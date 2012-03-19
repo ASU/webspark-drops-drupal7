@@ -1,0 +1,283 @@
+<?php
+
+/**
+ * @file
+ * Panel view modes tests.
+ */
+
+class dsPanelViewModesTests extends dsBaseTest {
+
+  /**
+   * Implements getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Panels'),
+      'description' => t('Tests for managing layouts with Panels editor.'),
+      'group' => t('Display suite'),
+    );
+  }
+
+  /**
+   * Edit a layout on a view mode.
+   *
+   * @param $edit
+   *   A collection of form properties to submit.
+   * @param $view_mode
+   *   The name of the view mode.
+   * @param $layout
+   *   The name of the layout.
+   * @param $check_fields
+   *   Whether we need to check on fields.
+   */
+  function DSpanelEditLayout($edit, $view_mode, $layout, $check_fields = FALSE, $type = 'article') {
+
+    $this->drupalPost('admin/structure/types/manage/' . $type . '/display/' . $view_mode . $layout, $edit, t('Save layout'));
+    $this->assertText(t('The layout has been saved.'));
+
+    if ($check_fields) {
+      $this->assertText('"Node being viewed" Body');
+      $this->assertText('"Node being viewed" created date');
+      $this->assertText('"Node being viewed" author');
+      $this->assertNoText('"Node being viewed" links');
+      $this->assertNoText('"Node being viewed" Tags');
+      $this->assertNoText('"Node being viewed" title');
+      $this->assertNoText('"Node being viewed" comments');
+      $this->assertNoText('"Node being viewed" comment form');
+      $this->assertNoText('"Node being viewed" Tags');
+      $this->assertNoText('"Node being viewed" Image');
+    }
+  }
+
+  /**
+   * Change layout.
+   *
+   * @param $view_mode
+   *   The name of the view mode.
+   * @param $old_layout
+   *   The name of the old layout.
+   * @param $new_layout
+   *   The name of the new layout.
+   */
+  function DSPanelChangeLayout($view_mode, $old_layout, $new_layout) {
+    $this->drupalPost('admin/structure/types/manage/article/display/' . $view_mode . $old_layout, array('layout' => $new_layout), t('Next'));
+    $this->drupalPost(NULL, array(), t('Save'), array(), array(), 'panels-change-layout');
+    $this->assertText(t('Panel layout has been updated.'));
+    $this->assertText(t('Configure settings for the !new_layout layout.', array('!new_layout' => $new_layout)));
+  }
+
+  /**
+   * Clone a layout
+
+   * @param $edit
+   *   A collection of form properties to submit.
+   * @param $view_mode
+   *   The name of the view mode.
+   */
+  function DSPanelCloneLayout($edit, $view_mode) {
+    $this->drupalPost('admin/structure/types/manage/article/display/' . $view_mode, $edit, t('Clone layout'));
+    $this->assertText(t('The layout has been cloned.'));
+  }
+
+  /**
+   * Panels view modes tests.
+   */
+  function testPanelViewModes() {
+
+    variable_set('ds_extras_panel_view_modes', TRUE);
+    $this->refreshVariables();
+    cache_clear_all('ds_fields', 'cache');
+    cache_clear_all('entity_info:', 'cache', TRUE);
+    cache_clear_all('theme_registry:', 'cache', TRUE);
+    cache_clear_all('module_implements', 'cache_bootstrap');
+    menu_rebuild();
+
+    // Create 2 nodes.
+    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => FALSE));
+    $this->drupalGet('node/' . $node->nid);
+    $node_sticky = $this->drupalCreateNode(array('type' => 'article', 'sticky' => TRUE, 'promote' => FALSE));
+    $this->drupalGet('node/' . $node->nid);
+
+    // Create a new layout and assert it's used.
+    $edit = array();
+    $this->DSpanelEditLayout($edit, '', 'twocol');
+    $this->assertRaw('panel-display panel-2col');
+
+    // Remove the layout and assert it's not used anymore.
+    $this->drupalPost('admin/structure/types/manage/article/display', $edit, t('Remove layout'));
+    $this->assertText(t('The layout has been removed.'));
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertNoRaw('panel-display panel-2col');
+
+    // Use the twocol_swentel layout, so we can also test on the $class variable.
+    $edit = array('sticky' => '1', 'class' => 'extra-class');
+    $this->DSpanelEditLayout($edit, '', 'twocol_swentel');
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertRaw('swentel-layout');
+    $this->assertRaw('extra-class');
+    $this->assertNoRaw('sticky');
+    $this->assertRaw('block-system-navigation');
+    $this->drupalGet('node/' . $node_sticky->nid);
+    $this->assertRaw('swentel-layout');
+    $this->assertRaw('extra-class');
+    $this->assertRaw('sticky');
+    $this->assertRaw('block-system-navigation');
+
+    // Remove class. Also remove blocks.
+    $edit = array('hide_sidebars' => '1', 'class' => '');
+    $this->DSpanelEditLayout($edit, '', '');
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertRaw('swentel-layout');
+    $this->assertNoRaw('extra-class');
+    $this->assertNoRaw('sticky');
+    $this->assertNoRaw('block-system-navigation');
+    $this->drupalGet('node/' . $node_sticky->nid);
+    $this->assertRaw('swentel-layout');
+    $this->assertNoRaw('extra-class');
+    $this->assertRaw('sticky');
+    $this->assertNoRaw('block-system-navigation');
+
+    // Recreate a layout with less fields by default.
+    $this->drupalPost('admin/structure/types/manage/article/display', array(), t('Remove layout'));
+    $edit = array(
+      'field_tags_enable' => FALSE,
+      'field_image_enable' => FALSE,
+      'node_title_enable' => FALSE,
+      'node_links_enable' => FALSE,
+      'node_comments_enable' => FALSE,
+      'node_comment_form_enable' => FALSE,
+    );
+    $this->DSpanelEditLayout($edit, '', 'twocol_swentel', TRUE);
+
+    // Change layout to 2 col stacked (panel-2col-stacked)
+    $this->DSPanelChangeLayout('', 'twocol_swentel', 'twocol_stacked');
+    $this->DSPanelChangeLayout('', 'twocol_stacked', 'twocol_swentel');
+
+    // Enable the full content view mode
+    $edit = array('view_modes_custom[full]' => '1');
+    $this->drupalPost('admin/structure/types/manage/article/display', $edit, t('Save'));
+
+    // Clone default layout into full content and remove
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertNoRaw('swentel-layout');
+    $edit = array('clone' => 'node|article|default');
+    $this->DSPanelCloneLayout($edit, 'full');
+    $this->drupalPost('admin/structure/types/manage/article/display', array(), t('Remove layout'));
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertRaw('swentel-layout');
+
+    // Test hide page title.
+    $this->assertRaw('<h1 class="title" id="page-title">
+          '. $node->title . '        </h1>');
+    $edit = array('page_option_type' => '1');
+    $this->DSpanelEditLayout($edit, 'full', '');
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertNoRaw('<h1 class="title" id="page-title">
+      '. $node->title . '        </h1>');
+
+    // Use page title substitutions.
+    $edit = array('page_option_type' => '1', 'page_option_title' => '%node:type');
+    $this->DSpanelEditLayout($edit, 'full', '');
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertNoRaw('<h1 class="title" id="page-title">
+      '. $node->type . '        </h1>');
+
+    // Test panels with the switch view mode, so add a layout on default again.
+    $edit = array('clone' => 'node|article|full');
+    $this->DSPanelCloneLayout($edit, 'teaser');
+    $edit = array('view_modes_custom[full]' => FALSE);
+    $this->drupalPost('admin/structure/types/manage/article/display', $edit, t('Save'));
+    $this->DSpanelEditLayout(array(), '', 'twocol');
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertRaw('panel-display panel-2col');
+    $edit = array('ds_switch' => 'teaser');
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    $this->assertRaw('swentel-layout');
+
+    // Test hide page title with the switch view mode.
+    $edit = array('page_option_type' => '0');
+    $this->DSpanelEditLayout($edit, 'teaser', '');
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertRaw('<h1 class="title" id="page-title">
+          '. $node->title . '        </h1>');
+    $edit = array('page_option_type' => '1');
+    $this->DSpanelEditLayout($edit, 'teaser', '');
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertNoRaw('<h1 class="title" id="page-title">
+      '. $node->title . '        </h1>');
+
+    // Test switching from field UI to panels editor and vica versa.
+    // By default, everything should be panels editor.
+    $this->drupalGet('admin/structure/types/manage/article/display');
+    $this->assertNoRaw('edit-additional-settings-layout');
+    $this->drupalGet('admin/structure/types/manage/article/display/teaser');
+    $this->assertNoRaw('edit-additional-settings-layout');
+    $this->drupalGet('admin/structure/types/manage/article/display', array('query' => array('switch' => 'field_ui')));
+    $this->assertNoRaw('edit-additional-settings-layout');
+    // Enable switching and detection of configured layouts.
+    variable_set('ds_extras_editor_switch', TRUE);
+    $this->refreshVariables();
+    $this->drupalGet('admin/structure/types/manage/article/display');
+    $this->assertNoRaw('edit-additional-settings-layout');
+    $this->drupalGet('admin/structure/types/manage/article/display', array('query' => array('switch' => 'field_ui')));
+    $this->assertRaw('edit-additional-settings-layout');
+    $this->dsSelectLayout(array(), array(), 'admin/structure/types/manage/article/display', array('query' => array('switch' => 'field_ui')));
+    $this->assertRaw('edit-additional-settings-layout');
+    $this->drupalGet('admin/structure/types/manage/article/display', array('query' => array('switch' => 'panels')));
+    $this->assertNoRaw('edit-additional-settings-layout');
+    $this->drupalGet('admin/structure/types/manage/article/display');
+    $this->assertRaw('edit-additional-settings-layout');
+
+    // Create a page and article node which we'll promote to test the renderer.
+    $node_3 = $this->drupalCreateNode(array('type' => 'article', 'promote' => TRUE, 'title' => 'My article'));
+    $node_4 = $this->drupalCreateNode(array('type' => 'page', 'promote' => TRUE, 'title' => 'My page'));
+
+    // Page layout & article layout, both using same layout.
+    $edit = array();
+    $this->DSpanelEditLayout($edit, 'teaser', '/twocol', FALSE, 'page');
+    $this->drupalPost('admin/structure/types/manage/article/display/teaser', array(), t('Remove layout'));
+    $this->DSpanelEditLayout($edit, 'teaser', '/twocol', FALSE);
+
+    // Go to front page and verify we see the content of both types in teaser format.
+    $this->drupalGet('node');
+    $this->assertRaw('My article');
+    $this->assertRaw('My page');
+
+    // Use one column layout.
+    $this->drupalPost('admin/structure/types/manage/article/display/teaser', array(), t('Remove layout'));
+    $this->DSpanelEditLayout($edit, 'teaser', '/onecol', FALSE);
+
+    // Go to front page and verify we see the content of both types in teaser format.
+    $this->drupalGet('node');
+    $this->assertRaw('My article');
+    $this->assertRaw('My page');
+
+    // Tests to verify that changing panels layout chooses the right template.
+    $edit = array(
+      'additional_settings[layout]' => '',
+    );
+    $this->drupalPost('admin/structure/types/manage/article/display', $edit, t('Save'));
+    $edit = array();
+    $this->DSpanelEditLayout($edit, '', 'twocol_stacked', FALSE);
+    $this->drupalGet('node/' . $node_3->nid);
+    $this->assertRaw('panel-2col-stacked clearfix panel-display');
+
+    // Change panel
+    $this->DSPanelChangeLayout('', 'twocol_stacked', 'twocol');
+    $this->drupalGet('node/' . $node_3->nid);
+    $this->assertNoRaw('panel-2col-stacked clearfix panel-display');
+    $this->assertRaw('panel-display panel-2col clearfix');
+
+    // Disable panels and verify that simply saving Field UI without layout does not
+    // trigger any notices in entity_info_alter and on display of entities itself.
+    variable_set('ds_extras_panel_view_modes', FALSE);
+    $this->refreshVariables();
+    cache_clear_all('ds_fields', 'cache');
+    cache_clear_all('entity_info:', 'cache', TRUE);
+    cache_clear_all('theme_registry:', 'cache', TRUE);
+    cache_clear_all('module_implements', 'cache_bootstrap');
+    menu_rebuild();
+    $this->drupalPost('admin/structure/types/manage/article/display', array(), t('Save'));
+    $this->drupalGet('node/' . $node_3->nid);
+  }
+}

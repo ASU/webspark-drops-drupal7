@@ -1,0 +1,163 @@
+-------------------------------------------------------------------------------------
+7.x-1.5 14/02/2012
+-------------------------------------------------------------------------------------
+- #1423498 by swentel: expose load_comments in views export.
+- #1391192 by czigor: fix notice in ds_render_ctools_field().
+- #1410440 by swentel: fix #bundle notices once and for all.
+- #1382132 by andypost: follow up on region warning.
+- #1294686 by victoriachan: follow up on empty region to block error.
+- #1382132 by swentel: add warning about wrong regions.
+- #1387036 by donquixote and swentel: Fix array to string conversion in implode.
+- #1388288 by mrfelton: Fix vertical tabs with empty regions. 
+- #1342030 by swentel: Add page title options for user and taxonomy term.
+- #1370386 by swentel: Fix link to entity uri.
+- #1369170 by swentel: Fix errors on form class not being an error.
+- #1360480 by swentel: fix panel layouts on taxonomy terms.
+- #1365142 by swentel: hide field with ds views fields if configured.
+- #1311108 by swentel: full content view mode not fully disabled.
+- #1324196 by swentel: fix notices with relation and efq.
+- #1313228 by swentel: followup, limit length on machine name.
+- #1289516 by swentel: Username field is not passed through form_username() function.
+- #1332376 by swentel: 3 column stacked form layout.
+- #1356190 by swentel: use $form_id instead of $form['#token'].
+- #1343990 by OnkelTem: Fix changing of fields on forms.
+- #1354630 by swentel: DS entity views can handle custom fields now as well.
+- #1345278 by swentel: fixed Node title field label not displayed.
+- #1353140 by isaacfreeman and swentel: implement hook_admin_paths() for display tab.
+- #1240510 by tim.plunkett: follow up on Views row options missing in views export.
+- #1359106 by netsensei: DS alters entity info without checking if bundles exists.
+- #1355936 by GoZ: Token clear option.
+- #1336342 by Casper_Deseyne: Flexible panels layouts need the full $layout as well.
+- #1295586 by pfrenssen: follow up on variables passed by reference.
+- #1358162 by zuuperman: set the title on page title options.
+
+-------------------------------------------------------------------------------------
+7.x-1.4 31/10/2011
+-------------------------------------------------------------------------------------
+- #1299580 by swentel: ability to set FT on instance level + tpl suggestion.
+- #1287048 by swentel: make dynamic fields content selection work better.
+- #1321046 by swentel: Ability to remove region to blocks from emergency page.
+- #1324234 by swentel: The clone functionality of Field group broke DS clone.
+- #1316344 by jherencia: Impossible to render a user using panels layout.
+- #1315768 by dixon_: Panels layouts are handled the wrong way.
+- #1313228 by swentel: database column to small for vd label (seriously).
+- #1305092 by swentel: add relationship to ds row plugin.
+- #1310930 by swentel: Switch view mode through $_GET argument.
+- #1309280 by swentel: fix clash with modules looking for #field index in form.
+- #1304714 by swentel: update or remove layout/field settings on content type actions.
+- #1302270 by swentel: clearer description of CTools cache plugin in DS extras.
+- #1294686 by attiks: Fix empty region to block error.
+- #1295586 by Johnny vd Laar: Fix strict warnings in ds_views_row_render_taxonomy_term_data().
+- #1242620 by swentel: hide limit textfield on formatter settings form.
+- #1283714 by swentel: hide format and label for views layouting.
+- #1264386 by swentel: add option to temporarily disable theming through DS.
+- #1244514 by dub4u: long description in info file segfaults apache on PHP 5.3.4
+                     and windows.
+- #1283910 by swentel: hide() is not always respected.
+- #1283256 by swentel: form layouts show up on manage display.
+- #1279478 by fadeddata: only add preprocess function if there is a theming function.
+- #1267050 by swentel: PDOException: Table ds_view_modes doesn't exist.
+- #1272508 by swentel: add support for File Entity.
+- #1262706 by swentel: remove notices from enabling views displays.
+- #1258086 by swentel: Add layout as class in template files.
+- #1265920 by swentel: The theme's field.tpl.php should be found as well.
+- #1261582 by swentel: default to nid so views doesn't crash.
+- #1270634 by swentel: check on #view_mode index in contextual links.
+- #1269004 by adf1969 and swentel: use $base_root for subdir installs in ds_source.
+- #1259454 by swentel: add more help text for a preprocess field.
+- #1266400 by pfrenssen: Provide a default setting for the 'Retain filters' checkbox
+                         if this is hidden in solr search.
+- #1264508 by pfrenssen: Browser freezes on empty search and highlighting enabled.
+- #1263438 by pfrenssen: Apache Solr filter conditions need to be updated.
+- #1255710 by avr: API example "hook_ds_custom_fields_info" should not use object.
+- #1238132 by swentel: Embedding view with term references in fields results in errors.
+- #1254224 by swentel: search snippet (only solr) and info field.
+- #1254736 by swentel: do not affect non configured default view mode with disabled view mode.
+- #1254894 by swentel: Extra fields was limited to one per bundle.
+- #1244336 by swentel: ds_field_attach_view_alter() should not run for panels.
+- #1251076 by swentel: fix notices on simply changing field UI when a layout was
+                       already configured.
+- #1251330 by swentel: set title on revision view mode.
+- #1239436 by swentel: fix PDO exceptions on rare occasions.
+- #1252792 by swentel: Menu titles should be in hook_menu().
+- #1250862 by pfrenssen: Call to undefined method SolrBaseQuery::add_filter().
+- #1244896 by Jax: Fix reference error in layout revert form.
+- #1242058 by swentel: fivestar is no longer available on the content type.
+- #1241936 by swentel: add missing tests.
+- #1240510 by swentel: Views row options missing in views export.
+- #1227790 by swentel: fix various subtle problems with panels layouts.
+- #1239658 by tjhellmann and swentel: remove double quote when using custom label el.
+- #1238710 by swentel: do not conflict with core overlay css.
+- #1237064 by swentel: do not conflict with revisioning module.
+- by swentel: Apache Solr multisite support.
+- by jyve: New minimal Field Template added.
+
+-------------------------------------------------------------------------------------
+7.x-1.3 03/08/2011
+-------------------------------------------------------------------------------------
+- #1238048 by stalski: Moving fieldsets into another region leaves children behind.
+- #1234792 by swentel: group search results by type.
+- #1194252 by swentel and zuuperman: hide colons on labels for reset and expert.
+- #1193114 by swentel: make sure features don't list Display suite x times.
+- #1192744 by swentel and mrfelton: load comments on nodes on views listings.
+- #1214238 by dylon: fix type in ds.field_ui.inc.
+- #1207718 by BTMash: fix white page and facet api.
+- #1218464 by muka: Better regular expression for finding themes.
+- #1218636 by swentel: fix issue in ds-build to create tpl files with hyphens.
+- #1146216 by swentel: preprocess fields via UI and fix taxonomy term preprocess.
+- #1221842 by swentel: fix minor warnings in schema definition.
+- #1191336 by swentel: override display of node revisions.
+- #1227986 by swentel: use theme key of layout plugin.
+- #1222412 by swentel: extend page title options with substitutions.
+- #1225588 by swentel: add contextual links on block field.
+- #1233958 by swentel: add destination to 'Manage region styles'.
+- #1218474 by muka, swentel: add field links directly from field UI.
+- Ability to limit number of items per formatter.
+- Use $search_result variable for user page as well so empty doesn't show up.
+- Panel view modes module: use Panels layouts to manage the view modes.
+- Hide sidebar blocks option.
+- Views Field UI fields mode.
+
+-------------------------------------------------------------------------------------
+7.x-1.2 14/06/2011
+-------------------------------------------------------------------------------------
+- #1187960 by askibinski: trigger solr on empty search.
+- #1184646 by swentel: make fields in non existing regions are visible in the UI.
+- #1166928 by swentel: support for gravatar.
+- #1175414 by swentel: fix issue with regions having dashes/underscores.
+- #1171408 by mverbaar: Add starter template and drush integration.
+- #1143070 by neurojavi: Check on taxonomy formatters/view modes.
+- #1152232 by yoroy: remove unnecessary checkbox descriptions.
+- #1151858 by neurojavi: add file entity support to ds views plugin.
+- #1155148 by swentel: fix notices on entities.
+- #1136542 by swentel: add micro support.
+- #1160014 by swentel: add option to remove all theme hook suggestions.
+- #1163046 by swentel: map old regions to new regions when changing layout.
+- Cleanup admin settings screen of Extras module.
+- Support for Panels layouts.
+- New feature: Dynamic content field.
+- New Extras feature: extra fields.
+- New Extras feature: contextual links to manage display screens.
+- New Extras feature: switch view mode fields through ajax.
+- Fix notices in fields and view modes form on fieldable key.
+
+-------------------------------------------------------------------------------------
+7.x-1.1 09/05/2011
+-------------------------------------------------------------------------------------
+- #1150536 by swentel: fix apachesolr changes in DS search.
+- #1053912 by swentel and jyve: change field labels, classes and wrappers per mode.
+- #1142572 by swentel: add ability to hide the page title on full node view.
+- #1132682 by swentel: add hook_ds_layout_info_alter().
+- #1129208 by swentel: support for Fivestar in Extras module.
+- #1129228 by netsensei and swentel: create separate render function.
+- #1131364 by BrockBoland: fix documentation in ds.api.php for use_token.
+- #1124346 by codycraven and swentel: Fix racing conditions on additional settings.
+- #1125250 by swentel: check on default user image.
+- Use another function to preprocess a view.
+- Optimized wording in extras settings screen.
+- Remove Obsolete CVS $Id$ tags and .DS_Store directory.
+
+-------------------------------------------------------------------------------------
+7.x-1.0 09/04/2011
+-------------------------------------------------------------------------------------
+- First official 1.0 release for D7.

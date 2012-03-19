@@ -1,0 +1,23 @@
+
+.ds-form-3col .group-header {
+  clear: both;
+}
+
+.ds-form-3col .group-left {
+  width: 25%;
+  float: left;
+}
+
+.ds-form-3col .group-middle {
+  width: 50%;
+  float: left;
+}
+
+.ds-form-3col .group-right {
+  width: 25%;
+  float: right;
+}
+
+.ds-form-3col .group-footer {
+  clear: both;
+}

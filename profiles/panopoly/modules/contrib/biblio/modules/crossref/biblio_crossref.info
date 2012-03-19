@@ -1,0 +1,13 @@
+name = Biblio - Crossref
+description = Provides DOI lookup and import to the Biblio module.
+core = 7.x
+package = Biblio
+dependencies[] = biblio
+files[] = biblio.crossref.client.php
+
+; Information added by drupal.org packaging script on 2012-03-15
+version = "7.x-1.0-rc3+58-dev"
+core = "7.x"
+project = "biblio"
+datestamp = "1331813069"
+

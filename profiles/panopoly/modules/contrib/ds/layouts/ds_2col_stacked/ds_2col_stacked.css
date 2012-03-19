@@ -1,0 +1,17 @@
+
+.group-header {
+}
+
+.group-left {
+  float: left;
+  width: 50%;
+}
+
+.group-right {
+  float: right;
+  width: 50%;
+}
+
+.group-footer {
+  clear: both;
+}

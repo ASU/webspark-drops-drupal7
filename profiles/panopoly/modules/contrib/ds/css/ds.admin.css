@@ -1,0 +1,137 @@
+
+/**
+ * @file
+ * Administration CSS for Display Suite.
+ */
+
+/**
+ * Field template.
+ */
+.field-template {
+  display: none;
+  min-width: 450px;
+  z-index: 1000;
+}
+
+.ds-extras-field-template {
+  margin-bottom: 1em;
+}
+
+.field-formatter-settings-editing .ft-link {
+  display: none;
+}
+
+.ft-group div.form-item {
+  float: left;
+  width: 130px;
+}
+
+/**
+ * Limit
+ */
+.limit-float {
+  float: left;
+  margin-right: 5px;
+}
+
+/**
+ * Modal
+ */
+#modalBackdrop {
+  position: fixed!important;
+  background-color: #000!important;
+}
+ 
+div.ctools-modal-content .modal-header {
+  padding: 5px;
+  background-color: #E1E2DC;
+}
+
+div.ctools-modal-content a.close {
+  color: #666;
+}
+
+div.ctools-modal-content .modal-title {
+  /*font-weight: normal;*/
+  color: #666;
+}
+
+div.ctools-modal-content .modal-header img {
+  display: none;
+}
+
+div.ctools-modal-content .form-item label {
+  width: 100%;
+  float: none;
+  clear: both;
+}
+
+div.ctools-modal-content .resizable-textarea {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+div.ctools-modal-content {
+  font-size: 12px;
+  border: solid 1px #ddd;
+  -webkit-border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+  -webkit-box-shadow: -1em 1em 1em rgba(0, 0, 0, 0.5);
+}
+
+a.section-link {
+  display: block;
+}
+
+#ctools-content-selection h2 {
+  color: #666;
+}
+
+.option-text-aligner .form-item {
+  float: left;
+  padding: .25em 1em .25em 0;
+  margin: 0;
+}
+
+.option-text-aligner {
+  clear: both;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+/**
+ * CTools content selection.
+ */
+#ctools-content-selection #ds-left {
+  float: left;
+  width: 30%;
+}
+
+#ctools-content-selection #ds-right {
+  float: left;
+  width: 70%; 
+}
+
+#ctools-content-selection .selection-hide {
+  display: none;
+}
+
+#ctools-content-selection .content-item {
+  width: 50%;
+  float: left;	
+}
+
+/**
+ * Fieldset in vertical tabs.
+ */
+.vertical-tabs fieldset#edit-additional-settings-ds-page-title-options-page-option-contexts {
+  margin: 1em 0;
+  padding: 2.5em 0 0;
+  border: 1px solid #CCCCCC;
+}
+
+#edit-additional-settings-ds-page-title-options-page-option-contexts legend {
+  display: block;
+}

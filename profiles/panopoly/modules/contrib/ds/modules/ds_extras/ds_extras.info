@@ -1,0 +1,13 @@
+name = "Extras"
+description = "Contains additional features."
+core = "7.x"
+package = "Display suite"
+dependencies[] = ds
+configure = admin/structure/ds/extras
+
+; Information added by drupal.org packaging script on 2012-02-14
+version = "7.x-1.5"
+core = "7.x"
+project = "ds"
+datestamp = "1329223541"
+

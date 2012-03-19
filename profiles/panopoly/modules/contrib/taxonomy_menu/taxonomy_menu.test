@@ -1,0 +1,103 @@
+<?php
+
+/**
+ * @file
+ * Tests for taxonomy.module.
+ */
+
+/**
+* Class with common helper methods.
+*/
+class TaxonomyMenuWebTestCase extends DrupalWebTestCase {
+
+  /**
+   * Returns a new vocabulary with random properties.
+   */
+  function createVocabulary() {
+    // Create a vocabulary.
+    $vocabulary = new stdClass();
+    $vocabulary->name = $this->randomName();
+    $vocabulary->description = $this->randomName();
+    $vocabulary->machine_name = drupal_strtolower($this->randomName());
+    $vocabulary->help = '';
+    $vocabulary->nodes = array('article' => 'article');
+    $vocabulary->weight = mt_rand(0, 10);
+    taxonomy_vocabulary_save($vocabulary);
+    return $vocabulary;
+  }
+
+  /**
+   * Returns a new term with random properties in vocabulary $vid.
+   */
+  function createTerm($vocabulary) {
+    $term = new stdClass();
+    $term->name = $this->randomName();
+    $term->description = $this->randomName();
+    // Use the first available text format.
+    $term->format = db_query_range('SELECT format FROM {filter_format}', 0, 1)->fetchField();
+    $term->vid = $vocabulary->vid;
+    taxonomy_term_save($term);
+    return $term;
+  }
+}
+
+/**
+ * Tests for taxonomy vocabulary functions.
+ */
+class TaxonomyMenuUnitTest extends TaxonomyMenuWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'CRUD',
+      'description' => 'Test CRUD functions',
+      'group' => 'Taxonomy Menu',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('taxonomy_menu');
+    $admin_user = $this->drupalCreateUser(array('create article content', 'administer taxonomy'));
+    $this->drupalLogin($admin_user);
+    $this->vocabulary = $this->createVocabulary();
+    $this->term = $this->createTerm($this->vocabulary);
+    
+    $field = array(
+      'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,
+      'type' => 'taxonomy_term_reference',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'settings' => array(
+        'allowed_values' => array(
+          array(
+            'vocabulary' => $this->vocabulary->machine_name,
+            'parent' => 0,
+          ),
+        ),
+      ),
+    );
+    field_create_field($field);
+
+    $this->instance = array(
+      'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,
+      'bundle' => 'article',
+      'entity_type' => 'node',
+      'widget' => array(
+        'type' => 'options_select',
+      ),
+      'display' => array(
+        'default' => array(
+          'type' => 'taxonomy_term_reference_link',
+        ),
+      ),
+    );
+    field_create_instance($this->instance);
+  }
+
+  function testTaxonomyMenuCRUD() {
+    $edit = array();
+    $edit['taxonomy_menu[vocab_parent]'] = 'main-menu:0';
+    $this->drupalPost('admin/structure/taxonomy/' .  $this->vocabulary->machine_name . '/edit', $edit, 'Save');
+    $this->assertResponse(200);
+    
+  }
+}
+

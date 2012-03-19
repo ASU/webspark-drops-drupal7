@@ -1,0 +1,227 @@
+# $Id: nl.po,v 1.1.2.1 2009/06/06 15:30:50 libeco Exp $
+#
+# Dutch translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  office_hours.elements.inc: n/a
+#  office_hours.theme.inc: n/a
+#  office_hours_handler_filter_day.inc,v 1.1.2.1 2009/03/07 22:13:50 ozeuss
+#  office_hours.module,v 1.1.2.1.2.7 2009/04/24 13:49:29 ozeuss
+#  office_hours.info,v 1.1.4.1 2008/03/19 18:03:53 ozeuss
+#  office_hours_handler_filter_hours.inc,v 1.1.2.1 2009/03/07 22:13:50 ozeuss
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2009-04-29 16:30+0200\n"
+"PO-Revision-Date: 2009-04-29 16:30+0100\n"
+"Last-Translator: L.B. Cohn <lichai@999games.nl>\n"
+"Language-Team: Dutch <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: office_hours.elements.inc:64
+#: office_hours.theme.inc:13
+#: includes/office_hours_handler_filter_day.inc:12
+msgid "Sunday"
+msgstr "Zondag"
+
+#: office_hours.elements.inc:64
+#: office_hours.theme.inc:13
+#: includes/office_hours_handler_filter_day.inc:12
+msgid "Monday"
+msgstr "Maandag"
+
+#: office_hours.elements.inc:64
+#: office_hours.theme.inc:13
+#: includes/office_hours_handler_filter_day.inc:12
+msgid "Tuesday"
+msgstr "Dinsdag"
+
+#: office_hours.elements.inc:64
+#: office_hours.theme.inc:13
+#: includes/office_hours_handler_filter_day.inc:12
+msgid "Wednesday"
+msgstr "Woensdag"
+
+#: office_hours.elements.inc:64
+#: office_hours.theme.inc:13
+#: includes/office_hours_handler_filter_day.inc:12
+msgid "Thursday"
+msgstr "Donderdag"
+
+#: office_hours.elements.inc:64
+#: office_hours.theme.inc:13
+#: includes/office_hours_handler_filter_day.inc:12
+msgid "Friday"
+msgstr "Vrijdag"
+
+#: office_hours.elements.inc:64
+#: office_hours.theme.inc:13
+#: includes/office_hours_handler_filter_day.inc:12
+msgid "Saturday"
+msgstr "Zaterdag"
+
+#: office_hours.elements.inc:64
+#: office_hours.module:292
+msgid "None"
+msgstr "Geen"
+
+#: office_hours.elements.inc:71
+msgid "Additional hours:"
+msgstr "Extra uren:"
+
+#: office_hours.elements.inc:90
+msgid "From"
+msgstr "Van"
+
+#: office_hours.elements.inc:100
+msgid "Until"
+msgstr "Tot"
+
+#: office_hours.elements.inc:171
+msgid "Hours should be between 0 and 23."
+msgstr "Uren moeten tussen 0 en 23 zijn."
+
+#: office_hours.elements.inc:174
+msgid "Minutes should be between 0 and 59."
+msgstr "Minuten moeten tussen 0 en 59 zijn."
+
+#: office_hours.theme.inc:72
+msgid "This field is required."
+msgstr "Dit veld is verplicht."
+
+#: office_hours.theme.inc:76
+msgid "!title: !required"
+msgstr "!title: !required"
+
+#: office_hours.module:36
+msgid "Number of field that will show."
+msgstr "Aantal velden dat te zien zal zijn."
+
+#: office_hours.module:37
+msgid "Warning! Changing this setting after data has been created could result in the loss of data!"
+msgstr "Waarschuwing! Het aanpassen van deze instelling nadat data is gecreëerd kan resulteren in het verlies van data!"
+
+#: office_hours.module:40
+msgid "Number of values"
+msgstr "Aantal waardes"
+
+#: office_hours.module:86
+msgid "Store office or opening hours in the database."
+msgstr "Bewaar kantoor- of openingstijden in de database."
+
+#: office_hours.module:107
+msgid "Hours format"
+msgstr "Uurformaat"
+
+#: office_hours.module:108
+msgid "24 hrs."
+msgstr "24-uurs"
+
+#: office_hours.module:108
+msgid "12 hrs"
+msgstr "12-uurs"
+
+#: office_hours.module:111
+msgid "Format of the clock. IMPORTANT NOTE: if you do not select \"Multiple values\", you can enter only one day."
+msgstr "Klokformaat. BELANGRIJK: als \"Meerdere waardes\" niet is geselecteerd kun je maar één waarde per dag invullen."
+
+#: office_hours.module:115
+msgid "granularity of time"
+msgstr "tijdgranulariteit"
+
+#: office_hours.module:116
+msgid "Hours"
+msgstr "Uren"
+
+#: office_hours.module:116
+msgid "Half hours"
+msgstr "Halve uren"
+
+#: office_hours.module:116
+msgid "Quarter hours"
+msgstr "Kwart uren"
+
+#: office_hours.module:119
+msgid "Allow inserting quarter hours, half hours, or only hours of the day"
+msgstr "Sta toe dat er kwart uren, halve uren of alleen hele uren worden gekozen"
+
+#: office_hours.module:123
+msgid "Limit widget start hours"
+msgstr "Beperk widget-starttijden"
+
+#: office_hours.module:127
+msgid "Set the allowed start hours. Note: if you just changed the clock format, please submit before changing this."
+msgstr "Stel het toegestane starttijdstip in. Let op: als je zojuist het klokformaat hebt aangepast moet je eerst opslaan voor je dit kan aanpassen"
+
+#: office_hours.module:131
+msgid "Limit widget end hours"
+msgstr "Beperk widget-eindtijden"
+
+#: office_hours.module:135
+msgid "Set the allowed end hours. Note: if you just changed the clock format, please submit before changing this"
+msgstr "Stel het toegestane eindtijdstip in. Let op: als je zojuist het klokformaat hebt aangepast moet je eerst opslaan voor je dit kan aanpassen"
+
+#: office_hours.module:155
+msgid "Validate hours"
+msgstr "Valideer uren"
+
+#: office_hours.module:158
+msgid "Please note that this will work as long as the opening hours are not through midnight."
+msgstr "Let er wel op dat dit alleen werkt als de openingstijden niet langs middernacht gaan."
+
+#: office_hours.module:209
+msgid "Closing hours are earlier than opening hours validator"
+msgstr "Sluitingstijden zijn eerder dan openingstijdenvalidator"
+
+#: office_hours.module:234
+msgid "Office Hours"
+msgstr "Kantoortijden"
+
+#: office_hours.module:367;412
+msgid "Content"
+msgstr "Inhoud"
+
+#: office_hours.module:414
+msgid "Appears in: @types"
+msgstr "Te zien in: @types"
+
+#: office_hours.module:435
+msgid "<No value>"
+msgstr "<Geen waarde>"
+
+#: office_hours.module:0
+msgid "office_hours"
+msgstr "kantoortijden"
+
+#: office_hours.info:0
+msgid "office hours"
+msgstr "kantoortijden"
+
+#: office_hours.info:0
+msgid "Defines an office hours field for cck"
+msgstr "Maakt een kantoortijdenveld voor CCK"
+
+#: office_hours.info:0
+msgid "CCK"
+msgstr "CCK"
+
+#: includes/office_hours_handler_filter_day.inc:8
+msgid "Day"
+msgstr "Dag"
+
+#: includes/office_hours_handler_filter_day.inc:27
+msgid "Is open on one of the following days"
+msgstr "Is open op één van de volgende dagen"
+
+#: includes/office_hours_handler_filter_day.inc:28
+msgid "Is closed on one of the following days"
+msgstr "Is gesloten op één van de volgende dagen"
+
+#: includes/office_hours_handler_filter_hours.inc:132;148;160;166
+msgid "Choose hour"
+msgstr "Kies uur"
+

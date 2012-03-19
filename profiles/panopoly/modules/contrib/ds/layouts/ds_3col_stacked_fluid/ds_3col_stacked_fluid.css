@@ -1,0 +1,31 @@
+
+.group-header {
+  clear: both;
+}
+
+.group-left {
+  width: 25%;
+  float: left;
+}
+
+.group-middle {
+  width: 100%;
+  float: left;
+}
+
+.group-one-sidebar .group-middle {
+  width: 75%;
+}
+
+.group-two-sidebars .group-middle {
+  width: 50%;
+}
+
+.group-right {
+  width: 25%;
+  float: right;
+}
+
+.group-footer {
+  clear: both;
+}

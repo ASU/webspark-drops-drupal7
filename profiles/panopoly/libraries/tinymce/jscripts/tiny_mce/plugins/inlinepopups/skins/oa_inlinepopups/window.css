@@ -1,0 +1,220 @@
+/* Clearlooks 2 */
+
+/* Reset */
+.oa_inlinepopups,
+.oa_inlinepopups div,
+.oa_inlinepopups span,
+.oa_inlinepopups a {
+  vertical-align:baseline;
+  text-align:left;
+  position:absolute;
+  border:0;
+  padding:0;
+  margin:0;
+  background:transparent;
+  font-family: 'Open Sans', 'Lucida Sans', 'Lucida Grande', verdana sans-serif;
+  font-size: 12px;
+  color:#000;
+  text-decoration:none;
+  font-weight:normal;
+  width:auto;
+  height:auto;
+  overflow:hidden;
+  display:block;
+}
+
+/* General */
+.oa_inlinepopups {
+  position:absolute;
+  direction:ltr;
+}
+
+.oa_inlinepopups .mceWrapper {
+  position:static;
+}
+
+.mceEventBlocker {
+  position:fixed;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+}
+
+.oa_inlinepopups .mcePlaceHolder {
+  border:1px solid #000;
+  background:#888;
+  top:0;
+  left:0;
+  opacity:0.5;
+  -ms-filter:'alpha(opacity=50)';
+  filter:alpha(opacity=50);
+}
+.oa_inlinepopups_modalBlocker {
+  position:fixed;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  background: #000;
+  opacity: 0.8;
+  -ms-filter: 'alpha(opacity=80)';
+  filter: alpha(opacity=80); display:none;
+}
+
+/* Top */
+.oa_inlinepopups .mceTop, .oa_inlinepopups .mceTop div {
+  top: 0;
+  width: 100%;
+  height: 50px;
+  background: #666666; /* Old browsers */
+  /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzY2NjY2NiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMzMzMzMzMiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjN2RiOWU4IiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
+  background: -moz-linear-gradient(top,  #666666 0%, #333333 100%, #7db9e8 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#666666), color-stop(100%,#333333), color-stop(100%,#7db9e8)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #666666 0%,#333333 100%,#7db9e8 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #666666 0%,#333333 100%,#7db9e8 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #666666 0%,#333333 100%,#7db9e8 100%); /* IE10+ */
+  background: linear-gradient(top,  #666666 0%,#333333 100%,#7db9e8 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#666666', endColorstr='#7db9e8',GradientType=0 ); /* IE6-8 */
+  
+  -webkit-border-top-left-radius: 4px;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.oa_inlinepopups .mceTop .mceLeft {
+  display: none;
+}
+
+.oa_inlinepopups .mceTop .mceCenter {
+  width: 100%;
+  height: 50px;
+}
+
+.oa_inlinepopups .mceTop .mceRight {
+  display: none;
+}
+
+.oa_inlinepopups .mceTop span {
+  width: 100%;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 50px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.oa_inlinepopups .mceFocus .mceTop .mceLeft {background:url(img/corners.gif) -6px 0}
+.oa_inlinepopups .mceFocus .mceTop .mceRight {background:url(img/corners.gif) -18px 0}
+.oa_inlinepopups .mceFocus .mceTop span {color:#FFF}
+
+/* Middle */
+.oa_inlinepopups .mceMiddle, .oa_inlinepopups .mceMiddle div {
+  top: 0;
+}
+
+.oa_inlinepopups .mceMiddle {
+  width: 100%;
+  height:100%;
+}
+
+.oa_inlinepopups .mceMiddle .mceLeft {
+  display: none;
+}
+
+.oa_inlinepopups .mceMiddle span {
+  top: 50px;
+  width: 100%;
+  height: 100%;
+  background:#FFF;
+}
+
+.oa_inlinepopups .mceMiddle .mceRight {
+  display: none;
+}
+
+/* Bottom */
+.oa_inlinepopups .mceBottom, .oa_inlinepopups .mceBottom div {height:6px;}
+
+.oa_inlinepopups .mceBottom {left:0; bottom:0; width:100%;}
+
+.oa_inlinepopups .mceBottom div {
+  top: 0;
+}
+
+.oa_inlinepopups .mceBottom .mceLeft {
+  display: none;
+}
+
+.oa_inlinepopups .mceBottom .mceCenter {left:5px; width:100%;}
+
+.oa_inlinepopups .mceBottom .mceRight {
+  display: none;
+}
+
+.oa_inlinepopups .mceBottom span {display:none;}
+.oa_inlinepopups .mceStatusbar .mceBottom, .oa_inlinepopups .mceStatusbar .mceBottom div {height:23px}
+.oa_inlinepopups .mceStatusbar .mceBottom .mceLeft {display: none;}
+.oa_inlinepopups .mceStatusbar .mceBottom .mceRight {display: none;}
+.oa_inlinepopups .mceStatusbar .mceBottom span {display:block; left:7px; font-family:Arial, Verdana; font-size:11px; line-height:23px}
+
+/* Actions */
+.oa_inlinepopups a {width:29px; height:50px; top:3px;}
+.oa_inlinepopups .mceClose {right:6px; background:url(img/buttons.gif) -87px 0}
+.oa_inlinepopups .mceMin {display:none; right:68px; background:url(img/buttons.gif) 0 0}
+.oa_inlinepopups .mceMed {display:none; right:37px; background:url(img/buttons.gif) -29px 0}
+.oa_inlinepopups .mceMax {display:none; right:37px; background:url(img/buttons.gif) -58px 0}
+.oa_inlinepopups .mceMove {display:none;width:100%;cursor:move;background:url(img/corners.gif) no-repeat -100px -100px}
+.oa_inlinepopups .mceMovable .mceMove {display:block}
+
+.oa_inlinepopups .mceFocus .mceClose {
+  height: 15px;
+  width: 16px;
+  margin-top: 15px;
+  margin-right: 10px;
+  background: url(img/close-popup.png) no-repeat left top;
+}
+
+.oa_inlinepopups .mceFocus .mceClose:hover {
+  background-position: left -15px;
+}
+
+.oa_inlinepopups .mceFocus .mceMin {right:68px; background:url(img/buttons.gif) 0 -16px}
+.oa_inlinepopups .mceFocus .mceMed {right:37px; background:url(img/buttons.gif) -29px -16px}
+.oa_inlinepopups .mceFocus .mceMax {right:37px; background:url(img/buttons.gif) -58px -16px}
+.oa_inlinepopups .mceFocus .mceMin:hover {right:68px; background:url(img/buttons.gif) 0 -32px}
+.oa_inlinepopups .mceFocus .mceMed:hover {right:37px; background:url(img/buttons.gif) -29px -32px}
+.oa_inlinepopups .mceFocus .mceMax:hover {right:37px; background:url(img/buttons.gif) -58px -32px}
+
+/* Resize */
+.oa_inlinepopups .mceResize {top:auto; left:auto; display:none; width:5px; height:5px;}
+.oa_inlinepopups .mceResizable .mceResize {display:block}
+.oa_inlinepopups .mceResizable .mceMin, .oa_inlinepopups .mceMax {display:none}
+.oa_inlinepopups .mceMinimizable .mceMin {display:block}
+.oa_inlinepopups .mceMaximizable .mceMax {display:block}
+.oa_inlinepopups .mceMaximized .mceMed {display:block}
+.oa_inlinepopups .mceMaximized .mceMax {display:none}
+.oa_inlinepopups a.mceResizeN {top:0; left:0; width:100%; cursor:n-resize}
+.oa_inlinepopups a.mceResizeNW {top:0; left:0; cursor:nw-resize}
+.oa_inlinepopups a.mceResizeNE {top:0; right:0; cursor:ne-resize}
+.oa_inlinepopups a.mceResizeW {top:0; left:0; height:100%; cursor:w-resize;}
+.oa_inlinepopups a.mceResizeE {top:0; right:0; height:100%; cursor:e-resize}
+.oa_inlinepopups a.mceResizeS {bottom:0; left:0; width:100%; cursor:s-resize}
+.oa_inlinepopups a.mceResizeSW {bottom:0; left:0; cursor:sw-resize}
+.oa_inlinepopups a.mceResizeSE {bottom:0; right:0; cursor:se-resize}
+
+/* Alert/Confirm */
+.oa_inlinepopups .mceButton {font-weight:bold; bottom:10px; width:80px; height:30px; background:url(img/button.gif); line-height:30px; vertical-align:middle; text-align:center; outline:0}
+.oa_inlinepopups .mceMiddle .mceIcon {left:15px; top:35px; width:32px; height:32px}
+.oa_inlinepopups .mceAlert .mceMiddle span, .oa_inlinepopups .mceConfirm .mceMiddle span {background:transparent;left:60px; top:35px; width:320px; height:50px; font-weight:bold; overflow:auto; white-space:normal}
+.oa_inlinepopups a:hover {font-weight:bold;}
+.oa_inlinepopups .mceAlert .mceMiddle, .oa_inlinepopups .mceConfirm .mceMiddle {background:#D6D7D5}
+.oa_inlinepopups .mceAlert .mceOk {left:50%; top:auto; margin-left: -40px}
+.oa_inlinepopups .mceAlert .mceIcon {background:url(img/alert.gif)}
+.oa_inlinepopups .mceConfirm .mceOk {left:50%; top:auto; margin-left: -90px}
+.oa_inlinepopups .mceConfirm .mceCancel {left:50%; top:auto}
+.oa_inlinepopups .mceConfirm .mceIcon {background:url(img/confirm.gif)}

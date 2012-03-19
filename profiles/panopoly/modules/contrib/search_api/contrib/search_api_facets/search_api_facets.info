@@ -1,0 +1,16 @@
+
+name = Old search facets (deprecated)
+description = "Use the new 'Search facets' module integrating with the Facet API instead."
+dependencies[] = search_api
+dependencies[] = block
+core = 7.x
+package = Search
+
+files[] = search_api_facets.entity.inc
+
+; Information added by drupal.org packaging script on 2011-12-15
+version = "7.x-1.0"
+core = "7.x"
+project = "search_api"
+datestamp = "1323968143"
+

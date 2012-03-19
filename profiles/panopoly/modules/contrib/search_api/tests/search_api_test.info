@@ -1,0 +1,18 @@
+
+name = Search API test
+description = "Some dummy implementations for testing the Search API."
+core = 7.x
+package = Search
+
+dependencies[] = search_api
+
+files[] = search_api_test.module
+
+hidden = TRUE
+
+; Information added by drupal.org packaging script on 2011-12-15
+version = "7.x-1.0"
+core = "7.x"
+project = "search_api"
+datestamp = "1323968143"
+

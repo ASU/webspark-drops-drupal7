@@ -1,0 +1,23 @@
+
+.group-header {
+  clear: both;
+}
+
+.group-left {
+  width: 33%;
+  float: left;
+}
+
+.group-middle {
+  width: 34%;
+  float: left;
+}
+
+.group-right {
+  width: 33%;
+  float: right;
+}
+
+.group-footer {
+  clear: both;
+}

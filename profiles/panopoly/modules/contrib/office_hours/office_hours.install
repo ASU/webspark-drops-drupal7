@@ -1,0 +1,39 @@
+<?php
+/**
+* @file
+* Install, update and uninstall functions for the office hours module.
+*/
+
+// $Id: office_hours.install,v 1.1.2.1.2.7 2009/11/01 14:49:36 ozeuss Exp $
+
+/**
+ * Implementation of hook_install().
+ */
+function office_hours_install() {
+ // drupal_load('module', 'content');
+ // content_notify('install', 'office_hours');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function office_hours_uninstall() {
+ // drupal_load('module', 'content');
+  //content_notify('uninstall', 'office_hours');
+}
+
+/**
+ * Implementation of hook_enable().
+ */
+function office_hours_enable() {
+ // drupal_load('module', 'content');
+  //content_notify('enable', 'office_hours');
+}
+
+/**
+ * Implementation of hook_disable().
+ */
+function office_hours_disable() {
+ // drupal_load('module', 'content');
+ // content_notify('disable', 'office_hours');
+}

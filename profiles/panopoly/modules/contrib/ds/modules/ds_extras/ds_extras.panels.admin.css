@@ -1,0 +1,29 @@
+
+.vertical-tabs #ds-panels-layout fieldset.default-fallback,
+.vertical-tabs #ds-panels-layout fieldset#edit-page-option-contexts {
+  margin: 1em 0;
+  padding: 2.5em 0 0;
+  border: 1px solid #CCCCCC;
+}
+
+#ds-panels-layout legend {
+	display: block;
+}
+
+#ds-panels-layout .layout-link {
+	height: auto;
+	padding: 0;
+}
+
+#ds-panels-layout-table {
+  width: auto;
+}
+
+#ds-panels-layout-table td {
+	padding: 3px 5px;
+}
+
+#ds-panels-layout-table .form-item {
+	padding: 0 3px;
+	margin: 0;
+}

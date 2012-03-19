@@ -1,0 +1,53 @@
+@CHARSET "UTF-8";
+
+/* Formatter in Views and Pages */
+.oh-display {
+  white-space: nowrap;
+}
+
+.oh-display-label {
+  display: inline-block; // give each label the same width, to align the hours.
+}
+
+.oh-display-hours {
+}
+
+.oh-display-closed {
+  font-style: italic;
+}
+
+/* Blocks */
+.office-hours-block .form-item label {
+  display: inline;
+}
+
+div.office-hours-block div {
+  display: inline;
+}
+
+.office-hours-block .dayname {
+  width: 6em;
+  display: -moz-inline-box;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.office-hours-block .form-item label { font-weight: normal; }
+.office_hours_table { margin-top: 0; }
+.office_hours_table tbody { border: none; }
+.office_hours_table tr, .office_hours_table td  { border: none!important; }
+.office_hours_table tr.odd { background: transparent none; }
+
+div.office-hours-block span.day {
+  width: 100px;
+  display: inline-block;
+}
+
+div.field-widget-office-hours table {
+/*  width: 770px; */
+  width: 45em;
+}
+
+div.field-widget-office-hours table tr td {
+/*  width: 55%; */
+}
