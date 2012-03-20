@@ -27,6 +27,11 @@ function calendar_views_templates() {
     if (!$info['fieldable'] || $entity_type == 'taxonomy_term') {
       continue;
     }
+    // Quick check to make sure everything has been setup correctly
+    $field_info = _field_info_collate_fields();
+    if (empty($field_info['instances'][$entity_type])) { 
+      continue;
+    }
     $items = field_info_instances($entity_type);
     $views_fields = date_views_fields($info['base table']);
     foreach ($views_fields['name'] as $name => $data) {
