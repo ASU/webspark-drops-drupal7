@@ -172,7 +172,7 @@ function panopoly_apps_check($form, &$form_state) {
   $form['pantheon'] = array(
     '#title' => t('Pantheon'),
     '#type' => 'fieldset',
-    '#description' => theme('image', array('path' => drupal_get_path('profile', 'openacademy') . '/images/enable-apps-pantheon.png')) . t('If you are installing Panopoly on Pantheon, you need to enable "On Server Development" to use apps.<br /><br />After you install your apps, you will need to use the "Commit" button to add them to the version control system.'),
+    '#description' => theme('image', array('path' => drupal_get_path('profile', 'panopoly') . '/images/enable-apps-pantheon.png')) . t('If you are installing Panopoly on Pantheon, you need to enable "On Server Development" to use apps.<br /><br />After you install your apps, you will need to use the "Commit" button to add them to the version control system.'),
   );
 
   $form['ftp'] = array(
