@@ -23,6 +23,7 @@ function panopoly_install_tasks($install_state) {
     'default apps' => array(
       'panopoly_admin',
       'panopoly_core',
+      'panopoly_demo',
       'panopoly_images',
       'panopoly_magic',
       'panopoly_pages',
