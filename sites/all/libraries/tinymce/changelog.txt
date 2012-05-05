@@ -1,3 +1,27 @@
+Version 3.4.8 (2012-02-02)
+	Fixed bug in IE where selected text ending with space cannot be formatted then formatted again to get original text.
+	Fixed bug in IE where images larger than editor area were being deselected when toolbar buttons are clicked.
+	Fixed bug where wrong text align buttons are active when multiple block elements are selected.
+	Fixed bug where selected link not showing in target field of link dialog in some selection cases.
+	Use settings for remove_trailing_br so this can be turned off instead of hard coding the value.
+	Fixed bug in IE where the media plugin displayed null text when some values aren't filled in.
+	Added API method 'onSetAttrib' that fires when the attribute value on a node changes.
+	Fix font size dropdown value not being updated when text already has a font size in the advanced template.
+	Fixed bug in IE where IE doesn't use ARIA attributes properly on options - causing labels to be read out 2 times.
+	Fixed bug where caret cannot be placed after table if table is at end of document in IE.
+	Fixed bug where adding range isn't always successful so we need to check range count otherwise an exception can occur.
+	Added spacebar onclick handler to toolbar buttons to ensure that the accessibility behaviour works correctly.
+	Fixed bug where a stranded bullet point would get created in WebKit.
+	Fixed bug where selecting text in a blockquote and pressing backspace toggles the style.
+	Fixed bug where pressing enter from a heading in IE, the resulting P tag below it shares the style property. 
+	Fix white space in between spans from being deleted. 
+	Fixed bug where scrollbars where visible in the character map dialog on Gecko.
+	Fixed issue with missing translation for one of the emoticons.
+	Fixed bug where dots in id:s where causing problems. Patch provided by Abhishek Dev.
+	Fixed bug where urls with an at sign in the path wouldn't be parsed correctly. Patch contributed by Jason Grout.
+	Fixed bug where Opera would remove the first character of a inline formatted word if you pressed backspace.
+	Fixed bugs with the autoresize plugin on various browsers and removed the need for the throbber.
+	Fixed performance issue where the contextmenu plugin would try to remove the menu even if it was removed. Patch contributed by mhu.
 Version 3.4.7 (2011-11-03)
 	Modified the caret formatting behavior to word similar to common desktop wordprocessors like Word or Libre Office.
 	Fixed bug in Webkit - Cursor positioning does not work vertically within a table cell with multiple lines of text.

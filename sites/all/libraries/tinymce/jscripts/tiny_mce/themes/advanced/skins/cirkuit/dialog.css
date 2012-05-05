@@ -29,14 +29,14 @@ input.checkbox {border:1px none #000000; background:transparent; vertical-align:
 /* Buttons */
 #insert, #cancel, #apply, .mceActionPanel .button, input.mceButton, .updateButton {
 	border: 1px solid #ccc; 
-	margin: 0 10px 0 0;
-	padding: 0 13px 1px;
+	margin: 0 8px 0 0;
+	padding: 0 8px 1px;
 	font-weight: bold;
 	font-family: 'Open Sans', 'Lucida Sans', 'Lucida Grande', verdana sans-serif;
-  font-size: 12px;
-	min-width: 65px; 
-	height: 33px;
-	line-height: 32px;
+  font-size: 11px;
+	min-width: 55px; 
+	height: 20px;
+	line-height: 19px;
 	color: #666;
 	cursor:pointer;
 	outline: none;
@@ -46,23 +46,14 @@ input.checkbox {border:1px none #000000; background:transparent; vertical-align:
 	border-radius: 3px;
 	
 	background: #fafafa; /* Old browsers */
-
   /* IE9 SVG, needs conditional override of 'filter' to 'none' */
-
   background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZhZmFmYSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlOWVhZWMiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-
   background: -moz-linear-gradient(top,  #fafafa 0%, #e9eaec 100%); /* FF3.6+ */
-
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fafafa), color-stop(100%,#e9eaec)); /* Chrome,Safari4+ */
-
   background: -webkit-linear-gradient(top,  #fafafa 0%,#e9eaec 100%); /* Chrome10+,Safari5.1+ */
-
   background: -o-linear-gradient(top,  #fafafa 0%,#e9eaec 100%); /* Opera 11.10+ */
-
   background: -ms-linear-gradient(top,  #fafafa 0%,#e9eaec 100%); /* IE10+ */
-
   background: linear-gradient(top,  #fafafa 0%,#e9eaec 100%); /* W3C */
-
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#e9eaec',GradientType=0 ); /* IE6-8 */
 
   
@@ -73,56 +64,32 @@ input.checkbox {border:1px none #000000; background:transparent; vertical-align:
 
 #insert:hover, #cancel:hover, #apply:hover, .mceActionPanel .button:hover, input.mceButton:hover, .updateButton:hover {
   background: #fafafa; /* Old browsers */
-
   /* IE9 SVG, needs conditional override of 'filter' to 'none' */
-
   background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZhZmFmYSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjNWM1YzUiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-
   background: -moz-linear-gradient(top,  #fafafa 0%, #c5c5c5 100%); /* FF3.6+ */
-
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fafafa), color-stop(100%,#c5c5c5)); /* Chrome,Safari4+ */
-
   background: -webkit-linear-gradient(top,  #fafafa 0%,#c5c5c5 100%); /* Chrome10+,Safari5.1+ */
-
   background: -o-linear-gradient(top,  #fafafa 0%,#c5c5c5 100%); /* Opera 11.10+ */
-
   background: -ms-linear-gradient(top,  #fafafa 0%,#c5c5c5 100%); /* IE10+ */
-
   background: linear-gradient(top,  #fafafa 0%,#c5c5c5 100%); /* W3C */
-
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#c5c5c5',GradientType=0 ); /* IE6-8 */
-
-
 }
 
 #insert:active, #cancel:active, #apply:active, .mceActionPanel .button:active, input.mceButton:active, .updateButton:active {
   outline: none;
-  
   background: #e9eaec; /* Old browsers */
-
   /* IE9 SVG, needs conditional override of 'filter' to 'none' */
-
   background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2U5ZWFlYyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-
   background: -moz-linear-gradient(top,  #e9eaec 0%, #ffffff 100%); /* FF3.6+ */
-
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e9eaec), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */
-
   background: -webkit-linear-gradient(top,  #e9eaec 0%,#ffffff 100%); /* Chrome10+,Safari5.1+ */
-
   background: -o-linear-gradient(top,  #e9eaec 0%,#ffffff 100%); /* Opera 11.10+ */
-
   background: -ms-linear-gradient(top,  #e9eaec 0%,#ffffff 100%); /* IE10+ */
-
   background: linear-gradient(top,  #e9eaec 0%,#ffffff 100%); /* W3C */
-
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e9eaec', endColorstr='#ffffff',GradientType=0 ); /* IE6-8 */
-
-  
   -webkit-box-shadow: 0px 0px 0px 0px #fff;
   -moz-box-shadow: 0px 0px 0px 0px #fff;
   box-shadow: 0px 0px 0px 0px #fff; 
-
 }
 
 /* Browse */
@@ -147,7 +114,7 @@ td.charmap, #charmap a {width:18px; height:18px; color:#000; border:1px solid #A
 
 /* Source */
 .wordWrapCode {vertical-align:middle; border:1px none #000000; background:transparent;}
-.mceActionPanel {margin-top:15px;height:35px;margin-bottom: 213px;}
+.mceActionPanel {margin-top:5px;height:22px;}
 
 /* Tabs classes */
 .tabs {width:100%; height:18px; line-height:normal; background:url(img/tabs.gif) repeat-x 0 -72px;}
@@ -204,3 +171,6 @@ iframe#iframe {
 iframe#iframe html {
   background: transparent !important;
 }
+
+#general_panel #class_list,
+#general_panel #target_list { width: 200px; }
