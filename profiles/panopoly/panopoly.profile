@@ -11,13 +11,13 @@ function panopoly_install_tasks($install_state) {
   // Summon the power of the Apps module
   require_once(drupal_get_path('module', 'apps') . '/apps.profile.inc');
 
-  // Setup a task to verify capability to run apps
+  // Set up a task to verify capability to run apps
   $tasks['panopoly_apps_check'] = array(
     'display_name' => t('Enable apps support'),
     'type' => 'form',
   );
 
-  // Setup the Panopoly Apps install task
+  // Set up the Panopoly Apps install task
   $panopoly_server = array(
     'machine name' => 'panopoly',
     'default apps' => array(
@@ -27,7 +27,9 @@ function panopoly_install_tasks($install_state) {
       'panopoly_images',
       'panopoly_magic',
       'panopoly_pages',
+      'panopoly_search',
       'panopoly_theme',
+      'panopoly_users',
       'panopoly_widgets',
       'panopoly_wysiwyg',
     ),
@@ -36,9 +38,15 @@ function panopoly_install_tasks($install_state) {
     ),
   );
   $tasks = $tasks + apps_profile_install_tasks($install_state, $panopoly_server);
-  $tasks['apps_profile_apps_select_form_panopoly']['display_name'] = t('Install apps for Panopoly');
 
-  // Setup the theme selection and configuration tasks
+  // Rename one of the default apps tasks. In the case of a non-interactive
+  // installation, apps_profile_install_tasks() never defines this task, so we
+  // need to make sure we don't accidentally create it when it doesn't exist.
+  if (isset($tasks['apps_profile_apps_select_form_panopoly'])) {
+    $tasks['apps_profile_apps_select_form_panopoly']['display_name'] = t('Install apps for Panopoly');
+  }
+
+  // Set up the theme selection and configuration tasks
   $tasks['panopoly_theme_form'] = array(
     'display_name' => t('Choose a theme'),
     'type' => 'form',
@@ -48,7 +56,7 @@ function panopoly_install_tasks($install_state) {
     'type' => 'form',
   );
 
-  // Setup the prepare task to close it out
+  // Set up the prepare task to close it out
   $tasks['panopoly_prepare'] = array(
     'display_name' => t('Prepare site'),
     'type' => 'form',
@@ -68,11 +76,15 @@ function panopoly_form_install_configure_form_alter(&$form, $form_state) {
 
   // Set reasonable defaults for site configuration form
   $form['site_information']['site_name']['#default_value'] = 'Panopoly';
-  $form['site_information']['site_mail']['#default_value'] = 'admin@'. $_SERVER['HTTP_HOST']; 
   $form['admin_account']['account']['name']['#default_value'] = 'admin';
-  $form['admin_account']['account']['mail']['#default_value'] = 'admin@'. $_SERVER['HTTP_HOST'];
   $form['server_settings']['site_default_country']['#default_value'] = 'US';
   $form['server_settings']['date_default_timezone']['#default_value'] = 'America/Los_Angeles'; // West coast, best coast
+  // Don't set the email address to "admin@localhost" as that will fail D7's
+  // email address validation.
+  if ($_SERVER['HTTP_HOST'] != 'localhost') {
+    $form['site_information']['site_mail']['#default_value'] = 'admin@'. $_SERVER['HTTP_HOST'];
+    $form['admin_account']['account']['mail']['#default_value'] = 'admin@'. $_SERVER['HTTP_HOST'];
+  }
 }
 
 /**
@@ -131,7 +143,7 @@ function panopoly_apps_servers_info() {
       'description' => 'Apps for Panopoly',
       'manifest' => 'http://apps.getpantheon.com/panopoly',
       'profile' => $profile,
-      'profile_version' => isset($info['version']) ? $info['version'] : '7.x-1.x',
+      'profile_version' => isset($info['version']) ? $info['version'] : '7.x-1.0-beta3',
       'server_name' => $_SERVER['SERVER_NAME'],
       'server_ip' => $_SERVER['SERVER_ADDR'],
     ),
@@ -218,7 +230,7 @@ function panopoly_theme_form($form, &$form_state) {
     '#title' => t('Starting Theme'),
     '#type' => 'radios',
     '#options' => $themes,
-    '#default_value' => 'panopoly_default',
+    '#default_value' => 'bartik',
   );
 
   $form['submit'] = array(
@@ -265,7 +277,7 @@ function panopoly_prepare($form, &$form_state) {
   );
 
   $form['openingtext'] = array(
-    '#markup' => '<h2>' . t('Panopoly now needs to do a bit more Drupal magic to get everything setup.') . '</h2>',
+    '#markup' => '<h2>' . t('Panopoly now needs to do a bit more Drupal magic to get everything set up.') . '</h2>',
   );
 
   $form['submit'] = array(
@@ -335,9 +347,18 @@ function panopoly_finished_yah($form, &$form_state) {
  */
 function panopoly_finished_yah_submit($form, &$form_state) {
 
+  // Allow anonymous and authenticated users to see content
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content'));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content'));
+
   // Once more for good measure
   drupal_flush_all_caches();
 
   // And away we go
-  drupal_goto('<front>');
+  // $form_state['redirect'] won't work here since we are still in the
+  // installer, so use drupal_goto() (for interactive installs only) instead.
+  $install_state = $form_state['build_info']['args'][0];
+  if ($install_state['interactive']) {
+    drupal_goto('<front>');
+  }
 }

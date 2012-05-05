@@ -1,6 +1,6 @@
 name = Panopoly
 description = A magical framework for building Drupal products based on the Panels module
-version = 7.x-1.0-beta1
+version = 7.x-1.0-beta3
 core = 7.x
 
 ; Core
@@ -16,6 +16,7 @@ dependencies[] = field
 dependencies[] = field_ui
 dependencies[] = file
 dependencies[] = block
+dependencies[] = dblog
 
 ; Contrib - Foundation 
 dependencies[] = ctools
@@ -30,8 +31,6 @@ dependencies[] = views
 dependencies[] = views_content
 dependencies[] = views_ui
 dependencies[] = token
-dependencies[] = ds
-dependencies[] = ds_extras
 
 ; Contrib - Field UI and Content Types
 dependencies[] = tablefield
@@ -43,12 +42,7 @@ dependencies[] = date_views
 dependencies[] = views_slideshow
 dependencies[] = views_slideshow_cycle
 dependencies[] = simple_gmap
-dependencies[] = email
-dependencies[] = phone
 dependencies[] = field_group
-dependencies[] = office_hours
-dependencies[] = entityreference
-dependencies[] = calendar
 dependencies[] = file_entity
 
 ; Contrib - Media
@@ -61,7 +55,6 @@ dependencies[] = media_vimeo
 ; Contrib - Menus and URLS
 dependencies[] = pathauto
 dependencies[] = menu_block
-dependencies[] = taxonomy_menu
 
 ; Contrib - User Experience
 dependencies[] = wysiwyg
@@ -89,7 +82,6 @@ dependencies[] = apps
 dependencies[] = features
 dependencies[] = entity
 dependencies[] = uuid
-dependencies[] = uuid_features
 dependencies[] = defaultcontent
 dependencies[] = strongarm
 dependencies[] = libraries

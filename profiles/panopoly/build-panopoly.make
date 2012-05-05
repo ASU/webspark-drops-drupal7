@@ -1,4 +1,5 @@
 api = 2
 core = 7.x
+projects[drupal][version] = 7.14
 includes[] = drupal-org-core.make
-projects[panopoly][version] = 1.0-beta1
+includes[] = drupal-org.make
