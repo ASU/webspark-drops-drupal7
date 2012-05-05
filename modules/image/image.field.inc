@@ -208,7 +208,7 @@ function image_field_prepare_view($entity_type, $entities, $field, $instances, $
         $fid = $instances[$id]['settings']['default_image'];
       }
       // Otherwise, use the default for the field.
-      elseif ($field['settings']['default_image']) {
+      elseif (!empty($field['settings']['default_image'])) 
         $fid = $field['settings']['default_image'];
       }
 
