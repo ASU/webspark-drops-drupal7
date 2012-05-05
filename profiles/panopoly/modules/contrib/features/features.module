@@ -7,6 +7,8 @@
  * entities which taken together statisfy a certain use-case.
  */
 
+define('FEATURES_API', '1');
+
 define('FEATURES_MODULE_ENABLED', 1);
 define('FEATURES_MODULE_DISABLED', 0);
 define('FEATURES_MODULE_MISSING', -1);
@@ -294,6 +296,8 @@ function features_modules_enabled($modules) {
       features_enable_feature($module);
     }
   }
+  // Make sure any new files are included now that a new module is enabled.
+  features_include(TRUE);
 }
 
 /**
@@ -316,12 +320,14 @@ function features_include($reset = FALSE) {
 
     if (module_exists('ctools')) {
       // Finally, add ctools eval'd implementations.
-      ctools_features_declare_functions();
+      ctools_features_declare_functions($reset);
     }
 
     // Clear static cache, since we've now included new implementers.
     foreach (features_get_components(NULL, 'file') as $file) {
-      require_once DRUPAL_ROOT . '/' . $file;
+      if (is_file(DRUPAL_ROOT . '/' . $file)) {
+        require_once DRUPAL_ROOT . '/' . $file;
+      }
     }
   }
 }
@@ -351,7 +357,7 @@ function features_include_defaults($components = NULL, $reset = FALSE) {
   }
   // Use all include components if none are explicitly specified.
   else {
-    $components = $include_components;
+    $components = array_keys($include_components);
   }
   foreach ($components as $component) {
     if (isset($include_components[$component]) && (!isset($included[$component]) || $reset)) {

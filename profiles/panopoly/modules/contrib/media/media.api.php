@@ -40,10 +40,14 @@ function hook_media_browser_plugin_info() {
 /**
  * Alter the list of plugins for the media browser.
  *
+ * @param array &$info
+ *   The associative array of media browser plugin definitions from
+ *   hook_media_browser_plugin_info().
+ *
  * @see hook_media_browser_plugin_info()
  * @see media_get_browser_plugin_info()
  */
-function hook_media_browser_plugin_info_alter() {
+function hook_media_browser_plugin_info_alter(&$info) {
   $info['media_upload']['title'] = t('Upload 2.0');
   $info['media_upload']['class'] = 'MediaBrowserUploadImproved';
 }

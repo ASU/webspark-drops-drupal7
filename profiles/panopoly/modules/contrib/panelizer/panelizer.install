@@ -30,7 +30,7 @@ function panelizer_requirements($phase) {
 function panelizer_schema() {
   // This should always point to our 'current' schema. This makes it
   // relatively easy to keep a record of schema as we make changes to it.
-  return panelizer_schema_1();
+  return panelizer_schema_2();
 }
 
 /**
@@ -179,6 +179,19 @@ function panelizer_schema_1() {
   return $schema;
 }
 
+function panelizer_schema_2() {
+  $schema = panelizer_schema_1();
+  $schema['panelizer_defaults']['fields']['access'] = array(
+    'type' => 'text',
+    'size' => 'big',
+    'description' => 'Contains the access control for editing this default.',
+    'serialize' => TRUE,
+    'object default' => array(),
+  );
+
+  return $schema;
+}
+
 /**
  * Implements hook_install().
  */
@@ -277,7 +290,7 @@ function panelizer_update_7102() {
 
   db_add_field('panelizer_entity', 'revision_id', $revision_id);
 
-  db_query("UPDATE {panelizer_entity} pe LEFT JOIN {node} n ON pe.entity_id = n.nid SET pe.revision_id = n.nid");
+  db_query("UPDATE {panelizer_entity} pe LEFT JOIN {node} n ON pe.entity_id = n.nid SET pe.revision_id = n.vid");
 
   // Add the new index
   db_add_primary_key('panelizer_entity', array('entity_type', 'entity_id', 'revision_id'));
@@ -294,4 +307,13 @@ function panelizer_update_7103() {
   db_change_field('panelizer_entity', 'entity_type', 'entity_type', $schema['panelizer_entity']['fields']['entity_type']);
   db_change_field('panelizer_entity', 'revision_id', 'revision_id', $schema['panelizer_entity']['fields']['revision_id']);
   db_change_field('panelizer_defaults', 'pnid', 'pnid', $schema['panelizer_defaults']['fields']['pnid']);
+}
+
+/**
+ * Add the access field.
+ */
+function panelizer_update_7104() {
+  $schema = panelizer_schema_2();
+  $access = $schema['panelizer_defaults']['fields']['access'];
+  db_add_field('panelizer_defaults', 'access', $access);
 }

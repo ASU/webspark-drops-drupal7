@@ -85,6 +85,8 @@ function file_entity_access($op) {
  */
 function file_entity_menu() {
   // File Configuration
+  // @todo Move this back to admin/config/media/file-types in Drupal 8 if
+  // MENU_MAX_DEPTH is increased to a value higher than 9.
   $items['admin/structure/file-types'] = array(
     'title' => 'File types',
     'description' => 'Manage settings for the type of files used on your site.',
@@ -529,24 +531,22 @@ function file_entity_file_formatter_file_image_view($file, $display, $langcode) 
     return;
   }
 
-  $scheme = file_uri_scheme($file->uri);
-  $local_wrappers = file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL);
-  if (isset($local_wrappers[$scheme]) && $image = image_load($file->uri)) {
+  if (file_entity_file_is_local($file) && isset($file->image_dimensions)) {
     if (!empty($display['settings']['image_style'])) {
       $element = array(
         '#theme' => 'image_style',
         '#style_name' => $display['settings']['image_style'],
         '#path' => $file->uri,
-        '#width' => $image->info['width'],
-        '#height' => $image->info['height'],
+        '#width' => $file->image_dimensions['width'],
+        '#height' => $file->image_dimensions['height'],
       );
     }
     else {
       $element = array(
         '#theme' => 'image',
         '#path' => $file->uri,
-        '#width' => $image->info['width'],
-        '#height' => $image->info['height'],
+        '#width' => $file->image_dimensions['width'],
+        '#height' => $file->image_dimensions['height'],
       );
     }
     return $element;
@@ -851,4 +851,19 @@ function file_entity_invalidate_field_caches($file) {
     }
     cache_clear_all($cids, 'cache_field');
   }
+}
+
+/**
+ * Check if a file entity is considered local or not.
+ *
+ * @param object $file
+ *   A file entity object from file_load().
+ *
+ * @return
+ *   TRUE if the file is using a local stream wrapper, or FALSE otherwise.
+ */
+function file_entity_file_is_local($file) {
+  $scheme = file_uri_scheme($file->uri);
+  $wrappers = file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL);
+  return !empty($wrappers[$scheme]) && empty($wrappers[$scheme]['remote']);
 }

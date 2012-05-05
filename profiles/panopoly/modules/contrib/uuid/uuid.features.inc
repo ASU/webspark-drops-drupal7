@@ -100,8 +100,11 @@ function uuid_entities_features_export_render($module_name, $components, $export
         if (!empty($entity->{$field_name})) {
           foreach ($entity->{$field_name} as $langcode => &$items) {
             // Let other modules alter fields on exported entities.
-            $function = $field['module'] . '_uuid_entities_features_export_field_alter';
-            if (function_exists($function)) {
+            // We are not using drupal_alter() here, because of it's complexity
+            // dealing with over two alterable arguments.
+            $hook = 'uuid_entities_features_export_field_alter';
+            foreach (module_implements($hook) as $module_name) {
+              $function = $module_name . '_' . $hook;
               $function($entity_type, $entity, $field, $instance, $langcode, $items);
             }
             foreach ($items as &$item) {

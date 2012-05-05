@@ -239,7 +239,11 @@ class EntityFieldHandlerHelper {
           // Remember the entity IDs to later load all at once (so as to
           // properly utilize multiple load functionality).
           $id = $property->getIdentifier();
-          $entities[$type][$i] = $id;
+          // Only accept valid ids. $id can be FALSE for entity values that are
+          // NULL.
+          if ($id) {
+            $entities[$type][$i] = $id;
+          }
         }
         elseif ($property instanceof EntityStructureWrapper) {
           $results[$i] = $property;

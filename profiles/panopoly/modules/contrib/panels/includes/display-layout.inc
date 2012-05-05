@@ -190,12 +190,9 @@ function panels_change_layout($form, &$form_state) {
 
   $renderer->meta_location = 'inline';
 
-  // ARGH. Lazy load of CSS is not working for some reason.
-  $renderer->add_css(drupal_get_path('module', 'panels') . "/css/panels_admin.css");
-  if (isset($form_state['input']) && isset($form_state['input']['js']) && !$form_state['input']['js']) {
-    $renderer->add_css(drupal_get_path('module', 'panels') . "/css/panels_dnd.css");
-    $renderer->add_css(drupal_get_path('module', 'ctools') . "/css/dropdown.css");
-  }
+  ctools_add_css('panels_admin', 'panels');
+  ctools_add_css('panels_dnd', 'panels');
+  ctools_add_css('dropdown');
 
   // For every region that had content in the old layout, create a custom pane
   // in the new layout that represents that region.

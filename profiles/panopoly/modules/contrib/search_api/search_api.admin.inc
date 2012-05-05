@@ -275,6 +275,7 @@ function search_api_admin_add_server_validate(array $form, array &$form_state) {
     return;
   }
   $form_state['values']['options']['service'] = $service;
+  $options = isset($values['options']['form']) ? $values['options']['form'] : array();
   $service->configurationFormValidate($form['options']['form'], $form_state['values']['options']['form'], $form_state);
 }
 

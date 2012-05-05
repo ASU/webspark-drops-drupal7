@@ -234,11 +234,6 @@ div#media-browser .throbber {
   overflow-y: auto;
 }
 
-#media-tab-media_internet .media-provider img {
-  vertical-align: middle;
-  margin-right: 1em;
-}
-
 #media-browser-library-list .label-wrapper {
   margin-left: 0;
 }

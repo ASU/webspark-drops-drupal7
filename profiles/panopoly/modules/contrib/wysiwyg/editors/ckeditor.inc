@@ -136,7 +136,7 @@ function wysiwyg_ckeditor_themes($editor, $profile) {
 function wysiwyg_ckeditor_settings($editor, $config, $theme) {
   $settings = array(
     'baseHref' => $GLOBALS['base_url'] . '/',
-    'width' => '100%',
+    'width' => 'auto',
     // For better compatibility with smaller textareas.
     'resize_minWidth' => 450,
     'height' => 420,

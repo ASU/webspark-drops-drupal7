@@ -12,7 +12,7 @@
  * is operating in or on.
  *
  * For example, when viewing a page, the 'context' is a node object. When
- * viewing a user, the 'context' is a user object. Contexs can also
+ * viewing a user, the 'context' is a user object. Contexts can also
  * have related contexts. For example, when viewing a 'node' you may need
  * to know something about the node author. Therefore, the node author
  * is a related context.

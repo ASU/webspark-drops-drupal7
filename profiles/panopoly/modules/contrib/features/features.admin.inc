@@ -867,7 +867,7 @@ function features_autocomplete_packages($search_string) {
   $matched_packages = array();
   //fetch all modules that are features and copy the package name into a new array.
   foreach (features_get_features(NULL, TRUE) as $value) {
-    if(preg_match('/' . $search_string . '/', $value->info['package'])) {
+    if (preg_match('/' . $search_string . '/i', $value->info['package'])) {
       $matched_packages[$value->info['package']] = $value->info['package'];
     }
   }

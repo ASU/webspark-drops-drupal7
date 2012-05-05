@@ -16,9 +16,9 @@ features[node][] = "features_test"
 features[user_permission][] = "create features_test content"
 features[views_view][] = "features_test"
 
-; Information added by drupal.org packaging script on 2012-03-18
-version = "7.x-1.0-rc1+0-dev"
+; Information added by drupal.org packaging script on 2012-04-13
+version = "7.x-1.0-rc2"
 core = "7.x"
 project = "features"
-datestamp = "1332030320"
+datestamp = "1334345807"
 

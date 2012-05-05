@@ -467,9 +467,12 @@ class SearchApiSolrService extends SearchApiAbstractService {
     // Set searched fields
     $options = $query->getOptions();
     $search_fields = $query->getFields();
+    // Get the index fields to be able to retrieve boosts.
+    $index_fields = $index->getFields();
     $qf = array();
     foreach ($search_fields as $f) {
-      $qf[] = $fields[$f];
+      $boost = isset($index_fields[$f]['boost']) ? '^' . $index_fields[$f]['boost'] : '';
+      $qf[] = $fields[$f] . $boost;
     }
 
     // Extract filters
@@ -606,7 +609,8 @@ class SearchApiSolrService extends SearchApiAbstractService {
       return $results;
     }
     catch (Exception $e) {
-      throw new SearchApiException($e->getMessage());
+      throw new SearchApiException(t('An error occurred while trying to search with Solr: !msg.',
+          array('!msg' => $e->getMessage())));
     }
   }
 
@@ -848,6 +852,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
         $key = trim($key);
         $class = variable_get('search_api_solr_service_class', 'SearchApiSolrConnection');
         $key = $class::phrase($key);
+        
         $k[] = $key;
       }
     }
@@ -967,7 +972,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
     }
     $class = variable_get('search_api_solr_service_class', 'SearchApiSolrConnection');
     return $class::phrase($value);
-  }
+ }
 
   /**
    * Helper method for creating the facet field parameters.
@@ -993,10 +998,10 @@ class SearchApiSolrService extends SearchApiAbstractService {
         // Remember that filters for this field should be tagged.
         $class = variable_get('search_api_solr_service_class', 'SearchApiSolrConnection');
         $escaped = $class::escapeFieldName($fields[$info['field']]);
-        $taggedFields[$escaped] = "{!tag=$escaped}";
+ $taggedFields[$escaped] = "{!tag=$escaped}";
         // Add the facet field.
         $facet_params['facet.field'][] = "{!ex=$escaped}$field";
-      }
+    }
       else {
         // Add the facet field.
         $facet_params['facet.field'][] = $field;
@@ -1061,6 +1066,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
       unset($params['qf']);
       $class = variable_get('search_api_solr_service_class', 'SearchApiSolrConnection');
       $keys = implode(":($k) OR ", array_map(array($class, 'escapeFieldName'), $fields)) . ":($k)";
+  
       return TRUE;
     }
     return FALSE;

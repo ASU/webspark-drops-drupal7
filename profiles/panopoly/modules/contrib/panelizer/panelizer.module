@@ -100,6 +100,16 @@ function panelizer_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
+ * Implements hook_page_alter().
+ */
+function panelizer_page_alter(&$page) {
+  // Delegate.
+  foreach (panelizer_get_plugins_with_hook('page_alter') as $handler) {
+    $handler->hook_page_alter($page);
+  }
+}
+
+/**
  * Implements hook_entity_load().
  */
 function panelizer_entity_load(&$entities, $entity_type) {
@@ -213,16 +223,13 @@ function panelizer_views_api() {
 }
 
 /**
- * Implements hook_panelizer_defaults().
+ * Implements hook_panelizer_defaults_alter().
  */
-function panelizer_panelizer_defaults() {
-  $items = array();
+function panelizer_panelizer_defaults_alter(&$items) {
   // Delegate.
   foreach (panelizer_get_plugins_with_hook('panelizer_defaults') as $handler) {
     $handler->hook_panelizer_defaults($items);
   }
-
-  return $items;
 }
 
 /**
@@ -236,6 +243,74 @@ function panelizer_default_page_manager_handlers() {
   }
 
   return $items;
+}
+
+/**
+ * Implement CTools access form caching callback: get.
+ */
+function panelizer_ctools_access_get($argument) {
+  list($entity_type, $bundle, $name) = explode(':', $argument);
+  $handler = panelizer_entity_plugin_get_handler($entity_type);
+  $panelizer = $handler->get_default_panelizer_object($bundle, $name);
+
+  if (empty($panelizer)) {
+    return;
+  }
+
+  if (!$handler->access_default_panelizer_object($panelizer)) {
+    return;
+  }
+
+  // First, see if there's a cache
+  ctools_include('object-cache');
+  $access = ctools_object_cache_get('panelizer_access', $argument);
+  if (!$access) {
+    $access = $panelizer->access;
+  }
+
+  $context = $handler->get_contexts($panelizer);
+
+  return array($access, $context);
+}
+
+/**
+ * Implement CTools access form caching callback: set.
+ */
+function panelizer_ctools_access_set($argument, $access) {
+  list($entity_type, $bundle, $name) = explode(':', $argument);
+  $handler = panelizer_entity_plugin_get_handler($entity_type);
+  $panelizer = $handler->get_default_panelizer_object($bundle, $name);
+
+  if (empty($panelizer)) {
+    return;
+  }
+
+  if (!$handler->access_default_panelizer_object($panelizer)) {
+    return;
+  }
+
+  ctools_include('object-cache');
+  ctools_object_cache_set('panelizer_access', $argument, $access);
+}
+
+/**
+ * Implement CTools access form caching callback: get.
+ */
+function panelizer_ctools_access_clear($argument) {
+  list($entity_type, $bundle, $name) = explode(':', $argument);
+  $handler = panelizer_entity_plugin_get_handler($entity_type);
+  $panelizer = $handler->get_default_panelizer_object($bundle, $name);
+
+  if (empty($panelizer)) {
+    return;
+  }
+
+  if (!$handler->access_default_panelizer_object($panelizer)) {
+    return;
+  }
+
+  ctools_include('object-cache');
+  ctools_object_cache_clear('panelizer', $argument);
 }
 
 // -----------------------------------------------------------------------
@@ -421,10 +496,26 @@ function panelizer_export_ui_switcher_page($entity_handler, $bundle, $plugin_nam
   $handler = ctools_export_ui_get_handler($plugin);
 
   if ($handler) {
+    if (is_string($entity_handler)) {
+      $entity_handler = panelizer_entity_plugin_get_handler($entity_handler);
+    }
+
     $handler->entity_handler = $entity_handler;
     $handler->entity_bundle = $bundle;
-    $handler->plugin['menu']['menu prefix'] = 'admin/config/content/panelizer/' . $entity_handler->entity_type;
-    $handler->plugin['menu']['menu item'] = $bundle;
+    if (empty($entity_handler->entity_admin_root) || substr($_GET['q'], 30) == 'admin/config/content/panelizer') {
+      $handler->plugin['menu']['menu prefix'] = 'admin/config/content/panelizer/' . $entity_handler->entity_type;
+      $handler->plugin['menu']['menu item'] = $bundle;
+    }
+    else {
+      $base_path = $entity_handler->entity_admin_root . '/panelizer';
+      if (is_numeric($entity_handler->entity_admin_bundle)) {
+        $bits = explode('/', $base_path);
+        $bits[$entity_handler->entity_admin_bundle] = $bundle;
+        $base_path = implode('/', $bits);
+      }
+      $handler->plugin['menu']['menu prefix'] = dirname($base_path);
+      $handler->plugin['menu']['menu item'] = basename($base_path);
+    }
 
     $path = $handler->plugin['menu']['menu prefix'] . '/' . $handler->plugin['menu']['menu item'];
 
@@ -475,15 +566,15 @@ function panelizer_default_title_callback($handler, $bundle) {
  * We use this to make sure the right tabs appear.
  */
 function panelizer_has_choice_callback($handler, $bundle, $name = NULL) {
-  if (!user_access('administer panelizer')) {
-    return FALSE;
-  }
-
   if (is_string($handler)) {
     $handler = panelizer_entity_plugin_get_handler($handler);
   }
 
   if (!$handler) {
+    return FALSE;
+  }
+
+  if (!panelizer_administer_entity_bundle($handler, $bundle)) {
     return FALSE;
   }
 
@@ -501,10 +592,6 @@ function panelizer_has_choice_callback($handler, $bundle, $name = NULL) {
  * We use this to make sure the right tabs appear.
  */
 function panelizer_has_no_choice_callback($handler, $bundle) {
-  if (!user_access('administer panelizer')) {
-    return FALSE;
-  }
-
   if (is_string($handler)) {
     $handler = panelizer_entity_plugin_get_handler($handler);
   }
@@ -513,7 +600,68 @@ function panelizer_has_no_choice_callback($handler, $bundle) {
     return FALSE;
   }
 
+  if (!panelizer_administer_entity_bundle($handler, $bundle)) {
+    return FALSE;
+  }
+
   return $handler->has_default_panel($bundle) && !$handler->has_panel_choice($bundle);
+}
+
+/**
+ * Menu callback to determine if a type has a choice of defaults.
+ *
+ * We use this to make sure the right tabs appear.
+ */
+function panelizer_is_panelized($handler, $bundle) {
+  if (is_string($handler)) {
+    $handler = panelizer_entity_plugin_get_handler($handler);
+  }
+
+  if (!$handler) {
+    return FALSE;
+  }
+
+  if (!panelizer_administer_entity_bundle($handler, $bundle)) {
+    return FALSE;
+  }
+
+  return $handler->is_panelized($bundle);
+}
+
+/**
+ * Access callback to see if a user can administer a particular bundle.
+ */
+function panelizer_administer_entity_bundle($handler, $bundle) {
+  if (is_string($handler)) {
+    $handler = panelizer_entity_plugin_get_handler($handler);
+  }
+
+  return user_access('administer panelizer') || user_access("administer panelizer $handler->entity_type $bundle defaults");
+}
+
+/**
+ * Access callback to see if a user can administer a particular panelizer default.
+ */
+function panelizer_administer_panelizer_default($handler, $bundle, $name) {
+  if (is_string($handler)) {
+    $handler = panelizer_entity_plugin_get_handler($handler);
+  }
+
+  $panelizer = $handler->get_default_panelizer_object($bundle, $name);
+  if (!$panelizer) {
+    return FALSE;
+  }
+
+  return $handler->access_default_panelizer_object($panelizer);
+}
+
+/**
+ * Menu load callback to scrub a node bundle from the URL safe equivalent.
+ */
+function panelizer_node_type_load($name) {
+  if ($type = node_type_get_type(strtr($name, array('-' => '_')))) {
+    return $type->type;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -772,7 +920,7 @@ function panelizer_panels_cache_save($argument, $cache) {
     return;
   }
 
-  if ($get_default) {
+  if (!empty($get_default)) {
     $panelizer = $handler->get_default_panelizer_object($bundle, $name);
     $panelizer->display = $cache->display;
     ctools_include('export');
@@ -835,6 +983,10 @@ function panelizer_features_export_alter(&$export, $module_name) {
         'panelizer_' . $entity_type . ':' . $bundle . '_default'
       );
 
+      if (module_exists('strongarm')) {
+        $variables = array_diff($variables, array_keys(strongarm_vars_load()));
+      }
+
       foreach ($variables as $variable) {
         $export['features']['variable'][$variable] = $variable;
       }
@@ -843,3 +995,97 @@ function panelizer_features_export_alter(&$export, $module_name) {
 
   return array();
 }
+
+// -----------------------------------------------------------------------
+// Drupal actions integration for VBO
+
+/**
+ * Implements hook_action_info().
+ */
+function panelizer_action_info() {
+  return array(
+    'panelizer_set_status_action' => array(
+      'type' => 'entity',
+      'label' => t('Set panelizer status'),
+      'vbo_configurable' => TRUE,
+      'behavior' => array('changes_property'),
+    )
+  );
+}
+
+/**
+ * Executes the panelizer_set_status action.
+ */
+function panelizer_set_status_action($entity, $context) {
+  list($entity_id, $revision_id, $bundle) = entity_extract_ids($context['entity_type'], $entity);
+  if (isset($context['panelizer_default'])) {
+    $entity->panelizer = $context['panelizer_default'];
+    $entity->panelizer->did = NULL;
+
+    // Ensure original values are maintained:
+    $entity->panelizer->entity_id = $entity_id;
+    $entity->panelizer->revision_id = $revision_id;
+  }
+  else {
+    $entity->panelizer->name = NULL;
+    $entity->panelizer->did = NULL;
+  }
+}
+
+/**
+ * Provides the panelizer_set_status_action form.
+ */
+function panelizer_set_status_action_form($context, &$form_state) {
+  $form = array();
+  $entity_info = entity_get_info($context['entity_type']);
+  $entities = entity_load($context['entity_type'], $form_state['selection']);
+  $bundles = array();
+
+  // Collect our list of bundles.
+  foreach ($entities as $entity) {
+    list($entity_id, $revision_id, $bundle) = entity_extract_ids($context['entity_type'], $entity);
+    $bundles[$bundle] = $bundle;
+  }
+
+  $conditions = array(
+    'panelizer_type' => $context['entity_type'],
+    'panelizer_key' => $bundles,
+  );
+
+  ctools_include('export');
+  $defaults = ctools_export_load_object('panelizer_defaults', 'conditions', $conditions);
+
+  foreach ($defaults as $name => $default) {
+    if (empty($default->title)) {
+      $default->title = t('Default');
+    }
+    $options[$name] = t('@bundle: @title', array('@bundle' => $entity_info['bundles'][$default->panelizer_key]['label'], '@title' => $default->title));
+  }
+
+  natcasesort($options);
+  $options = array(
+    'not' => t('Not panelized'),
+  ) + $options;
+
+  $form['panelizer'] = array(
+    '#type' => 'select',
+    '#title' => t('Panelizer status'),
+    '#options' => $options,
+  );
+
+  $form['#panelizer_defaults'] = $defaults;
+  return $form;
+}
+
+function panelizer_set_status_action_submit($form, $form_state) {
+  $retval = array(
+    'panelizer' => $form_state['values']['panelizer'],
+  );
+
+  if ($form_state['values']['panelizer'] != 'not') {
+    $retval['panelizer_default'] = $form['#panelizer_defaults'][$form_state['values']['panelizer']];
+  }
+
+  return $retval;
+}
+

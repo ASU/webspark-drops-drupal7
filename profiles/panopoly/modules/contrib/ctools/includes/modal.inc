@@ -8,8 +8,7 @@
  * Drupal specific stuff to use it. The modal is fairly generic and can
  * be activated mostly by setting up the right classes, but if you are
  * using the modal you must include links to the images in settings,
- * because the javascript does not inherently know where the images are
- * at.
+ * because the javascript does not inherently know where the images are.
  *
  * You can accomplish this with this PHP code:
  * @code {
@@ -26,8 +25,7 @@
  * For submit buttons, however, the URL is found a different, slightly
  * more complex way. The ID of the item is taken and -url is appended to
  * it to derive a class name. Then, all form elements that contain that
- * class name are founded and their values put together to form a
- * URL.
+ * class name are founded and their values put together to form a URL.
  *
  * For example, let's say you have an 'add' button, and it has a select
  * form item that tells your system what widget it is adding. If the id

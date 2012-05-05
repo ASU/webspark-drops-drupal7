@@ -280,8 +280,10 @@ function panelizer_panelizer_task_get_addressable($task, $subtask_name, $handler
     return;
   }
 
-  // Load the display
+  // Load the display.
   $display = $entity->panelizer->display;
+  // Load the panelizer info.
+  $panelizer = $entity->panelizer;
   // One of these two will always be set.
   $entity_type = !empty($panelizer->entity_type) ? $panelizer->entity_type : $panelizer->panelizer_type;
   $handler = panelizer_entity_plugin_get_handler($entity_type);
@@ -298,12 +300,15 @@ function panelizer_panelizer_task_get_addressable($task, $subtask_name, $handler
   $display->cache_key = implode(':', array('panelizer', $entity_type, $entity_id));
 
   $renderer = panels_get_renderer($panelizer->pipeline, $display);
-  if ($type == 'content') {
-    $renderer->prepare();
+  $renderer->prepare();
 
-    $pid = array_shift($address);
-    if (!empty($renderer->prepared['panes'][$pid])) {
+  $pid = array_shift($address);
+  if (!empty($renderer->prepared['panes'][$pid])) {
+    if ($type == 'content') {
       return $renderer->render_pane($renderer->prepared['panes'][$pid]);
+    }
+    elseif ($type == 'pane') {
+      return $renderer->prepared['panes'][$pid];
     }
   }
 }

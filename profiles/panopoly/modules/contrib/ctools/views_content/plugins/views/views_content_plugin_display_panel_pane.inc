@@ -384,6 +384,13 @@ class views_content_plugin_display_panel_pane extends views_plugin_display {
     return $this->view->override_path;
   }
 
+  function get_url() {
+    if ($this->get_option('inherit_panels_path')) {
+      return $this->get_path();
+    }
+    return parent::get_url();
+  }
+
   function uses_exposed_form_in_block() {
     // We'll always allow the exposed form in a block, regardless of path.
     return TRUE;

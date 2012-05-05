@@ -146,6 +146,7 @@ function uuid_menu_links_features_rebuild_ordered($menu_links, $reset = FALSE) {
   static $all_links;
   if (!isset($ordered) || $reset) {
     $ordered = array();
+    features_include_defaults(array('uuid_entities', 'uuid_menu_links'));
     $unordered = features_get_default('uuid_menu_links');
 
     // Order all links by depth.
@@ -155,7 +156,7 @@ function uuid_menu_links_features_rebuild_ordered($menu_links, $reset = FALSE) {
         foreach ($unordered as $key => &$link) {
           $identifier = uuid_menu_links_features_identifier($link);
           if ($identifier) {
-            $parent = (isset($link['uuid_parent_path']) && $link['uuid_parent_path']) ? $link['menu_name'] . ":" . $link['uuid_parent_path'] : '';
+            $parent = (isset($link['uuid_parent_path']) && $link['uuid_parent_path']) ? $link['uuid_menu_name'] . ":" . $link['uuid_parent_path'] : '';
             if (empty($parent)) {
               $ordered[$identifier] = 0;
               $all_links[$identifier] = $link;
@@ -240,7 +241,7 @@ function uuid_menu_link_make_universal(&$link, $prepare_for_export = FALSE) {
   }
 
   if ($prepare_for_export) {
-    foreach (array('link_path', 'mlid', 'plid') as $property) {
+    foreach (array('link_path', 'mlid', 'plid', 'nid', 'menu_name', 'href') as $property) {
       if (isset($link[$property])) {
         unset($link[$property]);
       }
@@ -314,6 +315,11 @@ function uuid_menu_path_to_uri_transform(&$path) {
       $args[2] = current(entity_get_uuid_by_id('taxonomy_term', array($args[2])));
       $uri = implode('/', $args);
     }
+  }
+
+  // Return original path if it doesn't contain IDs.
+  if (!$uri) {
+    $uri = $path;
   }
 
   // Allow modules to do custom transformations.

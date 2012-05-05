@@ -14,9 +14,10 @@ files[] = tests/file_entity.test
 ; We have to add a fake version so Git checkouts do not fail Media dependencies
 version = 7.x-2.x-dev
 
-; Information added by drupal.org packaging script on 2012-03-16
-version = "7.x-2.0-unstable3+18-dev"
+
+; Information added by drush on 2012-05-04
+version = "7.x-2.0-unstable3+21-dev"
 core = "7.x"
 project = "file_entity"
-datestamp = "1331856974"
+datestamp = "1336182127"
 

@@ -133,6 +133,20 @@ function hook_ctools_plugin_post_alter(&$plugin, &$info) {
   }
 }
 
+/**
+ * Alter the list of modules/themes which implement a certain api.
+ *
+ * The hook named here is just an example, as the real existing hooks are named
+ * for example 'hook_views_api_alter'.
+ *
+ * @param array $list
+ *   An array of informations about the implementors of a certain api.
+ *   The key of this array are the module names/theme names.
+ */
+function hook_ctools_api_hook_alter(&$list) {
+  // Alter the path of the node implementation.
+  $list['node']['path'] = drupal_get_path('module', 'node');
+}
 
 /**
  * Alter the available functions to be used in ctools math expression api.

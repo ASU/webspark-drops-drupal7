@@ -45,6 +45,7 @@ function bulk_export_menu() {
  */
 function bulk_export_export($cli = FALSE, $options = array()) {
   ctools_include('export');
+  $form = array();
   $schemas = ctools_export_get_schemas(TRUE);
   $exportables = $export_tables = array();
 
@@ -66,6 +67,7 @@ function bulk_export_export($cli = FALSE, $options = array()) {
       'export_tables' => $export_tables,
       'name' => '',
       'code' => '',
+      'module' => '',
     );
 
     // If called from drush_ctools_export, get the module name and
@@ -73,6 +75,9 @@ function bulk_export_export($cli = FALSE, $options = array()) {
     if ($cli) {
       $module_name = $options['name'];
       $form_state['values']['name'] = $module_name;
+      if (isset($options['selections'])) {
+        $exportables = $options['selections'];
+      }
       $form_state['values']['tables'] = array();
       foreach ($exportables as $table => $names) {
         if (!empty($names)) {

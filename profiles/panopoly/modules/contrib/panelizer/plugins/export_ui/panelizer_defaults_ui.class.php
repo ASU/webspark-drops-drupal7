@@ -29,6 +29,7 @@ class panelizer_defaults_ui extends ctools_export_ui {
     unset($this->plugin['menu']['items']['context']);
     unset($this->plugin['menu']['items']['content']);
     unset($this->plugin['menu']['items']['layout']);
+    unset($this->plugin['menu']['items']['access']);
 
     // Change the callbacks for everything:
     foreach ($this->plugin['menu']['items'] as $key => $item) {
@@ -42,12 +43,21 @@ class panelizer_defaults_ui extends ctools_export_ui {
     parent::hook_menu($items);
   }
 
+  function list_page($js, $input) {
+    drupal_set_title($this->entity_handler->get_bundle_title($this->entity_bundle));
+    return parent::list_page($js, $input);
+  }
+
   function list_filter($form_state, $item) {
     // Reminder: This returns TRUE to exclude the item.
     if ($this->entity_handler->entity_type != $item->panelizer_type) {
       return TRUE;
     }
     if ($this->entity_bundle != $item->panelizer_key) {
+      return TRUE;
+    }
+
+    if (!$this->entity_handler->access_default_panelizer_object($item)) {
       return TRUE;
     }
 

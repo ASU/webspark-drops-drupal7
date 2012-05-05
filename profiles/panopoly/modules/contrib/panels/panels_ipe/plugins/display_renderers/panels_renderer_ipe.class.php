@@ -60,9 +60,9 @@ class panels_renderer_ipe extends panels_renderer_editor {
       '#prefix' => '<div class="panels-ipe-pseudobutton-container">',
       '#suffix' => '</div>',
       );
-    }
 
-    panels_ipe_toolbar_add_button($this->clean_key, 'panels-ipe-change-layout', $button);
+      panels_ipe_toolbar_add_button($this->clean_key, 'panels-ipe-change-layout', $button);
+    }
 
     ctools_include('ajax');
     ctools_include('modal');
@@ -230,6 +230,11 @@ class panels_renderer_ipe extends panels_renderer_editor {
       'layout' => $this->plugins['layout'],
     );
 
+    // Reset the $_POST['ajax_html_ids'] values to preserve
+    // proper IDs on form elements when they are rebuilt
+    // by the Panels IPE without refreshing the page
+    $_POST['ajax_html_ids'] = array();
+
     $output = drupal_build_form('panels_ipe_edit_control_form', $form_state);
     if (empty($form_state['executed'])) {
       // At this point, we want to save the cache to ensure that we have a lock.
@@ -282,6 +287,11 @@ class panels_renderer_ipe extends panels_renderer_editor {
     if ($this->ipe_test_lock('change_layout', $break)) {
       return;
     }
+
+    // Reset the $_POST['ajax_html_ids'] values to preserve
+    // proper IDs on form elements when they are rebuilt
+    // by the Panels IPE without refreshing the page
+    $_POST['ajax_html_ids'] = array();
 
     // At this point, we want to save the cache to ensure that we have a lock.
     $this->cache->ipe_locked = TRUE;

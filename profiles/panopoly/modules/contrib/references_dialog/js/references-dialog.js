@@ -4,38 +4,42 @@
     attach: function (context, settings) {
       // Add appropriate classes on all fields that should have it. This is
       // necessary since we don't actually know what markup we are dealing with.
-      $.each(settings.ReferencesDialog.fields, function(key, widget_settings) {
-        $('.' + key + ' a.references-dialog-activate').click(function() {
-          Drupal.ReferencesDialog.open($(this).attr('href'), $(this).html());
-          Drupal.ReferencesDialog.entityIdReceived = function(entity_type, entity_id, label) {
-            if (typeof widget_settings.format != 'undefined') {
-              var value = widget_settings.format
-                .replace('$label', label)
-                .replace('$entity_id', entity_id)
-                .replace('$entity_type', entity_type);
-            }
-            // If we have a callback path, let's invoke that.
-            if (typeof widget_settings.callback_path != 'undefined') {
-              var entity_info = {
-                label: label, 
-                entity_id: entity_id, 
-                entity_type: entity_type
+      if (typeof settings.ReferencesDialog != undefined && typeof settings.ReferencesDialog != 'undefined') {
+        $.each(settings.ReferencesDialog.fields, function(key, widget_settings) {
+          $('.' + key + ' a.references-dialog-activate').click(function() {
+            Drupal.ReferencesDialog.open($(this).attr('href'), $(this).html());
+            Drupal.ReferencesDialog.entityIdReceived = function(entity_type, entity_id, label) {
+              if (typeof widget_settings.format != 'undefined') {
+                var value = widget_settings.format
+                  .replace('$label', label)
+                  .replace('$entity_id', entity_id)
+                  .replace('$entity_type', entity_type);
               }
-              Drupal.ReferencesDialog.invokeCallback(widget_settings.callback_path, entity_info, widget_settings.callback_settings)
+              // If we have a callback path, let's invoke that.
+              if (typeof widget_settings.callback_path != 'undefined') {
+                var entity_info = {
+                  label: label,
+                  entity_id: entity_id,
+                  entity_type: entity_type
+                }
+                Drupal.ReferencesDialog.invokeCallback(widget_settings.callback_path, entity_info, widget_settings.callback_settings)
+              }
+              // If we have a target, use that.
+              else if (typeof widget_settings.target != 'undefined') {
+                $('#' + widget_settings.target).val(value);
+                $('#' + widget_settings.target).change();
+              }
+              // If we have none of the above, we just insert the value in the item
+              // that invoked this.
+              else {
+                $('#' + key).val(value);
+                $('#' + key).change();
+              }
             }
-            // If we have a target, use that.
-            else if (typeof widget_settings.target != 'undefined') {
-              $('#' + widget_settings.target).val(value)
-            }
-            // If we have none of the above, we just insert the value in the item
-            // that invoked this.
-            else {
-              $('#' + key).val(value);
-            }
-          }
-          return false;
-        }, context);
-      });
+            return false;
+          }, context);
+        });
+      }
     }
   };
 
@@ -46,7 +50,7 @@
     dialog_open: false,
     open_dialog: null
   }
-  
+
   Drupal.ReferencesDialog.invokeCallback = function(callback, entity_info, settings) {
     if (typeof settings == 'object') {
       entity_info.settings = settings;

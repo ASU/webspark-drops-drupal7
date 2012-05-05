@@ -272,7 +272,7 @@ function date_popup_element_process($element, &$form_state, $form) {
   $element['#tree'] = TRUE;
   $element['#theme_wrappers'] = array('date_popup');
 
-  if (isset($element['#ajax'])) {
+  if (!empty($element['#ajax'])) {
     $element['#ajax'] += array(
       'trigger_as' => array('name' =>$element['#name']),
       'event' => 'change',
@@ -391,13 +391,14 @@ function date_popup_process_time_part(&$element) {
       // The first value in the dropdown list should be the same as the element
       // default_value, but it needs to be in JS format (i.e. milliseconds since
       // the epoch).
-      $start_time = new DateObject($element['#default_value'], $element['#date_timezone'], $element['#date_format']);
+      $start_time = new DateObject($element['#default_value'], $element['#date_timezone'], DATE_FORMAT_DATETIME);
       date_increment_round($start_time, $element['#date_increment']);
       $start_time = $start_time->format(DATE_FORMAT_UNIX) * 1000;
       $settings = array(
         'timeFormat' => $format,
         'interval' => $element['#date_increment'],
         'startTime' => $start_time,
+        'scrollbar' => TRUE,
       );
       break;
     default:

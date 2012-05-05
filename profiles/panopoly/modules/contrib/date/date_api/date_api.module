@@ -124,7 +124,7 @@ function date_api_menu() {
     'position' => 'left',
     'weight' => -10,
     'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('administer group'),
+    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
     'file path' => drupal_get_path('module', 'system'),
   );
@@ -268,10 +268,22 @@ class DateObject extends DateTime {
         $this->setGranularityFromTime($time, $tz);
       }
     }
-    // This tz was given as just an offset, which causes problems, or the
-    // timezone was invalid.
+    // If this tz was given as just an offset or the timezone
+    // was invalid, we need to do some tweaking.
     if (!$this->getTimezone() || !preg_match('/[a-zA-Z]/', $this->getTimezone()->getName())) {
-      $this->setTimezone(new DateTimeZone("UTC"));
+
+      // If the timezone name is an offset and the original
+      // $tz has a name, use it. This happens if you pass in
+      // a date string with an offset along with a specific timezone name.
+      if (!preg_match('/[a-zA-Z]/', $this->getTimezone()->getName()) && preg_match('/[a-zA-Z]/', $tz->getName())) {
+        $this->setTimezone($tz);
+      }
+      // If we get this far, we have no information about the timezone name,
+      // but we will get undefined index errors without any name.
+      else {
+        $this->setTimezone(new DateTimeZone("UTC"));
+        $this->errors['timezone'] = t('No valid timezone name was provided.');
+      }
     }
   }
 
@@ -1662,7 +1674,7 @@ function date_format_date($date, $type = 'medium', $format = '', $langcode = NUL
  *
  * @see format_interval()
  */
-function date_format_interval($date, $granularity = 2) {
+function date_format_interval($date, $granularity = 2, $display_ago = TRUE) {
   // If no date is sent, then return nothing.
   if (empty($date)) {
     return NULL;
@@ -1670,7 +1682,8 @@ function date_format_interval($date, $granularity = 2) {
 
   $interval = REQUEST_TIME - $date->format('U');
   if ($interval > 0) {
-    return t('!time ago', array('!time' => format_interval($interval, $granularity)));
+    return $display_ago ? t('!time ago', array('!time' => format_interval($interval, $granularity))) :
+      t('!time', array('!time' => format_interval($interval, $granularity)));
   }
   else {
     return format_interval(abs($interval), $granularity);
@@ -2139,7 +2152,7 @@ function date_limit_format($format, $granularity) {
   // Remove orphaned punctuation at the beginning of the string.
   $format = preg_replace('`^([\-/\.,:\'])`', '', $format);
   // Remove orphaned punctuation at the end of the string.
-  $format = preg_replace('([\-/\.,:\']$)', '', $format);
+  $format = preg_replace('([\-/,:\']$)', '', $format);
   $format = preg_replace('(\\$)', '', $format);
 
   // Trim any whitespace from the result.
@@ -2147,9 +2160,12 @@ function date_limit_format($format, $granularity) {
 
   // After removing the non-desired parts of the format, test if the only things
   // left are escaped, non-date, characters. If so, return nothing.
-  if (!$test = trim(preg_replace('(\\\\\w{1})', '', $format))) {
+  // Using S instead of w to pick up non-ASCII characters.
+  $test = trim(preg_replace('(\\\\\S{1,3})', '', $format));
+  if (empty($test)) {
     $format = '';
   }
+
   return $format;
 }
 

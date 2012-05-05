@@ -165,8 +165,9 @@ function _uuid_services_entity_access($op, $args) {
   try {
     // Fetch the information we have to work with.
     $entity_type = $args[0];
+    // Load functions always deal with multiple entities. So does this lookup
+    // function. But in practice this will always only be one id.
     $entity_ids = entity_get_id_by_uuid($entity_type, array($args[1]));
-    $entity_id = reset($entity_ids);
     $entity = NULL;
     if (!empty($args[2])) {
       $entity = (object)$args[2];
@@ -174,10 +175,15 @@ function _uuid_services_entity_access($op, $args) {
       // access functions to work on it.
       entity_make_entity_local($entity_type, $entity);
     }
+    // Fetch the local entity if we've got an id.
+    elseif (!empty($entity_id)) {
+      $entities = entity_load($entity_type, $entity_ids);
+      $entity = reset($entities);
+    }
 
     // If we've been routed to the 'update' method and the entity we are
     // operating on doesn't exist yet, that should be reflected.
-    if ($op == 'update' && empty($entity_id)) {
+    if ($op == 'update' && empty($entity_ids)) {
       $op = 'create';
     }
     // Taxonomy and Comment module uses 'edit' instead of 'update'.

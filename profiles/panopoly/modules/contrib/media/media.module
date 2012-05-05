@@ -579,7 +579,7 @@ function media_browser_form_submit($form, &$form_state) {
   }
   if (!empty($form_state['files'])) {
     $files = $form_state['files'];
-    $form_state['redirect'] = array('media/browser', array('query' => array('render' => 'media-popup', 'fid' => $file->fid)));
+    $form_state['redirect'] = array('media/browser', array('query' => array('render' => 'media-popup', 'fid' => array_keys($files))));
   }
 }
 
@@ -1250,4 +1250,21 @@ function media_get_browser_plugin_info() {
   }
 
   return $info;
+}
+
+/**
+ * Helper function to get a list of local stream wrappers.
+ */
+function media_get_local_stream_wrappers() {
+  return file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL_NORMAL);
+}
+
+/**
+ * Helper function to get a list of remote stream wrappers.
+ */
+function media_get_remote_stream_wrappers() {
+  $wrappers = file_get_stream_wrappers();
+  $wrappers = array_diff_key($wrappers, file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL_NORMAL));
+  $wrappers = array_diff_key($wrappers, file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL_HIDDEN));
+  return $wrappers;
 }

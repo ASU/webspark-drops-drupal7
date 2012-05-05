@@ -42,6 +42,8 @@ Drupal.wysiwyg.editor.attach.ckeditor = function(context, params, settings) {
   // Apply editor instance settings.
   CKEDITOR.config.customConfig = '';
 
+  var $drupalToolbar = $('#toolbar', Drupal.overlayChild ? window.parent.document : document);
+
   settings.on = {
     instanceReady: function(ev) {
       var editor = ev.editor;
@@ -133,6 +135,19 @@ Drupal.wysiwyg.editor.attach.ckeditor = function(context, params, settings) {
 
     focus: function(ev) {
       Drupal.wysiwyg.activeId = ev.editor.name;
+    },
+
+    afterCommandExec: function(ev) {
+      // Fix Drupal toolbar obscuring editor toolbar in fullscreen mode.
+      if (ev.data.name != 'maximize') {
+        return;
+      }
+      if (ev.data.command.state == CKEDITOR.TRISTATE_ON) {
+        $drupalToolbar.hide();
+      }
+      else {
+        $drupalToolbar.show();
+      }
     }
   };
 

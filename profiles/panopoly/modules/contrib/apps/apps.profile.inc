@@ -13,7 +13,7 @@
 function apps_profile_install_tasks($install_state, $apps_server) {
   // Only use apps forms during interactive installs.
   $tasks = array();
-  if ($install_state['interactive']) {
+  if ($install_state['interactive'] || is_writable(drupal_realpath('sites/all/modules'))) {
     $apps_server_name = $apps_server['machine name'];
     $_SESSION['apps_servers'][$apps_server_name] = $apps_server;
     $tasks = array(
@@ -86,7 +86,10 @@ function apps_profile_apps_select_form($form, $form_state, &$install_state) {
     $form['actions'] = array('#type' => 'actions', '#weight' => 3);
     foreach($_SESSION['apps_manifest'] as $name => $app) {
       if ($name != '#theme') {
-        $options[$name] = '<strong>' . $app['name'] . '</strong><br>' . $app['description'];
+        $options[$name] = '<strong>' . $app['name'] . '</strong>';
+        if (isset($app['description'])) {
+          $options[$name] .= '<br>' . $app['description'];
+        }
       }
     }
     $form = array();
@@ -138,7 +141,10 @@ function apps_profile_apps_select_form($form, $form_state, &$install_state) {
  */
 function apps_profile_apps_select_form_submit($form, &$form_state) {
   $_SESSION['apps'] = array();
-  if ($form_state['values']['op'] == t('Install Apps')) {
+  // Checking to make sure that skip was not clicked. We compare the op
+  // against the form_state for click to handle both the interactive case
+  // where op is set and the non-interactive case where there is no op.
+  if ($form_state['values']['op'] != $form_state['values']['skip']) {
     $_SESSION['apps'] = array_filter($form_state['values']['apps']);
     $_SESSION['apps_default_content'] = $form_state['values']['default_content'];
   }
@@ -154,7 +160,7 @@ function apps_profile_download_app_modules(&$install_state) {
     $apps[] = $_SESSION['apps_manifest'][$name];
   }
   $batch = apps_download_apps_batch($apps);
-  
+ 
   $batch['finished'] = 'apps_profile_download_batch_finished';
   return $batch;
 }

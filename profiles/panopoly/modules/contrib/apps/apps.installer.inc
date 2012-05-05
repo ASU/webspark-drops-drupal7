@@ -118,7 +118,6 @@ function apps_download_batch($project, $url, $type, &$context) {
 
   // Verify it.
   $archive_errors = update_manager_archive_verify($project, $local_cache, $extract_directory);
-  $archive_errors = array();
   if (!empty($archive_errors)) {
     // We just need to make sure our array keys don't collide, so use the
     // numeric keys from the $archive_errors array.

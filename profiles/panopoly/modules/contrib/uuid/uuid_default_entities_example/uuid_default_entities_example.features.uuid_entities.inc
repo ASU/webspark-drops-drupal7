@@ -19,6 +19,9 @@ function uuid_default_entities_example_uuid_default_entities() {
     'description' => NULL,
     'format' => NULL,
     'name' => 'Foo',
+    'path' => array(
+      'alias' => 'term/foo',
+    ),
     'rdf_mapping' => array(
       'rdftype' => array(
         0 => 'skos:Concept',
@@ -125,6 +128,9 @@ function uuid_default_entities_example_uuid_default_entities() {
     'last_comment_name' => NULL,
     'last_comment_uid' => '1',
     'log' => '',
+    'path' => array(
+      'alias' => 'lorem-ipsum',
+    ),
     'promote' => '1',
     'rdf_mapping' => array(
       'field_image' => array(

@@ -19,6 +19,7 @@ interface PanelizerEntityInterface {
   public function hook_form_alter(&$form, &$form_state, $form_id);
   public function hook_permission(&$items);
   public function hook_admin_paths(&$items);
+  public function hook_views_data_alter(&$data);
 
   // Entity specific Drupal hooks
   public function hook_entity_load(&$entities);
@@ -48,6 +49,11 @@ interface PanelizerEntityInterface {
    * Load the named default panel for the bundle.
    */
   public function get_default_panelizer_object($bundle, $name);
+
+  /**
+   * Determine if the current user has access to the $panelizer.
+   */
+  public function access_default_panelizer_object($panelizer);
 
   /**
    * Determine if a bundle is panelized
@@ -147,9 +153,19 @@ interface PanelizerEntityInterface {
  */
 abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
   /**
+   * Where in the entity admin UI we should add Panelizer tabs with bundles.
+   */
+  public $entity_admin_root = NULL;
+
+  /**
    * True if the entity supports revisions.
    */
   public $supports_revisions = FALSE;
+
+  /**
+   * The base table in SQL the entity uses, for views support.
+   */
+  public $views_table = '';
 
   /**
    * The plugin metadata.
@@ -176,6 +192,16 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     $entity_info = entity_get_info($this->entity_type);
     // Make a permission for each bundle we control.
     foreach ($this->plugin['bundles'] as $bundle => $settings) {
+      // This is before the if because it shows up regardless of whether
+      // or not a type is panelized.
+      $items["administer panelizer $this->entity_type $bundle defaults"] = array(
+        'title' => t('%entity_name %bundle_name: Administer Panelizer default panels, allowed content and settings.', array(
+          '%entity_name' => $entity_info['label'],
+          '%bundle_name' => $entity_info['bundles'][$bundle]['label'],
+        )),
+        'description' => t('Users with this permission can fully administer panelizer for this entity bundle.'),
+      );
+
       if (empty($settings['status'])) {
         continue;
       }
@@ -240,7 +266,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
       // Configure entity editing pages
       $base = array(
         'access callback' => 'panelizer_entity_plugin_callback_switcher',
-        'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'settings'),
+        'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'content'),
         'type' => MENU_LOCAL_TASK,
       );
 
@@ -248,25 +274,17 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
         'title' => 'Panelizer',
         // make sure this is accessible to panelize entities with no defaults.
         'page callback' => 'panelizer_entity_plugin_switcher_page',
-        'page arguments' => array($this->entity_type, 'settings', $position),
+        'page arguments' => array($this->entity_type, 'content', $position),
         'weight' => 11,
         'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
       ) + $base;
 
-      $items[$this->plugin['entity path'] . '/panelizer/settings'] = array(
-        'title' => 'Settings',
+      $items[$this->plugin['entity path'] . '/panelizer/content'] = array(
+        'title' => 'Content',
         'page callback' => 'panelizer_entity_plugin_switcher_page',
-        'page arguments' => array($this->entity_type, 'settings', $position),
+        'page arguments' => array($this->entity_type, 'content', $position),
         'type' => MENU_DEFAULT_LOCAL_TASK,
         'weight' => 11,
-      ) + $base;
-
-      $items[$this->plugin['entity path'] . '/panelizer/context'] = array(
-        'title' => 'Context',
-        'page callback' => 'panelizer_entity_plugin_switcher_page',
-        'page arguments' => array($this->entity_type, 'context', $position),
-        'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'context'),
-        'weight' => 12,
       ) + $base;
 
       $items[$this->plugin['entity path'] . '/panelizer/layout'] = array(
@@ -274,17 +292,326 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
         'page callback' => 'panelizer_entity_plugin_switcher_page',
         'page arguments' => array($this->entity_type, 'layout', $position),
         'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'layout'),
+        'weight' => 12,
+      ) + $base;
+
+      $items[$this->plugin['entity path'] . '/panelizer/context'] = array(
+        'title' => 'Context',
+        'page callback' => 'panelizer_entity_plugin_switcher_page',
+        'page arguments' => array($this->entity_type, 'context', $position),
+        'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'context'),
         'weight' => 13,
       ) + $base;
 
-      $items[$this->plugin['entity path'] . '/panelizer/content'] = array(
-        'title' => 'Content',
+      $items[$this->plugin['entity path'] . '/panelizer/settings'] = array(
+        'title' => 'Settings',
         'page callback' => 'panelizer_entity_plugin_switcher_page',
-        'page arguments' => array($this->entity_type, 'content', $position),
-        'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'content'),
+        'page arguments' => array($this->entity_type, 'settings', $position),
+        'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'settings'),
         'weight' => 14,
       ) + $base;
     }
+
+    if (!empty($this->entity_admin_root)) {
+      $this->add_admin_links($this->entity_admin_root, $this->entity_admin_bundle, $items);
+    }
+  }
+
+  /**
+   * Helper function to add administrative menu items into an entity's already existing structure.
+   *
+   * While this very closely follows the administrative items placed into the
+   * menu in admin.inc, it is a little bit different because of how bundles
+   * are placed into the URL. So the code is close but not QUITE reusable without
+   * going through some hoops.
+   *
+   * @param $root
+   *   The root path. This will be something like 'admin/structure/types/manage/%'.
+   *   Everything will be placed at $root/panelizer/*.
+   * @param $bundle
+   *   This is either the numeric position of the bundle or, for entity types
+   *   that do not support bundles, a hard coded bundle string.
+   * @param &$items
+   *   The array of menu items this is being added to.
+   */
+  public function add_admin_links($root, $bundle, &$items) {
+    // Node $root = 'admin/structure/types/manage/%
+    // Taxonomy $root = 'admin/structure/taxonomy/%'
+    // User $root = 'admin/config/people/accounts'
+    $parts = explode('/', $root);
+    $base_count = count($parts);
+
+    // Configure settings pages.
+    $settings_base = array(
+      'access callback' => 'panelizer_is_panelized',
+      'access arguments' => array($this->entity_type, $bundle),
+      'file' => 'includes/admin.inc',
+    );
+
+    // This is the base tab that will be added. The weight is set
+    // to try and make sure it stays to the right of manage fields
+    // and manage display.
+    $items[$root . '/panelizer'] = array(
+      'title' => 'Panelizer',
+      'page callback' => 'panelizer_allowed_content_page',
+      'page arguments' => array($this->entity_type, $bundle),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 5,
+    ) + $settings_base;
+
+    $items[$root . '/panelizer/allowed'] = array(
+      'title' => 'Available content',
+      'page callback' => 'panelizer_allowed_content_page',
+      'page arguments' => array($this->entity_type, $bundle),
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+      'weight' => -10,
+    ) + $settings_base;
+
+    $tabs_base = array(
+      'access callback' => 'panelizer_has_no_choice_callback',
+      'access arguments' => array($this->entity_type, $bundle),
+      'page arguments' => array($this->entity_type, $bundle, 'default'),
+      'type' => MENU_LOCAL_TASK,
+      'file' => 'includes/admin.inc',
+    );
+
+    $items[$root . '/panelizer/settings'] = array(
+      'title' => 'Settings',
+      'page callback' => 'panelizer_default_settings_page',
+      'weight' => -5,
+    ) + $tabs_base;
+
+    $items[$root . '/panelizer/context'] = array(
+      'title' => 'Contexts',
+      'page callback' => 'panelizer_default_context_page',
+      'weight' => -4,
+    ) + $tabs_base;
+
+    $items[$root . '/panelizer/layout'] = array(
+      'title' => 'Layout',
+      'page callback' => 'panelizer_default_layout_page',
+      'weight' => -3,
+    ) + $tabs_base;
+
+    $items[$root . '/panelizer/content'] = array(
+      'title' => 'Content',
+      'page callback' => 'panelizer_default_content_page',
+      'weight' => -2,
+    ) + $tabs_base;
+
+    $subtabs_base = array(
+      'access callback' => 'panelizer_administer_panelizer_default',
+      'access arguments' => array($this->entity_type, $bundle, $base_count + 2),
+      'page arguments' => array($this->entity_type, $bundle, $base_count + 2),
+      'type' => MENU_LOCAL_TASK,
+      'file' => 'includes/admin.inc',
+    );
+
+    $items[$root . '/panelizer/list/%'] = array(
+      'title' => 'Settings',
+      'page callback' => 'panelizer_default_settings_page',
+      'title callback' => 'panelizer_default_name_title_callback',
+      'type' => MENU_CALLBACK,
+    ) + $subtabs_base;
+
+    $items[$root . '/panelizer/list/%/settings'] = array(
+      'title' => 'Settings',
+      'page callback' => 'panelizer_default_settings_page',
+      'weight' => -5,
+    ) + $subtabs_base;
+
+    $items[$root . '/panelizer/list/%/context'] = array(
+      'title' => 'Contexts',
+      'page callback' => 'panelizer_default_context_page',
+      'weight' => -4,
+    ) + $subtabs_base;
+
+    $items[$root . '/panelizer/list/%/layout'] = array(
+      'title' => 'Layout',
+      'page callback' => 'panelizer_default_layout_page',
+      'weight' => -3,
+    ) + $subtabs_base;
+
+    $items[$root . '/panelizer/list/%/content'] = array(
+      'title' => 'Content',
+      'page callback' => 'panelizer_default_content_page',
+      'weight' => -2,
+    ) + $subtabs_base;
+
+    $items[$root . '/panelizer/list/%/access'] = array(
+      'title' => 'Access',
+      'page callback' => 'panelizer_default_access_page',
+      'weight' => -2,
+    ) + $subtabs_base;
+
+    // Also make clones of all the export UI menu items. Again there is some
+    // duplicated code here because of subtle differences.
+    // Load the $plugin information
+    $plugin = ctools_get_export_ui('panelizer_defaults');
+
+    $ui_items = $plugin['menu']['items'];
+
+    // Change the item to a tab.
+    $ui_items['list']['type'] = MENU_LOCAL_TASK;
+    $ui_items['list']['weight'] = -6;
+    $ui_items['list']['title'] = 'List';
+
+    // menu local actions are weird.
+    $ui_items['add']['path'] = 'list/add';
+    $ui_items['import']['path'] = 'list/import';
+
+    // Edit is being handled elsewhere:
+    unset($ui_items['edit']);
+    unset($ui_items['edit callback']);
+    unset($ui_items['list callback']);
+    unset($ui_items['context']);
+    unset($ui_items['content']);
+    unset($ui_items['layout']);
+    unset($ui_items['access']);
+
+    // Change the callbacks for everything:
+    foreach ($ui_items as $key => $item) {
+      // originally admin/config/content/panelizer/%panelizer_handler
+      $ui_items[$key]['access callback'] = 'panelizer_has_choice_callback';
+      $ui_items[$key]['access arguments'] = array($this->entity_type, $bundle, '');
+      $ui_items[$key]['page callback'] = 'panelizer_export_ui_switcher_page';
+      array_unshift($ui_items[$key]['page arguments'], $bundle);
+      array_unshift($ui_items[$key]['page arguments'], $this->entity_type);
+    }
+
+    foreach ($ui_items as $item) {
+      // Add menu item defaults.
+      $item += array(
+        'file' => 'export-ui.inc',
+        'file path' => drupal_get_path('module', 'ctools') . '/includes',
+      );
+
+      $path = !empty($item['path']) ? $root . '/panelizer/' . $item['path'] : $root . '/panelizer';
+      unset($item['path']);
+      $items[$path] = $item;
+    }
+  }
+
+  /**
+   * Add the panelizer settings form to a single entity bundle config form.
+   *
+   * @param &$form
+   *   The form array.
+   * @param &$form_state
+   *   The form state array.
+   * @param $bundle
+   *   The machine name of the bundle this form is for.
+   * @param $type_location
+   *   The location in the form state values that the bundle name will be;
+   *   this is used so that if a machine name of a bundle is changed, Panelizer
+   *   can update as much as possible.
+   */
+  public function add_bundle_setting_form(&$form, &$form_state, $bundle, $type_location) {
+    $settings = !empty($this->plugin['bundles'][$bundle]) ? $this->plugin['bundles'][$bundle] : array('status' => FALSE, 'default' => FALSE, 'choice' => FALSE);
+
+    $form['panelizer'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Panelizer'),
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
+      '#group' => 'additional_settings',
+      '#attributes' => array(
+        'class' => array('panelizer-node-type-settings-form'),
+      ),
+      '#bundle' => $bundle,
+      '#location' => $type_location,
+      '#tree' => TRUE,
+      '#access' => panelizer_administer_entity_bundle($this, $bundle),
+//      '#attached' => array(
+//        'js' => array(drupal_get_path('module', 'comment') . '/panelizer-entity-form.js'),
+//      ),
+    );
+
+    $form['panelizer']['status'] = array(
+      '#title' => t('Panelize'),
+      '#type' => 'checkbox',
+      '#default_value' => !empty($settings['status']),
+      '#id' => 'panelizer-status',
+    );
+
+    $form['panelizer']['default'] = array(
+      '#title' => t('Provide default panel'),
+      '#type' => 'checkbox',
+      '#default_value' => !empty($settings['default']),
+      '#states' => array(
+        'visible' => array(
+          '#panelizer-status' => array('checked' => TRUE),
+        ),
+      ),
+      '#description' => t('If checked, a default panel will be utilized for all existing and new entities.'),
+    );
+
+    $form['panelizer']['choice'] = array(
+      '#title' => t('Allow panel choice'),
+      '#type' => 'checkbox',
+      '#default_value' => !empty($settings['choice']),
+      '#states' => array(
+        'visible' => array(
+          '#panelizer-status' => array('checked' => TRUE),
+        ),
+      ),
+      '#description' => t('If checked multiple panels can be created and each entity will get a selector to choose which panel to use.'),
+    );
+
+    array_unshift($form['#submit'], 'panelizer_entity_default_bundle_form_submit');
+
+    $form_state['panelizer_entity_handler'] = $this;
+  }
+
+  /**
+   * Submit callback for the bundle edit form.
+   */
+  public function add_bundle_setting_form_submit($form, &$form_state, $bundle, $type_location) {
+    // Some types do not support changing bundles, so we don't check if it's
+    // not possible to change.
+    if ($type_location) {
+      $new_bundle = drupal_array_get_nested_value($form_state['values'], $type_location);
+    }
+    else {
+      $new_bundle = $bundle;
+    }
+
+    // Check to see if the bundle has changed. If so we need to move stuff around.
+    if ($bundle && $new_bundle != $bundle) {
+      // Remove old settings.
+      variable_del('panelizer_defaults_' . $this->entity_type . '_' . $bundle);
+      $allowed_layouts = variable_get('panelizer_' . $this->entity_type . ':' . $bundle . '_allowed_layouts', NULL);
+      if ($allowed_layouts) {
+        variable_del('panelizer_' . $this->entity_type . ':' . $bundle . '_allowed_layouts');
+        variable_set('panelizer_' . $this->entity_type . ':' . $new_bundle . '_allowed_layouts', $allowed_layouts);
+      }
+      $default = variable_get('panelizer_' . $this->entity_type . ':' . $bundle . '_default', NULL);
+      if ($default) {
+        variable_del('panelizer_' . $this->entity_type . ':' . $bundle . '_default');
+        variable_set('panelizer_' . $this->entity_type . ':' . $new_bundle . '_default', $default);
+      }
+
+      // Load up all panelizer defaults for the old bundle and resave them
+      // for the new bundle.
+      $panelizer_defaults = $this->get_default_panelizer_objects($bundle);
+      foreach ($panelizer_defaults as $panelizer) {
+        list($entity_type, $old_bundle, $name) = explode(':', $panelizer->name);
+        $panelizer->name = implode(':', array($entity_type, $new_bundle, $name));
+        $panelizer->panelizer_key = $new_bundle;
+        // If there's a pnid this should change the name and retain the pnid.
+        // If there is no pnid this will create a new one in the database
+        // because exported panelizer defaults attached to a bundle will have
+        // to be moved to the database in order to follow along and
+        // then be re-exported.
+        // @todo -- should we warn the user about this?
+        ctools_export_crud_save('panelizer_defaults', $panelizer);
+      }
+    }
+
+    variable_set('panelizer_defaults_' . $this->entity_type . '_' . $new_bundle, $form_state['values']['panelizer']);
+
+    // Unset this so that the type save forms don't try to save it to variables.
+    unset($form_state['values']['panelizer']);
   }
 
   /**
@@ -337,6 +664,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     else {
       $panelizers = db_query("SELECT * FROM {panelizer_entity} WHERE entity_type = '$this->entity_type' AND entity_id IN (:ids)", array(':ids' => $ids))->fetchAllAssoc('entity_id');
     }
+
     $defaults = array();
     $dids = array();
     // Go through our entity list and generate a list of defaults and displays
@@ -353,15 +681,16 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
 
       // If no panelizer was loaded, queue up defaults to load.
       if (empty($panelizers[$entity_id])) {
-        if ($this->has_default_panel($bundle)) {
-          $defaults[] = implode(':', array($this->entity_type, $bundle, 'default'));
+        if ($this->has_default_panel($bundles[$entity_id])) {
+          $name = implode(':', array($this->entity_type, $bundles[$entity_id], 'default'));
+          $defaults[$name] = $name;
         }
       }
       else {
         $entity->panelizer = ctools_export_unpack_object('panelizer_entity', $panelizers[$entity_id]);
         // Panelizers that do not have dids are just a selection of defaults
         // that has never actually been modified.
-        if (empty($entity->panelizer->did)) {
+        if (empty($entity->panelizer->did) && !empty($entity->panelizer->name)) {
           $defaults[] = $entity->panelizer->name;
         }
         else {
@@ -612,7 +941,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
 
   public function hook_field_attach_submit($entity, &$form, &$form_state) {
     list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
-    if (!empty($form_state['panelizer has choice'])) {
+    if (!empty($form_state['panelizer has choice']) && !empty($form_state['values']['panelizer']['name'])) {
       // Guarantee we overwrite any previous settings or non-settings.
       $entity->panelizer = $this->get_default_panelizer_object($bundle, $form_state['values']['panelizer']['name']);
       $entity->panelizer->did = NULL;
@@ -631,6 +960,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
 
     list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
 
+    // @todo -- why is there node specific stuff here?
     $node_options = variable_get('node_options_' . $bundle, array('status', 'promote'));
     $retval[0] = in_array('revision', $node_options);
     $retval[1] = user_access('administer nodes');
@@ -930,6 +1260,19 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
   }
 
   /**
+   * Determine if the current user has access to the $panelizer.
+   */
+  public function access_default_panelizer_object($panelizer) {
+    // Automatically true for this, regardless of anything else.
+    if (user_access('administer panelizer')) {
+      return TRUE;
+    }
+
+    ctools_include('context');
+    return user_access("administer panelizer $this->entity_type $panelizer->panelizer_key defaults") && ctools_access($panelizer->access, $this->get_contexts($panelizer));
+  }
+
+  /**
    * Implements a delegated hook_panelizer_defaults().
    *
    * This makes sure that all panelized entities configured to have a
@@ -947,7 +1290,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     foreach ($this->plugin['bundles'] as $bundle => $info) {
       if (!empty($info['status']) && !empty($info['default'])) {
         $panelizer = $this->get_internal_default_panelizer($bundle);
-        if (empty($default_names[$panelizer->name])) {
+        if (empty($default_names[$panelizer->name]) && !isset($panelizers[$panelizer->name])) {
           $panelizers[$panelizer->name] = $panelizer;
         }
       }
@@ -1324,5 +1667,71 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     return t('@entity bundle', array('@entity' => $entity_info['label']));
   }
 
+  /**
+   * Implement views support for panelizer entity types.
+   */
+  public function hook_views_data_alter(&$items) {
+    $entity_info = entity_get_info($this->entity_type);
+    if (!empty($entity_info['base table'])) {
+      $table = $entity_info['base table'];
+      $items[$table]['panelizer_link'] = array(
+        'field' => array(
+          'title' => t('Panelizer link'),
+          'help' => t('Provide a link to panelizer-related operations on the content.'),
+          'handler' => 'panelizer_handler_field_link',
+          'entity_type' => $this->entity_type,
+        ),
+      );
+      $items[$table]['panelizer_status'] = array(
+        'field' => array(
+          'title' => t('Panelizer status'),
+          'help' => t('Display whether an entity is panelized and which panelizer option it is using.'),
+          'handler' => 'panelizer_handler_panelizer_status',
+          'entity_type' => $this->entity_type,
+        ),
+      );
+
+      // Join on revision id if possible or entity id if not.
+      if (!empty($entity_info['entity keys']['revision'])) {
+        $id_field = $entity_info['entity keys']['revision'];
+        $field = 'revision_id';
+      }
+      else {
+        $id_field = $entity_info['entity keys']['id'];
+        $field = 'entity_id';
+      }
+
+      $items['panelizer_entity_' . $table]['table']['join'] = array(
+        $table => array(
+          'handler' => 'views_join',
+          'table' => 'panelizer_entity',
+          'left_table' => $table,
+          'left_field' => $id_field,
+          'field' => $field,
+          'extra' => array(array(
+            'field' => 'entity_type',
+            'value' => $this->entity_type,
+            'operator' => '=',
+          )),
+        ),
+      );
+
+      $items['panelizer_entity_' . $table]['table']['group'] = $items[$table]['table']['group'];
+
+      $items['panelizer_entity_' . $table]['name'] = array(
+        'filter' => array(
+          'title' => t('Panelizer status'),
+          'help' => t('Filter based upon panelizer status.'),
+          'handler' => 'panelizer_handler_filter_panelizer_status',
+          'entity_type' => $this->entity_type,
+        ),
+      );
+    }
+  }
 }
 
+function panelizer_entity_default_bundle_form_submit($form, &$form_state) {
+  $bundle = $form['panelizer']['#bundle'];
+  $type_location = $form['panelizer']['#location'];
+  $form_state['panelizer_entity_handler']->add_bundle_setting_form_submit($form, $form_state, $bundle, $type_location);
+}

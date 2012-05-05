@@ -138,7 +138,6 @@ function media_variable_default($name = NULL) {
       // Browser defaults in media.browser.inc.
       'browser_viewtype_default' => 'thumbnails',
       'browser_pager_limit' => 40,
-      'browser_library_empty_message' => 'There are currently no media in this library to select.',
 
       'import_batch_size' => 20,
       'fromurl_supported_schemes' => array('http', 'https', 'ftp', 'smb', 'ftps'),
@@ -150,6 +149,7 @@ function media_variable_default($name = NULL) {
       'show_file_type_rebuild_nag' => NULL,
       'field_select_media_text' => NULL,
       'field_remove_media_text' => NULL,
+      'browser_library_empty_message' => NULL,
     );
   }
 

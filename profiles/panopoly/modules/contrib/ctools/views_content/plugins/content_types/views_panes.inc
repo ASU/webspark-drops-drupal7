@@ -148,7 +148,7 @@ function views_content_views_panes_content_type_render($subtype, $conf, $panel_a
   $args = array();
   $arguments = $view->display_handler->get_option('arguments');
 
-  $context_keys = array_keys($contexts);
+  $context_keys = isset($conf['context']) ? $conf['context'] : array();
   foreach ($view->display_handler->get_argument_input() as $id => $argument) {
     switch ($argument['type']) {
       case 'context':
@@ -256,7 +256,7 @@ function views_content_views_panes_content_type_render($subtype, $conf, $panel_a
       }
 
       if ($conf['use_pager']) {
-        if (!isset($pager['options']['id']) || $pager['options']['id'] != $conf['pager_id']) {
+        if (!isset($pager['options']['id']) || (isset($conf['pager_id']) && $pager['options']['id'] != $conf['pager_id'])) {
           $pager['options']['id'] = $conf['pager_id'];
         }
       }

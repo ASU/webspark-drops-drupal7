@@ -14,8 +14,8 @@ function search_api_solr_requirements($phase) {
         return array(
           'search_api_solr' => array(
             'title' => $t('Solr PHP library'),
-            'description' => $t('The library is correctly installed, but out of date. ' .
-                'It is suggested to install the newest version (@version).', array('@version' => 'r60')),
+            'value' => $t('The library is correctly installed, but out of date'),
+            'description' => $t('It is suggested to install the newest version (@version).', array('@version' => 'r60')),
             'severity' => REQUIREMENT_WARNING,
           ),
         );
@@ -23,7 +23,7 @@ function search_api_solr_requirements($phase) {
       return array(
         'search_api_solr' => array(
           'title' => $t('Solr PHP library'),
-          'description' => $t('The library was correctly installed.'),
+          'value' => $t('The library was correctly installed'),
           'severity' => REQUIREMENT_OK,
         ),
       );
@@ -32,7 +32,7 @@ function search_api_solr_requirements($phase) {
       return array(
         'search_api_solr' => array(
           'title' => $t('Solr PHP library'),
-          'description' => $t('The library was not correctly installed. Please see INSTALL.txt for instructions.'),
+          'value' => $t('The library was not correctly installed. Please see INSTALL.txt for instructions.'),
           'severity' => REQUIREMENT_ERROR,
         ),
       );
@@ -86,6 +86,16 @@ function search_api_solr_requirements($phase) {
     }
     return $ret;
   }
+}
+
+/**
+ * Implements hook_install().
+ *
+ * We register our autoloader here because our hook_init() won't get called
+ * until the next bootstrap (it registers the autoloader too.)
+ */
+function search_api_solr_install() {
+  spl_autoload_register('_search_api_solr_autoload');
 }
 
 /**

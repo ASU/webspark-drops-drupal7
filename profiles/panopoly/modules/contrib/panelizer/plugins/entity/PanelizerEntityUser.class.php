@@ -10,6 +10,10 @@
  * Handles user specific functionality for Panelizer.
  */
 class PanelizerEntityUser extends PanelizerEntityDefault {
+  public $entity_admin_root = 'admin/config/people/accounts';
+  // No bundle support so we hardcode the default bundle.
+  public $entity_admin_bundle = 'user';
+  public $views_table = 'users';
 
   public function entity_access($op, $entity) {
     // This must be implemented by the extending class.
@@ -92,6 +96,17 @@ class PanelizerEntityUser extends PanelizerEntityDefault {
     $handlers['user_view_panelizer'] = $handler;
 
     return $handlers;
+  }
+
+  /**
+   * Implements a delegated hook_form_alter.
+   *
+   * We want to add Panelizer settings for the bundle to the node type form.
+   */
+  public function hook_form_alter(&$form, &$form_state, $form_id) {
+    if ($form_id == 'user_admin_settings') {
+      $this->add_bundle_setting_form($form, $form_state, 'user', NULL);
+    }
   }
 
 }

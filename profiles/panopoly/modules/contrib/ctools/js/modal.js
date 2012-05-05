@@ -43,7 +43,7 @@
         // How much to remove from the inner content to make space for the
         // theming.
         contentRight: 25,
-        contentBottom: 75
+        contentBottom: 45
       },
       modalOptions: {
         opacity: .55,
@@ -200,7 +200,7 @@
         });
         */
 
-      $('a.ctools-use-modal:not(.ctools-use-modal-processed)', context)
+      $('area.ctools-use-modal:not(.ctools-use-modal-processed), a.ctools-use-modal:not(.ctools-use-modal-processed)', context)
         .addClass('ctools-use-modal-processed')
         .click(Drupal.CTools.Modal.clickAjaxLink)
         .each(function () {

@@ -14,6 +14,10 @@ function features_populate($items, $dependencies, $module_name) {
   $stub = array('features' => array(), 'dependencies' => array(), 'conflicts' => array());
   $export = _features_populate($items, $stub, $module_name);
 
+  // Add Features API version. Any module with this entry in the .info file
+  // will be treated as a Feature and included in the admin/build/features UI.
+  $export['features']['features_api']['api:' . FEATURES_API] = TRUE;
+
   // Allow other modules to alter the export.
   drupal_alter('features_export', $export, $module_name);
 
@@ -52,10 +56,12 @@ function _features_populate($pipe, &$export, $module_name = '') {
       $more = $function($data, $export, $module_name, $component);
       // Add the context information.
       $export['component'] = $component;
+      $export['module_name'] = $module_name;
       // Allow other modules to manipulate the pipe to add in additional modules.
       drupal_alter(array('features_pipe', 'features_pipe_' . $component), $more, $data, $export);
       // Remove the component information.
       unset($export['component']);
+      unset($export['module_name']);
       // Allow for export functions to request additional exports, but avoid
       // circular references on already processed components.
       $processed[$component] = isset($processed[$component]) ? array_merge($processed[$component], $data) : $data;
@@ -403,7 +409,7 @@ function features_export_info($info, $parents = array()) {
     foreach ($parents as $key) {
       $line .= is_numeric($key) ? "[]" : "[{$key}]";
     }
-    $line .=  " = \"{$info}\"\n";
+    $line .=  " = {$info}\n";
     return $line;
   }
   return $output;
@@ -459,7 +465,7 @@ function features_tar_create($name, $contents) {
  */
 function features_var_export($var, $prefix = '', $init = TRUE) {
   if (is_object($var)) {
-    $output = method_exists($var, 'export') ? $var->export() : features_var_export((array) $var);
+    $output = method_exists($var, 'export') ? $var->export() : features_var_export((array) $var, '', FALSE);
   }
   else if (is_array($var)) {
     if (empty($var)) {

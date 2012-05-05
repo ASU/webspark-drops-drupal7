@@ -596,6 +596,20 @@ function wysiwyg_tinymce_plugins($editor) {
       'load' => TRUE,
     );
   }
+  if (version_compare($editor['installed version'], '3.4.1', '>=')) {
+    $plugins['lists'] = array(
+      'path' => $editor['library path'] . 'plugins/lists',
+      'extensions' => array('lists' => t('List normalizer')),
+      'url' => 'http://www.tinymce.com/wiki.php/Plugin:lists',
+      'internal' => TRUE,
+      'load' => TRUE,
+      'extended_valid_elements' => array(
+        'li[class|dir|id|lang|onclick|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style|title|type|value]',
+        'ol[class|compact|dir|id|lang|onclick|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|start|style|title|type]',
+        'ul[class|compact|dir|id|lang|onclick|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style|title|type]',
+      ),
+    );
+  }
   return $plugins;
 }
 

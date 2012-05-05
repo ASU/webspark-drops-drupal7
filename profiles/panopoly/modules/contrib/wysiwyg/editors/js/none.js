@@ -17,7 +17,7 @@ Drupal.wysiwyg.editor.attach.none = function(context, params, settings) {
   if (params.resizable) {
     var $wrapper = $('#' + params.field).parents('.form-textarea-wrapper:first');
     $wrapper.addClass('resizable');
-    if (Drupal.behaviors.textarea.attach) {
+    if (Drupal.behaviors.textarea) {
       Drupal.behaviors.textarea.attach();
     }
   }

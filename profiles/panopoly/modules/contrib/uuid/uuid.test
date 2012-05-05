@@ -622,6 +622,12 @@ class UUIDImportEntitiesTestCase extends UUIDTestCase {
     $node2 = $this->getEntityByUuid('node', $this->node2_uuid);
     $user1 = $this->getEntityByUuid('user', $this->user1_uuid);
 
+    $this->drupalGet('term/foo');
+    $this->assertResponse(200, 'Taxonomy term\'s url alias works.');
+
+    $this->drupalGet('lorem-ipsum');
+    $this->assertResponse(200, 'Node\' url alias works.');
+
     // Ensure that our entities was created.
     $this->assertEqual($term1->uuid, $this->term1_uuid, 'Term 1 was created.');
     $this->assertEqual($term2->uuid, $this->term2_uuid, 'Term 2 was created.');

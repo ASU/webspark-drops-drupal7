@@ -1,5 +1,9 @@
 Date Popup Authored Module 7.x
 
+Date Popup Authored 7.x-1.1
+---------------------------
+Stable release to coincide with stable release of Date.
+
 Date Popup Authored 7.x-1.1-beta2
 -------------------------------
 #1087616 by Mark Trapp: Post date resets on save if user can't administer nodes

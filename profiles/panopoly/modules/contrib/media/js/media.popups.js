@@ -336,7 +336,7 @@ Drupal.media.popups.setDialogPadding = function (dialogElement) {
  * Get an iframe to serve as the dialog's contents. Common to both plugins.
  */
 Drupal.media.popups.getPopupIframe = function (src, id, options) {
-  var defaults = {width: '800px', scrolling: 'no'};
+  var defaults = {width: '800px', scrolling: 'auto'};
   var options = $.extend({}, defaults, options);
 
   return $('<iframe class="media-modal-frame"/>')

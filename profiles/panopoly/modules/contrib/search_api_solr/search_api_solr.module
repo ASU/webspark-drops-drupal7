@@ -31,7 +31,9 @@ function _search_api_solr_solrphpclient_path() {
       }
     }
     else {
+      // Include libraries + current profile folders in searched directories.
       $search_dirs[] = 'sites/all/libraries/SolrPhpClient';
+      $search_dirs[] = 'profiles/' . drupal_get_profile() . '/libraries/SolrPhpClient';
     }
     $search_dirs[] = drupal_get_path('module', 'search_api_solr') . '/SolrPhpClient';
     foreach ($search_dirs as $dir) {

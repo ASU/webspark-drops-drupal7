@@ -33,7 +33,7 @@ $plugin = array(
 );
 
 /**
- * Run-time rendering of the body of the blcok
+ * Run-time rendering of the body of the block.
  *
  * @param $subtype
  * @param $conf

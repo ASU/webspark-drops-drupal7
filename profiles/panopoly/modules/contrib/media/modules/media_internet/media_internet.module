@@ -79,25 +79,25 @@ function media_internet_add($form, &$form_state = array(), $types = NULL) {
     $form['#validators']['media_file_validate_types'] = array($types);
   }
 
-  $form['providers'] = array();
-  $form['providers']['header'] = array('#markup' => '<h2>' . t('Supported Providers') . '</h2>');
+  $providers = array();
   foreach (media_internet_get_providers() as $key => $provider) {
     if (empty($provider['hidden']) || $provider['hidden'] != TRUE) {
-      if (isset($provider['image'])) {
-        $form['providers'][$key] = array('#markup' => theme('image', array('path' => $provider['image'], 'title' => $provider['title'])));
-      }
-      else {
-        $form['providers'][$key] = array('#markup' => $provider['title']);
-      }
-      // Wrap the provider in a div so we can make a nice list
-      $form['providers'][$key]['#prefix'] = '<div class="media-provider">';
-      $form['providers'][$key]['#suffix'] = '</div>';
+      // @todo Convert this to show provider images in a nice format.
+      $class = drupal_clean_css_identifier(drupal_strtolower($provider['title']));
+      $providers[] = array(
+        'data' => check_plain($provider['title']),
+        'class' => array($class),
+      );
     }
   }
-  if (count($form['providers']) == 1) {
-    // Just the header, no actual providers
-    unset($form['providers']['header']);
-  }
+  $form['providers'] = array(
+    '#theme' => 'item_list',
+    '#title' => t('Supported providers'),
+    '#items' => $providers,
+    '#attributes' => array(
+      'class' => array('media-internet-providers'),
+    ),
+  );
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(

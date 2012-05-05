@@ -14,6 +14,7 @@ $plugin = array(
       'context' => array('path' => 'list/%ctools_export_ui/context'),
       'content' => array('path' => 'list/%ctools_export_ui/content'),
       'layout' => array('path' => 'list/%ctools_export_ui/layout'),
+      'access' => array('path' => 'list/%ctools_export_ui/access'),
     ),
   ),
 
@@ -31,6 +32,7 @@ $plugin = array(
     'context' => array('title' => t('Context')),
     'layout' => array('title' => t('Layout')),
     'content' => array('title' => t('Content')),
+    'access' => array('title' => t('Access')),
   ),
 );
 

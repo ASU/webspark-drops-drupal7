@@ -90,9 +90,11 @@ function references_dialog_get_search_views($attachable) {
     // Get all views that has a references_dialog display.
     $results = references_dialog_get_applicable_views();
     foreach ($results as $view_name => $result) {
-      foreach ($result['attachables'] as $name => $view_attachable) {
-        if ($attachable == $view_attachable) {
-          $search_views[$attachable][$view_name] = $result;
+      foreach ($result as $display_name => $result_displays) {
+        foreach ($result_displays['attachables'] as $name => $view_attachable) {
+          if ($attachable == $view_attachable) {
+            $search_views[$attachable][$view_name] = $result_displays;
+          }
         }
       }
     }
@@ -115,7 +117,7 @@ function references_dialog_get_applicable_views() {
   foreach ($results as $result) {
     list($view, $display) = $result;
     if (is_object($view)) {
-      $views[$view->name] = array(
+      $views[$view->name][$display] = array(
         'display' => $display,
         'title' => isset($view->display[$view->current_display]->display_options['title']) ?
           $view->display[$view->current_display]->display_options['title'] : t('Search'),
@@ -297,8 +299,12 @@ function references_dialog_process_widget(&$element) {
   }
   $dialog_widget = references_dialog_widget_load($widget_type);
   // Attach javascript and CSS needed.
-  $element['#attached'] = references_dialog_attached();
+  $attached = references_dialog_attached();
+  $element['#attached']['js'][] = $attached['js'][0];
   $element['#attached']['js'][] = references_dialog_js_settings($element['#id'], array('format' => $dialog_widget['format']));
+  $element['#attached']['css'][] = $attached['css'][0];
+  $element['#attached']['library'][] = $attached['library'][0];
+
   $link_options = array('attributes' => array('class' => array('references-dialog-activate')));
   $dialog_links = array();
   foreach ($dialog_widget['operations'] as $operation => $settings) {

@@ -114,6 +114,46 @@ function file_entity_uuid_presave(&$entity, $entity_type) {
 }
 
 /**
+ * Load path data to entity object for includesion in export.
+ */
+function path_entity_uuid_load($entities, $entity_type) {
+  if ($entity_type == 'node') {
+    foreach ($entities as $node) {
+      $sources[] = 'node/' . $node->nid;
+    }
+
+    $result = db_select('url_alias')
+      ->fields('url_alias', array('source', 'alias'))
+      ->condition('source', $sources)
+      ->execute()
+      ->fetchAllKeyed();
+
+    foreach ($result as $source => $alias) {
+      $nid = str_replace('node/', '', $source);
+      $entities[$nid]->path['alias'] = $alias;
+      $entities[$nid]->path['pathauto'] = FALSE;
+    }
+  }
+  elseif ($entity_type == 'taxonomy_term') {
+    foreach ($entities as $term) {
+      $sources[] = 'taxonomy/term/' . $term->tid;
+    }
+
+    $result = db_select('url_alias')
+      ->fields('url_alias', array('source', 'alias'))
+      ->condition('source', $sources)
+      ->execute()
+      ->fetchAllKeyed();
+
+    foreach ($result as $source => $alias) {
+      $tid = str_replace('taxonomy/term/', '', $source);
+      $entities[$tid]->path['alias'] = $alias;
+      $entities[$tid]->path['pathauto'] = FALSE;
+    }
+  }
+}
+
+/**
  * Implements hook_entity_uuid_load().
  */
 function taxonomy_entity_uuid_load(&$entities, $entity_type) {
@@ -279,20 +319,18 @@ function user_reference_field_uuid_presave($entity_type, $entity, $field, $insta
  * Implements hook_field_uuid_load().
  */
 function entityreference_field_uuid_load($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  foreach ($items as &$item) {
-    $info = entity_get_info($item['target_type']);
-    entity_property_id_to_uuid($item, $item['target_type'], $info['entity keys']['id']);
-  }
+  // TODO: This is not really good, but as of now 'entity_property_id_to_uuid()'
+  // can't handle a single $item.
+  entity_property_id_to_uuid($items, $field['settings']['target_type'], 'target_id');
 }
 
 /**
  * Implements hook_field_uuid_presave().
  */
 function entityreference_field_uuid_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  foreach ($items as &$item) {
-    $info = entity_get_info($item['target_type']);
-    entity_property_uuid_to_id($item, $item['target_type'], $info['entity keys']['id']);
-  }
+  // TODO: This is not really good, but as of now 'entity_property_id_to_uuid()'
+  // can't handle a single $item.
+  entity_property_uuid_to_id($items, $field['settings']['target_type'], 'target_id');
 }
 
 /**

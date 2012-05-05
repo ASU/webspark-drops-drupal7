@@ -84,12 +84,26 @@ function entity_metadata_comment_get_node_properties($node, array $options, $nam
 }
 
 /**
+ * Getter callback for getting global languages.
+ */
+function entity_metadata_locale_get_languages($data, array $options, $name) {
+  return isset($GLOBALS[$name]) ? $GLOBALS[$name]->language : NULL;
+}
+
+/**
+ * Getter callback for getting the preferred user language.
+ */
+function entity_metadata_locale_get_user_language($account, array $options, $name) {
+  return user_preferred_language($account)->language;
+}
+
+/**
  * Return the options lists for the node and comment status property.
  */
 function entity_metadata_status_options_list() {
   return array(
-    0 => t('Published'),
-    1 => t('Unpublished'),
+    NODE_PUBLISHED => t('Published'),
+    NODE_NOT_PUBLISHED => t('Unpublished'),
   );
 }
 
@@ -381,7 +395,8 @@ function entity_metadata_language_list() {
 function entity_metadata_field_property_get($entity, array $options, $name, $entity_type, $info) {
   $field = field_info_field($name);
   $columns = array_keys($field['columns']);
-  $langcode = field_language($entity_type, $entity, $name, isset($options['language']) ? $options['language']->language : NULL);
+  $langcode = isset($options['language']) ? $options['language']->language : LANGUAGE_NONE;
+  $langcode = entity_metadata_field_get_language($entity_type, $entity, $field, $langcode, TRUE);
   $values = array();
   if (isset($entity->{$name}[$langcode])) {
     foreach ($entity->{$name}[$langcode] as $delta => $data) {
@@ -402,11 +417,7 @@ function entity_metadata_field_property_get($entity, array $options, $name, $ent
 function entity_metadata_field_property_set($entity, $name, $value, $langcode, $entity_type) {
   $field = field_info_field($name);
   $columns = array_keys($field['columns']);
-  if (!isset($langcode)) {
-    // Try to figure out the default language used by the entity.
-    // @todo: Update once http://drupal.org/node/1260640 has been fixed.
-    $langcode = isset($entity->language) ? $entity->language : LANGUAGE_NONE;
-  }
+  $langcode = entity_metadata_field_get_language($entity_type, $entity, $field, $langcode);
   $values = $field['cardinality'] == 1 ? array($value) : (array) $value;
 
   $items = array();
@@ -443,8 +454,9 @@ function entity_metadata_field_verbatim_get($entity, array $options, $name, $ent
   // Set contextual info useful for getters of any child properties.
   $context['instance'] = field_info_instance($context['parent']->type(), $name, $context['parent']->getBundle());
   $context['field'] = field_info_field($name);
+  $langcode = isset($options['language']) ? $options['language']->language : LANGUAGE_NONE;
+  $langcode = entity_metadata_field_get_language($entity_type, $entity, $context['field'], $langcode, TRUE);
 
-  $langcode = field_language($entity_type, $entity, $name, isset($options['language']) ? $options['language']->language : NULL);
   if ($context['field']['cardinality'] == 1) {
     return isset($entity->{$name}[$langcode][0]) ? $entity->{$name}[$langcode][0] : NULL;
   }
@@ -455,13 +467,9 @@ function entity_metadata_field_verbatim_get($entity, array $options, $name, $ent
  * Writes the passed field items in the object. Useful as field level setter
  * to set the whole data structure at once.
  */
-function entity_metadata_field_verbatim_set($entity, $name, $items, $langcode) {
+function entity_metadata_field_verbatim_set($entity, $name, $items, $langcode, $entity_type) {
   $field = field_info_field($name);
-  if (!isset($langcode)) {
-    // Try to figure out the default language used by the entity.
-    // @todo: Update once http://drupal.org/node/1260640 has been fixed.
-    $langcode = isset($entity->language) ? $entity->language : LANGUAGE_NONE;
-  }
+  $langcode = entity_metadata_field_get_language($entity_type, $entity, $entity_type, $langcode);
   $value = $field['cardinality'] == 1 ? array($items) : (array) $items;
   // Filter out any items set to NULL.
   $entity->{$name}[$langcode] = array_filter($value);
@@ -469,6 +477,37 @@ function entity_metadata_field_verbatim_set($entity, $name, $items, $langcode) {
   // Empty the static field language cache, so the field system picks up any
   // possible new languages.
   drupal_static_reset('field_language');
+}
+
+/**
+ * Helper for determining the field language to be used.
+ *
+ * Note that we cannot use field_language() as we are not about to display
+ * values, but generally read/write values.
+ *
+ * @param $fallback
+ *   (optional) Whether to fall back to the entity default language, if no
+ *   value is available for the given language code yet.
+ *
+ * @return
+ *   The language code to use.
+ */
+function entity_metadata_field_get_language($entity_type, $entity, $field, $langcode = LANGUAGE_NONE, $fallback = FALSE) {
+  // Try to figure out the default language used by the entity.
+  // @todo: Update once http://drupal.org/node/1260640 has been fixed.
+  $default_langcode = isset($entity->language) ? $entity->language : LANGUAGE_NONE;
+
+  // Determine the right language to use.
+  if ($default_langcode != LANGUAGE_NONE && field_is_translatable($entity_type, $field)) {
+    $langcode = ($langcode != LANGUAGE_NONE) ? field_valid_language($langcode, $default_langcode) : $default_langcode;
+    if (!isset($entity->{$field['field_name']}[$langcode]) && $fallback) {
+      $langcode = $default_langcode;
+    }
+    return $langcode;
+  }
+  else {
+    return LANGUAGE_NONE;
+  }
 }
 
 /**
@@ -524,6 +563,11 @@ function entity_metadata_field_file_create_item($property_name, $context) {
  * Callback for validating file field $items.
  */
 function entity_metadata_field_file_validate_item($items, $context) {
+  // Allow NULL values.
+  if (!isset($items)) {
+    return TRUE;
+  }
+
   // Stream-line $items for multiple vs non-multiple fields.
   $items = !entity_property_list_extract_type($context['type']) ? array($items) : (array) $items;
 
@@ -568,7 +612,7 @@ function entity_metadata_user_access($op, $entity = NULL, $account = NULL, $enti
   if (isset($entity) && $op != 'delete' && (($entity->uid == $account->uid && $entity->uid) || (!$entity->uid && $op == 'view'))) {
     return TRUE;
   }
-  if (user_access('administer users', $account) || user_access('access user profiles', $account) && $op == 'view') {
+  if (user_access('administer users', $account) || user_access('access user profiles', $account) && $op == 'view' && $entity->status) {
     return TRUE;
   }
   return FALSE;
@@ -622,7 +666,7 @@ function entity_metadata_taxonomy_access($op, $entity = NULL, $account = NULL, $
   if ($entity_type == 'taxonomy_vocabulary') {
     return user_access('administer taxonomy', $account);
   }
-  if (isset($entity) && $op == 'edit' && !isset($account) && taxonomy_term_edit_access($entity)) {
+  if (isset($entity) && $op == 'update' && !isset($account) && taxonomy_term_edit_access($entity)) {
     return TRUE;
   }
   if (user_access('administer taxonomy', $account) || user_access('access content', $account) && $op == 'view') {
@@ -813,7 +857,7 @@ function entity_metadata_form_taxonomy_vocabulary($term) {
  */
 function entity_metadata_form_entity_ui($entity, $entity_type) {
   $info = entity_get_info($entity_type);
-  $form_state = array();
+  $form_state = form_state_defaults();
   // Add in the include file as the form API does else with the include file
   // specified for the active menu item.
   if (!empty($info['admin ui']['file'])) {

@@ -151,7 +151,7 @@ function theme_features_form_buttons(&$vars) {
   drupal_add_css(drupal_get_path('module', 'features') . '/features.css');
 
   $output = drupal_render_children($vars['element']);
-  return !empty($output) ? "<div class='buttons clear-block'>{$output}</div>" : '';
+  return !empty($output) ? "<div class='buttons clearfix'>{$output}</div>" : '';
 }
 
 /**
@@ -226,7 +226,7 @@ function theme_features_form_export(&$vars) {
   drupal_add_js(drupal_get_path('module', 'features') . '/features.js');
 
   $output = '';
-  $output .= "<div class='clear-block features-components'>";
+  $output .= "<div class='clearfix features-components'>";
   $output .= "<div class='column'>" . drupal_render($vars['form']['components']) . drupal_render($vars['form']['sources']) . "</div>";
   $output .= "<div class='column'>" . drupal_render($vars['form']['features']) . "</div>";
   $output .= "</div>";

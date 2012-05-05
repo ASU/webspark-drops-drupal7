@@ -207,9 +207,10 @@ function media_browser_list() {
   // I think PDO should protect them, but I'm not 100% certain.
   array_walk_recursive($params, '_media_recursive_check_plain');
 
-  $types = isset($params['types']) ? $params['types'] : NULL;
-  $url_include_patterns = isset($params['url_include_patterns']) ? $params['url_include_patterns'] : NULL;
-  $url_exclude_patterns = isset($params['url_exclude_patterns']) ? $params['url_exclude_patterns'] : NULL;
+  $remote_types = !empty($params['types']) ? $params['types'] : NULL;
+  $url_include_patterns = !empty($params['url_include_patterns']) ? $params['url_include_patterns'] : NULL;
+  $url_exclude_patterns = !empty($params['url_exclude_patterns']) ? $params['url_exclude_patterns'] : NULL;
+  $allowed_schemes = !empty($params['schemes']) ? array_filter($params['schemes']) : array();
 
   $start = isset($params['start']) ? $params['start'] : 0;
   $limit = isset($params['limit']) ? $params['limit'] : media_variable_get('browser_pager_limit');
@@ -219,22 +220,41 @@ function media_browser_list() {
   $query->range($start, $limit);
   $query->orderBy('f.timestamp', 'DESC');
 
-  // Add conditions based on file type *or* allowed extensions.
-  $condition = $query;
-  if (!empty($types) && !empty($params['file_extensions'])) {
-    $condition = db_or();
-  }
-  if (!empty($types)) {
-    $condition->condition('f.type', $types, 'IN');
-  }
+  // Add conditions based on remote file type *or* local allowed extensions.
+  $or_condition = db_or();
+
+  // Include local files with the allowed extensions.
   if (!empty($params['file_extensions'])) {
     $extensions = array_filter(explode(' ', $params['file_extensions']));
-    foreach ($extensions as $extension) {
-      $condition->condition('f.uri', '%' . db_like('.' . $extension), 'LIKE');
+    $local_wrappers = array_intersect_key(media_get_local_stream_wrappers(), $allowed_schemes);
+    if (!empty($local_wrappers) && !empty($extensions)) {
+      $local_condition = db_or();
+      foreach (array_keys($local_wrappers) as $scheme) {
+        foreach ($extensions as $extension) {
+          $local_condition->condition('f.uri', db_like($scheme . '://') . '%' . db_like('.' . $extension), 'LIKE');
+        }
+      }
+      $or_condition->condition($local_condition);
     }
   }
-  if ($condition instanceof DatabaseCondition) {
-    $query->condition($condition);
+
+  // Include remote files with the allowed file types.
+  if (!empty($remote_types)) {
+    $remote_wrappers = array_intersect_key(media_get_remote_stream_wrappers(), $allowed_schemes);
+    if (!empty($remote_wrappers)) {
+      $remote_condition = db_and();
+      $wrapper_condition = db_or();
+      foreach (array_keys($remote_wrappers) as $scheme) {
+        $wrapper_condition->condition('f.uri', db_like($scheme . '://') . '%', 'LIKE');
+      }
+      $remote_condition->condition($wrapper_condition);
+      $remote_condition->condition('f.type', $remote_types, 'IN');
+      $or_condition->condition($remote_condition);
+    }
+  }
+
+  if ($or_condition->count()) {
+    $query->condition($or_condition);
   }
 
   if ($url_include_patterns) {

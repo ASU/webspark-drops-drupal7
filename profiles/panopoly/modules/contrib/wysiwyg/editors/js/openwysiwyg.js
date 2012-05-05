@@ -23,6 +23,19 @@ WYSIWYG.getEditor = function (n) {
 
 (function($) {
 
+// Fix Drupal toolbar obscuring editor toolbar in fullscreen mode.
+var oldMaximize = WYSIWYG.maximize;
+WYSIWYG.maximize = function (n) {
+var $drupalToolbar = $('#toolbar', Drupal.overlayChild ? window.parent.document : document);
+  oldMaximize.apply(this, arguments);
+  if (this.maximized[n]) {
+    $drupalToolbar.hide();
+  }
+  else {
+    $drupalToolbar.show();
+  }
+}
+
 /**
  * Attach this editor to a target element.
  */

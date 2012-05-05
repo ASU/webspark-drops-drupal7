@@ -83,7 +83,11 @@ body .path-admin-apps span.icon {
   background: #eee;
   clear: both;
   padding: 6px 5px 0px;
-  min-width: 970px;
+}
+
+#apps-list h2 {
+  margin-top: 0;
+  width: 300px;
 }
 
 #apps-list .item-list {
@@ -105,7 +109,7 @@ body .path-admin-apps span.icon {
   float: left;
   display: block;
   height: 110px;
-  width: 350px;
+  width: 46.5%;
   border: 1px solid #ccc;
   background: #fff;
   margin: 5px;
@@ -122,7 +126,7 @@ body .path-admin-apps span.icon {
 .app-teaser {
   float: left;
   display: inline-block;
-  padding: 10px 15px;
+  padding: 5px 15px 10px 15px;
   width: 200px;
 }
 

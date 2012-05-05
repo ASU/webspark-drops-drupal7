@@ -7,12 +7,20 @@
  */
 class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
   public function parse($embedCode) {
+    // Vimeo has a few URL formats:
+    //   http://vimeo.com/*
+    //   http://vimeo.com/video/*
+    //   http://vimeo.com/groups/*/videos/*
+    //   http://vimeo.com/channels/*#$ID
     $patterns = array(
-      '@vimeo\.com/([^"\& ]+)@i',
+      '@vimeo\.com/(\d+)@i',
+      '@vimeo\.com/video/(\d+)@i',
+      '@vimeo\.com/groups/.+/videos/(\d+)@i',
+      '@vimeo\.com/channels/.+#(\d+)@i',
     );
     foreach ($patterns as $pattern) {
       preg_match($pattern, $embedCode, $matches);
-      if (isset($matches[1])  && is_numeric($matches[1])) {
+      if (isset($matches[1])) {
         return file_stream_wrapper_uri_normalize('vimeo://v/' . $matches[1]);
       }
     }
@@ -34,11 +42,19 @@ class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
     $uri = $this->parse($this->embedCode);
     //@todo: this is terribly broken in some ways because the function is really
     // made for local files which are 'real'
-    return file_uri_to_object($uri);
+    $file = file_uri_to_object($uri, TRUE);
+
+    // Try to default the file name to the video's title.
+    if (empty($file->fid) && $info = $this->getOEmbed()) {
+      $file->filename = truncate_utf8($info['title'], 255);
+    }
+    return $file;
   }
 
   /**
-   * Returns information about the media. See http://video.search.yahoo.com/mrss.
+   * Returns information about the media.
+   *
+   * See http://video.search.yahoo.com/mrss
    *
    * @return
    *   If ATOM+MRSS information is available, a SimpleXML element containing
@@ -59,7 +75,9 @@ class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
   }
 
   /**
-   * Returns information about the media. See http://www.oembed.com/.
+   * Returns information about the media.
+   *
+   * See http://www.oembed.com/ and https://vimeo.com/api/docs/oembed
    *
    * @return
    *   If oEmbed information is available, an array containing 'title', 'type',
@@ -69,7 +87,9 @@ class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
   public function getOEmbed() {
     $uri = $this->parse($this->embedCode);
     $external_url = drupal_realpath($uri);
-    $oembed_url = url('http://www.vimeo.com/oembed', array('query' => array('url' => $external_url, 'format' => 'json')));
+    $oembed_url = url('http://vimeo.com/api/oembed.json', array(
+      'query' => array('url' => $external_url))
+    );
     $response = drupal_http_request($oembed_url);
     if (!isset($response->error)) {
       return drupal_json_decode($response->data);

@@ -37,14 +37,14 @@ function ctools_entity_from_field_get_children($parent_plugin, $parent) {
   $context_types = array();
 
   // Get the schema information for every field.
-  $fields_info = field_info_instances();
-  foreach ($fields_info as $from_entity => $entity_info) {
-    foreach ($entity_info as $bundle => $fields) {
-      // There might be fields attached to bundles that are disabled (e.g. a
-      // module that declared a node's content type, is now disabled), but the
-      // field instance is still shown.
-      if (!empty($entities[$from_entity]['bundles'][$bundle])) {
-        foreach ($fields as $field_name => $field) {
+  $fields_info = field_info_fields();
+  foreach ($fields_info as $field_name => $field) {
+    foreach ($field['bundles'] as $from_entity => $bundles) {
+      foreach ($bundles as $bundle) {
+        // There might be fields attached to bundles that are disabled (e.g. a
+        // module that declared a node's content type, is now disabled), but the
+        // field instance is still shown.
+        if (!empty($entities[$from_entity]['bundles'][$bundle])) {
           $foreign_keys = ctools_field_foreign_keys($field_name);
 
           foreach ($foreign_keys as $key => $info) {
