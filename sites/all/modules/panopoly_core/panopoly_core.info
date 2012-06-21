@@ -1,0 +1,24 @@
+name = Panopoly Core
+description = The magical core of the Panopoly framework.
+core = 7.x
+package = Panopoly
+php = 5.2.4
+project = panopoly_core
+dependencies[] = ctools
+dependencies[] = strongarm
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:1
+features[variable][] = ctools_content_all_views
+features[variable][] = date_first_day
+features[variable][] = date_format_long
+features[variable][] = date_format_medium
+features[variable][] = date_format_panopoly_day
+features[variable][] = date_format_panopoly_time
+features[variable][] = date_format_short
+
+; Information added by drupal.org packaging script on 2012-06-21
+version = "7.x-1.0-beta4"
+core = "7.x"
+project = "panopoly_core"
+datestamp = "1340290620"
+

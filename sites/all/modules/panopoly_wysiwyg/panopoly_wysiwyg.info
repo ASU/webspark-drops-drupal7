@@ -1,0 +1,28 @@
+name = Panopoly WYSIWYG
+description = Integrates a WYSIWYG into Drupal.
+core = 7.x
+package = Panopoly
+php = 5.2.4
+project = panopoly_wysiwyg
+dependencies[] = caption_filter
+dependencies[] = features
+dependencies[] = image_resize_filter
+dependencies[] = media
+dependencies[] = page_manager
+dependencies[] = wysiwyg
+dependencies[] = wysiwyg_filter
+features[features_api][] = api:1
+features[filter][] = panopoly_html_text
+features[filter][] = panopoly_wysiwyg_text
+features[user_permission][] = use text format panopoly_html_text
+features[user_permission][] = use text format panopoly_wysiwyg_text
+features[wysiwyg][] = panopoly_html_text
+features[wysiwyg][] = panopoly_wysiwyg_text
+stylesheets[all][] = panopoly_wysiwyg.css
+
+; Information added by drupal.org packaging script on 2012-06-21
+version = "7.x-1.0-beta4"
+core = "7.x"
+project = "panopoly_wysiwyg"
+datestamp = "1340290631"
+

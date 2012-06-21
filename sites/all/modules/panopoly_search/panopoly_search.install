@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * Implementation of hook_install()
+ */
+function panopoly_search_install() {
+
+}
+
+/**
+ * Implemenetation of hook_uninstall()
+ */
+function panopoly_search_uninstall() {
+
+}
+
+/** 
+ * Panopoly Beta 4 Update: Enabling Search API DB Module
+ */
+function panopoly_search_update_7001(&$sandbox) {
+  module_enable(array('search_api_db'));
+}

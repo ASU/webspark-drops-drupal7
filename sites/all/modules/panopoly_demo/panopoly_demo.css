@@ -1,0 +1,30 @@
+/**
+ * CSS Styles for Demo Content
+ */
+div .panopoly-image-half {
+  float: left;
+  margin-right: 1em;
+}
+
+div .panopoly-image-quarter {
+  float: left;
+  margin-right: .75em;
+  margin-top: .5em;
+}
+
+div.field-type-image img {
+  margin: .5em 1em .5em 0;
+}
+
+/**
+ * CSS Styles for Demo Style Plugins
+ */
+.pane-blue-background {
+  background-color: #00BFFF;
+  padding: 1em;
+}
+
+.pane-red-background {
+  background-color: #DC143C;
+  padding: 1em;
+}
