@@ -1,5 +1,10 @@
 <?php
 /**
+ * @file
+ * Provide views handlers for fieldable panel panes
+ */
+
+/**
  * Field handler to present a link node delete.
  */
 class fieldable_panels_panes_handler_field_delete_entity extends fieldable_panels_panes_handler_field_view_entity {

@@ -120,7 +120,7 @@ function pm_existing_pages_find_paths($search = '') {
       ->fields('mr', array('path', 'title', 'page_callback', 'load_functions'))
       ->condition('page_callback', 'page_manager_page_execute', '!=')
       ->condition('page_callback', 'pm_existing_pages_pm_existing_pages_page', '!=')
-      ->condition('path', $search . '%', 'LIKE')
+      ->condition('path', db_like($search) . '%', 'LIKE')
       ->extend('PagerDefault')
       ->limit(10)
       ->execute();
@@ -160,11 +160,14 @@ function pm_existing_pages_determine_path($lf, $path) {
     if ($parts[$position] == '%') {
       // Menu tail.
       if (is_array($function) && key($function) == 'menu_tail_load') {
-        $parts[$position] = $parts[$position] = '%menu_tail';
+        $parts[$position] = '%menu_tail';
+      }
+      elseif (is_array($function) && key($function) == 'views_arg_load') {
+        $parts[$position] = '%views_arg';
       }
       // Normal load objects.
       elseif (is_string($function) && substr($function, -5) == '_load') {
-        $parts[$position] = $parts[$position] = '%' . str_replace('_load', '', $function);
+        $parts[$position] = '%' . str_replace('_load', '', $function);
       }
     }
   }

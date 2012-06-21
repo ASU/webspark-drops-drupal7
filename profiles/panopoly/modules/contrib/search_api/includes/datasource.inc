@@ -346,7 +346,7 @@ abstract class SearchApiAbstractDataSourceController implements SearchApiDataSou
    * @see hook_entity_property_info()
    */
   protected function getPropertyInfo() {
-    throw new SearchApiDataSourceException(t('No known property information for type !type.', array('!type' => $this->type)));
+    throw new SearchApiDataSourceException(t('No known property information for type @type.', array('@type' => $this->type)));
   }
 
   /**
@@ -432,7 +432,7 @@ abstract class SearchApiAbstractDataSourceController implements SearchApiDataSou
    *   An array containing all item IDs for this type.
    */
   protected function getAllItemIds() {
-    throw new SearchApiDataSourceException(t('Items not known for type !type.', array('!type' => $this->type)));
+    throw new SearchApiDataSourceException(t('Items not known for type @type.', array('@type' => $this->type)));
   }
 
   /**
@@ -689,8 +689,8 @@ abstract class SearchApiAbstractDataSourceController implements SearchApiDataSou
     if ($index->item_type != $this->type) {
       $index_type = search_api_get_item_type_info($index->item_type);
       $index_type = empty($index_type['name']) ? $index->item_type : $index_type['name'];
-      $msg = t('Invalid index !index of type !index_type passed to data source controller for type !this_type.',
-          array('!index' => $index->name, '!index_type' => $index_type, '!this_type' => $this->info['name']));
+      $msg = t('Invalid index @index of type @index_type passed to data source controller for type @this_type.',
+          array('@index' => $index->name, '@index_type' => $index_type, '@this_type' => $this->info['name']));
       throw new SearchApiDataSourceException($msg);
     }
   }

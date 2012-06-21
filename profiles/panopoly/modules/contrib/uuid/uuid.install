@@ -13,6 +13,22 @@ define('UUID_UPGRADE_VAR', 'uuid_upgrade_in_progress');
 module_load_include('inc', 'uuid', 'uuid.entity');
 
 /**
+ * Helper function that returns a schema field definition for UUID fields.
+ *
+ * @see uuid_schema_alter()
+ * @see uuid_install()
+ */
+function uuid_schema_field_definition() {
+  return array(
+    'type' => 'char',
+    'length' => 36,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'The Universally Unique Identifier.',
+  );
+}
+
+/**
  * Implements of hook_schema_alter().
  */
 function uuid_schema_alter(&$schema = array()) {

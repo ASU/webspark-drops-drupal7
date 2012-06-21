@@ -1,5 +1,10 @@
 <?php
 /**
+ * @file
+ * Provide views handler arguments for fieldable panel panes
+ */
+
+/**
  * Argument handler to accept a node type.
  */
 class fieldable_panels_panes_handler_argument_bundle extends views_handler_argument {

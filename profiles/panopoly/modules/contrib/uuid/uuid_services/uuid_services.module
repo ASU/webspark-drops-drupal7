@@ -170,7 +170,7 @@ function _uuid_services_entity_access($op, $args) {
     $entity_ids = entity_get_id_by_uuid($entity_type, array($args[1]));
     $entity = NULL;
     if (!empty($args[2])) {
-      $entity = (object)$args[2];
+      $entity = entity_create($entity_type, $args[2]);
       // We have to make the entity local (i.e. only have local references), for
       // access functions to work on it.
       entity_make_entity_local($entity_type, $entity);
@@ -204,4 +204,19 @@ function _uuid_services_entity_access($op, $args) {
     watchdog_exception('uuid_services', $exception);
     return services_error($exception, 406, $entity_type);
   }
+}
+
+/**
+ * Implements hook_services_resources().
+ */
+function uuid_services_services_resources() {
+  module_load_include('inc', 'uuid_services', 'resources/field_collection.resource');
+
+  $resources = array(
+    '#api_version' => 3002,
+  );
+
+  $resources += _field_collection_resource_definition();
+
+  return $resources;
 }

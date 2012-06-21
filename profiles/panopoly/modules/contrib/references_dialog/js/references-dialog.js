@@ -88,7 +88,7 @@
       }).width(window_width-10).height(window_height)
       $(window).bind("resize scroll", function() {
         // Move the dialog the main window moves.
-        if (typeof Drupal.ReferencesDialog == "object") {
+        if (typeof Drupal.ReferencesDialog == "object" && Drupal.ReferencesDialog.open_dialog != null) {
           Drupal.ReferencesDialog.open_dialog.
             dialog("option", "position", ["center", 10]);
           Drupal.ReferencesDialog.setDimensions();

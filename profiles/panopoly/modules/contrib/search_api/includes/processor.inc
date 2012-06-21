@@ -269,7 +269,7 @@ abstract class SearchApiAbstractProcessor implements SearchApiProcessorInterface
       }
     }
     else {
-        $this->processFieldValue($value);
+      $this->processFieldValue($value);
     }
     if (is_array($value)) {
       $type = 'tokens';

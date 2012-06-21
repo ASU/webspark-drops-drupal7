@@ -57,6 +57,10 @@ class panelizer_defaults_ui extends ctools_export_ui {
       return TRUE;
     }
 
+    if ($this->entity_view_mode != $item->view_mode) {
+      return TRUE;
+    }
+
     if (!$this->entity_handler->access_default_panelizer_object($item)) {
       return TRUE;
     }
@@ -77,6 +81,7 @@ class panelizer_defaults_ui extends ctools_export_ui {
     else if ($form_state['op'] == 'add') {
       $form_state['item']->panelizer_type = $this->entity_handler->entity_type;
       $form_state['item']->panelizer_key = $this->entity_bundle;
+      $form_state['item']->view_mode = $this->entity_view_mode;
       $form_state['item']->display = $this->entity_handler->get_default_display();
     }
     return parent::edit_execute_form_standard($form_state);

@@ -50,7 +50,7 @@ class panelizer_plugin_row_panelizer_node_view extends views_plugin_row_node_vie
     }
 
     $handler = panelizer_entity_plugin_get_handler('node');
-    $info = $handler->render_entity($node);
+    $info = $handler->render_entity($node, 'page_manager');
 
     if (empty($info)) {
       if (!empty($this->options['render_anything'])) {

@@ -126,7 +126,7 @@ function media_variable_default($name = NULL) {
       // Name of the theme to use in media popup dialogs, defaults to admin_theme
       'dialog_theme' => '',
       // @TODO: Make a configuration form with this.
-      'file_extensions' => 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp mp3 mov m4v mp4 mpeg avi ogg oga ogv wmv ico',
+      'file_extensions' => 'jpg jpeg gif png txt doc docx xls xlsx pdf ppt pptx pps ppsx odt ods odp mp3 mov m4v mp4 mpeg avi ogg oga ogv wmv ico',
       'max_filesize' => '',
       'debug' => FALSE,
 

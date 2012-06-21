@@ -127,7 +127,7 @@ class SearchApiViewsHandlerFilterOptions extends SearchApiViewsHandlerFilter {
     if (count($this->value) == 0) {
       return $this->operator == '=' ? t('none') : t('any');
     }
-    else if (count($this->value) == 1) {
+    elseif (count($this->value) == 1) {
       // If there is only a single value, use just the plain operator, = or <>.
       $operator = check_plain($this->operator);
       $values = check_plain($this->definition['options'][reset($this->value)]);
@@ -158,7 +158,7 @@ class SearchApiViewsHandlerFilterOptions extends SearchApiViewsHandlerFilter {
     if (is_scalar($this->value) && $this->value !== '') {
       $this->query->condition($this->real_field, $this->value, $this->operator, $this->options['group']);
     }
-    elseif($this->value) {
+    elseif ($this->value) {
       if ($this->operator == '=') {
         $filter = $this->query->createFilter('OR');
         // $filter will be NULL if there were errors in the query.

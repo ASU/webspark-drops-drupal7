@@ -25,8 +25,6 @@ class MediaBrowserLibrary extends MediaBrowserPlugin {
   public function view() {
     $path = drupal_get_path('module', 'media');
     $build['#attached']['js'][] = $path . '/js/plugins/media.library.js';
-    //@todo: should move this.
-    $build['#attached']['css'][] = $path . '/js/plugins/media.library.css';
 
     $build['#settings']['viewMode'] = 'thumbnails';
     $build['#settings']['getMediaUrl'] = url('media/browser/list');

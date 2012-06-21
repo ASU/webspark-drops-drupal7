@@ -300,11 +300,48 @@ function fieldable_panels_panes_theme() {
     'fieldable_panels_pane' => array(
       'render element' => 'elements',
       'variable'  => array(
-        'element'  => null,
+        'element'  => NULL,
       ),
       'template'  => 'fieldable-panels-pane',
     ),
   );
+}
+
+/**
+ * Implements hook_admin_menu_map().
+ */
+function fieldable_panels_panes_admin_menu_map() {
+  $bundles = array();
+  $info = entity_get_info('fieldable_panels_pane');
+
+  foreach ($info['bundles'] as $bundle_name => $bundle_info) {
+    $bundles[] = strtr($bundle_name, '_', '-');
+
+    if (isset($bundle_info['admin'])) {
+      $admin_path = $bundle_info['admin']['path'];
+      $fields = array();
+
+      foreach (field_info_instances('fieldable_panels_pane', $bundle_name) as $field) {
+        $fields[] = $field['field_name'];
+      }
+
+      $map["$admin_path/fields/%field_ui_menu"]['parent'] = "$admin_path/fields";
+      $map["$admin_path/fields/%field_ui_menu"]['arguments'][] = array(
+        '%fieldable_panels_panes_type' => array($bundle_name),
+        '%field_ui_menu' => $fields,
+      );
+    }
+  }
+
+  $map['admin/structure/panels/entity/manage/%fieldable_panels_panes_type'] = array(
+    'parent' => 'admin/structure/panels/entity',
+    'arguments' => array(
+      array('%fieldable_panels_panes_type' => $bundles),
+    ),
+  );
+
+
+  return $map;
 }
 
 // -------------------------------------------------------------------------
@@ -366,7 +403,11 @@ function fieldable_panels_panes_entity_title($entity) {
  * Implements hook_ctools_plugin_directory()
  */
 function fieldable_panels_panes_ctools_plugin_directory($owner, $plugin_type) {
-  if ($owner = 'ctools' && $plugin_type == 'content_types') {
+  if ($owner == 'ctools' && $plugin_type == 'content_types') {
+    return 'plugins/' . $plugin_type;
+  }
+
+  if ($owner == 'panelizer' && defined('PANELIZER_VERSION') && version_compare(PANELIZER_VERSION, '3.0', '>=')) {
     return 'plugins/' . $plugin_type;
   }
 }
@@ -450,7 +491,7 @@ function fieldable_panels_panes_preprocess_fieldable_panels_pane(&$vars) {
   field_attach_preprocess('fieldable_panels_pane', $vars['elements']['#element'], $vars['content'], $vars);
 
   $vars['fields'] = '';
-  foreach($vars['content'] as $content) {
+  foreach ($vars['content'] as $content) {
     $vars['fields'] .= render($content);
   }
 }

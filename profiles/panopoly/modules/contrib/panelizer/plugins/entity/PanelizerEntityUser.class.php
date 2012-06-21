@@ -14,6 +14,7 @@ class PanelizerEntityUser extends PanelizerEntityDefault {
   // No bundle support so we hardcode the default bundle.
   public $entity_admin_bundle = 'user';
   public $views_table = 'users';
+  public $uses_page_manager = TRUE;
 
   public function entity_access($op, $entity) {
     // This must be implemented by the extending class.
@@ -34,13 +35,6 @@ class PanelizerEntityUser extends PanelizerEntityDefault {
   public function entity_save($entity) {
     // IMPORTANT NOTE: this can *only* update panelizer items!
     user_save($entity, array('panelizer' => $entity->panelizer));
-  }
-
-  /**
-   * Implement the save function for the entity.
-   */
-  public function entity_allows_revisions($entity) {
-    return array(FALSE, FALSE);
   }
 
   public function settings_form(&$form, &$form_state) {
@@ -67,10 +61,10 @@ class PanelizerEntityUser extends PanelizerEntityDefault {
     return t('User');
   }
 
-  function get_default_display() {
+  function get_default_display($bundle, $view_mode) {
     // For now we just go with the empty display.
     // @todo come up with a better default display.
-    return parent::get_default_display();
+    return parent::get_default_display($bundle, $view_mode);
   }
 
   /**

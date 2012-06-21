@@ -416,7 +416,7 @@ function search_api_update_7101() {
     catch (Exception $e1) {
       // Ignore.
     }
-    throw new DrupalUpdateException(t('An exception occurred during the update: !msg.', array('!msg' => $e->getMessage())));
+    throw new DrupalUpdateException(t('An exception occurred during the update: @msg.', array('@msg' => $e->getMessage())));
   }
 }
 
@@ -787,6 +787,31 @@ function search_api_update_7113() {
         ))
         ->condition('id', $index->id)
         ->execute();
+    }
+  }
+}
+
+/**
+ * Sanitize watchdog messages.
+ */
+function search_api_update_7114() {
+  if (db_table_exists('watchdog')) {
+    try {
+      $entries = db_select('watchdog', 'w')
+        ->fields('w', array('wid', 'message'))
+        ->condition('type', 'search_api')
+        ->execute();
+      foreach ($entries as $entry) {
+        db_update('watchdog')
+          ->fields(array(
+            'message' => check_plain($entry->message),
+          ))
+          ->condition('wid', $entry->wid)
+          ->execute();
+      }
+    }
+    catch (Exception $e) {
+      throw new DrupalUpdateException(t('An exception occurred during the update: @msg.', array('@msg' => $e->getMessage())));
     }
   }
 }

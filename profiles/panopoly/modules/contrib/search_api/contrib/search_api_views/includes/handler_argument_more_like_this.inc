@@ -11,6 +11,7 @@ class SearchApiViewsHandlerArgumentMoreLikeThis extends SearchApiViewsHandlerArg
    */
   public function option_definition() {
     $options = parent::option_definition();
+    unset($options['break_phrase']);
     $options['fields'] = array('default' => array());
     return $options;
   }
@@ -20,6 +21,7 @@ class SearchApiViewsHandlerArgumentMoreLikeThis extends SearchApiViewsHandlerArg
    */
   public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
+    unset($form['break_phrase']);
 
     $index = search_api_index_load(substr($this->table, 17));
     if (!empty($index->options['fields'])) {
@@ -56,13 +58,13 @@ class SearchApiViewsHandlerArgumentMoreLikeThis extends SearchApiViewsHandlerArg
     $server = $this->query->getIndex()->server();
     if (!$server->supportsFeature('search_api_mlt')) {
       $class = search_api_get_service_info($server->class);
-      throw new SearchApiException(t('The search service "!class" does not offer "More like this" functionality.',
-          array('!class' => $class['name'])));
+      throw new SearchApiException(t('The search service "@class" does not offer "More like this" functionality.',
+          array('@class' => $class['name'])));
       return;
     }
     $fields = $this->options['fields'] ? $this->options['fields'] : array();
     if (empty($fields)) {
-      foreach($this->query->getIndex()->options['fields'] as $key => $field) {
+      foreach ($this->query->getIndex()->options['fields'] as $key => $field) {
         $fields[] = $key;
       }
     }

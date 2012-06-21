@@ -1,5 +1,10 @@
 <?php
 /**
+ * @file
+ * Provide views handlers for fieldable panel panes
+ */
+
+/**
  * Field handler to display if the revision is current or not.
  */
 class fieldable_panels_panes_handler_field_is_current extends views_handler_field {

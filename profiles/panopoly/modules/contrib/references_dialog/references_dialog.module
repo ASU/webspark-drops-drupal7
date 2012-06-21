@@ -36,7 +36,7 @@ function references_dialog_element_info_alter(&$info) {
   foreach (references_dialog_widgets() as $widget) {
     // If this element type is specified as a type that a widget should be
     // attached to, go ahead and make it so.
-    if (isset($info[$widget['element_type']])) {
+    if (isset($info[$widget['element_type']]) && (!isset($info[$widget['element_type']]['#after_build']) || !in_array('references_dialog_process_widget', $info[$widget['element_type']]['#after_build']))) {
       $info[$widget['element_type']]['#after_build'][] = 'references_dialog_process_widget';
     }
   }
@@ -580,7 +580,8 @@ function references_dialog_redirect_access() {
  */
 function references_dialog_redirect_page($entity_id, $entity_type) {
   // Get some information about the entity we are dealing with.
-  $entity = reset(entity_load($entity_type, array($entity_id)));
+  $entity = entity_load($entity_type, array($entity_id));
+  $entity = reset($entity);
   $entity_info = entity_get_info($entity_type);
   $entity_id = $entity->{$entity_info['entity keys']['id']};
   $entity_title = entity_label($entity_type, $entity);
@@ -661,7 +662,10 @@ function references_dialog_get_admin_path($entity_type, $op, $bundle = NULL, $en
     if (isset($entity)) {
         $path = str_replace('[entity_id]', $wrapper->getIdentifier(), $path);
     }
-    if (isset($bundle)) {
+    if (!$bundle) {
+      $bundle = $wrapper->getBundle();
+    }
+    if ($bundle) {
       $path = str_replace('[bundle]', $bundle, $path);
       // Some entities (like node) provide a sort of sanitized version.
       // This makes sure we support this.

@@ -3,9 +3,9 @@ description = Provides the ability to override existing pages through Page manag
 core = 7.x
 dependencies[] = page_manager
 package = Chaos tool suite
-; Information added by drupal.org packaging script on 2012-04-25
-version = "7.x-1.2"
+; Information added by drupal.org packaging script on 2012-05-21
+version = "7.x-1.4"
 core = "7.x"
 project = "pm_existing_pages"
-datestamp = "1335344186"
+datestamp = "1337606183"
 

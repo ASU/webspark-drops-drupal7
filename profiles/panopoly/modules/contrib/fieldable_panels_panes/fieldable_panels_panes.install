@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * fieldable panel panes install file
+ */
 
 /**
  * Implements hook_schema().
@@ -158,4 +162,16 @@ function fieldable_panels_panes_update_7101(&$sandbox) {
   if (!db_field_exists('fieldable_panels_panes_revision', 'vuuid')) {
     db_add_field('fieldable_panels_panes_revision', 'vuuid', array('type' => 'char', 'length' => 36, 'default' => '', 'description' => 'The Universally Unique Identifier.'));
   }
+}
+
+/**
+ * Delete stale revisions.
+ */
+function fieldable_panels_panes_update_7102(&$sandbox) {
+  $existing = db_select('fieldable_panels_panes', 'f');
+  $existing->fields('f', array('fpid'));
+
+  db_delete('fieldable_panels_panes_revision')
+    ->condition('fpid', $existing, 'NOT IN')
+    ->execute();
 }

@@ -7,6 +7,7 @@
 $plugin = array(
   'handler' => 'PanelizerEntityUser',
   'entity path' => 'user/%user',
+  'uses page manager' => TRUE,
   'hooks' => array(
     'menu' => TRUE,
     'admin_paths' => TRUE,

@@ -23,18 +23,15 @@ class SearchApiEntityDataSourceController extends SearchApiAbstractDataSourceCon
     $info = entity_get_info($this->type);
     $properties = entity_get_property_info($this->type);
     if (empty($info['entity keys']['id'])) {
-      throw new SearchApiDataSourceException(t("Entity type !type doesn't specify an ID key.",
-          array('!type' => $info['label'])));
+      throw new SearchApiDataSourceException(t("Entity type @type doesn't specify an ID key.", array('@type' => $info['label'])));
     }
     $field = $info['entity keys']['id'];
     if (empty($properties['properties'][$field]['type'])) {
-      throw new SearchApiDataSourceException(t("Entity type !type doesn't specify a type for the !prop property.",
-          array('!type' => $info['label'], '!prop' => $field)));
+      throw new SearchApiDataSourceException(t("Entity type @type doesn't specify a type for the @prop property.", array('@type' => $info['label'], '@prop' => $field)));
     }
     $type = $properties['properties'][$field]['type'];
     if (search_api_is_list_type($type)) {
-      throw new SearchApiDataSourceException(t("Entity type !type uses list field !prop as its ID.",
-          array('!type' => $info['label'], '!prop' => $field)));
+      throw new SearchApiDataSourceException(t("Entity type @type uses list field @prop as its ID.", array('@type' => $info['label'], '@prop' => $field)));
     }
     if ($type == 'token') {
       $type = 'string';

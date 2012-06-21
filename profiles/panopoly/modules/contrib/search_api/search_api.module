@@ -465,7 +465,7 @@ function search_api_search_api_server_update(SearchApiServer $server) {
                   $server->deleteItems(array($id), $index);
                 }
                 else {
-                  watchdog('search_api', t('Unknown task "!task" for server "!name".', array('!task' => $task, '!name' => $server->machine_name)), NULL, 'warning');
+                  watchdog('search_api', t('Unknown task "@task" for server "@name".', array('@task' => $task, '@name' => $server->machine_name)), NULL, WATCHDOG_WARNING);
                 }
             }
           }
@@ -1079,7 +1079,7 @@ function search_api_get_items_to_index(SearchApiIndex $index, $limit = -1) {
 function search_api_query($id, array $options = array()) {
   $index = search_api_index_load($id);
   if (!$index) {
-    throw new SearchApiException(t('Unknown index with ID !id.', array('!id' => $id)));
+    throw new SearchApiException(t('Unknown index with ID @id.', array('@id' => $id)));
   }
   return $index->query($options);
 }
@@ -1275,8 +1275,7 @@ function search_api_get_datasource_controller($type) {
     }
     if (empty($datasources[$type]) || !($datasources[$type] instanceof SearchApiDataSourceControllerInterface)) {
       unset($datasources[$type]);
-      throw new SearchApiException(t('Unknown or invalid item type !type.',
-          array('!type' => $type)));
+      throw new SearchApiException(t('Unknown or invalid item type @type.', array('@type' => $type)));
     }
   }
   return $datasources[$type];
@@ -1373,7 +1372,7 @@ function _search_api_query_add_node_access($account, SearchApiQueryInterface $qu
     // Simple hack for returning no results.
     $query->condition('status', 0);
     $query->condition('status', 1);
-    watchdog('search_api', 'User !name tried to execute a search, but cannot access content.', array('!name' => theme('username', array('account' => $account))), WATCHDOG_NOTICE);
+    watchdog('search_api', 'User @name tried to execute a search, but cannot access content.', array('@name' => theme('username', array('account' => $account))), WATCHDOG_NOTICE);
     return;
   }
 
@@ -2069,7 +2068,7 @@ function _search_api_indexing_queue_process(array $task) {
       $index->datasource()->trackItemChange($diff, array($index), TRUE);
     }
     if ($num) {
-      watchdog('search_api', t('Indexed !num items for index !name', array('!num' => $num, '!name' => $index->name)), NULL, WATCHDOG_INFO);
+      watchdog('search_api', t('Indexed @num items for index @name', array('@num' => $num, '@name' => $index->name)), NULL, WATCHDOG_INFO);
     }
     return $num;
   }

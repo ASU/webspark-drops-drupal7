@@ -369,8 +369,7 @@ class SearchApiIndex extends Entity {
     if (!isset($this->server_object) || $reset) {
       $this->server_object = $this->server ? search_api_server_load($this->server) : FALSE;
       if ($this->server && !$this->server_object) {
-        throw new SearchApiException(t('Unknown server !server specified for index !name.',
-            array('!server' => $this->server, '!name' => $this->machine_name)));
+        throw new SearchApiException(t('Unknown server @server specified for index @name.', array('@server' => $this->server, '@name' => $this->machine_name)));
       }
     }
     return $this->server_object ? $this->server_object : NULL;
@@ -413,10 +412,10 @@ class SearchApiIndex extends Entity {
       return array();
     }
     if (!$this->enabled) {
-      throw new SearchApiException(t("Couldn't index values on '!name' index (index is disabled)", array('!name' => $this->name)));
+      throw new SearchApiException(t("Couldn't index values on '@name' index (index is disabled)", array('@name' => $this->name)));
     }
     if (empty($this->options['fields'])) {
-      throw new SearchApiException(t("Couldn't index values on '!name' index (no fields selected)", array('!name' => $this->name)));
+      throw new SearchApiException(t("Couldn't index values on '@name' index (no fields selected)", array('@name' => $this->name)));
     }
     $fields = $this->options['fields'];
     $custom_type_fields = array();
@@ -430,7 +429,7 @@ class SearchApiIndex extends Entity {
       }
     }
     if (empty($fields)) {
-      throw new SearchApiException(t("Couldn't index values on '!name' index (no fields selected)", array('!name' => $this->name)));
+      throw new SearchApiException(t("Couldn't index values on '@name' index (no fields selected)", array('@name' => $this->name)));
     }
 
     // Mark all items that are rejected as indexed.
@@ -564,13 +563,13 @@ class SearchApiIndex extends Entity {
         continue;
       }
       if (empty($infos[$id]) || !class_exists($infos[$id]['class'])) {
-        watchdog('search_api', t('Undefined data alteration !class specified in index !name', array('!class' => $id, '!name' => $this->name)), NULL, WATCHDOG_WARNING);
+        watchdog('search_api', t('Undefined data alteration @class specified in index @name', array('@class' => $id, '@name' => $this->name)), NULL, WATCHDOG_WARNING);
         continue;
       }
       $class = $infos[$id]['class'];
       $callback = new $class($this, empty($settings['settings']) ? array() : $settings['settings']);
       if (!($callback instanceof SearchApiAlterCallbackInterface)) {
-        watchdog('search_api', t('Unknown callback class !class specified for data alteration !name', array('!class' => $class, '!name' => $id)), NULL, WATCHDOG_WARNING);
+        watchdog('search_api', t('Unknown callback class @class specified for data alteration @name', array('@class' => $class, '@name' => $id)), NULL, WATCHDOG_WARNING);
         continue;
       }
 
@@ -601,13 +600,13 @@ class SearchApiIndex extends Entity {
         continue;
       }
       if (empty($infos[$id]) || !class_exists($infos[$id]['class'])) {
-        watchdog('search_api', t('Undefined processor !class specified in index !name', array('!class' => $id, '!name' => $this->name)), NULL, WATCHDOG_WARNING);
+        watchdog('search_api', t('Undefined processor @class specified in index @name', array('@class' => $id, '@name' => $this->name)), NULL, WATCHDOG_WARNING);
         continue;
       }
       $class = $infos[$id]['class'];
       $processor = new $class($this, isset($settings['settings']) ? $settings['settings'] : array());
       if (!($processor instanceof SearchApiProcessorInterface)) {
-        watchdog('search_api', t('Unknown processor class !class specified for processor !name', array('!class' => $class, '!name' => $id)), NULL, WATCHDOG_WARNING);
+        watchdog('search_api', t('Unknown processor class @class specified for processor @name', array('@class' => $class, '@name' => $id)), NULL, WATCHDOG_WARNING);
         continue;
       }
 

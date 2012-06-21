@@ -64,6 +64,24 @@ function book_entity_uuid_presave(&$entity, $entity_type) {
 }
 
 /**
+ * Implements hook_entity_uuid_presave().
+ */
+function user_entity_uuid_presave(&$entity, $entity_type) {
+  if ($entity_type == 'user') {
+    if (!empty($entity->picture)) {
+      $uuids = entity_get_id_by_uuid('file', array($entity->picture['uuid']));
+      $fid = current($uuids);
+      if (!$entity->is_new) {
+        $entity->picture = file_load($fid);
+      }
+      else {
+        $entity->picture = $fid;
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_entity_uuid_load().
  */
 function comment_entity_uuid_load(&$entities, $entity_type) {
@@ -110,6 +128,11 @@ function file_entity_uuid_load(&$entities, $entity_type) {
 function file_entity_uuid_presave(&$entity, $entity_type) {
   if ($entity_type == 'file') {
     entity_property_uuid_to_id($entity, 'user', 'uid');
+    if (isset($entity->file_contents)) {
+      $directory = drupal_dirname($entity->uri);
+      file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+      file_unmanaged_save_data(base64_decode($entity->file_contents), $entity->uri, FILE_EXISTS_REPLACE);
+    }
   }
 }
 
@@ -132,6 +155,9 @@ function path_entity_uuid_load($entities, $entity_type) {
       $nid = str_replace('node/', '', $source);
       $entities[$nid]->path['alias'] = $alias;
       $entities[$nid]->path['pathauto'] = FALSE;
+      unset($entities[$nid]->path['pid']);
+      unset($entities[$nid]->path['source']);
+      unset($entities[$nid]->path['language']);
     }
   }
   elseif ($entity_type == 'taxonomy_term') {
@@ -149,6 +175,9 @@ function path_entity_uuid_load($entities, $entity_type) {
       $tid = str_replace('taxonomy/term/', '', $source);
       $entities[$tid]->path['alias'] = $alias;
       $entities[$tid]->path['pathauto'] = FALSE;
+      unset($entities[$tid]->path['pid']);
+      unset($entities[$tid]->path['source']);
+      unset($entities[$tid]->path['language']);
     }
   }
 }
@@ -380,7 +409,7 @@ function field_collection_field_uuid_presave($entity_type, $entity, $field, $ins
 function node_uuid_entities_features_export_entity_alter(&$entity, $entity_type) {
   if ($entity_type == 'node') {
     foreach (array('data', 'name', 'picture', 'revision_uid', 'last_comment_timestamp') as $property) {
-      if (isset($entity->{$property}) || $entity->{$property} === NULL) {
+      if (property_exists($entity, $property)) {
         unset($entity->{$property});
       }
     }
@@ -393,7 +422,7 @@ function node_uuid_entities_features_export_entity_alter(&$entity, $entity_type)
 function user_uuid_entities_features_export_entity_alter(&$entity, $entity_type) {
   if ($entity_type == 'user') {
     foreach (array('data', 'access', 'login') as $property) {
-      if (isset($entity->{$property}) || $entity->{$property} === NULL) {
+      if (property_exists($entity, $property)) {
         unset($entity->{$property});
       }
     }

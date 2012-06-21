@@ -7,6 +7,7 @@
 $plugin = array(
   'handler' => 'PanelizerEntityTaxonomyTerm',
   'entity path' => 'taxonomy/term/%taxonomy_term',
+  'uses page manager' => TRUE,
   'hooks' => array(
     'menu' => TRUE,
     'admin_paths' => TRUE,

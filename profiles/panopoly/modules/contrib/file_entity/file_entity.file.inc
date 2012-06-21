@@ -157,7 +157,7 @@ function file_entity_file_load($files) {
 function file_entity_image_dimensions($file, $force = FALSE) {
   // Prevent PHP notices when trying to read empty files.
   // @see http://drupal.org/node/681042
-  if (!filesize($file->uri)) {
+  if (!$file->filesize) {
     return;
   }
 

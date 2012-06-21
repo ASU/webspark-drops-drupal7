@@ -8,12 +8,11 @@
   margin-bottom: .5em;
 }
 
-#panopoly-theme-form .form-item-theme #edit-theme label img {
+#panopoly-theme-form .form-item-theme label img {
   float: left;
-  width: 20%;
+  width: 100px;
   margin-right: 1em;
 }
-
 
 #panopoly-apps-check #edit-pantheon img {
   float: right;

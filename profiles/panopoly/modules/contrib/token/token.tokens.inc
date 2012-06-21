@@ -133,7 +133,7 @@ function token_token_info() {
   $info['tokens']['content-type']['edit-url'] = array(
     'name' => t('Edit URL'),
     'description' => t("The URL of the content type's edit page."),
-    //'type' => 'url',
+    // 'type' => 'url',
   );
 
   // Taxonomy term and vocabulary tokens.
@@ -141,7 +141,7 @@ function token_token_info() {
     $info['tokens']['term']['edit-url'] = array(
       'name' => t('Edit URL'),
       'description' => t("The URL of the taxonomy term's edit page."),
-      //'type' => 'url',
+      // 'type' => 'url',
     );
     $info['tokens']['term']['parents'] = array(
       'name' => t('Parents'),
@@ -161,7 +161,7 @@ function token_token_info() {
     $info['tokens']['vocabulary']['edit-url'] = array(
       'name' => t('Edit URL'),
       'description' => t("The URL of the vocabulary's edit page."),
-      //'type' => 'url',
+      // 'type' => 'url',
     );
   }
 
@@ -185,13 +185,13 @@ function token_token_info() {
     'name' => t('Account cancellation URL'),
     'description' => t('The URL of the confirm delete page for the user account.'),
     'restricted' => TRUE,
-    //'type' => 'url',
+    // 'type' => 'url',
   );
   $info['tokens']['user']['one-time-login-url'] = array(
     'name' => t('One-time login URL'),
     'description' => t('The URL of the one-time login page for the user account.'),
     'restricted' => TRUE,
-    //'type' => 'url',
+    // 'type' => 'url',
   );
   if (variable_get('user_pictures', 0)) {
     $info['tokens']['user']['picture'] = array(
@@ -1415,15 +1415,10 @@ function field_tokens($type, $tokens, array $data = array(), array $options = ar
         continue;
       }
 
-      // Replace the [entity:field-name] token.
-      if (isset($tokens[$field_name])) {
+      // Replace the [entity:field-name] token only if token module added this
+      // token.
+      if (isset($tokens[$field_name]) && _token_module($data['token_type'], $field_name) == 'token') {
         $original = $tokens[$field_name];
-
-        // Assert that this field was added by token.module.
-        $token_info = token_get_info($data['token_type'], $field_name);
-        if (!isset($token_info['module']) || $token_info['module'] != 'token') {
-          continue;
-        }
 
         $field_output = field_view_field($entity_type, $entity, $field_name, 'token', $langcode);
         $field_output['#token_options'] = $options;

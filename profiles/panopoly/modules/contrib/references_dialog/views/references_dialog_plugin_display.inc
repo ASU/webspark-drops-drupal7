@@ -188,6 +188,19 @@ class references_dialog_plugin_display extends views_plugin_display {
     // And the title, which is much easier.
     drupal_set_title(filter_xss_admin($this->view->get_title()), PASS_THROUGH);
     $content = $this->view->render();
+    return $content;
+  }
+
+  function query() {
+    // At this point we need to see if our widget needs to inject something
+    // into the query in order to filter out unwanted data.
+    if (isset($this->view->references_dialog['attachable']['query'])) {
+      $this->view->references_dialog['attachable']['query']($this->view);
+    }
+  }
+
+  function render() {
+    $output = theme($this->theme_functions(), array('view' => $this->view));
     // Let's add the data necessary to javascript, so that we can
     // act upon it there.
     $js_result = array();
@@ -208,19 +221,6 @@ class references_dialog_plugin_display extends views_plugin_display {
     }
     drupal_add_js(drupal_get_path('module', 'references_dialog') . '/js/search-reference.js');
     drupal_add_js(array('ReferencesDialog' => array('entities' => $js_result)), 'setting');
-
-    return $content;
-  }
-
-  function query() {
-    // At this point we need to see if our widget needs to inject something
-    // into the query in order to filter out unwanted data.
-    if (isset($this->view->references_dialog['attachable']['query'])) {
-      $this->view->references_dialog['attachable']['query']($this->view);
-    }
-  }
-
-  function render() {
-    return theme($this->theme_functions(), array('view' => $this->view));
+    return $output;
   }
 }

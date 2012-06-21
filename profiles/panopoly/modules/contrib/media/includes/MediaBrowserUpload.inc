@@ -23,15 +23,15 @@ class MediaBrowserUpload extends MediaBrowserPlugin {
    * Implements MediaBrowserPlugin::view().
    */
   public function view() {
-    module_load_include('inc', 'media', 'includes/media.pages');
+    module_load_include('inc', 'file_entity', 'file_entity.pages');
 
     $build = array();
     if ($this->params['multiselect'] && module_exists('plupload')) {
-      $build['form'] = drupal_get_form('media_add_upload_multiple', $this->params);
+      $build['form'] = drupal_get_form('file_entity_add_upload_multiple', $this->params);
       $build['#attached']['js'][] = drupal_get_path('module', 'media') . '/js/plugins/media.upload_multiple.js';
     }
     else {
-      $build['form'] = drupal_get_form('media_add_upload', $this->params);
+      $build['form'] = drupal_get_form('file_entity_add_upload', $this->params);
     }
 
     return $build;

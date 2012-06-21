@@ -172,7 +172,7 @@ class SearchApiFacetapiAdapter extends FacetapiAdapter {
       // properly.
       $keys = '[' . t('complex query') . ']';
     }
-    else if (!$keys) {
+    elseif (!$keys) {
       // If a base path other than the current one is set, we assume that we
       // shouldn't report on the current search. Highly hack-y, of course.
       if ($search[0]->getOption('search_api_base_path', $_GET['q']) !== $_GET['q']) {

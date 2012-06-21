@@ -130,7 +130,7 @@ class SearchApiServer extends Entity {
         $this->proxy = new $class['class']($this);
       }
       if (!($this->proxy instanceof SearchApiServiceInterface)) {
-        throw new SearchApiException(t('Search server with machine name !name specifies illegal service class !class.', array('!name' => $this->machine_name, '!class' => $this->class)));
+        throw new SearchApiException(t('Search server with machine name @name specifies illegal service class @class.', array('@name' => $this->machine_name, '@class' => $this->class)));
       }
     }
   }

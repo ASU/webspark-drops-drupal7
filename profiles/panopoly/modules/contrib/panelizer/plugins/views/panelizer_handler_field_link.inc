@@ -25,6 +25,7 @@ class panelizer_handler_field_link extends views_handler_field_node_link {
   function option_definition() {
     $options = parent::option_definition();
     $options['panelizer_tab'] = array('default' => 'panelizer');
+    $options['view_mode'] = array('default' => 'page_manager');
     return $options;
   }
 
@@ -35,6 +36,20 @@ class panelizer_handler_field_link extends views_handler_field_node_link {
       '#title' => 'Panelizer tab to link to',
       '#options' => $this->tab_map,
       '#default_value' => $this->options['panelizer_tab'],
+    );
+
+    $entity_type = $this->definition['entity_type'];
+    $handler = panelizer_entity_plugin_get_handler($entity_type);
+
+    $view_modes = array();
+    foreach ($handler->plugin['view modes'] as $view_mode => $view_mode_info) {
+      $view_modes[$view_mode] = $view_mode_info['label'];
+    }
+
+    $form['view_mode'] = array(
+      '#type' => 'select',
+      '#title' => t('View mode'),
+      '#options' => $view_modes,
     );
   }
 
@@ -51,7 +66,7 @@ class panelizer_handler_field_link extends views_handler_field_node_link {
     if ($handler && $handler->is_panelized($bundle) && $handler->panelizer_access($this->options['panelizer_tab'], $entity)) {
       $this->options['alter']['make_link'] = TRUE;
 
-      $path = str_replace("%$entity_type", $entity_id, $handler->plugin['entity path']) . '/panelizer/' . $this->options['panelizer_tab'];
+      $path = str_replace("%$entity_type", $entity_id, $handler->plugin['entity path']) . '/panelizer/' . $this->options['view_mode'] . '/' . $this->options['panelizer_tab'];
       $this->options['alter']['path'] = $path;
       $this->options['alter']['query'] = drupal_get_destination();
       $text = !empty($this->options['text']) ? $this->options['text'] : $this->tab_map[$this->options['panelizer_tab']];

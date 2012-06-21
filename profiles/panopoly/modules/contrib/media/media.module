@@ -233,34 +233,15 @@ function media_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  // @todo Move this to file_entity
-  $items['file/add'] = array(
-    'title' => 'Add file',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('media_add_upload'),
-    'access arguments' => array('administer files'),
-    'file' => 'includes/media.pages.inc',
-  );
-  if (module_exists('plupload') && module_exists('multiform')) {
-    $items['file/add']['page arguments'] = array('media_add_upload_multiple');
-  }
-  $items['file/add/upload'] = array(
-    'title' => 'Upload',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
-  );
-
   return $items;
 }
 
 /**
  * Implements hook_menu_local_tasks_alter().
- *
- * @todo Move this to file_entity
  */
 function media_menu_local_tasks_alter(&$data, $router_item, $root_path) {
-  // Add action link to 'file/add' on 'admin/content/file' page.
-  if ($root_path == 'admin/content/file' || $root_path == 'admin/content/file/thumbnails') {
+  // Add action link to 'file/add' on 'admin/content/file/thumbnails' page.
+  if ($root_path == 'admin/content/file/thumbnails') {
     $item = menu_get_item('file/add');
     if (!empty($item['access'])) {
       $data['actions']['output'][] = array(
@@ -432,10 +413,11 @@ function media_styles_style_flush($style) {
 function media_page_alter(&$page) {
   if (isset($_GET['render']) && $_GET['render'] == 'media-popup') {
     $page['#theme'] = 'media_dialog_page';
-    // temporary fix while awaiting fix for 914786
-    if (module_exists('admin_menu')) {
-      admin_menu_suppress();
-    }
+
+    // Disable administration modules from adding output to the popup.
+    // @see http://drupal.org/node/914786
+    module_invoke_all('suppress');
+
     foreach (element_children($page) as $key) {
       if ($key != 'content') {
         unset($page[$key]);
@@ -566,8 +548,21 @@ function media_form_file_entity_edit_alter(&$form, &$form_state) {
   }
 }
 
+/**
+ * Alter forms when using the media browser popup to use
+ * media_browser_form_submit
+ */
 function media_form_alter(&$form, &$form_state, $form_id) {
+  // If we're in the media browser, set the #media_browser key to true
+  // so that if an ajax request gets sent to a different path, the form
+  // still uses the media_browser_form_submit callback
   if (current_path() == 'media/browser' && $form_id != 'views_exposed_form') {
+    $form_state['#media_browser'] = TRUE;
+  }
+
+  // If the #media_browser key isset and is true we are using the browser
+  // popup, so add the media_browser submit handler
+  if (!empty($form_state['#media_browser'])) {
     $form['#submit'][] = 'media_browser_form_submit';
   }
 }
@@ -591,6 +586,21 @@ function media_form_wysiwyg_profile_form_alter(&$form, &$form_state) {
   $form['buttons']['drupal']['media']['#element_validate'][] = 'media_wysiwyg_button_element_validate';
   $form['buttons']['drupal']['media']['#after_build'][] = 'media_wysiwyg_button_element_validate';
   form_load_include($form_state, 'inc', 'media', 'wysiwyg_plugins/media');
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function media_form_file_entity_add_upload_alter(&$form, &$form_state) {
+  if (isset($form['upload']['#upload_validators'])) {
+    $validators = &$form['upload']['#upload_validators'];
+
+    // If the list of allowed extensions is the default provided by file_entity
+    // then change the default to the more permissive media extension list.
+    if (isset($validators['file_validate_extensions']) && $validators['file_validate_extensions'] == array(FILE_DEFAULT_ALLOWED_EXTENSIONS)) {
+      $validators['file_validate_extensions'] = array(media_variable_get('file_extensions'));
+    }
+  }
 }
 
 /* ***************************************** */
@@ -1030,19 +1040,6 @@ function media_filter_info() {
 }
 
 /**
- * Sets the status to FILE_STATUS_PERMANENT.
- *
- * @param $file
- *  A file object.
- */
-function _media_save_file_permenently(&$file) {
-  if ($file->status < FILE_STATUS_PERMANENT) {
-    $file->status = FILE_STATUS_PERMANENT;
-    file_save($file);
-  }
-}
-
-/**
  * Returns a renderable array with the necessary classes to support a media
  * thumbnail.  Also provides default fallback images if no image is available.
  *
@@ -1160,7 +1157,7 @@ function media_form_file_entity_admin_files_alter(&$form, $form_state) {
     else {
       $form['files'] = array(
         '#tree' => TRUE,
-        '#prefix' => '<div class="media-display-thumbnails media-clear clearfix"><ul class="media-list-thumbnails">',
+        '#prefix' => '<div class="media-display-thumbnails media-clear clearfix"><ul id="media-browser-library-list" class="media-list-thumbnails">',
         '#suffix' => '</ul></div>',
       );
 

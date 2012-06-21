@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Supports file operations including View, Edit, and Delete.
@@ -28,6 +29,193 @@ function file_entity_view_page($file) {
   drupal_add_html_head_link(array('rel' => 'shortlink', 'href' => url($uri['path'], array_merge($uri['options'], array('alias' => TRUE)))), TRUE);
 
   return file_view($file, 'full');
+}
+
+/**
+ * Form callback for adding media via an upload form.
+ * @todo: should use the AJAX uploader
+ */
+function file_entity_add_upload($form, &$form_state, array $options = array()) {
+  // Set up file upload validators.
+  $validators = array();
+
+  // Validate file extensions. If there are no file extensions in $params and
+  // there are no Media defaults, there is no file extension validation.
+  if (!empty($options['file_extensions'])) {
+    $validators['file_validate_extensions'] = array($options['file_extensions']);
+  }
+  else {
+    $validators['file_validate_extensions'] = array(FILE_DEFAULT_ALLOWED_EXTENSIONS);
+  }
+
+  // Validate file size but do not allow anything higher than file_upload_max_size().
+  $max_filesize = file_upload_max_size();
+  if (!empty($options['max_filesize']) && $options['max_filesize'] < $max_filesize) {
+    $validators['file_validate_size'] = array(parse_size($options['max_filesize']));
+  }
+  else {
+    $validators['file_validate_size'] = array($max_filesize);
+  }
+
+  // Add image validators.
+  $options += array('min_resolution' => 0, 'max_resolution' => 0);
+  if ($options['min_resolution'] || $options['max_resolution']) {
+    $validators['file_validate_image_resolution'] = array($options['max_resolution'], $options['min_resolution']);
+  }
+
+  $form['#validators'] = $validators;
+
+  $form['upload'] = array(
+    '#type' => 'managed_file',
+    '#title' => t('Upload a new file'),
+    '#upload_location' => file_entity_upload_destination_uri($options),
+    '#upload_validators' => $validators,
+    '#progress_indicator' => 'bar',
+    '#required' => TRUE,
+    '#pre_render' => array('file_managed_file_pre_render', 'file_entity_managed_file_pre_render'),
+  );
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  form_load_include($form_state, 'inc', 'file_entity', 'file_entity.pages');
+
+  return $form;
+}
+
+/**
+ * Pre-render callback for adding validation descriptions to managed file elements.
+ */
+function file_entity_managed_file_pre_render($element) {
+  if (!empty($element['#upload_validators'])) {
+    if (!isset($element['#description'])) {
+      $element['#description'] = '';
+    }
+    if ($element['#description'] !== FALSE) {
+      $element['#description'] = theme('file_upload_help', array('description' => $element['#description'], 'upload_validators' => $element['#upload_validators']));
+    }
+  }
+  return $element;
+}
+
+/**
+ * Upload a file.
+ */
+function file_entity_add_upload_submit($form, &$form_state) {
+  $file = file_load($form_state['values']['upload']);
+
+  if ($file) {
+    // The media browser widget does not use the 'display' field.
+    $file->display = TRUE;
+
+    // Change the file from temporary to permanent.
+    $file->status = FILE_STATUS_PERMANENT;
+    file_save($file);
+
+    $form_state['file'] = $file;
+    drupal_set_message(t('The file @name was uploaded', array('@name' => $file->filename)));
+  }
+  else {
+    drupal_set_message(t('An error occurred and no file was uploaded.'), 'error');
+    return;
+  }
+
+  // Redirect to the file edit page after submission.
+  if (file_entity_access('edit')) {
+    $destination = array('destination' => 'admin/content/file');
+    if (isset($_GET['destination'])) {
+      $destination = drupal_get_destination();
+      unset($_GET['destination']);
+    }
+    $form_state['redirect'] = array('file/' . $file->fid . '/edit', array('query' => $destination));
+  }
+  else {
+    $form_state['redirect'] = 'admin/content/file';
+  }
+}
+
+/**
+ * Determines the upload location for the file add upload form.
+ *
+ * @param array $params
+ *   An array of parameters from the media browser.
+ * @param array $data
+ *   (optional) An array of token objects to pass to token_replace().
+ *
+ * @return
+ *   A file directory URI with tokens replaced.
+ *
+ * @see token_replace()
+ */
+function file_entity_upload_destination_uri(array $params, array $data = array()) {
+  $params += array(
+    'uri_scheme' => file_default_scheme(),
+    'file_directory' => '',
+  );
+
+  $destination = trim($params['file_directory'], '/');
+
+  // Replace tokens.
+  $destination = token_replace($destination, $data);
+
+  return $params['uri_scheme'] . '://' . $destination;
+}
+
+
+function file_entity_add_upload_multiple($form, &$form_state, $params = array()) {
+  $form = file_entity_add_upload($form, $form_state, $params);
+  unset($form['upload']['#title']);
+  // The validators will be set from plupload anyway.  This isn't pretty, but don't
+  // it to show up twice.
+  unset($form['upload']['#description']);
+
+  $form['upload']['#type'] = 'plupload';
+  $form['submit']['#value'] = t('Start upload');
+  return $form;
+}
+
+function file_entity_add_upload_multiple_submit($form, &$form_state) {
+  $scheme = variable_get('file_default_scheme', 'public') . '://';
+
+  // We can't use file_save_upload() because of http://www.jacobsingh.name/content/tight-coupling-no-not
+  foreach ($form_state['values']['upload'] as $uploaded_file) {
+    if ($uploaded_file['status'] == 'done') {
+      $source = $uploaded_file['tmppath'];
+      $destination = file_stream_wrapper_uri_normalize($scheme . $uploaded_file['name']);
+      // Rename it to its original name, and put it in its final home.
+      // Note - not using file_move here because if we call file_get_mime
+      // (in file_uri_to_object) while it has a .tmp extension, it horks.
+
+      $destination = file_unmanaged_move($source, $destination, FILE_EXISTS_RENAME);
+
+      $file = file_uri_to_object($destination);
+      $file->status = FILE_STATUS_PERMANENT;
+      file_save($file);
+
+      $saved_files[] = $file;
+      $form_state['files'][$file->fid] = $file;
+    }
+    else {
+      // @todo: move this to element validate or something.
+      form_set_error('pud', t('The specified file %name could not be uploaded.', array('%name' => $uploaded_file['name'])));
+    }
+  }
+
+  // Redirect to the file edit page.
+  if (file_entity_access('edit') && module_exists('multiform')) {
+    $destination = array('destination' => 'admin/content/file');
+    if (isset($_GET['destination'])) {
+      $destination = drupal_get_destination();
+      unset($_GET['destination']);
+    }
+    $form_state['redirect'] = array('admin/content/file/edit-multiple/' . implode(' ', array_keys($form_state['files'])), array('query' => $destination));
+  }
+  else {
+    $form_state['redirect'] = 'admin/content/file';
+  }
 }
 
 /**

@@ -22,12 +22,16 @@ function panelizer_settings_form($form, &$form_state) {
     );
   }
 
-  $form['no_blocks'] = array(
-    '#type' => 'checkbox',
-    '#default_value' => $panelizer->no_blocks,
-    '#title' => t('Disable Drupal blocks/regions'),
-    '#description' => t('Check this to have the panel disable sidebars displayed in the theme. Note that some themes support this setting better than others. If in doubt, try with stock themes to see.'),
-  );
+  // We only allow this setting on the "full page override" because it
+  // does not make sense in other modes.
+  if ($form_state['view_mode'] == 'page_manager') {
+    $form['no_blocks'] = array(
+      '#type' => 'checkbox',
+      '#default_value' => $panelizer->no_blocks,
+      '#title' => t('Disable Drupal blocks/regions'),
+      '#description' => t('Check this to have the panel disable sidebars displayed in the theme. Note that some themes support this setting better than others. If in doubt, try with stock themes to see.'),
+    );
+  }
 
   ctools_include('plugins', 'panels');
   $pipelines = panels_get_renderer_pipelines();
@@ -56,12 +60,36 @@ function panelizer_settings_form($form, &$form_state) {
     );
   }
 
+  if ($form_state['view_mode'] != 'page_manager') {
+    $form['title_element'] = array(
+      '#type' => 'textfield',
+      '#default_value' => $panelizer->title_element,
+      '#title' => t('Title element'),
+      '#description' => t('The HTML element to use for the entity title. Typically this will be an H2.'),
+    );
+
+    $form['link_to_entity'] = array(
+      '#type' => 'checkbox',
+      '#default_value' => $panelizer->link_to_entity,
+      '#title' => t('Link title to entity'),
+      '#description' => t('If checked the title will be a link to the entity.'),
+    );
+
+    $form['css_class'] = array(
+      '#type' => 'textfield',
+      '#size' => 35,
+      '#default_value' => $panelizer->css_class,
+      '#title' => t('CSS class'),
+      '#description' => t('The CSS class to apply to this panel. You may use context substitions here.'),
+    );
+  }
+
   $form['css_id'] = array(
     '#type' => 'textfield',
     '#size' => 35,
     '#default_value' => $panelizer->css_id,
     '#title' => t('CSS ID'),
-    '#description' => t('The CSS ID to apply to this panel'),
+    '#description' => t('The CSS ID to apply to this panel.'),
   );
 
   $form['css'] = array(
@@ -98,7 +126,14 @@ function panelizer_settings_form($form, &$form_state) {
  */
 function panelizer_settings_form_submit(&$form, &$form_state) {
   $panelizer = $form_state['panelizer'];
-  $panelizer->no_blocks = $form_state['values']['no_blocks'];
+  if ($form_state['view_mode'] == 'page_manager') {
+    $panelizer->no_blocks = $form_state['values']['no_blocks'];
+  }
+  else {
+    $panelizer->css_class = $form_state['values']['css_class'];
+    $panelizer->title_element = $form_state['values']['title_element'];
+  }
+
   $panelizer->css = $form_state['values']['css'];
   $panelizer->css_id = $form_state['values']['css_id'];
   $panelizer->pipeline = $form_state['values']['pipeline'];
@@ -390,7 +425,7 @@ function panelizer_edit_content_form($form, &$form_state) {
 
   $form_state['display'] = &$cache->display;
   $form_state['content_types'] = $cache->content_types;
-  $form_state['display_title'] = !empty($cache->display_title);
+  $form_state['display_title'] = TRUE;
 
   $form = panels_edit_display_form($form, $form_state);
 

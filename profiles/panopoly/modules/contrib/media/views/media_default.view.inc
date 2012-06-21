@@ -24,13 +24,11 @@ $handler->display->display_options['cache']['type'] = 'none';
 $handler->display->display_options['query']['type'] = 'views_query';
 $handler->display->display_options['query']['options']['query_comment'] = FALSE;
 $handler->display->display_options['exposed_form']['type'] = 'basic';
-$handler->display->display_options['exposed_form']['options']['autosubmit'] = 1;
-$handler->display->display_options['exposed_form']['options']['autosubmit_hide'] = 1;
+$handler->display->display_options['exposed_form']['options']['autosubmit'] = TRUE;
 $handler->display->display_options['pager']['type'] = 'full';
 $handler->display->display_options['pager']['options']['items_per_page'] = '10';
 $handler->display->display_options['pager']['options']['offset'] = '0';
 $handler->display->display_options['pager']['options']['id'] = '0';
-$handler->display->display_options['pager']['options']['expose']['items_per_page_options_all'] = 0;
 $handler->display->display_options['style_plugin'] = 'media_browser';
 /* No results behavior: Global: Text area */
 $handler->display->display_options['empty']['area']['id'] = 'area';
@@ -39,23 +37,14 @@ $handler->display->display_options['empty']['area']['field'] = 'area';
 $handler->display->display_options['empty']['area']['empty'] = FALSE;
 $handler->display->display_options['empty']['area']['content'] = 'No files available.';
 $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
-$handler->display->display_options['empty']['area']['tokenize'] = 0;
 /* Field: File: Name */
 $handler->display->display_options['fields']['filename']['id'] = 'filename';
 $handler->display->display_options['fields']['filename']['table'] = 'file_managed';
 $handler->display->display_options['fields']['filename']['field'] = 'filename';
 $handler->display->display_options['fields']['filename']['label'] = '';
-$handler->display->display_options['fields']['filename']['alter']['alter_text'] = 0;
-$handler->display->display_options['fields']['filename']['alter']['make_link'] = 0;
-$handler->display->display_options['fields']['filename']['alter']['absolute'] = 0;
-$handler->display->display_options['fields']['filename']['alter']['word_boundary'] = 0;
-$handler->display->display_options['fields']['filename']['alter']['ellipsis'] = 0;
-$handler->display->display_options['fields']['filename']['alter']['strip_tags'] = 0;
-$handler->display->display_options['fields']['filename']['alter']['trim'] = 0;
-$handler->display->display_options['fields']['filename']['alter']['html'] = 0;
-$handler->display->display_options['fields']['filename']['hide_empty'] = 0;
-$handler->display->display_options['fields']['filename']['empty_zero'] = 0;
-$handler->display->display_options['fields']['filename']['link_to_file'] = 1;
+$handler->display->display_options['fields']['filename']['alter']['word_boundary'] = FALSE;
+$handler->display->display_options['fields']['filename']['alter']['ellipsis'] = FALSE;
+$handler->display->display_options['fields']['filename']['link_to_file'] = TRUE;
 /* Sort criterion: File: Upload date */
 $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
 $handler->display->display_options['sorts']['timestamp']['table'] = 'file_managed';
@@ -87,8 +76,6 @@ $handler->display->display_options['filters']['filename']['expose']['operator_id
 $handler->display->display_options['filters']['filename']['expose']['label'] = 'File name';
 $handler->display->display_options['filters']['filename']['expose']['operator'] = 'filename_op';
 $handler->display->display_options['filters']['filename']['expose']['identifier'] = 'filename';
-$handler->display->display_options['filters']['filename']['expose']['required'] = 0;
-$handler->display->display_options['filters']['filename']['expose']['multiple'] = FALSE;
 /* Filter criterion: File: Type */
 $handler->display->display_options['filters']['type']['id'] = 'type';
 $handler->display->display_options['filters']['type']['table'] = 'file_managed';
@@ -98,12 +85,34 @@ $handler->display->display_options['filters']['type']['expose']['operator_id'] =
 $handler->display->display_options['filters']['type']['expose']['label'] = 'Type';
 $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
 $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
-$handler->display->display_options['filters']['type']['expose']['reduce'] = 0;
 
 /* Display: Media browser */
 $handler = $view->new_display('media_browser', 'Media browser', 'media_browser_1');
 $handler->display->display_options['defaults']['title'] = FALSE;
 $handler->display->display_options['title'] = 'View Library';
+
+/* Display: My files */
+$handler = $view->new_display('media_browser', 'My files', 'media_browser_my_files');
+$handler->display->display_options['defaults']['title'] = FALSE;
+$handler->display->display_options['title'] = 'My files';
+$handler->display->display_options['defaults']['relationships'] = FALSE;
+/* Relationship: File: User who uploaded */
+$handler->display->display_options['relationships']['uid']['id'] = 'uid';
+$handler->display->display_options['relationships']['uid']['table'] = 'file_managed';
+$handler->display->display_options['relationships']['uid']['field'] = 'uid';
+$handler->display->display_options['relationships']['uid']['required'] = TRUE;
+$handler->display->display_options['defaults']['arguments'] = FALSE;
+/* Contextual filter: User: Uid */
+$handler->display->display_options['arguments']['uid']['id'] = 'uid';
+$handler->display->display_options['arguments']['uid']['table'] = 'users';
+$handler->display->display_options['arguments']['uid']['field'] = 'uid';
+$handler->display->display_options['arguments']['uid']['relationship'] = 'uid';
+$handler->display->display_options['arguments']['uid']['default_action'] = 'default';
+$handler->display->display_options['arguments']['uid']['default_argument_type'] = 'current_user';
+$handler->display->display_options['arguments']['uid']['summary']['number_of_records'] = '0';
+$handler->display->display_options['arguments']['uid']['summary']['format'] = 'default_summary';
+$handler->display->display_options['arguments']['uid']['summary_options']['items_per_page'] = '25';
+$handler->display->display_options['arguments']['uid']['validate']['type'] = 'user';
 $translatables['media_default'] = array(
   t('Master'),
   t('more'),
@@ -122,4 +131,7 @@ $translatables['media_default'] = array(
   t('Type'),
   t('Media browser'),
   t('View Library'),
+  t('My files'),
+  t('User who uploaded'),
+  t('All'),
 );

@@ -62,7 +62,7 @@ function search_api_views_views_data() {
       if ($group) {
         // @todo Entity type label instead of $group?
         $table[$id]['group'] = $group;
-        $name = t('!field (indexed)', array('!field' => $name));
+        $name = t('@field (indexed)', array('@field' => $name));
       }
       $table[$id]['title'] = $name;
       $table[$id]['help'] = empty($info['description']) ? t('(No information available)') : $info['description'];

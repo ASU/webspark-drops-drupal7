@@ -44,7 +44,7 @@ function panelizer_admin_hook_menu(&$items) {
   $tabs_base = array(
     'access callback' => 'panelizer_has_no_choice_callback',
     'access arguments' => array(4, 5),
-    'page arguments' => array(4, 5, 'default'),
+    'page arguments' => array(4, 5, 'default', ''),
     'type' => MENU_LOCAL_TASK,
     'file' => 'includes/admin.inc',
   );
@@ -76,7 +76,7 @@ function panelizer_admin_hook_menu(&$items) {
   $subtabs_base = array(
     'access callback' => 'panelizer_administer_panelizer_default',
     'access arguments' => array(4, 5, 7),
-    'page arguments' => array(4, 5, 7),
+    'page arguments' => array(4, 5, 7, ''),
     'type' => MENU_LOCAL_TASK,
     'file' => 'includes/admin.inc',
   );
@@ -162,12 +162,14 @@ function theme_panelizer_settings_page_table($variables) {
 
   $rows = array();
   foreach (element_children($element) as $bundle) {
-    $row = array();
-    foreach ($columns as $column) {
-      $row[] = drupal_render($element[$bundle][$column]);
-    }
+    foreach (element_children($element[$bundle]) as $view_mode) {
+      $row = array();
+      foreach ($columns as $column) {
+        $row[] = drupal_render($element[$bundle][$view_mode][$column]);
+      }
 
-    $rows[] = $row;
+      $rows[] = $row;
+    }
   }
 
   $output = theme('table', array('header' => $header, 'rows' => $rows));
@@ -220,13 +222,50 @@ function panelizer_allowed_content_page($handler, $bundle) {
   return drupal_get_form('panels_common_settings', 'panelizer_' . $handler->entity_type . ':' . $bundle);
 }
 
+/**
+ * Page callback to delegate to either the settings page or list page.
+ */
+function panelizer_default_list_or_settings_page($handler, $bundle, $name, $view_mode) {
+  if (is_string($handler)) {
+    $handler = panelizer_entity_plugin_get_handler($handler);
+  }
+
+  // We need a version of $bundle with $view_mode but we need to retain one
+  // without it so we can pass straight $bundle to the settings page.
+  $test_bundle = $bundle;
+  if ($view_mode) {
+    $test_bundle .= '.' . $view_mode;
+  }
+
+  if ($handler->has_panel_choice($test_bundle)) {
+    // Call through to the UI switcher for the list
+    ctools_include('export-ui');
+    return panelizer_export_ui_switcher_page($handler, $test_bundle, 'panelizer_defaults', 'list');
+  }
+  else {
+    return panelizer_default_settings_page($handler, $bundle, $name, $view_mode);
+  }
+}
 
 /**
  * Page to configure basic settings for a panelizer default.
  */
-function panelizer_default_settings_page($handler, $bundle, $name) {
+function panelizer_default_settings_page($handler, $bundle, $name, $view_mode) {
   if (is_string($handler)) {
     $handler = panelizer_entity_plugin_get_handler($handler);
+  }
+
+  if ($view_mode) {
+    $bundle .= '.' . $view_mode;
+    // We use a $mode copy of $view_mode because the presence of $view_mode
+    // tells us later if we want fake tabs, but we still need to know the
+    // actual view mode regardless of that.
+    $mode = $view_mode;
+  }
+  else {
+    // We are NOT testing for the . here because if this is missing
+    // that is a sign of a bug and we want the notice.
+    list(, $mode) = explode('.', $bundle);
   }
 
   $panelizer = $handler->get_default_panelizer_object($bundle, $name);
@@ -238,6 +277,7 @@ function panelizer_default_settings_page($handler, $bundle, $name) {
     'panelizer' => &$panelizer,
     'no_redirect' => TRUE,
     'reset button' => TRUE,
+    'view_mode' => $mode,
   );
 
   if ($handler->has_panel_choice($bundle)) {
@@ -260,6 +300,10 @@ function panelizer_default_settings_page($handler, $bundle, $name) {
     drupal_goto($_GET['q']);
   }
 
+  if ($view_mode) {
+    $output = $handler->wrap_default_panelizer_pages($bundle, $output);
+  }
+
   return $output;
 }
 
@@ -280,9 +324,13 @@ function panelizer_delete_panelizer_defaults($panelizer) {
 /**
  * Page to configure what content is available for a given node type.
  */
-function panelizer_default_context_page($handler, $bundle, $name) {
+function panelizer_default_context_page($handler, $bundle, $name, $view_mode) {
   if (is_string($handler)) {
     $handler = panelizer_entity_plugin_get_handler($handler);
+  }
+
+  if ($view_mode) {
+    $bundle .= '.' . $view_mode;
   }
 
   $cache_key = $handler->entity_type . ':' . $bundle . ':' . $name;
@@ -314,15 +362,23 @@ function panelizer_default_context_page($handler, $bundle, $name) {
     drupal_goto($_GET['q']);
   }
 
+  if ($view_mode) {
+    $output = $handler->wrap_default_panelizer_pages($bundle, $output);
+  }
+
   return $output;
 }
 
 /**
  * Pass through to the panels layout editor.
  */
-function panelizer_default_layout_page($handler, $bundle, $name, $step = NULL, $layout = NULL) {
+function panelizer_default_layout_page($handler, $bundle, $name, $view_mode, $step = NULL, $layout = NULL) {
   if (is_string($handler)) {
     $handler = panelizer_entity_plugin_get_handler($handler);
+  }
+
+  if ($view_mode) {
+    $bundle .= '.' . $view_mode;
   }
 
   $panelizer = $handler->get_default_panelizer_object($bundle, $name);
@@ -355,15 +411,23 @@ function panelizer_default_layout_page($handler, $bundle, $name, $step = NULL, $
     drupal_goto($path . '/content');
   }
 
+  if ($view_mode) {
+    $output = $handler->wrap_default_panelizer_pages($bundle, $output);
+  }
+
   return $output;
 }
 
 /**
  * Determine edit access for this panelizer default.
  */
-function panelizer_default_access_page($handler, $bundle, $name) {
+function panelizer_default_access_page($handler, $bundle, $name, $view_mode) {
   if (is_string($handler)) {
     $handler = panelizer_entity_plugin_get_handler($handler);
+  }
+
+  if ($view_mode) {
+    $bundle .= '.' . $view_mode;
   }
 
   $panelizer = $handler->get_default_panelizer_object($bundle, $name);
@@ -419,9 +483,13 @@ function panelizer_default_access_page($handler, $bundle, $name) {
 /**
  * Pass through to the panels content editor.
  */
-function panelizer_default_content_page($handler, $bundle, $name) {
+function panelizer_default_content_page($handler, $bundle, $name, $view_mode) {
   if (is_string($handler)) {
     $handler = panelizer_entity_plugin_get_handler($handler);
+  }
+
+  if ($view_mode) {
+    $bundle .= '.' . $view_mode;
   }
 
   $panelizer = $handler->get_default_panelizer_object($bundle, $name);
@@ -453,7 +521,13 @@ function panelizer_default_content_page($handler, $bundle, $name) {
   }
 
   ctools_set_no_blocks(FALSE);
+
+  if ($view_mode) {
+    $output = $handler->wrap_default_panelizer_pages($bundle, $output);
+  }
+
   drupal_set_page_content($output);
   $page = element_info('page');
+
   return $page;
 }

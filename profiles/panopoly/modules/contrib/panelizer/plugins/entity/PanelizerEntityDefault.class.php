@@ -76,7 +76,7 @@ interface PanelizerEntityInterface {
    * This is meant to give administrators a starting point when panelizing
    * new entities.
    */
-  function get_default_display();
+  function get_default_display($bundle, $view_mode);
 
   /**
    * Get a panelizer object for the key.
@@ -84,12 +84,13 @@ interface PanelizerEntityInterface {
    * This must be implemented for each entity type, as the default object
    * implements a special case for handling panelizer defaults.
    */
-  function get_panelizer_object($key);
+   // @todo this seems to be unused now.
+//  function get_panelizer_object($key);
 
   /**
    * Render a panelized entity.
    */
-  function render_entity($entity, $args = array());
+  function render_entity($entity, $view_mode, $langcode = NULL, $args = array(), $address = NULL);
 
   /**
    * Fetch an object array of CTools contexts from panelizer information.
@@ -206,6 +207,12 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
         continue;
       }
 
+      $items["administer panelizer $this->entity_type $bundle overview"] = array(
+        'title' => t('%entity_name %bundle_name: Administer Panelizer overview', array(
+          '%entity_name' => $entity_info['label'],
+          '%bundle_name' => $entity_info['bundles'][$bundle]['label'],
+        )),
+      );
       $items["administer panelizer $this->entity_type $bundle content"] = array(
         'title' => t('%entity_name %bundle_name: Administer Panelizer content', array(
           '%entity_name' => $entity_info['label'],
@@ -262,11 +269,10 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
 
       $total = count($bits);
 
-      // @todo delegate the following
       // Configure entity editing pages
       $base = array(
         'access callback' => 'panelizer_entity_plugin_callback_switcher',
-        'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'content'),
+        'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'overview'),
         'type' => MENU_LOCAL_TASK,
       );
 
@@ -274,44 +280,65 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
         'title' => 'Panelizer',
         // make sure this is accessible to panelize entities with no defaults.
         'page callback' => 'panelizer_entity_plugin_switcher_page',
-        'page arguments' => array($this->entity_type, 'content', $position),
+        'page arguments' => array($this->entity_type, 'overview', $position),
         'weight' => 11,
         'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
       ) + $base;
 
-      $items[$this->plugin['entity path'] . '/panelizer/content'] = array(
-        'title' => 'Content',
+      $items[$this->plugin['entity path'] . '/panelizer/overview'] = array(
+        'title' => 'Overview',
         'page callback' => 'panelizer_entity_plugin_switcher_page',
-        'page arguments' => array($this->entity_type, 'content', $position),
+        'page arguments' => array($this->entity_type, 'overview', $position),
         'type' => MENU_DEFAULT_LOCAL_TASK,
         'weight' => 11,
       ) + $base;
 
-      $items[$this->plugin['entity path'] . '/panelizer/layout'] = array(
-        'title' => 'Layout',
-        'page callback' => 'panelizer_entity_plugin_switcher_page',
-        'page arguments' => array($this->entity_type, 'layout', $position),
-        'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'layout'),
-        'weight' => 12,
-      ) + $base;
+      // Put in all of our view mode based paths.
+      $weight = 0;
+      foreach ($this->plugin['view modes'] as $view_mode => $view_mode_info) {
+        $items[$this->plugin['entity path'] . "/panelizer/$view_mode"] = array(
+          'title' => $view_mode_info['label'],
+          'page callback' => 'panelizer_entity_plugin_switcher_page',
+          'page arguments' => array($this->entity_type, 'settings', $position, $view_mode),
+          'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'settings', $view_mode),
+          'weight' => $weight++,
+        ) + $base;
 
-      $items[$this->plugin['entity path'] . '/panelizer/context'] = array(
-        'title' => 'Context',
-        'page callback' => 'panelizer_entity_plugin_switcher_page',
-        'page arguments' => array($this->entity_type, 'context', $position),
-        'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'context'),
-        'weight' => 13,
-      ) + $base;
+        $items[$this->plugin['entity path'] . "/panelizer/$view_mode/content"] = array(
+          'title' => 'Content',
+          'page callback' => 'panelizer_entity_plugin_switcher_page',
+          'page arguments' => array($this->entity_type, 'content', $position, $view_mode),
+          'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'content', $view_mode),
+          'weight' => 14,
+        ) + $base;
 
-      $items[$this->plugin['entity path'] . '/panelizer/settings'] = array(
-        'title' => 'Settings',
-        'page callback' => 'panelizer_entity_plugin_switcher_page',
-        'page arguments' => array($this->entity_type, 'settings', $position),
-        'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'settings'),
-        'weight' => 14,
-      ) + $base;
+        $items[$this->plugin['entity path'] . "/panelizer/$view_mode/layout"] = array(
+          'title' => 'Layout',
+          'page callback' => 'panelizer_entity_plugin_switcher_page',
+          'page arguments' => array($this->entity_type, 'layout', $position, $view_mode),
+          'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'layout', $view_mode),
+          'weight' => 13,
+        ) + $base;
+
+        $items[$this->plugin['entity path'] . "/panelizer/$view_mode/context"] = array(
+          'title' => 'Context',
+          'page callback' => 'panelizer_entity_plugin_switcher_page',
+          'page arguments' => array($this->entity_type, 'context', $position, $view_mode),
+          'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'context', $view_mode),
+          'weight' => 12,
+        ) + $base;
+
+        $items[$this->plugin['entity path'] . "/panelizer/$view_mode/settings"] = array(
+          'title' => 'Settings',
+          'page callback' => 'panelizer_entity_plugin_switcher_page',
+          'page arguments' => array($this->entity_type, 'settings', $position, $view_mode),
+          'access arguments' => array($this->entity_type, 'access', 'admin', $position, 'settings', $view_mode),
+          'weight' => 11,
+        ) + $base;
+      }
     }
 
+    // Also add administrative links to the bundle.
     if (!empty($this->entity_admin_root)) {
       $this->add_admin_links($this->entity_admin_root, $this->entity_admin_bundle, $items);
     }
@@ -322,8 +349,8 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
    *
    * While this very closely follows the administrative items placed into the
    * menu in admin.inc, it is a little bit different because of how bundles
-   * are placed into the URL. So the code is close but not QUITE reusable without
-   * going through some hoops.
+   * are placed into the URL. So the code is close but not QUITE reusable
+   * without going through some hoops.
    *
    * @param $root
    *   The root path. This will be something like 'admin/structure/types/manage/%'.
@@ -367,128 +394,140 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
       'weight' => -10,
     ) + $settings_base;
 
-    $tabs_base = array(
-      'access callback' => 'panelizer_has_no_choice_callback',
-      'access arguments' => array($this->entity_type, $bundle),
-      'page arguments' => array($this->entity_type, $bundle, 'default'),
-      'type' => MENU_LOCAL_TASK,
-      'file' => 'includes/admin.inc',
-    );
-
-    $items[$root . '/panelizer/settings'] = array(
-      'title' => 'Settings',
-      'page callback' => 'panelizer_default_settings_page',
-      'weight' => -5,
-    ) + $tabs_base;
-
-    $items[$root . '/panelizer/context'] = array(
-      'title' => 'Contexts',
-      'page callback' => 'panelizer_default_context_page',
-      'weight' => -4,
-    ) + $tabs_base;
-
-    $items[$root . '/panelizer/layout'] = array(
-      'title' => 'Layout',
-      'page callback' => 'panelizer_default_layout_page',
-      'weight' => -3,
-    ) + $tabs_base;
-
-    $items[$root . '/panelizer/content'] = array(
-      'title' => 'Content',
-      'page callback' => 'panelizer_default_content_page',
-      'weight' => -2,
-    ) + $tabs_base;
-
-    $subtabs_base = array(
-      'access callback' => 'panelizer_administer_panelizer_default',
-      'access arguments' => array($this->entity_type, $bundle, $base_count + 2),
-      'page arguments' => array($this->entity_type, $bundle, $base_count + 2),
-      'type' => MENU_LOCAL_TASK,
-      'file' => 'includes/admin.inc',
-    );
-
-    $items[$root . '/panelizer/list/%'] = array(
-      'title' => 'Settings',
-      'page callback' => 'panelizer_default_settings_page',
-      'title callback' => 'panelizer_default_name_title_callback',
-      'type' => MENU_CALLBACK,
-    ) + $subtabs_base;
-
-    $items[$root . '/panelizer/list/%/settings'] = array(
-      'title' => 'Settings',
-      'page callback' => 'panelizer_default_settings_page',
-      'weight' => -5,
-    ) + $subtabs_base;
-
-    $items[$root . '/panelizer/list/%/context'] = array(
-      'title' => 'Contexts',
-      'page callback' => 'panelizer_default_context_page',
-      'weight' => -4,
-    ) + $subtabs_base;
-
-    $items[$root . '/panelizer/list/%/layout'] = array(
-      'title' => 'Layout',
-      'page callback' => 'panelizer_default_layout_page',
-      'weight' => -3,
-    ) + $subtabs_base;
-
-    $items[$root . '/panelizer/list/%/content'] = array(
-      'title' => 'Content',
-      'page callback' => 'panelizer_default_content_page',
-      'weight' => -2,
-    ) + $subtabs_base;
-
-    $items[$root . '/panelizer/list/%/access'] = array(
-      'title' => 'Access',
-      'page callback' => 'panelizer_default_access_page',
-      'weight' => -2,
-    ) + $subtabs_base;
-
-    // Also make clones of all the export UI menu items. Again there is some
-    // duplicated code here because of subtle differences.
-    // Load the $plugin information
-    $plugin = ctools_get_export_ui('panelizer_defaults');
-
-    $ui_items = $plugin['menu']['items'];
-
-    // Change the item to a tab.
-    $ui_items['list']['type'] = MENU_LOCAL_TASK;
-    $ui_items['list']['weight'] = -6;
-    $ui_items['list']['title'] = 'List';
-
-    // menu local actions are weird.
-    $ui_items['add']['path'] = 'list/add';
-    $ui_items['import']['path'] = 'list/import';
-
-    // Edit is being handled elsewhere:
-    unset($ui_items['edit']);
-    unset($ui_items['edit callback']);
-    unset($ui_items['list callback']);
-    unset($ui_items['context']);
-    unset($ui_items['content']);
-    unset($ui_items['layout']);
-    unset($ui_items['access']);
-
-    // Change the callbacks for everything:
-    foreach ($ui_items as $key => $item) {
-      // originally admin/config/content/panelizer/%panelizer_handler
-      $ui_items[$key]['access callback'] = 'panelizer_has_choice_callback';
-      $ui_items[$key]['access arguments'] = array($this->entity_type, $bundle, '');
-      $ui_items[$key]['page callback'] = 'panelizer_export_ui_switcher_page';
-      array_unshift($ui_items[$key]['page arguments'], $bundle);
-      array_unshift($ui_items[$key]['page arguments'], $this->entity_type);
-    }
-
-    foreach ($ui_items as $item) {
-      // Add menu item defaults.
-      $item += array(
-        'file' => 'export-ui.inc',
-        'file path' => drupal_get_path('module', 'ctools') . '/includes',
+    $weight = 1;
+    foreach ($this->plugin['view modes'] as $view_mode => $view_mode_info) {
+      $tabs_base = array(
+        'access callback' => 'panelizer_has_no_choice_callback',
+        'access arguments' => array($this->entity_type, $bundle, $view_mode),
+        'page arguments' => array($this->entity_type, $bundle, 'default', $view_mode),
+        'type' => MENU_LOCAL_TASK,
+        'file' => 'includes/admin.inc',
+        'weight' => $weight++,
       );
 
-      $path = !empty($item['path']) ? $root . '/panelizer/' . $item['path'] : $root . '/panelizer';
-      unset($item['path']);
-      $items[$path] = $item;
+      $items[$root . '/panelizer/' . $view_mode] = array(
+        'access callback' => 'panelizer_is_panelized',
+        'title' => $view_mode_info['label'],
+        'page callback' => 'panelizer_default_list_or_settings_page',
+      ) + $tabs_base;
+
+      $items[$root . '/panelizer/' . $view_mode . '/settings'] = array(
+        'title' => 'Settings',
+        'page callback' => 'panelizer_default_settings_page',
+        'weight' => -5,
+        'type' => MENU_DEFAULT_LOCAL_TASK,
+      ) + $tabs_base;
+
+      $items[$root . '/panelizer/' . $view_mode . '/context'] = array(
+        'title' => 'Contexts',
+        'page callback' => 'panelizer_default_context_page',
+        'weight' => -4,
+      ) + $tabs_base;
+
+      $items[$root . '/panelizer/' . $view_mode . '/layout'] = array(
+        'title' => 'Layout',
+        'page callback' => 'panelizer_default_layout_page',
+        'weight' => -3,
+      ) + $tabs_base;
+
+      $items[$root . '/panelizer/' . $view_mode . '/content'] = array(
+        'title' => 'Content',
+        'page callback' => 'panelizer_default_content_page',
+        'weight' => -2,
+      ) + $tabs_base;
+
+      $subtabs_base = array(
+        'access callback' => 'panelizer_administer_panelizer_default',
+        'access arguments' => array($this->entity_type, $bundle, $base_count + 2, $base_count + 1),
+        'page arguments' => array($this->entity_type, $bundle, $base_count + 2, $base_count + 1),
+        'type' => MENU_LOCAL_TASK,
+        'file' => 'includes/admin.inc',
+      );
+
+      $items[$root . '/panelizer/' . $view_mode . '/%'] = array(
+        'title' => 'Settings',
+        'page callback' => 'panelizer_default_settings_page',
+        'title callback' => 'panelizer_default_name_title_callback',
+        'type' => MENU_CALLBACK,
+      ) + $subtabs_base;
+
+      $items[$root . '/panelizer/' . $view_mode . '/%/settings'] = array(
+        'title' => 'Settings',
+        'page callback' => 'panelizer_default_settings_page',
+        'weight' => -5,
+      ) + $subtabs_base;
+
+      $items[$root . '/panelizer/' . $view_mode . '/%/context'] = array(
+        'title' => 'Contexts',
+        'page callback' => 'panelizer_default_context_page',
+        'weight' => -4,
+      ) + $subtabs_base;
+
+      $items[$root . '/panelizer/' . $view_mode . '/%/layout'] = array(
+        'title' => 'Layout',
+        'page callback' => 'panelizer_default_layout_page',
+        'weight' => -3,
+      ) + $subtabs_base;
+
+      $items[$root . '/panelizer/' . $view_mode . '/%/content'] = array(
+        'title' => 'Content',
+        'page callback' => 'panelizer_default_content_page',
+        'weight' => -2,
+      ) + $subtabs_base;
+
+      $items[$root . '/panelizer/' . $view_mode . '/%/access'] = array(
+        'title' => 'Access',
+        'page callback' => 'panelizer_default_access_page',
+        'weight' => -2,
+      ) + $subtabs_base;
+
+      // Also make clones of all the export UI menu items. Again there is some
+      // duplicated code here because of subtle differences.
+      // Load the $plugin information
+      $plugin = ctools_get_export_ui('panelizer_defaults');
+
+      $ui_items = $plugin['menu']['items'];
+
+      // Change the item to a tab.
+      $ui_items['list']['type'] = MENU_LOCAL_TASK;
+      $ui_items['list']['weight'] = -6;
+      $ui_items['list']['title'] = 'List';
+
+      // menu local actions are weird.
+      $ui_items['add']['path'] = 'list/add';
+      $ui_items['import']['path'] = 'list/import';
+
+      // Edit is being handled elsewhere:
+      unset($ui_items['edit']);
+      unset($ui_items['edit callback']);
+      unset($ui_items['list callback']);
+      unset($ui_items['context']);
+      unset($ui_items['content']);
+      unset($ui_items['layout']);
+      unset($ui_items['access']);
+
+      // Change the callbacks for everything:
+      foreach ($ui_items as $key => $item) {
+        // originally admin/config/content/panelizer/%panelizer_handler
+        $ui_items[$key]['access callback'] = 'panelizer_has_choice_callback';
+        $ui_items[$key]['access arguments'] = array($this->entity_type, $bundle, '');
+        $ui_items[$key]['page callback'] = 'panelizer_export_ui_switcher_page';
+        array_unshift($ui_items[$key]['page arguments'], $bundle);
+        array_unshift($ui_items[$key]['page arguments'], $this->entity_type);
+        $ui_items[$key]['path'] = str_replace('list/', '', $ui_items[$key]['path']);
+      }
+
+      foreach ($ui_items as $item) {
+        // Add menu item defaults.
+        $item += array(
+          'file' => 'export-ui.inc',
+          'file path' => drupal_get_path('module', 'ctools') . '/includes',
+        );
+
+        $path = !empty($item['path']) ? $root . '/panelizer/' . $view_mode . '/' . $item['path'] : $root . '/panelizer/' . $view_mode;
+        unset($item['path']);
+        $items[$path] = $item;
+      }
     }
   }
 
@@ -534,29 +573,54 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
       '#id' => 'panelizer-status',
     );
 
-    $form['panelizer']['default'] = array(
-      '#title' => t('Provide default panel'),
-      '#type' => 'checkbox',
-      '#default_value' => !empty($settings['default']),
-      '#states' => array(
-        'visible' => array(
-          '#panelizer-status' => array('checked' => TRUE),
+    foreach ($this->plugin['view modes'] as $view_mode => $view_mode_info) {
+      $form['panelizer'][$view_mode] = array(
+        '#type' => 'item',
+        '#title' => $view_mode_info['label'],
+        '#states' => array(
+          'visible' => array(
+            '#panelizer-status' => array('checked' => TRUE),
+          ),
         ),
-      ),
-      '#description' => t('If checked, a default panel will be utilized for all existing and new entities.'),
-    );
+      );
 
-    $form['panelizer']['choice'] = array(
-      '#title' => t('Allow panel choice'),
-      '#type' => 'checkbox',
-      '#default_value' => !empty($settings['choice']),
-      '#states' => array(
-        'visible' => array(
-          '#panelizer-status' => array('checked' => TRUE),
+      $form['panelizer'][$view_mode]['status'] = array(
+        '#title' => t('Panelize'),
+        '#type' => 'checkbox',
+        '#default_value' => !empty($settings['view modes'][$view_mode]['status']),
+        '#id' => 'panelizer-' . $view_mode . '-status',
+        '#states' => array(
+          'visible' => array(
+            '#panelizer-status' => array('checked' => TRUE),
+          ),
         ),
-      ),
-      '#description' => t('If checked multiple panels can be created and each entity will get a selector to choose which panel to use.'),
-    );
+      );
+      $form['panelizer'][$view_mode]['default'] = array(
+        '#title' => t('Provide default panel'),
+        '#type' => 'checkbox',
+        '#default_value' => !empty($settings['view modes'][$view_mode]['default']),
+        '#states' => array(
+          'visible' => array(
+            '#panelizer-status' => array('checked' => TRUE),
+            '#panelizer-' . $view_mode . '-status' => array('checked' => TRUE),
+          ),
+        ),
+        '#description' => t('If checked, a default panel will be utilized for all existing and new entities.'),
+      );
+
+      $form['panelizer'][$view_mode]['choice'] = array(
+        '#title' => t('Allow panel choice'),
+        '#type' => 'checkbox',
+        '#default_value' => !empty($settings['view modes'][$view_mode]['choice']),
+        '#states' => array(
+          'visible' => array(
+            '#panelizer-status' => array('checked' => TRUE),
+            '#panelizer-' . $view_mode . '-status' => array('checked' => TRUE),
+          ),
+        ),
+        '#description' => t('If checked multiple panels can be created and each entity will get a selector to choose which panel to use.'),
+      );
+    }
 
     array_unshift($form['#submit'], 'panelizer_entity_default_bundle_form_submit');
 
@@ -597,6 +661,10 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
       foreach ($panelizer_defaults as $panelizer) {
         list($entity_type, $old_bundle, $name) = explode(':', $panelizer->name);
         $panelizer->name = implode(':', array($entity_type, $new_bundle, $name));
+        if ($panelizer->view_mode != 'page_manager') {
+          $panelizer->name .= ':' . $panelizer->view_mode;
+        }
+
         $panelizer->panelizer_key = $new_bundle;
         // If there's a pnid this should change the name and retain the pnid.
         // If there is no pnid this will create a new one in the database
@@ -646,6 +714,12 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     $bundles = array();
 
     foreach ($entities as $entity) {
+      // Don't bother if somehow we've already loaded and are asked to
+      // load again.
+      if (!empty($entity->panelizer)) {
+        continue;
+      }
+
       list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
       if ($this->is_panelized($bundle)) {
         $ids[] = $this->supports_revisions ? $revision_id : $entity_id;
@@ -659,10 +733,15 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
 
     // Load all the panelizers associated with the list of entities.
     if ($this->supports_revisions) {
-      $panelizers = db_query("SELECT * FROM {panelizer_entity} WHERE entity_type = '$this->entity_type' AND revision_id IN (:ids)", array(':ids' => $ids))->fetchAllAssoc('entity_id');
+      $result = db_query("SELECT * FROM {panelizer_entity} WHERE entity_type = '$this->entity_type' AND revision_id IN (:ids)", array(':ids' => $ids));
     }
     else {
-      $panelizers = db_query("SELECT * FROM {panelizer_entity} WHERE entity_type = '$this->entity_type' AND entity_id IN (:ids)", array(':ids' => $ids))->fetchAllAssoc('entity_id');
+      $result = db_query("SELECT * FROM {panelizer_entity} WHERE entity_type = '$this->entity_type' AND entity_id IN (:ids)", array(':ids' => $ids));
+    }
+
+    $panelizers = array();
+    while ($panelizer = $result->fetchObject()) {
+      $panelizers[$panelizer->entity_id][$panelizer->view_mode] = $panelizer;
     }
 
     $defaults = array();
@@ -674,27 +753,56 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
       if (!empty($entity->panelizer)) {
         continue;
       }
+
       // Skip not panelized bundles.
       if (empty($bundles[$entity_id])) {
         continue;
       }
 
-      // If no panelizer was loaded, queue up defaults to load.
-      if (empty($panelizers[$entity_id])) {
-        if ($this->has_default_panel($bundles[$entity_id])) {
-          $name = implode(':', array($this->entity_type, $bundles[$entity_id], 'default'));
+      // Check for each view mode.
+      foreach ($this->plugin['view modes'] as $view_mode => $view_mode_info) {
+        $name = implode(':', array($this->entity_type, $bundles[$entity_id], 'default'));
+        if ($view_mode != 'page_manager') {
+          $name .= ':' . $view_mode;
+        }
+
+        // If no panelizer was loaded for the view mode, queue up defaults.
+        if (empty($panelizers[$entity_id][$view_mode]) && $this->has_default_panel($bundles[$entity_id] . '.' . $view_mode)) {
           $defaults[$name] = $name;
         }
-      }
-      else {
-        $entity->panelizer = ctools_export_unpack_object('panelizer_entity', $panelizers[$entity_id]);
-        // Panelizers that do not have dids are just a selection of defaults
-        // that has never actually been modified.
-        if (empty($entity->panelizer->did) && !empty($entity->panelizer->name)) {
-          $defaults[] = $entity->panelizer->name;
-        }
-        else {
-          $dids[$entity->panelizer->did] = $entity->panelizer->did;
+        // Otherwise unpack the loaded panelizer.
+        else if (!empty($panelizers[$entity_id][$view_mode])) {
+          $entity->panelizer[$view_mode] = ctools_export_unpack_object('panelizer_entity', $panelizers[$entity_id][$view_mode]);
+          // If somehow we have no name AND no did, fill in the default.
+          // This can happen if use of defaults has switched around maybe?
+          if (empty($entity->panelizer[$view_mode]->did) &&
+            empty($entity->panelizer[$view_mode]->name)) {
+            if ($this->has_default_panel($bundles[$entity_id] . '.' . $view_mode)) {
+              $entity->panelizer[$view_mode]->name = $name;
+            }
+            else {
+              // With no default, did or name, this doesn't actually exist.
+              unset($entity->panelizer[$view_mode]);
+              list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
+
+              db_delete('panelizer_entity')
+                ->condition('entity_type', $this->entity_type)
+                ->condition('entity_id', $entity_id)
+                ->condition('revision_id', $revision_id)
+                ->condition('view_mode', $view_mode)
+                ->execute();
+              continue;
+            }
+          }
+
+          // Panelizers that do not have dids are just a selection of defaults
+          // that has never actually been modified.
+          if (empty($entity->panelizer[$view_mode]->did) && !empty($entity->panelizer[$view_mode]->name)) {
+            $defaults[$entity->panelizer[$view_mode]->name] = $entity->panelizer[$view_mode]->name;
+          }
+          else {
+            $dids[$entity->panelizer[$view_mode]->did] = $entity->panelizer[$view_mode]->did;
+          }
         }
       }
     }
@@ -716,28 +824,36 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
       if (empty($bundles[$entity_id])) {
         continue;
       }
-      if (empty($entity->panelizer)) {
-        $default_key = implode(':', array($this->entity_type, $bundles[$entity_id], 'default'));
-        if (!empty($panelizer_defaults[$default_key])) {
-          $entity->panelizer = clone $panelizer_defaults[$default_key];
-          // make sure this entity can't write to the default display.
-          $entity->panelizer->did = NULL;
+      // Check for each view mode.
+      foreach ($this->plugin['view modes'] as $view_mode => $view_mode_info) {
+        if (empty($entity->panelizer[$view_mode])) {
+          // @todo there should be a convenience function for this.
+          $default_key = implode(':', array($this->entity_type, $bundles[$entity_id], 'default'));
+          if ($view_mode != 'page_manager') {
+            $default_key .= ':' . $view_mode;
+          }
+
+          if (!empty($panelizer_defaults[$default_key])) {
+            $entity->panelizer[$view_mode] = clone $panelizer_defaults[$default_key];
+            // make sure this entity can't write to the default display.
+            $entity->panelizer[$view_mode]->did = NULL;
+          }
         }
-      }
-      else if (empty($entity->panelizer->display)) {
-        if (!empty($entity->panelizer->did)) {
-          if (empty($displays[$entity->panelizer->did])) {
-            // Somehow the display for this entity has gotten lost?
-            $entity->panelizer->did = NULL;
-            $entity->panelizer->display = $this->get_default_display();
+        else if (empty($entity->panelizer[$view_mode]->display)) {
+          if (!empty($entity->panelizer[$view_mode]->did)) {
+            if (empty($displays[$entity->panelizer[$view_mode]->did])) {
+              // Somehow the display for this entity has gotten lost?
+              $entity->panelizer[$view_mode]->did = NULL;
+              $entity->panelizer[$view_mode]->display = $this->get_default_display($bundles[$entity_id], $view_mode);
+            }
+            else {
+              $entity->panelizer[$view_mode]->display = $displays[$entity->panelizer[$view_mode]->did];
+            }
           }
           else {
-            $entity->panelizer->display = $displays[$entity->panelizer->did];
-          }
-        }
-        else {
-          if (!empty($panelizer_defaults[$entity->panelizer->name])) {
-            $entity->panelizer->display = $panelizer_defaults[$entity->panelizer->name]->display;
+            if (!empty($panelizer_defaults[$entity->panelizer[$view_mode]->name])) {
+              $entity->panelizer[$view_mode]->display = $panelizer_defaults[$entity->panelizer[$view_mode]->name]->display;
+            }
           }
         }
       }
@@ -755,30 +871,55 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
       return;
     }
 
-    // On entity insert, we only write the display if it is not a default. That
-    // probably means it came from an export or deploy or something along
-    // those lines.
-    if (empty($entity->panelizer->name) && !empty($entity->panelizer->display)) {
-      $panelizer = $this->clone_panelizer($entity->panelizer, $entity);
-      // First write the display
-      panels_save_display($panelizer->display);
-
-      // Make sure we have the new did.
-      $panelizer->did = $panelizer->display->did;
-
-      // And write the new record.
-      return drupal_write_record('panelizer_entity', $panelizer);
+    // Allow exports or older data to be deployed successfully.
+    if (is_object($entity->panelizer)) {
+      $entity->panelizer = array('page_manager' => $entity->panelizer);
     }
-    else {
-      // We write the panelizer record to record which name is being used.
-      // And ensure the did is NULL:
-      $entity->panelizer->did = NULL;
-      $entity->panelizer->entity_type = $this->entity_type;
-      $entity->panelizer->entity_id = $entity_id;
-      // The (int) ensures that entities that do not support revisions work
-      // since the revision_id cannot be NULL.
-      $entity->panelizer->revision_id = (int) $revision_id;
-      return drupal_write_record('panelizer_entity', $entity->panelizer);
+
+    foreach ($entity->panelizer as $view_mode => $panelizer) {
+      // Just a safety check to make sure we can't have a missing view mode.
+      if (empty($view_mode)) {
+        $view_mode = 'page_manager';
+      }
+
+      // On entity insert, we only write the display if it is not a default.
+      // That probably means it came from an export or deploy or something
+      // along those lines.
+      if (empty($panelizer->name) && !empty($panelizer->display)) {
+        // Ensure we don't accidentally overwrite existing display
+        // data or anything silly like that.
+        $panelizer = $this->clone_panelizer($panelizer, $entity);
+        // First write the display
+        panels_save_display($panelizer->display);
+
+        // Make sure we have the new did.
+        $panelizer->did = $panelizer->display->did;
+
+        // Make sure there is a view mode.
+        if (!isset($panelizer->view_mode)) {
+          $panelizer->view_mode = $view_mode;
+        }
+
+        // And write the new record.
+        drupal_write_record('panelizer_entity', $clone);
+      }
+      else {
+        // We write the panelizer record to record which name is being used.
+        // And ensure the did is NULL:
+        $panelizer->did = NULL;
+        $panelizer->entity_type = $this->entity_type;
+        $panelizer->entity_id = $entity_id;
+        // The (int) ensures that entities that do not support revisions work
+        // since the revision_id cannot be NULL.
+        $panelizer->revision_id = (int) $revision_id;
+
+        // Make sure there is a view mode.
+        if (!isset($panelizer->view_mode)) {
+          $panelizer->view_mode = $view_mode;
+        }
+
+        drupal_write_record('panelizer_entity', $panelizer);
+      }
     }
   }
 
@@ -793,56 +934,77 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
       return;
     }
 
-    if ($this->supports_revisions) {
-      if (empty($entity->panelizer->revision_id) || $entity->panelizer->revision_id != $revision_id) {
-        $update = array();
-      }
-      else {
-        $update = array('entity_type', 'revision_id');
-      }
-    }
-    else {
-      if (empty($entity->panelizer->entity_id)) {
-        $update = array();
-      }
-      else {
-        $update = array('entity_type', 'entity_id');
-      }
+    // Allow exports or older data to be deployed successfully.
+    if (is_object($entity->panelizer)) {
+      $entity->panelizer = array('page_manager' => $entity->panelizer);
     }
 
-    // The editor will set this flag if the display is modified. This lets
-    // us know if we need to clone a new display or not.
-    // NOTE: This means that when exporting or deploying, we need to be sure
-    // to set the display_is_modified flag to ensure this gets written.
-    if (!empty($entity->panelizer->display_is_modified)) {
-      // If this is a new entry or the entry is using a display from a default,
-      // clone the display.
-      if (!$update || empty($entity->panelizer->did)) {
-        $panelizer = $this->clone_panelizer($entity->panelizer, $entity);
+    foreach ($entity->panelizer as $view_mode => $panelizer) {
+      // Just a safety check to make sure we can't have a missing view mode.
+      if (empty($view_mode)) {
+        $view_mode = 'page_manager';
+      }
+
+      if ($this->supports_revisions) {
+        if (empty($panelizer->revision_id) || $panelizer->revision_id != $revision_id) {
+          $panelizer->revision_id = $revision_id;
+          $update = array();
+        }
+        else {
+          $update = array('entity_type', 'revision_id', 'view_mode');
+        }
       }
       else {
-        $panelizer = $entity->panelizer;
+        if (empty($panelizer->entity_id)) {
+          $update = array();
+        }
+        else {
+          $update = array('entity_type', 'entity_id', 'view_mode');
+        }
       }
 
-      // First write the display
-      panels_save_display($panelizer->display);
+      // The editor will set this flag if the display is modified. This lets
+      // us know if we need to clone a new display or not.
+      // NOTE: This means that when exporting or deploying, we need to be sure
+      // to set the display_is_modified flag to ensure this gets written.
+      if (!empty($panelizer->display_is_modified)) {
+        // If this is a new entry or the entry is using a display from a default,
+        // clone the display.
+        if (!$update || empty($panelizer->did)) {
+          $panelizer = $this->clone_panelizer($panelizer, $entity);
+        }
 
-      // Make sure we have the did.
-      $panelizer->did = $panelizer->display->did;
+        // First write the display
+        panels_save_display($panelizer->display);
 
-      // Ensure that we always write this as NULL when we have our own panel:
-      $panelizer->name = NULL;
+        // Make sure we have the did.
+        $panelizer->did = $panelizer->display->did;
 
-      // And write the new record.
-      return drupal_write_record('panelizer_entity', $panelizer, $update);
-    }
-    else {
-      $entity->panelizer->entity_type = $this->entity_type;
-      $entity->panelizer->entity_id = $entity_id;
-      // The (int) ensures that entities that do not support revisions work
-      // since the revision_id cannot be NULL.
-      $entity->panelizer->revision_id = (int) $revision_id;
-      drupal_write_record('panelizer_entity', $entity->panelizer, $update);
+        // Ensure that we always write this as NULL when we have our own panel:
+        $panelizer->name = NULL;
+
+        // Make sure there is a view mode.
+        if (!isset($panelizer->view_mode)) {
+          $panelizer->view_mode = $view_mode;
+        }
+
+        // And write the new record.
+        return drupal_write_record('panelizer_entity', $panelizer, $update);
+      }
+      else {
+        $panelizer->entity_type = $this->entity_type;
+        $panelizer->entity_id = $entity_id;
+        // The (int) ensures that entities that do not support revisions work
+        // since the revision_id cannot be NULL.
+        $panelizer->revision_id = (int) $revision_id;
+
+        // Make sure there is a view mode.
+        if (!isset($panelizer->view_mode)) {
+          $panelizer->view_mode = $view_mode;
+        }
+
+        drupal_write_record('panelizer_entity', $panelizer, $update);
+      }
     }
   }
 
@@ -880,90 +1042,110 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
   public function hook_field_attach_form($entity, &$form, &$form_state, $langcode) {
     list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
 
-    // Do not give choices to non panelized nodes, or nodes that already have
-    // their won panel.
-    if (!$this->has_panel_choice($bundle) || !empty($entity->panelizer->did)) {
-      return;
-    }
-    $form_state['panelizer has choice'] = TRUE;
-    $form['panelizer'] = array(
-      '#type' => 'fieldset',
-      '#access' => $this->panelizer_access('choice', $entity),
-      '#title' => t('Panelizer'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-      '#group' => 'additional_settings',
-      '#attributes' => array(
-        'class' => array('panelizer-entity-options'),
-      ),
-      '#attached' => array(
-        'js' => array(ctools_attach_js('panelizer-vertical-tabs', 'panelizer')),
-      ),
-      '#weight' => -10,
-      '#tree' => TRUE,
-      // Put these here because submit does not get a real entity with
-      // the actual *(&)ing panelizer.
-      '#revision_id' => isset($entity->panelizer->revision_id) ? $entity->panelizer->revision_id : NULL,
-      '#entity_id' => isset($entity->panelizer->entity_id) ? $entity->panelizer->entity_id : NULL,
-    );
+    // We'll store the form array here so that we can tell at the end if we
+    // have any and need to add our fieldset.
+    $widgets = array();
 
-    $panelizers = $this->get_default_panelizer_objects($bundle);
-    $options = array();
-    foreach ($panelizers as $name => $panelizer) {
-      if (empty($panelizer->disabled)) {
-        $options[$name] = $panelizer->title ? $panelizer->title : t('Default');
+    foreach ($this->plugin['view modes'] as $view_mode => $view_mode_info) {
+      $view_bundle = $bundle . '.' . $view_mode;
+
+      // Ignore view modes that don't have a choice or already have their
+      // own custom panel set up.
+      if (!$this->has_panel_choice($view_bundle) || !empty($entity->panelizer[$view_mode]->did)) {
+        continue;
       }
-    }
 
-    if (!empty($entity->panelizer->name)) {
-      $name = $entity->panelizer->name;
-    }
-    else {
-      if ($this->has_default_panel($bundle)) {
-        $name = implode(':', array($this->entity_type, $bundle, 'default'));
+      $panelizers = $this->get_default_panelizer_objects($view_bundle);
+
+      $options = array();
+      foreach ($panelizers as $name => $panelizer) {
+        if (empty($panelizer->disabled)) {
+          $options[$name] = $panelizer->title ? $panelizer->title : t('Default');
+        }
+      }
+
+      if (!empty($entity->panelizer[$view_mode]->name)) {
+        $name = $entity->panelizer[$view_mode]->name;
       }
       else {
-        $name = '';
+        if ($this->has_default_panel($view_bundle)) {
+          $name = implode(':', array($this->entity_type, $bundle, 'default'));
+          if ($view_mode != 'page_manager') {
+            $name .= ':' . $view_mode;
+          }
+        }
+        else {
+          $name = '';
+        }
       }
+
+      if (!$this->has_default_panel($view_bundle)) {
+        $options = array('' => t('-- No panel --')) + $options;
+      }
+
+      $widgets[$view_mode]['name'] = array(
+        '#title' => $view_mode_info['label'],
+        '#type' => 'select',
+        '#options' => $options,
+        '#default_value' => $name,
+        // Put these here because submit does not get a real entity with
+        // the actual *(&)ing panelizer.
+        '#revision_id' => isset($entity->panelizer[$view_mode]->revision_id) ? $entity->panelizer[$view_mode]->revision_id : NULL,
+        '#entity_id' => isset($entity->panelizer[$view_mode]->entity_id) ? $entity->panelizer[$view_mode]->entity_id : NULL,
+      );
     }
 
-    if (!$this->has_default_panel($bundle)) {
-      $options = array('' => t('-- No panel --')) + $options;
+    if ($widgets) {
+      $form_state['panelizer has choice'] = TRUE;
+      $form['panelizer'] = array(
+        '#type' => 'fieldset',
+        '#access' => $this->panelizer_access('choice', $entity, $view_mode),
+        '#title' => t('Panelizer'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+        '#group' => 'additional_settings',
+        '#attributes' => array(
+          'class' => array('panelizer-entity-options'),
+        ),
+        '#attached' => array(
+          'js' => array(ctools_attach_js('panelizer-vertical-tabs', 'panelizer')),
+        ),
+        '#weight' => -10,
+        '#tree' => TRUE,
+      ) + $widgets;
     }
-
-    $form['panelizer']['name'] = array(
-      '#title' => t('Panel'),
-      '#type' => 'select',
-      '#options' => $options,
-      '#default_value' => $name,
-    );
   }
 
   public function hook_field_attach_submit($entity, &$form, &$form_state) {
     list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
-    if (!empty($form_state['panelizer has choice']) && !empty($form_state['values']['panelizer']['name'])) {
-      // Guarantee we overwrite any previous settings or non-settings.
-      $entity->panelizer = $this->get_default_panelizer_object($bundle, $form_state['values']['panelizer']['name']);
-      $entity->panelizer->did = NULL;
+    if (!empty($form_state['panelizer has choice'])) {
+      foreach ($this->plugin['view modes'] as $view_mode => $view_mode_info) {
+        if (isset($form_state['values']['panelizer'][$view_mode]['name'])) {
+          $entity->panelizer[$view_mode] = $this->get_default_panelizer_object($bundle . '.' . $view_mode, $form_state['values']['panelizer'][$view_mode]['name']);
+          $entity->panelizer[$view_mode]->did = NULL;
 
-      // Ensure original values are maintained:
-      $entity->panelizer->entity_id = $form['panelizer']['#entity_id'];
-      $entity->panelizer->revision_id = $form['panelizer']['#revision_id'];
+          // Ensure original values are maintained:
+          $entity->panelizer[$view_mode]->entity_id = $form['panelizer'][$view_mode]['name']['#entity_id'];
+          $entity->panelizer[$view_mode]->revision_id = $form['panelizer'][$view_mode]['name']['#revision_id'];
+        }
+      }
     }
   }
 
   /**
-   * Implement the save function for the entity.
+   * Determine if the entity allows revisions.
+   *
+   * @param $entity
+   *   The entity to test.
+   *
+   * @return array
+   *   An array containing two boolean values. The first one lets the system
+   *   know whether or not the entity currently allows revisions. The second
+   *   one lets us know if the user has access to control whether or not a
+   *   new revision is created.
    */
   public function entity_allows_revisions($entity) {
-    $retval = array();
-
-    list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
-
-    // @todo -- why is there node specific stuff here?
-    $node_options = variable_get('node_options_' . $bundle, array('status', 'promote'));
-    $retval[0] = in_array('revision', $node_options);
-    $retval[1] = user_access('administer nodes');
+    return array(FALSE, FALSE);
   }
 
   /**
@@ -992,41 +1174,248 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     return $panelizer_clone;
   }
 
-  function access_admin($entity, $op = NULL) {
+  function access_admin($entity, $op = NULL, $view_mode = NULL) {
     list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
+    if ($view_mode) {
+      $bundle .= '.' . $view_mode;
+    }
+    else {
+      $view_mode = 'page_manager';
+    }
+
     if (!$this->is_panelized($bundle)) {
       return FALSE;
     }
 
-    // If there is an $op, this must actually be panelized in order to pass.
-    // If there is no op, then the settings page can provide us a "panelize it!"
-    // page even if there is no panel.
-    if ($op && $op != 'settings' && empty($entity->panelizer)) {
-      return FALSE;
-    }
-
-    return $this->panelizer_access($op, $entity) && $this->entity_access('update', $entity);
+    return $this->panelizer_access($op, $entity, $view_mode) && $this->entity_access('update', $entity);
   }
 
   /**
    * Determine if the user has access to the panelizer operation for this type.
    */
-  function panelizer_access($op, $entity) {
-    list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
+  function panelizer_access($op, $bundle, $view_mode) {
+    if (is_object($bundle)) {
+      $entity = $bundle;
+      list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
+
+      // If there is an $op, this must actually be panelized in order to pass.
+      // If there is no op, then the settings page can provide us a "panelize it!"
+      // page even if there is no panel.
+      if ($op && $op != 'overview' && $op != 'settings' && empty($entity->panelizer[$view_mode])) {
+        return FALSE;
+      }
+    }
 
     return user_access('administer panelizer') || user_access("administer panelizer $this->entity_type $bundle $op");
   }
 
   /**
-   * Switched page callback to give the settings form.
+   * Switched page callback to give the overview page
    */
-  function page_settings($js, $input, $entity) {
+  function page_overview($js, $input, $entity) {
+    $header = array(
+      t('View mode'),
+      t('Status'),
+      t('Operations'),
+    );
+
     list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
 
-    if (empty($entity->panelizer)) {
+    $rows = array();
+
+    $base_url = $this->entity_base_url($entity);
+
+    foreach ($this->plugin['view modes'] as $view_mode => $view_mode_info) {
+      if (!$this->is_panelized($bundle . '.' . $view_mode)) {
+        continue;
+      }
+
+      $row = array();
+      $row[] = $view_mode_info['label'];
+      $panelized = TRUE;
+
+      if (!empty($entity->panelizer[$view_mode]->name)) {
+        $panelizer = ctools_export_crud_load('panelizer_defaults', $entity->panelizer[$view_mode]->name);
+        $status = !empty($panelizer->title) ? check_plain($panelizer->title) : t('Default');
+      }
+      else if (!empty($entity->panelizer[$view_mode]->did)) {
+        $status = t('Custom');
+      }
+      else {
+        $status = t('Not panelized');
+        $panelized = FALSE;
+      }
+      $row[] = $status;
+
+      if ($panelized) {
+        $links_array = array();
+        if ($this->panelizer_access('settings', $entity, $view_mode)) {
+          $links_array['settings'] = array(
+            'title' => t('settings'),
+            'href' => $base_url . '/' . $view_mode . '/settings',
+          );
+        }
+        if ($this->panelizer_access('context', $entity, $view_mode)) {
+          $links_array['context'] = array(
+            'title' => t('context'),
+            'href' => $base_url . '/' . $view_mode . '/context',
+          );
+        }
+        if ($this->panelizer_access('layout', $entity, $view_mode)) {
+          $links_array['layout'] = array(
+            'title' => t('layout'),
+            'href' => $base_url . '/' . $view_mode . '/layout',
+          );
+        }
+        if ($this->panelizer_access('content', $entity, $view_mode)) {
+          $links_array['content'] = array(
+            'title' => t('content'),
+            'href' => $base_url . '/' . $view_mode . '/content',
+          );
+        }
+      }
+      else {
+        $links_array = array(
+          'panelize' => array(
+            'title' => t('panelize'),
+            'href' => $base_url . '/' . $view_mode,
+          ),
+        );
+      }
+
+      $links = theme('links', array(
+        'links' => $links_array,
+        'attributes' => array('class' => 'links inline'),
+      ));
+
+      $row[] = $links;
+      $rows[] = $row;
+    }
+
+    $output = theme('table', array('header' => $header, 'rows' => $rows));
+    return $output;
+  }
+
+  /**
+   * Provides the base panelizer URL for an entity.
+   */
+  function entity_base_url($entity, $view_mode = NULL) {
+    list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
+
+    $bits = explode('/', $this->plugin['entity path']);
+    foreach ($bits as $count => $bit) {
+      if (strpos($bit, '%') === 0) {
+        $bits[$count] = $entity_id;
+      }
+    }
+
+    $bits[] = 'panelizer';
+    if ($view_mode) {
+      $bits[] = $view_mode;
+    }
+    $base_url = implode('/', $bits);
+
+    return $base_url;
+  }
+
+  /**
+   * Provides a wrapper for the panelizer page output.
+   *
+   * Drupal only supports 2 levels of tabs, but we need a 3rd
+   * level. We will fake it.
+   */
+  function wrap_entity_panelizer_pages($entity, $view_mode, $output) {
+    $base_url = $this->entity_base_url($entity, $view_mode);
+    return $this->make_fake_tabs($base_url, $entity, $view_mode, $output);
+  }
+
+  /**
+   * Provides a wrapper for the panelizer page output.
+   *
+   * Drupal only supports 2 levels of tabs, but we need a 3rd
+   * level. We will fake it.
+   */
+  function wrap_default_panelizer_pages($bundle, $output) {
+    list($bundle, $view_mode) = explode('.', $bundle);
+    $base_url = $this->entity_admin_root . '/panelizer/' . $view_mode;
+    // We have to sub in the bundle if this is set.
+    if (is_numeric($this->entity_admin_bundle)) {
+      $bits = explode('/', $base_url);
+      $bits[$this->entity_admin_bundle] = $bundle;
+      $base_url = implode('/', $bits);
+    }
+
+    return $this->make_fake_tabs($base_url, $bundle, $view_mode, $output);
+  }
+
+  /**
+   * Create some fake tabs that are attached to a page output.
+   */
+  function make_fake_tabs($base_url, $bundle, $view_mode, $output) {
+    $links_array = array();
+    if ($this->panelizer_access('settings', $bundle, $view_mode)) {
+      $links_array['panelizer-settings'] = array(
+        'title' => t('Settings'),
+        'href' => $base_url,
+      );
+    }
+    if ($this->panelizer_access('context', $bundle, $view_mode)) {
+      $links_array['panelizer-context'] = array(
+        'title' => t('Context'),
+        'href' => $base_url . '/context',
+      );
+    }
+    if ($this->panelizer_access('layout', $bundle, $view_mode)) {
+      $links_array['panelizer-layout'] = array(
+        'title' => t('Layout'),
+        'href' => $base_url . '/layout',
+      );
+    }
+    if ($this->panelizer_access('content', $bundle, $view_mode)) {
+      $links_array['panelizer-content'] = array(
+        'title' => t('Content'),
+        'href' => $base_url . '/content',
+      );
+    }
+
+    // Only render if > 1 link, just like core.
+    if (count($links_array) <= 1) {
+      return $output;
+    }
+
+    // These fake tabs are pretty despicable, but they'll do.
+    $links = '<div class="tabs clearfix">' . theme('links', array(
+      'links' => $links_array,
+      'attributes' => array('class' => 'tabs secondary'),
+    )) . '</div>';
+
+    if (is_array($output)) {
+      // Use array addition because forms will already be sorted so
+      // #weight may not be effective.
+      $output = array(
+          'panelizer_links' => array(
+          '#markup' => $links,
+          '#weight' => -10000,
+        ),
+      ) + $output;
+    }
+    else {
+      $output = $links . $output;
+    }
+
+    return $output;
+  }
+
+  /**
+   * Switched page callback to give the settings form.
+   */
+  function page_settings($js, $input, $entity, $view_mode) {
+    list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
+
+    if (empty($entity->panelizer[$view_mode])) {
       // If this entity is not yet panelized, and there is no default panel
-      // do to configuration, give them the option of panelizing it.
-      if ($this->has_default_panel($bundle)) {
+      // to do configuration, give them the option of panelizing it.
+      if ($this->has_default_panel($bundle . '.' . $view_mode)) {
         return MENU_NOT_FOUND;
       }
 
@@ -1035,19 +1424,20 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
 
       // Fetch a special default panelizer that is only accessible with the
       // default_anyway flag.
-      $panelizer = $this->get_internal_default_panelizer($bundle);
+      $panelizer = $this->get_internal_default_panelizer($bundle, $view_mode);
       $panelizer->name = NULL;
     }
     else {
       $form_id = 'panelizer_settings_form';
       $reset_button = TRUE;
-      $panelizer = $entity->panelizer;
+      $panelizer = $entity->panelizer[$view_mode];
     }
 
     $form_state = array(
       'entity' => $entity,
       'revision info' => $this->entity_allows_revisions($entity),
       'panelizer' => $panelizer,
+      'view_mode' => $view_mode,
       'no_redirect' => TRUE,
     );
 
@@ -1060,7 +1450,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     if (!empty($form_state['executed'])) {
       if (empty($form_state['clicked_button']['#reset'])) {
         drupal_set_message(t('The settings have been updated.'));
-        $entity->panelizer = $form_state['panelizer'];
+        $entity->panelizer[$view_mode] = $form_state['panelizer'];
         // Make sure that entity_save knows that the panelizer settings
         // are modified and must be made local to the entity.
         if (empty($panelizer->did) || !empty($panelizer->name)) {
@@ -1069,19 +1459,19 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
         $this->entity_save($entity);
       }
       else {
-        $this->delete_entity_panelizer($entity);
+        $this->delete_entity_panelizer($entity, $view_mode);
       }
 
       drupal_goto($_GET['q']);
     }
 
-    return $output;
+    return $this->wrap_entity_panelizer_pages($entity, $view_mode, $output);
   }
 
-  function page_context($js, $input, $entity) {
+  function page_context($js, $input, $entity, $view_mode) {
     list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
 
-    $cache_key = $entity_id;
+    $cache_key = $entity_id . '.' . $view_mode;
     $panelizer = panelizer_context_cache_get($this->entity_type, $cache_key);
 
     if (empty($panelizer)) {
@@ -1102,7 +1492,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     if (!empty($form_state['executed'])) {
       if (!empty($form_state['clicked_button']['#write'])) {
         drupal_set_message(t('The settings have been updated.'));
-        $entity->panelizer = $form_state['panelizer'];
+        $entity->panelizer[$view_mode] = $form_state['panelizer'];
         $this->entity_save($entity);
       }
       else {
@@ -1113,12 +1503,11 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
       drupal_goto($_GET['q']);
     }
 
-    return $output;
-
+    return $this->wrap_entity_panelizer_pages($entity, $view_mode, $output);
   }
 
-  function page_layout($js, $input, $entity, $step = NULL, $layout = NULL) {
-    $panelizer = $entity->panelizer;
+  function page_layout($js, $input, $entity, $view_mode, $step = NULL, $layout = NULL) {
+    $panelizer = $entity->panelizer[$view_mode];
     if (empty($panelizer)) {
       return MENU_NOT_FOUND;
     }
@@ -1128,42 +1517,31 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     $display = $panelizer->display;
     $display->context = $this->get_contexts($panelizer, $entity);
 
-    $bits = explode('/', $this->plugin['entity path']);
-    foreach ($bits as $count => $bit) {
-      if (strpos($bit, '%') === 0) {
-        $bits[$count] = $entity_id;
-      }
-    }
-
-    $bits[] = 'panelizer';
-    $finish_path = $bits;
-
-    $bits[] = 'layout';
-    $bits[] = '%step';
+    $path = $this->entity_base_url($entity, $view_mode);
 
     $form_state = array(
       'entity' => $entity,
       'revision info' => $this->entity_allows_revisions($entity),
       'display' => $display,
-      'wizard path' => implode('/', $bits),
+      'wizard path' => $path . '/layout/%step',
       'allowed_layouts' => 'panelizer_' . $this->entity_type . ':' . $bundle,
     );
 
     ctools_include('common', 'panelizer');
     $output = panelizer_change_layout_wizard($form_state, $step, $layout);
     if (!empty($form_state['complete'])) {
-      $entity->panelizer->display = $form_state['display'];
-      $entity->panelizer->display_is_modified = TRUE;
+      $entity->panelizer[$view_mode]->display = $form_state['display'];
+      $entity->panelizer[$view_mode]->display_is_modified = TRUE;
       $this->entity_save($entity);
       drupal_set_message(t('The layout has been changed.'));
-      drupal_goto(implode('/', $finish_path) . '/content');
+      drupal_goto($path . '/content');
     }
 
-    return $output;
+    return $this->wrap_entity_panelizer_pages($entity, $view_mode, $output);
   }
 
-  function page_content($js, $input, $entity) {
-    $panelizer = $entity->panelizer;
+  function page_content($js, $input, $entity, $view_mode) {
+    $panelizer = $entity->panelizer[$view_mode];
     if (empty($panelizer)) {
       return MENU_NOT_FOUND;
     }
@@ -1173,7 +1551,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     $form_state = array(
       'entity' => $entity,
       'revision info' => $this->entity_allows_revisions($entity),
-      'display cache' => panels_edit_cache_get(implode(':', array('panelizer', $this->entity_type, $entity_id))),
+      'display cache' => panels_edit_cache_get(implode(':', array('panelizer', $this->entity_type, $entity_id, $view_mode))),
       'no_redirect' => TRUE,
     );
 
@@ -1182,8 +1560,8 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     if (!empty($form_state['executed'])) {
       if (!empty($form_state['clicked_button']['#save-display'])) {
         drupal_set_message(t('The settings have been updated.'));
-        $entity->panelizer->display = $form_state['display'];
-        $entity->panelizer->display_is_modified = TRUE;
+        $entity->panelizer[$view_mode]->display = $form_state['display'];
+        $entity->panelizer[$view_mode]->display_is_modified = TRUE;
         $this->entity_save($entity);
       }
       else {
@@ -1194,47 +1572,88 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
       drupal_goto($_GET['q']);
     }
 
+    $output = $this->wrap_entity_panelizer_pages($entity, $view_mode, $output);
+
     ctools_set_no_blocks(FALSE);
     drupal_set_page_content($output);
     $page = element_info('page');
     return $page;
   }
 
-  function delete_entity_panelizer($entity) {
+  /**
+   * Delete panelizers associated with the entity.
+   *
+   * @param object $entity
+   *   The entity.
+   * @param $view_mode
+   *   The view mode to delete. If not specified, all view modes will be
+   *   deleted.
+   */
+  function delete_entity_panelizer($entity, $view_mode = NULL) {
     list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
 
-    // Locate and delete all displays associated with the entity.
-    $dids = db_query("SELECT did FROM {panelizer_entity} WHERE entity_type = '$this->entity_type' AND entity_id = :id", array(':id' => $entity_id))->fetchCol();
+    if (empty($view_mode)) {
+      // Locate and delete all displays associated with the entity.
+      $dids = db_query("SELECT did FROM {panelizer_entity} WHERE entity_type = '$this->entity_type' AND entity_id = :id", array(':id' => $entity_id))->fetchCol();
+    }
+    else {
+      $dids = db_query("SELECT did FROM {panelizer_entity} WHERE entity_type = '$this->entity_type' AND entity_id = :id AND view_mode = :view_mode", array(':id' => $entity_id, ':view_mode' => $view_mode))->fetchCol();
+    }
 
     foreach (array_unique($dids) as $did) {
       panels_delete_display($did);
     }
 
-    db_delete('panelizer_entity')
+    $delete = db_delete('panelizer_entity')
       ->condition('entity_type', $this->entity_type)
-      ->condition('entity_id', $entity_id)
-      ->execute();
+      ->condition('entity_id', $entity_id);
+
+    if ($view_mode) {
+      $delete->condition('view_mode', $view_mode);
+    }
+
+    $delete->execute();
   }
 
   /**
    * Determine if a bundle is panelized.
    */
   public function is_panelized($bundle) {
-    return !empty($this->plugin['bundles'][$bundle]) && !empty($this->plugin['bundles'][$bundle]['status']);
+    if (strpos($bundle, '.') === FALSE) {
+      return !empty($this->plugin['bundles'][$bundle]) && !empty($this->plugin['bundles'][$bundle]['status']);
+    }
+    else {
+      list($bundle, $view_mode) = explode('.', $bundle);
+      return !empty($this->plugin['bundles'][$bundle]) && !empty($this->plugin['bundles'][$bundle]['status']) && !empty($this->plugin['bundles'][$bundle]['view modes'][$view_mode]['status']);
+    }
   }
 
   /**
    * Determine if a bundle has a default panel.
+   *
+   * @param $bundle
+   *   A $bundle.$view_mode combo string. If no view mode is specified
+   *   then the 'page_manager' view mode will be assumed.
    */
   public function has_default_panel($bundle) {
-    return $this->is_panelized($bundle) && !empty($this->plugin['bundles'][$bundle]['default']);
+    if (strpos($bundle, '.') === FALSE) {
+      $bundle .= '.page_manager';
+    }
+    list($bundle, $view_mode) = explode('.', $bundle);
+
+    return $this->is_panelized($bundle) && !empty($this->plugin['bundles'][$bundle]['view modes'][$view_mode]['default']);
   }
 
   /**
    * Determine if a bundle is allowed choices.
    */
   public function has_panel_choice($bundle) {
-    return !empty($this->plugin['bundles'][$bundle]['choice']);
+    if (strpos($bundle, '.') === FALSE) {
+      $bundle .= '.page_manager';
+    }
+      list($bundle, $view_mode) = explode('.', $bundle);
+
+    return $this->is_panelized($bundle) && !empty($this->plugin['bundles'][$bundle]['view modes'][$view_mode]['choice']);
   }
 
   /**
@@ -1250,10 +1669,17 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
    * Get the default panelizers for the given bundle.
    */
   public function get_default_panelizer_objects($bundle) {
+    if (strpos($bundle, '.') !== FALSE) {
+      list($bundle, $view_mode) = explode('.', $bundle);
+    }
     $conditions = array(
       'panelizer_type' => $this->entity_type,
       'panelizer_key' => $bundle,
     );
+
+    if (!empty($view_mode)) {
+      $conditions['view_mode'] = $view_mode;
+    }
 
     ctools_include('export');
     return ctools_export_load_object('panelizer_defaults', 'conditions', $conditions);
@@ -1284,14 +1710,23 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     // Otherwise, features can't latch onto it.
     $default_names = &drupal_static('panelizer_defaults_in_database', NULL);
     if (!isset($default_names)) {
-      $default_names = drupal_map_assoc(db_query("SELECT name FROM {panelizer_defaults} WHERE name LIKE '%:default'")->fetchCol());
+      $default_names = drupal_map_assoc(db_query("SELECT name FROM {panelizer_defaults} WHERE name LIKE '%:default&'")->fetchCol());
     }
 
+    $entity_info = entity_get_info($this->entity_type);
+
     foreach ($this->plugin['bundles'] as $bundle => $info) {
-      if (!empty($info['status']) && !empty($info['default'])) {
-        $panelizer = $this->get_internal_default_panelizer($bundle);
-        if (empty($default_names[$panelizer->name]) && !isset($panelizers[$panelizer->name])) {
-          $panelizers[$panelizer->name] = $panelizer;
+      // Don't bother if there are no
+      if (empty($info['status'])) {
+        continue;
+      }
+
+      foreach ($this->plugin['view modes'] as $view_mode => $view_mode_info) {
+        if (!empty($info['view modes'][$view_mode]['status']) && !empty($info['view modes'][$view_mode]['default'])) {
+          $panelizer = $this->get_internal_default_panelizer($bundle, $view_mode);
+          if (empty($default_names[$panelizer->name]) && !isset($panelizers[$panelizer->name])) {
+            $panelizers[$panelizer->name] = $panelizer;
+          }
         }
       }
     }
@@ -1301,15 +1736,23 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
    * An internal representation of a panelizer object, used to seed when
    * we have none and want something to get started.
    */
-  public function get_internal_default_panelizer($bundle) {
+  public function get_internal_default_panelizer($bundle, $view_mode) {
     $load_name = implode(':', array($this->entity_type, $bundle, 'default'));
     $panelizer = ctools_export_crud_new('panelizer_defaults');
+    $panelizer->name = $load_name;
+    // Attach the view mode to the name, which is specially generated
+    // to ignore the specialty "page_manager" view mode.
+    if ($view_mode != 'page_manager') {
+      $panelizer->name .= ':' . $view_mode;
+    }
+
     $panelizer->panelizer_type = $this->entity_type;
     $panelizer->panelizer_key = $bundle;
-    $panelizer->name = $load_name;
-    $panelizer->display = $this->get_default_display();
+    $panelizer->view_mode = $view_mode;
+    $panelizer->display = $this->get_default_display($bundle, $view_mode);
     $panelizer->api_version = 1;
     $panelizer->title = t('Default');
+
     return $panelizer;
   }
 
@@ -1317,10 +1760,22 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
    * Load the named default panel for the bundle.
    */
   public function get_default_panelizer_object($bundle, $name) {
-    // If the name is in the format of entitytype:bundle:name which is the machine
-    // name used, split that out automatically.
+    if (strpos($bundle, '.') !== FALSE) {
+      list($bundle, $view_mode) = explode('.', $bundle);
+    }
+    else {
+      $view_mode = 'page_manager';
+    }
+
+    // If the name is not in the format of entitytype:bundle:name which is
+    // the machine name used, split that out automatically.
     if (strpos($name, ':') === FALSE) {
       $name = implode(':', array($this->entity_type, $bundle, $name));
+      // This is the default view mode and older defaults won't have this,
+      // so we don't enforce it.
+      if ($view_mode != 'page_manager') {
+        $name .= ':' . $view_mode;
+      }
     }
 
     ctools_include('export');
@@ -1332,10 +1787,35 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
    *
    * This should be implemented by the entity plugin.
    */
-  function get_default_display() {
+  function get_default_display($bundle, $view_mode) {
     // This is a straight up empty display.
     $display = panels_new_display();
     $display->layout = 'flexible';
+
+    $panes = array();
+    foreach (field_info_instances($this->entity_type, $bundle) as $field_name => $instance) {
+      $view_mode_settings = field_view_mode_settings($this->entity_type, $bundle);
+      $actual_mode = (!empty($view_mode_settings[$view_mode]['custom_settings']) ? $view_mode : 'default');
+      $field_display = $instance['display'][$actual_mode];
+
+      $pane = panels_new_pane('entity_field', $this->entity_type . ':' . $field_name, TRUE);
+      $pane->configuration['formatter'] = $field_display['type'];
+      $pane->configuration['formatter_settings'] = $field_display['settings'];
+      $pane->configuration['label'] = $field_display['label'];
+      $pane->configuration['context'] = 'panelizer';
+      $panes[] = array(
+        '#pane' => $pane,
+        '#weight' => $field_display['weight'],
+      );
+    }
+
+    // Use our #weights to sort these so they appear in whatever order the
+    // normal field configuration put them in.
+    uasort($panes, 'element_sort');
+    foreach ($panes as $pane) {
+      $display->add_pane($pane['#pane'], 'center');
+    }
+
     return $display;
   }
 
@@ -1344,8 +1824,8 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
    *
    * This must be implemented for each entity type.
    */
-  function get_panelizer_object($entity_id) {
-  }
+//  function get_panelizer_object($entity_id) {
+//  }
 
   /**
    * Add entity specific form to the Panelizer settings form.
@@ -1368,58 +1848,34 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     );
 
     $entity_info = entity_get_info($this->entity_type);
+
     $bundles = $entity_info['bundles'];
+
     drupal_alter('panelizer_default_types', $bundles, $this->entity_type);
 
     foreach ($bundles as $bundle => $bundle_info) {
-      $base_id = str_replace(array('][', '_', ' '), '-', '#edit-entities-' . $this->entity_type . '-' . $bundle);
       $base_url = 'admin/config/content/panelizer/' . $this->entity_type . '/' . $bundle;
+      $bundle_id = str_replace(array('][', '_', ' '), '-', '#edit-entities-' . $this->entity_type . '-' . $bundle . '-0');
 
-      $settings = !empty($this->plugin['bundles'][$bundle]) ? $this->plugin['bundles'][$bundle] : array('status' => FALSE, 'default' => FALSE, 'choice' => FALSE);
-
-      $form['entities'][$this->entity_type][$bundle]['title'] = array(
-        '#markup' => $bundle_info['label'],
+      // Add the widgets that apply only to the bundle.
+      $form['entities'][$this->entity_type][$bundle][0]['title'] = array(
+        '#markup' => '<strong>' . $bundle_info['label'] . '</strong>',
       );
 
-      $form['entities'][$this->entity_type][$bundle]['status'] = array(
+      $form['entities'][$this->entity_type][$bundle][0]['status'] = array(
         '#type' => 'checkbox',
-        '#default_value' => !empty($settings['status']),
+        '#default_value' => !empty($this->plugin['bundles'][$bundle]['status']),
       );
 
-      $form['entities'][$this->entity_type][$bundle]['default'] = array(
-        '#type' => 'checkbox',
-        '#default_value' => !empty($settings['default']),
-        '#states' => array(
-          'visible' => array(
-            $base_id . '-status' => array('checked' => TRUE),
-          ),
-        ),
-      );
-
-      $form['entities'][$this->entity_type][$bundle]['choice'] = array(
-        '#type' => 'checkbox',
-        '#default_value' => !empty($settings['choice']),
-        '#states' => array(
-          'visible' => array(
-            $base_id . '-status' => array('checked' => TRUE),
-          ),
-        ),
-      );
-
-      $form['entities'][$this->entity_type][$bundle]['links'] = array(
-        '#prefix' => '<div class="container-inline">',
-        '#suffix' => '</div>',
-      );
-
-      // Panelize is on all content types get this option
-      if (!empty($settings['status'])) {
+      // Set proper allowed content link for entire bundle based on status
+      if (!empty($this->plugin['bundles'][$bundle]['status'])) {
         $links_array = array(
           'settings' => array(
             'title' => t('allowed content'),
             'href' => $base_url . '/allowed',
           ),
         );
-         $links = theme('links', array(
+        $links = theme('links', array(
           'links' => $links_array,
           'attributes' => array('class' => 'links inline'),
         ));
@@ -1428,85 +1884,151 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
         $links = t('Save to access allowed content');
       }
 
-      $form['entities'][$this->entity_type][$bundle]['links']['basic'] = array(
+      $form['entities'][$this->entity_type][$bundle][0]['links']['basic'] = array(
         '#type' => 'item',
         '#title' => $links,
         '#states' => array(
           'visible' => array(
-            $base_id . '-status' => array('checked' => TRUE),
+            $bundle_id . '-status' => array('checked' => TRUE),
           ),
         ),
       );
 
-      // Panelize is enabled and a default panel will be provided
-      if (!empty($settings['status']) && !empty($settings['default']) && empty($settings['choice'])) {
-        $links_array = array(
-          'settings' => array(
-            'title' => t('settings'),
-            'href' => $base_url . '/settings',
-          ),
-          'context' => array(
-            'title' => t('context'),
-            'href' => $base_url . '/context',
-          ),
-          'layout' => array(
-            'title' => t('layout'),
-            'href' => $base_url . '/layout',
-          ),
-          'content' => array(
-            'title' => t('content'),
-            'href' => $base_url . '/content',
+      foreach ($this->plugin['view modes'] as $view_mode => $view_mode_info) {
+        $base_id = str_replace(array('][', '_', ' '), '-', '#edit-entities-' . $this->entity_type . '-' . $bundle . '-' . $view_mode);
+        $base_url = 'admin/config/content/panelizer/' . $this->entity_type . '/' . $bundle . '.' . $view_mode;
+
+        if (!empty($this->plugin['bundles'][$bundle]['view modes'][$view_mode]) && is_array($this->plugin['bundles'][$bundle]['view modes'][$view_mode])) {
+          $settings = $this->plugin['bundles'][$bundle]['view modes'][$view_mode];
+        }
+        else {
+          $settings = array(
+            'status' => FALSE,
+            'default' => FALSE,
+            'choice' => FALSE
+          );
+        }
+
+        if (empty($view_mode_info['panelizer special'])) {
+          $form['entities'][$this->entity_type][$bundle][$view_mode]['title'] = array(
+            '#markup' => '&nbsp;&nbsp;&nbsp;&nbsp;' . $view_mode_info['label'],
+          );
+        }
+        else {
+          $form['entities'][$this->entity_type][$bundle][$view_mode]['title'] = array(
+            '#markup' => '<strong>' . $bundle_info['label'] . '</strong>',
+          );
+        }
+
+        $form['entities'][$this->entity_type][$bundle][$view_mode]['status'] = array(
+          '#type' => 'checkbox',
+          '#default_value' => !empty($settings['status']),
+          '#states' => array(
+            'visible' => array(
+              $bundle_id . '-status' => array('checked' => TRUE),
+            ),
           ),
         );
 
-        $links = theme('links', array(
-          'links' => $links_array,
-          'attributes' => array('class' => 'links inline'),
-        ));
-      }
-      else {
-        $links = t('Save to access default panel');
-      }
-
-      $form['entities'][$this->entity_type][$bundle]['links']['default'] = array(
-        '#type' => 'item',
-        '#title' => $links,
-        '#states' => array(
-          'visible' => array(
-            $base_id . '-status' => array('checked' => TRUE),
-            $base_id . '-default' => array('checked' => TRUE),
-            $base_id . '-choice' => array('checked' => FALSE),
-          ),
-        ),
-      );
-
-      if (!empty($settings['status']) && !empty($settings['choice'])) {
-        $links_array = array(
-          'list' => array(
-            'title' => t('list'),
-            'href' => $base_url . '/list',
+        $form['entities'][$this->entity_type][$bundle][$view_mode]['default'] = array(
+          '#type' => 'checkbox',
+          '#default_value' => !empty($settings['default']),
+          '#states' => array(
+            'visible' => array(
+              $bundle_id . '-status' => array('checked' => TRUE),
+              $base_id . '-status' => array('checked' => TRUE),
+            ),
           ),
         );
 
-        $links = theme('links', array(
-          'links' => $links_array,
-          'attributes' => array('class' => 'links inline'),
-        ));
-      }
-      else {
-        $links = t('Save to access panel list');
-      }
-
-      $form['entities'][$this->entity_type][$bundle]['links']['default2'] = array(
-        '#type' => 'item',
-        '#title' => $links,
-        '#states' => array(
-          'visible' => array(
-            $base_id . '-status' => array('checked' => TRUE),
-            $base_id . '-choice' => array('checked' => TRUE),
+        $form['entities'][$this->entity_type][$bundle][$view_mode]['choice'] = array(
+          '#type' => 'checkbox',
+          '#default_value' => !empty($settings['choice']),
+          '#states' => array(
+            'visible' => array(
+              $bundle_id . '-status' => array('checked' => TRUE),
+              $base_id . '-status' => array('checked' => TRUE),
+            ),
           ),
-        ),
-      );
+        );
+
+        $form['entities'][$this->entity_type][$bundle][$view_mode]['links'] = array(
+          '#prefix' => '<div class="container-inline">',
+          '#suffix' => '</div>',
+        );
+
+        // Panelize is enabled and a default panel will be provided
+        if (!empty($settings['status']) && !empty($settings['default']) && empty($settings['choice'])) {
+          $links_array = array(
+            'settings' => array(
+              'title' => t('settings'),
+              'href' => $base_url . '/settings',
+            ),
+            'context' => array(
+              'title' => t('context'),
+              'href' => $base_url . '/context',
+            ),
+            'layout' => array(
+              'title' => t('layout'),
+              'href' => $base_url . '/layout',
+            ),
+            'content' => array(
+              'title' => t('content'),
+              'href' => $base_url . '/content',
+            ),
+          );
+
+          $links = theme('links', array(
+            'links' => $links_array,
+            'attributes' => array('class' => 'links inline'),
+          ));
+        }
+        else {
+          $links = t('Save to access default panel');
+        }
+
+        $form['entities'][$this->entity_type][$bundle][$view_mode]['links']['default'] = array(
+          '#type' => 'item',
+          '#title' => $links,
+          '#states' => array(
+            'visible' => array(
+              $bundle_id . '-status' => array('checked' => TRUE),
+              $base_id . '-status' => array('checked' => TRUE),
+              $base_id . '-default' => array('checked' => TRUE),
+              $base_id . '-choice' => array('checked' => FALSE),
+            ),
+          ),
+        );
+
+        if (!empty($settings['status']) && !empty($settings['choice'])) {
+          $links_array = array(
+            'list' => array(
+              'title' => t('list'),
+              'href' => $base_url . '/list',
+            ),
+          );
+
+          $links = theme('links', array(
+            'links' => $links_array,
+            'attributes' => array('class' => 'links inline'),
+          ));
+        }
+        else {
+          $links = t('Save to access panel list');
+        }
+
+        $form['entities'][$this->entity_type][$bundle][$view_mode]['links']['default2'] = array(
+          '#type' => 'item',
+          '#title' => $links,
+          '#states' => array(
+            'visible' => array(
+              $bundle_id . '-status' => array('checked' => TRUE),
+              $base_id . '-status' => array('checked' => TRUE),
+              $base_id . '-choice' => array('checked' => TRUE),
+            ),
+          ),
+        );
+      }
     }
   }
 
@@ -1526,7 +2048,15 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     }
 
     foreach ($form_state['values']['entities'][$this->entity_type] as $bundle => $values) {
-      variable_set('panelizer_defaults_' . $this->entity_type . '_' . $bundle, $values);
+      // Rewrite our settings because they're not quite in the right format in
+      // the form.
+      $settings = array('status' => $values[0]['status'], 'view modes' => array());
+      foreach ($values as $view_mode => $data) {
+        if ($view_mode) {
+          $settings['view modes'][$view_mode] = $data;
+        }
+      }
+      variable_set('panelizer_defaults_' . $this->entity_type . '_' . $bundle, $settings);
     }
 
     // @todo if we enable caching of the plugins, which we should, this
@@ -1551,14 +2081,14 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
    *   - 'no_blocks': Boolean defining if the panels display wants to hide core
    *      blocks or not when being rendered.
    */
-  function render_entity($entity, $args = array(), $address = NULL) {
-    if (empty($entity->panelizer) || empty($entity->panelizer->display)) {
+  function render_entity($entity, $view_mode, $langcode = NULL, $args = array(), $address = NULL) {
+    if (empty($entity->panelizer[$view_mode]) || empty($entity->panelizer[$view_mode]->display)) {
       return FALSE;
     }
     list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
 
-    $panelizer = $entity->panelizer;
-    $display = $entity->panelizer->display;
+    $panelizer = $entity->panelizer[$view_mode];
+    $display = $panelizer->display;
 
     $display->context = $this->get_contexts($panelizer, $entity);
     $display->args = $args;
@@ -1566,7 +2096,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
 
     // This means the IPE will use our cache which means it will get appropriate
     // allowed content should it be selected.
-    $display->cache_key = implode(':', array('panelizer', $this->entity_type, $entity_id));
+    $display->cache_key = implode(':', array('panelizer', $this->entity_type, $entity_id, $view_mode));
 
     // Check to see if there is any CSS.
     if (!empty($panelizer->css)) {
@@ -1578,8 +2108,10 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
       drupal_add_css($filename, array('group' => CSS_THEME));
     }
 
-    // We think this is handled as a page, so set the current page display.
-    panels_get_current_page_display($display);
+    if ($view_mode == 'page_manager') {
+      // We think this is handled as a page, so set the current page display.
+      panels_get_current_page_display($display);
+    }
 
     ctools_include('plugins', 'panels');
     $renderer = panels_get_renderer($panelizer->pipeline, $display);
@@ -1590,6 +2122,19 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
       'no_blocks' => !empty($panelizer->no_blocks),
     );
 
+    $info['classes_array'] = array();
+
+    if (!empty($panelizer->css_class)) {
+      ctools_include('cleanstring');
+      foreach (explode(' ', $panelizer->css_class) as $class) {
+        $class = ctools_context_keyword_substitute($class, array(), $display->context);
+        if ($class) {
+          $info['classes_array'][] = ctools_cleanstring($class);
+        }
+      }
+    }
+
+    $info['title'] = $display->get_title();
     return $info;
   }
 
@@ -1726,6 +2271,47 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
           'entity_type' => $this->entity_type,
         ),
       );
+    }
+  }
+
+  /**
+   * Preprocess the entity view mode template.
+   */
+  public function preprocess_panelizer_view_mode(&$vars, $entity, $element, $panelizer, $info) {
+    $vars['classes_array'][] = drupal_html_class($this->entity_type);
+    $vars['classes_array'][] = drupal_html_class($this->entity_type . '-' . $element['#view_mode']);
+    $vars['classes_array'][] = drupal_html_class($this->entity_type . '-' . $element['#panelizer_bundle']);
+    $vars['classes_array'][] = drupal_html_class($this->entity_type . '-' . $element['#panelizer_entity_id']);
+    if (!empty($entity->preview)) {
+      $vars['classes_array'][] = drupal_html_class($this->entity_type . '-preview');
+    }
+
+    if (!empty($panelizer->title_element)) {
+      $vars['title_element'] = $panelizer->title_element;
+    }
+    else {
+      $vars['title_element'] = 'h2';
+    }
+
+    $vars['content'] = $info['content'];
+    if (!empty($info['title'])) {
+      $vars['title'] = $info['title'];
+    }
+
+    if (!empty($info['classes_array'])) {
+      $vars['classes_array'] = array_merge($vars['classes_array'], $info['classes_array']);
+    }
+
+    if (!empty($panelizer->link_to_entity)) {
+      list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
+
+      $bits = explode('/', $this->plugin['entity path']);
+      foreach ($bits as $count => $bit) {
+        if (strpos($bit, '%') === 0) {
+          $bits[$count] = $entity_id;
+        }
+      }
+      $vars['entity_url'] = url(implode('/', $bits));
     }
   }
 }

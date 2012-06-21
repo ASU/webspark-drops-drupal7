@@ -6,6 +6,8 @@
  * privileged users.
  */
 
+define('PANELIZER_VERSION', '3.0');
+
 // -----------------------------------------------------------------------
 // Drupal core hooks
 
@@ -37,6 +39,12 @@ function panelizer_theme() {
   $items['panelizer_settings_page_table'] = array(
     'render element' => 'element',
     'file' => 'includes/admin.inc',
+  );
+
+  $items['panelizer_view_mode'] = array(
+    'render element' => 'element',
+    'template' => 'panelizer-view-mode',
+    'path' => drupal_get_path('module', 'panelizer') . '/templates',
   );
 
   // Delegate.
@@ -170,6 +178,41 @@ function panelizer_field_attach_submit($entity_type, $entity, &$form, &$form_sta
   // Delegate to the handler.
   if ($handler = panelizer_entity_plugin_get_handler($entity_type)) {
     $handler->hook_field_attach_submit($entity, $form, $form_state);
+  }
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function panelizer_entity_view_alter(&$build, $entity_type) {
+  // Prepare variables.
+  $handler = panelizer_entity_plugin_get_handler($entity_type);
+  if (!$handler) {
+    return;
+  }
+
+  // Love this hack, eh?
+  $element = ($entity_type == 'user') ? '#account' : '#' . $entity_type;
+  $entity = $build[$element];
+
+  list($entity_id, $revision_id, $bundle) = entity_extract_ids($entity_type, $entity);
+
+  // If the requested view mode does not exist, rendering will fall back
+  // to 'default' and we should check that one instead.
+  $view_mode = $build['#view_mode'];
+  if (!isset($handler->plugin['view modes'][$view_mode])) {
+    $view_mode = 'default';
+  }
+
+  if ($info = $handler->render_entity($entity, $view_mode)) {
+    // Change theming function and add the content on the $build array.
+    $build['#theme'] = 'panelizer_view_mode';
+    $build['#panelizer'] = $entity->panelizer[$view_mode];
+    $build['#panelizer_content'] = $info;
+    $build['#panelizer_handler'] = $handler;
+    $build['#panelizer_entity'] = $entity;
+    $build['#panelizer_bundle'] = $bundle;
+    $build['#panelizer_entity_id'] = $entity_id;
   }
 }
 
@@ -329,8 +372,44 @@ function panelizer_entity_plugin_process(&$plugin, $info) {
   if ($entity_info) {
     foreach ($entity_info['bundles'] as $bundle => $label) {
       if ($settings = variable_get('panelizer_defaults_' . $entity_type . '_' . $bundle, array())) {
+        // Translate from settings that existed prior to view mode
+        // support.
+        if (empty($settings['view modes'])) {
+          $old_settings = $settings;
+          $settings = array('view modes' => array());
+          if (empty($plugin['uses page manager'])) {
+            $settings['view modes']['default'] = $old_settings;
+          }
+          else {
+            $settings['view modes']['page_manager'] = $old_settings;
+          }
+          $settings['status'] = $old_settings['status'];
+        }
         $plugin['bundles'][$bundle] = $settings;
       }
+    }
+
+    // Add our fake view modes.
+    $plugin['view modes'] = array(
+      'page_manager' => array(
+        'label' => t('Full page override'),
+      ),
+      'default' => array(
+        'label' => t('Default'),
+      ),
+    );
+
+    if (!empty($entity_info['view modes'])) {
+      foreach ($entity_info['view modes'] as $view_mode => $view_mode_info) {
+        if (!empty($view_mode_info['custom settings'])) {
+          $plugin['view modes'][$view_mode] = $view_mode_info;
+        }
+      }
+    }
+
+    // It seems silly to unset this after but the logic is cleaner to read.
+    if (empty($plugin['uses page manager'])) {
+      unset($plugin['view modes']['page_manager']);
     }
   }
 
@@ -379,10 +458,6 @@ function panelizer_entity_plugin_get_handler($plugin) {
 
   // Get the class name from the 'handler' property if we have not already
   // cached a handler.
-  if (is_object($plugin)) {
-    vpr_trace();
-    exit;
-  }
   if (empty($cache[$plugin['name']]) && ($class = ctools_plugin_get_class($plugin, 'handler'))) {
     // @todo is there a good reason to use ->init instead of __construct?
     $cache[$plugin['name']] = new $class();
@@ -491,6 +566,14 @@ function panelizer_export_ui_switcher_page($entity_handler, $bundle, $plugin_nam
   array_shift($args);
   $js = !empty($_REQUEST['js']);
 
+  // Break our bundle up as necessary.
+  if (strpos($bundle, '.') !== FALSE) {
+    list($bundle, $view_mode) = explode('.', $bundle);
+  }
+  else {
+    $view_mode = 'page_manager';
+  }
+
   // Load the $plugin information
   $plugin = ctools_get_export_ui($plugin_name);
   $handler = ctools_export_ui_get_handler($plugin);
@@ -502,12 +585,14 @@ function panelizer_export_ui_switcher_page($entity_handler, $bundle, $plugin_nam
 
     $handler->entity_handler = $entity_handler;
     $handler->entity_bundle = $bundle;
+    $handler->entity_view_mode = $view_mode;
+
     if (empty($entity_handler->entity_admin_root) || substr($_GET['q'], 30) == 'admin/config/content/panelizer') {
       $handler->plugin['menu']['menu prefix'] = 'admin/config/content/panelizer/' . $entity_handler->entity_type;
       $handler->plugin['menu']['menu item'] = $bundle;
     }
     else {
-      $base_path = $entity_handler->entity_admin_root . '/panelizer';
+      $base_path = $entity_handler->entity_admin_root . '/panelizer/' . $view_mode;
       if (is_numeric($entity_handler->entity_admin_bundle)) {
         $bits = explode('/', $base_path);
         $bits[$entity_handler->entity_admin_bundle] = $bundle;
@@ -515,6 +600,9 @@ function panelizer_export_ui_switcher_page($entity_handler, $bundle, $plugin_nam
       }
       $handler->plugin['menu']['menu prefix'] = dirname($base_path);
       $handler->plugin['menu']['menu item'] = basename($base_path);
+      foreach ($handler->plugin['menu']['items'] as $key => &$item) {
+        $item['path'] = str_replace('list/', '', $item['path']);
+      }
     }
 
     $path = $handler->plugin['menu']['menu prefix'] . '/' . $handler->plugin['menu']['menu item'];
@@ -591,13 +679,17 @@ function panelizer_has_choice_callback($handler, $bundle, $name = NULL) {
  *
  * We use this to make sure the right tabs appear.
  */
-function panelizer_has_no_choice_callback($handler, $bundle) {
+function panelizer_has_no_choice_callback($handler, $bundle, $view_mode = NULL) {
   if (is_string($handler)) {
     $handler = panelizer_entity_plugin_get_handler($handler);
   }
 
   if (!$handler) {
     return FALSE;
+  }
+
+  if ($view_mode) {
+    $bundle .= '.' . $view_mode;
   }
 
   if (!panelizer_administer_entity_bundle($handler, $bundle)) {
@@ -612,13 +704,17 @@ function panelizer_has_no_choice_callback($handler, $bundle) {
  *
  * We use this to make sure the right tabs appear.
  */
-function panelizer_is_panelized($handler, $bundle) {
+function panelizer_is_panelized($handler, $bundle, $view_mode = NULL) {
   if (is_string($handler)) {
     $handler = panelizer_entity_plugin_get_handler($handler);
   }
 
   if (!$handler) {
     return FALSE;
+  }
+
+  if ($view_mode) {
+    $bundle .= '.' . $view_mode;
   }
 
   if (!panelizer_administer_entity_bundle($handler, $bundle)) {
@@ -636,15 +732,24 @@ function panelizer_administer_entity_bundle($handler, $bundle) {
     $handler = panelizer_entity_plugin_get_handler($handler);
   }
 
+  // adjust for the presence of a view mode.
+  if (strpos($bundle, '.') !== FALSE) {
+    list($bundle, $view_mode) = explode('.', $bundle);
+  }
+
   return user_access('administer panelizer') || user_access("administer panelizer $handler->entity_type $bundle defaults");
 }
 
 /**
  * Access callback to see if a user can administer a particular panelizer default.
  */
-function panelizer_administer_panelizer_default($handler, $bundle, $name) {
+function panelizer_administer_panelizer_default($handler, $bundle, $name, $view_mode = NULL) {
   if (is_string($handler)) {
     $handler = panelizer_entity_plugin_get_handler($handler);
+  }
+
+  if ($view_mode) {
+    $bundle .= '.' . $view_mode;
   }
 
   $panelizer = $handler->get_default_panelizer_object($bundle, $name);
@@ -718,7 +823,7 @@ function panelizer_export_delete_callback($object) {
 }
 
 /**
- * export.inc callback to load sub records for an object.
+ * export.inc callback to delete sub records for an object.
  */
 function panelizer_export_delete_callback_subrecords($objects) {
   $dids = array();
@@ -770,10 +875,11 @@ function panelizer_context_cache_get($entity_type, $key) {
       return $panelizer;
     }
     else {
-      $entities = entity_load($entity_type, array($key));
-      if ($entities[$key] && $entities[$key]->panelizer) {
-        $panelizer = $entities[$key]->panelizer;
-        $panelizer->base_contexts = $handler->get_base_contexts($entities[$key]);
+      list($entity_id, $view_mode) = explode('.', $key);
+      $entities = entity_load($entity_type, array($entity_id));
+      if (!empty($entities[$entity_id]) && !empty($entities[$entity_id]->panelizer[$view_mode])) {
+        $panelizer = $entities[$entity_id]->panelizer[$view_mode];
+        $panelizer->base_contexts = $handler->get_base_contexts($entities[$entity_id]);
         return $panelizer;
       }
     }
@@ -849,10 +955,11 @@ function panelizer_panels_cache_get($argument) {
       $cache->display->context = $handler->get_contexts($panelizer);
     }
     else {
-      $entities = entity_load($entity_type, array($key));
-      if ($entities[$key] && $entities[$key]->panelizer) {
-        $panelizer = $entities[$key]->panelizer;
-        $cache->display->context = $handler->get_contexts($panelizer, $entities[$key]);
+      list($entity_id, $view_mode) = explode(':', $key);
+      $entities = entity_load($entity_type, array($entity_id));
+      if (!empty($entities[$entity_id]) && !empty($entities[$entity_id]->panelizer[$view_mode])) {
+        $panelizer = $entities[$entity_id]->panelizer[$view_mode];
+        $cache->display->context = $handler->get_contexts($panelizer, $entities[$entity_id]);
       }
     }
 
@@ -868,15 +975,16 @@ function panelizer_panels_cache_get($argument) {
     $cache->display->context = $handler->get_contexts($panelizer);
   }
   else {
-    $entities = entity_load($entity_type, array($key));
-    if (empty($entities[$key]) || empty($entities[$key]->panelizer)) {
+    list($entity_id, $view_mode) = explode(':', $key);
+    $entities = entity_load($entity_type, array($entity_id));
+    if (empty($entities[$entity_id]) || empty($entities[$entity_id]->panelizer[$view_mode])) {
       return $cache;
     }
 
-    list($entity_id, $revision_id, $bundle) = entity_extract_ids($entity_type, $entities[$key]);
-    $panelizer = $entities[$key]->panelizer;
+    list($entity_id, $revision_id, $bundle) = entity_extract_ids($entity_type, $entities[$entity_id]);
+    $panelizer = $entities[$entity_id]->panelizer[$view_mode];
     $cache->display = $panelizer->display;
-    $cache->display->context = $handler->get_contexts($panelizer, $entities[$key]);
+    $cache->display->context = $handler->get_contexts($panelizer, $entities[$entity_id]);
   }
 
   ctools_include('common', 'panels');
@@ -927,20 +1035,19 @@ function panelizer_panels_cache_save($argument, $cache) {
     ctools_export_crud_save('panelizer_defaults', $panelizer);
   }
   else {
-    $entities = entity_load($entity_type, array($key));
-    if ($entities[$key] && $entities[$key]->panelizer) {
-      $entities[$key]->panelizer->display = $cache->display;
-      $entities[$key]->panelizer->display_is_modified = TRUE;
-      $handler->entity_save($entities[$key]);
+    list($entity_id, $view_mode) = explode(':', $key);
+    $entities = entity_load($entity_type, array($entity_id));
+    if ($entities[$entity_id] && $entities[$entity_id]->panelizer[$view_mode]) {
+      $entities[$entity_id]->panelizer[$view_mode]->display = $cache->display;
+      $entities[$entity_id]->panelizer[$view_mode]->display_is_modified = TRUE;
+      $handler->entity_save($entities[$entity_id]);
     }
   }
   panelizer_panels_cache_clear($argument, $cache);
-
 }
 
 // ---------------------------------------------------------------------------
 // Contrib module hooks to provide needed functionality.
-
 
 /**
  * Implements hook_export_node_alter().
@@ -964,7 +1071,6 @@ function panelizer_panelizer_default_types_alter(&$bundles, $entity_type) {
         unset($bundles['panel']);
       }
       break;
-    case 'user':
   }
 }
 
@@ -997,7 +1103,23 @@ function panelizer_features_export_alter(&$export, $module_name) {
 }
 
 // -----------------------------------------------------------------------
-// Drupal actions integration for VBO
+// Theme functions where necessary.
+
+/**
+ * Panelizer view mode theme function.
+ */
+function template_preprocess_panelizer_view_mode(&$vars) {
+  $element = $vars['element'];
+  $entity = $element['#panelizer_entity'];
+  $panelizer = $element['#panelizer'];
+  $handler = $element['#panelizer_handler'];
+  $info = $element['#panelizer_content'];
+
+  $handler->preprocess_panelizer_view_mode($vars, $entity, $element, $panelizer, $info);
+}
+
+// -----------------------------------------------------------------------
+// Drupal actions integration for VBO.
 
 /**
  * Implements hook_action_info().
@@ -1008,7 +1130,9 @@ function panelizer_action_info() {
       'type' => 'entity',
       'label' => t('Set panelizer status'),
       'vbo_configurable' => TRUE,
+      'configurable' => FALSE,
       'behavior' => array('changes_property'),
+      'configurable' => TRUE,
     )
   );
 }
@@ -1017,18 +1141,23 @@ function panelizer_action_info() {
  * Executes the panelizer_set_status action.
  */
 function panelizer_set_status_action($entity, $context) {
+  $view_mode = 'page_manager';
+  if (isset($context['view_mode'])) {
+    $view_mode = $context['view_mode'];
+  }
+
   list($entity_id, $revision_id, $bundle) = entity_extract_ids($context['entity_type'], $entity);
   if (isset($context['panelizer_default'])) {
-    $entity->panelizer = $context['panelizer_default'];
-    $entity->panelizer->did = NULL;
+    $entity->panelizer[$view_mode] = $context['panelizer_default'];
+    $entity->panelizer[$view_mode]->did = NULL;
 
     // Ensure original values are maintained:
-    $entity->panelizer->entity_id = $entity_id;
-    $entity->panelizer->revision_id = $revision_id;
+    $entity->panelizer[$view_mode]->entity_id = $entity_id;
+    $entity->panelizer[$view_mode]->revision_id = $revision_id;
   }
   else {
-    $entity->panelizer->name = NULL;
-    $entity->panelizer->did = NULL;
+    $entity->panelizer[$view_mode]->name = NULL;
+    $entity->panelizer[$view_mode]->did = NULL;
   }
 }
 
@@ -1041,6 +1170,7 @@ function panelizer_set_status_action_form($context, &$form_state) {
   $entities = entity_load($context['entity_type'], $form_state['selection']);
   $bundles = array();
 
+  $handler = panelizer_entity_plugin_get_handler($context['entity_type']);
   // Collect our list of bundles.
   foreach ($entities as $entity) {
     list($entity_id, $revision_id, $bundle) = entity_extract_ids($context['entity_type'], $entity);
@@ -1059,18 +1189,46 @@ function panelizer_set_status_action_form($context, &$form_state) {
     if (empty($default->title)) {
       $default->title = t('Default');
     }
-    $options[$name] = t('@bundle: @title', array('@bundle' => $entity_info['bundles'][$default->panelizer_key]['label'], '@title' => $default->title));
+    $options[$default->view_mode][$name] = t('@bundle: @title', array('@bundle' => $entity_info['bundles'][$default->panelizer_key]['label'], '@title' => $default->title));
   }
 
-  natcasesort($options);
-  $options = array(
-    'not' => t('Not panelized'),
-  ) + $options;
+  $view_modes = array();
+  foreach ($handler->plugin['view modes'] as $view_mode => $view_mode_info) {
+    $view_modes[$view_mode] = $view_mode_info['label'];
+  }
 
-  $form['panelizer'] = array(
+  $form['panelizer']['#tree'] = TRUE;
+
+  foreach ($view_modes as $view_mode => $label) {
+    if (empty($options[$view_mode])) {
+      unset($view_modes[$view_mode]);
+      continue;
+    }
+
+    natcasesort($options[$view_mode]);
+    $panelizers = array(
+      'not' => t('Not panelized'),
+    ) + $options[$view_mode];
+
+
+    $form['panelizer'][$view_mode] = array(
+      '#type' => 'select',
+      '#title' => t('Panelizer status'),
+      '#options' => $panelizers,
+      '#states' => array(
+        'visible' => array(
+          '#panelizer-view-mode' => array('value' => $view_mode),
+        ),
+      ),
+    );
+  }
+
+  $form['view_mode'] = array(
     '#type' => 'select',
-    '#title' => t('Panelizer status'),
-    '#options' => $options,
+    '#title' => t('View mode'),
+    '#options' => $view_modes,
+    '#id' => 'panelizer-view-mode',
+    '#weight' => -10,
   );
 
   $form['#panelizer_defaults'] = $defaults;
@@ -1078,14 +1236,17 @@ function panelizer_set_status_action_form($context, &$form_state) {
 }
 
 function panelizer_set_status_action_submit($form, $form_state) {
+  $view_mode = $form_state['values']['view_mode'];
+  $panelizer = $form_state['values']['panelizer'][$view_mode];
+
   $retval = array(
-    'panelizer' => $form_state['values']['panelizer'],
+    'panelizer' => $panelizer,
+    'view_mode' => $view_mode,
   );
 
   if ($form_state['values']['panelizer'] != 'not') {
-    $retval['panelizer_default'] = $form['#panelizer_defaults'][$form_state['values']['panelizer']];
+    $retval['panelizer_default'] = $form['#panelizer_defaults'][$panelizer];
   }
 
   return $retval;
 }
-

@@ -109,17 +109,18 @@ function panelizer_panelizer_task_contextual_link($handler, $plugin, $contexts, 
 
   $entity = &$context->data;
 
-  if (empty($entity->panelizer)) {
+  if (empty($entity->panelizer['page_manager'])) {
     return FALSE;
   }
 
-  $panelizer = $entity->panelizer;
+  $panelizer = $entity->panelizer['page_manager'];
   // One of these two will always be set.
   $entity_type = !empty($panelizer->entity_type) ? $panelizer->entity_type : $panelizer->panelizer_type;
 
   if ($entity_handler = panelizer_entity_plugin_get_handler($entity_type)) {
     list($entity_id, $revision_id, $bundle) = entity_extract_ids($entity_type, $entity);
 
+    // @todo there's code on the entity handler to do this path thing for us.
     $bits = explode('/', $entity_handler->plugin['entity path']);
     foreach ($bits as $count => $bit) {
       if (strpos($bit, '%') === 0) {
@@ -128,27 +129,28 @@ function panelizer_panelizer_task_contextual_link($handler, $plugin, $contexts, 
     }
 
     $bits[] = 'panelizer';
+    $bits[] = 'page_manager';
 
     $base_path = implode('/', $bits);
-    if ($entity_handler->panelizer_access('settings', $entity)) {
+    if ($entity_handler->panelizer_access('settings', $entity, 'page_manager')) {
       $links['settings'] = array(
         'title' => t('Edit panelizer settings'),
         'href' => "$base_path/settings",
       );
     }
-    if ($entity_handler->panelizer_access('context', $entity)) {
+    if ($entity_handler->panelizer_access('context', $entity, 'page_manager')) {
       $links['context'] = array(
         'title' => t('Edit panelizer contexts'),
         'href' => "$base_path/context",
       );
     }
-    if ($entity_handler->panelizer_access('layout', $entity)) {
+    if ($entity_handler->panelizer_access('layout', $entity, 'page_manager')) {
       $links['layout'] = array(
         'title' => t('Edit panelizer layout'),
         'href' => "$base_path/layout",
       );
     }
-    if ($entity_handler->panelizer_access('content', $entity)) {
+    if ($entity_handler->panelizer_access('content', $entity, 'page_manager')) {
       $links['content'] = array(
         'title' => t('Edit panelizer content'),
         'href' => "$base_path/content",
@@ -227,18 +229,18 @@ function panelizer_panelizer_task_render($handler, $base_contexts, $args, $test 
     return FALSE;
   }
 
-  if (empty($context->data->panelizer)) {
+  if (empty($context->data->panelizer['page_manager'])) {
     return FALSE;
   }
 
-  $panelizer = $context->data->panelizer;
+  $panelizer = $context->data->panelizer['page_manager'];
   // One of these two will always be set.
   $entity_type = !empty($panelizer->entity_type) ? $panelizer->entity_type : $panelizer->panelizer_type;
 
   $address = implode('::', array('page_manager', $handler->task, $handler->subtask, $handler->name, implode('..', $args)));
 
   if ($entity_handler = panelizer_entity_plugin_get_handler($entity_type)) {
-    return $entity_handler->render_entity($context->data, $args, $address);
+    return $entity_handler->render_entity($context->data, 'page_manager', NULL, $args, $address);
   }
 }
 
@@ -259,7 +261,7 @@ function panelizer_panelizer_task_test($handler, $base_contexts) {
   }
 
   $entity = &$context->data;
-  return !empty($entity->panelizer->display);
+  return !empty($entity->panelizer['page_manager']->display);
 }
 
 function panelizer_panelizer_task_get_addressable($task, $subtask_name, $handler, $address, $contexts, $arguments, $type) {
@@ -276,14 +278,15 @@ function panelizer_panelizer_task_get_addressable($task, $subtask_name, $handler
   // Extract the entity from the context so we can load the panelizer.
   $entity = &$context->data;
 
-  if (empty($entity->panelizer) || empty($entity->panelizer->display)) {
+  if (empty($entity->panelizer['page_manager']) || empty($entity->panelizer['page_manager']->display)) {
     return;
   }
 
-  // Load the display.
-  $display = $entity->panelizer->display;
   // Load the panelizer info.
-  $panelizer = $entity->panelizer;
+  $panelizer = $entity->panelizer['page_manager'];
+  // Load the display.
+  $display = $panelizer->display;
+
   // One of these two will always be set.
   $entity_type = !empty($panelizer->entity_type) ? $panelizer->entity_type : $panelizer->panelizer_type;
   $handler = panelizer_entity_plugin_get_handler($entity_type);

@@ -25,23 +25,12 @@ $plugin = array(
 function pm_existing_pages_pm_existing_pages_content_type_render($subtype, $conf, $panel_args) {
 
   $task = pm_existing_pages_get_existing_pages($conf['task_id']);
-  if (!$task) {
+  if (!$task || empty($panel_args)) {
     return;
   }
 
-  $menu_item = menu_get_item();
-  if (!empty($menu_item['page_arguments'])) {
-    $args = $menu_item['page_arguments'];
-  }
-
-  if (empty($args)) {
-    return;
-  }
-
-  // Extract defaults from original menu router.
-  $pm_args = array_shift($args);
-  // Merge default page arguments with passed within request.
-  $args = array_merge($pm_args['pa'], $args);
+  $menu_args = $panel_args[1];
+  $pm_args = $panel_args[2];
 
   $function = $pm_args['pc'];
   $file = $pm_args['f'];
@@ -54,7 +43,7 @@ function pm_existing_pages_pm_existing_pages_content_type_render($subtype, $conf
     }
     require_once DRUPAL_ROOT . '/' . $file_path . '/' . $file;
   }
-  $content = call_user_func_array($function, $args);
+  $content = call_user_func_array($function, $menu_args);
 
   $block = new stdClass();
   $block->module = 'pm_existing_pages';

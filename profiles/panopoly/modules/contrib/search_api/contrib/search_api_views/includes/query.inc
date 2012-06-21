@@ -237,6 +237,9 @@ class SearchApiViewsQuery extends views_plugin_query {
 
       // Store the results.
       $this->pager->total_items = $view->total_rows = $results['result count'];
+      if (!empty($this->pager->options['offset'])) {
+        $this->pager->total_items -= $this->pager->options['offset'];
+      }
       $this->pager->update_page_info();
       $view->result = array();
       if (!empty($results['results'])) {

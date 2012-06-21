@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Provide views handlers for fieldable panel panes fields
+ */
+
+/**
  * Field handler to translate a node type into its readable form.
  */
 class fieldable_panels_panes_handler_field_bundle extends views_handler_field {

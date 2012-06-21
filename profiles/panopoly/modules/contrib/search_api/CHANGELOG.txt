@@ -1,11 +1,19 @@
 Search API 1.x, dev (xx/xx/xxxx):
 ---------------------------------
-- #1535726 by bojanz: Ensure argument 2 passed to configurationFormValidate()
-  of SearchApiAbstractService is an array.
-- #1400882 by mh86: Fix Index hierarchy with all parents may result in loops.
+
+Search API 1.1 (05/23/2012):
+----------------------------
+- Fixed escaping of error messages.
+- #1330506 by drunken monkey: Removed the old Facets module.
+- #1504318 by peximo: Fixed Views pager offset.
+- #1141488 by moonray, drunken monkey: Added option to use multiple values with
+  contextual filters.
+- #1535726 by bojanz, joelpittet: Fixed arguments for
+  $service->configurationFormValidate() for empty forms.
+- #1400882 by mh86: Fixed "Index hierarchy" for "All parents".
 
 Search API 1.0 (12/15/2011):
----------------------------------
+----------------------------
 - #1350322 by drunken monkey: Fixed regressions introduced with cron queue
   indexing.
 - #1352292 by das-peter, drunken monkey: Use Search API specific table groups in

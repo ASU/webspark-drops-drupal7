@@ -55,6 +55,18 @@ Panelizer operates in four basic modes:
   have some kind of panel, whether it is one of the choices or a customized
   panel for that entity.
 
+VIEW MODES
+
+Panelizer will allow yout panelize each view mode individually. One view
+mode, the "Full page override" is not actually a view mode; it uses Page
+Manager to completely override the output of the page the entity is
+viewed one. This will often conflict somewhwat with the Default view
+mode. It is reommended that you do not panelize both the Default and
+the Full page override, but instead pick whichever one you think is most
+needed. The actually difference between the two are quite subtle: Placement
+of the title is different, and the comment form will not appear in the
+default view mode but it will appear in the full page override.
+
 PERMISSIONS
 
 Once panelizer is enabled for an entity/bundle combination, it may be
@@ -98,7 +110,6 @@ If your entity does not support bundles, you can only panelize the entire
 entity.
 
 Future functionality
-  - Allow panels for different build modes -- this is tricky
   - Implement panel subtabs. i.e, allow node/27/arbitrarylink to be a subtab
     of an entity, using panelizer.
   - Allow some other way of panelizing entities other than bundles. Either

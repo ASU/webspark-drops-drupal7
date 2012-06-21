@@ -13,9 +13,8 @@ files[] = plugins/views/panelizer_handler_filter_panelizer_status.inc
 files[] = plugins/views/panelizer_plugin_row_panelizer_node_view.inc
 
 
-; Information added by drush on 2012-05-04
-version = "7.x-2.0+17-dev"
-core = "7.x"
+; Information added by drush on 2012-06-21
+version = ""
 project = "panelizer"
-datestamp = "1336182130"
+datestamp = "1340295722"
 

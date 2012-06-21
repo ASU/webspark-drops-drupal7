@@ -167,11 +167,15 @@ class PanelsPaneController extends DrupalDefaultEntityController {
     entity_prepare_view('fieldable_panels_pane', array($entity->fpid => $entity), $langcode);
     $entity->content = field_attach_view('fieldable_panels_pane', $entity, $view_mode, $langcode);
     $entity->content += array(
+      '#fieldable_panels_pane' => $entity,
       '#theme' => 'fieldable_panels_pane',
       '#element' => $entity,
       '#view_mode' => $view_mode,
       '#language' => $langcode,
     );
+
+    $entity_type = 'fieldable_panels_pane';
+    drupal_alter(array('fieldable_panels_pane_view', 'entity_view'), $entity->content, $entity_type);
 
     return drupal_render($entity->content);
   }
@@ -190,6 +194,10 @@ class PanelsPaneController extends DrupalDefaultEntityController {
 
         // Delete after calling hooks so that they can query entity tables as needed.
         db_delete('fieldable_panels_panes')
+          ->condition('fpid', $fpids, 'IN')
+          ->execute();
+
+        db_delete('fieldable_panels_panes_revision')
           ->condition('fpid', $fpids, 'IN')
           ->execute();
       }

@@ -1,5 +1,10 @@
 <?php
 /**
+ * @file
+ * Provide views handlers for fieldable panel panes
+ */
+
+/**
  * Field handler to present a link to the node.
  */
 class fieldable_panels_panes_handler_field_view_revision extends views_handler_field {

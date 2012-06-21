@@ -117,7 +117,7 @@ function panelizer_schema_1() {
         'description' => 'The name of the default being used if there is one.',
       ),
     ) + $common_fields,
-    'primary key' => array('entity_type', 'entity_id', 'revision_id'),
+    'primary key' => array('entity_type', 'entity_id', 'revision_id', 'view_mode'),
   );
 
   $schema['panelizer_defaults'] = array(
@@ -187,6 +187,60 @@ function panelizer_schema_2() {
     'description' => 'Contains the access control for editing this default.',
     'serialize' => TRUE,
     'object default' => array(),
+  );
+
+  $schema['panelizer_defaults']['fields']['view_mode'] = array(
+    'type' => 'varchar',
+    'length' => '128',
+    'description' => 'Contains the view mode this panelizer is for.',
+  );
+
+  $schema['panelizer_entity']['fields']['view_mode'] = array(
+    'type' => 'varchar',
+    'length' => '128',
+    'description' => 'Contains the view mode this panelizer is for.',
+  );
+
+  $schema['panelizer_entity']['fields']['css_class'] = array(
+    'type' => 'varchar',
+    'length' => '255',
+    'description' => 'The CSS class this panel should use.',
+    'default' => '',
+  );
+
+  $schema['panelizer_defaults']['fields']['css_class'] = array(
+    'type' => 'varchar',
+    'length' => '255',
+    'description' => 'The CSS class this panel should use.',
+    'default' => '',
+  );
+
+  $schema['panelizer_entity']['fields']['title_element'] = array(
+    'type' => 'varchar',
+    'length' => '255',
+    'description' => 'The HTML element the title should use.',
+    'default' => 'H2',
+  );
+
+  $schema['panelizer_defaults']['fields']['title_element'] = array(
+    'type' => 'varchar',
+    'length' => '255',
+    'description' => 'The HTML element the title should use.',
+    'default' => 'H2',
+  );
+
+  $schema['panelizer_entity']['fields']['link_to_entity'] = array(
+    'type' => 'int',
+    'size' => 'tiny',
+    'description' => 'Whether or not the title should link to the entity.',
+    'default' => 1,
+  );
+
+  $schema['panelizer_defaults']['fields']['link_to_entity'] = array(
+    'type' => 'int',
+    'size' => 'tiny',
+    'description' => 'Whether or not the title should link to the entity.',
+    'default' => 1,
   );
 
   return $schema;
@@ -316,4 +370,67 @@ function panelizer_update_7104() {
   $schema = panelizer_schema_2();
   $access = $schema['panelizer_defaults']['fields']['access'];
   db_add_field('panelizer_defaults', 'access', $access);
+}
+
+/**
+ * Add the view mode field.
+ */
+function panelizer_update_7105() {
+  $schema = panelizer_schema_2();
+  $view_mode = $schema['panelizer_defaults']['fields']['view_mode'];
+  db_add_field('panelizer_defaults', 'view_mode', $view_mode);
+  $view_mode = $schema['panelizer_entity']['fields']['view_mode'];
+  db_add_field('panelizer_entity', 'view_mode', $view_mode);
+
+  db_update('panelizer_defaults')
+    ->fields(array(
+      'view_mode' => 'page_manager',
+    ))
+    ->execute();
+
+  db_update('panelizer_entity')
+    ->fields(array(
+      'view_mode' => 'page_manager',
+    ))
+    ->execute();
+}
+
+/**
+ * Add the view mode to the primary key for the panelizer_entity table.
+ */
+function panelizer_update_7106() {
+  // Remove the primary key.
+  db_drop_primary_key('panelizer_entity');
+
+  // Add the new index
+  db_add_primary_key('panelizer_entity', array('entity_type', 'entity_id', 'revision_id', 'view_mode'));
+
+  return t('Added revision support.');
+}
+
+/**
+ * Add the css class and element title fields.
+ */
+function panelizer_update_7107() {
+  $schema = panelizer_schema_2();
+  $css_class = $schema['panelizer_defaults']['fields']['css_class'];
+  db_add_field('panelizer_defaults', 'css_class', $css_class);
+  $css_class = $schema['panelizer_entity']['fields']['css_class'];
+  db_add_field('panelizer_entity', 'css_class', $css_class);
+
+  $title_element = $schema['panelizer_defaults']['fields']['title_element'];
+  db_add_field('panelizer_defaults', 'title_element', $title_element);
+  $title_element = $schema['panelizer_entity']['fields']['title_element'];
+  db_add_field('panelizer_entity', 'title_element', $title_element);
+}
+
+/**
+ * Add the link_to_entity field
+ */
+function panelizer_update_7108() {
+  $schema = panelizer_schema_2();
+  $link_to_entity = $schema['panelizer_defaults']['fields']['link_to_entity'];
+  db_add_field('panelizer_defaults', 'link_to_entity', $link_to_entity);
+  $link_to_entity = $schema['panelizer_entity']['fields']['link_to_entity'];
+  db_add_field('panelizer_entity', 'link_to_entity', $link_to_entity);
 }
