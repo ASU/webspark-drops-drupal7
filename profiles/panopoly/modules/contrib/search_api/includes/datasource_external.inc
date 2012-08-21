@@ -73,7 +73,7 @@ class SearchApiExternalDataSourceController extends SearchApiAbstractDataSourceC
    * @see hook_entity_property_info()
    */
   protected function getPropertyInfo() {
-    $info['properties']['id'] = array(
+    $info['property info']['id'] = array(
       'label' => t('ID'),
       'type' => 'string',
     );

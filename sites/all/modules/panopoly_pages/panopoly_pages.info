@@ -9,18 +9,26 @@ dependencies[] = entity
 dependencies[] = features
 dependencies[] = image
 dependencies[] = link
+dependencies[] = list
 dependencies[] = menu
 dependencies[] = page_manager
 dependencies[] = panelizer
 dependencies[] = panels_ipe
+dependencies[] = panopoly_core
 dependencies[] = strongarm
 features[ctools][] = page_manager:pages_default:1
 features[ctools][] = panelizer:panelizer:1
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:1
 features[field][] = node-panopoly_page-body
+features[field][] = node-panopoly_page-field_featured_categories
 features[field][] = node-panopoly_page-field_featured_image
+features[field][] = node-panopoly_page-field_featured_status
 features[node][] = panopoly_page
+features[panelizer_defaults][] = node:panopoly_page:default
+features[panelizer_defaults][] = node:panopoly_page:default:default
+features[panelizer_defaults][] = node:panopoly_page:default:featured
+features[panelizer_defaults][] = node:panopoly_page:default:teaser
 features[variable][] = additional_settings__active_tab_panopoly_page
 features[variable][] = field_bundle_settings_node__panopoly_page
 features[variable][] = menu_options_panopoly_page
@@ -33,11 +41,11 @@ features[variable][] = panelizer_node:panopoly_page_allowed_layouts
 features[variable][] = panelizer_node:panopoly_page_allowed_types
 features[variable][] = panelizer_node:panopoly_page_default
 features[variable][] = save_continue_panopoly_page
-files[] = panopoly_pages.module
+stylesheets[all][] = panopoly_pages.css
 
-; Information added by drupal.org packaging script on 2012-06-21
-version = "7.x-1.0-beta4"
+; Information added by drupal.org packaging script on 2012-08-21
+version = "7.x-1.0-beta5"
 core = "7.x"
 project = "panopoly_pages"
-datestamp = "1340290625"
+datestamp = "1345557448"
 

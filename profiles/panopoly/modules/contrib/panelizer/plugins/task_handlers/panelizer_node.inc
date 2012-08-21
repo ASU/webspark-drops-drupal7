@@ -255,6 +255,10 @@ function panelizer_panelizer_task_test($handler, $base_contexts) {
     return;
   }
 
+  if (!ctools_context_handler_select($handler, $base_contexts)) {
+    return;
+  }
+
   $context = _panelizer_panelizer_task_get_context($handler, $base_contexts);
   if (empty($context->data)) {
     return;

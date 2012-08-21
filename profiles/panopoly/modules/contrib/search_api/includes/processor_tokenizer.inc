@@ -26,13 +26,13 @@ class SearchApiTokenizer extends SearchApiAbstractProcessor {
             'Specify the characters as a <a href="@link">PCRE character class</a>. ' .
             'Note: For non-English content, the default setting might not be suitable.',
             array('@link' => url('http://www.php.net/manual/en/regexp.reference.character-classes.php'))),
-        '#default_value' => "[^\\p{L}\\p{N}^']",
+        '#default_value' => "[^[:alnum:]]",
       ),
       'ignorable' => array(
         '#type' => 'textfield',
         '#title' => t('Ignorable characters'),
         '#description' => t('Specify characters which should be removed from fulltext fields and search strings (e.g., "-"). The same format as above is used.'),
-        '#default_value' => '[-]',
+        '#default_value' => "[']",
       ),
     );
 

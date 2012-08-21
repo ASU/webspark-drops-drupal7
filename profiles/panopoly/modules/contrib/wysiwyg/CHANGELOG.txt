@@ -1,6 +1,7 @@
 
 Wysiwyg 7.x-2.x, xxxx-xx-xx
 ---------------------------
+#1388224 by ksenzee, sun, TwoD: Fixed editors detaching on form submissions.
 #682160 by n_vashenko, TwoD: Fixed lists plugin support for TinyMCE.
 #1414354 by Merco: Fixed none.js breaks if textarea.js is not loaded.
 #1064600 by TwoD: Fixed maximized editors hidden under Drupal's toolbar.

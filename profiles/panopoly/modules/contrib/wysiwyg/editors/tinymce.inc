@@ -266,7 +266,7 @@ function wysiwyg_tinymce_settings($editor, $config, $theme) {
       $settings += array(
         'theme_advanced_resize_horizontal' => FALSE,
         'theme_advanced_resizing_use_cookie' => FALSE,
-        'theme_advanced_path_location' => isset($config['path_loc']) ? $config['path_loc'] : 'bottom',
+        'theme_advanced_statusbar_location' => isset($config['path_loc']) ? $config['path_loc'] : 'bottom',
         'theme_advanced_resizing' => isset($config['resizing']) ? $config['resizing'] : 1,
         'theme_advanced_toolbar_location' => isset($config['toolbar_loc']) ? $config['toolbar_loc'] : 'top',
         'theme_advanced_toolbar_align' => isset($config['toolbar_align']) ? $config['toolbar_align'] : 'left',

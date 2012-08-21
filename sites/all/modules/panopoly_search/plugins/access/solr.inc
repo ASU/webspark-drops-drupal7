@@ -27,7 +27,7 @@ function panopoly_search_solr_ctools_access_settings($form, &$form_state, $conf)
  */
 function panopoly_search_solr_ctools_access_check($conf, $context) {
   $solr_server = search_api_server_load('solr_server');
-  return $solr_server->ping();
+  return ($solr_server->enabled && $solr_server->ping());
 }
 
 /**

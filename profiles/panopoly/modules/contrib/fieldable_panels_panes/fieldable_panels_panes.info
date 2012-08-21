@@ -21,10 +21,9 @@ files[] = plugins/views/fieldable_panels_panes_handler_field_view_revision.inc
 files[] = plugins/views/fieldable_panels_panes_handler_field_is_current.inc
 files[] = plugins/views/fieldable_panels_panes_handler_field_make_current.inc
 
-
-; Information added by drush on 2012-06-21
-version = "7.x-1.0+7-dev"
+; Information added by drupal.org packaging script on 2012-08-18
+version = "7.x-1.2"
 core = "7.x"
 project = "fieldable_panels_panes"
-datestamp = "1340295722"
+datestamp = "1345319222"
 

@@ -1,10 +1,8 @@
 Panopoly Users
 ==============
-Maintains user accounts and user workflows
+Helps you do more with users on your Panopoly site!
 
 Key Features
-* Improvements to the user/login, user/password and user/register pages
+* Panelization of the to the user/login, user/password and user/register pages
 * Panelized user profile pages by default
-
-To Do
-* Better integration with PM Existing Pages to provide default layouts
+* Addition of fields to support a user picture and user biography

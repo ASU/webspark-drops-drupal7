@@ -84,7 +84,7 @@ function media_field_widget_settings_form($field, $instance) {
     $options[$key] = $definition->label;
   }
 
-  $streams = file_get_stream_wrappers();
+  $streams = file_get_stream_wrappers(STREAM_WRAPPERS_VISIBLE);
 
   $form['allowed_types'] = array(
     '#type' => 'checkboxes',
@@ -93,11 +93,10 @@ function media_field_widget_settings_form($field, $instance) {
     '#default_value' => $settings['allowed_types'],
     '#description' => t('Media types which are allowed for this field when using remote streams.'),
     '#weight' => 1,
-    '#access' => count(file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL)) != count($streams),
+    '#access' => count(file_get_stream_wrappers(STREAM_WRAPPERS_VISIBLE | STREAM_WRAPPERS_LOCAL)) != count($streams),
   );
 
   $options = array();
-  unset($streams['temporary']);
   foreach ($streams as $scheme => $data) {
     $options[$scheme] = t('@scheme (@name)', array('@scheme' => $scheme . '://', '@name' => $data['name']));
   }

@@ -192,7 +192,15 @@ function panelizer_entity_view_alter(&$build, $entity_type) {
   }
 
   // Love this hack, eh?
-  $element = ($entity_type == 'user') ? '#account' : '#' . $entity_type;
+  if ($entity_type == 'user') {
+    $element = '#account';
+  }
+  elseif ($entity_type == 'taxonomy_term') {
+    $element = '#term';
+  }
+  else {
+    $element = '#' . $entity_type;
+  }
   $entity = $build[$element];
 
   list($entity_id, $revision_id, $bundle) = entity_extract_ids($entity_type, $entity);
@@ -253,6 +261,17 @@ function panelizer_ctools_plugin_api($module, $api) {
       'path' => drupal_get_path('module', 'panelizer') . '/includes',
     );
   }
+}
+
+/**
+ * Implements hook_features_api().
+ */
+function panelizer_features_api() {
+  $api = array();
+  $api['panelizer_defaults'] = _ctools_features_get_info('panelizer_defaults');
+  $api['panelizer_defaults']['alter_type'] = FEATURES_ALTER_TYPE_NONE;
+
+  return $api;
 }
 
 /**
@@ -802,6 +821,7 @@ function panelizer_export_save_callback(&$object) {
  * export.inc callback to properly export a panelizer default.
  */
 function panelizer_export_export_callback($object, $indent) {
+  $object->did = NULL;
   $output = ctools_export_object('panelizer_defaults', $object, $indent);
   $output .= panels_export_display($object->display, $indent);
   $output .= $indent . '$panelizer->display = $display;' . "\n";
@@ -828,13 +848,15 @@ function panelizer_export_delete_callback($object) {
 function panelizer_export_delete_callback_subrecords($objects) {
   $dids = array();
   foreach ($objects as $panelizer) {
-    $dids[$panelizer->did] = $panelizer->did;
+    if (!empty($panelizer->did)) {
+      $dids[$panelizer->did] = $panelizer->did;
+    }
   }
 
   if ($dids) {
     $displays = panels_load_displays($dids);
     foreach ($objects as $panelizer) {
-      if (!empty($displays[$panelizer->did])) {
+      if (!empty($panelizer->did) && !empty($displays[$panelizer->did])) {
         $panelizer->display = $displays[$panelizer->did];
       }
     }
@@ -1090,6 +1112,11 @@ function panelizer_features_export_alter(&$export, $module_name) {
       );
 
       if (module_exists('strongarm')) {
+        foreach ($variables as $key => $variable) {
+          if (variable_get($variable) === NULL) {
+            unset($variables[$key]);
+          }
+        }
         $variables = array_diff($variables, array_keys(strongarm_vars_load()));
       }
 

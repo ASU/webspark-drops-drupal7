@@ -79,14 +79,29 @@ function wysiwyg_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
   );
+  // @see wysiwyg_dialog()
   $items['wysiwyg/%'] = array(
     'page callback' => 'wysiwyg_dialog',
     'page arguments' => array(1),
+    'delivery callback' => 'wysiwyg_deliver_dialog_page',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
     'file' => 'wysiwyg.dialog.inc',
   );
   return $items;
+}
+
+/**
+ * Implements hook_element_info().
+ */
+function wysiwyg_element_info() {
+  // @see wysiwyg_dialog()
+  $types['wysiwyg_dialog_page'] = array(
+    '#theme' => 'wysiwyg_dialog_page',
+    '#theme_wrappers' => array('html'),
+    '#show_messages' => TRUE,
+  );
+  return $types;
 }
 
 /**
@@ -103,8 +118,9 @@ function wysiwyg_theme() {
     'wysiwyg_admin_button_table' => array(
       'render element' => 'form',
     ),
+    // @see wysiwyg_dialog()
     'wysiwyg_dialog_page' => array(
-      'variables' => array('content' => NULL, 'show_messages' => TRUE),
+      'render element' => 'page',
       'file' => 'wysiwyg.dialog.inc',
       'template' => 'wysiwyg-dialog-page',
     ),
@@ -812,6 +828,7 @@ function wysiwyg_get_all_editors() {
       'libraries' => array(),
       'version callback' => NULL,
       'themes callback' => NULL,
+      'settings form callback' => NULL,
       'settings callback' => NULL,
       'plugin callback' => NULL,
       'plugin settings callback' => NULL,

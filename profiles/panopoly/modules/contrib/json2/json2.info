@@ -1,0 +1,10 @@
+name = JSON2 javascript library
+description = This module provides support for the JSON2 javascript library
+core = 7.x
+dependencies[] = libraries
+; Information added by drupal.org packaging script on 2012-06-29
+version = "7.x-1.0"
+core = "7.x"
+project = "json2"
+datestamp = "1340978202"
+

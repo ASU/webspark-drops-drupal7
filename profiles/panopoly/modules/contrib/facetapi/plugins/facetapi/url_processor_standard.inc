@@ -2,18 +2,21 @@
 
 /**
  * @file
- * The standard URL processor.
+ * The standard url processor class.
  */
 
 /**
- * Extension of FacetapiUrlProcessor.
+ * Url processor plugin that retrieves facet data from the query string.
+ *
+ * This plugin retrieves facet data from $_GET, and stored all information in
+ * the "f" query string variable by default.
  */
 class FacetapiUrlProcessorStandard extends FacetapiUrlProcessor {
 
   /**
    * Implements FacetapiUrlProcessor::fetchParams().
    *
-   * Pulls facet params from the $_GET variable.
+   * Use $_GET as the source for facet data.
    */
   public function fetchParams() {
     return $_GET;
@@ -100,7 +103,7 @@ class FacetapiUrlProcessorStandard extends FacetapiUrlProcessor {
       }
     }
 
-    // Sets the breadcrumb trail with h keys and filters.
+    // Sets the breadcrumb trail with the keys and filters.
     drupal_set_breadcrumb($breadcrumb);
   }
 }

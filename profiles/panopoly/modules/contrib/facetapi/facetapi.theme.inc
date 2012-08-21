@@ -87,6 +87,8 @@ function theme_facetapi_count($variables) {
  *   An associative array containing the keys 'text', 'path', and 'options'. See
  *   the l() function for information about these variables.
  *
+ * @see l()
+ *
  * @ingroup themeable
  */
 function theme_facetapi_link_active($variables) {
@@ -105,7 +107,7 @@ function theme_facetapi_link_active($variables) {
   // Builds link, passes through t() which gives us the ability to change the
   // position of the widget on a per-language basis.
   $replacements = array(
-    '!facetapi_deactivate_widget' => theme('facetapi_deactivate_widget'),
+    '!facetapi_deactivate_widget' => theme('facetapi_deactivate_widget', $variables),
     '!facetapi_accessible_markup' => theme('facetapi_accessible_markup', $accessible_vars),
   );
   $variables['text'] = t('!facetapi_deactivate_widget !facetapi_accessible_markup', $replacements);
@@ -117,8 +119,11 @@ function theme_facetapi_link_active($variables) {
  * Returns HTML for the deactivation widget.
  *
  * @param $variables
- *   An associative array containing:
- *   - text: The text of the facet link.
+ *   An associative array containing the keys 'text', 'path', and 'options'. See
+ *   the l() function for information about these variables.
+ *
+ * @see l()
+ * @see theme_facetapi_link_active()
  *
  * @ingroup themable
  */

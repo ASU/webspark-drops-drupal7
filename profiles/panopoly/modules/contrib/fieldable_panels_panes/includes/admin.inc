@@ -28,22 +28,22 @@ function fieldable_panels_panes_entities_page() {
 
     $operations['list'] = array(
       'title' => t('list'),
-      'href' => 'admin/structure/panels/entity/manage/' . $type_url_str,
+      'href' => 'admin/structure/fieldable-panels-panes/manage/' . $type_url_str,
     );
 
     $operations['add'] = array(
       'title' => t('add'),
-      'href' => 'admin/structure/panels/entity/manage/' . $type_url_str . '/add',
+      'href' => 'admin/structure/fieldable-panels-panes/manage/' . $type_url_str . '/add',
     );
 
     $operations['fields'] = array(
       'title' => t('manage fields'),
-      'href' => 'admin/structure/panels/entity/manage/' . $type_url_str . '/fields',
+      'href' => 'admin/structure/fieldable-panels-panes/manage/' . $type_url_str . '/fields',
     );
 
     $operations['display'] = array(
       'title' => t('manage display'),
-      'href' => 'admin/structure/panels/entity/manage/' . $type_url_str . '/display',
+      'href' => 'admin/structure/fieldable-panels-panes/manage/' . $type_url_str . '/display',
     );
 
     $ops = theme('links', array('links' => $operations, 'attributes' => array('class' => array('links', 'inline'))));
@@ -112,7 +112,7 @@ function fieldable_panels_panes_entity_delete_form($form, &$form_state, $entity)
   $form_state['entity'] = $entity;
   return confirm_form($form,
     t('Are you sure you want to delete %title?', array('%title' => $entity->title)),
-    'admin/structure/panels/entity/view/' . $entity->fpid,
+    'admin/structure/fieldable-panels-panes/view/' . $entity->fpid,
     t('This action cannot be undone. Note that deleting this entity will not delete panes using it, they will exist but display nothing.'),
     t('Delete'),
     t('Cancel')
@@ -140,7 +140,7 @@ function fieldable_panels_panes_entity_delete_revision_form($form, &$form_state,
   $form_state['entity'] = $entity;
   return confirm_form($form,
     t('Are you sure you want to delete the revision from %revision-date?', array('%revision-date' => format_date($entity->timestamp))),
-    'admin/structure/panels/entity/view/' . $entity->fpid,
+    'admin/structure/fieldable-panels-panes/view/' . $entity->fpid,
     t('This action cannot be undone.'),
     t('Delete'),
     t('Cancel')
@@ -162,7 +162,7 @@ function fieldable_panels_panes_entity_delete_revision_form_submit($form, &$form
     drupal_set_message(t('The revision from %date has been deleted.', array('%date' => format_date($entity->timestamp))));
   }
 
-  $form_state['redirect'] = 'admin/structure/panels/entity/view/' . $entity->fpid . '/revision';
+  $form_state['redirect'] = 'admin/structure/fieldable-panels-panes/view/' . $entity->fpid . '/revision';
 }
 
 /**
@@ -244,6 +244,6 @@ function fieldable_panels_panes_entity_make_current_page($entity) {
   fieldable_panels_panes_save($entity);
 
   drupal_set_message(t('The revision has been made current.'));
-  drupal_goto("admin/structure/panels/entity/view/$entity->fpid");
+  drupal_goto("admin/structure/fieldable-panels-panes/view/$entity->fpid");
 }
 

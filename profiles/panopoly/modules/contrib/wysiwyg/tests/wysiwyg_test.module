@@ -48,4 +48,3 @@ function wysiwyg_test_ajax_form_callback($form, &$form_state) {
   form_builder($form['form_id']['#value'], $form, $form_state);
   return $form['body'];
 }
-

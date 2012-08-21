@@ -16,7 +16,7 @@ Drupal.wysiwyg.plugins = Drupal.wysiwyg.plugins || {};
         }
       });
     });
-  }  
+  }
 
   // Determine support for queryCommandEnabled().
   // An exception should be thrown for non-existing commands.

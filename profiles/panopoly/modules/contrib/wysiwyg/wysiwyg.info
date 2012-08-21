@@ -10,9 +10,9 @@ files[] = wysiwyg.module
 files[] = tests/wysiwyg.test
 
 
-; Information added by drush on 2012-06-21
-version = "7.x-2.1+19-dev"
+; Information added by drush on 2012-08-21
+version = "7.x-2.1+29-dev"
 core = "7.x"
 project = "wysiwyg"
-datestamp = "1340295720"
+datestamp = "1345558980"
 

@@ -1,10 +1,18 @@
 <?php
 
 /**
+ * @file
+ * An installation file for Panopoly Widgets
+ */
+
+/**
  * Implements hook_install().
  */
 function panopoly_widgets_install() {
-
+  panopoly_widgets_save_default_file_data(drupal_get_path('module', 'panopoly_widgets') . '/default_content/vegetables-demo-image.png', 'vegetables-demo-image.png', 'image');
+  panopoly_widgets_save_default_file_data(drupal_get_path('module', 'panopoly_widgets') . '/default_content/vegetables_demo_spotlight.jpeg', 'vegetables_demo_spotlight.jpeg', 'spotlight');
+  panopoly_widgets_save_default_file_data(drupal_get_path('module', 'panopoly_widgets') . '/default_content/preview-file.txt', 'preview-file.txt', 'basic_file');
+  panopoly_widgets_save_default_video_data();
 }
 
 /**
@@ -57,3 +65,66 @@ function panopoly_widgets_field_schema($field) {
     return $schema;
   }
 }
+
+/**
+ * Implementation of hook_update_N().
+ */
+function panopoly_widgets_update_7001(&$sandbox) {
+  panopoly_widgets_save_default_file_data(drupal_get_path('module', 'panopoly_widgets') . '/default_content/vegetables-demo-image.png', 'vegetables-demo-image.png', 'image');
+  panopoly_widgets_save_default_file_data(drupal_get_path('module', 'panopoly_widgets') . '/default_content/vegetables_demo_spotlight.jpeg', 'vegetables_demo_spotlight.jpeg', 'spotlight');
+  panopoly_widgets_save_default_file_data(drupal_get_path('module', 'panopoly_widgets') . '/default_content/preview-file.txt', 'preview-file.txt', 'basic_file');
+  panopoly_widgets_save_default_video_data();
+}
+
+/**
+ * Helper function to save default file data.
+ */
+function panopoly_widgets_save_default_file_data($filepath, $filename, $type) {
+  $fid = variable_get('panopoly_widgets_default_' . $type . '_fid', NULL);
+  if (empty($fid)) {
+    $file = fopen($filepath, 'r');
+    $file_raw = fread($file, filesize($filepath));
+    $file_entity = file_save_data($file_raw, 'public://' . $filename);
+
+    if (!empty($file_entity->fid)) {
+      variable_set('panopoly_widgets_default_' . $type . '_fid', $file_entity->fid);
+
+      return $file_entity->fid;
+    }
+  }
+}
+
+/**
+ * Helper function to save default video data.
+ */
+function panopoly_widgets_save_default_video_data() {
+  $fid = variable_get('panopoly_widgets_default_video_fid', NULL);
+
+  if (empty($fid)) {
+
+    // Create the file object
+    $file = (object) array(
+      'uid' => 1,
+      'filename' => 'The Drupal Song Music Video',
+      'uri' => 'youtube://v/lZ-s3DRZJKY',
+      'filemime' => 'video/youtube',
+      'status' => 1,
+      'type' => 'video',
+      'filesize' => 0,
+      'timestamp' => REQUEST_TIME,
+    );
+
+    // Save the file object
+    module_invoke_all('file_presave', $file);
+    module_invoke_all('entity_presave', $file, 'file');
+    drupal_write_record('file_managed', $file);
+    module_invoke_all('file_insert', $file);
+    module_invoke_all('entity_insert', $file, 'file');
+
+    // Record the result
+    if (!empty($file->fid)) {
+      variable_set('panopoly_widgets_default_video_fid', $file->fid);
+    }
+  }
+}
+

@@ -31,6 +31,16 @@ function current_search_menu() {
  * Implements hook_menu_alter().
  */
 function current_search_menu_alter(&$items) {
+  // Use same access callback as Facet API. We can't define access callbacks in
+  // CTools plugins, so we have to alter the menu and define them here.
+  $base_path = 'admin/config/search/current_search';
+  foreach ($items as $path => $item) {
+    if ($base_path == $path || 0 === strpos($path, "$base_path/")) {
+      $items[$path]['access callback'] = 'facetapi_access_callback';
+      $items[$path]['access arguments'] = array();
+    }
+  }
+
   // Ensures that the edit link shows up in contextual links.
   $item = &$items['admin/config/search/current_search/list/%ctools_export_ui/edit'];
   $item['title'] = 'Configure current search items';
@@ -53,6 +63,10 @@ function current_search_theme() {
     ),
     'current_search_link_active' => array(
       'arguments' => array('text' => NULL, 'path' => NULL, 'options' => array()),
+      'file' => 'current_search.theme.inc',
+    ),
+    'current_search_keys' => array(
+      'arguments' => array('keys' => NULL, 'adapter' => NULL),
       'file' => 'current_search.theme.inc',
     ),
     'current_search_deactivate_widget' => array(

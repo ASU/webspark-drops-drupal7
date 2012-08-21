@@ -32,6 +32,12 @@ Drupal.behaviors.mediaViews = {
       for (index in Drupal.settings.media.files) {
         if (Drupal.settings.media.files[index].fid == fid) {
           selectedFiles.push(Drupal.settings.media.files[index]);
+
+          // If multiple tabs contains the same file, it will be present in the
+          // files-array multiple times, so we break out early so we don't have
+          // it in the selectedFiles array multiple times.
+          // This would interfer with multi-selection, so...
+          break;
         }
       }
       Drupal.media.browser.selectMedia(selectedFiles);

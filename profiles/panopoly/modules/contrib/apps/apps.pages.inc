@@ -270,19 +270,15 @@ function apps_app_uninstall($server_name, $app_name) {
 }
 
 /**
- * Callback for app configure page
+ * Admin settings form for Apps.
  */
-function apps_config_page() {
-return drupal_get_form('apps_config_form');
-}
-
 function apps_config_form() {
   $form = array();
-  $form['apps_enable_developement_console'] = array(
-    '#title' => t('Enable Developement Console'),
-    '#description' => t('Allows local apps to be displayed in a development app console.'),
+  $form['apps_enable_dev_console'] = array(
+    '#title' => t('Enable Development Console'),
+    '#description' => t('Allows local Apps to be displayed in a development app server.'),
     '#type' => 'checkbox',
-    '#default_value'=> variable_get('apps_enable_developement_console', FALSE),
+    '#default_value'=> variable_get('apps_enable_dev_console', FALSE),
   );
   $form['apps_allow_voting'] = array(
     '#title' => t('Allow Voting'),
@@ -295,6 +291,10 @@ function apps_config_form() {
   return $form;
 }
 
+/**
+ * Once the settings are saved, flush all caches. This will trigger the
+ * Apps dev server to appear in the Apps console.
+ */
 function apps_config_form_submit() {
   drupal_flush_all_caches();
 }

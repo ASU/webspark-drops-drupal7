@@ -2,11 +2,14 @@
 
 /**
  * @file
- * Displays field groups.
+ * The group current search item plugin class.
  */
 
 /**
- * Extension of CurrentSearchItem that displays field groups.
+ * Current search item plugin that displays the active facet items in a group.
+ *
+ * This plugins displays displays active items grouped by field in a horizontal
+ * list.
  */
 class CurrentSearchGroup extends CurrentSearchItem {
 
@@ -46,7 +49,7 @@ class CurrentSearchGroup extends CurrentSearchItem {
       // Builds list items.
       foreach ($group as $item) {
         $markup = $adapter->getMappedValue($item['facets'][0], $item['value']);
-        $text = ($markup['#html']) ? $markup['#markup'] : check_plain($markup['#markup']);
+        $text = empty($markup['#html']) ? check_plain($markup['#markup']) : $markup['#markup'];
         $variables = array(
           'text' => $text,
           'path' => $this->getFacetPath($item, $adapter),

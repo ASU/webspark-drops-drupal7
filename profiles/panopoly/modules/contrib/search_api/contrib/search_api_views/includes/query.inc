@@ -300,7 +300,7 @@ class SearchApiViewsQuery extends views_plugin_query {
       }
 
       // Save the row values for adding them to the Views result afterwards.
-      $rows[$id] = $row;
+      $rows[$id] = (object) $row;
     }
 
     // Load items of those rows which haven't got all field values, yet.
@@ -311,15 +311,13 @@ class SearchApiViewsQuery extends views_plugin_query {
       foreach ($items as $id => $item) {
         // Extract item properties.
         $wrapper = $this->index->entityWrapper($item, FALSE);
-        $rows[$id]['_entity_properties'] += $this->extractFields($wrapper, $missing[$id]);
-        $rows[$id]['entity'] = $item;
+        $rows[$id]->_entity_properties += $this->extractFields($wrapper, $missing[$id]);
+        $rows[$id]->entity = $item;
       }
     }
 
     // Finally, add all rows to the Views result set.
-    foreach ($rows as $id => $row) {
-      $view->result[$id] = (object) $row;
-    }
+    $view->result = array_values($rows);
   }
 
   /**

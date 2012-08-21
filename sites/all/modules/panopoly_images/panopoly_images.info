@@ -38,13 +38,12 @@ features[image][] = panopoly_image_half
 features[image][] = panopoly_image_quarter
 features[image][] = panopoly_image_spotlight
 features[image][] = panopoly_image_square
-features[image][] = panopoly_image_teaser
 features[image][] = panopoly_image_thumbnail
 stylesheets[all][] = panopoly_images.css
 
-; Information added by drupal.org packaging script on 2012-06-21
-version = "7.x-1.0-beta4"
+; Information added by drupal.org packaging script on 2012-08-21
+version = "7.x-1.0-beta5"
 core = "7.x"
 project = "panopoly_images"
-datestamp = "1340290622"
+datestamp = "1345557445"
 

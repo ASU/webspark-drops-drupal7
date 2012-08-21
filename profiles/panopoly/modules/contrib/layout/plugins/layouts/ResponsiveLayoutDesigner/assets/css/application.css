@@ -1,0 +1,311 @@
+/* @group This styling needs to be removed eventually. It's presentation and it doesn't belong here. */
+.rld-steps a {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+/* @end */
+.clearfix::after {
+  clear: both;
+  content: ' ';
+  display: block;
+  height: 0;
+  visibility: hidden;
+  width: 100%;
+}
+.rld-screen {
+  margin: 0 auto;
+  max-width: 1024px;
+  text-align: center;
+}
+.rld-iframe {
+  margin: 0 auto;
+}
+
+/* @group Layout */
+
+/* @group StepManager */
+.rld-layout-manager,
+.rld-layout-previewer {
+  text-align: center;
+}
+.rld-layout-manager .rld-stepmanager,
+.rld-layout-previewer .rld-stepmanager {
+  margin: 0 auto;
+}
+.rld-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.rld-steps .rld-tab {
+  display: inline-block;
+  margin-left: 1em;
+  margin-right: 1em;
+  position: relative;
+  vertical-align: middle;
+}
+.rld-steps .rld-tab::before,
+.rld-steps .rld-tab::after {
+  background-attachment: scroll;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  content: ' ';
+  display: block;
+  position: absolute;
+}
+.rld-steps .rld-tab::before {
+  background-color: #7d7d7d;
+  height: 1px;
+  left: -22px;
+  top: 1.2em;
+  width: 20px;
+}
+.rld-steps .rld-tab:first-child::before {  
+  background-color: transparent;
+  background-image: url("../images/small-screen.png");
+  background-position: left center;
+  height: 22px;
+  left: -28px;
+  top: 6px;
+  width: 25px;
+}
+.rld-steps .rld-tab:last-child::after {
+  background-image: url("../images/large-screen.png");
+  background-position: right center;
+  height: 22px;
+  right: -39px;
+  top: 6px;
+  width: 35px;
+}
+.rld-steps .rld-tab .rld-link {
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  display: inline-block;
+  line-height: 1.8em;
+  padding: 5px;
+}
+.rld-layout-previewer .rld-tab .rld-link {
+  color: #ccc;
+}
+.rld-layout-manager .rld-tab .rld-link {
+  color: #484848;
+}
+.rld-link.rld-active::after {
+  border-style: solid;
+  border-width: 6px 4px;
+  bottom: 2px;
+  content: ' ';
+  display: block;
+  height: 0px;
+  left: 40%;
+  position: absolute;
+  width: 0px;
+}
+.rld-layout-previewer .rld-link.rld-active::after {
+  border-color: transparent transparent #ccc transparent;
+}
+.rld-layout-manager .rld-link.rld-active::after {
+  border-color: transparent transparent #484848 transparent;
+}
+.rld-layouts {
+  margin-top: 0.5em;
+  padding: 1em;
+}
+
+/* @end */
+
+/* @end */
+
+/* @group Region and row styles */
+
+.rld-layouts {
+  position: relative;
+}
+.rld-layout {
+  position: relative;
+}
+.rld-row {
+  -webkit-user-select: none;
+  cursor: move;
+}
+.rld-placeholder,
+.rld-region {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  float: left;
+  margin-bottom: 15px;
+  position: relative;
+}
+.rld-region {
+  width: 100%; /* splitter def: 960px */
+}
+.rld-region > .rld-inner {
+  background-color: #555;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  color: white;
+  height: 4em;
+  margin: 0 2px;
+  padding: 0 1em;
+}
+.rld-placeholder {
+  background-color: white;
+  background-color: rgba(255,255,255,0.6667);
+  color: #ccc;
+  height: 4em;
+  outline: 1px dashed #31cbff;
+  outline-offset: -5px;
+  overflow: hidden;
+  width: 0;
+}
+.rld-region .rld-region-close {
+  position: absolute;
+  right: 14px;
+  top: 7px;
+  background-color: #cdcdcd;
+  border-radius: 10px;
+  color: #484848;
+  padding: 4px;
+  cursor: default;
+  font-size: 0.8em;
+  line-height: 0.8em;
+  text-decoration: none;
+}
+.rld-col.rld-region {
+  padding: 0;
+}
+.rld-grid-underlay {
+  bottom: 24px;
+  height: auto;
+  margin: 0.25em 0;
+  min-height: 20px;
+  position: absolute;
+  top: 24px;
+  width: 100%;
+}
+.rld-grid-underlay + * {
+  margin-top: 24px;
+}
+.rld-grid-col {
+  background-color: #E0E3E8;
+  border-color: white;
+  border-style: solid;
+  border-width: 0 2px;
+  height: 100%;
+  min-height: 1em;
+  outline: 1px solid #B8B8B8;
+  outline-offset: -3px;
+}
+.rld-layoutstep-controls {
+  margin-bottom: 5px;
+}
+.rld-splitter {
+  background-attachment: scroll;
+  background-image: url('../images/grippie.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  bottom: 0;
+	cursor: e-resize;	/* in case col-resize isn't supported */
+	cursor: col-resize;
+	height: 100%;
+  position: absolute;
+  top: 0;
+  width: 12px;
+  z-index: 1;
+}
+.rld-splitter:hover {
+  background-color: rgba(0, 0, 0, 0.3333);
+}
+.rld-splitter-left {
+  background-position: left center;
+  left: 3px;
+  -moz-border-radius: 5px 0 0 5px;
+  -webkit-border-radius: 5px 0 0 5px;
+  border-radius: 5px 0 0 5px;
+}
+.rld-splitter-right {
+  background-position: right center;
+  right: 3px;
+  -moz-border-radius: 0 5px 5px 0;
+  -webkit-border-radius: 0 5px 5px 0;
+  border-radius: 0 5px 5px 0;
+}
+.rld-splitter-active {
+  background: url('../images/grippie-active.png') 0 -3px;
+}
+
+/* @end */
+
+/* @grid */
+
+/* @group Sortable */
+
+.ui-sortable .ui-state-highlight {
+  height: 50px;
+  padding: 10px;
+  margin: 1em 0;
+}
+.ui-sortable .region .drag-icon {
+  font-size: 2em;
+  margin-right: 1em;
+}
+.ui-sortable .region .remove-icon {
+  position: absolute;
+  right: 5px;
+  top: 20px;
+  background-color: #cdcdcd;
+  border-radius: 10px;
+  color: #484848;
+  padding: 4px;
+  cursor: default;
+}
+
+/* @end */
+
+/* @end */
+
+/* @group Previewer */
+
+.rld-previewer {
+  border: 1px solid #484848;
+  position: absolute;
+  top: 100px;
+}
+@media (max-width:600px) {
+  .rld-layout-previewer {
+    display: none;    
+  }
+}
+.rld-modal-screen {
+  background-color: white;
+  bottom: 0;
+  height: 100%;
+  opacity: 0.9;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+.rld-modal-close {
+  position: absolute;
+  margin-top: 5px;
+  right: 10px;
+}
+.rld-modal-close a {
+  background-color: #59a;
+  border: 1px solid #3F3F3F;
+  border-radius: 7px;
+  box-sizing: border-box;
+  color: white;
+  display: inline-block;
+  letter-spacing: 1.5pt;
+  padding: 0.08333em 0.3333em;
+}
+.rld-modal-close a:hover {
+  background-color: #666666;
+  color: white;
+  text-decoration: none;
+}
+
+/* @end */

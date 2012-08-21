@@ -1,0 +1,84 @@
+<?php
+
+/**
+ * @file
+ * Installation and uninstallation routines for grid builder.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function gridbuilder_schema() {
+  $schema['gridbuilder'] = array(
+    'description' => 'Information about gridbuilder grids',
+    'export' => array(
+      'key' => 'name',
+      'identifier' => 'gridbuilder', // Exports will be defined as $gridbuilder.
+      'default hook' => 'default_gridbuilder_grids',  // Function hook name.
+      'api' => array(
+        'owner' => 'gridbuilder',
+        'api' => 'default_gridbuilder_grids',  // Base name for api include files.
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
+    'fields' => array(
+      'grid_id' => array(
+        'description' => 'Serial ID for this grid.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'no export' => TRUE,
+      ),
+      'name' => array(
+        'description' => 'Machine name for this grid.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'admin_title' => array(
+        'description' => 'User visible label for this grid.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'grid_type' => array(
+        'description' => 'Whether the grid is fixed (0) or fluid (1).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'width' => array(
+        'description' => 'Width of grid in pixels (or 100 for fluid grids).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'columns' => array(
+        'description' => 'Number of columns in this grid.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'padding_width' => array(
+        'description' => 'Column padding value. Understood in pixels for fixed grids (eg. 10) or as percentage for fluid grids (eg. 1.5).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'gutter_width' => array(
+        'description' => 'Gutter width value. Understood in pixels for fixed grids (eg. 20) or as percentage for fluid grids (eg. 2).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('grid_id'),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
+  );
+  return $schema;
+}

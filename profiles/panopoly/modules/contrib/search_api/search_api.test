@@ -470,6 +470,9 @@ class SearchApiUnitTest extends DrupalWebTestCase {
     $this->assertEqual($query->getKeys(), array('#conjunction' => 'AND', 'foo', 'bar'), t('"@mode" parse mode, test !num.', array('@mode' => $modes[$mode]['name'], '!num' => $num++)));
     $query->keys('(foo bar) OR "bar baz"');
     $this->assertEqual($query->getKeys(), array('(foo', 'bar)', 'OR', 'bar baz', '#conjunction' => 'AND'), t('"@mode" parse mode, test !num.', array('@mode' => $modes[$mode]['name'], '!num' => $num++)));
+    // http://drupal.org/node/1468678
+    $query->keys('"Münster"');
+    $this->assertEqual($query->getKeys(), array('#conjunction' => 'AND', 'Münster'), t('"@mode" parse mode, test !num.', array('@mode' => $modes[$mode]['name'], '!num' => $num++)));
   }
 
   public function checkIgnoreCaseProcessor() {

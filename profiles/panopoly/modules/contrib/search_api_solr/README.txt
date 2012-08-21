@@ -88,13 +88,13 @@ take effect.
 Hidden Configuration
 ----------
 
-The variable search_api_solr_connection_class is used to define the connection information
-that will be used to connect to solr. This was abstracted into a variable to allow services
-that automatically setup solr for a particular site to override the default connection class.
+The variable search_api_solr_connection_class is used to define the connection
+information that will be used to connect to solr. This was abstracted into a
+variable to allow services that automatically setup solr for a particular site
+to override the default connection class.
 
-To see an example of how a connection class can be defined, check out the Pantheon Search 
-implementation: https://github.com/pantheon-systems/drops-7/blob/master/modules/pantheon/
-pantheon_apachesolr/Pantheon_Search_Api_Solr_Service.php.
+The default is the SearchApiSolrConnection class in solr_connection.inc, which
+should be used as the base class for custom modifications.
 
 Developers
 ----------

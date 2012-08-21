@@ -11,44 +11,55 @@
  *
  */
 function apps_profile_install_tasks($install_state, $apps_server) {
+  // Need to include the apps.module file because on installs the profile
+  // collects all install tasks before any modules are enabled
+  module_load_include('module', 'apps');
+
   // Only use apps forms during interactive installs.
   $tasks = array();
-  if ($install_state['interactive'] || is_writable(drupal_realpath('sites/all/modules'))) {
-    $apps_server_name = $apps_server['machine name'];
-    $_SESSION['apps_servers'][$apps_server_name] = $apps_server;
-    $tasks = array(
-      'apps_profile_apps_select_form_' . $apps_server_name => array(
-        'display_name' => apps_profile_get_server_name($apps_server),
-        'type' => 'form',
-        'function' => 'apps_profile_apps_select_form',
-      ),
-      'apps_profile_download_app_modules_' . $apps_server_name => array(
-        'display' => FALSE,
-        'type' => 'batch',
-        'run' => (isset($_SESSION['apps']))?INSTALL_TASK_RUN_IF_NOT_COMPLETED:INSTALL_TASK_SKIP,
-        'function' => 'apps_profile_download_app_modules',
-      ),
-      // Only need this if using filetransfer authorization.
-      'apps_profile_authorize_transfer_' . $apps_server_name => array(
-        'display' => FALSE,
-        'type' => 'form',
-        'run' => (!(is_writable(drupal_realpath('sites/all/modules'))) && isset($_SESSION['apps']))?INSTALL_TASK_RUN_IF_NOT_COMPLETED:INSTALL_TASK_SKIP,
-        'function' => 'apps_profile_authorize_transfer',
-      ),
-      'apps_profile_install_app_modules_' . $apps_server_name => array(
-        'display' => FALSE,
-        'type' => 'batch',
-        'run' => (isset($_SESSION['apps']))?INSTALL_TASK_RUN_IF_NOT_COMPLETED:INSTALL_TASK_SKIP,
-        'function' => 'apps_profile_install_app_modules',
-      ),
-      'apps_profile_enable_app_modules_' . $apps_server_name => array(
-        'display' => FALSE,
-        'type' => 'batch',
-        'run' => (isset($_SESSION['apps']))?INSTALL_TASK_RUN_IF_NOT_COMPLETED:INSTALL_TASK_SKIP,
-        'function' => 'apps_profile_enable_app_modules',
-      ),
-    );
-  }
+  $apps_server_name = $apps_server['machine name'];
+
+  $task_screen = 'apps_profile_apps_select_form_' . $apps_server_name;
+  $_SESSION['apps_servers'][$task_screen] = $apps_server;
+  $tasks = array(
+    // Setup an initial task to verify capability to run apps.
+    'apps_install_verify' => array(
+      'display_name' => t('Verify Apps support'),
+      'type' => 'form',
+      'function' => 'apps_install_verify',
+    ),
+    $task_screen => array(
+      'display_name' => apps_profile_get_server_name($apps_server),
+      'type' => 'form',
+      'function' => 'apps_profile_apps_select_form',
+    ),
+    'apps_profile_download_app_modules_' . $apps_server_name => array(
+      'display' => FALSE,
+      'type' => 'batch',
+      // If this is not an interactive install, we can download apps only if we have write access.
+      'run' => (!empty($_SESSION['apps_downloads']) && ($install_state['interactive'] || apps_installer_has_write_access())) ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,
+      'function' => 'apps_profile_download_app_modules',
+    ),
+    // Only need this if using filetransfer authorization.
+    'apps_profile_authorize_transfer_' . $apps_server_name => array(
+      'display' => FALSE,
+      'type' => 'form',
+      'run' => (!empty($_SESSION['apps_downloads']) && $install_state['interactive'] && !apps_installer_has_write_access()) ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,
+      'function' => 'apps_profile_authorize_transfer',
+    ),
+    'apps_profile_install_app_modules_' . $apps_server_name => array(
+      'display' => FALSE,
+      'type' => 'batch',
+      'run' => (!empty($_SESSION['apps_downloads']) && ($install_state['interactive'] || apps_installer_has_write_access())) ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,
+      'function' => 'apps_profile_install_app_modules',
+    ),
+    'apps_profile_enable_app_modules_' . $apps_server_name => array(
+      'display' => FALSE,
+      'type' => 'batch',
+      'run' => (isset($_SESSION['apps'])) ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,
+      'function' => 'apps_profile_enable_app_modules',
+    ),
+  );
   return $tasks;
 }
 
@@ -62,9 +73,10 @@ function apps_profile_apps_select_form($form, $form_state, &$install_state) {
 
   // If there is no internet things get in an unfixable state. Use try->catch
   try {
-    $apps_server_name = str_replace('apps_profile_apps_select_form_', '', $form_state['build_info']['args'][0]['active_task']);
-    $_SESSION['apps_manifest'] = apps_apps($apps_server_name);
-    $_SESSION['apps_server'] = $_SESSION['apps_servers'][$apps_server_name];
+    $apps_server = $_SESSION['apps_servers'][$install_state['active_task']];
+
+    $_SESSION['apps_server'] = $apps_server;
+    $_SESSION['apps_manifest'] = apps_apps($apps_server['machine name']);
   }
   catch (Exception $e) {
     $form['info'] = array(
@@ -141,11 +153,14 @@ function apps_profile_apps_select_form($form, $form_state, &$install_state) {
  */
 function apps_profile_apps_select_form_submit($form, &$form_state) {
   $_SESSION['apps'] = array();
-  // Checking to make sure that skip was not clicked. We compare the op
-  // against the form_state for click to handle both the interactive case
-  // where op is set and the non-interactive case where there is no op.
-  if ($form_state['values']['op'] != $form_state['values']['skip']) {
+  // Checking to make sure that skip was not clicked. Proceed if op is empty
+  // to cover the non-interactive case where there is no op.
+  if (empty($form_state['values']['op']) || $form_state['values']['op'] == t('Install Apps')) {
     $_SESSION['apps'] = array_filter($form_state['values']['apps']);
+    // Determine if any apps need to be downloaded.
+    apps_include('manifest');
+    $installed_apps = apps_apps($_SESSION['apps_server']['machine name'], array('installed' => TRUE), TRUE);
+    $_SESSION['apps_downloads'] = array_diff_key($_SESSION['apps'], $installed_apps) ? TRUE: FALSE;
     $_SESSION['apps_default_content'] = $form_state['values']['default_content'];
   }
 }
@@ -160,7 +175,7 @@ function apps_profile_download_app_modules(&$install_state) {
     $apps[] = $_SESSION['apps_manifest'][$name];
   }
   $batch = apps_download_apps_batch($apps);
- 
+  
   $batch['finished'] = 'apps_profile_download_batch_finished';
   return $batch;
 }
@@ -278,9 +293,26 @@ function apps_profile_install_app_modules(&$install_state) {
  * Install downloaded apps.
  */
 function apps_profile_enable_app_modules(&$install_state) {
+  // If this is not an interactive install, we may have apps that were selected
+  // but not installed. Filter them out.
+  if (!$install_state['interactive']) {
+    apps_include('manifest');
+    // If not interactive it is one big request, clear some static caches
+    // so we recognized modules that have been downloaded just prior.
+    system_list_reset();
+    drupal_static_reset('apps_manifest');
+    $installed_apps = apps_apps($_SESSION['apps_server']['machine name'], array('installed' => TRUE), TRUE);
+    $_SESSION['apps'] = array_intersect_key($_SESSION['apps'], $installed_apps);
+    // If no selected apps are installed, we have nothing to enable.
+    if (empty($_SESSION['apps'])) {
+      return;
+    }
+  }
+
   $modules = array_keys($_SESSION['apps']);
+
   // Allow profiles to add default content.
-  if ($_SESSION['apps_default_content'] && isset($_SESSION['apps_server']['default content callback'])) {
+  if (isset($_SESSION['apps_default_content']) && isset($_SESSION['apps_server']['default content callback'])) {
     $function = $_SESSION['apps_server']['default content callback'];
     if (function_exists($function)) {
       $function($modules);
@@ -297,7 +329,7 @@ function apps_profile_enable_app_modules(&$install_state) {
     }
   }
   if (!empty($modules)) {
-    // Setup the batch omments
+    // Setup the batch comments
     $enable_commands = array();
     foreach($modules as $module) {
       $module_info = system_get_info('module', $module);
@@ -318,7 +350,6 @@ function apps_profile_enable_app_modules(&$install_state) {
 }
 
 function app_profile_enable_module($module, $module_name, &$context) {
-
   // This is here to show the user that we are in the process of enabling
   $context['message'] = t('Enabled %module app', array('%module' => $module_name));
 
@@ -335,6 +366,8 @@ function app_profile_enable_module($module, $module_name, &$context) {
  * Batch callback invoked when enable batch is completed.
  */
 function apps_profile_enable_app_modules_finished($success, $results) {
+  // Only display errors, on success do nothing since on success any
+  // message we print will show up in a weird context (next page)
   if (!empty($results['errors'])) {
     $error_list = array(
       'title' => t('Enabling apps failed:'),
@@ -342,10 +375,7 @@ function apps_profile_enable_app_modules_finished($success, $results) {
     );
     drupal_set_message(theme('item_list', $error_list), 'error');
   }
-  elseif ($success) {
-    drupal_set_message(t('Apps enabled successfully.'));
-  }
-  else {
+  elseif(!$success) {
     // Ideally we're catching all Exceptions, so they should never see this,
     // but just in case, we have to tell them something.
     drupal_set_message(t('Fatal error trying to enable apps.'), 'error');
@@ -353,12 +383,13 @@ function apps_profile_enable_app_modules_finished($success, $results) {
 
   // Do a little cleanup
   // We cannot unset $_SESSION['apps'] here because it is used in the
-  // run' check for this task and can cause wierd interactions with 
+  // run check for this task and can cause weird interactions with
   // the batch operations.
   // unset($_SESSION['apps']);
   unset($_SESSION['apps_default_content']);
   unset($_SESSION['apps_server']);
   unset($_SESSION['apps_manifest']);
+  unset($_SESSION['apps_downloads']);
 }
 
 /**
@@ -397,6 +428,106 @@ function apps_profile_check_dependencies($module_list) {
   // If we make it this far then everything is good.
   return TRUE;
 }
+
+/**
+ * Show instructions and check system services to help guide direction
+ * for Apps installs.
+ */
+function apps_install_verify() {
+  $form = array();
+
+  $form['opening'] = array(
+    '#markup' => '<h1>' . t('Verify Apps support') . '</h1>',
+  );
+
+  $form['openingtext'] = array(
+    '#markup' => '<p>' . t('Installation of Apps requires that modules are installed on your site using the same mechanism as the Update module in Drupal core. This functionality depends on certain PHP extensions being enabled on your server. Below is the documentation & verification for the various methods of installing. <strong>Note that you need only <em>one</em> of these methods enabled in order to install apps.</strong>') . '</p>',
+    '#weight' => -10,
+  );
+
+  // Verify FTP support
+  $ftp_installed = extension_loaded('ftp');
+  $form['ftp'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('FTP (!status)', array('!status' => $ftp_installed ? t('Enabled!') : t('Not enabled'))),
+    '#description' => '',
+    '#collapsible' => !$ftp_installed,
+    '#collapsed' => !$ftp_installed,
+    '#weight' => $ftp_installed ? 0 : 10,
+  );
+  if (!$ftp_installed) {
+    $form['ftp']['#description'] .= t('Your server does not have the FTP PHP extension. You will need to install it or use an alternative method. See <a href="http://us2.php.net/manual/en/book.ftp.php">http://us2.php.net/manual/en/book.ftp.php</a> for how to install the FTP PHP extension.') . '<br /><br />';
+  }
+  $form['ftp']['#description'] .= t('To install with FTP, you will need an FTP username and password that has permissions to write to your site directory on your server. Be aware that FTP is not an encrypted protocol and your credentials will be transmitted in the clear.');
+
+  // Verify SSH support
+  $ssh_installed = extension_loaded('ssh2');
+  $form['ssh'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('SSH (!status)', array('!status' => $ssh_installed ? t('Enabled!') : t('Not enabled'))),
+    '#description' => '',
+    '#collapsible' => !$ssh_installed,
+    '#collapsed' => !$ssh_installed,
+    '#weight' => $ssh_installed ? 1 : 11,
+  );
+  if (!$ssh_installed) {
+    $form['ssh']['#description'] .= t('Your server does not have ssh2 installed. You will need to install it or use an alternative method. See <a href="http://us2.php.net/manual/en/book.ssh2.php">http://us2.php.net/manual/en/book.ssh2.php</a> for how to install the ssh2 php extension.') . '<br /><br />';
+  }
+  $form['ssh']['#description'] .= t('To install with SSH, you will need a username and password of a user that can SSH into the server and has write permissions to your site directory on your server.');
+
+  // Verify web server write permissions
+  $install_permissions = apps_installer_has_write_access();
+  $vars = array('@install_path' => APPS_INSTALL_PATH);
+  $form['webserver'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Webserver direct install (!status)', array('!status' => $install_permissions ? t('Enabled!') : t('Not enabled'))),
+    '#description' => '',
+    '#collapsible' => !$install_permissions,
+    '#collapsed' => !$install_permissions,
+    '#weight' => $install_permissions ? 2 : 12,
+  );
+  $form['webserver']['#description'] .= $install_permissions
+    ? t('You have write permissions to @install_path.', $vars) . '<br /><br />'
+    : t('You do not have sufficient permissions to install by webserver direct install. In order to assign these permissions, go to the root of your drupal install and type <br/><br/><strong>sudo chmod -R 777 @install_path</strong>', $vars) . '<br /><br />';
+  $form['webserver']['#description'] .= t('Be aware that there are security issues with leaving your site in this state.');
+
+  // When altering this form and adding an install option, set this value to
+  // TRUE if your option is enabled (available).
+  $app_enabled = $ftp_installed || $ssh_installed || $install_permissions;
+  $form['app_enabled'] = array(
+    '#type' => 'value',
+    '#value' => $app_enabled,
+  );
+
+  $form['#process'] = array('apps_install_verify_process');
+
+  $form['continue'] = array(
+    '#type' => 'submit',
+    '#value' => t('Continue'),
+    '#weight' => 20,
+  );
+
+  return $form;
+}
+
+/**
+ * Process callback for apps_install_verify form.
+ *
+ * If no options are enabled, show all of them and a message.
+ */
+function apps_install_verify_process($form) {
+  if (!$form['app_enabled']['#value']) {
+    foreach (element_children($form) as $key) {
+      if (isset($form[$key]['#type']) && $form[$key]['#type'] == 'fieldset') {
+        $form[$key]['#collapsible'] = FALSE;
+        $form[$key]['#collapsed'] = FALSE;
+      }
+    }
+    drupal_set_message(t('No app install methods were found. <a href="!url">Retry verification</a>', array('!url' => check_url(drupal_current_script_url()))), 'warning');
+  }
+  return $form;
+}
+
 
 /**
  * Generate the title of the Apps install screen

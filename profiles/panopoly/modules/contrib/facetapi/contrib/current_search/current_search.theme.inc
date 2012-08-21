@@ -118,6 +118,18 @@ function theme_current_search_link_active($variables) {
 }
 
 /**
+ * Returns HTML for a search keys facet item.
+ *
+ * @param $variables
+ *   An associative array containing the keys 'keys' and 'adapter'.
+ *
+ * @ingroup themeable
+ */
+function theme_current_search_keys($variables) {
+  return check_plain($variables['keys']);
+}
+
+/**
  * Returns HTML for the deactivation widget.
  *
  * @param $variables

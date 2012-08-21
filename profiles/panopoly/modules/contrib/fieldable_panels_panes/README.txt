@@ -11,10 +11,10 @@ function MYMODULE_entity_info_alter(&$entity_info) {
     'pane top level' => FALSE, // set to true to make this show as a top level icon
     'pane icon' => '/path/to/custom/icon/for/this/pane.png',
     'admin' => array(
-      'path' => 'admin/structure/panels/entity/manage/%fieldable_panels_panes_type',
+      'path' => 'admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type',
       'bundle argument' => 5,
       // Note that this has all _ replaced with - from the bundle name.
-      'real path' => 'admin/structure/panels/entity/manage/my-bundle-name',
+      'real path' => 'admin/structure/fieldable-panels-panes/manage/my-bundle-name',
       'access arguments' => array('administer fieldable panels panes'),
     ),
   );

@@ -63,9 +63,11 @@ function panopoly_demo_default_page_manager_pages() {
     'style_settings' => array(
       'default' => NULL,
       'header' => NULL,
-      'sidebar' => NULL,
       'contentmain' => NULL,
       'footer' => NULL,
+    ),
+    'sidebar' => array(
+      'style' => '-1',
     ),
   );
   $display->cache = array();
@@ -76,22 +78,27 @@ function panopoly_demo_default_page_manager_pages() {
     $pane->pid = 'new-1';
     $pane->panel = 'contentmain';
     $pane->type = 'views_panes';
-    $pane->subtype = 'panopoly_demo-featured_demo';
+    $pane->subtype = 'panopoly_demo-individual_demo_item';
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(
+      'fields_override' => array(
+        'field_featured_image' => 1,
+        'title' => 1,
+        'created' => 1,
+        'name' => 1,
+        'body' => 1,
+      ),
       'exposed' => array(
-        'title' => 'Vegetables are Great',
-        'widget_title' => '',
+        'title' => 'Content Demo',
       ),
       'view_mode' => 'featured',
-      'widget_title' => '',
+      'widget_title' => NULL,
       'items_per_page' => NULL,
+      'view_settings' => 'nodes',
     );
     $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
+    $pane->style = array();
     $pane->css = array();
     $pane->extras = array();
     $pane->position = 0;
@@ -102,18 +109,32 @@ function panopoly_demo_default_page_manager_pages() {
     $pane->pid = 'new-2';
     $pane->panel = 'contentmain';
     $pane->type = 'views_panes';
-    $pane->subtype = 'panopoly_demo-all_demo';
+    $pane->subtype = 'panopoly_demo-demo_listing';
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(
-      'items_per_page' => '5',
+      'fields_override' => array(
+        'field_featured_image' => 1,
+        'title' => 1,
+        'created' => 1,
+        'name' => 1,
+        'body' => 1,
+      ),
+      'exposed' => array(
+        'sort_by' => 'created',
+        'sort_order' => 'ASC',
+        'widget_title' => '',
+        'items_per_page' => '3',
+      ),
       'view_mode' => 'teaser',
-      'widget_title' => 'More Content',
+      'widget_title' => '',
+      'items_per_page' => '3',
+      'view_settings' => 'nodes',
+      'override_title' => '',
+      'override_title_text' => '',
     );
     $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
+    $pane->style = array();
     $pane->css = array();
     $pane->extras = array();
     $pane->position = 1;
@@ -155,20 +176,25 @@ function panopoly_demo_default_page_manager_pages() {
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(
-      'items_per_page' => '10',
       'fields_override' => array(
         'field_featured_image' => 1,
         'title' => 1,
         'created' => 1,
+        'name' => 0,
         'body' => 0,
       ),
-      'view_mode' => NULL,
-      'widget_title' => 'Recent Content',
+      'exposed' => array(
+        'widget_title' => 'Demo Items',
+      ),
+      'view_mode' => 'teaser',
+      'widget_title' => 'Demo Items',
+      'items_per_page' => '3',
+      'view_settings' => 'fields',
+      'override_title' => '',
+      'override_title_text' => '',
     );
     $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
+    $pane->style = array();
     $pane->css = array();
     $pane->extras = array();
     $pane->position = 1;
@@ -179,18 +205,29 @@ function panopoly_demo_default_page_manager_pages() {
     $pane->pid = 'new-5';
     $pane->panel = 'sidebar';
     $pane->type = 'views_panes';
-    $pane->subtype = 'panopoly_demo-demo_slideshow';
+    $pane->subtype = 'panopoly_demo-list_featured_demo_items';
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(
-      'items_per_page' => '10',
+      'fields_override' => array(
+        'field_featured_image' => 1,
+        'title' => 1,
+        'created' => 0,
+        'name' => 1,
+        'body' => 1,
+      ),
+      'exposed' => array(
+        'widget_title' => 'Featured Demo Items',
+      ),
       'view_mode' => 'teaser',
-      'widget_title' => 'Demo Slideshow',
+      'widget_title' => 'Featured Demo Items',
+      'items_per_page' => '0',
+      'view_settings' => 'fields',
+      'override_title' => '',
+      'override_title_text' => '',
     );
     $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
+    $pane->style = array();
     $pane->css = array();
     $pane->extras = array();
     $pane->position = 2;

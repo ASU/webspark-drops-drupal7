@@ -117,7 +117,7 @@ interface SearchApiProcessorInterface {
    *
    * @param array $response
    *   An array containing the search results. See the return value of
-   *   SearchApiQueryInterface->execute() for the detailled format.
+   *   SearchApiQueryInterface->execute() for the detailed format.
    * @param SearchApiQuery $query
    *   The object representing the executed query.
    */

@@ -45,7 +45,7 @@ class PanelsPaneController extends DrupalDefaultEntityController {
 
     switch ($op) {
       case 'create':
-        return user_access('create fieldable panels panes');
+        return user_access('create fieldable ' . $entity);
 
       case 'view':
         ctools_include('context');
@@ -177,7 +177,7 @@ class PanelsPaneController extends DrupalDefaultEntityController {
     $entity_type = 'fieldable_panels_pane';
     drupal_alter(array('fieldable_panels_pane_view', 'entity_view'), $entity->content, $entity_type);
 
-    return drupal_render($entity->content);
+    return $entity->content;
   }
 
   public function delete($fpids) {
@@ -223,6 +223,8 @@ class PanelsPaneController extends DrupalDefaultEntityController {
     $values += array(
       'bundle' => 'fieldable_panels_pane',
       'title' => '',
+      'link' => '',
+      'path' => '',
       'reusable' => FALSE,
       'admin_title' => '',
       'admin_description' => '',

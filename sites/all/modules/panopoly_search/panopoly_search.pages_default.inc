@@ -13,7 +13,7 @@ function panopoly_search_default_page_manager_pages() {
   $page->api_version = 1;
   $page->name = 'panopoly_search';
   $page->task = 'page';
-  $page->admin_title = 'Search';
+  $page->admin_title = 'Search Page';
   $page->admin_description = '';
   $page->path = 'search/site/!keywords';
   $page->access = array(
@@ -66,6 +66,11 @@ function panopoly_search_default_page_manager_pages() {
       'plugins' => array(
         1 => array(
           'name' => 'solr',
+          'settings' => NULL,
+          'not' => FALSE,
+        ),
+        2 => array(
+          'name' => 'search_api_index',
           'settings' => NULL,
           'not' => FALSE,
         ),
@@ -330,12 +335,25 @@ function panopoly_search_default_page_manager_pages() {
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(
-      'view_mode' => NULL,
+      'view_mode' => 'teaser',
       'widget_title' => '',
-      'items_per_page' => NULL,
+      'items_per_page' => '15',
       'context' => array(
         0 => 'argument_string_1',
       ),
+      'fields_override' => array(
+        'field_featured_image' => 1,
+        'title' => 1,
+        'body' => 1,
+      ),
+      'exposed' => array(
+        'widget_title' => '',
+      ),
+      'override_title' => '',
+      'override_title_text' => '',
+      'view_settings' => 'fields',
+      'use_pager' => 1,
+      'pager_id' => '0',
     );
     $pane->cache = array();
     $pane->style = array(
@@ -373,7 +391,7 @@ function panopoly_search_default_page_manager_pages() {
     $pane->panel = 'sidebar';
     $pane->type = 'block';
     $pane->subtype = 'facetapi-fA1pg0Ubd1zgx1mvzHkFUGaNoMb4Gs0s';
-    $pane->shown = TRUE;
+    $pane->shown = FALSE;
     $pane->access = array();
     $pane->configuration = array(
       'override_title' => 1,

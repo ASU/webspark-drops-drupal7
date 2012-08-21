@@ -9,7 +9,12 @@
  * Implements hook_flush_caches().
  */
 function libraries_flush_caches() {
-  return array('cache_libraries');
+  // @todo When upgrading from 1.x, update.php attempts to flush caches before
+  //   the cache table has been created.
+  // @see http://drupal.org/node/1477932
+  if (db_table_exists('cache_libraries')) {
+    return array('cache_libraries');
+  }
 }
 
 /**

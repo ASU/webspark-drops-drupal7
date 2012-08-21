@@ -21,7 +21,9 @@ function fieldable_panels_panes_fieldable_panels_pane_ctools_content_types() {
     'description' => t('Create custom panels pane with fields'),
     'category' => t('Fielded panes'),
     'all contexts' => TRUE,
-    'defaults' => array(),
+    'defaults' => array(
+      'view_mode' => 'full',
+    ),
     'edit form' => 'fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form',
     'edit text' => t('Edit'),
   );
@@ -66,21 +68,23 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_content_types
 /**
  * Callback to render our content type.
  */
-function fieldable_panels_panes_fieldable_panels_pane_content_type_render($subtype, $conf, $panel_args, $context) {
+function fieldable_panels_panes_fieldable_panels_pane_content_type_render($subtype, $conf, $panel_args = array(), $context = array()) {
   $entity = fieldable_panels_panes_load_entity($subtype);
+  $view_mode = isset($conf['view_mode']) ? $conf['view_mode'] : 'full';
   if ($entity && !empty($entity->fpid) && fieldable_panels_panes_access('view', $entity)) {
     $settings = field_bundle_settings('fieldable_panels_pane', $entity->bundle);
     $block = new stdClass();
+    $block->title = '';
     if (empty($settings['extra_fields']['display']) || !empty($settings['extra_fields']['display']['title']['default']['visible'])) {
       $block->title = !empty($entity->title) ? filter_xss_admin($entity->title) : '';
     }
-    $block->content = fieldable_panels_panes_view($entity);
+    $block->content = fieldable_panels_panes_view($entity, $view_mode);
 
     if (fieldable_panels_panes_access('update', $entity)) {
       $block->admin_links[] = array(
         'title' => t('Edit pane'),
         'alt' => t("Edit the values in this pane"),
-        'href' => "admin/structure/panels/entity/view/$entity->fpid/edit",
+        'href' => "admin/structure/fieldable-panels-panes/view/$entity->fpid/edit",
         'query' => drupal_get_destination(),
       );
     }
@@ -106,6 +110,13 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_admin_title($
 }
 
 /**
+ * Callback to provide administrative information for a fieldable panels pane.
+ */
+function fieldable_panels_panes_fieldable_panels_pane_content_type_admin_info($subtype, $conf) {
+  return fieldable_panels_panes_fieldable_panels_pane_content_type_render($subtype, $conf);
+}
+
+/**
  * Form used to edit our content type.
  */
 function fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form($form, &$form_state) {
@@ -126,36 +137,30 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form($fo
     return $form;
   }
 
-  // If we are adding an existing entity, fake the form into thinking that
-  // it has simply executed as we are not actually using the form.
-  if ($form_state['op'] == 'add' && !empty($form_state['subtype']['entity_id'])) {
-    $form_state['executed'] = TRUE;
-    $form_state['complete'] = TRUE;
-    return;
+  ctools_form_include_file($form_state, $form_state['plugin']['path'] . '/' . $form_state['plugin']['file']);
+
+  $entity_info = entity_get_info('fieldable_panels_pane');
+  $view_mode_options = array();
+  foreach ($entity_info['view modes'] as $mode => $option) {
+    $view_mode_options[$mode] = $option['label'];
   }
-
-  // @todo: This really should be in CTools, if possible, in order to ensure AJAX works
-  // everywhere.
-
-  // module_load_include uses an unfortunately annoying syntax to work, making it
-  // difficult to translate the more simple $path + $file syntax.
-
-  $plugin = $form_state['plugin'];
-  $module = $plugin['module'];
-
-  // Cut the module path out.
-  $path = str_replace(drupal_get_path('module', $module) . '/', '', $plugin['path'] . '/' . $plugin['file']);
-  $type = pathinfo($path, PATHINFO_EXTENSION);
-  $name = str_replace('.' . $type, '', $path);
-
-  // Now add this to the build info files so that AJAX requests will know to load it.
-  $form_state['build_info']['files']["$module:$name.$type"] = array(
-    'type' => $type,
-    'module' => $module,
-    'name' => $name,
+  $form['view_mode'] = array(
+    '#title' => t('View mode'),
+    '#type' => 'select',
+    '#description' => t('Select a view mode for this pane.'),
+    '#options' => $view_mode_options,
+    '#default_value' => $conf['view_mode'],
   );
 
+  // If we're adding a reusable type, the only thing we want on the form is
+  // the view mode, so skip the rest.
+  if ($form_state['op'] == 'add' && !empty($form_state['subtype']['entity_id'])) {
+    $form_state['no update entity'] = TRUE;
+    return $form;
+  }
+
   $form = fieldable_panels_panes_entity_edit_form($form, $form_state);
+
   $form['reusable']['warning'] = array(
     '#markup' => '<div class="description">' . t('Note: Editing any value on a reusable pane will change the value everywhere this pane is used.') . '</div>',
   );
@@ -167,6 +172,10 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form($fo
  * Validate submission of our content type edit form.
  */
 function fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form_validate($form, &$form_state) {
+  if (!empty($form_state['no update entity'])) {
+    return;
+  }
+
   if ($form_state['entity']) {
     fieldable_panels_panes_entity_edit_form_validate($form, $form_state);
   }
@@ -176,6 +185,12 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form_val
  * Submit our content type edit form.
  */
 function fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form_submit($form, &$form_state) {
+  $form_state['conf']['view_mode'] = $form_state['values']['view_mode'];
+
+  if (!empty($form_state['no update entity'])) {
+    return;
+  }
+
   $entity = $form_state['entity'];
   if (!$entity) {
     return;
@@ -236,8 +251,6 @@ function _fieldable_panels_panes_custom_content_type($entity) {
     'description' => check_plain($entity->admin_description),
     'category' => $entity->category ? check_plain($entity->category) : t('Miscellaneous'),
     'all contexts' => TRUE,
-    // Prevent editing/creating revisions when adding this to a display.
-    'add form' => '',
     'icon' => 'icon_block_custom.png',
   );
 
@@ -285,6 +298,10 @@ function _fieldable_panels_panes_load_entity($subtype_name) {
     if ($content = entity_uuid_load('fieldable_panels_pane', array($id))) {
       $content = reset($content);
     }
+  }
+  elseif ($type == 'vid') {
+    $fpid = db_query('SELECT fpid FROM {fieldable_panels_panes_revision} WHERE vid = :vid', array(':vid' => $id))->fetchField();
+    $content = fieldable_panels_panes_load($fpid, $id);
   }
   else {
     $content = fieldable_panels_panes_load($id);

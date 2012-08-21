@@ -58,6 +58,7 @@ function file_import_alter(&$node) {
           if (!empty($fids) && isset($fids[0]) && is_object($fids[0])) {
             file_delete($fid[0]);
           }
+          $file = file_save_data($item['image'], $item['uri']);
           // Decode image data. Older versions exported binary data
           // so if this fails we asume that is the reason.
           $data = base64_decode($item['image']);

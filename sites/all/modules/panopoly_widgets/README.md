@@ -1,20 +1,16 @@
 Panopoly Widgets
 ================
-Creates generic widget functionality to customize wide and far
+Allows the creation and reuse of fielded entities to add common types of content to your Panopoly pages!
 
 Key Features
-* Implementation of basic field types (files, images, text) with Fieldable Panels Panes
-* Integration with Tablefield module to provide a table Fieldable Panels Pane
-* Integration with Link module to provide a links Fieldable Panels Pane
-* Integration with Media module to provide a YouTube/Vimeo Fieldable Panels Pane
-* Integration with Menu Block to provide a submenu Fieldable Panels Pane
-* Integration with Simple GMap module to provide a map Fieldable Panels Pane
-* Creation of a spotlight entity type/field formatter to provide a spotlight Fieldable Panels Pane
-* Customization and styling of Views Slideshows
-* UI/UX improvements for Fieldable Panels Panels editing/reusing experience
-* UX/UX improvements for Menu Block adding/editing experience
-
-To Do
-* Cleanup of Views Slideshow Theming + CSS
-* Cleanup of Spotlight CSS
-* Cleanup of Form API handling of File Fields for Fieldable Panels Panes
+* Integration with Link module to provide a list of links
+* Provides the ability to provide an uploaded file
+* Provides the ability to provide an uploaded image
+* Provides the ability to provide a WYSIWYG authored block of text
+* Integration with Simple GMap module to provide a map
+* Integration with Tablefield module to provide a table
+* Integration with Media module to provide an embedded video
+* Provides a custom entity to create a rotating spotlight
+* Integration with Menu Block to provide a submenu
+* Provides a customizable view to add a generic list of content
+* Provides a customizable view to add a generic piece of content

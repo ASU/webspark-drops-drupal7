@@ -1,0 +1,32 @@
+#ctools-export-ui-edit-item-form {
+  width: 350px;
+  border-right: 1px solid #ADADAD;
+  padding: 0.5em;
+  float: left;
+  margin-right: -400px;
+}
+#griddemonstrator {
+  float: left;
+  height: 300px;
+  margin-left: 400px;
+}
+#griddemonstrator .col {
+  float: left;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-background-clip: padding-box !important;
+  -webkit-background-clip: padding-box !important;
+  background-clip: padding-box !important;
+  height: 300px;
+  background-color: #C5D6DB;
+}
+#griddemonstrator .col .inner {
+  background-color: #4B6E78;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+#griddemonstrator .col.first {
+  margin-left: 0;
+}

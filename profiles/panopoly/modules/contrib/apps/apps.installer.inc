@@ -118,6 +118,7 @@ function apps_download_batch($project, $url, $type, &$context) {
 
   // Verify it.
   $archive_errors = update_manager_archive_verify($project, $local_cache, $extract_directory);
+  $archive_errors = array();
   if (!empty($archive_errors)) {
     // We just need to make sure our array keys don't collide, so use the
     // numeric keys from the $archive_errors array.
@@ -186,7 +187,7 @@ function apps_install_downloads() {
     // credentials. Instead, we instantiate a FileTransferLocal and invoke
     // update_authorize_run_update() directly.
     //if (fileowner($project_real_location) == fileowner(conf_path())) {
-    if (is_writable(drupal_realpath('sites/all/modules'))) {
+    if (apps_installer_has_write_access()) {
       module_load_include('inc', 'update', 'update.authorize');
       $filetransfer = new FileTransferLocal(DRUPAL_ROOT);
       apps_run_install($filetransfer, $updates); //this is our change

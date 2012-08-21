@@ -10,7 +10,7 @@
 function panopoly_widgets_field_default_fields() {
   $fields = array();
 
-  // Exported field: 'fieldable_panels_pane-basic_file-field_basic_file_file'
+  // Exported field: 'fieldable_panels_pane-basic_file-field_basic_file_file'.
   $fields['fieldable_panels_pane-basic_file-field_basic_file_file'] = array(
     'field_config' => array(
       'active' => '1',
@@ -31,6 +31,7 @@ function panopoly_widgets_field_default_fields() {
           0 => 'fid',
         ),
       ),
+      'locked' => '0',
       'module' => 'file',
       'settings' => array(
         'display_default' => 0,
@@ -56,7 +57,7 @@ function panopoly_widgets_field_default_fields() {
       'entity_type' => 'fieldable_panels_pane',
       'field_name' => 'field_basic_file_file',
       'label' => 'File',
-      'required' => 1,
+      'required' => 0,
       'settings' => array(
         'description_field' => 0,
         'file_directory' => 'general',
@@ -76,7 +77,7 @@ function panopoly_widgets_field_default_fields() {
     ),
   );
 
-  // Exported field: 'fieldable_panels_pane-basic_file-field_basic_file_text'
+  // Exported field: 'fieldable_panels_pane-basic_file-field_basic_file_text'.
   $fields['fieldable_panels_pane-basic_file-field_basic_file_text'] = array(
     'field_config' => array(
       'active' => '1',
@@ -97,6 +98,7 @@ function panopoly_widgets_field_default_fields() {
           0 => 'format',
         ),
       ),
+      'locked' => '0',
       'module' => 'text',
       'settings' => array(),
       'translatable' => '0',
@@ -104,7 +106,12 @@ function panopoly_widgets_field_default_fields() {
     ),
     'field_instance' => array(
       'bundle' => 'basic_file',
-      'default_value' => NULL,
+      'default_value' => array(
+        0 => array(
+          'value' => 'Salsify napa cabbage azuki bean mung bean kakadu plum onion garbanzo horseradish lettuce jícama water chestnut gumbo turnip courgette winter purslane cress squash. ',
+          'format' => 'plain_text',
+        ),
+      ),
       'deleted' => '0',
       'description' => '',
       'display' => array(
@@ -136,67 +143,7 @@ function panopoly_widgets_field_default_fields() {
     ),
   );
 
-  // Exported field: 'fieldable_panels_pane-callout-field_callout_text'
-  $fields['fieldable_panels_pane-callout-field_callout_text'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_callout_text',
-      'foreign keys' => array(
-        'format' => array(
-          'columns' => array(
-            'format' => 'format',
-          ),
-          'table' => 'filter_format',
-        ),
-      ),
-      'indexes' => array(
-        'format' => array(
-          0 => 'format',
-        ),
-      ),
-      'module' => 'text',
-      'settings' => array(),
-      'translatable' => '0',
-      'type' => 'text_long',
-    ),
-    'field_instance' => array(
-      'bundle' => 'callout',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'hidden',
-          'module' => 'text',
-          'settings' => array(),
-          'type' => 'text_default',
-          'weight' => '0',
-        ),
-      ),
-      'entity_type' => 'fieldable_panels_pane',
-      'field_name' => 'field_callout_text',
-      'label' => 'Text',
-      'required' => 1,
-      'settings' => array(
-        'text_processing' => '1',
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'text',
-        'settings' => array(
-          'rows' => '5',
-        ),
-        'type' => 'text_textarea',
-        'weight' => '-4',
-      ),
-    ),
-  );
-
-  // Exported field: 'fieldable_panels_pane-image-field_basic_image_caption'
+  // Exported field: 'fieldable_panels_pane-image-field_basic_image_caption'.
   $fields['fieldable_panels_pane-image-field_basic_image_caption'] = array(
     'field_config' => array(
       'active' => '1',
@@ -217,6 +164,7 @@ function panopoly_widgets_field_default_fields() {
           0 => 'format',
         ),
       ),
+      'locked' => '0',
       'module' => 'text',
       'settings' => array(),
       'translatable' => '0',
@@ -224,7 +172,13 @@ function panopoly_widgets_field_default_fields() {
     ),
     'field_instance' => array(
       'bundle' => 'image',
-      'default_value' => NULL,
+      'default_value' => array(
+        0 => array(
+          'summary' => '',
+          'value' => 'Green bean beet greens water spinach bitterleaf dandelion summer purslane plantain. Brussels sprout dulse kohlrabi cabbage napa cabbage winter purslane garlic mustard water spinach tigernut pea asparagus jícama wakame ricebean.',
+          'format' => 'plain_text',
+        ),
+      ),
       'deleted' => '0',
       'description' => '',
       'display' => array(
@@ -249,7 +203,7 @@ function panopoly_widgets_field_default_fields() {
         'active' => 1,
         'module' => 'text',
         'settings' => array(
-          'rows' => '5',
+          'rows' => '3',
           'summary_rows' => 5,
         ),
         'type' => 'text_textarea_with_summary',
@@ -258,7 +212,7 @@ function panopoly_widgets_field_default_fields() {
     ),
   );
 
-  // Exported field: 'fieldable_panels_pane-image-field_basic_image_image'
+  // Exported field: 'fieldable_panels_pane-image-field_basic_image_image'.
   $fields['fieldable_panels_pane-image-field_basic_image_image'] = array(
     'field_config' => array(
       'active' => '1',
@@ -279,9 +233,10 @@ function panopoly_widgets_field_default_fields() {
           0 => 'fid',
         ),
       ),
+      'locked' => '0',
       'module' => 'image',
       'settings' => array(
-        'default_image' => 0,
+        'default_image' => '45',
         'uri_scheme' => 'public',
       ),
       'translatable' => '0',
@@ -306,9 +261,10 @@ function panopoly_widgets_field_default_fields() {
       'entity_type' => 'fieldable_panels_pane',
       'field_name' => 'field_basic_image_image',
       'label' => 'Image',
-      'required' => 1,
+      'required' => 0,
       'settings' => array(
         'alt_field' => 1,
+        'default_image' => 0,
         'file_directory' => 'general',
         'file_extensions' => 'png gif jpg jpeg',
         'max_filesize' => '',
@@ -330,7 +286,7 @@ function panopoly_widgets_field_default_fields() {
     ),
   );
 
-  // Exported field: 'fieldable_panels_pane-map-field_map_address'
+  // Exported field: 'fieldable_panels_pane-map-field_map_address'.
   $fields['fieldable_panels_pane-map-field_map_address'] = array(
     'field_config' => array(
       'active' => '1',
@@ -351,6 +307,7 @@ function panopoly_widgets_field_default_fields() {
           0 => 'format',
         ),
       ),
+      'locked' => '0',
       'module' => 'text',
       'settings' => array(
         'max_length' => '255',
@@ -360,9 +317,13 @@ function panopoly_widgets_field_default_fields() {
     ),
     'field_instance' => array(
       'bundle' => 'map',
-      'default_value' => NULL,
+      'default_value' => array(
+        0 => array(
+          'value' => '717 California Street, San Francisco, California 94108',
+        ),
+      ),
       'deleted' => '0',
-      'description' => '',
+      'description' => 'The street address of the location you wish to map. This widget will contact Google and try to do its best to create a map!',
       'display' => array(
         'default' => array(
           'label' => 'hidden',
@@ -384,7 +345,7 @@ function panopoly_widgets_field_default_fields() {
       'entity_type' => 'fieldable_panels_pane',
       'field_name' => 'field_map_address',
       'label' => 'Address',
-      'required' => 1,
+      'required' => 0,
       'settings' => array(
         'text_processing' => '0',
         'user_register_form' => FALSE,
@@ -401,7 +362,73 @@ function panopoly_widgets_field_default_fields() {
     ),
   );
 
-  // Exported field: 'fieldable_panels_pane-quick_links-field_quick_links_links'
+  // Exported field: 'fieldable_panels_pane-map-field_map_information'.
+  $fields['fieldable_panels_pane-map-field_map_information'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_map_information',
+      'foreign keys' => array(
+        'format' => array(
+          'columns' => array(
+            'format' => 'format',
+          ),
+          'table' => 'filter_format',
+        ),
+      ),
+      'indexes' => array(
+        'format' => array(
+          0 => 'format',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'text',
+      'settings' => array(),
+      'translatable' => '0',
+      'type' => 'text_long',
+    ),
+    'field_instance' => array(
+      'bundle' => 'map',
+      'default_value' => array(
+        0 => array(
+          'value' => 'Zucchini gumbo grape salad watercress sea lettuce rutabaga chard bell pepper beetroot chickweed peanut garlic.',
+          'format' => 'plain_text',
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_default',
+          'weight' => '1',
+        ),
+      ),
+      'entity_type' => 'fieldable_panels_pane',
+      'field_name' => 'field_map_information',
+      'label' => 'Information',
+      'required' => 0,
+      'settings' => array(
+        'text_processing' => '1',
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'text',
+        'settings' => array(
+          'rows' => '3',
+        ),
+        'type' => 'text_textarea',
+        'weight' => '-3',
+      ),
+    ),
+  );
+
+  // Exported field: 'fieldable_panels_pane-quick_links-field_quick_links_links'.
   $fields['fieldable_panels_pane-quick_links-field_quick_links_links'] = array(
     'field_config' => array(
       'active' => '1',
@@ -411,6 +438,7 @@ function panopoly_widgets_field_default_fields() {
       'field_name' => 'field_quick_links_links',
       'foreign keys' => array(),
       'indexes' => array(),
+      'locked' => '0',
       'module' => 'link',
       'settings' => array(
         'attributes' => array(
@@ -432,7 +460,12 @@ function panopoly_widgets_field_default_fields() {
     ),
     'field_instance' => array(
       'bundle' => 'quick_links',
-      'default_value' => NULL,
+      'default_value' => array(
+        0 => array(
+          'title' => 'Kombu collard greens',
+          'url' => 'http://drupal.org',
+        ),
+      ),
       'deleted' => '0',
       'description' => '',
       'display' => array(
@@ -477,128 +510,7 @@ function panopoly_widgets_field_default_fields() {
     ),
   );
 
-  // Exported field: 'fieldable_panels_pane-quote-field_quote_author'
-  $fields['fieldable_panels_pane-quote-field_quote_author'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_quote_author',
-      'foreign keys' => array(
-        'format' => array(
-          'columns' => array(
-            'format' => 'format',
-          ),
-          'table' => 'filter_format',
-        ),
-      ),
-      'indexes' => array(
-        'format' => array(
-          0 => 'format',
-        ),
-      ),
-      'module' => 'text',
-      'settings' => array(
-        'max_length' => '255',
-      ),
-      'translatable' => '0',
-      'type' => 'text',
-    ),
-    'field_instance' => array(
-      'bundle' => 'quote',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'hidden',
-          'module' => 'text',
-          'settings' => array(),
-          'type' => 'text_default',
-          'weight' => '1',
-        ),
-      ),
-      'entity_type' => 'fieldable_panels_pane',
-      'field_name' => 'field_quote_author',
-      'label' => 'Author',
-      'required' => FALSE,
-      'settings' => array(
-        'text_processing' => 0,
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'module' => 'text',
-        'settings' => array(
-          'size' => 60,
-        ),
-        'type' => 'text_textfield',
-        'weight' => '-3',
-      ),
-    ),
-  );
-
-  // Exported field: 'fieldable_panels_pane-quote-field_quote_quote'
-  $fields['fieldable_panels_pane-quote-field_quote_quote'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_quote_quote',
-      'foreign keys' => array(
-        'format' => array(
-          'columns' => array(
-            'format' => 'format',
-          ),
-          'table' => 'filter_format',
-        ),
-      ),
-      'indexes' => array(
-        'format' => array(
-          0 => 'format',
-        ),
-      ),
-      'module' => 'text',
-      'settings' => array(),
-      'translatable' => '0',
-      'type' => 'text_long',
-    ),
-    'field_instance' => array(
-      'bundle' => 'quote',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'hidden',
-          'module' => 'text',
-          'settings' => array(),
-          'type' => 'text_default',
-          'weight' => '0',
-        ),
-      ),
-      'entity_type' => 'fieldable_panels_pane',
-      'field_name' => 'field_quote_quote',
-      'label' => 'Quote',
-      'required' => 1,
-      'settings' => array(
-        'text_processing' => '1',
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'text',
-        'settings' => array(
-          'rows' => '5',
-        ),
-        'type' => 'text_textarea',
-        'weight' => '-4',
-      ),
-    ),
-  );
-
-  // Exported field: 'fieldable_panels_pane-spotlight-field_basic_spotlight_items'
+  // Exported field: 'fieldable_panels_pane-spotlight-field_basic_spotlight_items'.
   $fields['fieldable_panels_pane-spotlight-field_basic_spotlight_items'] = array(
     'field_config' => array(
       'active' => '1',
@@ -619,6 +531,7 @@ function panopoly_widgets_field_default_fields() {
           0 => 'fid',
         ),
       ),
+      'locked' => '0',
       'module' => 'panopoly_widgets',
       'settings' => array(
         'default_image' => 0,
@@ -629,14 +542,23 @@ function panopoly_widgets_field_default_fields() {
     ),
     'field_instance' => array(
       'bundle' => 'spotlight',
-      'default_value' => NULL,
+      'default_value' => array(
+        0 => array(
+          'title' => 'Veggies sunt bona vobis!',
+          'link' => 'http://drupal.org',
+          'fid' => '',
+          'description' => 'Kakadu plum cucumber soko prairie turnip cress squash tatsoi nori aubergine asparagus endive dandelion beetroot lettuce broccoli water chestnut brussels sprout. ',
+        ),
+      ),
       'deleted' => '0',
       'description' => '',
       'display' => array(
         'default' => array(
           'label' => 'hidden',
           'module' => 'panopoly_widgets',
-          'settings' => array(),
+          'settings' => array(
+            'image_style' => 'panopoly_image_spotlight',
+          ),
           'type' => 'panopoly_spotlight_default',
           'weight' => '0',
         ),
@@ -666,60 +588,7 @@ function panopoly_widgets_field_default_fields() {
     ),
   );
 
-  // Exported field: 'fieldable_panels_pane-spotlight-field_spotlight_rotation_time'
-  $fields['fieldable_panels_pane-spotlight-field_spotlight_rotation_time'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_spotlight_rotation_time',
-      'foreign keys' => array(),
-      'indexes' => array(),
-      'module' => 'number',
-      'settings' => array(),
-      'translatable' => '0',
-      'type' => 'number_integer',
-    ),
-    'field_instance' => array(
-      'bundle' => 'spotlight',
-      'default_value' => array(
-        0 => array(
-          'value' => '4',
-        ),
-      ),
-      'deleted' => '0',
-      'description' => 'How long (in seconds) before the spotlight rotates to the next image.',
-      'display' => array(
-        'default' => array(
-          'label' => 'hidden',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => '1',
-        ),
-      ),
-      'entity_type' => 'fieldable_panels_pane',
-      'field_name' => 'field_spotlight_rotation_time',
-      'label' => 'Rotation Time',
-      'required' => 0,
-      'settings' => array(
-        'max' => '',
-        'min' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 0,
-        'module' => 'number',
-        'settings' => array(),
-        'type' => 'number',
-        'weight' => '-3',
-      ),
-    ),
-  );
-
-  // Exported field: 'fieldable_panels_pane-table-field_basic_table_table'
+  // Exported field: 'fieldable_panels_pane-table-field_basic_table_table'.
   $fields['fieldable_panels_pane-table-field_basic_table_table'] = array(
     'field_config' => array(
       'active' => '1',
@@ -729,6 +598,7 @@ function panopoly_widgets_field_default_fields() {
       'field_name' => 'field_basic_table_table',
       'foreign keys' => array(),
       'indexes' => array(),
+      'locked' => '0',
       'module' => 'tablefield',
       'settings' => array(
         'cell_processing' => '0',
@@ -742,21 +612,18 @@ function panopoly_widgets_field_default_fields() {
       'default_value' => array(
         0 => array(
           'tablefield' => array(
-            'cell_0_0' => '',
-            'cell_0_1' => '',
-            'cell_0_2' => '',
-            'cell_1_0' => '',
-            'cell_1_1' => '',
-            'cell_1_2' => '',
-            'cell_2_0' => '',
-            'cell_2_1' => '',
-            'cell_2_2' => '',
+            'cell_0_0' => 'Vegetable One',
+            'cell_0_1' => 'Vegeteable Two',
+            'cell_1_0' => 'brussels sprouts',
+            'cell_1_1' => 'cucumber',
+            'cell_2_0' => 'spinach',
+            'cell_2_1' => 'carrots',
             'import' => array(
               'rebuild_field_basic_table_table_0' => 'Upload CSV',
               'tablefield_csv_field_basic_table_table_0' => '',
             ),
             'rebuild' => array(
-              'count_cols' => '3',
+              'count_cols' => '2',
               'count_rows' => '3',
               'rebuild' => 'Rebuild Table',
             ),
@@ -791,83 +658,7 @@ function panopoly_widgets_field_default_fields() {
     ),
   );
 
-  // Exported field: 'fieldable_panels_pane-text-field_basic_text_link'
-  $fields['fieldable_panels_pane-text-field_basic_text_link'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_basic_text_link',
-      'foreign keys' => array(),
-      'indexes' => array(),
-      'module' => 'link',
-      'settings' => array(
-        'attributes' => array(
-          'class' => '',
-          'rel' => '',
-          'target' => 'default',
-        ),
-        'display' => array(
-          'url_cutoff' => 80,
-        ),
-        'enable_tokens' => 1,
-        'title' => 'optional',
-        'title_maxlength' => 128,
-        'title_value' => '',
-        'url' => 0,
-      ),
-      'translatable' => '0',
-      'type' => 'link_field',
-    ),
-    'field_instance' => array(
-      'bundle' => 'text',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'hidden',
-          'module' => 'link',
-          'settings' => array(),
-          'type' => 'link_default',
-          'weight' => 1,
-        ),
-      ),
-      'entity_type' => 'fieldable_panels_pane',
-      'field_name' => 'field_basic_text_link',
-      'label' => 'Read More Link',
-      'required' => 0,
-      'settings' => array(
-        'attributes' => array(
-          'class' => 'read-more',
-          'configurable_title' => 0,
-          'rel' => '',
-          'target' => 'default',
-          'title' => '',
-        ),
-        'display' => array(
-          'url_cutoff' => '80',
-        ),
-        'enable_tokens' => 1,
-        'title' => 'value',
-        'title_maxlength' => '128',
-        'title_value' => 'Read more',
-        'url' => 0,
-        'user_register_form' => FALSE,
-        'validate_url' => 1,
-      ),
-      'widget' => array(
-        'active' => 0,
-        'module' => 'link',
-        'settings' => array(),
-        'type' => 'link_field',
-        'weight' => '-3',
-      ),
-    ),
-  );
-
-  // Exported field: 'fieldable_panels_pane-text-field_basic_text_text'
+  // Exported field: 'fieldable_panels_pane-text-field_basic_text_text'.
   $fields['fieldable_panels_pane-text-field_basic_text_text'] = array(
     'field_config' => array(
       'active' => '1',
@@ -888,6 +679,7 @@ function panopoly_widgets_field_default_fields() {
           0 => 'format',
         ),
       ),
+      'locked' => '0',
       'module' => 'text',
       'settings' => array(),
       'translatable' => '0',
@@ -895,7 +687,12 @@ function panopoly_widgets_field_default_fields() {
     ),
     'field_instance' => array(
       'bundle' => 'text',
-      'default_value' => NULL,
+      'default_value' => array(
+        0 => array(
+          'value' => 'Bok choy potato courgette beet greens squash scallion avocado fennel soko. Radish water chestnut tomato sweet pepper soybean quandong. Sweet pepper collard greens courgette black-eyed pea kohlrabi bunya nuts parsley kakadu plum tomatillo coriander dandelion caulie. Pea sprouts onion chickweed garbanzo plantain cress kakadu plum bamboo shoot celery dandelion. Carrot kohlrabi parsnip lotus root scallion chickpea welsh onion spring onion broccoli rabe broccoli horseradish fennel caulie desert raisin cucumber. ',
+          'format' => 'plain_text',
+        ),
+      ),
       'deleted' => '0',
       'description' => '',
       'display' => array(
@@ -910,7 +707,7 @@ function panopoly_widgets_field_default_fields() {
       'entity_type' => 'fieldable_panels_pane',
       'field_name' => 'field_basic_text_text',
       'label' => 'Text',
-      'required' => 1,
+      'required' => 0,
       'settings' => array(
         'text_processing' => '1',
         'user_register_form' => FALSE,
@@ -927,7 +724,7 @@ function panopoly_widgets_field_default_fields() {
     ),
   );
 
-  // Exported field: 'fieldable_panels_pane-video-field_video_video'
+  // Exported field: 'fieldable_panels_pane-video-field_video_video'.
   $fields['fieldable_panels_pane-video-field_video_video'] = array(
     'field_config' => array(
       'active' => '1',
@@ -935,12 +732,20 @@ function panopoly_widgets_field_default_fields() {
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_video_video',
-      'foreign keys' => array(),
+      'foreign keys' => array(
+        'file_managed' => array(
+          'columns' => array(
+            'fid' => 'fid',
+          ),
+          'table' => 'file_managed',
+        ),
+      ),
       'indexes' => array(
         'fid' => array(
           0 => 'fid',
         ),
       ),
+      'locked' => '0',
       'module' => 'mediafield',
       'settings' => array(),
       'translatable' => '0',
@@ -975,6 +780,7 @@ function panopoly_widgets_field_default_fields() {
         'settings' => array(
           'allowed_schemes' => array(
             'public' => 0,
+            'vimeo' => 'vimeo',
             'youtube' => 'youtube',
           ),
           'allowed_types' => array(
@@ -985,7 +791,9 @@ function panopoly_widgets_field_default_fields() {
           ),
           'browser_plugins' => array(
             'library' => 0,
-            'media_default--media_browser_1' => 0,
+            'media_default--media_browser_1' => 'media_default--media_browser_1',
+            'media_default--media_browser_my_files' => 0,
+            'media_internet' => 'media_internet',
             'upload' => 0,
           ),
           'progress_indicator' => 'throbber',
@@ -1001,17 +809,19 @@ function panopoly_widgets_field_default_fields() {
   t('Address');
   t('Author');
   t('Caption');
+  t('Existing Content');
   t('File');
   t('How long (in seconds) before the spotlight rotates to the next image.');
   t('Image');
+  t('Information');
   t('Items');
   t('Links');
   t('Quote');
-  t('Read More Link');
-  t('Rotation Time');
   t('Table');
   t('Text');
+  t('The street address of the location you wish to map. This widget will contact Google and try to do its best to create a map!');
   t('Video');
+  t('View Mode');
 
   return $fields;
 }

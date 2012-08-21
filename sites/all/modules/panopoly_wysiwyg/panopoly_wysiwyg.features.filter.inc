@@ -10,7 +10,7 @@
 function panopoly_wysiwyg_filter_default_formats() {
   $formats = array();
 
-  // Exported format: HTML
+  // Exported format: HTML.
   $formats['panopoly_html_text'] = array(
     'format' => 'panopoly_html_text',
     'name' => 'HTML',
@@ -197,7 +197,7 @@ function panopoly_wysiwyg_filter_default_formats() {
     ),
   );
 
-  // Exported format: WYSIWYG
+  // Exported format: WYSIWYG.
   $formats['panopoly_wysiwyg_text'] = array(
     'format' => 'panopoly_wysiwyg_text',
     'name' => 'WYSIWYG',

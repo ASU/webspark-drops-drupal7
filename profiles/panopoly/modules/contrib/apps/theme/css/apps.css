@@ -6,7 +6,6 @@ body .path-admin-apps span.icon {
   background: #eee;
   padding: 10px;
   border: 1px solid #ccc;
-  min-width: 960px;
 }
 
 #apps-featured-wrapper {
@@ -100,9 +99,7 @@ body .path-admin-apps span.icon {
 #apps-list ul {
   clear: both;
   padding: 0;
-  display: inline-block;
   margin: 0;
-  width: 100%;
 }
 
 #apps-list ul li {
@@ -110,10 +107,15 @@ body .path-admin-apps span.icon {
   display: block;
   height: 110px;
   width: 46.5%;
+  max-width:450px;
   border: 1px solid #ccc;
   background: #fff;
-  margin: 5px;
+  margin: 5px 5px 10px;
   padding: 10px;
+}
+/* This is specifically for tao based themes to make things wrap a bit better*/
+body.tao #apps-list ul li {
+  max-width:350px;
 }
 
 .app-logo {
@@ -308,10 +310,7 @@ body .path-admin-apps span.icon {
 .block #apps-list ul {
   display: block;
 }
-.block #apps-list ul li {
-  float: none;
-  width: auto;
-}
+
 .block #apps-list {
   min-width:0;
 }

@@ -11,7 +11,7 @@
 class current_search_export_ui extends ctools_export_ui {
 
   /**
-   * Implements ctools_export_ui::list_form().
+   * Overrides ctools_export_ui::list_form().
    *
    * Simplifies the form similar to how the Context module does it.
    */
@@ -24,14 +24,14 @@ class current_search_export_ui extends ctools_export_ui {
   }
 
   /**
-   * Implements ctools_export_ui::list_build_row().
+   * Overrides ctools_export_ui::list_build_row().
    */
   function list_build_row($item, &$form_state, $operations) {
     parent::list_build_row($item, $form_state, $operations);
   }
 
   /**
-   * Implements ctools_export_ui::edit_execute_form().
+   * Overrides ctools_export_ui::edit_execute_form().
    *
    * This is hacky, but since CTools Export UI uses drupal_goto() we have to
    * effectively change the plugin to modify the redirect path dynamically.
@@ -61,7 +61,7 @@ class current_search_export_ui extends ctools_export_ui {
   }
 
   /**
-   * Implements ctools_export_ui::edit_page().
+   * Overrides ctools_export_ui::edit_page().
    *
    * Allows passing of options to drupal_goto() as opposed to just a path.
    *
@@ -94,7 +94,7 @@ class current_search_export_ui extends ctools_export_ui {
 
     $output = $this->edit_execute_form($form_state);
     if (!empty($form_state['executed'])) {
-      // @see @see http://drupal.org/node/1373048
+      // @see http://drupal.org/node/1373048
       $export_key = $this->plugin['export']['key'];
       $args = (array) $this->plugin['redirect']['edit'];
       $args[0] = str_replace('%ctools_export_ui', $form_state['item']->{$export_key}, $args[0]);
@@ -105,7 +105,7 @@ class current_search_export_ui extends ctools_export_ui {
   }
 
    /**
-   * Implements ctools_export_ui::add_page().
+   * Overrides ctools_export_ui::add_page().
    *
    * Allows passing of options to drupal_goto() as opposed to just a path.
    *
@@ -185,7 +185,7 @@ function current_search_settings_form(&$form, &$form_state) {
       'exists' => 'current_search_config_exists',
       'source' => array('info', 'label'),
     ),
-    '#disabled' => !empty($item->name),
+    '#disabled' => ('clone' != $form_state['form type'] && !empty($item->name)),
     '#description' => t('The machine readable name of the current search block configuration. This value can only contain letters, numbers, and underscores.'),
   );
 

@@ -36,9 +36,9 @@ function fieldable_panels_panes_entity_info() {
         'fieldable_panels_pane' => array(
           'label' => t('Panels pane'),
           'admin' => array(
-            'path' => 'admin/structure/panels/entity/manage/%fieldable_panels_panes_type',
-            'bundle argument' => 5,
-            'real path' => 'admin/structure/panels/entity/manage/fieldable-panels-pane',
+            'path' => 'admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type',
+            'bundle argument' => 4,
+            'real path' => 'admin/structure/fieldable-panels-panes/manage/fieldable-panels-pane',
             'access arguments' => array('administer fieldable panels panes'),
           ),
         ),
@@ -101,161 +101,191 @@ function fieldable_panels_panes_menu() {
   );
 
 
-  $items['admin/structure/panels/entity'] = array(
-    'title' => 'Entities',
+  $items['admin/structure/fieldable-panels-panes'] = array(
+    'title' => 'Fieldable Panels Panes',
     'description' => 'Manage pane content types.',
     'page callback' => 'fieldable_panels_panes_entities_page',
-    'type' => MENU_LOCAL_TASK,
   ) + $base;
 
-  $items['admin/structure/panels/entity/list'] = array(
+  $items['admin/structure/fieldable-panels-panes/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   ) + $base;
 
-  $items['admin/structure/panels/entity/view/%fieldable_panels_panes'] = array(
+  $items['admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes'] = array(
     'title callback' => 'fieldable_panels_panes_entity_title',
-    'title arguments' => array(5),
+    'title arguments' => array(4),
     'page callback' => 'fieldable_panels_panes_entity_view_page',
-    'page arguments' => array(5),
+    'page arguments' => array(4),
     'access callback' => 'fieldable_panels_panes_access',
-    'access arguments' => array('view', 5),
+    'access arguments' => array('view', 4),
   ) + $base;
 
-  $items['admin/structure/panels/entity/view/%fieldable_panels_panes/view'] = array(
+  $items['admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes/view'] = array(
     'title' => 'Preview',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'page callback' => 'fieldable_panels_panes_entity_view_page',
-    'page arguments' => array(5),
+    'page arguments' => array(4),
     'access callback' => 'fieldable_panels_panes_access',
-    'access arguments' => array('view', 5),
+    'access arguments' => array('view', 4),
     'weight' => -10,
   ) + $base;
 
-  $items['admin/structure/panels/entity/view/%fieldable_panels_panes/edit'] = array(
+  $items['admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes/edit'] = array(
     'title' => 'Edit',
     'type' => MENU_LOCAL_TASK,
     'page callback' => 'fieldable_panels_panes_entity_edit_page',
-    'page arguments' => array(5),
+    'page arguments' => array(4),
     'access callback' => 'fieldable_panels_panes_access',
-    'access arguments' => array('update', 5),
+    'access arguments' => array('update', 4),
     'weight' => -8,
   ) + $base;
 
-  $items['admin/structure/panels/entity/view/%fieldable_panels_panes/view-access'] = array(
+  $items['admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes/view-access'] = array(
     'title' => 'View access',
     'type' => MENU_LOCAL_TASK,
     'page callback' => 'fieldable_panels_panes_entity_edit_access_page',
-    'page arguments' => array('view', 5),
+    'page arguments' => array('view', 4),
     'access callback' => 'fieldable_panels_panes_access',
-    'access arguments' => array('update', 5),
+    'access arguments' => array('update', 4),
     'weight' => 10,
   ) + $base;
 
-  $items['admin/structure/panels/entity/view/%fieldable_panels_panes/update-access'] = array(
+  $items['admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes/update-access'] = array(
     'title' => 'Edit access',
     'type' => MENU_LOCAL_TASK,
     'page callback' => 'fieldable_panels_panes_entity_edit_access_page',
-    'page arguments' => array('edit', 5),
+    'page arguments' => array('edit', 4),
     'access callback' => 'fieldable_panels_panes_access',
-    'access arguments' => array('update', 5),
+    'access arguments' => array('update', 4),
     'weight' => 11,
   ) + $base;
 
-  $items['admin/structure/panels/entity/view/%fieldable_panels_panes/delete'] = array(
+  $items['admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes/delete'] = array(
     'title' => 'Delete',
     'type' => MENU_LOCAL_TASK,
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('fieldable_panels_panes_entity_delete_form', 5),
+    'page arguments' => array('fieldable_panels_panes_entity_delete_form', 4),
     'access callback' => 'fieldable_panels_panes_access',
-    'access arguments' => array('delete', 5),
+    'access arguments' => array('delete', 4),
     'weight' => -8,
   ) + $base;
 
-  $items['admin/structure/panels/entity/view/%fieldable_panels_panes/revision'] = array(
+  $items['admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes/revision'] = array(
     'title' => 'Revisions',
     'type' => MENU_LOCAL_TASK,
     'page callback' => 'fieldable_panels_panes_entity_list_revisions_page',
-    'page arguments' => array(5),
+    'page arguments' => array(4),
     'access callback' => 'fieldable_panels_panes_access',
-    'access arguments' => array('delete', 5),
+    'access arguments' => array('delete', 4),
     'weight' => -7,
   ) + $base;
 
-  $items['admin/structure/panels/entity/view/%fieldable_panels_panes/revision/%'] = array(
+  $items['admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes/revision/%'] = array(
     'title callback' => 'fieldable_panels_panes_entity_title',
-    'title arguments' => array(5),
+    'title arguments' => array(4),
     'page callback' => 'fieldable_panels_panes_entity_view_page',
-    'page arguments' => array(5),
+    'page arguments' => array(4),
     'access callback' => 'fieldable_panels_panes_access',
-    'access arguments' => array('view', 5),
-    'load arguments' => array(7),
+    'access arguments' => array('view', 4),
+    'load arguments' => array(6),
   ) + $base;
 
-  $items['admin/structure/panels/entity/view/%fieldable_panels_panes/revision/%/view'] = array(
+  $items['admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes/revision/%/view'] = array(
     'title' => 'View',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'page callback' => 'fieldable_panels_panes_entity_view_page',
-    'page arguments' => array(5),
+    'page arguments' => array(4),
     'access callback' => 'fieldable_panels_panes_access',
-    'access arguments' => array('view', 5),
-    'load arguments' => array(7),
+    'access arguments' => array('view', 4),
+    'load arguments' => array(6),
     'weight' => -10,
   ) + $base;
 
-  $items['admin/structure/panels/entity/view/%fieldable_panels_panes/revision/%/edit'] = array(
+  $items['admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes/revision/%/edit'] = array(
     'title' => 'Edit',
     'type' => MENU_LOCAL_TASK,
     'page callback' => 'fieldable_panels_panes_entity_edit_page',
-    'page arguments' => array(5),
+    'page arguments' => array(4),
     'access callback' => 'fieldable_panels_panes_access',
-    'access arguments' => array('update', 5),
+    'access arguments' => array('update', 4),
     'weight' => -8,
-    'load arguments' => array(7),
+    'load arguments' => array(6),
   ) + $base;
 
-  $items['admin/structure/panels/entity/view/%fieldable_panels_panes/revision/%/delete'] = array(
+  $items['admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes/revision/%/delete'] = array(
     'title' => 'Delete',
     'type' => MENU_LOCAL_TASK,
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('fieldable_panels_panes_entity_delete_revision_form', 5),
+    'page arguments' => array('fieldable_panels_panes_entity_delete_revision_form', 4),
     'access callback' => 'fieldable_panels_panes_access',
-    'access arguments' => array('delete', 5),
+    'access arguments' => array('delete', 4),
     'weight' => -7,
-    'load arguments' => array(7),
+    'load arguments' => array(6),
   ) + $base;
 
-  $items['admin/structure/panels/entity/view/%fieldable_panels_panes/revision/%/make-current'] = array(
+  $items['admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes/revision/%/make-current'] = array(
     'title' => 'Make current',
     'type' => MENU_CALLBACK,
     'page callback' => 'fieldable_panels_panes_entity_make_current_page',
-    'page arguments' => array(5),
+    'page arguments' => array(4),
     'access callback' => 'fieldable_panels_panes_access',
-    'access arguments' => array('update', 5),
+    'access arguments' => array('update', 4),
     'weight' => -8,
-    'load arguments' => array(7),
+    'load arguments' => array(6),
   ) + $base;
 
-  $items['admin/structure/panels/entity/manage/%fieldable_panels_panes_type'] = array(
+  if (module_exists('devel')) {
+    $items['admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes/devel'] = array(
+      'title' => 'Devel',
+      'page callback' => 'devel_load_object',
+      'page arguments' => array('fieldable_panels_pane', 4),
+      'access arguments' => array('access devel information'),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 100,
+      'file' => 'devel.pages.inc',
+      'file path' => drupal_get_path('module', 'devel'),
+    );
+
+    $items['admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes/devel/load'] = array(
+      'title' => 'Load',
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+    );
+
+    $items['admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes/devel/render'] = array(
+      'title' => 'Render',
+      'page callback' => 'devel_render_object',
+      // Normally this would be the name of the entity type, but slightly
+      // modified in order to call the right function.
+      'page arguments' => array('fieldable_panels_panes', 4),
+      'access arguments' => array('access devel information'),
+      'file' => 'devel.pages.inc',
+      'file path' => drupal_get_path('module', 'devel'),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 100,
+    );
+  }
+
+  $items['admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type'] = array(
     'title callback' => 'fieldable_panels_panes_entities_title',
-    'title arguments' => array(5),
+    'title arguments' => array(4),
     'page callback' => 'fieldable_panels_panes_entities_list_page',
-    'page arguments' => array(5),
+    'page arguments' => array(4),
   ) + $base;
 
-  $items['admin/structure/panels/entity/manage/%fieldable_panels_panes_type/list'] = array(
+  $items['admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
 
-  $items['admin/structure/panels/entity/manage/%fieldable_panels_panes_type/add'] = array(
+  $items['admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type/add'] = array(
     'title' => 'Add',
     'page callback' => 'fieldable_panels_panes_entities_add_page',
-    'page arguments' => array(5),
+    'page arguments' => array(4),
     'access callback' => 'fieldable_panels_panes_access',
-    'access arguments' => array('create'),
+    'access arguments' => array('create', 5),
     'type' => MENU_LOCAL_TASK,
   ) + $base;
 
@@ -299,9 +329,6 @@ function fieldable_panels_panes_theme() {
   return array(
     'fieldable_panels_pane' => array(
       'render element' => 'elements',
-      'variable'  => array(
-        'element'  => NULL,
-      ),
       'template'  => 'fieldable-panels-pane',
     ),
   );
@@ -333,8 +360,8 @@ function fieldable_panels_panes_admin_menu_map() {
     }
   }
 
-  $map['admin/structure/panels/entity/manage/%fieldable_panels_panes_type'] = array(
-    'parent' => 'admin/structure/panels/entity',
+  $map['admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type'] = array(
+    'parent' => 'admin/structure/fieldable-panels-panes',
     'arguments' => array(
       array('%fieldable_panels_panes_type' => $bundles),
     ),
@@ -342,6 +369,54 @@ function fieldable_panels_panes_admin_menu_map() {
 
 
   return $map;
+}
+
+/**
+ * Implementation of hook_panels_dashboard_blocks().
+ */
+function fieldable_panels_panes_panels_dashboard_blocks(&$vars) {
+  $vars['links']['fieldable_panels_panes'] = array(
+    'title' => l(t('Fieldable Panels Panes'), 'admin/structure/fieldable-panels-panes'),
+    'description' => t('Fieldable Panels Panes are fieldable entities that can be created directly in the Panels UI or created in a separate administrative UI to reuse later in a panel pane.'),
+  );
+
+  $entity_info = entity_get_info('fieldable_panels_pane');
+  $count = 0;
+  $rows = array();
+
+  foreach ($entity_info['bundles'] as $bundle => $info) {
+    $type_url_str = str_replace('_', '-', $bundle);
+
+    $rows[] = array(
+      check_plain($info['label']),
+      l(t('List'), 'admin/structure/fieldable-panels-panes/manage/' . $type_url_str),
+      l(t('Add'), 'admin/structure/fieldable-panels-panes/manage/' . $type_url_str . '/add'),
+      l(t('Manage Fields'), 'admin/structure/fieldable-panels-panes/manage/' . $type_url_str . '/fields'),
+      l(t('Manage Display'), 'admin/structure/fieldable-panels-panes/manage/' . $type_url_str . '/display'),
+    );
+
+    // Only display 10.
+    if (++$count >= 10) {
+      break;
+    }
+  }
+
+  if ($rows) {
+    $content = theme('table', array('rows' => $rows, 'attributes' => array('class' => 'panels-manage')));
+  }
+  else {
+    $content = '<p>' . t('There are no fieldable panel pane types.') . '</p>';
+  }
+
+  $vars['blocks']['fieldable_panels_panes'] = array(
+    'weight' => -100,
+    'title' => t('Manage fieldable panels panes'),
+    'link' => l(t('Go to list'), 'admin/structure/fieldable-panels-panes'),
+    'content' => $content,
+    'class' => 'dashboard-fieldable-panels-panes',
+    'section' => 'right',
+  );
+
 }
 
 // -------------------------------------------------------------------------
@@ -481,7 +556,7 @@ function fieldable_panels_panes_views_api() {
 /**
  * Preprocess function for fieldable-panels-pane.tpl.php
  */
-function fieldable_panels_panes_preprocess_fieldable_panels_pane(&$vars) {
+function template_preprocess_fieldable_panels_pane(&$vars) {
   $vars += array('content' => array());
   foreach (element_children($vars['elements']) as $key) {
     $vars['content'][$key] = $vars['elements'][$key];
@@ -494,6 +569,8 @@ function fieldable_panels_panes_preprocess_fieldable_panels_pane(&$vars) {
   foreach ($vars['content'] as $content) {
     $vars['fields'] .= render($content);
   }
+
+  $vars['theme_hook_suggestions'][] = 'fieldable_panels_pane__' . $vars['elements']['#element']->bundle;
 }
 
 /**
@@ -502,6 +579,9 @@ function fieldable_panels_panes_preprocess_fieldable_panels_pane(&$vars) {
 function fieldable_panels_panes_preprocess_panels_pane(&$vars) {
   if ($vars['pane']->type == 'fieldable_panels_pane') {
     $entity = fieldable_panels_panes_load_entity($vars['pane']->subtype);
+    if ($entity->link && !empty($vars['title'])) {
+      $vars['title'] = l($vars['title'], $entity->path);
+    }
     $vars['classes_array'][] = 'pane-bundle-' . ctools_cleanstring($entity->bundle, array('lower case' => TRUE));
   }
 }
@@ -696,6 +776,26 @@ function fieldable_panels_panes_entity_edit_form($form, &$form_state) {
   ctools_include('dependent');
   ctools_add_js('dependent');
 
+  $form['link'] = array(
+    '#weight' => -10,
+  );
+
+  $form['link']['link'] = array(
+    '#title' => t('Make title a link'),
+    '#type' => 'checkbox',
+    '#default_value' => $entity->link,
+    '#description' => t('Check here to make the title link to another page.'),
+    '#id' => 'edit-link',
+  );
+
+  $form['link']['path'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Path'),
+    '#description' => t('The path for this link. This can be an internal Drupal path such as %add-node or an external URL such as %drupal. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => 'node/add', '%drupal' => 'http://drupal.org')),
+    '#dependency' => array('edit-link' => array(1)),
+    '#default_value' => $entity->path,
+  );
+
   $form['reusable'] = array(
     '#weight' => 10,
   );
@@ -790,6 +890,8 @@ function fieldable_panels_panes_entity_edit_form_submit($form, &$form_state) {
 
   // Copy hardcoded fields.
   $entity->title = $form_state['values']['title'];
+  $entity->link = $form_state['values']['link'];
+  $entity->path = $form_state['values']['path'];
   $entity->reusable = $form_state['values']['reusable'];
   $entity->category = $form_state['values']['category'];
   $entity->admin_title = $form_state['values']['admin_title'];

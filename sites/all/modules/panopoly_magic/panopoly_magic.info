@@ -10,22 +10,15 @@ dependencies[] = menu
 dependencies[] = node
 dependencies[] = page_manager
 dependencies[] = panels_ipe
-dependencies[] = strongarm
-features[ctools][] = strongarm:strongarm:1
+dependencies[] = panopoly_core
 features[features_api][] = api:1
-features[variable][] = page_manager_node_edit_disabled
-features[variable][] = page_manager_node_view_disabled
-features[variable][] = page_manager_term_view_disabled
-features[variable][] = panels_page_allowed_layouts
-features[variable][] = panels_page_allowed_types
-features[variable][] = panels_page_default
 files[] = panopoly_magic.module
 scripts[] = panopoly_magic.js
 stylesheets[all][] = panopoly_magic.css
 
-; Information added by drupal.org packaging script on 2012-06-21
-version = "7.x-1.0-beta4"
+; Information added by drupal.org packaging script on 2012-08-21
+version = "7.x-1.0-beta5"
 core = "7.x"
 project = "panopoly_magic"
-datestamp = "1340290623"
+datestamp = "1345557446"
 

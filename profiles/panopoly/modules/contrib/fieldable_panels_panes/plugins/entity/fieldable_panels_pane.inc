@@ -5,7 +5,7 @@
  */
 $plugin = array(
   'handler' => 'FieldablePanelsPaneEntity',
-  'entity path' => 'admin/structure/panels/entity/view/%fieldable_panels_panes',
+  'entity path' => 'admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes',
   'hooks' => array(
     'menu' => TRUE,
     'admin_paths' => TRUE,

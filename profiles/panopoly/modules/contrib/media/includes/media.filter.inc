@@ -32,80 +32,6 @@ function media_filter($text) {
 }
 
 /**
- *  Filter callback for media url filter.
- *  @TODO: There are currently problems with this. For instance, if a file is
- *  to be loaded from a remote location here, it will be recreated multiple
- *  times, each time this filter is called. If we want to continue supporting
- *  this feature, we would need to probably create a new stream or other way
- *  to lookup a remote file w/ its local version. Probably best as a contributed
- *  module because of this difficulty. ~ aaron.
- */
-function media_url_filter($text, $filter) {
-  $text = ' ' . $text . ' ';
-
-  // Need to attach the variables to the callback after the regex.
-  $callback = _media_url_curry('_media_url_parse_full_links', 1);
-
-  // Match absolute URLs.
-  $text = preg_replace_callback("`(<p>|<li>|<br\s*/?>|[ \n\r\t\(])((http://|https://)([a-zA-Z0-9@:%_+*~#?&=.,/;-]*[a-zA-Z0-9@:%_+*~#&=/;-]))([.,?!]*?)(?=(</p>|</li>|<br\s*/?>|[ \n\r\t\)]))`i", $callback, $text);
-
-  return $text;
-}
-
-/**
- * If one of our allowed providers knows what to do with the url,
- * then let it embed the video.
- *
- * @param int $filter
- *  The filter id.
- * @param array $match
- *  The matched text from our regex.
- *
- * @return string
- *  The replacement text for the url.
- */
-function _media_url_parse_full_links($match) {
-  // Get just the URL.
-  $match[2] = check_url(decode_entities($match[2]));
-  try {
-    $file = media_parse_to_file($match[2]);
-  }
-  catch (Exception $e) {
-    // Ignore errors; pass the original text for other filters to deal with.
-    return $match[0];
-  }
-
-  if ($file->fid) {
-    $file = file_load($file->fid);
-
-    // Generate a preview of the file
-    // @TODO: Allow user to change the formatter in the filter settings.
-    $preview = file_view_file($file, 'media_large');
-    $preview['#show_names'] = TRUE;
-
-    return drupal_render($preview);
-  }
-
-  // Nothing was parsed; return the original text.
-  return $match[0];
-}
-
-function _media_url_curry($func, $arity) {
-  return create_function('', "
-    \$args = func_get_args();
-    if(count(\$args) >= $arity)
-        return call_user_func_array('$func', \$args);
-    \$args = var_export(\$args, 1);
-    return create_function('','
-        \$a = func_get_args();
-        \$z = ' . \$args . ';
-        \$a = array_merge(\$z,\$a);
-        return call_user_func_array(\'$func\', \$a);
-    ');
-  ");
-}
-
-/**
  * Parses the contents of a CSS declaration block and returns a keyed array of property names and values.
  *
  * @param $declarations
@@ -278,6 +204,52 @@ function _media_generate_tagMap($text) {
 }
 
 /**
+ * Return a list of view modes allowed for a file embedded in the WYSIWYG.
+ *
+ * @param object $file
+ *   A file entity.
+ *
+ * @return array
+ *   An array of view modes that can be used on the file when embedded in the
+ *   WYSIWYG.
+ */
+function media_get_wysiwyg_allowed_view_modes($file) {
+  $enabled_view_modes = &drupal_static(__FUNCTION__, array());
+
+  // @todo Add more caching for this.
+  if (!isset($enabled_view_modes[$file->type])) {
+    $enabled_view_modes[$file->type] = array();
+
+    // Add the default view mode by default.
+    $enabled_view_modes[$file->type]['default'] = array('label' => t('Default'), 'custom settings' => TRUE);
+
+    $entity_info = entity_get_info('file');
+    $view_mode_settings = field_view_mode_settings('file', $file->type);
+    foreach ($entity_info['view modes'] as $view_mode => $view_mode_info) {
+      // Do not show view modes that don't have their own settings and will
+      // only fall back to the default view mode.
+      if (empty($view_mode_settings[$view_mode]['custom_settings'])) {
+        continue;
+      }
+
+      // Don't present the user with an option to choose a view mode in which
+      // the file is hidden.
+      $extra_fields = field_extra_fields_get_display('file', $file->type, $view_mode);
+      if (empty($extra_fields['file']['visible'])) {
+        continue;
+      }
+
+      // Add the view mode to the list of enabled view modes.
+      $enabled_view_modes[$file->type][$view_mode] = $view_mode_info;
+    }
+  }
+
+  $view_modes = $enabled_view_modes[$file->type];
+  drupal_alter('media_wysiwyg_allowed_view_modes', $view_modes, $file);
+  return $view_modes;
+}
+
+/**
  * Form callback used when embedding media.
  *
  * Allows the user to pick a format for their media file.
@@ -287,19 +259,9 @@ function media_format_form($form, $form_state, $file) {
   $form = array();
   $form['#media'] = $file;
 
-  $entity_info = entity_get_info('file');
-  $view_modes = $entity_info['view modes'];
-  drupal_alter('media_wysiwyg_allowed_view_modes', $view_modes, $file);
-
+  $view_modes = media_get_wysiwyg_allowed_view_modes($file);
   $formats = $options = array();
   foreach ($view_modes as $view_mode => $view_mode_info) {
-    // Don't present the user with an option to choose a view mode in which the
-    // file is hidden.
-    $extra_fields = field_extra_fields_get_display('file', $file->type, $view_mode);
-    if (!$extra_fields['file']['visible']) {
-      continue;
-    }
-
     //@TODO: Display more verbose information about which formatter and what it does.
     $options[$view_mode] = $view_mode_info['label'];
     $element = media_get_file_without_label($file, $view_mode, array('wysiwyg' => TRUE));
@@ -381,12 +343,6 @@ function media_format_form($form, $form_state, $file) {
  */
 function media_get_file_without_label($file, $view_mode, $settings = array()) {
   $file->override = $settings;
-
-  // Legacy support for Styles module plugins that expect overridden HTML
-  // attributes in $file->override rather than $file->override['attributes'].
-  if (isset($settings['attributes'])) {
-    $file->override += $settings['attributes'];
-  }
 
   $element = file_view_file($file, $view_mode);
 

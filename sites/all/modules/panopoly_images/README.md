@@ -1,6 +1,6 @@
 Panopoly Images
 ===============
-Provides scaling and cropping to images
+Provides common image styles and helps make them responsive!
 
 Key Features
 * Several image style presets of various sizes

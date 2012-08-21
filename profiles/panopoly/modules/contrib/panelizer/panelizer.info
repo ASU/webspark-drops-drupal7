@@ -12,9 +12,9 @@ files[] = plugins/views/panelizer_handler_panelizer_status.inc
 files[] = plugins/views/panelizer_handler_filter_panelizer_status.inc
 files[] = plugins/views/panelizer_plugin_row_panelizer_node_view.inc
 
-
-; Information added by drush on 2012-06-21
-version = ""
+; Information added by drupal.org packaging script on 2012-08-18
+version = "7.x-3.0-rc1"
+core = "7.x"
 project = "panelizer"
-datestamp = "1340295722"
+datestamp = "1345319286"
 

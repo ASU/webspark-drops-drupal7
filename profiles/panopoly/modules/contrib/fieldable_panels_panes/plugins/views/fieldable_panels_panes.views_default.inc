@@ -103,6 +103,14 @@ function fieldable_panels_panes_views_default_views() {
   $handler->display->display_options['style_options']['override'] = 1;
   $handler->display->display_options['style_options']['sticky'] = 0;
   $handler->display->display_options['style_options']['empty_table'] = 0;
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = FALSE;
+  $handler->display->display_options['empty']['area']['content'] = 'There are currently no entities of this type.';
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
+  $handler->display->display_options['empty']['area']['tokenize'] = 0;
   /* Field: Fieldable pane: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'fieldable_panels_panes';
@@ -144,6 +152,28 @@ function fieldable_panels_panes_views_default_views() {
   $handler->display->display_options['arguments']['bundle']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['bundle']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['bundle']['summary_options']['items_per_page'] = '25';
+  $translatables['fieldable_pane_entities'] = array(
+    t('Master'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('There are currently no entities of this type.'),
+    t('Title'),
+    t('Reusable'),
+    t('Administrative title'),
+    t('Administrative category'),
+    t('Administrative description'),
+    t('Administrative link'),
+    t('Administrative edit link'),
+    t('Administrative delete link'),
+    t('All'),
+  );
   $views['fieldable_pane_entities'] = $view;
 
   $view = new view;

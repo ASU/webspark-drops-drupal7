@@ -6,8 +6,8 @@ php = 5.2.4
 project = panopoly_demo
 dependencies[] = features
 dependencies[] = page_manager
-dependencies[] = views
 dependencies[] = panopoly_pages
+dependencies[] = views
 features[content][] = panopoly-demo-0
 features[content][] = panopoly-demo-1
 features[content][] = panopoly-demo-2
@@ -19,9 +19,9 @@ features[page_manager_pages][] = panopoly_demo_panel
 features[views_view][] = panopoly_demo
 stylesheets[all][] = panopoly_demo.css
 
-; Information added by drupal.org packaging script on 2012-06-21
-version = "7.x-1.0-beta4"
+; Information added by drupal.org packaging script on 2012-08-21
+version = "7.x-1.0-beta5"
 core = "7.x"
 project = "panopoly_demo"
-datestamp = "1340290621"
+datestamp = "1345557152"
 

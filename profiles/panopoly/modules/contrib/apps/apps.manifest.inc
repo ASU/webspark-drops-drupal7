@@ -55,10 +55,10 @@ function apps_servers($server_name = FALSE) {
     }
   }
   // if we have the dev console turned on add it as a server
-  if (variable_get('apps_enable_developement_console', FALSE)) {
+  if (variable_get('apps_enable_dev_console', FALSE)) {
     $servers['development'] = array(
       'name' => 'development',
-      'description' => 'Local Apps in Developement',
+      'description' => 'Local Apps in Development',
       'title' => 'Development',
       'manifest' => FALSE,
       'featured app' => FALSE,
@@ -258,7 +258,7 @@ function apps_retrieve_app_image($url, $title = FALSE, $alt = FALSE) {
     $remote = $remote->headers;
     $remote_timestamp = strtotime($remote['last-modified']);
 
-    if($remote_timestamp <= $current->timestamp && $remote['content-length'] == $current->filesize){
+    if($remote_timestamp <= $current->timestamp && !empty($remote['content-length']) && $remote['content-length'] == $current->filesize){
       //TODO make this a file 
       $current->path = $current->uri;
       $current->title = $title ? $title : '';
@@ -273,7 +273,7 @@ function apps_retrieve_app_image($url, $title = FALSE, $alt = FALSE) {
     if (!file_exists(drupal_realpath(file_build_uri('apps')))) {
       drupal_mkdir(file_build_uri('apps'));
     }
-    $file = file_save_data($request->data, $uri, FILE_EXISTS_REPLACE);
+    $file = file_save_data($request->data, $uri, FILE_EXISTS_RENAME);
     if ($current) {
       $file->fid = $current->fid;
     }
@@ -297,7 +297,7 @@ function apps_retrieve_app_image($url, $title = FALSE, $alt = FALSE) {
  *TODO: Cache status data and clear on changes to any module status
  */
 function apps_manifest($server) {
-  $manifests = &drupal_static(__function__);
+  $manifests = &drupal_static(__FUNCTION__);
   require_once DRUPAL_ROOT . '/includes/install.inc';
   if (empty($manifests[$server['name']]) && !isset($manifests[$server['name']]['error'])) {
     // Get manifest from server
@@ -353,6 +353,8 @@ function apps_manifest($server) {
         $app['dependencies'][$version['name']] = $info;
       }
       if (isset($app['libraries'])) {
+        $profile = variable_get('install_profile', 'standard');
+        $profile_path = drupal_get_path('profile', $profile);
         foreach($app['libraries'] as $name_version => $downloadable) {
           $info = array(
             'downloadable' => $downloadable,
@@ -360,7 +362,7 @@ function apps_manifest($server) {
             'status' => APPS_INSTALLABLE,
             'incompatable' => 0,
             'enabled' => 0,
-            'installed' =>  is_dir(DRUPAL_ROOT . "/sites/all/libraries/$name_version"),
+            'installed' =>  is_dir(DRUPAL_ROOT . "/sites/all/libraries/$name_version") || is_dir($profile_path . "/libraries/$name_version"),
           );
           $app['libraries'][$name_version] = $info;
         }

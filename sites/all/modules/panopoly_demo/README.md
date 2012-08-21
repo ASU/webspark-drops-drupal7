@@ -3,11 +3,7 @@ Panopoly Demo
 Demo content and functionality to help show the power of Panopoly
 
 Key features
-* Demonstration Content
-* Demonstration Homepage
+* Demonstration homepage
+* Demonstration content
 * Demonstration Views/Panels Integration
-* Demonstration background styles
-
-TODO
-* Better demonstration of menu/menu-block integration
-* Demonstration of fieldable panel panes
+* Demonstration pane and region styles

@@ -227,7 +227,7 @@ Information for developers
 
 Apart from improving the module itself, developers can extend search
 capabilities provided by the Search API by providing implementations for one (or
-several) of the following classes. Detailled documentation on the methods that
+several) of the following classes. Detailed documentation on the methods that
 need to be implemented are always available as doc comments in the respective
 interface definition (all found in their respective files in the includes/
 directory). The details for hooks can be looked up in the search_api.api.php

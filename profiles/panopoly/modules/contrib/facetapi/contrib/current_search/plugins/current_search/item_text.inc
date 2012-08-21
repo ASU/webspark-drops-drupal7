@@ -2,11 +2,16 @@
 
 /**
  * @file
- * Plugin that adds custom text to the current search block.
+ * The text current search item plugin class.
  */
 
 /**
- * Extension of CurrentSearchItem that displays all active items.
+ * Current search item plugin that displays text configured by the user.
+ *
+ * It is a common use case to display the number of results returned by the
+ * query or addition to pagination information to end users. This plugin allows
+ * administrators to set arbitrary strings with replacement patterns to build
+ * the messages they want to display to users in the Current Search block.
  */
 class CurrentSearchItemText extends CurrentSearchItem {
 

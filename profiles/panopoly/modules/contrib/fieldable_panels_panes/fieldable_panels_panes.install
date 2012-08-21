@@ -36,6 +36,16 @@ function fieldable_panels_panes_schema() {
         'type' => 'varchar',
         'length' => 255,
       ),
+      'link' => array(
+        'description' => 'Whether or not this entity title will link to another page.',
+        'type' => 'int',
+        'size' => 'tiny',
+      ),
+      'path' => array(
+        'description' => 'The path the title should link to.',
+        'type' => 'varchar',
+        'length' => 255,
+      ),
       'reusable' => array(
         'description' => 'Whether or not this entity will appear in the Add Content dialog.',
         'type' => 'int',
@@ -174,4 +184,29 @@ function fieldable_panels_panes_update_7102(&$sandbox) {
   db_delete('fieldable_panels_panes_revision')
     ->condition('fpid', $existing, 'NOT IN')
     ->execute();
+}
+
+/**
+ * Reset the theme registry.
+ */
+function fieldable_panels_panes_update_7103(&$sandbox) {
+  // All caches are flushed during the update process, so we do nothing.
+  return t('Theme registry cache has been cleared.');
+}
+
+/*
+ * Update menu paths.
+ */
+function fieldable_panels_panes_update_7104(&$sandbox) {
+  // We don't have to flush caches manually since the update process will flush
+  // all caches anyway.
+  return t('Menu cache has been flushed.');
+}
+
+/**
+ * Add support to link pane titles to paths.
+ */
+function fieldable_panels_panes_update_7105() {
+  db_add_field('fieldable_panels_panes', 'link', array('type' => 'int', 'size' => 'tiny', 'description' => 'Whether or not this entity title will link to another page.'));
+  db_add_field('fieldable_panels_panes', 'path', array('type' => 'varchar', 'length' => 255, 'description' => 'The path the title should link to.'));
 }

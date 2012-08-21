@@ -1,0 +1,109 @@
+<?php
+
+/**
+ * @file
+ * Installation and uninstallation routines for responsive layouts.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function layout_schema() {
+  $schema['layout_region'] = array(
+    'description' => 'Information about common regions for responsive layouts.',
+    'export' => array(
+      'key' => 'name',
+      'identifier' => 'layout_region', // Exports will be defined as $layout_region.
+      'default hook' => 'default_layout_region',  // Function hook name.
+      'api' => array(
+        'owner' => 'layout',
+        'api' => 'default_layout_region',  // Base name for api include files.
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
+    'fields' => array(
+      'region_id' => array(
+        'description' => 'Serial ID for this region.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'no export' => TRUE,
+      ),
+      'name' => array(
+        'description' => 'Machine name for this region.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'admin_title' => array(
+        'description' => 'User visible label for this region.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('region_id'),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
+  );
+  $schema['layout_breakpoint'] = array(
+    'description' => 'Information about common breakpoints for responsive layouts.',
+    'export' => array(
+      'key' => 'name',
+      'identifier' => 'layout_breakpoint', // Exports will be defined as $layout_breakpoint.
+      'default hook' => 'default_layout_breakpoint',  // Function hook name.
+      'api' => array(
+        'owner' => 'layout',
+        'api' => 'default_layout_breakpoint',  // Base name for api include files.
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
+    'fields' => array(
+      'breakpoint_id' => array(
+        'description' => 'Serial ID for this breakpoint.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'no export' => TRUE,
+      ),
+      'name' => array(
+        'description' => 'Machine name for this breakpoint.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'admin_title' => array(
+        'description' => 'User visible label for this breakpoint.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'width' => array(
+        'description' => 'Pixel or em value for the breakpoint (eg. 780px, 23em, etc).',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'grid_name' => array(
+        'description' => 'Grid applied at this breakpoint. References {gridbuilder}.name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('breakpoint_id'),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
+  );
+  return $schema;
+}

@@ -125,6 +125,10 @@ function panels_choose_layout($form, &$form_state) {
     );
 
     foreach ($radios as $key => $choice) {
+      // Set the first available layout as default value.
+      if (empty($display->layout)) {
+        $display->layout = $key;
+      }
       // Generate the parents as the autogenerator does, so we will have a
       // unique id for each radio button.
       $form['layout'][$category][$key] = array(
@@ -178,6 +182,9 @@ function panels_choose_layout_submit($form, &$form_state) {
 function panels_change_layout($form, &$form_state) {
   // Provide a temporary display and renderer.
   $form_state['layout_display'] = $display = panels_new_display();
+  if (isset($form_state['cache_key'])) {
+    $display->cache_key = $form_state['cache_key'];
+  }
 
   $new_layout = panels_get_layout($form_state['layout']);
   $new_layout_regions = panels_get_regions($new_layout, $display);

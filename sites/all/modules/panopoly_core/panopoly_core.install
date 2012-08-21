@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * An installation file for Panopoly Core
+ */
+
+/**
+ * Implementation of hook_install()
+ */
+function panopoly_core_install() {
+
+}
+
+/**
+ * Implemenetation of hook_uninstall()
+ */
+function panopoly_core_uninstall() {
+
+}
+
+/** 
+ * Panopoly Beta 5 Update: Correctly Setting install_task to "done"
+ */
+function panopoly_core_update_7001(&$sandbox) {
+  variable_set('install_task', 'done');
+}

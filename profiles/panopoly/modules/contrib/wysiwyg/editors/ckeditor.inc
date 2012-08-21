@@ -30,6 +30,7 @@ function wysiwyg_ckeditor_editor() {
     'install note callback' => 'wysiwyg_ckeditor_install_note',
     'version callback' => 'wysiwyg_ckeditor_version',
     'themes callback' => 'wysiwyg_ckeditor_themes',
+    'settings form callback' => 'wysiwyg_ckeditor_settings_form',
     'settings callback' => 'wysiwyg_ckeditor_settings',
     'plugin callback' => 'wysiwyg_ckeditor_plugins',
     'plugin settings callback' => 'wysiwyg_ckeditor_plugin_settings',
@@ -120,6 +121,40 @@ function wysiwyg_ckeditor_themes($editor, $profile) {
 }
 
 /**
+ * Enhances the editor profile settings form for CKEditor.
+ *
+ * Adds support for CKEditor's advanced stylesSets, which are a more advanced
+ * implementation and combination of block formats and font styles that allow
+ * to adjust the HTML element, attributes, and CSS styles at once.
+ *
+ * @see http://docs.cksource.com/CKEditor_3.x/Developers_Guide/Styles
+ * @see http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html#.stylesSet
+ */
+function wysiwyg_ckeditor_settings_form(&$form, &$form_state) {
+  if (version_compare($form_state['wysiwyg']['editor']['installed version'], '3.2.1', '>=')) {
+    // Replace CSS classes element description to explain the advanced syntax.
+    $form['css']['css_classes']['#description'] = t('Optionally define CSS classes for the "Font style" dropdown list.<br />Enter one class on each line in the format: !format. Example: !example<br />If left blank, CSS classes are automatically imported from loaded stylesheet(s).', array(
+      '!format' => '<code>[label]=[element].[class]</code>',
+      '!example' => '<code>Title=h1.title</code>',
+    ));
+    $form['css']['css_classes']['#element_validate'][] = 'wysiwyg_ckeditor_settings_form_validate_css_classes';
+  }
+  else {
+    // Versions below 3.2.1 do not support Font styles at all.
+    $form['css']['css_classes']['#access'] = FALSE;
+  }
+}
+
+/**
+ * #element_validate handler for CSS classes element altered by wysiwyg_ckeditor_settings_form().
+ */
+function wysiwyg_ckeditor_settings_form_validate_css_classes($element, &$form_state) {
+  if (wysiwyg_ckeditor_settings_parse_styles($element['#value']) === FALSE) {
+    form_error($element, t('The specified CSS classes are syntactically incorrect.'));
+  }
+}
+
+/**
  * Return runtime editor settings for a given wysiwyg profile.
  *
  * @param $editor
@@ -189,6 +224,15 @@ function wysiwyg_ckeditor_settings($editor, $config, $theme) {
     }
   }
 
+  // Parse and define the styles set for the Styles plugin (3.2.1+).
+  // @todo This should be a plugin setting, but Wysiwyg does not support
+  //   plugin-specific settings yet.
+  if (!empty($config['buttons']['default']['Styles']) && version_compare($editor['installed version'], '3.2.1', '>=')) {
+    if ($styles = wysiwyg_ckeditor_settings_parse_styles($config['css_classes'])) {
+      $settings['stylesSet'] = $styles;
+    }
+  }
+
   if (isset($config['language'])) {
     $settings['language'] = $config['language'];
   }
@@ -247,6 +291,51 @@ function wysiwyg_ckeditor_settings($editor, $config, $theme) {
   $settings['toolbar'] = array($settings['toolbar']);
 
   return $settings;
+}
+
+/**
+ * Parses CSS classes settings string into a stylesSet JavaScript settings array.
+ *
+ * @param string $css_classes
+ *   A string containing CSS class definitions to add to the Style dropdown
+ *   list, separated by newlines.
+ *
+ * @return array|false
+ *   An array containing the parsed stylesSet definition, or FALSE on parse
+ *   error.
+ *
+ * @see wysiwyg_ckeditor_settings_form()
+ * @see wysiwyg_ckeditor_settings_form_validate_css_classes()
+ *
+ * @todo This should be a plugin setting, but Wysiwyg does not support
+ *   plugin-specific settings yet.
+ */
+function wysiwyg_ckeditor_settings_parse_styles($css_classes) {
+  $set = array();
+  $input = trim($css_classes);
+  if (empty($input)) {
+    return $set;
+  }
+  // Handle both Unix and Windows line-endings.
+  foreach (explode("\n", str_replace("\r", '', $input)) as $line) {
+    $line = trim($line);
+    // [label]=[element].[class][.[class]][...] pattern expected.
+    if (!preg_match('@^.+= *[a-zA-Z0-9]+(\.[a-zA-Z0-9_ -]+)*$@', $line)) {
+      return FALSE;
+    }
+    list($label, $selector) = explode('=', $line, 2);
+    $classes = explode('.', $selector);
+    $element = array_shift($classes);
+
+    $style = array();
+    $style['name'] = trim($label);
+    $style['element'] = trim($element);
+    if (!empty($classes)) {
+      $style['attributes']['class'] = implode(' ', array_map('trim', $classes));
+    }
+    $set[] = $style;
+  }
+  return $set;
 }
 
 /**

@@ -14,7 +14,7 @@ A video tutorial is available here:  http://youtu.be/SF7bZw9wCwg
 -- REQUIREMENTS --
 
 A connector module is needed to access an app's server.
- An example of a connector module is Level Ten Apps http://drupal.org/project/levelten_apps
+ * An example of a connector module is Level Ten Apps http://drupal.org/project/levelten_apps
 
 -- INSTALLATION --
 
@@ -45,6 +45,15 @@ A connector module is needed to access an app's server.
 
 
 -- FAQ --
+
+*I am having trouble installing Apps that contain files from a GitHub download URL*
+
+GitHub download URLs are typically of the style, http://github.com/user/repo/tarball/branch
+Drupal's downloader and GitHub's download URLs have typically not played nice
+together, so we recommend either appending a filename to the end of the GitHub
+URL such as, http://github.com/user/repo/tarball/branch/filename.tar.gz or
+using a utility such as http://githubredir.debian.net/ to generate those
+URLs for you.
 
 
 -- APP INSTALLATION --
@@ -78,15 +87,43 @@ Install directly to sites directory
 
 This is not the preferred method of install and should be a last resort.
 
-In order to install directly to the sites directory it needs to be writable.
-In order to do this go to the root of your drupal install and type
+In order to install directly the sites/all/modules directory it needs to be
+writable. In order to do this go to the root of your drupal install and type
 
-sudo chmod -R 777 sites
+sudo chmod 777 sites/all/modules
 
 Be aware that there are security issues with leaving your site in this state.
 
+-- APP UNINSTALL --
+When an app is uninstalled, it should remove or cleanup items that a normal
+Drupal module would do via hook_uninstall. This includes variables that the
+module has set and modifications to existing tables. If there is content
+that the app has created that makes sense to remove, it should be deleted.
+If contexts, views, etc. were created by code, then disabling or uninstalling
+the app will remove them automatically. Features won't remove content types,
+but will make them eligible to delete.
 
+See also: hook_uninstall [1]
 
+-- DEFAULT CONTENT --
+If an app provides default content provided by the defaultcontent module, it
+has to be listed as a dependency for the app. Any app's demo content module
+that uses the defaultcontent module for its content should include it as a
+dependency.
+
+The dependency will be listed automatically in the .info file when creating
+the feature to be used as the app's demo content module with the following:
+
+dependencies[] = "defaultcontent"
+
+The dependency should be added to the app manifest by specifying both the
+dependency and download location. The following lines added to the app
+manifest specifies a dependency on version 7.x-1.0-alpha6:
+
+dependencies[defaultcontent] = defaultcontent 1.0-alpha6
+downloadables[defaultcontent 1.0-alpha4] = http://ftp.drupal.org/files/projects/defaultcontent-7.x-1.0-alpha6.tar.gz
+
+See also: Default Content Module [2]
 
 -- CONTACT --
 
@@ -96,3 +133,6 @@ Current maintainers:
 * jec006 - http://drupal.org/user/855980
 * tirdadc - http://drupal.org/user/383630
 
+
+[1]: http://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_uninstall/7
+[2]: http://drupal.org/project/defaultcontent

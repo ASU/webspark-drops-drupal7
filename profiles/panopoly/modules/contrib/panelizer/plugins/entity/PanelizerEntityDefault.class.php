@@ -574,7 +574,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     );
 
     foreach ($this->plugin['view modes'] as $view_mode => $view_mode_info) {
-      $form['panelizer'][$view_mode] = array(
+      $form['panelizer']['view modes'][$view_mode] = array(
         '#type' => 'item',
         '#title' => $view_mode_info['label'],
         '#states' => array(
@@ -584,7 +584,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
         ),
       );
 
-      $form['panelizer'][$view_mode]['status'] = array(
+      $form['panelizer']['view modes'][$view_mode]['status'] = array(
         '#title' => t('Panelize'),
         '#type' => 'checkbox',
         '#default_value' => !empty($settings['view modes'][$view_mode]['status']),
@@ -595,7 +595,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
           ),
         ),
       );
-      $form['panelizer'][$view_mode]['default'] = array(
+      $form['panelizer']['view modes'][$view_mode]['default'] = array(
         '#title' => t('Provide default panel'),
         '#type' => 'checkbox',
         '#default_value' => !empty($settings['view modes'][$view_mode]['default']),
@@ -608,7 +608,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
         '#description' => t('If checked, a default panel will be utilized for all existing and new entities.'),
       );
 
-      $form['panelizer'][$view_mode]['choice'] = array(
+      $form['panelizer']['view modes'][$view_mode]['choice'] = array(
         '#title' => t('Allow panel choice'),
         '#type' => 'checkbox',
         '#default_value' => !empty($settings['view modes'][$view_mode]['choice']),
@@ -711,6 +711,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
   public function hook_entity_load(&$entities) {
     ctools_include('export');
     $ids = array();
+    $vids = array();
     $bundles = array();
 
     foreach ($entities as $entity) {
@@ -722,7 +723,10 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
 
       list($entity_id, $revision_id, $bundle) = entity_extract_ids($this->entity_type, $entity);
       if ($this->is_panelized($bundle)) {
-        $ids[] = $this->supports_revisions ? $revision_id : $entity_id;
+        $ids[] = $entity_id;
+        if ($this->supports_revisions) {
+          $vids[] = $revision_id;
+        }
         $bundles[$entity_id] = $bundle;
       }
     }
@@ -733,7 +737,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
 
     // Load all the panelizers associated with the list of entities.
     if ($this->supports_revisions) {
-      $result = db_query("SELECT * FROM {panelizer_entity} WHERE entity_type = '$this->entity_type' AND revision_id IN (:ids)", array(':ids' => $ids));
+      $result = db_query("SELECT * FROM {panelizer_entity} WHERE entity_type = '$this->entity_type' AND entity_id IN (:ids) AND revision_id IN (:vids)", array(':ids' => $ids, ':vids' => $vids));
     }
     else {
       $result = db_query("SELECT * FROM {panelizer_entity} WHERE entity_type = '$this->entity_type' AND entity_id IN (:ids)", array(':ids' => $ids));
@@ -1737,6 +1741,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
    * we have none and want something to get started.
    */
   public function get_internal_default_panelizer($bundle, $view_mode) {
+    ctools_include('export');
     $load_name = implode(':', array($this->entity_type, $bundle, 'default'));
     $panelizer = ctools_export_crud_new('panelizer_defaults');
     $panelizer->name = $load_name;

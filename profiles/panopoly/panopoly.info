@@ -1,4 +1,5 @@
 name = Panopoly
+distribution_name = Panopoly
 description = A magical framework for building Drupal products based on the Panels module
 core = 7.x
 
@@ -16,6 +17,7 @@ dependencies[] = field_ui
 dependencies[] = file
 dependencies[] = block
 dependencies[] = dblog
+dependencies[] = update
 
 ; Panopoly - Contrib - Foundation 
 dependencies[] = ctools
@@ -30,6 +32,8 @@ dependencies[] = views
 dependencies[] = views_content
 dependencies[] = views_ui
 dependencies[] = token
+; dependencies[] = layout
+; dependencies[] = gridbuilder
 
 ; Panopoly - Contrib - Field UI and Content Types
 dependencies[] = tablefield
@@ -38,11 +42,10 @@ dependencies[] = date
 dependencies[] = date_api
 dependencies[] = date_popup
 dependencies[] = date_views
-dependencies[] = views_slideshow
-dependencies[] = views_slideshow_cycle
 dependencies[] = simple_gmap
 dependencies[] = field_group
 dependencies[] = file_entity
+dependencies[] = entityreference
 
 ; Panopoly - Contrib - Media
 dependencies[] = media
@@ -64,9 +67,11 @@ dependencies[] = date_popup_authored
 dependencies[] = admin
 dependencies[] = module_filter
 dependencies[] = views_bulk_operations
+dependencies[] = views_autocomplete_filters
 dependencies[] = simplified_menu_admin
 dependencies[] = references_dialog 
 dependencies[] = backports
+; dependencies[] = jquery_update
 
 ; Panopoly - Contrib - Search 
 dependencies[] = facetapi
@@ -80,14 +85,13 @@ dependencies[] = search_api_db
 dependencies[] = apps 
 dependencies[] = features
 dependencies[] = entity
-dependencies[] = uuid
 dependencies[] = defaultcontent
 dependencies[] = strongarm
 dependencies[] = libraries
+dependencies[] = json2
 
 ; Panopoly - Contrib - Development
 dependencies[] = devel
-dependencies[] = devel_generate
 
 ; Panopoly - Contrib - Theme
 dependencies[] = conditional_styles
@@ -96,9 +100,9 @@ dependencies[] = respondjs
 ; CSS Stylesheets
 stylesheets[all][] = panopoly.css
 
-; Information added by drupal.org packaging script on 2012-06-21
-version = "7.x-1.0-beta4"
+; Information added by drupal.org packaging script on 2012-08-21
+version = "7.x-1.0-beta5"
 core = "7.x"
 project = "panopoly"
-datestamp = "1340295716"
+datestamp = "1345558975"
 

@@ -299,6 +299,19 @@ function wysiwyg_profile_form($form, &$form_state, $profile) {
     '#weight' => 110,
   );
 
+  // Supply contextual information for other callbacks and handlers.
+  // @todo Modernize this form for D7+ and declare these earlier.
+  // $profile is the primary object of this form, and as an entity, usually
+  // expected to live in $form_state[$entity_type].
+  $form_state['wysiwyg_profile'] = $profile;
+  $form_state['wysiwyg']['editor'] = $editor;
+  $form_state['wysiwyg']['plugins'] = $plugins;
+
+  // Allow editor library specific changes to be made to the form.
+  if (isset($editor['settings form callback'])) {
+    $editor['settings form callback']($form, $form_state);
+  }
+
   return $form;
 }
 

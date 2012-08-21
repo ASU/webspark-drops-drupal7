@@ -297,11 +297,18 @@ function facetapi_theme() {
  * Custom access callback. Checks if the user has either the "administer search"
  * OR "administer facets" permissions.
  *
+ * @param stdClass|NULL $account
+ *   (optional) The account to check, if not given use currently logged in user.
+ *
  * @return boolean
  *   TRUE if the user has access to the resource, FALSE otherwise.
  */
-function facetapi_access_callback() {
-  return user_access('administer search') || user_access('administer facets');
+function facetapi_access_callback($account = NULL) {
+  global $user;
+  if (!isset($account)) {
+    $account = $user;
+  }
+  return user_access('administer search', $account) || user_access('administer facets', $account);
 }
 
 /**
@@ -628,7 +635,7 @@ function facetapi_get_facet_info($searcher) {
         }
 
         // Iterates over facet definitions, merges defaults.
-        foreach($facets as $facet_name => $info) {
+        foreach ($facets as $facet_name => $info) {
 
           // @see http://drupal.org/node/1161434
           // Converts "query type" to an array and stores in "query types".
@@ -1116,6 +1123,7 @@ function facetapi_save_facet_status(FacetapiAdapter $adapter, array $realm, arra
 
   // Clears caches and statics if we are not batch processing.
   if ($success && !$batch_process) {
+    drupal_static('facetapi_get_searcher_settings', array(), TRUE);
     drupal_static('facetapi_get_enabled_facets', array(), TRUE);
     if ('block' == $realm['name']) {
       cache_clear_all(NULL, 'cache_block');

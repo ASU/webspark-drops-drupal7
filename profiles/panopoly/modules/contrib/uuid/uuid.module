@@ -188,7 +188,7 @@ function uuid_features_api() {
       'name' => t('UUID entities'),
       'default_hook' => 'uuid_default_entities',
       'default_file' => FEATURES_DEFAULTS_INCLUDED,
-      'features_source' => TRUE,
+      'feature_source' => TRUE,
       'file' => drupal_get_path('module', 'uuid') .'/uuid.features.inc',
     ),
     'uuid_menu_links' => array(

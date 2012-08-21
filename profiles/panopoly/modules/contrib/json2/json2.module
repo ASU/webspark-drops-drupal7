@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * Implements hook_requirements()
+ */
+function json2_requirements($phase) {
+  $requirements = array();
+  if ($phase == 'runtime') {
+    $t = get_t();
+    if ($path = libraries_get_path('json2')) {
+      if (file_exists($path . '/json2.js')) {
+        $requirements['json2'] = array(
+          'title' => $t('JSON2'),
+          'value' => $t('json2.js found'),
+          'severity' => REQUIREMENT_OK,
+        );
+        return $requirements;
+      }
+    }
+    $requirements['json2'] = array(
+      'title' => $t('JSON2'),
+      'value' => isset($lib['error message']) ? $t($lib['error message']) : t('json2 library was not found'),
+      'severity' => REQUIREMENT_ERROR,
+    );
+  }
+  return $requirements;
+}
+
+/**
+ * Implements hook_libraries_info().
+ */
+function json2_libraries_info() {
+  $libraries = array();
+  $libraries['json2'] = array(
+    'name' => 'JSON2',
+    'vendor url' => 'https://github.com/douglascrockford/JSON-js',
+    'download url' => 'https://raw.github.com/douglascrockford/JSON-js/master/json2.js',
+    'files' => array(
+      'js' => array(
+        'json2.js',
+      ),
+    ),
+    'version arguments' => array(
+      'file' => 'json2.js',
+      'pattern' => '/(\d+)-(\d+)-(\d+)/',
+      'lines' => 4,
+    ),    
+  );
+
+  return $libraries;
+}
+
+

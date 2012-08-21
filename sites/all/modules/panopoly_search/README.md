@@ -1,11 +1,8 @@
-panopoly_search
+Panopoly Search
 ===============
-
-Indexes and searches site content, Solr or otherwise
+Indexes and searches site content making it available to both Solr and DB search indexes
 
 Key Features
-* Integration with Apache Solr for Search
+* Integration with Search API Solr for Solr searching
+* Integration with Search API for database searching
 * Panelized search page
-
-To Do 
-* Integration of search_api_db module as fallback instead of core search

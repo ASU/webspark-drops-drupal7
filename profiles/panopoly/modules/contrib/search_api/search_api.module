@@ -607,6 +607,42 @@ function search_api_search_api_index_delete(SearchApiIndex $index) {
 }
 
 /**
+ * Implements hook_features_export_alter().
+ *
+ * Adds dependency information for exported servers.
+ */
+function search_api_features_export_alter(&$export, $module_name) {
+  if (isset($export['features']['search_api_server'])) {
+    // Get a list of the modules that provide storage engines.
+    $hook = 'search_api_service_info';
+    $classes = array();
+    foreach (module_implements('search_api_service_info') as $module) {
+      $function = $module . '_' . $hook;
+      $engines = $function();
+      foreach ($engines as $service => $specs) {
+        $classes[$service] = $module;
+      }
+    }
+
+    // Check all of the exported server specifications.
+    foreach ($export['features']['search_api_server'] as $server_name) {
+      // Load the server's object.
+      $server = search_api_server_load($server_name);
+      $module = $classes[$server->class];
+
+      // Ensure that the module responsible for the server object is listed as
+      // a dependency.
+      if (!isset($export['dependencies'][$module])) {
+        $export['dependencies'][$module] = $module;
+      }
+    }
+
+    // Ensure the dependencies list is still sorted alphabetically.
+    ksort($export['dependencies']);
+  }
+}
+
+/**
  * Implements hook_entity_insert().
  *
  * Marks the new item as to-index for all indexes on entities of the specified
@@ -991,7 +1027,12 @@ function search_api_index_items(SearchApiIndex $index, $limit = -1) {
  */
 function search_api_index_specific_items(SearchApiIndex $index, array $ids) {
   $items = $index->loadItems($ids);
-  $indexed = $items ? $index->index($items) : array();
+  // Clone items because data alterations may alter them.
+  $cloned_items = array();
+  foreach ($items as $id => $item) {
+    $cloned_items[$id] = clone $item;
+  }
+  $indexed = $items ? $index->index($cloned_items) : array();
   if ($indexed) {
     search_api_track_item_indexed($index, $indexed);
   }

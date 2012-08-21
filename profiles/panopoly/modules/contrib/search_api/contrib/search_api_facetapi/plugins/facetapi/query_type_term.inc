@@ -89,7 +89,7 @@ class SearchApiFacetapiTerm extends FacetapiQueryType implements FacetapiQueryTy
           $query_filter->condition($field, $lower, '>=');
         }
         if ($upper != '*') {
-          $query_filter->condition($field, $upper, '<');
+          $query_filter->condition($field, $upper, '<=');
         }
       }
     }

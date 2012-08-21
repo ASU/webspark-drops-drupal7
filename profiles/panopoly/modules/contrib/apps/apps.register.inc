@@ -170,13 +170,31 @@ function _apps_menu() {
   }
 
   $menu['admin/config/system/apps'] = array(
-    'page callback' => 'apps_config_page',
     'title' => 'Apps Configuration',
-    'description' => 'Setting for the App Console',
-        'type'=> MENU_NORMAL_ITEM,
-  ) + $common;
+    'description' => 'Settings for the App Module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('apps_config_form'),
+    'access arguments' => array('administer apps'),
+    'file' => 'apps.pages.inc',
+  );
+  $menu['admin/config/system/apps/settings'] = array(
+    'title' => 'Apps Configuration',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $menu['admin/config/system/apps/verify'] = array(
+    'title' => 'Verify Apps support',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('apps_install_verify'),
+    'description' => 'Apps installation requirements check',
+    'type' => MENU_LOCAL_TASK,
+    'access arguments' => array('administer apps'),
+    'file' => 'apps.profile.inc',
+  );
+
+
+
   return $menu;
-  
 }
 
 /**

@@ -1,0 +1,117 @@
+/* Generic column setup */
+.rld-col {
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  box-sizing:border-box;
+  float:left;
+}
+
+
+
+/* 1. 3 Column Grid 0px - 349px 
+----------------------------------------------------------------------------- */
+
+.rld-container-3 .rld-span_1 {
+  width:33.3333333333%;
+}
+.rld-container-3 .rld-span_2 {
+  width:66.6666666667%;
+}
+.rld-container-3 .rld-span_3 {
+  width:100%;
+}
+
+/* 2. 6 Column Grid 350px - 759px 
+----------------------------------------------------------------------------- */
+
+.rld-container-6 .rld-span_1 {
+  width:16.6666666667%;
+}
+.rld-container-6 .rld-span_2 {
+  width:33.3333333333%;
+}
+.rld-container-6 .rld-span_3 {
+  width:50%;
+}
+.rld-container-6 .rld-span_4 {
+  width:66.6666666667%;
+}
+.rld-container-6 .rld-span_5 {
+  width:83.3333333333%;
+}
+.rld-container-6 .rld-span_6 {
+  width:100%;
+}
+
+/* 3. 10 Column Grid 760px - 959px 
+----------------------------------------------------------------------------- */
+.rld-container-10 .rld-span_1 {
+  width:10%;
+}
+.rld-container-10 .rld-span_2 {
+  width:20%;
+}
+.rld-container-10 .rld-span_3 {
+  width:30%;
+}
+.rld-container-10 .rld-span_4 {
+  width:40%;
+}
+.rld-container-10 .rld-span_5 {
+  width:50%;
+}
+.rld-container-10 .rld-span_6 {
+  width:60%;
+}
+.rld-container-10 .rld-span_7 {
+  width:70%;
+}
+.rld-container-10 .rld-span_8 {
+  width:80%;
+}
+.rld-container-10 .rld-span_9 {
+  width:90%;
+}
+.rld-container-10 .rld-span_10 {
+  width:100%;
+}
+
+/* 4. 12 Column Grid 960px - Infinity 
+----------------------------------------------------------------------------- */
+
+.rld-container-12 .rld-span_1 {
+  width:8.3333333333%;
+}
+.rld-container-12 .rld-span_2 {
+  width:16.6666666667%;
+}
+.rld-container-12 .rld-span_3 {
+  width:25%;
+}
+.rld-container-12 .rld-span_4 {
+  width:33.3333333333%;
+}
+.rld-container-12 .rld-span_5 {
+  width:41.6666666667%;
+}
+.rld-container-12 .rld-span_6 {
+  width:50%;
+}
+.rld-container-12 .rld-span_7 {
+  width:58.3333333333%;
+}
+.rld-container-12 .rld-span_8 {
+  width:66.6666666667%;
+}
+.rld-container-12 .rld-span_9 {
+  width:75%;
+}
+.rld-container-12 .rld-span_10 {
+  width:83.3333333333%;
+}
+.rld-container-12 .rld-span_11 {
+  width:91.6666666667%;
+}
+.rld-container-12 .rld-span_12 {
+  width:100%;
+}

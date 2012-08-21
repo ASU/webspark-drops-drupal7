@@ -847,8 +847,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
       else {
         $key = trim($key);
         $class = variable_get('search_api_solr_connection_class', 'SearchApiSolrConnection');
-        $key = $class::phrase($key);
-        
+        $key = call_user_func(array($class, 'phrase'), $key);
         $k[] = $key;
       }
     }
@@ -927,7 +926,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
    */
   protected function createFilterQuery($field, $value, $operator, $field_info) {
     $class = variable_get('search_api_solr_connection_class', 'SearchApiSolrConnection');
-    $field = $class::escapeFieldName($field);
+    $field = call_user_func(array($class, 'escapeFieldName'), $field);
     if ($value === NULL) {
       return ($operator == '=' ? '-' : '') . "$field:[* TO *]";
     }
@@ -967,7 +966,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
         break;
     }
     $class = variable_get('search_api_solr_connection_class', 'SearchApiSolrConnection');
-    return $class::phrase($value);
+    return call_user_func(array($class, 'phrase'), $value);
  }
 
   /**
@@ -993,11 +992,11 @@ class SearchApiSolrService extends SearchApiAbstractService {
       if (isset($info['operator']) && $info['operator'] === 'or') {
         // Remember that filters for this field should be tagged.
         $class = variable_get('search_api_solr_connection_class', 'SearchApiSolrConnection');
-        $escaped = $class::escapeFieldName($fields[$info['field']]);
- $taggedFields[$escaped] = "{!tag=$escaped}";
+        $escaped = call_user_func(array($class, 'escapeFieldName'), $fields[$info['field']]);
+        $taggedFields[$escaped] = "{!tag=$escaped}";
         // Add the facet field.
         $facet_params['facet.field'][] = "{!ex=$escaped}$field";
-    }
+      }
       else {
         // Add the facet field.
         $facet_params['facet.field'][] = $field;
@@ -1062,7 +1061,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
       unset($params['qf']);
       $class = variable_get('search_api_solr_connection_class', 'SearchApiSolrConnection');
       $keys = implode(":($k) OR ", array_map(array($class, 'escapeFieldName'), $fields)) . ":($k)";
-  
+
       return TRUE;
     }
     return FALSE;

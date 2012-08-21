@@ -94,20 +94,24 @@ Drupal.wysiwyg.editor.attach.tinymce = function(context, params, settings) {
  *
  * See Drupal.wysiwyg.editor.detach.none() for a full desciption of this hook.
  */
-Drupal.wysiwyg.editor.detach.tinymce = function(context, params) {
+Drupal.wysiwyg.editor.detach.tinymce = function (context, params, trigger) {
   if (typeof params != 'undefined') {
     var instance = tinyMCE.get(params.field);
     if (instance) {
       instance.save();
-      instance.remove();
+      if (trigger != 'serialize') {
+        instance.remove();
+      }
     }
   }
   else {
     // Save contents of all editors back into textareas.
     tinyMCE.triggerSave();
-    // Remove all editor instances.
-    for (var instance in tinyMCE.editors) {
-      tinyMCE.editors[instance].remove();
+    if (trigger != 'serialize') {
+      // Remove all editor instances.
+      for (var instance in tinyMCE.editors) {
+        tinyMCE.editors[instance].remove();
+      }
     }
   }
 };
@@ -192,7 +196,7 @@ Drupal.wysiwyg.editor.instance.tinymce = {
   },
 
   openDialog: function(dialog, params) {
-    var instanceId = this.isFullscreen() ? 'mce_fullscreen' : this.field;
+    var instanceId = this.getInstanceId();
     var editor = tinyMCE.get(instanceId);
     editor.windowManager.open({
       file: dialog.url + '/' + instanceId,
@@ -203,8 +207,7 @@ Drupal.wysiwyg.editor.instance.tinymce = {
   },
 
   closeDialog: function(dialog) {
-    var instanceId = this.isFullscreen() ? 'mce_fullscreen' : this.field;
-    var editor = tinyMCE.get(instanceId);
+    var editor = tinyMCE.get(this.getInstanceId());
     editor.windowManager.close(dialog);
   },
 
@@ -239,13 +242,25 @@ Drupal.wysiwyg.editor.instance.tinymce = {
 
   insert: function(content) {
     content = this.prepareContent(content);
-    var instanceId = this.isFullscreen() ? 'mce_fullscreen' : this.field;
-    tinyMCE.execInstanceCommand(instanceId, 'mceInsertContent', false, content);
+    tinyMCE.execInstanceCommand(this.getInstanceId(), 'mceInsertContent', false, content);
+  },
+
+  setContent: function (content) {
+    content = this.prepareContent(content);
+    tinyMCE.execInstanceCommand(this.getInstanceId(), 'mceSetContent', false, content);
+  },
+
+  getContent: function () {
+    return tinyMCE.get(this.getInstanceId()).getContent();
   },
 
   isFullscreen: function() {
     // TinyMCE creates a completely new instance for fullscreen mode.
     return tinyMCE.activeEditor.id == 'mce_fullscreen' && tinyMCE.activeEditor.getParam('fullscreen_editor_id') == this.field;
+  },
+
+  getInstanceId: function () {
+    return this.isFullscreen() ? 'mce_fullscreen' : this.field;
   }
 };
 

@@ -1481,7 +1481,7 @@ function search_api_admin_index_fields(array $form, array &$form_state, SearchAp
     '#title' => t('Select fields to index'),
     '#description' => t('<p>The datatype of a field determines how it can be used for searching and filtering. ' .
         'The boost is used to give additional weight to certain fields, e.g. titles or tags. It only takes effect for fulltext fields.</p>' .
-        '<p>Whether detailled field types are supported depends on the type of server this index resides on. ' .
+        '<p>Whether detailed field types are supported depends on the type of server this index resides on. ' .
         'In any case, fields of type "Fulltext" will always be fulltext-searchable.</p>'),
   );
   if ($index->server) {

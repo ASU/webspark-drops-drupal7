@@ -1,0 +1,243 @@
+<?php
+
+/**
+ * @file
+ * Simple grid builder tool.
+ */
+
+/**
+ * Fixed width grid.
+ */
+define('GRIDBUILDER_FIXED', 0);
+
+/**
+ * Fluid width grid.
+ */
+define('GRIDBUILDER_FLUID', 1);
+
+/**
+ * Implementation of hook_menu_alter().
+ */
+function gridbuilder_menu_alter(&$items) {
+  // If used in conjunction with the layout module, convert the automatically
+  // created ctools menu item to a local task.
+  if (module_exists('layout') && (isset($items['admin/structure/panels/layouts/grids']))) {
+    $items['admin/structure/panels/layouts/grids']['type'] = MENU_LOCAL_TASK;
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function gridbuilder_permission() {
+  return array(
+    'administer gridbuilder' => array(
+      'title' => t('Administer grid builder grids'),
+      'description' => t('Administer grids created with the grid builder.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function gridbuilder_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'ctools' && $plugin_type =='export_ui') {
+    return "plugins/$plugin_type";
+  }
+}
+
+/**
+ * Implementation of hook_ctools_plugin_api().
+ *
+ * Tell CTools that we support the default_gridbuilder_grids API.
+ */
+function gridbuilder_ctools_plugin_api($owner, $api) {
+  if ($owner == 'gridbuilder' && $api == 'default_gridbuilder_grids') {
+    return array('version' => 1);
+  }
+}
+
+/**
+ * Implementation of hook_default_gridbuilder_grids().
+ *
+ * Provide a couple of default grids.
+ */
+function gridbuilder_default_gridbuilder_grids() {
+  $export = array();
+
+  // Add a few fluid layouts. These are used by layout module.
+  $grid = new stdClass;
+  $grid->api_version = 1;
+  $grid->name = 'three_column_fluid';
+  $grid->admin_title = 'Three column fluid';
+  $grid->grid_type = GRIDBUILDER_FLUID;
+  $grid->width = '100';
+  $grid->columns = '3';
+  $grid->padding_width = '1.5';
+  $grid->gutter_width = '2';
+  $export['three_column_fluid'] = $grid;
+
+  $grid = new stdClass;
+  $grid->api_version = 1;
+  $grid->name = 'six_column_fluid';
+  $grid->admin_title = 'Six column fluid';
+  $grid->grid_type = GRIDBUILDER_FLUID;
+  $grid->width = '100';
+  $grid->columns = '6';
+  $grid->padding_width = '1.5';
+  $grid->gutter_width = '2';
+  $export['six_column_fluid'] = $grid;
+
+  $grid = new stdClass;
+  $grid->api_version = 1;
+  $grid->name = 'twelve_column_fluid';
+  $grid->admin_title = 'Twelve column fluid';
+  $grid->grid_type = GRIDBUILDER_FLUID;
+  $grid->width = '100';
+  $grid->columns = '12';
+  $grid->padding_width = '1.5';
+  $grid->gutter_width = '2';
+  $export['twelve_column_fluid'] = $grid;
+
+  // Add a couple fixed layouts for the sake of example.
+  $grid = new stdClass;
+  $grid->api_version = 1;
+  $grid->name = 'ninesixty_12';
+  $grid->admin_title = '960px wide, 12 column grid';
+  $grid->grid_type = GRIDBUILDER_FIXED;
+  $grid->width = '960';
+  $grid->columns = '12';
+  $grid->padding_width = '20';
+  $grid->gutter_width = '10';
+  $export['ninesixty_12'] = $grid;
+
+  $grid = new stdClass;
+  $grid->api_version = 1;
+  $grid->name = 'ninesixty_16';
+  $grid->admin_title = '960px wide, 16 column grid';
+  $grid->grid_type = GRIDBUILDER_FIXED;
+  $grid->width = '960';
+  $grid->columns = '16';
+  $grid->padding_width = '20';
+  $grid->gutter_width = '10';
+  $export['ninesixty_16'] = $grid;
+
+  return $export;
+}
+
+/**
+ * API function to get all grids on the site.
+ */
+function gridbuilder_load_all() {
+  ctools_include('export');
+  return ctools_export_crud_load_all('gridbuilder');
+}
+
+/**
+ * Look up one grid setup based on machine name.
+ */
+function gridbuilder_load($name) {
+  ctools_include('export');
+  return ctools_export_crud_load('gridbuilder', $name);
+}
+
+/**
+ * Return generated CSS for a given grid.
+ *
+ * @param (string) $name
+ *   Machine name of the grid.
+ * @param (string) $wrapper_selector
+ *   (optional) Wrapper CSS selector to use to scope the CSS.
+ * @param (string) $span_selector_prefix
+ *   (optional) Column span selector prefix to scope the CSS.
+ * @param (boolean) $skip_spacing
+ *    Whether we should skip including spacing in the output. Useful for tight
+ *    layout demonstration presentation.
+ *
+ * @return
+ *   Fully assembled CSS string.
+ */
+function gridbuilder_get_css($name, $wrapper_selector = NULL, $span_selector_prefix = NULL, $skip_spacing = FALSE) {
+  // First attempt to let other modules provide CSS for this grid. If users are
+  // not happy with the CSS generated here, they can provide their own and skip
+  // our CSS generation.
+  $css = module_invoke_all('gridbuilder_get_css', $name);
+  if (!empty($css)) {
+    return join('', $css);
+  }
+
+  $grid = gridbuilder_load($name);
+  $css = '';
+
+  // If the wrapper selector was not provided, generate one. This is useful for
+  // specific administration use cases when we scope the classes by grids.
+  if (empty($wrapper_selector)) {
+    $wrapper_selector = '.rld-container-' . $grid->name;
+  }
+
+  // If the span selector was not provided, generate one. This is useful for
+  // the front end to apply varying span widths under different names.
+  if (empty($span_selector_prefix)) {
+    $span_selector_prefix = '.rld-span_';
+  }
+
+  // If spacing is to be skipped, override the gutter and padding temporarily.
+  if ($skip_spacing) {
+    $grid->gutter_width = $grid->padding_width = 0;
+  }
+
+  switch ($grid->grid_type) {
+    case GRIDBUILDER_FLUID:
+      $size_suffix = '%';
+      // Override to 100% whatever it was.
+      $grid->width = '100';
+      break;
+    case GRIDBUILDER_FIXED:
+      $size_suffix = 'px';
+      break;
+  }
+
+
+  // Because we use the border-box box model, we only need to substract the
+  // size of margins from the full width and divide the rest by number of
+  // columns to get a value for column size.
+  $colwidth = ($grid->width - (($grid->columns - 1) * $grid->gutter_width)) / $grid->columns;
+
+  $css = $wrapper_selector . ' .rld-col {
+  border: 0px solid rgba(0,0,0,0);
+  float: left;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-background-clip: padding-box !important;
+  -webkit-background-clip: padding-box !important;
+  background-clip: padding-box !important;
+  margin-left: ' . $grid->gutter_width . $size_suffix . ';
+  padding: 0 ' . $grid->padding_width  . $size_suffix . ';
+}
+' . $wrapper_selector . ' .rld-col' . $span_selector_prefix .'first {
+  margin-left: 0;
+  clear: both;
+}
+';
+  for ($i = 1; $i <= $grid->columns; $i++) {
+    $css .= $wrapper_selector . ' ' . $span_selector_prefix . $i . " {\n";
+    if ($i == 1) {
+      // The first column does not yet have any margins.
+      $css .= '  width: ' . $colwidth * $i . $size_suffix . ";\n";
+    }
+    elseif ($i == $grid->columns) {
+      // The full width column always spans 100%.
+      $css .= "  width: " . $grid->width . $size_suffix . ";\n  margin-left: 0;\n";
+    }
+    else {
+      // Other columns absorb all columns that they need to include and one
+      // less margin before them.
+      $css .= '  width: ' . (($colwidth * $i) + ($grid->gutter_width * ($i -1))) . $size_suffix . ";\n";
+    }
+    $css .= "}\n";
+  }
+
+  return $css;
+}

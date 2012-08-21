@@ -122,6 +122,9 @@ function search_api_facetapi_facetapi_facet_info(array $searcher_info) {
           'map options' => array(),
           'field type' => $type,
         );
+        if ($type === 'date') {
+          $facet_info[$key]['description'] .= ' ' . t('(Caution: This may perform very poorly for large result sets.)');
+        }
         $facet_info[$key]['map options'] += array(
           'field' => $field,
           'index id' => $index->machine_name,
@@ -359,4 +362,20 @@ function _search_api_facetapi_facet_create_label(array $values, array $options) 
     }
   }
   return $map;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function search_api_facetapi_form_search_api_admin_index_fields_alter(&$form, &$form_state) {
+  $form['#submit'][] = 'search_api_facetapi_search_api_admin_index_fields_submit';
+}
+
+/**
+ * Form submission handler for search_api_admin_index_fields().
+ */
+function search_api_facetapi_search_api_admin_index_fields_submit($form, &$form_state) {
+  // Clears this searcher's cached facet definitions.
+  $cid = 'facetapi:facet_info:search_api@' . $form_state['index']->machine_name . ':';
+  cache_clear_all($cid, 'cache', TRUE);
 }

@@ -137,7 +137,7 @@ class panels_renderer_ipe extends panels_renderer_editor {
   function render_pane_content(&$pane) {
     $content = parent::render_pane_content($pane);
     // Ensure that empty panes have some content.
-    if (empty($content->content)) {
+    if (empty($content) || empty($content->content)) {
       // Get the administrative title.
       $content_type = ctools_get_content_type($pane->type);
       $title = ctools_content_admin_title($content_type, $pane->subtype, $pane->configuration, $this->display->context);
@@ -163,10 +163,10 @@ class panels_renderer_ipe extends panels_renderer_editor {
     $empty_ph = theme('panels_ipe_placeholder_pane', array('region_id' => $region_id, 'region_title' => $this->plugins['layout']['regions'][$region_id]));
 
     // Wrap the placeholder in some guaranteed markup.
-    $panes['empty_placeholder'] = '<div class="panels-ipe-placeholder panels-ipe-on panels-ipe-portlet-marker panels-ipe-portlet-static">' . $empty_ph . theme('panels_ipe_add_pane_button', array('region_id' => $region_id, 'display' => $this->display, 'renderer' => $this)) . "</div>";
+    $control = '<div class="panels-ipe-placeholder panels-ipe-on panels-ipe-portlet-marker panels-ipe-portlet-static">' . $empty_ph . theme('panels_ipe_add_pane_button', array('region_id' => $region_id, 'display' => $this->display, 'renderer' => $this)) . "</div>";
 
     $output = parent::render_region($region_id, $panes);
-    $output = theme('panels_ipe_region_wrapper', array('output' => $output, 'region_id' => $region_id, 'display' => $this->display, 'renderer' => $this));
+    $output = theme('panels_ipe_region_wrapper', array('output' => $output, 'region_id' => $region_id, 'display' => $this->display, 'controls' => $control, 'renderer' => $this));
     $classes = 'panels-ipe-region';
 
     return "<div id='panels-ipe-regionid-$region_id' class='panels-ipe-region'>$output</div>";
@@ -221,6 +221,11 @@ class panels_renderer_ipe extends panels_renderer_editor {
       return;
     }
 
+    // Reset the $_POST['ajax_html_ids'] values to preserve
+    // proper IDs on form elements when they are rebuilt
+    // by the Panels IPE without refreshing the page
+    $_POST['ajax_html_ids'] = array();
+
     $form_state = array(
       'display' => &$this->display,
       'content_types' => $this->cache->content_types,
@@ -229,11 +234,6 @@ class panels_renderer_ipe extends panels_renderer_editor {
       // Panels needs this to make sure that the layout gets callbacks
       'layout' => $this->plugins['layout'],
     );
-
-    // Reset the $_POST['ajax_html_ids'] values to preserve
-    // proper IDs on form elements when they are rebuilt
-    // by the Panels IPE without refreshing the page
-    $_POST['ajax_html_ids'] = array();
 
     $output = drupal_build_form('panels_ipe_edit_control_form', $form_state);
     if (empty($form_state['executed'])) {
@@ -288,11 +288,6 @@ class panels_renderer_ipe extends panels_renderer_editor {
       return;
     }
 
-    // Reset the $_POST['ajax_html_ids'] values to preserve
-    // proper IDs on form elements when they are rebuilt
-    // by the Panels IPE without refreshing the page
-    $_POST['ajax_html_ids'] = array();
-
     // At this point, we want to save the cache to ensure that we have a lock.
     $this->cache->ipe_locked = TRUE;
     panels_edit_cache_set($this->cache);
@@ -333,6 +328,11 @@ class panels_renderer_ipe extends panels_renderer_editor {
       'finish' => t('Save'),
       'no_redirect' => TRUE,
     );
+
+    // Reset the $_POST['ajax_html_ids'] values to preserve
+    // proper IDs on form elements when they are rebuilt
+    // by the Panels IPE without refreshing the page
+    $_POST['ajax_html_ids'] = array();
 
     $output = drupal_build_form('panels_change_layout', $form_state);
     $output = drupal_render($output);
@@ -391,7 +391,7 @@ class panels_renderer_ipe extends panels_renderer_editor {
       $pane = $this->display->content[$pid];
     }
 
-    $this->commands[] = ajax_command_append("#panels-ipe-regionid-{$pane->panel} div.panels-ipe-sort-container", $this->render_pane($pane));
+    $this->commands[] = ajax_command_prepend("#panels-ipe-regionid-{$pane->panel} div.panels-ipe-sort-container", $this->render_pane($pane));
     $this->commands[] = ajax_command_changed("#panels-ipe-display-{$this->clean_key}");
   }
 }

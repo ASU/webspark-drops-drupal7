@@ -24,7 +24,7 @@ If the index lies on a server supporting facets (and if this module is enabled),
 you'll notice a "Facets" tab. Click it and it will take you to the index' facet
 configuration page. You'll see a table containing all indexed fields and options
 for enabling and configuring facets for them.
-For a detailled explanation of the available options, please refer to the Facet
+For a detailed explanation of the available options, please refer to the Facet
 API documentation.
 
 - Creating facets via the URL

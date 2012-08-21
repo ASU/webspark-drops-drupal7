@@ -311,7 +311,7 @@ function facetapi_get_settings_path($searcher, $realm_name, $facet_name, $op) {
  * Returns the widget plugin definitions available to the facet.
  *
  * All widget plugins are checked against their requirmenets. Only widgets that
- * pall all requirements are returned by this function.
+ * pass all requirements are returned by this function.
  *
  * @param array $realm
  *   The realm definition.

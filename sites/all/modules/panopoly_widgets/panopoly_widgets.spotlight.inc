@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * A specification for the custom spotlight entity that is part of Panopoly Widgets
+ */
+
+/**
  * Implements hook_field_info().
  */
 function panopoly_widgets_field_info() {
@@ -103,8 +108,43 @@ function panopoly_widgets_field_formatter_info() {
     'panopoly_spotlight_default' => array(
       'label' => t('Default'),
       'field types' => array('panopoly_spotlight'),
+      'settings' => array(
+        'image_style' => 'panopoly_image_spotlight',
+      ),
     ),
   );
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function panopoly_widgets_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  $element = array();
+
+  if ($display['type'] == 'panopoly_spotlight_default') {
+    $element['image_style'] = array(
+      '#title' => t('Image style'), 
+      '#type' => 'select',
+      '#options' => image_style_options(),
+      '#default_value' => $settings['image_style'],
+      '#required' => TRUE,
+    );
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function panopoly_widgets_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  
+  $summary = t('Image Style: @style', array('@style' => $settings['image_style']));
+  return $summary;
 }
 
 /**
@@ -118,14 +158,14 @@ function panopoly_widgets_field_formatter_view($entity_type, $entity, $field, $i
 
   // Assemble the tabs header
   $header = '<ul>';
-  foreach($items as $delta => $item_data) {
+  foreach ($items as $delta => $item_data) {
     $header .= '<li>' . '<a href="#panopoly-spotlight-' . $delta . '">' . ($delta+1) . '</a></li>'; 
   }
   $header .= '</ul>';
 
   // Assemble the tabs content
-  foreach($items as $delta => $item_data) {
-    $element[$delta]['#markup'] = ($delta == 0) ? $header . theme('panopoly_spotlight_view', array('items' => $item_data, 'delta' => $delta)) : theme('panopoly_spotlight_view', array('items' => $item_data, 'delta' => $delta));
+  foreach ($items as $delta => $item_data) {
+    $element[$delta]['#markup'] = ($delta == 0) ? $header . theme('panopoly_spotlight_view', array('items' => $item_data, 'delta' => $delta, 'settings' => $settings)) : theme('panopoly_spotlight_view', array('items' => $item_data, 'delta' => $delta, 'settings' => $settings));
   }
   return $element;
 }
@@ -176,7 +216,21 @@ function panopoly_widgets_field_widget_form(&$form, &$form_state, $field, $insta
  * Implements hook_field_presave()
  */
 function panopoly_widgets_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  image_field_presave($entity_type, $entity, $field, $instance, $langcode, $items);
+  // We need to set presave values if fids are not set. This shouldn't effect save operations
+  // form API validation will prevent this from ever happening unless previewing.
+  if (!empty($items)) {
+    foreach ($items as &$item) {
+      if (empty($item['fid'])) {
+        $fid = variable_get('panopoly_widgets_default_' . $entity->bundle . '_fid', NULL);
+        
+        if (!empty($fid)) {
+          $item['fid'] = $fid;
+        }
+      }
+    }
+
+    image_field_presave($entity_type, $entity, $field, $instance, $langcode, $items);
+  }
 }
 
 /**
@@ -231,15 +285,6 @@ function panopoly_widgets_field_prepare_view($entity_type, $entities, $field, $i
       }
     }
   }
-
-  //Add appropriate JS variables for rotation time.
-  //@TODO: Allow different rotation speeds to be set for different
-  //spotlights in the page.
-  $rotation_time = (int) $entities[1]->field_spotlight_rotation_time['und'][0]['value'];
-  empty($rotation_time) ? $rotation_time = 4 : '';
-  $rotation_time = 1000 * $rotation_time;
-  $js_variables = array('spotlight_settings' => array('rotation_time' => $rotation_time)); 
-  drupal_add_js($js_variables, 'setting'); 
 }
 
 /**
@@ -248,12 +293,18 @@ function panopoly_widgets_field_prepare_view($entity_type, $entities, $field, $i
 function theme_panopoly_spotlight_view($variables) {
   $title = $variables['items']['title'];
   $description = $variables['items']['description'];
-  $image_entity = entity_uuid_load('file', array($variables['items']['uuid']));
-  $image = file_load(array_pop($image_entity)->fid);
+  if (module_exists('uuid')) {
+    $image_entity = entity_uuid_load('file', array($variables['items']['uuid']));
+    $image = file_load(array_pop($image_entity)->fid);
+  }
+  else {
+    $image = (object) $variables['items'];
+  }
   $link = $variables['items']['link'];
+  $settings = $variables['settings'];
 
   $output = '<div id="' . 'panopoly-spotlight-' . $variables['delta'] . '" class="' . 'panopoly-spotlight' . '">';
-  $output .= theme('image_style', array('style_name' => 'panopoly_image_spotlight', 'path' => $image->uri));
+  $output .= theme('image_style', array('style_name' => $settings['image_style'], 'path' => $image->uri));
   $output .= '<div class="panopoly-spotlight-wrapper">';
   $output .= '<h3 class="panopoly-spotlight-label">' . t('Spotlight') . '</h3>';
   $output .= '<div class="panopoly-spotlight-info">';
