@@ -356,7 +356,7 @@ class PantheonApacheSolrService {
   }
 
   /**
-   * Check the reponse code and thow an exception if it's not 200.
+   * Check the response code and throw an exception if it's not 200.
    *
    * @param stdClass $response
    *   response object.
@@ -409,7 +409,20 @@ class PantheonApacheSolrService {
    * Central method for making a GET operation against this Solr Server
    */
   protected function _sendRawGet($url, $options = array()) {
-    $response = $this->_makeHttpRequest($url, $options);
+    $cache_id = hash('sha1', $url);
+
+    # Check if this query is cached
+    $query_cache = cache_get($cache_id, 'solr_query_cache');
+    if (!$query_cache) {
+      $response = $this->_makeHttpRequest($url, $options);
+
+      // Solr query cache expiration in second(s)
+      $solr_cache_ttl = REQUEST_TIME + variable_get('solr_cache_ttl', 15);
+      cache_set($cache_id, $response, 'solr_query_cache', $solr_cache_ttl);
+    }
+    else {
+      $response = $query_cache->data;
+    }
     return $this->checkResponse($response);
   }
 
@@ -434,30 +447,34 @@ class PantheonApacheSolrService {
   protected function _makeHttpRequest($url, $options = array()) {
     // Hacking starts here.
     // $result = drupal_http_request($url, $headers, $method, $content);
+    static $ch;
     $client_cert = '../certs/binding.pem';
     $port = 449;
-    $ch = curl_init();
-    // Janktastic, but the parent PHPSolrClient library assumes http
-    // $url = str_replace('http://', 'https://', $url);
-    curl_setopt($ch, CURLOPT_SSLCERT, $client_cert);
 
-    // set URL and other appropriate options
-    $opts = pantheon_apachesolr_curlopts();
-    $opts[CURLOPT_URL] = $url;
-    $opts[CURLOPT_PORT] = $port;
+    if (!isset($ch)) {
+      $ch = curl_init();
 
-    curl_setopt_array($ch, $opts);
+      // The parent PHPSolrClient library assumes http
+      // $url = str_replace('http://', 'https://', $url);
 
-    // If we are doing a delete request...
+      // These options only need to be set once
+      curl_setopt($ch, CURLOPT_SSLCERT, $client_cert);
+      $opts = pantheon_apachesolr_curlopts();
+      $opts[CURLOPT_PORT] = $port;
+      curl_setopt_array($ch, $opts);
+    }
+    curl_setopt($ch, CURLOPT_URL, $url);
+
+    // If we are doing a DELETE request...
     if (isset($options['method'])) {
       if ($options['method'] == 'DELETE') {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
       }
-      // If we are doing a put request...
+      // If we are doing a PUT request...
       if ($options['method'] == 'PUT') {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
       }
-      // If we are doing a put request...
+      // If we are doing a POST request...
       if ($options['method'] == 'POST') {
         curl_setopt($ch, CURLOPT_POST, 1);
       }
