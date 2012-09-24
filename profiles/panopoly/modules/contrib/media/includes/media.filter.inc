@@ -322,6 +322,22 @@ function media_format_form($form, $form_state, $file) {
     '#default_value' => $default_view_mode
   );
 
+  if ($file->type === 'image') {
+    $form['options']['alt'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Alternate text'),
+      '#description' => t('This text will be used by screen readers, search engines, or when the image cannot be loaded.'),
+      '#default_value' => isset($file->field_file_image_alt_text['und'][0]['safe_value']) ? $file->field_file_image_alt_text['und'][0]['safe_value'] : '',
+    );
+
+    $form['options']['title'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Title'),
+      '#description' => t('The title is used as a tool tip when the user hovers the mouse over the image.'),
+      '#default_value' => isset($file->field_file_image_title_text['und'][0]['safe_value']) ? $file->field_file_image_title_text['und'][0]['safe_value'] : '',
+    );
+  }
+
   // Similar to a form_alter, but we want this to run first so that media.types.inc
   // can add the fields specific to a given type (like alt tags on media).
   // If implemented as an alter, this might not happen, making other alters not

@@ -25,16 +25,24 @@ class CurrentSearchItemText extends CurrentSearchItem {
     if ($this->settings['plural']) {
       $condition = '[' . $this->settings['plural_condition'] . ']';
       $count = (int) token_replace($condition, $data);
-      $raw_text = ($count != 1) ? $this->settings['text_plural'] : $this->settings['text'];
+      if ($count != 1) {
+        $raw_text = $this->settings['text_plural'];
+        $translation_key = 'text_plural';
+      }
+      else {
+        $raw_text = $this->settings['text'];
+        $translation_key = 'text';
+      }
     }
     else {
       $raw_text = $this->settings['text'];
+      $translation_key = 'text';
     }
 
     // Translates text, returns themed output.
-    $translated_text = $this->translate('text', $raw_text);
+    $translated_text = $this->translate($translation_key, $raw_text);
     $variables = array(
-      'text' => filter_xss(token_replace($translated_text, $data)),
+      'text' => filter_xss_admin(token_replace($translated_text, $data)),
       'wrapper' => $this->settings['wrapper'],
       'element' => $this->settings['element'],
       'css' => $this->settings['css'],

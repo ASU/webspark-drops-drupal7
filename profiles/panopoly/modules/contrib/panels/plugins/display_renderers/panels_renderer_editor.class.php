@@ -757,6 +757,11 @@ class panels_renderer_editor extends panels_renderer_standard {
       // References get blown away with AJAX caching. This will fix that.
       $this->cache->display->content[$pid] = $form_state['pane'];
 
+      // Conditionally overwrite the context for this panel if present in the form state.
+      if (!empty($form_state['display_cache']->display->context)) {
+        $this->cache->display->context = $form_state['display_cache']->display->context;
+      }
+
       panels_edit_cache_set($this->cache);
       $this->command_update_pane($pid);
       $this->commands[] = ctools_modal_command_dismiss();

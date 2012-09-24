@@ -1,4 +1,3 @@
-
 /* ------------------ Reset Styles ------------------ */
 
 caption,
@@ -20,7 +19,6 @@ tr td,
 tr th {
   text-align: right;
 }
-
 /* ------------------ List Styles ------------------ */
 
 .region-content ul,
@@ -75,7 +73,7 @@ ul.tips {
 
 #main-menu ul.links li,
 #main-menu ul.links li a {
-  float: right;
+  float: none;
 }
 
 /* --------------- Secondary Menu ------------ */
@@ -126,7 +124,7 @@ ul.tips {
 .comment ul.links li {
   padding: 0 0 0.5em;
 }
-.comment-unpublished {
+.comment.unpublished {
   margin-left: 5px;
   margin-right: 0;
   padding: 5px 5px 5px 2px;
@@ -224,10 +222,10 @@ ul.action-links li a {
 }
 
 /* Animated throbber */
-html.js input.form-autocomplete {
+.js input.form-autocomplete {
   background-position: 1% 4px;
 }
-html.js input.throbbing {
+.js input.throbbing {
   background-position: 1% -16px;
 }
 
@@ -260,6 +258,13 @@ html.js input.throbbing {
 .poll .total {
   text-align: left;
 }
+.poll .choice-title {
+  clear: left;
+}
+.poll .percent {
+  float: left;
+  text-align: left;
+}
 
 /* ---------- Color Form ----------- */
 
@@ -273,4 +278,29 @@ html.js input.throbbing {
 .color-form #palette .lock {
   right: -20px;
   left: 0;
+}
+
+/* ----------- media queries ------------------------------- */
+
+@media all and (min-width: 461px) and (max-width: 900px) {
+ /* ------------ Header and Menus -------------------------- */
+  #main-menu-links {
+    margin: 0 5px 0 5px;
+  }
+  #main-menu-links li {
+    margin-left: 5px;
+    margin-right: 0px;
+  }
+  #main-menu-links li:nth-child(3n) {
+    margin-right: 0px;
+    margin-left: -5px;
+  }
+}
+
+@media all and (min-width: 901px) {
+ /* ------------ Header and Menus -------------------------- */
+  #main-menu ul.links li,
+  #main-menu ul.links li a {
+    float: right;
+  }
 }

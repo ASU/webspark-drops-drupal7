@@ -76,9 +76,16 @@ function facetapi_test_facetapi_searcher_info() {
 
 /**
  * Implements hook_facetapi_translate_string().
+ *
+ * Returns a serialized array for testing.
  */
 function facetapi_test_facetapi_translate_string($name, $string, $langcode = NULL) {
-  return 'translated';
+  return serialize(array(
+    'name' => $name,
+    'string' => $string,
+    'langcode' => (string) $langcode,
+    'return' => 'translated',
+  ));
 }
 
 /**
@@ -155,16 +162,23 @@ function facetapi_test_process_hierarchy(array $values) {
 function facetapi_test_search_callback() {
   $build = array();
 
+  // Load adapter, throw exception on error.
   if (!$adapter = facetapi_adapter_load('facetapi_test')) {
     throw new Exception(t('Error loading adapter.'));
   }
 
+  // Set result count if passed through query string.
+  if (isset($_GET['count'])) {
+    $adapter->setResultCount((int) $_GET['count']);
+  }
+
+  // Instantiate a dummy query class, initialize facets.
   $query = new stdClass();
   $adapter->addActiveFilters($query);
 
+  // Set keywords if passed through query string.
   $keys = isset($_GET['keys']) ? $_GET['keys'] : arg(2);
   $adapter->setSearchKeys($keys);
-  $adapter->setResultCount(10);
 
   $build['placeholder'] = array(
     '#markup' => t('Placeholder'),

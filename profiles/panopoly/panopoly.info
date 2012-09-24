@@ -3,7 +3,7 @@ distribution_name = Panopoly
 description = A magical framework for building Drupal products based on the Panels module
 core = 7.x
 
-; Panopoly - Core
+; Drupal Core
 dependencies[] = menu
 dependencies[] = image
 dependencies[] = list
@@ -15,94 +15,26 @@ dependencies[] = search
 dependencies[] = field
 dependencies[] = field_ui
 dependencies[] = file
-dependencies[] = block
 dependencies[] = dblog
 dependencies[] = update
 
-; Panopoly - Contrib - Foundation 
-dependencies[] = ctools
-dependencies[] = panels
-dependencies[] = panels_ipe
-dependencies[] = panels_breadcrumbs
-dependencies[] = pm_existing_pages
-dependencies[] = page_manager
-dependencies[] = fieldable_panels_panes
-dependencies[] = panelizer
-dependencies[] = views
-dependencies[] = views_content
-dependencies[] = views_ui
-dependencies[] = token
-; dependencies[] = layout
-; dependencies[] = gridbuilder
+; Panopoly Foundation
+dependencies[] = panopoly_core
+dependencies[] = panopoly_images
+dependencies[] = panopoly_theme
+dependencies[] = panopoly_magic
+dependencies[] = panopoly_widgets
+dependencies[] = panopoly_admin
+dependencies[] = panopoly_users
 
-; Panopoly - Contrib - Field UI and Content Types
-dependencies[] = tablefield
-dependencies[] = link
-dependencies[] = date
-dependencies[] = date_api
-dependencies[] = date_popup
-dependencies[] = date_views
-dependencies[] = simple_gmap
-dependencies[] = field_group
-dependencies[] = file_entity
-dependencies[] = entityreference
+; Panopoly Toolset
+dependencies[] = panopoly_pages
+dependencies[] = panopoly_search
+dependencies[] = panopoly_wysiwyg
 
-; Panopoly - Contrib - Media
-dependencies[] = media
-dependencies[] = media_internet
-dependencies[] = mediafield
-dependencies[] = media_youtube
-dependencies[] = media_vimeo
-
-; Panopoly - Contrib - Menus and URLS
-dependencies[] = pathauto
-dependencies[] = menu_block
-
-; Panopoly - Contrib - User Experience
-dependencies[] = wysiwyg
-dependencies[] = wysiwyg_filter
-dependencies[] = caption_filter
-dependencies[] = image_resize_filter
-dependencies[] = date_popup_authored
-dependencies[] = admin
-dependencies[] = module_filter
-dependencies[] = views_bulk_operations
-dependencies[] = views_autocomplete_filters
-dependencies[] = simplified_menu_admin
-dependencies[] = references_dialog 
-dependencies[] = backports
-; dependencies[] = jquery_update
-
-; Panopoly - Contrib - Search 
-dependencies[] = facetapi
-dependencies[] = search_api
-dependencies[] = search_api_solr
-dependencies[] = search_api_facetapi
-dependencies[] = search_api_views
-dependencies[] = search_api_db
-
-; Panopoly - Contrib - Products
-dependencies[] = apps 
-dependencies[] = features
-dependencies[] = entity
-dependencies[] = defaultcontent
-dependencies[] = strongarm
-dependencies[] = libraries
-dependencies[] = json2
-
-; Panopoly - Contrib - Development
-dependencies[] = devel
-
-; Panopoly - Contrib - Theme
-dependencies[] = conditional_styles
-dependencies[] = respondjs
-
-; CSS Stylesheets
-stylesheets[all][] = panopoly.css
-
-; Information added by drupal.org packaging script on 2012-08-21
-version = "7.x-1.0-beta5"
+; Information added by drupal.org packaging script on 2012-09-24
+version = "7.x-1.0-beta6"
 core = "7.x"
 project = "panopoly"
-datestamp = "1345558975"
+datestamp = "1348524620"
 

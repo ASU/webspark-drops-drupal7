@@ -169,9 +169,18 @@ function current_search_check_visibility($delta) {
     return FALSE;
   }
 
-  // Returns TRUE if search keys were entered by the user or this block is
-  // configured to be displayed on empty pages.
-  return ($adapter->getSearchKeys() || $config->settings['advanced']['empty_searches']);
+  // Returns TRUE based on the empty_searches setting and the current search.
+  switch ($config->settings['advanced']['empty_searches']) {
+    case CURRENT_SEARCH_DISPLAY_KEYS:
+      return ($adapter->getSearchKeys());
+    case CURRENT_SEARCH_DISPLAY_FILTERS:
+      return ($adapter->getAllActiveItems());
+    case CURRENT_SEARCH_DISPLAY_KEYS_FILTERS:
+      return ($adapter->getSearchKeys() || $adapter->getAllActiveItems());
+    case CURRENT_SEARCH_DISPLAY_ALWAYS:
+    default:
+      return TRUE;
+  }
 }
 
 /**

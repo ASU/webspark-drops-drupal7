@@ -83,7 +83,7 @@ Drupal.wysiwyg.plugins.media = {
     if (additional) {
       for (k in additional) {
         if (additional.hasOwnProperty(k)) {
-          if (k === 'attr') {
+          if (k === 'attr' || k === 'alt' || k === "title") {
             imgElement.attr(k, additional[k]);
           }
         }
@@ -327,7 +327,7 @@ Drupal.wysiwyg.plugins.media = {
     if (additional) {
       for (var name in additional) {
         if (additional.hasOwnProperty(name)) {
-          if (name !== 'alt') {
+          if (name !== 'alt' && name !== 'title') {
             imgElement.addClass('attr__' + name + '__' + additional[name]);
           }
         }

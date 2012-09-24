@@ -9,6 +9,7 @@
  */
 
 (function ($) {
+
   // Make sure our objects are defined.
   Drupal.CTools = Drupal.CTools || {};
   Drupal.CTools.Modal = Drupal.CTools.Modal || {};
@@ -250,7 +251,10 @@
       Drupal.CTools.Modal.show(Drupal.CTools.Modal.getSettings(ajax.element));
     }
     $('#modal-title').html(response.title);
-    $('#modal-content').html(response.output);
+    // Simulate an actual page load by scrolling to the top after adding the
+    // content. This is helpful for allowing users to see error messages at the
+    // top of a form, etc.
+    $('#modal-content').html(response.output).scrollTop(0);
     // Trigger a resize event to make sure modal is in the right place.
     $(window).trigger('resize');
     Drupal.attachBehaviors();
@@ -369,7 +373,7 @@
           'min-width': Drupal.CTools.Modal.currentSettings.modalSize.width,
           'min-height': Drupal.CTools.Modal.currentSettings.modalSize.height,
           'width': 'auto',
-          'height': 'auto',
+          'height': 'auto'
         });
         $('#modalContent').css({'width': 'auto'});
       }
@@ -421,9 +425,9 @@
 
     // Create our content div, get the dimensions, and hide it
     var modalContent = $('#modalContent').css('top','-1000px');
-    var mdcTop = $(document).scrollTop() + ( winHeight / 2 ) - (  modalContent.outerHeight() / 2);
+    var mdcTop = Math.max($(document).scrollTop() + ( winHeight / 2 ) - (  modalContent.outerHeight() / 2), 10);
 
-    var mdcLeft = ( winWidth / 2 ) - ( modalContent.outerWidth() / 2);
+    var mdcLeft = Math.max(( winWidth / 2 ) - ( modalContent.outerWidth() / 2), 10);
     $('#modalBackdrop').css(css).css('top', 0).css('height', docHeight + 'px').css('width', docWidth + 'px').show();
     modalContent.css({top: mdcTop + 'px', left: mdcLeft + 'px'}).hide()[animation](speed, function () { /* $(window).trigger('resize'); */ });
 
@@ -486,13 +490,32 @@
       var height = Math.max(modalContent.outerHeight(), $('div.ctools-modal-content', context).outerHeight());
       var width = Math.max(modalContent.outerWidth(), $('div.ctools-modal-content', context).outerWidth());
 
-      var mdcTop = $(document).scrollTop() + ( winHeight / 2 ) - (  height / 2);
-      var mdcLeft = ( winWidth / 2 ) - ( width / 2);
+      var mdcTop = Math.max($(document).scrollTop() + ( winHeight / 2 ) - (  height / 2), 10);
+      var mdcLeft = Math.max(( winWidth / 2 ) - ( width / 2), 10);
+
+      // Apply attributes to fix the position of the modal relative to current
+      // position of page. This is required when the modal is larger than the
+      // browser window. This enables the modal to scroll with the rest of the
+      // page, rather than remaining centered in the page whilst scrolling.
+      if (height > $(window).height()) {
+        if (e.type === 'resize') {
+          // Is a resize event so get the position of top relative to current
+          // position of document in browser window.
+          mdcTop = 10 + $(document).scrollTop();
+        }
+        else if (e.type === 'scroll') {
+          // Is a scroll event so mantain to current position of the modal
+          // relative to page.
+          var modalOffSet = modalContent.offset();
+          mdcTop = modalOffSet.y;
+        }
+      }
 
       // Apply the changes
       $('#modalBackdrop').css({'height': winHeight + 'px', 'width': winWidth + 'px', 'top': $(document).scrollTop()}).show();
       modalContent.css('top', mdcTop + 'px').css('left', mdcLeft + 'px').show();
     };
+
     $(window).bind('resize', modalContentResize);
     $(window).bind('scroll', modalContentResize);
 

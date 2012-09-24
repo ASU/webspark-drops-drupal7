@@ -12,6 +12,12 @@
  * Implements hook_file_type_info().
  */
 function media_file_type_info() {
+  // Check for whether this is being executed during registry_update() from
+  // within an installation profile *before* the schema has been created.
+  if (drupal_installation_attempted() && !db_table_exists('media_types')) {
+    return array();
+  }
+
   $types = array();
   foreach (media_type_get_types() as $type => $type_object) {
     $types[$type] = array(

@@ -89,6 +89,15 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_render($subty
       );
     }
 
+    if (module_exists('entity_translation') && entity_translation_enabled('fieldable_panels_pane') && entity_translation_tab_access($entity->bundle)) {
+      $block->admin_links[] = array(
+        'title' => t('Translate pane'),
+        'alt' => t("Translate the values in this pane"),
+        'href' => "admin/structure/fieldable-panels-panes/view/$entity->fpid/translate",
+        'query' => drupal_get_destination(),
+      );
+    }
+
     return $block;
   }
 }

@@ -231,6 +231,11 @@ class SearchApiSolrService extends SearchApiAbstractService {
         throw new Exception(t('SolrPhpClient library not found! Please follow the instructions in search_api_solr/INSTALL.txt for installing the Solr search module.'));
       }
       $class = variable_get('search_api_solr_connection_class', 'SearchApiSolrConnection');
+
+      if ( !class_exists( $class ) ) {
+        $class = 'SearchApiSolrConnection';
+      }
+
       $this->solr = new $class($this->options);
     }
   }

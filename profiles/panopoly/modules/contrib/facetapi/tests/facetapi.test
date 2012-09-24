@@ -428,7 +428,8 @@ class FacetapiApiFunctions extends FacetapiTestCase {
     // Sets Facet API Test as the translator module.
     variable_set('facetapi:translator_module', 'facetapi_test');
     $translated = facetapi_translate_string('name', 'untranslated');
-    $this->assertEqual($translated, 'translated', t('String translated by facetapi_translate_string().'), 'Facet API');
+    $array = unserialize($translated);
+    $this->assertEqual($array['return'], 'translated', t('String translated by facetapi_translate_string().'), 'Facet API');
   }
 
   /**

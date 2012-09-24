@@ -3,7 +3,7 @@
 // v 1.1.x
 // Dual licensed under the MIT and GPL licenses.
 // ----------------------------------------------------------------------------
-// Copyright (C) 2007-2011 Jay Salvat
+// Copyright (C) 2007-2012 Jay Salvat
 // http://markitup.jaysalvat.com/
 // ----------------------------------------------------------------------------
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,14 +26,19 @@
 // ----------------------------------------------------------------------------
 (function($) {
 	$.fn.markItUp = function(settings, extraSettings) {
-		var options, ctrlKey, shiftKey, altKey;
-		ctrlKey = shiftKey = altKey = false;
-	
+		var method, params, options, ctrlKey, shiftKey, altKey; ctrlKey = shiftKey = altKey = false;
+
+		if (typeof settings == 'string') {
+			method = settings;
+			params = extraSettings;
+		} 
+
 		options = {	id:						'',
 					nameSpace:				'',
 					root:					'',
 					previewHandler:			false,
 					previewInWindow:		'', // 'width=800, height=600, resizable=yes, scrollbars=yes'
+					previewInElement:		'',
 					previewAutoRefresh:		true,
 					previewPosition:		'after',
 					previewTemplatePath:	'~/templates/preview.html',
@@ -73,6 +78,20 @@
 
 			options.previewParserPath = localize(options.previewParserPath);
 			options.previewTemplatePath = localize(options.previewTemplatePath);
+
+			if (method) {
+				switch(method) {
+					case 'remove':
+						remove();
+					break;
+					case 'insert':
+						markup(params);
+					break;
+					default: 
+						$.error('Method ' +  method + ' does not exist on jQuery.markItUp');
+				}
+				return;
+			}
 
 			// apply the computed path to ~/
 			function localize(data, inText) {
@@ -142,6 +161,10 @@
 				$$.bind('focus.markItUp', function() {
 					$.markItUp.focused = this;
 				});
+
+				if (options.previewInElement) {
+					refreshPreview();
+				}
 			}
 
 			// recursively build header with dropMenus from markupset
@@ -443,6 +466,8 @@
 			function preview() {
 				if (typeof options.previewHandler === 'function') {
 					previewWindow = true;
+				} else if (options.previewInElement) {
+					previewWindow = $(options.previewInElement);
 				} else if (!previewWindow || previewWindow.closed) {
 					if (options.previewInWindow) {
 						previewWindow = window.open('', 'preview', options.previewInWindow);
@@ -485,7 +510,7 @@
 					options.previewHandler( $$.val() );
 				} else if (options.previewParser && typeof options.previewParser === 'function') {
 					var data = options.previewParser( $$.val() );
-					writeInPreview( localize(data, 1) ); 
+					writeInPreview(localize(data, 1) ); 
 				} else if (options.previewParserPath !== '') {
 					$.ajax({
 						type: 'POST',
@@ -513,7 +538,9 @@
 			}
 			
 			function writeInPreview(data) {
-				if (previewWindow.document) {			
+				if (options.previewInElement) {
+					$(options.previewInElement).html(data);
+				} else if (previewWindow && previewWindow.document) {			
 					try {
 						sp = previewWindow.document.documentElement.scrollTop
 					} catch(e) {
@@ -575,14 +602,19 @@
 				}
 			}
 
+			function remove() {
+				$$.unbind(".markItUp").removeClass('markItUpEditor');
+				$$.parent('div').parent('div.markItUp').parent('div').replaceWith($$);
+				$$.data('markItUp', null);
+			}
+
 			init();
 		});
 	};
 
 	$.fn.markItUpRemove = function() {
 		return this.each(function() {
-				var $$ = $(this).unbind(".markItUp").removeClass('markItUpEditor');
-				$$.parent('div').parent('div.markItUp').parent('div').replaceWith($$);
+				$(this).markItUp('remove');
 			}
 		);
 	};

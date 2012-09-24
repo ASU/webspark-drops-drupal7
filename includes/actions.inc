@@ -279,12 +279,12 @@ function actions_synchronize($delete_orphans = FALSE) {
   foreach ($actions_in_code as $callback => $array) {
     // Ignore configurable actions since their instances get put in when the
     // user adds the action.
-    if (empty($array['configurable']) && is_array($array)) {
+    if (!$array['configurable']) {
       // If we already have an action ID for this action, no need to assign aid.
       if (isset($actions_in_db[$callback])) {
         unset($actions_in_db[$callback]);
       }
-      elseif (!empty($array['type']) && !empty($array['label'])) {
+      else {
         // This is a new singleton that we don't have an aid for; assign one.
         db_insert('actions')
           ->fields(array(

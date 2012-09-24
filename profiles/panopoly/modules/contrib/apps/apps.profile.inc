@@ -198,6 +198,11 @@ function apps_profile_download_batch_finished($success, $results) {
     drupal_set_message(t('Updates downloaded successfully.'));
     $_SESSION['update_manager_update_projects'] = isset($results['projects']) ? $results['projects'] : NULL;
   }
+  else {
+    // Ideally we're catching all Exceptions, so they should never see this,
+    // but just in case, we have to tell them something.
+    drupal_set_message(t('Fatal error trying to download.'), 'error');
+  }
 }
 
 /**
@@ -369,6 +374,11 @@ function apps_profile_enable_app_modules_finished($success, $results) {
       'items' => $results['errors'],
     );
     drupal_set_message(theme('item_list', $error_list), 'error');
+  }
+  elseif(!$success) {
+    // Ideally we're catching all Exceptions, so they should never see this,
+    // but just in case, we have to tell them something.
+    drupal_set_message(t('Fatal error trying to enable apps.'), 'error');
   }
 
   // Do a little cleanup

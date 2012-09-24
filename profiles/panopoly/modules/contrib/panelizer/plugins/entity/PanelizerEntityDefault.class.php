@@ -975,8 +975,11 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
         // If this is a new entry or the entry is using a display from a default,
         // clone the display.
         if (!$update || empty($panelizer->did)) {
-          $panelizer = $this->clone_panelizer($panelizer, $entity);
-        }
+          $entity->panelizer[$view_mode] = $panelizer = $this->clone_panelizer($panelizer, $entity);
+
+          // Update the cache key since we are adding a new display
+          $panelizer->display->cache_key = implode(':', array('panelizer', $panelizer->entity_type, $panelizer->entity_id, $view_mode));
+        } 
 
         // First write the display
         panels_save_display($panelizer->display);

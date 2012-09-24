@@ -51,6 +51,35 @@ function fieldable_panels_panes_entity_info() {
         ),
       ),
 
+      'translation' => array(
+        'locale' => TRUE,
+        'entity_translation' => array(
+          'base path' => 'admin/structure/fieldable-panels-panes/view/%fieldable_panels_panes',
+          'path wildcard' => '%fieldable_panels_panes',
+        ),
+      ),
+
+      // Add title replacement support for translations.
+      'field replacement' => array(
+        'title' => array(
+          'field' => array(
+            'type' => 'text',
+            'cardinality' => 1,
+            'translatable' => TRUE,
+          ),
+          'instance' => array(
+            'label' => t('Title'),
+            'required' => TRUE,
+            'settings' => array(
+              'text_processing' => 0,
+            ),
+            'widget' => array(
+              'weight' => -5,
+            ),
+          ),
+        ),
+      ),
+
       // entity module callbacks
       'view callback' => 'entity_metadata_view_single',
       'creation callback' => 'fieldable_panels_panes_create',
@@ -760,6 +789,7 @@ function fieldable_panels_panes_get_base_context($entity = NULL) {
  */
 function fieldable_panels_panes_entity_edit_form($form, &$form_state) {
   $entity = $form_state['entity'];
+  $language = isset($entity->language) ? $entity->language : LANGUAGE_NONE;
 
   // fixes a bug in wysiwyg
   // oh wysiwyg. We need a better way to address this.
@@ -771,6 +801,37 @@ function fieldable_panels_panes_entity_edit_form($form, &$form_state) {
     '#default_value' => $entity->title,
     '#weight' => -10,
   );
+
+  // Provide support for translations
+  if (module_exists('entity_translation') && entity_translation_enabled('fieldable_panels_pane')) {
+    // Entity Translation expects these keys to exist in the form in order to
+    // flag when translations are out of date.
+    $form['#entity_type'] = $entity->bundle;
+    $form['#' . $entity->bundle] = $entity;
+
+    $form['language'] = array(
+      '#type' => 'select',
+      '#title' => t('Language'),
+      '#default_value' => $language,
+      '#options' => array(LANGUAGE_NONE => t('Language neutral')) + locale_language_list('name'),
+    );
+
+    // Disable languages for existing translations, so it is not possible to
+    // switch this product to some language which is already in the translation set.
+    if (isset($entity->translations)) {
+      foreach ($entity->translations->data as $langcode => $translation) {
+        if ($langcode != $entity->translations->original) {
+          unset($form['language']['#options'][$langcode]);
+        }
+      }
+    }
+  }
+  else {
+    $form['language'] = array(
+      '#type' => 'value',
+      '#value' => $language,
+    );
+  }
 
   // Make the other form items dependent upon it.
   ctools_include('dependent');
@@ -896,6 +957,7 @@ function fieldable_panels_panes_entity_edit_form_submit($form, &$form_state) {
   $entity->category = $form_state['values']['category'];
   $entity->admin_title = $form_state['values']['admin_title'];
   $entity->admin_description = $form_state['values']['admin_description'];
+  $entity->language = $form_state['values']['language'];
 
   $entity->revision = $form_state['values']['revision'];
   // Only set a log message if there was a new revision. This prevents

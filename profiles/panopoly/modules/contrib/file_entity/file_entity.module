@@ -467,9 +467,14 @@ function file_entity_file_formatter_info() {
 
   // Add a simple file formatter for displaying an image in a chosen style.
   if (module_exists('image')) {
+
     $formatters['file_image'] = array(
       'label' => t('Image'),
-      'default settings' => array('image_style' => ''),
+      'default settings' => array(
+        'image_style' => '',
+        'alt' => '',
+        'title' => ''
+      ),
       'view callback' => 'file_entity_file_formatter_file_image_view',
       'settings callback' => 'file_entity_file_formatter_file_image_settings',
     );
@@ -580,6 +585,10 @@ function file_entity_file_formatter_file_image_view($file, $display, $langcode) 
         '#path' => $file->uri,
         '#width' => $file->image_dimensions['width'],
         '#height' => $file->image_dimensions['height'],
+        '#alt' => token_replace($display['settings']['alt'],
+          array('file' => $file), array('clear' => 1, 'sanitize' => 0)),
+        '#title' => token_replace($display['settings']['title'],
+          array('file' => $file), array('clear' => 1, 'sanitize' => 0)),
       );
     }
     else {
@@ -588,6 +597,10 @@ function file_entity_file_formatter_file_image_view($file, $display, $langcode) 
         '#path' => $file->uri,
         '#width' => $file->image_dimensions['width'],
         '#height' => $file->image_dimensions['height'],
+        '#alt' => token_replace($display['settings']['alt'],
+          array('file' => $file), array('clear' => 1, 'sanitize' => 0)),
+        '#title' => token_replace($display['settings']['title'],
+          array('file' => $file), array('clear' => 1, 'sanitize' => 0)),
       );
     }
     return $element;
@@ -608,6 +621,32 @@ function file_entity_file_formatter_file_image_settings($form, &$form_state, $se
     '#default_value' => $settings['image_style'],
     '#empty_option' => t('None (original image)'),
   );
+
+  // For image files we allow the alt attribute (required in HTML).
+  $element['alt'] = array(
+    '#title' => t('Alt attribute'),
+    '#description' => t('The text to use as value for the <em>img</em> tag <em>alt</em> attribute. Can be left empty. Token replacements are available'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['alt'],
+  );
+
+  // Allow the setting of the title attribute.
+  $element['title'] = array(
+    '#title' => t('Title attribute'),
+    '#description' => t('The text to use as value for the <em>img</em> tag <em>title</em> attribute. Can be left empty. Token replacements are available'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['title'],
+  );
+
+  if (module_exists('token')) {
+    $element['tokens'] = array(
+      '#theme' => 'token_tree',
+      '#token_types' => array('file'),
+      '#global_types' => TRUE,
+      '#click_insert' => TRUE,
+    );
+  }
+
   return $element;
 }
 

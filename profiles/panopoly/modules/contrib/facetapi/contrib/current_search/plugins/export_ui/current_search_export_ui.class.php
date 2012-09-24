@@ -426,10 +426,23 @@ function current_search_settings_form(&$form, &$form_state) {
     '#tree' => TRUE,
   );
 
+  // This setting was originally intended as a way for site builders to enable
+  // the current search block on pages where no keywords were submitted by the
+  // end user, which is known as an "empty search". The display settings were
+  // expanded beyond empty searches at http://drupal.org/node/1779670 leaving
+  // us with the unfortunate "empty_searches" key which no longer reflects what
+  // this setting does.
   $form['advanced_settings']['empty_searches'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Display current search block on empty search pages.'),
-    '#default_value' => !empty($item->settings['advanced']['empty_searches']),
+    '#type' => 'radios',
+    '#title' => t('Display settings'),
+    '#options' => array(
+      CURRENT_SEARCH_DISPLAY_KEYS => t('Display only when keywords are entered.'),
+      CURRENT_SEARCH_DISPLAY_ALWAYS => t('Display on empty searches where no keywords are entered.'),
+      CURRENT_SEARCH_DISPLAY_FILTERS => t('Display only when one or more facet items are active.'),
+      CURRENT_SEARCH_DISPLAY_KEYS_FILTERS => t('Display when either keywords are entered one or more facet items are active.'),
+    ),
+    '#default_value' => $item->settings['advanced']['empty_searches'],
+    '#description' => t('This setting determines when the current search block will be displayed.'),
   );
 
 }

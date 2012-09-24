@@ -64,6 +64,13 @@ function fieldable_panels_panes_schema() {
         'description' => 'The category it will appear in the Add Content dialog under.',
         'type' => 'text',
       ),
+      'language' => array(
+        'description' => 'The language of this entity.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
       'view_access' => array(
         'type' => 'text',
         'size' => 'big',
@@ -209,4 +216,25 @@ function fieldable_panels_panes_update_7104(&$sandbox) {
 function fieldable_panels_panes_update_7105() {
   db_add_field('fieldable_panels_panes', 'link', array('type' => 'int', 'size' => 'tiny', 'description' => 'Whether or not this entity title will link to another page.'));
   db_add_field('fieldable_panels_panes', 'path', array('type' => 'varchar', 'length' => 255, 'description' => 'The path the title should link to.'));
+}
+
+/*
+ * Add language column.
+ */
+function fieldable_panels_panes_update_7106(&$sandbox) {
+  $table = 'fieldable_panels_panes';
+  $field = 'language';
+
+  if (!db_field_exists($table, $field)) {
+    $schema = drupal_get_schema($table, TRUE);
+    db_add_field($table, $field, $schema['fields'][$field]);
+
+    db_update($table)
+      ->fields(array($field => LANGUAGE_NONE))
+      ->execute();
+
+    return t("Added $table.language field.");
+  }
+
+  return t("$table.language field already exists, updated skipped.");
 }

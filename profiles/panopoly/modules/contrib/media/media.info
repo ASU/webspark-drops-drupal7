@@ -19,9 +19,9 @@ files[] = tests/media.entity.test
 configure = admin/config/media/browser
 
 
-; Information added by drush on 2012-08-21
+; Information added by drush on 2012-09-24
 version = "7.x-2.0-unstable6+3-dev"
 core = "7.x"
 project = "media"
-datestamp = "1345558981"
+datestamp = "1348524639"
 

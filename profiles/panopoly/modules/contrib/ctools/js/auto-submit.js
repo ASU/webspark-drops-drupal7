@@ -54,10 +54,6 @@ Drupal.behaviors.CToolsAutoSubmit = {
         }
       });
 
-    $('.form-autocomplete').blur(function (e) {
-        triggerSubmit.call(e.target.form);
-    });
-
     // e.keyCode: key
     var discardKeyCode = [
       16, // shift
@@ -78,7 +74,7 @@ Drupal.behaviors.CToolsAutoSubmit = {
     ];
     // Don't wait for change event on textfields
     $('.ctools-auto-submit-full-form input:text, input:text.ctools-auto-submit', context)
-      .filter(':not(.form-autocomplete, .ctools-auto-submit-exclude)')
+      .filter(':not(.ctools-auto-submit-exclude)')
       .once('ctools-auto-submit', function () {
         // each textinput element has his own timeout
         var timeoutID = 0;

@@ -17,7 +17,7 @@ class FacetapiTestAdapter extends FacetapiAdapter {
   /**
    * The total number of results in the query.
    */
-  protected $resultCount;
+  protected $resultCount = 10;
 
   /**
    * Implements FacetapiAdapter::searchExecuted().

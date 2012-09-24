@@ -256,9 +256,9 @@ function apps_retrieve_app_image($url, $title = FALSE, $alt = FALSE) {
   if($current && file_exists($current->uri)){
     $remote = drupal_http_request($url, array('method' => 'HEAD')); //get the remote headers
     $remote = $remote->headers;
-    $remote_timestamp = strtotime($remote['last-modified']);
 
-    if($remote_timestamp <= $current->timestamp && !empty($remote['content-length']) && $remote['content-length'] == $current->filesize){
+    // If either the last-modified or the content-length value is different, alter the "file" with the new information. 
+    if ((!empty($remote['last-modified']) && $remote['last-modified'] <= $current->timestamp) || (!empty($remote['content-length']) && $remote['content-length'] == $current->filesize)){
       //TODO make this a file 
       $current->path = $current->uri;
       $current->title = $title ? $title : '';

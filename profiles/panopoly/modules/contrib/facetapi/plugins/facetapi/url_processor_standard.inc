@@ -66,14 +66,6 @@ class FacetapiUrlProcessorStandard extends FacetapiUrlProcessor {
     $active_items = $this->adapter->getAllActiveItems();
 
     $item = menu_get_item();
-    $last_load_func = is_array($item['load_functions']) ? end($item['load_functions']) : NULL;
-    if (!empty($item['title']) && ((!$keys && $active_items) || ($keys && $last_load_func != 'menu_tail_load'))) {
-      $last = end($breadcrumb);
-      $this_page = l($item['title'], $item['href'], $item['localized_options']);
-      if ($last != $this_page) {
-        $breadcrumb[] = $this_page;
-      }
-    }
 
     // Initializes base breadcrumb query.
     $query = $this->params;

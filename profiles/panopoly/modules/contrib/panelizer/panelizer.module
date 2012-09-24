@@ -1063,6 +1063,10 @@ function panelizer_panels_cache_save($argument, $cache) {
       $entities[$entity_id]->panelizer[$view_mode]->display = $cache->display;
       $entities[$entity_id]->panelizer[$view_mode]->display_is_modified = TRUE;
       $handler->entity_save($entities[$entity_id]);
+      // The display may have been cloned in the save process, so we need
+      // to be sure to put the old display back, and its contexts.
+      $cache->display = $entities[$entity_id]->panelizer[$view_mode]->display;
+      $cache->display->context = $handler->get_contexts($entities[$entity_id]->panelizer[$view_mode], $entities[$entity_id]);
     }
   }
   panelizer_panels_cache_clear($argument, $cache);

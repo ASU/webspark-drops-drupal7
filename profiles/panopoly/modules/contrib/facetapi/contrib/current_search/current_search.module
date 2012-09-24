@@ -6,6 +6,27 @@
  * current search.
  */
 
+/**
+ * Display current search block only when keywords are entered.
+ */
+define('CURRENT_SEARCH_DISPLAY_KEYS', 0);
+
+/**
+ * Display current search block on empty searches where no keywords are entered.
+ */
+define('CURRENT_SEARCH_DISPLAY_ALWAYS', 1);
+
+/**
+ * Display current search block only when one or more facet items are active.
+ */
+define('CURRENT_SEARCH_DISPLAY_FILTERS', 2);
+
+/**
+ * Display current search block when either keywords are entered one or more
+ * facet items are active.
+ */
+define('CURRENT_SEARCH_DISPLAY_KEYS_FILTERS', 3);
+
 // Includes the Block hooks and form alterations.
 require_once dirname(__FILE__) . '/current_search.block.inc';
 

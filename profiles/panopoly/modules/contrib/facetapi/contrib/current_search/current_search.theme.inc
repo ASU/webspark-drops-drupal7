@@ -24,7 +24,7 @@
  */
 function theme_current_search_text(array $variables) {
   // Initializes output, sanitizes text if necessary.
-  $sanitize = $variables['options']['html'];
+  $sanitize = empty($variables['options']['html']);
   $output = ($sanitize) ? check_plain($variables['text']) : $variables['text'];
 
   // Adds wrapper markup and CSS classes.

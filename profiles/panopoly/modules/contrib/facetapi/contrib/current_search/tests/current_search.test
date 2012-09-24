@@ -147,4 +147,52 @@ class CurrentSearchBugFixTestCase extends CurrentSearchTestCase {
 
     $this->facetapiIssueMessage('http://drupal.org/node/1668980');
   }
+
+  /**
+   * Tests bug fixed at http://drupal.org/node/1728496.
+   *
+   * @see http://drupal.org/node/1728496
+   */
+  public function testPluralTranslation() {
+    variable_set('facetapi:translator_module', 'facetapi_test');
+
+    // Enable the standard current search block via the UI.
+    $this->drupalLogin($this->adminUser);
+    $this->currentSearchEnableBlock('standard');
+    $this->drupalLogin($this->authenticatedUser);
+
+    // Set the result count to 1 to test singular translation.
+    $this->drupalGet('facetapi_test/search', array('query' => array('keys' => 'test', 'count' => 1)));
+    $raw = filter_xss_admin('s:36:"current_search:standard:results:text";');
+    $this->assertRaw($raw, t('Singular text in current search block is translated.'));
+
+    // Set the result count to 10 to test plural translation.
+    $this->drupalGet('facetapi_test/search', array('query' => array('keys' => 'test', 'count' => 10)));
+    $raw = filter_xss_admin('s:43:"current_search:standard:results:text_plural";');
+    $this->assertRaw($raw, t('Plural text in current search block is translated.'));
+  }
+
+  /**
+   * Tests bug fixed at http://drupal.org/node/1751514.
+   *
+   * @see http://drupal.org/node/1751514
+   * @see http://drupal.org/node/1741444
+   */
+  public function testCurrentSearchTextEncoding() {
+    $raw_text = '<test>';
+    $variables = array(
+      'text' => $raw_text,
+      'wrapper' => 0,
+    );
+
+    // Test that the variable is escaped using check_plain().
+    $variables['options'] = array('html' => FALSE);
+    $sanitized_text = theme('current_search_text', $variables);
+    $this->assertEqual(check_plain($raw_text), $sanitized_text, t('Text is properly sanitized by the theme_current_search_text() function.'), 'Current Search Blocks');
+
+    // Test that the HTML is not double encoded.
+    $variables['options'] = array('html' => TRUE);
+    $unsanitized_text = theme('current_search_text', $variables);
+    $this->assertEqual($raw_text, $unsanitized_text, t('HTML is not double encoded by the theme_current_search_text() function.'), 'Current Search Blocks');
+  }
 }

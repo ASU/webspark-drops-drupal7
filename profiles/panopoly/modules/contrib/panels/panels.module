@@ -1526,7 +1526,7 @@ function panels_edit_cache_break_lock($cache) {
  * Get display edit cache on behalf of panel context.
  *
  * The key is the second half of the key in this form:
- * panel_context:TASK_NAME:HANDLER_NAME;
+ * panel_context:TASK_NAME::HANDLER_NAME::args::url;
  */
 function panel_context_panels_cache_get($key) {
   ctools_include('common', 'panels');
@@ -1535,7 +1535,7 @@ function panel_context_panels_cache_get($key) {
   // this loads the panel context inc even if we don't use the plugin.
   $plugin = page_manager_get_task_handler('panel_context');
 
-  list($task_name, $handler_name) = explode(':', $key, 2);
+  list($task_name, $handler_name, $args, $q) = explode('::', $key, 4);
   $page = page_manager_get_page_cache($task_name);
   if (isset($page->display_cache[$handler_name])) {
     return $page->display_cache[$handler_name];
@@ -1549,8 +1549,18 @@ function panel_context_panels_cache_get($key) {
   }
   $cache = new stdClass();
 
+  $task = page_manager_get_task($page->task_id);
+  //ctools_context_handler_get_all_contexts($page->task, $page->subtask, $handler);
+  $arguments = array();
+  if ($args) {
+    $arguments = explode('\\', $args);
+  }
+
+  $contexts = ctools_context_handler_get_task_contexts($task, $page->subtask, $arguments);
+  ctools_context_handler_get_handler_contexts($contexts, $handler);
+
   $cache->display = &panels_panel_context_get_display($handler);
-  $cache->display->context = ctools_context_handler_get_all_contexts($page->task, $page->subtask, $handler);
+  $cache->display->context = $contexts;
   $cache->display->cache_key = 'panel_context:' . $key;
   $cache->content_types = panels_common_get_allowed_types('panels_page', $cache->display->context);
   $cache->display_title = TRUE;
@@ -1563,7 +1573,7 @@ function panel_context_panels_cache_get($key) {
  * Get the Page Manager cache for the panel_context plugin.
  */
 function _panel_context_panels_cache_get_page_cache($key, $cache) {
-  list($task_name, $handler_name) = explode(':', $key, 2);
+  list($task_name, $handler_name, $args, $q) = explode('::', $key, 4);
   $page = page_manager_get_page_cache($task_name);
   $page->display_cache[$handler_name] = $cache;
   if ($handler_name) {

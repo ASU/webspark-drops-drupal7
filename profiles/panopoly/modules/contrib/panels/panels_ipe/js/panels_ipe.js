@@ -241,7 +241,7 @@ function DrupalPanelsIPE(cache_key, cfg) {
 
   this.endEditing = function() {
     ipe.lockPath = null;
-    $('.panels-ipe-form-container', ipe.control).empty();
+    $('.panels-ipe-form-container').empty();
     // Re-show all the IPE non-editing meta-elements
     $('div.panels-ipe-off').show('fast');
 
