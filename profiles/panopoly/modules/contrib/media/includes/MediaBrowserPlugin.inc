@@ -65,22 +65,16 @@ abstract class MediaBrowserPlugin implements MediaBrowserPluginInterface {
    *    plugin's hook_media_browser_plugin_info() then it will be used,
    *    otherwise a default of 0 will be used.
    *  - form: If the plugin is to display a native Drupal form, then the output
-   *    of drupal_get_form should be returned into the 'form' render key.
+   *    of drupal_get_form should be returned into the 'form' render key. If a
+   *    form's callback isn't normally loaded, module_load_include() should be
+   *    used to ensure that the form can be displayed.
    *
-   * Example:
+   * Example usage:
    * @code
-   *  return array(
-   *    '#attached' => array(
-   *      'js' => array(
-   *         drupal_get_path('module', 'media') . '/js/plugins/media.library.js',
-   *       ),
-   *     ),
-   *     '#settings' => array(
-   *       'viewMode' => 'thumbnails',
-   *       'getMediaUrl' => url('media/browser/list'),
-   *     ),
-   *     '#markup' => '<div>Library goes here</div>',
-   * );
+   *   module_load_include('inc', 'mymodule', 'mymodule.pages');
+   *   $build['#attached']['js'][] = drupal_get_path('module', 'mymodule') . '/js/mymodule.media.browser.js';
+   *   $build['form'] = drupal_get_form('mymodule_media_form');
+   *   return $build;
    * @endcode
    *
    * @return

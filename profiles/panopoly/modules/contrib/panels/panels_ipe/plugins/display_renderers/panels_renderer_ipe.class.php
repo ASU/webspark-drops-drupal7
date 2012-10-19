@@ -227,6 +227,7 @@ class panels_renderer_ipe extends panels_renderer_editor {
     $_POST['ajax_html_ids'] = array();
 
     $form_state = array(
+      'renderer' => $this,
       'display' => &$this->display,
       'content_types' => $this->cache->content_types,
       'rerender' => FALSE,

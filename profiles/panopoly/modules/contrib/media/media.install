@@ -9,76 +9,6 @@
  * Implements hook_schema().
  */
 function media_schema() {
-  $schema['media_type'] = array(
-    'description' => 'Stores the settings for media types.',
-    'fields' => array(
-      'name' => array(
-        'description' => 'The machine name of the media type.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'label' => array(
-        'description' => 'The label of the media type.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'base' => array(
-        'description' => 'If this is a base type (i.e. cannot be deleted)',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ),
-      'weight' => array(
-        'description' => 'Weight of media type. Determines which one wins when claiming a piece of media (first wins)',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'normal',
-      ),
-      'type_callback' => array(
-        'description' => 'Callback to determine if provided media is of this type.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => FALSE,
-        'default' => '',
-      ),
-      'type_callback_args' => array(
-        'type' => 'text',
-        'not null' => FALSE,
-        'size' => 'big',
-        'serialize' => TRUE,
-        'description' => 'A serialized array of name value pairs that will be passed to the callback function',
-      ),
-    ),
-    'primary key' => array('name'),
-  );
-
-  $schema['media_list_type'] = array(
-    'description' => 'Stores the user preference for whether to list as table or images.',
-    'fields' => array(
-      'uid' => array(
-        'description' => 'The {user}.uid of the user.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'type' => array(
-        'description' => 'The type of display (table or images).',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-    ),
-    'primary key' => array('uid'),
-  );
-
   $schema['media_filter_usage'] = array(
     'description' => 'Stores fids that have been included in the media tag in formatted textareas.',
     'fields' => array(
@@ -118,64 +48,29 @@ function media_schema() {
  * Implements hook_install().
  */
 function media_install() {
-  // @todo We may need to disable the media bundle & field in hook_disable.
-
-  // Define the default type to be used if no other type is found. Give it a
-  // high weight to ensure it runs last.
-  $types['default'] = new stdClass();
-  $types['default']->name = 'default';
-  $types['default']->label = "Other";
-  $types['default']->base = TRUE;
-  $types['default']->weight = 1000;
-  $types['default']->type_callback_args = array(
-    'match_type' => 'any',
-    'mimetypes' => array('/.*/'),
+  // Create initial display settings.
+  module_load_include('inc', 'file_entity', 'file_entity.file_api');
+  $default_image_styles = array(
+    'preview' => 'square_thumbnail',
+    'teaser' => 'medium',
+    'full' => 'large',
   );
-
-  // Define the common media types: image, audio, and video.
-  $types['image'] = new stdClass();
-  $types['image']->name = 'image';
-  $types['image']->label = "Image";
-  $types['image']->base = TRUE;
-  $types['image']->type_callback_args = array(
-    'match_type' => 'all',
-    'mimetypes' => array('/^image/'),
-    'extensions' => array('jpg', 'jpeg', 'gif', 'png', 'tiff'),
-    'streams' => array('public', 'private'),
-  );
-
-  $types['audio'] = new stdClass();
-  $types['audio']->name = 'audio';
-  $types['audio']->label = "Audio";
-  $types['audio']->base = TRUE;
-  $types['audio']->type_callback_args = array(
-    'match_type' => 'all',
-    'mimetypes' => array('/^audio/'),
-    'extensions' => array('mp3', 'ogg', 'wma'),
-    'streams' => array('public', 'private'),
-  );
-
-  $types['video'] = new stdClass();
-  $types['video']->name = 'video';
-  $types['video']->label = "Video";
-  $types['video']->base = TRUE;
-  $types['video']->type_callback_args = array(
-    'match_type' => 'all',
-    'mimetypes' => array('/^video/'),
-    'extensions' => array('mov', 'mp4', 'avi'),
-    'streams' => array('public', 'private'),
-  );
-
-  // Create the defined types.
-  foreach ($types as $name => $type) {
-    media_type_save($type);
-
-    // @todo By default, we hide the file display in the 'small' view mode for
-    //   legacy reasons. Does it still make sense to do so? See
-    //   http://drupal.org/node/1051090.
-    $bundle_settings = field_bundle_settings('file', $name);
-    $bundle_settings['extra_fields']['display']['file']['media_small'] = array('weight' => 0, 'visible' => FALSE);
-    field_bundle_settings('file', $name, $bundle_settings);
+  // Only needed by sites that updated from Media 1.x.
+  // @see media_entity_info_alter()
+  if (media_variable_get('show_deprecated_view_modes')) {
+    $default_image_styles['media_original'] = '';
+  }
+  foreach ($default_image_styles as $view_mode => $image_style) {
+    $display_name = 'image__' . $view_mode . '__file_image';
+    $display = array(
+      'api_version' => 1,
+      'name' => $display_name,
+      'status' => 1,
+      'weight' => 5,
+      'settings' => array('image_style' => $image_style),
+      'export_type' => NULL,
+    );
+    file_display_save((object) $display);
   }
 }
 
@@ -196,38 +91,18 @@ function media_update_dependencies() {
   // This update function requires field_update_7002() to run before it since
   // the field_bundle_settings variable has been split into separate variables
   // per entity type and bundle.
-  $dependencies['mymodule'][7016] = array(
+  $dependencies['media'][7016] = array(
     'field' => 7002,
+    'rules' => 7205,
   );
 
   return $dependencies;
 }
 
 /**
- * Create the media_list_type table.
+ * Deprecated update function.
  */
 function media_update_7000() {
-  $schema['media_list_type'] = array(
-    'description' => 'Stores the user preference for whether to list as table or images.',
-    'fields' => array(
-      'uid' => array(
-        'description' => 'The {user}.uid of the user.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'type' => array(
-        'description' => 'The type of display (table or images).',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-    ),
-    'primary key' => array('uid'),
-  );
-  db_create_table('media_list_type', $schema['media_list_type']);
 }
 
 /**
@@ -302,7 +177,10 @@ function media_update_7002() {
     }
     $type->name = $type->machine_name;
     unset($type->machine_name);
-    media_type_save($type);
+    db_merge('media_type')
+      ->key(array('name' => $type->name))
+      ->fields((array) $type)
+      ->execute();
   }
   variable_del('media_types');
 }
@@ -342,19 +220,9 @@ function media_update_7006() {
 }
 
 /**
- * Changes the preview formatter for non-image types to the icon view.
+ * Deprecated update function.
  */
 function media_update_7007() {
-  // @todo media_type_configure_formatters() is a deprecated function, so remove
-  //   this code entirely?
-  drupal_load('module', 'media');
-  drupal_load('module', 'field');
-
-  foreach (media_type_get_types() as $type => $info) {
-    if ($type != 'image') {
-      media_type_configure_formatters($type, array('media_preview' => 'media_large_icon'));
-    }
-  }
 }
 
 /**
@@ -364,27 +232,15 @@ function media_update_7008() {
 }
 
 /**
- * Changes the preview formatter for video types to a square thumbnail, like for images.
+ * Deprecated update function.
  */
 function media_update_7009() {
-  // @todo media_type_configure_formatters() is a deprecated function, so remove
-  //   this code entirely?
-  drupal_load('module', 'media');
-  drupal_load('module', 'field');
-  media_type_configure_formatters('video', array('media_preview' => 'styles_file_square_thumbnail'));
 }
 
 /**
- * Changes the large formatter for video types to the large file style.
+ * Deprecated update function.
  */
 function media_update_7010() {
-  // @todo media_type_configure_formatters() is a deprecated function, so remove
-  //   this code entirely?
-  // This formatter association was added to media_enable() at one point, but
-  // without a corresponding update function, so here's that update function.
-  drupal_load('module', 'media');
-  drupal_load('module', 'field');
-  media_type_configure_formatters('video', array('media_large' => 'styles_file_large'));
 }
 
 /**
@@ -708,4 +564,242 @@ function media_update_7201() {
  */
 function media_update_7202() {
   module_enable(array('views'));
+}
+
+/**
+ * Empty update function to trigger cache clear.
+ */
+function media_update_7203() {
+  // Do nothing.
+}
+
+/**
+ * Update old Media view modes to the new File Entity ones.
+ */
+function media_update_7204() {
+  $view_mode_updates = array(
+    'media_preview' => 'preview',
+    'media_small' => 'teaser',
+    'media_large' => 'full',
+  );
+
+  // Update the media__wysiwyg_default_view_mode variable.
+  $wysiwyg_default_view_mode = variable_get('media__wysiwyg_default_view_mode');
+  if (isset($wysiwyg_default_view_mode) && isset($view_mode_updates[$wysiwyg_default_view_mode])) {
+    $wysiwyg_default_view_mode = $view_mode_updates[$wysiwyg_default_view_mode];
+    variable_set('media__wysiwyg_default_view_mode', $wysiwyg_default_view_mode);
+  }
+
+  // Update view mode references in the 'field_bundle_settings' variable.
+  $field_bundle_settings = variable_get('field_bundle_settings');
+  if (!empty($field_bundle_settings['file'])) {
+    foreach ($field_bundle_settings['file'] as $file_type => $info) {
+      // Per-bundle information about the view modes.
+      foreach ($view_mode_updates as $old_view_mode => $new_view_mode) {
+        if (isset($info['view_modes'][$old_view_mode])) {
+          $field_bundle_settings['file'][$file_type]['view_modes'][$new_view_mode] = $info['view_modes'][$old_view_mode];
+          unset($field_bundle_settings['file'][$file_type]['view_modes'][$old_view_mode]);
+        }
+        // The File Entity module defaults to not use custom settings for the
+        // new view modes, but the Media module used to default to using custom
+        // settings, so if this variable is not defined, use the prior default.
+        if (!isset($field_bundle_settings['file'][$file_type]['view_modes'][$new_view_mode]['custom_settings'])) {
+          $field_bundle_settings['file'][$file_type]['view_modes'][$new_view_mode]['custom_settings'] = TRUE;
+        }
+      }
+
+      // Settings for the "extra fields" configured on the Manage Display page.
+      if (!empty($info['extra_fields']['display'])) {
+        foreach ($info['extra_fields']['display'] as $extra_field_name => $extra_field_info) {
+          foreach ($view_mode_updates as $old_view_mode => $new_view_mode) {
+            if (isset($extra_field_info[$old_view_mode])) {
+              $field_bundle_settings['file'][$file_type]['extra_fields']['display'][$extra_field_name][$new_view_mode] = $extra_field_info[$old_view_mode];
+              unset($field_bundle_settings['file'][$file_type]['extra_fields']['display'][$extra_field_name][$old_view_mode]);
+            }
+          }
+        }
+      }
+    }
+  }
+  variable_set('field_bundle_settings', $field_bundle_settings);
+
+  // Move settings for fields attached to files from the old view modes to the
+  // new ones.
+  $instances = field_read_instances(array('entity_type' => 'file'));
+  foreach ($instances as $instance) {
+    $updated = FALSE;
+    foreach ($view_mode_updates as $old_view_mode => $new_view_mode) {
+      if (isset($instance['display'][$old_view_mode])) {
+        $instance['display'][$new_view_mode] = $instance['display'][$old_view_mode];
+        unset($instance['display'][$old_view_mode]);
+        $updated = TRUE;
+      }
+    }
+    if ($updated) {
+      field_update_instance($instance);
+    }
+  }
+
+  // Move "Manage file display" settings from old view modes to new ones.
+  $file_display_names = db_query('SELECT name FROM {file_display}')->fetchCol();
+  foreach ($file_display_names as $old_file_display_name) {
+    list($file_type, $view_mode, $formatter) = explode('__', $old_file_display_name, 3);
+    if (isset($view_mode_updates[$view_mode])) {
+      $view_mode = $view_mode_updates[$view_mode];
+      $new_file_display_name = implode('__', array($file_type, $view_mode, $formatter));
+      db_delete('file_display')->condition('name', $new_file_display_name)->execute();
+      db_update('file_display')->fields(array('name' => $new_file_display_name))->condition('name', $old_file_display_name)->execute();
+    }
+  }
+
+  // Update file/image/media fields that use a formatter that reference an old
+  // file view modes to reference the new ones.
+  foreach (field_read_instances() as $instance) {
+    if (!empty($instance['display'])) {
+      $updated = FALSE;
+      foreach ($instance['display'] as $instance_view_mode => $display) {
+        if (isset($display['settings']['file_view_mode']) && isset($view_mode_updates[$display['settings']['file_view_mode']])) {
+          $instance['display'][$instance_view_mode]['settings']['file_view_mode'] = $view_mode_updates[$display['settings']['file_view_mode']];
+          $updated = TRUE;
+        }
+      }
+      if ($updated) {
+        field_update_instance($instance);
+      }
+    }
+  }
+
+  // Update formatter settings that reference the old view modes within saved
+  // Views.
+  if (db_table_exists('views_display')) {
+    $result = db_select('views_display', 'v')->fields('v', array('vid', 'id', 'display_options'))->execute();
+    foreach ($result as $record) {
+      if (!empty($record->display_options)) {
+        $display_options = unserialize($record->display_options);
+        if (_media_update_7204_update_views_display_options($display_options, $view_mode_updates)) {
+          db_update('views_display')
+            ->fields(array('display_options' => serialize($display_options)))
+            ->condition('vid', $record->vid)
+            ->condition('id', $record->id)
+            ->execute();
+        }
+      }
+    }
+  }
+
+  // Update formatter settings that reference the old view modes within unsaved
+  // Views in the CTools object cache. Objects in the CTools cache are instances
+  // of classes, so the Views module must be enabled to unserialize it
+  // correctly.
+  if (db_table_exists('ctools_object_cache') && module_exists('views')) {
+    $result = db_select('ctools_object_cache', 'c')->fields('c', array('sid', 'name', 'obj', 'data'))->condition('obj', 'view')->execute();
+    foreach ($result as $record) {
+      $view = unserialize($record->data);
+      if (!empty($view->display)) {
+        $updated = FALSE;
+        foreach ($view->display as $display_name => $display) {
+          if (!empty($display->display_options) && _media_update_7204_update_views_display_options($display->display_options, $view_mode_updates)) {
+            $updated = TRUE;
+          }
+        }
+        if ($updated) {
+          db_update('ctools_object_cache')
+            ->fields(array('data' => serialize($view)))
+            ->condition('sid', $record->sid)
+            ->condition('name', $record->name)
+            ->condition('obj', $record->obj)
+            ->execute();
+        }
+      }
+    }
+  }
+
+  // Clear caches that might contain stale Views displays.
+  if (module_exists('views')) {
+    cache_clear_all('*', 'cache_views', TRUE);
+    cache_clear_all('*', 'cache_views_data', TRUE);
+  }
+  if (module_exists('block')) {
+    cache_clear_all('*', 'cache_block', TRUE);
+  }
+  cache_clear_all('*', 'cache_page', TRUE);
+
+  // We still have the old media_link and media_original view modes that must be
+  // supported for now.
+  // @TODO: Make this apply only to updates from Media 1.x.
+  // @see media_entity_info_alter()
+  variable_set('media__show_deprecated_view_modes', TRUE);
+}
+
+/**
+ * Drop the unused {media_list_type} table.
+ */
+function media_update_7205() {
+  db_drop_table('media_list_type');
+  return t('Dropped the unused {media_list_type} table.');
+}
+
+/**
+ * Move default file display configurations to the database.
+ */
+function media_update_7206() {
+  module_load_include('inc', 'file_entity', 'file_entity.file_api');
+  module_load_include('inc', 'ctools', 'includes/export');
+  $default_image_styles = array(
+    'preview' => 'square_thumbnail',
+    'teaser' => 'medium',
+    'full' => 'large',
+  );
+
+  // Only needed by sites that updated from Media 1.x.
+  // @see media_entity_info_alter()
+  if (media_variable_get('show_deprecated_view_modes')) {
+    $default_image_styles['media_original'] = '';
+  }
+
+  // Clear out the ctools cache so that the old default implementations
+  // are removed.
+  ctools_export_load_object_reset('file_display');
+  foreach ($default_image_styles as $view_mode => $image_style) {
+    $existing_displays = file_displays_load('image', $view_mode, TRUE);
+    // Only insert default config into the database if no existing
+    // configuration is found.
+    if (!isset($existing_displays['file_image'])) {
+      $display_name = 'image__' . $view_mode . '__file_image';
+      $display = array(
+        'api_version' => 1,
+        'name' => $display_name,
+        'status' => 1,
+        'weight' => 5,
+        'settings' => array('image_style' => $image_style),
+        'export_type' => NULL,
+      );
+      file_display_save((object) $display);
+    }
+  }
+}
+
+/**
+ * Helper function for media_update_7204() to update display options within Views.
+ */
+function _media_update_7204_update_views_display_options(&$display_options, $view_mode_updates) {
+  $updated = FALSE;
+
+  // Update fields that use a formatter with a file_view_mode formatter setting.
+  if (!empty($display_options['fields'])) {
+    foreach ($display_options['fields'] as $field_name => $field_display) {
+      if (isset($field_display['settings']['file_view_mode']) && isset($view_mode_updates[$field_display['settings']['file_view_mode']])) {
+        $display_options['fields'][$field_name]['settings']['file_view_mode'] = $view_mode_updates[$field_display['settings']['file_view_mode']];
+        $updated = TRUE;
+      }
+    }
+  }
+
+  // Update Views that display files directly using a row plugin with a view
+  // mode setting.
+  if (isset($display_options['row_plugin']) && $display_options['row_plugin'] === 'file' && isset($display_options['row_options']['view_mode']) && isset($view_mode_updates[$display_options['row_options']['view_mode']])) {
+    $display_options['row_options']['view_mode'] = $view_mode_updates[$display_options['row_options']['view_mode']];
+    $updated = TRUE;
+  }
+  return $updated;
 }

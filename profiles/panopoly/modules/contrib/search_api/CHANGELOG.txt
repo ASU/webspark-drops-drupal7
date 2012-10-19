@@ -1,6 +1,22 @@
 Search API 1.x, dev (xx/xx/xxxx):
 ---------------------------------
 
+Search API 1.3 (10/10/2012):
+----------------------------
+- Patch by mr.baileys: Fixed "enable" function doesn't use security tokens.
+- #1318904 by becw, das-peter, orakili, drunken monkey: Added improved handling
+  for NULL values in Views.
+- #1306008 by Damien Tournoud, drunken monkey: Fixed handling of negative
+  facets.
+- #1182912 by drunken monkey, sepgil: Added Rules action for indexing entities.
+- #1507882 by jsacksick: Added "Exclude unpublished nodes" data alteration.
+- #1225620 by drunken monkey: Added Batch API integration for the "Index now"
+  functionality.
+- #1777710 by dasjo: Remove dependency on $_GET['q'] for determining base paths.
+- #1715238 by jsacksick: Fixed fulltext argument handler field list is broken.
+- #1414138 by drunken monkey: Fixed internal static index property cache.
+- #1253320 by drunken monkey, fago: Fixed improper error handling.
+
 Search API 1.2 (07/07/2012):
 ----------------------------
 - #1368548 by das-peter: Do not index views results by entity id.

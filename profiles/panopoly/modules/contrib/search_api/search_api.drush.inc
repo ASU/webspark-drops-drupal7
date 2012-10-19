@@ -43,11 +43,13 @@ function search_api_drush_command() {
       'drush sapi-i' => dt('Alias to index items for all enabled indexes.'),
       'drush sapi-i 1' => dt('Index items for the index with the ID !id.', array('!id' => 1)),
       'drush sapi-i default_node_index' => dt('Index items for the index with the machine name !name.', array('!name' => 'default_node_index')),
-      'drush sapi-i 1 100' => dt('Index a maximum number of !limit items for the index with the ID !id.', array('!limit' => 100, '!id' => 1)),
+      'drush sapi-i 1 100' => dt("Index a maximum number of !limit items (index's cron batch size items per batch run) for the index with the ID !id.", array('!limit' => 100, '!id' => 1)),
+      'drush sapi-i 1 100 10' => dt("Index a maximum number of !limit items (!batch_size items per batch run) for the index with the ID !id.", array('!limit' => 100, '!batch_size' => 10, '!id' => 1)),
     ),
     'arguments' => array(
       'index_id' => dt('The numeric ID or machine name of an index.'),
-      'limit' => dt("The number of items to index. Use 0 to index all items. Defaults to the index's cron batch size."),
+      'limit' => dt("The number of items to index (index's cron batch size items per run). Set to 0 to index all items. Defaults to 0 (index all)."),
+      'batch_size' => dt("The number of items to index per batch run. Set to 0 to index all items at once. Defaults to the index's cron batch size."),
     ),
     'aliases' => array('sapi-i'),
   );
@@ -161,8 +163,15 @@ function drush_search_api_status($index_id = NULL) {
 
 /**
  * Index items.
+ *
+ * @param string|integer $index_id
+ *   The index name or id for which items should be indexed.
+ * @param integer $limit
+ *   Maximum number of items to index.
+ * @param integer $batch_size
+ *   Number of items to index per batch.
  */
-function drush_search_api_index($index_id = NULL, $limit = NULL) {
+function drush_search_api_index($index_id = NULL, $limit = NULL, $batch_size = NULL) {
   if (search_api_drush_static(__FUNCTION__)) {
     return;
   }
@@ -170,18 +179,65 @@ function drush_search_api_index($index_id = NULL, $limit = NULL) {
   if (empty($indexes)) {
     return;
   }
-  $limit_string = $limit;
   foreach ($indexes as $index) {
-    if (is_null($limit)) {
-      $limit = $index->options['cron_limit'];
-      $limit_string = $limit;
+    // Get the number of remaing items to index.
+    $datasource = $index->datasource();
+    $index_status = $datasource->getIndexStatus($index);
+    $remaining = $index_status['total'] - $index_status['indexed'];
+
+    // Get the number of items to index per batch run.
+    if (!isset($batch_size)) {
+      $batch_size = empty($index->options['cron_limit']) ? SEARCH_API_DEFAULT_CRON_LIMIT : $index->options['cron_limit'];
     }
-    elseif ((int) $limit <= 0) {
-      $limit = -1;
-      $limit_string = t('all');
+    elseif ($batch_size <= 0) {
+      $batch_size = $remaining;
     }
-    drush_print(dt('Indexing a maximum number of !limit items for index !index.', array('!index' => $index->name, '!limit' => $limit_string)));
-    search_api_index_items($index, $limit);
+
+    // Get the number items to index.
+    if (!isset($limit) || !is_int($limit += 0) || $limit <= 0) {
+      $limit = $remaining;
+    }
+
+    drush_log(dt("Indexing a maximum number of !limit items (!batch_size items per batch run) for the index !index.", array('!index' => $index->name, '!limit' => $limit, '!batch_size' => $batch_size)), 'ok');
+
+    // Create the batch.
+    if (!_search_api_batch_indexing_create($index, $batch_size, $limit, $remaining, TRUE)) {
+      drush_log(dt("Couldn't create a batch, please check the batch_sise and limit parameters."), 'error');
+    }
+    else {
+      // Launch the batch process.
+      drush_backend_batch_process();
+    }
+  }
+}
+
+/**
+ * Copy of formal_plural that works with drush as 't' may not be available.
+ */
+function _search_api_drush_format_plural($count, $singular, $plural, array $args = array(), array $options = array()) {
+  $args['@count'] = $count;
+  if ($count == 1) {
+    return dt($singular, $args, $options);
+  }
+
+  // Get the plural index through the gettext formula.
+  $index = (function_exists('locale_get_plural')) ? locale_get_plural($count, isset($options['langcode']) ? $options['langcode'] : NULL) : -1;
+  // If the index cannot be computed, use the plural as a fallback (which
+  // allows for most flexiblity with the replaceable @count value).
+  if ($index < 0) {
+    return dt($plural, $args, $options);
+  }
+  else {
+    switch ($index) {
+      case "0":
+        return dt($singular, $args, $options);
+      case "1":
+        return dt($plural, $args, $options);
+      default:
+        unset($args['@count']);
+        $args['@count[' . $index . ']'] = $count;
+        return dt(strtr($plural, array('@count' => '@count[' . $index . ']')), $args, $options);
+    }
   }
 }
 

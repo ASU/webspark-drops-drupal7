@@ -61,7 +61,9 @@
       ];
 
       // Disable save button and update label on auto submit. 
-      $(':submit.ctools-auto-submit-click', context).bind('click', function (e) {
+      $(':submit.ctools-auto-submit-click', context)
+      .once('ctools-auto-submit')
+      .bind('click', function (e) {
         triggerDisable.call(e.target.form);
       });
 
@@ -70,7 +72,9 @@
 
       // Handle title fields.
       var timer;
-      $('.panopoly-textfield-autosubmit', context).bind('keyup keydown blur', function (e) {
+      $('.panopoly-textfield-autosubmit', context)
+      .once('ctools-auto-submit')
+      .bind('keyup keydown blur', function (e) {
         var $element;
         $element = $('.widget-preview .pane-title', context);
 
@@ -103,12 +107,16 @@
       });
   
       // Handle autocomplete fields.
-      $('.panopoly-autocomplete-autosubmit', context).blur(function (e) {
+      $('.panopoly-autocomplete-autosubmit', context)
+      .once('ctools-auto-submit')
+      .blur(function (e) {
         triggerSubmit.call(e.target.form);
       });
 
       // Handle textarea fields.
-      $('.panopoly-textarea-autosubmit', context).bind('keyup keydown blur', function (e) {
+      $('.panopoly-textarea-autosubmit', context)
+      .once('ctools-auto-submit')
+      .bind('keyup keydown blur', function (e) {
         // On blur just autosubmit the form.
         if (e.type == 'blur') {
           clearTimeout(timer);

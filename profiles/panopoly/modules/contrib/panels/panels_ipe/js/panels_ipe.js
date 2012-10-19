@@ -34,6 +34,10 @@ Drupal.behaviors.PanelsIPE = {
       $('div#panels-ipe-display-' + key + ':not(.panels-ipe-processed)')
         .addClass('panels-ipe-processed')
         .each(function() {
+          // If we're replacing an old IPE, clean it up a little.
+          if (Drupal.PanelsIPE.editors[key]) {
+            Drupal.PanelsIPE.editors[key].editing = false;
+          }
           Drupal.PanelsIPE.editors[key] = new DrupalPanelsIPE(key);
           Drupal.PanelsIPE.editors[key].showContainer();
         });
@@ -89,6 +93,22 @@ function DrupalPanelsIPE(cache_key, cfg) {
     // re-display it.
     if (ipe.topParent && ipe.topParent.hasClass('panels-ipe-editing') && ipe.container.is(':not(visible)')) {
       ipe.showContainer();
+    }
+  });
+
+
+  // If a user navigates away from a locked IPE, cancel the lock in the background.
+  $(window).bind('beforeunload', function() {
+    if (!ipe.editing) {
+      return;
+    }
+
+    if (ipe.topParent && ipe.topParent.hasClass('changed')) {
+      ipe.changed = true;
+    }
+
+    if (ipe.changed) {
+      return Drupal.t('This will discard all unsaved changes. Are you sure?');
     }
   });
 
@@ -170,6 +190,7 @@ function DrupalPanelsIPE(cache_key, cfg) {
   };
 
   this.initEditing = function(formdata) {
+    ipe.editing = true;
     ipe.topParent = $('div#panels-ipe-display-' + cache_key);
     ipe.backup = this.topParent.clone();
 
@@ -212,11 +233,6 @@ function DrupalPanelsIPE(cache_key, cfg) {
     ipe.showForm();
     ipe.topParent.addClass('panels-ipe-editing');
 
-    // Repaint the draghandles to recalculate width
-    $('.panels-ipe-draghandle').each(function() {
-      $(this).css('position', 'relative');
-    });
-
   };
 
   this.hideContainer = function() {
@@ -240,6 +256,7 @@ function DrupalPanelsIPE(cache_key, cfg) {
   };
 
   this.endEditing = function() {
+    ipe.editing = false;
     ipe.lockPath = null;
     $('.panels-ipe-form-container').empty();
     // Re-show all the IPE non-editing meta-elements
@@ -248,10 +265,9 @@ function DrupalPanelsIPE(cache_key, cfg) {
     ipe.showButtons();
     // Re-hide all the IPE meta-elements
     $('div.panels-ipe-on').hide();
-    if (ipe.topParent) {
-      ipe.topParent.removeClass('panels-ipe-editing');
-      $('div.panels-ipe-sort-container', ipe.topParent).sortable("destroy");
-    }
+
+    $('.panels-ipe-editing').removeClass('panels-ipe-editing');
+    $('div.panels-ipe-sort-container', ipe.topParent).sortable("destroy");
   };
 
   this.saveEditing = function() {

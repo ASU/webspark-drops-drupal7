@@ -4,15 +4,15 @@ core = 7.x
 package = Panopoly
 php = 5.2.4
 project = panopoly_theme
-dependencies[] = image
+dependencies[] = panopoly_core
 features[features_api][] = api:1
+scripts[] = js/panopoly-accordion.js
 stylesheets[all][] = css/panopoly-featured.css
 stylesheets[all][] = css/panopoly-accordian.css
-scripts[] = js/panopoly-accordion.js
 
-; Information added by drupal.org packaging script on 2012-09-24
-version = "7.x-1.0-beta6"
+; Information added by drupal.org packaging script on 2012-10-19
+version = "7.x-1.0-rc1"
 core = "7.x"
 project = "panopoly_theme"
-datestamp = "1348523089"
+datestamp = "1350688617"
 

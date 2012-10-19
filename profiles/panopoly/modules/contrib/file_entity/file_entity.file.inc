@@ -14,10 +14,37 @@ function file_entity_file_presave($file) {
     $file->filemime = file_get_mimetype($file->uri);
   }
 
-  // Always update file type based on filemime.
-  $file->type = file_get_type($file);
+  // The file type is used as a bundle key, and therefore, must not be NULL.
+  // It defaults to FILE_TYPE_NONE when loaded via file_load(), but in case
+  // file_save() is called on a new file object, default it here too.
+  if (!isset($file->type)) {
+    $file->type = FILE_TYPE_NONE;
+  }
+
+  // If the file isn't already assigned a real type, determine what type should
+  // be assigned to it.
+  if ($file->type === FILE_TYPE_NONE) {
+    $type = file_get_type($file);
+    if (isset($type)) {
+      $file->type = $type;
+    }
+  }
 
   field_attach_presave('file', $file);
+}
+
+/**
+ * Implements hook_file_type().
+ */
+function file_entity_file_type($file) {
+  $types = array();
+  foreach (file_type_get_enabled_types() as $type) {
+    if (in_array($file->filemime, $type->mimetypes)) {
+      $types[] = $type->type;
+    }
+  }
+
+  return $types;
 }
 
 /**

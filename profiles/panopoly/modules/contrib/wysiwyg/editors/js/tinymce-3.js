@@ -11,13 +11,6 @@
  *   An object containing editor settings for each input format.
  */
 Drupal.wysiwyg.editor.init.tinymce = function(settings) {
-  // If JS compression is enabled, TinyMCE is unable to autodetect its global
-  // settinge, hence we need to define them manually.
-  // @todo Move global library settings somewhere else.
-  tinyMCE.baseURL = settings.global.editorBasePath;
-  tinyMCE.srcMode = (settings.global.execMode == 'src' ? '_src' : '');
-  tinyMCE.gzipMode = (settings.global.execMode == 'gzip');
-
   // Fix Drupal toolbar obscuring editor toolbar in fullscreen mode.
   var $drupalToolbar = $('#toolbar', Drupal.overlayChild ? window.parent.document : document);
   tinyMCE.onAddEditor.add(function (mgr, ed) {
@@ -33,10 +26,6 @@ Drupal.wysiwyg.editor.init.tinymce = function(settings) {
 
   // Initialize editor configurations.
   for (var format in settings) {
-    if (format == 'global') {
-      continue;
-    };
-    tinyMCE.init(settings[format]);
     if (Drupal.settings.wysiwyg.plugins[format]) {
       // Load native external plugins.
       // Array syntax required; 'native' is a predefined token in JavaScript.
@@ -63,7 +52,7 @@ Drupal.wysiwyg.editor.attach.tinymce = function(context, params, settings) {
   ed.onEvent.add(function(ed, e) {
     Drupal.wysiwyg.activeId = ed.id;
   });
-  // Tell TinyMCE DOM has been loaded for AJAX
+  // Indicate that the DOM has been loaded (in case of Ajax).
   tinymce.dom.Event.domLoaded = true;
   // Make toolbar buttons wrappable (required for IE).
   ed.onPostRender.add(function (ed) {

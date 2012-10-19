@@ -1163,7 +1163,11 @@ class panels_renderer_editor extends panels_renderer_standard {
       unset($this->cache->style);
     }
 
-    // $conf was a reference so it should just modify.
+    // Copy settings from form state back into the cache.
+    if(!empty($form_state['values']['settings'])) {
+      $this->cache->display->content[$pid]->style['settings'] = $form_state['values']['settings'];
+    }
+
     panels_edit_cache_set($this->cache);
 
     $this->commands[] = ctools_modal_command_dismiss();

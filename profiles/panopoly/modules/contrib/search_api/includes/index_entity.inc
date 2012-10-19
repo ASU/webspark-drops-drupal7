@@ -272,6 +272,11 @@ class SearchApiIndex extends Entity {
     if (!$changed) {
       return 0;
     }
+
+    // Reset the index's internal property cache to correctly incorporate new
+    // settings.
+    $this->resetCaches();
+
     return $this->save();
   }
 
@@ -911,6 +916,21 @@ class SearchApiIndex extends Entity {
    */
   public function loadItems(array $ids) {
     return $this->datasource()->loadItems($ids);
+  }
+
+  /**
+   * Reset internal static caches.
+   *
+   * Should be used when things like fields or data alterations change to avoid
+   * using stale data.
+   */
+  public function resetCaches() {
+    $this->datasource = NULL;
+    $this->server_object = NULL;
+    $this->callbacks = NULL;
+    $this->processors = NULL;
+    $this->added_properties = NULL;
+    $this->fulltext_fields = array();
   }
 
 }

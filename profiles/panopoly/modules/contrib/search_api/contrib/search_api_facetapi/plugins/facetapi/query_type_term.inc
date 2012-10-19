@@ -123,26 +123,24 @@ class SearchApiFacetapiTerm extends FacetapiQueryType implements FacetapiQueryTy
     if (isset($results['search_api_facets']) && isset($results['search_api_facets'][$this->facet['field']])) {
       $values = $results['search_api_facets'][$this->facet['field']];
       foreach ($values as $value) {
-        if ($value['count']) {
-          $filter = $value['filter'];
-          // As Facet API isn't really suited for our native facet filter
-          // representations, convert the format here. (The missing facet can
-          // stay the same.
-          if ($filter[0] == '"') {
-            $filter = substr($filter, 1, -1);
-          }
-          elseif ($filter != '!') {
-            // This is a range filter.
-            $filter = substr($filter, 1, -1);
-            $pos = strpos($filter, ' ');
-            if ($pos !== FALSE) {
-              $filter = '[' . substr($filter, 0, $pos) . ' TO ' . substr($filter, $pos + 1) . ']';
-            }
-          }
-          $build[$filter] = array(
-            '#count' => $value['count'],
-          );
+        $filter = $value['filter'];
+        // As Facet API isn't really suited for our native facet filter
+        // representations, convert the format here. (The missing facet can
+        // stay the same.)
+        if ($filter[0] == '"') {
+          $filter = substr($filter, 1, -1);
         }
+        elseif ($filter != '!') {
+          // This is a range filter.
+          $filter = substr($filter, 1, -1);
+          $pos = strpos($filter, ' ');
+          if ($pos !== FALSE) {
+            $filter = '[' . substr($filter, 0, $pos) . ' TO ' . substr($filter, $pos + 1) . ']';
+          }
+        }
+        $build[$filter] = array(
+          '#count' => $value['count'],
+        );
       }
     }
     return $build;

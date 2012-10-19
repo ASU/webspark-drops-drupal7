@@ -4,18 +4,13 @@ core = 7.x
 package = Panopoly
 php = 5.2.4
 project = panopoly_users
-dependencies[] = ctools
 dependencies[] = features
 dependencies[] = field_group
-dependencies[] = field_sql_storage
 dependencies[] = image
-dependencies[] = menu
-dependencies[] = page_manager
 dependencies[] = panelizer
 dependencies[] = panopoly_core
 dependencies[] = pm_existing_pages
 dependencies[] = strongarm
-dependencies[] = text
 features[ctools][] = field_group:field_group:1
 features[ctools][] = page_manager:pages_default:1
 features[ctools][] = panelizer:panelizer:1
@@ -37,16 +32,13 @@ features[panelizer_defaults][] = user:user:default:default
 features[panelizer_defaults][] = user:user:default:featured
 features[variable][] = page_manager_user_view_disabled
 features[variable][] = panelizer_defaults_user_user
-features[variable][] = panelizer_user:user_allowed_layouts
-features[variable][] = panelizer_user:user_allowed_types
-features[variable][] = panelizer_user:user_default
 features[variable][] = pm_existing_pages_disabled_user_login
 features[variable][] = pm_existing_pages_disabled_user_password
 features[variable][] = pm_existing_pages_disabled_user_register
 
-; Information added by drupal.org packaging script on 2012-09-24
-version = "7.x-1.0-beta6"
+; Information added by drupal.org packaging script on 2012-10-19
+version = "7.x-1.0-rc1"
 core = "7.x"
 project = "panopoly_users"
-datestamp = "1348523090"
+datestamp = "1350688619"
 

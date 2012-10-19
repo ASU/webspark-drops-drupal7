@@ -387,7 +387,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
     ) + $settings_base;
 
     $items[$root . '/panelizer/allowed'] = array(
-      'title' => 'Available content',
+      'title' => 'Allowed content',
       'page callback' => 'panelizer_allowed_content_page',
       'page arguments' => array($this->entity_type, $bundle),
       'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -979,7 +979,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
 
           // Update the cache key since we are adding a new display
           $panelizer->display->cache_key = implode(':', array('panelizer', $panelizer->entity_type, $panelizer->entity_id, $view_mode));
-        } 
+        }
 
         // First write the display
         panels_save_display($panelizer->display);
@@ -1290,6 +1290,20 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
         );
       }
 
+      // Allow applications to add additional panelizer tabs.
+      drupal_alter('panelizer_overview_links', $links_array, $this->entity_type, $entity, $view_mode, $status, $panelized);
+
+      $context = array(
+        'entity' => $entity,
+        'view_mode' => $view_mode,
+        'base_url' => $base_url,
+        'status' => $status,
+        'panelized' => $panelized,
+      );
+
+      // Allow applications to add additional panelizer tabs.
+      drupal_alter('panelizer_overview_links', $links_array, $this->entity_type, $context);
+
       $links = theme('links', array(
         'links' => $links_array,
         'attributes' => array('class' => 'links inline'),
@@ -1384,6 +1398,18 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
         'href' => $base_url . '/content',
       );
     }
+    
+    $context = array(
+      'view_mode' => $view_mode,
+      'bundle' => $bundle,
+      'base_url' => $base_url
+    );
+
+    // Allow applications to add additional panelizer tabs.
+    drupal_alter('panelizer_tab_links', $links_array, $this->entity_type, $context);
+
+    // Allow applications to add additional panelizer tabs.
+    drupal_alter('panelizer_tab_links', $links_array, $this->entity_type, $bundle, $view_mode);
 
     // Only render if > 1 link, just like core.
     if (count($links_array) <= 1) {
@@ -1400,7 +1426,7 @@ abstract class PanelizerEntityDefault implements PanelizerEntityInterface {
       // Use array addition because forms will already be sorted so
       // #weight may not be effective.
       $output = array(
-          'panelizer_links' => array(
+        'panelizer_links' => array(
           '#markup' => $links,
           '#weight' => -10000,
         ),

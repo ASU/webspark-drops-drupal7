@@ -119,7 +119,13 @@ function _uuid_services_entity_retrieve($entity_type, $uuid) {
  */
 function _uuid_services_entity_update($entity_type, $uuid, $entity) {
   try {
-    $entity = (object)$entity;
+    $controller = entity_get_controller($entity_type);
+    if ($controller instanceof EntityAPIControllerInterface) {
+      $entity = $controller->create($entity);
+    }
+    else {
+      $entity = (object) $entity;
+    }
     entity_uuid_save($entity_type, $entity);
     return $entity;
   }

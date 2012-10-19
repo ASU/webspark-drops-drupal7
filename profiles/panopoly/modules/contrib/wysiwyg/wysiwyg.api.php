@@ -211,6 +211,14 @@ function hook_INCLUDE_editor() {
     // (optional) A callback to perform editor-specific adjustments or
     // enhancements for the administrative editor profile settings form.
     'settings form callback' => 'wysiwyg_ckeditor_settings_form',
+    // (optional) A callback to return an initialization JavaScript snippet for
+    // this editor library, loaded before the actual library files. The returned
+    // JavaScript is executed as inline script in a primitive environment,
+    // before the DOM is loaded; typically used to prime a base path and other
+    // global window variables for the editor library before it is loaded.
+    // All implementations should verbosely document what they are doing and
+    // why that is required.
+    'init callback' => 'wysiwyg_ckeditor_init',
     // A callback to convert administrative profile/editor settings into
     // JavaScript settings.
     'settings callback' => 'wysiwyg_ckeditor_settings',

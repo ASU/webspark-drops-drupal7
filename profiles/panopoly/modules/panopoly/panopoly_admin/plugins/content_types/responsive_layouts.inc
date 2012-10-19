@@ -47,7 +47,7 @@ function panopoly_admin_responsive_layouts_content_type_render($subtype, $conf, 
       $pane->content = theme('table', array('header' => $header, 'rows' => $layout_options, 'attributes' => array('class' => array('responsive-layouts'))));
     }
     else {
-      $pane->content = t('No custom responsive layouts have yet been created. !add one now!', array('!add' => l('Add', 'admin/structure/panels/layouts/add-responsive')));
+      $pane->content = t('No custom responsive layouts have yet been created. !add one now!', array('!add' => l(t('Add'), 'admin/structure/panels/layouts/add-responsive')));
     }
     return $pane;
   }

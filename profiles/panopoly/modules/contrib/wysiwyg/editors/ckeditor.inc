@@ -31,6 +31,7 @@ function wysiwyg_ckeditor_editor() {
     'version callback' => 'wysiwyg_ckeditor_version',
     'themes callback' => 'wysiwyg_ckeditor_themes',
     'settings form callback' => 'wysiwyg_ckeditor_settings_form',
+    'init callback' => 'wysiwyg_ckeditor_init',
     'settings callback' => 'wysiwyg_ckeditor_settings',
     'plugin callback' => 'wysiwyg_ckeditor_plugins',
     'plugin settings callback' => 'wysiwyg_ckeditor_plugin_settings',
@@ -155,6 +156,35 @@ function wysiwyg_ckeditor_settings_form_validate_css_classes($element, &$form_st
 }
 
 /**
+ * Returns an initialization JavaScript for this editor library.
+ *
+ * @param array $editor
+ *   The editor library definition.
+ * @param string $library
+ *   The library variant key from $editor['libraries'].
+ * @param object $profile
+ *   The (first) wysiwyg editor profile.
+ *
+ * @return string
+ *   A string containing inline JavaScript to execute before the editor library
+ *   script is loaded.
+ */
+function wysiwyg_ckeditor_init($editor) {
+  // CKEditor unconditionally searches for its library filename in SCRIPT tags
+  // on the page upon loading the library in order to determine the base path to
+  // itself. When JavaScript aggregation is enabled, this search fails and all
+  // relative constructed paths within CKEditor are broken. The library has a
+  // CKEditor.basePath property, but it is not publicly documented and thus not
+  // reliable. The official documentation suggests to solve the issue through
+  // the global window variable.
+  // @see http://docs.cksource.com/CKEditor_3.x/Developers_Guide/Specifying_the_Editor_Path
+  $library_path = base_path() . $editor['library path'] . '/';
+  return <<<EOL
+window.CKEDITOR_BASEPATH = '$library_path';
+EOL;
+}
+
+/**
  * Return runtime editor settings for a given wysiwyg profile.
  *
  * @param $editor
@@ -170,7 +200,6 @@ function wysiwyg_ckeditor_settings_form_validate_css_classes($element, &$form_st
  */
 function wysiwyg_ckeditor_settings($editor, $config, $theme) {
   $settings = array(
-    'baseHref' => $GLOBALS['base_url'] . '/',
     'width' => 'auto',
     // For better compatibility with smaller textareas.
     'resize_minWidth' => 450,
@@ -185,7 +214,6 @@ function wysiwyg_ckeditor_settings($editor, $config, $theme) {
     // @todo Check whether completely disabling ProcessHTMLEntities is an option.
     'entities_latin' => FALSE,
     'entities_greek' => FALSE,
-    'global_basepath_var' => 'CKEDITOR_BASEPATH',
   );
 
   // Add HTML block format settings; common block formats are already predefined
@@ -211,7 +239,7 @@ function wysiwyg_ckeditor_settings($editor, $config, $theme) {
         $settings['contentsCss'] = reset(wysiwyg_get_css());
       }
       elseif ($config['css_setting'] == 'self' && isset($config['css_path'])) {
-        $settings['contentsCss'] = strtr($config['css_path'], array('%b' => base_path(), '%t' => path_to_theme()));
+        $settings['contentsCss'] = strtr($config['css_path'], array('%b' => base_path(), '%t' => drupal_get_path('theme', variable_get('theme_default', NULL))));
       }
     }
     else {
@@ -219,7 +247,7 @@ function wysiwyg_ckeditor_settings($editor, $config, $theme) {
         $settings['contentsCss'] = wysiwyg_get_css();
       }
       elseif ($config['css_setting'] == 'self' && isset($config['css_path'])) {
-        $settings['contentsCss'] = explode(',', strtr($config['css_path'], array('%b' => base_path(), '%t' => path_to_theme())));
+        $settings['contentsCss'] = explode(',', strtr($config['css_path'], array('%b' => base_path(), '%t' => drupal_get_path('theme', variable_get('theme_default', NULL)))));
       }
     }
   }

@@ -296,26 +296,34 @@ class SearchApiWebTest extends DrupalWebTestCase {
     $this->assertText(t('Clear index'), t('"Clear index" button found.'));
     $this->assertNoText(t('Re-index content'), t('"Re-index" button not found.'));
 
+    // Here we test the indexing + the warning message when some items
+    // can not be indexed.
+    // The server refuses (for test purpose) to index items with IDs that are
+    // multiples of 8 unless the "search_api_test_index_all" variable is set.
     $values = array(
       'limit' => 8,
     );
     $this->drupalPost(NULL, $values, t('Index now'));
     $this->assertText(t('Successfully indexed @count items.', array('@count' => 7)));
-    $this->assertText(t("Some items couldn't be indexed. Check the logs for details."), t('Index errors warning is displayed.'));
+    $this->assertText(t('1 item could not be indexed. Check the logs for details.'), t('Index errors warning is displayed.'));
     $this->assertNoText(t("Couldn't index items. Check the logs for details."), t("Index error isn't displayed."));
     $this->assertText(t('About @percentage% of all items have been indexed in their latest version (@indexed / @total).', array('@indexed' => 7, '@total' => 10, '@percentage' => 70)), t('!field displayed.', array('!field' => t('Correct index status'))));
     $this->assertText(t('Re-indexing'), t('"Re-index" button found.'));
 
+    // Here we're testing the error message when no item could be indexed.
+    // The item with ID 8 is still not indexed.
     $values = array(
       'limit' => 1,
     );
     $this->drupalPost(NULL, $values, t('Index now'));
     $this->assertNoPattern('/' . str_replace('144', '-?\d*', t('Successfully indexed @count items.', array('@count' => 144))) . '/', t('No items could be indexed.'));
-    $this->assertNoText(t("Some items couldn't be indexed. Check the logs for details."), t("Index errors warning isn't displayed."));
+    $this->assertNoText(t('1 item could not be indexed. Check the logs for details.'), t("Index errors warning isn't displayed."));
     $this->assertText(t("Couldn't index items. Check the logs for details."), t('Index error is displayed.'));
 
+    // Here we test the indexing of all the remaining items.
+    variable_set('search_api_test_index_all', TRUE);
     $values = array(
-      'limit' => 100,
+      'limit' => -1,
     );
     $this->drupalPost(NULL, $values, t('Index now'));
     $this->assertText(t('Successfully indexed @count items.', array('@count' => 3)));

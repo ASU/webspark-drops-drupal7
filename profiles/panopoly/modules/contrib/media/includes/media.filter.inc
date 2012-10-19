@@ -84,17 +84,45 @@ function media_token_to_markup($match, $wysiwyg = FALSE) {
     if (!isset($tag_info['fid'])) {
       throw new Exception('No file Id');
     }
+
+    // Ensure a valid view mode is being requested.
     if (!isset($tag_info['view_mode'])) {
-      // Should we log or throw an exception here instead?
-      // Do we need to validate the view mode for fields API?
       $tag_info['view_mode'] = media_variable_get('wysiwyg_default_view_mode');
     }
+    elseif ($tag_info['view_mode'] != 'default') {
+      $file_entity_info = entity_get_info('file');
+      if (!in_array($tag_info['view_mode'], array_keys($file_entity_info['view modes']))) {
+        // Media 1.x defined some old view modes that have been superseded by
+        // more semantically named ones in File Entity. The media_update_7203()
+        // function updates field settings that reference the old view modes,
+        // but it's impractical to update all text content, so adjust
+        // accordingly here.
+        static $view_mode_updates = array(
+          'media_preview' => 'preview',
+          'media_small' => 'teaser',
+          'media_large' => 'full',
+        );
+        if (isset($view_mode_updates[$tag_info['view_mode']])) {
+          $tag_info['view_mode'] = $view_mode_updates[$tag_info['view_mode']];
+        }
+        else {
+          throw new Exception('Invalid view mode');
+        }
+      }
+    }
+
 
     $file = file_load($tag_info['fid']);
     if (!$file) {
       throw new Exception('Could not load media object');
     }
     $tag_info['file'] = $file;
+
+    // The class attributes is a string, but drupal requires it to be
+    // an array, so we fix it here.
+    if (!empty($tag_info['attributes']['class'])) {
+      $tag_info['attributes']['class'] = explode(" ", $tag_info['attributes']['class']);
+    }
 
     // Track the fid of this file in the {media_filter_usage} table.
     media_filter_track_usage($file->fid);
@@ -131,7 +159,19 @@ function media_token_to_markup($match, $wysiwyg = FALSE) {
     return '';
   }
 
-  $element = media_get_file_without_label($file, $tag_info['view_mode'], $settings);
+  if ($wysiwyg) {
+    $element = media_get_file_without_label($file, $tag_info['view_mode'], $settings);
+  }
+  else {
+    // Display the field elements.
+    $element = array();
+    $element['content']['#prefix'] = '<div>';
+    $element['content']['file'] = media_get_file_without_label($file, $tag_info['view_mode'], $settings);
+    field_attach_prepare_view('file', array($file->fid => $file), $tag_info['view_mode']);
+    entity_prepare_view('file', array($file->fid => $file));
+    $element['content'] += field_attach_view('file', $file, $tag_info['view_mode']);
+    $element['content']['#suffix'] = '</div>';
+  }
   drupal_alter('media_token_to_markup', $element, $tag_info, $settings);
   return drupal_render($element);
 }
@@ -321,22 +361,6 @@ function media_format_form($form, $form_state, $file) {
     '#options' => $options,
     '#default_value' => $default_view_mode
   );
-
-  if ($file->type === 'image') {
-    $form['options']['alt'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Alternate text'),
-      '#description' => t('This text will be used by screen readers, search engines, or when the image cannot be loaded.'),
-      '#default_value' => isset($file->field_file_image_alt_text['und'][0]['safe_value']) ? $file->field_file_image_alt_text['und'][0]['safe_value'] : '',
-    );
-
-    $form['options']['title'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Title'),
-      '#description' => t('The title is used as a tool tip when the user hovers the mouse over the image.'),
-      '#default_value' => isset($file->field_file_image_title_text['und'][0]['safe_value']) ? $file->field_file_image_title_text['und'][0]['safe_value'] : '',
-    );
-  }
 
   // Similar to a form_alter, but we want this to run first so that media.types.inc
   // can add the fields specific to a given type (like alt tags on media).

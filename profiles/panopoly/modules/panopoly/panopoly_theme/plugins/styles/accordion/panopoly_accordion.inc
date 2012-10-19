@@ -38,7 +38,7 @@ function theme_panopoly_theme_panopoly_accordion_style_render_region($vars) {
   $output = '<div class="drulog-panels-accordion" id="' . $region_id . '">';
   foreach ($panes as $pane_id => $pane) {
     if ($pane_id != 'empty_placeholder') {
-      $output .= ($display->content[$pane_id]->title) ? '<h4 class="accordion-title">' . $display->content[$pane_id]->title . '</h4>' : '<h4 class="accordion-title">' . t('This pane needs a title!') . '</h4>';
+      $output .= !empty($display->content[$pane_id]->title) ? '<h4 class="accordion-title">' . $display->content[$pane_id]->title . '</h4>' : '<h4 class="accordion-title">' . t('This pane needs a title!') . '</h4>';
       $output .= '<div class="accordion-content ' . $region_id . '-' . $pane_id . '">' . $pane . '</div>';
     } 
   }

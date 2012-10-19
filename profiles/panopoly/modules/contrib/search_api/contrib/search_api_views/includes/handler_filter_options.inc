@@ -18,6 +18,8 @@ class SearchApiViewsHandlerFilterOptions extends SearchApiViewsHandlerFilter {
     return array(
       '=' => t('Is one of'),
       '<>' => t('Is not one of'),
+      'empty' => t('Is empty'),
+      'not empty' => t('Is not empty'),
     );
   }
 
@@ -99,6 +101,14 @@ class SearchApiViewsHandlerFilterOptions extends SearchApiViewsHandlerFilter {
       '#size' => min(4, count($this->definition['options'])),
       '#default_value' => isset($this->value) ? $this->value : array(),
     );
+
+    // Hide the value box if operator is 'empty' or 'not empty'.
+    // Radios share the same selector so we have to add some dummy selector.
+    // #states replace #dependency (http://drupal.org/node/1595022).
+    $form['value']['#states']['visible'] = array(
+      ':input[name="options[operator]"],dummy-empty' => array('!value' => 'empty'),
+      ':input[name="options[operator]"],dummy-not-empty' => array('!value' => 'not empty'),
+    );
   }
 
   /**
@@ -107,6 +117,13 @@ class SearchApiViewsHandlerFilterOptions extends SearchApiViewsHandlerFilter {
   public function admin_summary() {
     if (!empty($this->options['exposed'])) {
       return t('exposed');
+    }
+
+    if ($this->operator === 'empty') {
+      return t('is empty');
+    }
+    if ($this->operator === 'not empty') {
+      return t('is not empty');
     }
 
     if (!is_array($this->value)) {
@@ -152,26 +169,34 @@ class SearchApiViewsHandlerFilterOptions extends SearchApiViewsHandlerFilter {
    * Add this filter to the query.
    */
   public function query() {
-    while (is_array($this->value) && count($this->value) == 1) {
-      $this->value = reset($this->value);
+    if ($this->operator === 'empty') {
+      $this->query->condition($this->real_field, NULL, '=', $this->options['group']);
     }
-    if (is_scalar($this->value) && $this->value !== '') {
-      $this->query->condition($this->real_field, $this->value, $this->operator, $this->options['group']);
+    elseif ($this->operator === 'not empty') {
+      $this->query->condition($this->real_field, NULL, '<>', $this->options['group']);
     }
-    elseif ($this->value) {
-      if ($this->operator == '=') {
-        $filter = $this->query->createFilter('OR');
-        // $filter will be NULL if there were errors in the query.
-        if ($filter) {
-          foreach ($this->value as $v) {
-            $filter->condition($this->real_field, $v, '=');
-          }
-          $this->query->filter($filter, $this->options['group']);
-        }
+    else {
+      while (is_array($this->value) && count($this->value) == 1) {
+        $this->value = reset($this->value);
       }
-      else {
-        foreach ($this->value as $v) {
-          $this->query->condition($this->real_field, $v, $this->operator, $this->options['group']);
+      if (is_scalar($this->value) && $this->value !== '') {
+        $this->query->condition($this->real_field, $this->value, $this->operator, $this->options['group']);
+      }
+      elseif ($this->value) {
+        if ($this->operator == '=') {
+          $filter = $this->query->createFilter('OR');
+          // $filter will be NULL if there were errors in the query.
+          if ($filter) {
+            foreach ($this->value as $v) {
+              $filter->condition($this->real_field, $v, '=');
+            }
+            $this->query->filter($filter, $this->options['group']);
+          }
+        }
+        else {
+          foreach ($this->value as $v) {
+            $this->query->condition($this->real_field, $v, $this->operator, $this->options['group']);
+          }
         }
       }
     }

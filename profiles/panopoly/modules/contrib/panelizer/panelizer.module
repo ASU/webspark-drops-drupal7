@@ -185,6 +185,7 @@ function panelizer_field_attach_submit($entity_type, $entity, &$form, &$form_sta
  * Implements hook_entity_view_alter().
  */
 function panelizer_entity_view_alter(&$build, $entity_type) {
+  static $recursion_prevention = array();
   // Prepare variables.
   $handler = panelizer_entity_plugin_get_handler($entity_type);
   if (!$handler) {
@@ -212,6 +213,12 @@ function panelizer_entity_view_alter(&$build, $entity_type) {
     $view_mode = 'default';
   }
 
+  if (!empty($recursion_prevention[$entity_type][$entity_id][$view_mode])) {
+    return;
+  }
+
+  $recursion_prevention[$entity_type][$entity_id][$view_mode] = TRUE;
+
   if ($info = $handler->render_entity($entity, $view_mode)) {
     // Change theming function and add the content on the $build array.
     $build['#theme'] = 'panelizer_view_mode';
@@ -222,6 +229,8 @@ function panelizer_entity_view_alter(&$build, $entity_type) {
     $build['#panelizer_bundle'] = $bundle;
     $build['#panelizer_entity_id'] = $entity_id;
   }
+  $recursion_prevention[$entity_type][$entity_id][$view_mode] = FALSE;
+
 }
 
 // -----------------------------------------------------------------------
@@ -268,8 +277,10 @@ function panelizer_ctools_plugin_api($module, $api) {
  */
 function panelizer_features_api() {
   $api = array();
-  $api['panelizer_defaults'] = _ctools_features_get_info('panelizer_defaults');
-  $api['panelizer_defaults']['alter_type'] = FEATURES_ALTER_TYPE_NONE;
+  if (function_exists('_ctools_features_get_info')) {
+    $api['panelizer_defaults'] = _ctools_features_get_info('panelizer_defaults');
+    $api['panelizer_defaults']['alter_type'] = FEATURES_ALTER_TYPE_NONE;
+  }
 
   return $api;
 }
@@ -663,7 +674,24 @@ function panelizer_default_title_callback($handler, $bundle) {
     return '';
   }
 
-  $title = $handler->get_bundle_title($bundle);
+  $entity_info = entity_get_info($handler->entity_type);
+
+  $title = $entity_info['label'];
+
+  if (strpos($bundle, '.') === FALSE) {
+    $bundle = $bundle;
+    $view_mode = '';
+  }
+  else {
+    list($bundle, $view_mode) = explode('.', $bundle);
+  }
+
+  $title .= ' | ' . $handler->get_bundle_title($bundle);
+
+  if ($view_mode && !empty($handler->plugin['view modes'][$view_mode]['label'])) {
+    $title .= ' | ' . $handler->plugin['view modes'][$view_mode]['label'];
+  }
+
   return $title;
 }
 

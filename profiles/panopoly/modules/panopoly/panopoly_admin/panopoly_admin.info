@@ -4,18 +4,17 @@ core = 7.x
 package = Panopoly
 php = 5.2.4
 project = panopoly_admin
-dependencies[] = admin
 dependencies[] = admin_views
-dependencies[] = apps
 dependencies[] = backports
 dependencies[] = ctools
 dependencies[] = date_popup_authored
+dependencies[] = defaultconfig
 dependencies[] = features
 dependencies[] = module_filter
 dependencies[] = page_manager
+dependencies[] = panopoly_core
 dependencies[] = simplified_menu_admin
 dependencies[] = strongarm
-dependencies[] = views
 dependencies[] = views_bulk_operations
 features[ctools][] = page_manager:pages_default:1
 features[ctools][] = strongarm:strongarm:1
@@ -27,14 +26,13 @@ features[page_manager_pages][] = panopoly_admin_page_library
 features[page_manager_pages][] = panopoly_admin_pane_library
 features[user_role][] = administrator
 features[user_role][] = editor
-features[variable][] = admin_toolbar
 features[variable][] = user_admin_role
 scripts[] = panopoly-admin.js
 stylesheets[all][] = panopoly-admin.css
 
-; Information added by drupal.org packaging script on 2012-09-24
-version = "7.x-1.0-beta6"
+; Information added by drupal.org packaging script on 2012-10-19
+version = "7.x-1.0-rc1"
 core = "7.x"
 project = "panopoly_admin"
-datestamp = "1348523078"
+datestamp = "1350688313"
 

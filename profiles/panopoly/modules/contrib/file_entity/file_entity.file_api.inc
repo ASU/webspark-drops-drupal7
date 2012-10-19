@@ -6,59 +6,9 @@
  */
 
 /**
- * Returns information about file types from hook_file_type_info().
- *
- * @param $file_type
- *   (optional) A file type name. If ommitted, all file types will be returned.
- *
- * @return
- *   Either a file type description, as provided by hook_file_type_info(), or an
- *   array of all existing file types, keyed by file type name.
+ * The {file_managed}.type value when the file type has not yet been determined.
  */
-function file_info_file_types($file_type = NULL) {
-  $info = &drupal_static(__FUNCTION__);
-  if (!isset($info)) {
-    $info = module_invoke_all('file_type_info');
-
-    // Add support for the standard file types until this can be fully
-    // abstracted out of Media module.
-    $info += array(
-      'application' => array('label' => t('Application (multipurpose)')),
-      'audio' => array('label' => t('Audio')),
-      'image' => array('label' => t('Image')),
-      'text' => array('label' => t('Text')),
-      'video' => array('label' => t('Video')),
-    );
-
-    drupal_alter('file_type_info', $info);
-    uasort($info, '_file_entity_sort_weight_label');
-  }
-  if ($file_type) {
-    if (isset($info[$file_type])) {
-      return $info[$file_type];
-    }
-  }
-  else {
-    return $info;
-  }
-}
-
-/**
- * Determines the file type of a passed in file object.
- *
- * The file type is determined by extracting the 'first' part of the file's
- * MIME type. For example, a PNG image with a MIME type of 'image/png' will
- * have a file type of 'image'.
- *
- * @link http://www.iana.org/assignments/media-types/index.html IANA list of official MIME media types @endlink
- */
-function file_get_type($file) {
-  // Ensure that a MIME type has been determined first.
-  if (empty($file->filemime)) {
-    $file->filemime = file_get_mimetype($file->uri);
-  }
-  return substr($file->filemime, 0, strpos($file->filemime, '/'));
-}
+define('FILE_TYPE_NONE', 'undefined');
 
 /**
  * Returns information about file formatters from hook_file_formatter_info().
@@ -90,10 +40,15 @@ function file_info_formatter_types($formatter_type = NULL) {
 }
 
 /**
- * Clears the file info cache.
+ * Clears all cached configuration related to file types, formatters, and display settings.
  */
 function file_info_cache_clear() {
-  drupal_static_reset('file_info_file_types');
+  // Clear the CTools managed caches.
+  ctools_include('export');
+  ctools_export_load_object_reset('file_type');
+  ctools_export_load_object_reset('file_display');
+
+  // Clear the formatter type cache, managed by file_info_formatter_types().
   drupal_static_reset('file_info_formatter_types');
 }
 
@@ -299,26 +254,29 @@ function file_view_file($file, $displays = 'full', $langcode = NULL) {
     }
   }
 
-  // If none of the configured formatters were able to display the file, attempt
-  // to display the file using the file type's default view callback.
+  // As a last resort, fall back to showing a link to the file.
   if (!isset($element)) {
-    $file_type_info = file_info_file_types($file->type);
-    if (isset($file_type_info['default view callback']) && ($function = $file_type_info['default view callback']) && function_exists($function)) {
-      $element = $function($file, $view_mode, $langcode);
-    }
+    $element = array(
+      '#theme' => 'file_link',
+      '#file' => $file,
+    );
   }
 
-  // If a render element was returned by a formatter or the file type's default
-  // view callback, add some defaults to it and return it.
-  if (isset($element)) {
-    $element += array(
-      '#file' => $file,
-      '#view_mode' => $view_mode,
-      '#language' => $langcode,
-    );
-    return $element;
-  }
+  // Add defaults and return the element.
+  $element += array(
+    '#file' => $file,
+    '#view_mode' => $view_mode,
+    '#language' => $langcode,
+  );
+
+  return $element;
 }
+
+/**
+ * @defgroup file_displays File displays API
+ * @{
+ * Functions to load and save information about file displays.
+ */
 
 /**
  * Returns an array of possible displays to use for a file type in a given view mode.
@@ -414,6 +372,7 @@ function file_displays_load($file_type, $view_mode, $key_by_formatter_name = FAL
 function file_display_save($display) {
   ctools_include('export');
   ctools_export_crud_save('file_display', $display);
+  file_info_cache_clear();
 }
 
 /**
@@ -422,9 +381,237 @@ function file_display_save($display) {
 function file_display_new($file_type, $view_mode, $formatter_name) {
   ctools_include('export');
   $display = ctools_export_crud_new('file_display');
+  file_info_cache_clear();
   $display->name = implode('__', array($file_type, $view_mode, $formatter_name));
   return $display;
 }
+
+/**
+ * @} End of "defgroup file_displays".
+ */
+
+/**
+ * @defgroup file_types File types API
+ * @{
+ * Functions to load and save information about file types.
+ */
+
+/**
+ * Returns an array of all available file types, including enabled and disabled ones.
+ *
+ * @see file_type_get_enabled_types()
+ * @see file_type_get_disabled_types()
+ */
+function file_type_get_all_types($reset = FALSE) {
+  ctools_include('export');
+  return ctools_export_crud_load_all('file_type', $reset);
+}
+
+/**
+ * Returns an array of enabled file types.
+ */
+function file_type_get_enabled_types() {
+  $types = file_type_get_all_types();
+  return array_filter($types, 'file_type_is_enabled');
+}
+
+/**
+ * Returns an array of disabled file types.
+ */
+function file_type_get_disabled_types($reset = FALSE) {
+  $types = file_type_get_all_types();
+  return array_filter($types, 'file_type_is_disabled');
+}
+
+/**
+ * Returns TRUE if a file type is enabled, FALSE otherwise.
+ */
+function file_type_is_enabled($type) {
+  return empty($type->disabled);
+}
+
+/**
+ * Returns TRUE if a file type is disabled, FALSE otherwise.
+ */
+function file_type_is_disabled($view) {
+  return !empty($type->disabled);
+}
+
+/**
+ * Returns the configuration object for the passed in file type name, or FALSE if it doesn't exist.
+ */
+function file_type_load($type_name) {
+  ctools_include('export');
+  $type = ctools_export_crud_load('file_type', $type_name);
+  return isset($type) ? $type : FALSE;
+}
+
+/**
+ * CTools exportables 'subrecords callback' to load {file_type} subrecords.
+ */
+function file_type_load_subrecords($types) {
+  foreach ($types as $type) {
+    $type->mimetypes = db_query('SELECT mimetype FROM {file_type_mimetypes} WHERE type = :type', array(':type' => $type->type))->fetchCol();
+    $type->streams = db_query('SELECT stream FROM {file_type_streams} WHERE type = :type', array(':type' => $type->type))->fetchCol();
+  }
+}
+
+/**
+ * Updates an existing file type or creates a new one.
+ *
+ * This function can be called on its own, or via the CTools exportables
+ * 'save callback' for {file_type} objects.
+ */
+function file_type_save($type) {
+  // Get the old type object, so we now can issue the correct insert/update
+  // queries.
+  if (!empty($type->old_type) && $type->old_type != $type->type) {
+    $rename_bundle = TRUE;
+    $old_type = file_type_load($type->old_type);
+  }
+  else {
+    $rename_bundle = FALSE;
+    $old_type = file_type_load($type->type);
+  }
+
+  // The type and label fields are required, but description is optional.
+  if (!isset($type->description)) {
+    $type->description = '';
+  }
+  $fields = array(
+    'type' => $type->type,
+    'label' => $type->label,
+    'description' => $type->description,
+  );
+
+  // Prepare the mimetype multiple insert query, but don't execute it until
+  // later in this function.
+  if (!empty($type->mimetypes)) {
+    $mimetype_insert = db_insert('file_type_mimetypes')->fields(array('type', 'mimetype'));
+    foreach ($type->mimetypes as $mimetype) {
+      $mimetype_insert->values(array('type' => $type->type, 'mimetype' => $mimetype));
+    }
+  }
+
+  // Prepare the stream multiple insert query, but don't execute it until
+  // later in this function.
+  if (!empty($type->streams)) {
+    $stream_insert = db_insert('file_type_streams')->fields(array('type', 'stream'));
+    foreach ($type->streams as $stream) {
+      $stream_insert->values(array('type' => $type->type, 'stream' => $stream));
+    }
+  }
+
+  // Update an existing type object, whether with a modified 'type' property or
+  // not.
+  if ($old_type) {
+    if ($old_type->export_type & EXPORT_IN_DATABASE) {
+      db_update('file_type')
+        ->fields($fields)
+        ->condition('type', $old_type->type)
+        ->execute();
+      db_delete('file_type_mimetypes')
+        ->condition('type', $old_type->type)
+        ->execute();
+      db_delete('file_type_streams')
+        ->condition('type', $old_type->type)
+        ->execute();
+    }
+    else {
+      db_insert('file_type')
+        ->fields($fields)
+        ->execute();
+    }
+    if (isset($mimetype_insert)) {
+      $mimetype_insert->execute();
+    }
+    if (isset($stream_insert)) {
+      $stream_insert->execute();
+    }
+    if ($rename_bundle) {
+      field_attach_rename_bundle('file', $old_type->type, $type->type);
+    }
+    module_invoke_all('file_type_update', $type);
+    $status = SAVED_UPDATED;
+  }
+  // Insert a new type object.
+  else {
+    db_insert('file_type')
+      ->fields($fields)
+      ->execute();
+    if (isset($mimetype_insert)) {
+      $mimetype_insert->execute();
+    }
+    if (isset($stream_insert)) {
+      $stream_insert->execute();
+    }
+    field_attach_create_bundle('file', $type->type);
+    module_invoke_all('file_type_insert', $type);
+    $status = SAVED_NEW;
+  }
+
+  // Clear the necessary caches.
+  file_info_cache_clear();
+
+  // Ensure the type has the correct export_type in case the $type parameter
+  // continues to be used by the calling function after this function completes.
+  if (empty($type->export_type)) {
+    $type->export_type = 0;
+  }
+  $type->export_type |= EXPORT_IN_DATABASE;
+
+  return $status;
+}
+
+/**
+ * Deletes a file type from the database.
+ *
+ * This function can be called on its own, or via the CTools exportables
+ * 'delete callback' for {file_type} objects.
+ *
+ * @param $type
+ *   Either a loaded file type object or the machine-name of the type.
+ */
+function file_type_delete($type) {
+  $type = is_string($type) ? file_type_load($type) : $type;
+
+  db_delete('file_type')
+    ->condition('type', $type->type)
+    ->execute();
+  db_delete('file_type_mimetypes')
+    ->condition('type', $type->type)
+    ->execute();
+
+  file_info_cache_clear();
+
+  // After deleting from the database, check if the type still exists as a
+  // code-provided default type. If not, consider the type fully deleted and
+  // invoke the needed hooks.
+  if (!file_type_load($type->type)) {
+    field_attach_delete_bundle('file', $type->type);
+    module_invoke_all('file_type_delete', $type);
+  }
+}
+
+/**
+ * Determines file type for a given file.
+ *
+ * @param $file
+ *   File object.
+ *
+ * @return
+ *   Machine name of file type that should be used for given file.
+ */
+function file_get_type($file) {
+  $types = module_invoke_all('file_type', $file);
+  drupal_alter('file_type', $types, $file);
+
+  return empty($types) ? NULL : reset($types);
+}
+
+/**
+ * @} End of "defgroup file_types".
+ */
 
 /**
  * Helper function to sort an array by the value of each item's 'weight' key, while preserving relative order of items that have equal weight.

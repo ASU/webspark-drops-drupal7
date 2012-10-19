@@ -49,7 +49,7 @@ function file_entity_admin_files($form, &$form_state) {
   // Build the sortable table header.
   $header = array(
     'title' => array('data' => t('Title'), 'field' => 'f.filename'),
-    'type' => array('data' => t('Type'), 'field' => 'f.filemime'),
+    'type' => array('data' => t('Type'), 'field' => 'f.type'),
     'size' => array('data' => t('Size'), 'field' => 'f.filesize'),
     'author' => array('data' => t('Author'), 'field' => 'u.name'),
     'timestamp' => array('data' => t('Updated'), 'field' => 'f.timestamp', 'sort' => 'desc'),
@@ -63,6 +63,8 @@ function file_entity_admin_files($form, &$form_state) {
   $query->condition('f.status', FILE_STATUS_PERMANENT);
   $query->limit($limit);
   $query->orderByHeader($header);
+  $query->addTag('admin_files');
+  $query->addMetaData('form_state', $form_state);
 
   foreach (array_keys(file_entity_get_hidden_stream_wrappers()) as $name) {
     $query->condition('f.uri', $name . '%', 'NOT LIKE');
@@ -83,13 +85,25 @@ function file_entity_admin_files($form, &$form_state) {
   $destination = drupal_get_destination();
   $options = array();
   foreach ($files as $file) {
+    $file_type = file_type_load($file->type);
     $options[$file->fid] = array(
       'title' => theme('file_entity_file_link', array('file' => $file)),
-      'type' =>  check_plain($file->filemime),
+      'type' => $file_type ? check_plain($file_type->label) : FILE_TYPE_NONE,
       'size' => format_size($file->filesize),
       'author' => theme('username', array('account' => $accounts[$file->uid])),
       'timestamp' => format_date($file->timestamp, 'short'),
     );
+
+    // Show a warning for files that do not exist.
+    if (@!file_exists($file->uri)) {
+      $options[$file->fid]['#attributes']['class'][] = 'error';
+      if (!file_stream_wrapper_get_instance_by_uri($file->uri)) {
+        $options[$file->fid]['#attributes']['title'] = t('The stream wrapper for @scheme files is missing.', array('@scheme' => file_uri_scheme($file->uri)));
+      }
+      else {
+        $options[$file->fid]['#attributes']['title'] = t('The file does not exist.');
+      }
+    }
 
     $options[$file->fid]['operations'] = array(
       'data' => array(
@@ -172,23 +186,25 @@ function file_entity_admin_files_submit($form, &$form_state) {
  * Displays the file type admin overview page.
  */
 function file_entity_list_types_page() {
-  $types = file_info_file_types();
-  $entity_info = entity_get_info('file');
+  $file_entity_info = entity_get_info('file');
   $field_ui = module_exists('field_ui');
   $header = array(
     array('data' => t('Name')),
-    array('data' => t('Operations'), 'colspan' => $field_ui ? '3' : '1'),
+    array('data' => t('Operations'), 'colspan' => $field_ui ? '4' : '2'),
   );
   $rows = array();
 
-  foreach ($types as $type => $info) {
-    $row = array(array('data' => theme('file_entity_file_type_overview', $info)));
-    $path = isset($entity_info['bundles'][$type]['admin']['real path']) ? $entity_info['bundles'][$type]['admin']['real path'] : NULL;
+  foreach (file_type_get_all_types(TRUE) as $type) {
+    $row = array(array('data' => theme('file_entity_file_type_overview', array('label' => $type->label, 'description' => $type->description))));
+    $path = isset($file_entity_info['bundles'][$type->type]['admin']['real path']) ? $file_entity_info['bundles'][$type->type]['admin']['real path'] : NULL;
+
+    $row[] = array('data' => isset($path) ? l(t('edit file type'), $path . '/edit') : '');
     if ($field_ui) {
       $row[] = array('data' => isset($path) ? l(t('manage fields'), $path . '/fields') : '');
       $row[] = array('data' => isset($path) ? l(t('manage display'), $path . '/display') : '');
     }
     $row[] = array('data' => isset($path) ? l(t('manage file display'), $path . '/file-display') : '');
+
     $rows[] = $row;
   }
 
@@ -206,6 +222,8 @@ function file_entity_list_types_page() {
  * Form callback; presents file display settings for a given view mode.
  */
 function file_entity_file_display_form($form, &$form_state, $file_type, $view_mode) {
+  $file_type = $file_type->type;
+
   $form['#file_type'] = $file_type;
   $form['#view_mode'] = $view_mode;
   $form['#tree'] = TRUE;
@@ -344,4 +362,120 @@ function theme_file_entity_file_display_order($variables) {
   drupal_add_tabledrag('file-displays-order', 'order', 'sibling', 'file-display-order-weight', NULL, NULL, TRUE);
 
   return $output;
+}
+
+/**
+ * Form constructor for the file type settings form.
+ *
+ * @param object $type
+ *   The file type.
+ *
+ * @see file_entity_file_type_form_validate()
+ * @see file_entity_file_type_form_submit()
+ */
+function file_entity_file_type_form($form, &$form_state, $type) {
+  $form['#file_type'] = $type->type;
+
+  $form['label'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Name'),
+    '#description' => t('This is the human readable name of the file type.'),
+    '#required' => TRUE,
+    '#default_value' => $type->label,
+  );
+  $form['description'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Description'),
+    '#description' => t('This is the description of the file type.'),
+    '#default_value' => $type->description,
+  );
+
+  $form['mimetypes'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Mimetypes'),
+    '#description' => t('Enter one mimetype per line.'),
+    '#default_value' => implode("\n", $type->mimetypes),
+  );
+
+  include_once DRUPAL_ROOT . '/includes/file.mimetypes.inc';
+  $mimetypes = file_mimetype_mapping();
+
+  $form['mimetype_mapping'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Mimetype List'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['mimetype_mapping']['mapping'] = array(
+    '#theme' => 'item_list',
+    '#items' => $mimetypes['mimetypes'],
+  );
+
+  // Options for allowed Streams.
+  $options = array('public' => t('Public files'), 'private' => t('Private files'));
+  foreach (file_get_stream_wrappers() as $stream => $wrapper) {
+    $options[$stream] = $wrapper['name'];
+  }
+  unset($options['temporary']);
+  $default_value = array();
+  if (isset($type->streams)) {
+    foreach ($type->streams as $stream) {
+      $default_value[$stream] = $stream;
+    }
+  }
+  $form['streams'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Allowed streams'),
+    '#options' => $options,
+    '#default_value' => $default_value,
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+
+  return $form;
+}
+
+/**
+ * Form validation handler for file_entity_file_type_form().
+ *
+ * @see file_entity_file_type_form_submit()
+ */
+function file_entity_file_type_form_validate($form, &$form_state) {
+  include_once DRUPAL_ROOT . '/includes/file.mimetypes.inc';
+  $mimetype_mapping = file_mimetype_mapping();
+
+  $valid_mimetypes = $mimetype_mapping['mimetypes'];
+  $submitted_mimetypes = array_filter(array_map('trim', explode("\n", $form_state['values']['mimetypes'])));
+
+  $invalid_mimetypes = array_diff($submitted_mimetypes, $valid_mimetypes);
+  foreach ($invalid_mimetypes as $mimetype) {
+    form_set_error('mimetypes', t('The mimetype %mimetype is not a valid mimetype.', array('%mimetype' => $mimetype)));
+  }
+}
+
+/**
+ * Form submission handler for file_entity_file_type_form().
+ *
+ * @see file_entity_file_type_form_validate()
+ */
+function file_entity_file_type_form_submit($form, &$form_state) {
+  $type = file_type_load($form['#file_type']);
+
+  $type->label = $form_state['values']['label'];
+  $type->description = $form_state['values']['description'];
+  $type->mimetypes = array_filter(array_map('trim', explode("\n", $form_state['values']['mimetypes'])));
+  $type->streams = array();
+  foreach ($form_state['values']['streams'] as $stream) {
+    if ($stream) {
+      $type->streams[] = $stream;
+    }
+  }
+
+  file_type_save($type);
+
+  drupal_set_message(t('The file type %type has been updated.', array('%type' => $type->label)));
+  $form_state['redirect'] = 'admin/structure/file-types';
 }

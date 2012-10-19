@@ -62,7 +62,7 @@
  * language negotiation rule that was previously applied.
  *
  * @see template_preprocess()
- * @see template_preprocess_file()
+ * @see template_preprocess_file_entity()
  * @see template_process()
  */
 ?>

@@ -117,7 +117,7 @@ function media_variable_default($name = NULL) {
       'wysiwyg_title' => t('Media browser'),
       'wysiwyg_icon_title' => t('Add media'),
       //@todo: We should do this per type actually.  For "other" it should be a link.
-      'wysiwyg_default_view_mode' => 'media_large',
+      'wysiwyg_default_view_mode' => 'full',
       // Types which can be selected when embedding media vs wysiwyg.
       'wysiwyg_allowed_types' => array('audio', 'image', 'video'),
       // Attributes which can be modified via the wysiwyg and persist.
@@ -128,7 +128,7 @@ function media_variable_default($name = NULL) {
       // Name of the theme to use in media popup dialogs, defaults to admin_theme
       'dialog_theme' => '',
       // @TODO: Make a configuration form with this.
-      'file_extensions' => FILE_DEFAULT_ALLOWED_EXTENSIONS . ' mp3 mov m4v mpeg avi ogg oga ogv wmv ico',
+      'file_extensions' => FILE_DEFAULT_ALLOWED_EXTENSIONS . ' mp3 mov mp4 m4a m4v mpeg avi ogg oga ogv wmv ico',
       'max_filesize' => '',
       'debug' => FALSE,
 
@@ -137,21 +137,23 @@ function media_variable_default($name = NULL) {
       // Used in media.xml.inc: how long to cache retrieved remote data.
       'xml_cache_expire' => 3600,
 
-      // Browser defaults in media.browser.inc.
-      'browser_viewtype_default' => 'thumbnails',
-      'browser_pager_limit' => 40,
-
       'import_batch_size' => 20,
       'fromurl_supported_schemes' => array('http', 'https', 'ftp', 'smb', 'ftps'),
       'type_icon_directory' => drupal_get_path('module', 'media') . '/images/types',
       'icon_base_directory' => drupal_get_path('module', 'media') . '/images/icons',
       'icon_set' => 'default',
 
+      // Whether to show the legacy Link and Original view modes. Set to TRUE
+      // in media_update_7203() to not break sites updating from 1.x.
+      'show_deprecated_view_modes' => FALSE,
+
       // Deprecated variables no longer in use, but should still be uninstalled.
       'show_file_type_rebuild_nag' => NULL,
       'field_select_media_text' => NULL,
       'field_remove_media_text' => NULL,
       'browser_library_empty_message' => NULL,
+      'browser_pager_limit' => NULL,
+      'browser_viewtype_default' => NULL,
     );
   }
 

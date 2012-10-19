@@ -15,9 +15,6 @@
 // A registry of variable_get defaults.
 require_once (dirname(__FILE__) . '/includes/media.variables.inc');
 
-// Define media related file types and how to display them.
-require_once (dirname(__FILE__) . '/includes/media.types.inc');
-
 // Code relating to using media as a field.
 require_once (dirname(__FILE__) . '/includes/media.fields.inc');
 
@@ -41,6 +38,7 @@ function media_hook_info() {
     'media_wysiwyg_allowed_view_modes_alter',
     'media_format_form_prepare_alter',
     'media_token_to_markup_alter',
+    'query_media_browser_alter',
   );
 
   return array_fill_keys($hooks, array('group' => 'media'));
@@ -66,24 +64,33 @@ function media_help($path, $arg) {
       $output .= '<ul><li>' . t('Enable WYSIWYG plugin on your desired <a href="@wysiwyg-profile">WYSIWYG profile</a>. Please note that you will need to have <a href="@wysiwyg">WYSIWYG</a> module enabled.', array('@wysiwyg-profile' => url('admin/config/content/wysiwyg'), '@wysiwyg' => 'http://drupal.org/project/wysiwyg')) . '</li>';
       $output .= '<li>' . t('Add Media Filter to the WYSIWYG enabled <a href="@input-format">Input format</a>', array('@input-format' => url('admin/config/content/formats'))) . '</li></ul></dd>';
       return $output;
-    case 'admin/structure/file-types/manage/%/display/media_preview':
-    case 'admin/structure/file-types/manage/%/file-display/media_preview':
-      drupal_set_message(t('Changing the Preview view mode could have unintended side effects such as breaking the Media browser or WYSIWYG integration. Only change these display settings if you know what you are doing.'), 'warning');
-      break;
   }
 }
 
 /**
  * Implements hook_entity_info_alter().
- *
- * Add view modes to the file entity type, appropriate for displaying media.
  */
 function media_entity_info_alter(&$entity_info) {
-  $entity_info['file']['view modes']['media_link'] = array('label' => t('Link'), 'custom settings' => TRUE);
-  $entity_info['file']['view modes']['media_preview'] = array('label' => t('Preview'), 'custom settings' => TRUE);
-  $entity_info['file']['view modes']['media_small'] = array('label' => t('Small'), 'custom settings' => TRUE);
-  $entity_info['file']['view modes']['media_large'] = array('label' => t('Large'), 'custom settings' => TRUE);
-  $entity_info['file']['view modes']['media_original'] = array('label' => t('Original'), 'custom settings' => TRUE);
+  // For sites that updated from Media 1.x, continue to provide these deprecated
+  // view modes.
+  // @see http://drupal.org/node/1051090
+  if (media_variable_get('show_deprecated_view_modes')) {
+    $entity_info['file']['view modes'] += array(
+      'media_link' => array(
+        'label' => t('Link'),
+        'custom settings' => TRUE,
+      ),
+      'media_original' => array(
+        'label' => t('Original'),
+        'custom settings' => TRUE,
+      ),
+    );
+  }
+
+  if (module_exists('entity_translation')) {
+    $entity_info['file']['translation']['entity_translation']['class'] = 'MediaEntityTranslationHandler';
+    $entity_info['file']['translation']['entity_translation']['path schemes']['media'] = array('edit path' => 'media/%file/edit/%ctools_js');
+  }
 }
 
 /**
@@ -171,31 +178,6 @@ function media_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('media_browser_testbed'),
     'access arguments' => array('administer files'),
-    'type' => MENU_CALLBACK,
-    'file' => 'includes/media.browser.inc',
-  );
-
-
-  /**
-   * Browser callbacks
-   * @var unknown_type
-   */
-  $items['media/browser/list'] = array(
-    'title' => 'Media browser list',
-    'description' => 'Ajax Callback for getting media',
-    'page callback' => 'media_browser_list',
-    'access callback' => 'media_access',
-    'access arguments' => array('view'),
-    'type' => MENU_CALLBACK,
-    'file' => 'includes/media.browser.inc',
-  );
-
-  $items['media/browser/library'] = array(
-    'title' => 'Media browser library',
-    'description' => 'Media Browser for picking media and uploading new media',
-    'page callback' => 'media_browser_library',
-    'access callback' => 'media_access',
-    'access arguments' => array('view'),
     'type' => MENU_CALLBACK,
     'file' => 'includes/media.browser.inc',
   );
@@ -288,21 +270,12 @@ function media_permission() {
 
 /**
  * Implements hook_theme().
- *
- * @TODO: Needs a major cleanup.
  */
 function media_theme() {
   return array(
-
     // The default media file list form element.
     'media_file_list' => array(
       'variables' => array('element' => NULL),
-    ),
-
-    // A link for a file w/ an icon to the media/$fid page.
-    'media_link' => array(
-      'variables' => array('file' => NULL),
-      'file' => 'includes/media.theme.inc',
     ),
 
     // A preview of the uploaded file.
@@ -317,17 +290,6 @@ function media_theme() {
       'file' => 'includes/media.theme.inc',
     ),
 
-    // Administrative thumbnail previews.
-    'media_admin_thumbnail_operations' => array(
-      'variables' => array('file' => NULL),
-      'file' => 'includes/media.theme.inc',
-    ),
-
-    // Tabs in the media browser.
-    'media_browser_tabs' => array(
-      'file' => 'includes/media.theme.inc',
-    ),
-
     // Dialog page.
     'media_dialog_page' => array(
       'render element' => 'page',
@@ -335,12 +297,13 @@ function media_theme() {
       'file' => 'includes/media.theme.inc',
     ),
 
-    //
+    // Media form API element type.
     'media_element' => array(
       'render element' => 'element',
       'file' => 'includes/media.theme.inc',
     ),
 
+    // Display a file as a large icon.
     'media_formatter_large_icon' => array(
       'variables' => array('file' => NULL, 'attributes' => array()),
       'file' => 'includes/media.theme.inc',
@@ -405,7 +368,7 @@ function media_page_alter(&$page) {
 
     // Disable administration modules from adding output to the popup.
     // @see http://drupal.org/node/914786
-    module_invoke_all('suppress');
+    module_invoke_all('suppress', TRUE);
 
     foreach (element_children($page) as $key) {
       if ($key != 'content') {
@@ -910,6 +873,18 @@ function media_parse_to_file($url) {
 }
 
 /**
+ * Silly function to recursively run check_plain on an array.
+ *
+ * There is probably something in core I am not aware of that does this.
+ *
+ * @param $value
+ * @param $key
+ */
+function media_recursive_check_plain(&$value, $key) {
+  $value = check_plain($value);
+}
+
+/**
  * Implements hook_element_info().
  */
 function media_element_info() {
@@ -1043,12 +1018,12 @@ function media_element_validate(&$element, &$form_state) {
 
     $has_value = FALSE;
     foreach ($form_state['values'][$field_name][$lang] as $value) {
-      if ($value['fid']) {
+      if (!empty($value['fid'])) {
         $has_value = TRUE;
       }
     }
     if (!$has_value) {
-      form_error($element, t('%element_title is required.', array('%element_title' => $element['#title'])));
+      form_error($element, t('%element_title is required.', array('%element_title' => $form_state['field'][$field_name][$lang]['instance']['label'])));
     }
   }
 }
@@ -1093,11 +1068,10 @@ function media_filter_info() {
  */
 function media_get_thumbnail_preview($file, $link = NULL) {
   // If a file has an invalid type, allow file_view_file() to work.
-  if (!file_info_file_types($file->type)) {
+  if (!file_type_is_enabled($file->type)) {
     $file->type = file_get_type($file);
   }
-
-  $preview = file_view_file($file, 'media_preview');
+  $preview = file_view_file($file, 'preview');
   $preview['#show_names'] = TRUE;
   $preview['#add_link'] = $link;
   $preview['#theme_wrappers'][] = 'media_thumbnail';
@@ -1119,11 +1093,47 @@ function media_get_thumbnail_preview($file, $link = NULL) {
  */
 function media_file_validate_types(stdClass $file, $types) {
   $errors = array();
-  if (!in_array(media_get_type($file), $types)) {
+  if (!in_array(file_get_type($file), $types)) {
     $errors[] = t('Only the following types of files are allowed to be uploaded: %types-allowed', array('%types-allowed' => implode(', ', $types)));
   }
 
   return $errors;
+}
+
+/**
+ * Implements hook_file_type_info_alter().
+ */
+function media_file_type_info_alter(array &$info) {
+  // Add default view callback support for all file types.
+  foreach ($info as $type => $type_info) {
+    $info[$type] += array(
+      'default view callback' => 'media_file_type_media_default_view',
+    );
+  }
+}
+
+/**
+ * Implements hook_file_type_TYPE_default_view().
+ *
+ * Returns a drupal_render() array for displaying the file when there are no
+ * administrator-configured formatters, or none of the configured ones return a
+ * display.
+ */
+function media_file_type_media_default_view($file, $view_mode, $langcode) {
+  // During preview, or when custom attribute values are needed on the displayed
+  // element, use a media icon.
+  if ($view_mode == 'preview' || isset($file->override)) {
+    return array(
+      '#theme' => 'media_formatter_large_icon',
+      '#file' => $file,
+    );
+  }
+
+  // Finally, fall back to File module's generic file display.
+  return array(
+    '#theme' => 'file_link',
+    '#file' => $file,
+  );
 }
 
 /**

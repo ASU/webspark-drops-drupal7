@@ -335,7 +335,9 @@ function panopoly_widgets_field_default_fields() {
             'include_map' => 1,
             'include_text' => 0,
             'information_bubble' => 0,
+            'langcode' => 'en',
             'link_text' => 'View larger map',
+            'map_type' => 'm',
             'zoom_level' => '14',
           ),
           'type' => 'simple_gmap',
@@ -724,16 +726,16 @@ function panopoly_widgets_field_default_fields() {
     ),
   );
 
-  // Exported field: 'fieldable_panels_pane-video-field_video_video'.
-  $fields['fieldable_panels_pane-video-field_video_video'] = array(
+  // Exported field: 'fieldable_panels_pane-video-field_video_file'.
+  $fields['fieldable_panels_pane-video-field_video_file'] = array(
     'field_config' => array(
       'active' => '1',
       'cardinality' => '1',
       'deleted' => '0',
       'entity_types' => array(),
-      'field_name' => 'field_video_video',
+      'field_name' => 'field_video_file',
       'foreign keys' => array(
-        'file_managed' => array(
+        'fid' => array(
           'columns' => array(
             'fid' => 'fid',
           ),
@@ -746,10 +748,14 @@ function panopoly_widgets_field_default_fields() {
         ),
       ),
       'locked' => '0',
-      'module' => 'mediafield',
-      'settings' => array(),
+      'module' => 'file',
+      'settings' => array(
+        'display_default' => 0,
+        'display_field' => 0,
+        'uri_scheme' => 'public',
+      ),
       'translatable' => '0',
-      'type' => 'media',
+      'type' => 'file',
     ),
     'field_instance' => array(
       'bundle' => 'video',
@@ -758,20 +764,23 @@ function panopoly_widgets_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'hidden',
-          'module' => 'mediafield',
+          'module' => 'file_entity',
           'settings' => array(
             'file_view_mode' => 'default',
           ),
-          'type' => 'media',
-          'weight' => '1',
+          'type' => 'file_rendered',
+          'weight' => '2',
         ),
       ),
       'entity_type' => 'fieldable_panels_pane',
-      'field_name' => 'field_video_video',
+      'field_name' => 'field_video_file',
       'label' => 'Video',
       'required' => 0,
       'settings' => array(
+        'description_field' => 0,
+        'file_directory' => '',
         'file_extensions' => 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp mp3 mov m4v mp4 mpeg avi ogg oga ogv wmv ico',
+        'max_filesize' => '',
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -799,7 +808,7 @@ function panopoly_widgets_field_default_fields() {
           'progress_indicator' => 'throbber',
         ),
         'type' => 'media_generic',
-        'weight' => '-3',
+        'weight' => '-2',
       ),
     ),
   );

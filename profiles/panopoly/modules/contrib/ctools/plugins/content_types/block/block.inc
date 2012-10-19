@@ -85,46 +85,26 @@ function _ctools_block_content_type_content_type($module, $delta, $block) {
  * doesn't cache its results anyway.
  */
 function _ctools_block_load_blocks() {
+  if (!module_exists('block')) {
+    return array();
+  }
+
   $blocks = &drupal_static(__FUNCTION__, NULL);
   if (!isset($blocks)) {
     global $theme_key;
 
-    if (module_exists('block')) {
-      $query = db_select('block', 'b');
-      $result = $query
-        ->fields('b')
-        ->condition('b.theme', $theme_key)
-        ->orderBy('b.region')
-        ->orderBy('b.weight')
-        ->orderBy('b.module')
-        ->addTag('block_load')
-        ->addTag('translatable')
-        ->execute();
+    $query = db_select('block', 'b');
+    $result = $query
+      ->fields('b')
+      ->condition('b.theme', $theme_key)
+      ->orderBy('b.region')
+      ->orderBy('b.weight')
+      ->orderBy('b.module')
+      ->addTag('block_load')
+      ->addTag('translatable')
+      ->execute();
 
-      $block_info = $result->fetchAllAssoc('bid');
-    }
-
-    else {
-      $block_info = array();
-      foreach (module_implements('block_info') as $module) {
-        foreach (module_invoke($module, 'block_info') as $delta => $block) {
-          $block_info[] = (object) array(
-            'module' => $module,
-            'delta' => $delta,
-            'theme' => $theme_key,
-            'status' => 0,
-            'weight' => 0,
-            'region' => -1,
-            'custom' => 0,
-            'visibility' => 0,
-            'pages' => NULL,
-            'title' => NULL,
-            'cache' => isset($block['cache']) ? $block['cache'] : 0,
-          );
-        }
-      }
-    }
-
+    $block_info = $result->fetchAllAssoc('bid');
     // Allow modules to modify the block list.
     drupal_alter('block_list', $block_info);
 
@@ -166,17 +146,17 @@ function ctools_block_content_type_render($subtype, $conf) {
     // Allow modules to modify the block before it is viewed, via either
     // hook_block_view_alter() or hook_block_view_MODULE_DELTA_alter().
     drupal_alter(array('block_view', "block_view_{$module}_{$delta}"), $block, $info);
-    $block = (object) $block;
   }
+  $block = (object) $block;
 
-  if (!is_object($block)) {
+  if (empty($block)) {
     return;
   }
 
   $block->module = $module;
   $block->delta = $delta;
 
-  if ($module == 'block') {
+  if ($module == 'block' && !empty($info) && isset($info->title)) {
     $block->title = $info->title;
   }
   else if (isset($block->subject)) {

@@ -4,6 +4,7 @@
  */
 
 include_once('panopoly_admin.features.inc');
+include_once('panopoly_admin.defaultconfig.inc');
 
 /**
  * Implementation of hook_apps_app_info()
@@ -28,7 +29,7 @@ function panopoly_admin_configure_form($form, &$form_state) {
       '1' => 'Enabled',
       '0' => 'Disabled',
     ),
-    '#default_value' => variable_get('panopoly_admin_machine_name', FALSE),
+    '#default_value' => variable_get('panopoly_admin_machine_name', 0),
     '#description' => t('Do you want to provide an option to specify a machine name (provided by the Default Content module) on the content editing form?'),
   );
 
@@ -40,7 +41,7 @@ function panopoly_admin_configure_form($form, &$form_state) {
       '1' => 'Enabled',
       '0' => 'Disabled',
     ),
-    '#default_value' => variable_get('panopoly_admin_revision_option', FALSE),
+    '#default_value' => variable_get('panopoly_admin_revision_option', 0),
     '#description' => t('Do you want to provide an option to create a new revision for content on the content editing form?'),
   );
 
@@ -49,9 +50,23 @@ function panopoly_admin_configure_form($form, &$form_state) {
     '#type' => 'select',
     '#required' => TRUE,
     '#options' => array(
+      '1' => 'Enabled',
+      '0' => 'Disabled',
     ),
-    '#default_value' => variable_get('panopoly_admin_link_description', FALSE),
+    '#default_value' => variable_get('panopoly_admin_link_description', 0),
     '#description' => t('Do you want to provide a description field for a menu item link on the node edit page?'),
+  );
+
+  $form['panopoly_admin_advanced_plugins'] = array(
+    '#title' => t('Use Advanced Panel Plugins'),
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#options' => array(
+      '1' => 'Enabled',
+      '0' => 'Disabled',
+    ),
+    '#default_value' => variable_get('panopoly_admin_advanced_plugins', 0),
+    '#description' => t('Do you want to enable the advanced Panel plugins in the Panopoly pane library? This includes rarely used Panel plugins for such things as view context, token support, and page elements?'),
   );
 
   return system_settings_form($form);
@@ -77,6 +92,13 @@ function panopoly_admin_panels_pane_content_alter($content, $pane, $args, $conte
   if ($pane->subtype == 'node:field_featured_categories' && !empty($content->content['field_featured_categories']) && $content->content['field_featured_categories']['#access'] == FALSE) {
     $content->title = '';
   }
+}
+
+/**
+ * Implementation of hook_ctools_content_subtype_alter()
+ */
+function panopoly_admin_ctools_content_subtype_alter(&$subtype, &$plugin) {
+
 }
 
 /**
@@ -166,7 +188,7 @@ function panopoly_admin_form_alter(&$form, &$form_state, $form_id) {
   }
 
   // Improve the menu adding experience
-  if (isset($form['menu']) && isset($form['menu']['enabled'])) {
+  if (isset($form['menu']) && isset($form['menu']['enabled']) && $form['menu']['#access']) {
     $form['menu']['link']['link_title']['#size'] = '';
     $form['menu']['link']['weight']['#access'] = FALSE;
     $form['menu']['link']['link_title']['#title'] = 'Title';
@@ -225,6 +247,30 @@ function panopoly_admin_menu() {
     'access arguments' => array('administer panelizer'),
   );
 
+  // Panels pane layout enable/disable page callback
+  $items['admin/panopoly/libraries/panes/layout/%/%/%'] = array(
+    'type' => MENU_CALLBACK,
+    'page callback' => 'panopoly_admin_switch_layout_action',
+    'page arguments' => array(5, 6, 7),
+    'access arguments' => array('administer page manager'),
+  );
+
+  // Panels pane enable/disable page callback
+  $items['admin/panopoly/libraries/panes/pane/%/%/%/%'] = array(
+    'type' => MENU_CALLBACK,
+    'page callback' => 'panopoly_admin_switch_pane_action',
+    'page arguments' => array(5, 6, 7, 8),
+    'access arguments' => array('administer page manager'),
+  );
+
+  // Panels pane type enable/disable page callback
+  $items['admin/panopoly/libraries/panes/type/%/%/%'] = array(
+    'type' => MENU_CALLBACK,
+    'page callback' => 'panopoly_admin_switch_pane_type_action',
+    'page arguments' => array(5, 6, 7),
+    'access arguments' => array('administer page manager'),
+  );
+
   // Add an administration page for Panopoly
   $items['admin/panopoly'] = array(
     'title' => 'Panopoly',
@@ -274,7 +320,7 @@ function panopoly_admin_menu() {
   );
 
   // Add settings pages for Panopoly and Panopoly Apps
-  foreach(module_list() as $module) {
+  foreach (module_list() as $module) {
     $app_info = module_invoke($module, 'apps_app_info');
     if (!empty($app_info) && !empty($app_info['configure form'])) {
       $module_info = drupal_parse_info_file(drupal_get_path('module', $module) . '/' . $module . '.info');
@@ -286,7 +332,8 @@ function panopoly_admin_menu() {
           'page arguments' => array($app_info['configure form']),
           'access arguments' => array('administer site configuration'),
         );
-      } else if (!empty($module_info['package']) && $module_info['package'] == 'Panopoly Apps') {
+      } 
+      elseif (!empty($module_info['package']) && $module_info['package'] == 'Panopoly Apps') {
         $items['admin/panopoly/app_settings/' . $module] = array(
           'title' => $module_info['name'],
           'description' => 'This is the configuration screen for ' . $module_info['name'],
@@ -444,5 +491,206 @@ function panopoly_admin_config_page() {
   }
   else {
     return t('You do not have any administrative items.');
+  }
+}
+
+/**
+ * Helper function to identify advanced plugins
+ */
+function panopoly_admin_is_advanced_plugin($plugin) {
+
+  // Specifically excluded categories
+  $fixed_advanced_plugins = array(
+    'View context', // support for views context
+    'Page elements', // sitewide panes that don't work so well in $content region
+    'Facet API', // default facet api options subsumed into "Search Facets" option
+    'File', // support for file items that is just confusing
+    'Fielded panes', // unnecessary default FPP content type
+    'Fieldable_panels_pane', // duplicated fields for custom panes
+    'Existing pages', // pages from pm existing pages module that will break the site
+  );
+
+  // Specifically excluded panes
+  $fixed_advanced_panes = array(
+    'Execute PHP',  // sigh
+    'Devel', // devel option for advanced users
+    'Switch user',  // devel option for advanced users
+    'Theme switcher', // devel option for advanced users
+  );
+
+  // Define this as an advanced plugin if it is in the advance category or pane list or has tokens
+  $pane_label = !empty($plugin['title']) ? $plugin['title'] : '';
+  $category_label = (is_string($plugin['category'])) ? $plugin['category'] : $plugin['category'][0];
+  return (in_array($category_label, $fixed_advanced_plugins) || in_array($pane_label, $fixed_advanced_panes) || strpos($category_label, '(tokens)'));
+}
+
+/**
+ * Helper function to enable or disable layouts
+ */
+function panopoly_admin_switch_layout_action($status, $layout_name, $token) {
+  
+  $commands = array();
+  $panels_page_allowed_layouts = unserialize(variable_get('panels_page_allowed_layouts'));
+  
+  if ($token == drupal_get_token($layout_name) && $status == 'enable') {
+    $panels_page_allowed_layouts->allowed_layout_settings[$layout_name] = TRUE;
+    $commands[] = ajax_command_replace('#panopoly-admin-layout-response-' . $layout_name, _panopoly_admin_general_layout_get_status($layout_name, $status));
+  } 
+  elseif ($token == drupal_get_token($layout_name) && $status == 'disable') {
+    $panels_page_allowed_layouts->allowed_layout_settings[$layout_name] = FALSE;
+    $commands[] = ajax_command_replace('#panopoly-admin-layout-response-' . $layout_name, _panopoly_admin_general_layout_get_status($layout_name, $status));
+  } 
+  else {
+    $commands[] = ajax_command_replace('#panopoly-admin-layout-response-' . $layout_name, 'Trouble!');
+  }
+
+  variable_set('panels_page_allowed_layouts', serialize($panels_page_allowed_layouts));
+  print ajax_render($commands);
+  drupal_exit();
+}
+
+/**
+ * Helper function to enable or disable general panel panes
+ */
+function panopoly_admin_switch_pane_action($status, $category_name, $plugin_name, $token) {
+
+  $commands = array();
+  $panels_page_allowed_types = variable_get('panels_page_allowed_types');
+
+  if ($token == drupal_get_token($plugin_name) && $status == 'enable') {
+    $panels_page_allowed_types[$category_name . '-' . $plugin_name] = $category_name . '-' . $plugin_name;
+    $commands[] = ajax_command_replace('#panopoly-admin-pane-response-' . $category_name . '-' . str_replace(':', '_', $plugin_name), _panopoly_admin_general_panes_get_status($plugin_name, $category_name, $status));
+  } 
+  elseif ($token == drupal_get_token($plugin_name) && $status == 'disable') {
+    $panels_page_allowed_types[$category_name . '-' . $plugin_name] = 0;
+    $commands[] = ajax_command_replace('#panopoly-admin-pane-response-' . $category_name . '-' . str_replace(':', '_', $plugin_name), _panopoly_admin_general_panes_get_status($plugin_name, $category_name, $status));
+  } 
+  else {
+    $commands[] = ajax_command_replace('#panopoly-admin-pane-response-' . $category_name . '-' . str_replace(':', '_', $plugin_name), 'Trouble!');
+  }
+
+  variable_set('panels_page_allowed_types', $panels_page_allowed_types);
+  print ajax_render($commands);
+  drupal_exit();
+}
+
+/**
+ * Helper function to enable or disable general pane types
+ */
+function panopoly_admin_switch_pane_type_action($status, $plugin_type, $token) {
+
+  $commands = array();
+  $panels_page_default = variable_get('panels_page_default');
+
+  if ($token == drupal_get_token($plugin_type) && $status == 'enable') {
+    $panels_page_default[$plugin_type] = $plugin_type;
+    $commands[] = ajax_command_replace('#panopoly-admin-type-response-' . $plugin_type, _panopoly_admin_plugin_type_get_status($plugin_type, $status));
+  } 
+  elseif ($token == drupal_get_token($plugin_type) && $status == 'disable') {
+    $panels_page_default[$plugin_type] = 0;
+    $commands[] = ajax_command_replace('#panopoly-admin-type-response-' . $plugin_type, _panopoly_admin_plugin_type_get_status($plugin_type, $status));
+  } 
+  else {
+    $commands[] = ajax_command_replace('#panopoly-admin-type-response-' . $plugin_type, 'Trouble!');
+  }
+
+  variable_set('panels_page_default', $panels_page_default);
+  print ajax_render($commands);
+  drupal_exit();
+}
+
+/**
+ * Helper function to get the layout status
+ */
+function _panopoly_admin_general_layout_get_status($layout_name, $status) {
+  if ($status == 'enable') {
+    $link = array(
+      '#type' => 'link',
+      '#title' => t('Disable?'),
+      '#href' => 'admin/panopoly/libraries/panes/layout/disable/' . $layout_name . '/' . drupal_get_token($layout_name),
+      '#ajax' => array(
+        'wrapper' => 'panopoly-admin-layout-response-' . $layout_name,
+        'method' => 'replace',
+        'effect' => 'fade',
+      ),
+    );
+    return '<div id="panopoly-admin-layout-response-' . $layout_name . '">Enabled (' . drupal_render($link) . ')</div>';
+  }
+  else {
+    $link = array(
+      '#type' => 'link',
+      '#title' => t('Enable?'),
+      '#href' => 'admin/panopoly/libraries/panes/layout/enable/' . $layout_name . '/' . drupal_get_token($layout_name),
+      '#ajax' => array(
+        'wrapper' => 'panopoly-admin-layout-response-' . $layout_name,
+        'method' => 'replace',
+        'effect' => 'fade',
+      ),
+    );
+    return '<div id="panopoly-admin-layout-response-' . $layout_name . '">Disabled (' . drupal_render($link) . ')</div>';
+  }
+}
+
+/**
+ * Helper function to get the plugin status
+ */
+function _panopoly_admin_general_panes_get_status($plugin_name, $category_name, $status) {
+  if ($status == 'enable') {
+    $link = array(
+      '#type' => 'link',
+      '#title' => t('Disable?'),
+      '#href' => 'admin/panopoly/libraries/panes/pane/disable/' . $category_name . '/' . $plugin_name . '/' . drupal_get_token($plugin_name),
+      '#ajax' => array(
+        'wrapper' => 'panopoly-admin-pane-response-' . $category_name . '-' . str_replace(':', '_', $plugin_name),
+        'method' => 'replace',
+        'effect' => 'fade',     
+      ),                          
+    );
+    return '<div id="panopoly-admin-pane-response-' . $category_name . '-' . str_replace(':', '_', $plugin_name) . '">Enabled (' . drupal_render($link) . ')</div>';
+  }
+  else {
+    $link = array(
+      '#type' => 'link',
+      '#title' => t('Enable?'),
+      '#href' => 'admin/panopoly/libraries/panes/pane/enable/' . $category_name . '/' . $plugin_name . '/' . drupal_get_token($plugin_name),
+      '#ajax' => array(
+        'wrapper' => 'panopoly-admin-pane-response-' . $category_name . '-' . str_replace(':', '_', $plugin_name),
+        'method' => 'replace',
+        'effect' => 'fade',
+      ),
+    );
+    return '<div id="panopoly-admin-pane-response-' . $category_name . '-' . str_replace(':', '_', $plugin_name) . '">Disabled (' . drupal_render($link) . ')</div>';
+  }
+}
+
+/**
+ * Helper function to get the plugin type status
+ */
+function _panopoly_admin_plugin_type_get_status($plugin_type, $status) {
+  if ($status == 'enable') {
+    $link = array(
+      '#type' => 'link',
+      '#title' => t('Disable?'),
+      '#href' => 'admin/panopoly/libraries/panes/type/disable/' . $plugin_type . '/' . drupal_get_token($plugin_type),
+      '#ajax' => array(
+        'wrapper' => 'panopoly-admin-type-response-' . $plugin_type,
+        'method' => 'replace',
+        'effect' => 'fade',
+      ),
+    );
+    return '<div id="panopoly-admin-type-response-' . $plugin_type . '">Enabled (' . drupal_render($link) . ')</div>';
+  }
+  else {
+    $link = array(
+      '#type' => 'link',
+      '#title' => t('Enable?'),
+      '#href' => 'admin/panopoly/libraries/panes/type/enable/' . $plugin_type . '/' . drupal_get_token($plugin_type),
+      '#ajax' => array(
+        'wrapper' => 'panopoly-admin-type-response-' . $plugin_type,
+        'method' => 'replace',
+        'effect' => 'fade',
+      ),
+    );
+    return '<div id="panopoly-admin-type-response-' . $plugin_type . '">Disabled (' . drupal_render($link) . ')</div>';
   }
 }

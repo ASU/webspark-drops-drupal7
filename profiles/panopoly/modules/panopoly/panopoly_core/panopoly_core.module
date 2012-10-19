@@ -1,6 +1,7 @@
 <?php
 
 include_once('panopoly_core.features.inc');
+include_once('panopoly_core.defaultconfig.inc');
 
 /**
  * Implementation of hook_init()
@@ -68,7 +69,7 @@ function panopoly_core_configure_form($form, &$form_state) {
       '1' => 'Enabled',
       '0' => 'Disabled',
     ),
-    '#default_value' => variable_get('panopoly_core_breadcrumb_title', TRUE) ? '1' : '0',
+    '#default_value' => variable_get('panopoly_core_breadcrumb_title', 1),
     '#description' => t('Do you want Panopoly to append the page title to the site breadcrumb?'),
   );
 
@@ -95,7 +96,7 @@ function panopoly_core_apps_servers_info() {
     'panopoly' => array(
       'title' => 'Panopoly',
       'description' => 'Apps for Panopoly',
-      'manifest' => (empty($info['version']) || $info['version'] == '7.x-1.x-dev') ? 'http://apps.getpantheon.com/panopoly-dev' : 'http://apps.getpantheon.com/panopoly',
+      'manifest' => (empty($info['version']) || $info['version'] == '7.x-1.x-dev' || strpos($info['version'], '-dev')) ? 'http://apps.getpantheon.com/panopoly-dev' : 'http://apps.getpantheon.com/panopoly',
     ),
   );
 }
@@ -130,13 +131,31 @@ function panopoly_core_module_implements_alter(&$implementations, $hook) {
 }
 
 /**
- * Implements hook_css_alter().
- *
- * This hook is implemented to include our special jQuery UI theme. It requires removing the default
- * theme provided by Drupal core.
+ * Implementation hook_element_info_alter().
  */
-function panopoly_core_css_alter(&$css) {
-  // Installs the jquery.ui themeroller theme to the theme.
+function panopoly_core_element_info_alter(&$type) {
+  // Rather than implementing hook_css_alter(), we'll add a custom pre render 
+  // function for the styles elemement. This is to allow us to override 
+  // seven_css_alter(), which always runs after any module's implementation.
+  if (isset($type['styles']['#pre_render'])) {
+    array_unshift($type['styles']['#pre_render'], 'panopoly_core_pre_render_styles');
+  }
+}
+
+/**
+ * Implementation of hook_css_alter()
+ */
+function panopoly_core_css_alter() { 
+  // Deprecated
+}
+
+/**
+ * Pre render the styles element.
+ */
+function panopoly_core_pre_render_styles($elements) {
+  $css = &$elements['#items'];
+
+  // Installs the jQuery.UI themeroller theme to the theme.
   if (isset($css['misc/ui/jquery.ui.theme.css'])) {
     $css['misc/ui/jquery.ui.theme.css']['data'] = drupal_get_path('module', 'panopoly_core') . '/css/panopoly-jquery-ui-theme.css';
   }
@@ -148,6 +167,8 @@ function panopoly_core_css_alter(&$css) {
   if (isset($css['misc/ui/jquery.ui.tabs.css'])) {
     unset($css['misc/ui/jquery.ui.tabs.css']);
   }
+
+  return $elements;
 }
 
 /**

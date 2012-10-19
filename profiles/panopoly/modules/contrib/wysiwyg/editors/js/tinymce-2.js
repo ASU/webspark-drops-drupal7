@@ -10,18 +10,8 @@
  *   An object containing editor settings for each input format.
  */
 Drupal.wysiwyg.editor.init.tinymce = function(settings) {
-  // If JS compression is enabled, TinyMCE is unable to autodetect its global
-  // settinge, hence we need to define them manually.
-  // @todo Move global library settings somewhere else.
-  tinyMCE.baseURL = settings.global.editorBasePath;
-  tinyMCE.srcMode = (settings.global.execMode == 'src' ? '_src' : '');
-  tinyMCE.gzipMode = (settings.global.execMode == 'gzip');
-
   // Initialize editor configurations.
   for (var format in settings) {
-    if (format == 'global') {
-      continue;
-    }
     tinyMCE.init(settings[format]);
     if (Drupal.settings.wysiwyg.plugins[format]) {
       // Load native external plugins.

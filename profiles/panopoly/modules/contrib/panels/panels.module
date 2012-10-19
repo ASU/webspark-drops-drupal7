@@ -1554,10 +1554,12 @@ function panel_context_panels_cache_get($key) {
   $arguments = array();
   if ($args) {
     $arguments = explode('\\', $args);
+    $contexts = ctools_context_handler_get_task_contexts($task, $page->subtask, $arguments);
+    $contexts = ctools_context_handler_get_handler_contexts($contexts, $handler);
   }
-
-  $contexts = ctools_context_handler_get_task_contexts($task, $page->subtask, $arguments);
-  ctools_context_handler_get_handler_contexts($contexts, $handler);
+  else {
+    $contexts = ctools_context_handler_get_all_contexts($page->task, $page->subtask, $handler);
+  }
 
   $cache->display = &panels_panel_context_get_display($handler);
   $cache->display->context = $contexts;

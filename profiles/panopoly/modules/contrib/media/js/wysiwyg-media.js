@@ -83,7 +83,7 @@ Drupal.wysiwyg.plugins.media = {
     if (additional) {
       for (k in additional) {
         if (additional.hasOwnProperty(k)) {
-          if (k === 'attr' || k === 'alt' || k === "title") {
+          if (k === 'attr') {
             imgElement.attr(k, additional[k]);
           }
         }
@@ -169,7 +169,7 @@ Drupal.wysiwyg.plugins.media = {
     // string. Using a regular expression instead of jQuery manipulation to
     // prevent <script> tags from being displaced.
     // @see http://drupal.org/node/1280758.
-    if (matches = content.match(/<img[^>]+class=([\'"])media-image[^>]*>/gi)) {
+    if (matches = content.match(/<img[^>]+class=([\'"]media-image |[^>]*\smedia-image\s|[^>]*\smedia-image[\'"]|[\'"]media-image[\'"])[^>]*>/gi)) {
       for (var i = 0; i < matches.length; i++) {
         var imageTag = matches[i];
         var inlineTag = Drupal.wysiwyg.plugins.media.createTag($(imageTag));
@@ -327,7 +327,7 @@ Drupal.wysiwyg.plugins.media = {
     if (additional) {
       for (var name in additional) {
         if (additional.hasOwnProperty(name)) {
-          if (name !== 'alt' && name !== 'title') {
+          if (name !== 'alt') {
             imgElement.addClass('attr__' + name + '__' + additional[name]);
           }
         }

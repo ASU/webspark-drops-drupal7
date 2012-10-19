@@ -73,16 +73,15 @@ function file_entity_tokens($type, $tokens, array $data = array(), array $option
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'type':
-          if ($file_type = file_info_file_types($file->type)) {
-            $replacements[$original] = $sanitize ? check_plain($file_type['label']) : $file_type['label'];
+          if ($file_type = file_type_load($file->type)) {
+            $replacements[$original] = $sanitize ? check_plain($file_type->label) : $file_type->label;
           }
           break;
       }
     }
 
     // Chained token relationships.
-    if (($file_type_tokens = token_find_with_prefix($tokens, 'type')) && $file_type = file_info_file_types($file->type)) {
-      $file_type['type'] = $file->type;
+    if (($file_type_tokens = token_find_with_prefix($tokens, 'type')) && $file_type = file_type_load($file->type)) {
       $replacements += token_generate('file-type', $file_type_tokens, array('file_type' => $file_type), $options);
     }
   }
@@ -94,21 +93,21 @@ function file_entity_tokens($type, $tokens, array $data = array(), array $option
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'name':
-          $replacements[$original] = $sanitize ? check_plain($file_type['label']) : $file_type['label'];
+          $replacements[$original] = $sanitize ? check_plain($file_type->label) : $file_type->label;
           break;
         case 'machine-name':
           // This is a machine name so does not ever need to be sanitized.
-          $replacements[$original] = $file_type['type'];
+          $replacements[$original] = $file_type->type;
           break;
         case 'count':
           $query = db_select('file_managed');
-          $query->condition('type', $file_type['type']);
+          $query->condition('type', $file_type->type);
           $query->addTag('file_type_file_count');
           $count = $query->countQuery()->execute()->fetchField();
           $replacements[$original] = (int) $count;
           break;
         case 'edit-url':
-          $replacements[$original] = url('admin/structure/file-types/manage/' . $file_type['type'] . '/fields', $url_options);
+          $replacements[$original] = url('admin/structure/file-types/manage/' . $file_type->type . '/fields', $url_options);
           break;
       }
     }

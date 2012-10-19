@@ -3,26 +3,24 @@
 include_once('panopoly_images.features.inc');
 
 /**
+ * Implementation of hook_init()
+ */
+function panopoly_images_init() {
+
+  // Adding the panopoly images file to the theme so it will show up in the WYSIWYG
+  drupal_add_css(drupal_get_path('module', 'panopoly_images') . '/panopoly-images.css', array('group' => CSS_THEME));
+}
+
+
+/**
  * Implementation of drupal_alter() for media_wysiwyg_allowed_view_modes
  */
 function panopoly_images_media_wysiwyg_allowed_view_modes_alter(&$options, $context) {
 
-  // Unset confusing options
-  if (!empty($options['token'])) {
-    unset($options['token']); 
-  }
-  if (!empty($options['media_link'])) {
-    unset($options['media_link']);
-  }
-  if (!empty($options['full'])) {
-    unset($options['full']); 
-  }
-
   // Relabel some options
-  $options['media_original']['label'] = t('Full Size');
-  $options['media_large']['label'] = t('Half Size');
-  $options['media_small']['label'] = t('Quarter Size');
-  $options['media_preview']['label'] = t('Thumbnail');
+  $options['default']['label'] = t('Full Size');
+  $options['teaser']['label'] = t('Half Size');
+  $options['preview']['label'] = t('Thumbnail');
 }
 
 /**
@@ -49,6 +47,11 @@ function panopoly_images_form_alter(&$form, &$form_state, $form_id) {
         '#markup' => theme('image', array('path' => image_style_url($format, $image_path))),
       );
     }
+  }
+
+  // Set the default media style to be default
+  if ($form_id == 'media_format_form' && !empty($form['options']['format'])) {
+    $form['options']['format']['#default_value'] = 'default';
   }
 }
 

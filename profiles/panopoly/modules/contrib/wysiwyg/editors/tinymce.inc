@@ -28,6 +28,7 @@ function wysiwyg_tinymce_editor() {
     ),
     'version callback' => 'wysiwyg_tinymce_version',
     'themes callback' => 'wysiwyg_tinymce_themes',
+    'init callback' => 'wysiwyg_tinymce_init',
     'settings callback' => 'wysiwyg_tinymce_settings',
     'plugin callback' => 'wysiwyg_tinymce_plugins',
     'plugin settings callback' => 'wysiwyg_tinymce_plugin_settings',
@@ -126,6 +127,40 @@ function wysiwyg_tinymce_themes($editor, $profile) {
 }
 
 /**
+ * Returns an initialization JavaScript for this editor library.
+ *
+ * @param array $editor
+ *   The editor library definition.
+ * @param string $library
+ *   The library variant key from $editor['libraries'].
+ * @param object $profile
+ *   The (first) wysiwyg editor profile.
+ *
+ * @return string
+ *   A string containing inline JavaScript to execute before the editor library
+ *   script is loaded.
+ */
+function wysiwyg_tinymce_init($editor, $library) {
+  // TinyMCE unconditionally searches for its library filename in SCRIPT tags on
+  // on the page upon loading the library in order to determine the base path to
+  // itself. When JavaScript aggregation is enabled, this search fails and all
+  // relative constructed paths within TinyMCE are broken. The library has a
+  // tinyMCE.baseURL property, but it is not publicly documented and thus not
+  // reliable. The official support forum suggests to solve the issue through
+  // the global window.tinyMCEPreInit variable also used by various serverside
+  // compressor scrips available from the official website.
+  // @see http://www.tinymce.com/forum/viewtopic.php?id=23286
+  $settings = drupal_json_encode(array(
+    'base' => base_path() . $editor['library path'],
+    'suffix' => (strpos($library, 'src') !== FALSE || strpos($library, 'dev') !== FALSE ? '_src' : ''),
+    'query' => '',
+  ));
+  return <<<EOL
+window.tinyMCEPreInit = $settings;
+EOL;
+}
+
+/**
  * Return runtime editor settings for a given wysiwyg profile.
  *
  * @param $editor
@@ -191,7 +226,7 @@ function wysiwyg_tinymce_settings($editor, $config, $theme) {
       $settings['content_css'] = implode(',', wysiwyg_get_css());
     }
     elseif ($config['css_setting'] == 'self' && isset($config['css_path'])) {
-      $settings['content_css'] = strtr($config['css_path'], array('%b' => base_path(), '%t' => path_to_theme()));
+      $settings['content_css'] = strtr($config['css_path'], array('%b' => base_path(), '%t' => drupal_get_path('theme', variable_get('theme_default', NULL))));
     }
   }
 

@@ -1,10 +1,6 @@
 (function($) {
 
 Drupal.wysiwyg.editor.init.ckeditor = function(settings) {
-  window.CKEDITOR_BASEPATH = settings.global.editorBasePath + '/';
-  CKEDITOR.basePath = window.CKEDITOR_BASEPATH;
-//  Drupal.wysiwyg.editor['initialized']['ckeditor'] = true;
-
   // Plugins must only be loaded once. Only the settings from the first format
   // will be used but they're identical anyway.
   var registeredPlugins = {};
@@ -39,10 +35,6 @@ Drupal.wysiwyg.editor.init.ckeditor = function(settings) {
  * Attach this editor to a target element.
  */
 Drupal.wysiwyg.editor.attach.ckeditor = function(context, params, settings) {
-//  if (typeof Drupal.wysiwyg.editor.initialized.ckeditor == 'undefined') {
-//    Drupal.wysiwyg.editor.init.ckeditor(settings);
-//  }
-
   // Apply editor instance settings.
   CKEDITOR.config.customConfig = '';
 

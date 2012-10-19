@@ -32,7 +32,7 @@ function panopoly_admin_overridden_page_templates_content_type_render($subtype, 
     ->condition('pe.view_mode', 'page_manager')
     ->execute()
     ->fetchAllAssoc('entity_id');
-  foreach($pages as $overridden_page) {
+  foreach ($pages as $overridden_page) {
     $entity_info = entity_get_info($overridden_page->entity_type);
     $entity = entity_load($overridden_page->entity_type, array($overridden_page->entity_id));
     $entity = $entity[$overridden_page->entity_id];

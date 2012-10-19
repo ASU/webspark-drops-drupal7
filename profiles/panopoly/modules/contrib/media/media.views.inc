@@ -91,6 +91,12 @@ function template_preprocess_media_views_view_media_browser(&$vars) {
 
   // Add media browser javascript and CSS.
   drupal_add_js(drupal_get_path('module', 'media') . '/js/plugins/media.views.js');
-  // We need to see if we can depricate this
-  drupal_add_js(drupal_get_path('module', 'media') . '/js/plugins/media.library.js');
+}
+
+/**
+ * Implements hook_views_invalidate_cache().
+ */
+function media_views_invalidate_cache() {
+  cache_clear_all('media:browser:plugin', 'cache', TRUE);
+  drupal_static_reset('media_get_browser_plugin_info');
 }

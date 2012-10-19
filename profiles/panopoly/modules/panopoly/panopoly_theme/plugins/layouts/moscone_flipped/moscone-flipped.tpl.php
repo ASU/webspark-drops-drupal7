@@ -17,7 +17,7 @@
       <?php print $content['header']; ?>
     </div>
   </div>
-  
+
   <div class="moscone-flipped-container moscone-flipped-column-content clearfix">
     <div class="moscone-flipped-column-content-region moscone-flipped-content panel-panel">
       <div class="moscone-flipped-column-content-region-inner moscone-flipped-content-inner panel-panel-inner">
@@ -30,11 +30,11 @@
       </div>
     </div>
   </div>
-  
-  <div class="moscone-container moscone-header clearfix panel-panel">
-    <div class="moscone-container-inner moscone-header-inner panel-panel-inner">
+
+  <div class="moscone-container moscone-footer clearfix panel-panel">
+    <div class="moscone-container-inner moscone-footer-inner panel-panel-inner">
       <?php print $content['footer']; ?>
     </div>
   </div>
-  
+
 </div><!-- /.moscone-flipped -->

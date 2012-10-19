@@ -18,7 +18,7 @@ function mediafield_field_info() {
         'file_extensions' => media_variable_get('file_extensions'),
       ),
       'default_widget' => 'media_generic',
-      'default_formatter' => 'media_large',
+      'default_formatter' => 'media',
       'property_type' => 'field_item_file',
       'property_callbacks' => array('entity_metadata_field_file_callback'),
     ),

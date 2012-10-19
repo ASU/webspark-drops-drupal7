@@ -21,7 +21,7 @@ function panopoly_admin_flexible_layouts_content_type_render($subtype, $conf, $p
 
   // Bring in anything from the flexible layout builder
   $layout_options = array();
-  foreach(panels_get_layouts() as $layout_option) {
+  foreach (panels_get_layouts() as $layout_option) {
     if ($layout_option['theme'] == 'panels_flexible' && $layout_option['builder'] == FALSE) {
       $layout_options[] = array(
         'data' => array(
@@ -42,7 +42,7 @@ function panopoly_admin_flexible_layouts_content_type_render($subtype, $conf, $p
     $pane->content = theme('table', array('header' => $header, 'rows' => $layout_options, 'attributes' => array('class' => array('flexible-layouts'))));
   }
   else {
-    $pane->content = t('No flexible layout options have yet been created. !add one now!', array('!add' => l('Add', 'admin/structure/panels/layouts/add-flexible')));
+    $pane->content = t('No flexible layout options have yet been created. !add one now!', array('!add' => l(t('Add'), 'admin/structure/panels/layouts/add-flexible')));
   }
   return $pane;
 }

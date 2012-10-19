@@ -302,6 +302,7 @@ function wysiwyg_get_profile($format) {
 function wysiwyg_load_editor($profile) {
   static $settings_added;
   static $loaded = array();
+  $path = drupal_get_path('module', 'wysiwyg');
 
   $name = $profile->editor;
   // Library files must be loaded only once.
@@ -309,6 +310,13 @@ function wysiwyg_load_editor($profile) {
     // Load editor.
     $editor = wysiwyg_get_editor($name);
     if ($editor) {
+      $default_library_options = array(
+        'type' => 'file',
+        'scope' => 'header',
+        'defer' => FALSE,
+        'cache' => TRUE,
+        'preprocess' => TRUE,
+      );
       // Determine library files to load.
       // @todo Allow to configure the library/execMode to use.
       if (isset($profile->settings['library']) && isset($editor['libraries'][$profile->settings['library']])) {
@@ -321,9 +329,33 @@ function wysiwyg_load_editor($profile) {
         $files = array_shift($editor['libraries']);
         $files = $files['files'];
       }
+
+      // Check whether the editor requires an initialization script.
+      if (!empty($editor['init callback'])) {
+        $init = $editor['init callback']($editor, $library, $profile);
+        if (!empty($init)) {
+          // Build a file for each of the editors to hold the init scripts.
+          // @todo Aggregate all initialization scripts into one file.
+          $uri = 'public://js/wysiwyg/wysiwyg_' . $name . '_' . drupal_hash_base64($init) . '.js';
+          $init_exists = file_exists($uri);
+          if (!$init_exists) {
+            $js_path = dirname($uri);
+            file_prepare_directory($js_path, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+          }
+          // Attempt to create the file, or fall back to an inline script (which
+          // will not work in Ajax calls).
+          if (!$init_exists && !file_unmanaged_save_data($init, $uri, FILE_EXISTS_REPLACE)) {
+            drupal_add_js($init, array('type' => 'inline') + $default_library_options);
+          }
+          else {
+            drupal_add_js(file_create_url($uri), $default_library_options);
+          }
+        }
+      }
+
       foreach ($files as $file => $options) {
         if (is_array($options)) {
-          $options += array('type' => 'file', 'scope' => 'header', 'defer' => FALSE, 'cache' => TRUE, 'preprocess' => TRUE);
+          $options += $default_library_options;
           drupal_add_js($editor['library path'] . '/' . $file, $options);
         }
         else {
@@ -351,17 +383,6 @@ function wysiwyg_load_editor($profile) {
       foreach ($files as $file) {
         drupal_add_css($editor['css path'] . '/' . $file);
       }
-
-      drupal_add_js(array('wysiwyg' => array(
-        'configs' => array($editor['name'] => array('global' => array(
-          // @todo Move into (global) editor settings.
-          // If JS compression is enabled, at least TinyMCE is unable to determine
-          // its own base path and exec mode since it can't find the script name.
-          'editorBasePath' => base_path() . $editor['library path'],
-          'execMode' => $library,
-        ))),
-      )), 'setting');
-
       $loaded[$name] = TRUE;
     }
     else {
@@ -378,7 +399,6 @@ function wysiwyg_load_editor($profile) {
       'enable' => t('Enable rich-text'),
     )), 'setting');
 
-    $path = drupal_get_path('module', 'wysiwyg');
     // Initialize our namespaces in the *header* to do not force editor
     // integration scripts to check and define Drupal.wysiwyg on its own.
     drupal_add_js($path . '/wysiwyg.init.js', array('group' => JS_LIBRARY));

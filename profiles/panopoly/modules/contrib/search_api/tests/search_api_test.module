@@ -231,14 +231,14 @@ class SearchApiTestService extends SearchApiAbstractService {
   }
 
   public function indexItems(SearchApiIndex $index, array $items) {
-    // Refuse to index items with IDs that are multiples of 7 unless all items are indexed.
-    $count = db_query('SELECT COUNT(*) FROM {search_api_item} WHERE index_id = :index_id AND changed <> 0', array(':index_id' => $index->id))->fetchField();
-    if ($count == count($items)) {
+    // Refuse to index items with IDs that are multiples of 8 unless the
+    // "search_api_test_index_all" variable is set.
+    if (variable_get('search_api_test_index_all', FALSE)) {
       return $this->index($index, array_keys($items));
     }
     $ret = array();
     foreach ($items as $id => $item) {
-      if ($id % 7) {
+      if ($id % 8) {
         $ret[] = $id;
       }
     }

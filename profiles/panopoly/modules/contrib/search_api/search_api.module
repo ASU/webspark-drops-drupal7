@@ -241,7 +241,7 @@ function search_api_cron() {
         search_api_track_item_queued($index, $ids);
       }
       catch (SearchApiException $e) {
-        watchdog('search_api', $e->getMessage(), NULL, WATCHDOG_WARNING);
+        watchdog_exception('search_api', $e);
       }
     }
   }
@@ -791,6 +791,11 @@ function search_api_search_api_alter_callback_info() {
     'description' => t('Add node access information to the index.'),
     'class' => 'SearchApiAlterNodeAccess',
   );
+  $callbacks['search_api_alter_node_status'] = array(
+    'name' => t('Exclude unpublished nodes'),
+    'description' => t('Exclude unpublished nodes from the index.'),
+    'class' => 'SearchApiAlterNodeStatus',
+  );
 
   return $callbacks;
 }
@@ -889,7 +894,7 @@ function search_api_track_item_change($type, array $item_ids) {
         search_api_index_specific_items_delayed($index, $item_ids);
       }
       catch (SearchApiException $e) {
-        watchdog('search_api', $e->getMessage(), NULL, WATCHDOG_ERROR);
+        watchdog_exception('search_api', $e);
       }
     }
   }
@@ -1035,6 +1040,16 @@ function search_api_index_specific_items(SearchApiIndex $index, array $ids) {
   $indexed = $items ? $index->index($cloned_items) : array();
   if ($indexed) {
     search_api_track_item_indexed($index, $indexed);
+    // If some items could not be indexed, we don't want to try re-indexing
+    // them right away, so we mark them as "freshly" changed. Sadly, there is
+    // no better way than to mark them as indexed first...
+    if (count($indexed) < count($ids)) {
+      // Believe it or not but this is actually quite faster than the equivalent
+      // $diff = array_diff($ids, $indexed);
+      $diff = array_keys(array_diff_key(array_flip($ids), array_flip($indexed)));
+      $index->datasource()->trackItemIndexed($diff, $index);
+      $index->datasource()->trackItemChange($diff, array($index));
+    }
   }
   return $indexed;
 }
@@ -1391,7 +1406,7 @@ function search_api_search_api_query_alter(SearchApiQueryInterface $query) {
         _search_api_query_add_node_access($account, $query);
       }
       catch (SearchApiException $e) {
-        watchdog('search_api', 'An error occurred while altering node access to a search query: @message.', array('@message' => $e->getMessage()), WATCHDOG_WARNING);
+        watchdog_exception('search_api', $e);
       }
     }
     else {
@@ -2085,6 +2100,23 @@ function search_api_index_delete($id) {
 }
 
 /**
+ * Options list callback for search indexes.
+ *
+ * @return array
+ *   An array of search index machine names mapped to their human-readable
+ *   names.
+ */
+function search_api_index_options_list() {
+  $ret = array(
+    NULL => '- ' . t('All') . ' -',
+  );
+  foreach (search_api_index_load_multiple(FALSE) as $id => $index) {
+    $ret[$id] = $index->name;
+  }
+  return $ret;
+}
+
+/**
  * Cron queue worker callback for indexing some items.
  *
  * @param array $task
@@ -2097,21 +2129,26 @@ function search_api_index_delete($id) {
  */
 function _search_api_indexing_queue_process(array $task) {
   $index = search_api_index_load($task['index']);
-  if ($index && $index->enabled && !$index->read_only && $task['items']) {
-    $indexed = search_api_index_specific_items($index, $task['items']);
-    $num = count($indexed);
-    // If some items couldn't be indexed, mark them as dirty again.
-    if ($num < count($task['items'])) {
-      // Believe it or not but this is actually quite faster than the equivalent
-      // $diff = array_diff($task['items'], $indexed);
-      $diff = array_keys(array_diff_key(array_flip($task['items']), array_flip($indexed)));
-      // Mark the items as dirty again.
-      $index->datasource()->trackItemChange($diff, array($index), TRUE);
+  try {
+    if ($index && $index->enabled && !$index->read_only && $task['items']) {
+      $indexed = search_api_index_specific_items($index, $task['items']);
+      $num = count($indexed);
+      // If some items couldn't be indexed, mark them as dirty again.
+      if ($num < count($task['items'])) {
+        // Believe it or not but this is actually quite faster than the equivalent
+        // $diff = array_diff($task['items'], $indexed);
+        $diff = array_keys(array_diff_key(array_flip($task['items']), array_flip($indexed)));
+        // Mark the items as dirty again.
+        $index->datasource()->trackItemChange($diff, array($index), TRUE);
+      }
+      if ($num) {
+        watchdog('search_api', t('Indexed @num items for index @name', array('@num' => $num, '@name' => $index->name)), NULL, WATCHDOG_INFO);
+      }
+      return $num;
     }
-    if ($num) {
-      watchdog('search_api', t('Indexed @num items for index @name', array('@num' => $num, '@name' => $index->name)), NULL, WATCHDOG_INFO);
-    }
-    return $num;
+  }
+  catch (SearchApiException $e) {
+    watchdog_exception('search_api', $e);
   }
 }
 
@@ -2121,15 +2158,20 @@ function _search_api_indexing_queue_process(array $task) {
 function _search_api_index_queued_items() {
   $queue = &search_api_index_specific_items_delayed();
 
-  if ($queue) {
-    $indexes = search_api_index_load_multiple(array_keys($queue));
-    foreach ($indexes as $index_id => $index) {
-      search_api_index_specific_items($index, $queue[$index_id]);
+  try {
+    if ($queue) {
+      $indexes = search_api_index_load_multiple(array_keys($queue));
+      foreach ($indexes as $index_id => $index) {
+        search_api_index_specific_items($index, $queue[$index_id]);
+      }
     }
-  }
 
-  // Reset the queue so we don't index the items twice by accident.
-  $queue = array();
+    // Reset the queue so we don't index the items twice by accident.
+    $queue = array();
+  }
+  catch (SearchApiException $e) {
+    watchdog_exception('search_api', $e);
+  }
 }
 
 /**
@@ -2164,4 +2206,145 @@ function _search_api_convert_custom_type($callback, $value, $original_type, $typ
     }
   }
   return $values;
+}
+
+/**
+ * Create and set a batch for indexing items.
+ *
+ * @param SearchApiIndex $index
+ *   The index for which items should be indexed.
+ * @param $batch_size
+ *   Number of items to index per batch.
+ * @param $limit
+ *   Maximum number of items to index.
+ * @param $remaining
+ *   Remaining items to index.
+ * @param $drush
+ *   Boolean specifying whether this was called from drush or not.
+ */
+function _search_api_batch_indexing_create(SearchApiIndex $index, $batch_size, $limit, $remaining, $drush = FALSE) {
+  if ($limit !== 0 && $batch_size !== 0) {
+    $t = !empty($drush) ? 'dt' : 't';
+
+    if ($limit < 0 || $limit > $remaining) {
+      $limit = $remaining;
+    }
+    if ($batch_size < 0) {
+      $batch_size = $remaining;
+    }
+    $batch = array(
+      'title' => $t('Indexing items'),
+      'operations' => array(
+        array('_search_api_batch_indexing_callback', array($index, $batch_size, $limit, $drush)),
+      ),
+      'progress_message' => $t('Completed about @percentage% of the indexing operation.'),
+      'finished' => '_search_api_batch_indexing_finished',
+      'file' => drupal_get_path('module', 'search_api') . '/search_api.module',
+    );
+    batch_set($batch);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Batch API callback for the indexing functionality.
+ *
+ * @param SearchApiIndex $index
+ *   The index for which items should be indexed.
+ * @param integer $batch_size
+ *   Number of items to index per batch.
+ * @param integer $limit
+ *   Maximum number of items to index.
+ * @param boolean $drush
+ *   Boolean specifying whether this was called from drush or not.
+ * @param array $context
+ *   The batch context.
+ */
+function _search_api_batch_indexing_callback(SearchApiIndex $index, $batch_size, $limit, $drush = FALSE, array &$context) {
+  // Persistent data among batch runs.
+  if (!isset($context['sandbox']['limit'])) {
+    $context['sandbox']['limit'] = $limit;
+    $context['sandbox']['batch_size'] = $batch_size;
+    $context['sandbox']['progress'] = 0;
+  }
+
+  // Persistent data for results.
+  if (!isset($context['results']['indexed'])) {
+    $context['results']['indexed'] = 0;
+    $context['results']['not indexed'] = 0;
+    $context['results']['drush'] = $drush;
+  }
+
+  // Number of items to index for this run.
+  $to_index = min($context['sandbox']['limit'] - $context['sandbox']['progress'], $context['sandbox']['batch_size']);
+
+  // Index the items.
+  $indexed = search_api_index_items($index, $to_index);
+  $context['results']['indexed'] += $indexed;
+
+  // Display progress message.
+  if ($indexed > 0) {
+    $format_plural = $context['results']['drush'] === TRUE ? '_search_api_drush_format_plural' : 'format_plural';
+    $context['message'] = $format_plural($context['results']['indexed'], 'Successfully indexed 1 item.', 'Successfully indexed @count items.');
+  }
+
+  // Some items couldn't be indexed.
+  if ($indexed !== $to_index) {
+    $context['results']['not indexed'] += $to_index - $indexed;
+  }
+
+  $context['sandbox']['progress'] += $to_index;
+
+  // Everything has been indexed.
+  if ($indexed === 0 || $context['sandbox']['progress'] >= $context['sandbox']['limit']) {
+    $context['finished'] = 1;
+  }
+  else {
+    $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['limit'];
+  }
+}
+
+/**
+ * Batch API finishing callback for the indexing functionality.
+ *
+ * @param boolean $success
+ *   Result of the batch operation.
+ * @param array $results
+ *   Results.
+ * @param array $operations
+ *   Remaining batch operation to process.
+ */
+function _search_api_batch_indexing_finished($success, $results, $operations) {
+  // Check if called from drush.
+  if (!empty($results['drush'])) {
+    $drupal_set_message = 'drush_log';
+    $format_plural = '_search_api_drush_format_plural';
+    $t = 'dt';
+    $success_message = 'success';
+  }
+  else {
+    $drupal_set_message = 'drupal_set_message';
+    $format_plural = 'format_plural';
+    $t = 't';
+    $success_message = 'status';
+  }
+
+  // Display result messages.
+  if ($success) {
+    if (!empty($results['indexed'])) {
+      $drupal_set_message($format_plural($results['indexed'], 'Successfully indexed 1 item.', 'Successfully indexed @count items.'), $success_message);
+
+      if (!empty($results['not indexed'])) {
+       $drupal_set_message($format_plural($results['not indexed'], '1 item could not be indexed. Check the logs for details.', '@count items could not be indexed. Check the logs for details.'), 'warning');
+      }
+    }
+    else {
+      $drupal_set_message($t("Couldn't index items. Check the logs for details."), 'error');
+    }
+  }
+  else {
+    $drupal_set_message($t("An error occurred while trying to index items. Check the logs for details."), 'error');
+  }
+
 }

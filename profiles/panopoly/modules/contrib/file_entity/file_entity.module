@@ -36,6 +36,8 @@ function file_entity_hook_info() {
     'file_view',
     'file_view_alter',
     'file_displays_alter',
+    'file_type',
+    'file_type_alter',
   );
 
   return array_fill_keys($hooks, array('group' => 'file'));
@@ -77,6 +79,10 @@ function file_entity_help($path, $arg) {
     case 'admin/structure/file-types':
       $output = '<p>' . t('When a file is uploaded to this website, it is assigned one of the following types, based on what kind of file it is.') . '</p>';
       return $output;
+    case 'admin/structure/file-types/manage/%/display/preview':
+    case 'admin/structure/file-types/manage/%/file-display/preview':
+      drupal_set_message(t('Some modules rely on the Preview view mode to function correctly. Changing these settings may break parts of your site.'), 'warning');
+      break;
   }
 }
 
@@ -101,7 +107,7 @@ function file_entity_menu() {
     'access arguments' => array('administer site configuration'),
     'file' => 'file_entity.admin.inc',
   );
-  $items['admin/structure/file-types/manage/%'] = array(
+  $items['admin/structure/file-types/manage/%file_type'] = array(
     'title' => 'Manage file types',
     'description' => 'Manage settings for the type of files used on your site.',
   );
@@ -192,6 +198,21 @@ function file_entity_menu() {
       // configured as a wildcard (multiple file types sharing the same menu
       // router path).
       $file_type_argument = isset($bundle_info['admin']['bundle argument']) ? $bundle_info['admin']['bundle argument'] : $file_type;
+
+      $items[$path] = array(
+        'title' => 'Edit file type',
+        'title callback' => 'file_type_get_name',
+        'title arguments' => array(4),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('file_entity_file_type_form', $file_type_argument),
+        'file' => 'file_entity.admin.inc',
+      ) + $access;
+
+      // Add the 'File type settings' tab.
+      $items["$path/edit"] = array(
+        'title' => 'Edit',
+        'type' => MENU_DEFAULT_LOCAL_TASK,
+      );
 
       // Add the 'Manage file display' tab.
       $items["$path/file-display"] = array(
@@ -342,30 +363,42 @@ function file_entity_theme() {
 /**
  * Implements hook_entity_info_alter().
  *
- * Extends the core file entity to be fieldable. Modules can define file types
- * via hook_file_type_info(). For each defined type, create a bundle, so that
- * fields can be configured per file type.
+ * Extends the core file entity to be fieldable. The file type is used as the
+ * bundle key. File types are implemented as CTools exportables, so modules can
+ * define default file types via hook_file_default_types(), and the
+ * administrator can override the default types or add custom ones via
+ * admin/structure/file-types.
  */
 function file_entity_entity_info_alter(&$entity_info) {
   $entity_info['file']['fieldable'] = TRUE;
   $entity_info['file']['entity keys']['bundle'] = 'type';
+  $entity_info['file']['bundle keys']['bundle'] = 'type';
   $entity_info['file']['bundles'] = array();
   $entity_info['file']['uri callback'] = 'file_entity_uri';
-  $entity_info['file']['view modes']['full'] = array(
-    'label' => t('Full'),
-    'custom settings' => FALSE,
+  $entity_info['file']['view modes'] += array(
+    'teaser' => array(
+      'label' => t('Teaser'),
+      'custom settings' => TRUE,
+    ),
+    'full' => array(
+      'label' => t('Full content'),
+      'custom settings' => FALSE,
+    ),
+    'preview' => array(
+      'label' => t('Preview'),
+      'custom settings' => TRUE,
+    ),
   );
-  foreach (file_info_file_types() as $type => $info) {
-    $info += array(
-      // Provide a default administration path for Field UI, but not if 'admin'
-      // has been explicitly set to NULL.
+
+  foreach (file_type_get_enabled_types() as $type) {
+    $entity_info['file']['bundles'][$type->type] = array(
+      'label' => $type->label,
       'admin' => array(
-        'path' => 'admin/structure/file-types/manage/%',
-        'real path' => 'admin/structure/file-types/manage/' . $type,
+        'path' => 'admin/structure/file-types/manage/%file_type',
+        'real path' => 'admin/structure/file-types/manage/' . $type->type,
         'bundle argument' => 4,
       ),
     );
-    $entity_info['file']['bundles'][$type] = array_intersect_key($info, drupal_map_assoc(array('label', 'admin')));
   }
 
   // Ensure some of the Entity API callbacks are supported.
@@ -419,22 +452,24 @@ function file_entity_metadata_form_file($file) {
 function file_entity_field_extra_fields() {
   $info = array();
 
-  foreach (file_type_get_names() as $type => $name) {
-    $info['file'][$type]['form']['filename'] = array(
-      'label' => t('File name'),
-      'description' => t('File name'),
-      'weight' => -10,
-    );
-    $info['file'][$type]['form']['preview'] = array(
-      'label' => t('File'),
-      'description' => t('File preview'),
-      'weight' => -5,
-    );
-    $info['file'][$type]['display']['file'] = array(
-      'label' => t('File'),
-      'description' => t('File display'),
-      'weight' => 0,
-    );
+  if ($file_type_names = file_type_get_names()) {
+    foreach ($file_type_names as $type => $name) {
+      $info['file'][$type]['form']['filename'] = array(
+        'label' => t('File name'),
+        'description' => t('File name'),
+        'weight' => -10,
+      );
+      $info['file'][$type]['form']['preview'] = array(
+        'label' => t('File'),
+        'description' => t('File preview'),
+        'weight' => -5,
+      );
+      $info['file'][$type]['display']['file'] = array(
+        'label' => t('File'),
+        'description' => t('File display'),
+        'weight' => 0,
+      );
+    }
   }
 
   return $info;
@@ -448,33 +483,26 @@ function file_entity_file_formatter_info() {
 
   // Allow file field formatters to be reused for displaying the file entity's
   // file pseudo-field.
-  if (module_exists('file')) {
-    foreach (field_info_formatter_types() as $field_formatter_type => $field_formatter_info) {
-      if (in_array('file', $field_formatter_info['field types'])) {
-        $formatters['file_field_' . $field_formatter_type] = array(
-          'label' => $field_formatter_info['label'],
-          'view callback' => 'file_entity_file_formatter_file_field_view',
+  foreach (field_info_formatter_types() as $field_formatter_type => $field_formatter_info) {
+    if (in_array('file', $field_formatter_info['field types'])) {
+      $formatters['file_field_' . $field_formatter_type] = array(
+        'label' => $field_formatter_info['label'],
+        'view callback' => 'file_entity_file_formatter_file_field_view',
+      );
+      if (!empty($field_formatter_info['settings'])) {
+        $formatters['file_field_' . $field_formatter_type] += array(
+          'default settings' => $field_formatter_info['settings'],
+          'settings callback' => 'file_entity_file_formatter_file_field_settings',
         );
-        if (isset($field_formatter_info['settings'])) {
-          $formatters['file_field_' . $field_formatter_type] += array(
-            'default settings' => $field_formatter_info['settings'],
-            'settings callback' => 'file_entity_file_formatter_file_field_settings',
-          );
-        }
       }
     }
   }
 
   // Add a simple file formatter for displaying an image in a chosen style.
   if (module_exists('image')) {
-
     $formatters['file_image'] = array(
       'label' => t('Image'),
-      'default settings' => array(
-        'image_style' => '',
-        'alt' => '',
-        'title' => ''
-      ),
+      'default settings' => array('image_style' => ''),
       'view callback' => 'file_entity_file_formatter_file_image_view',
       'settings callback' => 'file_entity_file_formatter_file_image_settings',
     );
@@ -585,10 +613,6 @@ function file_entity_file_formatter_file_image_view($file, $display, $langcode) 
         '#path' => $file->uri,
         '#width' => $file->image_dimensions['width'],
         '#height' => $file->image_dimensions['height'],
-        '#alt' => token_replace($display['settings']['alt'],
-          array('file' => $file), array('clear' => 1, 'sanitize' => 0)),
-        '#title' => token_replace($display['settings']['title'],
-          array('file' => $file), array('clear' => 1, 'sanitize' => 0)),
       );
     }
     else {
@@ -597,10 +621,6 @@ function file_entity_file_formatter_file_image_view($file, $display, $langcode) 
         '#path' => $file->uri,
         '#width' => $file->image_dimensions['width'],
         '#height' => $file->image_dimensions['height'],
-        '#alt' => token_replace($display['settings']['alt'],
-          array('file' => $file), array('clear' => 1, 'sanitize' => 0)),
-        '#title' => token_replace($display['settings']['title'],
-          array('file' => $file), array('clear' => 1, 'sanitize' => 0)),
       );
     }
     return $element;
@@ -621,32 +641,6 @@ function file_entity_file_formatter_file_image_settings($form, &$form_state, $se
     '#default_value' => $settings['image_style'],
     '#empty_option' => t('None (original image)'),
   );
-
-  // For image files we allow the alt attribute (required in HTML).
-  $element['alt'] = array(
-    '#title' => t('Alt attribute'),
-    '#description' => t('The text to use as value for the <em>img</em> tag <em>alt</em> attribute. Can be left empty. Token replacements are available'),
-    '#type' => 'textfield',
-    '#default_value' => $settings['alt'],
-  );
-
-  // Allow the setting of the title attribute.
-  $element['title'] = array(
-    '#title' => t('Title attribute'),
-    '#description' => t('The text to use as value for the <em>img</em> tag <em>title</em> attribute. Can be left empty. Token replacements are available'),
-    '#type' => 'textfield',
-    '#default_value' => $settings['title'],
-  );
-
-  if (module_exists('token')) {
-    $element['tokens'] = array(
-      '#theme' => 'token_tree',
-      '#token_types' => array('file'),
-      '#global_types' => TRUE,
-      '#click_insert' => TRUE,
-    );
-  }
-
   return $element;
 }
 
@@ -659,7 +653,7 @@ function file_entity_file_formatter_file_image_settings($form, &$form_state, $se
 function _file_entity_view_mode_menu_access($file_type, $view_mode, $access_callback) {
   // Deny access if the view mode isn't configured to use custom display
   // settings.
-  $view_mode_settings = field_view_mode_settings('file', $file_type);
+  $view_mode_settings = field_view_mode_settings('file', $file_type->type);
   $visibility = ($view_mode == 'default') || !empty($view_mode_settings[$view_mode]['custom_settings']);
   if (!$visibility) {
     return FALSE;
@@ -900,6 +894,95 @@ function file_entity_multiple_delete_confirm_operation($fids) {
  */
 function file_entity_get_hidden_stream_wrappers() {
   return array_diff_key(file_get_stream_wrappers(STREAM_WRAPPERS_ALL), file_get_stream_wrappers(STREAM_WRAPPERS_VISIBLE));
+}
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function file_entity_ctools_plugin_api($owner, $api) {
+  if ($owner == 'file_entity' && $api == 'file_type') {
+    return array('version' => 1);
+  }
+}
+
+/**
+ * Implements hook_file_default_types().
+ */
+function file_entity_file_default_types() {
+  $types = array();
+
+  // Image.
+  $types['image'] = (object) array(
+    'api_version' => 1,
+    'type' => 'image',
+    'label' => t('Image'),
+    'description' => t('An <em>Image</em> file is a still visual.'),
+    'mimetypes' => array(
+      'image/jpeg',
+      'image/gif',
+      'image/png',
+    ),
+    'streams' => array(
+      'public',
+    ),
+  );
+
+  // Video.
+  $types['video'] = (object) array(
+    'api_version' => 1,
+    'type' => 'video',
+    'label' => t('Video'),
+    'description' => t('A <em>Video</em> file is a moving visual recording.'),
+    'mimetypes' => array(
+      'video/quicktime',
+      'video/mp4',
+      'video/x-msvideo',
+      'video/ogg',
+    ),
+    'streams' => array(
+      'public',
+    ),
+  );
+
+  // Audio.
+  $types['audio'] = (object) array(
+    'api_version' => 1,
+    'type' => 'audio',
+    'label' => t('Audio'),
+    'description' => t('An <em>Audio</em> file is a sound recording.'),
+    'mimetypes' => array(
+      'audio/mpeg',
+      'audio/x-ms-wma',
+      'audio/x-wav',
+      'audio/ogg',
+    ),
+    'streams' => array(
+      'public',
+    ),
+  );
+
+  // Document.
+  $types['document'] = (object) array(
+    'api_version' => 1,
+    'type' => 'document',
+    'label' => t('Document'),
+    'description' => t('A <em>Document</em> file is written information.'),
+    'mimetypes' => array(
+      'text/plain',
+      'application/msword',
+      'application/vnd.ms-excel',
+      'application/pdf',
+      'application/vnd.ms-powerpoint',
+      'application/vnd.oasis.opendocument.text',
+      'application/vnd.oasis.opendocument.spreadsheet',
+      'application/vnd.oasis.opendocument.presentation',
+    ),
+    'streams' => array(
+      'public',
+    ),
+  );
+
+  return $types;
 }
 
 /**

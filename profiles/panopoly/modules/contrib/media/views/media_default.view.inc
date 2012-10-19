@@ -5,7 +5,7 @@
  * The default view for the media browser library tab.
  */
 
-$view = new view;
+$view = new view();
 $view->name = 'media_default';
 $view->description = 'Default view for the media browser library tab.';
 $view->tag = 'media, default';
@@ -22,7 +22,9 @@ $handler->display->display_options['group_by'] = TRUE;
 $handler->display->display_options['access']['type'] = 'perm';
 $handler->display->display_options['cache']['type'] = 'none';
 $handler->display->display_options['query']['type'] = 'views_query';
-$handler->display->display_options['query']['options']['query_comment'] = FALSE;
+$handler->display->display_options['query']['options']['query_tags'] = array(
+  0 => 'media_browser',
+);
 $handler->display->display_options['exposed_form']['type'] = 'basic';
 $handler->display->display_options['exposed_form']['options']['autosubmit'] = TRUE;
 $handler->display->display_options['pager']['type'] = 'full';
@@ -89,7 +91,7 @@ $handler->display->display_options['filters']['type']['expose']['identifier'] = 
 /* Display: Media browser */
 $handler = $view->new_display('media_browser', 'Media browser', 'media_browser_1');
 $handler->display->display_options['defaults']['title'] = FALSE;
-$handler->display->display_options['title'] = 'View Library';
+$handler->display->display_options['title'] = 'Library';
 
 /* Display: My files */
 $handler = $view->new_display('media_browser', 'My files', 'media_browser_my_files');
@@ -102,17 +104,40 @@ $handler->display->display_options['relationships']['uid']['table'] = 'file_mana
 $handler->display->display_options['relationships']['uid']['field'] = 'uid';
 $handler->display->display_options['relationships']['uid']['required'] = TRUE;
 $handler->display->display_options['defaults']['arguments'] = FALSE;
-/* Contextual filter: User: Uid */
-$handler->display->display_options['arguments']['uid']['id'] = 'uid';
-$handler->display->display_options['arguments']['uid']['table'] = 'users';
-$handler->display->display_options['arguments']['uid']['field'] = 'uid';
-$handler->display->display_options['arguments']['uid']['relationship'] = 'uid';
-$handler->display->display_options['arguments']['uid']['default_action'] = 'default';
-$handler->display->display_options['arguments']['uid']['default_argument_type'] = 'current_user';
-$handler->display->display_options['arguments']['uid']['summary']['number_of_records'] = '0';
-$handler->display->display_options['arguments']['uid']['summary']['format'] = 'default_summary';
-$handler->display->display_options['arguments']['uid']['summary_options']['items_per_page'] = '25';
-$handler->display->display_options['arguments']['uid']['validate']['type'] = 'user';
+$handler->display->display_options['defaults']['filter_groups'] = FALSE;
+$handler->display->display_options['defaults']['filters'] = FALSE;
+/* Filter criterion: File: Status */
+$handler->display->display_options['filters']['status']['id'] = 'status';
+$handler->display->display_options['filters']['status']['table'] = 'file_managed';
+$handler->display->display_options['filters']['status']['field'] = 'status';
+$handler->display->display_options['filters']['status']['value'] = array(
+  1 => '1',
+);
+/* Filter criterion: File: Name */
+$handler->display->display_options['filters']['filename']['id'] = 'filename';
+$handler->display->display_options['filters']['filename']['table'] = 'file_managed';
+$handler->display->display_options['filters']['filename']['field'] = 'filename';
+$handler->display->display_options['filters']['filename']['operator'] = 'contains';
+$handler->display->display_options['filters']['filename']['exposed'] = TRUE;
+$handler->display->display_options['filters']['filename']['expose']['operator_id'] = 'filename_op';
+$handler->display->display_options['filters']['filename']['expose']['label'] = 'File name';
+$handler->display->display_options['filters']['filename']['expose']['operator'] = 'filename_op';
+$handler->display->display_options['filters']['filename']['expose']['identifier'] = 'filename';
+/* Filter criterion: File: Type */
+$handler->display->display_options['filters']['type']['id'] = 'type';
+$handler->display->display_options['filters']['type']['table'] = 'file_managed';
+$handler->display->display_options['filters']['type']['field'] = 'type';
+$handler->display->display_options['filters']['type']['exposed'] = TRUE;
+$handler->display->display_options['filters']['type']['expose']['operator_id'] = 'type_op';
+$handler->display->display_options['filters']['type']['expose']['label'] = 'Type';
+$handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
+$handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
+/* Filter criterion: User: Current */
+$handler->display->display_options['filters']['uid_current']['id'] = 'uid_current';
+$handler->display->display_options['filters']['uid_current']['table'] = 'users';
+$handler->display->display_options['filters']['uid_current']['field'] = 'uid_current';
+$handler->display->display_options['filters']['uid_current']['relationship'] = 'uid';
+$handler->display->display_options['filters']['uid_current']['value'] = '1';
 $translatables['media_default'] = array(
   t('Master'),
   t('more'),
@@ -124,14 +149,17 @@ $translatables['media_default'] = array(
   t('Items per page'),
   t('- All -'),
   t('Offset'),
+  t('« first'),
+  t('‹ previous'),
+  t('next ›'),
+  t('last »'),
   t('No files available.'),
   t('Upload date'),
   t('Use count'),
   t('File name'),
   t('Type'),
   t('Media browser'),
-  t('View Library'),
+  t('Library'),
   t('My files'),
   t('User who uploaded'),
-  t('All'),
 );

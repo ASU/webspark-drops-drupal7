@@ -22,6 +22,7 @@ function panopoly_admin_reusable_widgets_content_type_render($subtype, $conf, $p
   // Create the Table Data
   ctools_include('common', 'panels');
   ctools_include('plugins', 'panels');
+  require_once(drupal_get_path('module', 'fieldable_panels_panes') . '/plugins/content_types/fieldable_panels_pane.inc');
   $header = array(array('data' => '', 'style' => 'width: 20px'), t('Title'), t('Category'), t('Type'), '');
   $rows = array();
   $general_types = _fieldable_panels_panes_default_content_type();
@@ -36,7 +37,7 @@ function panopoly_admin_reusable_widgets_content_type_render($subtype, $conf, $p
           l($subtype['title'], 'admin/structure/fieldable-panels-panes/view/' . $entity->fpid),
           $subtype['category'],
           ucwords($entity->bundle),
-          l('Edit', 'admin/structure/fieldable-panels-panes/view/' . $entity->fpid . '/edit'),
+          l(t('Edit'), 'admin/structure/fieldable-panels-panes/view/' . $entity->fpid . '/edit', array('query' => array('destination' => 'admin/panopoly/libraries/panes'))),
         ),
       );
     }
@@ -49,7 +50,7 @@ function panopoly_admin_reusable_widgets_content_type_render($subtype, $conf, $p
     $pane->content = theme('table', array('header' => $header, 'rows' => $rows));
   }
   else {
-    $pane->content = t('You do have not created any reusable widgets');
+    $pane->content = t('You do have not created any reusable widgets.');
   }
   return $pane;
 }

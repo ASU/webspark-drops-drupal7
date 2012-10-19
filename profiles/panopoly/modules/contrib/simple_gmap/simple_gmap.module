@@ -29,6 +29,8 @@ function simple_gmap_field_formatter_info() {
       'zoom_level' => 14,
       'information_bubble' => 1,
       'link_text' => t('View larger map'),
+      'map_type' => 'm',
+      'langcode' => 'en',
     ),
   );
 
@@ -52,6 +54,8 @@ function simple_gmap_theme($existing, $type, $theme, $path) {
         'information_bubble' => TRUE,
         'link_text' => t('View larger map'),
         'address_text' => '',
+        'map_type' => 'm',
+        'langcode' => 'en',
       ),
       'template' => 'simple-gmap-output',
     ),
@@ -64,6 +68,9 @@ function simple_gmap_theme($existing, $type, $theme, $path) {
  * Formats map/link fields.
  */
 function simple_gmap_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+
+  global $language;
+
   $element = array();
 
   // Figure out what to display for each item we have here.
@@ -76,6 +83,21 @@ function simple_gmap_field_formatter_view($entity_type, $entity, $field, $instan
   $link_text = $link ? check_plain($display['settings']['link_text']) : '';
   $bubble = $display['settings']['information_bubble'] ? TRUE : FALSE;
   $zoom_level = (int) $display['settings']['zoom_level'];
+
+  // Figure out a language code to use. Google cannot recognize 'und'.
+  $lang_to_use = isset($display['settings']['langcode']) ? check_plain($display['settings']['langcode']) : 'en';
+  if ($lang_to_use == 'page') {
+    $lang_to_use = $langcode;
+  }
+  if ($lang_to_use == LANGUAGE_NONE) {
+    $lang_to_use = $language->language;
+  }
+
+  $map_type = isset($display['settings']['map_type']) ? check_plain($display['settings']['map_type']) : 'm';
+  // Default to standard map if not recognized.
+  if (!in_array($map_type, array('m', 'k', 'h', 'p'))) {
+    $map_type = 'm';
+  }
 
   foreach($items as $delta => $item) {
     $url_value = urlencode(check_plain($item['value']));
@@ -92,6 +114,8 @@ function simple_gmap_field_formatter_view($entity_type, $entity, $field, $instan
           'information_bubble' => $bubble,
           'link_text' => $link_text,
           'address_text' => $address,
+          'map_type' => $map_type,
+          'langcode' => $lang_to_use,
         )));
   }
 
@@ -106,7 +130,10 @@ function simple_gmap_field_formatter_settings_form($field, $instance, $view_mode
   $settings = $display['settings'];
   $type = $display['type'];
 
-  $element = array();
+  $element['embedded_label'] = array(
+    '#type' => 'markup',
+    '#markup' => '<h3>' . t('Embedded map') . '</h3>',
+  );
 
   $element['include_map'] = array(
     '#type' => 'checkbox',
@@ -126,6 +153,11 @@ function simple_gmap_field_formatter_settings_form($field, $instance, $view_mode
     '#default_value' => (int) $settings['iframe_height'],
   );
 
+  $element['link_label'] = array(
+    '#type' => 'markup',
+    '#markup' => '<h3>' . t('Link to map') . '</h3>',
+  );
+
   $element['include_link'] = array(
     '#type' => 'checkbox',
     '#title' => t('Include link to map'),
@@ -136,6 +168,11 @@ function simple_gmap_field_formatter_settings_form($field, $instance, $view_mode
     '#title' => t('Link text'),
     '#type' => 'textfield',
     '#default_value' => check_plain($settings['link_text']),
+  );
+
+  $element['generic_label'] = array(
+    '#type' => 'markup',
+    '#markup' => '<h3>' . t('General settings') . '</h3>',
   );
 
   $element['zoom_level'] = array(
@@ -180,6 +217,26 @@ function simple_gmap_field_formatter_settings_form($field, $instance, $view_mode
     '#default_value' => (int) $settings['include_text'],
   );
 
+  $element['map_type'] = array(
+    '#title' => t('Map type'),
+    '#type' => 'select',
+    '#description' => t('Choose a default map type for embedded and linked maps'),
+    '#options' => array(
+      'm' => t('Map'),
+      'k' => t('Satellite'),
+      'h' => t('Hybrid'),
+      'p' => t('Terrain'),
+    ),
+    '#default_value' => check_plain($settings['map_type']),
+  );
+
+  $element['langcode'] = array(
+    '#title' => t('Language'),
+    '#type' => 'textfield',
+    '#default_value' => check_plain($settings['langcode']),
+    '#description' => t("Enter a two-letter language code that Google Maps can recognize, or enter 'page' (without the quotes) to use the current page's Drupal language code"),
+  );
+
   return $element;
 }
 
@@ -192,6 +249,15 @@ function simple_gmap_field_formatter_settings_summary($field, $instance, $view_m
 
   $information_bubble = $settings['information_bubble'] ? t('Yes') : t('No');
 
+  $map_types = array(
+      'm' => t('Map'),
+      'k' => t('Satellite'),
+      'h' => t('Hybrid'),
+      'p' => t('Terrain'),
+  );
+  $map_type = isset($settings['map_type']) ? check_plain($settings['map_type']) : 'm';
+  $map_type = isset($map_types[$map_type]) ? $map_types[$map_type] : $map_types['m'];
+
   $summary = array();
 
   if ($settings['include_map']) {
@@ -202,8 +268,11 @@ function simple_gmap_field_formatter_settings_summary($field, $instance, $view_m
   }
 
   if ($settings['include_map'] || $settings['include_link']) {
+    $language = isset($display['settings']['langcode']) ? check_plain($display['settings']['langcode']) : 'en';
+    $summary[] = t('Map Type: @map_type', array('@map_type' => $map_type));
     $summary[] = t('Zoom Level: @zoom_level', array('@zoom_level' => $settings['zoom_level']));
     $summary[] = t('Information Bubble: @information_bubble', array('@information_bubble' => $information_bubble));
+    $summary[] = t('Language: @language', array('@language' => $language));
   }
 
   if ($settings['include_text']) {

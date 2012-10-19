@@ -4,10 +4,9 @@ core = 7.x
 package = Panopoly
 php = 5.2.4
 project = panopoly_search
-dependencies[] = ctools
 dependencies[] = facetapi
 dependencies[] = page_manager
-dependencies[] = panels
+dependencies[] = panopoly_core
 dependencies[] = search
 dependencies[] = search_api
 dependencies[] = search_api_db
@@ -55,9 +54,9 @@ features[variable][] = search_api_facets_search_ids
 features[views_view][] = panopoly_database_search
 features[views_view][] = panopoly_search
 
-; Information added by drupal.org packaging script on 2012-09-24
-version = "7.x-1.0-beta6"
+; Information added by drupal.org packaging script on 2012-10-19
+version = "7.x-1.0-rc1"
 core = "7.x"
 project = "panopoly_search"
-datestamp = "1348523087"
+datestamp = "1350688615"
 

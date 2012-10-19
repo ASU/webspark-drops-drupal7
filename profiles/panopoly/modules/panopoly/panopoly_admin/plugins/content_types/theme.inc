@@ -29,7 +29,7 @@ function panopoly_admin_theme_content_type_render($subtype, $conf, $panel_args, 
   $theme_links = array();
   $theme_links[] = array(
     'title' => t('Configure'),
-    'href' => 'admin/appearance/settings/'. $theme_key,
+    'href' => 'admin/appearance/settings/' . $theme_key,
   );
   $theme_links[] = array(
     'title' => t('Change theme'),

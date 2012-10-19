@@ -25,7 +25,7 @@ function panopoly_theme_uninstall() {
 function panopoly_theme_update_7001(&$sandbox) {
 
   // Update Bartik, Garland, or Responsive Bartik's Current Logo to New Panopoly Location
-  foreach(array('bartik', 'garland', 'responsive_bartik') as $theme_key) {
+  foreach (array('bartik', 'garland', 'responsive_bartik') as $theme_key) {
     $theme_settings = variable_get('theme_' . $theme_key . '_settings');
     if ($theme_settings['logo_path'] == 'profiles/panopoly/images/panopoly_icon_theme.png') {
       $theme_settings['logo_path'] = drupal_get_path('module', 'panopoly_theme') . '/images/panopoly_icon_theme.png';

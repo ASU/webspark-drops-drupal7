@@ -20,14 +20,7 @@ class SearchApiViewsHandlerArgumentFulltext extends SearchApiViewsHandlerArgumen
   public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
-    $index = search_api_index_load(substr($this->table, 17));
-    if (!empty($index->options['fields'])) {
-      $fields = array();
-      $f = $index->options['fields'];
-      foreach ($index->getFulltextFields() as $name) {
-        $fields[$name] = $f[$name]['name'];
-      }
-    }
+    $fields = $this->getFulltextFields();
     if (!empty($fields)) {
       $form['fields'] = array(
         '#type' => 'select',
@@ -71,6 +64,21 @@ class SearchApiViewsHandlerArgumentFulltext extends SearchApiViewsHandlerArgumen
         $keys = "($old) ($keys)";
       }
     }
+  }
+
+  /**
+   * Helper method to get an option list of all available fulltext fields.
+   */
+  protected function getFulltextFields() {
+    $ret = array();
+    $index = search_api_index_load(substr($this->table, 17));
+    if (!empty($index->options['fields'])) {
+      $fields = $index->getFields();
+      foreach ($index->getFulltextFields() as $field) {
+        $ret[$field] = $fields[$field]['name'];
+      }
+    }
+    return $ret;
   }
 
 }

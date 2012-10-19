@@ -4,6 +4,7 @@ core = 7.x
 package = Panopoly Apps
 php = 5.2.4
 project = panopoly_demo
+dependencies[] = defaultcontent
 dependencies[] = features
 dependencies[] = page_manager
 dependencies[] = panopoly_pages
@@ -19,9 +20,9 @@ features[page_manager_pages][] = panopoly_demo_panel
 features[views_view][] = panopoly_demo
 stylesheets[all][] = panopoly_demo.css
 
-; Information added by drupal.org packaging script on 2012-09-24
-version = "7.x-1.0-beta6"
+; Information added by drupal.org packaging script on 2012-10-19
+version = "7.x-1.0-rc1"
 core = "7.x"
 project = "panopoly_demo"
-datestamp = "1348524346"
+datestamp = "1350688613"
 

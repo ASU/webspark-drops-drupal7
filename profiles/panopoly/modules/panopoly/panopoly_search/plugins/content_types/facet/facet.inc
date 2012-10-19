@@ -9,7 +9,7 @@ $plugin = array(
   'title' => t('Search Facets'),
   'description' => t('The list of options available for a particular type of search facet'),
   'required context' => new ctools_context_required(t('Keywords'), 'string'),
-  'category' => t('Facet API'),
+  'category' => t('Search'),
   'content_types' => 'facet',
   'render last' => TRUE,
   'render callback' => 'panopoly_search_facet_content_type_render',
@@ -27,7 +27,7 @@ function panopoly_search_facet_content_type_edit_form($form, &$form_state) {
       if ($facet = facetapi_facet_load($facet_name, $searcher)) {
         if ($string = facetapi_build_delta($searcher, $realm_name, $facet_name)) {
           if ($delta = array_search($string, $map)) {
-            switch($searcher) {
+            switch ($searcher) {
               case 'search_api@database_node_index':
                 $deltas[$delta] = 'DB: ' . $facet_name;
                 break;

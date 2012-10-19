@@ -23,6 +23,22 @@ class FileEntityTestHelper extends DrupalWebTestCase {
       }
     }
   }
+
+  protected function createFileType($overrides = array()) {
+    $type = new stdClass();
+    $type->type = 'test';
+    $type->label = "Test";
+    $type->description = '';
+    $type->mimetypes = array('image/jpeg', 'image/gif', 'image/png', 'image/tiff');
+    $type->streams = array('public', 'private');
+
+    foreach ($overrides as $k => $v) {
+      $type->$k = $v;
+    }
+
+    file_type_save($type);
+    return $type;
+  }
 }
 
 class FileEntityUnitTestCase extends FileEntityTestHelper {
@@ -55,7 +71,7 @@ class FileEntityUnitTestCase extends FileEntityTestHelper {
 
     // Test entity ID, revision ID, and bundle.
     $ids = entity_extract_ids('file', $file);
-    $this->assertIdentical($ids, array($file->fid, NULL, 'text'));
+    $this->assertIdentical($ids, array($file->fid, NULL, 'document'));
 
     // Test the entity URI callback.
     $uri = entity_uri('file', $file);
@@ -136,7 +152,7 @@ class FileEntityReplaceTestCase extends FileEntityTestHelper {
 
     // Test that file saves without uploading a file.
     $this->drupalPost(NULL, array(), t('Save'));
-    $this->assertText(t('Text @file has been updated.', array('@file' => $file->filename)), 'File was updated without file upload.');
+    $this->assertText(t('Document @file has been updated.', array('@file' => $file->filename)), 'File was updated without file upload.');
 
     // Get the next text file to use as a replacement.
     $original = clone $file;
@@ -146,7 +162,7 @@ class FileEntityReplaceTestCase extends FileEntityTestHelper {
     $edit = array();
     $edit['files[replace_upload]'] = drupal_realpath($replacement->uri);
     $this->drupalPost('file/' . $file->fid . '/edit', $edit, t('Save'));
-    $this->assertText(t('Text @file has been updated.', array('@file' => $file->filename)), 'File was updated with file upload.');
+    $this->assertText(t('Document @file has been updated.', array('@file' => $file->filename)), 'File was updated with file upload.');
 
     // Re-load the file from the database.
     $file = file_load($file->fid);
@@ -196,9 +212,9 @@ class FileEntityTokenTestCase extends FileEntityTestHelper {
 
   function testFileEntityTokens() {
     $tokens = array(
-      'type' => 'Text',
-      'type:name' => 'Text',
-      'type:machine-name' => 'text',
+      'type' => 'Document',
+      'type:name' => 'Document',
+      'type:machine-name' => 'document',
       'type:count' => count($this->files['text']),
     );
     $this->assertTokens('file', array('file' => $this->files['text'][0]), $tokens);
@@ -232,4 +248,48 @@ class FileEntityTokenTestCase extends FileEntityTestHelper {
 
     return $values;
   }
+}
+
+class FileEntityTypeTestCase extends FileEntityTestHelper {
+  public static function getInfo() {
+    return array(
+      'name' => 'File entity types',
+      'description' => 'Test the file entity types.',
+      'group' => 'File entity',
+    );
+  }
+
+  /**
+   * Test creating a new type. Basic CRUD.
+   */
+  function testCreate() {
+    $type_machine_type = 'foo';
+    $type_machine_label = 'foobar';
+    $type = $this->createFileType(array('type' => $type_machine_type, 'label' => $type_machine_label));
+    $loaded_type = file_type_load($type_machine_type);
+    $this->assertEqual($loaded_type->label, $type_machine_label, "Was able to create a type and retreive it.");
+  }
+
+
+  /**
+   * Ensures that the weight is respected when types are created.
+   * @return unknown_type
+   */
+  function testOrder() {
+//    $type = $this->createFileType(array('name' => 'last', 'label' => 'Last', 'weight' => 100));
+//    $type = $this->createFileType(array('name' => 'first', 'label' => 'First'));
+//    $types = media_type_get_types();
+//    $keys = array_keys($types);
+//    $this->assertTrue(isset($types['last']) && isset($types['first']), "Both types saved");
+//    $this->assertTrue(array_search('last', $keys) > array_search('first', $keys), 'Type which was supposed to be first came first');
+  }
+
+  /**
+   * Test view mode assignment.  Currently fails, don't know why.
+   * @return unknown_type
+   */
+  function testViewModesAssigned() {
+  }
+
+
 }

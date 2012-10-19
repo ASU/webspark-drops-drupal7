@@ -6,6 +6,7 @@ dependencies[] = field
 dependencies[] = file
 dependencies[] = ctools
 files[] = views/views_handler_argument_file_type.inc
+files[] = views/views_handler_field_file_rendered.inc
 files[] = views/views_handler_field_file_type.inc
 files[] = views/views_handler_filter_file_type.inc
 files[] = views/views_plugin_row_file_view.inc
@@ -16,9 +17,9 @@ configure = admin/structure/file-types
 version = 7.x-2.x-dev
 
 
-; Information added by drush on 2012-09-24
-version = "7.x-2.0-unstable6+2-dev"
+; Information added by drush on 2012-10-19
+version = "7.x-2.0-unstable6+13-dev"
 core = "7.x"
 project = "file_entity"
-datestamp = "1348524622"
+datestamp = "1350689520"
 

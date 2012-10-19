@@ -1,6 +1,7 @@
 <?php
 
 include_once('panopoly_users.features.inc');
+include_once('panopoly_users.defaultconfig.inc');
 
 /**
  * Implementation of hook_apps_app_info()
@@ -33,7 +34,7 @@ function panopoly_users_configure_form($form, &$form_state) {
        0 => t('Do Not Remove'),
        1 => t('Remove'),
      ),
-     '#default_value' => variable_get('panopoly_users_remove_tabs', TRUE),
+     '#default_value' => variable_get('panopoly_users_remove_tabs', 1),
      '#description' => t('Do you want to remove the login, reset password, and register tabs on the user page? These links will be transfered into the relevant field descriptions instead.'),
   );
 
