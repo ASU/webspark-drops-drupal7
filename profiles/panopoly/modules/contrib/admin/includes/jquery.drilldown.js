@@ -80,16 +80,16 @@
         if (breadcrumb.length > 0) {
           var trail = $(settings.trail);
           trail.empty();
-          for (var key in breadcrumb) {
-            if (breadcrumb[key]) {
-              // We don't use the $().clone() method here because of an
-              // IE & jQuery 1.2 bug.
-              var clone = $('<a></a>')
-                .attr('href', $(breadcrumb[key]).attr('href'))
-                .attr('class', $(breadcrumb[key]).attr('class'))
-                .html($(breadcrumb[key]).html())
-                .addClass('depth-'+key)
-                .appendTo(trail);
+
+         var numberOfCrumbs=breadcrumb.length;
+         for (var key=0; key<numberOfCrumbs;key++) {
+
+             var clone=$(breadcrumb[key]).clone()
+               .addClass('depth-'+key)
+               .appendTo(trail);
+
+             if ((breadcrumb[key]))
+             {
 
               // We add a reference to the original link and a click handler
               // that traces back to that instance to set as the active link.
@@ -122,9 +122,9 @@
           // Set initial active menu state.
           var activeLink;
           $('ul.menu a', menu).removeClass('active');
-          if (settings.activePath && $('ul.menu a[href='+settings.activePath+']', menu).size() > 0) {
+          if (settings.activePath && $('ul.menu a[href="'+settings.activePath+'"]', menu).size() > 0) {
             this.activePath = settings.activePath;
-            activeLink = $('ul.menu a[href='+settings.activePath+']', menu).addClass('active');
+            activeLink = $('ul.menu a[href="'+settings.activePath+'"]', menu).addClass('active');
           }
           if (!activeLink) {
             activeLink = $('ul.menu a.active', menu).size() ? $('ul.menu a.active', menu) : $('ul.menu > li > a', menu);
@@ -145,7 +145,7 @@
               }
               else {
                 var url = $(this).children('a').attr('href');
-                var activeLink = $('ul.menu a[href='+url+']', menu);
+                var activeLink = $('ul.menu a[href="'+url+'"]', menu);
                 menu.drilldown('setActive', {
                   activeLink: activeLink,
                   trail: settings.trail,

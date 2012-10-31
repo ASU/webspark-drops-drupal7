@@ -621,8 +621,17 @@ class EntityAPIControllerExportable extends EntityAPIController {
     if ($conditions) {
       foreach ($entities as $key => $entity) {
         $entity_values = (array) $entity;
-        if (array_diff_assoc($conditions, $entity_values)) {
-          unset($entities[$key]);
+        // We cannot use array_diff_assoc() here because condition values can
+        // also be arrays, e.g. '$conditions = array('status' => array(1, 2))'
+        foreach ($conditions as $condition_key => $condition_value) {
+          if (is_array($condition_value)) {
+            if (!isset($entity_values[$condition_key]) || !in_array($entity_values[$condition_key], $condition_value)) {
+              unset($entities[$key]);
+            }
+          }
+          elseif (!isset($entity_values[$condition_key]) || $entity_values[$condition_key] != $condition_value) {
+            unset($entities[$key]);
+          }
         }
       }
     }

@@ -7,9 +7,9 @@ configure = admin/structure/panels
 files[] = panels_ipe.module
 
 
-; Information added by drush on 2012-10-19
+; Information added by drush on 2012-10-31
 version = "7.x-3.3+10-dev"
 core = "7.x"
 project = "panels"
-datestamp = "1350689534"
+datestamp = "1351711958"
 

@@ -46,6 +46,20 @@ function panopoly_users_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'panelizer_user:user_allowed_layouts_default';
+  $strongarm->value = 1;
+  $export['panelizer_user:user_allowed_layouts_default'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'panelizer_user:user_allowed_types_default';
+  $strongarm->value = 1;
+  $export['panelizer_user:user_allowed_types_default'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'pm_existing_pages_disabled_user_login';
   $strongarm->value = FALSE;
   $export['pm_existing_pages_disabled_user_login'] = $strongarm;

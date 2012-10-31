@@ -55,6 +55,12 @@ function panopoly_core_field_default_fields() {
           'type' => 'image',
           'weight' => '0',
         ),
+        'featured' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
       ),
       'entity_type' => 'taxonomy_term',
       'field_name' => 'field_featured_image',

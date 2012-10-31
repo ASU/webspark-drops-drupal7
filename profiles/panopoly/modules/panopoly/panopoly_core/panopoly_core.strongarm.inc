@@ -141,9 +141,28 @@ function panopoly_core_strongarm() {
         'default' => 1,
         'choice' => 0,
       ),
+      'featured' => array(
+        'status' => 1,
+        'default' => 1,
+        'choice' => 0,
+      ),
     ),
   );
   $export['panelizer_defaults_taxonomy_term_panopoly_categories'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'panelizer_taxonomy_term:panopoly_categories_allowed_layouts_default';
+  $strongarm->value = 1;
+  $export['panelizer_taxonomy_term:panopoly_categories_allowed_layouts_default'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'panelizer_taxonomy_term:panopoly_categories_allowed_types_default';
+  $strongarm->value = 1;
+  $export['panelizer_taxonomy_term:panopoly_categories_allowed_types_default'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

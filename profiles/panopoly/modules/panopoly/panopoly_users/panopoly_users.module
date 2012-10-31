@@ -1,7 +1,6 @@
 <?php
 
 include_once('panopoly_users.features.inc');
-include_once('panopoly_users.defaultconfig.inc');
 
 /**
  * Implementation of hook_apps_app_info()

@@ -4,6 +4,7 @@ core = 7.x
 package = Panopoly
 php = 5.2.4
 project = panopoly_wysiwyg
+dependencies[] = caption_filter
 dependencies[] = features
 dependencies[] = image_resize_filter
 dependencies[] = linkit
@@ -26,9 +27,9 @@ features[wysiwyg][] = panopoly_html_text
 features[wysiwyg][] = panopoly_wysiwyg_text
 stylesheets[all][] = panopoly-wysiwyg.css
 
-; Information added by drupal.org packaging script on 2012-10-19
-version = "7.x-1.0-rc1"
+; Information added by drupal.org packaging script on 2012-10-31
+version = "7.x-1.0-rc2"
 core = "7.x"
 project = "panopoly_wysiwyg"
-datestamp = "1350688623"
+datestamp = "1351711040"
 

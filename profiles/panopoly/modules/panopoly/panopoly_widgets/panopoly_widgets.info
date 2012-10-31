@@ -39,7 +39,9 @@ features[field][] = fieldable_panels_pane-spotlight-field_basic_spotlight_items
 features[field][] = fieldable_panels_pane-table-field_basic_table_table
 features[field][] = fieldable_panels_pane-text-field_basic_text_text
 features[field][] = fieldable_panels_pane-video-field_video_file
+features[file_display][] = video__default__media_vimeo_image
 features[file_display][] = video__default__media_vimeo_video
+features[file_display][] = video__default__media_youtube_image
 features[file_display][] = video__default__media_youtube_video
 features[file_display][] = video__preview__media_vimeo_image
 features[file_display][] = video__preview__media_youtube_image
@@ -50,9 +52,9 @@ files[] = panopoly_widgets.module
 scripts[] = panopoly-widgets.js
 stylesheets[all][] = panopoly-widgets.css
 
-; Information added by drupal.org packaging script on 2012-10-19
-version = "7.x-1.0-rc1"
+; Information added by drupal.org packaging script on 2012-10-31
+version = "7.x-1.0-rc2"
 core = "7.x"
 project = "panopoly_widgets"
-datestamp = "1350688621"
+datestamp = "1351711039"
 

@@ -94,6 +94,9 @@ function panopoly_wysiwyg_wysiwyg_default_profiles() {
         'spellchecker' => array(
           'spellchecker' => 1,
         ),
+        'captionfilter' => array(
+          'captionfilter' => 1,
+        ),
         'drupal' => array(
           'media' => 1,
           'break' => 1,

@@ -4,7 +4,9 @@ core = 7.x
 package = Panopoly
 php = 5.2.4
 project = panopoly_pages
+dependencies[] = ctools
 dependencies[] = panopoly_core
+dependencies[] = strongarm
 features[ctools][] = page_manager:pages_default:1
 features[ctools][] = panelizer:panelizer:1
 features[ctools][] = strongarm:strongarm:1
@@ -26,11 +28,13 @@ features[variable][] = node_options_panopoly_page
 features[variable][] = node_preview_panopoly_page
 features[variable][] = node_submitted_panopoly_page
 features[variable][] = panelizer_defaults_node_panopoly_page
+features[variable][] = panelizer_node:panopoly_page_allowed_layouts_default
+features[variable][] = panelizer_node:panopoly_page_allowed_types_default
 features[variable][] = save_continue_panopoly_page
 
-; Information added by drupal.org packaging script on 2012-10-19
-version = "7.x-1.0-rc1"
+; Information added by drupal.org packaging script on 2012-10-31
+version = "7.x-1.0-rc2"
 core = "7.x"
 project = "panopoly_pages"
-datestamp = "1350688320"
+datestamp = "1351711034"
 

@@ -34,6 +34,9 @@ function content_features_export_render($module_name, $data, $export = NULL) {
   asort($data);
   foreach ($data as $name) {
     if ($node = defaultcontent_get_node($name)) {
+      // let other modules edit the export
+      drupal_alter('content_features_export_render', $module_name, $node);
+      
       $code .= "\n";
       $code .= "  \$content['$name'] = " . defaultcontent_export_node($node) . ";\n";
     }

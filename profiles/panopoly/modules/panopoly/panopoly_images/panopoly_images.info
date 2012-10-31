@@ -38,10 +38,11 @@ features[image][] = panopoly_image_quarter
 features[image][] = panopoly_image_spotlight
 features[image][] = panopoly_image_square
 features[image][] = panopoly_image_thumbnail
+features[image][] = panopoly_image_video
 
-; Information added by drupal.org packaging script on 2012-10-19
-version = "7.x-1.0-rc1"
+; Information added by drupal.org packaging script on 2012-10-31
+version = "7.x-1.0-rc2"
 core = "7.x"
 project = "panopoly_images"
-datestamp = "1350688317"
+datestamp = "1351711031"
 

@@ -44,4 +44,10 @@ function panopoly_theme_entity_info_alter(&$entity_info) {
     'label' => t('Featured'),
     'custom settings' => TRUE,
   );
+
+  // Add featured view mode to taxonomy
+  $entity_info['taxonomy_term']['view modes']['featured'] = array(
+    'label' => t('Featured'),
+    'custom settings' => TRUE,
+  );
 }

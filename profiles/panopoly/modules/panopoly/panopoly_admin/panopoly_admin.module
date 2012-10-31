@@ -33,18 +33,6 @@ function panopoly_admin_configure_form($form, &$form_state) {
     '#description' => t('Do you want to provide an option to specify a machine name (provided by the Default Content module) on the content editing form?'),
   );
 
-  $form['panopoly_admin_revision_option'] = array(
-    '#title' => t('Create revision'),
-    '#type' => 'select',
-    '#required' => TRUE,
-    '#options' => array(
-      '1' => 'Enabled',
-      '0' => 'Disabled',
-    ),
-    '#default_value' => variable_get('panopoly_admin_revision_option', 0),
-    '#description' => t('Do you want to provide an option to create a new revision for content on the content editing form?'),
-  );
-
   $form['panopoly_admin_link_description'] = array(
     '#title' => t('Menu Link Description'),
     '#type' => 'select',
@@ -69,9 +57,84 @@ function panopoly_admin_configure_form($form, &$form_state) {
     '#description' => t('Do you want to enable the advanced Panel plugins in the Panopoly pane library? This includes rarely used Panel plugins for such things as view context, token support, and page elements?'),
   );
 
+  $form['panopoly_admin_toolbar'] = array(
+    '#title' => t('Administrative Toolbar'),
+    '#type' => 'select',
+    '#options' => array(
+      'none' => t('None'),
+      'admin' => t('Admin Module'),
+      'navbar' => t('Navbar Module'),
+      'admin_menu' => t('Admin Menu Module'),
+      'toolbar' => t('Toolbar Module')
+    ),
+    '#default_value' => variable_get('panopoly_admin_toolbar', panopoly_admin_get_active_toolbar()),
+    '#description' => t('Would you like to provide an administrative toolbar for admins and editors?'),
+  );
+
+  $form['#submit'][] = 'panopoly_admin_configure_form_submit';
+
   return system_settings_form($form);
 }
 
+/**
+ * Handler to get admin toolbar module
+ */
+function panopoly_admin_get_active_toolbar() {
+  if (variable_get('panopoly_admin_toolbar')) {
+    return variable_get('panopoly_admin_toolbar');
+  }
+
+  $toolbars = array('navbar', 'admin_menu', 'toolbar');
+  foreach ($toolbars as $toolbar) {
+    if (module_exists($toolbar)) {
+      return $toolbar;
+    }
+  }
+  return '';
+}
+
+/**
+ * Submit handler for panopoly admin configure form.
+ *
+ * Enable / disable the correct toolbars depending on user settings.
+ */
+function panopoly_admin_configure_form_submit($form, &$form_state) {
+  $old_toolbar = variable_get('panopoly_admin_toolbar', '');
+  $toolbar = $form_state['values']['panopoly_admin_toolbar'];
+
+  if ($toolbar != $old_toolbar) {
+
+    if ($toolbar == 'none') {
+      module_disable(array('admin', 'navbar', 'admin_menu', 'admin_menu_toolbar', 'toolbar'));
+    }
+    else if ($toolbar == 'admin') {
+      module_disable(array('navbar', 'admin_menu', 'admin_menu_toolbar', 'toolbar'));
+      module_enable(array('admin'));
+    }
+    else if ($toolbar == 'navbar') {
+      module_disable(array('admin', 'admin_menu', 'admin_menu_toolbar', 'toolbar'));
+      module_enable(array('navbar'));
+
+      // Navbar requires a menu rebuild.
+      menu_rebuild();
+    }
+    else if ($toolbar == 'admin_menu') {
+      module_disable(array('admin', 'navbar', 'toolbar'));
+      module_enable(array('admin_menu', 'admin_menu_toolbar'));
+
+      // Admin menu requires a menu rebuild
+      // Admin menu requires double cache clearing
+      menu_rebuild();
+      cache_clear_all();
+    }
+    else if ($toolbar == 'toolbar') {
+      module_disable(array('admin', 'navbar', 'admin_menu'));
+      module_enable(array('toolbar'));
+    }
+
+    cache_clear_all();
+  }
+}
 
 /**
  * Implementation of hook_ctools_plugin_directory()
@@ -178,12 +241,20 @@ function panopoly_admin_form_alter(&$form, &$form_state, $form_id) {
     $form['author']['date']['#size'] = 20;
   }
 
-  // Make revisioning happen by default
+  // Improve the revision interface
   if (isset($form['revision_information']['revision'])) {
-    unset($form['revision_information']['#type']);
-    $form['revision_information']['log']['#access'] = FALSE;
+    $form['revision_information']['log']['#states'] = array(
+      'visible' => array(
+        'input[name="revision"]' => array('checked' => TRUE)
+      )
+    );
+    $form['revision_information']['log']['#weight'] = 10;
+    unset($form['revision_information']['log']['#title']);
+    $form['revision_information']['revision']['#weight'] = 9;
     $form['options']['revision'] = $form['revision_information']['revision'];
-    $form['options']['revision']['#access'] = variable_get('panopoly_admin_revision_option', FALSE);
+    $form['options']['log'] = $form['revision_information']['log'];
+    unset($form['revision_information']['#type']);
+    unset($form['revision_information']['log']);
     unset($form['revision_information']['revision']);
   }
 
@@ -309,7 +380,7 @@ function panopoly_admin_menu() {
 
   // Add an administration section for Panopoly app settings
   $items['admin/panopoly/apps_settings'] = array(
-    'title' => 'Apps Settings',
+    'title' => 'Panopoly Apps Settings',
     'description' => 'Configuration related to Panopoly Apps',
     'position' => 'right',
     'weight' => -45,
@@ -334,13 +405,25 @@ function panopoly_admin_menu() {
         );
       } 
       elseif (!empty($module_info['package']) && $module_info['package'] == 'Panopoly Apps') {
-        $items['admin/panopoly/app_settings/' . $module] = array(
+        $items['admin/panopoly/apps_settings/' . $module] = array(
           'title' => $module_info['name'],
           'description' => 'This is the configuration screen for ' . $module_info['name'],
           'page callback' => 'drupal_get_form',
           'page arguments' => array($app_info['configure form']),
           'access arguments' => array('administer site configuration'),
         );
+        if (!empty($app_info['demo content module']) && !empty($app_info['demo content link path'])) {
+          if (module_exists($app_info['demo content module'])) {
+            $items[$app_info['demo content link path'] . '/disable_demo_content'] = array(
+              'title' => 'Disable Demo Content',
+              'description' => 'This will disable the demo content that is provided by this app.',
+              'page callback' => 'drupal_get_form',
+              'type' => MENU_LOCAL_ACTION,
+              'page arguments' => array('panopoly_admin_disable_demo_content_form', $app_info['demo content module'], $app_info['demo content link path']),
+              'access arguments' => array('administer apps'),
+            );
+          }
+        }
       }
     }
   }
@@ -364,6 +447,40 @@ function panopoly_admin_menu_alter(&$items) {
   // Set the description of the pane library
   $items['admin/panopoly/libraries/panes']['description'] = 'This is the pane library for the site. See all of the panes you can add to your pages.';
 
+}
+
+/**
+ * Callback form to disable demo content for an app
+ */
+function panopoly_admin_disable_demo_content_form($form, &$form_state, $demomodule, $redirect) {
+  $form = array();
+
+  drupal_set_title('Disable Demo Content?');
+
+  $form['redirect'] = array(
+    '#type' => 'value',
+    '#value' => $redirect,
+  );
+
+  $form['demomodule'] = array(
+    '#type' => 'value',
+    '#value' => $demomodule,
+  );
+
+  $form['submit'] = array(
+    '#value' => t('Disable Demo Content'),
+    '#type' => 'submit',
+  );
+  return $form;
+}
+
+/**
+ * Submit handler for disabling demo content
+ */
+function panopoly_admin_disable_demo_content_form_submit($form, &$form_state) {
+  module_disable(array($form_state['values']['demomodule']));
+  menu_rebuild();
+  drupal_goto($form_state['values']['redirect']);
 }
 
 /**

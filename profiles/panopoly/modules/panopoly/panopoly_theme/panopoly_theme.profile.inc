@@ -39,7 +39,7 @@ function panopoly_theme_selection_form($form, &$form_state) {
   $form['theme_wrapper']['theme'] = array(
     '#type' => 'radios',
     '#options' => $themes,
-    '#default_value' => 'bartik',
+    '#default_value' => 'responsive_bartik',
   );
 
   $form['submit'] = array(
@@ -54,22 +54,21 @@ function panopoly_theme_selection_form($form, &$form_state) {
  * Form submit handler to select the theme
  */
 function panopoly_theme_selection_form_submit($form, &$form_state) {
-  if (!empty($form_state['input']['theme'])) {
-    // Enable and set the theme of choice
-    $theme = $form_state['input']['theme'];
-    theme_enable(array($theme));
-    variable_set('theme_default', $theme);
 
-    // Set the Bartik or Garland logo to be Panopoly's logo
-    if ($theme == 'bartik' || $theme == 'garland' || $theme == 'responsive_bartik') {
-      $theme_data = _system_rebuild_theme_data();
-      $theme_data[$theme]->info['settings']['default_logo'] = 0;
-      $theme_data[$theme]->info['settings']['logo_path'] = drupal_get_path('module', 'panopoly_theme') . '/images/panopoly_icon_theme.png';
-      variable_set('theme_' . $theme . '_settings', $theme_data[$theme]->info['settings']);
-    }
+  // Enable and set the theme of choice
+  $theme = $form_state['values']['theme'];
+  theme_enable(array($theme));
+  variable_set('theme_default', $theme);
 
-    // Flush theme caches so things are right
-    system_rebuild_theme_data();
-    drupal_theme_rebuild();
+  // Set the Bartik or Garland logo to be Panopoly's logo
+  if ($theme == 'bartik' || $theme == 'garland' || $theme == 'responsive_bartik') {
+    $theme_data = _system_rebuild_theme_data();
+    $theme_data[$theme]->info['settings']['default_logo'] = 0;
+    $theme_data[$theme]->info['settings']['logo_path'] = drupal_get_path('module', 'panopoly_theme') . '/images/panopoly_icon_theme.png';
+    variable_set('theme_' . $theme . '_settings', $theme_data[$theme]->info['settings']);
   }
+
+  // Flush theme caches so things are right
+  system_rebuild_theme_data();
+  drupal_theme_rebuild();
 }

@@ -10,12 +10,14 @@ projects[ctools][subdir] = contrib
 projects[ctools][download][type] = git
 projects[ctools][download][revision] = d6157d1
 projects[ctools][download][branch] = 7.x-1.x
+projects[ctools][patch][1822472] = http://drupal.org/files/1822472-exclude-all.patch
 
 projects[panels][version] = 3.x-dev
 projects[panels][subdir] = contrib
 projects[panels][download][type] = git
 projects[panels][download][revision] = 4e636d7
 projects[panels][download][branch] = 7.x-3.x
+projects[panels][patch][1069744] = http://drupal.org/files/1069744-ipe-inaccessible-pane-placeholders.patch
 
 projects[panels_breadcrumbs][version] = 2.x-dev
 projects[panels_breadcrumbs][subdir] = contrib
@@ -29,6 +31,7 @@ projects[panelizer][download][type] = git
 projects[panelizer][download][revision] = 3fdacfd 
 projects[panelizer][download][branch] = 7.x-3.x
 projects[panelizer][patch][1655296] = http://drupal.org/files/1655296-allow-additional-panelizer-tab-pages_1.patch
+projects[panelizer][patch][1824566] = http://drupal.org/files/1824566-allow-panelizer-bundles-to-use-default-4.patch
 
 projects[fieldable_panels_panes][version] = 1.2
 projects[fieldable_panels_panes][subdir] = contrib
@@ -67,6 +70,7 @@ projects[token][subdir] = contrib
 
 projects[entity][version] = 1.0-rc3
 projects[entity][subdir] = contrib
+projects[entity][patch][1514764] = http://drupal.org/files/1514764-fix_entity_conditions-20.patch
 
 projects[libraries][version] = 2.0
 projects[libraries][subdir] = contrib
@@ -93,10 +97,4 @@ projects[defaultcontent][subdir] = contrib
 projects[defaultcontent][download][type] = git
 projects[defaultcontent][download][revision] = d8806d8
 projects[defaultcontent][download][branch] = 7.x-1.x
-
-projects[uuid][version] = 1.x-dev
-projects[uuid][subdir] = contrib
-projects[uuid][download][type] = git
-projects[uuid][download][revision] = 4730c67
-projects[uuid][download][branch] = 7.x-1.x
-projects[uuid][patch][1605284] = http://drupal.org/files/1605284-define-types-for-tokens-6.patch
+projects[defaultcontent][patch][1754428] = http://drupal.org/files/1754428-allow-node-export-alter.patch
