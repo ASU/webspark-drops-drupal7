@@ -469,7 +469,7 @@ function panopoly_admin_menu_link_alter(&$item) {
 
   // Automatically set all of the settings elements to be children of the main parent element
   // Not entirely sure why the menu system doesn't do this for us. 
-  if (strpos($item['path'], 'panopoly/settings/')) {
+  if (!empty($item['path']) && strpos($item['path'], 'panopoly/settings/')) {
     $parent_mlid = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path", array(':path' => 'admin/panopoly/settings'))->fetchField();
     $item['plid'] = $parent_mlid;
   }
