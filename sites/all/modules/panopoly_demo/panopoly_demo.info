@@ -9,6 +9,8 @@ dependencies[] = features
 dependencies[] = page_manager
 dependencies[] = panopoly_pages
 dependencies[] = views
+dependencies[] = views_content
+stylesheets[all][] = panopoly_demo.css
 features[content][] = panopoly-demo-0
 features[content][] = panopoly-demo-1
 features[content][] = panopoly-demo-2
@@ -18,11 +20,10 @@ features[ctools][] = views:views_default:3.0
 features[features_api][] = api:1
 features[page_manager_pages][] = panopoly_demo_panel
 features[views_view][] = panopoly_demo
-stylesheets[all][] = panopoly_demo.css
 
-; Information added by drupal.org packaging script on 2012-10-19
-version = "7.x-1.0-rc1"
+; Information added by drupal.org packaging script on 2012-11-12
+version = "7.x-1.0-rc3"
 core = "7.x"
 project = "panopoly_demo"
-datestamp = "1350688613"
+datestamp = "1352741294"
 

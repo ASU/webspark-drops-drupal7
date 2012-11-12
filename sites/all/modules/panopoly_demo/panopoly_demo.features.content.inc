@@ -15,6 +15,7 @@ function panopoly_demo_content_defaults() {
     'link' => array(
       'menu_name' => 'main-menu',
       'link_path' => 'node-name/panopoly-demo-0',
+      'path' => 'node-name/panopoly-demo-0',
       'router_path' => 'node/%',
       'link_title' => 'Lovely Vegetables',
       'options' => array(),
@@ -89,6 +90,7 @@ function panopoly_demo_content_defaults() {
     'link' => array(
       'menu_name' => 'main-menu',
       'link_path' => 'node-name/panopoly-demo-1',
+      'path' => 'node-name/panopoly-demo-1',
       'router_path' => 'node/%',
       'link_title' => 'Vegetables are Great',
       'options' => array(),
@@ -163,6 +165,7 @@ function panopoly_demo_content_defaults() {
     'link' => array(
       'menu_name' => 'main-menu',
       'link_path' => 'node-name/panopoly-demo-2',
+      'path' => 'node-name/panopoly-demo-2',
       'router_path' => 'node/%',
       'link_title' => 'Great Vegetables',
       'options' => array(),
@@ -237,6 +240,7 @@ function panopoly_demo_content_defaults() {
     'link' => array(
       'menu_name' => 'main-menu',
       'link_path' => 'node-name/panopoly-demo-3',
+      'path' => 'node-name/panopoly-demo-3',
       'router_path' => 'node/%',
       'link_title' => 'Content Demo',
       'options' => array(),
