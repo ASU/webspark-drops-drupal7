@@ -290,6 +290,10 @@
   padding-bottom: 1em;
 }
 
+#node-edit .container-inline-date .form-item-date-time {
+  clear: left;
+}
+
 #node-edit .form-item-date-time label, 
 #node-edit .form-item-date-date label, 
 #node-edit .form-item-name label {

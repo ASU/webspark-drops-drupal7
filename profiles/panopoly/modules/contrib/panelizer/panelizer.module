@@ -595,12 +595,19 @@ function panelizer_entity_plugin_switcher_page($entity_type, $op) {
 
   // Load the $plugin information
   if ($handler = panelizer_entity_plugin_get_handler($entity_type)) {
+    // replace the first two arguments:
+    $args[0] = $js;
+    $args[1] = $_POST;
     $method = 'page_' . $op;
     if (method_exists($handler, $method)) {
-      // replace the first two arguments:
-      $args[0] = $js;
-      $args[1] = $_POST;
       return call_user_func_array(array($handler, $method), $args);
+    }
+    // Check to see if this is an operation from panelizer_operations
+    // with a callback instead.
+    $operations = panelizer_operations();
+    if (isset($operations[$op]) && isset($operations[$op]['entity callback']) && function_exists($operations[$op]['entity callback'])) {
+      array_unshift($args, $handler);
+      return call_user_func_array($operations[$op]['entity callback'], $args);
     }
   }
   else {
@@ -1089,6 +1096,7 @@ function panelizer_panels_cache_get($argument) {
   }
 
   ctools_include('common', 'panels');
+  ctools_include('plugins', 'panels');
   $cache->display->cache_key = "panelizer:$type:$key";
 
   // Set the allowed content types
@@ -1375,3 +1383,43 @@ function panelizer_set_status_action_submit($form, $form_state) {
 
   return $retval;
 }
+
+// --------------------------------------------------------------------------
+// Miscellaneous helper functions
+
+/**
+ * Return list of operations.
+ *
+ * @see hook_panelizer_operations_alter().
+ */
+function panelizer_operations() {
+  $operations = array(
+    'settings' => array(
+      'menu title' => 'Settings',
+      'link title' => t('settings'),
+      'admin callback' => 'panelizer_default_settings_page',
+      // ctools export ui thinks this is 'edit'.
+      'ui path' => 'edit',
+    ),
+    'context' => array(
+      'menu title' => 'Context',
+      'link title' => t('context'),
+      'admin callback' => 'panelizer_default_context_page',
+    ),
+    'layout' => array(
+      'menu title' => 'Layout',
+      'link title' => t('layout'),
+      'admin callback' => 'panelizer_default_layout_page',
+    ),
+    'content' => array(
+      'menu title' => 'Content',
+      'link title' => t('content'),
+      'admin callback' => 'panelizer_default_content_page',
+    ),
+  );
+
+  drupal_alter('panelizer_operations', $operations);
+
+  return $operations;
+}
+

@@ -15,11 +15,14 @@ function defaultconfig_admin() {
     '#type' => 'vertical_tabs',
   );
   foreach ($components as $hook => $component) {
-    $page['tables'][] = array(
-      '#title' => $component['label'],
-      '#type' => 'fieldset',
-      'table' => defaultconfig_component_table($component),
-    );
+    $table = defaultconfig_component_table($component);
+    if ($table) {
+      $page['tables'][] = array(
+        '#title' => $component['label'],
+        '#type' => 'fieldset',
+        'table' => defaultconfig_component_table($component),
+      );
+    }
   }
   return $page;
 }
@@ -34,8 +37,10 @@ function defaultconfig_component_table($component) {
     // @todo fetch more information about the modules. For now, let's just
     // use the machine name.
     foreach ($modules as $module) {
-      $data[] = array($module, l(t('rebuild'),
-              'admin/structure/defaultconfig/rebuild/' . $module . '/' . $component['name']));
+      $data[] = array(
+        $module,
+        l(t('rebuild'), 'admin/structure/defaultconfig/rebuild/' . $module . '/' . $component['name']),
+      );
     }
     return array(
       '#theme' => 'table',
@@ -43,9 +48,7 @@ function defaultconfig_component_table($component) {
       '#rows' => $data
     );
   }
-  return array(
-    '#markup' => t('No modules define default content for %label', array('%label' => $component['label'])),
-  );
+  return FALSE;
 }
 
 

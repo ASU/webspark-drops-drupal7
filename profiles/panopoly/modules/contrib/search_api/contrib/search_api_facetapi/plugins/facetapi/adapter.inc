@@ -49,7 +49,7 @@ class SearchApiFacetapiAdapter extends FacetapiAdapter {
     if ($search && $search[0]->getOption('search_api_base_path')) {
       return $search[0]->getOption('search_api_base_path');
     }
-    return request_path();
+    return current_path();
   }
 
   /**

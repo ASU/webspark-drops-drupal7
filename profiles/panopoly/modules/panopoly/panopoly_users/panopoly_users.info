@@ -5,6 +5,7 @@ package = Panopoly
 php = 5.2.4
 project = panopoly_users
 dependencies[] = ctools
+dependencies[] = defaultconfig
 dependencies[] = features
 dependencies[] = field_group
 dependencies[] = image
@@ -17,6 +18,14 @@ features[ctools][] = page_manager:pages_default:1
 features[ctools][] = panelizer:panelizer:1
 features[ctools][] = pm_existing_pages:pm_existing_pages:1
 features[ctools][] = strongarm:strongarm:1
+features[defaultconfig][] = strongarm:panelizer_defaults_user_user
+features[defaultconfig][] = user_default_permissions:administer panelizer user user breadcrumbs
+features[defaultconfig][] = user_default_permissions:administer panelizer user user content
+features[defaultconfig][] = user_default_permissions:administer panelizer user user context
+features[defaultconfig][] = user_default_permissions:administer panelizer user user defaults
+features[defaultconfig][] = user_default_permissions:administer panelizer user user layout
+features[defaultconfig][] = user_default_permissions:administer panelizer user user overview
+features[defaultconfig][] = user_default_permissions:administer panelizer user user settings
 features[features_api][] = api:1
 features[field][] = user-user-field_user_about
 features[field][] = user-user-field_user_picture
@@ -32,16 +41,15 @@ features[panelizer_defaults][] = user:user:default
 features[panelizer_defaults][] = user:user:default:default
 features[panelizer_defaults][] = user:user:default:featured
 features[variable][] = page_manager_user_view_disabled
-features[variable][] = panelizer_defaults_user_user
 features[variable][] = panelizer_user:user_allowed_layouts_default
 features[variable][] = panelizer_user:user_allowed_types_default
 features[variable][] = pm_existing_pages_disabled_user_login
 features[variable][] = pm_existing_pages_disabled_user_password
 features[variable][] = pm_existing_pages_disabled_user_register
 
-; Information added by drupal.org packaging script on 2012-10-31
-version = "7.x-1.0-rc2"
+; Information added by drupal.org packaging script on 2012-11-12
+version = "7.x-1.0-rc3"
 core = "7.x"
 project = "panopoly_users"
-datestamp = "1351711038"
+datestamp = "1352691217"
 

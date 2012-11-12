@@ -15,6 +15,7 @@ dependencies[] = search_api_solr
 dependencies[] = search_api_views
 dependencies[] = strongarm
 dependencies[] = views
+dependencies[] = views_content
 features[ctools][] = facetapi:facetapi_defaults:1
 features[ctools][] = page_manager:pages_default:1
 features[ctools][] = strongarm:strongarm:1
@@ -54,9 +55,9 @@ features[variable][] = search_api_facets_search_ids
 features[views_view][] = panopoly_database_search
 features[views_view][] = panopoly_search
 
-; Information added by drupal.org packaging script on 2012-10-31
-version = "7.x-1.0-rc2"
+; Information added by drupal.org packaging script on 2012-11-12
+version = "7.x-1.0-rc3"
 core = "7.x"
 project = "panopoly_search"
-datestamp = "1351711035"
+datestamp = "1352691211"
 

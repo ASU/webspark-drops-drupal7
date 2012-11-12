@@ -71,6 +71,11 @@ div.ctools-modal-content .panels-choose-layout .dependent-options {
   padding-left: 0px;
 }
 
+div.modal-content-preview-button {
+  padding-top: 100px;
+  text-align: center;
+}
+
 #panels-layout-category-Panopoly-wrapper .panels-layouts-category,
 #panels-layout-category-Panopoly-wrapper .layout-link div {
   display: none;

@@ -6,13 +6,13 @@ php = 5.2.4
 project = panopoly_magic
 dependencies[] = fape
 dependencies[] = panopoly_core
-features[features_api][] = api:1
 scripts[] = panopoly-magic.js
 stylesheets[all][] = panopoly-magic.css
+features[features_api][] = api:1
 
-; Information added by drupal.org packaging script on 2012-10-19
-version = "7.x-1.0-rc1"
+; Information added by drupal.org packaging script on 2012-11-12
+version = "7.x-1.0-rc3"
 core = "7.x"
 project = "panopoly_magic"
-datestamp = "1350688319"
+datestamp = "1352691207"
 

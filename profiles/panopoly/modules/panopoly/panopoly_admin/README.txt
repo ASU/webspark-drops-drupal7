@@ -6,7 +6,6 @@ enhancement modules and exposes a variety of end user settings for Panopoly.
 Key Features
 * Customized Content Editing Experience
 * Custom Style for the Media Browser
-* Defines an "Administor" and "Editor user role
 * Creates Panopoly Administrative Section (admin/panopoly) for Panopoly Configuration
 * Provides Pane Library, Layout Library, and Page Library Administrative Pages
 * Packages Several Different Administrative Toolbar Options (Admin Menu, Admin, Navbar, Toolbar)

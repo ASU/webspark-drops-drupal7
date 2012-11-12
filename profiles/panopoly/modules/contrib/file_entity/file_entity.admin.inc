@@ -112,18 +112,20 @@ function file_entity_admin_files($form, &$form_state) {
         '#attributes' => array('class' => array('links', 'inline')),
       ),
     );
-
-    $options[$file->fid]['operations']['data']['#links']['edit'] = array(
-      'title' => t('Edit'),
-      'href' => 'file/' . $file->fid . '/edit',
-      'query' => $destination,
-    );
-
-    $options[$file->fid]['operations']['data']['#links']['delete'] = array(
-      'title' => t('Delete'),
-      'href' => 'file/' . $file->fid . '/delete',
-      'query' => $destination,
-    );
+    if (file_entity_access('edit', $file)) {
+      $options[$file->fid]['operations']['data']['#links']['edit'] = array(
+        'title' => t('Edit'),
+        'href' => 'file/' . $file->fid . '/edit',
+        'query' => $destination,
+      );
+    }
+    if (file_entity_access('delete', $file)) {
+      $options[$file->fid]['operations']['data']['#links']['delete'] = array(
+        'title' => t('Delete'),
+        'href' => 'file/' . $file->fid . '/delete',
+        'query' => $destination,
+      );
+    }
   }
 
   $form['files'] = array(

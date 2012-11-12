@@ -95,8 +95,36 @@ function media_update_dependencies() {
     'field' => 7002,
     'rules' => 7205,
   );
-
+  // This update requires {file_type} table created.
+  $dependencies['media'][7208] = array(
+    'file_entity' => 7201,
+  );
   return $dependencies;
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function media_requirements($phase) {
+  $t = get_t();
+  // Make sure that file_entity module is 2.x version.
+  // We can't add this check in .info file because drupal.org testbot cant
+  // handle it. See #1734648.
+  $requirements = array();
+
+  if ($phase == 'update') {
+    $info = system_get_info('module', 'file_entity');
+    if (strpos($info['version'], '7.x-2') === FALSE) {
+      $requirements['file_entity'] = array(
+        'title' => $t('File entity 2.x'),
+        'value' => $t('Wrong version'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => $t('Media 2.x requires <a href="@url">File entity 2.x</a>. Please download the correct version and make sure you have deleted the file_entity folder inside the media module directory.', array('@url' => 'http://drupal.org/project/file_entity')),
+      );
+    }
+  }
+
+  return $requirements;
 }
 
 /**
@@ -503,14 +531,14 @@ function media_update_7020() {
  */
 function media_update_7200() {
   $perms = user_permission_get_modules();
-  if (!isset($perms['view file'])) {
+  if (!isset($perms['view files'])) {
     throw new DrupalUpdateException('The File Entity module needs to be upgraded before continuing.');
   }
   else {
     $roles = user_roles(FALSE, 'view media');
     $permissions = array(
       'view media' => FALSE,
-      'view file' => TRUE,
+      'view files' => TRUE,
     );
     foreach ($roles as $rid => $role) {
       user_role_change_permissions($rid, $permissions);
@@ -518,7 +546,7 @@ function media_update_7200() {
     $roles = user_roles(FALSE, 'edit media');
     $permissions = array(
       'edit media' => FALSE,
-      'edit file' => TRUE,
+      'edit any files' => TRUE,
     );
     foreach ($roles as $rid => $role) {
       user_role_change_permissions($rid, $permissions);
@@ -735,8 +763,10 @@ function media_update_7204() {
  * Drop the unused {media_list_type} table.
  */
 function media_update_7205() {
-  db_drop_table('media_list_type');
-  return t('Dropped the unused {media_list_type} table.');
+  if (db_table_exists('media_list_type')) {
+    db_drop_table('media_list_type');
+    return t('Dropped the unused {media_list_type} table.');
+  }
 }
 
 /**
@@ -777,6 +807,139 @@ function media_update_7206() {
       file_display_save((object) $display);
     }
   }
+}
+
+/**
+ * Empty update function to trigger cache clear
+ * after changing access callbacks to file_entity_access.
+ */
+function media_update_7207() {
+  // Do nothing.
+}
+
+/**
+ * Drop the media_types table and migrate all files to the new file_entity types.
+ */
+function media_update_7208() {
+
+  // @see http://drupal.org/node/1292382
+  if (!function_exists('file_type_get_enabled_types')) {
+    throw new DrupalUpdateException('The File Entity module needs to be upgraded before continuing.');
+  }
+  else {
+
+    if (db_table_exists('media_type')) {
+      $existing_types = db_select('media_type', 'mt')
+        ->orderBy('weight')
+        ->fields('mt')
+        ->execute()
+        // Will key by the name field.
+        ->fetchAllAssoc('name');
+      foreach ($existing_types as &$type) {
+        $type->type_callback_args = unserialize($type->type_callback_args);
+      }
+
+      include_once DRUPAL_ROOT . '/includes/file.mimetypes.inc';
+      $mapping = file_mimetype_mapping();
+      foreach ($existing_types as $type) {
+        if ($type->name == 'default') {
+          // We do not migrate this type, since there is no way to handle its weight.
+          continue;
+        }
+        $extensions = isset($type->type_callback_args['extensions']) ? $type->type_callback_args['extensions'] : array();
+        $mimetypes = isset($type->type_callback_args['mimetypes']) ? $type->type_callback_args['mimetypes'] : array();
+        // Add mimetypes by extensions.
+        foreach ($extensions as $extension) {
+          if (isset($mapping['extensions'][$extension])) {
+            $type->mimetypes[] = $mapping['mimetypes'][$mapping['extensions'][$extension]];
+          }
+        }
+        // Add rest mimetypes.
+        foreach ($mimetypes as $mimetype) {
+          // Mimetype is a regex pattern.
+          foreach ($mapping['mimetypes'] as $mapping_mimetype) {
+            if (preg_match($mimetype, $mapping_mimetype) && !in_array($mapping_mimetype, $type->mimetypes)) {
+              $type->mimetypes[] = $mapping_mimetype;
+            }
+          }
+        }
+        $type->streams = isset($type->type_callback_args['streams']) ? $type->type_callback_args['streams'] : array();
+        $type->type = $type->name;
+        // Merge existing type with new ones.
+        if ($new_type = file_type_load($type->name)) {
+          $new_type->mimetypes = array_merge($type->mimetypes, $new_type->mimetypes);
+          $new_type->streams = array_merge($type->streams, $new_type->streams);
+        }
+        file_type_save($new_type);
+      }
+      db_drop_table('media_type');
+
+      // Special treatment for old media application type to new file_entity
+      // document one. Add some more mimetypes to document.
+      $document_type = file_type_load('document');
+      foreach($mapping['mimetypes'] as $mimetype) {
+        $is_document = strpos($mimetype, 'document') !== FALSE || strpos($mimetype, 'application/vnd.ms-') !== FALSE;
+        if ($is_document && !in_array($mimetype, $document_type->mimetypes)) {
+          $document_type->mimetypes[] = $mimetype;
+        }
+      }
+      file_type_save($document_type);
+    }
+  }
+}
+
+/**
+ * Update {file_managed}.type with the new file types provided by file_entity.
+ */
+function media_update_7209() {
+  // Go through file_managed table and update files with the new type names.
+  $enabled_types = file_type_get_enabled_types();
+
+  $query = db_select('file_managed', 'f')
+    ->fields('f', array('fid', 'type', 'filemime', 'uri'));
+  $files = $query->execute()->fetchAllAssoc('fid');
+  $failed = array();
+  foreach ($files as $fid => $file) {
+    if (empty($file->filemime)) {
+      $file->filemime = file_get_mimetype($file->uri);
+    }
+
+    $valid = FALSE;
+    foreach ($enabled_types as $type) {
+      if (in_array($file->filemime, $type->mimetypes)) {
+        $file->newtype = $type->type;
+        $valid = TRUE;
+        continue;
+      }
+    }
+
+    if (!$valid) {
+      $failed[] = $file->uri;
+      // Mark this file with FILE_TYPE_NONE so it is easier to be tracked and
+      // updated later, instead of scanning the whole table again.
+      $file->newtype = FILE_TYPE_NONE;
+    }
+
+    if ($file->newtype != $file->type) {
+      db_update('file_managed')
+        ->fields(array('type' => $file->newtype))
+        ->condition('fid', $file->fid)
+        ->execute();
+    }
+  }
+
+  if (!empty($failed)) {
+    return t('The following file(s) have a mimetype that does not belong to any file entity type. Please update manually.') . PHP_EOL . implode(PHP_EOL, $failed);
+  }
+
+  return t('All files types converted succesfully.');
+}
+
+/**
+ * Delete deceprated media__type_icon_directory variable.
+ */
+function media_update_7210() {
+  media_variable_del('type_icon_directory');
 }
 
 /**

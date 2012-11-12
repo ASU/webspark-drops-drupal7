@@ -1,7 +1,6 @@
 <?php
 
 include_once('panopoly_core.features.inc');
-include_once('panopoly_core.defaultconfig.inc');
 
 /**
  * Implementation of hook_init()
@@ -123,7 +122,7 @@ function panopoly_core_entity_info_alter(&$entity_info) {
  * problematic entity_entity_info_alter() implementation. 
  */
 function panopoly_core_module_implements_alter(&$implementations, $hook) {
-  if ($hook == 'entity_info_alter' || $hook == 'css_alter') {
+  if ($hook == 'entity_info_alter' || $hook == 'css_alter' || $hook == 'modules_enabled') {
     $group = $implementations['panopoly_core'];
     unset($implementations['panopoly_core']);
     $implementations['panopoly_core'] = $group;
@@ -139,6 +138,45 @@ function panopoly_core_element_info_alter(&$type) {
   // seven_css_alter(), which always runs after any module's implementation.
   if (isset($type['styles']['#pre_render'])) {
     array_unshift($type['styles']['#pre_render'], 'panopoly_core_pre_render_styles');
+  }
+}
+
+/**
+ * Implements hook_modules_enabled().
+ *
+ * This hook is implemented to assign some default permissions for panelizer's handling 
+ * of taxonomy terms. This has to be done in this hook to run after both features
+ * and defaultconfig which power the functionality. Hopefully a more general solution
+ * can be found. More information - http://drupal.org/node/1837312.
+ */
+function panopoly_core_modules_enabled($modules) {
+
+  // Only run this logic if we are executing as part of an install profile
+  if (variable_get('install_task', 'done') != 'done') {
+
+    // Rebuild some caches so this all works right
+    features_flush_caches();
+    drupal_static_reset();
+
+    // Define some permissions for the editor role
+    $editor = user_role_load_by_name('editor');
+    user_role_grant_permissions($editor->rid, array('administer panelizer taxonomy_term panopoly_categories breadcrumbs'));
+    user_role_grant_permissions($editor->rid, array('administer panelizer taxonomy_term panopoly_categories content'));
+    user_role_grant_permissions($editor->rid, array('administer panelizer taxonomy_term panopoly_categories context'));
+    user_role_grant_permissions($editor->rid, array('administer panelizer taxonomy_term panopoly_categories defaults'));
+    user_role_grant_permissions($editor->rid, array('administer panelizer taxonomy_term panopoly_categories layout'));
+    user_role_grant_permissions($editor->rid, array('administer panelizer taxonomy_term panopoly_categories overview'));
+    user_role_grant_permissions($editor->rid, array('administer panelizer taxonomy_term panopoly_categories settings'));
+
+    // Define some permissions for the admin role
+    $administrator = user_role_load_by_name('administrator');
+    user_role_grant_permissions($administrator->rid, array('administer panelizer taxonomy_term panopoly_categories breadcrumbs'));
+    user_role_grant_permissions($administrator->rid, array('administer panelizer taxonomy_term panopoly_categories content'));
+    user_role_grant_permissions($administrator->rid, array('administer panelizer taxonomy_term panopoly_categories context'));
+    user_role_grant_permissions($administrator->rid, array('administer panelizer taxonomy_term panopoly_categories defaults'));
+    user_role_grant_permissions($administrator->rid, array('administer panelizer taxonomy_term panopoly_categories layout'));
+    user_role_grant_permissions($administrator->rid, array('administer panelizer taxonomy_term panopoly_categories overview'));
+    user_role_grant_permissions($administrator->rid, array('administer panelizer taxonomy_term panopoly_categories settings'));
   }
 }
 

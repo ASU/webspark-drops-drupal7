@@ -263,9 +263,9 @@ function panopoly_admin_default_page_manager_pages() {
   $page->api_version = 1;
   $page->name = 'panopoly_admin_layout_library';
   $page->task = 'page';
-  $page->admin_title = 'Layout Library';
+  $page->admin_title = 'Panopoly Layouts';
   $page->admin_description = 'This is the page library that manages page layouts.';
-  $page->path = 'admin/panopoly/libraries/layouts';
+  $page->path = 'admin/panopoly/layouts';
   $page->access = array(
     'plugins' => array(
       1 => array(
@@ -283,7 +283,7 @@ function panopoly_admin_default_page_manager_pages() {
   );
   $page->menu = array(
     'type' => 'normal',
-    'title' => 'Layout Library',
+    'title' => 'Panopoly Layouts',
     'name' => 'management',
     'weight' => '0',
     'parent' => array(
@@ -443,9 +443,9 @@ function panopoly_admin_default_page_manager_pages() {
   $page->api_version = 1;
   $page->name = 'panopoly_admin_page_library';
   $page->task = 'page';
-  $page->admin_title = 'Page Library';
+  $page->admin_title = 'Panopoly Pages';
   $page->admin_description = 'This is the page library that manages page templates, landing pages, and overridden pages.';
-  $page->path = 'admin/panopoly/libraries/pages';
+  $page->path = 'admin/panopoly/pages';
   $page->access = array(
     'plugins' => array(
       1 => array(
@@ -463,7 +463,7 @@ function panopoly_admin_default_page_manager_pages() {
   );
   $page->menu = array(
     'type' => 'normal',
-    'title' => 'Page Library',
+    'title' => 'Panopoly Pages',
     'name' => 'management',
     'weight' => '0',
     'parent' => array(
@@ -587,9 +587,9 @@ function panopoly_admin_default_page_manager_pages() {
   $page->api_version = 1;
   $page->name = 'panopoly_admin_pane_library';
   $page->task = 'page';
-  $page->admin_title = 'Pane Library';
+  $page->admin_title = 'Panopoly Panes';
   $page->admin_description = 'This is the pane library for the site. See all of the panes you can add to your pages.';
-  $page->path = 'admin/panopoly/libraries/panes';
+  $page->path = 'admin/panopoly/panes';
   $page->access = array(
     'plugins' => array(
       1 => array(
@@ -607,7 +607,7 @@ function panopoly_admin_default_page_manager_pages() {
   );
   $page->menu = array(
     'type' => 'normal',
-    'title' => 'Pane Library',
+    'title' => 'Panopoly Panes',
     'name' => 'management',
     'weight' => '0',
     'parent' => array(

@@ -18,8 +18,10 @@ $view->disabled = FALSE; /* Edit this to true to make a default view disabled in
 /* Display: Master */
 $handler = $view->new_display('default', 'Master', 'default');
 $handler->display->display_options['use_ajax'] = TRUE;
+$handler->display->display_options['use_more_always'] = FALSE;
 $handler->display->display_options['group_by'] = TRUE;
 $handler->display->display_options['access']['type'] = 'perm';
+$handler->display->display_options['access']['perm'] = 'view files';
 $handler->display->display_options['cache']['type'] = 'none';
 $handler->display->display_options['query']['type'] = 'views_query';
 $handler->display->display_options['query']['options']['query_tags'] = array(
@@ -36,7 +38,6 @@ $handler->display->display_options['style_plugin'] = 'media_browser';
 $handler->display->display_options['empty']['area']['id'] = 'area';
 $handler->display->display_options['empty']['area']['table'] = 'views';
 $handler->display->display_options['empty']['area']['field'] = 'area';
-$handler->display->display_options['empty']['area']['empty'] = FALSE;
 $handler->display->display_options['empty']['area']['content'] = 'No files available.';
 $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
 /* Field: File: Name */
@@ -92,11 +93,16 @@ $handler->display->display_options['filters']['type']['expose']['identifier'] = 
 $handler = $view->new_display('media_browser', 'Media browser', 'media_browser_1');
 $handler->display->display_options['defaults']['title'] = FALSE;
 $handler->display->display_options['title'] = 'Library';
+$handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
 
 /* Display: My files */
 $handler = $view->new_display('media_browser', 'My files', 'media_browser_my_files');
 $handler->display->display_options['defaults']['title'] = FALSE;
 $handler->display->display_options['title'] = 'My files';
+$handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+$handler->display->display_options['defaults']['access'] = FALSE;
+$handler->display->display_options['access']['type'] = 'perm';
+$handler->display->display_options['access']['perm'] = 'view own files';
 $handler->display->display_options['defaults']['relationships'] = FALSE;
 /* Relationship: File: User who uploaded */
 $handler->display->display_options['relationships']['uid']['id'] = 'uid';

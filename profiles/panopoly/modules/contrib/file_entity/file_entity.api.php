@@ -123,48 +123,66 @@ function hook_file_view_alter($build, $type) {
 }
 
 /**
- * Defines bulk file operations.
+ * Control access to a file.
  *
- * This hook enables modules to inject custom operations into the mass
- * operations dropdown found at admin/content/file, by associating a callback
- * function with the operation, which is called when the form is submitted.
- * The callback function receives one initial argument, which is an array of
- * the checked files.
+ * Modules may implement this hook if they want to have a say in whether or not
+ * a given user has access to perform a given operation on a file.
+ *
+ * The administrative account (user ID #1) always passes any access check,
+ * so this hook is not called in that case. Users with the "bypass file access"
+ * permission may always view and edit files through the administrative
+ * interface.
+ *
+ * Note that not all modules will want to influence access on all
+ * file types. If your module does not want to actively grant or
+ * block access, return FILE_ENTITY_ACCESS_IGNORE or simply return nothing.
+ * Blindly returning FALSE will break other file access modules.
+ *
+ * @param $op
+ *   The operation to be performed. Possible values:
+ *   - "create"
+ *   - "delete"
+ *   - "update"
+ *   - "view"
+ * @param $file
+ *   The file on which the operation is to be performed, or, if it does
+ *   not yet exist, the type of file to be created.
+ * @param $account
+ *   A user object representing the user for whom the operation is to be
+ *   performed.
  *
  * @return
- *  An associave array of operations keyed by machine name.
- *    - label: A string to show in the operations dropdown.
- *    - callback (string): A callback function to call for the operation. This
- *        function will be passed an array of file_ids which were selected.
- *    - confirm (boolean): Whether or not this operation requires a confirm form
- *        In the case where confirm is set to true, callback should be a function
- *        which can return a confirm form.
+ *   FILE_ENTITY_ACCESS_ALLOW if the operation is to be allowed;
+ *   FILE_ENTITY_ACCESS_DENY if the operation is to be denied;
+ *   FILE_ENTITY_ACCESS_IGNORE to not affect this operation at all.
  *
- * @see hook_file_operation_info_alter()
- * @see file_entity_get_file_operation_info()
+ * @ingroup file_entity_access
  */
-function hook_file_operation_info() {
-  $info['fluff'] = array(
-    'label' => t('Fluff selected files'),
-    'callback' => 'file_fluff_files',
-  );
+function hook_file_entity_access($op, $file, $account) {
+  $type = is_string($file) ? $file : $file->type;
 
-  return $info;
+  if ($op !== 'create' && (REQUEST_TIME - $file->timestamp) < 3600) {
+    // If the file was uploaded in the last hour, deny access to it.
+    return FILE_ENTITY_ACCESS_DENY;
+  }
+
+  // Returning nothing from this function would have the same effect.
+  return FILE_ENTITY_ACCESS_IGNORE;
 }
 
 /**
- * Perform alterations on bulk file operations.
+ * Control access to listings of files.
  *
- * @param $info
- *   Array of information on bulk file operations exposed by
- *   hook_file_operation_info() implementations.
+ * @param $query
+ *   A query object describing the composite parts of a SQL query related to
+ *   listing files.
  *
- * @see hook_file_operation_info()
- * @see file_entity_get_file_operation_info()
+ * @see hook_query_TAG_alter()
+ * @ingroup file_entity_access
  */
-function hook_file_operation_info_alter(&$info) {
-  // Remove the 'Fluff selected files' operation.
-  unset($info['fluff']);
+function hook_query_file_entity_access_alter(QueryAlterableInterface $query) {
+  // Only show files that have been uploaded more than an hour ago.
+  $query->condition('timestamp', REQUEST_TIME - 3600, '<=');
 }
 
 /**

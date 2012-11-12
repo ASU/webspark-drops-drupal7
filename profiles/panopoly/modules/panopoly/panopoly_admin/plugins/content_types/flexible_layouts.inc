@@ -42,7 +42,12 @@ function panopoly_admin_flexible_layouts_content_type_render($subtype, $conf, $p
     $pane->content = theme('table', array('header' => $header, 'rows' => $layout_options, 'attributes' => array('class' => array('flexible-layouts'))));
   }
   else {
-    $pane->content = t('No flexible layout options have yet been created. !add one now!', array('!add' => l(t('Add'), 'admin/structure/panels/layouts/add-flexible')));
+    if (user_access('administer panels layouts')) {
+      $pane->content = t('No flexible layout options have yet been created. !add one now!', array('!add' => l(t('Add'), 'admin/structure/panels/layouts/add-flexible')));
+    }
+    else {
+      $pane->content = t('No flexible layout options have yet been created.');
+    }
   }
   return $pane;
 }

@@ -23,3 +23,16 @@ function media_vimeo_uninstall() {
   }
   return array(array('success' => TRUE, 'query' => "Deleted all variables in the Media: Vimeo namespace."));
 }
+
+/**
+ * Update Media Vimeo files to the new video file_entity type.
+ */
+function media_vimeo_update_7001() {
+  $video_type = file_type_load('video');
+  $video_type->mimetypes[] = 'video/vimeo';
+  // maybe also add stream if is not there already?
+  file_type_save($video_type);
+
+  // Update existing files
+  db_query("UPDATE {file_managed} SET type = 'video' WHERE type = 'undefined' AND filemime = 'video/vimeo'");
+}

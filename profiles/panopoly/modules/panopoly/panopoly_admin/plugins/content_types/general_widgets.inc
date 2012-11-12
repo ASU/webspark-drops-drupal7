@@ -35,7 +35,7 @@ function panopoly_admin_general_widgets_content_type_render($subtype, $conf, $pa
         'data' => array(
           theme('image', array('path' => $widget['icon'])),
           str_replace('Add ', '', ucwords($widget['title'])),
-          l(t('Add reusable pane'), 'admin/structure/fieldable-panels-panes/manage/' . $widget['name'] . '/add', array('query' => array('destination' => 'admin/panopoly/libraries/panes'))),
+          l(t('Add reusable pane'), 'admin/structure/fieldable-panels-panes/manage/' . $widget['name'] . '/add', array('query' => array('destination' => 'admin/panopoly/panes'))),
         ),
       );
     }

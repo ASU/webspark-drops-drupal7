@@ -131,27 +131,28 @@ function media_token_to_markup($match, $wysiwyg = FALSE) {
     $attribute_whitelist = media_variable_get('wysiwyg_allowed_attributes');
     $settings['attributes'] = array_intersect_key($attributes, array_flip($attribute_whitelist));
 
-    // Many media formatters will want to apply width and height independently
-    // of the style attribute or the corresponding HTML attributes, so pull
-    // these two out into top-level settings. Different WYSIWYG editors have
-    // different behavior with respect to whether they store user-specified
-    // dimensions in the HTML attributes or the style attribute, so check both.
-    // Per http://www.w3.org/TR/html5/the-map-element.html#attr-dim-width, the
-    // HTML attributes are merely hints: CSS takes precedence.
-    if (isset($settings['attributes']['style'])) {
-      $css_properties = media_parse_css_declarations($settings['attributes']['style']);
-      foreach (array('width', 'height') as $dimension) {
-        if (isset($css_properties[$dimension]) && substr($css_properties[$dimension], -2) == 'px') {
-          $settings[$dimension] = substr($css_properties[$dimension], 0, -2);
-        }
-        elseif (isset($settings['attributes'][$dimension])) {
-          $settings[$dimension] = $settings['attributes'][$dimension];
+    if (!empty($tag_info['attributes']) && is_array($tag_info['attributes'])) {
+      $attribute_whitelist = media_variable_get('wysiwyg_allowed_attributes');
+      $settings['attributes'] = array_intersect_key($tag_info['attributes'], array_flip($attribute_whitelist));
+
+      // Many media formatters will want to apply width and height independently
+      // of the style attribute or the corresponding HTML attributes, so pull
+      // these two out into top-level settings. Different WYSIWYG editors have
+      // different behavior with respect to whether they store user-specified
+      // dimensions in the HTML attributes or the style attribute, so check both.
+      // Per http://www.w3.org/TR/html5/the-map-element.html#attr-dim-width, the
+      // HTML attributes are merely hints: CSS takes precedence.
+      if (isset($settings['attributes']['style'])) {
+        $css_properties = media_parse_css_declarations($settings['attributes']['style']);
+        foreach (array('width', 'height') as $dimension) {
+          if (isset($css_properties[$dimension]) && substr($css_properties[$dimension], -2) == 'px') {
+            $settings[$dimension] = substr($css_properties[$dimension], 0, -2);
+          }
+          elseif (isset($settings['attributes'][$dimension])) {
+            $settings[$dimension] = $settings['attributes'][$dimension];
+          }
         }
       }
-    }
-
-    if ($wysiwyg) {
-      $settings['wysiwyg'] = $wysiwyg;
     }
   }
   catch (Exception $e) {
@@ -160,7 +161,20 @@ function media_token_to_markup($match, $wysiwyg = FALSE) {
   }
 
   if ($wysiwyg) {
+    $settings['wysiwyg'] = $wysiwyg;
+    // If sending markup to a WYSIWYG, we need to pass the file infomation so
+    // that a inline macro can be generated when the WYSIWYG is detached.
+    // The WYSIWYG plugin is expecting this information in the format of a
+    // urlencoded JSON string stored in the data-file_info attribute of the
+    // element.
     $element = media_get_file_without_label($file, $tag_info['view_mode'], $settings);
+    $data = drupal_json_encode(array(
+      'type' => 'media',
+      'fid' => $file->fid,
+      'view_mode' => $tag_info['view_mode'],
+    ));
+    $element['#attributes']['data-file_info'] = urlencode($data);
+    $element['#attributes']['class'][] = 'media-element';
   }
   else {
     // Display the field elements.
@@ -332,7 +346,6 @@ function media_format_form($form, $form_state, $file) {
   $form['#attached']['library'][] = array('media', 'media_base');
   $form['#attached']['library'][] = array('system', 'form');
   $form['#attached']['js'][] = drupal_get_path('module', 'media') . '/js/media.format_form.js';
-  $form['#attached']['css'][] = drupal_get_path('module', 'media') . '/css/media-format-form.css';
 
   $form['heading'] = array(
     '#type' => 'markup',

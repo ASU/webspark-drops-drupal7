@@ -238,7 +238,7 @@ function file_entity_install() {
   // Set permissions.
   $roles = user_roles();
   foreach ($roles as $rid => $role) {
-    user_role_grant_permissions($rid, array('view file'));
+    user_role_grant_permissions($rid, array('view files'));
   }
 }
 
@@ -524,4 +524,20 @@ function file_entity_update_7202() {
     ->fields(array('type' => 'undefined'))
     ->condition('type', '')
     ->execute();
+}
+
+/**
+ * Update permission names.
+ */
+function file_entity_update_7203() {
+  $permissions = array(
+    'view file' => 'view files',
+    'edit file' => 'edit any files',
+  );
+  foreach ($permissions as $old => $new) {
+    db_update('role_permission')
+      ->fields(array('permission' => $new))
+      ->condition('permission', $old)
+      ->execute();
+  }
 }

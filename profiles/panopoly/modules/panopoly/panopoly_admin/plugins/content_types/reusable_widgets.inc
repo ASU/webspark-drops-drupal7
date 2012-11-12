@@ -37,7 +37,7 @@ function panopoly_admin_reusable_widgets_content_type_render($subtype, $conf, $p
           l($subtype['title'], 'admin/structure/fieldable-panels-panes/view/' . $entity->fpid),
           $subtype['category'],
           ucwords($entity->bundle),
-          l(t('Edit'), 'admin/structure/fieldable-panels-panes/view/' . $entity->fpid . '/edit', array('query' => array('destination' => 'admin/panopoly/libraries/panes'))),
+          l(t('Edit'), 'admin/structure/fieldable-panels-panes/view/' . $entity->fpid . '/edit', array('query' => array('destination' => 'admin/panopoly/panes'))),
         ),
       );
     }

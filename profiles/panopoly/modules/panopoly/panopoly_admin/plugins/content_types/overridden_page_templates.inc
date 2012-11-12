@@ -31,7 +31,7 @@ function panopoly_admin_overridden_page_templates_content_type_render($subtype, 
     ->condition('pe.entity_type', $entity_types)
     ->condition('pe.view_mode', 'page_manager')
     ->execute()
-    ->fetchAllAssoc('entity_id');
+    ->fetchAll(); 
   foreach ($pages as $overridden_page) {
     $entity_info = entity_get_info($overridden_page->entity_type);
     $entity = entity_load($overridden_page->entity_type, array($overridden_page->entity_id));
@@ -44,7 +44,7 @@ function panopoly_admin_overridden_page_templates_content_type_render($subtype, 
         $entity_data['title'],
         '<em>' . $entity_info['bundles'][$entity_data['bundle_type']]['label'] . ' template' . '</em>',
         l(url($entity_uri['path']), $entity_uri['path']),
-        l(t('Revert'), 'admin/site/panelizer-delete/' . $entity_data['type'] . '/' . $entity_data['id']),
+        (panopoly_admin_panelizer_revert_access($entity_data['type'], $entity_data['id'])) ? l(t('Revert'), 'admin/site/panelizer-delete/' . $entity_data['type'] . '/' . $entity_data['id']) : NULL,
       )
     );
   }

@@ -64,7 +64,7 @@ function media_include_browser_js() {
     }
   }
   // Add wysiwyg-specific settings.
-  $settings = array('blacklist' => array('src', 'fid', 'view_mode', 'format'));
+  $settings = array('wysiwyg_allowed_attributes' => media_variable_get('wysiwyg_allowed_attributes'));
   drupal_add_js(array('media' => $settings), 'setting');
 }
 

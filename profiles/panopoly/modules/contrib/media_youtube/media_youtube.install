@@ -107,3 +107,15 @@ function media_youtube_update_7012() {
   return array();
 }
 
+/**
+ * Update Media YouTube files to the new video file_entity type.
+ */
+function media_youtube_update_7013() {
+  $video_type = file_type_load('video');
+  $video_type->mimetypes[] = 'video/youtube';
+  // maybe also add stream if is not there already?
+  file_type_save($video_type);
+
+  // Update existing files
+  db_query("UPDATE {file_managed} SET type = 'video' WHERE type = 'undefined' AND filemime = 'video/youtube'");
+}

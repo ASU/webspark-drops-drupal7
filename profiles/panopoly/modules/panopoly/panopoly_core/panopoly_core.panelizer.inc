@@ -28,6 +28,7 @@ function panopoly_core_panelizer_defaults() {
   $panelizer->css_class = '';
   $panelizer->title_element = 'H2';
   $panelizer->link_to_entity = TRUE;
+  $panelizer->extra = '';
   $display = new panels_display();
   $display->layout = 'burr';
   $display->layout_settings = array();
@@ -159,6 +160,7 @@ function panopoly_core_panelizer_defaults() {
   $panelizer->css_class = '';
   $panelizer->title_element = 'H2';
   $panelizer->link_to_entity = TRUE;
+  $panelizer->extra = '';
   $display = new panels_display();
   $display->layout = 'flexible';
   $display->layout_settings = array();
@@ -248,6 +250,7 @@ function panopoly_core_panelizer_defaults() {
   $panelizer->css_class = '';
   $panelizer->title_element = 'H2';
   $panelizer->link_to_entity = TRUE;
+  $panelizer->extra = '';
   $display = new panels_display();
   $display->layout = 'phelan';
   $display->layout_settings = array();

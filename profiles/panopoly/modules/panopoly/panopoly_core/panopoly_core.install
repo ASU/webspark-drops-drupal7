@@ -59,10 +59,6 @@ function panopoly_core_requirements($phase) {
  */
 function panopoly_core_install() {
 
-  // Allow anonymous and authenticated users to see content
-  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content'));
-  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content'));
-
   // Add login link for users to log in
   $item = array(
     'link_path' => 'user/login',

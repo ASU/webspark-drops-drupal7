@@ -50,30 +50,22 @@ function panelizer_admin_hook_menu(&$items) {
     'type' => MENU_SUGGESTED_ITEM,
   ) + $tabs_base;
 
-  $items['admin/config/content/panelizer/%panelizer_handler/%/settings'] = array(
-    'title' => 'Settings',
-    'page callback' => 'panelizer_default_settings_page',
-    'weight' => -5,
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  ) + $tabs_base;
-
-  $items['admin/config/content/panelizer/%panelizer_handler/%/context'] = array(
-    'title' => 'Contexts',
-    'page callback' => 'panelizer_default_context_page',
-    'weight' => -4,
-  ) + $tabs_base;
-
-  $items['admin/config/content/panelizer/%panelizer_handler/%/layout'] = array(
-    'title' => 'Layout',
-    'page callback' => 'panelizer_default_layout_page',
-    'weight' => -3,
-  ) + $tabs_base;
-
-  $items['admin/config/content/panelizer/%panelizer_handler/%/content'] = array(
-    'title' => 'Content',
-    'page callback' => 'panelizer_default_content_page',
-    'weight' => -2,
-  ) + $tabs_base;
+  $index = 0;
+  foreach (panelizer_operations() as $path => $operation) {
+    $items['admin/config/content/panelizer/%panelizer_handler/%/' . $path] = array(
+      'title' => $operation['menu title'],
+      'page callback' => $operation['admin callback'],
+      'weight' => $index - 5,
+      'type' => ($index === 0) ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+    ) + $tabs_base;
+    if (isset($operation['file'])) {
+      $items['admin/config/content/panelizer/%panelizer_handler/%/' . $path]['file'] = $operation['file'];
+    }
+    if (isset($operation['file path'])) {
+      $items['admin/config/content/panelizer/%panelizer_handler/%/' . $path]['file path'] = $operation['file path'];
+    }
+    $index++;
+  }
 
   $subtabs_base = array(
     'access callback' => 'panelizer_administer_panelizer_default',
@@ -90,29 +82,21 @@ function panelizer_admin_hook_menu(&$items) {
     'type' => MENU_CALLBACK,
   ) + $subtabs_base;
 
-  $items['admin/config/content/panelizer/%panelizer_handler/%/list/%/settings'] = array(
-    'title' => 'Settings',
-    'page callback' => 'panelizer_default_settings_page',
-    'weight' => -5,
-  ) + $subtabs_base;
-
-  $items['admin/config/content/panelizer/%panelizer_handler/%/list/%/context'] = array(
-    'title' => 'Contexts',
-    'page callback' => 'panelizer_default_context_page',
-    'weight' => -4,
-  ) + $subtabs_base;
-
-  $items['admin/config/content/panelizer/%panelizer_handler/%/list/%/layout'] = array(
-    'title' => 'Layout',
-    'page callback' => 'panelizer_default_layout_page',
-    'weight' => -3,
-  ) + $subtabs_base;
-
-  $items['admin/config/content/panelizer/%panelizer_handler/%/list/%/content'] = array(
-    'title' => 'Content',
-    'page callback' => 'panelizer_default_content_page',
-    'weight' => -2,
-  ) + $subtabs_base;
+  $index = 0;
+  foreach (panelizer_operations() as $path => $operation) {
+    $items['admin/config/content/panelizer/%panelizer_handler/%/list/%/' . $path] = array(
+      'title' => $operation['menu title'],
+      'page callback' => $operation['admin callback'],
+      'weight' => $index - 5,
+    ) + $subtabs_base;
+    if (isset($operation['file'])) {
+      $items['admin/config/content/panelizer/%panelizer_handler/%/list/%/' . $path]['file'] = $operation['file'];
+    }
+    if (isset($operation['file path'])) {
+      $items['admin/config/content/panelizer/%panelizer_handler/%/list/%/' . $path]['file path'] = $operation['file path'];
+    }
+    $index++;
+  }
 
   $items['admin/config/content/panelizer/%panelizer_handler/%/list/%/access'] = array(
     'title' => 'Access',

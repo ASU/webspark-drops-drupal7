@@ -31,7 +31,7 @@ function media_internet_menu() {
  * Access callback for the media_internet media browser plugin.
  */
 function media_internet_access($account = NULL) {
-  return user_access('administer media', $account) || user_access('add media from remote sources', $account);
+  return user_access('administer files', $account) || user_access('add media from remote sources', $account);
 }
 
 /**
@@ -201,7 +201,7 @@ function media_internet_add_submit($form, &$form_state) {
   }
 
   // Redirect to the file edit page after submission.
-  if (media_access('edit')) {
+  if (file_entity_access('update', $file)) {
     $destination = array('destination' => 'admin/content/file');
     if (isset($_GET['destination'])) {
       $destination = drupal_get_destination();

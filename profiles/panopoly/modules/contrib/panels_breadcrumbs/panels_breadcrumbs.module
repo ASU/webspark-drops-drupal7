@@ -56,6 +56,20 @@ function panels_breadcrumbs_variant_breadcrumb_form_submit($form, &$form_state) 
 }
 
 /**
+ * Implements hook_ctools_render_alter().
+ *
+ * When a Page Manager page is rendered, build the breadcrumb if it exists.
+ */
+function panels_breadcrumbs_ctools_render_alter($info, $page, $context) {
+  $handler = $context['handler'];
+  $contexts = ctools_context_handler_get_handler_contexts($context['contexts'], $handler);
+
+  if (isset($handler->conf['panels_breadcrumbs_state']) && $handler->conf['panels_breadcrumbs_state']) {
+    panels_breadcrumbs_build_breadcrumb($handler->conf, $contexts, TRUE);
+  }
+}
+
+/**
  * Returns a partially formed panels breadcrumbs configuration form.
  *
  * @param $conf
@@ -123,54 +137,6 @@ function panels_breadcrumbs_partial_configuration_form($conf, $contexts) {
 }
 
 /**
- * Implements hook_ctools_plugin_pre_alter().
- */
-function panels_breadcrumbs_ctools_plugin_pre_alter(&$plugin, $info) {
-  // Adds a wrapper callback to the panel_context render callback.
-  if ($plugin['name'] == 'panel_context') {
-    $plugin['render'] = 'panels_breadcrumbs_panel_context_render_wrapper';
-  }
-
-  // Modifies the core ctools breadcrumb pane implementation
-  if ($plugin['name'] == 'page_breadcrumb') {
-    $plugin['all contexts'] = TRUE;
-    $plugin['edit form'] = 'panels_breadcrumbs_page_breadcrumb_content_type_edit_form';
-    $plugin['render callback'] = 'panels_breadcrumbs_page_breadcrumb_content_type_render';
-    $plugin['admin title'] = 'panels_breadcrumbs_page_breadcrumb_content_type_admin_title';
-    $plugin['admin info'] = 'panels_breadcrumbs_page_breadcrumb_content_type_admin_info';
-    $plugin['defaults'] = array(
-      'panels_breadcrumbs_admin_title' => '',
-      'panels_breadcrumbs_state' => 0,
-      'panels_breadcrumbs_titles' => '',
-      'panels_breadcrumbs_paths' => '',
-      'panels_breadcrumbs_home' => 0,
-    );
-  }
-}
-
-/**
- * Wrapper callback for panels_panel_context_render().
- *
- * This allows to work with the data contained in the handler before the panel
- * and content panes get rendered. This is a rather ugly workaround to the issue
- * in http://drupal.org/node/1398244 but as of now, no other 'cleaner' solution
- * was found that did not imply a loss of functionality.
- *
- * @see panels_breadcrumbs_ctools_plugin_pre_alter()
- */
-function panels_breadcrumbs_panel_context_render_wrapper($handler, $base_contexts, $args) {
-  $contexts = ctools_context_handler_get_handler_contexts($base_contexts, $handler);
-
-  // If panels_breadcrumbs is enabled for this display, build the breadcrumb.
-  if (isset($handler->conf['panels_breadcrumbs_state']) && $handler->conf['panels_breadcrumbs_state']) {
-    panels_breadcrumbs_build_breadcrumb($handler->conf, $contexts, TRUE);
-  }
-
-  // Invoke panel_context default render callback.
-  return panels_panel_context_render($handler, $base_contexts, $args, FALSE);
-}
-
-/**
  * Builds a custom breadcrumb from the provided contexts and configuration.
  *
  * @param $conf
@@ -197,8 +163,8 @@ function panels_breadcrumbs_build_breadcrumb($conf, $contexts, $override = FALSE
     return;
   }
 
-  // Look for placeholder tokens in titles and paths and convert them for this display
-  $titles = ctools_context_keyword_substitute($conf['panels_breadcrumbs_titles'], array(), $contexts);
+  // Look for placeholder tokens in paths and convert them for this display
+  $titles = $conf['panels_breadcrumbs_titles'];
   $paths = ctools_context_keyword_substitute($conf['panels_breadcrumbs_paths'], array(), $contexts);
 
   // Break titles and paths into arrays and remove empty keys
@@ -220,9 +186,13 @@ function panels_breadcrumbs_build_breadcrumb($conf, $contexts, $override = FALSE
 
   // Iterate through all crumbs and add them to the breadcrumb
   foreach ($titles as $key => $title) {
-    $title = html_entity_decode(trim($title), ENT_QUOTES);
+    // Translate the title and convert existing placeholder tokens afterwards.
+    $translated_title = t($title);
+    $translated_title = ctools_context_keyword_substitute($translated_title, array(), $contexts);
+
+    $translated_title = html_entity_decode(trim($translated_title), ENT_QUOTES);
     $path = empty($paths[$key]) ? '<none>' : trim($paths[$key]);
-    $breadcrumbs_info[] = array('title' => t($title), 'href' => $path) + $default_breadcrumb_info;
+    $breadcrumbs_info[] = array('title' => $translated_title, 'href' => $path) + $default_breadcrumb_info;
   }
 
   // Allow other modules to intercept and operate changes in the breadcrumb
@@ -248,16 +218,49 @@ function panels_breadcrumbs_build_breadcrumb($conf, $contexts, $override = FALSE
   return $breadcrumbs;
 }
 
+// CTools breadcrumb content-type plugin override
+// -----------------------------------------------------------------------------
+
 /**
- * Render callback override of 'page_breadcrumb' ctools content type.
+ * Implements hook_ctools_plugin_pre_alter().
+ */
+function panels_breadcrumbs_ctools_plugin_pre_alter(&$plugin, $info) {
+  // Modifies the core ctools breadcrumb content-type implementation
+  if ($plugin['name'] == 'page_breadcrumb') {
+    $plugin['all contexts'] = TRUE;
+    $plugin['edit form'] = 'panels_breadcrumbs_page_breadcrumb_content_type_edit_form';
+    $plugin['render callback'] = 'panels_breadcrumbs_page_breadcrumb_content_type_render';
+    $plugin['admin title'] = 'panels_breadcrumbs_page_breadcrumb_content_type_admin_title';
+    $plugin['admin info'] = 'panels_breadcrumbs_page_breadcrumb_content_type_admin_info';
+    $plugin['defaults'] = array(
+      'panels_breadcrumbs_admin_title' => '',
+      'panels_breadcrumbs_state' => 0,
+      'panels_breadcrumbs_titles' => '',
+      'panels_breadcrumbs_paths' => '',
+      'panels_breadcrumbs_home' => 0,
+    );
+  }
+}
+
+/**
+ * Render callback override of 'page_breadcrumb' ctools content-type.
  */
 function panels_breadcrumbs_page_breadcrumb_content_type_render($subtype, $conf, $panel_args, $contexts) {
+  $panelizer_conf = panels_breadcrumbs_get_panelizer_breadcrumb_conf();
+
+  // Find which breadcrumb configuration to use.
   if (isset($conf['panels_breadcrumbs_state']) && $conf['panels_breadcrumbs_state']) {
-    $breadcrumb = panels_breadcrumbs_build_breadcrumb($conf, $contexts);
+    $correct_conf = $conf;
+  }
+  else if (!empty($panelizer_conf)) {
+    $correct_conf = $panelizer_conf;
   }
   else {
-    $breadcrumb = drupal_get_breadcrumb();
+    $page = page_manager_get_current_page();
+    $correct_conf = $page['handler']->conf;
   }
+
+  $breadcrumb = panels_breadcrumbs_build_breadcrumb($correct_conf, $contexts);
 
   $block = new stdClass();
   $block->content = theme('breadcrumb', array('breadcrumb' => $breadcrumb));
@@ -319,4 +322,189 @@ function panels_breadcrumbs_page_breadcrumb_content_type_admin_info($subtype, $c
   $block->title = $title;
   $block->content = '';
   return $block;
+}
+
+// Panelizer integration
+// -----------------------------------------------------------------------------
+
+/**
+ * Implements hook_panelizer_operations_alter().
+ */
+function panels_breadcrumbs_panelizer_operations_alter(&$operations) {
+  $operations['breadcrumbs'] = array(
+    'menu title' => 'Breadcrumbs',
+    'link title' => t('breadcrumbs'),
+    'entity callback' => 'panels_breadcrumbs_panelizer_breadcrumbs_entity_page',
+    'admin callback' => 'panels_breadcrumbs_panelizer_breadcrumbs_admin_page',
+  );
+}
+
+/**
+ * Panelizer breadcrumbs operation entity page callback.
+ */
+function panels_breadcrumbs_panelizer_breadcrumbs_entity_page($handler, $js, $input, $entity, $view_mode) {
+  $panelizer = $entity->panelizer[$view_mode];
+  if (empty($panelizer)) {
+    return MENU_NOT_FOUND;
+  }
+
+  list($entity_id, $revision_id, $bundle) = entity_extract_ids($handler->entity_type, $entity);
+
+  $form_state = array(
+    'entity' => $entity,
+    'revision info' => $handler->entity_allows_revisions($entity),
+    'display cache' => panels_edit_cache_get(implode(':', array('panelizer', $handler->entity_type, $entity_id, $view_mode))),
+    'no_redirect' => TRUE,
+    'panelizer' => $panelizer,
+  );
+
+  ctools_include('common', 'panelizer');
+  $output = drupal_build_form('panels_breadcrumbs_panelizer_breadcrumbs_form', $form_state);
+  
+  if (!empty($form_state['executed'])) {
+    if ($form_state['clicked_button']['#name'] == 'save') {
+      drupal_set_message(t('The settings have been updated.'));
+
+      $entity->panelizer[$view_mode]->extra['panels_breadcrumbs_state'] = $form_state['values']['panels_breadcrumbs_state'];
+      $entity->panelizer[$view_mode]->extra['panels_breadcrumbs_titles'] = $form_state['values']['panels_breadcrumbs_titles'];
+      $entity->panelizer[$view_mode]->extra['panels_breadcrumbs_paths'] = $form_state['values']['panels_breadcrumbs_paths'];
+      $entity->panelizer[$view_mode]->extra['panels_breadcrumbs_home'] = $form_state['values']['panels_breadcrumbs_home'];
+
+      $handler->entity_save($entity);
+    }
+    else {
+      drupal_set_message(t('Changes have been discarded.'));
+    }
+
+    drupal_goto($_GET['q']);
+  }
+
+  $output = $handler->wrap_entity_panelizer_pages($entity, $view_mode, $output);
+
+  ctools_set_no_blocks(FALSE);
+  drupal_set_page_content($output);
+  $page = element_info('page');
+  return $page;
+}
+
+/**
+ * Panelizer breadcrumbs operation admin page callback.
+ */
+function panels_breadcrumbs_panelizer_breadcrumbs_admin_page($handler, $bundle, $name, $view_mode) {
+  if (is_string($handler)) {
+    $handler = panelizer_entity_plugin_get_handler($handler);
+  }
+
+  if ($view_mode) {
+    $bundle .= '.' . $view_mode;
+  }
+
+  $panelizer = $handler->get_default_panelizer_object($bundle, $name);
+  if (empty($panelizer)) {
+    return MENU_NOT_FOUND;
+  }
+
+  $cache_key = 'panelizer:default:' . $handler->entity_type . ':' . $bundle . ':' . $name;
+
+  $form_state = array(
+    'display cache' => panels_edit_cache_get($cache_key),
+    'no_redirect' => TRUE,
+    'panelizer' => $panelizer,
+  );
+
+  ctools_include('common', 'panelizer');
+  $output = drupal_build_form('panels_breadcrumbs_panelizer_breadcrumbs_form', $form_state);
+
+  if (!empty($form_state['executed'])) {
+    if ($form_state['clicked_button']['#name'] == 'save') {
+      drupal_set_message(t('The settings have been updated.'));
+
+      $panelizer->extra['panels_breadcrumbs_state'] = $form_state['values']['panels_breadcrumbs_state'];
+      $panelizer->extra['panels_breadcrumbs_titles'] = $form_state['values']['panels_breadcrumbs_titles'];
+      $panelizer->extra['panels_breadcrumbs_paths'] = $form_state['values']['panels_breadcrumbs_paths'];
+      $panelizer->extra['panels_breadcrumbs_home'] = $form_state['values']['panels_breadcrumbs_home'];
+      
+      ctools_export_crud_save('panelizer_defaults', $panelizer);
+    }
+    else {
+      drupal_set_message(t('Changes have been discarded.'));
+    }
+
+    drupal_goto($_GET['q']);
+  }
+
+  ctools_set_no_blocks(FALSE);
+
+  if ($view_mode) {
+    $output = $handler->wrap_default_panelizer_pages($bundle, $output);
+  }
+
+  drupal_set_page_content($output);
+  $page = element_info('page');
+
+  return $page;
+}
+
+/**
+ * Panelizer breadcrumb configuration form.
+ */
+function panels_breadcrumbs_panelizer_breadcrumbs_form($form, $form_state) {
+  ctools_include('context');
+
+  $panelizer = $form_state['panelizer'];
+  $contexts = ctools_context_load_contexts($panelizer);
+
+  $form = panels_breadcrumbs_partial_configuration_form($form_state['panelizer']->extra, $contexts);
+
+  $form['actions'] = array(
+    '#type' => 'actions',
+  );
+
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+    '#name' => 'save',
+  );
+
+  $form['actions']['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#name' => 'cancel',
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_panelizer_pre_render_alter().
+ *
+ * Set the breadcrumb for the panelized entity.
+ */
+function panels_breadcrumbs_panelizer_pre_render_alter(&$panelizer, &$display, $entity) {
+  if (!isset($panelizer->entity_type)) {
+    return;
+  }
+
+  $panelizer_entity_plugin = panelizer_entity_plugin_get_handler($panelizer->entity_type);
+  $contexts = $panelizer_entity_plugin->get_contexts($panelizer);
+
+  if (!empty($panelizer->extra['panels_breadcrumbs_state']) && $panelizer->extra['panels_breadcrumbs_state']) {
+    panels_breadcrumbs_build_breadcrumb($panelizer->extra, $contexts, TRUE);
+
+    // Store the panelizer breadcrumb configuration
+    panels_breadcrumbs_get_panelizer_breadcrumb_conf($panelizer->extra);
+  }
+}
+
+/**
+ * Returns the breadcrumb configuration for the panelized entity.
+ */
+function panels_breadcrumbs_get_panelizer_breadcrumb_conf($conf = FALSE) {
+  $panelizer_conf = &drupal_static(__FUNCTION__);
+
+  if ($conf) {
+    $panelizer_conf = $conf;
+  }
+
+  return $panelizer_conf;
 }

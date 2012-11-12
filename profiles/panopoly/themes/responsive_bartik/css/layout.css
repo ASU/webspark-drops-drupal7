@@ -160,6 +160,9 @@ body,
     float: left; /* LTR */
     position: relative;
   }
+  .no-sidebars #content {
+    width: 100%;
+  }
   .two-sidebars #content {
     margin-left: 25%;
     margin-right: 25%;

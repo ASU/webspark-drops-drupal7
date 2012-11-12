@@ -82,7 +82,7 @@ function media_field_widget_settings_form($field, $instance) {
   $form['allowed_types'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Allowed remote media types'),
-    '#options' => file_type_get_names(),
+    '#options' => file_entity_type_get_names(),
     '#default_value' => $settings['allowed_types'],
     '#description' => t('Media types which are allowed for this field when using remote streams.'),
     '#weight' => 1,

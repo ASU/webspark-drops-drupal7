@@ -4,7 +4,6 @@
  */
 
 include_once('panopoly_admin.features.inc');
-include_once('panopoly_admin.defaultconfig.inc');
 
 /**
  * Implementation of hook_apps_app_info()
@@ -151,9 +150,13 @@ function panopoly_admin_panels_pane_content_alter($content, $pane, $args, $conte
   // Pass the title properly through to style plugins rendering regions
   $pane->title = (isset($content->title)) ? $content->title : NULL;
 
-  // Hide the title of the featured category pane if there isn't any content
-  if ($pane->subtype == 'node:field_featured_categories' && !empty($content->content['field_featured_categories']) && $content->content['field_featured_categories']['#access'] == FALSE) {
-    $content->title = '';
+  // Hide the title of administrative panes when there isn't any content
+  if (!empty($context['argument_node_edit_1'])) {
+    foreach($content->content as $content_item) {
+      if (isset($content_item['#access']) && $content_item['#access'] === FALSE) {
+        $content->title = '';
+      }
+    }
   }
 }
 
@@ -161,7 +164,6 @@ function panopoly_admin_panels_pane_content_alter($content, $pane, $args, $conte
  * Implementation of hook_ctools_content_subtype_alter()
  */
 function panopoly_admin_ctools_content_subtype_alter(&$subtype, &$plugin) {
-
 }
 
 /**
@@ -205,17 +207,21 @@ function panopoly_admin_form_alter(&$form, &$form_state, $form_id) {
     unset($form['machine_name_fs']);
   }
 
-  // Improve the publishing options
+  // Improve the publishing options by remove promote to front page and stick.
+  // Allow the option list to be shown globally since permissions are handled on 
+  // a per field level and we are injecting things in there
   if (isset($form['options'])) {
     $form['options']['promote']['#access'] = FALSE;
     $form['options']['sticky']['#access'] = FALSE;
+    $form['options']['#access'] = TRUE;
   }
 
   // Move the featured field into publishing options
   if (!empty($form['field_featured_status'])) {
     $form['options']['field_featured_status'] = $form['field_featured_status'];
-    unset($form['field_featured_status']);
+    $form['field_featured_status'] = array('#language' => $form['options']['field_featured_status']['#language']);
   }
+
 
   // Remove the description from the featured image
   if (!empty($form['field_featured_image'])) {
@@ -242,7 +248,7 @@ function panopoly_admin_form_alter(&$form, &$form_state, $form_id) {
   }
 
   // Improve the revision interface
-  if (isset($form['revision_information']['revision'])) {
+  if (isset($form['revision_information']['revision']) && $form['revision_information']['revision']['#access']) {
     $form['revision_information']['log']['#states'] = array(
       'visible' => array(
         'input[name="revision"]' => array('checked' => TRUE)
@@ -315,30 +321,31 @@ function panopoly_admin_menu() {
     'type' => MENU_CALLBACK,
     'page callback' => 'drupal_get_form',
     'page arguments' => array('panopoly_admin_panelizer_delete_form', 3, 4),
-    'access arguments' => array('administer panelizer'),
+    'access callback' => 'panopoly_admin_panelizer_revert_access',
+    'access arguments' => array(3, 4),
   );
 
   // Panels pane layout enable/disable page callback
-  $items['admin/panopoly/libraries/panes/layout/%/%/%'] = array(
+  $items['admin/panopoly/panes/layout/%/%/%'] = array(
     'type' => MENU_CALLBACK,
     'page callback' => 'panopoly_admin_switch_layout_action',
-    'page arguments' => array(5, 6, 7),
-    'access arguments' => array('administer page manager'),
+    'page arguments' => array(4, 5, 6),
+    'access callback' => 'panopoly_admin_panels_layout_access',
   );
 
   // Panels pane enable/disable page callback
-  $items['admin/panopoly/libraries/panes/pane/%/%/%/%'] = array(
+  $items['admin/panopoly/panes/pane/%/%/%/%'] = array(
     'type' => MENU_CALLBACK,
     'page callback' => 'panopoly_admin_switch_pane_action',
-    'page arguments' => array(5, 6, 7, 8),
+    'page arguments' => array(4, 5, 6, 7),
     'access arguments' => array('administer page manager'),
   );
 
   // Panels pane type enable/disable page callback
-  $items['admin/panopoly/libraries/panes/type/%/%/%'] = array(
+  $items['admin/panopoly/panes/type/%/%/%'] = array(
     'type' => MENU_CALLBACK,
     'page callback' => 'panopoly_admin_switch_pane_type_action',
-    'page arguments' => array(5, 6, 7),
+    'page arguments' => array(4, 5, 6),
     'access arguments' => array('administer page manager'),
   );
 
@@ -346,20 +353,8 @@ function panopoly_admin_menu() {
   $items['admin/panopoly'] = array(
     'title' => 'Panopoly',
     'description' => 'Administer all things Panopoly.',
-    'position' => 'right',
     'weight' => -8,
-    'page callback' => 'panopoly_admin_config_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
-    'file path' => drupal_get_path('module', 'system'),
-  );
-
-  // Add an administration section for the Panopoly dashboard
-  $items['admin/panopoly/libraries'] = array(
-    'title' => 'Panopoly Libraries',
-    'description' => 'Libraries of Panopoly related items.',
     'position' => 'left',
-    'weight' => -50,
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
@@ -370,22 +365,10 @@ function panopoly_admin_menu() {
   $items['admin/panopoly/settings'] = array(
     'title' => 'Panopoly Settings',
     'description' => 'Configuration related to Panopoly',
-    'position' => 'right',
-    'weight' => -50,
+    'weight' => 50,
+    'position' => 'left',
     'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
-    'file path' => drupal_get_path('module', 'system'),
-  );
-
-  // Add an administration section for Panopoly app settings
-  $items['admin/panopoly/apps_settings'] = array(
-    'title' => 'Panopoly Apps Settings',
-    'description' => 'Configuration related to Panopoly Apps',
-    'position' => 'right',
-    'weight' => -45,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
     'file path' => drupal_get_path('module', 'system'),
   );
@@ -405,7 +388,7 @@ function panopoly_admin_menu() {
         );
       } 
       elseif (!empty($module_info['package']) && $module_info['package'] == 'Panopoly Apps') {
-        $items['admin/panopoly/apps_settings/' . $module] = array(
+        $items['admin/panopoly/settings/' . $module] = array(
           'title' => $module_info['name'],
           'description' => 'This is the configuration screen for ' . $module_info['name'],
           'page callback' => 'drupal_get_form',
@@ -431,22 +414,65 @@ function panopoly_admin_menu() {
 }
 
 /**
+ * Access handler for Panelizer revert functionality
+ */
+function panopoly_admin_panelizer_revert_access($entity_type, $entity_id) {
+
+  // Allow if the user can administer panelizer
+  if (user_access('administer panelizer')) {
+    return TRUE;
+  }
+
+  // Allow if the user can administer the specific panelizer item
+  // TODO - do we also want to check ability to modify panelizer setting?
+  $entities = entity_load($entity_type, array($entity_id));
+  if (entity_access('update', $entity_type, $entities[$entity_id])) {
+    return TRUE;
+  }
+
+  // Otherwise not allowed
+  return FALSE;
+}
+
+/**
+ * Access handler for changing Panels layouts
+ */
+function panopoly_admin_panels_layout_access() {
+  return user_access('administer page manager');
+}
+
+/**
  * Implementation of hook_menu_alter()
  */
 function panopoly_admin_menu_alter(&$items) {
 
-  // Set the description of the dashboard
-  $items['admin/panopoly/dashboards/site']['description'] = 'This is the primary site dashboard to manage Panopoly';
-
   // Set the description of the page library
-  $items['admin/panopoly/libraries/pages']['description'] = 'This is the page library for the site. See your landing pages, page templates, and overriden page templates.';
+  $items['admin/panopoly/pages']['description'] = 'This is the page library for the site. See your landing pages, page templates, and overriden page templates.';
 
   // Set the description of the layout library
-  $items['admin/panopoly/libraries/layouts']['description'] = 'This is the layout library for the site. See your preset and custom layouts.';
+  $items['admin/panopoly/layouts']['description'] = 'This is the layout library for the site. See your preset and custom layouts.';
 
   // Set the description of the pane library
-  $items['admin/panopoly/libraries/panes']['description'] = 'This is the pane library for the site. See all of the panes you can add to your pages.';
+  $items['admin/panopoly/panes']['description'] = 'This is the pane library for the site. See all of the panes you can add to your pages.';
 
+  // Adjust the "Pages" page created by Panels to have a more specific permission set
+  $items['admin/structure/pages']['access arguments'] = array('administer page manager');
+
+  // Adjust the "Configuration" page to only show when the user can change the configuration options
+  $items['admin/config']['access arguments'] = array('administer site configuration');
+}
+
+/**
+ * Implementation of hook_link_alter()
+ */
+function panopoly_admin_menu_link_alter(&$item) {
+
+  // Automatically set all of the settings elements to be children of the main parent element
+  // Not entirely sure why the menu system doesn't do this for us. 
+  if (strpos($item['path'], 'panopoly/settings/')) {
+    $parent_mlid = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path", array(':path' => 'admin/panopoly/settings'))->fetchField();
+    $item['plid'] = $parent_mlid;
+  }
 }
 
 /**
@@ -551,7 +577,7 @@ function panopoly_admin_panelizer_delete_form($form, &$form_state, $entity_type,
  */
 function panopoly_admin_panelizer_delete_form_submit($form, &$form_state) {
 
-  $form_state['redirect'] = 'admin/panopoly/libraries/pages';
+  $form_state['redirect'] = 'admin/panopoly/pages';
 
   db_delete('panelizer_entity')
       ->condition('entity_type', $form_state['values']['entity_type'])
@@ -559,56 +585,6 @@ function panopoly_admin_panelizer_delete_form_submit($form, &$form_state) {
       ->execute();
 
   drupal_set_message(t('The overridden page template for %title has been deleted.', array('%title' => $form_state['values']['entity_title'])));
-}
-
-/**
- * Menu callback: Provide the administration overview page.
- * 
- * Adapted from system_admin_config_page()
- */
-function panopoly_admin_config_page() {
-
-  // Check for status report errors.
-  if (system_status(TRUE) && user_access('administer site configuration')) {
-    drupal_set_message(t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))), 'error');
-  }
-  $blocks = array();
-  if ($admin = db_query("SELECT menu_name, mlid FROM {menu_links} WHERE link_path = 'admin/panopoly' AND module = 'system'")->fetchAssoc()) {
-    $result = db_query("
-      SELECT m.*, ml.*
-      FROM {menu_links} ml
-      INNER JOIN {menu_router} m ON ml.router_path = m.path
-      WHERE ml.link_path <> 'admin/help' AND menu_name = :menu_name AND ml.plid = :mlid AND hidden = 0", $admin, array('fetch' => PDO::FETCH_ASSOC));
-    foreach ($result as $item) {
-      _menu_link_translate($item);
-      if (!$item['access']) {
-        continue;
-      }
-      // The link description, either derived from 'description' in hook_menu()
-      // or customized via menu module is used as title attribute.
-      if (!empty($item['localized_options']['attributes']['title'])) {
-        $item['description'] = $item['localized_options']['attributes']['title'];
-        unset($item['localized_options']['attributes']['title']);
-      }
-      $block = $item;
-      $block['content'] = '';
-      $block['content'] .= theme('admin_block_content', array('content' => system_admin_menu_block($item)));
-      if (!empty($block['content'])) {
-        $block['show'] = TRUE;
-      }
-
-      // Prepare for sorting as in function _menu_tree_check_access().
-      // The weight is offset so it is always positive, with a uniform 5-digits.
-      $blocks[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $block;
-    }
-  }
-  if ($blocks) {
-    ksort($blocks);
-    return theme('admin_page', array('blocks' => $blocks));
-  }
-  else {
-    return t('You do not have any administrative items.');
-  }
 }
 
 /**
@@ -724,27 +700,37 @@ function _panopoly_admin_general_layout_get_status($layout_name, $status) {
     $link = array(
       '#type' => 'link',
       '#title' => t('Disable?'),
-      '#href' => 'admin/panopoly/libraries/panes/layout/disable/' . $layout_name . '/' . drupal_get_token($layout_name),
+      '#href' => 'admin/panopoly/panes/layout/disable/' . $layout_name . '/' . drupal_get_token($layout_name),
       '#ajax' => array(
         'wrapper' => 'panopoly-admin-layout-response-' . $layout_name,
         'method' => 'replace',
         'effect' => 'fade',
       ),
     );
-    return '<div id="panopoly-admin-layout-response-' . $layout_name . '">Enabled (' . drupal_render($link) . ')</div>';
+    if (panopoly_admin_panels_layout_access()) {
+      return '<div id="panopoly-admin-layout-response-' . $layout_name . '">'. t('Enabled') . ' (' . drupal_render($link) . ')</div>';
+    }
+    else {
+      return '<div id="panopoly-admin-layout-response-' . $layout_name . '">' . t('Enabled') . '</div>';
+    }
   }
   else {
     $link = array(
       '#type' => 'link',
       '#title' => t('Enable?'),
-      '#href' => 'admin/panopoly/libraries/panes/layout/enable/' . $layout_name . '/' . drupal_get_token($layout_name),
+      '#href' => 'admin/panopoly/panes/layout/enable/' . $layout_name . '/' . drupal_get_token($layout_name),
       '#ajax' => array(
         'wrapper' => 'panopoly-admin-layout-response-' . $layout_name,
         'method' => 'replace',
         'effect' => 'fade',
       ),
     );
-    return '<div id="panopoly-admin-layout-response-' . $layout_name . '">Disabled (' . drupal_render($link) . ')</div>';
+    if (panopoly_admin_panels_layout_access()) {
+      return '<div id="panopoly-admin-layout-response-' . $layout_name . '">' . t('Disabled') . '(' . drupal_render($link) . ')</div>';
+    }
+    else {
+      return '<div id="panopoly-admin-layout-response-' . $layout_name . '">' . t('Disabled') . '</div>';
+    }
   }
 }
 
@@ -756,7 +742,7 @@ function _panopoly_admin_general_panes_get_status($plugin_name, $category_name, 
     $link = array(
       '#type' => 'link',
       '#title' => t('Disable?'),
-      '#href' => 'admin/panopoly/libraries/panes/pane/disable/' . $category_name . '/' . $plugin_name . '/' . drupal_get_token($plugin_name),
+      '#href' => 'admin/panopoly/panes/pane/disable/' . $category_name . '/' . $plugin_name . '/' . drupal_get_token($plugin_name),
       '#ajax' => array(
         'wrapper' => 'panopoly-admin-pane-response-' . $category_name . '-' . str_replace(':', '_', $plugin_name),
         'method' => 'replace',
@@ -769,7 +755,7 @@ function _panopoly_admin_general_panes_get_status($plugin_name, $category_name, 
     $link = array(
       '#type' => 'link',
       '#title' => t('Enable?'),
-      '#href' => 'admin/panopoly/libraries/panes/pane/enable/' . $category_name . '/' . $plugin_name . '/' . drupal_get_token($plugin_name),
+      '#href' => 'admin/panopoly/panes/pane/enable/' . $category_name . '/' . $plugin_name . '/' . drupal_get_token($plugin_name),
       '#ajax' => array(
         'wrapper' => 'panopoly-admin-pane-response-' . $category_name . '-' . str_replace(':', '_', $plugin_name),
         'method' => 'replace',
@@ -788,7 +774,7 @@ function _panopoly_admin_plugin_type_get_status($plugin_type, $status) {
     $link = array(
       '#type' => 'link',
       '#title' => t('Disable?'),
-      '#href' => 'admin/panopoly/libraries/panes/type/disable/' . $plugin_type . '/' . drupal_get_token($plugin_type),
+      '#href' => 'admin/panopoly/panes/type/disable/' . $plugin_type . '/' . drupal_get_token($plugin_type),
       '#ajax' => array(
         'wrapper' => 'panopoly-admin-type-response-' . $plugin_type,
         'method' => 'replace',
@@ -801,7 +787,7 @@ function _panopoly_admin_plugin_type_get_status($plugin_type, $status) {
     $link = array(
       '#type' => 'link',
       '#title' => t('Enable?'),
-      '#href' => 'admin/panopoly/libraries/panes/type/enable/' . $plugin_type . '/' . drupal_get_token($plugin_type),
+      '#href' => 'admin/panopoly/panes/type/enable/' . $plugin_type . '/' . drupal_get_token($plugin_type),
       '#ajax' => array(
         'wrapper' => 'panopoly-admin-type-response-' . $plugin_type,
         'method' => 'replace',

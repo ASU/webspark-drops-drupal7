@@ -18,6 +18,7 @@ projects[responsive_bartik][type] = theme
 projects[responsive_bartik][download][type] = git
 projects[responsive_bartik][download][revision] = 7853fee
 projects[responsive_bartik][download][branch] = 7.x-1.x
+projects[responsive_bartik][patch][1835960] = http://drupal.org/files/1835960-no-sidebar-width-content-1.patch
 
 ; projects[radix][version] = 1.x-dev
 ; projects[radix][type] = theme

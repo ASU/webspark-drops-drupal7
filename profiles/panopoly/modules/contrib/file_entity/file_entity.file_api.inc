@@ -124,7 +124,7 @@ function file_view($file, $view_mode = 'full', $langcode = NULL) {
   // displayed on its own page. Modules may alter this behavior (for example,
   // to restrict contextual links to certain view modes) by implementing
   // hook_file_view_alter().
-  if (!empty($file->fid) && !($view_mode == 'full' && file_is_page($file))) {
+  if (!empty($file->fid) && !($view_mode == 'full' && file_entity_is_page($file))) {
     $build['#contextual_links']['file'] = array('file', array($file->fid));
   }
 

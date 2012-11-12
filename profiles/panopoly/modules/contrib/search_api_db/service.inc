@@ -431,6 +431,9 @@ class SearchApiDbService extends SearchApiAbstractService {
       }
       return $ret;
     }
+    if (!isset($value)) {
+      return NULL;
+    }
     switch ($type) {
       case 'text':
         $ret = array();
@@ -600,24 +603,21 @@ class SearchApiDbService extends SearchApiAbstractService {
       $this->warnings[$msg] = 1;
     }
 
+    if (!isset($db_query)) {
+      $db_query = db_select($fields['search_api_language']['table'], 't', $this->query_options);
+      $db_query->addField('t', 'item_id', 'item_id');
+      $db_query->addExpression(':score', 'score', array(':score' => 1));
+    }
+
     $filter = $query->getFilter();
     if ($filter->getFilters()) {
-      if (!isset($db_query)) {
-        $db_query = db_select($fields['search_api_language']['table'], 't', $this->query_options);
-        $db_query->addField('t', 'item_id', 'item_id');
-        $db_query->addExpression(':score', 'score', array(':score' => 1));
-      }
       $condition = $this->createFilterCondition($filter, $fields, $db_query);
       if ($condition) {
         $db_query->condition($condition);
       }
     }
 
-    if (!isset($db_query)) {
-      $db_query = db_select($fields['search_api_language']['table'], 't', $this->query_options);
-      $db_query->addField('t', 'item_id', 'item_id');
-      $db_query->addExpression(':score', 'score', array(':score' => 1));
-    }
+    $db_query->addTag('search_api_db_search');
 
     $time_processing_done = microtime(TRUE);
     $results = array();
@@ -1091,6 +1091,7 @@ class SearchApiDbService extends SearchApiAbstractService {
         continue;
       }
       $field = $fields[$facet['field']];
+      $missing_count = 0;
 
       $select = db_select($table, 't');
       $alias = $this->getTableAlias($field, $select, TRUE);
@@ -1100,23 +1101,32 @@ class SearchApiDbService extends SearchApiAbstractService {
       $select->orderBy('num', 'DESC');
 
       $limit = $facet['limit'];
-      if ($limit) {
+      if ((int) $limit > 0) {
         $select->range(0, $limit);
       }
       if ($facet['min_count'] > 1) {
         $select->having('num >= :count', array(':count' => $facet['min_count']));
       }
-      if ($facet['missing']) {
-        $inner_query = db_select($field['table'], 't1')
-          ->fields('t1', array('item_id'));
-        $missing_count = db_select($table, 't');
-        $missing_count->addExpression('COUNT(item_id)');
-        $missing_count->condition('item_id', $inner_query, 'NOT IN');
-        $missing_count = $missing_count->execute()->fetchField();
-        $missing_count = $missing_count >= $facet['min_count'] ? $missing_count : 0;
-      }
-      else {
-        $missing_count = 0;
+      if (((bool) $facet['missing']) === search_api_is_list_type($field['type'])) {
+        // For multi-valued fields, the "missing" facet is defined by the table
+        // not having any entries for those items. We therefore need to execute
+        // an additional query, counting the items which do not have any entries
+        // in the field table.
+        if ($facet['missing']) {
+          $inner_query = db_select($field['table'], 't1')
+            ->fields('t1', array('item_id'));
+          $missing_count = db_select($table, 't');
+          $missing_count->addExpression('COUNT(item_id)');
+          $missing_count->condition('item_id', $inner_query, 'NOT IN');
+          $missing_count = $missing_count->execute()->fetchField();
+          $missing_count = $missing_count >= $facet['min_count'] ? $missing_count : 0;
+        }
+        // For single-valued fields, there are explicit NULL values in the
+        // table for "missing" entries. Therefore, we have to exclude NULL
+        // values if we do not want a "missing" facet.
+        else {
+          $select->isNotNull('value');
+        }
       }
 
       $terms = array();
@@ -1133,7 +1143,7 @@ class SearchApiDbService extends SearchApiAbstractService {
         }
         $terms[] = array(
           'count' => $row->num,
-          'filter' => '"' . $row->value . '"',
+          'filter' => isset($row->value) ? '"' . $row->value . '"' : '!',
         );
       }
       if ($missing_count && (!$limit || count($terms) < $limit)) {

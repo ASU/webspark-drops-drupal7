@@ -197,7 +197,18 @@ function panelizer_add_revision_info_form(&$form, &$form_state) {
       $form['#submit'][] = $form_state['input']['form_id'] . '_submit';
     }
 
-    $form['#submit'][] = 'panelizer_add_revision_info_form_submit';
+    // The submit handler needs to go in a different location depending on
+    // what form this is.
+    $submit_handler = 'panelizer_add_revision_info_form_submit';
+    if (!empty($form['buttons']['submit']['#submit'])) {
+      $form['buttons']['submit']['#submit'][] = $submit_handler;
+    }
+    elseif (!empty($form['buttons']['return']['#submit'])) {
+      $form['buttons']['return']['#submit'][] = $submit_handler;
+    }
+    else {
+      $form['#submit'][] = $submit_handler;
+    }
   }
 }
 

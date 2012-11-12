@@ -3,14 +3,18 @@
 /**
  * Attach this editor to a target element.
  */
-Drupal.wysiwyg.editor.attach.markitup = function(context, params, settings) {
+Drupal.wysiwyg.editor.attach.markitup = function (context, params, settings) {
   $('#' + params.field, context).markItUp(settings);
 
   // Adjust CSS for editor buttons.
   $.each(settings.markupSet, function (button) {
-    $('.' + settings.nameSpace + ' .' + this.className + ' a')
-      .css({ backgroundImage: 'url(' + settings.root + 'sets/default/images/' + button + '.png' + ')' })
-      .parents('li').css({ backgroundImage: 'none' });
+    imgdir = (settings.markupSet[button].imageDir) ? settings.markupSet[button].imageDir : settings.root + 'sets/default/images/';
+    imgfile = (settings.markupSet[button].imageFile) ? settings.markupSet[button].imageFile : button + '.png';
+    if (this.className != 'markItUpSeparator') {
+      $('.' + settings.nameSpace + ' .' + this.className + ' a')
+        .css({ backgroundImage: 'url(' + imgdir + imgfile + ')' })
+        .parents('li').css({ backgroundImage: 'none' });
+    }
   });
 };
 

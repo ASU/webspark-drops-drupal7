@@ -6,7 +6,7 @@
 (function ($) {
   Drupal.behaviors.mediaBrowserEdit = {
     attach: function (context) {
-      var $iframe = $('iframe.media-modal-frame', top.document);
+      var $iframe = $('iframe.media-modal-frame', parent.window.document);
 
       // Enable iframe scrolling and remove padding.
       $iframe
@@ -24,8 +24,8 @@
       var height = $iframe.height();
       var content_height = $('body').height();
       if (content_height > height) {
-        var window_height = $(top.window).height();
-        var margin_top = parseInt($iframe.parent().css('top')) - $(top).scrollTop();
+        var window_height = $(parent.window).height();
+        var margin_top = parseInt($iframe.parent().css('top')) - $(parent).scrollTop();
         height = Math.min(content_height, window_height - margin_top - 50);
         $iframe.animate({height: height + 'px'});
       }

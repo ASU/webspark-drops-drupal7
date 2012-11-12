@@ -9,13 +9,7 @@ $plugin = array(
     'menu item' => '%',
     'menu title' => 'Panelizer',
     'menu description' => 'Add, edit or delete custom content layouts.',
-    'items' => array(
-      'edit' => array('path' => 'list/%ctools_export_ui/settings'),
-      'context' => array('path' => 'list/%ctools_export_ui/context'),
-      'content' => array('path' => 'list/%ctools_export_ui/content'),
-      'layout' => array('path' => 'list/%ctools_export_ui/layout'),
-      'access' => array('path' => 'list/%ctools_export_ui/access'),
-    ),
+    'items' => array(),
   ),
 
   'title singular' => t('panelizer default'),
@@ -27,12 +21,16 @@ $plugin = array(
     'class' => 'panelizer_defaults_ui',
   ),
 
-  'allowed operations' => array(
-    'edit' => array('title' => t('Settings')),
-    'context' => array('title' => t('Context')),
-    'layout' => array('title' => t('Layout')),
-    'content' => array('title' => t('Content')),
-    'access' => array('title' => t('Access')),
-  ),
+  'allowed operations' => array(),
 );
+
+// Add our possibly variable operations.
+foreach (panelizer_operations() as $path => $operation) {
+  $location = isset($operation['ui path']) ? $operation['ui path'] : $path;
+  $plugin['menu']['items'][$location] = array('path' => 'list/%ctools_export_ui/' . $path);
+  $plugin['allowed operations'][$location] = array('title' => t($operation['menu title']));
+}
+
+$plugin['menu']['items']['access'] = array('path' => 'list/%ctools_export_ui/access');
+$plugin['allowed operations']['access'] = array('title' => t('Access'));
 

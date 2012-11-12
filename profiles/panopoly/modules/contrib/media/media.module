@@ -62,7 +62,7 @@ function media_help($path, $arg) {
       $output .= '<dt>' . t('Using media assets in WYSIWYG') . '</dt>';
       $output .= '<dd>' . t('Media module provides rich integration with WYSIWYG editors, using Media Browser plugin you can select media asset from library to add to the rich text editor moreover you can add media asset from the media browser itself using either upload method or add from url method. To configure media with WYSIWYG you need two steps of configuration:');
       $output .= '<ul><li>' . t('Enable WYSIWYG plugin on your desired <a href="@wysiwyg-profile">WYSIWYG profile</a>. Please note that you will need to have <a href="@wysiwyg">WYSIWYG</a> module enabled.', array('@wysiwyg-profile' => url('admin/config/content/wysiwyg'), '@wysiwyg' => 'http://drupal.org/project/wysiwyg')) . '</li>';
-      $output .= '<li>' . t('Add Media Filter to the WYSIWYG enabled <a href="@input-format">Input format</a>', array('@input-format' => url('admin/config/content/formats'))) . '</li></ul></dd>';
+      $output .= '<li>' . t('Enable the %tags filter on the <a href="@input-format">Input format</a> you are using with the WYSIWYG profile.', array('%tags' => 'Convert Media tags to markup'), array('@input-format' => url('admin/config/content/formats'))) . '</li></ul></dd>';
       return $output;
   }
 }
@@ -94,13 +94,13 @@ function media_entity_info_alter(&$entity_info) {
 }
 
 /**
- * Access callback for files.
+ * Access callback for files. Don't use this function, it will be removed!
  *
- * This duplicates file_entity_access() and should be removed when the File
- * Entity module provides an access API.
+ * @todo Completely remove this function in favor of file_entity_access after
+ * a few releases, to ensure rest of contib catches up.
  */
 function media_access($op, $account = NULL) {
-  return (user_access('administer files', $account) || user_access($op . ' file', $account));
+  return user_access('administer files', $account);
 }
 
 /**
@@ -117,23 +117,6 @@ function media_menu() {
     'file' => 'includes/media.admin.inc',
   );
 
-  // Settings used for determining the type of media a file is.
-  // @todo Find a new home for this that integrates with the file_entity module.
-//  $items['admin/config/media/types/manage/%media_type'] = array(
-//    'title' => 'Manage media',
-//    'title callback' => 'media_type_page_title',
-//    'title arguments' => array(5),
-//    'description' => 'Manage files used on your site.',
-//    'page callback' => 'drupal_get_form',
-//    'page arguments' => array('media_admin_type_manage_form', 5),
-//    'access arguments' => array('administer media'),
-//    'file' => 'includes/media.admin.inc',
-//  );
-//  $items['admin/config/media/types/manage/%media_type/settings'] = array(
-//    'title' => 'Settings',
-//    'type' => MENU_DEFAULT_LOCAL_TASK,
-//    'weight' => -1,
-//  );
   // Administrative screens for managing media.
   $items['admin/content/file/thumbnails'] = array(
     'title' => 'Thumbnails',
@@ -164,8 +147,8 @@ function media_menu() {
     'title' => 'Media browser',
     'description' => 'Media Browser for picking media and uploading new media',
     'page callback' => 'media_browser',
-    'access callback' => 'media_access',
-    'access arguments' => array('view'),
+    'access callback' => 'file_entity_access',
+    'access arguments' => array('create'),
     'type' => MENU_CALLBACK,
     'file' => 'includes/media.browser.inc',
     'theme callback' => 'media_dialog_get_theme_name',
@@ -187,8 +170,8 @@ function media_menu() {
     'description' => 'Choose a format for a piece of media',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('media_format_form', 1),
-    'access callback' => 'media_access',
-    'access arguments' => array('view'),
+    'access callback' => 'file_entity_access',
+    'access arguments' => array('view', 1),
     'file' => 'includes/media.filter.inc',
     'theme callback' => 'media_dialog_get_theme_name',
     'type' => MENU_CALLBACK,
@@ -201,8 +184,7 @@ function media_menu() {
       'title' => 'Edit multiple files',
       'page callback' => 'media_file_page_edit_multiple',
       'page arguments' => array(4),
-      'access callback' => 'media_access',
-      'access arguments' => array('edit'),
+      'access arguments' => array('edit any files'),
       'file' => 'includes/media.pages.inc',
     );
   }
@@ -213,8 +195,8 @@ function media_menu() {
     'title' => 'Edit',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('media_file_edit_modal', 1, 3),
-    'access callback' => 'media_access',
-    'access arguments' => array('edit'),
+    'access callback' => 'file_entity_access',
+    'access arguments' => array('update', 1),
     'file' => 'includes/media.pages.inc',
     'type' => MENU_CALLBACK,
   );
@@ -565,7 +547,8 @@ function media_browser_form_submit($form, &$form_state) {
   if (!empty($url)) {
     // We the user has access to edit media, we change the redirect to the file-edit url
     // first, then secondly to the destionation decided above.
-    if (media_access('edit')) {
+    // @todo maybe check every file separately for update permissions instead of edit any file.
+    if (user_access('edit any files')) {
       $destination = $url . '?' . drupal_http_build_query($parameters['query']);
       $url = media_file_edit_url($parameters['query']['fid']);
       $parameters = array('query' => array('render' => 'media-popup', 'destination' => $destination));
@@ -595,9 +578,20 @@ function media_form_file_entity_add_upload_alter(&$form, &$form_state) {
 
     // If the list of allowed extensions is the default provided by file_entity
     // then change the default to the more permissive media extension list.
-    if (isset($validators['file_validate_extensions']) && $validators['file_validate_extensions'] == array(FILE_DEFAULT_ALLOWED_EXTENSIONS)) {
+    if (isset($validators['file_validate_extensions']) && $validators['file_validate_extensions'] == array(FILE_ENTITY_DEFAULT_ALLOWED_EXTENSIONS)) {
       $validators['file_validate_extensions'] = array(media_variable_get('file_extensions'));
     }
+  }
+}
+
+/**
+ * Implements hook_file_download_access().
+ */
+function media_file_download_access($field, $entity_type, $entity) {
+  if ($entity_type == 'media') {
+    // @todo replace this with file_entity_access one, when downloads
+    // are supported by file_entity module.
+    return user_access('view files');
   }
 }
 
@@ -618,15 +612,6 @@ function media_form_file_entity_add_upload_alter(&$form, &$form_state) {
  */
 function media_multi_load($fids) {
   return file_load_multiple(explode(' ', $fids));
-}
-
-/**
- * Implements hook_file_download_access().
- */
-function media_file_download_access($field, $entity_type, $entity) {
-  if ($entity_type == 'media') {
-    return media_access('view');
-  }
 }
 
 /**
@@ -968,7 +953,7 @@ function media_element_process(&$element, &$form_state, $form) {
       ),
     ),
     '#weight' => 20,
-    '#access' => media_access('edit'),
+    '#access' => file_entity_access('update', $fid),
   );
   $element['remove'] = array(
     '#type' => 'link',

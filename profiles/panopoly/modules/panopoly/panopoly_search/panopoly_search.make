@@ -11,13 +11,13 @@ projects[facetapi][subdir] = contrib
 projects[search_api][version] = 1.3
 projects[search_api][subdir] = contrib
 projects[search_api][patch][1698098] = http://drupal.org/files/search-api-disabled-index-configure-link.patch
-projects[search_api][patch][1827272] = http://drupal.org/files/1827272-request-path.patch
+projects[search_api][patch][1827272] = http://drupal.org/files/1827272-request-path-7.patch
 
 projects[search_api_solr][version] = 1.0-rc2
 projects[search_api_solr][subdir] = contrib
 projects[search_api_solr][patch][1407282] = http://drupal.org/files/1407282-variable_solr_connection_class-33.patch
 
-projects[search_api_db][version] = 1.0-beta3
+projects[search_api_db][version] = 1.0-beta4
 projects[search_api_db][subdir] = contrib
 
 ; Solr PHP Client Library
