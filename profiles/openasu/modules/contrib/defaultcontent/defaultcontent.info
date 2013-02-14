@@ -1,0 +1,6 @@
+name = Default Content
+description = Allows Export/Import of Default Content
+core = 7.x
+package = Features
+dependencies[] = features
+dependencies[] = ctools

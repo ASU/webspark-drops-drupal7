@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ */
+function asu_brand_uninstall() {
+  variable_del('asu_brand_header_basepath');
+  variable_del('asu_brand_header_template');
+  variable_del('asu_brand_footer_color');
+  cache_clear_all('asu_brand:head', 'cache');
+  cache_clear_all('asu_brand:header', 'cache');
+  cache_clear_all('asu_brand:footer', 'cache');
+  cache_clear_all('asu_brand:students_footer', 'cache');
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Set footer color variable to '' if it equals '_black' which is the actual
+ * value for the black footer.
+ */
+function asu_brand_update_7100(&$sandbox) {
+  $footer_color = variable_get('asu_brand_footer_color', ASU_BRAND_FOOTER_COLOR_DEFAULT);
+  if ($footer_color = '_black') {
+    variable_set('asu_brand_footer_color', '');
+    cache_clear_all('asu_brand:footer', 'cache');
+  }
+}

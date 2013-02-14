@@ -1,0 +1,114 @@
+<?php
+
+/**
+ * ASU Brand module.
+ *
+ * Author: Marcus Anthony (marcus.anthony@asu.edu
+ * Created: 2011-09-21
+ */
+
+define('ASU_BRAND_HEADER_VERSION', '4.0');
+define('ASU_BRAND_HEADER_BASEPATH_DEFAULT', 'https://asu.edu/asuthemes');
+define('ASU_BRAND_HEADER_TEMPLATE_DEFAULT', 'default');
+define('ASU_BRAND_FOOTER_COLOR_DEFAULT', '');
+define('ASU_BRAND_CACHE_LIFETIME', 172800);
+
+/**
+ * Implements hook_block_info().
+ */
+function asu_brand_block_info() {
+  // Never cache the header with Drupal's caching system because the contents of
+  // the block changes based on if the user is logged in. The included header files
+  // are cached manually when then block is viewed in _asu_brand_block_header().
+  $blocks['asu_brand_header'] = array(
+    'info' => t('ASU Brand: header'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['asu_brand_footer'] = array(
+    'info' => t('ASU Brand: footer'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['asu_brand_students_footer'] = array(
+    'info' => t('ASU Brand: students footer'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function asu_brand_block_configure($delta = '') {
+  $form = array();
+  switch ($delta) {
+    case 'asu_brand_header':
+    case 'asu_brand_footer':
+    case 'asu_brand_students_footer':
+      module_load_include('inc', 'asu_brand', 'asu_brand.admin');
+      $form = asu_brand_get_block_configure_form($delta);
+      break;
+  }
+  return $form;
+}
+
+/**
+ * Implements hook_block_save().
+ */
+
+function asu_brand_block_save($delta = '', $edit = array()) {
+  switch ($delta) {
+    case 'asu_brand_header':
+      variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
+      variable_set('asu_brand_header_template', $edit['asu_brand_header_template']);
+      asu_brand_cache_clear();
+      break;
+    
+    case 'asu_brand_footer':
+      variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
+      variable_set('asu_brand_footer_color', $edit['asu_brand_footer_color']);
+      asu_brand_cache_clear();
+      break;
+    
+    case 'asu_brand_students_footer':
+      variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
+      asu_brand_cache_clear();
+      break;
+  }
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function asu_brand_block_view($delta = '') {
+  $block = array();  
+  switch ($delta) {
+    case 'asu_brand_header':
+      module_load_include('inc', 'asu_brand', 'asu_brand.block');
+      $block['subject'] = NULL;
+      $block['content'] = asu_brand_get_block_header();
+      break;
+
+    case 'asu_brand_footer':
+      module_load_include('inc', 'asu_brand', 'asu_brand.block');
+      $block['subject'] = NULL;
+      $block['content'] = asu_brand_get_block_footer();
+      break;
+    
+    case 'asu_brand_students_footer':
+      module_load_include('inc', 'asu_brand', 'asu_brand.block');
+      $block['subject'] = NULL;
+      $block['content'] = asu_brand_get_block_students_footer();
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Clear block caches.
+ * 
+ * If called without arguments, clears all asu_brand related items. $cid can be
+ * any asu_brand item (without the 'asu_brand:' part.
+ */
+function asu_brand_cache_clear($cid = '', $wildcard = TRUE) {
+  cache_clear_all('asu_brand:' . $cid, 'cache', $wildcard);
+}

@@ -1,0 +1,29 @@
+#admin-menu, #admin-menu .dropdown {
+  z-index: 1000;
+}
+
+#main-wrapper {
+  margin-top: 80px;
+}
+
+/* Basic ASU Styling */
+a {
+  color: #990033; 
+}
+
+#footerlower {  
+  background-color: #000;
+}
+
+.navbar-inner {
+  background: #ffcb66;
+}
+
+#asu_search_module input.asu_search_button {
+  position: relative;
+  top: -5px;
+}
+
+#asu_search_module input.asu_search_box {
+  border-radius: 0px;
+}

@@ -1,0 +1,7 @@
+name = Panels Breadcrumbs
+description = Adds the ability to set breadcrumbs directly from Panels and takes advantage of arguments and contexts as placeholder tokens
+core = 7.x
+package = Panels
+dependencies[] = ctools
+dependencies[] = page_manager
+dependencies[] = panels

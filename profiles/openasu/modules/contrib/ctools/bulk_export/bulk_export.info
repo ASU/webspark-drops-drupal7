@@ -1,0 +1,5 @@
+name = Bulk Export
+description = Performs bulk exporting of data objects known about by Chaos tools.
+core = 7.x
+dependencies[] = ctools
+package = Chaos tool suite

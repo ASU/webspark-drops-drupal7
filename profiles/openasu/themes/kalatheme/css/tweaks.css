@@ -1,0 +1,58 @@
+#node-edit #edit-title {
+  height: auto;
+}
+
+.navbar-fixed-top, .navbar-fixed-bottom {
+  z-index: 999;
+}
+
+html.js input.form-autocomplete {
+  background: transparent;
+}
+
+#main-wrapper {
+  margin-top: 120px;
+  margin-bottom: 50px;
+}
+
+.pane-content .container {
+  width: auto;
+}
+
+legend {
+  border-bottom: 0;
+}
+
+.views-ajax-popup .scroll fieldset {
+  padding: 5px;
+}
+
+html.js fieldset.collapsed {
+  padding: 5px;
+}
+
+.collapse-processed .fieldset-wrapper {
+  margin-left: 25px;
+}
+
+.form-actions .btn {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+label.option {
+  display: inline;
+  font-weight: normal;
+}
+
+.radio input[type="radio"], .checkbox input[type="checkbox"] {
+  margin-left: 0px;
+}
+
+.media-list-thumbnails .form-type-checkbox {
+  bottom: 0;
+}
+
+div#admin-toolbar.vertical {
+  z-index: 9999;
+}

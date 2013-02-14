@@ -1,0 +1,21 @@
+name = OpenASU Bootstrap
+description = A flexible, responsive and mobile-first theme based on Kalatheme aka built on Panopoly and powered by Twitter Bootstrap. 
+base theme = kalatheme
+version = VERSION
+core = 7.x
+
+regions[header] = Header
+regions[content] = Content
+regions[footer] = Footer
+
+stylesheets[screen][] = css/custom.css
+
+features[] = logo
+;features[] = name
+features[] = slogan
+;features[] = node_user_picture
+;features[] = comment_user_picture
+;features[] = comment_user_verification
+features[] = favicon
+features[] = main_menu
+features[] = secondary_menu

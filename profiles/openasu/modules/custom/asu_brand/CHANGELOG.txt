@@ -1,0 +1,49 @@
+CHANGELOG for ASU Brand module for Drupal 7
+
+7.x-1.2, 2012-09-14
+-----------------------
+- Split functions out into asu_brand.admin.inc and asu_brand.block.inc to
+  decrease asu_brand.module file. This helps speed up loading page requests and
+  is a best practice. Renamed _asu_brand_block_header() and
+  _asu_brand_block_footer() to better represent what they do.
+- Removed extra variable_del() in asu_brand_uninstall().
+- Added block for students.asu.edu menu footer (located at 
+  http://www.asu.edu/asuthemes/4.0/includes/students_footer.shtml as of this
+  release).
+- Added asu_brand_cache_clear() to clear all asu_brand related cached items.
+- Changed footer color options so that Black = '', which is the default and the
+  actual value for the black footer. Made the color field on the block
+  configuration form not required so that it will pass validation.
+- Added the theme basepath to all block configuration forms.
+- Fixed asu_brand_get_block_header() so as to not make unnecessary if
+  statements.
+
+7.x-1.1, 2012-07-23
+-----------------------
+- Updated the module to work with the 4.0 version of the ASU header.
+
+7.x-1.0, 2012-07-20
+-----------------------
+- Initial non-beta release.
+- Made https://asu.edu/asuthemes the default base path so the module will work
+  out-of-box on hosting environments that do not have AFS access.
+- Checks if theme files are able to be loaded. If there is already data in the
+  cache, then just continue to use it.
+- Added link to list of templates to the block configuration form.
+
+7.x-1.0-beta3, 2012-03-22
+-----------------------
+- Include global $base_path in $asu_sso_signinurl and $asu_sso_signouturl for
+  installations that are not in the root web directory.
+
+7.x-1.0-beta2, 2012-01-03
+-----------------------
+- Update Sign Out link when CAS is not enabled.
+- Remove WebAuth compatibility since this module is for drupal 7 sites
+and WebAuth won't be supported for drupal 7.
+- Fix bug where if you changed the footer color to something other
+than black and then back to black, a warning to enter a color value was triggered.
+
+7.x-1.0-beta1, 2011-09-22
+-----------------------
+- Initial beta release of the ASU Brand module.
