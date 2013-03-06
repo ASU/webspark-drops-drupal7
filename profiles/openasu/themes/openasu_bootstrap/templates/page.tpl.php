@@ -85,11 +85,21 @@
     <nav class='navbar navbar-fixed-top'>
       <div class='navbar-inner'>
         <div class='container'>
+          <?php /* ?>
+          
+          // This collapses the menu into a responsive dropdown but does not integrate with ASU_BRAND yet
           <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse'>
+            <span class='icon-bar'></span>
+            <span class='icon-bar'></span>
+            <span class='icon-bar'></span>
           </a>
           <div class='nav-collapse'>
-              <?php print render($page['header']); ?>
-          </div>    
+            // header normally goes here
+          </div> 
+          */ ?>
+          
+          <?php print render($page['header']); ?>
+          
         </div>
       </div>
     </nav>
@@ -100,7 +110,7 @@
     
     <?php // print $breadcrumb; ?>
 
-    <div id="content" class="column container">
+    <div id="content" class="column <?php $no_panels ? print ' container"' : ''; ?>">
       <a id="main-content"></a>
       
        <?php if ($messages): ?>

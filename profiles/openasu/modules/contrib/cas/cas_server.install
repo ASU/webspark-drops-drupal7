@@ -1,0 +1,83 @@
+<?php
+
+/**
+ * @file
+ * Installation hooks for the CAS Server module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function cas_server_schema() {
+  $schema = array();
+
+  $schema['cas_server_tickets'] = array(
+    'description' => 'Stores CAS server tickets.',
+    'fields' => array(
+      'service' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'ticket' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('ticket'),
+  );
+
+  return $schema;
+}
+
+
+/**
+ * Creates CAS server tickets table.
+ */
+function cas_server_update_1() {
+  $schema = array();
+
+  $schema['cas_server_tickets'] = array(
+    'description' => 'Stores CAS server tickets.',
+    'fields' => array(
+      'service' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'ticket' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('ticket'),
+  );
+
+  $ret = array();
+  db_create_table($ret, 'cas_server_tickets', $schema['cas_server_tickets']);
+  return $ret;
+}

@@ -9,21 +9,17 @@
  * version, if available.
  */
 function asu_brand_get_block_header() {
-  global $base_path;
-  
   // Set the header settings for the injected javascript into <head>.
-  // Alter the signin/signout URL if cas in enabled.
   $asu_sso_signedin = (user_is_logged_in() ? 'true' : 'false');
+  
+  // Alter the signin/signout URL if cas in enabled.
   if(module_exists('cas')) {
-    $proto = 'https://';
-    $host = $_SERVER['SERVER_NAME'];
-    $port = ($_SERVER['SERVER_PORT'] == 80 ? '' : ':' . $_SERVER['SERVER_PORT']);
-    $asu_sso_signinurl = $proto . $host . $port . $base_path . 'cas?destination=' . urlencode(drupal_get_path_alias($_GET['q']));
-    $asu_sso_signouturl = $base_path . 'caslogout';
+    $asu_sso_signinurl = url('cas', array('https' => TRUE, 'query' => cas_login_destination()));
+    $asu_sso_signouturl = url('caslogout', array('https' => TRUE));
   }
   else {
-    $asu_sso_signinurl = $base_path . 'user/login?destination=' . urlencode(drupal_get_path_alias($_GET['q']));
-    $asu_sso_signouturl = $base_path . 'user/logout';
+    $asu_sso_signinurl = url('user/login', array('query' => user_login_destination()));
+    $asu_sso_signouturl = url('user/logout');
   }
   
   // Inject header javascript into <head> and set the weight to a high negative value.

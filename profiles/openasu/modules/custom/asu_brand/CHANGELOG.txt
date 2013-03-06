@@ -1,5 +1,11 @@
 CHANGELOG for ASU Brand module for Drupal 7
 
+7.x-1.3, 2013-02-15
+-----------------------
+- Fix signin/signout urls by using url() and setting destination query parameter
+  with destination building functions. This fixes non-root directory sites and
+  sites behind a proxy server.
+
 7.x-1.2, 2012-09-14
 -----------------------
 - Split functions out into asu_brand.admin.inc and asu_brand.block.inc to

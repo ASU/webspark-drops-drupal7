@@ -1,0 +1,34 @@
+/**
+ * @file
+ * asu grey menu styling
+**/
+
+
+.navbar .nav>.active>a,.navbar .nav>.active>a:hover,.navbar .nav>.active>a:focus
+  {
+  background-color: #4f5557;
+}
+
+#menu .navbar-inner {
+  background-color: #4f5557;
+}
+
+#menu .navbar-inner ul.nav a.active {
+  background-color: #ffb310;
+  color: #fff;
+  border-bottom: 5px #ffb310 solid;
+  border-top: 5px #ffb310 solid;
+}
+
+#menu .navbar-inner ul.nav a:hover {
+  background-color: #ffb310;
+  color: #fff;
+  border-bottom: 5px #ffb310 solid;
+  border-top: 5px #ffb310 solid;
+}
+
+#menu .navbar-inner ul.nav a {
+  color: #fff;
+  border-bottom: 5px #4f5557 solid;
+  border-top: 5px #4f5557 solid;
+}

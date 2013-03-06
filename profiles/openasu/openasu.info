@@ -48,3 +48,4 @@ dependencies[] = block
 
 ; OpenASU - Custom
 dependencies[] = asu_brand
+dependencies[] = asu_cas

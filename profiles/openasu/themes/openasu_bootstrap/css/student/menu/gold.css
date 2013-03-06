@@ -1,0 +1,33 @@
+/**
+ * @file
+ * asu gold menu styling
+**/
+
+.navbar .nav>.active>a,.navbar .nav>.active>a:hover,.navbar .nav>.active>a:focus
+  {
+  background-color: #ffb310;
+}
+
+#menu .navbar-inner {
+  background-color: #ffb310;
+}
+
+#menu .navbar-inner ul.nav a.active {
+  color: #333;
+  border-bottom: 5px #fff solid;
+  border-top: 5px #fff solid;
+  background-color: #fff;
+}
+
+#menu .navbar-inner ul.nav a:hover {
+  color: #333;
+  border-bottom: 5px #fff solid;
+  border-top: 5px #fff solid;
+  background-color: #fff;
+}
+
+#menu .navbar-inner ul.nav a {
+  color: #fff;
+  border-bottom: 5px #ffb310 solid;
+  border-top: 5px #ffb310 solid;
+}

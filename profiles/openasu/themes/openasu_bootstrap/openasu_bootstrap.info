@@ -8,7 +8,8 @@ regions[header] = Header
 regions[content] = Content
 regions[footer] = Footer
 
-stylesheets[screen][] = css/custom.css
+stylesheets[screen][] = css/asu.css
+stylesheets[screen][] = css/nav.css
 
 features[] = logo
 ;features[] = name
@@ -19,3 +20,5 @@ features[] = slogan
 features[] = favicon
 features[] = main_menu
 features[] = secondary_menu
+
+plugins[panels][layouts] = layouts

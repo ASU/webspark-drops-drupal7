@@ -55,7 +55,23 @@ function openasu_theme_configure_form($form, &$form_state) {
       'default' => t('Default Footer'),
       'student' => t('Student Footer'),
     ),
-    '#default_value' => 'default',
+    '#default_value' => variable_get('asu_brand_is_student', 'default'),
+  );
+
+  $form['theme_configuration']['asu_brand_student_color'] = array(
+    '#title' => t('Student Template Color'),
+    '#type' => 'radios',
+    '#states' => array(
+      'visible' => array(
+        ':input[name="asu_brand_is_student"]' => array('value' => 'student'),
+      ),
+    ),
+    '#options' => array(
+      'black' => t('Black'),
+      'gold' => t('Gold'),
+      'grey' => t('Grey'),
+    ),
+    '#default_value' => variable_get('asu_brand_student_color', 'black'),
   );
 
   $form['submit'] = array(
@@ -70,7 +86,9 @@ function openasu_theme_configure_form($form, &$form_state) {
  * Form submit handler to configure the theme
  */
 function openasu_theme_configure_form_submit($form, &$form_state) {
-  
+  // Disable the default Bartik theme
+  theme_disable(array('bartik'));
+
   // Enable and set the ASU theme
   $theme = 'openasu_bootstrap';
   $module = 'asu_brand';
@@ -86,8 +104,19 @@ function openasu_theme_configure_form_submit($form, &$form_state) {
   $asu_brand_header_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(':delta' => $asu_brand_header_delta, ':theme' => $theme))->fetchField();
   db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(':status' => 1, ':bid' => $asu_brand_header_bid, ':theme' => $theme));
   db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(':region' => 'header', ':bid' => $asu_brand_header_bid, ':theme' => $theme));
-  $asu_brand_footer_delta = ($form_state['values']['asu_brand_is_student'] == 'default') ? 'asu_brand_footer' : 'asu_brand_students_footer';
-  $asu_brand_footer_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(':delta' => $asu_brand_footer_delta, ':theme' => $theme))->fetchField();
+
+  // Add in student footer if applicable 
+  if ($form_state['values']['asu_brand_is_student'] == 'student') {
+    $asu_brand_footer_delta = 'asu_brand_students_footer';
+    variable_set('asu_brand_is_student', 'student');
+    $asu_brand_footer_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(':delta' => $asu_brand_footer_delta, ':theme' => $theme))->fetchField();
+    db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(':status' => 1, ':bid' => $asu_brand_footer_bid, ':theme' => $theme));
+    db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(':region' => 'footer', ':bid' => $asu_brand_footer_bid, ':theme' => $theme)); 
+    db_query("UPDATE {block} SET weight = -100 WHERE bid = :bid AND theme = :theme", array(':bid' => $asu_brand_footer_bid, ':theme' => $theme)); 
+  }
+  
+  // Add in default footer regardless
+  $asu_brand_footer_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(':delta' => 'asu_brand_footer', ':theme' => $theme))->fetchField();
   db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(':status' => 1, ':bid' => $asu_brand_footer_bid, ':theme' => $theme));
   db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(':region' => 'footer', ':bid' => $asu_brand_footer_bid, ':theme' => $theme));
 

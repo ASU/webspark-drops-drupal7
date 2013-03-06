@@ -1,6 +1,5 @@
-name = Kalatheme
-description = A flexible, responsive and mobile-first layout built on Panopoly and powered by Twitter Bootstrap. 
-version = VERSION
+name = Kalamuna Kalatheme
+description = A flexible, responsive, lightweight and mobile-first theme built on Panopoly and powered by Twitter Bootstrap.
 core = 7.x
 
 regions[content] = content
@@ -18,5 +17,16 @@ features[] = favicon
 features[] = main_menu
 features[] = secondary_menu
 
+settings[responsive_toggle] = 1
+settings[pane_styles_toggle] = 1
+settings[extra_styles_toggle] = 0
+
 plugins[panels][layouts] = layouts
 plugins[panels][styles] = styles
+
+; Information added by drupal.org packaging script on 2013-02-26
+version = "7.x-1.0-rc1"
+core = "7.x"
+project = "kalatheme"
+datestamp = "1361916363"
+

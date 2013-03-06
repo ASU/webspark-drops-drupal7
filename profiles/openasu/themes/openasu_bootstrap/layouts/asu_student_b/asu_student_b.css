@@ -1,0 +1,70 @@
+/**
+ * @file
+ * asu-b panel layout
+**/
+
+.panels-ipe-editing .asu-b #picture {
+  max-height: 100%;
+}
+
+#panels-ipe-regionid-menu {
+  display: none;
+}
+
+.asu-b #content {
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.asu-b #picture .asu-b-container {
+  margin-bottom: 0;
+}
+
+.asu-b-sidebar .panel-pane {
+  margin-bottom: 40px;
+}
+
+.asu-b #picture img {
+  margin-bottom: 0;
+}
+
+.asu-b-container {
+  margin-bottom: 1em;
+}
+
+.asu-b-sidebar {
+  min-height: 1px;
+  width: 23.043%;
+  float: left;
+}
+
+.asu-b-sidebar-inner {
+  margin-right: 30px;
+  margin-left: 30px
+}
+
+.asu-b-content {
+  width: 76.957%;
+  float: left;
+}
+
+.asu-b-content-inner {
+  margin-right: 30px;
+  margin-left: 0;
+}
+
+/* iPhone [portrait + landscape] */
+@media only screen and (max-width: 480px) {
+  .asu-b-content,.asu-b-sidebar {
+    width: 100%;
+    float: none;
+  }
+  .asu-b-sidebar-inner {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .asu-b-content-inner {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Bartik's theme implementation to display a single Drupal page.
+ * Kalatheme's implementation to display a single Drupal page.
  *
  * The doctype, html, head, and body tags are not in this template. Instead
  * they can be found in the html.tpl.php template normally located in the
@@ -38,7 +38,8 @@
  * Navigation:
  * - $main_menu (array): An array containing the Main menu links for the
  *   site, if they have been configured.
- * - $main_menu_expanded (array): An array containing 2 depths of the Main menu links 
+ * - $main_menu_expanded (array): An array containing 2 depths of the Main 
+ *   menu links 
  *   for the site, if they have been configured.
  * - $secondary_menu (array): An array containing the Secondary menu links for
  *   the site, if they have been configured.
@@ -63,6 +64,9 @@
  *   associated with the page, and the node ID is the second argument
  *   in the page's path (e.g. node/12345 and node/12345/revisions, but not
  *   comment/reply/12345).
+ *   
+ * Kalatheme:
+ * - $no_panels: A boolean that is true if the current page is not a panels page
  *
  * Regions:
  * - $page['content']: The main content of the current page.
@@ -104,7 +108,12 @@
                   'links' => $secondary_menu,
                   'attributes' => array(
                     'id' => 'secondary-menu-links',
-                    'class' => array('links', 'inline', 'clearfix', 'nav pull-right'),
+                    'class' => array(
+                      'links',
+                      'inline',
+                      'clearfix',
+                      'nav pull-right',
+                    ),
                   ),
                   'heading' => array(
                     'text' => t('Secondary menu'),
@@ -137,23 +146,26 @@
     
   <!-- Page Main -->
   <div id="main-wrapper" class="clearfix"><div id="main" class="clearfix">
-    
-    <?php // print $breadcrumb; ?>
-
-    <div id="content" class="column">
+    <div id="content" class="column <?php $no_panels ? print ' container"' : ''; ?>">
       <a id="main-content"></a>
       <?php if ($tabs): ?>
+        <div id="tabs" class="container">
           <?php print render($tabs); ?>
+        </div>
       <?php endif; ?>
       
       <?php if ($action_links): ?>
+        <div id="action-links" class="container">
           <?php print render($action_links); ?>
+        </div>
       <?php endif; ?>
 
       <?php if ($messages): ?>
-        <div id="messages"><div class="section clearfix">
-          <?php print $messages; ?>
-        </div></div> <!-- /.section, /#messages -->
+        <div id="messages">
+          <div class="section clearfix container">
+            <?php print $messages; ?>
+          </div>
+        </div> <!-- /.section, /#messages -->
       <?php endif; ?>
 
       <?php print render($page['content']); ?>

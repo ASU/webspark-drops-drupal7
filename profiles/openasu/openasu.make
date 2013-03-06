@@ -70,27 +70,29 @@ projects[panopoly_search][download][revision] = 34bee3f
 projects[panopoly_search][download][branch] = 7.x-1.x
 
 ; ASU Modules
-projects[asu_brand][version] = 1.2
+
+projects[asu_brand][version] = 1.3
 projects[asu_brand][subdir] = custom
 projects[asu_brand][location] = https://webconsulting.asu.edu/fserver
 
-; Kalatheme
-projects[kalatheme][version] = 1.x-dev
-projects[kalatheme][type] = theme
-projects[kalatheme][download][type] = git
-projects[kalatheme][download][revision] = 07e9f5e
-projects[kalatheme][download][branch] = 7.x-1.x
-projects[kalatheme][download][url] = git@git.drupal.org:sandbox/pirog/1908016.git
+projects[asu_cas][version] = 1.x-dev
+projects[asu_cas][subdir] = custom
+projects[asu_cas][download][type] = git
+projects[asu_cas][download][revision] = be90f37
+projects[asu_cas][download][branch] = 7.x-1.x
+projects[asu_cas][download][url] = https://github.com/kalamuna/asu_cas.git
 
-; OpenASU KalaSubtheme
+; Bootstrap Framework
+
+projects[kalatheme][version] = 1.0-rc3
+projects[kalatheme][type] = theme
+
 projects[openasu_bootstrap][version] = 1.x-dev
 projects[openasu_bootstrap][type] = theme
 projects[openasu_bootstrap][download][type] = git
-projects[openasu_bootstrap][download][revision] = 07a4fdb
+projects[openasu_bootstrap][download][revision] = 2c0c273
 projects[openasu_bootstrap][download][branch] = 7.x-1.x
 projects[openasu_bootstrap][download][url] = https://github.com/kalamuna/openasu_bootstrap.git
 
-; Twitter Bootstrap Library
 libraries[bootstrap][download][type] = get
-libraries[bootstrap][download][url] = https://github.com/twitter/bootstrap/archive/v2.2.2.zip
-
+libraries[bootstrap][download][url] = https://github.com/kalamuna/asu_bootlibrary/archive/v2.3.0.zip
