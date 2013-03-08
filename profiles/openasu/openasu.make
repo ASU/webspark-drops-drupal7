@@ -40,7 +40,7 @@ projects[panopoly_widgets][download][branch] = 7.x-1.x
 projects[panopoly_admin][version] = 1.x-dev
 projects[panopoly_admin][subdir] = panopoly
 projects[panopoly_admin][download][type] = git
-projects[panopoly_admin][download][revision] = 58ad88b
+projects[panopoly_admin][download][revision] = fedc685
 projects[panopoly_admin][download][branch] = 7.x-1.x
 
 projects[panopoly_users][version] = 1.x-dev
@@ -78,19 +78,22 @@ projects[asu_brand][location] = https://webconsulting.asu.edu/fserver
 projects[asu_cas][version] = 1.x-dev
 projects[asu_cas][subdir] = custom
 projects[asu_cas][download][type] = git
-projects[asu_cas][download][revision] = be90f37
+projects[asu_cas][download][revision] = 9234147
 projects[asu_cas][download][branch] = 7.x-1.x
 projects[asu_cas][download][url] = https://github.com/kalamuna/asu_cas.git
 
 ; Bootstrap Framework
 
-projects[kalatheme][version] = 1.0-rc3
+projects[kalatheme][version] = 1.x-dev
 projects[kalatheme][type] = theme
+projects[kalatheme][download][type] = git
+projects[kalatheme][download][revision] = a7d77a5
+projects[kalatheme][download][branch] = 7.x-1.x
 
 projects[openasu_bootstrap][version] = 1.x-dev
 projects[openasu_bootstrap][type] = theme
 projects[openasu_bootstrap][download][type] = git
-projects[openasu_bootstrap][download][revision] = 2c0c273
+projects[openasu_bootstrap][download][revision] = c83e2cc
 projects[openasu_bootstrap][download][branch] = 7.x-1.x
 projects[openasu_bootstrap][download][url] = https://github.com/kalamuna/openasu_bootstrap.git
 

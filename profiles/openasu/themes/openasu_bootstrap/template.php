@@ -79,7 +79,7 @@ function _openasu_bootstrap_theme_student_menu(&$variables) {
 function openasu_bootstrap_ctools_plugin_post_alter(&$plugin, &$info) {
   if ($info['type'] == 'styles') {
     if ($plugin['name'] == 'kalacustomize') {
-      $plugin['title'] = 'Arizona State University';
+      $plugin['title'] = 'ASU Customize';
     }
   }
 }
@@ -88,15 +88,6 @@ function openasu_bootstrap_ctools_plugin_post_alter(&$plugin, &$info) {
  * Implements hook_form_FORM_ID_alter().
  */
 function openasu_bootstrap_form_panels_edit_style_settings_form_alter(&$form, &$form_state) {
-  // Add some ASU styles if style panes are on
-  if (isset($form['general_settings']['settings']['pane_style'])) {
-    $form['general_settings']['settings']['pane_style']['#options'] += array(
-      'black-pane' => 'ASU BLACK',
-      'yellow-pane' => 'ASU GOLD',
-      'grey-pane' => 'ASU GREY',
-    );
-  }
-
   // Add some extra ASU styles if extra styles are on
   if (isset($form['general_settings']['settings']['title'])) {
     $styles = array('title', 'content');

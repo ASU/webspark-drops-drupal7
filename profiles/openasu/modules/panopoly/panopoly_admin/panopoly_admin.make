@@ -31,6 +31,7 @@ projects[admin][patch][1334804] = http://drupal.org/files/1334804-admin-jquery-u
 
 projects[navbar][version] = 1.0-alpha3
 projects[navbar][subdir] = contrib
+projects[navbar][patch][1875254] = http://drupal.org/files/navbar_has_mismatching_closing_tag_1875254_1.patch
 
 projects[admin_menu][version] = 3.0-rc3
 projects[admin_menu][subdir] = contrib

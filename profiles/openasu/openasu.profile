@@ -19,6 +19,15 @@ function openasu_install_tasks_alter(&$tasks, $install_state) {
   // Magically go one level deeper in solving years of dependency problems
   require_once(drupal_get_path('module', 'panopoly_core') . '/panopoly_core.profile.inc');
   $tasks['install_load_profile']['function'] = 'panopoly_core_install_load_profile';
+
+  // Force the SSL for installation
+  if (isset($_SERVER['PANTHEON_ENVIRONMENT'])) {
+    if (!isset($_SERVER['HTTP_X_SSL']) || $_SERVER['HTTP_X_SSL'] != 'ON') {
+      header('HTTP/1.0 301 Moved Permanently');
+      header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+      exit();
+    }
+  }
 }
 
 /**
@@ -37,8 +46,18 @@ function openasu_theme_configure_form($form, &$form_state) {
     '#type' => 'fieldset',
   );
 
+  $form['theme_configuration']['asu_brand_is_student'] = array(
+    '#title' => t('Site Type'),
+    '#type' => 'radios',
+    '#options' => array(
+      'student' => t('Student Site'),
+      'default' => t('Barebones Site'),
+    ),
+    '#default_value' => variable_get('asu_brand_is_student', 'student'),
+  );
+
   $form['theme_configuration']['asu_brand_header_template'] = array(
-    '#title' => t('Color Scheme'),
+    '#title' => t('Header Color'),
     '#type' => 'radios',
     '#options' => array(
       'default' => t('Gold'),
@@ -48,18 +67,8 @@ function openasu_theme_configure_form($form, &$form_state) {
     '#default_value' => variable_get('asu_brand_header_template', ASU_BRAND_HEADER_TEMPLATE_DEFAULT),
   );
 
-  $form['theme_configuration']['asu_brand_is_student'] = array(
-    '#title' => t('Footer Type'),
-    '#type' => 'select',
-    '#options' => array(
-      'default' => t('Default Footer'),
-      'student' => t('Student Footer'),
-    ),
-    '#default_value' => variable_get('asu_brand_is_student', 'default'),
-  );
-
   $form['theme_configuration']['asu_brand_student_color'] = array(
-    '#title' => t('Student Template Color'),
+    '#title' => t('Student Menu Color'),
     '#type' => 'radios',
     '#states' => array(
       'visible' => array(
@@ -90,9 +99,10 @@ function openasu_theme_configure_form_submit($form, &$form_state) {
   theme_disable(array('bartik'));
 
   // Enable and set the ASU theme
+  $basetheme = 'kalatheme';
   $theme = 'openasu_bootstrap';
   $module = 'asu_brand';
-  theme_enable(array($theme));
+  theme_enable(array($basetheme, $theme));
   variable_set('theme_default', $theme);
 
   // Set the appropriate colors
