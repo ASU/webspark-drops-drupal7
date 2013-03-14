@@ -13,6 +13,10 @@
   background-color: #4f5557;
 }
 
+#menu {
+  background-color: #4f5557;
+}
+
 #menu .navbar-inner ul.nav a.active {
   background-color: #ffb310;
   color: #fff;

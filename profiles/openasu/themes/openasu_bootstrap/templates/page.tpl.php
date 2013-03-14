@@ -39,7 +39,7 @@
  * Navigation:
  * - $main_menu (array): An array containing the Main menu links for the
  *   site, if they have been configured.
- * - $main_menu_expanded (array): An array containing 2 depths of the Main menu links 
+ * - $main_menu_expanded (array): An array containing 2 depths of the Main menu links
  *   for the site, if they have been configured.
  * - $secondary_menu (array): An array containing the Secondary menu links for
  *   the site, if they have been configured.
@@ -78,68 +78,100 @@
  * @ingroup themeable
  */
 ?>
-<div id="page-wrapper"><div id="page">
- 
-   <!-- Page Header -->
-  <header id='masthead'>
-    <nav class='navbar navbar-fixed-top'>
-      <div class='navbar-inner'>
-        <div class='container'>
-          <?php /* ?>
-          
-          // This collapses the menu into a responsive dropdown but does not integrate with ASU_BRAND yet
-          <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse'>
-            <span class='icon-bar'></span>
-            <span class='icon-bar'></span>
-            <span class='icon-bar'></span>
-          </a>
-          <div class='nav-collapse'>
-            // header normally goes here
-          </div> 
-          */ ?>
-          
-          <?php print render($page['header']); ?>
-          
+<div id="page-wrapper">
+  <div id="page">
+
+    <!-- Page Header -->
+    <header id='masthead'>
+      <nav class='navbar navbar-fixed-top'>
+        <div class='navbar-inner'>
+          <div class='container'>
+            <?php print render($page['header']); ?>
+          </div>
         </div>
+      </nav>
+    </header>
+
+    <section class="section" id="picture">
+      <div class="container">
+        <?php print $asu_picture; ?>
       </div>
-    </nav>
-  </header>
-    
-  <!-- Page Main -->
-  <div id="main-wrapper" class="clearfix"><div id="main" class="clearfix">
-    
-    <?php // print $breadcrumb; ?>
+    </section>
 
-    <div id="content" class="column <?php $no_panels ? print ' container"' : ''; ?>">
-      <a id="main-content"></a>
-      
-       <?php if ($messages): ?>
-        <div id="messages"><div class="section clearfix">
-          <?php print $messages; ?>
-        </div></div> <!-- /.section, /#messages -->
-      <?php endif; ?>
-      
-      <?php if ($tabs): ?>
-          <?php print render($tabs); ?>
-      <?php endif; ?>
-      
-      <?php if ($action_links): ?>
-          <?php print render($action_links); ?>
-      <?php endif; ?>
+    <section class="section" id="menu">
+      <div class="container">
+        <nav class='navbar navbar-fixed-top'>
+          <div class='navbar-inner'>
+            <a class='btn btn-navbar' data-target='.nav-collapse'
+              data-toggle='collapse'> <span class='icon-bar'></span> <span
+              class='icon-bar'></span> <span class='icon-bar'></span>
+            </a>
+            <div class='nav-collapse'>
+              <?php print theme('links__system_main_menu', array(
+                'links' => $main_menu_asu,
+                'attributes' => array(
+                  'class' => array('nav pull-left'),
+                ),
+                'heading' => array(
+                  'text' => t('Main menu'),
+                  'level' => 'h2',
+                  'class' => array('element-invisible'),
+                ),
+              )); ?>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </section>
 
-      <?php print render($page['content']); ?>
-      
-    </div> <!-- /.section, /#content -->
-
-  </div></div> <!-- /#main, /#main-wrapper -->
-
-  <!-- Page Footer -->
-  <footer class='section' id='footerlower' role='contentinfo'>
-    <div class='container'>
-      <div class='row-fluid'>
-        <?php print render($page['footer']); ?>
+    <?php if ($messages): ?>
+    <div id="messages">
+      <div class="section clearfix">
+        <?php print $messages; ?>
       </div>
     </div>
-  </footer>
+    <!-- /.section, /#messages -->
+    <?php endif; ?>
 
-</div></div> <!-- /#page, /#page-wrapper -->
+    <?php if ($tabs): ?>
+    <section class="section" id="tabs">
+      <div class="container">
+        <?php print render($tabs); ?>
+      </div>
+    </section>
+    <?php endif; ?>
+
+    <?php if ($action_links): ?>
+    <section class="section" id="action-links">
+      <div class="container">
+        <?php print render($action_links); ?>
+      </div>
+    </section>
+    <?php endif; ?>
+
+    <!-- Page Main -->
+    <div id="main-wrapper" class="clearfix">
+      <div id="main" class="clearfix">
+        <div id="content"
+          class="column <?php $no_panels ? print ' container"' : ''; ?>">
+          <a id="main-content"></a>
+          <?php print render($page['content']); ?>
+        </div>
+        <!-- /.section, /#content -->
+
+      </div>
+    </div>
+    <!-- /#main, /#main-wrapper -->
+
+    <!-- Page Footer -->
+    <footer class='section' id='footerlower' role='contentinfo'>
+      <div class='container'>
+        <div class='row-fluid'>
+          <?php print render($page['footer']); ?>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</div>
+<!-- /#page, /#page-wrapper -->

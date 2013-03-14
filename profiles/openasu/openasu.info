@@ -33,6 +33,9 @@ dependencies[] = panopoly_pages
 dependencies[] = panopoly_search
 dependencies[] = panopoly_wysiwyg
 
+; Panopoly Demo
+dependencies[] = panopoly_demo
+
 ; Panopoly Recommended - Admin
 dependencies[] = navbar
 dependencies[] = backports

@@ -4,6 +4,14 @@
   margin: auto;
 }
 
+#page .region-content {
+  padding: 20px;
+}
+
+#menu {
+  background-color: #000;
+}
+
 #footerlower {
   background-color: transparent;
 }

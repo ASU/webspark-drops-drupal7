@@ -19,7 +19,7 @@
   font-weight: normal;
 }
 
-#main-wrapper #panels-ipe-regionid-sidebar .panel-pane.black-pane ul a {
+#main-wrapper .menu-block-wrapper .panel-pane.black-pane ul a {
   color: #fff;
   font-weight: normal;
 }
@@ -43,7 +43,7 @@
   font-weight: normal;
 }
 
-#main-wrapper #panels-ipe-regionid-sidebar .panel-pane.yellow-pane ul a {
+#main-wrapper .menu-block-wrapper .panel-pane.yellow-pane ul a {
   color: #fff;
   font-weight: normal;
 }
@@ -67,7 +67,7 @@
   font-weight: normal;
 }
 
-#main-wrapper #panels-ipe-regionid-sidebar .panel-pane.grey-pane ul a {
+#main-wrapper .menu-block-wrapper .panel-pane.grey-pane ul a {
   color: #fff;
   font-weight: normal;
 }

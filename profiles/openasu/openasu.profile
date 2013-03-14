@@ -47,12 +47,7 @@ function openasu_theme_configure_form($form, &$form_state) {
   );
 
   $form['theme_configuration']['asu_brand_is_student'] = array(
-    '#title' => t('Site Type'),
-    '#type' => 'radios',
-    '#options' => array(
-      'student' => t('Student Site'),
-      'default' => t('Barebones Site'),
-    ),
+    '#type' => 'value',
     '#default_value' => variable_get('asu_brand_is_student', 'student'),
   );
 
@@ -68,13 +63,8 @@ function openasu_theme_configure_form($form, &$form_state) {
   );
 
   $form['theme_configuration']['asu_brand_student_color'] = array(
-    '#title' => t('Student Menu Color'),
+    '#title' => t('Menu Color'),
     '#type' => 'radios',
-    '#states' => array(
-      'visible' => array(
-        ':input[name="asu_brand_is_student"]' => array('value' => 'student'),
-      ),
-    ),
     '#options' => array(
       'black' => t('Black'),
       'gold' => t('Gold'),
@@ -95,6 +85,7 @@ function openasu_theme_configure_form($form, &$form_state) {
  * Form submit handler to configure the theme
  */
 function openasu_theme_configure_form_submit($form, &$form_state) {
+
   // Disable the default Bartik theme
   theme_disable(array('bartik'));
 
@@ -134,4 +125,24 @@ function openasu_theme_configure_form_submit($form, &$form_state) {
   asu_brand_cache_clear();
   system_rebuild_theme_data();
   drupal_theme_rebuild();
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter()
+ */
+function openasu_form_install_configure_form_alter(&$form, $form_state) {
+
+  // Hide some messages from various modules that are just too chatty.
+  drupal_get_messages('status');
+  drupal_get_messages('warning');
+
+  // Set reasonable defaults for site configuration form
+  $form['site_information']['site_name']['#default_value'] = 'My New OpenASU Site';
+  $form['admin_account']['account']['name']['#default_value'] = 'admin';
+
+  // Define a default email address if we can guess a valid one
+  if (valid_email_address('admin@' . $_SERVER['HTTP_HOST'])) {
+    $form['site_information']['site_mail']['#default_value'] = 'admin@' . $_SERVER['HTTP_HOST'];
+    $form['admin_account']['account']['mail']['#default_value'] = 'admin@' . $_SERVER['HTTP_HOST'];
+  }
 }

@@ -7,7 +7,7 @@
  * Created: 2011-09-21
  */
 
-define('ASU_BRAND_HEADER_VERSION', '4.0');
+define('ASU_BRAND_HEADER_VERSION', '4.1');
 define('ASU_BRAND_HEADER_BASEPATH_DEFAULT', 'https://asu.edu/asuthemes');
 define('ASU_BRAND_HEADER_TEMPLATE_DEFAULT', 'default');
 define('ASU_BRAND_FOOTER_COLOR_DEFAULT', '');

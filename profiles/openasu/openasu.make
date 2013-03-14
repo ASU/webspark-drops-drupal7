@@ -69,16 +69,24 @@ projects[panopoly_search][download][type] = git
 projects[panopoly_search][download][revision] = 34bee3f
 projects[panopoly_search][download][branch] = 7.x-1.x
 
+projects[panopoly_demo][version] = 1.x-dev
+projects[panopoly_demo][subdir] = panopoly
+projects[panopoly_demo][download][type] = git
+projects[panopoly_demo][download][revision] = a0ed0cf
+projects[panopoly_demo][download][branch] = 7.x-1.x
+
 ; ASU Modules
 
 projects[asu_brand][version] = 1.3
 projects[asu_brand][subdir] = custom
 projects[asu_brand][location] = https://webconsulting.asu.edu/fserver
+; NOTE - The header/footer version has been changed to 4.1 instead of 4.0
+; to use the responsive header. This change will likely be in the 1.4 version.
 
 projects[asu_cas][version] = 1.x-dev
 projects[asu_cas][subdir] = custom
 projects[asu_cas][download][type] = git
-projects[asu_cas][download][revision] = 9234147
+projects[asu_cas][download][revision] = 0a02c91
 projects[asu_cas][download][branch] = 7.x-1.x
 projects[asu_cas][download][url] = https://github.com/kalamuna/asu_cas.git
 
@@ -87,13 +95,13 @@ projects[asu_cas][download][url] = https://github.com/kalamuna/asu_cas.git
 projects[kalatheme][version] = 1.x-dev
 projects[kalatheme][type] = theme
 projects[kalatheme][download][type] = git
-projects[kalatheme][download][revision] = a7d77a5
+projects[kalatheme][download][revision] = b983dd9
 projects[kalatheme][download][branch] = 7.x-1.x
 
 projects[openasu_bootstrap][version] = 1.x-dev
 projects[openasu_bootstrap][type] = theme
 projects[openasu_bootstrap][download][type] = git
-projects[openasu_bootstrap][download][revision] = c83e2cc
+projects[openasu_bootstrap][download][revision] = be54af6506280b2da179db7d86e50c168856b105
 projects[openasu_bootstrap][download][branch] = 7.x-1.x
 projects[openasu_bootstrap][download][url] = https://github.com/kalamuna/openasu_bootstrap.git
 
