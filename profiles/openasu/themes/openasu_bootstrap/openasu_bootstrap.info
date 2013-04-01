@@ -5,6 +5,7 @@ version = VERSION
 core = 7.x
 
 regions[header] = Header
+regions[menu] = Menu
 regions[content] = Content
 regions[footer] = Footer
 
@@ -23,4 +24,4 @@ features[] = secondary_menu
 
 plugins[panels][styles] = styles
 
-settings[default_picture] = 1
+settings[default_picture] = 0

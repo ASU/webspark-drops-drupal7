@@ -1,5 +1,4 @@
 /* pane styles for asu */
-
 .black-pane {
   background-color: #000;
   border-right: 5px solid #ffb310;
@@ -70,4 +69,20 @@
 #main-wrapper .menu-block-wrapper .panel-pane.grey-pane ul a {
   color: #fff;
   font-weight: normal;
+}
+
+ul.nav li.dropdown:hover>ul.dropdown-menu {
+  display: block;
+}
+
+a.menu:after,.dropdown-toggle:after {
+  content: none;
+}
+
+.navbar .dropdown-menu {
+ margin-top: 0px;
+}
+
+.dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus {
+  background: transparent;
 }

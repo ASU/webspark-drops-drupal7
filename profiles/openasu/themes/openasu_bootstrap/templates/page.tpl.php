@@ -91,13 +91,15 @@
         </div>
       </nav>
     </header>
-
-    <section class="section" id="picture">
-      <div class="container">
-        <?php print $asu_picture; ?>
-      </div>
-    </section>
-
+    
+    <?php if ($asu_picture): ?>
+      <section class="section" id="picture">
+        <div class="container">
+          <?php print $asu_picture; ?>
+        </div>
+      </section>
+    <?php endif; ?>
+    
     <section class="section" id="menu">
       <div class="container">
         <nav class='navbar navbar-fixed-top'>
@@ -107,17 +109,7 @@
               class='icon-bar'></span> <span class='icon-bar'></span>
             </a>
             <div class='nav-collapse'>
-              <?php print theme('links__system_main_menu', array(
-                'links' => $main_menu_asu,
-                'attributes' => array(
-                  'class' => array('nav pull-left'),
-                ),
-                'heading' => array(
-                  'text' => t('Main menu'),
-                  'level' => 'h2',
-                  'class' => array('element-invisible'),
-                ),
-              )); ?>
+              <?php print render($page['menu']); ?>
             </div>
           </div>
         </nav>

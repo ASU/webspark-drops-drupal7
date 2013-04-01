@@ -93,18 +93,26 @@ function openasu_theme_configure_form_submit($form, &$form_state) {
   $basetheme = 'kalatheme';
   $theme = 'openasu_bootstrap';
   $module = 'asu_brand';
-  theme_enable(array($basetheme, $theme));
+  theme_enable(array($basetheme));
+  theme_enable(array($theme));
   variable_set('theme_default', $theme);
 
   // Set the appropriate colors
   $header_key = $form_state['values']['asu_brand_header_template'];
   variable_set('asu_brand_header_template', $header_key);
 
-  // Enable the apporpriate blocks in the right regions
+  // Enable the Brand Header block in the right region
   $asu_brand_header_delta = 'asu_brand_header';
   $asu_brand_header_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(':delta' => $asu_brand_header_delta, ':theme' => $theme))->fetchField();
   db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(':status' => 1, ':bid' => $asu_brand_header_bid, ':theme' => $theme));
   db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(':region' => 'header', ':bid' => $asu_brand_header_bid, ':theme' => $theme));
+
+  // Enable the Main Menu block in the right region
+  $main_menu_delta = 'main-menu';
+  $main_menu_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(':delta' => $main_menu_delta, ':theme' => $theme))->fetchField();
+  db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(':status' => 1, ':bid' => $main_menu_bid, ':theme' => $theme));
+  db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(':region' => 'menu', ':bid' => $main_menu_bid, ':theme' => $theme));
+  db_query("UPDATE {block} SET weight = -100 WHERE bid = :bid AND theme = :theme", array(':bid' => $main_menu_bid, ':theme' => $theme));
 
   // Add in student footer if applicable 
   if ($form_state['values']['asu_brand_is_student'] == 'student') {

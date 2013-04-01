@@ -86,7 +86,7 @@ projects[asu_brand][location] = https://webconsulting.asu.edu/fserver
 projects[asu_cas][version] = 1.x-dev
 projects[asu_cas][subdir] = custom
 projects[asu_cas][download][type] = git
-projects[asu_cas][download][revision] = 0a02c91
+projects[asu_cas][download][revision] = 3e52237
 projects[asu_cas][download][branch] = 7.x-1.x
 projects[asu_cas][download][url] = https://github.com/kalamuna/asu_cas.git
 
@@ -101,7 +101,7 @@ projects[kalatheme][download][branch] = 7.x-1.x
 projects[openasu_bootstrap][version] = 1.x-dev
 projects[openasu_bootstrap][type] = theme
 projects[openasu_bootstrap][download][type] = git
-projects[openasu_bootstrap][download][revision] = be54af6506280b2da179db7d86e50c168856b105
+projects[openasu_bootstrap][download][revision] = 8c367c6
 projects[openasu_bootstrap][download][branch] = 7.x-1.x
 projects[openasu_bootstrap][download][url] = https://github.com/kalamuna/openasu_bootstrap.git
 

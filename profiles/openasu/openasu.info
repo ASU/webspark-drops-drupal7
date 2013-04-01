@@ -47,8 +47,6 @@ dependencies[] = date_popup_authored
 ; OpenASU - Drupal Core
 dependencies[] = block
 
-; OpenASU - Contrib
-
 ; OpenASU - Custom
 dependencies[] = asu_brand
 dependencies[] = asu_cas
