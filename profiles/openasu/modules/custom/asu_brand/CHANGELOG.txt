@@ -1,5 +1,9 @@
 CHANGELOG for ASU Brand module for Drupal 7
 
+7.x-1.4, 2013-03-27
+-----------------------
+- Added support for selecting header version from http://asu.edu/asuthemes/headers.xml.
+
 7.x-1.3, 2013-02-15
 -----------------------
 - Fix signin/signout urls by using url() and setting destination query parameter

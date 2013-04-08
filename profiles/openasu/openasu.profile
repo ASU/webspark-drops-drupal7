@@ -129,6 +129,9 @@ function openasu_theme_configure_form_submit($form, &$form_state) {
   db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(':status' => 1, ':bid' => $asu_brand_footer_bid, ':theme' => $theme));
   db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(':region' => 'footer', ':bid' => $asu_brand_footer_bid, ':theme' => $theme));
 
+  // Set the responsive version of the header to be default
+  variable_set('asu_brand_header_version', '4.0-rsp.1');
+
   // Flush theme caches so things are right
   asu_brand_cache_clear();
   system_rebuild_theme_data();

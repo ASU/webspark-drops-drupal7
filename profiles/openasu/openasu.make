@@ -77,11 +77,9 @@ projects[panopoly_demo][download][branch] = 7.x-1.x
 
 ; ASU Modules
 
-projects[asu_brand][version] = 1.3
+projects[asu_brand][version] = 1.4
 projects[asu_brand][subdir] = custom
 projects[asu_brand][location] = https://webconsulting.asu.edu/fserver
-; NOTE - The header/footer version has been changed to 4.1 instead of 4.0
-; to use the responsive header. This change will likely be in the 1.4 version.
 
 projects[asu_cas][version] = 1.x-dev
 projects[asu_cas][subdir] = custom

@@ -36,6 +36,7 @@ EOL;
   drupal_add_html_head(array('#type' => 'markup', '#markup' => $inline_script, '#weight' => -100), 'asu_brand_head_js');
   
   // Build the head and header file paths.
+  $header_version = variable_get('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT);
   $header_basebath = variable_get('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT);
   $header_template = variable_get('asu_brand_header_template', ASU_BRAND_HEADER_TEMPLATE_DEFAULT);
   
@@ -49,7 +50,7 @@ EOL;
     $head_output = $cache['asu_brand:head']->data;
   }
   else {
-    $head_path = $header_basebath . '/' . ASU_BRAND_HEADER_VERSION . '/heads/' . $header_template . '.shtml';
+    $head_path = $header_basebath . '/' . $header_version . '/heads/' . $header_template . '.shtml';
     if ($head_output = file_get_contents($head_path)) {
       cache_set('asu_brand:head', $head_output, 'cache', time() + ASU_BRAND_CACHE_LIFETIME);
     }
@@ -65,7 +66,7 @@ EOL;
     $output = $cache['asu_brand:header']->data;
   }
   else {
-    $header_path = $header_basebath . '/' . ASU_BRAND_HEADER_VERSION . '/headers/' . $header_template . '.shtml';
+    $header_path = $header_basebath . '/' . $header_version . '/headers/' . $header_template . '.shtml';
     if ($output = file_get_contents($header_path)) {
       cache_set('asu_brand:header', $output, 'cache', time() + ASU_BRAND_CACHE_LIFETIME);
     }
@@ -88,9 +89,10 @@ function asu_brand_get_block_footer() {
     $output = $cache->data;
   }
   else {
+    $header_version = variable_get('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT);
     $header_basebath = variable_get('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT);
     $footer_color = variable_get('asu_brand_footer_color', ASU_BRAND_FOOTER_COLOR_DEFAULT);
-    $path = $header_basebath . '/' . ASU_BRAND_HEADER_VERSION . '/includes/footer' . $footer_color . '.shtml';
+    $path = $header_basebath . '/' . $header_version . '/includes/footer' . $footer_color . '.shtml';
     if ($output = file_get_contents($path)) {
       cache_set('asu_brand:footer', $output, 'cache', time() + ASU_BRAND_CACHE_LIFETIME);
     }
@@ -111,8 +113,9 @@ function asu_brand_get_block_students_footer() {
     $output = $cache->data;
   }
   else {
+    $header_version = variable_get('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT);
     $header_basebath = variable_get('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT);
-    $path = $header_basebath . '/' . ASU_BRAND_HEADER_VERSION . '/includes/students_footer.shtml';
+    $path = $header_basebath . '/' . $header_version . '/includes/students_footer.shtml';
     if ($output = file_get_contents($path)) {
       cache_set('asu_brand:students_footer', $output, 'cache', time() + ASU_BRAND_CACHE_LIFETIME);
     }

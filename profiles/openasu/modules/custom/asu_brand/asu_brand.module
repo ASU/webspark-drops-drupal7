@@ -3,11 +3,12 @@
 /**
  * ASU Brand module.
  *
- * Author: Marcus Anthony (marcus.anthony@asu.edu
+ * Author: Marcus Anthony (marcus.anthony@asu.edu)
  * Created: 2011-09-21
  */
 
-define('ASU_BRAND_HEADER_VERSION', '4.1');
+define('ASU_BRAND_HEADER_VERSION_XML_URL', 'http://asu.edu/asuthemes/headers.xml');
+define('ASU_BRAND_HEADER_VERSION_DEFAULT', '4.0');
 define('ASU_BRAND_HEADER_BASEPATH_DEFAULT', 'https://asu.edu/asuthemes');
 define('ASU_BRAND_HEADER_TEMPLATE_DEFAULT', 'default');
 define('ASU_BRAND_FOOTER_COLOR_DEFAULT', '');
@@ -58,18 +59,21 @@ function asu_brand_block_configure($delta = '') {
 function asu_brand_block_save($delta = '', $edit = array()) {
   switch ($delta) {
     case 'asu_brand_header':
+      variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
       variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
       variable_set('asu_brand_header_template', $edit['asu_brand_header_template']);
       asu_brand_cache_clear();
       break;
     
     case 'asu_brand_footer':
+      variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
       variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
       variable_set('asu_brand_footer_color', $edit['asu_brand_footer_color']);
       asu_brand_cache_clear();
       break;
     
     case 'asu_brand_students_footer':
+      variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
       variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
       asu_brand_cache_clear();
       break;
