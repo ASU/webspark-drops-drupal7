@@ -1,0 +1,29 @@
+name = Panopoly Demo
+description = Demo content and functionality to help show the power of Panopoly
+core = 7.x
+package = Panopoly Apps
+php = 5.2.4
+project = panopoly_demo
+dependencies[] = defaultcontent
+dependencies[] = features
+dependencies[] = page_manager
+dependencies[] = panopoly_pages
+dependencies[] = views
+dependencies[] = views_content
+stylesheets[all][] = panopoly_demo.css
+features[content][] = panopoly-demo-0
+features[content][] = panopoly-demo-1
+features[content][] = panopoly-demo-2
+features[content][] = panopoly-demo-3
+features[ctools][] = page_manager:pages_default:1
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:1
+features[page_manager_pages][] = panopoly_demo_panel
+features[views_view][] = panopoly_demo
+
+; Information added by drupal.org packaging script on 2012-11-12
+version = "7.x-1.0-rc3"
+core = "7.x"
+project = "panopoly_demo"
+datestamp = "1352741294"
+
