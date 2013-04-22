@@ -171,7 +171,8 @@ InsertMedia.prototype = {
   insert: function (formatted_media) {
     var element = create_element(formatted_media.html, {
           fid: this.mediaFile.fid,
-          view_mode: formatted_media.type
+          view_mode: formatted_media.type,
+          attributes: formatted_media.options
         });
 
     var markup = outerHTML(element),
@@ -204,6 +205,11 @@ function ensure_tagmap () {
  *    A object containing the media file information (fid, view_mode, etc).
  */
 function create_element (html, info) {
+  if ($('<div></div>').append(html).text().length === html.length) {
+    // Element is not an html tag. Surround it in a span element
+    // so we can pass the file attributes.
+    html = '<span>' + html + '</span>';
+  }
   var element = $(html);
 
   // Move attributes from the file info array to the placeholder element.
@@ -222,7 +228,12 @@ function create_element (html, info) {
   element.attr('data-file_info', encodeURI(JSON.stringify(info)));
 
   // Adding media-element class so we can find markup element later.
-  element.addClass('media-element');
+  var classes = ['media-element'];
+
+  if(info.view_mode){
+    classes.push('file-' + info.view_mode.replace(/_/g, '-'));
+  }
+  element.addClass(classes.join(' '));
 
   return element;
 }

@@ -84,7 +84,7 @@ class panelizer_defaults_ui extends ctools_export_ui {
       $form_state['item']->panelizer_type = $this->entity_handler->entity_type;
       $form_state['item']->panelizer_key = $this->entity_bundle;
       $form_state['item']->view_mode = $this->entity_view_mode;
-      $form_state['item']->display = $this->entity_handler->get_default_display();
+      $form_state['item']->display = $this->entity_handler->get_default_display($this->entity_bundle, $this->entity_view_mode);
     }
     return parent::edit_execute_form_standard($form_state);
   }

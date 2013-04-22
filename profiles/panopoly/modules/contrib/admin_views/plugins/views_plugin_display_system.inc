@@ -29,6 +29,7 @@
  * @ingroup views_display_plugins
  */
 class views_plugin_display_system extends views_plugin_display {
+
   /**
    * The system display requires a path.
    */
@@ -36,10 +37,16 @@ class views_plugin_display_system extends views_plugin_display {
     return TRUE;
   }
 
+  /**
+   * The system display uses breadcrumbs.
+   */
   function uses_breadcrumb() {
     return TRUE;
   }
 
+  /**
+   * Overrides views_plugin_display::option_definition().
+   */
   function option_definition() {
     $options = parent::option_definition();
 
@@ -58,6 +65,87 @@ class views_plugin_display_system extends views_plugin_display {
     );
 
     return $options;
+  }
+
+  /**
+   * Overrides views_plugin_display::options_summary().
+   */
+  function options_summary(&$categories, &$options) {
+    parent::options_summary($categories, $options);
+
+    $categories['system'] = array(
+      'title' => t('System path settings'),
+    );
+
+    // Disable the access plugin configuration in the UI.
+    // @see option_definition()
+    $categories['access']['build']['#access'] = FALSE;
+
+    $path = strip_tags('/' . $this->get_option('path'));
+    if (empty($path)) {
+      $path = t('None');
+    }
+
+    $options['path'] = array(
+      'category' => 'system',
+      'title' => t('Path'),
+      'value' => views_ui_truncate($path, 24),
+    );
+  }
+
+  /**
+   * Overrides views_plugin_display::options_form().
+   */
+  function options_form(&$form, &$form_state) {
+    parent::options_form($form, $form_state);
+
+    switch ($form_state['section']) {
+      case 'path':
+        $form['#title'] .= t('An existing menu path this view replaces');
+        $form['path'] = array(
+          '#type' => 'textfield',
+          '#description' => t('This view replaces this path on your site. You may use "%" in your URL to represent values that will be used for contextual filters. For example: "node/%/feed".'),
+          '#default_value' => $this->get_option('path'),
+          '#field_prefix' => '<span dir="ltr">' . url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
+          '#field_suffix' => '</span>&lrm;',
+          '#attributes' => array('dir' => 'ltr'),
+        );
+        break;
+    }
+  }
+
+  /**
+   * Overrides views_plugin_display::options_validate().
+   */
+  function options_validate(&$form, &$form_state) {
+    parent::options_validate($form, $form_state);
+
+    switch ($form_state['section']) {
+      case 'path':
+        if (strpos($form_state['values']['path'], '$arg') !== FALSE) {
+          form_error($form['path'], t('"$arg" is no longer supported. Use % instead.'));
+        }
+
+        if (strpos($form_state['values']['path'], '%') === 0) {
+          form_error($form['path'], t('"%" may not be used for the first segment of a path.'));
+        }
+        // Automatically remove '/' from path.
+        $form_state['values']['path'] = trim($form_state['values']['path'], '/');
+        break;
+    }
+  }
+
+  /**
+   * Overrides views_plugin_display::options_submit().
+   */
+  function options_submit(&$form, &$form_state) {
+    parent::options_submit($form, $form_state);
+
+    switch ($form_state['section']) {
+      case 'path':
+        $this->set_option('path', $form_state['values']['path']);
+        break;
+    }
   }
 
   /**
@@ -129,7 +217,7 @@ class views_plugin_display_system extends views_plugin_display {
       // @see option_definition()
       // @see views_plugin_access_menu
       'access callback' => !empty($callbacks[$path]['access callback']) ? $callbacks[$path]['access callback'] : 'user_access',
-      'access arguments' => $callbacks[$path]['access arguments'],
+      'access arguments' => !empty($callbacks[$path]['access arguments']) ? $callbacks[$path]['access arguments'] : array(),
       // Identify URL embedded arguments and correlate them to a handler
       'load arguments' => array($this->view->name, $this->display->id, '%index'),
     );
@@ -164,6 +252,9 @@ class views_plugin_display_system extends views_plugin_display {
           continue;
         }
         $child = &$callbacks[$child_path];
+        // Get this first, as we want to know if this existed before parent and
+        // default values are merged.
+        $file = isset($child['file']);
         // Copy all properties from the original parent that will be replaced
         // with new values.
         // This typically resets 'access arguments', etc.
@@ -175,6 +266,14 @@ class views_plugin_display_system extends views_plugin_display {
         // combined with $items[$path] + $defaults, but are separated for
         // documentation purposes and clarity.)
         $child += array_intersect_key($parent, $defaults);
+        // Unset the child 'file' property if its implementing module doesn't
+        // match it's parent and it didn't have a 'file' preoperty specified
+        // before. Otherwise, for example, example_module could inherit a 'file'
+        // property of 'node.admin.inc', so the actual include path would be
+        // something like .../modules/example_module/node.admin.inc.
+        if (!$file && ($child['module'] != $parent['module'])) {
+          unset($child['file']);
+        }
         // Last catch-22, insert new default properties and their default values
         // for the child, which may not be defined on the original parent.
         // This typically inserts 'access callback', which can be omitted in
@@ -184,6 +283,7 @@ class views_plugin_display_system extends views_plugin_display {
         $child += $defaults;
       }
     }
+
     // If the original parent path already existed, copy over its remaining
     // properties.
     $items[$path] += $parent;
@@ -192,6 +292,8 @@ class views_plugin_display_system extends views_plugin_display {
   }
 
   /**
+   * Overrides views_plugin_display::execute().
+   *
    * Build and render the page view.
    *
    * Since we replace an existing page, we need to invoke views_set_page_view().
@@ -218,82 +320,8 @@ class views_plugin_display_system extends views_plugin_display {
   }
 
   /**
-   * Provide the summary for page options in the views UI.
-   *
-   * This output is returned as an array.
+   * Overrides views_plugin_display::get_argument_text().
    */
-  function options_summary(&$categories, &$options) {
-    parent::options_summary($categories, $options);
-
-    $categories['system'] = array(
-      'title' => t('System path settings'),
-    );
-
-    // Disable the access plugin configuration in the UI.
-    // @see option_definition()
-    $categories['access']['build']['#access'] = FALSE;
-
-    $path = strip_tags('/' . $this->get_option('path'));
-    if (empty($path)) {
-      $path = t('None');
-    }
-
-    $options['path'] = array(
-      'category' => 'system',
-      'title' => t('Path'),
-      'value' => views_ui_truncate($path, 24),
-    );
-  }
-
-  /**
-   * Provide the default form for setting options.
-   */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
-
-    switch ($form_state['section']) {
-      case 'path':
-        $form['#title'] .= t('An existing menu path this view replaces');
-        $form['path'] = array(
-          '#type' => 'textfield',
-          '#description' => t('This view replaces this path on your site. You may use "%" in your URL to represent values that will be used for contextual filters. For example: "node/%/feed".'),
-          '#default_value' => $this->get_option('path'),
-          '#field_prefix' => '<span dir="ltr">' . url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
-          '#field_suffix' => '</span>&lrm;',
-          '#attributes' => array('dir' => 'ltr'),
-        );
-        break;
-    }
-  }
-
-  function options_validate(&$form, &$form_state) {
-    parent::options_validate($form, $form_state);
-
-    switch ($form_state['section']) {
-      case 'path':
-        if (strpos($form_state['values']['path'], '$arg') !== FALSE) {
-          form_error($form['path'], t('"$arg" is no longer supported. Use % instead.'));
-        }
-
-        if (strpos($form_state['values']['path'], '%') === 0) {
-          form_error($form['path'], t('"%" may not be used for the first segment of a path.'));
-        }
-        // Automatically remove '/' from path.
-        $form_state['values']['path'] = trim($form_state['values']['path'], '/');
-        break;
-    }
-  }
-
-  function options_submit(&$form, &$form_state) {
-    parent::options_submit($form, $form_state);
-
-    switch ($form_state['section']) {
-      case 'path':
-        $this->set_option('path', $form_state['values']['path']);
-        break;
-    }
-  }
-
   function get_argument_text() {
     return array(
       'filter value not present' => t('When the filter value is <em>NOT</em> in the URL'),
@@ -301,4 +329,5 @@ class views_plugin_display_system extends views_plugin_display {
       'description' => t('The contextual filter values is provided by the URL.'),
     );
   }
+
 }

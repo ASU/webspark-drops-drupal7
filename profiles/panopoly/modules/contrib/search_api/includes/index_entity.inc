@@ -395,7 +395,7 @@ class SearchApiIndex extends Entity {
    */
   public function query($options = array()) {
     if (!$this->enabled) {
-      throw new SearchApiException(t('Cannot search on a disabled index. Please !enable the index in the Search API configuration.', array('!enable' => l(t('enable'), 'admin/config/search/search_api'))));
+      throw new SearchApiException(t('Cannot search on a disabled index.'));
     }
     return $this->server()->query($this, $options);
   }

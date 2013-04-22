@@ -30,19 +30,12 @@ body,
   border: 1px solid #ccc;
 }
 #secondary-menu {
+  margin-bottom: 5px;
+  overflow: hidden;
   width: 100%;
-  margin: auto;
-  padding-bottom: 10px;
-}
-.with-secondary-menu .region-header {
-  margin-top: 3em;
-}
-.without-secondary-menu .region-header {
-  margin-top: 15px;
 }
 #main-wrapper {
   min-height: 300px;
-  overflow: hidden;
 }
 #content .section,
 .sidebar .section {
@@ -78,7 +71,7 @@ body,
   padding: 0 10px;
 }
 
-@media all and (min-width: 560px) and (max-width:850px) {
+@media all and (min-width: 560px) and (max-width: 850px) {
 
   #sidebar-first,
   .region-triptych-first,
@@ -162,7 +155,7 @@ body,
   }
   .no-sidebars #content {
     width: 100%;
-  }
+  }  
   .two-sidebars #content {
     margin-left: 25%;
     margin-right: 25%;

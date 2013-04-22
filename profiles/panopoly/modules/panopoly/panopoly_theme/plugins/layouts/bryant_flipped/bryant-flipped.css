@@ -14,6 +14,7 @@
 }
 
 .bryant-flipped-content {
+  min-height: 1px;
   float: left;
   width: 78.723%;
 }

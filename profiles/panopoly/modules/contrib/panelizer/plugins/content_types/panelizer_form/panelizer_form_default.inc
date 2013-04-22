@@ -27,7 +27,9 @@ function panelizer_panelizer_form_default_content_type_render($subtype, $conf, $
       unset($block->content['panelizer']['#pre_render']);
       unset($block->content['panelizer']['#theme_wrappers']);
       $block->content['panelizer']['#type'] = '';
-      $block->content['panelizer']['path']['#size'] /= 2;
+      if (isset($block->content['panelizer']['path']['#size'])) {
+        $block->content['panelizer']['path']['#size'] /= 2;
+      }
 
       // Set access to false on the original rather than removing so that
       // vertical tabs doesn't clone it. I think this is due to references.

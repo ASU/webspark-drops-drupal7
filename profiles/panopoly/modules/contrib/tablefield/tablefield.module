@@ -12,6 +12,92 @@
  */
 
 /**
+ * Implements hook_menu().
+ */
+function tablefield_menu() {
+  return array(
+    'tablefield/export/%/%/%/%/%' => array(
+      'page callback' => 'tablefield_export_csv',
+      'page arguments' => array(2, 3, 4, 5, 6),
+      'title' => 'Export Table Data',
+      'access arguments' => array('export tablefield'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_permission().
+ */
+function tablefield_permission() {
+  return array(
+    'export tablefield' => array(
+      'title' => t('Export Tablefield Data as CSV'),
+    ),
+  );
+}
+
+/**
+ * Menu callback to export a table as a CSV.
+ *
+ * @param String $entity_type
+ *  The type of entity, e.g. node.
+ * @param String $entity_id
+ *  The id of the entity.
+ * @param String $field_name
+ *  The machine name of the field to load.
+ * @param String $langcode
+ *  The language code specified.
+ * @param String $delta
+ *  The field delta to load.
+ */
+function tablefield_export_csv($entity_type, $entity_id, $field_name, $langcode, $delta) {
+  $filename = sprintf('%s_%s_%s_%s_%s.csv', $entity_type, $entity_id, $field_name, $langcode, $delta);
+  $uri = 'temporary://' . $filename;
+
+  // Attempt to load the entity.
+  $ids = array($entity_id);
+  $entity = entity_load($entity_type, $ids);
+  $entity = array_pop($entity);
+
+  // Ensure that the data is available and that we can load a
+  // temporary file to stream the data.
+  if (isset($entity->{$field_name}[$langcode][$delta]['value']) && $fp = fopen($uri, 'w+')) {
+    $table = tablefield_rationalize_table(unserialize($entity->{$field_name}[$langcode][$delta]['value']));
+
+    // Save the data as a CSV file.
+    foreach ($table as $row) {
+      fputcsv($fp, $row);
+    }
+
+    fclose($fp);
+
+    // Add basic HTTP headers.
+    $http_headers = array(
+      'Content-Type' => 'text/csv',
+      'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+      'Content-Length' => filesize($uri),
+    );
+
+    // IE needs special headers.
+    if(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
+      $http_headers['Cache-Control'] = 'must-revalidate, post-check=0, pre-check=0';
+      $http_headers['Pragma'] = 'public';
+    }
+    else {
+      $http_headers['Pragma'] = 'no-cache';
+    }
+
+    // Stream the download.
+    file_transfer($uri, $http_headers);
+  }
+
+  // Something went wrong.
+  drupal_add_http_header('Status', '500 Internal Server Error');
+  print t('Error generating CSV.');
+  drupal_exit();
+}
+
+/**
  * Implements hook_field_info().
  */
 function tablefield_field_info() {
@@ -30,6 +116,11 @@ function tablefield_field_info() {
  */
 function tablefield_field_settings_form($field, $instance, $has_data) {
   $form = array();
+  $form['export'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Allow users to export table data as CSV',
+    '#default_value' => isset($field['settings']['export']) ? $field['settings']['export'] : FALSE,
+  );
   $form['lock_values'] = array(
     '#type' => 'checkbox',
     '#title' => 'Lock table field defaults from further edits during node add/edit.',
@@ -196,10 +287,33 @@ function tablefield_field_formatter_view($entity_type, $entity, $field, $instanc
       }
 
       // Pull the header for theming
-      $header = array_shift($tabledata);
+      $header_data = array_shift($tabledata);
+
+      // Check for an empty header, if so we don't want to theme it.
+      $noheader = TRUE;
+      foreach ($header_data as $cell) {
+        if (strlen($cell['data']) > 0) {
+          $noheader = FALSE;
+          break;
+        }
+      }
+
+      $header = $noheader ? NULL : $header_data;
+
+      $entity_info = entity_get_info($entity_type);
+      $entity_id = !empty($entity_info['entity keys']['id']) ? $entity->{$entity_info['entity keys']['id']} : NULL;
 
       // Theme the table for display
-      $element[$delta]['#markup'] = theme('tablefield_view', array('header' => $header, 'rows' => $tabledata, 'delta' => $delta));
+      $element[$delta]['#markup'] = theme('tablefield_view', array(
+        'header' => $header,
+        'rows' => $tabledata,
+        'delta' => $delta,
+        'export' => isset($field['settings']['export']) ? $field['settings']['export'] : NULL,
+        'entity_type' => $entity_type,
+        'entity_id' => $entity_id,
+        'field_name' => $field['field_name'],
+        'langcode' => $langcode,
+      ));
     }
 
   }
@@ -544,7 +658,7 @@ function tablefield_rebuild_form_ajax($form, $form_state) {
         $delta = $parent;
       }
       $tmp = $rebuild;
-  
+
       if ($parent == 'rebuild' || $parent == 'import') {
         $rebuild = $delta == 0 ? $tmp[$parent] : $tmp;
         //$rebuild = $tmp[$parent];
@@ -620,6 +734,11 @@ function tablefield_theme() {
         'header' => NULL,
         'rows' => NULL,
         'delta' => NULL,
+        'export' => NULL,
+        'entity_type' => NULL,
+        'entity_id' => NULL,
+        'field_name' => NULL,
+        'langcode' => NULL,
       ),
     ),
   );
@@ -636,6 +755,13 @@ function theme_tablefield_view($variables) {
     ),
   );
 
+  // If the user has access to the csv export option, display it now.
+  $export = '';
+  if ($variables['export'] && user_access('export tablefield')) {
+    $url = sprintf('tablefield/export/%s/%s/%s/%s/%s', $variables['entity_type'], $variables['entity_id'], $variables['field_name'], $variables['langcode'], $variables['delta']);
+    $export = '<div id="tablefield-export-link-' . $variables['delta'] . '" class="tablefield-export-link">' . l(t('Export Table Data'), $url) . '</div>';
+  }
+
   return '<div id="tablefield-wrapper-' . $variables['delta'] . '" class="tablefield-wrapper">'
     . theme('table',
       array(
@@ -644,5 +770,6 @@ function theme_tablefield_view($variables) {
         'attributes' => $attributes,
       )
     )
+    . $export
     . '</div>';
 }

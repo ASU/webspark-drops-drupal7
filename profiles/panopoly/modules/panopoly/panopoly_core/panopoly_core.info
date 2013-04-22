@@ -37,7 +37,6 @@ dependencies[] = views_autocomplete_filters
 dependencies[] = views_content
 dependencies[] = views_ui
 stylesheets[all][] = css/panopoly-fonts.css
-stylesheets[all][] = css/panopoly-modal.css
 stylesheets[all][] = css/panopoly-dropbutton.css
 features[ctools][] = panelizer:panelizer:1
 features[ctools][] = strongarm:strongarm:1
@@ -75,9 +74,9 @@ features[variable][] = panelizer_taxonomy_term:panopoly_categories_allowed_layou
 features[variable][] = panelizer_taxonomy_term:panopoly_categories_allowed_types_default
 features[views_view][] = panopoly_taxonomy
 
-; Information added by drupal.org packaging script on 2012-11-12
-version = "7.x-1.0-rc3"
+; Information added by drupal.org packaging script on 2013-04-22
+version = "7.x-1.0-rc4"
 core = "7.x"
 project = "panopoly_core"
-datestamp = "1352691202"
+datestamp = "1366630919"
 

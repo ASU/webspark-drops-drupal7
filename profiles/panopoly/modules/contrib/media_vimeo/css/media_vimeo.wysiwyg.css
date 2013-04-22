@@ -2,6 +2,10 @@
 /**
  *  @file
  *  Overlay for Vimeo thumbnails in the media library browser.
+ *
+ *  @TODO: Is this all for the Media Browser Providers logos? If so,
+ *  they've been removed in latest Media dev and this file can be removed.
+ *
  */
 #media-browser .styles-container-media_vimeo {
   /* Relative wrapper for the overlay. */

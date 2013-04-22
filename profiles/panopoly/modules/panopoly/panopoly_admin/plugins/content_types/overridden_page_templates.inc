@@ -30,6 +30,8 @@ function panopoly_admin_overridden_page_templates_content_type_render($subtype, 
     ->orderBy('pe.entity_id', 'DESC')
     ->condition('pe.entity_type', $entity_types)
     ->condition('pe.view_mode', 'page_manager')
+    ->condition('pe.did', 0, '>')
+    ->distinct()
     ->execute()
     ->fetchAll(); 
   foreach ($pages as $overridden_page) {

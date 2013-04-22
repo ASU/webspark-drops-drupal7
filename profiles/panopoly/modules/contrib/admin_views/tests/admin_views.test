@@ -86,6 +86,10 @@ class AdminViewsSystemDisplayTestCase extends AdminViewsWebTestCase {
     );
   }
 
+  function setUp() {
+    parent::setUp(array('node', 'comment', 'admin_views_test'));
+  }
+
   /**
    * Tests proper inheritance of router item properties.
    */
@@ -102,6 +106,12 @@ class AdminViewsSystemDisplayTestCase extends AdminViewsWebTestCase {
       $this->clickLink($link);
       $this->assertResponse(200);
     }
+
+    // Test that child page callbacks of a system display work.
+    $this->drupalGet('admin/content/admin_views_test');
+    $this->assertResponse(200);
+    $this->assertTitle('Administration views test | Drupal');
+    $this->assertText('Administration views test page callback');
   }
 }
 

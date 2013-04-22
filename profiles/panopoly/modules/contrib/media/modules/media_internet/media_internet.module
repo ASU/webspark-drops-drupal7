@@ -52,33 +52,6 @@ function media_internet_permission() {
  * @todo Convert the form arguments to just one array of options/parameters.
  */
 function media_internet_add($form, &$form_state = array(), $types = NULL) {
-  $form['embed_code'] = array(
-    '#type' => 'textfield',
-    '#title' => t('URL or Embed code'),
-    '#description' => t('Input a url or embed code from one of the listed providers.'),
-    '#attributes' => array('class' => array('media-add-from-url')),
-    // There is no standard specifying a maximum length for a URL. Internet
-    // Explorer supports upto 2083 (http://support.microsoft.com/kb/208427), so
-    // we assume publicly available media URLs are within this limit.
-    '#maxlength' => 2083,
-    '#required' => TRUE,
-  );
-
-
-  // @todo:
-  // Add live previews back (currently broken)
-
-  //$form['preview'] = array(
-  //  '#type' => 'item',
-  //  '#title' => t('Preview'),
-  //  '#markup' => '<div id="media-add-from-url-preview"></div>'
-  //);
-
-  $form['#validators'] = array();
-  if ($types) {
-    $form['#validators']['media_file_validate_types'] = array($types);
-  }
-
   $providers = array();
   foreach (media_internet_get_providers() as $key => $provider) {
     if (empty($provider['hidden']) || $provider['hidden'] != TRUE) {
@@ -90,14 +63,38 @@ function media_internet_add($form, &$form_state = array(), $types = NULL) {
       );
     }
   }
-  $form['providers'] = array(
-    '#theme' => 'item_list',
-    '#title' => t('Supported providers'),
-    '#items' => $providers,
-    '#attributes' => array(
-      'class' => array('media-internet-providers'),
-    ),
+
+  $form['embed_code'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Enter a URL to an image'),
+    '#description' => t('Enter a URL to an image on the web.'),
+    '#attributes' => array('class' => array('media-add-from-url')),
+    // There is no standard specifying a maximum length for a URL. Internet
+    // Explorer supports upto 2083 (http://support.microsoft.com/kb/208427), so
+    // we assume publicly available media URLs are within this limit.
+    '#maxlength' => 2083,
+    '#required' => TRUE,
   );
+
+  // If any providers are enabled it is assumed that some kind of embed is supported
+  if ($providers) {
+    $form['embed_code']['#title'] = t('Enter an image URL or an embed code');
+    $form['embed_code']['#description'] = t('Enter a URL or the embed code from a media provider.');
+
+    $form['providers'] = array(
+      '#theme' => 'item_list',
+      '#title' => t('Supported providers'),
+      '#items' => $providers,
+      '#attributes' => array(
+        'class' => array('media-internet-providers'),
+      ),
+    );
+  }
+
+  $form['#validators'] = array();
+  if ($types) {
+    $form['#validators']['media_file_validate_types'] = array($types);
+  }
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
@@ -124,10 +121,10 @@ function media_internet_add_validate($form, &$form_state) {
     $provider = media_internet_get_provider($embed_code);
     $provider->validate();
   } catch (MediaInternetNoHandlerException $e) {
-    form_set_error('url', $e->getMessage());
+    form_set_error('embed_code', $e->getMessage());
     return;
   } catch (MediaInternetValidationException $e) {
-    form_set_error('url', $e->getMessage());
+    form_set_error('embed_code', $e->getMessage());
     return;
   }
 
@@ -137,7 +134,7 @@ function media_internet_add_validate($form, &$form_state) {
     try {
       $file = $provider->getFileObject();
     } catch (Exception $e) {
-      form_set_error('url', $e->getMessage());
+      form_set_error('embed_code', $e->getMessage());
       return;
     }
 
@@ -154,7 +151,7 @@ function media_internet_add_validate($form, &$form_state) {
       else {
         $message .= ' ' . array_pop($errors);
       }
-      form_set_error('url', $message);
+      form_set_error('embed_code', $message);
       return FALSE;
     }
   }
@@ -188,12 +185,12 @@ function media_internet_add_submit($form, &$form_state) {
     $file = $provider->save();
   }
   catch (Exception $e) {
-    form_set_error('url', $e->getMessage());
+    form_set_error('embed_code', $e->getMessage());
     return;
   }
 
   if (!$file->fid) {
-    form_set_error('url', t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $embed_code)));
+    form_set_error('embed_code', t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $embed_code)));
     return;
   }
   else {

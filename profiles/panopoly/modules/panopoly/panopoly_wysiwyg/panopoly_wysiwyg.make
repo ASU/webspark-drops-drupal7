@@ -15,18 +15,21 @@ projects[wysiwyg_filter][subdir] = contrib
 
 ; The WYSIWYG Helpers
 
-projects[linkit][version] = 2.5
+projects[linkit][version] = 2.6
 projects[linkit][subdir] = contrib
+
+projects[image_resize_filter][version] = 1.13
+projects[image_resize_filter][subdir] = contrib
 
 projects[caption_filter][version] = 1.2
 projects[caption_filter][subdir] = contrib
-projects[caption_filter][patch][1432092] = http://drupal.org/files/caption-button-and-image-1432092-8_0.patch
+projects[caption_filter][patch][1432092] = http://drupal.org/files/1432092-button-and-image.patch
 
 ; Include our Editors
 
 libraries[tinymce][download][type] = get
-libraries[tinymce][download][url] = https://github.com/downloads/tinymce/tinymce/tinymce_3.5.7.zip
-libraries[tinymce][patch][1561882] = http://drupal.org/files/1561882-cirkuit-theme-tinymce-3.5.7.patch
+libraries[tinymce][download][url] = https://github.com/downloads/tinymce/tinymce/tinymce_3.5.8.zip
+libraries[tinymce][patch][1561882] = http://drupal.org/files/1561882-cirkuit-theme-tinymce-3.5.8.patch
 
 libraries[markitup][download][type] = get
 libraries[markitup][download][url] = https://github.com/markitup/1.x/tarball/master

@@ -5,6 +5,7 @@ package = Panopoly
 php = 5.2.4
 project = panopoly_wysiwyg
 dependencies[] = caption_filter
+dependencies[] = ctools
 dependencies[] = defaultconfig
 dependencies[] = features
 dependencies[] = image_resize_filter
@@ -13,7 +14,6 @@ dependencies[] = media
 dependencies[] = media_internet
 dependencies[] = media_vimeo
 dependencies[] = media_youtube
-dependencies[] = panopoly_core
 dependencies[] = strongarm
 dependencies[] = wysiwyg
 dependencies[] = wysiwyg_filter
@@ -26,13 +26,14 @@ features[features_api][] = api:1
 features[filter][] = panopoly_html_text
 features[filter][] = panopoly_wysiwyg_text
 features[linkit_profiles][] = content_editors
+features[variable][] = media__wysiwyg_allowed_types
 features[variable][] = media__wysiwyg_browser_plugins
 features[wysiwyg][] = panopoly_html_text
 features[wysiwyg][] = panopoly_wysiwyg_text
 
-; Information added by drupal.org packaging script on 2012-11-12
-version = "7.x-1.0-rc3"
+; Information added by drupal.org packaging script on 2013-04-22
+version = "7.x-1.0-rc4"
 core = "7.x"
 project = "panopoly_wysiwyg"
-datestamp = "1352691222"
+datestamp = "1366630968"
 

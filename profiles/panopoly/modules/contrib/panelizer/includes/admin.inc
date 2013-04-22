@@ -215,31 +215,6 @@ function panelizer_allowed_content_page($handler, $bundle) {
 }
 
 /**
- * Page callback to delegate to either the settings page or list page.
- */
-function panelizer_default_list_or_settings_page($handler, $bundle, $name, $view_mode) {
-  if (is_string($handler)) {
-    $handler = panelizer_entity_plugin_get_handler($handler);
-  }
-
-  // We need a version of $bundle with $view_mode but we need to retain one
-  // without it so we can pass straight $bundle to the settings page.
-  $test_bundle = $bundle;
-  if ($view_mode) {
-    $test_bundle .= '.' . $view_mode;
-  }
-
-  if ($handler->has_panel_choice($test_bundle)) {
-    // Call through to the UI switcher for the list
-    ctools_include('export-ui');
-    return panelizer_export_ui_switcher_page($handler, $test_bundle, 'panelizer_defaults', 'list');
-  }
-  else {
-    return panelizer_default_settings_page($handler, $bundle, $name, $view_mode);
-  }
-}
-
-/**
  * Page to configure basic settings for a panelizer default.
  */
 function panelizer_default_settings_page($handler, $bundle, $name, $view_mode) {
@@ -268,7 +243,6 @@ function panelizer_default_settings_page($handler, $bundle, $name, $view_mode) {
   $form_state = array(
     'panelizer' => &$panelizer,
     'no_redirect' => TRUE,
-    'reset button' => TRUE,
     'view_mode' => $mode,
   );
 
@@ -279,20 +253,13 @@ function panelizer_default_settings_page($handler, $bundle, $name, $view_mode) {
   ctools_include('common', 'panelizer');
   $output = drupal_build_form('panelizer_settings_form', $form_state);
   if (!empty($form_state['executed'])) {
-    if (empty($form_state['clicked_button']['#reset'])) {
-      ctools_include('export');
-      ctools_export_crud_save('panelizer_defaults', $panelizer);
-      drupal_set_message(t('The settings have been updated.'));
-    }
-    else {
-      panelizer_delete_panelizer_defaults($panelizer);
-      drupal_set_message(t('The panelizer settings have been reset to the default.'));
-    }
-
+    ctools_include('export');
+    ctools_export_crud_save('panelizer_defaults', $panelizer);
+    drupal_set_message(t('The settings have been updated.'));
     drupal_goto($_GET['q']);
   }
 
-  if ($view_mode) {
+  if ($view_mode && !$handler->has_panel_choice($bundle)) {
     $output = $handler->wrap_default_panelizer_pages($bundle, $output);
   }
 
@@ -354,7 +321,7 @@ function panelizer_default_context_page($handler, $bundle, $name, $view_mode) {
     drupal_goto($_GET['q']);
   }
 
-  if ($view_mode) {
+  if ($view_mode && !$handler->has_panel_choice($bundle)) {
     $output = $handler->wrap_default_panelizer_pages($bundle, $output);
   }
 
@@ -403,7 +370,7 @@ function panelizer_default_layout_page($handler, $bundle, $name, $view_mode, $st
     drupal_goto($path . '/content');
   }
 
-  if ($view_mode) {
+  if ($view_mode && !$handler->has_panel_choice($bundle)) {
     $output = $handler->wrap_default_panelizer_pages($bundle, $output);
   }
 
@@ -514,7 +481,7 @@ function panelizer_default_content_page($handler, $bundle, $name, $view_mode) {
 
   ctools_set_no_blocks(FALSE);
 
-  if ($view_mode) {
+  if ($view_mode && !$handler->has_panel_choice($bundle)) {
     $output = $handler->wrap_default_panelizer_pages($bundle, $output);
   }
 

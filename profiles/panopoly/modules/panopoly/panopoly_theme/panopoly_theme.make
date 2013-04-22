@@ -16,9 +16,9 @@ libraries[respondjs][download][url] = https://github.com/scottjehl/Respond/tarba
 projects[responsive_bartik][version] = 1.x-dev
 projects[responsive_bartik][type] = theme
 projects[responsive_bartik][download][type] = git
-projects[responsive_bartik][download][revision] = 7853fee
+projects[responsive_bartik][download][revision] = 194c16b
 projects[responsive_bartik][download][branch] = 7.x-1.x
-projects[responsive_bartik][patch][1835960] = http://drupal.org/files/1835960-no-sidebar-width-content-1.patch
+projects[responsive_bartik][patch][1966198] = http://drupal.org/files/1966198-remove-auto-width.patch
 
 ; projects[radix][version] = 1.x-dev
 ; projects[radix][type] = theme

@@ -10,9 +10,9 @@ files[] = plugins/views_plugin_access_menu.inc
 
 files[] = tests/admin_views.test
 
-; Information added by drupal.org packaging script on 2012-09-09
-version = "7.x-1.0"
+; Information added by drupal.org packaging script on 2012-12-17
+version = "7.x-1.1"
 core = "7.x"
 project = "admin_views"
-datestamp = "1347174752"
+datestamp = "1355764856"
 

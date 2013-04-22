@@ -77,13 +77,6 @@ function panopoly_users_form_alter(&$form, $form_state, $form_id) {
       $form['pass']['#description'] .= '<br>' . t('If you forgot your password, !request.', array('!request' => l('request a new password', 'user/password')));
     }
   }
-
-  // Remove the title from the user picture field
-  if ($form_id == 'user_profile_form') {
-    if (!empty($form['field_user_picture']['und'][0]['#title'])) {
-      unset($form['field_user_picture']['und'][0]['#title']);
-    }
-  }
 }
 
 /**

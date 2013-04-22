@@ -5,26 +5,6 @@
  */
 
 /**
- * Implements hook_requirements().
- */
-function panelizer_requirements($phase) {
-  $requirements = array();
-
-  if ($phase == 'runtime') {
-    $node_view = page_manager_get_task('node_view');
-    if ($node_view['disabled']) {
-      $requirements['panelizer'] = array(
-        'title' => t('Panelizer'),
-        'value' => t('You must enable the %node_view page template in <a href="@url">page manager</a> to use panelizer.', array('%node_view' => 'node_view', '@url' => url('admin/structure/pages'))),
-        'severity' => REQUIREMENT_ERROR,
-      );
-    }
-  }
-
-  return $requirements;
-}
-
-/**
  * Implements hook_schema().
  */
 function panelizer_schema() {
@@ -97,7 +77,7 @@ function panelizer_schema_1() {
       'entity_type' => array(
         'description' => 'The type of the entity this panel is attached to.',
         'type' => 'varchar',
-        'length' => 255,
+        'length' => 128,
         'not null' => TRUE,
       ),
       'entity_id' => array(
@@ -466,4 +446,20 @@ function panelizer_update_7109() {
   db_add_field('panelizer_defaults', 'extra', $extra);
   $extra = $schema['panelizer_entity']['fields']['extra'];
   db_add_field('panelizer_entity', 'extra', $extra);
+}
+
+/**
+ * Changing the size of the entity_type field of panelizer_entity.
+ */
+function panelizer_update_7110() {
+  db_drop_primary_key('panelizer_entity');
+  db_change_field('panelizer_entity', 'entity_type', 'entity_type',
+    array(
+      'description' => 'The type of the entity this panel is attached to.',
+      'type' => 'varchar',
+      'length' => 128,
+      'not null' => TRUE,
+    ),
+    array('primary key' => array('entity_type', 'entity_id', 'revision_id', 'view_mode'))
+  );
 }

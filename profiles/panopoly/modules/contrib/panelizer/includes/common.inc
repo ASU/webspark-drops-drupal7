@@ -83,6 +83,15 @@ function panelizer_settings_form($form, &$form_state) {
       '#description' => t('The CSS class to apply to this panel. You may use context substitions here.'),
     );
   }
+  else {
+    $form['css_class'] = array(
+      '#type' => 'textfield',
+      '#size' => 35,
+      '#default_value' => $panelizer->css_class,
+      '#title' => t('Body class'),
+      '#description' => t('The CSS class to apply to the BODY tag. You may use context substitions here.'),
+    );
+  }
 
   $form['css_id'] = array(
     '#type' => 'textfield',
@@ -110,14 +119,6 @@ function panelizer_settings_form($form, &$form_state) {
     '#value' => t('Save'),
   );
 
-  if (!empty($form_state['reset button'])) {
-    $form['actions']['reset'] = array(
-      '#type' => 'submit',
-      '#value' => t('Reset to default'),
-      '#reset' => TRUE,
-   );
-  }
-
   return $form;
 }
 
@@ -130,13 +131,17 @@ function panelizer_settings_form_submit(&$form, &$form_state) {
     $panelizer->no_blocks = $form_state['values']['no_blocks'];
   }
   else {
-    $panelizer->css_class = $form_state['values']['css_class'];
     $panelizer->title_element = $form_state['values']['title_element'];
   }
 
+  $panelizer->css_class = $form_state['values']['css_class'];
   $panelizer->css = $form_state['values']['css'];
   $panelizer->css_id = $form_state['values']['css_id'];
   $panelizer->pipeline = $form_state['values']['pipeline'];
+  // Behind an if because this value does not always exist.
+  if (isset($form_state['values']['link_to_entity'])) {
+    $panelizer->link_to_entity = $form_state['values']['link_to_entity'];
+  }
   if (!empty($form_state['has title'])) {
     $panelizer->title = $form_state['values']['title'];
   }
@@ -308,6 +313,24 @@ function panelizer_panelize_entity_form($form, &$form_state) {
   );
 
   return $form;
+}
+
+/**
+ * Form used when an entity is panelized and is being reset.
+ */
+function panelizer_reset_entity_form($form, &$form_state) {
+  $entity_type = $form_state['panelizer']->entity_type;
+  $entity_info = entity_get_info($entity_type);
+  $form = array();
+
+  return confirm_form(
+    $form,
+    t('Are you sure you want to reset the panelizer status for this %entity?', array('%entity' => $entity_info['label'])),
+    dirname(dirname($_GET['q'])),
+    t('This %entity will be reset to the default panelizer state, discarding any modifications made to it. This action cannot be undone.', array('%entity' => $entity_info['label'])),
+    t('Reset'),
+    t('Cancel'),
+    'panelizer_reset_entity_confirm');
 }
 
 /**

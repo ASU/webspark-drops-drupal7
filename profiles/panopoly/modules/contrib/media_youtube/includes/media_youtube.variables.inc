@@ -2,6 +2,7 @@
 
 /**
  * @file media_youtube/includes/media_youtube.variables.inc
+ *
  * Variable defaults for Media: YouTube.
  */
 
@@ -13,6 +14,18 @@
  * This is the variable namespace, automatically prepended to module variables.
  */
 define('MEDIA_YOUTUBE_NAMESPACE', 'media_youtube__');
+
+/**
+ * This is the rest point for the YouTube api.
+ *
+ * Avoid using the gdata api url when possible. Too many calls will result in
+ * throttling and 403 errors.
+ */
+define('MEDIA_YOUTUBE_REST_API', 'https://gdata.youtube.com/feeds/api/videos');
+
+/**
+ * Variable system uses Ctools Exportables.
+ */
 
 /**
  * Wrapper for variable_get() using the Media: YouTube variable registry.
@@ -33,9 +46,8 @@ define('MEDIA_YOUTUBE_NAMESPACE', 'media_youtube__');
  * @see media_youtube_variable_default()
  */
 function media_youtube_variable_get($name, $default = NULL) {
-  // Allow for an override of the default.
-  // Useful when a variable is required (like $path), but namespacing is still
-  // desired.
+  // Allow for an override of the default. Useful when a variable is required
+  // (like $path), but namespacing is still desired.
   if (!isset($default)) {
     $default = media_youtube_variable_default($name);
   }
@@ -87,7 +99,7 @@ function media_youtube_variable_del($name) {
  *
  * @param string $name
  *  Optional variable name to retrieve the default. Note that it has not yet
- *  been pre-pended with the MEDIA_YOUTUBE_NAMESPACE namespace at this time.
+ *  been prepended with the MEDIA_YOUTUBE_NAMESPACE namespace at this time.
  * @return unknown
  *  The default value of this variable, if it's been set, or NULL, unless
  *  $name is NULL, in which case we return an array of all default values.
@@ -101,20 +113,21 @@ function media_youtube_variable_default($name = NULL) {
 
   if (!isset($defaults)) {
     $defaults = array(
-      'width' => 560,
-      'height' =>340,
+      'width' => 640,
+      'height' => 390,
+      'autohide' => 2,
       'autoplay' => FALSE,
-      'related' => TRUE,
-      'hd' => FALSE,
-      'showsearch' => TRUE,
+      'color' => 'red',
+      'enablejsapi' => FALSE,
+      'loop' => FALSE,
       'modestbranding' => FALSE,
-      'showinfo'=> TRUE,
-      'version' => 3,
+      'nocookie' => FALSE,
+      'origin' => '',
+      'protocol' => 'https:',
+      'protocol_specify' => FALSE,
+      'rel' => TRUE,
+      'showinfo' => TRUE,
       'theme' => 'dark',
-      'fullscreen' => TRUE,
-      'wmode' => 'transparent',
-      'chromeless' => FALSE,
-      'preview_uri' => 'youtube://v/-jubiv7QUco',
     );
   }
 

@@ -10,6 +10,9 @@
  */
 class MediaEntityTest extends MediaTestHelper {
 
+  /**
+   * Provides test information.
+   */
   public static function getInfo() {
     return array(
       'name' => 'Media entity',
@@ -21,7 +24,7 @@ class MediaEntityTest extends MediaTestHelper {
   /**
    * Test the ability to create and query media items.
    */
-  function testQueryMedia() {
+  public function testQueryMedia() {
     $text_files = $this->drupalGetTestFiles('text');
     $images = $this->drupalGetTestFiles('image');
 
@@ -29,7 +32,7 @@ class MediaEntityTest extends MediaTestHelper {
     foreach (array_merge($text_files, $images) as $file) {
       // file_uri_to_object triggers a fatal error to d.o testbot.
       // lets remove for now..
-      //$file = file_uri_to_object($file->uri);
+      // $file = file_uri_to_object($file->uri);
       file_save($file);
     }
 

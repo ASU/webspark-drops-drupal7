@@ -79,25 +79,6 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_render($subty
       $block->title = !empty($entity->title) ? filter_xss_admin($entity->title) : '';
     }
     $block->content = fieldable_panels_panes_view($entity, $view_mode);
-
-    if (fieldable_panels_panes_access('update', $entity)) {
-      $block->admin_links[] = array(
-        'title' => t('Edit pane'),
-        'alt' => t("Edit the values in this pane"),
-        'href' => "admin/structure/fieldable-panels-panes/view/$entity->fpid/edit",
-        'query' => drupal_get_destination(),
-      );
-    }
-
-    if (module_exists('entity_translation') && entity_translation_enabled('fieldable_panels_pane') && entity_translation_tab_access($entity->bundle)) {
-      $block->admin_links[] = array(
-        'title' => t('Translate pane'),
-        'alt' => t("Translate the values in this pane"),
-        'href' => "admin/structure/fieldable-panels-panes/view/$entity->fpid/translate",
-        'query' => drupal_get_destination(),
-      );
-    }
-
     return $block;
   }
 }
@@ -207,7 +188,12 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form_sub
 
   fieldable_panels_panes_entity_edit_form_submit($form, $form_state);
   if (!empty($entity->is_new)) {
-    $entity_id = 'fpid:' . $entity->fpid;
+    if (module_exists('uuid') && isset($entity->uuid)) {
+      $entity_id = 'uuid:' . $entity->uuid;
+    }
+    else {
+      $entity_id = 'fpid:' . $entity->fpid;
+    }
 
     // @todo -- this won't work if $form_state does not contain
     // 'pane' which could theoretically happen in a non-Panels
@@ -299,7 +285,8 @@ function fieldable_panels_panes_load_entity($subtype_name) {
 function _fieldable_panels_panes_load_entity($subtype_name) {
   list($type, $id) = explode(':', $subtype_name);
   if ($type == 'uuid' && module_exists('uuid')) {
-    if ($content = entity_uuid_load('fieldable_panels_pane', array($id))) {
+    $ids = entity_get_id_by_uuid('fieldable_panels_pane', array($id));
+    if ($content = entity_load('fieldable_panels_pane', $ids)) {
       $content = reset($content);
     }
   }

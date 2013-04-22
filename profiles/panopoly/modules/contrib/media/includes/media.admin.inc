@@ -32,7 +32,7 @@ function media_import($form, &$form_state) {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Preview')
+      '#value' => t('Preview'),
     );
     $form['actions']['cancel'] = array(
       '#type' => 'link',
@@ -61,7 +61,7 @@ function media_import_validate($form, &$form_state) {
     if (!is_dir($directory)) {
       form_set_error('directory', t('The provided directory does not exist.'));
     }
-    $pattern = !empty($pattern) ? $pattern :  '*';
+    $pattern = !empty($pattern) ? $pattern : '*';
     $files = glob("$directory/$pattern");
     if (empty($files)) {
       form_set_error('pattern', t('No files were found in %directory matching %pattern', array('%directory' => $directory, '%pattern' => $pattern)));
@@ -126,10 +126,10 @@ function media_import_batch_import_files($files, &$context) {
   }
 
   $context['message'] = "Importing " . theme('item_list', array('items' => $to_process));
-  $context['message'] .= drupal_render($image_in_message); // Just for kicks, show an image we are importing
+  // Show the image that is being imported.
+  $context['message'] .= drupal_render($image_in_message);
 
   $context['finished'] = ($context['sandbox']['max'] - count($files)) / $context['sandbox']['max'];
-
 }
 
 /**
@@ -160,7 +160,9 @@ function media_admin_config_browser($form, &$form_state) {
     '#type' => 'select',
     '#title' => t('Media browser theme'),
     '#options' => $theme_options,
-    '#description' => t("This theme will be used for all media related dialogs.  It can be different from your site's theme because many site themes do not work well in the small windows which media uses."),
+    '#description' => t("This theme will be used for all media related dialogs.
+      It can be different from your site's theme because many site themes do not
+      work well in the small windows which media uses."),
     '#default_value' => media_variable_get('dialog_theme'),
   );
 
@@ -168,7 +170,11 @@ function media_admin_config_browser($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Allowed file extensions'),
     '#default_value' => media_variable_get('file_extensions'),
-    '#description' => t('File extensions which are accepted in the media browser.  Use spaces to separate (e.g. "jpg gif pdf doc"). <br/><em>Note that this can be overriden on a per-field basis when creating multimedia asset fields and files of certain extensions cannot be embedded at this time.</em>'),
+    '#description' => t('File extensions which are accepted in the media
+      browser. Use spaces to separate (for example: "jpg gif pdf doc").
+      <br/><em>Note that this can be overriden on a per-field basis when
+      creating multimedia asset fields and files of certain extensions cannot be
+      embedded at this time.</em>'),
     '#maxlength' => 255,
   );
 
@@ -219,6 +225,9 @@ function media_admin_config_browser($form, &$form_state) {
   return system_settings_form($form);
 }
 
+/**
+ * Manipulate values before form is submitted.
+ */
 function media_admin_config_browser_pre_submit(&$form, &$form_state) {
   if (!$form_state['values'][media_variable_name('dialog_theme')]) {
     media_variable_del('dialog_theme');

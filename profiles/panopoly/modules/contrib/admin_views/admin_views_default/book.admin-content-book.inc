@@ -95,6 +95,12 @@ $handler->display->display_options['style_options']['info'] = array(
   ),
 );
 $handler->display->display_options['style_options']['empty_table'] = TRUE;
+/* No results behavior: Global: Unfiltered text */
+$handler->display->display_options['empty']['area_text_custom']['id'] = 'area_text_custom';
+$handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
+$handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
+$handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
+$handler->display->display_options['empty']['area_text_custom']['content'] = 'No books available.';
 /* Relationship: Book: Top level book */
 $handler->display->display_options['relationships']['bid']['id'] = 'bid';
 $handler->display->display_options['relationships']['bid']['table'] = 'book';
@@ -351,6 +357,7 @@ $handler->display->display_options['filters']['status_1']['expose']['remember'] 
 /* Display: System */
 $handler = $view->new_display('system', 'System', 'system_1');
 $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+$handler->display->display_options['hide_admin_links'] = TRUE;
 $handler->display->display_options['defaults']['access'] = FALSE;
 $handler->display->display_options['path'] = 'admin/content/book';
 $translatables['admin_views_book'] = array(

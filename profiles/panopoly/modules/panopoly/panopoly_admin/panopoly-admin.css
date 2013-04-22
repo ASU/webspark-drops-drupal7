@@ -428,10 +428,6 @@ ul#media-browser-library-list {
   background-color: #FFF; /* makes sure that our background color is white when ajaxing in views */
 }
 
-.tabledrag-toggle-weight-wrapper {
-  display: none; /* removes the "show row weights" option. has accessibility considerations. */
-}
-
 .form-item-uid {
   position: relative; /* fixes positioning for auto complete items in firefox - http://drupal.org/node/1218684 */
 }

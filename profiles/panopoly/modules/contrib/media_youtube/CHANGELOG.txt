@@ -45,3 +45,5 @@ by aaron: Upgrade module to DRUPAL-7.
 =============
 
 by aaron: Create ResourceYouTubeStreamWrapper.inc.
+by RobW: Please read the Commit Log for further changes:
+  http://drupal.org/node/365186/commits

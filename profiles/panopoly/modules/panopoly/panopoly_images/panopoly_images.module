@@ -88,3 +88,13 @@ function panopoly_images_file_displays_alter(&$displays, &$file, &$view_mode) {
 function panopoly_images_preprocess_image_style(&$variables) {
   $variables['attributes']['class'][] = str_replace('_', '-', $variables['style_name']);
 }
+
+/**
+  * Implements hook_entity_info_alter().
+  */
+function panopoly_images_entity_info_alter(&$entity_info) {
+  $entity_info['file']['view modes']['link'] = array(
+    'label' => t('Link'),
+    'custom settings' => TRUE,
+  );
+}

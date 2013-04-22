@@ -9,17 +9,32 @@
  * Implementation of hook_install().
  */
 function panopoly_widgets_install() {
-  panopoly_widgets_save_default_file_data(drupal_get_path('module', 'panopoly_widgets') . '/default_content/vegetables-demo-image.png', 'vegetables-demo-image.png', 'image');
-  panopoly_widgets_save_default_file_data(drupal_get_path('module', 'panopoly_widgets') . '/default_content/vegetables_demo_spotlight.jpeg', 'vegetables_demo_spotlight.jpeg', 'spotlight');
-  panopoly_widgets_save_default_file_data(drupal_get_path('module', 'panopoly_widgets') . '/default_content/preview-file.txt', 'preview-file.txt', 'basic_file');
-  panopoly_widgets_save_default_video_data();
+
 }
+
 
 /**
  * Implementation of hook_uninstall().
  */
 function panopoly_widgets_uninstall() {
 
+  // Retrieve the file IDs for default files
+  $fids = array(
+    'panopoly_widgets_default_spotlight_fid' => variable_get('panopoly_widgets_default_spotlight_fid', NULL), 
+    'panopoly_widgets_default_image_fid' => variable_get('panopoly_widgets_default_image_fid', NULL), 
+    'panopoly_widgets_default_video_fid' => variable_get('panopoly_widgets_default_video_fid', NULL)
+  );
+
+  foreach($fids as $variable_name => $fid) {
+
+    // Deletes the file
+    if (!empty($fid) && $file = file_load($fid)) {
+      file_delete($file);
+    }
+
+    // Deletes the variable
+    variable_del($variable_name);
+  }
 }
 
 /**
@@ -68,12 +83,11 @@ function panopoly_widgets_field_schema($field) {
 
 /**
  * Implementation of hook_update_N().
+ *
+ * Adding the default files for images, spotlights, and files to the database
  */
 function panopoly_widgets_update_7001(&$sandbox) {
-  panopoly_widgets_save_default_file_data(drupal_get_path('module', 'panopoly_widgets') . '/default_content/vegetables-demo-image.png', 'vegetables-demo-image.png', 'image');
-  panopoly_widgets_save_default_file_data(drupal_get_path('module', 'panopoly_widgets') . '/default_content/vegetables_demo_spotlight.jpeg', 'vegetables_demo_spotlight.jpeg', 'spotlight');
-  panopoly_widgets_save_default_file_data(drupal_get_path('module', 'panopoly_widgets') . '/default_content/preview-file.txt', 'preview-file.txt', 'basic_file');
-  panopoly_widgets_save_default_video_data();
+  // This section has been removed
 }
 
 /**
@@ -93,17 +107,14 @@ function panopoly_widgets_update_7002(&$sandbox) {
  * Move video mediafield data into a file field.
  */
 function panopoly_widgets_update_7003(&$sandbox) {
-
   $results = entity_load('fieldable_panels_pane');
   foreach ($results as $entity) {
-
     foreach ($entity->field_video_video[LANGUAGE_NONE] as $f) {
       $entity->field_video_file[LANGUAGE_NONE][] = array(
         'fid' => $f['fid'],
         'display' => 1,
       );
     }
-
     $form_state['entity'] = $entity;
     $form_state['values'] = (array) $entity;
     $form_state['values']['link'] = ($form_state['values']['link'] == 0) ? NULL : $form_state['values']['link'];
@@ -119,25 +130,20 @@ function panopoly_widgets_update_7003(&$sandbox) {
  * Convert panel panes with "uuid" style subtypes into "fpid" style subtypes.
  */
 function panopoly_widgets_update_7004(&$sandbox) {
-
   $results = db_select('panels_pane', 'p')
     ->fields('p', array('pid', 'subtype'))
     ->execute()
     ->fetchAll();
-
   foreach ($results as $result) {
     if (substr($result->subtype, 0, 5) == 'uuid:') {
       $uuid = substr($result->subtype, 5);
-
       $fpid = db_select('fieldable_panels_panes', 'fpp')
         ->fields('fpp', array('fpid'))
         ->condition('uuid', $uuid)
         ->execute()
         ->fetchField();
-
       if (!empty($fpid)) {
         $subtype = "fpid:" . $fpid;
-
         db_update('panels_pane')
         ->fields(array('subtype' => $subtype))
         ->condition('pid', $result->pid)
@@ -148,54 +154,27 @@ function panopoly_widgets_update_7004(&$sandbox) {
 }
 
 /**
- * Helper function to save default file data.
+ * Implements hook_update_N().
+ *
+ * Removes the default content from the database and file system
  */
-function panopoly_widgets_save_default_file_data($filepath, $filename, $type) {
-  $fid = variable_get('panopoly_widgets_default_' . $type . '_fid', NULL);
-  if (empty($fid)) {
-    $file = fopen($filepath, 'r');
-    $file_raw = fread($file, filesize($filepath));
-    $file_entity = file_save_data($file_raw, 'public://' . $filename);
+function panopoly_widgets_update_7005(&$sandbox) {
 
-    if (!empty($file_entity->fid)) {
-      variable_set('panopoly_widgets_default_' . $type . '_fid', $file_entity->fid);
+  // Retrieve the file IDs for default files
+  $fids = array(
+    'panopoly_widgets_default_spotlight_fid' => variable_get('panopoly_widgets_default_spotlight_fid', NULL),
+    'panopoly_widgets_default_image_fid' => variable_get('panopoly_widgets_default_image_fid', NULL),
+    'panopoly_widgets_default_video_fid' => variable_get('panopoly_widgets_default_video_fid', NULL)
+  );
 
-      return $file_entity->fid;
+  foreach($fids as $variable_name => $fid) {
+
+    // Deletes the file
+    if (!empty($fid) && $file = file_load($fid)) {
+      file_delete($file);
     }
+
+    // Deletes the variable
+    variable_del($variable_name);
   }
 }
-
-/**
- * Helper function to save default video data.
- */
-function panopoly_widgets_save_default_video_data() {
-  $fid = variable_get('panopoly_widgets_default_video_fid', NULL);
-
-  if (empty($fid)) {
-
-    // Create the file object
-    $file = (object) array(
-      'uid' => 1,
-      'filename' => 'The Drupal Song Music Video',
-      'uri' => 'youtube://v/lZ-s3DRZJKY',
-      'filemime' => 'video/youtube',
-      'status' => 1,
-      'type' => 'video',
-      'filesize' => 0,
-      'timestamp' => REQUEST_TIME,
-    );
-
-    // Save the file object
-    module_invoke_all('file_presave', $file);
-    module_invoke_all('entity_presave', $file, 'file');
-    drupal_write_record('file_managed', $file);
-    module_invoke_all('file_insert', $file);
-    module_invoke_all('entity_insert', $file, 'file');
-
-    // Record the result
-    if (!empty($file->fid)) {
-      variable_set('panopoly_widgets_default_video_fid', $file->fid);
-    }
-  }
-}
-

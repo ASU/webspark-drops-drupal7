@@ -40,15 +40,15 @@ class PanelizerEntityUser extends PanelizerEntityDefault {
   public function settings_form(&$form, &$form_state) {
     parent::settings_form($form, $form_state);
 
-    if (!empty($this->plugin['bundles']['user'])) {
+    if (!empty($this->plugin['bundles']['user']['status']) && !empty($this->plugin['bundles']['user']['view modes']['page_manager']['status'])) {
       $task = page_manager_get_task('user_view');
       if (!empty($task['disabled'])) {
-        drupal_set_message('The user template page is currently not enabled in page manager. You must enable this for Panelizer to be able to panelize users.', 'warning');
+        drupal_set_message('The user template page is currently not enabled in page manager. You must enable this for Panelizer to be able to panelize users using the "Full page override" view mode.', 'warning');
       }
 
       $handler = page_manager_load_task_handler($task, '', 'user_view_panelizer');
       if (!empty($handler->disabled)) {
-        drupal_set_message('The panelizer variant on the user template page is currently not enabled in page manager. You must enable this for Panelizer to be able to panelize users.', 'warning');
+        drupal_set_message('The panelizer variant on the user template page is currently not enabled in page manager. You must enable this for Panelizer to be able to panelize users using the "Full page override" view mode.', 'warning');
       }
     }
   }
@@ -100,6 +100,19 @@ class PanelizerEntityUser extends PanelizerEntityDefault {
   public function hook_form_alter(&$form, &$form_state, $form_id) {
     if ($form_id == 'user_admin_settings') {
       $this->add_bundle_setting_form($form, $form_state, 'user', NULL);
+    }
+  }
+
+  /**
+   * Fetch the entity out of a build for hook_entity_view.
+   *
+   * @param $build
+   *   The render array that contains the entity.
+   */
+  public function get_entity_view_entity($build) {
+    $element = '#account';
+    if (isset($build[$element])) {
+      return $build[$element];
     }
   }
 

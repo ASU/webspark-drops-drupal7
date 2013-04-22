@@ -352,7 +352,7 @@ function defaultcontent_import_sort($a, $b) {
   foreach ($plugins as $plugin) {
     $cb = isset($plugin['import_sort callback']) ? $plugin['import_sort callback'] : $plugin['name'] . '_import_sort';
     if (function_exists($cb)) {
-      $cmp = $cb($a, $b);
+      $cmp = $cb($a, $b) + $cmp;
     }
   }
   return $cmp;

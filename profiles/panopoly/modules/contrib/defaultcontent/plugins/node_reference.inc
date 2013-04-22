@@ -87,10 +87,10 @@ function node_reference_import_sort($a, $b) {
       }
     }
   }
-  if (in_array($a->machine_name, $b_children) || empty($a_children)) {
+  if (in_array($a->machine_name, $b_children) && empty($a_children)) {
     return -1;
   }
-  elseif (in_array($b->machine_name, $a_children) || empty($b_children)) {
+  elseif (in_array($b->machine_name, $a_children) && empty($b_children)) {
     return 1;
   }
   else {

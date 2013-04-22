@@ -8,9 +8,9 @@ dependencies[] = uuid
 dependencies[] = entity
 
 
-; Information added by drush on 2012-11-12
+; Information added by drush on 2013-04-22
 version = "7.x-1.0-alpha3+47-dev"
 core = "7.x"
 project = "uuid"
-datestamp = "1352691799"
+datestamp = "1366645541"
 

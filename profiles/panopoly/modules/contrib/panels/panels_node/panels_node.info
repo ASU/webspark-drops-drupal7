@@ -7,9 +7,9 @@ core = 7.x
 files[] = panels_node.module
 
 
-; Information added by drush on 2012-11-12
-version = "7.x-3.3+10-dev"
+; Information added by drush on 2013-04-22
+version = "7.x-3.3+39-dev"
 core = "7.x"
 project = "panels"
-datestamp = "1352691818"
+datestamp = "1366645551"
 

@@ -4,9 +4,9 @@ package = "Panels"
 core = "7.x"
 dependencies[] = "panels"
 dependencies[] = "views"
-dependencies[] = "field_ui"
 
 files[] = includes/PanelsPaneController.class.php
+files[] = includes/translation.handler.fieldable_panels_pane.inc
 files[] = plugins/views/fieldable_panels_panes_handler_argument_bundle.inc
 files[] = plugins/views/fieldable_panels_panes_handler_field_bundle.inc
 files[] = plugins/views/fieldable_panels_panes_handler_field_delete_entity.inc
@@ -21,9 +21,10 @@ files[] = plugins/views/fieldable_panels_panes_handler_field_view_revision.inc
 files[] = plugins/views/fieldable_panels_panes_handler_field_is_current.inc
 files[] = plugins/views/fieldable_panels_panes_handler_field_make_current.inc
 
-; Information added by drupal.org packaging script on 2012-08-18
-version = "7.x-1.2"
+
+; Information added by drush on 2013-04-22
+version = "7.x-1.4+5-dev"
 core = "7.x"
 project = "fieldable_panels_panes"
-datestamp = "1345319222"
+datestamp = "1366645540"
 

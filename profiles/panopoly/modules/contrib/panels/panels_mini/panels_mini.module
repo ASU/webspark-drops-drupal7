@@ -130,8 +130,8 @@ function panels_mini_block_view($delta = 0) {
  */
 function panels_mini_block_configure($delta = 0) {
   return array(
-    'admin-shortcut' => array(
-      '#value' => l(t('Manage this mini-panel'), 'admin/structure/mini-panels/' . $delta . '/edit')
+    'admin_shortcut' => array(
+      '#markup' => l(t('Manage this mini-panel'), 'admin/structure/mini-panels/list/' . $delta . '/edit')
     ),
   );
 }
@@ -285,7 +285,8 @@ function panels_mini_load_all($reset = FALSE) {
     }
   }
 
-  return $cache;
+  // Strip out NULL entries that may have been added by panels_mini_load().
+  return array_filter($cache);
 }
 
 /**

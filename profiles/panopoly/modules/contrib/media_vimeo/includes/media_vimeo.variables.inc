@@ -101,11 +101,17 @@ function media_vimeo_variable_default($name = NULL) {
 
   if (!isset($defaults)) {
     $defaults = array(
-      'width' => 560,
-      'height' =>340,
-      'autoplay' => FALSE,
-      'fullscreen' => TRUE,
+      'width' => 640,
+      'height' =>360,
       'preview_uri' => 'vimeo://v/21869117',
+      'api' => 0,
+      'autoplay' => 0,
+      'byline' => 1,
+      'color' => NULL,
+      'loop' => 0,
+      'portrait' => 1,
+      'title' => 1,
+      'protocol' => 'http://',
     );
   }
 

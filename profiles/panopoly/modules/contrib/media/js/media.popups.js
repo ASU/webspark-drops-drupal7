@@ -305,9 +305,9 @@ Drupal.media.popups.getDialogOptions = function () {
     modal: true,
     draggable: false,
     resizable: false,
-    minWidth: 600,
-    width: 800,
-    height: 550,
+    minWidth: 500,
+    width: 670,
+    height: 280,
     position: 'center',
     overlay: {
       backgroundColor: '#000000',

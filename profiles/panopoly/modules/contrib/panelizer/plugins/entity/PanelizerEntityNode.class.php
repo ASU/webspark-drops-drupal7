@@ -59,7 +59,7 @@ class PanelizerEntityNode extends PanelizerEntityDefault {
 
     $warn = FALSE;
     foreach ($this->plugin['bundles'] as $info) {
-      if (!empty($info['status'])) {
+      if (!empty($info['status']) && !empty($info['view modes']['page_manager']['status'])) {
         $warn = TRUE;
         break;
       }
@@ -68,12 +68,12 @@ class PanelizerEntityNode extends PanelizerEntityDefault {
     if ($warn) {
       $task = page_manager_get_task('node_view');
       if (!empty($task['disabled'])) {
-        drupal_set_message('The node template page is currently not enabled in page manager. You must enable this for Panelizer to be able to panelize nodes.', 'warning');
+        drupal_set_message('The node template page is currently not enabled in page manager. You must enable this for Panelizer to be able to panelize nodes using the "Full page override" view mode.', 'warning');
       }
 
       $handler = page_manager_load_task_handler($task, '', 'node_view_panelizer');
       if (!empty($handler->disabled)) {
-        drupal_set_message('The panelizer variant on the node template page is currently not enabled in page manager. You must enable this for Panelizer to be able to panelize nodes.', 'warning');
+        drupal_set_message('The panelizer variant on the node template page is currently not enabled in page manager. You must enable this for Panelizer to be able to panelize nodes using the "Full page override" view mode.', 'warning');
       }
     }
   }
@@ -181,7 +181,7 @@ class PanelizerEntityNode extends PanelizerEntityDefault {
   /**
    * Implements hook_views_plugins_alter().
    */
-  function hook_views_plugins_alter($plugins) {
+  function hook_views_plugins_alter(&$plugins) {
     // While it would be nice to genericize this plugin, there is no
     // generic entity view. This means that to genericize it we'll still
     // need to have each entity know how to do the view individually.
@@ -197,6 +197,7 @@ class PanelizerEntityNode extends PanelizerEntityDefault {
       'uses options' => TRUE,
       'type' => 'normal',
       'register theme' => FALSE,
+      'name' => 'panelizer_node_view',
     );
   }
 }

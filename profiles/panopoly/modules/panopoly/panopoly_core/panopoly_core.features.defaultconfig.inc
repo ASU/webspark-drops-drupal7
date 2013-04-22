@@ -452,6 +452,7 @@ function panopoly_core_defaultconfig_strongarm() {
     'views_panes-panopoly_admin_media-admin_media' => 0,
     'views_panes-panopoly_admin_users-admin_users' => 0,
     'views_panes-panopoly_taxonomy-taxonomy_content' => 0,
+    'block-shortcut-shortcuts' => 0,
   );
   $export['panels_page_allowed_types'] = $strongarm;
 
@@ -467,10 +468,10 @@ function panopoly_core_defaultconfig_strongarm() {
     'menu_tree' => 'menu_tree',
     'views_panes' => 'views_panes',
     'other' => 'other',
-    'token' => 0,
-    'entity_form_field' => 0,
-    'custom' => 0,
-    'block' => 0,
+    'token' => 'token',
+    'entity_form_field' => 'entity_form_field',
+    'custom' => 'custom',
+    'block' => 'block',
   );
   $export['panels_page_default'] = $strongarm;
 

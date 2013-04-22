@@ -8,7 +8,7 @@
 $items = array();
 foreach($element as $key => $value) {
   if (is_numeric($key)) {
-    $items[] = $value['#markup'];
+    $items[] = render($value);
    }
 }
 print theme('item_list', array('items' => $items));

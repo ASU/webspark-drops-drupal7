@@ -240,7 +240,15 @@ function panelizer_panelizer_task_render($handler, $base_contexts, $args, $test 
   $address = implode('::', array('page_manager', $handler->task, $handler->subtask, $handler->name, implode('..', $args)));
 
   if ($entity_handler = panelizer_entity_plugin_get_handler($entity_type)) {
-    return $entity_handler->render_entity($context->data, 'page_manager', NULL, $args, $address);
+    $info = $entity_handler->render_entity($context->data, 'page_manager', NULL, $args, $address);
+
+    // Remove and add body element classes
+    $panel_body_css = &drupal_static('panel_body_css');
+    if (!empty($info['classes_array']) && !isset($panel_body_css['body_classes_to_add'])) {
+      $panel_body_css['body_classes_to_add'] = implode(' ', $info['classes_array']);
+    }
+
+    return $info;
   }
 }
 
@@ -265,7 +273,23 @@ function panelizer_panelizer_task_test($handler, $base_contexts) {
   }
 
   $entity = &$context->data;
-  return !empty($entity->panelizer['page_manager']->display);
+  // Fail if there isn't a panelizer object on the entity.
+  if (empty($entity->panelizer['page_manager']->display)) {
+    return;
+  }
+
+  $panelizer = $entity->panelizer['page_manager'];
+  $entity_type = !empty($panelizer->entity_type) ? $panelizer->entity_type : $panelizer->panelizer_type;
+
+  $panelizer_handler = panelizer_entity_plugin_get_handler($entity_type);
+  if (!$panelizer_handler) {
+    return;
+  }
+
+  list($entity_id, $revision_id, $bundle) = entity_extract_ids($entity_type, $entity);
+
+  // Make sure the bundle + view mode is actually panelized!
+  return $panelizer_handler->is_panelized($bundle . '.page_manager');
 }
 
 function panelizer_panelizer_task_get_addressable($task, $subtask_name, $handler, $address, $contexts, $arguments, $type) {

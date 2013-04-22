@@ -6,7 +6,7 @@
  */
 
 /**
- * Implementation of WYSIWYG's hook_INCLUDE_plugin().
+ * Implements WYSIWYG's hook_INCLUDE_plugin().
  */
 function media_media_plugin() {
   // Include the required browser JS.
@@ -15,7 +15,7 @@ function media_media_plugin() {
   // @see http://drupal.org/node/1039076
   media_include_browser_js();
 
-  // Plugin definition
+  // Plugin definition.
   $plugins['media'] = array(
     'title' => media_variable_get('wysiwyg_title'),
     'vendor url' => 'http://drupal.org/project/media',
@@ -59,7 +59,8 @@ function media_include_browser_js() {
       // Since the arguments to pass are variable, use call_user_func_array().
       // This will not handle all potential drupal_add_*() functions directly
       // but covers the js and library needed here, which are unlikely to be
-      // expanded since this function is only a workaround for a wysiwyg limitation.
+      // expanded since this function is only a workaround for a wysiwyg
+      // limitation.
       call_user_func_array($function, $definition);
     }
   }

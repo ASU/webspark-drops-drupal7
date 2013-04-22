@@ -308,6 +308,7 @@ $handler->display->display_options['filters']['rid']['expose']['remember'] = TRU
 /* Display: System */
 $handler = $view->new_display('system', 'System', 'system_1');
 $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+$handler->display->display_options['hide_admin_links'] = TRUE;
 $handler->display->display_options['defaults']['access'] = FALSE;
 $handler->display->display_options['path'] = 'admin/people';
 $translatables['admin_views_user'] = array(

@@ -10,7 +10,7 @@
 function fieldable_panels_panes_views_default_views() {
   $views = array();
 
-  $view = new view;
+  $view = new view();
   $view->name = 'fieldable_pane_entities';
   $view->description = 'Administrative view to show a list of fieldable pane entities and administer them.';
   $view->tag = 'default';
@@ -22,12 +22,17 @@ function fieldable_panels_panes_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['query_comment'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '50';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
     'bundle' => 'bundle',
@@ -100,17 +105,12 @@ function fieldable_panels_panes_views_default_views() {
       'empty_column' => 0,
     ),
   );
-  $handler->display->display_options['style_options']['override'] = 1;
-  $handler->display->display_options['style_options']['sticky'] = 0;
-  $handler->display->display_options['style_options']['empty_table'] = 0;
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
-  $handler->display->display_options['empty']['area']['empty'] = FALSE;
   $handler->display->display_options['empty']['area']['content'] = 'There are currently no entities of this type.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
-  $handler->display->display_options['empty']['area']['tokenize'] = 0;
   /* Field: Fieldable pane: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'fieldable_panels_panes';
@@ -148,10 +148,9 @@ function fieldable_panels_panes_views_default_views() {
   $handler->display->display_options['arguments']['bundle']['table'] = 'fieldable_panels_panes';
   $handler->display->display_options['arguments']['bundle']['field'] = 'bundle';
   $handler->display->display_options['arguments']['bundle']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['bundle']['default_argument_skip_url'] = 0;
   $handler->display->display_options['arguments']['bundle']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['bundle']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['bundle']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['bundle']['summary_options']['items_per_page'] = '50';
   $translatables['fieldable_pane_entities'] = array(
     t('Master'),
     t('more'),
@@ -163,6 +162,10 @@ function fieldable_panels_panes_views_default_views() {
     t('Items per page'),
     t('- All -'),
     t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
     t('There are currently no entities of this type.'),
     t('Title'),
     t('Reusable'),
@@ -176,7 +179,7 @@ function fieldable_panels_panes_views_default_views() {
   );
   $views['fieldable_pane_entities'] = $view;
 
-  $view = new view;
+  $view = new view();
   $view->name = 'fieldable_pane_entity_revisions';
   $view->description = 'Administrative view to show a list of revisions of a fieldable pane entity and administer them.';
   $view->tag = 'default';
@@ -188,12 +191,17 @@ function fieldable_panels_panes_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['query_comment'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '50';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
     'log' => 'log',
@@ -254,127 +262,41 @@ function fieldable_panels_panes_views_default_views() {
       'empty_column' => 0,
     ),
   );
-  $handler->display->display_options['style_options']['override'] = 1;
-  $handler->display->display_options['style_options']['sticky'] = 0;
-  $handler->display->display_options['style_options']['empty_table'] = 0;
   /* Relationship: Fieldable pane (historical data): Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'fieldable_panels_panes_revision';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['required'] = 0;
   /* Field: Fieldable pane (historical data): Log message */
   $handler->display->display_options['fields']['log']['id'] = 'log';
   $handler->display->display_options['fields']['log']['table'] = 'fieldable_panels_panes_revision';
   $handler->display->display_options['fields']['log']['field'] = 'log';
-  $handler->display->display_options['fields']['log']['alter']['alter_text'] = 0;
-  $handler->display->display_options['fields']['log']['alter']['make_link'] = 0;
-  $handler->display->display_options['fields']['log']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['log']['alter']['external'] = 0;
-  $handler->display->display_options['fields']['log']['alter']['replace_spaces'] = 0;
-  $handler->display->display_options['fields']['log']['alter']['trim_whitespace'] = 0;
-  $handler->display->display_options['fields']['log']['alter']['nl2br'] = 0;
-  $handler->display->display_options['fields']['log']['alter']['word_boundary'] = 1;
-  $handler->display->display_options['fields']['log']['alter']['ellipsis'] = 1;
-  $handler->display->display_options['fields']['log']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['log']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['log']['alter']['html'] = 0;
-  $handler->display->display_options['fields']['log']['element_label_colon'] = 1;
-  $handler->display->display_options['fields']['log']['element_default_classes'] = 1;
   $handler->display->display_options['fields']['log']['empty'] = 'No log message.';
-  $handler->display->display_options['fields']['log']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['log']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['log']['hide_alter_empty'] = 0;
+  $handler->display->display_options['fields']['log']['hide_alter_empty'] = FALSE;
   /* Field: User: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'users';
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['relationship'] = 'uid';
   $handler->display->display_options['fields']['name']['label'] = 'Author';
-  $handler->display->display_options['fields']['name']['alter']['alter_text'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['make_link'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['external'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['replace_spaces'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['trim_whitespace'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['nl2br'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['word_boundary'] = 1;
-  $handler->display->display_options['fields']['name']['alter']['ellipsis'] = 1;
-  $handler->display->display_options['fields']['name']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['html'] = 0;
-  $handler->display->display_options['fields']['name']['element_label_colon'] = 1;
-  $handler->display->display_options['fields']['name']['element_default_classes'] = 1;
-  $handler->display->display_options['fields']['name']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['name']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['name']['hide_alter_empty'] = 0;
-  $handler->display->display_options['fields']['name']['link_to_user'] = 1;
-  $handler->display->display_options['fields']['name']['overwrite_anonymous'] = 0;
-  $handler->display->display_options['fields']['name']['format_username'] = 1;
+  $handler->display->display_options['fields']['name']['hide_alter_empty'] = FALSE;
   /* Field: Fieldable pane (historical data): Created date */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'fieldable_panels_panes_revision';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['alter']['alter_text'] = 0;
-  $handler->display->display_options['fields']['timestamp']['alter']['make_link'] = 0;
-  $handler->display->display_options['fields']['timestamp']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['timestamp']['alter']['external'] = 0;
-  $handler->display->display_options['fields']['timestamp']['alter']['replace_spaces'] = 0;
-  $handler->display->display_options['fields']['timestamp']['alter']['trim_whitespace'] = 0;
-  $handler->display->display_options['fields']['timestamp']['alter']['nl2br'] = 0;
-  $handler->display->display_options['fields']['timestamp']['alter']['word_boundary'] = 1;
-  $handler->display->display_options['fields']['timestamp']['alter']['ellipsis'] = 1;
-  $handler->display->display_options['fields']['timestamp']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['timestamp']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['timestamp']['alter']['html'] = 0;
-  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = 1;
-  $handler->display->display_options['fields']['timestamp']['element_default_classes'] = 1;
-  $handler->display->display_options['fields']['timestamp']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['timestamp']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['timestamp']['hide_alter_empty'] = 0;
+  $handler->display->display_options['fields']['timestamp']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'short';
   /* Field: Fieldable pane (historical data): Is current */
   $handler->display->display_options['fields']['is_current']['id'] = 'is_current';
   $handler->display->display_options['fields']['is_current']['table'] = 'fieldable_panels_panes_revision';
   $handler->display->display_options['fields']['is_current']['field'] = 'is_current';
-  $handler->display->display_options['fields']['is_current']['alter']['alter_text'] = 0;
-  $handler->display->display_options['fields']['is_current']['alter']['make_link'] = 0;
-  $handler->display->display_options['fields']['is_current']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['is_current']['alter']['external'] = 0;
-  $handler->display->display_options['fields']['is_current']['alter']['replace_spaces'] = 0;
-  $handler->display->display_options['fields']['is_current']['alter']['trim_whitespace'] = 0;
-  $handler->display->display_options['fields']['is_current']['alter']['nl2br'] = 0;
-  $handler->display->display_options['fields']['is_current']['alter']['word_boundary'] = 1;
-  $handler->display->display_options['fields']['is_current']['alter']['ellipsis'] = 1;
-  $handler->display->display_options['fields']['is_current']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['is_current']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['is_current']['alter']['html'] = 0;
-  $handler->display->display_options['fields']['is_current']['element_label_colon'] = 1;
-  $handler->display->display_options['fields']['is_current']['element_default_classes'] = 1;
-  $handler->display->display_options['fields']['is_current']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['is_current']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['is_current']['hide_alter_empty'] = 0;
+  $handler->display->display_options['fields']['is_current']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['is_current']['current_text'] = ' <em>(is current)</em>';
   /* Field: Fieldable pane (historical data): Administrative link */
   $handler->display->display_options['fields']['view_revision']['id'] = 'view_revision';
   $handler->display->display_options['fields']['view_revision']['table'] = 'fieldable_panels_panes_revision';
   $handler->display->display_options['fields']['view_revision']['field'] = 'view_revision';
   $handler->display->display_options['fields']['view_revision']['label'] = 'Operations';
-  $handler->display->display_options['fields']['view_revision']['alter']['alter_text'] = 0;
-  $handler->display->display_options['fields']['view_revision']['alter']['make_link'] = 0;
-  $handler->display->display_options['fields']['view_revision']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['view_revision']['alter']['replace_spaces'] = 0;
-  $handler->display->display_options['fields']['view_revision']['alter']['trim_whitespace'] = 0;
-  $handler->display->display_options['fields']['view_revision']['alter']['nl2br'] = 0;
-  $handler->display->display_options['fields']['view_revision']['alter']['word_boundary'] = 1;
-  $handler->display->display_options['fields']['view_revision']['alter']['ellipsis'] = 1;
-  $handler->display->display_options['fields']['view_revision']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['view_revision']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['view_revision']['alter']['html'] = 0;
-  $handler->display->display_options['fields']['view_revision']['element_label_colon'] = 1;
-  $handler->display->display_options['fields']['view_revision']['element_default_classes'] = 1;
-  $handler->display->display_options['fields']['view_revision']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['view_revision']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['view_revision']['hide_alter_empty'] = 0;
+  $handler->display->display_options['fields']['view_revision']['hide_alter_empty'] = FALSE;
   /* Field: Fieldable pane (historical data): Administrative edit link */
   $handler->display->display_options['fields']['edit_revision']['id'] = 'edit_revision';
   $handler->display->display_options['fields']['edit_revision']['table'] = 'fieldable_panels_panes_revision';
@@ -399,12 +321,34 @@ function fieldable_panels_panes_views_default_views() {
   $handler->display->display_options['arguments']['fpid']['field'] = 'fpid';
   $handler->display->display_options['arguments']['fpid']['default_action'] = 'not found';
   $handler->display->display_options['arguments']['fpid']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['fpid']['default_argument_skip_url'] = 0;
   $handler->display->display_options['arguments']['fpid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['fpid']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['fpid']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['fpid']['break_phrase'] = 0;
-  $handler->display->display_options['arguments']['fpid']['not'] = 0;
+  $handler->display->display_options['arguments']['fpid']['summary_options']['items_per_page'] = '50';
+  $translatables['fieldable_pane_entity_revisions'] = array(
+    t('Master'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
+    t('author'),
+    t('Log message'),
+    t('No log message.'),
+    t('Author'),
+    t('Created date'),
+    t('Is current'),
+    t(' <em>(is current)</em>'),
+    t('Operations'),
+    t('All'),
+  );
   $views['fieldable_pane_entity_revisions'] = $view;
 
   return $views;

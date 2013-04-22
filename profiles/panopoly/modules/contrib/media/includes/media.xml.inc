@@ -1,23 +1,24 @@
 <?php
 
 /**
- *  @file
- *  XML data retrieval and storage API for Media.
+ * @file
+ * XML data retrieval and storage API for Media.
  */
 
 /**
- *  A wrapper around simplexml to retrieve a given XML file.
+ * A wrapper around simplexml to retrieve a given XML file.
  *
- *  @param $url
- *    The URL to the XML to retrieve.
- *  @param $display_errors
- *    Optional; if TRUE, then we'll display errors to the end user. They'll be
- *    logged to the watchdog in any case.
- *  @param $refresh
- *    Optional; if TRUE, then we'll force a new load of the XML. Otherwise,
- *    a cached version will be retrieved if possible.
- *  @return
- *    A fully populated object, or FALSE on an error.
+ * @param string $url
+ *   The URL to the XML to retrieve.
+ * @param bool $display_errors
+ *   Optional; if TRUE, then we'll display errors to the end user. They'll be
+ *   logged to the watchdog in any case.
+ * @param bool $refresh
+ *   Optional; if TRUE, then we'll force a new load of the XML. Otherwise,
+ *   a cached version will be retrieved if possible.
+ *
+ * @return object
+ *   A fully populated object, or FALSE on an error.
  */
 function _media_retrieve_xml($url, $display_errors = FALSE, $refresh = FALSE) {
   $xmls = &drupal_static(__FUNCTION__, array());
@@ -34,7 +35,7 @@ function _media_retrieve_xml($url, $display_errors = FALSE, $refresh = FALSE) {
   // Enable user error handling.
   libxml_use_internal_errors(TRUE);
 
-  // Load the document
+  // Load the document.
   $result = drupal_http_request($url);
   $xml = simplexml_load_string($result->data);
 
@@ -64,9 +65,10 @@ function _media_retrieve_xml($url, $display_errors = FALSE, $refresh = FALSE) {
 }
 
 /**
- *  Recursively converts a SimpleXMLElement object into an array.
- *  @param $xml
- *    The original XML object.
+ * Recursively converts a SimpleXMLElement object into an array.
+ *
+ * @param object $xml
+ *   The original XML object.
  */
 function _media_unserialize_xml($xml) {
   if ($xml instanceof SimpleXMLElement) {

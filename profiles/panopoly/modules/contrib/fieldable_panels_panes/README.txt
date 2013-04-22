@@ -12,7 +12,7 @@ function MYMODULE_entity_info_alter(&$entity_info) {
     'pane icon' => '/path/to/custom/icon/for/this/pane.png',
     'admin' => array(
       'path' => 'admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type',
-      'bundle argument' => 5,
+      'bundle argument' => 4,
       // Note that this has all _ replaced with - from the bundle name.
       'real path' => 'admin/structure/fieldable-panels-panes/manage/my-bundle-name',
       'access arguments' => array('administer fieldable panels panes'),
@@ -20,7 +20,7 @@ function MYMODULE_entity_info_alter(&$entity_info) {
   );
 }
 
-Fields are then added to your bundle as normal through the Manage Fields and 
+Fields are then added to your bundle as normal through the Manage Fields and
 Display Fields tabs in the UI.
 
 You can use this hook to rename or remove the default bundle but remember that

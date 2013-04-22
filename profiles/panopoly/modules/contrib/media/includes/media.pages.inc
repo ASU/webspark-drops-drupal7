@@ -5,35 +5,16 @@
  * Common pages for the Media module.
  */
 
-/**
- *  Menu callback; display a thumbnail for an AJAX preview.
- */
-function media_preview_ajax() {
-  $url = $_GET['url'];
-  $uri = media_parse_to_uri($url);
-  if ($uri) {
-    $file = file_uri_to_object($uri);
-    drupal_json_output(array(
-      'preview' => theme('media_admin_thumbnail', array('file' => $file)),
-    ));
-  }
-  else {
-    drupal_json_output(array(
-      'error' => t('Invalid URL.'),
-    ));
-  }
-  die();
-}
 
 /**
  * Menu callback; Edit multiple files on the same page using multiform module.
  *
+ * @todo When http://drupal.org/node/1227706 is fixed, filter the $files
+ * array using file_access($file, 'edit').
+ *
  * @see media_file_operation_edit_multiple()
  */
 function media_file_page_edit_multiple($files) {
-  // @todo When http://drupal.org/node/1227706 is fixed, filter the $files
-  // array using file_access($file, 'edit').
-
   if (empty($files)) {
     return MENU_ACCESS_DENIED;
   }
@@ -90,7 +71,7 @@ function media_file_edit_modal($form, &$form_state, $file, $js) {
     $commands = $output;
 
     if ($form_state['executed']) {
-      $commands[] = ctools_modal_command_dismiss(t('File saved'));
+      $commands = array(ctools_modal_command_dismiss(t('File saved')));
     }
 
     print ajax_render($commands);

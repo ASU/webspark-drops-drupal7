@@ -36,6 +36,21 @@ function menu_item_export_alter(&$node, &$export) {
 }
 
 /**
+ * Handles a sort to insure that parent menu links are imported first.
+ */
+function menu_item_import_sort($a, $b) {
+  if (!empty($a->link['has_children']) && empty($b->link['has_children'])) {
+    return -1;
+  }
+  elseif (!empty($b->link['has_children']) && empty($a->link['has_children'])) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+/**
  * Handles the importing of menu item after the node is loaded
  *
  * Convert the menu item path from machine to nid and save

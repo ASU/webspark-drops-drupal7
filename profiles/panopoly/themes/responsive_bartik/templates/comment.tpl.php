@@ -59,7 +59,7 @@
 ?>
 <article class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
 
-  <header class="attribution">
+  <footer class="attribution">
 
     <?php print $picture; ?>
 
@@ -74,7 +74,7 @@
         <?php print $permalink; ?>
       </p>
     </div>
-  </header>
+  </footer>
 
   <div class="comment-text">
     <div class="comment-arrow"></div>

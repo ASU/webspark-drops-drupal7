@@ -1,5 +1,10 @@
 api = 2
 core = 7.x
-projects[drupal][version] = 7.17
-includes[] = drupal-org-core.make
-includes[] = drupal-org.make
+
+; Drupal
+projects[drupal][version] = 7.22
+
+; Panopoly
+projects[panopoly][type] = profile 
+projects[panopoly][download][type] = git
+projects[panopoly][download][branch] = 7.x-1.x

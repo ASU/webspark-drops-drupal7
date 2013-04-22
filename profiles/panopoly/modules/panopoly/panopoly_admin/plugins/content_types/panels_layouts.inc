@@ -6,8 +6,8 @@
  */
 
 $plugin = array(
-  'title' => t('Default Panels Layouts'),
-  'description' => t('This is list of the custom layouts your modules and themes provide.'),
+  'title' => t('Panels Layouts'),
+  'description' => t('This is list of the panels layouts your modules and themes provide.'),
   'content_types' => array('panels_layouts'),
   'category' => t('Admin'),
   'required context' => new ctools_context_required(t('Panopoly Admin'), 'string'),
@@ -19,18 +19,39 @@ $plugin = array(
   */
 function panopoly_admin_panels_layouts_content_type_render($subtype, $conf, $panel_args, $context) {
 
-  // Find all the Panopoly layouts
+  // Find all the Panels layouts
   $layout_options = array();
   $panels_page_allowed_layouts = unserialize(variable_get('panels_page_allowed_layouts'));
   foreach (panels_get_layouts() as $layout_option) {
-    if ($layout_option['category'] !== 'Panopoly' && $layout_option['module'] == 'panels' && (empty($layout_option['builder']) || $layout_option['builder'] == FALSE) && !in_array($layout_option['theme'], array('panels_flexible', 'layout_responsive'))) {
+    if (empty($layout_option['builder']) || $layout_option['builder'] == FALSE) {
+
+      // Determine the type of panels layout
+      if ($layout_option['module'] == 'panels') {
+        if (!in_array($layout_option['theme'], array('panels_flexible', 'layout_responsive'))) {
+          $layout_type = t('Default (Panels)');
+        } 
+        else if ($layout_option['theme'] == 'panels_flexible') {
+          $layout_type = t('Custom (Flexible)');
+        }
+        else if ($layout_option['theme'] == 'layout_responsive') {
+          $layout_type = t('Custom (Responsive)');
+        }
+      }
+      else if ($layout_option['category'] == 'Panopoly') {
+        $layout_type = t('Default (Panopoly)');
+      }
+      else {
+        $layout_type = 'Custom (Code)';
+      }
+
       $layout_name = $layout_option['name'];
-      $layout_status = ($panels_page_allowed_layouts->allowed_layout_settings[$layout_name]) ? _panopoly_admin_general_layout_get_status($layout_name, 'enable') : _panopoly_admin_general_layout_get_status($layout_name, 'disable');
-      $layout_options[] = array(
+      $layout_status = (!empty($panels_page_allowed_layouts->allowed_layout_settings[$layout_name])) ? _panopoly_admin_general_layout_get_status($layout_name, 'enable') : _panopoly_admin_general_layout_get_status($layout_name, 'disable');
+      $layout_options[$layout_option['title'] . '::' . $layout_option['category']] = array(
         'data' => array(
           theme('image', array('path' => $layout_option['path'] . '/' . $layout_option['icon'])),
           $layout_option['title'],
           $layout_option['category'],
+          $layout_type,
           $layout_status,
         ),
       );
@@ -39,9 +60,9 @@ function panopoly_admin_panels_layouts_content_type_render($subtype, $conf, $pan
 
   // Create the Output
   $pane = new stdClass();
-  $pane->title = t('Default Panels Layouts');
+  ksort($layout_options);
   if (!empty($layout_options)) {
-    $header = array(array('data' => '', 'style' => 'width: 30px'), t('Title'), t('Category'), t('Status'));
+    $header = array(array('data' => '', 'style' => 'width: 30px'), t('Title'), t('Category'), t('Type'), t('Status'));
     $pane->content = theme('table', array('header' => $header, 'rows' => $layout_options, 'attributes' => array('class' => array('panels-layouts'))));
   }
   else {

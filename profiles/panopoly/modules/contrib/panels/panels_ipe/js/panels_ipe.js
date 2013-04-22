@@ -15,9 +15,11 @@ Drupal.PanelsIPE = {
     $('a.pane-delete:not(.pane-delete-processed)', context)
       .addClass('pane-delete-processed')
       .click(function() {
-        if (confirm('Remove this pane?')) {
+        if (confirm(Drupal.t('Remove this pane?'))) {
           $(this).parents('div.panels-ipe-portlet-wrapper').fadeOut('medium', function() {
+            var $sortable = $(this).closest('.ui-sortable');
             $(this).empty().remove();
+            $sortable.trigger('sortremove');
           });
           $(this).parents('div.panels-ipe-display-container').addClass('changed');
         }
@@ -344,11 +346,19 @@ $(function() {
       Drupal.PanelsIPE.editors[data.key].initEditing(data.data);
       Drupal.PanelsIPE.editors[data.key].lockPath = data.lockPath;
     }
+    Drupal.attachBehaviors();
+
   };
 
   Drupal.ajax.prototype.commands.IPEsetLockState = function(ajax, data, status) {
     if (Drupal.PanelsIPE.editors[data.key]) {
       Drupal.PanelsIPE.editors[data.key].lockPath = data.lockPath;
+    }
+  };
+
+  Drupal.ajax.prototype.commands.addNewPane = function(ajax, data, status) {
+    if (Drupal.PanelsIPE.editors[data.key]) {
+      Drupal.PanelsIPE.editors[data.key].changed = true;
     }
   };
 
@@ -382,6 +392,11 @@ $(function() {
    */
   Drupal.ajax.prototype.ipeReplacedEventResponse = Drupal.ajax.prototype.eventResponse;
   Drupal.ajax.prototype.eventResponse = function (element, event) {
+    if (element.ipeCancelThis) {
+      element.ipeCancelThis = null;
+      return false;
+    }
+
     if ($(this.element).attr('id') == 'panels-ipe-cancel') {
       if (!Drupal.PanelsIPE.editors[this.element_settings.ipe_cache_key].cancelEditing()) {
         return false;
@@ -414,7 +429,7 @@ $(function() {
 
   Drupal.ajax.prototype.ipeReplacedBeforeSerialize = Drupal.ajax.prototype.beforeSerialize;
   Drupal.ajax.prototype.beforeSerialize = function (element_settings, options) {
-    if ($(this.element).attr('id') == 'panels-ipe-save') {
+    if ($(this.element).hasClass('panels-ipe-save')) {
       Drupal.PanelsIPE.editors[this.element_settings.ipe_cache_key].saveEditing();
     };
     return this.ipeReplacedBeforeSerialize(element_settings, options);

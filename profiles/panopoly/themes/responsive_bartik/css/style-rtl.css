@@ -280,6 +280,11 @@ ul.action-links li a {
   left: 0;
 }
 
+/* ---------- Menu toggle link ----------- */
+a#menu-toggle {
+  text-align: left;
+}
+
 /* ----------- media queries ------------------------------- */
 
 @media all and (min-width: 461px) and (max-width: 900px) {

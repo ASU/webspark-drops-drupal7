@@ -292,12 +292,14 @@ $handler->display->display_options['filters']['status']['expose']['remember'] = 
 /* Display: Comments */
 $handler = $view->new_display('system', 'Comments', 'system_1');
 $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+$handler->display->display_options['hide_admin_links'] = TRUE;
 $handler->display->display_options['defaults']['access'] = FALSE;
 $handler->display->display_options['path'] = 'admin/content/comment';
 
 /* Display: Unpublished */
 $handler = $view->new_display('system', 'Unpublished', 'system_2');
 $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+$handler->display->display_options['hide_admin_links'] = TRUE;
 $handler->display->display_options['defaults']['access'] = FALSE;
 $handler->display->display_options['defaults']['filter_groups'] = FALSE;
 $handler->display->display_options['defaults']['filters'] = FALSE;

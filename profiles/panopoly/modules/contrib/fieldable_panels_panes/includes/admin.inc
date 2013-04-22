@@ -246,4 +246,3 @@ function fieldable_panels_panes_entity_make_current_page($entity) {
   drupal_set_message(t('The revision has been made current.'));
   drupal_goto("admin/structure/fieldable-panels-panes/view/$entity->fpid");
 }
-

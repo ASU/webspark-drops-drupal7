@@ -64,13 +64,6 @@ function fieldable_panels_panes_schema() {
         'description' => 'The category it will appear in the Add Content dialog under.',
         'type' => 'text',
       ),
-      'language' => array(
-        'description' => 'The language of this entity.',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-      ),
       'view_access' => array(
         'type' => 'text',
         'size' => 'big',
@@ -102,6 +95,13 @@ function fieldable_panels_panes_schema() {
         'length' => 36,
         'default' => '',
         'description' => 'The Universally Unique Identifier.',
+      ),
+      'language' => array(
+        'description' => 'The {languages}.language of this entity.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
       ),
     ),
     'primary key' => array('fpid'),
@@ -162,6 +162,10 @@ function fieldable_panels_panes_schema() {
     ),
   );
 
+  // Optional cache table for entitycache support.
+  $schema['cache_entity_fieldable_panels_pane'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_entity_fieldable_panels_pane']['description'] = 'Cache table used to store fieldable_panels_pane entity records.';
+
   return $schema;
 }
 
@@ -218,23 +222,29 @@ function fieldable_panels_panes_update_7105() {
   db_add_field('fieldable_panels_panes', 'path', array('type' => 'varchar', 'length' => 255, 'description' => 'The path the title should link to.'));
 }
 
-/*
+/**
  * Add language column.
  */
-function fieldable_panels_panes_update_7106(&$sandbox) {
-  $table = 'fieldable_panels_panes';
-  $field = 'language';
-
-  if (!db_field_exists($table, $field)) {
-    $schema = drupal_get_schema($table, TRUE);
-    db_add_field($table, $field, $schema['fields'][$field]);
-
-    db_update($table)
-      ->fields(array($field => LANGUAGE_NONE))
-      ->execute();
-
-    return t("Added $table.language field.");
+function fieldable_panels_panes_update_7106() {
+  // Make sure to add language field
+  if (!db_field_exists('fieldable_panels_panes', 'language')) {
+    db_add_field('fieldable_panels_panes', 'language', array(
+      'description' => 'The {languages}.language of this entity.',
+      'type' => 'varchar',
+      'length' => 12,
+      'not null' => TRUE,
+      'default' => '',
+    ));
   }
+}
 
-  return t("$table.language field already exists, updated skipped.");
+/**
+ * Add cache table for optional entitycache support.
+ */
+function fieldable_panels_panes_update_7107() {
+  if (!db_table_exists('cache_entity_fieldable_panels_pane')) {
+    $schema = drupal_get_schema_unprocessed('system', 'cache');
+    $schema['description'] = 'Cache table used to store fieldable_panel_pane entity records.';
+    db_create_table('cache_entity_fieldable_panels_pane', $schema);
+  }
 }
