@@ -15,15 +15,27 @@ function openasu_bootstrap_form_system_theme_settings_alter(&$form, &$form_state
     '#type' => 'fieldset',
   );
 
-  $form['theme_configuration']['asu_brand_header_template'] = array(
+  $form['theme_configuration']['asu_brand_header_selector'] = array(
     '#title' => t('Color Scheme'),
     '#type' => 'radios',
     '#options' => array(
       'default' => t('Gold'),
       'default_maroon' => t('Maroon'),
       'default_white' => t('White'),
+      'custom' => t('Custom'),
     ),
-    '#default_value' => variable_get('asu_brand_header_template', ASU_BRAND_HEADER_TEMPLATE_DEFAULT),
+    '#default_value' => variable_get('asu_brand_header_selector', ASU_BRAND_HEADER_TEMPLATE_DEFAULT),
+  );
+  
+  $form['theme_configuration']['asu_brand_header_template'] = array(
+    '#title' => t('Enter Custom Template Key'),
+    '#type' => 'textfield',
+    '#states' => array(
+     'visible' => array(
+       ':input[name="asu_brand_header_selector"]' => array('value' => 'custom'),
+     ),
+    ),
+    '#default_value' => variable_get('asu_brand_header_template', variable_get('asu_brand_header_selector')),
   );
 
   $form['theme_configuration']['asu_brand_is_student'] = array(
@@ -52,11 +64,13 @@ function openasu_bootstrap_form_system_theme_settings_alter(&$form, &$form_state
     ),
     '#default_value' => variable_get('asu_brand_student_color', 'black'),
   );
-  /*
-  $form['theme_configuration']['picture'] = array(
-    '#markup' => t('Global Header Image'),
-    '#type' => 'markup',
-  ); */
+  $form['theme_configuration']['hide_local_menu_navicon'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Hide local menu Navicon'),
+    '#default_value' => theme_get_setting('hide_local_menu_navicon', 'openasu_bootstrap'),
+    '#tree' => FALSE,
+    '#description' => t('This will disable the navicon for the local menu on mobile and tablet devices. The ASU Header navicon will now activate the local menu.'),
+  );
   $form['theme_configuration']['default_picture'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use a global header image?'),
@@ -93,9 +107,15 @@ function openasu_bootstrap_form_system_theme_settings_alter(&$form, &$form_state
 function openasu_bootstrap_settings_submit($form, &$form_state) {
   // Set the variables, need to use this instead of theme_get_settings
   // because the scop of the vars is more global.
-  variable_set('asu_brand_header_template', $form_state['values']['asu_brand_header_template']);
+  if ($form_state['values']['asu_brand_header_selector'] != 'custom') {
+    variable_set('asu_brand_header_template', $form_state['values']['asu_brand_header_selector']);
+  }
+  else {
+    variable_set('asu_brand_header_template', $form_state['values']['asu_brand_header_template']);
+  }
   variable_set('asu_brand_is_student', $form_state['values']['asu_brand_is_student']);
   variable_set('asu_brand_student_color', $form_state['values']['asu_brand_student_color']);
+  variable_set('asu_brand_header_selector', $form_state['values']['asu_brand_header_selector']);
 
   if ($file = $form_state['values']['picture_upload']) {
     unset($form_state['values']['picture_upload']);

@@ -35,3 +35,10 @@
   border-bottom: 5px #ffb310 solid;
   border-top: 5px #ffb310 solid;
 }
+
+#menu ul.nav > li:hover a {
+  color: #000;
+  border-bottom: 5px #fff solid;
+  border-top: 5px #fff solid;
+  background-color: #fff;
+}

@@ -67,7 +67,6 @@
  *
  * Regions:
  * - $page['content']: The main content of the current page.
-
  *
  * @see template_preprocess()
  * @see template_preprocess_page()
@@ -91,7 +90,32 @@
         </div>
       </nav>
     </header>
-    
+
+    <?php if (!$asu_local_navicon): ?>
+      <section class="section hidden-desktop" id="menu">
+        <div class="container">
+          <nav class='navbar navbar-fixed-top fixer'>
+            <div class='navbar-inner fixer'>
+              <div class='nav-collapse'>
+                <?php print render($page['menu']); ?>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </section>
+    <?php endif; ?>
+
+    <?php if ($site_name): ?>
+      <section class="section" id="site-name-desktop">
+        <div class="container">
+          <h1 class='site-title'>
+            <span class='first-word'><?php print $site_name_first; ?> </span>
+            <?php print $site_name_last; ?>
+          </h1>
+        </div>
+      </section>
+    <?php endif; ?>
+
     <?php if ($asu_picture): ?>
       <section class="section" id="picture">
         <div class="container">
@@ -99,16 +123,25 @@
         </div>
       </section>
     <?php endif; ?>
-    
+
     <section class="section" id="menu">
       <div class="container">
         <nav class='navbar navbar-fixed-top'>
           <div class='navbar-inner'>
-            <a class='btn btn-navbar' data-target='.nav-collapse'
-              data-toggle='collapse'> <span class='icon-bar'></span> <span
-              class='icon-bar'></span> <span class='icon-bar'></span>
-            </a>
-            <div class='nav-collapse'>
+            <?php if ($site_name): ?>
+              <div class='navbar-sitename-collapse'>
+                <h1 class='site-title'>
+                  <span class='first-word'><?php print $site_name_first; ?></span>
+                  <?php print $site_name_last; ?>
+                </h1>
+              </div>
+            <?php endif; ?>
+
+            <?php if ($asu_local_navicon): ?>
+              <?php print $asu_local_navicon; ?>
+            <?php endif; ?>
+
+            <div class='<?php $asu_local_navicon ? print 'nav-collapse' : print 'visible-desktop'; ?>'>
               <?php print render($page['menu']); ?>
             </div>
           </div>

@@ -51,15 +51,27 @@ function openasu_theme_configure_form($form, &$form_state) {
     '#default_value' => variable_get('asu_brand_is_student', 'student'),
   );
 
-  $form['theme_configuration']['asu_brand_header_template'] = array(
-    '#title' => t('Header Color'),
+  $form['theme_configuration']['asu_brand_header_selector'] = array(
+    '#title' => t('Color Scheme'),
     '#type' => 'radios',
     '#options' => array(
       'default' => t('Gold'),
       'default_maroon' => t('Maroon'),
       'default_white' => t('White'),
+      'custom' => t('Custom'),
     ),
-    '#default_value' => variable_get('asu_brand_header_template', ASU_BRAND_HEADER_TEMPLATE_DEFAULT),
+    '#default_value' => variable_get('asu_brand_header_selector', ASU_BRAND_HEADER_TEMPLATE_DEFAULT),
+  );
+  
+  $form['theme_configuration']['asu_brand_header_template'] = array(
+    '#title' => t('Enter Custom Template Key'),
+    '#type' => 'textfield',
+    '#states' => array(
+     'visible' => array(
+       ':input[name="asu_brand_header_selector"]' => array('value' => 'custom'),
+     ),
+    ),
+    '#default_value' => variable_get('asu_brand_header_template', variable_get('asu_brand_header_selector')),
   );
 
   $form['theme_configuration']['asu_brand_student_color'] = array(
@@ -98,8 +110,15 @@ function openasu_theme_configure_form_submit($form, &$form_state) {
   variable_set('theme_default', $theme);
 
   // Set the appropriate colors
-  $header_key = $form_state['values']['asu_brand_header_template'];
-  variable_set('asu_brand_header_template', $header_key);
+  if ($form_state['values']['asu_brand_header_selector'] != 'custom') {
+    variable_set('asu_brand_header_template', $form_state['values']['asu_brand_header_selector']);
+  }
+  else {
+    variable_set('asu_brand_header_template', $form_state['values']['asu_brand_header_template']);
+  }
+  variable_set('asu_brand_is_student', $form_state['values']['asu_brand_is_student']);
+  variable_set('asu_brand_student_color', $form_state['values']['asu_brand_student_color']);
+  variable_set('asu_brand_header_selector', $form_state['values']['asu_brand_header_selector']);
 
   // Enable the Brand Header block in the right region
   $asu_brand_header_delta = 'asu_brand_header';
@@ -156,4 +175,9 @@ function openasu_form_install_configure_form_alter(&$form, $form_state) {
     $form['site_information']['site_mail']['#default_value'] = 'admin@' . $_SERVER['HTTP_HOST'];
     $form['admin_account']['account']['mail']['#default_value'] = 'admin@' . $_SERVER['HTTP_HOST'];
   }
+
+  // Set the location to be in Arizona
+  $form['server_settings']['site_default_country']['#default_value'] = 'US';
+  $form['server_settings']['date_default_timezone']['#default_value'] = 'America/Phoenix';
+  $form['server_settings']['date_default_timezone']['#attributes']['class'] = array();
 }

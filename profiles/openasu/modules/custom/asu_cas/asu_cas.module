@@ -12,10 +12,24 @@ function asu_cas_boot() {
   if (!$install_state) {
     if (isset($_SERVER['PANTHEON_ENVIRONMENT'])) {
       if (!isset($_SERVER['HTTP_X_SSL']) || $_SERVER['HTTP_X_SSL'] != 'ON') {
-        header('HTTP/1.0 301 Moved Permanently'); 
+        header('HTTP/1.0 301 Moved Permanently');
         header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-        exit(); 
+        exit();
       }
+    }
+  }
+}
+
+/**
+ * Implements hook_filter_default_formats_alter()
+ *
+ * THIS REALLY SHOULD BE IN ITS OWN MODULE BUT IM PUTTING IT HERE FOR NOW
+ */
+if (!function_exists('panopoly_wysiwyg_filter_default_formats_alter')) {
+  function panopoly_wysiwyg_filter_default_formats_alter(&$data) {
+    // This allows users to enter in more then one extra line
+    if (isset($data['panopoly_wysiwyg_text'])) {
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['valid_elements'] .= ',#p';
     }
   }
 }

@@ -10,6 +10,15 @@
   margin-top: 20px;
 }
 
+#site-name-desktop {
+  background-color: #000;
+  height: 40px;
+}
+
+#site-name-desktop h1 {
+  line-height: 28px;
+}
+
 #picture img.panopoly-image-full {
   margin-bottom: 0;
 }
@@ -63,6 +72,17 @@ h1,h2,h3,h4 {
   color: #ffb310;
 }
 
+h1.site-title .first-word {
+  color: #AFA593;
+}
+
+h1.site-title {
+  color: #FFF;
+  margin: 0;
+  padding: 5px 13px;
+  font-size: 2.5em;
+}
+
 h2 {
   font-size: 26px;
   line-height: 30px;
@@ -108,6 +128,32 @@ h4 {
   text-shadow: none;
 }
 
+.navbar-inner {
+  background: transparent;
+}
+
+.navbar-sitename-collapse {
+  display: none;
+  font-family: arial;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 10px;
+  color: #fff;
+  border-bottom: 5px transparent solid;
+  border-top: 5px transparent solid;
+  padding: 10px;
+  float: left;
+}
+
+#asu_universal_nav ul a {
+  display: block;
+  font: 12px/12px Arial,Helvetica,sans-serif;
+  color: #000;
+  text-decoration: none;
+  padding: 8px 8px 0px 8px;
+}
+
 .navbar .nav>.active>a,.navbar .nav>.active>a:hover,.navbar .nav>.active>a:focus
   {
   background-color: #000;
@@ -117,6 +163,21 @@ h4 {
 
 .navbar-fixed-top .navbar-inner,.navbar-static-top .navbar-inner {
   border-width: 0 0;
+}
+
+.nav-collapse-total {
+  overflow: hidden;
+  height: 0;
+  display: block;
+}
+
+.navbar-inner.fixer {
+  padding: 0;
+}
+
+.navbar.navbar-fixed-top.fixer {
+  margin-bottom: 0;
+
 }
 
 #menu .navbar-inner {
@@ -137,7 +198,7 @@ h4 {
   border-top: 5px #000 solid;
 }
 
-#menu .navbar-inner ul.nav a:hover {
+#menu ul.nav > li:hover a {
   color: #ffb310;
   border-bottom: 5px #ffb310 solid;
 }
@@ -147,38 +208,60 @@ h4 {
   border-bottom: 5px #ffb310 solid;
 }
 
-#menu .navbar-inner ul.nav ul.dropdown-menu a {
-  border: 0;
-  color: #000;
-}
-
 .navbar .nav li.dropdown.open>.dropdown-toggle,.navbar .nav li.dropdown.active>.dropdown-toggle,.navbar .nav li.dropdown.open.active>.dropdown-toggle
   {
   background-color: transparent;
 }
 
-#menu .navbar-inner ul.nav ul.dropdown-menu a:hover {
-  background: transparent;
+/* dropdown bootstrap overrides */
+.dropdown-menu {
+  border: 0;
+  padding: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+    -moz-box-shadow: 0 5px 10px 2px rgba(0,0,0,0.5);
+  -ms-box-shadow: 0 5px 10px 2px rgba(0,0,0,0.5);
+  -o-box-shadow: 0 5px 10px 2px rgba(0,0,0,0.5);
+  -khtml-box-shadow: 0 5px 10px 2px rgba(0,0,0,0.5);
+  -webkit-box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.5);
+}
+
+.navbar .nav>li>.dropdown-menu:after {
+  content: none;
+}
+
+.navbar .nav>li>.dropdown-menu:before {
+  content: none;
+}
+
+#menu .navbar-inner ul.nav a {
+  padding-left: 23px;
+  padding-right: 23px;
+}
+
+.navbar ul.dropdown-menu li {
+  padding-right: 5px;
+  margin-right: -5px;
+}
+
+#menu .navbar ul.nav ul.dropdown-menu li a {
+  font-size: 13px;
+  font-weight: normal;
+  display: block;
+  line-height: 120%;
+  padding: 10px;
+  background: #4F5557;
+  border: 0;
+  color: #fff;
+  padding-right: 40px;
+}
+
+#menu .navbar ul.nav ul.dropdown-menu li:hover a {
+  background: #FFB310;
   color: #000;
-  opacity: .5;
 }
 
-#menu .navbar .nav>li>.dropdown-menu:after {
-  border-bottom: 6px solid #ccc;
-}
-
-#menu .navbar .dropdown-menu {
-  background-color: #ccc;
-}
-
-@media ( max-width : 979px) {
-  .nav-collapse,.nav-collapse.collapse {
-    overflow: hidden;
-    height: 0;
-    display: block;
-    background-color: black;
-  }
-}
 
 /* default submenu and link fpps */
 .panel-pane h2 {
@@ -187,7 +270,7 @@ h4 {
   color: #333;
 }
 
-.panel-pane ul,.panel-pane ul li.leaf,.panel-pane ul li.expanded,.panel-pane ul li.collapsed
+.panel-pane ul li.leaf,.panel-pane ul li.expanded,.panel-pane ul li.collapsed
   {
   list-style: none;
 }
@@ -208,6 +291,7 @@ h4 {
 #main-wrapper .panel-pane .menu-block-wrapper ul a:hover {
   text-decoration: underline;
 }
+
 
 /* responsive */
 @media ( min-width : 768px) and (max-width: 979px) {
@@ -230,5 +314,26 @@ h4 {
 @media ( max-width : 979px) {
   #masthead .navbar-fixed-top {
     margin-bottom: 0;
+  }
+  .navbar-sitename-collapse {
+    display: block;
+  }
+  .nav-collapse,.nav-collapse.collapse {
+    overflow: hidden;
+    height: 0;
+    display: block;
+    background-color: black;
+  }
+  h1.site-title {
+    font-size: 24px;
+  }
+  #site-name-desktop {
+    display: none;
+  }
+  .navbar-fixed-top .navbar-inner, .navbar-fixed-bottom .navbar-inner {
+    padding: 0;
+  }
+  .nav-collapse .dropdown-menu {
+    display: block;
   }
 }

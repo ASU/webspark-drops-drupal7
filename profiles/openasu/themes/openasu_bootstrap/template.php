@@ -10,11 +10,6 @@
  * Implements template_preprocess_html().
  */
 function openasu_bootstrap_preprocess_html(&$variables) {
-  // Set the header color
-  if (module_exists('asu_brand')) {
-    drupal_add_css(drupal_get_path('theme', 'openasu_bootstrap') . '/css/header/' .
-      variable_get('asu_brand_header_template', ASU_BRAND_HEADER_TEMPLATE_DEFAULT) .  '.css');
-  }
   // Load student CSS if this is a student template
   if (variable_get('asu_brand_is_student', 'default') == 'student') {
     drupal_add_css(drupal_get_path('theme', 'openasu_bootstrap') . '/css/student/' .
@@ -23,6 +18,7 @@ function openasu_bootstrap_preprocess_html(&$variables) {
       'media' => 'screen',
       'weight' => '100',
       )
+
     );
     // Load menu CSS for student header
     if (variable_get('asu_brand_student_color', 'black') != 'black') {
@@ -55,12 +51,36 @@ function openasu_bootstrap_ctools_plugin_post_alter(&$plugin, &$info) {
  */
 function openasu_bootstrap_preprocess_page(&$variables) {
   $variables['asu_picture'] = '';
+  $variables['asu_local_navicon'] = '';
+
+  // Make sure default picture gets responsive panopoly stylingz
   if (theme_get_setting('default_picture', 'openasu_bootstrap') && theme_get_setting('picture_path', 'openasu_bootstrap')) {
     $variables['asu_picture'] = theme('image_style', array(
       'style_name' => 'panopoly_image_full',
       'path' => theme_get_setting('picture_path', 'openasu_bootstrap'),
     )
     );
+  }
+
+  // Parse sitename for color
+  $variables['site_name_first'] = '';
+  $variables['site_name_last'] = '';
+  $middle = strrpos(substr($variables['site_name'], 0, floor(strlen($variables['site_name']) / 2)), ' ') + 1;
+  $variables['site_name_first'] = substr($variables['site_name'], 0, $middle);  // "The Quick : Brown Fox "
+  $variables['site_name_last'] = substr($variables['site_name'], $middle);  // "Jumped Over The Lazy / Dog"
+
+  // Build the navicon if applicable
+  if (!theme_get_setting('hide_local_menu_navicon', 'openasu_bootstrap')) {
+    $variables['asu_local_navicon'] = str_replace('href="/"', 'href="#"', l("<span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>", NULL,
+      array(
+        'attributes' => array(
+          'data-target' => '.nav-collapse',
+          'data-toggle' => 'collapse',
+          'class' => 'btn btn-navbar'
+        ),
+        'html' => TRUE
+      )
+    ));
   }
 }
 
@@ -88,8 +108,25 @@ function openasu_bootstrap_preprocess_block(&$variables) {
         'class' => array('element-invisible'),
       ),));
       $block->subject = '';
-  } 
+  }
 }
+
+/**
+ * Implements hook_block_view_alter().
+ *
+ * We are using this to inject the bootstrap data-toggle/data-target attributes into the ASU
+ * Header so that it can also activate the local menu.
+ *
+ */
+function openasu_bootstrap_block_view_alter(&$data, $block) {
+  // Add the attributes if applicable
+  if (($block->module == 'asu_brand') && ($block->delta == 'asu_brand_header')) {
+    if (theme_get_setting('hide_local_menu_navicon', 'openasu_bootstrap')) {
+      $data['content'] = str_replace('<a href="javascript:toggleASU();">', '<a href="javascript:toggleASU();" data-target=".nav-collapse" data-toggle="collapse"', $data['content']);
+    }
+  }
+}
+
 
 /**
  * Implements theme_links__system_main_menu.
