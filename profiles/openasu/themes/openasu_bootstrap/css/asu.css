@@ -10,13 +10,13 @@
   margin-top: 20px;
 }
 
-#site-name-desktop {
-  background-color: #000;
-  height: 40px;
-}
-
 #site-name-desktop h1 {
   line-height: 28px;
+}
+
+#site-name-desktop .container {
+  background-color: #000;
+  height: 40px;
 }
 
 #picture img.panopoly-image-full {
@@ -162,7 +162,7 @@ h4 {
 }
 
 .navbar-fixed-top .navbar-inner,.navbar-static-top .navbar-inner {
-  border-width: 0 0;
+  border-width: 0;
 }
 
 .nav-collapse-total {
@@ -177,11 +177,16 @@ h4 {
 
 .navbar.navbar-fixed-top.fixer {
   margin-bottom: 0;
-
 }
 
 #menu .navbar-inner {
   background-color: #000;
+  min-height: auto;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+#masthead .navbar-inner {
   min-height: auto;
   box-shadow: none;
   -webkit-box-shadow: none;
@@ -335,5 +340,11 @@ h4 {
   }
   .nav-collapse .dropdown-menu {
     display: block;
+  }
+  #menu {
+    background: #000;
+  }
+  #picture .container {
+    width: auto;
   }
 }

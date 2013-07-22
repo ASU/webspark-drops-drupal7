@@ -26,7 +26,7 @@ function openasu_bootstrap_form_system_theme_settings_alter(&$form, &$form_state
     ),
     '#default_value' => variable_get('asu_brand_header_selector', ASU_BRAND_HEADER_TEMPLATE_DEFAULT),
   );
-  
+
   $form['theme_configuration']['asu_brand_header_template'] = array(
     '#title' => t('Enter Custom Template Key'),
     '#type' => 'textfield',
@@ -73,10 +73,10 @@ function openasu_bootstrap_form_system_theme_settings_alter(&$form, &$form_state
   );
   $form['theme_configuration']['default_picture'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Use a global header image?'),
+    '#title' => t('Use a header image on the front page?'),
     '#default_value' => theme_get_setting('default_picture', 'openasu_bootstrap'),
     '#tree' => FALSE,
-    '#description' => t('Upload an image the be displayed across all of the pages of your site'),
+    '#description' => t('Upload an image to be displayed as a header on your front page.'),
   );
   $form['theme_configuration']['settings'] = array(
     '#type' => 'container',
@@ -129,7 +129,7 @@ function openasu_bootstrap_settings_submit($form, &$form_state) {
   if (!empty($form_state['values']['picture_path'])) {
     $form_state['values']['picture_path'] = _system_theme_settings_validate_path($form_state['values']['picture_path']);
   }
-  
+
   // ASU header needs a cache_clear
   if (module_exists('asu_brand')) {
     asu_brand_cache_clear();

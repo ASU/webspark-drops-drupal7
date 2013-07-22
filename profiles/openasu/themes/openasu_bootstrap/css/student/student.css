@@ -4,12 +4,17 @@
   margin: auto;
 }
 
-#page .region-content {
-  padding: 20px;
+#page {
+  background-color: #fff;
 }
 
-#menu {
-  background-color: #000;
+#content.container {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+#page .region-content {
+  padding: 20px;
 }
 
 #footerlower {
@@ -37,13 +42,19 @@
   #page, #masthead {
     width: auto;
   }
+  #menu .navbar-inner ul.nav a {
+    border-bottom: 5px transparent solid;
+    border-top: 5px transparent solid;
+  }
+  #menu ul.nav > li:hover a  {
+    border-bottom: 5px transparent solid;
+    border-top: 5px transparent solid;
+  }
 }
 
-#page {
-  background-color: #fff;
+@media ( max-width : 979px) {
+  #menu .navbar-inner {
+    background: #000;
+  }
 }
 
-#content.container {
-  padding-left: 20px;
-  padding-right: 20px;
-}

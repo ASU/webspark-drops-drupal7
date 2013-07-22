@@ -13,10 +13,6 @@
   background-color: #4f5557;
 }
 
-#menu {
-  background-color: #4f5557;
-}
-
 #menu .navbar-inner ul.nav a.active {
   background-color: #ffb310;
   color: #fff;
@@ -42,4 +38,24 @@
   border-bottom: 5px #ffb310 solid;
   border-top: 5px #ffb310 solid;
   background-color: #ffb310;
+}
+
+@media  (max-width: 767px) {
+  #page, #masthead {
+    width: auto;
+  }
+  #menu .navbar-inner ul.nav a {
+    border-bottom: 5px transparent solid;
+    border-top: 5px transparent solid;
+  }
+  #menu ul.nav > li:hover a  {
+    border-bottom: 5px transparent solid;
+    border-top: 5px transparent solid;
+  }
+}
+
+@media ( max-width : 979px) {
+  #menu .navbar-inner {
+    background: #000;
+  }
 }

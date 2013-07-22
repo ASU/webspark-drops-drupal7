@@ -8,10 +8,6 @@
   background-color: #ffb310;
 }
 
-#menu {
-  background-color: #ffb310;
-}
-
 #menu .navbar-inner {
   background-color: #ffb310;
 }
@@ -41,4 +37,24 @@
   border-bottom: 5px #fff solid;
   border-top: 5px #fff solid;
   background-color: #fff;
+}
+
+@media  (max-width: 767px) {
+  #page, #masthead {
+    width: auto;
+  }
+  #menu .navbar-inner ul.nav a {
+    border-bottom: 5px transparent solid;
+    border-top: 5px transparent solid;
+  }
+  #menu ul.nav > li:hover a  {
+    border-bottom: 5px transparent solid;
+    border-top: 5px transparent solid;
+  }
+}
+
+@media ( max-width : 979px) {
+  #menu .navbar-inner {
+    background: #000;
+  }
 }

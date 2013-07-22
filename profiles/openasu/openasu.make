@@ -96,7 +96,7 @@ projects[kalatheme][type] = theme
 projects[openasu_bootstrap][version] = 1.x-dev
 projects[openasu_bootstrap][type] = theme
 projects[openasu_bootstrap][download][type] = git
-projects[openasu_bootstrap][download][revision] = 6aae928
+projects[openasu_bootstrap][download][revision] = cd9bb9d
 projects[openasu_bootstrap][download][branch] = 7.x-1.x
 projects[openasu_bootstrap][download][url] = https://github.com/kalamuna/openasu_bootstrap.git
 
