@@ -308,6 +308,10 @@ function panels_permission() {
       'title' => t('Use panel locks'),
       'description' => t('Allows a user to lock and unlock panes in a panel display.'),
     ),
+    'use ipe with page manager' => array(
+      'title' => t("Use the Panels In-Place Editor with Page Manager"),
+      'description' => t('Allows users with access to the In-Place editor to administer page manager pages. This permission is only needed for users without "use page manager" access.'),
+    ),
   );
 }
 
@@ -1070,6 +1074,9 @@ function panels_render_display(&$display, $renderer = NULL) {
   if (!empty($display->context)) {
     if ($form_context = ctools_context_get_form($display->context)) {
       $form_context->form['#theme'] = 'panels_render_display_form';
+      if (empty($form_context->form['#theme_wrappers']) || !in_array('form', $form_context->form['#theme_wrappers'])) {
+        $form_context['#theme_wrappers'][] = 'form';
+      }
       $form_context->form['#display'] = &$display;
       return $form_context->form;
     }
@@ -1086,10 +1093,7 @@ function panels_render_display(&$display, $renderer = NULL) {
  * then operate as a theme function of the form.
  */
 function theme_panels_render_display_form($vars) {
-  // @todo this is probably broken in D7
-  $render = $vars['element']['#display']->render();
-  $vars['element']['#children'] = $render;
-  return theme('form', $vars);
+  return $vars['element']['#display']->render();
 }
 
 // @layout
@@ -1226,7 +1230,9 @@ function template_preprocess_panels_pane(&$vars) {
       }
 
       $element = contextual_pre_render_links($element);
-      $links += $element['#links'];
+      if(!empty($element['#links'])) {
+        $links += $element['#links'];
+      }
     }
 
     if ($links) {
@@ -1276,7 +1282,7 @@ function template_preprocess_panels_pane(&$vars) {
 
   // Add template file suggestion for content type and sub-type.
   $vars['theme_hook_suggestions'][] = $base . $delimiter . $content->type;
-  $vars['theme_hook_suggestions'][] = $base . $delimiter . strtr($content->type, '-', '_') . $delimiter . strtr($content->subtype, '-', '_');
+  $vars['theme_hook_suggestions'][] = $base . $delimiter . strtr(ctools_cleanstring($content->type, array('lower case' => TRUE)), '-', '_') . $delimiter . strtr(ctools_cleanstring($content->subtype, array('lower case' => TRUE)), '-', '_');
 
   $vars['pane_prefix'] = !empty($content->pane_prefix) ? $content->pane_prefix : '';
   $vars['pane_suffix'] = !empty($content->pane_suffix) ? $content->pane_suffix : '';

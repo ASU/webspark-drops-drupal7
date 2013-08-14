@@ -7,11 +7,11 @@
 
 /**
  * Implements hook_views_plugins().
+ *
+ * Generate a list of which base-tables to enabled the plugins for.
  */
 function media_views_plugins() {
   $plugins = array();
-
-  // Generate a list of which base-tables to enabled the plugins for.
 
   // Always allow the actual file-table
   $base = array('file_managed');
@@ -66,7 +66,9 @@ function template_preprocess_media_views_view_media_browser(&$vars) {
   foreach ($vars['rows'] as $index => $row) {
     // The Search API module returns the row in a slightly different format,
     // so convert it to the format that the normal file_managed table returns.
-    if (!empty($row->entity->fid)) $vars['rows'][$index]->fid = $row->entity->fid;
+    if (!empty($row->entity->fid)) {
+      $vars['rows'][$index]->fid = $row->entity->fid;
+    }
     $fids[$index] = $row->fid;
   }
   $files = file_load_multiple($fids);
@@ -74,29 +76,23 @@ function template_preprocess_media_views_view_media_browser(&$vars) {
   // Render the preview for each file.
   foreach ($vars['rows'] as $index => $row) {
     $file = $files[$row->fid];
-    // Add url/preview to the file object
+    // Add url/preview to the file object.
     media_browser_build_media_item($file);
     $vars['rows'][$index] = $file;
-    $vars['rows'][$index]->preview = l($file->preview, 'media/browser', array(
-      'html' => TRUE,
-      'attributes' => array(
-        'data-fid' => $row->fid,
-      ),
-      'query' => array('render' => 'media-popup', 'fid' => $row->fid))
-    );
+    $vars['rows'][$index]->preview = $file->preview;
   }
 
-  // Add the files to JS so that they are accessible inside the browser
+  // Add the files to JS so that they are accessible inside the browser.
   drupal_add_js(array('media' => array('files' => array_values($files))), 'setting');
 
-  // Add the browser parameters to the settings and that this display exists
+  // Add the browser parameters to the settings and that this display exists.
   drupal_add_js(array(
     'media' => array(
       'browser' => array(
         'params' => media_get_browser_params(),
         'views' => array(
           $vars['view']->name => array(
-            $vars['view']->current_display
+            $vars['view']->current_display,
           ),
         ),
       ),
@@ -104,7 +100,7 @@ function template_preprocess_media_views_view_media_browser(&$vars) {
   ), 'setting');
 
   // Add classes and wrappers from the style plugin.
-  $handler  = $vars['view']->style_plugin;
+  $handler = $vars['view']->style_plugin;
 
   $class = explode(' ', $handler->options['class']);
   $class = array_map('drupal_clean_css_identifier', $class);

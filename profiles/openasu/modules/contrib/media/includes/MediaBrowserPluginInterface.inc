@@ -15,10 +15,10 @@ interface MediaBrowserPluginInterface {
   /**
    * Set up the plugin class.
    *
-   * @param $info
+   * @param array $info
    *   An array of plugin info from hook_media_browser_plugin_info()
    *   implementations.
-   * @param $params
+   * @param array $params
    *   An array of parameters which came in is $_GET['params']. The expected
    *   parameters are still being defined.
    *   - 'types': array of media types to support
@@ -33,11 +33,12 @@ interface MediaBrowserPluginInterface {
    *   An optional user account object from user_load(). Defaults to the current
    *   global user.
    *
-   * @return boolean
+   * @return bool
    *   TRUE if the user can access this plugin, or FALSE otherwise.
    */
   public function access($account = NULL);
 
-  // The view() method is an abstract function so it is defined in MediaBrowserPlugin.
-  // public function view();
+  // The view() method is an abstract function so it is defined in MediaBrowser
+  // Plugin.
+  // @todo public function view();
 }

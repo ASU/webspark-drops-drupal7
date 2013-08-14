@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Definition of views_handler_field_file_type.
+ */
+
+/**
  * Field handler to translate a file type into its readable form.
  */
 class views_handler_field_file_type extends views_handler_field_file {

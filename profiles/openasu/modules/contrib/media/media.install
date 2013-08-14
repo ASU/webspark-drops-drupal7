@@ -51,26 +51,31 @@ function media_install() {
   // Create initial display settings.
   module_load_include('inc', 'file_entity', 'file_entity.file_api');
   $default_image_styles = array(
-    'preview' => 'square_thumbnail',
+    'preview' => 'media_thumbnail',
     'teaser' => 'medium',
     'full' => 'large',
   );
   // Only needed by sites that updated from Media 1.x.
   // @see media_entity_info_alter()
-  if (media_variable_get('show_deprecated_view_modes')) {
+  if (variable_get('media__show_deprecated_view_modes')) {
     $default_image_styles['media_original'] = '';
   }
+
   foreach ($default_image_styles as $view_mode => $image_style) {
-    $display_name = 'image__' . $view_mode . '__file_image';
-    $display = array(
-      'api_version' => 1,
-      'name' => $display_name,
-      'status' => 1,
-      'weight' => 5,
-      'settings' => array('image_style' => $image_style),
-      'export_type' => NULL,
-    );
-    file_display_save((object) $display);
+    $existing_display = file_displays_load('image', $view_mode);
+
+    if (empty($existing_display)) {
+      $display_name = 'image__' . $view_mode . '__file_image';
+      $display = array(
+        'api_version' => 1,
+        'name' => $display_name,
+        'status' => 1,
+        'weight' => 5,
+        'settings' => array('image_style' => $image_style),
+        'export_type' => NULL,
+      );
+      file_display_save((object) $display);
+    }
   }
 }
 
@@ -88,6 +93,12 @@ function media_uninstall() {
  * Implements hook_update_dependencies().
  */
 function media_update_dependencies() {
+  // media_update_7200() needs to convert old 'media' permissions to new 'file'
+  // permissions, so it must run before file_entity_7208 which updates existing
+  // 'file' permissions to be split per file type.
+  $dependencies['file_entity'][7208] = array(
+    'media' => 7200,
+  );
   // This update function requires field_update_7002() to run before it since
   // the field_bundle_settings variable has been split into separate variables
   // per entity type and bundle.
@@ -96,10 +107,7 @@ function media_update_dependencies() {
     'rules' => 7205,
   );
   // Those updates require {file_type} table created.
-  $dependencies['media'][7208] = array(
-    'file_entity' => 7201,
-  );
-  $dependencies['media'][7209] = array(
+  $dependencies['media'][7204] = array(
     'file_entity' => 7201,
   );
   return $dependencies;
@@ -202,7 +210,7 @@ function media_update_7002() {
   drupal_load('module', 'media');
   $old_types = variable_get('media_types');
   foreach ($old_types as $type) {
-    // Was an error in the original creation
+    // Was an error in the original creation.
     if (isset($type->callbacks)) {
       unset($type->callbacks);
     }
@@ -476,6 +484,8 @@ function media_update_7016() {
 }
 
 /**
+ * Move file display configuration.
+ *
  * Move file display configurations from the 'file_displays' variable to the
  * {file_display} table.
  */
@@ -486,6 +496,7 @@ function media_update_7017() {
   // prior to media_update_7016(), run it again in order to capture those
   // configurations too.
   if (db_table_exists('file_display') && function_exists('file_entity_update_7001')) {
+    module_load_include('install', 'file_entity', 'file_entity');
     file_entity_update_7001();
   }
 }
@@ -497,7 +508,10 @@ function media_update_7018() {
 }
 
 /**
- * Update old per-view-mode media field formatters to the generic media formatter with a setting.
+ * Update old view mode formaters.
+ *
+ * Update old per-view-mode media field formatters to the generic media
+ * formatter with a setting.
  */
 function media_update_7019() {
   $instances = array();
@@ -566,7 +580,10 @@ function media_update_7200() {
 }
 
 /**
- * Enable the new Media Field module if this site uses "media" fields. File fields are now preferred for storing media.
+ * Handle existing media fields.
+ *
+ * Enable the new Media Field module if this site uses "media" fields. File
+ * fields are now preferred for storing media.
  */
 function media_update_7201() {
   $fields = field_info_fields();
@@ -578,7 +595,8 @@ function media_update_7201() {
 
       // Update entries in file_usage so that they are associated with Media
       // Field rather than Media.
-      // @TODO This update function may conflict with http://drupal.org/node/1268116
+      // @TODO This update function may conflict with
+      // http://drupal.org/node/1268116
       db_update('file_usage')
         ->condition('module', 'media')
         ->fields(array('module' => 'mediafield'))
@@ -786,7 +804,7 @@ function media_update_7206() {
 
   // Only needed by sites that updated from Media 1.x.
   // @see media_entity_info_alter()
-  if (media_variable_get('show_deprecated_view_modes')) {
+  if (variable_get('media__show_deprecated_view_modes')) {
     $default_image_styles['media_original'] = '';
   }
 
@@ -813,17 +831,22 @@ function media_update_7206() {
 }
 
 /**
- * Empty update function to trigger cache clear
- * after changing access callbacks to file_entity_access.
+ * Trigger cache clear.
+ *
+ * Empty update function to trigger cache clear after changing access callbacks
+ * to file_entity_access.
  */
 function media_update_7207() {
   // Do nothing.
 }
 
 /**
- * Drop the media_types table and migrate all files to the new file_entity types.
+ * Drop the media_types table and migrate files to file_entity types.
  */
 function media_update_7208() {
+  // Reset static cache to ensure our new file types are recognized
+  drupal_static_reset('ctools_export_load_object_table_exists');
+
   if (!db_table_exists('media_type')) {
     // No types to migrate.
     return;
@@ -845,11 +868,9 @@ function media_update_7208() {
 
     include_once DRUPAL_ROOT . '/includes/file.mimetypes.inc';
     $mapping = file_mimetype_mapping();
+    // We do not migrate this type, since there is no way to handle its weight.
+    unset($existing_types['default']);
     foreach ($existing_types as $type) {
-      if ($type->name == 'default') {
-        // We do not migrate this type, since there is no way to handle its weight.
-        continue;
-      }
       $extensions = isset($type->type_callback_args['extensions']) ? $type->type_callback_args['extensions'] : array();
       $mimetypes = isset($type->type_callback_args['mimetypes']) ? $type->type_callback_args['mimetypes'] : array();
       // Add mimetypes by extensions.
@@ -874,6 +895,9 @@ function media_update_7208() {
         $new_type->mimetypes = array_merge($type->mimetypes, $new_type->mimetypes);
         $new_type->streams = array_merge($type->streams, $new_type->streams);
       }
+      else {
+        $new_type = $type;
+      }
       file_type_save($new_type);
     }
     db_drop_table('media_type');
@@ -881,7 +905,10 @@ function media_update_7208() {
     // Special treatment for old media application type to new file_entity
     // document one. Add some more mimetypes to document.
     $document_type = file_type_load('document');
-    foreach($mapping['mimetypes'] as $mimetype) {
+    if (!$document_type) {
+      return;
+    }
+    foreach ($mapping['mimetypes'] as $mimetype) {
       $is_document = strpos($mimetype, 'document') !== FALSE || strpos($mimetype, 'application/vnd.ms-') !== FALSE;
       if ($is_document && !in_array($mimetype, $document_type->mimetypes)) {
         $document_type->mimetypes[] = $mimetype;
@@ -892,61 +919,51 @@ function media_update_7208() {
 }
 
 /**
- * Update {file_managed}.type with the new file types provided by file_entity.
+ * DEPRECATED: Update {file_managed}.type with the new file types provided by
+ * file_entity. (Types migration has been moved to admin/structure/file-types/upgrade',
+ * where can be executed manually.)
  */
 function media_update_7209() {
-  // Go through file_managed table and update files with the new type names.
-  $enabled_types = file_type_get_enabled_types();
 
-  $query = db_select('file_managed', 'f')
-    ->fields('f', array('fid', 'type', 'filemime', 'uri'));
-  $files = $query->execute()->fetchAllAssoc('fid');
-  $failed = array();
-  foreach ($files as $fid => $file) {
-    if (empty($file->filemime)) {
-      $file->filemime = file_get_mimetype($file->uri);
-    }
-
-    $valid = FALSE;
-    foreach ($enabled_types as $type) {
-      if (in_array($file->filemime, $type->mimetypes)) {
-        $file->newtype = $type->type;
-        $valid = TRUE;
-        continue;
-      }
-    }
-
-    if (!$valid) {
-      $failed[] = $file->uri;
-      // Mark this file with FILE_TYPE_NONE so it is easier to be tracked and
-      // updated later, instead of scanning the whole table again.
-      $file->newtype = FILE_TYPE_NONE;
-    }
-
-    if ($file->newtype != $file->type) {
-      db_update('file_managed')
-        ->fields(array('type' => $file->newtype))
-        ->condition('fid', $file->fid)
-        ->execute();
-    }
-  }
-
-  if (!empty($failed)) {
-    return t('The following file(s) have a mimetype that does not belong to any file entity type. Please update manually.') . PHP_EOL . implode(PHP_EOL, $failed);
-  }
-
-  return t('All files types converted succesfully.');
 }
 
 /**
  * Delete deceprated media__type_icon_directory variable.
  */
 function media_update_7210() {
-  media_variable_del('type_icon_directory');
+  variable_del('media__type_icon_directory');
 }
 
 /**
- * Helper function for media_update_7204() to update display options within Views.
+ * Flush old version of the image style to make the thumbnails appear correctly.
+ */
+function media_update_7211() {
+  $style = image_style_load('square_thumbnail');
+
+  if ($style) {
+    $style['name'] = 'media_thumbnail';
+    image_style_save($style);
+  }
+
+  // Replace any instances in display settings
+  module_load_include('inc', 'file_entity', 'file_entity.file_api');
+  $entity_info = entity_get_info('file');
+  $view_modes = array('default' => array('label' => t('Default'))) + $entity_info['view modes'];
+  foreach ($view_modes as $view_mode => $view_mode_info) {
+    $displays = file_displays_load('image', $view_mode);
+    foreach ($displays as $display) {
+      if ($display->settings['image_style'] == 'square_thumbnail') {
+        $display->settings['image_style'] = 'media_thumbnail';
+        file_display_save($display);
+      }
+    }
+  }
+
+  return t('Flushed image style and updated display styles.');
+}
+
+/**
+ * Utility function for update 7204. Updates display options within Views.
  */
 function _media_update_7204_update_views_display_options(&$display_options, $view_mode_updates) {
   $updated = FALSE;
@@ -968,4 +985,27 @@ function _media_update_7204_update_views_display_options(&$display_options, $vie
     $updated = TRUE;
   }
   return $updated;
+}
+
+/**
+ * Re-create application file type for legacy reasons.
+ */
+function media_update_7212() {
+  module_load_include('inc', 'file_entity', 'file_entity.file_api');
+  if (!file_type_load('application')) {
+    $application = (object) array(
+      'api_version' => 1,
+      'type' => 'application',
+      'label' => t('Application'),
+      'description' => t('Multipurpose type - kept to support older sites.'),
+      'mimetypes' => array(),
+      'streams' => array(
+        'public',
+      ),
+    );
+
+    file_type_save($application);
+    $application = file_type_load('application');
+    file_type_disable($application);
+  }
 }

@@ -243,25 +243,27 @@ function panelizer_entity_view_alter(&$build, $entity_type) {
     return;
   }
 
-  // Love this hack, eh?
-  if ($entity_type == 'user') {
-    $element = '#account';
+  $entity = $handler->get_entity_view_entity($build);
+
+  // Safety check in case we can't find the entity.
+  if (!$entity) {
+    return;
   }
-  elseif ($entity_type == 'taxonomy_term') {
-    $element = '#term';
-  }
-  else {
-    $element = '#' . $entity_type;
-  }
-  $entity = $build[$element];
 
   list($entity_id, $revision_id, $bundle) = entity_extract_ids($entity_type, $entity);
 
   // If the requested view mode does not exist, rendering will fall back
   // to 'default' and we should check that one instead.
   $view_mode = $build['#view_mode'];
-  if (!isset($handler->plugin['view modes'][$view_mode])) {
+
+  // Test to see if this view mode is actually panelizable at all.
+  if (!isset($handler->plugin['view modes'][$view_mode]) || (empty($handler->plugin['view modes'][$view_mode]['custom settings']) && empty($handler->plugin['view mode status'][$bundle][$view_mode]))) {
     $view_mode = 'default';
+  }
+
+  // Make sure the bundle + view mode is actually panelized!
+  if (!$handler->is_panelized($bundle . '.' . $view_mode)) {
+    return;
   }
 
   if (!empty($recursion_prevention[$entity_type][$entity_id][$view_mode])) {
@@ -328,9 +330,14 @@ function panelizer_ctools_plugin_api($module, $api) {
  */
 function panelizer_features_api() {
   $api = array();
-  if (function_exists('_ctools_features_get_info')) {
+  if (function_exists('_ctools_features_get_info') && defined('FEATURES_ALTER_TYPE_NONE')) {
     $api['panelizer_defaults'] = _ctools_features_get_info('panelizer_defaults');
-    $api['panelizer_defaults']['alter_type'] = FEATURES_ALTER_TYPE_NONE;
+    // CTools calls our hook_panelizer_defaults_alter so prevent Features from
+    // calling it too. FEATURES_ALTER_TYPE_INLINE means we are handling alter
+    // hooks ourselves here.
+    $api['panelizer_defaults']['alter_type'] = FEATURES_ALTER_TYPE_INLINE;
+    // Provide a separate alter hook for features_override.
+    $api['panelizer_defaults']['alter_hook'] = 'panelizer_defaults_override';
   }
 
   return $api;
@@ -354,6 +361,9 @@ function panelizer_panelizer_defaults_alter(&$items) {
   foreach (panelizer_get_plugins_with_hook('panelizer_defaults') as $handler) {
     $handler->hook_panelizer_defaults($items);
   }
+
+  // Allow features_overrides to alter the config.
+  drupal_alter('panelizer_defaults_override', $items);
 }
 
 /**
@@ -467,6 +477,12 @@ function panelizer_entity_plugin_process(&$plugin, $info) {
           $settings['status'] = $old_settings['status'];
         }
         $plugin['bundles'][$bundle] = $settings;
+
+        // Build the custom settings of the view modes for this bundle.
+        $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
+        foreach ($entity_info['view modes'] as $view_mode_name => $view_mode_info) {
+          $plugin['view mode status'][$bundle][$view_mode_name] = !empty($view_mode_settings[$view_mode_name]['custom_settings']);
+        }
       }
     }
 
@@ -482,9 +498,7 @@ function panelizer_entity_plugin_process(&$plugin, $info) {
 
     if (!empty($entity_info['view modes'])) {
       foreach ($entity_info['view modes'] as $view_mode => $view_mode_info) {
-        if (!empty($view_mode_info['custom settings'])) {
-          $plugin['view modes'][$view_mode] = $view_mode_info;
-        }
+        $plugin['view modes'][$view_mode] = $view_mode_info;
       }
     }
 
@@ -640,6 +654,31 @@ function panelizer_entity_plugin_callback_switcher($entity_type, $switcher_type,
 }
 
 /**
+ * Page callback to delegate to either the settings page or list page.
+ */
+function panelizer_default_list_or_settings_page($handler, $bundle, $name, $view_mode, $operation = 'list', $item = NULL) {
+  if (is_string($handler)) {
+    $handler = panelizer_entity_plugin_get_handler($handler);
+  }
+
+  // We need a version of $bundle with $view_mode but we need to retain one
+  // without it so we can pass straight $bundle to the settings page.
+  $test_bundle = $bundle;
+  if ($view_mode) {
+    $test_bundle .= '.' . $view_mode;
+  }
+
+  if ($handler->has_panel_choice($test_bundle)) {
+    // Call through to the UI switcher for the list
+    ctools_include('export-ui');
+    return panelizer_export_ui_switcher_page($handler, $test_bundle, 'panelizer_defaults', $operation, $item);
+  }
+  else {
+    return panelizer_default_settings_page($handler, $bundle, $name, $view_mode);
+  }
+}
+
+/**
  * Specialized version of ctools_export_ui_switcher_page()
  *
  * This one is designed to set our entity handler and bundle on the
@@ -777,6 +816,13 @@ function panelizer_has_choice_callback($handler, $bundle, $name = NULL) {
   }
 
   return $handler->has_panel_choice($bundle);
+}
+
+/**
+ * Menu callback to determine if a type has a choice of defaults, with view mode.
+ */
+function panelizer_has_choice_callback_view_mode($handler, $bundle, $view_mode) {
+  return panelizer_has_choice_callback($handler, $bundle . '.' . $view_mode);
 }
 
 /**
@@ -1140,6 +1186,14 @@ function panelizer_panels_cache_clear($argument, $cache) {
  * Save all changes made to a display using the Page Manager page cache.
  */
 function panelizer_panels_cache_save($argument, $cache) {
+  // If this is set, they clicked a button that saves a different panelizer
+  // than was being edited, such as saving to default rather than customizing
+  // an entity.
+  $original = $argument;
+  if (isset($cache->display->swap_cache_key)) {
+    $argument = $cache->display->swap_cache_key;
+  }
+
   list($entity_type, $key) = explode(':', $argument, 2);
   $type = $entity_type;
   if ($entity_type == 'default') {
@@ -1171,7 +1225,7 @@ function panelizer_panels_cache_save($argument, $cache) {
       $cache->display->context = $handler->get_contexts($entities[$entity_id]->panelizer[$view_mode], $entities[$entity_id]);
     }
   }
-  panelizer_panels_cache_clear($argument, $cache);
+  panelizer_panels_cache_clear($original, $cache);
 }
 
 // ---------------------------------------------------------------------------
@@ -1423,3 +1477,140 @@ function panelizer_operations() {
   return $operations;
 }
 
+/**
+ * Implements hook_form_alter().
+ *
+ * Alter the IPE save control form to handle extra Panelizer functionality.
+ */
+function panelizer_form_panels_ipe_edit_control_form_alter(&$form, &$form_state) {
+  if (empty($form_state['renderer'])) {
+    return;
+  }
+
+  $renderer = $form_state['renderer'];
+
+  $cache_key = $renderer->display->cache_key;
+  list($module, $type, $key) = explode(':', $cache_key, 3);
+  if ($module != 'panelizer') {
+    return;
+  }
+
+  if ($type == 'default') {
+    return;
+  }
+
+  // Load the $plugin information
+  $handler = panelizer_entity_plugin_get_handler($type);
+  if (!$handler) {
+    return;
+  }
+
+  // Get the entity that's being edited.
+  list($entity_id, $view_mode) = explode(':', $key);
+  $entities = entity_load($handler->entity_type, array($entity_id));
+  if (empty($entities[$entity_id])) {
+    return;
+  }
+
+  $entity = $entities[$entity_id];
+  list($entity_id, $revision_id, $bundle) = entity_extract_ids($handler->entity_type, $entity);
+  $entity_info = entity_get_info($handler->entity_type);
+
+  if (empty($entity->panelizer[$view_mode])) {
+    return;
+  }
+
+  $panelizer = $entities[$entity_id]->panelizer[$view_mode];
+
+  // If the entity already has customized panelizer data, add the revert button.
+  if (!empty($panelizer->did)) {
+    if ($handler->has_default_panel($bundle . '.' . $view_mode)) {
+      $form['buttons']['revert_default'] = array(
+        '#type' => 'submit',
+        '#value' => t('Revert to @bundle_name default', array('@bundle_name' => $entity_info['bundles'][$bundle]['label'])),
+        '#submit' => array('panels_ipe_revert_to_default'),
+        '#attributes' => array('class' => array('panels-ipe-cancel')),
+        '#id' => 'panelizer-ipe-revert',
+//        '#attributes' => array('onclick' => ''),
+      );
+      $form_state['panelizer entity'] = $entity;
+      $form_state['panelizer bundle'] = $bundle;
+      $form_state['panelizer handler'] = $handler;
+      $form_state['panelizer view_mode'] = $view_mode;
+    }
+    return;
+  }
+
+  // Change the default button to say "Save as custom".
+  $form['buttons']['submit']['#value'] = t('Save as custom');
+
+  // Calculate the proper name to add to the cache key, which
+  // has some data stripped off of the true name.
+  if (empty($panelizer->name)) {
+    $name = 'default';
+  }
+  else {
+    $pieces = explode(':', $panelizer->name);
+    // Strip off entity type
+    array_shift($pieces);
+    // Strip off entity bundle
+    array_shift($pieces);
+    // Strip off view mode
+    array_shift($pieces);
+    $name = implode(':', $pieces);
+  }
+
+  // Add another button to save as the default instead:
+  $form['buttons']['save_default'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save as @bundle_name default', array('@bundle_name' => $entity_info['bundles'][$bundle]['label'])),
+    '#submit' => array('panels_ipe_change_to_default', 'panels_edit_display_form_submit'),
+    '#save-display' => TRUE,
+    '#weight' => -1,
+    // precalculate the cache key so we don't have to unwind a bunch of stuff
+    // in the submit handler.
+    '#cache_key' => 'default:' . $handler->entity_type . ':' . $bundle . '.' . $panelizer->view_mode . ':' . $name,
+    '#attributes' => array('class' => array('panels-ipe-save')),
+    '#id' => 'panelizer-save-default',
+  );
+}
+
+/**
+ * Submit handler to save the panelizer default instead of customizing the entity.
+ */
+function panels_ipe_change_to_default($form, &$form_state) {
+  // Change the cache key so that it saves to the default instead of the
+  // entity. This works because we're actually editing the original display
+  // anyway, and everything else keys off the cache key.
+  $form_state['display']->swap_cache_key = $form_state['triggering_element']['#cache_key'];
+}
+
+/**
+ * Submit handler to revert to the default panelizer.
+ */
+function panels_ipe_revert_to_default($form, &$form_state) {
+  // Reduce code complexity due to indirection.
+  $handler = $form_state['panelizer handler'];
+  $entity = $form_state['panelizer entity'];
+  $bundle = $form_state['panelizer bundle'];
+  $view_mode = $form_state['panelizer view_mode'];
+  $renderer = $form_state['renderer'];
+
+  $handler->delete_entity_panelizer($entity, $view_mode);
+
+  $name = implode(':', array($handler->entity_type, $bundle, 'default'));
+  if ($view_mode != 'page_manager') {
+    $name .= ':' . $view_mode;
+  }
+  $cache_key = $form_state['display']->cache_key;
+
+  // Now load the original default display and force a rerender.
+  $panelizer = $handler->get_default_panelizer_object($bundle . '.' . $view_mode, $name);
+
+  $renderer->display = $display = $panelizer->display;
+  $display->cache_key = $cache_key;
+
+  $display->context = $handler->get_contexts($panelizer, $entity);
+
+  $renderer->commands[] = ajax_command_replace("#panels-ipe-display-{$renderer->clean_key}", panels_render_display($display, $renderer));
+}

@@ -11,11 +11,16 @@
  */
 class MediaEntityTranslationHandler extends EntityTranslationDefaultHandler {
 
+  /**
+   * Constructor function.
+   */
   public function __construct($entity_type, $entity_info, $entity) {
     parent::__construct('file', $entity_info, $entity);
   }
 
   /**
+   * Entity form handler.
+   *
    * @see EntityTranslationDefaultHandler::entityForm()
    */
   public function entityForm(&$form, &$form_state) {

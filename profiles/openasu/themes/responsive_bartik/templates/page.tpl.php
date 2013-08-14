@@ -89,9 +89,9 @@
 ?>
 <div id="page-wrapper"><div id="page">
 
-  <div id="header" class="<?php print $secondary_menu ? 'with-secondary-menu': 'without-secondary-menu'; ?>"><div class="section clearfix">
+  <header id="header" role="banner" class="<?php print $secondary_menu ? 'with-secondary-menu': 'without-secondary-menu'; ?>"><div class="section clearfix">
     <?php if ($secondary_menu): ?>
-      <div id="secondary-menu" class="navigation">
+      <nav id="secondary-menu" role="navigation" class="navigation">
         <?php print theme('links__system_secondary_menu', array(
           'links' => $secondary_menu,
           'attributes' => array(
@@ -104,7 +104,7 @@
             'class' => array('element-invisible'),
           ),
         )); ?>
-      </div> <!-- /#secondary-menu -->
+      </nav> <!-- /#secondary-menu -->
     <?php endif; ?>
     
     
@@ -143,7 +143,7 @@
     <?php print render($page['header']); ?>
 
     <?php if ($main_menu): ?>
-      <div id="main-menu" class="navigation">
+      <nav id="main-menu" role="navigation" class="navigation">
         <?php print theme('links__system_main_menu', array(
           'links' => $main_menu,
           'attributes' => array(
@@ -156,12 +156,9 @@
             'class' => array('element-invisible'),
           ),
         )); ?>
-      </div> <!-- /#main-menu -->
+      </nav> <!-- /#main-menu -->
     <?php endif; ?>
-
-    
-
-  </div></div> <!-- /.section, /#header -->
+  </div></header> <!-- /.section, /#header -->
 
   <?php if ($messages): ?>
     <div id="messages"><div class="section clearfix">
@@ -175,7 +172,7 @@
     </div></div> <!-- /.section, /#featured -->
   <?php endif; ?>
 
-  <div id="main-wrapper" class="clearfix"><div id="main" class="clearfix">
+  <div id="main-wrapper" class="clearfix"><div id="main" role="main" class="clearfix">
 
     <?php print $breadcrumb; ?>
 
@@ -239,9 +236,9 @@
     <?php endif; ?>
 
     <?php if ($page['footer']): ?>
-      <div id="footer" class="clearfix">
+      <footer id="footer" role="contentinfo" class="clearfix">
         <?php print render($page['footer']); ?>
-      </div> <!-- /#footer -->
+      </footer> <!-- /#footer -->
     <?php endif; ?>
 
   </div></div> <!-- /.section, /#footer-wrapper -->

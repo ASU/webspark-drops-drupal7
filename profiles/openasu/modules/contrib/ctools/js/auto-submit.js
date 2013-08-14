@@ -88,6 +88,11 @@ Drupal.behaviors.CToolsAutoSubmit = {
             if ($.inArray(e.keyCode, discardKeyCode) === -1) {
               timeoutID = setTimeout($.proxy(triggerSubmit, this.form), 500);
             }
+          })
+          .bind('change', function (e) {
+            if ($.inArray(e.keyCode, discardKeyCode) === -1) {
+              timeoutID = setTimeout($.proxy(triggerSubmit, this.form), 500);
+            }
           });
       });
   }

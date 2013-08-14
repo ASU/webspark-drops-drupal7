@@ -6,19 +6,22 @@
  * Template file for theme('media_youtube_video').
  *
  * Variables available:
- *  $uri - The uri to the YouTube video, such as youtube://v/xsy7x8c9.
- *  $video_id - The unique identifier of the YouTube video.
- *  $width - The width to render.
- *  $height - The height to render.
- *  $autoplay - If TRUE, then start the player automatically when displaying.
- *  $fullscreen - Whether to allow fullscreen playback.
+ *  $uri - The media uri for the YouTube video (e.g., youtube://v/xsy7x8c9).
+ *  $video_id - The unique identifier of the YouTube video (e.g., xsy7x8c9).
+ *  $id - The file entity ID (fid).
+ *  $url - The full url including query options for the Youtube iframe.
+ *  $options - An array containing the Media Youtube formatter options.
+ *  $api_id_attribute - An id attribute if the Javascript API is enabled;
+ *  otherwise NULL.
+ *  $width - The width value set in Media: Youtube file display options.
+ *  $height - The height value set in Media: Youtube file display options.
+ *  $title - The Media: YouTube file's title.
+ *  $alternative_content - Text to display for browsers that don't support
+ *  iframes.
  *
- * Note that we set the width & height of the outer wrapper manually so that
- * the JS will respect that when resizing later.
  */
+
 ?>
-<div class="media-youtube-outer-wrapper" id="media-youtube-<?php print $id; ?>" style="width: <?php print $width; ?>px; height: <?php print $height; ?>px;">
-  <div class="media-youtube-preview-wrapper" id="<?php print $wrapper_id; ?>">
-    <?php print $output; ?>
-  </div>
+<div class="<?php print $classes; ?> media-youtube-<?php print $id; ?>">
+  <iframe class="media-youtube-player" <?php print $api_id_attribute; ?>width="<?php print $width; ?>" height="<?php print $height; ?>" title="<?php print $title; ?>" src="<?php print $url; ?>" frameborder="0" allowfullscreen><?php print $alternative_content; ?></iframe>
 </div>

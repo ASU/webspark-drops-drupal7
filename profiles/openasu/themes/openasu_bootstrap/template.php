@@ -122,7 +122,7 @@ function openasu_bootstrap_block_view_alter(&$data, $block) {
   // Add the attributes if applicable
   if (($block->module == 'asu_brand') && ($block->delta == 'asu_brand_header')) {
     if (theme_get_setting('hide_local_menu_navicon', 'openasu_bootstrap')) {
-      $data['content'] = str_replace('<a href="javascript:toggleASU();">', '<a href="javascript:toggleASU();" data-target=".nav-collapse" data-toggle="collapse"', $data['content']);
+      $data['content'] = str_replace('<a href="javascript:toggleASU();">', '<a href="javascript:toggleASU();" data-target=".hidden-collapse" data-toggle="collapse">', $data['content']);
     }
   }
 }

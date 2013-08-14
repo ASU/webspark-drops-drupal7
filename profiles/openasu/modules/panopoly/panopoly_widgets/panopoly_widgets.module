@@ -3,6 +3,21 @@
 include_once('panopoly_widgets.features.inc');
 include_once('panopoly_widgets.spotlight.inc');
 
+
+/**
+ * Implements hook_init()
+ */
+function panopoly_widgets_init() {
+  
+  // Load the seven theme CSS for the media browser. This is done
+  // because the seven theme may not be the admin theme, but the
+  // media browser assumes that it is....
+  if (arg(0) == 'media' && arg(1) == 'browser' && $GLOBALS['theme'] != 'seven') {
+    drupal_add_css(drupal_get_path('theme', 'seven') . '/reset.css', array('basename' => 'seven_reset', 'group' => CSS_THEME));
+    drupal_add_css(drupal_get_path('theme', 'seven') . '/style.css', array('basename' => 'seven_style', 'group' => CSS_THEME));
+  }
+}
+
 /**
  * Implements hook_apps_app_info()
  */
@@ -30,9 +45,9 @@ function panopoly_widgets_configure_form($form, &$form_state) {
 }
 
 /**
- * Implements hook_init()
+ * Implements hook_page_build()
  */
-function panopoly_widgets_init() {
+function panopoly_widgets_page_build(&$page) {
 
   // Include the Spotlight Rotation time setting
   $rotation_time = 1000 * variable_get('panopoly_widgets_spotlight_rotation_time', 4);
@@ -57,9 +72,9 @@ function panopoly_widgets_ctools_content_subtype_alter(&$subtype, &$plugin) {
 
   // Modify the menu block plugin to better fit into our UI
   if ($plugin['module'] == 'menu_block' && $subtype['menu_title'] == 'Main menu') {
-    $subtype['category'][0] = 'Custom';
+    $subtype['category'][0] = t('Custom');
     $subtype['top level'] = TRUE;
-    $subtype['title'] = 'Add submenu';
+    $subtype['title'] = t('Add submenu');
     $subtype['icon'] = drupal_get_path('module', 'panopoly_widgets') . '/images/icon_submenu.png';
     $subtype['admin css'] = array(drupal_get_path('module', 'menu_block') . '/menu-block-admin.css');
     $subtype['admin js'] = array(drupal_get_path('module', 'menu_block') . '/menu-block.js');
@@ -67,17 +82,17 @@ function panopoly_widgets_ctools_content_subtype_alter(&$subtype, &$plugin) {
 
   // Modify the general content item to appear in the generic content sidebar area
   if ($plugin['module'] == 'views_content' && $subtype['title'] == 'Piece of Content') {
-    $subtype['category'][0] = 'Custom';
+    $subtype['category'][0] = t('Custom');
     $subtype['top level'] = TRUE;
-    $subtype['title'] = 'Add content item';
+    $subtype['title'] = t('Add content item');
     $subtype['icon'] = drupal_get_path('module', 'panopoly_widgets') . '/images/icon_content_item.png';
   }
 
   // Modify the general content listing to appear in the generic content sidebar area
   if ($plugin['module'] == 'views_content' && $subtype['title'] == 'List of Content') {
-    $subtype['category'][0] = 'Custom';
+    $subtype['category'][0] = t('Custom');
     $subtype['top level'] = TRUE;
-    $subtype['title'] = 'Add content list';
+    $subtype['title'] = t('Add content list');
     $subtype['icon'] = drupal_get_path('module', 'panopoly_widgets') . '/images/icon_content_list.png';
   }
 
@@ -149,7 +164,7 @@ function panopoly_widgets_form_alter(&$form, &$form_state, $form_id) {
     $form['reusable']['#type'] = 'fieldset';
     $form['reusable']['#process'] = array('ctools_dependent_process');
     $form['reusable']['#id'] = 'reusable-settings';
-    $form['reusable']['category']['#value'] = 'Reusable Content';
+    $form['reusable']['category']['#value'] = t('Reusable Content');
     $form['reusable']['category']['#type'] = 'value';
     $form['reusable']['admin_description']['#access'] = FALSE;
 
@@ -345,6 +360,44 @@ function panopoly_widgets_field_display_fieldable_panels_pane_alter(&$display, $
     if (!empty($view_mode)) {
       $display['settings']['view_mode'] = $view_mode;
     }
+  }
+}
+
+/**
+ * Implementation of hook_file_default_displays_alter()
+ */
+function panopoly_widgets_file_default_displays_alter(&$default_displays) {
+
+  // Set the default video configuration for videos
+  if (!empty($default_displays['video__default__media_vimeo_video'])) {
+    $default_displays['video__default__media_vimeo_video']->settings['protocol'] = '//';
+  }
+  if (!empty($default_displays['video__default__media_youtube_video'])) {
+    $default_displays['video__default__media_youtube_video']->settings['modestbranding'] = 1;
+  }
+
+  // Set the default image style for videos to be our custom video image style
+  if (!empty($default_displays['video__default__media_youtube_image'])) {
+    $default_displays['video__default__media_youtube_image']->settings['image_style'] = 'panopoly_image_video';
+  }
+  if (!empty($default_displays['video__default__media_vimeo_image'])) {
+    $default_displays['video__default__media_vimeo_image']->settings['image_style'] = 'panopoly_image_video';
+  }
+
+  // Set the teaser image style for videos to be our custom video image style
+  if (!empty($default_displays['video__teaser__media_vimeo_image'])) {
+    $default_displays['video__teaser__media_vimeo_image']->settings['image_style'] = 'panopoly_image_video';
+  }
+  if (!empty($default_displays['video__teaser__media_youtube_image'])) {
+    $default_displays['video__teaser__media_youtube_image']->settings['image_style'] = 'panopoly_image_video';
+  }
+
+  // Set the preview image style for videos to be our custom thumbnail image style
+  if (!empty($default_displays['video__preview__media_youtube_image'])) {
+    $default_displays['video__preview__media_youtube_image']->settings['image_style'] = 'panopoly_image_thumbnail';
+  }
+  if (!empty($default_displays['video__preview__media_vimeo_image'])) {
+    $default_displays['video__preview__media_vimeo_image']->settings['image_style'] = 'panopoly_image_thumbnail';
   }
 }
 

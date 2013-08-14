@@ -162,6 +162,10 @@ function fieldable_panels_panes_schema() {
     ),
   );
 
+  // Optional cache table for entitycache support.
+  $schema['cache_entity_fieldable_panels_pane'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_entity_fieldable_panels_pane']['description'] = 'Cache table used to store fieldable_panels_pane entity records.';
+
   return $schema;
 }
 
@@ -231,5 +235,16 @@ function fieldable_panels_panes_update_7106() {
       'not null' => TRUE,
       'default' => '',
     ));
+  }
+}
+
+/**
+ * Add cache table for optional entitycache support.
+ */
+function fieldable_panels_panes_update_7107() {
+  if (!db_table_exists('cache_entity_fieldable_panels_pane')) {
+    $schema = drupal_get_schema_unprocessed('system', 'cache');
+    $schema['description'] = 'Cache table used to store fieldable_panel_pane entity records.';
+    db_create_table('cache_entity_fieldable_panels_pane', $schema);
   }
 }

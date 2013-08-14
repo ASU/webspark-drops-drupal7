@@ -284,15 +284,20 @@ function ctools_block_content_type_admin_title($subtype, $conf) {
  */
 function ctools_block_content_type_admin_info($subtype, $conf) {
   list($module, $delta) = _ctools_block_get_module_delta($subtype, $conf);
-  $block = (object) module_invoke($module, 'block', 'view', $delta);
+  $block = (object) module_invoke($module, 'block_view', $delta);
 
-  // Sanitize the block because <script> tags can hose javascript up:
-  if (!empty($block->content)) {
-    $block->content = filter_xss_admin($block->content);
-  }
+  if (!empty($block)) {
+    // Sanitize the block because <script> tags can hose javascript up:
+    if (!empty($block->content)) {
+      $block->content = filter_xss_admin(render($block->content));
+    }
 
-  if (!empty($block) && !empty($block->subject)) {
-    $block->title = $block->subject;
+    if (!empty($block->subject)) {
+      $block->title = $block->subject;
+    }
+    elseif (empty($block->title)) {
+      $block->title = t('No title');
+    }
     return $block;
   }
 }
@@ -497,11 +502,11 @@ function ctools_user_login_pane_render($subtype, $conf, $panel_args, $contexts) 
   $info->module = $module;
   $info->delta = $delta;
 
-  $block = new stdClass;
-  $block->subject = t('User login');
+  $block = array();
+  $block['subject'] = t('User login');
   // Manually set the content (rather than invoking block_view) because the
   // block implementation won't render on certain URLs.
-  $block->content = drupal_get_form('user_login_block');
+  $block['content'] = drupal_get_form('user_login_block');
 
   // Allow modules to modify the block before it is viewed, via either
   // hook_block_view_alter() or hook_block_view_MODULE_DELTA_alter().

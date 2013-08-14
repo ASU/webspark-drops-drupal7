@@ -34,11 +34,11 @@ function panopoly_images_image_default_styles() {
         'module' => 'image',
         'name' => 'image_scale',
         'data' => array(
-          'width' => '480',
+          'width' => 480,
           'height' => '',
           'upscale' => 0,
         ),
-        'weight' => '1',
+        'weight' => 1,
       ),
       3 => array(
         'label' => 'Crop',
@@ -50,11 +50,11 @@ function panopoly_images_image_default_styles() {
         'module' => 'image',
         'name' => 'image_crop',
         'data' => array(
-          'width' => '480',
-          'height' => '260',
+          'width' => 480,
+          'height' => 260,
           'anchor' => 'center-center',
         ),
-        'weight' => '3',
+        'weight' => 3,
       ),
     ),
   );
@@ -73,11 +73,11 @@ function panopoly_images_image_default_styles() {
         'module' => 'image',
         'name' => 'image_scale',
         'data' => array(
-          'width' => '960',
+          'width' => 960,
           'height' => '',
           'upscale' => 0,
         ),
-        'weight' => '2',
+        'weight' => 2,
       ),
     ),
   );
@@ -96,11 +96,11 @@ function panopoly_images_image_default_styles() {
         'module' => 'image',
         'name' => 'image_scale',
         'data' => array(
-          'width' => '480',
+          'width' => 480,
           'height' => '',
           'upscale' => 0,
         ),
-        'weight' => '1',
+        'weight' => 1,
       ),
     ),
   );
@@ -119,11 +119,11 @@ function panopoly_images_image_default_styles() {
         'module' => 'image',
         'name' => 'image_scale',
         'data' => array(
-          'width' => '240',
+          'width' => 240,
           'height' => '',
           'upscale' => 0,
         ),
-        'weight' => '1',
+        'weight' => 1,
       ),
     ),
   );
@@ -142,10 +142,10 @@ function panopoly_images_image_default_styles() {
         'module' => 'image',
         'name' => 'image_scale_and_crop',
         'data' => array(
-          'width' => '960',
-          'height' => '560',
+          'width' => 960,
+          'height' => 560,
         ),
-        'weight' => '2',
+        'weight' => 2,
       ),
     ),
   );
@@ -164,10 +164,10 @@ function panopoly_images_image_default_styles() {
         'module' => 'image',
         'name' => 'image_scale_and_crop',
         'data' => array(
-          'width' => '200',
-          'height' => '200',
+          'width' => 200,
+          'height' => 200,
         ),
-        'weight' => '1',
+        'weight' => 1,
       ),
     ),
   );
@@ -186,11 +186,11 @@ function panopoly_images_image_default_styles() {
         'module' => 'image',
         'name' => 'image_scale',
         'data' => array(
-          'width' => '80',
-          'height' => '80',
+          'width' => 80,
+          'height' => 80,
           'upscale' => 0,
         ),
-        'weight' => '1',
+        'weight' => 1,
       ),
     ),
   );
@@ -209,10 +209,10 @@ function panopoly_images_image_default_styles() {
         'module' => 'image',
         'name' => 'image_scale_and_crop',
         'data' => array(
-          'width' => '560',
-          'height' => '314',
+          'width' => 640,
+          'height' => 390,
         ),
-        'weight' => '1',
+        'weight' => 1,
       ),
     ),
   );

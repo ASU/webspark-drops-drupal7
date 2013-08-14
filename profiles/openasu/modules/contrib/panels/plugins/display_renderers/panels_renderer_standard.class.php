@@ -259,6 +259,10 @@ class panels_renderer_standard {
       }
     }
     $this->prepared['panes'] = $first + $normal + $last;
+
+    // Allow other modules the alter the prepared panes array.
+    drupal_alter('panels_panes_prepared', $this->prepared['panes'], $this);
+
     return $this->prepared['panes'];
   }
 
@@ -436,7 +440,7 @@ class panels_renderer_standard {
         break;
       case 'inline':
         $url = base_path() . $filename;
-        $this->prefix .= '<link type="text/css" rel="stylesheet" href="' . $url . '" />'."\n";
+        $this->prefix .= '<link type="text/css" rel="stylesheet" href="' . file_create_url($url) . '" />'."\n";
         break;
     }
   }

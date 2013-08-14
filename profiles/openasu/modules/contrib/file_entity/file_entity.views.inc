@@ -41,7 +41,79 @@ function file_entity_views_data() {
     ),
   );
 
+  // View link.
+  $data['file_managed']['link'] = array(
+    'title' => t('Link'),
+    'help' => t('Provide a simple link to the file entity.'),
+    'field' => array(
+      'handler' => 'views_handler_field_file_link',
+      'real field' => 'fid',
+      'additional fields' => array(
+        'fid',
+      ),
+    ),
+  );
+
+  // Edit link.
+  $data['file_managed']['edit'] = array(
+    'title' => t('Edit link'),
+    'help' => t('Provide a simple link to edit the file entity.'),
+    'field' => array(
+      'handler' => 'views_handler_field_file_link_edit',
+      'real field' => 'fid',
+      'additional fields' => array(
+        'fid',
+      ),
+    ),
+  );
+
+  // Delete link.
+  $data['file_managed']['delete'] = array(
+    'title' => t('Delete link'),
+    'help' => t('Provide a simple link to delete the file entity.'),
+    'field' => array(
+      'handler' => 'views_handler_field_file_link_delete',
+      'real field' => 'fid',
+      'additional fields' => array(
+        'fid',
+      ),
+    ),
+  );
+
+  // Download link.
+  $data['file_managed']['download'] = array(
+    'title' => t('Download link'),
+    'help' => t('Provide a simple link to download the file entity.'),
+    'field' => array(
+      'handler' => 'views_handler_field_file_link_download',
+      'real field' => 'fid',
+      'additional fields' => array(
+        'fid',
+      ),
+    ),
+  );
+
+  // Usage link.
+  $data['file_managed']['usage'] = array(
+    'title' => t('Usage link'),
+    'help' => t('Provide a simple link to view the usage of the file entity.'),
+    'field' => array(
+      'handler' => 'views_handler_field_file_link_usage',
+      'real field' => 'fid',
+      'additional fields' => array(
+        'fid',
+      ),
+    ),
+  );
+
   return $data;
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function file_entity_views_data_alter(&$data) {
+  $data['file_managed']['filename']['field']['handler'] = 'views_handler_field_file_filename';
 }
 
 /**
@@ -59,6 +131,16 @@ function file_entity_views_plugins() {
         'uses options' => TRUE,
         'type' => 'normal',
         'help topic' => 'style-file',
+      ),
+      'file_rss' => array(
+        'title' => t('File'),
+        'help' => t('Display the file with standard file view.'),
+        'handler' => 'views_plugin_row_file_rss',
+        'theme' => 'views_view_row_rss',
+        'base' => array('file_managed'), // only works with 'file' as base.
+        'uses options' => TRUE,
+        'type' => 'feed',
+        'help topic' => 'style-file-rss',
       ),
     ),
   );

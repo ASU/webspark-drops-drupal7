@@ -79,16 +79,6 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_render($subty
       $block->title = !empty($entity->title) ? filter_xss_admin($entity->title) : '';
     }
     $block->content = fieldable_panels_panes_view($entity, $view_mode);
-
-    if (fieldable_panels_panes_access('update', $entity)) {
-      $block->admin_links[] = array(
-        'title' => t('Edit pane'),
-        'alt' => t("Edit the values in this pane"),
-        'href' => "admin/structure/fieldable-panels-panes/view/$entity->fpid/edit",
-        'query' => drupal_get_destination(),
-      );
-    }
-
     return $block;
   }
 }
@@ -236,6 +226,7 @@ function _fieldable_panels_panes_default_content_type() {
       'description' => t('Create a new custom entity.'),
       'all contexts' => TRUE,
       'bundle' => $bundle,
+      'create content access' => 'fieldable_panels_panes_content_type_create_access',
     );
   }
 
@@ -309,4 +300,11 @@ function _fieldable_panels_panes_load_entity($subtype_name) {
   }
 
   return $content;
+}
+
+/**
+ * Access callback for creating a new content type.
+ */
+function fieldable_panels_panes_content_type_create_access($type, $subtype) {
+  return fieldable_panels_panes_access('create', $subtype['name']);
 }

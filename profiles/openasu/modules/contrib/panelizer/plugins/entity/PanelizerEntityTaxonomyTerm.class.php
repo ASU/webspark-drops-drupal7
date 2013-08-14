@@ -40,7 +40,7 @@ class PanelizerEntityTaxonomyTerm extends PanelizerEntityDefault {
 
     $warn = FALSE;
     foreach ($this->plugin['bundles'] as $info) {
-      if (!empty($info['status'])) {
+      if (!empty($info['status']) && !empty($info['view modes']['page_manager']['status'])) {
         $warn = TRUE;
         break;
       }
@@ -49,12 +49,12 @@ class PanelizerEntityTaxonomyTerm extends PanelizerEntityDefault {
     if ($warn) {
       $task = page_manager_get_task('term_view');
       if (!empty($task['disabled'])) {
-        drupal_set_message('The taxonomy term template page is currently not enabled in page manager. You must enable this for Panelizer to be able to panelize taxonomy terms.', 'warning');
+        drupal_set_message('The taxonomy term template page is currently not enabled in page manager. You must enable this for Panelizer to be able to panelize taxonomy terms using the "Full page override" view mode.', 'warning');
       }
 
       $handler = page_manager_load_task_handler($task, '', 'term_view_panelizer');
       if (!empty($handler->disabled)) {
-        drupal_set_message('The panelizer variant on the taxonomy term template page is currently not enabled in page manager. You must enable this for Panelizer to be able to panelize taxonomy terms.', 'warning');
+        drupal_set_message('The panelizer variant on the taxonomy term template page is currently not enabled in page manager. You must enable this for Panelizer to be able to panelize taxonomy terms using the "Full page override" view mode.', 'warning');
       }
     }
   }
@@ -111,6 +111,19 @@ class PanelizerEntityTaxonomyTerm extends PanelizerEntityDefault {
         $bundle = $form['#vocabulary']->machine_name;
         $this->add_bundle_setting_form($form, $form_state, $bundle, array('machine_name'));
       }
+    }
+  }
+
+  /**
+   * Fetch the entity out of a build for hook_entity_view.
+   *
+   * @param $build
+   *   The render array that contains the entity.
+   */
+  public function get_entity_view_entity($build) {
+    $element = '#term';
+    if (isset($build[$element])) {
+      return $build[$element];
     }
   }
 

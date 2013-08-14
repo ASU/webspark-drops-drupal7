@@ -6,19 +6,19 @@
  * Template file for theme('media_vimeo_video').
  *
  * Variables available:
- *  $uri - The uri to the Vimeo video, such as vimeo://v/xsy7x8c9.
- *  $video_id - The unique identifier of the Vimeo video.
- *  $width - The width to render.
- *  $height - The height to render.
- *  $autoplay - If TRUE, then start the player automatically when displaying.
- *  $fullscreen - Whether to allow fullscreen playback.
+ *  $uri - The media uri for the Vimeo video (e.g., vimeo://v/xsy7x8c9).
+ *  $video_id - The unique identifier of the Vimeo video (e.g., xsy7x8c9).
+ *  $id - The file entity ID (fid).
+ *  $url - The full url including query options for the Vimeo iframe.
+ *  $options - An array containing the Media Vimeo formatter options.
+ *  $api_id_attribute - A required id attribute if the Javascript API
+ *  is enabled; otherwise NULL.
+ *  $width - The width value set in Media: Vimeo file display options.
+ *  $height - The height value set in Media: Vimeo file display options.
  *
- * Note that we set the width & height of the outer wrapper manually so that
- * the JS will respect that when resizing later.
  */
+
 ?>
-<div class="media-vimeo-outer-wrapper" id="media-vimeo-<?php print $id; ?>" style="width: <?php print $width; ?>px; height: <?php print $height; ?>px;">
-  <div class="media-vimeo-preview-wrapper" id="<?php print $wrapper_id; ?>">
-    <?php print $output; ?>
-  </div>
+<div class="<?php print $classes; ?> media-vimeo-<?php print $id; ?>">
+  <iframe class="media-vimeo-player" <?php print $api_id_attribute; ?>width="<?php print $width; ?>" height="<?php print $height; ?>" src="<?php print $url; ?>" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 </div>

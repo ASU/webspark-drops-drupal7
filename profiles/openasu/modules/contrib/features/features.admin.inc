@@ -5,6 +5,52 @@
  * Forms for Features admin screens
  */
 
+
+/**
+ * Settings form for features
+ */
+function features_settings_form($form, $form_state) {
+  $form = array();
+
+  $components = features_get_components();
+  uasort($components, 'features_compare_component_name');
+  $form['show_components'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Show components on create/edit feature form.'),
+    '#description' => t('Components with no options will not be shown no matter the setting below. Disabled components cannot be used with admin form.')
+  );
+  foreach ($components as $compontent => $info) {
+    if (empty($info['feature_source']) && empty($info['features_source'])) {
+      continue;
+    }
+    $form['show_components']['features_admin_show_component_' . $compontent] = array(
+      '#title' => t('@name (@machine)', array('@name' => $info['name'], '@machine' => $compontent)),
+      '#type' => 'checkbox',
+      '#default_value' => variable_get('features_admin_show_component_' . $compontent, TRUE),
+    );
+    if ($compontent == 'menu_links' && ($menus = menu_get_menus())) {
+      $form['show_components']['features_admin_menu_links'] = array(
+        '#title' => t('Advanced Menu Link Settings'),
+        '#type' => 'fieldset',
+        '#collapsed' => TRUE,
+        '#collapsible' => TRUE,
+        '#states' => array(
+          'invisible' => array(
+            'input[name="features_admin_show_component_menu_links"]' => array('checked' => FALSE),
+          ),
+        ),
+      );
+      $form['show_components']['features_admin_menu_links']['features_admin_menu_links_menus'] = array(
+        '#title' => t('Allowed menus for menu links'),
+        '#type' => 'checkboxes',
+        '#options' =>  array_map('check_plain', $menus),
+        '#default_value' => variable_get('features_admin_menu_links_menus', array_keys(menu_get_menus())),
+      );
+    }
+  }
+  return system_settings_form($form);
+}
+
 /**
  * Form constructor for features export form.
  *
@@ -267,14 +313,20 @@ function _features_export_form_components(&$form, &$form_state) {
     module_load_include('inc', 'features', 'features.export');
 
     $feature_export = _features_export_generate($export, $form_state, $feature);
-    $feature_export = features_export_prepare($feature_export, $feature->name);
+    $feature_export = features_export_prepare($feature_export, $feature->name, TRUE);
     $info = features_export_info($feature_export);
 
     drupal_add_js(array('features' => array('info' => $info)), 'setting');
   }
 
+  // determine any components that are deprecated
+  $deprecated = features_get_deprecated($export['components']);
+
   $sections = array('included', 'detected', 'added');
   foreach ($export['components'] as $component => $component_info) {
+    if (!variable_get('features_admin_show_component_' . $component, TRUE)) {
+      continue;
+    }
     $label = (isset($component_info['name']) ?
       $component_info['name'] . " <span>(" . check_plain($component) . ")</span>" : check_plain($component));
 
@@ -287,42 +339,72 @@ function _features_export_form_components(&$form, &$form_state) {
 
     if ($count + count($component_info['options']['sources']) > 0) {
 
-      $form['export'][$component] = array(
-        '#markup' => '',
-        '#tree' => TRUE,
-        );
-      $form['export'][$component]['sources'] = array(
-        '#type' => 'fieldset',
-        '#title' => $label,
-        '#tree' => TRUE,
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
-        '#attributes' => array('class' => array('features-export-component')),
-        '#prefix' => "<div class='features-export-parent component-$component'>",
-      );
-      $form['export'][$component]['sources']['selected'] = array(
-        '#type' => 'checkboxes',
-        '#id' => "edit-sources-$component_name",
-        '#options' => features_dom_encode_options($component_info['options']['sources']),
-        '#default_value' => features_dom_encode_options($component_info['selected']['sources'], FALSE),
-        '#attributes' => array(
-          'class' => array('component-select'),
-        ),
-      );
+      if (!empty($deprecated[$component])) {
+        // only show deprecated component if it has some exports
+        if (!empty($component_info['options']['included'])) {
+          $form['export'][$component] = array(
+            '#markup' => '',
+            '#tree' => TRUE,
+            );
 
-      foreach ($sections as $section) {
-        $form['export'][$component][$section] = array(
-          '#type' => 'checkboxes',
-          '#options' => !empty($component_info['options'][$section]) ?
-            features_dom_encode_options($component_info['options'][$section]) : array(),
-          '#default_value' => !empty($component_info['selected'][$section]) ?
-            features_dom_encode_options($component_info['selected'][$section], FALSE) : array(),
-          '#attributes' => array('class' => array('component-' . $section)),
-        );
+          $form['export'][$component]['deprecated'] = array(
+            '#type' => 'fieldset',
+            '#title' => $label . "<span class='features-conflict'> (" . t('DEPRECATED') . ")</span>",
+            '#tree' => TRUE,
+            '#collapsible' => TRUE,
+            '#collapsed' => TRUE,
+            '#attributes' => array('class' => array('features-export-component')),
+          );
+          $list = ' ';
+          foreach ($component_info['options']['included'] as $key) {
+            $list .= "<span class='form-type-checkbox features-conflict'>$key</span>";
+          }
+          $form['export'][$component]['deprecated']['selected'] = array(
+            '#prefix' => "<div class='component-detected'>",
+            '#markup' => $list,
+            '#suffix' => "</div>",
+          );
+        }
       }
-      $form['export'][$component][$sections[0]]['#prefix'] =
-        "<div class='component-list features-export-list $extra_class'>";
-      $form['export'][$component][$sections[count($sections)-1]]['#suffix'] = '</div></div>';
+      else {
+        $form['export'][$component] = array(
+          '#markup' => '',
+          '#tree' => TRUE,
+          );
+
+        $form['export'][$component]['sources'] = array(
+          '#type' => 'fieldset',
+          '#title' => $label,
+          '#tree' => TRUE,
+          '#collapsible' => TRUE,
+          '#collapsed' => TRUE,
+          '#attributes' => array('class' => array('features-export-component')),
+          '#prefix' => "<div class='features-export-parent component-$component'>",
+        );
+        $form['export'][$component]['sources']['selected'] = array(
+          '#type' => 'checkboxes',
+          '#id' => "edit-sources-$component_name",
+          '#options' => features_dom_encode_options($component_info['options']['sources']),
+          '#default_value' => features_dom_encode_options($component_info['selected']['sources'], FALSE),
+          '#attributes' => array(
+            'class' => array('component-select'),
+          ),
+        );
+
+        foreach ($sections as $section) {
+          $form['export'][$component][$section] = array(
+            '#type' => 'checkboxes',
+            '#options' => !empty($component_info['options'][$section]) ?
+              features_dom_encode_options($component_info['options'][$section]) : array(),
+            '#default_value' => !empty($component_info['selected'][$section]) ?
+              features_dom_encode_options($component_info['selected'][$section], FALSE) : array(),
+            '#attributes' => array('class' => array('component-' . $section)),
+          );
+        }
+        $form['export'][$component][$sections[0]]['#prefix'] =
+          "<div class='component-list features-export-list $extra_class'>";
+        $form['export'][$component][$sections[count($sections)-1]]['#suffix'] = '</div></div>';
+      }
     }
   }
   $form['export']['features_legend'] = array(
@@ -405,6 +487,10 @@ function _features_export_build($feature, &$form_state) {
   foreach ($components as $component => $component_info) {
     if ($reset) {
       unset($form_state['values'][$component]);
+    }
+    if (!variable_get('features_admin_show_component_' . $component, TRUE)) {
+      unset($components[$component]);
+      continue;
     }
     // User-selected components take precedence.
     $stub[$component] = array();
@@ -744,7 +830,9 @@ function features_export_build_form_submit($form, &$form_state) {
       $directory = (!empty($export['project path'])) ? $export['project path'] . '/' . $module_name :
         (isset($feature->filename) ? dirname($feature->filename) : $destination . '/' . $module_name);
       if (!is_dir($directory)) {
-        mkdir($directory);
+        if (mkdir($directory, 0777, true) === FALSE) {
+          $success = FALSE;
+        }
       }
     }
     else {
@@ -892,14 +980,14 @@ function features_admin_form($form, $form_state) {
         }
       }
       if (!empty($unmet_dependencies)) {
-        $description .= "<div class='dependencies'>" . t('Unmet dependencies: @dependencies', array('@dependencies' => implode(', ', $unmet_dependencies))) . "</div>";
+        $description .= "<div class='dependencies'>" . t('Unmet dependencies: !dependencies', array('!dependencies' => implode(', ', $unmet_dependencies))) . "</div>";
         $disabled = TRUE;
       }
     }
 
     if (!empty($module->dependents)) {
       $disabled = TRUE;
-      $description .= "<div class='requirements'>". t('Required by: @dependents', array('@dependents' => implode(', ', $module->dependents))) ."</div>";
+      $description .= "<div class='requirements'>". t('Required by: !dependents', array('!dependents' => implode(', ', $module->dependents))) ."</div>";
     }
 
     // Detect potential conflicts
@@ -1093,10 +1181,13 @@ function features_admin_components_revert(&$form, &$form_state) {
   module_load_include('inc', 'features', 'features.export');
   features_include();
   $module = $form_state['values']['module'];
-  $revert = array();
+  $revert = array($module => array());
   foreach (array_filter($form_state['values']['revert']) as $component => $status) {
     $revert[$module][] = $component;
     drupal_set_message(t('Reverted all <strong>@component</strong> components for <strong>@module</strong>.', array('@component' => $component, '@module' => $module)));
+  }
+  if (empty($revert[$module])) {
+    drupal_set_message(t('Please select which components to revert.'), 'warning');
   }
   features_revert($revert);
   $form_state['redirect'] = 'admin/structure/features/' . $module;
@@ -1164,11 +1255,9 @@ function features_form_submit(&$form, &$form_state) {
 }
 
 /**
- * Form for disabling orphaned dependencies.
+ * Form for clearing cache after enabling a feature.
  */
 function features_cleanup_form($form, $form_state, $cache_clear = FALSE) {
-  $form = array();
-
   // Clear caches if we're getting a post-submit redirect that requests it.
   if ($cache_clear) {
     drupal_flush_all_caches();
@@ -1180,80 +1269,7 @@ function features_cleanup_form($form, $form_state, $cache_clear = FALSE) {
     menu_rebuild();
   }
 
-  // Retrieve orphaned modules and provide them as optional modules to be disabled.
-  // Exclude any modules that have been added to the 'ignored' list.
-  $options = array();
-  $orphans = features_get_orphans();
-  $ignored = variable_get('features_ignored_orphans', array());
-  if (!empty($orphans)) {
-    foreach ($orphans as $module) {
-      if (!in_array($module->name, $ignored, TRUE)) {
-        $options[$module->name] = check_plain($module->info['name']);
-      }
-    }
-  }
-
-  if (!empty($options)) {
-    $form['orphans'] = array(
-      '#title' => t('Orphaned dependencies'),
-      '#description' => t('These modules are dependencies of features that have been disabled. They may be disabled without affecting other components of your website.'),
-      '#type' => 'checkboxes',
-      '#options' => $options,
-      '#default_value' => array_keys($options),
-    );
-    $form['buttons'] = array('#tree' => TRUE, '#theme' => 'features_form_buttons');
-    $form['buttons']['disable'] = array(
-      '#type' => 'submit',
-      '#value' => t('Disable selected modules'),
-      '#submit' => array('features_cleanup_form_disable'),
-    );
-    $form['buttons']['ignore'] = array(
-      '#type' => 'submit',
-      '#value' => t('Leave enabled'),
-      '#submit' => array('features_cleanup_form_ignore'),
-    );
-  }
-  else {
     drupal_goto('admin/structure/features');
-  }
-  return $form;
-}
-
-/**
- * Submit handler for disable action on features_cleanup_form().
- */
-function features_cleanup_form_disable(&$form, &$form_state) {
-  if (!empty($form_state['values']['orphans'])) {
-    $disable = array_keys(array_filter($form_state['values']['orphans']));
-    $ignored = array_diff(array_keys($form_state['values']['orphans']), $disable);
-
-    // Disable any orphans that have been selected.
-    module_disable($disable);
-    drupal_flush_all_caches();
-
-    // Add enabled modules to ignored orphans list.
-    $ignored_orphans = variable_get('features_ignored_orphans', array());
-    foreach ($ignored as $module) {
-      $ignored_orphans[$module] = $module;
-    }
-    variable_set('features_ignored_orphans', $ignored_orphans);
-  }
-  $form_state['redirect'] = 'admin/structure/features/cleanup';
-}
-
-/**
- * Submit handler for ignore action on features_cleanup_form().
- */
-function features_cleanup_form_ignore(&$form, &$form_state) {
-  if (!empty($form_state['values']['orphans'])) {
-    $ignored = array_keys($form_state['values']['orphans']);
-    $ignored_orphans = variable_get('features_ignored_orphans', array());
-    foreach ($ignored as $module) {
-      $ignored_orphans[$module] = $module;
-    }
-    variable_set('features_ignored_orphans', $ignored_orphans);
-  }
-  $form_state['redirect'] = 'admin/structure/features/cleanup';
 }
 
 /**

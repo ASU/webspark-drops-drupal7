@@ -4,7 +4,7 @@ package = Distribution Management
 version = 7.x-1.0
 core = 7.x
 
-; dependencies[] = update
+dependencies[] = update
 
 files[] = apps.module
 files[] = apps.updater.inc

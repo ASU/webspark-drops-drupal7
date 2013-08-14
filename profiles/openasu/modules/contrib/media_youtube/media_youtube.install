@@ -108,14 +108,61 @@ function media_youtube_update_7012() {
 }
 
 /**
- * Update Media YouTube files to the new video file_entity type.
+ * Add new browser for media.
  */
-function media_youtube_update_7013() {
-  $video_type = file_type_load('video');
-  $video_type->mimetypes[] = 'video/youtube';
-  // maybe also add stream if is not there already?
-  file_type_save($video_type);
+function media_youtube_update_7200() {
+  return array();
+}
 
-  // Update existing files
-  db_query("UPDATE {file_managed} SET type = 'video' WHERE type = 'undefined' AND filemime = 'video/youtube'");
+/**
+ * Clean up file display formatters and migrate settings.
+ */
+function media_youtube_update_7201() {
+  // Required to run file_displays_load() in update.php.
+  module_load_include('inc', 'file_entity', 'file_entity.file_api');
+
+  // Get view modes.
+  $video_view_modes = field_view_mode_settings('file', "video");
+  $video_view_modes['default'] = array('custom_settings' => TRUE);
+  foreach ($video_view_modes as $view_mode => $custom_settings) {
+
+    $formatters = file_displays_load('video', $view_mode);
+    $formatter = 'video__' . $view_mode . '__media_youtube_video';
+
+    if (isset($formatters[$formatter])) {
+
+      // Migrate chromeless=1 or controls='0' to autohide=1, showinfo=0.
+      if (isset($formatters[$formatter]->settings['chromeless'])) {
+        if ($formatters[$formatter]->settings['chromeless'] == 1) {
+          $formatters[$formatter]->settings['autohide'] = 1;
+          $formatters[$formatter]->settings['showinfo'] = 0;
+        }
+      }
+      if (isset($formatters[$formatter]->settings['controls'])) {
+        if ($formatters[$formatter]->settings['controls'] == 0) {
+          $formatters[$formatter]->settings['autohide'] = 1;
+          $formatters[$formatter]->settings['showinfo'] = 0;
+        }
+      }
+
+      // Remove deprecated settings from the exportable array.
+      foreach (array('version', 'fullscreen', 'hd', 'showsearch', 'controls', 'chromeless') as $deprecated) {
+        if (isset($formatters[$formatter]->settings[$deprecated])) {
+          unset($formatters[$formatter]->settings[$deprecated]);
+        }
+      }
+
+      // Save the ctools objects
+      $display = $formatters[$formatter];
+      file_display_save((object) $display);
+    }
+  }
+  return array();
+}
+
+/**
+ * Empty update function.
+ */
+function media_youtube_update_7202() {
+  // Code removed in response to http://drupal.org/node/1911970.
 }

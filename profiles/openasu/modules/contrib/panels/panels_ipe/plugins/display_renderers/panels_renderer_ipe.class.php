@@ -258,7 +258,7 @@ class panels_renderer_ipe extends panels_renderer_editor {
         'command' => 'initIPE',
         'key' => $this->clean_key,
         'data' => drupal_render($output),
-        'lockPath' => $this->get_url('unlock_ipe'),
+        'lockPath' => url($this->get_url('unlock_ipe')),
       );
       return;
     }
@@ -329,7 +329,7 @@ class panels_renderer_ipe extends panels_renderer_editor {
     $this->commands[] = array(
       'command' => 'IPEsetLockState',
       'key' => $this->clean_key,
-      'lockPath' => $this->get_url('unlock_ipe'),
+      'lockPath' => url($this->get_url('unlock_ipe')),
     );
   }
 
@@ -358,7 +358,7 @@ class panels_renderer_ipe extends panels_renderer_editor {
       if (!empty($form_state['clicked_button']['#save-display'])) {
         // Saved. Save the cache.
         panels_edit_cache_save($this->cache);
-        $this->display->skip_cache;
+        $this->display->skip_cache = TRUE;
 
         // Since the layout changed, we have to update these things in the
         // renderer in order to get the right settings.
@@ -407,6 +407,10 @@ class panels_renderer_ipe extends panels_renderer_editor {
 
     $this->commands[] = ajax_command_prepend("#panels-ipe-regionid-{$pane->panel} div.panels-ipe-sort-container", $this->render_pane($pane));
     $this->commands[] = ajax_command_changed("#panels-ipe-display-{$this->clean_key}");
+    $this->commands[] = array(
+      'command' => 'addNewPane',
+      'key' => $this->clean_key,
+    );
   }
 }
 
@@ -444,12 +448,14 @@ function panels_ipe_edit_control_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => t('Save'),
     '#id' => 'panels-ipe-save',
+    '#attributes' => array('class' => array('panels-ipe-save')),
     '#submit' => array('panels_edit_display_form_submit'),
     '#save-display' => TRUE,
   );
   $form['buttons']['cancel'] = array(
     '#type' => 'submit',
     '#id' => 'panels-ipe-cancel',
+    '#attributes' => array('class' => array('panels-ipe-cancel')),
     '#value' => t('Cancel'),
   );
   return $form;

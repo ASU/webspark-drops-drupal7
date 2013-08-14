@@ -34,11 +34,15 @@ function panopoly_admin_general_panes_content_type_render($subtype, $conf, $pane
   // Build the data for the different panes
   $plugin_data = array();
   $panels_page_allowed_types = variable_get('panels_page_allowed_types');
+  $panels_page_default_types = variable_get('panels_page_default');
   foreach (ctools_content_get_all_types() as $category_name => $category) {
     foreach ($category as $plugin_name => $plugin) {
       $category_label = (is_string($plugin['category'])) ? $plugin['category'] : $plugin['category'][0];
       $category_label = ($category_label == 'Custom') ? 'Global' : $category_label; // Call all custom plugins "Global"
-      $plugin_status = (!empty($panels_page_allowed_types[$category_name . '-' . $plugin_name])) ? _panopoly_admin_general_panes_get_status($plugin_name, $category_name, 'enable') : _panopoly_admin_general_panes_get_status($plugin_name, $category_name, 'disable');
+      $plugin_enabled = (!empty($panels_page_allowed_types[$category_name . '-' . $plugin_name])) ? TRUE : FALSE;
+      $plugin_setting = (isset($panels_page_allowed_types[$category_name . '-' . $plugin_name])) ? TRUE : FALSE;
+      $category_enabled = (!empty($panels_page_default_types[$category_name]) || !array_key_exists($category_name, $panels_page_default_types)) ? TRUE : FALSE;
+      $plugin_status = ($plugin_enabled || (!$plugin_setting && $category_enabled)) ? _panopoly_admin_general_panes_get_status($plugin_name, $category_name, 'enable') : _panopoly_admin_general_panes_get_status($plugin_name, $category_name, 'disable');
 
       // Only show plugins that are general (no context)
       if (empty($plugin['required context'])) {
@@ -54,6 +58,7 @@ function panopoly_admin_general_panes_content_type_render($subtype, $conf, $pane
 
   // Create the Output
   ksort($plugin_data);
+  $pane = new stdClass();
   $pane->content .= theme('table', array('header' => $header, 'rows' => $plugin_data));
   return $pane;
 }

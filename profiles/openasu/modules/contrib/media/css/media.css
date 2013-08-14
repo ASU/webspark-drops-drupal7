@@ -1,9 +1,15 @@
 /**
  * @file
  * Styles for the media library.
+ *
+ * The display and layout of the Media browser assumes Drupal's Seven theme as
+ * the theme active when this is displayed.
  */
 
-/* jQuery UI */
+/* jQuery UI Resets */
+.ui-tabs {
+  padding: 0;
+}
 
 .ui-dialog.media-wrapper .ui-dialog-content {
   padding: 0;
@@ -13,22 +19,71 @@
   display: none;
 }
 
-/* Media item */
+#media-browser-tabset .ui-widget-header {
+  background: none;
+}
+
+/* Remove the default border */
+.ui-widget-content {
+  border: none;
+}
+
+/* *********************************************************** */
+/* Browser layout themeing */
+
+/* Size the branding header appropriately */
+#media-browser-tabset #branding {
+  padding: 10px 10px 0px 10px;
+}
+
+#media-browser-tabset #branding h1 {
+  float: left;
+  height: 16px;
+  margin-top: 0px;
+}
+
+/* Float the tabs right to keep the UI consistent across themes */
+#media-tabs-wrapper {
+  float: right;
+}
+
+#media-browser-tabset ul.tabs {
+  padding: 0;
+  border: none;
+}
+
+/* Reset the height to match the browser */
+#media-browser-tabset ul.tabs.primary li a:link {
+  font-weight: bold;
+  margin-right: 0;
+}
+
+.media-browser-tab.ui-tabs-panel {
+  border: 1px solid #cccccc;
+}
+
+/* *********************************************************** */
+/* Media item display */
 
 .media-item {
   background: #FFFFFF;
   border: 1px solid #CCCCCC;
   padding: 5px;
-  width: 100px;
+   position: relative;
 }
 
 .media-item img {
   height: auto;
-  width: 100%;
+  margin-bottom: 10px;
 }
 
 .media-item .label-wrapper {
   text-align: center;
+  position: absolute;
+  bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
 }
 
 .media-item .label-wrapper label {
@@ -38,7 +93,7 @@
   white-space: nowrap;
 }
 
-/* Media item list */
+/* Media item lists */
 
 #media-browser-library-list {
   margin: 0;

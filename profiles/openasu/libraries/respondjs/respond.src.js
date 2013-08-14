@@ -111,7 +111,7 @@ window.matchMedia = window.matchMedia || (function( doc, undefined ) {
 
 					// by wrapping recursive function call in setTimeout 
 					// we prevent "Stack overflow" error in IE7
-					setTimeout(function(){ makeRequests(); },0);
+					win.setTimeout(function(){ makeRequests(); },0);
 				} );
 			}
 		},
@@ -163,8 +163,8 @@ window.matchMedia = window.matchMedia || (function( doc, undefined ) {
 						media : thisq.split( "(" )[ 0 ].match( /(only\s+)?([a-zA-Z]+)\s?/ ) && RegExp.$2 || "all",
 						rules : rules.length - 1,
 						hasquery : thisq.indexOf("(") > -1,
-						minw : thisq.match( /\(min\-width:[\s]*([\s]*[0-9\.]+)(px|em)[\s]*\)/ ) && parseFloat( RegExp.$1 ) + ( RegExp.$2 || "" ), 
-						maxw : thisq.match( /\(max\-width:[\s]*([\s]*[0-9\.]+)(px|em)[\s]*\)/ ) && parseFloat( RegExp.$1 ) + ( RegExp.$2 || "" )
+						minw : thisq.match( /\(\s*min\-width\s*:\s*(\s*[0-9\.]+)(px|em)\s*\)/ ) && parseFloat( RegExp.$1 ) + ( RegExp.$2 || "" ), 
+						maxw : thisq.match( /\(\s*max\-width\s*:\s*(\s*[0-9\.]+)(px|em)\s*\)/ ) && parseFloat( RegExp.$1 ) + ( RegExp.$2 || "" )
 					} );
 				}	
 			}
@@ -223,8 +223,8 @@ window.matchMedia = window.matchMedia || (function( doc, undefined ) {
 
 			//throttle resize calls	
 			if( fromResize && lastCall && now - lastCall < resizeThrottle ){
-				clearTimeout( resizeDefer );
-				resizeDefer = setTimeout( applyMedia, resizeThrottle );
+				win.clearTimeout( resizeDefer );
+				resizeDefer = win.setTimeout( applyMedia, resizeThrottle );
 				return;
 			}
 			else {

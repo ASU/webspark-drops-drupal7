@@ -184,7 +184,7 @@ $plugin = array(
   'default conf' => array(
     'title' => t('Panel'),
     'no_blocks' => FALSE,
-    'pipeline' => 'standard',
+    'pipeline' => variable_get('panels_renderer_default', 'standard'),
     'body_classes_to_remove' => '',
     'body_classes_to_add' => '',
     'css_id' => '',
@@ -306,6 +306,13 @@ function panels_panel_context_render($handler, $base_contexts, $args, $test = TR
   panels_get_current_page_display($display);
 
   $renderer = panels_get_renderer($handler->conf['pipeline'], $display);
+  // If the IPE is enabled, but the user does not have access to edit
+  // load the standard renderer instead.
+
+  $parents = class_parents($renderer);
+  if (!empty($parents['panels_renderer_editor']) && !user_access('user page manager') && !user_access('use ipe with page manager')) {
+    $renderer = panels_get_renderer_handler('standard', $display);
+  }
 
   // Remove and add body element classes
   $panel_body_css = &drupal_static('panel_body_css');
@@ -893,12 +900,25 @@ function panels_panel_context_get_addressable($task, $subtask_name, $handler, $a
   $display->cache_key = panels_panel_context_cache_key($task->name, $handler->name, $arguments);
 
   $renderer = panels_get_renderer($handler->conf['pipeline'], $display);
-  if ($type == 'content') {
-    $renderer->prepare();
+  $renderer->prepare();
 
+  if ($address) {
     $pid = array_shift($address);
     if (!empty($renderer->prepared['panes'][$pid])) {
-      return $renderer->render_pane($renderer->prepared['panes'][$pid]);
+      if ($type == 'content') {
+        return $renderer->render_pane($renderer->prepared['panes'][$pid]);
+      }
+      elseif ($type == 'pane') {
+        return $renderer->prepared['panes'][$pid];
+      }
+    }
+  }
+  else {
+    if ($type == 'content') {
+      return $renderer->render();
+    }
+    elseif ($type == 'renderer') {
+      return $renderer;
     }
   }
 }

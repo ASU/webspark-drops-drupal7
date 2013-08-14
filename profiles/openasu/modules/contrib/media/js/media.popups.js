@@ -83,12 +83,10 @@ Drupal.media.popups.mediaBrowser = function (onSelect, globalOptions, pluginOpti
     }
     onSelect(selected);
     $(this).dialog("destroy");
-    $(this).remove();
   };
 
   dialogOptions.buttons[cancel] = function () {
     $(this).dialog("destroy");
-    $(this).remove();
   };
 
   Drupal.media.popups.setDialogPadding(mediaIframe.dialog(dialogOptions));
@@ -132,7 +130,6 @@ Drupal.media.popups.mediaBrowser.finalizeSelection = function () {
   }
   onSelect(selected);
   $(this).dialog("destroy");
-  $(this).remove();
 }
 
 /**
@@ -152,7 +149,7 @@ Drupal.media.popups.mediaBrowser.finalizeSelection = function () {
 Drupal.media.popups.mediaStyleSelector = function (mediaFile, onSelect, options) {
   var defaults = Drupal.media.popups.mediaStyleSelector.getDefaults();
   // @todo: remove this awful hack :(
-  defaults.src = defaults.src.replace('-media_id-', mediaFile.fid);
+  defaults.src = defaults.src.replace('-media_id-', mediaFile.fid) + '&fields=' + JSON.stringify(mediaFile.fields);
   options = $.extend({}, defaults, options);
   // Create it as a modal window.
   var mediaIframe = Drupal.media.popups.getPopupIframe(options.src, 'mediaStyleSelector');
@@ -184,12 +181,10 @@ Drupal.media.popups.mediaStyleSelector = function (mediaFile, onSelect, options)
     }
     onSelect(formattedMedia);
     $(this).dialog("destroy");
-    $(this).remove();
   };
 
   dialogOptions.buttons[cancel] = function () {
     $(this).dialog("destroy");
-    $(this).remove();
   };
 
   Drupal.media.popups.setDialogPadding(mediaIframe.dialog(dialogOptions));
@@ -253,9 +248,6 @@ Drupal.media.popups.mediaFieldEditor = function (fid, onSelect, options) {
   var dialogOptions = Drupal.media.popups.getDialogOptions();
 
   dialogOptions.buttons[ok] = function () {
-    alert('hell yeah');
-    return "poo";
-
     var formattedMedia = this.contentWindow.Drupal.media.formatForm.getFormattedMedia();
     if (!formattedMedia) {
       alert(notSelected);
@@ -263,12 +255,10 @@ Drupal.media.popups.mediaFieldEditor = function (fid, onSelect, options) {
     }
     onSelect(formattedMedia);
     $(this).dialog("destroy");
-    $(this).remove();
   };
 
   dialogOptions.buttons[cancel] = function () {
     $(this).dialog("destroy");
-    $(this).remove();
   };
 
   Drupal.media.popups.setDialogPadding(mediaIframe.dialog(dialogOptions));
@@ -305,15 +295,18 @@ Drupal.media.popups.getDialogOptions = function () {
     modal: true,
     draggable: false,
     resizable: false,
-    minWidth: 600,
-    width: 800,
-    height: 550,
+    minWidth: 500,
+    width: 670,
+    height: 280,
     position: 'center',
     overlay: {
       backgroundColor: '#000000',
       opacity: 0.4
     },
-    zIndex: 10000
+    zIndex: 10000,
+    close: function (event, ui) {
+      $(event.target).remove();
+    }
   };
 };
 

@@ -50,6 +50,9 @@ function file_info_cache_clear() {
 
   // Clear the formatter type cache, managed by file_info_formatter_types().
   drupal_static_reset('file_info_formatter_types');
+
+  // Clear file type caches
+  drupal_static_reset('file_type_get_names');
 }
 
 /**
@@ -397,12 +400,51 @@ function file_display_new($file_type, $view_mode, $formatter_name) {
  */
 
 /**
- * Returns an array of all available file types, including enabled and disabled ones.
+ * Load a file type configuration object.
+ *
+ * @param string $name
+ *   The file type machine name to load.
+ *
+ * @return object
+ *   The file type object, or FALSE if it does not exist.
+ */
+function file_type_load($name) {
+  ctools_include('export');
+  $type = ctools_export_crud_load('file_type', $name);
+  return isset($type) ? $type : FALSE;
+}
+
+/**
+ * Load multiple file type configuration objects.
+ *
+ * @param array $names
+ *   An array of file type machine names to load.
+ *
+ * @return array
+ *   An array of file type objects, keyed by machine name.
+ */
+function file_type_load_multiple(array $names) {
+  ctools_include('export');
+  return ctools_export_crud_load_multiple('file_type', $names);
+}
+
+/**
+ * Load all file type configuration objects.
+ *
+ * This includes all enabled and disabled file types.
+ *
+ * @param boolean $reset
+ *   If TRUE, the static cache of all file types will be flushed prior to
+ *   loading. This can be important on listing pages where file types might
+ *   have changed on the page load.
+ *
+ * @return array
+ *   An array of file type objects, keyed by machine name.
  *
  * @see file_type_get_enabled_types()
  * @see file_type_get_disabled_types()
  */
-function file_type_get_all_types($reset = FALSE) {
+function file_type_load_all($reset = FALSE) {
   ctools_include('export');
   return ctools_export_crud_load_all('file_type', $reset);
 }
@@ -411,15 +453,15 @@ function file_type_get_all_types($reset = FALSE) {
  * Returns an array of enabled file types.
  */
 function file_type_get_enabled_types() {
-  $types = file_type_get_all_types();
+  $types = file_type_load_all();
   return array_filter($types, 'file_type_is_enabled');
 }
 
 /**
  * Returns an array of disabled file types.
  */
-function file_type_get_disabled_types($reset = FALSE) {
-  $types = file_type_get_all_types();
+function file_type_get_disabled_types() {
+  $types = file_type_load_all();
   return array_filter($types, 'file_type_is_disabled');
 }
 
@@ -433,27 +475,8 @@ function file_type_is_enabled($type) {
 /**
  * Returns TRUE if a file type is disabled, FALSE otherwise.
  */
-function file_type_is_disabled($view) {
+function file_type_is_disabled($type) {
   return !empty($type->disabled);
-}
-
-/**
- * Returns the configuration object for the passed in file type name, or FALSE if it doesn't exist.
- */
-function file_type_load($type_name) {
-  ctools_include('export');
-  $type = ctools_export_crud_load('file_type', $type_name);
-  return isset($type) ? $type : FALSE;
-}
-
-/**
- * CTools exportables 'subrecords callback' to load {file_type} subrecords.
- */
-function file_type_load_subrecords($types) {
-  foreach ($types as $type) {
-    $type->mimetypes = db_query('SELECT mimetype FROM {file_type_mimetypes} WHERE type = :type', array(':type' => $type->type))->fetchCol();
-    $type->streams = db_query('SELECT stream FROM {file_type_streams} WHERE type = :type', array(':type' => $type->type))->fetchCol();
-  }
 }
 
 /**
@@ -482,25 +505,8 @@ function file_type_save($type) {
     'type' => $type->type,
     'label' => $type->label,
     'description' => $type->description,
+    'mimetypes' => serialize($type->mimetypes),
   );
-
-  // Prepare the mimetype multiple insert query, but don't execute it until
-  // later in this function.
-  if (!empty($type->mimetypes)) {
-    $mimetype_insert = db_insert('file_type_mimetypes')->fields(array('type', 'mimetype'));
-    foreach ($type->mimetypes as $mimetype) {
-      $mimetype_insert->values(array('type' => $type->type, 'mimetype' => $mimetype));
-    }
-  }
-
-  // Prepare the stream multiple insert query, but don't execute it until
-  // later in this function.
-  if (!empty($type->streams)) {
-    $stream_insert = db_insert('file_type_streams')->fields(array('type', 'stream'));
-    foreach ($type->streams as $stream) {
-      $stream_insert->values(array('type' => $type->type, 'stream' => $stream));
-    }
-  }
 
   // Update an existing type object, whether with a modified 'type' property or
   // not.
@@ -510,23 +516,11 @@ function file_type_save($type) {
         ->fields($fields)
         ->condition('type', $old_type->type)
         ->execute();
-      db_delete('file_type_mimetypes')
-        ->condition('type', $old_type->type)
-        ->execute();
-      db_delete('file_type_streams')
-        ->condition('type', $old_type->type)
-        ->execute();
     }
     else {
       db_insert('file_type')
         ->fields($fields)
         ->execute();
-    }
-    if (isset($mimetype_insert)) {
-      $mimetype_insert->execute();
-    }
-    if (isset($stream_insert)) {
-      $stream_insert->execute();
     }
     if ($rename_bundle) {
       field_attach_rename_bundle('file', $old_type->type, $type->type);
@@ -539,12 +533,6 @@ function file_type_save($type) {
     db_insert('file_type')
       ->fields($fields)
       ->execute();
-    if (isset($mimetype_insert)) {
-      $mimetype_insert->execute();
-    }
-    if (isset($stream_insert)) {
-      $stream_insert->execute();
-    }
     field_attach_create_bundle('file', $type->type);
     module_invoke_all('file_type_insert', $type);
     $status = SAVED_NEW;
@@ -578,9 +566,11 @@ function file_type_delete($type) {
   db_delete('file_type')
     ->condition('type', $type->type)
     ->execute();
-  db_delete('file_type_mimetypes')
-    ->condition('type', $type->type)
-    ->execute();
+
+  // Remove this type from CToolS status variable.
+  $status = variable_get('default_file_type', array());
+  unset($status[$type->type]);
+  variable_set('default_file_type', $status);
 
   file_info_cache_clear();
 
@@ -592,6 +582,29 @@ function file_type_delete($type) {
     module_invoke_all('file_type_delete', $type);
   }
 }
+
+
+/**
+ * Enable a file type.
+ *
+ * @param string $type
+ *   Type of the file_type to disable
+ */
+function file_type_enable($type) {
+  ctools_export_crud_enable('file_type', $type);
+}
+
+
+/**
+ * Disable a file type.
+ *
+ * @param string $type
+ *   Type of the file_type to disable
+ */
+function file_type_disable($type) {
+  ctools_export_crud_disable('file_type', $type);
+}
+
 
 /**
  * Determines file type for a given file.

@@ -15,6 +15,16 @@ class EntityTranslationFieldablePanelsPaneHandler extends EntityTranslationDefau
     parent::__construct('fieldable_panels_pane', $entity_info, $entity);
   }
 
+  /**
+   * @see EntityTranslationDefaultHandler::isRevision()
+   */
+  public function isRevision() {
+    return !empty($this->entity->revision);
+  }
+
+  /**
+   * @see EntityTranslationDefaultHandler::getAccess()
+   */
   public function getAccess($op) {
     return fieldable_panels_panes_access($op, $this->entity);
   }

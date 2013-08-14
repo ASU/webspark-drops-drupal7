@@ -92,7 +92,7 @@
     </header>
 
     <?php if (!$asu_local_navicon): ?>
-      <section class="section hidden-desktop" id="menu">
+      <section class="section hidden-collapse hidden-desktop" id="menu">
         <div class="container">
           <nav class='navbar navbar-fixed-top fixer'>
             <div class='navbar-inner fixer'>
@@ -200,6 +200,15 @@
         </div>
       </div>
     </footer>
+
+        <!-- Page Footer -->
+    <section class='section' id='closure'>
+      <div class='container'>
+        <div class='row-fluid'>
+          <?php print render($page['closure']); ?>
+        </div>
+      </div>
+    </section>
 
   </div>
 </div>

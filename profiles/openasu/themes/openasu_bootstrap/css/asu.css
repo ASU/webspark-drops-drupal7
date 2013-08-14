@@ -128,10 +128,6 @@ h4 {
   text-shadow: none;
 }
 
-.navbar-inner {
-  background: transparent;
-}
-
 .navbar-sitename-collapse {
   display: none;
   font-family: arial;
@@ -161,8 +157,10 @@ h4 {
   -webkit-box-shadow: none;
 }
 
-.navbar-fixed-top .navbar-inner,.navbar-static-top .navbar-inner {
+.navbar-fixed-top .navbar-inner,
+.navbar-static-top .navbar-inner {
   border-width: 0;
+  background: #000;
 }
 
 .nav-collapse-total {
@@ -199,8 +197,8 @@ h4 {
   letter-spacing: 0;
   line-height: 10px;
   color: #fff;
-  border-bottom: 5px #000 solid;
-  border-top: 5px #000 solid;
+  border-bottom: 5px transparent solid;
+  border-top: 5px transparent solid;
 }
 
 #menu ul.nav > li:hover a {
@@ -222,6 +220,17 @@ h4 {
 .dropdown-menu {
   border: 0;
   padding: 0;
+  /*ietesting*/
+    -moz-border-radius: none;
+  border-radius: none;
+    -moz-box-shadow: none;
+    -ms-box-shadow: none;
+    -o-box-shadow: none;
+   -khtml-box-shadow: none;
+   -webkit-box-shadow: none;
+  box-shadow: none;
+
+/*
   -moz-border-radius: 0;
   border-radius: 0;
     -moz-box-shadow: 0 5px 10px 2px rgba(0,0,0,0.5);
@@ -230,7 +239,7 @@ h4 {
   -khtml-box-shadow: 0 5px 10px 2px rgba(0,0,0,0.5);
   -webkit-box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.5);
   box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.5);
-}
+*/}
 
 .navbar .nav>li>.dropdown-menu:after {
   content: none;
@@ -267,6 +276,24 @@ h4 {
   color: #000;
 }
 
+#closure {
+  text-align: right;
+  margin: 30px 30px 0 0;
+  padding: 0;
+}
+
+#closure p {
+  padding: 0;
+}
+
+#closure a {
+  text-decoration: none;
+}
+
+#closure a:hover {
+  text-decoration: none;
+  color: #000;
+}
 
 /* default submenu and link fpps */
 .panel-pane h2 {
@@ -323,11 +350,20 @@ h4 {
   .navbar-sitename-collapse {
     display: block;
   }
-  .nav-collapse,.nav-collapse.collapse {
+  .nav-collapse,.nav-collapse.collapse  {
     overflow: hidden;
     height: 0;
     display: block;
     background-color: black;
+  }
+  .in .nav-collapse,.in .nav-collapse.collapse  {
+    overflow: inherit;
+    height: auto;
+    display: block;
+    background-color: black;
+  }
+  .hidden-collapse {
+    height: 0;
   }
   h1.site-title {
     font-size: 24px;
@@ -339,7 +375,7 @@ h4 {
     padding: 0;
   }
   .nav-collapse .dropdown-menu {
-    display: block;
+    display: none;
   }
   #menu {
     background: #000;
