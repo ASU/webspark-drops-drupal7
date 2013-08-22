@@ -55,8 +55,9 @@ function openasu_bootstrap_preprocess_page(&$variables) {
 
   // Make sure default picture gets responsive panopoly stylingz
   if (theme_get_setting('default_picture', 'openasu_bootstrap') && theme_get_setting('picture_path', 'openasu_bootstrap')) {
+    $image_style = module_exists('asu_cas') ? 'asu_header_image' : 'panopoly_image_full';
     $variables['asu_picture'] = theme('image_style', array(
-      'style_name' => 'panopoly_image_full',
+      'style_name' => $image_style,
       'path' => theme_get_setting('picture_path', 'openasu_bootstrap'),
     )
     );

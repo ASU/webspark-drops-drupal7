@@ -1,8 +1,10 @@
 <?php
 /**
  * @file
- * Drupal needs this blank file.
+ * Code for the ASU CAS and More feature.
  */
+
+include_once 'asu_cas.features.inc';
 
 /**
  * Implements hook_boot()
@@ -18,6 +20,18 @@ function asu_cas_boot() {
       }
     }
   }
+}
+
+/**
+ * Implementation of hook_init()
+ *
+ * This and the image styles should really be in another feature at some point
+ *
+ */
+function asu_cas_init() {
+
+  // Adding the asu images css file to the theme so it will show up in the WYSIWYG
+  drupal_add_css(drupal_get_path('module', 'asu_cas') . '/asu_cas.css', array('group' => CSS_THEME));
 }
 
 /**

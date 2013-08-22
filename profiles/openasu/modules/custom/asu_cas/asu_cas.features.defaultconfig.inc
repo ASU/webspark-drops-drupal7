@@ -233,7 +233,7 @@ function asu_cas_defaultconfig_user_default_roles() {
   // Exported role: CAS.
   $roles['CAS'] = array(
     'name' => 'CAS',
-    'weight' => '4',
+    'weight' => 4,
   );
 
   return $roles;
