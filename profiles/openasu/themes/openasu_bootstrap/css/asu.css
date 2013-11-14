@@ -1,4 +1,78 @@
-#admin-menu,#admin-menu .dropdown {
+/* 
+Gradient background bits 
+Moved this stuff from student.css
+*/
+
+html {
+  min-height: 100%;
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  height: 100%;
+  margin: 0;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+@media ( min-width : 930px) {
+  body {
+    height: 100%;
+    background-size: 100% 100%;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#ccc),to(#fff) );
+    background-image: -webkit-linear-gradient(top, #ccc, #fff);
+    background-image: -moz-linear-gradient(top, #ccc, #fff);
+    background-image: -o-linear-gradient(top, #ccc, #fff);
+    background-image: linear-gradient(to bottom, #ccc, #fff);
+    zoom: 1;
+
+  }
+  .container,
+  .navbar-static-top .container,
+  .navbar-fixed-top .container,
+  .navbar-fixed-bottom .container {
+    width: auto;
+  }
+  #page, #masthead {
+    width: 1000px;
+  }
+}
+
+@media (max-width: 930px) and (min-width: 768px) {
+  .container,
+  .navbar-static-top .container,
+  .navbar-fixed-top .container,
+  .navbar-fixed-bottom .container {
+    width: auto;
+  }
+}
+
+@media  (max-width: 767px) {
+  #page,
+  #masthead {
+    width: auto;
+  }
+  .navbar-inner ul.nav li {
+    padding-left: 20px;
+  }
+  #menu .navbar-inner ul.nav {
+    width: auto;
+  }
+  #menu .navbar-inner ul.nav>a {
+    border-bottom: 5px transparent solid;
+    border-top: 5px transparent solid;
+  }
+  #menu ul.nav > li:hover>a  {
+    border-bottom: 5px transparent solid;
+    border-top: 5px transparent solid;
+  }
+}
+
+/* end gradient background bits */
+
+#admin-menu,
+#admin-menu .dropdown {
   z-index: 1000;
 }
 
@@ -23,13 +97,16 @@
   margin-bottom: 0;
 }
 
-#tabs,#messages,#action-links {
+#tabs,
+#messages,
+#action-links {
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 10px;
 }
 
-#menu .container:before,#menu .container:after {
+#menu .container:before,
+#menu .container:after {
   display: block;
 }
 
@@ -63,7 +140,10 @@ table#blocks {
   width: 100%;
 }
 
-h1,h2,h3,h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: arial;
   font-size: 36px;
   font-weight: bold;
@@ -150,8 +230,9 @@ h4 {
   padding: 8px 8px 0px 8px;
 }
 
-.navbar .nav>.active>a,.navbar .nav>.active>a:hover,.navbar .nav>.active>a:focus
-  {
+.navbar .nav>.active>a,
+.navbar .nav>.active>a:hover,
+.navbar .nav>.active>a:focus {
   background-color: #000;
   box-shadow: none;
   -webkit-box-shadow: none;
@@ -211,8 +292,9 @@ h4 {
   border-bottom: 5px #ffb310 solid;
 }
 
-.navbar .nav li.dropdown.open>.dropdown-toggle,.navbar .nav li.dropdown.active>.dropdown-toggle,.navbar .nav li.dropdown.open.active>.dropdown-toggle
-  {
+.navbar .nav li.dropdown.open>.dropdown-toggle,
+.navbar .nav li.dropdown.active>.dropdown-toggle,
+.navbar .nav li.dropdown.open.active>.dropdown-toggle {
   background-color: transparent;
 }
 
@@ -244,8 +326,7 @@ h4 {
 }
 
 .navbar ul.dropdown-menu li {
-/*  padding-right: 5px;
-*/  margin-right: -5px;
+  margin-right: -5px;
 }
 
 #menu .navbar ul.nav ul.dropdown-menu li a {
@@ -260,9 +341,21 @@ h4 {
   padding-right: 40px;
 }
 
-#menu .navbar ul.nav ul.dropdown-menu li:hover a {
-  background: #FFB310;
+#menu .navbar ul.nav ul.dropdown-menu li a:focus,
+#menu .navbar ul.nav ul.dropdown-menu li a:hover,
+ul.dropdown-menu .active a:hover,
+ul.dropdown-menu .active a:focus,
+.dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus {
+  background: #ffb310;
+  background-color: #ffb310;
   color: #000;
+  /* ie fix, bootstrap sets the bg as a gradient so we need to clear out the filters */
+  filter: none;
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(enabled=false)";
+}
+
+#menu .navbar ul.nav ul.dropdown-menu li a.active {
+  color: #ffb310;
 }
 
 #closure {
@@ -291,8 +384,9 @@ h4 {
   color: #333;
 }
 
-.panel-pane ul li.leaf,.panel-pane ul li.expanded,.panel-pane ul li.collapsed
-  {
+.panel-pane ul li.leaf,
+.panel-pane ul li.expanded,
+.panel-pane ul li.collapsed {
   list-style: none;
 }
 
@@ -314,7 +408,7 @@ h4 {
 
 
 /* responsive */
-@media ( min-width : 768px) and (max-width: 979px) {
+@media ( min-width : 768px) and (max-width: 930px) {
   #asu_hdr {
     min-width: 768px;
   }
@@ -324,28 +418,33 @@ h4 {
   #asu_hdr,#asu_black_footer {
     min-width: auto;
   }
-  .navbar-fixed-top,.navbar-fixed-bottom,.navbar-static-top,#picture,#footerlower
-    {
+  .navbar-fixed-top,
+  .navbar-fixed-bottom,
+  .navbar-static-top,
+  #picture,
+  #footerlower {
     margin-right: -20px;
     margin-left: -20px;
   }
 }
 
-@media ( max-width : 979px) {
+@media ( max-width : 930px) {
   #masthead .navbar-fixed-top {
     margin-bottom: 0;
   }
   .navbar-sitename-collapse {
     display: block;
   }
-  .nav-collapse,.nav-collapse.collapse  {
+  .nav-collapse,
+  .nav-collapse.collapse  {
     overflow: hidden;
     height: 0;
     display: block;
     background-color: black;
     margin: 0;
   }
-  .in .nav-collapse,.in .nav-collapse.collapse  {
+  .in .nav-collapse,
+  .in .nav-collapse.collapse  {
     overflow: inherit;
     height: auto;
     display: block;
@@ -362,7 +461,8 @@ h4 {
   #site-name-desktop {
     display: none;
   }
-  .navbar-fixed-top .navbar-inner, .navbar-fixed-bottom .navbar-inner {
+  .navbar-fixed-top .navbar-inner,
+  .navbar-fixed-bottom .navbar-inner {
     padding: 0;
   }
   .nav-collapse .dropdown-menu {
@@ -375,3 +475,4 @@ h4 {
     width: auto;
   }
 }
+

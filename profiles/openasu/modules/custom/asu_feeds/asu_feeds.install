@@ -1,0 +1,27 @@
+<?php
+/*
+function asu_feeds_install() {
+  //clear the cache to display in Feeds as available plugin.
+  //cache_clear_all('plugins:feeds:plugins', 'cache');
+	
+	
+	$weight = db_select('system', 's')
+              ->fields('s', array('weight'))
+              ->condition('name', 'othermodule', '=')
+              ->execute()
+              ->fetchField();
+  db_update('system')
+    ->fields(array('weight' => $weight +1))
+    ->condition('name', 'yourmodulename', '=')
+    ->execute();
+}
+*/
+/*
+function asu_feeds_enable() {
+  //clear the cache to display in Feeds as available plugin.
+  cache_clear_all('plugins:feeds:plugins', 'cache');
+}
+*/
+
+
+

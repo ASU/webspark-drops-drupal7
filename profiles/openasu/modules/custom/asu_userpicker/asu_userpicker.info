@@ -1,0 +1,13 @@
+name = ASU Userpicker
+description = Provides a custom user field widget for picking users in Drupal and ASU LDAP, and creating those not yet in Drupal.
+core = 7.x
+package = ASU 
+configure = admin/config/people/asu_userpicker
+dependencies[] = cas_attributes
+dependencies[] = cas_ldap
+dependencies[] = ldap_servers
+dependencies[] = field_ui
+dependencies[] = user_reference
+files[] = asu_userpicker.module
+;stylesheets[all][] = asu_userpicker.css
+

@@ -1,0 +1,457 @@
+<?php
+
+/**
+ * @file
+ * asu_userpicker.module - ASU Userpicker code.
+ *
+ * @author
+ * Michael Samuelson <mlsamuel@asu.edu> / <mlsamuelson@gmail.com>
+ *
+ * Module provides a custom user field widget for picking users in
+ * Drupal and ASU LDAP, and creating those not yet in Drupal.
+ *
+ */
+
+/*********************************************************************
+  CONFIG
+*********************************************************************/
+
+// TODO No Admin UI, but you can tweak these settings as needed.
+define("ASU_USERPICKER_REFERENCEABLE_ROLES", variable_get('asu_userpicker_referenceable_roles', 
+    serialize(array(
+      2 => '2', // Authenticated user
+      3 => '0',
+    ))));
+define("ASU_USERPICKER_REFERENCEABLE_STATUS", variable_get('asu_userpicker_referenceable_status', 
+    serialize(array(
+      1 => '1', // Active users
+      0 => '0',
+    ))));
+define("ASU_USERPICKER_REFERENCEABLE_VIEW", variable_get('asu_userpicker_referenceables_view', ''));
+define("ASU_USERPICKER_LABEL", variable_get('asu_userpicker_label', 'USER'));
+// Note, also, optional setting:
+// variable_get('asu_userpicker_search_user_fields', array());
+
+/*********************************************************************
+  DRUPAL HOOKS
+*********************************************************************/
+
+/**
+ * Implements hook_field_widget_info().
+ *
+ */
+function asu_userpicker_field_widget_info() {
+  return array(
+    'asu_userpicker_autocomplete' => array(
+      'label' => t('ASU User Picker Autocomplete'),
+      'description' => t('Autocomplete userpicker that searches current Drupal site as well as ASU LDAP'),
+      'field types' => array('user_reference'),
+      'settings' => array(
+        'autocomplete_match' => 'contains',
+        'size' => 128,
+        'autocomplete_path' => 'autocomplete/asu/user',
+      ),
+      //'behaviors' => array(
+      //  'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      //  'default value' => FIELD_BEHAVIOR_DEFAULT,
+      //),
+    ),  
+  ); 
+
+}
+
+
+/**
+ * Implements hook_field_widget_form().
+ *
+ */
+function asu_userpicker_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+
+  switch ($instance['widget']['type']) {
+    case 'asu_userpicker_autocomplete':
+      $element += array(
+        '#type' => 'textfield',
+        '#default_value' => isset($items[$delta]['uid']) ? $items[$delta]['uid'] : NULL,
+        '#autocomplete_path' => $instance['widget']['settings']['autocomplete_path'],
+        '#size' => $instance['widget']['settings']['size'],
+        '#element_validate' => array('asu_userpicker_autocomplete_validate'),
+        '#value_callback' => 'user_reference_autocomplete_value',
+      );
+      break;
+  }
+  return array('uid' => $element);
+}
+
+/**
+ * Implements hook_field_attach_presave().
+ *
+ */
+/*
+function asu_userpicker_field_attach_presave($entity_type, $entity) {
+
+  // TODO how to get at values?
+  // We don't know fields from this context... so let's just do it in the
+  // validation function.
+
+  //dpm('presave!');
+  //dpm('$entity_type');
+  //dpm($entity_type);
+  //dpm(var_export($entity, 1));
+  //dpm('$entity');
+  //dpm($entity);
+
+}
+*/
+
+/**
+ * Implements hook_menu().
+ *
+ */
+function asu_userpicker_menu() {
+
+  $items['admin/config/people/asu_userpicker'] = array(
+    'title' => 'ASU Userpicker settings',
+    'description' => 'Configure ASU Userpicker settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('asu_userpicker_admin_settings'),
+    // TODO Custom permission? Since this is admin callback, okay for now.
+    'access arguments' => array('administer users'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'asu_userpicker.admin.inc',
+  );
+  $items['autocomplete/asu/user'] = array(
+    'page callback' => 'asu_userpicker_autocomplete',
+    //'access callback' => TRUE,
+    // Only outputting non-sensitive info, so tie to profile perms.
+    'access arguments' => array('access user profiles'),
+    'weight' => 1,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_form_FORM-ID_alter().
+ *
+ * Add ASU Userpicker autocomplet to "Add CAS User" cas_add_user_form.
+ *
+ */
+function asu_userpicker_form_cas_add_user_form_alter(&$form, &$form_state, $form_id) {
+
+  // We don't have to set the field type, just set the autocomplete path...
+  $form['account']['cas_name']['#autocomplete_path'] = 'autocomplete/asu/user';
+  // Looks like we do not need this line, since CAS does user creation based on
+  // ASURITE ID (which is what our autocomplete returns).
+  //$form['account']['cas_name']['#element_validate'] = 'asu_userpicker_autocomplete_validate';
+  
+}
+
+/*********************************************************************
+  CALLBACKS
+*********************************************************************/
+
+/**
+ * Autocomplete callback for ASURITE textfield.
+ *
+ */
+function asu_userpicker_autocomplete($string) {
+
+  // 1. Check existing users for asurite matches.
+  // 2. Check LDAP for asurite matches.
+  // 3. Remove dupes and display.
+
+  // LOCAL SEARCH
+
+  $local_results = asu_userpicker_search_local($string);
+
+  $items = array();
+
+  foreach ($local_results as $local_result) {
+    // This is the cas_name/asurite ID.
+    // We need to save on drupal users names.
+    // We just force all usernames to be the same as ASURITE IDs.
+    $items[$local_result->name] = 'Existing user : ' . check_plain($local_result->cas_name . ' : <' . check_plain($local_result->mail) . '>');
+  }
+
+  // LDAP Search 
+
+  // Query LDAP on ASURITE ID and common name / full name.
+  $search_results = asu_userpicker_search_ldap($string, $filters = array('asuriteid', 'cn'));
+
+  // Add non-existing users to our list
+  foreach ($search_results as $search_result) {
+    if ($search_result['asuriteid'][0]) {
+      $items[$search_result['asuriteid'][0]] = $search_result['asuriteid'][0] . ' : ' . $search_result['cn'][0] . ' <' . $search_result['mail'][0] . '>';
+    }
+  }
+
+  print drupal_json_output($items);
+  exit();
+}
+
+/*********************************************************************
+  THEMING
+*********************************************************************/
+
+
+/*********************************************************************
+  FORMS
+*********************************************************************/
+
+/**
+ * Validation callback for a user_reference autocomplete element.
+ */
+function asu_userpicker_autocomplete_validate($element, &$form_state, $form) {
+
+
+  // 1. Is this a valid local user?
+  // 2. Is this a valid asurite? (consult ldap)
+
+  // Assumes Field API field...
+  $field = field_widget_field($element, $form_state);
+  // If isn't a Field API field... fake it.
+  // Note: These fields can be set by changing a user field's
+  // '#autocomplete_path' to 'autocomplete/asu/user' and 
+  // '#element_validate' to 'asu_userpicker_autocomplete_validate'
+  // with a hook_form_alter() in your code. TODO Better document this.
+  if (!$field) {
+    // We're not a Field API field, so fake these settings in.
+    // TODO Is there a better, less fakey way to do this?
+    $field['field_name'] = 'asu_userpicker'; // Used in static cache ID.
+    $field['settings'] = array(
+      // No Admin UI, but you can set manually. (See CONFIG section.)
+      'referenceable_roles' => unserialize(ASU_USERPICKER_REFERENCEABLE_ROLES),
+      'referenceable_status' => unserialize(ASU_USERPICKER_REFERENCEABLE_STATUS),
+      'view' => 
+      array(
+        // No Admin UI, but you can set manually. (See CONFIG section.)
+        'view_name' => ASU_USERPICKER_REFERENCEABLE_VIEW,
+        'display_name' => '',
+        'args' => 
+        array(),
+      ),
+    );
+  }
+  $instance = field_widget_instance($element, $form_state);
+  // If isn't a Field API managed field...
+  if (!$instance) {
+    // No Admin UI, but you can set manually. (See CONFIG section.)
+    $instance['label'] = ASU_USERPICKER_LABEL;
+  }
+
+  $value = $element['#value'];
+  $uid = NULL;
+
+  if (!empty($value)) {
+    // Check whether we have an explicit "[uid:n]" input.
+    preg_match('/^(?:\s*|(.*) )?\[\s*uid\s*:\s*(\d+)\s*\]$/', $value, $matches);
+    if (!empty($matches)) {
+      // Explicit uid. Check that the 'name' part matches the actual name for
+      // the uid.
+      list(, $name, $uid) = $matches;
+      if (!empty($name)) {
+        $names = _user_reference_get_user_names(array($uid));
+        if ($name != $names[$uid]) {
+          form_error($element, t('%name: name mismatch. Please check your selection.', array('%name' => $instance['label'])));
+        }
+      }
+    }
+    else {
+      // No explicit uid (the submitted value was not populated by autocomplete
+      // selection). Get the uid of a referencable user from the entered name.
+      $options = array(
+        'string' => $value,
+        'match' => 'equals',
+        'limit' => 1,
+      );
+
+      $references = user_reference_potential_references($field, $options);
+      // Found local user.
+      if ($references) {
+        // @todo The best thing would be to present the user with an
+        // additional form, allowing the user to choose between valid
+        // candidates with the same name. ATM, we pick the first
+        // matching candidate...
+        $uid = key($references);
+      }
+      // Check to see if $value is a valid ASURITE ID.
+      elseif ($asurite_user = asu_userpicker_asurite_exists($value, FALSE)) {
+
+        // Create the user, in this, our autocomplete widget validate function.
+        // Decided to do creation here as a last resort.
+        // hook_field_presave() - is only for actual field implementing
+        // modules.
+        // hook_field_attach_presave() - is triggered entity-wide, not giving
+        // us individual field context.
+
+        // Let CAS create our new user based on ASURITE ID and mappings.
+        // Other attributes will be synced into place by CAS Attributes module when
+        // user logs in. Use that module's configs to set that up. See 
+        // /admin/config/people/cas/attributes 
+        $options['edit']['mail'] = $asurite_user['mail'][0];
+        $new_user = cas_user_register($asurite_user['asuriteid'][0], $options);
+
+        $uid = $new_user->uid;
+        $name = check_plain($new_user->name);
+
+        // On multi-value fields, adding more fields obliterates all but last
+        // message. So just be generic to avoid confusion.
+        //drupal_set_message(t('Imported new user ') . l($name, 'users/' . $name), 'status'); 
+        drupal_set_message(t('Imported newly referenced user(s).'), 'status'); 
+
+      }
+      else {
+        form_error($element, t('%name: found no valid user with that name.', array('%name' => $instance['label'])));
+      }
+    }
+  }
+
+  // Set the element's value as the user id that was extracted from the entered
+  // input.
+  form_set_value($element, $uid, $form_state);
+}
+
+
+/*********************************************************************
+  INTERNAL
+*********************************************************************/
+
+
+/*********************************************************************
+  API
+*********************************************************************/
+
+/**
+ * Autocomplete LDAP query function.
+ *
+ * @param $string
+ *   String to seach on.
+ *
+ * @param $filters
+ *   Array of LDAP filters to consult in query. Some examples are 
+ *   asuriteid, cn, and eid.
+ *
+ * @param $wildcard
+ *   Boolean Whether or not to use wildcards. Don't if you've got int based
+ *    values.
+ *
+ * @return
+ *   Array of raw results from LDAP.
+ */
+function asu_userpicker_search_ldap($string, $filters = array('asuriteid'), $wildcard = TRUE) {
+
+  // Query LDAP for list of users. 
+
+  // TODO No Admin UI for this variable, but you can set it manually with
+  // devel/php. If none set, we just use the first ldap server we find.
+  $asu_ldap_server = variable_get('asu_userpicker_ldap_server', '');
+  $ldap_server = ldap_servers_get_servers($asu_ldap_server, 'all', TRUE);
+  // We get an array if no $asu_ldap_server, just use the first in that case.
+  if (is_array($ldap_server)) {
+      $ldap_server = array_shift($ldap_server);
+  }
+    
+
+  //$filter = "asuriteid=*$string*";
+  //$filter = "cn=*$string*";
+  //$filter = "affilateid=*$string*";
+  // An array of filters will be assembled like so
+  // "(|(asuriteid=*$string*)(cn=*$string*)(affiliateid=*$string*))";
+
+  $wildcard_value = $wildcard ? '*' : '';
+  $search_filters = '';
+  $count = 0;
+  foreach ($filters as $filter) {
+    $search_filters .= '('. $filter . '=' . $wildcard_value . $string . $wildcard_value . ')';
+    $count++;
+  }
+  if ($count > 1) { // OR syntax
+    $search_filters = '(|' . $search_filters . ')';
+  }
+
+  // Note we limit size to 10 results, and set a time limit at 20 (seconds,
+  //  assumed).
+  $search_results = $ldap_server->search($base_dn = NULL, $search_filters, $attributes = array(), $attrsonly = 0, $sizelimit = 10, $timelimit = 10, $deref = LDAP_DEREF_NEVER);
+
+  return $search_results;
+}
+
+/**
+ * Autocomplete local Drupal query function.
+ *
+ * @param $string
+ *   String to seach on.
+ *
+ * @return
+ *   Array of raw results from query.
+ */
+function asu_userpicker_search_local($string) {
+
+  // TODO how best to handle escaping here so cases like
+  // Smith-Jones and O'Malley are searchable...
+  // Need to consider this same issue for 
+  // asu_userpicker_search_local() ?
+  $string = check_plain($string);
+
+  $items = array();
+
+  // Query {user}.name
+  $query = db_select('users', 'u');
+  // JOIN {cas_user} with {users}
+  $query->leftJoin('cas_user', 'cu', 'cu.uid = u.uid');
+
+  // FIELDS
+  $query->fields('cu', array('uid', 'cas_name'));
+  $query->fields('u', array('name', 'mail'));
+
+  // Add in admin configured user fields, if any.
+  $user_search_fields = array_filter(variable_get('asu_userpicker_search_user_fields', array()));
+
+  $user_field_conditions = '';
+  foreach ($user_search_fields as $user_search_field) {
+
+    $clean_user_search_field = check_plain($user_search_field);
+
+    // JOIN {<checked user field>} with {users}
+    $query->leftJoin('field_data_' . $clean_user_search_field, 'f_' . $clean_user_search_field, 'f_' . $clean_user_search_field . '.entity_id = u.uid'); 
+    // FIELDS to return in query
+    $query->fields('f_' . $clean_user_search_field, array($clean_user_search_field . '_value'));
+    // CONDITIONS in where clause
+    $user_field_conditions .= " OR (f_" . $clean_user_search_field . "." . $clean_user_search_field . "_value LIKE '%".$string."%')";
+
+  }
+
+  $query->where("((u.name LIKE '%".$string."%') OR (u.mail LIKE '%".$string."%') OR (cu.cas_name LIKE '%".$string."%')" . $user_field_conditions .")");
+
+  $local_results = $query->orderRandom()->execute();
+
+  return $local_results;
+}
+
+/**
+ * Helper function to check on existence of ASURITE ID.
+ *
+ * @param $string
+ *   String ASURITE ID to seach on.
+ * @param $bool
+ *   Boolean Whether or not to return value as boolean.
+ *
+ * @return
+ *   Boolean True if ASURITE ID exists.
+ */
+function asu_userpicker_asurite_exists($string, $bool = TRUE) {
+
+  if ($bool) {
+    return (bool) cas_ldap_attributes($string);
+  }
+  else {
+    return cas_ldap_attributes($string);
+  }
+}
+
+
+/*********************************************************************
+  DEVELOPER NOTES 
+*********************************************************************/
+
+

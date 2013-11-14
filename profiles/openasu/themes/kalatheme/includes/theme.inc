@@ -313,6 +313,7 @@ function kalatheme_links__system_main_menu($variables) {
 
     foreach ($links as $key => $link) {
       $class = array($key);
+      $link['#attributes'] = array();
 
       // Add first/last/active classes to help out themers.
       if ($i == 1) {
@@ -325,23 +326,30 @@ function kalatheme_links__system_main_menu($variables) {
         && (empty($link['#language']) || $link['#language']->language == $language_url->language)) {
         $class[] = 'active';
       }
-      if (!empty($link['#below'])) {
-        $class[] = 'dropdown';
-        $link['#attributes']['data-toggle'] = 'dropdown';
-        $link['#attributes']['class'][] = 'dropdown-toggle';
-        $link['#href'] = NULL;
+      // Check for, and honor active states set by context menu reactions
+      if (module_exists('context')) {
+        $contexts = context_active_contexts();
+        foreach ($contexts as $context) {
+          if ((isset($context->reactions['menu']))) {
+            if ($link['#href'] == $context->reactions['menu']) {
+              $class[] = 'active';
+            }
+          }
+        }
       }
+
       $options['attributes'] = $link['#attributes'];
 
+      // Make list item a dropdown if we have child items.
+      if (!empty($link['#below'])) {
+        $class[] = 'dropdown';
+        $class[] = 'clearfix';
+      }
       $output .= '<li' . drupal_attributes(array('class' => $class)) . '>';
 
       if (isset($link['#href'])) {
         // Pass in $link as $options, they share the same keys.
         $output .= l($link['#title'], $link['#href'], array('attributes' => $link['#attributes']));
-      }
-      // Put in empty anchor for dropdown.
-      elseif ($link['#attributes']['data-toggle'] && !isset($link['#href'])) {
-        $output .= str_replace('href="/"', 'href="#"', l($link['#title'], $link['#href'], array('attributes' => $link['#attributes'])));
       }
       elseif (!empty($link['#title'])) {
         // Wrap non-<a> links in <span> for adding title and class attributes.
@@ -355,7 +363,9 @@ function kalatheme_links__system_main_menu($variables) {
         $output .= '<span' . $span_attributes . '>' . $link['#title'] . '</span>';
       }
 
+      // If link has child items, print a toggle and dropdown menu.
       if (!empty($link['#below'])) {
+        $output .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>';
         $output .= theme('links__system_main_menu', array(
           'links' => $link['#below'],
           'attributes' => array(
@@ -399,6 +409,9 @@ function kalatheme_menu_local_tasks(&$variables) {
     $variables['primary']['#prefix'] = '<ul class="nav nav-pills">';
     $variables['primary']['#suffix'] = '</ul>';
     if (!empty($variables['secondary'])) {
+      if (!function_exists("_kalatheme_associate_parent_tasks")) {
+        require_once DRUPAL_ROOT . '/' . drupal_get_path('theme', 'kalatheme') . '/includes/kalatheme.inc';
+      }
       $variables = _kalatheme_associate_parent_tasks($variables);
     }
     $output .= drupal_render($variables['primary']);

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the ASU News Feeds feature.
+ */
+
+include_once 'asu_news.features.inc';

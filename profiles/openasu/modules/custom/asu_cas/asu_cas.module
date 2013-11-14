@@ -47,3 +47,35 @@ if (!function_exists('panopoly_wysiwyg_filter_default_formats_alter')) {
     }
   }
 }
+
+/**
+ * Implements hook_update_projects_alter()
+ *
+ * This function will remove any module managed by ASU WebSpark from
+ * the list of modules in the Drupal Update Manager.
+ */
+function asu_cas_update_projects_alter(&$projects) {
+
+  // Setup information about managed components to remove from the update managed
+  $managed_things = array();
+  $managed_things[] = 'drupal'; // adding drupal core
+  $managed_things[] = 'kalatheme'; // adding base theme
+
+  // Determine any dependencies to components manged by the distribution
+  $profile_info = install_profile_info('openasu');
+  foreach ($profile_info['dependencies'] as $module) {
+    $managed_things[] = $module;
+    $module_info = drupal_parse_info_file(drupal_get_path('module', $module) . '/' . $module . '.info');
+    if (!empty($module_info['dependencies'])) {
+      foreach ($module_info['dependencies'] as $dependency) {
+        $parts = explode(' (', $dependency, 2);
+        $managed_things[] = array_shift($parts);
+      }
+    }
+  }
+
+  // Remove modules and themes managed by distribution
+  foreach($managed_things as $managed_module) {
+    unset($projects[$managed_module]);
+  }
+}

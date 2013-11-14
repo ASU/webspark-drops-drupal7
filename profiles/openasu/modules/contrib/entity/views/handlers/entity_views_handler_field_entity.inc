@@ -80,7 +80,6 @@ class entity_views_handler_field_entity extends views_handler_field {
     $options['display'] = array('default' => 'label');
     $options['link_to_entity']['default'] = TRUE;
     $options['view_mode'] = array('default' => 'default');
-    $options['bypass_access'] = array('default' => FALSE);
 
     return $options;
   }
@@ -135,12 +134,6 @@ class entity_views_handler_field_entity extends views_handler_field {
         '#value' => $options ? key($options) : 'default',
       );
     }
-    $form['bypass_access'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Bypass access checks'),
-      '#description' => t('If enabled, access permissions for rendering the entity are not checked.'),
-      '#default_value' => !empty($this->options['bypass_access']),
-    );
   }
 
   public function render($values) {
@@ -182,8 +175,7 @@ class entity_views_handler_field_entity extends views_handler_field {
     if (!is_object($entity) && isset($entity) && $entity !== FALSE) {
       $entity = entity_load_single($type, $entity);
     }
-    // Make sure the entity exists and access is either given or bypassed.
-    if (!$entity || !(!empty($this->options['bypass_access']) || entity_access('view', $type, $entity))) {
+    if (!$entity) {
       return '';
     }
 

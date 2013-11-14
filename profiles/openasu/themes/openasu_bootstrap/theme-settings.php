@@ -11,7 +11,7 @@
 function openasu_bootstrap_form_system_theme_settings_alter(&$form, &$form_state) {
   // Build the config form
   $form['theme_configuration'] = array(
-    '#title' => t('OpenASU Theme Settings'),
+    '#title' => t('WebSpark Theme Settings'),
     '#type' => 'fieldset',
   );
 

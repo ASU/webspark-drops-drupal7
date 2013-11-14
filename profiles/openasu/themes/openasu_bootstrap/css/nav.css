@@ -1,14 +1,19 @@
 /*
 iefix: without setting the width of the nav and a discrete background color, ie was not fully covering the width of the nav area nor properly overriding boostrap styles.
 */
-
 .navbar-inner,
 #menu .navbar-inner {
   background-image: none;
   background-color: #000;
 }
-.navbar-inner ul.nav { width: 100%; background-color:#000;}
-.navbar-inner ul.nav li { background-color:#000; }
+
+.navbar-inner ul.nav {
+  width: 100%; background-color:#000;
+}
+
+.navbar-inner ul.nav li {
+  background-color:#000;
+}
 /*endiefix*/
 
 /* pane styles for asu */
@@ -88,15 +93,11 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
   display: block;
 }
 
-a.menu:after,.dropdown-toggle:after {
+a.menu:after,
+.dropdown-toggle:after {
   content: none;
 }
 
 .navbar .dropdown-menu {
  margin-top: 0px;
-}
-
-.dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus {
-  /*ietesting*/
-  background:#000;
 }

@@ -1,4 +1,4 @@
-name = OpenASU Bootstrap
+name = ASU WebSpark Bootstrap
 description = A flexible, responsive and mobile-first theme based on Kalatheme aka built on Panopoly and powered by Twitter Bootstrap.
 base theme = kalatheme
 version = VERSION

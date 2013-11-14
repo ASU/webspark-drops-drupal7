@@ -1,0 +1,93 @@
+<?php
+
+/**
+ * @file
+ * asu_userpicker.install - ASU Userpicker intall code.
+ *
+ * @author
+ * Michael Samuelson <mlsamuel@asu.edu> / <mlsamuelson@gmail.com>
+ *
+ */
+
+/**
+ * Implements hook_install()
+ */
+function asu_userpicker_install() {
+
+// MODULES RELIED ON (as noted in .info)
+// cas_attributes
+  // cas_ldap
+// ldap_servers (7.x-2.0-beta6) - from ldap module package - ldap not required
+// references
+  // user_reference
+
+  // Auto-create/config the asu_ldap server.
+  if (module_exists('ldap_servers')) {
+    ldap_servers_module_load_include('php', 'ldap_servers', 'LdapServerAdmin.class');
+
+    // Build fake form values.
+    $asu_ldap_server = array(
+      'sid' => 'asu_ldap',
+      'name' => 'ASU LDAP',
+      'status' => '1',
+      'ldap_type' => 'default',
+      'address' => 'ldaps://sec-ds.asu.edu',
+      'port' => '636',
+      'tls' => '0',
+      'followrefs' => '0',
+      'bind_method' => '1',
+      'binddn' => 'uid=YOUR_APP_ID_HERE,ou=ReadOnly,o=asu.edu',
+      'bindpw' => 'YOUR_PWD_HERE',
+      'clear_bindpw' => FALSE,
+      'user_dn_expression' => '',
+      'basedn' => 'ou=People,o=asu.edu',
+      'user_attr' => 'asuriteid',
+      'picture_attr' => '',
+      'account_name_attr' => '',
+      'mail_attr' => 'mail',
+      'mail_template' => '',
+      'unique_persistent_attr' => '',
+      'unique_persistent_attr_binary' => '0',
+      'ldap_to_drupal_user' => '',
+      'testing_drupal_username' => '',
+      'testing_drupal_user_dn' => '',
+      'grp_unused' => '0',
+      'grp_object_cat' => '',
+      'grp_nested' => '0',
+      'grp_user_memb_attr_exists' => '0',
+      'grp_user_memb_attr' => '',
+      'grp_memb_attr' => '',
+      'grp_memb_attr_match_user_attr' => '',
+      'grp_derive_from_dn' => '0',
+      'grp_derive_from_dn_attr' => '',
+      'grp_test_grp_dn' => '',
+      'grp_test_grp_dn_writeable' => '',
+      'search_pagination' => '0',
+      'search_page_size' => '1000',
+    );
+
+    // Load up an LdapServerAdmin object so we can save against it.
+    $new_server = new LdapServerAdmin('asu_ldap'); // loads generic since this id doesn't exist
+    // Make sure an 'asu_ldap' server doesn't already exist.
+    if (is_null($new_server->sid)) {
+      // Submit with our fake form values.
+      $new_server->drupalFormSubmit($op = 'add', $asu_ldap_server);
+
+      // TODO Document advanced configs - or add to UI...
+
+      $msg = t("IMPORTANT: ASU Userpicker module successfully installed and created an ASU LDAP server configuration, however you must obtain an LDAP application account and update settings in order to use the functionality. ") . l("See the ASU Userpicker admin page for more details.", 'admin/config/people/asu_userpicker');
+      drupal_set_message($msg, 'warning');
+
+    }
+    else {
+      drupal_set_message(t('ASU Userpicker module was enabled, but failed to create the necessary LDAP server configuration.'), 'warning');
+    }
+
+    // DEBUG
+    //$server = new LdapServerAdmin('asu_ldap');
+    //dpm($server);
+
+  }
+
+
+}

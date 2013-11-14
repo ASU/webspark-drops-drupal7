@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * @file
+ * Installation hooks for the CAS Attributes module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function cas_attributes_uninstall() {
+  // Delete variables.
+  variable_del('cas_attributes');
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function cas_attributes_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+
+  if ($phase == 'runtime') {
+    if (!function_exists('cas_phpcas_attributes')) {
+      $requirements['cas_attributes'] = array(
+        'title' => $t('CAS'),
+        'value' => $t('Outdated'),
+        'severity' => REQUIREMENT_WARNING,
+        'description' => $t('CAS attributes requires <a href="@url">CAS</a> version 7.x-1.0 or later.', array('@url' => 'http://drupal.org/project/cas')),
+      );
+    }
+
+    // Okay to call functions from cas.module since we are in the runtime
+    // phase. We hide errors here in case phpcas could not be loaded.
+    if ($version = @cas_phpcas_load()) {
+      if (!method_exists('phpCAS', 'getAttributes')) {
+        $requirements['cas_attributes_phpcas'] = array(
+          'title' => $t('phpCAS (Attribute support)'),
+          'value' => $version,
+          'severity' => REQUIREMENT_WARNING,
+          'description' => $t('CAS attributes requires <a href="@url">phpCAS</a> version 1.1.0 or later.', array('@url' => 'https://wiki.jasig.org/display/CASC/phpCAS')),
+        );
+      }
+    }
+  }
+  return $requirements;
+}
+
+function cas_attributes_update_7100() {
+  $attr = variable_get('cas_attributes', array());
+  if (array_key_exists('relations', $attr)) {
+    foreach ($attr['relations'] as $key => $value) {
+      $attr['relations'][$key] = preg_replace('/\[cas:attribute:([^:\?\]]*)]/', '[cas:attribute:$1:first]', $value);
+    }
+  }
+  variable_set('cas_attributes', $attr);
+}

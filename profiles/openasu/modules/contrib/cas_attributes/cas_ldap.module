@@ -1,0 +1,92 @@
+<?php
+
+/**
+ * @file
+ * Allows user account and profile attributes to be automatically populated
+ * using tokens. Provides basic tokens for attributes returned by an LDAP
+ * server.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function cas_ldap_menu() {
+  $items['admin/config/people/cas/attributes/ldap'] = array(
+    'title' => 'LDAP Tokens',
+    'description' => 'Get a list of all available LDAP Tokens',
+    'page callback' => 'cas_ldap_list',
+    'access arguments' => array('administer cas'),
+    'file' => 'cas_ldap.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -8,
+  );
+  return $items;
+}
+
+/**
+ * Administrative settings form.
+ */
+function cas_ldap_form_cas_attributes_admin_settings_alter(&$form, &$form_state, $form_id) {
+  $cas_attributes = variable_get('cas_attributes', array());
+  $cas_attributes += array('ldap' => array('server' => NULL));
+
+  $form['cas_attributes']['ldap'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'LDAP',
+    '#tree' => TRUE,
+    '#weight' => -8,
+  );
+  $ldap_servers = ldap_servers_get_servers(NULL, 'enabled');
+  $options = array();
+  if ($ldap_servers) {
+    foreach ($ldap_servers as $sid => $ldap_server) {
+      $options[$sid] = $ldap_server->name;
+    }
+  }
+  $form['cas_attributes']['ldap']['server'] = array(
+    '#type' => 'select',
+    '#title' => t('Server'),
+    '#default_value' => $cas_attributes['ldap']['server'],
+    '#options' => $options,
+    '#empty_option' => t('- Select a LDAP server -'),
+    '#description' => t('The LDAP server to query for LDAP attributes. <a href="@url">Configure servers</a>.', array('@url' => url('admin/config/people/ldap/servers'))),
+  );
+}
+
+/**
+ * Returns an array containing LDAP attributes for the specified user.
+ *
+ * @param $name
+ */
+function cas_ldap_attributes($name) {
+  $attributes = &drupal_static(__FUNCTION__, array());
+
+  if (!isset($attributes[$name])) {
+    $attributes[$name] = _cas_ldap_attributes($name);
+  }
+  return $attributes[$name];
+}
+
+/**
+ * Look up the user attributes for the specified user.
+ */
+function _cas_ldap_attributes($name) {
+  $cas_attributes = variable_get('cas_attributes', array());
+
+  if (empty($cas_attributes['ldap']['server'])) {
+    // No CAS server configured.
+    return array();
+  }
+
+  $ldap_server = ldap_servers_get_servers($cas_attributes['ldap']['server'], 'enabled', TRUE);
+  if (empty($ldap_server)) {
+    // We cannot load the server.
+    return;
+  }
+
+  // Connect to the server and perform the lookup.
+  $ldap_server->connect();
+  $ldap_server->bind();
+  $result = $ldap_server->user_lookup($name);
+  return $result['attr'];
+}

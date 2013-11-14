@@ -1,0 +1,282 @@
+<?php
+
+/**
+ * @file
+ * Tests for CAS Attributes.
+ */
+
+/**
+ * Helper class to automatically include the CAS Attributes module.
+ */
+class CasAttributesTestHelper extends CasTestHelper {
+  function setUp() {
+    // Install modules needed for this test. This could have been passed in as
+    // either a single array argument or a variable number of string arguments.
+    // @todo Remove this compatibility layer in Drupal 8, and only accept
+    // $modules as a single array argument.
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
+    }
+    $modules = array_merge(array('cas_attributes'), $modules);
+    parent::setUp($modules);
+  }
+}
+
+/**
+ * Test case for CAS attribute tokens.
+ */
+class CasAttributesTokenTestCase extends CasAttributesTestHelper {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'CAS Attributes: Tokens',
+      'description' => 'Test CAS Attribute attribute tokens.',
+      'group' => 'Central Authentication Service',
+    );
+  }
+
+  /**
+   * Test the CAS attribute tokens.
+   */
+  function testAttributeTokens() {
+    $account = $this->casCreateUser();
+    $attributes = array(
+      'surname' => 'Smith',
+      'givenName' => 'John',
+      'memberOf' => array(
+        'CN=Staff,OU=Groups,DC=example,DC=edu',
+        'CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu',
+      ),
+    );
+    $this->casLogin($account, $attributes);
+
+    $this->assertToken('[cas:name]', $account->cas_name);
+    $this->assertToken('[cas:attribute:surname]', $attributes['surname']);
+    $this->assertToken('[cas:attribute:memberOf:first]', $attributes['memberOf'][0]);
+    $this->assertToken('[cas:attribute:memberOf:last]', $attributes['memberOf'][1]);
+
+    $keys = array_merge(array('attraStyle'), array_keys($attributes));
+    $keys = array_map('drupal_strtolower', $keys);
+    $this->assertToken('[cas:attribute:?]', t('Available attributes: %keys', array('%keys' => implode(', ', $keys))));
+  }
+}
+
+/**
+ * Test case for CAS attribute setting.
+ */
+class CasAttributesTestCase extends CasAttributesTestHelper {
+
+  function setUp() {
+    parent::setUp();
+
+    foreach (array('test_user_memberof', 'test_user_name') as $field_name) {
+      // Create a field, and an instance on 'user' entity type.
+      $field = array(
+        'field_name' => $field_name,
+        'type' => 'text',
+        'settings' => array(
+          'max_length' => 255,
+        ),
+      );
+      field_create_field($field);
+      $instance = array(
+        'field_name' => $field_name,
+        'label' => t('Some user field called @field_name', array('@field_name' => $field_name)),
+        'entity_type' => 'user',
+        'bundle' => 'user',
+      );
+      field_create_instance($instance);
+    }
+  }
+
+  public static function getInfo() {
+    return array(
+      'name' => 'CAS Attributes: Login',
+      'description' => 'Test CAS Attributes are set on login.',
+      'group' => 'Central Authentication Service',
+    );
+  }
+
+  /**
+   * Test the CAS attribute tokens.
+   */
+  function testNewUserLogin() {
+    // Create a new CAS user.
+    $cas_name = $this->randomName();
+    $attributes = array(
+      'surname' => 'Smith',
+      'givenName' => 'John',
+      'memberOf' => array(
+        'CN=Staff,OU=Groups,DC=example,DC=edu',
+        'CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu',
+      ),
+    );
+    $cas_user = array('name' => $cas_name, 'attributes' => $attributes);
+    variable_set('cas_test_cas_user', $cas_user);
+
+    // Set up the relationship mappings.
+    $this->drupalLogin($this->admin_user);
+    $edit = array(
+      'cas_attributes[sync_every_login]' => 0,
+      'cas_attributes[overwrite]' => 1,
+      'cas_attributes[relations][name]' => '[cas:attribute:NAME]',
+      'cas_attributes[relations][mail]' => '[cas:name]@example.com',
+      'cas_attributes[relations][test_user_memberof]' => '[cas:attribute:memberOf:first]',
+      'cas_attributes[relations][test_user_name]' => '[cas:attribute:givenName] [cas:attribute:surname]',
+    );
+    $this->drupalPost('admin/config/people/cas/attributes', $edit, t('Save configuration'));
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalGet('admin/config/people/cas/attributes/cas');
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalLogout();
+
+    // Log in as the new CAS user.
+    $this->casLogin($cas_name, $attributes);
+
+    // After login, the account is reloaded into $this->loggedInUser.
+    // The account name should not have been changed, since the token should
+    // evaluate to nothing.
+    $this->assertEqual($this->loggedInUser->name, $cas_name);
+    $this->assertEqual($this->loggedInUser->mail, "$cas_name@example.com");
+    $this->assertEqual($this->loggedInUser->test_user_memberof[LANGUAGE_NONE][0]['value'], 'CN=Staff,OU=Groups,DC=example,DC=edu');
+    $this->assertEqual($this->loggedInUser->test_user_name[LANGUAGE_NONE][0]['value'], 'John Smith');
+
+  }
+
+  function testSyncEveryLogin() {
+    // Create a new CAS user.
+    $cas_name = $this->randomName();
+    $attributes = array(
+      'surname' => 'Smith',
+      'givenName' => 'John',
+    );
+    $cas_user = array('name' => $cas_name, 'attributes' => $attributes);
+    variable_set('cas_test_cas_user', $cas_user);
+
+    // Set up a relationship mapping, and leave sync_every_login turned off.
+    $this->drupalLogin($this->admin_user);
+    $edit = array(
+      'cas_attributes[sync_every_login]' => 0,
+      'cas_attributes[overwrite]' => 1,
+      'cas_attributes[relations][test_user_name]' => '[cas:attribute:givenName] [cas:attribute:surname]',
+    );
+    $this->drupalPost('admin/config/people/cas/attributes', $edit, t('Save configuration'));
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalGet('admin/config/people/cas/attributes/cas');
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalLogout();
+
+    // Log in as the new CAS user.
+    $this->casLogin($cas_name, $attributes);
+
+    // After login, the account is reloaded into $this->loggedInUser.
+    $this->assertEqual($this->loggedInUser->test_user_name[LANGUAGE_NONE][0]['value'], 'John Smith');
+
+    // change the attributes
+    $attributes = array(
+      'surname' => 'Smith',
+      'givenName' => 'Dave',
+    );
+    $cas_user = array('name' => $cas_name, 'attributes' => $attributes);
+    variable_set('cas_test_cas_user', $cas_user);
+
+    // log out and log back in
+    $this->drupalLogout();
+    $this->casLogin($cas_name, $attributes);
+
+    $this->loggedInUser = user_load($this->loggedInUser->uid, TRUE); // workaround since casLogin gets cached copy
+
+    // Sync every login is turned off so name should not have changed.
+    $this->assertEqual($this->loggedInUser->test_user_name[LANGUAGE_NONE][0]['value'], 'John Smith');
+
+    // turn on sync every login
+    $this->drupalLogout();
+    $this->drupalLogin($this->admin_user);
+    $edit = array(
+      'cas_attributes[sync_every_login]' => 1,
+    );
+    $this->drupalPost('admin/config/people/cas/attributes', $edit, t('Save configuration'));
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalGet('admin/config/people/cas/attributes/cas');
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalLogout();
+
+    // log CAS user back in
+    $this->casLogin($cas_name, $attributes);
+
+    $this->loggedInUser = user_load($this->loggedInUser->uid, TRUE); // workaround since casLogin gets cached copy
+
+    // Sync every login is on and overwrite is on so name should be updated.
+    $this->assertEqual($this->loggedInUser->test_user_name[LANGUAGE_NONE][0]['value'], 'Dave Smith');
+
+  }
+
+  function testOverwriteAttributesLogin() {
+    // Create a new CAS user.
+    $cas_name = $this->randomName();
+    $attributes = array(
+      'surname' => 'Smith',
+      'givenName' => 'John',
+    );
+    $cas_user = array('name' => $cas_name, 'attributes' => $attributes);
+    variable_set('cas_test_cas_user', $cas_user);
+
+    // Set up a relationship mapping, and leave overwrite existing data turned off.
+    $this->drupalLogin($this->admin_user);
+    $edit = array(
+      'cas_attributes[sync_every_login]' => 1,
+      'cas_attributes[overwrite]' => 0,
+      'cas_attributes[relations][test_user_name]' => '[cas:attribute:givenName] [cas:attribute:surname]',
+    );
+    $this->drupalPost('admin/config/people/cas/attributes', $edit, t('Save configuration'));
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalGet('admin/config/people/cas/attributes/cas');
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalLogout();
+
+    // Log in as the new CAS user.
+    $this->casLogin($cas_name, $attributes);
+
+    // After login, the account is reloaded into $this->loggedInUser.
+    $this->assertEqual($this->loggedInUser->test_user_name[LANGUAGE_NONE][0]['value'], 'John Smith');
+
+    // change the attributes
+    $attributes = array(
+      'surname' => 'Smith',
+      'givenName' => 'Dave',
+    );
+    $cas_user = array('name' => $cas_name, 'attributes' => $attributes);
+    variable_set('cas_test_cas_user', $cas_user);
+
+    // log out and log back in
+    $this->drupalLogout();
+    $this->casLogin($cas_name, $attributes);
+
+    $this->loggedInUser = user_load($this->loggedInUser->uid, TRUE); // workaround since casLogin gets cached copy
+
+    // Overwrite existing data is turned off so name should not have changed.
+    $this->assertEqual($this->loggedInUser->test_user_name[LANGUAGE_NONE][0]['value'], 'John Smith');
+
+    // turn on sync every login
+    $this->drupalLogout();
+    $this->drupalLogin($this->admin_user);
+    $edit = array(
+      'cas_attributes[overwrite]' => 1,
+    );
+    $this->drupalPost('admin/config/people/cas/attributes', $edit, t('Save configuration'));
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalGet('admin/config/people/cas/attributes/cas');
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalLogout();
+
+    // log CAS user back in
+    $this->casLogin($cas_name, $attributes);
+
+    $this->loggedInUser = user_load($this->loggedInUser->uid, TRUE); // workaround since casLogin gets cached copy
+
+    // Sync every login is on and overwrite is on so name should be updated.
+    $this->assertEqual($this->loggedInUser->test_user_name[LANGUAGE_NONE][0]['value'], 'Dave Smith');
+
+  }
+}

@@ -1,0 +1,123 @@
+<?php
+
+/**
+ * @file
+ * Allows user account and profile attributes to be automatically populated
+ * using tokens. Provides basic tokens for attributes returned by the CAS
+ * server.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function cas_attributes_menu() {
+  $items = array();
+
+  $items['admin/config/people/cas/attributes'] = array(
+    'title' => 'Attributes',
+    'description' => 'Manage the relationships between CAS attributes and user fields.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('cas_attributes_admin_settings'),
+    'access arguments' => array('administer cas'),
+    'file' => 'cas_attributes.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -8,
+  );
+  $items['admin/config/people/cas/attributes/settings'] = array(
+    'title' => 'Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['admin/config/people/cas/attributes/cas'] = array(
+    'title' => 'CAS Attribute Tokens',
+    'description' => 'Get a list of all available CAS Attributes',
+    'page callback' => 'cas_attributes_list',
+    'access arguments' => array('administer cas'),
+    'file' => 'cas_attributes.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -8,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_cas_user_presave().
+ */
+function cas_attributes_cas_user_presave(&$edit, $account) {
+  $cas_attributes = variable_get('cas_attributes', array());
+  $cas_attributes += array('overwrite' => TRUE, 'sync_every_login' => NULL, 'relations' => array('mail' => NULL, 'name' => NULL), 'roles' => array('manage' => array(), 'mapping' => ''));
+
+  // We synchronize on the first login (always) and on future logins (if chosen).
+  if ($account->login && !$cas_attributes['sync_every_login']) {
+    // The user has logged in before and we are not set to always synchronize.
+    return;
+  }
+
+  $data = array('cas' => $edit['cas_user']['name']);
+
+  // Set each drupal field to its mapped attribute.
+  foreach ($cas_attributes['relations'] as $drupal_field => $text) {
+    $result = trim(token_replace($text, $data, array('clear' => TRUE)));
+    $result = html_entity_decode($result);
+
+    // Only update the fields if there is data to set.
+    if (!empty($result)) {
+      if ($drupal_field == 'name' || $drupal_field == 'mail') {
+        // Only update field if overwrite setting is on, or if it is empty.
+        if ($cas_attributes['overwrite'] || empty($account->{$drupal_field})) {
+          $edit[$drupal_field] = $result;
+        }
+      }
+      else {
+        // Only update field if overwrite setting is on, or if it is empty.
+        if ($cas_attributes['overwrite'] || empty($account->{$drupal_field})) {
+          $edit[$drupal_field][LANGUAGE_NONE][0]['value'] = $result;
+        }
+      }
+    }
+  }
+
+  // Manage Roles
+
+  // Make sure there are attributes to check.
+  if (!empty($cas_attributes['roles']['mapping'])) {
+    // Get the users attributes.
+    $user_attributes = cas_phpcas_attributes($data['cas']);
+    // Allow other modules to manipulate the attribute values.
+    // Can't use module_invoke_all() because we need to pass byref.
+    $arguments = array(&$user_attributes);
+    foreach (module_implements('cas_attributes_roles_modify') as $module) {
+      $function = $module . '_cas_attributes_roles_modify';
+      call_user_func_array($function, $arguments);
+    }
+
+    // Build all the attirbutes to check.
+    $cas_user_roles = array();
+    $attributes_to_check = explode("\n", $cas_attributes['roles']['mapping']);
+    foreach ($attributes_to_check as $attribute) {
+      if (!empty($user_attributes[$attribute])) {
+        if (is_array($user_attributes[$attribute])) {
+          $cas_user_roles = array_merge($cas_user_roles, $user_attributes[$attribute]);
+        }
+        else {
+          $cas_user_roles[] = $user_attributes[$attribute];
+        }
+      }
+    }
+
+    // Loop through all the managed roles and see if the user has access to them
+    // and set accordingly.
+    $roles = user_roles();
+    foreach ($cas_attributes['roles']['manage'] as $rid) {
+      if (!empty($rid)) {
+        if (in_array($roles[$rid], $cas_user_roles)) {
+          $edit['roles'][$rid] = $roles[$rid];
+        }
+        else {
+          unset($edit['roles'][$rid]);
+        }
+      }
+    }
+  }
+}

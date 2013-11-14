@@ -1,0 +1,52 @@
+<?php
+/**
+ * @file
+ *   Utilizes Feeds module architecture to import and process feeds.
+ */
+/**
+ * Implementation of hook_feeds_plugins().
+ */
+function asu_feeds_feeds_plugins() {
+  $info = array();
+  $info['ASUeAdvisorTransferFeedParser'] = array(
+    'name' => t('ASU eAdvisor Parser'),
+    'description' => t('Parse ASU eAdvisor Transfer data'),
+    'handler' => array(
+      'parent' => 'FeedsParser',
+      'class' => 'ASUeAdvisorTransferFeedParser',
+      'file' => 'ASUeAdvisorTransferFeedParser.inc',
+      'path' => drupal_get_path('module', 'asu_feeds'),
+    ),
+  );
+  $info['ASUDirectoryFeedParser'] = array(
+    'name' => t('ASU Directory Parser'),
+    'description' => t('Parse ASU Directory feeds that comes from web services'),
+    'handler' => array(
+      'parent' => 'FeedsParser',
+      'class' => 'ASUDirectoryFeedParser',
+      'file' => 'ASUDirectoryFeedParser.inc',
+      'path' => drupal_get_path('module', 'asu_feeds'),
+    ),
+  );
+  $info['ASUDirectoryFetcher'] = array(
+    'name' => t('ASU Directory Fetcher'),
+    'description' => t('Fetcher for ASU Directory Feeds. Allows user to enter Department Code.'),
+    'handler' => array(
+      'parent' => 'FeedsHTTPFetcher',
+      'class' => 'ASUDirectoryFetcher',
+      'file' => 'ASUDirectoryFetcher.inc',
+      'path' => drupal_get_path('module', 'asu_feeds'),
+    ),
+  );
+  return $info;
+}
+
+/**
+ * Implements hook_enable().
+ *
+ * Clear Feed's plugin cache so that this plugin shows up.
+ */
+function asu_feeds_enable() {
+  //clear the cache to display in Feeds as available plugin.
+	drupal_flush_all_caches();
+}

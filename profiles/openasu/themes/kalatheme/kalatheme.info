@@ -19,14 +19,16 @@ features[] = secondary_menu
 
 settings[responsive_toggle] = 1
 settings[pane_styles_toggle] = 1
+settings[region_styles_toggle] = 1
 settings[extra_styles_toggle] = 0
+settings[always_show_page_title] = 0
 
 plugins[panels][layouts] = layouts
 plugins[panels][styles] = styles
 
-; Information added by drupal.org packaging script on 2013-05-30
-version = "7.x-1.0-rc4"
+; Information added by drupal.org packaging script on 2013-10-09
+version = "7.x-1.2"
 core = "7.x"
 project = "kalatheme"
-datestamp = "1369875063"
+datestamp = "1381357113"
 

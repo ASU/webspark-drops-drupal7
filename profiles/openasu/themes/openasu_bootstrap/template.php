@@ -10,6 +10,21 @@
  * Implements template_preprocess_html().
  */
 function openasu_bootstrap_preprocess_html(&$variables) {
+  // Add IE meta tag to force IE rendering mode
+  $meta_ie_render_engine = array(
+    '#type' => 'html_tag',
+    '#tag' => 'meta',
+    '#attributes' => array(
+      'content' =>  'IE=edge,chrome=1',
+      'http-equiv' => 'X-UA-Compatible',
+    )
+  );
+  drupal_add_html_head($meta_ie_render_engine, 'meta_ie_render_engine');
+
+  // Add conditional stylesheets for IE
+  drupal_add_css(path_to_theme() . '/css/ie9.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 9', '!IE' => FALSE), 'preprocess' => FALSE));
+  drupal_add_css(path_to_theme() . '/css/ie8.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 8', '!IE' => FALSE), 'preprocess' => FALSE));
+
   // Load student CSS if this is a student template
   if (variable_get('asu_brand_is_student', 'default') == 'student') {
     drupal_add_css(drupal_get_path('theme', 'openasu_bootstrap') . '/css/student/' .

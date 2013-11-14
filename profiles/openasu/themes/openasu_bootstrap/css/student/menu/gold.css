@@ -3,20 +3,43 @@
  * asu gold menu styling
 **/
 
-.navbar .nav>.active>a,.navbar .nav>.active>a:hover,.navbar .nav>.active>a:focus
-  {
+
+
+/*
+iefix: without setting the width of the nav and a discrete background color, ie was not fully covering the width of the nav area nor properly overriding boostrap styles.
+*/
+.navbar-inner,
+#menu .navbar-inner {
+  background-image: none;
+}
+
+.navbar-inner ul.nav {
+  width: 100%; 
+}
+
+.navbar-inner,
+#menu .navbar-inner,
+.navbar-inner ul.nav,
+.navbar-inner ul.nav>li {
+  background-color: #ffb310;
+}
+/*endiefix*/
+
+
+
+
+.navbar ul.nav>li.active>a,
+.navbar ul.nav>li.active>a:hover,
+.navbar ul.nav>li.active>a:focus {
+  background-color: #ffb310;
+}
+
+.navbar ul.nav>li.active a {
   background-color: #ffb310;
 }
 
 #menu .navbar-inner {
   background-color: #ffb310;
-}
-
-#menu .navbar-inner ul.nav a.active {
-  color: #333;
-  border-bottom: 5px #fff solid;
-  border-top: 5px #fff solid;
-  background-color: #fff;
 }
 
 #menu .navbar-inner ul.nav a:hover {
@@ -32,7 +55,7 @@
   border-top: 5px #ffb310 solid;
 }
 
-#menu ul.nav > li:hover a {
+#menu ul.nav>li:hover a {
   color: #000;
   border-bottom: 5px #fff solid;
   border-top: 5px #fff solid;
@@ -40,23 +63,22 @@
 }
 
 @media  (max-width: 767px) {
-  #page, #masthead {
+  #page,
+  #masthead {
     width: auto;
   }
   #menu .navbar-inner ul.nav a {
-    
     border-bottom: 5px transparent solid;
     border-top: 5px transparent solid;
-    
   }
-  #menu ul.nav > li:hover a  {
-    
+  #menu ul.nav > li:hover a  {  
     border-bottom: 5px transparent solid;
-    border-top: 5px transparent solid;
-    
+    border-top: 5px transparent solid;    
+  }
 }
 
-@media ( max-width : 979px) {
+
+@media ( max-width : 930px) {
   #menu .navbar-inner {
     background: #000;
   }

@@ -16,7 +16,7 @@ function cas_add_user_form() {
     '#title' => t('CAS username'),
     '#required' => TRUE,
     '#default_value' => '',
-    '#description' => t('Registration will proceded as if the user with the specified CAS username just logged in.'),
+    '#description' => t('Registration will proceed as if the user with the specified CAS username just logged in.'),
     '#element_validate' => array('_cas_name_element_validate'),
     '#weight' => -10,
   );

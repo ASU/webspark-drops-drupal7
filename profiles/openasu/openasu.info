@@ -1,5 +1,5 @@
-name = OpenASU
-distribution_name = OpenASU
+name = ASU WebSpark
+distribution_name = ASU WebSpark
 description = A starting point for websites at ASU
 core = 7.x
 exclusive = 1
@@ -34,8 +34,8 @@ dependencies[] = panopoly_pages
 dependencies[] = panopoly_search
 dependencies[] = panopoly_wysiwyg
 
-; Panopoly Demo
-dependencies[] = panopoly_demo
+; OpenASU - Demo
+dependencies[] = openasu_demo
 
 ; Panopoly Recommended - Admin
 dependencies[] = navbar

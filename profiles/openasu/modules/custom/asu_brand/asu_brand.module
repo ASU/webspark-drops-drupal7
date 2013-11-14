@@ -8,7 +8,7 @@
  */
 
 define('ASU_BRAND_HEADER_VERSION_XML_URL', 'http://asu.edu/asuthemes/headers.xml');
-define('ASU_BRAND_HEADER_VERSION_DEFAULT', '4.0-rsp-up.0');
+define('ASU_BRAND_HEADER_VERSION_DEFAULT', '4.0');
 define('ASU_BRAND_HEADER_BASEPATH_DEFAULT', 'https://asu.edu/asuthemes');
 define('ASU_BRAND_HEADER_TEMPLATE_DEFAULT', 'default');
 define('ASU_BRAND_FOOTER_COLOR_DEFAULT', '');
@@ -64,14 +64,14 @@ function asu_brand_block_save($delta = '', $edit = array()) {
       variable_set('asu_brand_header_template', $edit['asu_brand_header_template']);
       asu_brand_cache_clear();
       break;
-
+    
     case 'asu_brand_footer':
       variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
       variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
       variable_set('asu_brand_footer_color', $edit['asu_brand_footer_color']);
       asu_brand_cache_clear();
       break;
-
+    
     case 'asu_brand_students_footer':
       variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
       variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
@@ -84,7 +84,7 @@ function asu_brand_block_save($delta = '', $edit = array()) {
  * Implements hook_block_view().
  */
 function asu_brand_block_view($delta = '') {
-  $block = array();
+  $block = array();  
   switch ($delta) {
     case 'asu_brand_header':
       module_load_include('inc', 'asu_brand', 'asu_brand.block');
@@ -97,7 +97,7 @@ function asu_brand_block_view($delta = '') {
       $block['subject'] = NULL;
       $block['content'] = asu_brand_get_block_footer();
       break;
-
+    
     case 'asu_brand_students_footer':
       module_load_include('inc', 'asu_brand', 'asu_brand.block');
       $block['subject'] = NULL;
@@ -109,7 +109,7 @@ function asu_brand_block_view($delta = '') {
 
 /**
  * Clear block caches.
- *
+ * 
  * If called without arguments, clears all asu_brand related items. $cid can be
  * any asu_brand item (without the 'asu_brand:' part.
  */

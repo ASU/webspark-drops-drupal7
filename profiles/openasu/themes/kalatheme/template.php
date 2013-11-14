@@ -67,7 +67,7 @@ function kalatheme_process_page(&$variables) {
   if (module_exists('color')) {
     _color_page_alter($variables);
   }
-  
+
   // Define variables to theme local actions as a dropdown.
   $dropdown_attributes = array(
     'container' => array(
@@ -129,6 +129,9 @@ function kalatheme_process_page(&$variables) {
   if (!isset($variables['page']['content']['system_main']['main']['#markup']) || (strpos($variables['page']['content']['system_main']['main']['#markup'], 'panel-panel') === FALSE)) {
     $variables['no_panels'] = TRUE;
   }
+
+  // Check if we're to always print the page title, even on panelized pages.
+  $variables['always_show_page_title'] = theme_get_setting('always_show_page_title') ? TRUE : FALSE;
 }
 
 /**
@@ -213,7 +216,7 @@ function kalatheme_preprocess_views_view_table(&$variables) {
     $rows[] = $row;
   }
   $variables['row_classes'] = $rows;
-  
+
   // Add in bootstrap classes
   $variables['classes_array'] = array('table', 'table-striped', 'table-bordered', 'table-hover');
 }
@@ -292,6 +295,41 @@ function kalatheme_libraries_info() {
       ),
     ),
   );
-  
+
   return $libraries;
+}
+
+/**
+ * This attempts to find and return the Bootstrap library version
+ *
+ * @param $library - The actual library
+ * @param $options - Options to help determine the library version
+ * @return Library version number
+ */
+function _kalatheme_get_version($library, $options) {
+  // Use bootstrap.min.css if exists, if not use normal bootstrap.css
+  $file = (file_exists(DRUPAL_ROOT . '/' . $library['library path'] . '/css/bootstrap.min.css')) ?
+    '/css/bootstrap.min.css' : '/css/bootstrap.css';
+
+  // Provide defaults.
+  $options += array(
+    'file' => $file,
+    'pattern' => '',
+    'lines' => 20,
+    'cols' => 200,
+  );
+
+  $file = DRUPAL_ROOT . '/' . $library['library path'] . '/' . $options['file'];
+  if (empty($options['file']) || !file_exists($file)) {
+    return;
+  }
+  $file = fopen($file, 'r');
+  while ($options['lines'] && $line = fgets($file, $options['cols'])) {
+    if (preg_match($options['pattern'], $line, $version)) {
+      fclose($file);
+      return $version[1];
+    }
+    $options['lines']--;
+  }
+  fclose($file);
 }
