@@ -46,6 +46,7 @@ projects[panopoly_wysiwyg][subdir] = panopoly
 projects[panopoly_search][version] = 1.0-rc5
 projects[panopoly_search][subdir] = panopoly
 projects[panopoly_search][patch][2063715] = https://drupal.org/files/2063715-panopoly-search-update-conditional-2.patch
+projects[panopoly_search][patch][2111097] = https://drupal.org/files/2111097-panopoly_search-pantheon_apachesolr.patch
 
 ; Demo Content
 projects[panopoly_demo][version] = 1.0-rc3
