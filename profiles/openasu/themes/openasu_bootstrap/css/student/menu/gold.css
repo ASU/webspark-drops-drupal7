@@ -14,7 +14,7 @@ iefix: without setting the width of the nav and a discrete background color, ie 
 }
 
 .navbar-inner ul.nav {
-  width: 100%; 
+  width: 100%;
 }
 
 .navbar-inner,
@@ -25,8 +25,12 @@ iefix: without setting the width of the nav and a discrete background color, ie 
 }
 /*endiefix*/
 
-
-
+#menu .navbar-inner ul.nav a.active {
+  color: #000000;
+  border-bottom: 5px #ffffff solid;
+  border-top: 5px #ffffff solid;
+  background-color: #ffffff;
+}
 
 .navbar ul.nav>li.active>a,
 .navbar ul.nav>li.active>a:hover,
@@ -71,9 +75,9 @@ iefix: without setting the width of the nav and a discrete background color, ie 
     border-bottom: 5px transparent solid;
     border-top: 5px transparent solid;
   }
-  #menu ul.nav > li:hover a  {  
+  #menu ul.nav > li:hover a  {
     border-bottom: 5px transparent solid;
-    border-top: 5px transparent solid;    
+    border-top: 5px transparent solid;
   }
 }
 

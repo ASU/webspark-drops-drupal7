@@ -6,7 +6,7 @@ core = 7.x
 projects[drupal][type] = core
 projects[drupal][version] = 7.23
 
-; ASU Overrides 
+; ASU Overrides
 
 projects[simple_gmap][version] = 1.0
 projects[simple_gmap][subdir] = contrib
@@ -100,7 +100,7 @@ projects[references][version] = 2.1
 projects[references][type] = module
 projects[references][subdir] = contrib
 
-projects[ldap][version] = 2.0-beta6 
+projects[ldap][version] = 2.0-beta6
 projects[ldap][type] = module
 projects[ldap][subdir] = contrib
 
@@ -108,7 +108,7 @@ projects[cas_attributes][version] = 1.0-rc2
 projects[cas_attributes][type] = module
 projects[cas_attributes][subdir] = contrib
 
-projects[calendar][version] = 3.4 
+projects[calendar][version] = 3.4
 projects[calendar][type] = module
 projects[calendar][subdir] = contrib
 
@@ -120,7 +120,7 @@ projects[feeds_xpathparser][version] = 1.0-beta4
 projects[feeds_xpathparser][type] = module
 projects[feeds_xpathparser][subdir] = contrib
 
-projects[field_group][version] = 1.1 
+projects[field_group][version] = 1.1
 projects[field_group][type] = module
 projects[field_group][subdir] = contrib
 
@@ -128,7 +128,7 @@ projects[job_scheduler][version] = 2.0-alpha3
 projects[job_scheduler][type] = module
 projects[job_scheduler][subdir] = contrib
 
-projects[viewfield][version] = 2.0 
+projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
 projects[viewfield][subdir] = contrib
 
@@ -138,7 +138,7 @@ projects[views_php][subdir] = contrib
 
 ; Bootstrap and Theme Framework
 
-projects[kalatheme][version] = 1.2
+projects[kalatheme][version] = 1.3
 projects[kalatheme][type] = theme
 
 projects[modernizr][version] = 3.1
@@ -147,7 +147,7 @@ projects[modernizr][subdir] = contrib
 projects[openasu_bootstrap][version] = 1.x-dev
 projects[openasu_bootstrap][type] = theme
 projects[openasu_bootstrap][download][type] = git
-projects[openasu_bootstrap][download][revision] = 5f9e16a
+projects[openasu_bootstrap][download][revision] = 1c5644e
 projects[openasu_bootstrap][download][branch] = 7.x-1.x
 projects[openasu_bootstrap][download][url] = https://github.com/kalamuna/openasu_bootstrap.git
 

@@ -92,7 +92,7 @@
     </header>
 
     <?php if (!$asu_local_navicon): ?>
-      <section class="section hidden-collapse hidden-desktop" id="menu">
+      <section class="section hidden-collapse hidden-desktop collapse" id="menu">
         <div class="container">
           <nav class='navbar navbar-fixed-top fixer'>
             <div class='navbar-inner fixer'>

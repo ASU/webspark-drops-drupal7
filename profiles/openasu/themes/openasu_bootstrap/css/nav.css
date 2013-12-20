@@ -11,6 +11,10 @@ iefix: without setting the width of the nav and a discrete background color, ie 
   width: 100%; background-color:#000;
 }
 
+.navbar-inner, #menu .navbar-inner, .navbar-inner ul.nav, .navbar-inner ul.nav li a:hover {
+  background-color: #000000;
+}
+
 .navbar-inner ul.nav li {
   background-color:#000;
 }
