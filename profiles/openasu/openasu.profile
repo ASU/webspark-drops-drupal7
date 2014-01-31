@@ -42,7 +42,7 @@ function openasu_theme_configure_form($form, &$form_state) {
   $form = array();
 
   $form['theme_configuration'] = array(
-    '#title' => t('OpenASU Theme Settings'),
+    '#title' => t('ASU Webspark Theme Settings'),
     '#type' => 'fieldset',
   );
 
@@ -167,7 +167,7 @@ function openasu_form_install_configure_form_alter(&$form, $form_state) {
   drupal_get_messages('warning');
 
   // Set reasonable defaults for site configuration form
-  $form['site_information']['site_name']['#default_value'] = 'My New OpenASU Site';
+  $form['site_information']['site_name']['#default_value'] = 'My New ASU Webspark Site';
   $form['admin_account']['account']['name']['#default_value'] = 'admin';
 
   // Define a default email address if we can guess a valid one
