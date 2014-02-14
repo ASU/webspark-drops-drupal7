@@ -182,8 +182,8 @@ function openasu_demo_default_page_manager_pages() {
     $pane->configuration = array(
       'admin_title' => '',
       'title' => 'ASU Feeds',
-      'body' => '<p>Easily include ASU feeds on any page within the site. Learn more about individual feed options:</p><p><a href="/asu-events">ASU Events</a><br><a href="/asu-news-feed">ASU News</a></p>',
-      'format' => 'panopoly_wysiwyg_text',
+      'body' => '<p>Easily include ASU feeds on any page within the site. Learn more about individual feed options:</p><p><a href="/content/asu-events">ASU Events</a><br><a href="/content/asu-news">ASU News</a></p>',
+      'format' => 'panopoly_html_text',
       'substitute' => TRUE,
     );
     $pane->cache = array();
@@ -204,7 +204,7 @@ function openasu_demo_default_page_manager_pages() {
     $pane->configuration = array(
       'admin_title' => '',
       'title' => '',
-      'body' => '<img src="/sites/all/modules/openasu_demo/images/map_feature_home_page.png" />',
+      'body' => '<a href="/content/maps"><img src="/sites/all/modules/openasu_demo/images/map_feature_home_page.png" /></a>',
       'format' => 'panopoly_html_text',
       'substitute' => TRUE,
     );
@@ -226,7 +226,7 @@ function openasu_demo_default_page_manager_pages() {
     $pane->configuration = array(
       'admin_title' => '',
       'title' => '',
-      'body' => '<img src="sites/all/modules/openasu_demo/images/mobile_home_page.png" />',
+      'body' => '<a href="/content/mobile-formatted"><img src="sites/all/modules/openasu_demo/images/mobile_home_page.png" /></a>',
       'format' => 'panopoly_html_text',
       'substitute' => TRUE,
     );
