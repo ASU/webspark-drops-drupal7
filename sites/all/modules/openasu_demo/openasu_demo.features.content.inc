@@ -315,13 +315,19 @@ function openasu_demo_content_defaults() {
     'body' => array(
       'und' => array(
         0 => array(
-          'value' => '<h3>Contact</h3><p>Have questions on how ASU webspark can work for you? Or are you a current user of ASU webspark? Please check out&nbsp;<a href="drupal.asu.edu">drupal.asu.edu</a>&nbsp;for further information.</p><p>&nbsp;</p><blockquote><p>Site administrators can also add custom contact forms to their site. &nbsp;To add a custom form go to Content - Add Content - Webform. &nbsp;This creates a page where your form will be displayed. &nbsp;Give the page a title and some descriptive text. &nbsp;Now to add fields to the form click on Webform at the top of the page (next to Edit). &nbsp;Here you can add the desired webform fields. &nbsp;For more information on creating custom WebForms see&nbsp;http://www.youtube.com/watch?v=fgIL8jEMd4s and&nbsp;http://www.ostraining.com/blog/drupal/webform-module/</p></blockquote><p><img src="/sites/all/modules/openasu_demo/images/contact_form_example.jpg"></p>',
+          'value' => '<h3>Contact</h3><p>Have questions on how ASU webspark can work for you? Or are you a current user of ASU webspark? Please check out&nbsp;<a href="drupal.asu.edu">drupal.asu.edu</a>&nbsp;for further information.</p><p>&nbsp;</p><blockquote><p><strong>Step 1:&nbsp;</strong>Site administrators can also add custom contact forms to their site. &nbsp;To add a custom form go to Content - Add Content - Webform. &nbsp;This creates a page where your form will be displayed.</p></blockquote><blockquote><p><strong>Step 2:&nbsp;</strong>Give the page a title and some descriptive text.</p></blockquote><blockquote><p><strong>Step 3:&nbsp;</strong>Now to add fields to the form click on Webform at the top of the page (next to Edit). &nbsp;Here you can add the desired webform fields. &nbsp;</p></blockquote><blockquote><p><strong>Step 4:&nbsp;</strong>For more information on creating custom WebForms see&nbsp;http://www.youtube.com/watch?v=fgIL8jEMd4s and&nbsp;http://www.ostraining.com/blog/drupal/webform-module/</p></blockquote><p><img src="/sites/all/modules/openasu_demo/images/contact_form_example.jpg"></p>',
           'summary' => '',
-          'format' => 'panopoly_wysiwyg_text',
+          'format' => 'panopoly_html_text',
           'safe_value' => '<h3>Contact</h3>
 <p>Have questions on how ASU webspark can work for you? Or are you a current user of ASU webspark? Please check out <a href="drupal.asu.edu">drupal.asu.edu</a> for further information.</p>
 <p> </p>
-<blockquote><p>Site administrators can also add custom contact forms to their site.  To add a custom form go to Content - Add Content - Webform.  This creates a page where your form will be displayed.  Give the page a title and some descriptive text.  Now to add fields to the form click on Webform at the top of the page (next to Edit).  Here you can add the desired webform fields.  For more information on creating custom WebForms see <a href="http://www.youtube.com/watch?v=fgIL8jEMd4s">http://www.youtube.com/watch?v=fgIL8jEMd4s</a> and <a href="http://www.ostraining.com/blog/drupal/webform-module/">http://www.ostraining.com/blog/drupal/webform-module/</a></p>
+<blockquote><p><strong>Step 1: </strong>Site administrators can also add custom contact forms to their site.  To add a custom form go to Content - Add Content - Webform.  This creates a page where your form will be displayed.</p>
+</blockquote>
+<blockquote><p><strong>Step 2: </strong>Give the page a title and some descriptive text.</p>
+</blockquote>
+<blockquote><p><strong>Step 3: </strong>Now to add fields to the form click on Webform at the top of the page (next to Edit).  Here you can add the desired webform fields.  </p>
+</blockquote>
+<blockquote><p><strong>Step 4: </strong>For more information on creating custom WebForms see <a href="http://www.youtube.com/watch?v=fgIL8jEMd4s">http://www.youtube.com/watch?v=fgIL8jEMd4s</a> and <a href="http://www.ostraining.com/blog/drupal/webform-module/">http://www.ostraining.com/blog/drupal/webform-module/</a></p>
 </blockquote>
 <p><img src="/sites/all/modules/openasu_demo/images/contact_form_example.jpg" width="305" height="512" /></p>
 ',
