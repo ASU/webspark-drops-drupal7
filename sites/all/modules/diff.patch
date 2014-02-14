@@ -1,0 +1,810 @@
+diff --git a/sites/all/modules/openasu_demo/openasu_demo.features.content.inc b/sites/all/modules/openasu_demo/openasu_demo.features.content.inc
+index 8daf8bf..dac25ba 100755
+--- a/sites/all/modules/openasu_demo/openasu_demo.features.content.inc
++++ b/sites/all/modules/openasu_demo/openasu_demo.features.content.inc
+@@ -11,7 +11,6 @@ function openasu_demo_content_defaults() {
+   $content = array();
+ 
+   $content['about'] = (object) array(
+-    'exported_path' => 'about',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/about',
+@@ -26,6 +25,7 @@ function openasu_demo_content_defaults() {
+       'weight' => -49,
+       'identifier' => 'main-menu:node-name/about',
+     ),
++    'exported_path' => 'content/about',
+     'title' => 'About',
+     'status' => 1,
+     'promote' => 1,
+@@ -48,7 +48,7 @@ function openasu_demo_content_defaults() {
+ <p><strong><a href="https://drupal.asu.edu/host#plans">view more information about hosting plans</a></strong></p>
+ <p>A new web site takes less than 15 minutes to create and once ready, it is easy to customize with different layouts and <a href="/node/7">built-in features</a>. Since ASU webspark is created specifically for the ASU community, an ASU webspark site allows any designated ASU user to serve as administrator or author, by signing in to the site with ASU credentials.</p>
+ <p><a href="http://www.youtube.com/playlist?list=PL06Pxw-jVkN085OawfNr0m3ztnffkZSST"><strong>view pantheon video guides</strong></a></p>
+-<p><img style="float:left" src="/sites/default/files/resize/remote/2d45de60d88f6cde27576fb8dddc9fca-244x114.png" width="244" height="114" /></p>
++<p><img style="float:left" src="/sites/all/modules/openasu_demo/images/pantheon-logo-white.png" width="244" height="114" /></p>
+ ',
+           'safe_summary' => '',
+         ),
+@@ -64,7 +64,6 @@ function openasu_demo_content_defaults() {
+   );
+ 
+   $content['asu-events'] = (object) array(
+-    'exported_path' => 'asu-events',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/asu-events',
+@@ -80,6 +79,7 @@ function openasu_demo_content_defaults() {
+       'parent_path' => 'node-name/features',
+       'identifier' => 'main-menu:node-name/asu-events',
+     ),
++    'exported_path' => 'content/asu-events',
+     'title' => 'ASU Events ',
+     'status' => 1,
+     'promote' => 1,
+@@ -100,12 +100,12 @@ function openasu_demo_content_defaults() {
+ <p>Site administrators add an ASU Events feed to the site which will automatically be updated.</p>
+ <h4>Importing Events Feed</h4>
+ <p> </p>
+-<blockquote><p><strong>Step 1: </strong> In the site administration panel, go to Structure-Feeds-ASU Events Importer<strong><em>.</em></strong> To the right of Node Processor click on Settings and set Bundle to ASU Events.</p>
++<blockquote><p><strong>Step 1: </strong> In the site administration panel, go to Structure-Feeds importers-ASU Events Importer (/admin/structure/feeds/asu_events_importer). Click Override or Edit and to the right of Node Processor click on Settings and set Bundle to ASU Events.</p>
+ </blockquote>
+-<p><em>example display:</em><br /><img src="/sites/default/files/resize/remote/5374175c25843811c285d7f00459a777-275x98.png" width="275" height="98" /></p>
++<p><em>example display:</em><br /><img src="/sites/all/modules/openasu_demo/images/Screen%20Shot%202013-07-25%20at%209.55.01%20AM.png" width="275" height="98" /></p>
+ <blockquote><p><strong>Step 2:</strong> Navigate to your_site_address/import/asu_events_importer and add the feed URL of the ASU Events feed, and select Import. (To request an ASU Events Feed and the corresponding url, email <a href="mailto:Tanya.Amos@asu.edu">Tanya.Amos@asu.edu</a> at ASU Events.)</p>
+ </blockquote>
+-<p><em>example display:</em><br /><img src="/sites/default/files/resize/remote/e73f001e7ec9d272f670b0444b323c64-275x247.png" width="275" height="247" /></p>
++<p><em>example display:</em><br /><img src="/sites/all/modules/openasu_demo/images/importasuevents.png" width="275" height="247" /></p>
+ <h4></h4>
+ <h4><strong>Adding Events Views</strong><em><br /></em></h4>
+ <p><strong></strong>Note: Full details on how the Views module works can be found on the <a href="https://drupal.org/project/views">Views Module page</a> on drupal.org.</p>
+@@ -124,6 +124,9 @@ function openasu_demo_content_defaults() {
+ <p> </p>
+ <p><strong>Step 7:</strong> To complete setup, select "Save" at the top of the page.</p>
+ </blockquote>
++<p>For any additional information please see <a href="https://drupal.asu.edu/wiki/asu-events-feed-feature">ASU Events Feature</a>.</p>
++<p><img src="/sites/all/modules/openasu_demo/images/events_preset.jpg" width="735" height="502" /></p>
++<p>An example of what your Events feed could look like.</p>
+ ',
+           'safe_summary' => '',
+         ),
+@@ -139,7 +142,6 @@ function openasu_demo_content_defaults() {
+   );
+ 
+   $content['asu-header-footer'] = (object) array(
+-    'exported_path' => 'asu-header-footer',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/asu-header-footer',
+@@ -155,6 +157,7 @@ function openasu_demo_content_defaults() {
+       'parent_path' => 'node-name/features',
+       'identifier' => 'main-menu:node-name/asu-header-footer',
+     ),
++    'exported_path' => 'content/header-and-footer',
+     'title' => 'Header and Footer',
+     'status' => 1,
+     'promote' => 1,
+@@ -175,12 +178,12 @@ function openasu_demo_content_defaults() {
+ <p>Each site will automatically incorporate the current version of the standard ASU header and footer. The footer has two style options to select from – the standard footer or My ASU student focused footer. Selections can easily be made during the initial creation of the site or changed at any time within the administrative settings. The framework will also be updated automatically for all users of ASU webspark when there are updates made to either the header or footer.</p>
+ <p> </p>
+ <h4>Header Options</h4>
+-<p><img src="/sites/default/files/resize/remote/319d8862d4938f6de56bdefb3229700c-525x29.png" width="525" height="29" /></p>
+-<p><img src="/sites/default/files/resize/remote/feeac646eb08208262e6c497e02b363c-525x29.png" width="525" height="29" /></p>
+-<p><img src="/sites/default/files/resize/remote/0061eb341f7fdcda21cb1548949862b1-525x29.png" width="525" height="29" /></p>
++<p><img src="/sites/all/modules/openasu_demo/images/header1.png" width="525" height="29" /></p>
++<p><img src="/sites/all/modules/openasu_demo/images/header2.png" width="525" height="29" /></p>
++<p><img src="/sites/all/modules/openasu_demo/images/header3_0.png" width="525" height="29" /></p>
+ <p> </p>
+ <h4>Standard Footer</h4>
+-<p><img src="/sites/default/files/resize/remote/9b81c3d52e3dc03352dbff8b17d8bc30-525x14.png" width="525" height="14" /></p>
++<p><img src="/sites/all/modules/openasu_demo/images/footer.png" width="525" height="14" /></p>
+ <p> </p>
+ ',
+           'safe_summary' => '',
+@@ -197,7 +200,6 @@ function openasu_demo_content_defaults() {
+   );
+ 
+   $content['asu-news-feed'] = (object) array(
+-    'exported_path' => 'asu-news-feed',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/asu-news-feed',
+@@ -213,6 +215,7 @@ function openasu_demo_content_defaults() {
+       'parent_path' => 'node-name/features',
+       'identifier' => 'main-menu:node-name/asu-news-feed',
+     ),
++    'exported_path' => 'content/asu-news',
+     'title' => 'ASU News',
+     'status' => 1,
+     'promote' => 1,
+@@ -233,22 +236,22 @@ function openasu_demo_content_defaults() {
+ <p>Site administrators add an ASU News feed to the site which will automatically be updated.</p>
+ <h4>How to Import a News Feed</h4>
+ <p> </p>
+-<blockquote><p><strong>Step 1: </strong>In the site administration panel, go to Structure-Feeds-ASU News Importer<strong><em>.</em></strong> <span>To the right of Node Processor click on Settings and s</span>et Bundle to ASU News.</p>
++<blockquote><p><strong>Step 1: </strong>In the site administration panel, go to Structure-Feeds importers-ASU Events Importer (/admin/structure/feeds/asu_news_importer). Click Override or Edit and to the right of Node Processor click on Settings and set Bundle to ASU News.</p>
+ </blockquote>
+ <p> <em>example display:</em></p>
+-<p><img src="/sites/default/files/resize/remote/a4cf50810a55962218b866935fd536b4-289x96.png" width="289" height="96" /></p>
++<p><img src="/sites/all/modules/openasu_demo/images/Screen%20Shot%202013-07-25%20at%209.54.49%20AM.png" width="289" height="96" /></p>
+ <p> </p>
+ <blockquote><p><strong>Step 2: </strong>Navigate to <em>your_site_address</em>/import/asu_news_importer and add the feed URL of the ASU News feed, and select Import. (To request an ASU News Feed and the corresponding url, email <a href="mailto:Brandon.Jenkins@asu.edu">Brandon.Jenkins@asu.edu</a> at ASU News.)</p>
+ </blockquote>
+-<p><em><em>example display:</em><br /><img src="/sites/default/files/resize/remote/b2dbd89520802d90ab35d4bdc6342e56-275x247.png" width="275" height="247" /> </em></p>
++<p><em><em>example display:</em><br /><img src="/sites/all/modules/openasu_demo/images/importasunews.png" width="275" height="247" /> </em></p>
+ <h4>Importing Events Feed</h4>
+ <p> </p>
+-<blockquote><p><strong>Step 1: </strong> In the site administration panel, go to Structure-Feeds importers-ASU Events Importer (/admin/structure/feeds/asu_events_importer). Click Override or Edit and to the right of Node Processor click on Settings and set Bundle to ASU Events.</p>
++<blockquote><p><strong>Step 1: </strong> In the site administration panel, go to Structure-Feeds-ASU Events Importer<em></em><strong><em>.</em></strong> Set Bundle to ASU Events.</p>
+ </blockquote>
+-<p><em>example display:</em><br /><img src="/sites/default/files/resize/remote/5374175c25843811c285d7f00459a777-275x98.png" width="275" height="98" /></p>
++<p><em>example display:</em><br /><img src="/sites/all/modules/openasu_demo/images/Screen%20Shot%202013-07-25%20at%209.55.01%20AM.png" width="275" height="98" /></p>
+ <blockquote><p><strong>Step 2:</strong> Navigate to your_site_address/import/asu_events_importer and add the feed URL of the ASU Events feed, and select Import. (To request an ASU Events Feed and the corresponding url, email <a href="mailto:Tanya.Amos@asu.edu">Tanya.Amos@asu.edu</a> at ASU Events.)</p>
+ </blockquote>
+-<p><em>example display:</em><br /><img src="/sites/default/files/resize/remote/e73f001e7ec9d272f670b0444b323c64-275x247.png" width="275" height="247" /></p>
++<p><em>example display:</em><br /><img src="/sites/all/modules/openasu_demo/images/importasuevents.png" width="275" height="247" /></p>
+ <p> </p>
+ <p><em>Note: Full details on how the Views module works can be found on the <a href="https://drupal.org/project/views">Views Module page</a> on drupal.org.</em></p>
+ <p> </p>
+@@ -266,6 +269,9 @@ function openasu_demo_content_defaults() {
+ <p> </p>
+ <p><strong>Step 7:</strong> To complete setup, select "Save" at the top of the page.</p>
+ </blockquote>
++<p>For any additional information please see <a href="https://drupal.asu.edu/create/asu-news-feature">ASU News Feature</a>.</p>
++<p><img src="/sites/all/modules/openasu_demo/images/news_preset.jpg" width="736" height="486" /></p>
++<p>An example of what your News feed could look like.</p>
+ ',
+           'safe_summary' => '',
+         ),
+@@ -281,7 +287,6 @@ function openasu_demo_content_defaults() {
+   );
+ 
+   $content['contact-contact'] = (object) array(
+-    'exported_path' => 'content/contact',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/contact-contact',
+@@ -296,6 +301,7 @@ function openasu_demo_content_defaults() {
+       'weight' => 0,
+       'identifier' => 'main-menu:node-name/contact-contact',
+     ),
++    'exported_path' => 'content/contact',
+     'title' => 'Contact',
+     'status' => 1,
+     'promote' => 1,
+@@ -333,7 +339,6 @@ function openasu_demo_content_defaults() {
+   );
+ 
+   $content['content-layout-options'] = (object) array(
+-    'exported_path' => 'content-layout-options',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/content-layout-options',
+@@ -349,6 +354,7 @@ function openasu_demo_content_defaults() {
+       'parent_path' => 'node-name/features',
+       'identifier' => 'main-menu:node-name/content-layout-options',
+     ),
++    'exported_path' => 'content/content-layout-options',
+     'title' => 'Content Layout Options',
+     'status' => 1,
+     'promote' => 1,
+@@ -375,275 +381,7 @@ function openasu_demo_content_defaults() {
+ </ul>
+ <p> </p>
+ <h4>Page Layout Options</h4>
+-<p><i><img src="/sites/default/files/resize/remote/557ef9038e5886744e41cfdc8126b85d-574x286.png" width="574" height="286" /></i></p>
+-',
+-          'safe_summary' => '',
+-        ),
+-      ),
+-    ),
+-    'field_featured_status' => array(
+-      'und' => array(
+-        0 => array(
+-          'value' => 0,
+-        ),
+-      ),
+-    ),
+-  );
+-
+-  $content['asu-eadvisor-degree-feed'] = (object) array(
+-    'exported_path' => 'asu-eadvisor-degree-feed',
+-    'link' => array(
+-      'menu_name' => 'main-menu',
+-      'link_path' => 'node-name/asu-eadvisor-degree-feed',
+-      'router_path' => 'node/%',
+-      'link_title' => 'ASU eAdvisor',
+-      'options' => array(),
+-      'module' => 'menu',
+-      'hidden' => 0,
+-      'external' => 0,
+-      'has_children' => 0,
+-      'expanded' => 0,
+-      'weight' => 0,
+-      'parent_path' => 'node-name/features',
+-      'identifier' => 'main-menu:node-name/asu-eadvisor-degree-feed',
+-    ),
+-    'title' => 'ASU eAdvisor Degree Feed',
+-    'status' => 1,
+-    'promote' => 1,
+-    'sticky' => 0,
+-    'type' => 'panopoly_page',
+-    'language' => 'und',
+-    'created' => 1377101640,
+-    'comment' => 0,
+-    'translate' => 0,
+-    'machine_name' => 'asu-eadvisor-degree-feed',
+-    'body' => array(
+-      'und' => array(
+-        0 => array(
+-          'value' => '<h3>ASU eAdvisor Degree Feed</h3><p>Site administrators add an ASU eAdvisor Degrees feed to the site which will automatically be updated.</p><h4>Importing Degrees Feed</h4><blockquote><p>Administrators can create 3&nbsp; ASU eAdvisor Degree Feeds (Undergrad Major, Undergrad Minor and Certificate, and Graduate).</p></blockquote><p>&nbsp;</p><blockquote><p><strong>Step 1 (Undergrad):&nbsp;</strong>Go to your_site.asu.edu/node/add/asu-eadvisor-degree-feed.</p></blockquote><p>&nbsp;</p><blockquote><p><strong>Step 2: </strong>Enter a title, for example "eAdvisor degree feed - Undergrad majors".</p></blockquote><p>&nbsp;</p><blockquote><p><strong>Step 3: </strong>Enter the following in the corresponding setting boxes:<br>Protocol: HTTPS Server name: webapp4.asu.edu <br>Path: /programs/XmlRpcServer <br>Service: eAdvisorDSFind.findDegreeByCollegeAndProgram College Code: enter corresponding college code (example: CLA)<br>Program Undergrad Certificate: False</p></blockquote><p>&nbsp;</p><blockquote><p><strong>Step 4: </strong>Select Save.&nbsp; Degree information will now be imported to the Drupal site and create the eAdvisor nodes.</p></blockquote><p>&nbsp;</p><blockquote><p><strong>For Undergrad Minor)<br></strong>Follow steps 1-4 above but change:<br>Program: Undergrad Certificate: False</p></blockquote><p>&nbsp;</p><blockquote><p><strong>For Graduate)<br></strong>Follow&nbsp;steps 1-4 above but change:<br>Program: Graduate Certificate: False<br>(Certificate option is ignored when Program: Graduate is chosen)</p></blockquote><p>&nbsp;</p><p>An ASU eAdvisor Degree view will be created for each of the feeds entered. &nbsp;To view feed settings, go to Structure &gt; Views. &nbsp;Under each view make sure to add a filter for your department by selecting Filter Criteria and entering "code" into the text box.&nbsp; Check the box next to Content: Department Code and select Apply. Keep the drop down as "Is equal to" and type in the department code.</p><p>This is also where the URLs can be found for linking each page.</p><p>For any additional information please see <a href="https://drupal.asu.edu/create/asu-eadvisor-degree-feed">ASU eAdvisor Degree Feed</a>.</p><p><img src="/sites/all/modules/openasu_demo/images/eadvisor_preset.jpg" /></p><p>An example of what your eAdvisor feed could look like.</p>',
+-          'summary' => '',
+-          'format' => 'panopoly_wysiwyg_text',
+-          'safe_value' => '<h3>ASU eAdvisor Degree Feed</h3>
+-<p>Site administrators add an ASU eAdvisor Degrees feed to the site which will automatically be updated.</p>
+-<h4>Importing Degrees Feed</h4>
+-<blockquote><p>Administrators can create 3  ASU eAdvisor Degree Feeds (Undergrad Major, Undergrad Minor and Certificate, and Graduate).</p>
+-</blockquote>
+-<p> </p>
+-<blockquote><p><strong>Step 1 (Undergrad): </strong>Go to your_site.asu.edu/node/add/asu-eadvisor-degree-feed.</p>
+-</blockquote>
+-<p> </p>
+-<blockquote><p><strong>Step 2: </strong>Enter a title, for example "eAdvisor degree feed - Undergrad majors".</p>
+-</blockquote>
+-<p> </p>
+-<blockquote><p><strong>Step 3: </strong>Enter the following in the corresponding setting boxes:<br />Protocol: HTTPS Server name: webapp4.asu.edu <br />Path: /programs/XmlRpcServer <br />Service: eAdvisorDSFind.findDegreeByCollegeAndProgram College Code: enter corresponding college code (example: CLA)<br />Program Undergrad Certificate: False</p>
+-</blockquote>
+-<p> </p>
+-<blockquote><p><strong>Step 4: </strong>Select Save.  Degree information will now be imported to the Drupal site and create the eAdvisor nodes.</p>
+-</blockquote>
+-<p> </p>
+-<blockquote><p><strong>For Undergrad Minor)<br /></strong>Follow steps 1-4 above but change:<br />Program: Undergrad Certificate: False</p>
+-</blockquote>
+-<p> </p>
+-<blockquote><p><strong>For Graduate)<br /></strong>Follow steps 1-4 above but change:<br />Program: Graduate Certificate: False<br />(Certificate option is ignored when Program: Graduate is chosen)</p>
+-</blockquote>
+-<p> </p>
+-<p>An ASU eAdvisor Degree view will be created for each of the feeds entered.  To view feed settings, go to Structure &gt; Views.  Under each view make sure to add a filter for your department by selecting Filter Criteria and entering "code" into the text box.  Check the box next to Content: Department Code and select Apply. Keep the drop down as "Is equal to" and type in the department code.</p>
+-<p>This is also where the URLs can be found for linking each page.</p>
+-',
+-          'safe_summary' => '',
+-        ),
+-      ),
+-    ),
+-    'field_featured_status' => array(
+-      'und' => array(
+-        0 => array(
+-          'value' => 0,
+-        ),
+-      ),
+-    ),
+-  );
+-
+-  $content['home-slideshow'] = (object) array(
+-    'exported_path' => 'home-slideshow',
+-    'link' => array(
+-      'menu_name' => 'main-menu',
+-      'link_path' => 'node-name/home-slideshow',
+-      'router_path' => 'node/%',
+-      'link_title' => 'Home Slideshow',
+-      'options' => array(),
+-      'module' => 'menu',
+-      'hidden' => 0,
+-      'external' => 0,
+-      'has_children' => 0,
+-      'expanded' => 0,
+-      'weight' => 0,
+-      'parent_path' => 'node-name/features',
+-      'identifier' => 'main-menu:node-name/home-slideshow',
+-    ),
+-    'title' => 'Home Slideshow',
+-    'status' => 0,
+-    'promote' => 1,
+-    'sticky' => 0,
+-    'type' => 'panopoly_page',
+-    'language' => 'und',
+-    'created' => 1372369800,
+-    'comment' => 0,
+-    'translate' => 0,
+-    'machine_name' => 'home-slideshow',
+-    'body' => array(
+-      'und' => array(
+-        0 => array(
+-          'value' => '<p>Easily include a rotating slideshow of images on the home page.</p><p>&nbsp;</p><p><i>(include instructions/screenshots on how users add modify/add home page images)</i></p><p><i>(include photo resources links)</i></p>',
+-          'summary' => '',
+-          'format' => 'panopoly_wysiwyg_text',
+-          'safe_value' => '<p>Easily include a rotating slideshow of images on the home page.</p>
+-<p> </p>
+-<p><i>(include instructions/screenshots on how users add modify/add home page images)</i></p>
+-<p><i>(include photo resources links)</i></p>
+-',
+-          'safe_summary' => '',
+-        ),
+-      ),
+-    ),
+-    'field_featured_status' => array(
+-      'und' => array(
+-        0 => array(
+-          'value' => 0,
+-        ),
+-      ),
+-    ),
+-  );
+-
+-  $content['how-edit-site'] = (object) array(
+-    'exported_path' => 'how-edit-site',
+-    'link' => array(
+-      'menu_name' => 'main-menu',
+-      'link_path' => 'node-name/how-edit-site',
+-      'router_path' => 'node/%',
+-      'link_title' => 'How to Edit a Site',
+-      'options' => array(),
+-      'module' => 'menu',
+-      'hidden' => 0,
+-      'external' => 0,
+-      'has_children' => 0,
+-      'expanded' => 0,
+-      'weight' => -49,
+-      'parent_path' => 'node-name/about',
+-      'identifier' => 'main-menu:node-name/how-edit-site',
+-    ),
+-    'title' => 'How to Edit a Site',
+-    'status' => 1,
+-    'promote' => 1,
+-    'sticky' => 0,
+-    'type' => 'panopoly_page',
+-    'language' => 'und',
+-    'created' => 1378948920,
+-    'comment' => 0,
+-    'translate' => 0,
+-    'machine_name' => 'how-edit-site',
+-    'body' => array(
+-      'und' => array(
+-        0 => array(
+-          'value' => '<h3>How to Edit a Site</h3><p>Drupal is an open source content management platform powering millions of websites and applications. It’s built, used, and supported by an active and diverse community of people around the world. Drupal is a robust platform which allows flexibility with thousands of add-on module available.</p><p><strong><a href="https://drupal.org/">learn more about drupal</a></strong></p><h4>Editing an ASU webspark Site</h4><p>There are two ways to edit page content. The first is to select "Edit" at the top of the page (just below the main menu).&nbsp; This will bring up a page with all sections on the page in editable boxes. <br><br>The other way is to select "Customize this Page" at the bottom of the page. This will display all of the content on the page (including sidebars) in panels. Panels can be rearranged through drag and drop controls. Panels can also be edited and deleted by selecting correspoinding buttons at the top of each panel. Additional panels can also be added to the page layout.</p><p>An embed video field can be displayed on a page by utlizing panels.&nbsp; To add a panel select the "+" button in the top right corner of the page. Additional items can also be added to a panel including blocks, forms, page content and views. Each new panel contains various options for customization and can be placed in multiple locations on a page. Be sure to select "Save" at the bottom of every page to save and publish changes to the live web site.</p><p>Navigation can be modified within the Structure menu. Within each menu, a list of the menu links will be displayed. These can be moved by dragging and dropping. Menu items can also be deleted from this page. To edit the display name and URL of a menu item, select "Edit" and change the menu link title and path fields. Be sure to select "Save" at the bottom to save all changes.</p><p>Further documentation can be found on the <strong><a href="https://www.getpantheon.com/">Pantheon website</a></strong>.</p>',
+-          'summary' => '',
+-          'format' => 'panopoly_wysiwyg_text',
+-          'safe_value' => '<h3>How to Edit a Site</h3>
+-<p>Drupal is an open source content management platform powering millions of websites and applications. It’s built, used, and supported by an active and diverse community of people around the world. Drupal is a robust platform which allows flexibility with thousands of add-on module available.</p>
+-<p><strong><a href="https://drupal.org/">learn more about drupal</a></strong></p>
+-<h4>Editing an ASU webspark Site</h4>
+-<p>There are two ways to edit page content. The first is to select "Edit" at the top of the page (just below the main menu).  This will bring up a page with all sections on the page in editable boxes. </p>
+-<p>The other way is to select "Customize this Page" at the bottom of the page. This will display all of the content on the page (including sidebars) in panels. Panels can be rearranged through drag and drop controls. Panels can also be edited and deleted by selecting correspoinding buttons at the top of each panel. Additional panels can also be added to the page layout.</p>
+-<p>An embed video field can be displayed on a page by utlizing panels.  To add a panel select the "+" button in the top right corner of the page. Additional items can also be added to a panel including blocks, forms, page content and views. Each new panel contains various options for customization and can be placed in multiple locations on a page. Be sure to select "Save" at the bottom of every page to save and publish changes to the live web site.</p>
+-<p>Navigation can be modified within the Structure menu. Within each menu, a list of the menu links will be displayed. These can be moved by dragging and dropping. Menu items can also be deleted from this page. To edit the display name and URL of a menu item, select "Edit" and change the menu link title and path fields. Be sure to select "Save" at the bottom to save all changes.</p>
+-<p>Further documentation can be found on the <strong><a href="https://www.getpantheon.com/">Pantheon website</a></strong>.</p>
+-',
+-          'safe_summary' => '',
+-        ),
+-      ),
+-    ),
+-    'field_featured_status' => array(
+-      'und' => array(
+-        0 => array(
+-          'value' => 0,
+-        ),
+-      ),
+-    ),
+-  );
+-
+-  $content['maps'] = (object) array(
+-    'exported_path' => 'maps',
+-    'link' => array(
+-      'menu_name' => 'main-menu',
+-      'link_path' => 'node-name/maps',
+-      'router_path' => 'node/%',
+-      'link_title' => 'Maps',
+-      'options' => array(),
+-      'module' => 'menu',
+-      'hidden' => 0,
+-      'external' => 0,
+-      'has_children' => 0,
+-      'expanded' => 0,
+-      'weight' => 0,
+-      'parent_path' => 'node-name/features',
+-      'identifier' => 'main-menu:node-name/maps',
+-    ),
+-    'title' => 'Maps',
+-    'status' => 1,
+-    'promote' => 1,
+-    'sticky' => 0,
+-    'type' => 'panopoly_page',
+-    'language' => 'und',
+-    'created' => 1375308600,
+-    'comment' => 0,
+-    'translate' => 0,
+-    'machine_name' => 'maps',
+-    'body' => array(
+-      'und' => array(
+-        0 => array(
+-          'value' => '<h3>Maps</h3><p>Include location maps with the built-in Google Maps feature.</p>',
+-          'summary' => '',
+-          'format' => 'panopoly_wysiwyg_text',
+-          'safe_value' => '<h3>Maps</h3>
+-<p>Include location maps with the built-in Google Maps feature.</p>
+-',
+-          'safe_summary' => '',
+-        ),
+-      ),
+-    ),
+-    'field_featured_status' => array(
+-      'und' => array(
+-        0 => array(
+-          'value' => 0,
+-        ),
+-      ),
+-    ),
+-  );
+-
+-  $content['shortcode-test'] = (object) array(
+-    'exported_path' => 'shortcode-test',
+-    'title' => 'Shortcode Test',
+-    'status' => 1,
+-    'promote' => 1,
+-    'sticky' => 0,
+-    'type' => 'panopoly_page',
+-    'language' => 'und',
+-    'created' => 1379626200,
+-    'comment' => 0,
+-    'translate' => 0,
+-    'machine_name' => 'shortcode-test',
+-    'body' => array(
+-      'und' => array(
+-        0 => array(
+-          'value' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sagittis [highlight]metus lacus, et dignissim tortor consequat at[/highlight]. Nunc vitae augue nec odio ultricies rhoncus quis quis ipsum. Donec et quam eget ipsum interdum porta. Curabitur suscipit magna ipsum, ac semper ante dignissim blandit. Integer vitae neque fermentum, ornare nunc non, molestie nulla. Nullam lacinia dolor felis, vitae pharetra sapien eleifend id. Morbi semper ullamcorper fermentum. Cras eleifend erat eget convallis scelerisque. Fusce risus sem, tristique id tempor et, gravida vel orci. Pellentesque non consequat nisi.</p><p>&nbsp;</p>
+-
+-
+-
+-[button url="http://www.sooperthemes.com" size="1"]Action Button[/button]',
+-          'summary' => '',
+-          'format' => 'panopoly_html_text',
+-          'safe_value' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sagittis [highlight]metus lacus, et dignissim tortor consequat at[/highlight]. Nunc vitae augue nec odio ultricies rhoncus quis quis ipsum. Donec et quam eget ipsum interdum porta. Curabitur suscipit magna ipsum, ac semper ante dignissim blandit. Integer vitae neque fermentum, ornare nunc non, molestie nulla. Nullam lacinia dolor felis, vitae pharetra sapien eleifend id. Morbi semper ullamcorper fermentum. Cras eleifend erat eget convallis scelerisque. Fusce risus sem, tristique id tempor et, gravida vel orci. Pellentesque non consequat nisi.</p>
+-<p> </p>
+-<p>[button url="<a href="http://www.sooperthemes.com">http://www.sooperthemes.com</a>" size="1"]Action Button[/button] </p>
++<p><i><img src="/sites/all/modules/openasu_demo/images/panels.png" width="574" height="286" /></i></p>
+ ',
+           'safe_summary' => '',
+         ),
+@@ -659,7 +397,6 @@ function openasu_demo_content_defaults() {
+   );
+ 
+   $content['features'] = (object) array(
+-    'exported_path' => 'features',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/features',
+@@ -674,6 +411,7 @@ function openasu_demo_content_defaults() {
+       'weight' => -48,
+       'identifier' => 'main-menu:node-name/features',
+     ),
++    'exported_path' => 'content/features',
+     'title' => 'Features',
+     'status' => 1,
+     'promote' => 1,
+@@ -695,10 +433,10 @@ function openasu_demo_content_defaults() {
+ <p>The framework is set up for easy editing and includes toolbars to change styles, create menu items and add images.</p>
+ <p> </p>
+ <h4>Editing Menu</h4>
+-<p><img src="/sites/default/files/resize/remote/cfbfeabf1a6dc866058f3793a36bd533-500x63.png" width="500" height="63" /></p>
++<p><img src="/sites/all/modules/openasu_demo/images/editor.png" width="500" height="63" /></p>
+ <p> </p>
+ <h4>Menu and Image Options</h4>
+-<p><img src="/sites/default/files/resize/remote/3920a99efaa1e2c0c333d88ef46a0290-300x482.png" width="300" height="482" /></p>
++<p><img src="/sites/all/modules/openasu_demo/images/sidebar.png" width="300" height="482" /></p>
+ ',
+           'safe_summary' => '',
+         ),
+@@ -714,7 +452,6 @@ function openasu_demo_content_defaults() {
+   );
+ 
+   $content['footer-options'] = (object) array(
+-    'exported_path' => 'footer-options',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/footer-options',
+@@ -730,6 +467,7 @@ function openasu_demo_content_defaults() {
+       'parent_path' => 'node-name/styles',
+       'identifier' => 'main-menu:node-name/footer-options',
+     ),
++    'exported_path' => 'content/footer-options',
+     'title' => 'Footer Options',
+     'status' => 1,
+     'promote' => 1,
+@@ -750,11 +488,11 @@ function openasu_demo_content_defaults() {
+ <p>Site owners may also select from two footer display options. The My ASU footer is intended for student-focused websites or the standard footer can be used without the My ASU option.</p>
+ <p> </p>
+ <h4><strong>My ASU footer with standard footer:</strong></h4>
+-<p><img src="/sites/default/files/resize/remote/52d883ae84f2b6d36bbd98bf9b9170e4-711x141.jpg" width="711" height="141" /></p>
++<p><img src="/sites/all/modules/openasu_demo/images/myasu_footer.jpg" width="711" height="141" /></p>
+ <h4></h4>
+ <p> </p>
+ <h4><strong>Standard footer:</strong></h4>
+-<p><strong><img src="/sites/default/files/resize/remote/c62fc057a8204c794cb9c9e2eec48376-711x25.jpg" width="711" height="25" /></strong></p>
++<p><strong><img src="/sites/all/modules/openasu_demo/images/footer.jpg" width="711" height="25" /></strong></p>
+ <p> </p>
+ ',
+           'safe_summary' => '',
+@@ -771,7 +509,6 @@ function openasu_demo_content_defaults() {
+   );
+ 
+   $content['google-analytics'] = (object) array(
+-    'exported_path' => 'google-analytics',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/google-analytics',
+@@ -787,6 +524,7 @@ function openasu_demo_content_defaults() {
+       'parent_path' => 'node-name/features',
+       'identifier' => 'main-menu:node-name/google-analytics',
+     ),
++    'exported_path' => 'content/google-analytics',
+     'title' => 'Google Analytics',
+     'status' => 1,
+     'promote' => 1,
+@@ -806,7 +544,7 @@ function openasu_demo_content_defaults() {
+           'safe_value' => '<h3>Google Analytics</h3>
+ <p>Google Analytics is a service offered by Google that generates detailed statistics about a website\'s traffic and traffic sources and measures conversions and sales. Google Analytics can track visitors from all referrers, including search engines and social networks, direct visits and referring sites. It also displays advertising, pay-per-click networks, email marketing and digital collateral such as links within PDF documents. It\'s one of the most powerful digital analytics solutions available - and it\'s free for anyone to use.</p>
+ <p> </p>
+-<p><img src="/sites/default/files/resize/remote/8d606fd1aba511d3103f29407e6587ee-627x227.png" width="627" height="227" /></p>
++<p><img src="/sites/all/modules/openasu_demo/images/analytics.png" width="627" height="227" /></p>
+ <p> </p>
+ <p> </p>
+ <h4>New to Analytics?</h4>
+@@ -819,7 +557,7 @@ function openasu_demo_content_defaults() {
+ <p> </p>
+ <blockquote><p><strong>Step 2:</strong> Add the site ID to Web Property ID box under Menu-Configuration-System-Google Analytics in the administration settings.</p>
+ </blockquote>
+-<p><em>example settings display:</em><br /><img src="/sites/default/files/resize/remote/14cc3e276849ab6aff4e42da2c9fb253-525x465.png" width="525" height="465" /></p>
++<p><em>example settings display:</em><br /><img src="/sites/all/modules/openasu_demo/images/googleanalytics.png" width="525" height="465" /></p>
+ <p> </p>
+ <blockquote><p><strong>Step 3:</strong> Select "Save configuration".</p>
+ </blockquote>
+@@ -838,7 +576,6 @@ function openasu_demo_content_defaults() {
+   );
+ 
+   $content['how-to-start-site'] = (object) array(
+-    'exported_path' => 'how-to-start-site',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/how-to-start-site',
+@@ -854,6 +591,7 @@ function openasu_demo_content_defaults() {
+       'parent_path' => 'node-name/about',
+       'identifier' => 'main-menu:node-name/how-to-start-site',
+     ),
++    'exported_path' => 'content/how-start-site',
+     'title' => 'How to Start a Site',
+     'status' => 1,
+     'promote' => 1,
+@@ -878,7 +616,7 @@ function openasu_demo_content_defaults() {
+ <p> </p>
+ <blockquote><p><strong>To get started, create a new user account using an ASU email at:</strong> <a href="https://dashboard.getpantheon.com">https://dashboard.getpantheon.com</a></p>
+ </blockquote>
+-<p><img src="/sites/default/files/resize/remote/ad9b8cd28cd16530a37447ce4b21beda-480x282.jpg" width="480" height="282" /></p>
++<p><img src="/sites/all/modules/openasu_demo/images/spinupsite.jpg" width="480" height="282" /></p>
+ ',
+           'safe_summary' => '',
+         ),
+@@ -894,7 +632,6 @@ function openasu_demo_content_defaults() {
+   );
+ 
+   $content['mobile-formatted'] = (object) array(
+-    'exported_path' => 'mobile-formatted',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/mobile-formatted',
+@@ -910,6 +647,7 @@ function openasu_demo_content_defaults() {
+       'parent_path' => 'node-name/features',
+       'identifier' => 'main-menu:node-name/mobile-formatted',
+     ),
++    'exported_path' => 'content/mobile-formatted',
+     'title' => 'Mobile Formatted',
+     'status' => 1,
+     'promote' => 1,
+@@ -929,7 +667,7 @@ function openasu_demo_content_defaults() {
+           'safe_value' => '<h3>Mobile Formatted</h3>
+ <p>ASU webspark is designed to be mobile friendly, making it easy for site visitors to view information on phones, tablets or other mobile devices. As new mobility standards and updates become available, site owners can quickly apply the update to a site in the site dashboard.</p>
+ <p> </p>
+-<p><a href="https://webapp4.asu.edu/mobile/about"><img src="/sites/default/files/resize/remote/5346f2699a7ecc2e5fa7dd4b90002266-280x57.jpg" width="280" height="57" /></a></p>
++<p><a href="https://webapp4.asu.edu/mobile/about"><img src="/sites/all/modules/openasu_demo/images/Mobile-My-ASU-Ad.jpg" width="280" height="57" /></a></p>
+ ',
+           'safe_summary' => '',
+         ),
+@@ -945,7 +683,6 @@ function openasu_demo_content_defaults() {
+   );
+ 
+   $content['openasu-style-options'] = (object) array(
+-    'exported_path' => 'openasu-style-options',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/openasu-style-options',
+@@ -961,6 +698,7 @@ function openasu_demo_content_defaults() {
+       'parent_path' => 'node-name/styles',
+       'identifier' => 'main-menu:node-name/openasu-style-options',
+     ),
++    'exported_path' => 'content/navigation',
+     'title' => 'Navigation ',
+     'status' => 1,
+     'promote' => 1,
+@@ -982,11 +720,11 @@ function openasu_demo_content_defaults() {
+ <p> </p>
+ <h4>Menu Options</h4>
+ <p><strong>Black Menu Color</strong></p>
+-<p><img src="/sites/default/files/resize/remote/6eccb505e4d579d39460898731b3eac5-550x99.png" width="550" height="99" /></p>
++<p><img src="/sites/all/modules/openasu_demo/images/nav_black.png" width="550" height="99" /></p>
+ <p> <strong>Gold Menu Color</strong></p>
+-<p><img src="/sites/default/files/resize/remote/cc051ced98c6adb6a2c2d899ddafab17-550x99.png" width="550" height="99" /></p>
++<p><img src="/sites/all/modules/openasu_demo/images/nav_gold.png" width="550" height="99" /></p>
+ <p><strong>Grey Menu Color</strong></p>
+-<p><img src="/sites/default/files/resize/remote/c430b650ecc2be45607355685d429b21-550x99.png" width="550" height="99" /><br /> </p>
++<p><img src="/sites/all/modules/openasu_demo/images/nav_grey_0.png" width="550" height="99" /><br /> </p>
+ <p> </p>
+ ',
+           'safe_summary' => '',
+@@ -1003,7 +741,6 @@ function openasu_demo_content_defaults() {
+   );
+ 
+   $content['quick-site-start'] = (object) array(
+-    'exported_path' => 'quick-site-start',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/quick-site-start',
+@@ -1019,6 +756,7 @@ function openasu_demo_content_defaults() {
+       'parent_path' => 'node-name/features',
+       'identifier' => 'main-menu:node-name/quick-site-start',
+     ),
++    'exported_path' => 'content/quick-site-start',
+     'title' => 'Quick Site Start Up',
+     'status' => 1,
+     'promote' => 1,
+@@ -1052,21 +790,9 @@ function openasu_demo_content_defaults() {
+         ),
+       ),
+     ),
+-    'field_embed_video' => array(
+-      'und' => array(
+-        0 => array(
+-          'video_url' => 'http://vimeo.com/66602882',
+-          'thumbnail_path' => 'public://video_embed_field_thumbnails/vimeo/66602882.jpg',
+-          'video_data' => 'a:24:{s:2:"id";i:66602882;s:5:"title";s:37:"Create an ASU WebSpark site (OpenASU)";s:11:"description";s:131:"See how easy it is to use ASU\'s new Drupal web hosting service to create a web site that\'s ASU branded, mobile-friendly and secure!";s:3:"url";s:25:"http://vimeo.com/66602882";s:11:"upload_date";s:19:"2013-05-20 18:56:46";s:15:"thumbnail_small";s:50:"http://b.vimeocdn.com/ts/438/085/438085235_100.jpg";s:16:"thumbnail_medium";s:50:"http://b.vimeocdn.com/ts/438/085/438085235_200.jpg";s:15:"thumbnail_large";s:50:"http://b.vimeocdn.com/ts/438/085/438085235_640.jpg";s:7:"user_id";i:18441605;s:9:"user_name";s:22:"UTO Drupal Development";s:8:"user_url";s:29:"http://vimeo.com/user18441605";s:19:"user_portrait_small";s:145:"http://www.gravatar.com/avatar/3fb1a3b2908a83abaf8f884be8a221d6?d=http%3A%2F%2Fb.vimeocdn.com%2Fimages_v6%2Fportraits%2Fportrait_30_blue.png&s=30";s:20:"user_portrait_medium";s:145:"http://www.gravatar.com/avatar/3fb1a3b2908a83abaf8f884be8a221d6?d=http%3A%2F%2Fb.vimeocdn.com%2Fimages_v6%2Fportraits%2Fportrait_75_blue.png&s=75";s:19:"user_portrait_large";s:147:"http://www.gravatar.com/avatar/3fb1a3b2908a83abaf8f884be8a221d6?d=http%3A%2F%2Fb.vimeocdn.com%2Fimages_v6%2Fportraits%2Fportrait_100_blue.png&s=100";s:18:"user_portrait_huge";s:147:"http://www.gravatar.com/avatar/3fb1a3b2908a83abaf8f884be8a221d6?d=http%3A%2F%2Fb.vimeocdn.com%2Fimages_v6%2Fportraits%2Fportrait_300_blue.png&s=300";s:21:"stats_number_of_likes";i:1;s:21:"stats_number_of_plays";i:117;s:24:"stats_number_of_comments";i:1;s:8:"duration";i:213;s:5:"width";i:1280;s:6:"height";i:720;s:4:"tags";s:96:"Drupal, ASU, Arizona State University, web hosting, Pantheon, OpenASU, video, web site, WebSpark";s:13:"embed_privacy";s:8:"anywhere";s:7:"handler";s:5:"vimeo";}',
+-          'embed_code' => NULL,
+-          'description' => NULL,
+-        ),
+-      ),
+-    ),
+   );
+ 
+   $content['resources'] = (object) array(
+-    'exported_path' => 'resources',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/resources',
+@@ -1082,6 +808,7 @@ function openasu_demo_content_defaults() {
+       'parent_path' => 'node-name/styles',
+       'identifier' => 'main-menu:node-name/resources',
+     ),
++    'exported_path' => 'content/resources',
+     'title' => 'Resources',
+     'status' => 1,
+     'promote' => 1,
+@@ -1121,7 +848,6 @@ function openasu_demo_content_defaults() {
+   );
+ 
+   $content['single-sign'] = (object) array(
+-    'exported_path' => 'single-sign',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/single-sign',
+@@ -1137,6 +863,7 @@ function openasu_demo_content_defaults() {
+       'parent_path' => 'node-name/features',
+       'identifier' => 'main-menu:node-name/single-sign',
+     ),
++    'exported_path' => 'content/single-sign',
+     'title' => 'Single Sign On',
+     'status' => 1,
+     'promote' => 1,
+@@ -1160,15 +887,15 @@ function openasu_demo_content_defaults() {
+ <p> </p>
+ <blockquote><p><strong>Step</strong> <strong>1</strong>: Navigate to Menu-People in the administration settings. Select "Add CAS user" to add an ASU user. Other users can also be granted access to the site by selecting the "Add user" option. <strong> </strong></p>
+ </blockquote>
+-<p><em>example settings display:</em><br /><img src="/sites/default/files/resize/remote/aaa10167e97403ad66a111629e2e8aa9-500x99.png" width="500" height="99" /></p>
++<p><em>example settings display:</em><br /><img src="/sites/all/modules/openasu_demo/images/adduser1.png" width="500" height="99" /></p>
+ <p> </p>
+ <blockquote><p><strong>Step</strong> <strong>2</strong>: Enter the CAS username (ASURITE) to add an ASU user.</p>
+ </blockquote>
+-<p><em>example settings display:</em><br /><img src="/sites/default/files/resize/remote/1dcf8f588c86383c7598c322109c7d88-500x159.png" width="500" height="159" /></p>
++<p><em>example settings display:</em><br /><img src="/sites/all/modules/openasu_demo/images/adduser2.png" width="500" height="159" /></p>
+ <p> </p>
+ <blockquote><p><strong>Step</strong> <strong>3</strong>: Username, email address, password and status can be edited by selecting the individual user name in the People section.</p>
+ </blockquote>
+-<p><em>example settings display:</em><br /><img src="/sites/default/files/resize/remote/3cf7cae2c6a0f5310ee6e96c42b8801e-500x421.png" width="500" height="421" /></p>
++<p><em>example settings display:</em><br /><img src="/sites/all/modules/openasu_demo/images/adduser3.png" width="500" height="421" /></p>
+ <p> </p>
+ <p>A users role is the type of site access they have been granted. An administrator has access to all areas of the site and can edit all configuration settings. An authenticated user is the basic level of permissions. These users can login to My ASU by utilizing the ASU Header, but do not have any editing permissions on the site.</p>
+ ',
+@@ -1186,7 +913,6 @@ function openasu_demo_content_defaults() {
+   );
+ 
+   $content['social-media'] = (object) array(
+-    'exported_path' => 'social-media',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/social-media',
+@@ -1202,6 +928,7 @@ function openasu_demo_content_defaults() {
+       'parent_path' => 'node-name/features',
+       'identifier' => 'main-menu:node-name/social-media',
+     ),
++    'exported_path' => 'content/social-media',
+     'title' => 'Social Media',
+     'status' => 1,
+     'promote' => 1,
+@@ -1221,7 +948,7 @@ function openasu_demo_content_defaults() {
+           'safe_value' => '<h3>Social Media</h3>
+ <p>Social media is media that encourages two-way and multiple member conversations, as opposed to traditional one-way media.</p>
+ <p>The <strong><a href="http://commguide.asu.edu/">ASU Communication Guide</a></strong> provides guidelines for various social media channels including Facebook, Twitter and LinkedIn. ASU webspark allows administrators to incorporate social media channels in several ways.</p>
+-<p> <img src="/sites/default/files/resize/remote/d5bb473e6a00fcbcc00714709176edbe-62x62.png" width="62" height="62" /><img src="/sites/default/files/resize/remote/da87eb122ab5bfdab756d42a55fd72d9-62x62.png" width="62" height="62" /><img src="/sites/default/files/resize/remote/28bf268cf8fb716a7adbb6221c00279c-62x62.png" width="62" height="62" /><img src="/sites/default/files/resize/remote/b9d0e0c051023c86767fc5871e29c3c1-62x62.png" width="62" height="62" /><img src="/sites/default/files/resize/remote/f8af8a5ea904662f0378deedb143cd8c-62x62.png" width="62" height="62" /><img src="/sites/default/files/resize/remote/363f15cb4f2f338082db078e5b0846c9-62x62.png" width="62" height="62" /></p>
++<p> <img src="/sites/all/modules/openasu_demo/images/facebook.png" width="62" height="62" /><img src="/sites/all/modules/openasu_demo/images/twitter.png" width="62" height="62" /><img src="/sites/all/modules/openasu_demo/images/linkedin.png" width="62" height="62" /><img src="/sites/all/modules/openasu_demo/images/youtube.png" width="62" height="62" /><img src="/sites/all/modules/openasu_demo/images/Vimeo.png" width="62" height="62" /><img src="/sites/all/modules/openasu_demo/images/google.png" width="62" height="62" /></p>
+ <p> </p>
+ <h4>How to Add Social Media</h4>
+ <p> </p>
+@@ -1271,7 +998,6 @@ function openasu_demo_content_defaults() {
+   );
+ 
+   $content['styles'] = (object) array(
+-    'exported_path' => 'styles',
+     'link' => array(
+       'menu_name' => 'main-menu',
+       'link_path' => 'node-name/styles',
+@@ -1286,6 +1012,7 @@ function openasu_demo_content_defaults() {
+       'weight' => -47,
+       'identifier' => 'main-menu:node-name/styles',
+     ),
++    'exported_path' => 'content/styles',
+     'title' => 'Styles',
+     'status' => 1,
+     'promote' => 1,
+@@ -1304,12 +1031,12 @@ function openasu_demo_content_defaults() {
+           'format' => 'panopoly_wysiwyg_text',
+           'safe_value' => '<h3><img src="/profiles/openasu/modules/contrib/wysiwyg/plugins/break/images/spacer.gif" width="1" height="1" /><img src="/profiles/openasu/modules/contrib/wysiwyg/plugins/break/images/spacer.gif" width="1" height="1" />Styles</h3>
+ <p>By using ASU webspark, all style configurations are created and ready to use. This section will provide more information on heading, content display and type options.</p>
+-<div>
+-<div>
+-<div>
+-<div>
+-<div>
+-<div>
++<div class="panels-ipe-portlet-content">
++<div class="panel-pane pane-entity-field pane-node-body">
++<div class="pane-content">
++<div class="field field-name-body field-type-text-with-summary field-label-hidden">
++<div class="field-items">
++<div class="field-item even">
+ <p> </p>
+ <h4>Typography</h4>
+ <p>Several pre-defined formats are available.</p>
+diff --git a/sites/all/modules/openasu_demo/openasu_demo.info b/sites/all/modules/openasu_demo/openasu_demo.info
+index bf638a4..136e320 100755
+--- a/sites/all/modules/openasu_demo/openasu_demo.info
++++ b/sites/all/modules/openasu_demo/openasu_demo.info
+@@ -1,7 +1,7 @@
+-name = WebSpark Demo
+-description = Demo content and functionality to help show the power of WebSpark
++name = Webspark Demo
++description = Demo content and functionality to help show the power of Webspark
+ core = 7.x
+-package = WebSpark Apps
++package = ASU Webspark
+ php = 5.2.4
+ version = 7.x-1.0-rc3
+ project = openasu_demo
+@@ -18,11 +18,6 @@ features[content][] = asu-header-footer
+ features[content][] = asu-news-feed
+ features[content][] = contact-contact
+ features[content][] = content-layout-options
+-features[content][] = content/asu-eadvisor-degree-feed
+-features[content][] = content/home-slideshow
+-features[content][] = content/how-edit-site
+-features[content][] = content/maps
+-features[content][] = content/shortcode-test
+ features[content][] = features
+ features[content][] = footer-options
+ features[content][] = google-analytics
