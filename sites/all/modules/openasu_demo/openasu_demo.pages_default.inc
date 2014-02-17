@@ -94,8 +94,8 @@ function openasu_demo_default_page_manager_pages() {
     $pane->configuration = array(
       'admin_title' => '',
       'title' => 'What is ASU webspark?',
-      'body' => '<p>Web<strong>spark</strong> lets you create a feature-rich website without in-depth technical knowledge. Learn more:</p><h4><a href="/about">Learn More About web<strong>spark</strong></a><br><br><a href="/how-to-start-site">How To Get Started</a><br><br><a href="/content/contact">Request More Information</a><br><br><br><br></h4><p>&nbsp;</p><p><a href="http://commguide.asu.edu/"><img src="https://dev-openasu-demo.ws.asu.edu/sites/default/files/asucommguide.jpg" data-file_info="%7B%22fid%22:%2261%22,%22view_mode%22:%22default%22,%22type%22:%22media%22%7D"></a></p><p>The Comm Guide is the source for all ASU branding and standards information, including logo downloads, photography resources and social media tools.<br><br><a href="http://commguide.asu.edu/">Visit ASU Comm Guide site</a><br><br></p>',
-      'format' => 'panopoly_wysiwyg_text',
+      'body' => '<p>Web<strong>spark</strong> lets you create a feature-rich website without in-depth technical knowledge. Learn more:</p><h4><a href="/content/about">Learn More About web<strong>spark</strong></a><br><br><a href="/content/how-to-start-site">How To Get Started</a><br><br><a href="/content/contact">Request More Information</a><br><br><br><br></h4><p>&nbsp;</p><p><a href="http://commguide.asu.edu/"><img src="https://dev-openasu-demo.ws.asu.edu/sites/default/files/asucommguide.jpg" data-file_info="%7B%22fid%22:%2261%22,%22view_mode%22:%22default%22,%22type%22:%22media%22%7D"></a></p><p>The Comm Guide is the source for all ASU branding and standards information, including logo downloads, photography resources and social media tools.<br><br><a href="http://commguide.asu.edu/">Visit ASU Comm Guide site</a><br><br></p>',
+      'format' => 'panopoly_html_text',
       'substitute' => TRUE,
     );
     $pane->cache = array();
@@ -116,8 +116,8 @@ function openasu_demo_default_page_manager_pages() {
     $pane->configuration = array(
       'admin_title' => '',
       'title' => 'Highlights',
-      'body' => '<ul><li>Flexible content placement options</li><li>Multiple style variations available</li><li>New site created within 15 minutes</li><li>Easy to use editor</li><li>Use analytics for site tracking</li></ul><p><a href="/features">view full list of features</a></p>',
-      'format' => 'panopoly_wysiwyg_text',
+      'body' => '<ul><li>Flexible content placement options</li><li>Multiple style variations available</li><li>New site created within 15 minutes</li><li>Easy to use editor</li><li>Use analytics for site tracking</li></ul><p><a href="/content/features">view full list of features</a></p>',
+      'format' => 'panopoly_html_text',
       'substitute' => TRUE,
     );
     $pane->cache = array();
