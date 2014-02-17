@@ -69,7 +69,7 @@ function openasu_demo_default_page_manager_pages() {
     $pane = new stdClass();
     $pane->pid = 'new-1';
     $pane->panel = 'contentmain';
-    $pane->type = 'fieldable_panels_pane';
+    $pane->type = 'custom';
     $pane->subtype = 'custom';
     $pane->shown = TRUE;
     $pane->access = array();
