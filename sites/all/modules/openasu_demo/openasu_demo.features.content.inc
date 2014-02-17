@@ -297,7 +297,7 @@ function openasu_demo_content_defaults() {
     ),
     'exported_path' => 'content/contact',
     'title' => 'Contact',
-    'status' => 1,
+    'status' => 0,
     'promote' => 1,
     'sticky' => 0,
     'type' => 'panopoly_page',

@@ -32,4 +32,5 @@ features[content][] = styles
 features[ctools][] = page_manager:pages_default:1
 features[ctools][] = views:views_default:3.0
 features[features_api][] = api:2
+features[page_manager_pages][] = contact_demo_page
 features[page_manager_pages][] = openasu_demo_panel
