@@ -70,11 +70,15 @@ function openasu_demo_default_page_manager_pages() {
     $pane->pid = 'new-1';
     $pane->panel = 'contentmain';
     $pane->type = 'fieldable_panels_pane';
-    $pane->subtype = 'fpid:3';
+    $pane->subtype = 'custom';
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(
-      'view_mode' => 'Full',
+      'admin_title' => '',
+      'title' => 'Contact',
+      'body' => '<h3>Contact</h3><p>Have questions on how ASU webspark can work for you? Or are you a current user of ASU webspark? Please check out&nbsp;<a href="drupal.asu.edu">drupal.asu.edu</a>&nbsp;for further information.</p><p>&nbsp;</p><blockquote><p><strong>Step 1:&nbsp;</strong>Site administrators can also add custom contact forms to their site. &nbsp;To add a custom form go to Content - Add Content - Webform. &nbsp;This creates a page where your form will be displayed.</p></blockquote><blockquote><p><strong>Step 2:&nbsp;</strong>Give the page a title and some descriptive text.</p></blockquote><blockquote><p><strong>Step 3:&nbsp;</strong>Now to add fields to the form click on Webform at the top of the page (next to Edit). &nbsp;Here you can add the desired webform fields. &nbsp;</p></blockquote><blockquote><p><strong>Step 4:&nbsp;</strong>For more information on creating custom WebForms see&nbsp;http://www.youtube.com/watch?v=fgIL8jEMd4s and&nbsp;http://www.ostraining.com/blog/drupal/webform-module/</p></blockquote><p><img src="/sites/all/modules/openasu_demo/images/contact_form_example.jpg"></p>',
+      'format' => 'panopoly_html_text',
+      'substitute' => TRUE,
     );
     $pane->cache = array();
     $pane->style = array(
@@ -87,7 +91,7 @@ function openasu_demo_default_page_manager_pages() {
     $display->content['new-1'] = $pane;
     $display->panels['contentmain'][0] = 'new-1';
   $display->hide_title = PANELS_TITLE_FIXED;
-  $display->title_pane = 'new-1';
+  $display->title_pane = '0';
   $handler->conf['display'] = $display;
   $page->default_handlers[$handler->name] = $handler;
   $pages['contact_demo_page'] = $page;
