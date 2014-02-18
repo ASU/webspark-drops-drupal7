@@ -7,7 +7,7 @@
 include_once 'panopoly_demo.features.inc';
 
 /**
- * Implementation of hook_menu_alter()
+ * Implements hook_menu_alter().
  */
 function panopoly_demo_menu_alter(&$items) {
   $items['node']['page callback'] = 'drupal_goto';
@@ -15,14 +15,14 @@ function panopoly_demo_menu_alter(&$items) {
 }
 
 /**
- * Implementation of hook_ctools_plugin_directory()
+ * Implements hook_ctools_plugin_directory().
  */
 function panopoly_demo_ctools_plugin_directory($module, $plugin) {
   return 'plugins/' . $plugin;
 }
 
 /**
- * Implementation of hook_link_alter() 
+ * Implements hook_link_alter(). 
  * 
  * This is a clever workaround for some notice errors that
  * we introduced in Panopoly Admin RC3. This function can be
@@ -33,4 +33,18 @@ function panopoly_demo_menu_link_alter(&$item) {
   if (empty($item['path'])) {
     $item['path'] = $item['link_path'];
   }
+}
+
+/**
+ * Implements hook_migrate_api().
+ */
+function panopoly_demo_migrate_api() {
+  $api = array(
+    'api' => 2,
+    'migrations' => array(
+      'PanopolyDemoNode' => array('class_name' => 'PanopolyDemoNode'),
+      'PanopolyDemoMenu' => array('class_name' => 'PanopolyDemoMenu'),
+    ),
+  );
+  return $api;
 }

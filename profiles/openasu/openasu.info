@@ -3,6 +3,7 @@ distribution_name = ASU WebSpark
 description = A starting point for websites at ASU
 core = 7.x
 exclusive = 1
+version = VERSION
 
 ; Drupal Core
 dependencies[] = menu

@@ -11,44 +11,31 @@
 ?>
 
 <div class="panel-display hewston-flipped clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
-
-  <section class='section'>
-    <div class='container'>
-      <div class="hewston-flipped-container hewston-flipped-top clearfix row-fluid">
-        <div class="hewston-flipped-top-region hewston-flipped-slider-gutter panel-panel span3">
-          <div class="hewston-flipped-top-region-inner hewston-flipped-slider-gutter-inner panel-panel-inner">
-            <?php print $content['slidergutter']; ?>
-          </div>
+  <section class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD); ?> hewston-flipped-slider-gutter-area">
+          <?php print $content['slidergutter']; ?>
         </div>
-        <div class="hewston-flipped-top-region hewston-flipped-slider panel-panel span9">
-          <div class="hewston-flipped-top-region-inner hewston-flipped-slider-inner panel-panel-inner">
-            <?php print $content['slider']; ?>
-          </div>
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD * 2); ?> hewston-flipped-slider-area">
+          <?php print $content['slider']; ?>
         </div>
       </div>
     </div>
   </section>
-      
-  <section class='section'>
-    <div class='container'>
-      <div class="hewston-flipped-container hewston-flipped-middle clearfix row-fluid">
-        <div class="hewston-flipped-middle-region hewston-flipped-column1 panel-panel span4">
-          <div class="hewston-flipped-middle-region-inner hewston-flipped-column1-inner panel-panel-inner">
-            <?php print $content['column1']; ?>
-          </div>
+  <section class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD, 3); ?> hewston-flipped-middle-region-1">
+          <?php print $content['column1']; ?>
         </div>
-        <div class="hewston-flipped-middle-region hewston-flipped-column2 panel-panel span4">
-          <div class="hewston-flipped-middle-region-inner hewston-flipped-column2-inner panel-panel-inner">
-            <?php print $content['column2']; ?>
-          </div>
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD, 3); ?> hewston-flipped-middle-region-2">
+          <?php print $content['column2']; ?>
         </div>
-        <div class="hewston-flipped-middle-region hewston-flipped-column3 panel-panel span4">
-          <div class="hewston-flipped-middle-region-inner hewston-flipped-column3-inner panel-panel-inner">
-            <?php print $content['column3']; ?>
-          </div>
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD, 3); ?> hewston-flipped-middle-region-3">
+          <?php print $content['column3']; ?>
         </div>
       </div>
     </div>
   </section>
-      
 </div><!-- /.hewston-flipped -->
