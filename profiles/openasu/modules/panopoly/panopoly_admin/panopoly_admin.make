@@ -8,7 +8,7 @@ core = 7.x
 projects[backports][version] = 1.0-alpha1
 projects[backports][subdir] = contrib
 
-projects[module_filter][version] = 1.7
+projects[module_filter][version] = 1.8
 projects[module_filter][subdir] = contrib
 
 projects[simplified_menu_admin][version] = 1.0-beta2
@@ -48,7 +48,7 @@ projects[jquery_update][subdir] = contrib
 
 ; Libraries
 libraries[backbone][download][type] = get
-libraries[backbone][download][url] = https://github.com/documentcloud/backbone/archive/1.0.0.zip
+libraries[backbone][download][url] = https://github.com/jashkenas/backbone/archive/1.0.0.tar.gz
 
 libraries[underscore][download][type] = get
-libraries[underscore][download][url] = https://github.com/documentcloud/underscore/archive/1.4.4.zip
+libraries[underscore][download][url] = https://github.com/jashkenas/underscore/archive/1.4.4.zip

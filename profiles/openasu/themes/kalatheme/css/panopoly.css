@@ -33,12 +33,13 @@
 #node-edit .form-item-path-alias label {
   float: left;
   font-weight: 400;
+  font-size: 14px;
 }
 
 #node-edit .form-item-path-alias {
   font-size: .8em;
   margin-bottom: .25em;
-  margin-top: .25em;
+  margin-top: .55em;
   min-height: 1.2em;
   padding: 0;
   vertical-align: middle;
@@ -48,6 +49,7 @@
   margin-left: 4px;
   padding-bottom: 0;
   padding-top: 0;
+  height: 20px;
 }
 
 #node-edit .form-item-path-pathauto {
@@ -511,19 +513,19 @@ ul#media-browser-library-list {
  * Navbar Styling
  */
 a#navbar-link-admin-panopoly:before {
-  background-image: url("../../../../../profiles/panopoly/modules/panopoly/panopoly_admin/images/icon-panopoly.png");
+  background-image: url("../../../modules/panopoly/panopoly_admin/images/icon-panopoly.png");
 }
 
 a#navbar-link-admin-panopoly.active:before {
-  background-image: url("../../../../../profiles/panopoly/modules/panopoly/panopoly_admin/images/icon-panopoly-active.png");
+  background-image: url("../../../modules/panopoly/panopoly_admin/images/icon-panopoly-active.png");
 }
 
 a#navbar-link-admin-apps:before {
-  background-image: url("../../../../../profiles/panopoly/modules/panopoly/panopoly_admin/images/icon-apps.png");
+  background-image: url("../../../modules/panopoly/panopoly_admin/images/icon-apps.png");
 }
 
 a#navbar-link-admin-apps.active:before {
-  background-image: url("../../../../../profiles/panopoly/modules/panopoly/panopoly_admin/images/icon-apps-active.png");
+  background-image: url("../../../modules/panopoly/panopoly_admin/images/icon-apps-active.png");
 }
 
 #navbar-tray--2 a {
@@ -543,11 +545,11 @@ a#navbar-link-admin-apps.active:before {
   position: absolute;
   top: 0;
   width: 20px;
-  background-image: url("../../../../../profiles/panopoly/modules/panopoly/panopoly_admin/images/icon-add.png");
+  background-image: url("../../../modules/panopoly/panopoly_admin/images/icon-add.png");
 }
 
 #navbar-tray--2 a.active:before {
-  background-image: url("../../../../../profiles/panopoly/modules/panopoly/panopoly_admin/images/icon-add-active.png");
+  background-image: url("../../../modules/panopoly/panopoly_admin/images/icon-add-active.png");
 }
 
 #navbar-administration .edit-shortcuts {

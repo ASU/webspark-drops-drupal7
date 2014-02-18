@@ -11,42 +11,34 @@
 ?>
 
 <div class="panel-display moscone clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
-
-  <section class='section alt' id='promo'>
-    <div class='container'>
-      <div class="moscone-container moscone-header clearfix panel-panel herp-unit">
-        <div class="moscone-container-inner moscone-header-inner panel-panel-inner">
+  <section class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> moscone-main-container">
           <?php print $content['header']; ?>
         </div>
       </div>
     </div>
   </section>
-      
-  <section class='section'>
-    <div class='container'>      
-      <div class="moscone-container moscone-column-content clearfix row-fluid">
-        <div class="moscone-column-content-region moscone-sidebar panel-panel span3">
-          <div class="moscone-column-content-region-inner moscone-sidebar-inner panel-panel-inner">
-            <?php print $content['sidebar']; ?>
-          </div>
+  <section class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD); ?> moscone-sidebar-area">
+          <?php print $content['sidebar']; ?>
         </div>
-        <div class="moscone-column-content-region moscone-content panel-panel span9">
-          <div class="moscone-column-content-region-inner moscone-content-inner panel-panel-inner">
-            <?php print $content['contentmain']; ?>
-          </div>
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD * 2); ?> moscone-main-content">
+          <?php print $content['contentmain']; ?>
         </div>
       </div>
     </div>
   </section>
-      
-  <footer class='section' id='footer' role='contentinfo'>
-    <div class='container'>
-      <div class="moscone-container moscone-footer clearfix panel-panel">
-        <div class="moscone-container-inner moscone-footer-inner panel-panel-inner">
+  <footer class="section" id="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> moscone-footer-area">
           <?php print $content['footer']; ?>
         </div>
       </div>
     </div>
   </footer>
-  
 </div><!-- /.moscone -->

@@ -1,0 +1,410 @@
+/*
+Gradient background bits
+Moved this stuff from student.css
+*/
+
+html {
+  min-height: 100%;
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  height: 100%;
+  margin: 0;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+#masthead .container,
+#footerlower .container {
+  padding: 0;
+}
+
+.navbar {
+  border: 0;
+}
+
+.navbar-nav {
+  margin: 0;
+}
+
+.navbar-collapse {
+  max-height: none;
+  padding-right: 0;
+}
+
+.navbar .nav > .dropdown > a {
+  padding-right: 23px;
+}
+
+.container>.navbar-header, .container-fluid>.navbar-header, .container>.navbar-collapse, .container-fluid>.navbar-collapse {
+  margin-right: 0;
+}
+
+.title {
+  line-height: normal;
+}
+
+@media ( min-width : 931px) {
+  .navbar-collapse.collapse {
+    display: block !important;
+    height: auto !important;
+    padding-bottom: 0;
+    overflow: visible !important;
+  }
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+  .navbar .nav > .dropdown > .dropdown-toggle {
+    display: none;
+  }
+  .navbar-collapse {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  .navbar-default .navbar-nav>li>a {
+    padding-left: 23px;
+    padding-right: 23px;
+    font-family: arial;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 10px;
+    color: #fff;
+    border-bottom: 5px transparent solid;
+    border-top: 5px transparent solid;
+  }
+  .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
+    border-bottom: 5px #ffb310 solid;
+  }
+  .navbar-nav>li>a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .navbar-header ul.nav > li:hover > a {
+    color: #ffb310;
+    border-bottom: 5px #ffb310 solid;
+  }
+  body {
+    height: 100%;
+    background-size: 100% 100%;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#ccc),to(#fff) );
+    background-image: -webkit-linear-gradient(top, #ccc, #fff);
+    background-image: -moz-linear-gradient(top, #ccc, #fff);
+    background-image: -o-linear-gradient(top, #ccc, #fff);
+    background-image: linear-gradient(to bottom, #ccc, #fff);
+    zoom: 1;
+  }
+  .container {
+    width: auto;
+  }
+  #page, #masthead {
+    width: 1000px;
+  }
+  .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus {
+    background: #ffb310;
+    background-color: #ffb310;
+    color: #000;
+  }
+    /* dropdown bootstrap overrides */
+  .dropdown-menu {
+    border: 0;
+    padding: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -moz-box-shadow: 0 5px 10px 2px rgba(0,0,0,0.5);
+    -ms-box-shadow: 0 5px 10px 2px rgba(0,0,0,0.5);
+    -o-box-shadow: 0 5px 10px 2px rgba(0,0,0,0.5);
+    -khtml-box-shadow: 0 5px 10px 2px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.5);
+  }
+  .navbar .nav > .dropdown.active {
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 1000px) {
+  #page, #masthead {
+    width: auto;
+  }
+}
+
+@media (max-width: 931px) {
+  .navbar-default nav {
+    float: none;
+  }
+  .navbar-default .navbar-nav .open .dropdown-menu>li>a {
+    color: #fff;
+    background-color: #666;
+    line-height: 19px;
+    padding: 10px 10px 10px 45px;
+    font-family: arial;
+    font-size: 16px;
+  }
+  .navbar-default .navbar-nav .open .dropdown-menu>li.first>a {
+    border-top: 3px #ffb310 solid;
+  }
+  .navbar-default .navbar-nav>li>a {
+    font-family: arial;
+    font-size: 18px;
+    color: #fff;
+    padding: 15px 35px 15px 35px;
+  }
+  .navbar-default .navbar-nav>li {
+    border-top: 1px #333 solid;
+  }
+  .navbar .nav > .dropdown > .dropdown-toggle {
+    padding-left: 5px;
+    padding-right: 40px;
+  }
+  .caret {
+    border-right: 7px solid transparent;
+    border-left: 7px solid transparent;
+    border-top: 10px solid;
+  }
+  .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-nav .open .dropdown-menu>li>a:focus,
+  .navbar-default .navbar-nav .open .dropdown-menu>.active>a, .navbar-default .navbar-nav .open .dropdown-menu>.active>a:hover, .navbar-default .navbar-nav .open .dropdown-menu>.active>a:focus {
+    color: #ffb310;
+    background-color: #666;
+  }
+}
+
+/*new*/
+
+@media (max-width: 931px) and (min-width: 768px) {
+  .container,
+  .navbar-static-top .container,
+  .navbar-fixed-top .container,
+  .navbar-fixed-bottom .container {
+    width: auto;
+  }
+}
+
+@media  (max-width: 767px) {
+  #page,
+  #masthead {
+    width: auto;
+  }
+}
+
+#admin-menu,
+#admin-menu .dropdown {
+  z-index: 1000;
+}
+
+#main-wrapper {
+  margin-top: 0px;
+}
+
+#content.container {
+  margin-top: 20px;
+}
+
+#site-name-desktop h1 {
+  line-height: 28px;
+}
+
+#site-name-desktop .container {
+  background-color: #000;
+  height: 40px;
+}
+
+#picture img.panopoly-image-full {
+  margin-bottom: 0;
+}
+
+#tabs,
+#messages,
+#action-links {
+  padding-top: 10px;
+}
+
+#menu .container:before,
+#menu .container:after {
+  display: block;
+}
+
+/* Basic ASU Styling (from style guide) */
+#main-wrapper .region-content {
+  font-family: arial;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: 18px;
+  color: #666;
+  text-decoration: none;
+}
+
+#main-wrapper .region-content a {
+  color: #990033;
+  text-decoration: none;
+  /* border-bottom: 1px dotted; this might not be the best style choice */
+}
+
+#main-wrapper .region-content a:hover {
+  color: #000;
+  border: 0;
+  text-decoration: none;
+}
+
+table#blocks {
+  width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: arial;
+  font-size: 36px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 0;
+  color: #ffb310;
+}
+
+h1.site-title .first-word {
+  color: #AFA593;
+}
+
+h1.site-title {
+  color: #FFF;
+  margin: 0;
+  padding: 5px 13px;
+  font-size: 2.5em;
+}
+
+h2 {
+  font-size: 26px;
+  line-height: 30px;
+  color: #333;
+}
+
+h3 {
+  font-size: 26px;
+  line-height: 30px;
+  color: #ffb310;
+}
+
+h4 {
+  font-size: 14px;
+  line-height: 16px;
+  color: #333;
+}
+
+.featured-text {
+  font-family: arial;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 20px;
+  color: #000;
+  text-decoration: none;
+}
+
+.featured-text a: {
+  text-decoration: none;
+  /* border-bottom: 1px dotted; this might not be the best style choice */
+  color: #990033;
+}
+
+.featured-text a:hover {
+  text-decoration: none;
+  border-bottom: 0;
+  color: #000;
+}
+
+/* default menu styling */
+.navbar .nav>li>a {
+  text-shadow: none;
+}
+
+#closure {
+  text-align: right;
+  margin: 30px 30px 0 0;
+  padding: 0;
+}
+
+#closure p {
+  padding: 0;
+}
+
+#closure a {
+  text-decoration: none;
+}
+
+#closure a:hover {
+  text-decoration: none;
+  color: #000;
+}
+
+/* default submenu and link fpps */
+.panel-pane h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.panel-pane ul li.leaf,
+.panel-pane ul li.expanded,
+.panel-pane ul li.collapsed {
+  list-style: none;
+}
+
+.panel-pane ul.menu li {
+  margin: 0;
+}
+
+/* defualt asu sidemenu style */
+.panel-pane.pane-menu-tree {
+  padding: 5px 15px;
+  background-color: #000;
+  border-right: 5px #ffb310 solid;
+}
+
+.panel-pane.pane-menu-tree h2.pane-title {
+  line-height: 0;
+  padding-bottom: 10px;
+  color: #ffb310;
+}
+
+.panel-pane.pane-menu-tree ul.menu {
+  padding-left: 10px;
+}
+
+#main-wrapper .panel-pane.pane-menu-tree ul a {
+  list-style: none;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 22px;
+  color: #fff;
+}
+
+#main-wrapper .panel-pane.pane-menu-tree a:hover {
+  color: #ffb310;
+}
+
+#main-wrapper .panel-pane.pane-menu-tree a.active {
+  color: #ffb310;
+}
+
+/* Android responsive dropdown bugfix */
+@media (max-width: 480px) {
+  .nav-collapse {
+    -webkit-transform: none;
+  }
+
+  /** WEBSPARK-87 - long title on smaller phones fix **/
+  #site-name-desktop h1 {
+    line-height: 32px;
+  }
+
+  /** WEBSPARK-88 - blockquote causing horizontal scroll **/
+  blockquote p {
+    font-size: 9px;
+  }
+}

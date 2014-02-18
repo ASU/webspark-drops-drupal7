@@ -1,0 +1,87 @@
+<?php
+
+/**
+ * Updating the WebSpark Default Theme from "OpenASU Bootstrap"
+ * to "ASU WebSpark Bootstrap".
+ */
+function asu_cas_update_7000(&$sandbox) {
+
+  // If they are running the old theme, update them.
+  $oldtheme = 'openasu_bootstrap';
+  if (variable_get('theme_default') == $oldtheme) {
+
+    // Update the Current ASU Theme
+    $basetheme = 'kalatheme';
+    $theme = 'asu_webspark_bootstrap';
+    system_rebuild_theme_data();
+    drupal_theme_rebuild();
+    theme_enable(array($basetheme));
+    theme_enable(array($theme));
+    variable_set('theme_default', $theme);
+
+    // Move old Kalacustomize data to Kalatheme 3
+    $result = db_query('SELECT pid, style FROM {panels_pane}')->fetchAll();
+    // Default Kalatheme 3 settings and mappings
+    $devices = array(
+      'hidden-xs' => 0,
+      'hidden-sm' => 0,
+      'hidden-md' => 0,
+      'hidden-lg' => 0,
+    );
+    $pane_style = array(
+      'well' => 0,
+      'pull-left' => 0,
+      'pull-right' => 0,
+      'clearfix' => 0,
+      'jumbotron' => 0,
+    );
+    $device_mapping = array(
+      'Phone' => 'hidden-xs',
+      'Tablet' => 'hidden-sm',
+      'Desktop' => 'hidden-md',
+    );
+    // Do the updates
+    if (!empty($result)) {
+      foreach ($result as $record) {
+          // Unserialize db data
+        $old_styles = unserialize($record->style);
+        if ($old_styles['style'] == 'kalacustomize') {
+          $new_styles = $old_styles;
+          // Build new styles default data
+          $new_styles['settings']['devices'] = $devices;
+          $new_styles['settings']['pane_style'] = $pane_style;
+          // Update old device visibility settings
+          foreach ($old_styles['settings']['devices'] as $device => $status) {
+            if ($status !== 0) {
+              $new_styles['settings']['devices'][$device_mapping[$device]] = $device_mapping[$device];
+            }
+          }
+          // Update old pane style settings
+          $old_pane_style = $old_styles['settings']['pane_style'];
+          if ($old_pane_style == 'hero-unit') {
+            $new_styles['settings']['pane_style']['jumbotron'] = 'jumbotron';
+          }
+          else {
+            $new_styles['settings']['pane_style'][$old_pane_style] = $old_pane_style;
+          }
+          // Serialize new data and write to DB
+          $new_styles = serialize($new_styles);
+          db_update('panels_pane')
+            ->fields(array(
+              'style' => $new_styles
+            ))
+            ->condition('pid', $record->pid)
+            ->execute();
+        }
+      }
+    }
+
+    // Update the Theme Settings
+    $old_settings = variable_get('theme_openasu_bootstrap_settings', array());
+    $new_settings = variable_get('theme_asu_webspark_bootstrap_settings', array());
+    $merged_settings = array_merge($old_settings, $new_settings);
+    variable_set('theme_asu_webspark_bootstrap_settings', $merged_settings);
+  }
+
+  return t('Updated to Latest and Greatest Theme. Migrated settings.');
+}
