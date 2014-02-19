@@ -11,22 +11,16 @@
 ?>
 
 <div class="panel-display burr-flipped clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
-  
-  <section class='section'>
-    <div class='container'>
-      <div class="burr-flipped-container burr-flipped-content-container clearfix row-fluid">
-        <div class="burr-flipped-content burr-flipped-content-region panel-panel span7">
-          <div class="burr-flipped-content-inner burr-flipped-content-region-inner panel-panel-inner">
-            <?php print $content['contentmain']; ?>
-          </div>
+  <section class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD * 2); ?> burr-flipped-main-content">
+          <?php print $content['contentmain']; ?>
         </div>
-        <div class="burr-flipped-sidebar burr-flipped-content-region panel-panel span5">
-          <div class="burr-flipped-sidebar-inner burr-flipped-content-region-inner panel-panel-inner">
-            <?php print $content['sidebar']; ?>
-          </div>
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD); ?> burr-flipped-sidebar-content">
+          <?php print $content['sidebar']; ?>
         </div>
       </div>
     </div>
   </section>
-      
 </div><!-- /.burr-flipped -->

@@ -1,29 +1,26 @@
 name = Panopoly Demo
-description = Demo content and functionality to help show the power of Panopoly
+description = Demo functionality and content to help show the power of Panopoly
 core = 7.x
-package = Panopoly Apps
-php = 5.2.4
+package = Panopoly Demos
 project = panopoly_demo
-dependencies[] = defaultcontent
 dependencies[] = features
+dependencies[] = migrate
 dependencies[] = page_manager
 dependencies[] = panopoly_pages
 dependencies[] = views
 dependencies[] = views_content
 stylesheets[all][] = panopoly_demo.css
-features[content][] = panopoly-demo-0
-features[content][] = panopoly-demo-1
-features[content][] = panopoly-demo-2
-features[content][] = panopoly-demo-3
 features[ctools][] = page_manager:pages_default:1
 features[ctools][] = views:views_default:3.0
-features[features_api][] = api:1
+features[features_api][] = api:2
 features[page_manager_pages][] = panopoly_demo_panel
 features[views_view][] = panopoly_demo
+files[] = import/panopoly_demo.node.inc
+files[] = import/panopoly_demo.menu.inc
 
-; Information added by drupal.org packaging script on 2012-11-12
-version = "7.x-1.0-rc3"
+; Information added by Drupal.org packaging script on 2014-01-29
+version = "7.x-1.1"
 core = "7.x"
 project = "panopoly_demo"
-datestamp = "1352741294"
+datestamp = "1391036983"
 

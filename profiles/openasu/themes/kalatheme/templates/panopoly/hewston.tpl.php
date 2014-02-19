@@ -11,44 +11,31 @@
 ?>
 
 <div class="panel-display hewston clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
-
-  <section class='section'>
-    <div class='container'>
-      <div class="hewston-container hewston-top clearfix row-fluid row-fluid">
-        <div class="hewston-top-region hewston-slider panel-panel span9">
-          <div class="hewston-top-region-inner hewston-slider-inner panel-panel-inner">
-            <?php print $content['slider']; ?>
-          </div>
+  <section class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD * 2); ?> hewston-slider-area">
+          <?php print $content['slider']; ?>
         </div>
-        <div class="hewston-top-region hewston-slider-gutter panel-panel span3">
-          <div class="hewston-top-region-inner hewston-slider-gutter-inner panel-panel-inner">
-            <?php print $content['slidergutter']; ?>
-          </div>
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD); ?> hewston-slider-gutter-area">
+          <?php print $content['slidergutter']; ?>
         </div>
       </div>
     </div>
   </section>
-
-  <section class='section'>
-    <div class='container'>  
-      <div class="hewston-container hewston-middle clearfix row-fluid">
-        <div class="hewston-middle-region hewston-column1 panel-panel span4">
-          <div class="hewston-middle-region-inner hewston-column1-inner panel-panel-inner">
-            <?php print $content['column1']; ?>
-          </div>
+  <section class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD, 3); ?> hewston-middle-region-1">
+          <?php print $content['column1']; ?>
         </div>
-        <div class="hewston-middle-region hewston-column2 panel-panel span4">
-          <div class="hewston-middle-region-inner hewston-column2-inner panel-panel-inner">
-            <?php print $content['column2']; ?>
-          </div>
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD, 3); ?> hewston-middle-region-2">
+          <?php print $content['column2']; ?>
         </div>
-        <div class="hewston-middle-region hewston-column3 panel-panel span4">
-          <div class="hewston-middle-region-inner hewston-column3-inner panel-panel-inner">
-            <?php print $content['column3']; ?>
-          </div>
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD, 3); ?> hewston-middle-region-3">
+          <?php print $content['column3']; ?>
         </div>
       </div>
     </div>
   </section>
-  
 </div><!-- /.hewston -->

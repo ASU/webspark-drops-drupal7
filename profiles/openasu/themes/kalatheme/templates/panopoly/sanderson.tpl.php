@@ -11,44 +11,31 @@
 ?>
 
 <div class="panel-display sanderson clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
-  
-  <section class='section'>
-    <div class='container'>
-      <div class="sanderson-container sanderson-column-content sanderson-column-content-row1 clearfix fluid-row">
-        <div class="sanderson-column-content-region sanderson-column1 panel-panel span6">
-          <div class="sanderson-column-content-region-inner sanderson-column1-inner panel-panel-inner">
-            <?php print $content['column1']; ?>
-          </div>
+  <section class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_HALF); ?> sanderson-column-content-region-1">
+          <?php print $content['column1']; ?>
         </div>
-        <div class="sanderson-column-content-region sanderson-column2 panel-panel span6">
-          <div class="sanderson-column-content-region-inner sanderson-column2-inner panel-panel-inner">
-            <?php print $content['column2']; ?>
-          </div>
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_HALF); ?> sanderson-column-content-region-2">
+          <?php print $content['column2']; ?>
         </div>
       </div>
     </div>
   </section>
-  
-  <footer class='section' id='footer' role='contentinfo'>
-    <div class='container'>    
-      <div class="sanderson-container sanderson-secondary-column-content sanderson-column-content-row2 clearfix row-fluid">
-        <div class="sanderson-secondary-column-content-region sanderson-secondary-column1 panel-panel span4">
-          <div class="sanderson-secondary-column-content-region-inner sanderson-secondary-column1-inner panel-panel-inner">
-            <?php print $content['secondarycolumn1']; ?>
-          </div>
+  <footer class="section" id="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD, 3); ?> sanderson-secondary-column-content-region-1">
+          <?php print $content['secondarycolumn1']; ?>
         </div>
-        <div class="sanderson-secondary-column-content-region sanderson-secondary-column2 panel-panel span4">
-          <div class="sanderson-secondary-column-content-region-inner sanderson-secondary-column2-inner panel-panel-inner">
-            <?php print $content['secondarycolumn2']; ?>
-          </div>
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD, 3); ?> sanderson-secondary-column-content-region-2">
+          <?php print $content['secondarycolumn2']; ?>
         </div>
-        <div class="sanderson-secondary-column-content-region sanderson-secondary-column3 panel-panel span4">
-          <div class="sanderson-secondary-column-content-region-inner sanderson-secondary-column3-inner panel-panel-inner">
-            <?php print $content['secondarycolumn3']; ?>
-          </div>
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD, 3); ?> sanderson-secondary-column-content-region-3">
+          <?php print $content['secondarycolumn3']; ?>
         </div>
       </div>
     </div>
   </footer>
-   
 </div><!-- /.sanderson -->

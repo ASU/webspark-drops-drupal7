@@ -4,52 +4,49 @@ core = 7.x
 ; Drupal Core
 
 projects[drupal][type] = core
-projects[drupal][version] = 7.23
+projects[drupal][version] = 7.26
 
-; ASU Overrides
+; Drupal Core Patches
+projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-profile-ajax-1334818-8.patch
 
-projects[simple_gmap][version] = 1.0
-projects[simple_gmap][subdir] = contrib
-projects[simple_gmap][patch][2070277] = https://drupal.org/files/21085150-simple-gmap-support-https-1.patch
 
 ; The Panopoly Foundation
 
-projects[panopoly_core][version] = 1.0-rc5
+projects[panopoly_core][version] = 1.1
 projects[panopoly_core][subdir] = panopoly
 
-projects[panopoly_images][version] = 1.0-rc5
+projects[panopoly_images][version] = 1.1
 projects[panopoly_images][subdir] = panopoly
 
-projects[panopoly_theme][version] = 1.0-rc5
+projects[panopoly_theme][version] = 1.1
 projects[panopoly_theme][subdir] = panopoly
 
-projects[panopoly_magic][version] = 1.0-rc5
+projects[panopoly_magic][version] = 1.1
 projects[panopoly_magic][subdir] = panopoly
 
-projects[panopoly_widgets][version] = 1.0-rc5
+projects[panopoly_widgets][version] = 1.1
 projects[panopoly_widgets][subdir] = panopoly
 
-projects[panopoly_admin][version] = 1.0-rc5
+projects[panopoly_admin][version] = 1.1
 projects[panopoly_admin][subdir] = panopoly
 
-projects[panopoly_users][version] = 1.0-rc5
+projects[panopoly_users][version] = 1.1
 projects[panopoly_users][subdir] = panopoly
 
 ; The Panopoly Toolset
 
-projects[panopoly_pages][version] = 1.0-rc5
+projects[panopoly_pages][version] = 1.1
 projects[panopoly_pages][subdir] = panopoly
 
-projects[panopoly_wysiwyg][version] = 1.0-rc5
+projects[panopoly_wysiwyg][version] = 1.1
 projects[panopoly_wysiwyg][subdir] = panopoly
 
-projects[panopoly_search][version] = 1.0-rc5
+projects[panopoly_search][version] = 1.1
 projects[panopoly_search][subdir] = panopoly
 projects[panopoly_search][patch][2063715] = https://drupal.org/files/2063715-panopoly-search-update-conditional-2.patch
-projects[panopoly_search][patch][2111097] = https://drupal.org/files/2111097-panopoly_search-pantheon_apachesolr.patch
 
 ; Demo Content
-projects[panopoly_demo][version] = 1.0-rc3
+projects[panopoly_demo][version] = 1.1
 projects[panopoly_demo][subdir] = panopoly
 
 ; ASU Modules
@@ -62,7 +59,7 @@ projects[asu_cas][version] = 1.x-dev
 projects[asu_cas][subdir] = custom
 projects[asu_cas][type] = module
 projects[asu_cas][download][type] = git
-projects[asu_cas][download][revision] = 6a86794
+projects[asu_cas][download][revision] = 6de8249
 projects[asu_cas][download][branch] = 7.x-1.x
 projects[asu_cas][download][url] = https://github.com/kalamuna/asu_cas.git
 
@@ -138,21 +135,21 @@ projects[views_php][subdir] = contrib
 
 ; Bootstrap and Theme Framework
 
-projects[kalatheme][version] = 1.3
+projects[kalatheme][version] = 3.0-rc2
 projects[kalatheme][type] = theme
 
 projects[modernizr][version] = 3.1
 projects[modernizr][subdir] = contrib
 
-projects[openasu_bootstrap][version] = 1.x-dev
-projects[openasu_bootstrap][type] = theme
-projects[openasu_bootstrap][download][type] = git
-projects[openasu_bootstrap][download][revision] = 1c5644e
-projects[openasu_bootstrap][download][branch] = 7.x-1.x
-projects[openasu_bootstrap][download][url] = https://github.com/kalamuna/openasu_bootstrap.git
+projects[asu_webspark_bootstrap][version] = 1.0
+projects[asu_webspark_bootstrap][type] = theme
+projects[asu_webspark_bootstrap][download][type] = git
+projects[asu_webspark_bootstrap][download][revision] = 7cd9a6d
+projects[asu_webspark_bootstrap][download][branch] = 7.x-1.x
+projects[asu_webspark_bootstrap][download][url] = https://github.com/kalamuna/asu_webspark_bootstrap.git
 
-libraries[bootstrap][download][type] = get
-libraries[bootstrap][download][url] = https://github.com/kalamuna/asu_bootlibrary/archive/v2.3.1.zip
+libraries[asu_webspark_bootstrap_bootstrap][download][type] = get
+libraries[asu_webspark_bootstrap_bootstrap][download][url] = https://github.com/kalamuna/asu_webspark_bootstrap_library/archive/v3.1.1.zip
 
 libraries[modernizr][download][type] = get
 libraries[modernizr][download][url] = https://github.com/Modernizr/Modernizr/archive/v2.6.2.zip
