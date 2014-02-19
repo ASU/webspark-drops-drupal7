@@ -1,0 +1,49 @@
+<?php
+/**
+ * @file
+ * panopoly_demo.install
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function panopoly_demo_enable() {
+  _panopoly_core_import_demo_content(array('PanopolyDemoNode', 'PanopolyDemoMenu'));
+}
+
+/**
+ * Implements hook_disable().
+ */
+function panopoly_demo_disable() {
+  _panopoly_core_rollback_demo_content(array('PanopolyDemoMenu', 'PanopolyDemoNode'));
+}
+
+/**
+ * Update demo content for Panopoly Demo.
+ */
+function panopoly_demo_update_7001(&$sandbox) {
+  // Delete old demo content which was supplied by the defaultcontent module.
+  // Take care not to delete any edited nodes (we assume that it the title
+  // wasnt changed, that the node is safe to delete).
+  $nodes = array(
+    'panopoly-demo-0' => 'Lovely Vegetables',
+    'panopoly-demo-1' => 'Vegetables are Great',
+    'panopoly-demo-2' => 'Great Vegetables',
+    'panopoly-demo-3' => 'Content Demo',
+  );
+  foreach ($nodes as $machine_name => $title) {
+    if ($nid = defaultcontent_get_default($machine_name)) {
+      $node = node_load($nid, NULL, TRUE);
+      if ($node->title == $title) {
+        node_delete($nid);
+        defaultcontent_set_default($machine_name, FALSE);
+      }
+    }
+  }
+
+  // Import updated demo content
+  if (module_exists('panopoly_demo')) {
+    module_enable(array('migrate'));
+    _panopoly_core_import_demo_content(array('PanopolyDemoNode', 'PanopolyDemoMenu'));
+  }
+}

@@ -530,6 +530,9 @@ function views_content_views_panes_content_type_edit_form($form, &$form_state) {
   // have to handle it separately.
   if (isset($exposed_form['sort_by'])) {
     $form['exposed']['sort_by'] = $exposed_form['sort_by'];
+    if (isset($conf['exposed']['sort_by'])) {
+      $form['exposed']['sort_by']['#default_value'] = $conf['exposed']['sort_by'];
+    }
   }
 
   if (isset($exposed_form['sort_order'])) {

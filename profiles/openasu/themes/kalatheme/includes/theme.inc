@@ -155,7 +155,7 @@ function kalatheme_status_report($variables) {
     ),
     REQUIREMENT_ERROR => array(
       'title' => t('Error'),
-      'class' => 'alert alert-error',
+      'class' => 'alert alert-danger',
     ),
   );
   $output = '<table class="system-status-report">';
@@ -181,22 +181,6 @@ function kalatheme_status_report($variables) {
 }
 
 /**
- * Implements theme_form().
- */
-function kalatheme_form($variables) {
-  $element = $variables['element'];
-  if (isset($element['#action'])) {
-    $element['#attributes']['action'] = drupal_strip_dangerous_protocols($element['#action']);
-  }
-  element_set_attributes($element, array('method', 'id'));
-  if (empty($element['#attributes']['accept-charset'])) {
-    $element['#attributes']['accept-charset'] = "UTF-8";
-  }
-  // Anonymous DIV to satisfy XHTML compliance.
-  return '<form' . drupal_attributes($element['#attributes']) . '><fieldset>' . $element['#children'] . '</fieldset></form>';
-}
-
-/**
  * Implements theme_button().
  */
 function kalatheme_button($variables) {
@@ -219,11 +203,15 @@ function kalatheme_button($variables) {
  */
 function kalatheme_textarea($variables) {
   $element = $variables['element'];
+  _kalatheme_ensure_class($element);
   $element['#attributes']['name'] = $element['#name'];
   $element['#attributes']['id'] = $element['#id'];
   $element['#attributes']['cols'] = $element['#cols'];
   $element['#attributes']['rows'] = $element['#rows'];
   _form_set_class($element, array('form-textarea'));
+
+  // Add Bootstrap class.
+  $element['#attributes']['class'][] = 'form-control';
 
   $wrapper_attributes = array(
     'class' => array('form-textarea-wrapper'),
@@ -238,6 +226,36 @@ function kalatheme_textarea($variables) {
   $output .= '<textarea' . drupal_attributes($element['#attributes']) . '>' . check_plain($element['#value']) . '</textarea>';
   $output .= '</div>';
   return $output;
+}
+
+/**
+ * Implements theme_textfield().
+ */
+function kalatheme_textfield($variables) {
+  _kalatheme_ensure_class($variables['element']);
+  // Add Bootstrap class, then defer to core for the rest.
+  $variables['element']['#attributes']['class'][] = 'form-control';
+  return theme_textfield($variables);
+}
+
+/**
+ * Implements theme_select().
+ */
+function kalatheme_select($variables) {
+  _kalatheme_ensure_class($variables['element']);
+  // Add Bootstrap class, then defer to core for the rest.
+  $variables['element']['#attributes']['class'][] = 'form-control';
+  return theme_select($variables);
+}
+
+/**
+ * Implements theme_password().
+ */
+function kalatheme_password($variables) {
+  _kalatheme_ensure_class($variables['element']);
+  // Add Bootstrap class, then defer to core for the rest.
+  $variables['element']['#attributes']['class'][] = 'form-control';
+  return theme_password($variables);
 }
 
 /**
@@ -259,7 +277,7 @@ function kalatheme_field__taxonomy_term_reference($variables) {
   }
 
   // Render the items.
-  $output .= ($variables['element']['#label_display'] == 'inline') ? '<ul class="links inline">' : '<ul class="links">';
+  $output .= ($variables['element']['#label_display'] == 'inline') ? '<ul class="links list-inline">' : '<ul class="links">';
   foreach ($variables['items'] as $delta => $item) {
     $output .= '<li class="taxonomy-term-reference-' . $delta . '"' . $variables['item_attributes'][$delta] . '>' . drupal_render($item) . '</li>';
   }
@@ -313,7 +331,7 @@ function kalatheme_links__system_main_menu($variables) {
 
     foreach ($links as $key => $link) {
       $class = array($key);
-      $link['#attributes'] = array();
+      $link['#attributes'] = (isset($link['#localized_options']['attributes'])) ? $link['#localized_options']['attributes'] : array();
 
       // Add first/last/active classes to help out themers.
       if ($i == 1) {
@@ -365,11 +383,14 @@ function kalatheme_links__system_main_menu($variables) {
 
       // If link has child items, print a toggle and dropdown menu.
       if (!empty($link['#below'])) {
-        $output .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>';
+        $dropdown_id = 'main-menu-dropdown-' . $i;
+        $output .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="' . $dropdown_id. '"><span class="caret"></span></a>';
         $output .= theme('links__system_main_menu', array(
           'links' => $link['#below'],
           'attributes' => array(
             'class' => array('dropdown-menu'),
+            'role' => 'menu',
+            'aria-labelledby' => $dropdown_id
           ),
         ));
       }
@@ -391,7 +412,7 @@ function kalatheme_links__system_main_menu($variables) {
  */
 function kalatheme_status_messages($variables) {
   // Call correct theme function depending on whether all dependencies loaded.
-  require_once DRUPAL_ROOT . '/' . drupal_get_path('theme', 'kalatheme') . '/includes/kalatheme.inc';
+  require_once DRUPAL_ROOT . '/' . drupal_get_path('theme', 'kalatheme') . '/includes/utils.inc';
   $status_function = _kalatheme_load_dependencies();
   return $status_function($variables);
 }
@@ -409,9 +430,6 @@ function kalatheme_menu_local_tasks(&$variables) {
     $variables['primary']['#prefix'] = '<ul class="nav nav-pills">';
     $variables['primary']['#suffix'] = '</ul>';
     if (!empty($variables['secondary'])) {
-      if (!function_exists("_kalatheme_associate_parent_tasks")) {
-        require_once DRUPAL_ROOT . '/' . drupal_get_path('theme', 'kalatheme') . '/includes/kalatheme.inc';
-      }
       $variables = _kalatheme_associate_parent_tasks($variables);
     }
     $output .= drupal_render($variables['primary']);
@@ -476,7 +494,7 @@ function kalatheme_menu_local_actions($variables) {
 
   // Render the dropdown.
   $output = $container_attributes ?  '<li' . $container_attributes . '>' : '<li>';
-  $output .= $toggle_attributes ?  '<a' . $toggle_attributes . '><i class="icon-wrench"></i> Actions <b class="caret"></b></a>' : '<a>Actions <b class="caret"></b></a>';
+  $output .= $toggle_attributes ?  '<a' . $toggle_attributes . '><i class="glyphicon glyphicon-wrench"></i> Actions <b class="caret"></b></a>' : '<a>Actions <b class="caret"></b></a>';
   $output .= $content_attributes ? '<ul' . $content_attributes . '>' : '<ul>';
   $output .= drupal_render($variables['menu_actions']);
   $output .= '</ul>';
@@ -555,7 +573,7 @@ function kalatheme_update_report($variables) {
       case UPDATE_NOT_SECURE:
       case UPDATE_REVOKED:
       case UPDATE_NOT_SUPPORTED:
-        $class = 'alert alert-error';
+        $class = 'alert alert-danger';
         $icon = theme('image', array('path' => 'misc/watchdog-error.png', 'width' => 18, 'height' => 18, 'alt' => t('error'), 'title' => t('error')));
         break;
       case UPDATE_NOT_CHECKED:
@@ -734,4 +752,46 @@ function kalatheme_update_report($variables) {
   }
   drupal_add_css(drupal_get_path('module', 'update') . '/update.css');
   return $output;
+}
+
+/**
+ * Checks that a render array's ['#attribute']['class'] is set, adding it if
+ * necessary.
+ *
+ * @param array $render_array
+ *   A renderable array.
+ */
+function _kalatheme_ensure_class(&$render_array) {
+  if (!isset($render_array['#attributes'])) {
+    $render_array['#attributes'] = array();
+  }
+  if (!isset($render_array['#attributes']['class'])) {
+    $render_array['#attributes']['class'] = array();
+  }
+}
+
+/**
+ * Calculates a column number based on columns in the total and current grid.
+ *
+ * @param int $percentage
+ *   Whole number version of the percentage to calculate.
+ * @param (optional) integer $total_columns
+ *   The total actual columns in the current row. Defaults to 2.
+ *
+ * @return int
+ *   The column count, rounded if necessary.
+ */
+function kalatheme_grid_size($percentage, $total_columns = 2) {
+  $columns = $percentage * KALATHEME_GRID_SIZE;
+  // Deal with uneven division.
+  if (!is_integer($columns)) {
+    if ($columns > (KALATHEME_GRID_SIZE / $total_columns)) {
+      $columns = floor($columns);
+    }
+    else {
+      $columns = ceil($columns);
+    }
+  }
+
+  return $columns;
 }

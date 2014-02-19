@@ -1,11 +1,35 @@
 <?php
 /**
  * @file
- * Kalatheme's primary theme functions and alterations.
+ * Kalatheme's primary pre/preprocess functions and alterations.
  */
 
+// Constants
+// We want to use the global here to respect alterations from modules
+// like ThemeKey
+global $theme_key;
+if (!defined('KALATHEME_BOOTSTRAP_LIBRARY')) {
+  define('KALATHEME_BOOTSTRAP_LIBRARY', $theme_key . '_bootstrap');
+}
+
+// Load some core things
 $kalatheme_path = drupal_get_path('theme', 'kalatheme');
 require_once $kalatheme_path . '/includes/theme.inc';
+require_once $kalatheme_path . '/includes/libraries.inc';
+
+/**
+ * Represents the number of columns in the grid supplied by Bootstrap.
+ * And provides some common grid sizes
+ */
+define('KALATHEME_GRID_SIZE', kalatheme_get_grid_size());
+define('KALATHEME_GRID_FULL', 1);
+define('KALATHEME_GRID_HALF', 1/2);
+define('KALATHEME_GRID_THIRD', 1/3);
+define('KALATHEME_GRID_FOURTH', 1/4);
+define('KALATHEME_GRID_FIFTH', 1/5);
+define('KALATHEME_GRID_SIXTH', 1/6);
+// Just because we can
+define('KALATHEME_GRID_SILLY', 1/42);
 
 /**
  * Implements hook_theme().
@@ -16,6 +40,22 @@ function kalatheme_theme($existing, $type, $theme, $path) {
       'variables' => array('menu_actions' => NULL, 'attributes' => NULL),
       'file' => 'includes/theme.inc',
     ),
+  );
+}
+
+/**
+ * Implements hook_menu() (via hook menu alter because that is how themes roll).
+ */
+function kalatheme_menu_alter(&$items) {
+  $items['admin/appearance/kalasetup'] = array(
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('kalatheme_setup_form'),
+    'access arguments' => array('administer themes'),
+    'weight' => 25,
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'setup.inc',
+    'file path' => drupal_get_path('theme', 'kalatheme') . '/includes',
+    'title' => 'Setup Kalatheme',
   );
 }
 
@@ -41,7 +81,7 @@ function kalatheme_preprocess_html(&$variables) {
   $variables['path_to_kalatheme'] = drupal_get_path('theme', 'kalatheme');
 
   // Load all dependencies.
-  require_once DRUPAL_ROOT . '/' . $variables['path_to_kalatheme'] . '/includes/kalatheme.inc';
+  require_once DRUPAL_ROOT . '/' . $variables['path_to_kalatheme'] . '/includes/utils.inc';
   _kalatheme_load_dependencies();
 }
 
@@ -125,10 +165,7 @@ function kalatheme_process_page(&$variables) {
   }
 
   // If panels arent being used at all.
-  $variables['no_panels'] = FALSE;
-  if (!isset($variables['page']['content']['system_main']['main']['#markup']) || (strpos($variables['page']['content']['system_main']['main']['#markup'], 'panel-panel') === FALSE)) {
-    $variables['no_panels'] = TRUE;
-  }
+  $variables['no_panels'] = !(module_exists('page_manager') && page_manager_get_current_page());
 
   // Check if we're to always print the page title, even on panelized pages.
   $variables['always_show_page_title'] = theme_get_setting('always_show_page_title') ? TRUE : FALSE;
@@ -166,6 +203,16 @@ function kalatheme_process_maintenance_page(&$variables) {
   }
 }
 
+/*
+ * Implements hook_panels_default_style_render_region().
+ *
+ * Some magic from @malberts with inspiration from Omega
+ */
+function kalatheme_panels_default_style_render_region(&$variables) {
+  // Remove .panels-separator.
+  return implode('', $variables['panes']);
+}
+
 /**
  * Override or insert variables into the node template.
  *
@@ -193,15 +240,15 @@ function kalatheme_preprocess_block(&$variables) {
  * Implements hook_preprocess_panels_add_content_link().
  */
 function kalatheme_preprocess_panels_add_content_link(&$vars) {
-  $vars['text_button'] = ctools_ajax_text_button($vars['title'], $vars['url'], $vars['description'], 'panels-modal-add-config btn');
+  $vars['text_button'] = ctools_ajax_text_button($vars['title'], $vars['url'], $vars['description'], 'panels-modal-add-config btn btn-default');
 }
 
 /**
  * Implements hook_preprocess_views_view_grid().
  */
 function kalatheme_preprocess_views_view_grid(&$variables) {
-  if (12 % $variables['options']['columns'] === 0) {
-    $variables['span'] = 'span' . 12 / $variables['options']['columns'];
+  if (kalatheme_get_grid_size() % $variables['options']['columns'] === 0) {
+    $variables['span'] = 'col-md-' . kalatheme_get_grid_size() / $variables['options']['columns'];
   }
 }
 
@@ -219,117 +266,18 @@ function kalatheme_preprocess_views_view_table(&$variables) {
 
   // Add in bootstrap classes
   $variables['classes_array'] = array('table', 'table-striped', 'table-bordered', 'table-hover');
-}
 
-/**
- * Checks if Bootstrap's responsive CSS is installed.
- *
- * @param array $variant
- *   Library, or one of its variants, to check
- * @param string $version
- *   Library's version number, if applicable
- * @param string $variant_name
- *   Name of current variant, if applicable
- */
-function kalatheme_check_responsive(&$variant, $version, $variant_name) {
-  foreach (array_keys($variant['files']['css']) as $css) {
-    if (!preg_match('/^css\/bootstrap\-responsive\.(?:min\.)?css$/', $css)) {
-      continue;
-    }
-    $css_path = DRUPAL_ROOT . '/' . $variant['library path'] . '/' . $css;
-    if (!file_exists($css_path)) {
-      unset($variant['files']['css'][$css]);
+  // Remove the active class from table cells, as Bootstrap 3 gives them a funky background.
+  $handler = $variables['view']->style_plugin;
+  $active = !empty($handler->active) ? $handler->active : FALSE;
+  if ($active) {
+    foreach ($variables['field_classes'][$active] as &$cell) {
+      $cell_classes = explode(' ', $cell);
+      $active_class_index = array_search('active', $cell_classes);
+      if ($active_class_index !== FALSE) {
+        unset($cell_classes[$active_class_index]);
+        $cell = implode(' ', $cell_classes);
+      }
     }
   }
-}
-
-/**
- * Implements hook_libraries_info().
- */
-function kalatheme_libraries_info() {
-  $libraries = array();
-  $libraries['bootstrap'] = array(
-    'name' => 'Twitter Bootstrap',
-    'machine name' => 'bootstrap',
-    'vendor url' => 'http://twitter.github.com',
-    'download url' => 'http://twitter.github.com',
-    'path' => '',
-    'callbacks' => array(
-      'pre-load' => array(
-        'kalatheme_check_responsive',
-      ),
-    ),
-    'version arguments' => array(
-      'pattern' => '@v+([0-9a-zA-Z\.-]+)@',
-      'lines' => 100,
-      'cols' => 200,
-    ),
-    'version callback' => '_kalatheme_get_version',
-    'versions' => array(
-      '2' => array(
-        'files' => array(
-          'js' => array(
-            'js/bootstrap.js',
-          ),
-          'css' => array(
-            'css/bootstrap.css',
-            'css/bootstrap-responsive.css',
-          ),
-        ),
-        'variants' => array(
-          'minified' => array(
-            'files' => array(
-              'js' => array(
-                'js/bootstrap.min.js',
-              ),
-              'css' => array(
-                'css/bootstrap.min.css',
-                'css/bootstrap-responsive.min.css',
-              ),
-            ),
-            'variant arguments' => array(
-              'variant' => 'minified',
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
-
-  return $libraries;
-}
-
-/**
- * This attempts to find and return the Bootstrap library version
- *
- * @param $library - The actual library
- * @param $options - Options to help determine the library version
- * @return Library version number
- */
-function _kalatheme_get_version($library, $options) {
-  // Use bootstrap.min.css if exists, if not use normal bootstrap.css
-  $file = (file_exists(DRUPAL_ROOT . '/' . $library['library path'] . '/css/bootstrap.min.css')) ?
-    '/css/bootstrap.min.css' : '/css/bootstrap.css';
-
-  // Provide defaults.
-  $options += array(
-    'file' => $file,
-    'pattern' => '',
-    'lines' => 20,
-    'cols' => 200,
-  );
-
-  $file = DRUPAL_ROOT . '/' . $library['library path'] . '/' . $options['file'];
-  if (empty($options['file']) || !file_exists($file)) {
-    return;
-  }
-  $file = fopen($file, 'r');
-  while ($options['lines'] && $line = fgets($file, $options['cols'])) {
-    if (preg_match($options['pattern'], $line, $version)) {
-      fclose($file);
-      return $version[1];
-    }
-    $options['lines']--;
-  }
-  fclose($file);
 }
