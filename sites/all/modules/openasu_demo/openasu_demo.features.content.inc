@@ -584,6 +584,63 @@ function openasu_demo_content_defaults() {
     ),
   );
 
+  $content['how-edit-site'] = (object) array(
+    'link' => array(
+      'menu_name' => 'main-menu',
+      'link_path' => 'node-name/how-edit-site',
+      'router_path' => 'node/%',
+      'link_title' => 'How to Edit a Site',
+      'options' => array(),
+      'module' => 'menu',
+      'hidden' => 0,
+      'external' => 0,
+      'has_children' => 0,
+      'expanded' => 0,
+      'weight' => -49,
+      'customized' => 0,
+      'parent_path' => 'node-name/about',
+      'identifier' => 'main-menu:node-name/how-edit-site',
+    ),
+    'exported_path' => 'content/how-edit-site',
+    'title' => 'How to Edit a Site',
+    'status' => 1,
+    'promote' => 1,
+    'sticky' => 0,
+    'type' => 'panopoly_page',
+    'language' => 'und',
+    'created' => 1378948920,
+    'comment' => 0,
+    'translate' => 0,
+    'machine_name' => 'how-edit-site',
+    'body' => array(
+      'und' => array(
+        0 => array(
+          'value' => '<h3>How to Edit a Site</h3><p>Drupal is an open source content management platform powering millions of websites and applications. It’s built, used, and supported by an active and diverse community of people around the world. Drupal is a robust platform which allows flexibility with thousands of add-on module available.</p><p><strong><a href="https://drupal.org/">learn more about drupal</a></strong></p><h4>Editing an ASU webspark Site</h4><p>There are two ways to edit page content. The first is to select "Edit" at the top of the page (just below the main menu).&nbsp; This will bring up a page with all sections on the page in editable boxes. <br><br>The other way is to select "Customize this Page" at the bottom of the page. This will display all of the content on the page (including sidebars) in panels. Panels can be rearranged through drag and drop controls. Panels can also be edited and deleted by selecting correspoinding buttons at the top of each panel. Additional panels can also be added to the page layout.</p><p>An embed video field can be displayed on a page by utlizing panels.&nbsp; To add a panel select the "+" button in the top right corner of the page. Additional items can also be added to a panel including blocks, forms, page content and views. Each new panel contains various options for customization and can be placed in multiple locations on a page. Be sure to select "Save" at the bottom of every page to save and publish changes to the live web site.</p><p>Navigation can be modified within the Structure menu. Within each menu, a list of the menu links will be displayed. These can be moved by dragging and dropping. Menu items can also be deleted from this page. To edit the display name and URL of a menu item, select "Edit" and change the menu link title and path fields. Be sure to select "Save" at the bottom to save all changes.</p><p>Further documentation can be found on the <strong><a href="https://www.getpantheon.com/">Pantheon website</a></strong>.</p>',
+          'summary' => '',
+          'format' => 'panopoly_wysiwyg_text',
+          'safe_value' => '<h3>How to Edit a Site</h3>
+<p>Drupal is an open source content management platform powering millions of websites and applications. It’s built, used, and supported by an active and diverse community of people around the world. Drupal is a robust platform which allows flexibility with thousands of add-on module available.</p>
+<p><strong><a href="https://drupal.org/">learn more about drupal</a></strong></p>
+<h4>Editing an ASU webspark Site</h4>
+<p>There are two ways to edit page content. The first is to select "Edit" at the top of the page (just below the main menu).  This will bring up a page with all sections on the page in editable boxes. </p>
+<p>The other way is to select "Customize this Page" at the bottom of the page. This will display all of the content on the page (including sidebars) in panels. Panels can be rearranged through drag and drop controls. Panels can also be edited and deleted by selecting correspoinding buttons at the top of each panel. Additional panels can also be added to the page layout.</p>
+<p>An embed video field can be displayed on a page by utlizing panels.  To add a panel select the "+" button in the top right corner of the page. Additional items can also be added to a panel including blocks, forms, page content and views. Each new panel contains various options for customization and can be placed in multiple locations on a page. Be sure to select "Save" at the bottom of every page to save and publish changes to the live web site.</p>
+<p>Navigation can be modified within the Structure menu. Within each menu, a list of the menu links will be displayed. These can be moved by dragging and dropping. Menu items can also be deleted from this page. To edit the display name and URL of a menu item, select "Edit" and change the menu link title and path fields. Be sure to select "Save" at the bottom to save all changes.</p>
+<p>Further documentation can be found on the <strong><a href="https://www.getpantheon.com/">Pantheon website</a></strong>.</p>
+',
+          'safe_summary' => '',
+        ),
+      ),
+    ),
+    'field_featured_status' => array(
+      'und' => array(
+        0 => array(
+          'value' => 0,
+        ),
+      ),
+    ),
+  );
+
   $content['how-to-start-site'] = (object) array(
     'link' => array(
       'menu_name' => 'main-menu',
@@ -636,6 +693,56 @@ function openasu_demo_content_defaults() {
       'und' => array(
         0 => array(
           'value' => 1,
+        ),
+      ),
+    ),
+  );
+
+  $content['maps'] = (object) array(
+    'link' => array(
+      'menu_name' => 'main-menu',
+      'link_path' => 'node-name/maps',
+      'router_path' => 'node/%',
+      'link_title' => 'Maps',
+      'options' => array(),
+      'module' => 'menu',
+      'hidden' => 0,
+      'external' => 0,
+      'has_children' => 0,
+      'expanded' => 0,
+      'weight' => 0,
+      'customized' => 0,
+      'parent_path' => 'node-name/features',
+      'identifier' => 'main-menu:node-name/maps',
+    ),
+    'exported_path' => 'content/maps',
+    'title' => 'Maps',
+    'status' => 1,
+    'promote' => 1,
+    'sticky' => 0,
+    'type' => 'panopoly_page',
+    'language' => 'und',
+    'created' => 1375308600,
+    'comment' => 0,
+    'translate' => 0,
+    'machine_name' => 'maps',
+    'body' => array(
+      'und' => array(
+        0 => array(
+          'value' => '<h3>Maps</h3><p>Include location maps with the built-in Google Maps feature.</p>',
+          'summary' => '',
+          'format' => 'panopoly_wysiwyg_text',
+          'safe_value' => '<h3>Maps</h3>
+<p>Include location maps with the built-in Google Maps feature.</p>
+',
+          'safe_summary' => '',
+        ),
+      ),
+    ),
+    'field_featured_status' => array(
+      'und' => array(
+        0 => array(
+          'value' => 0,
         ),
       ),
     ),
