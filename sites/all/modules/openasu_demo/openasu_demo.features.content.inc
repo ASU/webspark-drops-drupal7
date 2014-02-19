@@ -729,11 +729,26 @@ function openasu_demo_content_defaults() {
     'body' => array(
       'und' => array(
         0 => array(
-          'value' => '<h3>Maps</h3><p>Include location maps with the built-in Google Maps feature.</p>',
+          'value' => '<h3>Maps</h3><p>Include location maps with the built-in Google Maps feature.</p><p>&nbsp;[[{"fid":"2","view_mode":"default","fields":{"format":"default","field_file_image_alt_text[und][0][value]":"demo_map","field_file_image_title_text[und][0][value]":"Demo Map"},"type":"media","attributes":{"alt":"demo_map","title":"Demo Map","height":"407","width":"609","class":"media-element file-default"}}]]</p><p>&nbsp;</p><p><strong>&nbsp;How to Add a Map</strong></p><p>&nbsp;</p><blockquote><p><strong>Step 1:</strong>&nbsp;At the bottom of the page, select "Customize this page".</p><p>&nbsp;</p><p><strong>Step 2:</strong>&nbsp;Select the plus sign to "Add a pane".</p><p>&nbsp;</p><p><strong>Step 3:</strong>&nbsp;On the left hand side of the menu, select "Add Map".</p><p>&nbsp;</p><p><strong>Step 4:</strong>&nbsp;Enter the address and description.</p><p>&nbsp;</p><p><strong>Step 5:</strong>&nbsp;Save the map settings. Then save the page to complete the changes.</p></blockquote><p>&nbsp;</p>',
           'summary' => '',
           'format' => 'panopoly_wysiwyg_text',
           'safe_value' => '<h3>Maps</h3>
 <p>Include location maps with the built-in Google Maps feature.</p>
+<p> <img alt="demo_map" title="Demo Map" height="407" width="609" class="media-element file-default" src="https://webspark119-webspark.ws.asu.edu/sites/default/files/Screen%20Shot%202014-02-19%20at%208.43.19%20AM_0.png" /></p>
+<p> </p>
+<p><strong> How to Add a Map</strong></p>
+<p> </p>
+<blockquote><p><strong>Step 1:</strong> At the bottom of the page, select "Customize this page".</p>
+<p> </p>
+<p><strong>Step 2:</strong> Select the plus sign to "Add a pane".</p>
+<p> </p>
+<p><strong>Step 3:</strong> On the left hand side of the menu, select "Add Map".</p>
+<p> </p>
+<p><strong>Step 4:</strong> Enter the address and description.</p>
+<p> </p>
+<p><strong>Step 5:</strong> Save the map settings. Then save the page to complete the changes.</p>
+</blockquote>
+<p> </p>
 ',
           'safe_summary' => '',
         ),
