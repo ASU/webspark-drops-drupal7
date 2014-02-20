@@ -85,3 +85,19 @@ function asu_cas_update_7000(&$sandbox) {
 
   return t('Updated to Latest and Greatest Theme. Migrated settings.');
 }
+
+/**
+ * Making sure the new responsive ASU header is being updated from older
+ * versions
+ */
+function asu_cas_update_7001(&$sandbox) {
+
+  // If they are running the old header
+  $newheader = '4.0-rsp-up.0';
+  if (variable_get('asu_brand_header_version') !== $newheader) {
+    variable_set('asu_brand_header_version', '4.0-rsp-up.0');
+  }
+
+  return t('New responsive header set.');
+}
+
