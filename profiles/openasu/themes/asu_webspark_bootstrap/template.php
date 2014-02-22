@@ -82,9 +82,10 @@ function asu_webspark_bootstrap_preprocess_page(&$variables) {
   $variables['site_name_first'] = '';
   $variables['site_name_last'] = '';
   if (strpos($variables['site_name'], ' ') !== FALSE) {
-    $middle = strrpos(substr($variables['site_name'], 0, floor(strlen($variables['site_name']) / 2)), ' ') + 1;
-    $variables['site_name_first'] = substr($variables['site_name'], 0, $middle);  // "The Quick : Brown Fox "
-    $variables['site_name_last'] = substr($variables['site_name'], $middle);  // "Jumped Over The Lazy / Dog"
+    $site_name_words = explode(" ", $variables['site_name']);
+    $middle = floor(count($site_name_words) / 2);
+    $variables['site_name_first'] = implode(" ", array_slice($site_name_words, 0, $middle));
+    $variables['site_name_last'] = implode(" ", array_slice($site_name_words, $middle, count($site_name_words) - $middle));
   }
   else {
     $variables['site_name_last'] = $variables['site_name'];
