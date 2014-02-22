@@ -4,16 +4,24 @@
  * Implementation of hook_enable()
  */
 function openasu_demo_enable() {
-  $settings = variable_get('theme_openasu_bootstrap_settings');
+  $settings = variable_get('theme_asu_webspark_bootstrap_settings');
   $settings['default_picture'] = 1;
   $settings['picture_path'] = file_unmanaged_copy(drupal_get_path('module', 'openasu_demo') . '/images/header.png');
   variable_set('site_frontpage', 'demo');
-  variable_set('theme_openasu_bootstrap_settings', $settings);
+  variable_set('theme_asu_webspark_bootstrap_settings', $settings);
 }
 
 /**
  * Implementation of hook_disable()
  */
 function openasu_demo_disable() {
-  // Do we want to unset the openasu_bootstrap_settings here?  
+  // Reset the frontpage to drupal default
+  variable_del('site_frontpage');
+  variable_set('site_frontpage', 'node');
+
+  // Remove the default front page image
+  $settings = variable_get('theme_asu_webspark_bootstrap_settings');
+  $settings['default_picture'] = 0;
+  unset($settings['picture_path']);
+  variable_set('theme_asu_webspark_bootstrap_settings', $settings);
 }
