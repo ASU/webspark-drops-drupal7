@@ -231,7 +231,7 @@ function asu_webspark_bootstrap_links__system_main_menu($variables) {
         $class[] = 'dropdown';
         $class[] = 'clearfix';
       }
-      if ($link['#original_link']['mlid'] == $trail[0]['mlid']) {
+      if (!empty($trail) && $link['#original_link']['mlid'] == $trail[0]['mlid']) {
         $class[] = 'active';
       }
       $output .= '<li' . drupal_attributes(array('class' => $class)) . '>';
