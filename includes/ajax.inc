@@ -327,8 +327,16 @@ function ajax_get_form() {
     // system/ajax without actually viewing the concerned form in the browser.
     // This is likely a hacking attempt as it never happens under normal
     // circumstances, so we just do nothing.
-    watchdog('ajax', 'Invalid form POST data.', array(), WATCHDOG_WARNING);
-    drupal_exit();
+    // This also seems to happen when you try to use #ajax in an install profile
+    // form. So we can check for that scenario as well and just load the form
+    // from its constructor function instead.
+    if (isset($_POST['form_id']) && isset($GLOBALS['conf']['install_task']) && $GLOBALS['conf']['install_task'] !== 'done') {
+      $form = drupal_get_form($_POST['form_id']);
+    }
+    else {
+      watchdog('ajax', 'Invalid form POST data.', array(), WATCHDOG_WARNING);
+      drupal_exit();
+    }
   }
 
   // Since some of the submit handlers are run, redirects need to be disabled.
@@ -415,6 +423,14 @@ function ajax_base_page_theme() {
     // page cache.
     if ($theme === variable_get('theme_default', 'bartik') || drupal_valid_token($token, $theme)) {
       return $theme;
+    }
+
+    // If running an AJAX request on an install profile form this will always
+    // return Bartik which is bad since Seven is the install profile theme.
+    // Here is a weak check that probably needs some TLC to return the right
+    // value.
+    if ($theme === 'undefined' && isset($GLOBALS['conf']['install_task']) && $GLOBALS['conf']['install_task'] !== 'done') {
+      return 'seven';
     }
   }
 }
