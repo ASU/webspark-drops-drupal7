@@ -61,7 +61,7 @@ projects[asu_cas][type] = module
 projects[asu_cas][download][type] = git
 projects[asu_cas][download][revision] = f9b88b5
 projects[asu_cas][download][branch] = 7.x-1.x
-projects[asu_cas][download][url] = https://github.com/kalamuna/asu_cas.git
+projects[asu_cas][download][url] = https://github.com/ASU/asu-drupal7-cas-client-config.git
 
 projects[asu_userpicker][version] = 1.0
 projects[asu_userpicker][subdir] = custom
@@ -146,10 +146,10 @@ projects[asu_webspark_bootstrap][type] = theme
 projects[asu_webspark_bootstrap][download][type] = git
 projects[asu_webspark_bootstrap][download][revision] = 016ad3c
 projects[asu_webspark_bootstrap][download][branch] = 7.x-1.x
-projects[asu_webspark_bootstrap][download][url] = https://github.com/kalamuna/asu_webspark_bootstrap.git
+projects[asu_webspark_bootstrap][download][url] = https://github.com/asu/webspark-theme-original.git
 
 libraries[asu_webspark_bootstrap_bootstrap][download][type] = get
-libraries[asu_webspark_bootstrap_bootstrap][download][url] = https://github.com/kalamuna/asu_webspark_bootstrap_library/archive/v3.1.1.zip
+libraries[asu_webspark_bootstrap_bootstrap][download][url] = https://github.com/asu/webspark-theme-original-library/archive/v3.1.1.zip
 
 libraries[modernizr][download][type] = get
 libraries[modernizr][download][url] = https://github.com/Modernizr/Modernizr/archive/v2.6.2.zip
