@@ -133,6 +133,10 @@ projects[views_php][version] = 1.x-dev
 projects[views_php][type] = module
 projects[views_php][subdir] = contrib
 
+projects[webform][version] = 3.20
+projects[webform][type] = module
+projects[webform][subdir] = contrib
+
 ; Bootstrap and Theme Framework
 
 projects[kalatheme][version] = 3.0-rc2
