@@ -1,0 +1,61 @@
+language: php
+
+php:
+  - 5.4
+
+mysql:
+  database: drupal
+  username: root
+  encoding: utf8
+
+install:
+  - sudo apt-get update > /dev/null
+  - "mysql -e 'create database drupal;'"
+
+  # Install latest Drush 6.
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - composer global require --no-interaction drush/drush:6.*
+
+  # Build Behat dependencies
+  - cd ./profiles/openasu/tests/behat
+  - composer install --no-interaction
+  # - cp behat.template.yml behat.local.yml
+  - cd /home/travis/build/ASU/webspark-drops-drupal7
+
+  # Build Codebase
+
+  - mkdir private_files
+
+  # Setup files
+  - sudo chmod -R 777 sites/all
+
+  # Setup display for Selenium
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - sleep 5
+
+  # Get Selenium
+  - wget http://selenium.googlecode.com/files/selenium-server-standalone-2.37.0.jar
+  - java -jar selenium-server-standalone-2.37.0.jar > /dev/null 2>&1 &
+  - sleep 5
+
+  # Disable sendmail
+  - echo sendmail_path=`which true` >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+
+before_script:
+
+
+  # Do the site install
+  - drush si openasu --db-url=mysql://root:@127.0.0.1/drupal --account-name=admin --account-pass=admin --site-mail=admin@example.com --site-name="Webspark" --yes
+
+  - drush runserver --server=builtin 8888 > /dev/null 2>&1 &
+  - sleep 3
+  - cd profiles/openasu/tests/behat
+
+script:
+
+  - ./bin/behat --config behat.travis.yml
+
+notifications:
+  email:
+    - webspark-ci@asu.edu
