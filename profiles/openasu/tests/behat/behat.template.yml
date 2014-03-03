@@ -1,0 +1,38 @@
+default:
+  paths:
+    features: 'features'
+  extensions:
+    Behat\MinkExtension\Extension:
+      goutte: ~
+      selenium2: ~
+      base_url: http://${drupal.uri}
+      files_path: ../../
+    Drupal\DrupalExtension\Extension:
+      blackbox: ~
+      drush:
+        root: ${drush.root}
+      region_map:
+        # Regions for Panopoly Layouts
+        Bryant Content: ".bryant-content"
+        Bryant Sidebar: ".bryant-sidebar"
+        Bryant Flipped Content: ".bryant-flipped-content"
+        Bryant Flipped Sidebar: ".bryant-flipped-sidebar"
+        # For Panels / Panopoly specific regions.
+        CTools modal: "#modalContent"
+        Live preview: "fieldset.widget-preview"
+        # These are the regions for responsive_bartik.
+        Header: ".region-header"
+        Featured: ".region-featured"
+        Highlighted: ".region-highlighted"
+        Help: ".region-help"
+        Content: ".region-content"
+        Sidebar first: ".region-sidebar-first"
+        Sidebar second: ".region-sidebar-second"
+        Triptych first: ".region-triptych-first"
+        Triptych middle: ".region-triptych-middle"
+        Triptych last: ".region-triptych-last"
+        Footer first column: ".region-footer-firstcolumn"
+        Footer second column: ".region-footer-secondcolumn"
+        Footer third column: ".region-footer-thirdcolumn"
+        Footer fourth column: ".region-footer-fourthcolumn"
+        Footer: ".region-footer"
