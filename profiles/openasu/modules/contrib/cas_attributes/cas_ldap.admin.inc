@@ -9,13 +9,13 @@
  * Lists available CAS Attributes.
  */
 function cas_ldap_list() {
-  $cas_attributes = variable_get('cas_attributes', array());
+  $cas_attr_ldap_server = variable_get('cas_attributes_ldap_server', NULL);
 
-  if (empty($cas_attributes['ldap']['server'])) {
+  if (empty($cas_attr_ldap_server)) {
     // No CAS server configured.
     return t('An <a href="@url">LDAP server</a> must be selected.', array('@url' => url('admin/config/people/cas/attributes')));
   }
-  $ldap_server = ldap_servers_get_servers($cas_attributes['ldap']['server'], 'enabled', TRUE);
+  $ldap_server = ldap_servers_get_servers($cas_attr_ldap_server, 'enabled', TRUE);
 
   if (empty($ldap_server->testingDrupalUsername)) {
     return t('Please configure the LDAP server\'s <a href="@url">testing Drupal username</a>.', array('@url' => url('admin/config/people/ldap/servers/edit/' . $ldap_server->sid)));

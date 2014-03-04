@@ -15,7 +15,7 @@ class LdapAuthenticationConf {
    *
    * @var array
    *
-   * @see LdapServer::sid()
+   * @see LdapServer->sid()
    */
   public $sids = array();
 
@@ -24,7 +24,7 @@ class LdapAuthenticationConf {
    *
    * @var associative array of LdapServer objects keyed on sids
    *
-   * @see LdapServer::sid
+   * @see LdapServer->sid()
    * @see LdapServer
    */
   public $enabledAuthenticationServers = array();
@@ -107,6 +107,73 @@ class LdapAuthenticationConf {
    * @var int
    */
   public $emailUpdate = LDAP_AUTHENTICATION_EMAIL_UPDATE_ON_LDAP_CHANGE_DEFAULT;
+  
+  /**
+   * Email default handling option
+   * 
+   * This affects how email addresses that are empty are handled by 
+   * the authentication process.
+   * 
+   *   LDAP_AUTHENTICATION_EMAIL_TEMPLATE_NONE -- leaves the email empty
+   *   LDAP_AUTHENTICATION_EMAIL_TEMPLATE_IF_EMPTY (default) -- if the email is empty, it will be replaced
+   *   LDAP_AUTHENTICATION_EMAIL_TEMPLATE_ALWAYS -- always use the template
+   * 
+   * @var int
+   */
+  public $emailTemplateHandling = LDAP_AUTHENTICATION_EMAIL_TEMPLATE_DEFAULT;
+  
+  /**
+   * Email template.
+   * 
+   * @var string
+   */
+  public $emailTemplate = LDAP_AUTHENTICATION_DEFAULT_TEMPLATE;
+      
+  /**
+   * Whether or not to display a notification to the user on login, prompting 
+   * them to change their email.
+   * 
+   * @var boolean
+   */
+  public $templateUsagePromptUser = LDAP_AUTHENTICATION_TEMPLATE_USAGE_PROMPT_USER_DEFAULT;
+  
+  /**
+   * Whether or not to avoid updating the email address of the user if the
+   * template was used to generate it.
+   * 
+   * @var boolean
+   */
+  public $templateUsageNeverUpdate = LDAP_AUTHENTICATION_TEMPLATE_USAGE_NEVER_UPDATE_DEFAULT;
+  
+  /**
+   * Whether or not to use the email template if there is a user with a different
+   * login name but same email address in the system.
+   * 
+   * @var boolean
+   */
+  public $templateUsageResolveConflict = LDAP_AUTHENTICATION_TEMPLATE_USAGE_RESOLVE_CONFLICT_DEFAULT;
+  
+  /**
+   * A PCRE regular expression (minus the delimiter and flags) that will be used
+   * if $templateUsagePromptUser is set to true to determine if the email 
+   * address is a fake one or not. 
+   * 
+   * By allowing this to be customized, we let the administrators handle older
+   * patterns should they decide to change the existing one, as well as avoiding
+   * the complexity of determining a proper regex from the template.
+   * 
+   * @var string
+   */
+  public $templateUsagePromptRegex = LDAP_AUTHENTICATION_DEFAULT_TEMPLATE_REGEX;
+  
+  /**
+   * Controls whether or not we should check on login if the email template was
+   * used and redirect the user if needed.
+   * 
+   * @var boolean
+   */
+  public $templateUsageRedirectOnLogin = LDAP_AUTHENTICATION_REDIRECT_ON_LOGIN_DEFAULT;
+  
 
 
    /**
@@ -191,6 +258,13 @@ class LdapAuthenticationConf {
     'ssoNotifyAuthentication',
     'ldapImplementation',
     'cookieExpire',
+    'emailTemplate',
+    'emailTemplateHandling',
+    'templateUsagePromptUser',
+    'templateUsageNeverUpdate',
+    'templateUsageResolveConflict',
+    'templateUsagePromptRegex',
+    'templateUsageRedirectOnLogin',
   );
 
   public function hasEnabledAuthenticationServers() {

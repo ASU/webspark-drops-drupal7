@@ -10,9 +10,9 @@ files[] = cas_attributes.test
 
 configure = admin/config/people/cas/attributes
 
-; Information added by drupal.org packaging script on 2013-01-31
-version = "7.x-1.0-rc2"
+; Information added by  packaging script on 2013-11-13
+version = "7.x-1.0-rc3"
 core = "7.x"
 project = "cas_attributes"
-datestamp = "1359590419"
+datestamp = "1384309134"
 

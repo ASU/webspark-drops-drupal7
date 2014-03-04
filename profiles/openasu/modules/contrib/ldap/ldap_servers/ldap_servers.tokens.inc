@@ -389,7 +389,7 @@ function ldap_servers_token_tokenize_user_account($user_account, $token_keys = '
     $parts = explode('.', $token_key);
     $attr_type = $parts[0];
     $attr_name = $parts[1];
-    $attr_conversion = (isset($parts[2])) ? $parts[1] : 'none';
+    $attr_conversion = (isset($parts[2])) ? $parts[2] : 'none';
     $value = FALSE;
     $skip = FALSE;
 
@@ -436,7 +436,7 @@ function ldap_servers_token_tokenize_user_account($user_account, $token_keys = '
           break;
 
         case 'to-md5':
-          $value = md5($value);
+          $value = "{MD5}" . base64_encode( pack( "H*", md5( $value ) ) );
           break;
 
         case 'to-lowercase':

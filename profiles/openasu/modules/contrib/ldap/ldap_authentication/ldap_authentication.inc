@@ -60,6 +60,9 @@ function _ldap_authentication_login_form_alter(&$form, &$form_state, $form_id) {
     if (isset($auth_conf->loginUIPasswordTxt)) {
       $form['pass']['#description'] = t($auth_conf->loginUIPasswordTxt);
     }
+    if ($auth_conf->templateUsageRedirectOnLogin) {
+      $form['#submit'][] = 'ldap_authentication_check_for_email_template';
+    }
   }
 }
 
@@ -115,6 +118,23 @@ function _ldap_authentication_form_user_profile_form_alter(&$form, $form_state) 
   }
 }
 
+/**
+ * Replaces the email address in $ldap_user with one from the template in
+ * $auth_conf.
+ * 
+ * @param array $ldap_user
+ *   LDAP user entry
+ * @param LdapAuthenticationConf $auth_conf
+ *   LDAP authentication configuration class.
+ */
+function _ldap_authentication_replace_user_email(&$ldap_user, $auth_conf, $tokens) {
+  // fallback template in case one was not specified.
+  $template = '@username@localhost';
+  if (!empty($auth_conf->emailTemplate)) {
+    $template = $auth_conf->emailTemplate;
+  }
+  $ldap_user['mail'] = format_string($template, $tokens);
+}
 
 /**
   * user form validation will take care of username, pwd fields
@@ -242,6 +262,33 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
   }
   $watchdog_tokens['%drupal_accountname'] = $drupal_accountname;
 
+  // @todo maybe we can add more tokens?
+  $email_template_tokens = array(
+    '@username' => $drupal_accountname,
+  );
+  
+  $email_template_used = FALSE;
+  
+  /**
+   * Ensures that we respect the email template handling settings.
+   */
+  if (!empty($auth_conf->emailTemplate)) {
+    switch ($auth_conf->emailTemplateHandling) {
+      case LDAP_AUTHENTICATION_EMAIL_TEMPLATE_IF_EMPTY:
+        if (!empty($ldap_user['mail'])) {
+          break;
+        }
+        // deliberate fallthrough
+      case LDAP_AUTHENTICATION_EMAIL_TEMPLATE_ALWAYS:
+        _ldap_authentication_replace_user_email($ldap_user, $auth_conf, $email_template_tokens);
+        if ($detailed_watchdog_log) {
+          watchdog('ldap_authentication', 'Using template generated email for %username', $watchdog_tokens, WATCHDOG_DEBUG);
+        }
+        $email_template_used = TRUE;
+        break;
+    }
+  }
+  
   /**
    * VI. Find or create corresponding drupal account and set authmaps
    *
@@ -307,10 +354,13 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
    * VI.C: existing Drupal account with incorrect email.  fix email if appropriate
    *
    */
-  if ($drupal_account_exists && $drupal_account->mail != $ldap_user['mail'] && (
-          $auth_conf->emailUpdate == LDAP_AUTHENTICATION_EMAIL_UPDATE_ON_LDAP_CHANGE_ENABLE_NOTIFY ||
-          $auth_conf->emailUpdate == LDAP_AUTHENTICATION_EMAIL_UPDATE_ON_LDAP_CHANGE_ENABLE
-          ))  {
+  if ((!($auth_conf->templateUsageNeverUpdate && $email_template_used)) && 
+      $drupal_account_exists && 
+      $drupal_account->mail != $ldap_user['mail'] && 
+      (
+        $auth_conf->emailUpdate == LDAP_AUTHENTICATION_EMAIL_UPDATE_ON_LDAP_CHANGE_ENABLE_NOTIFY ||
+        $auth_conf->emailUpdate == LDAP_AUTHENTICATION_EMAIL_UPDATE_ON_LDAP_CHANGE_ENABLE
+      )) {
     $user_edit = array('mail' => $ldap_user['mail']);
 
     $watchdog_tokens['%username'] = $drupal_account->name;
@@ -337,15 +387,29 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
 
     // VI.C.1 Do not provision Drupal account if another account has same email.
     if ($account_with_same_email = user_load_by_mail($ldap_user['mail'])) {
+      $error = TRUE;
       /**
        * username does not exist but email does.  Since user_external_login_register does not deal with
        * mail attribute and the email conflict error needs to be caught beforehand, need to throw error here
        */
-      $watchdog_tokens['%duplicate_name'] = $account_with_same_email->name;
-      watchdog('ldap_authentication', 'LDAP user with DN %dn has email address
-        (%mail) conflict with a drupal user %duplicate_name', $watchdog_tokens, WATCHDOG_ERROR);
-      drupal_set_message(t('Another user already exists in the system with the same email address. You should contact the system administrator in order to solve this conflict.'), 'error');
-      return;
+      if ($auth_conf->templateUsageResolveConflict && (!$email_template_used)) {
+        if ($detailed_watchdog_log) {
+          watchdog('ldap_authentication', 'Conflict detected, using template generated email for %username', $watchdog_tokens, WATCHDOG_DEBUG);
+        }
+        _ldap_authentication_replace_user_email($ldap_user, $auth_conf, $email_template_tokens);
+        $email_template_used = TRUE;
+        // recheck with the template email to make sure it doesn't also exist.
+        if ($account_with_same_email = user_load_by_mail($ldap_user['mail'])) {
+          $error = TRUE;
+        }
+      }
+      if ($error) {
+        $watchdog_tokens['%duplicate_name'] = $account_with_same_email->name;
+        watchdog('ldap_authentication', 'LDAP user with DN %dn has email address
+          (%mail) conflict with a drupal user %duplicate_name', $watchdog_tokens, WATCHDOG_ERROR);
+        drupal_set_message(t('Another user already exists in the system with the same email address. You should contact the system administrator in order to solve this conflict.'), 'error');
+        return;
+      }
     }
 
     // VI.C.2 Do not provision Drupal account if provisioning disabled
@@ -384,6 +448,12 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
     else {
       $user_edit = array('name' => $drupal_accountname, 'status' => 1);
     }
+    
+    // If the email template was used, we want to pass in the email that was
+    // generated so that its not overridden by the provisioner.
+    if ($email_template_used) {
+      $user_edit['mail'] = $ldap_user['mail'];
+    }
 
     // don't pass in ldap user to provisionDrupalAccount, because want to requery with correct attributes needed
     // this may be a case where efficiency dictates querying for all attributes
@@ -396,6 +466,11 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
     }
     else {
       user_set_authmaps($drupal_account, array('authname_ldap_user' => $authname));
+      // Using Rules allows emails to be fired and many other possible reactions
+      // to the creation of a user.
+      if (module_exists('rules')) {
+        rules_invoke_event('ldap_user_created', $drupal_account, $email_template_used);
+      }
     }
   }
 

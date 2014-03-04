@@ -481,12 +481,12 @@ function testLogons() {
 
   $user_data = $hpotter->data['ldap_authorizations']['og_group'];
   $success = (isset($user_data[$students_membership_consumer_id]) &&
-             isset($user_data[$gryffindor_membership_consumer_id]) &&
-             isset($user_data[$students_membership_consumer_id]['date_granted']) &&
-             isset($user_data[$gryffindor_membership_consumer_id]['consumer_id_mixed_case']) &&
-             isset($user_data[$students_membership_consumer_id]['date_granted']) &&
-             isset($user_data[$gryffindor_membership_consumer_id]['consumer_id_mixed_case']) &&
-             $user_data[$gryffindor_membership_consumer_id]['consumer_id_mixed_case'] == $gryffindor_membership_consumer_id);
+     isset($user_data[$gryffindor_membership_consumer_id]) &&
+     isset($user_data[$students_membership_consumer_id]['date_granted']) &&
+     isset($user_data[$gryffindor_membership_consumer_id]['consumer_id_mixed_case']) &&
+     isset($user_data[$students_membership_consumer_id]['date_granted']) &&
+     isset($user_data[$gryffindor_membership_consumer_id]['consumer_id_mixed_case']) &&
+     $user_data[$gryffindor_membership_consumer_id]['consumer_id_mixed_case'] == $gryffindor_membership_consumer_id);
   $this->assertTrue($success, 'Correct User Data Authorization Records', $test_id);
 
 
@@ -531,12 +531,12 @@ function testLogons() {
     $this->assertTrue($success, 'Correct Authorizations on user logon', $test_id);
     $user_data = $hpotter->data['ldap_authorizations']['og_group'];
     $success = (isset($user_data[$students_membership_consumer_id]) &&
-                 isset($user_data[$gryffindor_membership_consumer_id]) &&
-                 isset($user_data[$students_membership_consumer_id]['date_granted']) &&
-                 isset($user_data[$gryffindor_membership_consumer_id]['consumer_id_mixed_case']) &&
-                 isset($user_data[$students_membership_consumer_id]['date_granted']) &&
-                 isset($user_data[$gryffindor_membership_consumer_id]['consumer_id_mixed_case']) &&
-                 $user_data[$gryffindor_membership_consumer_id]['consumer_id_mixed_case'] == $gryffindor_membership_consumer_id);
+       isset($user_data[$gryffindor_membership_consumer_id]) &&
+       isset($user_data[$students_membership_consumer_id]['date_granted']) &&
+       isset($user_data[$gryffindor_membership_consumer_id]['consumer_id_mixed_case']) &&
+       isset($user_data[$students_membership_consumer_id]['date_granted']) &&
+       isset($user_data[$gryffindor_membership_consumer_id]['consumer_id_mixed_case']) &&
+       $user_data[$gryffindor_membership_consumer_id]['consumer_id_mixed_case'] == $gryffindor_membership_consumer_id);
     $this->assertTrue($success, 'Correct User Data Authorization Records', $test_id);
     $this->drupalGet('user/logout');
   }

@@ -9,20 +9,11 @@
  * Administrative settings form.
  */
 function cas_attributes_admin_settings() {
-  // Get current settings, and add default options.
-  $cas_attributes = variable_get('cas_attributes', array());
-  $cas_attributes += array('overwrite' => TRUE, 'sync_every_login' => NULL, 'relations' => array('mail' => NULL, 'name' => NULL), 'roles' => array('manage' => array(), 'mapping' => ''));
-  $relations = $cas_attributes['relations'];
 
-  $form['cas_attributes'] = array(
-    '#tree' => TRUE,
-    '#type' => NULL,
-  );
-
-  $form['cas_attributes']['sync_every_login'] = array(
+  $form['cas_attributes_sync_every_login'] = array(
     '#type' => 'radios',
     '#title' => t('Fetch CAS Attributes'),
-    '#default_value' => $cas_attributes['sync_every_login'],
+    '#default_value' => variable_get('cas_attributes_sync_every_login', NULL),
     '#options' => array(
       0 => 'only when a CAS account is created (i.e., the first login of a CAS user).',
       1 => 'every time a CAS user logs in.'
@@ -30,10 +21,10 @@ function cas_attributes_admin_settings() {
     '#weight' => -10,
   );
 
-  $form['cas_attributes']['overwrite'] = array(
+  $form['cas_attributes_overwrite'] = array(
     '#type' => 'radios',
     '#title' => t('Overwrite existing values'),
-    '#default_value' => $cas_attributes['overwrite'],
+    '#default_value' => variable_get('cas_attributes_overwrite', TRUE),
     '#options' => array(
       0 => 'only store data from attributes for fields that are empty (don\'t overwrite user fields that already have data).',
       1 => 'always store data from attributes (overwrite user fields that already have data).',
@@ -41,24 +32,26 @@ function cas_attributes_admin_settings() {
     '#weight' => -9,
   );
 
-  $form['cas_attributes']['relations'] = array(
+  $relations = variable_get('cas_attributes_relations', array());
+  $form['cas_attributes_relations'] = array(
+    '#tree' => TRUE,
     '#type' => 'fieldset',
     '#title' => t('CAS attribute mappings'),
   );
 
-  $form['cas_attributes']['relations']['help'] = array(
+  $form['cas_attributes_relations']['help'] = array(
     '#markup' => t('Token replacement strings used to populate each <a href="@url">user field</a>?  Only text fields are eligible to be populated.  Entries left blank will be ignored.', array('@url' => url('admin/config/people/accounts/fields'))),
   );
 
   // Provide fields for username and e-mail address.
-  $form['cas_attributes']['relations']['name'] = array(
+  $form['cas_attributes_relations']['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Username'),
     '#default_value' => isset($relations['name']) ? $relations['name'] : '',
     '#size' => 50,
     '#description' => t('The account username.'),
   );
-  $form['cas_attributes']['relations']['mail'] = array(
+  $form['cas_attributes_relations']['mail'] = array(
     '#type' => 'textfield',
     '#title' => t('E-mail address'),
     '#default_value' => isset($relations['mail']) ? $relations['mail'] : '',
@@ -70,7 +63,7 @@ function cas_attributes_admin_settings() {
   foreach (field_info_instances('user', 'user') as $name => $instance) {
     $field = field_info_field($instance['field_name']);
     if ($field['type'] == 'text') {
-      $form['cas_attributes']['relations'][$name] = array(
+      $form['cas_attributes_relations'][$name] = array(
         '#type' => 'textfield',
         '#title' => t($instance['label']),
         '#default_value' => isset($relations[$name]) ? $relations[$name] : '',
@@ -81,8 +74,7 @@ function cas_attributes_admin_settings() {
   }
 
   // Role Management
-  $managed_roles = $cas_attributes['roles'];
-  $form['cas_attributes']['roles'] = array(
+  $form['cas_attributes_roles'] = array(
     '#type' => 'fieldset',
     '#title' => t('Role Mapping'),
     '#access' => user_access('administer permissions'),
@@ -98,15 +90,15 @@ function cas_attributes_admin_settings() {
   unset($roles[DRUPAL_AUTHENTICATED_RID]);
   asort($roles);
 
-  $form['cas_attributes']['roles']['manage'] = array(
+  $form['cas_attributes_roles']['cas_attributes_roles_manage'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Roles to manage'),
     '#description' => t('Which roles should be managed by these attributes.'),
-    '#default_value' => $managed_roles['manage'],
+    '#default_value' => variable_get('cas_attributes_roles_manage', array()),
     '#options' => $roles,
   );
 
-  $form['cas_attributes']['roles']['mapping'] = array(
+  $form['cas_attributes_roles']['cas_attributes_roles_mapping'] = array(
     '#type' => 'textarea',
     '#title' => t('Attributes'),
     '#description' => t('List the names of the CAS attributes which may ' .
@@ -116,7 +108,7 @@ function cas_attributes_admin_settings() {
       'If the name of a managed role is present in at least one of these ' .
       'attributes, that role will be given to the user; otherwise, it will ' .
       'be taken away.'),
-    '#default_value' => $managed_roles['mapping'],
+    '#default_value' => variable_get('cas_attributes_roles_mapping', ''),
   );
 
   $form['token_tree'] = array(

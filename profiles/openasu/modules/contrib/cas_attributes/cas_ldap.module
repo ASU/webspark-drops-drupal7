@@ -27,13 +27,10 @@ function cas_ldap_menu() {
  * Administrative settings form.
  */
 function cas_ldap_form_cas_attributes_admin_settings_alter(&$form, &$form_state, $form_id) {
-  $cas_attributes = variable_get('cas_attributes', array());
-  $cas_attributes += array('ldap' => array('server' => NULL));
 
-  $form['cas_attributes']['ldap'] = array(
+  $form['cas_attributes_ldap'] = array(
     '#type' => 'fieldset',
     '#title' => 'LDAP',
-    '#tree' => TRUE,
     '#weight' => -8,
   );
   $ldap_servers = ldap_servers_get_servers(NULL, 'enabled');
@@ -43,10 +40,10 @@ function cas_ldap_form_cas_attributes_admin_settings_alter(&$form, &$form_state,
       $options[$sid] = $ldap_server->name;
     }
   }
-  $form['cas_attributes']['ldap']['server'] = array(
+  $form['cas_attributes_ldap']['cas_attributes_ldap_server'] = array(
     '#type' => 'select',
     '#title' => t('Server'),
-    '#default_value' => $cas_attributes['ldap']['server'],
+    '#default_value' => variable_get('cas_attributes_ldap_server', NULL),
     '#options' => $options,
     '#empty_option' => t('- Select a LDAP server -'),
     '#description' => t('The LDAP server to query for LDAP attributes. <a href="@url">Configure servers</a>.', array('@url' => url('admin/config/people/ldap/servers'))),
@@ -71,14 +68,14 @@ function cas_ldap_attributes($name) {
  * Look up the user attributes for the specified user.
  */
 function _cas_ldap_attributes($name) {
-  $cas_attributes = variable_get('cas_attributes', array());
+  $cas_attr_ldap_server = variable_get('cas_attributes_ldap_server', NULL);
 
-  if (empty($cas_attributes['ldap']['server'])) {
+  if (empty($cas_attr_ldap_server)) {
     // No CAS server configured.
     return array();
   }
 
-  $ldap_server = ldap_servers_get_servers($cas_attributes['ldap']['server'], 'enabled', TRUE);
+  $ldap_server = ldap_servers_get_servers($cas_attr_ldap_server, 'enabled', TRUE);
   if (empty($ldap_server)) {
     // We cannot load the server.
     return;
