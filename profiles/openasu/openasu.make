@@ -100,11 +100,11 @@ projects[references][version] = 2.1
 projects[references][type] = module
 projects[references][subdir] = contrib
 
-projects[ldap][version] = 2.0-beta6
+projects[ldap][version] = 2.0-beta8
 projects[ldap][type] = module
 projects[ldap][subdir] = contrib
 
-projects[cas_attributes][version] = 1.0-rc2
+projects[cas_attributes][version] = 1.0-rc3
 projects[cas_attributes][type] = module
 projects[cas_attributes][subdir] = contrib
 
