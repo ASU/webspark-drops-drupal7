@@ -51,7 +51,7 @@ projects[panopoly_demo][subdir] = panopoly
 
 ; ASU Modules
 
-projects[asu_brand][version] = 1.4
+projects[asu_brand][version] = 1.5
 projects[asu_brand][subdir] = custom
 projects[asu_brand][location] = https://webconsulting.asu.edu/fserver
 
