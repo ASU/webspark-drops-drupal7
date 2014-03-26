@@ -201,6 +201,34 @@ function openasu_form_install_configure_form_alter(&$form, $form_state) {
   $form['server_settings']['site_default_country']['#default_value'] = 'US';
   $form['server_settings']['date_default_timezone']['#default_value'] = 'America/Phoenix';
   $form['server_settings']['date_default_timezone']['#attributes']['class'] = array();
+
+  $form['admin_account']['openasu_admin_asurite'] = array(
+    '#title' => 'ASURITE User ID',
+    '#description' => st('Associate admin account with ASURITE User'),
+    '#type' => 'textfield',
+    '#required' => FALSE,
+    '#weight' => 20,
+  );
+
+  // Add an additional submit handler to process the form
+  $form['#submit'][] = 'openasu_admin_save_asurite';
+
+}
+
+
+
+/**
+ * Custom submission handler for Webspark install.
+ */
+function openasu_admin_save_asurite($form_id, &$form_state) {
+  $asurite = $form_state['values']['openasu_admin_asurite'];
+  if (!empty($asurite)) {
+    variable_set('openasu_admin_asurite', $asurite);
+    db_merge('cas_user')
+      ->key(array('cas_name' => $asurite))
+      ->fields(array('uid' => 1))
+      ->execute();
+  }
 }
 
 /**
