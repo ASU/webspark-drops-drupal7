@@ -6,6 +6,8 @@
 
 include_once 'asu_cas.features.inc';
 
+define('ASU_CAS_USERNAME_LABEL', 'ASURITE User ID');
+
 /**
  * Implements hook_boot()
  */
@@ -126,5 +128,41 @@ function asu_cas_update_status_alter(&$projects) {
       $projects[$project_name]['status'] = UPDATE_CURRENT;
       $projects[$project_name]['reason'] = t('Drupal core is managed by WebSpark. Do not update manually.');
     }
+  }
+}
+
+/*
+ * Implements hook_menu_alter()
+ */
+function asu_cas_menu_alter(&$items) {
+  $items['admin/people/cas/create']['title'] =  'Add ASURITE User';
+  $items['user/%user/cas']['access callback'] = FALSE;
+}
+
+/*
+ * Implements hook_form_id_form_alter()
+ */
+ function asu_cas_form_cas_add_user_form_alter(&$form, &$form_state) {
+   $form['account']['cas_name']['#title'] = ASU_CAS_USERNAME_LABEL;
+   $form['account']['cas_name']['#description'] = t("Registration will proceed as if the user with the specified @label just logged in.",  array('@label' => ASU_CAS_USERNAME_LABEL));
+ }
+
+
+function asu_cas_form_user_register_form_alter(&$form, &$form_state) {
+  if (user_access('administer users')) {
+    $form['account']['cas_name']['#title'] = ASU_CAS_USERNAME_LABEL;
+    $form['account']['cas_name']['#description'] = 'If necessary, additional ASURITE User IDs can be added after the account is created.';
+  }
+}
+
+function asu_cas_form_cas_user_add_alter(&$form, &$form_state) {
+  $form['cas_name']['#title'] = ASU_CAS_USERNAME_LABEL;
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t("Add an @label", array('@label' => ASU_CAS_USERNAME_LABEL)));
+}
+
+function asu_cas_form_user_profile_form_alter(&$form, &$form_state) {
+  if (user_access('administer users')) {
+    $form['account']['cas_name']['#title'] = ASU_CAS_USERNAME_LABEL;
+    $form['account']['cas_name']['#description'] = '';
   }
 }
