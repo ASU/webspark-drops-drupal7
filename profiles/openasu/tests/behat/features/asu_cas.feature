@@ -1,4 +1,4 @@
-@api
+@api @javascript
 Feature: ASU CAS
   In order to have consistency
   I need to test that ASU CAS uses
