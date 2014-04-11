@@ -20,6 +20,7 @@ dependencies[] = field_ui
 dependencies[] = file
 dependencies[] = dblog
 dependencies[] = update
+dependencies[] = contextual
 
 ; Panopoly Foundation
 dependencies[] = panopoly_core
