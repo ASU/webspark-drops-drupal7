@@ -19,6 +19,8 @@ settings[toggle_logo] = 0
 
 stylesheets[all][] = css/main.css
 
+scripts[] = js/autoscroll.js
+
 settings[toggle_logo] = 0
 settings[toggle_name] = 1
 settings[toggle_slogan] = 0
