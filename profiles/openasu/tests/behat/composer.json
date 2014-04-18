@@ -1,6 +1,7 @@
 {
   "require": {
-    "drupal/drupal-extension": "*"
+    "drupal/drupal-extension": "*",
+    "symfony/symfony": "2.4.2"
   },
   "config": {
     "bin-dir": "bin/"
