@@ -87,7 +87,7 @@ function panopoly_admin_panels_pane_content_alter($content, $pane, $args, $conte
   $pane->title = (isset($content->title)) ? $content->title : NULL;
 
   // Hide the title of administrative panes when there isn't any content
-  if (!empty($context['argument_node_edit_1']) && !empty($content->content)) {
+  if (!empty($context['argument_node_edit_1']) && !empty($content->content) && is_array($content->content)) {
     foreach($content->content as $content_item) {
       if (is_array($content_item) && isset($content_item['#access']) && $content_item['#access'] === FALSE) {
         $content->title = '';

@@ -34,11 +34,18 @@ function panopoly_widgets_configure_form($form, &$form_state) {
   $form = array();
 
   $form['panopoly_widgets_spotlight_rotation_time'] = array(
-    '#title' => t('Spotlight Rotation Time'),
+    '#title' => t('Spotlight rotation time'),
     '#type' => 'textfield',
     '#required' => TRUE,
     '#default_value' => variable_get('panopoly_widgets_spotlight_rotation_time', 4),
     '#description' => t('How many seconds do you want between rotations of the spotlight widget?'),
+  );
+
+  $form['panopoly_widgets_spotlight_pause_play_buttons'] = array(
+    '#title' => t('Add pause/play button to all spotlight widgets.'),
+    '#type' => 'checkbox',
+    '#default_value' => variable_get('panopoly_widgets_spotlight_pause_play_buttons', 1),
+    '#description' => t('The button will appear under to the slide numbers. Helps with accessibility.'),
   );
 
   return system_settings_form($form);
@@ -380,14 +387,8 @@ function panopoly_widgets_file_default_displays_alter(&$default_displays) {
   if (!empty($default_displays['video__default__media_vimeo_video'])) {
     $default_displays['video__default__media_vimeo_video']->settings['protocol'] = '//';
   }
-  if (!empty($default_displays['video__default__media_youtube_video'])) {
-    $default_displays['video__default__media_youtube_video']->settings['modestbranding'] = 1;
-  }
 
   // Set the default image style for videos to be our custom video image style
-  if (!empty($default_displays['video__default__media_youtube_image'])) {
-    $default_displays['video__default__media_youtube_image']->settings['image_style'] = 'panopoly_image_video';
-  }
   if (!empty($default_displays['video__default__media_vimeo_image'])) {
     $default_displays['video__default__media_vimeo_image']->settings['image_style'] = 'panopoly_image_video';
   }
@@ -396,14 +397,8 @@ function panopoly_widgets_file_default_displays_alter(&$default_displays) {
   if (!empty($default_displays['video__teaser__media_vimeo_image'])) {
     $default_displays['video__teaser__media_vimeo_image']->settings['image_style'] = 'panopoly_image_video';
   }
-  if (!empty($default_displays['video__teaser__media_youtube_image'])) {
-    $default_displays['video__teaser__media_youtube_image']->settings['image_style'] = 'panopoly_image_video';
-  }
 
   // Set the preview image style for videos to be our custom thumbnail image style
-  if (!empty($default_displays['video__preview__media_youtube_image'])) {
-    $default_displays['video__preview__media_youtube_image']->settings['image_style'] = 'panopoly_image_thumbnail';
-  }
   if (!empty($default_displays['video__preview__media_vimeo_image'])) {
     $default_displays['video__preview__media_vimeo_image']->settings['image_style'] = 'panopoly_image_thumbnail';
   }
