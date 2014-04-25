@@ -2542,7 +2542,7 @@ function file_entity_field_attach_load($entity_type, $entities, $age, $options) 
           foreach ($items as $delta => $item) {
             // If alt and title text is not specified, fall back to alt and
             // title text on the file.
-            if (empty($item['alt']) || empty($item['title'])) {
+            if (!empty($item['fid']) && (empty($item['alt']) || empty($item['title']))) {
               $file = file_load($item['fid']);
               foreach (array('alt', 'title') as $key) {
                 if (empty($item[$key]) && !empty($file->{$key})) {

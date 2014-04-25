@@ -1,3 +1,5 @@
+@CHARSET "UTF-8";
+
 div.horizontal-tabs {
   margin: 0 0 1em 0; /* LTR */
   padding: 0;
@@ -14,7 +16,7 @@ div.horizontal-tabs {
   list-style: none;
   list-style-image: none; /* IE6 */
   background-color: #dedede;
-  border-right: 1px solid #dedede; /* LTR */
+  border-right: 1px solid #dedede;
   width: 100%;
   height: auto;
   clear: both;
@@ -25,20 +27,19 @@ div.horizontal-tabs {
   border: 0;
 }
 
-fieldset.horizontal-tabs-pane > legend,
-fieldset.vertical-tabs-pane fieldset.horizontal-tabs-pane > legend {
+.horizontal-tabs-pane>legend {
   display: none;
 }
 
 /* Layout of each tab */
 .horizontal-tabs ul.horizontal-tabs-list li {
   background: #eee;
-  border-right: 1px solid #ccc; /* LTR */
+  border-right: 1px solid #ccc;
   padding: 1px;
-  padding-top: 0;
+  padding-top: 0; 
   margin: 0;
   min-width: 5em; /* IE7 */
-  float: left; /* LTR */
+  float: left;
 }
 .horizontal-tabs ul.horizontal-tabs-list li.selected {
   background-color: #fff;
@@ -57,9 +58,6 @@ fieldset.vertical-tabs-pane fieldset.horizontal-tabs-pane > legend {
 .horizontal-tabs ul.horizontal-tabs-list li:focus {
   background-color: #ddd;
 }
-.horizontal-tabs ul.horizontal-tabs-list :focus {
-  outline: none;
-}
 .horizontal-tabs ul.horizontal-tabs-list li a:focus strong,
 .horizontal-tabs ul.horizontal-tabs-list li a:active strong,
 .horizontal-tabs ul.horizontal-tabs-list li a:hover strong {
@@ -72,7 +70,7 @@ fieldset.vertical-tabs-pane fieldset.horizontal-tabs-pane > legend {
   text-decoration: none;
   padding: 0.5em 0.6em 0.3em 0.6em;
   position:relative;
-  top: 0px;
+  top: 0px;  
 }
 .horizontal-tabs ul.horizontal-tabs-list .selected strong {
   color: #000;
@@ -86,9 +84,9 @@ fieldset.vertical-tabs-pane fieldset.horizontal-tabs-pane > legend {
 }
 
 /**
- * tab content
+ * tab content 
  */
-div.field-group-htabs-wrapper .field-group-format-wrapper {
+div.field-group-htabs-wrapper .field-group-format-wrapper { 
   clear: both;
   padding: 0 0 0.6em;
 }
@@ -97,5 +95,4 @@ div.field-group-htabs-wrapper .field-group-format-wrapper {
   display: block;
   position: absolute;
   top: -100000px;
-  width: 100%;
 }

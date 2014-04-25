@@ -1,0 +1,19 @@
+Panopoly Pages 7.x-1.4, 2014-04-24
+----------------------------
+- No changes since last release.
+
+Panopoly Pages 7.x-1.3, 2014-04-23
+----------------------------
+- Crop pictures when inserting them.
+
+Panopoly Pages 7.x-1.2, 2014-13-08
+----------------------------
+- Add CHANGELOG.txt
+- Provide feature module updates for ctools / panels upgrade.
+
+Panopoly Pages 7.x-1.1, 2014-01-13
+----------------------------
+- Update all features.
+- Separate field_base from field_instance in Panopoly Pages.
+- Panopoly Pages has missing dependencies.
+- Troubles Implementing Default Permissions for Panelizer

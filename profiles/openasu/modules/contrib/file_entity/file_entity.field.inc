@@ -310,7 +310,7 @@ function file_entity_field_formatter_view($entity_type, $entity, $field, $instan
   elseif ($display['type'] == 'file_download_link') {
     foreach ($items as $delta => $item) {
       $file = (object) $item;
-      if (file_entity_access('download', $file)) {
+      if (file_entity_file_is_local($file) && file_entity_access('download', $file)) {
         $element[$delta] = array(
           '#theme' => 'file_entity_download_link',
           '#file' => $file,
