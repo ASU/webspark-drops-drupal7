@@ -23,12 +23,8 @@ projects[fieldable_panels_panes][subdir] = contrib
 projects[pm_existing_pages][version] = 1.4
 projects[pm_existing_pages][subdir] = contrib
 
-projects[fape][version] = 1.x-dev
+projects[fape][version] = 1.2
 projects[fape][subdir] = contrib
-projects[fape][download][type] = git
-projects[fape][download][revision] = 1143ee2
-projects[fape][download][branch] = 7.x-1.x
-projects[fape][patch][1846156] = http://drupal.org/files/fape-1846156-5.patch
 
 ; Views Magic
 
