@@ -157,11 +157,19 @@ function panopoly_widgets_field_formatter_view($entity_type, $entity, $field, $i
   drupal_add_library('system', 'ui.tabs');
 
   // Assemble the tabs header
-  $header = '<ul>';
+  $header = '<div class="panopoly-spotlight-buttons-wrapper">';
+  $header .= '<ul>';
   foreach ($items as $delta => $item_data) {
     $header .= '<li>' . '<a href="#panopoly-spotlight-' . $delta . '">' . ($delta+1) . '</a></li>'; 
   }
   $header .= '</ul>';
+
+  if (variable_get('panopoly_widgets_spotlight_pause_play_buttons', 1)) {
+    $header .= '<div class="panopoly-spotlight-function-buttons">';
+    $header .= '<a href="#" class="panopoly-spotlight-pause-play">' . t('Pause') . '</a>';
+    $header .= '</div>';
+  }
+  $header .= '</div>';  // class="panopoly-spotlight-buttons-wrapper"
 
   // Assemble the tabs content
   foreach ($items as $delta => $item_data) {
@@ -171,7 +179,7 @@ function panopoly_widgets_field_formatter_view($entity_type, $entity, $field, $i
 }
 
 /**
- * Implements hook_widget_form().
+ * Implements hook_field_widget_form().
  */
 function panopoly_widgets_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
 
@@ -200,6 +208,12 @@ function panopoly_widgets_field_widget_form(&$form, &$form_state, $field, $insta
       '#default_value' => isset($items[$delta]['fid']) ? $items[$delta]['fid'] : NULL,
     );
 
+    $element['alt'] = array(
+      '#title' => t('Alt text'),
+      '#type' => 'textfield',
+      '#default_value' => isset($items[$delta]['alt']) ? $items[$delta]['alt'] : NULL,
+    );
+
     $element['description'] = array(
       '#title' => t('Description'),
       '#type' => 'textarea',
@@ -207,6 +221,51 @@ function panopoly_widgets_field_widget_form(&$form, &$form_state, $field, $insta
       '#resizable' => FALSE,
       '#default_value' => isset($items[$delta]['description']) ? $items[$delta]['description'] : NULL,
     );
+
+    // Allow cropping via the manualcrop module.
+    if (module_exists('manualcrop') && user_access("use manualcrop")) {
+      $fid = isset($form_state['values'][$field['field_name']][$langcode][$delta]['fid']) ? 
+        $form_state['values'][$field['field_name']][$langcode][$delta]['fid'] : $element['fid']['#default_value'];
+      $file = !empty($fid) ? file_load($fid) : NULL;
+
+      if (!empty($file)) {
+        $manualcrop = array(
+          'manualcrop_enable' => TRUE,
+          'manualcrop_keyboard' => TRUE,
+          'manualcrop_thumblist' => FALSE,
+          'manualcrop_inline_crop' => FALSE,
+          'manualcrop_crop_info' => TRUE,
+          'manualcrop_instant_preview' => TRUE,
+          'manualcrop_instant_crop' => FALSE,
+          'manualcrop_default_crop_area' => TRUE,
+          'manualcrop_maximize_default_crop_area' => TRUE,
+          'manualcrop_styles_mode' => 'include',
+          'manualcrop_styles_list' => array(
+            'panopoly_image_spotlight' => 'panopoly_image_spotlight',
+          ),
+          'manualcrop_require_cropping' => array(),
+        );
+        manualcrop_croptool_process($form, $form_state, $element, $file, $manualcrop);
+      }
+
+      // We use an '#after_build' to put it inside the 'fid' element
+      // so it's added via AJAX when the image is uploaded.
+      $element['#after_build'] = array('_panopoly_widgets_spotlight_manualcrop_after_build_callback');
+    }
+  }
+
+  return $element;
+}
+
+/**
+ * An '#after_build' callback on a 'managed_field' element.
+ *
+ * Adds the 'manualcrop' button to the 'fid' element.
+ */
+function _panopoly_widgets_spotlight_manualcrop_after_build_callback($element, &$form_state) {
+  if (!empty($element['manualcrop'])) {
+    $element['fid']['manualcrop'] = $element['manualcrop'];
+    unset($element['manualcrop']);
   }
 
   return $element;
@@ -242,7 +301,6 @@ function panopoly_widgets_field_presave($entity_type, $entity, $field, $instance
         }
       }
     }
-
     image_field_presave($entity_type, $entity, $field, $instance, $langcode, $items);
   }
 }
@@ -253,7 +311,6 @@ function panopoly_widgets_field_presave($entity_type, $entity, $field, $instance
 function panopoly_widgets_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
   $entity_items_copy = $items;
   image_field_load($entity_type, $entities, $field, $instances, $langcode, $items, $age);
-
   // image_field_load() will overwrite 'title' with the image title. Here we
   // return it to the item title.
   foreach ($entity_items_copy as $entity_id => $items_copy) {
@@ -324,6 +381,7 @@ function theme_panopoly_spotlight_view($variables) {
   $title = $variables['items']['title'];
   $description = $variables['items']['description'];
   $link = $variables['items']['link'];
+  $alt = $variables['items']['alt'];
   $settings = $variables['settings'];
 
   if (module_exists('uuid')) {
@@ -335,7 +393,7 @@ function theme_panopoly_spotlight_view($variables) {
   }
 
   $output = '<div id="' . 'panopoly-spotlight-' . $variables['delta'] . '" class="' . 'panopoly-spotlight' . '">';
-  $output .= theme('image_style', array('style_name' => $settings['image_style'], 'path' => $image->uri));
+  $output .= theme('image_style', array('style_name' => $settings['image_style'], 'path' => $image->uri, 'alt' => $alt));
   $output .= '<div class="panopoly-spotlight-wrapper">';
   if (!empty($title) || !empty($link)) {
     if (empty($title)) {
