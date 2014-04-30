@@ -1,3 +1,7 @@
+Panopoly Magic 7.x-1.5, 2014-04-30
+----------------------------
+- Font-family on submit buttons (CSS Error).
+
 Panopoly Magic 7.x-1.4, 2014-04-24
 ----------------------------
 - No changes since last release.
