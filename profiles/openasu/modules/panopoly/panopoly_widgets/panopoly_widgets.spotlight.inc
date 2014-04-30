@@ -221,51 +221,6 @@ function panopoly_widgets_field_widget_form(&$form, &$form_state, $field, $insta
       '#resizable' => FALSE,
       '#default_value' => isset($items[$delta]['description']) ? $items[$delta]['description'] : NULL,
     );
-
-    // Allow cropping via the manualcrop module.
-    if (module_exists('manualcrop') && user_access("use manualcrop")) {
-      $fid = isset($form_state['values'][$field['field_name']][$langcode][$delta]['fid']) ? 
-        $form_state['values'][$field['field_name']][$langcode][$delta]['fid'] : $element['fid']['#default_value'];
-      $file = !empty($fid) ? file_load($fid) : NULL;
-
-      if (!empty($file)) {
-        $manualcrop = array(
-          'manualcrop_enable' => TRUE,
-          'manualcrop_keyboard' => TRUE,
-          'manualcrop_thumblist' => FALSE,
-          'manualcrop_inline_crop' => FALSE,
-          'manualcrop_crop_info' => TRUE,
-          'manualcrop_instant_preview' => TRUE,
-          'manualcrop_instant_crop' => FALSE,
-          'manualcrop_default_crop_area' => TRUE,
-          'manualcrop_maximize_default_crop_area' => TRUE,
-          'manualcrop_styles_mode' => 'include',
-          'manualcrop_styles_list' => array(
-            'panopoly_image_spotlight' => 'panopoly_image_spotlight',
-          ),
-          'manualcrop_require_cropping' => array(),
-        );
-        manualcrop_croptool_process($form, $form_state, $element, $file, $manualcrop);
-      }
-
-      // We use an '#after_build' to put it inside the 'fid' element
-      // so it's added via AJAX when the image is uploaded.
-      $element['#after_build'] = array('_panopoly_widgets_spotlight_manualcrop_after_build_callback');
-    }
-  }
-
-  return $element;
-}
-
-/**
- * An '#after_build' callback on a 'managed_field' element.
- *
- * Adds the 'manualcrop' button to the 'fid' element.
- */
-function _panopoly_widgets_spotlight_manualcrop_after_build_callback($element, &$form_state) {
-  if (!empty($element['manualcrop'])) {
-    $element['fid']['manualcrop'] = $element['manualcrop'];
-    unset($element['manualcrop']);
   }
 
   return $element;

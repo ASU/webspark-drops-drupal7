@@ -1,3 +1,7 @@
+Panopoly Core 7.x-1.5, 2014-04-30
+---------------------------
+- Update FAPE to version 1.2 for SA-CONTRIB-2014-048.
+
 Panopoly Core 7.x-1.4, 2014-04-24
 ---------------------------
 - No changes since last release.
