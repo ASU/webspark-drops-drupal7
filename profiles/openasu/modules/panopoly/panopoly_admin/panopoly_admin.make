@@ -51,4 +51,4 @@ libraries[backbone][download][type] = get
 libraries[backbone][download][url] = https://github.com/jashkenas/backbone/archive/1.0.0.tar.gz
 
 libraries[underscore][download][type] = get
-libraries[underscore][download][url] = https://github.com/jashkenas/underscore/archive/1.4.4.zip
+libraries[underscore][download][url] = https://github.com/jashkenas/underscore/archive/1.5.2.zip

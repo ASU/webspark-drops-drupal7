@@ -25,8 +25,8 @@ Drupal.behaviors.MultiPage = {
       // Transform each div.multipage-pane into a multipage with controls.
       $panes.each(function () {
         
-        $controls = $('<div class="multipage-controls-list clearfix"></div>');
-        $(this).append($controls);
+        $controls = $('<div class="multipage-controls-list"></div>');
+        $(this).append('<div class="multipage-controls clearfix"></div>').append($controls);
         
         // Check if the submit button needs to move to the latest pane.
         if (Drupal.settings.field_group.multipage_move_submit && $('.form-actions').length) {
@@ -50,18 +50,18 @@ Drupal.behaviors.MultiPage = {
         }
         
       });
-
-      if (paneWithFocus === undefined) {
+      
+      if (!paneWithFocus) {
         // If the current URL has a fragment and one of the tabs contains an
         // element that matches the URL fragment, activate that tab.
-        if (window.location.hash && window.location.hash !== '#' && $(window.location.hash, this).length) {
+        if (window.location.hash && $(window.location.hash, this).length) {
           paneWithFocus = $(window.location.hash, this).closest('.multipage-pane');
         }
         else {
           paneWithFocus = $('multipage-open', this).length ? $('multipage-open', this) : $('> .multipage-pane:first', this);
         }
       }
-      if (paneWithFocus !== undefined) {
+      if (paneWithFocus.length) {
         paneWithFocus.data('multipageControl').focus();
       }
     });
@@ -78,8 +78,7 @@ Drupal.behaviors.MultiPage = {
  */
 Drupal.multipageControl = function (settings) {
   var self = this;
-  var controls = Drupal.theme('multipage', settings);
-  $.extend(self, settings, controls);
+  $.extend(this, settings, Drupal.theme('multipage', settings));
 
   this.nextLink.click(function () {
     self.nextPage();
@@ -133,7 +132,7 @@ Drupal.multipageControl.prototype = {
         .val(this.wrapper.attr('id'));
     // Mark the active control for screen readers.
     $('#active-multipage-control').remove();
-    this.nextLink.after('<span id="active-multipage-control" class="element-invisible">' + Drupal.t('(active page)') + '</span>');
+    this.nextLink.append('<span id="active-multipage-control" class="element-invisible">' + Drupal.t('(active page)') + '</span>');
   },
   
   /**
@@ -141,7 +140,6 @@ Drupal.multipageControl.prototype = {
    */
   nextPage: function () {
     this.wrapper.next().data('multipageControl').focus();
-    $('html, body').scrollTop(this.wrapper.parents('.field-group-multipage-group-wrapper').offset().top);
   },
   
   /**
@@ -149,7 +147,6 @@ Drupal.multipageControl.prototype = {
    */
   previousPage: function () {
     this.wrapper.prev().data('multipageControl').focus();
-    $('html, body').scrollTop(this.wrapper.parents('.field-group-multipage-group-wrapper').offset().top);
   },
 
   /**
@@ -207,25 +204,16 @@ Drupal.multipageControl.prototype = {
  *   - previousTitle: The jQuery element that contains the group title
  */
 Drupal.theme.prototype.multipage = function (settings) {
-
   var controls = {};
   controls.item = $('<span class="multipage-button"></span>');
-  
-  controls.previousLink = $('<input type="button" class="form-submit multipage-link-previous" value="" />');
-  controls.previousTitle = Drupal.t('Previous page');
-  controls.item.append(controls.previousLink.val(controls.previousTitle));  
-  
-  controls.nextLink = $('<input type="button" class="form-submit multipage-link-next" value="" />');
-  controls.nextTitle = Drupal.t('Next page');
-  controls.item.append(controls.nextLink.val(controls.nextTitle));
-  
+  controls.item.append(controls.nextLink = $('<input type="button" class="form-submit multipage-link-next" value="" />').val(controls.nextTitle = Drupal.t('Next page')));
+  controls.item.append(controls.previousLink = $('<a class="multipage-link-previous" href="#"></a>'));
   if (!settings.has_next) {
     controls.nextLink.hide();
   }
-  if (!settings.has_previous) {
-    controls.previousLink.hide();
+  if (settings.has_previous) {
+    controls.previousLink.append(controls.previousTitle = $('<strong></strong>').text(Drupal.t('Previous')));
   }
-  
   return controls;
 };
 
@@ -239,28 +227,13 @@ Drupal.FieldGroup.Effects = Drupal.FieldGroup.Effects || {};
 Drupal.FieldGroup.Effects.processMultipage = {
   execute: function (context, settings, type) {
     if (type == 'form') {
-      
-      var $firstErrorItem = false;
-      
       // Add required fields mark to any element containing required fields
       $('div.multipage-pane').each(function(i){
         if ($('.error', $(this)).length) {
-          
-          // Save first error item, for focussing it.
-          if (!$firstErrorItem) {
-            $firstErrorItem = $(this).data('multipageControl');
-          }          
-          
           Drupal.FieldGroup.setGroupWithfocus($(this));
           $(this).data('multipageControl').focus();
         }
       });
-
-      // Focus on first multipage that has an error.
-      if ($firstErrorItem) {
-        $firstErrorItem.focus();
-      }
-      
     }
   }
 }

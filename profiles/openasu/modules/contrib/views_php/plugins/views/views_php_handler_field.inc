@@ -44,7 +44,7 @@ class views_php_handler_field extends views_handler_field {
     $form += views_php_form_element($this,
       FALSE,
       array('php_value', t('Value code'), t('Code to construct the value of this field.'), FALSE),
-      array('$view', '$handler', '$static', '$row', '$data')
+      array('$view', '$handler', '$static')
     );
     $form += views_php_form_element($this,
       array('use_php_click_sortable', t('Enable click sort'), t('If checked, you can use PHP code to enable click sort on the field.')),
@@ -112,7 +112,7 @@ class views_php_handler_field extends views_handler_field {
    * @see self::php_post_execute()
    */
   function php_pre_execute() {
-    // Ecexute static PHP code.
+    // Execute static PHP code.
     if (!empty($this->options['php_setup'])) {
       $function = create_function('$view, $handler, &$static', $this->options['php_setup'] . ';');
       ob_start();
@@ -126,16 +126,12 @@ class views_php_handler_field extends views_handler_field {
    * @see views_php_views_post_execute()
    */
   function php_post_execute() {
-    // Ecexute value PHP code.
+    // Execute value PHP code.
     if (!empty($this->options['php_value'])) {
-      $function = create_function('$view, $handler, &$static, $row, $data', $this->options['php_value'] . ';');
+      $function = create_function('$view, $handler, &$static', $this->options['php_value'] . ';');
       ob_start();
       foreach ($this->view->result as $i => &$row) {
-        $normalized_row = new stdClass;
-        foreach ($this->view->display_handler->get_handlers('field') as $field => $handler) {
-          $normalized_row->$field = isset($row->{$handler->field_alias}) ? $row->{$handler->field_alias} : NULL;
-        }
-        $row->{$this->field_alias} = $function($this->view, $this, $this->php_static_variable, $normalized_row, $row);
+        $row->{$this->field_alias} = $function($this->view, $this, $this->php_static_variable);
       }
       ob_end_clean();
     }
@@ -207,11 +203,11 @@ class views_php_handler_field extends views_handler_field {
    * Implements views_handler_field#render().
    */
   function render($values) {
-    // Ecexute output PHP code.
+    // Execute output PHP code.
     if (!empty($this->options['php_output']) && isset($this->php_output_lamda_function)) {
       $normalized_row = new stdClass;
-      foreach ($this->view->display_handler->get_handlers('field') as $field => $handler) {
-        $normalized_row->$field = isset($values->{$handler->field_alias}) ? $values->{$handler->field_alias} : NULL;
+      foreach ($this->view->style_plugin->rendered_fields{$this->view->row_index} as $field => $value) {
+        $normalized_row->$field = $value;
       }
 
       $function = $this->php_output_lamda_function;

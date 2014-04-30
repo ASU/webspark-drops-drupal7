@@ -1,0 +1,31 @@
+Panopoly Admin 7.x-1.4, 2014-04-24
+----------------------------
+- No changes since last release.
+
+Panopoly Admin 7.x-1.3, 2014-04-23
+----------------------------
+- Revert "Issue #2235081: Update jquery_update to version 2.4.".
+- Update library to underscore 1.5.x.
+- Update jquery_update to version 2.4.
+- Error when changing node-edit page.
+
+Panopoly Admin 7.x-1.2, 2014-13-08
+----------------------------
+- Add CHANGELOG.txt
+- Panopoly_admin_general_panes_content_type_render array_key_exists() expects parameter 2 to be array, null given.
+- Editors unable to save draft content by default.
+- Provide feature module updates for ctools / panels upgrade.
+
+Panopoly Admin 7.x-1.1, 2014-01-13
+----------------------------
+- Panopoly panes error.
+- Panopoly links appear on Administration Menu even when role has no relevant permissions.
+- Update all features.
+- Use #title_display rather than unsetting #title.
+- Change panopoly_admin to use #title_display rather than unsetting #title.
+- Don't move 'field_featured_status' into node 'options' if the user doesn't have permission to access it.
+- Move file_entity permissions from panopoly_admin to panopoly_widgets.
+- Improve the styling of the media "cancel" button
+- Editors unable to save draft content by default
+- Update module_filter module to version 1.8
+- Update URLs for backbone and underscore for Drupal.org whitelist.

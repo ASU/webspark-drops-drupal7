@@ -405,7 +405,11 @@ class panels_renderer_ipe extends panels_renderer_editor {
       $pane = $this->display->content[$pid];
     }
 
-    $this->commands[] = ajax_command_prepend("#panels-ipe-regionid-{$pane->panel} div.panels-ipe-sort-container", $this->render_pane($pane));
+    $this->commands[] = array(
+      'command' => 'insertNewPane',
+      'regionId' => $pane->panel,
+      'renderedPane' => $this->render_pane($pane),
+    );
     $this->commands[] = ajax_command_changed("#panels-ipe-display-{$this->clean_key}");
     $this->commands[] = array(
       'command' => 'addNewPane',
