@@ -376,11 +376,11 @@ function openasu_demo_content_defaults() {
     'body' => array(
       'und' => array(
         0 => array(
-          'value' => '<h3>Content Layout Options</h3><p>ASU webspark includes Panolopy, a powerful Drupal application that allows site builders flexibility in determining page layouts while utilizing drag and drop style page configuration.</p><p><strong>Key Features:</strong></p><ul><li>Layouts are responsive and allow a site to work seamlessly on mobile devices.</li><li>Drag and drop customizations of pages which allow users to easily switch layouts, change styles and add areas to display text, images, links, maps, submenus, video and spotlights on any page within the site. No coding required.</li><li>Pages utilize WYSIWYG editor (What You See Is What You Get) with a common toolbar to easily modify text, add links or insert images.</li></ul><p>&nbsp;</p><h4>Page Layout Options</h4><p><i><img src="/sites/all/modules/openasu_demo/images/panels.png" data-file_info="%7B%22fid%22:%2263%22,%22view_mode%22:%22default%22,%22type%22:%22media%22%7D"></i></p>',
+          'value' => '<h3>Content Layout Options</h3><p>ASU webspark includes Panopoly, a powerful Drupal application that allows site builders flexibility in determining page layouts while utilizing drag and drop style page configuration.</p><p><strong>Key Features:</strong></p><ul><li>Layouts are responsive and allow a site to work seamlessly on mobile devices.</li><li>Drag and drop customizations of pages which allow users to easily switch layouts, change styles and add areas to display text, images, links, maps, submenus, video and spotlights on any page within the site. No coding required.</li><li>Pages utilize WYSIWYG editor (What You See Is What You Get) with a common toolbar to easily modify text, add links or insert images.</li></ul><p>&nbsp;</p><h4>Page Layout Options</h4><p><i><img src="/sites/all/modules/openasu_demo/images/panels.png" data-file_info="%7B%22fid%22:%2263%22,%22view_mode%22:%22default%22,%22type%22:%22media%22%7D"></i></p>',
           'summary' => '',
           'format' => 'panopoly_wysiwyg_text',
           'safe_value' => '<h3>Content Layout Options</h3>
-<p>ASU webspark includes Panolopy, a powerful Drupal application that allows site builders flexibility in determining page layouts while utilizing drag and drop style page configuration.</p>
+<p>ASU webspark includes Panopoly, a powerful Drupal application that allows site builders flexibility in determining page layouts while utilizing drag and drop style page configuration.</p>
 <p><strong>Key Features:</strong></p>
 <ul>
 <li>Layouts are responsive and allow a site to work seamlessly on mobile devices.</li>
