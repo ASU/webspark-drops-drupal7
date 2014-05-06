@@ -79,6 +79,11 @@ class LdapAuthenticationConfAdmin extends LdapAuthenticationConf {
       LDAP_AUTHENTICATION_EMAIL_UPDATE_ON_LDAP_CHANGE_ENABLE => t('Update stored email if LDAP email differs at login but don\'t notify user.'),
       LDAP_AUTHENTICATION_EMAIL_UPDATE_ON_LDAP_CHANGE_DISABLE => t('Don\'t update stored email if LDAP email differs at login.'),
       );
+    $values['emailTemplateHandlingOptions'] = array(
+      LDAP_AUTHENTICATION_EMAIL_TEMPLATE_NONE => t('Never use the template.'),
+      LDAP_AUTHENTICATION_EMAIL_TEMPLATE_IF_EMPTY => t('Use the template if no email address was provided by the LDAP server.'),
+      LDAP_AUTHENTICATION_EMAIL_TEMPLATE_ALWAYS => t('Always use the template.'),
+    );
 
 
     /**
@@ -182,7 +187,17 @@ class LdapAuthenticationConfAdmin extends LdapAuthenticationConf {
 
   public $emailUpdateDefault = LDAP_AUTHENTICATION_EMAIL_UPDATE_ON_LDAP_CHANGE_ENABLE_NOTIFY;
   public $emailUpdateOptions;
-
+  
+  public $emailTemplateHandlingDefault = LDAP_AUTHENTICATION_EMAIL_TEMPLATE_DEFAULT;
+  public $emailTemplateHandlingOptions;
+  
+  public $emailTemplateDefault = LDAP_AUTHENTICATION_DEFAULT_TEMPLATE;
+  
+  public $templateUsagePromptUserDefault = LDAP_AUTHENTICATION_TEMPLATE_USAGE_PROMPT_USER_DEFAULT;
+  
+  public $templateUsagePromptRegexDefault = LDAP_AUTHENTICATION_DEFAULT_TEMPLATE_REGEX;
+  
+  public $templateUsageNeverUpdateDefault = LDAP_AUTHENTICATION_TEMPLATE_USAGE_NEVER_UPDATE_DEFAULT;
 
    /**
    * 5. Single Sign-On / Seamless Sign-On
@@ -391,7 +406,66 @@ class LdapAuthenticationConfAdmin extends LdapAuthenticationConf {
       '#default_value' => $this->emailUpdate,
       '#options' => $this->emailUpdateOptions,
       );
-
+    
+    $form['email']['template'] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#title' => t('Email Templates'),
+    );
+    
+    $form['email']['template']['emailTemplateHandling'] = array(
+      '#type' => 'radios',
+      '#title' => t('Email Template Handling'),
+      '#required' => 1,
+      '#default_value' => $this->emailTemplateHandling,
+      '#options' => $this->emailTemplateHandlingOptions
+    );
+    
+    $form['email']['template']['emailTemplate'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Email Template'),
+      '#required' => 0,
+      '#default_value' => $this->emailTemplate,
+    );
+    
+    $form['email']['template']['templateUsageResolveConflict'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('If a Drupal account already exists with the same email, but different account name, use the email template instead of the LDAP email.'),
+      '#default_value' => $this->templateUsageResolveConflict,
+    );
+    
+    $form['email']['template']['templateUsageNeverUpdate'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Ignore the Email Update settings and never update the stored email if the template is used.'),
+      '#default_value' => $this->templateUsageNeverUpdate,
+    );
+    
+    $form['email']['prompts'] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#title' => t('User Email Prompt'),
+      '#description' => t('These settings allow the user to fill in their email address after logging in if the template was used to generate their email address.'),      
+    );
+    
+    $form['email']['prompts']['templateUsagePromptUser'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Prompt user for email on every page load.'),
+      '#default_value' => $this->templateUsagePromptUser,
+    );
+    
+    $form['email']['prompts']['templateUsageRedirectOnLogin'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Redirect the user to the form after logging in.'),
+      '#default_value' => $this->templateUsageRedirectOnLogin,
+    );
+    
+    $form['email']['prompts']['templateUsagePromptRegex'] = array(
+      '#type' => 'textfield',
+      '#default_value' => $this->templateUsagePromptRegex,
+      '#title' => t('Template Regex'),
+      '#description' => t('This regex will be used to determine if the template was used to create an account.'),
+    );
+    
 
     $form['password'] = array(
       '#type' => 'fieldset',
@@ -559,6 +633,13 @@ class LdapAuthenticationConfAdmin extends LdapAuthenticationConf {
     $this->ssoNotifyAuthentication = ($values['ssoNotifyAuthentication']) ? (int)$values['ssoNotifyAuthentication'] : NULL;
     $this->cookieExpire = ($values['cookieExpire']) ? (int)$values['cookieExpire'] : NULL;
     $this->ldapImplementation = ($values['ldapImplementation']) ? (string)$values['ldapImplementation'] : NULL;
+    $this->emailTemplateHandling = ($values['emailTemplateHandling']) ? (int) $values['emailTemplateHandling'] : NULL;
+    $this->emailTemplate = ($values['emailTemplate']) ? $values['emailTemplate'] : '';
+    $this->templateUsagePromptUser = ($values['templateUsagePromptUser']) ? 1 : 0;
+    $this->templateUsageResolveConflict = ($values['templateUsageResolveConflict']) ? 1 : 0;
+    $this->templateUsagePromptRegex = ($values['templateUsagePromptRegex']) ? $values['templateUsagePromptRegex'] : '';
+    $this->templateUsageRedirectOnLogin = ($values['templateUsageRedirectOnLogin']) ? 1 : 0;
+    $this->templateUsageNeverUpdate = ($values['templateUsageNeverUpdate']) ? 1 : 0;
   }
 
   public function drupalFormSubmit($values) {

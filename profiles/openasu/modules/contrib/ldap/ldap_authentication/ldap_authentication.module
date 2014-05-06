@@ -29,6 +29,19 @@ define('LDAP_AUTHENTICATION_EMAIL_FIELD_DISABLE',      3);
 define('LDAP_AUTHENTICATION_EMAIL_FIELD_ALLOW',        4);
 define('LDAP_AUTHENTICATION_EMAIL_FIELD_DEFAULT',      3);
 
+define('LDAP_AUTHENTICATION_EMAIL_TEMPLATE_NONE',  1);
+define('LDAP_AUTHENTICATION_EMAIL_TEMPLATE_ALWAYS', 2);
+define('LDAP_AUTHENTICATION_EMAIL_TEMPLATE_IF_EMPTY', 3);
+define('LDAP_AUTHENTICATION_EMAIL_TEMPLATE_DEFAULT', 3);
+
+define('LDAP_AUTHENTICATION_DEFAULT_TEMPLATE', '@username@fake-domain.com');
+
+define('LDAP_AUTHENTICATION_DEFAULT_TEMPLATE_REGEX', '.*@fake-domain\\.com');
+
+define('LDAP_AUTHENTICATION_TEMPLATE_USAGE_NEVER_UPDATE_DEFAULT', 0);
+define('LDAP_AUTHENTICATION_TEMPLATE_USAGE_RESOLVE_CONFLICT_DEFAULT', 0);
+define('LDAP_AUTHENTICATION_TEMPLATE_USAGE_PROMPT_USER_DEFAULT', 0);
+
 define('LDAP_AUTHENTICATION_PASSWORD_FIELD_SHOW',       2);
 define('LDAP_AUTHENTICATION_PASSWORD_FIELD_HIDE',       3);
 define('LDAP_AUTHENTICATION_PASSWORD_FIELD_ALLOW',      4);
@@ -52,12 +65,23 @@ define('LDAP_AUTHENTICATION_HELP_LINK_TEXT_DEFAULT', 'Logon Help');
 define('LDAP_AUTHENTICATION_DISABLED_FOR_BAD_CONF_MSG' , 'The site logon is currently not working due to a configuration error.  Please see logs for additional details.');
 define('LDAP_AUTHENTICATION_COOKIE_EXPIRE', 0);
 
+define('LDAP_AUTHENTICATION_REDIRECT_ON_LOGIN_DEFAULT', 0);
+
 /**
  * Implements hook_menu().
  */
 function ldap_authentication_menu() {
   $items = array();
 
+  $items['user/ldap-profile-update'] = array(
+    'title' => 'Update Profile',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ldap_authentication_profile_update_form'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'ldap_authentication.pages.inc',
+  );
+  
   $items['admin/config/people/ldap/authentication'] = array(
     'title' => 'Authentication',
     'description' => 'Configure LDAP Authentication',
@@ -153,6 +177,72 @@ function ldap_authentication_help($path, $arg) {
     case 'admin/help#ldap_authentication':
       $output = '<p>' . $authentication_help . '</p>';
       return $output;
+  }
+}
+
+/**
+ * Helper function that determines whether or not the user's profile
+ * is valid or needs to be updated on login.
+ * 
+ * Currently this only checks if mail is valid or not according to the
+ * authentication settings.
+ * 
+ * @return boolean
+ *   TRUE if the user's profile is valid, otherwise FALSE.
+ * 
+ */
+function _ldap_authentication_verify_user_profile() {
+  global $user;
+  $result = TRUE;
+  // We only want non-anonymous and non-1 users.
+  if ($user->uid > 1) {
+    // we store the value in the session for speed.
+    if (isset($_SESSION['ldap_authentication_template']) &&
+            isset($_SESSION['ldap_authentication_template']['verify_user_profile'])) {
+      return $_SESSION['ldap_authentication_template']['verify_user_profile'];
+    }
+    if (ldap_authentication_ldap_authenticated($user)) {
+      $auth_conf = ldap_authentication_get_valid_conf();
+      $regex = '`' . $auth_conf->templateUsagePromptRegex . '`i';
+      if (preg_match($regex, $user->mail)) {
+        $result = FALSE;
+      }
+      $_SESSION['ldap_authentication_template'] = array(
+        'verify_user_profile' => $result,
+      );
+    }
+  }
+  return TRUE;
+}
+
+/**
+ * Implements hook_init().
+ */
+function ldap_authentication_init() {
+  $auth_conf = ldap_authentication_get_valid_conf();
+  if ($auth_conf->templateUsagePromptUser) {
+    ldap_authentication_check_for_email_template();
+  }
+}
+
+/**
+ * Form submit callback to check for an email template and redirect if needed.
+ */
+function ldap_authentication_check_for_email_template() {
+  if (!_ldap_authentication_verify_user_profile()) {
+    $url = 'user/ldap-profile-update';
+    $cp = current_path();
+    // avoid redirects on these two pages.
+    if ($cp != $url && $cp != 'user/logout') {
+      if (isset($_GET['destination'])) {
+        unset($_GET['destination']);
+      }
+      drupal_goto($url, array(
+        'query' => array(
+          'next' => current_path(),
+        ),
+      ));
+    }
   }
 }
 

@@ -466,6 +466,7 @@ class LdapAuthorizationConsumerOG extends LdapAuthorizationConsumerAbstract {
      */
     $og_actions = array('grants' => array(), 'revokes' => array());
     $consumer_ids_log = "";
+    $log = "";
 
     //dpm('consumers');dpm($consumers); dpm('users_authorization_consumer_ids'); dpm($users_authorization_consumer_ids);
     foreach ($consumers as $consumer_id => $consumer) {
@@ -538,7 +539,7 @@ class LdapAuthorizationConsumerOG extends LdapAuthorizationConsumerAbstract {
           else {
             $og_actions['revokes'][$entity_type][$gid][] = $rid;
           }
-          $log .= "revoke case 1: user has authorization, revoke it.  revokeSingleAuthorization will remove $user_auth_data[$consumer_id]";
+          $log .= "revoke case 1: user has authorization, revoke it.  revokeSingleAuthorization will remove $consumer_id";
           $log .=" ".$entity_type . ":" . $gid .":" . $rid ;          
         }
         elseif ($user_has_authorization_recorded)  {

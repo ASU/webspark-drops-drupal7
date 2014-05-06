@@ -767,7 +767,7 @@ class LdapUserConf {
    *
    */
   public function synchToDrupalAccount($drupal_user, &$user_edit, $prov_event = LDAP_USER_EVENT_SYNCH_TO_DRUPAL_USER, $ldap_user = NULL,  $save = FALSE) {
-
+    
     $debug = array(
       'account' => $drupal_user,
       'user_edit' => $user_edit,
@@ -1036,7 +1036,10 @@ class LdapUserConf {
       $user_edit['name'] = $account->name;
       $watchdog_tokens['%username'] = $user_edit['name'];
     }
-    if ($this->drupalAcctProvisionServer) {
+    //When using the multi-domain last authentication option
+    //$ldap_server breaks beacause $this->drupalAcctProvisionServer is set on LDAP_USER_AUTH_SERVER_SID
+    //So we need to check it's not the case before using ldap_servers_get_servers
+    if ($this->drupalAcctProvisionServer && $this->drupalAcctProvisionServer != LDAP_USER_AUTH_SERVER_SID) {
 
       $ldap_server = ldap_servers_get_servers($this->drupalAcctProvisionServer, 'enabled', TRUE);  // $ldap_user['sid']
 

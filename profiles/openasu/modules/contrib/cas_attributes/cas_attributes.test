@@ -118,12 +118,12 @@ class CasAttributesTestCase extends CasAttributesTestHelper {
     // Set up the relationship mappings.
     $this->drupalLogin($this->admin_user);
     $edit = array(
-      'cas_attributes[sync_every_login]' => 0,
-      'cas_attributes[overwrite]' => 1,
-      'cas_attributes[relations][name]' => '[cas:attribute:NAME]',
-      'cas_attributes[relations][mail]' => '[cas:name]@example.com',
-      'cas_attributes[relations][test_user_memberof]' => '[cas:attribute:memberOf:first]',
-      'cas_attributes[relations][test_user_name]' => '[cas:attribute:givenName] [cas:attribute:surname]',
+      'cas_attributes_sync_every_login' => 0,
+      'cas_attributes_overwrite' => 1,
+      'cas_attributes_relations[name]' => '[cas:attribute:NAME]',
+      'cas_attributes_relations[mail]' => '[cas:name]@example.com',
+      'cas_attributes_relations[test_user_memberof]' => '[cas:attribute:memberOf:first]',
+      'cas_attributes_relations[test_user_name]' => '[cas:attribute:givenName] [cas:attribute:surname]',
     );
     $this->drupalPost('admin/config/people/cas/attributes', $edit, t('Save configuration'));
     $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
@@ -157,9 +157,9 @@ class CasAttributesTestCase extends CasAttributesTestHelper {
     // Set up a relationship mapping, and leave sync_every_login turned off.
     $this->drupalLogin($this->admin_user);
     $edit = array(
-      'cas_attributes[sync_every_login]' => 0,
-      'cas_attributes[overwrite]' => 1,
-      'cas_attributes[relations][test_user_name]' => '[cas:attribute:givenName] [cas:attribute:surname]',
+      'cas_attributes_sync_every_login' => 0,
+      'cas_attributes_overwrite' => 1,
+      'cas_attributes_relations[test_user_name]' => '[cas:attribute:givenName] [cas:attribute:surname]',
     );
     $this->drupalPost('admin/config/people/cas/attributes', $edit, t('Save configuration'));
     $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
@@ -194,7 +194,7 @@ class CasAttributesTestCase extends CasAttributesTestHelper {
     $this->drupalLogout();
     $this->drupalLogin($this->admin_user);
     $edit = array(
-      'cas_attributes[sync_every_login]' => 1,
+      'cas_attributes_sync_every_login' => 1,
     );
     $this->drupalPost('admin/config/people/cas/attributes', $edit, t('Save configuration'));
     $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
@@ -225,9 +225,9 @@ class CasAttributesTestCase extends CasAttributesTestHelper {
     // Set up a relationship mapping, and leave overwrite existing data turned off.
     $this->drupalLogin($this->admin_user);
     $edit = array(
-      'cas_attributes[sync_every_login]' => 1,
-      'cas_attributes[overwrite]' => 0,
-      'cas_attributes[relations][test_user_name]' => '[cas:attribute:givenName] [cas:attribute:surname]',
+      'cas_attributes_sync_every_login' => 1,
+      'cas_attributes_overwrite' => 0,
+      'cas_attributes_relations[test_user_name]' => '[cas:attribute:givenName] [cas:attribute:surname]',
     );
     $this->drupalPost('admin/config/people/cas/attributes', $edit, t('Save configuration'));
     $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
@@ -262,7 +262,7 @@ class CasAttributesTestCase extends CasAttributesTestHelper {
     $this->drupalLogout();
     $this->drupalLogin($this->admin_user);
     $edit = array(
-      'cas_attributes[overwrite]' => 1,
+      'cas_attributes_overwrite' => 1,
     );
     $this->drupalPost('admin/config/people/cas/attributes', $edit, t('Save configuration'));
     $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
@@ -279,4 +279,168 @@ class CasAttributesTestCase extends CasAttributesTestHelper {
     $this->assertEqual($this->loggedInUser->test_user_name[LANGUAGE_NONE][0]['value'], 'Dave Smith');
 
   }
+
+  function testRoleMapping() {
+    // Create a new CAS user.
+    $cas_name = $this->randomName();
+    $attributes = array(
+      'some_roles' => array(
+        'teacher','scholar',
+      ),
+    );
+    $cas_user = array('name' => $cas_name, 'attributes' => $attributes);
+    variable_set('cas_test_cas_user', $cas_user);
+
+    // create several roles
+    $role_ids = array();
+    $teacher_role_id = $this->drupalCreateRole(array(), 'teacher');
+    $role_ids[$teacher_role_id] = $teacher_role_id;
+    $scholar_role_id = $this->drupalCreateRole(array(), 'scholar');
+    $role_ids[$scholar_role_id] = $scholar_role_id;
+    $philosopher_role_id = $this->drupalCreateRole(array(), 'philosopher');
+    $role_ids[$philosopher_role_id] = $philosopher_role_id;
+
+    // Manage all three new roles via CAS
+    $this->admin_user = $this->drupalCreateUser(array('administer users', 'administer cas', 'administer permissions'));
+    $this->drupalLogin($this->admin_user);
+    $edit = array(
+      'cas_attributes_sync_every_login' => 1,
+      'cas_attributes_overwrite' => 0,
+      'cas_attributes_roles_mapping' => 'some_roles',
+    );
+    foreach($role_ids as $rid) {
+      $edit['cas_attributes_roles_manage[' . $rid . ']'] = $rid;
+    }
+    $this->drupalPost('admin/config/people/cas/attributes', $edit, t('Save configuration'));
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalGet('admin/config/people/cas/attributes/cas');
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalLogout();
+
+    // Log in as the new CAS user.
+    $this->casLogin($cas_name, $attributes);
+
+    // After login, user should have roles teacher and scholar, but not philosopher
+    $user_roles = $this->loggedInUser->roles;
+    $this->assertTrue(array_key_exists($teacher_role_id, $user_roles), "Test user has role teacher.");
+    $this->assertTrue(array_key_exists($scholar_role_id, $user_roles), "Test user has role scholar.");
+    $this->assertFalse(array_key_exists($philosopher_role_id, $user_roles), "Test user does not have role philosopher.");
+
+    $this->drupalLogout();
+
+    // change the attributes
+    $attributes = array(
+      'some_roles' => array(
+        'philosopher','scholar',
+      ),
+    );
+    $cas_user = array('name' => $cas_name, 'attributes' => $attributes);
+    variable_set('cas_test_cas_user', $cas_user);
+
+    // Log in again.
+    $this->casLogin($cas_name, $attributes);
+    $this->loggedInUser = user_load($this->loggedInUser->uid, TRUE); // workaround since casLogin gets cached copy
+
+    // After login, user should now have roles scholar and philosopher, but not teacher
+    $user_roles = $this->loggedInUser->roles;
+    $this->assertFalse(array_key_exists($teacher_role_id, $user_roles), "Test user does not have role teacher.");
+    $this->assertTrue(array_key_exists($scholar_role_id, $user_roles), "Test user has role scholar.");
+    $this->assertTrue(array_key_exists($philosopher_role_id, $user_roles), "Test user has role philosopher.");
+
+    $this->drupalLogout();
+
+    // stop managing philosopher role
+    $this->drupalLogin($this->admin_user);
+    $edit = array();
+    foreach($role_ids as $rid) {
+      $edit['cas_attributes_roles_manage[' . $rid . ']'] = $rid;
+    }
+    $edit['cas_attributes_roles_manage[' . $philosopher_role_id . ']'] = FALSE;
+    $this->drupalPost('admin/config/people/cas/attributes', $edit, t('Save configuration'));
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalGet('admin/config/people/cas/attributes/cas');
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalLogout();
+
+    // change the attributes again
+    $attributes = array(
+      'some_roles' => array(
+        'teacher',
+      ),
+    );
+    $cas_user = array('name' => $cas_name, 'attributes' => $attributes);
+    variable_set('cas_test_cas_user', $cas_user);
+
+    // Log in yet again.
+    $this->casLogin($cas_name, $attributes);
+    $this->loggedInUser = user_load($this->loggedInUser->uid, TRUE); // workaround since casLogin gets cached copy
+
+    // After login, user should now have roles teacher and philosopher, but not scholar
+    $user_roles = $this->loggedInUser->roles;
+    $this->assertTrue(array_key_exists($teacher_role_id, $user_roles), "Test user has role teacher.");
+    $this->assertFalse(array_key_exists($scholar_role_id, $user_roles), "Test user does not have role scholar.");
+    $this->assertTrue(array_key_exists($philosopher_role_id, $user_roles), "Test user has role philosopher.");
+
+  }
+
+  function testRoleMappingFromMultipleVariables() {
+    // Create a new CAS user.
+    $cas_name = $this->randomName();
+    $attributes = array(
+      'a_role' => array(
+        'architect',
+      ),
+      'some_other_roles' => array(
+        'teacher','scholar',
+      ),
+      'yet_another_role' => array(
+        'doctor',
+      ),
+    );
+    $cas_user = array('name' => $cas_name, 'attributes' => $attributes);
+    variable_set('cas_test_cas_user', $cas_user);
+
+    // create several roles
+    $role_ids = array();
+    $teacher_role_id = $this->drupalCreateRole(array(), 'teacher');
+    $role_ids[$teacher_role_id] = $teacher_role_id;
+    $scholar_role_id = $this->drupalCreateRole(array(), 'scholar');
+    $role_ids[$scholar_role_id] = $scholar_role_id;
+    $philosopher_role_id = $this->drupalCreateRole(array(), 'philosopher');
+    $role_ids[$philosopher_role_id] = $philosopher_role_id;
+    $architect_role_id = $this->drupalCreateRole(array(), 'architect');
+    $role_ids[$architect_role_id] = $architect_role_id;
+    $doctor_role_id = $this->drupalCreateRole(array(), 'doctor');
+    $role_ids[$doctor_role_id] = $doctor_role_id;
+
+    // Manage all five new roles via CAS
+    $this->admin_user = $this->drupalCreateUser(array('administer users', 'administer cas', 'administer permissions'));
+    $this->drupalLogin($this->admin_user);
+    $edit = array(
+      'cas_attributes_sync_every_login' => 1,
+      'cas_attributes_overwrite' => 0,
+      'cas_attributes_roles_mapping' => "a_role\nsome_other_roles \nyet_another_role\n\n",
+    );
+    foreach($role_ids as $rid) {
+      $edit['cas_attributes_roles_manage[' . $rid . ']'] = $rid;
+    }
+    $this->drupalPost('admin/config/people/cas/attributes', $edit, t('Save configuration'));
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalGet('admin/config/people/cas/attributes/cas');
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit');
+    $this->drupalLogout();
+
+    // Log in as the new CAS user.
+    $this->casLogin($cas_name, $attributes);
+
+    // After login, user should have roles teacher, scholar, architect, and doctor, but not philosopher
+    $user_roles = $this->loggedInUser->roles;
+    $this->assertTrue(array_key_exists($teacher_role_id, $user_roles), "Test user has role teacher.");
+    $this->assertTrue(array_key_exists($scholar_role_id, $user_roles), "Test user has role scholar.");
+    $this->assertFalse(array_key_exists($philosopher_role_id, $user_roles), "Test user does not have role philosopher.");
+    $this->assertTrue(array_key_exists($architect_role_id, $user_roles), "Test user has role architect.");
+    $this->assertTrue(array_key_exists($doctor_role_id, $user_roles), "Test user has role doctor.");
+
+  }
+
 }

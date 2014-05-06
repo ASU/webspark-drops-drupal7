@@ -45,11 +45,8 @@ function cas_attributes_menu() {
  * Implements hook_cas_user_presave().
  */
 function cas_attributes_cas_user_presave(&$edit, $account) {
-  $cas_attributes = variable_get('cas_attributes', array());
-  $cas_attributes += array('overwrite' => TRUE, 'sync_every_login' => NULL, 'relations' => array('mail' => NULL, 'name' => NULL), 'roles' => array('manage' => array(), 'mapping' => ''));
-
   // We synchronize on the first login (always) and on future logins (if chosen).
-  if ($account->login && !$cas_attributes['sync_every_login']) {
+  if ($account->login && !variable_get('cas_attributes_sync_every_login', NULL)) {
     // The user has logged in before and we are not set to always synchronize.
     return;
   }
@@ -57,7 +54,8 @@ function cas_attributes_cas_user_presave(&$edit, $account) {
   $data = array('cas' => $edit['cas_user']['name']);
 
   // Set each drupal field to its mapped attribute.
-  foreach ($cas_attributes['relations'] as $drupal_field => $text) {
+  $overwrite = variable_get('cas_attributes_overwrite', TRUE);
+  foreach (variable_get('cas_attributes_relations', array()) as $drupal_field => $text) {
     $result = trim(token_replace($text, $data, array('clear' => TRUE)));
     $result = html_entity_decode($result);
 
@@ -65,13 +63,13 @@ function cas_attributes_cas_user_presave(&$edit, $account) {
     if (!empty($result)) {
       if ($drupal_field == 'name' || $drupal_field == 'mail') {
         // Only update field if overwrite setting is on, or if it is empty.
-        if ($cas_attributes['overwrite'] || empty($account->{$drupal_field})) {
+        if ($overwrite || empty($account->{$drupal_field})) {
           $edit[$drupal_field] = $result;
         }
       }
       else {
         // Only update field if overwrite setting is on, or if it is empty.
-        if ($cas_attributes['overwrite'] || empty($account->{$drupal_field})) {
+        if ($overwrite || empty($account->{$drupal_field})) {
           $edit[$drupal_field][LANGUAGE_NONE][0]['value'] = $result;
         }
       }
@@ -81,7 +79,8 @@ function cas_attributes_cas_user_presave(&$edit, $account) {
   // Manage Roles
 
   // Make sure there are attributes to check.
-  if (!empty($cas_attributes['roles']['mapping'])) {
+  $mapping = variable_get('cas_attributes_roles_mapping', '');
+  if (!empty($mapping)) {
     // Get the users attributes.
     $user_attributes = cas_phpcas_attributes($data['cas']);
     // Allow other modules to manipulate the attribute values.
@@ -94,8 +93,9 @@ function cas_attributes_cas_user_presave(&$edit, $account) {
 
     // Build all the attirbutes to check.
     $cas_user_roles = array();
-    $attributes_to_check = explode("\n", $cas_attributes['roles']['mapping']);
+    $attributes_to_check = explode("\n", trim($mapping));
     foreach ($attributes_to_check as $attribute) {
+      $attribute = trim($attribute);
       if (!empty($user_attributes[$attribute])) {
         if (is_array($user_attributes[$attribute])) {
           $cas_user_roles = array_merge($cas_user_roles, $user_attributes[$attribute]);
@@ -109,7 +109,7 @@ function cas_attributes_cas_user_presave(&$edit, $account) {
     // Loop through all the managed roles and see if the user has access to them
     // and set accordingly.
     $roles = user_roles();
-    foreach ($cas_attributes['roles']['manage'] as $rid) {
+    foreach (variable_get('cas_attributes_roles_manage', array()) as $rid) {
       if (!empty($rid)) {
         if (in_array($roles[$rid], $cas_user_roles)) {
           $edit['roles'][$rid] = $roles[$rid];

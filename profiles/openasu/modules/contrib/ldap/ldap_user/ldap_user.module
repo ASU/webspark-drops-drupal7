@@ -738,7 +738,7 @@ function ldap_user_synch_to_drupal($username, $prov_event = LDAP_USER_EVENT_SYNC
   $ldap_user_conf = ldap_user_conf();
   $account = user_load_by_name($username);
   $user_edit = array();
-  $ldap_user_conf->synchToDrupalAccount($account, $user_edit, $prov_event, $ldap_user, FALSE);
+  $ldap_user_conf->synchToDrupalAccount($account, $user_edit, $prov_event, $ldap_user, TRUE);
 
 }
 
@@ -891,13 +891,12 @@ function ldap_user_user_login(&$edit, $account) {
       if ($ldap_user) {
         $ldap_server = ldap_servers_get_servers($ldap_user_conf->drupalAcctProvisionServer, NULL, TRUE);
         $ldap_user_conf->entryToUserEdit($ldap_user, $user_edit, $ldap_server, LDAP_USER_PROV_DIRECTION_TO_DRUPAL_USER, array(LDAP_USER_EVENT_SYNCH_TO_DRUPAL_USER));
+        if (empty($account->picture->fid)) { // see #1973352 and #935592
+          $account2 = user_load($account->uid);
+          $account->picture = $account2->picture;
+        }
+        $account = user_save($account, $user_edit, 'ldap_user');
       }
-
-      if (empty($account->picture->fid)) { // see #1973352 and #935592
-        $account2 = user_load($account->uid);
-        $account->picture = $account2->picture;
-      }
-      $account = user_save($account, $user_edit, 'ldap_user');
     }
   }
 

@@ -6,9 +6,9 @@ dependencies[] = ldap_authentication
 core = 7.x
 configure = admin/config/people/ldap/authentication
 
-; Information added by drupal.org packaging script on 2013-10-08
-version = "7.x-2.0-beta6"
+; Information added by Drupal.org packaging script on 2014-01-08
+version = "7.x-2.0-beta8"
 core = "7.x"
 project = "ldap"
-datestamp = "1381233714"
+datestamp = "1389150511"
 

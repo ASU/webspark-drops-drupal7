@@ -55,3 +55,34 @@ function cas_attributes_update_7100() {
   }
   variable_set('cas_attributes', $attr);
 }
+
+function cas_attributes_update_7101() {
+  // split the various settings up into their own smaller, more manageable variables
+  $attr = variable_get('cas_attributes', array());
+  if(array_key_exists('overwrite', $attr)) {
+    variable_set('cas_attributes_overwrite', $attr['overwrite']);
+  }
+  if(array_key_exists('sync_every_login', $attr)) {
+    variable_set('cas_attributes_sync_every_login', $attr['sync_every_login']);
+  }
+  if(array_key_exists('relations', $attr)) {
+    variable_set('cas_attributes_relations', $attr['relations']);
+  }
+  if(array_key_exists('roles', $attr)) {
+    if(array_key_exists('manage', $attr['roles'])) {
+      variable_set('cas_attributes_roles_manage', $attr['roles']['manage']);
+    }
+    if(array_key_exists('mapping', $attr['roles'])) {
+      variable_set('cas_attributes_roles_mapping', $attr['roles']['mapping']);
+    }
+  }
+
+  // (this one should only exist if cas_ldap has been used at some point)
+  if(array_key_exists('ldap', $attr)) {
+    if(array_key_exists('server', $attr['ldap'])) {
+      variable_set('cas_attributes_ldap_server', $attr['ldap']['server']);
+    }
+  }
+
+  variable_del('cas_attributes');
+}

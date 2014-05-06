@@ -7,6 +7,30 @@
  */
 
 /**
+ * TODO check if this already exists or find a better place for this function
+ *
+ * Formats a ldap-entry ready to be printed on console.
+ * TODO describe preconditions for ldap_entry
+ */
+function pretty_print_ldap_entry($ldap_entry) {
+  $m=array();
+  for ($i=0; $i < $ldap_entry['count']; $i++) {
+    $k=$ldap_entry[$i];
+    $v=$ldap_entry[$k];
+    if(is_array($v)) {
+      $m2=array();
+      $max=$v['count']>3 ? 3 : $v['count'];
+      for ($j=0; $j < $max; $j++) {
+	$m2[] = $v[$j];
+      }
+      $v="(".join(", ", $m2).")";
+    }
+    $m[] = $k . ": " . $v;
+  }
+  return join(", ", $m);
+}
+
+/**
  * LDAP Server Class
  *
  *  This class is used to create, work with, and eventually destroy ldap_server
@@ -1743,6 +1767,28 @@ class LdapServer {
       }
       else {// maybe cn, uid, etc is held
         $member_id = ldap_servers_get_first_rdn_value_from_dn($group_entry['dn'], $this->groupMembershipsAttrMatchingUserAttr);
+	if(!$member_id) {
+	  if ($this->detailed_watchdog_log) {
+	     watchdog('ldap_server', 'group_entry: %ge', array('%ge'=>pretty_print_ldap_entry($group_entry)));
+	  }
+	  // group not identified by simple checks yet!
+
+	  // examine the entry and see if it matches the configured groupObjectClass
+	  $goc=$group_entry['objectclass']; // TODO do we need to ensure such entry is there?
+	  if(is_array($goc)) {              // TODO is it always an array?
+	    foreach($goc as $g) {
+	      $g=drupal_strtolower($g);
+	      if($g == $this->groupObjectClass) {
+		// found a group, current user must be member in it - so:
+		if ($this->detailed_watchdog_log) {
+		  watchdog('ldap_server', 'adding %mi', array('%mi'=>$member_id));
+		}
+		$member_id=$group_entry['dn'];
+		break;
+	      }
+	    }
+	  }
+	}
       }
 
       if ($member_id && !in_array($member_id, $tested_group_ids)) {

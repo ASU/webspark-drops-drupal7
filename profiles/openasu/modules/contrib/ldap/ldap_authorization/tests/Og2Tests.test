@@ -94,7 +94,7 @@ class LdapAuthorizationOg2Tests extends LdapTestCase {
     }
 
   }
-  
+
   /**
    * get test data in convenient format, so tests are easier to read and write
    */
@@ -121,7 +121,7 @@ class LdapAuthorizationOg2Tests extends LdapTestCase {
     }
     return array($group_nodes, $group_nids, $group_entity_ids, $roles_by_name, $consumer_ids);
   }
-  
+
   /**
    * just make sure install succeeds and
    */
@@ -159,7 +159,7 @@ class LdapAuthorizationOg2Tests extends LdapTestCase {
     $this->ldapTestId = $this->module_name . ': og2 functions';
     list($group_nodes, $group_nids, $group_entity_ids, $roles_by_name, $consumer_ids) = $this->getTestData(TRUE);
 
-    
+
     /**
      * II.0 basic granting tests to make sure og_role_grant, ldap_authorization_og_rid_from_role_name,
      *   and ldap_authorization_og2_get_group functions work
@@ -220,7 +220,7 @@ class LdapAuthorizationOg2Tests extends LdapTestCase {
       $consumer_ids['faculty'][OG_ADMINISTRATOR_ROLE] => 'faculty admin',
       $consumer_ids['faculty']['dungeon-master'] => 'faculty dungeon master',
     );
-    
+
     foreach ($should_haves as $consumer_id => $descriptor) {
       $this->assertTrue(ldap_authorization_og2_has_consumer_id($consumer_id, $web_user->uid),
          "LdapAuthorizationConsumerOG usersAuthorizations() for $descriptor - $consumer_id", $this->ldapTestId);
@@ -341,7 +341,7 @@ function testFlags() {
   );
 
   list($group_nodes, $group_nids, $group_entity_ids, $roles_by_name, $consumer_ids) = $this->getTestData(TRUE);
-    
+
   $this->consumerAdminConf['og_group']->status = 1;
   $this->consumerAdminConf['og_group']->save();
   list($new_authorizations, $notifications) = ldap_authorizations_user_authorizations($hpotter, 'query', 'og_group');  // just see if the correct ones are derived.
