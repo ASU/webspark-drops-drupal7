@@ -39,3 +39,10 @@ features[defaultconfig][] = strongarm:cas_version
 features[defaultconfig][] = user_default_roles:CAS
 features[features_api][] = api:2
 features[image][] = asu_header_image
+
+
+; Information added by drush on 2014-05-06
+version = ""
+project = "asu_cas"
+datestamp = "1399420450"
+
