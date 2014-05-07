@@ -7,3 +7,11 @@ core = 7.x
 php = 5.2
 files[] = IXRFeedsFetcher.inc
 files[] = includes/IXR_Library.inc.php
+
+
+; Information added by drush on 2014-05-07
+version = "7.x-1.0-beta1"
+core = "7.x"
+project = "ixr"
+datestamp = "1399499199"
+
