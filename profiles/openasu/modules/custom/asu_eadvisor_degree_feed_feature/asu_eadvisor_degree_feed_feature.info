@@ -76,3 +76,11 @@ package = "Features"
 project = "asu_eadvisor_degree_feed_feature"
 project status url = "https://webconsulting.asu.edu/fserver"
 version = "7.x-1.0-beta1"
+
+
+; Information added by drush on 2014-05-06
+version = "7.x-1.0-beta1"
+core = "7.x"
+project = "asu_eadvisor_degree_feed_feature"
+datestamp = "1399420448"
+

@@ -1,6 +1,13 @@
 name = ASU Brand
 description = Provides ASU header and footer blocks without the use of an ASU based theme.
-version = 7.x-1.4
+version = 7.x-1.5-dev
 core = 7.x
 package = ASU
 project status url = "https://webconsulting.asu.edu/fserver"
+
+; Information added by drush on 2014-05-06
+version = "7.x-1.5"
+core = "7.x"
+project = "asu_brand"
+datestamp = "1399420450"
+

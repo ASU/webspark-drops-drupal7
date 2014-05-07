@@ -4,13 +4,16 @@
  * Implements hook_uninstall().
  */
 function asu_brand_uninstall() {
-  variable_del('asu_brand_header_basepath');
-  variable_del('asu_brand_header_template');
-  variable_del('asu_brand_footer_color');
-  cache_clear_all('asu_brand:head', 'cache');
-  cache_clear_all('asu_brand:header', 'cache');
-  cache_clear_all('asu_brand:footer', 'cache');
-  cache_clear_all('asu_brand:students_footer', 'cache');
+  drupal_load('module', 'asu_brand');
+  
+  // Delete all module variables.
+  db_delete('variable')->condition('name', 'asu_brand%', 'LIKE')->execute();
+  cache_clear_all('variables', 'cache_bootstrap');
+  
+  // Delete caches.
+  foreach (asu_brand_get_cache_ids() as $cache_id) {
+    cache_clear_all($cache_id, 'cache');
+  }
 }
 
 /**
