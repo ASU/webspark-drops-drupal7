@@ -34,3 +34,11 @@ settings[pane_styles_toggle] = 1
 settings[always_show_page_title] = 0
 
 settings[default_picture] = 0
+
+
+; Information added by drush on 2014-05-07
+version = "7.x-1.0"
+core = "7.x"
+project = "asu_webspark_bootstrap"
+datestamp = "1399499196"
+

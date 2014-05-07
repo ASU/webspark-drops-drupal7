@@ -51,45 +51,56 @@ projects[panopoly_demo][subdir] = panopoly
 
 ; ASU Modules
 
-;projects[asu_brand][version] = 1.4
-;projects[asu_brand][subdir] = custom
-;projects[asu_brand][location] = https://webconsulting.asu.edu/fserver
+projects[asu_brand][version] = 1.5
+projects[asu_brand][subdir] = custom
+projects[asu_brand][type] = module
+projects[asu_brand][download][revision] = 7f47f070
+projects[asu_brand][download][branch] = 7.x-1.x
+projects[asu_brand][download][url] = https://github.com/ASU/asu-drupal-brand.git
 
 projects[asu_cas][version] = 1.x-dev
 projects[asu_cas][subdir] = custom
 projects[asu_cas][type] = module
-projects[asu_cas][download][type] = git
 projects[asu_cas][download][revision] = f9b88b5
 projects[asu_cas][download][branch] = 7.x-1.x
-projects[asu_cas][download][url] = https://github.com/ASU/asu-drupal7-cas-client-config.git
+projects[asu_cas][download][url] = https://github.com/ASU/asu-drupal-cas-client-config.git
 
 projects[asu_userpicker][version] = 1.0
 projects[asu_userpicker][subdir] = custom
 projects[asu_userpicker][type] = module
-projects[asu_userpicker][download][type] = git
 projects[asu_userpicker][download][revision] = 95a01aadb043e9c2e6241a301e253d7c56e26b71
 projects[asu_userpicker][download][tag] = 7.x-1.0
-projects[asu_userpicker][download][url] = https://github.com/mlsamuelson/asu_userpicker.git
+projects[asu_userpicker][download][url] = https://github.com/ASU/asu-drupal-userpicker.git
 
-;projects[asu_feeds][version] = 1.0-beta3
-;projects[asu_feeds][subdir] = custom
-;projects[asu_feeds][location] = http://webconsulting.asu.edu/fserver
+projects[asu_feeds][version] = 1.0-beta4
+projects[asu_feeds][subdir] = custom
+projects[asu_feeds][type] = module
+projects[asu_feeds][download][revision] = 0225f2e9f7
+projects[asu_feeds][download][url] = https://github.com/ASU/asu-drupal-feeds.git
 
-;projects[ixr][version] = 1.0-beta1
-;projects[ixr][subdir] = custom
-;projects[ixr][location] = http://webconsulting.asu.edu/fserver
+projects[ixr][version] = 1.0-beta1
+projects[ixr][subdir] = custom
+projects[ixr][type] = module
+projects[ixr][download][revision] = 0695bc1550
+projects[ixr][download][url] = https://github.com/ASU/asu-drupal-ixr.git
 
-;projects[asu_events][version] = 1.0-dev
-;projects[asu_events][subdir] = custom
-;projects[asu_events][location] = https://webconsulting.asu.edu/fserver
+projects[asu_events][version] = 1.0-dev
+projects[asu_events][subdir] = custom
+projects[asu_events][type] = module
+projects[asu_events][download][revision] = 46bd43bbba
+projects[asu_events][download][url] = https://github.com/ASU/asu-drupal-events-feed.git
 
-;projects[asu_news][version] = 1.0-dev
-;projects[asu_news][subdir] = custom
-;projects[asu_news][location] = https://webconsulting.asu.edu/fserver
+projects[asu_news][version] = 1.0-dev
+projects[asu_news][subdir] = custom
+projects[asu_news][type] = module
+projects[asu_news][download][revision] = a6c180f26f
+projects[asu_news][download][url] = https://github.com/ASU/asu-drupal-news.git
 
-;projects[asu_eadvisor_degree_feed_feature][version] = 1.0-beta1
-;projects[asu_eadvisor_degree_feed_feature][subdir] = custom
-;projects[asu_eadvisor_degree_feed_feature][location] = https://webconsulting.asu.edu/fserver
+projects[asu_eadvisor_degree_feed_feature][version] = 1.0-beta1
+projects[asu_eadvisor_degree_feed_feature][subdir] = custom
+projects[asu_eadvisor_degree_feed_feature][type] = module
+projects[asu_eadvisor_degree_feed_feature][download][revision] = 59a20ae94b
+projects[asu_eadvisor_degree_feed_feature][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
 
 ; ASU Module Prerequisites
 
@@ -116,10 +127,6 @@ projects[feeds][subdir] = contrib
 projects[feeds_xpathparser][version] = 1.0-beta4
 projects[feeds_xpathparser][type] = module
 projects[feeds_xpathparser][subdir] = contrib
-
-projects[field_group][version] = 1.1
-projects[field_group][type] = module
-projects[field_group][subdir] = contrib
 
 projects[job_scheduler][version] = 2.0-alpha3
 projects[job_scheduler][type] = module

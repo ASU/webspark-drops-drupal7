@@ -41,7 +41,7 @@ Add this code to the bottom of your /sites/default/settings.php file:
 =========================================================
 Bugs
 =========================================================
-Send bug reports and patches to webconsulting@asu.edu.
+Send bug reports and patches at http://drupal.asu.edu/build/asu-news-feature
 
 =========================================================
 Thanks

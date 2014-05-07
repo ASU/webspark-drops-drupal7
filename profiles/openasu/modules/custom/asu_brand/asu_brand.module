@@ -13,6 +13,7 @@ define('ASU_BRAND_HEADER_BASEPATH_DEFAULT', 'https://asu.edu/asuthemes');
 define('ASU_BRAND_HEADER_TEMPLATE_DEFAULT', 'default');
 define('ASU_BRAND_FOOTER_COLOR_DEFAULT', '');
 define('ASU_BRAND_CACHE_LIFETIME', 172800);
+define('ASU_BRAND_PREVIEW_PAGES_DEFAULT', "system/ajax/*\npanels/ajax/*");
 
 /**
  * Implements hook_block_info().
@@ -62,6 +63,7 @@ function asu_brand_block_save($delta = '', $edit = array()) {
       variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
       variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
       variable_set('asu_brand_header_template', $edit['asu_brand_header_template']);
+      variable_set('asu_brand_preview_pages', $edit['asu_brand_preview_pages']);
       asu_brand_cache_clear();
       break;
     
@@ -69,12 +71,14 @@ function asu_brand_block_save($delta = '', $edit = array()) {
       variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
       variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
       variable_set('asu_brand_footer_color', $edit['asu_brand_footer_color']);
+      variable_set('asu_brand_preview_pages', $edit['asu_brand_preview_pages']);
       asu_brand_cache_clear();
       break;
     
     case 'asu_brand_students_footer':
       variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
       variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
+      variable_set('asu_brand_preview_pages', $edit['asu_brand_preview_pages']);
       asu_brand_cache_clear();
       break;
   }
@@ -84,24 +88,42 @@ function asu_brand_block_save($delta = '', $edit = array()) {
  * Implements hook_block_view().
  */
 function asu_brand_block_view($delta = '') {
-  $block = array();  
+  $block = array();
+  $is_preview_path = asu_brand_is_preview_path();
+  $preview_text = t('No preview available');
+  
   switch ($delta) {
     case 'asu_brand_header':
-      module_load_include('inc', 'asu_brand', 'asu_brand.block');
       $block['subject'] = NULL;
-      $block['content'] = asu_brand_get_block_header();
+      if ($is_preview_path) {
+        $block['content'] = $preview_text;
+      }
+      else {
+        module_load_include('inc', 'asu_brand', 'asu_brand.block');
+        $block['content'] = asu_brand_get_block_header();
+      }
       break;
 
     case 'asu_brand_footer':
-      module_load_include('inc', 'asu_brand', 'asu_brand.block');
       $block['subject'] = NULL;
-      $block['content'] = asu_brand_get_block_footer();
+      if ($is_preview_path) {
+        $block['content'] = $preview_text;
+      }
+      else {
+        module_load_include('inc', 'asu_brand', 'asu_brand.block');
+        $block['content'] = asu_brand_get_block_footer();
+      }
       break;
     
     case 'asu_brand_students_footer':
-      module_load_include('inc', 'asu_brand', 'asu_brand.block');
       $block['subject'] = NULL;
-      $block['content'] = asu_brand_get_block_students_footer();
+      if ($is_preview_path) {
+        $block['content'] = $preview_text;
+      }
+      else {
+        module_load_include('inc', 'asu_brand', 'asu_brand.block');
+        $block['content'] = asu_brand_get_block_students_footer();
+      }
       break;
   }
   return $block;
@@ -115,4 +137,33 @@ function asu_brand_block_view($delta = '') {
  */
 function asu_brand_cache_clear($cid = '', $wildcard = TRUE) {
   cache_clear_all('asu_brand:' . $cid, 'cache', $wildcard);
+}
+
+/**
+ * Get list of cache IDs.
+ */
+function asu_brand_get_cache_ids($reset = FALSE) {
+  $cache_ids = &drupal_static(__FUNCTION__);
+  if ($reset || !isset($cache_ids)) {
+    $cache_ids = array('asu_brand:head', 'asu_brand:header', 'asu_brand:footer', 'asu_brand:students_footer');
+  }
+  return $cache_ids;
+}
+
+/**
+ * Determine if path is generating a preview.
+ */
+function asu_brand_is_preview_path($reset = FALSE) {
+  $page_match = &drupal_static(__FUNCTION__);
+  if ($reset || !isset($page_match)) {
+    $pages = variable_get('asu_brand_preview_pages', ASU_BRAND_PREVIEW_PAGES_DEFAULT);
+    // Convert the Drupal path to lowercase.
+    $path = drupal_strtolower(drupal_get_path_alias($_GET['q']));
+    // Compare the lowercase internal and lowercase path alias (if any).
+    $page_match = drupal_match_path($path, $pages);
+    if ($path != $_GET['q']) {
+      $page_match = $page_match || drupal_match_path($_GET['q'], $pages);
+    }
+  }
+  return $page_match;
 }
