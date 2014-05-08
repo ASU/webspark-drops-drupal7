@@ -1,5 +1,5 @@
-name = ASU WebSpark
-distribution_name = ASU WebSpark
+name = ASU Webspark
+distribution_name = ASU Webspark
 description = A starting point for websites at ASU
 core = 7.x
 exclusive = 1
