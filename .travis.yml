@@ -58,4 +58,4 @@ script:
 
 notifications:
   email:
-    - webspark-ci@asu.edu
+    - webspark-ci@googlegroups.com
