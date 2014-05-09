@@ -31,6 +31,8 @@ class FeatureContext extends DrupalContext
   public function __construct(array $parameters) {
     // Initialize your context here
     $this->useContext('panels', new PanelsSubContext());
+    $this->useContext('wysiwyg', new WysiwygSubContext());
+    $this->useContext('media', new MediaSubContext());
   }
 
 //
@@ -44,6 +46,156 @@ class FeatureContext extends DrupalContext
 //        doSomethingWith($argument);
 //    }
 //
+
+  /**
+   * @Given /^I switch to the frame "([^"]*)"$/
+   */
+  public function iSwitchToTheFrame($frame) {
+    $this->getSession()->switchToIFrame($frame);
+  }
+
+  /**
+   * @Given /^I switch out of all frames$/
+   */
+  public function iSwitchOutOfAllFrames() {
+    $this->getSession()->switchToIFrame();
+  }
+
+  /**
+   * @Then /^I should see the "([^"]*)" button$/
+   */
+  public function assertButton($label) {
+    $page = $this->getSession()->getPage();
+    $results = $page->findAll('css', "input[type=submit],input[type=button],button");
+    if (!empty($results)) {
+      foreach ($results as $result) {
+        if ($result->getTagName() == 'input' && $result->getAttribute('value') == $label) {
+          return;
+        }
+        elseif ($result->getText() == $label) {
+          return;
+        }
+      }
+    }
+    throw new \Exception(sprintf('The "%s" button was not found on the page %s', $label, $region, $this->getSession()->getCurrentUrl()));
+  }
+
+  /**
+   * @Then /^I should see the "([^"]*)" button in the "([^"]*)" region$/
+   */
+  public function assertRegionButton($label, $region) {
+    $regionObj = $this->getRegion($region);
+    $results = $regionObj->findAll('css', "input[type=submit],input[type=button],button");
+    if (!empty($results)) {
+      foreach ($results as $result) {
+        if ($result->getTagName() == 'input' && $result->getAttribute('value') == $label) {
+          return;
+        }
+        elseif ($result->getText() == $label) {
+          return;
+        }
+      }
+    }
+    throw new \Exception(sprintf('The "%s" button was not found in the "%s" region on the page %s', $label, $region, $this->getSession()->getCurrentUrl()));
+  }
+
+  /**
+   * @Then /^I should see the "([^"]*)" element in the "([^"]*)" region$/
+   */
+  public function assertRegionElement($tag, $region) {
+    $regionObj = $this->getRegion($region);
+    $elements = $regionObj->findAll('css', $tag);
+    if (!empty($elements)) {
+      return;
+    }
+    throw new \Exception(sprintf('The element "%s" was not found in the "%s" region on the page %s', $tag, $region, $this->getSession()->getCurrentUrl()));
+  }
+
+  /**
+   * @Then /^I should not see the "([^"]*)" element in the "([^"]*)" region$/
+   */
+  public function assertNotRegionElement($tag, $region) {
+    $regionObj = $this->getRegion($region);
+    $result = $regionObj->findAll('css', $tag);
+    if (!empty($result)) {
+      throw new \Exception(sprintf('Element "%s" was found in the "%s" region on the page %s', $tag, $region, $this->getSession()->getCurrentUrl()));
+    }
+  }
+
+  /**
+   * @Then /^I should see "([^"]*)" in the "([^"]*)" element in the "([^"]*)" region$/
+   */
+  public function assertRegionElementText($text, $tag, $region) {
+    $regionObj = $this->getRegion($region);
+    $results = $regionObj->findAll('css', $tag);
+    if (!empty($results)) {
+      foreach ($results as $result) {
+        if ($result->getText() == $text) {
+          return;
+        }
+      }
+    }
+    throw new \Exception(sprintf('The text "%s" was not found in the "%s" element in the "%s" region on the page %s', $text, $tag, $region, $this->getSession()->getCurrentUrl()));
+  }
+
+  /**
+   * @Then /^I should see "([^"]*)" in the "([^"]*)" element with the "([^"]*)" CSS property set to "([^"]*)" in the "([^"]*)" region$/
+   */
+  public function assertRegionElementTextCss($text, $tag, $property, $value, $region) {
+    $regionObj = $this->getRegion($region);
+    $elements = $regionObj->findAll('css', $tag);
+    if (empty($elements)) {
+      throw new \Exception(sprintf('The element "%s" was not found in the "%s" region on the page %s', $tag, $region, $this->getSession()->getCurrentUrl()));
+    }
+
+    $found = FALSE;
+    foreach ($elements as $element) {
+      if ($element->getText() == $text) {
+        $found = TRUE;
+        break;
+      }
+    }
+    if (!$found) {
+      throw new \Exception(sprintf('The text "%s" was not found in the "%s" element in the "%s" region on the page %s', $text, $tag, $region, $this->getSession()->getCurrentUrl()));
+    }
+
+    if (!empty($property)) {
+      $style = $element->getAttribute('style');
+      if (strpos($style, "$property: $value") === FALSE) {
+        throw new \Exception(sprintf('The "%s" property does not equal "%s" on the element "%s" in the "%s" region on the page %s', $property, $value, $tag, $region, $this->getSession()->getCurrentUrl()));
+      }
+    }
+  }
+
+  /**
+   * @Then /^I should not see "([^"]*)" in the "([^"]*)" element in the "([^"]*)" region$/
+   */
+  public function assertNotRegionElementText($text, $tag, $region) {
+    $regionObj = $this->getRegion($region);
+    $results = $regionObj->findAll('css', $tag);
+    if (!empty($results)) {
+      foreach ($results as $result) {
+        if ($result->getText() == $text) {
+          throw new \Exception(sprintf('The text "%s" was found in the "%s" element in the "%s" region on the page %s', $text, $tag, $region, $this->getSession()->getCurrentUrl()));
+        }
+      }
+    }
+  }
+
+  /**
+   * @Then /^I should see the image alt "(?P<link>[^"]*)" in the "(?P<region>[^"]*)"(?:| region)$/
+   */
+  public function assertAltRegion($alt, $region) {
+    $regionObj = $this->getRegion($region);
+    $element = $regionObj->find('css', 'img');
+    $tmp = $element->getAttribute('alt');
+    if ($alt == $tmp) {
+      $result = $alt;
+    }
+    if (empty($result)) {
+      throw new \Exception(sprintf('No alt text matching "%s" in the "%s" region on the page %s', $alt, $region, $this->getSession()->getCurrentUrl()));
+    }
+  }
 
   /**
    * @AfterStep @javascript
@@ -99,7 +251,7 @@ class FeatureContext extends DrupalContext
    * Wait for the jQuery AJAX loading to finish. ONLY USE FOR DEBUGGING!
    */
   public function iWaitForAJAX() {
-    $this->getSession()->wait(5000, 'jQuery.active === 0');
+    $this->getSession()->wait(5000, 'jQuery != undefined && jQuery.active === 0');
   }
 
   /**
@@ -118,9 +270,10 @@ class FeatureContext extends DrupalContext
       if ($end === FALSE) {
         break;
       }
+      $random_generator = new Random;
       $name = substr($argument, $start + 1, $end - $start - 1);
       if ($name == 'random') {
-        $this->vars[$name] = Random::name(8);
+        $this->vars[$name] = $random_generator->name(8);
         $random[] = $this->vars[$name];
       }
       // In order to test previous random values stored in the form,
@@ -142,5 +295,41 @@ class FeatureContext extends DrupalContext
     }
 
     return $argument;
+  }
+
+  /**
+   * @Given /^I log in with the One Time Login Url$/
+   */
+  public function iLogInWithTheOneTimeLoginUrl() {
+    if ($this->loggedIn()) {
+      $this->logOut();
+    }
+
+    $random = new Random;
+
+    // Create user (and project)
+    $user = (object) array(
+      'name' => $random->name(8),
+      'pass' => $random->name(16),
+      'role' => 'authenticated user',
+    );
+    $user->mail = "{$user->name}@example.com";
+
+    // Create a new user.
+    $this->getDriver()->userCreate($user);
+
+    $this->users[$user->name] = $this->user = $user;
+
+    $base_url = rtrim($this->locatePath('/'), '/');
+    $login_link = $this->getMainContext()->getDriver('drush')->drush('uli', array(
+      "'$user->name'",
+      '--browser=0',
+      "--uri=${base_url}",
+    ));
+    // Trim EOL characters. Required or else visiting the link won't work.
+    $login_link = trim($login_link);
+    $login_link = str_replace("/login", '', $login_link);
+    $this->getSession()->visit($this->locatePath($login_link));
+    return TRUE;
   }
 }
