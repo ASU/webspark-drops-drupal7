@@ -1,3 +1,7 @@
+Panopoly Demo 7.x-1.6, 2014-05-22
+---------------------------
+- No changes since last release.
+
 Panopoly Demo 7.x-1.5, 2014-04-30
 ---------------------------
 - Oops, prematurely added the 7.x-1.5 entry to the CHANGELOG.txt.
