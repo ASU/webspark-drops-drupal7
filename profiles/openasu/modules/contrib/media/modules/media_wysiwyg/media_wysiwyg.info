@@ -20,5 +20,5 @@ configure = admin/config/media/browser
 version = "7.x-2.0-alpha3+37-dev"
 core = "7.x"
 project = "media"
-datestamp = "1400793247"
+datestamp = "1400798842"
 

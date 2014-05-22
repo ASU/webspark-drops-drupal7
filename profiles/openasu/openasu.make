@@ -61,7 +61,7 @@ projects[asu_brand][download][url] = https://github.com/ASU/asu-drupal-brand.git
 projects[asu_cas][version] = 1.x-dev
 projects[asu_cas][subdir] = custom
 projects[asu_cas][type] = module
-projects[asu_cas][download][revision] = f9b88b5
+projects[asu_cas][download][revision] = ea78ed15f0
 projects[asu_cas][download][branch] = 7.x-1.x
 projects[asu_cas][download][url] = https://github.com/ASU/asu-drupal-cas-client-config.git
 
