@@ -2,8 +2,7 @@
 
 
 function asu_cas_enable() {
-  db_query("UPDATE {system} SET weight = 1 WHERE name = 'asu_cas'"); 
-  variable_set('cas_login_message', 'Logged in with ASURITE %cas_username.');
+  db_query("UPDATE {system} SET weight = 1 WHERE name = 'asu_cas'");
 }
 
 /**
@@ -112,6 +111,5 @@ function asu_cas_update_7001(&$sandbox) {
  * + Change default successful login message
  */
 function asu_cas_update_7002(&$sandbox) {
-  db_query("UPDATE {system} SET weight = 1 WHERE name = 'asu_cas'"); 
-  variable_set('cas_login_message', 'Logged in with ASURITE %cas_username.');
+  db_query("UPDATE {system} SET weight = 1 WHERE name = 'asu_cas'");
 }

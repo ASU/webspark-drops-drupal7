@@ -109,7 +109,7 @@ admin/config/search/clean-urls/check';
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'cas_login_drupal_invite';
-  $strongarm->value = 'Cancel CAS login';
+  $strongarm->value = 'Cancel ASURITE login';
   $export['cas_login_drupal_invite'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -123,21 +123,21 @@ admin/config/search/clean-urls/check';
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'cas_login_invite';
-  $strongarm->value = 'Log in using CAS';
+  $strongarm->value = 'Log in using ASURITE';
   $export['cas_login_invite'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'cas_login_message';
-  $strongarm->value = 'Logged in via CAS as %cas_username.';
+  $strongarm->value = 'Logged in via ASURITE as %cas_username.';
   $export['cas_login_message'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'cas_login_redir_message';
-  $strongarm->value = 'You will be redirected to the secure CAS login page.';
+  $strongarm->value = 'You will be redirected to the secure ASURITE login page.';
   $export['cas_login_redir_message'] = $strongarm;
 
   $strongarm = new stdClass();
