@@ -154,10 +154,10 @@ projects[kalatheme][type] = theme
 projects[modernizr][version] = 3.1
 projects[modernizr][subdir] = contrib
 
-projects[asu_webspark_bootstrap][version] = 1.0
+projects[asu_webspark_bootstrap][version] = 1.1
 projects[asu_webspark_bootstrap][type] = theme
 projects[asu_webspark_bootstrap][download][type] = git
-projects[asu_webspark_bootstrap][download][revision] = 58c46ab
+projects[asu_webspark_bootstrap][download][revision] = fe090c54
 projects[asu_webspark_bootstrap][download][branch] = 7.x-1.x
 projects[asu_webspark_bootstrap][download][url] = https://github.com/asu/webspark-theme-original.git
 
