@@ -220,7 +220,7 @@ function _ldap_authentication_verify_user_profile() {
  */
 function ldap_authentication_init() {
   $auth_conf = ldap_authentication_get_valid_conf();
-  if ($auth_conf->templateUsagePromptUser) {
+  if ($auth_conf && $auth_conf->templateUsagePromptUser) {
     ldap_authentication_check_for_email_template();
   }
 }
