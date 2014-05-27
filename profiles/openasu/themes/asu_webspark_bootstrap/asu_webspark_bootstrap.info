@@ -2,7 +2,7 @@ name = ASU WebSpark Bootstrap
 description = A Kalatheme subtheme powered by Twitter Bootstrap & Science.
 base theme = kalatheme
 core = 7.x
-version = "7.x-1.0"
+version = "7.x-1.1"
 project = "asu_webspark_bootstrap"
 
 regions[header] = Header
@@ -18,6 +18,8 @@ features[] = name
 settings[toggle_logo] = 0
 
 stylesheets[all][] = css/main.css
+
+scripts[] = js/autoscroll.js
 
 settings[toggle_logo] = 0
 settings[toggle_name] = 1
