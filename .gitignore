@@ -41,3 +41,13 @@ Thumbs.db
 # SASS #
 ##########
 .sass-cache
+
+# Eclipse generated files #
+######################
+.project
+.settings/
+.buildpath
+*/.project
+*/.settings/
+*/.buildpath
+
