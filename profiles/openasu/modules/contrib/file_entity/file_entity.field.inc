@@ -286,6 +286,9 @@ function file_entity_field_formatter_view($entity_type, $entity, $field, $instan
     foreach ($items as $delta => $item) {
       if (!isset($recursion_queue[$item['fid']])) {
         $files_display[$item['fid']] = file_load($item['fid']);
+        if (!empty($item['description'])) {
+          $files_display[$item['fid']]->description = $item['description'];
+        }
       }
     }
 

@@ -52,6 +52,12 @@ table.mobile-table {
   display: none;
 }
 
+#modalContent .tablefield-row-0 {
+  background-color: rgba(0, 0, 0, 0.51);
+  color: #ffffff;
+  font-weight: bold;
+}
+
 /* Table Widget - Responsive */
 @media only screen and (max-width: 480px) {
 
@@ -133,3 +139,11 @@ table.mobile-table {
 .pane-bundle-spotlight .ui-state-active a { color: #000000; }
 .pane-bundle-spotlight .panopoly-spotlight { position: relative; }
 .pane-bundle-spotlight .panopoly-spotlight .panopoly-image-full { border: 0; }
+
+/**
+ * Hide the Media 'Edit' button when on a CTools dialog, because it will
+ * close the current CTools dialog. Remove once #2264187 is fixed.
+ */
+.ctools-modal-content .media-widget a.edit {
+  display: none;
+}

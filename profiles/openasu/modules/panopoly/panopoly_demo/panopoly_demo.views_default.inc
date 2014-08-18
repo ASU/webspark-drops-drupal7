@@ -12,7 +12,7 @@ function panopoly_demo_views_default_views() {
 
   $view = new view();
   $view->name = 'panopoly_demo';
-  $view->description = 'Administrative view to show news.';
+  $view->description = 'View for demo widgets.';
   $view->tag = 'default';
   $view->base_table = 'node';
   $view->human_name = 'Panopoly Demo';
