@@ -1,0 +1,58 @@
+name = ASU Webspark
+distribution_name = ASU Webspark
+description = A starting point for websites at ASU
+core = 7.x
+exclusive = 1
+version = VERSION
+
+; Drupal Core
+dependencies[] = menu
+dependencies[] = image
+dependencies[] = list
+dependencies[] = number
+dependencies[] = options
+dependencies[] = path
+dependencies[] = taxonomy
+dependencies[] = search
+dependencies[] = shortcut
+dependencies[] = field
+dependencies[] = field_ui
+dependencies[] = file
+dependencies[] = dblog
+dependencies[] = update
+
+; Panopoly Foundation
+dependencies[] = panopoly_core
+dependencies[] = panopoly_images
+dependencies[] = panopoly_theme
+dependencies[] = panopoly_magic
+dependencies[] = panopoly_widgets
+dependencies[] = panopoly_admin
+dependencies[] = panopoly_users
+
+; Panopoly Toolset
+dependencies[] = panopoly_pages
+dependencies[] = panopoly_search
+dependencies[] = panopoly_wysiwyg
+
+; OpenASU - Demo
+dependencies[] = openasu_demo
+
+; Panopoly Recommended - Admin
+dependencies[] = navbar
+dependencies[] = backports
+dependencies[] = simplified_menu_admin
+dependencies[] = save_draft
+dependencies[] = module_filter
+dependencies[] = date_popup_authored
+
+; OpenASU - Drupal Core
+dependencies[] = block
+
+; OpenASU - Custom
+dependencies[] = asu_brand
+dependencies[] = asu_cas
+dependencies[] = asu_securityscanfixes
+
+; OpenASU - Toolset
+dependencies[] = modernizr

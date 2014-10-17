@@ -195,6 +195,7 @@ body.tao #apps-list ul li {
   color: #000;
   text-transform: capitalize;
   font-family: "Lucida Grande", Arial, Helvetica, sans-serif;
+  float: left;
   margin-top: 10px;
 }
 

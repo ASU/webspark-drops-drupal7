@@ -28,7 +28,7 @@ function asu_brand_get_block_settings($reset = FALSE) {
     );
     // Alter the signin/signout URL if cas in enabled.
     if(module_exists('cas')) {
-      $js_settings['asu_sso_signinurl'] = url('cas', array('https' => TRUE, 'query' => cas_login_destination()));
+      $js_settings['asu_sso_signinurl'] = url('cas', array('https' => TRUE, 'query' => drupal_get_destination()));
       $js_settings['asu_sso_signouturl'] = url('caslogout', array('https' => TRUE));
     }
     else {

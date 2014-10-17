@@ -1,0 +1,26 @@
+<?php
+/**
+ * @file
+ * Code for the Webspark banner feature.
+ */
+
+include_once 'webspark_banner.features.inc';
+
+function webspark_banner_entity_info_alter(&$entity_info) {
+  // Webspark Banner Widget.
+  $entity_info['fieldable_panels_pane']['bundles']['banner'] = array(
+    'label' => t('Add title banner'),
+    'pane category' => t('Custom'),
+    'pane top level' => TRUE,
+    'pane icon' => drupal_get_path('module', 'webspark_banner') . '/images/icon_banner.png',
+    'admin' => array(
+      'path' => 'admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type',
+      'bundle argument' => 4,
+      'real path' => 'admin/structure/fieldable-panels-panes/manage/banner',
+      'access arguments' => array('administer fieldable panels panes'),
+    ),
+  );
+}
+
+drupal_add_css(drupal_get_path('module', 'webspark_banner') . '/css/webspark_banner.css', array('weight' => 99, 'group' => CSS_DEFAULT));
+drupal_add_js(drupal_get_path('module', 'webspark_banner') . '/js/webspark_banner.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 95));

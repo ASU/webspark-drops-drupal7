@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Addresses:
+ * No form caching
+ *
+ * Optional: "Password Autocomplete" security report flaw
+ */
+
+function asu_securityscanfixes_form_alter(&$form, &$form_state, $form_id) {
+  // no form caching
+  if (module_exists('webform') && strpos($form_id, 'webform_client_form_') !== FALSE) {
+    // Set form caching to none in some cases.
+    if (isset($form_state['webform']['component_tree']['children']) && !empty($form_state['webform']['component_tree']['children'])) {
+      $submission = $form_state['webform']['component_tree']['children'];
+      $set_cache_headers = TRUE;
+      // Checks Webform 3.x forms for file components first - no caching if file component exists
+      foreach ($submission as $k => $v) {
+        if ($v['type'] === 'file') {
+          $set_cache_headers = FALSE;
+          break;
+        }
+      }
+      if ($set_cache_headers === TRUE) { // Set for no cache
+        drupal_add_http_header('Cache-Control', 'no-cache, no-store');
+        drupal_add_http_header('Pragma', 'no-cache');
+        drupal_add_http_header('Expires', '-1');
+      }
+    }
+  }
+  // Response to "Password Autocomplete" security report flaw
+  // Disabled by default. Should be narrowed down to certain forms if enabled.
+  //$form['#attributes']['autocomplete'] = 'off';
+}
+
+/**
+ * Implements hook_preprocess_page().
+ *
+ * Adds JS for CSRF vulnerability
+ */
+function asu_securityscanfixes_preprocess_page(&$vars) {
+  // CSRF
+  drupal_add_js(drupal_get_path('module', 'asu_securityscanfixes') . '/js/asu_securityscanfixes.js');
+  $vars['scripts'] = drupal_get_js();
+}

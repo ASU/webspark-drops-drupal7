@@ -1,0 +1,97 @@
+/**
+ * CSS file for Webspark hero module.
+ */
+
+/* Increase font size of modal warning and move higher */
+.hero-warning {
+	position: relative;
+	top: -105px;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+/* Make hero background image responsive */
+.hero-bg-img {
+	background-size: cover;
+	width: 100%;
+	margin-top: -1px;
+}
+.pane-bundle-hero {
+	padding-top: 85px;
+	padding-bottom: 50px;	
+}
+.pane-bundle-hero p {
+	margin: 0;
+	padding: 0;
+}
+.pane-bundle-hero h2 {
+	color: white;
+	font-size: 60px;
+	font-weight: 900;
+	line-height: 1;
+	margin: 0 0 10px 0;
+	text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+.pane-bundle-hero .field-name-field-webspark-hero-blurb {
+	max-width: 900px;
+  margin-bottom: 24px;
+	color: white;
+	font-size: 24px;
+	line-height: 24px;
+	font-weight: 900;
+	text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Button styles */
+.pane-bundle-hero .field-name-field-webspark-hero-ugradbtn,
+.pane-bundle-hero .field-name-field-webspark-hero-gradbtn {
+  width: 41.6667%;
+	display: inline-block;
+	margin-bottom: 12px;
+	padding-left: 15px;
+  padding-right: 15px;
+}
+.pane-bundle-hero .field-name-field-webspark-hero-ugradbtn {
+	padding-left: 0;
+}
+
+/* =MEDIA QUERIES
+-------------------------------------------------------------- */
+@media (min-width: 1200px) { 
+
+	.pane-bundle-hero .field-name-field-webspark-hero-ugradbtn,
+	.pane-bundle-hero .field-name-field-webspark-hero-gradbtn {
+		width: 33.3333%;
+	}	
+	
+}
+
+@media (max-width: 992px) { 
+
+	.pane-bundle-hero h2 {
+		font-size: 50px;
+	}
+	.pane-bundle-hero .field-name-field-webspark-hero-blurb {
+		font-size: 21px;
+		line-height: 21px;
+	}
+	.pane-bundle-hero .field-name-field-webspark-hero-ugradbtn,
+	.pane-bundle-hero .field-name-field-webspark-hero-gradbtn {
+		width: 50%;
+	}	
+
+}
+
+@media (max-width: 768px) { 
+
+	.pane-bundle-hero .field-name-field-webspark-hero-ugradbtn,
+	.pane-bundle-hero .field-name-field-webspark-hero-gradbtn {
+		display: block;
+		width: 100%;
+		padding-left: 0;
+	}	
+	
+}
+
+
+ 

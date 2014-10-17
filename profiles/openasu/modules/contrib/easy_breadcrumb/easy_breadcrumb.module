@@ -1,0 +1,172 @@
+<?php
+/**
+ * @file
+ * The Easy Breadcrumb module provides a block to be embedded in any page,
+ * typically at some place near the page's header.
+ * Easy Breadcrumb uses the URL (path alias) and the current page's title
+ * (when available) to obtain the breadcrumb's segments and its respective
+ * links. The resulting block will be something like:
+ * "Home >> Contact Us" or "Home / Contact us".
+ * Such presentation could vary depending on the configuration of the module.
+ */
+
+/**
+ * Implements hook_permission().
+ *
+ * @return Assoc
+ *   permission items.
+ */
+function easy_breadcrumb_permission() {
+  return array(
+    'administer easy_breadcrumb' => array(
+      'title' => t("Administer Easy Breadcrumb"),
+      'description' => t('Perform administration tasks for the module Easy Breadcrumb.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_init().
+ */
+function easy_breadcrumb_init() {
+  $disable_drupal_default_breadcrumb = variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_DEFAULT_DRUPAL_BREADCRUMB, TRUE);
+  if ($disable_drupal_default_breadcrumb) {
+    // Sets the Drupal's default breadcrumb as an empty array to disable it.
+    drupal_set_breadcrumb(array());
+  }
+}
+
+/**
+ * Implements hook_menu().
+ *
+ * @return Assoc
+ *   menu items.
+ */
+function easy_breadcrumb_menu() {
+  $items = array();
+  $items['admin/config/user-interface/easy-breadcrumb'] = array(
+    'title' => 'Easy Breadcrumb',
+    'description' => "Controls settings for the module Easy Breadcrumb",
+    'file' => 'includes/easy_breadcrumb.admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_easy_breadcrumb_general_settings_form'),
+    'access arguments' => array('administer easy_breadcrumb'),
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ *
+ * @param array $existing
+ *   An array of existing implementations that may be used for override
+ *   purposes. This is primarily useful for themes that may wish to examine
+ *   existing implementations to extract data (such as arguments) so that it may
+ *   properly register its own, higher priority implementations.
+ * @param string $type
+ *   What 'type' is being processed. This is primarily useful so that themes
+ *   tell if they are the actual theme being called or a parent theme. May be
+ *   one of: module: A module is being checked for theme implementations.
+ *   base_theme_engine: A theme engine is being checked for a theme which is a
+ *   parent of the actual theme being used. theme_engine: A theme engine is
+ *   being checked for the actual theme being used. base_theme: A base theme is
+ *   being checked for theme implementations. theme: The actual theme in use is
+ *   being checked.
+ * @param string $theme
+ *   The actual name of theme that is being being checked (mostly only useful
+ *   for theme engine).
+ * @param string $path
+ *   The directory path of the theme or module, so that it doesn't need to be
+ *   looked up.
+ *
+ * @return Assoc
+ *   A keyed array of theme hooks.
+ */
+function easy_breadcrumb_theme($existing, $type, $theme, $path) {
+  return array(
+    'easy_breadcrumb' => array(
+      'variables' => array(
+        'breadcrumb' => NULL,
+        'segments_quantity' => NULL,
+        'separator' => NULL,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_block_info().
+ *
+ * @return Assoc
+ *   the blocks' info.
+ */
+function easy_breadcrumb_block_info() {
+  $block = array();
+  $block['easy_breadcrumb'] = array(
+    'info' => t('Easy Breadcrumb'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+  return $block;
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * @param string $delta
+ *   the identifier of the requested block.
+ *
+ * @return Assoc
+ *   the requested block's view.
+ */
+function easy_breadcrumb_block_view($delta = NULL) {
+  $block = array();
+  switch ($delta) {
+    case 'easy_breadcrumb':
+      require_once 'includes/easy_breadcrumb.blocks.inc';
+      $block['subject'] = NULL;
+      $block['content'] = _easy_breadcrumb_block();
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Theme function for the breadcrumb.
+ *
+ * @param Assoc $variables
+ *   arguments
+ *
+ * @return string
+ *   HTML for the themed breadcrumb.
+ */
+function theme_easy_breadcrumb($variables) {
+
+  $breadcrumb = $variables['breadcrumb'];
+  $segments_quantity = $variables['segments_quantity'];
+  $separator = $variables['separator'];
+
+  $html = '';
+
+  if ($segments_quantity > 0) {
+
+    $html .= '<div class="easy-breadcrumb">';
+
+    for ($i = 0, $s = $segments_quantity - 1; $i < $segments_quantity; ++$i) {
+			$it = $breadcrumb[$i];
+      $content = decode_entities($it['content']);
+			if (isset($it['url'])) {
+				$html .= l($content, $it['url'], array('attributes' => array('class' => $it['class'])));
+			} else {
+        $class = implode(' ', $it['class']);
+				$html .= '<span class="' . $class . '">'	. check_plain($content) . '</span>';
+			}
+			if ($i < $s) {
+				$html .= '<span class="easy-breadcrumb_segment-separator"> ' . $separator . ' </span>';
+			}
+    }
+    
+    $html .= '</div>';
+  }
+
+  return $html;
+}

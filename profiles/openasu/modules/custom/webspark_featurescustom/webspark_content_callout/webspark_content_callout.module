@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Webspark Content Callout feature.
+ */
+
+include_once 'webspark_content_callout.features.inc';

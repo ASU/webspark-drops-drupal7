@@ -408,7 +408,7 @@ function views_content_views_panes_content_type_edit_form($form, &$form_state) {
       $form['fields_override'][$field] = array(
         '#type' => 'checkbox',
         '#title' => $title,
-        '#default_value' => isset($conf['fields_override'][$field]) ? $conf['fields_override'][$field] : TRUE,
+        '#default_value' => isset($conf['fields_override'][$field]) ? $conf['fields_override'][$field] : !$handler->options['exclude'],
       );
     }
   }

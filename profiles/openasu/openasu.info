@@ -35,9 +35,6 @@ dependencies[] = panopoly_pages
 dependencies[] = panopoly_search
 dependencies[] = panopoly_wysiwyg
 
-; OpenASU - Demo
-dependencies[] = openasu_demo
-
 ; Panopoly Recommended - Admin
 dependencies[] = navbar
 dependencies[] = backports
@@ -49,9 +46,43 @@ dependencies[] = date_popup_authored
 ; OpenASU - Drupal Core
 dependencies[] = block
 
+; OpenASU - Contrib recommended
+dependencies[] = views_ui
+dependencies[] = contextual
+
+; OpenASU - Contrib modules for features
+dependencies[] = backgroundfield
+dependencies[] = chosen
+dependencies[] = easy_breadcrumb
+dependencies[] = entity_view_mode
+dependencies[] = flexslider
+dependencies[] = fontawesome
+dependencies[] = google_appliance
+dependencies[] = maxlength
+dependencies[] = panels_tabs
+dependencies[] = uuid_features
+dependencies[] = video_embed_field
+dependencies[] = wysiwyg_template
+
 ; OpenASU - Custom
 dependencies[] = asu_brand
 dependencies[] = asu_cas
+dependencies[] = asu_spotlight
+dependencies[] = mega_footer
+dependencies[] = asu_gsa
+; container module for features 
+dependencies[] = webspark_featurescustom
+; features and modules included in webspark_featurescustom
+dependencies[] = asu_securityscanfixes
+dependencies[] = webspark_wysiwyg
+dependencies[] = webspark_panels_styles
+dependencies[] = webspark_banner
+dependencies[] = webspark_breadcrumbs
+dependencies[] = webspark_content_callout
+dependencies[] = webspark_hero
+dependencies[] = webspark_megamenu
+dependencies[] = mega_footer_menu
+dependencies[] = webspark_extras
 
 ; OpenASU - Toolset
 dependencies[] = modernizr

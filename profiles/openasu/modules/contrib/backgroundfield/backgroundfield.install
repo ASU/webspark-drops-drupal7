@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * Implementation of hook_field_schema()
+ */
+function backgroundfield_field_schema($field) {
+  if ($field['type'] == 'backgroundfield') {
+    return array(
+      'columns' => array(
+        'fid' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+      ),
+      'foreign keys' => array(
+        'file_managed' => array(
+          'table' => 'file_managed',
+          'columns' => array('fid' => 'fid'),
+        ),
+      ),
+    );
+  } // if backgroundfield
+} // backgroundfield_field_schema()

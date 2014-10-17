@@ -1,0 +1,128 @@
+<?php
+
+/**
+ * @file
+ * An installation file for Panopoly Widgets
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function asu_spotlight_install() {
+
+}
+
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function asu_spotlight_uninstall() {
+
+  // Retrieve the file IDs for default files
+  $fids = array(
+    'panopoly_widgets_default_spotlight_fid' => variable_get('panopoly_widgets_default_spotlight_fid', NULL), 
+    'panopoly_widgets_default_image_fid' => variable_get('panopoly_widgets_default_image_fid', NULL), 
+    'panopoly_widgets_default_video_fid' => variable_get('panopoly_widgets_default_video_fid', NULL)
+  );
+
+  foreach($fids as $variable_name => $fid) {
+
+    // Deletes the file
+    if (!empty($fid) && $file = file_load($fid)) {
+      file_delete($file);
+    }
+
+    // Deletes the variable
+    variable_del($variable_name);
+  }
+
+  variable_del('panopoly_widgets_spotlight_pause_play_buttons');
+  variable_del('panopoly_widgets_spotlight_rotation_time');
+}
+
+/**
+ * Implementation of hook_field_schema().
+ */
+function asu_spotlight_field_schema($field) {
+  if ($field['type'] == 'asu_spotlight') {
+    $schema['columns']['title'] = array(
+      'type' => 'varchar',
+      'length' => '255',
+      'not null' => FALSE,
+    );
+
+    $schema['columns']['description'] = array(
+      'type' => 'text',
+      'size' => 'big',
+      'not null' => FALSE,
+    );
+
+    $schema['columns']['fid'] = array(
+      'type' => 'int', 
+      'not null' => FALSE,
+      'unsigned' => TRUE,
+    );
+
+    $schema['columns']['link'] = array(
+      'type' => 'varchar',
+      'length' => '255',
+      'not null' => FALSE,
+    );
+
+    $schema['columns']['alt'] = array(
+      'type' => 'varchar',
+      'length' => '255',
+      'not null' => FALSE,
+    );
+
+    $schema['indexes'] = array(
+      'fid' => array('fid'),
+    );
+
+    $schema['foreign keys'] = array(
+      'fid' => array(
+        'table' => 'file_managed',
+        'columns' => array('fid' => 'fid'),
+      ),
+    );
+
+    $schema['columns']['actionlink'] = array(
+      'type' => 'varchar',
+      'length' => '255',
+      'not null' => FALSE,
+    );
+
+    $schema['columns']['actiontitle'] = array(
+      'type' => 'varchar',
+      'length' => '255',
+      'not null' => FALSE,
+    );
+
+    $schema['columns']['actionlink2'] = array(
+      'type' => 'varchar',
+      'length' => '255',
+      'not null' => FALSE,
+    );
+
+    $schema['columns']['actiontitle2'] = array(
+      'type' => 'varchar',
+      'length' => '255',
+      'not null' => FALSE,
+    );
+
+    $schema['columns']['position'] = array(
+      'type' => 'varchar',
+      'length' => '100',
+      'not null' => FALSE,
+    );
+
+    $schema['columns']['color'] = array(
+      'type' => 'varchar',
+      'length' => '100',
+      'not null' => FALSE,
+    );
+
+    return $schema;
+  }
+}
+

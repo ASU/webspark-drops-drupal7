@@ -1,0 +1,9 @@
+name = ASU Security Report fixes
+description = "Contains fixes for common ASU security scan problems."
+package = ASU
+
+files[] = asu_securityscanfixes.module
+
+version = "7.x-1.0"
+core = "7.x"
+project = "asu_securityscanfixes"

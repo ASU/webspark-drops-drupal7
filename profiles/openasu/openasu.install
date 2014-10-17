@@ -13,4 +13,18 @@
  */
 function openasu_install() {
   variable_set('admin_theme', 'seven');
+  
+//Fix for image threshold error max ten upon spinning up webspark innovation
+
+  variable_set('image_resize_filter_threshold', 1000);
+
+//Deleting the default CAS role 3 created by the CAS module which gives it wrong permissions, we delete it and recreate it with a new role and let the database set the role rather than forcing a role rid
+
+  user_role_delete('CAS');
+  $role = new stdClass();
+  $role->name = 'CAS';
+  user_role_save($role);
+
+
+
 }

@@ -1,0 +1,10 @@
+<?php
+
+function asu_gsa_enable() {
+  $js = 'ASUHeader.gsa = True';
+  drupal_add_js($js, array('type' => 'inline', 'scope' => 'header', 'group' => JS_THEME, 'weight' => -10));
+  variable_set('google_appliance_hostname','http://search.asu.edu');
+  variable_set('google_appliance_frontend','asu_frontend');
+  variable_set('google_appliance_search_title','ASU Search Results');
+}
+

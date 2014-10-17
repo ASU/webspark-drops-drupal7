@@ -1,0 +1,7 @@
+name = ASU RFI
+description = ASU RFI Form module.
+core = 7.x
+package = ASUO
+dependencies[] = multiblock
+;files[] = asu_rfi.email.inc
+;scripts[] = asu_rfi.js
