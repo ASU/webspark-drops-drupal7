@@ -1,0 +1,55 @@
+name = Innovation
+description = Theme with ASU Web Standards styling. A Kalatheme subtheme, powered by Bootstrap.
+base theme = kalatheme
+core = 7.x
+version = "7.x-1.0-beta1"
+project = "Innovation"
+
+regions[header] = Header
+regions[menu] = Menu
+regions[content] = Content
+regions[prefooter] = Prefooter
+regions[footer] = Footer
+regions[closure] = Closure
+
+features[] = favicon
+features[] = logo
+features[] = name
+
+settings[toggle_logo] = 0
+
+; Stylesheets
+
+; original Webspark and Web Standards
+stylesheets[all][] = css/innovation-main.css
+stylesheets[all][] = css/grid.css
+stylesheets[all][] = css/buttons.css
+stylesheets[all][] = css/forms.css
+stylesheets[all][] = css/nav.css
+;stylesheets[all][] = profiles/openasu/libraries/fontawesome/css/font-awesome.min.css
+stylesheets[all][] = fonts/roboto/css/roboto.css
+
+; Scripts
+
+; Theme settings
+
+; original Webspark
+settings[toggle_logo] = 0
+settings[toggle_name] = 1
+settings[toggle_slogan] = 0
+settings[toggle_node_user_picture] = 0
+settings[toggle_comment_user_picture] = 0
+settings[toggle_comment_user_verification] = 0
+settings[toggle_favicon] = 1
+settings[toggle_main_menu] = 0
+settings[toggle_secondary_menu] = 0
+
+settings[responsive_toggle] = 1
+settings[pane_styles_toggle] = 1
+settings[always_show_page_title] = 0
+
+settings[default_picture] = 0
+
+; Web Standards
+; Panels layouts
+plugins[panels][layouts] = layouts

@@ -1,0 +1,322 @@
+<?php
+
+/**
+*Implements hook_block_info
+*
+**/
+function mega_footer_block_info() {
+  $blocks['mega_footer'] = array(
+
+    'info' => t('Mega Footer'),
+    'region' => 'footer',
+    'cache' => DRUPAL_CACHE_GLOBAL,
+    'status' => 1,
+  );
+
+  return $blocks;
+}
+
+/**
+*Implements hook_block_info_alter, in order to disable default asu brand module footer
+*
+**/
+function mega_footer_block_info_alter(&$blocks, $theme, $code_blocks) {
+  $blocks['asu_brand']['asu_brand_footer']['status'] = 0;
+
+}
+
+/**
+*Implements hook_block view in order to build custom mega footer
+*
+***/
+function mega_footer_block_view($delta = '') {
+  //global $base_url;
+
+  $block = array();
+
+  if($delta=='mega_footer') {
+
+  $mega_menu = menu_tree_all_data('menu-mega-footer-menu');
+  $mega_menu = menu_tree_output($mega_menu);
+
+  //
+  //Begin with Title and Address
+  $footer_mark =
+  	"<div class='megafoot'>
+    <div class='row'>
+    <div class='col-md-4 col-sm-12 space-bot-md'>";
+
+    if(variable_get('unit_logo', '') != '') {
+      $file = file_load(variable_get('unit_logo', ''));
+      $file_url = file_create_url($file->uri);
+      $footer_mark .= "<img src='".$file_url."' />";
+    }
+
+
+
+
+  $footer_mark .= "
+	          <h1>".variable_get('unit_title', 'Arizona State University')."</h1>
+
+            <address>"
+            .variable_get('unit_address_one', '1151 S. Forest Ave., Tempe, AZ, 85281')."<br>";
+	          //Check to see if there is a second line to the address
+            $is_line_two = variable_get('unit_address_two', NULL);
+
+	          if($is_line_two!=NULL) {
+                $footer_mark .= $is_line_two. "<br>";
+            }
+
+            $footer_mark .= "Phone: <a class='phone-link' href='tel:".variable_get('unit_phone', '480-965-2100')."'>".variable_get('unit_phone', '480-965-2100')."</a><br>";
+  	       //check to see if fax is provided, and add to markup if so
+            $is_fax = variable_get('unit_fax', '');
+
+            if($is_fax!=NULL) {
+  		          $footer_mark .= "Fax: <a class='phone-link' href='tel:".$is_fax."'>".$is_fax."</a><br>";
+            }
+
+            $footer_mark .=
+            "</address>";
+
+            $footer_mark .=  "<p><a class='contact-link' href='".variable_get('unit_contact_us', 'https://contact.asu.edu/')."'>Contact Us</a></p>";
+
+
+  //Social Media
+
+  $footer_mark .= "<ul class='social-media'>";
+
+
+  if(variable_get('unit_facebook_connect', NULL)!=NULL) {
+    $footer_mark .=  "<li><a href='".variable_get('unit_facebook_connect', NULL)."' title='Facebook'><i class='fa fa-facebook-square' aria-hidden='true'></i></a>
+                      </li>";
+  }
+
+  if(variable_get('unit_twitter_connect', NULL)!=NULL) {
+    $footer_mark .=  "<li><a href='".variable_get('unit_twitter_connect', NULL)."' title='Twitter'><i class='fa fa-twitter-square' aria-hidden='true'></i></a>
+                      </li>";
+  }
+
+  if(variable_get('unit_google_connect', NULL)!=NULL) {
+    $footer_mark .=  "<li><a href='".variable_get('unit_google_connect', NULL)."' title='Google+'><i class='fa fa-google-plus-square' aria-hidden='true'></i></a>
+                      </li>";
+  }
+
+  if(variable_get('unit_linkedin_connect', NULL)!=NULL) {
+    $footer_mark .=  "<li><a href='".variable_get('unit_linkedin_connect', NULL)."' title='LinkedIn'><i class='fa fa-linkedin-square' aria-hidden='true'></i></a>
+                      </li>";
+  }
+
+  if(variable_get('unit_youtube_connect', NULL)!=NULL) {
+    $footer_mark .=  "<li><a href='".variable_get('unit_youtube_connect', NULL)."' title='YouTube'><i class='fa fa-youtube-square' aria-hidden='true'></i></a>
+                      </li>";
+  }
+
+
+  $footer_mark .= "</ul>";
+
+  //add contribute button and closing div
+  $footer_mark .= "<button type='button' class='btn btn-primary'><a href='http://asufoundation.org'>Contribute</a></button>
+
+                  </div>";
+
+
+  //Now we add the menu items to the right
+  foreach($mega_menu as $item) {
+
+      if(is_bool($item)) {
+        break;
+      }
+
+      $footer_mark .= "<div class='col-md-2 col-sm-3 space-bot-md'>
+          <h2 data-toggle='collapse' data-target='#".$item['#title']."' class='big-foot-head'>".
+          $item['#title']."<span></span></h2>
+          <ul class='big-foot-nav  collapse in' id='".$item['#title']."' style=''>";
+
+          foreach($item['#below'] as $inner) {
+            if(is_bool($inner)) {
+              break;
+            }
+
+            $footer_mark .= "<li><a href='".$inner['#href']."''>".$inner['#title']."</a></li>";
+          }
+
+          $footer_mark .= "</div>";
+
+  }
+  $footer_mark .= "</div>";
+
+  $footer_mark .= "<div class='little-foot'>
+                    <div class='container'>
+                      <div class='row'>
+                        <div class='col-md-12'>
+                          <ul class='little-foot-nav'>
+                            <li><a  href='http://www.asu.edu/copyright/'>Copyright &amp; Trademark</a></li>
+                            <li><a href='http://www.asu.edu/accessibility/'>Accessibility</a></li>
+                            <li><a href='http://www.asu.edu/privacy/'>Privacy</a></li>
+                            <li><a href='http://www.asu.edu/emergency/'>Emergency</a></li>
+                            <li><a href='http://www.asu.edu/contactasu/'>Contact ASU</a></li>
+                          </ul>
+                        </div>
+                      </div>
+                  </div>";
+
+
+  $footer_mark .= "</div>";
+
+
+
+
+    $block['content'] = array(
+    '#markup' => $footer_mark,
+    '#attached' => array(
+      'css' => array(
+        drupal_get_path('module', 'mega_footer') . '/css/megafoot.css',
+      ),
+      'js' => array(
+        drupal_get_path('module', 'mega_footer') . '/js/megafoot.js',
+      ),
+    ));
+  }
+
+  	return $block;
+}
+
+/**
+*Implements hook_block_configure in order to allow customization of the mega footer block
+*
+**/
+function mega_footer_block_configure($delta = '') {
+
+  $form = array();
+  if ($delta=='mega_footer') {
+    $form['unit_title'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Unit Title'),
+      '#decription' => t('This will be the title of your organization displayed in the mega footer.'),
+      '#default_value' => variable_get('unit_title', 'ASU'),
+      '#required' => TRUE,
+    );
+
+    $form['unit_address_one'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Address First Line'),
+      '#default_value' => variable_get('unit_address_one', '1151 S. Forest Ave., Tempe, AZ, 85281'),
+      '#required' => TRUE,
+    );
+
+    $form['unit_address_two'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Address Second Line'),
+      '#default_value' => variable_get('unit_address_two', NULL),
+      '#required' => FALSE,
+    );
+
+    $form['unit_phone'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Phone'),
+      '#default_value' => variable_get('unit_phone', '480-965-2100'),
+      '#required' => TRUE,
+    );
+
+    $form['unit_fax'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Fax'),
+      '#default_value' => variable_get('unit_fax', NULL),
+    );
+
+    $form['unit_contact_us'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Contact Us Link'),
+      '#default_value' => variable_get('unit_contact_us', 'https://contact.asu.edu/'),
+    );
+
+    $form['unit_facebook_connect'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Facebook Connect Link'),
+      '#default_value' => variable_get('unit_facebook_connect', NULL),
+    );
+
+    $form['unit_twitter_connect'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Twitter Connect Link'),
+      '#default_value' => variable_get('unit_twitter_connect', NULL),
+    );
+
+    $form['unit_google_connect'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Google+ Connect Link'),
+      '#default_value' => variable_get('unit_google_connect', NULL),
+    );
+
+    $form['unit_linkedin_connect'] = array(
+      '#type' => 'textfield',
+      '#title' => t('LinkedIn Connect Link'),
+      '#default_value' => variable_get('unit_linkedin_connect', NULL),
+
+    );
+
+    $form['unit_youtube_connect'] = array(
+      '#type' => 'textfield',
+      '#title' => t('YouTube Connect Link'),
+      '#default_value' => variable_get('unit_youtube_connect', NULL),
+    );
+
+    $form['unit_logo'] = array(
+    '#type' => 'managed_file',
+    '#title' => t('Choose a logo image.'),
+    '#default_value' => variable_get('unit_logo', ''),
+    '#upload_location' => 'public://',
+    );
+
+
+  }
+
+  return $form;
+}
+
+/**
+*Implements hook_block_save
+*
+**/
+function mega_footer_block_save($delta = '', $edit = array()) {
+	if($delta == 'mega_footer') {
+	  if($edit['unit_logo'] != '') {
+      	$block = block_load('mega_footer', 'mega_footer');
+   		$file = file_load($edit['unit_logo']);
+		$file->status = FILE_STATUS_PERMANENT;
+		file_save($file);
+		file_usage_add($file, 'mega_footer', 'block', $block->bid);
+
+	  }
+    	variable_set('unit_logo', $edit['unit_logo']);
+		variable_set('unit_title', $edit['unit_title']);
+		variable_set('unit_address_one', $edit['unit_address_one']);
+    	variable_set('unit_address_two', $edit['unit_address_two']);
+		variable_set('unit_phone', $edit['unit_phone']);
+		variable_set('unit_fax', $edit['unit_fax']);
+    	variable_set('unit_contact_us', 'https://contact.asu.edu/');
+    	variable_set('unit_facebook_connect', $edit['unit_facebook_connect']);
+    	variable_set('unit_twitter_connect', $edit['unit_twitter_connect']);
+    	variable_set('unit_google_connect', $edit['unit_google_connect']);
+    	variable_set('unit_linkedin_connect', $edit['unit_linkedin_connect']);
+    	variable_set('unit_youtube_connect', $edit['unit_youtube_connect']);
+	}
+}
+
+/**
+*Implements hook_form_alter
+* Takes away ability to delete the menu on menu edit form
+*
+**/
+function mega_footer_form_alter(&$form, &$form_state, $form_id) {
+  if($form_id=='menu_edit_menu' && $form['menu_name']['#default_value']=='menu-mega-footer-menu') {
+    $form['actions']['delete']['#access']=false;
+    $form['title']['#access']=false;
+    $form['description']['#access']=false;
+    $form['description']['#expanded']=true;
+    $form['menu_name']['#description']='The top level menu items will not be rendered as links,
+        and instead as titles for each column of links.
+        Adding any more than 4 top-level links will result in the
+        remainder being pushed to the 2nd row.';
+  }
+}

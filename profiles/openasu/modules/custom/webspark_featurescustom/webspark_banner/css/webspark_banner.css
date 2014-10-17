@@ -1,0 +1,25 @@
+/**
+ * CSS file for Webspark banner module.
+ */
+
+/* Make banner background image responsive */
+.title-banner {
+	background-size: cover;
+	width: 100%;
+	margin-top: -1px;
+}
+.pane-bundle-banner {
+	padding-top: 105px;
+	padding-bottom: 30px;	
+}
+.pane-bundle-banner h2.pane-title {
+	color: white;
+	font-size: 60px;
+	font-weight: 900;
+	line-height: 1;
+	margin: 0 0 10px 0;
+	text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+
+ 

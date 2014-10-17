@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Webspark WYSIWYG feature.
+ */
+
+include_once 'webspark_wysiwyg.features.inc';

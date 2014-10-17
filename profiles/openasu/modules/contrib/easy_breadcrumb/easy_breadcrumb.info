@@ -1,0 +1,16 @@
+name = Easy Breadcrumb
+description = Provides a plug-and-play block to be embedded in your pages, typically at some place near the page's header.
+files[] = includes/EasyBreadcrumbConstants.inc
+configure = admin/config/user-interface/easy-breadcrumb
+dependencies[] = pathauto
+
+core = 7.x
+
+
+
+; Information added by Drupal.org packaging script on 2014-07-08
+version = "7.x-2.12"
+core = "7.x"
+project = "easy_breadcrumb"
+datestamp = "1404848028"
+

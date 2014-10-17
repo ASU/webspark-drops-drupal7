@@ -1,0 +1,297 @@
+<?php
+
+/**
+ * Implementation of hook_field_info()
+ */
+function backgroundfield_field_info() {
+  return array(
+    'backgroundfield' => array(
+      'label' => t('BackgroundField'),
+      'description' => t('Defines a background image field with associated css settings'),
+      'settings' => array(
+        'uri_scheme' => variable_get('file_default_scheme', 'public'),
+        'default_image' => 0,
+      ),
+      'instance_settings' => array(
+        'file_extensions' => 'png gif jpg jpeg',
+        'file_directory' => '',
+        'max_filesize' => '',
+        'max_resolution' => '',
+        'min_resolution' => '',
+        'image_style' => '',
+        'css_selector' => '',
+        'css_repeat' => '',
+        'css_h_position' => '',
+        'css_v_position' => '',
+        'css_attachment' => '',
+        'css_important' => '',
+      ),
+      'default_widget' => 'backgroundfield_widget',
+      'default_formatter' => 'backgroundfield_formatter',
+    ),
+  );
+} // backgroundfield_field_info()
+
+
+/**
+ * hook_field_settings_form()
+ */
+function backgroundfield_field_settings_form($field, $instance, $has_data) {
+  $form = image_field_settings_form($field, $instance, $has_data);
+  return $form;
+}
+
+/**
+ * hook_field_instance_settings_form()
+ */
+function backgroundfield_field_instance_settings_form($field, $instance) {
+  // image field expects these
+  $instance['settings']['alt_field'] = '';
+  $instance['settings']['title_field'] = '';
+
+  // Use the image field instance settings form as a basis.
+  $form = image_field_instance_settings_form($field, $instance);
+
+  // more convenient variable
+  $settings = $instance['settings'];
+
+  // we don't need these, but unsetting them seems to be problematic
+  $form['alt_field']['#access'] = FALSE;
+  $form['title_field']['#access'] = FALSE;;
+
+  $image_styles = image_styles();
+  $options = array('no_style' => t('Original Image'));
+  foreach ($image_styles as $style => $details) $options[$style] = $details['name'];
+  $form['image_style'] = array(
+    '#type' => 'select',
+    '#title' => t('Image Style'),
+    '#default_value' => (isset($settings['image_style']) && !empty($settings['image_style']))? $settings['image_style'] : 'no_style',
+    '#description' => t('Select an image style to apply to this image'),
+    '#options' => $options,
+  );
+  $form['css_selector'] = array(
+    '#type' => 'textfield',
+    '#title' => t('CSS Selector'),
+    '#default_value' => (isset($settings['css_selector']) && !empty($settings['css_selector']))? $settings['css_selector'] : 'body',
+    '#description' => t(''),
+    '#required' => TRUE,
+  );  
+  $form['css_repeat'] = array(
+    '#type' => 'radios',
+    '#title' => t('Repeat'),
+    '#default_value' => (isset($settings['css_repeat']) && !empty($settings['css_repeat']))? $settings['css_repeat'] : 'repeat',
+    '#options' => array(
+      'repeat' => t('Repeat'),
+      'repeat-x' => t('Repeat Horizontally'),
+      'repeat-y' => t('Repeat Vertically'),
+      'no-repeat' => t('No Repeat')
+    ),  
+    '#required' => TRUE,
+  );  
+  $form['css_h_position'] = array(
+    '#type' => 'radios',
+    '#title' => t('Horizontal Position'),
+    '#default_value' => (isset($settings['css_h_position']) && !empty($settings['css_h_position']))? $settings['css_h_position'] : 'left',
+    '#options' => array(
+      'left' => t('Left'),
+      'center' => t('Center'),
+      'right' => t('Right')
+    ),  
+    '#required' => TRUE,
+  );  
+  $form['css_v_position'] = array(
+    '#type' => 'radios',
+    '#title' => t('Vertical Position'),
+    '#default_value' => (isset($settings['css_v_position']) && !empty($settings['css_v_position']))? $settings['css_v_position'] : 'top',
+    '#options' => array(
+      'top' => t('Top'),
+      'center' => t('Center'),
+      'bottom' => t('Bottom')
+    ),  
+    '#required' => TRUE,
+  ); 
+  $form['css_attachment'] = array(
+    '#type' => 'radios',
+    '#title' => t('Attachment'),
+    '#default_value' => (isset($settings['css_attachment']) && !empty($settings['css_attachment']))? $settings['css_attachment'] : 'scroll',
+    '#options' => array(
+      'scroll' => t('Scroll'),
+      'fixed' => t('Fixed'),
+    ),
+    '#required' => TRUE,
+  );
+  $form['css_important'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('!important'),
+    '#description' => t('Check this in order to set the <a href="@important_url">!important declaration</a>.', array('@important_url' => url('http://www.w3.org/TR/CSS21/cascade.htmlr', array('fragment' => 'important-rules')))),
+    '#default_value' => (isset($settings['css_important']) && $settings['css_important'])? $settings['css_important'] : 0,
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_field_load().
+ */
+function backgroundfield_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
+  image_field_load($entity_type, $entities, $field, $instances, $langcode, $items, $age);
+}
+
+/**
+ * Implements hook_field_presave().
+ */
+function backgroundfield_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  image_field_presave($entity_type, $entity, $field, $instance, $langcode, $items);
+}
+
+/**
+ * Implements hook_field_insert().
+ */
+function backgroundfield_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  image_field_insert($entity_type, $entity, $field, $instance, $langcode, $items);
+}
+
+/**
+ * Implements hook_field_update().
+ */
+function backgroundfield_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  image_field_update($entity_type, $entity, $field, $instance, $langcode, $items);
+}
+
+/**
+ * Implements hook_field_delete().
+ */
+function backgroundfield_field_delete($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  image_field_delete($entity_type, $entity, $field, $instance, $langcode, $items);
+}
+
+/**
+ * Implements hook_field_delete_revision().
+ */
+function backgroundfield_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  image_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, $items);
+}
+
+/**
+ * Implements hook_field_update_field().
+ */
+function backgroundfield_field_update_field($field, $prior_field, $has_data) {
+  // hack so we can use the default image function
+  $field['type'] = 'image';
+  image_field_update_field($field, $prior_field, $has_data);
+}
+
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function backgroundfield_field_is_empty($item, $field) {
+  return image_field_is_empty($item, $field);
+}
+
+/**
+ * Implements hook_field_widget_info()
+ */
+function backgroundfield_field_widget_info() {
+  return array(
+    'backgroundfield_widget' => array(
+      'label' => t('Background Field'),
+      'field types' => array('backgroundfield'),
+      'description' => t('Allows users to apply a background image to a field defined css selector'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_CUSTOM,
+        'default value' => FIELD_BEHAVIOR_NONE,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_widget_settings_form()
+ */
+function backgroundfield_field_widget_settings_form($field, $instance) {
+  if (!isset($instance['widget']['settings']['preview_image_style'])) {
+    $instance['widget']['settings']['preview_image_style'] = '';
+  }
+  if (!isset($instance['widget']['settings']['progress_indicator'])) {
+    $instance['widget']['settings']['progress_indicator'] = '';
+  }
+  return image_field_widget_settings_form($field, $instance);
+}
+
+/**
+ * Implements hook_field_widget_form()
+ */
+function backgroundfield_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  // expected by image field
+  $instance['widget']['settings']['preview_image_style'] = 0;
+
+  $elements = image_field_widget_form($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
+  return $elements;
+}
+
+/**
+ * Implementation of hook_field_formatter_info()
+ */
+function backgroundfield_field_formatter_info() {
+  return array(
+    'backgroundfield_formatter' => array(
+      'label' => t('Background Field'),
+      'field types' => array('backgroundfield'),
+    ),
+  );
+}
+
+/**
+ * Immplementation of hook_field_formatter_view()
+ */
+function backgroundfield_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+
+  static $previous_selectors = array();
+  if (in_array($instance['settings']['css_selector'], $previous_selectors)) return;
+
+  // if this field instance has more than one image, randomly select one
+  if (count($items) > 1) {
+    $num = mt_rand(0, count($items) - 1);
+    $file = file_load($items[$num]['fid']);
+  }
+  // if this field instance has an image
+  else if (isset($items[0])) {
+    $file = file_load($items[0]['fid']);
+  }
+  // else if there's a default image
+  else if (is_numeric($field['settings']['default_image'])) {
+    $file = file_load($field['settings']['default_image']);
+  }
+  // no images, end here.
+  else {
+    return;
+  }
+
+  // check if there's a file
+  if (!$file) return;
+  $important = (isset($instance['settings']['css_important']) && $instance['settings']['css_important'])? ' !important' : '';
+
+  if (isset($instance['settings']['image_style']) && !empty($instance['settings']['image_style']) && $instance['settings']['image_style'] != 'no_style') {
+    $file = file_create_url(image_style_path($instance['settings']['image_style'], $file->uri));
+  }
+  else {
+    $file = file_create_url($file->uri);
+  }
+  
+  // $instance['settings'] can be modified by calling hook_backgroundfield_alter(&$settings, $entity)
+  drupal_alter('backgroundfield', $instance['settings'], $entity);
+
+  $css = $instance['settings']['css_selector'] . ' {
+    background-image: url("' . $file . '")' . $important . ';
+    background-repeat: ' . $instance['settings']['css_repeat'] . $important . ';
+    background-position: ' . $instance['settings']['css_h_position'] . ' ' . $instance['settings']['css_v_position'] . $important . ';
+    background-attachment: ' . $instance['settings']['css_attachment'] . $important . ';
+    }';
+  $options = array(
+    'type' => 'inline',
+    'group' => CSS_DEFAULT,
+  );
+  drupal_add_css($css, $options);
+
+}

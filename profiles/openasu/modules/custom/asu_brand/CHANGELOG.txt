@@ -1,5 +1,9 @@
 CHANGELOG for ASU Brand module for Drupal 7
 
+7.x-1.6, 2014-09-22
+-----------------------
+- Removes use cas_login_destination() as it is not available as of cas-7.x-1.4.
+
 7.x-1.5, 2014-01-15
 -----------------------
 - Add the use of long term caches in the case that the external file resources

@@ -1,0 +1,532 @@
+/* -------------------------------------------------*/
+/* TB ADMIN STYLE
+----------------------------------------------------*/
+.tb-megamenu .dropdown-menu li > a:hover,
+.tb-megamenu .dropdown-menu li > a:focus,
+.tb-megamenu .dropdown-submenu:hover > a {
+  background: #4f4f4f;
+}
+
+.tb-megamenu .dropdown-menu a:visited {
+  color: #666;
+}
+
+.tb-megamenu hr {
+  margin: 0;
+}
+
+.tb-megamenu-admin-form .disabled {
+  pointer-events: none;
+  cursor: default;
+  opacity: .3;
+}
+
+/* -------------------------------------------------*/
+/* TB MEGAMENU ADMIN UI
+---------------------------------------------------*/
+
+#tb-megamenu-admin {
+  min-height: 800px;
+  background: url(../images/grid-bg.jpg) top left;
+  margin: 0 -20px;
+}
+
+.tb-megamenu .admin-inline-toolbox h3 {
+  font-size: 18px;
+  line-height: 20px;
+}
+
+.tb-megamenu .admin-inline-toolbox h3 a.back-megamenu-toolbox {
+  font-size: 13px;
+  font-weight: normal;
+}
+
+
+/* Intro
+---------------------*/
+#tb-megamenu-admin-mm-intro {
+  float: left;
+  padding: 20px 145px 20px 20px;
+  text-shadow: 0 1px 1px white;
+}
+
+#tb-megamenu-admin-mm-intro h3 {
+  margin-top: 0;
+}
+
+#tb-megamenu-admin-mm-intro p,
+#tb-megamenu-admin-mm-toolitem p,
+#tb-megamenu-admin-mm-toolcol p,
+#tb-megamenu-admin-mm-toolsub p {
+  display: block;
+  color: #999999;
+  font-size: 95%;
+  overflow: hidden;
+}
+
+
+
+/* Toolbox
+---------------------*/
+#tb-megamenu-admin-mm-tb {
+  float: left;
+  text-shadow: 0 1px 1px #fff;
+}
+
+#tb-megamenu-admin .admin-inline-toolbox {
+  position: relative;
+}
+
+#tb-megamenu-admin-mm-tb .admin-toolbox {
+  padding: 20px;
+  display: none;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -o-box-sizing: border-box;
+}
+
+#tb-megamenu-admin-mm-tb .admin-toolbox h3 {
+  margin-top: 0;
+}
+
+#tb-megamenu-admin-mm-tb .admin-toolbox ul {
+  margin-left: 0;
+  margin-right: 20px;
+  float: left;
+}
+
+#tb-megamenu-admin-mm-intro > ul > li {
+  float: left;
+}
+
+#tb-megamenu-admin-mm-intro li {
+  margin-right: 20px;
+}
+
+#tb-megamenu-admin-mm-tb .admin-toolbox li > label,
+#tb-megamenu-admin-mm-tb .admin-toolbox li > label a,
+#tb-megamenu-admin-mm-intro li > label,
+#tb-megamenu-admin-mm-intro li > label a {
+  font-size: 11px;
+  color: #999999;
+}
+
+#tb-megamenu-admin-mm-tb .btn [class^="icon-"],
+#tb-megamenu-admin-mm-tb .btn [class*=" icon-"] {
+  margin-right: 0;
+}
+
+#tb-megamenu-admin-mm-tb .admin-toolbox li > label a:focus,
+#tb-megamenu-admin-mm-tb .admin-toolbox li > label a:hover,
+#tb-megamenu-admin-mm-intro li > label a:hover,
+#tb-megamenu-admin-mm-intro li > label a:focus {
+  color: #0077bb;
+}
+
+
+
+/* Toolbox Actions ---- */
+.tb-megamenu-admin-mm-row .toolbox-actions-group {
+  bottom: 9px;
+  position: absolute;
+  right: 20px;
+}
+
+.tb-megamenu-admin-mm-row .toolbox-links-groups {
+  top: 20px;
+  position: absolute;
+  right: 20px;
+}
+
+.tb-megamenu-admin-mm-row .toolbox-links-groups a {
+  color: #0074bd;
+  margin-left: 8px;
+}
+
+.tb-megamenu-admin-mm-row .toolbox-links-groups a:hover,
+.tb-megamenu-admin-mm-row .toolbox-links-groups a:focus {
+  text-decoration: underline;
+}
+
+/* Fullscreen Toggle */
+.tb-megamenu #navigation_params .tb-megamenu-admin-tog-fullscreen {
+  position: absolute;
+  right: 0;
+  top: -50px;
+}
+
+
+
+/* ADMIN LAYOUT
+---------------------------------------------------*/
+.tb-megamenu #tb-megamenu-block-wrapper .chzn-container,
+.tb-megamenu #tb-megamenu-block-wrapper .chzn-drop{
+  width: 230px !important;
+}
+
+.tb-megamenu .chzn-container,
+.tb-megamenu .chzn-drop {
+  max-width: 100% !important;
+  min-width: 100px;
+  width: 100% !important;
+}
+
+
+
+/* Toolbar ---*/
+#tb-megamenu-admin fieldset {
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+#tb-megamenu-admin-toolbar .btn-group {
+  margin-left: 5px;
+}
+
+#tb-megamenu-admin-toolbar #tb-megamenu-admin-tb-save {
+  margin-right: 15px;
+  margin-left: 15px;
+}
+
+#tb-megamenu-admin-toolbar #tb-megamenu-admin-tb-close {
+  margin-left: 20px;
+}
+
+.tb-megamenu .btn [class^="icon-"],
+.tb-megamenu .btn [class*=" icon-"] {
+  line-height: 1;
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+#tb-megamenu-admin-toolbar button {
+  box-shadow: 1px 2px 2px rgba(0,0,0,.1);
+}
+
+/* Loading */
+#tb-megamenu-admin-tb-recompile .icon-loading,
+#tb-megamenu-admin-tb-recompile.loading .icon-check {
+  display: none;
+}
+
+#tb-megamenu-admin-tb-recompile.loading .icon-loading {
+  display: inline-block;
+  background: url(../images/loading.gif) no-repeat !important;
+  width: 14px;
+  height: 14px;
+  margin-bottom: -2px;
+}
+
+
+/* ADMIN TOOLBOX
+---------------------------------------------------*/
+.tb-megamenu .admin-inline-toolbox {
+  margin: 15px 0 20px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  background: #eee;
+  border-bottom: 1px solid #e6e6e6;
+  border-top: 1px solid #e6e6e6; 
+}
+
+.tb-megamenu .admin-inline-toolbox ul {
+  margin: 0;
+  padding: 0;
+}
+
+.tb-megamenu .admin-inline-toolbox li {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  list-style: none;
+}
+
+/* Fullscreen Toggle */
+.tb-megamenu-admin-tog-fullscreen {
+  border: 1px solid #ccc;
+  background: #e6e6e6;
+  padding: 5px 10px;
+}
+
+
+/* ADMIN FORMS
+---------------------------------------------------*/
+/* Reset --- */
+.tb-megamenu form label, form span.faux-label,
+.tb-megamenu input#jform_title, input#jform_leveltitle, input#jform_grouptitle {
+  font-size: 100%;
+}
+
+.tb-megamenu fieldset input,
+.tb-megamenu fieldset textarea,
+.tb-megamenu fieldset select,
+.tb-megamenu fieldset img,
+.tb-megamenu fieldset button {
+  margin: 0;
+  float: none;
+}
+
+.tb-megamenu fieldset p {
+  font-size: 100%;
+  margin-bottom: 10px;
+}
+
+/* Button --- */
+.tb-megamenu select, textarea,
+.tb-megamenu input[type="text"], input[type="password"], input[type="datetime"],
+.tb-megamenu input[type="datetime-local"], input[type="date"], input[type="month"],
+.tb-megamenu input[type="time"], input[type="week"], input[type="number"],
+.tb-megamenu input[type="email"], input[type="url"], input[type="search"],
+.tb-megamenu input[type="tel"], input[type="color"], .uneditable-input,
+.tb-megamenu .input-append .add-on, .input-prepend .add-on, .input-append .btn, .input-prepend .btn {
+  height: 22px;
+  line-height: 22px;
+}
+
+.tb-megamenu select, input[type="file"] {
+  height: 32px;
+  line-height: 32px;
+}
+
+/* Radio
+--------*/
+/* Radio Button Groups ---*/
+.tb-megamenu .radio.btn-group input[type=radio] {
+  display: none;
+}
+
+.tb-megamenu .radio.btn-group > label:first-of-type {
+  margin-left: 0;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+}
+
+.tb-megamenu fieldset.radio.btn-group {
+  padding-left: 0;
+  padding-top: 0 !important;
+}
+
+.tb-megamenu fieldset select {
+  width: 180px;
+}
+
+
+/* Buttons
+---------- */
+.tb-megamenu .btn {
+  line-height: 22px;
+}
+
+.tb-megamenu .btn-success:hover {
+  border-color: #479047;
+}
+
+
+/* PLUGINS STYLES
+--------------------------------------------------*/
+/* Choosen
+----------*/
+/* @group Base */
+.tb-megamenu .chzn-container {
+  font-size: 14px;
+}
+
+.tb-megamenu .chzn-container .chzn-drop {
+  background: #fff;
+  border: 1px solid #aaa;
+  border-top: 0;
+  top: 29px;
+  left: 0;
+  box-shadow: 0 4px 5px rgba(0,0,0,.15);
+}
+/* @end */
+
+
+/* @group Single Chosen */
+.tb-megamenu .chzn-container-single .chzn-single {
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 3px #ffffff inset, 0 1px 1px rgba(0,0,0,0.1);
+  font-size: 13px;
+  height: 21px;
+  line-height: 21px;
+  padding: 4px 0 4px 8px;
+  color: #555;
+}
+
+.tb-megamenu .chzn-container-single .chzn-default {
+  color: #999;
+}
+
+.tb-megamenu .chzn-container-single .chzn-single span {
+  margin-right: 26px;
+}
+
+.tb-megamenu .chzn-container-single .chzn-single abbr {
+  right: 26px;
+  top: 10px;
+}
+
+.tb-megamenu .chzn-container-single .chzn-single div {
+  width: 20px;
+}
+
+.tb-megamenu .chzn-container-single .chzn-single div b {
+  background-position: 0 4px;
+}
+
+.tb-megamenu .chzn-container-single .chzn-search {
+  padding: 5px 4px;
+  overflow: hidden;
+}
+
+.tb-megamenu .chzn-container-single .chzn-search input {
+  background-image: url(../images/search-invert.png);
+  background-position: 95% center;
+  margin: 0;
+  padding: 2px 20px 2px 5px;
+  border: 1px solid #eee;
+  float: none;
+}
+
+.tb-megamenu .chzn-container-single .chzn-search input:focus {
+  border: 1px solid rgba(82, 168, 236, .6);
+}
+
+.tb-megamenu .chzn-container .chzn-results li {
+  display: block;
+  font-size: 13px;
+  margin-right: 0 !important;
+  padding: 8px;
+}
+
+.tb-megamenu .chzn-container-single .chzn-drop {
+  border-radius: 0 0 3px 3px;
+  display: none;
+  width: 99%;
+}
+
+.tb-megamenu .chzn-with-drop .chzn-drop {
+  display: block;
+}
+
+/* @end */
+
+
+/* @group Results */
+.tb-megamenu .chzn-container .chzn-results {
+  clear: both;
+}
+
+.tb-megamenu .chzn-container .chzn-results .highlighted {
+  background-color: #07b;
+  background-image: -moz-linear-gradient(top, #0097ee, #0077bb);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0097ee), to(#0077bb));
+  background-image: -webkit-linear-gradient(top, #0097ee, #0077bb);
+  background-image: -o-linear-gradient(top, #0097ee, #0077bb);
+  background-image: linear-gradient(to bottom, #0097ee, #0077bb);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0097ee', endColorstr='#ff0077bb', GradientType=0);
+  color: #fff;
+  text-shadow: none;
+}
+
+.tb-megamenu .chzn-container .chzn-results li em {
+  background: #feffde;
+  font-style: normal;
+}
+
+.tb-megamenu .chzn-container .chzn-results .highlighted em {
+  background: transparent;
+}
+
+.tb-megamenu .chzn-container .chzn-results .no-results {
+  background: #f4f4f4;
+  display: list-item;
+}
+
+.tb-megamenu .chzn-container .chzn-results .group-result {
+  cursor: default;
+  color: #999;
+  font-weight: bold;
+}
+
+.tb-megamenu .chzn-container .chzn-results-scroll {
+  background: white;
+  margin: 0 4px;
+  position: absolute;
+  text-align: center;
+  width: 321px; /* This should by dynamic with js */
+  z-index: 1;
+}
+
+.tb-megamenu .chzn-container .chzn-results-scroll span {
+  display: inline-block;
+  height: 17px;
+  text-indent: -5000px;
+  width: 9px;
+}
+
+.tb-megamenu .chzn-container .chzn-results-scroll-down {
+  bottom: 0;
+}
+
+.tb-megamenu .chzn-container .chzn-results-scroll-down span {
+  background-position: -4px -3px;
+}
+
+.tb-megamenu .chzn-container .chzn-results-scroll-up span {
+  background-position: -22px -3px;
+}
+/* @end */
+
+
+/* @group Active  */
+.tb-megamenu .chzn-container-active .chzn-single {
+  -webkit-box-shadow: 0 0 5px rgba(0,0,0,.3);
+  -moz-box-shadow   : 0 0 5px rgba(0,0,0,.3);
+  box-shadow        : 0 0 5px rgba(0,0,0,.3);
+  border: 1px solid #07b;
+}
+
+.tb-megamenu .chzn-with-drop a.chzn-single {
+  border: 1px solid #aaa;
+  background-color: #eee;
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#ffffff', GradientType=0 );
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(20%, #eeeeee), color-stop(80%, #ffffff));
+  background-image: -webkit-linear-gradient(top, #eeeeee 20%, #ffffff 80%);
+  background-image: -moz-linear-gradient(top, #eeeeee 20%, #ffffff 80%);
+  background-image: -o-linear-gradient(top, #eeeeee 20%, #ffffff 80%);
+  background-image: linear-gradient(#eeeeee 20%, #ffffff 80%);
+  border-bottom-left-radius : 0;
+  border-bottom-right-radius: 0;
+}
+
+.tb-megamenu .chzn-with-drop a.chzn-single div b {
+  background-position: -18px 5px;
+}
+
+.tb-megamenu .chzn-container-active .chzn-choices {
+  box-shadow: 0 0 5px rgba(0,0,0,.3);
+  border: 1px solid #07b;
+}
+
+.tb-megamenu .chzn-container-active .chzn-choices .search-field input {
+  color: #333 !important;
+}
+/* @end */
+
+/* Fix for Font Awesome */
+.tb-megamenu [class^="icon-"]:before,
+.tb-megamenu [class*=" icon-"]:before {
+  font-family: "FontAwesome";
+}
+
+.tb-megamenu .icon-eye-open:before,
+.tb-megamenu .icon-eye:before {
+  content: "\f06e";
+}

@@ -1,0 +1,988 @@
+<?php
+
+/**
+ * @file
+ * asu_rfi.module - ASU RFI Module
+ *
+ * @author
+ * Archana Puliroju (apuliroj@asu.edu)
+ * Michael Samuelson (mlsamuel@asu.edu)
+ *
+ * Module provides ASU RFI form submission functionality.
+ *
+ */
+
+/*********************************************************************
+CONFIG
+ *********************************************************************/
+
+
+/*********************************************************************
+DRUPAL HOOKS
+ *********************************************************************/
+
+/**
+ * Implements hook_permission().
+ */
+function asu_rfi_permission() {
+  // TODO not used anywhere yet...
+  $perms = array(
+    'asu access lead export tool' => array(
+      'title' => t('Administer ASU RFI module'),
+      'description' => t('Administer ASU RFI module'),
+    ),
+  );
+
+  return $perms;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function asu_rfi_menu() {
+  $items = array();
+
+  // Form is deployed via blocks.
+
+  // Admin UI is managed via block integrations.
+
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function asu_rfi_block_info() {
+
+  // A block to call the RFI form.
+  $blocks['asu_rfi_form_block'] = array(
+    'info' => t('RFI Master'),
+    'cache' => DRUPAL_NO_CACHE,
+    'mb_enabled' => TRUE, // Multiblock module integration.
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_info().
+ *
+ * @param string $delta
+ * @param array $multi_id (for Multiblock)
+ *
+ * @return array
+ */
+function asu_rfi_block_view($delta = '', $multi_id = NULL) {
+
+  $block = array();
+
+  switch ($delta) {
+    case 'asu_rfi_form_block':
+
+      // If we have a multiblock ID, line it up for use getting settings.
+      $multi_id = $multi_id ? $multi_id : NULL;
+      // Get instance settings.
+      $instance_settings = asu_rfi_get_block_instance_settings($multi_id);
+
+      $block['subject'] = t('RFI Form');
+
+      // TODO Load the RFI form in this block.
+      $form = NULL; // drupal_get_form($form_id);
+
+      // We use Ajax Blocks module to provide anonymous ajax loading, and then
+      // we do standard form submissions.
+
+      // Do form_alter type stuff here where we have multiblock settings in
+      // context.
+
+      // TODO Note for Archana (to be removed):
+      // Following is how we did the logic for various form build modes using
+      // the block instance's admin settings. In ASUOnline the programs were
+      // represented by program nodes that were tagged with taxonomy categories
+      // that were used to sort them into opt-groups in the dropdown.
+      // I've left this here as an example of how the instance settings can be
+      // used to "configure" the form via filtering out program options, but
+      // in the asu_rfi implementation we'll most likely have our own logic.
+
+      // 4 RFI Form Build Modes:
+      // 1a. based on single degree (one program set, field hidden)
+      // 1b. based on single degree (one program set, field visible but disabled)
+      // 2. based on degree program destination(s)
+      // 3. based on array of degrees by program/plan code
+      // 4. based on degree program categor(ies)
+      // 5. based on current program page
+
+      // IMPORTANT NOTE
+      // The building of program options happens vy way of "filtering"
+      // the full listing of programs to match the configured options. That's
+      // because entityform was based off a single configured form. We don't
+      // have to do it that way with custom forms. We could just build the
+      // form as we desire it here, given the instance settings for the block.
+
+      if ($instance_settings['build_method'] == 'program') { // 1 and 3
+
+        // Display program options based on block instance settings.
+        $program_options = $instance_settings['programs'];
+
+        if (count($program_options) > 1) { // Build type 3. More than one program.
+
+          // array_intersect_key() not working here... key type miss-match?
+          // No help from type casting, either. Do it manually. // TODO Code reuse point.
+          foreach ($form['field_rfi_program'][LANGUAGE_NONE]['#options'] as $key => $value) {
+            if (!in_array($key, $program_options) && ($key != '_none')) {
+              unset($form['field_rfi_program'][LANGUAGE_NONE]['#options'][$key]);
+            }
+          }
+
+        }
+        elseif (count($program_options) === 1) { // Build type 1. Single program.
+
+          $program_single_option = array_values($program_options);
+          $form['field_rfi_program'][LANGUAGE_NONE]['#value'] = $program_single_option[0];
+
+          // Display or hide single program input?
+          if ($instance_settings['single_program_display']) { // Display disabled.
+
+            // Drupal doesn't send value if disabled so validation will fail.
+            //$form['field_rfi_program'][LANGUAGE_NONE]['#attributes']['disabled'] = TRUE;
+
+            // Since disabling the element leads to validation issues, just
+            // unset ALL but this selection. Poorman's "disabled" option.
+            foreach ($form['field_rfi_program'][LANGUAGE_NONE]['#options'] as $key => $value) {
+              if ($key != $form['field_rfi_program'][LANGUAGE_NONE]['#value']) {
+                unset($form['field_rfi_program'][LANGUAGE_NONE]['#options'][$key]);
+              }
+            }
+
+          }
+          else { // Do not display.
+            // Running into validation errors for some reason with this.
+            //$form['field_rfi_program']['#access'] = FALSE;
+            // So we hide the field with CSS... Since there's only one accepted
+            // value anyway, DOM manipulation isn't a concern.
+            $form['field_rfi_program']['#attributes']['class'][] = 'element-hidden';
+            //$form['field_rfi_program'][LANGUAGE_NONE]['#access'] = FALSE;
+          }
+
+        }
+        else { // No programs selected. Display all program options.
+
+          // Allow all options. Do nothing.
+
+        }
+
+      }
+      elseif ($instance_settings['build_method'] == 'destination') { // Build type 2. 'destination'
+
+        // Filter program options based on destination.
+        $destinations = $instance_settings['destinations'];
+        $destination_program_options = asu_rfi_get_destination_programs($destinations);
+        $destination_program_options = array_flip($destination_program_options);
+
+        // Filter out options that don't match. // TODO Code reuse point.
+        foreach ($form['field_rfi_program'][LANGUAGE_NONE]['#options'] as $key => $value) {
+          if (!in_array($key, $destination_program_options) && ($key != '_none')) {
+            unset($form['field_rfi_program'][LANGUAGE_NONE]['#options'][$key]);
+          }
+        }
+
+      }
+      elseif ($instance_settings['build_method'] == 'category') { // Build type 4. 'category'
+
+        // Filter program options based on categories.
+        $categories = $instance_settings['categories'];
+        $category_program_options = asu_rfi_get_category_programs($categories);
+        $category_program_options = array_flip($category_program_options);
+
+        // Filter out options that don't match. // TODO Code reuse point.
+        foreach ($form['field_rfi_program'][LANGUAGE_NONE]['#options'] as $key => $value) {
+          if (!in_array($key, $category_program_options) && ($key != '_none')) {
+            unset($form['field_rfi_program'][LANGUAGE_NONE]['#options'][$key]);
+          }
+        }
+
+      }
+      elseif ($instance_settings['build_method'] == 'detect_program') { // Build type 5. 'detect_program'
+        $node = node_load(arg(1));
+
+        if ($node->type == 'program') {
+
+          // Filter out all options that aren't our program. // TODO Code reuse point.
+          foreach ($form['field_rfi_program'][LANGUAGE_NONE]['#options'] as $key => $value) {
+            if ($key != $node->nid) {
+              unset($form['field_rfi_program'][LANGUAGE_NONE]['#options'][$key]);
+            }
+          }
+
+        }
+
+      }
+
+      // Load the program_category vocabulary.
+      $vocabulary = taxonomy_vocabulary_machine_name_load('program_category');
+      $terms = entity_load('taxonomy_term', FALSE, array('vid' => $vocabulary->vid));
+
+      // The View for these options is prefixed with the category. Strip it off
+      // and Set the options into an opt group for it.
+      // TODO Only do if count() of options is > 1?
+      foreach ($form['field_rfi_program'][LANGUAGE_NONE]['#options'] as $key => $value) {
+
+        foreach ($terms as $term_key => $term_value) {
+
+          // For every category term, check this option entry to see if we need to unset
+          // it and move it under the category term's opt group.
+          // Views adds a preceding space for some reason.
+          if (strpos(trim($value), $term_value->name .' - ') === 0) {
+            unset($form['field_rfi_program'][LANGUAGE_NONE]['#options'][$key]);
+            $form['field_rfi_program'][LANGUAGE_NONE]['#options'][$term_value->name][$key] = str_replace($term_value->name .' - ', '', $value);
+          }
+
+        }
+
+      }
+
+
+      // Special, configurable prefix text and markup. Print if you have it.
+      if ($instance_settings['rfi_prefix']['value']) {
+        $form['rfi_prefix_markup'] = array(
+          '#markup' =>  '<div class="rfi-prefix">' . check_markup($instance_settings['rfi_prefix']['value'], $instance_settings['rfi_prefix']['format']) . '</div>',
+          '#weight' => -5,
+        );
+      }
+
+      // Special, configurable suffix text and markup.
+      if ($instance_settings['suffix']['value']) {
+        $form['suffix_markup'] = array(
+          '#markup' => '<div class="rfi-suffix">' . check_markup($instance_settings['suffix']['value'], $instance_settings['suffix']['format']) . '</div>',
+          '#weight' => 499, // Actions, like submit, are set at 400
+        );
+      }
+
+      $block['content'] = render($form);
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_block_configure().
+ *
+ * @param string $delta
+ * @param array $multi_id (for Multiblock)
+ *
+ * @return array
+ */
+function asu_rfi_block_configure($delta = '', $multi_id = NULL) {
+
+  $form = array();
+
+  switch ($delta) {
+    case 'asu_rfi_form_block':
+
+      $multi_id = $multi_id ? $multi_id : NULL;
+      $instance_settings = asu_rfi_get_block_instance_settings($multi_id);
+      $build_methods = array('program' => t('Selected programs'), 'destination' => t('Program destination'), 'category' => t('Program category'), 'detect_program' => t('Detect Program'));
+      $build_method_settings = $instance_settings['build_method'] ? $instance_settings['build_method'] : NULL;
+      $form['asu_rfi_form_block_build_method'] = array(
+        '#type' => 'radios',
+        '#title' => t('ASUO RFI Form Build Method'),
+        '#default_value' => $instance_settings['build_method'],
+        '#options' => $build_methods,
+        '#description' => t('Choose the program option build mode.'),
+        '#required' => TRUE,
+      );
+
+      $program_options = asu_rfi_get_programs();
+      $program_settings = $instance_settings['programs'] ? $instance_settings['programs'] : NULL;
+      $form['asu_rfi_form_block_programs'] = array(
+        '#type' => 'select',
+        '#title' => t('ASUO RFI Form Programs'),
+        '#default_value' => $program_settings,
+        '#options' => $program_options,
+        '#multiple' => TRUE,
+        '#size' => 10,
+        '#description' => t('CTRL + click to select programs to display in this RFI Form instance. Selecting NO programs will display ALL. Selecting ONE program will result in the programs field being hidden.'),
+        '#states' => array(
+          'visible' => array( // Only show if method selected was program
+            ':input[name="asu_rfi_form_block_build_method"]' => array('value' => 'program'),
+          ),
+        ),
+      );
+      $single_program_display_options = array(0 => 'No', 1 => 'Yes');
+      $single_program_display_settings = $instance_settings['single_program_display'] ? $instance_settings['single_program_display'] : 0;
+      $form['asu_rfi_form_block_single_program_display'] = array(
+        '#type' => 'select',
+        '#title' => t('Display disabled form element if only a single program selected?'),
+        '#default_value' => $single_program_display_settings,
+        '#options' => $single_program_display_options,
+        '#description' => t('If only one program is selected, display the program in a disabled select box?'),
+        '#states' => array(
+          'visible' => array( // Only show if method selected was program
+            // TODO would be wonderful to make this option available with the
+            // detect_program mode, too, but for some reason multiple values
+            // aren't working as shown on
+            // https://api.drupal.org/api/examples/form_example%21form_example_states.inc/function/form_example_states_form/7
+            ':input[name="asu_rfi_form_block_build_method"]' => array('value' => 'program'),
+          ),
+        ),
+      );
+
+      $destinations = asu_rfi_get_program_destinations();
+      foreach ($destinations as $dest_tid => $dest_value) {
+        $destination_options[$dest_tid] = $dest_value['label'];
+      }
+      $default_dest = array_search('ASU', $destination_options);
+      $dest_settings = $instance_settings['destinations'] ? $instance_settings['destinations'] : $default_dest;
+      $form['asu_rfi_form_block_destinations'] = array(
+        '#type' => 'select',
+        '#title' => t('ASUO RFI Form Program Destinations'),
+        '#default_value' => $dest_settings,
+        '#options' => $destination_options,
+        '#multiple' => TRUE,
+        '#size' => 10,
+        '#description' => t('CTRL + click to select multiple values.'),
+        '#states' => array(
+          'visible' => array( // Only show if method selected was destination
+            ':input[name="asu_rfi_form_block_build_method"]' => array('value' => 'destination'),
+          ),
+        ),
+      );
+
+      $categories = asu_rfi_get_program_categories();
+      foreach ($categories as $category_tid => $category_value) {
+        $category_options[$category_tid] = $category_value['label'];
+      }
+      $category_settings = $instance_settings['categories'] ? $instance_settings['categories'] : NULL;
+      $form['asu_rfi_form_block_categories'] = array(
+        '#type' => 'select',
+        '#title' => t('ASUO RFI Form Program Categories'),
+        '#default_value' => $category_settings,
+        '#options' => $category_options,
+        '#multiple' => TRUE,
+        '#size' => 10,
+        '#description' => t('CTRL + click to select multiple values.'),
+        '#states' => array(
+          'visible' => array( // Only show if method selected was destination
+            ':input[name="asu_rfi_form_block_build_method"]' => array('value' => 'category'),
+          ),
+        ),
+      );
+
+      $default_rfi_prefix = array(
+        'value' => '',
+        'format' => filter_default_format(),
+      );
+      $rfi_prefix_settings = $instance_settings['rfi_prefix'] ? $instance_settings['rfi_prefix'] : $default_rfi_prefix;
+      $form['asu_rfi_form_block_rfi_prefix'] = array(
+        '#type' => 'text_format',
+        '#title' => t('ASUO RFI Form prefix text and markup'),
+        '#default_value' => $rfi_prefix_settings['value'],
+        '#format' => $rfi_prefix_settings['format'],
+        '#description' => t('Special text to display at the top of the RFI form.'),
+      );
+
+      $default_suffix = array(
+        'value' => '',
+        'format' => filter_default_format(),
+      );
+      $suffix_settings = $instance_settings['suffix'] ? $instance_settings['suffix'] : $default_suffix;
+      $form['asu_rfi_form_block_suffix'] = array(
+        '#type' => 'text_format',
+        '#title' => t('ASUO RFI Form suffix text and markup'),
+        '#default_value' => $suffix_settings['value'],
+        '#format' => $suffix_settings['format'],
+        '#description' => t('Special text to follow the RFI form.'),
+      );
+
+      break;
+  }
+  return $form;
+}
+
+/**
+ * Implements hook_block_save().
+ *
+ * @param string $delta
+ * @param array $edit (for Multiblock)
+ */
+function asu_rfi_block_save($delta = '', $edit = array()) {
+
+  switch ($delta) {
+    case 'asu_rfi_form_block':
+
+      $multi_id = isset($edit['multiblock_delta']) ? '_'. $edit['multiblock_delta']['#value'] : NULL;
+
+      variable_set('asu_rfi_form_block_build_method' . $multi_id, $edit['asu_rfi_form_block_build_method']);
+      variable_set('asu_rfi_form_block_destinations' . $multi_id, $edit['asu_rfi_form_block_destinations']);
+      variable_set('asu_rfi_form_block_programs' . $multi_id, $edit['asu_rfi_form_block_programs']);
+      variable_set('asu_rfi_form_block_categories' . $multi_id, $edit['asu_rfi_form_block_categories']);
+      variable_set('asu_rfi_form_block_single_program_display' . $multi_id, $edit['asu_rfi_form_block_single_program_display']);
+      variable_set('asu_rfi_form_block_rfi_prefix' . $multi_id, $edit['asu_rfi_form_block_rfi_prefix']);
+      variable_set('asu_rfi_form_block_suffix' . $multi_id, $edit['asu_rfi_form_block_suffix']);
+
+      break;
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function asu_rfi_cron() {
+
+  /* EXAMPLE OF HOW WE COULD CATCH FAILED POSTINGS, AND RETRY THEM VIA CRON
+
+  // Check for unposted leads (confirmation == -1), and add them to the cron
+  // queue.
+
+  $queue = DrupalQueue::get('asu_rfi_failed_leads_queue');
+
+  // Get failed RFI Leads.
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'entityform')
+    ->entityCondition('bundle', 'rfi_form')
+    // Don't let this keep happening forever if we have permanent failure.
+    ->propertyCondition('created', time() - 432000, '>') // Created in the last 5 days (432000 = 5(24 * 3600)).
+    ->fieldCondition('field_confirmation', 'value', '-1', '=') // Failed lead.
+    ->addMetaData('account', user_load(1)); // Run the query as user 1.
+  $results = $query->execute();
+
+  // Add failed leads to the cron jobs queue.
+  if (isset($results['entityform'])) {
+
+    // For each failed lead, add it to the asu_rfi_failed_leads_queue.
+    foreach ($results['entityform'] as $key => $failed_rfi_lead) {
+      $queue->createItem($failed_rfi_lead);
+    }
+
+  }
+  */
+
+}
+
+/**
+ * Implements hook_cron_queue_info().
+ */
+function asu_rfi_cron_queue_info() {
+
+  // Process to repost failed leads.
+  $queues = array();
+  /*
+  $queues['asu_rfi_failed_leads_queue'] = array(
+    'worker callback' => 'asu_rfi_repost_rfi', // Function to call, each item.
+    'time' => 10, // Seconds to spend working on the queue.
+  );
+  */
+
+  return $queues;
+}
+
+/**
+ * Implements hook_libraries_info().
+ */
+function asu_rfi_libraries_info() {
+  $libraries = array();
+  /*
+  // Google Closure Library
+  $libraries['phoneparser'] = array(
+    'name' => 'phoneparser',
+    'vendor url' => 'https://rawgit.com/Gilshallem/phoneparser/master/demo.htm',
+    'download url' => 'https://github.com/Gilshallem/phoneparser',
+    'version' => '',
+    'files' => array(
+      'js' => array(
+        'phoneparser.js' => array('scope' => 'header', 'group' => JS_LIBRARY),
+      ),
+    ),
+  );
+  */
+
+  return $libraries;
+}
+
+/*********************************************************************
+CALLBACKS
+ *********************************************************************/
+
+/**
+ * Cron worker callback.
+ *
+ * Called once for each item.
+ *
+ * @param $data
+ */
+function asu_rfi_repost_rfi($data) {
+
+  /*
+  // Load and resave entityform entry which has been flagged as a failure
+  // to post to third parties (field_confirmation == -1).
+  // asu_rfi_entity_update() will kick in and attempt to repost.
+
+  $entityform = entity_load_single('entityform', $data->entityform_id);
+
+  $wrapper = entity_metadata_wrapper('entityform', $entityform);
+  $wrapper->save();
+  */
+
+}
+
+/*********************************************************************
+THEMING
+ *********************************************************************/
+
+
+/*********************************************************************
+FORMS
+ *********************************************************************/
+
+/**
+ * Implements hook_form_alter().
+ */
+/*
+function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
+
+  dpm($form_id);
+
+}
+*/
+
+/**
+ * RFI form definition function.
+ * TODO
+ */
+
+
+/**
+ * RFI form validate handler.
+ * TODO
+ */
+
+
+/**
+ * RFI form submit handler.
+ * TODO
+ *
+ * Consider, do we need to gather and include geolocation data with save?
+ *   $ip = asu_geoip_get_client_ip();
+ *   $location = asu_geoip_geo_locate($ip);
+ * OS and browser? (See asu_rfi_detect_os() and asu_rfi_detect_browser()).
+ * (I have a module for that from ASUOnline).
+ * Other special data to gather? Analytics to push?
+ *
+ * Attempt to push data to Salesforce middleware immediately. If fails, queue
+ * up for resubmission attempt via cron, or flag the submission so cron can
+ * check for items needing resubmission itself?
+ */
+
+
+/*********************************************************************
+INTERNAL
+ *********************************************************************/
+
+
+/*********************************************************************
+API
+ *********************************************************************/
+
+/**
+ * Helper function to obtain all settings for a block (Multiblock compatible).
+ *
+ * @param mixed (string or integer) $multi_id Multiblock block delta value
+ * @param boolean
+ *
+ * @return array
+ */
+function asu_rfi_get_block_instance_settings($multi_id = NULL, $endpoint_build = FALSE) {
+
+  // $multi_id if you got 'em.
+  $multi_id = $multi_id ? '_' . $multi_id : NULL;
+
+  if (!$endpoint_build) {
+    $block_instance_settings = array();
+    $block_instance_settings['build_method'] = variable_get('asu_rfi_form_block_build_method' . $multi_id, NULL);
+    $block_instance_settings['programs'] = variable_get('asu_rfi_form_block_programs' . $multi_id, array());
+    $block_instance_settings['categories'] = variable_get('asu_rfi_form_block_categories' . $multi_id, array());
+    $block_instance_settings['single_program_display'] = variable_get('asu_rfi_form_block_single_program_display' . $multi_id, 0);
+    $block_instance_settings['destinations'] = variable_get('asu_rfi_form_block_destinations' . $multi_id, array());
+    $block_instance_settings['rfi_prefix'] = variable_get('asu_rfi_form_block_rfi_prefix' . $multi_id, NULL);
+    $block_instance_settings['suffix'] = variable_get('asu_rfi_form_block_suffix' . $multi_id, NULL);
+  }
+  else { // Default build settings, used by our GET/POST endpoint.
+
+    $block_instance_settings = array();
+    $block_instance_settings['build_method'] = 'program';
+    $block_instance_settings['programs'] = array();
+    $block_instance_settings['categories'] = array();
+    $block_instance_settings['single_program_display'] = 0;
+    $block_instance_settings['destinations'] = array();
+    $block_instance_settings['rfi_prefix'] = NULL;
+    $block_instance_settings['suffix'] = NULL;
+
+  }
+
+  return $block_instance_settings;
+}
+
+/**
+ * Detect the user's OS.
+ *
+ * @return int|string
+ */
+function asu_rfi_detect_os() {
+
+  $current_os = "unknown";
+  $os_list = array (
+    'Windows 7' => '(Windows NT 6\.1)',
+    'Windows Vista' => '(Windows NT 6\.0)',
+    'Windows XP' => '(Windows NT 5\.1)|(Windows XP)',
+    'Mac OS' => '(Mac_PowerPC)|(Macintosh)',
+    'Linux' => '(Linux)|(X11)',
+    'Search Bot'=>'(nuhk)|(Googlebot)|(Yammybot)|(Openbot)|(Slurp)|(MSNBot)|(Ask Jeeves\/Teoma)|(ia_archiver)',
+    'Windows 3.11' => 'Win16',
+    'Windows 95' => '(Windows 95)|(Win95)|(Windows_95)',
+    'Windows 98' => '(Windows 98)|(Win98)',
+    'Windows 2000' => '(Windows NT 5\.0)|(Windows 2000)',
+    'Windows Server 2003' => '(Windows NT 5\.2)',
+    'Windows NT 4.0' => '(Windows NT 4\.0)|(WinNT4\.0)|(WinNT)|(Windows NT)',
+    'Windows ME' => '(Windows 98)|(Win 9x 4\.90)|(Windows ME)',
+    'Open BSD' => 'OpenBSD',
+    'Sun OS' => 'SunOS',
+    'QNX' => 'QNX',
+    'BeOS' => 'BeOS',
+    'OS/2' => 'OS\/2'
+  );
+  if (isset($_SERVER['HTTP_USER_AGENT'])) {
+    foreach($os_list as $current_os => $match) {
+      if (preg_match('#'.$match.'#i', $_SERVER['HTTP_USER_AGENT'])) {
+        break;
+      }
+    }
+  }
+  return $current_os;
+}
+
+/**
+ * Detect the user's browser.
+ *
+ * @return string
+ */
+function asu_rfi_detect_browser() {
+
+  $browser = 'unknown';
+  if (isset($_SERVER['HTTP_USER_AGENT'])) {
+    $u_agent = $_SERVER['HTTP_USER_AGENT'];
+    if (stripos($u_agent, 'MSIE') !== FALSE) {
+      $browser = "IE";
+    }
+    elseif (stripos($u_agent, 'Chrome') !== FALSE) {
+      $browser = "Chrome";
+    }
+    elseif (stripos($u_agent, 'Firefox') !== FALSE) {
+      $browser = "Firefox";
+    }
+    elseif (stripos($u_agent, 'Safari') !== FALSE) {
+      $browser = "Safari";
+    }
+    elseif (stripos($u_agent, 'Flock') !== FALSE) {
+      $browser = "Flock";
+    }
+    elseif (stripos($u_agent, 'Opera') !== FALSE) {
+      $browser = "Opera";
+    }
+  }
+
+  return $browser;
+}
+
+/**
+ * Helper function to return all active status program nodes
+ *
+ * @return array where key is nid and value is program focus (program code +
+ *   program plan code)
+ *
+ * TODO Probably will want to remove, or edit to use new program gathering
+ * logic.
+ */
+function asu_rfi_get_programs() {
+
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'program')
+    ->propertyCondition('status', 1)
+    -> propertyOrderBy('title', 'ASC')
+    ->addMetaData('account', user_load(1)); // Run the query as user 1.
+  $result = $query->execute();
+  if (isset($result['node'])) {
+    $items_nids = array_keys($result['node']);
+    $items = entity_load('node', $items_nids);
+  }
+
+  $out = array();
+  foreach ($items as $nid => $program) {
+
+    $program_wrapper = entity_metadata_wrapper('node', $program);
+
+    $program_abbr = $program_wrapper->field_program_abbr->value();
+    $program_code = $program_wrapper->field_program_code->value();
+    $program_plan_code = $program_wrapper->field_program_plan_code->value();
+
+    // Abbr in value matches how we present name in get programs Views
+    // Datasource View.
+    $out[$nid] = $program_abbr;
+  }
+
+  return $out;
+}
+
+/**
+ * Helper function to return program destinations (taxonomy_term).
+ *
+ * @return array where key is tid and value is array('name' => [term name],
+ *   'label' => 'field_destination_label')
+ *
+ * TODO Probably remove. Destinations were used for pushing data to different
+ * services. We'll just be using Salesforce.
+ */
+function asu_rfi_get_program_destinations() {
+
+  // Get crm_destination taxonomy term entities...
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'taxonomy_term')
+    ->entityCondition('bundle', 'crm_destinations')
+    ->propertyOrderBy('weight')
+    ->addMetaData('account', user_load(1)); // Run the query as user 1.
+  $result = $query->execute();
+  if (isset($result['taxonomy_term'])) {
+    $items_tids = array_keys($result['taxonomy_term']);
+    $items = entity_load('taxonomy_term', $items_tids);
+  }
+
+  $out = array();
+  foreach ($items as $nid => $destination) {
+
+    $destination_wrapper = entity_metadata_wrapper('taxonomy_term', $destination);
+
+
+    $destination_tid = $destination_wrapper->tid->value();
+    $destination_name = $destination_wrapper->name->value();
+    $destination_label = $destination_wrapper->field_destination_label->value();
+
+    $out[$destination_tid]['name'] = $destination_name;
+    $out[$destination_tid]['label'] =  $destination_label;
+  }
+
+  return $out;
+}
+
+/**
+ * Helper function to return program categories (taxonomy_term).
+ *
+ * @return array where key is tid and value is array('name' => [term name],
+ *   'label' => [term name])
+ *
+ * TODO probably remove.
+ */
+function asu_rfi_get_program_categories() {
+
+  // Get program_category taxonomy term entities...
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'taxonomy_term')
+    ->entityCondition('bundle', 'program_category')
+    ->propertyOrderBy('weight')
+    ->addMetaData('account', user_load(1)); // Run the query as user 1.
+  $result = $query->execute();
+  if (isset($result['taxonomy_term'])) {
+    $items_tids = array_keys($result['taxonomy_term']);
+    $items = entity_load('taxonomy_term', $items_tids);
+  }
+
+  $out = array();
+  if (isset($items)) {
+    foreach ($items as $nid => $destination) {
+
+      $category_wrapper = entity_metadata_wrapper('taxonomy_term', $destination);
+
+      $category_tid = $category_wrapper->tid->value();
+      $category_name = $category_wrapper->name->value();
+
+      $out[$category_tid]['name'] = $category_name;
+      $out[$category_tid]['label'] = $category_name;
+    }
+  }
+
+  return $out;
+}
+
+/**
+ * Helper function to return programs configured for provided destination(s).
+ * @param $destinations array where value is a destination tid.
+ *
+ * @return array ala array([nid] => [program abbr])
+ *
+ * TODO probably remove.
+ */
+function asu_rfi_get_destination_programs($destinations = array()) {
+
+  $out = array();
+
+  if ($destinations) {
+
+    // Load programs that point to the CRM Destionation tids.
+
+    // Get crm_destination taxonomy term entities...
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'program')
+      ->fieldCondition('field_program_crm_dest', 'tid', $destinations, 'IN')
+      ->addMetaData('account', user_load(1)); // Run the query as user 1.
+    $result = $query->execute();
+    if (isset($result['node'])) {
+      $items_nids = array_keys($result['node']);
+      $items = entity_load('node', $items_nids);
+    }
+
+    if (isset($items)) {
+      foreach ($items as $nid => $program) {
+
+        $program_wrapper = entity_metadata_wrapper('node', $program);
+
+        $program_abbr = $program_wrapper->field_program_abbr->value();
+        $program_code = $program_wrapper->field_program_code->value();
+        $program_plan_code = $program_wrapper->field_program_plan_code->value();
+
+        // Abbr in value matches how we present name in get programs Views
+        // Datasource View.
+        $out[$nid] = $program_abbr;
+      }
+    }
+
+  }
+
+  return $out;
+}
+
+/**
+ * Helper function to return programs configured for provided categor(ies).
+ *
+ * @param $categories array where value is a category tid.
+ *
+ * @return array ala array([nid] => [program abbr])
+ *
+ * TODO probably remove.
+ */
+// TODO lot of shared code between some of these taxonomy-based API functions.
+// Single source them, as possible.
+function asu_rfi_get_category_programs($categories = array()) {
+
+  $out = array();
+
+  if ($categories) {
+
+    // Load programs that point to the Program Category tids.
+
+    // Get program_category taxonomy term entities...
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'program')
+      ->fieldCondition('field_program_cat', 'tid', $categories, 'IN')
+      ->addMetaData('account', user_load(1)); // Run the query as user 1.
+    $result = $query->execute();
+    if (isset($result['node'])) {
+      $items_nids = array_keys($result['node']);
+      $items = entity_load('node', $items_nids);
+    }
+
+    foreach ($items as $nid => $program) {
+
+      $program_wrapper = entity_metadata_wrapper('node', $program);
+
+      $program_abbr = $program_wrapper->field_program_abbr->value();
+      $program_code = $program_wrapper->field_program_code->value();
+      $program_plan_code = $program_wrapper->field_program_plan_code->value();
+
+      // Abbr in value matches how we present name in get programs Views
+      // Datasource View.
+      $out[$nid] = $program_abbr;
+    }
+
+  }
+
+  return $out;
+}
+
+/**
+ * Helper function to determine if an RFI submission is a duplicate submission.
+ *
+ * @param $email email attached to submission.
+ * @param $program_nid nid of the program attached to submission.
+ * @param $new_entity_id id current entity, if available. (Needed, in some
+ *   contexts so we don't throw a dupe on the in-process entityform being
+ *   checked. Basically, provide it where we have an $entity context instead of
+ *   a $form_state context.)
+ *
+ * @return Boolean FALSE if is NOT duplicate submission. ID of duplicate
+ *   entityform if is.
+ *
+ * TODO Do we need to implement any logic for preventing duplicate submissions?
+ * Or can we just allow them to happen?
+ * If need to implement - how about a duplicate == same email + program as
+ * existing submission (in current temporary list of submissions).
+ */
+function asu_rfi_is_dupe($email, $program_nid, $new_entity_id = 0) {
+
+  $dupe = FALSE;
+
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'entityform')
+    ->entityCondition('entity_id', $new_entity_id, '!=') // Sometimes, need to make sure we don't catch currently new entity.
+    ->fieldCondition('field_email_address', 'value', $email, '=')
+    ->fieldCondition('field_rfi_program', 'target_id', $program_nid, '=')
+    ->propertyCondition('created', time() - 129000, '>') // limit dupe check to items in last 2 weeks
+    ->addMetaData('account', user_load(1)); // Run the query as user 1.
+  $result = $query->execute();
+
+  // Results in a boolean as entityform won't be set if nothing is found.
+  if (isset($result['entityform'])) {
+    $first_result = array_shift($result['entityform']);
+    // If we had a result, return the entityform_id so we can use with ASUO ID
+    // reporting.
+    $dupe = $first_result->entityform_id;
+  }
+  else {
+    $dupe = FALSE;
+  }
+
+  return $dupe;
+}
+
+/**
+ * Helper function to determine which environment we're operating in.
+ *
+ * @return Name of the environment. dev, qa, or prod
+ */
+function asu_rfi_determine_environment() {
+
+  // Strict operator so we don't match on FALSE.
+  global $base_url;
+  $environ = 'prod';
+  if ((strpos($base_url, 'https://localhost') === 0) || (strpos($base_url, 'http://localhost') === 0)) {
+    $environ = 'dev';
+  }
+  if ((strpos($base_url, 'https://dev-') === 0) || (strpos($base_url, 'http://dev-') === 0)) {
+    $environ = 'dev';
+  }
+  if ((strpos($base_url, 'https://qa-') === 0) || (strpos($base_url, 'http://qa-') === 0)) {
+    $environ = 'qa';
+  }
+  if ((strpos($base_url, 'https://test-') === 0) || (strpos($base_url, 'http://test-') === 0)) {
+    $environ = 'qa';
+  }
+
+  return $environ;
+}
+
+/*********************************************************************
+DEVELOPER NOTES
+ *********************************************************************/
+
+

@@ -34,10 +34,10 @@ function asu_cas_defaultconfig_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'cas_auto_assigned_role';
   $strongarm->value = array(
-    3 => '3',
+    5 => '5',
     2 => TRUE,
+    3 => 0,
     4 => 0,
-    5 => 0,
   );
   $export['cas_auto_assigned_role'] = $strongarm;
 

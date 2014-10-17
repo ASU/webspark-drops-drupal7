@@ -47,7 +47,7 @@ function panopoly_search_update_7001(&$sandbox) {
 function panopoly_search_update_7002(&$sandbox) {
 
   // If we are running on Pantheon...
-  if (variable_get('pantheon_tier') && function_exists('_search_api_solr_autoload')) {
+  if (variable_get('pantheon_tier')) {
 
     // Enable Pantheon's Search Module
     module_enable(array('pantheon_apachesolr'));
@@ -93,7 +93,7 @@ function panopoly_search_update_7003(&$sandbox) {
 function panopoly_search_update_7004(&$sandbox) {
 
   // If we are running on Pantheon...
-  if (variable_get('pantheon_tier') && function_exists('_search_api_solr_autoload')) {
+  if (variable_get('pantheon_tier')) {
 
     // Load the Solr PHP Client Library
     _search_api_solr_autoload('Apache_Solr_Service');

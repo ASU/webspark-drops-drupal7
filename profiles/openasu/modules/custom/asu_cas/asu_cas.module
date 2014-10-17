@@ -92,7 +92,7 @@ function asu_cas_update_projects_alter(&$projects) {
   $managed_things = array();
   $managed_things[] = 'kalatheme'; // adding base theme
   $managed_things[] = 'asu_webspark_bootstrap'; // adding base theme
-
+  $managed_things[] = 'innovation';
   // Determine any dependencies to components manged by the distribution
   $profile_info = install_profile_info('openasu');
   foreach ($profile_info['dependencies'] as $module) {

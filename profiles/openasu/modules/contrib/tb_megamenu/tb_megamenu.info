@@ -1,0 +1,19 @@
+name = TB Mega Menu
+description = Megamenu solutions for Drupal
+package = tb_megamenu
+version = VERSION
+core = 7.x
+
+files[] = tb_megamenu.functions.inc
+files[] = tb_megamenu.themes.inc
+files[] = tb_megamenu.ajax.inc
+files[] = tb_megamenu.admin.inc
+files[] = tb_megamenu.module
+configure = admin/structure/tb-megamenu
+
+; Information added by Drupal.org packaging script on 2014-08-15
+version = "7.x-1.0-beta5"
+core = "7.x"
+project = "tb_megamenu"
+datestamp = "1408100329"
+

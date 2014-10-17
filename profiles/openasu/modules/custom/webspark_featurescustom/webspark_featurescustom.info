@@ -1,0 +1,6 @@
+name = Webspark Features Container
+description = This is nothing more than a placeholder module for custom Webspark features.
+core = 7.x
+package = ASU Webspark
+files[] = webspark_featurescustom.module
+version = 7.x-1.0

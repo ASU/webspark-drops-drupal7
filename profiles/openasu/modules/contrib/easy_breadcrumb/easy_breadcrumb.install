@@ -1,0 +1,25 @@
+<?php
+/**
+ * @file
+ * Install hooks.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function easy_breadcrumb_uninstall() {
+
+  require_once 'includes/EasyBreadcrumbConstants.inc';
+
+  // Use reflection for getting constants.
+  $o_class = new ReflectionClass('EasyBreadcrumbConstants');
+  $constants = $o_class->getConstants();
+
+  // Deletes all the created variables by this module.
+  foreach ($constants as $constant_name => $constant_value) {
+    // The database variables are named using the prefix 'DB_VAR'.
+    if (strpos($constant_name, 'DB_VAR_') === 0) {
+      variable_del($constant_value);
+    }
+  }
+}

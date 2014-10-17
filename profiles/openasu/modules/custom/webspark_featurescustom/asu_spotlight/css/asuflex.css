@@ -1,0 +1,80 @@
+.blurbcontainer {
+	width: auto;
+	position: absolute;	!important
+	z-index: 2000;
+	
+}
+
+.slidecontainer {
+	position: relative; !important
+}
+
+.slidecontainer p {
+	max-width: 400px;
+	color: #FFF;
+	font-size: 24px;
+}
+
+.slidecontainer h2 {
+	max-width: 400px;
+	color: #FFF;
+	
+}
+
+.blurbcontainer .btn {
+	display: inline;
+	margin-right: 20px;
+}	
+
+/*.flexslider .flex-viewport {
+	overflow: visible;
+}*/
+
+body .flexslider {
+	
+}
+
+.top-left {
+	top: 2%;
+	left: 5%;
+}
+
+.top-center {
+	top: 2%;
+	right: 40%;
+}
+
+.top-right {
+ 	top: 2%;
+ 	right: 5%;
+}
+
+.mid-left {
+	top: 30%;
+	left: 5%;
+}
+
+.mid-center {
+	top: 30%;
+	right: 40%;
+}
+
+.mid-right {
+	top: 30%;
+	right: 5%;
+}
+
+.bottom-left {
+	bottom: 5%;
+	left: 5%;
+}
+
+.bottom-center {
+	bottom: 5%;
+	right: 40%;
+}
+
+.bottom-right {
+	bottom: 5%;
+	right: 5%;
+}

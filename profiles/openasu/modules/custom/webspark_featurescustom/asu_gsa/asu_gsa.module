@@ -1,0 +1,328 @@
+<?php
+/**
+ * @file
+ * Author: Zohair Zaidi (zazaidi@asu.edu)
+ * Description: Custom module to add on ASU specific functionality for the Google Search Appliance
+ */
+function asu_gsa_init() {
+  drupal_add_css(drupal_get_path('module', 'asu_gsa') . '/asu_gsa.css', array('group' => CSS_THEME));
+  drupal_add_js('var ASUHeader = ASUHeader || {};','inline');
+  $js = 'ASUHeader.gsa = "google-appliance-block-form"';
+  drupal_add_js($js, array('type' => 'inline', 'scope' => 'header', 'group' => JS_THEME, 'weight' => -10));
+
+  if (isset($_POST['search_keys'])) {
+    $query = $_POST['search_keys'];
+    $pass = "Header";
+    asu_gsa_redirect($query,$pass);
+  }
+
+}
+
+
+function asu_gsa_menu() {
+  $items = array();
+  $items['admin/config/search/asu_gsa/settings'] = array(    'title' => 'ASU GSA Search',    'description' => 'Configure options for search via the ASU Google Search Appliance.',    'page callback' => 'drupal_get_form',    'page arguments' => array('asu_gsa_admin_settings'),    'file' => 'asu_gsa.admin.inc',    'access arguments' => array('administer_google_appliance'),    'weight' => -30,  );
+  return $items;
+}
+
+
+function asu_gsa_menu_alter(&$items) {
+  unset($items['gsearch']);
+  unset($items['admin/config/search/google_appliance/settings']);
+  $items['admin/config/search/google_appliance/settings'] = array (  'title' => 'ASU GSA Config',  );
+  $items['gsearch/%/%'] = array (
+    'title' => 'ASU Search',
+    'page callback' => 'asu_gsa_redirect',
+    'page arguments' => array(1,2),
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $settings = _asu_gsa_get_settings();
+  if ($settings['local_search'] == "No") {
+    unset($items['search']);
+    $items['search'] = array(
+      'title' => ' ',
+      'page callback' => 'asu_gsa_collection',
+      'page arguments' => array(1, 2), // (1) search query, (2) results sort param
+      'access callback' => 'user_access',
+      'access arguments' => array('access content'),
+      'type' => MENU_SUGGESTED_ITEM,  );
+
+    $items['search/%/%'] = array(
+      'title' => ' ',
+      'page callback' => 'asu_gsa_collection',
+      'page arguments' => array(1, 2), // (1) search query, (2) results sort param
+      'access callback' => 'user_access',
+      'access arguments' => array('access content'),
+      'type' => MENU_SUGGESTED_ITEM,  );
+  }
+  $items['global'] = array(
+    'title' => ' ',
+    'page callback' => 'asu_gsa_global',
+    'page arguments' => array(1, 2), // (1) search query, (2) results sort param
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+    'type' => MENU_SUGGESTED_ITEM,  );
+}
+
+
+function asu_gsa_theme() {
+  $themes = array (
+    'asu_gsa_search_results_template' => array(
+      'template' => 'results',
+      'arguments' => array(),
+    ),);
+  return $themes;
+}
+
+
+function asu_gsa_redirect($query,$sort) {
+  $type = variable_get('asu_gsa_search_type','Collection');
+  if ($sort == "Header") {
+    drupal_goto('search/'.$query);
+  }
+  if ($type == "Collection") {
+    drupal_goto('search/'.$query.'/'.$sort);
+  } else  {
+    drupal_goto('global/'.$query.'/'.$sort);
+  }
+
+}
+
+function clean_result($string, $start, $end){
+  $string = " ".$string;
+  $pos = strpos($string,$start);
+
+  if ($pos == 0) return "";
+  $pos += strlen($start);
+  $len = strpos($string,$end,$pos) - $pos;
+  return substr($string,$pos,$len);
+}
+
+function asu_gsa_sort() {
+  $path = current_path();
+  $exp = explode("/",$path);
+  if (count($exp) > 2) {
+    $sort = $exp[2];
+  }
+  else {
+    $sort = "";
+    $sort_type = "rel";
+  }
+  if (strpos($sort,'rel') !== false) {
+    $sort_type = "rel";
+  }
+
+  if (strpos($sort,'date') !== false) {
+    $sort_type = "date";
+  }
+  $heads = "";
+  if ($sort_type == "rel") {
+    $heads = '<span class="selected-sort">Sort by Relevance</span>';
+  }
+  else {
+    $heads = '<a class="sort-date" href="rel">Sort by Relevance</a>';
+  }
+  $heads .= ' | ';
+  if ($sort_type == "date") {
+    $heads .=  '<span class="selected-sort">Sort by Date</span>';
+  }
+  else {
+    $heads .= '<a class="sort-date" href="date">Sort by Date</a>';
+  }
+  $heads .= "</div></div>";
+
+  return $heads;
+}
+function asu_gsa_collection($query,$sort) {
+  global $base_url;
+  $site_name =  variable_get('site_name', 'This Site');
+  variable_set('asu_gsa_search_type',"Collection");
+  $results = "";
+  $tabs = "";
+  $collection = variable_get("original_collection", "default_collection");
+  $heads = '<div class="search-option"><h1 class="search-gsa">Search Results</h1>';
+  if ($query == "") {
+    $heads .= drupal_get_form("asu_gsa_search_form");
+    return $heads;
+  } else {
+    $results .= google_appliance_search_view($query,$sort);
+    if ($collection != "default_collection")
+    {
+      $heads .= '<a class="search-collection search-selected" href="'.$base_url.'/search/'.$query.'/'.$sort.'">This Site</a><a class="search-global" href="'.$base_url.'/global/'.$query.'/'.$sort.'">All of ASU</a><div class="search-gsa-sort">';
+      $sort_links = asu_gsa_sort();
+      $heads .= $sort_links;
+    }
+    else {
+      $sort_links = asu_gsa_sort();
+      $heads .= $sort_links;
+    }
+    $results = serialize($results);
+    $sanitized = clean_result($results,':"','";');
+    drupal_add_js('jQuery(document).ready(function () { jQuery("<button class=\'btn search\' type=submit value=Search name=op><i class=\'fa fa-search\' aria-hidden=true><span class=sr-only>Search</span></button>").insertAfter("#edit-search-keys--2")    } )', 'inline');
+    return $heads.$sanitized;
+  }
+
+}
+
+function asu_gsa_global($query,$sort) {
+  global $base_url;
+  variable_set('asu_gsa_search_type',"Global");
+  $site_name =  variable_get('site_name', 'This Site');
+  $test = variable_get('google_appliance_collection');
+
+  if ($test != "default_collection") {
+    variable_set("original_collection",$test);
+  }
+
+  $new_collection = "default_collection";
+  variable_set('google_appliance_collection',$new_collection);
+  $results = google_appliance_search_view($query,$sort);
+  $collection = variable_get("original_collection", "default_collection");
+  variable_set('google_appliance_collection',$collection);
+  $heads = '<div class="search-option"><h1 class="search-gsa">Search Results</h1>';
+  if ($collection != "default_collection") {
+    $heads .= '<a class="search-collection" href="'.$base_url.'/search/'.$query.'/'.$sort.'">This Site</a><a class="search-global search-selected" href="'.$base_url.'/global/'.$query.'/'.$sort.'">All of ASU</a><div class="search-gsa-sort">';
+    $sort_links = asu_gsa_sort();
+    $heads .= $sort_links;
+  }
+  else {
+    $sort_links = asu_gsa_sort();
+    $heads .= $sort_links;
+  }
+  drupal_add_js('jQuery(document).ready(function () { jQuery("<button class=\'btn search\' type=submit value=Search name=op><i class=\'fa fa-search\' aria-hidden=true><span class=sr-only>Search</span></button>").insertAfter("#edit-search-keys--2")    } )', 'inline');
+  $results = serialize($results);
+  $clean = clean_result($results,':"','";');
+  return $heads.$clean;
+}
+
+
+function asu_gsa_search_form($form, &$form_state, $query = '', $prompt = '') {
+  $prompt = ($prompt == '') ? t('Enter the terms you wish to search for.') :
+    $prompt;
+
+  $form['basic'] = array(
+    '#type' => 'container'  );
+  $form['basic']['search_keys'] = array(
+    '#type' => 'textfield',
+    '#default_value' => $query,
+    '#attributes' => array(
+      'title' => $prompt,    ),
+    '#title' => check_plain($prompt),
+    '#title_display' => 'invisible',  );
+
+  if ($query == '') {
+    $form['basic']['prompt'] = array(
+      '#type' => 'item',
+      '#markup' => '<p><b>' . $prompt . '</b></p>'    );
+  }
+
+  $form['basic']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Search')
+  );
+
+  $form_state['action'] = 'search/';
+
+  return $form;
+}
+
+
+function asu_gsa_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == "asu_gsa_search_form") {
+    drupal_add_js('jQuery(document).ready(function () { jQuery("<button class=\'btn search\' type=submit value=Search name=op><i class=\'fa fa-search\' aria-hidden=true><span class=sr-only>Search</span></button>").insertAfter("#edit-search-keys")    } )', 'inline');
+  }
+  if ($form_id == "google_appliance_block_form" || $form_id == "google_appliance_search_form" || $form_id == "asu_gsa_search_form") {
+
+    $form['#submit'][] = 'asu_gsa_form_submit';
+
+  }
+
+}
+
+
+
+
+function asu_gsa_form_submit($form, &$form_state) {
+
+  if (isset($form_state['values']['search_keys'])) {
+    $search_query = urlencode($form_state['values']['search_keys']);
+    $settings = _asu_gsa_get_settings();
+    $local = $settings['local_search'];
+    $type = variable_get("asu_gsa_search_type");
+
+    if ($local == "No") {
+      switch ($type) {
+        case "Collection":
+          $form_state['redirect'] = url('search/' . $search_query, array('absolute' => TRUE));
+          break;
+        case "Global":
+          $form_state['redirect'] = url('global/' . $search_query, array('absolute' => TRUE));
+          break;
+      }
+
+    } else {
+      $form_state['redirect'] = url('search/site/' . $search_query, array('absolute' => TRUE));
+    }
+
+  }
+
+}
+
+
+function asu_gsa_registry_alter(&$theme_registry) {
+
+
+  if (isset($theme_registry['search_results'])) {
+    $module_path = drupal_get_path('module', 'asu_gsa');
+    $theme_registry['search_results']['theme path'] = $module_path;
+    $theme_registry['search_results']['template'] = $module_path . '/templates/asu-gsa-results';
+  }
+
+}
+
+define('SGA_DEFAULT_LOCAL_SEARCH','No');
+function _asu_gsa_get_settings($refresh = FALSE) {
+  static $settings;
+  $field_keys =  array(
+    'hostname',
+    'collection',
+    'frontend',
+    'timeout',
+    'autofilter',
+    'language_filter_toggle',
+    'query_inspection',
+    'search_title',
+    'results_per_page',
+    'block_visibility_settings',
+    'local_search',  );
+
+  if ($refresh || empty($settings)) {
+    // Settings fall back to default constants.
+    foreach ($field_keys as $field) {
+      $settings[$field] = variable_get(
+        'google_appliance_' . $field,
+        constant('SGA_DEFAULT_' . strtoupper($field))
+      );
+    }
+
+
+    $settings['language_filter_options'] = variable_get(
+      'google_appliance_language_filter_options',
+      array('***CURRENT_LANGUAGE***')
+    );
+
+    if ($settings['block_visibility_settings'] === '') {
+      $settings['block_visibility_settings'] = array();
+    }
+
+  }
+
+  return $settings;
+}
+
+
+function asu_gsa_preprocess_google_appliance_results(&$variables) {
+  $variables['theme_hook_suggestions'][] = 'asu_gsa_results';
+}

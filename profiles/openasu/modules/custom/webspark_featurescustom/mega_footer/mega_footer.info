@@ -1,0 +1,6 @@
+name = Mega Footer
+description = CSS/jQuery drop-down, drop-right and drop-left menus to be placed in blocks
+core = 7.x
+
+dependencies[] = mega_footer_menu
+

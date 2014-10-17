@@ -1,0 +1,12 @@
+name = BackgroundField
+description = Defines a background image field type.
+dependencies[] = image
+package = BackgroundField
+core = 7.x
+
+; Information added by drupal.org packaging script on 2012-09-27
+version = "7.x-1.5"
+core = "7.x"
+project = "backgroundfield"
+datestamp = "1348789567"
+

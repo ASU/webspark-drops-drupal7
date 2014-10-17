@@ -1,0 +1,29 @@
+<?php
+/**
+ * @file
+ * Code for the Webspark hero feature.
+ */
+
+include_once 'webspark_hero.features.inc';
+
+/** 
+ * Implementation of hook_entity_info_alter().
+ */
+function webspark_hero_entity_info_alter(&$entity_info) {
+  // Webspark Hero Widget.
+  $entity_info['fieldable_panels_pane']['bundles']['hero'] = array(
+    'label' => t('Add top section hero'),
+    'pane category' => t('Custom'),
+    'pane top level' => TRUE,
+    'pane icon' => drupal_get_path('module', 'webspark_hero') . '/images/icon_hero.png',
+    'admin' => array(
+      'path' => 'admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type',
+      'bundle argument' => 4,
+      'real path' => 'admin/structure/fieldable-panels-panes/manage/hero',
+      'access arguments' => array('administer fieldable panels panes'),
+    ),
+  );
+}
+
+drupal_add_css(drupal_get_path('module', 'webspark_hero') . '/css/webspark_hero.css', array('weight' => 99, 'group' => CSS_DEFAULT));
+drupal_add_js(drupal_get_path('module', 'webspark_hero') . '/js/webspark_hero.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 95));
