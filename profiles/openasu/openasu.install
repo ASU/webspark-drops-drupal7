@@ -18,13 +18,22 @@ function openasu_install() {
 
   variable_set('image_resize_filter_threshold', 1000);
 
-//Deleting the default CAS role 3 created by the CAS module which gives it wrong permissions, we delete it and recreate it with a new role and let the database set the role rather than forcing a role rid
+//Setting the cas_auto_assigned_role variable array to grant only the CAS and Authenticated User roles to every new user 
 
-  user_role_delete('CAS');
-  $role = new stdClass();
-  $role->name = 'CAS';
-  user_role_save($role);
+  $roles = user_roles();
+  $cas_roles = array();
 
+  foreach ($roles as $key=>$role) {
 
+    if ($role == "CAS" || $role == "authenticated user") {
+          $cas_roles[$key] = 1; //Enable the role
+    } 
+    else {
+          $cas_roles[$key] = 0; //Disable the role
+    }  
+
+  }  
+
+  $cas_roles_set = variable_set('cas_auto_assigned_role',$cas_roles);
 
 }
