@@ -76,8 +76,24 @@ function webspark_extras_uuid_features_default_panelizer() {
     );
     $pane->cache = array();
     $pane->style = array(
-      'style' => 'default',
-      'settings' => NULL,
+      'style' => 'customstyles',
+      'settings' => array(
+        'fullwidthbg' => '',
+        'panerowpad' => array(
+          'js-paddingabove' => 'js-paddingabove',
+          'js-paddingbelow' => 'js-paddingbelow',
+          'js-remove2above' => 0,
+          'js-remove6above' => 0,
+          'js-remove2below' => 0,
+          'js-remove6below' => 0,
+        ),
+        'panespace' => array(
+          'space-top-sm' => 0,
+          'space-top-md' => 0,
+          'space-bot-sm' => 0,
+          'space-bot-md' => 0,
+        ),
+      ),
     );
     $pane->css = array();
     $pane->extras = array();
