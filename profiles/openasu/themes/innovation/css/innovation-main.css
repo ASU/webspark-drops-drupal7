@@ -154,33 +154,34 @@ h6, .h6 {
 -------------------------------------------------------------- */
 
 .header__sitename {
-  color: #2a2a2a;
-  font-size: 21px;
-  margin-bottom: 0;
-  padding: 0 0 12px 12px;
-  white-space: nowrap;
-  overflow: hidden;
+    color: #2a2a2a;
+    font-size: 21px;
+    margin-bottom: 0;
+    padding: 0 0 12px 12px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .header__sitename a {
-  color: #2a2a2a;
+    color: #2a2a2a;
 }
 #asu_hdr #asu_universal_nav_new .icn {
-	box-sizing: content-box;
+    box-sizing: content-box;
 }
 @media (max-width: 930px) {
-	#header .container-fluid > .row > .col-md-12 {
-		width: 100%;
-	}
-  .header__sitename {
-    font-size: 15px;
-    padding: 5px 12px;
-    color: #FFF;
-    background: #505558;
-    font-weight: 600;
-  }
-  .header__sitename a {
-    color: #FFF
-  }
+    #header .container-fluid > .row > .col-md-12 {
+        width: 100%;
+    }
+    .header__sitename {
+        font-size: 15px;
+        padding: 12px 15px;
+        color: #FFF;
+        background: #505558;
+        font-weight: 600;
+        line-height: 12px;
+    }
+    .header__sitename a {
+        color: #FFF
+    }
 }
 
 /* =IMAGES
