@@ -10,23 +10,26 @@
 function webspark_extras_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: main-menu_help:node/24
-  $menu_links['main-menu_help:node/24'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'node/24',
-    'router_path' => 'node/%',
+  // Exported menu link: management_help:http://webspark.asu.edu/help
+  $menu_links['management_help:webspark-help'] = array(
+    'menu_name' => 'management',
+    'link_path' => 'http://webspark.asu.edu/help',
+    'router_path' => '',
     'link_title' => 'Help',
     'options' => array(
-      'attributes' => array(),
-      'identifier' => 'main-menu_help:node/24',
+      'attributes' => array(
+        'title' => 'WebSpark Help',
+      ),
+      'identifier' => 'management_help:webspark-help',
     ),
     'module' => 'menu',
     'hidden' => 0,
-    'external' => 0,
+    'external' => 1,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => 50,
+    'weight' => 42,
     'customized' => 1,
+    'parent_identifier' => 'management_administration:admin',
   );
   // Translatables
   // Included for use with string extractors like potx.
