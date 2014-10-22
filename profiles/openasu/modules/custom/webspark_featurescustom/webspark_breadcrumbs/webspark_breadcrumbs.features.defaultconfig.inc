@@ -24,6 +24,15 @@ function webspark_breadcrumbs_defaultconfig_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'default_page_manager_pages';
+  $strongarm->value = array(
+    'features' => TRUE,
+  );
+  $export['default_page_manager_pages'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'easy_breadcrumb-capitalizator_ignored_words';
   $strongarm->value = array(
     'of' => 'of',
