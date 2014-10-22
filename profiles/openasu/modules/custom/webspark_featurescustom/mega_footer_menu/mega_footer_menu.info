@@ -1,7 +1,7 @@
 name = Mega Footer Menu
-description = This will create a menu for the mega footer.  The top level items in the menu are rendered as titles for each column of links.  
+description = This will create a menu for the mega footer.  The top level items in the menu are rendered as titles for each column of links.
 core = 7.x
-package = Features
+package = ASU Webspark
 version = 7.x-1.0
 project = mega_footer_menu
 dependencies[] = features
