@@ -10,24 +10,29 @@
 function webspark_extras_content_menu_links_defaults() {
   $menu_links = array();
 
-  // Exported menu link: main-menu:node/32
-  $menu_links['main-menu:node/32'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'node/32',
-    'router_path' => 'node/%',
-    'link_title' => 'Help & Examples',
-    'options' => array(),
+  // Exported menu link: management_help:http
+  $menu_links['management_help:webspark-help'] = array(
+    'menu_name' => 'management',
+    'link_path' => 'http://webspark.asu.edu/help',
+    'router_path' => '',
+    'link_title' => 'Help',
+    'options' => array(
+      'attributes' => array(
+        'title' => 'WebSpark Help',
+      ),
+      'identifier' => 'management_help:webspark-help',
+    ),
     'module' => 'menu',
     'hidden' => 0,
-    'external' => 0,
-    'has_children' => 1,
+    'external' => 1,
+    'has_children' => 0,
     'expanded' => 0,
-    'weight' => 0,
-    'customized' => 0,
+    'weight' => 42,
+    'parent_path' => 'admin',
   );
   // Translatables
   // Included for use with string extractors like potx.
-  t('Help & Examples');
+  t('Help');
 
 
   return $menu_links;

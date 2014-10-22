@@ -24,6 +24,13 @@ function webspark_extras_defaultconfig_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'admin_theme';
+  $strongarm->value = 'seven';
+  $export['admin_theme'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'entity_view_modes';
   $strongarm->value = array(
     'file' => array(
@@ -34,6 +41,13 @@ function webspark_extras_defaultconfig_strongarm() {
     ),
   );
   $export['entity_view_modes'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'node_admin_theme';
+  $strongarm->value = 1;
+  $export['node_admin_theme'] = $strongarm;
 
   return $export;
 }
