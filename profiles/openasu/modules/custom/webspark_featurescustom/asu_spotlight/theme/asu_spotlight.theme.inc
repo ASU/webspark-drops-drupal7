@@ -66,14 +66,11 @@ function theme_asu_spotlight_list_item(&$vars) {
           .$vars['package']['item']['actiontitle2'].'</a>';
   }
 
-
   $list_item .= '</div>
             </div>
           </li>';
 
-
   return $list_item;
-
 
 }
 
