@@ -173,10 +173,11 @@ h6, .h6 {
 	}
   .header__sitename {
     font-size: 15px;
-    padding: 5px 12px;
+    padding: 12px 15px;
     color: #FFF;
     background: #505558;
     font-weight: 600;
+    line-height: 12px;
   }
   .header__sitename a {
     color: #FFF
