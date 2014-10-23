@@ -1,0 +1,171 @@
+<?php
+
+
+
+/**
+ * Implementation of hook_entity_info_alter()
+ */
+function asu_maps_widget_entity_info_alter(&$entity_info) {
+
+  // ASU Map
+  $entity_info['fieldable_panels_pane']['bundles']['asu_maps_widget'] = array(
+    'label' => t('Add ASU Map'),
+    'description' => t('Add ASU Map'),
+    'pane category' => t('Custom'),
+    'pane top level' => TRUE,
+    'pane icon' => drupal_get_path('module', 'panopoly_widgets') . '/images/icon_map.png',
+    'admin' => array(
+      'path' => 'admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type',
+      'bundle argument' => 4,
+      'real path' => 'admin/structure/fieldable-panels-panes/manage/asu_maps_widget',
+      'access arguments' => array('administer fieldable panels panes'),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_field_formatter_info().
+ * We're going to be using our own formatter based on our own theme.
+ */
+function asu_maps_widget_field_formatter_info() {
+  return array(
+    'asu_maps' => array(
+      'label' => t('ASU Maps'),
+      'field types' => array('text'),
+      'settings' => array(
+        //'image_style' => 'panopoly_image_spotlight',
+        //'caption' => FALSE,
+        //'optionset' => 'default',
+      ),
+    ),
+  );
+}
+
+
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ *
+ */
+function asu_maps_widget_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  $element = array();
+  /*
+  if ($display['type'] == 'asu_maps') {
+    dpm($elements);
+    $element['image_style'] = array(
+      '#title' => t('Image style'),
+      '#type' => 'select',
+      '#options' => image_style_options(),
+      '#default_value' => $settings['image_style'],
+      '#required' => TRUE,
+    );
+    //asu_spotlight optionset for flexslider
+    $optionsets = array();
+    ctools_include('export');
+    foreach (flexslider_optionset_load_all() as $name => $optionset) {
+      $optionsets[$name] = check_plain($optionset->title);
+    }
+
+    $element['optionset'] = array(
+      '#title' => t('Option set'),
+      '#type' => 'select',
+      '#options' => $optionsets,
+      '#default_value' => $settings['optionset'],
+    );
+  }*/
+
+  return $element;
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function asu_maps_widget_theme($existing, $type, $theme, $path) {
+  return array(
+    'asu_maps_view' => array(
+      'variables' => array(
+        'items' => NULL,
+        'delta' => NULL,
+        'settings' => NULL,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function asu_maps_widget_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  dpm($items);
+  dpm($display);
+  $element = array();
+  $settings = $display['settings'];
+  $formatter = $display['type'];
+  drupal_add_library('system', 'ui.tabs');
+  /*
+  // Assemble the tabs header
+  $header = '<div class="panopoly-spotlight-buttons-wrapper">';
+  $header .= '<ul>';
+  foreach ($items as $delta => $item_data) {
+    $header .= '<li>' . '<a href="#panopoly-spotlight-' . $delta . '">' . ($delta+1) . '</a></li>';
+  }
+  $header .= '</ul>';
+
+  if (variable_get('panopoly_widgets_spotlight_pause_play_buttons', 1)) {
+    $header .= '<div class="panopoly-spotlight-function-buttons">';
+    $header .= '<a href="#" class="panopoly-spotlight-pause-play">' . t('Pause') . '</a>';
+    $header .= '</div>';
+  }
+  $header .= '</div>';  // class="panopoly-spotlight-buttons-wrapper"
+  */
+  // Assemble the tabs content
+  foreach ($items as $delta => $item_data) {
+    $element[$delta]['#markup'] = theme('asu_maps_view', array('items' => $item_data, 'delta' => $delta, 'settings' => $settings));
+  }
+  dpm('element', $element);
+  return $element;
+}
+
+/**
+ * Theme function for asu_maps view
+ */
+function theme_asu_maps_view($variables) {
+  dpm($variables);
+  /*$title = $variables['items']['title'];
+  $description = $variables['items']['description'];
+  $link = $variables['items']['link'];
+  $alt = $variables['items']['alt'];
+  $settings = $variables['settings'];
+
+  if (module_exists('uuid')) {
+    $image_entity = entity_uuid_load('file', array($variables['items']['uuid']));
+    $image = file_load(array_pop($image_entity)->fid);
+  }
+  else {
+    $image = (object) $variables['items'];
+  }
+
+  $output = '<div id="' . 'panopoly-spotlight-' . $variables['delta'] . '" class="' . 'panopoly-spotlight' . '">';
+  $output .= theme('image_style', array('style_name' => $settings['image_style'], 'path' => $image->uri, 'alt' => $alt));
+  $output .= '<div class="panopoly-spotlight-wrapper">';
+  if (!empty($title) || !empty($link)) {
+    if (empty($title)) {
+      $title = t('Link');
+    }
+    $output .= '<h3 class="panopoly-spotlight-label">' . (empty($link) ? check_plain($title) : l($title, $link)) . '</h3>';
+  }
+  if (!empty($description)) {
+    $output .= '<div class="panopoly-spotlight-info">';
+    $output .= '<p>' . $description . '</p>';
+    $output .= '</div>';
+  }
+  $output .= '</div>';
+  $output .= '</div>';
+  */
+
+  $output = '<div>This is a test</div>';
+  return $output;
+}
