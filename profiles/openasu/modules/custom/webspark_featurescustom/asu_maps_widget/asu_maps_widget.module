@@ -125,6 +125,7 @@ function asu_maps_widget_field_formatter_view($entity_type, $entity, $field, $in
   foreach ($items as $delta => $item_data) {
     $element[$delta]['#markup'] = theme('asu_maps_view', array('items' => $item_data, 'delta' => $delta, 'settings' => $settings));
   }
+  drupal_add_js('js/asu_map.js');
   dpm('element', $element);
   return $element;
 }
@@ -166,6 +167,6 @@ function theme_asu_maps_view($variables) {
   $output .= '</div>';
   */
 
-  $output = '<div>This is a test</div>';
+  $output = '<div id="asu_map">This is a test</div>';
   return $output;
 }
