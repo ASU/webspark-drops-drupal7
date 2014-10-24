@@ -29,7 +29,7 @@ function theme_asu_spotlight_list(&$vars) {
       }
 
       $output .= theme('asu_spotlight_list_item', array(
-        'package' => $item, 
+        'package' => $item,
         'settings' => array(
           'optionset' => $optionset,
         ),
@@ -48,9 +48,9 @@ function theme_asu_spotlight_list(&$vars) {
 function theme_asu_spotlight_list_item(&$vars) {
 
   $list_item = '<li' . drupal_attributes($vars['settings']['attributes']) . '>
-            <div class="slidecontainer" position="relative">' . 
+            <div class="slidecontainer" position="relative">' .
                       $vars['package']['slide'] .
-                '<div class="blurbcontainer '.$vars['package']['item']['position'].'">' . 
+                '<div class="blurbcontainer '.$vars['package']['item']['position'].'">' .
                       '<h2>'.$vars['package']['item']['title'].'</h2>'.
                       '<p>'.$vars['package']['item']['description'].'</p>';
 
@@ -61,7 +61,7 @@ function theme_asu_spotlight_list_item(&$vars) {
   }
 
   if($vars['package']['item']['actiontitle2'] != NULL && $vars['package']['item']['actionlink2'] != NULL) {
-    
+
     $list_item .= '<a class="btn btn-'.$vars['package']['item']['color'].' btn-block" href="'.$vars['package']['item']['actionlink2'].'">'
           .$vars['package']['item']['actiontitle2'].'</a>';
   }
@@ -69,10 +69,10 @@ function theme_asu_spotlight_list_item(&$vars) {
 
   $list_item .= '</div>
             </div>
-          </li>\n';
+          </li>';
 
 
-  return $list_item;          
+  return $list_item;
 
 
 }
@@ -132,14 +132,14 @@ function template_process_asu_spotlight(&$vars) {
 
   // Finally, add the configuration to the page
   flexslider_add($vars['settings']['attributes']['id'], $vars['settings']['optionset']);
-  
+
 }
 
 /**
  * Process function for asu_spotlight_list_item
  */
 function template_process_asu_spotlight_list(&$vars) {
-  
+
   // Reset the list of attributes
   $vars['settings']['attributes'] = array(
     // @todo find a way to detect the outter container class if possible
@@ -177,7 +177,7 @@ function template_process_asu_spotlight_list_item(&$vars) {
     $attributes['data-thumbcaption'] = $caption;
     // Prevent captions from appearing in the slider as well
     if (isset($settings['optionset']->options['thumbCaptionsBoth']) and FALSE === $settings['optionset']->options['thumbCaptionsBoth']) {
-      $caption = '';      
+      $caption = '';
     }
   }
 
