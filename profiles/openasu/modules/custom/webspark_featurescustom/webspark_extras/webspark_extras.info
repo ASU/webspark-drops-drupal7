@@ -1,5 +1,5 @@
 name = Webspark Extras
-description = Responsive image display type option, default admin theme, help link
+description = "Responsive image display type option, default admin theme, help link"
 core = 7.x
 package = ASU Webspark
 version = 7.x-1.0-dev
