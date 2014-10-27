@@ -115,7 +115,7 @@ function mega_footer_block_view($delta = '') {
   $footer_mark .= "</ul>";
 
   //add contribute button and closing div
-  $footer_mark .= "<button type='button' class='btn btn-primary'><a href='http://asufoundation.org'>Contribute</a></button>
+  $footer_mark .= "<button type='button' class='btn btn-primary' href='http://asufoundation.org'>Contribute</button>
 
                   </div>";
 
@@ -132,25 +132,24 @@ function mega_footer_block_view($delta = '') {
           $item['#title']."<span></span></h2>
           <ul class='big-foot-nav  collapse in' id='".$item['#title']."' style=''>";
 
-          foreach($item['#below'] as $inner) {
-            if(is_bool($inner)) {
-              break;
-            }
+      foreach($item['#below'] as $inner) {
+        if(is_bool($inner)) {
+          break;
+        }
 
-            $footer_mark .= "<li><a href='".$inner['#href']."''>".$inner['#title']."</a></li>";
-          }
+        $footer_mark .= "<li><a href='".$inner['#href']."'>".$inner['#title']."</a></li>";
+      }
 
-          $footer_mark .= "</div>";
+      $footer_mark .= "</ul></div>";
 
   }
   $footer_mark .= "</div>";
-
   $footer_mark .= "<div class='little-foot'>
                     <div class='container'>
                       <div class='row'>
                         <div class='col-md-12'>
                           <ul class='little-foot-nav'>
-                            <li><a  href='http://www.asu.edu/copyright/'>Copyright &amp; Trademark</a></li>
+                            <li><a href='http://www.asu.edu/copyright/'>Copyright &amp; Trademark</a></li>
                             <li><a href='http://www.asu.edu/accessibility/'>Accessibility</a></li>
                             <li><a href='http://www.asu.edu/privacy/'>Privacy</a></li>
                             <li><a href='http://www.asu.edu/emergency/'>Emergency</a></li>
@@ -158,10 +157,10 @@ function mega_footer_block_view($delta = '') {
                           </ul>
                         </div>
                       </div>
-                  </div>";
+                  </div>
+                </div>";
 
-
-  $footer_mark .= "</div>";
+$footer_mark .= "</div>";
 
 
 
@@ -289,11 +288,11 @@ function mega_footer_block_save($delta = '', $edit = array()) {
 
 	  }
     	variable_set('unit_logo', $edit['unit_logo']);
-		variable_set('unit_title', $edit['unit_title']);
-		variable_set('unit_address_one', $edit['unit_address_one']);
+		  variable_set('unit_title', $edit['unit_title']);
+		  variable_set('unit_address_one', $edit['unit_address_one']);
     	variable_set('unit_address_two', $edit['unit_address_two']);
-		variable_set('unit_phone', $edit['unit_phone']);
-		variable_set('unit_fax', $edit['unit_fax']);
+		  variable_set('unit_phone', $edit['unit_phone']);
+	    variable_set('unit_fax', $edit['unit_fax']);
     	variable_set('unit_contact_us', 'https://contact.asu.edu/');
     	variable_set('unit_facebook_connect', $edit['unit_facebook_connect']);
     	variable_set('unit_twitter_connect', $edit['unit_twitter_connect']);
