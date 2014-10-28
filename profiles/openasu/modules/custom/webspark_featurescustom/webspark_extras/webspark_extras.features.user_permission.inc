@@ -10,13 +10,25 @@
 function webspark_extras_user_default_permissions() {
   $permissions = array();
 
-  // Exported permission: 'access contextual links'.
-  $permissions['access contextual links'] = array(
-    'name' => 'access contextual links',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'contextual',
+  // Exported permission: 'create fieldable spotlight'.
+  $permissions['create fieldable spotlight'] = array(
+    'name' => 'create fieldable spotlight',
+    'roles' => array(),
+    'module' => 'fieldable_panels_panes',
+  );
+
+  // Exported permission: 'delete fieldable spotlight'.
+  $permissions['delete fieldable spotlight'] = array(
+    'name' => 'delete fieldable spotlight',
+    'roles' => array(),
+    'module' => 'fieldable_panels_panes',
+  );
+
+  // Exported permission: 'edit fieldable spotlight'.
+  $permissions['edit fieldable spotlight'] = array(
+    'name' => 'edit fieldable spotlight',
+    'roles' => array(),
+    'module' => 'fieldable_panels_panes',
   );
 
   return $permissions;
