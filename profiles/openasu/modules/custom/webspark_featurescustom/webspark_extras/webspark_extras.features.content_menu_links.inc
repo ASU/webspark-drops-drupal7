@@ -10,7 +10,7 @@
 function webspark_extras_content_menu_links_defaults() {
   $menu_links = array();
 
-  // Exported menu link: management_help:http
+  // Exported menu link: management_help:webspark-help
   $menu_links['management_help:webspark-help'] = array(
     'menu_name' => 'management',
     'link_path' => 'http://webspark.asu.edu/help',
