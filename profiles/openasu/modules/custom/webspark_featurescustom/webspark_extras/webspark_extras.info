@@ -1,5 +1,5 @@
 name = Webspark Extras
-description = "Responsive image display type option, default admin theme, help link, disabling basic panopoly spotlight"
+description = "Responsive image display type option, default admin theme, help link, disable panopoly_spotlight"
 core = 7.x
 package = ASU Webspark
 version = 7.x-1.0-dev
