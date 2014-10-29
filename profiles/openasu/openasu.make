@@ -59,10 +59,10 @@ projects[asu_brand][download][revision] = 91f8308a
 projects[asu_brand][download][branch] = header42
 projects[asu_brand][download][url] = https://github.com/ASU/asu-drupal-brand.git
 
-projects[asu_cas][version] = 7.x-1.3
+projects[asu_cas][version] = 7.x-1.5
 projects[asu_cas][subdir] = custom
 projects[asu_cas][type] = module
-projects[asu_cas][download][revision] = 0f2d7c7c
+projects[asu_cas][download][revision] = 7f8539ce
 projects[asu_cas][download][branch] = 7.x-1.x
 projects[asu_cas][download][url] = https://github.com/ASU/asu-drupal-cas-client-config.git
 
@@ -108,7 +108,7 @@ projects[webspark_featurescustom][type] = module
 projects[webspark_featurescustom][subdir] = custom
 projects[webspark_featurescustom][directory_name] = webspark_featurescustom
 projects[webspark_featurescustom][download][type] = git
-projects[webspark_featurescustom][download][revision] = b4d8c25f
+projects[webspark_featurescustom][download][revision] = 6a5d0d3b
 projects[webspark_featurescustom][download][branch] = master
 projects[webspark_featurescustom][download][url] = https://github.com/ASU/webspark-webstandards-components.git
 
@@ -248,10 +248,10 @@ libraries[asu_webspark_bootstrap_bootstrap][download][url] = https://github.com/
 
 ; Bootstrap and Theme Framework - Subtheme - Web Standards
 
-projects[innovation][version] = beta1
+projects[innovation][version] = beta2
 projects[innovation][type] = theme
 projects[innovation][download][type] = git
-projects[innovation][download][revision] = 608dd7b7
+projects[innovation][download][revision] = 28e0ae46
 projects[innovation][download][branch] = master
 projects[innovation][download][url] = https://github.com/ASU/webspark-theme-innovation.git
 
