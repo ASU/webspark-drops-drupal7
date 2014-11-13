@@ -13,41 +13,41 @@ projects[drupal][patch][] = https://www.drupal.org/files/issues/SA-CORE-2014-005
 
 ; The Panopoly Foundation
 
-projects[panopoly_core][version] = 1.11
+projects[panopoly_core][version] = 1.13
 projects[panopoly_core][subdir] = panopoly
 
-projects[panopoly_images][version] = 1.11
+projects[panopoly_images][version] = 1.13
 projects[panopoly_images][subdir] = panopoly
 
-projects[panopoly_theme][version] = 1.11
+projects[panopoly_theme][version] = 1.13
 projects[panopoly_theme][subdir] = panopoly
 
-projects[panopoly_magic][version] = 1.11
+projects[panopoly_magic][version] = 1.13
 projects[panopoly_magic][subdir] = panopoly
 
-projects[panopoly_widgets][version] = 1.11
+projects[panopoly_widgets][version] = 1.13
 projects[panopoly_widgets][subdir] = panopoly
 
-projects[panopoly_admin][version] = 1.11
+projects[panopoly_admin][version] = 1.13
 projects[panopoly_admin][subdir] = panopoly
 
-projects[panopoly_users][version] = 1.11
+projects[panopoly_users][version] = 1.13
 projects[panopoly_users][subdir] = panopoly
 
 ; The Panopoly Toolset
 
-projects[panopoly_pages][version] = 1.11
+projects[panopoly_pages][version] = 1.13
 projects[panopoly_pages][subdir] = panopoly
 
-projects[panopoly_wysiwyg][version] = 1.11
+projects[panopoly_wysiwyg][version] = 1.13
 projects[panopoly_wysiwyg][subdir] = panopoly
 
-projects[panopoly_search][version] = 1.11
+projects[panopoly_search][version] = 1.13
 projects[panopoly_search][subdir] = panopoly
 
 ; Demo Content
 
-projects[panopoly_demo][version] = 1.11
+projects[panopoly_demo][version] = 1.13
 projects[panopoly_demo][subdir] = panopoly
 
 ; ASU Modules
@@ -108,7 +108,7 @@ projects[webspark_featurescustom][type] = module
 projects[webspark_featurescustom][subdir] = custom
 projects[webspark_featurescustom][directory_name] = webspark_featurescustom
 projects[webspark_featurescustom][download][type] = git
-projects[webspark_featurescustom][download][revision] = 6a5d0d3b
+projects[webspark_featurescustom][download][revision] = 5321e494
 projects[webspark_featurescustom][download][branch] = master
 projects[webspark_featurescustom][download][url] = https://github.com/ASU/webspark-webstandards-components.git
 
@@ -181,6 +181,10 @@ projects[entity_view_mode][version] = 1.0-rc1
 projects[entity_view_mode][type] = module
 projects[entity_view_mode][subdir] = contrib
 
+projects[features_override][version] = 7.x-2.0-rc2
+projects[features_override][type] = module
+projects[features_override][subdir] = contrib
+
 projects[flexslider][version] = 2.0-alpha3
 projects[flexslider][type] = module
 projects[flexslider][subdir] = contrib
@@ -248,10 +252,10 @@ libraries[asu_webspark_bootstrap_bootstrap][download][url] = https://github.com/
 
 ; Bootstrap and Theme Framework - Subtheme - Web Standards
 
-projects[innovation][version] = beta2
+projects[innovation][version] = beta3
 projects[innovation][type] = theme
 projects[innovation][download][type] = git
-projects[innovation][download][revision] = 28e0ae46
+projects[innovation][download][revision] = 94666910
 projects[innovation][download][branch] = master
 projects[innovation][download][url] = https://github.com/ASU/webspark-theme-innovation.git
 
