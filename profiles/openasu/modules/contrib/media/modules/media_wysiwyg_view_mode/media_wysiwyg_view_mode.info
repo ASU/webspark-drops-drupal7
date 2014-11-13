@@ -12,4 +12,4 @@ files[] = media_wysiwyg_view_mode.test
 ; Information added by drush on 2014-11-13
 version = "7.x-2.0-alpha3+98-dev"
 project = "media"
-datestamp = "1415914727"
+datestamp = "1415916164"

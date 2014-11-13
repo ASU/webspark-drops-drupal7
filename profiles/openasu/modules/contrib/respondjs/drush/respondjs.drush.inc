@@ -8,7 +8,7 @@
 /**
  * The URI to the respond.js library.
  */
-define('RESPONDJS_DOWNLOAD_URI', 'https://raw.github.com/scottjehl/Respond/master/respond.min.js');
+define('RESPONDJS_DOWNLOAD_URI', 'https://raw.githubusercontent.com/scottjehl/Respond/master/dest/respond.min.js');
 
 /**
  * Implementation of hook_drush_command().

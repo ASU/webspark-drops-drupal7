@@ -11,4 +11,4 @@ files[] = includes/views/manualcrop.views.inc
 ; Information added by drush on 2014-11-13
 version = "7.x-1.4+109-dev"
 project = "manualcrop"
-datestamp = "1415914724"
+datestamp = "1415916161"
