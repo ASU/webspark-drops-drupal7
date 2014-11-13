@@ -17,7 +17,6 @@ function theme_asu_spotlight_list(&$vars) {
   $attributes = &$vars['settings']['attributes'];
   $type = &$vars['settings']['type'];
   $output = '';
-
   // Build the list
   if (!empty($items)) {
     $output .= "<$type" . drupal_attributes($attributes) . '>';
@@ -54,15 +53,21 @@ function theme_asu_spotlight_list_item(&$vars) {
                       '<h2>'.$vars['package']['item']['title'].'</h2>'.
                       '<p>'.$vars['package']['item']['description'].'</p>';
 
+  if($vars['package']['item']['color']=='red') {
+    $color = 'primary';
+  } else {
+    $color = 'blue';
+  }
+
   if($vars['package']['item']['actiontitle'] != NULL && $vars['package']['item']['actionlink']!= NULL ) {
 
-    $list_item .= '<a class="btn btn-'.$vars['package']['item']['color'].' btn-block" href="'.$vars['package']['item']['actionlink'].'">'
+    $list_item .= '<a class="btn btn-'.$color.' btn-block" href="'.$vars['package']['item']['actionlink'].'">'
           .$vars['package']['item']['actiontitle'].'</a>';
   }
 
   if($vars['package']['item']['actiontitle2'] != NULL && $vars['package']['item']['actionlink2'] != NULL) {
 
-    $list_item .= '<a class="btn btn-'.$vars['package']['item']['color'].' btn-block" href="'.$vars['package']['item']['actionlink2'].'">'
+    $list_item .= '<a class="btn btn-'.$color.' btn-block" href="'.$vars['package']['item']['actionlink2'].'">'
           .$vars['package']['item']['actiontitle2'].'</a>';
   }
 
@@ -75,7 +80,7 @@ function theme_asu_spotlight_list_item(&$vars) {
 }
 
 /**
- * Template preprocess handler for 'flexslider' theme.
+ * Template preprocess handler for 'asu_spotlight' theme.
  */
 function template_process_asu_spotlight(&$vars) {
   // Reference configuration variables
@@ -146,7 +151,7 @@ function template_process_asu_spotlight_list(&$vars) {
 }
 
 /**
- * Process function for flexslider_list_item
+ * Process function for asu_spotlight_list_item
  */
 function template_process_asu_spotlight_list_item(&$vars) {
   // Reset the list of attributes

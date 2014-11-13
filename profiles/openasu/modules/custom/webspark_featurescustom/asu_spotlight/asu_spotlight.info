@@ -9,7 +9,6 @@ dependencies[] = panopoly_widgets
 dependencies[] = flexslider
 
 stylesheets[all][] = css/asuflex.css
-scripts[] = js/asuflex.js
 
 features[features_api][] = api:2
 

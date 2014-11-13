@@ -13,7 +13,7 @@
 <div class="panel-display sutro-double clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
   <section class="section">
     <div class="container">
-      <div class="row">
+      <div class="row row-full">
         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> sutro-double-header-area">
           <?php print $content['header']; ?>
         </div>
@@ -30,7 +30,7 @@
           <?php print $content['column2']; ?>
         </div>
       </div>
-      <div class="row">
+      <div class="row row-full">
         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> sutro-double-middle-area">
           <?php print $content['middle']; ?>
         </div>
@@ -47,7 +47,7 @@
   </section>
   <footer class="section" id="footer">
     <div class="container">
-      <div class="row">
+      <div class="row row-full">
         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> sutro-double-footer-area">
           <?php print $content['footer']; ?>
         </div>

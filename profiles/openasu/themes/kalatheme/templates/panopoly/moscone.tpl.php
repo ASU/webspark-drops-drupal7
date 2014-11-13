@@ -13,7 +13,7 @@
 <div class="panel-display moscone clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
   <section class="section">
     <div class="container">
-      <div class="row">
+      <div class="row row-full">
         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> moscone-main-container">
           <?php print $content['header']; ?>
         </div>
@@ -34,7 +34,7 @@
   </section>
   <footer class="section" id="footer">
     <div class="container">
-      <div class="row">
+      <div class="row row-full">
         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> moscone-footer-area">
           <?php print $content['footer']; ?>
         </div>

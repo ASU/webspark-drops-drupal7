@@ -7,8 +7,8 @@
 	Drupal.behaviors.webspark_banner = {
 		attach: function(context, settings) {
 
-		$( ".pane-bundle-banner" ).parents( ".container" ).removeClass( "container" ).addClass( "container-fluid" );
-		$( ".pane-bundle-banner" ).parents( ".row" ).addClass( "title-banner" );
+		//$( ".pane-bundle-banner" ).parents( ".container" ).removeClass( "container" ).addClass( "container-fluid" );
+		$( ".pane-bundle-banner" ).addClass( "title-banner" );
 
 		}
 	};

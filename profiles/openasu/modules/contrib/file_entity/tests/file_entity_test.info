@@ -5,10 +5,7 @@ core = 7.x
 dependencies[] = file_entity
 hidden = TRUE
 
-
-; Information added by drush on 2014-10-29
+; Information added by drush on 2014-11-13
 version = "7.x-2.0-alpha3+29-dev"
-core = "7.x"
 project = "file_entity"
-datestamp = "1414615249"
-
+datestamp = "1415914726"

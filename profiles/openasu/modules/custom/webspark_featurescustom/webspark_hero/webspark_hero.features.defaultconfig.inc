@@ -50,9 +50,9 @@ function webspark_hero_defaultconfig_field_default_fields() {
     'field_instance' => array(
       'bundle' => 'hero',
       'deleted' => 0,
-      'description' => '<p class="hero-warning">Only add heroes to the top section of your page!!</p>
-Images should be 1220 x 350 px. Smaller images will be scaled up; larger ones will be cropped.<br>
-',
+      'description' => '<p>Only add heroes to the top section of your page and in a single-region row.</p>
+<p>Images should be 1220 x 350 px. Smaller images will be scaled up; larger ones will be cropped.</p>
+<p>When adding a new image, you must refresh the page after saving to view the image.</p>',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -431,9 +431,9 @@ Images should be 1220 x 350 px. Smaller images will be scaled up; larger ones wi
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('<p class="hero-warning">Only add heroes to the top section of your page!!</p>
-Images should be 1220 x 350 px. Smaller images will be scaled up; larger ones will be cropped.<br>
-');
+  t('<p>Only add heroes to the top section of your page and in a single-region row.</p>
+<p>Images should be 1220 x 350 px. Smaller images will be scaled up; larger ones will be cropped.</p>
+<p>When adding a new image, you must refresh the page after saving to view the image.</p>');
   t('Blurb');
   t('Explore graduate programs button  (recommended)');
   t('Explore undergraduate programs button (recommended)');

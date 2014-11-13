@@ -11,7 +11,6 @@ function webspark_banner_defaultconfig_features() {
   return array(
     'webspark_banner' => array(
       'field_default_fields' => 'field_default_fields',
-      'strongarm' => 'strongarm',
     ),
   );
 }
@@ -51,7 +50,9 @@ function webspark_banner_defaultconfig_field_default_fields() {
     'field_instance' => array(
       'bundle' => 'banner',
       'deleted' => 0,
-      'description' => 'Images should be 1220 x 200 px. Smaller images will be scaled up; larger ones will be cropped.',
+      'description' => '<p>Only add a title banner to the top section of your page and in a single-region row.</p>
+<p>Images should be 1220 x 200 px. Smaller images will be scaled up; larger ones will be cropped.</p>
+<p>When adding a new image, you must refresh the page after saving to view the image.</p>',
       'display' => array(
         'default' => array(
           'label' => 'hidden',
@@ -99,48 +100,10 @@ function webspark_banner_defaultconfig_field_default_fields() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('<p>Only add a title banner to the top section of your page and in a single-region row.</p>
+<p>Images should be 1220 x 200 px. Smaller images will be scaled up; larger ones will be cropped.</p>
+<p>When adding a new image, you must refresh the page after saving to view the image.</p>');
   t('Banner image');
-  t('Images should be 1220 x 200 px. Smaller images will be scaled up; larger ones will be cropped.');
 
   return $fields;
-}
-
-/**
- * Implements hook_defaultconfig_strongarm().
- */
-function webspark_banner_defaultconfig_strongarm() {
-  $export = array();
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'field_bundle_settings_fieldable_panels_pane__banner';
-  $strongarm->value = array(
-    'view_modes' => array(
-      'full' => array(
-        'custom_settings' => FALSE,
-      ),
-      'token' => array(
-        'custom_settings' => FALSE,
-      ),
-    ),
-    'extra_fields' => array(
-      'form' => array(
-        'title' => array(
-          'weight' => '-5',
-        ),
-      ),
-      'display' => array(
-        'title' => array(
-          'default' => array(
-            'weight' => '-5',
-            'visible' => TRUE,
-          ),
-        ),
-      ),
-    ),
-  );
-  $export['field_bundle_settings_fieldable_panels_pane__banner'] = $strongarm;
-
-  return $export;
 }

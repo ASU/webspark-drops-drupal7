@@ -81,7 +81,7 @@
 
   <!-- Page Header -->
   <header id="header">
-  	<div class="container-fluid">
+  	<div class="container">
   		<div class="row">
   			<div class="column col-md-12">
 					<?php print render($page['header']); ?>
@@ -98,11 +98,10 @@
 
 
 	<!-- Nav Bar -->
-	<div class="navmenu">
+	<div id="ASUNavMenu" class="navmenu">
 		<div class="container">
       <!--Commented to work with mega menu-->
-			<!--<nav class="navbar-collapse collapse" role="navigation">-->
-      <nav class="navbar-collapse2 collapse2" role="navigation2">
+                     <nav class="navbar-collapse collapse">
 					<?php print render($page['menu']); ?>
 			</nav><!-- /#navbar -->
 		</div><!-- /.container -->
@@ -111,7 +110,7 @@
     <!-- Page Main -->
   <div id="main-wrapper" class="clearfix"><div id="main" class="clearfix">
     <a id="main-content"></a>
-    
+
     <div id="top-content" class="column container">
       <?php if (($no_panels || $always_show_page_title) && $title): ?>
         <h1 id="page-title" class="title">
@@ -148,7 +147,7 @@
 
   <!-- Page Footer -->
   <footer id="footer">
-    <div class="container">
+    <div class="container-fluid">
       <div class="row-fluid">
       	<?php print render($page['footer']); ?>
       </div>
@@ -156,7 +155,7 @@
   </footer><!-- /#footer -->
 
   <?php print render($page['closure']); ?>
-  
+
   </div>
 </div>
 <!-- /#page, /#page-wrapper -->

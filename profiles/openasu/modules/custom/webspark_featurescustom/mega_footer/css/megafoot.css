@@ -1,143 +1,160 @@
 #block-mega-footer-mega-footer {
-background-color: #1e1e1e;
+	background-color: #1e1e1e;
 
+}
+
+.megafoot .row {
+	max-width: 1170px;
+	margin: auto;
 }
 
 .megafoot h1 {
-margin-bottom: 16px;
-font-size: 16px;
+		margin-bottom: 16px;
+		font-size: 16px;
 
-line-height: 1.2;
-color: #fff;
+		line-height: 1.2;
+		color: #fff;
 }
 
 .megafoot h2 {
-margin-bottom: 16px;
-font-size: 21px;
-font-weight: normal;
-color: #fff;
+		margin-bottom: 16px;
+		font-size: 21px;
+		font-weight: normal;
+		color: #fff;
 }
 
 .megafoot address {
-color: #fff;
-margin-bottom: 0;
-font-weight: 200;
-font-style: normal;
-line-height: 1.44;
+		color: #fff;
+		margin-bottom: 0;
+		font-weight: 200;
+		font-style: normal;
+		line-height: 1.44;
 }
 
 .megafoot .phone-link {
-color: #fff;
-border-bottom: 0;
+		color: #fff;
+		border-bottom: 0;
 }
 
 .megafoot .big-foot-nav > li > a {
-color: #ccc;
-text-decoration: none;
-border-bottom: 1px dotted #ccc;
+		color: #ccc;
+		text-decoration: none;
+		border-bottom: 1px dotted #ccc;
 }
 .megafoot .big-foot-nav > li > a:hover,
 .megafoot .big-foot-nav > li > a:focus {
-	color: #fff;
-	border-bottom: 1px dotted #fff;
+		color: #fff;
+		border-bottom: 1px dotted #fff;
 }
 .megafoot ul > li, .megafoot ol > li {
-position: relative;
-display: block;
+		position: relative;
+		display: block;
 }
 
 .megafoot ul, .megafoot ol {
-margin: 0;
-padding: 0;
-list-style: none;
+		margin: 0;
+		padding: 0;
+		list-style: none;
 }
 
 .megafoot .contact-link {
-color: #a9a9a9;
-border-bottom: 1px dotted #a9a9a9;
+		color: #a9a9a9;
+		border-bottom: 1px dotted #a9a9a9;
 }
 
 .megafoot ul:before, .megafoot ul:after, .megafoot ol:before, .megafoot ol:after {
-content: " ";
-display: table;
+		content: " ";
+		display: table;
 }
 
 .megafoot .btn {
-	margin-bottom: 30px;
+		margin-bottom: 30px;
 }
 
 .megafoot ul:after, .megafoot ol:after {
-clear: both;
+		clear: both;
 }
 
 .megafoot .social-media {
-margin-bottom: 30px;
+		margin-bottom: 30px;
 }
 
 .megafoot .social-media > li > a {
-margin-right: 10px;
-font-size: 38px;
-color: #a9a9a9;
-border-bottom: 0;
+		margin-right: 10px;
+		font-size: 38px;
+		color: #a9a9a9;
+		border-bottom: 0;
 }
 
 .megafoot ul > li > a, .megafoot ol > li > a {
-position: relative;
-text-decoration: none;
+		position: relative;
+		text-decoration: none;
 }
 
 .megafoot .social-media > li {
-float: left;
+		float: left;
 }
 
 
 
 
 .megafoot .little-foot {
-padding-top: 40px;
-padding-bottom: 40px;
-background-color: #e5e5e5;
-width:100%;
+		padding-top: 40px;
+		padding-bottom: 40px;
+		background-color: #e5e5e5;
+		width:100%;
 }
 
 .little-foot-nav > li > a {
-margin-right: 30px;
-font-size: 18px;
-font-weight: 400;
-color: #333;
-border-bottom: 0;
-float:left;
+		margin-right: 30px;
+		font-size: 18px;
+		font-weight: 400;
+		color: #333;
+		border-bottom: 0;
+		float:left;
 }
 .little-foot-nav > li > a:hover,
 .little-foot-nav > li > a:focus {
-	color: #595959;
+		color: #595959;
 }
 .collapse.in {
-display: block;
+		display: block;
 }
 
 .megafoot {
-padding-top: 20px;
+		padding-top: 20px;
 
 }
 
 .megafoot .big-foot-nav > li {
-margin-bottom: 12px;
-}
-
-.megafoot-border {
-	border-bottom: 1px solid #383d3e;
+		margin-bottom: 12px;
 }
 
 .big-foot-head .caret {
-	float: right;
-	margin-right: 30px;
+		float: right;
+		margin-right: 30px;
+		margin-top: 15px;
+		display: none;
 }
 
 
 @media (max-width: 991px) {
-.megafoot h2 {
-cursor: pointer;
+	.megafoot h2 {
+			cursor: pointer;
+			margin-top: 10px;
+	}
+
 }
+
+@media (max-width: 768px) {
+	.big-foot-head .caret {
+			cursor: pointer;
+			margin-top: 10px;
+			display: inline-block;
+	}
+
+	.megafoot .row .space-bot-md {
+			border-bottom: 1px solid #383d3e;
+	}
 
 }

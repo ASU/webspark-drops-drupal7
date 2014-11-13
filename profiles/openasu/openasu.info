@@ -64,6 +64,7 @@ dependencies[] = panels_tabs
 dependencies[] = uuid_features
 dependencies[] = video_embed_field
 dependencies[] = wysiwyg_template
+dependencies[] = features_override
 
 ; OpenASU - Custom
 dependencies[] = asu_brand

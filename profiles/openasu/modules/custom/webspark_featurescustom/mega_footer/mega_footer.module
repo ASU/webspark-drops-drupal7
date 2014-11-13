@@ -9,20 +9,12 @@ function mega_footer_block_info() {
 
     'info' => t('Mega Footer'),
     'region' => 'footer',
+    'weight' => -10,
     'cache' => DRUPAL_CACHE_GLOBAL,
     'status' => 1,
   );
 
   return $blocks;
-}
-
-/**
-*Implements hook_block_info_alter, in order to disable default asu brand module footer
-*
-**/
-function mega_footer_block_info_alter(&$blocks, $theme, $code_blocks) {
-  $blocks['asu_brand']['asu_brand_footer']['status'] = 0;
-
 }
 
 /**
@@ -44,7 +36,7 @@ function mega_footer_block_view($delta = '') {
   $footer_mark =
   	"<div class='megafoot'>
     <div class='row'>
-    <div class='col-md-4 col-sm-12 space-bot-md'>";
+    <div class='col-md-4 col-sm-12 space-bot-md megafoot-border'>";
 
     if(variable_get('unit_logo', '') != '') {
       $file = file_load(variable_get('unit_logo', ''));
@@ -114,10 +106,13 @@ function mega_footer_block_view($delta = '') {
 
   $footer_mark .= "</ul>";
 
+  if(variable_get('contribute_link', NULL) != NULL) {
   //add contribute button and closing div
-  $footer_mark .= "<button type='button' class='btn btn-primary' href='http://asufoundation.org'>Contribute</button>
+      $footer_mark .= "<a class='btn btn-primary' href='".variable_get('contribute_link', NULL). "'>Contribute</a>";
+  }
 
-                  </div>";
+
+  $footer_mark .= "</div>";
 
 
   //Now we add the menu items to the right
@@ -129,7 +124,7 @@ function mega_footer_block_view($delta = '') {
 
       $footer_mark .= "<div class='col-md-2 col-sm-3 space-bot-md'>
           <h2 data-toggle='collapse' data-target='#".$item['#title']."' class='big-foot-head'>".
-          $item['#title']."<span></span></h2>
+          $item['#title']."<span class='caret'></span></h2>
           <ul class='big-foot-nav  collapse in' id='".$item['#title']."' style=''>";
 
       foreach($item['#below'] as $inner) {
@@ -144,21 +139,6 @@ function mega_footer_block_view($delta = '') {
 
   }
   $footer_mark .= "</div>";
-  $footer_mark .= "<div class='little-foot'>
-                    <div class='container'>
-                      <div class='row'>
-                        <div class='col-md-12'>
-                          <ul class='little-foot-nav'>
-                            <li><a href='http://www.asu.edu/copyright/'>Copyright &amp; Trademark</a></li>
-                            <li><a href='http://www.asu.edu/accessibility/'>Accessibility</a></li>
-                            <li><a href='http://www.asu.edu/privacy/'>Privacy</a></li>
-                            <li><a href='http://www.asu.edu/emergency/'>Emergency</a></li>
-                            <li><a href='http://www.asu.edu/contactasu/'>Contact ASU</a></li>
-                          </ul>
-                        </div>
-                      </div>
-                  </div>
-                </div>";
 
 $footer_mark .= "</div>";
 
@@ -166,15 +146,16 @@ $footer_mark .= "</div>";
 
 
     $block['content'] = array(
-    '#markup' => $footer_mark,
-    '#attached' => array(
-      'css' => array(
-        drupal_get_path('module', 'mega_footer') . '/css/megafoot.css',
-      ),
-      'js' => array(
-        drupal_get_path('module', 'mega_footer') . '/js/megafoot.js',
-      ),
-    ));
+        '#markup' => $footer_mark,
+        '#attached' => array(
+          'css' => array(
+            drupal_get_path('module', 'mega_footer') . '/css/megafoot.css',
+          ),/*
+          'js' => array(
+            drupal_get_path('module', 'mega_footer') . '/js/megafoot.js',
+          ),*/
+        )
+    );
   }
 
   	return $block;
@@ -260,6 +241,12 @@ function mega_footer_block_configure($delta = '') {
       '#default_value' => variable_get('unit_youtube_connect', NULL),
     );
 
+    $form['contribute_link'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Contribute Link'),
+      '#default_value' => variable_get('contribute_link', NULL),
+    );
+
     $form['unit_logo'] = array(
     '#type' => 'managed_file',
     '#title' => t('Choose a logo image.'),
@@ -299,6 +286,7 @@ function mega_footer_block_save($delta = '', $edit = array()) {
     	variable_set('unit_google_connect', $edit['unit_google_connect']);
     	variable_set('unit_linkedin_connect', $edit['unit_linkedin_connect']);
     	variable_set('unit_youtube_connect', $edit['unit_youtube_connect']);
+      variable_set('contribute_link', $edit['contribute_link']);
 	}
 }
 
