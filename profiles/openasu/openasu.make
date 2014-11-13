@@ -4,12 +4,12 @@ core = 7.x
 ; Drupal Core
 
 projects[drupal][type] = core
-projects[drupal][version] = 7.31
+projects[drupal][version] = 7.32
 
 ; Drupal Core Patches
 projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-profile-ajax-1334818-8.patch
 ; security patch pre-7.32
-projects[drupal][patch][] = https://www.drupal.org/files/issues/SA-CORE-2014-005-D7.patch
+; projects[drupal][patch][] = https://www.drupal.org/files/issues/SA-CORE-2014-005-D7.patch
 
 ; The Panopoly Foundation
 
