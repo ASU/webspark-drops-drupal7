@@ -258,6 +258,8 @@ projects[innovation][download][type] = git
 projects[innovation][download][revision] = 94666910
 projects[innovation][download][branch] = master
 projects[innovation][download][url] = https://github.com/ASU/webspark-theme-innovation.git
+; local patch for Panopoly TPLs - see WEBSPARK-361 in JIRA
+projects[innovation][patch][] = patches/webspark-361-kalatheme-panopoly-tpl-class-update.patch
 
 libraries[innovation_bootstrap][download][type] = get
 libraries[innovation_bootstrap][download][url] = https://github.com/ASU/webspark-theme-innovation-bootstrap/archive/master.zip
