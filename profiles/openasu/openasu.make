@@ -181,7 +181,7 @@ projects[entity_view_mode][version] = 1.0-rc1
 projects[entity_view_mode][type] = module
 projects[entity_view_mode][subdir] = contrib
 
-projects[features_override][version] = 7.x-2.0-rc2
+projects[features_override][version] = 2.0-rc2
 projects[features_override][type] = module
 projects[features_override][subdir] = contrib
 
