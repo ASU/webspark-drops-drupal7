@@ -3,8 +3,7 @@ distribution_name = ASU Webspark
 description = A starting point for websites at ASU
 core = 7.x
 exclusive = 1
-;version = VERSION
-version = 1.11.1
+version = VERSION
 
 ; Drupal Core
 dependencies[] = menu
@@ -62,9 +61,9 @@ dependencies[] = google_appliance
 dependencies[] = maxlength
 dependencies[] = panels_tabs
 dependencies[] = uuid_features
+dependencies[] = features_override
 dependencies[] = video_embed_field
 dependencies[] = wysiwyg_template
-dependencies[] = features_override
 
 ; OpenASU - Custom
 dependencies[] = asu_brand

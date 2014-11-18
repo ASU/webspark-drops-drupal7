@@ -44,7 +44,6 @@ function openasu_install_tasks_alter(&$tasks, $install_state) {
       exit();
     }
   }
-  //dpm($install_state);
 }
 
 /** 
