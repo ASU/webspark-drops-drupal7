@@ -4,50 +4,50 @@ core = 7.x
 ; Drupal Core
 
 projects[drupal][type] = core
-projects[drupal][version] = 7.31
+projects[drupal][version] = 7.32
 
 ; Drupal Core Patches
 projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-profile-ajax-1334818-8.patch
 ; security patch pre-7.32
-projects[drupal][patch][] = https://www.drupal.org/files/issues/SA-CORE-2014-005-D7.patch
+; projects[drupal][patch][] = https://www.drupal.org/files/issues/SA-CORE-2014-005-D7.patch
 
 ; The Panopoly Foundation
 
-projects[panopoly_core][version] = 1.11
+projects[panopoly_core][version] = 1.13
 projects[panopoly_core][subdir] = panopoly
 
-projects[panopoly_images][version] = 1.11
+projects[panopoly_images][version] = 1.13
 projects[panopoly_images][subdir] = panopoly
 
-projects[panopoly_theme][version] = 1.11
+projects[panopoly_theme][version] = 1.13
 projects[panopoly_theme][subdir] = panopoly
 
-projects[panopoly_magic][version] = 1.11
+projects[panopoly_magic][version] = 1.13
 projects[panopoly_magic][subdir] = panopoly
 
-projects[panopoly_widgets][version] = 1.11
+projects[panopoly_widgets][version] = 1.13
 projects[panopoly_widgets][subdir] = panopoly
 
-projects[panopoly_admin][version] = 1.11
+projects[panopoly_admin][version] = 1.13
 projects[panopoly_admin][subdir] = panopoly
 
-projects[panopoly_users][version] = 1.11
+projects[panopoly_users][version] = 1.13
 projects[panopoly_users][subdir] = panopoly
 
 ; The Panopoly Toolset
 
-projects[panopoly_pages][version] = 1.11
+projects[panopoly_pages][version] = 1.13
 projects[panopoly_pages][subdir] = panopoly
 
-projects[panopoly_wysiwyg][version] = 1.11
+projects[panopoly_wysiwyg][version] = 1.13
 projects[panopoly_wysiwyg][subdir] = panopoly
 
-projects[panopoly_search][version] = 1.11
+projects[panopoly_search][version] = 1.13
 projects[panopoly_search][subdir] = panopoly
 
 ; Demo Content
 
-projects[panopoly_demo][version] = 1.11
+projects[panopoly_demo][version] = 1.13
 projects[panopoly_demo][subdir] = panopoly
 
 ; ASU Modules
@@ -59,10 +59,10 @@ projects[asu_brand][download][revision] = 91f8308a
 projects[asu_brand][download][branch] = header42
 projects[asu_brand][download][url] = https://github.com/ASU/asu-drupal-brand.git
 
-projects[asu_cas][version] = 7.x-1.3
+projects[asu_cas][version] = 7.x-1.5
 projects[asu_cas][subdir] = custom
 projects[asu_cas][type] = module
-projects[asu_cas][download][revision] = 0f2d7c7c
+projects[asu_cas][download][revision] = 7f8539ce
 projects[asu_cas][download][branch] = 7.x-1.x
 projects[asu_cas][download][url] = https://github.com/ASU/asu-drupal-cas-client-config.git
 
@@ -108,7 +108,7 @@ projects[webspark_featurescustom][type] = module
 projects[webspark_featurescustom][subdir] = custom
 projects[webspark_featurescustom][directory_name] = webspark_featurescustom
 projects[webspark_featurescustom][download][type] = git
-projects[webspark_featurescustom][download][revision] = b4d8c25f
+projects[webspark_featurescustom][download][revision] = 5321e494
 projects[webspark_featurescustom][download][branch] = master
 projects[webspark_featurescustom][download][url] = https://github.com/ASU/webspark-webstandards-components.git
 
@@ -181,6 +181,10 @@ projects[entity_view_mode][version] = 1.0-rc1
 projects[entity_view_mode][type] = module
 projects[entity_view_mode][subdir] = contrib
 
+projects[features_override][version] = 2.0-rc2
+projects[features_override][type] = module
+projects[features_override][subdir] = contrib
+
 projects[flexslider][version] = 2.0-alpha3
 projects[flexslider][type] = module
 projects[flexslider][subdir] = contrib
@@ -230,6 +234,8 @@ projects[wysiwyg_template][subdir] = contrib
 
 projects[kalatheme][version] = 3.0-rc2
 projects[kalatheme][type] = theme
+; local patch for Panopoly TPLs - see WEBSPARK-361 in JIRA
+projects[kalatheme][patch][] = patches/webspark-361-kalatheme-panopoly-tpl-class-update.patch
 
 projects[modernizr][version] = 3.1
 projects[modernizr][subdir] = contrib
@@ -248,10 +254,10 @@ libraries[asu_webspark_bootstrap_bootstrap][download][url] = https://github.com/
 
 ; Bootstrap and Theme Framework - Subtheme - Web Standards
 
-projects[innovation][version] = beta1
+projects[innovation][version] = beta3
 projects[innovation][type] = theme
 projects[innovation][download][type] = git
-projects[innovation][download][revision] = 608dd7b7
+projects[innovation][download][revision] = 94666910
 projects[innovation][download][branch] = master
 projects[innovation][download][url] = https://github.com/ASU/webspark-theme-innovation.git
 

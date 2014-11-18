@@ -1,0 +1,291 @@
+diff --git a/templates/panopoly/bartlett-flipped.tpl.php b/templates/panopoly/bartlett-flipped.tpl.php
+index f8be1ac..e254d2f 100644
+--- a/templates/panopoly/bartlett-flipped.tpl.php
++++ b/templates/panopoly/bartlett-flipped.tpl.php
+@@ -13,7 +13,7 @@
+ <div class="panel-display bartlett-flipped clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+   <section class="section">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> bartlett-flipped-everything">
+           <div class="row">
+             <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD * 2); ?> bartlett-flipped-main">
+diff --git a/templates/panopoly/bartlett.tpl.php b/templates/panopoly/bartlett.tpl.php
+index e8474eb..e51f2e8 100644
+--- a/templates/panopoly/bartlett.tpl.php
++++ b/templates/panopoly/bartlett.tpl.php
+@@ -13,7 +13,7 @@
+ <div class="panel-display bartlett clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+   <section class="section">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> bartlett-everything">
+           <div class="row">
+             <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD); ?> bartlett-side">
+diff --git a/templates/panopoly/boxton.tpl.php b/templates/panopoly/boxton.tpl.php
+index 32bba50..fdbeaa4 100644
+--- a/templates/panopoly/boxton.tpl.php
++++ b/templates/panopoly/boxton.tpl.php
+@@ -13,8 +13,8 @@
+ <div class="panel-display boxton clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+   <section class="section">
+     <div class="container">
+-      <div class="row">
+-        <div class="boxton-everything col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?>">
++      <div class="row row-full">
++        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?>">
+           <?php print $content['contentmain']; ?>
+         </div>
+       </div>
+diff --git a/templates/panopoly/brenham-flipped.tpl.php b/templates/panopoly/brenham-flipped.tpl.php
+index 86a535e..aace6a5 100644
+--- a/templates/panopoly/brenham-flipped.tpl.php
++++ b/templates/panopoly/brenham-flipped.tpl.php
+@@ -13,7 +13,7 @@
+ <div class="panel-display brenham-flipped clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+   <section class="section alt" id="promo">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> brenham-flipped-promo">
+           <?php print $content['header']; ?>
+         </div>
+diff --git a/templates/panopoly/brenham.tpl.php b/templates/panopoly/brenham.tpl.php
+index e74aa60..9b0b230 100644
+--- a/templates/panopoly/brenham.tpl.php
++++ b/templates/panopoly/brenham.tpl.php
+@@ -13,7 +13,7 @@
+ <div class="panel-display brenham clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+   <section class="section alt" id="promo">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> brenham-promo">
+           <?php print $content['header']; ?>
+         </div>
+diff --git a/templates/panopoly/harris.tpl.php b/templates/panopoly/harris.tpl.php
+index 29559ea..589d051 100644
+--- a/templates/panopoly/harris.tpl.php
++++ b/templates/panopoly/harris.tpl.php
+@@ -13,7 +13,7 @@
+ <div class="panel-display harris clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+   <section class="section">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> harris-main-container">
+           <?php print $content['header']; ?>
+         </div>
+diff --git a/templates/panopoly/moscone-flipped.tpl.php b/templates/panopoly/moscone-flipped.tpl.php
+index 7d4fa9f..70b3d23 100644
+--- a/templates/panopoly/moscone-flipped.tpl.php
++++ b/templates/panopoly/moscone-flipped.tpl.php
+@@ -13,7 +13,7 @@
+ <div class="panel-display moscone-flipped-flipped clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+   <section class="section">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> moscone-flipped-main-container">
+           <?php print $content['header']; ?>
+         </div>
+@@ -34,7 +34,7 @@
+   </section>
+   <footer class="section" id="footer">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> moscone-flipped-footer-area">
+           <?php print $content['footer']; ?>
+         </div>
+diff --git a/templates/panopoly/moscone.tpl.php b/templates/panopoly/moscone.tpl.php
+index cf30ef0..36de78c 100644
+--- a/templates/panopoly/moscone.tpl.php
++++ b/templates/panopoly/moscone.tpl.php
+@@ -13,7 +13,7 @@
+ <div class="panel-display moscone clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+   <section class="section">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> moscone-main-container">
+           <?php print $content['header']; ?>
+         </div>
+@@ -34,7 +34,7 @@
+   </section>
+   <footer class="section" id="footer">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> moscone-footer-area">
+           <?php print $content['footer']; ?>
+         </div>
+diff --git a/templates/panopoly/pond.tpl.php b/templates/panopoly/pond.tpl.php
+index 64b3d54..a330ee9 100644
+--- a/templates/panopoly/pond.tpl.php
++++ b/templates/panopoly/pond.tpl.php
+@@ -13,7 +13,7 @@
+ <div class="panel-display pond clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+   <section class="section">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> pond-header-area">
+           <?php print $content['header']; ?>
+         </div>
+@@ -52,7 +52,7 @@
+   </section>
+   <footer class="section" id="footer">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> pond-footer-area">
+           <?php print $content['footer']; ?>
+         </div>
+diff --git a/templates/panopoly/rolph.tpl.php b/templates/panopoly/rolph.tpl.php
+index 9f8a907..40aa5cd 100644
+--- a/templates/panopoly/rolph.tpl.php
++++ b/templates/panopoly/rolph.tpl.php
+@@ -13,7 +13,7 @@
+ <div class="panel-display rolph clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+   <section class="section alt" id="promo">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> rolph-header-area">
+           <?php print $content['header']; ?>
+         </div>
+@@ -40,7 +40,7 @@
+   </section>
+    <footer class="section" id="footer">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> rolph-footer-area">
+           <?php print $content['footer']; ?>
+         </div>
+diff --git a/templates/panopoly/sutro-double.tpl.php b/templates/panopoly/sutro-double.tpl.php
+index 068e163..adca188 100644
+--- a/templates/panopoly/sutro-double.tpl.php
++++ b/templates/panopoly/sutro-double.tpl.php
+@@ -13,7 +13,7 @@
+ <div class="panel-display sutro-double clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+   <section class="section">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> sutro-double-header-area">
+           <?php print $content['header']; ?>
+         </div>
+@@ -30,7 +30,7 @@
+           <?php print $content['column2']; ?>
+         </div>
+       </div>
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> sutro-double-middle-area">
+           <?php print $content['middle']; ?>
+         </div>
+@@ -47,7 +47,7 @@
+   </section>
+   <footer class="section" id="footer">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> sutro-double-footer-area">
+           <?php print $content['footer']; ?>
+         </div>
+diff --git a/templates/panopoly/sutro.tpl.php b/templates/panopoly/sutro.tpl.php
+index 8c31aa8..4b3b138 100644
+--- a/templates/panopoly/sutro.tpl.php
++++ b/templates/panopoly/sutro.tpl.php
+@@ -13,7 +13,7 @@
+ <div class="panel-display sutro clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+   <section class="section">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> sutro-header-area">
+             <?php print $content['header']; ?>
+         </div>
+@@ -34,7 +34,7 @@
+   </section>
+   <footer class="section" id="footer">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> sutro-footer-area">
+           <?php print $content['footer']; ?>
+         </div>
+diff --git a/templates/panopoly/taylor-flipped.tpl.php b/templates/panopoly/taylor-flipped.tpl.php
+index d843769..7b90ba8 100644
+--- a/templates/panopoly/taylor-flipped.tpl.php
++++ b/templates/panopoly/taylor-flipped.tpl.php
+@@ -13,7 +13,7 @@
+ <div class="panel-display taylor-flipped-flipped clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+    <section class="section">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> taylor-flipped-header-area">
+           <?php print $content['header']; ?>
+         </div>
+@@ -37,7 +37,7 @@
+   </section>
+   <footer class="section" id="footer">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> taylor-flipped-footer-area">
+           <?php print $content['footer']; ?>
+         </div>
+diff --git a/templates/panopoly/taylor.tpl.php b/templates/panopoly/taylor.tpl.php
+index 6980e84..51abb33 100644
+--- a/templates/panopoly/taylor.tpl.php
++++ b/templates/panopoly/taylor.tpl.php
+@@ -13,7 +13,7 @@
+ <div class="panel-display taylor clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+   <section class="section">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> taylor-header-area">
+           <?php print $content['header']; ?>
+         </div>
+@@ -37,7 +37,7 @@
+   </section>
+   <footer class="section" id="footer">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> taylor-footer-area">
+           <?php print $content['footer']; ?>
+         </div>
+diff --git a/templates/panopoly/webb-flipped.tpl.php b/templates/panopoly/webb-flipped.tpl.php
+index fea032d..3ea41ef 100644
+--- a/templates/panopoly/webb-flipped.tpl.php
++++ b/templates/panopoly/webb-flipped.tpl.php
+@@ -13,7 +13,7 @@
+ <div class="panel-display webb-flipped-flipped clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+   <section class="section">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> webb-flipped-header-area">
+           <?php print $content['header']; ?>
+         </div>
+diff --git a/templates/panopoly/webb.tpl.php b/templates/panopoly/webb.tpl.php
+index 0d033a7..081cc26 100644
+--- a/templates/panopoly/webb.tpl.php
++++ b/templates/panopoly/webb.tpl.php
+@@ -13,7 +13,7 @@
+ <div class="panel-display webb clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+   <section class="section">
+     <div class="container">
+-      <div class="row">
++      <div class="row row-full">
+         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> webb-header-area">
+           <?php print $content['header']; ?>
+         </div>

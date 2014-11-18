@@ -1,6 +1,18 @@
 name = Webspark Features Container
-description = This is nothing more than a placeholder module for custom Webspark features.
+description = "Enables web standards compliant Innovation theme components."
 core = 7.x
 package = ASU Webspark
 files[] = webspark_featurescustom.module
-version = 7.x-1.0
+version = 7.x-1.1
+
+; enable these features
+dependencies[] = asu_securityscanfixes
+dependencies[] = webspark_wysiwyg
+dependencies[] = webspark_panels_styles
+dependencies[] = webspark_banner
+dependencies[] = webspark_breadcrumbs
+dependencies[] = webspark_content_callout
+dependencies[] = webspark_hero
+dependencies[] = webspark_megamenu
+dependencies[] = mega_footer_menu
+dependencies[] = webspark_extras

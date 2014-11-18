@@ -1,4 +1,59 @@
 <?php
 /**
- * Placeholder module for features in subdirectories - Nothing to see here.
+ * Placeholder module for features in subdirectories
+ * Code added to activate theme specific modules & configuration
  */
+
+function webspark_featurescustom_menu_alter (&$items) {
+	// Modifying callback for theme selection function to include our own functionality
+	$items['admin/appearance/default']['page callback'] = 'webspark_featurescustom_theme_check';
+}
+
+function webspark_featurescustom_theme_check () {
+	// Checking if the selected theme is our theme & calling function to active modules/configuration
+	module_load_include('inc', 'system', 'system.admin.inc');
+	$theme_request = $_REQUEST['theme'];
+	if ($theme_request == 'innovation') {
+		webspark_featurescustom_enable_config($theme_request);
+	}
+	system_theme_default();
+}
+
+function webspark_featurescustom_enable_config($theme) {
+	// Enabling all theme related modules if they are not enabled
+	$modules = array();
+	// Contrib module dependencies for features
+	$modules[] = 'backgroundfield';
+	$modules[] = 'chosen';
+	$modules[] = 'easy_breadcrumb';
+	$modules[] = 'entity_view_mode';
+	$modules[] = 'flexslider';
+	$modules[] = 'fontawesome';
+	$modules[] = 'google_appliance';
+	$modules[] = 'maxlength';
+	$modules[] = 'panels_tabs';
+	$modules[] = 'uuid_features';
+	$modules[] = 'video_embed_field';
+	$modules[] = 'wysiwyg_template';
+	$modules[] = 'asu_spotlight';
+	$modules[] = 'mega_footer';
+	// OpenASU custom modules, features
+	$modules[] = 'asu_gsa';
+	$modules[] = 'webspark_featurescustom';
+	$modules[] = 'webspark_wysiwyg';
+	$modules[] = 'webspark_panels_styles';
+	$modules[] = 'webspark_banner';
+	$modules[] = 'webspark_breadcrumbs';
+	$modules[] = 'webspark_content_callout';
+	$modules[] = 'webspark_hero';
+	$modules[] = 'webspark_megamenu';
+	$modules[] = 'mega_footer_menu';
+	$modules[] = 'webspark_extras';
+	module_enable($modules,TRUE);
+	$message = $theme." theme modules have been enabled.";
+	drupal_set_message($message);
+
+	// Add setting for updating header to proper version
+    	variable_set('asu_brand_header_version', '4.2');
+}
+

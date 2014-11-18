@@ -13,7 +13,7 @@
 <div class="panel-display webb clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
   <section class="section">
     <div class="container">
-      <div class="row">
+      <div class="row row-full">
         <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> webb-header-area">
           <?php print $content['header']; ?>
         </div>

@@ -4,6 +4,11 @@
 
 /* =BOOTSTRAP, PANOPOLY & WEBSPARK OEVERRIDES
 -------------------------------------------------------------- */
+#asu_footer ul{
+    max-width: 1170px;
+    margin: 0 auto;
+}
+
 body #page .region-content {
     padding: 0;
 }
@@ -117,7 +122,6 @@ a.btn-primary,
 /* =TYPOGRAPHY
 -------------------------------------------------------------- */
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-    margin-top: 0;
     margin-bottom: 24px;
     color: #000;
     font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -154,33 +158,46 @@ h6, .h6 {
 -------------------------------------------------------------- */
 
 .header__sitename {
-  color: #2a2a2a;
-  font-size: 21px;
-  margin-bottom: 0;
-  padding: 0 0 12px 12px;
-  white-space: nowrap;
-  overflow: hidden;
+    color: #2a2a2a;
+    font-size: 21px;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0 0 12px 12px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .header__sitename a {
-  color: #2a2a2a;
+    color: #2a2a2a;
 }
 #asu_hdr #asu_universal_nav_new .icn {
-	box-sizing: content-box;
+    box-sizing: content-box;
 }
 @media (max-width: 930px) {
-	#header .container-fluid > .row > .col-md-12 {
-		width: 100%;
-	}
-  .header__sitename {
-    font-size: 15px;
-    padding: 5px 12px;
-    color: #FFF;
-    background: #505558;
-    font-weight: 600;
-  }
-  .header__sitename a {
-    color: #FFF
-  }
+    #header .container{
+        width:100%;
+    }
+    #header>.container .row{
+        margin-left:0px;
+        margin-right:0px;
+    }
+    #header>.container .row .col-md-12{
+        padding-left:0px;
+        padding-right:0px;
+    }
+    #header .container-fluid > .row > .col-md-12 {
+        width: 100%;
+    }
+    .header__sitename {
+        font-size: 15px;
+        padding: 12px 15px;
+        color: #FFF;
+        background: #505558;
+        font-weight: 600;
+        line-height: 12px;
+    }
+    .header__sitename a {
+        color: #FFF
+    }
 }
 
 /* =IMAGES
@@ -426,7 +443,7 @@ alert-warning a.close:hover {
 		padding-right: 15px;
 		padding-left: 15px;
 	}
-	
+
 
 }
 
@@ -446,7 +463,44 @@ alert-warning a.close:hover {
 		float: none !important;
 		margin-right: 0;
 	}
-	
+
 }
-
-
+/* ----------------------------------------------------- */
+#header .container{
+  padding-left:0px;
+  padding-right:0px;
+}
+.section > .container {
+  width: 100%;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.section > .container .row {
+  max-width: 1170px;
+  margin: 0 auto;
+}
+.section > .container .row-full {
+  width: 100% !important;
+  max-width: none;
+}
+.section > .container .row-full .col-md-12 {
+  padding-left:0;
+  padding-right:0;
+}
+.section > .container .row-full [class^="pane-"] {
+  max-width: 1170px;
+  margin: 0 auto;
+}
+.section > .container .row-full .maxpayne [class^="pane-"] {
+  width:100% !important;
+  padding-left:0;
+  padding-right:0;
+  margin-left:0;
+  margin-right:0;
+  max-width:none !important;
+}
+.row {
+  padding:0px;
+  margin:0px;
+}
+#footer{background-color:#1E1E1E}

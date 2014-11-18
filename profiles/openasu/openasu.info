@@ -64,6 +64,7 @@ dependencies[] = panels_tabs
 dependencies[] = uuid_features
 dependencies[] = video_embed_field
 dependencies[] = wysiwyg_template
+dependencies[] = features_override
 
 ; OpenASU - Custom
 dependencies[] = asu_brand
@@ -71,19 +72,19 @@ dependencies[] = asu_cas
 dependencies[] = asu_spotlight
 dependencies[] = mega_footer
 dependencies[] = asu_gsa
-; container module for features 
+; container features built for Webspark 
 dependencies[] = webspark_featurescustom
-; features and modules included in webspark_featurescustom
-dependencies[] = asu_securityscanfixes
-dependencies[] = webspark_wysiwyg
-dependencies[] = webspark_panels_styles
-dependencies[] = webspark_banner
-dependencies[] = webspark_breadcrumbs
-dependencies[] = webspark_content_callout
-dependencies[] = webspark_hero
-dependencies[] = webspark_megamenu
-dependencies[] = mega_footer_menu
-dependencies[] = webspark_extras
+; features and modules enabled in webspark_featurescustom
+;dependencies[] = asu_securityscanfixes
+;dependencies[] = webspark_wysiwyg
+;dependencies[] = webspark_panels_styles
+;dependencies[] = webspark_banner
+;dependencies[] = webspark_breadcrumbs
+;dependencies[] = webspark_content_callout
+;dependencies[] = webspark_hero
+;dependencies[] = webspark_megamenu
+;dependencies[] = mega_footer_menu
+;dependencies[] = webspark_extras
 
 ; OpenASU - Toolset
 dependencies[] = modernizr
