@@ -107,7 +107,7 @@ function asu_cas_update_projects_alter(&$projects) {
   }
 
   // Remove modules and themes managed by distribution
-  foreach($managed_things as $managed_module) {
+  foreach ($managed_things as $managed_module) {
     unset($projects[$managed_module]);
   }
 }
@@ -135,7 +135,7 @@ function asu_cas_update_status_alter(&$projects) {
  * Implements hook_menu_alter()
  */
 function asu_cas_menu_alter(&$items) {
-  $items['admin/people/cas/create']['title'] =  'Add ASURITE User';
+  $items['admin/people/cas/create']['title'] = 'Add ASURITE User';
   $items['user/%user/cas']['access callback'] = FALSE;
 }
 
@@ -143,47 +143,74 @@ function asu_cas_menu_alter(&$items) {
  * Implements hook_form_id_form_alter()
  */
 
-/* This function was added to fix CAS role issue by adding CAS role enabled by default and disable it from being unchecked */
- function asu_cas_form_alter(&$form, &$form_state, $form_id) { 
-	if ($form['#id'] == "cas-admin-settings") {
-	unset($form['account']['cas_auto_assigned_role']);
-	$roles = array_map('check_plain', user_roles(TRUE));
-        $checkbox_authenticated = array(
-    		'#type' => 'checkbox',
-    		'#title' => $roles[DRUPAL_AUTHENTICATED_RID],
-    		'#default_value' => TRUE,
-    		'#disabled' => TRUE,
-  	);
- 	foreach ($roles as $key=>$role) {
-    		if ($role == "CAS") {
-     		$name = $role;
-     		$rid = $key;
-    	}
-  	}
-  	$cas_authenticated = array(
-    		'#type' => 'checkbox',
-    		'#title' => $name,
-    		'#default_value' => TRUE,
-    		'#disabled' => TRUE,
-  	);
- 	unset($roles[DRUPAL_AUTHENTICATED_RID]);
-  	unset($roles[$rid]);
-  	$form['account']['cas_auto_assigned_role'] = array(
-   		'#type' => 'checkboxes',
-		'#title' => t('Roles'),
-		'#description' => t('The selected roles will be automatically assigned to each CAS user on login. Use this to automatically give CAS users additional privileges or to identify CAS users to other modules.'),
-		'#default_value' => variable_get('cas_auto_assigned_role', array()),
-		'#options' => $roles,
-		'#access' => user_access('administer permissions'),
-		 DRUPAL_AUTHENTICATED_RID => $checkbox_authenticated,
-                 $rid => $cas_authenticated,
- 	 );
-	}
- }
- function asu_cas_form_cas_add_user_form_alter(&$form, &$form_state) {
-   $form['account']['cas_name']['#title'] = ASU_CAS_USERNAME_LABEL;
-   $form['account']['cas_name']['#description'] = t("Registration will proceed as if the user with the specified @label just logged in.",  array('@label' => ASU_CAS_USERNAME_LABEL));
- }
+/* This properly sets the default admin role to 'administrator' and disables all the other roles from being assigned */
+function asu_cas_form_alter(&$form, &$form_state, $form_id) {
+
+  if ($form_id == "user_admin_settings") {
+    $roles = array_map('check_plain', user_roles(TRUE));
+    foreach ($roles as $key => $role) {
+      // Sets the default administrator role to 'administrator' to ensure CAS role does not become default
+      if ($role == "administrator") {
+        print $role;
+        variable_set("user_admin_role", $key);
+      }
+      else {
+        unset($roles[$key]);
+      }
+    }
+    $form['admin_role']['user_admin_role'] = array(
+      '#type' => 'select',
+      '#title' => t('Administrator role'),
+      '#default_value' => variable_get('user_admin_role', 0),
+      '#options' => $roles,
+      '#description' => t('This role will be automatically assigned new permissions whenever a module is enabled. Changing this setting will not affect existing permissions.'),
+    );
+  }
+  /* This function was added to fix CAS role issue by adding CAS role enabled by default and disable it from being unchecked */
+  if ($form_id == "cas_admin_settings") {
+    $roles = array_map('check_plain', user_roles(TRUE));
+    unset($form['account']['cas_auto_assigned_role']);
+    $checkbox_authenticated = array(
+      '#type' => 'checkbox',
+      '#title' => $roles[DRUPAL_AUTHENTICATED_RID],
+      '#default_value' => TRUE,
+      '#disabled' => TRUE,
+    );
+    foreach ($roles as $key => $role) {
+      // Sets the default administrator role to 'administrator' to ensure CAS role does not become default
+      if ($role == "CAS") {
+        $name = $role;
+        $rid = $key;
+      }
+    }
+    // Preventing CAS role from being taken away from CAS user
+    $cas_authenticated = array(
+      '#type' => 'checkbox',
+      '#title' => $name,
+      '#default_value' => TRUE,
+      '#disabled' => TRUE,
+    );
+    unset($roles[DRUPAL_AUTHENTICATED_RID]);
+    unset($roles[$rid]);
+
+    // Auto assigns CAS user role to all new CAS users
+    $form['account']['cas_auto_assigned_role'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Roles'),
+      '#description' => t('The selected roles will be automatically assigned to each CAS user on login. Use this to automatically give CAS users additional privileges or to identify CAS users to other modules.'),
+      '#default_value' => variable_get('cas_auto_assigned_role', array()),
+      '#options' => $roles,
+      '#access' => user_access('administer permissions'),
+      DRUPAL_AUTHENTICATED_RID => $checkbox_authenticated,
+      $rid => $cas_authenticated,
+    );
+  }
+}
+
+function asu_cas_form_cas_add_user_form_alter(&$form, &$form_state) {
+  $form['account']['cas_name']['#title'] = ASU_CAS_USERNAME_LABEL;
+  $form['account']['cas_name']['#description'] = t("Registration will proceed as if the user with the specified @label just logged in.", array('@label' => ASU_CAS_USERNAME_LABEL));
+}
 
 
 function asu_cas_form_user_register_form_alter(&$form, &$form_state) {
@@ -195,7 +222,10 @@ function asu_cas_form_user_register_form_alter(&$form, &$form_state) {
 
 function asu_cas_form_cas_user_add_alter(&$form, &$form_state) {
   $form['cas_name']['#title'] = ASU_CAS_USERNAME_LABEL;
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t("Add an @label", array('@label' => ASU_CAS_USERNAME_LABEL)));
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t("Add an @label", array('@label' => ASU_CAS_USERNAME_LABEL))
+  );
 }
 
 function asu_cas_form_user_profile_form_alter(&$form, &$form_state) {
@@ -204,3 +234,4 @@ function asu_cas_form_user_profile_form_alter(&$form, &$form_state) {
     $form['account']['cas_name']['#description'] = '';
   }
 }
+

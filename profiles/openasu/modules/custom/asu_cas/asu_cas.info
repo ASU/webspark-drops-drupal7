@@ -5,6 +5,7 @@ package = ASU
 php = 5.2.4
 version = 7.x-1.5
 project = asu_cas
+dependencies[] = panopoly_core
 dependencies[] = asu_brand
 dependencies[] = cas
 dependencies[] = defaultconfig
