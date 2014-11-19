@@ -13,6 +13,9 @@
  */
 function openasu_install() {
   variable_set('admin_theme', 'seven');
+
+  // WEBSPARK-254
+  module_enable(array('asu_cas'));
   
 //Fix for image threshold error max ten upon spinning up webspark innovation
 

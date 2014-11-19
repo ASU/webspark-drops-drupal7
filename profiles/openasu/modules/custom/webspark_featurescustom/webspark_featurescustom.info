@@ -5,8 +5,7 @@ package = ASU Webspark
 files[] = webspark_featurescustom.module
 version = 7.x-1.1
 
-; enable these features
-dependencies[] = panopoly_core
+; enable these features by making them dependencies on this module
 dependencies[] = asu_securityscanfixes
 dependencies[] = webspark_wysiwyg
 dependencies[] = webspark_panels_styles
