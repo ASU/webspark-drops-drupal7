@@ -7,7 +7,7 @@ version = 7.x-1.5
 project = asu_cas
 
 dependencies[] = asu_brand
-;dependencies[] = cas
+dependencies[] = cas
 dependencies[] = defaultconfig
 dependencies[] = image
 
