@@ -30,7 +30,7 @@
 ######################
 .DS_Store*
 ehthumbs.db
-Icon
+Icon
 Thumbs.db
 ._*
 
@@ -50,4 +50,7 @@ Thumbs.db
 */.project
 */.settings/
 */.buildpath
+
+# PHPStorm generated files #/
+.idea
 
