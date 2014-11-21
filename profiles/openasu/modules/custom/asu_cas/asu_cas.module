@@ -152,7 +152,7 @@ function asu_cas_form_alter(&$form, &$form_state, $form_id) {
 
   if ($form_id == "user_admin_settings") {
     $roles = array_map('check_plain', user_roles(TRUE));
-    foreach ($roles as $key => $role) {
+    /*foreach ($roles as $key => $role) {
       // Sets the default administrator role to 'administrator' to ensure CAS role does not become default
       if ($role == "administrator") {
         print $role;
@@ -168,7 +168,7 @@ function asu_cas_form_alter(&$form, &$form_state, $form_id) {
       '#default_value' => variable_get('user_admin_role', 0),
       '#options' => $roles,
       '#description' => t('This role will be automatically assigned new permissions whenever a module is enabled. Changing this setting will not affect existing permissions.'),
-    );
+    );*/
   }
   /* This function was added to fix CAS role issue by adding CAS role enabled by default and disable it from being unchecked */
   if ($form_id == "cas_admin_settings") {
