@@ -101,14 +101,15 @@ function clean_result($string, $start, $end){
 }
 
 function asu_gsa_sort() {
+  global $base_url;
   $path = current_path();
   $exp = explode("/",$path);
+  $query = $exp[1];
   if (count($exp) > 2) {
     $sort = $exp[2];
   }
   else {
-    $sort = "";
-    $sort_type = "rel";
+    $sort = "rel";
   }
   if (strpos($sort,'rel') !== false) {
     $sort_type = "rel";
@@ -129,7 +130,7 @@ function asu_gsa_sort() {
     $heads .=  '<span class="selected-sort">Sort by Date</span>';
   }
   else {
-    $heads .= '<a class="sort-date" href="date">Sort by Date</a>';
+    $heads .= '<a class="sort-date" href="'.$base_url.'/search/'.$query.'/date">Sort by Date</a>';
   }
   $heads .= "</div></div>";
 
