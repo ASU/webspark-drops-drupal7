@@ -50,9 +50,10 @@ function webspark_hero_defaultconfig_field_default_fields() {
     'field_instance' => array(
       'bundle' => 'hero',
       'deleted' => 0,
-      'description' => '<p>Only add heroes to the top section of your page and in a single-region row.</p>
-<p>Images should be 1220 x 350 px. Smaller images will be scaled up; larger ones will be cropped.</p>
-<p>When adding a new image, you must refresh the page after saving to view the image.</p>',
+      'description' => '<h4>Tips & Instructions</h4>
+<p>Heroes should be added <strong>only to the top region</strong> of your page.</p>
+<p>Images should be 1170 x 380 px. Smaller images will be scaled up; larger ones will be cropped.</p>
+<p>When adding a new image, <strong>refresh the page</strong> after saving to view the image (it displays as a CSS background image).</p>',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -72,7 +73,7 @@ function webspark_hero_defaultconfig_field_default_fields() {
         'css_h_position' => 'center',
         'css_important' => 0,
         'css_repeat' => 'no-repeat',
-        'css_selector' => '.hero-bg-img',
+        'css_selector' => '.pane-bundle-hero',
         'css_v_position' => 'center',
         'default_image' => 0,
         'file_directory' => '',
@@ -431,9 +432,10 @@ function webspark_hero_defaultconfig_field_default_fields() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('<p>Only add heroes to the top section of your page and in a single-region row.</p>
-<p>Images should be 1220 x 350 px. Smaller images will be scaled up; larger ones will be cropped.</p>
-<p>When adding a new image, you must refresh the page after saving to view the image.</p>');
+  t('<h4>Tips & Instructions</h4>
+<p>Heroes should be added <strong>only to the top region</strong> of your page.</p>
+<p>Images should be 1170 x 380 px. Smaller images will be scaled up; larger ones will be cropped.</p>
+<p>When adding a new image, <strong>refresh the page</strong> after saving to view the image (it displays as a CSS background image).</p>');
   t('Blurb');
   t('Explore graduate programs button  (recommended)');
   t('Explore undergraduate programs button (recommended)');

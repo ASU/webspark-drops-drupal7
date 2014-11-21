@@ -1,9 +1,10 @@
-name = Webspark hero
-description = Adds a hero widget for use with Panels' IPE.
+name = Webspark Hero
+description = Adds a standard (1170x380px) hero widget for use with Panels IPE.
 core = 7.x
 package = ASU Webspark
-version = 7.x-1.0-dev
+version = 7.x-1.2-dev
 project = webspark_hero
+stylesheets[all][] = css/webspark_hero.css
 dependencies[] = backgroundfield
 dependencies[] = ctools
 dependencies[] = defaultconfig

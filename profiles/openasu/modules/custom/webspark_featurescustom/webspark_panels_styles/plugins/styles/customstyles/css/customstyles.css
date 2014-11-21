@@ -4,34 +4,34 @@
 
 /* =Background colors on rows
 -------------------------------------------------------------- */
-.row.bg-darkgray {
+.js-darkgraybg {
 	background-color: #353535;
 	color: #fff;
 }
-.row.bg-lightgray {
+.js-lightgraybg {
 	background-color: #F1F1F1;
 }
-.bg-darkgray h1, .bg-darkgray h2, .bg-darkgray h3, .bg-darkgray h4, .bg-darkgray h5, .bg-darkgray h6, .bg-darkgray .h1, .bg-darkgray.h2, .bg-darkgray .h3, .bg-darkgray .h4, .bg-darkgray .h5, .bg-darkgray .h6, .bg-darkgray h1 a, .bg-darkgray h2 a, .bg-darkgray h3 a, .bg-darkgray h4 a, .bg-darkgray h5 a, .bg-darkgray h6 a, .bg-darkgray .h1 a, .bg-darkgray .h2 a, .bg-darkgray .h3 a, .bg-darkgray .h4 a, .bg-darkgray .h5 a, .bg-darkgray .h6 a {
+.js-darkgraybg h1, .js-darkgraybg h2, .js-darkgraybg h3, .js-darkgraybg h4, .js-darkgraybg h5, .js-darkgraybg h6, .js-darkgraybg .h1, .js-darkgraybg.h2, .js-darkgraybg .h3, .js-darkgraybg .h4, .js-darkgraybg .h5, .js-darkgraybg .h6, .js-darkgraybg h1 a, .js-darkgraybg h2 a, .js-darkgraybg h3 a, .js-darkgraybg h4 a, .js-darkgraybg h5 a, .js-darkgraybg h6 a, .js-darkgraybg .h1 a, .js-darkgraybg .h2 a, .js-darkgraybg .h3 a, .js-darkgraybg .h4 a, .js-darkgraybg .h5 a, .js-darkgraybg .h6 a {
 	color: #fff;
 }
 
 /* Spacing on rows */
-.row.row-padding-top {
+.row-padding-top {
 	padding-top: 55px !important;	
 }
-.row.row-padding-bottom {
+.row-padding-bottom {
 	padding-bottom: 55px !important;	
 }
-.row.remove-2-above {
+.remove-2-above {
 	margin-top: -6px !important;
 }
-.row.remove-6-above {
+.remove-6-above {
 	margin-top: -12px !important;
 }
-.row.remove-2-below {
+.remove-2-below {
 	margin-bottom: -6px !important;
 }
-.row.remove-6-below {
+.remove-6-below {
 	margin-bottom: -12px !important;
 }
 

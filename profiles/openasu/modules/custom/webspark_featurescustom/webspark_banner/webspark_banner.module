@@ -22,5 +22,42 @@ function webspark_banner_entity_info_alter(&$entity_info) {
   );
 }
 
-drupal_add_css(drupal_get_path('module', 'webspark_banner') . '/css/webspark_banner.css', array('weight' => 99, 'group' => CSS_DEFAULT));
-drupal_add_js(drupal_get_path('module', 'webspark_banner') . '/js/webspark_banner.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 95));
+/**
+ * Implements hook_preprocess_fieldable_panels_pane().
+ */
+function webspark_banner_preprocess_fieldable_panels_pane(&$variables){
+  if($variables['elements']['#bundle'] === 'banner'){
+    $title = $variables['elements']['#fieldable_panels_pane']->title;
+    $variables['elements']['title'] = array(
+      '#theme' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => $title
+    );
+  }
+}
+
+/**
+ * Implements hook_preprocess_panels_pane().
+ */
+function webspark_banner_preprocess_panels_pane(&$variables){
+  if(isset($variables['content']['#bundle']) && $variables['content']['#bundle']==='banner' ){
+    $variables['title'] = '';
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function webspark_banner_theme(){
+  return array(
+    'fieldable_panels_pane__banner' => array(
+      'template' => 'templates/fieldable-panels-pane--banner',
+      'render element' => 'elements',
+      'type' => 'module'
+    )
+  );
+}
+
+/* function webspark_banner_init() {
+	drupal_add_js(drupal_get_path('module', 'webspark_banner') . '/js/webspark_banner.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 95));
+} */

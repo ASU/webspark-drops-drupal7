@@ -3,8 +3,7 @@
  * @file
  * Drupal needs this blank file.
  */
-drupal_add_css(drupal_get_path('module', 'webspark_megamenu') . '/css/webspark_megamenu.css', array('weight' => 99, 'group' => CSS_DEFAULT));
-//drupal_add_js(drupal_get_path('module', 'webspark_megamenu') . '/js/webspark_megamenu.js?url='.urlencode(variable_get('site_frontpage', 'node')));
+function webspark_megamenu_init() {
 $js = '(function ($, Drupal) {
   Drupal.behaviors.webspark_megamenu = {
     attach: function() {
@@ -24,3 +23,5 @@ $js = '(function ($, Drupal) {
   }
 })(jQuery, Drupal);';
 drupal_add_js($js, array('type' => 'inline'));
+drupal_add_css(drupal_get_path('module', 'webspark_megamenu') . '/css/webspark_megamenu.css', array('weight' => 99, 'group' => CSS_DEFAULT));
+}
