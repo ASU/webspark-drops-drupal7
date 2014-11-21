@@ -1,0 +1,177 @@
+/**
+ * CSS file for Webspark hero module.
+ */
+
+/* Increase font size of modal warning and move higher */
+.hero-warning {
+	position: relative;
+	top: -105px;
+	font-size: 16px;
+	font-weight: bold;
+}
+/* Make hero background image responsive */
+.pane-bundle-jumbohero {
+	background-size: cover;
+	width: 100%;
+	margin-top: -1px;
+}
+.pane-bundle-jumbohero .pane-content {
+	position: relative;
+	height: 700px;
+	padding: 0 15px;
+}
+.pane-bundle-jumbohero .jumbotext-wrapper {
+	width: 100%;
+}
+.pane-bundle-jumbohero .field-name-field-webspark-jumbo-position {
+	display: none;
+}
+.pane-bundle-jumbohero p {
+	margin: 0;
+	padding: 0;
+}
+.pane-bundle-jumbohero h2 {
+	color: white;
+	font-size: 60px;
+	font-weight: 900;
+	line-height: 1;
+	margin: 0;
+  padding: 10px 0;
+	text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+.pane-bundle-jumbohero .field-name-field-webspark-jumbohero-blurb {
+	max-width: 900px;
+  margin-bottom: 24px;
+	color: white;
+	font-size: 24px;
+	line-height: 24px;
+	font-weight: 900;
+	text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Button styles */
+.pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn,
+.pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn {
+  width: 41.6667%;
+	display: inline-block;
+	margin-bottom: 12px;
+
+}
+.pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn {
+	padding-right: 15px;
+}
+.pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn {
+	padding-left: 15px;
+}
+/* Positioning content within jumbo hero */
+.pane-bundle-jumbohero .position-top-left {
+	padding-top: 75px;
+	text-align: left;
+}
+.pane-bundle-jumbohero .position-top-center {
+	padding-top: 75px;
+	text-align: center;	
+}
+.pane-bundle-jumbohero .position-top-center .field-name-field-webspark-jumbohero-blurb {
+	margin: 0 auto;
+}
+.pane-bundle-jumbohero .position-top-right {
+	padding-top: 75px;
+	text-align: right;	
+}
+.pane-bundle-jumbohero .position-top-right .field-name-field-webspark-jumbohero-blurb {
+	float: right;
+}
+.pane-bundle-jumbohero .position-bottom-left {
+	position: absolute;
+	bottom: 80px;
+	padding-top: 0;
+}
+.pane-bundle-jumbohero .position-bottom-center {
+	position: absolute;
+	bottom: 80px;
+	padding-top: 0;
+	text-align: center;	
+}
+.pane-bundle-jumbohero .position-bottom-center .field-name-field-webspark-jumbohero-blurb {
+	margin: 0 auto;
+}
+.pane-bundle-jumbohero .position-bottom-right {
+	position: absolute;
+	bottom: 80px;
+	padding-top: 0;
+	text-align: right;	
+}
+.pane-bundle-jumbohero .position-bottom-right .field-name-field-webspark-jumbohero-blurb {
+	float: right;
+}
+
+/* =MEDIA QUERIES
+-------------------------------------------------------------- */
+@media (min-width: 1200px) { 
+
+	.pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn,
+	.pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn {
+		width: 33.3333%;
+	}	
+	
+}
+
+@media (max-width: 992px) { 
+
+	.pane-bundle-jumbohero .jumbotext-wrapper {
+		width: 95%;
+	}
+	.pane-bundle-jumbohero h2 {
+		font-size: 50px;
+	}
+	.pane-bundle-jumbohero .field-name-field-webspark-jumbohero-blurb {
+		font-size: 21px;
+		line-height: 21px;
+	}
+	.pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn,
+	.pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn {
+		width: 50%;
+	}	
+
+}
+
+@media (max-width: 768px) { 
+	
+	.pane-bundle-jumbohero h2 {
+		padding-top: 30px;
+		font-size: 40px;
+	}
+	.pane-bundle-jumbohero .position-top-right .field-name-field-webspark-jumbohero-blurb,
+	.pane-bundle-jumbohero .position-bottom-right .field-name-field-webspark-jumbohero-blurb {
+		margin-bottom: 0;
+	}
+	.pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn,
+	.pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn {
+		display: block;
+		width: 100%;
+		margin: 0;
+		padding: 0 15px;
+	}	
+/* 	.pane-bundle-jumbohero .position-top-right .field-name-field-webspark-hero-ugradbtn,
+	.pane-bundle-jumbohero .position-top-right .field-name-field-webspark-hero-gradbtn,
+	.pane-bundle-jumbohero .position-bottom-right .field-name-field-webspark-hero-ugradbtn,
+	.pane-bundle-jumbohero .position-bottom-right .field-name-field-webspark-hero-gradbtn {
+		display: inline-block;
+	} */
+	.pane-bundle-jumbohero .position-bottom-left,
+	.pane-bundle-jumbohero .position-bottom-center,
+	.pane-bundle-jumbohero .position-bottom-right {
+		bottom: 80px;
+	}
+	
+}
+
+@media (max-width: 480px) { 
+
+	.pane-bundle-jumbohero .jumbotext-wrapper {
+		width: 90%;
+	}
+	
+}
+

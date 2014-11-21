@@ -1,0 +1,66 @@
+<?php
+/**
+ * @file
+ * Code for the Webspark Jumbo Hero feature.
+ */
+
+include_once 'webspark_jumbohero.features.inc';
+
+
+/** 
+ * Implementation of hook_entity_info_alter().
+ */
+function webspark_jumbohero_entity_info_alter(&$entity_info) {
+  $entity_info['fieldable_panels_pane']['bundles']['jumbohero'] = array(
+    'label' => t('Add a jumbo hero'),
+    'pane category' => t('Custom'),
+    'pane top level' => TRUE,
+    'pane icon' => drupal_get_path('module', 'webspark_jumbohero') . '/images/icon_jumbohero.png',
+    'admin' => array(
+      'path' => 'admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type',
+      'bundle argument' => 4,
+      'real path' => 'admin/structure/fieldable-panels-panes/manage/jumbohero',
+      'access arguments' => array('administer fieldable panels panes'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_preprocess_fieldable_panels_pane().
+ */
+function webspark_jumbohero_preprocess_fieldable_panels_pane(&$variables){
+  if($variables['elements']['#bundle'] === 'jumbohero'){
+    $title = $variables['elements']['#fieldable_panels_pane']->title;
+    $variables['elements']['title'] = array(
+      '#theme' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => $title
+    );
+  }
+}
+
+/**
+ * Implements hook_preprocess_panels_pane().
+ */
+function webspark_jumbohero_preprocess_panels_pane(&$variables){
+  if(isset($variables['content']['#bundle']) && $variables['content']['#bundle']==='jumbohero' ){
+    $variables['title'] = '';
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function webspark_jumbohero_theme(){
+  return array(
+    'fieldable_panels_pane__jumbohero' => array(
+      'template' => 'templates/fieldable-panels-pane--jumbohero',
+      'render element' => 'elements',
+      'type' => 'module'
+    )
+  );
+}
+
+
+
+
