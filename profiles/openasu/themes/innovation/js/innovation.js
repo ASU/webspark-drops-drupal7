@@ -13,6 +13,11 @@
 		}
 	};
 	
+	  $('#ASUNavMenu').height();
+    $('#ASUNavMenu').affix({
+        offset: { top: $('#ASUNavMenu').offset().top }
+    });
+    
 	// Override mobile table function in panopoly_widgets.js
 	Drupal.behaviors.panopolyWidgetTables.attach = function (context, settings) {
 		// Leave empty to override
