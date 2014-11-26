@@ -42,6 +42,16 @@ function innovation_ctools_plugin_post_alter(&$plugin, &$info) {
 }
 
 /**
+ * Implements hook_ctools_content_subtype_alter()
+ */
+function innovation_ctools_content_subtype_alter(&$subtype, &$plugin) {
+  if ($plugin['module'] == 'views_content' && $subtype['title'] == 'Add content item') {
+    $subtype['title'] = t('Add existing content');
+  }
+}
+   
+
+/**
  * Override or insert variables into the page template.
  *
  * Implements template_process_page().
@@ -129,6 +139,14 @@ function innovation_preprocess_page(&$variables) {
 
     drupal_add_js($js, array('type' => 'inline', 'scope' => 'header', 'group' => JS_THEME, 'weight' => -10));
   } /* ----- { End Megamenu stuff } ----- */
+  /**
+   * Adding to find the asu-degree template.
+   */
+  if (isset($variables['node'])) {
+    if ($variables['node']->type == 'asu_degree') {
+      $variables['theme_hook_suggestions'][] = 'page__asu_degree';
+    }
+  }
 }
 
 /**

@@ -1,0 +1,18 @@
+
+Innovation 7.x-1.0-beta4, 2014-11-21
+------------------------------
+- Added styles for accordions
+- Increased sitename h2 to 24px and decreased line-height to 1.
+- Added spacing to edit tabs and background color for improved UX.
+- Added header and spacing to panels modal list.
+- Increased size of submit button on panels modal.
+- Added styles for new panels modal help text.
+
+Innovation 7.x-1.0-beta5, 2014-11-21
+------------------------------
+- Adding padding and border on page title, per web standard specs
+- Removing extra padding around header
+- Adding padding around 2+ col rows
+- Adding vertical padding to body fields, breadcrumbs, page titles and sidebar menus
+- Cleaning up files, removing old unused styles
+- Altered ctools widget link to "Add existing content" for improved UX
