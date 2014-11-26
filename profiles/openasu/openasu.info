@@ -74,10 +74,15 @@ dependencies[] = asu_brand
 dependencies[] = asu_spotlight
 dependencies[] = mega_footer
 dependencies[] = asu_gsa
+; pending Arizona testing
+;dependencies[] = asu_rfi
+;dependencies[] = asu_feeds
+;dependencies[] = asu_degrees
 
 ; Container features built for Webspark
 dependencies[] = webspark_featurescustom
 dependencies[] = asu_securityscanfixes
+dependencies[] = asu_maps_enhanced
 dependencies[] = webspark_wysiwyg
 dependencies[] = webspark_panels_styles
 dependencies[] = webspark_banner
@@ -87,4 +92,8 @@ dependencies[] = webspark_hero
 dependencies[] = webspark_jumbohero
 dependencies[] = webspark_megamenu
 dependencies[] = mega_footer_menu
+; pending testing
+;dependencies[] = webspark_newsevents
+
+; Final feature - the catchall
 dependencies[] = webspark_extras

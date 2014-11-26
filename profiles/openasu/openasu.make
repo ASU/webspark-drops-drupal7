@@ -71,16 +71,16 @@ projects[asu_userpicker][download][revision] = 95a01aadb043e9c2e6241a301e253d7c5
 projects[asu_userpicker][download][tag] = 7.x-1.0
 projects[asu_userpicker][download][url] = https://github.com/ASU/asu-drupal-userpicker.git
 
-projects[asu_feeds][version] = 1.0-beta4
+projects[asu_feeds][version] = 1.0-beta2
 projects[asu_feeds][subdir] = custom
 projects[asu_feeds][type] = module
-projects[asu_feeds][download][revision] = 0225f2e9f7
+projects[asu_feeds][download][revision] = da9c9fed27eed9b1e0d7f88a9d28c5a82882cd19
 projects[asu_feeds][download][url] = https://github.com/ASU/asu-drupal-feeds.git
 
-projects[ixr][version] = 1.0-beta1
+projects[ixr][version] = 1.0-beta2
 projects[ixr][subdir] = custom
 projects[ixr][type] = module
-projects[ixr][download][revision] = 0695bc1550
+projects[ixr][download][revision] = 990012dd
 projects[ixr][download][url] = https://github.com/ASU/asu-drupal-ixr.git
 
 projects[asu_events][version] = 1.0-dev
@@ -95,18 +95,28 @@ projects[asu_news][type] = module
 projects[asu_news][download][revision] = a6c180f26f
 projects[asu_news][download][url] = https://github.com/ASU/asu-drupal-news.git
 
+; eAdvisor Feed Feature (depracated in lieu of ASU Degrees)
 projects[asu_eadvisor_degree_feed_feature][version] = 1.0-beta1
 projects[asu_eadvisor_degree_feed_feature][subdir] = custom
 projects[asu_eadvisor_degree_feed_feature][type] = module
 projects[asu_eadvisor_degree_feed_feature][download][revision] = 59a20ae94b
 projects[asu_eadvisor_degree_feed_feature][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
 
+; ASU Degrees (replacement for asu_eadvisor_degree_feed_feature)
+; TODO - Update ASU Degrees module(s) to new repo or combine with other repos
+projects[asu_degrees][version] = 1.0
+projects[asu_degrees][type] = module
+projects[asu_degrees][subdir] = custom
+projects[asu_degrees][download][revision] = dbbc32ae
+projects[asu_degrees][download][branch] = asu_degrees
+projects[asu_degrees][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
+
 ; Includes multiple features and modules
 projects[webspark_featurescustom][type] = module
 projects[webspark_featurescustom][subdir] = custom
 projects[webspark_featurescustom][directory_name] = webspark_featurescustom
 projects[webspark_featurescustom][download][type] = git
-projects[webspark_featurescustom][download][revision] = 70f898db
+projects[webspark_featurescustom][download][revision] = b86a8da9
 projects[webspark_featurescustom][download][branch] = master
 projects[webspark_featurescustom][download][url] = https://github.com/ASU/webspark-webstandards-components.git
 
@@ -144,6 +154,8 @@ projects[feeds][subdir] = contrib
 projects[feeds_xpathparser][version] = 1.0-beta4
 projects[feeds_xpathparser][type] = module
 projects[feeds_xpathparser][subdir] = contrib
+; patch for errors/warnings (only in dev version of module)
+projects[feeds_xpathparser][patch][1998194] = https://www.drupal.org/files/feeds_xpath_parser_undefined_index_unique-1998194-2.patch
 
 projects[job_scheduler][version] = 2.0-alpha3
 projects[job_scheduler][type] = module
@@ -152,6 +164,10 @@ projects[job_scheduler][subdir] = contrib
 projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
 projects[viewfield][subdir] = contrib
+
+projects[views_bootstrap][version] = 3.1
+projects[views_bootstrap][type] = module
+projects[views_bootstrap][subdir] = contrib
 
 projects[views_php][version] = 1.x-dev
 projects[views_php][type] = module
@@ -206,7 +222,7 @@ projects[panels_tabs][subdir] = contrib
 projects[tb_megamenu][version] = 1.0-beta5
 projects[tb_megamenu][type] = module
 projects[tb_megamenu][subdir] = contrib
-;; TODO - PATCH the CSS for tb_megamenu
+; TODO - PATCH the CSS for tb_megamenu
 projects[tb_megamenu][patch][] = https://www.drupal.org/files/issues/webspark_megamenu-fixing_breakpoints.patch
 
 ;projects[uuid_features][version] = 1.0-alpha4
@@ -252,10 +268,10 @@ libraries[asu_webspark_bootstrap_bootstrap][download][url] = https://github.com/
 
 ; Bootstrap and Theme Framework - Subtheme - Web Standards
 
-projects[innovation][version] = beta3
+projects[innovation][version] = beta5
 projects[innovation][type] = theme
 projects[innovation][download][type] = git
-projects[innovation][download][revision] = 0d139904
+projects[innovation][download][revision] = 5225a920
 projects[innovation][download][branch] = master
 projects[innovation][download][url] = https://github.com/ASU/webspark-theme-innovation.git
 
