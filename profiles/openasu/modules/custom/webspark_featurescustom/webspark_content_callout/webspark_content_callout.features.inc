@@ -30,5 +30,6 @@ function webspark_content_callout_node_info() {
       'help' => '',
     ),
   );
+  drupal_alter('node_info', $items);
   return $items;
 }

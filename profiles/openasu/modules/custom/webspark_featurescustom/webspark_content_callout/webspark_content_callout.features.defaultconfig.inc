@@ -11,6 +11,7 @@ function webspark_content_callout_defaultconfig_features() {
   return array(
     'webspark_content_callout' => array(
       'field_default_fields' => 'field_default_fields',
+      'strongarm' => 'strongarm',
     ),
   );
 }
@@ -325,4 +326,20 @@ function webspark_content_callout_defaultconfig_field_default_fields() {
   t('Images should be about 370x250 px.');
 
   return $fields;
+}
+
+/**
+ * Implements hook_defaultconfig_strongarm().
+ */
+function webspark_content_callout_defaultconfig_strongarm() {
+  $export = array();
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'uuid_features_file_assets_path';
+  $strongarm->value = 'profiles/openasu/modules/custom/webspark_featurescustom/webspark_content_callout/images';
+  $export['uuid_features_file_assets_path'] = $strongarm;
+
+  return $export;
 }

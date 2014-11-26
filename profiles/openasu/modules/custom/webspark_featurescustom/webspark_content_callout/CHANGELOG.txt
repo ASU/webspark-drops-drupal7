@@ -1,0 +1,4 @@
+
+Webspark Content Callout 7.x-1.1-dev, 2014-11-21
+------------------------------
+- Adding config settings for Features UUID export settings to export four example content callouts with text, image and video.
