@@ -111,4 +111,6 @@
 }
 
 }
-
+#asu-gsa-search-form > div > h2 {
+    display: none;
+}

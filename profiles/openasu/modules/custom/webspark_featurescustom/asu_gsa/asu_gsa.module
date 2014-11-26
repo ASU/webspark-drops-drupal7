@@ -12,7 +12,7 @@ function asu_gsa_init() {
 
   if (isset($_POST['search_keys'])) {
     $query = $_POST['search_keys'];
-    $pass = "Header";
+    $pass = "";
     asu_gsa_redirect($query,$pass);
   }
 
@@ -57,6 +57,22 @@ function asu_gsa_menu_alter(&$items) {
       'access arguments' => array('access content'),
       'type' => MENU_SUGGESTED_ITEM,  );
   }
+else {
+   unset($items['search']);
+    $items['search/%'] = array(
+      'title' => ' ',
+      'page callback' => 'asu_gsa_local',
+      'page arguments' => array('search',1), // (1) search query, (2) results sort param
+      'access callback' => 'user_access',
+      'access arguments' => array('access content'),
+      'type' => MENU_SUGGESTED_ITEM,
+      'file' => 'search.pages.inc',
+      'file path' => drupal_get_path('module', 'search'),
+      );
+
+}
+
+
   $items['global'] = array(
     'title' => ' ',
     'page callback' => 'asu_gsa_global',
@@ -64,6 +80,67 @@ function asu_gsa_menu_alter(&$items) {
     'access callback' => 'user_access',
     'access arguments' => array('access content'),
     'type' => MENU_SUGGESTED_ITEM,  );
+}
+
+function asu_gsa_local($search, $keys) {
+   module_load_include('module','search','search');
+   module_load_include('inc','search','search.pages');
+  variable_set("asu_gsa_search_type", "Local");
+  $info = FALSE;
+  $keys = trim($keys);
+  // Also try to pull search keywords out of the $_REQUEST variable to
+  // support old GET format of searches for existing links.
+  if (!$keys && !empty($_REQUEST['keys'])) {
+    $keys = trim($_REQUEST['keys']);
+  }
+
+  if (!empty($module)) {
+    $active_module_info = search_get_info();
+    if (isset($active_module_info[$module])) {
+      $info = $active_module_info[$module];
+    }
+  }
+
+  if (empty($info)) {
+    // No path or invalid path: find the default module. Note that if there
+    // are no enabled search modules, this function should never be called,
+    // since hook_menu() would not have defined any search paths.
+    $info = search_get_default_module_info();
+    // Redirect from bare /search or an invalid path to the default search path.
+    $path = 'search/' . $info['path'];
+    if ($keys) {
+      $path .= '/' . $keys;
+    }
+    #drupal_goto($path);
+  }
+
+  // Default results output is an empty string.
+  $results = array('#markup' => '');
+  // Process the search form. Note that if there is $_POST data,
+  // search_form_submit() will cause a redirect to search/[module path]/[keys],
+  // which will get us back to this page callback. In other words, the search
+  // form submits with POST but redirects to GET. This way we can keep
+  // the search query URL clean as a whistle.
+  if (empty($_POST['form_id']) || $_POST['form_id'] != 'search_form') {
+    $conditions =  NULL;
+    if (isset($info['conditions_callback']) && function_exists($info['conditions_callback'])) {
+      // Build an optional array of more search conditions.
+      $conditions = call_user_func($info['conditions_callback'], $keys);
+    }
+    // Only search if there are keywords or non-empty conditions.
+    if ($keys || !empty($conditions)) {
+      // Log the search keys.
+      watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $info['title']), WATCHDOG_NOTICE, l(t('results'), 'search/' . $info['path'] . '/' . $keys));
+
+      // Collect the search results.
+      $results = search_data($keys, $info['module'], $conditions);
+    }
+  }
+  $build['search_form'] = drupal_get_form('asu_gsa_search_form', $keys, NULL , NULL);
+  $build['search_results'] = $results;
+
+  return $build;
+
 }
 
 
@@ -79,13 +156,14 @@ function asu_gsa_theme() {
 
 function asu_gsa_redirect($query,$sort) {
   $type = variable_get('asu_gsa_search_type','Collection');
-  if ($sort == "Header") {
-    drupal_goto('search/'.$query);
-  }
   if ($type == "Collection") {
     drupal_goto('search/'.$query.'/'.$sort);
-  } else  {
+  } 
+  if ($type == "Global")   {
     drupal_goto('global/'.$query.'/'.$sort);
+  }
+  if ($type == "Local") {
+   drupal_goto('search/'.$query.'/'.$sort);	
   }
 
 }
@@ -130,8 +208,14 @@ function asu_gsa_sort() {
     $heads .=  '<span class="selected-sort">Sort by Date</span>';
   }
   else {
+    $type = variable_get('asu_gsa_search_type');
+    if ($type == 'Collection') { 	
     $heads .= '<a class="sort-date" href="'.$base_url.'/search/'.$query.'/date">Sort by Date</a>';
-  }
+    } 
+     else { 
+     $heads .= '<a class="sort-date" href="'.$base_url.'/global/'.$query.'/date">Sort by Date</a>';
+   }
+   }
   $heads .= "</div></div>";
 
   return $heads;
@@ -172,7 +256,8 @@ function asu_gsa_global($query,$sort) {
   variable_set('asu_gsa_search_type',"Global");
   $site_name =  variable_get('site_name', 'This Site');
   $test = variable_get('google_appliance_collection');
-
+  $settings = _asu_gsa_get_settings();
+  $local = $settings['local_search'];
   if ($test != "default_collection") {
     variable_set("original_collection",$test);
   }
@@ -183,7 +268,8 @@ function asu_gsa_global($query,$sort) {
   $collection = variable_get("original_collection", "default_collection");
   variable_set('google_appliance_collection',$collection);
   $heads = '<div class="search-option"><h1 class="search-gsa">Search Results</h1>';
-  if ($collection != "default_collection") {
+  if ($collection != "default_collection" || $local == "Yes") {
+     if ($local == "Yes") { $sort = "";    }
     $heads .= '<a class="search-collection" href="'.$base_url.'/search/'.$query.'/'.$sort.'">This Site</a><a class="search-global search-selected" href="'.$base_url.'/global/'.$query.'/'.$sort.'">All of ASU</a><div class="search-gsa-sort">';
     $sort_links = asu_gsa_sort();
     $heads .= $sort_links;
@@ -202,9 +288,13 @@ function asu_gsa_global($query,$sort) {
 function asu_gsa_search_form($form, &$form_state, $query = '', $prompt = '') {
   $prompt = ($prompt == '') ? t('Enter the terms you wish to search for.') :
     $prompt;
-
+  global $base_url;
+ $settings = _asu_gsa_get_settings();
+ $local = $settings['local_search'];
   $form['basic'] = array(
     '#type' => 'container'  );
+   $form['basic']['head'] = array(
+    '#markup' => t('<div class="search-option"><h1 class="search-gsa">Search Results</h1><a class="search-collection search-selected" href="'.$base_url.'/search/'.$query.'">This Site</a><a class="search-global" href="'.$base_url.'/global/'.$query.'">All of ASU</a><div class="search-gsa-sort"></div>'));
   $form['basic']['search_keys'] = array(
     '#type' => 'textfield',
     '#default_value' => $query,
@@ -223,9 +313,18 @@ function asu_gsa_search_form($form, &$form_state, $query = '', $prompt = '') {
     '#type' => 'submit',
     '#value' => t('Search')
   );
-
+  $path = current_path(); 
+  $vars = explode("/",$path);
+  if ($local == "Yes") {
+  if ($vars[0] == 'global') {
+  $form_state['action'] = 'global/';
+   }
+   else {
   $form_state['action'] = 'search/';
-
+   }
+    } else {
+  $form_state['action'] = 'search/';
+  }
   return $form;
 }
 
@@ -235,9 +334,7 @@ function asu_gsa_form_alter(&$form, &$form_state, $form_id) {
     drupal_add_js('jQuery(document).ready(function () { jQuery("<button class=\'btn search\' type=submit value=Search name=op><i class=\'fa fa-search\' aria-hidden=true><span class=sr-only>Search</span></button>").insertAfter("#edit-search-keys")    } )', 'inline');
   }
   if ($form_id == "google_appliance_block_form" || $form_id == "google_appliance_search_form" || $form_id == "asu_gsa_search_form") {
-
     $form['#submit'][] = 'asu_gsa_form_submit';
-
   }
 
 }
@@ -246,14 +343,12 @@ function asu_gsa_form_alter(&$form, &$form_state, $form_id) {
 
 
 function asu_gsa_form_submit($form, &$form_state) {
-
   if (isset($form_state['values']['search_keys'])) {
     $search_query = urlencode($form_state['values']['search_keys']);
     $settings = _asu_gsa_get_settings();
     $local = $settings['local_search'];
     $type = variable_get("asu_gsa_search_type");
 
-    if ($local == "No") {
       switch ($type) {
         case "Collection":
           $form_state['redirect'] = url('search/' . $search_query, array('absolute' => TRUE));
@@ -261,11 +356,10 @@ function asu_gsa_form_submit($form, &$form_state) {
         case "Global":
           $form_state['redirect'] = url('global/' . $search_query, array('absolute' => TRUE));
           break;
+        case "Local": 
+	 $form_state['redirect'] = url('search/' . $search_query, array('absolute' => TRUE));
+          break;
       }
-
-    } else {
-      $form_state['redirect'] = url('search/site/' . $search_query, array('absolute' => TRUE));
-    }
 
   }
 
@@ -283,7 +377,7 @@ function asu_gsa_registry_alter(&$theme_registry) {
 
 }
 
-define('SGA_DEFAULT_LOCAL_SEARCH','No');
+define('SGA_DEFAULT_LOCAL_SEARCH','Yes');
 function _asu_gsa_get_settings($refresh = FALSE) {
   static $settings;
   $field_keys =  array(
