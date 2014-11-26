@@ -1,0 +1,54 @@
+<?php
+/**
+ * @file
+ * webspark_wysiwyg.features.defaultconfig.inc
+ */
+
+/**
+ * Implements hook_defaultconfig_features().
+ */
+function webspark_wysiwyg_defaultconfig_features() {
+  return array(
+    'webspark_wysiwyg' => array(
+      'user_default_permissions' => 'user_default_permissions',
+    ),
+  );
+}
+
+/**
+ * Implements hook_defaultconfig_user_default_permissions().
+ */
+function webspark_wysiwyg_defaultconfig_user_default_permissions() {
+  $permissions = array();
+
+  // Exported permission: 'use text format full_html'.
+  $permissions['use text format full_html'] = array(
+    'name' => 'use text format full_html',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'filter',
+  );
+
+  // Exported permission: 'use text format panopoly_html_text'.
+  $permissions['use text format panopoly_html_text'] = array(
+    'name' => 'use text format panopoly_html_text',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'editor' => 'editor',
+    ),
+    'module' => 'filter',
+  );
+
+  // Exported permission: 'use text format panopoly_wysiwyg_text'.
+  $permissions['use text format panopoly_wysiwyg_text'] = array(
+    'name' => 'use text format panopoly_wysiwyg_text',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'editor' => 'editor',
+    ),
+    'module' => 'filter',
+  );
+
+  return $permissions;
+}

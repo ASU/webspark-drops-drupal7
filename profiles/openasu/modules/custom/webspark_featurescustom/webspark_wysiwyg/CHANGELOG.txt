@@ -1,0 +1,6 @@
+
+Webspark WYSIWYG 7.x-1.1-dev, 2014-11-24
+------------------------------
+- Added Full HTML text format for admin
+- Included perms in module config settings
+- Added tables to HTML text format
