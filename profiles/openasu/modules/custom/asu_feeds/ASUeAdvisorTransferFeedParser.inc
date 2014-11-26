@@ -29,22 +29,37 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
       $parsed_data[$key]['guid'] = md5($parsed_data[$key]['AcadPlan']);
 
       // Campuses
-      if (count($data['CampusStringArray'])) {
-        foreach ($data['CampusStringArray'] as $campus_key => $value) {
-          if ($value == 'ONLNE') {
-            $value = 'Online';
+      if(count($data['CampusStringArray'])){
+        foreach($data['CampusStringArray'] as $campus_key => $value){
+          switch($value){
+            case 'ONLNE':
+              $value = 'Online';
+              break;
+            //case 'DOWNTOWN':
+            case 'DTPHX':
+              $value = 'Downtown';
+              break;
+            case 'POLY':
+              $value = 'Polytechnic';
+              break;
+            default:
+              $value = 'Tempe';
+              break;
           }
-          if ($value == 'DTPHX') {
-            $value = 'Downtown';
+          if($value == 'Online'){
+            unset($parsed_data[$key]['CampusStringArray'][$campus_key]);
+            array_push($parsed_data[$key]['CampusStringArray'],$value);
+          }else{
+            $parsed_data[$key]['CampusStringArray'][$campus_key] = $value;
           }
-          if ($value == 'POLY') {
-            $value = 'Polytechnic';
-          }
-          $parsed_data[$key]['CampusStringArray'][$campus_key] = ucwords(strtolower($value));
         }
+        $parsed_data[$key]['CampusStringArray'] = array_values($parsed_data[$key]['CampusStringArray']);
       }
-      else {
-        $parsed_data[$key]['CampusStringArray'] = array();
+
+      // Format careerData
+      if (count($data['careerData'])) {
+        $parsed_data[$key]['careerData'] = json_encode($data['careerData']);
+
       }
 
       // Transfer agreements
@@ -80,9 +95,36 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
       $parsed_data[$key]['program'] = $batch->getProgram();
       $parsed_data[$key]['cert'] = $cert;
 
+      // Sub-plan code and subplan major map url - [SubPlnMajorMaps]
+      $parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanCode'] = array();
+      $parsed_data[$key]['subPlnMajorMaps.SubPlnMajorMapUrl'] = array();
+      if (count($data['SubPlnMajorMaps'])) {
+        foreach ($data['SubPlnMajorMaps'] as $subplan_url) {
+          if(isset($subplan_url['SubplnMajorMapSubplanCode'])){
+            $parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanCode'][] = $subplan_url['SubplnMajorMapSubplanCode'];
+          }
+          if(isset($subplan_url['SubPlnMajorMapUrl'])){
+            $parsed_data[$key]['subPlnMajorMaps.SubPlnMajorMapUrl'][] = $subplan_url['SubPlnMajorMapUrl'];
+          }
+
+        }
+      }
+
+      // Sub-plans - [SubPln]
+      $parsed_data[$key]['subplan.code'] = array();
+      $parsed_data[$key]['subplan.name'] = array();
+      if (count($data['SubPln'])) {
+        foreach ($data['SubPln'] as $the_code => $subplan) {
+          $parsed_data[$key]['subplan.code'][] = $the_code;
+          $parsed_data[$key]['subplan.name'][] = $subplan;
+        }
+      }
+
     } // End of foreach
 
     //error_log(print_r($parsed_data, true));
+    watchdog('keith debug', '<pre>'. print_r($parsed_data, true) .'</pre>');
+    //watchdog('keith $v', '<pre>' . print_r($v, true) . '</pre>');
 		return new FeedsParserResult($parsed_data);
   }
 
@@ -95,7 +137,7 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
       'AcadPlan' => array('name' => t('Academic plan')),
       'AcadProg' => array('name' => t('Academic program')),
       'CampusStringArray' => array('name' => t('Campus')),
-      'AsuCareerOpp' => array('name' => t('Career opporunities')),
+      'AsuCareerOpp' => array('name' => t('Career opportunities')),
       'CollegeDescr100' => array('name' => t('College name')),
       'CollegeUrl' => array('name' => t('College URL')),
       'Descr100' => array('name' => t('Description (100)')),
@@ -123,6 +165,12 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
       'AsuProgramFee' => array('name' => t('Additional program fee')),
       'AsuLangReqFlag' => array('name' => t('Second language requirement')),
       'MinMathReq' => array('name' => t('Minimum math requirement')),
+      'careerData' => array('name' => t('Example Careers')),
+      'subPlnMajorMaps.SubPlnMajorMapUrl' => array('name' => t('Subplan major map URL')),
+      'subplan.code' => array('name' => t('Subplan code')),
+      'subplan.name' => array('name' => t('Subplan name')),
+      'majorMapDefaultYear' => array('name' => t('Major map year')),
+      //'subPlnMajorMaps.SubplnMajorMapSubplanCode' => array('name' => t('Subplan code')),
     );
   }
 }
