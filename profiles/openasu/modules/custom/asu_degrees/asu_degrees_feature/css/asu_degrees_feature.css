@@ -1,0 +1,142 @@
+/**
+  * View page styles
+  **/
+.view-asu-degrees-feature .view-content .views-field.views-field-field-degree-image {
+    float: left;
+    padding-right: 15px;
+}
+
+@media (min-width: 992px) and (max-width: 1200px ) {
+    .view-asu-degrees-feature .view-content .views-field.views-field-field-degree-image img {
+        width: 212px;
+        height: 152px;
+    }
+}
+@media (min-width: 767px) and (max-width: 992px) {
+    .view-asu-degrees-feature .view-content .views-field.views-field-field-degree-image {
+        width: 50%;
+    }
+}
+
+@media (max-width: 767px) {
+    .view-asu-degrees-feature .view-content .views-field.views-field-field-degree-image {
+        float:none;
+    }
+    .asu-degree-major-title {
+        margin-top: 24px;
+    }
+    .views-field.views-field-field-asu-degree .asu-degree-rewritten-fields {
+        overflow: visible;
+        padding-left: 0;
+    }
+}
+
+.asu-degree-rewritten-fields {
+    overflow: hidden;
+    padding-left: 15px;
+}
+
+.view-asu-degrees-feature table > tbody > tr > td {
+    border: none;
+}
+
+.asu-degree-major-title {
+    font-size: 21px;
+}
+
+.asu-degree-field-title {
+    font-weight: bold;
+    float: left;
+    padding-right: 5px;
+}
+
+.view-asu-degrees-feature .row, .view-asu-degrees-feature .col.col-lg-6 {
+    margin-bottom: 24px;
+}
+
+/**
+  * Degree Page styles
+  **/
+.asu-degree-grey-section {
+    background: #f1f1f1;
+    padding: 48px 0;
+}
+
+.asu-degree-grey-section a {
+    font-weight: 500;
+}
+
+.space-bot-md {
+    margin-bottom: 24px;
+}
+
+.space-bot-lg {
+    margin-bottom: 36px;
+}
+
+.node-type-asu-degree p {
+    margin: 0 0 24px;
+    font-weight: 200;
+}
+
+.node-type-asu-degree .container .field-name-body {
+    font-size: 20px;
+}
+
+.node-type-asu-degree .asu-degree-banner-image img {
+        min-height: 288px;
+}
+
+@media (min-width: 768px) {
+    .node-type-asu-degree .field-name-body {
+        font-size : 24px;
+    }
+    .node-type-asu-degree .col-sm-6 {
+        width: 50%;
+        float: left;
+    }
+    .node-type-asu-degree .asu-degree-banner-image img {
+        min-height: 238px;
+    }
+    .node-type-asu-degree h1#page-title {
+        font-size: 60px;
+    }
+}
+
+@media (min-width: 992px) {
+    .node-type-asu-degree .col-md-4 {
+        width : 33.33333%;
+    }
+    .node-type-asu-degree .asu-degree-banner-image img {
+    min-height: 200px;
+    }
+}
+
+.space-top-xl {
+    margin-top: 48px;
+}
+
+.space-bot-xl {
+    margin-bottom: 48px;
+}
+
+.node-type-asu-degree a.btn.btn-lg, .node-type-asu-degree .btn.btn-lg {
+    margin-top: 0;
+}
+
+.node-type-asu-degree .asu-degree-banner-image {
+    background-image: url(/sites/default/files/asu_degree_banner_default.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 110px 0 20px 0;
+}
+
+.node-type-asu-degree #page-title {
+    color: white;
+    font-size: 50px;
+    margin-bottom: 10px;
+    line-height: 1;
+    font-weight: 900;
+    text-shadow: 0 0 5px rgba(0,0,0,0.5);
+}

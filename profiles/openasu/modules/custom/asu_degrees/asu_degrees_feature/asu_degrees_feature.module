@@ -1,0 +1,27 @@
+<?php
+/**
+ * @file
+ * Code for the ASU Degrees feature.
+ */
+
+include_once 'asu_degrees_feature.features.inc';
+
+/**
+ *  Implements hook_form_alter().
+ */
+function asu_degrees_feature_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'asu_degree_node_form') {
+    $form['field_asu_degree_example_careers']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_field_default_field_instances_alter().
+ *
+ * Set the default image.
+ */
+function asu_degrees_feature_field_default_field_instances_alter(&$fields) {
+  if (isset($fields['node-asu_degree-field_asu_banner_image']['settings']['default_image'])) {
+    $fields['node-asu_degree-field_asu_banner_image']['settings']['default_image'] = variable_get('asu_degrees_feature_banner_fid');
+  }
+}

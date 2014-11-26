@@ -1,0 +1,81 @@
+<?php
+/**
+ * @file
+ * Code for the ASU Degrees module.
+ */
+
+/**
+ *  Implements hook_block_info().
+ */
+function asu_degrees_block_info() {
+  $blocks = array();
+  $blocks['related_programs'] = array(
+    'info' => t('Related Programs'),
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'pages' => '/degree/*',
+  );
+
+  return $blocks;
+}
+
+/**
+ *  Implements hook_block_view().
+ */
+function asu_degrees_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'related_programs':
+      $block['subject'] = '';
+      $block['content'] = _asu_degrees_BLOCK_CONTENT();
+      break;
+    default:
+      $block['subject'] = '';
+      $block['content'] = array();
+      break;
+  }
+  return $block;
+}
+
+function _asu_degrees_BLOCK_CONTENT() {
+  $node = node_load(arg(1));
+  $result = array();
+    if (arg(0) == 'node' && $node->type == 'asu_degree') {
+    if (count($node->field_asu_degree_relatedprograms)) {
+      foreach ($node->field_asu_degree_relatedprograms[LANGUAGE_NONE] as $key => $value) {
+        $result[] = array(
+          'data' => $node->field_asu_degree_relatedprograms[LANGUAGE_NONE][$key]['entity']->title,
+          'class' => array('list-group-item')
+        );
+      }
+      $output[] = array(
+        '#theme' => 'item_list',
+        '#items' => $result,
+        '#type' => 'ul',
+        '#attributes' => array('class' => 'list-group'),
+      );
+    }
+    else {
+      $output = array();
+    }
+  }
+  return $output;
+}
+
+/**
+ * Helper function to find and render a block.
+ */
+function render_block_content($module, $delta) {
+  $output = '';
+  if ($block = block_load($module, $delta)) {
+    if ($build = module_invoke($module, 'block_view', $delta)) {
+      $delta = str_replace('-', '_', $delta);
+      drupal_alter(array('block_view', "block_view_{$module}_{$delta}"), $build, $block);
+
+      if (!empty($build['content'])) {
+        return is_array($build['content']) ? render($build['content']) : $build['content'];
+      }
+    }
+  }
+  return $output;
+}
