@@ -1,0 +1,21 @@
+<?php
+function webspark_newsevents_install() {
+  
+  /**
+   * Grab image within the Feature module. Then, create image in the new site to use for default image for the field_asunews_image field.
+   */
+  $filename = 'asunews_default_image.png';
+  $origfile = drupal_get_path('module', 'webspark_newsevents') . '/images/' . $filename;
+  $uri = 'public://' . $filename;
+  $file = (object) array(
+    'uid' => 1,
+    'filename' => $filename,
+    'uri' => $origfile,
+    'filemime' => 'image/png',
+    'filesize' => filesize($origfile),
+    'status' => FILE_STATUS_PERMANENT,
+  );
+  $file = file_copy($file, $uri, FILE_EXISTS_REPLACE);
+  variable_set('webspark_newsevents_asunews_image_fid', $file->fid);
+  
+}

@@ -1,0 +1,142 @@
+/**
+ * CSS file for Webspark News Events module.
+ */
+
+/* Clear both on "Read more" */
+.pane-asu-news-new-panel-pane-1 .view-footer,
+.pane-events-new-panel-pane-1 .view-footer {
+  clear: both;
+}
+
+/* Common field */
+.views-field-field-asunews-image a {
+  border-bottom: none;
+}
+.page-news h1,
+.page-events h1 {
+  margin-bottom: 0;
+}
+
+/* Events date */
+.event-day-month {
+  float: left;
+  margin-right: 5px;
+  margin-top: 10px;
+  width: 50px;
+  text-align: center;
+}
+.the-event-date {
+  display: inline;
+  font-size: 42px;
+}
+.event-date-wrap {
+  background-color: #fafafa;
+  display: inline-block;
+  border: thin solid #a1a1a1;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.the-event-day {
+  border: thin solid #a1a1a1;
+  font-size: 12px;
+}
+.views-field-field-asuevent-very-start-date-3 {
+  margin-bottom: 10px;
+}
+
+
+/* news-and-events */
+.view-asu-news-new .views-field-field-asunews-image {
+  margin-bottom: 10px;
+}
+.view-asu-news-new .views-field-title,
+.view-events-new .views-field-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  clear: both;
+}
+.views-label-field-asuevent-location {
+  float: left;
+  margin-right: 5px;
+}
+.pane-events-new-panel-pane-1 {
+  background-color: #f1f1f1;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* news page */
+@media (min-width: 931px) {
+  .view-asu-news-new .views-row {
+    height: 450px;
+  }
+}
+
+/* News node */
+.pane-node-field-asunews-contri-name h2.pane-title,
+.pane-node-field-asunews-post-date-iso h2.pane-title {
+  float: left; 
+  font-size: 16px;
+  margin-right: 5px;
+  font-weight: inherit;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+.pane-node-field-asunews-contri-name {
+  float: left;
+  /*white-space: nowrap;*/
+  display: flex;
+  margin-right: 5px;
+}
+
+/* Related News Articles in News node */
+.pane-node-field-asunews-related-story-url {
+  border: thin solid #a1a1a1;
+  padding: 20px;
+  border-top: thick solid #903;
+}
+.pane-node-field-asunews-related-story-url h2.pane-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+.pane-node-field-asunews-related-story-url a {
+  border-bottom: none;
+}
+.pane-node-field-asunews-related-story-url .field-item {
+  border-bottom: thin solid #a1a1a1;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+.pane-node-field-asunews-related-story-url .field-item:first-child {
+  border-top: thin solid #a1a1a1;
+}
+.pane-node-field-asunews-related-story-url .field-item:last-child {
+  border-bottom: none;
+}
+.pane-node-field-asunews-image,
+.pane-node-field-asunews-post-date-iso {
+  margin-bottom: 2em;
+}
+
+/* Events page */
+.view-events-new .views-row {
+  margin-bottom: 20px;
+}
+
+/* Event node */
+.node-type-asu-event .panel-pane {
+  margin-bottom:20px;
+}
+.node-type-asu-event h1 {
+  margin-bottom:0;
+}
+.pane-node-field-asuevent-subtitle {
+  font-size: 30px;
+  font-weight: normal;
+}
+.pane-node-field-asuevent-display-date {
+  font-weight: bold;
+}
+
+
+  
