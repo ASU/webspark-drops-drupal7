@@ -5,3 +5,13 @@
  */
 
 include_once 'webspark_extras.features.inc';
+
+
+function webspark_extras_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'panopoly_page_node_form') {
+     $form['field_featured_image']['#access'] = FALSE;
+     $form['field_featured_categories']['#access'] = FALSE;
+     $form['field_featured_status']['#access'] = FALSE;
+   
+  }
+}
