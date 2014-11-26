@@ -1,0 +1,28 @@
+name = Views Bootstrap
+package = Views
+description = Bootstrap Components
+
+dependencies[] = views
+
+files[] = plugins/carousel/views_bootstrap_carousel_plugin_style.inc
+files[] = plugins/carousel/views_bootstrap_carousel_plugin_rows.inc
+
+files[] = plugins/thumbnail/views_bootstrap_thumbnail_plugin_style.inc
+files[] = plugins/thumbnail/views_bootstrap_thumbnail_plugin_rows.inc
+
+files[] = plugins/grid/views_bootstrap_grid_plugin_style.inc
+
+files[] = plugins/accordion/views_bootstrap_accordion_plugin_style.inc
+
+files[] = plugins/tab/views_bootstrap_tab_plugin_style.inc
+
+files[] = plugins/media/views_bootstrap_media_plugin_style.inc
+
+files[] = plugins/table/views_bootstrap_table_plugin_style.inc
+
+; Information added by Drupal.org packaging script on 2014-04-27
+version = "7.x-3.1"
+core = "7.x"
+project = "views_bootstrap"
+datestamp = "1398607429"
+

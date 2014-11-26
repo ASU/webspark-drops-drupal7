@@ -1,0 +1,72 @@
+<?php
+/**
+ * @file
+ * Bootstrap integration.
+ */
+
+/**
+ * Implements hook_views_api().
+ */
+function views_bootstrap_views_api() {
+  return array("api" => "3.0");
+}
+
+/**
+ * Split items by rows and columns.
+ * - Stolen from Drupal 8 template_preprocess_views_view_grid().
+ *
+ * @param $vars
+ * @param $columns
+ * @param bool $horizontal
+ *
+ * @return array
+ *
+ * @TODO: Use array_chunk().
+ */
+function _views_bootstrap_split_rows($vars, $columns, $horizontal = TRUE) {
+  $col = 0;
+  $row = 0;
+  $items = array();
+  $remainders = count($vars['rows']) % $columns;
+  $num_rows = floor(count($vars['rows']) / $columns);
+
+  // Iterate over each rendered views result row.
+  foreach ($vars['rows'] as $item) {
+
+    // Add the item.
+    if ($horizontal) {
+      $items[$row]['content'][$col]['content'] = $item;
+    }
+    else {
+      $items[$col]['content'][$row]['content'] = $item;
+    }
+
+    // Increase, decrease or reset appropriate integers.
+    if ($horizontal) {
+      if ($col == 0 && $col != ($columns - 1)) {
+        $col++;
+      }
+      elseif ($col >= ($columns - 1)) {
+        $col = 0;
+        $row++;
+      }
+      else {
+        $col++;
+      }
+    }
+    else {
+      $row++;
+      if (!$remainders && $row == $num_rows) {
+        $row = 0;
+        $col++;
+      }
+      elseif ($remainders && $row == $num_rows + 1) {
+        $row = 0;
+        $col++;
+        $remainders--;
+      }
+    }
+  }
+
+  return $items;
+}
