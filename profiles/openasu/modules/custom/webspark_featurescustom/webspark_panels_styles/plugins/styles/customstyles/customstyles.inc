@@ -1,147 +1,161 @@
 <?php
-/**
-* Defines a style plugin
-*
-*  - panestyles: corresponds to directory name of plugin
-*  - render pane: the suffix of the theme function for the pane (without "theme_").
-*     - Example: If the function name is "theme_panestyles_render_pane",
-*       the value of "render pane" is "panestyles_render_pane".
-*  - render region: the suffix of the theme function for the region (without "theme_").
-*     - Example: If the function name is "theme_panestyles_render_region",
-*       the value of "render region" is "panestyles_render_region".
-*  - pane settings form: name of function that returns a settings form
-*  - hook theme: array of hook theme information
-*    - define an array for pane and region. The key must match the first parameter of the returned theme() in the
-*       corresponding theme_ function.
-*       Example: 'hook theme' => 'panestyles_theme_pane' => array();
-*        In function theme_panestyles_render_pane:
-*          return theme('panestyles_theme_pane'...) [truncated]
-*      - template: corresponds to name of tpl.php for pane, i.e. panestyles-pane.tpl.php
-*      - path: the path where the template file lives
-*      - variables: an array of variables to add to the $variables array in the theme function
-*
-*/
 
-$plugin =  array(
-  'customstyles' => array(
-    'title' => t('Spacing and background colors'),
-    'description'   => t('Custom styles for ASU Standards themed sites.'),
-    'render pane' => 'customstyles_render_pane',
-    'render region' => 'customstyles_render_region',
-    'pane settings form' => 'customstyles_settings_form',
-    'settings form' => 'customstyles_settings_form', // For region.
-    'weight' => 100,
-    'hook theme'    => array(
-      'customstyles_theme_pane' => array(
-        'template' => 'customstyles-pane',
-         'path' => drupal_get_path('module', 'webspark_panels_styles') . '/plugins/styles/customstyles',
-         'variables' => array(
-           'content' => NULL,
-           'settings' => NULL,
-         ),
-       ),
-      'customstyles_theme_region' => array(
-        'template' => 'customstyles-region',
-         'path' => drupal_get_path('module', 'webspark_panels_styles') .'/plugins/styles/customstyles',
-         'variables' => array(
-           'content' => NULL,
-         ),
-       ),
-    ),
-  ),
+/**
+ * @file
+ * Definition of the Custom Styles panels style plugin.
+ */
+
+$plugin = array(
+  'title' => t('Spacing and background colors'),
+  'description' => t('Custom styles for ASU Standards themed sites.'),
+  'render region' => 'customstyles_render_region',
+  'render pane' => 'customstyles_render_pane',
+  'settings form' => 'customstyles_pane_settings_form',
+  'pane settings form' => 'customstyles_pane_settings_form',
+  'weight' => 100,
 );
 
-
-function theme_customstyles_render_pane($vars) {
-  $settings = $vars['settings'];
-  $content = $vars['content'];
-
-  // Make multi-value settings arrays into strings so they can just be printed
-  // in the tpl.
-  if (!empty($settings['panerowpad']) && is_array($settings['panerowpad'])) {
-    $settings['panerowpad'] = array_filter($settings['panerowpad']);
-    $settings['panerowpad'] = implode(' ', $settings['panerowpad']);
-  }
-  if (!empty($settings['panespace']) && is_array($settings['panespace'])) {
-    $settings['panespace'] = array_filter($settings['panespace']);
-    $settings['panespace'] = implode(' ', $settings['panespace']);
-  }
-
-  return theme('customstyles_theme_pane', array('content' => $content, 'settings' => $settings));
-}
-
-
+/**
+ * Theme fuction for the region style.
+ */
 function theme_customstyles_render_region($vars) {
+  $content = $vars['panes'];
   $settings = $vars['settings'];
-  $content = '';
-  foreach ($vars['panes'] as $pane_id => $pane_output) {
-    $content .= $pane_output;
+
+  $settings['attributes'] = '';
+	$settings['attributes'] .= $settings['bgcolors'] . ' ' . $settings['spacing'];
+
+  // Theme.
+  if (!empty($settings['theme']) && $settings['theme']) {
+    $output = theme('panels_default_style_render_region', $vars);
   }
-  if (empty($content)) {
-    return;
+  else {
+    $output = implode(PHP_EOL, $content);
   }
 
-  // Make multi-value settings arrays into strings so they can just be printed
-  // in the tpl.
-  if (!empty($settings['panerowpad']) && is_array($settings['panerowpad'])) {
-    $settings['panerowpad'] = array_filter($settings['panerowpad']);
-    $settings['panerowpad'] = implode(' ', $settings['panerowpad']);
-  }
-  if (!empty($settings['panespace']) && is_array($settings['panespace'])) {
-    $settings['panespace'] = array_filter($settings['panespace']);
-    $settings['panespace'] = implode(' ', $settings['panespace']);
+  // Wrap
+  if (!empty($output)) {
+    $content_wrapper = _customstyles_wrapper_wrap($settings);
+    $output = $content_wrapper['prefix'] . $output . $content_wrapper['suffix'];
   }
 
-  return theme('customstyles_theme_region', array('content' => $content, 'settings' => $settings));
+  return $output;
 }
 
-function customstyles_settings_form($style_settings) {
+/**
+ * Theme function for the pane style.
+ */
+function theme_customstyles_render_pane($vars) {
+  $content = &$vars['content'];
+  $settings = $vars['settings'];
 
-	$bg_options = array(
-		'js-lightgraybg' => t('Light gray background'),
-		'js-darkgraybg' => t('Dark gray background'),
-		'no-bg' => t('White (or no) background'),
-	);
-  $form['fullwidthbg'] = array(
-    '#type' => 'radios',
-    '#title' => t('Add background colors to full-width rows:'),
-    '#description' => t('Use on full-width rows only.'),
-    '#options' => $bg_options,
-    '#required' => FALSE,
-    '#default_value' => (isset($style_settings['fullwidthbg'])) ? $style_settings['fullwidthbg'] : '',
-  );
+  // This is needed to prevent throwing an error in php 5.5+
+  if (!isset($content->css_class)) {
+    $content->css_class = '';
+  }
+  
+	$content->css_class .= $settings['bgcolors'] . ' ' . $settings['spacing'];  
+  $output = theme('panels_pane', $vars);
 
-	$padding_options = array(
-		'js-paddingabove' => t('Add spacing above row'),
-		'js-paddingbelow' => t('Add spacing below row'),
-		'js-remove2above' => t('Decrease spacing 6px above'),
-		'js-remove6above' => t('Decrease spacing 12px above'),
-		'js-remove2below' => t('Decrease spacing 6px below'),
-		'js-remove6below' => t('Decrease spacing 12px below'),
-	);
-  $form['panerowpad'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Adjust row spacing:'),
-    '#description' => t('Adjust padding on this panes row.'),
-    '#options' => $padding_options,
-    '#required' => FALSE,
-    '#default_value' => (isset($style_settings['panerowpad'])) ? $style_settings['panerowpad'] : '',
-  );
-  
-	$spacing_options = array(
-		'space-top-sm' => t('Add 12px spacing above'),
-		'space-top-md' => t('Add 30px spacing above'),
-		'space-bot-sm' => t('Add 12px spacing below'),
-		'space-bot-md' => t('Add 30px spacing below'),
-	);
-  $form['panespace'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Adjust pane spacing:'),
-    '#description' => t('Adjust spacing on only this single pane.'),
-    '#options' => $spacing_options,
-    '#required' => FALSE,
-    '#default_value' => (isset($style_settings['panespace'])) ? $style_settings['panespace'] : '',
-  );
-  
+  return $output;
+}
+
+/**
+ * Options for the Panels style plugin to help style panes.
+ */
+function customstyles_pane_settings_form($style_settings) {
+    $bgcolor_options = array(
+			'js-lightgraybg' => t('Light gray background'),
+			'js-darkgraybg' => t('Dark gray background'),
+    );
+    $form['bgcolors'] = array(
+      '#prefix' => '<div class="well">',
+      '#suffix' => '</div>',
+      '#type' => 'radios',
+			'#title' => t('Add background colors to full-width rows:'),
+			'#description' => t('Background colors work best on full-width rows.'),
+			'#required' => FALSE,
+      '#options' => $bgcolor_options,
+      '#default_value' => $style_settings['bgcolors'],
+    );
+
+    $spacing_default_value = isset($style_settings['spacing']) ? $style_settings['spacing'] : '';
+    $space_options = array(
+			'space-top-sm' => t('Add 12px top padding'),
+			'space-top-md' => t('Add 28px top padding'),
+			'row-padding-top' => t('Add 42px top padding'),
+			'space-bot-sm' => t('Add 12px bottom padding'),
+			'space-bot-md' => t('Add 28px bottom padding'),
+			'row-padding-bottom' => t('Add 42px bottom padding'),
+			'remove-6-above' => t('Remove 6px margin above'),
+			'remove-12-above' => t('Remove 12px margin above'),
+			'remove-28-above' => t('Remove 28px margin above'),
+			'remove-42-above' => t('Remove 42px margin above'),
+			'remove-6-below' => t('Remove 6px margin below'),
+			'remove-12-below' => t('Remove 12px margin below'),
+			'remove-28-below' => t('Remove 28px margin below'),
+			'remove-42-below' => t('Remove 42px margin below'),
+    );
+    $form['spacing'] = array(
+      '#prefix' => '<div class="well">',
+      '#suffix' => '</div>',
+			'#type' => 'radios',
+			'#title' => t('Adjust pane and row spacing:'),
+			'#description' => t('Adjust margins and padding.  If more spacing is needed, add an empty pane and adjust spacing there.'),
+      '#options' => $space_options,
+      '#required' => FALSE,
+      '#default_value' => $spacing_default_value,
+    );
+
   return $form;
 }
+
+/**
+ * Get pane/region styles depending on chosen classes.
+ *
+ * @return array
+ *   Array with prefix and suffix keys.
+ */
+function _customstyles_get_styles($styles) {
+  if (isset($styles)) {
+    foreach ($styles as $key => $class) {
+      if ($class === 0) {
+        unset($styles[$key]);
+      }
+    }
+   return $styles ? ' ' . implode(' ', $styles) : '';
+  }
+}
+
+/**
+ * Create a region wrapper from provided attributes.
+ *
+ * @return array
+ *   Array with prefix and suffix keys.
+ */
+function _customstyles_wrapper_wrap($item = array()) {
+  $wrap['prefix'] = NULL;
+  $wrap['suffix'] = NULL;
+  $wrap['attributes'] = NULL;
+
+  if (!empty($item['attributes'])) {
+    $value = $item['attributes'];
+    $wrap['attributes'] .= " class=\"$value\"";
+  }
+
+  $wrap['prefix'] = '<div ' . $wrap['attributes'] . '>';
+  $wrap['suffix'] = '</div>';
+
+  if (!empty($item['prefix'])) {
+    $wrap['prefix'] = $item['prefix'];
+  }
+  if (!empty($item['suffix'])) {
+    $wrap['suffix'] = $item['suffix'];
+  }
+
+  $wrap['prefix'] = PHP_EOL . $wrap['prefix'];
+  $wrap['suffix'] = $wrap['suffix'] . PHP_EOL;
+
+  return $wrap;
+}
+

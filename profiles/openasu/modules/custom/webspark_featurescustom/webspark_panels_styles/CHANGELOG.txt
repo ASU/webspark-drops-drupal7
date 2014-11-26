@@ -1,0 +1,4 @@
+
+Webspark Panels Styles 7.x-1.2-dev, 2014-11-25
+------------------------------
+- Custon Styles Plugin: a complete rewrite of the plugin.  Template files removed and CSS classes added from the customstyles.inc file, to prevent overwriting classes supplied by other modules and widgets.

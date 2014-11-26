@@ -1,8 +1,11 @@
 name = Webspark Custom Panel Styles
 description = A CTools Style Plugin that provides custom pane styles.
+core = 7.x
 package = ASU Webspark
+version = 7.x-1.0-dev
+project = webspark_panels_styles
 stylesheets[all][] = plugins/styles/customstyles/css/customstyles.css
 dependencies[] = ctools
 dependencies[] = page_manager
 dependencies[] = panels
-core = 7.x
+

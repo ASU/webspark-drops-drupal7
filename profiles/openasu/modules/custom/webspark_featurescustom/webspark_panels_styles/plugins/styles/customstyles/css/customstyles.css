@@ -17,42 +17,47 @@
 
 /* Spacing on rows */
 .row-padding-top {
-	padding-top: 55px !important;	
+	padding-top: 42px !important;	
 }
 .row-padding-bottom {
-	padding-bottom: 55px !important;	
+	padding-bottom: 42px !important;	
 }
-.remove-2-above {
-	margin-top: -6px !important;
-}
-.remove-6-above {
-	margin-top: -12px !important;
-}
-.remove-2-below {
-	margin-bottom: -6px !important;
-}
-.remove-6-below {
-	margin-bottom: -12px !important;
-}
-
-/* Spacing on panes */
 .space-top-sm {
-	margin-top: 12px;
+	padding-top: 12px;
 }
 .space-top-md {
-	margin-top: 30px;
+	padding-top: 30px;
 }
 .space-bot-sm {
-	margin-bottom: 12px;
+	padding-bottom: 12px;
 }
 .space-bot-md {
-	margin-bottom: 30px;
+	padding-bottom: 30px;
 }
-.remove-all-top {
-	margin-top: 0;
-	padding-top: 0;
+.remove-6-above {
+	margin-top: -6px !important;
 }
-.remove-all-bottom {
-	margin-bottom: 0;
-	padding-bottom: 0;
+.remove-12-above {
+	margin-top: -12px !important;
 }
+.remove-28-above {
+	margin-top: -28px !important;
+}
+.remove-42-above {
+	margin-top: -42px !important;
+}
+.remove-6-below {
+	margin-bottom: -6px !important;
+}
+.remove-12-below {
+	margin-bottom: -12px !important;
+}
+.remove-28-below {
+	margin-bottom: -28px !important;
+}
+.remove-42-below {
+	margin-bottom: -42px !important;
+}
+
+
+
