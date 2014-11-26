@@ -40,3 +40,7 @@ Thumbs.db
 */.project
 */.settings/
 */.buildpath
+
+# PHPStorm files #
+######################
+.idea

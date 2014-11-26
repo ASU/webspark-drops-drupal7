@@ -67,3 +67,23 @@ function _webspark_featurescustom_enable_config($theme) {
       variable_set('asu_brand_header_version', '4.2');
 }
 
+
+/** 
+ * Implementation of hook_entity_info_alter()
+ */
+function webspark_featurescustom_entity_info_alter(&$entity_info) {
+  // Changing name of Basic Image widget for clarity
+  $entity_info['fieldable_panels_pane']['bundles']['image'] = array(
+    'label' => t('Add responsive image'),
+    'description' => t('Add 100%-wide responsive image'),
+    'pane category' => t('Custom'),
+    'pane top level' => TRUE,
+    'pane icon' => drupal_get_path('module', 'panopoly_widgets') . '/images/icon_image.png',
+    'admin' => array(
+      'path' => 'admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type',
+      'bundle argument' => 4,
+      'real path' => 'admin/structure/fieldable-panels-panes/manage/image',
+      'access arguments' => array('administer fieldable panels panes'),
+    ),
+  );
+}
