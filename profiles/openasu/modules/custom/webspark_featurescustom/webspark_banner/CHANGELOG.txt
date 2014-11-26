@@ -1,0 +1,12 @@
+
+Webspark Title Banner 7.x-1.1-dev, 2014-11-21
+------------------------------
+- Setting background image on .pane-bundle-banner
+
+Webspark Title Banner 7.x-1.2-dev, 2014-11-25
+------------------------------
+- Restoring old css class title-banner
+
+Webspark Title Banner 7.x-1.3-dev, 2014-11-25
+------------------------------
+- Fixing classes on tpl file

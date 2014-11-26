@@ -1,4 +1,4 @@
-<div class="title-banner <?php print $classes; ?>"<?php print $attributes; ?>>
+<div class="<?php print $classes; ?>"<?php print $attributes; ?>>
 
 	<?php print render($elements['title']); ?>
   <?php print render($title_suffix); ?>

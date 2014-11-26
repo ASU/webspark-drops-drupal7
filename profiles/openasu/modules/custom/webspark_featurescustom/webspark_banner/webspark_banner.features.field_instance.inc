@@ -14,9 +14,11 @@ function webspark_banner_field_default_field_instances() {
   $field_instances['fieldable_panels_pane-banner-field_banner_image'] = array(
     'bundle' => 'banner',
     'deleted' => 0,
-    'description' => '<p>Only add a title banner to the top section of your page and in a single-region row.</p>
-<p>Images should be 1220 x 200 px. Smaller images will be scaled up; larger ones will be cropped.</p>
-<p>When adding a new image, you must refresh the page after saving to view the image.</p>',
+    'description' => '<ul class="help-text">
+<li>Add a title banner only <strong>to the top section</strong> of your page and in a single-region row.</li>
+<li>Images should be 1220 x 200 px. Smaller images will be scaled up; larger ones will be cropped.</li>
+<li>When adding a new image, you must refresh the page after saving to view the image.</li>
+</ul>',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -63,9 +65,11 @@ function webspark_banner_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('<p>Only add a title banner to the top section of your page and in a single-region row.</p>
-<p>Images should be 1220 x 200 px. Smaller images will be scaled up; larger ones will be cropped.</p>
-<p>When adding a new image, you must refresh the page after saving to view the image.</p>');
+  t('<ul class="help-text">
+<li>Add a title banner only <strong>to the top section</strong> of your page and in a single-region row.</li>
+<li>Images should be 1220 x 200 px. Smaller images will be scaled up; larger ones will be cropped.</li>
+<li>When adding a new image, you must refresh the page after saving to view the image.</li>
+</ul>');
   t('Banner image');
 
   return $field_instances;
