@@ -9,10 +9,6 @@ class IXRFeedsFetcherResult extends FeedsFetcherResult {
   protected $domain;
   protected $path;
   protected $service;
-  // Chizuko added the following for eAdvisor Degree Feed:
-  protected $college_code;
-  protected $program;
-  protected $cert;
 
   public function __construct($protocol, $url, $path, $service, $college_code, $program, $cert) {
     $this->protocol = $protocol;
@@ -94,33 +90,6 @@ class IXRFeedsFetcher extends FeedsFetcher {
       '#default_value' => isset($source_config['service']) ? $source_config['service'] : '',
     );
 
-    //Chizuko added the following for eAdvisor Degree Feed:
-    $form['college_code'] = array(
-      '#type' => 'textfield',
-      '#title' => t('College code'),
-      '#description' => t('Code for college. For example, CLA for College of Liberal Arts and Sciences.'),
-      '#default_value' => isset($source_config['college_code']) ? $source_config['college_code'] : '',
-    );
-    $form['program'] = array(
-      '#type' => 'select',
-      '#title' => t('Program'),
-      '#options' => array(
-        'undergrad' => t('Undergrad'),
-        'graduate' => t('Graduate'),
-      ),
-      '#default_value' => isset($source_config['program']) ? $source_config['program'] : '',
-    );
-    $form['cert'] = array(
-      '#type' => 'select',
-      '#title' => t('Certificate'),
-      '#description' => t('True for Undergraduate Minors and Certificates, false for
-Undergraduate Majors and Graduate Majors, Certificates and Minors. If you chose Graduate program, then, this option would be ignored and False would be used.'),
-      '#options' => array(
-        '1' => t('True'),
-        '0' => t('False'),
-      ),
-      '#default_value' => isset($source_config['cert']) ? $source_config['cert'] : '',
-    );
     return $form;
   }
 
