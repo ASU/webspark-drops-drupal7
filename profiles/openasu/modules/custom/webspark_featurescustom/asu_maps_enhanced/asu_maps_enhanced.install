@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * An installation file for ASU Maps Enhanced
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function asu_maps_enhanced_install() {
+
+}
+
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function asu_maps_enhanced_uninstall() {
+
+
+
+}
+
+/**
+ * Implementation of hook_field_schema().
+ */
+function asu_maps_enhanced_field_schema($field) {
+  if ($field['type'] == 'asu_maps_enhanced') {
+
+    $schema['columns']['description'] = array(
+      'type' => 'text',
+      'not null' => FALSE,
+    );
+
+    $schema['columns']['map_items'] = array(
+      'type' => 'text',
+      'not null' => FALSE,
+    );
+
+    return $schema;
+  }
+}

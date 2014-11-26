@@ -1,0 +1,7 @@
+.my_checkboxes .form-item label.form-checkbox {
+  float: left;
+  width: 20%;
+}
+.my_checkboxes .form-item .description {
+  clear: both;
+}
