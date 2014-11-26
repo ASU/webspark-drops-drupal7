@@ -224,13 +224,12 @@ function webspark_jumbohero_field_default_field_instances() {
   $field_instances['fieldable_panels_pane-jumbohero-field_webspark_jumbohero_bgimg'] = array(
     'bundle' => 'jumbohero',
     'deleted' => 0,
-    'description' => '<h4>Tips & Instructions</h4>
-
-<p>Heroes should be added <strong>only to the top region</strong> of your page.</p>
-
-<p>Images should be 1170 x 700 px. Smaller images will be scaled up; larger ones will be cropped.</p>
-
-<p>When adding a new image, <strong>refresh the page</strong> after saving to view the image (it displays as a CSS background image).</p>',
+    'description' => '<ul class="help-text">
+<li class="help-title">Tips & Instructions</li>
+<li>Heroes should be added <strong>only to the top region</strong> of your page.</li>
+<li>Images should be 1170 x 700 px. Smaller images will be scaled up; larger ones will be cropped.</li>
+<li>When adding a new image, <strong>refresh the page</strong> after saving to view the image.</li>
+</ul>',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -319,14 +318,13 @@ function webspark_jumbohero_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('<h4>Tips & Instructions</h4>
-
-<p>Heroes should be added <strong>only to the top region</strong> of your page.</p>
-
-<p>Images should be 1170 x 700 px. Smaller images will be scaled up; larger ones will be cropped.</p>
-
-<p>When adding a new image, <strong>refresh the page</strong> after saving to view the image (it displays as a CSS background image).</p>');
   t('<strong>Only add this button if you did not add the explore degree buttons.</strong>   This single call-to-action button should support the single most important item of the hero message and drive the user.');
+  t('<ul class="help-text">
+<li class="help-title">Tips & Instructions</li>
+<li>Heroes should be added <strong>only to the top region</strong> of your page.</li>
+<li>Images should be 1170 x 700 px. Smaller images will be scaled up; larger ones will be cropped.</li>
+<li>When adding a new image, <strong>refresh the page</strong> after saving to view the image.</li>
+</ul>');
   t('Blurb');
   t('Choose a position for the content (title, text and/or buttons) on the hero.');
   t('Explore graduate programs button (recommended)');

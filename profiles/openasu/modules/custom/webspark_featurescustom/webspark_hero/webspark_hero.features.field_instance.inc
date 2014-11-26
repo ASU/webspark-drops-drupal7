@@ -14,10 +14,12 @@ function webspark_hero_field_default_field_instances() {
   $field_instances['fieldable_panels_pane-hero-field_webspark_hero_bgimg'] = array(
     'bundle' => 'hero',
     'deleted' => 0,
-    'description' => '<h4>Tips & Instructions</h4>
-<p>Heroes should be added <strong>only to the top region</strong> of your page.</p>
-<p>Images should be 1170 x 380 px. Smaller images will be scaled up; larger ones will be cropped.</p>
-<p>When adding a new image, <strong>refresh the page</strong> after saving to view the image (it displays as a CSS background image).</p>',
+    'description' => '<ul class="help-text">
+<li class="help-title">Tips & Instructions</li>
+<li>Heroes should be added <strong>only to the top region</strong> of your page.</li>
+<li>Images should be 1170 x 380 px. Smaller images will be scaled up; larger ones will be cropped.</li>
+<li>When adding a new image, <strong>refresh the page</strong> after saving to view the image.</li>
+</ul>',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -37,7 +39,7 @@ function webspark_hero_field_default_field_instances() {
       'css_h_position' => 'center',
       'css_important' => 0,
       'css_repeat' => 'no-repeat',
-      'css_selector' => '.pane-bundle-hero',
+      'css_selector' => '.hero-bg-img',
       'css_v_position' => 'center',
       'default_image' => 0,
       'file_directory' => '',
@@ -278,10 +280,12 @@ function webspark_hero_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('<h4>Tips & Instructions</h4>
-<p>Heroes should be added <strong>only to the top region</strong> of your page.</p>
-<p>Images should be 1170 x 380 px. Smaller images will be scaled up; larger ones will be cropped.</p>
-<p>When adding a new image, <strong>refresh the page</strong> after saving to view the image (it displays as a CSS background image).</p>');
+  t('<ul class="help-text">
+<li class="help-title">Tips & Instructions</li>
+<li>Heroes should be added <strong>only to the top region</strong> of your page.</li>
+<li>Images should be 1170 x 380 px. Smaller images will be scaled up; larger ones will be cropped.</li>
+<li>When adding a new image, <strong>refresh the page</strong> after saving to view the image.</li>
+</ul>');
   t('Blurb');
   t('Explore graduate programs button  (recommended)');
   t('Explore undergraduate programs button (recommended)');

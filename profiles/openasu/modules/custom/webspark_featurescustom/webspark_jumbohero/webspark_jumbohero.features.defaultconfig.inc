@@ -11,8 +11,6 @@ function webspark_jumbohero_defaultconfig_features() {
   return array(
     'webspark_jumbohero' => array(
       'field_default_fields' => 'field_default_fields',
-      'field_group_info' => 'field_group_info',
-      'strongarm' => 'strongarm',
     ),
   );
 }
@@ -382,13 +380,12 @@ function webspark_jumbohero_defaultconfig_field_default_fields() {
     'field_instance' => array(
       'bundle' => 'jumbohero',
       'deleted' => 0,
-      'description' => '<h4>Tips & Instructions</h4>
-
-<p>Heroes should be added <strong>only to the top region</strong> of your page.</p>
-
-<p>Images should be 1170 x 700 px. Smaller images will be scaled up; larger ones will be cropped.</p>
-
-<p>When adding a new image, <strong>refresh the page</strong> after saving to view the image (it displays as a CSS background image).</p>',
+      'description' => '<ul class="help-text">
+<li class="help-title">Tips & Instructions</li>
+<li>Heroes should be added <strong>only to the top region</strong> of your page.</li>
+<li>Images should be 1170 x 700 px. Smaller images will be scaled up; larger ones will be cropped.</li>
+<li>When adding a new image, <strong>refresh the page</strong> after saving to view the image.</li>
+</ul>',
       'display' => array(
         'default' => array(
           'label' => 'hidden',
@@ -505,14 +502,13 @@ function webspark_jumbohero_defaultconfig_field_default_fields() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('<h4>Tips & Instructions</h4>
-
-<p>Heroes should be added <strong>only to the top region</strong> of your page.</p>
-
-<p>Images should be 1170 x 700 px. Smaller images will be scaled up; larger ones will be cropped.</p>
-
-<p>When adding a new image, <strong>refresh the page</strong> after saving to view the image (it displays as a CSS background image).</p>');
   t('<strong>Only add this button if you did not add the explore degree buttons.</strong>   This single call-to-action button should support the single most important item of the hero message and drive the user.');
+  t('<ul class="help-text">
+<li class="help-title">Tips & Instructions</li>
+<li>Heroes should be added <strong>only to the top region</strong> of your page.</li>
+<li>Images should be 1170 x 700 px. Smaller images will be scaled up; larger ones will be cropped.</li>
+<li>When adding a new image, <strong>refresh the page</strong> after saving to view the image.</li>
+</ul>');
   t('Blurb');
   t('Choose a position for the content (title, text and/or buttons) on the hero.');
   t('Explore graduate programs button (recommended)');
@@ -524,84 +520,4 @@ function webspark_jumbohero_defaultconfig_field_default_fields() {
   t('Position');
 
   return $fields;
-}
-
-/**
- * Implements hook_defaultconfig_field_group_info().
- */
-function webspark_jumbohero_defaultconfig_field_group_info() {
-  $export = array();
-
-  $field_group = new stdClass();
-  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-  $field_group->api_version = 1;
-  $field_group->identifier = 'group_webspark_jumbohero_buttons|fieldable_panels_pane|jumbohero|form';
-  $field_group->group_name = 'group_webspark_jumbohero_buttons';
-  $field_group->entity_type = 'fieldable_panels_pane';
-  $field_group->bundle = 'jumbohero';
-  $field_group->mode = 'form';
-  $field_group->parent_name = '';
-  $field_group->data = array(
-    'label' => 'Recommended buttons',
-    'weight' => '3',
-    'children' => array(
-      0 => 'field_webspark_hero_ugradbtn',
-      1 => 'field_webspark_hero_gradbtn',
-      2 => 'field_webspark_hero_primarybtn',
-    ),
-    'format_type' => 'fieldset',
-    'format_settings' => array(
-      'label' => 'Recommended buttons',
-      'instance_settings' => array(
-        'required_fields' => 1,
-        'classes' => 'group-webspark-jumbohero-buttons field-group-fieldset',
-        'description' => '<strong>Recommended:</strong>   Add exploring undergraduate and graduate degree program buttons as the Calls to Action.<br><br>
-<strong>Alternative:</strong>  In place of degree buttons, a single call to action can be use to support the content, driving the user the single most important item of the message.',
-      ),
-      'formatter' => 'open',
-    ),
-  );
-  $export['group_webspark_jumbohero_buttons|fieldable_panels_pane|jumbohero|form'] = $field_group;
-
-  return $export;
-}
-
-/**
- * Implements hook_defaultconfig_strongarm().
- */
-function webspark_jumbohero_defaultconfig_strongarm() {
-  $export = array();
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'field_bundle_settings_fieldable_panels_pane__jumbohero';
-  $strongarm->value = array(
-    'view_modes' => array(
-      'full' => array(
-        'custom_settings' => FALSE,
-      ),
-      'token' => array(
-        'custom_settings' => FALSE,
-      ),
-    ),
-    'extra_fields' => array(
-      'form' => array(
-        'title' => array(
-          'weight' => '0',
-        ),
-      ),
-      'display' => array(
-        'title' => array(
-          'default' => array(
-            'weight' => '0',
-            'visible' => TRUE,
-          ),
-        ),
-      ),
-    ),
-  );
-  $export['field_bundle_settings_fieldable_panels_pane__jumbohero'] = $strongarm;
-
-  return $export;
 }

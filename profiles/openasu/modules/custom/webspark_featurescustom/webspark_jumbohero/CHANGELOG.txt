@@ -1,0 +1,4 @@
+
+Webspark Jumbo Hero 7.x-1.1-dev, 2014-11-21
+------------------------------
+- Reworked help text.

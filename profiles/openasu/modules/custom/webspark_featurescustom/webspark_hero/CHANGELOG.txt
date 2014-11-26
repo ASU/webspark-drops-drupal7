@@ -1,0 +1,8 @@
+
+Webspark Hero 7.x-1.3-dev, 2014-11-21
+------------------------------
+- Reworked help text.
+
+Webspark Hero 7.x-1.4-dev, 2014-11-25
+------------------------------
+- Restored old css class "hero-bg-img"

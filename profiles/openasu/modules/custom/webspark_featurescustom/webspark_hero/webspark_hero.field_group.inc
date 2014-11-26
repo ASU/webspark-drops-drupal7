@@ -23,9 +23,9 @@ function webspark_hero_field_group_info() {
     'label' => 'Recommended buttons',
     'weight' => '3',
     'children' => array(
-      0 => 'field_webspark_hero_primarybtn',
-      1 => 'field_webspark_hero_ugradbtn',
-      2 => 'field_webspark_hero_gradbtn',
+      0 => 'field_webspark_hero_gradbtn',
+      1 => 'field_webspark_hero_primarybtn',
+      2 => 'field_webspark_hero_ugradbtn',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -33,8 +33,11 @@ function webspark_hero_field_group_info() {
       'instance_settings' => array(
         'required_fields' => 0,
         'classes' => 'webspark-hero-buttons field-group-fieldset',
-        'description' => '<strong>Recommended:</strong>   Add exploring undergraduate and graduate degree program buttons as the Calls to Action.<br><br>
-<strong>Alternative:</strong>  In place of degree buttons, a single call to action can be use to support the content, driving the user the single most important item of the message.',
+        'description' => '<ul class="help-text">
+<li class="help-title">ASU Web Standard Buttons</li>
+<li><strong>Recommended:</strong>   Add exploring undergraduate and graduate degree program buttons as the Calls to Action.</li>
+<li><strong>Alternative:</strong>  In place of degree buttons, a single call to action can be use to support the content, driving the user the single most important item of the message.</li>
+</ul>',
       ),
       'formatter' => 'open',
     ),
