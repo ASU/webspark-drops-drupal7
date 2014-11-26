@@ -50,8 +50,10 @@ function mega_footer_block_view($delta = '') {
   $footer_mark .= "
 	          <h1>".variable_get('unit_title', 'Arizona State University')."</h1>
 
-            <address>"
-            .variable_get('unit_address_one', '1151 S. Forest Ave., Tempe, AZ, 85281')."<br>";
+            <address>";
+            if(variable_get('unit_address_one', NULL)!=NULL) {
+                $footer_mark .= variable_get('unit_address_one', NULL)."<br>";
+            }
 	          //Check to see if there is a second line to the address
             $is_line_two = variable_get('unit_address_two', NULL);
 
@@ -59,7 +61,13 @@ function mega_footer_block_view($delta = '') {
                 $footer_mark .= $is_line_two. "<br>";
             }
 
-            $footer_mark .= "Phone: <a class='phone-link' href='tel:".variable_get('unit_phone', '480-965-2100')."'>".variable_get('unit_phone', '480-965-2100')."</a><br>";
+            if(variable_get('unit_address_three', NULL)!=NULL) {
+              $footer_mark .= variable_get('unit_address_three', NULL)."<br>";
+            }
+
+            if(variable_get('unit_phone', NULL)!=NULL) {
+                $footer_mark .= "Phone: <a class='phone-link' href='tel:".variable_get('unit_phone', NULL)."'>".variable_get('unit_phone', NULL)."</a><br>";
+            }
   	       //check to see if fax is provided, and add to markup if so
             $is_fax = variable_get('unit_fax', '');
 
@@ -69,9 +77,9 @@ function mega_footer_block_view($delta = '') {
 
             $footer_mark .=
             "</address>";
-
-            $footer_mark .=  "<p><a class='contact-link' href='".variable_get('unit_contact_us', 'https://contact.asu.edu/')."'>Contact Us</a></p>";
-
+            if(variable_get('unit_contact_us', NULL)!=NULL) {
+                $footer_mark .=  "<p><a class='contact-link' href='".variable_get('unit_contact_us', NULL)."'>Contact Us</a></p>";
+            }
 
   //Social Media
 
@@ -180,8 +188,8 @@ function mega_footer_block_configure($delta = '') {
     $form['unit_address_one'] = array(
       '#type' => 'textfield',
       '#title' => t('Address First Line'),
-      '#default_value' => variable_get('unit_address_one', '1151 S. Forest Ave., Tempe, AZ, 85281'),
-      '#required' => TRUE,
+      '#default_value' => variable_get('unit_address_one', NULL),
+      '#required' => FALSE,
     );
 
     $form['unit_address_two'] = array(
@@ -191,11 +199,18 @@ function mega_footer_block_configure($delta = '') {
       '#required' => FALSE,
     );
 
+    $form['unit_address_three'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Address Third Line'),
+      '#default_value' => variable_get('unit_address_three', NULL),
+      '#required' => FALSE,
+    );
+
     $form['unit_phone'] = array(
       '#type' => 'textfield',
       '#title' => t('Phone'),
-      '#default_value' => variable_get('unit_phone', '480-965-2100'),
-      '#required' => TRUE,
+      '#default_value' => variable_get('unit_phone', NULL),
+      '#required' => FALSE,
     );
 
     $form['unit_fax'] = array(
@@ -207,7 +222,8 @@ function mega_footer_block_configure($delta = '') {
     $form['unit_contact_us'] = array(
       '#type' => 'textfield',
       '#title' => t('Contact Us Link'),
-      '#default_value' => variable_get('unit_contact_us', 'https://contact.asu.edu/'),
+      '#default_value' => variable_get('unit_contact_us', NULL),
+      '#required' => FALSE,
     );
 
     $form['unit_facebook_connect'] = array(
@@ -278,9 +294,10 @@ function mega_footer_block_save($delta = '', $edit = array()) {
 		  variable_set('unit_title', $edit['unit_title']);
 		  variable_set('unit_address_one', $edit['unit_address_one']);
     	variable_set('unit_address_two', $edit['unit_address_two']);
+      variable_set('unit_address_three', $edit['unit_address_three']);
 		  variable_set('unit_phone', $edit['unit_phone']);
 	    variable_set('unit_fax', $edit['unit_fax']);
-    	variable_set('unit_contact_us', 'https://contact.asu.edu/');
+    	variable_set('unit_contact_us', $edit['unit_contact_us']);
     	variable_set('unit_facebook_connect', $edit['unit_facebook_connect']);
     	variable_set('unit_twitter_connect', $edit['unit_twitter_connect']);
     	variable_set('unit_google_connect', $edit['unit_google_connect']);
