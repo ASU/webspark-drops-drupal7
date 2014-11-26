@@ -13,7 +13,7 @@ function webspark_megamenu_content_menu_links_defaults() {
   // Exported menu link: main-menu_admissions:<front>
   $menu_links['main-menu_admissions:<front>'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => '<front>',
+    'link_path' => 'https://webspark.asu.edu/help',
     'router_path' => '',
     'link_title' => 'Admissions',
     'options' => array(
@@ -33,7 +33,7 @@ function webspark_megamenu_content_menu_links_defaults() {
   // Exported menu link: main-menu_degree-programs:<front>
   $menu_links['main-menu_degree-programs:<front>'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => '<front>',
+    'link_path' => 'https://webspark.asu.edu/help',
     'router_path' => '',
     'link_title' => 'Degree Programs',
     'options' => array(
@@ -73,7 +73,7 @@ function webspark_megamenu_content_menu_links_defaults() {
   // Exported menu link: main-menu_student-life:<front>
   $menu_links['main-menu_student-life:<front>'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => '<front>',
+    'link_path' => 'https://webspark.asu.edu/help',
     'router_path' => '',
     'link_title' => 'Student Life',
     'options' => array(
@@ -100,3 +100,4 @@ function webspark_megamenu_content_menu_links_defaults() {
 
   return $menu_links;
 }
+
