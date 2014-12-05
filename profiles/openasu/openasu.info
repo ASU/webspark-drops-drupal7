@@ -3,7 +3,8 @@ distribution_name = ASU Webspark
 description = A starting point for websites at ASU
 core = 7.x
 exclusive = 1
-version = VERSION
+;version = VERSION
+version = 1.13.2
 
 ; Drupal Core
 dependencies[] = menu
@@ -26,9 +27,10 @@ dependencies[] = panopoly_core
 dependencies[] = panopoly_images
 dependencies[] = panopoly_theme
 dependencies[] = panopoly_magic
-dependencies[] = panopoly_widgets
 dependencies[] = panopoly_admin
 dependencies[] = panopoly_users
+; moved widgets below _users
+dependencies[] = panopoly_widgets
 
 ; Panopoly Toolset
 dependencies[] = panopoly_pages
@@ -48,7 +50,7 @@ dependencies[] = block
 
 ; OpenASU - Contrib recommended
 dependencies[] = views_ui
-dependencies[] = contextual
+;dependencies[] = contextual
 
 ; OpenASU - Contrib modules for features
 dependencies[] = backgroundfield
@@ -70,19 +72,15 @@ dependencies[] = modernizr
 
 ; OpenASU - Custom
 dependencies[] = asu_brand
-;dependencies[] = asu_cas
-dependencies[] = asu_spotlight
-dependencies[] = mega_footer
-dependencies[] = asu_gsa
-; pending Arizona testing
-;dependencies[] = asu_rfi
-;dependencies[] = asu_feeds
-;dependencies[] = asu_degrees
 
-; Container features built for Webspark
+; Container module built for Webspark custom features
 dependencies[] = webspark_featurescustom
+dependencies[] = asu_gsa
+; testing
+;dependencies[] = asu_maps_enhanced
+dependencies[] = asu_spotlight
 dependencies[] = asu_securityscanfixes
-dependencies[] = asu_maps_enhanced
+dependencies[] = mega_footer
 dependencies[] = webspark_wysiwyg
 dependencies[] = webspark_panels_styles
 dependencies[] = webspark_banner
@@ -92,8 +90,6 @@ dependencies[] = webspark_hero
 dependencies[] = webspark_jumbohero
 dependencies[] = webspark_megamenu
 dependencies[] = mega_footer_menu
-; pending testing
-;dependencies[] = webspark_newsevents
-
-; Final feature - the catchall
 dependencies[] = webspark_extras
+
+;dependencies[] = asu_cas (see openasu.install)

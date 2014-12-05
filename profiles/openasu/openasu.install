@@ -17,24 +17,23 @@ function openasu_install() {
   // WEBSPARK-254
   module_enable(array('asu_cas'));
   
-//Fix for image threshold error max ten upon spinning up webspark innovation
+  //Fix for image threshold error max ten upon spinning up webspark innovation
 
   variable_set('image_resize_filter_threshold', 1000);
 
-//Setting the cas_auto_assigned_role variable array to grant only the CAS and Authenticated User roles to every new user 
+  //Setting the cas_auto_assigned_role variable array to grant only the CAS and Authenticated
+  // User roles to every new user.
 
   $roles = user_roles();
   $cas_roles = array();
 
   foreach ($roles as $key=>$role) {
-
     if ($role == "CAS" || $role == "authenticated user") {
           $cas_roles[$key] = 1; //Enable the role
     } 
     else {
           $cas_roles[$key] = 0; //Disable the role
-    }  
-
+    }
   }  
 
   $cas_roles_set = variable_set('cas_auto_assigned_role',$cas_roles);

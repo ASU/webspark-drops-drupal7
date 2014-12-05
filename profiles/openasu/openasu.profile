@@ -26,12 +26,12 @@ function openasu_install_tasks_alter(&$tasks, $install_state) {
   // Magically go one level deeper in solving years of dependency problems
   require_once(drupal_get_path('module', 'panopoly_core') . '/panopoly_core.profile.inc');
   $tasks['install_load_profile']['function'] = 'panopoly_core_install_load_profile';
-  
-  // Skip Webspark theme settings task if Innovation theme is selected
+
+    // Skip Webspark theme settings task if Innovation theme is selected
   if (!empty($install_state['parameters']['whichtheme']) && $install_state['parameters']['whichtheme'] == 'innovation') {
     $tasks['openasu_theme_configure_form']['run'] = INSTALL_TASK_SKIP;
   }
-  
+
   // Skip Innovation extra setup task if Webspark theme is selected
   if (!empty($install_state['parameters']['whichtheme']) && $install_state['parameters']['whichtheme'] == 'asu_webspark_bootstrap') {
     $tasks['openasu_innovation_extra_setup']['run'] = INSTALL_TASK_SKIP;
@@ -46,9 +46,9 @@ function openasu_install_tasks_alter(&$tasks, $install_state) {
   }
 }
 
-/** 
+/**
  * Implements hook_form()
- * 
+ *
  * Form to select Drupal theme
  * Choices:
  * -- Webspark
@@ -58,7 +58,7 @@ function openasu_select_theme_form($form, &$form_state) {
   $form = array();
   $theme = 'innovation';
   global $base_url;
-  global $base_path; 
+  global $base_path;
   $form['theme_selection'] = array(
     '#title' => t('Select a theme'),
     '#type' => 'fieldset',
@@ -82,7 +82,8 @@ function openasu_select_theme_form($form, &$form_state) {
   $form['theme_selection']['selection_preview'] = array(
     '#prefix' => "<div id='openasu-selection-preview'>",
     '#markup' => t('<p><img src="@preview"></p>', array(
-    '@preview' => $base_url.$base_path.'/profiles/openasu/themes/'.$theme.'/screenshot.png')),
+      '@preview' => $base_url . $base_path . '/profiles/openasu/themes/' . $theme . '/screenshot.png'
+    )),
     '#suffix' => "</div>",
   );
   $form['submit'] = array(
@@ -100,12 +101,12 @@ function openasu_select_theme_form($form, &$form_state) {
 
 function openasu_select_theme_form_submit($form, &$form_state) {
   global $install_state;
-  
+
   // Innovation theme selected
   if ($form_state['values']['whichtheme'] == 'innovation') {
     // Set install state to 
     $install_state['parameters']['whichtheme'] = 'innovation';
-    
+
     // Disable the default Bartik theme
     theme_disable(array('bartik'));
     // Enable and set the theme
@@ -122,14 +123,41 @@ function openasu_select_theme_form_submit($form, &$form_state) {
     variable_set('asu_brand_header_template', 'default');
     variable_set('asu_brand_header_selector', 'default');
 
-  // Enable the Brand Header block in the right region
-  $asu_brand_header_delta = 'asu_brand_header';
-  $asu_brand_header_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(':delta' => $asu_brand_header_delta, ':theme' => $theme))->fetchField();
-  db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(':status' => 1, ':bid' => $asu_brand_header_bid, ':theme' => $theme));
-  db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(':region' => 'header', ':bid' => $asu_brand_header_bid, ':theme' => $theme));
+    // Enable the Brand Header block in the right region
+    $asu_brand_header_delta = 'asu_brand_header';
+    $asu_brand_header_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(
+        ':delta' => $asu_brand_header_delta,
+        ':theme' => $theme
+      ))->fetchField();
+    db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(
+        ':status' => 1,
+        ':bid' => $asu_brand_header_bid,
+        ':theme' => $theme
+      ));
+    db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(
+        ':region' => 'header',
+        ':bid' => $asu_brand_header_bid,
+        ':theme' => $theme
+      ));
 
-  // Set the responsive version of the header to be default
-  variable_set('asu_brand_header_version', '4.2');
+    // Add back in default footer regardless - readded after WEBSPARK-357 removed it from megafooter module
+    $asu_brand_footer_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(
+        ':delta' => 'asu_brand_footer',
+        ':theme' => $theme
+      ))->fetchField();
+    db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(
+        ':status' => 1,
+        ':bid' => $asu_brand_footer_bid,
+        ':theme' => $theme
+      ));
+    db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(
+        ':region' => 'footer',
+        ':bid' => $asu_brand_footer_bid,
+        ':theme' => $theme
+      ));
+
+    // Set the responsive version of the header to be default
+    variable_set('asu_brand_header_version', '4.3');
   }
 }
 
@@ -173,16 +201,17 @@ function openasu_theme_configure_form($form, &$form_state) {
   $form['theme_configuration']['header_preview'] = array(
     '#prefix' => "<div id='openasu-header-preview'>",
     '#markup' => t('<img src="@preview">', array(
-      '@preview' => drupal_get_path('profile', 'openasu') . '/themes/' . $theme . '/thumbs/' . variable_get('asu_brand_header_selector', ASU_BRAND_HEADER_TEMPLATE_DEFAULT) . '-header.png')),
+      '@preview' => drupal_get_path('profile', 'openasu') . '/themes/' . $theme . '/thumbs/' . variable_get('asu_brand_header_selector', ASU_BRAND_HEADER_TEMPLATE_DEFAULT) . '-header.png'
+    )),
     '#suffix' => "</div>",
   );
   $form['theme_configuration']['asu_brand_header_template'] = array(
     '#title' => t('Enter Custom Template Key'),
     '#type' => 'textfield',
     '#states' => array(
-     'visible' => array(
-       ':input[name="asu_brand_header_selector"]' => array('value' => 'custom'),
-     ),
+      'visible' => array(
+        ':input[name="asu_brand_header_selector"]' => array('value' => 'custom'),
+      ),
     ),
     '#default_value' => variable_get('asu_brand_header_template', variable_get('asu_brand_header_selector')),
   );
@@ -206,7 +235,8 @@ function openasu_theme_configure_form($form, &$form_state) {
   $form['theme_configuration']['menu_preview'] = array(
     '#prefix' => "<div id='openasu-menu-preview'>",
     '#markup' => t('<img src="@preview">', array(
-      '@preview' => drupal_get_path('profile', 'openasu') . '/themes/' . $theme . '/thumbs/' . variable_get('asu_brand_student_color', 'black') . '-menu.png')),
+      '@preview' => drupal_get_path('profile', 'openasu') . '/themes/' . $theme . '/thumbs/' . variable_get('asu_brand_student_color', 'black') . '-menu.png'
+    )),
     '#suffix' => "</div>",
   );
   $form['submit'] = array(
@@ -252,31 +282,81 @@ function openasu_theme_configure_form_submit($form, &$form_state) {
 
   // Enable the Brand Header block in the right region
   $asu_brand_header_delta = 'asu_brand_header';
-  $asu_brand_header_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(':delta' => $asu_brand_header_delta, ':theme' => $theme))->fetchField();
-  db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(':status' => 1, ':bid' => $asu_brand_header_bid, ':theme' => $theme));
-  db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(':region' => 'header', ':bid' => $asu_brand_header_bid, ':theme' => $theme));
+  $asu_brand_header_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(
+      ':delta' => $asu_brand_header_delta,
+      ':theme' => $theme
+    ))->fetchField();
+  db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(
+      ':status' => 1,
+      ':bid' => $asu_brand_header_bid,
+      ':theme' => $theme
+    ));
+  db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(
+      ':region' => 'header',
+      ':bid' => $asu_brand_header_bid,
+      ':theme' => $theme
+    ));
 
   // Enable the Main Menu block in the right region
   $main_menu_delta = 'main-menu';
-  $main_menu_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(':delta' => $main_menu_delta, ':theme' => $theme))->fetchField();
-  db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(':status' => 1, ':bid' => $main_menu_bid, ':theme' => $theme));
-  db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(':region' => 'menu', ':bid' => $main_menu_bid, ':theme' => $theme));
-  db_query("UPDATE {block} SET weight = -100 WHERE bid = :bid AND theme = :theme", array(':bid' => $main_menu_bid, ':theme' => $theme));
+  $main_menu_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(
+      ':delta' => $main_menu_delta,
+      ':theme' => $theme
+    ))->fetchField();
+  db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(
+      ':status' => 1,
+      ':bid' => $main_menu_bid,
+      ':theme' => $theme
+    ));
+  db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(
+      ':region' => 'menu',
+      ':bid' => $main_menu_bid,
+      ':theme' => $theme
+    ));
+  db_query("UPDATE {block} SET weight = -100 WHERE bid = :bid AND theme = :theme", array(
+      ':bid' => $main_menu_bid,
+      ':theme' => $theme
+    ));
 
   // Add in student footer if applicable
   if ($form_state['values']['asu_brand_is_student'] == 'student') {
     $asu_brand_footer_delta = 'asu_brand_students_footer';
     variable_set('asu_brand_is_student', 'student');
-    $asu_brand_footer_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(':delta' => $asu_brand_footer_delta, ':theme' => $theme))->fetchField();
-    db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(':status' => 1, ':bid' => $asu_brand_footer_bid, ':theme' => $theme));
-    db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(':region' => 'footer', ':bid' => $asu_brand_footer_bid, ':theme' => $theme));
-    db_query("UPDATE {block} SET weight = -100 WHERE bid = :bid AND theme = :theme", array(':bid' => $asu_brand_footer_bid, ':theme' => $theme));
+    $asu_brand_footer_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(
+        ':delta' => $asu_brand_footer_delta,
+        ':theme' => $theme
+      ))->fetchField();
+    db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(
+        ':status' => 1,
+        ':bid' => $asu_brand_footer_bid,
+        ':theme' => $theme
+      ));
+    db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(
+        ':region' => 'footer',
+        ':bid' => $asu_brand_footer_bid,
+        ':theme' => $theme
+      ));
+    db_query("UPDATE {block} SET weight = -100 WHERE bid = :bid AND theme = :theme", array(
+        ':bid' => $asu_brand_footer_bid,
+        ':theme' => $theme
+      ));
   }
 
-  // Add in default footer regardless
-  $asu_brand_footer_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(':delta' => 'asu_brand_footer', ':theme' => $theme))->fetchField();
-  db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(':status' => 1, ':bid' => $asu_brand_footer_bid, ':theme' => $theme));
-  db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(':region' => 'footer', ':bid' => $asu_brand_footer_bid, ':theme' => $theme));
+  // Add in Brand Footer block footer regardless of student footer
+  $asu_brand_footer_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(
+      ':delta' => 'asu_brand_footer',
+      ':theme' => $theme
+    ))->fetchField();
+  db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(
+      ':status' => 1,
+      ':bid' => $asu_brand_footer_bid,
+      ':theme' => $theme
+    ));
+  db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(
+      ':region' => 'footer',
+      ':bid' => $asu_brand_footer_bid,
+      ':theme' => $theme
+    ));
 
   // Set the responsive version of the header to be default
   variable_set('asu_brand_header_version', '4.0-rsp-up.0');
@@ -311,7 +391,7 @@ function openasu_theme_configure_form_submit($form, &$form_state) {
   $modules[] = 'webspark_extras';
 
   module_disable($modules);
-  
+
   // Enable Webspark Demo module
   $modules_enable = array('openasu_demo');
   module_enable($modules_enable);
@@ -324,8 +404,9 @@ function openasu_theme_configure_form_submit($form, &$form_state) {
  * More Innovation theme setup, after initial module enabling, etc.
  */
 function openasu_innovation_extra_setup(&$install_state) {
-  if (isset($install_state['parameters']['whichtheme']) && 
-    $install_state['parameters']['whichtheme'] == 'innovation') {
+  if (isset($install_state['parameters']['whichtheme']) &&
+    $install_state['parameters']['whichtheme'] == 'innovation'
+  ) {
     // With tb_megamenu enabled and the block created by webspark_megamenu feature, 
     // enable the TB Main Menu block in the right region.
     if (module_exists('tb_megamenu') && module_exists('webspark_megamenu')) {
@@ -391,7 +472,7 @@ function openasu_admin_save_asurite($form_id, &$form_state) {
 /**
  * Theme selection Ajax callbacks that returns HTML to the setup form so that the user
  * can see a preview of the theme.
- * 
+ *
  * @function openasu_selection_preview - select a theme preview (Innovation only)
  * @function openasu_header_preview - select a header (Webspark only)
  * @function openasu_menu_preview - select a menu color (Webspark only)
@@ -403,7 +484,7 @@ function openasu_admin_save_asurite($form_id, &$form_state) {
 function openasu_selection_preview($form, &$form_state) {
   $theme = $form_state['values']['whichtheme'];
   $form['theme_selection']['selection_preview']['#markup'] = t('<p><img src="@preview"></p>', array(
-    '@preview' => $base_url.$base_path.'/profiles/openasu/themes/'.$theme.'/screenshot.png',
+    '@preview' => $base_url . $base_path . '/profiles/openasu/themes/' . $theme . '/screenshot.png',
   ));
   return $form['theme_selection']['selection_preview'];
 }
@@ -415,7 +496,7 @@ function openasu_header_preview($form, &$form_state) {
   }
   else {
     $form['theme_configuration']['header_preview']['#markup'] = t('<img src="@preview">', array(
-      '@preview' => $base_url.$base_path.'/profiles/openasu/themes/asu_webspark_bootstrap/thumbs/' . $header . '-header.png',
+      '@preview' => $base_url . $base_path . '/profiles/openasu/themes/asu_webspark_bootstrap/thumbs/' . $header . '-header.png',
     ));
   }
   return $form['theme_configuration']['header_preview'];
@@ -424,7 +505,7 @@ function openasu_header_preview($form, &$form_state) {
 function openasu_menu_preview($form, &$form_state) {
   $menu = $form_state['values']['asu_brand_student_color'];
   $form['theme_configuration']['menu_preview']['#markup'] = t('<img src="@preview">', array(
-    '@preview' => $base_url.$base_path.'/profiles/openasu/themes/asu_webspark_bootstrap/thumbs/' . $menu . '-menu.png',
+    '@preview' => $base_url . $base_path . '/profiles/openasu/themes/asu_webspark_bootstrap/thumbs/' . $menu . '-menu.png',
   ));
   return $form['theme_configuration']['menu_preview'];
 }

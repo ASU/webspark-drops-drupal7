@@ -50,17 +50,17 @@ projects[panopoly_demo][subdir] = panopoly
 
 ; ASU Modules
 
-projects[asu_brand][version] = 1.6
+projects[asu_brand][version] = 1.7
 projects[asu_brand][subdir] = custom
 projects[asu_brand][type] = module
-projects[asu_brand][download][revision] = 91f8308a
+projects[asu_brand][download][revision] = 8aea08e7
 projects[asu_brand][download][branch] = header42
 projects[asu_brand][download][url] = https://github.com/ASU/asu-drupal-brand.git
 
 projects[asu_cas][version] = 7.x-1.5
 projects[asu_cas][subdir] = custom
 projects[asu_cas][type] = module
-projects[asu_cas][download][revision] = 4d4a6feb
+projects[asu_cas][download][revision] = 989fe3af
 projects[asu_cas][download][branch] = 7.x-1.x
 projects[asu_cas][download][url] = https://github.com/ASU/asu-drupal-cas-client-config.git
 
@@ -86,20 +86,20 @@ projects[ixr][download][url] = https://github.com/ASU/asu-drupal-ixr.git
 projects[asu_events][version] = 1.0-dev
 projects[asu_events][subdir] = custom
 projects[asu_events][type] = module
-projects[asu_events][download][revision] = 46bd43bbba
+projects[asu_events][download][revision] = a2211824
 projects[asu_events][download][url] = https://github.com/ASU/asu-drupal-events-feed.git
 
 projects[asu_news][version] = 1.0-dev
 projects[asu_news][subdir] = custom
 projects[asu_news][type] = module
-projects[asu_news][download][revision] = a6c180f26f
+projects[asu_news][download][revision] = fc29af6a
 projects[asu_news][download][url] = https://github.com/ASU/asu-drupal-news.git
 
 ; eAdvisor Feed Feature (depracated in lieu of ASU Degrees)
 projects[asu_eadvisor_degree_feed_feature][version] = 1.0-beta1
 projects[asu_eadvisor_degree_feed_feature][subdir] = custom
 projects[asu_eadvisor_degree_feed_feature][type] = module
-projects[asu_eadvisor_degree_feed_feature][download][revision] = 59a20ae94b
+projects[asu_eadvisor_degree_feed_feature][download][revision] = 91278fd1
 projects[asu_eadvisor_degree_feed_feature][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
 
 ; ASU Degrees (replacement for asu_eadvisor_degree_feed_feature)
@@ -107,23 +107,23 @@ projects[asu_eadvisor_degree_feed_feature][download][url] = https://github.com/A
 projects[asu_degrees][version] = 1.0
 projects[asu_degrees][type] = module
 projects[asu_degrees][subdir] = custom
-projects[asu_degrees][download][revision] = dbbc32ae
+projects[asu_degrees][download][revision] = 5edb137c
 projects[asu_degrees][download][branch] = asu_degrees
 projects[asu_degrees][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
 
-; Includes multiple features and modules
+; Includes multiple Webspark features and modules
 projects[webspark_featurescustom][type] = module
 projects[webspark_featurescustom][subdir] = custom
 projects[webspark_featurescustom][directory_name] = webspark_featurescustom
 projects[webspark_featurescustom][download][type] = git
-projects[webspark_featurescustom][download][revision] = b86a8da9
+projects[webspark_featurescustom][download][revision] = dc640f11
 projects[webspark_featurescustom][download][branch] = master
 projects[webspark_featurescustom][download][url] = https://github.com/ASU/webspark-webstandards-components.git
 
 projects[asu_rfi][type] = module
 projects[asu_rfi][subdir] = custom
 projects[asu_rfi][download][type] = git
-projects[asu_rfi][download][revision] = 05d9d122
+projects[asu_rfi][download][revision] = dd1c109e
 projects[asu_rfi][download][branch] = master
 projects[asu_rfi][download][url] = https://github.com/ASU/asu-drupal-rfi
 
@@ -161,6 +161,10 @@ projects[job_scheduler][version] = 2.0-alpha3
 projects[job_scheduler][type] = module
 projects[job_scheduler][subdir] = contrib
 
+projects[multiblock][version] = 1.1
+projects[multiblock][type] = module
+projects[multiblock][subdir] = contrib
+
 projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
 projects[viewfield][subdir] = contrib
@@ -177,7 +181,7 @@ projects[webform][version] = 3.21
 projects[webform][type] = module
 projects[webform][subdir] = contrib
 
-; ASU Module prerequisites - Webstandards additions - contrib
+; ASU Module prerequisites - Webspark Webstandards Components - contrib
 
 projects[backgroundfield][version] = 1.5
 projects[backgroundfield][type] = module
@@ -271,7 +275,7 @@ libraries[asu_webspark_bootstrap_bootstrap][download][url] = https://github.com/
 projects[innovation][version] = beta5
 projects[innovation][type] = theme
 projects[innovation][download][type] = git
-projects[innovation][download][revision] = 5225a920
+projects[innovation][download][revision] = 30514a42
 projects[innovation][download][branch] = master
 projects[innovation][download][url] = https://github.com/ASU/webspark-theme-innovation.git
 
