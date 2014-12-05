@@ -5,7 +5,8 @@ package = ASU Webspark
 version = 7.x-1.0-dev
 project = asu_maps_enhanced
 
-dependencies[] = panopoly_widgets
+; WEBSPARK-462 - install profile issue
+;dependencies[] = panopoly_widgets
 
 stylesheets[all][] = css/asu_maps_enhanced.css
 scripts[] = js/asu_maps_enhanced.js

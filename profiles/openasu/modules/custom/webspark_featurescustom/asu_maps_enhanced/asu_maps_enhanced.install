@@ -3,7 +3,7 @@
 /**
  * @file
  * An installation file for ASU Maps Enhanced
- */
+ **/
 
 /**
  * Implementation of hook_install().
