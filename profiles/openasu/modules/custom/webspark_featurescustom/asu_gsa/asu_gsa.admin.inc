@@ -17,7 +17,7 @@ function asu_gsa_admin_settings($form) {
   $form['connection_info']['local_search'] = array(
     '#type' => 'select',
     '#title' => t('Local Search'),
-    '#description' => t('Do you want to use the default Drupal search instead of the GSA search?'),
+    '#description' => t('Do you want to use the default Drupal search instead of the GSA search? (Select No if you will set your own custom collection below)'),
     '#default_value' => $settings['local_search'],
      '#options' => array(
       'No' => t('No'),
@@ -29,7 +29,7 @@ function asu_gsa_admin_settings($form) {
   $form['connection_info']['collection'] = array(
     '#type' => 'textfield',
     '#title' => t('Collection'),
-    '#description' => t('The name of a valid collection on the GSA (default value: default_collection).'),
+    '#description' => t('The name of a valid collection on the GSA (default value: default_collection). Email webconsulting@asu.edu if you need a custom collection setup'),
     '#default_value' => $settings['collection'],
     '#required' => TRUE,
   );
