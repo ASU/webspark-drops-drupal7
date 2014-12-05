@@ -24,6 +24,7 @@ function webspark_content_callout_user_default_permissions() {
     'name' => 'create content_callout content',
     'roles' => array(
       'administrator' => 'administrator',
+      'editor' => 'editor',
     ),
     'module' => 'node',
   );
@@ -33,6 +34,7 @@ function webspark_content_callout_user_default_permissions() {
     'name' => 'delete any content_callout content',
     'roles' => array(
       'administrator' => 'administrator',
+      'editor' => 'editor',
     ),
     'module' => 'node',
   );
@@ -42,6 +44,7 @@ function webspark_content_callout_user_default_permissions() {
     'name' => 'delete own content_callout content',
     'roles' => array(
       'administrator' => 'administrator',
+      'editor' => 'editor',
     ),
     'module' => 'node',
   );
@@ -51,6 +54,7 @@ function webspark_content_callout_user_default_permissions() {
     'name' => 'edit any content_callout content',
     'roles' => array(
       'administrator' => 'administrator',
+      'editor' => 'editor',
     ),
     'module' => 'node',
   );
@@ -60,6 +64,7 @@ function webspark_content_callout_user_default_permissions() {
     'name' => 'edit own content_callout content',
     'roles' => array(
       'administrator' => 'administrator',
+      'editor' => 'editor',
     ),
     'module' => 'node',
   );
