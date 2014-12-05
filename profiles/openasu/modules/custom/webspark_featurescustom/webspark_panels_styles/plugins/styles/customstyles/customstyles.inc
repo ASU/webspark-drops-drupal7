@@ -23,8 +23,9 @@ function theme_customstyles_render_region($vars) {
   $settings = $vars['settings'];
 
   $settings['attributes'] = '';
-	$settings['attributes'] .= $settings['bgcolors'] . ' ' . $settings['spacing'];
-
+  foreach ($settings as $key=>$param) {
+    $settings['attributes'] .= ' ' . $param; 
+  }
   // Theme.
   if (!empty($settings['theme']) && $settings['theme']) {
     $output = theme('panels_default_style_render_region', $vars);
@@ -53,8 +54,9 @@ function theme_customstyles_render_pane($vars) {
   if (!isset($content->css_class)) {
     $content->css_class = '';
   }
-  
-	$content->css_class .= $settings['bgcolors'] . ' ' . $settings['spacing'];  
+  foreach ($settings as $key=>$param) { 
+     $content->css_class .= ' ' . $param;
+  }
   $output = theme('panels_pane', $vars);
 
   return $output;
@@ -64,7 +66,10 @@ function theme_customstyles_render_pane($vars) {
  * Options for the Panels style plugin to help style panes.
  */
 function customstyles_pane_settings_form($style_settings) {
-    $bgcolor_options = array(
+   
+   $bgcolors_default_value = isset($style_settings['bgcolors']) ? $style_settings['bgcolors'] : ''; 
+   $bgcolor_options = array(
+			'' => t('None'), 
 			'js-lightgraybg' => t('Light gray background'),
 			'js-darkgraybg' => t('Dark gray background'),
     );
@@ -76,36 +81,86 @@ function customstyles_pane_settings_form($style_settings) {
 			'#description' => t('Background colors work best on full-width rows.'),
 			'#required' => FALSE,
       '#options' => $bgcolor_options,
-      '#default_value' => $style_settings['bgcolors'],
+      '#default_value' => $bgcolors_default_value,
     );
 
-    $spacing_default_value = isset($style_settings['spacing']) ? $style_settings['spacing'] : '';
-    $space_options = array(
+    $padtop_default_value = isset($style_settings['padtop']) ? $style_settings['padtop'] : ''; 
+    $padbot_default_value = isset($style_settings['padbot']) ? $style_settings['padbot'] : ''; 
+    $martop_default_value = isset($style_settings['martop']) ? $style_settings['martop'] : ''; 
+    $marbot_default_value = isset($style_settings['marbot']) ? $style_settings['marbot'] : ''; 
+    
+    $padtop_options = array (
+			'' => t('None'), 
 			'space-top-sm' => t('Add 12px top padding'),
 			'space-top-md' => t('Add 28px top padding'),
 			'row-padding-top' => t('Add 42px top padding'),
+    );
+
+    $padbot_options = array ( 
+			'' => t('None'),
 			'space-bot-sm' => t('Add 12px bottom padding'),
 			'space-bot-md' => t('Add 28px bottom padding'),
 			'row-padding-bottom' => t('Add 42px bottom padding'),
+    ); 
+    $martop_options = array ( 
+			'' => t('None'),
 			'remove-6-above' => t('Remove 6px margin above'),
-			'remove-12-above' => t('Remove 12px margin above'),
-			'remove-28-above' => t('Remove 28px margin above'),
-			'remove-42-above' => t('Remove 42px margin above'),
-			'remove-6-below' => t('Remove 6px margin below'),
-			'remove-12-below' => t('Remove 12px margin below'),
-			'remove-28-below' => t('Remove 28px margin below'),
-			'remove-42-below' => t('Remove 42px margin below'),
+                        'remove-12-above' => t('Remove 12px margin above'),
+                        'remove-28-above' => t('Remove 28px margin above'),
+                        'remove-42-above' => t('Remove 42px margin above'),
+
     );
-    $form['spacing'] = array(
+    $marbot_options = array ( 
+			'' => t('None'),
+                        'remove-6-below' => t('Remove 6px margin below'),
+                        'remove-12-below' => t('Remove 12px margin below'),
+                        'remove-28-below' => t('Remove 28px margin below'),
+                        'remove-42-below' => t('Remove 42px margin below'),
+    ); 
+
+   $form['padtop'] = array(
       '#prefix' => '<div class="well">',
       '#suffix' => '</div>',
-			'#type' => 'radios',
-			'#title' => t('Adjust pane and row spacing:'),
-			'#description' => t('Adjust margins and padding.  If more spacing is needed, add an empty pane and adjust spacing there.'),
-      '#options' => $space_options,
+                        '#type' => 'radios',
+                        '#title' => t('Adjust the padding on the top'),
+                        '#description' => t(''),
+      '#options' => $padtop_options,
       '#required' => FALSE,
-      '#default_value' => $spacing_default_value,
+      '#default_value' => $padtop_default_value,
     );
+
+   $form['padbot'] = array(
+      '#prefix' => '<div class="well">',
+      '#suffix' => '</div>',
+                        '#type' => 'radios',
+                        '#title' => t('Adjust the padding on the bottom'),
+      			'#description' => t(''),
+      '#options' => $padbot_options,
+      '#required' => FALSE,
+      '#default_value' => $padbot_default_value,
+    );
+
+   $form['martop'] = array(
+      '#prefix' => '<div class="well">',
+      '#suffix' => '</div>',
+                        '#type' => 'radios',
+                        '#title' => t('Adjust the margin on the top'),
+      			'#description' => t(''),
+      '#options' => $martop_options,
+      '#required' => FALSE,
+      '#default_value' => $martop_default_value,
+    );
+
+   $form['marbot'] = array(
+      '#prefix' => '<div class="well">',
+      '#suffix' => '</div>',
+                        '#type' => 'radios',
+                        '#title' =>  t('Adjust the margin on the bottom'),
+      			'#description' => t(''),
+      '#options' => $marbot_options,
+      '#required' => FALSE,
+      '#default_value' => $marbot_default_value,
+    ); 
 
   return $form;
 }
