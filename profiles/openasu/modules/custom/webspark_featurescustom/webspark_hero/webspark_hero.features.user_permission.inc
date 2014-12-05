@@ -15,6 +15,7 @@ function webspark_hero_user_default_permissions() {
     'name' => 'create fieldable hero',
     'roles' => array(
       'administrator' => 'administrator',
+      'editor' => 'editor',
     ),
     'module' => 'fieldable_panels_panes',
   );
@@ -24,6 +25,7 @@ function webspark_hero_user_default_permissions() {
     'name' => 'delete fieldable hero',
     'roles' => array(
       'administrator' => 'administrator',
+      'editor' => 'editor',
     ),
     'module' => 'fieldable_panels_panes',
   );
@@ -33,6 +35,7 @@ function webspark_hero_user_default_permissions() {
     'name' => 'edit fieldable hero',
     'roles' => array(
       'administrator' => 'administrator',
+      'editor' => 'editor',
     ),
     'module' => 'fieldable_panels_panes',
   );

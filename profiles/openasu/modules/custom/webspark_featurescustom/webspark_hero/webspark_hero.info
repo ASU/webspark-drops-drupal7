@@ -13,6 +13,7 @@ dependencies[] = fieldable_panels_panes
 dependencies[] = image
 dependencies[] = link
 dependencies[] = maxlength
+; WEBSPARK-462 - install profile issue
 dependencies[] = panopoly_widgets
 dependencies[] = strongarm
 dependencies[] = text
