@@ -5,11 +5,11 @@
  */
 function asu_brand_uninstall() {
   drupal_load('module', 'asu_brand');
-  
+
   // Delete all module variables.
   db_delete('variable')->condition('name', 'asu_brand%', 'LIKE')->execute();
   cache_clear_all('variables', 'cache_bootstrap');
-  
+
   // Delete caches.
   foreach (asu_brand_get_cache_ids() as $cache_id) {
     cache_clear_all($cache_id, 'cache');
@@ -27,5 +27,36 @@ function asu_brand_update_7100(&$sandbox) {
   if ($footer_color = '_black') {
     variable_set('asu_brand_footer_color', '');
     cache_clear_all('asu_brand:footer', 'cache');
+  }
+}
+
+/**
+ * Implements hook_update_N()
+ * + Updates header variables if Innovation theme is selected
+ * + Re-add footer block to all pages
+ */
+function asu_brand_update_7101(&$sandbox) {
+  $theme = 'innovation';
+  if (variable_get('theme_default') === $theme) {
+    // re-add footer after removal from mega footer module
+    $asu_brand_footer_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(
+      ':delta' => 'asu_brand_footer',
+      ':theme' => $theme
+    ))->fetchField();
+    db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(
+      ':status' => 1,
+      ':bid' => $asu_brand_footer_bid,
+      ':theme' => $theme
+    ));
+    db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(
+      ':region' => 'footer',
+      ':bid' => $asu_brand_footer_bid,
+      ':theme' => $theme
+    ));
+    // updates header vars
+    variable_set('asu_brand_header_selector', 'default');
+    variable_set('asu_brand_header_template', 'default');
+    variable_set('asu_brand_header_version', '4.3');
+    variable_set('asu_brand_header_basepath', 'http://www.asu.edu/asuthemes');
   }
 }

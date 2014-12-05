@@ -18,6 +18,7 @@ function asu_brand_get_block_settings($reset = FALSE) {
     $settings->head_path = $settings->header_basebath . '/' . $settings->header_version . '/heads/' . $settings->header_template . '.shtml';
     $settings->header_path = $settings->header_basebath . '/' . $settings->header_version . '/headers/' . $settings->header_template . '.shtml';
     $settings->footer_path = $settings->header_basebath . '/' . $settings->header_version . '/includes/footer' . $settings->footer_color . '.shtml';
+    $settings->gtm_path = $settings->header_basebath . '/' . $settings->header_version . '/includes/gtm.shtml';
     $settings->students_footer_path = $settings->header_basebath . '/' . $settings->header_version . '/includes/students_footer.shtml';
     
     // Set javascript settings.

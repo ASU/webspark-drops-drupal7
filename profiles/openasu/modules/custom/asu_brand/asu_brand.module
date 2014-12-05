@@ -7,13 +7,47 @@
  * Created: 2011-09-21
  */
 
+/*********************************************************************
+ CONFIG
+*********************************************************************/
+
 define('ASU_BRAND_HEADER_VERSION_XML_URL', 'http://asu.edu/asuthemes/headers.xml');
 define('ASU_BRAND_HEADER_VERSION_DEFAULT', '4.2');
-define('ASU_BRAND_HEADER_BASEPATH_DEFAULT', 'https://asu.edu/asuthemes');
+define('ASU_BRAND_HEADER_BASEPATH_DEFAULT', 'http://www.asu.edu/asuthemes');
 define('ASU_BRAND_HEADER_TEMPLATE_DEFAULT', 'default');
 define('ASU_BRAND_FOOTER_COLOR_DEFAULT', '');
 define('ASU_BRAND_CACHE_LIFETIME', 172800);
 define('ASU_BRAND_PREVIEW_PAGES_DEFAULT', "system/ajax/*\npanels/ajax/*");
+
+/**
+ * Delta of ASU Header block (declared in asu_brand.module)
+ * @var string
+ */
+define('ASU_BRAND_HEADER_DELTA', 'asu_brand_header');
+
+/**
+ * Default machine name of site menu to inject into the responsive header menu
+ * @var string
+ */
+define('ASU_BRAND_SITE_MENU_NAME_DEFAULT', 'main-menu');
+
+
+/**
+ * Implements hook_init().
+ */
+function asu_brand_init() {
+  if (variable_get('asu_brand_sitemenu_injection_flag', 1)) {
+    $menu_array = asu_brand_get_site_menu_array();
+    drupal_alter('asu_brand_sitemenu', $menu_array); // Invoke alter
+    
+    $js = 'window.ASUHeader = window.ASUHeader || {};';
+    $js .= 'ASUHeader.site_menu = ASUHeader.site_menu || {};';
+    $js .= 'ASUHeader.site_menu.json = \''.json_encode($menu_array, JSON_HEX_APOS).'\';';
+    
+    drupal_add_js($js, array('type' => 'inline', 'scope' => 'header', 'group' => JS_THEME, 'weight' => -10));
+  }
+}
+
 
 /**
  * Implements hook_block_info().
@@ -22,7 +56,7 @@ function asu_brand_block_info() {
   // Never cache the header with Drupal's caching system because the contents of
   // the block changes based on if the user is logged in. The included header files
   // are cached manually when then block is viewed in _asu_brand_block_header().
-  $blocks['asu_brand_header'] = array(
+  $blocks[ASU_BRAND_HEADER_DELTA] = array(
     'info' => t('ASU Brand: header'),
     'cache' => DRUPAL_NO_CACHE,
   );
@@ -43,7 +77,7 @@ function asu_brand_block_info() {
 function asu_brand_block_configure($delta = '') {
   $form = array();
   switch ($delta) {
-    case 'asu_brand_header':
+    case ASU_BRAND_HEADER_DELTA:
     case 'asu_brand_footer':
     case 'asu_brand_students_footer':
       module_load_include('inc', 'asu_brand', 'asu_brand.admin');
@@ -64,13 +98,17 @@ function asu_brand_block_save($delta = '', $edit = array()) {
       variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
       variable_set('asu_brand_header_template', $edit['asu_brand_header_template']);
       variable_set('asu_brand_preview_pages', $edit['asu_brand_preview_pages']);
+      variable_set('asu_brand_gtm_override', $edit['asu_brand_gtm_override']);
+      variable_set('asu_brand_sitemenu_injection_flag', $edit['asu_brand_sitemenu_injection_flag']);
+      variable_set('asu_brand_sitemenu_name', $edit['asu_brand_sitemenu_name']);
       asu_brand_cache_clear();
       break;
     
     case 'asu_brand_footer':
       variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
       variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
-      variable_set('asu_brand_footer_color', $edit['asu_brand_footer_color']);
+      // No color options on footer anymore
+      //variable_set('asu_brand_footer_color', $edit['asu_brand_footer_color']);
       variable_set('asu_brand_preview_pages', $edit['asu_brand_preview_pages']);
       asu_brand_cache_clear();
       break;
@@ -130,6 +168,29 @@ function asu_brand_block_view($delta = '') {
 }
 
 /**
+ * Implements hook_page_alter().
+ * Adds a post_render callback and loads the include file.
+ * @see drupal_render_page()
+ */
+function asu_brand_page_alter(&$page) {
+  // Call sequence:
+  // - drupal_render_page()
+  //   - hook_page_alter()
+  //   - drupal_render()
+  // - drupal_render()
+  //   - callbacks in $elements['#theme_wrappers']
+  //     - hook_preprocess_html(): 'html' is the wrapper for page
+  //     - templates may add tags after body tag
+  //   - callbacks in $elements['#post_render']
+  //     - asu_brand_page_process(): callback set here
+
+  // Add callback routine.
+  $page['#post_render'][] = 'asu_brand_page_process';
+  // Load include file.
+  module_load_include('inc', 'asu_brand', 'asu_brand.gtm');
+}
+
+/**
  * Clear block caches.
  * 
  * If called without arguments, clears all asu_brand related items. $cid can be
@@ -145,7 +206,7 @@ function asu_brand_cache_clear($cid = '', $wildcard = TRUE) {
 function asu_brand_get_cache_ids($reset = FALSE) {
   $cache_ids = &drupal_static(__FUNCTION__);
   if ($reset || !isset($cache_ids)) {
-    $cache_ids = array('asu_brand:head', 'asu_brand:header', 'asu_brand:footer', 'asu_brand:students_footer');
+    $cache_ids = array('asu_brand:head', 'asu_brand:header', 'asu_brand:footer', 'asu_brand:students_footer', 'asu_brand:gtm');
   }
   return $cache_ids;
 }
@@ -166,4 +227,62 @@ function asu_brand_is_preview_path($reset = FALSE) {
     }
   }
   return $page_match;
+}
+
+
+/**
+ * Returns site menu array
+ */
+function asu_brand_get_site_menu_array() {
+  $menu_tree = menu_tree_all_data(variable_get('asu_brand_sitemenu_name', ASU_BRAND_SITE_MENU_NAME_DEFAULT));
+  $menu_array = array();
+  $i=0;
+  foreach ($menu_tree as $item) {
+    if (isset($item['link']) && $item['link']['access'] && !$item['link']['hidden']) {
+      $menu_array[$i]['title'] = t(strip_tags(htmlspecialchars_decode($item['link']['title'])));
+      $menu_array[$i]['path'] = t($item['link']['link_path']);
+      $menu_array[$i]['options'] = t($item['link']['options']);
+      // Render child items.
+      if (asu_brand_menuitem_has_active_children($item)) {
+        $j=0;
+        foreach ($item['below'] as $child) {
+          if (isset($child['link']) && !$child['link']['hidden']) {
+            $menu_array[$i]['children'][$j]['title'] = t($child['link']['title']);
+            $menu_array[$i]['children'][$j]['path'] = t($child['link']['link_path']);
+            $menu_array[$i]['children'][$j]['options'] = t($child['link']['options']);
+            // Render grandchild items.
+            if (asu_brand_menuitem_has_active_children($child)) {
+              $k=0;
+              foreach ($child['below'] as $grandchild) {
+                if (isset($grandchild['link']) && !$grandchild['link']['hidden']) {
+                  $menu_array[$i]['children'][$j]['children'][$k]['title'] = t($grandchild['link']['title']);
+                  $menu_array[$i]['children'][$j]['children'][$k]['path'] = t($grandchild['link']['link_path']);
+                  $menu_array[$i]['children'][$j]['children'][$k]['options'] = t($grandchild['link']['options']);
+                  $k++;
+                }
+              }
+            }
+            $j++;
+          }
+        }
+      }
+      $i++;
+    }
+  }
+  return $menu_array;
+}
+
+
+/**
+ * Parses menuitem and returns true if there are active child menu items.
+ * @param array $menuitem
+ * @return boolean
+ */
+function asu_brand_menuitem_has_active_children($menuitem) {
+  if (is_array($menuitem) && isset($menuitem['below']) && !empty($menuitem['below'])) {
+    foreach ($menuitem['below'] as $child) {
+      if (isset($child['link']) && $child['link']['access'] && ($child['link']['hidden'] == 0)) return true;
+    }
+  }
+  return false;
 }

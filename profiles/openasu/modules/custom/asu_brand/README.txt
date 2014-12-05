@@ -17,3 +17,13 @@ theme's colors to the following to give the theme a general ASU feel:
   Footer background: #000000
   Link color: #990033
 
+HOOKS
+--------------------------
+
+/**
+ * Implements hook_sitemenu().
+ * Modify site menu before injection into ASU Header
+ */
+function MODULENAME_sitemenu_alter(&$menu_array) {
+  // you can modify the site menu here
+}
