@@ -8,4 +8,4 @@ dependencies[] = libraries
 ; Information added by drush on 2014-12-05
 version = "7.x-1.0-alpha10+8-dev"
 project = "navbar"
-datestamp = "1417775852"
+datestamp = "1417781814"

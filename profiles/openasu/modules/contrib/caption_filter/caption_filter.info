@@ -6,4 +6,4 @@ package = Input filters
 ; Information added by drush on 2014-12-05
 version = "7.x-1.2+9-dev"
 project = "caption_filter"
-datestamp = "1417775855"
+datestamp = "1417781817"

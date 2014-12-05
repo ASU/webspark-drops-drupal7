@@ -12,4 +12,4 @@ files[] = includes/MediaYouTubeBrowser.inc
 ; Information added by drush on 2014-12-05
 version = "7.x-2.0-rc4+9-dev"
 project = "media_youtube"
-datestamp = "1417775849"
+datestamp = "1417781811"
