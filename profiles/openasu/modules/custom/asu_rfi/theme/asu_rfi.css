@@ -1,0 +1,22 @@
+.fa-info-circle{
+    display: inline-block;
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    color: #ffffff;
+    background:red;
+    padding: 1%;
+    border-radius: 35px;
+}
+
+.rfi_test_mode{
+    background: red;
+    padding: 2%;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.rfi_test_mode a{
+    color : #000000 !important;
+}

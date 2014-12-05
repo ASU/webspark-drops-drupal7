@@ -1,0 +1,88 @@
+<?php
+
+/**
+ * Implementation of hook_schema().
+ */
+function asu_rfi_schema() {
+
+/* US states schema */
+ $schema['asu_rfi_states_list'] = array(
+  'description' => 'List of US states',
+  'fields' => array(
+     'stateCode' => array(
+          'description' => 'State code',
+          'type' => 'varchar',
+          'length' => 225,
+          'not null' => TRUE),
+     'stateDesc' => array(
+          'description' => 'State Name',
+          'type' => 'varchar',
+          'length' => 225,
+          'not null' => TRUE
+          )
+       ),
+       'primary key' => array('stateCode'),
+  );
+  
+  
+
+/* US countries schema */ 
+ $schema['asu_rfi_countries'] = array(
+   'description' => 'Countries list',
+   'fields' => array(
+     'countryCode3' => array(
+        'description' => 'Country code',
+        'type' => 'varchar',
+        'length' => 225,
+        'not null' => TRUE),
+     'countryDesc' => array(
+        'description' => 'Country name',
+        'type' => 'varchar',
+        'length' => 225,
+        'not null' => TRUE),
+    ),
+    'primary key' => array('countryCode3'),
+   );
+   
+   /* US countries schema */ 
+ $schema['asu_rfi_sem_dates'] = array(
+   'description' => 'Start term dates',
+   'fields' => array(
+     'semId' => array(
+        'description' => 'Semeter term ID',
+        'type' => 'varchar',
+        'length' => 225,
+        'not null' => TRUE),
+     'semLabel' => array(
+        'description' => 'Semester term label',
+        'type' => 'varchar',
+        'length' => 225,
+        'not null' => TRUE),
+    ),
+    'primary key' => array('semId'),
+   );
+   
+
+   return $schema;
+ 
+}
+
+function asu_rfi_install(){
+ 
+  include('data/asu_rfi_states_data.inc');
+  include('data/asu_rfi_sem_dates.inc');
+  include('data/asu_rfi_countries_data.inc');
+  drupal_set_message('ASU RFI module has been installed. Configure module settings at <a href="/admin/config/asu/asurfi">admin settings page</a>');
+  drupal_add_js('jQuery(document).ready(function () { alert("ASU RFI module has been installed. Configure module settings at <a href="/admin/config/asu/asurfi">admin settings page</a>"); });', 'inline');
+}
+
+function asu_rfi_uninstall(){
+  drupal_uninstall_schema('asu_rfi');
+  variable_del('asu_rfi_form_mode');
+  variable_del('asu_rfi_google_analytics_key');
+  variable_del('asu_rfi_error_email');
+  variable_del('asu_rfi_error_email');
+  variable_del('asu_rfi_from_email_field');
+ }
+
+?>

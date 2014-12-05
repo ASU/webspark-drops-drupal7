@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the ASU RFI Feature feature.
+ */
+
+include_once 'asu_rfi_feature.features.inc';
