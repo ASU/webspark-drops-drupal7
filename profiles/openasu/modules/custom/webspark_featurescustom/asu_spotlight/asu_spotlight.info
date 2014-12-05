@@ -5,8 +5,9 @@ package = ASU Webspark
 version = 7.x-1.0-dev
 project = asu_spotlight
 
-dependencies[] = panopoly_widgets
 dependencies[] = flexslider
+; WEBSPARK-462 - Install profile issues
+;dependencies[] = panopoly_widgets
 
 stylesheets[all][] = css/asuflex.css
 
