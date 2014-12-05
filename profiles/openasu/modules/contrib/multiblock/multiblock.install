@@ -1,0 +1,49 @@
+<?php
+
+function multiblock_schema() {
+  $schema = array();
+
+  $schema['multiblock'] = array(
+    'description' => 'Table for storing information about block instances used by the multiblock module.',
+    'fields' => array(
+      'delta' => array(
+        'description' => 'Unique key for each created block instance.',
+        'type' => 'serial',
+        'not null' => TRUE,
+      ),
+      'title' => array(
+        'description' => 'The title used to display a block instance in the instance administration.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'module' => array(
+        'description' => 'The name of the module that provided the original block.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'orig_delta' => array(
+        'description' => 'The delta of the original block.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '0',
+      ),
+      'multi_settings' => array(
+        'description' => 'Boolean flag that stores if the original module has multiblock support for multiple instance of this block.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('delta'),
+  );
+
+  return $schema;
+}
+
