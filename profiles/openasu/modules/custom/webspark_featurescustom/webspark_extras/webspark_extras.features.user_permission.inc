@@ -31,5 +31,13 @@ function webspark_extras_user_default_permissions() {
     'module' => 'fieldable_panels_panes',
   );
 
+  // WEBSPARK-462 - update perms
+  // Exported permission: 'view the administration theme'.
+  $permissions['view the administration theme'] = array(
+    'name' => 'view the administration theme',
+    'roles' => array(),
+    'module' => 'system',
+  );
+
   return $permissions;
 }
