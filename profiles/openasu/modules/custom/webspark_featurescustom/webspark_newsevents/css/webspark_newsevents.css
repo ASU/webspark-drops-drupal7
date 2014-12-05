@@ -88,6 +88,10 @@
   display: flex;
   margin-right: 5px;
 }
+.node-type-asu-news .bryant-flipped-sidebar-region {
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
 
 /* Related News Articles in News node */
 .pane-node-field-asunews-related-story-url {
