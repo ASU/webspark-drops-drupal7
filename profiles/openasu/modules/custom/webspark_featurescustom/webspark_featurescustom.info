@@ -5,14 +5,4 @@ package = ASU Webspark
 files[] = webspark_featurescustom.module
 version = 7.x-1.1
 
-; enable these features by making them dependencies on this module
-;dependencies[] = asu_securityscanfixes
-;dependencies[] = webspark_wysiwyg
-;dependencies[] = webspark_panels_styles
-;dependencies[] = webspark_banner
-;dependencies[] = webspark_breadcrumbs
-;dependencies[] = webspark_content_callout
-;dependencies[] = webspark_hero
-;dependencies[] = webspark_megamenu
-;dependencies[] = mega_footer_menu
-;dependencies[] = webspark_extras
+; submodules enabled in the installation profile by default to avoid dependency/permissions issues with Panopoly

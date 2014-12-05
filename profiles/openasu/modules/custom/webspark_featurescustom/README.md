@@ -5,21 +5,22 @@ A collection of features compiled specifically for the Webspark distro of Panopo
 
 This includes:
 
-ASU Security Scan Fixes
 ASU GSA - Google Search Appliance
-Webspark Page Elements:
-    Webspark Breadcrumbs
-    Mega Footer
-    Mega Footer Menu
-    Webspark Megamenu
-Webspark WYSIWYG settings
-Webspark Panels Styles
+ASU Maps Enhanced
+ASU Security Scan Fixes
 Various Fieldable Panel Pane Elements:
     ASU Spotlight
     Webspark Banner
     Webspark Hero
     Webspark Jumbohero
-    Webspark Content Callouts
+    Webspark Content Callout
+Webspark Extras
 Webspark feeds content:
     Webspark News & Events
-Webspark Extras
+Webspark Page Elements:
+    Webspark Breadcrumbs
+    Mega Footer
+    Mega Footer Menu
+    Webspark Megamenu
+Webspark Panels Styles
+Webspark WYSIWYG settings

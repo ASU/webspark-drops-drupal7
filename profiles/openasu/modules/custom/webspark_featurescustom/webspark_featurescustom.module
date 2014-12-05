@@ -64,7 +64,7 @@ function _webspark_featurescustom_enable_config($theme) {
   drupal_set_message($message);
 
   // Add setting for updating header to proper version
-      variable_set('asu_brand_header_version', '4.2');
+      variable_set('asu_brand_header_version', '4.3');
 }
 
 
