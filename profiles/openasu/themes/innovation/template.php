@@ -134,7 +134,8 @@ function innovation_preprocess_page(&$variables) {
     ASUHeader = ASUHeader || {};
     ASUHeader.site_menu = ASUHeader.site_menu || {};
     ASUHeader.site_menu.markup = '.json_encode($markup).'
-    ASUHeader.site_menu.json = '.json_encode($ja).';
+    // WEBSPARK-422
+    //ASUHeader.site_menu.json = '.json_encode($ja).';
     ASUHeader.site_menu.site_name = '.json_encode($variables['site_name']);
 
     drupal_add_js($js, array('type' => 'inline', 'scope' => 'header', 'group' => JS_THEME, 'weight' => -10));

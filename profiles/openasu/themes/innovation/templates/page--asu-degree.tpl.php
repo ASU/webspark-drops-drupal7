@@ -111,7 +111,7 @@
         <a id="main-content"></a>
 
     <!--<div class="asu-degree-banner-image"><img src="/sites/default/files/default_images/<?php //print render($variables['page']['content']['system_main']['nodes'][arg(1)]['field_asu_banner_image']['#items'][0]['filename']); ?>"></div>-->
-    <div class="asu-degree-banner-image">
+    <div class="asu-degree-banner-image" style="background-image:url(/sites/default/files/<?php echo $variables['page']['content']['system_main']['nodes'][arg(1)]['field_asu_banner_image']['#items'][0]['filename']; ?>)">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
@@ -247,8 +247,8 @@
 
     <!-- Page Footer -->
     <footer id="footer">
-      <div class="container-fluid">
-        <div class="row-fluid">
+      <div class="container">
+        <div class="row row-full">
           <?php print render($page['footer']); ?>
         </div>
       </div>

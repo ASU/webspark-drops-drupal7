@@ -147,8 +147,8 @@
 
   <!-- Page Footer -->
   <footer id="footer">
-    <div class="container-fluid">
-      <div class="row-fluid">
+    <div class="container">
+      <div class="row row-full">
       	<?php print render($page['footer']); ?>
       </div>
     </div>
