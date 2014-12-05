@@ -48,7 +48,7 @@ function asu_cas_update_7000(&$sandbox) {
     // Do the updates
     if (!empty($result)) {
       foreach ($result as $record) {
-          // Unserialize db data
+        // Unserialize db data
         $old_styles = unserialize($record->style);
         if ($old_styles['style'] == 'kalacustomize') {
           $new_styles = $old_styles;
@@ -98,9 +98,8 @@ function asu_cas_update_7000(&$sandbox) {
 function asu_cas_update_7001(&$sandbox) {
 
   // If they are running the old header
-  $newtheme = 'innovation';
-  if(variable_get('theme_default')==$newtheme) {
-    variable_set('asu_brand_header_version', '4.2');
+  if (variable_get('theme_default') == 'innovation') {
+    variable_set('asu_brand_header_version', '4.3');
   }
 
   return t('New responsive header set.');
@@ -112,4 +111,63 @@ function asu_cas_update_7001(&$sandbox) {
  */
 function asu_cas_update_7002(&$sandbox) {
   db_query("UPDATE {system} SET weight = 1 WHERE name = 'asu_cas'");
+}
+
+/**
+ * Implements hook_update_N
+ * + Add missing permissions to features - WEBSPARK-393, WEBSPARK-462
+ */
+function asu_cas_update_7003(&$sandbox) {
+  if (module_exists('webspark_banner')) {
+    user_role_grant_permissions('3', array(
+      'create fieldable banner',
+      'edit fieldable banner',
+      'delete fieldable banner',
+    ));
+    user_role_grant_permissions('4', array(
+      'create fieldable banner',
+      'edit fieldable banner',
+      'delete fieldable banner',
+    ));
+  }
+  if (module_exists('webspark_content_callout')) {
+    user_role_grant_permissions('3', array(
+      'administer panelizer node content_callout defaults', // administrator only
+      'create content_callout content',
+      'delete any content_callout content',
+      'delete own content_callout content',
+      'edit any content_callout content',
+      'edit own content_callout content',
+    ));
+    user_role_grant_permissions('4', array(
+      'create content_callout content',
+      'delete any content_callout content',
+      'delete own content_callout content',
+      'edit any content_callout content',
+      'edit own content_callout content',
+    ));
+  }
+  if (module_exists('webspark_hero')) {
+    user_role_grant_permissions('4', array(
+      'create fieldable hero',
+      'edit fieldable hero',
+      'delete fieldable hero',
+    ));
+  }
+  if (module_exists('webspark_jumbohero')) {
+    user_role_grant_permissions('3', array(
+      'create fieldable jumbohero',
+      'edit fieldable jumbohero',
+      'delete fieldable jumbohero',
+    ));
+    user_role_grant_permissions('4', array(
+      'create fieldable jumbohero',
+      'edit fieldable jumbohero',
+      'delete fieldable jumbohero',
+    ));
+  }
+  // Admin theme for editors - added to webspark_extras
+  user_role_grant_permissions('4', array(
+    'view administration theme',
+  ));
 }
