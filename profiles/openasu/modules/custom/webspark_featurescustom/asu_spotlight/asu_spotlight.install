@@ -12,6 +12,9 @@ function asu_spotlight_install() {
 
 }
 
+function asu_spotlight_update_7001(&$sandbox) {
+  features_revert_module('asu_spotlight');
+}
 
 /**
  * Implementation of hook_uninstall().
@@ -20,8 +23,8 @@ function asu_spotlight_uninstall() {
 
   // Retrieve the file IDs for default files
   $fids = array(
-    'panopoly_widgets_default_spotlight_fid' => variable_get('panopoly_widgets_default_spotlight_fid', NULL), 
-    'panopoly_widgets_default_image_fid' => variable_get('panopoly_widgets_default_image_fid', NULL), 
+    'panopoly_widgets_default_spotlight_fid' => variable_get('panopoly_widgets_default_spotlight_fid', NULL),
+    'panopoly_widgets_default_image_fid' => variable_get('panopoly_widgets_default_image_fid', NULL),
     'panopoly_widgets_default_video_fid' => variable_get('panopoly_widgets_default_video_fid', NULL)
   );
 
@@ -58,7 +61,7 @@ function asu_spotlight_field_schema($field) {
     );
 
     $schema['columns']['fid'] = array(
-      'type' => 'int', 
+      'type' => 'int',
       'not null' => FALSE,
       'unsigned' => TRUE,
     );
@@ -125,4 +128,3 @@ function asu_spotlight_field_schema($field) {
     return $schema;
   }
 }
-

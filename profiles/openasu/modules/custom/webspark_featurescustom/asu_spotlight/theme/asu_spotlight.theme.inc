@@ -12,6 +12,7 @@
  */
 function theme_asu_spotlight_list(&$vars) {
   // Reference configuration variables
+
   $optionset = &$vars['settings']['optionset'];
   $items = &$vars['items'];
   $attributes = &$vars['settings']['attributes'];
@@ -84,6 +85,7 @@ function theme_asu_spotlight_list_item(&$vars) {
  */
 function template_process_asu_spotlight(&$vars) {
   // Reference configuration variables
+  
   $optionset = &$vars['settings']['optionset'];
   $settings = &$vars['settings'];
   $items = &$vars['items'];

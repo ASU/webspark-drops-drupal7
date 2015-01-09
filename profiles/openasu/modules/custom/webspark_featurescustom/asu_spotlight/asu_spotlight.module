@@ -4,15 +4,15 @@
 include_once('asu_spotlight.spotlight.inc');
 
 function asu_spotlight_menu_alter(&$items) {
-    $items['admin/config/media/flexslider']['title'] = 'ASU Spotlight'; 
+    $items['admin/config/media/flexslider']['title'] = 'ASU Spotlight';
 }
 
-/** 
+/**
  * Implementation of hook_entity_info_alter()
  */
 function asu_spotlight_entity_info_alter(&$entity_info) {
 
- 
+
   // Spotlight
   $entity_info['fieldable_panels_pane']['bundles']['asu_spotlight'] = array(
     'label' => t('Add ASU spotlight'),
@@ -38,13 +38,13 @@ function asu_spotlight_theme() {
       'template' => 'theme/asu_spotlight',
       'file' => 'theme/asu_spotlight.theme.inc',
     ),
-    
+
     // Slide container
     'asu_spotlight_list' => array(
       'variables' => array('items' => array(), 'settings' => array()),
       'file' => 'theme/asu_spotlight.theme.inc',
     ),
-    
+
     // Slide item
     'asu_spotlight_list_item' => array(
       'variables' => array('item' => array(), 'settings' => array(), 'caption' => ''),
@@ -52,5 +52,3 @@ function asu_spotlight_theme() {
     ),
   );
 }
-
-

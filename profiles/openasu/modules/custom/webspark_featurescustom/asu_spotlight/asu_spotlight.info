@@ -2,16 +2,16 @@ name = ASU Spotlight
 description = This module creates a flexslider-like slideshow, complete with optional title, description, and action-button placement.
 core = 7.x
 package = ASU Webspark
-version = 7.x-1.0-dev
+version = 7.x-1.4-dev
 project = asu_spotlight
-
+dependencies[] = asu_spotlight
+dependencies[] = features
 dependencies[] = flexslider
-; WEBSPARK-462 - Install profile issues
-;dependencies[] = panopoly_widgets
-
 stylesheets[all][] = css/asuflex.css
-
+;explanation = Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>
 features[features_api][] = api:2
-
 features[field_base][] = field_asu_spotlight_items
-features[field_instance][] = fieldable_panels_pane-spotlight-field_asu_spotlight_items
+features[field_base][] = field_optionset
+features[field_instance][] = fieldable_panels_pane-asu_spotlight-field_asu_spotlight_items
+features[field_instance][] = fieldable_panels_pane-asu_spotlight-field_optionset
+required = 1
