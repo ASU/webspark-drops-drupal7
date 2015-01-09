@@ -34,8 +34,9 @@ function openasu_install() {
     else {
           $cas_roles[$key] = 0; //Disable the role
     }
-  }  
+  }
 
   $cas_roles_set = variable_set('cas_auto_assigned_role',$cas_roles);
 
+  watchdog('install', "openasu_install end");
 }

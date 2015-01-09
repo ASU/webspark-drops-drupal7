@@ -5,10 +5,12 @@
  */
 function openasu_install_tasks() {
   $tasks['openasu_select_theme_form'] = array(
+    'display' => TRUE,
     'display_name' => t('Select theme'),
     'type' => 'form',
   );
   $tasks['openasu_theme_configure_form'] = array(
+    'display' => TRUE,
     'display_name' => t('Configure theme'),
     'type' => 'form',
   );
@@ -27,15 +29,18 @@ function openasu_install_tasks_alter(&$tasks, $install_state) {
   require_once(drupal_get_path('module', 'panopoly_core') . '/panopoly_core.profile.inc');
   $tasks['install_load_profile']['function'] = 'panopoly_core_install_load_profile';
 
+  // Pick a theme
+  if (!empty($install_state['parameters']['whichtheme'])) {
     // Skip Webspark theme settings task if Innovation theme is selected
-  if (!empty($install_state['parameters']['whichtheme']) && $install_state['parameters']['whichtheme'] == 'innovation') {
-    $tasks['openasu_theme_configure_form']['run'] = INSTALL_TASK_SKIP;
+    if ($install_state['parameters']['whichtheme'] == 'innovation') {
+      $tasks['openasu_theme_configure_form']['run'] = INSTALL_TASK_SKIP;
+    }
+    // Skip Innovation extra setup task if Webspark theme is selected
+    if ($install_state['parameters']['whichtheme'] == 'asu_webspark_bootstrap') {
+      $tasks['openasu_innovation_extra_setup']['run'] = INSTALL_TASK_SKIP;
+    }
   }
 
-  // Skip Innovation extra setup task if Webspark theme is selected
-  if (!empty($install_state['parameters']['whichtheme']) && $install_state['parameters']['whichtheme'] == 'asu_webspark_bootstrap') {
-    $tasks['openasu_innovation_extra_setup']['run'] = INSTALL_TASK_SKIP;
-  }
   // Force the SSL for installation
   if (isset($_SERVER['PANTHEON_ENVIRONMENT'])) {
     if (!isset($_SERVER['HTTP_X_SSL']) || $_SERVER['HTTP_X_SSL'] != 'ON') {
@@ -379,13 +384,14 @@ function openasu_theme_configure_form_submit($form, &$form_state) {
   $modules[] = 'mega_footer';
   // OpenASU custom modules, features
   $modules[] = 'asu_gsa';
-  $modules[] = 'webspark_featurescustom';
+  $modules[] = 'asu_maps_enhanced';
   $modules[] = 'webspark_wysiwyg';
   $modules[] = 'webspark_panels_styles';
   $modules[] = 'webspark_banner';
   $modules[] = 'webspark_breadcrumbs';
   $modules[] = 'webspark_content_callout';
   $modules[] = 'webspark_hero';
+  $modules[] = 'webspark_jumbohero';
   $modules[] = 'webspark_megamenu';
   $modules[] = 'mega_footer_menu';
   $modules[] = 'webspark_extras';
@@ -509,3 +515,4 @@ function openasu_menu_preview($form, &$form_state) {
   ));
   return $form['theme_configuration']['menu_preview'];
 }
+

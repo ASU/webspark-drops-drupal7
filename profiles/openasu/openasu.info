@@ -29,7 +29,7 @@ dependencies[] = panopoly_theme
 dependencies[] = panopoly_magic
 dependencies[] = panopoly_admin
 dependencies[] = panopoly_users
-; moved widgets below _users
+; moved widgets below panopoly_users
 dependencies[] = panopoly_widgets
 
 ; Panopoly Toolset
@@ -76,12 +76,10 @@ dependencies[] = asu_brand
 ; Container module built for Webspark custom features
 dependencies[] = webspark_featurescustom
 dependencies[] = asu_gsa
-; testing
-;dependencies[] = asu_maps_enhanced
+dependencies[] = asu_maps_enhanced
 dependencies[] = asu_spotlight
 dependencies[] = asu_securityscanfixes
 dependencies[] = mega_footer
-dependencies[] = webspark_wysiwyg
 dependencies[] = webspark_panels_styles
 dependencies[] = webspark_banner
 dependencies[] = webspark_breadcrumbs
@@ -90,6 +88,6 @@ dependencies[] = webspark_hero
 dependencies[] = webspark_jumbohero
 dependencies[] = webspark_megamenu
 dependencies[] = mega_footer_menu
+dependencies[] = webspark_wysiwyg
 dependencies[] = webspark_extras
-
-;dependencies[] = asu_cas (see openasu.install)
+;dependencies[] = asu_cas (moved to openasu_install)

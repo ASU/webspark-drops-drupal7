@@ -53,14 +53,14 @@ projects[panopoly_demo][subdir] = panopoly
 projects[asu_brand][version] = 1.7
 projects[asu_brand][subdir] = custom
 projects[asu_brand][type] = module
-projects[asu_brand][download][revision] = 8aea08e7
+projects[asu_brand][download][revision] = 4e2268c9
 projects[asu_brand][download][branch] = header42
 projects[asu_brand][download][url] = https://github.com/ASU/asu-drupal-brand.git
 
 projects[asu_cas][version] = 7.x-1.5
 projects[asu_cas][subdir] = custom
 projects[asu_cas][type] = module
-projects[asu_cas][download][revision] = 660ea9a1d0e77bf2b698e4ddb32a9605ed8ebada
+projects[asu_cas][download][revision] = f2c41254
 projects[asu_cas][download][branch] = 7.x-1.x
 projects[asu_cas][download][url] = https://github.com/ASU/asu-drupal-cas-client-config.git
 
@@ -74,7 +74,7 @@ projects[asu_userpicker][download][url] = https://github.com/ASU/asu-drupal-user
 projects[asu_feeds][version] = 1.0-beta2
 projects[asu_feeds][subdir] = custom
 projects[asu_feeds][type] = module
-projects[asu_feeds][download][revision] = da9c9fed27eed9b1e0d7f88a9d28c5a82882cd19
+projects[asu_feeds][download][revision] = 400daaf0
 projects[asu_feeds][download][url] = https://github.com/ASU/asu-drupal-feeds.git
 
 projects[ixr][version] = 1.0-beta2
@@ -107,7 +107,7 @@ projects[asu_eadvisor_degree_feed_feature][download][url] = https://github.com/A
 projects[asu_degrees][version] = 1.0
 projects[asu_degrees][type] = module
 projects[asu_degrees][subdir] = custom
-projects[asu_degrees][download][revision] = 5edb137c
+projects[asu_degrees][download][revision] = 814df0e9
 projects[asu_degrees][download][branch] = asu_degrees
 projects[asu_degrees][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
 
@@ -116,7 +116,7 @@ projects[webspark_featurescustom][type] = module
 projects[webspark_featurescustom][subdir] = custom
 projects[webspark_featurescustom][directory_name] = webspark_featurescustom
 projects[webspark_featurescustom][download][type] = git
-projects[webspark_featurescustom][download][revision] = 17a22139b59edcc574f563d87f831e9b22a6f50d
+projects[webspark_featurescustom][download][revision] = 94649bb3
 projects[webspark_featurescustom][download][branch] = master
 projects[webspark_featurescustom][download][url] = https://github.com/ASU/webspark-webstandards-components.git
 
@@ -252,7 +252,9 @@ projects[wysiwyg_template][subdir] = contrib
 
 projects[kalatheme][version] = 3.0-rc2
 projects[kalatheme][type] = theme
-; local patch for Panopoly TPLs - see WEBSPARK-361 in JIRA
+; WEBSPARK-188 - CSS img url fix
+projects[kalatheme][patch][] = patches/webspark-188.kalatheme-css-img-urls.patch
+; WEBSPARK-361 - Panopoly TPLs and row-full class
 projects[kalatheme][patch][] = patches/webspark-361-kalatheme-panopoly-tpl-class-update.patch
 
 projects[modernizr][version] = 3.1
@@ -272,10 +274,10 @@ libraries[asu_webspark_bootstrap_bootstrap][download][url] = https://github.com/
 
 ; Bootstrap and Theme Framework - Subtheme - Web Standards
 
-projects[innovation][version] = beta5
+projects[innovation][version] = beta6
 projects[innovation][type] = theme
 projects[innovation][download][type] = git
-projects[innovation][download][revision] = 30514a42
+projects[innovation][download][revision] = 102d0b45
 projects[innovation][download][branch] = master
 projects[innovation][download][url] = https://github.com/ASU/webspark-theme-innovation.git
 
