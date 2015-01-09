@@ -11,7 +11,32 @@ include_once 'asu_degrees_feature.features.inc';
  */
 function asu_degrees_feature_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'asu_degree_node_form') {
+    $form['some_text'] = array('#markup' => '<div class="messages warning">If any of the info on the page needs to be changed, please make the change upstream on webapp4.</div>');
+    $form['body']['#access'] = FALSE;
+    $form['field_asu_academic_plan']['#access'] = FALSE;
+    $form['field_asu_academic_program']['#access'] = FALSE;
+    $form['field_asu_college']['#access'] = FALSE;
+    $form['field_asu_college_url']['#access'] = FALSE;
+    $form['field_asu_degree']['#access'] = FALSE;
+    $form['field_asu_degree_admission_req']['#access'] = FALSE;
+    $form['field_asu_degree_asuds_url']['#access'] = FALSE;
+    $form['field_asu_degree_awarded']['#access'] = FALSE;
+    $form['field_asu_degree_campus']['#access'] = FALSE;
+    $form['field_asu_degree_career_opps']['#access'] = FALSE;
+    $form['field_asu_degree_cert']['#access'] = FALSE;
+    $form['field_asu_degree_department']['#access'] = FALSE;
+    $form['field_asu_degree_department_code']['#access'] = FALSE;
     $form['field_asu_degree_example_careers']['#access'] = FALSE;
+    $form['field_asu_degree_major_map_url']['#access'] = FALSE;
+    $form['field_asu_degree_major_map_year']['#access'] = FALSE;
+    $form['field_asu_degree_min_math']['#access'] = FALSE;
+    $form['field_asu_degree_program']['#access'] = FALSE;
+    $form['field_asu_degree_program_fee']['#access'] = FALSE;
+    $form['field_asu_degree_req_desc']['#access'] = FALSE;
+    $form['field_asu_degree_second_language']['#access'] = FALSE;
+    $form['field_asu_degree_subplan_title']['#access'] = FALSE;
+    $form['field_asu_degree_subplan_url']['#access'] = FALSE;
+    $form['field_asu_diploma_description']['#access'] = FALSE;
   }
 }
 

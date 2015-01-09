@@ -19,7 +19,7 @@ class ASUeAdvisorFeedsFetcherResult extends FeedsFetcherResult {
     $this->url = $url;
     $this->path = $path;
     $this->service = $service;
-    $this->college_code = $college_code;
+    $this->college_code = strtoupper($college_code);
     $this->program = $program;
     $this->cert = (boolean) $cert;
     parent::__construct();

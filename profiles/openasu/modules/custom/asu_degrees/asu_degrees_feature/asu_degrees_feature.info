@@ -21,6 +21,7 @@ dependencies[] = strongarm
 dependencies[] = text
 dependencies[] = views
 dependencies[] = views_bootstrap
+dependencies[] = views_php
 dependencies[] = views_ui
 scripts[] = /js/asu_degrees_feature.js
 stylesheets[all][] = /css/asu_degrees_feature.css

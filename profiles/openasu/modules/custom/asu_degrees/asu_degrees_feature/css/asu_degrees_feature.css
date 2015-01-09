@@ -50,7 +50,7 @@
     padding-right: 5px;
 }
 
-.view-asu-degrees-feature .row, .view-asu-degrees-feature .col.col-lg-6 {
+.view-asu-degrees-feature .row, .view-asu-degrees .col.col-lg-6 {
     margin-bottom: 24px;
 }
 
@@ -125,7 +125,7 @@
 }
 
 .node-type-asu-degree .asu-degree-banner-image {
-    background-image: url(/sites/default/files/asu_degree_banner_default.jpg);
+    /*background-image: url(/sites/default/files/asu_degree_banner_default.jpg);*/
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
