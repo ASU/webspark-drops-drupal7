@@ -167,3 +167,48 @@ function asu_cas_update_7003(&$sandbox) {
     ));
   }
 }
+
+/**
+ * Implements hook_update_N
+ * + Remove perms from CAS role and add them to adminisrator role  - WEBSPARK-470
+ * + Add perms for Add ASU Spotlight perms
+ * + Add admin theme, create files perms to editor role
+ */
+function asu_cas_update_7004(&$sandbox) {
+  $cas_role = user_role_load_by_name('CAS')->rid;
+  $admin_role = user_role_load_by_name('administrator')->rid;
+  $editor_role = user_role_load_by_name('editor')->rid;
+  if (is_numeric($cas_role) && is_numeric($admin_role) && is_numeric($editor_role)) {
+    $roles = array($cas_role => 'CAS');
+    $permissions = user_role_permissions($roles);
+    if (is_array($permissions[$cas_role]) && !empty($permissions[$cas_role])) {
+      $cas_perms = array_keys($permissions[$cas_role]);
+      user_role_revoke_permissions($cas_role, $cas_perms); // CAS role revoke
+      watchdog('user', 'CAS permissions revoked by asu_cas_update_7004 - ' . implode(',', $cas_perms));
+      user_role_grant_permissions($admin_role, $cas_perms); // admin role grant
+    }
+    else {
+      // do nothing
+    }
+    // update ASU spotlight perms
+    if (module_exists('asu_spotlight')) {
+      user_role_grant_permissions($admin_role, array(
+        'create fieldable spotlight',
+        'edit fieldable spotlight',
+        'delete fieldable spotlight',
+      ));
+      user_role_grant_permissions($editor_role, array(
+        'create fieldable spotlight',
+        'edit fieldable spotlight',
+        'delete fieldable spotlight',
+      ));
+    }
+    // Add administrator theme to editor
+    user_role_grant_permissions($editor_role, array(
+        'view the administration theme',
+        'create files',
+      )
+    );
+  }
+  // Add administrator
+}
