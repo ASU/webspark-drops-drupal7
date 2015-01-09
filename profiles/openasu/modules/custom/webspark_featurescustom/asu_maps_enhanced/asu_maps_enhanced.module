@@ -85,10 +85,9 @@ function asu_maps_enhanced_theme($existing, $type, $theme, $path) {
  */
 function asu_maps_enhanced_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $map_items = array();
+  $element = array();
   if(isset($items[0]['map_items'])) {
       $map_items = drupal_json_decode($items[0]['map_items']);
-
-      $element = array();
       $settings = $display['settings'];
       $formatter = $display['type'];
   }
@@ -98,9 +97,8 @@ function asu_maps_enhanced_field_formatter_view($entity_type, $entity, $field, $
   }
 
   if(isset($items[0]['description'])) {
-      if($items[0]['description']!='<none>' || $items[0]['description']!='none') {
-          $element[$delta]['#markup'] .= '<div>'.$items[0]['description'].'</div>';
-      }
+
+          $element[0]['#markup'] .= '<div>'.$items[0]['description'].'</div>';
   }
 
   return $element;
@@ -204,7 +202,7 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
     variable_set('panopoly_magic_live_preview', 0);
 
     //Initial Campus Bird interation in order to grap categories and subcategories
-    $catarray = asu_maps_enhanced_get_cbird('categories', '', false);
+    $catarray = asu_maps_enhanced_get_cbird('categories', '', true);
 
     //get the top level categories, and place all other categories into  other_cats array
     $category_options = array();
@@ -302,10 +300,7 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       '#suffix' => '</div>',
       '#ajax' => array(
           'event' => 'change',
-          'callback' => 'asu_maps_enhanced_get_fields',
-          'wrapper' => 'bird_form_div',//'sub_div',
-          'method' => 'replace',
-          'effect' => 'fade',
+          'callback' => 'asu_maps_enhanced_top_select',
       ),
       '#default_value' => isset($prev_top_selects) ? $prev_top_selects : NULL,
     );
@@ -326,7 +321,9 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
     foreach($top_cat_selected as $top_cat) {
         if($top_cat!=0) {
             $subarray = $category_options[$top_cat]['children'];
-            $sub_options = $sub_options + $subarray;
+            if(!empty($subarray)) {
+              $sub_options = $sub_options + $subarray;
+            }
         }
     }
 
@@ -335,15 +332,12 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
     $element['bird_fieldset']['sub_category'] = array(
       '#title' => t('Sub-Categories'),
       '#type' => 'checkboxes',
-      '#prefix' => '<div class="col-md-4">',
+      '#prefix' => '<div id="subcat_div" class="col-md-4">',
       '#suffix' => '</div>',
       '#options' => $sub_options,
       '#ajax' => array(
           'event' => 'change',
-          'callback' => 'asu_maps_enhanced_get_fields',
-          'wrapper' => 'bird_form_div',//'bird_locations_div',
-          'method' => 'replace',
-          'effect' => 'fade',
+          'callback' => 'asu_maps_enhanced_subcat_select',
       ),
       '#default_value' => isset($prev_sub_selects) ? $prev_sub_selects: NULL
       );
@@ -376,8 +370,7 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
 
       foreach($sub_cat_selected as $subcat) {
           if($subcat!=0) {
-              $loc_array = asu_maps_enhanced_get_cbird('locations', $subcat, false);
-
+              $loc_array = asu_maps_enhanced_get_cbird('locations', $subcat, true);
               $loc_by_subcat[$subcat] = $loc_array;
           }
       }
@@ -402,7 +395,7 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
           $i++;
       }
 
-
+    asort($loc_choices);
 
     //add the location choices to the field form element
     $element['bird_fieldset']['location_id'] = array(
@@ -412,32 +405,15 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       '#suffix' => '</div>',
       '#ajax' => array(
           'event' => 'change',
-          'callback' => 'asu_maps_enhanced_get_fields',
-          'wrapper' => 'bird_form_div',
-          'method' => 'replace',
-          'effect' => 'fade',
+          'callback' => 'asu_maps_enhanced_user_loc_choices',
+          //'wrapper' => 'bird_form_div',
+          //'method' => 'replace',
+          //'effect' => 'fade',
       ),
       '#options' => $loc_choices,
       '#default_value' => isset($loc_selected) ? $loc_selected : NULL,
+      //'#default_value' => isset($loc_selected) ? $loc_selected : NULL,
     );
-
-
-    //loop through prev_loc_selects and remove any which are unavailable now
-    /*if(!empty($loc_choices)) {
-
-        foreach($prev_loc_selects as &$ploc) {
-            $found = 0;
-            foreach($loc_choices as $key => $choice) {
-                if($key == $ploc) {
-                  $found = 1;
-                }
-            }
-
-            if($found==0) {
-              unset($ploc);
-            }
-        }
-    }*/
 
     //MAP_ITEMS HIDDEN FIELD LOGIC
     //loop through and fill final array, json_locations, with selected locations, then json encode
@@ -465,30 +441,36 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       '#value' => $encoded_loc,
       '#prefix' => '<div id="map_items_hidden">',
       '#suffix' => '</div>',
-      '#default_value' => isset($items['map_items']) ? $items['map_items'] : NULL,
+      '#default_value' => isset($encoded_loc) ? $encoded_loc : NULL,
     );
-
-
   }
 
   return $element;
 }
 
-function asu_maps_enhanced_get_fields($form, &$form_state) {
+function asu_maps_enhanced_top_select($form, &$form_state) {
 
   $commands = array();
-  $commands[] = ajax_command_replace('#bird_form_div', drupal_render($form['field_asu_maps_enhanced_items']['und'][0]['bird_fieldset']));
+  $commands[] = ajax_command_replace('#subcat_div', drupal_render($form['field_asu_maps_enhanced_items']['und'][0]['bird_fieldset']['sub_category']));
+  $commands[] = ajax_command_replace('#bird_locations_div', drupal_render($form['field_asu_maps_enhanced_items']['und'][0]['bird_fieldset']['location_id']));
   $commands[] = ajax_command_replace("#map_items_hidden", drupal_render($form['field_asu_maps_enhanced_items']['und'][0]['map_items']));
   return array('#type' => 'ajax', '#commands' => $commands);
 }
-/*not needed for now*****
-function asu_maps_enhanced_get_locations($form, &$form_state) {
 
+
+function asu_maps_enhanced_subcat_select($form, &$form_state) {
+
+  $commands = array();
+  $commands[] = ajax_command_replace('#bird_locations_div', drupal_render($form['field_asu_maps_enhanced_items']['und'][0]['bird_fieldset']['location_id']));
+  $commands[] = ajax_command_replace("#map_items_hidden", drupal_render($form['field_asu_maps_enhanced_items']['und'][0]['map_items']));
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
 
 function asu_maps_enhanced_user_loc_choices($form, &$form_state) {
-
+  $commands = array();
+  $commands[] = ajax_command_replace("#map_items_hidden", drupal_render($form['field_asu_maps_enhanced_items']['und'][0]['map_items']));
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
-*/
 
 /**
 *Function to get json objects from campus bird
@@ -528,36 +510,6 @@ function asu_maps_enhanced_get_cbird($type, $category='', $visible=false) {
 
 
 /**
- * Implements hook_field_validate().
- */
-function asu_maps_enhanced_field_validate($entity_type, $entity, $field, $instance, $langcode, &$items, &$errors) {
-
-  foreach ($items as &$item) {
-
-  }
-}
-
-
-/**
- * Implements hook_field_presave()
- */
-function asu_maps_enhanced_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
-
-  if (!empty($items)) {
-    foreach ($items as &$item) {
-
-    }
-  }
-}
-
-/**
- * Implements hook_field_load().
- */
-function asu_maps_enhanced_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
-
-}
-
-/**
  * Implements hook_field_insert().  Turns preview back on upon inserting new field.
  */
 function asu_maps_enhanced_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
@@ -569,25 +521,4 @@ function asu_maps_enhanced_field_insert($entity_type, $entity, $field, $instance
  */
 function asu_maps_enhanced_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
     variable_set('panopoly_magic_live_preview', 1);
-}
-
-/**
- * Implements hook_field_delete().
- */
-function asu_maps_enhanced_field_delete($entity_type, $entity, $field, $instance, $langcode, &$items) {
-
-}
-
-/**
- * Implements hook_field_delete_revision().
- */
-function asu_maps_enhanced_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, &$items) {
-
-}
-
-/**
- * Implements hook_field_prepare_view().
- */
-function asu_maps_enhanced_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
-
 }

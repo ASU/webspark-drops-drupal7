@@ -10,7 +10,7 @@
 function asu_maps_enhanced_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'fieldable_panels_pane-spotlight-field_basic_spotlight_items'
+  // Exported field_instance: 'fieldable_panels_pane-asu_maps_enhanced-field_asu_maps_enhanced_items'
   $field_instances['fieldable_panels_pane-asu_maps_enhanced-field_asu_maps_enhanced_items'] = array(
     'bundle' => 'asu_maps_enhanced',
     'default_value' => NULL,
@@ -20,9 +20,7 @@ function asu_maps_enhanced_field_default_field_instances() {
       'default' => array(
         'label' => 'hidden',
         'module' => 'asu_maps_enhanced',
-        'settings' => array(
-
-        ),
+        'settings' => array(),
         'type' => 'asu_maps_enhanced',
         'weight' => 0,
       ),
@@ -32,7 +30,7 @@ function asu_maps_enhanced_field_default_field_instances() {
     'label' => 'ASU Enhanced Map Items',
     'required' => 0,
     'settings' => array(
-
+      'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 0,
@@ -45,9 +43,7 @@ function asu_maps_enhanced_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-
-  t('Map Items');
-
+  t('ASU Enhanced Map Items');
 
   return $field_instances;
 }

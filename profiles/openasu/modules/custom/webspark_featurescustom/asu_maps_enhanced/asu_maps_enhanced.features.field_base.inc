@@ -17,11 +17,11 @@ function asu_maps_enhanced_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_asu_maps_enhanced_items',
+    'foreign keys' => array(),
+    'indexes' => array(),
     'locked' => 0,
     'module' => 'asu_maps_enhanced',
-    'settings' => array(
-      
-    ),
+    'settings' => array(),
     'translatable' => 0,
     'type' => 'asu_maps_enhanced',
   );
