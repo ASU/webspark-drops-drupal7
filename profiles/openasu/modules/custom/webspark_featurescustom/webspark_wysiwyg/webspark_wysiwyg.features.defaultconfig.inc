@@ -30,25 +30,5 @@ function webspark_wysiwyg_defaultconfig_user_default_permissions() {
     'module' => 'filter',
   );
 
-  // Exported permission: 'use text format panopoly_html_text'.
-  $permissions['use text format panopoly_html_text'] = array(
-    'name' => 'use text format panopoly_html_text',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'editor' => 'editor',
-    ),
-    'module' => 'filter',
-  );
-
-  // Exported permission: 'use text format panopoly_wysiwyg_text'.
-  $permissions['use text format panopoly_wysiwyg_text'] = array(
-    'name' => 'use text format panopoly_wysiwyg_text',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'editor' => 'editor',
-    ),
-    'module' => 'filter',
-  );
-
   return $permissions;
 }
