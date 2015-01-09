@@ -5,452 +5,523 @@
  * Description: Custom module to add on ASU specific functionality for the Google Search Appliance
  */
 function asu_gsa_init() {
-	// Sending js variable to asu header to tell it we are using the asu gsa module, so let us handle search locally
-	drupal_add_css(drupal_get_path('module', 'asu_gsa') . '/asu_gsa.css', array('group' => CSS_THEME));
-	drupal_add_js('var ASUHeader = ASUHeader || {};','inline');
-	$js = 'ASUHeader.gsa = "google-appliance-block-form"';
-	drupal_add_js($js, array('type' => 'inline', 'scope' => 'header', 'group' => JS_THEME, 'weight' => -10));
+  // Sending js variable to asu header to tell it we are using the asu gsa module, so let us handle search locally
+  drupal_add_css(drupal_get_path('module', 'asu_gsa') . '/asu_gsa.css', array('group' => CSS_THEME));
+  drupal_add_js('var ASUHeader = ASUHeader || {};', 'inline');
+  $js = 'ASUHeader.gsa = "**d"';
+  drupal_add_js($js, array(
+    'type' => 'inline',
+    'scope' => 'header',
+    'group' => JS_THEME,
+    'weight' => -10
+  ));
 
-	// Checking if a search has been done on the site, if so check which type and redirect to appropriate search type
-	 if (isset($_POST['search_keys']) || isset($_POST['search_header'])) {
-                $path = current_path();
-                $exp = explode("/",$path);
-                $type = $exp[0];
-                if (isset($_POST['search_keys'])) {
-                        $query = $_POST['search_keys'];
-                }
-                if (isset($_POST['search_header'])) {
-                         $query = $_POST['search_header'];
-                         $type = 'search';
-                }
-                $pass = "";
-                asu_gsa_redirect($query,$pass,$type);
-        }
+  // Checking if a search has been done on the site, if so check which type and redirect to appropriate search type
+  if (isset($_POST['search_keys']) || isset($_POST['search_header'])) {
+    $path = current_path();
+    $exp = explode("/", $path);
+    $type = $exp[0];
+    if (isset($_POST['search_keys'])) {
+      $query = check_plain($_POST['search_keys']);
+      if (strpos($query, "quot;") != FALSE) {
+        $query = str_replace('&quot;', '"', $query);
+      }
+      if ($query != $_POST['search_keys']) {
+        $query = '"' . $query . '"';
+      }
+    }
+    if (isset($_POST['search_header'])) {
+      $query = check_plain($_POST['search_header']);
+      if (strpos($query, 'quot;') != FALSE) {
+        $query = str_replace('&quot;', '"', $query);
+      }
+      $type = 'search';
+      if ($query != $_POST['search_header']) {
+        $query = '"' . $query . '"';
+      }
+    }
+    $pass = "";
+    asu_gsa_redirect($query, $pass, $type);
+  }
 
 }
 
 
 function asu_gsa_menu() {
-	// Setting the asu gsa admin configuration page
-	$items = array();
-	$items['admin/config/search/asu_gsa/settings'] = array(    'title' => 'ASU GSA Search',    'description' => 'Configure options for search via the ASU Google Search Appliance.',    'page callback' => 'drupal_get_form',    'page arguments' => array('asu_gsa_admin_settings'),    'file' => 'asu_gsa.admin.inc',    'access arguments' => array('administer_google_appliance'),    'weight' => -30,  );
-	return $items;
+  // Setting the asu gsa admin configuration page
+  $items = array();
+  $items['admin/config/search/asu_gsa/settings'] = array(
+    'title' => 'ASU GSA Search',
+    'description' => 'Configure options for search via the ASU Google Search Appliance.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('asu_gsa_admin_settings'),
+    'file' => 'asu_gsa.admin.inc',
+    'access arguments' => array('administer_google_appliance'),
+    'weight' => -30,
+  );
+  return $items;
 }
 
 
 function asu_gsa_menu_alter(&$items) {
 
-	// Removing the default unnecessary configuration options brought in by the google appliance module
-	unset($items['gsearch']);
-	unset($items['admin/config/search/google_appliance/settings']);
-	$items['admin/config/search/google_appliance/settings'] = array (  'title' => 'ASU GSA Config',  );
-	$items['gsearch/%/%'] = array (
-		'title' => 'ASU Search',
-		'page callback' => 'asu_gsa_redirect',
-		'page arguments' => array(1,2),
-		'access callback' => 'user_access',
-		'access arguments' => array('access content'),
-		'type' => MENU_CALLBACK,
-	);
-	$settings = _asu_gsa_get_settings();
+  // Removing the default unnecessary configuration options brought in by the google appliance module
+  unset($items['gsearch']);
+  unset($items['admin/config/search/google_appliance/settings']);
+  $items['admin/config/search/google_appliance/settings'] = array('title' => 'ASU GSA Config',);
+  $items['gsearch/%/%'] = array(
+    'title' => 'ASU Search',
+    'page callback' => 'asu_gsa_redirect',
+    'page arguments' => array(1, 2),
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $settings = _asu_gsa_get_settings();
 
-	// If we aren't using drupal local search, then call the collection function to use the set collection for the searches
-	if ($settings['local_search'] == "No") {
-		unset($items['search']);
-		$items['search'] = array(
-		'title' => ' ',
-		'page callback' => 'asu_gsa_collection',
-		'page arguments' => array(1, 2), // (1) search query, (2) results sort param
-		'access callback' => 'user_access',
-		'access arguments' => array('access content'),
-		'type' => MENU_SUGGESTED_ITEM,  );
+  // If we aren't using drupal local search, then call the collection function to use the set collection for the searches
+  if ($settings['local_search'] == "No") {
+    unset($items['search']);
+    $items['search'] = array(
+      'title' => ' ',
+      'page callback' => 'asu_gsa_collection',
+      'page arguments' => array(1, 2),
+      // (1) search query, (2) results sort param
+      'access callback' => 'user_access',
+      'access arguments' => array('access content'),
+      'type' => MENU_SUGGESTED_ITEM,
+    );
 
-		$items['search/%/%'] = array(
-		'title' => ' ',
-		'page callback' => 'asu_gsa_collection',
-		'page arguments' => array(1, 2), // (1) search query, (2) results sort param
-		'access callback' => 'user_access',
-		'access arguments' => array('access content'),
-		'type' => MENU_SUGGESTED_ITEM,  );
-	}
+    $items['search/%/%'] = array(
+      'title' => ' ',
+      'page callback' => 'asu_gsa_collection',
+      'page arguments' => array(1, 2),
+      // (1) search query, (2) results sort param
+      'access callback' => 'user_access',
+      'access arguments' => array('access content'),
+      'type' => MENU_SUGGESTED_ITEM,
+    );
+  }
 
-	// If we are using the drupal local search, call the appropriate function and disable using the gsa
-	else {
-		unset($items['search']);
-		$items['search/%'] = array(
-		'title' => ' ',
-		'page callback' => 'asu_gsa_local',
-		'page arguments' => array('search',1), // (1) search query, (2) results sort param
-		'access callback' => 'user_access',
-		'access arguments' => array('access content'),
-		'type' => MENU_SUGGESTED_ITEM,
-		'file' => 'search.pages.inc',
-		'file path' => drupal_get_path('module', 'search'),
-	);
-	}
+  // If we are using the drupal local search, call the appropriate function and disable using the gsa
+  else {
+    unset($items['search']);
+    $items['search/%'] = array(
+      'title' => ' ',
+      'page callback' => 'asu_gsa_local',
+      'page arguments' => array('search', 1),
+      // (1) search query, (2) results sort param
+      'access callback' => 'user_access',
+      'access arguments' => array('access content'),
+      'type' => MENU_SUGGESTED_ITEM,
+      'file' => 'search.pages.inc',
+      'file path' => drupal_get_path('module', 'search'),
+    );
+  }
 
-	// Use the global search function if we are calling the global asu search
-	$items['global'] = array(
-	'title' => ' ',
-	'page callback' => 'asu_gsa_global',
-	'page arguments' => array(1, 2), // (1) search query, (2) results sort param
-	'access callback' => 'user_access',
-	'access arguments' => array('access content'),
-	'type' => MENU_SUGGESTED_ITEM,  );
+  // Use the global search function if we are calling the global asu search
+  $items['global'] = array(
+    'title' => ' ',
+    'page callback' => 'asu_gsa_global',
+    'page arguments' => array(1, 2), // (1) search query, (2) results sort param
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+    'type' => MENU_SUGGESTED_ITEM,
+  );
 }
 
 function asu_gsa_local($search, $keys) {
+  if ($keys != "") {
+    $keys = check_plain($keys);
+    if (strpos($keys, "quot;") != FALSE) {
+      $keys = str_replace('&quot;', '"', $keys);
+    }
 
-	// If we are using drupal's search, call the drupal search module so we can invoke their function
+    // If we are using drupal's search, call the drupal search module so we can invoke their function
 
-	module_load_include('module','search','search');
-	module_load_include('inc','search','search.pages');
-	
-	// Get the search keys if they are set
-	$info = FALSE;
-	$keys = trim($keys);
- 	if (!$keys && !empty($_REQUEST['keys'])) {
-		$keys = trim($_REQUEST['keys']);
-	}
+    module_load_include('module', 'search', 'search');
+    module_load_include('inc', 'search', 'search.pages');
 
-	if (!empty($module)) {
-		$active_module_info = search_get_info();
-    		if (isset($active_module_info[$module])) {
-      			$info = $active_module_info[$module];
-    		}
-  	}
+    // Get the search keys if they are set
+    $info = FALSE;
+    $keys = trim($keys);
+    if (!$keys && !empty($_REQUEST['keys'])) {
+      $keys = trim($_REQUEST['keys']);
+    }
 
-	// Set the path for the search
-	if (empty($info)) {
-		$info = search_get_default_module_info();
-		$path = 'search/' . $info['path'];
-	if ($keys) {
-		$path .= '/' . $keys;
-	}
-	}
+    if (!empty($module)) {
+      $active_module_info = search_get_info();
+      if (isset($active_module_info[$module])) {
+        $info = $active_module_info[$module];
+      }
+    }
 
- 	$results = array('#markup' => '');
- 	if (empty($_POST['form_id']) || $_POST['form_id'] != 'search_form') {
-		$conditions =  NULL;
-	if (isset($info['conditions_callback']) && function_exists($info['conditions_callback'])) {
-		$conditions = call_user_func($info['conditions_callback'], $keys);
-	}
-	// Only search if there are keywords or non-empty conditions.
-	if ($keys || !empty($conditions)) {
-      // Log the search keys.
-		watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $info['title']), WATCHDOG_NOTICE, l(t('results'), 'search/' . $info['path'] . '/' . $keys));
-      // Collect the search results.
-		$results = search_data($keys, $info['module'], $conditions);
-    	}
-	}
-	$build['search_form'] = drupal_get_form('asu_gsa_search_form', $keys, NULL , NULL);
-	$build['search_results'] = $results;
+    // Set the path for the search
+    if (empty($info)) {
+      $info = search_get_default_module_info();
+      $path = 'search/' . $info['path'];
+      if ($keys) {
+        $path .= '/' . $keys;
+      }
+    }
 
-	return $build;
+    $results = array('#markup' => '');
+    if (empty($_POST['form_id']) || $_POST['form_id'] != 'search_form') {
+      $conditions = NULL;
+      if (isset($info['conditions_callback']) && function_exists($info['conditions_callback'])) {
+        $conditions = call_user_func($info['conditions_callback'], $keys);
+      }
+      // Only search if there are keywords or non-empty conditions.
+      if ($keys || !empty($conditions)) {
+        // Log the search keys.
+        watchdog('search', 'Searched %type for %keys.', array(
+          '%keys' => $keys,
+          '%type' => $info['title']
+        ), WATCHDOG_NOTICE, l(t('results'), 'search/' . $info['path'] . '/' . $keys));
+        // Collect the search results.
+        $results = search_data($keys, $info['module'], $conditions);
+      }
+    }
+    $build['search_form'] = drupal_get_form('asu_gsa_search_form', $keys, NULL, NULL);
+    $build['search_results'] = $results;
+
+    return $build;
+  }
+  else {
+    drupal_set_message(t("Please enter a valid search query."), 'error');
+  }
+}
+
+function asu_gsa_redirect($query, $sort, $type) {
+  if ($query != "") {
+    // Check what type of search was performed, and redirect accordingly
+    if ($type == "search") {
+      drupal_goto('search/' . $query . '/' . $sort);
+    }
+    if ($type == "global") {
+      drupal_goto('global/' . $query . '/' . $sort);
+    }
+    else {
+      drupal_goto('search/' . $query . '/' . $sort);
+    }
+  }
+  else {
+    drupal_set_message(t("Please enter a valid search query."), 'error');
+  }
+
 
 }
 
-function asu_gsa_redirect($query,$sort,$type) {
+function clean_result($string, $start, $end) {
 
-	// Check what tyoe of search was performed, and redirect accordingly 
-	if ($type == "search") {
-		drupal_goto('search/'.$query.'/'.$sort);
-	} 
-	if ($type == "global")   {
-		drupal_goto('global/'.$query.'/'.$sort);
-	}
-	else {
-		drupal_goto('search/'.$query.'/'.$sort);
-	}
+  // Function to sanitize the search terms
+  $string = " " . $string;
+  $pos = strpos($string, $start);
 
-
-}
-
-function clean_result($string, $start, $end){
-
-	// Function to sanitize the search terms 
-	$string = " ".$string;
-	$pos = strpos($string,$start);
-
-	if ($pos == 0) return "";
-	$pos += strlen($start);
-	$len = strpos($string,$end,$pos) - $pos;
-	return substr($string,$pos,$len);
+  if ($pos == 0) {
+    return "";
+  }
+  $pos += strlen($start);
+  $len = strpos($string, $end, $pos) - $pos;
+  return substr($string, $pos, $len);
 }
 
 function asu_gsa_sort() {
 
-	// Function to create the top sort links for date & relevance 
-	global $base_url;
-	$path = current_path();
-	$exp = explode("/",$path);
-	$type = $exp[0];
-	$query = $exp[1];
+  // Function to create the top sort links for date & relevance
+  global $base_url;
+  $path = current_path();
+  $exp = explode("/", $path);
+  $type = $exp[0];
+  $query = $exp[1];
 
-	// Check the type of sort type that was done and set it 
-	if (count($exp) > 2) {
-		$sort = $exp[2];
-	}
-	else {
-		$sort = "rel";
-	}
-	if (strpos($sort,'rel') !== false) {
-		$sort_type = "rel";
-	}
+  // Check the type of sort type that was done and set it
+  if (count($exp) > 2) {
+    $sort = $exp[2];
+  }
+  else {
+    $sort = "rel";
+  }
+  if (strpos($sort, 'rel') !== FALSE) {
+    $sort_type = "rel";
+  }
 
-	if (strpos($sort,'date') !== false) {
-		$sort_type = "date";
-	}
+  if (strpos($sort, 'date') !== FALSE) {
+    $sort_type = "date";
+  }
 
-	// Create the top header links for the sort according to the type of search was done
-	$heads = "";
-	if ($sort_type == "rel") {
-		$heads = '<span class="selected-sort">Sort by Relevance</span>';
-	}
-	else {
-		$heads = '<a class="sort-date" href="rel">Sort by Relevance</a>';
-	}
-	$heads .= ' | ';
-	if ($sort_type == "date") {
-		$heads .=  '<span class="selected-sort">Sort by Date</span>';
-	}
-	else {
-		if ($type == 'search') { 	
-			$heads .= '<a class="sort-date" href="'.$base_url.'/search/'.$query.'/date">Sort by Date</a>';
-		} 
-		else { 
-			$heads .= '<a class="sort-date" href="'.$base_url.'/global/'.$query.'/date">Sort by Date</a>';
-		}
-	}
-	$heads .= "</div></div>";
+  // Create the top header links for the sort according to the type of search was done
+  $heads = "";
+  if ($sort_type == "rel") {
+    $heads = '<span class="selected-sort">Sort by Relevance</span>';
+  }
+  else {
+    $heads = '<a class="sort-date" href=\'rel\'>Sort by Relevance</a>';
+  }
+  $heads .= ' | ';
+  if ($sort_type == "date") {
+    $heads .= '<span class="selected-sort">Sort by Date</span>';
+  }
+  else {
+    if ($type == 'search') {
+      $heads .= '<a class="sort-date" href=\'' . $base_url . '/search/' . $query . '/date\'>Sort by Date</a>';
+    }
+    else {
+      $heads .= '<a class="sort-date" href=\'' . $base_url . '/global/' . $query . '/date\'>Sort by Date</a>';
+    }
+  }
+  $heads .= "</div></div>";
 
-	return $heads;
+  return $heads;
 }
 
-function asu_gsa_collection($query,$sort) {
+function asu_gsa_collection($query, $sort) {
+  if ($query != "") {
+    $query = check_plain($query);
+    if (strpos($query, "quot;") != FALSE) {
+      $query = str_replace('&quot;', '"', $query);
+    }
+    // Function to handle gsa collection searches
+    global $base_url;
+    $site_name = variable_get('site_name', 'This Site');
+    $results = "";
+    $tabs = "";
+    // Set what the collection was before they change it, if it's not set, set it to default_collection
+    $collection = variable_get("original_collection", "default_collection");
+    $heads = '<div class="search-option"><h1 class="search-gsa">Search Results</h1>';
+    if ($query == "") {
+      // Grab the asu gsa search form to display it
+      $heads .= drupal_get_form("asu_gsa_search_form");
+      return $heads;
+    }
+    else {
+      // Creating the search view from google appliance module
+      $results .= google_appliance_search_view($query, $sort);
 
-	// Function to handle gsa collection searches 
-	global $base_url;
-	$site_name =  variable_get('site_name', 'This Site');
-	$results = "";
-	$tabs = "";
-	// Set what the collection was before they change it, if it's not set, set it to default_collection
-	$collection = variable_get("original_collection", "default_collection");
-	$heads = '<div class="search-option"><h1 class="search-gsa">Search Results</h1>';
-	if ($query == "") {
-		// Grab the asu gsa search form to display it
-		$heads .= drupal_get_form("asu_gsa_search_form");
-		return $heads;
-	} 
-	else {
-		// Creating the search view from google appliance module
-		$results .= google_appliance_search_view($query,$sort);
-
-		// If we are using a custom collection, setup the correct tabs on top 
-		if ($collection != "default_collection")
-		{
-			$heads .= '<a class="search-collection search-selected" href="'.$base_url.'/search/'.$query.'/'.$sort.'">This Site</a><a class="search-global" href="'.$base_url.'/global/'.$query.'/'.$sort.'">All of ASU</a><div class="search-gsa-sort">';
-			$sort_links = asu_gsa_sort();
-			$heads .= $sort_links;
-		}
-		else {
-			$sort_links = asu_gsa_sort();
-			$heads .= $sort_links;
-		}
-		$results = serialize($results);
-		$sanitized = clean_result($results,':"','";');
-		drupal_add_js('jQuery(document).ready(function () { jQuery("<button class=\'btn search\' type=submit value=Search name=op><i class=\'fa fa-search\' aria-hidden=true><span class=sr-only>Search</span></button>").insertAfter("#edit-search-keys--2")    } )', 'inline');
-		return $heads.$sanitized;
-	}
-
+      // If we are using a custom collection, setup the correct tabs on top
+      if ($collection != "default_collection") {
+        $heads .= '<a class="search-collection search-selected" href=\'' . $base_url . '/search/' . $query . '/' . $sort . '\'>This Site</a><a class="search-global" href=\'' . $base_url . '/global/' . $query . '/' . $sort . '\'>All of ASU</a><div class="search-gsa-sort">';
+        $sort_links = asu_gsa_sort();
+        $heads .= $sort_links;
+      }
+      else {
+        $sort_links = asu_gsa_sort();
+        $heads .= $sort_links;
+      }
+      $results = serialize($results);
+      $sanitized = clean_result($results, ':"', '";');
+      drupal_add_js('jQuery(document).ready(function () { jQuery("<button class=\'btn search\' type=submit value=Search name=op><i class=\'fa fa-search\' aria-hidden=true><span class=sr-only>Search</span></button>").insertAfter("#edit-search-keys--2")    } )', 'inline');
+      return $heads . $sanitized;
+    }
+  }
+  else {
+    drupal_goto("search/ /");
+    drupal_set_message(t("Please enter a valid search query."), 'error');
+  }
 }
 
-function asu_gsa_global($query,$sort) {
+function asu_gsa_global($query, $sort) {
+  if ($query != "") {
+    $query = check_plain($query);
+    if (strpos($query, "quot;") != FALSE) {
+      $query = str_replace('&quot;', '"', $query);
+    }
 
-	// This function handles the ASU global search 
-	global $base_url;
-	$site_name =  variable_get('site_name', 'This Site');
-	
-	// Check if we are using the global search
-	$test = variable_get('google_appliance_collection');
-	$settings = _asu_gsa_get_settings();
-	$local = $settings['local_search'];
-	if ($test != "default_collection") {
-	variable_set("original_collection",$test);
-	}
+    // This function handles the ASU global search
+    global $base_url;
+    $site_name = variable_get('site_name', 'This Site');
 
-	// Display the default collection headers if we are using the global search
-	$new_collection = "default_collection";
-	variable_set('google_appliance_collection',$new_collection);
-	$results = google_appliance_search_view($query,$sort);
-	$collection = variable_get("original_collection", "default_collection");
-	variable_set('google_appliance_collection',$collection);
-	$heads = '<div class="search-option"><h1 class="search-gsa">Search Results</h1>';
-	if ($collection != "default_collection" || $local == "Yes") {
-	if ($local == "Yes") { $sort = "";    }
-		$heads .= '<a class="search-collection" href="'.$base_url.'/search/'.$query.'/'.$sort.'">This Site</a><a class="search-global search-selected" href="'.$base_url.'/global/'.$query.'/'.$sort.'">All of ASU</a><div class="search-gsa-sort">';
-		$sort_links = asu_gsa_sort();
-		$heads .= $sort_links;
-	}
-	else {
-		$sort_links = asu_gsa_sort();
-		$heads .= $sort_links;
-	}
+    // Check if we are using the global search
+    $test = variable_get('google_appliance_collection');
+    $settings = _asu_gsa_get_settings();
+    $local = $settings['local_search'];
+    if ($test != "default_collection") {
+      variable_set("original_collection", $test);
+    }
 
-	// Adding the scope search icon in the search bar
-	drupal_add_js('jQuery(document).ready(function () { jQuery("<button class=\'btn search\' type=submit value=Search name=op><i class=\'fa fa-search\' aria-hidden=true><span class=sr-only>Search</span></button>").insertAfter("#edit-search-keys--2")    } )', 'inline');
-	$results = serialize($results);
-	$clean = clean_result($results,':"','";');
- 	return $heads.$clean;
+    // Display the default collection headers if we are using the global search
+    $new_collection = "default_collection";
+    variable_set('google_appliance_collection', $new_collection);
+    $results = google_appliance_search_view($query, $sort);
+    $collection = variable_get("original_collection", "default_collection");
+    variable_set('google_appliance_collection', $collection);
+    $heads = '<div class="search-option"><h1 class="search-gsa">Search Results</h1>';
+    if ($collection != "default_collection" || $local == "Yes") {
+      if ($local == "Yes") {
+        $sort = "";
+      }
+      $heads .= '<a class="search-collection" href=\'' . $base_url . '/search/' . $query . '/' . $sort . '\'>This Site</a><a class="search-global search-selected" href=\'' . $base_url . '/global/' . $query . '/' . $sort . '\'>All of ASU</a><div class="search-gsa-sort">';
+      $sort_links = asu_gsa_sort();
+      $heads .= $sort_links;
+    }
+    else {
+      $sort_links = asu_gsa_sort();
+      $heads .= $sort_links;
+    }
+
+    // Adding the scope search icon in the search bar
+    drupal_add_js('jQuery(document).ready(function () { jQuery("<button class=\'btn search\' type=submit value=Search name=op><i class=\'fa fa-search\' aria-hidden=true><span class=sr-only>Search</span></button>").insertAfter("#edit-search-keys--2")    } )', 'inline');
+    $results = serialize($results);
+    $clean = clean_result($results, ':"', '";');
+    return $heads . $clean;
+  }
+  else {
+    drupal_goto("global/ /");
+    drupal_set_message(t("Please enter a valid search query."), 'error');
+  }
+
 }
 
 
 function asu_gsa_search_form($form, &$form_state, $query = '', $prompt = '') {
 // Creating the search form that is displayed on the search page
 
-	$prompt = ($prompt == '') ? t('Enter the terms you wish to search for.') :
-	$prompt;
-	global $base_url;
-	$settings = _asu_gsa_get_settings();
-	$local = $settings['local_search'];
-	$form['basic'] = array(
-	'#type' => 'container'  );
-	// Creating the basic search form & modifying the markup to show the search tabs
-	$form['basic']['head'] = array(
-		'#markup' => t('<div class="search-option"><h1 class="search-gsa">Search Results</h1><a class="search-collection search-selected" href="'.$base_url.'/search/'.$query.'">This Site</a><a class="search-global" href="'.$base_url.'/global/'.$query.'">All of ASU</a><div class="search-gsa-sort"></div>'));
-	
-		// Create the search field with the given prompt
-		$form['basic']['search_keys'] = array(
-			'#type' => 'textfield',
-			'#default_value' => $query,
-			'#attributes' => array(
-			'title' => $prompt,    ),
-			'#title' => check_plain($prompt),
-			'#title_display' => 'invisible',  
-		);
+  $prompt = ($prompt == '') ? t('Enter the terms you wish to search for.') :
+    $prompt;
+  global $base_url;
+  $settings = _asu_gsa_get_settings();
+  $local = $settings['local_search'];
+  $form['basic'] = array(
+    '#type' => 'container'
+  );
+  // Creating the basic search form & modifying the markup to show the search tabs
+  $form['basic']['head'] = array(
+    '#markup' => t('<div class="search-option"><h1 class="search-gsa">Search Results</h1><a class="search-collection search-selected" href=\'' . $base_url . '/search/' . $query . '\'>This Site</a><a class="search-global" href=\'' . $base_url . '/global/' . $query . '\'>All of ASU</a><div class="search-gsa-sort"></div>')
+  );
 
-	// If the query is blank, give the search prompt 
-	if ($query == '') {
-		$form['basic']['prompt'] = array(
-			'#type' => 'item',
-			'#markup' => '<p><b>' . $prompt . '</b></p>'    
-		);
-	}
+  // Create the search field with the given prompt
+  $form['basic']['search_keys'] = array(
+    '#type' => 'textfield',
+    '#default_value' => $query,
+    '#attributes' => array(
+      'title' => $prompt,
+    ),
+    '#title' => check_plain($prompt),
+    '#title_display' => 'invisible',
+  );
 
-	// Add the search button
-	$form['basic']['submit'] = array(
-		'#type' => 'submit',
-		'#value' => t('Search')
-	);
+  // If the query is blank, give the search prompt
+  if ($query == '') {
+    $form['basic']['prompt'] = array(
+      '#type' => 'item',
+      '#markup' => '<p><b>' . $prompt . '</b></p>'
+    );
+  }
 
-	// Check what type of search we are doing and submit the form accordingly
+  // Add the search button
+  $form['basic']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Search')
+  );
 
-	$path = current_path(); 
-	$vars = explode("/",$path);
-	if ($local == "Yes") {
-	if ($vars[0] == 'global') {
-	$form_state['action'] = 'global/';
-	}
-	else {
-	$form_state['action'] = 'search/';
-	}
-	} else {
-	$form_state['action'] = 'search/';
-	}
-	return $form;
+  // Check what type of search we are doing and submit the form accordingly
+
+  $path = current_path();
+  $vars = explode("/", $path);
+  if ($local == "Yes") {
+    if ($vars[0] == 'global') {
+      $form_state['action'] = 'global/';
+    }
+    else {
+      $form_state['action'] = 'search/';
+    }
+  }
+  else {
+    $form_state['action'] = 'search/';
+  }
+  return $form;
 }
 
 
 function asu_gsa_form_alter(&$form, &$form_state, $form_id) {
-	if ($form_id == "asu_gsa_search_form") {
-		// Add the custom search icon in the textfield
-		drupal_add_js('jQuery(document).ready(function () { jQuery("<button class=\'btn search\' type=submit value=Search name=op><i class=\'fa fa-search\' aria-hidden=true><span class=sr-only>Search</span></button>").insertAfter("#edit-search-keys")    } )', 'inline');
-	}
-	if ($form_id == "google_appliance_block_form" || $form_id == "google_appliance_search_form" || $form_id == "asu_gsa_search_form") {
-		// Add our own custom submit function to handle additional functionality
-		$form['#submit'][] = 'asu_gsa_form_submit';
-	}
+  if ($form_id == "asu_gsa_search_form") {
+    // Add the custom search icon in the textfield
+    drupal_add_js('jQuery(document).ready(function () { jQuery("<button class=\'btn search\' type=submit value=Search name=op><i class=\'fa fa-search\' aria-hidden=true><span class=sr-only>Search</span></button>").insertAfter("#edit-search-keys")    } )', 'inline');
+  }
+  if ($form_id == "google_appliance_block_form" || $form_id == "google_appliance_search_form" || $form_id == "asu_gsa_search_form") {
+    // Add our own custom submit function to handle additional functionality
+    $form['#submit'][] = 'asu_gsa_form_submit';
+  }
 
 }
 
 
-
-
 function asu_gsa_form_submit($form, &$form_state) {
 
-	// Handling the form submission for the search   
-	if (isset($form_state['values']['search_keys'])) {
-		$search_query = urlencode($form_state['values']['search_keys']);
-		$settings = _asu_gsa_get_settings();
-		$local = $settings['local_search'];
-		$path = current_path();
-		$exp = explode("/",$path);
-		$type = $exp[0];
-		switch ($type) {
-			case "search":
-				$form_state['redirect'] = url('search/' . $search_query, array('absolute' => TRUE));
-			break;
-			case "global":
-				$form_state['redirect'] = url('global/' . $search_query, array('absolute' => TRUE));
-			break;
-		}	
-	}
+  // Handling the form submission for the search
+  if (isset($form_state['values']['search_keys'])) {
+    $search_query = urlencode($form_state['values']['search_keys']);
+    $settings = _asu_gsa_get_settings();
+    $local = $settings['local_search'];
+    $path = current_path();
+    $exp = explode("/", $path);
+    $type = $exp[0];
+    switch ($type) {
+      case "search":
+        $form_state['redirect'] = url('search/' . $search_query, array('absolute' => TRUE));
+        break;
+      case "global":
+        $form_state['redirect'] = url('global/' . $search_query, array('absolute' => TRUE));
+        break;
+    }
+  }
 
 }
 
 
 function asu_gsa_registry_alter(&$theme_registry) {
 
-	// Adding our module to the registry
-	if (isset($theme_registry['search_results'])) {
-		$module_path = drupal_get_path('module', 'asu_gsa');
-		$theme_registry['search_results']['theme path'] = $module_path;
-		$theme_registry['search_results']['template'] = $module_path . '/templates/asu-gsa-results';
-	}
+  // Adding our module to the registry
+  if (isset($theme_registry['search_results'])) {
+    $module_path = drupal_get_path('module', 'asu_gsa');
+    $theme_registry['search_results']['theme path'] = $module_path;
+    $theme_registry['search_results']['template'] = $module_path . '/templates/asu-gsa-results';
+  }
 
 }
 
-define('SGA_DEFAULT_LOCAL_SEARCH','Yes');
+define('SGA_DEFAULT_LOCAL_SEARCH', 'Yes');
 function _asu_gsa_get_settings($refresh = FALSE) {
-	
-	// Setting all our custom gsa search parameters
-	static $settings;
-	$field_keys =  array(
-	'hostname',
-	'collection',
-	'frontend',
-	'timeout',
-	'autofilter',
-	'language_filter_toggle',
-	'query_inspection',
-	'search_title',
-	'results_per_page',
-	'block_visibility_settings',
-	'local_search',  );
 
-	if ($refresh || empty($settings)) {
-	// Settings fall back to default constants.
-	foreach ($field_keys as $field) {
-		$settings[$field] = variable_get(
-		'google_appliance_' . $field,
-		constant('SGA_DEFAULT_' . strtoupper($field))
-	);
-	}
+  // Setting all our custom gsa search parameters
+  static $settings;
+  $field_keys = array(
+    'hostname',
+    'collection',
+    'frontend',
+    'timeout',
+    'autofilter',
+    'language_filter_toggle',
+    'query_inspection',
+    'search_title',
+    'results_per_page',
+    'block_visibility_settings',
+    'local_search',
+  );
 
-	$settings['language_filter_options'] = variable_get(
-		'google_appliance_language_filter_options',
-		array('***CURRENT_LANGUAGE***')
-	);
+  if ($refresh || empty($settings)) {
+    // Settings fall back to default constants.
+    foreach ($field_keys as $field) {
+      $settings[$field] = variable_get(
+        'google_appliance_' . $field,
+        constant('SGA_DEFAULT_' . strtoupper($field))
+      );
+    }
 
-	if ($settings['block_visibility_settings'] === '') {
-		$settings['block_visibility_settings'] = array();
-	}
+    $settings['language_filter_options'] = variable_get(
+      'google_appliance_language_filter_options',
+      array('***CURRENT_LANGUAGE***')
+    );
 
-	}
+    if ($settings['block_visibility_settings'] === '') {
+      $settings['block_visibility_settings'] = array();
+    }
 
-	return $settings;
-	}
+  }
+
+  return $settings;
+}
 
 function asu_gsa_preprocess_google_appliance_results(&$variables) {
-	$variables['theme_hook_suggestions'][] = 'asu_gsa_results';
+  $variables['theme_hook_suggestions'][] = 'asu_gsa_results';
 }

@@ -19,10 +19,10 @@ function asu_gsa_admin_settings($form) {
     '#title' => t('Local Search'),
     '#description' => t('Do you want to use the default Drupal search instead of the GSA search? (Select No if you will set your own custom collection below)'),
     '#default_value' => $settings['local_search'],
-     '#options' => array(
+    '#options' => array(
       'No' => t('No'),
       'Yes' => t('Yes'),
-       ),
+    ),
     '#required' => TRUE,
   );
 
@@ -34,7 +34,7 @@ function asu_gsa_admin_settings($form) {
     '#required' => TRUE,
   );
 
- $form['#submit'][] = 'asu_gsa_admin_settings_submit';
+  $form['#submit'][] = 'asu_gsa_admin_settings_submit';
 
   return system_settings_form($form);
 }
@@ -42,13 +42,13 @@ function asu_gsa_admin_settings($form) {
 
 function asu_gsa_admin_settings_submit($form, &$form_state) {
 
-  
-  $field_keys =  array(
+
+  $field_keys = array(
     'collection',
     'local_search',
   );
   $original = $form_state['values']['collection'];
-  variable_set("original_collection",$original);
+  variable_set("original_collection", $original);
   // save settings
   foreach ($field_keys as $field) {
     variable_set('google_appliance_' . $field, trim($form_state['values'][$field]));
