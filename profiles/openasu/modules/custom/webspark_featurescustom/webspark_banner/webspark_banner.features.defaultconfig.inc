@@ -52,7 +52,7 @@ function webspark_banner_defaultconfig_field_default_fields() {
       'deleted' => 0,
       'description' => '<ul class="help-text">
 <li>Add a title banner only <strong>to the top section</strong> of your page and in a single-region row.</li>
-<li>Images should be 1220 x 200 px. Smaller images will be scaled up; larger ones will be cropped.</li>
+<li>Images should be 1170 x 200 px for optimal display.</li>
 <li>When adding a new image, you must refresh the page after saving to view the image.</li>
 </ul>',
       'display' => array(
@@ -104,7 +104,7 @@ function webspark_banner_defaultconfig_field_default_fields() {
   // Included for use with string extractors like potx.
   t('<ul class="help-text">
 <li>Add a title banner only <strong>to the top section</strong> of your page and in a single-region row.</li>
-<li>Images should be 1220 x 200 px. Smaller images will be scaled up; larger ones will be cropped.</li>
+<li>Images should be 1170 x 200 px for optimal display.</li>
 <li>When adding a new image, you must refresh the page after saving to view the image.</li>
 </ul>');
   t('Banner image');

@@ -53,7 +53,7 @@ function webspark_hero_defaultconfig_field_default_fields() {
       'description' => '<ul class="help-text">
 <li class="help-title">Tips & Instructions</li>
 <li>Heroes should be added <strong>only to the top region</strong> of your page.</li>
-<li>Images should be 1170 x 380 px. Smaller images will be scaled up; larger ones will be cropped.</li>
+<li>Images should be 1170 x 380 px for optimal display.</li>
 <li>When adding a new image, <strong>refresh the page</strong> after saving to view the image.</li>
 </ul>',
       'display' => array(
@@ -437,7 +437,7 @@ function webspark_hero_defaultconfig_field_default_fields() {
   t('<ul class="help-text">
 <li class="help-title">Tips & Instructions</li>
 <li>Heroes should be added <strong>only to the top region</strong> of your page.</li>
-<li>Images should be 1170 x 380 px. Smaller images will be scaled up; larger ones will be cropped.</li>
+<li>Images should be 1170 x 380 px for optimal display.</li>
 <li>When adding a new image, <strong>refresh the page</strong> after saving to view the image.</li>
 </ul>');
   t('Blurb');

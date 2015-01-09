@@ -227,7 +227,7 @@ function webspark_jumbohero_field_default_field_instances() {
     'description' => '<ul class="help-text">
 <li class="help-title">Tips & Instructions</li>
 <li>Heroes should be added <strong>only to the top region</strong> of your page.</li>
-<li>Images should be 1170 x 700 px. Smaller images will be scaled up; larger ones will be cropped.</li>
+<li>Images should be 1170 x 700 px for optimal display.</li>
 <li>When adding a new image, <strong>refresh the page</strong> after saving to view the image.</li>
 </ul>',
     'display' => array(
@@ -322,7 +322,7 @@ function webspark_jumbohero_field_default_field_instances() {
   t('<ul class="help-text">
 <li class="help-title">Tips & Instructions</li>
 <li>Heroes should be added <strong>only to the top region</strong> of your page.</li>
-<li>Images should be 1170 x 700 px. Smaller images will be scaled up; larger ones will be cropped.</li>
+<li>Images should be 1170 x 700 px for optimal display.</li>
 <li>When adding a new image, <strong>refresh the page</strong> after saving to view the image.</li>
 </ul>');
   t('Blurb');
