@@ -1,4 +1,8 @@
 
-Webspark Content Callout 7.x-1.1-dev, 2014-11-21
+Webspark Content Callout 7.x-1.2-dev, 2014-11-21
 ------------------------------
 - Adding config settings for Features UUID export settings to export four example content callouts with text, image and video.
+
+Webspark Content Callout 7.x-1.3-dev, 2014-12-17
+------------------------------
+- Removing two of the example callouts.  One was a duplicate.  The second, the callout with the image, was removed because the image prevented replacing the files directory through the Pantheon dashboard while importing a site.
