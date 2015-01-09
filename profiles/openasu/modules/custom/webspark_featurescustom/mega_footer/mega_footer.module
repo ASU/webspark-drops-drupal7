@@ -127,18 +127,22 @@ function mega_footer_block_view($delta = '') {
 
   $footer_mark .= "</div>";
 
-
+  $i = 0;
   //Now we add the menu items to the right
   foreach($mega_menu as $item) {
 
       if(is_bool($item)) {
         break;
       }
+      $caret = "";
+      if(!empty($item['#below'])) {
+        $caret = "caret";
+      }
 
       $footer_mark .= "<div class='col-md-2 col-sm-3 space-bot-md'>
-          <h2 data-toggle='collapse' data-target='#".$item['#title']."' class='big-foot-head'>".
-          $item['#title']."<span class='caret'></span></h2>
-          <ul class='big-foot-nav  collapse in' id='".$item['#title']."' style=''>";
+          <h2 data-toggle='collapse' data-target='#mega_accord".$i."' class='big-foot-head'>".
+          $item['#title']."<span class='$caret'></span></h2>
+          <ul class='big-foot-nav  collapse in' id='mega_accord".$i."' style=''>";
 
       foreach($item['#below'] as $inner) {
         if(is_bool($inner)) {
@@ -149,7 +153,7 @@ function mega_footer_block_view($delta = '') {
       }
 
       $footer_mark .= "</ul></div>";
-
+  $i++;
   }
   $footer_mark .= "</div>";
 

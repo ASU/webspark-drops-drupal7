@@ -2,8 +2,9 @@ name = Mega Footer
 description = CSS/jQuery drop-down, drop-right and drop-left menus to be placed in blocks
 core = 7.x
 package = ASU Webspark
-version = 7.x-1.0-dev
+version = 7.x-1.2-dev
 
 
 dependencies[] = mega_footer_menu
+dependencies[] = fontawesome
 scripts[] = js/megafoot.js
