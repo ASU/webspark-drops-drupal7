@@ -1,0 +1,42 @@
+diff --git a/css/panopoly.css b/css/panopoly.css
+index 6a57182..71aa50a 100644
+--- a/css/panopoly.css
++++ b/css/panopoly.css
+@@ -513,19 +513,19 @@ ul#media-browser-library-list {
+  * Navbar Styling
+  */
+ a#navbar-link-admin-panopoly:before {
+-  background-image: url("../../../../../profiles/panopoly/modules/panopoly/panopoly_admin/images/icon-panopoly.png");
++  background-image: url("/profiles/openasu/modules/panopoly/panopoly_admin/images/icon-panopoly.png");
+ }
+ 
+ a#navbar-link-admin-panopoly.active:before {
+-  background-image: url("../../../../../profiles/panopoly/modules/panopoly/panopoly_admin/images/icon-panopoly-active.png");
++  background-image: url("/profiles/openasu/modules/panopoly/panopoly_admin/images/icon-panopoly-active.png");
+ }
+ 
+ a#navbar-link-admin-apps:before {
+-  background-image: url("../../../../../profiles/panopoly/modules/panopoly/panopoly_admin/images/icon-apps.png");
++  background-image: url("/profiles/openasu/modules/panopoly/panopoly_admin/images/icon-apps.png");
+ }
+ 
+ a#navbar-link-admin-apps.active:before {
+-  background-image: url("../../../../../profiles/panopoly/modules/panopoly/panopoly_admin/images/icon-apps-active.png");
++  background-image: url("/profiles/openasu/modules/panopoly/panopoly_admin/images/icon-apps-active.png");
+ }
+ 
+ #navbar-tray--2 a {
+@@ -545,11 +545,11 @@ a#navbar-link-admin-apps.active:before {
+   position: absolute;
+   top: 0;
+   width: 20px;
+-  background-image: url("../../../../../profiles/panopoly/modules/panopoly/panopoly_admin/images/icon-add.png");
++  background-image: url("/profiles/openasu/modules/panopoly/panopoly_admin/images/icon-add.png");
+ }
+ 
+ #navbar-tray--2 a.active:before {
+-  background-image: url("../../../../../profiles/panopoly/modules/panopoly/panopoly_admin/images/icon-add-active.png");
++  background-image: url("/profiles/openasu/modules/panopoly/panopoly_admin/images/icon-add-active.png");
+ }
+ 
+ #navbar-administration .edit-shortcuts {
