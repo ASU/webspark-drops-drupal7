@@ -7,6 +7,8 @@ CHANGELOG for ASU Brand module for Drupal 7
 - Header versions file changed to gtmheader.xml .
 - Header versions file location is sensitive to set basepath.
 - Checks for brand module version dependancy.
+- Menu item json injects absolute paths.
+- Removed extraneous properties from menu menu item json.
 
 7.x-1.6, 2014-09-22
 -----------------------

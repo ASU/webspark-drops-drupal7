@@ -7,23 +7,33 @@ ASU Brand module installation instructions.
 3. The header and footer are cached locally and will refresh every 48 hours. If
    you need to manually refresh them, go to Configuration -> Performace and
    clear the site's cache.
+     
 
-Bartik theme users
+FAQ
+--------------------------
+Q: Does the module support the 'Special menu items' module?
+A: Yes. <nolink> menu items will link to current page ('#')
+   and <separator> menu items will not be rendered in the
+   injected mobile menu.
 
-If you are using the default Bartik theme, enable the color module and set the 
-theme's colors to the following to give the theme a general ASU feel:
-  Header top: #ffcb66 (if you are using a gold header; #860025 for maroon)
-  Header bottom: #ffcb66 (if you are using a gold header; #860025 for maroon)
-  Footer background: #000000
-  Link color: #990033
+
 
 HOOKS
 --------------------------
 
 /**
- * Implements hook_sitemenu().
+ * Implements hook_asu_brand_sitemenu_alter().
  * Modify site menu before injection into ASU Header
  */
-function MODULENAME_sitemenu_alter(&$menu_array) {
-  // you can modify the site menu here
+function MODULENAME_asu_brand_sitemenu_alter(&$menu_array) {
+  // you can modify the $menu_array here
+}
+
+
+/**
+ * Implements hook_asu_brand_sitename_alter().
+ * Modify site name before injection into ASU Header
+ */
+function MODULENAME_asu_brand_sitename_alter(&$site_name) {
+  // you can modify the $site_name here
 }

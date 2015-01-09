@@ -40,9 +40,13 @@ function asu_brand_init() {
     $menu_array = asu_brand_get_site_menu_array();
     drupal_alter('asu_brand_sitemenu', $menu_array); // Invoke alter
     
+    $site_name = asu_brand_get_site_name();
+    drupal_alter('asu_brand_sitename', $site_name); // Invoke alter
+    
     $js = 'window.ASUHeader = window.ASUHeader || {};';
     $js .= 'ASUHeader.site_menu = ASUHeader.site_menu || {};';
     $js .= 'ASUHeader.site_menu.json = \''.json_encode($menu_array, JSON_HEX_APOS).'\';';
+    $js .= 'ASUHeader.site_menu.site_name = '.json_encode($site_name, JSON_HEX_APOS).';';
     
     drupal_add_js($js, array('type' => 'inline', 'scope' => 'header', 'group' => JS_THEME, 'weight' => -10));
   }
@@ -231,6 +235,15 @@ function asu_brand_is_preview_path($reset = FALSE) {
 
 
 /**
+ * Get site name displayed in mobile menu
+ * @return String
+ */
+function asu_brand_get_site_name() {
+  $site_name = variable_get('site_name', '');
+  return $site_name;
+}
+
+/**
  * Returns site menu array
  */
 function asu_brand_get_site_menu_array() {
@@ -239,25 +252,31 @@ function asu_brand_get_site_menu_array() {
   $i=0;
   foreach ($menu_tree as $item) {
     if (isset($item['link']) && $item['link']['access'] && !$item['link']['hidden']) {
-      $menu_array[$i]['title'] = t(strip_tags(htmlspecialchars_decode($item['link']['title'])));
-      $menu_array[$i]['path'] = t($item['link']['link_path']);
-      $menu_array[$i]['options'] = t($item['link']['options']);
+      if ($menu_item = asu_brand_get_menu_item($item['link']['title'], $item['link']['link_path'], $item['link']['options'])) {
+        $menu_array[$i] = $menu_item;
+      } else {
+        $i--;
+      }
       // Render child items.
       if (asu_brand_menuitem_has_active_children($item)) {
         $j=0;
         foreach ($item['below'] as $child) {
           if (isset($child['link']) && !$child['link']['hidden']) {
-            $menu_array[$i]['children'][$j]['title'] = t($child['link']['title']);
-            $menu_array[$i]['children'][$j]['path'] = t($child['link']['link_path']);
-            $menu_array[$i]['children'][$j]['options'] = t($child['link']['options']);
+            if ($menu_item = asu_brand_get_menu_item($child['link']['title'], $child['link']['link_path'], $child['link']['options'])) {
+              $menu_array[$i]['children'][$j] = $menu_item;
+            } else {
+              $j--;
+            }
             // Render grandchild items.
             if (asu_brand_menuitem_has_active_children($child)) {
               $k=0;
               foreach ($child['below'] as $grandchild) {
                 if (isset($grandchild['link']) && !$grandchild['link']['hidden']) {
-                  $menu_array[$i]['children'][$j]['children'][$k]['title'] = t($grandchild['link']['title']);
-                  $menu_array[$i]['children'][$j]['children'][$k]['path'] = t($grandchild['link']['link_path']);
-                  $menu_array[$i]['children'][$j]['children'][$k]['options'] = t($grandchild['link']['options']);
+                  if ($menu_item = asu_brand_get_menu_item($grandchild['link']['title'], $grandchild['link']['link_path'], $grandchild['link']['options'])) {
+                    $menu_array[$i]['children'][$j]['children'][$k] = $menu_item;
+                  } else {
+                    $k--;
+                  }
                   $k++;
                 }
               }
@@ -270,6 +289,37 @@ function asu_brand_get_site_menu_array() {
     }
   }
   return $menu_array;
+}
+
+
+/**
+ * Compose and return menu item
+ *   Special handling for 'Special menu items' module
+ *   Return NULL for path if <nolink>
+ *   Return empty array if <separator>
+ * @param atring $title
+ * @param atring $path
+ * @param assoc array $options
+ * @return assoc array>
+ */
+function asu_brand_get_menu_item($title, $path, $options = array()) {
+  // default
+  $menu_item = array(
+        'title' => t(strip_tags(htmlspecialchars_decode($title))),
+        'path'  => url($path, $options)
+      );
+  // special handling for 'Special menu items' module
+  if (module_exists('special_menu_items')) {
+    switch ($path) {
+      case '<nolink>':
+        $menu_item['path'] = NULL;
+        break;
+      case '<separator>':
+        return array(); // return empty array if separator
+        break;
+    }
+  }
+  return $menu_item;
 }
 
 
