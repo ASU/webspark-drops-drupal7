@@ -27,10 +27,10 @@ function webspark_featurescustom_theme_check () {
 }
 
 /**
- * Enables list of modules when the innovation theme in enabled.
+ * On switch-over from Webspark Classic to Innovation theme, do the following:
  */
 function _webspark_featurescustom_enable_config($theme) {
-  // Enabling all theme related modules if they are not enabled
+  // Enabling Innovation-related modules if they are not enabled
   $modules = array();
   // Contrib module dependencies for features
   $modules[] = 'backgroundfield';
@@ -49,22 +49,63 @@ function _webspark_featurescustom_enable_config($theme) {
   $modules[] = 'mega_footer';
   // OpenASU custom modules, features
   $modules[] = 'asu_gsa';
-  $modules[] = 'webspark_featurescustom';
+  $modules[] = 'asu_maps_enhanced';
   $modules[] = 'webspark_wysiwyg';
   $modules[] = 'webspark_panels_styles';
   $modules[] = 'webspark_banner';
   $modules[] = 'webspark_breadcrumbs';
   $modules[] = 'webspark_content_callout';
   $modules[] = 'webspark_hero';
+  $modules[] = 'webspark_jumbohero';
   $modules[] = 'webspark_megamenu';
   $modules[] = 'mega_footer_menu';
   $modules[] = 'webspark_extras';
   module_enable($modules,TRUE);
-  $message = $theme." theme modules have been enabled.";
-  drupal_set_message($message);
+  watchdog('theme update', 'Modules enabled for ' . $theme . ' - ' . implode(',', $modules));
 
+  // WEBSPARK-448, 509
   // Add setting for updating header to proper version
-      variable_set('asu_brand_header_version', '4.3');
+  variable_set('asu_brand_header_version', '4.3');
+  // Update header file name to default
+  variable_set('asu_brand_header_template', 'default');
+  // Update header basepath
+  variable_set('asu_brand_header_basepath', 'http://www.asu.edu/asuthemes');
+  watchdog('theme update', 'Updated header values for ' . $theme);
+
+  // WEBSPARK-509 - Swap out system main-menu with TB Mega Menu main-menu on
+  // theme update.
+  db_update('block')
+    ->fields(array(
+        'region' => 'menu',
+        'status' => '1',
+        'weight' => '-100'
+      )
+    )
+    ->condition('module', 'tb_megamenu')
+    ->condition('delta', 'main-menu')
+    ->execute();
+  db_update('block')
+    ->fields(array(
+        'region' => '-1',
+        'status' => '0',
+        'weight' => '0'
+      )
+    )
+    ->condition('module', 'system')
+    ->condition('delta', 'main-menu')
+    ->execute();
+  // disable ASU Students block
+  db_update('block')
+    ->fields(array(
+        'region' => '-1',
+        'status' => '0',
+        'weight' => '0'
+      )
+    )
+    ->condition('module', 'asu_brand')
+    ->condition('delta', 'asu_brand_students_footer')
+    ->execute();
+  watchdog('theme update', 'Updated nav menu blocks for ' . $theme);
 }
 
 
