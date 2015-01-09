@@ -37,7 +37,7 @@
           <?php print $content['toprow2col2']; ?>
         </div>
       </div>
-      <div class="row row-3 beast-two-column row-full">
+      <div class="row row-3 beast-two-column">
         <div class="column col-sm-12 col-md-7 col-lg-8 beast-top-row3-column1">
           <?php print $content['toprow3col1']; ?>
         </div>

@@ -90,7 +90,8 @@ a:focus,
   outline-offset: -2px;
 }
 
-#header a {
+#header a,
+#asu_footer a {
   border-bottom: none;
 }
 

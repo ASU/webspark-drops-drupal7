@@ -76,8 +76,19 @@
  *
  * @ingroup themeable
  */
+
+// Set node array in one place:
+if (is_numeric(arg(1))) {
+  $node_info = $variables['page']['content']['system_main']['nodes'][arg(1)];
+}
+else {
+  $node_info = array();
+}
+
+
 ?>
-<div id="page-wrapper"><div id="page">
+<div id="page-wrapper">
+  <div id="page">
 
     <!-- Page Header -->
     <header id="header">
@@ -87,14 +98,19 @@
             <?php print render($page['header']); ?>
 
             <?php if ($site_name): ?>
-              <h1 class="header__sitename"<?php if ($hide_site_name) { print ' class="element-invisible"'; } ?>>
-                <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home"><span><?php print $site_name; ?></span></a>
+              <h1 class="header__sitename"<?php if ($hide_site_name) {
+                print ' class="element-invisible"';
+              } ?>>
+                <a href="<?php print $front_page; ?>"
+                   title="<?php print t('Home'); ?>"
+                   rel="home"><span><?php print $site_name; ?></span></a>
               </h1>
             <?php endif; ?>
           </div>
         </div>
       </div>
-    </header><!-- /.header -->
+    </header>
+    <!-- /.header -->
 
 
     <!-- Nav Bar -->
@@ -103,82 +119,108 @@
         <!--Commented to work with mega menu-->
         <nav class="navbar-collapse collapse">
           <?php print render($page['menu']); ?>
-        </nav><!-- /#navbar -->
-      </div><!-- /.container -->
-    </div><!-- /.navmenu -->
+        </nav>
+        <!-- /#navbar -->
+      </div>
+      <!-- /.container -->
+    </div>
+    <!-- /.navmenu -->
     <!-- Page Main -->
-    <div id="main-wrapper" class="clearfix"><div id="main" class="clearfix">
+    <div id="main-wrapper" class="clearfix">
+      <div id="main" class="clearfix">
         <a id="main-content"></a>
 
-    <!--<div class="asu-degree-banner-image"><img src="/sites/default/files/default_images/<?php //print render($variables['page']['content']['system_main']['nodes'][arg(1)]['field_asu_banner_image']['#items'][0]['filename']); ?>"></div>-->
-    <div class="asu-degree-banner-image" style="background-image:url(/sites/default/files/<?php echo $variables['page']['content']['system_main']['nodes'][arg(1)]['field_asu_banner_image']['#items'][0]['filename']; ?>)">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <?php if (($no_panels || $always_show_page_title) && $title): ?> 
-              <h1 id="page-title" class="title">           
-                <?php print $title; ?>
-                (<?php print render($variables['page']['content']['system_main']['nodes'][arg(1)]['field_asu_degree']['#items'][0]['value']); ?>)
-              </h1>
-            <?php endif; ?>
+        <div class="asu-degree-banner-image"
+             style="background-image:url(/sites/default/files/<?php echo $node_info['field_asu_banner_image']['#items'][0]['filename']; ?>)">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <?php if (($no_panels || $always_show_page_title) && $title): ?>
+                  <h1 id="page-title" class="title">
+                    <?php print $title; ?>
+                    <?php if (isset($node_info['field_asu_degree']['#items'][0]['value'])): ?>
+                      (<?php print render($node_info['field_asu_degree']['#items'][0]['value']); ?>)
+                    <?php endif; ?>
+                  </h1>
+                <?php endif; ?>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    </div>
-        <div id="top-content" class="column container">
+      <div id="top-content" class="column container">
 
-          <?php if ($messages): ?>
-            <div id="messages">
-              <?php print $messages; ?>
-            </div>
-          <?php endif; ?>
+        <?php if ($messages): ?>
+          <div id="messages">
+            <?php print $messages; ?>
+          </div>
+        <?php endif; ?>
 
-          <?php if ($tabs): ?>
-            <div id="tabs">
-              <?php print render($tabs); ?>
-            </div>
-          <?php endif; ?>
+        <?php if ($tabs): ?>
+          <div id="tabs">
+            <?php print render($tabs); ?>
+          </div>
+        <?php endif; ?>
 
-          <?php if ($action_links): ?>
-            <div id="action-links">
-              <?php print render($action_links); ?>
-            </div>
-          <?php endif; ?>
-        </div> <!-- /#top-content -->
+        <?php if ($action_links): ?>
+          <div id="action-links">
+            <?php print render($action_links); ?>
+          </div>
+        <?php endif; ?>
+      </div>
+      <!-- /#top-content -->
 
-        <!--Start degree content-->
-        <?php print theme('breadcrumb', array('breadcrumb'=>drupal_get_breadcrumb())); ?>
-        <div class="container">
-          <?php //dpm(get_defined_vars()); ?>
-          <?php print render($variables['page']['content']['system_main']['nodes'][arg(1)]['body']); ?>
+      <!--Start degree content-->
+      <?php print theme('breadcrumb', array('breadcrumb' => drupal_get_breadcrumb())); ?>
+      <div class="container">
+        <?php if (isset($node_info['body'])): ?>
+          <?php print render($node_info['body']); ?>
           <div class="row space-bot-lg">
             <div class="col-sm-6 col-md-4 space-bot-md">
-              <a href="https://students.asu.edu/typeofstudent" data-scroll="" class="btn btn-gold btn-block btn-lg">Request information</a>
+              <a href="https://students.asu.edu/typeofstudent" data-scroll=""
+                 class="btn btn-gold btn-block btn-lg">Request information</a>
             </div>
             <div class="col-sm-6 col-md-4 space-bot-md">
-              <a href="https://visit.asu.edu/" class="btn btn-gold btn-block btn-lg">Schedule a visit</a>
+              <a href="https://visit.asu.edu/"
+                 class="btn btn-gold btn-block btn-lg">Schedule a visit</a>
             </div>
             <div class="col-sm-6 col-md-4 space-bot-md">
-              <a href="http://www.asu.edu/enroll/apply" class="btn btn-gold btn-block btn-lg">How and when to apply</a>
+              <a href="http://www.asu.edu/enroll/apply"
+                 class="btn btn-gold btn-block btn-lg">How and when to apply</a>
             </div>
           </div>
-        </div>
-        <div class="asu-degree-grey-section">
-          <div class="container">
-            <div class="row">
-              <div class="col-sm-6 col-md-4">
-                <h2>Degree Offered</h2>
-                <div class="asu-degree-page-degree-offered">
-                  <p>
-                    <?php print render($variables['page']['content']['system_main']['nodes'][arg(1)]['field_asu_degree_awarded']['#items'][0]['value']); ?>, <?php print render($variables['page']['content']['system_main']['nodes'][arg(1)]['field_asu_degree']['#items'][0]['value']); ?><br>
-                    <a href="<?php echo $variables['page']['content']['system_main']['nodes'][arg(1)]['field_asu_college_url']['#items'][0]['url']; ?>" target="_blank"><?php print render($variables['page']['content']['system_main']['nodes'][arg(1)]['field_asu_diploma_description']['#items'][0]['value']); ?></a>
-                  </p>
-                </div>
+        <?php endif; ?>
+      </div>
+      <div class="asu-degree-grey-section">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-6 col-md-4">
+              <h2>Degree Offered</h2>
+
+              <div class="asu-degree-page-degree-offered">
                 <p>
-                  <b>Location</b><br>
-                  <!--TODO - Set URLs to be pulled in from webapp4 if they are in there.-->
-                  <?php switch($variables['page']['content']['system_main']['nodes'][arg(1)]['field_asu_degree_campus']['#items'][0]['value']){
+                  <?php if (isset($node_info['field_asu_degree_awarded']['#items'][0]['value'])): ?>
+                    <?php print render($node_info['field_asu_degree_awarded']['#items'][0]['value']); ?>
+                  <?php endif; ?>
+                  <?php if (isset($node_info['field_asu_degree']['#items'][0]['value'])): ?>
+                    , <?php print render($node_info['field_asu_degree']['#items'][0]['value']); ?>
+                  <?php endif; ?><br>
+
+                  <?php if (isset($node_info['field_asu_college']['#items'][0]['value'])): ?>
+                    <?php if (isset($node_info['field_asu_college_url']['#items'][0]['url'])): ?>
+                      <a href="<?php echo $node_info['field_asu_college_url']['#items'][0]['url']; ?>" target="_blank">
+                    <?php endif; ?>
+                    <?php print render($node_info['field_asu_college']['#items'][0]['value']); ?>
+                    <?php if (isset($node_info['field_asu_college_url']['#items'][0]['url'])): ?>
+                      </a>
+                    <?php endif; ?>
+                  <?php endif; ?>
+                </p>
+              </div>
+              <p>
+                <b>Location</b><br>
+                <?php if (isset($node_info['field_asu_degree_campus']['#items'][0]['value'])): ?>
+                  <?php switch ($node_info['field_asu_degree_campus']['#items'][0]['value']) {
                     case 'Tempe':
                       echo '<a href="http://www.asu.edu/tour/tempe/index.html">Tempe</a>';
                       break;
@@ -191,59 +233,87 @@
                     default:
                       echo '<a href="http://asuonline.asu.edu/">Online</a>';
                   } ?>
-                </p>
-                <h2>What is a Major Map?</h2>
-                <p>A major map outlines a major’s critical requirements, elective and required courses, and optimal course sequencing to help students stay on the right track to graducation.</p>
-                <?php if(isset($variables['page']['content']['system_main']['nodes'][arg(1)]['field_asu_degree_major_map_url'])): ?>
-                <p><a href="<?php echo $variables['page']['content']['system_main']['nodes'][arg(1)]['field_asu_degree_major_map_url']['#items'][0]['url']; ?>" target="_blank">View Major Map</a></p>
-                <?php endif ?>
-              </div>
-              <div class="col-sm-6 col-md-4">
-                <h2>Application Requirements</h2>
-                <p>
-                  All students are required to meet general university admission requirements.<br>
-                  <a href="https://students.asu.edu/freshman">Freshman</a><br>
-                  <a href="https://transfer.asu.edu/">Transfer</a><br>
-                  <a href="https://students.asu.edu/international">International</a><br>
-                  <a href="https://students.asu.edu/readmission">Readmission</a>
-                </p>
-              </div>
-              <div class="col-sm-6 col-md-4">
-                <h2>Affording College</h2>
-                <p>
-                  <a href="https://students.asu.edu/scholarships">Scholarships</a><br>
-                  Find and apply for relevant scholarships.
-                </p>
-                <p>
-                  <a href="https://students.asu.edu/admission/wue">WUE eligible program</a><br>
-                  Undergraduate students from western states who enroll in this program are eligible for a discounted tuition rate.
-                </p>
-                <p>
-                  <a href="https://students.asu.edu/financialaid">Financial Aid</a><br>
-                  ASU has many financial aid options. Almost everyone, regardless of income, can qualify for some form of financial aid. In fact, more than 70 percent of all ASU students receive some form of financial assistance every year.
-                </p>
-              </div>
+                <?php endif; ?>
+              </p>
+
+              <h2>What is a Major Map?</h2>
+
+              <p>A major map outlines a major’s critical requirements, elective
+                and required courses, and optimal course sequencing to help
+                students stay on the right track to graducation.</p>
+              <?php if (isset($node_info['field_asu_degree_major_map_url'])): ?>
+                <p><a
+                    href="<?php echo $node_info['field_asu_degree_major_map_url']['#items'][0]['url']; ?>"
+                    target="_blank">View Major Map</a></p>
+              <?php endif ?>
+            </div>
+            <div class="col-sm-6 col-md-4">
+              <h2>Application Requirements</h2>
+
+              <p>
+                All students are required to meet general university admission
+                requirements.<br>
+                <a href="https://students.asu.edu/freshman">Freshman</a><br>
+                <a href="https://transfer.asu.edu/">Transfer</a><br>
+                <a
+                  href="https://students.asu.edu/international">International</a><br>
+                <a href="https://students.asu.edu/readmission">Readmission</a>
+              </p>
+            </div>
+            <div class="col-sm-6 col-md-4">
+              <h2>Affording College</h2>
+
+              <p>
+                <a href="https://students.asu.edu/scholarships">Scholarships</a><br>
+                Find and apply for relevant scholarships.
+              </p>
+
+              <p>
+                <a href="https://students.asu.edu/admission/wue">WUE eligible
+                  program</a><br>
+                Undergraduate students from western states who enroll in this
+                program are eligible for a discounted tuition rate.
+              </p>
+
+              <p>
+                <a href="https://students.asu.edu/financialaid">Financial
+                  Aid</a><br>
+                ASU has many financial aid options. Almost everyone, regardless
+                of income, can qualify for some form of financial aid. In fact,
+                more than 70 percent of all ASU students receive some form of
+                financial assistance every year.
+              </p>
             </div>
           </div>
         </div>
-        <div class="container space-top-xl space-bot-xl">
-          <div class="col-md-8">
+      </div>
+      <div class="container space-top-xl space-bot-xl">
+        <div class="col-md-8">
+          <?php if (isset($node_info['field_asu_degree_career_opps'])): ?>
             <h2>Career Outlook</h2>
-            <?php print render($variables['page']['content']['system_main']['nodes'][arg(1)]['field_asu_degree_career_opps']); ?>
+            <?php print render($node_info['field_asu_degree_career_opps']); ?>
+          <?php endif; ?>
+          <?php if (isset($node_info['field_asu_degree_example_careers'])): ?>
             <h2>Example Careers</h2>
-            <?php print render($variables['page']['content']['system_main']['nodes'][arg(1)]['field_asu_degree_example_careers']); ?>
-          </div>
-          <?php if(isset($variables['page']['content']['system_main']['nodes'][arg(1)]['field_asu_degree_relatedprograms'])): ?>
-            <div class="col-md-4">
-              <div class="pane-menu-tree">
-                <h4>Related Programs</h4>
-                <?php print render_block_content('asu_degrees', 'related_programs'); ?>
-              </div>
+            <?php print render($node_info['field_asu_degree_example_careers']); ?>
+          <?php endif; ?>
+
+        </div>
+        <?php if (isset($node_info['field_asu_degree_relatedprograms'])): ?>
+          <div class="col-md-4">
+            <div class="pane-menu-tree">
+              <h4>Related Programs</h4>
+              <?php print render_block_content('asu_degrees', 'related_programs'); ?>
             </div>
-          <?php endif ?>
+          </div>
+        <?php endif ?>
         </div>
 
-      </div></div> <!-- /#main, /#main-wrapper -->
+        <?php print render($page['prefooter']); ?>
+
+      </div>
+    </div>
+    <!-- /#main, /#main-wrapper -->
 
     <!-- Page Footer -->
     <footer id="footer">
@@ -252,7 +322,8 @@
           <?php print render($page['footer']); ?>
         </div>
       </div>
-    </footer><!-- /#footer -->
+    </footer>
+    <!-- /#footer -->
 
     <?php print render($page['closure']); ?>
 
