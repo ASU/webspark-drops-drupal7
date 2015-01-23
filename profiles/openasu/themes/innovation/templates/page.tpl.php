@@ -87,7 +87,7 @@
 					<?php print render($page['header']); ?>
 
 					<?php if ($site_name): ?>
-							<h1 class="header__sitename<?php if ($hide_site_name) { print ' element-invisible'; } ?>">
+							<h1 class="header__sitename<?php if ($hide_site_name) { print ' hidden'; } ?>">
 									<a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home"><span><?php print $site_name; ?></span></a>
 							</h1>
 					<?php endif; ?>
