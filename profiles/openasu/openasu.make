@@ -54,7 +54,7 @@ projects[asu_brand][version] = 1.7
 projects[asu_brand][subdir] = custom
 projects[asu_brand][type] = module
 projects[asu_brand][download][revision] = 4e2268c9
-projects[asu_brand][download][branch] = header42
+projects[asu_brand][download][branch] = 7.x-1.x
 projects[asu_brand][download][url] = https://github.com/ASU/asu-drupal-brand.git
 
 projects[asu_cas][version] = 7.x-1.5
@@ -86,13 +86,13 @@ projects[ixr][download][url] = https://github.com/ASU/asu-drupal-ixr.git
 projects[asu_events][version] = 1.0-dev
 projects[asu_events][subdir] = custom
 projects[asu_events][type] = module
-projects[asu_events][download][revision] = a2211824
+projects[asu_events][download][revision] = 3ff78bb9
 projects[asu_events][download][url] = https://github.com/ASU/asu-drupal-events-feed.git
 
 projects[asu_news][version] = 1.0-dev
 projects[asu_news][subdir] = custom
 projects[asu_news][type] = module
-projects[asu_news][download][revision] = fc29af6a
+projects[asu_news][download][revision] = 7e925b539
 projects[asu_news][download][url] = https://github.com/ASU/asu-drupal-news.git
 
 ; eAdvisor Feed Feature (depracated in lieu of ASU Degrees)
@@ -107,7 +107,7 @@ projects[asu_eadvisor_degree_feed_feature][download][url] = https://github.com/A
 projects[asu_degrees][version] = 1.0
 projects[asu_degrees][type] = module
 projects[asu_degrees][subdir] = custom
-projects[asu_degrees][download][revision] = 814df0e9
+projects[asu_degrees][download][revision] = 3b3c292e
 projects[asu_degrees][download][branch] = asu_degrees
 projects[asu_degrees][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
 
@@ -116,14 +116,14 @@ projects[webspark_featurescustom][type] = module
 projects[webspark_featurescustom][subdir] = custom
 projects[webspark_featurescustom][directory_name] = webspark_featurescustom
 projects[webspark_featurescustom][download][type] = git
-projects[webspark_featurescustom][download][revision] = dd0741fd
+projects[webspark_featurescustom][download][revision] = 0f4c8c8f
 projects[webspark_featurescustom][download][branch] = master
 projects[webspark_featurescustom][download][url] = https://github.com/ASU/webspark-webstandards-components.git
 
 projects[asu_rfi][type] = module
 projects[asu_rfi][subdir] = custom
 projects[asu_rfi][download][type] = git
-projects[asu_rfi][download][revision] = 11163881
+projects[asu_rfi][download][revision] = 7d925e6f
 projects[asu_rfi][download][branch] = master
 projects[asu_rfi][download][url] = https://github.com/ASU/asu-drupal-rfi
 
@@ -138,6 +138,10 @@ projects[ldap][type] = module
 projects[ldap][subdir] = contrib
 ; patch - see https://drupal.org/node/2182413, comment #10 - remove upon ldap update beyond beta8
 projects[ldap][patch][2182413] = http://cgit.drupalcode.org/ldap/patch/?id=fe3a3d56ffebc9bd551c6d83a03172fae13517c3
+
+projects[better_watchdog_ui][version] = 2.0
+projects[better_watchdog_ui][type] = module
+projects[better_watchdog_ui][subdir] = contrib
 
 projects[cas_attributes][version] = 1.0-rc3
 projects[cas_attributes][type] = module
@@ -186,6 +190,8 @@ projects[webform][subdir] = contrib
 projects[backgroundfield][version] = 1.5
 projects[backgroundfield][type] = module
 projects[backgroundfield][subdir] = contrib
+; WEBSPARK-481 - BackgroundField image patch - default_image error
+projects[backgroundfield][patch][1841978] = https://www.drupal.org/files/backgroundfield_undefined_index-1841978-18.patch
 
 projects[chosen][version] = 2.0-beta4
 projects[chosen][type] = module
@@ -222,6 +228,14 @@ projects[maxlength][subdir] = contrib
 projects[panels_tabs][version] = 2.x-dev
 projects[panels_tabs][type] = module
 projects[panels_tabs][subdir] = contrib
+
+; Going to Git repo for set commit
+projects[quicktabs][type] = module
+projects[quicktabs][subdir] = contrib
+projects[quicktabs][download][type] = "git"
+projects[uuid_features][download][branch] = "7.x-3.x"
+projects[uuid_features][download][url] = "http://git.drupal.org/project/quicktabs.git"
+projects[uuid_features][download][revision] = "758de4cc4995149a2de1d566b4209ec343581d27"
 
 projects[tb_megamenu][version] = 1.0-beta5
 projects[tb_megamenu][type] = module
@@ -277,7 +291,7 @@ libraries[asu_webspark_bootstrap_bootstrap][download][url] = https://github.com/
 projects[innovation][version] = beta6
 projects[innovation][type] = theme
 projects[innovation][download][type] = git
-projects[innovation][download][revision] = 102d0b45
+projects[innovation][download][revision] = a9c7ab89
 projects[innovation][download][branch] = master
 projects[innovation][download][url] = https://github.com/ASU/webspark-theme-innovation.git
 
