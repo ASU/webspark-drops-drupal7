@@ -50,6 +50,7 @@ dependencies[] = block
 
 ; OpenASU - Contrib recommended
 dependencies[] = views_ui
+dependencies[] = better_watchdog_ui
 ;dependencies[] = contextual
 
 ; OpenASU - Contrib modules for features
@@ -62,6 +63,7 @@ dependencies[] = fontawesome
 dependencies[] = google_appliance
 dependencies[] = maxlength
 dependencies[] = panels_tabs
+;dependencies[] = quicktabs
 dependencies[] = uuid_features
 dependencies[] = features_override
 dependencies[] = video_embed_field
