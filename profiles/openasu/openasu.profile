@@ -72,8 +72,8 @@ function openasu_select_theme_form($form, &$form_state) {
     '#title' => t(''),
     '#type' => 'radios',
     '#options' => array(
-      'innovation' => t('Innovation (BETA) - ASU Web Standards compliant theme. Currently in development and not ready for production.'),
-      'asu_webspark_bootstrap' => t('Webspark (Stable) - ASU branded responsive (mobile friendly) theme.'),
+      'innovation' => t('Innovation - ASU Web Standards compliant theme.'),
+      //'asu_webspark_bootstrap' => t('Webspark Classic (Depracated) - ASU branded responsive (mobile friendly) theme.'),
     ),
     '#default_value' => 'innovation',
     '#ajax' => array(
