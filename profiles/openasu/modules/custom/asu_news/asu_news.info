@@ -1,7 +1,7 @@
 name = ASU News Feeds
 description = For importing and displaying ASU News feeds. DEPRACATED.
 core = 7.x
-package = DEPRACATED
+package = ASU Depracated
 version = 7.x-1.0-dev
 project = asu_news
 dependencies[] = ctools
