@@ -86,18 +86,26 @@ function asu_maps_enhanced_theme($existing, $type, $theme, $path) {
 function asu_maps_enhanced_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $map_items = array();
   $element = array();
+  $height = 642;
+  $element[0]['#markup'] = '';
+  if(isset($entity->field_map_info['und'][0]['value']) && isset($entity->field_map_action_link['und'][0])) {
+      $map_info = $entity->field_map_info['und'][0]['value'];
+      $field_map_alink = $entity->field_map_action_link['und'][0]['url'];
+      $field_map_atitle = $entity->field_map_action_link['und'][0]['title'];
+      $element[0]['#markup'] = "<div class = 'row'><div class ='col-md-8'>$map_info</div><div class ='col-md-4'><a
+      id='map_button' class ='btn btn-primary' href='$field_map_alink'>$field_map_atitle</a></div></div>";
+      $height = 425;
+  }
   if(isset($items[0]['map_items'])) {
       $map_items = drupal_json_decode($items[0]['map_items']);
       $settings = $display['settings'];
       $formatter = $display['type'];
   }
   foreach ($items as $delta => $item_data) {
-      $element[$delta]['#markup'] = theme('asu_maps_enhanced_view', array('items' => $map_items, 'delta' => $delta, 'settings' => $settings));
-
+      $element[$delta]['#markup'] .= theme('asu_maps_enhanced_view', array('items' => $map_items, 'delta' => $delta, 'settings' => $settings, 'height' => $height));
   }
 
   if(isset($items[0]['description'])) {
-
           $element[0]['#markup'] .= '<div>'.$items[0]['description'].'</div>';
   }
 
@@ -108,10 +116,10 @@ function asu_maps_enhanced_field_formatter_view($entity_type, $entity, $field, $
 * Theme function for asu_maps view
 **/
 function theme_asu_maps_enhanced_view($variables) {
-
+  $height = $variables['height'];
   $output = '';
   if(!empty($variables['items'])) {
-      $output .= '<div id="asu_map" style="height:642px; width: 100%;"><iframe style="height: 100%;" id="embed-iframe" class="map dev" src="//myatlascms.maps.asu.edu/map/?id=120&amp;em=1#!f/';
+      $output .= '<div id="asu_map" style="height:'.$height.'px; width: 100%;"><iframe style="height: 100%;" id="embed-iframe" class="map dev" src="//myatlascms.maps.asu.edu/map/?id=120&amp;em=1#!f/';
 
       $count = count($variables['items']);
       $i = 1;
@@ -274,12 +282,7 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
     $prev_top_selects= array_unique($prev_top_selects);
 
     //Begin building the widget form
-    $element['description'] = array(
-      '#title' => t('Description'),
-      '#type' => 'textfield',
-      '#rows' => 2,
-      '#default_value' => isset($items[$delta]['description']) ? $items[$delta]['description'] : NULL,
-    );
+
 
     $element['bird_fieldset'] = array(
         '#type' => 'fieldset',
@@ -442,6 +445,13 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       '#prefix' => '<div id="map_items_hidden">',
       '#suffix' => '</div>',
       '#default_value' => isset($encoded_loc) ? $encoded_loc : NULL,
+    );
+
+    $element['description'] = array(
+      '#title' => t('Description'),
+      '#type' => 'textfield',
+      '#rows' => 2,
+      '#default_value' => isset($items[$delta]['description']) ? $items[$delta]['description'] : NULL,
     );
   }
 

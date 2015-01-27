@@ -12,6 +12,15 @@ function asu_maps_enhanced_install() {
 
 }
 
+/**
+*Implements hook_update_N
+*in order to revert module and add fields
+*
+**/
+function asu_maps_enhanced_update_7001(&$sandbox) {
+  features_revert_module('asu_maps_enhanced');
+}
+
 
 /**
  * Implementation of hook_uninstall().
