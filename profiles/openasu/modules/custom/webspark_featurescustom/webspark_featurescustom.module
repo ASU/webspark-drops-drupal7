@@ -13,8 +13,8 @@ function webspark_featurescustom_menu_alter (&$items) {
   $items['admin/appearance/default']['page callback'] = 'webspark_featurescustom_theme_check';
 }
 
-/** 
- * Custom menu callback 
+/**
+ * Custom menu callback
  */
 function webspark_featurescustom_theme_check () {
   // Checking if the selected theme is our theme & calling function to active modules/configuration
@@ -109,7 +109,7 @@ function _webspark_featurescustom_enable_config($theme) {
 }
 
 
-/** 
+/**
  * Implementation of hook_entity_info_alter()
  */
 function webspark_featurescustom_entity_info_alter(&$entity_info) {
@@ -124,6 +124,21 @@ function webspark_featurescustom_entity_info_alter(&$entity_info) {
       'path' => 'admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type',
       'bundle argument' => 4,
       'real path' => 'admin/structure/fieldable-panels-panes/manage/image',
+      'access arguments' => array('administer fieldable panels panes'),
+    ),
+  );
+
+  // Changing description of Basic text for clarity
+  $entity_info['fieldable_panels_pane']['bundles']['text'] = array(
+    'label' => t('Add text'),
+    'description' => t('Add text and media'),
+    'pane category' => t('Custom'),
+    'pane top level' => TRUE,
+    'pane icon' => drupal_get_path('module', 'panopoly_widgets') . '/images/icon_text.png',
+    'admin' => array(
+      'path' => 'admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type',
+      'bundle argument' => 4,
+      'real path' => 'admin/structure/fieldable-panels-panes/manage/text',
       'access arguments' => array('administer fieldable panels panes'),
     ),
   );
