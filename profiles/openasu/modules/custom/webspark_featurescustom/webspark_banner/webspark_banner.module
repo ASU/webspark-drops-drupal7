@@ -10,6 +10,7 @@ function webspark_banner_entity_info_alter(&$entity_info) {
   // Webspark Banner Widget.
   $entity_info['fieldable_panels_pane']['bundles']['banner'] = array(
     'label' => t('Add title banner'),
+    'description' => t('Add a 1170 x 200 px image title banner to the top row'),
     'pane category' => t('Custom'),
     'pane top level' => TRUE,
     'pane icon' => drupal_get_path('module', 'webspark_banner') . '/images/icon_banner.png',
