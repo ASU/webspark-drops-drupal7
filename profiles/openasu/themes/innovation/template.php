@@ -24,6 +24,8 @@ function innovation_preprocess_html(&$variables) {
     )
   );
   drupal_add_html_head($meta_ie_render_engine, 'meta_ie_render_engine');
+  // WEBSPARK-189 - add actual HTTP header along with meta tag
+  drupal_add_http_header('X-UA-Compatible', 'IE=Edge,chrome=1');
 
   // Add conditional stylesheets for IE
   drupal_add_css(path_to_theme() . '/css/ie9.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 9', '!IE' => FALSE), 'preprocess' => FALSE));
@@ -49,7 +51,6 @@ function innovation_ctools_content_subtype_alter(&$subtype, &$plugin) {
     $subtype['title'] = t('Add existing content');
   }
 }
-   
 
 /**
  * Override or insert variables into the page template.
@@ -67,79 +68,6 @@ function innovation_preprocess_page(&$variables) {
     );
   }
 
-    /** Web Standards transplant **/
-
-  /* ----- { Passes ASUHeader.site_menu variable to client side (3 levels deep) } ----- */
-
-  if (module_exists('tb_megamenu') && ($menu_tree = tb_megamenu_get_tree('main-menu'))) {
-    $markup = '';
-    $ja = array();
-    $i=0;
-    foreach ($menu_tree as $item) {
-      if (isset($item['link']) && $item['link']['access'] && !$item['link']['hidden']) {
-        $markup .= sprintf("<li class=\"tlb\"><div class=\"text\">%s</div>", l(t(strip_tags(htmlspecialchars_decode($item['link']['title']))), $item['link']['link_path'], $item['link']['options']));
-        $ja[$i]['parent']['title']
-        = t(strip_tags(htmlspecialchars_decode($item['link']['title'])));
-        $ja[$i]['parent']['path']
-        = t($item['link']['link_path']);
-        $ja[$i]['parent']['options']
-        = t($item['link']['options']);
-        // Render child items.
-        if (innovation_menuitem_has_active_children($item)) {
-          $markup .= "<div class=\"icn fa f-sort-down\"></div></li>"; // parent toggle icon
-          $markup .= "<li class=\"clb closed\"><ul>";
-          foreach ($item['below'] as $child) {
-            if (isset($child['link']) && !$child['link']['hidden']) {
-              $markup .= sprintf("<li class=\"cb\"><div class=\"text\">%s</div>",l(t($child['link']['title']), $child['link']['link_path'], $child['link']['options']));
-              $ja[$i]['child']['title']
-              = t($item['link']['title']);
-              $ja[$i]['child']['path']
-              = t($item['link']['link_path']);
-              $ja[$i]['child']['options']
-              = t($item['link']['options']);
-              // Render grandchild items.
-              if (innovation_menuitem_has_active_children($child)) {
-                $markup .= "<div class=\"icn2 fa f-sort-down\"></div></li>"; // parent toggle icon
-                $markup .= "<li class=\"clb closed\"><ul>";
-                $j=0;
-                foreach ($child['below'] as $grandchild) {
-                  if (isset($grandchild['link']) && !$grandchild['link']['hidden']) {
-                    $markup .= sprintf("<li class=\"ccb\"><div class=\"text\">%s</div></li>",l(t($grandchild['link']['title']), $grandchild['link']['link_path'], $grandchild['link']['options']));
-                    $ja[$j]['grandchild']['title']
-                    = t($item['link']['title']);
-                    $ja[$j]['grandchild']['path']
-                    = t($item['link']['link_path']);
-                    $ja[$j]['grandchild']['options']
-                    = t($item['link']['options']);
-                    ++$j;
-                  }
-                }
-                $markup .= "</ul></li>";
-              } else {
-                $markup .= "</li>";
-              }
-            }
-          }
-          $markup .= "</ul></li>";
-        } else {
-          $markup .= "<div class=\"icn fa f-share-square-o\"></div></li>";
-        }
-        ++$i;
-      }
-    }
-    //dpm($menu_tree);
-    //dpm(get_defined_vars());
-    //dpm(json_encode($markup));
-    $js = '
-    ASUHeader = ASUHeader || {};
-    ASUHeader.site_menu = ASUHeader.site_menu || {};
-    ASUHeader.site_menu.markup = '.json_encode($markup).'
-    // WEBSPARK-422
-    //ASUHeader.site_menu.json = '.json_encode($ja).';
-    ASUHeader.site_menu.site_name = '.json_encode($variables['site_name']);
-
-    drupal_add_js($js, array('type' => 'inline', 'scope' => 'header', 'group' => JS_THEME, 'weight' => -10));
-  } /* ----- { End Megamenu stuff } ----- */
   /**
    * Adding to find the asu-degree template.
    */

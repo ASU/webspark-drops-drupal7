@@ -576,6 +576,7 @@ a.close:hover {
 -------------------------------------------------------------- */
 
 /* Node edit */
+
 #top-content #tabs .nav-pills {
   padding-top: 1em;
 }
@@ -623,17 +624,18 @@ a.close:hover {
 }
 
 .panels-section-column-categories .panels-categories-box {
-  margin-bottom: 2em;
+  margin-bottom: 0.5em;
 }
 
 h2.widget-list {
   font-size: 14px;
-  margin: 26px 0 0 10px;
+  line-height: 1.4;
+  margin: 0 0 0 10px;
 }
 
 .panels-section-column .content-type-button {
   top: 3px;
-  line-height: 1.5em;
+  line-height: 1.35em;
 }
 
 ul.help-text {

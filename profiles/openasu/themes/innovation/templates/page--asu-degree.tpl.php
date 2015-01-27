@@ -85,7 +85,6 @@ else {
   $node_info = array();
 }
 
-
 ?>
 <div id="page-wrapper">
   <div id="page">
@@ -172,12 +171,27 @@ else {
 
       <!--Start degree content-->
       <?php print theme('breadcrumb', array('breadcrumb' => drupal_get_breadcrumb())); ?>
+      <?php //dpm(get_defined_vars()); ?>
       <div class="container">
-        <?php if (isset($node_info['body'])): ?>
+        <?php if (isset($node_info['field_asu_degree_short_desc']['#items'][0]['safe_value'])): ?>
+          <div class="asu-degree-short-description">
+            <?php print render($node_info['field_asu_degree_short_desc']['#items'][0]['safe_value']); ?>
+            <div class="asu-degree-read-more">
+              <a href="#degree-collapse" data-toggle="collapse" aria-expanded="false">Read More</a>
+            </div>
+            <div id="degree-collapse" class="collapse">
+              <?php if (isset($node_info['body'])): ?>
+                <?php print render($node_info['body']); ?>
+              <?php endif; ?>
+            </div>
+          </div>
+
+        <?php elseif (isset($node_info['body'])): ?>
           <?php print render($node_info['body']); ?>
+        <?php endif; ?>
           <div class="row space-bot-lg">
-            <div class="col-sm-6 col-md-4 space-bot-md">
-              <a href="https://students.asu.edu/typeofstudent" data-scroll=""
+            <div class="col-sm-6 col-md-4 space-bot-md"><!--https://students.asu.edu/typeofstudent-->
+              <a href="#block-asu-rfi-asu-rfi-form-block" data-scroll=""
                  class="btn btn-gold btn-block btn-lg">Request information</a>
             </div>
             <div class="col-sm-6 col-md-4 space-bot-md">
@@ -189,7 +203,6 @@ else {
                  class="btn btn-gold btn-block btn-lg">How and when to apply</a>
             </div>
           </div>
-        <?php endif; ?>
       </div>
       <div class="asu-degree-grey-section">
         <div class="container">
@@ -263,8 +276,12 @@ else {
             <div class="col-sm-6 col-md-4">
               <h2>Affording College</h2>
 
-              <p>
-                <a href="https://students.asu.edu/scholarships">Scholarships</a><br>
+              <p><!--https://students.asu.edu/scholarships-->
+                <?php if (isset($node_info['field_scholarship_link']['#items'][0]['url'])): ?>
+                  <a href="<?php echo $node_info['field_scholarship_link']['#items'][0]['url'] ?>">Scholarships</a><br>
+                <?php else: ?>
+                  <a href="<?php echo 'https://scholarships.asu.edu/colleges' ?>">Scholarships</a><br>
+                <?php endif ?>
                 Find and apply for relevant scholarships.
               </p>
 
@@ -276,8 +293,11 @@ else {
               </p>
 
               <p>
-                <a href="https://students.asu.edu/financialaid">Financial
-                  Aid</a><br>
+                <?php if (isset($node_info['field_financial_aid_link']['#items'][0]['url'])): ?>
+                  <a href="<?php echo $node_info['field_financial_aid_link']['#items'][0]['url'] ?>">Financial Aid</a><br>
+                <?php else: ?>
+                  <a href="<?php echo 'https://students.asu.edu/financialaid' ?>">Financial Aid</a><br>
+                <?php endif ?>
                 ASU has many financial aid options. Almost everyone, regardless
                 of income, can qualify for some form of financial aid. In fact,
                 more than 70 percent of all ASU students receive some form of
