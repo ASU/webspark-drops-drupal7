@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Provide Rules integration for database log entry events.
+ */
+
+module_load_include('inc', 'better_watchdog_ui_rules', 'better_watchdog_ui_rules.rules');
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function better_watchdog_ui_rules_entity_info_alter(&$entity_info) {
+  // Set the rules controller class for nodes to own implementation.
+  $entity_info['better_watchdog_ui_watchdog']['rules controller class'] = 'WatchdogRulesController';
+}

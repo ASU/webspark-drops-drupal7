@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * @file
+ * Provide views field and filter handlers, and
+ * allow bulk operations.
+ */
+
+/**
+ * Implements hook_init().
+ */
+function better_watchdog_ui_init() {
+  $path = drupal_strtolower(drupal_get_path_alias($_GET['q']));
+
+  if ($path != BETTER_WATCHDOG_UI_VIEW_PATH) {
+    return;
+  }
+
+  if (isset($_GET['type'])) {
+    foreach ($_GET['type'] as $id => $value) {
+      if (!_better_watchdog_ui_type_exists($value)) {
+        unset($_GET['type'][$id]);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function better_watchdog_ui_menu() {
+  $items[BETTER_WATCHDOG_UI_VIEW_PATH . '/clear'] = array(
+    'title' => 'Clear all log messages',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('better_watchdog_ui_clear_all_form'),
+    'access arguments' => array('access site reports'),
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_views_bulk_operations_form_alter().
+ */
+function better_watchdog_ui_views_bulk_operations_form_alter(&$form, &$form_state, $vbo) {
+  if ($form['#form_id'] == 'views_form_better_watchdog_ui_view_page' && $form_state['step'] == 'views_form_views_form') {
+    $form['select']['clear_all'] = array(
+      '#markup' => l(t('Clear all log messages'), BETTER_WATCHDOG_UI_VIEW_PATH . '/clear'),
+    );
+  }
+}
+
+/**
+ * Form callback to confirm deletion of all watchdog entries.
+ */
+function better_watchdog_ui_clear_all_form($form, &$form_state) {
+  return confirm_form(array(), t('Are you sure you want to delete ALL log messages?'),
+    array('path' => BETTER_WATCHDOG_UI_VIEW_PATH), t('This action cannot be undone.'), t('Delete'), t('Cancel'));
+}
+
+/**
+ * Submit function: delete all watchdog entries.
+ */
+function better_watchdog_ui_clear_all_form_submit($form, &$form_state) {
+  db_delete('watchdog')->execute();
+  drupal_set_message(t('All log messages cleared.'));
+  $form_state['redirect'] = BETTER_WATCHDOG_UI_VIEW_PATH;
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function better_watchdog_ui_views_api() {
+
+  $api = array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'better_watchdog_ui') . '/views',
+  );
+
+  return $api;
+}
+
+/**
+ * Helper function: check if type exists in DB.
+ */
+function _better_watchdog_ui_type_exists($value) {
+  $query = db_select('watchdog', 'w');
+  $query->fields('w');
+  $query->condition('w.type', $value);
+  return $query->execute()->rowCount();
+}

@@ -1,0 +1,14 @@
+name = Better Watchdog UI Entity
+description = "Provide entity wrappers for database log entries."
+package = Better Watchdog UI
+core = 7.x
+
+dependencies[] = dblog
+dependencies[] = entity
+
+; Information added by Drupal.org packaging script on 2013-12-16
+version = "7.x-2.0"
+core = "7.x"
+project = "better_watchdog_ui"
+datestamp = "1387188871"
+

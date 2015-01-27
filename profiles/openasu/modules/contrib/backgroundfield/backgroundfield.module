@@ -178,6 +178,12 @@ function backgroundfield_field_delete_revision($entity_type, $entity, $field, $i
 function backgroundfield_field_update_field($field, $prior_field, $has_data) {
   // hack so we can use the default image function
   $field['type'] = 'image';
+  if (!isset($field['settings']['default_image'])) {
+    $field['settings']['default_image'] = NULL;
+  }
+  if (!isset($prior_field['settings']['default_image'])) {
+    $prior_field['settings']['default_image'] = NULL;
+  }
   image_field_update_field($field, $prior_field, $has_data);
 }
 

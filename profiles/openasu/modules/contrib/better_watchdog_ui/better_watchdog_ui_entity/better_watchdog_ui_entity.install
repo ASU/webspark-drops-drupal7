@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * Installation and update functions.
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function better_watchdog_ui_entity_enable() {
+  // Allow our view to override the basic watchdog detail page
+  // by increasing module weight in system database table.
+  $weight = db_select('system', 's')
+  ->fields('s', array('weight'))
+  ->condition('s.name', 'dblog', '=')
+  ->condition('type', 'module')
+  ->execute()
+  ->fetchField();
+
+  db_update('system')
+    ->fields(array('weight' => $weight + 1))
+    ->condition('name', 'better_watchdog_ui_entity')
+    ->condition('type', 'module')
+    ->execute();
+}
+
+/**
+ * Implements hook_disable().
+ */
+function better_watchdog_ui_entity_disable() {
+  // Reset the weight to be smaller than the dblog module.
+  $weight = db_select('system', 's')
+  ->fields('s', array('weight'))
+  ->condition('s.name', 'dblog', '=')
+  ->condition('type', 'module')
+  ->execute()
+  ->fetchField();
+
+  db_update('system')
+    ->fields(array('weight' => $weight - 1))
+    ->condition('name', 'better_watchdog_ui_entity')
+    ->condition('type', 'module')
+    ->execute();
+}

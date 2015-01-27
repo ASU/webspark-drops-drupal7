@@ -1,0 +1,95 @@
+<?php
+
+/**
+ * @file
+ * Installation and update functions.
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function better_watchdog_ui_enable() {
+  // Allow our view to override the basic watchdog listing
+  // by increasing module weight in system database table.
+  $weight = db_select('system', 's')
+  ->fields('s', array('weight'))
+  ->condition('s.name', 'better_watchdog_ui', '=')
+  ->condition('type', 'module')
+  ->execute()
+  ->fetchField();
+
+  db_update('system')
+    ->fields(array('weight' => $weight + 1))
+    ->condition('name', 'better_watchdog_ui')
+    ->condition('type', 'module')
+    ->execute();
+
+  // Enable watchdog view.
+  module_load_include('inc', 'better_watchdog_ui', 'better_watchdog_ui/better_watchdog_ui.views_default');
+  $views_status = variable_get('views_defaults', array());
+  if (array_key_exists('better_watchdog_ui_view', $views_status)) {
+    // TRUE means disable.
+    $views_status['better_watchdog_ui_view'] = TRUE;
+    variable_set('views_defaults', $views_status);
+    views_invalidate_cache();
+  }
+}
+
+/**
+ * Implements hook_disable().
+ */
+function better_watchdog_ui_disable() {
+  // Reset the weight to be smaller than the dblog module.
+  $weight = db_select('system', 's')
+  ->fields('s', array('weight'))
+  ->condition('s.name', 'better_watchdog_ui', '=')
+  ->condition('type', 'module')
+  ->execute()
+  ->fetchField();
+
+  db_update('system')
+    ->fields(array('weight' => $weight - 1))
+    ->condition('name', 'better_watchdog_ui')
+    ->condition('type', 'module')
+    ->execute();
+
+  // Disable watchdog view.
+  module_load_include('inc', 'better_watchdog_ui', 'better_watchdog_ui/better_watchdog_ui.views_default');
+  $views_status = variable_get('views_defaults', array());
+  if (array_key_exists('better_watchdog_ui_view', $views_status)) {
+    // TRUE means disable.
+    $views_status['better_watchdog_ui_view'] = FALSE;
+    variable_set('views_defaults', $views_status);
+    views_invalidate_cache();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function better_watchdog_ui_uninstall() {
+  // Delete watchdog view.
+  $view = views_get_view('better_watchdog_ui_view');
+  if ($view) {
+    $view->delete();
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function better_watchdog_ui_update_7201(&$sandbox) {
+  // Enable entity submodule.
+  module_enable(array('better_watchdog_ui_entity'));
+  // Remove old view.
+  $view = views_get_view('better_watchdog_ui_view');
+  if ($view) {
+    $view->delete();
+  }
+  // Save new view.
+  module_load_include('inc', 'better_watchdog_ui', 'views/better_watchdog_ui.views_default');
+  $views = better_watchdog_ui_views_default_views();
+  $wd_view = $views['better_watchdog_ui_view'];
+  $wd_view->save();
+  views_invalidate_cache();
+}
