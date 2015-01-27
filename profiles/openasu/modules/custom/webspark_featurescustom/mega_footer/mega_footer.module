@@ -66,7 +66,7 @@ function mega_footer_block_view($delta = '') {
             }
 
             if(variable_get('unit_phone', NULL)!=NULL) {
-                $footer_mark .= "Phone: <a class='phone-link' href='tel:".variable_get('unit_phone', NULL)."'>".variable_get('unit_phone', NULL)."</a><br>";
+                $footer_mark .= "Phone: <a class='phone-link' href='tel:".variable_get('unit_phone', NULL)."'><b>".variable_get('unit_phone', NULL)."</b></a><br>";
             }
   	       //check to see if fax is provided, and add to markup if so
             $is_fax = variable_get('unit_fax', '');
@@ -116,12 +116,19 @@ function mega_footer_block_view($delta = '') {
     </li>";
   }
 
+  if(variable_get('unit_rss_feed', NULL)!=NULL) {
+    $footer_mark .=  "<li><a href='".variable_get('unit_rss_feed', NULL)."' title='RSS'><i class='fa fa-rss-square' aria-hidden='true'></i></a>
+    </li>";
+  }
+
 
   $footer_mark .= "</ul>";
 
+
+  $contrib = variable_get('contribute_button', 'Contribute');
   if(variable_get('contribute_link', NULL) != NULL) {
   //add contribute button and closing div
-      $footer_mark .= "<a class='btn btn-primary' href='".variable_get('contribute_link', NULL). "'>Contribute</a>";
+      $footer_mark .= "<a class='btn btn-primary' href='".variable_get('contribute_link', NULL). "'>$contrib</a>";
   }
 
 
@@ -272,6 +279,18 @@ function mega_footer_block_configure($delta = '') {
       '#default_value' => variable_get('unit_instagram_connect', NULL),
     );
 
+    $form['unit_rss_feed'] = array(
+      '#type' => 'textfield',
+      '#title' => t('RSS Link'),
+      '#default_value' => variable_get('unit_rss_feed', NULL),
+    );
+
+    $form['contribute_button'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Contribute Button Text'),
+      '#default_value' => variable_get('contribute_button', 'Contribute'),
+    );
+
     $form['contribute_link'] = array(
       '#type' => 'textfield',
       '#title' => t('Contribute Link'),
@@ -319,7 +338,9 @@ function mega_footer_block_save($delta = '', $edit = array()) {
     	variable_set('unit_linkedin_connect', $edit['unit_linkedin_connect']);
     	variable_set('unit_youtube_connect', $edit['unit_youtube_connect']);
       variable_set('unit_instagram_connect', $edit['unit_instagram_connect']);
+      variable_set('contribute_button', $edit['contribute_button']);
       variable_set('contribute_link', $edit['contribute_link']);
+      variable_set('unit_rss_feed', $edit['unit_rss_feed']);
 	}
 }
 
