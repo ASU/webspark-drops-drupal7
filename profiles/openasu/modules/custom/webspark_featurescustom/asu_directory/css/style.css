@@ -1,0 +1,104 @@
+.node-type-asu-directory-person #content {
+    border: 1px solid #ddd;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 30px;
+    width: 750px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+.node-type-asu-directory-person .beast-top-row5-column1 {
+   width: 35%;
+}
+.node-type-asu-directory-person .beast-top-row5-column2 {
+    font-size: 18px;
+    width: 45%;	
+}
+.node-type-asu-directory-person .beast-top-row5-column3 {
+    width: 10%;
+}
+.field-name-field-asu-directory-displayname {
+    font-weight: bold;
+}
+#quicktabs-asu_directory_profile_tabs {
+    margin-left: -45px;
+    width: 749px;
+    margin-top: 25px;
+}
+#quicktabs-asu_directory_profile_tabs .ui-tabs-nav li:first-child {
+    margin-left: 45px;
+}
+.node-type-asu-directory-person .field-name-field-asu-directory-email {
+    margin-top: 35px;
+}
+#quicktabs-asu_directory_profile_tabs .view-asu-directory-people td {
+    border: 1px solid #fff !important;
+}
+#quicktabs-asu_directory_profile_tabs .ui-tabs .ui-tabs-panel {
+    padding: 25px;
+}
+.directory-sort a {
+    border-bottom: medium none !important;
+    color: black !important;
+    text-decoration: none !important;
+}
+.directory-sort {
+    background-color: #fff !important;
+}
+.view-asu-directory-people.view-id-asu_directory_people table { 
+    border: none !important;
+}
+.view-asu-directory-people.view-id-asu_directory_people {
+    padding: 25px;
+}
+.view-asu-directory-people.view-id-asu_directory_people td {
+    border-top: 1px solid #b7b7b7;
+    border-right: none !important;
+    border-left: none !important;
+    border-bottom: none !important;
+}
+.view-asu-directory-people.view-id-asu_directory_people th {
+   border-left: none !important;
+   border-right: none !important;
+   border-bottom: 2px solid #b7b7b7;
+}
+#quicktabs-asu_directory_profile_tabs td {
+    background-color: #fff !important;
+    border-top: 1px solid white;
+}
+
+#quicktabs-asu_directory_profile_tabs .ui-tabs-panel {
+    border-right: 1px solid #ddd !important;
+}
+
+#quicktabs-asu_directory_profile_tabs .ui-tabs-nav {
+    border-right: 1px solid #ddd !important;
+}
+
+@media (max-width: 748px) { 
+
+.node-type-asu-directory-person #content { 
+	width: 100%;
+}
+
+#quicktabs-asu_directory_profile_tabs { 
+	width: 100%;
+}
+.panel-pane.pane-block.pane-quicktabs-asu-directory-profile-tabs {
+	width: 100%;
+}
+}
+
+@media (max-width: 365px) { 
+
+#quicktabs-asu_directory_profile_tabs .ui-tabs-nav li:first-child {
+	margin-left: 0px;
+}
+#quicktabs-asu_directory_profile_tabs .ui-tabs-nav li {
+	width: 100% !important;
+}
+
+#quicktabs-asu_directory_profile_tabs .ui-tabs-nav li a {
+	width: 100% !important;
+}
+}

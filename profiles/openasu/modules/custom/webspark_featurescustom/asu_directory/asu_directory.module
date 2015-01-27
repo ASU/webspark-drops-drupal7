@@ -1,0 +1,9 @@
+<?php
+/**
+ * @file
+ * Code for the ASU Directory feature.
+ * Created by: Zohair Zaidi (zazaidi@asu.edu)
+ * Initial Release: 01/20/2015
+ */
+
+include_once 'asu_directory.features.inc';
