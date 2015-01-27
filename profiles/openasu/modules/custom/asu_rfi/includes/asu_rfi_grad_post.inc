@@ -22,8 +22,8 @@ function asu_rfi_grad_post($data){
   
   
   //date of birth
-  if(isset($data['dob'])){
-    $dob = $data['dob'];
+  if(isset($data['birthdate'])){
+    $dob = $data['birthdate'];
   }
   else{
     $dob = '';
@@ -38,8 +38,8 @@ function asu_rfi_grad_post($data){
   }
  
  //Comment
-  if(isset($data['comment'])){
-    $comment = $data['comment'];
+  if(isset($data['questions'])){
+    $comment = $data['questions'];
   }
   else{
     $comment = '';
@@ -92,7 +92,7 @@ $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
                 'birthdate' => $dob,
                 'veteranStatus' => $military,
                 'questions' => $comment,
-		'poiCode' => $data['prog_plan'],
+		'poiCode' => $data['program_code'],
 		
 	);
   
@@ -119,6 +119,10 @@ foreach($submission_data as $key_value => $result_array){
 	$info = curl_getinfo($curl); //Used by your drupal messages below
 	
 	curl_close($curl);
+	
+	dpm($response);
+	
+	dpm($info);
 	
 //Get the previous page node
 $destination = drupal_get_destination();
@@ -155,17 +159,17 @@ if(($info['http_code'] == 400) || ($info['http_code'] == 500)){
   ->execute();
   
   //update error message
-   $node_error_updated = db_update('field_data_field_rfi_error_message') 
-  ->fields(array(
-    'field_rfi_error_message_value' => $response->data,
-  ))
-  ->condition('entity_id', $nodeid)
-  ->execute();
-  
+
+ 
+ /*  $node = node_load($nodeid);
+    $node_wrapper = entity_metadata_wrapper('node', $node);
+    $node_wrapper->field_rfi_submission_status->set('Pending');
+    $node_wrapper->field_rfi_error_message->set($error_message);
+    $node_wrapper->save();
   
   //Clear cache on field to display field's updated value on front end        
   $cid = 'field:node:' . $nodeid;
-  cache_clear_all($cid, 'cache_field');
+  cache_clear_all($cid, 'cache_field');*/
 }
 
 if(($info['http_code'] == 200)){
@@ -184,7 +188,7 @@ if(($info['http_code'] == 200)){
 }
 
 //if failed to post to SF, the set "last_failure_SF_posting" variable to current time
-if(($response->code != 200)){
+if(($info['http_code'] != 200)){
   variable_set('last_failure_SF_posting', time());
 }
 

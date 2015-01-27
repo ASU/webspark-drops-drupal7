@@ -10,7 +10,7 @@
 /* Implementation of hook_form **/
 
 function asu_rfi_email($prog_plan, $e_email){
-   
+
  if(!empty($prog_plan)){   
  $data = xmlrpc('https://webapp4.asu.edu/programs/XmlRpcServer', array('eAdvisorDSFind.findDegreeByAcadPlanMapArray' => array($prog_plan)));
 
@@ -184,11 +184,13 @@ function asu_rfi_email($prog_plan, $e_email){
             $map = "<br /><strong><i> Listing of Required Courses: </i> </strong> <br /><a href= ".$major_map."> <br /><strong> View major map </strong> </a><br /><br />";
             
      
-            if(!empty($additional_req)) // check if there are any additional requirments
+            if(!empty($additional_req)){ // check if there are any additional requirments
                 $whole_body = $short_desc.$description.$wufu_data.$fee.$lang.$math_requ.$addition_req.$mari.$map.$career_format;
-
-            else 
+	    }
+            else
+	    {
                 $whole_body = $short_desc. $description.$wufu_data.$fee.$lang.$math_requ.$mari.$map.$career_format;
+	    }
          }
  }
   $message_start = "<p> Thank you for your interest in attending Arizona State University.";
@@ -218,13 +220,13 @@ function asu_rfi_email($prog_plan, $e_email){
   By providing your email address, you gave Arizona State University permission to send this email.
   Please add <a href = 'mailto:asurecruitment@asu.edu' >asurecruitment@asu.edu</a> to your address book or safe sender list. Arizona State University - Undergraduate Admissions - PO Box 870112 - Tempe, AZ 85287-0112.</div>";
 
-if(!empty($prog_plan)){
-        $message = $message_start.$message_middle;
+//if(!empty($prog_plan)){
+ /*       $message = $message_start.$message_middle;
       }
   else{
        $message = $message_start.$message_end.$footer;
        $params['body'] = $message;
-    }
+    }*/
  if(!empty($newdata)){
     $table_end = "</table>";
    
@@ -232,14 +234,13 @@ if(!empty($prog_plan)){
     $row = $survey;
     $whole_body = $whole_body.$row;  
     }
-  
-   
-   $params['body'] = $message.$whole_body.$table_end.$message_end.$footer;
+   $params['body'] = $message_start.$message_middle.$whole_body.$table_end.$message_end.$footer;
    }
- else{ 
-   $params['body'] = $message.$whole_body.$message_end.$footer;
- }
-
+  else{
+   $whole_body = $whole_body;
+   $params['body'] = $message_start.$message_middle.$whole_body.$message_end.$footer;
+  }
+//}
  //Get email configuration varible values from the rfi admin settings page
   $from_email = variable_get('asu_rfi_from_email_field');
   if(!empty($from_email)){

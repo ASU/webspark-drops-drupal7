@@ -29,7 +29,7 @@ function asu_rfi_confirmation($nid){
     $plan_code = $sub_wrapper->field_rfi_program->value();
     $program_code = $sub_wrapper->field_rfi_college_code->value();
     $program_name = $sub_wrapper->field_rfi_college_name->value();
-    
+    $prospect_level = $sub_wrapper->field_rfi_prospect_level->value();
   }
    $college = $program_code.' - RFI';
    $sku = $program_code.$plan_code;
@@ -41,13 +41,39 @@ function asu_rfi_confirmation($nid){
    
    $items = array('sku'=>$sku, 'name'=>$college, 'category'=>'RFI', 'price'=>'100', 'quantity'=>'1');
   
+   $message = "<div style='padding:8% 0 8% 0;'>Thank you for your interest in ASU. An ASU representative will contact you soon!</div>";
    
-    $message = "<div>Thank you for your interest in ASU. An ASU representative will contact you soon!</div>";
+  $undergrad_confirm_nid = variable_get('asu_rfi_undergrad_confirm_node');
+  if($prospect_level == "Undergraduate"){
+    if(isset($undergrad_confirm_nid)){
+      $unode = node_load($undergrad_confirm_nid);
+      $undergrad_body = $unode->body['und'][0]['value'];
+      $confirm_message = $message.$undergrad_body;
+    }
+    else{
+     $confirm_message = $message;
+    }
+   }
+   
+   elseif($prospect_level == "Graduate"){
+    $grad_confirm_nid = variable_get('asu_rfi_grad_confirm_node'); 
+    if(isset($grad_confirm_nid)){
+      $gnode = node_load($grad_confirm_nid);
+      $grad_body = $gnode->body['und'][0]['value'];
+      $confirm_message = $message.$grad_body;
+    }
+    else{
+     $confirm_message = $message;
+    }
+   }
+   else{
+    $confirm_message = $message;
+   }
     
 //GMT transaction variables
 drupal_add_js("(function ($) {  SI_dataLayer.push({ 'ecommerce': { 'purchase': { 'actionField': { 'id': '$ga_id', 'affiliation': '$program_name','revenue': '100', },'products': [{ 'name': '$college', 'id': '$ga_id', 'price': '100','quantity': '1',}]}}})})(jQuery)", array('type' => 'inline', 'scope' => 'footer','weight' => 5));
  
-return $message;
+return $confirm_message;
 
  
 }

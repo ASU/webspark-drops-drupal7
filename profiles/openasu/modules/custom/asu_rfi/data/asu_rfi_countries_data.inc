@@ -23,7 +23,7 @@
   //get environment variable fro variables table
   $environment = variable_get('siteDomain');
   if(($environment == "qa") || ($environment == "dev")){
-    $middleware_host = "webforms-dev.asu.edu";
+    $middleware_host = "webforms-qa.asu.edu";
   }
   else{
     $middleware_host = "webforms.asu.edu";
@@ -35,7 +35,7 @@
   $options = array(
     CURLOPT_URL => $url,
     CURLOPT_RETURNTRANSFER => 1,
-    CURLOPT_HTTPHEADER => array('Content-Type: text/json', 'Authorization: Basic ' . base64_encode('archana:3UIzHi6vMNXDTV9p')),
+    CURLOPT_HTTPHEADER => array('Content-Type: text/json', 'Authorization: Basic ' . base64_encode('apuliroj:3UIzHi6vMNXDTV9p')),
   );  
 
   curl_setopt_array($ch, $options);

@@ -1,22 +1,73 @@
-.fa-info-circle{
-    display: inline-block;
-    font-family: FontAwesome;
-    font-style: normal;
-    font-weight: normal;
-    line-height: 1;
-    color: #ffffff;
-    background:red;
-    padding: 1%;
-    border-radius: 35px;
-}
 
 .rfi_test_mode{
     background: red;
     padding: 2%;
     color: #ffffff;
     font-size: 16px;
+    width: 80%;
+}
+
+.block-multiblock{
+    margin-left:5%;
 }
 
 .rfi_test_mode a{
     color : #000000 !important;
+}
+
+.rfi_button{
+    background: #a30046 !important;
+    color: #ffffff !important;
+}
+
+
+.rfi_phone{
+    /*width: 25%;
+    float: left;*/
+}
+
+.rfi_mobile, .form-item-mobile-check{
+    margin-bottom: 110px !important;
+    margin-top: 60px !important;
+    margin-left: 10px !important;
+}
+
+#rfi_second_form{
+    margin-top: 20px;
+}
+
+.form-item-prog-plan label, .form-item-start-date label, .form-item-student-type label, .form-item-country label, .form-item-state label, .form-item-program-code label{
+    display: block !important;
+}
+
+.chosen-default{
+  color: #505050 !important; 
+}
+
+.chosen-container{
+  min-width: 25% !important;    
+}
+
+.phone_field_rfi{
+    margin-right: 10px;
+    float:left;
+}
+
+#edit_birthdate_year_chosen { 
+  width: 6.2em !important; 
+}
+#edit_birthdate_month_chosen { 
+  width: 7.2em  !important; 
+}
+#edit_birthdate_day_chosen {
+  width: 6em !important; 
+}
+#edit-birthdate { padding: 0; }
+
+.form-item-birthdate-year{
+    
+}
+
+.form-control{
+    width: auto !important;
 }

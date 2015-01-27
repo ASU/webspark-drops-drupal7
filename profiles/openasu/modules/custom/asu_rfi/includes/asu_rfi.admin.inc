@@ -11,10 +11,17 @@ function asu_rfi_admin_settings($form_state){
   
   $form = array();
   
+  $form_modes = array('test'=>'Test','live'=>'Production');
+  
+   $form['form_stage'] = array(
+	'#type' => 'item',
+        '#markup' => t('<div class="rfi_note">Important: The RFI submissions will not be posted to Sales force via Middle ware unless Authentication code has been added. Please read below the Authentication code field for more details'),
+    );                 
+  
   $form['asu_rfi_form_access'] = array(
     '#type' => 'fieldset',
     '#title' => 'Request info form access settings',
-     '#collapsible' => TRUE,
+    '#collapsible' => TRUE,
     '#collapsed' => FALSE,
     '#attributes' => array('class' => array('asu_rfi_admin_field asu_rfi_form_access')),
     );
@@ -23,7 +30,7 @@ function asu_rfi_admin_settings($form_state){
    $form['asu_rfi_form_access']['asu_rfi_form_mode'] = array(
     '#type' => 'select',
     '#title' => t('Test/Live Mode'),
-    '#options' => array('test'=>'Test','live'=>'Production'),
+    '#options' => $form_modes,
     '#default_value' => variable_get('asu_rfi_form_mode'),
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
     '#description' => t("Specifiy if the form is in Test mode or Live mode."),
@@ -31,15 +38,15 @@ function asu_rfi_admin_settings($form_state){
     );
    
    //Will be enabled in future
-   /* $form['asu_rfi_form_access']['asu_rfi_form_auth_key'] = array(
+  $form['asu_rfi_form_access']['asu_rfi_form_auth_key'] = array(
     '#type' => 'textfield',
     '#title' => t('Authentication code'),
     '#default_value' => variable_get('asu_rfi_form_auth_key'),
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
-    '#description' => t("Specifiy the form authentication key from middle wear."),
-    '#required' => TRUE,
+    '#description' => t("Specifiy the form authentication key from middle wear. You can request the authentication key from <a href='https://webforms.asu.edu/content/access-rfi-middleware-request'>here</a>. Note that RFI submissions will not be posted to Sales force via Middle ware unless this code has been added"),
+    '#required' => FALSE,
     );
-    */ 
+    
      //Error notification email if submissions to Sales force failed for more than 2 days
     $form['asu_rfi_error_email'] = array(
     '#type' => 'textfield',
@@ -57,13 +64,47 @@ function asu_rfi_admin_settings($form_state){
     '#title' => t('Site identifier for Google Analytics'),
     '#default_value' => variable_get('asu_rfi_google_analytics_key'),
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
-    '#description' => t("Enter 6-10 character string that identifies your site Google Analytics transactions."),
+    '#description' => t("Enter a 6-10 character string to identify your site in Google Analytics transactions."),
     '#required' => TRUE,
     '#disabled' => FALSE,
     );
- 
    
-     $form['asu_rfi_confirm_email'] = array(
+     $form['undergrad_degree_type'] = array(
+	'#type' => 'hidden',
+	'#size' => 30,
+	'#maxlength' => 64,
+	'#default_value' =>  variable_get('asu_rfi_ugrad_degree_type'),
+    ); 
+   
+   $form['grad_degree_type'] = array(
+	'#type' => 'hidden',
+	'#size' => 30,
+	'#maxlength' => 64,
+	'#default_value' =>  variable_get('asu_rfi_graduate_degree_type'),
+    );
+    
+   $form['asu_rfi_confirm_content'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Confirmation webpage content settings',
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    '#attributes' => array('class' => array('asu_rfi_confirm_email_fields')),
+    );
+   
+   $form['asu_rfi_confirm_content']['asu_rfi_undergrad_confirm_node'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Enter undergrad confirmation node id'),
+    '#default_value' => variable_get('asu_rfi_undergrad_confirm_node'),
+    '#attributes' => array('class' => array('asu_rfi_admin_field')),
+    '#description' => t("Enter the node id of the undergraduate node whose body content has to be included on the confirmation page."),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="undergrad_degree_type"]' => array('value' => 'undergrad'),
+	),
+      ),
+    );
+   
+    $form['asu_rfi_confirm_email'] = array(
     '#type' => 'fieldset',
     '#title' => 'Confirmation email settings',
     '#collapsible' => TRUE,
@@ -104,9 +145,9 @@ function asu_rfi_admin_settings($form_state){
     '#siffix' => '</div>',
     );
     
+    return system_settings_form($form);
   
-  
-   return system_settings_form($form);
+    drupal_set_message('Next steps: Please start adding instances of RFI Master form <a href="/admin/structure/block/instances"><strong>here</strong></a>');
  
 }
 
