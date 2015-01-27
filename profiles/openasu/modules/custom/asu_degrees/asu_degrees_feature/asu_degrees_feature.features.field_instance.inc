@@ -61,7 +61,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 7,
+      'weight' => 10,
     ),
   );
 
@@ -113,7 +113,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 3,
+      'weight' => 6,
     ),
   );
 
@@ -165,7 +165,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 4,
+      'weight' => 7,
     ),
   );
 
@@ -303,7 +303,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 10,
+      'weight' => 13,
     ),
   );
 
@@ -369,7 +369,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 11,
+      'weight' => 14,
     ),
   );
 
@@ -421,7 +421,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 6,
+      'weight' => 9,
     ),
   );
 
@@ -475,7 +475,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 20,
+      'weight' => 23,
     ),
   );
 
@@ -541,7 +541,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 16,
+      'weight' => 19,
     ),
   );
 
@@ -593,7 +593,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 5,
+      'weight' => 8,
     ),
   );
 
@@ -646,7 +646,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 9,
+      'weight' => 12,
     ),
   );
 
@@ -700,7 +700,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 15,
+      'weight' => 18,
     ),
   );
 
@@ -752,7 +752,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 5,
       ),
       'type' => 'text_textfield',
-      'weight' => 18,
+      'weight' => 21,
     ),
   );
 
@@ -804,7 +804,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 12,
+      'weight' => 15,
     ),
   );
 
@@ -856,7 +856,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 13,
+      'weight' => 16,
     ),
   );
 
@@ -910,7 +910,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 24,
+      'weight' => 27,
     ),
   );
 
@@ -976,7 +976,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 14,
+      'weight' => 17,
     ),
   );
 
@@ -1028,7 +1028,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 27,
+      'weight' => 30,
     ),
   );
 
@@ -1080,7 +1080,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 23,
+      'weight' => 26,
     ),
   );
 
@@ -1132,7 +1132,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 10,
       ),
       'type' => 'text_textfield',
-      'weight' => 17,
+      'weight' => 20,
     ),
   );
 
@@ -1184,7 +1184,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 21,
+      'weight' => 24,
     ),
   );
 
@@ -1231,7 +1231,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
-      'weight' => 28,
+      'weight' => 31,
     ),
   );
 
@@ -1285,7 +1285,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 19,
+      'weight' => 22,
     ),
   );
 
@@ -1337,7 +1337,62 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 22,
+      'weight' => 25,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_short_desc'
+  $field_instances['node-asu_degree-field_asu_degree_short_desc'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 32,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_degree_short_desc',
+    'label' => 'Short Description',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => 140,
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 3,
     ),
   );
 
@@ -1389,7 +1444,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 25,
+      'weight' => 28,
     ),
   );
 
@@ -1455,7 +1510,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 26,
+      'weight' => 29,
     ),
   );
 
@@ -1507,7 +1562,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 8,
+      'weight' => 11,
     ),
   );
 
@@ -1597,11 +1652,147 @@ function asu_degrees_feature_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-asu_degree-field_financial_aid_link'
+  $field_instances['node-asu_degree-field_financial_aid_link'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Add a link here to change from the default financial aid link to one specific to your needs.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 34,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_financial_aid_link',
+    'label' => 'Financial Aid link',
+    'required' => 0,
+    'settings' => array(
+      'attributes' => array(
+        'class' => '',
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => 'default',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'optional',
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'link_field',
+      'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_degree-field_scholarship_link'
+  $field_instances['node-asu_degree-field_scholarship_link'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Add a link here to change from the default scholarship link to one specific to your needs.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 33,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_scholarship_link',
+    'label' => 'Scholarship Link',
+    'required' => 0,
+    'settings' => array(
+      'attributes' => array(
+        'class' => '',
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => 'default',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'optional',
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'link_field',
+      'weight' => 4,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('ASU Banner Image');
   t('Academic Plan');
   t('Academic Program');
+  t('Add a link here to change from the default financial aid link to one specific to your needs.');
+  t('Add a link here to change from the default scholarship link to one specific to your needs.');
   t('Additional Program Fee');
   t('Admission Requirements');
   t('Campus');
@@ -1617,13 +1808,16 @@ function asu_degrees_feature_field_default_field_instances() {
   t('Department Code');
   t('Diploma Description');
   t('Example Careers');
+  t('Financial Aid link');
   t('Major Map URL');
   t('Major Map Year');
   t('Minimum math requirement');
   t('Program: Undergrad or Graduate');
   t('Related Programs');
   t('Requirement description');
+  t('Scholarship Link');
   t('Second Language Requirement');
+  t('Short Description');
   t('Subplan: Title');
   t('Subplan: URL');
   t('This image only shows up on the view page.  Horizontal images work best.');

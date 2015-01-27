@@ -62,7 +62,7 @@ function asu_degrees_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_degree_awarded']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_asu_degree_awarded']['alter']['text'] = '<a href="/node/[nid]">[field_asu_degree_awarded]</a>';
   $handler->display->display_options['fields']['field_asu_degree_awarded']['element_label_colon'] = FALSE;
-  /* Field: Content: Degree Description (long) */
+  /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -113,10 +113,10 @@ else {
   $handler->display->display_options['fields']['field_asu_degree']['label'] = '';
   $handler->display->display_options['fields']['field_asu_degree']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_asu_degree']['alter']['text'] = '<div class="asu-degree-rewritten-fields">
-    <div class="asu-degree-major-title">[field_asu_degree_awarded]</div>
+    <div class="asu-degree-major-title">[field_asu_degree_awarded] ([field_asu_degree])</div>
     [body]
     <div class="asu-degree-field-title">Location:</div> [field_asu_degree_campus]<br>
-    <div class="asu-degree-field-title">Degree Type:</div> [field_asu_degree]<br>
+    <!--<div class="asu-degree-field-title">Degree Type:</div> [field_asu_degree]<br>-->
     <div class="asu-degree-field-title">Available Online:</div> [php]
 </div>';
   $handler->display->display_options['fields']['field_asu_degree']['element_label_colon'] = FALSE;
@@ -252,6 +252,92 @@ else {
   $handler = $view->new_display('page', 'Page - Graduate', 'page_3');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Graduate';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = '';
+  $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
+  /* Field: Content: Degree Image */
+  $handler->display->display_options['fields']['field_degree_image']['id'] = 'field_degree_image';
+  $handler->display->display_options['fields']['field_degree_image']['table'] = 'field_data_field_degree_image';
+  $handler->display->display_options['fields']['field_degree_image']['field'] = 'field_degree_image';
+  $handler->display->display_options['fields']['field_degree_image']['label'] = '';
+  $handler->display->display_options['fields']['field_degree_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_degree_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_degree_image']['settings'] = array(
+    'image_style' => 'asu_degree_image',
+    'image_link' => '',
+  );
+  /* Field: Content: Degree Awarded */
+  $handler->display->display_options['fields']['field_asu_degree_awarded']['id'] = 'field_asu_degree_awarded';
+  $handler->display->display_options['fields']['field_asu_degree_awarded']['table'] = 'field_data_field_asu_degree_awarded';
+  $handler->display->display_options['fields']['field_asu_degree_awarded']['field'] = 'field_asu_degree_awarded';
+  $handler->display->display_options['fields']['field_asu_degree_awarded']['label'] = '';
+  $handler->display->display_options['fields']['field_asu_degree_awarded']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_asu_degree_awarded']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_asu_degree_awarded']['alter']['text'] = '<a href="/node/[nid]">[field_asu_degree_awarded]</a>';
+  $handler->display->display_options['fields']['field_asu_degree_awarded']['element_label_colon'] = FALSE;
+  /* Field: Content: Body */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['body']['alter']['max_length'] = '125';
+  $handler->display->display_options['fields']['body']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+  /* Field: Content: Campus */
+  $handler->display->display_options['fields']['field_asu_degree_campus']['id'] = 'field_asu_degree_campus';
+  $handler->display->display_options['fields']['field_asu_degree_campus']['table'] = 'field_data_field_asu_degree_campus';
+  $handler->display->display_options['fields']['field_asu_degree_campus']['field'] = 'field_asu_degree_campus';
+  $handler->display->display_options['fields']['field_asu_degree_campus']['label'] = 'Location';
+  $handler->display->display_options['fields']['field_asu_degree_campus']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_asu_degree_campus']['hide_alter_empty'] = FALSE;
+  $handler->display->display_options['fields']['field_asu_degree_campus']['delta_limit'] = '1';
+  $handler->display->display_options['fields']['field_asu_degree_campus']['delta_offset'] = '0';
+  /* Field: Global: PHP */
+  $handler->display->display_options['fields']['php']['id'] = 'php';
+  $handler->display->display_options['fields']['php']['table'] = 'views';
+  $handler->display->display_options['fields']['php']['field'] = 'php';
+  $handler->display->display_options['fields']['php']['label'] = '';
+  $handler->display->display_options['fields']['php']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['php']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
+  $handler->display->display_options['fields']['php']['php_output'] = '<?php
+$v = count($data->_field_data[\'nid\'][\'entity\']->field_asu_degree_campus[\'und\']) - 1;
+if ($data->_field_data[\'nid\'][\'entity\']->field_asu_degree_campus[\'und\'][$v][\'value\']== \'Online\') {
+  echo \'Yes\';
+}
+else {
+  echo \'No\';
+}
+?>';
+  $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
+  $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
+  /* Field: Content: Department Code */
+  $handler->display->display_options['fields']['field_asu_degree_department_code']['id'] = 'field_asu_degree_department_code';
+  $handler->display->display_options['fields']['field_asu_degree_department_code']['table'] = 'field_data_field_asu_degree_department_code';
+  $handler->display->display_options['fields']['field_asu_degree_department_code']['field'] = 'field_asu_degree_department_code';
+  $handler->display->display_options['fields']['field_asu_degree_department_code']['label'] = '';
+  $handler->display->display_options['fields']['field_asu_degree_department_code']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_asu_degree_department_code']['element_label_colon'] = FALSE;
+  /* Field: Content: Degree */
+  $handler->display->display_options['fields']['field_asu_degree']['id'] = 'field_asu_degree';
+  $handler->display->display_options['fields']['field_asu_degree']['table'] = 'field_data_field_asu_degree';
+  $handler->display->display_options['fields']['field_asu_degree']['field'] = 'field_asu_degree';
+  $handler->display->display_options['fields']['field_asu_degree']['label'] = '';
+  $handler->display->display_options['fields']['field_asu_degree']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_asu_degree']['alter']['text'] = '<div class="asu-degree-rewritten-fields">
+    <div class="asu-degree-major-title">[field_asu_degree_awarded]</div>
+    [body]
+    <div class="asu-degree-field-title">Location:</div> [field_asu_degree_campus]<br>
+    <!--<div class="asu-degree-field-title">Degree Type:</div> [field_asu_degree]<br>-->
+    <div class="asu-degree-field-title">Available Online:</div> [php]
+</div>';
+  $handler->display->display_options['fields']['field_asu_degree']['element_label_colon'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */

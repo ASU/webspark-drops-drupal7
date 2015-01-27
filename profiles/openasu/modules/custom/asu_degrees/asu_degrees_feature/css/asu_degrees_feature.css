@@ -42,6 +42,7 @@
 
 .asu-degree-major-title {
     font-size: 21px;
+    color: #a30046;
 }
 
 .asu-degree-field-title {
@@ -79,7 +80,7 @@
     font-weight: 200;
 }
 
-.node-type-asu-degree .container .field-name-body {
+.node-type-asu-degree .container .field-name-body, .asu-degree-short-description {
     font-size: 20px;
 }
 
@@ -139,4 +140,16 @@
     line-height: 1;
     font-weight: 900;
     text-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+.node-type-asu-degree .space-bot-md {
+    padding-bottom: 0;
+}
+
+.asu-degree-short-description > p:first-child {
+    margin-bottom: 10px;
+}
+
+.asu-degree-read-more {
+    margin-bottom: 25px;
 }

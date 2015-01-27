@@ -1,0 +1,3 @@
+ASU Degrees Feed module is used to pull degrees and certificates from webapp4 into the site. When enabled the module will create two content types (ASU Degree and ASU Degree Feed) and a view to display the content. Upon import, ASU Degree nodes will be created for each of the degrees or certificates that match what is specified on the import configuration.
+
+For more info on setting up the module see https://webspark.asu.edu/features/asu-degrees-feed
