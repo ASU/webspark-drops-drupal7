@@ -1,0 +1,270 @@
+
+
+@media (min-width: 768px) {
+    .pane-content .flex-slider-wrapper > .container,
+    .pane-content .flex-control-wrapper > .container
+    {
+        width: 750px;
+    }
+}
+
+@media (min-width: 992px) {
+    .pane-content .flex-slider-wrapper > .container,
+    .pane-content .flex-control-wrapper > .container
+    {
+        width: 970px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .pane-content .flex-slider-wrapper > .container,
+    .pane-content .flex-control-wrapper > .container
+    {
+        width: 1170px;
+    }
+}
+
+/*
+// Homepage Slider
+// -------------------------------------------------- */
+/*
+ * Flex Resets
+ */
+/* line 10, ../scss/_home-slider.scss */
+.flex-container a:hover,
+.flex-container a:focus,
+.flex-slider a:hover,
+.flex-slider a:focus {
+    outline: none;
+}
+
+/* line 16, ../scss/_home-slider.scss */
+.slides,
+.flex-control-nav,
+.flex-direction-nav {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* line 24, ../scss/_home-slider.scss */
+.flex-pauseplay span {
+    text-transform: capitalize;
+}
+
+/*
+ * Flex Base
+ */
+
+/* line 55, ../scss/_home-slider.scss */
+.no-js .uto-flexslider .slides > li:first-child {
+    display: block;
+}
+
+/*
+ * Flex Direction Nav
+ */
+/* line 65, ../scss/_home-slider.scss */
+.flex-direction-nav {
+    *height: 0;
+}
+/* line 68, ../scss/_home-slider.scss */
+.flex-direction-nav li {
+    display: inline;
+}
+/* line 72, ../scss/_home-slider.scss */
+.flex-direction-nav a {
+    display: inline-block;
+    padding: 5px 14px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    width: auto;
+    z-index: 10;
+    overflow: hidden;
+    cursor: pointer;
+    -webkit-transition: all 500ms ease-in-out;
+    -o-transition: all 500ms ease-in-out;
+    transition: all 500ms ease-in-out;
+}
+/* line 84, ../scss/_home-slider.scss */
+.flex-direction-nav a:hover, .flex-direction-nav a:focus {
+    text-decoration: none;
+    background-color: #eee;
+    border: 1px solid #ddd;
+}
+/* line 92, ../scss/_home-slider.scss */
+.flex-direction-nav a.flex-prev {
+    float: left;
+}
+/* line 95, ../scss/_home-slider.scss */
+.flex-direction-nav a.flex-next {
+    float: right;
+}
+/* line 98, ../scss/_home-slider.scss */
+.flex-direction-nav a.flex-prev:before {
+    display: inline-block;
+    margin-right: 10px;
+    font-family: 'FontAwesome';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    content: '\f104';
+}
+/* line 107, ../scss/_home-slider.scss */
+.flex-direction-nav a.flex-next:after {
+    display: inline-block;
+    margin-left: 10px;
+    font-family: 'FontAwesome';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    content: '\f105';
+}
+/* line 117, ../scss/_home-slider.scss */
+.flex-direction-nav .flex-disabled {
+    color: #777;
+}
+
+/*
+ * Flex Pause/Play
+ */
+/* line 126, ../scss/_home-slider.scss */
+.flex-pauseplay a {
+    display: block;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    opacity: 0.8;
+    z-index: 10;
+    overflow: hidden;
+    cursor: pointer;
+    color: #000;
+}
+/* line 139, ../scss/_home-slider.scss */
+.flex-pauseplay a:before {
+    font-family: "uto-flexslider-icon";
+    font-size: 20px;
+    display: inline-block;
+    content: '\f004';
+}
+/* line 145, ../scss/_home-slider.scss */
+.flex-pauseplay a:hover {
+    opacity: 1;
+}
+/* line 148, ../scss/_home-slider.scss */
+.flex-pauseplay a .flex-play:before {
+    content: '\f003';
+}
+
+/*
+ * Flex Nav
+ */
+/* line 156, ../scss/_home-slider.scss */
+.flex-control-nav {
+    position: absolute;
+    display: none;
+    /* hide paging on mobile */
+    left: 130px;
+    right: 130px;
+    text-align: center;
+}
+/* line 163, ../scss/_home-slider.scss */
+.flex-control-nav li {
+    margin: 6px;
+    display: inline-block;
+    zoom: 1;
+    *display: inline;
+}
+
+/*
+ * Flex Paging
+ */
+/* line 175, ../scss/_home-slider.scss */
+.flex-control-paging li a {
+    position: relative;
+    width: 27px;
+    height: 27px;
+    display: block;
+    background: #fff;
+    cursor: pointer;
+    text-indent: -9999px;
+    border-radius: 50%;
+    border: 1px solid #b0b0b0;
+}
+/* line 186, ../scss/_home-slider.scss */
+.flex-control-paging li a.flex-active:before {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    display: block;
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background-color: #505050;
+    cursor: pointer;
+}
+
+/* line 200, ../scss/_home-slider.scss */
+.flex-control-thumbs {
+    margin: 5px 0 0;
+    position: static;
+    overflow: hidden;
+}
+/* line 204, ../scss/_home-slider.scss */
+.flex-control-thumbs li {
+    width: 25%;
+    float: left;
+    margin: 0;
+}
+/* line 210, ../scss/_home-slider.scss */
+.flex-control-thumbs img {
+    width: 100%;
+    display: block;
+    opacity: .7;
+    cursor: pointer;
+    -webkit-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+}
+/* line 217, ../scss/_home-slider.scss */
+.flex-control-thumbs img:hover {
+    opacity: 1;
+}
+/* line 219, ../scss/_home-slider.scss */
+.flex-control-thumbs .flex-active {
+    opacity: 1;
+    cursor: default;
+}
+
+
+/* line 286, ../scss/_home-slider.scss */
+.flex-viewport {
+    max-height: 2000px;
+    -webkit-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+}
+/* line 291, ../scss/_home-slider.scss */
+.loading .flex-viewport {
+    max-height: 300px;
+}
+
+/*
+ * Flex Responsive
+ */
+@media screen and (min-width: 992px) {
+    /* line 304, ../scss/_home-slider.scss */
+    .flex-control-nav {
+        display: block;
+        /* show the paging */
+    }
+}
+
+.flexslider-ws .slides li img {
+  margin-bottom: 24px;
+}

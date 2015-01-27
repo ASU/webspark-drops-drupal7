@@ -1,0 +1,68 @@
+<?php
+
+//include_once('uto_carousel.features.inc');
+include_once('uto_carousel.spotlight.inc');
+
+function uto_carousel_menu_alter(&$items) {
+    $items['admin/config/media/flexslider']['title'] = 'UTO Carousel';
+}
+
+/**
+ * Implementation of hook_entity_info_alter()
+ */
+function uto_carousel_entity_info_alter(&$entity_info) {
+    // Spotlight
+    $entity_info['fieldable_panels_pane']['bundles']['uto_carousel'] = array(
+        'label' => t('Add UTO Carousel'),
+        'description' => t('Add UTO Carousel'),
+        'pane category' => t('ASU UTO'),
+        'pane top level' => TRUE,
+        'pane icon' => drupal_get_path('module', 'panopoly_widgets') . '/images/icon_spotlight.png',
+        'admin' => array(
+            'path' => 'admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type',
+            'bundle argument' => 4,
+            'real path' => 'admin/structure/fieldable-panels-panes/manage/uto_carousel',
+            'access arguments' => array('administer fieldable panels panes'),
+        ),
+    );
+}
+
+function uto_carousel_theme() {
+
+    // Summary View
+    $themes['uto_carousel'] = array(
+        'template' => 'templates/uto-carousel-list',
+        //'original hook' => 'views-view',
+        /*'preprocess functions' => array(
+            'template_preprocess',
+            'template_preprocess_views_view',
+            //'uto_link_carousel_preprocess_views_view__asu_uto_article_summary__panel_pane'
+        ),*/
+        'variables' => array('items' => array(), 'settings' => array())
+    );
+
+    return $themes;
+
+    /*return array(
+        // ASU flexslider container
+        'uto_carousel' => array(
+            'variables' => array('items' => array(), 'settings' => array()),
+            'template' => 'theme/uto_carousel',
+            'file' => 'theme/uto_carousel.theme.inc',
+        ),
+
+        // Slide container
+        'uto_carousel_list' => array(
+            'variables' => array('items' => array(), 'settings' => array()),
+            'file' => 'theme/uto_carousel.theme.inc',
+        ),
+
+        // Slide item
+        'uto_carousel_list_item' => array(
+            'variables' => array('item' => array(), 'settings' => array(), 'caption' => ''),
+            'file' => 'theme/uto_carousel.theme.inc',
+        ),
+    );*/
+}
+
+

@@ -1,0 +1,27 @@
+name = ASU Webspark Carousel
+description = Adds a carousel of images and text into Webspark.
+core = 7.x
+package = ASU Webspark
+version = 7.x-1.02
+project = uto_carousel
+dependencies[] = ctools
+dependencies[] = defaultconfig
+dependencies[] = features
+dependencies[] = fieldable_panels_panes
+dependencies[] = image
+dependencies[] = strongarm
+dependencies[] = uto_carousel
+scripts[] = js/jquery.flexslider-min.js
+scripts[] = js/webspark_carousel.js
+stylesheets[all][] = css/webspark_carousel.css
+explanation = Field type(s) in use - see <a href="/oklahoma7/admin/reports/fields">Field list</a>
+features[ctools][] = strongarm:strongarm:1
+features[defaultconfig][] = field_default_fields:fieldable_panels_pane-uto_carousel-field_items
+features[defaultconfig][] = user_default_permissions:create fieldable uto_carousel
+features[defaultconfig][] = user_default_permissions:delete fieldable uto_carousel
+features[defaultconfig][] = user_default_permissions:edit fieldable uto_carousel
+features[features_api][] = api:2
+features[field_base][] = field_items
+features[field_instance][] = fieldable_panels_pane-uto_carousel-field_items
+features[image][] = uto_carousel_thumbnail
+required = 0
