@@ -1,6 +1,6 @@
 <?php
 
-//include_once('asu_spotlight.features.inc');
+
 include_once('asu_spotlight.spotlight.inc');
 
 function asu_spotlight_menu_alter(&$items) {
@@ -51,4 +51,26 @@ function asu_spotlight_theme() {
       'file' => 'theme/asu_spotlight.theme.inc',
     ),
   );
+}
+
+/**
+*Implements hook_ctools_render_alter()
+*This is to remove the original panopoly spotlight from the Pane Library screen
+*
+**/
+function asu_spotlight_ctools_render_alter(&$info, &$page, &$context) {
+
+    if($info['title']=='Pane Library') {
+        $mark = $info['content'];
+        $dom = new DOMDocument;
+        $dom->loadHTML($mark);
+        $xPath = new DOMXPath($dom);
+        $nodes = $xPath->query('//*[@id="panopoly-admin-pane-response-fieldable_panels_pane-spotlight"]');
+        if($nodes->item(0)) {
+          $parent = $nodes->item(0)->parentNode->parentNode;
+          $parent->parentNode->removeChild($parent);
+        }
+        $mark =  $dom->saveHTML();
+        $info['content'] = $mark;
+    }
 }

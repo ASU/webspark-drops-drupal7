@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * panopoly_widgets.features.field_instance.inc
+ * asu_spotlight.features.field_instance.inc
  */
 
 /**

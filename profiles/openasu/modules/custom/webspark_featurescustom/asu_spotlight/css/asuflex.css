@@ -87,7 +87,7 @@ body .flexslider {
 	right: 5%;
 }
 
-@media (max-width: 992px) { 
+@media (max-width: 992px) {
 
 	.slidecontainer h2 {
 		font-size: 40px;
@@ -99,8 +99,8 @@ body .flexslider {
 
 }
 
-@media (max-width: 768px) { 
-	
+@media (max-width: 768px) {
+
 	.slidecontainer h2 {
 		font-size: 40px;
 	}
@@ -119,7 +119,7 @@ body .flexslider {
 	.top-right {
 		top: 5px;
 	}
-	
+
 }
 
 @media (max-width: 600px) {
@@ -175,13 +175,13 @@ body .flexslider {
 		}
 }
 
-@media (max-width: 450px) { 
-	
+@media (max-width: 450px) {
+
 	.slidecontainer h2 {
 		font-size: 20px;
 	}
 	.blurbcontainer .btn {
 		font-size: 12px;
 	}
-	
+
 }

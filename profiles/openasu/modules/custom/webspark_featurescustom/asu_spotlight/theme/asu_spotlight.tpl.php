@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Default output for a FlexSlider object.
+ * Default output for an ASU Spotlight object.
 */
 ?>
 

@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Theming functions for the flexslider module.
+ * Theming functions for the ASU Spotlight module.
  *
- * Preprocessor functions fill variables for templates and helper
- * functions to make theming easier.
+ * 
+ *
  */
 
 /**
@@ -85,7 +85,7 @@ function theme_asu_spotlight_list_item(&$vars) {
  */
 function template_process_asu_spotlight(&$vars) {
   // Reference configuration variables
-  
+
   $optionset = &$vars['settings']['optionset'];
   $settings = &$vars['settings'];
   $items = &$vars['items'];

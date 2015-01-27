@@ -2,7 +2,7 @@
 
 /**
  * @file
- * An installation file for Panopoly Widgets
+ * An installation file for ASU Spotlight
  */
 
 /**
@@ -12,8 +12,25 @@ function asu_spotlight_install() {
 
 }
 
+/**
+*Implemenation of hook_update_N()
+*
+*This reverts the feature portion to ensure that the optionset field is added
+**/
 function asu_spotlight_update_7001(&$sandbox) {
   features_revert_module('asu_spotlight');
+}
+
+
+/**
+*Implementation of hook_update_N()
+*
+*This update disables the original Panopoly spotlight
+**/
+function asu_spotlight_update_7002(&$sandbox) {
+  $allowed_panes = variable_get('panels_page_allowed_types', array());
+  $allowed_panes['fieldable_panels_pane-spotlight']=0;
+  variable_set('panels_page_allowed_types', $allowed_panes);
 }
 
 /**

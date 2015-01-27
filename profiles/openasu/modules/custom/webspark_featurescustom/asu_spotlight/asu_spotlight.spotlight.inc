@@ -2,7 +2,7 @@
 
 /**
 * @file
-* A specification for the custom spotlight entity that is part of Panopoly Widgets
+* A specification for the ASU Spotlight
 */
 
 /**
