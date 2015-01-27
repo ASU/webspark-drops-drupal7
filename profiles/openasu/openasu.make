@@ -116,7 +116,7 @@ projects[webspark_featurescustom][type] = module
 projects[webspark_featurescustom][subdir] = custom
 projects[webspark_featurescustom][directory_name] = webspark_featurescustom
 projects[webspark_featurescustom][download][type] = git
-projects[webspark_featurescustom][download][revision] = 0f4c8c8f
+projects[webspark_featurescustom][download][revision] = 8f6fe7a1
 projects[webspark_featurescustom][download][branch] = master
 projects[webspark_featurescustom][download][url] = https://github.com/ASU/webspark-webstandards-components.git
 
@@ -233,9 +233,9 @@ projects[panels_tabs][subdir] = contrib
 projects[quicktabs][type] = module
 projects[quicktabs][subdir] = contrib
 projects[quicktabs][download][type] = "git"
-projects[uuid_features][download][branch] = "7.x-3.x"
-projects[uuid_features][download][url] = "http://git.drupal.org/project/quicktabs.git"
-projects[uuid_features][download][revision] = "758de4cc4995149a2de1d566b4209ec343581d27"
+projects[quicktabs][download][branch] = "7.x-3.x"
+projects[quicktabs][download][url] = "http://git.drupal.org/project/quicktabs.git"
+projects[quicktabs][download][revision] = "758de4cc4995149a2de1d566b4209ec343581d27"
 
 projects[tb_megamenu][version] = 1.0-beta5
 projects[tb_megamenu][type] = module
