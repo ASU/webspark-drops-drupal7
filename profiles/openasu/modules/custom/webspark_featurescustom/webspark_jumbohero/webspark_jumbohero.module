@@ -7,12 +7,13 @@
 include_once 'webspark_jumbohero.features.inc';
 
 
-/** 
+/**
  * Implementation of hook_entity_info_alter().
  */
 function webspark_jumbohero_entity_info_alter(&$entity_info) {
   $entity_info['fieldable_panels_pane']['bundles']['jumbohero'] = array(
     'label' => t('Add a jumbo hero'),
+    'description' => t('Add a 1170 x 700 px jumbo hero to the top row'),
     'pane category' => t('Custom'),
     'pane top level' => TRUE,
     'pane icon' => drupal_get_path('module', 'webspark_jumbohero') . '/images/icon_jumbohero.png',

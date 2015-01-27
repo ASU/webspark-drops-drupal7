@@ -6,13 +6,14 @@
 
 include_once 'webspark_hero.features.inc';
 
-/** 
+/**
  * Implementation of hook_entity_info_alter().
  */
 function webspark_hero_entity_info_alter(&$entity_info) {
   // Webspark Hero Widget.
   $entity_info['fieldable_panels_pane']['bundles']['hero'] = array(
     'label' => t('Add hero'),
+    'description' => t('Add a 1170 x 380 px hero to the top row'),
     'pane category' => t('Custom'),
     'pane top level' => TRUE,
     'pane icon' => drupal_get_path('module', 'webspark_hero') . '/images/icon_hero.png',
