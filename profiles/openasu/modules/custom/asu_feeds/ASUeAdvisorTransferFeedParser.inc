@@ -31,7 +31,7 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
       // Campuses
       if(count($data['CampusStringArray'])){
         foreach($data['CampusStringArray'] as $campus_key => $value){
-          switch($value){
+          switch(trim(strtoupper($value))){
             case 'ONLNE':
               $value = 'Online';
               break;
@@ -42,8 +42,19 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
             case 'POLY':
               $value = 'Polytechnic';
               break;
-            default:
+            case 'WEST':
+              $value = 'West';
+              break;
+            case 'TMPE':
+            case 'TEMPE':
               $value = 'Tempe';
+              break;
+            case 'CALHC':
+              $value = 'Lake Havasu';
+              break;
+            //Add case for missing campus from degree feed
+            default:
+              $value = $value;
               break;
           }
           if($value == 'Online'){
@@ -123,7 +134,7 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
     } // End of foreach
 
     //error_log(print_r($parsed_data, true));
-    watchdog('keith debug', '<pre>'. print_r($parsed_data, true) .'</pre>');
+    //watchdog('keith debug', '<pre>'. print_r($parsed_data, true) .'</pre>');
     //watchdog('keith $v', '<pre>' . print_r($v, true) . '</pre>');
 		return new FeedsParserResult($parsed_data);
   }
@@ -170,7 +181,7 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
       'subplan.code' => array('name' => t('Subplan code')),
       'subplan.name' => array('name' => t('Subplan name')),
       'majorMapDefaultYear' => array('name' => t('Major map year')),
-      //'subPlnMajorMaps.SubplnMajorMapSubplanCode' => array('name' => t('Subplan code')),
+      'subPlnMajorMaps.SubplnMajorMapSubplanCode' => array('name' => t('Subplan code for URL')),
     );
   }
 }
