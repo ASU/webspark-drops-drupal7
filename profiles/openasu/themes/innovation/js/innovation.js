@@ -23,6 +23,45 @@
 			$('#ASUNavMenu').removeClass('affix');
 		}
 	});
+	//Used to determine if RFI form is on the page.
+	// Go to div if it is go to URL if it isn't #block-asu-rfi-asu-rfi-form-block
+	$('#take-me-to-rfi').on('click',function(e){
+		e.preventDefault();
+		if($('#block-asu-rfi-asu-rfi-form-block').length==0){
+			location.href='https://students.asu.edu/typeofstudent';
+		}
+	});
+	//Fixes all anchor tags with hashes
+	$('a').on('click',function(e){
+		var url = $(this).attr('href');
+		if (url.slice(0,1)=='#') {
+			e.preventDefault();
+			smoothScroll(url);
+		}
+	});
+	//Fixes onload scroll to the hash that originates from page URL
+	if (location.hash) {
+		setTimeout(function() {
+			smoothScroll(location.hash);
+		}, 1);
+	}
+	//Function to calculate current offset with respect to scroll position
+	function offsetTop() {
+		var hh = $('#header').height();
+		var sp = $(document).scrollTop();
+		var fx = $('#ASUNavMenu').height();
+		if(sp < hh) {
+			fx = fx*2;
+		}
+		fx+=15;
+		return fx;
+	}
+	//Actually does the hash smooth scrolling
+	function smoothScroll(hash) {
+		$('html,body').animate({scrollTop: $(hash).offset().top - offsetTop()},'slow');
+		window.location.hash = hash;
+	}
+
 	// Override mobile table function in panopoly_widgets.js
 	Drupal.behaviors.panopolyWidgetTables.attach = function (context, settings) {
 		// Leave empty to override

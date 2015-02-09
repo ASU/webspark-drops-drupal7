@@ -1,3 +1,16 @@
+.form-checkboxes .form-item,
+.form-radios .form-item,
+.form-type-radio,
+.form-type-checkbox,
+.radio,
+.checkbox {
+	position: relative;
+	display: block;
+	min-height: 24px;
+	margin-top: -5;
+	margin-bottom: 12px;
+	padding-left: 0;
+}
 .form-control,
 input[type="email"] {
 	background-color: #fff;
@@ -15,21 +28,12 @@ input[type="email"] {
 	transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
 	width: 100%;
 }
-.form-checkboxes .form-item, 
-.form-radios .form-item {
-	position: relative;
-	display: block;
-	min-height: 24px;
-	margin-top: -5;
-	margin-bottom: 12px;
-	padding-left: 0;
-}
 
 label.option,
 .form-type-radio label,
 .form-type-checkbox label {
 	max-width: 100%;
-  padding-left: 0;   
+  padding-left: 0;
   margin-bottom: 12px;
   font-size: 16px;
   font-weight: 200;
@@ -37,14 +41,12 @@ label.option,
 }
 .form-type-radio input[type="radio"],
 .form-type-checkbox input[type="checkbox"] {
-  position: absolute; 
+  position: absolute;
   float: none;
   display: none;
   margin-left: -20px;
 	padding: 0;
 }
-
-
 .form-type-radio .outer-wrap,
 .form-type-checkbox .outer-wrap {
 	display: inline-block;
@@ -63,16 +65,17 @@ label.option,
 .form-type-radio .outer-wrap,
 .form-type-radio .fa-circle {
   border-radius: 50%;
-} 
+}
 .form-type-radio .fa,
 .form-type-checkbox .fa {
 	display: inline-block !important;
 }
 .form-type-radio .fa-circle,
-.form-type-checkbox .fa-check { 
+.form-type-checkbox .fa-check {
 	position: absolute;
   font-size: 23px;
   color: white;
+	z-index: 10;
 }
 .form-type-radio .fa-circle {
   top: 3px;
@@ -88,7 +91,7 @@ label.option,
 }
 
 .form-type-radio input[type="radio"][disabled] + .outer-wrap,
-.form-type-radio input[type="radio"][disabled] + .outer-wrap > .fa-circle, 
+.form-type-radio input[type="radio"][disabled] + .outer-wrap > .fa-circle,
 .form-type-radio input[type="radio"].disabled + .outer-wrap,
 .form-type-radio input[type="radio"].disabled + .outer-wrap > .fa-circle {
   cursor: not-allowed;
@@ -101,13 +104,14 @@ label.option,
   cursor: not-allowed;
   opacity: .5;
 }
+
 /* =Removing styling from non-Admin forms
 -------------------------------------------------------------- */
-#modalContent .form-type-radio .outer-wrap, 
+#modalContent .form-type-radio .outer-wrap,
 #modalContent .form-type-checkbox .outer-wrap,
-#modalContent .form-type-radio .fa, 
+#modalContent .form-type-radio .fa,
 #modalContent .form-type-checkbox .fa,
-#modalContent .form-type-radio .fa-circle, 
+#modalContent .form-type-radio .fa-circle,
 #modalContent .form-type-checkbox .fa-check {
 	display: none;
 }
@@ -123,14 +127,14 @@ label.option,
   display: inline-block;
   position: static;
 }
-#modalContent .radio input[type="radio"], 
-#modalContent .radio-inline input[type="radio"], 
-#modalContent .checkbox input[type="checkbox"], 
+#modalContent .radio input[type="radio"],
+#modalContent .radio-inline input[type="radio"],
+#modalContent .checkbox input[type="checkbox"],
 #modalContent .checkbox-inline input[type="checkbox"] {
     float: none;
     margin: 0 5px 0 0;
 }
-#modalContent .form-checkboxes .form-item, 
+#modalContent .form-checkboxes .form-item,
 #modalContent .form-radios .form-item {
 	position: status;
 	min-height: auto;
@@ -142,7 +146,7 @@ label.option,
 #modalContent .form-type-radio label,
 #modalContent .form-type-checkbox label {
 	max-width: auto;
-  padding-left: 0;   
+  padding-left: 0;
   margin-bottom: 12px;
   font-size: 12px;
   font-weight: 200;

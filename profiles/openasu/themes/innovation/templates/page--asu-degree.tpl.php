@@ -85,7 +85,10 @@ else {
   $node_info = array();
 }
 
+//dpm(get_defined_vars());
+
 ?>
+
 <div id="page-wrapper">
   <div id="page">
 
@@ -171,7 +174,6 @@ else {
 
       <!--Start degree content-->
       <?php print theme('breadcrumb', array('breadcrumb' => drupal_get_breadcrumb())); ?>
-      <?php //dpm(get_defined_vars()); ?>
       <div class="container">
         <?php if (isset($node_info['field_asu_degree_short_desc']['#items'][0]['safe_value'])): ?>
           <div class="asu-degree-short-description">
@@ -190,9 +192,8 @@ else {
           <?php print render($node_info['body']); ?>
         <?php endif; ?>
           <div class="row space-bot-lg">
-            <div class="col-sm-6 col-md-4 space-bot-md"><!--https://students.asu.edu/typeofstudent-->
-              <a href="#block-asu-rfi-asu-rfi-form-block" data-scroll=""
-                 class="btn btn-gold btn-block btn-lg">Request information</a>
+            <div class="col-sm-6 col-md-4 space-bot-md">
+              <a href="#block-asu-rfi-asu-rfi-form-block" id="take-me-to-rfi" class="btn btn-gold btn-block btn-lg">Request information</a>
             </div>
             <div class="col-sm-6 col-md-4 space-bot-md">
               <a href="https://visit.asu.edu/"
@@ -232,33 +233,72 @@ else {
               </div>
               <p>
                 <b>Location</b><br>
-                <?php if (isset($node_info['field_asu_degree_campus']['#items'][0]['value'])): ?>
-                  <?php switch ($node_info['field_asu_degree_campus']['#items'][0]['value']) {
-                    case 'Tempe':
-                      echo '<a href="http://www.asu.edu/tour/tempe/index.html">Tempe</a>';
-                      break;
-                    case 'Polytechnic':
-                      echo '<a href="http://www.asu.edu/tour/polytechnic/index.html">Polytechnic</a>';
-                      break;
-                    case 'Downtown':
-                      echo '<a href="http://www.asu.edu/tour/downtown/index.html">Downtown</a>';
-                      break;
-                    default:
-                      echo '<a href="http://asuonline.asu.edu/">Online</a>';
-                  } ?>
-                <?php endif; ?>
+                <?php
+                  if (isset($node_info['field_asu_degree_campus']['#items'][0]['value'])) {
+                    $c = count($node_info['field_asu_degree_campus']['#items']) - 1;
+                    $i = 0;
+                    foreach ($node_info['field_asu_degree_campus']['#items'] as $campus) {
+                      $a = true;
+                      switch ($campus['value']) {
+                        case 'Tempe':
+                          echo '<a href="//www.asu.edu/tour/tempe/index.html">'.$campus['value'].'</a>';
+                          break;
+                        case 'Polytechnic':
+                          echo '<a href="//www.asu.edu/tour/polytechnic/index.html">'.$campus['value'].'</a>';
+                          break;
+                        case 'Downtown':
+                          echo '<a href="//www.asu.edu/tour/downtown/index.html">'.$campus['value'].'</a>';
+                          break;
+                        case 'West':
+                          echo '<a href="//www.asu.edu/tour/west/index.html">'.$campus['value'].'</a>';
+                          break;
+                        case 'Lake Havasu':
+                          echo '<a href="//havasu.asu.edu/">'.$campus['value'].'</a>';
+                          break;
+                        case 'Online':
+                          echo '<a href="//asuonline.asu.edu/">'.$campus['value'].'</a>';
+                          break;
+                        //Check ASU Feeds Parser.  The campus being used doesn't exist.
+                        default:
+                          //echo 'Campus Not Found';
+                          $a = false;
+                          echo '<!--'.$campus['value'].'-->';
+                          break;
+                      }
+                      if($i < $c && $a) {
+                        echo ', ';
+                      }
+                      ++$i;
+                    }
+                  }
+                ?>
               </p>
 
               <h2>What is a Major Map?</h2>
 
               <p>A major map outlines a major’s critical requirements, elective
                 and required courses, and optimal course sequencing to help
-                students stay on the right track to graducation.</p>
+                students stay on the right track to graduation.</p>
               <?php if (isset($node_info['field_asu_degree_major_map_url'])): ?>
                 <p><a
                     href="<?php echo $node_info['field_asu_degree_major_map_url']['#items'][0]['url']; ?>"
                     target="_blank">View Major Map</a></p>
               <?php endif ?>
+
+              <div class="asu-degree-subplans">
+              <?php if (isset($node_info['field_asu_degree_subplan_url']['#items'])): ?>
+                <p><b>Subplans</b><br/>
+                  <?php foreach ($node_info['field_asu_degree_subplan_url']['#items'] as $sp) {
+                    if ($sp['title'] != $sp['url']) {
+                      echo '<a href="'.$sp['url'].'">'.$sp['title'].'</a><br/>';
+                    }
+                    else {
+                      echo '<a href="'.$sp['url'].'">Online</a><br/>';
+                    }
+                  }
+                echo '</p>';
+              endif ?>
+              </div>
             </div>
             <div class="col-sm-6 col-md-4">
               <h2>Application Requirements</h2>
@@ -329,7 +369,9 @@ else {
         <?php endif ?>
         </div>
 
-        <?php print render($page['prefooter']); ?>
+        <div class="container">
+          <?php print render($page['prefooter']); ?>
+        </div>
 
       </div>
     </div>
