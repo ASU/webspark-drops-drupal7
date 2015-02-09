@@ -9,7 +9,7 @@ files[] = includes/MediaYouTubeStreamWrapper.inc
 files[] = includes/MediaInternetYouTubeHandler.inc
 files[] = includes/MediaYouTubeBrowser.inc
 
-; Information added by drush on 2015-01-26
+; Information added by drush on 2015-02-09
 version = "7.x-2.0-rc4+9-dev"
 project = "media_youtube"
-datestamp = "1422315738"
+datestamp = "1423520533"

@@ -11,7 +11,7 @@ files[] = includes/MediaInternetFileHandler.inc
 files[] = includes/MediaInternetNoHandlerException.inc
 files[] = includes/MediaInternetValidationException.inc
 
-; Information added by drush on 2015-01-26
+; Information added by drush on 2015-02-09
 version = "7.x-2.0-alpha3+98-dev"
 project = "media"
-datestamp = "1422315738"
+datestamp = "1423520532"
