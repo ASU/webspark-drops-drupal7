@@ -2,3 +2,7 @@
 Webspark Extras 7.x-1.1-dev, 2014-11-21
 ------------------------------
 - Removed 3 features fields from panopoly content page content type
+
+Webspark Extras 7.x-1.2-dev, 2015-1-27
+------------------------------
+- Set new default settings on accordion settings form

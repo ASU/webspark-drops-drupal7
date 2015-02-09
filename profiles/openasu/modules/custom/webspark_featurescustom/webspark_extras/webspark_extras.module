@@ -1,6 +1,5 @@
 <?php
 /**
- * @file
  * Code for the Webspark Extras feature.
  */
 
@@ -12,6 +11,13 @@ function webspark_extras_form_alter(&$form, &$form_state, $form_id) {
      $form['field_featured_image']['#access'] = FALSE;
      $form['field_featured_categories']['#access'] = FALSE;
      $form['field_featured_status']['#access'] = FALSE;
-   
+
+  }
+  if ($form_id == 'panels_edit_style_settings_form') {
+    $form['settings']['autoHeight']['#default_value'] = 0;
+    $form['settings']['clearStyle']['#default_value'] = 1;
+    $form['settings']['collapsible']['#default_value'] = 1;
+    $form['settings']['fillSpace']['#default_value'] = 1;
+
   }
 }
