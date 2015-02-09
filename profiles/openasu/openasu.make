@@ -74,7 +74,7 @@ projects[asu_userpicker][download][url] = https://github.com/ASU/asu-drupal-user
 projects[asu_feeds][version] = 1.0-beta2
 projects[asu_feeds][subdir] = custom
 projects[asu_feeds][type] = module
-projects[asu_feeds][download][revision] = 400daaf0
+projects[asu_feeds][download][revision] = 6ffeb022
 projects[asu_feeds][download][url] = https://github.com/ASU/asu-drupal-feeds.git
 
 projects[ixr][version] = 1.0-beta2
@@ -104,10 +104,10 @@ projects[asu_eadvisor_degree_feed_feature][download][url] = https://github.com/A
 
 ; ASU Degrees (replacement for asu_eadvisor_degree_feed_feature)
 ; TODO - Update ASU Degrees module(s) to new repo or combine with other repos
-projects[asu_degrees][version] = 1.0
+projects[asu_degrees][version] = 1.3
 projects[asu_degrees][type] = module
 projects[asu_degrees][subdir] = custom
-projects[asu_degrees][download][revision] = 3b3c292e
+projects[asu_degrees][download][revision] = 44f6d7c2
 projects[asu_degrees][download][branch] = asu_degrees
 projects[asu_degrees][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
 
@@ -208,6 +208,8 @@ projects[entity_view_mode][subdir] = contrib
 projects[features_override][version] = 2.0-rc2
 projects[features_override][type] = module
 projects[features_override][subdir] = contrib
+; WEBSPARK-481 - patch from drupal.org
+projects[features_override][patch][] = patches/recursion_check_is_slow-features_override-2232999-19.patch
 
 projects[flexslider][version] = 2.0-alpha3
 projects[flexslider][type] = module
@@ -288,10 +290,10 @@ libraries[asu_webspark_bootstrap_bootstrap][download][url] = https://github.com/
 
 ; Bootstrap and Theme Framework - Subtheme - Web Standards
 
-projects[innovation][version] = beta6
+projects[innovation][version] = beta7
 projects[innovation][type] = theme
 projects[innovation][download][type] = git
-projects[innovation][download][revision] = a9c7ab89
+projects[innovation][download][revision] = 6df6e27c
 projects[innovation][download][branch] = master
 projects[innovation][download][url] = https://github.com/ASU/webspark-theme-innovation.git
 
