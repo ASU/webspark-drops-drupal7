@@ -1,3 +1,12 @@
+Webspark WYSIWYG 7.x-1.3-dev, 2015-1-30
+------------------------------
+- Changes to the wysiwyg text format to accomodate anchor tags
+
+Webspark WYSIWYG 7.x-1.2-dev, 2015-1-26
+------------------------------
+- Added image styles for oval, rounded corners and thumbnail (double border)
+- Added hr and anchor buttons; removed font and regular paste buttons
+
 
 Webspark WYSIWYG 7.x-1.1-dev, 2014-11-24
 ------------------------------
