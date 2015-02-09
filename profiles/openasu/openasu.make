@@ -116,7 +116,7 @@ projects[webspark_featurescustom][type] = module
 projects[webspark_featurescustom][subdir] = custom
 projects[webspark_featurescustom][directory_name] = webspark_featurescustom
 projects[webspark_featurescustom][download][type] = git
-projects[webspark_featurescustom][download][revision] = 8f6fe7a1
+projects[webspark_featurescustom][download][revision] = 680bcbeb
 projects[webspark_featurescustom][download][branch] = master
 projects[webspark_featurescustom][download][url] = https://github.com/ASU/webspark-webstandards-components.git
 
