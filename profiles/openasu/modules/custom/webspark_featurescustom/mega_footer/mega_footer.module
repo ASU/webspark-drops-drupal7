@@ -66,7 +66,7 @@ function mega_footer_block_view($delta = '') {
             }
 
             if(variable_get('unit_phone', NULL)!=NULL) {
-                $footer_mark .= "Phone: <a class='phone-link' href='tel:".variable_get('unit_phone', NULL)."'><b>".variable_get('unit_phone', NULL)."</b></a><br>";
+                $footer_mark .= "Phone: <a class='phone-link' href='tel:".variable_get('unit_phone', NULL)."'>".variable_get('unit_phone', NULL)."</a><br>";
             }
   	       //check to see if fax is provided, and add to markup if so
             $is_fax = variable_get('unit_fax', '');
@@ -87,37 +87,44 @@ function mega_footer_block_view($delta = '') {
 
 
   if(variable_get('unit_facebook_connect', NULL)!=NULL) {
-    $footer_mark .=  "<li><a href='".variable_get('unit_facebook_connect', NULL)."' title='Facebook'><i class='fa fa-facebook-square' aria-hidden='true'></i></a>
+    $footer_mark .=  "<li><a href='".variable_get('unit_facebook_connect', NULL)."' title='Facebook'><span class='sr-only'>Facebook</span>
+    <i class='fa fa-facebook-square' aria-hidden='true'></i></a>
                       </li>";
   }
 
   if(variable_get('unit_twitter_connect', NULL)!=NULL) {
-    $footer_mark .=  "<li><a href='".variable_get('unit_twitter_connect', NULL)."' title='Twitter'><i class='fa fa-twitter-square' aria-hidden='true'></i></a>
+    $footer_mark .=  "<li><a href='".variable_get('unit_twitter_connect', NULL)."' title='Twitter'><span class='sr-only'>Twitter</span>
+    <i class='fa fa-twitter-square' aria-hidden='true'></i></a>
                       </li>";
   }
 
   if(variable_get('unit_google_connect', NULL)!=NULL) {
-    $footer_mark .=  "<li><a href='".variable_get('unit_google_connect', NULL)."' title='Google+'><i class='fa fa-google-plus-square' aria-hidden='true'></i></a>
+    $footer_mark .=  "<li><a href='".variable_get('unit_google_connect', NULL)."' title='Google+'><span class='sr-only'>Google Plus</span>
+    <i class='fa fa-google-plus-square' aria-hidden='true'></i></a>
                       </li>";
   }
 
   if(variable_get('unit_linkedin_connect', NULL)!=NULL) {
-    $footer_mark .=  "<li><a href='".variable_get('unit_linkedin_connect', NULL)."' title='LinkedIn'><i class='fa fa-linkedin-square' aria-hidden='true'></i></a>
+    $footer_mark .=  "<li><a href='".variable_get('unit_linkedin_connect', NULL)."' title='LinkedIn'><span class='sr-only'>LinkedIn</span>
+    <i class='fa fa-linkedin-square' aria-hidden='true'></i></a>
                       </li>";
   }
 
   if(variable_get('unit_youtube_connect', NULL)!=NULL) {
-    $footer_mark .=  "<li><a href='".variable_get('unit_youtube_connect', NULL)."' title='YouTube'><i class='fa fa-youtube-square' aria-hidden='true'></i></a>
+    $footer_mark .=  "<li><a href='".variable_get('unit_youtube_connect', NULL)."' title='YouTube'><span class='sr-only'>Youtube</span>
+    <i class='fa fa-youtube-square' aria-hidden='true'></i></a>
                       </li>";
   }
 
   if(variable_get('unit_instagram_connect', NULL)!=NULL) {
-    $footer_mark .=  "<li><a href='".variable_get('unit_instagram_connect', NULL)."' title='Instagram'><i class='fa fa-instagram' aria-hidden='true'></i></a>
+    $footer_mark .=  "<li><a href='".variable_get('unit_instagram_connect', NULL)."' title='Instagram'><span class='sr-only'>Instagram</span>
+    <i class='fa fa-instagram' aria-hidden='true'></i></a>
     </li>";
   }
 
   if(variable_get('unit_rss_feed', NULL)!=NULL) {
-    $footer_mark .=  "<li><a href='".variable_get('unit_rss_feed', NULL)."' title='RSS'><i class='fa fa-rss-square' aria-hidden='true'></i></a>
+    $footer_mark .=  "<li><a href='".variable_get('unit_rss_feed', NULL)."' title='RSS'><span class='sr-only'>RSS</span>
+    <i class='fa fa-rss-square' aria-hidden='true'></i></a>
     </li>";
   }
 
