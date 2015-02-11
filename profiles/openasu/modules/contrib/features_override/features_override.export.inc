@@ -120,6 +120,10 @@ function features_override_get_overrides($component_key = FALSE, $element_key = 
  *  
  */
 function _features_override_is_ref_to(&$a, &$b, $uniqid) {
+  if (is_object($a) && is_object($b)) {
+    return ($a === $b);
+  }
+
   $temp_a = $a;
   $temp_b = $b;
 
@@ -130,7 +134,6 @@ function _features_override_is_ref_to(&$a, &$b, $uniqid) {
 
   $a = $temp_a;
   $b = $temp_b;
-
   return $return;
 }
 
@@ -399,9 +402,8 @@ function features_override_export_keys($keys) {
  */
 function features_override_remove_recursion(&$item) {
   $uniqid = __FUNCTION__ . mt_rand(); // use of uniqid() here impacts performance
-  $stackObject = array();
-  $stackArray = array();
-  _features_override_remove_recursion($item, $stackObject, $stackArray, $uniqid);
+  $stack = array();
+  _features_override_remove_recursion($item, $stack, $uniqid);
 }
 
 /**
@@ -410,49 +412,29 @@ function features_override_remove_recursion(&$item) {
  * @param $item
  *   An object or array passed by reference.
  */
-function _features_override_remove_recursion(&$object, &$stackObject = array(), &$stackArray = array(), $uniqid) {
-  if ($object) {
-    $is_object = is_object($object);
-    $is_array = is_array($object);
-    if ($is_object || $is_array) {
-      if ($is_object) {
-        $in_stack = in_array($object, $stackObject, TRUE);
+function _features_override_remove_recursion(&$object, &$stack = array(), $uniqid) {
+  if ((is_object($object) || is_array($object)) && $object) {
+    $in_stack = FALSE;
+    foreach($stack as &$item) {
+      if(_features_override_is_ref_to($object, $item, $uniqid)) {
+        $in_stack = TRUE;
+        break;
       }
-      else {
-        $in_stack = FALSE;
-        foreach (array_keys($stackArray, $object, TRUE) as $found_key) {
-          $item = &$stackArray[$found_key];
-          if (_features_override_is_ref_to($object, $item, $uniqid)) {
-            $in_stack = TRUE;
-            break;
+    }
+    if(!$in_stack) {
+      $stack[] = $object;
+      foreach ($object as $key => &$subobject) {
+        if (_features_override_remove_recursion($subobject, $stack, $uniqid)) {
+          if (is_object($object)) {
+            unset($object->$key);
+          }
+          else {
+            unset($object[$key]);
           }
         }
       }
-      if (!$in_stack) {
-        // Add to stack.
-        if ($is_object) {
-          $stackObject[] = $object;
-        }
-        else {
-          $stackArray[] = $object;
-        }
-
-        // Recurse to object keys.
-        foreach ($object as $key => &$subobject) {
-          if (_features_override_remove_recursion($subobject, $stackObject, $stackArray, $uniqid)) {
-            if ($is_object) {
-              unset($object->$key);
-            }
-            else {
-              unset($object[$key]);
-            }
-          }
-        }
-      }
-      else {
-        // Found in stack, $object is a recursion.
-        return TRUE;
-      }
+    } else {
+      return TRUE;
     }
   }
   return FALSE;
