@@ -93,10 +93,25 @@ function asu_cas_update_projects_alter(&$projects) {
   $managed_things[] = 'kalatheme'; // adding base theme
   $managed_things[] = 'asu_webspark_bootstrap'; // adding subtheme
   $managed_things[] = 'Innovation'; // adding subtheme
-  // WEBSPARK-403, 254 - add modules enabled in openasu.install file
-  // (vs. .info file) in openasu_install
-  $managed_things[] = 'cas'; // adding subtheme
-  $managed_things[] = 'asu_cas'; // adding subtheme
+  // WEBSPARK-403, 254 - add modules 1) enabled in openasu.install file
+  $managed_things[] = 'cas'; // CAS library module
+  $managed_things[] = 'asu_cas'; // ASU CAS and More
+  // WEBSPARK- - add modules in installation profile and or .make files
+  // but not in .info file
+    // openasu.make
+  $managed_things[] = 'quicktabs';
+  $managed_things[] = 'better_watchdog_ui';
+  $managed_things[] = 'admin_menu';
+  $managed_things[] = 'feeds_xpathparser';
+    // webspark_featurescustom.make
+  $managed_things[] = 'email';
+  $managed_things[] = 'special_menu_items';
+    // asu_rfi.make
+  $managed_things[] = 'multiblock';
+  $managed_things[] = 'views_data_export';
+  $managed_things[] = 'mimemail';
+  $managed_things[] = 'mailsystem';
+
   // Determine any dependencies to components manged by the distribution
   $profile_info = install_profile_info('openasu');
   foreach ($profile_info['dependencies'] as $module) {
