@@ -5,7 +5,7 @@ core = 7.x
 
 ; Upload multidev and patch it
 
-projects[multiblock][version] = 7.x-1.1
+projects[multiblock][version] = 1.1
 projects[multiblock][type] = module
 projects[multiblock][subdir] = contrib
 projects[multiblock][patch][] = https://www.drupal.org/files/issues/multiblock-cache-fix.patch

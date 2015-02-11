@@ -155,6 +155,7 @@ projects[feeds][version] = 2.0-alpha8
 projects[feeds][type] = module
 projects[feeds][subdir] = contrib
 
+// WEBSPARK - monitor for updates
 projects[feeds_xpathparser][version] = 1.0-beta4
 projects[feeds_xpathparser][type] = module
 projects[feeds_xpathparser][subdir] = contrib
@@ -164,10 +165,6 @@ projects[feeds_xpathparser][patch][1998194] = https://www.drupal.org/files/feeds
 projects[job_scheduler][version] = 2.0-alpha3
 projects[job_scheduler][type] = module
 projects[job_scheduler][subdir] = contrib
-
-projects[multiblock][version] = 1.1
-projects[multiblock][type] = module
-projects[multiblock][subdir] = contrib
 
 projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
