@@ -123,7 +123,7 @@ projects[webspark_featurescustom][download][url] = https://github.com/ASU/webspa
 projects[asu_rfi][type] = module
 projects[asu_rfi][subdir] = custom
 projects[asu_rfi][download][type] = git
-projects[asu_rfi][download][revision] = 7d925e6f
+projects[asu_rfi][download][revision] = d220f3e5
 projects[asu_rfi][download][branch] = master
 projects[asu_rfi][download][url] = https://github.com/ASU/asu-drupal-rfi
 
@@ -202,11 +202,9 @@ projects[entity_view_mode][version] = 1.0-rc1
 projects[entity_view_mode][type] = module
 projects[entity_view_mode][subdir] = contrib
 
-projects[features_override][version] = 2.0-rc2
-projects[features_override][type] = module
-projects[features_override][subdir] = contrib
-; WEBSPARK-481 - patch from drupal.org
-projects[features_override][patch][] = patches/recursion_check_is_slow-features_override-2232999-19.patch
+; features_override added to Panopoly in v1.12 (disabled by default)
+; WEBSPARK-481 - patch from drupal.org (disabled temporarily)
+;projects[features_override][patch][] = patches/recursion_check_is_slow-features_override-2232999-19.patch
 
 projects[flexslider][version] = 2.0-alpha3
 projects[flexslider][type] = module
@@ -269,6 +267,8 @@ projects[kalatheme][type] = theme
 projects[kalatheme][patch][] = patches/webspark-188.kalatheme-css-img-urls.patch
 ; WEBSPARK-361 - Panopoly TPLs and row-full class
 projects[kalatheme][patch][] = patches/webspark-361-kalatheme-panopoly-tpl-class-update.patch
+; WEBSPARK-565 - Added views-view-table.tpl.php, pending update to kalatheme
+projects[kalatheme][patch][] = patches/webspark-565-add-views-tpl-to-kalatheme.patch
 
 projects[modernizr][version] = 3.1
 projects[modernizr][subdir] = contrib
