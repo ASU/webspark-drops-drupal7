@@ -123,7 +123,7 @@ projects[webspark_featurescustom][download][url] = https://github.com/ASU/webspa
 projects[asu_rfi][type] = module
 projects[asu_rfi][subdir] = custom
 projects[asu_rfi][download][type] = git
-projects[asu_rfi][download][revision] = d220f3e5
+projects[asu_rfi][download][revision] = 1e96787f
 projects[asu_rfi][download][branch] = master
 projects[asu_rfi][download][url] = https://github.com/ASU/asu-drupal-rfi
 
