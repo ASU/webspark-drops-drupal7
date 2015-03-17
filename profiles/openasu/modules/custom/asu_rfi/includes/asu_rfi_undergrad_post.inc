@@ -3,7 +3,7 @@
 function asu_rfi_undergrad_post($data)
 {
   global $base_url;
- dpm($data);
+
   $mw_auth_key = variable_get('asu_rfi_form_auth_key');
   $fname = $data['first_name'];
   $lname = $data['last_name'];
@@ -22,20 +22,7 @@ function asu_rfi_undergrad_post($data)
   $form_mode = variable_get('asu_rfi_form_mode');
   $hashkey = sha1($mw_auth_key.'+'.$nodeid); 
   
-  //check if the submission values are empty
-  if(isset($state)){
-    if($state == 0){
-      $state_province = '';
-    }
-    else{
-      $state_province = $state;
-    }
-    
-  }
-  else{
-    $state_province = '';
-  }
-  
+ 
   //modile phone
   if(isset($data['mobile_check'])){
     $mobile = str_replace('-', '', $data['mobile_check']);
@@ -84,16 +71,6 @@ function asu_rfi_undergrad_post($data)
     $address = '';
   }
   
-  //international
-  /*if($data['citizenship'] == 'FALSE')
-  {
-    $intnl_student = TRUE;
-  }
-   else
-   {
-    $intnl_student = FALSE;
-  }*/
-  
   //country
   if(isset($data['country'])){
     $country = $data['country'];
@@ -103,21 +80,36 @@ function asu_rfi_undergrad_post($data)
   }
 
   //Get siteDomain variable to see if it's dev or qa site.
-  $site = variable_get('siteDomain');
+  global $base_url;
+ 
+  if ((strpos($base_url, 'https://localhost') > 0) || (strpos($base_url, 'http://localhost') > 0)) {
+    $environ = 'dev';
+  }
+  if ((strpos($base_url, 'https://dev-') > 0) || (strpos($base_url, 'http://dev-') > 0) || (strpos($base_url, '-dev') > 0)) {
+    $environ = 'dev';
+  }
+  if ((strpos($base_url, 'https://qa-') > 0) || (strpos($base_url, 'http://qa-') > 0) || (strpos($base_url, '-qa') > 0) ) {
+    $environ = 'qa';
+  }
+  if ((strpos($base_url, 'https://test-') > 0) || (strpos($base_url, 'http://test-') > 0)) {
+    $environ = 'qa';
+  }
 
    // Salesforce URL to post data to
-  if(($site == "dev") || ($site == "qa") || ($form_mode == "test"))
+  /*if(($environ == "dev") || ($environ == "qa") || ($form_mode == "test") || empty($form_mode))
   {
     $url = "https://webforms-qa.asu.edu/asu_rfi_dedupe/submit_rfi/$hashkey/$nodeid";
   }
   else
-  {
+  {*/
     $url = "https://webforms.asu.edu/asu_rfi_dedupe/submit_rfi/$hashkey/$nodeid";
-  }
+  //}
+  
   
   $source = '';
    
   $fields = array(
+    'prod_test_flag' => $form_mode,
     'first_name' => $fname,
     'last_name' => $lname,
     'prospect_level' => 'Undergraduate',
@@ -134,15 +126,12 @@ function asu_rfi_undergrad_post($data)
     'prod_test_flag' => $form_mode,
     'street' => $address,
     'city' => $city,
-    'state' => $state_province,
+    'state' => $state,
     'intnl_student' => $data['citizenship'] ,
     'veteran_status' => $military,
   );
 
   $body = json_encode($fields);
-
-
-   
 
   try 
   {
@@ -173,5 +162,6 @@ function asu_rfi_undergrad_post($data)
         'Curl failed with error #%d: %s',
         $e->getCode(), $e->getMessage()),
         E_USER_ERROR);
-  }   
+  }
+   
 }

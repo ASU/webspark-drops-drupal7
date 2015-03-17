@@ -1,4 +1,6 @@
 
+/* CSS for RFI forms */
+
 .rfi_test_mode{
     background: red;
     padding: 2%;
@@ -7,8 +9,23 @@
     width: 80%;
 }
 
+@media (min-width: 992px){
+  .block-multiblock {
+     width: 931px;
+  }
+}
+
+@media (min-width: 1200px){
+  .block-multiblock {
+     width: 1170px;
+ }
+}
+
 .block-multiblock{
-    margin-left:5%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 20px;
+    padding-right: 20px;   
 }
 
 .rfi_test_mode a{
@@ -18,56 +35,109 @@
 .rfi_button{
     background: #a30046 !important;
     color: #ffffff !important;
+    margin-bottom: 20px !important;
+    margin-left:22px !important;
 }
 
-
-.rfi_phone{
-    /*width: 25%;
-    float: left;*/
-}
+@media screen and (min-width: 1110px){
 
 .rfi_mobile, .form-item-mobile-check{
-    margin-bottom: 110px !important;
+    margin-bottom: 6% !important;
     margin-top: 60px !important;
     margin-left: 10px !important;
+ }
+ 
+ .phone_field_rfi{
+    margin-right: 10px;
+    float:left;
+ }
 }
 
-#rfi_second_form{
-    margin-top: 20px;
+@media screen and (max-width: 1001px){
+    
+  .rfi_mobile, .form-item-mobile-check{
+    margin-bottom: 5% !important;
+    margin-left: 0px !important;
+  }
+    
+  .phone_field_rfi{
+    float:none;
+ }
+
+ .form-item-mobile-check{
+    padding-left: 0px !important;
+  }
+}
+
+    
+#asu-rfi-long-form-data input[type="text"], #asu_rfi_second_form input[type="text"], #asu-rfi-form-data input[type="text"], #asu-rfi-current-form-data input[type="text"]{
+ width: 240px;
+}
+
+#asu-rfi-long-form-data textarea, #asu_rfi_second_form textarea, #asu-rfi-form-data textarea, #asu-rfi-current-form-data  textarea{
+ width: 80%;
+}
+
+#asu-rfi-long-form-data .uneditable-input, #asu_rfi_second_form .uneditable-input, #asu-rfi-form-data .uneditable-input, #asu-rfi-current-form-data .uneditable-input{
+ width: 240px;
+}
+
+#asu_rfi_second_form .form-item-questions, #asu-rfi-long-form-data .form-item-questions, #asu-rfi-current-form-data .form-item-questions{
+    margin-left: 25px !important;
+}
+
+select {
+  width: 240px !important;
+
+}
+
+.chosen-container{
+     width: 240px !important;
+}
+
+.chosen-search input[type="text"]{
+    max-width: 230px !important;
+}
+
+.chosen-container.error{
+    background: none !important;
+}
+
+.form-item-birthdate label{
+    display: none !important;
+}
+
+input[type="radio"] {
+ float: left;
+ margin: 4px 5px 0;
+ width: 20px !important;
 }
 
 .form-item-prog-plan label, .form-item-start-date label, .form-item-student-type label, .form-item-country label, .form-item-state label, .form-item-program-code label{
     display: block !important;
 }
 
-.chosen-default{
-  color: #505050 !important; 
+#asu-rfi-long-form-data .form-item-citizenship{
+    padding-left: 0px !important;
 }
 
-.chosen-container{
-  min-width: 25% !important;    
+#asu_rfi_second_form .form-item-military label{
+    padding-left: 2%;
 }
 
-.phone_field_rfi{
-    margin-right: 10px;
-    float:left;
+#rfi_second_form{
+    margin-top: 20px;
 }
 
-#edit_birthdate_year_chosen { 
-  width: 6.2em !important; 
-}
-#edit_birthdate_month_chosen { 
-  width: 7.2em  !important; 
-}
-#edit_birthdate_day_chosen {
-  width: 6em !important; 
-}
-#edit-birthdate { padding: 0; }
 
-.form-item-birthdate-year{
-    
+div.fieldset-wrapper { 
+  overflow:visible !important;
 }
 
-.form-control{
-    width: auto !important;
+#asu-rfi-long-form-data .form-item-mobile-check .fa-check, #asu_rfi_second_form .form-item-mobile-check .fa-check, #asu-rfi-form-data .form-item-mobile-check .fa-check{
+    position: relative !important;
+}
+
+#edit-dob-field{
+    margin-bottom: -17px;
 }

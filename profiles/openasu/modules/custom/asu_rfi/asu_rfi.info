@@ -1,7 +1,6 @@
 name = ASU RFI
-description = "This module creates 'Request for Information' Drupal forms for inclusion in pages. The forms will be for Prospective and Future students to submit inquiries regarding degrees at ASU, and the submissions will be posted to Salesforce CRM."
+description = ASU RFI Form module.
 core = 7.x
-version = 7.x-1.0-beta1
 package = ASU
 dependencies[] = multiblock
 dependencies[] = views
@@ -9,6 +8,8 @@ dependencies[] = views_data_export
 dependencies[] = asu_rfi_feature
 dependencies[] = mimemail
 dependencies[] = asu_degrees
+dependencies[] = views_bulk_operations
 ;files[] = asu_rfi.email.inc
 ;files[] = asu_rfi.pages.inc
 ;scripts[] = asu_rfi.js
+scripts[] = session_clear.js

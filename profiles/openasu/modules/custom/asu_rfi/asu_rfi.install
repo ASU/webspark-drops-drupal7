@@ -73,8 +73,7 @@ function asu_rfi_install(){
   include('data/asu_rfi_sem_dates.inc');
   include('data/asu_rfi_countries_data.inc');
   drupal_set_message('ASU RFI module has been installed. Configure module settings at <a href="/admin/config/asu/asurfi">admin settings page</a>');
-  drupal_add_js('jQuery(document).ready(function () { alert("ASU RFI module has been installed. Configure module settings at <a href="/admin/config/asu/asurfi">admin settings page</a>"); });', 'inline');
-  cache_clear_all('*', 'cache_my_module_bin', TRUE);
+  
   //Check if CAS module exists and enabled and update cas_exclude variables with asu_rfi callback urls
   if (module_exists('cas')) {
     $out = variable_get('cas_exclude', 'none');
@@ -87,7 +86,6 @@ function asu_rfi_uninstall(){
   drupal_uninstall_schema('asu_rfi');
   variable_del('asu_rfi_form_mode');
   variable_del('asu_rfi_google_analytics_key');
-  variable_del('asu_rfi_error_email');
   variable_del('asu_rfi_error_email');
   variable_del('asu_rfi_from_email_field');
  }

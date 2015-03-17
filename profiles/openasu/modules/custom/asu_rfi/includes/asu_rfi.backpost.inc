@@ -10,12 +10,17 @@ function asu_rfi_success_post($hash, $nid)
   if($real_hash == $hash)
   {
     //update submission status 		
-    $node_status_updated = db_update('field_data_field_rfi_submission_status') 
+   /* $node_status_updated = db_update('field_data_field_rfi_submission_status') 
     ->fields(array(
       'field_rfi_submission_status_value' => 'SF_Complete',
     ))
     ->condition('entity_id', $nid)
-    ->execute();
+    ->execute(); */
+    
+    $node = node_load($nid);
+    $node_wrapper = entity_metadata_wrapper('node', $node);
+    $node_wrapper->field_rfi_submission_status->set('SF_Complete');
+    $node_wrapper->save();
     
     
     $cid = 'field:node:' . $nid;

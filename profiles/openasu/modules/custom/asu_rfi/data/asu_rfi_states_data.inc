@@ -3,15 +3,9 @@
   $type = 'fieldinfo';
   $name = 'state_province';
   
-  //get environment variable fro variables table
-  $environment = variable_get('siteDomain');
   
-  if(($environment == "qa") || ($environment == "dev")){
-    $middleware_host = "webforms-dev.asu.edu";
-  }
-  else{
-    $middleware_host = "webforms.asu.edu";
-  }
+  $middleware_host = "webforms.asu.edu";
+  
   
   $url = "https://$middleware_host/asu_salesforce_query/api/$type/$name";
 
@@ -19,7 +13,8 @@
   $options = array(
     CURLOPT_URL => $url,
     CURLOPT_RETURNTRANSFER => 1,
-    CURLOPT_HTTPHEADER => array('Content-Type: text/json', 'Authorization: Basic ' . base64_encode('apuliroj:3UIzHi6vMNXDTV9p')),
+    CURLOPT_HTTPHEADER => array('Content-Type: text/json', 'Authorization: Basic 7755:e7acf2e698751f4cac11718d97df6ebf64b94372'),
+
   );  
 
   curl_setopt_array($ch, $options);

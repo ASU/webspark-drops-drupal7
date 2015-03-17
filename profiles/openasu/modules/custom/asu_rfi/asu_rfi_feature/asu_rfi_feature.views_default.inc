@@ -212,6 +212,21 @@ function asu_rfi_feature_views_default_views() {
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
+  $handler->display->display_options['defaults']['header'] = FALSE;
+  /* Header: Global: Text area */
+  $handler->display->display_options['header']['area']['id'] = 'area';
+  $handler->display->display_options['header']['area']['table'] = 'views';
+  $handler->display->display_options['header']['area']['field'] = 'area';
+  $handler->display->display_options['header']['area']['content'] = '<h4>RFI Submissions Statuses:</h4>
+<p><strong>Complete: </strong>Student completed the multi step form or the long form. Response from middleware has not been received.</p>
+
+<p><strong>Incomplete:</strong> Student submitted just the first part of the multistep form. If the student doesn’t complete the second part of the form, it will be submitted to middleware/HTTP POST when cron runs in the site.</p>
+
+<p><strong>SF_Complete:</strong> After a submission is posted to the middleware, middleware responds to the site with the status of the submission. If the submission went through successfully, the status of the submission changes to SF_Complete.</p>
+ 
+<p><strong>Pending:</strong> If any error occurs with the submission to the middleware, the submission status changes to Pending.</p>
+';
+  $handler->display->display_options['header']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['fields'] = FALSE;
   /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
@@ -221,6 +236,12 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['created']['date_format'] = 'medium';
   $handler->display->display_options['fields']['created']['second_date_format'] = 'panopoly_time';
+  /* Field: Content: Updated date */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['date_format'] = 'long';
+  $handler->display->display_options['fields']['changed']['second_date_format'] = 'panopoly_time';
   /* Field: Bulk operations: Content */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';

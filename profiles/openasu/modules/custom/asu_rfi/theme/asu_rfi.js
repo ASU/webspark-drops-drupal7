@@ -7,8 +7,9 @@
         attach: function (context, settings) {
          
           $('html, body').animate({ scrollTop: $('#rfi_second_form').offset().top - 100}, 1000);
-         //$('html, body').animate({ scrollTop: $('#rfi_second_form_top_div').offset().top}, 1000);
-        // $('#rfi_second_form').scroll();
+          
+          
+        
       }
    }
 })
