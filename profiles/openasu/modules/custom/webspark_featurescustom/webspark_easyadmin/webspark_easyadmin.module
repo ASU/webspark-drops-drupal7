@@ -1,0 +1,25 @@
+<?php
+/**
+ * Code for the Webspark Easy Admin.
+ */
+
+/**
+ * Implements hook_form_alter().
+ */
+function webspark_easyadmin_form_alter(&$form, &$form_state, $form_id) {
+  // Add help text to panopoly video widget and media widget video upload fields
+  if ($form_id == 'fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form') {
+    $form['field_video_file']['und'][0]['#description'] = t('Supply the URL of a video, such as http://youtu.be/a8jzvh5Wb00  or  http://vimeo.com/21654482');
+  } 
+  if($form_id == "media_internet_add_upload"){
+  	$form['embed_code']['#description'] = t('Supply the URL of a video, such as http://youtu.be/a8jzvh5Wb00 or http://vimeo.com/21654482.<br />Supported internet media providers: <strong>YouTube Vimeo</strong>.');
+  } 
+}
+
+/**
+ * Implementation of hook_menu_alter().
+ */
+function webspark_easyadmin_menu_alter(&$items) {
+  // Remove panelizer tab from node views
+  $items['node/%node/panelizer']['type'] = MENU_CALLBACK;
+ }
