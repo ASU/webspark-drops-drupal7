@@ -61,7 +61,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 10,
+      'weight' => 14,
     ),
   );
 
@@ -113,7 +113,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 6,
+      'weight' => 10,
     ),
   );
 
@@ -165,7 +165,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 7,
+      'weight' => 11,
     ),
   );
 
@@ -204,7 +204,7 @@ function asu_degrees_feature_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
-      'default_image' => 3,
+      'default_image' => 7,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '',
@@ -303,7 +303,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 13,
+      'weight' => 17,
     ),
   );
 
@@ -369,7 +369,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 14,
+      'weight' => 18,
     ),
   );
 
@@ -421,7 +421,120 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 9,
+      'weight' => 13,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_acc_program'
+  $field_instances['node-asu_degree-field_asu_degree_acc_program'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 37,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_degree_acc_program',
+    'label' => 'Accelerated Program',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_onoff',
+      'weight' => 8,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_additional_req'
+  $field_instances['node-asu_degree-field_asu_degree_additional_req'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 39,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_degree_additional_req',
+    'label' => 'Additional Requirements',
+    'required' => 0,
+    'settings' => array(
+      'attributes' => array(
+        'class' => '',
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => 'default',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'none',
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'link_field',
+      'weight' => 28,
     ),
   );
 
@@ -475,7 +588,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 23,
+      'weight' => 27,
     ),
   );
 
@@ -541,7 +654,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 19,
+      'weight' => 23,
     ),
   );
 
@@ -593,7 +706,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 8,
+      'weight' => 12,
     ),
   );
 
@@ -646,7 +759,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 12,
+      'weight' => 16,
     ),
   );
 
@@ -700,7 +813,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 18,
+      'weight' => 22,
     ),
   );
 
@@ -752,7 +865,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 5,
       ),
       'type' => 'text_textfield',
-      'weight' => 21,
+      'weight' => 25,
     ),
   );
 
@@ -804,7 +917,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 15,
+      'weight' => 19,
     ),
   );
 
@@ -856,7 +969,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 16,
+      'weight' => 20,
     ),
   );
 
@@ -910,7 +1023,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 27,
+      'weight' => 32,
     ),
   );
 
@@ -976,7 +1089,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 17,
+      'weight' => 21,
     ),
   );
 
@@ -1028,7 +1141,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 30,
+      'weight' => 35,
     ),
   );
 
@@ -1080,7 +1193,57 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 26,
+      'weight' => 31,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_new_degree'
+  $field_instances['node-asu_degree-field_asu_degree_new_degree'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 38,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_degree_new_degree',
+    'label' => 'New Degree',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_onoff',
+      'weight' => 9,
     ),
   );
 
@@ -1132,7 +1295,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 10,
       ),
       'type' => 'text_textfield',
-      'weight' => 20,
+      'weight' => 24,
     ),
   );
 
@@ -1184,7 +1347,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 24,
+      'weight' => 29,
     ),
   );
 
@@ -1231,7 +1394,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
-      'weight' => 31,
+      'weight' => 36,
     ),
   );
 
@@ -1285,7 +1448,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 22,
+      'weight' => 26,
     ),
   );
 
@@ -1337,7 +1500,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 25,
+      'weight' => 30,
     ),
   );
 
@@ -1429,8 +1592,9 @@ function asu_degrees_feature_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'text_processing' => 0,
       'user_register_form' => FALSE,
@@ -1444,7 +1608,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 28,
+      'weight' => 33,
     ),
   );
 
@@ -1492,8 +1656,9 @@ function asu_degrees_feature_field_default_field_instances() {
       ),
       'enable_tokens' => 1,
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'rel_remove' => 'default',
       'title' => 'optional',
@@ -1510,7 +1675,120 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 29,
+      'weight' => 34,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_wue_available'
+  $field_instances['node-asu_degree-field_asu_degree_wue_available'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 35,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_degree_wue_available',
+    'label' => 'WUE Available',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_onoff',
+      'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_wue_link'
+  $field_instances['node-asu_degree-field_asu_degree_wue_link'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 36,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_degree_wue_link',
+    'label' => 'WUE Link',
+    'required' => 0,
+    'settings' => array(
+      'attributes' => array(
+        'class' => '',
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => 'default',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'none',
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'link_field',
+      'weight' => 6,
     ),
   );
 
@@ -1562,7 +1840,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 11,
+      'weight' => 15,
     ),
   );
 
@@ -1701,7 +1979,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'profile' => '',
       ),
       'rel_remove' => 'default',
-      'title' => 'optional',
+      'title' => 'none',
       'title_maxlength' => 128,
       'title_value' => '',
       'url' => 0,
@@ -1715,7 +1993,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 5,
+      'weight' => 7,
     ),
   );
 
@@ -1768,7 +2046,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'profile' => '',
       ),
       'rel_remove' => 'default',
-      'title' => 'optional',
+      'title' => 'none',
       'title_maxlength' => 128,
       'title_value' => '',
       'url' => 0,
@@ -1791,9 +2069,11 @@ function asu_degrees_feature_field_default_field_instances() {
   t('ASU Banner Image');
   t('Academic Plan');
   t('Academic Program');
+  t('Accelerated Program');
   t('Add a link here to change from the default financial aid link to one specific to your needs.');
   t('Add a link here to change from the default scholarship link to one specific to your needs.');
   t('Additional Program Fee');
+  t('Additional Requirements');
   t('Admission Requirements');
   t('Campus');
   t('Career Opportunities');
@@ -1812,6 +2092,7 @@ function asu_degrees_feature_field_default_field_instances() {
   t('Major Map URL');
   t('Major Map Year');
   t('Minimum math requirement');
+  t('New Degree');
   t('Program: Undergrad or Graduate');
   t('Related Programs');
   t('Requirement description');
@@ -1823,6 +2104,8 @@ function asu_degrees_feature_field_default_field_instances() {
   t('This image only shows up on the view page.  Horizontal images work best.');
   t('This is the banner image across the top of the degree pages.');
   t('URL for degree at ASU Degree Search');
+  t('WUE Available');
+  t('WUE Link');
 
   return $field_instances;
 }

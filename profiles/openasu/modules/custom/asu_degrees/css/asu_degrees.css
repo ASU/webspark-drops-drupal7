@@ -18,3 +18,9 @@
     border-bottom: 0;
     border-left: 0;
 }
+
+span.asu-degrees-accelerated {
+    font-size: 20px;
+    font-weight: normal;
+    vertical-align: middle;
+}

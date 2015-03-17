@@ -44,7 +44,7 @@ function asu_degrees_feature_strongarm() {
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '32',
+          'weight' => '35',
         ),
       ),
       'display' => array(),

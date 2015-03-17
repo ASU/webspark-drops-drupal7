@@ -12,14 +12,14 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
    * Implementation of FeedsParser::parse().
    */
   public function parse(FeedsSource $source, FeedsFetcherResult $fetcher_result) {
-		
-		$batch = $fetcher_result;
-		
+    
+    $batch = $fetcher_result;
+    
     $result = $batch->getRaw();
     //error_log( print_r($result, true) );
     $parsed_data = $result;
     if (!count($parsed_data)) {
-			return new FeedsParserResult($parsed_data);
+      return new FeedsParserResult($parsed_data);
     }
 
     // Parse the items - flatten where necessary
@@ -27,6 +27,32 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
 
       // Unique ID for the plan
       $parsed_data[$key]['guid'] = md5($parsed_data[$key]['AcadPlan']);
+
+      if (count($data['accelerateDegrees'])) {
+        $ad = array();
+        $parsed_data[$key]['ad'] = 1;
+      }
+
+      if (count($data['CampusWueInfo'])) {
+        $wueCampusConfirmed = array();
+        foreach ($data['CampusWueInfo'] as $cwi) {
+          if ($cwi['isCampusWue'] == 1) {
+            $parsed_data[$key]['wueCampusConfirmed'] = 1;
+          }
+        }
+      }
+
+/*      if (count($data['DegreeNew'])) {
+        $degreeIsNew = array();
+        foreach ($data['DegreeNew'] as $dn) {
+          $parsed_data[$key]['degreeIsNew'] = 1;
+        }
+      }*/
+
+      if (count($data['DescrlongExtn5'])) {
+        $additionalAdmissions = array();
+        $parsed_data[$key]['additionalAdmissions'] = 1;
+      }
 
       // Campuses
       if(count($data['CampusStringArray'])){
@@ -51,6 +77,9 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
               break;
             case 'CALHC':
               $value = 'Lake Havasu';
+              break;
+            case 'EAC':
+              $value = 'Eastern Arizona College';
               break;
             //Add case for missing campus from degree feed
             default:
@@ -117,7 +146,6 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
           if(isset($subplan_url['SubPlnMajorMapUrl'])){
             $parsed_data[$key]['subPlnMajorMaps.SubPlnMajorMapUrl'][] = $subplan_url['SubPlnMajorMapUrl'];
           }
-
         }
       }
 
@@ -131,12 +159,30 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
         }
       }
 
+      //if subplan.code == subPlnMajorMaps.SubplnMajorMapSubplanCode then replace code with name
+      if (count($parsed_data[$key]['subplan.name'])) {
+        $parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanName'] = array();
+        foreach($parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanCode'] as $sn){
+          $i = 0;
+          while ($i <= count($parsed_data[$key]['subplan.name'])) {
+            if ($sn == $parsed_data[$key]['subplan.code'][$i]) {
+              $parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanName'][] = $parsed_data[$key]['subplan.name'][$i];
+              $i == count($parsed_data[$key]['subplan.name']);
+            }
+            $i++;
+          }
+          unset($i);
+        }
+      }
+
+
+
     } // End of foreach
 
     //error_log(print_r($parsed_data, true));
-    //watchdog('keith debug', '<pre>'. print_r($parsed_data, true) .'</pre>');
+    //watchdog('ASU Degrees Debug', '<pre>'. print_r($parsed_data, true) .'</pre>');
     //watchdog('keith $v', '<pre>' . print_r($v, true) . '</pre>');
-		return new FeedsParserResult($parsed_data);
+    return new FeedsParserResult($parsed_data);
   }
 
   /**
@@ -182,6 +228,11 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
       'subplan.name' => array('name' => t('Subplan name')),
       'majorMapDefaultYear' => array('name' => t('Major map year')),
       'subPlnMajorMaps.SubplnMajorMapSubplanCode' => array('name' => t('Subplan code for URL')),
+      'subPlnMajorMaps.SubplnMajorMapSubplanName' => array('name' => t('Subplan name for URL')),
+      'wueCampusConfirmed' => array('name' => t('WUE Confirmed')),
+      'ad' => array('name' => t('Accelerated Degree')),
+      //not quite working yet
+      //'degreeIsNew' => array('name' => t('Degree New')),
     );
   }
 }

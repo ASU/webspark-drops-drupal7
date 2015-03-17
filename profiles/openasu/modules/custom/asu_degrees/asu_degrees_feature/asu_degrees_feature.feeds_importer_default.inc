@@ -172,8 +172,23 @@ function asu_degrees_feature_feeds_importer_default() {
             'unique' => FALSE,
           ),
           28 => array(
-            'source' => 'subPlnMajorMaps.SubplnMajorMapSubplanCode',
+            'source' => 'subPlnMajorMaps.SubplnMajorMapSubplanName',
             'target' => 'field_asu_degree_subplan_url:title',
+            'unique' => FALSE,
+          ),
+          29 => array(
+            'source' => 'ad',
+            'target' => 'field_asu_degree_acc_program',
+            'unique' => FALSE,
+          ),
+          30 => array(
+            'source' => 'wueCampusConfirmed',
+            'target' => 'field_asu_degree_wue_available',
+            'unique' => FALSE,
+          ),
+          31 => array(
+            'source' => 'degreeIsNew',
+            'target' => 'field_asu_degree_new_degree',
             'unique' => FALSE,
           ),
         ),
