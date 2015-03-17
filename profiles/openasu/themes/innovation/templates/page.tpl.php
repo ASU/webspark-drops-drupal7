@@ -85,11 +85,10 @@
   		<div class="row">
   			<div class="column col-md-12">
 					<?php print render($page['header']); ?>
-
 					<?php if ($site_name): ?>
-							<h1 class="header__sitename"<?php if ($hide_site_name) { print ' class="element-invisible"'; } ?>>
-									<a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home"><span><?php print $site_name; ?></span></a>
-							</h1>
+                      <h1 class="header__sitename<?php if ($hide_site_name) { print ' element-invisible'; } ?>">
+                        <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home"><span><?php print $site_name; ?></span></a>
+                      </h1>
 					<?php endif; ?>
 				</div>
 			</div>
@@ -146,7 +145,7 @@
   </div></div> <!-- /#main, /#main-wrapper -->
 
   <!-- Page Footer -->
-  <footer id="footer">
+  <footer id="page-footer">
     <div class="container">
       <div class="row row-full">
       	<?php print render($page['footer']); ?>

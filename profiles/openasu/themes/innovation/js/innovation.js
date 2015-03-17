@@ -6,14 +6,15 @@
 	Drupal.behaviors.asu_standard = {
 		attach: function(context, settings) {
 
-		$( "#asu_mobile_hdr" ).wrapInner("<div class='asu_mobile_hdr_wrapper'></div>");			
-		$( "#asu_mobile_menu" ).wrapInner("<div class='asu_mobile_menu_wrapper'></div>");	
+			$( "#asu_mobile_hdr" ).wrapInner("<div class='asu_mobile_hdr_wrapper'></div>");			
+			$( "#asu_mobile_menu" ).wrapInner("<div class='asu_mobile_menu_wrapper'></div>");	
 		
-		// Add header to Ctools Modal menu to improve UI
-		$( ".panels-add-content-modal .panels-categories-box" ).after( "<h2 class=\"widget-list\">More Content Panes</h2>" );
+			// Add header to Ctools Modal menu to improve UI
+			$( ".panels-add-content-modal .panels-categories-box" ).after( "<h2 class=\"widget-list\">More Content Panes</h2>" );
 
 		}
 	};
+
 	$('#ASUNavMenu').affix({offset:{top:$('#ASUNavMenu').offset().top}});
 	$(window).on('resize',function(){
 		var w = $(window).width();
@@ -33,17 +34,19 @@
 	});
 	//Fixes all anchor tags with hashes
 	$('a').on('click',function(e){
-		var url = $(this).attr('href');
-		if (url.slice(0,1)=='#') {
-			e.preventDefault();
-			smoothScroll(url);
+		var $this = $(this);
+		var url = $this.attr('href');
+		var cls = $this.attr('class');
+		if (!$this.hasClass('accordion-toggle') && !$this.closest('ui-tabs').length == 0 && $this.closest('nav-tabs').length == 0) {
+			if (url.slice(0,1)=='#') {
+				e.preventDefault();
+				smoothScroll(url);
+			}
 		}
 	});
 	//Fixes onload scroll to the hash that originates from page URL
 	if (location.hash) {
-		setTimeout(function() {
-			smoothScroll(location.hash);
-		}, 1);
+		smoothScroll(location.hash);
 	}
 	//Function to calculate current offset with respect to scroll position
 	function offsetTop() {

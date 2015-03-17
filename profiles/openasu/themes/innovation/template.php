@@ -9,17 +9,18 @@
  *
  * Implements template_preprocess_html().
  */
-function innovation_preprocess_html(&$variables) {
+function innovation_preprocess_html(&$variables)
+{
 
-	// Add theme js file here rather than in .info to add a weight and ensure it loads last
-	drupal_add_js(drupal_get_path('theme', 'innovation') . '/js/innovation.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 200));
+  // Add theme js file here rather than in .info to add a weight and ensure it loads last
+  drupal_add_js(drupal_get_path('theme', 'innovation') . '/js/innovation.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 200));
 
   // Add IE meta tag to force IE rendering mode
   $meta_ie_render_engine = array(
     '#type' => 'html_tag',
     '#tag' => 'meta',
     '#attributes' => array(
-      'content' =>  'IE=edge,chrome=1',
+      'content' => 'IE=edge,chrome=1',
       'http-equiv' => 'X-UA-Compatible',
     )
   );
@@ -35,7 +36,8 @@ function innovation_preprocess_html(&$variables) {
 /**
  * Implements hook_ctools_plugin_post_alter()
  */
-function innovation_ctools_plugin_post_alter(&$plugin, &$info) {
+function innovation_ctools_plugin_post_alter(&$plugin, &$info)
+{
   if ($info['type'] == 'styles') {
     if ($plugin['name'] == 'kalacustomize') {
       $plugin['title'] = 'ASU Customize';
@@ -46,7 +48,8 @@ function innovation_ctools_plugin_post_alter(&$plugin, &$info) {
 /**
  * Implements hook_ctools_content_subtype_alter()
  */
-function innovation_ctools_content_subtype_alter(&$subtype, &$plugin) {
+function innovation_ctools_content_subtype_alter(&$subtype, &$plugin)
+{
   if ($plugin['module'] == 'views_content' && $subtype['title'] == 'Add content item') {
     $subtype['title'] = t('Add existing content');
   }
@@ -57,14 +60,15 @@ function innovation_ctools_content_subtype_alter(&$subtype, &$plugin) {
  *
  * Implements template_process_page().
  */
-function innovation_preprocess_page(&$variables) {
+function innovation_preprocess_page(&$variables)
+{
   // Make sure default picture gets responsive panopoly stylingz
   if (theme_get_setting('default_picture', 'innovation') && theme_get_setting('picture_path', 'innovation')) {
     $image_style = module_exists('asu_cas') ? 'asu_header_image' : 'panopoly_image_full';
     $variables['asu_picture'] = theme('image_style', array(
-      'style_name' => $image_style,
-      'path' => theme_get_setting('picture_path', 'innovation'),
-    )
+        'style_name' => $image_style,
+        'path' => theme_get_setting('picture_path', 'innovation'),
+      )
     );
   }
 
@@ -83,7 +87,8 @@ function innovation_preprocess_page(&$variables) {
  *
  * Implements template_process_block().
  */
-function innovation_preprocess_block(&$variables) {
+function innovation_preprocess_block(&$variables)
+{
   $block = $variables['block'];
   if ($block->delta == 'main-menu' && $block->module == 'system' && $block->status == 1 && $block->theme = 'innovation') {
     // Get the entire main menu tree.
@@ -120,7 +125,8 @@ function innovation_preprocess_block(&$variables) {
  * Header so that it can also activate the local menu.
  *
  */
-function innovation_block_view_alter(&$data, $block) {
+function innovation_block_view_alter(&$data, $block)
+{
   // Add the attributes if applicable
   if (($block->module == 'asu_brand') && ($block->delta == 'asu_brand_header')) {
     $data['content'] = str_replace('<a href="javascript:toggleASU();">', '<a href="javascript:toggleASU();" data-target=".navbar-collapse" data-toggle="collapse">', $data['content']);
@@ -130,7 +136,8 @@ function innovation_block_view_alter(&$data, $block) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function innovation_form_panels_edit_style_settings_form_alter(&$form, &$form_state) {
+function innovation_form_panels_edit_style_settings_form_alter(&$form, &$form_state)
+{
   // Add some extra ASU styles if extra styles are on
   if (isset($form['general_settings']['settings']['title'])) {
     $styles = array('title', 'content');
@@ -145,7 +152,8 @@ function innovation_form_panels_edit_style_settings_form_alter(&$form, &$form_st
 /**
  * Implements theme_links__system_main_menu.
  */
-function innovation_links__system_main_menu($variables) {
+function innovation_links__system_main_menu($variables)
+{
   $links = $variables['links'];
   $attributes = $variables['attributes'];
   $heading = $variables['heading'];
@@ -191,7 +199,8 @@ function innovation_links__system_main_menu($variables) {
         $class[] = 'last';
       }
       if (isset($link['#href']) && ($link['#href'] == $_GET['q'] || ($link['#href'] == '<front>' && drupal_is_front_page()))
-        && (empty($link['#language']) || $link['#language']->language == $language_url->language)) {
+        && (empty($link['#language']) || $link['#language']->language == $language_url->language)
+      ) {
         $class[] = 'active';
       }
       // Check for, and honor active states set by context menu reactions
@@ -219,8 +228,7 @@ function innovation_links__system_main_menu($variables) {
       if (isset($link['#href'])) {
         // Pass in $link as $options, they share the same keys.
         $output .= l($link['#title'], $link['#href'], array('attributes' => $link['#attributes']));
-      }
-      elseif (!empty($link['#title'])) {
+      } elseif (!empty($link['#title'])) {
         // Wrap non-<a> links in <span> for adding title and class attributes.
         if (empty($link['#html'])) {
           $link['#title'] = check_plain($link['#title']);
@@ -235,7 +243,7 @@ function innovation_links__system_main_menu($variables) {
       // If link has child items, print a toggle and dropdown menu.
       if (!empty($link['#below'])) {
         $dropdown_id = 'main-menu-dropdown-' . $i;
-        $output .= '<a href="#" class="dropdown-toggle pull-right" data-toggle="dropdown" id="' . $dropdown_id. '"><span class="caret"></span></a>';
+        $output .= '<a href="#" class="dropdown-toggle pull-right" data-toggle="dropdown" id="' . $dropdown_id . '"><span class="caret"></span></a>';
         $output .= theme('links__system_main_menu', array(
           'links' => $link['#below'],
           'attributes' => array(
@@ -257,10 +265,9 @@ function innovation_links__system_main_menu($variables) {
 /** More Web Standards transplant **/
 
 /*********************************************************************
-
- INTERNAL
-
-*********************************************************************/
+ *
+ * INTERNAL
+ *********************************************************************/
 
 /*
  * Parses menuitem and returns true if there are
@@ -268,7 +275,8 @@ function innovation_links__system_main_menu($variables) {
 
 */
 
-function innovation_menuitem_has_active_children($menuitem) {
+function innovation_menuitem_has_active_children($menuitem)
+{
   if (is_array($menuitem) && isset($menuitem['below']) && !empty($menuitem['below'])) {
     foreach ($menuitem['below'] as $child) {
       if (isset($child['link']) && $child['link']['access'] && ($child['link']['hidden'] == 0)) return true;
@@ -278,14 +286,14 @@ function innovation_menuitem_has_active_children($menuitem) {
 }
 
 
-
 /**
  * Overides theme_checkbox
  */
-function innovation_checkbox($variables) {
+function innovation_checkbox($variables)
+{
   $element = $variables['element'];
   $element['#attributes']['type'] = 'checkbox';
-  element_set_attributes($element, array('id', 'name','#return_value' => 'value'));
+  element_set_attributes($element, array('id', 'name', '#return_value' => 'value'));
 
   // Unchecked checkbox has #value of integer 0.
   if (!empty($element['#checked'])) {
@@ -299,10 +307,11 @@ function innovation_checkbox($variables) {
 /**
  * Overides theme_radio
  */
-function innovation_radio($variables) {
+function innovation_radio($variables)
+{
   $element = $variables['element'];
   $element['#attributes']['type'] = 'radio';
-  element_set_attributes($element, array('id', 'name','#return_value' => 'value'));
+  element_set_attributes($element, array('id', 'name', '#return_value' => 'value'));
 
   if (isset($element['#return_value']) && $element['#value'] !== FALSE && $element['#value'] == $element['#return_value']) {
     $element['#attributes']['checked'] = 'checked';
@@ -315,7 +324,8 @@ function innovation_radio($variables) {
 /**
  * Overrides theme_form_element().
  */
-function innovation_form_element(&$variables) {
+function innovation_form_element(&$variables)
+{
   $element = &$variables['element'];
   $is_checkbox = FALSE;
   $is_radio = FALSE;
@@ -323,7 +333,7 @@ function innovation_form_element(&$variables) {
   // This function is invoked as theme wrapper, but the rendered form element
   // may not necessarily have been processed by form_builder().
   $element += array(
-      '#title_display' => 'before',
+    '#title_display' => 'before',
   );
 
   // Add element #id for #type 'item'.
@@ -345,7 +355,7 @@ function innovation_form_element(&$variables) {
         '_' => '-',
         '[' => '-',
         ']' => '',
-    ));
+      ));
   }
   // Add a class for disabled elements to facilitate cross-browser styling.
   if (!empty($element['#attributes']['disabled'])) {
@@ -361,12 +371,10 @@ function innovation_form_element(&$variables) {
     if ($element['#type'] == "radio") {
       $attributes['class'][] = 'radio';
       $is_radio = TRUE;
-    }
-    elseif ($element['#type'] == "checkbox") {
+    } elseif ($element['#type'] == "checkbox") {
       $attributes['class'][] = 'checkbox';
       $is_checkbox = TRUE;
-    }
-    else {
+    } else {
       $attributes['class'][] = 'form-group';
     }
   }
@@ -400,8 +408,7 @@ function innovation_form_element(&$variables) {
       $prefix .= isset($element['#field_prefix']) ? '<span class="input-group-addon">' . $element['#field_prefix'] . '</span>' : '';
       $suffix .= isset($element['#field_suffix']) ? '<span class="input-group-addon">' . $element['#field_suffix'] . '</span>' : '';
       $suffix .= '</div>';
-    }
-    else {
+    } else {
       $prefix .= isset($element['#field_prefix']) ? $element['#field_prefix'] : '';
       $suffix .= isset($element['#field_suffix']) ? $element['#field_suffix'] : '';
     }
@@ -418,8 +425,7 @@ function innovation_form_element(&$variables) {
       if ($is_radio || $is_checkbox) {
         $variables['#children'] = ' ' . $prefix . $element['#children'] . $suffix;
 
-      }
-      else {
+      } else {
         $output .= ' ' . $prefix . $element['#children'] . $suffix;
       }
       $output .= ' ' . theme('form_element_label', $variables) . "\n";
@@ -445,7 +451,8 @@ function innovation_form_element(&$variables) {
 /**
  * Overrides theme_form_element_label().
  */
-function innovation_form_element_label(&$variables) {
+function innovation_form_element_label(&$variables)
+{
   $element = $variables['element'];
 
   // This is also used in the installer, pre-database setup.
@@ -469,8 +476,7 @@ function innovation_form_element_label(&$variables) {
   // Style the label as class option to display inline with the element.
   if ($element['#title_display'] == 'after' && !$skip) {
     $attributes['class'][] = $element['#type'];
-  }
-  // Show label only to screen readers to avoid disruption in visual flows.
+  } // Show label only to screen readers to avoid disruption in visual flows.
   elseif ($element['#title_display'] == 'invisible') {
     $attributes['class'][] = 'element-invisible';
   }
@@ -491,4 +497,3 @@ function innovation_form_element_label(&$variables) {
   // The leading whitespace helps visually separate fields from inline labels.
   return ' <label' . drupal_attributes($attributes) . '>' . $output . "</label>\n";
 }
-

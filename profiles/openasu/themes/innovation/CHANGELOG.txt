@@ -16,3 +16,7 @@ Innovation 7.x-1.0-beta5, 2014-11-21
 - Adding vertical padding to body fields, breadcrumbs, page titles and sidebar menus
 - Cleaning up files, removing old unused styles
 - Altered ctools widget link to "Add existing content" for improved UX
+
+Innovation 7.x-1.0-beta8, 2014-2-11
+------------------------------
+- Change ID on <footer> from #footer to #page-footer to eliminate duplication.

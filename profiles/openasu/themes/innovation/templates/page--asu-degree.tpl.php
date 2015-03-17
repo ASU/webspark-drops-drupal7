@@ -86,7 +86,6 @@ else {
 }
 
 //dpm(get_defined_vars());
-
 ?>
 
 <div id="page-wrapper">
@@ -98,14 +97,9 @@ else {
         <div class="row">
           <div class="column col-md-12">
             <?php print render($page['header']); ?>
-
             <?php if ($site_name): ?>
-              <h1 class="header__sitename"<?php if ($hide_site_name) {
-                print ' class="element-invisible"';
-              } ?>>
-                <a href="<?php print $front_page; ?>"
-                   title="<?php print t('Home'); ?>"
-                   rel="home"><span><?php print $site_name; ?></span></a>
+              <h1 class="header__sitename<?php if ($hide_site_name) { print ' element-invisible'; } ?>">
+                <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home"><span><?php print $site_name; ?></span></a>
               </h1>
             <?php endif; ?>
           </div>
@@ -142,6 +136,9 @@ else {
                     <?php print $title; ?>
                     <?php if (isset($node_info['field_asu_degree']['#items'][0]['value'])): ?>
                       (<?php print render($node_info['field_asu_degree']['#items'][0]['value']); ?>)
+                    <?php endif; ?>
+                    <?php if (isset($node_info['field_asu_degree_acc_program']['#items'][0]['value'])): ?>
+                      <span class="asu-degrees-accelerated">Accelerated Degree</span>
                     <?php endif; ?>
                   </h1>
                 <?php endif; ?>
@@ -255,13 +252,16 @@ else {
                         case 'Lake Havasu':
                           echo '<a href="//havasu.asu.edu/">'.$campus['value'].'</a>';
                           break;
+                        case 'Eastern Arizona College':
+                          echo '<a href="//transfer.asu.edu/eac">'.$campus['value'].'</a>';
+                          break;
                         case 'Online':
                           echo '<a href="//asuonline.asu.edu/">'.$campus['value'].'</a>';
                           break;
                         //Check ASU Feeds Parser.  The campus being used doesn't exist.
                         default:
-                          //echo 'Campus Not Found';
-                          $a = false;
+                          echo 'Campus Not Found';
+                          //$a = false;
                           echo '<!--'.$campus['value'].'-->';
                           break;
                       }
@@ -287,7 +287,7 @@ else {
 
               <div class="asu-degree-subplans">
               <?php if (isset($node_info['field_asu_degree_subplan_url']['#items'])): ?>
-                <p><b>Subplans</b><br/>
+                <div class='asu-degree-sublplans'><p><b>Subplans</b><br/></div>
                   <?php foreach ($node_info['field_asu_degree_subplan_url']['#items'] as $sp) {
                     if ($sp['title'] != $sp['url']) {
                       echo '<a href="'.$sp['url'].'">'.$sp['title'].'</a><br/>';
@@ -310,13 +310,16 @@ else {
                 <a href="https://transfer.asu.edu/">Transfer</a><br>
                 <a
                   href="https://students.asu.edu/international">International</a><br>
-                <a href="https://students.asu.edu/readmission">Readmission</a>
+                <a href="https://students.asu.edu/readmission">Readmission</a><br>
+                <?php if (isset($node_info['field_asu_degree_additional_req']['#items'][0]['url'])): ?>
+                  <a href="<?php echo $node_info['field_asu_degree_additional_req']['#items'][0]['url']; ?>">Additional Requirements</a>
+                <?php endif ?>
               </p>
             </div>
             <div class="col-sm-6 col-md-4">
               <h2>Affording College</h2>
 
-              <p><!--https://students.asu.edu/scholarships-->
+              <p>
                 <?php if (isset($node_info['field_scholarship_link']['#items'][0]['url'])): ?>
                   <a href="<?php echo $node_info['field_scholarship_link']['#items'][0]['url'] ?>">Scholarships</a><br>
                 <?php else: ?>
@@ -325,12 +328,17 @@ else {
                 Find and apply for relevant scholarships.
               </p>
 
-              <p>
-                <a href="https://students.asu.edu/admission/wue">WUE eligible
-                  program</a><br>
-                Undergraduate students from western states who enroll in this
-                program are eligible for a discounted tuition rate.
-              </p>
+              <?php if (isset($node_info['field_asu_degree_wue_available']['#items'][0]['value']) && $node_info['field_asu_degree_wue_available']['#items'][0]['value'] == 1): ?>
+                <p>
+                  <?php if (isset($node_info['field_asu_degree_wue_link']['#items'][0]['url'])): ?>
+                    <a href="<?php echo $node_info['field_asu_degree_wue_link']['#items'][0]['url'] ?>">WUE eligible program</a><br>
+                  <?php else: ?>
+                    <a href="<?php echo 'https://students.asu.edu/admission/wue' ?>">WUE eligible program</a><br>
+                  <?php endif ?>
+                  Undergraduate students from western states who enroll in this
+                  program are eligible for a discounted tuition rate.
+                </p>
+              <?php endif ?>
 
               <p>
                 <?php if (isset($node_info['field_financial_aid_link']['#items'][0]['url'])): ?>
@@ -347,6 +355,11 @@ else {
           </div>
         </div>
       </div>
+
+      <div class="container">
+        <?php print render($page['asu_degree_marketing']); ?>
+      </div>
+
       <div class="container space-top-xl space-bot-xl">
         <div class="col-md-8">
           <?php if (isset($node_info['field_asu_degree_career_opps'])): ?>
@@ -357,7 +370,6 @@ else {
             <h2>Example Careers</h2>
             <?php print render($node_info['field_asu_degree_example_careers']); ?>
           <?php endif; ?>
-
         </div>
         <?php if (isset($node_info['field_asu_degree_relatedprograms'])): ?>
           <div class="col-md-4">
@@ -367,6 +379,10 @@ else {
             </div>
           </div>
         <?php endif ?>
+
+          <div class="col-md-4">
+            <?php print render($page['asu_degree_sidebar']); ?>
+          </div>
         </div>
 
         <div class="container">
@@ -378,7 +394,7 @@ else {
     <!-- /#main, /#main-wrapper -->
 
     <!-- Page Footer -->
-    <footer id="footer">
+    <footer id="page-footer">
       <div class="container">
         <div class="row row-full">
           <?php print render($page['footer']); ?>

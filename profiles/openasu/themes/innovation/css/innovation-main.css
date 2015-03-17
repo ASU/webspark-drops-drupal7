@@ -7,6 +7,7 @@
 #asu_footer ul {
   max-width: 1170px;
   margin: 0 auto;
+  padding-left: 0;
 }
 
 body #page .region-content {
@@ -720,32 +721,37 @@ ul.help-text li.help-title {
 }
 
 .section > .container,
-#footer > .container {
+#footer > .container,
+#page-footer > .container {
   width: 100%;
   padding-left: 0px;
   padding-right: 0px;
 }
 
 .section > .container .row,
-#footer > .container .row {
+#footer > .container .row,
+#page-footer > .container .row {
   max-width: 1170px;
   margin: 0 auto;
 }
 
 .section > .container .row-full,
-#footer > .container .row-full {
+#footer > .container .row-full,
+#page-footer > .container .row-full {
   width: 100% !important;
   max-width: none;
 }
 
 .section > .container .row-full .col-md-12,
-#footer > .container .row-full .col-md-12 {
+#footer > .container .row-full .col-md-12,
+#page-footer > .container .row-full .col-md-12 {
   padding-left: 0;
   padding-right: 0;
 }
 
 .section > .container .row-full [class^="pane-"],
-#footer > .container .row-full .content {
+#footer > .container .row-full .content,
+#page-footer > .container .row-full .content {
   max-width: 1170px;
   margin: 0 auto;
   padding-left: 15px;
@@ -753,7 +759,8 @@ ul.help-text li.help-title {
 }
 
 .section > .container .row-full .maxpayne [class^="pane-"],
-#footer > .container .row-full .maxpayne [class^="pane-"]{
+#footer > .container .row-full .maxpayne [class^="pane-"],
+#page-footer > .container .row-full .maxpayne [class^="pane-"] {
   width: 100% !important;
   padding-left: 0;
   padding-right: 0;
@@ -767,9 +774,9 @@ ul.help-text li.help-title {
   margin: 0px;
 }
 
-#footer {
+#page-footer {
   background-color: #1E1E1E;
 }
-#footer #block-asu-brand-asu-brand-footer {
+#page-footer #block-asu-brand-asu-brand-footer {
   background-color: #E5E5E5;
 }
