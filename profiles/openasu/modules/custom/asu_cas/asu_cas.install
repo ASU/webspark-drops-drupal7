@@ -210,5 +210,15 @@ function asu_cas_update_7004(&$sandbox) {
       )
     );
   }
-  // Add administrator
+}
+
+/**
+ * Implements hook_update_N()
+ * + Set administrative theme to Webspark Seven IF Seven theme is the current
+ * admin theme.
+ */
+function asu_cas_update_7005(&$sandbox) {
+  if (variable_get('admin_theme') === 'seven') {
+    variable_set('admin_theme', 'webspark_seven');
+  }
 }
