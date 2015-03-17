@@ -50,13 +50,13 @@ function asu_spotlight_field_widget_info() {
     'asu_spotlight_form' => array(
     'label' => t('ASU Spotlight'),
     'field types' => array('asu_spotlight'),
-    'behaviors' => array(
-    'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-    'default value' => FIELD_BEHAVIOR_DEFAULT,
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+        'default value' => FIELD_BEHAVIOR_DEFAULT,
+      ),
     ),
-    ),
-    );
-  }
+  );
+}
 
   /**
   * Implements hook_field_settings_form()
@@ -166,6 +166,7 @@ function asu_spotlight_field_widget_info() {
 
     if (!empty($items)) {
       foreach ($items as $key => $item) {
+        
         $tmp = $item;
         $item = array();
         $item['item'] = $tmp;
@@ -210,6 +211,13 @@ function asu_spotlight_field_widget_info() {
     }
 
     return $element;
+  }
+
+  function hook_admin_paths() {
+      $paths = array(
+        'admin/structure/fieldable-panels-panes/manage/spotlight/add' => FALSE,
+      );
+      return $paths;
   }
 
   /**
@@ -330,7 +338,7 @@ function asu_spotlight_field_widget_info() {
   */
   function asu_spotlight_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
     foreach ($items as $delta => $item) {
-      if (!panopoly_widgets_field_is_empty($item, $field) && empty($item['fid'])) {
+      if (!asu_spotlight_field_is_empty($item, $field) && empty($item['fid'])) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
         'error' => 'panopoly_widgets_spotlight_image_required',
         'message' => t('!name field is required.', array('!name' => t('Image'))),
@@ -397,21 +405,21 @@ function asu_spotlight_field_widget_info() {
 
   /**
   * Implements hook_field_delete().
-  */
+  **/
   function asu_spotlight_field_delete($entity_type, $entity, $field, $instance, $langcode, &$items) {
     image_field_delete($entity_type, $entity, $field, $instance, $langcode, $items);
   }
 
   /**
   * Implements hook_field_delete_revision().
-  */
+  **/
   function asu_spotlight_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, &$items) {
     image_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, $items);
   }
 
   /**
   * Implements hook_field_prepare_view().
-  */
+  **/
   function asu_spotlight_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
     // If there are no files specified at all, use the default.
     // TODO - make sure this works

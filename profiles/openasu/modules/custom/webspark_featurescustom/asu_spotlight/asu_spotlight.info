@@ -5,8 +5,11 @@ package = ASU Webspark
 version = 7.x-1.4-dev
 project = asu_spotlight
 dependencies[] = asu_spotlight
+dependencies[] = ctools
 dependencies[] = features
 dependencies[] = flexslider
+dependencies[] = list
+dependencies[] = options
 stylesheets[all][] = css/asuflex.css
 ;explanation = Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>
 features[features_api][] = api:2
@@ -14,4 +17,3 @@ features[field_base][] = field_asu_spotlight_items
 features[field_base][] = field_optionset
 features[field_instance][] = fieldable_panels_pane-asu_spotlight-field_asu_spotlight_items
 features[field_instance][] = fieldable_panels_pane-asu_spotlight-field_optionset
-required = 1
