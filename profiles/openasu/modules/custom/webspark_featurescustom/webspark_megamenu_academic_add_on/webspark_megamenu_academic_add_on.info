@@ -1,0 +1,16 @@
+name = Webspark MegaMenu Academic Add-on
+description = Academic add-on links (degree programs, admissions, student life, about) for the TB Mega Menu module.
+core = 7.x
+package = ASU Webspark
+version = 7.x-1.0
+project = webspark_megamenu_academic_add_on
+dependencies[] = defaultcontent
+dependencies[] = features
+dependencies[] = menu
+dependencies[] = tb_megamenu
+dependencies[] = webspark_megamenu
+features[content_menu_links][] = main-menu_about:https
+features[content_menu_links][] = main-menu_admissions:https
+features[content_menu_links][] = main-menu_degree-programs:https
+features[content_menu_links][] = main-menu_student-life:https
+features[features_api][] = api:2
