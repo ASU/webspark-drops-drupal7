@@ -257,7 +257,7 @@ function webspark_content_callout_defaultconfig_field_default_fields() {
           'progress_indicator' => 'throbber',
         ),
         'type' => 'image_image',
-        'weight' => 5,
+        'weight' => 11,
       ),
     ),
   );
@@ -282,7 +282,7 @@ function webspark_content_callout_defaultconfig_field_default_fields() {
       'bundle' => 'content_callout',
       'default_value' => NULL,
       'deleted' => 0,
-      'description' => '',
+      'description' => 'Supply the URL of a video, such as http://youtu.be/a8jzvh5Wb00  or  http://vimeo.com/21654482',
       'display' => array(
         'default' => array(
           'label' => 'hidden',
@@ -312,7 +312,7 @@ function webspark_content_callout_defaultconfig_field_default_fields() {
           'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         ),
         'type' => 'video_embed_field_video',
-        'weight' => 6,
+        'weight' => 12,
       ),
     ),
   );
@@ -324,6 +324,7 @@ function webspark_content_callout_defaultconfig_field_default_fields() {
   t('Callout image');
   t('Callout video');
   t('Images should be about 370x250 px.');
+  t('Supply the URL of a video, such as http://youtu.be/a8jzvh5Wb00  or  http://vimeo.com/21654482');
 
   return $fields;
 }
@@ -337,9 +338,64 @@ function webspark_content_callout_defaultconfig_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'uuid_features_entity_node';
+  $strongarm->value = array(
+    'content_callout' => 'content_callout',
+    'asu_degree' => 0,
+    'asu_degree_feed' => 0,
+    'panopoly_page' => 0,
+    'webform' => 0,
+  );
+  $export['uuid_features_entity_node'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'uuid_features_file_assets_path';
   $strongarm->value = 'profiles/openasu/modules/custom/webspark_featurescustom/webspark_content_callout/images';
   $export['uuid_features_file_assets_path'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'uuid_features_file_fieldable_panels_pane';
+  $strongarm->value = array(
+    'fieldable_panels_pane' => 0,
+    'asu_maps_enhanced' => 0,
+    'asu_spotlight' => 0,
+    'quick_links' => 0,
+    'basic_file' => 0,
+    'image' => 0,
+    'text' => 0,
+    'map' => 0,
+    'table' => 0,
+    'video' => 0,
+    'spotlight' => 0,
+    'banner' => 0,
+    'hero' => 0,
+    'jumbohero' => 0,
+  );
+  $export['uuid_features_file_fieldable_panels_pane'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'uuid_features_file_mode';
+  $strongarm->value = 'local';
+  $export['uuid_features_file_mode'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'uuid_features_file_node';
+  $strongarm->value = array(
+    'content_callout' => 'content_callout',
+    'asu_degree' => 0,
+    'asu_degree_feed' => 0,
+    'panopoly_page' => 0,
+    'webform' => 0,
+  );
+  $export['uuid_features_file_node'] = $strongarm;
 
   return $export;
 }

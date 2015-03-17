@@ -1,0 +1,9 @@
+/**
+ * CSS file for Webspark content callout module.
+ */
+
+/* Hide content callout media input fields on node add/edit */
+.group-callout-opts .field-type-image,
+.group-callout-opts .field-type-video-embed-field {
+	display: none;
+}

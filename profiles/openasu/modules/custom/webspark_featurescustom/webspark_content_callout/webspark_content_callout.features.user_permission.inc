@@ -19,6 +19,15 @@ function webspark_content_callout_user_default_permissions() {
     'module' => 'panelizer',
   );
 
+  // Exported permission: 'administer uuid'.
+  $permissions['administer uuid'] = array(
+    'name' => 'administer uuid',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'uuid',
+  );
+
   // Exported permission: 'create content_callout content'.
   $permissions['create content_callout content'] = array(
     'name' => 'create content_callout content',

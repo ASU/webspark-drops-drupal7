@@ -159,7 +159,41 @@ function webspark_content_callout_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 5,
+      'weight' => 11,
+    ),
+  );
+
+  // Exported field_instance: 'node-content_callout-field_callout_media'
+  $field_instances['node-content_callout-field_callout_media'] = array(
+    'bundle' => 'content_callout',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 5,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_callout_media',
+    'label' => 'Would you like to add an image or video to this callout?',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_select',
+      'weight' => 10,
     ),
   );
 
@@ -168,7 +202,7 @@ function webspark_content_callout_field_default_field_instances() {
     'bundle' => 'content_callout',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Supply the URL of a video, such as http://youtu.be/a8jzvh5Wb00  or  http://vimeo.com/21654482',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -198,7 +232,7 @@ function webspark_content_callout_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'video_embed_field_video',
-      'weight' => 6,
+      'weight' => 12,
     ),
   );
 
@@ -209,6 +243,8 @@ function webspark_content_callout_field_default_field_instances() {
   t('Callout image');
   t('Callout video');
   t('Images should be about 370x250 px.');
+  t('Supply the URL of a video, such as http://youtu.be/a8jzvh5Wb00  or  http://vimeo.com/21654482');
+  t('Would you like to add an image or video to this callout?');
 
   return $field_instances;
 }

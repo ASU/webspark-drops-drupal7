@@ -25,6 +25,7 @@ function webspark_content_callout_field_group_info() {
     'children' => array(
       0 => 'field_callout_image',
       1 => 'field_callout_video',
+      2 => 'field_callout_media',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -32,7 +33,7 @@ function webspark_content_callout_field_group_info() {
       'instance_settings' => array(
         'required_fields' => 1,
         'classes' => 'group-callout-opts field-group-fieldset',
-        'description' => 'Optionally, add either an image or a video (not both).',
+        'description' => '',
       ),
       'formatter' => 'open',
     ),
