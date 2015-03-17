@@ -1,8 +1,8 @@
 name = Webspark Extras
-description = Responsive image display, default admin theme, help link, cleanup content page fields, default accordion settings
+description = "Responsive image display, default admin theme, help link, cleanup content page, accordion settings, video help text"
 core = 7.x
 package = ASU Webspark
-version = 7.x-1.2-dev
+version = 7.x-1.3-dev
 project = webspark_extras
 dependencies[] = ctools
 dependencies[] = defaultconfig

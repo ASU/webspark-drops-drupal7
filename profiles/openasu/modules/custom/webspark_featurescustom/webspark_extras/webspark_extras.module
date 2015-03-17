@@ -7,17 +7,21 @@ include_once 'webspark_extras.features.inc';
 
 
 function webspark_extras_form_alter(&$form, &$form_state, $form_id) {
+
+	// Remove feature fields from panopoly content page 
   if ($form_id == 'panopoly_page_node_form') {
      $form['field_featured_image']['#access'] = FALSE;
      $form['field_featured_categories']['#access'] = FALSE;
      $form['field_featured_status']['#access'] = FALSE;
-
   }
+  
+  // Set default configuration settings on accordion settings form
   if ($form_id == 'panels_edit_style_settings_form') {
     $form['settings']['autoHeight']['#default_value'] = 0;
     $form['settings']['clearStyle']['#default_value'] = 1;
     $form['settings']['collapsible']['#default_value'] = 1;
     $form['settings']['fillSpace']['#default_value'] = 1;
-
   }
+  
 }
+
