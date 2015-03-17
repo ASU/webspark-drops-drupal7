@@ -50,17 +50,17 @@ projects[panopoly_demo][subdir] = panopoly
 
 ; ASU Modules
 
-projects[asu_brand][version] = 1.7
+projects[asu_brand][version] = 1.8
 projects[asu_brand][subdir] = custom
 projects[asu_brand][type] = module
-projects[asu_brand][download][revision] = 4e2268c9
+projects[asu_brand][download][revision] = fa4421bf
 projects[asu_brand][download][branch] = 7.x-1.x
 projects[asu_brand][download][url] = https://github.com/ASU/asu-drupal-brand.git
 
-projects[asu_cas][version] = 7.x-1.5
+projects[asu_cas][version] = 7.x-1.6
 projects[asu_cas][subdir] = custom
 projects[asu_cas][type] = module
-projects[asu_cas][download][revision] = f2c41254
+projects[asu_cas][download][revision] = bcd5900e
 projects[asu_cas][download][branch] = 7.x-1.x
 projects[asu_cas][download][url] = https://github.com/ASU/asu-drupal-cas-client-config.git
 
@@ -71,10 +71,10 @@ projects[asu_userpicker][download][revision] = 95a01aadb043e9c2e6241a301e253d7c5
 projects[asu_userpicker][download][tag] = 7.x-1.0
 projects[asu_userpicker][download][url] = https://github.com/ASU/asu-drupal-userpicker.git
 
-projects[asu_feeds][version] = 1.0-beta2
+projects[asu_feeds][version] = 1.0-beta4
 projects[asu_feeds][subdir] = custom
 projects[asu_feeds][type] = module
-projects[asu_feeds][download][revision] = 6ffeb022
+projects[asu_feeds][download][revision] = 9cdf62c2
 projects[asu_feeds][download][url] = https://github.com/ASU/asu-drupal-feeds.git
 
 projects[ixr][version] = 1.0-beta2
@@ -104,10 +104,10 @@ projects[asu_eadvisor_degree_feed_feature][download][url] = https://github.com/A
 
 ; ASU Degrees (replacement for asu_eadvisor_degree_feed_feature)
 ; TODO - Update ASU Degrees module(s) to new repo or combine with other repos
-projects[asu_degrees][version] = 1.3
+projects[asu_degrees][version] = 1.4
 projects[asu_degrees][type] = module
 projects[asu_degrees][subdir] = custom
-projects[asu_degrees][download][revision] = 44f6d7c2
+projects[asu_degrees][download][revision] = a254313c
 projects[asu_degrees][download][branch] = asu_degrees
 projects[asu_degrees][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
 
@@ -116,14 +116,14 @@ projects[webspark_featurescustom][type] = module
 projects[webspark_featurescustom][subdir] = custom
 projects[webspark_featurescustom][directory_name] = webspark_featurescustom
 projects[webspark_featurescustom][download][type] = git
-projects[webspark_featurescustom][download][revision] = 880ccabf
+projects[webspark_featurescustom][download][revision] = a4594750
 projects[webspark_featurescustom][download][branch] = master
 projects[webspark_featurescustom][download][url] = https://github.com/ASU/webspark-webstandards-components.git
 
 projects[asu_rfi][type] = module
 projects[asu_rfi][subdir] = custom
 projects[asu_rfi][download][type] = git
-projects[asu_rfi][download][revision] = 1e96787f
+projects[asu_rfi][download][revision] = c27a6428
 projects[asu_rfi][download][branch] = master
 projects[asu_rfi][download][url] = https://github.com/ASU/asu-drupal-rfi
 
@@ -155,10 +155,14 @@ projects[feeds][version] = 2.0-alpha8
 projects[feeds][type] = module
 projects[feeds][subdir] = contrib
 
-// WEBSPARK - monitor for updates
 projects[feeds_xpathparser][version] = 1.0-beta4
 projects[feeds_xpathparser][type] = module
 projects[feeds_xpathparser][subdir] = contrib
+// TODO - test 1.0 in Nevada
+projects[feeds_xpathparser][download][type] = "git"
+projects[feeds_xpathparser][download][branch] = "7.x-1.x"
+projects[feeds_xpathparser][download][url] = "http://git.drupal.org/project/feeds_xpathparser.git"
+projects[feeds_xpathparser][download][revision] = 541686196550fa4d0cc4967d7ce9de752f10e409
 ; patch for errors/warnings (only in dev version of module)
 projects[feeds_xpathparser][patch][1998194] = https://www.drupal.org/files/feeds_xpath_parser_undefined_index_unique-1998194-2.patch
 
@@ -178,7 +182,7 @@ projects[views_php][version] = 1.x-dev
 projects[views_php][type] = module
 projects[views_php][subdir] = contrib
 
-projects[webform][version] = 3.21
+projects[webform][version] = 3.22
 projects[webform][type] = module
 projects[webform][subdir] = contrib
 
@@ -287,10 +291,10 @@ libraries[asu_webspark_bootstrap_bootstrap][download][url] = https://github.com/
 
 ; Bootstrap and Theme Framework - Subtheme - Web Standards
 
-projects[innovation][version] = beta7
+projects[innovation][version] = beta9
 projects[innovation][type] = theme
 projects[innovation][download][type] = git
-projects[innovation][download][revision] = 6df6e27c
+projects[innovation][download][revision] = 01a09086
 projects[innovation][download][branch] = master
 projects[innovation][download][url] = https://github.com/ASU/webspark-theme-innovation.git
 
