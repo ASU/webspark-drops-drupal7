@@ -12,7 +12,7 @@ function uto_carousel_field_info() {
   return array(
     'uto_carousel' => array(
       'label' => t('UTO Carousel'),
-      'description' => t('A wonderfully (ASU modified) widgetsal spotlight field'),
+      'description' => t('A wonderfully (ASU modified) widgetsal carousel field'),
       'default_widget' => 'uto_carousel_form',
       'default_formatter' => 'uto_carousel',
       'settings' => array(
@@ -101,13 +101,13 @@ function uto_carousel_field_instance_settings_form($field, $instance) {
 }
 
 /**
- * Implementation of hook_field_formatter_info().  
- * We're going to be using our own formatter based on our own theme.  
+ * Implementation of hook_field_formatter_info().
+ * We're going to be using our own formatter based on our own theme.
  */
 function uto_carousel_field_formatter_info() {
   return array(
     'uto_carousel' => array(
-      'label' => t('UTO Carousel'),
+      'label' => t('Carousel'),
       'field types' => array('uto_carousel'),
       'settings' => array(
         'image_style' => 'panopoly_image_spotlight',
@@ -120,7 +120,7 @@ function uto_carousel_field_formatter_info() {
 
 /**
  * Implements hook_field_formatter_settings_form().
- * 
+ *
  */
 function uto_carousel_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   $display = $instance['display'][$view_mode];
@@ -129,7 +129,7 @@ function uto_carousel_field_formatter_settings_form($field, $instance, $view_mod
 
   if ($display['type'] == 'uto_carousel') {
     $element['image_style'] = array(
-      '#title' => t('Image style'), 
+      '#title' => t('Image style'),
       '#type' => 'select',
       '#options' => image_style_options(),
       '#default_value' => $settings['image_style'],
@@ -163,9 +163,9 @@ function uto_carousel_field_formatter_settings_summary($field, $instance, $view_
   $settings = $display['settings'];
 
   $summary = array();
-  
+
   $summary[] = t('Image Style: @style', array('@style' => $settings['image_style']));
-   
+
   $summary[] = !empty($settings['caption']) ? t('Display captions') : t('Do not display captions');
 
   // Load option set
@@ -225,7 +225,7 @@ function uto_carousel_field_formatter_view($entity_type, $entity, $field, $insta
       '#settings' => $display['settings'],
     );
   }
-  
+
   return $element;
 }
 
@@ -235,8 +235,8 @@ function uto_carousel_field_formatter_view($entity_type, $entity, $field, $insta
 function uto_carousel_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
 
   if ($instance['widget']['type'] == 'uto_carousel_form') {
-   
-    // Make it a multipart form  
+
+    // Make it a multipart form
     $form['#attributes']['enctype'] = 'multipart/form-data';
 
     // Define the element
@@ -278,7 +278,7 @@ function uto_carousel_field_widget_form(&$form, &$form_state, $field, $instance,
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]['actionlink']) ? $items[$delta]['actionlink'] : NULL,
     );
-    
+
 
     $element['actiontitle'] = array(
       '#title' => t('Action Title'),
@@ -301,8 +301,8 @@ function uto_carousel_field_widget_form(&$form, &$form_state, $field, $instance,
     /*$element['position'] = array(
       '#title' => t('Position'),
       '#type' => 'select',
-      '#options' => array('top-left' => 'top-left', 'top-center' => 'top-center', 'top-right' => 'top-right', 
-        'mid-left' => 'mid-left', 'mid-center' => 'mid-center', 'mid-right' => 'mid-right', 'bottom-left' => 'bottom-left', 
+      '#options' => array('top-left' => 'top-left', 'top-center' => 'top-center', 'top-right' => 'top-right',
+        'mid-left' => 'mid-left', 'mid-center' => 'mid-center', 'mid-right' => 'mid-right', 'bottom-left' => 'bottom-left',
         'bottom-center' => 'bottom-center', 'bottom-right' => 'bottom-right'),
       '#default_value' => isset($items[$delta]['position']) ? $items[$delta]['position'] : 'top-left',
     );*/
@@ -342,7 +342,7 @@ function uto_carousel_field_presave($entity_type, $entity, $field, $instance, $l
     foreach ($items as &$item) {
       if (empty($item['fid'])) {
         $fid = variable_get('panopoly_widgets_default_' . $entity->bundle . '_fid', NULL);
-        
+
         if (!empty($fid)) {
           $item['fid'] = $fid;
         }
@@ -380,7 +380,7 @@ function uto_carousel_field_insert($entity_type, $entity, $field, $instance, $la
 function uto_carousel_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
 
   // Load the original entity, if $entity->original is not already set.
-  // This is done as per http://drupal.org/node/985642 and can be removed when that patch is committed. 
+  // This is done as per http://drupal.org/node/985642 and can be removed when that patch is committed.
   if (empty($entity->original)) {
     $entity->original = entity_load_unchanged($entity_type, $field['id']);
   }
@@ -407,7 +407,7 @@ function uto_carousel_field_delete_revision($entity_type, $entity, $field, $inst
  */
 function uto_carousel_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
   // If there are no files specified at all, use the default.
-  // TODO - make sure this works 
+  // TODO - make sure this works
   foreach ($entities as $id => $entity) {
     if (empty($items[$id]) && $field['settings']['default_image']) {
       if ($file = file_load($field['settings']['default_image'])) {
@@ -420,4 +420,3 @@ function uto_carousel_field_prepare_view($entity_type, $entities, $field, $insta
     }
   }
 }
-
