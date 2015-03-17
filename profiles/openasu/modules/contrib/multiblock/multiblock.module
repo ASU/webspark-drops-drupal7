@@ -34,6 +34,10 @@ function multiblock_block_info() {
   $blocks = multiblock_get_block(NULL);
   foreach ($blocks as $block) {
     $blocks[$block->delta] = array('info' => $block->title);
+    $cache = db_query('SELECT cache FROM {block} WHERE module = :module AND delta = :orig_delta', array(':module' => $block->module, ':orig_delta' => $block->orig_delta))->fetchField();
+    if ($cache){
+      $blocks[$block->delta]['cache'] = $cache;
+    }
   }
   return $blocks;
 }
@@ -103,7 +107,7 @@ function multiblock_call_block($delta, $op, $edit) {
       $block = module_invoke($block_info->module, 'block_'. $op, $block_info->orig_delta, $edit);
     }
     else {
-      $block = module_invoke($block_info->module, 'block_'. $op, $block_info->orig_delta);
+      $block = module_invoke($block_info->module, 'block_'. $op, $block_info->orig_delta, $block_info->delta);
     }
     return $block;
   }
@@ -285,6 +289,14 @@ function multiblock_add_form_submit($form, &$form_state) {
       ))
       ->condition('delta', $form_state['values']['instance'], '=')
       ->execute();
+
+      $block = multiblock_get_block($form_state['values']['instance'], TRUE);
+
+      $cache = db_query('SELECT cache FROM {block} WHERE module = :module AND delta = :orig_delta', array(":module" => $block->module, ":orig_delta" => $block->orig_delta))->fetchField();
+      
+      if ($cache){
+        db_query('UPDATE {block} SET cache = :cache WHERE delta = :delta AND module = "multiblock"', array(':cache' => $cache, ':delta' => $block->delta));
+      }
 
     $form_state['redirect'] = 'admin/structure/block/instances';
     return;

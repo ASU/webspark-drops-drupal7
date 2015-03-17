@@ -13,9 +13,7 @@ files[] = tests/feeds_xpathparser_parser_xml.test
 files[] = tests/feeds_xpathparser_query_parser.test
 core = 7.x
 
-; Information added by drupal.org packaging script on 2013-05-09
+; Information added by drush on 2015-03-17
 version = "7.x-1.0-beta4"
-core = "7.x"
 project = "feeds_xpathparser"
-datestamp = "1368138912"
-
+datestamp = "1426555250"

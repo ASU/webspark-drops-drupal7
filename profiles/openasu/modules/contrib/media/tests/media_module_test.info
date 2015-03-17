@@ -4,7 +4,7 @@ package = Media
 core = 7.x
 hidden = TRUE
 
-; Information added by drush on 2015-02-09
+; Information added by drush on 2015-03-17
 version = "7.x-2.0-alpha3+98-dev"
 project = "media"
-datestamp = "1423520532"
+datestamp = "1426555227"

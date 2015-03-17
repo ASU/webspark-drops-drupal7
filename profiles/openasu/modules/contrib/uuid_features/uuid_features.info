@@ -8,7 +8,7 @@ package = Features
 
 configure = admin/structure/features/uuid_features
 
-; Information added by drush on 2015-02-09
+; Information added by drush on 2015-03-17
 version = "7.x-1.0-alpha4+37-dev"
 project = "uuid_features"
-datestamp = "1423520566"
+datestamp = "1426555254"
