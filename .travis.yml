@@ -8,6 +8,14 @@ mysql:
   username: root
   encoding: utf8
 
+# whitelist
+branches:
+  only:
+    - master
+    - 7.x-1.x
+    - travis-ci
+    - nightly
+
 install:
   - sudo apt-get update > /dev/null
   - "mysql -e 'create database drupal;'"
