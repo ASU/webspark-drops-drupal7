@@ -57,7 +57,7 @@ abstract class FeedsXPathParserBase extends FeedsParser {
     $this->rawXML = array_keys(array_filter($source_config['rawXML']));
     // Set link.
     $fetcher_config = $source->getConfigFor($source->importer->fetcher);
-    $parser_result->link = $fetcher_config['source'];
+    $parser_result->link = isset($fetcher_config['source']) ? $fetcher_config['source'] : '';
 
     $this->xpath = new FeedsXPathParserDOMXPath($this->doc);
     $config = array();
@@ -175,7 +175,7 @@ abstract class FeedsXPathParserBase extends FeedsParser {
     $form = array();
     $importer = feeds_importer($this->id);
     $importer_config = $importer->getConfig();
-    $mappings_ = $importer_config['processor']['config']['mappings'];
+    $mappings_ = $importer->processor->getMappings();
 
     if (empty($source_config)) {
       $source_config = $this->getConfig();
@@ -195,15 +195,10 @@ abstract class FeedsXPathParserBase extends FeedsParser {
       }
     }
 
-    $uniques = $mappings = array();
-    foreach ($mappings_ as $mapping) {
-      if (strpos($mapping['source'], 'xpathparser:') === 0) {
-        $mappings[$mapping['source']] = $mapping['target'];
-        if (isset($mapping['unique']) && $mapping['unique']) {
-          $uniques[] = $mapping['target'];
-        }
-      }
-    }
+    $uniques = $this->getUniques();
+    $mappings = $this->getOwnMappings();
+    $targets = $importer->processor->getMappingTargets();
+
     $form['xpath'] = array(
       '#type' => 'fieldset',
       '#tree' => TRUE,
@@ -251,7 +246,7 @@ abstract class FeedsXPathParserBase extends FeedsParser {
     foreach ($mappings as $source => $target) {
       $form['xpath']['sources'][$source] = array(
         '#type' => 'textfield',
-        '#title' => check_plain($target),
+        '#title' => isset($targets[$target]['name']) ? check_plain($targets[$target]['name']) : check_plain($target),
         '#description' => t('The XPath query to run.'),
         '#default_value' => isset($source_config['sources'][$source]) ? $source_config['sources'][$source] : '',
         '#maxlength' => 1024,
@@ -269,7 +264,7 @@ abstract class FeedsXPathParserBase extends FeedsParser {
     $form['xpath']['rawXML'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Select the queries you would like to return raw XML or HTML'),
-      '#options' => $mappings,
+      '#options' => $this->getOwnMappings(TRUE),
       '#default_value' => isset($source_config['rawXML']) ? $source_config['rawXML'] : array(),
     );
     $form['xpath']['exp'] = array(
@@ -309,7 +304,7 @@ abstract class FeedsXPathParserBase extends FeedsParser {
     $form['xpath']['exp']['debug'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Debug query'),
-      '#options' => array_merge(array('context' => 'context'), $mappings),
+      '#options' => array_merge(array('context' => t('Context')), $this->getOwnMappings(TRUE)),
       '#default_value' => isset($source_config['exp']['debug']) ? $source_config['exp']['debug'] : array(),
     );
     return $form;
@@ -449,13 +444,17 @@ abstract class FeedsXPathParserBase extends FeedsParser {
    * Overrides parent::getMappingSources().
    */
   public function getMappingSources() {
-    $mappings = $this->filterMappings(feeds_importer($this->id)->processor->config['mappings']);
+    $mappings = $this->getOwnMappings();
     $next = 0;
     if (!empty($mappings)) {
-      $keys = array_keys($mappings);
-      $last_mapping = end($keys);
-      $next = explode(':', $last_mapping);
-      $next = $next[1] + 1;
+      // Mappings can be re-ordered, so find the max.
+      foreach (array_keys($mappings) as $key) {
+        list(, $index) = explode(':', $key);
+        if ($index > $next) {
+          $next = $index;
+        }
+      }
+      $next++;
     }
     return array(
       'xpathparser:' . $next => array(
@@ -466,6 +465,26 @@ abstract class FeedsXPathParserBase extends FeedsParser {
   }
 
   /**
+   * Gets the unique mappings targets that are used by this parser.
+   *
+   * @return array
+   *   An array of mappings keyed source => target.
+   */
+  protected function getUniques() {
+    $uniques = array();
+    $importer = feeds_importer($this->id);
+
+    $targets = $importer->processor->getMappingTargets();
+    foreach ($importer->processor->getMappings() as $mapping) {
+      if (!empty($mapping['unique'])) {
+        $uniques[$mapping['source']] = $targets[$mapping['target']]['name'];
+      }
+    }
+
+    return $uniques;
+  }
+
+  /**
    * Gets the mappings that are defined by this parser.
    *
    * The mappings begin with "xpathparser:".
@@ -473,9 +492,17 @@ abstract class FeedsXPathParserBase extends FeedsParser {
    * @return array
    *   An array of mappings keyed source => target.
    */
-  protected function getOwnMappings() {
-    $importer_config = feeds_importer($this->id)->getConfig();
-    return $this->filterMappings($importer_config['processor']['config']['mappings']);
+  protected function getOwnMappings($label = FALSE) {
+    $importer = feeds_importer($this->id);
+    $mappings = $this->filterMappings($importer->processor->getMappings());
+    if ($label) {
+      $targets = $importer->processor->getMappingTargets();
+      foreach ($mappings as $source => $target) {
+        $mappings[$source] = isset($targets[$target]['name']) ? $targets[$target]['name'] : $target;
+      }
+    }
+
+    return $mappings;
   }
 
   /**
@@ -487,7 +514,7 @@ abstract class FeedsXPathParserBase extends FeedsParser {
    * @return array
    *   An array of mappings keyed source => target.
    */
-  protected function filterMappings($mappings) {
+  protected function filterMappings(array $mappings) {
     $our_mappings = array();
     foreach ($mappings as $mapping) {
       if (strpos($mapping['source'], 'xpathparser:') === 0) {
@@ -504,6 +531,7 @@ abstract class FeedsXPathParserBase extends FeedsParser {
    *   The previous value of use_errors.
    */
   protected function errorStart() {
+    libxml_clear_errors();
     return libxml_use_internal_errors(TRUE);
   }
 
@@ -539,6 +567,15 @@ abstract class FeedsXPathParserBase extends FeedsParser {
     }
     libxml_clear_errors();
     libxml_use_internal_errors($use);
+  }
+
+  /**
+   * Overrides parent::hasSourceConfig().
+   *
+   * Stop Feeds from building our form over and over again.
+   */
+  public function hasSourceConfig() {
+    return TRUE;
   }
 
 }
