@@ -137,8 +137,12 @@ else {
                     <?php if (isset($node_info['field_asu_degree']['#items'][0]['value'])): ?>
                       (<?php print render($node_info['field_asu_degree']['#items'][0]['value']); ?>)
                     <?php endif; ?>
-                    <?php if (isset($node_info['field_asu_degree_acc_program']['#items'][0]['value'])): ?>
+                    <!-- Displaying 'Accelerated Degree' field if true, displaying nothing if false -->
+                    <?php $accelerated_degree_value = ($node_info['field_asu_degree_acc_program']['#items'][0]['value']); ?>
+                    <?php if ($accelerated_degree_value == '1'): ?>
                       <span class="asu-degrees-accelerated">Accelerated Degree</span>
+                    <?php else: ?>
+                      <!-- do nothing, its not an accelerated degree -->
                     <?php endif; ?>
                   </h1>
                 <?php endif; ?>
