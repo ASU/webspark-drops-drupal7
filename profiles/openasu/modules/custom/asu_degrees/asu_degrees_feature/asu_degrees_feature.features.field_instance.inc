@@ -204,7 +204,7 @@ function asu_degrees_feature_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
-      'default_image' => 7,
+      'default_image' => 5,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '',
@@ -218,7 +218,6 @@ function asu_degrees_feature_field_default_field_instances() {
       'module' => 'media',
       'settings' => array(
         'allowed_schemes' => array(
-          'private' => 'private',
           'public' => 'public',
           'vimeo' => 0,
           'youtube' => 0,
@@ -233,7 +232,7 @@ function asu_degrees_feature_field_default_field_instances() {
           'media_default--media_browser_1' => 0,
           'media_default--media_browser_my_files' => 0,
           'media_internet' => 0,
-          'upload' => 0,
+          'upload' => 'upload',
           'youtube' => 0,
         ),
         'manualcrop_crop_info' => 1,
@@ -500,7 +499,7 @@ function asu_degrees_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_degree_additional_req',
-    'label' => 'Additional Requirements',
+    'label' => 'Additional Requirements URL',
     'required' => 0,
     'settings' => array(
       'attributes' => array(
@@ -1893,7 +1892,6 @@ function asu_degrees_feature_field_default_field_instances() {
       'module' => 'media',
       'settings' => array(
         'allowed_schemes' => array(
-          'private' => 'private',
           'public' => 'public',
           'vimeo' => 0,
           'youtube' => 0,
@@ -1908,7 +1906,7 @@ function asu_degrees_feature_field_default_field_instances() {
           'media_default--media_browser_1' => 0,
           'media_default--media_browser_my_files' => 0,
           'media_internet' => 0,
-          'upload' => 0,
+          'upload' => 'upload',
           'youtube' => 0,
         ),
         'manualcrop_crop_info' => 1,
@@ -2073,7 +2071,7 @@ function asu_degrees_feature_field_default_field_instances() {
   t('Add a link here to change from the default financial aid link to one specific to your needs.');
   t('Add a link here to change from the default scholarship link to one specific to your needs.');
   t('Additional Program Fee');
-  t('Additional Requirements');
+  t('Additional Requirements URL');
   t('Admission Requirements');
   t('Campus');
   t('Career Opportunities');
