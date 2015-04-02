@@ -7,7 +7,7 @@
 /**
  * Implements hook_menu_default_menu_custom().
  */
-function mega_footer_menu_menu_default_menu_custom() {
+function mega_footer_menu_default_menu_custom() {
   $menus = array();
 
   // Exported menu: menu-mega-footer-menu.
