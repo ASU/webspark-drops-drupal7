@@ -5,7 +5,7 @@
  */
 
 /**
- * Implements hook_defaultconfig_features().
+ * Implements hook_defaultconfig_features()
  */
 function asu_cas_defaultconfig_features() {
   return array(
@@ -17,7 +17,7 @@ function asu_cas_defaultconfig_features() {
 }
 
 /**
- * Implements hook_defaultconfig_strongarm().
+ * Implements hook_defaultconfig_strongarm()
  */
 function asu_cas_defaultconfig_strongarm() {
   $export = array();
@@ -225,7 +225,7 @@ node/*/edit';
 }
 
 /**
- * Implements hook_defaultconfig_user_default_roles().
+ * Implements hook_defaultconfig_user_default_roles()
  */
 function asu_cas_defaultconfig_user_default_roles() {
   $roles = array();

@@ -12,7 +12,7 @@
  * @see system_install()
  */
 function openasu_install() {
-  watchdog('install', "openasu_install completed");
+  watchdog('install', "openasu_install started");
   // WEBSPARK-548 - changed to subtheme of Seven for customization purposes
   variable_set('admin_theme', 'webspark_seven');
 
@@ -35,6 +35,13 @@ function openasu_install() {
   }
 
   $cas_roles_set = variable_set('cas_auto_assigned_role',$cas_roles);
+
+  // WEBSPARK-454 - Revert WYSIWYG settings on spinup to apply Webspark WYSIWYG
+  // settings.
+  features_revert(array(
+    'panopoly_wysiwyg' => array('wysiwyg')
+    )
+  );
 
   watchdog('install', "openasu_install completed");
 }

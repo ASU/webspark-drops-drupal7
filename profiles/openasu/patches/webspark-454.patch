@@ -1,0 +1,15 @@
+diff --git a/profiles/openasu/modules/panopoly/panopoly_wysiwyg/panopoly_wysiwyg.module b/profiles/openasu/modules/panopoly/panopoly_wysiwyg/panopoly_wysiwyg.module
+index 3e8c7b4..6d3d0bb 100644
+--- a/profiles/openasu/modules/panopoly/panopoly_wysiwyg/panopoly_wysiwyg.module
++++ b/profiles/openasu/modules/panopoly/panopoly_wysiwyg/panopoly_wysiwyg.module
+@@ -292,6 +292,10 @@ function panopoly_wysiwyg_alter_wysiwyg_editor_settings(&$settings, $context) {
+       }
+       break;
+   }
++  // WEBSPARK-454 - Add override settings applied in Webspark WYSIWYG module
++  if (module_exists('webspark_wysiwyg')) {
++    _webspark_wysiwyg_localsettings($settings, $context);
++  }
+ }
+ 
+ /**

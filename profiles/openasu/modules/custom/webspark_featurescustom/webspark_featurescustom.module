@@ -14,7 +14,10 @@ function webspark_featurescustom_menu_alter (&$items) {
 }
 
 /**
- * Custom menu callback
+ * Custom menu callback for when innovation is selected as the active theme
+ * (For moving Webspark Classic users to Innovation)
+ * @TODO - Put in check to see if certain settings are already in place before module_load_include...s
+ * @TODO - Remove this code completely after Webspark Classic installs are gone
  */
 function webspark_featurescustom_theme_check () {
   // Checking if the selected theme is our theme & calling function to active modules/configuration
