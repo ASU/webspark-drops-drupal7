@@ -1,11 +1,17 @@
 <?php
 
 
+/**
+ * Implements hook_enable()
+ * Ensures ASU CAS and More module is last
+ */
 function asu_cas_enable() {
   db_query("UPDATE {system} SET weight = 1 WHERE name = 'asu_cas'");
 }
 
 /**
+ * Implements hook_update_N();
+ *
  * Updating the WebSpark Default Theme from "OpenASU Bootstrap"
  * to "ASU WebSpark Bootstrap".
  */
@@ -92,6 +98,7 @@ function asu_cas_update_7000(&$sandbox) {
 }
 
 /**
+ * Implements hook_update_N()
  * Making sure the new responsive ASU header is being updated from older
  * versions
  */
@@ -169,7 +176,7 @@ function asu_cas_update_7003(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N
+ * Implements hook_update_N()
  * + Remove perms from CAS role and add them to adminisrator role  - WEBSPARK-470
  * + Add perms for Add ASU Spotlight perms
  * + Add admin theme, create files perms to editor role

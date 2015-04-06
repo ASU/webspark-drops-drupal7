@@ -118,7 +118,7 @@ function panopoly_wysiwyg_module_implements_alter(&$implementations, $hook) {
     $group = $implementations['panopoly_wysiwyg'];
     unset($implementations['panopoly_wysiwyg']);
     $implementations['panopoly_wysiwyg'] = $group;
-  }  
+  }
 }
 
 /**
@@ -309,7 +309,7 @@ function panopoly_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
     // requires some extra configuration or it'll break. So, we'll set this up
     // to prevent user text formats from breaking (see issue #1846322).
     if (!isset($settings['pdw_toggle_on'])) {
-      $settings['pdw_toggle_on'] = '1'; 
+      $settings['pdw_toggle_on'] = '1';
     }
     if (!isset($settings['pdw_toggle_toolbars'])) {
       $toolbars = array();
