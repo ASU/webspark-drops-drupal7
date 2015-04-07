@@ -54,3 +54,6 @@ Thumbs.db
 # PHPStorm generated files #/
 .idea
 
+# Behat tests - local #
+#######################
+/profiles/openasu/tests/behat/behat.local.yml
