@@ -111,15 +111,6 @@ projects[asu_degrees][download][revision] = a254313c
 projects[asu_degrees][download][branch] = asu_degrees
 projects[asu_degrees][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
 
-; Includes multiple Webspark features and modules
-projects[webspark_featurescustom][type] = module
-projects[webspark_featurescustom][subdir] = custom
-projects[webspark_featurescustom][directory_name] = webspark_featurescustom
-projects[webspark_featurescustom][download][type] = git
-projects[webspark_featurescustom][download][revision] = a4594750
-projects[webspark_featurescustom][download][branch] = master
-projects[webspark_featurescustom][download][url] = https://github.com/ASU/webspark-webstandards-components.git
-
 projects[asu_rfi][type] = module
 projects[asu_rfi][subdir] = custom
 projects[asu_rfi][download][type] = git
@@ -261,7 +252,8 @@ projects[wysiwyg_template][version] = 2.11
 projects[wysiwyg_template][type] = module
 projects[wysiwyg_template][subdir] = contrib
 
-; Bootstrap and Theme Framework
+; Bootstrap and Theme Frameworks
+; Removed -- Stays in webspark-drops-drupal7 repo (see WEBSPARK-366)
 
 ; Base Theme - Kalatheme
 
@@ -276,30 +268,6 @@ projects[kalatheme][patch][] = patches/webspark-565-add-views-tpl-to-kalatheme.p
 
 projects[modernizr][version] = 3.1
 projects[modernizr][subdir] = contrib
-
-; Bootstrap and Theme Framework - Subtheme - Webspark
-
-projects[asu_webspark_bootstrap][version] = 1.1
-projects[asu_webspark_bootstrap][type] = theme
-projects[asu_webspark_bootstrap][download][type] = git
-projects[asu_webspark_bootstrap][download][revision] = 0e10c11d
-projects[asu_webspark_bootstrap][download][branch] = 7.x-1.x
-projects[asu_webspark_bootstrap][download][url] = https://github.com/ASU/webspark-theme-original.git
-
-libraries[asu_webspark_bootstrap_bootstrap][download][type] = get
-libraries[asu_webspark_bootstrap_bootstrap][download][url] = https://github.com/ASU/webspark-theme-original-library/archive/v3.1.1.zip
-
-; Bootstrap and Theme Framework - Subtheme - Web Standards
-
-projects[innovation][version] = beta9
-projects[innovation][type] = theme
-projects[innovation][download][type] = git
-projects[innovation][download][revision] = 01a09086
-projects[innovation][download][branch] = master
-projects[innovation][download][url] = https://github.com/ASU/webspark-theme-innovation.git
-
-libraries[innovation_bootstrap][download][type] = get
-libraries[innovation_bootstrap][download][url] = https://github.com/ASU/webspark-theme-innovation-bootstrap/archive/master.zip
 
 ; ASU Module prerequisites - Webstandards additions - Libraries
 
