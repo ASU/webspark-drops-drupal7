@@ -229,3 +229,14 @@ function asu_cas_update_7005(&$sandbox) {
     variable_set('admin_theme', 'webspark_seven');
   }
 }
+
+/**
+ * Implements hook_update_N()
+ * + Enables Webspark EasyAdmin module
+ */
+function asu_cas_update_7006(&$sandbox) {
+  if (!module_exists('webspark_easyadmin')) {
+    module_enable(array('webspark_easyadmin'));
+  }
+}
+

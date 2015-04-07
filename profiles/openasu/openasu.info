@@ -86,6 +86,7 @@ dependencies[] = webspark_panels_styles
 dependencies[] = webspark_banner
 dependencies[] = webspark_breadcrumbs
 dependencies[] = webspark_content_callout
+dependencies[] = webspark_easyadmin
 dependencies[] = webspark_hero
 dependencies[] = webspark_jumbohero
 dependencies[] = webspark_megamenu
