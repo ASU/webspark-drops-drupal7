@@ -140,9 +140,37 @@ else {
                     <!-- Displaying 'Accelerated Degree' field if true, displaying nothing if false -->
                     <?php $accelerated_degree_value = ($node_info['field_asu_degree_acc_program']['#items'][0]['value']); ?>
                     <?php if ($accelerated_degree_value == '1'): ?>
-                      <span class="asu-degrees-accelerated">Accelerated Degree</span>
+                      <br>
+                      <i class="fa fa-location-arrow"></i>
+                      <span class="asu-degrees-program-flag">Accelerated Program</span>
                     <?php else: ?>
-                      <!-- do nothing, its not an accelerated degree -->
+                      <!-- do nothing, it's not an accelerated degree -->
+                    <?php endif; ?>
+                    <?php $concurrent_degree_value = ($node_info['field_asu_degree_conc_program']['#items'][0]['value']); ?>
+                    <?php if ($concurrent_degree_value == '1'): ?>
+                      <?php if ($accelerated_degree_value == '1'): ?>
+                        <i class="fa fa-star"></i>
+                        <span class="asu-degrees-program-flag">Concurrent Program</span>
+                      <?php else: ?>
+                        <br>
+                        <i class="fa fa-star"></i>
+                        <span class="asu-degrees-program-flag">Concurrent Program</span>
+                      <?php endif; ?>
+                    <?php else: ?>
+                      <!-- do nothing, it's not a concurrent degree -->
+                    <?php endif; ?>
+                    <?php $new_degree_value = ($node_info['field_asu_degree_new_program']['#items'][0]['value']); ?>
+                    <?php if ($new_degree_value == '1'): ?>
+                      <?php if (($accelerated_degree_value || $concurrent_degree_value) == '1'): ?>
+                        <i class="fa fa-retweet"></i>
+                        <span class="asu-degrees-program-flag">New Program</span>
+                      <?php else: ?>
+                        <br>
+                        <i class="fa fa-retweet"></i>
+                        <span class="asu-degrees-program-flag">New Program</span>
+                      <?php endif; ?>
+                    <?php else: ?>
+                      <!-- do nothing, it's not a new degree -->
                     <?php endif; ?>
                   </h1>
                 <?php endif; ?>
@@ -194,7 +222,7 @@ else {
         <?php endif; ?>
           <div class="row space-bot-lg">
             <div class="col-sm-6 col-md-4 space-bot-md">
-              <a href="#block-asu-rfi-asu-rfi-form-block" id="take-me-to-rfi" class="btn btn-gold btn-block btn-lg">Request information</a>
+              <a href="#asu-rfi-form-data" id="take-me-to-rfi" class="btn btn-gold btn-block btn-lg">Request information</a>
             </div>
             <div class="col-sm-6 col-md-4 space-bot-md">
               <a href="https://visit.asu.edu/"
@@ -379,10 +407,22 @@ else {
           <div class="col-md-4">
             <div class="pane-menu-tree">
               <h4>Related Programs</h4>
-              <?php print render_block_content('asu_degrees', 'related_programs'); ?>
+              <?php for ($it = 0; $it < 1000; $it++) {
+                if (isset($node_info['field_asu_degree_relatedprograms'][$it]['#markup'])) {
+                  $rp_result = $node_info['field_asu_degree_relatedprograms'][$it]['#markup'];
+                }
+                if (!empty($rp_result)) {
+                  print $rp_result;
+                  unset($rp_result);
+                } else {
+                  break 1;
+                }
+              ?>
+              <br>
+              <?php } ?>
             </div>
           </div>
-        <?php endif ?>
+        <?php endif; ?>
 
           <div class="col-md-4">
             <?php print render($page['asu_degree_sidebar']); ?>

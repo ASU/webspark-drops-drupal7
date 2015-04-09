@@ -10,16 +10,16 @@ class ASUeAdvisorFeedsFetcherResult extends FeedsFetcherResult {
   protected $path;
   protected $service;
   // Chizuko added the following for eAdvisor Degree Feed:
-  protected $college_code;
+  protected $unit_identifier;
   protected $program;
   protected $cert;
 
-  public function __construct($protocol, $url, $path, $service, $college_code, $program, $cert) {
+  public function __construct($protocol, $url, $path, $service, $unit_identifier, $program, $cert) {
     $this->protocol = $protocol;
     $this->url = $url;
     $this->path = $path;
     $this->service = $service;
-    $this->college_code = strtoupper($college_code);
+    $this->unit_identifier = strtoupper($unit_identifier);
     $this->program = $program;
     $this->cert = (boolean) $cert;
     parent::__construct();
@@ -50,9 +50,13 @@ class ASUeAdvisorFeedsFetcherResult extends FeedsFetcherResult {
         if ($this->program == "graduate") {
           $this->cert = false;
         }
-        $client->query($this->service, $this->college_code, $this->program, $this->cert); //For example, $client->query($this->service, "CLA", "undergrad", false);
-      }
-      else {
+        $client->query($this->service, $this->unit_identifier, $this->program, $this->cert); //For example, $client->query($this->service, "CLA", "undergrad", false);
+      } elseif ($this->service == "eAdvisorDSFind.findDegreeByCampusMapArray") {
+        if ($this->program == "graduate") {
+          $this->cert = false;
+        }
+        $client->query($this->service, $this->unit_identifier, $this->program, $this->cert);
+      } else {
         $client->query($this->service);
       }
       $response = $client->getResponse();
@@ -67,10 +71,42 @@ class ASUeAdvisorFeedsFetcherResult extends FeedsFetcherResult {
 class ASUeAdvisorFeedsFetcher extends FeedsFetcher {
   public function fetch(FeedsSource $source) {
     $source_config = $source->getConfigFor($this);
-    return new ASUeAdvisorFeedsFetcherResult($source_config['protocol'], $source_config['server'], $source_config['path'], $source_config['service'], $source_config['college_code'], $source_config['program'], $source_config['cert']);
+    return new ASUeAdvisorFeedsFetcherResult($source_config['protocol'], $source_config['server'], $source_config['path'], $source_config['service'], $source_config['unit_identifier'], $source_config['program'], $source_config['cert']);
   }
 
   public function sourceForm($source_config) {
+
+    // Available college codes for importing
+    $college_options = array(
+      'CBA' => t('CBA'),
+      'CHI' => t('CHI'),
+      'CES' => t('CES'),
+      'CHL' => t('CHL'),
+      'CHO' => t('CHO'),
+      'CAS' => t('CAS'),
+      'CCS' => t('CCS'),
+      'CLS' => t('CLS'),
+      'CLA' => t('CLA'),
+      'CNU' => t('CNU'),
+      'CPP' => t('CPP'),
+      'CSS' => t('CSS'),
+      'CTE' => t('CTE'),
+      'CTS' => t('CTS'),
+    );
+
+    // Available campus codes for importing
+    $campus_options = array(
+      'DTPHX' => t('DTPHX'),
+      'EAC' => t('EAC'),
+      'CALHC' => t('CALHC'),
+      'ONLNE' => t('ONLNE'),
+      'POLY' => t('POLY'),
+      'TEMPE' => t('TEMPE'),
+      'WEST' => t('WEST'),
+    );
+
+    $unit_options = array_merge($college_options, $campus_options);
+
     $form = array();
     $form['protocol'] = array(
       '#type' => 'select',
@@ -94,24 +130,34 @@ class ASUeAdvisorFeedsFetcher extends FeedsFetcher {
       '#default_value' => '/programs/XmlRpcServer',
     );
     $form['service'] = array(
-      '#type' => 'textfield',
+      '#type' => 'select',
       '#title' => t('Service'),
-      '#description' => t('Name of service to call. For example, eAdvisorDSFind.findDegreeByCollegeAndProgram'),
-      '#default_value' => 'eAdvisorDSFind.findDegreeByCollegeAndProgram',
+      '#options' => array(
+        'eAdvisorDSFind.findDegreeByCollegeAndProgram' => t('Import by college'),
+        'eAdvisorDSFind.findDegreeByCampusMapArray' => t('Import by campus'),
+      ),
+      '#default_value' => isset($source_config['service']) ? $source_config['service'] : '',
+      '#description' => t('Name of service to call. For example, use \'Import by college\' to utilize findDegreeByCollegeAndProgram
+        and \'Import by campus\' to utilize findDegreeByCampusMapArray. A list of available college and campus codes is located
+        at https://webspark.asu.edu/features/asu-degrees-feed.'),
     );
 
     //Chizuko added the following for eAdvisor Degree Feed:
-    $form['college_code'] = array(
-      '#type' => 'textfield',
-      '#title' => t('College code'),
-      '#description' => t('Code for college. For example, CLA for College of Liberal Arts and Sciences.'),
-      '#default_value' => isset($source_config['college_code']) ? $source_config['college_code'] : '',
+    $form['unit_identifier'] = array(
+      '#type' => 'select',
+      '#title' => t('Unit Identifier'),
+      '#options' => $unit_options,
+      '#default_value' => isset($source_config['unit_identifier']) ? $source_config['unit_identifier'] : '',
+      '#description' => t('Identifer for unit (college or campus).
+        For example, use \'CALHC\' for ASU Colleges at Lake Havasu City or \'CLA\' for College of Liberal Arts and Sciences.
+        College codes are compatible solely with the \'Import by college\' option and campus codes are compatible solely with
+        the \'Import by campus\' option.'),
     );
     $form['program'] = array(
       '#type' => 'select',
       '#title' => t('Program'),
       '#options' => array(
-        'undergrad' => t('Undergrad'),
+        'undergrad' => t('Undergraduate'),
         'graduate' => t('Graduate'),
       ),
       '#default_value' => isset($source_config['program']) ? $source_config['program'] : '',
@@ -119,11 +165,13 @@ class ASUeAdvisorFeedsFetcher extends FeedsFetcher {
     $form['cert'] = array(
       '#type' => 'select',
       '#title' => t('Certificate'),
-      '#description' => t('True for Undergraduate Minors and Certificates, false for
-Undergraduate Majors and Graduate Majors, Certificates and Minors. If you chose Graduate program, then, this option would be ignored and False would be used.'),
+      '#description' => t('When the intended program is undergraduate, selecting \'True\' will result in
+        Undergraduate Minors & Certificates, while selecting \'False\' will result in Undergraduate Majors.
+        When the selected program is graduate, this T/F choice is ignored, and either selection will result in
+        Graduate Majors, Minors & Certificates.'),
       '#options' => array(
-        '1' => t('True'),
-        '0' => t('False'),
+        0 => t('False'),
+        1 => t('True'),
       ),
       '#default_value' => isset($source_config['cert']) ? $source_config['cert'] : '',
     );
