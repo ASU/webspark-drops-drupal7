@@ -59,49 +59,76 @@ function openasu_theme_innovation_setup(&$install_state) {
   variable_set('asu_brand_header_template', 'default');
   variable_set('asu_brand_header_selector', 'default');
 
-  // Enable the Brand Header block in the right region
-  $asu_brand_header_delta = 'asu_brand_header';
-  $asu_brand_header_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(
-    ':delta' => $asu_brand_header_delta,
-    ':theme' => $theme
-  ))->fetchField();
-  db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(
-    ':status' => 1,
-    ':bid' => $asu_brand_header_bid,
-    ':theme' => $theme
-  ));
-  db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(
-    ':region' => 'header',
-    ':bid' => $asu_brand_header_bid,
-    ':theme' => $theme
-  ));
-
-  // Add back in default footer regardless - readded after WEBSPARK-357 removed it from megafooter module
-  $asu_brand_footer_bid = db_query("SELECT bid FROM {block} WHERE delta = :delta AND theme = :theme", array(
-    ':delta' => 'asu_brand_footer',
-    ':theme' => $theme
-  ))->fetchField();
-  db_query("UPDATE {block} SET status = :status WHERE bid = :bid AND theme = :theme", array(
-    ':status' => 1,
-    ':bid' => $asu_brand_footer_bid,
-    ':theme' => $theme
-  ));
-  db_query("UPDATE {block} SET region = :region WHERE bid = :bid AND theme = :theme", array(
-    ':region' => 'footer',
-    ':bid' => $asu_brand_footer_bid,
-    ':theme' => $theme
-  ));
-  // With tb_megamenu enabled and the block created by webspark_megamenu feature,
-  // enable the TB Main Menu block in the right region.
-  if (module_exists('tb_megamenu') && module_exists('webspark_megamenu')) {
-    $main_menu_bid = db_query("SELECT bid FROM {block} WHERE delta = 'main-menu' AND theme = 'innovation' AND module = 'tb_megamenu'")->fetchField();
-    db_query("UPDATE {block} SET status = 1 WHERE bid = :bid AND theme = 'innovation'", array(':bid' => $main_menu_bid));
-    db_query("UPDATE {block} SET region = 'menu' WHERE bid = :bid AND theme = 'innovation'", array(':bid' => $main_menu_bid));
-    db_query("UPDATE {block} SET weight = -100 WHERE bid = :bid AND theme = 'innovation'", array(':bid' => $main_menu_bid));
-  }
+  // Configure blocks for Innovation theme
+  openasu_blockupdates_for_theme($theme);
 
   // Flush ASU Brand caches so ASU headers are right
   asu_brand_cache_clear();
+}
+
+/**
+ * MASTER block configuration for Webspark for themes (Innovation on spinup)
+ * For both profile and module (webspark_featurescustom) usage
+ */
+function openasu_blockupdates_for_theme($theme) {
+  // Enable the Brand Header block in the right region
+  if (module_exists('asu_brand')) {
+    $asu_brand_header_bid = db_select('block', 'b')
+      ->fields('b', array('bid'))
+      ->condition('delta', 'asu_brand_header')
+      ->condition('theme', $theme)
+      ->execute()
+      ->fetchField();
+
+    db_update('block')
+      ->fields(array(
+          'status' => '1',
+          'region' => 'header',
+        )
+      )
+      ->condition('bid', $asu_brand_header_bid)
+      ->condition('theme', $theme)
+      ->execute();
+    // Add back in default footer regardless - readded after WEBSPARK-357 removed it from megafooter module
+    $asu_brand_footer_bid = db_select('block', 'b')
+      ->fields('b', array('bid'))
+      ->condition('delta', 'asu_brand_footer')
+      ->condition('theme', $theme)
+      ->execute()
+      ->fetchField();
+
+    db_update('block')
+      ->fields(array(
+          'status' => '1',
+          'region' => 'footer',
+        )
+      )
+      ->condition('bid', $asu_brand_footer_bid)
+      ->condition('theme', $theme)
+      ->execute();
+  }
+  // With tb_megamenu enabled and the block created by webspark_megamenu feature,
+  // enable the TB Main Menu block in the right region.
+  if (module_exists('tb_megamenu') && module_exists('webspark_megamenu')) {
+    $main_menu_bid = db_select('block', 'b')
+      ->fields('b', array('bid'))
+      ->condition('delta', 'main-menu')
+      ->condition('theme', $theme)
+      ->condition('module', 'tb_megamenu')
+      ->execute()
+      ->fetchField();
+    db_update('block')
+      ->fields(array(
+          'status' => '1',
+          'region' => 'menu',
+          'weight' => -100,
+        )
+      )
+      ->condition('bid', $main_menu_bid)
+      ->condition('theme', $theme)
+      ->execute();
+  }
+  watchdog(__FUNCTION__, 'Updated block settings for %theme theme', array('%theme' => $theme));
 }
 
 /**

@@ -7,10 +7,9 @@
 /**
  * Implements hook_menu_alter() - builds on existing menu callback
  */
-
 function webspark_featurescustom_menu_alter (&$items) {
   // Modifying callback for theme selection function to include our own functionality
-  $items['admin/appearance/default']['page callback'] = 'webspark_featurescustom_theme_check';
+  $items['admin/appearance/default']['page callback'] = '_webspark_featurescustom_theme_check';
 }
 
 /**
@@ -19,22 +18,33 @@ function webspark_featurescustom_menu_alter (&$items) {
  * @TODO - Put in check to see if certain settings are already in place before module_load_include...s
  * @TODO - Remove this code completely after Webspark Classic installs are gone
  */
-function webspark_featurescustom_theme_check () {
+function _webspark_featurescustom_theme_check () {
   // Checking if the selected theme is our theme & calling function to active modules/configuration
   module_load_include('inc', 'system', 'system.admin.inc');
-  $theme_request = $_REQUEST['theme'];
-  if ($theme_request == 'innovation') {
+  $theme_request = check_plain($_REQUEST['theme']);
+  module_enable(array('devel'));
+  if (module_exists('devel')) {
+    $theme_to_check = drupal_find_base_themes(array('innovation'), 'innovation');
+    dpm($theme_to_check, 'theme to check');
+  }
+  if ($theme_request === 'innovation') {
     _webspark_featurescustom_enable_config($theme_request);
+  }
+  // WEBSPARK-610 - Settings for when Innovation or asu_webspark_bootstrap
+  elseif ($theme_request !== 'asu_webspark_bootstrap') {
+    _webspark_featurescustom_alt_theme_config($theme_request);
   }
   system_theme_default();
 }
 
 /**
- * On switch-over from Webspark Classic to Innovation theme, do the following:
+ * Theme update callback - On theme change from any theme to Innovation theme
+ * @TODO - Simplify the header version number location
  */
 function _webspark_featurescustom_enable_config($theme) {
   // Enabling Innovation-related modules if they are not enabled
   $modules = array();
+  $modules_to_enable = array();
   // Contrib module dependencies for features
   $modules[] = 'backgroundfield';
   $modules[] = 'chosen';
@@ -50,21 +60,44 @@ function _webspark_featurescustom_enable_config($theme) {
   $modules[] = 'wysiwyg_template';
   $modules[] = 'asu_spotlight';
   $modules[] = 'mega_footer';
-  // OpenASU custom modules, features
+  // OpenASU custom modules, features - keep this up with openasu.info
   $modules[] = 'asu_gsa';
   $modules[] = 'asu_maps_enhanced';
+  $modules[] = 'asu_spotlight';
+  $modules[] = 'asu_securityscanfixes';
   $modules[] = 'webspark_wysiwyg';
   $modules[] = 'webspark_panels_styles';
   $modules[] = 'webspark_banner';
   $modules[] = 'webspark_breadcrumbs';
   $modules[] = 'webspark_content_callout';
+  $modules[] = 'webspark_easyadmin';
   $modules[] = 'webspark_hero';
   $modules[] = 'webspark_jumbohero';
   $modules[] = 'webspark_megamenu';
   $modules[] = 'mega_footer_menu';
   $modules[] = 'webspark_extras';
-  module_enable($modules,TRUE);
-  watchdog('theme update', 'Modules enabled for ' . $theme . ' - ' . implode(',', $modules));
+
+  // Enable disabled modules
+  foreach($modules as $module) {
+    if (!module_exists($module)) {
+      $modules_to_enable[] = $module;
+    }
+  }
+
+  if (count($modules_to_enable) > 0) {
+    try {
+      module_enable($modules_to_enable);
+      drupal_set_message('Modules enabled for <em>' . t($theme) . '</em> - ' . implode(', ', $modules_to_enable));
+      watchdog('theme update', 'Modules enabled for %theme theme - ' . implode(', ', $modules_to_enable), array('%theme' => $theme));
+    }
+    catch (Exception $e) {
+      watchdog('theme update', 'Innovation module dependency enabling failed: ' . $e->getMessage(), WATCHDOG_ERROR);
+      drupal_set_message('The enabling of Innovation theme-specific modules may have failed. Check your <a href="/admin/reports/dblog">recent log messages</a> for details.', 'error');
+    }
+  }
+  else {
+    watchdog('theme update', 'All modules already enabled for %theme theme, so no module_enable action taken.', array('%theme' => $theme));
+  }
 
   // WEBSPARK-448, 509
   // Add setting for updating header to proper version
@@ -73,44 +106,109 @@ function _webspark_featurescustom_enable_config($theme) {
   variable_set('asu_brand_header_template', 'default');
   // Update header basepath
   variable_set('asu_brand_header_basepath', 'http://www.asu.edu/asuthemes');
-  watchdog('theme update', 'Updated header values for ' . $theme);
+  watchdog('theme update', 'Updated ASU Header values for %theme theme', array('%theme' => $theme));
+
+  // WEBSPARK-610 - Re-apply original block configs to ensure their proper location
+  // to match spinup settings
+  if (function_exists('openasu_blockupdates_for_theme')) { // func in openasu.profile
+    openasu_blockupdates_for_theme($theme);
+  }
 
   // WEBSPARK-509 - Swap out system main-menu with TB Mega Menu main-menu on
-  // theme update.
-  db_update('block')
-    ->fields(array(
-        'region' => 'menu',
-        'status' => '1',
-        'weight' => '-100'
+  // theme update. (#610 - updated queries to Database API)
+  if (module_exists('tb_megamenu') && module_exists('webspark_megamenu')) {
+    db_update('block')
+      ->fields(array(
+          'region' => 'menu',
+          'status' => '1',
+          'weight' => '-100'
+        )
       )
-    )
-    ->condition('module', 'tb_megamenu')
-    ->condition('delta', 'main-menu')
-    ->execute();
-  db_update('block')
-    ->fields(array(
-        'region' => '-1',
-        'status' => '0',
-        'weight' => '0'
+      ->condition('module', 'tb_megamenu')
+      ->condition('delta', 'main-menu')
+      ->execute();
+    db_update('block')
+      ->fields(array(
+          'region' => '-1',
+          'status' => '0',
+          'weight' => '0'
+        )
       )
-    )
-    ->condition('module', 'system')
-    ->condition('delta', 'main-menu')
-    ->execute();
-  // disable ASU Students block
-  db_update('block')
-    ->fields(array(
-        'region' => '-1',
-        'status' => '0',
-        'weight' => '0'
+      ->condition('module', 'system')
+      ->condition('delta', 'main-menu')
+      ->execute();
+    // disable ASU Students block
+    db_update('block')
+      ->fields(array(
+          'region' => '-1',
+          'status' => '0',
+          'weight' => '0'
+        )
       )
-    )
-    ->condition('module', 'asu_brand')
-    ->condition('delta', 'asu_brand_students_footer')
-    ->execute();
-  watchdog('theme update', 'Updated nav menu blocks for ' . $theme);
+      ->condition('module', 'asu_brand')
+      ->condition('delta', 'asu_brand_students_footer')
+      ->execute();
+  }
+  // Flush ASU Brand caches so ASU headers are right
+  asu_brand_cache_clear();
+
+  drupal_set_message('Enabled Web Standards-themed blocks for <em>' . t($theme) . '</em> theme');
+  watchdog('theme update', 'Enabled Web Standards-themed blocks for %theme theme', array('%theme' => $theme));
+
 }
 
+/**
+ * Alternate callback for when Innovation is NOT selected - disable
+ * Innovation-specific blocks.
+ */
+function _webspark_featurescustom_alt_theme_config($theme = NULL){
+  if (is_null($theme)) { // callback from admin theme form
+    $theme = variable_get('admin_theme');
+    drupal_set_message($theme . ' selected as admininstrator theme');
+    watchdog('theme update', '%theme selected as administrator theme', array('%theme' => $theme));
+  }
+  // Hide blocks for $theme
+  db_update('block')
+    ->fields(array(
+        'region' => '-1',
+        'status' => '0',
+        'weight' => '0'
+      )
+    )
+    ->condition('theme', $theme)
+    ->condition(db_or()
+      ->condition(db_and()
+        ->condition('module', 'mega_footer')
+        ->condition('delta', 'mega_footer')
+      )
+      ->condition(db_and()
+        ->condition('module', 'asu_brand')
+        ->condition('delta', 'asu_brand_footer')
+      )
+      ->condition(db_and()
+        ->condition('module', 'asu_brand')
+        ->condition('delta', 'asu_brand_header')
+      )
+      ->condition(db_and()
+        ->condition('module', 'tb_megamenu')
+        ->condition('delta', 'main-menu')
+      )
+    )
+    ->execute();
+  drupal_set_message('Disabled Innovation-themed blocks for <em>' . t($theme) .
+    '</em> theme. Go to the <a href="">blocks configuration</a> page to re-enable these blocks if desired.');
+  watchdog('theme update', 'Disabled Web Standards-themed blocks for %theme theme.', array('%theme' => $theme));
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function webspark_featurescustom_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id === 'system_themes_admin_form') {
+    // called AFTER admin theme setting has been changed.
+    $form['actions']['submit']['#submit'][] = '_webspark_featurescustom_alt_theme_config';
+  }
+}
 
 /**
  * Implementation of hook_entity_info_alter()
