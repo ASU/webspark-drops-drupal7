@@ -18,21 +18,18 @@ function webspark_featurescustom_menu_alter (&$items) {
  * @TODO - Put in check to see if certain settings are already in place before module_load_include...s
  * @TODO - Remove this code completely after Webspark Classic installs are gone
  */
-function _webspark_featurescustom_theme_check () {
+function _webspark_featurescustom_theme_check() {
   // Checking if the selected theme is our theme & calling function to active modules/configuration
   module_load_include('inc', 'system', 'system.admin.inc');
-  $theme_request = check_plain($_REQUEST['theme']);
-  module_enable(array('devel'));
-  if (module_exists('devel')) {
-    $theme_to_check = drupal_find_base_themes(array('innovation'), 'innovation');
-    dpm($theme_to_check, 'theme to check');
-  }
-  if ($theme_request === 'innovation') {
-    _webspark_featurescustom_enable_config($theme_request);
+  $new_theme = check_plain($_REQUEST['theme']);
+
+  $asu_base_theme = _webspark_featurescustom_get_base_theme($new_theme);
+  if ($asu_base_theme) {
+    _webspark_featurescustom_enable_config($new_theme);
   }
   // WEBSPARK-610 - Settings for when Innovation or asu_webspark_bootstrap
-  elseif ($theme_request !== 'asu_webspark_bootstrap') {
-    _webspark_featurescustom_alt_theme_config($theme_request);
+  elseif (!$asu_base_theme && $new_theme !== 'asu_webspark_bootstrap') {
+    _webspark_featurescustom_alt_theme_config($new_theme);
   }
   system_theme_default();
 }
@@ -204,10 +201,43 @@ function _webspark_featurescustom_alt_theme_config($theme = NULL){
  * Implements hook_form_alter().
  */
 function webspark_featurescustom_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id === 'system_themes_admin_form') {
-    // called AFTER admin theme setting has been changed.
-    $form['actions']['submit']['#submit'][] = '_webspark_featurescustom_alt_theme_config';
+  // add submission handler to end after manually running D7 core form submit
+  $form['admin_theme']['actions']['submit']['#submit'][] = 'system_themes_admin_form_submit';
+  $form['admin_theme']['actions']['submit']['#submit'][] = '_webspark_featurescustom_admin_theme';
+}
+
+/**
+ * Implements hook_form_submit()
+ *
+ * Custom submission handler for admin theme form.
+ */
+function _webspark_featurescustom_admin_theme($form, &$form_state) {
+  $admin_theme = $form_state['values']['admin_theme']; // new admin theme
+  $asu_base_theme = _webspark_featurescustom_get_base_theme($admin_theme);
+  if ($asu_base_theme) {
+    _webspark_featurescustom_enable_config($admin_theme);
   }
+  // WEBSPARK-610 - Settings for when Innovation or asu_webspark_bootstrap
+  elseif (!$asu_base_theme && $admin_theme !== 'asu_webspark_bootstrap') {
+    _webspark_featurescustom_alt_theme_config($admin_theme);
+  }
+  system_theme_default();
+}
+
+/**
+ * Is new theme an ASU theme or have an ASU base theme?
+ * @param $theme - New theme selected
+ * @returns TRUE or FALSE
+ */
+function _webspark_featurescustom_get_base_theme($theme) {
+  $all_themes = list_themes();
+  foreach ($all_themes as $name => $value) {
+    if (!isset($value->base_theme)) {
+      unset($all_themes[$name]); // remove themes with no base_theme.
+    }
+  }
+  $base_themes = (in_array($theme, $all_themes)) ? drupal_find_base_themes($all_themes, $theme) : array();
+  return ($theme === 'innovation' || in_array('innovation', $base_themes)) ? TRUE : FALSE;
 }
 
 /**
