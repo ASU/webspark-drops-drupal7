@@ -45,3 +45,13 @@ function asu_securityscanfixes_preprocess_page(&$vars) {
   drupal_add_js(drupal_get_path('module', 'asu_securityscanfixes') . '/js/asu_securityscanfixes.js');
   $vars['scripts'] = drupal_get_js();
 }
+
+/**
+ * Implements hook_update_projects_alter().
+ */
+function asu_securityscanfixes_update_projects_alter(&$projects) {
+  // remove this project from updates list
+  if (isset($projects['asu_securityscanfixes'])) {
+    unset($projects['asu_securityscanfixes']);
+  }
+}
