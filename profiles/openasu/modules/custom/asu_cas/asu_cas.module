@@ -185,6 +185,8 @@ function asu_cas_libraries_info_alter(&$libraries) {
  * the list of modules in the Drupal Update Manager.
  *
  * @TODO: THIS SHOULD BE IN ITS OWN MODULE BUT IM PUTTING IT HERE FOR NOW
+ * @TODO: Check for module versions, just in case newer version is installed in sites/all/modules as an override
+ *    see webform module below
  */
 function asu_cas_update_projects_alter(&$projects) {
   // Setup information about managed components to remove from the update managed
@@ -195,13 +197,18 @@ function asu_cas_update_projects_alter(&$projects) {
   // WEBSPARK-403, 254 - add modules 1) enabled in openasu.install file
   $managed_things[] = 'cas'; // CAS library module
   $managed_things[] = 'asu_cas'; // ASU CAS and More
-  // WEBSPARK- - add modules in installation profile and or .make file but not in .info file
+  // WEBSPARK - add modules in installation profile and or .make file but not in .info file
     // openasu.make
   $managed_things[] = 'quicktabs';
   $managed_things[] = 'better_watchdog_ui';
   $managed_things[] = 'admin_menu';
   $managed_things[] = 'feeds_xpathparser';
   $managed_things[] = 'asu_securityscanfixes'; // no update repo
+    // custom check for Webform 3.x only - maintained in repo
+  $webform_info = system_get_info('module', 'webform');
+  if (isset($webform_info['version']) && stristr($webform_info['version'], '7.x-3')) {
+    $managed_things[] = 'webform';
+  }
     // webspark_featurescustom.make
   $managed_things[] = 'email';
   $managed_things[] = 'special_menu_items';
@@ -210,6 +217,7 @@ function asu_cas_update_projects_alter(&$projects) {
   $managed_things[] = 'views_data_export';
   $managed_things[] = 'mimemail';
   $managed_things[] = 'mailsystem';
+  //$managed_things[] = 'honeypot';
 
   // Determine any dependencies to components manged by the distribution
   $profile_info = install_profile_info('openasu');

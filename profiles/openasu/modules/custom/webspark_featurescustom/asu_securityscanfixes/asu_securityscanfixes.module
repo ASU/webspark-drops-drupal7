@@ -46,12 +46,3 @@ function asu_securityscanfixes_preprocess_page(&$vars) {
   $vars['scripts'] = drupal_get_js();
 }
 
-/**
- * Implements hook_update_projects_alter().
- */
-function asu_securityscanfixes_update_projects_alter(&$projects) {
-  // remove this project from updates list
-  if (isset($projects['asu_securityscanfixes'])) {
-    unset($projects['asu_securityscanfixes']);
-  }
-}
