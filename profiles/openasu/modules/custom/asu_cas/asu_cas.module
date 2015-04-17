@@ -24,13 +24,20 @@ function asu_cas_boot() {
   }
 }
 
+/**
+ * Implements hook_init()
+ */
+function asu_cas_init() {
+  // Adding the asu images css file to the theme so it will show up in the WYSIWYG
+  drupal_add_css(drupal_get_path('module', 'asu_cas') . '/asu_cas.css', array('group' => CSS_THEME));
+}
+
 /*
  * Implements hook_form_alter()
  *
  * This properly sets the default admin role to 'administrator' and disables
  * all the other roles from being assigned.
  */
-
 function asu_cas_form_alter(&$form, &$form_state, $form_id) {
 
   if ($form_id == "user_admin_settings") {
@@ -131,17 +138,6 @@ function asu_cas_menu_alter(&$items) {
 
 //////////////////////////////// END CAS-related Code
 //////////////////////////////// BEGIN misc. code
-
-/**
- * Implements hook_init()
- *
- * @TODO: THIS (and the related CSS file) SHOULD BE IN ITS OWN MODULE BUT IM PUTTING IT HERE FOR NOW
- *
- */
-function asu_cas_init() {
-  // Adding the asu images css file to the theme so it will show up in the WYSIWYG
-  drupal_add_css(drupal_get_path('module', 'asu_cas') . '/asu_cas.css', array('group' => CSS_THEME));
-}
 
 /**
  * Implememtation of hook_system_info_alter()

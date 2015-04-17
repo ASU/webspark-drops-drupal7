@@ -50,7 +50,6 @@ dependencies[] = block
 
 ; OpenASU - Contrib recommended
 dependencies[] = views_ui
-dependencies[] = better_watchdog_ui
 ;dependencies[] = contextual
 
 ; OpenASU - Contrib modules for features
@@ -94,3 +93,4 @@ dependencies[] = mega_footer_menu
 dependencies[] = webspark_wysiwyg
 dependencies[] = webspark_extras
 ;dependencies[] = asu_cas (moved to openasu_install)
+;dependencies[] = better_watchdog_ui (moved to openasu_install)

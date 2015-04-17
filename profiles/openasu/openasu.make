@@ -103,13 +103,12 @@ projects[asu_eadvisor_degree_feed_feature][download][revision] = 91278fd1
 projects[asu_eadvisor_degree_feed_feature][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
 
 ; ASU Degrees (replacement for asu_eadvisor_degree_feed_feature)
-; TODO - Update ASU Degrees module(s) to new repo or combine with other repos
-projects[asu_degrees][version] = 1.4
+projects[asu_degrees][version] = 1.5
 projects[asu_degrees][type] = module
 projects[asu_degrees][subdir] = custom
-projects[asu_degrees][download][revision] = a254313c
-projects[asu_degrees][download][branch] = asu_degrees
-projects[asu_degrees][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
+projects[asu_degrees][download][revision] = 90be3136
+projects[asu_degrees][download][branch] = master
+projects[asu_degrees][download][url] = https://github.com/ASU/asu-drupal-degrees.git
 
 projects[asu_rfi][type] = module
 projects[asu_rfi][subdir] = custom
