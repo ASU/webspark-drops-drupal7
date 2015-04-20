@@ -33,7 +33,7 @@ function hook_cas_server_user_attributes($account, $service, $ticket) {
   $attributes['friends'] = array('dries', 'webchick');
 
   // Or change the response based upon the server.
-  if (preg_match($service, "@^http://apple.com/@")) {
+  if (preg_match("@^http://apple.com/@", $service)) {
     // This data should not be confidential as the service URL is directly
     // supplied by the user and is in no way validated.
     $attributes['friends'] += 'sjobs';

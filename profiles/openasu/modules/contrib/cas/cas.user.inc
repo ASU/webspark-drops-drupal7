@@ -12,11 +12,11 @@ function cas_add_user_form() {
   $form = array();
 
   $form['account']['cas_name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('CAS username'),
+    '#type' => 'textarea',
+    '#title' => t('CAS username(s)'),
     '#required' => TRUE,
     '#default_value' => '',
-    '#description' => t('Registration will proceed as if the user with the specified CAS username just logged in.'),
+    '#description' => t('Enter a single username, or multiple usernames, one per line. Registration will proceed as if the user(s) with the specified CAS username just logged in.'),
     '#element_validate' => array('_cas_name_element_validate'),
     '#weight' => -10,
   );
@@ -24,28 +24,25 @@ function cas_add_user_form() {
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Create new account'),
+    '#value' => t('Create new account(s)'),
   );
   return $form;
 }
 
 function cas_add_user_form_submit($form, &$form_state) {
-  $options = array(
-    'invoke_cas_user_presave' => TRUE,
-  );
-  $account = cas_user_register($form_state['values']['cas_name'], $options);
+  $cas_names = preg_split('/[\n\r|\r|\n]+/', $form_state['values']['cas_name']);
 
-  // Terminate if an error occurred while registering the user.
-  if (!$account) {
-    drupal_set_message(t("Error saving user account."), 'error');
-    $form_state['redirect'] = '';
-    return;
+  foreach ($cas_names as $cas_name) {
+    $operations[] = array('cas_batch_user_add', array($cas_name));
   }
 
-  // Set these in case another module needs the values.
-  $form_state['user'] = $account;
-  $form_state['values']['uid'] = $account->uid;
+  $batch = array(
+    'title' => t('Creating users...'),
+    'operations' => $operations,
+    'finished' => 'cas_batch_user_finished',
+    'progress_message' => t('Processed @current out of @total.'),
+    'file' => drupal_get_path('module', 'cas') . '/cas.batch.inc',
+  );
 
-  $uri = entity_uri('user', $account);
-  drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
+  batch_set($batch);
 }

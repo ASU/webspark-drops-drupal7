@@ -80,7 +80,7 @@ function cas_uninstall() {
   variable_del('cas_auto_assigned_role');
   variable_del('cas_cert');
   variable_del('cas_changePasswordURL');
-  variable_del('cas_check_first');
+  variable_del('cas_check_frequency');
   variable_del('cas_debugfile');
   variable_del('cas_domain');
   variable_del('cas_exclude');
@@ -99,6 +99,7 @@ function cas_uninstall() {
   variable_del('cas_pgtpath');
   variable_del('cas_port');
   variable_del('cas_proxy');
+  variable_del('cas_proxy_list');
   variable_del('cas_registerURL');
   variable_del('cas_server');
   variable_del('cas_uri');
@@ -107,6 +108,7 @@ function cas_uninstall() {
 
   // And old (un-used) variables.
   variable_del('cas_cert_verify');
+  variable_del('cas_check_first');
   variable_del('cas_first_login');
   variable_del('cas_hijack_user');
   variable_del('cas_ldap_email_attribute');
@@ -347,4 +349,24 @@ function cas_update_7000(&$sandbox) {
   );
   $moved_deltas = array();
   update_fix_d7_block_deltas($sandbox, $renamed_deltas, $moved_deltas);
+}
+
+/**
+ * Use variable 'cas_check_frequency' instead of 'cas_gateway'.
+ */
+function cas_update_7101() {
+  if (variable_get('cas_check_first', NULL) === NULL) {
+    // The old variable was not set, nothing to do.
+    return;
+  }
+
+  if (variable_get('cas_check_first', FALSE)) {
+    // Check once, but not again until login.
+    variable_set('cas_check_frequency', -1);
+  }
+  else {
+    // Check never.
+    variable_set('cas_check_frequency', -2);
+  }
+  variable_del('cas_check_first');
 }
