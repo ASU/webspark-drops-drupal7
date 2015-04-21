@@ -1,1 +1,236 @@
-For complete changelog, go to https://drupal.asu.edu/node/3762.
+Webspark 1.13.6 (Wyoming) release
+----------------
+
+- Webspark Core
+    * Fixed issue where the custom WYSIWYG configuration settings were not 
+      being applied when creating a new site
+    * Fixed the issue where some administration pages would return a "Page Not 
+      Found" error after enabling or disabling modules on the site
+    * Fixed the bug where the Web Standards header/footer/menu blocks would be 
+      disabled when changing the site theme
+- Contributed Modules in Webspark
+    * Updated the Webform module to 3.24 (security update)
+    * Updated the Feeds XPath Parser module to 1.0
+- Web standards components in Webspark
+    * Separated out the default academic links (e.g., Degree Programs, 
+      Admissions, Student Live, and About) for the Web Standards navigation menu into 
+      a separate Drupal module (Webspark MegaMenu Academic Add-on) that can be 
+      disabled to remove those links for non-academic sites. (This feature is also 
+      now disabled by default. To add those links, enable the module.)
+    * Degrees module updates
+        - Added New Program and Concurrent Program fields
+        - Changed the Additional Requirements field name to "Additional 
+          Requirements URL"
+        - Disabled the option to upload image files to the site when using the 
+          "Add image" feature while editing an ASU Degree node
+        - Added the ability to link related programs together from their 
+          respective ASU Degree pages (nodes)
+        - Added the option to import degrees by Campus
+        - Replaced the College Code input text field in the import feed page 
+          with a select list of Colleges and Campuses
+        - Removed Preview button from the edit page for the ASU Degree nodes
+        - Fixed "Request Information" button so it correctly jumps to the RFI 
+          form (if the ASU RFI module is enabled)
+        - Fixed bug with the Accelerated Programs not being flagged properly
+    * Updated the ASU RFI module to 1.1
+
+Webspark 1.13.5 (Utah) release
+----------------
+
+- Drupal Core
+    * Security Update to Drupal 7.35
+- Webspark Core
+    * Deprecated Webspark Classic theme
+    * Set Webspark Seven theme as the admin theme
+    * Disabled the Panelizer tab by default
+    * Adjusted editor role permissions to grant editors access to recently 
+      added features 
+    * Added Special Menu Items module to distro
+- ASU Degrees
+    * Added scholarship, financial aid, and wue links
+    * Added wue and accelerated qualify flags
+    * Fixed bug in the feed parser where the programs from the Havasu and West 
+      campuses were being incorrectly associated with the Tempe campus
+    * Add regions under greybar and in the sidebar for testimonials and other 
+      marketing materials
+    * ASU RFI form integration     
+    * Changed the "request more information" to link to the Request for Information 
+	  (RFI) form if the RFI module is enabled and 
+	  the form is present in the page (in the pre footer region)
+    * Removed "Add ASU Degree" link on Add Content page
+- Other Webspark Modules
+    * Disabled the generic Panopoly Spotlight widget from the Panels UI, in 
+      lieu of the ASU Spotlight widget
+    * Carousel - Added "next", "previous", "continue reading" links, and 
+      subtitle options to the UI
+    * ASU News & Events - Fixed default permissions not being set for News and 
+      Events
+- Innovation theme
+    * Improved intra page navigation with anchor tags by taking into account 
+      the sticky navigation menu and adjusting the scrolling so that the the link 
+      destination is not covered up by the navigation menu
+    * Added table template file for views to Kalatheme
+    * Fixed duplicate ID properties in footer <div> tags
+
+Webspark 1.13.4 (Oklahoma II) release
+----------------
+
+- Webspark Core
+    * Added Special Menu Items module
+    * Added Quicktabs module
+    * Fixed layout bug for content edit form when using Full HTML input format
+    * Patched BackgroundImage module to eliminate repeated, "default image" 
+      errors
+    * Resolved ASU header scrolling issue with mobile menu (local links 
+      scrolled too far due to sticky menu positioning)
+- Innovation theme
+    * Fixed layout issue with table tags not rendering in views output
+    * Resolved strikethroughs not being saved in WYSIWYG editor
+- Web standards components in Webspark
+    * Updated Carousel feature
+    * Updated ASU Directory module
+    * Added RSS icon in Mega Footer
+    * Fixed layout issues in Mega Footer
+    * Can now allow Donate instead of Contribute in Mega Footer
+
+Webspark 1.13.3 (Oklahoma) release
+----------------
+
+- Webspark Core
+    * Updated editor role permissions
+    * Added Webspark Seven admin theme, which is a subtheme of Drupal core's 
+      Seven theme. Multiple bugs have been fixed in this new admin theme, and any 
+      future bug fixes to the administrator theme will be specifically applied to 
+      this theme only.
+- Innovation theme
+    * Removed from template.php the deprecated method for feeding the site 
+      title and navigation menu items to the ASU global header for their rendering in 
+      the mobile view. This functionality is now provided by the ASU Brand module.
+    * Added HTTP headers to fix layout issues with modern IE browsers set to 
+      Compatibility Mode
+    * Fixed various WYSIWYG issues
+    * Updated inactive button styles
+- Web standards components in Webspark
+    * Updated the ASU Degrees module, which pulls in programs/majors into the 
+      site and renders them for display
+    * Added Carousel widget, which creates a web standards compliant carousel 
+      for web pages
+    * Updated the ASU Directory module to format and style directory data to 
+      comform to the web standards. (Important: This is a temporary ASU directory 
+      solution that will be depracated when the new directory system is ready.)
+    * Added RSS feed button to the Mega Footer
+    * Updated Donate link functionality in the Mega Footer
+    * Hid generic (Panopoly) spotlight widget from the Webspark In-Place Editor 
+      (IPE), in lieu of the ASU Spotlight widget
+- Contributed Drupal modules in Webspark
+    * Added Better Watchdog UI module for a better UI when searching Drupal 
+      log/report entries
+    * Patched Background Image module to fix default_image error
+
+Webspark 1.13.2 (New Mexico) release
+----------------
+
+- Webspark Core
+    * Made sure all Innovation modules are enabled when changing from Webspark 
+      Classic to the Innovation theme
+    * Fixed incorrect permissions for Webspark-specific features
+    * Added Email module to installation profile
+    * Removed callout examples with images
+    * Unset all permissions for the CAS role to mitigate the incorrect 
+      assignment of permissions for that role on some previous versions of Webspark
+    * Updated editor role permissions for the navbar on site spinup
+    * Fixed misspelled DEPRECATED in module release
+    * Set more permissions for editor role:
+        + View admin theme
+        + Add and upload new files
+- Mega Menu & Header
+    * Updated to ASU Header version 4.3
+    * General updates
+    * Fixed child of a submenu item not being displayed correctly
+    * Added code to switch mega menu block for regular menu block
+    * Fixed bug where the placement of two words in the top-level navigation 
+      menu prevented the navigation menu from expanding in mobile
+    * Fixed bug where the ASU header would break when using the Webspark 
+      Classic theme after upgrading to Webspark 1.13.1 (Arizona) due to the switch to 
+      Google Tag Manager for analytics
+- Mega Footer
+    * Fixed mobile view issues
+    * Fixed issue where switching from the Webspark Classic theme to the 
+- Innovation theme resulted in the Mega Footer not displaying due to an 
+  "invalid footer region" error
+- Search (ASU GSA)
+    * Fixed date sort in initial search
+- ASU Enhanced Maps feature
+    * Refined features
+    * Added permissions for roles
+- ASU Spotlight
+    * Fixed Full-Width issues
+    * Adjusted spotlight text
+    * Fixed missing fields on spin-up issue
+    * Added ability to choose particular optionset for individual ASU Spotlight
+- ASU Degrees feature
+    * Added prefooter region to ASU Degrees custom template file
+    * Fixed output errors
+- Innovation theme
+    * Removed dotted maroon line from the ASU global footer links
+    * Updated favicon from pitchfork to ASU logo
+    * Worked on styles issues in fieldable panel panes
+    * Fixed checkboxes in certain forms
+    * Fixed edit window tool icons
+    * Fixed security errors and FontAwesome not loading in IE9
+- Breadcrumbs
+    * Fixed incorrect text, URLs, and paths not going beyond third page
+
+Webspark 1.13.1 (Arizona) release
+----------------
+
+- Webspark Core
+    * ASU global header changed to version 4.2
+    * Set moscone as default panels layout for content page in install
+    * Added Full HTML format for administrators
+    * Disabled contextual links for new spinups
+- Innovation theme
+    * Fixed 100% width background issues
+    * Made Save button larger on IPE modal
+    * Fixed font sizes and spacing around accordions
+    * Fixed bug where numbers and bullets bled into featured image
+- ASU custom modules
+    * Updated ASU Brand module
+        + Set default domain to www.asu.edu instead of asu.edu
+        + Changed protocol used to fetch the header include files to http 
+          instead of https
+    * Updated ASU Feeds module
+    * Fixed bug in the ASU GSA Search module where search type was sometimes 
+      incorrectly set
+    * Added new News & Events module
+    * Updated ASU Degree feature
+        + Locked down content type fields
+        + Corrected view issues
+    * Deprecated ASU News feature
+    * Deprecated ASU Events Feed feature
+- Web standards components in Webspark
+    * Added Webspark breadcrumbs feature to add breadcrumb navigation
+    * Added accordion pane style for automatically formatting panels into a web 
+      standards-compliant accordion element
+    * Added/updated ASU Maps feature/widget, which adds ASU-customized Google 
+      maps
+    * Restored old classes in webspark_banner and webspark_hero widgets
+    * Added Webspark Jumbohero feature to add option for 700px tall banner image
+    * Panels style plugin changes
+    * Fixed Webspark WYSIWYG bugs/errors:
+        + Strikethroughs not being saved
+        + Spell checker tool does not working
+    * Removed three features fields from 'content page' content type
+    * Mega Footer
+        + Made contact fields not required
+        + Added Instagram icon link
+        + Removed "KnowWPC" sample link
+        + Removed global footer code as part of the switch back to the global 
+          footer provided by the ASU Brand module
+    * Updated ASU Maps
+    * AJAX bug fix, updated maps key
+- Contributed Drupal modules in Webspark
+    * Added Easy Breadcrumbs module (a dependency for Webspark breadcrumbs 
+      feature)
+
+
