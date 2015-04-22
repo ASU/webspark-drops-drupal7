@@ -103,10 +103,10 @@ projects[asu_eadvisor_degree_feed_feature][download][revision] = 91278fd1
 projects[asu_eadvisor_degree_feed_feature][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
 
 ; ASU Degrees (replacement for asu_eadvisor_degree_feed_feature)
-projects[asu_degrees][version] = 1.5
+projects[asu_degrees][version] = 1.6
 projects[asu_degrees][type] = module
 projects[asu_degrees][subdir] = custom
-projects[asu_degrees][download][revision] = 1c438469
+projects[asu_degrees][download][revision] = ba8a1fdd
 projects[asu_degrees][download][branch] = master
 projects[asu_degrees][download][url] = https://github.com/ASU/asu-drupal-degrees.git
 
@@ -166,10 +166,6 @@ projects[special_menu_items][type] = module
 projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
 projects[viewfield][subdir] = contrib
-
-projects[views_bootstrap][version] = 3.1
-projects[views_bootstrap][type] = module
-projects[views_bootstrap][subdir] = contrib
 
 projects[views_php][version] = 1.x-dev
 projects[views_php][type] = module
