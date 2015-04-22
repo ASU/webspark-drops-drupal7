@@ -3,7 +3,7 @@ description = "Theme with ASU Web Standards styling. A Kalatheme subtheme, power
 base theme = kalatheme
 core = 7.x
 version = "7.x-1.0-beta9"
-project = "Innovation"
+project = "innovation"
 
 regions[header] = Header
 regions[menu] = Menu
