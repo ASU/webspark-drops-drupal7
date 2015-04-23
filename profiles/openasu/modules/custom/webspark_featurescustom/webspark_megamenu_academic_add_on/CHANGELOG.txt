@@ -1,0 +1,4 @@
+
+Webspark Megamenu Academic Addon 7.x-1.0, 2015-4-16
+------------------------------
+- Initial build.
