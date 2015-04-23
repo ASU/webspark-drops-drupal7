@@ -240,3 +240,21 @@ function asu_cas_update_7006(&$sandbox) {
   }
 }
 
+/**
+ * Implements hook_update_N()
+ * + Enables Webspark Featurescustom
+ * + NOTE: Future Webspark DB updates will come in webspark_featurescustom
+ */
+function asu_cas_update_7007(&$sandbox) {
+  if (!module_exists('webspark_featurescustom')) {
+    module_enable(array('webspark_featurescustom'));
+  }
+  else {
+    db_update('system')
+      ->fields(array(
+        'weight' => '2'
+      ))
+      ->condition('name', 'webspark_featurescustom')
+      ->execute();
+  }
+}

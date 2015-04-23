@@ -9,12 +9,9 @@ include_once 'webspark_wysiwyg.features.inc';
 /**
  * Implements hook_filter_default_formats_alter()
  *
- * WEBSPARK-454 - Updates Panopoly WYSIWYG filter settings.
- * Adapted this from asu_cas.module code and then moved settings
- * from this feature's features_overrides to here.
- * @TODO - Remove all features_overrides in Webspark.
+ * + WEBSPARK-454 - Updates Panopoly WYSIWYG filter settings without asu_cas
+ * module code or features_overrides.
  */
-
   function webspark_wysiwyg_filter_default_formats_alter(&$data) {
     // This allows users to enter in more then one extra line
     if (isset($data['panopoly_wysiwyg_text'])) {
