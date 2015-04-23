@@ -57,13 +57,6 @@ projects[asu_brand][download][revision] = fa4421bf
 projects[asu_brand][download][branch] = 7.x-1.x
 projects[asu_brand][download][url] = https://github.com/ASU/asu-drupal-brand.git
 
-projects[asu_cas][version] = 7.x-1.7
-projects[asu_cas][subdir] = custom
-projects[asu_cas][type] = module
-projects[asu_cas][download][revision] = ce9e5ca8
-projects[asu_cas][download][branch] = 7.x-1.x
-projects[asu_cas][download][url] = https://github.com/ASU/asu-drupal-cas-client-config.git
-
 projects[asu_userpicker][version] = 1.0
 projects[asu_userpicker][subdir] = custom
 projects[asu_userpicker][type] = module
@@ -83,26 +76,6 @@ projects[ixr][type] = module
 projects[ixr][download][revision] = 990012dd
 projects[ixr][download][url] = https://github.com/ASU/asu-drupal-ixr.git
 
-projects[asu_events][version] = 1.0-dev
-projects[asu_events][subdir] = custom
-projects[asu_events][type] = module
-projects[asu_events][download][revision] = 3ff78bb9
-projects[asu_events][download][url] = https://github.com/ASU/asu-drupal-events-feed.git
-
-projects[asu_news][version] = 1.0-dev
-projects[asu_news][subdir] = custom
-projects[asu_news][type] = module
-projects[asu_news][download][revision] = 7e925b539
-projects[asu_news][download][url] = https://github.com/ASU/asu-drupal-news.git
-
-; eAdvisor Feed Feature (depracated in lieu of ASU Degrees)
-projects[asu_eadvisor_degree_feed_feature][version] = 1.0-beta1
-projects[asu_eadvisor_degree_feed_feature][subdir] = custom
-projects[asu_eadvisor_degree_feed_feature][type] = module
-projects[asu_eadvisor_degree_feed_feature][download][revision] = 91278fd1
-projects[asu_eadvisor_degree_feed_feature][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
-
-; ASU Degrees (replacement for asu_eadvisor_degree_feed_feature)
 projects[asu_degrees][version] = 1.6
 projects[asu_degrees][type] = module
 projects[asu_degrees][subdir] = custom
@@ -249,8 +222,7 @@ projects[wysiwyg_template][version] = 2.11
 projects[wysiwyg_template][type] = module
 projects[wysiwyg_template][subdir] = contrib
 
-; Bootstrap and Theme Frameworks
-; Removed -- Stays in webspark-drops-drupal7 repo (see WEBSPARK-366)
+; Bootstrap and Theme Frameworks - Moved to Webspark repo (see WEBSPARK-366)
 
 ; Base Theme - Kalatheme
 
@@ -281,3 +253,21 @@ libraries[fontawesome][download][url] = http://fontawesome.io/assets/font-awesom
 
 libraries[modernizr][download][type] = get
 libraries[modernizr][download][url] = https://github.com/Modernizr/Modernizr/archive/v2.6.2.zip
+
+; DEPRACATED PROJECTS - DO NOT USE AND LOOK FOR ALTERNATE SOLUTIONS ASAP
+projects[asu_events][version] = 1.0-dev
+projects[asu_events][subdir] = custom
+projects[asu_events][type] = module
+projects[asu_events][download][revision] = 3ff78bb9
+projects[asu_events][download][url] = https://github.com/ASU/asu-drupal-events-feed.git
+projects[asu_news][version] = 1.0-dev
+projects[asu_news][subdir] = custom
+projects[asu_news][type] = module
+projects[asu_news][download][revision] = 7e925b539
+projects[asu_news][download][url] = https://github.com/ASU/asu-drupal-news.git
+; (DEPRACATED in lieu of ASU Degrees - asu_degrees module)
+projects[asu_eadvisor_degree_feed_feature][version] = 1.0-beta1
+projects[asu_eadvisor_degree_feed_feature][subdir] = custom
+projects[asu_eadvisor_degree_feed_feature][type] = module
+projects[asu_eadvisor_degree_feed_feature][download][revision] = fbc26834
+projects[asu_eadvisor_degree_feed_feature][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
