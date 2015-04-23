@@ -35,7 +35,6 @@ stylesheets[all][] = fonts/roboto/css/roboto.css
 
 ; Theme settings
 
-; original Webspark
 settings[toggle_logo] = 0
 settings[toggle_name] = 1
 settings[toggle_slogan] = 0
@@ -45,11 +44,9 @@ settings[toggle_comment_user_verification] = 0
 settings[toggle_favicon] = 1
 settings[toggle_main_menu] = 0
 settings[toggle_secondary_menu] = 0
-
 settings[responsive_toggle] = 1
 settings[pane_styles_toggle] = 1
 settings[always_show_page_title] = 0
-
 settings[default_picture] = 0
 
 ; Web Standards
