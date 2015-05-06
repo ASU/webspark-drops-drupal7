@@ -1,5 +1,9 @@
 CHANGELOG for ASU Brand module for Drupal 7
 
+7.x-1.9, 2015-05-06
+-----------------------
+- Updated default header version constant to 4.3
+
 7.x-1.7, 2014-11-25
 -----------------------
 - Google Tag Manager (GTM) Integration for analytics injection (reads new gtm.shtml

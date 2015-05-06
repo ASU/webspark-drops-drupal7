@@ -50,10 +50,10 @@ projects[panopoly_demo][subdir] = panopoly
 
 ; ASU Modules
 
-projects[asu_brand][version] = 1.8
+projects[asu_brand][version] = 1.9
 projects[asu_brand][subdir] = custom
 projects[asu_brand][type] = module
-projects[asu_brand][download][revision] = fa4421bf
+projects[asu_brand][download][revision] = 758a2fd1d2748a64d809f99cff255857498bd90f
 projects[asu_brand][download][branch] = 7.x-1.x
 projects[asu_brand][download][url] = https://github.com/ASU/asu-drupal-brand.git
 
