@@ -71,7 +71,7 @@ function openasu_theme_innovation_setup(&$install_state) {
  * For both profile and module (webspark_featurescustom) usage
  */
 function openasu_blockupdates_for_theme($theme) {
-  // Enable the Brand Header block in the right region
+  // Enable the Brand Header block in header
   if (module_exists('asu_brand')) {
     $asu_brand_header_bid = db_select('block', 'b')
       ->fields('b', array('bid'))
@@ -79,7 +79,6 @@ function openasu_blockupdates_for_theme($theme) {
       ->condition('theme', $theme)
       ->execute()
       ->fetchField();
-
     db_update('block')
       ->fields(array(
           'status' => '1',
@@ -89,7 +88,8 @@ function openasu_blockupdates_for_theme($theme) {
       ->condition('bid', $asu_brand_header_bid)
       ->condition('theme', $theme)
       ->execute();
-    // Add back in default footer regardless - readded after WEBSPARK-357 removed it from megafooter module
+
+    // Enable the Brand Header block in footer
     $asu_brand_footer_bid = db_select('block', 'b')
       ->fields('b', array('bid'))
       ->condition('delta', 'asu_brand_footer')
