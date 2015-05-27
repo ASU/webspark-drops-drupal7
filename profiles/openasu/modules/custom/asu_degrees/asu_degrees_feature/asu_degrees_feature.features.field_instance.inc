@@ -1072,6 +1072,230 @@ function asu_degrees_feature_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_grad_app'
+  $field_instances['node-asu_degree-field_asu_degree_grad_app'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '<strong>GRADUATE PROGRAMS ONLY</strong><br>
+Displays \'Application Deadline\' information on graduate degree nodes. This will not work on undergraduate degree nodes.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 42,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_degree_grad_app',
+    'label' => 'Graduate: Application Deadline',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 25,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 40,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_grad_desc_video'
+  $field_instances['node-asu_degree-field_asu_degree_grad_desc_video'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '<strong>GRADUATE PROGRAMS ONLY</strong><br>
+Displays given video (use WYSIWYG \'Add media\' button to embed) next to top degree description (above yellow buttons) on graduate degree nodes. This will not work on undergraduate degree nodes.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 45,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_degree_grad_desc_video',
+    'label' => 'Graduate: Degree Description Video',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 43,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_grad_financing'
+  $field_instances['node-asu_degree-field_asu_degree_grad_financing'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '<strong>GRADUATE PROGRAMS ONLY</strong><br>
+Displays \'Financing Your Education\' information on graduate degree nodes. This will not work on undergraduate degree nodes.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 43,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_degree_grad_financing',
+    'label' => 'Graduate: Financing Your Education',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 25,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 41,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_grad_text_area'
+  $field_instances['node-asu_degree-field_asu_degree_grad_text_area'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '<strong>GRADUATE PROGRAMS ONLY</strong><br>
+Displays given information below grey section (containing "Degree Offered") on graduate degree nodes. This will not work on undergraduate degree nodes.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 44,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_degree_grad_text_area',
+    'label' => 'Graduate: Free Text Area',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 25,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 42,
+    ),
+  );
+
   // Exported field_instance: 'node-asu_degree-field_asu_degree_major_map_url'
   $field_instances['node-asu_degree-field_asu_degree_major_map_url'] = array(
     'bundle' => 'asu_degree',
@@ -2110,6 +2334,14 @@ function asu_degrees_feature_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('<strong>GRADUATE PROGRAMS ONLY</strong><br>
+Displays \'Application Deadline\' information on graduate degree nodes. This will not work on undergraduate degree nodes.');
+  t('<strong>GRADUATE PROGRAMS ONLY</strong><br>
+Displays \'Financing Your Education\' information on graduate degree nodes. This will not work on undergraduate degree nodes.');
+  t('<strong>GRADUATE PROGRAMS ONLY</strong><br>
+Displays given information below grey section (containing "Degree Offered") on graduate degree nodes. This will not work on undergraduate degree nodes.');
+  t('<strong>GRADUATE PROGRAMS ONLY</strong><br>
+Displays given video (use WYSIWYG \'Add media\' button to embed) next to top degree description (above yellow buttons) on graduate degree nodes. This will not work on undergraduate degree nodes.');
   t('ASU Banner Image');
   t('Academic Plan');
   t('Academic Program');
@@ -2134,6 +2366,10 @@ function asu_degrees_feature_field_default_field_instances() {
   t('Diploma Description');
   t('Example Careers');
   t('Financial Aid link');
+  t('Graduate: Application Deadline');
+  t('Graduate: Degree Description Video');
+  t('Graduate: Financing Your Education');
+  t('Graduate: Free Text Area');
   t('Major Map URL');
   t('Major Map Year');
   t('Minimum math requirement');
