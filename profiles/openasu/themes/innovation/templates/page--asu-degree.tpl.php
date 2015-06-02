@@ -702,7 +702,6 @@ else {
                       </div>
                     </div>
                     <div class="col-sm-6 col-md-4">
-                      <h2>Application Deadline</h2>
 
                       <?php if (isset($node_info['field_asu_degree_grad_app']['#items'][0]['safe_value'])): ?>
                           <?php echo $node_info['field_asu_degree_grad_app']['#items'][0]['safe_value']; ?>
@@ -710,7 +709,6 @@ else {
 
                     </div>
                     <div class="col-sm-6 col-md-4">
-                      <h2>Affording College</h2>
 
                       <?php if (isset($node_info['field_asu_degree_grad_financing']['#items'][0]['safe_value'])): ?>
                           <?php echo $node_info['field_asu_degree_grad_financing']['#items'][0]['safe_value']; ?>
@@ -727,9 +725,11 @@ else {
 
               <div class="container space-top-xl space-bot-xl">
                 <div class="col-md-8">
+
                   <?php if (isset($node_info['field_asu_degree_grad_text_area']['#items'][0]['safe_value'])): ?>
                       <?php echo $node_info['field_asu_degree_grad_text_area']['#items'][0]['safe_value']; ?>
                   <?php endif ?>
+
                 </div>
                 <?php if (isset($node_info['field_asu_degree_relatedprograms'])): ?>
                   <div class="col-md-4">
