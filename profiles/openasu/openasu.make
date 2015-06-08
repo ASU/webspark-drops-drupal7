@@ -50,17 +50,17 @@ projects[panopoly_demo][subdir] = panopoly
 
 ; ASU Modules
 
-projects[asu_brand][version] = 1.9
+projects[asu_brand][version] = 1.10
 projects[asu_brand][subdir] = custom
 projects[asu_brand][type] = module
-projects[asu_brand][download][revision] = 758a2fd1d2748a64d809f99cff255857498bd90f
+projects[asu_brand][download][revision] = ade07e6f
 projects[asu_brand][download][branch] = 7.x-1.x
 projects[asu_brand][download][url] = https://github.com/ASU/asu-drupal-brand.git
 
 projects[asu_userpicker][version] = 1.0
 projects[asu_userpicker][subdir] = custom
 projects[asu_userpicker][type] = module
-projects[asu_userpicker][download][revision] = 95a01aadb043e9c2e6241a301e253d7c56e26b71
+projects[asu_userpicker][download][revision] = 95a01aad
 projects[asu_userpicker][download][tag] = 7.x-1.0
 projects[asu_userpicker][download][url] = https://github.com/ASU/asu-drupal-userpicker.git
 
