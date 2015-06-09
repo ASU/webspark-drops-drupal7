@@ -1,3 +1,35 @@
+Webspark 1.13.7 (Idaho) release
+----------------
+
+- Webspark Core
+    * Enabled update notifications for user installed modules in sites/all/modules
+      that supersede modules provided as part of the distro
+    * Removed static list of "Do Not Update" modules from Webspark (list is now
+      dynamically updated)
+    * Moved code not directly related to the CAS authentication system out of
+      ASU CAS and More module and into the Webspark Featurescustom module
+    * Integrated module update list code with Webspark spinup code in openasu.profile
+    * Removed Webspark master settings from Webspark Extras module
+    * Reorganized and refactored Webspark Featurescustom module code related to
+      updating theme settings, update status reporting, and Panels customizations
+
+- ASU Degrees module - v1.6
+    * Graduate degree nodes are now being uniquely displayed with markup styling that differs from undergraduate degree nodes
+    * Fixed the ASU Degrees View (viewing all undergraduate majors, all graduate programs, etc) to display all related ASU campuses correctly (previously, the first related campus was only showing)
+    * Added “Grid View” and “List View” buttons that allow user to switch between a grid and list display on any ASU Degrees View
+    * Fixed bugs in page--asu-degree.tpl.php that were appearing on ASU Degrees pages due to field not being checked if present
+
+- ASU Brand module - v1.10
+    * Fixed bug that prevented caching of the ASU Header and Footer in their respective blocks
+
+- ASU RFI module - v1.1
+    * Updated form mode variable value
+    * Updated RFI module link settings
+    * Updated title of ASU RFI settings menu
+    * Updated RFI module with added functionality and bug fixes
+
+
+
 Webspark 1.13.6 (Wyoming) release
 ----------------
 
@@ -8,9 +40,11 @@ Webspark 1.13.6 (Wyoming) release
       Found" error after enabling or disabling modules on the site
     * Fixed the bug where the Web Standards header/footer/menu blocks would be 
       disabled when changing the site theme
+
 - Contributed Modules in Webspark
     * Updated the Webform module to 3.24 (security update)
     * Updated the Feeds XPath Parser module to 1.0
+
 - Web standards components in Webspark
     * Separated out the default academic links (e.g., Degree Programs, 
       Admissions, Student Live, and About) for the Web Standards navigation menu into 

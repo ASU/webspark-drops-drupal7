@@ -83,10 +83,11 @@ projects[asu_degrees][download][revision] = ba8a1fdd
 projects[asu_degrees][download][branch] = master
 projects[asu_degrees][download][url] = https://github.com/ASU/asu-drupal-degrees.git
 
+projects[asu_rfi][version] = 1.1
 projects[asu_rfi][type] = module
 projects[asu_rfi][subdir] = custom
 projects[asu_rfi][download][type] = git
-projects[asu_rfi][download][revision] = c27a6428
+projects[asu_rfi][download][revision] = a4ac6e04
 projects[asu_rfi][download][branch] = master
 projects[asu_rfi][download][url] = https://github.com/ASU/asu-drupal-rfi
 
