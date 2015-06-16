@@ -132,6 +132,4 @@ function asu_cas_form_user_profile_form_alter(&$form, &$form_state) {
 function asu_cas_menu_alter(&$items) {
   $items['admin/people/cas/create']['title'] = 'Add ASURITE User';
   $items['user/%user/cas']['access callback'] = FALSE;
-  // WEBSPARK-511 - Hide Add ASU degrees link
-  $items['node/add/asu-degree']['access callback'] = FALSE;
 }
