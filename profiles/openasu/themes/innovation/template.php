@@ -9,8 +9,7 @@
  *
  * Implements template_preprocess_html().
  */
-function innovation_preprocess_html(&$variables)
-{
+function innovation_preprocess_html(&$variables) {
 
   // Add theme js file here rather than in .info to add a weight and ensure it loads last
   drupal_add_js(drupal_get_path('theme', 'innovation') . '/js/innovation.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 200));
@@ -25,6 +24,19 @@ function innovation_preprocess_html(&$variables)
     )
   );
   drupal_add_html_head($meta_ie_render_engine, 'meta_ie_render_engine');
+
+  // WEBSPARK-667 - Add meta tag to identify Innovation as a "Webspark" theme
+  // in the DOM
+  $meta_webspark_id = array(
+    '#type' => 'html_tag',
+    '#tag' => 'meta',
+    '#attributes' => array(
+      'content' => 'Webspark',
+      'http-equiv' => 'X-Name-of-Distro',
+    )
+  );
+  drupal_add_html_head($meta_webspark_id, 'meta_webspark_id');
+
   // WEBSPARK-189 - add actual HTTP header along with meta tag
   drupal_add_http_header('X-UA-Compatible', 'IE=Edge,chrome=1');
 
