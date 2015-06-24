@@ -1,6 +1,8 @@
 <?php
 /**
- * Code for the Webspark Easy Admin.
+ * Webspark Easy Admin
+ * Code designed to modify the admin interface of Webspark that isn't custom 
+ * Webspark-module specific. For Panopoly or other contrib modules/themes.
  */
 
 /**
@@ -22,4 +24,4 @@ function webspark_easyadmin_form_alter(&$form, &$form_state, $form_id) {
 function webspark_easyadmin_menu_alter(&$items) {
   // Remove panelizer tab from node views
   $items['node/%node/panelizer']['type'] = MENU_CALLBACK;
- }
+}
