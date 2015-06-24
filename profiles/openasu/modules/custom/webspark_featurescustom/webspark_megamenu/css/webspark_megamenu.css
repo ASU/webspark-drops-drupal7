@@ -48,7 +48,7 @@ li.tb-megamenu-item.mega a {
 
 .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child, .tb-megamenu .nav li.dropdown.active > .dropdown-toggle, li.tb-megamenu-item.mega.active a {
     background: #1f1f1f;
-    color: #FFFFFF;
+    color: #ffb310;
     font-size : 15px;
     font-weight: bold;
     border : none;
