@@ -1,0 +1,26 @@
+name = ASU Directory Integration Reinvented
+description = Allows creation of ASU Directory nodes with optional hierarchy tree
+core = 7.x
+package = ASU
+version = 7.x-1.0
+project = asu_dir
+dependencies[] = asu_dir
+dependencies[] = block
+dependencies[] = ctools
+dependencies[] = features
+dependencies[] = fontawesome
+dependencies[] = libraries
+dependencies[] = list
+dependencies[] = options
+dependencies[] = strongarm
+dependencies[] = jquery_update
+
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[field_base][] = field_asu_directory_items
+features[field_instance][] = node-asu_directory-field_asu_directory_items
+features[node][] = asu_directory
+features[user_permission][] = "Administer ASU Directory Configuration"
+files[] = asu_dir.module
+
+
