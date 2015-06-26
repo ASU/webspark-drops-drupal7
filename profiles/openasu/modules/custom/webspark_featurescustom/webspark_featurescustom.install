@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * Future Webspark DB updates here (instead of asu_cas module)
+ */
+
+/**
+ * Implements hook_enable()
+ */
+function webspark_featurescustom_enable() {
+  // place after asu_cas module for execution
+  db_update('system')
+    ->fields(array(
+      'weight' => '2'
+    ))
+    ->condition('name', 'webspark_featurescustom')
+    ->execute();
+}

@@ -98,7 +98,7 @@ Creating a Subtheme.
     The following blocks need to be enabled as follows (block name -> region):
     -- ASU Brand: header -> Header
     -- System help -> Header, below ASU Brand: header
-    -- Main menu -> Menu
+    -- TB Mega Menu: Main menu -> Menu
     (The ASU Brand footer shouldn't be needed for the Innovation theme.)
     Be sure to click Save Blocks.
     (If these regions are not available to you, check Step 13 above.)

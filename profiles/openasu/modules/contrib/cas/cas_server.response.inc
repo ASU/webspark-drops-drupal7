@@ -15,7 +15,7 @@
  */
 function theme_cas_service_validate_success($variables) {
   $cas_name = $variables['name'];
-  $output .= "<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>\n";
+  $output = "<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>\n";
   $output .= "<cas:authenticationSuccess>\n";
   $output .= "<cas:user>$cas_name</cas:user>\n";
   $output .= theme('cas_service_validate_attributes', $variables);
@@ -40,7 +40,7 @@ function theme_cas_service_validate_attributes($variables) {
   $style = $variables['style'];
 
   $output = '';
-  switch($style) {
+  switch ($style) {
     case 'jasig':
     default:
       $output .= "<cas:attributes>\n";
@@ -89,5 +89,23 @@ function theme_cas_service_validate_failure($variables) {
   $output .= "</cas:authenticationFailure>\n";
   $output .= "</cas:serviceResponse>\n";
 
+  return $output;
+}
+
+
+/**
+ * Generate the Single Sign Out request.
+ *
+ * @param unknown_type $variables
+ *   An associative array containing the key, date and logout id request
+ */
+function theme_cas_service_logout_request($variables) {
+  $id = $variables['id'];
+  $date = $variables['date'];
+  $ticket = $variables['ticket'];
+  $output = "<samlp:LogoutRequest xmlns:samlp='urn:oasis:names:tc:SAML:2.0:protocol' ID='$id' Version='2.0' IssueInstant='$date'>\n";
+  $output .= "<saml:NameID xmlns:saml='urn:oasis:names:tc:SAML:2.0:assertion'>@NOT_USED@</saml:NameID>\n";
+  $output .= "<samlp:SessionIndex>$ticket</samlp:SessionIndex>\n";
+  $output .= "</samlp:LogoutRequest>\n";
   return $output;
 }

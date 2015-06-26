@@ -9,7 +9,7 @@
  * Menu callback; Manage CAS identities for the specified user.
  */
 function cas_user_identities($account) {
-  drupal_set_title(format_username($account));
+  drupal_set_title(check_plain(format_username($account)));
 
   $header = array(t('CAS username'), t('Operations'));
   $rows = array();

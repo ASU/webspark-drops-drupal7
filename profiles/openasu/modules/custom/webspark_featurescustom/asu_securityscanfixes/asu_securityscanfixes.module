@@ -45,3 +45,4 @@ function asu_securityscanfixes_preprocess_page(&$vars) {
   drupal_add_js(drupal_get_path('module', 'asu_securityscanfixes') . '/js/asu_securityscanfixes.js');
   $vars['scripts'] = drupal_get_js();
 }
+

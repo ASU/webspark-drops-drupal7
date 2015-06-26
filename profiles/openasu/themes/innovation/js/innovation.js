@@ -6,30 +6,35 @@
 	Drupal.behaviors.asu_standard = {
 		attach: function(context, settings) {
 
-			$( "#asu_mobile_hdr" ).wrapInner("<div class='asu_mobile_hdr_wrapper'></div>");			
-			$( "#asu_mobile_menu" ).wrapInner("<div class='asu_mobile_menu_wrapper'></div>");	
-		
+			$( "#asu_mobile_hdr" ).wrapInner("<div class='asu_mobile_hdr_wrapper'></div>");
+			$( "#asu_mobile_menu" ).wrapInner("<div class='asu_mobile_menu_wrapper'></div>");
+
 			// Add header to Ctools Modal menu to improve UI
 			$( ".panels-add-content-modal .panels-categories-box" ).after( "<h2 class=\"widget-list\">More Content Panes</h2>" );
 
 		}
 	};
-
-	$('#ASUNavMenu').affix({offset:{top:$('#ASUNavMenu').offset().top}});
-	$(window).on('resize',function(){
-		var w = $(window).width();
-		if(w > 929 && !$('#ASUNavMenu').hasClass('navmenu affix-top')){
-			$('#ASUNavMenu').affix({offset:{top:$('#ASUNavMenu').offset().top}});
-		}else if(w < 930){
-			$('#ASUNavMenu').removeClass('affix');
+    //show hidden Mega Menu slider when needed
+	if ($('#navbar-administration').length > 0) {
+	} else {
+		$(window).scroll(function(){
+		if (($('#ASUNavMenu').offset().top - $(window).scrollTop()) < 1 && $('.ghostSlider').length < 1){
+			$('#ASUNavMenu').clone(true).prependTo(document.body).addClass('ghostSlider')
+			.css({"position": "fixed", "z-index": "2000", "width": "100%", "visibility": "visible"})
+			.removeAttr('id');
+		} else if (($('#ASUNavMenu').offset().top - $(window).scrollTop()) >= 1){
+			$('.ghostSlider').remove();
 		}
-	});
+	});	
+	};
 	//Used to determine if RFI form is on the page.
 	// Go to div if it is go to URL if it isn't #block-asu-rfi-asu-rfi-form-block
 	$('#take-me-to-rfi').on('click',function(e){
 		e.preventDefault();
-		if($('#block-asu-rfi-asu-rfi-form-block').length==0){
+		if($('#asu-rfi-form-data').length==0){
 			location.href='https://students.asu.edu/typeofstudent';
+		} else {
+			location.href='#asu-rfi-form-data';
 		}
 	});
 	//Fixes all anchor tags with hashes

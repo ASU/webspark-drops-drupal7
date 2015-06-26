@@ -3,7 +3,7 @@ description = Adds predefined tab styles to choose from per Quicktabs instance.
 core = 7.x
 configure=admin/structure/quicktabs/styles
 dependencies[] = "quicktabs"
-; Information added by drush on 2015-03-17
+; Information added by drush on 2015-04-20
 version = "7.x-3.6+9-dev"
 project = "quicktabs"
-datestamp = "1426555253"
+datestamp = "1429569614"

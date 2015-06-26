@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @file
+ * Field handler to provide a list of CAS user names.
+ */
+
 /**
  * Field handler to provide a list of CAS user names.
  */

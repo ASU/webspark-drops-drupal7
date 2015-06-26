@@ -91,7 +91,7 @@ function asu_degrees_feature_field_default_field_bases() {
     'locked' => 0,
     'module' => 'image',
     'settings' => array(
-      'default_image' => 0,
+      'default_image' => 4,
       'uri_scheme' => 'public',
     ),
     'translatable' => 0,
@@ -413,6 +413,32 @@ function asu_degrees_feature_field_default_field_bases() {
     'type' => 'text',
   );
 
+  // Exported field_base: 'field_asu_degree_conc_program'
+  $field_bases['field_asu_degree_conc_program'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_asu_degree_conc_program',
+    'foreign keys' => array(),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => '',
+        1 => '',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_boolean',
+  );
+
   // Exported field_base: 'field_asu_degree_department'
   $field_bases['field_asu_degree_department'] = array(
     'active' => 1,
@@ -478,6 +504,114 @@ function asu_degrees_feature_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_asu_degree_example_careers',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'text_long',
+  );
+
+  // Exported field_base: 'field_asu_degree_grad_app'
+  $field_bases['field_asu_degree_grad_app'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_asu_degree_grad_app',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'text_long',
+  );
+
+  // Exported field_base: 'field_asu_degree_grad_desc_video'
+  $field_bases['field_asu_degree_grad_desc_video'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_asu_degree_grad_desc_video',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'text_long',
+  );
+
+  // Exported field_base: 'field_asu_degree_grad_financing'
+  $field_bases['field_asu_degree_grad_financing'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_asu_degree_grad_financing',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'text_long',
+  );
+
+  // Exported field_base: 'field_asu_degree_grad_text_area'
+  $field_bases['field_asu_degree_grad_text_area'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_asu_degree_grad_text_area',
     'foreign keys' => array(
       'format' => array(
         'columns' => array(
@@ -586,13 +720,13 @@ function asu_degrees_feature_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_asu_degree_new_degree'
-  $field_bases['field_asu_degree_new_degree'] = array(
+  // Exported field_base: 'field_asu_degree_new_program'
+  $field_bases['field_asu_degree_new_program'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_asu_degree_new_degree',
+    'field_name' => 'field_asu_degree_new_program',
     'foreign keys' => array(),
     'indexes' => array(
       'value' => array(

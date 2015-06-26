@@ -1,0 +1,13 @@
+
+
+Drupal 7.x-1.1, 2015-05-15
+----------------------
+- Updated form mode variable value
+- Updated RFI module link settings
+- Updated title of ASU RFI settings menu
+- Updated RFI module with added functionality and bug fixes
+
+
+Drupal 7.x-1.0, 2014-11-15
+------------------------
+- Initial release

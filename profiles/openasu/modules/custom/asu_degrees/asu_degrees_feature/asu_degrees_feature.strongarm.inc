@@ -44,7 +44,7 @@ function asu_degrees_feature_strongarm() {
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '35',
+          'weight' => '38',
         ),
       ),
       'display' => array(),
@@ -104,14 +104,14 @@ function asu_degrees_feature_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'node_preview_asu_degree';
-  $strongarm->value = '1';
+  $strongarm->value = '0';
   $export['node_preview_asu_degree'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'node_preview_asu_degree_feed';
-  $strongarm->value = '1';
+  $strongarm->value = '0';
   $export['node_preview_asu_degree_feed'] = $strongarm;
 
   $strongarm = new stdClass();

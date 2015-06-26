@@ -25,7 +25,7 @@ configure = admin/config/media/file-settings
 ; We have to add a fake version so Git checkouts do not fail Media dependencies
 version = 7.x-2.x-dev
 
-; Information added by drush on 2015-03-17
+; Information added by drush on 2015-04-20
 version = "7.x-2.0-alpha3+29-dev"
 project = "file_entity"
-datestamp = "1426555227"
+datestamp = "1429569492"

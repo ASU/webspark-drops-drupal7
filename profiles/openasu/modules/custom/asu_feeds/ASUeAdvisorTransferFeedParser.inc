@@ -12,9 +12,9 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
    * Implementation of FeedsParser::parse().
    */
   public function parse(FeedsSource $source, FeedsFetcherResult $fetcher_result) {
-    
+
     $batch = $fetcher_result;
-    
+
     $result = $batch->getRaw();
     //error_log( print_r($result, true) );
     $parsed_data = $result;
@@ -29,8 +29,21 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
       $parsed_data[$key]['guid'] = md5($parsed_data[$key]['AcadPlan']);
 
       if (count($data['accelerateDegrees'])) {
-        $ad = array();
-        $parsed_data[$key]['ad'] = 1;
+        $acceleratedDegree = array();
+        $parsed_data[$key]['acceleratedDegree'] = 1;
+      }
+
+      if (count($data['concurrentDegrees'])) {
+        $concurrentDegree = array();
+        $parsed_data[$key]['concurrentDegree'] = 1;
+      }
+
+      if (count($data['DegreeNew'])) {
+        $newDegree = array();
+        $ndVal = $data['DegreeNew'];
+        if ($ndVal == 1) {
+          $parsed_data[$key]['newDegree'] = 1;
+        }
       }
 
       if (count($data['CampusWueInfo'])) {
@@ -41,13 +54,6 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
           }
         }
       }
-
-/*      if (count($data['DegreeNew'])) {
-        $degreeIsNew = array();
-        foreach ($data['DegreeNew'] as $dn) {
-          $parsed_data[$key]['degreeIsNew'] = 1;
-        }
-      }*/
 
       if (count($data['DescrlongExtn5'])) {
         $additionalAdmissions = array();
@@ -230,9 +236,9 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
       'subPlnMajorMaps.SubplnMajorMapSubplanCode' => array('name' => t('Subplan code for URL')),
       'subPlnMajorMaps.SubplnMajorMapSubplanName' => array('name' => t('Subplan name for URL')),
       'wueCampusConfirmed' => array('name' => t('WUE Confirmed')),
-      'ad' => array('name' => t('Accelerated Degree')),
-      //not quite working yet
-      //'degreeIsNew' => array('name' => t('Degree New')),
+      'acceleratedDegree' => array('name' => t('Accelerated Degree')),
+      'concurrentDegree' => array('name' => t('Concurrent Degree')),
+      'newDegree' => array('name' => t('New Degree')),
     );
   }
 }
