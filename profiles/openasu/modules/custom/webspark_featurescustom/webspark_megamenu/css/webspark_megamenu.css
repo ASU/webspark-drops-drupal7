@@ -180,7 +180,7 @@ li.tb-megamenu-item.mega.active .mega-dropdown-inner a {
 .tb-megamenu-row.row-fluid.hide-extra-padding {
     overflow: hidden;
 }
-.tb-megamenu .nav li.dropdown > .dropodown-toggle .caret {
+.tb-megamenu .nav li.dropdown > .dropdown-toggle .caret {
 	border-top-color:#fff;	
 }
 .tb-megamenu .nav li.dropdown.open .caret, .tb-megamenu .nav li.dropodown.open.active .caret, .tb-megamenu .nav li.dropdown.open a:hover .caret, .tb-megamenu .nav li.dropdown.open a:focus .caret {
