@@ -79,3 +79,11 @@ function render_block_content($module, $delta) {
   }
   return $output;
 }
+
+/**
+ * Implements hook_menu_alter()
+ */
+function asu_degrees_menu_alter(&$items) {
+  // WEBSPARK-511 - Hide "Add ASU degrees" link
+  $items['node/add/asu-degree']['access callback'] = FALSE;
+}
