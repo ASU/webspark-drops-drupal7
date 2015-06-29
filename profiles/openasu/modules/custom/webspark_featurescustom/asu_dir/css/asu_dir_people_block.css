@@ -1,0 +1,213 @@
+/**************************************************************************
+ * ASU Directory Module
+ * People Block CSS file
+ *
+ *
+ * @author : Colton Testamarck (colt@asu.edu)
+ *************************************************************************/
+
+
+/*************************************************************************
+*ASU Directory
+*************************************************************************/
+/*Node Form Specific*/
+
+#asu-directory-node-form #node-edit {
+    width: 100%;
+    font-size: 10px;
+}
+
+#asu-directory-node-form .form-item-path-alias {
+    font-size: 15px;
+}
+
+.form-item-title {
+    display: none;
+}
+
+
+#asu_directory_show_subs {
+    color:lightgray;
+}
+
+#asu_directory_show_subs.sub_activated {
+    color: #a30046;
+}
+
+.asu_directory_toggle_subdirectory {
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: black;
+}
+
+
+#edit-field-asu-directory-items-und-0-tree-display {
+    font-size: 12px;
+}
+
+.asu_directory_type_select {
+    /* width: 100%;*/
+
+}
+
+#asu_directory_employee_type_select {
+    margin-bottom: 20px;
+}
+
+#asu_directory_admin_toggles {
+    margin-bottom: 20px;
+}
+
+.asu-directory-instructions {
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.field-type-asu-directory .dept-mgr-btn {
+    float: right;
+    /*min-width: 350px;*/
+    font-weight: bold !important;
+    background-color: #a30046 !important;
+    border-color: #a30046 !important;
+    color: white;
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+
+.field-type-asu-directory .dept-mgr-btn:hover {
+    color: white;
+}
+
+body .field-type-asu-directory .active {
+    background-color: #a30046;
+    color: white;
+}
+
+
+/*Directory*/
+
+#people {
+    margin: 0;
+    border-top: solid 2px #ccc;
+    margin-bottom: 24px;
+}
+
+/*Sorting Interface*/
+#asu_directory_people_controls_top {
+    margin-bottom: 10px;
+}
+
+/*Any hovered people buttons*/
+.asu_directory_people_button:hover {
+    cursor: pointer;
+}
+
+
+#asu_directory_people_controls_bottom {
+    margin-top: 0px;
+    display: none;
+}
+
+
+.asu_people_row_even {
+    background-color: #fafafa;
+}
+
+/*Row in People block*/
+#people .asu_directory_people_row {
+    border-bottom: solid 2px #ccc;
+    padding: .5em 0 .5em 0;
+    min-height: 130px;
+}
+
+
+/* A row of the mock-table */
+#people .asu_directory_people_row:hover {
+    background-color: #eee;
+    cursor: pointer;
+}
+
+/*Numerical button for current page*/
+#asu_directory_people_this_pg_btn {
+    font-weight: bold;
+}
+
+
+/* People search button */
+#asu_directory_people_search_btn {
+    position: absolute;
+    top: 0;
+    right: 5px;
+    background: none;
+    border: none;
+    color: #2a2a2a;
+    font-size: 20px;
+    margin-right: 0;
+    margin-top: 0;
+}
+
+/* Contains the input and submit objects for people search */
+.asu_directory_people_search_group {
+    position: relative;
+    margin-bottom: 1em;
+
+}
+
+/* People search input field */
+#asu_directory_people_search_box {
+    max-width: 300px;
+    float: right;
+    margin-bottom: 15px;
+    margin-right: 15px;
+}
+
+/* Sort controls */
+.asu_directory_bottom_container {
+    height: 35px;
+    margin-bottom: 20px;
+}
+
+.asu_directory_bottom_container .pagination>li>span {
+    padding: 6px 10px;
+}
+
+
+/*Icon in Active Button in Sort Interface*/
+#asu_directory_people_controls_top .asu_directory_people_button.active i {
+    visibility: visible;
+}
+
+.field-type-asu-directory a {
+    color: #a30046;
+    text-decoration: none;
+    font-weight: normal;
+    border-bottom: none;
+}
+
+.asu_directory_breadcrumb {
+    margin: 0 0 19px 1px;
+    font-size: 16px;
+    width: 100%;
+    clear: both;
+
+}
+
+
+/** Node Display **/
+
+.node-asu-directory h2 {
+    display: none;
+}
+
+.node-type-asu-directory #page-title {
+    display: none;
+}
+
+.node-asu-directory .submitted {
+    display: none;
+}
+
+.ppl_img {
+    display: none;
+}
