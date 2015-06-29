@@ -12,8 +12,7 @@ mysql:
 branches:
   only:
     - master
-    - 7.x-dev
-    - travis-ci
+    - 7.x-rc
 
 install:
   - sudo apt-get update > /dev/null
