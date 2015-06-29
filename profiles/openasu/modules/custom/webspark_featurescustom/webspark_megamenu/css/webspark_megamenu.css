@@ -186,3 +186,9 @@ li.tb-megamenu-item.mega.active .mega-dropdown-inner a {
 .tb-megamenu .nav li.dropdown.open .caret, .tb-megamenu .nav li.dropodown.open.active .caret, .tb-megamenu .nav li.dropdown.open a:hover .caret, .tb-megamenu .nav li.dropdown.open a:focus .caret {
     border-top-color:#ffb130;	
 }
+.tb-megamenu .nav li.dropdown.open > .dropdown-toggle .caret, 
+.tb-megamenu .nav li.dropdown.active > .dropdown-toggle .caret, 
+.tb-megamenu .nav li.dropdown.open.active > .dropdown-toggle .caret {
+   border-bottom-color: #eee;
+   border-top-color: #ffb130 ;
+}
