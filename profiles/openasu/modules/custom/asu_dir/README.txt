@@ -7,9 +7,8 @@ INSTALLATION
 --------------------------
 Install as usual, see http://drupal.org/node/70151 for further information.
 
-See libraries required under DEPENDENCIES, below. Install libraries in
-
-sites/all/libraries/jqtree
+See libraries required under DEPENDENCIES, below. Install any missing libraries in sites/all/libraries. (NOTE:
+All of the libraries below are included already in Webspark 1.13.9+ and do not need to be installed.)
 
 
 DEPENDENCIES
