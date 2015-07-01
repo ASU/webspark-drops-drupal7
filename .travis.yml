@@ -13,6 +13,7 @@ branches:
   only:
     - master
     - 7.x-rc
+    - travis-ci
 
 install:
   - sudo apt-get update > /dev/null
