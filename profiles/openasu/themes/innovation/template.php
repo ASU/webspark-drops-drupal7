@@ -31,7 +31,7 @@ function innovation_preprocess_html(&$variables) {
     '#type' => 'html_tag',
     '#tag' => 'meta',
     '#attributes' => array(
-      'content' => 'Webspark',
+      'content' => 'Webspark:1.13.8 (Washington)',
       'http-equiv' => 'X-Name-of-Distro',
     )
   );
