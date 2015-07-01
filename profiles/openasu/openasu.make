@@ -169,9 +169,6 @@ projects[entity_view_mode][version] = 1.0-rc1
 projects[entity_view_mode][type] = module
 projects[entity_view_mode][subdir] = contrib
 
-; WEBSPARK-481 - patch from drupal.org for features_override (disabled temporarily)
-;projects[features_override][patch][] = patches/recursion_check_is_slow-features_override-2232999-19.patch
-
 projects[flexslider][version] = 2.0-alpha3
 projects[flexslider][type] = module
 projects[flexslider][subdir] = contrib
@@ -256,6 +253,8 @@ libraries[modernizr][download][type] = get
 libraries[modernizr][download][url] = https://github.com/Modernizr/Modernizr/archive/v2.6.2.zip
 
 ; DEPRACATED PROJECTS - DO NOT USE AND LOOK FOR ALTERNATE SOLUTIONS ASAP
+
+; Will be replaced by alternate system that will work with the Hub's new asunews site
 projects[asu_events][version] = 1.0-dev
 projects[asu_events][subdir] = custom
 projects[asu_events][type] = module
