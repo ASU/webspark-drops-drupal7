@@ -252,6 +252,9 @@ libraries[fontawesome][download][url] = http://fontawesome.io/assets/font-awesom
 libraries[modernizr][download][type] = get
 libraries[modernizr][download][url] = https://github.com/Modernizr/Modernizr/archive/v2.6.2.zip
 
+libraries[jqtree][download][type] = get
+libraries[jqtree][download][url] = https://github.com/mbraak/jqTree/archive/0.22.0.zip
+
 ; DEPRACATED PROJECTS - DO NOT USE AND LOOK FOR ALTERNATE SOLUTIONS ASAP
 
 ; Will be replaced by alternate system that will work with the Hub's new asunews site
