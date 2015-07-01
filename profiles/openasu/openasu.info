@@ -79,6 +79,7 @@ dependencies[] = webspark_featurescustom
 dependencies[] = asu_gsa
 dependencies[] = asu_maps_enhanced
 dependencies[] = asu_spotlight
+dependencies[] = uto_carousel
 dependencies[] = asu_securityscanfixes
 dependencies[] = mega_footer
 dependencies[] = webspark_panels_styles

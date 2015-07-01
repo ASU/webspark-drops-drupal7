@@ -254,6 +254,9 @@ libraries[modernizr][download][url] = https://github.com/Modernizr/Modernizr/arc
 
 libraries[jqtree][download][type] = get
 libraries[jqtree][download][url] = https://github.com/mbraak/jqTree/archive/0.22.0.zip
+libraries[jqtree][directory_name] = jqtree
+libraries[jqtree][destination] = libraries
+
 
 ; DEPRACATED PROJECTS - DO NOT USE AND LOOK FOR ALTERNATE SOLUTIONS ASAP
 
