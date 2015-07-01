@@ -26,7 +26,7 @@ function webspark_content_callout_uuid_features_default_file_entities() {
     ),
     'alt' => '',
     'title' => '',
-    'uuid_features_file_path' => 'profiles/openasu/modules/custom/webspark_featurescustom/webspark_content_callout/images/example.jpg',
+    'uuid_features_file_path' => 'profiles/openasu/modules/webspark_featurescustom/webspark_content_callout/images/example.jpg',
     'user_uuid' => 'dfa43482-1044-43a0-ba41-7b69fa34eed4',
   );
   return $files;

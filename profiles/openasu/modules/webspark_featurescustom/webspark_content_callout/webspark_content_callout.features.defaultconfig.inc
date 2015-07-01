@@ -352,7 +352,7 @@ function webspark_content_callout_defaultconfig_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'uuid_features_file_assets_path';
-  $strongarm->value = 'profiles/openasu/modules/custom/webspark_featurescustom/webspark_content_callout/images';
+  $strongarm->value = 'profiles/openasu/modules/webspark_featurescustom/webspark_content_callout/images';
   $export['uuid_features_file_assets_path'] = $strongarm;
 
   $strongarm = new stdClass();
