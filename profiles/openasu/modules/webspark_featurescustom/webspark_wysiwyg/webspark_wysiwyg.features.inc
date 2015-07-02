@@ -61,7 +61,7 @@ function webspark_wysiwyg_wysiwyg_default_profiles_alter(&$data) {
         EOP button large=btn btn-blue btn-lg
         EOP button full-col-wide=btn btn-blue btn-block
         EOP button large col-wide=btn btn-blue btn-lg btn-block'; /* WAS: '' */
-    $data['panopoly_wysiwyg_text']['settings']['css_path'] = '%b%t/css/innovation-main.css,%b%t/css/grid.css,%b%t/css/buttons.css,%b%t/css/forms.css,%b%t/css/nav.css,%b%t/fonts/roboto/css/roboto.css'; /* WAS: '' */
+    $data['panopoly_wysiwyg_text']['settings']['css_path'] = '%b%t/css/innovation-main.css,%b%t/css/buttons.css,%b%t/css/forms.css,%b%t/css/nav.css,%b%t/fonts/roboto/css/roboto.css'; /* WAS: '' */
     $data['panopoly_wysiwyg_text']['settings']['css_setting'] = 'self'; /* WAS: 'theme' */
     $data['panopoly_wysiwyg_text']['settings']['show_toggle'] = 1; /* WAS: 0 */
     $data['panopoly_wysiwyg_text']['settings']['user_choose'] = 1; /* WAS: 0 */
