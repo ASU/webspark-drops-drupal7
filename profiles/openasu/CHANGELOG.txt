@@ -1,3 +1,22 @@
+Webspark 1.13.9 (Washington) release
+----------------
+- Webspark Core
+    * Added meta tag to better identify Webspark sites and their version
+    * Moved the Webspark Featurescustom module into its own folder as part of code reorganization
+    * Updated Behat continuous integration tests for developers
+
+- ASU custom modules
+    * Added new ASU Directory Integration Reinvented module to replace the existing ASU Directory Feeds module
+    * Marked existing ASU Directory Feeds module as Deprecated
+    * Moved code that hides the "Add ASU Degrees" node from the ASU CAS and More module to the ASU Degrees module
+
+- Web standards components in Webspark
+    * Fixed bug where the home icon in the web standard navigation menu did not change its color to gold on hover
+      in the site home page
+    * Fixed bug where the down arrow for drop down items in the web standard navigation menu did not change its
+      color to gold on hover
+
+
 Webspark 1.13.8 (Idaho II) release
 ----------------
 - Drupal Core
