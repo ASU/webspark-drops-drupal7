@@ -1,0 +1,18 @@
+diff --git a/modules/media_wysiwyg/js/media_wysiwyg.filter.js b/modules/media_wysiwyg/js/media_wysiwyg.filter.js
+index ff8efb2..67701d8 100644
+--- a/modules/media_wysiwyg/js/media_wysiwyg.filter.js
++++ b/modules/media_wysiwyg/js/media_wysiwyg.filter.js
+@@ -126,9 +126,10 @@
+     replacePlaceholderWithToken: function(content) {
+       Drupal.media.filter.ensure_tagmap();
+ 
++// WEBSPARK-679
+       // Rewrite the tagmap in case any of the macros have changed.
+-      Drupal.settings.tagmap = {};
+-
++//      Drupal.settings.tagmap = {};
++//
+       // Wrap the content to be able to use replaceWith() and html().
+       content = $('<div>').append(content);
+       var media = $('.media-element', content);
+
