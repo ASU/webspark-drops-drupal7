@@ -134,6 +134,7 @@ projects[job_scheduler][subdir] = contrib
 
 ; WEBSPARK-679 - WYSIWYG + Media module issues
 projects[media][patch][] = patches/webspark-679_media-repair_encoded_macro-2028253-10.patch
+; -- remove when alpha4 comes out
 projects[media][patch][] = patches/webspark-679_wysiwyg-multiple-editors-media-images-breaks.patch
 
 projects[viewfield][version] = 2.0
