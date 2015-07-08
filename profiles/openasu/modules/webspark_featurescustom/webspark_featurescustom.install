@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * Future Webspark DB updates here (instead of asu_cas module)
+ */
+
+/**
+ * Implements hook_enable()
+ */
+function webspark_featurescustom_enable() {
+  // place after asu_cas module for execution
+  db_update('system')
+    ->fields(array(
+      'weight' => '2'
+    ))
+    ->condition('name', 'webspark_featurescustom')
+    ->execute();
+}
+
+/**
+ * Implements hook_update_N()
+ * + Enables ASU Webspark Carousel module for all Webspark userss
+ */
+function webspark_featurescustom_update_7000(&$sandbox) {
+  if (!module_exists('uto_carousel')) {
+    module_enable(array('uto_carousel'));
+  }
+}

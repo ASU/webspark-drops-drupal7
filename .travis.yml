@@ -12,7 +12,7 @@ mysql:
 branches:
   only:
     - master
-    - 7.x-dev
+    - 7.x-rc
     - travis-ci
 
 install:

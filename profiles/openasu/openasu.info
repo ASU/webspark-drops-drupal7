@@ -4,7 +4,8 @@ description = A starting point for websites at ASU
 core = 7.x
 exclusive = 1
 ;version = VERSION
-version = 1.13.8
+; Remember to update in innovation as well for DOM
+version = 1.13.9
 
 ; Drupal Core
 dependencies[] = menu
@@ -79,6 +80,7 @@ dependencies[] = webspark_featurescustom
 dependencies[] = asu_gsa
 dependencies[] = asu_maps_enhanced
 dependencies[] = asu_spotlight
+dependencies[] = uto_carousel
 dependencies[] = asu_securityscanfixes
 dependencies[] = mega_footer
 dependencies[] = webspark_panels_styles

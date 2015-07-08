@@ -4,7 +4,7 @@ core = 7.x
 ; Drupal Core
 
 projects[drupal][type] = core
-projects[drupal][version] = 7.35
+projects[drupal][version] = 7.38
 
 ; Drupal Core Patches
 projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-profile-ajax-1334818-8.patch
@@ -169,9 +169,6 @@ projects[entity_view_mode][version] = 1.0-rc1
 projects[entity_view_mode][type] = module
 projects[entity_view_mode][subdir] = contrib
 
-; WEBSPARK-481 - patch from drupal.org for features_override (disabled temporarily)
-;projects[features_override][patch][] = patches/recursion_check_is_slow-features_override-2232999-19.patch
-
 projects[flexslider][version] = 2.0-alpha3
 projects[flexslider][type] = module
 projects[flexslider][subdir] = contrib
@@ -255,7 +252,15 @@ libraries[fontawesome][download][url] = http://fontawesome.io/assets/font-awesom
 libraries[modernizr][download][type] = get
 libraries[modernizr][download][url] = https://github.com/Modernizr/Modernizr/archive/v2.6.2.zip
 
+libraries[jqtree][download][type] = get
+libraries[jqtree][download][url] = https://github.com/mbraak/jqTree/archive/0.22.0.zip
+libraries[jqtree][directory_name] = jqtree
+libraries[jqtree][destination] = libraries
+
+
 ; DEPRACATED PROJECTS - DO NOT USE AND LOOK FOR ALTERNATE SOLUTIONS ASAP
+
+; Will be replaced by alternate system that will work with the Hub's new asunews site
 projects[asu_events][version] = 1.0-dev
 projects[asu_events][subdir] = custom
 projects[asu_events][type] = module
