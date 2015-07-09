@@ -11,7 +11,7 @@
     Drupal.behaviors.asu_dir_ppl_block = {
         attach: function (context, settings) {
             if (Drupal.settings && ( settings = Drupal.settings.asu_dir)) {
-                if (( dept_nids = settings.dept_nids) && ( solr_server = settings.solr_server) && (field_configs = settings.field_configs) && (settings.admin!== undefined) && (top_level_ids = settings.top_level_ids))  {
+                if (( dept_nids = settings.dept_nids) && ( solr_server = settings.solr_server) && (field_configs = settings.field_configs) && (settings.admin !== undefined) && (top_level_ids = settings.top_level_ids)) {
                     $(window).bind('load', function () {
 
                         var admin = settings.admin;
@@ -30,11 +30,11 @@
 
                         asu_dir_init_people();
 
-                        if(dept_nids[0] != top_level_ids.top_level_nid) {
+                        if (dept_nids[0] != top_level_ids.top_level_nid) {
                             asu_dir_build_table(null, true);
                         }
 
-                        if(admin) {
+                        if (admin) {
                             asu_dir_activate_admin();
                         }
 
@@ -166,7 +166,7 @@ function asu_dir_build_table(query, reset) {
     }
 
     //if the "Show Managers" Option is selected, and we are querying for the 1st page, run the management query
-    if(show_managers==true && !$people.data.hasOwnProperty('q')) {
+    if (show_managers == true && !$people.data.hasOwnProperty('q')) {
 
         asu_dir_management_query(solr_server, solr_data);
         return false;
@@ -198,7 +198,7 @@ function asu_dir_build_table(query, reset) {
             //hide broken image containers
             jQuery('img').load(function () {
                 jQuery(this).parent().removeClass('ppl_img');
-            }).error(function() {
+            }).error(function () {
                 jQuery(this).parent().addClass('ppl_img');
             });
 
@@ -240,7 +240,7 @@ function asu_dir_management_query(solr_server, solr_data) {
     //Query for managers first
     var managers = Array();
 
-    if($people.data.field_items[0] != $people.data.manager_data.department || $people.data.manager_data.people==null || $people.data.manager_data.fq != solr_data.fq) {
+    if ($people.data.field_items[0] != $people.data.manager_data.department || $people.data.manager_data.people == null || $people.data.manager_data.fq != solr_data.fq) {
 
         $people.data.manager_data.fq = solr_data.fq;
 
@@ -342,12 +342,12 @@ function asu_dir_build_output(all_people, solr_data) {
         $people.html('<span>No employees found.</span>');
     }
 
-    if(all_people.length > 0) {
+    if (all_people.length > 0) {
 
         var offset = solr_data.start;
         var sub_array = all_people.slice(offset, offset + 10);
 
-        $people.data.num_pages = Math.ceil(all_people.length/10);
+        $people.data.num_pages = Math.ceil(all_people.length / 10);
 
         // Show controls if they were hidden
         $controls_bottom.show();
@@ -366,7 +366,7 @@ function asu_dir_build_output(all_people, solr_data) {
         //Most images coming from isearch-dev are broken right now, so removing broken images is done by jQuery
         jQuery('img').load(function () {
             jQuery(this).parent().removeClass('ppl_img');
-        }).error(function() {
+        }).error(function () {
             jQuery(this).parent().addClass('ppl_img');
         });
     }
@@ -381,18 +381,18 @@ function asu_dir_show_subdepts() {
     var $people = jQuery('#people');
     var subtoggle_switch = jQuery('#asu_directory_show_subs');
 
-    if($people.data.field_configs.sub_toggle==true) {
+    if ($people.data.field_configs.sub_toggle == true) {
         jQuery('#asu_directory_show_subs').addClass('sub_activated');
     }
 
-    subtoggle_switch.mousedown(function(event) {
+    subtoggle_switch.mousedown(function (event) {
 
         $people.data.page = 0;
 
         $people.data.field_configs.sub_toggle = !$people.data.field_configs.sub_toggle;
 
         //Store items and configs for our Drupal ASU_Directory field
-        if($people.data.field_configs.sub_toggle==true) {
+        if ($people.data.field_configs.sub_toggle == true) {
             $people.data.field_items = $people.data.tree_nids;
         } else {
             var temp = $people.data.field_items[0];
@@ -404,12 +404,12 @@ function asu_dir_show_subdepts() {
         var show_managers = jQuery('#asu_directory_show_managers');
 
         //"Show sub-departments" and "Show Managers" Options cannot be selected at the same time
-        if(subtoggle_switch.hasClass('sub_activated')) {
+        if (subtoggle_switch.hasClass('sub_activated')) {
             show_managers.removeClass('active');
             show_managers.addClass('disabled');
             $people.data.field_configs.show_managers = false;
 
-        } else if(show_managers.hasClass('disabled')) {
+        } else if (show_managers.hasClass('disabled')) {
             show_managers.removeClass('disabled');
         }
 
@@ -429,14 +429,14 @@ function asu_dir_activate_admin() {
     var $people = jQuery('#people');
 
 
-    if($people.data.field_configs.sub_toggle==true) {
+    if ($people.data.field_configs.sub_toggle == true) {
         manager_element.addClass('disabled');
-        $people.data.field_configs.show_managers=false;
-    } else if($people.data.field_configs.show_managers==true) {
+        $people.data.field_configs.show_managers = false;
+    } else if ($people.data.field_configs.show_managers == true) {
         manager_element.addClass('active');
     }
 
-    if($people.data.field_configs.show_tree==true) {
+    if ($people.data.field_configs.show_tree == true) {
         showtree_element.addClass('active');
     }
 
@@ -446,20 +446,20 @@ function asu_dir_activate_admin() {
         jQuery('#asu_directory_employee_type_select :button[value="' + selected_types[i] + '"]').addClass('active');
     }
 
-    showtree_element.click(function(event) {
+    showtree_element.click(function (event) {
         event.preventDefault();
         $people.data.field_configs.show_tree = !$people.data.field_configs.show_tree;
         jQuery(this).toggleClass('active');
         asu_dir_set_field();
     });
 
-    manager_element.click(function(event) {
+    manager_element.click(function (event) {
         event.preventDefault();
 
         //button should be disabled if sub_toggle is true, but in case it gets clicked
-        if($people.data.field_configs.sub_toggle==true) {
+        if ($people.data.field_configs.sub_toggle == true) {
             jQuery(this).removeClass('active').addClass('disabled');
-            $people.data.field_configs.show_managers=false;
+            $people.data.field_configs.show_managers = false;
         } else {
             $people.data.field_configs.show_managers = !$people.data.field_configs.show_managers;
             jQuery(this).toggleClass('active');
@@ -473,7 +473,7 @@ function asu_dir_activate_admin() {
     var $type_buttons = jQuery('#asu_directory_employee_type_select').find('.asu_directory_type_select');
 
 
-    $type_buttons.mousedown(function(event){
+    $type_buttons.mousedown(function (event) {
         event.preventDefault();
 
         var $people = jQuery('#people');
@@ -483,20 +483,20 @@ function asu_dir_activate_admin() {
 
         var temp_array = Array();
 
-        jQuery('#asu_directory_employee_type_select .active').each(function(index) {
+        jQuery('#asu_directory_employee_type_select .active').each(function (index) {
 
             temp_array.push(jQuery(this).val());
-            if(jQuery(this).val()=="Show All") {
+            if (jQuery(this).val() == "Show All") {
                 return false;
             }
         });
 
         //if array is empty, add "Show All" by default
-        if(temp_array.length==0) {
+        if (temp_array.length == 0) {
             temp_array.push("Show All");
         }
 
-        $people.data.sort ='lastNameSort asc';
+        $people.data.sort = 'lastNameSort asc';
         $people.data.field_configs.employee_types = temp_array;
         $people.data.page = 0;
 
@@ -528,6 +528,8 @@ function asu_dir_set_field() {
 function asu_dir_create_pagination() {
     var query = {};
     var $buttons = jQuery('#asu_directory_people_controls_bottom').find('.asu_directory_people_button');
+    var $ellipses = jQuery('.asu_directory_people_ellipses');
+
     $buttons.mousedown(function (event) {
         // Only fire on left click if button is not inactive
         if (event.which == 1 && !jQuery(this).hasClass('disabled')) {
@@ -548,10 +550,23 @@ function asu_dir_create_pagination() {
                 default:
                     query.offset = jQuery(this).find('span').text();
             }
+
             // Rebuild table
             asu_dir_build_table(query);
         }
-    })
+    });
+
+    $ellipses.mousedown(function (event) {
+        // Only fire on left click if button is not inactive
+        if (event.which == 1 && !jQuery(this).hasClass('disabled')) {
+            // Determine offest based on which button was pressed
+            query.offset = jQuery(this).find('span').text();
+
+            // Rebuild table
+            asu_dir_build_table(query);
+
+        }
+    });
 }
 
 /**
@@ -584,20 +599,38 @@ function asu_dir_set_page_buttons() {
         $ellipses.hide();
     }
     else {
+
         // If on 3rd or lower page, hide beginning numerical button and ellipse
         if ($people.data.page > 2) {
             $buttons.eq(1).html('<span>1</span>').show();
-            $ellipses.eq(0).show();
+
+            if($people.data.page == 3) {
+                $ellipses.eq(0).hide();
+            } else if ( $people.data.page == 4 ) {
+                $ellipses.eq(0).html('<span>2</span>').removeClass('disabled').show();
+            } else {
+                $ellipses.eq(0).html('<span>...</span>').addClass('disabled').show();
+            }
         }
         // Otherwise, show it
         else {
             $buttons.eq(1).hide();
             $ellipses.eq(0).hide();
         }
-        // If on 3rd page from end or lower, hide ending numerical button and ellipse
+        // If on 3rd page from end or lower, hide ending numerical button and ellipse\\
+
         if ($people.data.page < $people.data.num_pages - 3) {
-            $buttons.eq(7).html('<span>'+$people.data.num_pages+'</span>').show();
-            $ellipses.eq(1).show();
+            $buttons.eq(7).html('<span>' + $people.data.num_pages + '</span>').show();
+
+            if($people.data.page == $people.data.num_pages - 4) {
+                $ellipses.eq(1).hide();
+
+            } else if ($people.data.page == $people.data.num_pages - 5) {
+                $ellipses.eq(1).html('<span>' + ($people.data.num_pages - 1) + '</span>').removeClass('disabled').show();
+            } else {
+                $ellipses.eq(1).html('<span>...</span>').addClass('disabled').show();
+            }
+
         }
         //Otherwise, show it
         else {
@@ -608,14 +641,14 @@ function asu_dir_set_page_buttons() {
     var page = $people.data.page;
     var num_pages = $people.data.num_pages;
     // Set text for center "current page" button
-    $buttons.eq(4).html('<span>'+ (page + 1) + '</span>');
+    $buttons.eq(4).html('<span>' + (page + 1) + '</span>');
     // Set behavior for remaining buttons
     if (page >= 2) {
-        $buttons.eq(3).html('<span>'+page+'</span>').show();
-        $buttons.eq(2).html('<span>'+ (page - 1) +'</span>').show();
+        $buttons.eq(3).html('<span>' + page + '</span>').show();
+        $buttons.eq(2).html('<span>' + (page - 1) + '</span>').show();
     }
     else if (page >= 1) {
-        $buttons.eq(3).html('<span>'+ page+'</span>').show();
+        $buttons.eq(3).html('<span>' + page + '</span>').show();
         $buttons.eq(2).hide();
     }
     else if (page == 0) {
@@ -623,11 +656,11 @@ function asu_dir_set_page_buttons() {
         $buttons.eq(2).hide();
     }
     if (page <= num_pages - 3) {
-        $buttons.eq(5).html('<span>'+ (page + 2) +'</span>').show();
-        $buttons.eq(6).html('<span>'+(page + 3 )+ '</span>').show();
+        $buttons.eq(5).html('<span>' + (page + 2) + '</span>').show();
+        $buttons.eq(6).html('<span>' + (page + 3 ) + '</span>').show();
     }
     else if (page <= num_pages - 2) {
-        $buttons.eq(5).html('<span>'+(page + 2)+'</span>').show();
+        $buttons.eq(5).html('<span>' + (page + 2) + '</span>').show();
         $buttons.eq(6).hide();
     }
     else if (page == num_pages - 1) {
@@ -644,7 +677,7 @@ function asu_dir_set_page_buttons() {
 function asu_dir_build_table_markup(data) {
 
     var isearch_url = "https://isearch.asu.edu/profile/";
-    var docs =data;
+    var docs = data;
     var markup = '';
     var even = '';
     //we'll set the width of the main name/title column to  col-md-6 if there is no photo
@@ -653,7 +686,7 @@ function asu_dir_build_table_markup(data) {
 
         even = '';
 
-        if(i%2==0) {
+        if (i % 2 == 0) {
             even = 'asu_people_row_even';
         }
         //open row
@@ -671,22 +704,22 @@ function asu_dir_build_table_markup(data) {
         var title_string = '';
         var titles = docs[i].titles;
 
-        if(titles!==undefined) {
+        if (titles !== undefined) {
             for (var j = 0; j < titles.length && j < 3; j++) {
                 title_string += titles[j] + ", " + docs[i].departments[j] + "; ";
             }
         }
 
         //NAME AND TITLE COLUMN
-        markup += '<div class="'+ col_width + '"><div class="row-profile-text row-field"><a href="' + isearch_url + docs[i].eid + '" class="displayName viewDetails" id="' + docs[i].eid + '">';
-        markup +=   (docs[i].displayName != null ? docs[i].displayName : '') + '</a><br>';
-        markup +=   '<div class="job-title">' + title_string + '</div></div></div>';
+        markup += '<div class="' + col_width + '"><div class="row-profile-text row-field"><a href="' + isearch_url + docs[i].eid + '" class="displayName viewDetails" id="' + docs[i].eid + '">';
+        markup += (docs[i].displayName != null ? docs[i].displayName : '') + '</a><br>';
+        markup += '<div class="job-title">' + title_string + '</div></div></div>';
 
         //CONTACT INFO COLUMN
         markup += '<div class="col-md-3"><div class="row-profile-contact"><div class="row-profile-email row-field"><a class="emailAddress"';
         markup += 'href="mailto:' + docs[i].emailAddress + '">' + docs[i].emailAddress + '</a><br>';
 
-        if(docs[i].hasOwnProperty('phone') && docs[i].phone != '') {
+        if (docs[i].hasOwnProperty('phone') && docs[i].phone != '') {
             markup += '<span class="phone_number">' + docs[i].phone + '</span>';
         }
 
@@ -768,7 +801,7 @@ function asu_dir_people_search($people, $input) {
     var items = $people.data.tree_nids;
 
     //if displaying without tree, go with the field items
-    if(items===undefined) {
+    if (items === undefined) {
         items = $people.data.field_items;
     }
 
@@ -803,20 +836,20 @@ function asu_dir_solr_search_string(items, field) {
     field = field || 'deptids';
     var wrap = '';
 
-    if(field=="employeeTypes") {
+    if (field == "employeeTypes") {
         wrap = '"';
     }
 
-    if( items.indexOf("Show All") > -1) {
+    if (items.indexOf("Show All") > -1) {
         return "employeeTypes:*";
     }
 
     var temp = '';
     var last = items.length - 1;
 
-    for(var i=0; i < items.length; i++) {
-        temp += field + ':'+ wrap + items[i] + wrap;
-        if(i != last) {
+    for (var i = 0; i < items.length; i++) {
+        temp += field + ':' + wrap + items[i] + wrap;
+        if (i != last) {
             temp += ' OR ';
         }
     }

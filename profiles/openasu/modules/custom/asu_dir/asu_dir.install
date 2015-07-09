@@ -18,8 +18,7 @@
  * Cleans out our module's DB items.
  * Does not remove Page Manager page if it was edited and saved by Admin.
  */
-function asu_dir_uninstall()
-{
+function asu_dir_uninstall() {
   // Delete variables used
   variable_del('asu_dir_solr_endpoint');
   variable_del('asu_dir_tree_endpoint');
@@ -29,8 +28,7 @@ function asu_dir_uninstall()
 /**
  * Implementation of hook_field_schema().
  */
-function asu_dir_field_schema($field)
-{
+function asu_dir_field_schema($field) {
   if ($field['type'] == 'asu_directory') {
 
     $schema['columns']['directory_config'] = array(

@@ -32,7 +32,7 @@ define('ASU_DIRECTORY_TOP_LEVEL_DEPT_NID', 1342);
 define('ASU_DIRECTORY_FORM_CACHE_DURATION', 1);//set to one hour
 define('ASU_DIRECTORY_MODULE_NAME', 'asu_dir');
 
-define('ASU_DIRECTORY_SOLR_ENV', variable_get('asu_dir_solr_endpoint', 'https://webapp4.asu.edu') );
+define('ASU_DIRECTORY_SOLR_ENV', variable_get('asu_dir_solr_endpoint', 'https://webapp4.asu.edu'));
 define('ASU_DIRECTORY_TREE_ENDPOINT', variable_get('asu_dir_tree_endpoint', 'https://isearch.asu.edu/endpoints/dept_tree/json'));
 define('ASU_EMPLOYEE_TYPES_ENDPOINT', variable_get('asu_dir_employee_types_endpoint', 'https://isearch.asu.edu/endpoints/employee-types'));
 //define('ASU_DIRECTORY_FLAT_LIST_ENDPOINT', 'https://isearch.asu.edu/endpoints/dept_list/json');
@@ -49,8 +49,7 @@ define('ASU_EMPLOYEE_TYPES_ENDPOINT', variable_get('asu_dir_employee_types_endpo
  * @param field_items : array of dept_ids to show in directory display
  * @param $settings : array of settings for generating people content
  */
-function asu_dir_people_content($field_configs, $field_items, $admin)
-{
+function asu_dir_people_content($field_configs, $field_items, $admin) {
   $html = '';
 
   //pass these module constants tot he JS
@@ -67,7 +66,13 @@ function asu_dir_people_content($field_configs, $field_items, $admin)
   $field_configs['employee_types'] = drupal_json_encode($field_configs['employee_types']);
   $field_items = drupal_json_encode($field_items);
 
-  $settings = array('dept_nids' => $field_items,'field_configs' => $field_configs, 'solr_server' => ASU_DIRECTORY_SOLR_ENV, 'admin' => $admin, 'top_level_ids' => $top_level_ids);
+  $settings = array(
+    'dept_nids' => $field_items,
+    'field_configs' => $field_configs,
+    'solr_server' => ASU_DIRECTORY_SOLR_ENV,
+    'admin' => $admin,
+    'top_level_ids' => $top_level_ids
+  );
 
   drupal_add_js(array(ASU_DIRECTORY_MODULE_NAME => $settings), 'setting');
 
@@ -78,23 +83,23 @@ function asu_dir_people_content($field_configs, $field_items, $admin)
   // Markup for primary display block (to be altered via AJAX)
   $html .= '<div class="display" id="people"></div>';
 
-    //Bottom Pagination Controls
+  //Bottom Pagination Controls
   $html .= '<div class="asu_directory_bottom_container">';
   $html .= '<ul id="asu_directory_people_controls_bottom" class="pagination asu_directory_people_controls">';
 
-    $html .= '<li class="asu_directory_people_button prev first" id="asu_directory_people_prev_btn"><span class="asu_directory_people_top_switcher">< previous</span></li>';
+  $html .= '<li class="asu_directory_people_button prev first" id="asu_directory_people_prev_btn"><span class="asu_directory_people_top_switcher">< previous</span></li>';
 
-    $html .= '<li class="asu_directory_people_button" id="asu_directory_people_first_pg_btn"><span> 1 </span></li>';
-    $html .= '<li class="asu_directory_people_ellipses pager-ellipsis disabled"><span>...&nbsp;</span></li>';
-    $html .= '<li class="asu_directory_people_button" id="asu_directory_people_back_2_btn"><span class="dynamic_number"> </span></li>';
-    $html .= '<li class="asu_directory_people_button" id="asu_directory_people_back_1_btn"><span class="dynamic_number"> </span></li>';
-    $html .= '<li class="asu_directory_people_button" id="asu_directory_people_this_pg_btn"><span class="dynamic_number"> </span></li>';
-    $html .= '<li class="asu_directory_people_button" id="asu_directory_people_fwd_1_btn"><span class="dynamic_number"> </span></li>';
-    $html .= '<li class="asu_directory_people_button" id="asu_directory_people_fwd_2_btn"><span class="dynamic_number"> </span></li>';
-    $html .= '<li class="asu_directory_people_ellipses pager-ellipsis disabled"><span>...&nbsp;</span></li>';
-    $html .= '<li class="asu_directory_people_button" id="asu_directory_people_last_pg_btn"><span class="dynamic_number"> </span></li>';
+  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_first_pg_btn"><span> 1 </span></li>';
+  $html .= '<li class="asu_directory_people_ellipses pager-ellipsis disabled"><span>...&nbsp;</span></li>';
+  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_back_2_btn"><span class="dynamic_number"> </span></li>';
+  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_back_1_btn"><span class="dynamic_number"> </span></li>';
+  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_this_pg_btn"><span class="dynamic_number"> </span></li>';
+  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_fwd_1_btn"><span class="dynamic_number"> </span></li>';
+  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_fwd_2_btn"><span class="dynamic_number"> </span></li>';
+  $html .= '<li class="asu_directory_people_ellipses pager-ellipsis disabled"><span>...&nbsp;</span></li>';
+  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_last_pg_btn"><span class="dynamic_number"> </span></li>';
 
-    $html .= '<li class="asu_directory_people_button next last" id="asu_directory_people_next_btn"><span class="next last asu_directory_people_top_switcher">next ></span></li>';
+  $html .= '<li class="asu_directory_people_button next last" id="asu_directory_people_next_btn"><span class="next last asu_directory_people_top_switcher">next ></span></li>';
 
   $html .= '</ul>';
   $html .= '</div>';
@@ -110,8 +115,7 @@ function asu_dir_people_content($field_configs, $field_items, $admin)
  *
  * @return string : The HTML to display
  */
-function asu_dir_departments_content($standalone)
-{
+function asu_dir_departments_content($standalone) {
   $tree = asu_dir_get_dept_tree();
 
   // jqTree (http://mbraak.github.com/jqTree)
@@ -124,14 +128,18 @@ function asu_dir_departments_content($standalone)
 
   //Pass our items and configs to the JS
   //will need to pass extra configs if the tree is being used without the people display (standalone)
-  if($standalone) {
+  if ($standalone) {
     $top_level_ids = '{
-         "top_level_psid": "'.ASU_DIRECTORY_TOP_LEVEL_PS_ID.'",
-         "top_level_nid": '.ASU_DIRECTORY_TOP_LEVEL_DEPT_NID.'
+         "top_level_psid": "' . ASU_DIRECTORY_TOP_LEVEL_PS_ID . '",
+         "top_level_nid": ' . ASU_DIRECTORY_TOP_LEVEL_DEPT_NID . '
          }';
 
-    $settings = array('tree' => $tree, 'top_Level_ids' => $top_level_ids);//, 'dept_nids' => $field_items,'field_configs' => $field_configs, 'admin' => $admin_flag, 'solr_server' => ASU_DIRECTORY_SOLR_ENV);
-  } else {
+    $settings = array(
+      'tree' => $tree,
+      'top_Level_ids' => $top_level_ids
+    );//, 'dept_nids' => $field_items,'field_configs' => $field_configs, 'admin' => $admin_flag, 'solr_server' => ASU_DIRECTORY_SOLR_ENV);
+  }
+  else {
     $settings = array('tree' => $tree);
   }
 
@@ -143,7 +151,6 @@ function asu_dir_departments_content($standalone)
 
   return $html;
 }
-
 
 
 /**********************************************************************
@@ -237,11 +244,10 @@ function asu_dir_admin($form, &$form_state) {
  */
 function asu_dir_admin_submit($form, &$form_state) {
   /*maybe clear the cache after submitting*/
-  variable_set('asu_dir_solr_endpoint', $form['asu_dir_solr_env']['#value'] );
+  variable_set('asu_dir_solr_endpoint', $form['asu_dir_solr_env']['#value']);
   variable_set('asu_dir_tree_endpoint', $form['asu_dir_tree_endpoint']['#value']);
   variable_set('asu_dir_employee_types_endpoint', $form['asu_dir_employee_types_endpoint']['#value']);
 }
-
 
 
 /**
@@ -288,12 +294,12 @@ function asu_dir_cron() {
   );
 
   //Refresh and cache the Tree
-  $tree=NULL;
+  $tree = NULL;
 
   $tree_endpoint = ASU_DIRECTORY_TREE_ENDPOINT;
   $request = drupal_http_request($tree_endpoint, $options);
 
-  if($request->code==200) {
+  if ($request->code == 200) {
     $tree = $request->data;
   }
   // Create cache, set to hold cache for number of hours specified
@@ -308,12 +314,12 @@ function asu_dir_cron() {
   $endpoint = ASU_EMPLOYEE_TYPES_ENDPOINT;
   $request = drupal_http_request($endpoint, $options);
 
-  if($request->code==200) {
+  if ($request->code == 200) {
     $types = $request->data;
     $employee_types = drupal_json_decode($types);
   }
   // Create cache, set to hold cache for number of hours specified
-  if ($employee_types != null) {
+  if ($employee_types != NULL) {
 
     $expire_date = time() + 3600 * ASU_DIRECTORY_FORM_CACHE_DURATION;
     cache_set('asu_employee_types', $employee_types, 'cache', $expire_date);
@@ -334,13 +340,12 @@ function asu_dir_cron() {
  * @param $test
  * @return bool
  */
-function asu_dir_clear_cache($test)
-{
+function asu_dir_clear_cache($test) {
   // $test should determine whether or not this is the initial page load
   if ($test) {
     drupal_set_message(t('Caches for this module have been cleared.'));
     cache_clear_all('asu_directory_tree', 'cache', TRUE);
-    return false;
+    return FALSE;
   }
 }
 
@@ -351,10 +356,10 @@ function asu_dir_get_dept_tree() {
 
   $tree = &drupal_static(__FUNCTION__);
 
-  if (!isset($tree) || $tree=="") {
+  if (!isset($tree) || $tree == "") {
     // Check for cache
     if ($cache = cache_get('asu_directory_tree')) {
-      $tree = $cache -> data;
+      $tree = $cache->data;
     }
     // Create content and cache if no cache available
     else {
@@ -368,12 +373,12 @@ function asu_dir_get_dept_tree() {
       $tree_endpoint = ASU_DIRECTORY_TREE_ENDPOINT;
       $request = drupal_http_request($tree_endpoint, $options);
 
-      if($request->code==200) {
+      if ($request->code == 200) {
         $tree = $request->data;
       }
 
       // Create cache, set to hold cache for number of hours specified
-      if ($tree != null) {
+      if ($tree != NULL) {
         $set_date = time();
         $expire_date = time() + 3600 * ASU_DIRECTORY_FORM_CACHE_DURATION;
         cache_set('asu_directory_tree', $tree, 'cache', $expire_date);
@@ -394,10 +399,10 @@ function asu_dir_get_employee_types() {
 
   $employee_types = &drupal_static(__FUNCTION__);
 
-  if (!isset($employee_types) || $employee_types=="") {
+  if (!isset($employee_types) || $employee_types == "") {
     // Check for cache
     if ($cache = cache_get('asu_employee_types')) {
-      $employee_types = $cache -> data;
+      $employee_types = $cache->data;
     }
     // Create content and cache if no cache available
     else {
@@ -410,7 +415,7 @@ function asu_dir_get_employee_types() {
       $endpoint = ASU_EMPLOYEE_TYPES_ENDPOINT;
       $request = drupal_http_request($endpoint, $options);
 
-      if($request->code==200) {
+      if ($request->code == 200) {
         $types = $request->data;
         $employee_types = drupal_json_decode($types);
       }

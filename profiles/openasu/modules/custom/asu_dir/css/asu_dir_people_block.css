@@ -6,7 +6,6 @@
  * @author : Colton Testamarck (colt@asu.edu)
  *************************************************************************/
 
-
 /*************************************************************************
 *ASU Directory
 *************************************************************************/
@@ -25,9 +24,8 @@
     display: none;
 }
 
-
 #asu_directory_show_subs {
-    color:lightgray;
+    color: lightgray;
 }
 
 #asu_directory_show_subs.sub_activated {
@@ -40,7 +38,6 @@
     margin-bottom: 20px;
     color: black;
 }
-
 
 #edit-field-asu-directory-items-und-0-tree-display {
     font-size: 12px;
@@ -84,7 +81,6 @@ body .field-type-asu-directory .active {
     color: white;
 }
 
-
 /*Directory*/
 
 #people {
@@ -103,12 +99,10 @@ body .field-type-asu-directory .active {
     cursor: pointer;
 }
 
-
 #asu_directory_people_controls_bottom {
     margin-top: 0px;
     display: none;
 }
-
 
 .asu_people_row_even {
     background-color: #fafafa;
@@ -119,6 +113,33 @@ body .field-type-asu-directory .active {
     border-bottom: solid 2px #ccc;
     padding: .5em 0 .5em 0;
     min-height: 130px;
+}
+
+#people .asu_directory_people_row .img-responsive {
+    max-width: 100%;
+    margin: auto;
+    display: block;
+}
+
+@media (min-width: 992px) {
+    #people .asu_directory_people_row .img-responsive {
+        width: 100%;
+    }
+}
+
+@media (max-width: 992px) {
+    #people .asu_directory_people_row .img-responsive {
+        max-height: 250px !important;
+        max-width: 200px;
+    }
+
+    .asu_directory_people_row {
+        text-align: center;
+    }
+}
+
+.asu_directory_people_ellipses {
+    cursor: pointer;
 }
 
 
@@ -132,7 +153,6 @@ body .field-type-asu-directory .active {
 #asu_directory_people_this_pg_btn {
     font-weight: bold;
 }
-
 
 /* People search button */
 #asu_directory_people_search_btn {
@@ -168,10 +188,9 @@ body .field-type-asu-directory .active {
     margin-bottom: 20px;
 }
 
-.asu_directory_bottom_container .pagination>li>span {
+.asu_directory_bottom_container .pagination > li > span {
     padding: 6px 10px;
 }
-
 
 /*Icon in Active Button in Sort Interface*/
 #asu_directory_people_controls_top .asu_directory_people_button.active i {
@@ -192,7 +211,6 @@ body .field-type-asu-directory .active {
     clear: both;
 
 }
-
 
 /** Node Display **/
 

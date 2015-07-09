@@ -16,13 +16,13 @@
                 var id = null;
                 var department = 'ASU';
 
-                if (( dept_nids = settings.dept_nids) && ( solr_server = settings.solr_server) && (field_configs = settings.field_configs) && (settings.admin!== undefined) && (top_level_ids = settings.top_level_ids))  {
+                if (( dept_nids = settings.dept_nids) && ( solr_server = settings.solr_server) && (field_configs = settings.field_configs) && (settings.admin !== undefined) && (top_level_ids = settings.top_level_ids)) {
 
                     dept_nids = JSON.parse(dept_nids);
                     //field_configs = JSON.parse(field_configs);
 
                     admin = settings.admin;
-                    if(admin) {
+                    if (admin) {
                         id = top_level_ids.top_level_nid;
                     } else {
                         id = dept_nids[0];
@@ -70,7 +70,7 @@
                         var $people = $('#people');
                         var $title = $('#edit-title');
 
-                        if($people.data.field_configs.dept_id == event.node.dept_id || event.node.dept_id == 'ASU') {
+                        if ($people.data.field_configs.dept_id == event.node.dept_id || event.node.dept_id == 'ASU') {
                             return false;
                         }
 
@@ -87,7 +87,7 @@
                         $people.data.tree_nids = asu_dir_get_tree_ids(asu_dir_hrc_find_root(tree, deptnid));
 
                         //Store items and configs for our Drupal ASU_Directory field
-                        if($people.data.field_configs.sub_toggle==true) {
+                        if ($people.data.field_configs.sub_toggle == true) {
                             $people.data.field_items = $people.data.tree_nids;
                         } else {
                             var temp = [deptnid];
@@ -106,7 +106,7 @@
                     });
 
                     //If previous department was saved, open tree to that dept.
-                    if(department!='' && department != 'ASU') {
+                    if (department != '' && department != 'ASU') {
                         var $tree = jQuery('#treediv');
                         var node = $tree.tree('getNodeById', department);
                         $tree.tree('selectNode', node, true);
@@ -152,13 +152,13 @@ function asu_dir_hrc_find_root(data, dept_id) {
  */
 function asu_dir_get_tree_ids(tree, tree_ids) {
 
-    if(arguments.length==1) {
+    if (arguments.length == 1) {
         tree_ids = [];
     }
 
     tree_ids.push(tree.dept_nid);
 
-    for(var i= 0; i < tree.children.length; i++) {
+    for (var i = 0; i < tree.children.length; i++) {
         asu_dir_get_tree_ids(tree.children[i], tree_ids);
     }
 
