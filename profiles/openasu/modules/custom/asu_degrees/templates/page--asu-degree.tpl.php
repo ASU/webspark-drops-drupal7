@@ -85,7 +85,10 @@ else {
   $node_info = array();
 }
 
-//dpm(get_defined_vars());
+if (module_exists('metatag')) {
+  print render($page['content']['metatags']);
+}
+
 ?>
 
 <div id="page-wrapper">

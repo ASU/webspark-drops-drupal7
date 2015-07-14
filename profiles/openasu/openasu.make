@@ -132,10 +132,10 @@ projects[job_scheduler][version] = 2.0-alpha3
 projects[job_scheduler][type] = module
 projects[job_scheduler][subdir] = contrib
 
-; Webspark Megamenu
-projects[special_menu_items][version] = 2.0
-projects[special_menu_items][subdir] = contrib
-projects[special_menu_items][type] = module
+; WEBSPARK-679 - WYSIWYG + Media module issues
+projects[media][patch][] = patches/webspark-679_media-repair_encoded_macro-2028253-10.patch
+; -- remove when alpha4 comes out
+projects[media][patch][] = patches/webspark-679_wysiwyg-multiple-editors-media-images-breaks.patch
 
 projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
@@ -189,13 +189,18 @@ projects[panels_tabs][version] = 2.x-dev
 projects[panels_tabs][type] = module
 projects[panels_tabs][subdir] = contrib
 
-; Going to Git repo for set commit
+; Going to Git repo for dev commit
 projects[quicktabs][type] = module
 projects[quicktabs][subdir] = contrib
 projects[quicktabs][download][type] = "git"
 projects[quicktabs][download][branch] = "7.x-3.x"
 projects[quicktabs][download][url] = "http://git.drupal.org/project/quicktabs.git"
 projects[quicktabs][download][revision] = "758de4cc4995149a2de1d566b4209ec343581d27"
+
+; Webspark Megamenu
+projects[special_menu_items][version] = 2.0
+projects[special_menu_items][subdir] = contrib
+projects[special_menu_items][type] = module
 
 projects[tb_megamenu][version] = 1.0-beta5
 projects[tb_megamenu][type] = module
