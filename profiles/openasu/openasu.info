@@ -5,7 +5,7 @@ core = 7.x
 exclusive = 1
 ;version = VERSION
 ; Remember to update in innovation as well for DOM
-version = 1.13.9
+version = 1.13.10
 
 ; Drupal Core
 dependencies[] = menu
