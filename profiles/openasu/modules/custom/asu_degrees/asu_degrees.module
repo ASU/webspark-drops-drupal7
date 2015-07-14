@@ -94,8 +94,12 @@ function asu_degrees_menu_alter(&$items) {
 function asu_degrees_preprocess_page(&$variables) {
   // WEBSPARK-690 - move page tpl out of Innovation theme into this module
   if (isset($variables['node'])) {
-    if ($variables['node']->type == 'asu_degree') {
-      $variables['theme_hook_suggestions'][] = 'page__asu_degree';
+    // Check for 'full' view mode so page__asu_degree is applied only on full view
+    if ($variables['node']->type == 'asu_degree' && is_numeric(arg(1))
+      && isset($variables['page']['content']['system_main']['nodes'])) {
+      if ($variables['page']['content']['system_main']['nodes'][arg(1)]['body']['#view_mode'] == 'full') {
+        $variables['theme_hook_suggestions'][] = 'page__asu_degree';
+      }
     }
   }
 }

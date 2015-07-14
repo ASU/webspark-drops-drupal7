@@ -85,6 +85,7 @@ else {
   $node_info = array();
 }
 
+// Add subsection of $page['content'] for metatags
 if (module_exists('metatag')) {
   print render($page['content']['metatags']);
 }
