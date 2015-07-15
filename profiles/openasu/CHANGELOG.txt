@@ -1,4 +1,4 @@
-Webspark 1.13.10 (Spokane) release
+Webspark 1.13.10 (Spokane) release 
 ----------------
 - Contributed Drupal Modules in Webspark
     * Patched Media module to fix bug that made WYSIWYG fields disappear from ASU Degree edit forms when 1) more than one WYSIWYG editor was on the page, and 2) images were uploaded via the WYSIWYG editor
