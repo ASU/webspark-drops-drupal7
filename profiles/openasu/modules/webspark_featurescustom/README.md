@@ -5,7 +5,7 @@ A collection of features compiled specifically for the Webspark distro of Panopo
 
 This includes the following projects:
 
-ASU Directory (soon to be depracated)
+ASU Directory (soon to be deprecated)
 ASU GSA - Google Search Appliance
 ASU Security Scan Fixes
 Fieldable Panel Pane Elements:

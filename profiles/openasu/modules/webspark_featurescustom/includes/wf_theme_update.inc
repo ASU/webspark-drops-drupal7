@@ -183,7 +183,7 @@ function _webspark_featurescustom_webstandards_theme_config($theme) {
       ->condition('delta', 'main-menu')
       ->execute();
   }
-  // Disable depracated ASU Students block for all themes except asu_webspark_bootstrap
+  // Disable deprecated ASU Students block for all themes except asu_webspark_bootstrap
   db_update('block')
     ->fields(array(
         'region' => '-1',

@@ -194,7 +194,7 @@ Webspark 1.13.3 (Oklahoma) release
       for web pages
     * Updated the ASU Directory module to format and style directory data to 
       comform to the web standards. (Important: This is a temporary ASU directory 
-      solution that will be depracated when the new directory system is ready.)
+      solution that will be deprecated when the new directory system is ready.)
     * Added RSS feed button to the Mega Footer
     * Updated Donate link functionality in the Mega Footer
     * Hid generic (Panopoly) spotlight widget from the Webspark In-Place Editor 
