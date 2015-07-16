@@ -25,7 +25,12 @@
                                 <a href="<?php print $carouselLink ?>"><img src="<?php print $thumbnailUri ?>" class="img-responsive img-link"></a>
                             </div>
                             <div class="col-sm-6">
+                            <div class="col-sm-6">
+                              <?php if (!empty($carouselLink)): ?>
                                 <h4><a href="<?php print $carouselLink ?>"><?php print $thisItem['title'] ?></a></h4>
+                              <?php else: ?>
+                                <h4><?php print $thisItem['title'] ?></h4>
+                              <?php endif; ?>
                                 <p><?php print $thisItem['description']?>
                                 </p>
                             </div>
