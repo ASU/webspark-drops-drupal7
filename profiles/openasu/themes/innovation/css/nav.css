@@ -116,6 +116,9 @@
 .pane-menu-tree ul.menu li li a {
 	padding-left: 22px;
 }
+.pane-menu-tree ul.menu li li li a {
+	padding-left: 44px;
+}
 .pane-system-main-menu ul.menu li a,
 .pane-menu-tree ul.menu li a {
 	background-color: #fff;
