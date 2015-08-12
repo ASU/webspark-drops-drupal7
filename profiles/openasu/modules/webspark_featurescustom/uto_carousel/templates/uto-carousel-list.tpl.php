@@ -22,10 +22,14 @@
                         ?>
                         <li>
                             <div class="col-sm-6 text-center">
-                                <a href="<?php print $carouselLink ?>"><img src="<?php print $thumbnailUri ?>" class="img-responsive img-link"></a>
+                                <a href="<?php print $thisItem['link'] ?>"><img src="<?php print $thumbnailUri ?>" class="img-responsive img-link"></a>
                             </div>
                             <div class="col-sm-6">
-                                <h4><a href="<?php print $carouselLink ?>"><?php print $thisItem['title'] ?></a></h4>
+                              <?php if (!empty($thisItem['link'])): ?>
+                                <h4><a href="<?php print $thisItem['link'] ?>"><?php print $thisItem['title'] ?></a></h4>
+                              <?php else: ?>
+                                <h4><?php print $thisItem['title'] ?></h4>
+                              <?php endif; ?>
                                 <p><?php print $thisItem['description']?>
                                 </p>
                             </div>
