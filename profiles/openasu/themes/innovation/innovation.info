@@ -24,7 +24,6 @@ settings[toggle_logo] = 0
 
 ; original Webspark and Web Standards
 stylesheets[all][] = css/innovation-main.css
-stylesheets[all][] = css/grid.css
 stylesheets[all][] = css/buttons.css
 stylesheets[all][] = css/forms.css
 stylesheets[all][] = css/nav.css

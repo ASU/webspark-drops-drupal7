@@ -26,3 +26,34 @@ function webspark_featurescustom_update_7000(&$sandbox) {
     module_enable(array('uto_carousel'));
   }
 }
+
+/**
+ * Implements hook_update_N()
+ * + Spokane - Updates content callout feature's file assets setting in DB
+ */
+function webspark_featurescustom_update_7001(&$sandbox) {
+  if (module_exists('webspark_content_callout')) {
+    $uuid_assets_path = db_select('variable', 'v')
+      ->condition('name', 'uuid_features_file_assets_path')
+      ->fields('v', array('value'))
+      ->execute()
+      ->fetchField();
+    if (isset($uuid_assets_path) && strstr($uuid_assets_path, 'custom/webspark_featurescustom')) {
+      $uuid_assets_path = unserialize($uuid_assets_path);
+      $uuid_assets_path = serialize(preg_replace('|^(.+)/custom(/webspark_featurescustom.+)$|', '$1$2', $uuid_assets_path));
+      db_update('variable')
+        ->fields(array(
+            'value' => $uuid_assets_path,
+          )
+        )
+        ->condition('name', 'uuid_features_file_assets_path')
+        ->execute();
+      drupal_set_message('Webspark Content Callout file assets directory updated in variable table.');
+      watchdog('webspark_updates', '7001 - Webspark Content Callout file assets directory updated in variable table.');
+    }
+    else {
+      drupal_set_message('No Webspark Content Callout settings were applied.');
+      watchdog('webspark_updates', '7001 - No Webspark Content Callout settings were applied.');
+    }
+  }
+}

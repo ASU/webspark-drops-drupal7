@@ -31,7 +31,7 @@ function innovation_preprocess_html(&$variables) {
     '#type' => 'html_tag',
     '#tag' => 'meta',
     '#attributes' => array(
-      'content' => 'Webspark:1.13.9 (Washington)',
+      'content' => 'Webspark:1.13.10 (Spokane)',
       'http-equiv' => 'X-Name-of-Distro',
     )
   );
@@ -46,35 +46,13 @@ function innovation_preprocess_html(&$variables) {
 }
 
 /**
- * Implements hook_ctools_plugin_post_alter()
- */
-function innovation_ctools_plugin_post_alter(&$plugin, &$info)
-{
-  if ($info['type'] == 'styles') {
-    if ($plugin['name'] == 'kalacustomize') {
-      $plugin['title'] = 'ASU Customize';
-    }
-  }
-}
-
-/**
- * Implements hook_ctools_content_subtype_alter()
- */
-function innovation_ctools_content_subtype_alter(&$subtype, &$plugin)
-{
-  if ($plugin['module'] == 'views_content' && $subtype['title'] == 'Add content item') {
-    $subtype['title'] = t('Add existing content');
-  }
-}
-
-/**
  * Override or insert variables into the page template.
  *
  * Implements template_process_page().
  */
 function innovation_preprocess_page(&$variables)
 {
-  // Make sure default picture gets responsive panopoly stylingz
+  // Make sure default picture gets responsive panopoly styling
   if (theme_get_setting('default_picture', 'innovation') && theme_get_setting('picture_path', 'innovation')) {
     $image_style = module_exists('asu_cas') ? 'asu_header_image' : 'panopoly_image_full';
     $variables['asu_picture'] = theme('image_style', array(
@@ -82,15 +60,6 @@ function innovation_preprocess_page(&$variables)
         'path' => theme_get_setting('picture_path', 'innovation'),
       )
     );
-  }
-
-  /**
-   * Adding to find the asu-degree template.
-   */
-  if (isset($variables['node'])) {
-    if ($variables['node']->type == 'asu_degree') {
-      $variables['theme_hook_suggestions'][] = 'page__asu_degree';
-    }
   }
 }
 
@@ -127,6 +96,28 @@ function innovation_preprocess_block(&$variables)
       ),
     ));
     $block->subject = '';
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_post_alter()
+ */
+function innovation_ctools_plugin_post_alter(&$plugin, &$info)
+{
+  if ($info['type'] == 'styles') {
+    if ($plugin['name'] == 'kalacustomize') {
+      $plugin['title'] = 'ASU Customize';
+    }
+  }
+}
+
+/**
+ * Implements hook_ctools_content_subtype_alter()
+ */
+function innovation_ctools_content_subtype_alter(&$subtype, &$plugin)
+{
+  if ($plugin['module'] == 'views_content' && $subtype['title'] == 'Add content item') {
+    $subtype['title'] = t('Add existing content');
   }
 }
 

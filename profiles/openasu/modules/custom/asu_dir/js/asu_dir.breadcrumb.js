@@ -8,7 +8,7 @@
  */
 (function ($) {
     Drupal.behaviors.asu_dir_breadcrumb = {
-        attach : function(context, settings) {
+        attach: function (context, settings) {
 
             // On select of a treenode clear and then (re)calc and write the trail.
             var crumb = settings.asu_dir.field_configs.breadcrumb;
@@ -35,7 +35,7 @@
                             if (current_node.name == node.name) { // Lowest level. No dividing character.
                                 $('div.asu_directory_breadcrumb').prepend('<a href="' + isearch_url + current_node.dept_id + '">' + current_node.name + '</a>');
                             } else {
-                                if(!admin) {
+                                if (!admin) {
                                     $('div.asu_directory_breadcrumb').prepend('<a href="' + isearch_url + current_node.dept_id + '">' + current_node.name + '</a> <span class="breadcrumb-divider">/</span> ');
                                 }
                             }
@@ -45,7 +45,7 @@
                         }
 
 
-                        if(admin) {
+                        if (admin) {
 
                             var markup = $('div.asu_directory_breadcrumb').html();
                             var $people = $('#people');

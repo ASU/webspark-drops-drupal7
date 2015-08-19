@@ -1,3 +1,21 @@
+Webspark 1.13.10 (Spokane) release 
+----------------
+- Contributed Drupal Modules in Webspark
+    * Patched Media module to fix bug that made WYSIWYG fields disappear from ASU Degree edit forms when 1) more than one WYSIWYG editor was on the page, and 2) images were uploaded via the WYSIWYG editor
+
+- ASU custom modules
+    * ASU Directory Integration Reinvented - v1.1
+        * Retargeted the CSS to target only the ASU Directory Integration Reinvented node form, as it was previously generic and targeting panel forms also
+        * Fixed profile image width to be consistent in department display
+        * Fixed pagination displays on results pages (showed ellipses with four pages when it should've been a page number)
+    * ASU Degrees - v1.7
+        * Moved page--asu-degree.tpl.php template file out of the Innovation theme and into the ASU Degrees module
+        * Fixed issue with Metatag module integration to allow <meta> tags to appear in ASU Degree pages
+
+- Web standards components in Webspark
+    * Fixed regression introduced in Washington release ("Permission denied in uuid_features_file_export()") by updating DB settings for the Webspark Content Callout module
+
+
 Webspark 1.13.9 (Washington) release
 ----------------
 - Webspark Core
