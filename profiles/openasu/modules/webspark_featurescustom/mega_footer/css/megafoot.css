@@ -96,8 +96,9 @@
 		float: left;
 }
 
-
-
+.megafoot .fa:hover {
+    color: white;
+}
 
 .megafoot .little-foot {
 		padding-top: 40px;
@@ -138,13 +139,19 @@
 		display: none;
 }
 
+#block-mega-footer-mega-footer .content {
+    padding: 0 !important;
+}
+
+#block-asu-brand-asu-brand-footer .content {
+    padding: 0 !important;
+}
 
 @media (max-width: 991px) {
 	.megafoot h2 {
 			cursor: pointer;
 			margin-top: 10px;
 	}
-
 }
 
 @media (max-width: 768px) {
@@ -159,3 +166,6 @@
 	}
 
 }
+
+
+

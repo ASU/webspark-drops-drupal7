@@ -22,18 +22,17 @@ function mega_footer_block_info() {
 *
 ***/
 function mega_footer_block_view($delta = '') {
-  //global $base_url;
 
   $block = array();
 
   if($delta=='mega_footer') {
 
-  $mega_menu = menu_tree_all_data('menu-mega-footer-menu');
-  $mega_menu = menu_tree_output($mega_menu);
+    $mega_menu = menu_tree_all_data('menu-mega-footer-menu');
+    $mega_menu = menu_tree_output($mega_menu);
 
-  //
-  //Begin with Title and Address
-  $footer_mark =
+
+    //Begin with Title and Address
+    $footer_mark =
   	"<div class='megafoot'>
     <div class='row'>
     <div class='col-md-4 col-sm-12 space-bot-md megafoot-border'>";
@@ -43,9 +42,6 @@ function mega_footer_block_view($delta = '') {
       $file_url = file_create_url($file->uri);
       $footer_mark .= "<img src='".$file_url."' />";
     }
-
-
-
 
   $footer_mark .= "
 	          <h1>".variable_get('unit_title', 'Arizona State University')."</h1>
@@ -122,7 +118,32 @@ function mega_footer_block_view($delta = '') {
     </li>";
   }
 
-  if(variable_get('unit_rss_feed', NULL)!=NULL) {
+  if(variable_get('unit_vimeo_connect', NULL)!=NULL) {
+    $footer_mark .=  "<li><a href='".variable_get('unit_vimeo_connect', NULL)."' title='Vimeo'><span class='sr-only'>Vimeo</span>
+  <i class='fa fa-vimeo-square' aria-hidden='true'></i></a>
+  </li>";
+  }
+
+  if(variable_get('unit_flickr_connect', NULL)!=NULL) {
+    $footer_mark .=  "<li><a href='".variable_get('unit_flickr_connect', NULL)."' title='Flickr'><span class='sr-only'>Flickr</span>
+  <i class='fa fa-flickr' aria-hidden='true'></i></a>
+  </li>";
+  }
+
+  if(variable_get('unit_pinterest_connect', NULL)!=NULL) {
+    $footer_mark .=  "<li><a href='".variable_get('unit_pinterest_connect', NULL)."' title='Pinterest'><span class='sr-only'>Pinterest</span>
+  <i class='fa fa-pinterest-square' aria-hidden='true'></i></a>
+  </li>";
+  }
+
+  if(variable_get('unit_tumblr_connect', NULL)!=NULL) {
+    $footer_mark .=  "<li><a href='".variable_get('unit_tumblr_connect', NULL)."' title='Pinterest'><span class='sr-only'>Tumblr</span>
+  <i class='fa fa-tumblr-square' aria-hidden='true'></i></a>
+  </li>";
+  }
+
+
+    if(variable_get('unit_rss_feed', NULL)!=NULL) {
     $footer_mark .=  "<li><a href='".variable_get('unit_rss_feed', NULL)."' title='RSS'><span class='sr-only'>RSS</span>
     <i class='fa fa-rss-square' aria-hidden='true'></i></a>
     </li>";
@@ -286,6 +307,30 @@ function mega_footer_block_configure($delta = '') {
       '#default_value' => variable_get('unit_instagram_connect', NULL),
     );
 
+    $form['unit_vimeo_connect'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Vimeo Connect Link'),
+      '#default_value' => variable_get('unit_vimeo_connect', NULL),
+    );
+
+    $form['unit_flickr_connect'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Flickr Connect Link'),
+      '#default_value' => variable_get('unit_flickr_connect', NULL),
+    );
+
+    $form['unit_pinterest_connect'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Pinterest Connect Link'),
+      '#default_value' => variable_get('unit_pinterest_connect', NULL),
+    );
+
+    $form['unit_tumblr_connect'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Tumblr Connect Link'),
+      '#default_value' => variable_get('unit_tumblr_connect', NULL),
+    );
+
     $form['unit_rss_feed'] = array(
       '#type' => 'textfield',
       '#title' => t('RSS Link'),
@@ -310,7 +355,6 @@ function mega_footer_block_configure($delta = '') {
     '#default_value' => variable_get('unit_logo', ''),
     '#upload_location' => 'public://',
     );
-
 
   }
 
@@ -345,6 +389,11 @@ function mega_footer_block_save($delta = '', $edit = array()) {
     	variable_set('unit_linkedin_connect', $edit['unit_linkedin_connect']);
     	variable_set('unit_youtube_connect', $edit['unit_youtube_connect']);
       variable_set('unit_instagram_connect', $edit['unit_instagram_connect']);
+      variable_set('unit_vimeo_connect', $edit['unit_vimeo_connect']);
+      variable_set('unit_flickr_connect', $edit['unit_flickr_connect']);
+      variable_set('unit_pinterest_connect', $edit['unit_pinterest_connect']);
+      variable_set('unit_tumblr_connect', $edit['unit_tumblr_connect']);
+
       variable_set('contribute_button', $edit['contribute_button']);
       variable_set('contribute_link', $edit['contribute_link']);
       variable_set('unit_rss_feed', $edit['unit_rss_feed']);
