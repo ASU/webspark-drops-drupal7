@@ -45,6 +45,7 @@ function asu_dir_field_schema($field) {
   }
 }
 
+
 /**
  * Update the Solr URL
  */

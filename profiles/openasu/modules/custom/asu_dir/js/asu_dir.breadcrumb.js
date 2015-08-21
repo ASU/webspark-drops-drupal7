@@ -13,8 +13,10 @@
             // On select of a treenode clear and then (re)calc and write the trail.
             var crumb = settings.asu_dir.field_configs.breadcrumb;
             var admin = settings.asu_dir.admin;
+            var crumb_element = $('.asu_directory_breadcrumb');
+            var $people = $('#people');
 
-            $('div.asu_directory_breadcrumb').html(crumb);
+            crumb_element.html(crumb);
 
             $('#treediv').bind(
                 'tree.select',
@@ -33,10 +35,10 @@
                         while ((current_node.name)) { // If current_node has a name, drop a breadcrumb.
 
                             if (current_node.name == node.name) { // Lowest level. No dividing character.
-                                $('div.asu_directory_breadcrumb').prepend('<a href="' + isearch_url + current_node.dept_id + '">' + current_node.name + '</a>');
+                                crumb_element.prepend('<a href="' + isearch_url + current_node.dept_id + '">' + current_node.name + '</a>');
                             } else {
                                 if (!admin) {
-                                    $('div.asu_directory_breadcrumb').prepend('<a href="' + isearch_url + current_node.dept_id + '">' + current_node.name + '</a> <span class="breadcrumb-divider">/</span> ');
+                                    crumb_element.prepend('<a href="' + isearch_url + current_node.dept_id + '">' + current_node.name + '</a> <span class="breadcrumb-divider">/</span> ');
                                 }
                             }
 
@@ -47,11 +49,9 @@
 
                         if (admin) {
 
-                            var markup = $('div.asu_directory_breadcrumb').html();
-                            var $people = $('#people');
-
+                            var markup = crumb_element.html();
                             $people.data.field_configs.breadcrumb = markup;
-                            asu_dir_set_field();
+                            asu_dir_set_field($people);
                         }
                     }
                 }

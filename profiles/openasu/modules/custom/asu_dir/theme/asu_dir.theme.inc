@@ -1,0 +1,233 @@
+<?php
+/**
+ * @file
+ * Theming functions for the asu_dir module.
+ *
+ * @author Colton Testamarck (colt@asu.edu)
+ *
+ *
+ */
+
+
+/**
+ *Implements hook_theme()
+ *
+ *
+ **/
+function asu_dir_theme() {
+  return array(
+    // ASU Spotlight container
+    'asu_dir' => array(
+      'variables' => array('items' => array(), 'settings' => array()),
+      'template' => 'theme/asu_dir',
+      'file' => 'theme/asu_dir.theme.inc',
+    ),
+    'asu_dir_form_field' => array(
+      'variables' => array('items' => array(), 'settings' => array()),
+      'template' => 'theme/asu_dir_form_field',
+      'file' => 'theme/asu_dir.theme.inc',
+    ),
+    // Slide container
+    'asu_dir_people_list' => array(
+      'variables' => array('items' => array(), 'settings' => array()),
+      'file' => 'theme/asu_dir.theme.inc',
+    ),
+    // Slide item
+    'asu_dir_dept_tree' => array(
+      'variables' => array(
+        'item' => array(),
+        'settings' => array(),
+        'caption' => ''
+      ),
+      'file' => 'theme/asu_dir.theme.inc',
+    ),
+  );
+}
+
+/**
+ * Theme implementation to build People listing
+ */
+function theme_asu_dir_people_list(&$vars) {
+
+  $admin = $vars['settings']['admin'];
+  $field_configs = $vars['items'][0]['directory_config'];
+  $field_items = $vars['items'][0]['directory_items'];
+
+  $html = '';
+
+  //pass these module constants tot he JS
+  $top_level_ids = array(
+    'top_level_nid' => ASU_DIRECTORY_TOP_LEVEL_DEPT_NID,
+    'top_level_psid' => ASU_DIRECTORY_TOP_LEVEL_PS_ID
+  );
+
+  // add the custom js and css
+  drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir_ppl_block.js');
+  drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_people_block.css');
+
+  $settings = array(
+    'dept_nids' => $field_items,
+    'field_configs' => $field_configs,
+    'solr_server' => ASU_DIRECTORY_SOLR_ENV,
+    'admin' => $admin,
+    'top_level_ids' => $top_level_ids
+  );
+
+  drupal_add_js(array(ASU_DIRECTORY_MODULE_NAME => $settings), 'setting');
+
+  if ($admin || $field_configs['show_breadcrumbs']) {
+
+    drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir.breadcrumb.js');
+    $html .= '<div class="asu_directory_breadcrumb"></div>';
+  }
+
+  // Markup for primary display block (to be altered via AJAX)
+  $html .= '<div class="display" id="people"></div>';
+
+  //Bottom Pagination Controls
+  $html .= '<div class="asu_directory_bottom_container">';
+  $html .= '<ul id="asu_directory_people_controls_bottom" class="pagination asu_directory_people_controls">';
+
+  $html .= '<li class="asu_directory_people_button prev first" id="asu_directory_people_prev_btn"><span class="asu_directory_people_top_switcher">< previous</span></li>';
+
+  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_first_pg_btn"><span> 1 </span></li>';
+  $html .= '<li class="asu_directory_people_ellipses pager-ellipsis disabled"><span>...&nbsp;</span></li>';
+  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_back_2_btn"><span class="dynamic_number"> </span></li>';
+  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_back_1_btn"><span class="dynamic_number"> </span></li>';
+  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_this_pg_btn"><span class="dynamic_number"> </span></li>';
+  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_fwd_1_btn"><span class="dynamic_number"> </span></li>';
+  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_fwd_2_btn"><span class="dynamic_number"> </span></li>';
+  $html .= '<li class="asu_directory_people_ellipses pager-ellipsis disabled"><span>...&nbsp;</span></li>';
+  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_last_pg_btn"><span class="dynamic_number"> </span></li>';
+
+  $html .= '<li class="asu_directory_people_button next last" id="asu_directory_people_next_btn"><span class="next last asu_directory_people_top_switcher">next ></span></li>';
+
+  $html .= '</ul>';
+  $html .= '</div>';
+
+  return $html;
+}
+
+
+/**
+ * Default theme implementation for flexslider_list_item
+ */
+function theme_asu_dir_dept_tree(&$vars) {
+
+  $standalone = FALSE;
+  $whole_tree = FALSE;
+
+
+  if ( isset($vars['settings']['standalone_tree']) ) {
+    $standalone = $vars['settings']['standalone_tree'];
+  }
+
+  if( isset( $vars['settings']['whole_tree'] ) ) {
+    $whole_tree = $vars['settings']['whole_tree'];
+  }
+
+  $tree = asu_dir_get_dept_tree();
+
+  // jqTree (http://mbraak.github.com/jqTree)
+  libraries_load('jqtree');
+  libraries_load('fontawesome');
+
+  // Custom
+  drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_tree.css');
+  drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir_hierarchy_block.js');
+
+  $top_level_ids = array(
+         "top_level_psid" => ASU_DIRECTORY_TOP_LEVEL_PS_ID,
+         "top_level_nid" => ASU_DIRECTORY_TOP_LEVEL_DEPT_NID
+  );
+
+  //dpm($top_level_ids);
+  //Pass our items and configs to the JS
+  //will need to pass extra configs if the tree is being used without the people display (standalone)
+  if ($standalone) {
+
+    if(isset($vars['items'][0]['directory_items'])) {
+      $nids = $vars['items'][0]['directory_items'];
+    } else {
+      $nids = array(ASU_DIRECTORY_TOP_LEVEL_DEPT_NID);
+    }
+
+    $settings = array(
+      'tree' => $tree,
+      'top_level_ids' => $top_level_ids,
+      'standalone' => $standalone,
+      'dept_nids' => $nids,
+    );
+  }
+  else {
+    $settings = array(
+      'tree' => $tree,
+      'whole_tree' => $whole_tree,
+      'top_level_ids' => $top_level_ids);
+  }
+
+  drupal_add_js(array(ASU_DIRECTORY_MODULE_NAME => $settings), 'setting');
+
+  $employee_select = '';
+  $html = '';
+  $html .= $employee_select . '<div class="asu-directory-tree-hierarchy"><div id="treediv"></div></div>';
+
+  return $html;
+
+}
+
+
+/**
+ * Template preprocess handler for 'asu_dir' theme.
+ */
+function template_process_asu_dir(&$vars) {
+
+  //if items are saved, need to json decode them
+  if (!empty($vars['items'])) {
+    foreach ($vars['items'] as &$item) {
+      $item['directory_config'] = drupal_json_decode($item['directory_config']);
+      $item['directory_items'] = drupal_json_decode($item['directory_items']);
+    }
+  }
+  // Reference configuration variables
+  $vars['settings']['solr_url'] = ASU_DIRECTORY_SOLR_ENV;
+}
+
+
+/**
+ * Template preprocess handler for 'asu_dir_form_field' template.
+ */
+function template_process_asu_dir_form_field(&$vars) {
+
+  //this generates the employee type display, by first grabbing the types from the endpoint
+  //and then grouping them into 3 columns
+
+  $employee_types = asu_dir_get_employee_types();
+  $employee_types = $employee_types['nodes'];
+
+  //add the "show all" option to the front of the array
+  $show_all = array('node' => array('name' => 'Show All'));
+  array_unshift($employee_types, $show_all);
+
+  //calculate how many types we'll put in each column
+  $num_per_col = count($employee_types) / 3 + 1;
+
+  $count = 1;
+  $col = 0;
+
+  $vars['settings']['employee_types_col_' . $col] = array();
+
+  foreach ($employee_types as $type) {
+
+    if (($count % $num_per_col == 0) && ($count < count($employee_types))) {
+      $col++;
+      $vars['settings']['employee_types_col_' . $col] = array();
+    }
+
+    array_push($vars['settings']['employee_types_col_' . $col], $type);
+
+    $count++;
+  }
+}
+
+
