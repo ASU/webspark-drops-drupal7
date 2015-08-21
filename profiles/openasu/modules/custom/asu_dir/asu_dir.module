@@ -32,7 +32,7 @@ define('ASU_DIRECTORY_TOP_LEVEL_DEPT_NID', 1342);
 define('ASU_DIRECTORY_FORM_CACHE_DURATION', 1);//set to one hour
 define('ASU_DIRECTORY_MODULE_NAME', 'asu_dir');
 
-define('ASU_DIRECTORY_SOLR_ENV', variable_get('asu_dir_solr_endpoint', 'https://webapp4.asu.edu'));
+define('ASU_DIRECTORY_SOLR_ENV', variable_get('asu_dir_solr_endpoint', 'https://asudir-solr.asu.edu/asudir/directory/select'));
 define('ASU_DIRECTORY_TREE_ENDPOINT', variable_get('asu_dir_tree_endpoint', 'https://isearch.asu.edu/endpoints/dept_tree/json'));
 define('ASU_EMPLOYEE_TYPES_ENDPOINT', variable_get('asu_dir_employee_types_endpoint', 'https://isearch.asu.edu/endpoints/employee-types'));
 //define('ASU_DIRECTORY_FLAT_LIST_ENDPOINT', 'https://isearch.asu.edu/endpoints/dept_list/json');
@@ -449,4 +449,3 @@ function asu_dir_generate_people_display_head() {
   $html .= '</div>';
   return $html;
 }
-

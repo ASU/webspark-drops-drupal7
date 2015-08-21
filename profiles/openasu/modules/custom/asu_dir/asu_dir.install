@@ -44,3 +44,10 @@ function asu_dir_field_schema($field) {
     return $schema;
   }
 }
+
+/**
+ * Update the Solr URL
+ */
+function asu_dir_update_7001(&$sandbox) {
+  variable_set('asu_dir_solr_endpoint', 'https://asudir-solr.asu.edu/asudir/directory/select');
+}
