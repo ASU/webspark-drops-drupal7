@@ -43,8 +43,6 @@
                         asu_dir_people_create_search(solr_server, settings.tree);
 
                         asu_dir_create_pagination();
-
-
                     })
                 }
             }
@@ -174,7 +172,7 @@ function asu_dir_build_table(query, reset) {
 
     var html = '';
     jQuery.ajax({
-        'url': solr_server + '/solr/directory/select/',
+        'url': solr_server,
         'cache': false,
         'data': solr_data,
         'dataType': 'jsonp',
@@ -250,7 +248,7 @@ function asu_dir_management_query(solr_server, solr_data) {
         solr_data.fq = with_management;
 
         jQuery.ajax({
-            'url': solr_server + '/solr/directory/select/',
+            'url': solr_server,
             'cache': false,
             'data': solr_data,
             'dataType': 'jsonp',
@@ -283,7 +281,7 @@ function asu_dir_management_query(solr_server, solr_data) {
                 solr_data.fq = without_management;
 
                 jQuery.ajax({
-                    'url': solr_server + '/solr/directory/select/',
+                    'url': solr_server,
                     'cache': false,
                     'data': solr_data,
                     'dataType': 'jsonp',
