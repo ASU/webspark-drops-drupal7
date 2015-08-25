@@ -115,6 +115,12 @@ function mega_footer_block_view($delta = '') {
     <i class='fa fa-youtube-square' aria-hidden='true'></i></a>
                       </li>";
   }
+  
+   if(variable_get('unit_vimeo_connect', NULL)!=NULL) {
+    $footer_mark .=  "<li><a href='".variable_get('unit_vimeo_connect', NULL)."' title='Vimeo'><span class='sr-only'>Vimeo</span>
+    <i class='fa fa-vimeo-square' aria-hidden='true'></i></a>
+                      </li>";
+  }
 
   if(variable_get('unit_instagram_connect', NULL)!=NULL) {
     $footer_mark .=  "<li><a href='".variable_get('unit_instagram_connect', NULL)."' title='Instagram'><span class='sr-only'>Instagram</span>
@@ -279,6 +285,12 @@ function mega_footer_block_configure($delta = '') {
       '#title' => t('YouTube Connect Link'),
       '#default_value' => variable_get('unit_youtube_connect', NULL),
     );
+	
+	$form['unit_vimeo_connect'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Vimeo Connect Link'),
+      '#default_value' => variable_get('unit_vimeo_connect', NULL),
+    );
 
     $form['unit_instagram_connect'] = array(
       '#type' => 'textfield',
@@ -344,6 +356,7 @@ function mega_footer_block_save($delta = '', $edit = array()) {
     	variable_set('unit_google_connect', $edit['unit_google_connect']);
     	variable_set('unit_linkedin_connect', $edit['unit_linkedin_connect']);
     	variable_set('unit_youtube_connect', $edit['unit_youtube_connect']);
+		variable_set('unit_vimeo_connect', $edit['unit_vimeo_connect']);
       variable_set('unit_instagram_connect', $edit['unit_instagram_connect']);
       variable_set('contribute_button', $edit['contribute_button']);
       variable_set('contribute_link', $edit['contribute_link']);
