@@ -156,6 +156,7 @@ function template_process_asu_spotlight_list(&$vars) {
  */
 function template_process_asu_spotlight_list_item(&$vars) {
   // Reset the list of attributes
+
   $vars['settings']['attributes'] = array();
 
   // Reference configuration variables

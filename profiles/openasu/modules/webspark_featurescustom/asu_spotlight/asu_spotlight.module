@@ -1,6 +1,7 @@
 <?php
 
-include_once('asu_spotlight.spotlight.inc');
+include_once 'asu_spotlight.spotlight.inc';
+include_once 'asu_spotlight.features.inc';
 
 function asu_spotlight_menu_alter(&$items) {
     $items['admin/config/media/flexslider']['title'] = 'Webspark Optionsets';

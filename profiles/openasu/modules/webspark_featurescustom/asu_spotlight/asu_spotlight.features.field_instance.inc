@@ -21,9 +21,11 @@ function asu_spotlight_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'asu_spotlight',
         'settings' => array(
-          'image_style' => 'panopoly_image_spotlight',
+          'image_style' => 'asu_spotlight_image',
+          'optionset' => 'default',
+          'caption' => FALSE,
         ),
-        'type' => 'asu_spotlight_default',
+        'type' => 'asu_spotlight',
         'weight' => 0,
       ),
     ),
@@ -44,7 +46,7 @@ function asu_spotlight_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 0,
-      'module' => 'panopoly_widgets',
+      'module' => 'asu_spotlight',
       'settings' => array(),
       'type' => 'asu_spotlight_form',
       'weight' => -4,
