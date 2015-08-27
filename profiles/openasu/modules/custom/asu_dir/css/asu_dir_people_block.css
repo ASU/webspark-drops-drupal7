@@ -11,8 +11,6 @@
 *************************************************************************/
 /*Node Form Specific*/
 
-
-
 .page-node-edit.node-type-asu-directory {
     font-size: 12px;
 }
@@ -87,7 +85,6 @@ body .field-type-asu-directory .active {
 }
 
 .asu_directory_custom_group .input-group, .asu_directory_custom_group
-
 .btn {
     margin-top: 10px;
 
@@ -122,7 +119,7 @@ body .asu_directory_custom_saved:focus {
 }
 
 .has-spinner.active {
-    cursor:progress;
+    cursor: progress;
 }
 
 .has-spinner.active .spinner {
@@ -146,14 +143,12 @@ body .asu_directory_custom_saved:focus {
     width: 19px;
 }
 
-
 /*Directory*/
 
 #people {
     margin: 0;
     margin-bottom: 24px;
 }
-
 
 #people > div:first-child {
     border-top: solid 2px #ccc;
@@ -175,7 +170,7 @@ body .asu_directory_custom_saved:focus {
     color: #a30046;
 }
 
-#asu_directory_people_this_pg_btn > span{
+#asu_directory_people_this_pg_btn > span {
     background-color: #a30046;
     border-color: #a30046;
     color: #ffffff;
