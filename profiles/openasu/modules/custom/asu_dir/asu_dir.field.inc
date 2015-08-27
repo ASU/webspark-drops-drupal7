@@ -39,7 +39,7 @@ function asu_dir_field_is_empty($item, $field) {
 
   if ($configs['dept_id'] == NULL || $configs['dept_id'] == "" || $configs['dept_id'] == ASU_DIRECTORY_TOP_LEVEL_PS_ID) {
 
-    if($configs['use_custom_q'] && isset($configs['custom_q'])) {
+    if ($configs['use_custom_q'] && isset($configs['custom_q'])) {
       return FALSE;
     }
 

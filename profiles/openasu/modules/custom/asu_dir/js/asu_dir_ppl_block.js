@@ -179,12 +179,12 @@ function asu_dir_build_table(query) {
     var show_managers = $people.data.field_configs.show_managers;
     var solr_data = {};
 
-    if(!(solr_data = asu_dir_build_query($people, query))) {
+    if (!(solr_data = asu_dir_build_query($people, query))) {
         return false;
     }
 
     //if new custom query in admin display, clearout the people div before request
-    if($people.data.page===0 && $people.data.field_configs.use_custom_q) {
+    if ($people.data.page === 0 && $people.data.field_configs.use_custom_q) {
         $people.html('');
         jQuery('#asu_directory_people_controls_bottom').hide();
     }
@@ -256,7 +256,6 @@ function asu_dir_process_results($people, data) {
         $people.html('<span>No employees found.</span>');
     }
 }
-
 
 
 /**

@@ -28,20 +28,25 @@
 <div class="row asu_directory_custom_group">
   <div class="input-group col-md-12">
     <span class="input-group-addon" id="basic-addon1"> q = </span>
-    <input type="text" class="form-control asu_directory_q asu_directory_input" placeholder="Query" aria-describedby="basic-addon1">
+    <input type="text" class="form-control asu_directory_q asu_directory_input"
+           placeholder="Query" aria-describedby="basic-addon1">
   </div>
 
   <div class="input-group col-md-12">
     <span class="input-group-addon" id="basic-addon1"> fq = </span>
-    <input type="text" class="form-control asu_directory_fq asu_directory_input" placeholder="Filter Query" aria-describedby="basic-addon1">
+    <input type="text" class="form-control asu_directory_fq asu_directory_input"
+           placeholder="Filter Query" aria-describedby="basic-addon1">
   </div>
   <div class="input-group col-md-12">
     <span class="input-group-addon" id="basic-addon1"> sort = </span>
-    <input type="text" class="form-control asu_directory_sort asu_directory_input" placeholder="Filter Query" aria-describedby="basic-addon1">
+    <input type="text"
+           class="form-control asu_directory_sort asu_directory_input"
+           placeholder="Filter Query" aria-describedby="basic-addon1">
   </div>
 
   <button type="button" id="asu_directory_custom_q_submit"
-          class="btn btn-default has-spinner"><span class="spinner"><i class="fa fa-spinner fa-spin"></i></span><span class="custom-status">Run/Save</span>
+          class="btn btn-default has-spinner"><span class="spinner"><i
+        class="fa fa-spinner fa-spin"></i></span><span class="custom-status">Run/Save</span>
   </button>
 </div>
 

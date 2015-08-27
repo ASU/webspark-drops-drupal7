@@ -53,6 +53,10 @@ function theme_asu_dir_people_list(&$vars) {
   $field_configs = $vars['items'][0]['directory_config'];
   $field_items = $vars['items'][0]['directory_items'];
 
+  if (!isset($field_configs['show_breadcrumbs'])) {
+    $field_configs['show_breadcrumbs'] = TRUE;
+  }
+
   $html = '';
 
   //pass these module constants tot he JS
@@ -118,11 +122,11 @@ function theme_asu_dir_dept_tree(&$vars) {
   $whole_tree = FALSE;
 
 
-  if ( isset($vars['settings']['standalone_tree']) ) {
+  if (isset($vars['settings']['standalone_tree'])) {
     $standalone = $vars['settings']['standalone_tree'];
   }
 
-  if( isset( $vars['settings']['whole_tree'] ) ) {
+  if (isset($vars['settings']['whole_tree'])) {
     $whole_tree = $vars['settings']['whole_tree'];
   }
 
@@ -137,8 +141,8 @@ function theme_asu_dir_dept_tree(&$vars) {
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir_hierarchy_block.js');
 
   $top_level_ids = array(
-         "top_level_psid" => ASU_DIRECTORY_TOP_LEVEL_PS_ID,
-         "top_level_nid" => ASU_DIRECTORY_TOP_LEVEL_DEPT_NID
+    "top_level_psid" => ASU_DIRECTORY_TOP_LEVEL_PS_ID,
+    "top_level_nid" => ASU_DIRECTORY_TOP_LEVEL_DEPT_NID
   );
 
   //dpm($top_level_ids);
@@ -146,9 +150,10 @@ function theme_asu_dir_dept_tree(&$vars) {
   //will need to pass extra configs if the tree is being used without the people display (standalone)
   if ($standalone) {
 
-    if(isset($vars['items'][0]['directory_items'])) {
+    if (isset($vars['items'][0]['directory_items'])) {
       $nids = $vars['items'][0]['directory_items'];
-    } else {
+    }
+    else {
       $nids = array(ASU_DIRECTORY_TOP_LEVEL_DEPT_NID);
     }
 
@@ -163,7 +168,8 @@ function theme_asu_dir_dept_tree(&$vars) {
     $settings = array(
       'tree' => $tree,
       'whole_tree' => $whole_tree,
-      'top_level_ids' => $top_level_ids);
+      'top_level_ids' => $top_level_ids
+    );
   }
 
   drupal_add_js(array(ASU_DIRECTORY_MODULE_NAME => $settings), 'setting');
