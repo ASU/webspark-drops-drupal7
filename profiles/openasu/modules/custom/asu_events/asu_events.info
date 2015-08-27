@@ -1,5 +1,5 @@
 name = ASU Events
-description = Import and display ASU event feeds. DEPRACATED.
+description = Import and display ASU event feeds. DEPRECATED.
 core = 7.x
 package = ASU Deprecated
 php = 5.2.4
