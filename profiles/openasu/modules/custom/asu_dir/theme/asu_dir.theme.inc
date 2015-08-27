@@ -54,7 +54,7 @@ function theme_asu_dir_people_list(&$vars) {
   $field_items = $vars['items'][0]['directory_items'];
 
   if(!isset($field_configs['show_breadcrumbs'])) {
-    $field_configs['show_breadcrumbs'] = true;
+    $field_configs['show_breadcrumbs'] = TRUE;
   }
 
   $html = '';
