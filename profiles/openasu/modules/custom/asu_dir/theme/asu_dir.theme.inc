@@ -53,6 +53,10 @@ function theme_asu_dir_people_list(&$vars) {
   $field_configs = $vars['items'][0]['directory_config'];
   $field_items = $vars['items'][0]['directory_items'];
 
+  if(!isset($field_configs['show_breadcrumbs'])) {
+    $field_configs['show_breadcrumbs'] = true;
+  }
+
   $html = '';
 
   //pass these module constants tot he JS

@@ -246,7 +246,7 @@ body .asu_directory_custom_saved:focus {
 /* Contains the input and submit objects for people search */
 .asu_directory_people_search_group {
     position: relative;
-    margin-bottom: 1em;
+    padding-bottom: 20px;
 
 }
 

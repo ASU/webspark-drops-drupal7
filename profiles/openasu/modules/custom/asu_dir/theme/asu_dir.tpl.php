@@ -18,7 +18,6 @@
       <button id="asu_directory_people_search_btn"
               class="btn-main-search btn btn-primary asu_directory_people_button">
         <i class="fa fa-search"></i></button>
-      '
     </div>
   </div>
 
