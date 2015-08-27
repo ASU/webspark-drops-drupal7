@@ -35,7 +35,7 @@ function asu_spotlight_update_7002(&$sandbox) {
 
 /**
 *Implementation of hook_update_N()
-*This eliminates the panopoly spotlight from the list of allowed pane types
+*Eliminates the panopoly spotlight from the list of allowed pane types
 **/
 function asu_spotlight_update_7003(&$sandbox) {
 
@@ -51,6 +51,18 @@ function asu_spotlight_update_7003(&$sandbox) {
   }
   variable_set('panels_page_allowed_types', $allowed_panes);
 }
+
+
+/**
+ * Implements hook_update_N()
+ * Reverts feature to use custom image display type
+ *
+ * @param $sandbox
+ */
+function asu_spotlight_update_7004(&$sandbox) {
+  features_revert_module('asu_spotlight');
+}
+
 
 
 

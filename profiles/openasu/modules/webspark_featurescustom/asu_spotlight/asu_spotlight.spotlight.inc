@@ -110,7 +110,7 @@ function asu_spotlight_field_widget_info() {
         'label' => t('ASU Spotlight'),
         'field types' => array('asu_spotlight'),
         'settings' => array(
-            'image_style' => 'panopoly_image_spotlight',
+            'image_style' => 'asu_spotlight_image',
             'caption' => FALSE,
             'optionset' => 'default',
             ),
