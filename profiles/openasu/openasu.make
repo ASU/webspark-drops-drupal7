@@ -263,7 +263,7 @@ libraries[jqtree][directory_name] = jqtree
 libraries[jqtree][destination] = libraries
 
 
-; DEPRACATED PROJECTS - DO NOT USE AND LOOK FOR ALTERNATE SOLUTIONS ASAP
+; DEPRECATED PROJECTS - DO NOT USE AND LOOK FOR ALTERNATE SOLUTIONS ASAP
 
 ; Will be replaced by alternate system that will work with the Hub's new asunews site
 projects[asu_events][version] = 1.0-dev
@@ -276,7 +276,7 @@ projects[asu_news][subdir] = custom
 projects[asu_news][type] = module
 projects[asu_news][download][revision] = 7e925b539
 projects[asu_news][download][url] = https://github.com/ASU/asu-drupal-news.git
-; (DEPRACATED in lieu of ASU Degrees - asu_degrees module)
+; (DEPRECATED in lieu of ASU Degrees - asu_degrees module)
 projects[asu_eadvisor_degree_feed_feature][version] = 1.0-beta1
 projects[asu_eadvisor_degree_feed_feature][subdir] = custom
 projects[asu_eadvisor_degree_feed_feature][type] = module

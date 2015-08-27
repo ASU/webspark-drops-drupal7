@@ -24,6 +24,16 @@ function uto_carousel_entity_info_alter(&$entity_info) {
     );
 }
 
+/**
+ * Implements hook_field_attach_preprocess_alter().
+ */
+function uto_carousel_field_attach_preprocess_alter(&$variables, $context) {
+  dpm($variables, 'variables');
+  if ($variables['content']['#field_name'] === 'field_campus') {
+    unset($variables);
+  }
+}
+
 function uto_carousel_theme() {
 
     // Summary View
