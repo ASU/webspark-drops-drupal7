@@ -4,16 +4,16 @@ Webspark 1.13.11 (Tacoma) release
     * Updated to 7.39 (Security release)
 
 - ASU custom modules
-    * ASU Directory Integration Reinvented
+    * ASU Directory Integration Reinvented - v1.2
         * Added as an advanced configuration option the ability to enter a custom query string, instead of using the provided filters.
         * Added the ability to toggle the display navigation breadcrumbs on and off
         * Add asu_dir two-way-toggle for form elements
 
 - Web standards components in Webspark
-    * ASU Spotlight
+    * ASU Spotlight - v1.5
         * Fixed profile image width to be consistent in department display
         * Fixed issue with the automatic sizing of images upon their upload where a) images were getting cropped to a 800x600 pixel size and b) the image width would be scaled to 1000 pixels and the height adjusted to retain the aspect ratio
-    * Carousel (thanks to @ryanjbonnell)
+    * Carousel (thanks to @ryanjbonnell) - v1.4
         * Added conditional check to verify if carousel slide title should be a hyperlink
         * Fixed active class styling on deeply nested menu tree links
         * Deeply nested menu tree links are now indented
