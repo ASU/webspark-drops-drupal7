@@ -29,8 +29,14 @@
          
             $(window).bind("pageshow", function() {
                // let the browser natively reset defaults
-               $('#asu-rfi-form-data').reset();
-               $('#asu_rfi_second_form').reset();
+	       if ( $('#asu-rfi-form-data').length) {
+		   $('#asu-rfi-form-data')[0].reset();
+	       }
+               
+	       if ($('#asu_rfi_second_form').length) {
+		   $('#asu_rfi_second_form')[0].reset();
+	       }
+              
             })
          
           

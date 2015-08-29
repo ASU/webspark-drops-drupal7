@@ -161,7 +161,7 @@ function asu_rfi_form_data($form, &$form_state) {
     
 	$form['my_interest'] = array(
 	    '#type' => 'fieldset',
-	    '#title' => 'My Interests',
+	    '#title' => 'My interests',
 	    '#collapsible' => TRUE,
 	    '#collapsed' => FALSE,
 	    '#size' => 10,
@@ -183,7 +183,7 @@ function asu_rfi_form_data($form, &$form_state) {
   
 	$form['my_interest']['prog_plan'] = array(
 	    '#type' => 'textfield',
-	    '#title' => t('My program interest'),
+	    '#title' => t('My program of interest'),
 	    '#required' => TRUE,
 	    '#default_value' => $dname,
 	    '#disabled' => TRUE,
@@ -224,7 +224,7 @@ function asu_rfi_form_data($form, &$form_state) {
    
 	$form['about_me']['first_name'] = array(
 	    '#type' => 'textfield',
-	    '#title' => t('First Name'),
+	    '#title' => t('First name'),
 	    '#size' => 30,
 	    '#maxlength' => 30,
 	    '#required' => TRUE,
@@ -234,7 +234,7 @@ function asu_rfi_form_data($form, &$form_state) {
     
 	$form['about_me']['last_name'] = array(
 	    '#type' => 'textfield',
-	    '#title' => t('Last Name'),
+	    '#title' => t('Last name'),
 	    '#size' => 30,
 	    '#maxlength' => 64,
 	    '#required' => TRUE,
@@ -383,12 +383,12 @@ function asu_rfi_form_data_validate($form, &$form_state) {
   
    
     //validate first name
-    if( !preg_match("/^[a-zA-Z\._-\s]+$/",$fname)){
+    if( !preg_match("/^[a-zA-Z\.\s-_]+$/",$fname)){
         form_set_error('first_name', t('First name field accepts only plain text.'));
 	$fname = ucfirst($fname);
     }
     //validate last name
-    if( !preg_match("/^[a-zA-Z\._-\s]+$/",$lname)){
+    if( !preg_match("/^[a-zA-Z\.\s-_]+$/",$lname)){
         form_set_error('last_name', t('Last name field accepts only plain text.'));
 	$lname = ucfirst($lname);
     }
@@ -406,7 +406,7 @@ function asu_rfi_form_data_validate($form, &$form_state) {
 	}
     }
     else{
-	if( !preg_match("/^[0-9\._-\s+\(\)]+$/", $phone) || ($scam_num == "555" )) {
+	if( !preg_match("/^[0-9\.\s-_+\(\)]+$/", $phone) || ($scam_num == "555" )) {
 	    form_set_error('phone', t('You entered an invalid Phone number.'));
 	}
     }
@@ -429,7 +429,7 @@ function asu_rfi_form_data_validate($form, &$form_state) {
 	    }
 	}
 	else{
-	    if( !preg_match("/^[a-zA-Z0-9\_-\s+-]+$/",$zip)){
+	    if( !preg_match("/^[a-zA-Z0-9\s-_+-]+$/",$zip)){
 		form_set_error('zipcode', t('Postal code is not valid'));
 	    }
 	    if((strlen($zip) < 4)){
@@ -736,7 +736,7 @@ function asu_rfi_second_form($form, &$form_state){
     if(($form_mode == "test") || (empty($form_mode))){
 	$form['form_stage'] = array(
 	    '#type' => 'item',
-	    '#markup' => t('<div class="rfi_test_mode">The form is in test mode, you can change the mode in <a href="/admin/config/content/asurfi">admin settings page</a></div>')
+	    '#markup' => t('<div class="rfi_test_mode">The form is in test mode, you can change the mode in <a href="/admin/config/asu/asurfi">admin settings page</a></div>')
 	);
     }
    
@@ -861,14 +861,14 @@ function asu_rfi_second_form_validate($form,&$form_state){
     $zip = check_plain($form_state['values']['zipcode']);
     //validate address
     if(!empty($address)){
-      if( !preg_match("/^[a-zA-Z0-9\._-\s,#]+$/",$address)){
+      if( !preg_match("/^[a-zA-Z0-9\.\s-_,#]+$/",$address)){
 	  form_set_error('address', t('Address field accepts only plain text.'));
       }
     }
     //validate city
     if(!empty($city)){
 	if( !preg_match('/^[\p{L}\p{N} .-]+$/u', $city)) {
-	    form_set_error('city', t('City field accepts only plain text.'));
+	    form_set_error('city', t('City is invalid.'));
 	}
     } 
   
@@ -890,7 +890,7 @@ function asu_rfi_second_form_validate($form,&$form_state){
 	    }
 	}
 	else{
-	    if( !preg_match("/^[a-zA-Z0-9\_-\s]+$/",$zip)){
+	    if( !preg_match("/^[a-zA-Z0-9\s-_]+$/",$zip)){
 		form_set_error('zipcode', t('Postal code is not valid.'));
 	    }
 	    if((strlen($zip) < 4)){
@@ -903,7 +903,8 @@ function asu_rfi_second_form_validate($form,&$form_state){
     }
 
     //validate comments
-    if(!empty($form_state['values']['questions'])){
+    if(!empty($form_state['values']['questions']))
+    {
 	if(strlen($form_state['values']['questions']) > 255){
 	    form_set_error('questions', t('Comments are limited to a maximum of 255 characters.'));
 	}
@@ -988,7 +989,8 @@ function asu_rfi_second_form_submit($form, &$form_state){
 	    $coded_major = base64_encode($form_state['storage']['program_code']);
 	    $coded_college =  base64_encode($form_state['storage']['college_name']);
 	    $coded_college_code = base64_encode($form_state['storage']['college_code']);
-	    
+	    $coded_zip = base64_encode($zipcode);
+	    $coded_country = base64_encode($country);
 	    /*If graduate degree is submitted, root the from to graduate posting function.
 	     *Grab the node id of cinfirmation page from admin settings page if exists and redirect the user to confirmation node. If the node id doesn't exist, take the user to built in confirmation page*
 	     */
@@ -998,10 +1000,10 @@ function asu_rfi_second_form_submit($form, &$form_state){
 		if(!empty($grad_confid)){
 		    $galias = drupal_lookup_path('alias', $path = "node/$grad_confid", $path_language = NULL);
 		    if(!empty($alias)){
-			drupal_goto("$galias",array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode'=> $coded_college_code,'cat' => 'Grad RFI' )));
+			drupal_goto("$galias",array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode'=> $coded_college_code,'cat' => 'Grad RFI', 'zcode' => $coded_zip, 'con' => $coded_country)));
 		    }
 		    else{
-			drupal_goto("node/$grad_confid",array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode'=> $coded_college_code,'cat' => 'Grad RFI')));
+			drupal_goto("node/$grad_confid",array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode'=> $coded_college_code,'cat' => 'Grad RFI','zcode'=>$coded_zip,'con' => $coded_country)));
 		    }
 		}
 		else{
@@ -1021,10 +1023,10 @@ function asu_rfi_second_form_submit($form, &$form_state){
 		if(!empty($undergrad_confid)){
 		    $ualias = drupal_lookup_path('alias', $path = "node/$undergrad_confid", $path_language = NULL);
 		    if(!empty($ualias)){
-			drupal_goto("$ualias",array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode'=> $coded_college_code, 'cat' => 'UG RFI')));
+			drupal_goto("$ualias",array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode'=> $coded_college_code, 'cat' => 'UG RFI', 'zcode' => $coded_zip, 'con' => $coded_country)));
 		    }
 		    else{
-			drupal_goto("node/$undergrad_confid", array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode'=> $coded_college_code, 'cat' => 'UG RFI')));
+			drupal_goto("node/$undergrad_confid", array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode'=> $coded_college_code, 'cat' => 'UG RFI','zcode' => $coded_zip, 'con' => $coded_country)));
 		    }
 		}
 		else{
@@ -1113,7 +1115,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type){
     
     $form['my_interest'] = array(
 	'#type' => 'fieldset',
-	'#title' => 'My Interests',
+	'#title' => 'My interests',
 	'#collapsible' => TRUE,
 	'#collapsed' => FALSE,
 	'#size' => 30,
@@ -1134,7 +1136,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type){
     
     $form['my_interest']['program_code'] = array(
 	'#type' => 'select',
-	'#title' => t('My program interest'),
+	'#title' => t('My program of interest'),
 	'#options' => $programs,
 	'#required' => TRUE,
     );
@@ -1156,7 +1158,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type){
    
     $form['about_me']['first_name'] = array(
 	'#type' => 'textfield',
-	'#title' => t('First Name'),
+	'#title' => t('First name'),
 	'#size' => 30,
 	'#maxlength' => 50,
 	'#required' => TRUE,
@@ -1165,7 +1167,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type){
     
     $form['about_me']['last_name'] = array(
 	'#type' => 'textfield',
-	'#title' => t('Last Name'),
+	'#title' => t('Last name'),
 	'#size' => 30,
 	'#maxlength' => 50,
 	'#required' => TRUE,
@@ -1373,11 +1375,11 @@ function asu_rfi_long_form_data_validate($form,&$form_state){
     $mobile_check = $form_state['values']['mobile_check'];
    
     //validate first name
-    if( !preg_match("/^[a-zA-Z\._-\s]+$/",$fname)){
+    if( !preg_match("/^[a-zA-Z\.\s-_]+$/",$fname)){
         form_set_error('first_name', t('First name field accepts only plain text.'));
     }
     //validate last name
-   if( !preg_match("/^[a-zA-Z\._-\s]+$/",$lname)){
+   if( !preg_match("/^[a-zA-Z\.\s-_]+$/",$lname)){
         form_set_error('last_name', t('Last name field accepts only plain text.'));
 	
    }
@@ -1396,7 +1398,7 @@ function asu_rfi_long_form_data_validate($form,&$form_state){
 	}
     }
     else{
-	if( !preg_match("/^[0-9\._-\s+\(\)]+$/", $phone) || ($scam_num == "555" )) {
+	if( !preg_match("/^[0-9\.\s-_+\(\)]+$/", $phone) || ($scam_num == "555" )) {
 	     form_set_error('phone', t('You entered an invalid Phone number.'));
 	}
     }
@@ -1418,7 +1420,7 @@ function asu_rfi_long_form_data_validate($form,&$form_state){
 	    }
 	}
 	else{
-	    if( !preg_match("/^[a-zA-Z0-9\_-\s]+$/",$zip)){
+	    if( !preg_match("/^[a-zA-Z0-9\s-]+$/",$zip)){
 		form_set_error('zipcode', t('Postal code is not valid.'));
 	     }
 	    if((strlen($zip) < 4)){
@@ -1509,7 +1511,7 @@ function asu_rfi_long_form_data_validate($form,&$form_state){
     
     //validate address
     if(!empty($address)){
-	if( !preg_match("/^[a-zA-Z0-9\._-\s,#]+$/",$address)){
+	if( !preg_match("/^[a-zA-Z0-9\.\s-_,#]+$/",$address)){
 	    form_set_error('address', t('Address field accepts only plain text.'));
 	}
     }
@@ -1517,7 +1519,7 @@ function asu_rfi_long_form_data_validate($form,&$form_state){
     //validate city
     if(!empty($city)){
 	if( !preg_match('/^[\p{L}\p{N} .-]+$/u', $city)) {
-	    form_set_error('city', t('City field accepts only plain text.'));
+	    form_set_error('city', t('City is invalid.'));
 	}
     }
  
@@ -1683,17 +1685,19 @@ function asu_rfi_long_form_data_submit($form, &$form_state){
     $coded_college =  base64_encode($college_name);
     $coded_college_code = base64_encode($college_code);
     $coded_nid = base64_encode($entity->nid);
-     
+    $coded_zip = base64_encode($zip);
+    $coded_country = base64_encode($country);
+    
     if($form_state['values']['prospect_level'] == "Graduate"){
 	asu_rfi_grad_post($form_state['values']);
 	$grad_confid =  variable_get('asu_rfi_grad_confirm_node');
 	if(!empty($grad_confid)){
 	    $galias = drupal_lookup_path('alias', $path = "node/$grad_confid_confid", $path_language = NULL);
 	    if(!empty($galias)){
-		drupal_goto("$galias", array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode'=> $coded_college_code,'cat' => 'Grad RFI')));
+		drupal_goto("$galias", array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode'=> $coded_college_code,'cat' => 'Grad RFI','zcode' => $coded_zip,'con' => $coded_country)));
 	    }
 	    else{
-	       drupal_goto("node/$grad_confid",array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode"'=> $coded_college_code,'cat' => 'Grad RFI' )));
+	       drupal_goto("node/$grad_confid",array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode"'=> $coded_college_code,'cat' => 'Grad RFI','zcode' => $coded_zip,'con' => $coded_country )));
 	    }
 	}
 	else{
@@ -1708,10 +1712,10 @@ function asu_rfi_long_form_data_submit($form, &$form_state){
 	if(!empty($undergrad_confid)){
 	    $ualias = drupal_lookup_path('alias', $path = "node/$undergrad_confid", $path_language = NULL);
 	    if(!empty($ualias)){
-	       drupal_goto("$ualias", array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode'=> $coded_college_code,'cat' => 'UG RFI')));
+	       drupal_goto("$ualias", array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode'=> $coded_college_code,'cat' => 'UG RFI','zcode' => $coded_zip, 'con' => $coded_country)));
 	    }
 	    else{
-	       drupal_goto("node/$undergrad_confid", array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode"'=> $coded_college_code, 'cat' => 'UG RFI' )));
+	       drupal_goto("node/$undergrad_confid", array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode"'=> $coded_college_code, 'cat' => 'UG RFI','zcode' => $coded_zip, 'con' => $coded_country )));
 	    }
 	}
 	else{
@@ -1766,7 +1770,7 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type){
    
     $form['about_me']['first_name'] = array(
 	'#type' => 'textfield',
-	'#title' => t('First Name'),
+	'#title' => t('First name'),
 	'#size' => 30,
 	'#maxlength' => 30,
 	'#required' => TRUE,
@@ -1775,7 +1779,7 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type){
     
     $form['about_me']['last_name'] = array(
 	'#type' => 'textfield',
-	'#title' => t('Last Name'),
+	'#title' => t('Last name'),
 	'#size' => 30,
 	'#maxlength' => 64,
 	'#required' => TRUE,
@@ -1841,8 +1845,6 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type){
 /* Function to validate submitted values*/
 
 function asu_rfi_current_form_data_validate($form,&$form_state){
-    
- 
     $fname = $form_state['values']['first_name'];
     $fname = ucfirst($fname);
     $lname = $form_state['values']['last_name'];
@@ -1854,12 +1856,12 @@ function asu_rfi_current_form_data_validate($form,&$form_state){
     $form_type = $form_state['values']['degree_type'];
    
     //validate first name
-    if( !preg_match("/^[a-zA-Z0-9\._-\s]+$/",$fname)){
+    if( !preg_match("/^[a-zA-Z0-9\.\s-_]+$/",$fname)){
 	form_set_error('first_name', t('First name field accepts only plain text.'));
 	  
     }
     //validate last name
-    if( !preg_match("/^[a-zA-Z0-9\._-\s]+$/",$lname)){
+    if( !preg_match("/^[a-zA-Z0-9\.\s-_]+$/",$lname)){
 	form_set_error('last_name', t('Last name field accepts only plain text.'));
 	  
     }

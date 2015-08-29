@@ -150,7 +150,7 @@ function asu_rfi_admin_settings($form_state){
     $form['asu_rfi_confirm_email']['asu_rfi_email_subject_field'] =  array(
     '#type' => 'textfield',
     '#title' => t('"Subject" field'),
-    '#default_value' => variable_get('asu_rfi_from_email_field'),
+    '#default_value' => variable_get('asu_rfi_email_subject_field'),
     '#description' => t('Subject line of the email to be sent to the user upon form submission'),
     '#size' => 100,
     '#maxlength' => 100,

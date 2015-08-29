@@ -141,3 +141,7 @@ div.fieldset-wrapper {
 #edit-dob-field{
     margin-bottom: -17px;
 }
+
+#edit-dob-field .modal-body {
+  padding: 35px;
+}

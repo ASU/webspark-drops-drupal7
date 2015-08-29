@@ -1222,6 +1222,7 @@ function asu_rfi_feature_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
       'weight' => 20,

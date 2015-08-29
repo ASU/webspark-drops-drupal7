@@ -36,18 +36,237 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
-    'title' => 'title',
+    'created' => 'created',
+    'changed' => 'changed',
+    'views_bulk_operations' => 'views_bulk_operations',
+    'field_rfi_first_name' => 'field_rfi_first_name',
+    'field_rfi_last_name' => 'field_rfi_last_name',
+    'field_rfi_email' => 'field_rfi_email',
+    'field_rfi_phone' => 'field_rfi_phone',
+    'field_rfi_address' => 'field_rfi_address',
+    'field_rfi_city' => 'field_rfi_city',
+    'field_rfi_country' => 'field_rfi_country',
+    'field_rfi_state' => 'field_rfi_state',
+    'field_rfi_dob' => 'field_rfi_dob',
+    'field_rfi_zipcode' => 'field_rfi_zipcode',
+    'field_rfi_student_type' => 'field_rfi_student_type',
+    'field_rfi_veteran' => 'field_rfi_veteran',
+    'field_rfi_program' => 'field_rfi_program',
+    'field_rfi_program_name' => 'field_rfi_program_name',
+    'field_rfi_start_term' => 'field_rfi_start_term',
+    'field_rfi_start_term_code' => 'field_rfi_start_term_code',
+    'field_rfi_error_message' => 'field_rfi_error_message',
+    'field_rfi_form_name' => 'field_rfi_form_name',
+    'field_rfi_form_type' => 'field_rfi_form_type',
+    'field_rfi_international' => 'field_rfi_international',
+    'field_rfi_province' => 'field_rfi_province',
+    'field_rfi_question' => 'field_rfi_question',
+    'field_rfi_submission_status' => 'field_rfi_submission_status',
+    'nid' => 'nid',
+    'edit_node' => 'edit_node',
   );
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
-    'title' => array(
+    'created' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'changed' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'views_bulk_operations' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_first_name' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
+    'field_rfi_last_name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_email' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_phone' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_address' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_city' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_country' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_state' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_dob' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_zipcode' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_student_type' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_veteran' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_program' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_program_name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_start_term' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_start_term_code' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_error_message' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_form_name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_form_type' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_international' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_province' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_question' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_submission_status' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nid' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'edit_node' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
   );
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = '<p>0 Results Found</p>';
+  $handler->display->display_options['empty']['area']['format'] = 'full_html';
   /* Field: Content: First name */
   $handler->display->display_options['fields']['field_rfi_first_name']['id'] = 'field_rfi_first_name';
   $handler->display->display_options['fields']['field_rfi_first_name']['table'] = 'field_data_field_rfi_first_name';
@@ -209,6 +428,52 @@ function asu_rfi_feature_views_default_views() {
     1 => 0,
     3 => 0,
   );
+  /* Filter criterion: Content: Email (field_rfi_email) */
+  $handler->display->display_options['filters']['field_rfi_email_value']['id'] = 'field_rfi_email_value';
+  $handler->display->display_options['filters']['field_rfi_email_value']['table'] = 'field_data_field_rfi_email';
+  $handler->display->display_options['filters']['field_rfi_email_value']['field'] = 'field_rfi_email_value';
+  $handler->display->display_options['filters']['field_rfi_email_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['field_rfi_email_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_rfi_email_value']['expose']['operator_id'] = 'field_rfi_email_value_op';
+  $handler->display->display_options['filters']['field_rfi_email_value']['expose']['label'] = 'Search by student\'s email';
+  $handler->display->display_options['filters']['field_rfi_email_value']['expose']['operator'] = 'field_rfi_email_value_op';
+  $handler->display->display_options['filters']['field_rfi_email_value']['expose']['identifier'] = 'field_rfi_email_value';
+  $handler->display->display_options['filters']['field_rfi_email_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+  );
+  $handler->display->display_options['filters']['field_rfi_email_value']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['field_rfi_email_value']['expose']['autocomplete_min_chars'] = '0';
+  $handler->display->display_options['filters']['field_rfi_email_value']['expose']['autocomplete_field'] = 'field_rfi_email';
+  $handler->display->display_options['filters']['field_rfi_email_value']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['field_rfi_email_value']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['field_rfi_email_value']['expose']['autocomplete_dependent'] = 0;
+  /* Filter criterion: Content: Last name (field_rfi_last_name) */
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['id'] = 'field_rfi_last_name_value';
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['table'] = 'field_data_field_rfi_last_name';
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['field'] = 'field_rfi_last_name_value';
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['operator_id'] = 'field_rfi_last_name_value_op';
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['label'] = 'Search by Last name';
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['operator'] = 'field_rfi_last_name_value_op';
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['identifier'] = 'field_rfi_last_name_value';
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+  );
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['autocomplete_min_chars'] = '0';
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['autocomplete_field'] = 'field_rfi_last_name';
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['autocomplete_dependent'] = 0;
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -225,23 +490,11 @@ function asu_rfi_feature_views_default_views() {
 <p><strong>SF_Complete:</strong> After a submission is posted to the middleware, middleware responds to the site with the status of the submission. If the submission went through successfully, the status of the submission changes to SF_Complete.</p>
  
 <p><strong>Pending:</strong> If any error occurs with the submission to the middleware, the submission status changes to Pending.</p>
+
+<p><strong>Action required:</strong> If any error occurs after trying to submit to the middleware, the submission status will change to "Action required" and the site administrators should correct the submission and post it back to middleware using Bulk operation below.</p>
 ';
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Content: Post date */
-  $handler->display->display_options['fields']['created']['id'] = 'created';
-  $handler->display->display_options['fields']['created']['table'] = 'node';
-  $handler->display->display_options['fields']['created']['field'] = 'created';
-  $handler->display->display_options['fields']['created']['label'] = 'Submitted date';
-  $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['created']['date_format'] = 'medium';
-  $handler->display->display_options['fields']['created']['second_date_format'] = 'panopoly_time';
-  /* Field: Content: Updated date */
-  $handler->display->display_options['fields']['changed']['id'] = 'changed';
-  $handler->display->display_options['fields']['changed']['table'] = 'node';
-  $handler->display->display_options['fields']['changed']['field'] = 'changed';
-  $handler->display->display_options['fields']['changed']['date_format'] = 'long';
-  $handler->display->display_options['fields']['changed']['second_date_format'] = 'panopoly_time';
   /* Field: Bulk operations: Content */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';
@@ -387,6 +640,25 @@ function asu_rfi_feature_views_default_views() {
       'label' => '',
     ),
   );
+  /* Field: Content: Post date */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = 'Submitted date';
+  $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['created']['date_format'] = 'medium';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'panopoly_time';
+  /* Field: Content: Updated date */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['date_format'] = 'long';
+  $handler->display->display_options['fields']['changed']['second_date_format'] = 'panopoly_time';
+  /* Field: Content: Status of the submission */
+  $handler->display->display_options['fields']['field_rfi_submission_status']['id'] = 'field_rfi_submission_status';
+  $handler->display->display_options['fields']['field_rfi_submission_status']['table'] = 'field_data_field_rfi_submission_status';
+  $handler->display->display_options['fields']['field_rfi_submission_status']['field'] = 'field_rfi_submission_status';
+  $handler->display->display_options['fields']['field_rfi_submission_status']['element_label_colon'] = FALSE;
   /* Field: Content: First name */
   $handler->display->display_options['fields']['field_rfi_first_name']['id'] = 'field_rfi_first_name';
   $handler->display->display_options['fields']['field_rfi_first_name']['table'] = 'field_data_field_rfi_first_name';
@@ -496,11 +768,6 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['fields']['field_rfi_question']['table'] = 'field_data_field_rfi_question';
   $handler->display->display_options['fields']['field_rfi_question']['field'] = 'field_rfi_question';
   $handler->display->display_options['fields']['field_rfi_question']['element_label_colon'] = FALSE;
-  /* Field: Content: Status of the submission */
-  $handler->display->display_options['fields']['field_rfi_submission_status']['id'] = 'field_rfi_submission_status';
-  $handler->display->display_options['fields']['field_rfi_submission_status']['table'] = 'field_data_field_rfi_submission_status';
-  $handler->display->display_options['fields']['field_rfi_submission_status']['field'] = 'field_rfi_submission_status';
-  $handler->display->display_options['fields']['field_rfi_submission_status']['element_label_colon'] = FALSE;
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
