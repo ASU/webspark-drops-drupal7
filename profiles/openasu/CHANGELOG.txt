@@ -1,3 +1,18 @@
+Webspark 1.13.12 (Pullman) release
+----------------
+- ASU custom modules
+    * ASU RFI - v1.2
+        * Updated module to send message to middleware upon App key request.
+        * Updated module to show error log message to admins upon form submission failure if the connection between middleware and the form is lost.
+        * Added “Action require” status term to ASU RFI Submissions cck field.
+        * Updated the module to send pending submissions to middleware only once and alert site admins of failed submissions.
+        * Added Google analytics tracking code.
+        * Enhanced RFI lead submissions view to include search by students email or last name.
+        * Fixed “uncaught error” message in Jquery file.
+        * Added CSS to Date of birth modal message box.
+        * Fixed some upper case and lower case field names.
+
+
 Webspark 1.13.11 (Tacoma) release
 ----------------
 - Drupal Core
@@ -17,6 +32,7 @@ Webspark 1.13.11 (Tacoma) release
         * Added conditional check to verify if carousel slide title should be a hyperlink
         * Fixed active class styling on deeply nested menu tree links
         * Deeply nested menu tree links are now indented
+
 
 Webspark 1.13.10 (Spokane) release
 ----------------
