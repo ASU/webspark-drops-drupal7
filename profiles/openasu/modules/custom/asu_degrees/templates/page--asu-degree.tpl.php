@@ -242,15 +242,31 @@ if (module_exists('metatag')) {
                 <?php endif; ?>
                   <div class="row space-bot-lg">
                     <div class="col-sm-6 col-md-4 space-bot-md">
-                      <a href="#asu-rfi-form-data" id="take-me-to-rfi" class="btn btn-gold btn-block btn-lg">Request information</a>
+                      <?php if (isset($node_info['field_asu_degree_cta_information']['#items'][0]['url'])): ?>
+                        <a href="<?php echo $node_info['field_asu_degree_cta_information']['#items'][0]['url'] ?>"
+                           class="btn btn-gold btn-block btn-lg">Request information</a>
+                      <?php else: ?>
+                        <a href="#asu-rfi-form-data" id="take-me-to-rfi"
+                           class="btn btn-gold btn-block btn-lg">Request information</a>
+                      <?php endif ?>
                     </div>
                     <div class="col-sm-6 col-md-4 space-bot-md">
-                      <a href="https://visit.asu.edu/"
-                         class="btn btn-gold btn-block btn-lg">Schedule a visit</a>
+                      <?php if (isset($node_info['field_asu_degree_cta_visit']['#items'][0]['url'])): ?>
+                        <a href="<?php echo $node_info['field_asu_degree_cta_visit']['#items'][0]['url'] ?>"
+                           class="btn btn-gold btn-block btn-lg">Schedule a visit</a>
+                      <?php else: ?>
+                        <a href="https://visit.asu.edu/"
+                           class="btn btn-gold btn-block btn-lg">Schedule a visit</a>
+                      <?php endif ?>
                     </div>
                     <div class="col-sm-6 col-md-4 space-bot-md">
-                      <a href="http://www.asu.edu/enroll/apply"
-                         class="btn btn-gold btn-block btn-lg">How and when to apply</a>
+                      <?php if (isset($node_info['field_asu_degree_cta_apply']['#items'][0]['url'])): ?>
+                        <a href="<?php echo $node_info['field_asu_degree_cta_apply']['#items'][0]['url'] ?>"
+                           class="btn btn-gold btn-block btn-lg">How and when to apply</a>
+                      <?php else: ?>
+                        <a href="https://students.asu.edu/apply"
+                           class="btn btn-gold btn-block btn-lg">How and when to apply</a>
+                      <?php endif ?>
                     </div>
                   </div>
               </div>
@@ -270,13 +286,7 @@ if (module_exists('metatag')) {
                           <?php endif; ?><br>
 
                           <?php if (isset($node_info['field_asu_college']['#items'][0]['value'])): ?>
-                            <?php if (isset($node_info['field_asu_college_url']['#items'][0]['url'])): ?>
-                              <a href="<?php echo $node_info['field_asu_college_url']['#items'][0]['url']; ?>" target="_blank">
-                            <?php endif; ?>
                             <?php print render($node_info['field_asu_college']['#items'][0]['value']); ?>
-                            <?php if (isset($node_info['field_asu_college_url']['#items'][0]['url'])): ?>
-                              </a>
-                            <?php endif; ?>
                           <?php endif; ?>
                         </p>
                       </div>
@@ -326,11 +336,9 @@ if (module_exists('metatag')) {
                         ?>
                       </p>
 
-                      <h2>What is a Major Map?</h2>
+                      <h2>Major Map</h2>
 
-                      <p>A major map outlines a major’s critical requirements, elective
-                        and required courses, and optimal course sequencing to help
-                        students stay on the right track to graduation.</p>
+                      <p>A major map outlines the degree’s requirements for graduation.</p>
                       <?php if (isset($node_info['field_asu_degree_major_map_url'])): ?>
                         <p><a
                             href="<?php echo $node_info['field_asu_degree_major_map_url']['#items'][0]['url']; ?>"
@@ -355,7 +363,12 @@ if (module_exists('metatag')) {
                     <div class="col-sm-6 col-md-4">
                       <h2>Application Requirements</h2>
 
-                      <p>
+                        <?php if (isset($node_info['field_asu_degree_addl_req']['#items'][0]['safe_value'])): ?>
+                          <p>
+                            <?php print render($node_info['field_asu_degree_addl_req']['#items'][0]['safe_value']); ?>
+                          </p>
+                        <?php endif ?>
+
                         All students are required to meet general university admission
                         requirements.<br>
                         <a href="https://students.asu.edu/freshman">Freshman</a><br>
@@ -363,9 +376,6 @@ if (module_exists('metatag')) {
                         <a
                           href="https://students.asu.edu/international">International</a><br>
                         <a href="https://students.asu.edu/readmission">Readmission</a><br>
-                        <?php if (isset($node_info['field_asu_degree_additional_req']['#items'][0]['url'])): ?>
-                          <a href="<?php echo $node_info['field_asu_degree_additional_req']['#items'][0]['url']; ?>">Additional Requirements</a>
-                        <?php endif ?>
                       </p>
                     </div>
                     <div class="col-sm-6 col-md-4">
@@ -382,22 +392,14 @@ if (module_exists('metatag')) {
 
                       <?php if (isset($node_info['field_asu_degree_wue_available']['#items'][0]['value']) && $node_info['field_asu_degree_wue_available']['#items'][0]['value'] == 1): ?>
                         <p>
-                          <?php if (isset($node_info['field_asu_degree_wue_link']['#items'][0]['url'])): ?>
-                            <a href="<?php echo $node_info['field_asu_degree_wue_link']['#items'][0]['url'] ?>">WUE eligible program</a><br>
-                          <?php else: ?>
                             <a href="<?php echo 'https://students.asu.edu/admission/wue' ?>">WUE eligible program</a><br>
-                          <?php endif ?>
                           Undergraduate students from western states who enroll in this
                           program are eligible for a discounted tuition rate.
                         </p>
                       <?php endif ?>
 
                       <p>
-                        <?php if (isset($node_info['field_financial_aid_link']['#items'][0]['url'])): ?>
-                          <a href="<?php echo $node_info['field_financial_aid_link']['#items'][0]['url'] ?>">Financial Aid</a><br>
-                        <?php else: ?>
                           <a href="<?php echo 'https://students.asu.edu/financialaid' ?>">Financial Aid</a><br>
-                        <?php endif ?>
                         ASU has many financial aid options. Almost everyone, regardless
                         of income, can qualify for some form of financial aid. In fact,
                         more than 70 percent of all ASU students receive some form of
@@ -414,13 +416,24 @@ if (module_exists('metatag')) {
 
               <div class="container space-top-xl space-bot-xl">
                 <div class="col-md-8">
+
+                  <?php if (isset($node_info['field_asu_degree_grad_text_area']['#items'][0]['safe_value'])): ?>
+                      <?php echo $node_info['field_asu_degree_grad_text_area']['#items'][0]['safe_value']; ?>
+                  <?php endif ?>
+
                   <?php if (isset($node_info['field_asu_degree_career_opps'])): ?>
                     <h2>Career Outlook</h2>
-                    <?php print render($node_info['field_asu_degree_career_opps']); ?>
+                    <?php if (isset($node_info['field_asu_degree_career_outlook']['#items'][0]['safe_value'])): ?>
+                        <?php print render($node_info['field_asu_degree_career_outlook']['#items'][0]['safe_value']); ?>
+                    <?php elseif (isset($node_info['field_asu_degree_career_opps'])): ?>
+                      <?php print render($node_info['field_asu_degree_career_opps']); ?>
+                    <?php endif; ?>
                   <?php endif; ?>
                   <?php if (isset($node_info['field_asu_degree_example_careers'])): ?>
-                    <h2>Example Careers</h2>
-                    <?php print render($node_info['field_asu_degree_example_careers']); ?>
+                    <?php if (isset($node_info['field_asu_degree_ex_car_tf']['#items'][0]['value']) && $node_info['field_asu_degree_ex_car_tf']['#items'][0]['value'] == 1): ?>
+                      <h2>Example Careers</h2>
+                      <?php print render($node_info['field_asu_degree_example_careers']); ?>
+                    <?php endif; ?>
                   <?php endif; ?>
                 </div>
                 <?php if (isset($node_info['field_asu_degree_relatedprograms'])): ?>
@@ -600,15 +613,31 @@ if (module_exists('metatag')) {
 
                   <div class="row space-bot-lg">
                     <div class="col-sm-6 col-md-4 space-bot-md">
-                      <a href="#asu-rfi-form-data" id="take-me-to-rfi" class="btn btn-gold btn-block btn-lg">Request information</a>
+                      <?php if (isset($node_info['field_asu_degree_cta_information']['#items'][0]['url'])): ?>
+                        <a href="<?php echo $node_info['field_asu_degree_cta_information']['#items'][0]['url'] ?>"
+                           class="btn btn-gold btn-block btn-lg">Request information</a>
+                      <?php else: ?>
+                        <a href="#asu-rfi-form-data" id="take-me-to-rfi"
+                           class="btn btn-gold btn-block btn-lg">Request information</a>
+                      <?php endif ?>
                     </div>
                     <div class="col-sm-6 col-md-4 space-bot-md">
-                      <a href="https://visit.asu.edu/"
-                         class="btn btn-gold btn-block btn-lg">Schedule a visit</a>
+                      <?php if (isset($node_info['field_asu_degree_cta_visit']['#items'][0]['url'])): ?>
+                        <a href="<?php echo $node_info['field_asu_degree_cta_visit']['#items'][0]['url'] ?>"
+                           class="btn btn-gold btn-block btn-lg">Schedule a visit</a>
+                      <?php else: ?>
+                        <a href="https://visit.asu.edu/"
+                           class="btn btn-gold btn-block btn-lg">Schedule a visit</a>
+                      <?php endif ?>
                     </div>
                     <div class="col-sm-6 col-md-4 space-bot-md">
-                      <a href="http://www.asu.edu/enroll/apply"
-                         class="btn btn-gold btn-block btn-lg">How and when to apply</a>
+                      <?php if (isset($node_info['field_asu_degree_cta_apply']['#items'][0]['url'])): ?>
+                        <a href="<?php echo $node_info['field_asu_degree_cta_apply']['#items'][0]['url'] ?>"
+                           class="btn btn-gold btn-block btn-lg">How and when to apply</a>
+                      <?php else: ?>
+                        <a href="https://students.asu.edu/apply"
+                           class="btn btn-gold btn-block btn-lg">How and when to apply</a>
+                      <?php endif ?>
                     </div>
                   </div>
               </div>
@@ -625,13 +654,7 @@ if (module_exists('metatag')) {
                           <?php endif; ?><br>
 
                           <?php if (isset($node_info['field_asu_college']['#items'][0]['value'])): ?>
-                            <?php if (isset($node_info['field_asu_college_url']['#items'][0]['url'])): ?>
-                              <a href="<?php echo $node_info['field_asu_college_url']['#items'][0]['url']; ?>" target="_blank">
-                            <?php endif; ?>
                             <?php print render($node_info['field_asu_college']['#items'][0]['value']); ?>
-                            <?php if (isset($node_info['field_asu_college_url']['#items'][0]['url'])): ?>
-                              </a>
-                            <?php endif; ?>
                           <?php endif; ?>
                         </p>
                       </div>

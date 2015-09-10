@@ -212,34 +212,31 @@ function asu_degrees_feature_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'field_asu_degree_additional_req'
-  $field_bases['field_asu_degree_additional_req'] = array(
+  // Exported field_base: 'field_asu_degree_addl_req'
+  $field_bases['field_asu_degree_addl_req'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_asu_degree_additional_req',
-    'foreign keys' => array(),
-    'indexes' => array(),
-    'locked' => 0,
-    'module' => 'link',
-    'settings' => array(
-      'attributes' => array(
-        'class' => '',
-        'rel' => '',
-        'target' => 'default',
+    'field_name' => 'field_asu_degree_addl_req',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
       ),
-      'display' => array(
-        'url_cutoff' => 80,
-      ),
-      'enable_tokens' => 1,
-      'title' => 'optional',
-      'title_maxlength' => 128,
-      'title_value' => '',
-      'url' => 0,
     ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(),
     'translatable' => 0,
-    'type' => 'link_field',
+    'type' => 'text_long',
   );
 
   // Exported field_base: 'field_asu_degree_admission_req'
@@ -384,6 +381,33 @@ function asu_degrees_feature_field_default_field_bases() {
     'type' => 'text_long',
   );
 
+  // Exported field_base: 'field_asu_degree_career_outlook'
+  $field_bases['field_asu_degree_career_outlook'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_asu_degree_career_outlook',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'text_long',
+  );
+
   // Exported field_base: 'field_asu_degree_cert'
   $field_bases['field_asu_degree_cert'] = array(
     'active' => 1,
@@ -437,6 +461,96 @@ function asu_degrees_feature_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'list_boolean',
+  );
+
+  // Exported field_base: 'field_asu_degree_cta_apply'
+  $field_bases['field_asu_degree_cta_apply'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_asu_degree_cta_apply',
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'link',
+    'settings' => array(
+      'attributes' => array(
+        'class' => '',
+        'rel' => '',
+        'target' => 'default',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'title' => 'optional',
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+    ),
+    'translatable' => 0,
+    'type' => 'link_field',
+  );
+
+  // Exported field_base: 'field_asu_degree_cta_information'
+  $field_bases['field_asu_degree_cta_information'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_asu_degree_cta_information',
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'link',
+    'settings' => array(
+      'attributes' => array(
+        'class' => '',
+        'rel' => '',
+        'target' => 'default',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'title' => 'optional',
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+    ),
+    'translatable' => 0,
+    'type' => 'link_field',
+  );
+
+  // Exported field_base: 'field_asu_degree_cta_visit'
+  $field_bases['field_asu_degree_cta_visit'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_asu_degree_cta_visit',
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'link',
+    'settings' => array(
+      'attributes' => array(
+        'class' => '',
+        'rel' => '',
+        'target' => 'default',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'title' => 'optional',
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+    ),
+    'translatable' => 0,
+    'type' => 'link_field',
   );
 
   // Exported field_base: 'field_asu_degree_department'
@@ -495,6 +609,32 @@ function asu_degrees_feature_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'text',
+  );
+
+  // Exported field_base: 'field_asu_degree_ex_car_tf'
+  $field_bases['field_asu_degree_ex_car_tf'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_asu_degree_ex_car_tf',
+    'foreign keys' => array(),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => '',
+        1 => '',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_boolean',
   );
 
   // Exported field_base: 'field_asu_degree_example_careers'
@@ -1017,36 +1157,6 @@ function asu_degrees_feature_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'field_asu_degree_wue_link'
-  $field_bases['field_asu_degree_wue_link'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_asu_degree_wue_link',
-    'foreign keys' => array(),
-    'indexes' => array(),
-    'locked' => 0,
-    'module' => 'link',
-    'settings' => array(
-      'attributes' => array(
-        'class' => '',
-        'rel' => '',
-        'target' => 'default',
-      ),
-      'display' => array(
-        'url_cutoff' => 80,
-      ),
-      'enable_tokens' => 1,
-      'title' => 'optional',
-      'title_maxlength' => 128,
-      'title_value' => '',
-      'url' => 0,
-    ),
-    'translatable' => 0,
-    'type' => 'link_field',
-  );
-
   // Exported field_base: 'field_asu_diploma_description'
   $field_bases['field_asu_diploma_description'] = array(
     'active' => 1,
@@ -1104,36 +1214,6 @@ function asu_degrees_feature_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'image',
-  );
-
-  // Exported field_base: 'field_financial_aid_link'
-  $field_bases['field_financial_aid_link'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_financial_aid_link',
-    'foreign keys' => array(),
-    'indexes' => array(),
-    'locked' => 0,
-    'module' => 'link',
-    'settings' => array(
-      'attributes' => array(
-        'class' => '',
-        'rel' => '',
-        'target' => 'default',
-      ),
-      'display' => array(
-        'url_cutoff' => 80,
-      ),
-      'enable_tokens' => 1,
-      'title' => 'optional',
-      'title_maxlength' => 128,
-      'title_value' => '',
-      'url' => 0,
-    ),
-    'translatable' => 0,
-    'type' => 'link_field',
   );
 
   // Exported field_base: 'field_scholarship_link'
