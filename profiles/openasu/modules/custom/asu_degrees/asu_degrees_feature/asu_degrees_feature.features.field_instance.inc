@@ -61,7 +61,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 16,
+      'weight' => 27,
     ),
   );
 
@@ -113,7 +113,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 12,
+      'weight' => 23,
     ),
   );
 
@@ -165,7 +165,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 13,
+      'weight' => 24,
     ),
   );
 
@@ -250,7 +250,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'media_generic',
-      'weight' => 1,
+      'weight' => 2,
     ),
   );
 
@@ -302,7 +302,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 19,
+      'weight' => 32,
     ),
   );
 
@@ -368,7 +368,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 20,
+      'weight' => 33,
     ),
   );
 
@@ -420,16 +420,21 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 15,
+      'weight' => 25,
     ),
   );
 
   // Exported field_instance: 'node-asu_degree-field_asu_degree_acc_program'
   $field_instances['node-asu_degree-field_asu_degree_acc_program'] = array(
     'bundle' => 'asu_degree',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Denotes the ASU catalog value (on/off) for "accelerated program" with respect to this degree program.<br>
+<i>NOTE:</i> This field can be overridden, but will reapply the official catalog value to the degree program if the degree feed is updated.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -466,23 +471,24 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
-      'weight' => 8,
+      'weight' => 4,
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_additional_req'
-  $field_instances['node-asu_degree-field_asu_degree_additional_req'] = array(
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_addl_req'
+  $field_instances['node-asu_degree-field_asu_degree_addl_req'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => '<strong>UNDERGRADUATE PROGRAMS ONLY</strong><br>
+Additional requirements for the degree can be entered in to display at the top of the "Application Requirements" region on undergraduate degree nodes.',
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'link',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'link_default',
-        'weight' => 39,
+        'type' => 'text_default',
+        'weight' => 46,
       ),
       'featured' => array(
         'label' => 'above',
@@ -498,42 +504,30 @@ function asu_degrees_feature_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_asu_degree_additional_req',
-    'label' => 'Additional Requirements URL',
+    'field_name' => 'field_asu_degree_addl_req',
+    'label' => 'Additional Requirements',
     'required' => 0,
     'settings' => array(
-      'attributes' => array(
-        'class' => '',
-        'configurable_title' => 0,
-        'rel' => '',
-        'target' => 'default',
-        'title' => '',
-      ),
-      'display' => array(
-        'url_cutoff' => 80,
-      ),
-      'enable_tokens' => 1,
       'linkit' => array(
         'button_text' => 'Search',
         'enable' => 0,
         'profile' => '',
       ),
-      'rel_remove' => 'default',
-      'title' => 'none',
-      'title_maxlength' => 128,
-      'title_value' => '',
-      'url' => 0,
+      'text_processing' => 1,
       'user_register_form' => FALSE,
-      'validate_url' => 1,
     ),
     'widget' => array(
-      'active' => 0,
-      'module' => 'link',
+      'active' => 1,
+      'module' => 'text',
       'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
       ),
-      'type' => 'link_field',
-      'weight' => 30,
+      'type' => 'text_textarea',
+      'weight' => 11,
     ),
   );
 
@@ -587,7 +581,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 29,
+      'weight' => 22,
     ),
   );
 
@@ -653,7 +647,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 25,
+      'weight' => 45,
     ),
   );
 
@@ -705,7 +699,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 14,
+      'weight' => 26,
     ),
   );
 
@@ -758,7 +752,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 18,
+      'weight' => 29,
     ),
   );
 
@@ -812,7 +806,62 @@ function asu_degrees_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 24,
+      'weight' => 30,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_career_outlook'
+  $field_instances['node-asu_degree-field_asu_degree_career_outlook'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Add a description here to override the default career outlook description for your specific needs.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 50,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_degree_career_outlook',
+    'label' => 'Career Outlook description',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 15,
     ),
   );
 
@@ -864,16 +913,21 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 5,
       ),
       'type' => 'text_textfield',
-      'weight' => 27,
+      'weight' => 31,
     ),
   );
 
   // Exported field_instance: 'node-asu_degree-field_asu_degree_conc_program'
   $field_instances['node-asu_degree-field_asu_degree_conc_program'] = array(
     'bundle' => 'asu_degree',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Denotes the ASU catalog value (on/off) for "concurrent program" with respect to this degree program.<br>
+<i>NOTE:</i> This field can be overridden, but will reapply the official catalog value to the degree program if the degree feed is updated.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -910,6 +964,207 @@ function asu_degrees_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
+      'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_cta_apply'
+  $field_instances['node-asu_degree-field_asu_degree_cta_apply'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Add a link here to change from the default "How and when to apply" link to one specific to your needs.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 49,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_degree_cta_apply',
+    'label' => 'CTA Button - How and when to apply',
+    'required' => 0,
+    'settings' => array(
+      'attributes' => array(
+        'class' => '',
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => 'default',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'none',
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'link_field',
+      'weight' => 10,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_cta_information'
+  $field_instances['node-asu_degree-field_asu_degree_cta_information'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Add a link here to change from the default "Request information" link to one specific to your needs.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 47,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_degree_cta_information',
+    'label' => 'CTA Button - Request information',
+    'required' => 0,
+    'settings' => array(
+      'attributes' => array(
+        'class' => '',
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => 'default',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'none',
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'link_field',
+      'weight' => 8,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_cta_visit'
+  $field_instances['node-asu_degree-field_asu_degree_cta_visit'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Add a link here to change from the default "Schedule a visit" link to one specific to your needs.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 48,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_degree_cta_visit',
+    'label' => 'CTA Button - Schedule a visit',
+    'required' => 0,
+    'settings' => array(
+      'attributes' => array(
+        'class' => '',
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => 'default',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'none',
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'link_field',
       'weight' => 9,
     ),
   );
@@ -962,7 +1217,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 21,
+      'weight' => 34,
     ),
   );
 
@@ -1014,7 +1269,57 @@ function asu_degrees_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 22,
+      'weight' => 35,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_ex_car_tf'
+  $field_instances['node-asu_degree-field_asu_degree_ex_car_tf'] = array(
+    'bundle' => 'asu_degree',
+    'default_value' => array(
+      0 => array(
+        'value' => 1,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'Turn the "Example Careers" section on and off; check the box to show the example careers, and uncheck it to hide them.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 51,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_degree_ex_car_tf',
+    'label' => 'Example Careers: True/False',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_onoff',
+      'weight' => 16,
     ),
   );
 
@@ -1068,7 +1373,7 @@ function asu_degrees_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 34,
+      'weight' => 36,
     ),
   );
 
@@ -1121,10 +1426,10 @@ Displays \'Application Deadline\' information on graduate degree nodes. This wil
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'maxlength_js_truncate_html' => 0,
-        'rows' => 25,
+        'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 40,
+      'weight' => 18,
     ),
   );
 
@@ -1180,7 +1485,7 @@ Displays given video (use WYSIWYG \'Add media\' button to embed) next to top deg
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 43,
+      'weight' => 20,
     ),
   );
 
@@ -1233,10 +1538,10 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'maxlength_js_truncate_html' => 0,
-        'rows' => 25,
+        'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 41,
+      'weight' => 19,
     ),
   );
 
@@ -1245,8 +1550,7 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     'bundle' => 'asu_degree',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '<strong>GRADUATE PROGRAMS ONLY</strong><br>
-Displays given information below grey section (containing "Degree Offered") on graduate degree nodes. This will not work on undergraduate degree nodes.',
+    'description' => 'Displays given information below grey section (containing "Degree Offered") on degree nodes. Please do not use the "ASU Degree Marketing" region in Admin > Structure > Blocks if you are utilizing this field.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1270,7 +1574,7 @@ Displays given information below grey section (containing "Degree Offered") on g
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_degree_grad_text_area',
-    'label' => 'Graduate: Free Text Area',
+    'label' => 'Marketing Text Area',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -1289,10 +1593,10 @@ Displays given information below grey section (containing "Degree Offered") on g
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'maxlength_js_truncate_html' => 0,
-        'rows' => 25,
+        'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 42,
+      'weight' => 14,
     ),
   );
 
@@ -1358,7 +1662,7 @@ Displays given information below grey section (containing "Degree Offered") on g
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 23,
+      'weight' => 37,
     ),
   );
 
@@ -1410,7 +1714,7 @@ Displays given information below grey section (containing "Degree Offered") on g
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 37,
+      'weight' => 38,
     ),
   );
 
@@ -1462,7 +1766,7 @@ Displays given information below grey section (containing "Degree Offered") on g
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 33,
+      'weight' => 39,
     ),
   );
 
@@ -1475,7 +1779,8 @@ Displays given information below grey section (containing "Degree Offered") on g
       ),
     ),
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Denotes the ASU catalog value (on/off) for "new program" with respect to this degree program.<br>
+<i>NOTE:</i> This field can be overridden, but will reapply the official catalog value to the degree program if the degree feed is updated.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1512,7 +1817,7 @@ Displays given information below grey section (containing "Degree Offered") on g
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
-      'weight' => 11,
+      'weight' => 6,
     ),
   );
 
@@ -1564,7 +1869,7 @@ Displays given information below grey section (containing "Degree Offered") on g
         'size' => 10,
       ),
       'type' => 'text_textfield',
-      'weight' => 26,
+      'weight' => 40,
     ),
   );
 
@@ -1616,7 +1921,7 @@ Displays given information below grey section (containing "Degree Offered") on g
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 31,
+      'weight' => 21,
     ),
   );
 
@@ -1663,7 +1968,7 @@ Displays given information below grey section (containing "Degree Offered") on g
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
-      'weight' => 39,
+      'weight' => 17,
     ),
   );
 
@@ -1717,7 +2022,7 @@ Displays given information below grey section (containing "Degree Offered") on g
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 28,
+      'weight' => 41,
     ),
   );
 
@@ -1769,7 +2074,7 @@ Displays given information below grey section (containing "Degree Offered") on g
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 32,
+      'weight' => 42,
     ),
   );
 
@@ -1778,7 +2083,7 @@ Displays given information below grey section (containing "Degree Offered") on g
     'bundle' => 'asu_degree',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Add a description here to override the default degree catalog description for your specific needs. A "Read more" link will appear below your custom description that will expand to show the default degree catalog description.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1817,14 +2122,14 @@ Displays given information below grey section (containing "Degree Offered") on g
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'maxlength_js' => 140,
+        'maxlength_js' => '',
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'maxlength_js_truncate_html' => 0,
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 3,
+      'weight' => 7,
     ),
   );
 
@@ -1877,7 +2182,7 @@ Displays given information below grey section (containing "Degree Offered") on g
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 35,
+      'weight' => 43,
     ),
   );
 
@@ -1944,16 +2249,22 @@ Displays given information below grey section (containing "Degree Offered") on g
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 36,
+      'weight' => 44,
     ),
   );
 
   // Exported field_instance: 'node-asu_degree-field_asu_degree_wue_available'
   $field_instances['node-asu_degree-field_asu_degree_wue_available'] = array(
     'bundle' => 'asu_degree',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
     'deleted' => 0,
-    'description' => '',
+    'description' => '<strong>UNDERGRADUATE PROGRAMS ONLY</strong><br>
+Denotes whether or not this is a WUE eligible program. Undergraduate students from western states who enroll in this program are eligible for a discounted tuition rate.<br>
+<i>NOTE:</i> This field can be overridden, but will reapply the official catalog value to the degree program if the degree feed is updated.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1977,7 +2288,7 @@ Displays given information below grey section (containing "Degree Offered") on g
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_degree_wue_available',
-    'label' => 'WUE Available',
+    'label' => 'WUE eligible program',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1990,74 +2301,7 @@ Displays given information below grey section (containing "Degree Offered") on g
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
-      'weight' => 5,
-    ),
-  );
-
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_wue_link'
-  $field_instances['node-asu_degree-field_asu_degree_wue_link'] = array(
-    'bundle' => 'asu_degree',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'link',
-        'settings' => array(),
-        'type' => 'link_default',
-        'weight' => 36,
-      ),
-      'featured' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_asu_degree_wue_link',
-    'label' => 'WUE Link',
-    'required' => 0,
-    'settings' => array(
-      'attributes' => array(
-        'class' => '',
-        'configurable_title' => 0,
-        'rel' => '',
-        'target' => 'default',
-        'title' => '',
-      ),
-      'display' => array(
-        'url_cutoff' => 80,
-      ),
-      'enable_tokens' => 1,
-      'linkit' => array(
-        'button_text' => 'Search',
-        'enable' => 0,
-        'profile' => '',
-      ),
-      'rel_remove' => 'default',
-      'title' => 'none',
-      'title_maxlength' => 128,
-      'title_value' => '',
-      'url' => 0,
-      'user_register_form' => FALSE,
-      'validate_url' => 1,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'link',
-      'settings' => array(
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-      ),
-      'type' => 'link_field',
-      'weight' => 6,
+      'weight' => 13,
     ),
   );
 
@@ -2109,7 +2353,7 @@ Displays given information below grey section (containing "Degree Offered") on g
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 17,
+      'weight' => 28,
     ),
   );
 
@@ -2194,74 +2438,7 @@ Displays given information below grey section (containing "Degree Offered") on g
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'media_generic',
-      'weight' => 2,
-    ),
-  );
-
-  // Exported field_instance: 'node-asu_degree-field_financial_aid_link'
-  $field_instances['node-asu_degree-field_financial_aid_link'] = array(
-    'bundle' => 'asu_degree',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Add a link here to change from the default financial aid link to one specific to your needs.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'link',
-        'settings' => array(),
-        'type' => 'link_default',
-        'weight' => 34,
-      ),
-      'featured' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_financial_aid_link',
-    'label' => 'Financial Aid link',
-    'required' => 0,
-    'settings' => array(
-      'attributes' => array(
-        'class' => '',
-        'configurable_title' => 0,
-        'rel' => '',
-        'target' => 'default',
-        'title' => '',
-      ),
-      'display' => array(
-        'url_cutoff' => 80,
-      ),
-      'enable_tokens' => 1,
-      'linkit' => array(
-        'button_text' => 'Search',
-        'enable' => 0,
-        'profile' => '',
-      ),
-      'rel_remove' => 'default',
-      'title' => 'none',
-      'title_maxlength' => 128,
-      'title_value' => '',
-      'url' => 0,
-      'user_register_form' => FALSE,
-      'validate_url' => 1,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'link',
-      'settings' => array(
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-      ),
-      'type' => 'link_field',
-      'weight' => 7,
+      'weight' => 3,
     ),
   );
 
@@ -2270,7 +2447,8 @@ Displays given information below grey section (containing "Degree Offered") on g
     'bundle' => 'asu_degree',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Add a link here to change from the default scholarship link to one specific to your needs.',
+    'description' => '<strong>UNDERGRADUATE PROGRAMS ONLY</strong><br>
+Add a link here to change from the default scholarship link to one specific to your needs.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -2328,7 +2506,7 @@ Displays given information below grey section (containing "Degree Offered") on g
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 4,
+      'weight' => 12,
     ),
   );
 
@@ -2339,20 +2517,32 @@ Displays \'Application Deadline\' information on graduate degree nodes. This wil
   t('<strong>GRADUATE PROGRAMS ONLY</strong><br>
 Displays \'Financing Your Education\' information on graduate degree nodes. This will not work on undergraduate degree nodes.');
   t('<strong>GRADUATE PROGRAMS ONLY</strong><br>
-Displays given information below grey section (containing "Degree Offered") on graduate degree nodes. This will not work on undergraduate degree nodes.');
-  t('<strong>GRADUATE PROGRAMS ONLY</strong><br>
 Displays given video (use WYSIWYG \'Add media\' button to embed) next to top degree description (above yellow buttons) on graduate degree nodes. This will not work on undergraduate degree nodes.');
+  t('<strong>UNDERGRADUATE PROGRAMS ONLY</strong><br>
+Add a link here to change from the default scholarship link to one specific to your needs.');
+  t('<strong>UNDERGRADUATE PROGRAMS ONLY</strong><br>
+Additional requirements for the degree can be entered in to display at the top of the "Application Requirements" region on undergraduate degree nodes.');
+  t('<strong>UNDERGRADUATE PROGRAMS ONLY</strong><br>
+Denotes whether or not this is a WUE eligible program. Undergraduate students from western states who enroll in this program are eligible for a discounted tuition rate.<br>
+<i>NOTE:</i> This field can be overridden, but will reapply the official catalog value to the degree program if the degree feed is updated.');
   t('ASU Banner Image');
   t('Academic Plan');
   t('Academic Program');
   t('Accelerated Program');
-  t('Add a link here to change from the default financial aid link to one specific to your needs.');
-  t('Add a link here to change from the default scholarship link to one specific to your needs.');
+  t('Add a description here to override the default career outlook description for your specific needs.');
+  t('Add a description here to override the default degree catalog description for your specific needs. A "Read more" link will appear below your custom description that will expand to show the default degree catalog description.');
+  t('Add a link here to change from the default "How and when to apply" link to one specific to your needs.');
+  t('Add a link here to change from the default "Request information" link to one specific to your needs.');
+  t('Add a link here to change from the default "Schedule a visit" link to one specific to your needs.');
   t('Additional Program Fee');
-  t('Additional Requirements URL');
+  t('Additional Requirements');
   t('Admission Requirements');
+  t('CTA Button - How and when to apply');
+  t('CTA Button - Request information');
+  t('CTA Button - Schedule a visit');
   t('Campus');
   t('Career Opportunities');
+  t('Career Outlook description');
   t('Cert option: True or False');
   t('College');
   t('College URL');
@@ -2361,17 +2551,24 @@ Displays given video (use WYSIWYG \'Add media\' button to embed) next to top deg
   t('Degree Awarded');
   t('Degree Description (long)');
   t('Degree Image');
+  t('Denotes the ASU catalog value (on/off) for "accelerated program" with respect to this degree program.<br>
+<i>NOTE:</i> This field can be overridden, but will reapply the official catalog value to the degree program if the degree feed is updated.');
+  t('Denotes the ASU catalog value (on/off) for "concurrent program" with respect to this degree program.<br>
+<i>NOTE:</i> This field can be overridden, but will reapply the official catalog value to the degree program if the degree feed is updated.');
+  t('Denotes the ASU catalog value (on/off) for "new program" with respect to this degree program.<br>
+<i>NOTE:</i> This field can be overridden, but will reapply the official catalog value to the degree program if the degree feed is updated.');
   t('Department');
   t('Department Code');
   t('Diploma Description');
+  t('Displays given information below grey section (containing "Degree Offered") on degree nodes. Please do not use the "ASU Degree Marketing" region in Admin > Structure > Blocks if you are utilizing this field.');
   t('Example Careers');
-  t('Financial Aid link');
+  t('Example Careers: True/False');
   t('Graduate: Application Deadline');
   t('Graduate: Degree Description Video');
   t('Graduate: Financing Your Education');
-  t('Graduate: Free Text Area');
   t('Major Map URL');
   t('Major Map Year');
+  t('Marketing Text Area');
   t('Minimum math requirement');
   t('New Program');
   t('Program: Undergrad or Graduate');
@@ -2384,9 +2581,9 @@ Displays given video (use WYSIWYG \'Add media\' button to embed) next to top deg
   t('Subplan: URL');
   t('This image only shows up on the view page.  Horizontal images work best.');
   t('This is the banner image across the top of the degree pages.');
+  t('Turn the "Example Careers" section on and off; check the box to show the example careers, and uncheck it to hide them.');
   t('URL for degree at ASU Degree Search');
-  t('WUE Available');
-  t('WUE Link');
+  t('WUE eligible program');
 
   return $field_instances;
 }
