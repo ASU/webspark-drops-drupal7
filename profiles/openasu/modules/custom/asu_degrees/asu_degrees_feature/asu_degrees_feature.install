@@ -1,6 +1,10 @@
 <?php
 function asu_degrees_feature_install() {
-  
+
+  function asu_degrees_feature_update_7000(&$sandbox) {
+    features_revert_module('asu_degrees_feature');
+  }
+
   /**
    * Grab image within the Feature module. Then, create image in the new site to use for default image for the ASU Degree Banner Image field.
    */
@@ -17,5 +21,5 @@ function asu_degrees_feature_install() {
   );
   $file = file_copy($file, $uri, FILE_EXISTS_REPLACE);
   variable_set('asu_degrees_feature_banner_fid', $file->fid);
-  
+
 }
