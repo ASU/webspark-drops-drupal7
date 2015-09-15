@@ -1,7 +1,8 @@
 <?php
 function asu_degrees_feature_install() {
 
-  function asu_degrees_feature_update_7000(&$sandbox) {
+  /** Implementing hook_update_N */
+  function asu_degrees_feature_update_7001(&$sandbox) {
     features_revert_module('asu_degrees_feature');
   }
 
