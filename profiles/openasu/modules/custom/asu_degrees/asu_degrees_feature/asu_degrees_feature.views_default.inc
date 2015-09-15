@@ -216,7 +216,7 @@ else {
   $handler->display->display_options['fields']['field_degree_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_degree_image']['settings'] = array(
     'image_style' => 'asu_degree_image',
-    'image_link' => '',
+    'image_link' => 'content',
   );
   /* Field: Content: Degree Awarded */
   $handler->display->display_options['fields']['field_asu_degree_awarded']['id'] = 'field_asu_degree_awarded';
@@ -353,7 +353,7 @@ else {
   $handler->display->display_options['fields']['field_degree_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_degree_image']['settings'] = array(
     'image_style' => 'asu_degree_image',
-    'image_link' => '',
+    'image_link' => 'content',
   );
   /* Field: Content: Degree Awarded */
   $handler->display->display_options['fields']['field_asu_degree_awarded']['id'] = 'field_asu_degree_awarded';
@@ -488,7 +488,7 @@ else {
   $handler->display->display_options['fields']['field_degree_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_degree_image']['settings'] = array(
     'image_style' => 'asu_degree_image',
-    'image_link' => '',
+    'image_link' => 'content',
   );
   /* Field: Content: Degree Awarded */
   $handler->display->display_options['fields']['field_asu_degree_awarded']['id'] = 'field_asu_degree_awarded';
@@ -623,7 +623,7 @@ else {
   $handler->display->display_options['fields']['field_degree_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_degree_image']['settings'] = array(
     'image_style' => 'asu_degree_image',
-    'image_link' => '',
+    'image_link' => 'content',
   );
   /* Field: Content: Degree Awarded */
   $handler->display->display_options['fields']['field_asu_degree_awarded']['id'] = 'field_asu_degree_awarded';
@@ -831,7 +831,7 @@ else {
   $handler->display->display_options['fields']['field_degree_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_degree_image']['settings'] = array(
     'image_style' => 'asu_degree_image',
-    'image_link' => '',
+    'image_link' => 'content',
   );
   /* Field: Content: Degree Awarded */
   $handler->display->display_options['fields']['field_asu_degree_awarded']['id'] = 'field_asu_degree_awarded';
@@ -1042,7 +1042,7 @@ else {
   $handler->display->display_options['fields']['field_degree_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_degree_image']['settings'] = array(
     'image_style' => 'asu_degree_image',
-    'image_link' => '',
+    'image_link' => 'content',
   );
   /* Field: Content: Degree Awarded */
   $handler->display->display_options['fields']['field_asu_degree_awarded']['id'] = 'field_asu_degree_awarded';
@@ -1253,7 +1253,7 @@ else {
   $handler->display->display_options['fields']['field_degree_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_degree_image']['settings'] = array(
     'image_style' => 'asu_degree_image',
-    'image_link' => '',
+    'image_link' => 'content',
   );
   /* Field: Content: Degree Awarded */
   $handler->display->display_options['fields']['field_asu_degree_awarded']['id'] = 'field_asu_degree_awarded';
@@ -1464,7 +1464,7 @@ else {
   $handler->display->display_options['fields']['field_degree_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_degree_image']['settings'] = array(
     'image_style' => 'asu_degree_image',
-    'image_link' => '',
+    'image_link' => 'content',
   );
   /* Field: Content: Degree Awarded */
   $handler->display->display_options['fields']['field_asu_degree_awarded']['id'] = 'field_asu_degree_awarded';
