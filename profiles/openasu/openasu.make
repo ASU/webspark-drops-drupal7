@@ -4,7 +4,7 @@ core = 7.x
 ; Drupal Core
 
 projects[drupal][type] = core
-projects[drupal][version] = 7.38
+projects[drupal][version] = 7.39
 
 ; Drupal Core Patches
 projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-profile-ajax-1334818-8.patch
@@ -76,10 +76,10 @@ projects[ixr][type] = module
 projects[ixr][download][revision] = 990012dd
 projects[ixr][download][url] = https://github.com/ASU/asu-drupal-ixr.git
 
-projects[asu_degrees][version] = 1.6
+projects[asu_degrees][version] = 1.7
 projects[asu_degrees][type] = module
 projects[asu_degrees][subdir] = custom
-projects[asu_degrees][download][revision] = ba8a1fdd
+projects[asu_degrees][download][revision] = 1c21249af5cafcc5a32f6a217fd92489e4adeb94
 projects[asu_degrees][download][branch] = master
 projects[asu_degrees][download][url] = https://github.com/ASU/asu-drupal-degrees.git
 
@@ -87,7 +87,7 @@ projects[asu_rfi][version] = 1.2
 projects[asu_rfi][type] = module
 projects[asu_rfi][subdir] = custom
 projects[asu_rfi][download][type] = git
-projects[asu_rfi][download][revision] = 940080b8
+projects[asu_rfi][download][revision] = a2674a2560fac78f45c834c1856a09fb0ac90681
 projects[asu_rfi][download][branch] = master
 projects[asu_rfi][download][url] = https://github.com/ASU/asu-drupal-rfi
 
@@ -111,20 +111,22 @@ projects[cas_attributes][version] = 1.0-rc3
 projects[cas_attributes][type] = module
 projects[cas_attributes][subdir] = contrib
 
+; For Webspark News & Events
+; Will be removed when news & events is deleted
 projects[calendar][version] = 3.4
 projects[calendar][type] = module
 projects[calendar][subdir] = contrib
 
-; For Webspark News & Events
 projects[email][version] = 1.3
 projects[email][subdir] = contrib
 projects[email][type] = module
+; end will be removed
 
-projects[feeds][version] = 2.0-alpha8
+projects[feeds][version] = 2.0-alpha9
 projects[feeds][type] = module
 projects[feeds][subdir] = contrib
 
-projects[feeds_xpathparser][version] = 1.0
+projects[feeds_xpathparser][version] = 1.1
 projects[feeds_xpathparser][type] = module
 projects[feeds_xpathparser][subdir] = contrib
 
@@ -181,7 +183,7 @@ projects[google_appliance][version] = 1.12
 projects[google_appliance][type] = module
 projects[google_appliance][subdir] = contrib
 
-projects[maxlength][version] = 3.0-beta1
+projects[maxlength][version] = 3.2-beta2
 projects[maxlength][type] = module
 projects[maxlength][subdir] = contrib
 
@@ -217,7 +219,7 @@ projects[uuid_features][download][branch] = "7.x-1.x"
 projects[uuid_features][download][url] = "http://git.drupal.org/project/uuid_features.git"
 projects[uuid_features][download][revision] = "55a2d5070b6f238f40372070f70314cc4f8197d8"
 
-projects[video_embed_field][version] = 2.0-beta8
+projects[video_embed_field][version] = 2.0-beta11
 projects[video_embed_field][type] = module
 projects[video_embed_field][subdir] = contrib
 
