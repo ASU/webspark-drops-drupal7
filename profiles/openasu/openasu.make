@@ -79,7 +79,7 @@ projects[ixr][download][url] = https://github.com/ASU/asu-drupal-ixr.git
 projects[asu_degrees][version] = 1.7
 projects[asu_degrees][type] = module
 projects[asu_degrees][subdir] = custom
-projects[asu_degrees][download][revision] = 1c21249af5cafcc5a32f6a217fd92489e4adeb94
+projects[asu_degrees][download][revision] = d3ad21fd57c99b8fb55bb3714b17c9a050600ea0
 projects[asu_degrees][download][branch] = master
 projects[asu_degrees][download][url] = https://github.com/ASU/asu-drupal-degrees.git
 
@@ -100,7 +100,7 @@ projects[references][subdir] = contrib
 projects[ldap][version] = 2.0-beta8
 projects[ldap][type] = module
 projects[ldap][subdir] = contrib
-; patch - see https://drupal.org/node/2182413, comment #10 - remove upon ldap update beyond beta8
+;; patch - see https://drupal.org/node/2182413, comment #10 - remove upon ldap update beyond beta8
 projects[ldap][patch][2182413] = http://cgit.drupalcode.org/ldap/patch/?id=fe3a3d56ffebc9bd551c6d83a03172fae13517c3
 
 projects[better_watchdog_ui][version] = 2.0
@@ -111,8 +111,8 @@ projects[cas_attributes][version] = 1.0-rc3
 projects[cas_attributes][type] = module
 projects[cas_attributes][subdir] = contrib
 
-; For Webspark News & Events
-; Will be removed when news & events is deleted
+;; For Webspark News & Events
+;; Will be removed when news & events is deleted
 projects[calendar][version] = 3.4
 projects[calendar][type] = module
 projects[calendar][subdir] = contrib
@@ -120,7 +120,7 @@ projects[calendar][subdir] = contrib
 projects[email][version] = 1.3
 projects[email][subdir] = contrib
 projects[email][type] = module
-; end will be removed
+;; end will be removed
 
 projects[feeds][version] = 2.0-alpha9
 projects[feeds][type] = module
@@ -134,10 +134,10 @@ projects[job_scheduler][version] = 2.0-alpha3
 projects[job_scheduler][type] = module
 projects[job_scheduler][subdir] = contrib
 
-; WEBSPARK-679 - WYSIWYG + Media module issues
+;; WEBSPARK-679 - WYSIWYG + Media module issues
 projects[media][patch][] = patches/webspark-679_media-repair_encoded_macro-2028253-10.patch
-; -- remove when alpha4 comes out
-projects[media][patch][] = patches/webspark-679_wysiwyg-multiple-editors-media-images-breaks.patch
+;; -- remove when alpha4 comes out
+;projects[media][patch][] = patches/webspark-679_wysiwyg-multiple-editors-media-images-breaks.patch
 
 projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
@@ -156,8 +156,12 @@ projects[webform][subdir] = contrib
 projects[backgroundfield][version] = 1.5
 projects[backgroundfield][type] = module
 projects[backgroundfield][subdir] = contrib
-; WEBSPARK-481 - BackgroundField image patch - default_image error
+;; WEBSPARK-481 - BackgroundField image patch - default_image error
 projects[backgroundfield][patch][1841978] = https://www.drupal.org/files/backgroundfield_undefined_index-1841978-18.patch
+
+;; CAS SSO Integration - pulled in from old asu_cas.make file
+projects[cas][version] = 1.4
+projects[cas][subdir] = contrib
 
 projects[chosen][version] = 2.0-beta4
 projects[chosen][type] = module
@@ -191,7 +195,7 @@ projects[panels_tabs][version] = 2.x-dev
 projects[panels_tabs][type] = module
 projects[panels_tabs][subdir] = contrib
 
-; Going to Git repo for dev commit
+;; Going to Git repo for dev commit of quicktabs
 projects[quicktabs][type] = module
 projects[quicktabs][subdir] = contrib
 projects[quicktabs][download][type] = "git"
@@ -199,7 +203,7 @@ projects[quicktabs][download][branch] = "7.x-3.x"
 projects[quicktabs][download][url] = "http://git.drupal.org/project/quicktabs.git"
 projects[quicktabs][download][revision] = "758de4cc4995149a2de1d566b4209ec343581d27"
 
-; Webspark Megamenu
+;; Webspark Megamenu
 projects[special_menu_items][version] = 2.0
 projects[special_menu_items][subdir] = contrib
 projects[special_menu_items][type] = module
@@ -207,11 +211,11 @@ projects[special_menu_items][type] = module
 projects[tb_megamenu][version] = 1.0-beta5
 projects[tb_megamenu][type] = module
 projects[tb_megamenu][subdir] = contrib
-; TODO - PATCH the CSS for tb_megamenu
+;; TODO - PATCH the CSS for tb_megamenu
 projects[tb_megamenu][patch][] = https://www.drupal.org/files/issues/webspark_megamenu-fixing_breakpoints.patch
 
 ;projects[uuid_features][version] = 1.0-alpha4
-; grabbing alpha-4+dev-37 commit
+;; grabbing alpha-4+dev-37 commit
 projects[uuid_features][type] = module
 projects[uuid_features][subdir] = contrib
 projects[uuid_features][download][type] = "git"
@@ -229,21 +233,25 @@ projects[wysiwyg_template][subdir] = contrib
 
 ; Bootstrap and Theme Frameworks - Moved to Webspark repo (see WEBSPARK-366)
 
-; Base Theme - Kalatheme
+;; Base Theme - Kalatheme
 
 projects[kalatheme][version] = 3.0-rc2
 projects[kalatheme][type] = theme
-; WEBSPARK-188 - CSS img url fix
+;; WEBSPARK-188 - CSS img url fix
 projects[kalatheme][patch][] = patches/webspark-188.kalatheme-css-img-urls.patch
-; WEBSPARK-361 - Panopoly TPLs and row-full class
+;; WEBSPARK-361 - Panopoly TPLs and row-full class
 projects[kalatheme][patch][] = patches/webspark-361-kalatheme-panopoly-tpl-class-update.patch
-; WEBSPARK-565 - Added views-view-table.tpl.php, pending update to kalatheme
+;; WEBSPARK-565 - Added views-view-table.tpl.php, pending update to kalatheme
 projects[kalatheme][patch][] = patches/webspark-565-add-views-tpl-to-kalatheme.patch
 
 projects[modernizr][version] = 3.1
 projects[modernizr][subdir] = contrib
 
 ; ASU Module prerequisites - Webstandards additions - Libraries
+
+;; pulled in from asu_cas.make file
+libraries[CAS][download][type] = get
+libraries[CAS][download][url] = https://github.com/Jasig/phpCAS/archive/1.3.3.zip
 
 libraries[chosen][download][type] = get
 libraries[chosen][download][url] = https://github.com/harvesthq/chosen/releases/download/v1.1.0/chosen_v1.1.0.zip
@@ -267,7 +275,7 @@ libraries[jqtree][destination] = libraries
 
 ; DEPRECATED PROJECTS - DO NOT USE AND LOOK FOR ALTERNATE SOLUTIONS ASAP
 
-; Will be replaced by alternate system that will work with the Hub's new asunews site
+;; Will be replaced by alternate system that will work with the Hub's new asunews site
 projects[asu_events][version] = 1.0-dev
 projects[asu_events][subdir] = custom
 projects[asu_events][type] = module
@@ -278,7 +286,7 @@ projects[asu_news][subdir] = custom
 projects[asu_news][type] = module
 projects[asu_news][download][revision] = 7e925b539
 projects[asu_news][download][url] = https://github.com/ASU/asu-drupal-news.git
-; (DEPRECATED in lieu of ASU Degrees - asu_degrees module)
+;; (DEPRECATED in lieu of ASU Degrees - asu_degrees module)
 projects[asu_eadvisor_degree_feed_feature][version] = 1.0-beta1
 projects[asu_eadvisor_degree_feed_feature][subdir] = custom
 projects[asu_eadvisor_degree_feed_feature][type] = module
