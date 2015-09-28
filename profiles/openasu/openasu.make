@@ -87,7 +87,7 @@ projects[asu_rfi][version] = 1.2
 projects[asu_rfi][type] = module
 projects[asu_rfi][subdir] = custom
 projects[asu_rfi][download][type] = git
-projects[asu_rfi][download][revision] = a2674a2560fac78f45c834c1856a09fb0ac90681
+projects[asu_rfi][download][revision] = 8ca627d77c9640f585e639ffb1f694b585a8d3be
 projects[asu_rfi][download][branch] = master
 projects[asu_rfi][download][url] = https://github.com/ASU/asu-drupal-rfi
 
