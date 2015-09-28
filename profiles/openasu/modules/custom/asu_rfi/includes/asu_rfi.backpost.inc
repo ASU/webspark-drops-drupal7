@@ -4,7 +4,7 @@
 
 function asu_rfi_success_post($hash, $nid)
 {
-    header('text/json');
+    header('Content-Type: text/json');
     $mw_auth_key = variable_get('asu_rfi_form_auth_key');
     $real_hash = sha1($mw_auth_key . '+' . $nid);
     if($real_hash == $hash)
@@ -28,7 +28,7 @@ function asu_rfi_success_post($hash, $nid)
 
 function asu_rfi_fail_post($hash, $nid)
 {
-    header('text/json');
+    header('Content-Type: text/json');
     $mw_auth_key = variable_get('asu_rfi_form_auth_key');
     $real_hash = sha1($mw_auth_key . '+' . $nid);
     if($real_hash == $hash)
@@ -94,7 +94,7 @@ function asu_rfi_fail_post($hash, $nid)
 
 function asu_rfi_test_post($hash, $nid)
 {
-    header('text/json');
+    header('Content-Type: text/json');
     $mw_auth_key = variable_get('asu_rfi_form_auth_key');
     $real_hash = sha1($mw_auth_key . '+' . $nid);
     if($real_hash == $hash)

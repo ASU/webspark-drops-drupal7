@@ -59,7 +59,7 @@ function asu_rfi_admin_settings($form_state){
     );
    
     
-   /* $form['asu_rfi_form_access']['asu_rfi_google_analytics_key'] = array(
+    $form['asu_rfi_form_access']['asu_rfi_google_analytics_key'] = array(
     '#type' => 'textfield',
     '#title' => t('Site identifier for Google Analytics'),
     '#default_value' => variable_get('asu_rfi_google_analytics_key'),
@@ -67,7 +67,7 @@ function asu_rfi_admin_settings($form_state){
     '#description' => t("Enter a 6-10 character string to identify your site in Google Analytics transactions."),
     '#required' => TRUE,
     '#disabled' => FALSE,
-    );*/
+    );
    
      $form['undergrad_degree_type'] = array(
 	'#type' => 'hidden',
@@ -85,7 +85,7 @@ function asu_rfi_admin_settings($form_state){
     
    $form['asu_rfi_confirm_content'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Confirmation webpage content settings',
+    '#title' => 'Confirmation webpage content settings. Text box to enter node id will appear after the form has been created.',
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
     '#attributes' => array('class' => array('asu_rfi_confirm_email_fields')),
