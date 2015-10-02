@@ -53,7 +53,7 @@ projects[panopoly_demo][subdir] = panopoly
 projects[asu_brand][version] = 1.10
 projects[asu_brand][subdir] = custom
 projects[asu_brand][type] = module
-projects[asu_brand][download][revision] = ade07e6f
+projects[asu_brand][download][revision] = 9d94f772f0ec1a4760c93d49645ad719773a211b
 projects[asu_brand][download][branch] = 7.x-1.x
 projects[asu_brand][download][url] = https://github.com/ASU/asu-drupal-brand.git
 
@@ -135,7 +135,7 @@ projects[job_scheduler][type] = module
 projects[job_scheduler][subdir] = contrib
 
 ;; WEBSPARK-679 - WYSIWYG + Media module issues
-projects[media][patch][] = patches/webspark-679_media-repair_encoded_macro-2028253-10.patch
+;projects[media][patch][] = patches/webspark-679_media-repair_encoded_macro-2028253-10.patch
 ;; -- remove when alpha4 comes out
 ;projects[media][patch][] = patches/webspark-679_wysiwyg-multiple-editors-media-images-breaks.patch
 
@@ -243,6 +243,9 @@ projects[kalatheme][patch][] = patches/webspark-188.kalatheme-css-img-urls.patch
 projects[kalatheme][patch][] = patches/webspark-361-kalatheme-panopoly-tpl-class-update.patch
 ;; WEBSPARK-565 - Added views-view-table.tpl.php, pending update to kalatheme
 projects[kalatheme][patch][] = patches/webspark-565-add-views-tpl-to-kalatheme.patch
+;; rjbonnel Github patches for spelling (remove when fixed in kalatheme update upstream)
+projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-spelling-fix.patch
+projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-admin-spelling-fix.patch
 
 projects[modernizr][version] = 3.1
 projects[modernizr][subdir] = contrib
