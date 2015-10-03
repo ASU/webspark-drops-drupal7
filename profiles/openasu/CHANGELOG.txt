@@ -1,3 +1,35 @@
+Webspark 1.13.13 (Hanford) release
+----------------
+
+- Contrib modules in Webspark:
+    * The following contrib modules have been updated:
+        * Feeds - v2.0-alpha9 (security update included)
+        * Video Embed Field - v2.0-beta11 (security update included)
+        * Feeds XPathparser - v1.1
+        * Maxlength - v3.2-beta2
+
+- Custom ASU module updates:
+    * ASU RFI module
+        * Fixed header JSON issue
+        * Changed help message in admin area.
+    * ASU Degrees module
+        * Added descriptions to most all administrative fields for general help for users while editing degree nodes
+        * Turned off periodic import in Degrees feed to limit overriding of user customizations
+        * Text field for short description has been made available to override catalog description with no character limit
+        * Created fields for CTA buttons that accept a hyperlink and can override the CTA button’s default destination
+        * Removed hyperlink function for college name in Degree Offered area
+        * Altered Major Map region with new title and description as directed
+        * Removed Additional Requirements URL function and implemented Additional Requirements section above other application requirements
+        * Updated default hyperlink for Scholarships and removed ability to override Financial Aid and WUE programs URLs
+        * Added marketing text area functionality from graduate nodes to undergraduate nodes
+        * Created ability to override Career Outlook description and added an true/false checkbox to control display of the Example Careers section
+        * Degree images tied to a degree node on the grid and list View displays now also link to the same content as the degree title
+        * Added hook_update_N for reverting ASU Degrees feature
+
+- Web standards components in Webspark:
+    * Webspark Megamenu
+        * Added Automatic resizing of the MegaMenu depending on the size of the screen
+
 Webspark 1.13.12 (Pullman) release
 ----------------
 - ASU custom modules
