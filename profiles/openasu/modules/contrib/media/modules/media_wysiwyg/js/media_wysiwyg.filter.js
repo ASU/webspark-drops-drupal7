@@ -126,9 +126,10 @@
     replacePlaceholderWithToken: function(content) {
       Drupal.media.filter.ensure_tagmap();
 
+// WEBSPARK-679
       // Rewrite the tagmap in case any of the macros have changed.
-      Drupal.settings.tagmap = {};
-
+//      Drupal.settings.tagmap = {};
+//
       // Wrap the content to be able to use replaceWith() and html().
       content = $('<div>').append(content);
       var media = $('.media-element', content);

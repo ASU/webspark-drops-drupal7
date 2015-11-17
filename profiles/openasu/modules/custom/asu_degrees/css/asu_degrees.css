@@ -2,15 +2,16 @@
     margin-top: 10px;
 }
 
-.node-type-asu-degree .list-group-item:first-child {
+.node-type-asu-degree .pane-menu-tree a:first-child {
     border-top-right-radius: 0;
     border-top-left-radius: 0;
 }
 
-.node-type-asu-degree .list-group-item {
+.node-type-asu-degree .pane-menu-tree a {
     position: relative;
     display: block;
     padding: 10px 5px;
+    margin-bottom: -20px;
     font-weight: normal;
     background-color: white;
     border-top: 1px solid #d7d7d7;
@@ -19,8 +20,30 @@
     border-left: 0;
 }
 
-span.asu-degrees-accelerated {
+i.fa.fa-location-arrow {
+    font-size: 25px;
+    position: relative;
+    bottom: 8px;
+    margin-right: -10px;
+}
+
+i.fa.fa-star {
+    font-size: 25px;
+    position: relative;
+    bottom: 8px;
+    margin-right: -10px;
+}
+
+i.fa.fa-retweet {
+    font-size: 25px;
+    position: relative;
+    bottom: 8px;
+    margin-right: -10px;
+}
+
+span.asu-degrees-program-flag {
     font-size: 20px;
     font-weight: normal;
     vertical-align: middle;
+    padding-right: 5px;
 }

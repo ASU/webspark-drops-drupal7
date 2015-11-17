@@ -12,9 +12,8 @@ mysql:
 branches:
   only:
     - master
-    - 7.x-1.x
+    - 7.x-rc
     - travis-ci
-    - nightly
 
 install:
   - sudo apt-get update > /dev/null

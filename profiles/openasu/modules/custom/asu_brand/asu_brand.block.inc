@@ -59,17 +59,20 @@ function asu_brand_get_block_settings($reset = FALSE) {
  * If $reset == TRUE, then skip #1.
  */
 function asu_brand_get_cached_content($cache_id, $file_path, $reset = FALSE) {
-  if (!$reset && isset($settings->cache[$cache_id])) {
-    $output = $settings->cache[$cache_id]->data;
+
+  if($output = cache_get($cache_id)) {
+    $output = $output->data;
   }
-  else {
+
+  if ($reset || $output==NULL || !isset($output)) {
+
     if ($output = file_get_contents($file_path)) {
       cache_set($cache_id, $output, 'cache', time() + ASU_BRAND_CACHE_LIFETIME);
       variable_set($cache_id, $output);
     }
     else {
       // File resource is not available; use long term cache and cache it for 1 hour.
-      $output = $settings->long_term_cache[$cache_id];
+      $output = variable_get($cache_id, NULL);
       cache_set($cache_id, $output, 'cache', time() + 3600);
       watchdog('asu_brand', 'Unable to load @path to the cache; using long term cache.', array('@path' => $file_path), WATCHDOG_ERROR);
     }

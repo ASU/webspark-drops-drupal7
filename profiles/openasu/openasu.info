@@ -4,7 +4,8 @@ description = A starting point for websites at ASU
 core = 7.x
 exclusive = 1
 ;version = VERSION
-version = 1.13.4
+; Remember to update in innovation as well for DOM
+version = 1.13.13
 
 ; Drupal Core
 dependencies[] = menu
@@ -50,7 +51,6 @@ dependencies[] = block
 
 ; OpenASU - Contrib recommended
 dependencies[] = views_ui
-dependencies[] = better_watchdog_ui
 ;dependencies[] = contextual
 
 ; OpenASU - Contrib modules for features
@@ -80,12 +80,14 @@ dependencies[] = webspark_featurescustom
 dependencies[] = asu_gsa
 dependencies[] = asu_maps_enhanced
 dependencies[] = asu_spotlight
+dependencies[] = uto_carousel
 dependencies[] = asu_securityscanfixes
 dependencies[] = mega_footer
 dependencies[] = webspark_panels_styles
 dependencies[] = webspark_banner
 dependencies[] = webspark_breadcrumbs
 dependencies[] = webspark_content_callout
+dependencies[] = webspark_easyadmin
 dependencies[] = webspark_hero
 dependencies[] = webspark_jumbohero
 dependencies[] = webspark_megamenu
@@ -93,3 +95,4 @@ dependencies[] = mega_footer_menu
 dependencies[] = webspark_wysiwyg
 dependencies[] = webspark_extras
 ;dependencies[] = asu_cas (moved to openasu_install)
+;dependencies[] = better_watchdog_ui (moved to openasu_install)

@@ -1,8 +1,0 @@
-name = Webspark Features Container
-description = "Enables web standards compliant Innovation theme components."
-core = 7.x
-package = ASU Webspark
-files[] = webspark_featurescustom.module
-version = 7.x-1.2
-
-; submodules enabled in the installation profile by default to avoid dependency/permissions issues with Panopoly

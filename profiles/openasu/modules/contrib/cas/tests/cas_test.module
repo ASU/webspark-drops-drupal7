@@ -103,7 +103,7 @@ function cas_test_login() {
 
   if ($cas_user) {
     if (!is_array($cas_user)) {
-      $cas_user = array('name' => $cas_user);
+      $cas_user = array('name' => $cas_user, 'attributes' => array());
     }
     // Generate a ticket and redirect to the service URL with the login ticket.
     $ticket = _cas_test_ticket_generate($service, $cas_user);
@@ -128,6 +128,12 @@ function cas_test_login() {
  * Validate a ticket using the CAS 1.x protocol.
  */
 function cas_test_validate() {
+  // Prevent this page from being cached.
+  drupal_page_is_cacheable(FALSE);
+
+  // Set content type.
+  drupal_add_http_header('Content-Type', 'text/plain; charset=utf-8');
+
   //Obtain the ticket from the url and validate it.
   $ticket = $_GET['ticket'];
   $service = $_GET['service'];
@@ -148,10 +154,15 @@ function cas_test_validate() {
  * Validate a ticket using the CAS 2.0 protocol.
  */
 function cas_test_service_validate() {
+  // Prevent this page from being cached.
+  drupal_page_is_cacheable(FALSE);
+
+  // Set content type.
+  drupal_add_http_header('Content-Type', 'text/xml; charset=utf-8');
+
   $ticket = $_GET['ticket'];
   $service = $_GET['service'];
 
-  header('Content-type:', 'text/xml');
   if ($cas_user = _cas_test_ticket_validate($service, $ticket)) {
     print theme('cas_service_validate_success', $cas_user);
   }
@@ -234,14 +245,19 @@ function _cas_test_ticket_validate($service, $ticket) {
  *
  * @param $cas_user
  */
-function cas_test_single_sign_out($cas_name) {
+function cas_test_single_sign_out($cas_name, $double_encode=FALSE) {
   $sso = variable_get('cas_test_sso', array());
   foreach ($sso[$cas_name] as $service => $tickets) {
     foreach ($tickets as $ticket) {
       // Generate posting:
       $data = array(
-        'logoutRequest' => t("<samlp:LogoutRequest ID=\"!id\" Version=\"2.0\" IssueInstant=\"!time\">\n<saml:NameID>@NOT_USED@</saml:NameID>\n<samlp:SessionIndex>!ticket</samlp:SessionIndex>\n</samlp:LogoutRequest>", array('!id' => user_password(10), '!time' => time(), '!ticket' => $ticket)),
+        'logoutRequest' => t("<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\" xmlns:saml=\"urn:oasis:names:tc:SAML:2.0:assertion\" ID=\"!id\" Version=\"2.0\" IssueInstant=\"!time\">\n<saml:NameID>@NOT_USED@</saml:NameID>\n<samlp:SessionIndex>!ticket</samlp:SessionIndex>\n</samlp:LogoutRequest>", array('!id' => user_password(10), '!time' => time(), '!ticket' => $ticket)),
       );
+
+      if ($double_encode) {
+        // Certain CAS servers urlencode the logoutRequest.
+        $data['logoutRequest'] = urlencode($data['logoutRequest']);
+      }
 
       // Sign out the user.
       $options = array(

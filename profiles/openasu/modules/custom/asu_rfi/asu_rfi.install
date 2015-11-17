@@ -67,22 +67,30 @@ function asu_rfi_schema() {
  
 }
 
-function asu_rfi_install(){
+function asu_rfi_install() {
  
   include('data/asu_rfi_states_data.inc');
   include('data/asu_rfi_sem_dates.inc');
   include('data/asu_rfi_countries_data.inc');
-  drupal_set_message('ASU RFI module has been installed. Configure module settings at <a href="/admin/config/asu/asurfi">admin settings page</a>');
-  
+  drupal_set_message('ASU RFI module has been installed. Configure module settings at <a href="/admin/config/content/asurfi">admin settings page</a>');
+ 
   //Check if CAS module exists and enabled and update cas_exclude variables with asu_rfi callback urls
   if (module_exists('cas')) {
     $out = variable_get('cas_exclude', 'none');
     $out = $out . "\r\nasu_rfi/success/*\r\nasu_rfi/failure/*";
     variable_set('cas_exclude',$out);
   }
+  
+  //If honeypot module exists, set it's variable value
+  if(module_exists('honeypot')){
+      variable_set('honeypot_element_name','rfihurl');
+  }
+  
+  //Set the RFI form mode to "Test" initially upon module installation
+  variable_set('asu_rfi_form_mode','test');
 }
 
-function asu_rfi_uninstall(){
+function asu_rfi_uninstall() {
   drupal_uninstall_schema('asu_rfi');
   variable_del('asu_rfi_form_mode');
   variable_del('asu_rfi_google_analytics_key');
@@ -90,4 +98,13 @@ function asu_rfi_uninstall(){
   variable_del('asu_rfi_from_email_field');
  }
 
-?>
+/**
+ * Implements hook_update_N
+ * + Enable Honeypot module if ASU RFI module is enabled (Now required for 1.2+)
+ */
+function asu_rfi_update_7000(&$sandbox) {
+  if (module_exists('asu_rfi') && !module_exists('honeypot'))
+  {
+    module_enable(array('honeypot'));
+  }
+}

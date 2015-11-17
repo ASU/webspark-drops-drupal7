@@ -19,3 +19,10 @@ function asu_degrees_feature_install() {
   variable_set('asu_degrees_feature_banner_fid', $file->fid);
   
 }
+
+/** 
+ * Implementing hook_update_N 
+ */
+function asu_degrees_feature_update_7000(&$sandbox) {
+  features_revert_module('asu_degrees_feature');
+}

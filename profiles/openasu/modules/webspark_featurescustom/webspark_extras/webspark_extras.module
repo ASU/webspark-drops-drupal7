@@ -1,0 +1,6 @@
+<?php
+/**
+ * Code for the Webspark Extras feature.
+ */
+
+include_once 'webspark_extras.features.inc';

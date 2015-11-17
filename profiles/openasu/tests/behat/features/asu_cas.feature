@@ -4,7 +4,6 @@ Feature: ASU CAS Admin UI
   When I edit or add users
   I need to see ASURITE User ID and not CAS username
 
-
   Scenario: Admin user adds ASURITE user
     Given I am logged in as a user with the "administrator" role
     And I am on "/admin/people"

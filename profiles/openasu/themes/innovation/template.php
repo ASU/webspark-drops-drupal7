@@ -9,8 +9,7 @@
  *
  * Implements template_preprocess_html().
  */
-function innovation_preprocess_html(&$variables)
-{
+function innovation_preprocess_html(&$variables) {
 
   // Add theme js file here rather than in .info to add a weight and ensure it loads last
   drupal_add_js(drupal_get_path('theme', 'innovation') . '/js/innovation.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 200));
@@ -25,6 +24,19 @@ function innovation_preprocess_html(&$variables)
     )
   );
   drupal_add_html_head($meta_ie_render_engine, 'meta_ie_render_engine');
+
+  // WEBSPARK-667 - Add meta tag to identify Innovation as a "Webspark" theme
+  // in the DOM
+  $meta_webspark_id = array(
+    '#type' => 'html_tag',
+    '#tag' => 'meta',
+    '#attributes' => array(
+      'content' => 'Webspark:1.13.13 (Hanford)',
+      'http-equiv' => 'X-Name-of-Distro',
+    )
+  );
+  drupal_add_html_head($meta_webspark_id, 'meta_webspark_id');
+
   // WEBSPARK-189 - add actual HTTP header along with meta tag
   drupal_add_http_header('X-UA-Compatible', 'IE=Edge,chrome=1');
 
@@ -34,35 +46,13 @@ function innovation_preprocess_html(&$variables)
 }
 
 /**
- * Implements hook_ctools_plugin_post_alter()
- */
-function innovation_ctools_plugin_post_alter(&$plugin, &$info)
-{
-  if ($info['type'] == 'styles') {
-    if ($plugin['name'] == 'kalacustomize') {
-      $plugin['title'] = 'ASU Customize';
-    }
-  }
-}
-
-/**
- * Implements hook_ctools_content_subtype_alter()
- */
-function innovation_ctools_content_subtype_alter(&$subtype, &$plugin)
-{
-  if ($plugin['module'] == 'views_content' && $subtype['title'] == 'Add content item') {
-    $subtype['title'] = t('Add existing content');
-  }
-}
-
-/**
  * Override or insert variables into the page template.
  *
  * Implements template_process_page().
  */
 function innovation_preprocess_page(&$variables)
 {
-  // Make sure default picture gets responsive panopoly stylingz
+  // Make sure default picture gets responsive panopoly styling
   if (theme_get_setting('default_picture', 'innovation') && theme_get_setting('picture_path', 'innovation')) {
     $image_style = module_exists('asu_cas') ? 'asu_header_image' : 'panopoly_image_full';
     $variables['asu_picture'] = theme('image_style', array(
@@ -70,15 +60,6 @@ function innovation_preprocess_page(&$variables)
         'path' => theme_get_setting('picture_path', 'innovation'),
       )
     );
-  }
-
-  /**
-   * Adding to find the asu-degree template.
-   */
-  if (isset($variables['node'])) {
-    if ($variables['node']->type == 'asu_degree') {
-      $variables['theme_hook_suggestions'][] = 'page__asu_degree';
-    }
   }
 }
 
@@ -115,6 +96,28 @@ function innovation_preprocess_block(&$variables)
       ),
     ));
     $block->subject = '';
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_post_alter()
+ */
+function innovation_ctools_plugin_post_alter(&$plugin, &$info)
+{
+  if ($info['type'] == 'styles') {
+    if ($plugin['name'] == 'kalacustomize') {
+      $plugin['title'] = 'ASU Customize';
+    }
+  }
+}
+
+/**
+ * Implements hook_ctools_content_subtype_alter()
+ */
+function innovation_ctools_content_subtype_alter(&$subtype, &$plugin)
+{
+  if ($plugin['module'] == 'views_content' && $subtype['title'] == 'Add content item') {
+    $subtype['title'] = t('Add existing content');
   }
 }
 

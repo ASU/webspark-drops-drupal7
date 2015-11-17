@@ -6,7 +6,7 @@
   
   $middleware_host = "webforms.asu.edu";
   
-  $url = "https://$middleware_host/asu_salesforce_query/api/$type/$name";
+  $url = "https://$middleware_host/salesforce_query/api/$type/$name";
 
   $fields = array(
     'condition_Term_Status__c' => TRUE,

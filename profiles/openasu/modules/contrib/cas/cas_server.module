@@ -64,6 +64,10 @@ function cas_server_theme() {
       'variables' => array('ticket' => NULL, 'error_code' => NULL),
       'file' => 'cas_server.response.inc',
     ),
+    'cas_service_logout_request' => array(
+      'variables' => array('ticket' => NULL, 'date' => NULL, 'id' => NULL),
+      'file' => 'cas_server.response.inc',
+    ),
   );
 }
 
@@ -131,6 +135,12 @@ function cas_server_login() {
  * This provides the simple non-xml based
  */
 function cas_server_validate() {
+  // Prevent this page from being cached.
+  drupal_page_is_cacheable(FALSE);
+
+  // Set content type.
+  drupal_add_http_header('Content-Type', 'text/plain; charset=utf-8');
+
   //Obtain the ticket from the url and validate it.
   $ticket = isset($_REQUEST['ticket']) ? $_REQUEST['ticket'] : '';
   $service = isset($_REQUEST['service']) ? $_REQUEST['service'] : '';
@@ -149,13 +159,18 @@ function cas_server_validate() {
  * Returns data in xml
  */
 function cas_server_service_validate() {
+  // Prevent this page from being cached.
+  drupal_page_is_cacheable(FALSE);
+
+  // Set content type.
+  drupal_add_http_header('Content-Type', 'text/xml; charset=utf-8');
+
   $ticket = isset($_REQUEST['ticket']) ? $_REQUEST['ticket'] : '';
   $service = isset($_REQUEST['service']) ? $_REQUEST['service'] : '';
   $user_name = _cas_server_validate($service, $ticket);
   if (!$user_name) $cas_error='INVALID_TICKET';
   if (!$ticket || !$service) $cas_error='INVALID_REQUEST';
 
-  header('Content-type:', 'text/xml');
   if ($user_name) {
     //@TODO Generate proxy granting ticket
     $account = user_load_by_name($user_name);
@@ -189,13 +204,14 @@ function _cas_server_validate($service, $ticket) {
   // Look up the ticket
   $user_name='';
   $ticket_info=array(':service' => $service, ':ticket' => $ticket);
-  $result = db_query_range("SELECT u.name FROM {cas_server_tickets} t JOIN {users} u ON t.uid=u.uid  WHERE t.service = :service and t.ticket = :ticket", 0, 1, $ticket_info);
+  $result = db_query_range("SELECT u.name FROM {cas_server_tickets} t JOIN {users} u ON t.uid=u.uid  WHERE t.service = :service and t.ticket = :ticket AND valid=1", 0, 1, $ticket_info);
   if ($result !== FALSE) {
     foreach ($result as $ticket_data) {
       $user_name = $ticket_data->name;
     }
   }
-  db_delete('cas_server_tickets')
+  db_update('cas_server_tickets')
+    ->fields(array('valid' => 0))
     ->condition('ticket', $ticket)
     ->execute();
 
@@ -211,7 +227,7 @@ function _cas_server_save_ticket($uid, $service) {
   // Generate the ticket
   $time = REQUEST_TIME;
   $ticket = 'ST-' . user_password();
-  $ticket_data = array('uid' => $uid, 'service' => $service, 'ticket' => $ticket, 'timestamp' => $time);
+  $ticket_data = array('uid' => $uid, 'service' => $service, 'ticket' => $ticket, 'timestamp' => $time, 'valid' => 1);
   // Save the ticket to the db
   if ($uid && $service) {
     db_insert('cas_server_tickets')->fields($ticket_data)->execute();
@@ -221,8 +237,6 @@ function _cas_server_save_ticket($uid, $service) {
 
 /**
  * Menu callback; triggers a CAS logout.
- *
- * @TODO: Implement single sign out support
  */
 function cas_server_logout() {
   global $user;
@@ -239,4 +253,50 @@ function cas_server_logout() {
     $output .= '<p>' . l(t('Continue'), $_REQUEST['url']) . '</p>';
   }
   return $output;
+}
+
+/**
+ * Send CAS a logout requests for each of the user's CAS tickets.
+ *
+ * @param $account
+ *   The user for whom to send CAS logout requests.
+ */
+function cas_server_logout_clients($account) {
+   $result = db_query("SELECT service, ticket, valid FROM {cas_server_tickets} WHERE uid= :uid", array(':uid' => $account->uid));
+    if ($result !== FALSE) {
+      $expired_tickets = array();
+      foreach ($result as $client) {
+        $expired_tickets[] = $client->ticket;
+        if (!$client->valid)  {
+          $id = 'LR-' . user_password();
+          $date = date('c');
+          $logout_request = theme('cas_service_logout_request', array('id' => $id, 'date' => $date, 'ticket' => $client->ticket));
+          // Send POST request
+          $response = drupal_http_request(
+            $client->service,
+            array(
+              'headers' => array('Content-Type' => 'application/x-www-form-urlencoded'),
+              'method' =>  'POST',
+              'data' => 'logoutRequest=' . urlencode($logout_request),
+            )
+          );
+          if (@$response->error) {
+            watchdog('error', 'Error in CAS logout Request - %code : %message', array('%code' => $response->code, '%error' => $response->error));
+          }
+        }
+        // Remove ticket
+      }
+      if ($expired_tickets) {
+        db_delete('cas_server_tickets')
+          ->condition('ticket', $expired_tickets, 'IN')
+          ->execute();
+      }
+    }
+}
+
+/**
+ * Implements hook_user_logout().
+ */
+function cas_server_user_logout($account) {
+  cas_server_logout_clients($account);
 }

@@ -11,11 +11,11 @@ function asu_rfi_admin_settings($form_state){
   
   $form = array();
   
-  $form_modes = array('test'=>'Test','live'=>'Production');
+  $form_modes = array('test'=>'Test','prod'=>'Production');
   
    $form['form_stage'] = array(
 	'#type' => 'item',
-        '#markup' => t('<div class="rfi_note">Important: The RFI submissions will not be posted to Sales force via Middleware unless Authentication code has been added. Please read below the Authentication code field for more details'),
+        '#markup' => t('<div class="rfi_note">Important: The RFI submissions will not be posted to Sales force via Middleware unless Authentication code has been added. You can request the authentication key from <a href="https://webforms.asu.edu/content/access-rfi-middleware-request">here</a>. Note that RFI submissions will not be posted to Sales force via Middle ware unless this code has been added</div>'),
     );                 
   
   $form['asu_rfi_form_access'] = array(
@@ -33,13 +33,13 @@ function asu_rfi_admin_settings($form_state){
     '#options' => $form_modes,
     '#default_value' => variable_get('asu_rfi_form_mode'),
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
-    '#description' => t("Specifiy if the form is in Test mode or Live mode."),
+    '#description' => t("Specify if the forms are in Test mode or Live mode. Note: This is a sitewide configuration and will affect all forms. Only site admins can view the forms if they are in Test mode."),
     '#required' => TRUE,
     );
    
    //Will be enabled in future
   $form['asu_rfi_form_access']['asu_rfi_form_auth_key'] = array(
-    '#type' => 'textfield',
+    '#type' => 'hidden',
     '#title' => t('Authentication code'),
     '#default_value' => variable_get('asu_rfi_form_auth_key'),
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
@@ -85,7 +85,7 @@ function asu_rfi_admin_settings($form_state){
     
    $form['asu_rfi_confirm_content'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Confirmation webpage content settings',
+    '#title' => 'Confirmation webpage content settings. Text box to enter node id will appear after the form has been created.',
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
     '#attributes' => array('class' => array('asu_rfi_confirm_email_fields')),
@@ -150,7 +150,7 @@ function asu_rfi_admin_settings($form_state){
     $form['asu_rfi_confirm_email']['asu_rfi_email_subject_field'] =  array(
     '#type' => 'textfield',
     '#title' => t('"Subject" field'),
-    '#default_value' => variable_get('asu_rfi_from_email_field'),
+    '#default_value' => variable_get('asu_rfi_email_subject_field'),
     '#description' => t('Subject line of the email to be sent to the user upon form submission'),
     '#size' => 100,
     '#maxlength' => 100,

@@ -35,7 +35,7 @@ class CasTestHelper extends DrupalWebTestCase {
     $this->admin_user = $this->drupalCreateUser(array('administer users', 'administer cas'));
 
     // Download and extract in PHPCAS.
-    $this->downloadExtractPhpCas('1.2.2');
+    $this->downloadExtractPhpCas('1.3.2');
   }
 
   /**
@@ -77,16 +77,6 @@ class CasTestHelper extends DrupalWebTestCase {
       // Extract the files.
       $archiver = archiver_get_archiver($local_archive);
       $archiver->extract($simpletest_cache);
-      // Work around issue https://issues.jasig.org/browse/PHPCAS-105.
-      // @see http://drupal.org/node/1120034
-      switch ($version) {
-        case '1.1.3':
-          system_retrieve_file('http://drupal.org/files/issues/CAS-1.1.3-CAS-client.txt', $cas_library_dir . '/CAS/client.php', FALSE, FILE_EXISTS_REPLACE);
-          break;
-        case '1.2.1':
-          system_retrieve_file('http://drupal.org/files/issues/CAS-1.2.1-CAS-client_0.txt', $cas_library_dir . '/CAS/client.php', FALSE, FILE_EXISTS_REPLACE);
-          break;
-      }
     }
     if (function_exists('sem_get')) {
       sem_release($semaphore);
@@ -145,15 +135,39 @@ class CasTestHelper extends DrupalWebTestCase {
     }
 
     // Log in the user.
-    $cas_name = is_object($account) ? $account->cas_name : $account;
-    $cas_user = array('name' => $cas_name, 'attributes' => $attributes);
-    variable_set('cas_test_cas_user', $cas_user);
+    $cas_name = $this->setCasUser($account, $attributes);
     $this->drupalGet('cas');
 
     $pass = $this->assertLink(t('Log out'), 0, t('CAS user %cas_name successfully logged in.', array('%cas_name' => $cas_name)), t('User login'));
     if ($pass) {
-      $this->loggedInUser = cas_user_load_by_name($cas_name, TRUE);
+      $this->loggedInUser = cas_user_load_by_name($cas_name, TRUE, TRUE);
     }
+  }
+
+  /**
+   * Set the CAS username and attributes for the next CAS login request.
+   *
+   * @param $account
+   *   A user object with a valid CAS username field, or the CAS username as a
+   *   string.
+   * @param $attributes
+   *   Additional attributes for the CAS user.
+   *
+   * @return
+   *   The CAS username.
+   */
+  function setCasUser($account, $attributes = array()) {
+    $cas_name = is_object($account) ? $account->cas_name : $account;
+    $cas_user = array('name' => $cas_name, 'attributes' => $attributes);
+    variable_set('cas_test_cas_user', $cas_user);
+    return $cas_name;
+  }
+
+  /**
+   * Clear the CAS username and attributes for the next CAS login request.
+   */
+  function clearCasUser() {
+    variable_del('cas_test_cas_user');
   }
 
   /**
@@ -318,19 +332,24 @@ class CasUserAdminTestCase extends CasTestHelper {
   function testCasUserAdd() {
     $this->drupalLogin($this->admin_user);
 
-    // Add a CAS user.
-    $edit = array(
-      'cas_name' => $this->randomName(),
-    );
-    $this->drupalPost('admin/people/cas/create', $edit, t('Create new account'));
-    $this->assertText(t('Created a new user account for @name. No e-mail has been sent.', array('@name' => $edit['cas_name'])), 'User created');
+    // Add 3 CAS users.
+    $edit = array();
+    for ($i = 0; $i < 3; $i++) {
+      $cas_names[] = $this->randomName();
+    }
+    $edit['cas_name'] = implode("\n", $cas_names);
+    $this->drupalPost('admin/people/cas/create', $edit, t('Create new account(s)'));
+    $this->assertText(t('The following 3 CAS usernames were created: @cas_names', array('@cas_names' => implode(', ', $cas_names))), 'Users created');
 
-    // Verify the user shows up in the list of all users.
+    // Verify the users show up in the list of all users.
     $this->drupalGet('admin/people');
-    $this->assertNoUniqueText($edit['cas_name'], 'User and CAS username found in list of users');
+    foreach ($cas_names as $cas_name) {
+      $this->assertNoUniqueText($cas_name, 'User and CAS username found in list of users');
+    }
 
-    // Attempt to add the user again and see that it fails.
-    $this->drupalPost('admin/people/cas/create', $edit, t('Create new account'));
+    // Attempt to add one of the users again and see that it fails.
+    $edit['cas_name'] = $cas_names[0];
+    $this->drupalPost('admin/people/cas/create', $edit, t('Create new account(s)'));
     $this->assertText(t('The CAS username is already in use on this site.'), 'CAS username already in use.');
   }
 }
@@ -353,10 +372,16 @@ class CasUserTestCase extends CasTestHelper {
    */
   function testCasAutoRegister() {
     $cas_name = $this->randomName();
-    variable_set('cas_test_cas_user', array('name' => $cas_name));
+    $this->setCasUser($cas_name);
 
     // Test that the user is not automatically registered.
     variable_set('cas_user_register', FALSE);
+    $this->drupalGet('cas');
+    $this->assertRaw(t('No account found for %cas_name.', array('%cas_name' => $cas_name)));
+
+    // Ensure that the login result is not cached.
+    $cas_name = $this->randomName();
+    $this->setCasUser($cas_name);
     $this->drupalGet('cas');
     $this->assertRaw(t('No account found for %cas_name.', array('%cas_name' => $cas_name)));
 
@@ -370,7 +395,7 @@ class CasUserTestCase extends CasTestHelper {
     // Create a new user.
     $user2 = $this->drupalCreateUser();
     $cas_name = $user2->name;
-    variable_set('cas_test_cas_user', array('name' => $cas_name));
+    $this->setCasUser($cas_name);
 
     // Test that CAS does not hijack an existing username.
     $this->drupalGet('cas');
@@ -423,6 +448,13 @@ class CasUserTestCase extends CasTestHelper {
 
     $this->assertToken('[cas:name]', $account->cas_name);
   }
+
+  function testCaseInsensitiveLogin() {
+    $account = $this->casCreateUser();
+    $this->casLogin(strtoupper($account->cas_name));
+    $this->assertLoggedIn($account);
+  }
+
 }
 
 /**
@@ -510,7 +542,7 @@ class CasLoginRedirectionTestCase extends CasTestHelper {
     // Create a CAS user.
     $account = $this->casCreateUser();
     $cas_name = $account->cas_name;
-    variable_set('cas_test_cas_user', array('name' => $cas_name));
+    $this->setCasUser($cas_name);
 
     // Test going to 'cas'
     $this->drupalGet('cas');
@@ -619,6 +651,19 @@ class CasSingleSignOutTestCase extends CasTestHelper {
     // @todo: Add additional tests for other methods of logging in (especially
     //   methods coming from cas_pages).
   }
+
+  function testSingleSignOutDoubleEncode() {
+    // Create a user, and log in.
+    $cas_name = $this->randomName();
+    $account = $this->casCreateUser($cas_name);
+    $this->casLogin($account);
+
+    cas_test_single_sign_out($cas_name, TRUE);
+    $this->assertLoggedOut();
+
+    // @todo: Add additional tests for other methods of logging in (especially
+    //   methods coming from cas_pages).
+  }
 }
 
 /**
@@ -636,19 +681,31 @@ class CasGatewayTestCase extends CasTestHelper {
 
   function setUp() {
     parent::setUp();
-    variable_set('cas_check_first', TRUE);
   }
 
   /**
    * Test the CAS Gateway functionality of the user is not logged in.
    */
   function testCasGatewayLoggedOut() {
+    $node1 = $this->drupalCreateNode();
+
+    variable_set('cas_check_frequency', CAS_CHECK_ONCE);
     $this->drupalGet('');
-    $this->assertTrue($this->redirect_count > 1, 'Polled CAS server on first request.');
+    $this->assertTrue($this->redirect_count == 2, 'Polled CAS server on first request.');
     $this->drupalGet('');
     $this->assertEqual($this->redirect_count, 0, 'Did not poll CAS server on second request.');
-    $this->drupalGet('node');
+    $this->drupalGet('node/' . $node1->nid);
     $this->assertEqual($this->redirect_count, 0, 'Did not poll CAS server on third request.');
+    $this->assertFalse($this->loggedInUser);
+
+    variable_set('cas_check_frequency', CAS_CHECK_ALWAYS);
+    $this->drupalGet('');
+    $this->assertTrue($this->redirect_count == 2, 'Polled CAS server on first request');
+    $this->drupalGet('');
+    $this->assertTrue($this->redirect_count == 2, 'Polled CAS server on second request');
+    $this->drupalGet('node/' . $node1->nid);
+    $this->assertEqual($this->redirect_count == 2, 'Polled CAS server on third request');
+    $this->assertFalse($this->loggedInUser);
   }
 
   /**
@@ -658,9 +715,20 @@ class CasGatewayTestCase extends CasTestHelper {
     // Create a user.
     $cas_name = $this->randomName();
     $account = $this->casCreateUser($cas_name);
-    variable_set('cas_test_cas_user', array('name' => $cas_name));
+    $this->setCasUser($cas_name);
 
-    $this->drupalGet('node');
+    variable_set('cas_check_frequency', CAS_CHECK_ONCE);
+    $this->drupalGet('');
+    $this->assertLoggedIn($account);
+    // Logging out should immediately log a user back in
+    $this->drupalGet('user/logout');
+    $this->assertLoggedIn($account);
+
+    variable_set('cas_check_frequency', CAS_CHECK_ALWAYS);
+    $this->drupalGet('');
+    $this->assertLoggedIn($account);
+    // Logging out should immediately log a user back in
+    $this->drupalGet('user/logout');
     $this->assertLoggedIn($account);
   }
 }
@@ -685,7 +753,7 @@ class CasRequiredLoginTestCase extends CasTestHelper {
     $node1 = $this->drupalCreateNode();
     $node2 = $this->drupalCreateNode();
     $account = $this->casCreateUser();
-    variable_set('cas_test_cas_user', array('name' => $account->cas_name));
+    $this->setCasUser($account);
 
     $this->drupalGet("node/$node2->nid");
 
@@ -707,7 +775,7 @@ class CasRequiredLoginTestCase extends CasTestHelper {
     $this->assertField('pass', t('Password field found.'), t('Logout'));
 
     // Verify that accessing any other page redirects to the login page.
-    variable_del('cas_test_cas_user');
+    $this->clearCasUser();
     $this->drupalGet('node');
     $this->assertText('No CAS name provided.');
   }
@@ -718,9 +786,9 @@ class CasRequiredLoginTestCase extends CasTestHelper {
   function testCasExclude() {
     $node = $this->drupalCreateNode();
     $account = $this->casCreateUser();
-    variable_set('cas_test_cas_user', array('name' => $account->cas_name));
+    $this->setCasUser($account);
 
-    variable_set('cas_check_first', TRUE);
+    variable_set('cas_check_frequency', CAS_CHECK_ONCE);
     variable_set('cas_exclude', "node/$node->nid");
 
     // Visit an excluded page and ensure we did not try to log in.
@@ -786,7 +854,7 @@ class CasLoginBlockTestCase extends CasTestHelper {
    */
   function testCasLoginBlock() {
     $account = $this->casCreateUser();
-    variable_set('cas_test_cas_user', array('name' => $account->cas_name));
+    $this->setCasUser($account);
 
     // Verify that the block is shown on some pages, but not on others.
     $this->drupalGet('');

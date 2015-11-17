@@ -25,169 +25,27 @@ function asu_cas_boot() {
 }
 
 /**
- * Implememtation of hook_system_info_alter()
- *
- * This is designed to update the subtheme from openasu_bootstrap to
- * asu_webspark_bootstrap as part of the 1.0 release.
- */
-function asu_cas_system_info_alter(&$info, $file, $type) {
-  if ($type == 'theme' && isset($info['base theme']) && $info['base theme'] == 'openasu_bootstrap') {
-    $info['base theme'] = 'asu_webspark_bootstrap';
-  }
-}
-
-/**
- * Implementation of hook_libraries_info_alter()
- *
- * This is designed to make sure that if a subtheme has been created before
- * Kalatheme 1.4 that we are connecting it to the default ASU Bootstrap
- * library. We also want to make sure that the user doesn't actually have a
- * correct Bootstrap library already set up for their subtheme.
- *
- */
-function asu_cas_libraries_info_alter(&$libraries) {
-  global $theme_info;
-  if (isset($theme_info->name) && isset($theme_info->base_theme)) {
-    $library_path = DRUPAL_ROOT . '/sites/all/libraries/' . $theme_info->name . '_bootstrap/css/bootstrap.css';
-    if ($theme_info->name != 'asu_webspark_bootstrap' && $theme_info->base_theme == 'asu_webspark_bootstrap' && !file_exists($library_path)) {
-      $libraries[$theme_info->name . '_bootstrap']['machine name'] = 'asu_webspark_bootstrap_bootstrap';
-    }
-  }
-}
-
-/**
- * Implementation of hook_init()
- *
- * This and the image styles should really be in another feature at some point
- *
+ * Implements hook_init()
  */
 function asu_cas_init() {
-
   // Adding the asu images css file to the theme so it will show up in the WYSIWYG
   drupal_add_css(drupal_get_path('module', 'asu_cas') . '/asu_cas.css', array('group' => CSS_THEME));
 }
 
-/**
- * Implements hook_filter_default_formats_alter()
- *
- * THIS REALLY SHOULD BE IN ITS OWN MODULE BUT IM PUTTING IT HERE FOR NOW
- */
-if (!function_exists('panopoly_wysiwyg_filter_default_formats_alter')) {
-  function panopoly_wysiwyg_filter_default_formats_alter(&$data) {
-    // This allows users to enter in more then one extra line
-    if (isset($data['panopoly_wysiwyg_text'])) {
-      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['valid_elements'] .= ',#p';
-    }
-  }
-}
-
-/**
- * Implements hook_update_projects_alter()
- *
- * This function will remove any module managed by ASU WebSpark from
- * the list of modules in the Drupal Update Manager.
- */
-function asu_cas_update_projects_alter(&$projects) {
-  // Setup information about managed components to remove from the update managed
-  $managed_things = array();
-  $managed_things[] = 'kalatheme'; // adding base theme
-  $managed_things[] = 'asu_webspark_bootstrap'; // adding subtheme
-  $managed_things[] = 'Innovation'; // adding subtheme
-  // WEBSPARK-403, 254 - add modules 1) enabled in openasu.install file
-  $managed_things[] = 'cas'; // CAS library module
-  $managed_things[] = 'asu_cas'; // ASU CAS and More
-  // WEBSPARK- - add modules in installation profile and or .make files
-  // but not in .info file
-    // openasu.make
-  $managed_things[] = 'quicktabs';
-  $managed_things[] = 'better_watchdog_ui';
-  $managed_things[] = 'admin_menu';
-  $managed_things[] = 'feeds_xpathparser';
-    // webspark_featurescustom.make
-  $managed_things[] = 'email';
-  $managed_things[] = 'special_menu_items';
-    // asu_rfi.make
-  $managed_things[] = 'multiblock';
-  $managed_things[] = 'views_data_export';
-  $managed_things[] = 'mimemail';
-  $managed_things[] = 'mailsystem';
-
-  // Determine any dependencies to components manged by the distribution
-  $profile_info = install_profile_info('openasu');
-  foreach ($profile_info['dependencies'] as $module) {
-    $managed_things[] = $module;
-    $module_info = drupal_parse_info_file(drupal_get_path('module', $module) . '/' . $module . '.info');
-    if (!empty($module_info['dependencies'])) {
-      foreach ($module_info['dependencies'] as $dependency) {
-        $parts = explode(' (', $dependency, 2);
-        $managed_things[] = array_shift($parts);
-      }
-    }
-  }
-
-  // Remove modules and themes managed by distribution
-  foreach ($managed_things as $managed_module) {
-    unset($projects[$managed_module]);
-  }
-}
-
-/**
- * Implements hook_update_status_alter()
- *
- * This function will remove any module managed by ASU WebSpark from
- * the list of modules in the Drupal Update Manager.
- */
-function asu_cas_update_status_alter(&$projects) {
-  // Don't want to unset this in hook_update_projects_later as per
-  // https://drupal.org/node/1875386
-  // But we do want to make sure the user isn't aware of updates through the GUI
-  // so we mark as always up to date.
-  foreach ($projects as $project_name => $project_info) {
-    if ($project_name == 'drupal') {
-      $projects[$project_name]['status'] = UPDATE_CURRENT;
-      $projects[$project_name]['reason'] = t('Drupal core is managed by WebSpark. Do not update manually.');
-    }
-  }
-}
-
 /*
- * Implements hook_menu_alter()
+ * Implements hook_form_alter()
+ *
+ * This properly sets the default admin role to 'administrator' and disables
+ * all the other roles from being assigned.
  */
-function asu_cas_menu_alter(&$items) {
-  $items['admin/people/cas/create']['title'] = 'Add ASURITE User';
-  $items['user/%user/cas']['access callback'] = FALSE;
-  // WEBSPARK-511 - Hide Add ASU degrees link
-  $items['node/add/asu-degree']['access callback'] = FALSE;
-}
-
-/*
- * Implements hook_form_id_form_alter()
- */
-
-/* This properly sets the default admin role to 'administrator' and disables all the other roles from being assigned */
 function asu_cas_form_alter(&$form, &$form_state, $form_id) {
 
   if ($form_id == "user_admin_settings") {
     $roles = array_map('check_plain', user_roles(TRUE));
-    /*foreach ($roles as $key => $role) {
-      // Sets the default administrator role to 'administrator' to ensure CAS role does not become default
-      if ($role == "administrator") {
-        print $role;
-        variable_set("user_admin_role", $key);
-      }
-      else {
-        unset($roles[$key]);
-      }
-    }
-    $form['admin_role']['user_admin_role'] = array(
-      '#type' => 'select',
-      '#title' => t('Administrator role'),
-      '#default_value' => variable_get('user_admin_role', 0),
-      '#options' => $roles,
-      '#description' => t('This role will be automatically assigned new permissions whenever a module is enabled. Changing this setting will not affect existing permissions.'),
-    );*/
   }
-  /* This function was added to fix CAS role issue by adding CAS role enabled by default and disable it from being unchecked */
+
+  // This function was added to fix CAS role issue by adding CAS role enabled
+  // by default and disable it from being unchecked
   if ($form_id == "cas_admin_settings") {
     $roles = array_map('check_plain', user_roles(TRUE));
     unset($form['account']['cas_auto_assigned_role']);
@@ -198,7 +56,8 @@ function asu_cas_form_alter(&$form, &$form_state, $form_id) {
       '#disabled' => TRUE,
     );
     foreach ($roles as $key => $role) {
-      // Sets the default administrator role to 'administrator' to ensure CAS role does not become default
+      // Sets the default administrator role to 'administrator' to ensure CAS
+      // role does not become default
       if ($role == "CAS") {
         $name = $role;
         $rid = $key;
@@ -228,12 +87,17 @@ function asu_cas_form_alter(&$form, &$form_state, $form_id) {
   }
 }
 
+/*
+ * Implements hook_FORM_ID_form_alter()
+ */
 function asu_cas_form_cas_add_user_form_alter(&$form, &$form_state) {
   $form['account']['cas_name']['#title'] = ASU_CAS_USERNAME_LABEL;
   $form['account']['cas_name']['#description'] = t("Registration will proceed as if the user with the specified @label just logged in.", array('@label' => ASU_CAS_USERNAME_LABEL));
 }
 
-
+/*
+ * Implements hook_FORM_ID_form_alter()
+ */
 function asu_cas_form_user_register_form_alter(&$form, &$form_state) {
   if (user_access('administer users')) {
     $form['account']['cas_name']['#title'] = ASU_CAS_USERNAME_LABEL;
@@ -241,6 +105,9 @@ function asu_cas_form_user_register_form_alter(&$form, &$form_state) {
   }
 }
 
+/*
+ * Implements hook_FORM_ID_form_alter()
+ */
 function asu_cas_form_cas_user_add_alter(&$form, &$form_state) {
   $form['cas_name']['#title'] = ASU_CAS_USERNAME_LABEL;
   $form['actions']['submit'] = array(
@@ -249,6 +116,9 @@ function asu_cas_form_cas_user_add_alter(&$form, &$form_state) {
   );
 }
 
+/*
+ * Implements hook_FORM_ID_form_alter()
+ */
 function asu_cas_form_user_profile_form_alter(&$form, &$form_state) {
   if (user_access('administer users')) {
     $form['account']['cas_name']['#title'] = ASU_CAS_USERNAME_LABEL;
@@ -256,3 +126,10 @@ function asu_cas_form_user_profile_form_alter(&$form, &$form_state) {
   }
 }
 
+/*
+ * Implements hook_menu_alter()
+ */
+function asu_cas_menu_alter(&$items) {
+  $items['admin/people/cas/create']['title'] = 'Add ASURITE User';
+  $items['user/%user/cas']['access callback'] = FALSE;
+}

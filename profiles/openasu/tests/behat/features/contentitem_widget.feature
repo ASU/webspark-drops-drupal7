@@ -1,10 +1,10 @@
-Feature: Add content item
-  In order to put in a particular content item on a page
+Feature: Add existing content
+  In order to put in a particular existing content item on a page
   As a site administrator
-  I need to be able to choose which content item
+  I need to be able to choose which existing content item
 
   @api @javascript
-  Scenario: Add content item
+  Scenario: Add existing content
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
     When I visit "/node/add/panopoly-page"
@@ -19,8 +19,8 @@ Feature: Add content item
       And I should see "Content Page Testing title has been created."
     When I customize this page with the Panels IPE
       And I click "Add new pane"
-      And I click "Add content item"
-    Then I should see "Configure new Add content item"
+      And I click "Add existing content"
+    Then I should see "Configure new Add existing content"
     When I fill in the following:
       | exposed[title]        |Mobile Formatted|
     When I select "Content Page" from "exposed[type]"

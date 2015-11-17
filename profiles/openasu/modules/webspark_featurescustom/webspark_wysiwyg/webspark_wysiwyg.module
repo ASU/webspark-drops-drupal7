@@ -1,0 +1,81 @@
+<?php
+/**
+ * @file
+ * Code for the Webspark WYSIWYG feature.
+ */
+
+include_once 'webspark_wysiwyg.features.inc';
+
+/**
+ * Implements hook_filter_default_formats_alter()
+ *
+ * + WEBSPARK-454 - Updates Panopoly WYSIWYG filter settings without asu_cas
+ * module code or features_overrides.
+ */
+  function webspark_wysiwyg_filter_default_formats_alter(&$data) {
+    // This allows users to enter in more then one extra line
+    if (isset($data['panopoly_wysiwyg_text'])) {
+      // WEBSPARK-454 - moving changes from webspark_wysiwyg.features.inc to here
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][0] = 'a*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][10] = 'f*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][100] = 'Y*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][102] = 'Z*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][12] = 'g*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][14] = 'h*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][16] = 'i*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][18] = 'j*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][2] = 'b*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][20] = 'k*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][22] = 'l*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][24] = 'm*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][26] = 'n*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][28] = 'o*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][30] = 'p*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][32] = 'q*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][34] = 'r*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][36] = 's*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][38] = 't*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][4] = 'c*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][40] = 'u*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][42] = 'v*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][44] = 'w*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][46] = 'x*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][48] = 'y*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][50] = 'z*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][52] = 'A*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][54] = 'B*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][56] = 'C*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][58] = 'D*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][6] = 'd*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][60] = 'E*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][62] = 'F*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][64] = 'G*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][66] = 'H*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][68] = 'I*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][70] = 'J*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][72] = 'K*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][74] = 'L*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][76] = 'M*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][78] = 'N*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][8] = 'e*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][80] = 'O*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][82] = 'P*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][84] = 'Q*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][86] = 'R*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][88] = 'S*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][90] = 'T*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][92] = 'U*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][94] = 'V*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][96] = 'W*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][98] = 'X*'; /* WAS: '' */
+      $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['valid_elements'] = 'a[href|target<_blank|title|style|class|id],
+    div[style|class|align<center?justify?left?right],
+    br,em,i,strong,cite,code,blockquote,ul,ol,li,dl,dt,dd,
+    table[style|class],thead,th,tbody,tr,td,
+    span[style],p[style|class],
+    h1[style|class],h2[style|class],h3[style|class],h4[style|class],h5[style|class],h6[style|class],
+    img[!src|title|alt|style|width|height|class|hspace|vspace],
+    @[style|class],#p,&nbsp;
+    buttton[style|class]';
+    }
+  }
