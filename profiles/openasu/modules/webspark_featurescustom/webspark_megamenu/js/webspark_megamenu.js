@@ -1,15 +1,15 @@
 (function ($) {
-    Drupal.behaviors.webspark_megamenu_hidden = {
-        attach : function(context, settings) {
+  Drupal.behaviors.webspark_megamenu_hidden = {
+    attach: function (context, settings) {
 
-            if ($('.tb-megamenu-block.tb-block.tb-megamenu-block').length) {
-                $('.tb-megamenu-block.tb-block.tb-megamenu-block').closest('.tb-megamenu-row.row-fluid').addClass('hide-extra-padding');
-                $('.tb-megamenu-block.tb-block.tb-megamenu-block').closest('.tb-megamenu-block.tb-block.tb-megamenu-block').addClass('adding-padding');
-            }
+      if ($('.tb-megamenu-block.tb-block.tb-megamenu-block').length) {
+        $('.tb-megamenu-block.tb-block.tb-megamenu-block').closest('.tb-megamenu-row.row-fluid').addClass('hide-extra-padding');
+        $('.tb-megamenu-block.tb-block.tb-megamenu-block').closest('.tb-megamenu-block.tb-block.tb-megamenu-block').addClass('adding-padding');
+      }
 
-        }
     }
-    Drupal.behaviors.webspark_resize_menu = {
+  }
+  Drupal.behaviors.webspark_resize_menu = {
     attach: function (context, settings) {
 
       $(window).on('resize load', function () {
@@ -43,7 +43,7 @@
         var poss = [];
         var br = true;
         var objs = [{fs: 14,pd: 10,pds: "21px 10px 20px 10px"},{fs: 15,pd: 15,pds: '21px 15px'},{fs: 16, pd: 25,pds: '22px 25px 21px 25px'}];
-
+        var carets = document.getElementsByClassName('tb-megamenu-nav')[0].getElementsByClassName('caret').length * 10;
         for (var i = 0; i < objs.length; ++i) {
           var hold = 0;
           for (var c = 0; c < a.length; ++c) {
@@ -52,11 +52,24 @@
           hold = hold + (count * objs[i].pd * 2)
           poss.push(hold);
         }
-        if (poss[2] < x) {
+//        console.log(poss[2] , carets, x);
+        if ((poss[2] + carets) < x) {
+          if (typeof (Storage) !== "undefined") {
+            localStorage.setItem('asuMegaFont', '16px');
+            localStorage.setItem('asuMegaPadding', '22px 25px 21px 25px');
+          }
           return objs[2];
-        } else if (poss[1] < x) {
+        } else if ((poss[1] + carets) < x) {
+          if (typeof (Storage) !== "undefined") {
+            localStorage.setItem('asuMegaFont', '15px');
+            localStorage.setItem('asuMegaPadding', '21px 15px');
+          }
           return objs[1];
         } else {
+          if (typeof (Storage) !== "undefined") {
+            localStorage.setItem('asuMegaFont', '14px');
+            localStorage.setItem('asuMegaPadding', '21px 10px 20px 10px');
+          }
           return objs[0];
         }
 
