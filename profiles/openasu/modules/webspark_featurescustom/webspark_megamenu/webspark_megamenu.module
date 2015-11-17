@@ -36,3 +36,6 @@ function webspark_megamenu_form_alter(&$form, &$form_state, &$form_id) {
     //$form['link_path']['#default_value'] = $GLOBALS['base_url'].'/'.variable_get('site_frontpage', 'node');
   }
 }
+function webspark_megamenu_page_alter(&$page) {
+  drupal_add_js(drupal_get_path('module', 'webspark_megamenu').'/js/webspark_megamenu_pre.js', array('scope'=>'header'));
+}
