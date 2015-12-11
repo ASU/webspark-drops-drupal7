@@ -107,7 +107,7 @@
                     //console.log(facet);
                     $(this.target).append(
                         $('<li><a href="#" class="facet_item">' + facet + '</a></li>')
-                            //.addClass('tagcloud_size_' + parseInt(objectedItems[i].count / maxCount * 10))
+                        //.addClass('tagcloud_size_' + parseInt(objectedItems[i].count / maxCount * 10))
                             .click(this.clickHandler(facet))
                             .append(' <span class="badge count">' + count + '</span>')
                     );

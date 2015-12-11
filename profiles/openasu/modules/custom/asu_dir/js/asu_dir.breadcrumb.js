@@ -67,7 +67,6 @@
 }(jQuery));
 
 
-
 // Utility function to traverse nodes from the current node of the jqtree, and append breadcrumbs to the
 // crumb element
 function asu_dir_traverse_crumbs(current_node, crumb_element) {

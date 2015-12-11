@@ -55,7 +55,7 @@
 
 
             //if an override field is found as an fq, override the manager query
-            for (var i = 0; i < fq.length; i ++) {
+            for (var i = 0; i < fq.length; i++) {
                 for (var j = 0; j < override_fields.length; j++) {
 
                     if (fq[i] != null && fq[i].value != null && fq[i].value.indexOf(override_fields[j]) != -1) {
@@ -185,7 +185,7 @@
             }
 
             //if an override field is found as an fq, override the stripping of managers
-            for (var i = 0; i < fq.length; i ++) {
+            for (var i = 0; i < fq.length; i++) {
                 for (var j = 0; j < override_fields.length; j++) {
                     if (fq[i] != null && fq[i].value != null && fq[i].value.indexOf(override_fields[j]) != -1) {
                         override = true;
@@ -287,15 +287,15 @@
                         var doc = docs[i];
                         $(this.target).prepend(this.template(doc));
                         /*
-                        // For display in results.
-                        var items = [];
-                        items = items.concat(this.facetLinks('expertiseAreasFacet', doc.expertiseAreasFacet));
+                         // For display in results.
+                         var items = [];
+                         items = items.concat(this.facetLinks('expertiseAreasFacet', doc.expertiseAreasFacet));
 
-                        var $links = $('#expertise_links_' + doc.eid);
-                        $links.empty();
-                        for (var j = 0, m = items.length; j < m; j++) {
-                            $links.append($('<li></li>').append(items[j]));
-                        }*/
+                         var $links = $('#expertise_links_' + doc.eid);
+                         $links.empty();
+                         for (var j = 0, m = items.length; j < m; j++) {
+                         $links.append($('<li></li>').append(items[j]));
+                         }*/
                     }
                 } else {
                     for (var i = 0, l = docs.length; i < l; i++) {
@@ -306,14 +306,14 @@
 
                         // For display in results.
                         /*
-                        var items = [];
-                        items = items.concat(this.facetLinks('expertiseAreasFacet', doc.expertiseAreasFacet));
+                         var items = [];
+                         items = items.concat(this.facetLinks('expertiseAreasFacet', doc.expertiseAreasFacet));
 
-                        var $links = $('#expertise_links_' + doc.eid);
-                        $links.empty();
-                        for (var j = 0, m = items.length; j < m; j++) {
-                            $links.append($('<li></li>').append(items[j]));
-                        }*/
+                         var $links = $('#expertise_links_' + doc.eid);
+                         $links.empty();
+                         for (var j = 0, m = items.length; j < m; j++) {
+                         $links.append($('<li></li>').append(items[j]));
+                         }*/
                     }
                 }
             }

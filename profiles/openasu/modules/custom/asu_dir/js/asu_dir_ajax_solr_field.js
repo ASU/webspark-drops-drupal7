@@ -145,7 +145,6 @@ ASUPeople.dept_id = '';
                 }
 
 
-
                 Manager.init();
 
                 // Add Solr parameters for faceting.

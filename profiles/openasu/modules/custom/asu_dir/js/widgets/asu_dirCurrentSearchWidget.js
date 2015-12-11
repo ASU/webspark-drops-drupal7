@@ -61,9 +61,9 @@
                 var $target = $(this.target);
                 $target.empty();
                 /*
-                if (links.length > 0) {
-                    $target.append('<span class="breadcrumb"> People </span>');
-                }*/
+                 if (links.length > 0) {
+                 $target.append('<span class="breadcrumb"> People </span>');
+                 }*/
 
                 for (var i = 0, l = links.length; i < l; i++) {
                     if (i > 0) {

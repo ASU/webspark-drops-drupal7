@@ -143,15 +143,19 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   if (!isset($field_configs['isearch_flag'])) {
     $field_configs['isearch_flag'] = FALSE;
     $isearch_mode = FALSE;
-  } else {
+  }
+  else {
     $isearch_mode = $field_configs['isearch_flag'];
   }
 
 
   if (!isset($field_configs['show_breadcrumbs']) && !$isearch_mode) {
     $field_configs['show_breadcrumbs'] = TRUE;
-  } else if ($isearch_mode) {
-    $field_configs['show_breadcrumbs'] = FALSE;
+  }
+  else {
+    if ($isearch_mode) {
+      $field_configs['show_breadcrumbs'] = FALSE;
+    }
   }
 
   $alias = drupal_get_path_alias();

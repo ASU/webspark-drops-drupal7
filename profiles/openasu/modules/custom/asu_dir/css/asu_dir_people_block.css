@@ -227,7 +227,7 @@ body .asu_directory_custom_saved:focus {
 }
 
 #asu-dir-ajax-solr-people .asu_directory_people_row .row-profile-image img {
-    padding-left:  0;
+    padding-left: 0;
 }
 
 #people .asu_directory_people_row .img-responsive {
@@ -325,8 +325,6 @@ body .asu_directory_custom_saved:focus {
     cursor: pointer;
 }
 
-
-
 /** Node Display **/
 
 .node-asu-directory h2 {
@@ -354,7 +352,7 @@ body .asu_directory_custom_saved:focus {
     border: 1px solid #a90044;
 }
 
-.field-type-asu-directory .pagination>li>a, .field-type-asu-directory .pagination>li>span {
+.field-type-asu-directory .pagination > li > a, .field-type-asu-directory .pagination > li > span {
     padding: 6px 12px !important;
     margin-left: -1px !important;
 }
