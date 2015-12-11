@@ -60,3 +60,10 @@ function asu_dir_update_7001(&$sandbox) {
 function asu_dir_update_7002(&$sandbox) {
   variable_set('asu_dir_solr_endpoint', 'https://asudir-solr.asu.edu/asudir/directory/');
 }
+
+/**
+ * Enable asu_ajax_solr module
+ */
+function asu_dir_update_7003(&$sandbox) {
+  module_enable(array('asu_ajax_solr'));
+}
