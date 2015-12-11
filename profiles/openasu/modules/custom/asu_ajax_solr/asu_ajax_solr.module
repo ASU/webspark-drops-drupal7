@@ -1,0 +1,89 @@
+<?php
+
+/**
+ * @file
+ * asu_ajax_solr.module - AJAX Solr library integration with Libraries API.
+ *
+ * @author
+ * Michael Samuelson <mlsamuel@asu.edu> / <mlsamuelson@gmail.com>
+ *
+ */
+
+/*********************************************************************
+  CONFIG
+*********************************************************************/
+
+
+/*********************************************************************
+  DRUPAL HOOKS
+*********************************************************************/
+
+/**
+ * Implements hook_libraries_info()
+ *
+ */
+function asu_ajax_solr_libraries_info() {
+
+  // Expected to be extracted into 'sites/all/libraries/ajax_solr'.
+  $libraries['ajax_solr'] = array(
+    'name' => 'AJAX Solr',
+    'vendor url' => 'https://github.com/evolvingweb/ajax-solr',
+    'download url' => 'https://github.com/evolvingweb/ajax-solr/tarball/master',
+    // Short circuit version requirement. No official release yet.
+    'version callback' => 'asu_ajax_solr_short_circuit_version',
+    'files' => array(
+      'js' => array(
+        'core/Core.js',
+        'core/AbstractManager.js',
+        'managers/Manager.jquery.js',
+        'core/Parameter.js',
+        'core/ParameterStore.js',
+        'widgets/ParameterHistoryStore.js',
+        'core/AbstractWidget.js',
+        'core/AbstractTextWidget.js',
+        'widgets/jquery/PagerWidget.js',
+        'core/AbstractFacetWidget.js',
+      ), // Can be a path to the file location like array('lib/simple.js')
+      //'css' => array('none.css'), // Can be a path to the file location like array('css/simple.css')
+    ),
+  );
+
+  return $libraries;
+}
+
+/*********************************************************************
+  CALLBACKS
+*********************************************************************/
+
+
+/*********************************************************************
+  THEMING
+*********************************************************************/
+
+
+/*********************************************************************
+  FORMS
+*********************************************************************/
+
+
+/*********************************************************************
+  INTERNAL
+*********************************************************************/
+
+/**
+ * Short-circuit the version argument.
+ */
+function asu_ajax_solr_short_circuit_version() {
+  return TRUE;
+}
+
+/*********************************************************************
+  API
+*********************************************************************/
+
+
+/*********************************************************************
+  DEVELOPER NOTES 
+*********************************************************************/
+
+// Load library when needed with libraries_load('jqtree');
