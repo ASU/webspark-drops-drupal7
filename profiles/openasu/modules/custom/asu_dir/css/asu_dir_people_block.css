@@ -64,6 +64,11 @@ body .asu_directory_custom_group {
     margin-top: 30px;
 }
 
+.field-type-asu-directory #asu-dir-people-wrapper {
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
 .field-type-asu-directory .dept-mgr-btn {
     float: right;
     /*min-width: 350px;*/
@@ -145,18 +150,23 @@ body .asu_directory_custom_saved:focus {
 
 /*Directory*/
 
-#people {
+#asu-dir-ajax-solr-people {
     margin: 0;
-    margin-bottom: 24px;
 }
 
-#people > div:first-child {
+#asu-dir-ajax-solr-people > div:first-child {
     border-top: solid 2px #ccc;
+}
+
+#asu-dir-ajax-solr-selections {
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0px 0px 5px 1px;
 }
 
 /*Sorting Interface*/
 #asu_directory_people_controls_top {
-    margin-bottom: 35px;
+    margin-bottom: 10px;
 }
 
 /*Any hovered people buttons*/
@@ -176,15 +186,35 @@ body .asu_directory_custom_saved:focus {
     color: #ffffff;
 }
 
-.asu_people_row_even {
+.asu_directory_people_row:nth-child(odd) {
     background-color: #fafafa;
 }
 
 /*Row in People block*/
+#asu-dir-ajax-solr-people .asu_directory_people_row {
+    border-bottom: solid 2px #ccc;
+    padding: .5em 0 .5em 0;
+    min-height: 130px;
+    width: auto;
+}
+
+#asu-dir-ajax-solr-people .asu_directory_people_row .img-responsive {
+    max-width: 100%;
+    margin: auto;
+    display: block;
+}
+
+/** for the iSearch department tool **/
+
 #people .asu_directory_people_row {
     border-bottom: solid 2px #ccc;
     padding: .5em 0 .5em 0;
     min-height: 130px;
+    width: auto;
+}
+
+#asu-dir-ajax-solr-people .asu_directory_people_row .row-profile-image img {
+    padding-left:  0;
 }
 
 #people .asu_directory_people_row .img-responsive {
@@ -194,13 +224,13 @@ body .asu_directory_custom_saved:focus {
 }
 
 @media (min-width: 992px) {
-    #people .asu_directory_people_row .img-responsive {
+    #asu-dir-ajax-solr-people .asu_directory_people_row .img-responsive {
         width: 100%;
     }
 }
 
 @media (max-width: 992px) {
-    #people .asu_directory_people_row .img-responsive {
+    #asu-dir-ajax-solr-people .asu_directory_people_row .img-responsive {
         max-height: 250px !important;
         max-width: 200px;
     }
@@ -215,7 +245,7 @@ body .asu_directory_custom_saved:focus {
 }
 
 /* A row of the mock-table */
-#people .asu_directory_people_row:hover {
+#asu-dir-ajax-solr-people .asu_directory_people_row:hover {
     background-color: #eee;
     cursor: pointer;
 }
@@ -226,7 +256,7 @@ body .asu_directory_custom_saved:focus {
 }
 
 /* People search button */
-#asu_directory_people_search_btn {
+.asu_dir_people_search_btn {
     position: absolute;
     top: 0;
     right: 5px;
@@ -235,7 +265,7 @@ body .asu_directory_custom_saved:focus {
     color: #2a2a2a;
     font-size: 20px;
     margin-right: 0;
-    margin-top: 0;
+    margin-top: 0 !important;
 }
 
 /* Contains the input and submit objects for people search */
@@ -252,18 +282,6 @@ body .asu_directory_custom_saved:focus {
     margin-right: 15px;
 }
 
-/* Sort controls */
-.asu_directory_bottom_container {
-    height: 35px;
-    margin-bottom: 20px;
-    text-align: center;
-    margin-left: -20px;
-}
-
-.asu_directory_bottom_container .pagination > li > span {
-    padding: 6px 10px;
-}
-
 /*Icon in Active Button in Sort Interface*/
 #asu_directory_people_controls_top .asu_directory_people_button.active i {
     visibility: visible;
@@ -276,12 +294,22 @@ body .asu_directory_custom_saved:focus {
     border-bottom: none;
 }
 
+.field-type-asu-directory .asu-dir-search {
+    margin-right: -15px;
+    margin-left: -15px;
+    margin-bottom: 15px;
+}
+
 .asu_directory_breadcrumb {
-    margin: 0 0 19px 1px;
+    margin: 0 0 15px 1px;
     font-size: 16px;
     width: 100%;
     clear: both;
 
+}
+
+.asu_directory_breadcrumb a {
+    cursor: pointer;
 }
 
 /** Node Display **/
@@ -300,4 +328,102 @@ body .asu_directory_custom_saved:focus {
 
 .ppl_img {
     display: none;
+}
+
+.field-type-asu-directory .pagination .pager-current {
+    background-color: #a90044;
+    color: white;
+    margin-left: -1px !important;
+    margin-right: 0px !important;
+    font-weight: normal !important;
+    border: 1px solid #a90044;
+}
+
+.field-type-asu-directory .pagination>li>a, .field-type-asu-directory .pagination>li>span {
+    padding: 6px 12px !important;
+    margin-left: -1px !important;
+}
+
+.field-type-asu-directory .pager-disabled, .field-type-asu-directory #asu-dir-ajax-solr-pager .pager-disabled:hover {
+    color: black;
+}
+
+/* Alpha bar new */
+
+.asu-dir-alpha-bar .col-md-12 {
+    margin-bottom: 10px;
+}
+
+.alphabet {
+    list-style-type: none;
+    padding: 0;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+.alphabet li {
+    float: left;
+    margin: 0;
+    padding-top: 5px;
+    padding-right: 0;
+    padding-left: 0;
+    padding-bottom: 25px;
+    font-size: 16px;
+    -moz-box-sizing: border-box;
+    color: #a90044;
+    display: inline-block;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 3.84%;
+    font-weight: 400;
+}
+
+.alphabet li:last-child {
+    border-right: none;
+}
+
+.alphabet li:hover {
+    color: white;
+    background-color: #a90044;
+}
+
+.alphabet li.active-letter {
+    color: white;
+    background-color: #a90044;
+}
+
+select {
+    display: block;
+    width: 100%;
+    height: 37px;
+    font-size: 16px;
+    font-weight: 200;
+    line-height: 1.44;
+    color: #505050;
+    background: #fff;
+    border: 1px solid #b0b0b0;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 1px 2px 9px rgba(213, 213, 213, 0.5);
+    box-shadow: inset 1px 2px 9px rgba(213, 213, 213, 0.5);
+    -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+
+}
+
+/** ISearch-specific **/
+
+#block-asu-dept-info-asu-dept-info-people {
+    margin-bottom: 35px;
+}
+
+.asu_directory_bottom_container {
+    text-align: center;
+}
+
+.block-asu-dept-info #asu-dir-people-wrapper {
+    margin-left: 0px;
+    margin-right: 0px;
 }

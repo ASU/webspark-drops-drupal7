@@ -52,3 +52,11 @@ function asu_dir_field_schema($field) {
 function asu_dir_update_7001(&$sandbox) {
   variable_set('asu_dir_solr_endpoint', 'https://asudir-solr.asu.edu/asudir/directory/select');
 }
+
+
+/**
+ * Update the Solr URL, again
+ */
+function asu_dir_update_7002(&$sandbox) {
+  variable_set('asu_dir_solr_endpoint', 'https://asudir-solr.asu.edu/asudir/directory/');
+}
