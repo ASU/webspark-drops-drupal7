@@ -252,7 +252,7 @@
             }
 
             //NAME AND TITLE COLUMN
-            markup += '<div class="' + col_width + '"><div class="row-profile-text row-field"><a href="http://isearch.asu.edu/profile/' + doc.eid + '" class="displayName viewDetails" id="' + doc.eid + '" class="displayName viewDetails">';
+            markup += '<div class="' + col_width + '"><div class="row-profile-text row-field"><a href="http://isearch.asu.edu/profile/' + doc.eid + '" target="_blank" class="displayName viewDetails" id="' + doc.eid + '" class="displayName viewDetails">';
             markup += (doc.displayName != null ? doc.displayName : '') + '</a><br>';
             markup += '<div class="job-title">' + title_string + '</div></div></div>';
 
