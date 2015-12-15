@@ -1,5 +1,5 @@
 /**
- * JavaScript file for webspark_seven admin theme.
+ * JavaScript file for webspark_seven theme (a subtheme of Drupal Core's Seven theme).
  *
  */
 
