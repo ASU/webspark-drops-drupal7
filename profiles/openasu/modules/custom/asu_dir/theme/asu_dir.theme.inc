@@ -217,7 +217,6 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   //Pagination Controls
 
   $html .= '<div class="text-center asu_directory_bottom_container"><ul id="asu-dir-ajax-solr-pager" class="pagination"></ul></div>';
-  $html .= '</div>';
 
   return $html;
 }
