@@ -7,10 +7,10 @@
 
 .asu-directory-tree-hierarchy {
     border: 1px solid #B8B8B8;
-    border-top-width: 3px;
+    border-top: 8px solid #a30046;
     margin: 1px 0px 200px 0px;
     overflow: auto;
-    padding: 10px;
+    padding: 30px;
     position: relative;
 }
 
@@ -44,10 +44,6 @@ ul.jqtree-tree li.jqtree-selected > .jqtree-element, ul.jqtree-tree li.jqtree-se
  *************************************************************************/
 #block-asu-directory-asu-directory-dept-hrc a:hover {
     text-decoration: none;
-}
-
-ul.jqtree-tree {
-    margin-left: 18px;
 }
 
 ul.jqtree-tree a {

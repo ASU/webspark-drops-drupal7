@@ -217,6 +217,10 @@ body .asu_directory_custom_saved:focus {
     display: block;
 }
 
+.col-md-4.asu-dir-contact-col {
+    padding-left: 0;
+}
+
 /** for the iSearch department tool **/
 
 #people .asu_directory_people_row {
@@ -228,6 +232,17 @@ body .asu_directory_custom_saved:focus {
 
 #asu-dir-ajax-solr-people .asu_directory_people_row .row-profile-image img {
     padding-left: 0;
+    width: 100%;
+}
+
+#asu-dir-ajax-solr-people .asu_directory_people_row .row-profile-image {
+    max-height:100px;
+    overflow:hidden;
+}
+
+.col-md-12 > #asu-dir-people-wrapper > #asu-dir-ajax-solr-people .row-profile-image {
+    max-height: 180px;
+    overflow: hidden;
 }
 
 #people .asu_directory_people_row .img-responsive {
@@ -440,3 +455,19 @@ select {
     margin-left: 0px;
     margin-right: 0px;
 }
+
+.row-profile-email {
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    word-break: break-word;
+}
+
+.asu_directory_people_row {
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: normal;
+}
+
