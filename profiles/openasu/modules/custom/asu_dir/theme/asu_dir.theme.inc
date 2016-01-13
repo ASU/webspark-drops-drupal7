@@ -217,7 +217,6 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   //Pagination Controls
 
   $html .= '<div class="text-center asu_directory_bottom_container"><ul id="asu-dir-ajax-solr-pager" class="pagination"></ul></div>';
-  $html .= '</div>';
 
   return $html;
 }
@@ -255,7 +254,7 @@ function theme_asu_dir_dept_tree(&$vars) {
     "top_level_nid" => ASU_DIRECTORY_TOP_LEVEL_DEPT_NID
   );
 
-  //dpm($top_level_ids);
+
   //Pass our items and configs to the JS
   //will need to pass extra configs if the tree is being used without the people display (standalone)
   if ($standalone) {
@@ -314,6 +313,12 @@ function template_process_asu_dir_ajax_solr_field(&$vars) {
   if (!empty($vars['items'])) {
     foreach ($vars['items'] as &$item) {
       $item['directory_config'] = drupal_json_decode($item['directory_config']);
+
+      //set the breadcrumb option, if it doesn't exist, due to template needs
+      if (!array_key_exists('show_breadcrumbs', $item['directory_config'])) {
+        $item['directory_config']['show_breadcrumbs'] = FALSE;
+      }
+
       $item['directory_items'] = drupal_json_decode($item['directory_items']);
     }
   }

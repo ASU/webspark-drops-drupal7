@@ -235,11 +235,14 @@
 
             var col_width = 'col-md-6';
 
+            markup += '<div class="col-md-2 peopleImg">';
+
             //PHOTO COLUMN
             if (doc.photoPreference != 'none' && doc.photoUrl != null && doc.photoUrl != '') {
-                col_width = 'col-md-4';
-                markup += '<div class="col-md-2 peopleImg"><div class="row-profile-image row-field"><img src="' + doc.photoUrl + '?size=medium"></div></div>';
+                markup += '<div class="row-profile-image row-field"><img src="' + doc.photoUrl + '?size=medium"></div>';
             }
+
+            markup += '</div>';
 
             //concatenate string with all titles, and departments, followed by ; --limiting this to 3 titles/departments for display purposes
             var title_string = '';
@@ -252,12 +255,13 @@
             }
 
             //NAME AND TITLE COLUMN
-            markup += '<div class="' + col_width + '"><div class="row-profile-text row-field"><a href="http://isearch.asu.edu/profile/' + doc.eid + '" target="_blank" class="displayName viewDetails" id="' + doc.eid + '" class="displayName viewDetails">';
+            markup += '<div class="' + col_width + '"><div class="row-profile-text row-field"><a href="http://isearch.asu.edu/profile/' + doc.eid + '" target="_blank" class="displayName viewDetails" id="'
+                + doc.eid + '" class="displayName viewDetails">';
             markup += (doc.displayName != null ? doc.displayName : '') + '</a><br>';
             markup += '<div class="job-title">' + title_string + '</div></div></div>';
 
             //CONTACT INFO COLUMN
-            markup += '<div class="col-md-3"><div class="row-profile-contact"><div class="row-profile-email row-field"><a class="emailAddress"';
+            markup += '<div class="col-md-4 asu-dir-contact-col"><div class="row-profile-contact"><div class="row-profile-email row-field"><a class="emailAddress"';
             markup += 'href="mailto:' + doc.emailAddress + '">' + doc.emailAddress + '</a><br>';
 
             if (doc.hasOwnProperty('phone') && doc.phone != '') {
@@ -265,7 +269,7 @@
             }
             markup += '</div></div></div>';
 
-            markup += '<div class="col-md-3"><div id="expertise_links_' + doc.eid + '" class="row-profile-expertise-area row-field"></div></div>';
+            //markup += '<div class="col-md-3"><div id="expertise_links_' + doc.eid + '" class="row-profile-expertise-area row-field"></div></div>';
 
             //close row
             markup += '</div>';
