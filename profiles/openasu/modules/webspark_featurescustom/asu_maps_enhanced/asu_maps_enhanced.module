@@ -89,8 +89,6 @@ function asu_maps_enhanced_field_formatter_view($entity_type, $entity, $field, $
   $map_items = array();
   $element = array();
   $map_settings = array();
-
-  if ($items[0])
   $height = 642;
 
   $element[0]['#markup'] = '';
