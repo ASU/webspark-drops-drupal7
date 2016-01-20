@@ -20,7 +20,7 @@
                 field_configs: null,
                 managers: [],
                 saved_deptnid: 0,
-                override_fields: [],
+                override_fields: []
             }, attributes);
         },
 
@@ -124,6 +124,7 @@
 
                         },
                         'complete': function (jqXHR, textStatus) {
+
                         }
                     });
 
@@ -224,6 +225,13 @@
             }
 
             this.renderPeople(results, false);
+
+            if (Drupal.settings.asu_dept_info) {
+               var info_nid = $('.jqtree-selected').attr('dept_nid');
+
+               asu_dept_info_process_directory_admins(info_nid);
+            }
+
         },
 
         template: function (doc) {
@@ -231,7 +239,7 @@
             var markup = '';
 
             //open row
-            markup += '<div eid="' + doc.eid + '" class="row row-header asu_directory_people_row " >';
+            markup += '<div eid="' + doc.eid + '" asurite="' + doc.asuriteId + '" class="row row-header asu_directory_people_row " >';
 
             var col_width = 'col-md-6';
 
@@ -262,7 +270,7 @@
 
             //CONTACT INFO COLUMN
             markup += '<div class="col-md-4 asu-dir-contact-col"><div class="row-profile-contact"><div class="row-profile-email row-field"><a class="emailAddress"';
-            markup += 'href="mailto:' + doc.emailAddress + '">' + doc.emailAddress + '</a><br>';
+            markup += 'href="mailto:' + doc.emailAddress + '">' + doc.emailAddress + '</a>&nbsp; <span class="asu-dir-admin"></span><br>';
 
             if (doc.hasOwnProperty('phone') && doc.phone != '') {
                 markup += '<div class="phone_number">' + doc.phone + '</div>';
