@@ -10,10 +10,15 @@
  */
 class FeedsXPathParserHTML extends FeedsXPathParserBase {
 
+  /**
+   * Whether this version of PHP has a useable saveHTML() method.
+   *
+   * @var bool
+   */
   protected $hasSaveHTML = FALSE;
 
   /**
-   * Overrides parent::__construct().
+   * {@inheritdoc}
    */
   public function __construct($id) {
     parent::__construct($id);
@@ -25,10 +30,9 @@ class FeedsXPathParserHTML extends FeedsXPathParserBase {
   }
 
   /**
-   * Implements FeedsXPathParserBase::setup().
+   * {@inheritdoc}
    */
   protected function setup($source_config, FeedsFetcherResult $fetcher_result) {
-
     if (!empty($source_config['exp']['tidy']) && extension_loaded('tidy')) {
       $config = array(
         'merge-divs'       => FALSE,
@@ -42,23 +46,42 @@ class FeedsXPathParserHTML extends FeedsXPathParserBase {
       );
       // Default tidy encoding is UTF8.
       $encoding = $source_config['exp']['tidy_encoding'];
-      $raw = tidy_repair_string(trim($fetcher_result->getRaw()), $config, $encoding);
+      $raw = tidy_repair_string($fetcher_result->getRaw(), $config, $encoding);
     }
     else {
       $raw = $fetcher_result->getRaw();
     }
-    $doc = new DOMDocument();
+
+    $document = new DOMDocument();
+    $document->strictErrorChecking = FALSE;
+    $document->recover = TRUE;
+
     // Use our own error handling.
     $use = $this->errorStart();
-    $success = $doc->loadHTML($raw);
-    unset($raw);
+
+    if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+      $options = LIBXML_NONET;
+      $options |= defined('LIBXML_COMPACT') ? LIBXML_COMPACT : 0;
+      $options |= defined('LIBXML_PARSEHUGE') ? LIBXML_PARSEHUGE : 0;
+
+      $success = $document->loadHTML($raw, $options);
+    }
+    else {
+      $success = $document->loadHTML($raw);
+    }
+
     $this->errorStop($use, $source_config['exp']['errors']);
+
     if (!$success) {
       throw new Exception(t('There was an error parsing the HTML document.'));
     }
-    return $doc;
+
+    return $document;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function getRaw(DOMNode $node) {
     if ($this->hasSaveHTML) {
       return $this->doc->saveHTML($node);
@@ -66,4 +89,5 @@ class FeedsXPathParserHTML extends FeedsXPathParserBase {
 
     return $this->doc->saveXML($node, LIBXML_NOEMPTYTAG);
   }
+
 }

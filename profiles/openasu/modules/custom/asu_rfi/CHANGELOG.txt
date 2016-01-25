@@ -1,11 +1,24 @@
 
+Drupal 7.x-1.2, 2015-07-27
+——————————————————————————
+- Updated module to send message to middleware upon App key request.
+— Updated module to show error log message to admins upon form submission failure if the connection between middleware and the form is lost.
+- Added “Action require” status term to ASU RFI Submissions cck field.
+- Updated the module to send pending submissions to middleware only once and alert site admins of failed submissions.
+- Added Google analytics tracking code.
+- Enhanced RFI lead submissions view to include search by students email or last name.
+- Fixed “uncaught error” message in Jquery file.
+- Added CSS to Date of birth modal message box
+- Fixed some upper case and lower case field names.
+
+
 
 Drupal 7.x-1.1, 2015-05-15
 ----------------------
 - Updated form mode variable value
 - Updated RFI module link settings
 - Updated title of ASU RFI settings menu
-- Updated RFI module with added functionality and bug fixes
+- Added the ability to add customized confirmation node ids for Grad RFI form and Undergrad RFI form (if both exist in the site) on the admin settings page.
 
 
 Drupal 7.x-1.0, 2014-11-15

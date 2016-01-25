@@ -153,6 +153,61 @@ function asu_rfi_undergrad_post($data)
       curl_setopt_array($ch, $options);
 
       $response = curl_exec($ch);
+      $curl_code = curl_getinfo($ch);
+      
+      //If response from middleware is not a success message, save the error message submission node and send message onto the confirmation page screen
+     // if($response == "Access Denied - hashed value does not match any registered site"){
+      if(($curl_code['http_code'] == 403 || $curl_code['http_code'] == 500)){
+            $error_message = $response;
+            $node = node_load($nodeid);
+            $node_wrapper = entity_metadata_wrapper('node', $node);
+            $node_wrapper->field_rfi_submission_status->set('Pending');
+            $node_wrapper->field_rfi_error_message->set($error_message);
+            $node_wrapper->save();
+            $to_email = variable_get('asu_rfi_error_email', NULL); //get error reporting email address from rfi admin settings page
+            //get middleware app key. If it's empty, don't send error email to admins.
+            if(!empty($mw_auth_key)){
+             if(!empty($to_email)){
+              if(!isset($data['cron_run']) || ($data['cron_run'] != "Cron_running")){
+                $host = $_SERVER['HTTP_HOST'];
+                //send email to admin reporting the issue
+                $content = "The following <a href='https://$host/node/$nodeid'>submission</a> from ".$_SERVER['HTTP_HOST']." has some problem and hasn't been submitted to middleware";
+                $subject = "Failed submissions to Sales Force from ".$_SERVER['HTTP_HOST'];
+                $my_module = 'mimemail';
+                $my_mail_token = '';
+                $MimeMailSystem = drupal_mail_system($my_module, $my_mail_token);
+                $default_from = variable_get('site_mail', ini_get('sendmail_from'));
+                $message = array(
+                    'id' => $my_module . '_' . $my_mail_token,
+                    'from' => $default_from,
+                    'key' => '',
+                    'subject' => $subject,
+                    'body' => array($content),
+                    'to' => $to_email,
+                    'module' => 'mimemail',
+                    'headers' => array(
+                        'From' => $default_from,
+                        'Sender' => $default_from,
+                        'Return-Path' => $default_from,
+                        'Content-Type' => 'text/html; charset=UTF-8;',
+                        'to' => $to_email 
+                    ),
+                );
+	
+                $emailmessage = $MimeMailSystem->format($message);
+                if ($MimeMailSystem->mail($emailmessage)) {
+                    watchdog('asu_rfi', 'SF Error message email sent to '.$to_email);
+                    variable_set('SF_error_message_sent', time());
+                }
+              }
+             } 
+            }
+            
+            if (drupal_valid_path('admin')) {
+                drupal_set_message('Error message from Middleware: '.$error_message);
+            }
+            
+      }
       curl_close($ch);
 
       if (FALSE === $response)

@@ -990,7 +990,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
    */
-   
 
   JqTreeWidget = (function(_super) {
     __extends(JqTreeWidget, _super);
@@ -1037,7 +1036,7 @@
         return this.openNode(node, slide);
       }
     };
-    
+
     JqTreeWidget.prototype.getTree = function() {
       return this.tree;
     };

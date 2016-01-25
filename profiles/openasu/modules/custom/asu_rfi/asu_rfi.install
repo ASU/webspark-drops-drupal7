@@ -67,7 +67,7 @@ function asu_rfi_schema() {
  
 }
 
-function asu_rfi_install(){
+function asu_rfi_install() {
  
   include('data/asu_rfi_states_data.inc');
   include('data/asu_rfi_sem_dates.inc');
@@ -90,7 +90,7 @@ function asu_rfi_install(){
   variable_set('asu_rfi_form_mode','test');
 }
 
-function asu_rfi_uninstall(){
+function asu_rfi_uninstall() {
   drupal_uninstall_schema('asu_rfi');
   variable_del('asu_rfi_form_mode');
   variable_del('asu_rfi_google_analytics_key');
@@ -98,4 +98,13 @@ function asu_rfi_uninstall(){
   variable_del('asu_rfi_from_email_field');
  }
 
-?>
+/**
+ * Implements hook_update_N
+ * + Enable Honeypot module if ASU RFI module is enabled (Now required for 1.2+)
+ */
+function asu_rfi_update_7000(&$sandbox) {
+  if (module_exists('asu_rfi') && !module_exists('honeypot'))
+  {
+    module_enable(array('honeypot'));
+  }
+}

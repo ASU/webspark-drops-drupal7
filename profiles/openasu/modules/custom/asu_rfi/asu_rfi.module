@@ -408,7 +408,7 @@ function asu_rfi_cron() {
     //update countries
     $ctype = 'fieldinfo';
     $cname = 'country';
-  $curl = "https://webforms.asu.edu/asu_salesforce_query/api/$ctype/$cname";
+  $curl = "https://webforms.asu.edu/salesforce_query/api/$ctype/$cname";
   try 
   {
     $c_ch = curl_init();
@@ -455,7 +455,7 @@ function asu_rfi_cron() {
     //update states
     $type = 'fieldinfo';
     $name = 'state_province';
-    $url = "https://webforms.asu.edu/asu_salesforce_query/api/$type/$name";
+    $url = "https://webforms.asu.edu/salesforce_query/api/$type/$name";
 
     $ch = curl_init();
     $options = array(
@@ -485,7 +485,7 @@ function asu_rfi_cron() {
     //update asu_rfi_sem_dates
   $semtype = 'select';
   $semname = 'rfi_dedupe_list_terms';
-  $semurl = "https://webforms.asu.edu/asu_salesforce_query/api/$semtype/$semname";
+  $semurl = "https://webforms.asu.edu/salesforce_query/api/$semtype/$semname";
 
   $semfields = array(
     'condition_Term_Status__c' => TRUE,
@@ -688,6 +688,7 @@ function asu_rfi_repost_rfi($data) {
         $upost['zipcode'] = isset($node->field_rfi_zipcode['und'][0]['value']) ? $node->field_rfi_zipcode['und'][0]['value'] : '';
         $upost['mobile_check'] = isset($node->field_rfi_sms_opted['und'][0]['value']) ? $node->field_rfi_sms_opted['und'][0]['value'] : '';
         $upost['submission_nodeid'] = $node->nid;
+        $upost['cron_run'] = "Cron_running";
         $utype_of_form = isset($node->field_rfi_form_type['und'][0]['value']) ? $node->field_rfi_form_type['und'][0]['value'] : '';
         if($utype_of_form == "Undergraduate long form"){
           $upost['type_of_form'] = 'LF';
@@ -1129,8 +1130,8 @@ function asu_rfi_js_alter(&$javascript) {
 }
 
 //function to send data transaction variable SI_dataLayer to GTM tag
-/*function asu_rfi_preprocess_page(&$variables) {
-  
+function asu_rfi_preprocess_page(&$variables) {
+
   //Check if /degree-programs/request-info-thank-you is loaded, grad the node id from the URL, load the node and get the variables. Add Google analytics code to the header. 
   if(isset($variables['theme_hook_suggestions'][1])){
   if($variables['theme_hook_suggestions'][1] == "page__degree_programs__request_info_thank_you"){
@@ -1156,38 +1157,54 @@ function asu_rfi_js_alter(&$javascript) {
       $program_code = $sub_wrapper->field_rfi_college_code->value();
       $program_name = $sub_wrapper->field_rfi_college_name->value();
       $prospect_level = $sub_wrapper->field_rfi_prospect_level->value();
+      $zip = $sub_wrapper->field_rfi_zipcode->value();
+      $country = $sub_wrapper->field_rfi_country->value();
     }
+
     $college = $program_code.'-RFI';
     $sku = $program_code.$plan_code.'-RFI';
     $ga_id = variable_get('asu_rfi_google_analytics_key').'-'.$nid ;
-    if($prospect_level == "Undergraduate"){
-      $category  = 'UG RFI';
-    }
-    if($prospect_level == "Graduate"){
-      $category  = 'Grad RFI';
-    }
+    $category  = 'RFI';
     
+    $zip_section = substr($zip,0,2);
+     if($country == "United States"){
+        if(!empty($zip_section)){
+        if(($zip_section == "85") || ($zip_section == "86")){
+          $price = '100.00';
+        }
+        else{
+          $price = '200.00';
+        }
+       }
+      }
+    else{
+         $price = '300.00';
+    }
+    $price = '100.00';
     drupal_add_js("(function ($) { 
        SI_dataLayer = [{
+          'event': 'ecommerce_event',
           'transactionId': '$ga_id',
           'transactionAffiliation': '$program_name',
-          'transactionTotal': '100.00', 
+          'transactionTotal': '$price', 
           'transactionProducts': [{
                 'sku': '$sku', 
                 'name': '$college',  
                 'category': '$category',
-                'price': '100.00', 
+                'price': '$price', 
                 'quantity': '1'
               }]
             }];
         })(jQuery)", array('type' => 'inline', 'scope' => 'header','weight' => 0));
   }
-  } 
+  
    //if confirmation node id specified in module settings page is called instead, run below code
    else
    {
+    
     $undergrad_confirm_nid = variable_get('asu_rfi_undergrad_confirm_node');
     $grad_confirm_nid = variable_get('asu_rfi_grad_confirm_node');
+    
     if (isset($variables['node']) && ($variables['node']->nid == $undergrad_confirm_nid || $variables['node']->nid == $grad_confirm_nid))
     {
       if(isset($_GET['pro']) || isset($_GET['ccode']) || isset($_GET['maj']) || isset($_GET['sub']))
@@ -1196,22 +1213,41 @@ function asu_rfi_js_alter(&$javascript) {
        $college_rfi = $college." - RFI";
        $college_code = base64_decode($_GET['ccode']);
        $major = base64_decode($_GET['maj']);
-       $major_rfi = $major.'-RFI';
+       $major_rfi = $college_code.'-RFI';
        $sku = $college_code.$major.'-RFI';
        $nid = base64_decode($_GET['sub']);
-       $category = $_GET['cat'];
+       $zip = base64_decode($_GET['zcode']);
+       $country = base64_decode($_GET['con']);
+       $zip_section = substr($zip,0,2);
+       //$category = $_GET['cat'];
+       $category  = 'RFI';
        $ga_id = variable_get('asu_rfi_google_analytics_key').'-'.$nid ;
+       if($country == "United States"){
+        if(!empty($zip_section)){
+        if(($zip_section == "85") || ($zip_section == "86")){
+          $price = '100.00';
+        }
+        else{
+          $price = '200.00';
+        }
+       }
+       }
+       else{
+         $price = '300.00';
+       }
+       
        //GMT transaction variables
        drupal_add_js("(function ($) { 
          SI_dataLayer = [{
+            'event': 'ecommerce_event',
             'transactionId': '$ga_id',
             'transactionAffiliation': '$college',
-            'transactionTotal': '100.00', 
+            'transactionTotal': '$price', 
             'transactionProducts': [{
                'sku': '$sku', 
                'name': '$major_rfi', 
                'category': '$category',
-               'price': '100.00', 
+               'price': '$price', 
                'quantity': '1'
              }]
         }];
@@ -1219,7 +1255,8 @@ function asu_rfi_js_alter(&$javascript) {
       }
     }
    }
-}*/
+  }
+}
 
 /* Implementation of hook form_after_build to remove requirement on student type field for Grad forms */
 

@@ -1,4 +1,72 @@
-Webspark 1.13.10 (Spokane) release 
+Webspark 1.13.13 (Hanford) release
+----------------
+
+- Contrib modules in Webspark:
+    * The following contrib modules have been updated:
+        * Feeds - v2.0-alpha9 (security update included)
+        * Video Embed Field - v2.0-beta11 (security update included)
+        * Feeds XPathparser - v1.1
+        * Maxlength - v3.2-beta2
+
+- Custom ASU module updates:
+    * ASU RFI module
+        * Fixed header JSON issue
+        * Changed help message in admin area.
+    * ASU Degrees module
+        * Added descriptions to most all administrative fields for general help for users while editing degree nodes
+        * Turned off periodic import in Degrees feed to limit overriding of user customizations
+        * Text field for short description has been made available to override catalog description with no character limit
+        * Created fields for CTA buttons that accept a hyperlink and can override the CTA button’s default destination
+        * Removed hyperlink function for college name in Degree Offered area
+        * Altered Major Map region with new title and description as directed
+        * Removed Additional Requirements URL function and implemented Additional Requirements section above other application requirements
+        * Updated default hyperlink for Scholarships and removed ability to override Financial Aid and WUE programs URLs
+        * Added marketing text area functionality from graduate nodes to undergraduate nodes
+        * Created ability to override Career Outlook description and added an true/false checkbox to control display of the Example Careers section
+        * Degree images tied to a degree node on the grid and list View displays now also link to the same content as the degree title
+        * Added hook_update_N for reverting ASU Degrees feature
+
+- Web standards components in Webspark:
+    * Webspark Megamenu
+        * Added Automatic resizing of the MegaMenu depending on the size of the screen
+
+Webspark 1.13.12 (Pullman) release
+----------------
+- ASU custom modules
+    * ASU RFI - v1.2
+        * Updated module to send message to middleware upon App key request.
+        * Updated module to show error log message to admins upon form submission failure if the connection between middleware and the form is lost.
+        * Added “Action require” status term to ASU RFI Submissions cck field.
+        * Updated the module to send pending submissions to middleware only once and alert site admins of failed submissions.
+        * Added Google analytics tracking code.
+        * Enhanced RFI lead submissions view to include search by students email or last name.
+        * Fixed “uncaught error” message in Jquery file.
+        * Added CSS to Date of birth modal message box.
+        * Fixed some upper case and lower case field names.
+
+
+Webspark 1.13.11 (Tacoma) release
+----------------
+- Drupal Core
+    * Updated to 7.39 (Security release)
+
+- ASU custom modules
+    * ASU Directory Integration Reinvented - v1.2
+        * Added as an advanced configuration option the ability to enter a custom query string, instead of using the provided filters.
+        * Added the ability to toggle the display navigation breadcrumbs on and off
+        * Add asu_dir two-way-toggle for form elements
+
+- Web standards components in Webspark
+    * ASU Spotlight - v1.5
+        * Fixed profile image width to be consistent in department display
+        * Fixed issue with the automatic sizing of images upon their upload where a) images were getting cropped to a 800x600 pixel size and b) the image width would be scaled to 1000 pixels and the height adjusted to retain the aspect ratio
+    * Carousel (thanks to @ryanjbonnell) - v1.4
+        * Added conditional check to verify if carousel slide title should be a hyperlink
+        * Fixed active class styling on deeply nested menu tree links
+        * Deeply nested menu tree links are now indented
+
+
+Webspark 1.13.10 (Spokane) release
 ----------------
 - Contributed Drupal Modules in Webspark
     * Patched Media module to fix bug that made WYSIWYG fields disappear from ASU Degree edit forms when 1) more than one WYSIWYG editor was on the page, and 2) images were uploaded via the WYSIWYG editor
@@ -194,7 +262,7 @@ Webspark 1.13.3 (Oklahoma) release
       for web pages
     * Updated the ASU Directory module to format and style directory data to 
       comform to the web standards. (Important: This is a temporary ASU directory 
-      solution that will be depracated when the new directory system is ready.)
+      solution that will be deprecated when the new directory system is ready.)
     * Added RSS feed button to the Mega Footer
     * Updated Donate link functionality in the Mega Footer
     * Hid generic (Panopoly) spotlight widget from the Webspark In-Place Editor 

@@ -738,6 +738,7 @@ function asu_rfi_feature_field_default_field_bases() {
         'Complete' => 'Complete',
         'Incomplete' => 'Incomplete',
         'Pending' => 'Pending',
+        'action_required' => 'Action required',
         'SF_Complete' => 'SF_Complete',
       ),
       'allowed_values_function' => '',

@@ -4,8 +4,9 @@
  * @file
  * ASU Directory module
  *
- * This module grabs the Department Hierarchy from iSearch, and allows the configuration of custom
- * directory display blocks or panels.
+ * This module allows the configuration of custom
+ * directory nodes, which displays employees in a
+ * directory listing from a root department.
  *
  * @author Colton Testamarck (colt@asu.edu)
  *
@@ -14,9 +15,9 @@
 /*********************************************************************
  * INCLUDES
  *********************************************************************/
-
+include_once 'theme/asu_dir.theme.inc';
 include_once 'asu_dir.features.inc';
-require_once drupal_get_path('module', 'asu_dir') . '/asu_dir.field.inc';
+include_once 'asu_dir.field.inc';
 
 /*********************************************************************
  * CONFIGS
@@ -32,126 +33,10 @@ define('ASU_DIRECTORY_TOP_LEVEL_DEPT_NID', 1342);
 define('ASU_DIRECTORY_FORM_CACHE_DURATION', 1);//set to one hour
 define('ASU_DIRECTORY_MODULE_NAME', 'asu_dir');
 
-define('ASU_DIRECTORY_SOLR_ENV', variable_get('asu_dir_solr_endpoint', 'https://webapp4.asu.edu'));
+define('ASU_DIRECTORY_URL', 'https://isearch.asu.edu');
+define('ASU_DIRECTORY_SOLR_ENV', variable_get('asu_dir_solr_endpoint', 'https://asudir-solr.asu.edu/asudir/directory/select'));
 define('ASU_DIRECTORY_TREE_ENDPOINT', variable_get('asu_dir_tree_endpoint', 'https://isearch.asu.edu/endpoints/dept_tree/json'));
 define('ASU_EMPLOYEE_TYPES_ENDPOINT', variable_get('asu_dir_employee_types_endpoint', 'https://isearch.asu.edu/endpoints/employee-types'));
-//define('ASU_DIRECTORY_FLAT_LIST_ENDPOINT', 'https://isearch.asu.edu/endpoints/dept_list/json');
-
-/*********************************************************************
- * API
- *********************************************************************/
-
-/**
- * Content for Dept People Block display
- * @return string : The HTML to display
- *
- * @param field_configs : array of settings for the people display
- * @param field_items : array of dept_ids to show in directory display
- * @param $settings : array of settings for generating people content
- */
-function asu_dir_people_content($field_configs, $field_items, $admin) {
-  $html = '';
-
-  //pass these module constants tot he JS
-  $top_level_ids = array(
-    'top_level_nid' => ASU_DIRECTORY_TOP_LEVEL_DEPT_NID,
-    'top_level_psid' => ASU_DIRECTORY_TOP_LEVEL_PS_ID
-  );
-
-  // Custom
-  drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir.breadcrumb.js');
-  drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir_ppl_block.js');
-  drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_people_block.css');
-
-  $field_configs['employee_types'] = drupal_json_encode($field_configs['employee_types']);
-  $field_items = drupal_json_encode($field_items);
-
-  $settings = array(
-    'dept_nids' => $field_items,
-    'field_configs' => $field_configs,
-    'solr_server' => ASU_DIRECTORY_SOLR_ENV,
-    'admin' => $admin,
-    'top_level_ids' => $top_level_ids
-  );
-
-  drupal_add_js(array(ASU_DIRECTORY_MODULE_NAME => $settings), 'setting');
-
-  //End of people controls top
-
-  //Markup for breadcrumb div
-  $html .= '<div class="asu_directory_breadcrumb"></div>';
-  // Markup for primary display block (to be altered via AJAX)
-  $html .= '<div class="display" id="people"></div>';
-
-  //Bottom Pagination Controls
-  $html .= '<div class="asu_directory_bottom_container">';
-  $html .= '<ul id="asu_directory_people_controls_bottom" class="pagination asu_directory_people_controls">';
-
-  $html .= '<li class="asu_directory_people_button prev first" id="asu_directory_people_prev_btn"><span class="asu_directory_people_top_switcher">< previous</span></li>';
-
-  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_first_pg_btn"><span> 1 </span></li>';
-  $html .= '<li class="asu_directory_people_ellipses pager-ellipsis disabled"><span>...&nbsp;</span></li>';
-  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_back_2_btn"><span class="dynamic_number"> </span></li>';
-  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_back_1_btn"><span class="dynamic_number"> </span></li>';
-  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_this_pg_btn"><span class="dynamic_number"> </span></li>';
-  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_fwd_1_btn"><span class="dynamic_number"> </span></li>';
-  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_fwd_2_btn"><span class="dynamic_number"> </span></li>';
-  $html .= '<li class="asu_directory_people_ellipses pager-ellipsis disabled"><span>...&nbsp;</span></li>';
-  $html .= '<li class="asu_directory_people_button" id="asu_directory_people_last_pg_btn"><span class="dynamic_number"> </span></li>';
-
-  $html .= '<li class="asu_directory_people_button next last" id="asu_directory_people_next_btn"><span class="next last asu_directory_people_top_switcher">next ></span></li>';
-
-  $html .= '</ul>';
-  $html .= '</div>';
-
-  return $html;
-}
-
-/**
- * Content for Dept Hierarchy display
- *
- *
- * @param standalone : boolean flag ->  true if this is admin display
- *
- * @return string : The HTML to display
- */
-function asu_dir_departments_content($standalone) {
-  $tree = asu_dir_get_dept_tree();
-
-  // jqTree (http://mbraak.github.com/jqTree)
-  libraries_load('jqtree');
-  libraries_load('fontawesome');
-
-  // Custom
-  drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_tree.css');
-  drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir_hierarchy_block.js');
-
-  //Pass our items and configs to the JS
-  //will need to pass extra configs if the tree is being used without the people display (standalone)
-  if ($standalone) {
-    $top_level_ids = '{
-         "top_level_psid": "' . ASU_DIRECTORY_TOP_LEVEL_PS_ID . '",
-         "top_level_nid": ' . ASU_DIRECTORY_TOP_LEVEL_DEPT_NID . '
-         }';
-
-    $settings = array(
-      'tree' => $tree,
-      'top_Level_ids' => $top_level_ids
-    );//, 'dept_nids' => $field_items,'field_configs' => $field_configs, 'admin' => $admin_flag, 'solr_server' => ASU_DIRECTORY_SOLR_ENV);
-  }
-  else {
-    $settings = array('tree' => $tree);
-  }
-
-  drupal_add_js(array(ASU_DIRECTORY_MODULE_NAME => $settings), 'setting');
-
-  $employee_select = '';
-  $html = '';
-  $html .= $employee_select . '<div class="asu-directory-tree-hierarchy"><div id="treediv"></div></div>';
-
-  return $html;
-}
-
 
 /**********************************************************************
  * HOOKS
@@ -159,6 +44,7 @@ function asu_dir_departments_content($standalone) {
 
 /**
  * Implements hook_permission().
+ * Adds custom permission to configure the module
  */
 function asu_dir_permission() {
   $perms[ASU_DIRECTORY_ADMIN_CONFIG_SETTINGS] = array(
@@ -171,7 +57,7 @@ function asu_dir_permission() {
 
 /**
  * Implements hook_menu()
- * this declares the asu_dir config form for the menu
+ * Declares the asu_dir config form for the menu
  *
  * @return array
  */
@@ -251,7 +137,9 @@ function asu_dir_admin_submit($form, &$form_state) {
 
 
 /**
- * Function to include the jqTree library, located in libs/jqtree.
+ * Implements hook_libraries_info
+ *
+ * Adds the JQtree library
  * Documentation for the library can be found here http://mbraak.github.io/jqTree/
  *
  * @return mixed
@@ -324,8 +212,6 @@ function asu_dir_cron() {
     $expire_date = time() + 3600 * ASU_DIRECTORY_FORM_CACHE_DURATION;
     cache_set('asu_employee_types', $employee_types, 'cache', $expire_date);
   }
-
-
 }
 
 
@@ -335,7 +221,7 @@ function asu_dir_cron() {
 
 
 /**
- * This is a function to clear the tree from cache
+ * Clear tree and employee types from cache
  *
  * @param $test
  * @return bool
@@ -350,7 +236,7 @@ function asu_dir_clear_cache($test) {
 }
 
 /***
- * This is a function to get the department hierarchy tree
+ * Get the department hierarchy tree
  */
 function asu_dir_get_dept_tree() {
 
@@ -369,7 +255,7 @@ function asu_dir_get_dept_tree() {
         'timeout' => 60,
       );
 
-      //Process and deliver data to javascript
+      //Get the tree and cache
       $tree_endpoint = ASU_DIRECTORY_TREE_ENDPOINT;
       $request = drupal_http_request($tree_endpoint, $options);
 
@@ -391,9 +277,9 @@ function asu_dir_get_dept_tree() {
 
 
 /**
- * This is function which returns an array of employee types
  *
- * @return mixed
+ *
+ * @return mixed An array of employee types
  */
 function asu_dir_get_employee_types() {
 
@@ -420,7 +306,7 @@ function asu_dir_get_employee_types() {
         $employee_types = drupal_json_decode($types);
       }
 
-      // Create cache, set to hold cache for number of hours specified
+      // Cache employee types for number of hours specified
       if ($employee_types != NULL) {
 
         $expire_date = time() + 3600 * ASU_DIRECTORY_FORM_CACHE_DURATION;
@@ -433,20 +319,5 @@ function asu_dir_get_employee_types() {
 
 }
 
-function asu_dir_generate_people_display_head() {
 
-  $html = '';
-  // Markup for search (possibly sorting down the line)
-  $html .= '<div id="asu_directory_people_controls_top" class="asu_directory_people_controls">';
-
-  // Markup for Search interface
-  //$html .= '<span class="asu_directory_people_search_group">';
-  $html .= '<div class="asu_directory_people_search_group">';
-  $html .= '<input class="input-main-search form-control form-text" id="asu_directory_people_search_box" placeholder="Search" />';
-  $html .= '<button id="asu_directory_people_search_btn" class="btn-main-search btn btn-primary asu_directory_people_button">
-             <i class="fa fa-search"></i></button>';
-  $html .= '</div>';
-  $html .= '</div>';
-  return $html;
-}
 

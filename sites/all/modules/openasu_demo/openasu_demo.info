@@ -1,7 +1,7 @@
 name = Webspark Demo
-description = Demo content and functionality to help show the power of Webspark. DEPRACATED.
+description = Demo content and functionality to help show the power of Webspark. DEPRECATED.
 core = 7.x
-package = ASU Depracated
+package = ASU Deprecated
 version = 7.x-1.2
 project = openasu_demo
 dependencies[] = ctools
