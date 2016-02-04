@@ -15,7 +15,8 @@
             AjaxSolr.asu_dirTreeWidget.__super__.constructor.apply(this, arguments);
             AjaxSolr.extend(this, {
                 tree: null,
-                field_configs: null
+                field_configs: null,
+                top_level_ids: null
             }, attributes);
         },
 

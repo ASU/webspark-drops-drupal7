@@ -25,6 +25,7 @@ ASUPeople.dept_id = '';
 
                 var admin = ( settings.hasOwnProperty('admin') ? settings.admin : false);
                 var query = null;
+                var field_configs = settings.field_configs;
 
                 // if any errors are returned from initializing the ASUPeople global,
                 // stop execution and log the errors to the console.

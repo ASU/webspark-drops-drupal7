@@ -189,6 +189,7 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   }
 
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asuAlphaBarWidget.js');
+  drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirSortWidget.js');
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirResultWidget.js');
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirTreeWidget.js');
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir_ajax_solr_field.js');
@@ -203,6 +204,8 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
     'top_level_ids' => $top_level_ids,
     'tree' => $tree,
     'page_alias' => $alias,
+    'titlesort_field' => ASU_DIR_TITLESORT_FIELD,
+    'tsort_placeholder' => ASU_DIR_TITLESORT_PHOLDER
   );
 
   drupal_add_js(array(ASU_DIRECTORY_MODULE_NAME => $settings), 'setting');

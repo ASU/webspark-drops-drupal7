@@ -22,9 +22,10 @@ ASUPeople.dept_id = '';
 
                 settings = settings.asu_dir;
 
-                //get the configs passed in by Drupal
+                //get the -----onfigs passed in by Drupal
                 var top_level_ids = settings.top_level_ids;
                 var field_configs = settings.field_configs;
+                ASUPeople.field_configs = field_configs;
                 var admin = settings.admin;
                 var query = null;
                 var saved_dept_nids = settings.dept_nids;
@@ -32,6 +33,8 @@ ASUPeople.dept_id = '';
                 var solr_server = settings.solr_server;
                 var page_alias = settings.page_alias;
                 var isearch_mode = field_configs.isearch_flag;
+                var titlesort_field = settings.titlesort_field;
+                var tsort_placeholder = settings.tsort_placeholder;
 
                 //create the dept. tree from the root dept
                 var top_nid = saved_dept_nids[0];
@@ -57,16 +60,6 @@ ASUPeople.dept_id = '';
                 Manager = new AjaxSolr.Manager({
                     solrUrl: solr_server
                 });
-
-                // Add in Results widget. See our custom
-                // js/widgets/isPeopleResultWidget.js method extending AbstractWidget.
-                Manager.addWidget(new AjaxSolr.asu_dirResultWidget({
-                    id: 'people',
-                    target: '#asu-dir-ajax-solr-people',
-                    solr_server: solr_server,
-                    field_configs: field_configs,
-                    override_fields: override_fields
-                }));
 
                 // Add in stock pager widget.
                 Manager.addWidget(new AjaxSolr.PagerWidget({
@@ -105,6 +98,48 @@ ASUPeople.dept_id = '';
                         top_level_ids: top_level_ids
                     }));
                 }
+
+                //First Item in array will be the default Sort
+                var sort_items = [{
+                    'field_name': 'lastNameSort',
+                    'field_id': '#dir-lastNameSort'
+                    },
+                    {//field doesn't actually exist in solr yet
+                    'field_name': titlesort_field,
+                    'field_id': '#dir-rankSort'
+                    }
+                ];
+
+                var default_sort = 'lastNameSort asc';
+
+                //logic for the default sort
+                if (field_configs.show_managers) {
+                    //default_sort = 'lastNameSort asc';
+                    //TODO:  onece titlesort field in place delete above and uncomment
+                    // below
+                    default_sort = titlesort_field + ' asc';
+                }
+
+                // Add Sorting widget
+                Manager.addWidget(new AjaxSolr.asu_dirSortWidget({
+                    id: 'asuDirSort',
+                    target: '#asu-dir-ajax-solr-sort',
+                    sort_items: sort_items,
+                    field_configs: field_configs,
+                    default_sort: default_sort,
+                    titlesort_field: titlesort_field,
+                    tsort_placeholder: tsort_placeholder
+                }));
+
+                // Add in Results widget. See our custom
+                // js/widgets/isPeopleResultWidget.js method extending AbstractWidget.
+                Manager.addWidget(new AjaxSolr.asu_dirResultWidget({
+                    id: 'people',
+                    target: '#asu-dir-ajax-solr-people',
+                    solr_server: solr_server,
+                    field_configs: field_configs,
+                    override_fields: override_fields
+                }));
 
 
                 //If we're in iSearch mode, leave out the facet, current search , text (search), and history widgets
@@ -214,7 +249,7 @@ ASUPeople.dept_id = '';
                             if (field_configs.custom_q.hasOwnProperty('sort')) {
                                 Manager.store.addByValue('sort', field_configs.custom_q.sort);
                             } else {
-                                Manager.store.addByValue('sort', 'lastNameSort asc');
+                                //Manager.store.addByValue('sort', 'lastNameSort asc');
                             }
                         }
                     }

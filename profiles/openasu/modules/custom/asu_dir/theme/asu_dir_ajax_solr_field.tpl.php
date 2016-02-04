@@ -43,10 +43,11 @@
           <!--<div class="col-md-4"><select id="primaryTitleFacet"><option value="0">Primary Title</option></select></div> // Comment this out for now -->
           <div class="col-md-8 form-type-select"><select
               id="expertiseAreasFacet" class="facet-widget">
-              <option value="0">Expertise Areas</option>
+              <option value="0">Expertise Areas</option>asu
             </select></div>
 
-          <div id="asu-dir-ajax-solr-search" class="col-md-4"><input
+          <div id="asu-dir-ajax-solr-search" class="col-md-4">
+            <input
               class="input-main-search form-control form-text required"
               placeholder="Search" type="text" id="edit-keys" name="keys"
               size="15" maxlength="128"/>
@@ -55,6 +56,12 @@
               <i class=&quot;fa fa-search&quot; aria-hidden=&quot;true&quot;></i>"
                     type="submit">
               <i class="fa fa-search" aria-hidden="true"></i></button>
+
+            <div id="asu-dir-ajax-solr-sort" >
+              Sort By:  &nbsp;<span class="asu-dir-sort-item" id="dir-lastNameSort">Last Name </span>
+              &nbsp; | &nbsp;
+              <span class="asu-dir-sort-item" id="dir-rankSort">Rank </span>
+            </div>
           </div>
         </div>
 
