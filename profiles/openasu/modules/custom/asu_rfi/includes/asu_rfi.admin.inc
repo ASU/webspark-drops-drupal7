@@ -132,7 +132,7 @@ function asu_rfi_admin_settings($form_state){
     '#default_value' => variable_get('asu_rfi_from_email_field'),
     '#description' => t('From email address to be shown in the user\'s email'),
     '#size' => 50,
-    '#maxlength' => 25,
+    '#maxlength' => 50,
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
     );
     
@@ -142,7 +142,7 @@ function asu_rfi_admin_settings($form_state){
     '#default_value' => variable_get('asu_rfi_from_name_field'),
     '#description' => t('Name to be shown in the user\'s email'),
     '#size' => 50,
-    '#maxlength' => 25,
+    '#maxlength' => 50,
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
     );
     
