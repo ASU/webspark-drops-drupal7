@@ -113,7 +113,7 @@ function asu_rfi_undergrad_post($data)
    }
    else
    {*/
-     $url = "https://webforms-dev.asu.edu/asu_rfi_dedupe/submit_rfi/$hashkey/$nodeid";
+     $url = "https://webforms.asu.edu/asu_rfi_dedupe/submit_rfi/$hashkey/$nodeid";
   //}
   
   
@@ -154,7 +154,7 @@ function asu_rfi_undergrad_post($data)
       
       $fieldHash = sha1($mw_auth_key.'+'.$body);
       
-      $url = "https://webforms-dev.asu.edu/asu_edplus_middleware/submit/$fieldHash";
+      $url = "https://webforms.asu.edu/asu_edplus_middleware/submit/$fieldHash";
     }
 
     try 
