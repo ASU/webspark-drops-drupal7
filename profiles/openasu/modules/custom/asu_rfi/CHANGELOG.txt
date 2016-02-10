@@ -1,3 +1,9 @@
+Drupal 7.x-1.3 2016-02-10
+-------------------------
+- Adding the campus field to the RFI form.
+- Making the form options responsive.
+- Changing the "DOB" text
+- Enabling the RFI permission.
 
 Drupal 7.x-1.2, 2015-07-27
 ——————————————————————————
