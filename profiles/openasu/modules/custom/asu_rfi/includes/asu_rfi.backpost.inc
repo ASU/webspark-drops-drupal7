@@ -19,7 +19,7 @@ function asu_rfi_success_post($hash, $nid)
     }
     else
     {
-        print('Not a valid Hash / Nid combination');
+	http_response_code(403);
     }
 }
 
@@ -124,6 +124,10 @@ function asu_rfi_middle_key($key){
   
     global $conf;
    
+    if(!isset($conf['asu_rfi_form_auth_key'])){       
+        variable_set('asu_rfi_form_auth_key', FALSE);
+    }
+  
     if(empty($conf['asu_rfi_form_auth_key'])){
        
         $middle_key = base64_decode($key);
@@ -131,6 +135,7 @@ function asu_rfi_middle_key($key){
     }
     else{
          http_response_code(400);
+
     }
 }
 

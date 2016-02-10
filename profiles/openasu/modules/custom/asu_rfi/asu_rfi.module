@@ -7,6 +7,7 @@
  * @author
  * Archana Puliroju (apuliroj@asu.edu)
  * Michael Samuelson (mlsamuel@asu.edu)
+ * Jared Rounsavall (jrounsav@asu.edu)
  *
  * Module provides ASU RFI form submission functionality.
  *
@@ -28,15 +29,12 @@ DRUPAL HOOKS
  * Implements hook_permission().
  */
 function asu_rfi_permission() {
-  // TODO not used anywhere yet...
-  $perms = array(
-    'asu access lead export tool' => array(
-      'title' => t('Administer ASU RFI module'),
+  return array(
+    'administer asu rfi' => array(
+      'title' => t('Administer ASU RFI'),
       'description' => t('Administer ASU RFI module'),
     ),
   );
-
-  return $perms;
 }
 
 /**
@@ -75,7 +73,7 @@ function asu_rfi_menu() {
     'description' => t('Administer RFI form settings.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('asu_rfi_admin_settings'),
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('administer asu rfi'),
     'options' => array('attributes' => array('class' => 'title')),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'includes/asu_rfi.admin.inc'
@@ -652,6 +650,8 @@ function asu_rfi_repost_rfi($data) {
         $gradpost['citizenship'] = isset($node->field_rfi_international['und'][0]['value']) ? $node->field_rfi_international['und'][0]['value'] : '';
         $gradpost['questions'] = isset($node->field_rfi_question['und'][0]['value']) ? $node->field_rfi_question['und'][0]['value'] : '';
         $gradpost['student_type'] = $node->field_rfi_student_type['und'][0]['value'];
+        $gradpost['location'] = $node->field_rfi_location['und'][0]['value'];
+        $gradpost['campus'] = $node->field_rfi_campus['und'][0]['value'];
         $gradpost['zipcode'] = isset($node->field_rfi_zipcode['und'][0]['value']) ? $node->field_rfi_zipcode['und'][0]['value'] : '';
         $gradpost['mobile_check'] = isset($node->field_rfi_sms_opted['und'][0]['value']) ? $node->field_rfi_sms_opted['und'][0]['value'] : '';
         $gradpost['submission_nodeid'] = $node->nid;
@@ -685,6 +685,8 @@ function asu_rfi_repost_rfi($data) {
         $upost['citizenship'] = isset($node->field_rfi_international['und'][0]['value']) ? $node->field_rfi_international['und'][0]['value'] : '';
         $upost['questions'] = isset($node->field_rfi_question['und'][0]['value']) ? $node->field_rfi_question['und'][0]['value'] : '';
         $upost['student_type'] = $node->field_rfi_student_type['und'][0]['value'];
+        $upost['location'] = $node->field_rfi_location['und'][0]['value'];
+        $upost['campus'] = $node->field_rfi_campus['und'][0]['value'];
         $upost['zipcode'] = isset($node->field_rfi_zipcode['und'][0]['value']) ? $node->field_rfi_zipcode['und'][0]['value'] : '';
         $upost['mobile_check'] = isset($node->field_rfi_sms_opted['und'][0]['value']) ? $node->field_rfi_sms_opted['und'][0]['value'] : '';
         $upost['submission_nodeid'] = $node->nid;
@@ -722,7 +724,6 @@ FORMS
 
 
 function asu_rfi_form_alter(&$form, &$form_state, $form_id){
-  
   //below code adds css to ajax preview of rfi forms in the panels preview page
   $form_exists = strpos($form['#id'], 'asu-rfi-long-form-data--');
   $ctools_div_exists = strpos($form['#id'], 'ctools-block-content-type-edit-form');
@@ -756,13 +757,76 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id){
         drupal_add_js(drupal_get_path('module', 'asu_rfi') .'/theme/session_clear.js','file');
       }
     }
-    
+
     if($form['#id'] == "asu-rfi-long-form-data"){
-      drupal_add_js(drupal_get_path('module', 'asu_rfi') .'/theme/session_clear.js','file');
-      $form['#after_build'][] = 'asu_rfi_form_after_build';
+//      drupal_add_css(drupal_get_path('module', 'asu_rfi') . '/css/asu_rfi.css');
+      
+      
+      if(isset($form['my_interest']['program_code']['#options'])){
+//      if($form['my_interest'] && $form['my_interest']['program_code'] && $form['my_interest']['program_code']['#options']){
+        drupal_add_js(drupal_get_path('module', 'asu_rfi') .'/theme/session_clear.js','file');
+        drupal_add_js(drupal_get_path('module', 'asu_rfi') .'/js/asu_rfi.js');
+        $form['#after_build'][] = 'asu_rfi_form_after_build';
+      
+        $pcodes = $form['my_interest']['program_code']['#options'];
+        $possibleLocations = asu_rfi_query_codes($pcodes);
+
+        if(!in_array("Online", $possibleLocations)){
+          $form['my_interest']['location']['online'] = array('#disabled' => TRUE);      
+          $form['my_interest']['location']['no_preference'] = array('#disabled' => TRUE);      
+
+          $form['my_interest']['location']['#default_value'] = 'on_campus';          
+        } 
+        else if(count($possibleLocations) == 1 && $possibleLocations[0] == "Online"){
+          $form['my_interest']['location']['on_campus'] = array('#disabled' => TRUE);
+          $form['my_interest']['location']['no_preference'] = array('#disabled' => TRUE);
+          $form['my_interest']['location']['#default_value'] = 'online';        
+          /* -- Convert form for EdPlus Consumption -- */
+          $form['my_interest']['campus']['#access'] = FALSE;
+          $form['my_interest']['student_type']['#access'] = FALSE;      
+          $form['my_interest']['start_date']['#access'] = FALSE;
+          $form['about_me']['mobile_check']['#access'] = FALSE;
+          $form['about_me']['country']['#access'] = FALSE;
+          $form['about_me']['zipcode']['#access'] = FALSE;
+          $form['about_me']['dob_field']['#access'] = FALSE;
+          $form['about_me']['birthdate']['#access'] = FALSE;
+          $form['about_me']['citizenship']['#access'] = FALSE;
+          $form['about_me']['military']['#access'] = FALSE;
+          $form['address_info']['#access'] = FALSE;
+          $form['questions']['#access'] = FALSE;
+          /* -- END Convert form for EdPlus Consumption -- */
+        }
+        $newLocationArr = array();
+        foreach($possibleLocations as $key=>$value){
+          $newLocationArr[$value] = $value;
+        }
+        $possibleLocations = $newLocationArr;
+
+        $form['my_interest']['campus']['#options'] = $possibleLocations;
+      }
+      
+      
+      
     }
     
     if($form['#id'] == "asu-rfi-form-data"){
+      
+      if(isset($form['program_code']['#default_value'])){
+//      if($form['program_code'] && $form['program_code']['#default_value']){
+        $pcode = $form['program_code']['#default_value'];    
+        $pcode2 = array($pcode => $form['my_interest']['prog_plan']['#default_value']);
+        $possibleLocations = asu_rfi_query_codes($pcode2);
+
+        $newLocationArr = array();
+
+        foreach($possibleLocations as $key=>$value){
+          $newLocationArr[$value] = $value;
+        }
+
+        $possibleLocations = $newLocationArr;
+
+        $form['my_interest']['campus']['#options'] = $possibleLocations; 
+      }
       /*  $meta_ie_render_engine = array(
             '#type' => 'html_tag',
             '#tag' => 'meta',
@@ -794,7 +858,7 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id){
    $rfi_mode = variable_get('asu_rfi_form_mode');
     global $user;
     
-      if(($rfi_mode == "test") || empty($rfi_mode)){
+      if((($rfi_mode == "test") || empty($rfi_mode)) && ($form['#id'] == "asu-rfi-form-data" || $form['#id'] == "asu-rfi-long-form-data" || $form['#id'] == 'views-exposed-form-asu-rfi-submissions-report-page')){
          if(user_access('administer nodes', $user) == 1){
             return true;
          }
@@ -805,6 +869,60 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id){
         }
       }
      
+}
+
+
+
+
+/* return list of possible locations for form alter, also create global js object for degree dependencies */
+function asu_rfi_query_codes($pcodes){
+  $campusOptions = array();
+  foreach($pcodes as $code => $prog){
+      
+    $query = new EntityFieldQuery();
+
+    $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'asu_degree')
+      ->fieldCondition('field_asu_academic_plan', 'value', $code)
+      ->range(0, 10)
+      ->addMetaData('account', user_load(1)); // Run the query as user 1.
+
+    $result = $query->execute();
+
+    if (isset($result['node'])) {
+      $program_nids = array_keys($result['node']);
+      $programs = entity_load('node', $program_nids);
+      $programs = reset($programs);
+      $programs = (array) $programs;
+      
+      $desiredProg = array(
+        'code' => $programs['field_asu_academic_plan']['und']['0']['value'],
+        'vid' => $programs['vid'],
+        'title' => $programs['title'],
+        'locations' => $programs['field_asu_degree_campus']['und'],
+      );
+            
+      drupal_add_js(
+        array('asu_rfi' => array(
+          'degrees' => array(
+            $desiredProg['vid'] => array(
+              'code' => $desiredProg['code'],
+              'title' => $desiredProg['title'],
+              'locations' => $desiredProg['locations'],
+            )
+          )
+        )
+             ), 'setting');
+      
+      $locations = $programs['field_asu_degree_campus']['und'];
+      foreach($locations as $location){
+        if(!in_array($location['value'], $campusOptions)){
+          array_push($campusOptions,$location['value']);
+        }
+      }
+    }
+  }
+  return $campusOptions;
 }
 
 /**
@@ -894,6 +1012,7 @@ function asu_rfi_get_undergrad_programs() {
       //set the variables so they can be used to show degree programs based on the form type selections above in block settings
       foreach($program_type as $programs){
           $degreetype = $programs->field_asu_degree_program_value;
+          
           if($degreetype == "undergrad"){
              variable_set('asu_rfi_ugrad_degree_type', $degreetype);
           }
@@ -1045,6 +1164,8 @@ function asu_rfi_bulk_submit_action(&$node, $context) {
         $upost['citizenship'] = isset($node->field_rfi_international['und'][0]['value']) ? $node->field_rfi_international['und'][0]['value'] : '';
         $upost['questions'] = isset($node->field_rfi_question['und'][0]['value']) ? $node->field_rfi_question['und'][0]['value'] : '';
         $upost['student_type'] = $node->field_rfi_student_type['und'][0]['value'];
+        $upost['location'] = $node->field_rfi_location['und'][0]['value'];
+        $upost['campus'] = $node->field_rfi_campus['und'][0]['value'];
         $upost['zipcode'] = isset($node->field_rfi_zipcode['und'][0]['value']) ? $node->field_rfi_zipcode['und'][0]['value'] : '';
         $upost['mobile_check'] = isset($node->field_rfi_sms_opted['und'][0]['value']) ? $node->field_rfi_sms_opted['und'][0]['value'] : '';
         $upost['submission_nodeid'] = $node->nid;
@@ -1075,6 +1196,8 @@ function asu_rfi_bulk_submit_action(&$node, $context) {
         $gradpost['citizenship'] = isset($node->field_rfi_international['und'][0]['value']) ? $node->field_rfi_international['und'][0]['value'] : '';
         $gradpost['questions'] = isset($node->field_rfi_question['und'][0]['value']) ? $node->field_rfi_question['und'][0]['value'] : '';
         $gradpost['student_type'] = $node->field_rfi_student_type['und'][0]['value'];
+        $gradpost['location'] = $node->field_rfi_location['und'][0]['value'];
+        $gradpost['campus'] = $node->field_rfi_campus['und'][0]['value'];
         $gradpost['zipcode'] = isset($node->field_rfi_zipcode['und'][0]['value']) ? $node->field_rfi_zipcode['und'][0]['value'] : '';
         $gradpost['mobile_check'] = isset($node->field_rfi_sms_opted['und'][0]['value']) ? $node->field_rfi_sms_opted['und'][0]['value'] : '';
         $gradpost['submission_nodeid'] = $node->nid;
@@ -1131,7 +1254,6 @@ function asu_rfi_js_alter(&$javascript) {
 
 //function to send data transaction variable SI_dataLayer to GTM tag
 function asu_rfi_preprocess_page(&$variables) {
-
   //Check if /degree-programs/request-info-thank-you is loaded, grad the node id from the URL, load the node and get the variables. Add Google analytics code to the header. 
   if(isset($variables['theme_hook_suggestions'][1])){
   if($variables['theme_hook_suggestions'][1] == "page__degree_programs__request_info_thank_you"){
@@ -1151,8 +1273,9 @@ function asu_rfi_preprocess_page(&$variables) {
     }
  
     $out = array();
-    foreach ($items as $nid => $submissions) {
+    foreach ($items as $nid => $submissions) {      
       $sub_wrapper = entity_metadata_wrapper('node', $submissions);
+      $prog_full_name = $sub_wrapper->field_rfi_program_name->value();
       $plan_code = $sub_wrapper->field_rfi_program->value();
       $program_code = $sub_wrapper->field_rfi_college_code->value();
       $program_name = $sub_wrapper->field_rfi_college_name->value();
@@ -1160,28 +1283,50 @@ function asu_rfi_preprocess_page(&$variables) {
       $zip = $sub_wrapper->field_rfi_zipcode->value();
       $country = $sub_wrapper->field_rfi_country->value();
     }
-
-    $college = $program_code.'-RFI';
+    $subdomain =  array_shift((explode(".",$_SERVER['HTTP_HOST'])));    
     $sku = $program_code.$plan_code.'-RFI';
-    $ga_id = variable_get('asu_rfi_google_analytics_key').'-'.$nid ;
+    $ga_id = $subdomain . '-' . variable_get('asu_rfi_google_analytics_key').'-'.$nid ;
     $category  = 'RFI';
-    
     $zip_section = substr($zip,0,2);
+    $price = '100.00';
      if($country == "United States"){
         if(!empty($zip_section)){
         if(($zip_section == "85") || ($zip_section == "86")){
           $price = '100.00';
+          $locale = 'In State';
         }
         else{
           $price = '200.00';
+          $locale = 'Out of State';
         }
        }
       }
-    else{
-         $price = '300.00';
+    else if(!empty($country) && $country !== "United States"){      
+        $price = '300.00';
+        $locale = "International";
+    } else {
+      $price = '100';
+      $locale = 'Online';
     }
-    $price = '100.00';
+    $college = 'RFI - ' . $locale . ' - ' . $prog_full_name;
+    
     drupal_add_js("(function ($) { 
+       SI_dataLayer = [{
+          'event': 'ecommerce_event',
+          'transactionId': '$ga_id',
+          'transactionAffiliation': '$program_code',
+          'transactionTotal': '$price', 
+          'transactionProducts': [{
+                'sku': '$sku', 
+                'name': '$college',  
+                'category': '$category',
+                'price': '$price', 
+                'quantity': '1'
+              }]
+            }];
+        })(jQuery)", array('type' => 'inline', 'scope' => 'header','weight' => 0));
+    // Old code for GTM collected name instead of code
+    /*drupal_add_js("(function ($) {  
        SI_dataLayer = [{
           'event': 'ecommerce_event',
           'transactionId': '$ga_id',
@@ -1195,7 +1340,7 @@ function asu_rfi_preprocess_page(&$variables) {
                 'quantity': '1'
               }]
             }];
-        })(jQuery)", array('type' => 'inline', 'scope' => 'header','weight' => 0));
+        })(jQuery)", array('type' => 'inline', 'scope' => 'header','weight' => 0));*/
   }
   
    //if confirmation node id specified in module settings page is called instead, run below code
@@ -1221,7 +1366,8 @@ function asu_rfi_preprocess_page(&$variables) {
        $zip_section = substr($zip,0,2);
        //$category = $_GET['cat'];
        $category  = 'RFI';
-       $ga_id = variable_get('asu_rfi_google_analytics_key').'-'.$nid ;
+       $subdomain =  array_shift((explode(".",$_SERVER['HTTP_HOST'])));
+       $ga_id = $subdomain . '-' . variable_get('asu_rfi_google_analytics_key').'-'.$nid ;
        if($country == "United States"){
         if(!empty($zip_section)){
         if(($zip_section == "85") || ($zip_section == "86")){
@@ -1235,9 +1381,23 @@ function asu_rfi_preprocess_page(&$variables) {
        else{
          $price = '300.00';
        }
-       
        //GMT transaction variables
        drupal_add_js("(function ($) { 
+         SI_dataLayer = [{
+            'event': 'ecommerce_event',
+            'transactionId': '$ga_id',
+            'transactionAffiliation': '$college_code',
+            'transactionTotal': '$price', 
+            'transactionProducts': [{
+               'sku': '$sku', 
+               'name': '$major_rfi', 
+               'category': '$category',
+               'price': '$price', 
+               'quantity': '1'
+             }]
+        }];
+      })(jQuery)", array('type' => 'inline', 'scope' => 'header','weight' => 0));
+        /*drupal_add_js("(function ($) { 
          SI_dataLayer = [{
             'event': 'ecommerce_event',
             'transactionId': '$ga_id',
@@ -1251,7 +1411,7 @@ function asu_rfi_preprocess_page(&$variables) {
                'quantity': '1'
              }]
         }];
-      })(jQuery)", array('type' => 'inline', 'scope' => 'header','weight' => 0));
+      })(jQuery)", array('type' => 'inline', 'scope' => 'header','weight' => 0));*/
       }
     }
    }
@@ -1261,11 +1421,13 @@ function asu_rfi_preprocess_page(&$variables) {
 /* Implementation of hook form_after_build to remove requirement on student type field for Grad forms */
 
 function asu_rfi_form_after_build($form, &$form_state) {
-  
-  if(($form['degree_type']['#default_value'] == "graduate_longform") || ($form['degree_type']['#default_value'] == "graduate")) {
-      $form['my_interest']['student_type']['#required'] = FALSE;
-      $form['my_interest']['student_type']['#needs_validation'] = FALSE;
+  if(isset($form['degree_type']['#default_value'])){
+    if(($form['degree_type']['#default_value'] == "graduate_longform") || ($form['degree_type']['#default_value'] == "graduate")) {
+        $form['my_interest']['student_type']['#required'] = FALSE;
+        $form['my_interest']['student_type']['#needs_validation'] = FALSE;
+    }  
   }
+  
   
  return $form;
 }
