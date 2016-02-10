@@ -3,11 +3,12 @@
 function asu_rfi_undergrad_post($data)
 {
     global $base_url;
-    
+
     $mw_auth_key = variable_get('asu_rfi_form_auth_key');
-    $fname = $data['first_name'];
+    $fname = $data['first_name'];    
     $lname = $data['last_name'];
     $email = $data['email'];
+    $ipAddress = $data['ip_address'];
     $phone = preg_replace('[\D]', '',$data['phone']);
     if(!empty($data['start_date'])){
       $term = $data['start_date'];
@@ -16,14 +17,22 @@ function asu_rfi_undergrad_post($data)
       $term = '';
     }
     
+    $location = $data['location'];
+	$campus = $data['campus']; // Adding campus data -- campus1234
     $state = $data['state'];
     $prog_code = $data['program_code'];
+  
+    if($prog_code == "" || empty($prog_code)){
+      $prog_code = "Exploratory";
+    }
     $nodeid = $data['submission_nodeid'];
     $form_mode = variable_get('asu_rfi_form_mode');
     $hashkey = sha1($mw_auth_key.'+'.$nodeid); 
     $type_of_form = $data['type_of_form'];
     $domain = $_SERVER['HTTP_HOST'];
     $source = $domain.'-'.$type_of_form.'-UG';
+  
+    $campus = asu_rfi_correct_campus_id($campus);
   
     //modile phone
     if(isset($data['mobile_check'])){
@@ -133,9 +142,20 @@ function asu_rfi_undergrad_post($data)
         'state' => $state,
         'intnl_student' => $data['citizenship'] ,
         'veteran_status' => $military,
+		'campus' => $campus,
+        'location' => $location,
     );
-
     $body = json_encode($fields);
+  
+    if($location == 'Online' || $location == 'online'){      
+      $fields = asu_rfi_online_fields($fields, $nodeid, $ipAddress);
+      
+      $body = json_encode($fields);
+      
+      $fieldHash = sha1($mw_auth_key.'+'.$body);
+      
+      $url = "https://webforms.asu.edu/asu_edplus_middleware/submit/$fieldHash";
+    }
 
     try 
     {
@@ -223,5 +243,56 @@ function asu_rfi_undergrad_post($data)
           E_USER_ERROR);
     }
    
+}
+
+function asu_rfi_correct_campus_id($campus){
+  
+  switch ($campus){
+    case "Tempe":
+      $campusId = "TEMPE";
+      break;
+    case "Online":
+      $campusId = "ONLNE";
+      break;
+    case "East Arizona College":
+      $campusId = "EAC";
+      break;
+    case "Polytechnic":
+      $campusId = "POLY";
+      break;
+    case "Lake Havasu":
+      $campusId = "CALHC";
+      break;
+    case "West":
+      $campusId = "WEST";
+      break;
+    case "Downtown":
+      $campusId = "DTPHX";
+      break;
+    default:
+      $campusId = '';
+      
+  }
+  
+  return $campusId;
+}
+
+function asu_rfi_online_fields($fields, $nodeid, $ip){
+  
+  $fieldsUpdated = array(
+    'first_name' => $fields['first_name'],
+    'last_name' => $fields['last_name'],
+    'program' => 'UGLA-' . $fields['program'],
+    'email' => $fields['email'],
+    'phone' => $fields['phone'],
+    'prod_test_flag' => $fields['prod_test_flag'],
+    'base_url' => $fields['base_url'],
+    'remote_nid' => $nodeid,    
+    'ldetect_v' => $ip,
+    'campaign' => $fields['base_url'] . '-LF-UG',
+    'sourceid' => $nodeid,
+  );
+  
+  return $fieldsUpdated;
 }
 ?>
