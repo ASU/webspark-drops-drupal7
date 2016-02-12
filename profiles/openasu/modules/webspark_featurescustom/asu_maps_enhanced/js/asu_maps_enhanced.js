@@ -19,8 +19,7 @@
 
             $('.enhanced-map-nav .' + campus).addClass('cHover');
 
-
-            $(document).on('click tap touch','.nav-left li',function() {
+            $(document).on('click tap touch', '.nav-left li', function () {
                 var c = $(this).html();
                 var mc = '?' + getMC(c);
                 var mc_reg = /\?(mc.*)/;
@@ -70,8 +69,4 @@ function getMC(campus) {
     }
 
     return ref;
-}
-
-function feedback(){
-    window.open('https://webapp4.asu.edu/feedback/feedback/map', '_blank').focus();
 }
