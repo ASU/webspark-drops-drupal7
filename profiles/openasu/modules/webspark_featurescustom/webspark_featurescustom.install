@@ -19,7 +19,7 @@ function webspark_featurescustom_enable() {
 
 /**
  * Implements hook_update_N()
- * + Enables ASU Webspark Carousel module for all Webspark userss
+ * + Enables ASU Webspark Carousel module for all Webspark users
  */
 function webspark_featurescustom_update_7000(&$sandbox) {
   if (!module_exists('uto_carousel')) {
@@ -55,5 +55,19 @@ function webspark_featurescustom_update_7001(&$sandbox) {
       drupal_set_message('No Webspark Content Callout settings were applied.');
       watchdog('webspark_updates', '7001 - No Webspark Content Callout settings were applied.');
     }
+  }
+}
+
+/**
+ * Implements hook_update_N()
+ * + Ferndale - Increases the number of stored Drupal log entries to higher threshold if currently set to 1000 rows or lower.
+ */
+
+function webspark_featurescustom_update_7002(&$sandbox) {
+  // WEBSPARK-696
+  $max_log_count = settype(variable_get('dblog_row_limit'), "int");
+  if ($max_log_count <= 1000 && $max_log_count != 0) {
+    variable_set('dblog_row_limit', '100000');
+    watchdog('webspark_updates', "Increased dblog_row_limit to 100,000 latest log entries.");
   }
 }
