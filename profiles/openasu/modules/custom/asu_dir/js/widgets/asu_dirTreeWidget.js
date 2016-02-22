@@ -29,10 +29,14 @@
             var dept_nids = [];
             var top_ids = this.top_level_ids;
 
+            var tree_open = "glyphicon-minus-sign";
+            var tree_close = "glyphicon-plus-sign";
+            var tree_marker = "fa-bookmark";
+
             // Build Department Hierarchy tree list for display in block
             treediv.tree({
-                closedIcon: $('<span class="glyphicon glyphicon-plus-sign"></span>'),
-                openedIcon: $('<span class="glyphicon glyphicon-minus-sign"></span>'),
+                closedIcon: $('<span tabindex="0" class="glyphicon glyphicon-plus-sign"></span>'),
+                openedIcon: $('<span tabindex="0" class="glyphicon glyphicon-minus-sign"></span>'),
                 data: tree,
                 // First level open
                 autoOpen: 0,
@@ -44,7 +48,7 @@
                     $li.attr('dept_id', node.dept_id);
 
                     if (!node.hasChildren()) {
-                        $li.find('.jqtree-element').prepend('<span class="jqtree-folder-icon fa fa-bookmark"></span>');
+                        $li.find('.jqtree-element').prepend('<span tabindex="0" class="jqtree-folder-icon fa fa-bookmark"></span>');
                     }
                 }
             });
@@ -79,12 +83,31 @@
                 self.manager.doRequest();
             });
 
+            var access_links = $('#treediv .fa-bookmark');
+
+            var pluses = $('#treediv .glyphicon-plus-sign');
+
+            pluses.on('focus', function(event) {
+                var parents = $(this).parents().eq(1);
+                var pnode = $(this).parents().eq(2).attr('dept_id');
+                var $tree = $('#treediv');
+                var node = $tree.tree('getNodeById', pnode);
+                $tree.tree('openNode', node);
+                parents.find("span.glyphicon-minus-sign").focus();
+            });
+
+            access_links.on('keydown', function(event) {
+                if(event.which == 13) {
+                    var parent = $(this).parents().eq(0);
+                    parent.click();
+                }
+            });
+
             var state = history.getState();
             // If initial load, load the state from the URL.
             var url = state.cleanUrl, index = url.indexOf("?");// ASU edit.
 
             if (index != -1) {
-
                 //get the query string from URL
                 var query_string = url.substr(index + 1);
                 var re = /query=/gi;

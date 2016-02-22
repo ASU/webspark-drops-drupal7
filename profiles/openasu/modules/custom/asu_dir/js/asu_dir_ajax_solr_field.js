@@ -65,8 +65,8 @@ ASUPeople.dept_id = '';
                 Manager.addWidget(new AjaxSolr.PagerWidget({
                     id: 'pager',
                     target: '#asu-dir-ajax-solr-pager',
-                    prevLabel: '<i class="fa fa-angle-double-left"></i>',
-                    nextLabel: '<i class="fa fa-angle-double-right"></i>',
+                    prevLabel: '<i class="fa fa-angle-double-left"></i><span class="asu-dir-hidden">Previous</span>',
+                    nextLabel: '<i class="fa fa-angle-double-right"></i><span class="asu-dir-hidden">Next</span>',
                     innerWindow: 1,
                     renderHeader: function (perPage, offset, total) {
                         $('#pager-header').html($('<span></span>').text('displaying ' + Math.min(total, offset + 1) + ' to ' + Math.min(total, offset + perPage) + ' of ' + total));
