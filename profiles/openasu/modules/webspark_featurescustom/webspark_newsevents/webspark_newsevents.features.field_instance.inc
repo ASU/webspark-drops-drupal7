@@ -671,7 +671,6 @@ function webspark_newsevents_field_default_field_instances() {
         'manualcrop_styles_list' => array(),
         'manualcrop_styles_mode' => 'include',
         'manualcrop_thumblist' => 0,
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'preview_image_style' => 'thumbnail',
         'progress_indicator' => 'throbber',
       ),
@@ -899,8 +898,14 @@ function webspark_newsevents_field_default_field_instances() {
         'url_cutoff' => 80,
       ),
       'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
       'title' => 'optional',
-      'title_maxlength' => 128,
+      'title_maxlength' => 255,
       'title_value' => '',
       'url' => 0,
       'user_register_form' => FALSE,
@@ -1276,8 +1281,14 @@ function webspark_newsevents_field_default_field_instances() {
         'url_cutoff' => 80,
       ),
       'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
       'title' => 'optional',
-      'title_maxlength' => 128,
+      'title_maxlength' => 255,
       'title_value' => '',
       'url' => 0,
       'user_register_form' => FALSE,
@@ -1337,6 +1348,11 @@ function webspark_newsevents_field_default_field_instances() {
     'label' => 'Phone',
     'required' => 0,
     'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -1344,6 +1360,8 @@ function webspark_newsevents_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'size' => 60,
       ),
       'type' => 'text_textfield',
@@ -1407,8 +1425,14 @@ function webspark_newsevents_field_default_field_instances() {
         'url_cutoff' => 80,
       ),
       'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
       'title' => 'optional',
-      'title_maxlength' => 128,
+      'title_maxlength' => 255,
       'title_value' => '',
       'url' => 0,
       'user_register_form' => FALSE,
@@ -1582,7 +1606,7 @@ function webspark_newsevents_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asuevent_registration_url',
-    'label' => 'Registration',
+    'label' => 'Registration/Tickets/RSVP',
     'required' => 0,
     'settings' => array(
       'attributes' => array(
@@ -1596,8 +1620,14 @@ function webspark_newsevents_field_default_field_instances() {
         'url_cutoff' => 80,
       ),
       'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
       'title' => 'optional',
-      'title_maxlength' => 128,
+      'title_maxlength' => 255,
       'title_value' => '',
       'url' => 0,
       'user_register_form' => FALSE,
@@ -2013,6 +2043,52 @@ function webspark_newsevents_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-asu_event-field_asuevent_tax_interests'
+  $field_instances['node-asu_event-field_asuevent_tax_interests'] = array(
+    'bundle' => 'asu_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 51,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asuevent_tax_interests',
+    'label' => 'Interests',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 52,
+    ),
+  );
+
   // Exported field_instance: 'node-asu_event-field_asuevent_tax_type'
   $field_instances['node-asu_event-field_asuevent_tax_type'] = array(
     'bundle' => 'asu_event',
@@ -2057,6 +2133,52 @@ function webspark_newsevents_field_default_field_instances() {
       ),
       'type' => 'taxonomy_autocomplete',
       'weight' => 49,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_event-field_asuevent_tax_unit'
+  $field_instances['node-asu_event-field_asuevent_tax_unit'] = array(
+    'bundle' => 'asu_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 50,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asuevent_tax_unit',
+    'label' => 'College Unit',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 51,
     ),
   );
 
@@ -2229,8 +2351,14 @@ function webspark_newsevents_field_default_field_instances() {
         'url_cutoff' => 80,
       ),
       'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
       'title' => 'optional',
-      'title_maxlength' => 128,
+      'title_maxlength' => 255,
       'title_value' => '',
       'url' => 0,
       'user_register_form' => FALSE,
@@ -2685,8 +2813,14 @@ function webspark_newsevents_field_default_field_instances() {
         'url_cutoff' => 80,
       ),
       'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
       'title' => 'optional',
-      'title_maxlength' => 128,
+      'title_maxlength' => 255,
       'title_value' => '',
       'url' => 0,
       'user_register_form' => FALSE,
@@ -2742,9 +2876,14 @@ function webspark_newsevents_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asunews_article_source',
-    'label' => 'Article source',
+    'label' => 'Source',
     'required' => 0,
     'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -2752,6 +2891,8 @@ function webspark_newsevents_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'size' => 60,
       ),
       'type' => 'text_textfield',
@@ -2981,6 +3122,11 @@ function webspark_newsevents_field_default_field_instances() {
     'label' => 'Contributor phone',
     'required' => 0,
     'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -2988,6 +3134,8 @@ function webspark_newsevents_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'size' => 60,
       ),
       'type' => 'text_textfield',
@@ -3040,7 +3188,7 @@ function webspark_newsevents_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
-      'default_image' => 0,
+      'default_image' => 3,
       'file_directory' => 'images_asunews',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '',
@@ -3065,7 +3213,6 @@ function webspark_newsevents_field_default_field_instances() {
         'manualcrop_styles_list' => array(),
         'manualcrop_styles_mode' => 'include',
         'manualcrop_thumblist' => 0,
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'preview_image_style' => 'thumbnail',
         'progress_indicator' => 'throbber',
       ),
@@ -3519,8 +3666,14 @@ function webspark_newsevents_field_default_field_instances() {
         'url_cutoff' => '',
       ),
       'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
       'title' => 'none',
-      'title_maxlength' => 128,
+      'title_maxlength' => 255,
       'title_value' => '',
       'url' => 0,
       'user_register_form' => FALSE,
@@ -3660,12 +3813,13 @@ function webspark_newsevents_field_default_field_instances() {
       ),
       'enable_tokens' => 1,
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'rel_remove' => 'default',
       'title' => 'optional',
-      'title_maxlength' => 128,
+      'title_maxlength' => 255,
       'title_value' => '',
       'url' => 0,
       'user_register_form' => FALSE,
@@ -3674,9 +3828,7 @@ function webspark_newsevents_field_default_field_instances() {
     'widget' => array(
       'active' => 0,
       'module' => 'link',
-      'settings' => array(
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-      ),
+      'settings' => array(),
       'type' => 'link_field',
       'weight' => 19,
     ),
@@ -3726,6 +3878,236 @@ function webspark_newsevents_field_default_field_instances() {
       ),
       'type' => 'taxonomy_autocomplete',
       'weight' => 20,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_news-field_asunews_tax_audience'
+  $field_instances['node-asu_news-field_asunews_tax_audience'] = array(
+    'bundle' => 'asu_news',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 21,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asunews_tax_audience',
+    'label' => 'Audience',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 23,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_news-field_asunews_tax_interests'
+  $field_instances['node-asu_news-field_asunews_tax_interests'] = array(
+    'bundle' => 'asu_news',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 22,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asunews_tax_interests',
+    'label' => 'Interests',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 24,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_news-field_asunews_tax_locations'
+  $field_instances['node-asu_news-field_asunews_tax_locations'] = array(
+    'bundle' => 'asu_news',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 23,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asunews_tax_locations',
+    'label' => 'Locations',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 25,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_news-field_asunews_tax_types'
+  $field_instances['node-asu_news-field_asunews_tax_types'] = array(
+    'bundle' => 'asu_news',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 24,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asunews_tax_types',
+    'label' => 'News Types',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 26,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_news-field_asunews_tax_unit'
+  $field_instances['node-asu_news-field_asunews_tax_unit'] = array(
+    'bundle' => 'asu_news',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 20,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asunews_tax_unit',
+    'label' => 'College Unit',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 22,
     ),
   );
 
@@ -3792,13 +4174,13 @@ function webspark_newsevents_field_default_field_instances() {
   t('(Used for "In the News" in D6 site.)');
   t('ASU News tag');
   t('Article Link');
-  t('Article source');
   t('Artists');
   t('Audience');
   t('Body');
   t('Campus');
   t('Category');
   t('Closing Reception');
+  t('College Unit');
   t('Contact');
   t('Contributor affiliation');
   t('Contributor email');
@@ -3813,7 +4195,10 @@ function webspark_newsevents_field_default_field_instances() {
   t('Image');
   t('Image alt');
   t('Image caption');
+  t('Interests');
   t('Location');
+  t('Locations');
+  t('News Types');
   t('News image');
   t('News image alt text');
   t('News image by');
@@ -3835,10 +4220,11 @@ function webspark_newsevents_field_default_field_instances() {
   t('Price');
   t('RSVP');
   t('RSVP other');
-  t('Registration');
   t('Registration other');
+  t('Registration/Tickets/RSVP');
   t('Related story URL');
   t('Room');
+  t('Source');
   t('Sponsorship');
   t('Subtitle');
   t('Teaser');
