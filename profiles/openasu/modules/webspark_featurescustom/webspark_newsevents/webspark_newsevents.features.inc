@@ -23,7 +23,8 @@ function webspark_newsevents_ctools_plugin_api($module = NULL, $api = NULL) {
  * Implements hook_views_api().
  */
 function webspark_newsevents_views_api($module = NULL, $api = NULL) {
-  return array("api" => "3.0");
+		  //return array("api" => "3.0");
+		  return array("api" => "3.0", 'template path' => drupal_get_path('module', 'webspark_newsevents') .'/templates');  // To include Views template files - Chizuko  
 }
 
 /**
@@ -127,6 +128,5 @@ function webspark_newsevents_node_info() {
       'help' => '',
     ),
   );
-  drupal_alter('node_info', $items);
   return $items;
 }
