@@ -15,8 +15,7 @@ function asu_rfi_grad_post($data){
     $type_of_form = $data['type_of_form'];
     $domain = $_SERVER['HTTP_HOST'];
     $source = $domain.'-'.$type_of_form.'-G';
-  	$campus = $data['campus'];
-	
+  
     //mobile number
     if(isset($data['mobile_check'])){
 	$mobile = str_replace('-', '', $data['mobile_check']);
@@ -120,7 +119,6 @@ function asu_rfi_grad_post($data){
 		'zip' => $data['zipcode'],
 		'iStudent' => $data['citizenship'],
 		'smsNumber' => $mobile,
-		'campus' => $campus,
 		
     );
  
@@ -129,7 +127,6 @@ function asu_rfi_grad_post($data){
 	    unset($submission_data[$key_value]);
 	}
     }
-//	dpm($submission_data);
 
     //url to post data to salesforce
     $curl = curl_init($url);
