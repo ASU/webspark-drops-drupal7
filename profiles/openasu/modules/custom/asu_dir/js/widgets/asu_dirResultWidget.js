@@ -270,7 +270,7 @@
 
             //PHOTO COLUMN
             if (doc.photoPreference != 'none' && doc.photoUrl != null && doc.photoUrl != '') {
-                markup += '<div class="row-profile-image row-field"><img src="' + doc.photoUrl + '?size=medium"></div>';
+                markup += '<div class="row-profile-image row-field"><img alt="' + doc.displayName + '" src="' + doc.photoUrl + '?size=medium"></div>';
             }
 
             markup += '</div>';

@@ -10,2054 +10,9 @@
 function webspark_newsevents_defaultconfig_features() {
   return array(
     'webspark_newsevents' => array(
-      'default_page_manager_handlers' => 'default_page_manager_handlers',
-      'feeds_importer_default' => 'feeds_importer_default',
       'field_default_fields' => 'field_default_fields',
-      'strongarm' => 'strongarm',
-      'taxonomy_default_vocabularies' => 'taxonomy_default_vocabularies',
     ),
   );
-}
-
-/**
- * Implements hook_defaultconfig_default_page_manager_handlers().
- */
-function webspark_newsevents_defaultconfig_default_page_manager_handlers() {
-  $export = array();
-
-  $handler = new stdClass();
-  $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
-  $handler->api_version = 1;
-  $handler->name = 'node_view_panel_context';
-  $handler->task = 'node_view';
-  $handler->subtask = '';
-  $handler->handler = 'panel_context';
-  $handler->weight = -99;
-  $handler->conf = array(
-    'title' => 'News Panel',
-    'no_blocks' => 0,
-    'pipeline' => 'standard',
-    'body_classes_to_remove' => '',
-    'body_classes_to_add' => '',
-    'css_id' => '',
-    'css' => '',
-    'contexts' => array(),
-    'relationships' => array(),
-    'access' => array(
-      'plugins' => array(
-        0 => array(
-          'name' => 'node_type',
-          'settings' => array(
-            'type' => array(
-              'asu_news' => 'asu_news',
-            ),
-          ),
-          'context' => 'argument_entity_id:node_1',
-          'not' => FALSE,
-        ),
-      ),
-      'logic' => 'and',
-    ),
-  );
-  $display = new panels_display();
-  $display->layout = 'bryant_flipped_flipped';
-  $display->layout_settings = array();
-  $display->panel_settings = array(
-    'style_settings' => array(
-      'default' => NULL,
-      'sidebar' => NULL,
-      'contentmain' => NULL,
-    ),
-  );
-  $display->cache = array();
-  $display->title = '';
-  $display->uuid = '5703a310-7be6-473c-9b90-11f44a2ad5e2';
-  $display->content = array();
-  $display->panels = array();
-    $pane = new stdClass();
-    $pane->pid = 'new-8bcf4d6e-4c1e-418d-bcdd-2332555e0eec';
-    $pane->panel = 'contentmain';
-    $pane->type = 'node_title';
-    $pane->subtype = 'node_title';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'link' => 0,
-      'markup' => 'h1',
-      'id' => '',
-      'class' => '',
-      'context' => 'argument_entity_id:node_1',
-      'override_title' => 1,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 0;
-    $pane->locks = array();
-    $pane->uuid = '8bcf4d6e-4c1e-418d-bcdd-2332555e0eec';
-    $display->content['new-8bcf4d6e-4c1e-418d-bcdd-2332555e0eec'] = $pane;
-    $display->panels['contentmain'][0] = 'new-8bcf4d6e-4c1e-418d-bcdd-2332555e0eec';
-    $pane = new stdClass();
-    $pane->pid = 'new-3832797e-8c9c-4f34-9d47-c0917f7ebe03';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asunews_image';
-    $pane->shown = TRUE;
-    $pane->access = array(
-      'plugins' => array(),
-    );
-    $pane->configuration = array(
-      'label' => 'title',
-      'formatter' => 'image',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(
-        'file_view_mode' => 'default',
-        'image_style' => 'asunews_image_style',
-        'image_link' => '',
-      ),
-      'context' => array(),
-      'override_title' => 1,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 1;
-    $pane->locks = array();
-    $pane->uuid = '3832797e-8c9c-4f34-9d47-c0917f7ebe03';
-    $display->content['new-3832797e-8c9c-4f34-9d47-c0917f7ebe03'] = $pane;
-    $display->panels['contentmain'][1] = 'new-3832797e-8c9c-4f34-9d47-c0917f7ebe03';
-    $pane = new stdClass();
-    $pane->pid = 'new-f9ea79b1-2b82-4324-8df1-65368d82ad45';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asunews_contri_name';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'title',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(
-        'include_map' => 1,
-        'include_static_map' => 0,
-        'include_link' => 0,
-        'include_text' => 0,
-        'iframe_height' => '200',
-        'iframe_width' => '200',
-        'zoom_level' => '14',
-        'information_bubble' => 1,
-        'link_text' => 'View larger map',
-        'map_type' => 'm',
-        'langcode' => 'en',
-      ),
-      'context' => array(),
-      'override_title' => 1,
-      'override_title_text' => 'By',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 2;
-    $pane->locks = array();
-    $pane->uuid = 'f9ea79b1-2b82-4324-8df1-65368d82ad45';
-    $display->content['new-f9ea79b1-2b82-4324-8df1-65368d82ad45'] = $pane;
-    $display->panels['contentmain'][2] = 'new-f9ea79b1-2b82-4324-8df1-65368d82ad45';
-    $pane = new stdClass();
-    $pane->pid = 'new-a9334df5-2e6d-4f6a-b038-16fdc3fa6ace';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asunews_post_date_iso';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'title',
-      'formatter' => 'date_default',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(
-        'format_type' => 'panopoly_day',
-        'multiple_number' => '',
-        'multiple_from' => '',
-        'multiple_to' => '',
-        'fromto' => 'both',
-      ),
-      'context' => array(),
-      'override_title' => 1,
-      'override_title_text' => '&mdash;',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 3;
-    $pane->locks = array();
-    $pane->uuid = 'a9334df5-2e6d-4f6a-b038-16fdc3fa6ace';
-    $display->content['new-a9334df5-2e6d-4f6a-b038-16fdc3fa6ace'] = $pane;
-    $display->panels['contentmain'][3] = 'new-a9334df5-2e6d-4f6a-b038-16fdc3fa6ace';
-    $pane = new stdClass();
-    $pane->pid = 'new-0c9d8795-a6f2-42eb-ad94-49156e0f5e2c';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:body';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'title',
-      'formatter' => 'text_default',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 1,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 4;
-    $pane->locks = array();
-    $pane->uuid = '0c9d8795-a6f2-42eb-ad94-49156e0f5e2c';
-    $display->content['new-0c9d8795-a6f2-42eb-ad94-49156e0f5e2c'] = $pane;
-    $display->panels['contentmain'][4] = 'new-0c9d8795-a6f2-42eb-ad94-49156e0f5e2c';
-    $pane = new stdClass();
-    $pane->pid = 'new-414ed093-c791-4695-900d-192879b1de4c';
-    $pane->panel = 'sidebar';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asunews_related_story_url';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'title',
-      'formatter' => 'link_default',
-      'delta_limit' => '0',
-      'delta_offset' => '0',
-      'delta_reversed' => 0,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 1,
-      'override_title_text' => 'Related news articles',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 0;
-    $pane->locks = array();
-    $pane->uuid = '414ed093-c791-4695-900d-192879b1de4c';
-    $display->content['new-414ed093-c791-4695-900d-192879b1de4c'] = $pane;
-    $display->panels['sidebar'][0] = 'new-414ed093-c791-4695-900d-192879b1de4c';
-  $display->hide_title = PANELS_TITLE_FIXED;
-  $display->title_pane = 'new-8bcf4d6e-4c1e-418d-bcdd-2332555e0eec';
-  $handler->conf['display'] = $display;
-  $export['node_view_panel_context'] = $handler;
-
-  $handler = new stdClass();
-  $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
-  $handler->api_version = 1;
-  $handler->name = 'node_view_panel_context_2';
-  $handler->task = 'node_view';
-  $handler->subtask = '';
-  $handler->handler = 'panel_context';
-  $handler->weight = -98;
-  $handler->conf = array(
-    'title' => 'ASU Events',
-    'no_blocks' => 0,
-    'pipeline' => 'standard',
-    'body_classes_to_remove' => '',
-    'body_classes_to_add' => '',
-    'css_id' => '',
-    'css' => '',
-    'contexts' => array(),
-    'relationships' => array(),
-    'access' => array(
-      'plugins' => array(
-        0 => array(
-          'name' => 'node_type',
-          'settings' => array(
-            'type' => array(
-              'asu_event' => 'asu_event',
-            ),
-          ),
-          'context' => 'argument_entity_id:node_1',
-          'not' => FALSE,
-        ),
-      ),
-      'logic' => 'and',
-    ),
-  );
-  $display = new panels_display();
-  $display->layout = 'boxton';
-  $display->layout_settings = array();
-  $display->panel_settings = array(
-    'style_settings' => array(
-      'default' => NULL,
-      'contentmain' => NULL,
-    ),
-  );
-  $display->cache = array();
-  $display->title = '';
-  $display->uuid = 'a6b2ffef-3a91-4ec8-9ba8-7fecf0b510d2';
-  $display->content = array();
-  $display->panels = array();
-    $pane = new stdClass();
-    $pane->pid = 'new-19bda35d-206d-46e9-b840-c1023bdaaa7b';
-    $pane->panel = 'contentmain';
-    $pane->type = 'node_title';
-    $pane->subtype = 'node_title';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'link' => 0,
-      'markup' => 'h1',
-      'id' => '',
-      'class' => '',
-      'context' => 'argument_entity_id:node_1',
-      'override_title' => 1,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 0;
-    $pane->locks = array();
-    $pane->uuid = '19bda35d-206d-46e9-b840-c1023bdaaa7b';
-    $display->content['new-19bda35d-206d-46e9-b840-c1023bdaaa7b'] = $pane;
-    $display->panels['contentmain'][0] = 'new-19bda35d-206d-46e9-b840-c1023bdaaa7b';
-    $pane = new stdClass();
-    $pane->pid = 'new-c96b7604-065d-415e-8ac4-8569e82bdb57';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_subtitle';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'hidden',
-      'formatter' => 'text_default',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array(
-      'css_id' => '',
-      'css_class' => '',
-    );
-    $pane->extras = array();
-    $pane->position = 1;
-    $pane->locks = array();
-    $pane->uuid = 'c96b7604-065d-415e-8ac4-8569e82bdb57';
-    $display->content['new-c96b7604-065d-415e-8ac4-8569e82bdb57'] = $pane;
-    $display->panels['contentmain'][1] = 'new-c96b7604-065d-415e-8ac4-8569e82bdb57';
-    $pane = new stdClass();
-    $pane->pid = 'new-64bf01e5-65d0-4eb5-acb5-854aacb2b4a8';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_image';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'hidden',
-      'formatter' => 'image',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(
-        'image_style' => '',
-        'image_link' => '',
-      ),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 2;
-    $pane->locks = array();
-    $pane->uuid = '64bf01e5-65d0-4eb5-acb5-854aacb2b4a8';
-    $display->content['new-64bf01e5-65d0-4eb5-acb5-854aacb2b4a8'] = $pane;
-    $display->panels['contentmain'][2] = 'new-64bf01e5-65d0-4eb5-acb5-854aacb2b4a8';
-    $pane = new stdClass();
-    $pane->pid = 'new-b7ea6130-7a35-4f7e-ae1c-53422ca22e51';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_display_date';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'hidden',
-      'formatter' => 'text_plain',
-      'delta_limit' => '0',
-      'delta_offset' => '0',
-      'delta_reversed' => 0,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 3;
-    $pane->locks = array();
-    $pane->uuid = 'b7ea6130-7a35-4f7e-ae1c-53422ca22e51';
-    $display->content['new-b7ea6130-7a35-4f7e-ae1c-53422ca22e51'] = $pane;
-    $display->panels['contentmain'][3] = 'new-b7ea6130-7a35-4f7e-ae1c-53422ca22e51';
-    $pane = new stdClass();
-    $pane->pid = 'new-9c982f2a-8400-4b93-aaaf-cd4803eef3a2';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_date';
-    $pane->shown = FALSE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'title',
-      'formatter' => 'date_default',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(
-        'format_type' => 'short',
-        'multiple_number' => '',
-        'multiple_from' => '',
-        'multiple_to' => '',
-        'fromto' => 'both',
-      ),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 4;
-    $pane->locks = array();
-    $pane->uuid = '9c982f2a-8400-4b93-aaaf-cd4803eef3a2';
-    $display->content['new-9c982f2a-8400-4b93-aaaf-cd4803eef3a2'] = $pane;
-    $display->panels['contentmain'][4] = 'new-9c982f2a-8400-4b93-aaaf-cd4803eef3a2';
-    $pane = new stdClass();
-    $pane->pid = 'new-45194fd9-0dd6-400b-bd9e-8d78e990ba95';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_price';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 5;
-    $pane->locks = array();
-    $pane->uuid = '45194fd9-0dd6-400b-bd9e-8d78e990ba95';
-    $display->content['new-45194fd9-0dd6-400b-bd9e-8d78e990ba95'] = $pane;
-    $display->panels['contentmain'][5] = 'new-45194fd9-0dd6-400b-bd9e-8d78e990ba95';
-    $pane = new stdClass();
-    $pane->pid = 'new-51e8c1f2-2743-445a-a60c-7831a735ef32';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_sponsorship';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'hidden',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 6;
-    $pane->locks = array();
-    $pane->uuid = '51e8c1f2-2743-445a-a60c-7831a735ef32';
-    $display->content['new-51e8c1f2-2743-445a-a60c-7831a735ef32'] = $pane;
-    $display->panels['contentmain'][6] = 'new-51e8c1f2-2743-445a-a60c-7831a735ef32';
-    $pane = new stdClass();
-    $pane->pid = 'new-2889e280-4451-4670-96f9-19406fe82b3d';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_unit';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'hidden',
-      'formatter' => 'text_plain',
-      'delta_limit' => '0',
-      'delta_offset' => '0',
-      'delta_reversed' => 0,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 7;
-    $pane->locks = array();
-    $pane->uuid = '2889e280-4451-4670-96f9-19406fe82b3d';
-    $display->content['new-2889e280-4451-4670-96f9-19406fe82b3d'] = $pane;
-    $display->panels['contentmain'][7] = 'new-2889e280-4451-4670-96f9-19406fe82b3d';
-    $pane = new stdClass();
-    $pane->pid = 'new-245ed23e-736f-4893-91c3-4f4db5f77159';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_campus';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 8;
-    $pane->locks = array();
-    $pane->uuid = '245ed23e-736f-4893-91c3-4f4db5f77159';
-    $display->content['new-245ed23e-736f-4893-91c3-4f4db5f77159'] = $pane;
-    $display->panels['contentmain'][8] = 'new-245ed23e-736f-4893-91c3-4f4db5f77159';
-    $pane = new stdClass();
-    $pane->pid = 'new-9736e2c5-20fb-4461-bffd-efe53004e9b1';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_location';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 9;
-    $pane->locks = array();
-    $pane->uuid = '9736e2c5-20fb-4461-bffd-efe53004e9b1';
-    $display->content['new-9736e2c5-20fb-4461-bffd-efe53004e9b1'] = $pane;
-    $display->panels['contentmain'][9] = 'new-9736e2c5-20fb-4461-bffd-efe53004e9b1';
-    $pane = new stdClass();
-    $pane->pid = 'new-863c35b6-46eb-4e1d-9522-35bb91666dcd';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_room';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 10;
-    $pane->locks = array();
-    $pane->uuid = '863c35b6-46eb-4e1d-9522-35bb91666dcd';
-    $display->content['new-863c35b6-46eb-4e1d-9522-35bb91666dcd'] = $pane;
-    $display->panels['contentmain'][10] = 'new-863c35b6-46eb-4e1d-9522-35bb91666dcd';
-    $pane = new stdClass();
-    $pane->pid = 'new-d065c352-9f0c-4659-b2cc-992ff8cd20f8';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:body';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'title',
-      'formatter' => 'text_default',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 1,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 11;
-    $pane->locks = array();
-    $pane->uuid = 'd065c352-9f0c-4659-b2cc-992ff8cd20f8';
-    $display->content['new-d065c352-9f0c-4659-b2cc-992ff8cd20f8'] = $pane;
-    $display->panels['contentmain'][11] = 'new-d065c352-9f0c-4659-b2cc-992ff8cd20f8';
-    $pane = new stdClass();
-    $pane->pid = 'new-ae6a46fa-b3bc-4a40-8243-72e1adf8522d';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_nonacademic_unit';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 12;
-    $pane->locks = array();
-    $pane->uuid = 'ae6a46fa-b3bc-4a40-8243-72e1adf8522d';
-    $display->content['new-ae6a46fa-b3bc-4a40-8243-72e1adf8522d'] = $pane;
-    $display->panels['contentmain'][12] = 'new-ae6a46fa-b3bc-4a40-8243-72e1adf8522d';
-    $pane = new stdClass();
-    $pane->pid = 'new-966045cd-f26c-4859-92ed-0a6841af4893';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_dept';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 13;
-    $pane->locks = array();
-    $pane->uuid = '966045cd-f26c-4859-92ed-0a6841af4893';
-    $display->content['new-966045cd-f26c-4859-92ed-0a6841af4893'] = $pane;
-    $display->panels['contentmain'][13] = 'new-966045cd-f26c-4859-92ed-0a6841af4893';
-    $pane = new stdClass();
-    $pane->pid = 'new-c55e4d25-fe7a-4ccf-b5b0-36d072e3d813';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_other_dept';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 14;
-    $pane->locks = array();
-    $pane->uuid = 'c55e4d25-fe7a-4ccf-b5b0-36d072e3d813';
-    $display->content['new-c55e4d25-fe7a-4ccf-b5b0-36d072e3d813'] = $pane;
-    $display->panels['contentmain'][14] = 'new-c55e4d25-fe7a-4ccf-b5b0-36d072e3d813';
-    $pane = new stdClass();
-    $pane->pid = 'new-b29aa843-81d8-4e09-892f-0c848e9c94aa';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_phone';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 15;
-    $pane->locks = array();
-    $pane->uuid = 'b29aa843-81d8-4e09-892f-0c848e9c94aa';
-    $display->content['new-b29aa843-81d8-4e09-892f-0c848e9c94aa'] = $pane;
-    $display->panels['contentmain'][15] = 'new-b29aa843-81d8-4e09-892f-0c848e9c94aa';
-    $pane = new stdClass();
-    $pane->pid = 'new-019bd334-2e9f-4900-b383-479691aa710e';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_more_info';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'link_default',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 16;
-    $pane->locks = array();
-    $pane->uuid = '019bd334-2e9f-4900-b383-479691aa710e';
-    $display->content['new-019bd334-2e9f-4900-b383-479691aa710e'] = $pane;
-    $display->panels['contentmain'][16] = 'new-019bd334-2e9f-4900-b383-479691aa710e';
-    $pane = new stdClass();
-    $pane->pid = 'new-933715a7-b558-4529-ab62-7d23762ea92c';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_registration_url';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'link_default',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 17;
-    $pane->locks = array();
-    $pane->uuid = '933715a7-b558-4529-ab62-7d23762ea92c';
-    $display->content['new-933715a7-b558-4529-ab62-7d23762ea92c'] = $pane;
-    $display->panels['contentmain'][17] = 'new-933715a7-b558-4529-ab62-7d23762ea92c';
-    $pane = new stdClass();
-    $pane->pid = 'new-1c30f1a8-c5d4-4292-a16f-50bf05223218';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_register_other';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_default',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(
-        'include_map' => 0,
-        'include_static_map' => 0,
-        'include_link' => 0,
-        'include_text' => 0,
-        'iframe_height' => '200',
-        'iframe_width' => '200',
-        'zoom_level' => '14',
-        'information_bubble' => 1,
-        'link_text' => 'View larger map',
-        'map_type' => 'm',
-        'langcode' => 'en',
-      ),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 18;
-    $pane->locks = array();
-    $pane->uuid = '1c30f1a8-c5d4-4292-a16f-50bf05223218';
-    $display->content['new-1c30f1a8-c5d4-4292-a16f-50bf05223218'] = $pane;
-    $display->panels['contentmain'][18] = 'new-1c30f1a8-c5d4-4292-a16f-50bf05223218';
-    $pane = new stdClass();
-    $pane->pid = 'new-173b14af-b681-401d-857e-5d5790b87879';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_ticketing_url';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'link_default',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 19;
-    $pane->locks = array();
-    $pane->uuid = '173b14af-b681-401d-857e-5d5790b87879';
-    $display->content['new-173b14af-b681-401d-857e-5d5790b87879'] = $pane;
-    $display->panels['contentmain'][19] = 'new-173b14af-b681-401d-857e-5d5790b87879';
-    $pane = new stdClass();
-    $pane->pid = 'new-97486944-489c-4acc-afd4-2696a46d2161';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_artists';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(
-        'include_map' => 1,
-        'include_static_map' => 0,
-        'include_link' => 0,
-        'include_text' => 0,
-        'iframe_height' => '200',
-        'iframe_width' => '200',
-        'zoom_level' => '14',
-        'information_bubble' => 1,
-        'link_text' => 'View larger map',
-        'map_type' => 'm',
-        'langcode' => 'en',
-      ),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 20;
-    $pane->locks = array();
-    $pane->uuid = '97486944-489c-4acc-afd4-2696a46d2161';
-    $display->content['new-97486944-489c-4acc-afd4-2696a46d2161'] = $pane;
-    $display->panels['contentmain'][20] = 'new-97486944-489c-4acc-afd4-2696a46d2161';
-    $pane = new stdClass();
-    $pane->pid = 'new-82a07646-804d-4bdc-912b-71cb8a2da50b';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_opening_recep';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 21;
-    $pane->locks = array();
-    $pane->uuid = '82a07646-804d-4bdc-912b-71cb8a2da50b';
-    $display->content['new-82a07646-804d-4bdc-912b-71cb8a2da50b'] = $pane;
-    $display->panels['contentmain'][21] = 'new-82a07646-804d-4bdc-912b-71cb8a2da50b';
-    $pane = new stdClass();
-    $pane->pid = 'new-ab5b9531-8f4d-4659-a706-239d87d279b6';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_closing_recep';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 22;
-    $pane->locks = array();
-    $pane->uuid = 'ab5b9531-8f4d-4659-a706-239d87d279b6';
-    $display->content['new-ab5b9531-8f4d-4659-a706-239d87d279b6'] = $pane;
-    $display->panels['contentmain'][22] = 'new-ab5b9531-8f4d-4659-a706-239d87d279b6';
-    $pane = new stdClass();
-    $pane->pid = 'new-df2cf524-22f2-4133-81ac-3b524afa9fa2';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_past_exhibitions';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_default',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 23;
-    $pane->locks = array();
-    $pane->uuid = 'df2cf524-22f2-4133-81ac-3b524afa9fa2';
-    $display->content['new-df2cf524-22f2-4133-81ac-3b524afa9fa2'] = $pane;
-    $display->panels['contentmain'][23] = 'new-df2cf524-22f2-4133-81ac-3b524afa9fa2';
-    $pane = new stdClass();
-    $pane->pid = 'new-740039a5-d3d8-4417-8ff8-57030263dfe8';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_press_release';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'link_default',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 24;
-    $pane->locks = array();
-    $pane->uuid = '740039a5-d3d8-4417-8ff8-57030263dfe8';
-    $display->content['new-740039a5-d3d8-4417-8ff8-57030263dfe8'] = $pane;
-    $display->panels['contentmain'][24] = 'new-740039a5-d3d8-4417-8ff8-57030263dfe8';
-    $pane = new stdClass();
-    $pane->pid = 'new-6fd0cc18-3f8b-4acf-8ed6-53ac31688c2a';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_pdf';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'link_default',
-      'delta_limit' => '0',
-      'delta_offset' => '0',
-      'delta_reversed' => 0,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 25;
-    $pane->locks = array();
-    $pane->uuid = '6fd0cc18-3f8b-4acf-8ed6-53ac31688c2a';
-    $display->content['new-6fd0cc18-3f8b-4acf-8ed6-53ac31688c2a'] = $pane;
-    $display->panels['contentmain'][25] = 'new-6fd0cc18-3f8b-4acf-8ed6-53ac31688c2a';
-    $pane = new stdClass();
-    $pane->pid = 'new-751ce9b8-bd60-4ac3-8710-5b7ffc180522';
-    $pane->panel = 'contentmain';
-    $pane->type = 'node_attachments';
-    $pane->subtype = 'node_attachments';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'context' => 'argument_entity_id:node_1',
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 26;
-    $pane->locks = array();
-    $pane->uuid = '751ce9b8-bd60-4ac3-8710-5b7ffc180522';
-    $display->content['new-751ce9b8-bd60-4ac3-8710-5b7ffc180522'] = $pane;
-    $display->panels['contentmain'][26] = 'new-751ce9b8-bd60-4ac3-8710-5b7ffc180522';
-    $pane = new stdClass();
-    $pane->pid = 'new-036f615c-8450-4a0f-a6cf-2d837f161801';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_rsvp_url';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'link_default',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 27;
-    $pane->locks = array();
-    $pane->uuid = '036f615c-8450-4a0f-a6cf-2d837f161801';
-    $display->content['new-036f615c-8450-4a0f-a6cf-2d837f161801'] = $pane;
-    $display->panels['contentmain'][27] = 'new-036f615c-8450-4a0f-a6cf-2d837f161801';
-    $pane = new stdClass();
-    $pane->pid = 'new-16379dbd-239b-4396-b67a-edeb27639ef7';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_contact_name';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 28;
-    $pane->locks = array();
-    $pane->uuid = '16379dbd-239b-4396-b67a-edeb27639ef7';
-    $display->content['new-16379dbd-239b-4396-b67a-edeb27639ef7'] = $pane;
-    $display->panels['contentmain'][28] = 'new-16379dbd-239b-4396-b67a-edeb27639ef7';
-    $pane = new stdClass();
-    $pane->pid = 'new-9c97b270-7c88-4bbb-a80a-327ef8fce4b0';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_email2';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'email_default',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => 'Email',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 29;
-    $pane->locks = array();
-    $pane->uuid = '9c97b270-7c88-4bbb-a80a-327ef8fce4b0';
-    $display->content['new-9c97b270-7c88-4bbb-a80a-327ef8fce4b0'] = $pane;
-    $display->panels['contentmain'][29] = 'new-9c97b270-7c88-4bbb-a80a-327ef8fce4b0';
-    $pane = new stdClass();
-    $pane->pid = 'new-a9f03f65-76c9-4eee-815e-e1afd6042469';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_rsvp_other';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 30;
-    $pane->locks = array();
-    $pane->uuid = 'a9f03f65-76c9-4eee-815e-e1afd6042469';
-    $display->content['new-a9f03f65-76c9-4eee-815e-e1afd6042469'] = $pane;
-    $display->panels['contentmain'][30] = 'new-a9f03f65-76c9-4eee-815e-e1afd6042469';
-    $pane = new stdClass();
-    $pane->pid = 'new-62be74ba-3510-4b05-a645-1c50801b149f';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_curator';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'inline',
-      'formatter' => 'text_plain',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 31;
-    $pane->locks = array();
-    $pane->uuid = '62be74ba-3510-4b05-a645-1c50801b149f';
-    $display->content['new-62be74ba-3510-4b05-a645-1c50801b149f'] = $pane;
-    $display->panels['contentmain'][31] = 'new-62be74ba-3510-4b05-a645-1c50801b149f';
-    $pane = new stdClass();
-    $pane->pid = 'new-949ada0a-cc04-4e3a-8c51-710e0245a5c7';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_image_view';
-    $pane->shown = FALSE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'hidden',
-      'formatter' => 'viewfield_default',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 32;
-    $pane->locks = array();
-    $pane->uuid = '949ada0a-cc04-4e3a-8c51-710e0245a5c7';
-    $display->content['new-949ada0a-cc04-4e3a-8c51-710e0245a5c7'] = $pane;
-    $display->panels['contentmain'][32] = 'new-949ada0a-cc04-4e3a-8c51-710e0245a5c7';
-    $pane = new stdClass();
-    $pane->pid = 'new-50e0de69-3321-4280-b1f9-176d64342c2d';
-    $pane->panel = 'contentmain';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_thumb_img';
-    $pane->shown = FALSE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'title',
-      'formatter' => 'image',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(
-        'image_style' => '',
-        'image_link' => '',
-      ),
-      'context' => array(),
-      'override_title' => 0,
-      'override_title_text' => '',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 33;
-    $pane->locks = array();
-    $pane->uuid = '50e0de69-3321-4280-b1f9-176d64342c2d';
-    $display->content['new-50e0de69-3321-4280-b1f9-176d64342c2d'] = $pane;
-    $display->panels['contentmain'][33] = 'new-50e0de69-3321-4280-b1f9-176d64342c2d';
-  $display->hide_title = PANELS_TITLE_FIXED;
-  $display->title_pane = 'new-19bda35d-206d-46e9-b840-c1023bdaaa7b';
-  $handler->conf['display'] = $display;
-  $export['node_view_panel_context_2'] = $handler;
-
-  return $export;
-}
-
-/**
- * Implements hook_defaultconfig_feeds_importer_default().
- */
-function webspark_newsevents_defaultconfig_feeds_importer_default() {
-  $export = array();
-
-  $feeds_importer = new stdClass();
-  $feeds_importer->disabled = FALSE; /* Edit this to true to make a default feeds_importer disabled initially */
-  $feeds_importer->api_version = 1;
-  $feeds_importer->id = 'asu_events_importer_new';
-  $feeds_importer->config = array(
-    'name' => 'ASU Events importer new',
-    'description' => 'Import ASU Event nodes from ASU Events site',
-    'fetcher' => array(
-      'plugin_key' => 'FeedsHTTPFetcher',
-      'config' => array(
-        'auto_detect_feeds' => 0,
-        'use_pubsubhubbub' => 0,
-        'designated_hub' => '',
-        'request_timeout' => '999',
-      ),
-    ),
-    'parser' => array(
-      'plugin_key' => 'FeedsXPathParserXML',
-      'config' => array(
-        'sources' => array(
-          'xpathparser:0' => 'nid',
-          'xpathparser:1' => 'title',
-          'xpathparser:2' => 'subtitle',
-          'xpathparser:3' => 'campus',
-          'xpathparser:4' => 'locations',
-          'xpathparser:5' => 'description',
-          'xpathparser:6' => 'date/displaydate',
-          'xpathparser:7' => 'phone',
-          'xpathparser:8' => 'email',
-          'xpathparser:9' => 'room',
-          'xpathparser:10' => 'sponsorship',
-          'xpathparser:11' => 'artists',
-          'xpathparser:12' => 'curator',
-          'xpathparser:13' => 'openingreception',
-          'xpathparser:14' => 'closingreception',
-          'xpathparser:15' => 'pastexhibitions',
-          'xpathparser:16' => 'contactname',
-          'xpathparser:17' => 'otherdept',
-          'xpathparser:18' => 'rsvp_other',
-          'xpathparser:19' => 'register_other',
-          'xpathparser:20' => 'non_academic_units',
-          'xpathparser:21' => 'thumbs',
-          'xpathparser:22' => 'website',
-          'xpathparser:23' => 'website_title',
-          'xpathparser:24' => 'alias',
-          'xpathparser:25' => 'alias',
-          'xpathparser:26' => 'press_release_url',
-          'xpathparser:27' => 'press_release_title',
-          'xpathparser:28' => 'ticketing_url',
-          'xpathparser:29' => 'ticketing_url',
-          'xpathparser:30' => 'rsvp_website_url',
-          'xpathparser:31' => 'rsvp_website_url',
-          'xpathparser:32' => 'register_website_url',
-          'xpathparser:33' => 'register_website_url',
-          'xpathparser:34' => 'theme',
-          'xpathparser:35' => 'type',
-          'xpathparser:36' => 'nid',
-          'xpathparser:37' => 'unit',
-          'xpathparser:38' => 'pdf/pdf_url',
-          'xpathparser:39' => 'pdf/pdf_url',
-          'xpathparser:40' => 'very_start_date',
-          'xpathparser:41' => 'very_end_date',
-          'xpathparser:42' => 'thumbs',
-          'xpathparser:43' => 'audience',
-          'xpathparser:44' => 'date/startdate',
-          'xpathparser:45' => 'date/enddate',
-          'xpathparser:46' => 'image/image_url',
-          'xpathparser:47' => 'image/image_alt',
-          'xpathparser:48' => 'image/image_caption',
-          'xpathparser:49' => 'field_cost_value',
-          'xpathparser:50' => 'email',
-        ),
-        'rawXML' => array(
-          'xpathparser:0' => 0,
-          'xpathparser:1' => 0,
-          'xpathparser:2' => 0,
-          'xpathparser:3' => 0,
-          'xpathparser:4' => 0,
-          'xpathparser:5' => 0,
-          'xpathparser:6' => 0,
-          'xpathparser:7' => 0,
-          'xpathparser:8' => 0,
-          'xpathparser:9' => 0,
-          'xpathparser:10' => 0,
-          'xpathparser:11' => 0,
-          'xpathparser:12' => 0,
-          'xpathparser:13' => 0,
-          'xpathparser:14' => 0,
-          'xpathparser:15' => 0,
-          'xpathparser:16' => 0,
-          'xpathparser:17' => 0,
-          'xpathparser:18' => 0,
-          'xpathparser:19' => 0,
-          'xpathparser:20' => 0,
-          'xpathparser:21' => 0,
-          'xpathparser:22' => 0,
-          'xpathparser:23' => 0,
-          'xpathparser:24' => 0,
-          'xpathparser:25' => 0,
-          'xpathparser:26' => 0,
-          'xpathparser:27' => 0,
-          'xpathparser:28' => 0,
-          'xpathparser:29' => 0,
-          'xpathparser:30' => 0,
-          'xpathparser:31' => 0,
-          'xpathparser:32' => 0,
-          'xpathparser:33' => 0,
-          'xpathparser:34' => 0,
-          'xpathparser:35' => 0,
-          'xpathparser:36' => 0,
-          'xpathparser:37' => 0,
-          'xpathparser:38' => 0,
-          'xpathparser:39' => 0,
-          'xpathparser:40' => 0,
-          'xpathparser:41' => 0,
-          'xpathparser:42' => 0,
-          'xpathparser:43' => 0,
-          'xpathparser:44' => 0,
-          'xpathparser:45' => 0,
-          'xpathparser:46' => 0,
-          'xpathparser:47' => 0,
-          'xpathparser:48' => 0,
-          'xpathparser:49' => 0,
-          'xpathparser:50' => 0,
-        ),
-        'context' => '/xml/node',
-        'exp' => array(
-          'errors' => 0,
-          'debug' => array(
-            'context' => 0,
-            'xpathparser:0' => 0,
-            'xpathparser:1' => 0,
-            'xpathparser:2' => 0,
-            'xpathparser:3' => 0,
-            'xpathparser:4' => 0,
-            'xpathparser:5' => 0,
-            'xpathparser:6' => 0,
-            'xpathparser:7' => 0,
-            'xpathparser:8' => 0,
-            'xpathparser:9' => 0,
-            'xpathparser:10' => 0,
-            'xpathparser:11' => 0,
-            'xpathparser:12' => 0,
-            'xpathparser:13' => 0,
-            'xpathparser:14' => 0,
-            'xpathparser:15' => 0,
-            'xpathparser:16' => 0,
-            'xpathparser:17' => 0,
-            'xpathparser:18' => 0,
-            'xpathparser:19' => 0,
-            'xpathparser:20' => 0,
-            'xpathparser:21' => 0,
-            'xpathparser:22' => 0,
-            'xpathparser:23' => 0,
-            'xpathparser:24' => 0,
-            'xpathparser:25' => 0,
-            'xpathparser:26' => 0,
-            'xpathparser:27' => 0,
-            'xpathparser:28' => 0,
-            'xpathparser:29' => 0,
-            'xpathparser:30' => 0,
-            'xpathparser:31' => 0,
-            'xpathparser:32' => 0,
-            'xpathparser:33' => 0,
-            'xpathparser:34' => 0,
-            'xpathparser:35' => 0,
-            'xpathparser:36' => 0,
-            'xpathparser:37' => 0,
-            'xpathparser:38' => 0,
-            'xpathparser:39' => 0,
-            'xpathparser:40' => 0,
-            'xpathparser:41' => 0,
-            'xpathparser:42' => 0,
-            'xpathparser:43' => 0,
-            'xpathparser:44' => 0,
-            'xpathparser:45' => 0,
-            'xpathparser:46' => 0,
-            'xpathparser:47' => 0,
-            'xpathparser:48' => 0,
-            'xpathparser:49' => 0,
-            'xpathparser:50' => 0,
-          ),
-        ),
-        'allow_override' => 1,
-      ),
-    ),
-    'processor' => array(
-      'plugin_key' => 'FeedsNodeProcessor',
-      'config' => array(
-        'expire' => '-1',
-        'author' => 0,
-        'mappings' => array(
-          0 => array(
-            'source' => 'xpathparser:0',
-            'target' => 'guid',
-            'unique' => 1,
-          ),
-          1 => array(
-            'source' => 'xpathparser:1',
-            'target' => 'title',
-            'unique' => FALSE,
-          ),
-          2 => array(
-            'source' => 'xpathparser:2',
-            'target' => 'field_asuevent_subtitle',
-            'unique' => FALSE,
-          ),
-          3 => array(
-            'source' => 'xpathparser:3',
-            'target' => 'field_asuevent_campus',
-            'unique' => FALSE,
-          ),
-          4 => array(
-            'source' => 'xpathparser:4',
-            'target' => 'field_asuevent_location',
-            'unique' => FALSE,
-          ),
-          5 => array(
-            'source' => 'xpathparser:5',
-            'target' => 'body',
-            'unique' => FALSE,
-          ),
-          6 => array(
-            'source' => 'xpathparser:6',
-            'target' => 'field_asuevent_display_date',
-            'unique' => FALSE,
-          ),
-          7 => array(
-            'source' => 'xpathparser:7',
-            'target' => 'field_asuevent_phone',
-            'unique' => FALSE,
-          ),
-          8 => array(
-            'source' => 'xpathparser:9',
-            'target' => 'field_asuevent_room',
-            'unique' => FALSE,
-          ),
-          9 => array(
-            'source' => 'xpathparser:10',
-            'target' => 'field_asuevent_sponsorship',
-            'unique' => FALSE,
-          ),
-          10 => array(
-            'source' => 'xpathparser:11',
-            'target' => 'field_asuevent_artists',
-            'unique' => FALSE,
-          ),
-          11 => array(
-            'source' => 'xpathparser:12',
-            'target' => 'field_asuevent_curator',
-            'unique' => FALSE,
-          ),
-          12 => array(
-            'source' => 'xpathparser:13',
-            'target' => 'field_asuevent_opening_recep',
-            'unique' => FALSE,
-          ),
-          13 => array(
-            'source' => 'xpathparser:14',
-            'target' => 'field_asuevent_closing_recep',
-            'unique' => FALSE,
-          ),
-          14 => array(
-            'source' => 'xpathparser:15',
-            'target' => 'field_asuevent_past_exhibitions',
-            'unique' => FALSE,
-          ),
-          15 => array(
-            'source' => 'xpathparser:16',
-            'target' => 'field_asuevent_contact_name',
-            'unique' => FALSE,
-          ),
-          16 => array(
-            'source' => 'xpathparser:17',
-            'target' => 'field_asuevent_other_dept',
-            'unique' => FALSE,
-          ),
-          17 => array(
-            'source' => 'xpathparser:18',
-            'target' => 'field_asuevent_rsvp_other',
-            'unique' => FALSE,
-          ),
-          18 => array(
-            'source' => 'xpathparser:19',
-            'target' => 'field_asuevent_register_other',
-            'unique' => FALSE,
-          ),
-          19 => array(
-            'source' => 'xpathparser:20',
-            'target' => 'field_asuevent_nonacademic_unit',
-            'unique' => FALSE,
-          ),
-          20 => array(
-            'source' => 'xpathparser:21',
-            'target' => 'field_asuevent_thumb_img',
-            'unique' => FALSE,
-          ),
-          21 => array(
-            'source' => 'xpathparser:22',
-            'target' => 'field_asuevent_more_info:url',
-            'unique' => FALSE,
-          ),
-          22 => array(
-            'source' => 'xpathparser:23',
-            'target' => 'field_asuevent_more_info:title',
-            'unique' => FALSE,
-          ),
-          23 => array(
-            'source' => 'xpathparser:24',
-            'target' => 'field_asuevent_url:url',
-            'unique' => FALSE,
-          ),
-          24 => array(
-            'source' => 'xpathparser:25',
-            'target' => 'field_asuevent_url:title',
-            'unique' => FALSE,
-          ),
-          25 => array(
-            'source' => 'xpathparser:26',
-            'target' => 'field_asuevent_press_release:url',
-            'unique' => FALSE,
-          ),
-          26 => array(
-            'source' => 'xpathparser:27',
-            'target' => 'field_asuevent_press_release:title',
-            'unique' => FALSE,
-          ),
-          27 => array(
-            'source' => 'xpathparser:28',
-            'target' => 'field_asuevent_ticketing_url:url',
-            'unique' => FALSE,
-          ),
-          28 => array(
-            'source' => 'xpathparser:29',
-            'target' => 'field_asuevent_ticketing_url:title',
-            'unique' => FALSE,
-          ),
-          29 => array(
-            'source' => 'xpathparser:30',
-            'target' => 'field_asuevent_rsvp_url:url',
-            'unique' => FALSE,
-          ),
-          30 => array(
-            'source' => 'xpathparser:31',
-            'target' => 'field_asuevent_rsvp_url:title',
-            'unique' => FALSE,
-          ),
-          31 => array(
-            'source' => 'xpathparser:32',
-            'target' => 'field_asuevent_registration_url:url',
-            'unique' => FALSE,
-          ),
-          32 => array(
-            'source' => 'xpathparser:33',
-            'target' => 'field_asuevent_registration_url:title',
-            'unique' => FALSE,
-          ),
-          33 => array(
-            'source' => 'xpathparser:34',
-            'target' => 'field_asuevent_tax_category',
-            'term_search' => '0',
-            'autocreate' => 1,
-          ),
-          34 => array(
-            'source' => 'xpathparser:35',
-            'target' => 'field_asuevent_tax_type',
-            'term_search' => '0',
-            'autocreate' => 1,
-          ),
-          35 => array(
-            'source' => 'xpathparser:36',
-            'target' => 'field_asuevent_nid',
-            'unique' => FALSE,
-          ),
-          36 => array(
-            'source' => 'xpathparser:37',
-            'target' => 'field_asuevent_unit',
-            'unique' => FALSE,
-          ),
-          37 => array(
-            'source' => 'xpathparser:38',
-            'target' => 'field_asuevent_pdf:url',
-            'unique' => FALSE,
-          ),
-          38 => array(
-            'source' => 'xpathparser:39',
-            'target' => 'field_asuevent_pdf:title',
-            'unique' => FALSE,
-          ),
-          39 => array(
-            'source' => 'xpathparser:40',
-            'target' => 'field_asuevent_very_start_date:start',
-            'unique' => FALSE,
-          ),
-          40 => array(
-            'source' => 'xpathparser:41',
-            'target' => 'field_asuevent_very_start_date:end',
-            'unique' => FALSE,
-          ),
-          41 => array(
-            'source' => 'xpathparser:42',
-            'target' => 'field_news_events_thumb_img',
-            'unique' => FALSE,
-          ),
-          42 => array(
-            'source' => 'xpathparser:43',
-            'target' => 'field_asuevent_tax_audience',
-            'term_search' => '0',
-            'autocreate' => 1,
-          ),
-          43 => array(
-            'source' => 'xpathparser:44',
-            'target' => 'field_asuevent_date:start',
-            'unique' => FALSE,
-          ),
-          44 => array(
-            'source' => 'xpathparser:45',
-            'target' => 'field_asuevent_date:end',
-            'unique' => FALSE,
-          ),
-          45 => array(
-            'source' => 'xpathparser:46',
-            'target' => 'field_asuevent_image',
-            'unique' => FALSE,
-          ),
-          46 => array(
-            'source' => 'xpathparser:47',
-            'target' => 'field_asuevent_img_alt',
-            'unique' => FALSE,
-          ),
-          47 => array(
-            'source' => 'xpathparser:48',
-            'target' => 'field_asuevent_img_caption',
-            'unique' => FALSE,
-          ),
-          48 => array(
-            'source' => 'xpathparser:49',
-            'target' => 'field_asuevent_price',
-            'unique' => FALSE,
-          ),
-          49 => array(
-            'source' => 'xpathparser:50',
-            'target' => 'field_asuevent_email2',
-            'unique' => FALSE,
-          ),
-        ),
-        'update_existing' => '2',
-        'input_format' => 'asu_feeds_input_format',
-        'authorize' => 1,
-        'skip_hash_check' => 0,
-        'bundle' => 'asu_event',
-      ),
-    ),
-    'content_type' => '',
-    'update' => 0,
-    'import_period' => '86400',
-    'expire_period' => 3600,
-    'import_on_create' => 1,
-    'process_in_background' => 0,
-  );
-  $export['asu_events_importer_new'] = $feeds_importer;
-
-  $feeds_importer = new stdClass();
-  $feeds_importer->disabled = FALSE; /* Edit this to true to make a default feeds_importer disabled initially */
-  $feeds_importer->api_version = 1;
-  $feeds_importer->id = 'asu_news_importer_new';
-  $feeds_importer->config = array(
-    'name' => 'ASU News importer new',
-    'description' => 'Import ASU News nodes from ASU News site',
-    'fetcher' => array(
-      'plugin_key' => 'FeedsHTTPFetcher',
-      'config' => array(
-        'auto_detect_feeds' => 0,
-        'use_pubsubhubbub' => 0,
-        'designated_hub' => '',
-        'request_timeout' => '999',
-      ),
-    ),
-    'parser' => array(
-      'plugin_key' => 'FeedsXPathParserXML',
-      'config' => array(
-        'sources' => array(
-          'xpathparser:0' => 'nid',
-          'xpathparser:1' => 'title',
-          'xpathparser:2' => 'body',
-          'xpathparser:3' => 'teaser',
-          'xpathparser:4' => 'webspark_term',
-          'xpathparser:5' => 'contributor_contact_information_affiliation',
-          'xpathparser:6' => 'contributor-contact-information-e-mail',
-          'xpathparser:7' => 'contributor-contact-information-name',
-          'xpathparser:8' => 'contributor-contact-information-phone-number',
-          'xpathparser:9' => 'field_source_value',
-          'xpathparser:10' => 'field_url_url',
-          'xpathparser:11' => 'post_date',
-          'xpathparser:12' => 'path',
-          'xpathparser:13' => 'image/image_url',
-          'xpathparser:14' => 'image/image_title',
-          'xpathparser:15' => 'image/image_description',
-          'xpathparser:16' => 'image/image_alt',
-          'xpathparser:17' => 'image/image_by',
-          'xpathparser:18' => 'image/image_download',
-          'xpathparser:19' => 'image/image_download_url',
-          'xpathparser:20' => 'nid',
-          'xpathparser:21' => 'related_story/related_story_title',
-          'xpathparser:22' => 'related_story/related_story_url',
-        ),
-        'rawXML' => array(
-          'xpathparser:0' => 0,
-          'xpathparser:1' => 0,
-          'xpathparser:2' => 0,
-          'xpathparser:3' => 0,
-          'xpathparser:4' => 0,
-          'xpathparser:5' => 0,
-          'xpathparser:6' => 0,
-          'xpathparser:7' => 0,
-          'xpathparser:8' => 0,
-          'xpathparser:9' => 0,
-          'xpathparser:10' => 0,
-          'xpathparser:11' => 0,
-          'xpathparser:12' => 0,
-          'xpathparser:13' => 0,
-          'xpathparser:14' => 0,
-          'xpathparser:15' => 0,
-          'xpathparser:16' => 0,
-          'xpathparser:17' => 0,
-          'xpathparser:18' => 0,
-          'xpathparser:19' => 0,
-          'xpathparser:20' => 0,
-          'xpathparser:21' => 0,
-          'xpathparser:22' => 0,
-        ),
-        'context' => '/xml/node',
-        'exp' => array(
-          'errors' => 0,
-          'debug' => array(
-            'context' => 0,
-            'xpathparser:0' => 0,
-            'xpathparser:1' => 0,
-            'xpathparser:2' => 0,
-            'xpathparser:3' => 0,
-            'xpathparser:4' => 0,
-            'xpathparser:5' => 0,
-            'xpathparser:6' => 0,
-            'xpathparser:7' => 0,
-            'xpathparser:8' => 0,
-            'xpathparser:9' => 0,
-            'xpathparser:10' => 0,
-            'xpathparser:11' => 0,
-            'xpathparser:12' => 0,
-            'xpathparser:13' => 0,
-            'xpathparser:14' => 0,
-            'xpathparser:15' => 0,
-            'xpathparser:16' => 0,
-            'xpathparser:17' => 0,
-            'xpathparser:18' => 0,
-            'xpathparser:19' => 0,
-            'xpathparser:20' => 0,
-            'xpathparser:21' => 0,
-            'xpathparser:22' => 0,
-          ),
-        ),
-        'allow_override' => 1,
-      ),
-    ),
-    'processor' => array(
-      'plugin_key' => 'FeedsNodeProcessor',
-      'config' => array(
-        'expire' => '-1',
-        'author' => 0,
-        'mappings' => array(
-          0 => array(
-            'source' => 'xpathparser:0',
-            'target' => 'field_asunews_nid',
-            'unique' => FALSE,
-          ),
-          1 => array(
-            'source' => 'xpathparser:1',
-            'target' => 'title',
-            'unique' => FALSE,
-          ),
-          2 => array(
-            'source' => 'xpathparser:2',
-            'target' => 'body',
-            'unique' => FALSE,
-          ),
-          3 => array(
-            'source' => 'xpathparser:3',
-            'target' => 'field_asunews_teaser',
-            'unique' => FALSE,
-          ),
-          4 => array(
-            'source' => 'xpathparser:4',
-            'target' => 'field_asunews_tag',
-            'term_search' => '0',
-            'autocreate' => 1,
-          ),
-          5 => array(
-            'source' => 'xpathparser:5',
-            'target' => 'field_asunews_contri_affiliation',
-            'unique' => FALSE,
-          ),
-          6 => array(
-            'source' => 'xpathparser:6',
-            'target' => 'field_asunews_contri_email',
-            'unique' => FALSE,
-          ),
-          7 => array(
-            'source' => 'xpathparser:7',
-            'target' => 'field_asunews_contri_name',
-            'unique' => FALSE,
-          ),
-          8 => array(
-            'source' => 'xpathparser:8',
-            'target' => 'field_asunews_contri_phone',
-            'unique' => FALSE,
-          ),
-          9 => array(
-            'source' => 'xpathparser:9',
-            'target' => 'field_asunews_article_source',
-            'unique' => FALSE,
-          ),
-          10 => array(
-            'source' => 'xpathparser:10',
-            'target' => 'field_asunews_article_link:url',
-            'unique' => FALSE,
-          ),
-          11 => array(
-            'source' => 'xpathparser:11',
-            'target' => 'field_asunews_post_date_iso:start',
-            'unique' => FALSE,
-          ),
-          12 => array(
-            'source' => 'xpathparser:12',
-            'target' => 'field_asunews_path:url',
-            'unique' => FALSE,
-          ),
-          13 => array(
-            'source' => 'xpathparser:13',
-            'target' => 'field_asunews_image',
-            'unique' => FALSE,
-          ),
-          14 => array(
-            'source' => 'xpathparser:14',
-            'target' => 'field_asunews_image_title',
-            'unique' => FALSE,
-          ),
-          15 => array(
-            'source' => 'xpathparser:15',
-            'target' => 'field_asunews_image_desc',
-            'unique' => FALSE,
-          ),
-          16 => array(
-            'source' => 'xpathparser:16',
-            'target' => 'field_asunews_image_alt',
-            'unique' => FALSE,
-          ),
-          17 => array(
-            'source' => 'xpathparser:17',
-            'target' => 'field_asunews_image_by',
-            'unique' => FALSE,
-          ),
-          18 => array(
-            'source' => 'xpathparser:18',
-            'target' => 'field_asunews_image_downloadable',
-            'unique' => FALSE,
-          ),
-          19 => array(
-            'source' => 'xpathparser:19',
-            'target' => 'field_asunews_image_dl_url:url',
-            'unique' => FALSE,
-          ),
-          20 => array(
-            'source' => 'xpathparser:20',
-            'target' => 'guid',
-            'unique' => 1,
-          ),
-          21 => array(
-            'source' => 'xpathparser:21',
-            'target' => 'field_asunews_related_story_url:title',
-            'unique' => FALSE,
-          ),
-          22 => array(
-            'source' => 'xpathparser:22',
-            'target' => 'field_asunews_related_story_url:url',
-            'unique' => FALSE,
-          ),
-        ),
-        'update_existing' => '2',
-        'input_format' => 'asu_feeds_input_format',
-        'authorize' => 1,
-        'skip_hash_check' => 0,
-        'bundle' => 'asu_news',
-      ),
-    ),
-    'content_type' => '',
-    'update' => 0,
-    'import_period' => '1800',
-    'expire_period' => 3600,
-    'import_on_create' => 1,
-    'process_in_background' => 0,
-  );
-  $export['asu_news_importer_new'] = $feeds_importer;
-
-  return $export;
 }
 
 /**
@@ -3034,7 +989,6 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'manualcrop_styles_list' => array(),
           'manualcrop_styles_mode' => 'include',
           'manualcrop_thumblist' => 0,
-          'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
           'preview_image_style' => 'thumbnail',
           'progress_indicator' => 'throbber',
         ),
@@ -3377,8 +1331,14 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'url_cutoff' => 80,
         ),
         'enable_tokens' => 1,
+        'linkit' => array(
+          'button_text' => 'Search',
+          'enable' => 0,
+          'profile' => '',
+        ),
+        'rel_remove' => 'default',
         'title' => 'optional',
-        'title_maxlength' => 128,
+        'title_maxlength' => 255,
         'title_value' => '',
         'url' => 0,
         'user_register_form' => FALSE,
@@ -3914,8 +1874,14 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'url_cutoff' => 80,
         ),
         'enable_tokens' => 1,
+        'linkit' => array(
+          'button_text' => 'Search',
+          'enable' => 0,
+          'profile' => '',
+        ),
+        'rel_remove' => 'default',
         'title' => 'optional',
-        'title_maxlength' => 128,
+        'title_maxlength' => 255,
         'title_value' => '',
         'url' => 0,
         'user_register_form' => FALSE,
@@ -3955,7 +1921,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
       'locked' => 0,
       'module' => 'text',
       'settings' => array(
-        'max_length' => 60,
+        'max_length' => 255,
       ),
       'translatable' => 0,
       'type' => 'text',
@@ -4004,6 +1970,11 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
       'label' => 'Phone',
       'required' => 0,
       'settings' => array(
+        'linkit' => array(
+          'button_text' => 'Search',
+          'enable' => 0,
+          'profile' => '',
+        ),
         'text_processing' => 0,
         'user_register_form' => FALSE,
       ),
@@ -4011,6 +1982,8 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
         'active' => 1,
         'module' => 'text',
         'settings' => array(
+          'maxlength_js' => 0,
+          'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
           'size' => 60,
         ),
         'type' => 'text_textfield',
@@ -4104,8 +2077,14 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'url_cutoff' => 80,
         ),
         'enable_tokens' => 1,
+        'linkit' => array(
+          'button_text' => 'Search',
+          'enable' => 0,
+          'profile' => '',
+        ),
+        'rel_remove' => 'default',
         'title' => 'optional',
-        'title_maxlength' => 128,
+        'title_maxlength' => 255,
         'title_value' => '',
         'url' => 0,
         'user_register_form' => FALSE,
@@ -4367,7 +2346,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_asuevent_registration_url',
-      'label' => 'Registration',
+      'label' => 'Registration/Tickets/RSVP',
       'required' => 0,
       'settings' => array(
         'attributes' => array(
@@ -4381,8 +2360,14 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'url_cutoff' => 80,
         ),
         'enable_tokens' => 1,
+        'linkit' => array(
+          'button_text' => 'Search',
+          'enable' => 0,
+          'profile' => '',
+        ),
+        'rel_remove' => 'default',
         'title' => 'optional',
-        'title_maxlength' => 128,
+        'title_maxlength' => 255,
         'title_value' => '',
         'url' => 0,
         'user_register_form' => FALSE,
@@ -5322,8 +3307,14 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'url_cutoff' => 80,
         ),
         'enable_tokens' => 1,
+        'linkit' => array(
+          'button_text' => 'Search',
+          'enable' => 0,
+          'profile' => '',
+        ),
+        'rel_remove' => 'default',
         'title' => 'optional',
-        'title_maxlength' => 128,
+        'title_maxlength' => 255,
         'title_value' => '',
         'url' => 0,
         'user_register_form' => FALSE,
@@ -5957,8 +3948,14 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'url_cutoff' => 80,
         ),
         'enable_tokens' => 1,
+        'linkit' => array(
+          'button_text' => 'Search',
+          'enable' => 0,
+          'profile' => '',
+        ),
+        'rel_remove' => 'default',
         'title' => 'optional',
-        'title_maxlength' => 128,
+        'title_maxlength' => 255,
         'title_value' => '',
         'url' => 0,
         'user_register_form' => FALSE,
@@ -5998,7 +3995,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
       'locked' => 0,
       'module' => 'text',
       'settings' => array(
-        'max_length' => 60,
+        'max_length' => 255,
       ),
       'translatable' => 0,
       'type' => 'text',
@@ -6043,9 +4040,14 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_asunews_article_source',
-      'label' => 'Article source',
+      'label' => 'Source',
       'required' => 0,
       'settings' => array(
+        'linkit' => array(
+          'button_text' => 'Search',
+          'enable' => 0,
+          'profile' => '',
+        ),
         'text_processing' => 0,
         'user_register_form' => FALSE,
       ),
@@ -6053,6 +4055,8 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
         'active' => 1,
         'module' => 'text',
         'settings' => array(
+          'maxlength_js' => 0,
+          'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
           'size' => 60,
         ),
         'type' => 'text_textfield',
@@ -6349,7 +4353,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
       'locked' => 0,
       'module' => 'text',
       'settings' => array(
-        'max_length' => 30,
+        'max_length' => 255,
       ),
       'translatable' => 0,
       'type' => 'text',
@@ -6398,6 +4402,11 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
       'label' => 'Contributor phone',
       'required' => 0,
       'settings' => array(
+        'linkit' => array(
+          'button_text' => 'Search',
+          'enable' => 0,
+          'profile' => '',
+        ),
         'text_processing' => 0,
         'user_register_form' => FALSE,
       ),
@@ -6405,6 +4414,8 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
         'active' => 1,
         'module' => 'text',
         'settings' => array(
+          'maxlength_js' => 0,
+          'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
           'size' => 60,
         ),
         'type' => 'text_textfield',
@@ -6487,7 +4498,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
       'required' => 0,
       'settings' => array(
         'alt_field' => 0,
-        'default_image' => 0,
+        'default_image' => 3,
         'file_directory' => 'images_asunews',
         'file_extensions' => 'png gif jpg jpeg',
         'max_filesize' => '',
@@ -6512,7 +4523,6 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'manualcrop_styles_list' => array(),
           'manualcrop_styles_mode' => 'include',
           'manualcrop_thumblist' => 0,
-          'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
           'preview_image_style' => 'thumbnail',
           'progress_indicator' => 'throbber',
         ),
@@ -7185,8 +5195,14 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'url_cutoff' => '',
         ),
         'enable_tokens' => 1,
+        'linkit' => array(
+          'button_text' => 'Search',
+          'enable' => 0,
+          'profile' => '',
+        ),
+        'rel_remove' => 'default',
         'title' => 'none',
-        'title_maxlength' => 128,
+        'title_maxlength' => 255,
         'title_value' => '',
         'url' => 0,
         'user_register_form' => FALSE,
@@ -7387,12 +5403,13 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
         ),
         'enable_tokens' => 1,
         'linkit' => array(
+          'button_text' => 'Search',
           'enable' => 0,
-          'insert_plugin' => '',
+          'profile' => '',
         ),
         'rel_remove' => 'default',
         'title' => 'optional',
-        'title_maxlength' => 128,
+        'title_maxlength' => 255,
         'title_value' => '',
         'url' => 0,
         'user_register_form' => FALSE,
@@ -7401,9 +5418,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
       'widget' => array(
         'active' => 0,
         'module' => 'link',
-        'settings' => array(
-          'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-        ),
+        'settings' => array(),
         'type' => 'link_field',
         'weight' => 19,
       ),
@@ -7581,7 +5596,6 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
   t('(Used for "In the News" in D6 site.)');
   t('ASU News tag');
   t('Article Link');
-  t('Article source');
   t('Artists');
   t('Audience');
   t('Body');
@@ -7624,10 +5638,11 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
   t('Price');
   t('RSVP');
   t('RSVP other');
-  t('Registration');
   t('Registration other');
+  t('Registration/Tickets/RSVP');
   t('Related story URL');
   t('Room');
+  t('Source');
   t('Sponsorship');
   t('Subtitle');
   t('Teaser');
@@ -7641,152 +5656,4 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
   t('Website');
 
   return $fields;
-}
-
-/**
- * Implements hook_defaultconfig_strongarm().
- */
-function webspark_newsevents_defaultconfig_strongarm() {
-  $export = array();
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'date_format_event_date_date_';
-  $strongarm->value = 'j';
-  $export['date_format_event_date_date_'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'date_format_event_date_day';
-  $strongarm->value = 'D';
-  $export['date_format_event_date_day'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'date_format_event_date_month';
-  $strongarm->value = 'M';
-  $export['date_format_event_date_month'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'date_format_month';
-  $strongarm->value = 'F';
-  $export['date_format_month'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'date_format_year';
-  $strongarm->value = 'Y';
-  $export['date_format_year'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'field_bundle_settings_node__asu_event';
-  $strongarm->value = array(
-    'view_modes' => array(),
-    'extra_fields' => array(
-      'form' => array(
-        'title' => array(
-          'weight' => '-5',
-        ),
-        'path' => array(
-          'weight' => '30',
-        ),
-      ),
-      'display' => array(),
-    ),
-  );
-  $export['field_bundle_settings_node__asu_event'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'field_bundle_settings_node__asu_news';
-  $strongarm->value = array(
-    'view_modes' => array(),
-    'extra_fields' => array(
-      'form' => array(
-        'title' => array(
-          'weight' => '0',
-        ),
-        'path' => array(
-          'weight' => '21',
-        ),
-      ),
-      'display' => array(),
-    ),
-  );
-  $export['field_bundle_settings_node__asu_news'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'node_options_asu_event';
-  $strongarm->value = array(
-    0 => 'status',
-  );
-  $export['node_options_asu_event'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'node_options_asu_news';
-  $strongarm->value = array(
-    0 => 'status',
-  );
-  $export['node_options_asu_news'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'node_submitted_asu_event';
-  $strongarm->value = 0;
-  $export['node_submitted_asu_event'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'node_submitted_asu_news';
-  $strongarm->value = 0;
-  $export['node_submitted_asu_news'] = $strongarm;
-
-  return $export;
-}
-
-/**
- * Implements hook_defaultconfig_taxonomy_default_vocabularies().
- */
-function webspark_newsevents_defaultconfig_taxonomy_default_vocabularies() {
-  return array(
-    'asu_events_audience' => array(
-      'name' => 'ASU Events Audience',
-      'machine_name' => 'asu_events_audience',
-      'description' => '',
-      'hierarchy' => 0,
-      'module' => 'taxonomy',
-      'weight' => 0,
-    ),
-    'asu_events_category' => array(
-      'name' => 'ASU Events Category',
-      'machine_name' => 'asu_events_category',
-      'description' => '',
-      'hierarchy' => 0,
-      'module' => 'taxonomy',
-      'weight' => 0,
-    ),
-    'asu_events_type' => array(
-      'name' => 'ASU Events Type',
-      'machine_name' => 'asu_events_type',
-      'description' => '',
-      'hierarchy' => 0,
-      'module' => 'taxonomy',
-      'weight' => 0,
-    ),
-  );
 }

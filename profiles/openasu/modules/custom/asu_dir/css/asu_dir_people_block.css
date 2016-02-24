@@ -499,3 +499,7 @@ select {
     color: #a30046;
 }
 
+
+.asu-dir-hidden {
+    display: none;
+}
