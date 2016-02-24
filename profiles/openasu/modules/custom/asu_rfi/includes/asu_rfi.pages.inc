@@ -1,6 +1,6 @@
 <?php
 // $Id: asu_rfi.pages.inc 
-// Campus additions found by searching : campus1234
+
 /**
  * @file
  * Request info form generation using form API
@@ -35,8 +35,6 @@ function asu_rfi_form($delta){
    // Hack for Safari
     drupal_add_js('jQuery(window).unload(function(){});', array('type' => 'inline')); 
 }
-
-
 
 function asu_rfi_form_data($form, &$form_state) {
     
@@ -150,7 +148,7 @@ function asu_rfi_form_data($form, &$form_state) {
     
 	$form['req_helper'] = array(
 	    '#type' => 'item',
-	    '#markup' => '<p>Fields marked with <span style = "color:black;">*</span> are required.</p>',
+	    '#markup' => '<p>Fields marked with <span style = "color:#FF0000;">*</span> are required.</p>',
 	    '#size' => 10,
 	    );
     
@@ -163,36 +161,11 @@ function asu_rfi_form_data($form, &$form_state) {
     
 	$form['my_interest'] = array(
 	    '#type' => 'fieldset',
-	    '#title' => 'I\'m Interested In...',
-	    '#collapsible' => FALSE,
+	    '#title' => 'My interests',
+	    '#collapsible' => TRUE,
 	    '#collapsed' => FALSE,
 	    '#size' => 10,
 	);
-//      $form['my_interest']['location'] = array(
-//      '#type' => 'radios',
-//      '#title' => t('Location'),
-//      '#options' => array('on_campus' => t('On Campus'), 'online' => t('Online'), 'no_preference' => t('No Preference')),
-//      '#default_value' => 'no_preference',
-//      '#required' => TRUE,
-//    );
-      
-    $form['my_interest']['prog_plan'] = array(
-	    '#type' => 'textfield',
-	    '#title' => t('My program of interest'),
-	    '#required' => TRUE,
-	    '#default_value' => $dname,
-	    '#disabled' => TRUE,
-	    '#size' => 30,
-	);
-      
-    $form['my_interest']['campus'] = array(
-    	'#type' => 'select',
-		'#title' => t('My campus of choice is'),
-		'#options' => array(),
-//		'#options' => array('any'=>'',),
-		'#required' => TRUE,
-		'#attributes' => array('class' => array('reqinfo_campus')),
-    );
      
 	$form['my_interest']['student_type'] = array(
 	    '#type' => 'select',
@@ -208,7 +181,14 @@ function asu_rfi_form_data($form, &$form_state) {
 	'#default_value' =>  isset($_SESSION['rfi_data']['student_type']) ? $_SESSION['rfi_data']['student_type'] : NULL,
 	);
   
-	
+	$form['my_interest']['prog_plan'] = array(
+	    '#type' => 'textfield',
+	    '#title' => t('My program of interest'),
+	    '#required' => TRUE,
+	    '#default_value' => $dname,
+	    '#disabled' => TRUE,
+	    '#size' => 30,
+	);
      
 	$form['program_code'] = array(
 	    '#type' => 'hidden',
@@ -236,8 +216,8 @@ function asu_rfi_form_data($form, &$form_state) {
     
 	$form['about_me'] = array(
 	    '#type' => 'fieldset',
-	    '#title' => 'About me...',
-	    '#collapsible' => FALSE,
+	    '#title' => 'About me',
+	    '#collapsible' => TRUE,
 	    '#collapsed' => FALSE,
 	);
    
@@ -323,7 +303,7 @@ function asu_rfi_form_data($form, &$form_state) {
 		<div class="modal-dialog">
 		    <div class="modal-content">
 			<div class="modal-body">
-			    Your birthday is important! It helps us keep your information secure as a unique identifier for your online submission.
+			    Your birthday is important! Not only will we send you a birthday message, it helps us keep your information secure as a unique identifier for your online submission.
 			</div>
 			<div class="modal-footer">
 			    <div class="btn btn-default" data-dismiss="modal">Close</div>
@@ -420,7 +400,7 @@ function asu_rfi_form_data_validate($form, &$form_state) {
     /** If mobile number field is checked, then check for USA format, else check for special characters **/
   
     $scam_num = substr($phone, 0, 3);
-    if(!empty($mobile_check) && $mobile_check != 0){
+    if($mobile_check != 0){
 	if( !preg_match("/^([1]-)?([0-9]{3}[-|.][0-9]{3}[-|.][0-9]{4})$/i", $phone) || ($scam_num == "555" )) {
 	    form_set_error('phone', t('You entered an invalid Phone number.'));
 	}
@@ -612,8 +592,6 @@ function asu_rfi_form_data_submit($form, &$form_state){
 	$multi_form_type = "Undergraduate multi form";
 	$form_state['storage']['prospect_level'] = "Undergraduate";
     }
-//    $form_state['storage']['location'] = $form_state['values']['location'];
-    $form_state['storage']['campus'] = $form_state['values']['campus'];
   
     $form_state['storage']['ip_address'] =  $form_state['values']['ip_address'];
     $form_state['storage']['college_code'] =  $form_state['values']['college'];
@@ -666,8 +644,6 @@ function asu_rfi_form_data_submit($form, &$form_state){
 		$ewrapper->field_rfi_program_name->set($form_state['storage']['prog_plan']);
 		$ewrapper->field_rfi_college_name->set($form_state['storage']['college_name']);
 		$ewrapper->field_rfi_prospect_level->set($form_state['storage']['prospect_level']);
-//        $ewrapper->field_rfi_location->set($form_state['storage']['location']);
-        $ewrapper->field_rfi_campus->set($form_state['storage']['campus']);  
 		$ewrapper->save();
 		
 		$form_state['storage']['submission_nodeid'] = $entity->nid;
@@ -704,8 +680,6 @@ function asu_rfi_form_data_submit($form, &$form_state){
 		$ewrapper->field_rfi_program_name->set($form_state['storage']['prog_plan']);
 		$ewrapper->field_rfi_college_name->set($form_state['storage']['college_name']);
 		$ewrapper->field_rfi_prospect_level->set($form_state['storage']['prospect_level']);
-//        $ewrapper->field_rfi_location->set($form_state['storage']['location']);
-        $ewrapper->field_rfi_campus->set($form_state['storage']['campus']);
 		$ewrapper->save();
 		$form_state['storage']['submission_nodeid'] = $get_nodeid;
 		$form_state['storage']['step'] = 'asu_rfi_second_form';
@@ -793,7 +767,7 @@ function asu_rfi_second_form($form, &$form_state){
     $form['address_info'] = array(
 	'#type' => 'fieldset',
 	'#title' => 'Please also send me information to the following address',
-	'#collapsible' => FALSE,
+	'#collapsible' => TRUE,
 	'#collapsed' => FALSE,
     );
      
@@ -1015,7 +989,6 @@ function asu_rfi_second_form_submit($form, &$form_state){
 	    $coded_major = base64_encode($form_state['storage']['program_code']);
 	    $coded_college =  base64_encode($form_state['storage']['college_name']);
 	    $coded_college_code = base64_encode($form_state['storage']['college_code']);
-  
 	    $coded_zip = base64_encode($zipcode);
 	    $coded_country = base64_encode($country);
 	    /*If graduate degree is submitted, root the from to graduate posting function.
@@ -1046,7 +1019,7 @@ function asu_rfi_second_form_submit($form, &$form_state){
 	    if($form_state['storage']['prospect_level'] == "Undergraduate"){
 		asu_rfi_undergrad_post($form_state['storage']); //-- To be used in future
 		$undergrad_confid = variable_get('asu_rfi_undergrad_confirm_node');
-	 
+	      
 		if(!empty($undergrad_confid)){
 		    $ualias = drupal_lookup_path('alias', $path = "node/$undergrad_confid", $path_language = NULL);
 		    if(!empty($ualias)){
@@ -1130,7 +1103,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type){
     );
     
     $form['req_helper'] = array(
-        '#value' => '<p>Fields marked with <span style = "color:black;">*</span> are required.</p>',
+        '#value' => '<p>Fields marked with <span style = "color:#FF0000;">*</span> are required.</p>',
     );
     
     $form['degree_type'] = array(
@@ -1141,104 +1114,44 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type){
     ); 
     
     $form['my_interest'] = array(
-	    '#type' => 'fieldset',
-	    '#title' => 'I\'m Interested In...',
-	    '#collapsible' => FALSE,
-	    '#collapsed' => FALSE,
-	    '#size' => 10,
-	);
-    $form['my_interest']['location'] = array(
-      '#type' => 'radios',
-      '#title' => t('Location'),
-      '#options' => array('on_campus' => t('On Campus'), 'online' => t('Online'), 'no_preference' => t('No Preference')),
-      '#default_value' => 'no_preference',
-      '#required' => TRUE,
-    );
-  
-    if(sizeof($programs) == 1){
-      $form['my_interest']['program_code'] = array(
-        '#type' => 'select',
-        '#title' => t('My program of interest'),
-        '#options' => $programs,
-        '#states' => array(
-              'required' => array(
-                ':input[name="degree_type"]' => array('value' => 'graduate_longform'),
-              ),
-            ),
-        );
-    } else{
-      $form['my_interest']['program_code'] = array(
-        '#type' => 'select',
-        '#title' => t('My program of interest'),
-        '#options' => $programs,  
-        "#empty_option"=>t('- Select -'),
-        '#states' => array(
-              'required' => array(
-                ':input[name="degree_type"]' => array('value' => 'graduate_longform'),
-              ),
-            ),
-        );
-    }
-    
-	
-	$form['my_interest']['campus'] = array(
-    	'#type' => 'select',
-		'#title' => t('My campus of choice is'),
-//		'#required' => FALSE,
-		'#attributes' => array('class' => array('reqinfo_campus')),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="location"]' => array('value' => 'on_campus'),
-          ),
-          'optional' => array(
-            ':input[name="program_code"]' => array('value' => ''),
-          ),
-          'disabled' => array(
-            ':input[name="program_code"]' => array('value' => ''),
-          ),
-        ),
-        "#empty_option"=>t('- Select -'),
+	'#type' => 'fieldset',
+	'#title' => 'My interests',
+	'#collapsible' => TRUE,
+	'#collapsed' => FALSE,
+	'#size' => 30,
     );
      
     $form['my_interest']['student_type'] = array(
-      '#type' => 'select',
-      '#title' => t('I will be a future'),
-      '#options' => array('First Time Freshman'=>'First Time Freshman', 'Transfer'=>'Transfer',' Readmission'=>'Readmission'),
-      '#states' => array(
-          'visible' => array(
-            ':input[name="degree_type"]' => array('value' => 'ugrad_longform'),
-          ),
-          'optional' => array(
-            ':input[name="location"]' => array('value' => 'online'),
-          ),
-          'invisible' => array(
-            ':input[name="location"]' => array('value' => 'online'),
-          ),
-      ), 
-      '#attributes' => array('class' => array('reqinfo_student_type')),
-      "#empty_option"=>t('- Select -'),
+	'#type' => 'select',
+	'#title' => t('I will be a future'),
+	'#options' => array('First Time Freshman'=>'First Time Freshman', 'Transfer'=>'Transfer',' Readmission'=>'Readmission'),
+	'#states' => array(
+	    'visible' => array(
+		':input[name="degree_type"]' => array('value' => 'ugrad_longform'),
+	    ),
+	), 
+	'#required' => TRUE,
+	'#attributes' => array('class' => array('reqinfo_student_type')),
+    );
+    
+    $form['my_interest']['program_code'] = array(
+	'#type' => 'select',
+	'#title' => t('My program of interest'),
+	'#options' => $programs,
+	'#required' => TRUE,
     );
      
     $form['my_interest']['start_date'] = array(
-      '#type' => 'select',
-      '#title' => t('My start date'),
-      '#options' => $start_dates,
-//  	  '#required' => TRUE,
-      '#states' => array(
-          'optional' => array(
-            ':input[name="location"]' => array('value' => 'online'),
-          ),
-          'invisible' => array(
-            ':input[name="location"]' => array('value' => 'online'),
-          ),
-      ),
-      "#empty_option"=>t('- Select -'),
+	'#type' => 'select',
+	'#title' => t('My start date'),
+	'#options' => $start_dates,
+	'#required' => TRUE,
     );
     
     $form['about_me'] = array(
 	'#type' => 'fieldset',
-	'#title' => 'About me...',
-	'#collapsible' => FALSE,
+	'#title' => 'About me',
+	'#collapsible' => TRUE,
 	'#collapsed' => FALSE,
     );
    
@@ -1287,43 +1200,26 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type){
 	'#maxlength' => 20,
 	'#required' => FALSE,
 	'#attributes' =>  array('class' => array('rfi_mobile')),
-    '#states' => array(
-        'invisible' => array(
-          ':input[name="location"]' => array('value' => 'online'),
-        ),
-      ),
     );
   
     $form['about_me']['country'] = array(
-      '#id' => 'rfi-country',
-      '#type' => 'select',
-          '#options' => $country,
-      '#title' => t('Country'),
-//      '#required' => TRUE,
-      '#states' => array(
-          'invisible' => array(
-            ':input[name="location"]' => array('value' => 'online'),
-          ),
-          'optional' => array(
-            ':input[name="location"]' => array('value' => 'online'),
-          ),  
-      ),
-      "#empty_option"=>t('- Select -'),
+	'#id' => 'rfi-country',
+	'#type' => 'select',
+        '#options' => $country,
+	'#title' => t('Country'),
+	'#required' => TRUE,
 	);
    
     $form['about_me']['zipcode'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Postal code'),
-      '#size' => 30,
-      '#maxlength' => 15,
-      '#states' => array(
-        'required' => array(
-            ':input[name="country"]' => array('value' => 'United States'),
-        ),
-        'invisible' => array(
-            ':input[name="location"]' => array('value' => 'online'),
-        ),
-      ),
+	'#type' => 'textfield',
+	'#title' => t('Postal code'),
+	'#size' => 30,
+	'#maxlength' => 15,
+	'#states' => array(
+	    'required' => array(
+		':input[name="country"]' => array('value' => 'United States'),
+	    ),
+	),
     );
     
     
@@ -1346,34 +1242,18 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type){
 
     // The below field creates illusion as part of date of birth field. I had to add this field to avoid validation error message containing modal data
     $form['about_me']['dob_field'] = array(
-      '#type' => 'item',
-          '#markup' => '<label><strong>Date of birth</strong></label> '.$modal_data,
-      '#states' => array(
-        'optional' => array(
-            ':input[name="location"]' => array('value' => 'online'),
-          ),
-        'invisible' => array(
-            ':input[name="location"]' => array('value' => 'online'),
-        ),
-      ),
+	'#type' => 'item',
+        '#markup' => '<label><strong>Date of birth <span class="form-required">*</span></strong></label> '.$modal_data,
     );
 
     $form['about_me']['birthdate'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Date of birth'),
-      '#description' => t('Format: mm/dd/yyyy'),
-      '#title_display' => 'invisible',
-      '#size' => 30,
-      '#maxlength' => 30,
-//      '#required' => TRUE,
-      '#states' => array(
-          'optional' => array(
-            ':input[name="location"]' => array('value' => 'online'),
-          ),
-          'invisible' => array(
-              ':input[name="location"]' => array('value' => 'online'),
-          ),
-      ),
+	'#type' => 'textfield',
+	'#title' => t('Date of birth'),
+	'#description' => t('Format: mm/dd/yyyy'),
+	'#title_display' => 'invisible',
+	'#size' => 30,
+	'#maxlength' => 30,
+	'#required' => TRUE,
     );
     
     $form['ip_address'] = array(
@@ -1385,44 +1265,29 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type){
     
     
     $form['about_me']['citizenship'] = array(
-	  '#type' => 'checkbox',
-	  '#title' => t('I am not a U.S. citizen and do not have a green card.'),
-      '#states' => array(
-          'invisible' => array(
-              ':input[name="location"]' => array('value' => 'online'),
-          ),
-      ),
+	'#type' => 'checkbox',
+	'#title' => t('I am not a U.S. citizen and do not have a green card.'),
     );
     
     $form['about_me']['military'] = array(
-      '#type' => 'radios',
-      '#title' => t('U.S. Veteran admission information and services'),
-      '#options' =>  array(
-          "None" => "None",
-          "Active Duty" => "Active Duty",
-          "National Guard" => "National Guard",
-          "Veteran" => "Veteran",
-          "Armed forces reserve" => "Armed forces reserve",
-          "Spouse/Dependent" => "Spouse/Dependent"
-          ),
-      '#size' => 30,
-      '#states' => array(
-          'invisible' => array(
-              ':input[name="location"]' => array('value' => 'online'),
-          ),
-      ),
+	'#type' => 'radios',
+	'#title' => t('U.S. Veteran admission information and services'),
+	'#options' =>  array(
+	    "None" => "None",
+	    "Active Duty" => "Active Duty",
+	    "National Guard" => "National Guard",
+	    "Veteran" => "Veteran",
+	    "Armed forces reserve" => "Armed forces reserve",
+	    "Spouse/Dependent" => "Spouse/Dependent"
+        ),
+	'#size' => 30,
     );
      
     $form['address_info'] = array(
-      '#type' => 'fieldset',
-      '#title' => 'Please also send me information to the following address',
-      '#collapsible' => FALSE,
-      '#collapsed' => FALSE,
-      '#states' => array(
-          'invisible' => array(
-              ':input[name="location"]' => array('value' => 'online'),
-          ),
-      ),
+	'#type' => 'fieldset',
+	'#title' => 'Please also send me information to the following address',
+	'#collapsible' => TRUE,
+	'#collapsed' => FALSE,
     );
      
     $form['address_info']['address'] = array(
@@ -1453,11 +1318,6 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type){
         '#cols' => 60,
         '#resizable' => TRUE,
         '#rows' => 5,
-        '#states' => array(
-           'invisible' => array(
-               ':input[name="location"]' => array('value' => 'online'),
-           ),
-        ),
      );
      
     $form['webform_url'] = array(
@@ -1496,45 +1356,6 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type){
 /* Function to validate submitted values*/
 
 function asu_rfi_long_form_data_validate($form,&$form_state){
-  
-  if($form_state['input']['location'] == 'online'){
-    $fname = $form_state['values']['first_name'];
-    $fname = ucfirst($fname);
-    $lname = $form_state['values']['last_name'];
-    $lname = ucfirst($lname);
-    $email = $form_state['values']['email'];
-    $phone = $form_state['values']['phone'];
-    
-    //validate first name
-    if( !preg_match("/^[a-zA-Z\.\s-_]+$/",$fname)){
-        form_set_error('first_name', t('First name field accepts only plain text.'));
-    }
-    //validate last name
-   if( !preg_match("/^[a-zA-Z\.\s-_]+$/",$lname)){
-        form_set_error('last_name', t('Last name field accepts only plain text.'));
-
-   }
-   //validation for email
-
-    if( !preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)*(\.[a-zA-Z]{2,6})+$/", $email)){
-      form_set_error('email', t('You entered an invalid email.'));
-    }
-
-    //validation for phone number
-    /** If mobile number field is checked, then check for USA format, else check for special characters **/
-     $scam_num = substr($phone, 0, 3);
-    if(!empty($mobile_check) && $mobile_check != 0){
-      if( !preg_match("/^([1]-)?([0-9]{3}[-|.][0-9]{3}[-|.][0-9]{4})$/i", $phone) || ($scam_num == "555" )) {
-          form_set_error('phone', t('You entered an invalid Phone number.'));
-      }
-    }
-    else{
-      if( !preg_match("/^[0-9\.\s-_+\(\)]+$/", $phone) || ($scam_num == "555" )) {
-           form_set_error('phone', t('You entered an invalid Phone number.'));
-      }
-    }
-    
-  } else{
     $stype = $form_state['values']['student_type'];
     $fname = $form_state['values']['first_name'];
     $fname = ucfirst($fname);
@@ -1547,13 +1368,12 @@ function asu_rfi_long_form_data_validate($form,&$form_state){
     $address = check_plain($form_state['values']['address']);
     $state = $form_state['values']['state'];
     $city = check_plain($form_state['values']['city']);
-    $location = $form_state['values']['location'];
-    $campus = $form_state['values']['campus'];
+    
     $questions = check_plain($form_state['values']['questions']);
     $form_type = $form_state['values']['degree_type'];
     $birthdate = $form_state['values']['birthdate'];
     $mobile_check = $form_state['values']['mobile_check'];
-
+   
     //validate first name
     if( !preg_match("/^[a-zA-Z\.\s-_]+$/",$fname)){
         form_set_error('first_name', t('First name field accepts only plain text.'));
@@ -1561,163 +1381,163 @@ function asu_rfi_long_form_data_validate($form,&$form_state){
     //validate last name
    if( !preg_match("/^[a-zA-Z\.\s-_]+$/",$lname)){
         form_set_error('last_name', t('Last name field accepts only plain text.'));
-
+	
    }
    //validation for email
-
+   
     if( !preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)*(\.[a-zA-Z]{2,6})+$/", $email)){
-      form_set_error('email', t('You entered an invalid email.'));
+	  form_set_error('email', t('You entered an invalid email.'));
     }
-
+  
     //validation for phone number
     /** If mobile number field is checked, then check for USA format, else check for special characters **/
      $scam_num = substr($phone, 0, 3);
     if($mobile_check != 0){
-      if( !preg_match("/^([1]-)?([0-9]{3}[-|.][0-9]{3}[-|.][0-9]{4})$/i", $phone) || ($scam_num == "555" )) {
-          form_set_error('phone', t('You entered an invalid Phone number.'));
-      }
+	if( !preg_match("/^([1]-)?([0-9]{3}[-|.][0-9]{3}[-|.][0-9]{4})$/i", $phone) || ($scam_num == "555" )) {
+	    form_set_error('phone', t('You entered an invalid Phone number.'));
+	}
     }
     else{
-      if( !preg_match("/^[0-9\.\s-_+\(\)]+$/", $phone) || ($scam_num == "555" )) {
-           form_set_error('phone', t('You entered an invalid Phone number.'));
-      }
+	if( !preg_match("/^[0-9\.\s-_+\(\)]+$/", $phone) || ($scam_num == "555" )) {
+	     form_set_error('phone', t('You entered an invalid Phone number.'));
+	}
     }
-
+    
     //validate zip code
     if(empty($zip)){
-    if(!empty($country) && ($country == "United States")){
-        form_set_error('zipcode', t('Postal code field is required.'));
+	if(!empty($country) && ($country == "United States")){
+	    form_set_error('zipcode', t('Postal code field is required.'));
+	}
     }
-    }
-
+  
     if(!empty($zip)){
-      if($country == "United States"){
-          if((strlen($zip) < 5)){
-          form_set_error('zipcode', t('Postal code cannot be less than 5 digits.'));
-          }
-          if(!preg_match('/^[0-9]{5}+$/',$zip)){
-          form_set_error('zipcode', t('Postal code accepts 5 digits only.'));
-          }
-      }
-    else{
-        if( !preg_match("/^[a-zA-Z0-9\s-]+$/",$zip)){
-        form_set_error('zipcode', t('Postal code is not valid.'));
-         }
-        if((strlen($zip) < 4)){
-        form_set_error('zipcode', t('Postal code cannot be less than 4 characters.'));
-        }
-        if(strlen($zip) > 20){
-        form_set_error('zipcode', t('Postal code cannot be longer than 20 characters.'));
-        }
+	if($country == "United States"){
+	    if((strlen($zip) < 5)){
+		form_set_error('zipcode', t('Postal code cannot be less than 5 digits.'));
+	    }
+	    if(!preg_match('/^[0-9]{5}+$/',$zip)){
+		form_set_error('zipcode', t('Postal code accepts 5 digits only.'));
+	    }
+	}
+	else{
+	    if( !preg_match("/^[a-zA-Z0-9\s-]+$/",$zip)){
+		form_set_error('zipcode', t('Postal code is not valid.'));
+	     }
+	    if((strlen($zip) < 4)){
+		form_set_error('zipcode', t('Postal code cannot be less than 4 characters.'));
+	    }
+	    if(strlen($zip) > 20){
+		form_set_error('zipcode', t('Postal code cannot be longer than 20 characters.'));
+	    }
+	}
     }
-    }
-
+  
    //validate birthdate
-
+  
    if(!empty($birthdate)){ 
-    //get number of occurences of '/' in dob
-    $slashes = substr_count($birthdate, '/');
-    if($slashes == 2){
-        $date_format = explode('/',$birthdate);
-        $month = $date_format[0];
-        $day = $date_format[1];
-        $year = $date_format[2];
-        $current_year = date('Y');
-        $year_limit = $current_year - 1;
-        $isLeapYear = date('L');
-        if(strlen($birthdate) < 11){
-
-        if(($month < 1) || ($month > 12)){
-            form_set_error('birthdate', t('Month range has to be between 1 and 12.'));
-            form_set_error('dob_field',t(' '));
-        }
-
-        if(($month == 1) || ($month == 3) || ($month == 5) || ($month == 7) || ($month == 8) || ($month == 10) || ($month == 12)){
-            if(($day < 1) || ($day > 31)){
-            form_set_error('birthdate', t('Date range has to be between 1 and 31.'));
-            form_set_error('dob_field',t(' '));
-            }
-        }
-
-        if(($month == 4) || ($month == 6) || ($month == 9) || ($month == 11)){
-            if(($day < 1) || ($day > 30)){
-            form_set_error('birthdate', t('Date range has to be between 1 and 30.'));
-            form_set_error('dob_field',t(' '));
-            }
-        }
-
-        if($month == 2) {
-            if($isLeapYear == 1){
-            if(($day < 1) || ($day > 29)){
-                form_set_error('birthdate', t('Date range has to be between 1 and 29.'));
-                form_set_error('dob_field',t(' '));
-            }
-            }
-            if($isLeapYear == 0){
-            if(($day < 1) || ($day > 28)){
-                form_set_error('birthdate', t('Date range has to be between 1 and 28.'));
-                form_set_error('dob_field',t(' '));
-            }
-            }
-        }
-
-        if(strlen($year) != 4){
-            form_set_error('birthdate', t('Year has to be 4 digits.'));
-        }
-
-        if($year > $year_limit){
-            form_set_error('birthdate', t('Year cannot be greater than '.$year_limit));
-        }
-
-        if(!preg_match("/^(0[1-9]|1[012])[\-\/.](0[1-9]|[12][0-9]|3[01])[\-\/.](19|20)\d\d$/", $birthdate)){
-            form_set_error('birthdate', t('Date of birth accepts the format mm/dd/yyyy.'));
-            form_set_error('dob_field',t(' '));
-        }
-        }
-        else{
-        form_set_error('birthdate', t('Date of birth is invalid, it accepts the format mm/dd/yyyy.'));
-        form_set_error('dob_field',t(' '));
-        }
+	//get number of occurences of '/' in dob
+	$slashes = substr_count($birthdate, '/');
+	if($slashes == 2){
+	    $date_format = explode('/',$birthdate);
+	    $month = $date_format[0];
+	    $day = $date_format[1];
+	    $year = $date_format[2];
+	    $current_year = date('Y');
+	    $year_limit = $current_year - 1;
+	    $isLeapYear = date('L');
+	    if(strlen($birthdate) < 11){
+		
+		if(($month < 1) || ($month > 12)){
+		    form_set_error('birthdate', t('Month range has to be between 1 and 12.'));
+		    form_set_error('dob_field',t(' '));
+		}
+		
+		if(($month == 1) || ($month == 3) || ($month == 5) || ($month == 7) || ($month == 8) || ($month == 10) || ($month == 12)){
+		    if(($day < 1) || ($day > 31)){
+			form_set_error('birthdate', t('Date range has to be between 1 and 31.'));
+			form_set_error('dob_field',t(' '));
+		    }
+		}
+		
+		if(($month == 4) || ($month == 6) || ($month == 9) || ($month == 11)){
+		    if(($day < 1) || ($day > 30)){
+			form_set_error('birthdate', t('Date range has to be between 1 and 30.'));
+			form_set_error('dob_field',t(' '));
+		    }
+		}
+		
+		if($month == 2) {
+		    if($isLeapYear == 1){
+			if(($day < 1) || ($day > 29)){
+			    form_set_error('birthdate', t('Date range has to be between 1 and 29.'));
+			    form_set_error('dob_field',t(' '));
+			}
+		    }
+		    if($isLeapYear == 0){
+			if(($day < 1) || ($day > 28)){
+			    form_set_error('birthdate', t('Date range has to be between 1 and 28.'));
+			    form_set_error('dob_field',t(' '));
+			}
+		    }
+		}
+		
+		if(strlen($year) != 4){
+		    form_set_error('birthdate', t('Year has to be 4 digits.'));
+		}
+		
+		if($year > $year_limit){
+		    form_set_error('birthdate', t('Year cannot be greater than '.$year_limit));
+		}
+		
+		if(!preg_match("/^(0[1-9]|1[012])[\-\/.](0[1-9]|[12][0-9]|3[01])[\-\/.](19|20)\d\d$/", $birthdate)){
+		    form_set_error('birthdate', t('Date of birth accepts the format mm/dd/yyyy.'));
+		    form_set_error('dob_field',t(' '));
+		}
+	    }
+	    else{
+		form_set_error('birthdate', t('Date of birth is invalid, it accepts the format mm/dd/yyyy.'));
+		form_set_error('dob_field',t(' '));
+	    }
+	}
+	else{
+	    form_set_error('birthdate', t('Date of birth is invalid, it accepts the format mm/dd/yyyy.'));
+	    form_set_error('dob_field',t(' '));
+	}
     }
     else{
-        form_set_error('birthdate', t('Date of birth is invalid, it accepts the format mm/dd/yyyy.'));
-        form_set_error('dob_field',t(' '));
-    }
-    }
-    else{
-    form_set_error('birthdate', t('Date of birth is required.'));
-    form_set_error('dob_field',t(' '));
+	form_set_error('birthdate', t('Date of birth is required.'));
+	form_set_error('dob_field',t(' '));
     }  
-
+    
     //validate address
     if(!empty($address)){
-    if( !preg_match("/^[a-zA-Z0-9\.\s-_,#]+$/",$address)){
-        form_set_error('address', t('Address field accepts only plain text.'));
+	if( !preg_match("/^[a-zA-Z0-9\.\s-_,#]+$/",$address)){
+	    form_set_error('address', t('Address field accepts only plain text.'));
+	}
     }
-    }
-
+ 
     //validate city
     if(!empty($city)){
-    if( !preg_match('/^[\p{L}\p{N} .-]+$/u', $city)) {
-        form_set_error('city', t('City is invalid.'));
+	if( !preg_match('/^[\p{L}\p{N} .-]+$/u', $city)) {
+	    form_set_error('city', t('City is invalid.'));
+	}
     }
-    }
-
+ 
     //validation for questions
     if(!empty($questions)){
-    $len =  strlen($questions); // validation for comments character limit to 255
-    if ($len > 255) 
-    {
-        form_set_error('questions', t('Comments are limited to a maximum of 255 characters.'));
+	$len =  strlen($questions); // validation for comments character limit to 255
+	if ($len > 255) 
+	{
+	    form_set_error('questions', t('Comments are limited to a maximum of 255 characters.'));
+	}
     }
-    } 
-  }
 }
 
 /* submit handler */
 function asu_rfi_long_form_data_submit($form, &$form_state){
+   
    global $user;
-
+ 
     //Get the type of the form. If the form is grad form, set prospect_level value to "Graduate", else "Undergraduate"
     if(($form_state['values']['degree_type']) == "graduate_longform"){
 	$stype = 'Graduate';
@@ -1734,8 +1554,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state){
     $email = check_plain($form_state['values']['email']);
     $phone = $form_state['values']['phone'];
     $form_state['values']['phone'] = $form_state['values']['phone'];
-    $location = $form_state['values']['location'];
-    $campus = $form_state['values']['campus'];
+    
     $sms_opted = $form_state['values']['mobile_check'];
   
     //check if the phone number already has 1 prepeneded. If yes, just pass phome number to sms field, else prepend 1.
@@ -1806,11 +1625,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state){
     if(array_key_exists($semester, $semdates)){
 	$semester_name = $semdates[$semester];
     }
-    if(!empty($semester_name)){
-      $form_state['values']['semester_name'] = $semester_name;  
-    } else {
-      $semester_name = '';
-    }
+    $form_state['values']['semester_name'] = $semester_name;
     
     //Query database to get program name based on the program code submitted in the form
     $program_name = db_query('select field_asu_degree_awarded_value from field_data_field_asu_degree_awarded mj join field_data_field_asu_academic_plan ap on mj.entity_id = ap.entity_id where ap.field_asu_academic_plan_value = :plan', array(':plan' => $program))->fetchField();
@@ -1829,7 +1644,6 @@ function asu_rfi_long_form_data_submit($form, &$form_state){
 	'comment' => 1,
 	'promote' => 0,
      );
-
     $entity = entity_create('node', $ent_values);
     $ewrapper = entity_metadata_wrapper('node', $entity);
     $ewrapper->title->set($fname);
@@ -1857,15 +1671,11 @@ function asu_rfi_long_form_data_submit($form, &$form_state){
     $ewrapper->field_rfi_program_name->set($program_name);
     $ewrapper->field_rfi_college_name->set($college_name);
     $ewrapper->field_rfi_prospect_level->set($form_state['values']['prospect_level']);
-    $ewrapper->field_rfi_location->set($location);
-    $ewrapper->field_rfi_campus->set($campus);
     
     $ewrapper->save();
   
     //send the confirmation email
-    if($location !== 'Online' && $location !== 'online'){
-      asu_rfi_email($form_state['values']['program_code'], $email);
-    }
+    asu_rfi_email($form_state['values']['program_code'], $email);
     
     $form_state['values']['submission_nodeid'] = $entity->nid;
     
@@ -1874,7 +1684,6 @@ function asu_rfi_long_form_data_submit($form, &$form_state){
     $coded_major = base64_encode($program);
     $coded_college =  base64_encode($college_name);
     $coded_college_code = base64_encode($college_code);
-  
     $coded_nid = base64_encode($entity->nid);
     $coded_zip = base64_encode($zip);
     $coded_country = base64_encode($country);
@@ -1942,7 +1751,7 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type){
     );
     
     $form['req_helper'] = array(
-        '#value' => '<p>Fields marked with <span style = "color:black;">*</span> are required.</p>',
+        '#value' => '<p>Fields marked with <span style = "color:#FF0000;">*</span> are required.</p>',
     );
     
     $form['degree_type'] = array(
@@ -1955,7 +1764,8 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type){
     $form['about_me'] = array(
      '#type' => 'fieldset',
      '#title' => 'About me',
-     '#collapsible' => FALSE,
+     '#collapsible' => TRUE,
+     '#collapsed' => FALSE,
     );
    
     $form['about_me']['first_name'] = array(
@@ -2256,5 +2066,4 @@ function _asu_rfi_program(){
    
     return $program;
 }
-
 ?>

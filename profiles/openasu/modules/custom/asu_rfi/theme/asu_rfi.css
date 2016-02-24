@@ -11,13 +11,13 @@
 
 @media (min-width: 992px){
   .block-multiblock {
-/*     width: 931px;*/
+     width: 931px;
   }
 }
 
 @media (min-width: 1200px){
   .block-multiblock {
-/*     width: 1170px;*/
+     width: 1170px;
  }
 }
 
@@ -43,13 +43,13 @@
 
 .rfi_mobile, .form-item-mobile-check{
     margin-bottom: 6% !important;
-/*    margin-top: 60px !important;*/
-/*    margin-left: 250px !important;*/
+    margin-top: 60px !important;
+    margin-left: 250px !important;
  }
  
  .phone_field_rfi{
     margin-right: 10px;
-/*    float:left;*/
+    float:left;
  }
 }
 
@@ -71,7 +71,7 @@
 
     
 #asu-rfi-long-form-data input[type="text"], #asu_rfi_second_form input[type="text"], #asu-rfi-form-data input[type="text"], #asu-rfi-current-form-data input[type="text"]{
- width: 230px;
+ width: 240px;
 }
 
 #asu-rfi-long-form-data textarea, #asu_rfi_second_form textarea, #asu-rfi-form-data textarea, #asu-rfi-current-form-data  textarea{
@@ -83,16 +83,16 @@
 }
 
 #asu_rfi_second_form .form-item-questions, #asu-rfi-long-form-data .form-item-questions, #asu-rfi-current-form-data .form-item-questions{
-/*    margin-left: 25px !important;*/
+    margin-left: 25px !important;
 }
 
 select {
-  width: 230px !important;
+  width: 240px !important;
 
 }
 
 .chosen-container{
-     width: 230px !important;
+     width: 240px !important;
 }
 
 .chosen-search input[type="text"]{
@@ -113,31 +113,8 @@ input[type="radio"] {
  width: 20px !important;
 }
 
-.form-item-campus label, .form-item-prog-plan label, .form-item-start-date label, .form-item-student-type label, .form-item-country label, .form-item-state label, .form-item-program-code label, #asu-rfi-form-data .form-type-textfield label, #asu-rfi-form-data .form-type-item label, #asu-rfi-form-data .form-item label, #asu_rfi_second_form .form-item label, #asu-rfi-current-form-data label{
+.form-item-prog-plan label, .form-item-start-date label, .form-item-student-type label, .form-item-country label, .form-item-state label, .form-item-program-code label{
     display: block !important;
-    font-weight: normal;
-    font-size: smaller;
-}
-
-/*
-#asu-rfi-form-data .form-wrapper, #asu_rfi_second_form .form-wrapper{
-    margin-top: 15px;
-    border-bottom: 1px solid grey;
-}
-*/
-.block-multiblock .form-wrapper, .block-multiblock .form-wrapper{
-    margin-top: 15px;
-    border-bottom: 1px solid grey;
-}
-
-#asu-rfi-form-data span.form-required, #asu-rfi-current-form-data .form-required{
-  color: black;
-}
-#asu_rfi_second_form .form-item-military.form-group{
-  border-bottom: 1px solid grey;
-}
-#asu_rfi_second_form .form-item-citizenship{
-  border-bottom: 1px solid grey;
 }
 
 #asu-rfi-long-form-data .form-item-citizenship{
@@ -167,27 +144,4 @@ div.fieldset-wrapper {
 
 #edit-dob-field .modal-body {
   padding: 35px;
-}
-/* -- Change Request Additions -- */
-#edit-location .form-type-radio.form-item-location.form-item.radio {
-    display: inline;
-    margin-right: 30px;
-}
-#asu-rfi-long-form-data label {
-    font-weight: normal;
-    font-size: smaller;
-}
-#asu-rfi-long-form-data span.form-required {
-    color: black;
-}
-
-#asu-rfi-long-form-data .fieldset-wrapper {
-    padding-left: 60px;
-    margin-bottom: 30px;
-    padding-bottom: 25px;
-    
-}
-#asu-rfi-long-form-data .form-wrapper {
-    margin-top: 15px;
-    border-bottom: 1px solid grey;
 }
