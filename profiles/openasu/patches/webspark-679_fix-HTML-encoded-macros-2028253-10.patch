@@ -1,8 +1,8 @@
 diff --git a/modules/media_wysiwyg/includes/media_wysiwyg.filter.inc b/modules/media_wysiwyg/includes/media_wysiwyg.filter.inc
-index 592b130..a02d3ff 100644
+index 0a16b87..57211f9 100644
 --- a/modules/media_wysiwyg/includes/media_wysiwyg.filter.inc
 +++ b/modules/media_wysiwyg/includes/media_wysiwyg.filter.inc
-@@ -279,6 +279,11 @@ function _media_wysiwyg_generate_tagMap($text) {
+@@ -302,6 +302,11 @@ function _media_wysiwyg_generate_tagMap($text) {
    static $tagmap = array();
    preg_match_all("/\[\[.*?\]\]/s", $text, $matches, PREG_SET_ORDER);
    foreach ($matches as $match) {

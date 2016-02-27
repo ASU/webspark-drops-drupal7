@@ -70,13 +70,13 @@
      */
     stateChangeFunction: function (self) {
       return function () {
+        var hash = self.storedString();
 
-            var hash = self.storedString();
-            if (self.hash != hash) {
-                self.load();
-                self.manager.doRequest();
-            }
+        if (self.hash != hash) {
+          self.load();
+          self.manager.doRequest();
         }
+      }
     }
   });
 })(window.History);
