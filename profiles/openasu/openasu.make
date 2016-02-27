@@ -48,11 +48,12 @@ projects[panopoly_search][subdir] = panopoly
 projects[panopoly_demo][version] = 1.13
 projects[panopoly_demo][subdir] = panopoly
 
-; ASU Modules
-;
+; ASU Custom, Webspark-agnostic modules
+; Webspark-only modules kept in webspark_featurescustom
+
 projects[asu_drupal_modules][type] = module
 projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = 7b67ec1c792c53db676a9ea293a7d8256c74ce3d
+projects[asu_drupal_modules][download][revision] = 3152d190ab121c5b1a1f859bf34e6710c101f143
 projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ; ASU Module Prerequisites
