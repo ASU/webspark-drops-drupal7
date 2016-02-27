@@ -10,26 +10,22 @@ define('ASU_CAS_USERNAME_LABEL', 'ASURITE User ID');
 
 /**
  * Implements hook_boot()
+ *
+ * Ensures that all pages are forced to HTTPS if Webspark Featurescustom isn't enabled
  */
 function asu_cas_boot() {
-  global $install_state;
-  if (!$install_state) {
-    if (isset($_SERVER['PANTHEON_ENVIRONMENT'])) {
-      if (!isset($_SERVER['HTTP_X_SSL']) || $_SERVER['HTTP_X_SSL'] != 'ON') {
-        header('HTTP/1.0 301 Moved Permanently');
-        header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-        exit();
+  if (!module_exists('webspark_featurescustom')) {
+    global $install_state;
+    if (!$install_state) {
+      if (isset($_SERVER['PANTHEON_ENVIRONMENT'])) {
+        if (!isset($_SERVER['HTTP_X_SSL']) || $_SERVER['HTTP_X_SSL'] != 'ON') {
+          header('HTTP/1.0 301 Moved Permanently');
+          header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+          exit();
+        }
       }
     }
   }
-}
-
-/**
- * Implements hook_init()
- */
-function asu_cas_init() {
-  // Adding the asu images css file to the theme so it will show up in the WYSIWYG
-  drupal_add_css(drupal_get_path('module', 'asu_cas') . '/asu_cas.css', array('group' => CSS_THEME));
 }
 
 /*

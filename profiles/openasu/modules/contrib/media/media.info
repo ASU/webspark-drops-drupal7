@@ -24,7 +24,7 @@ configure = admin/config/media/browser
 ; We have to add a fake version so Git checkouts do not fail Media dependencies
 version = 7.x-2.x-dev
 
-; Information added by drush on 2015-04-20
+; Information added by drush on 2014-07-20
 version = "7.x-2.0-alpha3+98-dev"
 project = "media"
-datestamp = "1429569492"
+datestamp = "1405840733"

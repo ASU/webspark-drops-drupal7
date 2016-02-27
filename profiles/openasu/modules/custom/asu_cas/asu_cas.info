@@ -1,5 +1,5 @@
 name = ASU CAS and More
-description = Provide CAS-SSO functionality for ASU and some other things
+description = "Provide CAS-SSO functionality for ASU integration of Drupal web sites"
 core = 7.x
 package = ASU
 php = 5.2.4
@@ -9,7 +9,6 @@ project = asu_cas
 dependencies[] = asu_brand
 dependencies[] = cas
 dependencies[] = defaultconfig
-dependencies[] = image
 
 features[defaultconfig][] = strongarm:cas_access
 features[defaultconfig][] = strongarm:cas_auto_assigned_role
@@ -40,4 +39,3 @@ features[defaultconfig][] = strongarm:cas_user_register
 features[defaultconfig][] = strongarm:cas_version
 features[defaultconfig][] = user_default_roles:CAS
 features[features_api][] = api:2
-features[image][] = asu_header_image
