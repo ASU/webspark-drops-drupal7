@@ -146,12 +146,15 @@
 /* =TABS
 -------------------------------------------------------------- */
 /* Removing panopoly styles */
+
+.ui-widget {
+	font-family: inherit;
+}
 .ui-widget-header {
 	background: none;
 	min-height: auto;
 	padding: 0;
 	color: #2a2a2a;
-	font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
 	font-size: 18px;
 	font-weight: 200;
 	line-height: 1.44;
