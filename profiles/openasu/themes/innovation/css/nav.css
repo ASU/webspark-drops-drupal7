@@ -147,6 +147,7 @@
 -------------------------------------------------------------- */
 /* Removing panopoly styles */
 
+/* WEBSPARK-742 - panopoly-theme.css override */
 .ui-widget {
 	font-family: inherit;
 }
