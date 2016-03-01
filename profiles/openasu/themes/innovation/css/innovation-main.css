@@ -2,7 +2,7 @@
  * Custom Web standard styles
  */
 
-/* =BOOTSTRAP, PANOPOLY & WEBSPARK OEVERRIDES
+/* =BOOTSTRAP, PANOPOLY & WEBSPARK OVERRIDES
 -------------------------------------------------------------- */
 #asu_footer ul {
   max-width: 1170px;
@@ -176,6 +176,14 @@ h5, .h5 {
 h6, .h6 {
   font-size: 16px;
   font-style: italic;
+}
+
+/* WYSIWYG style -- Lead Paragraph -- WEBSPARK-684 */
+.lead-paragraph {
+  font-family: inherit;
+  font-size: 1.5em;
+  font-weight: 200;
+  line-height: 1.4;
 }
 
 /* =HEADER

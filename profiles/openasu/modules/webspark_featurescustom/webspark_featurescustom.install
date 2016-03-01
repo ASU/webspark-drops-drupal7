@@ -60,7 +60,9 @@ function webspark_featurescustom_update_7001(&$sandbox) {
 
 /**
  * Implements hook_update_N()
- * + Ferndale - Increases the number of stored Drupal log entries to higher threshold if currently set to 1000 rows or lower.
+ * -- Ferndale
+ * + Increases the number of stored Drupal log entries to higher threshold if currently set to 1000 rows or lower.
+ * + Rebuilds Webspark WYSIWYG feature after adding lead paragraph styling
  */
 
 function webspark_featurescustom_update_7002(&$sandbox) {
@@ -70,4 +72,7 @@ function webspark_featurescustom_update_7002(&$sandbox) {
     variable_set('dblog_row_limit', '100000');
     watchdog('webspark_updates', "Increased dblog_row_limit to 100,000 latest log entries.");
   }
+  // WEBSPARK-684
+  features_revert_module('webspark_wysiwyg');
+  watchdog('webspark_updates', "Reverted Webspark WYSIWYG feature.");
 }
