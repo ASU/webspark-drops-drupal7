@@ -1,12 +1,14 @@
-
-Innovation 7.x-1.0-beta4, 2014-11-21
+Innovation 7.x-1.0-rc3, 2016-02-29
 ------------------------------
-- Added styles for accordions
-- Increased sitename h2 to 24px and decreased line-height to 1.
-- Added spacing to edit tabs and background color for improved UX.
-- Added header and spacing to panels modal list.
-- Increased size of submit button on panels modal.
-- Added styles for new panels modal help text.
+- Switched the site name in the header from an h1 to div, and removed the anchor tag.
+
+......
+See webspark release notes for beta8 -> rc2 notes).
+......
+
+Innovation 7.x-1.0-beta8, 2014-2-11
+------------------------------
+- Change ID on <footer> from #footer to #page-footer to eliminate duplication.
 
 Innovation 7.x-1.0-beta5, 2014-11-21
 ------------------------------
@@ -17,6 +19,11 @@ Innovation 7.x-1.0-beta5, 2014-11-21
 - Cleaning up files, removing old unused styles
 - Altered ctools widget link to "Add existing content" for improved UX
 
-Innovation 7.x-1.0-beta8, 2014-2-11
+Innovation 7.x-1.0-beta4, 2014-11-21
 ------------------------------
-- Change ID on <footer> from #footer to #page-footer to eliminate duplication.
+- Added styles for accordions
+- Increased sitename h2 to 24px and decreased line-height to 1.
+- Added spacing to edit tabs and background color for improved UX.
+- Added header and spacing to panels modal list.
+- Increased size of submit button on panels modal.
+- Added styles for new panels modal help text.
