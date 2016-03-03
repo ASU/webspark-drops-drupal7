@@ -53,7 +53,7 @@ projects[panopoly_demo][subdir] = panopoly
 
 projects[asu_drupal_modules][type] = module
 projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = 3152d190ab121c5b1a1f859bf34e6710c101f143
+projects[asu_drupal_modules][download][revision] = 09660a8d
 projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ; ASU Module Prerequisites
