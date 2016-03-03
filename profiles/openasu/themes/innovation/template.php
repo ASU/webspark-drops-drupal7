@@ -50,18 +50,10 @@ function innovation_preprocess_html(&$variables) {
  *
  * Implements template_process_page().
  */
-function innovation_preprocess_page(&$variables)
-{
-  // Make sure default picture gets responsive panopoly styling
-  if (theme_get_setting('default_picture', 'innovation') && theme_get_setting('picture_path', 'innovation')) {
-    $image_style = module_exists('asu_cas') ? 'asu_header_image' : 'panopoly_image_full';
-    $variables['asu_picture'] = theme('image_style', array(
-        'style_name' => $image_style,
-        'path' => theme_get_setting('picture_path', 'innovation'),
-      )
-    );
-  }
-}
+// WEBSPARK-366 - removing preprocess_page for now
+//function innovation_preprocess_page(&$variables)
+//{
+//}
 
 /**
  * Override or insert variables into the page template.

@@ -1,9 +1,10 @@
 name = Webspark Extras
-description = "Responsive image display, default admin theme, help link, cleanup content page, accordion settings, video help text"
+description = "Miscellaneous settings: Force SSL/HTTPS on Pantheon, Responsive image display, default admin theme, help link, cleanup content page, accordion settings, video help text"
 core = 7.x
 package = ASU Webspark
-version = 7.x-1.4
+version = 7.x-1.5
 project = webspark_extras
+required = TRUE
 dependencies[] = ctools
 dependencies[] = defaultconfig
 dependencies[] = defaultcontent

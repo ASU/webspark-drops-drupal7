@@ -9,5 +9,5 @@
 module_load_include('inc', 'webspark_featurescustom', 'includes/wf_theme_update');
 module_load_include('inc', 'webspark_featurescustom', 'includes/wf_update_status_filter');
 module_load_include('inc', 'webspark_featurescustom', 'includes/wf_panels_styles');
+// Remove the following when asu_webspark_bootstrap is removed from Webspark
 module_load_include('inc', 'webspark_featurescustom', 'includes/wf_image_styles');
-module_load_include('inc', 'webspark_featurescustom', 'includes/wf_security_settings');

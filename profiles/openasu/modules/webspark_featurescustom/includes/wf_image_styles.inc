@@ -5,15 +5,9 @@
  */
 
 /**
- * Implements hook_init()
- */
-function webspark_featurescustom_init() {
-  // Adding the asu images css file to the theme so it will show up in the WYSIWYG
-  drupal_add_css(drupal_get_path('module', 'webspark_featurescustom') . '/includes/css/wf_image_styles.css', array('group' => CSS_THEME, 'type' => 'file'));
-}
-
-/**
  * Implements hook_image_default_styles().
+ *
+ * TODO: Remove when asu_webspark_bootstrap theme is removed.
  */
 function webspark_featurescustom_image_default_styles() {
   $styles = array();
