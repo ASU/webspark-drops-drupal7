@@ -1,3 +1,48 @@
+Webspark 1.13.14 (Ferndale) release
+----------------
+
+- Drupal core:
+    * Updated core from 7.39 to 7.43 (critical security updates) - Read more on drupal.org
+
+- Webspark core:
+    * Reorganized directories and locations for various Webspark modules
+    * Increased the number of maximum log entries from 1,000 (default) to 100,000
+
+- Contrib Modules in Webspark:
+    * Views PHP - 7.x-1.0-alpha3+1-dev (security update included)
+
+- Custom ASU module updates:
+    * ASU Degrees module (v1.8)
+        * Fixed misspelling of "curriculum" on graduate degree pages
+    * ASU Directory Integration Reimagined (v1.4)
+        * Added alphabet filter widget, which filters by first letter of last name.
+        * Added sorting widget, which allows sorting by Rank and last name (ascending and descending)
+        * Added expertise area facet dropdown box
+        * Implemented query string writing for URL, to allow deep linking and browser history functionality
+        * Fixed responsive styling for web standards compliance
+        * Fixed html markup structure for web standards compliance
+    * ASU Brand module (v1.12)
+        * Added timeout to keep networking issues when requesting header assets from blocking the rendering of the rest
+          of the page
+        * Fixed header version selection issue that left the dropdown empty (Structure -> Blocks)
+
+- Web standards components in Webspark:
+    * Innovation theme (v1.0-rc3)
+        * Switched the markup for the site name in the header from an h1 to div, and removed the anchor tag
+        * Fixed font-family in jQuery UI tabs/widgets not inheriting web standards fonts
+
+    * Webspark Seven theme (v7.43)
+        * Fixed Chosen module issue that set the width of select lists too narrow and the font too high
+    * Webspark Megamenu (v1.5)
+        * Menu resize saves onto user's local machine to avoid resizing on every page load
+        * Removed markup for the unused mobile menu button to improve accessibility
+    * ASU Maps Enhanced (v1.2)
+        * Added option to select which campus to display
+        * Added option to display campus toggle menu above the map
+        * ASU Mega Footer (v1.4)
+        * Deprecated contact fields
+        * Added alt text field for logo
+
 Webspark 1.13.13 (Hanford) release
 ----------------
 
@@ -15,15 +60,19 @@ Webspark 1.13.13 (Hanford) release
     * ASU Degrees module
         * Added descriptions to most all administrative fields for general help for users while editing degree nodes
         * Turned off periodic import in Degrees feed to limit overriding of user customizations
-        * Text field for short description has been made available to override catalog description with no character limit
+        * Text field for short description has been made available to override catalog description with no character
+          limit
         * Created fields for CTA buttons that accept a hyperlink and can override the CTA button’s default destination
         * Removed hyperlink function for college name in Degree Offered area
         * Altered Major Map region with new title and description as directed
-        * Removed Additional Requirements URL function and implemented Additional Requirements section above other application requirements
+        * Removed Additional Requirements URL function and implemented Additional Requirements section above other
+          application requirements
         * Updated default hyperlink for Scholarships and removed ability to override Financial Aid and WUE programs URLs
         * Added marketing text area functionality from graduate nodes to undergraduate nodes
-        * Created ability to override Career Outlook description and added an true/false checkbox to control display of the Example Careers section
-        * Degree images tied to a degree node on the grid and list View displays now also link to the same content as the degree title
+        * Created ability to override Career Outlook description and added an true/false checkbox to control display of
+          the Example Careers section
+        * Degree images tied to a degree node on the grid and list View displays now also link to the same content as
+          the degree title
         * Added hook_update_N for reverting ASU Degrees feature
 
 - Web standards components in Webspark:
@@ -34,15 +83,17 @@ Webspark 1.13.12 (Pullman) release
 ----------------
 - ASU custom modules
     * ASU RFI - v1.2
-        * Updated module to send message to middleware upon App key request.
-        * Updated module to show error log message to admins upon form submission failure if the connection between middleware and the form is lost.
-        * Added “Action require” status term to ASU RFI Submissions cck field.
-        * Updated the module to send pending submissions to middleware only once and alert site admins of failed submissions.
-        * Added Google analytics tracking code.
-        * Enhanced RFI lead submissions view to include search by students email or last name.
-        * Fixed “uncaught error” message in Jquery file.
-        * Added CSS to Date of birth modal message box.
-        * Fixed some upper case and lower case field names.
+        * Updated module to send message to middleware upon App key request
+        * Updated module to show error log message to admins upon form submission failure if the connection between
+          middleware and the form is lost
+        * Added “Action require” status term to ASU RFI Submissions cck field
+        * Updated the module to send pending submissions to middleware only once and alert site admins of failed
+          submissions
+        * Added Google analytics tracking code
+        * Enhanced RFI lead submissions view to include search by students email or last name
+        * Fixed “uncaught error” message in Jquery file
+        * Added CSS to Date of birth modal message box
+        * Fixed some upper case and lower case field names
 
 
 Webspark 1.13.11 (Tacoma) release
@@ -52,14 +103,17 @@ Webspark 1.13.11 (Tacoma) release
 
 - ASU custom modules
     * ASU Directory Integration Reinvented - v1.2
-        * Added as an advanced configuration option the ability to enter a custom query string, instead of using the provided filters.
+        * Added as an advanced configuration option the ability to enter a custom query string, instead of using the
+          provided filters.
         * Added the ability to toggle the display navigation breadcrumbs on and off
         * Add asu_dir two-way-toggle for form elements
 
 - Web standards components in Webspark
     * ASU Spotlight - v1.5
         * Fixed profile image width to be consistent in department display
-        * Fixed issue with the automatic sizing of images upon their upload where a) images were getting cropped to a 800x600 pixel size and b) the image width would be scaled to 1000 pixels and the height adjusted to retain the aspect ratio
+        * Fixed issue with the automatic sizing of images upon their upload where a) images were getting cropped to a
+          800x600 pixel size and b) the image width would be scaled to 1000 pixels and the height adjusted to retain
+          the aspect ratio
     * Carousel (thanks to @ryanjbonnell) - v1.4
         * Added conditional check to verify if carousel slide title should be a hyperlink
         * Fixed active class styling on deeply nested menu tree links
@@ -69,19 +123,23 @@ Webspark 1.13.11 (Tacoma) release
 Webspark 1.13.10 (Spokane) release
 ----------------
 - Contributed Drupal Modules in Webspark
-    * Patched Media module to fix bug that made WYSIWYG fields disappear from ASU Degree edit forms when 1) more than one WYSIWYG editor was on the page, and 2) images were uploaded via the WYSIWYG editor
+    * Patched Media module to fix bug that made WYSIWYG fields disappear from ASU Degree edit forms when 1) more than
+      one WYSIWYG editor was on the page, and 2) images were uploaded via the WYSIWYG editor
 
 - ASU custom modules
     * ASU Directory Integration Reinvented - v1.1
-        * Retargeted the CSS to target only the ASU Directory Integration Reinvented node form, as it was previously generic and targeting panel forms also
+        * Retargeted the CSS to target only the ASU Directory Integration Reinvented node form, as it was previously
+          generic and targeting panel forms also
         * Fixed profile image width to be consistent in department display
-        * Fixed pagination displays on results pages (showed ellipses with four pages when it should've been a page number)
+        * Fixed pagination displays on results pages (showed ellipses with four pages when it should've been a page
+          number)
     * ASU Degrees - v1.7
         * Moved page--asu-degree.tpl.php template file out of the Innovation theme and into the ASU Degrees module
         * Fixed issue with Metatag module integration to allow <meta> tags to appear in ASU Degree pages
 
 - Web standards components in Webspark
-    * Fixed regression introduced in Washington release ("Permission denied in uuid_features_file_export()") by updating DB settings for the Webspark Content Callout module
+    * Fixed regression introduced in Washington release ("Permission denied in uuid_features_file_export()") by updating
+      DB settings for the Webspark Content Callout module
 
 
 Webspark 1.13.9 (Washington) release
@@ -125,10 +183,14 @@ Webspark 1.13.7 (Idaho) release
       updating theme settings, update status reporting, and Panels customizations
 
 - ASU Degrees module - v1.6
-    * Graduate degree nodes are now being uniquely displayed with markup styling that differs from undergraduate degree nodes
-    * Fixed the ASU Degrees View (viewing all undergraduate majors, all graduate programs, etc) to display all related ASU campuses correctly (previously, the first related campus was only showing)
-    * Added “Grid View” and “List View” buttons that allow user to switch between a grid and list display on any ASU Degrees View
-    * Fixed bugs in page--asu-degree.tpl.php that were appearing on ASU Degrees pages due to field not being checked if present
+    * Graduate degree nodes are now being uniquely displayed with markup styling that differs from undergraduate degree
+      nodes
+    * Fixed the ASU Degrees View (viewing all undergraduate majors, all graduate programs, etc) to display all related
+      ASU campuses correctly (previously, the first related campus was only showing)
+    * Added “Grid View” and “List View” buttons that allow user to switch between a grid and list display on any ASU
+      Degrees View
+    * Fixed bugs in page--asu-degree.tpl.php that were appearing on ASU Degrees pages due to field not being checked
+      if present
 
 - ASU Brand module - v1.10
     * Fixed bug that prevented caching of the ASU Header and Footer in their respective blocks
