@@ -245,21 +245,21 @@ libraries[jqtree][destination] = libraries
 projects[asu_events][version] = 1.0-dev
 projects[asu_events][subdir] = custom
 projects[asu_events][type] = module
-projects[asu_events][download][revision] = 3ff78bb9
+projects[asu_events][download][revision] = 9f04696f38b0999df42947ac6db0075d969ca553
 projects[asu_events][download][url] = https://github.com/ASU/asu-drupal-events-feed.git
 
 ;; Will be replaced by alternate system that will work with the Hub's new asunews site
 projects[asu_news][version] = 1.0-dev
 projects[asu_news][subdir] = custom
 projects[asu_news][type] = module
-projects[asu_news][download][revision] = 7e925b539
+projects[asu_news][download][revision] = e52986872a63d0fe1123d819aba554d76f2c6e33
 projects[asu_news][download][url] = https://github.com/ASU/asu-drupal-news.git
 
 ;; (DEPRECATED in lieu of ASU Degrees - asu_degrees module)
 projects[asu_eadvisor_degree_feed_feature][version] = 1.0-beta1
 projects[asu_eadvisor_degree_feed_feature][subdir] = custom
 projects[asu_eadvisor_degree_feed_feature][type] = module
-projects[asu_eadvisor_degree_feed_feature][download][revision] = fbc26834
+projects[asu_eadvisor_degree_feed_feature][download][revision] = 312c885e04f5cf64920b24fa1bc648c8f5a02989
 projects[asu_eadvisor_degree_feed_feature][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
 
 ; PANOPOLY PROJECT PATCHES
