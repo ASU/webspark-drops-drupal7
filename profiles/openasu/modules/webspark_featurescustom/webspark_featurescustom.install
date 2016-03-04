@@ -59,8 +59,7 @@ function webspark_featurescustom_update_7001(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
- * -- Ferndale
+ * Implements hook_update_N() -- Ferndale release
  * + Increases the number of stored Drupal log entries to higher threshold if currently set to 1000 rows or lower.
  * + Rebuilds Webspark WYSIWYG feature after adding lead paragraph styling
  * + Forces enabling of Webspark Extras module (has HTTPS code now)
@@ -76,5 +75,9 @@ function webspark_featurescustom_update_7002(&$sandbox) {
   // WEBSPARK-366 - ensure this module is enabled
   if (!module_exists('webspark_extras')) {
     module_enable(array('webspark_extras'));
+  }
+  // WEBSPARK-796 - update ASU header to v4.4
+  if (variable_get('asu_brand_header_version') == '4.3') {
+    variable_set('asu_brand_header_version', '4.4');
   }
 }
