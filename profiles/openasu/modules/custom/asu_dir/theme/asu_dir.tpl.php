@@ -13,8 +13,8 @@
 
     <span class="asu_directory_people_search_group">
     <div class="asu_directory_people_search_group">
-      <input class="input-main-search form-control form-text"
-             id="asu_directory_people_search_box" placeholder="Search"/>
+      <label class="asu-dir-label-hide">Search</label><input class="input-main-search form-control form-text"
+             id="asu_directory_people_search_box" title="Search" placeholder="Search"/>
       <button id="asu_directory_people_search_btn"
               class="btn-main-search btn btn-primary asu_directory_people_button">
         <i class="fa fa-search"></i></button>

@@ -64,12 +64,28 @@
                 }
             }
 
+            var active_letter = false;
+
+            //get rid of styling for active letter if it is not ther
+            for (var i = 0; i < fq.length; i++) {
+                if (fq[i] != null && fq[i].value != null && fq[i].value.indexOf('lastName') != -1) {
+                    active_letter = true;
+                }
+            }
+
+            if (!active_letter) {
+                $('.alphabet .active-letter').removeClass('active-letter');
+            }
+
+
             // To display managers at the beginning of the list is not possible since the managers field is
             // multi-valued in Solr, so this workaround does a separate request and prepends the managers to the
             // front page in alphabetical order
             // If the show_managers options is selected, no facets are selected,
             // and we are on the front page, prepend the managers to the front of the people listing
-            if (!override && q == "*:*" && field_configs.show_managers && (start == 0 || start == null)) {
+            // Note:  we need to check the ASUPeople global field configs in this case, because selection the 'rank'
+            //      for sorting will need to switch the manager sort on
+            if (!override && q == "*:*" && ASUPeople.field_configs.show_managers && (start == 0 || start == null)) {
 
                 //if we don't have managers saved for current department, do separate AJAX request and prepend them
                 if (this.saved_deptnid != ASUPeople.dept_nid) {
@@ -134,11 +150,11 @@
                     self.renderPeople(managers, true);
                 }
             }
-
+            /*
             if (!field_configs.use_custom_q) {
                 //For now, always sort by last name alphabetically
                 self.manager.store.addByValue('sort', 'lastNameSort asc');
-            }
+            }*/
         },
 
         facetLinks: function (facet_field, facet_values) {
@@ -237,6 +253,13 @@
         template: function (doc) {
 
             var markup = '';
+            var getUrl = window.location;
+            var host = getUrl.host;
+            var isearch_env = 'isearch.asu.edu';
+
+            if (host == 'isearch-dev.asu.edu' || host == 'isearch-qa.asu.edu') {
+                isearch_env = host;
+            }
 
             //open row
             markup += '<div eid="' + doc.eid + '" asurite="' + doc.asuriteId + '" class="row row-header asu_directory_people_row " >';
@@ -247,7 +270,7 @@
 
             //PHOTO COLUMN
             if (doc.photoPreference != 'none' && doc.photoUrl != null && doc.photoUrl != '') {
-                markup += '<div class="row-profile-image row-field"><img src="' + doc.photoUrl + '?size=medium"></div>';
+                markup += '<div class="row-profile-image row-field"><img alt="' + doc.displayName + '" src="' + doc.photoUrl + '?size=medium"></div>';
             }
 
             markup += '</div>';
@@ -263,7 +286,7 @@
             }
 
             //NAME AND TITLE COLUMN
-            markup += '<div class="' + col_width + '"><div class="row-profile-text row-field"><a href="http://isearch.asu.edu/profile/' + doc.eid + '" target="_blank" class="displayName viewDetails" id="'
+            markup += '<div class="' + col_width + '"><div class="row-profile-text row-field"><a href="//' + isearch_env + '/profile/' + doc.eid + '" target="_blank" class="displayName viewDetails" id="'
                 + doc.eid + '" class="displayName viewDetails">';
             markup += (doc.displayName != null ? doc.displayName : '') + '</a><br>';
             markup += '<div class="job-title">' + title_string + '</div></div></div>';

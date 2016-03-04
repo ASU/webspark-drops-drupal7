@@ -83,13 +83,14 @@
                 this.hash = this.exposedString();
 
                 var url_hash = this.hash;
+                this.hash = decodeURIComponent(this.hash);
                 var state = history.getState();
                 var field_configs = this.field_configs;
 
                 //Drupal doesn't like the q param, so we'll replace it in the saved uri with 'query'
                 var re = /(fq=deptids:).*?(&)/gi;
                 var eq = /(fq=employeeTypes:).*?(&)/gi;
-                var sort = /(&sort=lastNameSort).*?(asc)/gi;
+                var sort = /(&sort=.*?)(?=&|$)/gi;
 
                 var qparam = /q=/gi;
 
@@ -98,16 +99,20 @@
                 if (!field_configs.use_custom_q) {
                     url_hash = decodeURIComponent(url_hash);
 
-                    //remove the sort and employee type parameters from the
+                    //remove the sort and employee type parameters from the hash
                     url_hash = url_hash.replace(eq, "");
                     url_hash = url_hash.replace(sort, "");
                     url_hash = url_hash.replace(re, 'dept=' + ASUPeople.dept_nid + '&');
+                    this.hash = this.hash.replace(sort, "");
                 }
 
                 url_hash = url_hash.replace(qparam, 'query=');
 
                 //only save the new state if it's different from the current state
-                if (state.data.params != this.hash) {
+
+                if (state.data.params === undefined) {
+                    history.replaceState({params: this.hash}, null, '/' + this.page_alias + '?' + url_hash);
+                } else if (state.data.params != this.hash) {
                     history.pushState({params: this.hash}, null, '/' + this.page_alias + '?' + url_hash);
                 }
             },
@@ -161,9 +166,6 @@
 
                         ASUPeople.dept_nid = nid;
                     }
-
-                    var re = /query=/gi;
-                    query_string = query_string.replace(re, 'q=');
 
                     return query_string;
                 }
