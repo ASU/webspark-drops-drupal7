@@ -229,7 +229,7 @@ libraries[flexslider][download][type] = get
 libraries[flexslider][download][url] = https://github.com/woothemes/FlexSlider/archive/version/2.2.2.zip
 
 libraries[fontawesome][download][type] = get
-libraries[fontawesome][download][url] = http://fontawesome.io/assets/font-awesome-4.2.0.zip
+libraries[fontawesome][download][url] = https://github.com/FortAwesome/Font-Awesome/archive/v4.2.0.zip
 
 libraries[modernizr][download][type] = get
 libraries[modernizr][download][url] = https://github.com/Modernizr/Modernizr/archive/v2.6.2.zip
