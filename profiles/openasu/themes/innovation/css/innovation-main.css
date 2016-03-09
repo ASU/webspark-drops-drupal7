@@ -56,6 +56,17 @@ div.pane-menu-tree {
   margin-top: 3em;
 }
 
+#skip_to_content {
+    position: absolute;
+    left: -9999px;
+}
+
+#skip_to_content:focus{
+  position:relative;
+  left: 0;
+}
+
+
 /* =LINKS & BUTTONS
 -------------------------------------------------------------- */
 body {
