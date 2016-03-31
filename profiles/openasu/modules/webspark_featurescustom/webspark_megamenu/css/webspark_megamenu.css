@@ -217,3 +217,25 @@ li.tb-megamenu-item.mega.active .mega-dropdown-inner a {
    border-bottom-color: #eee;
    border-top-color: #ffb130 ;
 }
+.tb-megamenu-submenu {
+    border: none;
+}
+.tb-megamenu-nav>li>.tb-megamenu-submenu>.mega-dropdown-inner>.tb-megamenu-row>.tb-megamenu-column:not(:first-child){
+    border-left: 1px solid #414141;
+}
+
+ul.tb-megamenu-subnav a {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.tb-megamenu-subnav>.dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child, 
+.tb-megamenu-subnav>.dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child a {
+    background-color: #494949;
+}
+.tb-megamenu-subnav>.dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child a:hover {
+  background-color: #353535;
+}
+.tb-megamenu .mega-nav .mega-group > .mega-group-title, .tb-megamenu .dropdown-menu .mega-nav .mega-group > .mega-group-title{
+  text-transform: none;
+  font-size: 16px;
+}
