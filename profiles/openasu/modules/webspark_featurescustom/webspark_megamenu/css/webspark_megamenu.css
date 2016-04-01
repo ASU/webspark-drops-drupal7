@@ -230,7 +230,8 @@ ul.tb-megamenu-subnav a {
 }
 .tb-megamenu-subnav>.dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child, 
 .tb-megamenu-subnav>.dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child a {
-    background-color: #494949;
+background-color: #343434;
+    border-color: #2a2a2a;
 }
 .tb-megamenu-subnav>.dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child a:hover {
   background-color: #353535;
