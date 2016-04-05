@@ -77,4 +77,17 @@
 
     }
   }
+  Drupal.behaviors.webspark_megamenu = {
+    attach: function() {
+      var firstNavItem = $(".tb-megamenu-nav>li:first-child>a");
+      try {
+        if(firstNavItem.text().trim() == "Home"){
+          var a = "<i class=\"fa fa-home icon-white\"><span style=\"display:none\">Home</span></i>";
+          $(".tb-megamenu-nav>li:first-child>a").empty().append(a);
+        } 
+      } catch (e){
+        
+      }
+    }
+  }
 }(jQuery));
