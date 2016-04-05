@@ -221,12 +221,16 @@ li.tb-megamenu-item.mega.active .mega-dropdown-inner a {
     border: none;
 }
 .tb-megamenu-nav>li>.tb-megamenu-submenu>.mega-dropdown-inner>.tb-megamenu-row>.tb-megamenu-column:not(:first-child){
-    border-left: 1px solid #414141;
+    border-left: 1px solid #AFA593;
 }
 
-ul.tb-megamenu-subnav a {
+.tb-megamenu-nav, ul.tb-megamenu-subnav a {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+.tb-megamenu .dropdown-menu .mega-nav .mega-group > a.mega-group-title {
+    font-weight: normal;
+    color: #FFB130;
 }
 .tb-megamenu-subnav>.dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child, 
 .tb-megamenu-subnav>.dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child a {
