@@ -34,6 +34,7 @@ li.tb-megamenu-item.mega a {
 .tb-megamenu i.fa.fa-home.icon-white {
     margin-right: 0;
     display: block !important;
+    font-size: 16px;
 }
 
 .tb-megamenu .nav li.dropdown.open > .dropdown-toggle, .tb-megamenu .nav > li > a:focus, .tb-megamenu .nav > .active > a:focus, .tb-megamenu .nav li.dropdown.open.active > .dropdown-toggle, .tb-megamenu .nav > li.dropdown.open.active > a:hover, .tb-megamenu .nav > li > a:hover {
