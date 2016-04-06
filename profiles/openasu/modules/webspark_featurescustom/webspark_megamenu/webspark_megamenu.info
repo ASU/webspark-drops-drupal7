@@ -8,7 +8,6 @@ dependencies[] = defaultcontent
 dependencies[] = features
 dependencies[] = menu
 dependencies[] = tb_megamenu
-scripts[] = js/webspark_megamenu.js
 features[content_menu_links][] = main-menu_home:<front>
 features[features_api][] = api:2
 features[menu_custom][] = main-menu
