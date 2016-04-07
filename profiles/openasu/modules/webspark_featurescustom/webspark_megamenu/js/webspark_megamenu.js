@@ -83,34 +83,7 @@
 
     }
   }
-  Drupal.behaviors.webspark_megamenu_driveify = {
-      attach: function(context, settings){
-        var rows = $('.tb-megamenu-row');
-        try {
-          for(var i=0; i<rows.length;i++){
-            if(rows[i].children.length > 1){
-              var some = rows[i].children;
-              var bigheight = 0;
-              for(var j = 0; j < some.length; j++){
-                $('.tb-megamenu-submenu').css('display', 'block');
-                if(some[j].className.indexOf("tb-megamenu-column") >= 0){                
-                  if($('#' + some[j].id).height() > bigheight){
-                    bigheight = $('#' + some[j].id).height();
-                  }
-                }
-                $('.tb-megamenu-submenu').css('display', '');
-              }
-              for(var j = 0; j < some.length; j++){
-                $('#' + some[j].id).css('height', bigheight + 'px');
-              }
-            }
-          }
-        } catch (e){
-          
-        }
-        
-      }
-    } 
+
   Drupal.behaviors.webspark_megamenu = {
     attach: function() {
       var firstNavItem = $(".tb-megamenu-nav>li:first-child>a");
