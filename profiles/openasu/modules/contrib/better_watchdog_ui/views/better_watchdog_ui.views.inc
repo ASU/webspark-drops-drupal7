@@ -6,7 +6,7 @@
  */
 
 /**
- * Implements of hook_views_data_alter().
+ * Implements hook_views_data_alter().
  */
 function better_watchdog_ui_views_data_alter(&$data) {
 
@@ -135,7 +135,7 @@ function better_watchdog_ui_views_data_alter(&$data) {
     'title' => t('Link'),
     'help' => t('Link to view the result of the event.'),
     'field' => array(
-      'handler' => 'views_handler_field_url',
+      'handler' => 'views_handler_field_xss',
       'click sortable' => TRUE,
     ),
     'argument' => array(
@@ -234,7 +234,7 @@ function better_watchdog_ui_views_data_alter(&$data) {
 }
 
 /**
- * Implements of hook_views_query_alter().
+ * Implements hook_views_query_alter().
  */
 function better_watchdog_ui_views_query_alter(&$view, &$query) {
   if ($view->name == 'better_watchdog_ui_view') {
