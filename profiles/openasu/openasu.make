@@ -135,8 +135,9 @@ projects[backgroundfield][subdir] = contrib
 projects[backgroundfield][patch][1841978] = https://www.drupal.org/files/backgroundfield_undefined_index-1841978-18.patch
 
 ;; CAS SSO Integration - pulled in from old asu_cas.make file
-projects[cas][version] = 1.4
+projects[cas][version] = 1.5
 projects[cas][subdir] = contrib
+projects[cas][md5] = a27dc59b3c756e51862eb52e4c03c3ef
 
 projects[chosen][version] = 2.0-beta4
 projects[chosen][type] = module
