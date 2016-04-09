@@ -4,7 +4,7 @@ core = 7.x
 ; Drupal Core
 
 projects[drupal][type] = core
-projects[drupal][version] = 7.39
+projects[drupal][version] = 7.43
 
 ; Drupal Core Patches
 projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-profile-ajax-1334818-8.patch
@@ -13,40 +13,51 @@ projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-pr
 
 projects[panopoly_core][version] = 1.13
 projects[panopoly_core][subdir] = panopoly
+projects[panopoly_core][md5] = c009dfd4ae52c5968efbb3179b70f4d6
 
 projects[panopoly_images][version] = 1.13
 projects[panopoly_images][subdir] = panopoly
+projects[panopoly_images][md5] = 81243ef1d3ad5921f271454da8000a4e
 
 projects[panopoly_theme][version] = 1.13
 projects[panopoly_theme][subdir] = panopoly
+projects[panopoly_theme][md5] = e4e94970e04aff28cf04c82b6372b428
 
 projects[panopoly_magic][version] = 1.13
 projects[panopoly_magic][subdir] = panopoly
+projects[panopoly_magic][md5] = 5df69bf8e73215ffb89d2e286a88950a
 
 projects[panopoly_widgets][version] = 1.13
 projects[panopoly_widgets][subdir] = panopoly
+projects[panopoly_widgets][md5] = 29bf38694343fe138369113480f9c90d
 
 projects[panopoly_admin][version] = 1.13
 projects[panopoly_admin][subdir] = panopoly
+projects[panopoly_admin][md5] = 3b14f50ccbec22e109a22b495aee009d
 
 projects[panopoly_users][version] = 1.13
 projects[panopoly_users][subdir] = panopoly
+projects[panopoly_users][md5] = 977170d93cc2ad150c999d47ec633933
 
 ; The Panopoly Toolset
 
 projects[panopoly_pages][version] = 1.13
 projects[panopoly_pages][subdir] = panopoly
+projects[panopoly_pages][md5] = 94e926e4a30e1912f401e5160ca815f1
 
 projects[panopoly_wysiwyg][version] = 1.13
 projects[panopoly_wysiwyg][subdir] = panopoly
+projects[panopoly_wysiwyg][md5] = d14ce9def167e4d1d0ba8514b7e30adc
 
 projects[panopoly_search][version] = 1.13
 projects[panopoly_search][subdir] = panopoly
+projects[panopoly_search][md5] = c8fa7483940d1393f0195a5846d5fdb1
 
 ; Demo Content
 
 projects[panopoly_demo][version] = 1.13
 projects[panopoly_demo][subdir] = panopoly
+projects[panopoly_demo][md5] = a4cd5c43a1f87842791f50d6586238cb
 
 ; ASU Custom, Webspark-agnostic modules
 ; Webspark-only modules kept in webspark_featurescustom
@@ -61,16 +72,19 @@ projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-
 projects[references][version] = 2.1
 projects[references][type] = module
 projects[references][subdir] = contrib
+projects[references][md5] = 43b583931fba0c0c4e44bcea7fc5befd
 
 projects[ldap][version] = 2.0-beta8
 projects[ldap][type] = module
 projects[ldap][subdir] = contrib
+projects[ldap][md5] = 35d7e26ff486d89bd64e7b3b9439c199
 ;; patch - see https://drupal.org/node/2182413, comment #10 - remove upon ldap update beyond beta8
-projects[ldap][patch][2182413] = http://cgit.drupalcode.org/ldap/patch/?id=fe3a3d56ffebc9bd551c6d83a03172fae13517c3
+projects[ldap][patch][2182413] = https://www.drupal.org/files/issues/ldap-authentication_notice-2182413-18.patch
 
-projects[better_watchdog_ui][version] = 2.0
+projects[better_watchdog_ui][version] = 2.2
 projects[better_watchdog_ui][type] = module
 projects[better_watchdog_ui][subdir] = contrib
+projects[better_watchdog_ui][md5] = 058732be0276f8c77b23eb55f62d5fb9
 
 projects[cas_attributes][version] = 1.0-rc3
 projects[cas_attributes][type] = module
@@ -78,9 +92,10 @@ projects[cas_attributes][subdir] = contrib
 
 ;; For Webspark News & Events
 ;; Will be removed when news & events is deleted
-projects[calendar][version] = 3.4
+projects[calendar][version] = 3.5
 projects[calendar][type] = module
 projects[calendar][subdir] = contrib
+projects[calendar][md5] = 722be21d595e6dec4c3946119121167b
 
 projects[email][version] = 1.3
 projects[email][subdir] = contrib
@@ -156,11 +171,13 @@ projects[panels_tabs][type] = module
 projects[panels_tabs][subdir] = contrib
 
 ;; Going to Git repo for dev commit of quicktabs
+;; Github.com mirror provided by original module author
 projects[quicktabs][type] = module
 projects[quicktabs][subdir] = contrib
 projects[quicktabs][download][type] = "git"
 projects[quicktabs][download][branch] = "7.x-3.x"
-projects[quicktabs][download][url] = "http://git.drupal.org/project/quicktabs.git"
+;projects[quicktabs][download][url] = "git://git.drupal.org/project/quicktabs.git"
+projects[quicktabs][download][url] = "https://github.com/katbailey/quicktabs.git"
 projects[quicktabs][download][revision] = "758de4cc4995149a2de1d566b4209ec343581d27"
 
 ;; Webspark Megamenu
@@ -180,7 +197,7 @@ projects[uuid_features][type] = module
 projects[uuid_features][subdir] = contrib
 projects[uuid_features][download][type] = "git"
 projects[uuid_features][download][branch] = "7.x-1.x"
-projects[uuid_features][download][url] = "http://git.drupal.org/project/uuid_features.git"
+projects[uuid_features][download][url] = "git://git.drupal.org/project/uuid_features.git"
 projects[uuid_features][download][revision] = "55a2d5070b6f238f40372070f70314cc4f8197d8"
 
 projects[video_embed_field][version] = 2.0-beta11
@@ -207,8 +224,9 @@ projects[kalatheme][patch][] = patches/webspark-565-add-views-tpl-to-kalatheme.p
 projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-spelling-fix.patch
 projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-admin-spelling-fix.patch
 
-projects[modernizr][version] = 3.1
+projects[modernizr][version] = 3.9
 projects[modernizr][subdir] = contrib
+projects[modernizr][md5] = 5658ff636bea8adbd3bc004711f57828
 
 ; ASU Module prerequisites - Webstandards additions - Libraries
 

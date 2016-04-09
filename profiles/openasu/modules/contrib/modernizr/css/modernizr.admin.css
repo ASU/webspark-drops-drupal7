@@ -23,3 +23,19 @@ body.page-admin-config-development-modernizr div.download-modernizr {
   clear: both;
   padding-top: 1em;
 }
+
+/**
+ * Styles for Test API. Based on whether our current Modernizr lib is in sync
+ * with the latest Test API settings.
+ */
+body.page-admin-config-development-modernizr .modernizr-tests h3.not-included {
+  font-weight: bold;
+  color: #d02;
+}
+body.page-admin-config-development-modernizr .modernizr-tests h3.not-included::after {
+  content: " (missing)";
+  font-size: .7em;
+  vertical-align: top;
+  position: relative;
+  top: -2px;
+}
