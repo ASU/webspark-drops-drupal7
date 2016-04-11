@@ -26,13 +26,14 @@ projects[multiblock][patch][] = https://www.drupal.org/files/fix_config_per_inst
 projects[views_data_export][version] = 3.0-beta9
 projects[views_data_export][type] = module
 projects[views_data_export][subdir] = contrib
-projects[views_data_export][md5] = c4f294647dcdae75bcfed27b894c2647
+projects[views_data_export][md5] = 004aab9b208fd8d4be8ac831e1c947d60b79233a37a785ef36f2991e450d81e3
 
-projects[mimemail][version] = 1.0-beta3
+projects[mimemail][version] = 1.0-beta4
 projects[mimemail][type] = module
 projects[mimemail][subdir] = contrib
+projects[mimemail][sha256] = 28365ac72206125bc41c42b35832906d06bbdbb15ffb0433915eff013f2f111e
 
-projects[honeypot][version] = 1.17
+projects[honeypot][version] = 1.22
 projects[honeypot][type] = module
 projects[honeypot][subdir] = contrib
 
