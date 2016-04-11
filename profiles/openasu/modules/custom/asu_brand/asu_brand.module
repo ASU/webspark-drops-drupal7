@@ -12,7 +12,7 @@
 *********************************************************************/
 
 define('ASU_BRAND_HEADER_VERSION_XML_URL', 'http://asu.edu/asuthemes/headers.xml');
-define('ASU_BRAND_HEADER_VERSION_DEFAULT', '4.3');
+define('ASU_BRAND_HEADER_VERSION_DEFAULT', '4.4');
 define('ASU_BRAND_HEADER_BASEPATH_DEFAULT', 'http://www.asu.edu/asuthemes');
 define('ASU_BRAND_HEADER_TEMPLATE_DEFAULT', 'default');
 define('ASU_BRAND_FOOTER_COLOR_DEFAULT', '');

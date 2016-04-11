@@ -1,8 +1,11 @@
 <?php
+/**
+ * Implements hook_install()
+ */
 function webspark_newsevents_install() {
-  
   /**
-   * Grab image within the Feature module. Then, create image in the new site to use for default image for the field_asunews_image field.
+   * Grab image within the Feature module. Then, create image in the new site to
+   * use for default image for the field_asunews_image field.
    */
   $filename = 'asunews_default_image.png';
   $origfile = drupal_get_path('module', 'webspark_newsevents') . '/images/' . $filename;
@@ -17,5 +20,46 @@ function webspark_newsevents_install() {
   );
   $file = file_copy($file, $uri, FILE_EXISTS_REPLACE);
   variable_set('webspark_newsevents_asunews_image_fid', $file->fid);
-  
+}
+
+/**
+ * Implements hook_update_N()
+ * + Updated ASU Events module feed source XML mappings to match new fields
+ */
+function webspark_newsevents_update_7001(&$sandbox) {
+  $result = db_select('feeds_source', 'f')
+    ->fields('f', array('config'))
+    ->condition('f.id', 'asu_events_importer_new', '=')
+    ->execute()
+    ->fetchField();
+  if ($result) {
+    $result = unserialize($result);
+    $result['FeedsXPathParserXML']['sources']['xpathparser:5'] = 'full_body';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:23'] = 'website';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:32'] = 'ticketing_rsvp_url';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:33'] = 'ticketing_rsvp_url';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:38'] = 'download';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:39'] = 'download';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:40'] = 'very_start_date';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:41'] = 'very_end_date';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:44'] = 'very_start_date';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:45'] = 'very_end_date';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:0'] = '$field_asuevent_nid$field_asuevent_date:start';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:34'] = 'event_topics/event_topic';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:35'] = 'event_types/event_type';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:43'] = 'audiences/audience';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:34'] = 'event_topics/event_topic';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:51'] = 'interests/interest';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:52'] = 'event_units/event_unit';
+    $result['FeedsXPathParserXML']['sources']['xpathparser:53'] = 'department';
+    $result = serialize($result);
+    $result = preg_replace('|^(.+?)s:45:".field_asuevent_nid.field_asuevent_date:start"(.+?)$|', "$1" . 's:47:""$field_asuevent_nid$field_asuevent_date:start""' . "$2", $result);    dpm($result, 'after serialized + regex');
+    // Update DB
+    db_update('feeds_source')
+      ->fields(array(
+          'config' => $result)
+      )
+      ->condition('id', 'asu_events_importer_new', '=')
+      ->execute();
+  }
 }

@@ -407,3 +407,15 @@ blockquote {
     line-height: 32px;
   }
 }
+
+/* WEBSPARK-366 - moved as part of cleanup */
+
+/**
+ * Image styling
+ */
+img.asu-header-image {
+  max-width: 100%;
+  width: 100% !important;
+  height: auto;
+  margin-bottom: 0;
+}

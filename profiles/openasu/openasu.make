@@ -48,48 +48,13 @@ projects[panopoly_search][subdir] = panopoly
 projects[panopoly_demo][version] = 1.13
 projects[panopoly_demo][subdir] = panopoly
 
-; ASU Modules
+; ASU Custom, Webspark-agnostic modules
+; Webspark-only modules kept in webspark_featurescustom
 
-projects[asu_brand][version] = 1.10
-projects[asu_brand][subdir] = custom
-projects[asu_brand][type] = module
-projects[asu_brand][download][revision] = 9d94f772f0ec1a4760c93d49645ad719773a211b
-projects[asu_brand][download][branch] = 7.x-1.x
-projects[asu_brand][download][url] = https://github.com/ASU/asu-drupal-brand.git
-
-projects[asu_userpicker][version] = 1.0
-projects[asu_userpicker][subdir] = custom
-projects[asu_userpicker][type] = module
-projects[asu_userpicker][download][revision] = 95a01aad
-projects[asu_userpicker][download][tag] = 7.x-1.0
-projects[asu_userpicker][download][url] = https://github.com/ASU/asu-drupal-userpicker.git
-
-projects[asu_feeds][version] = 1.0-beta5
-projects[asu_feeds][subdir] = custom
-projects[asu_feeds][type] = module
-projects[asu_feeds][download][revision] = 604e5bd3
-projects[asu_feeds][download][url] = https://github.com/ASU/asu-drupal-feeds.git
-
-projects[ixr][version] = 1.0-beta2
-projects[ixr][subdir] = custom
-projects[ixr][type] = module
-projects[ixr][download][revision] = 990012dd
-projects[ixr][download][url] = https://github.com/ASU/asu-drupal-ixr.git
-
-projects[asu_degrees][version] = 1.7
-projects[asu_degrees][type] = module
-projects[asu_degrees][subdir] = custom
-projects[asu_degrees][download][revision] = d3ad21fd57c99b8fb55bb3714b17c9a050600ea0
-projects[asu_degrees][download][branch] = master
-projects[asu_degrees][download][url] = https://github.com/ASU/asu-drupal-degrees.git
-
-projects[asu_rfi][version] = 1.2
-projects[asu_rfi][type] = module
-projects[asu_rfi][subdir] = custom
-projects[asu_rfi][download][type] = git
-projects[asu_rfi][download][revision] = 8ca627d77c9640f585e639ffb1f694b585a8d3be
-projects[asu_rfi][download][branch] = master
-projects[asu_rfi][download][url] = https://github.com/ASU/asu-drupal-rfi
+projects[asu_drupal_modules][type] = module
+projects[asu_drupal_modules][directory_name] = custom
+projects[asu_drupal_modules][download][revision] = 09660a8d
+projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ; ASU Module Prerequisites
 
@@ -133,11 +98,6 @@ projects[feeds_xpathparser][subdir] = contrib
 projects[job_scheduler][version] = 2.0-alpha3
 projects[job_scheduler][type] = module
 projects[job_scheduler][subdir] = contrib
-
-;; WEBSPARK-679 - WYSIWYG + Media module issues
-;projects[media][patch][] = patches/webspark-679_media-repair_encoded_macro-2028253-10.patch
-;; -- remove when alpha4 comes out
-;projects[media][patch][] = patches/webspark-679_wysiwyg-multiple-editors-media-images-breaks.patch
 
 projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
@@ -252,9 +212,21 @@ projects[modernizr][subdir] = contrib
 
 ; ASU Module prerequisites - Webstandards additions - Libraries
 
-;; pulled in from asu_cas.make file
+libraries[ajax_solr][download][type] = get
+libraries[ajax_solr][download][url] = https://github.com/evolvingweb/ajax-solr/archive/master.zip
+libraries[ajax_solr][directory_name] = ajax_solr
+libraries[ajax_solr][destination] = libraries
+
+; CAS - Get only source + root PHP from Github
+; 1 of 2
 libraries[CAS][download][type] = get
-libraries[CAS][download][url] = https://github.com/Jasig/phpCAS/archive/1.3.3.zip
+libraries[CAS][download][url] = https://github.com/Jasig/phpCAS/archive/1.3.4.zip
+libraries[CAS][download][subtree] = source
+libraries[CAS][directory_name] = CAS/source
+; 2 of 2
+libraries[CAS_2][download][type] = file
+libraries[CAS_2][download][url] = https://raw.githubusercontent.com/Jasig/phpCAS/1.3.4/CAS.php
+libraries[CAS_2][directory_name] = CAS
 
 libraries[chosen][download][type] = get
 libraries[chosen][download][url] = https://github.com/harvesthq/chosen/releases/download/v1.1.0/chosen_v1.1.0.zip
@@ -265,7 +237,7 @@ libraries[flexslider][download][type] = get
 libraries[flexslider][download][url] = https://github.com/woothemes/FlexSlider/archive/version/2.2.2.zip
 
 libraries[fontawesome][download][type] = get
-libraries[fontawesome][download][url] = http://fontawesome.io/assets/font-awesome-4.2.0.zip
+libraries[fontawesome][download][url] = https://github.com/FortAwesome/Font-Awesome/archive/v4.2.0.zip
 
 libraries[modernizr][download][type] = get
 libraries[modernizr][download][url] = https://github.com/Modernizr/Modernizr/archive/v2.6.2.zip
@@ -275,23 +247,30 @@ libraries[jqtree][download][url] = https://github.com/mbraak/jqTree/archive/0.22
 libraries[jqtree][directory_name] = jqtree
 libraries[jqtree][destination] = libraries
 
-
 ; DEPRECATED PROJECTS - DO NOT USE AND LOOK FOR ALTERNATE SOLUTIONS ASAP
 
 ;; Will be replaced by alternate system that will work with the Hub's new asunews site
 projects[asu_events][version] = 1.0-dev
 projects[asu_events][subdir] = custom
 projects[asu_events][type] = module
-projects[asu_events][download][revision] = 3ff78bb9
+projects[asu_events][download][revision] = 9f04696f38b0999df42947ac6db0075d969ca553
 projects[asu_events][download][url] = https://github.com/ASU/asu-drupal-events-feed.git
+
+;; Will be replaced by alternate system that will work with the Hub's new asunews site
 projects[asu_news][version] = 1.0-dev
 projects[asu_news][subdir] = custom
 projects[asu_news][type] = module
-projects[asu_news][download][revision] = 7e925b539
+projects[asu_news][download][revision] = e52986872a63d0fe1123d819aba554d76f2c6e33
 projects[asu_news][download][url] = https://github.com/ASU/asu-drupal-news.git
+
 ;; (DEPRECATED in lieu of ASU Degrees - asu_degrees module)
 projects[asu_eadvisor_degree_feed_feature][version] = 1.0-beta1
 projects[asu_eadvisor_degree_feed_feature][subdir] = custom
 projects[asu_eadvisor_degree_feed_feature][type] = module
-projects[asu_eadvisor_degree_feed_feature][download][revision] = fbc26834
+projects[asu_eadvisor_degree_feed_feature][download][revision] = 312c885e04f5cf64920b24fa1bc648c8f5a02989
 projects[asu_eadvisor_degree_feed_feature][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
+
+; PANOPOLY PROJECT PATCHES
+;; These projects are installed first, before any other projects in the parent makefile.
+
+includes[panopoly_patches] = openasu_panopoly_patches.make

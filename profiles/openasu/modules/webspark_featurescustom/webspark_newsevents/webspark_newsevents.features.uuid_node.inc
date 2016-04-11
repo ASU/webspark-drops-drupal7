@@ -66,7 +66,7 @@ function webspark_newsevents_uuid_features_default_content() {
   'machine_name' => FALSE,
   'pathauto_perform_alias' => FALSE,
   'date' => '2014-11-12 09:38:07 -0700',
-  'user_uuid' => '220d21e5-542e-4905-9a7f-e91ab3d96e40',
+  'user_uuid' => 'e25ca6eb-2b7e-493f-af44-bcd81aa09678',
 );
   return $nodes;
 }

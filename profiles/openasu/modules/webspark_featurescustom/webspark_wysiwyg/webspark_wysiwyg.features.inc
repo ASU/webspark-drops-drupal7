@@ -40,7 +40,8 @@ function webspark_wysiwyg_wysiwyg_default_profiles_alter(&$data) {
     $data['panopoly_wysiwyg_text']['settings']['buttons']['template'] = array(
       'template' => 1,
     ); /* WAS: '' */
-    $data['panopoly_wysiwyg_text']['settings']['css_classes'] = 'Image align left=pull-left
+    $data['panopoly_wysiwyg_text']['settings']['css_classes'] = 'Lead paragraph=lead-paragraph
+        Image align left=pull-left
         Image align right=pull-right
         Oval image=img-circle
         Image with rounded corners=img-rounded

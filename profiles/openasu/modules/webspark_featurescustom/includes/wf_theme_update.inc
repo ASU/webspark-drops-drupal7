@@ -8,7 +8,7 @@
 /**
  * Implements hook_menu_alter()
  */
-function webspark_featurescustom_menu_alter (&$items) {
+function webspark_featurescustom_menu_alter(&$items) {
   // builds on existing menu callback for theme selection function to include
   // our own functionality
   $items['admin/appearance/default']['page callback'] = '_webspark_featurescustom_theme_check';
@@ -91,9 +91,12 @@ function _webspark_featurescustom_webstandards_theme_config($theme) {
   $modules[] = 'asu_spotlight';
   $modules[] = 'mega_footer';
   // OpenASU custom modules, features - keep this up with openasu.info
+  // TODO - automate this process by reading in .info file
+  $modules[] = 'webspark_featurescustom';
   $modules[] = 'asu_gsa';
   $modules[] = 'asu_maps_enhanced';
   $modules[] = 'asu_spotlight';
+  $modules[] = 'uto_carousel';
   $modules[] = 'asu_securityscanfixes';
   $modules[] = 'webspark_wysiwyg';
   $modules[] = 'webspark_panels_styles';
@@ -104,7 +107,9 @@ function _webspark_featurescustom_webstandards_theme_config($theme) {
   $modules[] = 'webspark_hero';
   $modules[] = 'webspark_jumbohero';
   $modules[] = 'webspark_megamenu';
+  $modules[] = 'mega_footer';
   $modules[] = 'mega_footer_menu';
+  $modules[] = 'webspark_wysiwyg';
   $modules[] = 'webspark_extras';
 
   // Enable disabled modules

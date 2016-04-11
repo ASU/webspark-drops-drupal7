@@ -2,7 +2,7 @@ name = Innovation
 description = "Theme with ASU Web Standards styling. A Kalatheme subtheme, powered by Bootstrap."
 base theme = kalatheme
 core = 7.x
-version = "7.x-1.0-rc1"
+version = "7.x-1.0-rc3"
 project = "innovation"
 
 regions[header] = Header
