@@ -77,6 +77,7 @@
  * @ingroup themeable
  */
 ?>
+<div class="accessibility-hide"><a href="#main-wrapper" id="skip_to_content">Skip to Main Page Content</a></div>
 <div id="page-wrapper"><div id="page">
 
   <!-- Page Header -->
@@ -86,9 +87,8 @@
   			<div class="column col-md-12">
 					<?php print render($page['header']); ?>
 					<?php if ($site_name): ?>
-                      <h1 class="header__sitename<?php if ($hide_site_name) { print ' element-invisible'; } ?>">
-                        <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home"><span><?php print $site_name; ?></span></a>
-                      </h1>
+                      <div class="header__sitename<?php if ($hide_site_name) { print ' element-invisible'; } ?>"><span><?php print $site_name; ?></span>
+                      </div>
 					<?php endif; ?>
 				</div>
 			</div>

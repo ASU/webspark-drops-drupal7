@@ -1,10 +1,10 @@
 .field-name-field-asu-maps-enhanced-items .row {
-      padding: 0px 10px 0px 10px;
+    padding: 0px 10px 0px 10px;
 }
 
 #map_button {
     float: right;
-    margin-bottom:10px;
+    margin-bottom: 10px;
 }
 
 .field-name-field-asu-maps-enhanced-items {
@@ -35,7 +35,6 @@
     display: inline-block;
 }
 
-
 .enhanced-map-nav ul li {
     cursor: pointer;
     padding: 6px 10px;
@@ -46,4 +45,14 @@
 
 .cHover {
     background: #A30046;
+}
+
+#map-height-field .valid-style {
+    margin-left: 10px;
+    color: green;
+}
+
+#map-height-field .invalid-style {
+    margin-left: 10px;
+    color: red;
 }

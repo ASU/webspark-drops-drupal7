@@ -81,7 +81,7 @@ function asu_maps_enhanced_field_default_field_bases() {
     'settings' => array(),
     'translatable' => 0,
     'type' => 'text_with_summary',
-    );
+  );
 
   return $field_bases;
 }

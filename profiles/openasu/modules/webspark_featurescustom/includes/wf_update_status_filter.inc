@@ -101,7 +101,7 @@ function webspark_featurescustom_update_status_alter(&$projects) {
   foreach ($projects as $project_name => $project_info) {
     if ($project_name == 'drupal') {
       $projects[$project_name]['status'] = UPDATE_CURRENT;
-      $projects[$project_name]['reason'] = t('Drupal core is managed by WebSpark. Do not update manually.');
+      $projects[$project_name]['reason'] = t('Drupal core is managed by WebSpark. Do not update ANY code outside of the /sites directory manually.');
     }
   }
 }

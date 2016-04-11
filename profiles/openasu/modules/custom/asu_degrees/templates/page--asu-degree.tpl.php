@@ -706,7 +706,7 @@ if (module_exists('metatag')) {
 
                       <h2>Plan of Study</h2>
 
-                      <p>The Plan of Study is the required cirriculum to complete the program.</p>
+                      <p>The Plan of Study is the required curriculum to complete the program.</p>
                       <?php if (isset($node_info['field_asu_degree_asuds_url'])): ?>
                         <p><a
                             href="<?php echo $node_info['field_asu_degree_asuds_url']['#items'][0]['url']; ?>"

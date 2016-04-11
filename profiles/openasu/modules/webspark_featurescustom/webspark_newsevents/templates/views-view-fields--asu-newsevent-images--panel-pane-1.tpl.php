@@ -31,6 +31,6 @@ if (isset($fields['field_asuevent_image'])) {
 }
 ?>
 
-<?php if (isset($fields[$field_asuevent_image])): ?>
+<?php if (isset($fields['field_asuevent_image'])): ?>
 	<img src="<?php print $asuevent_image_url; ?>" alt="<?php print $fields['field_asuevent_img_alt']->content; ?>" />
 <?php endif; ?>

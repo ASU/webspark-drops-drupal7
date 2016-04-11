@@ -172,7 +172,7 @@ function webspark_newsevents_feeds_importer_default() {
           ),
           5 => array(
             'source' => 'xpathparser:7',
-            'target' => 'field_asuevent_phone',
+            'target' => 'field_asu_event_pho',
             'unique' => FALSE,
           ),
           6 => array(
@@ -295,13 +295,13 @@ function webspark_newsevents_feeds_importer_default() {
           ),
           29 => array(
             'source' => 'xpathparser:51',
-            'target' => 'field_asuevent_tax_interests',
+            'target' => 'field_asuevent_tax_interest',
             'term_search' => '0',
             'autocreate' => 1,
           ),
           30 => array(
             'source' => 'xpathparser:52',
-            'target' => 'field_asuevent_tax_unit',
+            'target' => 'field_asuevents_tax_unit',
             'term_search' => '0',
             'autocreate' => 1,
           ),
@@ -469,7 +469,7 @@ function webspark_newsevents_feeds_importer_default() {
           ),
           7 => array(
             'source' => 'xpathparser:8',
-            'target' => 'field_asunews_contri_phone',
+            'target' => 'field_asunews_contr_phone',
             'unique' => FALSE,
           ),
           8 => array(

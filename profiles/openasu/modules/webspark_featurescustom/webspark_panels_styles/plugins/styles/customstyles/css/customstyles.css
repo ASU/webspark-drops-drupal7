@@ -43,6 +43,9 @@
 .space-bot-md {
 	padding-bottom: 30px;
 }
+.megafoot .space-bot-md {
+	padding-bottom: 60px;
+}
 .remove-6-above {
 	margin-top: -6px !important;
 }

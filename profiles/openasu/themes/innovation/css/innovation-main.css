@@ -2,7 +2,7 @@
  * Custom Web standard styles
  */
 
-/* =BOOTSTRAP, PANOPOLY & WEBSPARK OEVERRIDES
+/* =BOOTSTRAP, PANOPOLY & WEBSPARK OVERRIDES
 -------------------------------------------------------------- */
 #asu_footer ul {
   max-width: 1170px;
@@ -55,6 +55,17 @@ div.pane-system-main-menu,
 div.pane-menu-tree {
   margin-top: 3em;
 }
+
+#skip_to_content {
+    position: absolute;
+    left: -9999px;
+}
+
+#skip_to_content:focus{
+  position:relative;
+  left: 0;
+}
+
 
 /* =LINKS & BUTTONS
 -------------------------------------------------------------- */
@@ -178,10 +189,20 @@ h6, .h6 {
   font-style: italic;
 }
 
+/* WYSIWYG style -- Lead Paragraph -- WEBSPARK-684 */
+.lead-paragraph {
+  font-family: inherit;
+  font-size: 1.5em;
+  font-weight: 200;
+  line-height: 1.4;
+}
+
 /* =HEADER
 -------------------------------------------------------------- */
 .header__sitename {
   color: #2a2a2a;
+  font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: normal;
   font-size: 24px;
   line-height: 1;
   margin-top: 0;
@@ -417,7 +438,7 @@ table > tbody + tbody {
   border: none;
   border-radius: 0;
   box-shadow: none;
-  margin: 0 0 60px;
+  margin: 0 0 44px;
 }
 
 /* =ACCORDIONS
@@ -522,7 +543,6 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
   height: 13px;
   width: 13px;
 }
-
 /* =ALERTS
 -------------------------------------------------------------- */
 
@@ -531,46 +551,52 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
   padding: 20px;
 }
 
-a.close {
+.alert a.close {
   font-size: 22px;
   opacity: 1;
   color: #fff;
 }
 
-a.close:hover {
+.alert a.close:hover {
   color: #000;
 }
 
 .alert-success {
   background-color: #148e4b;
   border-color: #0b4b28;
-  color: #fff;
 }
 
 .alert-info {
   background-color: #008ed6;
   border-color: #005b8a;
-  color: #fff;
 }
 
 .alert-danger {
   background-color: #ec5937;
   border-color: #c43413;
-  color: #fff;
 }
 
 .alert-warning {
   background-color: #bfe319;
   border-color: #859e11;
-  color: #000;
 }
 
-.alert-warning a.close {
-  color: #000;
+.alert-success > ul > li,
+.alert-info > ul > li,
+.alert-danger > ul > li,
+.alert-warning > ul > li a.close:hover {
+  color: white;
+  margin: 1em 0;
 }
 
-.alert-warning a.close:hover {
-  color: #fff;
+.alert-warning > ul > li,
+.alert-warning > ul > li a.close,
+{
+  color: black;
+}
+
+.alert > ul > li > [class^=krumo] {
+  all: initial;
 }
 
 /* =ADMIN UI

@@ -480,3 +480,26 @@ select {
     font-weight: normal;
 }
 
+
+/** Sort Items **/
+
+#asu-dir-ajax-solr-sort {
+    font-size: 14px;
+    margin-top: 4px;
+    float: right;
+    font-weight: 400;
+}
+
+.asu-dir-sort-item {
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.dir-active-sort {
+    color: #a30046;
+}
+
+
+.asu-dir-hidden {
+    display: none;
+}

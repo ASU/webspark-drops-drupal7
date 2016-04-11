@@ -114,6 +114,101 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
     ),
   );
 
+  // Exported field: 'node-asu_event-field_asu_event_pho'.
+  $fields['node-asu_event-field_asu_event_pho'] = array(
+    'field_config' => array(
+      'active' => 1,
+      'cardinality' => 1,
+      'deleted' => 0,
+      'entity_types' => array(),
+      'field_name' => 'field_asu_event_pho',
+      'foreign keys' => array(
+        'format' => array(
+          'columns' => array(
+            'format' => 'format',
+          ),
+          'table' => 'filter_format',
+        ),
+      ),
+      'indexes' => array(
+        'format' => array(
+          0 => 'format',
+        ),
+      ),
+      'locked' => 0,
+      'module' => 'text',
+      'settings' => array(
+        'max_length' => 255,
+      ),
+      'translatable' => 0,
+      'type' => 'text',
+    ),
+    'field_instance' => array(
+      'bundle' => 'asu_event',
+      'default_value' => NULL,
+      'deleted' => 0,
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_default',
+          'weight' => 18,
+        ),
+        'featured' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+        'full' => array(
+          'label' => 'inline',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_default',
+          'weight' => 23,
+        ),
+        'ical' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 31,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_asu_event_pho',
+      'label' => 'Phone',
+      'required' => 0,
+      'settings' => array(
+        'linkit' => array(
+          'button_text' => 'Search',
+          'enable' => 0,
+          'profile' => '',
+        ),
+        'text_processing' => 0,
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'text',
+        'settings' => array(
+          'maxlength_js' => 0,
+          'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+          'size' => 60,
+        ),
+        'type' => 'text_textfield',
+        'weight' => 18,
+      ),
+    ),
+  );
+
   // Exported field: 'node-asu_event-field_asuevent_artists'.
   $fields['node-asu_event-field_asuevent_artists'] = array(
     'field_config' => array(
@@ -196,7 +291,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 24,
+        'weight' => 20,
       ),
     ),
   );
@@ -284,7 +379,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 14,
+        'weight' => 12,
       ),
     ),
   );
@@ -372,7 +467,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 27,
+        'weight' => 23,
       ),
     ),
   );
@@ -460,7 +555,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 29,
+        'weight' => 25,
       ),
     ),
   );
@@ -548,7 +643,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 25,
+        'weight' => 21,
       ),
     ),
   );
@@ -576,9 +671,9 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'second' => 0,
           'year' => 'year',
         ),
-        'timezone_db' => 'UTC',
+        'timezone_db' => '',
         'todate' => 'optional',
-        'tz_handling' => 'site',
+        'tz_handling' => 'none',
       ),
       'translatable' => 0,
       'type' => 'date',
@@ -635,17 +730,15 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
         'active' => 1,
         'module' => 'date',
         'settings' => array(
-          'display_all_day' => 0,
           'increment' => 15,
           'input_format' => 'm/d/Y - H:i:s',
           'input_format_custom' => '',
           'label_position' => 'above',
-          'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
           'text_parts' => array(),
           'year_range' => '-3:+3',
         ),
         'type' => 'date_text',
-        'weight' => 43,
+        'weight' => 7,
       ),
     ),
   );
@@ -733,7 +826,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 18,
+        'weight' => 16,
       ),
     ),
   );
@@ -821,7 +914,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 6,
+        'weight' => 5,
       ),
     ),
   );
@@ -889,7 +982,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'email_textfield',
-        'weight' => 47,
+        'weight' => 38,
       ),
     ),
   );
@@ -993,7 +1086,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'progress_indicator' => 'throbber',
         ),
         'type' => 'image_image',
-        'weight' => 44,
+        'weight' => 35,
       ),
     ),
   );
@@ -1074,7 +1167,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 45,
+        'weight' => 36,
       ),
     ),
   );
@@ -1153,7 +1246,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'rows' => 5,
         ),
         'type' => 'text_textarea',
-        'weight' => 46,
+        'weight' => 37,
       ),
     ),
   );
@@ -1241,7 +1334,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 13,
+        'weight' => 11,
       ),
     ),
   );
@@ -1349,7 +1442,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_field',
-        'weight' => 32,
+        'weight' => 29,
       ),
     ),
   );
@@ -1435,7 +1528,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
         'module' => 'number',
         'settings' => array(),
         'type' => 'number',
-        'weight' => 0,
+        'weight' => 1,
       ),
     ),
   );
@@ -1522,7 +1615,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 17,
+        'weight' => 15,
       ),
     ),
   );
@@ -1610,7 +1703,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 26,
+        'weight' => 22,
       ),
     ),
   );
@@ -1698,7 +1791,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 19,
+        'weight' => 17,
       ),
     ),
   );
@@ -1784,7 +1877,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'rows' => 5,
         ),
         'type' => 'text_textarea',
-        'weight' => 28,
+        'weight' => 24,
       ),
     ),
   );
@@ -1892,102 +1985,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_field',
-        'weight' => 31,
-      ),
-    ),
-  );
-
-  // Exported field: 'node-asu_event-field_asuevent_phone'.
-  $fields['node-asu_event-field_asuevent_phone'] = array(
-    'field_config' => array(
-      'active' => 1,
-      'cardinality' => 1,
-      'deleted' => 0,
-      'entity_types' => array(),
-      'field_name' => 'field_asuevent_phone',
-      'foreign keys' => array(
-        'format' => array(
-          'columns' => array(
-            'format' => 'format',
-          ),
-          'table' => 'filter_format',
-        ),
-      ),
-      'indexes' => array(
-        'format' => array(
-          0 => 'format',
-        ),
-      ),
-      'locked' => 0,
-      'module' => 'text',
-      'settings' => array(
-        'max_length' => 255,
-      ),
-      'translatable' => 0,
-      'type' => 'text',
-    ),
-    'field_instance' => array(
-      'bundle' => 'asu_event',
-      'default_value' => NULL,
-      'deleted' => 0,
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'module' => 'text',
-          'settings' => array(),
-          'type' => 'text_default',
-          'weight' => 18,
-        ),
-        'featured' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-        'full' => array(
-          'label' => 'inline',
-          'module' => 'text',
-          'settings' => array(),
-          'type' => 'text_default',
-          'weight' => 23,
-        ),
-        'ical' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 31,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_asuevent_phone',
-      'label' => 'Phone',
-      'required' => 0,
-      'settings' => array(
-        'linkit' => array(
-          'button_text' => 'Search',
-          'enable' => 0,
-          'profile' => '',
-        ),
-        'text_processing' => 0,
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'text',
-        'settings' => array(
-          'maxlength_js' => 0,
-          'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-          'size' => 60,
-        ),
-        'type' => 'text_textfield',
-        'weight' => 20,
+        'weight' => 28,
       ),
     ),
   );
@@ -2095,7 +2093,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_field',
-        'weight' => 30,
+        'weight' => 26,
       ),
     ),
   );
@@ -2183,7 +2181,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 12,
+        'weight' => 10,
       ),
     ),
   );
@@ -2270,7 +2268,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 37,
+        'weight' => 34,
       ),
     ),
   );
@@ -2378,7 +2376,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_field',
-        'weight' => 36,
+        'weight' => 33,
       ),
     ),
   );
@@ -2466,7 +2464,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 15,
+        'weight' => 13,
       ),
     ),
   );
@@ -2553,7 +2551,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 35,
+        'weight' => 32,
       ),
     ),
   );
@@ -2655,7 +2653,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_field',
-        'weight' => 34,
+        'weight' => 31,
       ),
     ),
   );
@@ -2743,7 +2741,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'text_textfield',
-        'weight' => 23,
+        'weight' => 19,
       ),
     ),
   );
@@ -2912,7 +2910,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'taxonomy_autocomplete',
-        'weight' => 50,
+        'weight' => 41,
       ),
     ),
   );
@@ -2993,7 +2991,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'taxonomy_autocomplete',
-        'weight' => 48,
+        'weight' => 39,
       ),
     ),
   );
@@ -3074,7 +3072,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'taxonomy_autocomplete',
-        'weight' => 49,
+        'weight' => 40,
       ),
     ),
   );
@@ -3325,7 +3323,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_field',
-        'weight' => 33,
+        'weight' => 30,
       ),
     ),
   );
@@ -3413,7 +3411,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'size' => 120,
         ),
         'type' => 'text_textfield',
-        'weight' => 16,
+        'weight' => 14,
       ),
     ),
   );
@@ -3515,7 +3513,7 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_field',
-        'weight' => 1,
+        'weight' => 2,
       ),
     ),
   );
@@ -3544,9 +3542,9 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
           'year' => 'year',
         ),
         'repeat' => 0,
-        'timezone_db' => 'UTC',
+        'timezone_db' => '',
         'todate' => 'optional',
-        'tz_handling' => 'site',
+        'tz_handling' => 'none',
       ),
       'translatable' => 0,
       'type' => 'date',
@@ -3610,17 +3608,15 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
         'active' => 1,
         'module' => 'date',
         'settings' => array(
-          'display_all_day' => 0,
           'increment' => 15,
           'input_format' => 'm/d/Y - g:i:sa',
           'input_format_custom' => '',
           'label_position' => 'above',
-          'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
           'text_parts' => array(),
           'year_range' => '-3:+3',
         ),
         'type' => 'date_text',
-        'weight' => 7,
+        'weight' => 6,
       ),
     ),
   );
@@ -4065,6 +4061,101 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
     ),
   );
 
+  // Exported field: 'node-asu_news-field_asunews_contr_phone'.
+  $fields['node-asu_news-field_asunews_contr_phone'] = array(
+    'field_config' => array(
+      'active' => 1,
+      'cardinality' => 1,
+      'deleted' => 0,
+      'entity_types' => array(),
+      'field_name' => 'field_asunews_contr_phone',
+      'foreign keys' => array(
+        'format' => array(
+          'columns' => array(
+            'format' => 'format',
+          ),
+          'table' => 'filter_format',
+        ),
+      ),
+      'indexes' => array(
+        'format' => array(
+          0 => 'format',
+        ),
+      ),
+      'locked' => 0,
+      'module' => 'text',
+      'settings' => array(
+        'max_length' => 255,
+      ),
+      'translatable' => 0,
+      'type' => 'text',
+    ),
+    'field_instance' => array(
+      'bundle' => 'asu_news',
+      'default_value' => NULL,
+      'deleted' => 0,
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_default',
+          'weight' => 8,
+        ),
+        'featured' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+        'full' => array(
+          'label' => 'hidden',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_default',
+          'weight' => 7,
+        ),
+        'ical' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_asunews_contr_phone',
+      'label' => 'Contributor phone',
+      'required' => 0,
+      'settings' => array(
+        'linkit' => array(
+          'button_text' => 'Search',
+          'enable' => 0,
+          'profile' => '',
+        ),
+        'text_processing' => 0,
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'text',
+        'settings' => array(
+          'maxlength_js' => 0,
+          'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+          'size' => 60,
+        ),
+        'type' => 'text_textfield',
+        'weight' => 11,
+      ),
+    ),
+  );
+
   // Exported field: 'node-asu_news-field_asunews_contri_affiliation'.
   $fields['node-asu_news-field_asunews_contri_affiliation'] = array(
     'field_config' => array(
@@ -4325,101 +4416,6 @@ function webspark_newsevents_defaultconfig_field_default_fields() {
         ),
         'type' => 'text_textfield',
         'weight' => 10,
-      ),
-    ),
-  );
-
-  // Exported field: 'node-asu_news-field_asunews_contri_phone'.
-  $fields['node-asu_news-field_asunews_contri_phone'] = array(
-    'field_config' => array(
-      'active' => 1,
-      'cardinality' => 1,
-      'deleted' => 0,
-      'entity_types' => array(),
-      'field_name' => 'field_asunews_contri_phone',
-      'foreign keys' => array(
-        'format' => array(
-          'columns' => array(
-            'format' => 'format',
-          ),
-          'table' => 'filter_format',
-        ),
-      ),
-      'indexes' => array(
-        'format' => array(
-          0 => 'format',
-        ),
-      ),
-      'locked' => 0,
-      'module' => 'text',
-      'settings' => array(
-        'max_length' => 255,
-      ),
-      'translatable' => 0,
-      'type' => 'text',
-    ),
-    'field_instance' => array(
-      'bundle' => 'asu_news',
-      'default_value' => NULL,
-      'deleted' => 0,
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'hidden',
-          'module' => 'text',
-          'settings' => array(),
-          'type' => 'text_default',
-          'weight' => 8,
-        ),
-        'featured' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-        'full' => array(
-          'label' => 'hidden',
-          'module' => 'text',
-          'settings' => array(),
-          'type' => 'text_default',
-          'weight' => 7,
-        ),
-        'ical' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_asunews_contri_phone',
-      'label' => 'Contributor phone',
-      'required' => 0,
-      'settings' => array(
-        'linkit' => array(
-          'button_text' => 'Search',
-          'enable' => 0,
-          'profile' => '',
-        ),
-        'text_processing' => 0,
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'text',
-        'settings' => array(
-          'maxlength_js' => 0,
-          'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-          'size' => 60,
-        ),
-        'type' => 'text_textfield',
-        'weight' => 11,
       ),
     ),
   );

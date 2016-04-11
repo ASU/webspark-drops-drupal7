@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the ASU eAdvisor Degree Feed Feature feature.
- */
-
-include_once('asu_eadvisor_degree_feed_feature.features.inc');

@@ -10,7 +10,6 @@
 
             // If we only have the default option in a dropdown facet, hide.
             $('.facet-widget').each(function () {
-                //console.log($(this).find('option').size());
                 // In toggle() TRUE == show, FALSE == hide
                 // We use 2 as display threshold because of label option, and
                 // if we've had a selection, we'll have 2. Also, if we only
@@ -45,9 +44,12 @@
             return function () {
                 var value = $(self.target).val();
 
-                if (self[meth].call(self, value)) {
-                    self.doRequest();
+                if (value != 0) {
+                    if (self[meth].call(self, value)) {
+                        self.doRequest();
+                    }
                 }
+
                 return false;
             }
         },
@@ -61,9 +63,13 @@
         unclickHandler: function (value) {
             var self = this;
             return function () {
-                if (self.remove(value)) {
-                    self.doRequest();
+
+                if (value != 0) {
+                    if (self.remove(value)) {
+                        self.doRequest();
+                    }
                 }
+
                 return false;
             }
         },
@@ -100,11 +106,8 @@
                 var facet = objectedItems[i].facet;
                 var count = objectedItems[i].count;
 
-                // TODO
                 // If is affiliation type facet. Output <li> tags.
                 if ($.inArray(this.field, this.manager.asu_dirFacetDisplay.affiliationFacets) >= 0) {
-                    //console.log(' affil facet');
-                    //console.log(facet);
                     $(this.target).append(
                         $('<li><a href="#" class="facet_item">' + facet + '</a></li>')
                         //.addClass('tagcloud_size_' + parseInt(objectedItems[i].count / maxCount * 10))
@@ -115,8 +118,7 @@
                 }
                 // If is dropdown type facet. Output <option> tags.
                 else if ($.inArray(this.field, this.manager.asu_dirFacetDisplay.dropdownFacets) >= 0) {
-                    //console.log('dropdown facet');
-                    //console.log(facet);
+
                     $(this.target).append(
                         $('<option class="facet_item" value=""></option>')
                             .text(facet + ' (' + count + ')').attr('value', facet)
@@ -145,7 +147,6 @@
 
             // If we only have the default option in a dropdown facet, hide.
             $('.facet-widget').each(function () {
-                //console.log($(this).find('option').size());
                 // In toggle() TRUE == show, FALSE == hide
                 // We use 2 as display threshold because of label option, and
                 // if we've had a selection, we'll have 2. Also, if we only

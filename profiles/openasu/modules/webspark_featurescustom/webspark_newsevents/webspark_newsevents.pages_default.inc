@@ -842,7 +842,7 @@ function webspark_newsevents_default_page_manager_handlers() {
     $pane->pid = 'new-b29aa843-81d8-4e09-892f-0c848e9c94aa';
     $pane->panel = 'contentmain';
     $pane->type = 'entity_field';
-    $pane->subtype = 'node:field_asuevent_phone';
+    $pane->subtype = 'node:field_asu_event_pho';
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(

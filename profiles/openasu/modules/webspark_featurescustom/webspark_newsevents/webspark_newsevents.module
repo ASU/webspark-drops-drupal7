@@ -35,7 +35,7 @@ function webspark_newsevents_views_api_alter(&$apis) {
 }
 
 /**
- * Implements hook_theme().
+ * Implements hook_theme(). 
  */
 function webspark_newsevents_theme(){
   return array(
@@ -51,3 +51,23 @@ function webspark_newsevents_theme(){
     ),
   );
 }
+
+
+/* KM: commented out for now as this was causing an error when going to edit content types
+
+function webspark_newsevents_form_alter(&$form, &$form_state, $form_id) {
+
+  if ($form_id == 'field_ui_field_overview_form') {
+    $form['fields']['field_asunews_contri_phone']['label']['#markup'] = "Contributor Phone (Deprecated)";
+
+  } else if ($form_id == 'asu_news_node_form') {
+
+    $form['field_asunews_contri_phone']['#access'] = FALSE;
+
+  } else if ($form_id == 'field_ui_display_overview_form') {
+
+    $form['fields']['field_asunews_contri_phone']['human_name']['#markup'] = "Contributor Phone (Deprecated)";
+  }
+
+}
+*/

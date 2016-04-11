@@ -106,7 +106,7 @@ function asu_cas_update_7001(&$sandbox) {
 
   // If they are running the old header
   if (variable_get('theme_default') == 'innovation') {
-    variable_set('asu_brand_header_version', '4.3');
+    variable_set('asu_brand_header_version', '4.4');
   }
 
   return t('New responsive header set.');

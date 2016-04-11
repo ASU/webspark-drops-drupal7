@@ -14,7 +14,7 @@
       Show Tree in Display
     </button>
     <button type="button" id="asu_directory_show_managers"
-            class="btn btn-default">Show Managers at Top of Display
+            class="btn btn-default"> Default to Rank Sort
     </button>
     <button type="button" id="asu_directory_show_breadcrumbs"
             class="btn btn-default">Show Breadcrumbs
