@@ -23,9 +23,10 @@ projects[multiblock][patch][] = https://www.drupal.org/files/fix_config_per_inst
 
 ; Added RFI dependencies here, vs. in openasu.make
 
-projects[views_data_export][version] = 3.0-beta8
+projects[views_data_export][version] = 3.0-beta9
 projects[views_data_export][type] = module
 projects[views_data_export][subdir] = contrib
+projects[views_data_export][md5] = c4f294647dcdae75bcfed27b894c2647
 
 projects[mimemail][version] = 1.0-beta3
 projects[mimemail][type] = module
