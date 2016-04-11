@@ -187,14 +187,9 @@ function webspark_newsevents_views_default_views() {
   $handler->display->display_options['filters']['tid']['id'] = 'tid';
   $handler->display->display_options['filters']['tid']['table'] = 'taxonomy_index';
   $handler->display->display_options['filters']['tid']['field'] = 'tid';
-  
-  // Get tid for Top Articles and use the tid - Chizuko
-  $top_article_tid = key(taxonomy_get_term_by_name("Top Articles"));
   $handler->display->display_options['filters']['tid']['value'] = array(
-    //74 => '74',
-    $top_article_tid => $top_article_tid, 
+    2 => 2,
   );
-  
   $handler->display->display_options['filters']['tid']['type'] = 'select';
   $handler->display->display_options['filters']['tid']['vocabulary'] = 'asu_news';
 
@@ -239,14 +234,9 @@ function webspark_newsevents_views_default_views() {
   $handler->display->display_options['filters']['tid']['id'] = 'tid';
   $handler->display->display_options['filters']['tid']['table'] = 'taxonomy_index';
   $handler->display->display_options['filters']['tid']['field'] = 'tid';
-  
-  // Get tid for Feature Articles and use the tid - Chizuko
-  $feature_article_tid = key(taxonomy_get_term_by_name("Feature Articles"));
   $handler->display->display_options['filters']['tid']['value'] = array(
-    //75 => '75',
-    $feature_article_tid => $feature_article_tid, 
+    1 => 1,
   );
-    
   $handler->display->display_options['filters']['tid']['type'] = 'select';
   $handler->display->display_options['filters']['tid']['vocabulary'] = 'asu_news';
 
@@ -446,6 +436,180 @@ function webspark_newsevents_views_default_views() {
     'multiple_to' => '',
   );
   $export['asu_news_new'] = $view;
+
+  $view = new view();
+  $view->name = 'asu_newsevent_images';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'ASU News Event Images';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Field: Content: Image alt */
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['id'] = 'field_asuevent_img_alt';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['table'] = 'field_data_field_asuevent_img_alt';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['field'] = 'field_asuevent_img_alt';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['label'] = '';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['alter']['strip_tags'] = TRUE;
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['element_type'] = '0';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['element_label_type'] = '0';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['element_wrapper_type'] = '0';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['type'] = 'text_plain';
+  /* Field: Content: Image */
+  $handler->display->display_options['fields']['field_asuevent_image']['id'] = 'field_asuevent_image';
+  $handler->display->display_options['fields']['field_asuevent_image']['table'] = 'field_data_field_asuevent_image';
+  $handler->display->display_options['fields']['field_asuevent_image']['field'] = 'field_asuevent_image';
+  $handler->display->display_options['fields']['field_asuevent_image']['label'] = '';
+  $handler->display->display_options['fields']['field_asuevent_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_asuevent_image']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_asuevent_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_asuevent_image']['settings'] = array(
+    'image_style' => '',
+    'image_link' => '',
+  );
+  /* Field: Content: News image alt text */
+  $handler->display->display_options['fields']['field_asunews_image_alt']['id'] = 'field_asunews_image_alt';
+  $handler->display->display_options['fields']['field_asunews_image_alt']['table'] = 'field_data_field_asunews_image_alt';
+  $handler->display->display_options['fields']['field_asunews_image_alt']['field'] = 'field_asunews_image_alt';
+  /* Contextual filter: Content: Nid */
+  $handler->display->display_options['arguments']['nid']['id'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['table'] = 'node';
+  $handler->display->display_options['arguments']['nid']['field'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['default_action'] = 'empty';
+  $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['nid']['specify_validation'] = TRUE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+
+  /* Display: Page */
+  $handler = $view->new_display('page', 'Page', 'page');
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Image alt */
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['id'] = 'field_asuevent_img_alt';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['table'] = 'field_data_field_asuevent_img_alt';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['field'] = 'field_asuevent_img_alt';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['label'] = '';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['alter']['strip_tags'] = TRUE;
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['element_type'] = '0';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['element_label_type'] = '0';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['element_wrapper_type'] = '0';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['type'] = 'text_plain';
+  /* Field: Content: Image */
+  $handler->display->display_options['fields']['field_asuevent_image']['id'] = 'field_asuevent_image';
+  $handler->display->display_options['fields']['field_asuevent_image']['table'] = 'field_data_field_asuevent_image';
+  $handler->display->display_options['fields']['field_asuevent_image']['field'] = 'field_asuevent_image';
+  $handler->display->display_options['fields']['field_asuevent_image']['label'] = '';
+  $handler->display->display_options['fields']['field_asuevent_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_asuevent_image']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_asuevent_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_asuevent_image']['settings'] = array(
+    'image_style' => '',
+    'image_link' => '',
+  );
+  $handler->display->display_options['path'] = 'test-asu-news-event-images';
+
+  /* Display: ASU event image Content pane */
+  $handler = $view->new_display('panel_pane', 'ASU event image Content pane', 'panel_pane_1');
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Image alt */
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['id'] = 'field_asuevent_img_alt';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['table'] = 'field_data_field_asuevent_img_alt';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['field'] = 'field_asuevent_img_alt';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['label'] = '';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['alter']['strip_tags'] = TRUE;
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['element_type'] = '0';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['element_label_type'] = '0';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['element_wrapper_type'] = '0';
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_asuevent_img_alt']['type'] = 'text_plain';
+  /* Field: Content: Image */
+  $handler->display->display_options['fields']['field_asuevent_image']['id'] = 'field_asuevent_image';
+  $handler->display->display_options['fields']['field_asuevent_image']['table'] = 'field_data_field_asuevent_image';
+  $handler->display->display_options['fields']['field_asuevent_image']['field'] = 'field_asuevent_image';
+  $handler->display->display_options['fields']['field_asuevent_image']['label'] = '';
+  $handler->display->display_options['fields']['field_asuevent_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_asuevent_image']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_asuevent_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_asuevent_image']['settings'] = array(
+    'image_style' => '',
+    'image_link' => '',
+  );
+  $handler->display->display_options['argument_input'] = array(
+    'nid' => array(
+      'type' => 'panel',
+      'context' => 'entity:file.field_file_image_alt_text',
+      'context_optional' => 0,
+      'panel' => '0',
+      'fixed' => '',
+      'label' => 'Content: Nid',
+    ),
+  );
+
+  /* Display: ASU news image Content pane */
+  $handler = $view->new_display('panel_pane', 'ASU news image Content pane', 'panel_pane_2');
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: News image alt text */
+  $handler->display->display_options['fields']['field_asunews_image_alt']['id'] = 'field_asunews_image_alt';
+  $handler->display->display_options['fields']['field_asunews_image_alt']['table'] = 'field_data_field_asunews_image_alt';
+  $handler->display->display_options['fields']['field_asunews_image_alt']['field'] = 'field_asunews_image_alt';
+  $handler->display->display_options['fields']['field_asunews_image_alt']['label'] = '';
+  $handler->display->display_options['fields']['field_asunews_image_alt']['alter']['strip_tags'] = TRUE;
+  $handler->display->display_options['fields']['field_asunews_image_alt']['element_type'] = '0';
+  $handler->display->display_options['fields']['field_asunews_image_alt']['element_label_type'] = '0';
+  $handler->display->display_options['fields']['field_asunews_image_alt']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_asunews_image_alt']['element_wrapper_type'] = '0';
+  $handler->display->display_options['fields']['field_asunews_image_alt']['element_default_classes'] = FALSE;
+  /* Field: Content: News image */
+  $handler->display->display_options['fields']['field_asunews_image']['id'] = 'field_asunews_image';
+  $handler->display->display_options['fields']['field_asunews_image']['table'] = 'field_data_field_asunews_image';
+  $handler->display->display_options['fields']['field_asunews_image']['field'] = 'field_asunews_image';
+  $handler->display->display_options['fields']['field_asunews_image']['label'] = '';
+  $handler->display->display_options['fields']['field_asunews_image']['element_type'] = '0';
+  $handler->display->display_options['fields']['field_asunews_image']['element_label_type'] = '0';
+  $handler->display->display_options['fields']['field_asunews_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_asunews_image']['element_wrapper_type'] = '0';
+  $handler->display->display_options['fields']['field_asunews_image']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_asunews_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_asunews_image']['settings'] = array(
+    'image_style' => '',
+    'image_link' => '',
+  );
+  $handler->display->display_options['argument_input'] = array(
+    'nid' => array(
+      'type' => 'panel',
+      'context' => 'entity:file.field_file_image_alt_text',
+      'context_optional' => 0,
+      'panel' => '0',
+      'fixed' => '',
+      'label' => 'Content: Nid',
+    ),
+  );
+  $export['asu_newsevent_images'] = $view;
 
   $view = new view();
   $view->name = 'events_new';

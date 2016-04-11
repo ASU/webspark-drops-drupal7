@@ -1,11 +1,8 @@
 <?php
-/**
- * Implements hook_install()
- */
 function webspark_newsevents_install() {
+  
   /**
-   * Grab image within the Feature module. Then, create image in the new site to
-   * use for default image for the field_asunews_image field.
+   * Grab image within the Feature module. Then, create image in the new site to use for default image for the field_asunews_image field.
    */
   $filename = 'asunews_default_image.png';
   $origfile = drupal_get_path('module', 'webspark_newsevents') . '/images/' . $filename;
@@ -20,13 +17,21 @@ function webspark_newsevents_install() {
   );
   $file = file_copy($file, $uri, FILE_EXISTS_REPLACE);
   variable_set('webspark_newsevents_asunews_image_fid', $file->fid);
+  
+}
+
+/**
+ * Implements hook_update_N()
+ */
+function webspark_newsevents_update_7001(&$sandbox) {
+  features_revert_module('webspark_newsevents');
 }
 
 /**
  * Implements hook_update_N()
  * + Updated ASU Events module feed source XML mappings to match new fields
  */
-function webspark_newsevents_update_7001(&$sandbox) {
+function webspark_newsevents_update_7002(&$sandbox) {
   $result = db_select('feeds_source', 'f')
     ->fields('f', array('config'))
     ->condition('f.id', 'asu_events_importer_new', '=')

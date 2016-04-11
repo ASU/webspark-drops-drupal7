@@ -21,3 +21,53 @@ function webspark_newsevents_field_default_field_instances_alter(&$fields) {
     $fields['node-asu_news-field_asunews_image']['settings']['default_image'] = variable_get('webspark_newsevents_asunews_image_fid');
   }
 }
+
+
+/**
+* Implements hook_views_api_alter().
+*
+* Views api is specified by features but we want to add the views-template directory to it.
+*/
+function webspark_newsevents_views_api_alter(&$apis) {
+	if (!empty($apis['webspark_newsevents']) && $apis['webspark_newsevents']['api'] == '3.0') {
+		$apis['webspark_newsevents']['template path'] = drupal_get_path('module', 'webspark_newsevents') . '/templates';
+	}
+}
+
+/**
+ * Implements hook_theme(). 
+ */
+function webspark_newsevents_theme(){
+  return array(
+    'views_view_fields__asu-newsevent_images__panel_pane_1' => array(
+      'template' => 'templates/views-view-fields--asu-newsevent-images--panel-pane-1',
+      'render element' => 'elements',
+      'type' => 'module'
+    ),
+    'views_view_fields__asu-newsevent_images__panel_pane_2' => array(
+      'template' => 'templates/views-view-fields--asu-newsevent-images--panel-pane-2',
+      'render element' => 'elements',
+      'type' => 'module'
+    ),
+  );
+}
+
+
+/* KM: commented out for now as this was causing an error when going to edit content types
+
+function webspark_newsevents_form_alter(&$form, &$form_state, $form_id) {
+
+  if ($form_id == 'field_ui_field_overview_form') {
+    $form['fields']['field_asunews_contri_phone']['label']['#markup'] = "Contributor Phone (Deprecated)";
+
+  } else if ($form_id == 'asu_news_node_form') {
+
+    $form['field_asunews_contri_phone']['#access'] = FALSE;
+
+  } else if ($form_id == 'field_ui_display_overview_form') {
+
+    $form['fields']['field_asunews_contri_phone']['human_name']['#markup'] = "Contributor Phone (Deprecated)";
+  }
+
+}
+*/
