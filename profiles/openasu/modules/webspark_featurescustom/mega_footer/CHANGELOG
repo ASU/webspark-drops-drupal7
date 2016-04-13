@@ -1,3 +1,8 @@
+mega_footer 7.x-1.5, 2016-02-03
+—————————————————————————
+
+-Removed <h1> tags from title field in footer
+
 mega_footer 7.x-1.4, 2016-02-03
 ---------------------------
 
