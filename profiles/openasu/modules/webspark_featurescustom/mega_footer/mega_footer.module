@@ -57,7 +57,7 @@ function mega_footer_block_view($delta = '') {
     }
 
     $footer_mark .= "
-	          <h1>" . variable_get('unit_title', 'Arizona State University') . "</h1>";
+	          <div class='mega-dept-title'>" . variable_get('unit_title', 'Arizona State University') . "</div>";
 
     $check = variable_get('megafoot_unit_descrip', NULL);
 
