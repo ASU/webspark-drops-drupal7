@@ -1253,6 +1253,52 @@ function asu_rfi_preprocess_page(&$variables) {
         }];
       })(jQuery)", array('type' => 'inline', 'scope' => 'header','weight' => 0));
       }
+    } else {
+        if(isset($variables['theme_hook_suggestions'][3]) && $variables['theme_hook_suggestions'][3] == 'page__asu_degree' && isset($_SESSION['rfi_data'])){
+            $thisNode = menu_get_object();
+            $price = '100.00';
+            $category  = 'RFI';
+            $nid = $thisNode->nid;
+            $college_code = $_SESSION['rfi_data']['college'];
+            $college = $_SESSION['rfi_data']['college_name'];
+            $program_code = $_SESSION['rfi_data']['program_code'];
+            $country = $_SESSION['rfi_data']['country'];
+            $zip_section = $_SESSION['rfi_data']['zipcode'];
+            if(isset($nid) && isset($college_code) && isset($college) && isset($program_code) && isset($country) && isset($zip_section)){
+                $ga_id = variable_get('asu_rfi_google_analytics_key').'-'.$nid;
+                $sku = $college_code.$program_code.'-RFI';
+                if($country == "United States"){
+                    if(!empty($zip_section)){
+                        if(($zip_section == "85") || ($zip_section == "86")){
+                            $price = '100.00';
+                        }
+                        else{
+                            $price = '200.00';
+                        }
+                    }
+                }
+                else{
+                    $price = '300.00';
+                }
+                drupal_add_js("(function ($) { 
+                   if($('#asu-rfi-multi-part1-thanks')){
+                    SI_dataLayer = [{
+                      'event': 'ecommerce_event',
+                      'transactionId': '$ga_id',
+                      'transactionAffiliation': '$program_code',
+                      'transactionTotal': '$price', 
+                      'transactionProducts': [{
+                        'sku': '$sku', 
+                        'name': '$college',  
+                        'category': '$category',
+                        'price': '$price', 
+                        'quantity': '1'
+                      }]
+                    }]; 
+                   }
+                })(jQuery)", array('type' => 'inline', 'scope' => 'header','weight' => 0));
+            }
+        }
     }
    }
   }
