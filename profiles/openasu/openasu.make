@@ -217,8 +217,16 @@ libraries[ajax_solr][download][url] = https://github.com/evolvingweb/ajax-solr/a
 libraries[ajax_solr][directory_name] = ajax_solr
 libraries[ajax_solr][destination] = libraries
 
+; CAS - Get only source + root PHP from Github
+; 1 of 2
 libraries[CAS][download][type] = get
-libraries[CAS][download][url] = https://github.com/Jasig/phpCAS/archive/1.3.3.zip
+libraries[CAS][download][url] = https://github.com/Jasig/phpCAS/archive/1.3.4.zip
+libraries[CAS][download][subtree] = source
+libraries[CAS][directory_name] = CAS/source
+; 2 of 2
+libraries[CAS_2][download][type] = file
+libraries[CAS_2][download][url] = https://raw.githubusercontent.com/Jasig/phpCAS/1.3.4/CAS.php
+libraries[CAS_2][directory_name] = CAS
 
 libraries[chosen][download][type] = get
 libraries[chosen][download][url] = https://github.com/harvesthq/chosen/releases/download/v1.1.0/chosen_v1.1.0.zip

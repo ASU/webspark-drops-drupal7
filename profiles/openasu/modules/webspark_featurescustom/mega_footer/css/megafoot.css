@@ -14,12 +14,13 @@
     margin-bottom: 16px;
 }
 
-.megafoot h1 {
+.mega-dept-title {
     margin-bottom: 16px;
     font-size: 16px;
-
     line-height: 1.2;
     color: #fff;
+    font-weight: normal;
+    margin-top: 20px;
 }
 
 .megafoot h2 {

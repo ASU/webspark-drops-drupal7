@@ -1,0 +1,5 @@
+CHANGELOG for Webspark News and Events for Drupal 7
+
+7.x-1.1, 2016-03-04
+-----------------------
+-Created new fields and instances to fix conflicts in field schema change
