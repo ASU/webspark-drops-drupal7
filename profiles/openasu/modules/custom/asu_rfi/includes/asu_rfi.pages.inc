@@ -742,7 +742,7 @@ function asu_rfi_second_form($form, &$form_state){
    
     $form['markup'] = array(
 	'#type' => 'item',
-	'#markup' => '<div style="background: green; padding:2%; color: #ffffff !important; width: 100%; text-align: justify;"><strong>Thank you for your interest in Arizona State University!</strong> We will send you information that matches your unique interests. If you would like additional information, please specify below.</div>',
+	'#markup' => '<div id="asu-rfi-multi-part1-thanks" style="background: green; padding:2%; color: #ffffff !important; width: 100%; text-align: justify;"><strong>Thank you for your interest in Arizona State University!</strong> We will send you information that matches your unique interests. If you would like additional information, please specify below.</div>',
     );
     
     $form['citizenship'] = array(
