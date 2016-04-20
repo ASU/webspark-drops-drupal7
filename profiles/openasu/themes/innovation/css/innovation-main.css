@@ -80,9 +80,9 @@ body {
 
 a,
 .ui-widget-content a {
-  border-bottom: 1px dotted #a30046;
+  border-bottom: 1px dotted #8C1D40;
   text-decoration: none;
-  color: #a30046;
+  color: #8C1D40;
   transition: all 0.25s ease-in-out 0s;
 }
 
@@ -620,7 +620,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 #top-content #tabs .nav-pills > li.active > a,
 #top-content #tabs .nav-pills > li.active > a:hover,
 #top-content #tabs .nav-pills > li.active > a:focus {
-  background-color: #a30046;
+  background-color: #8C1D40;
 }
 
 /* IPE */
