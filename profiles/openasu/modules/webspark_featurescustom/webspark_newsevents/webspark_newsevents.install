@@ -58,7 +58,7 @@ function webspark_newsevents_update_7002(&$sandbox) {
     $result['FeedsXPathParserXML']['sources']['xpathparser:52'] = 'event_units/event_unit';
     $result['FeedsXPathParserXML']['sources']['xpathparser:53'] = 'department';
     $result = serialize($result);
-    $result = preg_replace('|^(.+?)s:45:".field_asuevent_nid.field_asuevent_date:start"(.+?)$|', "$1" . 's:47:""$field_asuevent_nid$field_asuevent_date:start""' . "$2", $result);    dpm($result, 'after serialized + regex');
+    $result = preg_replace('|^(.+?)s:45:".field_asuevent_nid.field_asuevent_date:start"(.+?)$|', "$1" . 's:47:""$field_asuevent_nid$field_asuevent_date:start""' . "$2", $result);
     // Update DB
     db_update('feeds_source')
       ->fields(array(
