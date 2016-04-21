@@ -636,7 +636,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 }
 
 #modalContent .form-submit.btn {
-  margin-bottom: 2em;
+  margin-bottom: 1em;
   padding: 6px 20px;
   font-size: 18px;
 }
