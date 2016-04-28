@@ -1,5 +1,5 @@
 name = Webspark News and Events Prerequisite (Step 1)
-description = Import ASU News vocabrary and terms (Taxonomy)
+description = Imports ASU News taxonomy vocabulary and corresponding terms (before parent module - Step 2 - is enabled).
 core = 7.x
 package = ASU Webspark
 version = 7.x-1.0-beta1

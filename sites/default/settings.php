@@ -561,3 +561,9 @@ $conf['404_fast_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
  */
 # $conf['pressflow_smart_start'] = TRUE;
 
+/**
+ * Added include for local DB settings
+ */
+if (!isset($_SERVER['PANTHEON_ENVIRONMENT']) && file_exists(DRUPAL_ROOT . '/' . conf_path() . '/settings.local.php')) {
+  include DRUPAL_ROOT . '/' . conf_path() . '/settings.local.php';
+}

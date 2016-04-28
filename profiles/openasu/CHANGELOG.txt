@@ -1,3 +1,62 @@
+Webspark 1.13.15 (Bellingham) release
+----------------
+- Drupal core:
+    * The update to Drupal 7.43 broke file uploads attached to all Drupal forms submitted by unauthenticated users when
+    form validation fails. A temporary patch to fix this regression has been applied until the issue is fixed in Drupal
+    core.
+
+- Webspark core:
+    * Added 1 hour of caching (vs. none) for 301 page redirects to speed up their processing for repeat visitors
+    * Updated all Webspark maroon, gold, and blue colors in various CSS files to match Brand Guide defined ASU colors
+
+- Contrib libraries in Webspark:
+    * CAS (v1.3.4) - Includes multiple bug fixes and improvements (phpCAS changelog)
+
+- Custom ASU modules in Webspark:
+
+  The following deprecated Webspark modules/components (all of which are listed under "DEPRECATED" in the admin/modules
+  page of your site) have been removed in this release:
+    * ASU Eadvisor Feed Feature (replaced by ASU Degrees)
+    * ASU News (replaced by Webspark News & Events)
+    * ASU Events (replaced by Webspark News & Events)
+
+      While we strongly recommend discontinuing use of these unsupported projects in favor of their replacements, they
+      can technically be kept in your website by copying the module directories into the sites/all/modules folder of
+      your Webspark and immediately visiting the main modules page (i.e. /admin/modules) of your Webspark site before
+      this update is applied.
+
+- Web standards components in Webspark:
+    * Innovation theme (v1.0)
+        * Added "Skip to Content" link in template.php (accessibility fix)
+        * Fixed bottom margin issue with ASU Spotlight panes (was too large)
+    * Webspark News & Events (v1.0-beta3)
+        * Added ability to process new feed formats from ASU Now and ASU Events. To enable processing of the new feed
+          formats, follow the updating instructions at: https://webspark.asu.edu/features/news-and-events#updating
+        * Created new fields and instances to fix conflicts in the field schema change needed to import the new ASU Now
+          and ASU Event feeds
+        * Updated field mappings in standalone import form
+        * Fixed minor spelling issue in module description
+
+        IMPORTANT: If you have this module enabled and have already created events and/or news items, then you must
+        delete all of them prior to applying this update. This includes all non-feed generated events or news items
+        have been created manually. Please read the "Update" section of ASU News & Events
+        (https://webspark.asu.edu/features/news-and-events#updating) for detailed steps on how to apply this update.
+
+    * Webspark Megamenu (v1.6)
+        * Megamenu javascript files are now only called when the Innovation theme is the active theme on the page (was
+          being called for all Drupal themes)
+        * Reconfigured Megamenu javascript so that it is included in Drupal's JS aggregation (for better performance)
+        * Implemented new web standards styling for Megamenu items with expanded submenus.
+
+        IMPORTANT: Sites that have previously customized the CSS styling of their expanded submenus may need to make
+        adjustments to their custom styling and should test before deploying this update to their live/production
+        sites: https://webspark.asu.edu/features/mega-menu#updating
+
+    * ASU Mega Footer (v1.5)
+        * Removed <h1> tags from title field in footer to improve accessibility and SEO
+        * Added additional padding in order to prevent elements from colliding with the Global ASU Footer
+
+
 Webspark 1.13.14 (Ferndale) release
 ----------------
 

@@ -15,6 +15,7 @@
     "symfony/browser-kit": "2.4.2"
   },
   "config": {
-    "bin-dir": "bin/"
+    "bin-dir": "bin/",
+    "secure-http": false
   }
 }
