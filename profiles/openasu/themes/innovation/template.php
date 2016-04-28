@@ -31,7 +31,7 @@ function innovation_preprocess_html(&$variables) {
     '#type' => 'html_tag',
     '#tag' => 'meta',
     '#attributes' => array(
-      'content' => 'Webspark:1.13.14 (Ferndale)',
+      'content' => 'Webspark:1.13.15 (Bellingham)',
       'http-equiv' => 'X-Name-of-Distro',
     )
   );
