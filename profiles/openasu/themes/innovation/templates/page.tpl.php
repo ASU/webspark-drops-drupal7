@@ -77,7 +77,6 @@
  * @ingroup themeable
  */
 ?>
-<div class="accessibility-hide"><a href="#main-wrapper" id="skip_to_content">Skip to Main Page Content</a></div>
 <div id="page-wrapper"><div id="page">
 
   <!-- Page Header -->

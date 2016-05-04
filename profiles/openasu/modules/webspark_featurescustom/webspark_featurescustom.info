@@ -4,7 +4,10 @@ core = 7.x
 package = ASU Webspark
 project = webspark_featurescustom
 files[] = webspark_featurescustom.module
+
+; See below for info on version number
 version = 7.x-1.4
 required = TRUE
 
-; submodules enabled in the installation profile by default to avoid dependency/permissions issues with Panopoly
+; Contains submodules enabled in the installation profile by default to avoid dependency/permissions issues with Panopoly
+; The version number of this module is only updated when code that is NOT part of said submodules has been updated.

@@ -72,3 +72,8 @@ profiles/openasu/modules/**/.gitignore
 # rebuild Webspark from Drush make script
 ######################
 webspark_rebuild_from_drush_make.bash
+
+# local DB file with ID/pass for local development
+######################
+sites/default/settings.local.php
+

@@ -28,15 +28,12 @@ DRUPAL HOOKS
  * Implements hook_permission().
  */
 function asu_rfi_permission() {
-  // TODO not used anywhere yet...
-  $perms = array(
-    'asu access lead export tool' => array(
-      'title' => t('Administer ASU RFI module'),
-      'description' => t('Administer ASU RFI module'),
-    ),
-  );
-
-  return $perms;
+    return array(
+        'administer asu rfi' => array(
+            'title' => t('Administer ASU RFI'),
+            'description' => t('Administer ASU RFI module'),
+        ),
+    );
 }
 
 /**
@@ -75,7 +72,7 @@ function asu_rfi_menu() {
     'description' => t('Administer RFI form settings.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('asu_rfi_admin_settings'),
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('administer asu rfi'),
     'options' => array('attributes' => array('class' => 'title')),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'includes/asu_rfi.admin.inc'
@@ -793,17 +790,17 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id){
    //Get the RFI form mode settings, if form is in test mode, give only admins access to the form view
    $rfi_mode = variable_get('asu_rfi_form_mode');
     global $user;
-    
-      if(($rfi_mode == "test") || empty($rfi_mode)){
-         if(user_access('administer nodes', $user) == 1){
+
+    if((($rfi_mode == "test") || empty($rfi_mode)) && ($form['#id'] == "asu-rfi-form-data" || $form['#id'] == "asu-rfi-long-form-data" || $form['#id'] == 'views-exposed-form-asu-rfi-submissions-report-page')){
+        if(user_access('administer nodes', $user) == 1 || user_access('administer asu rfi', $user) == 1){
             return true;
-         }
-        else{
-           $form['#access'] = FALSE;
-           drupal_set_message("You do not have access to view this form",'warning');
-           return false;
         }
-      }
+        else{
+            $form['#access'] = FALSE;
+            drupal_set_message("You do not have access to view this form",'warning');
+            return false;
+        }
+    }
      
 }
 
@@ -1253,6 +1250,51 @@ function asu_rfi_preprocess_page(&$variables) {
         }];
       })(jQuery)", array('type' => 'inline', 'scope' => 'header','weight' => 0));
       }
+    } else {
+        $thisNode = menu_get_object();
+        if(isset($thisNode->type) && $thisNode->type == "asu_degree" && isset($_SESSION['rfi_data'])) {
+            dpm('in');
+            $price = '100.00';
+            $category = 'RFI';
+            $nid = $thisNode->nid;
+            $college_code = $_SESSION['rfi_data']['college'];
+            $college = $_SESSION['rfi_data']['college_name'];
+            $program_code = $_SESSION['rfi_data']['program_code'];
+            $country = $_SESSION['rfi_data']['country'];
+            $zip_section = $_SESSION['rfi_data']['zipcode'];
+            if (isset($nid) && isset($college_code) && isset($college) && isset($program_code) && isset($country) && isset($zip_section)) {
+                $ga_id = variable_get('asu_rfi_google_analytics_key') . '-' . $nid;
+                $sku = $college_code . $program_code . '-RFI';
+                if ($country == "United States") {
+                    if (!empty($zip_section)) {
+                        if (($zip_section == "85") || ($zip_section == "86")) {
+                            $price = '100.00';
+                        } else {
+                            $price = '200.00';
+                        }
+                    }
+                } else {
+                    $price = '300.00';
+                }
+                drupal_add_js("(function ($) { 
+                   if($('#asu-rfi-multi-part1-thanks')){
+                    SI_dataLayer = [{
+                      'event': 'ecommerce_event',
+                      'transactionId': '$ga_id',
+                      'transactionAffiliation': '$program_code',
+                      'transactionTotal': '$price', 
+                      'transactionProducts': [{
+                        'sku': '$sku', 
+                        'name': '$college',  
+                        'category': '$category',
+                        'price': '$price', 
+                        'quantity': '1'
+                      }]
+                    }]; 
+                   }
+                })(jQuery)", array('type' => 'inline', 'scope' => 'header', 'weight' => 0));
+            }
+        }
     }
    }
   }

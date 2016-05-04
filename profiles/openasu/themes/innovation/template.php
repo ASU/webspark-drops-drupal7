@@ -31,7 +31,7 @@ function innovation_preprocess_html(&$variables) {
     '#type' => 'html_tag',
     '#tag' => 'meta',
     '#attributes' => array(
-      'content' => 'Webspark:1.13.14 (Ferndale)',
+      'content' => 'Webspark:1.13.15 (Bellingham)',
       'http-equiv' => 'X-Name-of-Distro',
     )
   );
@@ -43,6 +43,17 @@ function innovation_preprocess_html(&$variables) {
   // Add conditional stylesheets for IE
   drupal_add_css(path_to_theme() . '/css/ie9.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 9', '!IE' => FALSE), 'preprocess' => FALSE));
   drupal_add_css(path_to_theme() . '/css/ie8.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 8', '!IE' => FALSE), 'preprocess' => FALSE));
+}
+
+/**
+ * Load Kalatheme dependencies.
+ *
+ * Implements template_process_html().
+ */
+function innovation_process_html(&$variables) {
+  // WEBSPARK-804 - Added Skip to Content link, below Google Analytics tags but before everything else.
+  $skip_html = '<div class="accessibility-hide"><a href="#main-wrapper" id="skip_to_content">Skip to Main Page Content</a></div>';
+  $variables['page_top'] = $skip_html . "\n" . $variables['page_top'];
 }
 
 /**

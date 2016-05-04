@@ -64,7 +64,7 @@ projects[panopoly_demo][md5] = a4cd5c43a1f87842791f50d6586238cb
 
 projects[asu_drupal_modules][type] = module
 projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = 09660a8d
+projects[asu_drupal_modules][download][revision] = fff089b3
 projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ; ASU Module Prerequisites
@@ -236,8 +236,16 @@ libraries[ajax_solr][download][url] = https://github.com/evolvingweb/ajax-solr/a
 libraries[ajax_solr][directory_name] = ajax_solr
 libraries[ajax_solr][destination] = libraries
 
+; CAS - Get only source + root PHP from Github
+; 1 of 2
 libraries[CAS][download][type] = get
-libraries[CAS][download][url] = https://github.com/Jasig/phpCAS/archive/1.3.3.zip
+libraries[CAS][download][url] = https://github.com/Jasig/phpCAS/archive/1.3.4.zip
+libraries[CAS][download][subtree] = phpCAS-1.3.4/source
+libraries[CAS][directory_name] = CAS/source
+; 2 of 2
+libraries[CAS_2][download][type] = file
+libraries[CAS_2][download][url] = https://raw.githubusercontent.com/Jasig/phpCAS/1.3.4/CAS.php
+libraries[CAS_2][directory_name] = CAS
 
 libraries[chosen][download][type] = get
 libraries[chosen][download][url] = https://github.com/harvesthq/chosen/releases/download/v1.1.0/chosen_v1.1.0.zip
@@ -247,8 +255,16 @@ libraries[chosen][destination] = libraries
 libraries[flexslider][download][type] = get
 libraries[flexslider][download][url] = https://github.com/woothemes/FlexSlider/archive/version/2.2.2.zip
 
+; 1 of 2
 libraries[fontawesome][download][type] = get
 libraries[fontawesome][download][url] = https://github.com/FortAwesome/Font-Awesome/archive/v4.2.0.zip
+libraries[fontawesome][download][subtree] = Font-Awesome-4.2.0/css
+libraries[fontawesome][directory_name] = fontawesome/css
+; 2 of 2
+libraries[fontawesome_fonts][download][type] = get
+libraries[fontawesome_fonts][download][url] = https://github.com/FortAwesome/Font-Awesome/archive/v4.2.0.zip
+libraries[fontawesome_fonts][download][subtree] = Font-Awesome-4.2.0/fonts
+libraries[fontawesome_fonts][directory_name] = fontawesome/fonts
 
 libraries[modernizr][download][type] = get
 libraries[modernizr][download][url] = https://github.com/Modernizr/Modernizr/archive/v2.6.2.zip
@@ -257,29 +273,6 @@ libraries[jqtree][download][type] = get
 libraries[jqtree][download][url] = https://github.com/mbraak/jqTree/archive/0.22.0.zip
 libraries[jqtree][directory_name] = jqtree
 libraries[jqtree][destination] = libraries
-
-; DEPRECATED PROJECTS - DO NOT USE AND LOOK FOR ALTERNATE SOLUTIONS ASAP
-
-;; Will be replaced by alternate system that will work with the Hub's new asunews site
-projects[asu_events][version] = 1.0-dev
-projects[asu_events][subdir] = custom
-projects[asu_events][type] = module
-projects[asu_events][download][revision] = 9f04696f38b0999df42947ac6db0075d969ca553
-projects[asu_events][download][url] = https://github.com/ASU/asu-drupal-events-feed.git
-
-;; Will be replaced by alternate system that will work with the Hub's new asunews site
-projects[asu_news][version] = 1.0-dev
-projects[asu_news][subdir] = custom
-projects[asu_news][type] = module
-projects[asu_news][download][revision] = e52986872a63d0fe1123d819aba554d76f2c6e33
-projects[asu_news][download][url] = https://github.com/ASU/asu-drupal-news.git
-
-;; (DEPRECATED in lieu of ASU Degrees - asu_degrees module)
-projects[asu_eadvisor_degree_feed_feature][version] = 1.0-beta1
-projects[asu_eadvisor_degree_feed_feature][subdir] = custom
-projects[asu_eadvisor_degree_feed_feature][type] = module
-projects[asu_eadvisor_degree_feed_feature][download][revision] = 312c885e04f5cf64920b24fa1bc648c8f5a02989
-projects[asu_eadvisor_degree_feed_feature][download][url] = https://github.com/ASU/asu-drupal-eadvisor-degree-feed.git
 
 ; PANOPOLY PROJECT PATCHES
 ;; These projects are installed first, before any other projects in the parent makefile.

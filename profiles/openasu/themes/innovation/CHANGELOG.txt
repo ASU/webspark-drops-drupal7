@@ -1,3 +1,7 @@
+Innovation 7.x-1.0, 2016-04-18
+------------------------------
+- Added "Skip to Content" link in template.php (accessibility fix)
+
 Innovation 7.x-1.0-rc3, 2016-02-29
 ------------------------------
 - Switched the site name in the header from an h1 to div, and removed the anchor tag.
