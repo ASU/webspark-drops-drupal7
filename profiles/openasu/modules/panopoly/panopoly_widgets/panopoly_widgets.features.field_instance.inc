@@ -10,7 +10,8 @@
 function panopoly_widgets_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'fieldable_panels_pane-basic_file-field_basic_file_file'
+  // Exported field_instance:
+  // 'fieldable_panels_pane-basic_file-field_basic_file_file'
   $field_instances['fieldable_panels_pane-basic_file-field_basic_file_file'] = array(
     'bundle' => 'basic_file',
     'deleted' => 0,
@@ -31,7 +32,7 @@ function panopoly_widgets_field_default_field_instances() {
     'settings' => array(
       'description_field' => 0,
       'file_directory' => 'general',
-      'file_extensions' => 'pdf txt',
+      'file_extensions' => 'txt doc docx xls xlsx pdf ppt pptx pps ppsx odt ods odp',
       'max_filesize' => '',
       'user_register_form' => FALSE,
     ),
@@ -46,7 +47,8 @@ function panopoly_widgets_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'fieldable_panels_pane-basic_file-field_basic_file_text'
+  // Exported field_instance:
+  // 'fieldable_panels_pane-basic_file-field_basic_file_text'
   $field_instances['fieldable_panels_pane-basic_file-field_basic_file_text'] = array(
     'bundle' => 'basic_file',
     'default_value' => NULL,
@@ -80,7 +82,8 @@ function panopoly_widgets_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'fieldable_panels_pane-image-field_basic_image_caption'
+  // Exported field_instance:
+  // 'fieldable_panels_pane-image-field_basic_image_caption'
   $field_instances['fieldable_panels_pane-image-field_basic_image_caption'] = array(
     'bundle' => 'image',
     'default_value' => NULL,
@@ -116,7 +119,8 @@ function panopoly_widgets_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'fieldable_panels_pane-image-field_basic_image_image'
+  // Exported field_instance:
+  // 'fieldable_panels_pane-image-field_basic_image_image'
   $field_instances['fieldable_panels_pane-image-field_basic_image_image'] = array(
     'bundle' => 'image',
     'deleted' => 0,
@@ -254,7 +258,8 @@ function panopoly_widgets_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'fieldable_panels_pane-quick_links-field_quick_links_links'
+  // Exported field_instance:
+  // 'fieldable_panels_pane-quick_links-field_quick_links_links'
   $field_instances['fieldable_panels_pane-quick_links-field_quick_links_links'] = array(
     'bundle' => 'quick_links',
     'default_value' => NULL,
@@ -274,6 +279,7 @@ function panopoly_widgets_field_default_field_instances() {
     'label' => 'Links',
     'required' => 0,
     'settings' => array(
+      'absolute_url' => 1,
       'attributes' => array(
         'class' => '',
         'configurable_title' => 0,
@@ -286,6 +292,7 @@ function panopoly_widgets_field_default_field_instances() {
       ),
       'enable_tokens' => 1,
       'title' => 'optional',
+      'title_label_use_field_label' => FALSE,
       'title_maxlength' => 128,
       'title_value' => '',
       'url' => 0,
@@ -301,7 +308,8 @@ function panopoly_widgets_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'fieldable_panels_pane-spotlight-field_basic_spotlight_duration'
+  // Exported field_instance:
+  // 'fieldable_panels_pane-spotlight-field_basic_spotlight_duration'
   $field_instances['fieldable_panels_pane-spotlight-field_basic_spotlight_duration'] = array(
     'bundle' => 'spotlight',
     'default_value' => NULL,
@@ -335,7 +343,8 @@ function panopoly_widgets_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'fieldable_panels_pane-spotlight-field_basic_spotlight_items'
+  // Exported field_instance:
+  // 'fieldable_panels_pane-spotlight-field_basic_spotlight_items'
   $field_instances['fieldable_panels_pane-spotlight-field_basic_spotlight_items'] = array(
     'bundle' => 'spotlight',
     'default_value' => NULL,
@@ -372,11 +381,47 @@ function panopoly_widgets_field_default_field_instances() {
       'module' => 'panopoly_widgets',
       'settings' => array(),
       'type' => 'panopoly_spotlight_form',
-      'weight' => 2,
+      'weight' => 3,
     ),
   );
 
-  // Exported field_instance: 'fieldable_panels_pane-table-field_basic_table_table'
+  // Exported field_instance:
+  // 'fieldable_panels_pane-spotlight-field_basic_spotlight_pager'
+  $field_instances['fieldable_panels_pane-spotlight-field_basic_spotlight_pager'] = array(
+    'bundle' => 'spotlight',
+    'default_value' => array(
+      0 => array(
+        'value' => 'full',
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'How would you like the pager to appear?',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 2,
+      ),
+    ),
+    'entity_type' => 'fieldable_panels_pane',
+    'field_name' => 'field_basic_spotlight_pager',
+    'label' => 'Pager Style',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 1,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'fieldable_panels_pane-table-field_basic_table_table'
   $field_instances['fieldable_panels_pane-table-field_basic_table_table'] = array(
     'bundle' => 'table',
     'default_value' => array(
@@ -407,7 +452,7 @@ function panopoly_widgets_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'tablefield',
         'settings' => array(),
-        'type' => 'default',
+        'type' => 'tablefield_default',
         'weight' => 0,
       ),
     ),
@@ -534,10 +579,12 @@ function panopoly_widgets_field_default_field_instances() {
   t('Address');
   t('Caption');
   t('File');
+  t('How would you like the pager to appear?');
   t('Image');
   t('Information');
   t('Items');
   t('Links');
+  t('Pager Style');
   t('Slide Duration');
   t('Table');
   t('Text');

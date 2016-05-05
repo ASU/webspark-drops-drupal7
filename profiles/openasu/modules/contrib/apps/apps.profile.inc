@@ -104,31 +104,78 @@ function apps_profile_apps_select_form($form, $form_state, &$install_state) {
 
   drupal_set_title(apps_profile_get_server_name($_SESSION['apps_server']));
   $form['actions'] = array('#type' => 'actions', '#weight' => 3);
-  foreach ($_SESSION['apps_manifest'] as $name => $app) {
-    if ($name != '#theme') {
-      $options[$name] = '<strong>' . $app['name'] . '</strong>';
-      if (isset($app['description'])) {
-        $options[$name] .= '<br>' . $app['description'];
-      }
-    }
-  }
-  $form = array();
 
   $form['apps_message'] = array(
     '#markup' => t('<h2>Apps</h2><p>Apps are the next generation in usability for Drupal. They contain bundles of functionality for your website. Select any apps you want to install right now. You can add more later on the apps page.</p></p>In order to install apps, you must be able to FTP or SSH into your server. This uses the same process as the update module.</p>'),
   );
+  $form['#attached']['css'][] = drupal_get_path('module', 'apps') . '/theme/css/apps-install.css';
 
-  $form['apps_fieldset'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Select Apps To Install'),
-    '#collapsible' => FALSE,
+  $form['apps_tabs'] = array(
+    '#type' => 'vertical_tabs',
   );
-  $form['apps_fieldset']['apps'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Apps'),
-    '#default_value' => $_SESSION['apps_server']['default apps'],
-    '#options' => $options,
-  );
+  $apps_manifest = $_SESSION['apps_manifest'];
+  unset($apps_manifest['#theme']);
+  $all_packages = array();
+  foreach ($apps_manifest as $name => $app) {
+    $packages = array();
+    if (!empty($app['package'])) {
+      // Only allow the first package on this form for now.
+      // @todo have javascript so can show it for all packages.
+      foreach (explode(',', $app['package']) as $package) {
+        $package = trim($package);
+        $package_key = strtolower(preg_replace('/[^\da-z]/i', '', $package));
+        $packages[$package_key] = $package;
+        break;
+      }
+    }
+    else {
+      $packages['other'] = t('Other');
+    }
+    foreach ($packages as $package_key => $package) {
+      if (empty($form['apps_package_' . $package_key])) {
+        $all_packages[] = $package_key;
+        $form['apps_package_' . $package_key] = array(
+          '#type' => 'fieldset',
+          '#group' => 'apps_tabs',
+          '#title' => $package,
+        );
+      }
+      $form['apps_package_' . $package_key][$name] = array(
+        '#title' => '<strong>' . $app['name'] . '</strong>',
+        '#type' => 'checkbox',
+        '#parents' => array('apps', $name),
+        '#return_value' => $name,
+        '#description' =>
+          (!empty($app['logo']['path']) ? 
+            theme('image', array('path' => $app['logo']['path'], 'height' => '32', 'width' => '32', 'attributes' => array('class' => array('apps-image')))) : '') .
+          (!empty($app['description']) ? $app['description'] : '') . '<span class="clearfix"></span>',
+        '#default_value' => in_array($name,  $_SESSION['apps_server']['default apps']),
+      );
+      // Hide child apps if parent is not being choosen.
+      if (!empty($app['parent_apps'])) {
+        foreach ($app['parent_apps'] as $parent_app) {
+          $form['apps_package_' . $package_key][$name]['#states']['visible'][':input[name="apps[' . $parent_app . ']"]'] = array('checked' => TRUE);
+        }
+      }
+    }
+  }
+  // If only one package, convert to old method.
+  if (count($all_packages) == 1) {
+    unset($form['apps_tabs']);
+    $form['apps_package_' . reset($all_packages)]['#title'] = t('Select Apps To Install');
+  }
+  else {
+    // Sort the packages by alaphabet.
+    unset($all_packages['other']);
+    sort($all_packages);
+    foreach ($all_packages as $weight => $package_key) {
+      $form['apps_package_' . $package_key]['#weight'] = $weight;
+    }
+    // Other should be last.
+    if (!empty($form['apps_package_other'])) {
+      $form['apps_package_other']['#weight'] = $weight+1;
+    }
+  }
 
   $form['default_content_fieldset'] = array(
     '#type' => 'fieldset',
@@ -164,7 +211,7 @@ function apps_profile_apps_select_form($form, $form_state, &$install_state) {
 function apps_profile_apps_select_form_validate($form, &$form_state) {
   if (empty($form_state['values']['op']) || $form_state['values']['op'] == t('Install Apps')) {
     // See if any the apps conflict with each other and cannot be used togeather.
-    $apps = array_filter($form_state['values']['apps']);
+    $apps = array_keys(array_filter($form_state['values']['apps']));
     foreach ($apps as $app_name) {
       $app = $_SESSION['apps_manifest'][$app_name];
       if (!empty($app['conflicts'])) {
@@ -182,6 +229,12 @@ function apps_profile_apps_select_form_validate($form, &$form_state) {
             $names[] = $_SESSION['apps_manifest'][$conflict]['name'] . ' (' . $conflict . ')';
           }
           form_set_error('apps', t('Conflict found with @app (@machine), not compatible with @apps', array('@app' => $app['name'], '@apps' => implode(', ', $names), '@machine' => $app_name)));
+        }
+      }
+      // Don't enable any apps who's parent apps aren't being enabled.
+      if (!empty($app['parent_apps'])) {
+        if (array_diff($app['parent_apps'], $apps)) {
+          unset($form_state['values']['apps'][$app_name]);
         }
       }
     }
@@ -212,7 +265,7 @@ function apps_profile_download_app_modules(&$install_state) {
   apps_include('installer');
   $apps = array();
   foreach ($_SESSION['apps'] as $id => $name) {
-    $apps[] = $_SESSION['apps_manifest'][$name];
+    $apps[] = $_SESSION['apps_manifest'][$id];
   }
   $batch = apps_download_apps_batch($apps);
 

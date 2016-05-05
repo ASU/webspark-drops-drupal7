@@ -265,7 +265,7 @@ function views_content_views_panes_content_type_render($subtype, $conf, $panel_a
   if ($allow['fields_override']) {
     if ($conf['fields_override']) {
       $fields = $view->get_items('field');
-      foreach ($fields as $field => $display) {
+      foreach ($fields as $field => $field_display) {
         $fields[$field]['exclude'] = empty($conf['fields_override'][$field]);
       }
       $view->display_handler->set_option('fields', $fields);
@@ -274,6 +274,11 @@ function views_content_views_panes_content_type_render($subtype, $conf, $panel_a
   }
 
   if ($allow['exposed_form'] && !empty($conf['exposed'])) {
+    foreach ($conf['exposed'] as $filter_name => $filter_value) {
+      if (!is_array($filter_value)) {
+        $conf['exposed'][$filter_name] = ctools_context_keyword_substitute($filter_value, array(), $contexts);
+      }
+    }
     $view->set_exposed_input($conf['exposed']);
   }
 
@@ -283,6 +288,11 @@ function views_content_views_panes_content_type_render($subtype, $conf, $panel_a
   if (empty($view->result) && !$view->display_handler->get_option('empty') && empty($view->style_plugin->definition['even empty'])) {
     return;
   }
+
+  // Add contextual links to the output.
+  $block = (array) $block;
+  views_add_block_contextual_links($block, $view, $display, 'panel_pane');
+  $block = (object) $block;
 
   $block->title = $view->get_title();
 
@@ -602,7 +612,7 @@ function views_content_views_panes_content_type_admin_info($subtype, $conf, $con
     $argument_input = $view->display_handler->get_option('argument_input');
 
     foreach ($conf['arguments'] as $key => $value) {
-      if(!empty($value)){
+      if (!empty($value)){
         $label = $argument_input[$key]['label'];
         $info[] = $label . ': ' . $value;
       }

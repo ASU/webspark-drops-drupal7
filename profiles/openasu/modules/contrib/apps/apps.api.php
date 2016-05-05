@@ -197,6 +197,8 @@ $js = <<<JS
         "fivestar 6.x-2.x-dev" : "http://ftp.drupal.org/files/projects/fivestar-7.x-2.x-dev.tar.gz",
         "votingapi 7.x-2.4" : "http://ftp.drupal.org/files/projects/votingapi-7.x-2.4.tar.gz"
       }
+      // Groups app with other apps from same server.
+      "package": "Drupal"
     }
     // This ends a single app manifest
   ]

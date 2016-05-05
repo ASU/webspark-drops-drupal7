@@ -71,8 +71,8 @@ interface SearchApiSolrConnectionInterface {
   /**
    * Gets information about the Solr Core.
    *
-   * @return array
-   *   An array with system information.
+   * @return object
+   *   A response object with system information.
    */
   public function getSystemInfo();
 
@@ -129,7 +129,7 @@ interface SearchApiSolrConnectionInterface {
    * @return object
    *  The HTTP response object.
    *
-   * @throws Exception
+   * @throws SearchApiException
    */
   public function makeServletRequest($servlet, array $params = array(), array $options = array());
 
@@ -158,16 +158,15 @@ interface SearchApiSolrConnectionInterface {
    * @param string $rawPost
    *   The XML document to send to the Solr server's update service.
    * @param int|false $timeout
-   *   (optional) Maximum expected duration (in seconds). Defaults to not timing
-   *   out.
+   *   (optional) Maximum expected duration (in seconds).
    *
    * @return object
    *   A response object.
    *
-   * @throws Exception
+   * @throws SearchApiException
    *   If an error occurs during the service call
    */
-  public function update($rawPost, $timeout = FALSE);
+  public function update($rawPost, $timeout = 3600);
 
   /**
    * Adds an array of Solr Documents to the index all at once
@@ -185,7 +184,7 @@ interface SearchApiSolrConnectionInterface {
    * @return object
    *   A response object.
    *
-   * @throws Exception
+   * @throws SearchApiException
    *   If an error occurs during the service call.
    */
   public function addDocuments(array $documents, $overwrite = NULL, $commitWithin = NULL);
@@ -204,7 +203,7 @@ interface SearchApiSolrConnectionInterface {
    * @return object
    *   A response object.
    *
-   * @throws Exception
+   * @throws SearchApiException
    *   If an error occurs during the service call.
    */
   public function commit($waitSearcher = TRUE, $timeout = 3600);
@@ -221,7 +220,7 @@ interface SearchApiSolrConnectionInterface {
    * @return object
    *   A response object.
    *
-   * @throws Exception
+   * @throws SearchApiException
    *   If an error occurs during the service call.
    */
   public function deleteById($id, $timeout = 3600);
@@ -238,7 +237,7 @@ interface SearchApiSolrConnectionInterface {
    * @return object
    *   A response object.
    *
-   * @throws Exception
+   * @throws SearchApiException
    *   If an error occurs during the service call.
    */
   public function deleteByMultipleIds(array $ids, $timeout = 3600);
@@ -254,7 +253,7 @@ interface SearchApiSolrConnectionInterface {
    * @return object
    *   A response object.
    *
-   * @throws Exception
+   * @throws SearchApiException
    *   If an error occurs during the service call.
    */
   public function deleteByQuery($rawQuery, $timeout = 3600);
@@ -273,7 +272,7 @@ interface SearchApiSolrConnectionInterface {
    * @return object
    *   A response object.
    *
-   * @throws Exception
+   * @throws SearchApiException
    *   If an error occurs during the service call.
    */
   public function optimize($waitSearcher = TRUE, $timeout = 3600);
@@ -288,13 +287,13 @@ interface SearchApiSolrConnectionInterface {
    *   documentation). Use arrays for parameter keys used more than once (e.g.,
    *   facet.field).
    * @param string $method
-   *   The HTTP method to use. Must be either "GET" or "POST". Defaults to
-   *   "GET".
+   *   The HTTP method to use. Must be either "GET", "POST" or "AUTO". Defaults
+   *   to "GET".
    *
    * @return object
    *   A response object.
    *
-   * @throws Exception
+   * @throws SearchApiException
    *   If an error occurs during the service call.
    */
   public function search($query = NULL, array $params = array(), $method = 'GET');

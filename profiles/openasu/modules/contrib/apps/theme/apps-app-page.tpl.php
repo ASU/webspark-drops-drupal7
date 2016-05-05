@@ -13,6 +13,10 @@
       <h3><?php print $rating_caption; ?></h3>
       <?php print drupal_render($rating); ?>
     <?php endif; ?>
+    <?php if ($parent_apps): ?>
+      <h2><?php print $parent_apps_title ?></h2>
+      <div class = 'app-parents'><?php print implode(', ', $parent_apps); ?></div>
+    <?php endif; ?>
   </div>
   <div class="app-main">
 
@@ -32,10 +36,12 @@
     </div>
     <?php endif; ?>
 
+  <?php if ($description): ?>
     <div class = 'app-description'>
       <h2><?php print $description_title; ?></h2>
       <?php print $description ?>
     </div>
+  <?php endif; ?>
 
     <?php if ($screenshot): ?>
       <div class = 'app-screenshot'><?php print $screenshot ?><div class="screenshot-shadow"></div></div>
