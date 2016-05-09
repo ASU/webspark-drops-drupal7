@@ -145,17 +145,23 @@ function asu_rfi_block_info() {
  * Implements hook_block_info().
  *
  * @param string $delta
- * @param array $multi_id (for Multiblock)
+ * @param array $multiblock_id (for Multiblock)
  *
  * @return array
  */
-function asu_rfi_block_view($delta = '', $multi_id = NULL) {
+function asu_rfi_block_view($delta = '', $multiblock_id = NULL) {
 
   $block = array();
 
   switch ($delta) {
     case 'asu_rfi_form_block':
-
+      if(isset($multiblock_id['multiblock_delta']) && isset($multiblock_id['multiblock_delta']['#value'])){
+        $multi_id = $multiblock_id['multiblock_delta']['#value'];
+      } else if (isset($multiblock_id)) {
+        $multi_id = $multiblock_id;
+      } else {
+        $multi_id = NULL;
+      }
       // If we have a multiblock ID, line it up for use getting settings.
       $multi_id = $multi_id ? $multi_id : NULL;
       // Get instance settings.
@@ -359,13 +365,19 @@ function asu_rfi_block_save($delta = '', $edit = array()) {
 /**
  * Helper function to obtain all settings for a block (Multiblock compatible).
  *
- * @param mixed (string or integer) $multi_id Multiblock block delta value
+ * @param array $multiblock_id contains Multiblock block delta value
  * @param boolean
  *
  * @return array
  */
-function asu_rfi_get_block_instance_settings($multi_id = NULL, $endpoint_build = FALSE) {
-
+function asu_rfi_get_block_instance_settings($multiblock_id = NULL, $endpoint_build = FALSE) {
+  if(isset($multiblock_id['multiblock_delta']) && isset($multiblock_id['multiblock_delta']['#value'])){
+    $multi_id = $multiblock_id['multiblock_delta']['#value'];
+  } else if (isset($multiblock_id)) {
+    $multi_id = $multiblock_id;
+  } else {
+    $multi_id = NULL;
+  }
     // $multi_id if you got 'em.
     $multi_id = $multi_id ? '_' . $multi_id : NULL;
     $block_instance_settings = array();
@@ -1253,7 +1265,6 @@ function asu_rfi_preprocess_page(&$variables) {
     } else {
         $thisNode = menu_get_object();
         if(isset($thisNode->type) && $thisNode->type == "asu_degree" && isset($_SESSION['rfi_data'])) {
-            dpm('in');
             $price = '100.00';
             $category = 'RFI';
             $nid = $thisNode->nid;
