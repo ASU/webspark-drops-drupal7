@@ -3,6 +3,11 @@
  * @file
  * Template for Radix Rolph.
  *
+ * Patched to support the classes and tags from the old, comparably named Panopoly layout for Webspark.
+ *
+ * Functions:
+ * kalatheme_grid_size (from kalatheme theme) - returns (int) Number of Bootstrap columns.
+ *
  * Variables:
  * - $css_id: An optional CSS id to use for the layout.
  * - $content: An array of content, each item in the array is keyed to one
@@ -11,46 +16,52 @@
 ?>
 
 <div class="panel-display rolph clearfix <?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
-
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12 radix-layouts-header panel-panel">
-        <div class="panel-panel-inner">
-          <?php print $content['header']; ?>
+  <section class="section alt" id="promo">
+    <div class="container">
+      <div class="row row-full">
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> rolph-header-area radix-layouts-header panel-panel">
+          <div class="panel-panel-inner">
+            <?php print $content['header']; ?>
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="row">
-      <div class="col-md-3 radix-layouts-quarter1 panel-panel">
-        <div class="panel-panel-inner">
-          <?php print $content['quarter1']; ?>
+  </section>
+  <section class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FOURTH, 4); ?> rolph-column-content-region-1 radix-layouts-quarter1 panel-panel">
+          <div class="panel-panel-inner">
+            <?php print $content['quarter1']; ?>
+          </div>
         </div>
-      </div>
-      <div class="col-md-3 radix-layouts-quarter2 panel-panel">
-        <div class="panel-panel-inner">
-          <?php print $content['quarter2']; ?>
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FOURTH, 4); ?> rolph-column-content-region-2 radix-layouts-quarter2 panel-panel">
+          <div class="panel-panel-inner">
+            <?php print $content['quarter2']; ?>
+          </div>
         </div>
-      </div>
-      <div class="col-md-3 radix-layouts-quarter3 panel-panel">
-        <div class="panel-panel-inner">
-          <?php print $content['quarter3']; ?>
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FOURTH, 4); ?> rolph-column-content-region-3 radix-layouts-quarter3 panel-panel">
+          <div class="panel-panel-inner">
+            <?php print $content['quarter3']; ?>
+          </div>
         </div>
-      </div>
-      <div class="col-md-3 radix-layouts-quarter4 panel-panel">
-        <div class="panel-panel-inner">
-          <?php print $content['quarter4']; ?>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-12 radix-layouts-footer panel-panel">
-        <div class="panel-panel-inner">
-          <?php print $content['footer']; ?>
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FOURTH, 4); ?> rolph-column-content-region-4 radix-layouts-quarter4 panel-panel">
+          <div class="panel-panel-inner">
+            <?php print $content['quarter4']; ?>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-
-</div><!-- /.taylor -->
+  </section>
+   <footer class="section" id="footer">
+    <div class="container">
+      <div class="row row-full">
+        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> rolph-footer-area radix-layouts-footer panel-panel">
+          <div class="panel-panel-inner">
+            <?php print $content['footer']; ?>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div><!-- /.rolph -->
