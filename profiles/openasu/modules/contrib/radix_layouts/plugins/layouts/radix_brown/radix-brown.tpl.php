@@ -2,7 +2,7 @@
 /**
  * @file
  * Template for Radix Brown.
- * 
+ *
  * Patched to support the classes and tags from the old, comparably named Panopoly layout for Webspark.
  *
  * Functions:
