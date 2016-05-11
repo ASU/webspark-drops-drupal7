@@ -3,10 +3,8 @@
  * @file
  * Template for Radix Phelan.
  *
- * Patched to support the classes and tags from the old, comparably named Panopoly layout for Webspark.
- *
- * Functions:
- * kalatheme_grid_size (from kalatheme theme) - returns (int) Number of Bootstrap columns.
+ * Patched to support the classes and tags from the old, comparably named
+ * Panopoly layouts ported into Kalatheme (and used by Webspark).
  *
  * Variables:
  * - $css_id: An optional CSS id to use for the layout.
@@ -19,12 +17,12 @@
   <section class="section">
     <div class="container">
       <div class="row">
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_HALF); ?> phelan-column-content-region-1 radix-layouts-column1 panel-panel">
+        <div class="col-md-6 phelan-column-content-region-1 radix-layouts-column1 panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['column1']; ?>
           </div>
         </div>
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_HALF); ?> phelan-column-content-region-2 radix-layouts-column2 panel-panel">
+        <div class="col-md-6 phelan-column-content-region-2 radix-layouts-column2 panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['column2']; ?>
           </div>

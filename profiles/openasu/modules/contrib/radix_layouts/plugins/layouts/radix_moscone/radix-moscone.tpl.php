@@ -3,10 +3,8 @@
  * @file
  * Template for Radix Moscone.
  *
- * Patched to support the classes and tags from the old Panopoly Moscone for Webspark.
- *
- * Functions:
- * kalatheme_grid_size (from kalatheme theme) - returns (int) Number of Bootstrap columns.
+ * Patched to support the classes and tags from the old, comparably named
+ * Panopoly layouts ported into Kalatheme (and used by Webspark).
  *
  * Variables:
  * - $css_id: An optional CSS id to use for the layout.
@@ -19,7 +17,7 @@
   <section class="section">
     <div class="container">
       <div class="row row-full">
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> moscone-main-container radix-layouts-header panel-panel">
+        <div class="col-md-12 moscone-main-container radix-layouts-header panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['header']; ?>
           </div>
@@ -30,12 +28,12 @@
   <section class="section">
     <div class="container">
       <div class="row">
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD); ?> moscone-sidebar-area radix-layouts-sidebar panel-panel">
+        <div class="col-md-4 moscone-sidebar-area radix-layouts-sidebar panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['sidebar']; ?>
           </div>
         </div>
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD * 2); ?> moscone-main-content radix-layouts-content panel-panel">
+        <div class="col-md-8 moscone-main-content radix-layouts-content panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['contentmain']; ?>
           </div>
@@ -46,7 +44,7 @@
   <footer class="section" id="footer">
     <div class="container">
       <div class="row row-full">
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_FULL); ?> moscone-footer-area radix-layouts-footer panel-panel">
+        <div class="col-md-12 moscone-footer-area radix-layouts-footer panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['footer']; ?>
           </div>

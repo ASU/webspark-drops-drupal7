@@ -3,10 +3,8 @@
  * @file
  * Template for Radix Hewston Flipped.
  *
- * Patched to support the classes and tags from the old, comparably named Panopoly layout for Webspark.
- *
- * Functions:
- * kalatheme_grid_size (from kalatheme theme) - returns (int) Number of Bootstrap columns.
+ * Patched to support the classes and tags from the old, comparably named
+ * Panopoly layouts ported into Kalatheme (and used by Webspark).
  *
  * Variables:
  * - $css_id: An optional CSS id to use for the layout.
@@ -19,12 +17,12 @@
   <section class="section">
     <div class="container">
       <div class="row">
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD); ?> hewston-flipped-slider-gutter-area radix-layouts-slidergutter panel-panel">
+        <div class="col-md-4 hewston-flipped-slider-gutter-area radix-layouts-slidergutter panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['slidergutter']; ?>
           </div>
         </div>
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD * 2); ?> hewston-flipped-slider-area radix-layouts-slider panel-panel">
+        <div class="col-md-8 hewston-flipped-slider-area radix-layouts-slider panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['slider']; ?>
           </div>
@@ -35,17 +33,17 @@
   <section class="section">
     <div class="container">
       <div class="row">
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD, 3); ?> hewston-flipped-middle-region-1 radix-layouts-column1 panel-panel">
+        <div class="col-md-4 hewston-flipped-middle-region-1 radix-layouts-column1 panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['column1']; ?>
           </div>
         </div>
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD, 3); ?> hewston-flipped-middle-region-2 radix-layouts-column2 panel-panel">
+        <div class="col-md-4 hewston-flipped-middle-region-2 radix-layouts-column2 panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['column2']; ?>
           </div>
         </div>
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD, 3); ?> hewston-flipped-middle-region-3 radix-layouts-column3 panel-panel">
+        <div class="col-md-4 hewston-flipped-middle-region-3 radix-layouts-column3 panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['column3']; ?>
           </div>

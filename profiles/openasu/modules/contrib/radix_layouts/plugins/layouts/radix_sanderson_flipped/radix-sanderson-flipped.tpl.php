@@ -3,10 +3,8 @@
  * @file
  * Template for Radix Sanderson Flipped.
  *
- * Patched to support the classes and tags from the old, comparably named Panopoly layout for Webspark.
- *
- * Functions:
- * kalatheme_grid_size (from kalatheme theme) - returns (int) Number of Bootstrap columns.
+ * Patched to support the classes and tags from the old, comparably named
+ * Panopoly layouts ported into Kalatheme (and used by Webspark).
  *
  * Variables:
  * - $css_id: An optional CSS id to use for the layout.
@@ -19,17 +17,17 @@
   <section class="section">
     <div class="container">
       <div class="row">
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD, 3); ?> sanderson-flipped-column-content-region-1 radix-layouts-column1 panel-panel">
+        <div class="col-md-4 sanderson-flipped-column-content-region-1 radix-layouts-column1 panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['column1']; ?>
           </div>
         </div>
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD, 3); ?> sanderson-flipped-column-content-region-2 radix-layouts-column2 panel-panel">
+        <div class="col-md-4 sanderson-flipped-column-content-region-2 radix-layouts-column2 panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['column2']; ?>
           </div>
         </div>
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_THIRD, 3); ?> sanderson-flipped-column-content-region-3 radix-layouts-column3 panel-panel">
+        <div class="col-md-4 sanderson-flipped-column-content-region-3 radix-layouts-column3 panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['column3']; ?>
           </div>
@@ -40,12 +38,12 @@
   <footer class="section" id="footer">
     <div class="container">
       <div class="row">
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_HALF); ?> sanderson-flipped-secondary-column-content-region-1 radix-layouts-secondarycolumn1 panel-panel">
+        <div class="col-md-6 sanderson-flipped-secondary-column-content-region-1 radix-layouts-secondarycolumn1 panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['secondarycolumn1']; ?>
           </div>
         </div>
-        <div class="col-md-<?php print kalatheme_grid_size(KALATHEME_GRID_HALF); ?> sanderson-flipped-secondary-column-content-region-2 radix-layouts-secondarycolumn2 panel-panel">
+        <div class="col-md-6 sanderson-flipped-secondary-column-content-region-2 radix-layouts-secondarycolumn2 panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['secondarycolumn2']; ?>
           </div>
