@@ -34,4 +34,4 @@ projects[radix_layouts][type] = module
 projects[radix_layouts][subdir] = contrib
 projects[radix_layouts][version] = 3.4
 ; Custom patch to make Radix layouts conform to ASU's custom CSS to fix background images, etc.
-projects[radix_layouts][patch][] = patches/webspark-420_radix-layouts-module_TPL-customizations.patch
+projects[radix_layouts][patch][] = patches/webspark-420_radix-layouts_TPL-customizations.patch
