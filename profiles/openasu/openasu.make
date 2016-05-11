@@ -107,9 +107,10 @@ projects[views_php][version] = 1.x-dev
 projects[views_php][type] = module
 projects[views_php][subdir] = contrib
 
-projects[webform][version] = 3.24
+projects[webform][version] = 4.12
 projects[webform][type] = module
 projects[webform][subdir] = contrib
+projects[webform][sha256] = 853d7d9804a2c4cb0f4bceec845662cda6a60e074906d2f2c194efb1d304b329
 
 ; ASU Module prerequisites - Webspark Webstandards Components - contrib
 
