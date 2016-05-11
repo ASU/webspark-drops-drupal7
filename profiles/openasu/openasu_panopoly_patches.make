@@ -23,8 +23,15 @@ projects[media][patch][] = https://www.drupal.org/files/issues/media-wysiwyg-alt
 projects[media][patch][] = https://www.drupal.org/files/issues/media-alt-title-double-encoded-2308487-1.patch
 
 ; Patches - Webspark
-; Review when upgraded to v. beta1
+; Review when Media module is upgraded to v. beta1
 ;; WEBSPARK-679 - WYSIWYG + Media module issues
 projects[media][patch][] = patches/webspark-679_fix-HTML-encoded-macros-2028253-10.patch
 ; Remove when alpha4 or higher is installed.
 projects[media][patch][] = patches/webspark-679_wysiwyg-multiple-editors-media-images-breaks.patch
+
+; Radix Layouts (module)
+projects[radix_layouts][type] = module
+projects[radix_layouts][subdir] = contrib
+projects[radix_layouts][version] = 3.4
+; Custom patch to make Radix layouts conform to ASU's custom CSS to fix background images, etc.
+projects[radix_layouts][patch][] = patches/webspark-420_radix-layouts-module_TPL-customizations.patch
