@@ -17,12 +17,12 @@
   <section class="section">
     <div class="container">
       <div class="row">
-        <div class="col-md-8 brown-header-2 radix-layouts-slider panel-panel">
+        <div class="col-md-8 brown-header-1 radix-layouts-slider panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['slider']; ?>
           </div>
         </div>
-        <div class="col-md-4 brown-header-1 radix-layouts-slidergutter panel-panel">
+        <div class="col-md-4 brown-header-2 radix-layouts-slidergutter panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['slidergutter']; ?>
           </div>
