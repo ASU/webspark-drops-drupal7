@@ -1,5 +1,5 @@
 diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php
-index e9ceeb5..42eec76 100644
+index e9ceeb5..c023efa 100644
 --- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php
 +++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php
 @@ -3,6 +3,9 @@
@@ -12,7 +12,7 @@ index e9ceeb5..42eec76 100644
   * Variables:
   * - $css_id: An optional CSS id to use for the layout.
   * - $content: An array of content, each item in the array is keyed to one
-@@ -11,36 +14,39 @@
+@@ -11,36 +14,36 @@
  ?>
  
  <div class="panel-display bartlett clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
@@ -23,7 +23,14 @@ index e9ceeb5..42eec76 100644
 -      <div class="col-md-4 radix-layouts-sidebar panel-panel">
 -        <div class="panel-panel-inner">
 -          <?php print $content['sidebar']; ?>
--        </div>
++  <section class="section">
++    <div class="container">
++      <div class="row">
++        <div class="col-md-4 bartlett-side radix-layouts-sidebar panel-panel">
++          <div class="panel-panel-inner">
++            <?php print $content['sidebar']; ?>
++          </div>
+         </div>
 -      </div>
 -
 -      <div class="col-md-8 panel-panel">
@@ -31,42 +38,30 @@ index e9ceeb5..42eec76 100644
 -          <div class="col-md-12 radix-layouts-contentheader panel-panel">
 -            <div class="panel-panel-inner">
 -              <?php print $content['contentheader']; ?>
-+  <section class="section">
-+    <div class="container">
-+      <div class="row row-full">
-+        <div class="col-md-12 bartlett-everything radix-layouts-sidebar panel-panel">
++        <div class="col-md-8 bartlett-main panel-panel">
 +          <div class="row">
-+            <div class="col-md-4 bartlett-side">
-+               <div class="panel-panel-inner">
-+                <?php print $content['sidebar']; ?>
++            <div class="col-md-12 bartlett-main-header radix-layouts-contentheader panel-panel">
++              <div class="panel-panel-inner">
++                <?php print $content['contentheader']; ?>
 +              </div>
              </div>
--          </div>
+           </div>
 -          <div class="col-md-6 radix-layouts-contentcolumn1 panel-panel">
 -            <div class="panel-panel-inner">
 -              <?php print $content['contentcolumn1']; ?>
-+          <div class="col-md-8 bartlett-main panel-panel">
-+            <div class="row">
-+              <div class="col-md-12 bartlett-main-header radix-layouts-contentheader panel-panel">
-+                <div class="panel-panel-inner">
-+                  <?php print $content['contentheader']; ?>
-+                </div>
++          <div class="row">
++            <div class="col-md-6 bartlett-main-col-1 radix-layouts-contentcolumn1 panel-panel">
++              <div class="panel-panel-inner">
++                <?php print $content['contentcolumn1']; ?>
 +              </div>
              </div>
 -          </div>
 -          <div class="col-md-6 radix-layouts-contentcolumn2 panel-panel">
 -            <div class="panel-panel-inner">
 -              <?php print $content['contentcolumn2']; ?>
-+            <div class="row">
-+              <div class="col-md-6 bartlett-main-col-1 radix-layouts-contentcolumn1 panel-panel">
-+                <div class="panel-panel-inner">
-+                  <?php print $content['contentcolumn1']; ?>
-+                </div>
-+              </div>
-+              <div class="col-md-6 bartlett-main-col-2 radix-layouts-contentcolumn2 panel-panel">
-+                <div class="panel-panel-inner">
-+                  <?php print $content['contentcolumn2']; ?>
-+                </div>
++            <div class="col-md-6 bartlett-main-col-2 radix-layouts-contentcolumn2 panel-panel">
++              <div class="panel-panel-inner">
++                <?php print $content['contentcolumn2']; ?>
 +              </div>
              </div>
            </div>
@@ -79,7 +74,7 @@ index e9ceeb5..42eec76 100644
 +  </section><!--  /.section -->
  </div><!-- /.bartlett -->
 diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php
-index d930904..788a730 100644
+index d930904..69fdd60 100644
 --- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php
 +++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php
 @@ -3,6 +3,10 @@
@@ -107,7 +102,7 @@ index d930904..788a730 100644
 -              <?php print $content['contentheader']; ?>
 +  <section class="section">
 +    <div class="container">
-+      <div class="row row-full">
++      <div class="row">
 +        <div class="col-md-8 bartlett-flipped-main panel-panel">
 +          <div class="row">
 +            <div class="col-md-12 bartlett-flipped-main-header radix-layouts-contentheader panel-panel">
@@ -320,7 +315,7 @@ index 32cbbb8..01de43f 100644
  </div><!-- /.brenham-flipped -->
 \ No newline at end of file
 diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brown/radix-brown.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brown/radix-brown.tpl.php
-index 74c8fbc..235a7cb 100755
+index 74c8fbc..42a4234 100755
 --- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brown/radix-brown.tpl.php
 +++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brown/radix-brown.tpl.php
 @@ -3,6 +3,9 @@
@@ -347,7 +342,7 @@ index 74c8fbc..235a7cb 100755
 +  <section class="section">
 +    <div class="container">
 +      <div class="row">
-+        <div class="col-md-8 brown-header-2 radix-layouts-slider panel-panel">
++        <div class="col-md-8 brown-header-1 radix-layouts-slider panel-panel">
 +          <div class="panel-panel-inner">
 +            <?php print $content['slider']; ?>
 +          </div>
@@ -356,7 +351,7 @@ index 74c8fbc..235a7cb 100755
 -      <div class="col-md-4 radix-layouts-slidergutter panel-panel">
 -        <div class="panel-panel-inner">
 -          <?php print $content['slidergutter']; ?>
-+        <div class="col-md-4 brown-header-1 radix-layouts-slidergutter panel-panel">
++        <div class="col-md-4 brown-header-2 radix-layouts-slidergutter panel-panel">
 +          <div class="panel-panel-inner">
 +            <?php print $content['slidergutter']; ?>
 +          </div>
@@ -2351,3 +2346,4 @@ index c64f960..42a071e 100755
 -  
 +  </section>
  </div><!-- /.whelan -->
+
