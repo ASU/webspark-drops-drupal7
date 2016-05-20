@@ -1,20 +1,20 @@
 imports:
     - behat.common.yml
-
+#
 default:
   extensions:
     Behat\MinkExtension:
       base_url: http://127.0.0.1:8888
-      files_path: './profiles/panopoly/modules/panopoly/panopoly_test/tests'
+      files_path: './profiles/openasu/modules/panopoly/panopoly_test/tests'
     Drupal\DrupalExtension:
       drush:
         alias: self
+        root: '/home/travis/build/ASU/webspark-drops-drupal7'
       # This will be setup using the BEHAT_PARAMS environment variable.
       #drupal:
-      #  drupal_root: "/path/to/drupal/root"
+        #drupal_root: "/home/travis/build/ASU/webspark-drops-drupal7"
 
       # Look in the profile modules directory and pull in module subcontexts.
       subcontexts:
         paths:
-          - "./profiles/panopoly"
-
+          - "./profiles/openasu"

@@ -1,8 +1,8 @@
 default:
   suites:
     default:
-      paths: 
-        features: 'features'
+      #paths: 
+        #features: 'features'
       filters:
         tags: "~@chrome"
       contexts:
@@ -15,8 +15,8 @@ default:
     Behat\MinkExtension:
       goutte: ~
       selenium2: ~
-      #base_url: http://mydrupalsite.com
-      #files_path: './profiles/panopoly/modules/panopoly/panopoly_test/tests'
+      #base_url: http://localhost
+      #files_path: './profiles/openasu/modules/panopoly/panopoly_test/tests'
     Drupal\DrupalExtension:
       blackbox: ~
       #drush:
