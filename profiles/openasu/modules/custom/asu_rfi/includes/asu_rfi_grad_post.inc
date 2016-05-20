@@ -69,22 +69,22 @@ function asu_rfi_grad_post($data){
     
     //Get siteDomain variable to see if it's dev or qa site.
     global $base_url;
-   
-    if ((strpos($base_url, 'https://localhost') > 0) || (strpos($base_url, 'http://localhost') > 0)) {
+
+    if ((strpos($base_url, 'https://localhost') == 0) || (strpos($base_url, 'http://localhost') == 0)) {
 	$environ = 'dev';
     }
-    if ((strpos($base_url, 'https://dev-') > 0) || (strpos($base_url, 'http://dev-') > 0) || (strpos($base_url, '-dev') > 0)) {
+    if ((strpos($base_url, 'https://dev-') == 0) || (strpos($base_url, 'http://dev-') == 0) || (strpos($base_url, '-dev') > 0)) {
 	$environ = 'dev';
     }
-    if ((strpos($base_url, 'https://qa-') > 0) || (strpos($base_url, 'http://qa-') > 0) || (strpos($base_url, '-qa') > 0) ) {
+    if ((strpos($base_url, 'https://qa-') == 0) || (strpos($base_url, 'http://qa-') == 0) || (strpos($base_url, '-qa') > 0) ) {
 	$environ = 'qa';
     }
-    if ((strpos($base_url, 'https://test-') > 0) || (strpos($base_url, 'http://test-') > 0)) {
+    if ((strpos($base_url, 'https://test-') == 0) || (strpos($base_url, 'http://test-') > 0)) {
 	$environ = 'qa';
     }
 
     // Salesforce URL to post data to
-    if(($environ == "dev") || ($environ == "qa")){
+    if((isset($environ) && $environ == "dev") || (isset($environ) && $environ == "qa")){
 	$url = 'https://requestinfo-qa.asu.edu/prospect_form_post'; 
     }
     else{

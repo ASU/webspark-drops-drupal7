@@ -1253,7 +1253,7 @@ function asu_rfi_preprocess_page(&$variables) {
     } else {
         $thisNode = menu_get_object();
         if(isset($thisNode->type) && $thisNode->type == "asu_degree" && isset($_SESSION['rfi_data'])) {
-            dpm('in');
+
             $price = '100.00';
             $category = 'RFI';
             $nid = $thisNode->nid;
