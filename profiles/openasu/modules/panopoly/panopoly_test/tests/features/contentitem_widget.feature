@@ -13,8 +13,8 @@ Feature: Add content item
       And I am viewing a landing page
     When I customize this page with the Panels IPE
       And I click "Add new pane"
-      And I click "Add content item" in the "CTools modal" region
-    Then I should see "Configure new Add content item"
+      And I click "Add existing content" in the "CTools modal" region
+    Then I should see "Configure new Add existing content"
     When I select "- Any -" from "exposed[type]"
       And I select the first autocomplete option for "test" on the "exposed[title]" field
     Then the "exposed[title]" field should contain "Test Page 1"
@@ -26,7 +26,7 @@ Feature: Add content item
     Then the "exposed[title]" field should not contain "Test Page 1"
 
   @api @javascript @panopoly_widgets
-  Scenario: Add content item (as "Fields")
+  Scenario: Add existing content (as "Fields")
     Given I am logged in as a user with the "administrator" role
     And Panopoly magic live previews are disabled
     And "panopoly_test_page" content:
@@ -35,8 +35,8 @@ Feature: Add content item
       And I am viewing a landing page
     When I customize this page with the Panels IPE
       And I click "Add new pane"
-      And I click "Add content item" in the "CTools modal" region
-    Then I should see "Configure new Add content item"
+      And I click "Add existing content" in the "CTools modal" region
+    Then I should see "Configure new Add existing content"
     When I select "Test Page" from "exposed[type]"
       And I fill in the following:
       | exposed[title] | Test Page 1       |
@@ -50,7 +50,7 @@ Feature: Add content item
       And I should see "Posted by Anonymous"
 
   @api @javascript @panopoly_widgets
-  Scenario: Add content item (as "Content")
+  Scenario: Add existing content (as "Content")
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
       And "panopoly_test_page" content:
@@ -59,8 +59,8 @@ Feature: Add content item
       And I am viewing a landing page
     When I customize this page with the Panels IPE
       And I click "Add new pane"
-      And I click "Add content item" in the "CTools modal" region
-    Then I should see "Configure new Add content item"
+      And I click "Add existing content" in the "CTools modal" region
+    Then I should see "Configure new Add existing content"
     When I select "Test Page" from "exposed[type]"
       And I fill in the following:
       | exposed[title] | Test Page 1       |
@@ -93,8 +93,8 @@ Feature: Add content item
       And I am viewing a landing page
     When I customize this page with the Panels IPE
       And I click "Add new pane"
-      And I click "Add content item" in the "CTools modal" region
-    Then I should see "Configure new Add content item"
+      And I click "Add existing content" in the "CTools modal" region
+    Then I should see "Configure new Add existing content"
     When I select "Test Page" from "exposed[type]"
       And I fill in the following:
       | exposed[title] | Test Page 1       |
@@ -130,8 +130,8 @@ Feature: Add content item
       And I am viewing a landing page
     When I customize this page with the Panels IPE
       And I click "Add new pane"
-      And I click "Add content item" in the "CTools modal" region
-    Then I should see "Configure new Add content item"
+      And I click "Add existing content" in the "CTools modal" region
+    Then I should see "Configure new Add existing content"
     When I select "Test Page (without Panelizer)" from "exposed[type]"
       And I fill in the following:
       | exposed[title] | Test Page 1       |
@@ -167,8 +167,8 @@ Feature: Add content item
       And I am viewing a landing page
     When I customize this page with the Panels IPE
       And I click "Add new pane"
-      And I click "Add content item" in the "CTools modal" region
-    Then I should see "Configure new Add content item"
+      And I click "Add existing content" in the "CTools modal" region
+    Then I should see "Configure new Add existing content"
     When I select "Test Page" from "exposed[type]"
       And I fill in the following:
       | exposed[title] | Test Page 1       |
