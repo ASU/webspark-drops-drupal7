@@ -78,31 +78,34 @@ class ASUeAdvisorFeedsFetcher extends FeedsFetcher {
 
     // Available college codes for importing
     $college_options = array(
-      'CBA' => t('CBA'),
-      'CHI' => t('CHI'),
-      'CES' => t('CES'),
-      'CHL' => t('CHL'),
-      'CHO' => t('CHO'),
-      'CAS' => t('CAS'),
-      'CCS' => t('CCS'),
-      'CLS' => t('CLS'),
-      'CLA' => t('CLA'),
-      'CNU' => t('CNU'),
-      'CPP' => t('CPP'),
-      'CSS' => t('CSS'),
-      'CTE' => t('CTE'),
-      'CTS' => t('CTS'),
+      'CHO' => t('Barrett, The Honors College'),
+      'CHL' => t('College of Health Solutions'),
+      'CLS' => t('College of Letters & Sciences'),
+      'CLA' => t('College of Liberal Arts & Sciences'),
+      'CNU' => t('College of Nursing & Health Innovation'),
+      'CPP' => t('College of Public Programs'),
+      'CTS' => t('College of Technology & Innovation'),
+      'CHI' => t('Herberger Institute for Design & the Arts'),
+      'CES' => t('Ira A. Fulton Schools of Engineering'),
+      'CTE' => t('Mary Lou Fulton Teachers College'),
+      'CAS' => t('New College of Interdisciplinary Arts & Sciences'),
+      'CSS' => t('School of Sustainability'),
+      'CBA' => t('W. P. Carey School of Business'),
+      'CCS' => t('Walter Cronkite School of Journalism & Mass Communication'),
     );
 
     // Available campus codes for importing
     $campus_options = array(
-      'DTPHX' => t('DTPHX'),
-      'EAC' => t('EAC'),
-      'CALHC' => t('CALHC'),
-      'ONLNE' => t('ONLNE'),
-      'POLY' => t('POLY'),
-      'TEMPE' => t('TEMPE'),
-      'WEST' => t('WEST'),
+      'ONLNE' => t('ASU Online'),
+      'EAC' => t('ASU@TheGilaValley'),
+      'CAC' => t('ASU@Pinal'),
+      'TUCSN' => t('ASU@Tucson'),
+      'AWC' => t('ASU@Yuma'),
+      'CALHC' => t('Colleges at Lake Havasu City'),
+      'DTPHX' => t('Downtown Phoenix campus'),
+      'POLY' => t('Polytechnic campus'),
+      'TEMPE' => t('Tempe campus'),
+      'WEST' => t('West campus'),
     );
 
     $unit_options = array_merge($college_options, $campus_options);
@@ -137,9 +140,10 @@ class ASUeAdvisorFeedsFetcher extends FeedsFetcher {
         'eAdvisorDSFind.findDegreeByCampusMapArray' => t('Import by campus'),
       ),
       '#default_value' => isset($source_config['service']) ? $source_config['service'] : '',
-      '#description' => t('Name of service to call. For example, use \'Import by college\' to utilize findDegreeByCollegeAndProgram
-        and \'Import by campus\' to utilize findDegreeByCampusMapArray. A list of available college and campus codes is located
-        at https://webspark.asu.edu/features/asu-degrees-feed.'),
+      '#description' => t('Name of service to call.
+        For example, use \'Import by college\' to utilize findDegreeByCollegeAndProgram
+        and \'Import by campus\' to utilize findDegreeByCampusMapArray. If you do not
+        see the college or campus you are looking for, please contact webconsulting@asu.edu.'),
     );
 
     //Chizuko added the following for eAdvisor Degree Feed:
@@ -149,9 +153,8 @@ class ASUeAdvisorFeedsFetcher extends FeedsFetcher {
       '#options' => $unit_options,
       '#default_value' => isset($source_config['unit_identifier']) ? $source_config['unit_identifier'] : '',
       '#description' => t('Identifer for unit (college or campus).
-        For example, use \'CALHC\' for ASU Colleges at Lake Havasu City or \'CLA\' for College of Liberal Arts and Sciences.
-        College codes are compatible solely with the \'Import by college\' option and campus codes are compatible solely with
-        the \'Import by campus\' option.'),
+        Colleges are compatible solely with the \'Import by college\' option and campuses are
+        compatible solely with the \'Import by campus\' option.'),
     );
     $form['program'] = array(
       '#type' => 'select',
