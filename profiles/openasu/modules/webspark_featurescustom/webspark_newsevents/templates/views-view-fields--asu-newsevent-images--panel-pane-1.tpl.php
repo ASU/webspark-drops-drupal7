@@ -27,10 +27,8 @@
 if (isset($fields['field_asuevent_image'])) {
 	$image_content = $fields['field_asuevent_image']->content;
 	preg_match('/<img [^>]*src="([^"]+)"/', $image_content, $matches);
-	if ($matches and isset($matches[1])) $asuevent_image_url = $matches[1];
+	if ($matches && isset($matches[1])) {
+		$asuevent_image_url = $matches[1];
+		echo '<img src="' . $asuevent_image_url . '" alt="' . $fields['field_asuevent_img_alt']->content . '" />';
+	}
 }
-?>
-
-<?php if (isset($fields['field_asuevent_image'])): ?>
-	<img src="<?php print $asuevent_image_url; ?>" alt="<?php print $fields['field_asuevent_img_alt']->content; ?>" />
-<?php endif; ?>

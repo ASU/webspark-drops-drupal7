@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Default simple view template to all the fields as a row.
@@ -24,11 +23,13 @@
  * @ingroup views_templates
  */
 if (isset($fields['field_asunews_image'])) {
-	$image_content = $fields['field_asunews_image']->content;
-	preg_match('/<img [^>]*src="([^"]+)"/', $image_content, $matches);
-	if ($matches and isset($matches[1])) $asunews_image_url = $matches[1];
+  $image_content = $fields['field_asunews_image']->content;
+  preg_match('/<img [^>]*src="([^"]+)"/', $image_content, $matches);
+  if ($matches and isset($matches[1])) {
+    $asunews_image_url = $matches[1];
+  }
 }
 ?>
-
-<?php if (isset($fields['field_asunews_image'])): ?><img src="<?php print $asunews_image_url; ?>" alt="<?php print $fields['field_asunews_image_alt']->content; ?>" />
+<?php if (isset($fields['field_asunews_image'])): ?>
+	<img src="<?php print $asunews_image_url; ?>" alt="<?php print $fields['field_asunews_image_alt']->content; ?>" />
 <?php endif; ?>
