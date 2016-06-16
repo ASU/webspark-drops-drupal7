@@ -39,7 +39,7 @@ Feature: Use rich text editor
       | Align Center                  | p          | text-align      | center       |
       | Align Right                   | p          | text-align      | right        |
 
-  @api @javascript @panopoly_wysiwyg
+  @api @javascript @panopoly_wysiwyg @webspark_ignore
   Scenario Outline: Format text in the editor (advanced toolbar)
     When I expand the toolbar in the "edit-body-und-0-value" WYSIWYG editor
       And I click the "<Action>" button in the "edit-body-und-0-value" WYSIWYG editor
