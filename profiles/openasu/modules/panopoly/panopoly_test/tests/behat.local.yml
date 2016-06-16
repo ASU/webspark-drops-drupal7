@@ -9,13 +9,11 @@ default:
       goutte: ~
       selenium2: ~
       base_url: http://bjdevil21-webspark
-      #base_url: http://127.0.2.4
       files_path: '/home/bryan/github.com/bjdevil21/webspark-drops-drupal7/profiles/openasu/modules/panopoly/panopoly_test/tests'
     Drupal\DrupalExtension:
       blackbox: ~
       drush:
         alias: bjdevil21-webspark
-        #alias: self
       drupal:
         drupal_root: "/home/bryan/github.com/bjdevil21/webspark-drops-drupal7"
 

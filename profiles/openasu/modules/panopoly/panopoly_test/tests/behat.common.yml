@@ -62,6 +62,8 @@ default:
         Footer: ".region-footer"
         Search: "#search-form"
         Panopoly Magic Style Settings: "#panels-edit-style-settings-form #edit-general-settings"
+        # Webspark additions to fix incompatibilities with stock Panopoly tests
+        TabsID: "#tabs"
 
 # Setup for Google Chrome only tests.
 chrome:
