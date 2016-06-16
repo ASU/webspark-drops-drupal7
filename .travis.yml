@@ -1,7 +1,7 @@
 language: php
 
 php:
-  - 5.4
+  - 5.5
 
 mysql:
   database: drupal
@@ -42,8 +42,8 @@ install:
   - sleep 5
 
   # Get Selenium
-  - wget https://selenium-release.storage.googleapis.com/2.47/selenium-server-standalone-2.47.1.jar
-  - java -jar selenium-server-standalone-2.47.1.jar > /dev/null 2>&1 &
+  - wget https://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
+  - java -jar selenium-server-standalone-2.53.0.jar > /dev/null 2>&1 &
   - sleep 5
 
   # Disable sendmail
@@ -54,14 +54,20 @@ before_script:
 
   # Do the site install
   - drush si openasu --db-url=mysql://root:@127.0.0.1/drupal --account-name=admin --account-pass=admin --site-mail=admin@example.com --site-name="Webspark" --yes
-
   - drush runserver --server=builtin 8888 > /dev/null 2>&1 &
   - sleep 3
-  - cd profiles/openasu/tests/behat
+  - drush pm-enable panopoly_test
+  - drush cc all
+  - cd profiles/openasu/modules/panopoly_test/tests
 
 script:
 
-  - ./bin/behat --config behat.travis.yml
+  - bin/behat --colors --tags '~@webspark_ignore' --tags '~@panopoly_demo' --tags '~@panopoly_search' --config behat.travis.yml
+
+after_script:
+
+  - sleep 3
+  - drush pm-disable panopoly_test
 
 notifications:
   email:
