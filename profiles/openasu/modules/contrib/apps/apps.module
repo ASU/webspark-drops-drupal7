@@ -8,6 +8,9 @@ define("APPSERVER_BASEPATH", 'admin/apps');
 define("APPSERVER_BASEPATH_DEPTH", 1);
 define("APPS_INSTALL_PATH", 'sites/all/modules');
 
+// File name for app info stored in downloaded projects.
+define('APPS_APP_INFO', 'app.info');
+
 define("APPS_ENABLED", 1);
 define("APPS_DISABLED", 0);
 define("APPS_INCOMPATIBLE", -1);
@@ -50,7 +53,7 @@ function apps_menu() {
     'page callback' => 'apps_install_page',
     'page arguments' => array(2),
     'access arguments' => array('administer apps'),
-    'type' => MENU_CALLBACK,
+    'type' => MENU_NORMAL_ITEM,
     'file' => 'apps.pages.inc',
   );
   $menu["admin/apps/%apps_server/all"] = array(
@@ -76,6 +79,13 @@ function apps_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'apps.pages.inc',
   );
+  $menu["admin/apps/%apps_server/catalog.md"] = array(
+    'title' => "Catelog",
+    'page callback' => 'apps_catalog_page',
+    'page arguments' => array(2),
+    'access arguments' => array('administer apps'),
+    'file' => 'apps.pages.inc',
+  );
 
   // App operations.
   $menu["admin/apps/%apps_app/%"] = array(
@@ -86,7 +96,7 @@ function apps_menu() {
     'page arguments' => array(2),
     'access callback' => 'apps_app_access',
     'access arguments' => array(2, 'details'),
-    'type' => MENU_CALLBACK,
+    'type' => MENU_NORMAL_ITEM,
     'file' => 'apps.pages.inc',
   );
   $menu["admin/apps/%apps_app/%/details"] = array(
@@ -130,6 +140,15 @@ function apps_menu() {
     'type' => MENU_LOCAL_ACTION,
     'file' => 'apps.pages.inc',
   );
+  $menu["admin/apps/%apps_app/%/update"] = array(
+    'title' => "Update",
+    'page callback' => 'apps_app_update',
+    'page arguments' => array(2),
+    'access callback' => 'apps_app_access',
+    'access arguments' => array(2, 'update'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'apps.pages.inc',
+  );
   $menu["admin/apps/%apps_app/%/configure"] = array(
     'title' => 'Configure',
     'page callback' => 'apps_app_config_page',
@@ -140,7 +159,17 @@ function apps_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'apps.pages.inc',
   );
-
+  if (module_exists('devel')) {
+    $menu['admin/apps/%apps_app/%/devel'] = array(
+      'title' => 'Devel',
+      'page callback' => 'apps_devel_load_array',
+      'page arguments' => array('app', 2),
+      'access arguments' => array('access devel information'),
+      'type' => MENU_LOCAL_TASK,
+      'file' => 'apps.pages.inc',
+      'weight' => 300,
+    );
+  }
   // Config Screens.
   $menu['admin/config/system/apps'] = array(
     'title' => 'Apps Configuration',
@@ -180,6 +209,27 @@ function apps_menu() {
 }
 
 /**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function apps_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  // Add CSRF tokens to admin action links.
+  if (strpos($root_path, 'admin/apps') === 0 && !empty($data['actions']['output'])) {
+    $add_token = array(
+      'admin/apps/%/%/disable' => 'disable',
+      'admin/apps/%/%/enable' => 'enable',
+      'admin/apps/%/%/install' => 'install',
+      'admin/apps/%/%/uninstall' => 'uninstall',
+      'admin/apps/%/%/update' => 'update',
+    );
+    foreach ($data['actions']['output'] as $key => $info) {
+      if (!empty($info['#link']['path']) && !empty($add_token[$info['#link']['path']])) {
+        $data['actions']['output'][$key]['#link']['localized_options']['query']['token'] = drupal_get_token($add_token[$info['#link']['path']] . '-' . arg(3, $info['#link']['href']));
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function apps_theme() {
@@ -212,6 +262,15 @@ function apps_theme() {
     'apps_update_page' => array(
       'render element' => 'content',
       'template' => 'apps-update-page',
+      'file' => 'apps.theme.inc',
+      'path' => $path,
+    ),
+    'apps_catalog_page' => array(
+      'variables' => array(
+        'server' => NULL,
+        'apps' => array(),
+      ),
+      'template' => 'apps-catalog-page',
       'file' => 'apps.theme.inc',
       'path' => $path,
     ),
@@ -266,11 +325,16 @@ function apps_app_access($app, $action = NULL) {
           }
         }
         if ($action == 'enable') {
-          return $app['status'] === APPS_DISABLED;
+          // We let enable callback most error conditions when it's next step.
+          return (isset($_SESSION['apps_install_next']) && $_SESSION['apps_install_next'] == $_GET['q'])
+            || ($app['status'] === APPS_DISABLED);
         }
         elseif ($action == 'install') {
           return $app['status'] === APPS_INSTALLABLE;
         }
+
+      case 'update':
+        return !empty($app['upgradeable']) || (!empty($_SESSION['apps_install_next']) && $_SESSION['apps_install_next']  == apps_app_page_path($app, 'update/updatedb'));
 
       case 'disable':
         return $app['status'] === APPS_ENABLED;
@@ -461,14 +525,19 @@ function apps_hook_info() {
  *   If the directory is writeable
  */
 function apps_installer_has_write_access() {
-  return is_writable(drupal_realpath(apps_installer_lib_dir())) && is_writable(drupal_realpath(variable_get('apps_install_path', APPS_INSTALL_PATH)));
+  $install_location = variable_get('apps_install_path', APPS_INSTALL_PATH);
+  // Create the directory if possible.
+  if (!is_dir($install_location) && !drupal_mkdir($install_location, NULL, TRUE)) {
+    return FALSE;
+  }
+  return is_writable(apps_installer_lib_dir(TRUE)) && is_writable($install_location);
 }
 
 /**
  * Return the libraries directory to check.
  */
-function apps_installer_lib_dir() {
-  return is_dir('sites/all/libraries') ? 'sites/all/libraries' : 'sites/all';
+function apps_installer_lib_dir($create_directory = FALSE) {
+  return is_dir('sites/all/libraries') || ($create_directory && drupal_mkdir('sites/all/libraries', NULL, TRUE))? 'sites/all/libraries' : 'sites/all';
 }
 
 /**
@@ -539,6 +608,22 @@ function apps_block_view($delta) {
  */
 function apps_include($group) {
   module_load_include("inc", "apps", "apps.$group");
+}
+
+/**
+ * Centralize the generation of App paths
+ *
+ * @param $app
+ *    The app array
+ * @param string $op
+ *    The path type
+ * @return string
+ *    A path to the app operation
+ */
+function apps_app_page_path($app, $op = 'details') {
+  if (isset($app['machine_name'])) {
+    return "admin/apps/{$app['server']['name']}/{$app['machine_name']}/$op";
+  }
 }
 
 /**
@@ -642,6 +727,7 @@ function apps_app_configure_permissions($app) {
  */
 function apps_app_configure_og_permissions($app) {
   node_types_rebuild();
+  module_load_include('inc', 'og', 'includes/og_features_role.features');
   if (!empty($app['og permissions'])) {
     foreach ($app['og permissions'] as $key => $roles) {
       list($group_type, $bundle, $perm) = explode(':', $key);
@@ -654,8 +740,8 @@ function apps_app_configure_og_permissions($app) {
         }
       }
 
-      $roles = og_roles($group_type, $bundle, 0);
-      foreach ($roles as $rid => $rolename) {
+      $all_roles = og_roles($group_type, $bundle, 0);
+      foreach ($all_roles as $rid => $rolename) {
         if (in_array($rolename, $roles)) {
           $grant[$rid][] = $perm;
         }

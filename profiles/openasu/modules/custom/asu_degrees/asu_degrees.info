@@ -5,5 +5,4 @@ package = ASU
 version = 7.x-1.9
 project = asu_degrees
 dependencies[] = asu_degrees_feature
-dependencies[] = entityreference
 stylesheets[all][] = /css/asu_degrees.css

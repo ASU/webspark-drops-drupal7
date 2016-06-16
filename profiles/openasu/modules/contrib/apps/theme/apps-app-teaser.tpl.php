@@ -1,4 +1,4 @@
-<div class="app-teaser-wrapper clearfix">
+<div class="app-teaser-wrapper clearfix <?php print $classes; ?>">
   <?php if ($logo): ?>
     <div class="app-logo">
       <?php print $logo ?>
@@ -11,6 +11,9 @@
     <div class="app-action"><?php print $action; ?></div>
     <?php if ($config): ?>
       <div class="app-action"><?php print $config; ?></div>
+    <?php endif; ?>
+    <?php if ($update): ?>
+      <div class="app-action"><?php print $update; ?></div>
     <?php endif; ?>
   </div>
 </div>
