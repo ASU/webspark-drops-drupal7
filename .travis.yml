@@ -21,10 +21,10 @@ install:
 
   # Install latest Drush 6.
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  - composer global require --no-interaction drush/drush:6.*
+  - composer global require --no-interaction drush/drush:7.*
 
   # Build Behat dependencies
-  - cd ./profiles/openasu/tests/behat
+  - cd ./profiles/openasu/modules/panopoly_test/tests
   - composer install --no-interaction
   # - cp behat.template.yml behat.local.yml
   - cd /home/travis/build/ASU/webspark-drops-drupal7
@@ -58,7 +58,7 @@ before_script:
   - sleep 3
   - drush pm-enable panopoly_test
   - drush cc all
-  - cd profiles/openasu/modules/panopoly_test/tests
+  - cd ./profiles/openasu/modules/panopoly_test/tests
 
 script:
 
