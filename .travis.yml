@@ -67,7 +67,7 @@ before_script:
   - sleep 3
   - drush pm-enable panopoly_test --yes
   - drush cc all
-  - cd ./profiles/openasu/modules/panopoly_test/tests
+  - cd ./profiles/openasu/modules/panopoly/panopoly_test/tests
 
 script:
 
