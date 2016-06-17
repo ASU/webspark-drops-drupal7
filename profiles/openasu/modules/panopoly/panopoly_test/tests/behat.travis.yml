@@ -11,8 +11,10 @@ default:
         alias: self
         root: '/home/travis/build/ASU/webspark-drops-drupal7'
       # This will be setup using the BEHAT_PARAMS environment variable.
-      #drupal:
-        #drupal_root: "/home/travis/build/ASU/webspark-drops-drupal7"
+      # @TODO - solve why BEHAT_PARAMS isn't working
+      drupal:
+        drupal_root: "/home/travis/build/ASU/webspark-drops-drupal7"
+
 
       # Look in the profile modules directory and pull in module subcontexts.
       subcontexts:
