@@ -63,7 +63,7 @@ before_script:
 
   # Do the site install
   - drush si openasu --db-url=mysql://root:@127.0.0.1/drupal --account-name=admin --account-pass=admin --site-mail=admin@example.com --site-name="Webspark" --yes
-  - drush runserver --server=builtin 8888 > /dev/null 2>&1 &
+  - drush runserver > /dev/null 2>&1 &
   - sleep 3
   - drush pm-enable panopoly_test --yes
   - drush cc all
