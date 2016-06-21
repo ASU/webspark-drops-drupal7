@@ -14,46 +14,40 @@ function innovation_preprocess_html(&$variables) {
   // Add theme js file here rather than in .info to add a weight and ensure it loads last
   drupal_add_js(drupal_get_path('theme', 'innovation') . '/js/innovation.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 200));
 
-  // Add IE meta tag to force IE rendering mode
-  $meta_ie_render_engine = array(
-    '#type' => 'html_tag',
-    '#tag' => 'meta',
-    '#attributes' => array(
-      'content' => 'IE=edge,chrome=1',
-      'http-equiv' => 'X-UA-Compatible',
-    )
-  );
-  drupal_add_html_head($meta_ie_render_engine, 'meta_ie_render_engine');
-
-  // WEBSPARK-667 - Add meta tag to identify Innovation as a "Webspark" theme
-  // in the DOM
-  $meta_webspark_id = array(
-    '#type' => 'html_tag',
-    '#tag' => 'meta',
-    '#attributes' => array(
-      'content' => 'Webspark:1.27 (Montana)',
-      'http-equiv' => 'X-Name-of-Distro',
-    )
-  );
-  drupal_add_html_head($meta_webspark_id, 'meta_webspark_id');
-
   // WEBSPARK-825 - Add link tag to stop 404 errors on Apple icon requests in
   // Drupal and server logs
   $link_apple_icons = array(
     'default' => array(
-      '#type' => 'html_tag',
-      '#tag' => 'link',
-      '#attributes' => array(
-        'rel' => 'apple-touch-icon',
-        'href' => '/profiles/openasu/themes/innovation/images/apple-touch-icon.png'
-      )
+      'rel' => 'apple-touch-icon',
+      'href' => '/profiles/openasu/themes/innovation/images/apple-touch-icon.png',
     ),
     'precomposed' => array(
+      'rel' => 'apple-touch-icon-precomposed',
+      'href' => '/profiles/openasu/themes/innovation/images/apple-touch-icon-precomposed.png',
+    ),
+  );
+  foreach ($link_apple_icons as $key => $value) {
+    drupal_add_html_head_link($value);
+  }
+
+  // Add IE meta tag to force IE rendering mode
+  $meta_tags_html = array(
+    // WEBSPARK-667, 825 - Add meta tag to identify Innovation as a "Webspark" theme
+    // in the DOM, and added MS tablet <meta> tag
+    'meta_webspark_id' => array(
       '#type' => 'html_tag',
-      '#tag' => 'link',
+      '#tag' => 'meta',
       '#attributes' => array(
-        'rel' => 'apple-touch-icon',
-        'href' => '/profiles/openasu/themes/innovation/images/apple-touch-icon-precomposed.png',
+        'content' => 'Webspark:1.27 (Montana)',
+        'http-equiv' => 'X-Name-of-Distro',
+      )
+    ),
+    'meta_ie_render_engine' => array(
+      '#type' => 'html_tag',
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'content' => 'IE=edge,chrome=1',
+        'http-equiv' => 'X-UA-Compatible',
       )
     ),
     'mstile' => array(
@@ -63,10 +57,10 @@ function innovation_preprocess_html(&$variables) {
         'name' => 'TileImage',
         'content' => '/profiles/openasu/themes/innovation/images/mstile.png',
       )
-    )
+    ),
   );
-  foreach ($link_apple_icons as $icons) {
-    drupal_add_html_head($icons, 'link_apple_icons');
+  foreach ($meta_tags_html as $key => $value) {
+    drupal_add_html_head($value, $key);
   }
 
   // WEBSPARK-189 - add actual HTTP header along with meta tag
