@@ -37,6 +37,38 @@ function innovation_preprocess_html(&$variables) {
   );
   drupal_add_html_head($meta_webspark_id, 'meta_webspark_id');
 
+  // WEBSPARK-825 - Add link tag to stop 404 errors on Apple icon requests in
+  // Drupal and server logs
+  $link_apple_icons = array(
+    'default' => array(
+      '#type' => 'html_tag',
+      '#tag' => 'link',
+      '#attributes' => array(
+        'rel' => 'apple-touch-icon',
+        'href' => '/profiles/openasu/themes/innovation/images/apple-touch-icon.png'
+      )
+    ),
+    'precomposed' => array(
+      '#type' => 'html_tag',
+      '#tag' => 'link',
+      '#attributes' => array(
+        'rel' => 'apple-touch-icon',
+        'href' => '/profiles/openasu/themes/innovation/images/apple-touch-icon-precomposed.png',
+      )
+    ),
+    'mstile' => array(
+      '#type' => 'html_tag',
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'name' => 'TileImage',
+        'content' => '/profiles/openasu/themes/innovation/images/mstile.png',
+      )
+    )
+  );
+  foreach ($link_apple_icons as $icons) {
+    drupal_add_html_head($icons, 'link_apple_icons');
+  }
+
   // WEBSPARK-189 - add actual HTTP header along with meta tag
   drupal_add_http_header('X-UA-Compatible', 'IE=Edge,chrome=1');
 
