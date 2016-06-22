@@ -37,8 +37,7 @@ function asu_rfi_form($delta){
 }
 
 function asu_rfi_form_data($form, &$form_state) {
-  $domain = $_SERVER['HTTP_HOST'];
-
+    
     //Clear all data when browser back button is clicked
     session_set_cookie_params(0);
     // Add no-store in Cache-Control to clear all data when browser back button is clicked
@@ -152,14 +151,7 @@ function asu_rfi_form_data($form, &$form_state) {
 	    '#markup' => '<p>Fields marked with <span style = "color:#FF0000;">*</span> are required.</p>',
 	    '#size' => 10,
 	    );
-
-  $form['domain'] = array(
-      '#type' => 'hidden',
-      '#size' => 30,
-      '#maxlength' => 64,
-      '#default_value' => $domain,
-  );
-
+    
 	$form['degree_type'] = array(
 	    '#type' => 'hidden',
 	    '#size' => 30,
@@ -257,7 +249,7 @@ function asu_rfi_form_data($form, &$form_state) {
 	    '#required' => TRUE,
 	    '#default_value' => isset($_SESSION['rfi_data']['email']) ? $_SESSION['rfi_data']['email'] : NULL,
 	);
-
+    
 	$form['about_me']['phone'] = array(
 	    '#prefix' => '<div class="phone_field_rfi">',
 	    '#suffix' => '</div>',
@@ -547,7 +539,6 @@ function asu_rfi_form_data_submit($form, &$form_state){
     global $user;
     // Save values to the form storage, add the next step function callback
     $form_state['rebuild'] = TRUE;
-    $form_state['storage']['domain'] = $form_state['values']['domain'];
     $form_state['storage']['first_name'] = check_plain($form_state['values']['first_name']);
     $form_state['storage']['last_name'] = check_plain($form_state['values']['last_name']);
     $form_state['storage']['phone'] = $form_state['values']['phone'];
@@ -633,7 +624,6 @@ function asu_rfi_form_data_submit($form, &$form_state){
 		$entity = entity_create('node', $ent_values);
 		$ewrapper = entity_metadata_wrapper('node', $entity);
 		$ewrapper->title->set($form_state['storage']['first_name']);
-    $ewrapper->field_rfi_domain->set($form_state['storage']['domain']);
 		$ewrapper->field_rfi_first_name->set($form_state['storage']['first_name']);
 	    	$ewrapper->field_rfi_last_name->set($form_state['storage']['last_name']);
 		$ewrapper->field_rfi_student_type->set($form_state['storage']['student_type']);
@@ -674,7 +664,6 @@ function asu_rfi_form_data_submit($form, &$form_state){
 		$node = node_load($get_nodeid);
 		$ewrapper = entity_metadata_wrapper('node', $node);
 		$ewrapper->title->set($form_state['storage']['first_name']);
-    $ewrapper->field_rfi_domain->set($form_state['storage']['domain']);
 		$ewrapper->field_rfi_first_name->set($form_state['storage']['first_name']);
 		$ewrapper->field_rfi_last_name->set($form_state['storage']['last_name']);
 		$ewrapper->field_rfi_student_type->set($form_state['storage']['student_type']);
@@ -1072,7 +1061,6 @@ function asu_rfi_long_form($delta, $programs, $form_type){
 
 /** construct the form **/
 function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type){
-  $domain = $_SERVER['HTTP_HOST'];
     //include theme css
     drupal_add_css(drupal_get_path('module', 'asu_rfi') .'/theme/asu_rfi.css');
     // Add no-store in Cache-Control to clear all data when browser back button is clicked
@@ -1121,15 +1109,8 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type){
     $form['req_helper'] = array(
         '#value' => '<p>Fields marked with <span style = "color:#FF0000;">*</span> are required.</p>',
     );
-
-  $form['domain'] = array(
-    '#type' => 'hidden',
-    '#size' => 30,
-    '#maxlength' => 64,
-    '#default_value' => $domain,
-  );
-
-  $form['degree_type'] = array(
+    
+    $form['degree_type'] = array(
 	'#type' => 'hidden',
 	'#size' => 30,
 	'#maxlength' => 64,
@@ -1572,7 +1553,6 @@ function asu_rfi_long_form_data_submit($form, &$form_state){
 	$long_form_type = "Undergraduate long form";
 	$form_state['values']['prospect_level'] = "Undergraduate";
     }
-    $domain = check_plain($form_state['values']['domain']);
     $fname = check_plain($form_state['values']['first_name']);
     $lname = check_plain($form_state['values']['last_name']);
     $email = check_plain($form_state['values']['email']);
@@ -1671,7 +1651,6 @@ function asu_rfi_long_form_data_submit($form, &$form_state){
     $entity = entity_create('node', $ent_values);
     $ewrapper = entity_metadata_wrapper('node', $entity);
     $ewrapper->title->set($fname);
-    $ewrapper->field_rfi_domain->set($domain);
     $ewrapper->field_rfi_first_name->set($fname);
     $ewrapper->field_rfi_last_name->set($lname);
     $ewrapper->field_rfi_student_type->set($stype);
@@ -1764,7 +1743,7 @@ function asu_rfi_current_form($delta, $programs, $form_type){
 
 /** construct the form **/
 function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type){
-  $domain = $_SERVER['HTTP_HOST'];
+   
 
     $form = array();
     honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));  
@@ -1782,15 +1761,8 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type){
     $form['req_helper'] = array(
         '#value' => '<p>Fields marked with <span style = "color:#FF0000;">*</span> are required.</p>',
     );
-
-  $form['domain'] = array(
-    '#type' => 'hidden',
-    '#size' => 30,
-    '#maxlength' => 64,
-    '#default_value' => $domain,
-  );
-
-  $form['degree_type'] = array(
+    
+    $form['degree_type'] = array(
 	'#type' => 'hidden',
 	'#size' => 30,
 	'#maxlength' => 64,
@@ -1926,7 +1898,6 @@ function asu_rfi_current_form_data_validate($form,&$form_state){
 function asu_rfi_current_form_data_submit($form, &$form_state){
     global $user;
 
-    $domain = $form_state['values']['domain'];
     $fname = $form_state['values']['first_name'];
     $lname = $form_state['values']['last_name'];
     $email = $form_state['values']['email'];
@@ -1963,7 +1934,6 @@ function asu_rfi_current_form_data_submit($form, &$form_state){
     
     $ewrapper->title->set($fname);
     $ewrapper->field_rfi_first_name->set($fname);
-    $ewrapper->field_rfi_domain->set($domain);
     $ewrapper->field_rfi_last_name->set($lname);
     $ewrapper->field_rfi_email->set($email);
     $ewrapper->field_rfi_phone->set($phone);
