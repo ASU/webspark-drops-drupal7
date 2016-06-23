@@ -1,3 +1,25 @@
+Webspark 1.27.1 (Ismay) release
+----------------
+- Drupal core
+    * Updated to v7.44 (Security updates)
+
+- Web standards components in Webspark
+    * Innovation theme (v1.2)
+        * Added apple icon + mstile PNGs (and their corresponding <link> and <meta> tags in <head>) to stop
+          superfluous 404 errors clogging the Drupal logs caused by Apple and MS tablets
+        * Added CSS that keeps images contained within fixed-width layouts
+        * Fixed Javascript console error (panopolyWidgetTables object not found)
+
+- ASU custom modules
+    * ASU RFI (v1.5)
+        * Reverted the collection of the domain upon form submission due to unintended consequences with RFI
+          forms already in use
+
+- Contributed libraries/modules
+    * Field Group (patch)
+        - Fixed issue where "Show" appears in horizontal tab title if node form is submitted through ajax
+    * Font Awesome library (v4.6.3) - Adds new icons
+
 Webspark 1.27 (Montana) release (MAJOR Update)
 ----------------
 - Webspark core
