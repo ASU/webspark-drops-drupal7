@@ -29,9 +29,18 @@ projects[media][patch][] = patches/webspark-679_fix-HTML-encoded-macros-2028253-
 ; Remove when alpha4 or higher is installed.
 projects[media][patch][] = patches/webspark-679_wysiwyg-multiple-editors-media-images-breaks.patch
 
+
 ; Radix Layouts (module)
 projects[radix_layouts][type] = module
 projects[radix_layouts][subdir] = contrib
 projects[radix_layouts][version] = 3.4
-; Custom patch to make Radix layouts conform to ASU's custom CSS to fix background images, etc.
+;  Make Radix layouts conform to ASU's custom CSS to fix background images, etc.
 projects[radix_layouts][patch][] = patches/webspark-420_radix-layouts_TPL-customizations.patch
+
+; Field Group
+projects[field_group][type] = module
+projects[field_group][subdir] = contrib
+projects[field_group][version] = 1.4
+; Fix "Show" appears in horizontal tab
+; https://www.drupal.org/files/issues/field-group-show-ajax-2042681-18-D7.patch
+projects[field_group][patch][] = patches/github-148_field-group-show-ajax.patch
