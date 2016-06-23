@@ -1,0 +1,19 @@
+imports:
+    - behat.common.yml
+
+default:
+  #paths:
+    #features: 'features'
+  extensions:
+    Behat\MinkExtension:
+      goutte: ~
+      selenium2: ~
+      base_url: http://bjdevil21-webspark
+      files_path: '/home/bryan/github.com/bjdevil21/webspark-drops-drupal7/profiles/openasu/modules/panopoly/panopoly_test/tests'
+    Drupal\DrupalExtension:
+      blackbox: ~
+      drush:
+        alias: bjdevil21-webspark
+      drupal:
+        drupal_root: "/home/bryan/github.com/bjdevil21/webspark-drops-drupal7"
+

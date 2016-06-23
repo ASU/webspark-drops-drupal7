@@ -1,7 +1,6 @@
 name = Apps
 description = Provides Interface for Install Apps from A drupal app server
 package = Distribution Management
-version = 7.x-1.0
 core = 7.x
 
 configure = admin/config/system/apps
@@ -13,9 +12,9 @@ files[] = apps.updater.inc
 files[] = apps.installer.inc
 files[] = apps.test
 
-; Information added by Drupal.org packaging script on 2014-09-18
-version = "7.x-1.0-beta17"
+; Information added by Drupal.org packaging script on 2015-06-23
+version = "7.x-1.0"
 core = "7.x"
 project = "apps"
-datestamp = "1411063950"
+datestamp = "1435090990"
 

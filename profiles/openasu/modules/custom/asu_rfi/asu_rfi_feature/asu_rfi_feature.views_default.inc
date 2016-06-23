@@ -39,6 +39,7 @@ function asu_rfi_feature_views_default_views() {
     'created' => 'created',
     'changed' => 'changed',
     'views_bulk_operations' => 'views_bulk_operations',
+    'field_rfi_domain' => 'field_rfi_domain',
     'field_rfi_first_name' => 'field_rfi_first_name',
     'field_rfi_last_name' => 'field_rfi_last_name',
     'field_rfi_email' => 'field_rfi_email',
@@ -101,6 +102,13 @@ function asu_rfi_feature_views_default_views() {
       'empty_column' => 0,
     ),
     'field_rfi_email' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_rfi_domain' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
@@ -282,6 +290,11 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['fields']['field_rfi_email']['table'] = 'field_data_field_rfi_email';
   $handler->display->display_options['fields']['field_rfi_email']['field'] = 'field_rfi_email';
   $handler->display->display_options['fields']['field_rfi_email']['element_label_colon'] = FALSE;
+  /* Field: Content: Domain */
+  $handler->display->display_options['fields']['field_rfi_domain']['id'] = 'field_rfi_domain';
+  $handler->display->display_options['fields']['field_rfi_domain']['table'] = 'field_data_field_rfi_domain';
+  $handler->display->display_options['fields']['field_rfi_domain']['field'] = 'field_rfi_domain';
+  $handler->display->display_options['fields']['field_rfi_domain']['element_label_colon'] = FALSE;
   /* Field: Content: Phone */
   $handler->display->display_options['fields']['field_rfi_phone']['id'] = 'field_rfi_phone';
   $handler->display->display_options['fields']['field_rfi_phone']['table'] = 'field_data_field_rfi_phone';
@@ -674,6 +687,11 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['fields']['field_rfi_email']['table'] = 'field_data_field_rfi_email';
   $handler->display->display_options['fields']['field_rfi_email']['field'] = 'field_rfi_email';
   $handler->display->display_options['fields']['field_rfi_email']['element_label_colon'] = FALSE;
+  /* Field: Content: Domain*/
+  $handler->display->display_options['fields']['field_rfi_domain']['id'] = 'field_rfi_domain';
+  $handler->display->display_options['fields']['field_rfi_domain']['table'] = 'field_data_field_rfi_domain';
+  $handler->display->display_options['fields']['field_rfi_domain']['field'] = 'field_rfi_domain';
+  $handler->display->display_options['fields']['field_rfi_domain']['element_label_colon'] = FALSE;
   /* Field: Content: Phone */
   $handler->display->display_options['fields']['field_rfi_phone']['id'] = 'field_rfi_phone';
   $handler->display->display_options['fields']['field_rfi_phone']['table'] = 'field_data_field_rfi_phone';

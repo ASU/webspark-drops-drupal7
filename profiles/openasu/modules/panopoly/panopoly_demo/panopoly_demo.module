@@ -41,9 +41,20 @@ function panopoly_demo_menu_link_alter(&$item) {
 function panopoly_demo_migrate_api() {
   $api = array(
     'api' => 2,
+    'groups' => array(
+      'panopoly_demo' => array(
+        'title' => t('Panopoly Demo Content'),
+      ),
+    ),
     'migrations' => array(
-      'PanopolyDemoNode' => array('class_name' => 'PanopolyDemoNode'),
-      'PanopolyDemoMenu' => array('class_name' => 'PanopolyDemoMenu'),
+      'PanopolyDemoNode' => array(
+        'class_name' => 'PanopolyDemoNode',
+        'group_name' => 'panopoly_demo',
+      ),
+      'PanopolyDemoMenu' => array(
+        'class_name' => 'PanopolyDemoMenu',
+        'group_name' => 'panopoly_demo',
+      ),
     ),
   );
   return $api;

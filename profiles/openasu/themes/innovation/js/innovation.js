@@ -25,7 +25,7 @@
       }
       if (($('#ASUNavMenu').offset().top - ($(window).scrollTop() + navOffset)) < 1 && $('.ghostSlider').length < 1){
           $('#ASUNavMenu').clone(true).prependTo(document.body).addClass('ghostSlider')
-          .css({"position": "fixed", "z-index": "2000", "width": "100%", "visibility": "visible"})
+          .css({"position": "fixed", "z-index": "1000", "width": "100%", "visibility": "visible"})
           .removeAttr('id');
       } else if (($('#ASUNavMenu').offset().top - ($(window).scrollTop() + navOffset)) >= 1){
           $('.ghostSlider').remove();

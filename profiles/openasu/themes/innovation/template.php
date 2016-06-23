@@ -31,7 +31,7 @@ function innovation_preprocess_html(&$variables) {
     '#type' => 'html_tag',
     '#tag' => 'meta',
     '#attributes' => array(
-      'content' => 'Webspark:1.13.15 (Bellingham)',
+      'content' => 'Webspark:1.27 (Montana)',
       'http-equiv' => 'X-Name-of-Distro',
     )
   );
@@ -281,8 +281,7 @@ function innovation_links__system_main_menu($variables)
 
 */
 
-function innovation_menuitem_has_active_children($menuitem)
-{
+function innovation_menuitem_has_active_children($menuitem) {
   if (is_array($menuitem) && isset($menuitem['below']) && !empty($menuitem['below'])) {
     foreach ($menuitem['below'] as $child) {
       if (isset($child['link']) && $child['link']['access'] && ($child['link']['hidden'] == 0)) return true;
@@ -295,8 +294,7 @@ function innovation_menuitem_has_active_children($menuitem)
 /**
  * Overides theme_checkbox
  */
-function innovation_checkbox($variables)
-{
+function innovation_checkbox($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'checkbox';
   element_set_attributes($element, array('id', 'name', '#return_value' => 'value'));
@@ -313,8 +311,7 @@ function innovation_checkbox($variables)
 /**
  * Overides theme_radio
  */
-function innovation_radio($variables)
-{
+function innovation_radio($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'radio';
   element_set_attributes($element, array('id', 'name', '#return_value' => 'value'));
@@ -330,8 +327,7 @@ function innovation_radio($variables)
 /**
  * Overrides theme_form_element().
  */
-function innovation_form_element(&$variables)
-{
+function innovation_form_element(&$variables) {
   $element = &$variables['element'];
   $is_checkbox = FALSE;
   $is_radio = FALSE;
@@ -457,8 +453,7 @@ function innovation_form_element(&$variables)
 /**
  * Overrides theme_form_element_label().
  */
-function innovation_form_element_label(&$variables)
-{
+function innovation_form_element_label(&$variables) {
   $element = $variables['element'];
 
   // This is also used in the installer, pre-database setup.

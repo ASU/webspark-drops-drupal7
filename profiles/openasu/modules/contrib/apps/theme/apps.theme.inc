@@ -9,13 +9,60 @@
  * Themes a list of apps.
  */
 function theme_apps_list($vars) {
-  $items = array();
-  foreach ($vars['apps'] as $id => $app) {
-    if (!preg_match("/^#/", $id)) {
-      $items[] = drupal_render($app);
+  // Check if Apps grouping mode is enabled.
+  if (variable_get('apps_grouping_mode', FALSE)) {
+    $packages = array();
+    $other = array();
+    foreach (element_children($vars['apps']) as $app_name) {
+      $app = $vars['apps'][$app_name];
+      if (!empty($app['package'])) {
+        foreach (explode(',', $app['package']) as $package) {
+          $packages[trim($package)][$app_name] = $app['name'];
+        }
+      }
+      else {
+        $other[$app_name] = $app['name'];
+      }
     }
+    ksort($packages);
+    if (!empty($other)) {
+      $packages[t('Other')] = $other;
+    }
+    // Until issue @https://drupal.org/node/1099132 is fixed, we need to
+    // manually load js file and add classes to element
+    $render['app_groups']['#attached']['js'][] = "misc/collapse.js";
+    $render['app_groups']['#attached']['js'][] = "misc/form.js";
+    if (variable_get('apps_grouping_vertical', TRUE)) {
+      $render['app_groups'] = array(
+        '#type' => 'vertical_tabs',
+        '#weight' => 99,
+      );
+    }
+    foreach ($packages as $key => $apps) {
+      $items = array();
+      foreach ($apps as $id => $app) {
+        $vars['apps'][$id]['#printed'] = FALSE;
+        $items[] = drupal_render($vars['apps'][$id]);
+      }
+      $render['app_groups'][$key] = array(
+        '#type' => 'fieldset',
+        '#title' => $key,
+        '#group' => 'app_groups',
+        '#children' => theme('item_list', array('items' => $items)),
+        '#attributes' => array('class' => array('collapsible')),
+      );
+    }
+    return drupal_render($render);
   }
-  return theme('item_list', array('items' => $items));
+  else {
+    $items = array();
+    foreach ($vars['apps'] as $id => $app) {
+      if (!preg_match("/^#/", $id)) {
+        $items[] = drupal_render($app);
+      }
+    }
+    return theme('item_list', array('items' => $items));
+  }
 }
 
 
@@ -23,7 +70,6 @@ function theme_apps_list($vars) {
  * Implements hook_preprocess_apps_app_teaser().
  */
 function apps_preprocess_apps_app_teaser(&$vars) {
-
   apps_include('pages');
   $link = apps_app_page_path($vars['app']);
   $vars['name'] = l($vars['app']['name'], $link);
@@ -55,6 +101,11 @@ function apps_preprocess_apps_app_teaser(&$vars) {
   //action link
   $vars['config'] = apps_app_access($vars['app'], 'configure') ? l(t('Config'), apps_app_page_path($vars['app'], 'configure')) : '';
   $vars['action'] = l(t('Details'), $link);
+  $vars['update'] = apps_app_access($vars['app'], 'update') ? l(t('Update'), apps_app_page_path($vars['app'], 'update')) : '';
+
+  if ($vars['app']['installed_version'] && $vars['app']['version'] != $vars['app']['installed_version']) {
+    $vars['classes_array'][] = ' apps-update-needed-teaser';
+  }
 }
 
 /**
@@ -87,6 +138,9 @@ function apps_preprocess_apps_app_page(&$vars) {
   $vars['name'] = $vars['app']['name'];
   $vars['author'] = l($vars['app']['author'], $vars['app']['author_url']);
   $vars['version'] = $vars['app']['version'];
+  if ($vars['app']['installed_version'] && $vars['app']['version'] != $vars['app']['installed_version']) {
+    $vars['version'] .= ' <span class="apps-update-needed">' . t('Installed: @installed_version', array('@installed_version' => $vars['app']['installed_version'])) . '</span>';
+  }
 
   $conflicts_enabled = array();
   if ($conflicts = apps_app_find_conflicts($vars['app'])) {
@@ -141,6 +195,17 @@ function apps_preprocess_apps_app_page(&$vars) {
     $vars['rating_caption'] = t('Average rating for this version:');
     $vars['rating'] = theme('apps_voting_widget', $vars['app']);
   }
+
+  $vars['parent_apps'] = array();
+  $vars['parent_apps_title'] = t('Depends on');
+  if (!empty($vars['app']['parent_apps'])) {
+    $apps = apps_apps($vars['app']['server']);
+    foreach ($vars['app']['parent_apps'] as $parent_app) {
+      if (!empty($apps[$parent_app])) {
+        $vars['parent_apps'][] = l($apps[$parent_app]['name'], apps_app_page_path($apps[$parent_app]));
+      }
+    }
+  }
 }
 
 /**
@@ -186,4 +251,27 @@ function apps_preprocess_apps_manage_page(&$vars) {
  */
 function apps_preprocess_apps_update_page(&$vars) {
   drupal_add_css(drupal_get_path('module', 'apps') . '/theme/css/apps.css');
+}
+
+/**
+ * Implements hook_preprocess_apps_update_page().
+ */
+function apps_preprocess_apps_catalog_page(&$vars) {
+  $vars['title'] = $vars['server']['title'];
+  $vars['apps_render'] = array();
+  foreach ($vars['apps'] as $machine_name => $info) {
+    $vars['apps_render'][$info['name']] = array(
+      'description' => check_plain($info['description']),
+      'conflicts' => array(),
+      'name' => check_plain($info['name']),
+    );
+    if ($conflicts = apps_app_find_conflicts($info)) {
+      foreach ($conflicts as $conflict) {
+        if ($conflict['server'] == $vars['server']['name']) {
+          $vars['apps_render'][$info['name']]['conflicts'][] = check_plain($vars['apps'][$conflict['name']]['name']);
+        }
+      }
+    }
+  }
+  ksort($vars['apps_render']);
 }

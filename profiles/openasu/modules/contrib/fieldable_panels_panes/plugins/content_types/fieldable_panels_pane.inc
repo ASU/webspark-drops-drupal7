@@ -13,7 +13,6 @@
  * caching and if this .inc file is loaded before the plugin is
  * requested, the $plugin = array() notation doesn't work.
  */
-
 function fieldable_panels_panes_fieldable_panels_pane_ctools_content_types() {
   return array(
     'title' => t('Fielded custom content'),
@@ -24,12 +23,61 @@ function fieldable_panels_panes_fieldable_panels_pane_ctools_content_types() {
     'defaults' => array(
       'view_mode' => 'full',
     ),
-    'edit form' => 'fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form',
+
+    // Callback to load the FPP.
+    'content type' => 'fieldable_panels_panes_fieldable_panels_pane_content_type',
+
+    // Functionality for editing an FPP.
     'edit text' => t('Edit'),
+    // Form API callback.
+    'edit form' => 'fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form',
+    // Access callback.
+    'check editable' => 'fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form_access',
   );
 }
 // --------------------------------------------------------------------------
 // Callbacks, many of them automatically named, for rendering content.
+
+/**
+ * Return an individual FPP.
+ */
+function fieldable_panels_panes_fieldable_panels_pane_content_type($subtype_id, $plugin) {
+  $content_type = array();
+
+  // If an ID was passed in, try loading a corresponding FPP.
+  if (strpos($subtype_id, ':') !== FALSE) {
+    // If a specific FPP was requested, load it. Use the 'force' method to
+    // avoid inadvertently triggering an infinite loop.
+    $entity = fieldable_panels_panes_load_from_subtype_force($subtype_id);
+
+    // The FPP could be loaded, so generate its content type definition.
+    if (!empty($entity)) {
+      $content_type = _fieldable_panels_panes_custom_content_type($entity);
+    }
+
+    // This shouldn't happen, but there may be situations where the FPP has been
+    // deleted but is still referenced in a Panels display.
+    else {
+      return $content_type;
+    }
+  }
+
+  // If nothing was loaded yet,
+  if (empty($content_type)) {
+    $type = 'fieldable_panels_pane';
+    $subtypes = ctools_content_get_subtypes($type);
+    if (isset($subtypes[$subtype_id])) {
+      $content_type = $subtypes[$subtype_id];
+    }
+    // If there's only 1 and we somehow have the wrong subtype ID, do not
+    // care. Return the proper subtype anyway.
+    if (empty($content_type) && !empty($plugin['single'])) {
+      $content_type = current($subtypes);
+    }
+  }
+
+  return $content_type;
+}
 
 /**
  * Callback to return the custom content types with the specified $subtype_name.
@@ -40,8 +88,8 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_content_type(
     return $types[$subtype_name];
   }
   else {
-    $entity = fieldable_panels_panes_load_entity($subtype_name);
-    if ($entity) {
+    $entity = fieldable_panels_panes_load_from_subtype($subtype_name);
+    if (!empty($entity)) {
       return _fieldable_panels_panes_custom_content_type($entity);
     }
   }
@@ -54,11 +102,13 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_content_types
   $types = _fieldable_panels_panes_default_content_type();
 
   $ids = db_query('SELECT fpid FROM {fieldable_panels_panes} WHERE reusable = 1')->fetchCol();
-  if ($ids) {
+  if (!empty($ids)) {
     $entities = fieldable_panels_panes_load_multiple($ids);
-    foreach ($entities as $entity) {
-      $subtype = _fieldable_panels_panes_custom_content_type($entity);
-      $types[$subtype['name']] = $subtype;
+    if (!empty($entities)) {
+      foreach ($entities as $entity) {
+        $subtype = _fieldable_panels_panes_custom_content_type($entity);
+        $types[$subtype['name']] = $subtype;
+      }
     }
   }
 
@@ -69,16 +119,34 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_content_types
  * Callback to render our content type.
  */
 function fieldable_panels_panes_fieldable_panels_pane_content_type_render($subtype, $conf, $panel_args = array(), $context = array()) {
-  $entity = fieldable_panels_panes_load_entity($subtype);
-  $view_mode = isset($conf['view_mode']) ? $conf['view_mode'] : 'full';
-  if ($entity && !empty($entity->fpid) && fieldable_panels_panes_access('view', $entity)) {
+  $entity = fieldable_panels_panes_load_from_subtype($subtype);
+  if (!empty($entity) && !empty($entity->fpid) && fieldable_panels_panes_access('view', $entity)) {
+    $view_mode = isset($conf['view_mode']) ? $conf['view_mode'] : 'full';
     $settings = field_bundle_settings('fieldable_panels_pane', $entity->bundle);
+    // Add pane config to the entity object before hook_view().
+    $entity->conf = $conf;
+
     $block = new stdClass();
     $block->title = '';
-    if (empty($settings['extra_fields']['display']) || !empty($settings['extra_fields']['display']['title']['default']['visible'])) {
-      $block->title = !empty($entity->title) ? filter_xss_admin($entity->title) : '';
-    }
     $block->content = fieldable_panels_panes_view($entity, $view_mode);
+
+    // Was there a title defined?
+    if (!empty($entity->title)) {
+      // Is this view mode configured?
+      $is_view_mode_set = isset($settings['extra_fields']['display']['title'][$view_mode]['visible']);
+
+      // Is the title configured for this view mode?
+      $show_view_mode_title = ($is_view_mode_set && $settings['extra_fields']['display']['title'][$view_mode]['visible']);
+
+      // Should the default view mode show the title?
+      $show_default_title = !empty($settings['extra_fields']['display']['title']['default']['visible']);
+
+      // Combine all of the above logic.
+      if (empty($settings['extra_fields']['display']) || (!$is_view_mode_set && $show_default_title) || $show_view_mode_title) {
+        $block->title = filter_xss_admin($entity->title);
+      }
+    }
+
     return $block;
   }
 }
@@ -87,13 +155,13 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_render($subty
  * Callback to provide the administrative title of the custom content.
  */
 function fieldable_panels_panes_fieldable_panels_pane_content_type_admin_title($subtype, $conf) {
-  $entity = fieldable_panels_panes_load_entity($subtype);
+  $entity = fieldable_panels_panes_load_from_subtype($subtype);
 
-  $output = t('Deleted/removed entity pane');
-  if (isset($entity) && is_object($entity)) {
-    $title = !empty($entity->admin_title) ? $entity->admin_title : (!empty($entity->title) ? $entity->title : t('No title'));
-
-    $output = $title;
+  if (!empty($entity) && is_object($entity)) {
+    $output = !empty($entity->admin_title) ? $entity->admin_title : (!empty($entity->title) ? $entity->title : t('No title'));
+  }
+  else {
+    $output = t('Deleted/removed entity pane');
   }
 
   return $output;
@@ -111,16 +179,15 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_admin_info($s
  */
 function fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form($form, &$form_state) {
   $conf = &$form_state['conf'];
-  $subtype_name = $form_state['subtype_name'];
 
   if (!isset($form_state['entity'])) {
-    $form_state['entity'] = fieldable_panels_panes_load_entity($subtype_name);
+    $form_state['entity'] = fieldable_panels_panes_load_from_subtype($form_state['subtype_name']);
   }
   $entity = $form_state['entity'];
 
-  // It's possible that we have a reference to an entity that is no longer valid.
-  // If so, bail, because otherwise field API will whitescreen.
-  if (!$entity) {
+  // It's possible that we have a reference to an entity that is no longer
+  // valid. If so, bail, because otherwise field API will whitescreen.
+  if (empty($entity)) {
     $form['error'] = array(
       '#markup' => t('The pane entity referenced does not appear to be valid. It was probably deleted and you should remove this pane.'),
     );
@@ -187,19 +254,26 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form_sub
   }
 
   fieldable_panels_panes_entity_edit_form_submit($form, $form_state);
-  if (!empty($entity->is_new)) {
-    if (module_exists('uuid') && isset($entity->uuid)) {
-      $entity_id = 'uuid:' . $entity->uuid;
-    }
-    else {
-      $entity_id = 'fpid:' . $entity->fpid;
-    }
 
-    // @todo -- this won't work if $form_state does not contain
-    // 'pane' which could theoretically happen in a non-Panels
-    // use case. Not that anybody uses this outside of Panels.
-    $form_state['pane']->subtype = $entity_id;
+  // Sub type is not explicitly set, define it here.
+  if (module_exists('uuid') && isset($entity->uuid)) {
+    $entity_id = 'uuid:' . $entity->uuid;
   }
+  else {
+    $entity_id = 'fpid:' . $entity->fpid;
+  }
+
+  // @todo: This won't work if $form_state does not contain 'pane' which could
+  // theoretically happen in a non-Panels use case. Not that anybody uses this
+  // outside of Panels.
+  $form_state['pane']->subtype = $entity_id;
+}
+
+/**
+ * Callback for the 'edit' permission.
+ */
+function fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form_access($content_type, $subtype, $view_mode = 'full') {
+  return fieldable_panels_panes_check_access_update($subtype);
 }
 
 // --------------------------------------------------------------------------
@@ -254,52 +328,6 @@ function _fieldable_panels_panes_custom_content_type($entity) {
 
   $info['entity_id'] = $info['name'];
   return $info;
-}
-
-/**
- * Properly load the entity the subtype.
- */
-function fieldable_panels_panes_load_entity($subtype_name) {
-  ctools_include('content');
-  $plugin = ctools_get_content_type('fieldable_panels_pane');
-
-  // Next, check to see how the subtype is configured.
-  $subtype_info = ctools_content_get_subtype($plugin, $subtype_name);
-
-  // This means we're probably in the process of creating a new one.
-  if (isset($subtype_info['bundle'])) {
-    return fieldable_panels_panes_create(array('bundle' => $subtype_info['bundle']));
-  }
-
-  // And try it this way.
-  if (isset($subtype_info['entity_id'])) {
-    return _fieldable_panels_panes_load_entity($subtype_info['entity_id']);
-  }
-
-  // Finally, try this:
-  return _fieldable_panels_panes_load_entity($subtype_name);
-}
-
-/**
- * Properly load the entity via $subtype_name
- */
-function _fieldable_panels_panes_load_entity($subtype_name) {
-  list($type, $id) = explode(':', $subtype_name);
-  if ($type == 'uuid' && module_exists('uuid')) {
-    $ids = entity_get_id_by_uuid('fieldable_panels_pane', array($id));
-    if ($content = entity_load('fieldable_panels_pane', $ids)) {
-      $content = reset($content);
-    }
-  }
-  elseif ($type == 'vid') {
-    $fpid = db_query('SELECT fpid FROM {fieldable_panels_panes_revision} WHERE vid = :vid', array(':vid' => $id))->fetchField();
-    $content = fieldable_panels_panes_load($fpid, $id);
-  }
-  else {
-    $content = fieldable_panels_panes_load($id);
-  }
-
-  return $content;
 }
 
 /**
