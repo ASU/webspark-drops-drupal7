@@ -3,7 +3,7 @@ Feature: Add content item
   As a site administrator
   I need to be able to choose which content item
 
-  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
+  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed @formscssfixes
   Scenario: Content item autocomplete should only offer nodes of the selected type
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled

@@ -3,7 +3,7 @@ Feature: Hidden view mode options
   As a site administrator
   I need to limit the view mode options displayed
 
-  @api @javascript @panopoly_magic
+  @api @javascript @panopoly_magic @w2
   Scenario: Make sure that the right view modes are hidden by default
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
@@ -25,7 +25,7 @@ Feature: Hidden view mode options
       And I should not see the radio button "Revision comparison"
       And I should not see the radio button "Tokens"
 
-  @api @javascript @panopoly_magic
+  @api @javascript @panopoly_magic @w2
   Scenario: Configure which view modes are available on Views
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
@@ -53,7 +53,7 @@ Feature: Hidden view mode options
     # Clean up after ourselves.
     When I run drush "vdel" "panopoly_magic_hidden_view_mode_options -y" 
 
-  @api @javascript @panopoly_magic @panopoly_widgets
+  @api @javascript @panopoly_magic @panopoly_widgets @w2
   Scenario: With vanilla Panopoly, we shouldn't see the 'View mode' selector on FPPs
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are manual
@@ -66,7 +66,7 @@ Feature: Hidden view mode options
     Then I should see "Configure new Add text"
       And I should not see "Select a view mode for this pane."
 
-  @api @javascript @panopoly_magic @panopoly_widgets
+  @api @javascript @panopoly_magic @panopoly_widgets @w2
   Scenario: Configure which view modes are available on FPPs
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled

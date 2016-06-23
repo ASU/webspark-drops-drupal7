@@ -33,7 +33,7 @@ class PanelsSubContext extends RawDrupalContext implements DrupalSubContextInter
    * @When I wait for the Panels IPE to activate
    */
   public function waitForIPEtoActivate() {
-    $this->getSession()->wait(5000, 'jQuery(".panels-ipe-editing").length > 0');
+    $this->getSession()->wait(3000, 'jQuery(".panels-ipe-editing").length > 0');
   }
 
   /**
@@ -42,7 +42,7 @@ class PanelsSubContext extends RawDrupalContext implements DrupalSubContextInter
    * @When I wait for the Panels IPE to deactivate
    */
   public function waitForIPEtoDeactivate() {
-    $this->getSession()->wait(5000, 'jQuery(".panels-ipe-editing").length === 0');
+    $this->getSession()->wait(3000, 'jQuery(".panels-ipe-editing").length === 0');
   }
 
   /**
