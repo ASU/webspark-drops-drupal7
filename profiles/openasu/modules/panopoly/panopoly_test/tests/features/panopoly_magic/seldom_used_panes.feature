@@ -3,7 +3,7 @@ Feature: Panopoly Magic allows the admin to toggle displaying seldom used pane s
   As a site administrator
   I need to enable showing seldom used pane styles
 
-  @api @javascript @panopoly_magic @w2
+  @api @javascript @panopoly_magic
   Scenario: Enable viewing seldom used pane styles
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
@@ -26,7 +26,7 @@ Feature: Panopoly Magic allows the admin to toggle displaying seldom used pane s
       And I press "Save"
       And I wait for the Panels IPE to deactivate
 
-  @api @javascript @panopoly_magic @w2
+  @api @javascript @panopoly_magic
   Scenario: Disable viewing seldom used pane styles
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
