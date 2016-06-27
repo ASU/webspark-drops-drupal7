@@ -305,6 +305,7 @@ p.img-thumbnail img {
 
 /* =TABLES
 -------------------------------------------------------------- */
+/* Default table styles */
 table {
   background-color: white;
   margin-bottom: 24px;
@@ -330,6 +331,9 @@ table > thead > tr > td {
   vertical-align: bottom;
   font-weight: bold;
 }
+table > tbody > tr:nth-child(2n+1) {
+	background-color: #F5F5F5;
+}
 
 table > caption + thead > tr:first-child > th,
 table > caption + thead > tr:first-child > td,
@@ -343,6 +347,32 @@ table > thead:first-child > tr:first-child > td {
 table > tbody + tbody {
   border-top: 2px solid #b7b7b7;
 }
+
+/* WYSIWYG Bordered table */
+table.bordered {
+	border-bottom: 1px solid #b7b7b7;
+	border-left: 1px solid #b7b7b7;
+}
+table.bordered > thead > tr > th,
+table.bordered > thead > tr > td,
+table.bordered > tbody > tr > th,
+table.bordered > tbody > tr > td,
+table.bordered > tfoot > tr > th,
+table.bordered > tfoot > tr > td {
+  border-right: 1px solid #b7b7b7;
+}
+table.bordered > tbody > tr:nth-child(2n+1) {
+	background-color: #fff;
+}
+table.bordered > caption + thead > tr:first-child > th,
+table.bordered > caption + thead > tr:first-child > td,
+table.bordered > colgroup + thead > tr:first-child > th,
+table.bordered > colgroup + thead > tr:first-child > td,
+table.bordered > thead:first-child > tr:first-child > th,
+table.bordered > thead:first-child > tr:first-child > td {
+  border-top: 1px solid #b7b7b7;
+}
+
 
 /* =CONTENT CALLOUTS
 -------------------------------------------------------------- */
