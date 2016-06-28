@@ -14,7 +14,7 @@
  */
 function asu_rfi_undergrad_email($prog_plan, $e_email, $humanName)
 {
-  if(!isset($e_email)){
+  if (!isset($e_email)) {
     watchdog('asu_rfi', 'An undergraduate RFI form attempted to send an email without an destination address.');
     return false;
   }
@@ -112,11 +112,11 @@ function asu_rfi_undergrad_email($prog_plan, $e_email, $humanName)
     $message = $MimeMailSystem->format($message);
 
     $result = $MimeMailSystem->mail($message);
-  } catch(Exception $e) {
+  } catch (Exception $e) {
     watchdog('asu_rfi', 'An undergraduate form failed to send to generate an email: ' . $e->getMessage());
   }
 
-  if(isset($result)){
+  if (isset($result)) {
     return true;
   } else {
     return false;
@@ -133,7 +133,7 @@ function asu_rfi_undergrad_email($prog_plan, $e_email, $humanName)
  */
 function asu_rfi_grad_email($prog_plan, $e_email, $humanName)
 {
-  if(!isset($e_email)){
+  if (!isset($e_email)) {
     watchdog('asu_rfi', 'An undergraduate RFI form attempted to send an email without an destination address.');
     return false;
   }
@@ -205,7 +205,6 @@ function asu_rfi_grad_email($prog_plan, $e_email, $humanName)
   }
 
 
-
   try {
     // send the mail to the user
     $my_module = 'mimemail';
@@ -231,11 +230,11 @@ function asu_rfi_grad_email($prog_plan, $e_email, $humanName)
     $message = $MimeMailSystem->format($message);
 
     $result = $MimeMailSystem->mail($message);
-  } catch(Exception $e) {
+  } catch (Exception $e) {
     watchdog('asu_rfi', 'A graduate form failed to send to generate an email: ' . $e->getMessage());
   }
 
-  if(isset($result)){
+  if (isset($result)) {
     return true;
   } else {
     return false;

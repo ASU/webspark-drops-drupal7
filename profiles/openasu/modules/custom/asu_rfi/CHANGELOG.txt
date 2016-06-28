@@ -1,4 +1,10 @@
-Drupal 7.x-1.3.1, 2016-04-15
+Drupal 7.x-1.5, 2016-06-14
+——————————————————————————
+- Implemented new location functionality
+- Added new Web Standards styling to the forms
+- The RFI now supports requests for Online degree information from EdPlus
+
+Drupal 7.x-1.4, 2016-04-15
 ——————————————————————————
 - Implementing updated email templates for both grad and undergrad submissions
 - fixing grad environment check
