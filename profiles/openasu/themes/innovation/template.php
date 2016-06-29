@@ -100,12 +100,13 @@ function innovation_process_html(&$variables) {
 function innovation_preprocess_block(&$variables)
 {
   $block = $variables['block'];
+
   if ($block->delta == 'main-menu' && $block->module == 'system' && $block->status == 1 && $block->theme = 'innovation') {
     // Get the entire main menu tree.
     $main_menu_tree = array();
     $main_menu_tree = menu_tree_all_data('main-menu', NULL, 2);
+
     // Add the rendered output to the $main_menu_expanded variable.
-    //
     $main_menu_asu = menu_tree_output($main_menu_tree);
     $pri_attributes = array(
       'class' => array(
@@ -306,7 +307,6 @@ function innovation_links__system_main_menu($variables)
 * active child menu items.
 
 */
-
 function innovation_menuitem_has_active_children($menuitem) {
   if (is_array($menuitem) && isset($menuitem['below']) && !empty($menuitem['below'])) {
     foreach ($menuitem['below'] as $child) {
@@ -314,40 +314,6 @@ function innovation_menuitem_has_active_children($menuitem) {
     }
   }
   return false;
-}
-
-
-/**
- * Overides theme_checkbox
- */
-function innovation_checkbox($variables) {
-  $element = $variables['element'];
-  $element['#attributes']['type'] = 'checkbox';
-  element_set_attributes($element, array('id', 'name', '#return_value' => 'value'));
-
-  // Unchecked checkbox has #value of integer 0.
-  if (!empty($element['#checked'])) {
-    $element['#attributes']['checked'] = 'checked';
-  }
-  _form_set_class($element, array('form-checkbox'));
-
-  return '<input' . drupal_attributes($element['#attributes']) . ' /><span class="outer-wrap"><i class="fa fa-check"></i></span>';
-}
-
-/**
- * Overides theme_radio
- */
-function innovation_radio($variables) {
-  $element = $variables['element'];
-  $element['#attributes']['type'] = 'radio';
-  element_set_attributes($element, array('id', 'name', '#return_value' => 'value'));
-
-  if (isset($element['#return_value']) && $element['#value'] !== FALSE && $element['#value'] == $element['#return_value']) {
-    $element['#attributes']['checked'] = 'checked';
-  }
-  _form_set_class($element, array('form-radio'));
-
-  return '<input' . drupal_attributes($element['#attributes']) . ' /><span class="outer-wrap"><i class="fa fa-circle"></i></span>';
 }
 
 /**
@@ -450,16 +416,17 @@ function innovation_form_element(&$variables) {
       break;
 
     case 'after':
-      if ($is_radio || $is_checkbox) {
-        $variables['#children'] = ' ' . $prefix . $element['#children'] . $suffix;
-
-      } else {
-        $output .= ' ' . $prefix . $element['#children'] . $suffix;
-      }
+      $output .= ' ' . $prefix . $element['#children'] . $suffix;
       $output .= ' ' . theme('form_element_label', $variables) . "\n";
       break;
 
     case 'none':
+      // Added output to ensure <label> tags are output for FontAwesome
+      // checkboxes and radio buttons to work. Was empty.
+      $output .= ' ' . $prefix . $element['#children'] . $suffix;
+      $output .= ' ' . theme('form_element_label', $variables) . "\n";
+      break;
+
     case 'attribute':
       // Output no label and no required marker, only the children.
       $output .= ' ' . $prefix . $element['#children'] . $suffix . "\n";
@@ -481,16 +448,23 @@ function innovation_form_element(&$variables) {
  */
 function innovation_form_element_label(&$variables) {
   $element = $variables['element'];
-
   // This is also used in the installer, pre-database setup.
   $t = get_t();
 
   // Determine if certain things should skip for checkbox or radio elements.
   $skip = (isset($element['#type']) && ('checkbox' === $element['#type'] || 'radio' === $element['#type']));
 
-  // If title and required marker are both empty, output no label.
-  if ((!isset($element['#title']) || $element['#title'] === '' && !$skip) && empty($element['#required'])) {
-    return '';
+  if (!$skip) {
+    // If title is empty or not defined, create blank title for empty <label> tag
+    if ((!isset($element['#title']) || $element['#title'] === '') && empty($element['#required'])) {
+      return '';
+    }
+    else {
+      $element['#title'] = (!isset($element['#title']) || $element['#title'] === '') ? '' : $element['#title'];
+    }
+  }
+  else {
+    $element['#title'] = (!isset($element['#title']) || $element['#title'] === '') ? '' : $element['#title'];
   }
 
   // If the element is required, a required marker is appended to the label.
@@ -499,7 +473,6 @@ function innovation_form_element_label(&$variables) {
   $title = filter_xss_admin($element['#title']);
 
   $attributes = array();
-
   // Style the label as class option to display inline with the element.
   if ($element['#title_display'] == 'after' && !$skip) {
     $attributes['class'][] = $element['#type'];
@@ -512,15 +485,14 @@ function innovation_form_element_label(&$variables) {
     $attributes['for'] = $element['#id'];
   }
 
-  // Insert radio and checkboxes inside label elements.
+  // Insert radio and checkboxes above label elements.
   $output = '';
   if (isset($variables['#children'])) {
     $output .= $variables['#children'];
   }
 
-  // Append label.
-  $output .= $t('!title !required', array('!title' => $title, '!required' => $required));
+  // Append original label info
+  $label_output = $t('!title !required', array('!title' => $title, '!required' => $required));
 
-  // The leading whitespace helps visually separate fields from inline labels.
-  return ' <label' . drupal_attributes($attributes) . '>' . $output . "</label>\n";
+  return $output . "\n" . ' <label' . drupal_attributes($attributes) . '>' . $label_output . "</label>\n";
 }
