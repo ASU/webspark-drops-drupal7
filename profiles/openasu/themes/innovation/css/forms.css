@@ -103,7 +103,6 @@
   left: 0;
   margin-left: -1.2em;
   transition: border 0.15s ease-in-out 0s;
-
 }
 .form-type-radio label::after {
   background-color: #555555;
@@ -157,7 +156,22 @@ input[type="radio"] .styled:checked + label::after {
   color: #fff;
 }
 
-/* Modal Content tweaks */
+/* Action buttons for all forms */
+
+.form-actions {
+  text-align: center;
+  vertical-align: middle;
+  padding-left: 1em;
+  padding-right: 1em;
+  display: inline-block;
+  margin-bottom: 0.25em;
+  margin-top: 0.25em;
+}
+.form-actions .btn, .form-submit {
+  margin: 1em 0.3125em;
+}
+
+/* Modal Content overrides */
 
 div.ctools-modal-content {
   font-size: 1em;
@@ -169,11 +183,18 @@ div.ctools-modal-content .dependent-options {
 #modal-content .checkbox input[type="checkbox"] {
   margin-left: -1.75em;
 }
+#modal-content .form-type-radio label {
+  padding-left: 2.45em;
+}
+#modal-content .form-type-radio label::before,
+#modal-content .form-type-radio label::after {
+  margin-left: 0;
+}
 #modal-content .fieldset-wrapper {
   margin-top: inherit;
   padding: 0 0.625em 1em;
 }
-#modal-content .form-item, .form-actions {
+#modal-content .form-item {
   margin-bottom: 1em;
   margin-top: 0;
 }
@@ -184,8 +205,6 @@ div.ctools-modal-content .dependent-options {
   float: right;
   margin: 0 0 1em 1em;
   min-width: 25%;
-  text-align: center;
-  vertical-align: middle;
   width: auto;
 }
 #modal-content .form-submit.btn {
