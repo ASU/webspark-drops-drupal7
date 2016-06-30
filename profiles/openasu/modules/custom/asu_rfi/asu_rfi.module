@@ -634,7 +634,7 @@ function asu_rfi_repost_rfi($data) {
      // if graduate submission node, try to repost it to asu_rfi_grad_post file.
      if(sizeof($node->field_rfi_prospect_level) != 0){
       if($node->field_rfi_prospect_level['und'][0]['value'] == "Graduate"){
-        $gradpost['domain'] = $node->field_rfi_domain['und'][0]['value'];
+        
         $gradpost['first_name'] = $node->field_rfi_first_name['und'][0]['value'];
         $gradpost['last_name'] = $node->field_rfi_last_name['und'][0]['value'];
         $gradpost['email'] = $node->field_rfi_email['und'][0]['value'];
@@ -668,7 +668,6 @@ function asu_rfi_repost_rfi($data) {
      //repost undergrad submissions to middleware
      
       if($node->field_rfi_prospect_level['und'][0]['value'] == "Undergraduate"){
-        $upost['domain'] = $node->field_rfi_domain['und'][0]['value'];
         $upost['first_name'] = $node->field_rfi_first_name['und'][0]['value'];
         $upost['last_name'] = $node->field_rfi_last_name['und'][0]['value'];
         $upost['email'] = $node->field_rfi_email['und'][0]['value'];
@@ -1029,7 +1028,6 @@ function asu_rfi_action_info() {
 
 function asu_rfi_bulk_submit_action(&$node, $context) {
   if($node->field_rfi_prospect_level['und'][0]['value'] == "Undergraduate"){
-        $upost['domain'] = $node->field_rfi_domain['und'][0]['value'];
         $upost['first_name'] = $node->field_rfi_first_name['und'][0]['value'];
         $upost['last_name'] = $node->field_rfi_last_name['und'][0]['value'];
         $upost['email'] = $node->field_rfi_email['und'][0]['value'];
@@ -1059,7 +1057,7 @@ function asu_rfi_bulk_submit_action(&$node, $context) {
   }
   
   if($node->field_rfi_prospect_level['und'][0]['value'] == "Graduate"){
-        $gradpost['domain'] = $node->field_rfi_domain['und'][0]['value'];
+        
         $gradpost['first_name'] = $node->field_rfi_first_name['und'][0]['value'];
         $gradpost['last_name'] = $node->field_rfi_last_name['und'][0]['value'];
         $gradpost['email'] = $node->field_rfi_email['und'][0]['value'];

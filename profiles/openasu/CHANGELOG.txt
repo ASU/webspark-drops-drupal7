@@ -1,3 +1,151 @@
+Webspark 1.27.1 (Ismay) release
+----------------
+- Drupal core
+    * Updated to v7.44 (Security updates)
+
+- Web standards components in Webspark
+    * Innovation theme (v1.2)
+        * Added apple icon + mstile PNGs (and their corresponding <link> and <meta> tags in <head>) to stop
+          superfluous 404 errors clogging the Drupal logs caused by Apple and MS tablets
+        * Added CSS that keeps images contained within fixed-width layouts
+        * Fixed Javascript console error (panopolyWidgetTables object not found)
+
+- ASU custom modules
+    * ASU RFI (v1.5)
+        * Reverted the collection of the domain upon form submission due to unintended consequences with RFI
+          forms already in use
+
+- Contributed libraries/modules
+    * Field Group (patch)
+        - Fixed issue where "Show" appears in horizontal tab title if node form is submitted through ajax
+    * Font Awesome library (v4.6.3) - Adds new icons
+
+Webspark 1.27 (Montana) release (MAJOR Update)
+----------------
+- Webspark core
+    * Updated Panopoly core - v1.27
+        * The Panopoly layout templates (which were part of the Kalatheme theme) were upgraded from their custom Panopoly layouts to Radix layouts. Any Webspark site pages/sections should be updated automatically to the new Radix layouts while keeping the same look/feel.
+        * Fixed template naming bug affecting the Brown layout. If you are using the Brown layout for any content on your site, that content will likely need to be manually moved to the equivalent regions after updating.
+        * When choosing new page layouts anywhere in the Drupal UI, avoid using any layouts that are listed under the "Panopoly" category and are now labeled as "deprecated". (TIP: The Radix layout icons in various Drupal UI sections are purple, while the old, deprecated layout icons are black.)
+        * While the CSS classes were (mostly) ported from the old layouts, there are a couple of slight DOM changes. Therefore, any sites with subthemes should thoroughly check to ensure that their site's customization is still rendering properly.
+        * Several contrib modules have been updated to versions tested to work with Panopoly 1.27.
+
+- Web standards components in Webspark
+    * Innovation theme (v1.1)
+        * Fixed the text legibility problem in the Drupal success alert messages by setting the text color back to white
+    * Webspark News and Events (v1.0-beta4)
+        * Fixed Undefined variable error in a module TPL file
+    * Webspark Megamenu (v1.4)
+        * Fixed bug that prevented the stored resize values for the main navigation menu items from being applied and resulted in the resizing occurring after the page loaded
+        * Fixed issue with the menu overlaying IPE elements
+    * ASU RFI (v1.4)
+        * Implemented updated email response templates
+        * RFI submission statuses now change on submission, rather than on callback from the middleware
+        * The domain is now collected on form submission rather than on a middleware post
+    * ASU Degrees (v1.9)
+        * Adds new campuses for import
+        * Improves UX by translating unit codes into human-recognizable names
+
+- Contrib projects - Updates
+-- Panopoly-managed modules - (not including core Panopoly modules)
+    * Administration Development tools (admin_devel) - v3.0-rc5
+    * Administration menu (admin_menu) - v3.0-rc5
+    * Administration menu Toolbar style (admin_menu_toolbar) - v3.0-rc5
+    * Administration views (admin_views) - v1.5
+    * Administration views test (admin_views_test) - v1.5
+    * Apps (apps) - v1.0
+    * Bulk Export (bulk_export) - v1.8
+    * Chaos tools (ctools) - v1.8
+    * Custom rulesets (ctools_access_ruleset) - v1.8
+    * Chaos Tools (CTools) AJAX Example (ctools_ajax_sample) - v1.8
+    * Custom content panes (ctools_custom_content) - v1.8
+    * Chaos Tools (CTools) Plugin Example (ctools_plugin_example) - v1.8
+    * Page manager (page_manager) - v1.8
+    * Stylizer (stylizer) - v1.8
+    * Term Depth access (term_depth) - v1.8
+    * CTools export test (ctools_export_test) - v1.8
+    * Chaos tools plugins test (ctools_plugin_test) - v1.8
+    * Views content panes (views_content) - v1.8
+    * Date (date) - v2.9-rc1
+    * Date All Day (date_all_day) - v2.9-rc1
+    * Date API (date_api) - v2.9-rc1
+    * Date Context (date_context) - v2.9-rc1
+    * Date Migration (date_migrate) - v2.9-rc1
+    * Date Migration Example (date_migrate_example) - v2.9-rc1
+    * Date Popup (date_popup) - v2.9-rc1
+    * Date Repeat API (date_repeat) - v2.9-rc1
+    * Date Repeat Field (date_repeat_field) - v2.9-rc1
+    * Date Tools (date_tools) - v2.9-rc1
+    * Date Views (date_views) - v2.9-rc1
+    * Distribution Update Status Manager (distro_update) - v1.0-beta4
+    * Entity API (entity) - v1.6
+    * Entity tokens (entity_token) - v1.6
+    * Entity feature module (entity_feature) - v1.6
+    * Entity CRUD test module (entity_test) - v1.6
+    * Entity-test type translation (entity_test_i18n) - v1.6
+    * Current Search Blocks (current_search) - v1.5
+    * Facet API (facetapi) - v1.5
+    * Facet API Test (facetapi_test) - v1.5
+    * Features (features) - v2.6
+    * Features Tests (features_test) - v2.6
+    * Fieldable Panels Panes (fieldable_panels_panes) - v1.7
+    * File entity (file_entity) - v2.0-beta1
+    * File Entity Test (file_entity_test) - v2.0-beta1
+    * Image resize filter (image_resize_filter) - v1.15
+    * jQuery Update (jquery_update) - v2.6
+    * Link (link) - v1.3
+    * Linkit (linkit) - v3.3
+    * Manual Crop (manualcrop) - v1.5+4-dev
+    * Media: Vimeo (media_vimeo) - v2.1
+    * Media: YouTube (media_youtube) - v3.0
+    * Menu Block (menu_block) - v2.7
+    * Menu Block Export (menu_block_export) - v2.7
+    * Migrate (migrate) - v2.8
+    * Migrate Example (migrate_example) - v2.8
+    * Migrate example - vOracle (migrate_example_oracle) - v2.8
+    * migrate_example_baseball (migrate_example_baseball) - v2.8
+    * Migrate UI (migrate_ui) - v2.8
+    * Module filter (module_filter) - v2.0
+    * Panels translation (i18n_panels) - v3.5
+    * Panels (panels) - v3.5
+    * Panels In-Place Editor (panels_ipe) - v3.5
+    * Mini panels (panels_mini) - v3.5
+    * Panel nodes (panels_node) - v3.5
+    * Respond.js (respondjs) - v1.5
+    * Search facets (search_api_facetapi) - v1.15
+    * Search views (search_api_views) - v1.15
+    * Search API (search_api) - v1.15
+    * Search API test (search_api_test) - v1.15
+    * Database search (search_api_db) - v1.4
+    * Solr search (search_api_solr) - v1.8
+    * TableField (tablefield) - v2.4
+    * Token Test (token_test) - v1.6
+    * Token (token) - v1.6
+    * Views Test (views_test) - v3.11
+    * Views (views) - v3.11
+    * Views UI (views_ui) - v3.11
+    * Views Autocomplete Filters (views_autocomplete_filters) - v1.2
+    * Actions permissions (VBO) (actions_permissions) - v3.3
+    * Views Bulk Operations (views_bulk_operations) - v3.3
+
+-- Webspark-managed modules
+    * Webform (webform) - v4.12
+    * CAS (cas) - v1.5
+    * Multiblock (multiblock) - v1.2
+    * Views data export (views_data_export) - v. beta9
+    * Mimemail (mimemail) - v.beta4
+    * Honeypot (honeypot) - v1.22
+    * Better Watchdog UI (better_watchdog_ui) - v2.1
+    * Modernizr (modernizr) - v3.9
+
+-- Panopoly-managed themes
+    * Responsive Bartik - v1.0
+
+-- Contrib and Webspark-managed module deletions
+    * Calendar (v3.4)
+    * OpenASU Demo
+
+
 Webspark 1.13.15 (Bellingham) release
 ----------------
 - Drupal core:
@@ -37,7 +185,7 @@ Webspark 1.13.15 (Bellingham) release
         * Updated field mappings in standalone import form
         * Fixed minor spelling issue in module description
 
-        IMPORTANT: If you have this module enabled and have already created events and/or news items, then you must
+        * IMPORTANT: If you have this module enabled and have already created events and/or news items, then you must
         delete all of them prior to applying this update. This includes all non-feed generated events or news items
         have been created manually. Please read the "Update" section of ASU News & Events
         (https://webspark.asu.edu/features/news-and-events#updating) for detailed steps on how to apply this update.

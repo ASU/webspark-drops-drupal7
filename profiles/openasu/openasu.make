@@ -238,14 +238,14 @@ libraries[flexslider][download][type] = get
 libraries[flexslider][download][url] = https://github.com/woothemes/FlexSlider/archive/version/2.2.2.zip
 
 ; 1 of 2
-libraries[fontawesome][download][type] = get
-libraries[fontawesome][download][url] = https://github.com/FortAwesome/Font-Awesome/archive/v4.2.0.zip
-libraries[fontawesome][download][subtree] = Font-Awesome-4.2.0/css
-libraries[fontawesome][directory_name] = fontawesome/css
+libraries[fontawesome_css][download][type] = get
+libraries[fontawesome_css][download][url] = https://github.com/FortAwesome/Font-Awesome/archive/v4.6.3.zip
+libraries[fontawesome_css][download][subtree] = Font-Awesome-4.6.3/css
+libraries[fontawesome_css][directory_name] = fontawesome/css
 ; 2 of 2
 libraries[fontawesome_fonts][download][type] = get
-libraries[fontawesome_fonts][download][url] = https://github.com/FortAwesome/Font-Awesome/archive/v4.2.0.zip
-libraries[fontawesome_fonts][download][subtree] = Font-Awesome-4.2.0/fonts
+libraries[fontawesome_fonts][download][url] = https://github.com/FortAwesome/Font-Awesome/archive/v4.6.3.zip
+libraries[fontawesome_fonts][download][subtree] = Font-Awesome-4.6.3/fonts
 libraries[fontawesome_fonts][directory_name] = fontawesome/fonts
 
 libraries[modernizr][download][type] = get

@@ -264,6 +264,13 @@ h6, .h6 {
 /* =IMAGES
 -------------------------------------------------------------- */
 
+/* Added from Panopoly Images CSS file (removed in Panopoly 1.21) */
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: bottom;
+}
+
 /* wysiwyg image spacing */
 img.media-element.pull-right {
   margin-left: 20px;
