@@ -15,7 +15,7 @@ Feature: Panopoly Magic respects entity view configuration
       And I click "View: Magic View Modes: Entity Featured" in the "CTools modal" region
     Then I should not see "Display Settings"
     Then I should see "Content Settings"
-    Then the "Featured" Innovation radio button should be set to "Featured "
+    Then the "Featured" radio button should be set to "Featured "
 
   @api @javascript @panopoly_magic @webspark_broken @webspark_fixed
   Scenario: Add view pane that has default view mode
@@ -29,7 +29,7 @@ Feature: Panopoly Magic respects entity view configuration
       And I click "View: Magic View Modes: Entity Full" in the "CTools modal" region
     Then I should not see "Display Settings"
     Then I should see "Content Settings"
-    Then the "Full content " Innovation radio button should be set to "Full content "
+    Then the "Full content " radio button should be set to "Full content "
 
   @api @javascript @panopoly_magic @webspark_broken @webspark_fixed
   Scenario: Add view pane that supports fields
@@ -45,4 +45,4 @@ Feature: Panopoly Magic respects entity view configuration
       And I should not see "Content Settings"
     When I select the radio button "Content"
     Then I should see "Content Settings"
-      And the "Teaser " Innovation radio button should be set to "Teaser "
+      And the "Teaser " radio button should be set to "Teaser "

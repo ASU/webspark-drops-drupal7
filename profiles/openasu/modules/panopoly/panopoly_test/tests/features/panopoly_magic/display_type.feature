@@ -14,7 +14,7 @@ Feature: Panopoly Magic allows the user to change the "Display Type" of a Views 
       And I click "View: Magic Display Type: Fields and allowed" in the "CTools modal" region
     Then I should see "Display Settings"
       And I should see "Display Type" in the "label" element in the "CTools modal" region
-      And the "Display Type" Innovation radio button should be set to "Fields "
+      And the "Display Type" radio button should be set to "Fields "
 
   @api @javascript @panopoly_magic
   Scenario: Add Views widget set to Fields but WITHOUT the 'Display Type' override allowed

@@ -29,7 +29,7 @@ Feature: Add submenu widget
       And I select "-- Rodzic" from "menu[parent]"
       And I press "edit-submit"
  
-  @api @javascript @panopoly_widgets @formscssfixes
+  @api @javascript @panopoly_widgets
   Scenario: Add submenu widget to page
     Given I am viewing a landing page
     When I customize this page with the Panels IPE
