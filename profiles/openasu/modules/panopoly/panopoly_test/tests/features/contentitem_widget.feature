@@ -64,8 +64,8 @@ Feature: Add content item
     When I select "Test Page" from "exposed[type]"
       And I fill in the following:
       | exposed[title] | Pano Test 1       |
-      And I select the radio button "Content" with the id "edit-view-settings-rendered-entity"
-      And I select the radio button "Teaser" with the id "edit-view-mode-teaser"
+      And I select the radio button "Content"
+      And I select the radio button "Teaser"
       And I press "Save" in the "CTools modal" region
       And I press "Save"
       And I wait for the Panels IPE to deactivate
