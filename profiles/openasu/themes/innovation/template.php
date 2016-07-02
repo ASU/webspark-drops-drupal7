@@ -11,6 +11,15 @@
  */
 function innovation_preprocess_html(&$variables) {
 
+  // WEBSPARK-879 - stop sticky menu in admin areas
+  $show_ghost_slider = (!path_is_admin(current_path())) ? 0 : 1;
+  drupal_add_js(array(
+    'webspark_megamenu' => array(
+      'path_is_admin' => $show_ghost_slider,
+      'path' => current_path(),
+    ),
+  ), 'setting');
+
   // Add theme js file here rather than in .info to add a weight and ensure it loads last
   drupal_add_js(drupal_get_path('theme', 'innovation') . '/js/innovation.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 200));
 
