@@ -4,7 +4,7 @@ package = Media
 core = 7.x
 dependencies[] = media
 
-; Information added by drush on 2014-07-20
-version = "7.x-2.0-alpha3+98-dev"
+; Information added by drush on 2015-07-14
+version = "7.x-2.0-beta1+0-dev"
 project = "media"
-datestamp = "1405840733"
+datestamp = "1436894445"

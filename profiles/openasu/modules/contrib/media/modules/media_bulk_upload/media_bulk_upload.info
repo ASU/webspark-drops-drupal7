@@ -7,9 +7,13 @@ dependencies[] = media
 dependencies[] = multiform
 dependencies[] = plupload
 
-files[] = includes/MediaBrowserBulkUpload.inc
+test_dependencies[] = multiform
+test_dependencies[] = plupload
 
-; Information added by drush on 2014-07-20
-version = "7.x-2.0-alpha3+98-dev"
+files[] = includes/MediaBrowserBulkUpload.inc
+files[] = tests/media_bulk_upload.test
+
+; Information added by drush on 2015-07-14
+version = "7.x-2.0-beta1+0-dev"
 project = "media"
-datestamp = "1405840733"
+datestamp = "1436894445"
