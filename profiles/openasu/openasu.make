@@ -46,13 +46,14 @@ projects[panopoly_search][subdir] = panopoly
 projects[panopoly_test][version] = 1.37
 projects[panopoly_test][subdir] = panopoly
 ; TODO - Add patches for custom Webspark testing
+projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update.patch
 
 ; ASU Custom, Webspark-agnostic modules
 ; Webspark-only modules kept in webspark_featurescustom
 
 projects[asu_drupal_modules][type] = module
 projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = fff089b3
+projects[asu_drupal_modules][download][revision] = 7f9dd2b2
 projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ; ASU Module Prerequisites
