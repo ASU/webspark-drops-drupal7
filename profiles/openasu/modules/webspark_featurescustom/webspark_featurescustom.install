@@ -81,3 +81,24 @@ function webspark_featurescustom_update_7002(&$sandbox) {
     variable_set('asu_brand_header_version', '4.4');
   }
 }
+
+/**
+ * Implements hook_update_N() -- Billings release
+ * + Disable and uninstall RespondJS module in preparation for removal
+ */
+
+function webspark_featurescustom_update_7003(&$sandbox) {
+  // WEBSPARK-891 - Disable and cleanup after respondjs module
+  if (module_exists('respondjs')) {
+    module_disable('respondjs');
+    watchdog('webspark_updates', "Disabled respondjs module, which will be removed with next Webspark release.");
+    if (is_null(variable_get('respondjs_scope'))) {
+      variable_del('respondjs_scope');
+      watchdog('webspark_updates', "Deleted respondJS module setting - respondjs_scope");
+    }
+    if (is_null(variable_get('respond_quiet'))) {
+      variable_del('respondjs_quiet');
+      watchdog('webspark_updates', "Deleted respondJS module setting - respondjs_quiet");
+    }
+  }
+}
