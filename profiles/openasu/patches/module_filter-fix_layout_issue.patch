@@ -1,0 +1,12 @@
+--- a/css/module_filter.css	2016-06-20 22:44:34.639450496 -0700
++++ b/css/module_filter.css	2016-07-05 21:17:28.640221841 -0700
+@@ -18,3 +18,9 @@
+   text-transform: uppercase;
+   color: #888;
+ }
++#module-filter-modules {
++  position: relative;
++}
++#module-filter-modules table {
++  position: absolute;
++}
