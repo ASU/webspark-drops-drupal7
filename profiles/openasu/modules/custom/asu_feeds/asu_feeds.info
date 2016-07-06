@@ -1,7 +1,7 @@
 ; $Id$
 name = "ASU Feeds"
 description = "Integrate ASU data with Drupal using the Feeds module"
-version = 7.x-1.x-beta5
+version = 7.x-1.x-beta6
 package = "ASU"
 core = 7.x
 php = 5.2
