@@ -14,20 +14,20 @@ Feature: Add content page
 
   @api @panopoly_pages
   Scenario: Add a content page
-    # Normally, here we'd press "Publish", however some child distribtions
+    # Normally, here we'd press "Publish", however some child distributions
     # don't use 'save_draft', and this makes this test compatible with them.
     #When I press "Publish"
     When I press "edit-submit"
     Then the "h1" element should contain "Testing title"
 
-  @api @javascript @panopoly_pages @local_files
+  @api @javascript @panopoly_pages @local_files @webspark_broken @webspark_ignore
   Scenario: Add a Featured Image with incorrect dimensions
     When I attach the file "test-sm.png" to "files[field_featured_image_und_0]"
     Then I should see "The specified file test-sm.png could not be uploaded. The image is too small; the minimum dimensions are 300x200 pixels."
 
-  @api @javascript @panopoly_pages @local_files
+  @api @javascript @panopoly_pages @local_files @webspark_broken @webspark_ignore
   Scenario: Add a Featured image
-    # Revisting the page will not be necessary when https://drupal.org/node/2281709 is resolved
+    # Revisiting the page will not be necessary when https://drupal.org/node/2281709 is resolved
     When I visit "/node/add/panopoly-page"
       And I fill in the following:
       | Title               | Testing title |
