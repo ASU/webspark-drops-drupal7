@@ -15,12 +15,12 @@ projects[wysiwyg][patch][1757684] = https://www.drupal.org/files/issues/wysiwyg-
 
 projects[wysiwyg_filter][version] = 1.6-rc2
 projects[wysiwyg_filter][subdir] = contrib
+projects[wysiwyg_filter][patch][1687794] = https://www.drupal.org/files/wysiwyg_filter-1687794-1-skip-validation-if-filter-disabled.patch
 
 ; The WYSIWYG Helpers
 
-projects[linkit][version] = 3.3
+projects[linkit][version] = 3.4
 projects[linkit][subdir] = contrib
-projects[linkit][patch][2115763] = http://drupal.org/files/issues/linkit-2115763-18-text-format-switching.patch
 
 projects[image_resize_filter][version] = 1.15
 projects[image_resize_filter][subdir] = contrib
