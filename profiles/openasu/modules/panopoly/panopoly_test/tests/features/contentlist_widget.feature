@@ -3,7 +3,7 @@ Feature: Add content list widget
   As a site administrator
   I need to be able to add a list with the content I choose
  
-  @api @javascript @panopoly_widgets @formscssfixes
+  @api @javascript @panopoly_widgets
   Scenario: Add a content list
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled

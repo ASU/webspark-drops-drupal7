@@ -3,7 +3,7 @@ Feature: View system help
   As a site owner
   I need to be able to view content in the system help region
 
-  @api @panopoly_demo @webspark_broken @webspark_ignore
+  @api @panopoly_demo
   Scenario: Create Test Page
     Given I am logged in as a user with the "administrator" role
     When I visit "/node/add/panopoly-test-page"

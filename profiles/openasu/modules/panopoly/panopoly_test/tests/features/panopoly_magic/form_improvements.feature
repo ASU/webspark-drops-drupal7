@@ -3,7 +3,7 @@ Feature: Panopoly Magic improves the usability of forms (even without previews)
   As a site administrator
   I need to see forms with improved user experience
 
-  @api @javascript @panopoly_magic @formscssfixes
+  @api @javascript @panopoly_magic
   Scenario: Change the settings on an image field formatter
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
