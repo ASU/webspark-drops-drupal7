@@ -389,10 +389,12 @@ function media_field_widget_submit($form, &$form_state) {
  */
 function theme_media_widget($variables) {
   $element = $variables['element'];
+  // Remove -update from the id.
+  $element_id = drupal_substr($element['#id'], 0, -7);
   $output = '';
 
   // The "form-media" class is required for proper Ajax functionality.
-  $output .= '<div id="' . $element['#id'] . '" class="media-widget form-media clearfix">';
+  $output .= '<div id="' . $element_id . '" class="media-widget form-media clearfix">';
   $output .= drupal_render_children($element);
   $output .= '</div>';
 

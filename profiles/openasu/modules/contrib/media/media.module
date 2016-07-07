@@ -822,7 +822,7 @@ function media_element_process($element, &$form_state, $form) {
   $element['browse_button']['#attached']['js'] = array(
     array(
       'type' => 'setting',
-      'data' => array('media' => array('elements' => array('#' . $element['#id'] => $element['#media_options'])))
+      'data' => array('media' => array('elements' => array('#' . $original_id => $element['#media_options'])))
     )
   );
 
@@ -1022,7 +1022,7 @@ function theme_media_element($variables) {
 
   $attributes = array();
   if (isset($element['#id'])) {
-    $attributes['id'] = $element['#id'];
+    $attributes['id'] = drupal_substr($element['#id'], 0, -7);
   }
   if (!empty($element['#attributes']['class'])) {
     $attributes['class'] = (array) $element['#attributes']['class'];
