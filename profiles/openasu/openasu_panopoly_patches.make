@@ -8,20 +8,17 @@
 ;
 ; These projects are installed first, before any other projects in the parent makefile.
 
-; Media (module)
+; Media (module) - matches Panopoly 1.37 (from panopoly_widgets.make)
 projects[media][type] = module
 projects[media][subdir] = contrib
-; v 2.0-beta1
 projects[media][version] = 2.0-beta1
 projects[media][sha256] = 4225713bdf9bf6f0eab8a2db92eb8c114125597d853f0a2d1cece71917f81d03
-
-; Patches - Panopoly make file patches
-projects[media][patch][] = https://www.drupal.org/files/issues/media-wysiwyg-alt-title-handling-2126697-27.patch
-projects[media][patch][] = https://www.drupal.org/files/issues/media-alt-title-double-encoded-2308487-1.patch
-
+projects[media][patch][2126697] = https://www.drupal.org/files/issues/media_wysiwyg_2126697-53.patch
+projects[media][patch][2308487] = https://www.drupal.org/files/issues/media-alt-title-double-encoded-2308487-2.patch
+projects[media][patch][2084287] = https://www.drupal.org/files/issues/media-file-name-focus-2084287-2.patch
+projects[media][patch][2534724] = https://www.drupal.org/files/issues/media-browser_opens_twice-2534724-53.patch
 ; Patches - Webspark
-; Review when Media module is upgraded to v. beta1
-;; WEBSPARK-679 - WYSIWYG + Media module issues
+; WEBSPARK-679 - WYSIWYG + Media module issues
 projects[media][patch][] = patches/webspark-679_fix-HTML-encoded-macros-2028253-10.patch
 
 ; Radix Layouts (module)
