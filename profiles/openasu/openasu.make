@@ -47,6 +47,7 @@ projects[panopoly_test][version] = 1.37
 projects[panopoly_test][subdir] = panopoly
 ; TODO - Add patches for custom Webspark testing
 projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update.patch
+projects[panopoly_test][patch][1372] = patches/webspark-847_panopoly-test-updates-3.patch
 
 ; ASU Custom, Webspark-agnostic modules
 ; Webspark-only modules kept in webspark_featurescustom

@@ -60,6 +60,7 @@ Thumbs.db
 profiles/openasu/libraries/**/*.patch
 profiles/openasu/modules/**/*.patch
 profiles/openasu/themes/**/*.patch
+profiles/openasu/**/PATCHES.txt
 
 # .gitignore in Drush make-pulled module repos
 ######################

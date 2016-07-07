@@ -26,7 +26,7 @@ index 82e7387..56eceae 100644
 -      #base_url: http://mydrupalsite.com
 -      #files_path: './profiles/panopoly/modules/panopoly/panopoly_test/tests'
 +      #base_url: http://localhost
-+      #files_path: './tests'
++      #files_path: './profiles/openasu/modules/panopoly/panopoly_test/tests'
      Drupal\DrupalExtension:
        blackbox: ~
 -      #drush:
@@ -42,7 +42,7 @@ index 82e7387..56eceae 100644
          Panopoly Magic Style Settings: "#panels-edit-style-settings-form #edit-general-settings"
 +        # Webspark additions to fix incompatibilities with stock Panopoly tests
 +        TabsID: "#tabs"
- 
+
  # Setup for Google Chrome only tests.
  chrome:
 diff --git a/tests/behat.local.yml b/tests/behat.local.yml
@@ -60,7 +60,7 @@ index 0000000..a44bb87
 +      goutte: ~
 +      selenium2: ~
 +      base_url: http://bjdevil21-webspark
-+      files_path: '/home/bryan/github.com/bjdevil21/webspark-drops-drupal7/tests'
++      files_path: '/home/bryan/github.com/bjdevil21/webspark-drops-drupal7/profiles/openasu/modules/panopoly/panopoly_test/tests'
 +    Drupal\DrupalExtension:
 +      blackbox: ~
 +      drush:
@@ -81,7 +81,7 @@ index 0000000..9d9568a
 +  extensions:
 +    Behat\MinkExtension:
 +      base_url: http://127.0.0.1:8888
-+      files_path: './tests'
++      files_path: './profiles/openasu/modules/panopoly/panopoly_test/tests'
 +    Drupal\DrupalExtension:
 +      drush:
 +        root: "/home/travis/build/ASU/webspark-drops-drupal7"
