@@ -1,3 +1,45 @@
+Panopoly Search 7.x-1.37, 2016-06-16
+-----------------------------
+- No changes since last release.
+
+Panopoly Search 7.x-1.36, 2016-06-16
+-----------------------------
+- No changes since last release.
+
+Panopoly Search 7.x-1.35, 2016-05-04
+-----------------------------
+- No changes since last release.
+
+Panopoly Search 7.x-1.34, 2016-04-20
+-----------------------------
+- Update to search_api 1.18 for SA-CONTRIB-2016-022.
+- Update search_api to 1.17, search_api_db to 1.5, search_api_solr to 1.10.
+
+Panopoly Search 7.x-1.33, 2016-04-14
+-----------------------------
+- Don't log searches for empty keywords.
+
+Panopoly Search 7.x-1.32, 2016-03-03
+-----------------------------
+- No changes since last release.
+
+Panopoly Search 7.x-1.31, 2016-02-25
+-----------------------------
+- No changes since last release.
+
+Panopoly Search 7.x-1.30, 2016-01-06
+-----------------------------
+- No changes since last release.
+
+Panopoly Search 7.x-1.29, 2015-11-18
+-----------------------------
+- No changes since last release.
+
+Panopoly Search 7.x-1.28, 2015-10-21
+-----------------------------
+- Search block pane config ignores prompt override.
+- Performance issues when indexing HTML-heavy sites.
+
 Panopoly Search 7.x-1.27, 2015-09-02
 -----------------------------
 - No changes since last release.

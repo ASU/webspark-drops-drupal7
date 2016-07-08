@@ -3,7 +3,7 @@ Feature: Add content list widget
   As a site administrator
   I need to be able to add a list with the content I choose
  
-  @api @javascript @panopoly_widgets @formscssfixes
+  @api @javascript @panopoly_widgets
   Scenario: Add a content list
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
@@ -24,11 +24,11 @@ Feature: Add content list widget
     When I select "Test Page" from "exposed[type]"
       And I select "Asc" from "exposed[sort_order]"
       And I select "Title" from "exposed[sort_by]"
-      And I wait 5 seconds
+      And I wait 3 seconds
       And I press "Save" in the "CTools modal" region
       And I press "Save"
       And I wait for the Panels IPE to deactivate
-      And I wait 5 seconds
+      And I wait 3 seconds
     Then I should see "Content Page List Asc 1"
       And I should see "Test Page 1"
       And I should see "January 2, 2001"

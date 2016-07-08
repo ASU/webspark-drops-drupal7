@@ -3,7 +3,7 @@ Feature: Panopoly Magic allows the user to change the "Display Type" of a Views 
   As a site administrator
   I need to be able to change the "Display Type" of a Views widget
 
-  @api @javascript @panopoly_magic @webspark_broken @webspark_fixed
+  @api @javascript @panopoly_magic
   Scenario: Add Views widget set to Fields with 'Display Type' override allowed
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled

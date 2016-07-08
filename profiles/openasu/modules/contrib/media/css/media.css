@@ -10,6 +10,9 @@
 .ui-tabs {
   padding: 0;
 }
+.ui-front {
+  z-index: 10001 !important;
+}
 
 .ui-dialog.media-wrapper .ui-dialog-content {
   padding: 0;
