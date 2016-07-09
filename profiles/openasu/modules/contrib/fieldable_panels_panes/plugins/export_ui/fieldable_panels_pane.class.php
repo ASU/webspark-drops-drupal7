@@ -17,28 +17,43 @@ class fieldable_panels_pane extends ctools_export_ui {
     $base_path = ctools_export_ui_plugin_base_path($this->plugin);
     $name = $item->{$this->plugin['export']['key']};
 
-    $operations['list'] = array(
-      'title' => t('List'),
-      'href' => $base_path . '/' . $name . '/list',
-    );
+    if (user_access('administer fieldable panels panes') || user_access('access fieldable panels panes master list')) {
+      $operations['list'] = array(
+        'title' => t('List'),
+        'href' => $base_path . '/' . $name . '/list',
+      );
+    }
 
-    $operations['add_entity'] = array(
-      'title' => t('Add Entity'),
-      'href' => $base_path . '/' . $name . '/add',
-    );
-
-    $operations += parent::build_operations($item);
-
-    $operations['field'] = array(
-      'title' => t('Manage Fields'),
-      'href' => $base_path . '/' . $name . '/fields',
-    );
-
-    $operations['display'] = array(
-      'title' => t('Manage Display'),
-      'href' => $base_path . '/' . $name . '/display',
-    );
-
+    if (user_access('administer fieldable panels panes') || user_access('create fieldable ' . $name)) {
+      $operations['add_entity'] = array(
+        'title' => t('Add Entity'),
+        'href' => $base_path . '/' . $name . '/add',
+      );
+    }
+    if (user_access('administer fieldable panels panes')) {
+      $operations['edit_entity'] = array(
+        'title' => t('Edit'),
+        'href' => $base_path . '/' . $name . '/edit',
+      );
+      $operations['delete_entity'] = array(
+        'title' => t('Delete'),
+        'href' => $base_path . '/' . $name . '/delete',
+      );
+      $operations['export_entity'] = array(
+        'title' => t('Export'),
+        'href' => $base_path . '/' . $name . '/export',
+      );
+      if (module_exists('field_ui')) {
+        $operations['field'] = array(
+          'title' => t('Manage Fields'),
+          'href' => $base_path . '/' . $name . '/fields',
+        );
+        $operations['display'] = array(
+          'title' => t('Manage Display'),
+          'href' => $base_path . '/' . $name . '/display',
+        );
+      }
+    }
     return $operations;
   }
 
@@ -160,25 +175,40 @@ class fieldable_panels_pane extends ctools_export_ui {
 
         $operations = array();
 
-        $operations['list'] = array(
-          'title' => t('list'),
-          'href' => 'admin/structure/fieldable-panels-panes/manage/' . $bundle,
-        );
-
-        $operations['add'] = array(
-          'title' => t('add'),
-          'href' => 'admin/structure/fieldable-panels-panes/manage/' . $bundle . '/add',
-        );
-
-        $operations['fields'] = array(
-          'title' => t('manage fields'),
-          'href' => $this->field_admin_path($bundle, 'fields'),
-        );
-
-        $operations['display'] = array(
-          'title' => t('manage display'),
-          'href' => $this->field_admin_path($bundle, 'display'),
-        );
+        if (user_access('administer fieldable panels panes') || user_access('access fieldable panels panes master list')) {
+          $operations['list'] = array(
+            'title' => t('list'),
+            'href' => 'admin/structure/fieldable-panels-panes/manage/' . $bundle,
+          );
+        }
+        if (user_access('administer fieldable panels panes')) {
+          $operations['add'] = array(
+            'title' => t('add'),
+            'href' => 'admin/structure/fieldable-panels-panes/manage/' . $bundle . '/add',
+          );
+          $operations['edit'] = array(
+            'title' => t('edit'),
+            'href' => 'admin/structure/fieldable-panels-panes/' . $bundle . '/edit',
+          );
+          $operations['delete'] = array(
+            'title' => t('delete'),
+            'href' => 'admin/structure/fieldable-panels-panes/' . $bundle . '/delete',
+          );
+          $operations['export'] = array(
+            'title' => t('export'),
+            'href' => 'admin/structure/fieldable-panels-panes/' . $bundle . '/export',
+          );
+          if (module_exists('field_ui')) {
+            $operations['fields'] = array(
+              'title' => t('manage fields'),
+              'href' => $this->field_admin_path($bundle, 'fields'),
+            );
+            $operations['display'] = array(
+              'title' => t('manage display'),
+              'href' => $this->field_admin_path($bundle, 'display'),
+            );
+          }
+        }
 
         $ops = theme('links', array('links' => $operations, 'attributes' => array('class' => array('links', 'inline'))));
 
@@ -199,7 +229,7 @@ class fieldable_panels_pane extends ctools_export_ui {
   }
 
   /**
-   * Helper method to derive paths to field ui operations.
+   * Helper method to derive paths to field UI operations.
    */
   function field_admin_path($name, $op) {
     return _field_ui_bundle_admin_path('fieldable_panels_pane', $name) . '/' . $op;

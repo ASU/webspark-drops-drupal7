@@ -61,7 +61,7 @@ function asu_rfi_undergrad_email($prog_plan, $e_email, $humanName)
                             <li><a href='http://www.asu.edu/prospective/video/'>about ASU (Video)</a></li>    
                             <li><a href='https://students.asu.edu/tuition'>cost calculator</a> and <a href='https://students.asu.edu/scholarships/estimator '>scholarship estimator</a></li>    
                         </ul>
-                        <p><strong>Explore the campus for you degree:</strong><br>
+                        <p><strong>Explore the campus for your degree:</strong><br>
                             <a href='https://www.asu.edu/tour/'>Take a tour</a>
                         </p>";
 
@@ -178,7 +178,7 @@ function asu_rfi_grad_email($prog_plan, $e_email, $humanName)
                             <a href='https://graduate.asu.edu/egss'>Preparing for Graduate School Seminars</a><br>
                             <a href='https://students.asu.edu/tuition'>Cost Estimator</a> and <a href='https://students.asu.edu/graduate/finances'>Graduate Funding Options</a></p>
                             
-                        <p><strong>Explore the campus for you degree:</strong><br>
+                        <p><strong>Explore the campus for your degree:</strong><br>
                             <a href='https://www.asu.edu/tour/'>Take a tour</a>
                         </p>";
 

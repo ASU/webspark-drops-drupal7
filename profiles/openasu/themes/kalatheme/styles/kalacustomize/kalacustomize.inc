@@ -23,8 +23,8 @@ function theme_kalatheme_kalacustomize_render_region($vars) {
   $settings = $vars['settings'];
 
   $settings['attributes'] = '';
-  $settings['attributes'] .= _kalatheme_get_styles($settings['devices']);
-  $settings['attributes'] .= _kalatheme_get_styles($settings['pane_style']);
+  $settings['attributes'] .= _kalatheme_get_styles(isset($settings['devices']) ? $settings['devices'] : NULL);
+  $settings['attributes'] .= _kalatheme_get_styles(isset($settings['pane_style']) ? $settings['pane_style'] : NULL);
 
     // Theme.
   if (!empty($settings['theme']) && $settings['theme']) {

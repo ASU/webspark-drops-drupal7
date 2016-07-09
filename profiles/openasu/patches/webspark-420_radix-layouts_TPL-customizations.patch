@@ -1,7 +1,7 @@
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php
+diff --git a/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php b/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php
 index e9ceeb5..c023efa 100644
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php
+--- a/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php
++++ b/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Bartlett.
@@ -73,10 +73,10 @@ index e9ceeb5..c023efa 100644
 +    </div><!-- /.container -->
 +  </section><!--  /.section -->
  </div><!-- /.bartlett -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php
+diff --git a/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php b/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php
 index d930904..69fdd60 100644
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php
+--- a/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php
++++ b/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php
 @@ -3,6 +3,10 @@
   * @file
   * Template for Radix Bartlett Flipped.
@@ -149,10 +149,10 @@ index d930904..69fdd60 100644
 +    </div><!-- /.container -->
 +  </section><!--  /.section -->
  </div><!-- /.bartlett-flipped -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_boxton/radix-boxton.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_boxton/radix-boxton.tpl.php
+diff --git a/plugins/layouts/radix_boxton/radix-boxton.tpl.php b/plugins/layouts/radix_boxton/radix-boxton.tpl.php
 index e5a6d57..38052ea 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_boxton/radix-boxton.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_boxton/radix-boxton.tpl.php
+--- a/plugins/layouts/radix_boxton/radix-boxton.tpl.php
++++ b/plugins/layouts/radix_boxton/radix-boxton.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Boxton.
@@ -188,10 +188,10 @@ index e5a6d57..38052ea 100755
 +    </div><!-- /.container -->
 +  </section><!--  /.section -->
  </div><!-- /.boxton -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brenham/radix-brenham.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brenham/radix-brenham.tpl.php
+diff --git a/plugins/layouts/radix_brenham/radix-brenham.tpl.php b/plugins/layouts/radix_brenham/radix-brenham.tpl.php
 index fa2d940..d09289a 100644
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brenham/radix-brenham.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brenham/radix-brenham.tpl.php
+--- a/plugins/layouts/radix_brenham/radix-brenham.tpl.php
++++ b/plugins/layouts/radix_brenham/radix-brenham.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Brenham.
@@ -250,10 +250,10 @@ index fa2d940..d09289a 100644
 \ No newline at end of file
 +  </section>
 +</div><!-- /.brenham -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brenham_flipped/radix-brenham-flipped.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brenham_flipped/radix-brenham-flipped.tpl.php
+diff --git a/plugins/layouts/radix_brenham_flipped/radix-brenham-flipped.tpl.php b/plugins/layouts/radix_brenham_flipped/radix-brenham-flipped.tpl.php
 index 32cbbb8..01de43f 100644
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brenham_flipped/radix-brenham-flipped.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brenham_flipped/radix-brenham-flipped.tpl.php
+--- a/plugins/layouts/radix_brenham_flipped/radix-brenham-flipped.tpl.php
++++ b/plugins/layouts/radix_brenham_flipped/radix-brenham-flipped.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Brenham Flipped.
@@ -314,10 +314,10 @@ index 32cbbb8..01de43f 100644
 +  </section>
  </div><!-- /.brenham-flipped -->
 \ No newline at end of file
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brown/radix-brown.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brown/radix-brown.tpl.php
+diff --git a/plugins/layouts/radix_brown/radix-brown.tpl.php b/plugins/layouts/radix_brown/radix-brown.tpl.php
 index 74c8fbc..42a4234 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brown/radix-brown.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_brown/radix-brown.tpl.php
+--- a/plugins/layouts/radix_brown/radix-brown.tpl.php
++++ b/plugins/layouts/radix_brown/radix-brown.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Brown.
@@ -434,10 +434,10 @@ index 74c8fbc..42a4234 100755
 -
 +  </footer>
  </div><!-- /.brown -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bryant/radix-bryant.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bryant/radix-bryant.tpl.php
+diff --git a/plugins/layouts/radix_bryant/radix-bryant.tpl.php b/plugins/layouts/radix_bryant/radix-bryant.tpl.php
 index 9f6300e..5e29a2e 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bryant/radix-bryant.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bryant/radix-bryant.tpl.php
+--- a/plugins/layouts/radix_bryant/radix-bryant.tpl.php
++++ b/plugins/layouts/radix_bryant/radix-bryant.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Bryant.
@@ -483,10 +483,10 @@ index 9f6300e..5e29a2e 100755
 \ No newline at end of file
 +  </section>
 +</div><!-- /.bryant -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bryant_flipped/radix-bryant-flipped.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bryant_flipped/radix-bryant-flipped.tpl.php
+diff --git a/plugins/layouts/radix_bryant_flipped/radix-bryant-flipped.tpl.php b/plugins/layouts/radix_bryant_flipped/radix-bryant-flipped.tpl.php
 index 9e9a46d..0445153 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bryant_flipped/radix-bryant-flipped.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_bryant_flipped/radix-bryant-flipped.tpl.php
+--- a/plugins/layouts/radix_bryant_flipped/radix-bryant-flipped.tpl.php
++++ b/plugins/layouts/radix_bryant_flipped/radix-bryant-flipped.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Bryant Flipped.
@@ -530,10 +530,10 @@ index 9e9a46d..0445153 100755
 -
 +  </section>
  </div><!-- /.bryant-flipped -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_burr/radix-burr.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_burr/radix-burr.tpl.php
+diff --git a/plugins/layouts/radix_burr/radix-burr.tpl.php b/plugins/layouts/radix_burr/radix-burr.tpl.php
 index 7139cc1..176a162 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_burr/radix-burr.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_burr/radix-burr.tpl.php
+--- a/plugins/layouts/radix_burr/radix-burr.tpl.php
++++ b/plugins/layouts/radix_burr/radix-burr.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Burr.
@@ -577,10 +577,10 @@ index 7139cc1..176a162 100755
 -    
 +  </section>
  </div><!-- /.burr -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_burr_flipped/radix-burr-flipped.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_burr_flipped/radix-burr-flipped.tpl.php
+diff --git a/plugins/layouts/radix_burr_flipped/radix-burr-flipped.tpl.php b/plugins/layouts/radix_burr_flipped/radix-burr-flipped.tpl.php
 index 9b3a4e6..e7bbd2c 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_burr_flipped/radix-burr-flipped.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_burr_flipped/radix-burr-flipped.tpl.php
+--- a/plugins/layouts/radix_burr_flipped/radix-burr-flipped.tpl.php
++++ b/plugins/layouts/radix_burr_flipped/radix-burr-flipped.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Burr Flipped.
@@ -624,10 +624,10 @@ index 9b3a4e6..e7bbd2c 100755
 -  </div>
 +  </section>
  </div><!-- /.burr-flipped -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_geary/radix-geary.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_geary/radix-geary.tpl.php
+diff --git a/plugins/layouts/radix_geary/radix-geary.tpl.php b/plugins/layouts/radix_geary/radix-geary.tpl.php
 index 4499d7a..64eca1e 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_geary/radix-geary.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_geary/radix-geary.tpl.php
+--- a/plugins/layouts/radix_geary/radix-geary.tpl.php
++++ b/plugins/layouts/radix_geary/radix-geary.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Geary.
@@ -696,10 +696,10 @@ index 4499d7a..64eca1e 100755
 -  
 +  </section>
  </div><!-- /.geary -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_harris/radix-harris.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_harris/radix-harris.tpl.php
+diff --git a/plugins/layouts/radix_harris/radix-harris.tpl.php b/plugins/layouts/radix_harris/radix-harris.tpl.php
 index c17c79a..36b7444 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_harris/radix-harris.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_harris/radix-harris.tpl.php
+--- a/plugins/layouts/radix_harris/radix-harris.tpl.php
++++ b/plugins/layouts/radix_harris/radix-harris.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Harris.
@@ -768,10 +768,10 @@ index c17c79a..36b7444 100755
 -  
 +  </section>
  </div><!-- /.harris -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_hewston/radix-hewston.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_hewston/radix-hewston.tpl.php
+diff --git a/plugins/layouts/radix_hewston/radix-hewston.tpl.php b/plugins/layouts/radix_hewston/radix-hewston.tpl.php
 index 50bdbff..f9a1cb4 100644
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_hewston/radix-hewston.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_hewston/radix-hewston.tpl.php
+--- a/plugins/layouts/radix_hewston/radix-hewston.tpl.php
++++ b/plugins/layouts/radix_hewston/radix-hewston.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Hewston.
@@ -849,10 +849,10 @@ index 50bdbff..f9a1cb4 100644
 -  
 +  </section>
  </div><!-- /.hewston -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_hewston_flipped/radix-hewston-flipped.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_hewston_flipped/radix-hewston-flipped.tpl.php
+diff --git a/plugins/layouts/radix_hewston_flipped/radix-hewston-flipped.tpl.php b/plugins/layouts/radix_hewston_flipped/radix-hewston-flipped.tpl.php
 index e99176a..9391e60 100644
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_hewston_flipped/radix-hewston-flipped.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_hewston_flipped/radix-hewston-flipped.tpl.php
+--- a/plugins/layouts/radix_hewston_flipped/radix-hewston-flipped.tpl.php
++++ b/plugins/layouts/radix_hewston_flipped/radix-hewston-flipped.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Hewston Flipped.
@@ -930,10 +930,10 @@ index e99176a..9391e60 100644
 -  
 +  </section>
  </div><!-- /.hewston-flipped -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_mccoppin/radix-mccoppin.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_mccoppin/radix-mccoppin.tpl.php
+diff --git a/plugins/layouts/radix_mccoppin/radix-mccoppin.tpl.php b/plugins/layouts/radix_mccoppin/radix-mccoppin.tpl.php
 index e9c017d..e0989f6 100644
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_mccoppin/radix-mccoppin.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_mccoppin/radix-mccoppin.tpl.php
+--- a/plugins/layouts/radix_mccoppin/radix-mccoppin.tpl.php
++++ b/plugins/layouts/radix_mccoppin/radix-mccoppin.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Mccoppin.
@@ -986,10 +986,10 @@ index e9c017d..e0989f6 100644
 -  
 +  </section>
  </div><!-- /.mccoppin -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_moscone/radix-moscone.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_moscone/radix-moscone.tpl.php
+diff --git a/plugins/layouts/radix_moscone/radix-moscone.tpl.php b/plugins/layouts/radix_moscone/radix-moscone.tpl.php
 index 47847a5..a08e84d 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_moscone/radix-moscone.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_moscone/radix-moscone.tpl.php
+--- a/plugins/layouts/radix_moscone/radix-moscone.tpl.php
++++ b/plugins/layouts/radix_moscone/radix-moscone.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Moscone.
@@ -1067,10 +1067,10 @@ index 47847a5..a08e84d 100755
 +  </footer>
 +</div><!-- /.moscone -->
 \ No newline at end of file
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_moscone_flipped/radix-moscone-flipped.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_moscone_flipped/radix-moscone-flipped.tpl.php
+diff --git a/plugins/layouts/radix_moscone_flipped/radix-moscone-flipped.tpl.php b/plugins/layouts/radix_moscone_flipped/radix-moscone-flipped.tpl.php
 index fce5af5..f47a5f6 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_moscone_flipped/radix-moscone-flipped.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_moscone_flipped/radix-moscone-flipped.tpl.php
+--- a/plugins/layouts/radix_moscone_flipped/radix-moscone-flipped.tpl.php
++++ b/plugins/layouts/radix_moscone_flipped/radix-moscone-flipped.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Moscone Flipped.
@@ -1146,10 +1146,10 @@ index fce5af5..f47a5f6 100755
 -  
 +  </footer>
  </div><!-- /.moscone-flipped -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_phelan/radix-phelan.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_phelan/radix-phelan.tpl.php
+diff --git a/plugins/layouts/radix_phelan/radix-phelan.tpl.php b/plugins/layouts/radix_phelan/radix-phelan.tpl.php
 index cee4c32..fefdbf7 100644
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_phelan/radix-phelan.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_phelan/radix-phelan.tpl.php
+--- a/plugins/layouts/radix_phelan/radix-phelan.tpl.php
++++ b/plugins/layouts/radix_phelan/radix-phelan.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Phelan.
@@ -1193,10 +1193,10 @@ index cee4c32..fefdbf7 100644
 -
 +  </section>
  </div><!-- /.phelan -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_pond/radix-pond.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_pond/radix-pond.tpl.php
+diff --git a/plugins/layouts/radix_pond/radix-pond.tpl.php b/plugins/layouts/radix_pond/radix-pond.tpl.php
 index f4e80f1..4c3c0e2 100644
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_pond/radix-pond.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_pond/radix-pond.tpl.php
+--- a/plugins/layouts/radix_pond/radix-pond.tpl.php
++++ b/plugins/layouts/radix_pond/radix-pond.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Pond.
@@ -1316,10 +1316,10 @@ index f4e80f1..4c3c0e2 100644
 -</div><!-- /.radix-pond -->
 +  </footer>
 +</div><!-- /.pond -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_rolph/radix-rolph.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_rolph/radix-rolph.tpl.php
+diff --git a/plugins/layouts/radix_rolph/radix-rolph.tpl.php b/plugins/layouts/radix_rolph/radix-rolph.tpl.php
 index df689b9..be1b9aa 100644
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_rolph/radix-rolph.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_rolph/radix-rolph.tpl.php
+--- a/plugins/layouts/radix_rolph/radix-rolph.tpl.php
++++ b/plugins/layouts/radix_rolph/radix-rolph.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Rolph.
@@ -1414,10 +1414,10 @@ index df689b9..be1b9aa 100644
 -</div><!-- /.taylor -->
 +  </footer>
 +</div><!-- /.rolph -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sanderson/radix-sanderson.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sanderson/radix-sanderson.tpl.php
+diff --git a/plugins/layouts/radix_sanderson/radix-sanderson.tpl.php b/plugins/layouts/radix_sanderson/radix-sanderson.tpl.php
 index aa7d1e4..3e79a7e 100644
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sanderson/radix-sanderson.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sanderson/radix-sanderson.tpl.php
+--- a/plugins/layouts/radix_sanderson/radix-sanderson.tpl.php
++++ b/plugins/layouts/radix_sanderson/radix-sanderson.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Sanderson.
@@ -1497,10 +1497,10 @@ index aa7d1e4..3e79a7e 100644
 +  </footer>
 +</div><!-- /.sanderson --
 \ No newline at end of file
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sanderson_flipped/radix-sanderson-flipped.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sanderson_flipped/radix-sanderson-flipped.tpl.php
+diff --git a/plugins/layouts/radix_sanderson_flipped/radix-sanderson-flipped.tpl.php b/plugins/layouts/radix_sanderson_flipped/radix-sanderson-flipped.tpl.php
 index 6b9cd84..0b32c9a 100644
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sanderson_flipped/radix-sanderson-flipped.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sanderson_flipped/radix-sanderson-flipped.tpl.php
+--- a/plugins/layouts/radix_sanderson_flipped/radix-sanderson-flipped.tpl.php
++++ b/plugins/layouts/radix_sanderson_flipped/radix-sanderson-flipped.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Sanderson Flipped.
@@ -1578,10 +1578,10 @@ index 6b9cd84..0b32c9a 100644
 -  
 +  </footer>
  </div><!-- /.sanderson-flipped -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_selby/radix-selby.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_selby/radix-selby.tpl.php
+diff --git a/plugins/layouts/radix_selby/radix-selby.tpl.php b/plugins/layouts/radix_selby/radix-selby.tpl.php
 index 2be8012..bacfd58 100644
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_selby/radix-selby.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_selby/radix-selby.tpl.php
+--- a/plugins/layouts/radix_selby/radix-selby.tpl.php
++++ b/plugins/layouts/radix_selby/radix-selby.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Selby.
@@ -1653,10 +1653,10 @@ index 2be8012..bacfd58 100644
 -
 +  </section>
  </div><!-- /.selby -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_selby_flipped/radix-selby-flipped.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_selby_flipped/radix-selby-flipped.tpl.php
+diff --git a/plugins/layouts/radix_selby_flipped/radix-selby-flipped.tpl.php b/plugins/layouts/radix_selby_flipped/radix-selby-flipped.tpl.php
 index 5660782..575293a 100644
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_selby_flipped/radix-selby-flipped.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_selby_flipped/radix-selby-flipped.tpl.php
+--- a/plugins/layouts/radix_selby_flipped/radix-selby-flipped.tpl.php
++++ b/plugins/layouts/radix_selby_flipped/radix-selby-flipped.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Selby Flipped.
@@ -1729,10 +1729,10 @@ index 5660782..575293a 100644
 -</div><!-- /.selby-flipped -->
 +  </section>
 +</div><!-- /.selby-flipped --><!-- /.selby-flipped-flipped-flipped -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sutro/radix-sutro.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sutro/radix-sutro.tpl.php
+diff --git a/plugins/layouts/radix_sutro/radix-sutro.tpl.php b/plugins/layouts/radix_sutro/radix-sutro.tpl.php
 index 1ea5233..50f166f 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sutro/radix-sutro.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sutro/radix-sutro.tpl.php
+--- a/plugins/layouts/radix_sutro/radix-sutro.tpl.php
++++ b/plugins/layouts/radix_sutro/radix-sutro.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Sutro.
@@ -1808,10 +1808,10 @@ index 1ea5233..50f166f 100755
 - 
 +  </footer>
  </div><!-- /.sutro -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sutro_double/radix-sutro-double.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sutro_double/radix-sutro-double.tpl.php
+diff --git a/plugins/layouts/radix_sutro_double/radix-sutro-double.tpl.php b/plugins/layouts/radix_sutro_double/radix-sutro-double.tpl.php
 index 77803de..c6f1c6f 100644
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sutro_double/radix-sutro-double.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_sutro_double/radix-sutro-double.tpl.php
+--- a/plugins/layouts/radix_sutro_double/radix-sutro-double.tpl.php
++++ b/plugins/layouts/radix_sutro_double/radix-sutro-double.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Sutro Double.
@@ -1922,10 +1922,10 @@ index 77803de..c6f1c6f 100644
 -
 +  </footer>
  </div><!-- /.sutro-double -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_taylor/radix-taylor.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_taylor/radix-taylor.tpl.php
+diff --git a/plugins/layouts/radix_taylor/radix-taylor.tpl.php b/plugins/layouts/radix_taylor/radix-taylor.tpl.php
 index dae05e8..eec1598 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_taylor/radix-taylor.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_taylor/radix-taylor.tpl.php
+--- a/plugins/layouts/radix_taylor/radix-taylor.tpl.php
++++ b/plugins/layouts/radix_taylor/radix-taylor.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Taylor.
@@ -2010,10 +2010,10 @@ index dae05e8..eec1598 100755
 -
 +  </footer>
  </div><!-- /.taylor -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_taylor_flipped/radix-taylor-flipped.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_taylor_flipped/radix-taylor-flipped.tpl.php
+diff --git a/plugins/layouts/radix_taylor_flipped/radix-taylor-flipped.tpl.php b/plugins/layouts/radix_taylor_flipped/radix-taylor-flipped.tpl.php
 index 7ddef4f..8730d4f 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_taylor_flipped/radix-taylor-flipped.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_taylor_flipped/radix-taylor-flipped.tpl.php
+--- a/plugins/layouts/radix_taylor_flipped/radix-taylor-flipped.tpl.php
++++ b/plugins/layouts/radix_taylor_flipped/radix-taylor-flipped.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Taylor Flipped.
@@ -2104,10 +2104,10 @@ index 7ddef4f..8730d4f 100755
 +  </footer>
 +  <?php endif; ?>
  </div><!-- /.taylor -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_webb/radix-webb.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_webb/radix-webb.tpl.php
+diff --git a/plugins/layouts/radix_webb/radix-webb.tpl.php b/plugins/layouts/radix_webb/radix-webb.tpl.php
 index b984794..eef6b3e 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_webb/radix-webb.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_webb/radix-webb.tpl.php
+--- a/plugins/layouts/radix_webb/radix-webb.tpl.php
++++ b/plugins/layouts/radix_webb/radix-webb.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Webb.
@@ -2195,10 +2195,10 @@ index b984794..eef6b3e 100755
 +    </div><!-- /.webb-column-content -->
 +  </section>
  </div><!-- /.webb -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_webb_flipped/radix-webb-flipped.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_webb_flipped/radix-webb-flipped.tpl.php
+diff --git a/plugins/layouts/radix_webb_flipped/radix-webb-flipped.tpl.php b/plugins/layouts/radix_webb_flipped/radix-webb-flipped.tpl.php
 index 4adbac4..60f5b11 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_webb_flipped/radix-webb-flipped.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_webb_flipped/radix-webb-flipped.tpl.php
+--- a/plugins/layouts/radix_webb_flipped/radix-webb-flipped.tpl.php
++++ b/plugins/layouts/radix_webb_flipped/radix-webb-flipped.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Webb Flipped.
@@ -2287,10 +2287,10 @@ index 4adbac4..60f5b11 100755
 +    </div><!-- /.webb-flipped-column-content -->
 +  </section>
 +</div><!-- /.webb-flipped -->
-diff --git a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_whelan/radix-whelan.tpl.php b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_whelan/radix-whelan.tpl.php
+diff --git a/plugins/layouts/radix_whelan/radix-whelan.tpl.php b/plugins/layouts/radix_whelan/radix-whelan.tpl.php
 index c64f960..42a071e 100755
---- a/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_whelan/radix-whelan.tpl.php
-+++ b/profiles/openasu/modules/contrib/radix_layouts/plugins/layouts/radix_whelan/radix-whelan.tpl.php
+--- a/plugins/layouts/radix_whelan/radix-whelan.tpl.php
++++ b/plugins/layouts/radix_whelan/radix-whelan.tpl.php
 @@ -3,6 +3,9 @@
   * @file
   * Template for Radix Whelan.

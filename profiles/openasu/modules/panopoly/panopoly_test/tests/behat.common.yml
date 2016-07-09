@@ -11,6 +11,8 @@ default:
         - Drupal\DrupalExtension\Context\MinkContext
         - Drupal\DrupalExtension\Context\MarkupContext
         - Drupal\DrupalExtension\Context\DrushContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\RawDrupalContext
   extensions:
     Behat\MinkExtension:
       goutte: ~
@@ -19,10 +21,6 @@ default:
       #files_path: './profiles/openasu/modules/panopoly/panopoly_test/tests'
     Drupal\DrupalExtension:
       blackbox: ~
-      #drush:
-      #  root: '/path/to/drupal/root'
-      #drupal:
-      #  drupal_root: '/path/to/drupal/root'
       api_driver: 'drupal'
       region_map:
         # The region on panopoly_page where the body appears (frequently
@@ -36,7 +34,7 @@ default:
         Bryant Flipped Sidebar: ".bryant-flipped .radix-layouts-sidebar"
         # For Panels / Panopoly specific regions.
         CTools modal: "#modalContent"
-        Live preview: "fieldset.panopoly-magic-preview"
+        Live preview: ".panopoly-magic-preview"
         Linkit modal: "#linkit-modal"
         # For the Media Browser
         Media web tab: '#media-tab-media_internet'

@@ -5,17 +5,14 @@ Feature: Make basic changes with the IPE
 
   Background:
     Given I am logged in as a user with the "administrator" role
-    And Panopoly magic live previews are disabled
-    When I visit "/node/add/panopoly-test-page"
-    And I fill in the following:
-      | Title  | Basic IPE Testing title |
-      | Editor | plain_text    |
-      | Body   | Basic IPE Testing body  |
-  # Normally, here we'd press "Publish", however some child distribtions
-  # don't use 'save_draft', and this makes this test compatible with them.
-  #When I press "Publish"
-    When I press "edit-submit"
-    Then I should see "Basic IPE Testing title"
+      And Panopoly magic live previews are disabled
+      When I visit "/node/add/panopoly-test-page"
+      And I fill in the following:
+        | Title  | Basic IPE Testing title |
+        | Editor | plain_text    |
+        | Body   | Basic IPE Testing body  |
+      And I press "edit-submit"
+      Then I should see "Basic IPE Testing title"
 
   @api @javascript @webspark_broken @webspark_fixed
   Scenario: Change layout
