@@ -13,11 +13,11 @@
  */
 ?>
 
-<div class="panel-display brenham_plus clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+<div class="panel-display brenham-plus clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
   <section class="section alt" id="promo">
     <div class="container">
       <div class="row row-full">
-      <div class="col-md-12 brenham_plus-promo radix-layouts-header panel-panel">
+      <div class="col-md-12 brenham-plus-promo radix-layouts-header panel-panel">
         <div class="panel-panel-inner">
           <?php print $content['header']; ?>
         </div>
@@ -28,26 +28,26 @@
     <div class="container">
       <div class="row">
       
-        <div class="col-md-4 brenham_plus-main-side radix-layouts-sidebar panel-panel">
+        <div class="col-md-4 brenham-plus-main-side radix-layouts-sidebar panel-panel">
           <div class="panel-panel-inner">
             <?php print $content['sidebar']; ?>
           </div>
         </div>
         
-        <div class="col-md-8 brenham_plus-column-content-region-area">
-					<div class="col-md-12 brenham_plus-main-contenttop radix-layouts-contenttop panel-panel">
+        <div class="col-md-8 brenham-plus-column-content-region-area">
+					<div class="col-md-12 brenham-plus-main-contenttop radix-layouts-contenttop panel-panel">
 						<div class="panel-panel-inner">
 							<?php print $content['contenttop']; ?>
 						</div>
 					</div>
 
-					<div class="col-md-12 brenham_plus-main-contentmain radix-layouts-contentmain panel-panel">
+					<div class="col-md-12 brenham-plus-main-contentmain radix-layouts-contentmain panel-panel">
 						<div class="panel-panel-inner">
 							<?php print $content['contentmain']; ?>
 						</div>
 					</div>
 
-					<div class="col-md-12 brenham_plus-main-contentbottom radix-layouts-contentbottom panel-panel">
+					<div class="col-md-12 brenham-plus-main-contentbottom radix-layouts-contentbottom panel-panel">
 						<div class="panel-panel-inner">
 							<?php print $content['contentbottom']; ?>
 						</div>
@@ -57,4 +57,4 @@
       </div>
     </div>
   </section>
-</div><!-- /.brenham_plus -->
+</div><!-- /.brenham-plus -->
