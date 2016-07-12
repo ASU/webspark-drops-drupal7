@@ -29,9 +29,9 @@
           <?php print $content['toprow1']; ?>
         </div>
       </div>
-      <div class="row row-1a beast-single-column">
-        <div class="column col-md-12 beast-top-row1a">
-          <?php print $content['toprow1a']; ?>
+      <div class="row row-1b beast-single-column">
+        <div class="column col-md-12 beast-top-row1b">
+          <?php print $content['toprow1b']; ?>
         </div>
       </div>      
       <div class="row row-2 beast-double-column">
@@ -69,9 +69,9 @@
           <?php print $content['toprow5col3']; ?>
         </div>
       </div>
-      <div class="row row-5a beast-single-column">
-        <div class="column col-md-12 beast-top-row5a">
-          <?php print $content['toprow5a']; ?>
+      <div class="row row-5b beast-single-column">
+        <div class="column col-md-12 beast-top-row5b">
+          <?php print $content['toprow5b']; ?>
         </div>
       </div>       
 			<div class="row row-6 beast-single-column row-full">
@@ -90,9 +90,9 @@
           <?php print $content['middlerow1']; ?>
         </div>
       </div>
-      <div class="row row-1a beast-single-column">
-        <div class="column col-md-12 beast-middle-row1a">
-          <?php print $content['middlerow1a']; ?>
+      <div class="row row-1b beast-single-column">
+        <div class="column col-md-12 beast-middle-row1b">
+          <?php print $content['middlerow1b']; ?>
         </div>
       </div>
       <div class="row row-2 beast-double-column">
@@ -130,9 +130,9 @@
           <?php print $content['middlerow5col3']; ?>
         </div>
       </div>
-      <div class="row row-5a beast-single-column">
-        <div class="column col-md-12 beast-middle-row5a">
-          <?php print $content['middlerow5a']; ?>
+      <div class="row row-5b beast-single-column">
+        <div class="column col-md-12 beast-middle-row5b">
+          <?php print $content['middlerow5b']; ?>
         </div>
       </div>
 			<div class="row row-6 beast-single-column row-full">
@@ -151,9 +151,9 @@
           <?php print $content['bottomrow1']; ?>
         </div>
       </div>
-      <div class="row row-1a beast-single-column">
-        <div class="column col-md-12 beast-bottom-row1a">
-          <?php print $content['bottomrow1a']; ?>
+      <div class="row row-1b beast-single-column">
+        <div class="column col-md-12 beast-bottom-row1b">
+          <?php print $content['bottomrow1b']; ?>
         </div>
       </div>
       <div class="row row-2 beast-double-column">
@@ -191,9 +191,9 @@
           <?php print $content['bottomrow5col3']; ?>
         </div>
       </div>
-      <div class="row row-5a beast-single-column">
-        <div class="column col-md-12 beast-bottom-row5a">
-          <?php print $content['bottomrow5a']; ?>
+      <div class="row row-5b beast-single-column">
+        <div class="column col-md-12 beast-bottom-row5b">
+          <?php print $content['bottomrow5b']; ?>
         </div>
       </div>
 			<div class="row row-6 beast-single-column row-full">
