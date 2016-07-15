@@ -42,6 +42,8 @@ projects[panopoly_wysiwyg][subdir] = panopoly
 
 projects[panopoly_search][version] = 1.37
 projects[panopoly_search][subdir] = panopoly
+; Fixes DB update dependency ordering
+projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
 
 projects[panopoly_test][version] = 1.37
 projects[panopoly_test][subdir] = panopoly
