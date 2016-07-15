@@ -24,6 +24,7 @@ function webspark_featurescustom_update_dependencies() {
   $deps = array();
   // Makes doubly sure for older Panopoly updates that 7118 comes before 7005 (panopoly_search)
   // Overrides panopoly_widgets_update_dependencies in panopoly_search.install
+  // Remove this once panopoly patches the issue on their end.
   $deps['panopoly_search'][7005] = array(
     'search_api' => 7118,
     'search_api_db' => 7104,

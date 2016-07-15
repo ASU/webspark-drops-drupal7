@@ -26,7 +26,8 @@ projects[radix_layouts][type] = module
 projects[radix_layouts][subdir] = contrib
 projects[radix_layouts][version] = 3.4
 ;  Make Radix layouts conform to ASU's custom CSS to fix background images, etc.
-projects[radix_layouts][patch][] = patches/webspark-420_radix-layouts_TPL-customizations.patch
+projects[radix_layouts][patch][101] = patches/webspark-420_radix-layouts_TPL-customizations.patch
+projects[radix_layouts][patch][102] = patches/webspark-743_add-two-brenham-layouts.patch
 
 ; Field Group
 projects[field_group][type] = module
