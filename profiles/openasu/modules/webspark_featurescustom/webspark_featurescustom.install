@@ -18,6 +18,21 @@ function webspark_featurescustom_enable() {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function webspark_featurescustom_update_dependencies() {
+  $deps = array();
+  // Makes doubly sure for older Panopoly updates that 7118 comes before 7005 (panopoly_search)
+  // Overrides panopoly_widgets_update_dependencies in panopoly_search.install
+  $deps['panopoly_search'][7005] = array(
+    'search_api' => 7118,
+    'search_api_db' => 7104,
+    'search_api_solr' => 7102,
+  );
+  return $deps;
+}
+
+/**
  * Implements hook_update_N()
  * + Enables ASU Webspark Carousel module for all Webspark users
  */
