@@ -1,3 +1,92 @@
+Webspark 1.37 (South Dakota) release
+----------------
+
+- Webspark core
+    * Added multiple patches for updating various contrib modules during the build process (located in /profiles/openasu/patches)
+    * Removed IE8 support by:
+        * Disabling RespondJS module (will be removed in the next release)
+        * Removing RespondJS library from /profiles/openasu/libraries
+    * Updated Panopoly core modules (v1.37). This change affects the following:
+        * Brought all Behat tests from custom tests directory into Panopoly Test module (v1.37)
+            * Increased number of tests to 100+ to test more Panopoly and Webspark features before new Webspark releases
+            * Updated local and travis-ci.org settings in .travis.yml, behat.local.yml, behat.travis.yml, etc.
+            * Tested to work with newer Selenium Standalone Server (v2.53.0)
+        * Removed Open Sans font (licensing issues)
+
+- Web standards components in Webspark
+    * Innovation theme (v1.3)
+        * Updated Innovation theme functions for form radios and checkboxes to be more WCAG-compliant
+        * Added second table style when creating an HTML table in the WYSIWYG editor
+        * Added more 100% wide columns to the Beast layout
+        * Added two new layouts (Brenhan Plus & Brenham Plus Flipped)
+    * ASU RFI (v1.4)
+        * Fixed a typo in the auto-response email for users requesting information
+
+- Contrib projects - Updates
+-- Panopoly-managed modules - (not including core Panopoly modules)
+    * Chaos tools (ctools) - v1.8
+        * Custom rulesets (ctools_access_ruleset) - v1.8
+        * Chaos Tools (CTools) AJAX Example (ctools_ajax_sample) - v1.8
+        * Custom content panes (ctools_custom_content) - v1.8
+        * Chaos Tools (CTools) Plugin Example (ctools_plugin_example) - v1.8
+        * Page manager (page_manager) - v1.8
+        * Stylizer (stylizer) - v1.8
+        * Term Depth access (term_depth) - v1.8
+        * CTools export test (ctools_export_test) - v1.8
+        * Chaos tools plugins test (ctools_plugin_test) - v1.8
+        * Views content panes (views_content) - v1.8
+    * Date (date) - v2.9-rc1
+        * Date All Day (date_all_day) - v2.9-rc1
+        * Date API (date_api) - v2.9-rc1
+        * Date Context (date_context) - v2.9-rc1
+        * Date Migration (date_migrate) - v2.9-rc1
+        * Date Migration Example (date_migrate_example) - v2.9-rc1
+        * Date Popup (date_popup) - v2.9-rc1
+        * Date Repeat API (date_repeat) - v2.9-rc1
+        * Date Repeat Field (date_repeat_field) - v2.9-rc1
+        * Date Tools (date_tools) - v2.9-rc1
+        * Date Views (date_views) - v2.9-rc1
+    * Default Config (defaultconfig) - patched same version (v1.0-alpha9)
+    * Entity API (entity) - v1.6
+        * Entity tokens (entity_token) - v1.6
+        * Entity feature module (entity_feature) - v1.6
+        * Entity CRUD test module (entity_test) - v1.6
+        * Entity-test type translation (entity_test_i18n) - v1.6
+    * Features (features) - v2.10
+        * Features Tests (features_test) - v2.10
+    * Features Override (features_override) - v2.0-rc3
+    * Fieldable Panels Panes (fieldable_panels_panes) - v1.10
+    * Field Group (field_group) - v1.5 + Webspark patches
+    * jQuery Update (jquery_update) - v2.7 (includes jQuery v1.10)
+    * LinkIt (linkit) - v3.4
+    * Manual Crop (manualcrop) - 1.5+4-dev
+    * Media - 2.0-beta1
+        * File Entity (file_entity) - v2.0-beta2
+        * Media Internet Sources (media_internet) - v2.0-beta1
+        * Media WYSIWYG (media_wysiwyg) - v2.0-beta1
+        * Media: Vimeo (media_vimeo) - v2.1
+        * Media: YouTube (media_youtube) - v3.0
+        * Video Embed Field (video_embed_field) - v2.0-beta1
+    * Module Filter (module_filter) - Webspark patches applied
+    * Radix Layouts (radix_layouts) - Webspark patches applied
+    * Search API (search_api) - v1.18
+        * Search API Views (search_api_views) - v1.18
+        * Search API FacetAPI (search_api_facetapi) - v1.18
+    * Database search (search_api_db) - v1.5
+    * Search API Solr (search_api_solr) - v1.10
+    * Solr search (search_api_solr) - v1.8
+    * Simplified Menu Administration (simplified_menu_admin) - Panopoly patches applied
+    * TableField (tablefield) - v2.4
+    * Token Test (token_test) - v1.6
+    * Token (token) - v1.6
+    * Views (views) - v3.14
+        * Views UI (views_ui) - v3.14
+    * WYSIWYG Filters (wysiwyg_filters) - Panopoly patches applied
+
+-- Panopoly-managed module deletions
+    * Panopoly Demo
+
+
 Webspark 1.27.1 (Ismay) release
 ----------------
 - Drupal core
@@ -5,7 +94,7 @@ Webspark 1.27.1 (Ismay) release
 
 - Web standards components in Webspark
     * Innovation theme (v1.2)
-        * Added apple icon + mstile PNGs (and their corresponding <link> and <meta> tags in <head>) to stop
+          * Added apple icon + mstile PNGs (and their corresponding <link> and <meta> tags in <head>) to stop
           superfluous 404 errors clogging the Drupal logs caused by Apple and MS tablets
         * Added CSS that keeps images contained within fixed-width layouts
         * Fixed Javascript console error (panopolyWidgetTables object not found)
