@@ -35,23 +35,23 @@
         </div>
         
         <div class="col-md-8 brenham-plus-column-content-region-area">
-					<div class="col-md-12 brenham-plus-main-contenttop radix-layouts-contenttop panel-panel">
-						<div class="panel-panel-inner">
-							<?php print $content['contenttop']; ?>
-						</div>
-					</div>
+          <div class="col-md-12 brenham-plus-main-contenttop radix-layouts-contenttop panel-panel">
+            <div class="panel-panel-inner">
+              <?php print $content['contenttop']; ?>
+            </div>
+          </div>
 
-					<div class="col-md-12 brenham-plus-main-contentmain radix-layouts-contentmain panel-panel">
-						<div class="panel-panel-inner">
-							<?php print $content['contentmain']; ?>
-						</div>
-					</div>
+          <div class="col-md-12 brenham-plus-main-contentmain radix-layouts-contentmain panel-panel">
+            <div class="panel-panel-inner">
+              <?php print $content['contentmain']; ?>
+            </div>
+          </div>
 
-					<div class="col-md-12 brenham-plus-main-contentbottom radix-layouts-contentbottom panel-panel">
-						<div class="panel-panel-inner">
-							<?php print $content['contentbottom']; ?>
-						</div>
-					</div>
+          <div class="col-md-12 brenham-plus-main-contentbottom radix-layouts-contentbottom panel-panel">
+            <div class="panel-panel-inner">
+              <?php print $content['contentbottom']; ?>
+            </div>
+          </div>
         </div>
         
       </div>
