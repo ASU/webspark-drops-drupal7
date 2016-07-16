@@ -19,7 +19,7 @@ Webspark 1.37 (South Dakota) release
         * Added second table style when creating an HTML table in the WYSIWYG editor
         * Added more 100% wide columns to the Beast layout
         * Added two new layouts (Brenhan Plus & Brenham Plus Flipped)
-    * ASU RFI (v1.4)
+    * ASU RFI (v1.5)
         * Fixed a typo in the auto-response email for users requesting information
 
 - Contrib projects - Updates

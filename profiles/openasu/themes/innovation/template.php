@@ -38,7 +38,7 @@ function innovation_preprocess_html(&$variables) {
       '#type' => 'html_tag',
       '#tag' => 'meta',
       '#attributes' => array(
-        'content' => 'Webspark:1.27 (Montana)',
+        'content' => 'Webspark:1.37 (South Dakota)',
         'http-equiv' => 'X-Name-of-Distro',
       )
     ),

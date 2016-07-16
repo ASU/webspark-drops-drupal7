@@ -1,3 +1,9 @@
+Innovation 7.x-1.4, 2016-07-15
+------------------------------
+- Added second table style when creating an HTML table in the WYSIWYG editor
+- Added more 100% wide columns to the Beast layout
+- Added two new layouts (Brenhan Plus & Brenham Plus Flipped)
+
 Innovation 7.x-1.3, 2016-06-29
 ------------------------------
 - Refactored checkboxes and radio buttons in Drupal forms to work better with typical Web Standards while
