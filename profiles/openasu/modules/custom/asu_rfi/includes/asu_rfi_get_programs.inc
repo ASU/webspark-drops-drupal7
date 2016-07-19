@@ -2,21 +2,38 @@
 
 function asu_rfi_get_programs()
 {
-  $options = array(
-    'method' => 'GET',
-    'timeout' => 15,
-    'headers' => array('Content-type' => 'application/json', 'Accept' => 'application/json'),
-  );
 
-  $response = drupal_http_request('https://asuonline.asu.edu/lead-submissions-v3/programs', $options);
+  $url = "asuonline.asu.edu/lead-submissions-v3/programs";
+  $curl = curl_init();
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => $url,
+    CURLOPT_HEADER => true,
+    CURLOPT_SSLVERSION => 5,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_HTTPHEADER => array('Accept: application/json')
+  ));
 
-  if (isset($response) && $response->code >= 200 && $response->code < 300) {
-    $data = $response->data;
-    return $data;
-  } else {
-    watchdog('asu_rfi', 'Failed to utilize the Get Programs API');
-    return false;
+  $header = explode("\n", curl_exec($curl));
+  curl_close($curl);
+
+  if (!empty($header) && !empty($header[0])) {
+
+    $code = explode(" ", $header[0]);
+
+    if (isset($code[1]) && $code[1] >= 200 && $code[1] < 400) {
+      if (isset($header[22]) && !empty($header[22])) {
+        $data = $header[22];
+        return $data;
+      }
+    } else {
+      watchdog('asu_rfi', 'The ASUOnline API is returning a status code of ' . $code[1]);
+    }
   }
+
+  if (!isset($data)) {
+    watchdog('asu_rfi', 'Failed to utilize the Get Programs API');
+  }
+  return false;
 }
 
 function asu_rfi_check_programs()
