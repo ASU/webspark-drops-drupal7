@@ -1,8 +1,0 @@
-  /*
-  You can use the gradient filter to hack in IE support as well, although
-  you should probably put it within a conditional comment
-  */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#cccccc', EndColorStr='#ffffff');
-  /* IE8 and above take a string as a value for a filter */
-  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#ffffff')";
-
