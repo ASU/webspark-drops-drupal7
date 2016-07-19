@@ -1,8 +1,13 @@
-Drupal 7.x-1.5, 2016-06-14
+Drupal 7.x-1.6,
 ——————————————————————————
 - Implemented new location functionality
 - Added new Web Standards styling to the forms
 - The RFI now supports requests for Online degree information from EdPlus
+- Resolved a timeout issue with the Graduate Thank You page
+
+Drupal 7.x-1.5, 2016-07-15
+——————————————————————————
+- Fixed a typo in the auto-response email
 
 Drupal 7.x-1.4, 2016-04-15
 ——————————————————————————
