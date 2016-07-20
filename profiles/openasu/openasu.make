@@ -213,7 +213,8 @@ projects[tb_megamenu][type] = module
 projects[tb_megamenu][subdir] = contrib
 projects[tb_megamenu][sha256] = 1b8266bd007f3f048c6923eb10b6c8e6c6ca99369cdacefb8a83f86c19573a17
 ; PATCH the CSS for tb_megamenu
-projects[tb_megamenu][patch][] = https://www.drupal.org/files/issues/webspark_megamenu-fixing_breakpoints.patch
+;projects[tb_megamenu][patch][] = https://www.drupal.org/files/issues/webspark_megamenu-fixing_breakpoints.patch
+projects[tb_megamenu][patch][] = patches/nojira-webspark-megamenu_fixing-breakpoints.patch
 
 ;projects[uuid_features][version] = 1.0-alpha4
 ;; grabbing alpha-4+dev-37 commit
