@@ -55,25 +55,19 @@ Thumbs.db
 ######################
 .idea
 
-# Behat tests - local #
-######################
-profiles/openasu/tests/behat/behat.local.yml
-
 # .patch files in Webspark profile subdirectories
 ######################
 profiles/openasu/libraries/**/*.patch
 profiles/openasu/modules/**/*.patch
 profiles/openasu/themes/**/*.patch
+profiles/openasu/**/PATCHES.txt
 
 # .gitignore in Drush make-pulled module repos
 ######################
 profiles/openasu/modules/**/.gitignore
+!profiles/openasu/modules/panopoly/panopoly_test/.gitignore
 
-# rebuild Webspark from Drush make script
+# Files for local development
 ######################
 webspark_rebuild_from_drush_make.bash
-
-# local DB file with ID/pass for local development
-######################
 sites/default/settings.local.php
-

@@ -205,8 +205,6 @@ Drupal.behaviors.linkitSearch = {
 
           $results.width($input.outerWidth()).css({
             position: 'absolute',
-            left: $input.position().left,
-            top: top,
             // High value because of other overlays like
             // wysiwyg fullscreen (TinyMCE) mode.
             zIndex: 211000,
@@ -233,6 +231,17 @@ Drupal.behaviors.linkitSearch = {
           Drupal.settings.linkit.currentInstance.linkContent = result.title;
 
           $('.linkit-path-element', context).focus();
+        },
+
+        themeResult: function(result) {
+          var output = [];
+          if ($.type(result.title) == 'string') {
+            output.push('<h4>', Drupal.checkPlain(result.title), '</h4>');
+          }
+          if ($.type(result.description) == 'string') {
+            output.push('<p>', Drupal.checkPlain(result.description), '</p>');
+          }
+          return output.join('');
         }
       }
 

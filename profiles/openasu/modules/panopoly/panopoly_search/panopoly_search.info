@@ -2,7 +2,6 @@ name = Panopoly Search
 description = Indexes and searches site content, Solr or otherwise.
 core = 7.x
 package = Panopoly
-php = 5.2.4
 project = panopoly_search
 dependencies[] = facetapi
 dependencies[] = page_manager
@@ -51,12 +50,13 @@ features[variable][] = facetapi:block_cache:search_api@database_node_index
 features[variable][] = facetapi:block_cache:search_api@node_index
 features[variable][] = search_active_modules
 features[variable][] = search_api_facets_search_ids
+features[variable][] = search_cron_limit
 features[views_view][] = panopoly_database_search
 features[views_view][] = panopoly_search
 
-; Information added by Drupal.org packaging script on 2014-10-17
-version = "7.x-1.13"
+; Information added by Drupal.org packaging script on 2016-06-16
+version = "7.x-1.37"
 core = "7.x"
 project = "panopoly_search"
-datestamp = "1413563615"
+datestamp = "1466091889"
 

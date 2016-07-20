@@ -36,6 +36,7 @@ function file_entity_field_formatter_info() {
       'controls' => TRUE,
       'autoplay' => FALSE,
       'loop' => FALSE,
+      'preload' => '',
       'multiple_file_behavior' => 'tags',
     ),
     'file formatter' => array(
@@ -53,6 +54,7 @@ function file_entity_field_formatter_info() {
       'muted' => FALSE,
       'width' => NULL,
       'height' => NULL,
+      'preload' => '',
       'multiple_file_behavior' => 'tags',
     ),
     'file formatter' => array(
@@ -131,6 +133,13 @@ function file_entity_field_formatter_settings_form($field, $instance, $view_mode
       '#type' => 'checkbox',
       '#default_value' => $settings['loop'],
     );
+    $element['preload'] = array(
+      '#title' => t('Preload'),
+      '#type' => 'select',
+      '#default_value' => $settings['preload'],
+      '#options' => drupal_map_assoc(array('none', 'auto', 'metadata')),
+      '#empty_option' => 'unspecified',
+    );
     $element['multiple_file_behavior'] = array(
       '#title' => t('Display of multiple files'),
       '#type' => 'radios',
@@ -160,6 +169,11 @@ function file_entity_field_formatter_settings_form($field, $instance, $view_mode
       '#type' => 'checkbox',
       '#default_value' => $settings['loop'],
     );
+    $element['muted'] = array(
+      '#title' => t('Muted'),
+      '#type' => 'checkbox',
+      '#default_value' => $settings['muted'],
+    );
     $element['width'] = array(
       '#type' => 'textfield',
       '#title' => t('Width'),
@@ -175,6 +189,13 @@ function file_entity_field_formatter_settings_form($field, $instance, $view_mode
       '#size' => 5,
       '#maxlength' => 5,
       '#field_suffix' => t('pixels'),
+    );
+    $element['preload'] = array(
+      '#title' => t('Preload'),
+      '#type' => 'select',
+      '#default_value' => $settings['preload'],
+      '#options' => drupal_map_assoc(array('none', 'auto', 'metadata')),
+      '#empty_option' => 'unspecified',
     );
     $element['multiple_file_behavior'] = array(
       '#title' => t('Display of multiple files'),
@@ -217,13 +238,14 @@ function file_entity_field_formatter_settings_summary($field, $instance, $view_m
     if (isset($settings['loop'])) {
       $summary[] = t('Loop: %loop', array('%loop' => $settings['loop'] ? t('yes') : t('no')));
     }
+    if (!empty($settings['preload'])) {
+      $summary[] = t('Preload: %preload', array('%preload' => $settings['preload']));
+    }
     if (isset($settings['multiple_file_behavior'])) {
       $summary[] = t('Multiple files: %multiple', array('%multiple' => $settings['multiple_file_behavior']));
     }
-
   }
   elseif ($display['type'] === 'file_video') {
-    $summary_items = array();
     if (isset($settings['controls'])) {
       $summary[] = t('Controls: %controls', array('%controls' => $settings['controls'] ? 'visible' : 'hidden'));
     }
@@ -238,6 +260,9 @@ function file_entity_field_formatter_settings_summary($field, $instance, $view_m
     }
     if ($settings['width'] && $settings['height']) {
       $summary[] = t('Size: %width x %height', array('%width' => $settings['width'], '%height' => $settings['height']));
+    }
+    if (!empty($settings['preload'])) {
+      $summary[] = t('Preload: %preload', array('%preload' => $settings['preload']));
     }
     if (isset($settings['multiple_file_behavior'])) {
       $summary[] = t('Multiple files: %multiple', array('%multiple' => $settings['multiple_file_behavior']));
@@ -296,6 +321,7 @@ function file_entity_field_formatter_view($entity_type, $entity, $field, $instan
     if ($files_display) {
       foreach ($files_display as $fid => $file) {
         $files_display[$fid]->referencing_entity = $entity;
+        $files_display[$fid]->referencing_entity_type = $entity_type;
         $files_display[$fid]->referencing_field = $field['field_name'];
       }
       $output = file_view_multiple($files_display, $view_mode);
@@ -313,7 +339,7 @@ function file_entity_field_formatter_view($entity_type, $entity, $field, $instan
   elseif ($display['type'] == 'file_download_link') {
     foreach ($items as $delta => $item) {
       $file = (object) $item;
-      if (file_entity_file_is_local($file) && file_entity_access('download', $file)) {
+      if (file_entity_access('download', $file)) {
         $element[$delta] = array(
           '#theme' => 'file_entity_download_link',
           '#file' => $file,
@@ -333,14 +359,14 @@ function file_entity_field_formatter_view($entity_type, $entity, $field, $instan
     if ($multiple_file_behavior == 'tags') {
       foreach ($items as $delta => $item) {
         if ($item['type'] == 'audio') {
-          $source_lists[] = array($item);
+          $source_lists[$delta] = array($item);
         }
       }
     }
     else {
       foreach ($items as $delta => $item) {
         if ($item['type'] == 'audio') {
-          $source_lists[0][] = $item;
+          $source_lists[0][$delta] = $item;
         }
       }
     }
@@ -353,6 +379,7 @@ function file_entity_field_formatter_view($entity_type, $entity, $field, $instan
         '#controls' => $settings['controls'],
         '#autoplay' => $settings['autoplay'],
         '#loop' => $settings['loop'],
+        '#preload' => $settings['preload'],
       );
     }
   }
@@ -367,22 +394,20 @@ function file_entity_field_formatter_view($entity_type, $entity, $field, $instan
     if ($multiple_file_behavior == 'tags') {
       foreach ($items as $delta => $item) {
         if ($item['type'] == 'video') {
-          $source_lists[] = array($item);
+          $source_lists[$delta] = array($item);
         }
       }
     }
     else {
       foreach ($items as $delta => $item) {
         if ($item['type'] == 'video') {
-          $source_lists[0][] = $item;
+          $source_lists[0][$delta] = $item;
         }
       }
     }
 
     // Render each source list as an <video> element.
     foreach ($source_lists as $delta => $sources) {
-      $width = $settings['width'];
-      $height = $settings['height'];
       $element[$delta] = array(
         '#theme' => 'file_entity_file_video',
         '#files' => $sources,
@@ -390,8 +415,9 @@ function file_entity_field_formatter_view($entity_type, $entity, $field, $instan
         '#autoplay' => $settings['autoplay'],
         '#loop' => $settings['loop'],
         '#muted' => $settings['muted'],
-        '#width' => ($width && $height) ? $width : NULL,
-        '#height' => ($width && $height) ? $height : NULL,
+        '#width' => $settings['width'],
+        '#height' => $settings['height'],
+        '#preload' => $settings['preload'],
       );
     }
   }

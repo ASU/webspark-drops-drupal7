@@ -4,56 +4,59 @@ core = 7.x
 ; Drupal Core
 
 projects[drupal][type] = core
-projects[drupal][version] = 7.39
+projects[drupal][version] = 7.44
 
 ; Drupal Core Patches
 projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-profile-ajax-1334818-8.patch
 
 ; The Panopoly Foundation
 
-projects[panopoly_core][version] = 1.13
+projects[panopoly_core][version] = 1.37
 projects[panopoly_core][subdir] = panopoly
 
-projects[panopoly_images][version] = 1.13
+projects[panopoly_images][version] = 1.37
 projects[panopoly_images][subdir] = panopoly
 
-projects[panopoly_theme][version] = 1.13
+projects[panopoly_theme][version] = 1.37
 projects[panopoly_theme][subdir] = panopoly
 
-projects[panopoly_magic][version] = 1.13
+projects[panopoly_magic][version] = 1.37
 projects[panopoly_magic][subdir] = panopoly
 
-projects[panopoly_widgets][version] = 1.13
+projects[panopoly_widgets][version] = 1.37
 projects[panopoly_widgets][subdir] = panopoly
 
-projects[panopoly_admin][version] = 1.13
+projects[panopoly_admin][version] = 1.37
 projects[panopoly_admin][subdir] = panopoly
 
-projects[panopoly_users][version] = 1.13
+projects[panopoly_users][version] = 1.37
 projects[panopoly_users][subdir] = panopoly
 
 ; The Panopoly Toolset
 
-projects[panopoly_pages][version] = 1.13
+projects[panopoly_pages][version] = 1.37
 projects[panopoly_pages][subdir] = panopoly
 
-projects[panopoly_wysiwyg][version] = 1.13
+projects[panopoly_wysiwyg][version] = 1.37
 projects[panopoly_wysiwyg][subdir] = panopoly
 
-projects[panopoly_search][version] = 1.13
+projects[panopoly_search][version] = 1.37
 projects[panopoly_search][subdir] = panopoly
+; Fixes DB update dependency ordering
+projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
 
-; Demo Content
-
-projects[panopoly_demo][version] = 1.13
-projects[panopoly_demo][subdir] = panopoly
+projects[panopoly_test][version] = 1.37
+projects[panopoly_test][subdir] = panopoly
+; TODO - Add patches for custom Webspark testing
+projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update.patch
+projects[panopoly_test][patch][1372] = patches/webspark-847_panopoly-test-updates-3.patch
 
 ; ASU Custom, Webspark-agnostic modules
 ; Webspark-only modules kept in webspark_featurescustom
 
 projects[asu_drupal_modules][type] = module
 projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = fff089b3
+projects[asu_drupal_modules][download][revision] = 2fcb4275
 projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ; ASU Module Prerequisites
@@ -107,9 +110,10 @@ projects[views_php][version] = 1.x-dev
 projects[views_php][type] = module
 projects[views_php][subdir] = contrib
 
-projects[webform][version] = 3.24
+projects[webform][version] = 4.12
 projects[webform][type] = module
 projects[webform][subdir] = contrib
+projects[webform][sha256] = 853d7d9804a2c4cb0f4bceec845662cda6a60e074906d2f2c194efb1d304b329
 
 ; ASU Module prerequisites - Webspark Webstandards Components - contrib
 
@@ -206,6 +210,7 @@ projects[kalatheme][patch][] = patches/webspark-565-add-views-tpl-to-kalatheme.p
 ;; rjbonnel Github patches for spelling (remove when fixed in kalatheme update upstream)
 projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-spelling-fix.patch
 projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-admin-spelling-fix.patch
+projects[kalatheme][patch][] = patches/nojira-20160715-kalatheme_fix-missing-index.patch
 
 projects[modernizr][version] = 3.1
 projects[modernizr][subdir] = contrib
@@ -237,14 +242,14 @@ libraries[flexslider][download][type] = get
 libraries[flexslider][download][url] = https://github.com/woothemes/FlexSlider/archive/version/2.2.2.zip
 
 ; 1 of 2
-libraries[fontawesome][download][type] = get
-libraries[fontawesome][download][url] = https://github.com/FortAwesome/Font-Awesome/archive/v4.2.0.zip
-libraries[fontawesome][download][subtree] = Font-Awesome-4.2.0/css
-libraries[fontawesome][directory_name] = fontawesome/css
+libraries[fontawesome_css][download][type] = get
+libraries[fontawesome_css][download][url] = https://github.com/FortAwesome/Font-Awesome/archive/v4.6.3.zip
+libraries[fontawesome_css][download][subtree] = Font-Awesome-4.6.3/css
+libraries[fontawesome_css][directory_name] = fontawesome/css
 ; 2 of 2
 libraries[fontawesome_fonts][download][type] = get
-libraries[fontawesome_fonts][download][url] = https://github.com/FortAwesome/Font-Awesome/archive/v4.2.0.zip
-libraries[fontawesome_fonts][download][subtree] = Font-Awesome-4.2.0/fonts
+libraries[fontawesome_fonts][download][url] = https://github.com/FortAwesome/Font-Awesome/archive/v4.6.3.zip
+libraries[fontawesome_fonts][download][subtree] = Font-Awesome-4.6.3/fonts
 libraries[fontawesome_fonts][directory_name] = fontawesome/fonts
 
 libraries[modernizr][download][type] = get

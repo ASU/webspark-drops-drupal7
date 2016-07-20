@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Contains SearchApiProcessorInterface and SearchApiAbstractProcessor.
+ */
+
+/**
  * Interface representing a Search API pre- and/or post-processor.
  *
  * While processors are enabled or disabled for both pre- and postprocessing at
@@ -27,7 +32,7 @@ interface SearchApiProcessorInterface {
   /**
    * Check whether this processor is applicable for a certain index.
    *
-   * This can be used for hiding the processor on the index's "Workflow" tab. To
+   * This can be used for hiding the processor on the index's "Filters" tab. To
    * avoid confusion, you should only use criteria that are immutable, such as
    * the index's item type. Also, since this is only used for UI purposes, you
    * should not completely rely on this to ensure certain index configurations
@@ -167,7 +172,7 @@ abstract class SearchApiAbstractProcessor implements SearchApiProcessorInterface
       $default_fields = drupal_map_assoc(array_keys($this->options['fields']));
     }
     foreach ($fields as $name => $field) {
-      $field_options[$name] = $field['name'];
+      $field_options[$name] = check_plain($field['name']);
       if (!empty($default_fields[$name]) || (!isset($this->options['fields']) && $this->testField($name, $field))) {
         $default_fields[$name] = $name;
       }
@@ -187,7 +192,7 @@ abstract class SearchApiAbstractProcessor implements SearchApiProcessorInterface
   public function configurationFormValidate(array $form, array &$values, array &$form_state) {
     $fields = array_filter($values['fields']);
     if ($fields) {
-      $fields = array_combine($fields, array_fill(0, count($fields), TRUE));
+      $fields = array_fill_keys($fields, TRUE);
     }
     $values['fields'] = $fields;
   }
@@ -385,13 +390,15 @@ abstract class SearchApiAbstractProcessor implements SearchApiProcessorInterface
   }
 
   /**
+   * Determines whether to process data from the given field.
+   *
    * @param $name
    *   The field's machine name.
    * @param array $field
    *   The field's information.
    *
-   * @return
-   *   TRUE, iff the field should be processed.
+   * @return bool
+   *   TRUE, if the field should be processed, FALSE otherwise.
    */
   protected function testField($name, array $field) {
     if (empty($this->options['fields'])) {
@@ -401,8 +408,13 @@ abstract class SearchApiAbstractProcessor implements SearchApiProcessorInterface
   }
 
   /**
-   * @return
-   *   TRUE, iff the type should be processed.
+   * Determines whether fields of the given type should normally be processed.
+   *
+   * Defaults to processing text types, but can easily be overridden by
+   * subclasses.
+   *
+   * @return bool
+   *   TRUE, if the type should be processed, FALSE otherwise.
    */
   protected function testType($type) {
     return search_api_is_text_type($type, array('text', 'tokens'));

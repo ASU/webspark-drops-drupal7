@@ -264,6 +264,13 @@ h6, .h6 {
 /* =IMAGES
 -------------------------------------------------------------- */
 
+/* Added from Panopoly Images CSS file (removed in Panopoly 1.21) */
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: bottom;
+}
+
 /* wysiwyg image spacing */
 img.media-element.pull-right {
   margin-left: 20px;
@@ -581,18 +588,17 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
   border-color: #859e11;
 }
 
-.alert-success > ul > li,
-.alert-info > ul > li,
-.alert-danger > ul > li,
-.alert-warning > ul > li a.close:hover {
-  color: white;
-  margin: 1em 0;
+.alert-warning *,
+.alert-warning a.close {
+  color: #000;
 }
 
-.alert-warning > ul > li,
-.alert-warning > ul > li a.close,
-{
-  color: black;
+.alert-success,
+.alert-info,
+.alert-danger,
+.alert-warning a.close:hover {
+  color: #fff;
+  margin: 1em 0;
 }
 
 .alert > ul > li > [class^=krumo] {
