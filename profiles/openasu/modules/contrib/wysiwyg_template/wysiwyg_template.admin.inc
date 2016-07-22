@@ -210,7 +210,7 @@ function wysiwyg_template_template_form($form, $form_state, $template = NULL) {
     '#type' => 'text_format',
     '#title' => t('HTML Template'),
     '#rows' => 10,
-    '#format' => NULL,
+    '#format' => isset($form_state['values']['format']) ? $form_state['values']['format'] : filter_default_format(),
     '#default_value' => isset($form_state['values']['body']) ? $form_state['values']['body'] : '',
     '#required' => true
   );
@@ -294,7 +294,11 @@ function wysiwyg_template_template_form_submit($form, &$form_state) {
     $form_state['values']['fid'] = $form_state['values']['template_image_fid'];
   }
   // save the template
-  if (wysiwyg_template_save_template($form_state['values'])) {
+  // Flatten body field data.
+  $template = $form_state['values'];
+  $template['body'] = $form_state['values']['body']['value'];
+  $template['format'] = $form_state['values']['body']['format'];
+  if (wysiwyg_template_save_template($template)) {
     drupal_set_message(t('The template has been saved.'));
   }
   else {
