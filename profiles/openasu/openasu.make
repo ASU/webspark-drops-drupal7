@@ -262,11 +262,12 @@ libraries[fontawesome_fonts][download][url] = https://github.com/FortAwesome/Fon
 libraries[fontawesome_fonts][download][subtree] = Font-Awesome-4.6.3/fonts
 libraries[fontawesome_fonts][directory_name] = fontawesome/fonts
 
-; Get entire Modernizr v2.8.3 library from https://github.com/Modernizr/Modernizr/archive/v2.8.3.zip
+; Temporarily in non-ASU repo for v3.3.1 custom build
+; @TODO - Move to official ASU repo
 libraries[modernizr][download][type] = get
-libraries[modernizr][download][url] = https://raw.githubusercontent.com/Modernizr/Modernizr/v2.8.3/modernizr.js
+libraries[modernizr][download][url] = https://raw.githubusercontent.com/bjdevil21/asu-webspark-libraries/master/modernizr/modernizr-custom.js
 libraries[modernizr][directory_name] = modernizr
-libraries[modernizr][download][sha256] = 7dfc3ef73c1284c7aff3c5cdac3812d212c8b899037d7860c8ba20a1defb9a7f
+libraries[modernizr][download][sha256] = 4f940bc0eac68623dc3874e8ccff90d4f827465f18d746234b635a2aa5890ff9
 
 libraries[jqtree][download][type] = get
 libraries[jqtree][download][url] = https://github.com/mbraak/jqTree/archive/0.22.0.zip
