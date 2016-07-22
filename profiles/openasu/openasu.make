@@ -262,9 +262,11 @@ libraries[fontawesome_fonts][download][url] = https://github.com/FortAwesome/Fon
 libraries[fontawesome_fonts][download][subtree] = Font-Awesome-4.6.3/fonts
 libraries[fontawesome_fonts][directory_name] = fontawesome/fonts
 
+; Get entire Modernizr v2.8.3 library from https://github.com/Modernizr/Modernizr/archive/v2.8.3.zip
 libraries[modernizr][download][type] = get
-libraries[modernizr][download][url] = https://github.com/Modernizr/Modernizr/archive/v2.6.2.zip
-libraries[modernizr][download][sha256] = 1fad7bf4340ddd915a6eb27eb056dfa1c4a51889db727e7ada76f57d86454998
+libraries[modernizr][download][url] = https://raw.githubusercontent.com/Modernizr/Modernizr/v2.8.3/modernizr.js
+libraries[modernizr][directory_name] = modernizr
+libraries[modernizr][download][sha256] = 7dfc3ef73c1284c7aff3c5cdac3812d212c8b899037d7860c8ba20a1defb9a7f
 
 libraries[jqtree][download][type] = get
 libraries[jqtree][download][url] = https://github.com/mbraak/jqTree/archive/0.22.0.zip
