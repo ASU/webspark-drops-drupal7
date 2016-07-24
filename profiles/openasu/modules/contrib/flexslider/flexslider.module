@@ -388,12 +388,17 @@ function flexslider_add($id = NULL, $optionset = NULL) {
 
   // If the ID or optionset aren't set, it is assumed the settings will be set
   // manually via the calling module/theme
-  if (!empty($id) && !empty($optionset)) {
+  if (!empty($optionset) && !in_array($optionset->name, $cache)) {
+    $cache[] = $optionset->name;
+    $js_setting['optionsets'] = array(
+      $optionset->name => $optionset->options,
+    );
+    drupal_add_js(array('flexslider' => $js_setting), 'setting');
+  }
+  
+  if (!empty($id)) {
     // JavaScript settings
     $js_settings = array(
-      'optionsets' => array(
-        $optionset->name => $optionset->options,
-      ),
       'instances' => array(
         $id => $optionset->name,
       ),
