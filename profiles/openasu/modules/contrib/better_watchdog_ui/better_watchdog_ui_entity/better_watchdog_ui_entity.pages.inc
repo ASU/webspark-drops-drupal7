@@ -57,7 +57,7 @@ function better_watchdog_ui_watchdog_view($watchdog, $view_mode = 'full') {
   );
   // MESSAGE.
   $replacement = unserialize($watchdog->variables);
-  $message = $replacement ? format_string($watchdog->message, $replacement) : $watchdog->message;
+  $message = is_array($replacement) ? format_string($watchdog->message, $replacement) : $watchdog->message;
   $watchdog->content['message'] = array(
     '#type' => 'item',
     '#title' => t('Message'),
@@ -84,7 +84,10 @@ function better_watchdog_ui_watchdog_view($watchdog, $view_mode = 'full') {
     '#markup' => render($delete_form),
   );
 
-  if (module_exists('rules')) {
+  // Allow other modules to alter the watchdog event page.
+  drupal_alter('better_watchdog_ui_event_page', $watchdog, $view_mode);
+
+  if (module_exists('better_watchdog_ui_rules')) {
     rules_invoke_event('better_watchdog_ui_watchdog_view', $watchdog, $view_mode);
   }
 
