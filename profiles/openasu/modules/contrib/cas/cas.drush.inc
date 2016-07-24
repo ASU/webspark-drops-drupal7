@@ -60,8 +60,11 @@ function cas_drush_user_create($cas_name) {
       $options = array('invoke_cas_user_presave' => TRUE);
       $new_user_object = cas_user_register($cas_name, $options);
       if ($new_user_object !== FALSE) {
-        _drush_user_print_info($new_user_object->uid);
-        // return $new_user_object->uid;
+        $user_fields = array('cas_name', 'uid', 'name', 'mail', 'status');
+        $new_user_object = (array) $new_user_object;
+        $new_user_object = array_intersect_key($new_user_object, array_flip($user_fields));
+        $new_user_object = drush_key_value_to_array_table($new_user_object);
+        drush_print_table($new_user_object);
       }
       else {
         drush_set_error(dt('Could not create a new user account with CAS username @cas_name.', array('@cas_name' => $cas_name)));
