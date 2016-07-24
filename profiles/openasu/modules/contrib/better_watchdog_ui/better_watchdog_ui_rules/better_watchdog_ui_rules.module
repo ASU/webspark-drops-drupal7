@@ -5,12 +5,18 @@
  * Provide Rules integration for database log entry events.
  */
 
-module_load_include('inc', 'better_watchdog_ui_rules', 'better_watchdog_ui_rules.rules');
-
 /**
  * Implements hook_entity_info_alter().
  */
 function better_watchdog_ui_rules_entity_info_alter(&$entity_info) {
   // Set the rules controller class for nodes to own implementation.
   $entity_info['better_watchdog_ui_watchdog']['rules controller class'] = 'WatchdogRulesController';
+}
+
+/**
+ * Implements hook_watchdog().
+ */
+function better_watchdog_ui_rules_watchdog(array $log_entry) {
+  $entity = new WatchdogEntity($log_entry, 'better_watchdog_ui_watchdog');
+  rules_invoke_event('better_watchdog_ui_watchdog_create', $entity);
 }

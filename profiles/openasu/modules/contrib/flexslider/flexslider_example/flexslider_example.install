@@ -8,6 +8,29 @@
  */
 
 /**
+ * Implements hook_uninstall().
+ */
+function flexslider_example_uninstall() {
+  // Collect all the example nodes and delete them since core/features won't do
+  // this for us
+  // @see [#1840288]
+  
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'flexslider_example');
+  
+  $results = $query->execute();
+  
+  // Ensure we have some nodes
+  if (!empty($results['node'])) {
+    $nids = array_keys($results['node']);
+    node_delete_multiple($nids);
+  }
+}
+
+
+
+/**
  * Implements hook_update_N().
  *
  * Checks for the Context module. Disables if not present.
