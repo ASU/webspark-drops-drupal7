@@ -163,6 +163,12 @@ h1.page-title {
   padding-bottom: 12px;
 }
 
+.page-title,
+.panel-title {
+  font-weight: bold;
+  letter-spacing: -1px;
+}
+
 h2, .h2 {
   font-size: 36px;
 }
