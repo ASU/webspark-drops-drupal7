@@ -96,6 +96,10 @@ projects[job_scheduler][version] = 2.0-alpha3
 projects[job_scheduler][type] = module
 projects[job_scheduler][subdir] = contrib
 
+projects[smtp][version] = 1.4
+projects[smtp][subdir] = contrib
+projects[smtp][type] = module
+
 projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
 projects[viewfield][subdir] = contrib
