@@ -163,6 +163,12 @@ h1.page-title {
   padding-bottom: 12px;
 }
 
+.page-title,
+.panel-title {
+  font-weight: bold;
+  letter-spacing: -1px;
+}
+
 h2, .h2 {
   font-size: 36px;
 }
@@ -202,9 +208,10 @@ h6, .h6 {
 .header__sitename {
   color: #2a2a2a;
   font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-weight: normal;
+  font-weight: bold;
   font-size: 24px;
   line-height: 1;
+  letter-spacing: -0.5px;
   margin-top: 0;
   margin-bottom: 0;
   padding: 0 0 12px 12px;
