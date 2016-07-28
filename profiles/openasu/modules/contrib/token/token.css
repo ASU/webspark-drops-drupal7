@@ -1,6 +1,5 @@
 
 .token-tree {
-  font-size: 0.85em;
   margin-left: 19px;
 }
 
@@ -11,6 +10,10 @@
 .token-tree td, .token-tree th {
   padding-top: 0;
   padding-bottom: 0;
+}
+
+.token-tree td:first-child {
+    padding-left: 19px;
 }
 
 .token-group {
