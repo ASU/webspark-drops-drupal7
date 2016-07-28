@@ -813,3 +813,28 @@ ul.help-text li.help-title {
 #page-footer #block-asu-brand-asu-brand-footer {
   background-color: #E5E5E5;
 }
+
+/* Token browsing modal */
+
+.ui-widget-content.ui-dialog.token-browser-container {
+  background-color: #fff;
+  padding: 0.5em;
+  border: 1px solid #ddd;
+}
+.ui-widget-content.ui-dialog.token-browser-container,
+.token-browser-container .ui-dialog-titlebar {
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+}
+.token-browser-container .ui-dialog-titlebar {
+  background-color: #eaeaec;
+}
+.token-browser-container .ui-dialog-title {
+  color: #333;
+  padding-left: 1em;
+}
+.token-browser-container table.treeTable > tbody > tr > td:not(first-child) {
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+}
