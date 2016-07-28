@@ -1,0 +1,33 @@
+diff --git a/jquery.treeTable.css b/jquery.treeTable.css
+index bec225a..fe332fe 100644
+--- a/jquery.treeTable.css
++++ b/jquery.treeTable.css
+@@ -16,11 +16,11 @@
+ }
+ 
+ .treeTable tr.collapsed td .expander {
+-  background-image: url(arrow-right.png);
++  background: transparent url(arrow-right.png) no-repeat 0 50%;
+ }
+ 
+ .treeTable tr.expanded td .expander {
+-  background-image: url(arrow-down.png);
++  background: transparent url(arrow-down.png) no-repeat 0 50%;
+ }
+ 
+ /* jquery.treeTable.sortable
+diff --git a/token.css b/token.css
+index 5432f0f..e401f25 100644
+--- a/token.css
++++ b/token.css
+@@ -13,6 +13,10 @@
+   padding-bottom: 0;
+ }
+ 
++.token-tree td:first-child {
++    padding-left: 19px;
++}
++
+ .token-group {
+   font-weight: bold;
+ }
