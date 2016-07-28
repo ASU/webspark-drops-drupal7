@@ -39,7 +39,7 @@
     childPrefix: "child-of-",
     clickableNodeNames: false,
     expandable: true,
-    indent: 19,
+    indent: 16,
     initialState: "collapsed",
     treeColumn: 0
   };
