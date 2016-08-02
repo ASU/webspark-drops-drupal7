@@ -279,11 +279,15 @@ libraries[modernizr_feature_d][download][subtree] = Modernizr-2.8.3/feature-dete
 libraries[modernizr_feature_d][directory_name] = modernizr/feature-detects
 libraries[modernizr_feature_d][download][sha256] = e9e8165a6ec2df5c9b72cafcee3c2b830656e010d9f64bbb1a571747359a8bd4
 
-libraries[jqtree][download][type] = get
-libraries[jqtree][download][url] = https://github.com/mbraak/jqTree/archive/0.22.0.zip
+libraries[jqtree][download][type] = file
+libraries[jqtree][download][url] = https://raw.githubusercontent.com/mbraak/jqTree/0.22.0/tree.jquery.js
 libraries[jqtree][directory_name] = jqtree
-libraries[jqtree][destination] = libraries
-libraries[jqtree][download][sha256] = 1a52b655f49e0c0778e0776d7d7f2afc2aa37a26ce9be110d7bc31b6e274d67d
+libraries[jqtree][download][sha256] = 8fe0e380e95c627a02057fe20fbf5746cb7bd3974fa56169cbf9c20d647eec92
+
+libraries[jqtree_css][download][type] = file
+libraries[jqtree_css][download][url] = https://raw.githubusercontent.com/mbraak/jqTree/0.22.0/jqtree.css
+libraries[jqtree_css][directory_name] = jqtree
+libraries[jqtree_css][download][sha256] = bd821d008f7fbe1642677b2e8154b3457823df846f68236dd7e1ac60f5d36d1f
 
 ; PANOPOLY PROJECT PATCHES
 ;; These projects are installed first, before any other projects in the parent makefile.
