@@ -104,10 +104,11 @@ projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
 projects[viewfield][subdir] = contrib
 
-; @TODO v1.0-alpha3
-projects[views_php][version] = 1.x-dev
+projects[views_php][version] = 1.0-alpha1
 projects[views_php][type] = module
 projects[views_php][subdir] = contrib
+; Applied in Alpha2, but can't upgrade to that yet - see https://www.drupal.org/node/2123315
+projects[views_php][patch][1290682] = https://www.drupal.org/files/views_php-fix_for_undefined_property-1290682.patch
 
 projects[webform][version] = 4.12
 projects[webform][type] = module
