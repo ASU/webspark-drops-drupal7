@@ -5,8 +5,8 @@
     <li>
       <label class="hasTip" title="<?php print t('Add/remove Column') . ' - ' . t('Click + to add a new column on the right of the selected column. Click - to remove the selected column') ?>"><?php print t('Add/remove Column') ?></label>
       <fieldset class="btn-group">
-        <a href="" class="btn toolcol-addcol toolbox-action first" data-action="addColumn" title="<?php print t('Add a new column on the right of the selected column') ?>"><i class="icon-plus"></i></a>
-        <a href="" class="btn toolcol-removecol toolbox-action last" data-action="removeColumn" title="<?php print t('Remove the selected column') ?>"><i class="icon-minus"></i></a>
+        <a href="" class="btn toolcol-addcol toolbox-action first" data-action="addColumn" title="<?php print t('Add a new column on the right of the selected column') ?>"><i class="fa fa-plus"></i></a>
+        <a href="" class="btn toolcol-removecol toolbox-action last" data-action="removeColumn" title="<?php print t('Remove the selected column') ?>"><i class="fa fa-minus"></i></a>
       </fieldset>
     </li>
   </ul>
@@ -20,7 +20,7 @@
         <label for="toggleHideWhenCollapse1" title="<?php print t('Hide this column when the menu is collapsed on small screen') ?>"><?php print t('Yes') ?></label>
       </fieldset>
     </li>
-  </ul>          
+  </ul>
   <ul>
     <li id="tb-megamenu-grid-wrapper" title="<?php print t('Grid (1-12)') . ' - ' . t('Set number of grid columns the selected column spans') ?>">
       <label class="hasTip"><?php print t('Grid (1-12)') ?></label>
@@ -67,7 +67,7 @@
         <label for="toggleShowBlockTitle1"><?php print t('Yes') ?></label>
       </fieldset>
     </li>
-  </ul>          
+  </ul>
   <ul>
     <li title="<?php print t('Extra class') . ' - ' . t('Add extra class to style megamenu') ?>">
       <label class="hasTip"><?php print t('Extra class') ?></label>
@@ -76,4 +76,4 @@
       </fieldset>
     </li>
   </ul>
-</div>    
+</div>
