@@ -1,45 +1,17 @@
 Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
 
 (function ($) {
-  Drupal.TBMegaMenu.oldWindowWidth = 0;
-  Drupal.TBMegaMenu.displayedMenuMobile = false;
-  Drupal.TBMegaMenu.supportedScreens = [980];
-  Drupal.TBMegaMenu.menuResponsive = function () {
-    var windowWidth = window.innerWidth ? window.innerWidth : $(window).width();
-    var navCollapse = $('.tb-megamenu').children('.nav-collapse');
-    if (windowWidth < Drupal.TBMegaMenu.supportedScreens[0]) {
-      navCollapse.addClass('collapse');
-      if (Drupal.TBMegaMenu.displayedMenuMobile) {
-        navCollapse.css({height: 'auto', overflow: 'visible'});
-      } else {
-        navCollapse.css({height: 0, overflow: 'hidden'});
-      }
-    } else {
-      // If width of window is greater than 980 (supported screen).
-      navCollapse.removeClass('collapse');
-      if (navCollapse.height() <= 0) {
-        navCollapse.css({height: 'auto', overflow: 'visible'});
-      }
-    }
-  };
-  
+  Drupal.TBMegaMenu.menuInstance = false;
   Drupal.behaviors.tbMegaMenuAction = {
     attach: function(context) {
-      $('.tb-megamenu-button', context).once('menuIstance', function () {
-        var This = this;
-        $(This).click(function() {
-          if(parseInt($(this).parent().children('.nav-collapse').height())) {
-            $(this).parent().children('.nav-collapse').css({height: 0, overflow: 'hidden'});
-            Drupal.TBMegaMenu.displayedMenuMobile = false;
-          }
-          else {
-            $(this).parent().children('.nav-collapse').css({height: 'auto', overflow: 'visible'});
-            Drupal.TBMegaMenu.displayedMenuMobile = true;
-          }
-        });
+      $('.tb-megamenu-button').click(function() {
+        if(parseInt($(this).parent().children('.nav-collapse').height())) {
+          $(this).parent().children('.nav-collapse').css({height: 0, overflow: 'hidden'});
+        }
+        else {
+          $(this).parent().children('.nav-collapse').css({height: 'auto', overflow: 'visible'});
+        }
       });
-      
-      
       var isTouch = 'ontouchstart' in window && !(/hp-tablet/gi).test(navigator.appVersion);
       if(!isTouch){
         $(document).ready(function($){
@@ -81,15 +53,7 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
           });
         });
       }
-      
-      $(window).resize(function() {
-        var windowWidth = window.innerWidth ? window.innerWidth : $(window).width();
-        if(windowWidth != Drupal.TBMegaMenu.oldWindowWidth){
-          Drupal.TBMegaMenu.oldWindowWidth = windowWidth;
-          Drupal.TBMegaMenu.menuResponsive();
-        }
-      });
-    },
+    }
   }
 })(jQuery);
 
