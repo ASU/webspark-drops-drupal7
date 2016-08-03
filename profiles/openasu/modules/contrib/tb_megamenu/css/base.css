@@ -131,10 +131,6 @@
 .tb-megamenu .nav > .dropdown > .dropdown-toggle .caret {
   display: inline-block;
 }
-.tb-megamenu .nav [class^="icon-"],
-.tb-megamenu .nav [class*=" icon-"] {
-  margin-right: 5px;
-}
 
 .tb-megamenu .nav {
 	margin-left: 0;
@@ -613,7 +609,7 @@
 }
 .tb-megamenu .btn-group > .btn,
 .tb-megamenu .btn-group > .dropdown-menu {
-	font-size: 13px;
+	/*font-size: 13px;*/
 }
 .tb-megamenu .btn-group > .btn.first,
 .tb-megamenu .btn-group > .btn:first-child {
@@ -970,7 +966,7 @@
 	}
 .tb-megamenu .nav-collapse .nav li a {
 		margin-bottom: 0;
-		border-top: 1px solid #d9d9d9;		
+		border-top: 1px solid #d9d9d9;
 	}
 .tb-megamenu .nav-collapse .nav li ul li ul.dropdown-menu,
 .tb-megamenu .nav-collapse .nav li ul li:hover ul.dropdown-menu,
@@ -978,7 +974,7 @@
 		display: none !important;
 	}
 .tb-megamenu .nav-collapse .nav > li > a,
-.tb-megamenu .nav-collapse .dropdown-menu a {			
+.tb-megamenu .nav-collapse .dropdown-menu a {
 		-webkit-border-radius: 0;
 		-moz-border-radius: 0;
 		border-radius: 0;
