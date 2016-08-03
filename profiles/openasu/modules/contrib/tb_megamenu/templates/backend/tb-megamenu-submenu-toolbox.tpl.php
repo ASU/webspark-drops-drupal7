@@ -5,7 +5,7 @@
     <li title="<?php print t('Add row') . ' - ' . t('Add a new row to the selected submenu') ?>">
       <label class="hasTip"><?php print t('Add row') ?></label>
       <fieldset class="btn-group">
-        <a href="" class="btn toolsub-addrow toolbox-action" data-action="addRow"><i class="icon-plus"></i></a>
+        <a href="" class="btn toolsub-addrow toolbox-action" data-action="addRow"><i class="fa fa-plus"></i></a>
       </fieldset>
     </li>
   </ul>
@@ -19,7 +19,7 @@
         <label for="togglesubHideWhenCollapse1" title="<?php print t('Hide this submenu when the menu is collapsed on small screens') ?>"><?php print t('Yes') ?></label>
       </fieldset>
     </li>
-  </ul>                    
+  </ul>
   <ul>
     <li title="<?php print t('Submenu width (px)') . ' - ' . t('Set submenu width (in pixel), this field must be a integer') ?>">
       <label class="hasTip"><?php print t('Submenu width (px)') ?></label>
@@ -33,14 +33,14 @@
       <label class="hasTip"><?php print t('Alignment') ?></label>
       <fieldset class="toolsub-alignment">
         <div class="btn-group">
-        <a class="btn toolsub-align-left toolbox-action" href="#" data-action="alignment" data-align="left" title="<?php print t('Left') ?>"><i class="icon-align-left"></i></a>
-        <a class="btn toolsub-align-right toolbox-action" href="#" data-action="alignment" data-align="right" title="<?php print t('Right') ?>"><i class="icon-align-right"></i></a>
-        <a class="btn toolsub-align-center toolbox-action" href="#" data-action="alignment" data-align="center" title="<?php print t('Center') ?>"><i class="icon-align-center"></i></a>
-        <a class="btn toolsub-align-justify toolbox-action" href="#" data-action="alignment" data-align="justify" title="<?php print t('Justify') ?>"><i class="icon-align-justify"></i></a>
+        <a class="btn toolsub-align-left toolbox-action" href="#" data-action="alignment" data-align="left" title="<?php print t('Left') ?>"><i class="fa fa-align-left"></i></a>
+        <a class="btn toolsub-align-right toolbox-action" href="#" data-action="alignment" data-align="right" title="<?php print t('Right') ?>"><i class="fa fa-align-right"></i></a>
+        <a class="btn toolsub-align-center toolbox-action" href="#" data-action="alignment" data-align="center" title="<?php print t('Center') ?>"><i class="fa fa-align-center"></i></a>
+        <a class="btn toolsub-align-justify toolbox-action" href="#" data-action="alignment" data-align="justify" title="<?php print t('Justify') ?>"><i class="fa fa-align-justify"></i></a>
         </div>
       </fieldset>
     </li>
-  </ul>          
+  </ul>
   <ul>
     <li title="<?php print t('Extra class') . ' - ' . t('Add extra class to style megamenu') ?>">
       <label class="hasTip"><?php print t('Extra class') ?></label>
