@@ -1,0 +1,13 @@
+diff --git a/panopoly_search.install b/panopoly_search.install
+index cb5b7bc..88554f3 100644
+--- a/panopoly_search.install
++++ b/panopoly_search.install
+@@ -34,7 +34,7 @@ function panopoly_search_update_dependencies() {
+   // We need to revert our servers/indexes only after these updates to
+   // search_api_db and search_api_solr.
+   $deps['panopoly_search'][7005] = array(
+-    'search_api' => 7116,
++    'search_api' => 7118,
+     'search_api_db' => 7104,
+     'search_api_solr' => 7102,
+   );

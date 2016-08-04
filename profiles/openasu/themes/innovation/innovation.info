@@ -2,7 +2,7 @@ name = Innovation
 description = "Theme with ASU Web Standards styling. A Kalatheme subtheme, powered by Bootstrap."
 base theme = kalatheme
 core = 7.x
-version = "7.x-1.0-rc3"
+version = "7.x-1.4"
 project = "innovation"
 
 regions[header] = Header
@@ -27,7 +27,6 @@ stylesheets[all][] = css/innovation-main.css
 stylesheets[all][] = css/buttons.css
 stylesheets[all][] = css/forms.css
 stylesheets[all][] = css/nav.css
-;stylesheets[all][] = profiles/openasu/libraries/fontawesome/css/font-awesome.min.css
 stylesheets[all][] = fonts/roboto/css/roboto.css
 
 ; Scripts

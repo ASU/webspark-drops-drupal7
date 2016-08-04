@@ -69,7 +69,7 @@
 -------------------------------------------------------------- */
 .pane-system-main-menu,
 .pane-menu-tree {
-	border-top: 8px solid #a30046;
+	border-top: 8px solid #8C1D40;
 	margin-top: 24px;
 	margin-bottom: 48px;
 	padding: 30px;
@@ -126,7 +126,7 @@
 	border-bottom: none;
 	display: block;
 	padding: 10px 5px;
-	color: #a30046;
+	color: #8C1D40;
 	font-weight: 200;
 	text-decoration: none;
 	font-size: 18px;
@@ -185,7 +185,7 @@
 .ui-tabs .ui-tabs-nav li.ui-state-hover,
 .ui-tabs .ui-tabs-nav li.ui-state-active,
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected {
-	border-top: 5px solid #a30046;
+	border-top: 5px solid #8C1D40;
 	background: none;
 	background-color: transparent;
 	margin-bottom: -1px;
@@ -240,7 +240,7 @@
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
   color: white;
-  background-color: #a30046;
+  background-color: #8C1D40;
 }
 
 /* =BREADCRUMBS
@@ -287,7 +287,7 @@
   padding: 6px 19px;
   line-height: 1.44;
   text-decoration: none;
-  color: #a30046;
+  color: #8C1D40;
   background-color: white;
   border: 1px solid #dddddd;
   margin-left: -1px;
@@ -316,8 +316,8 @@
 .pagination > .active > span:focus {
   z-index: 2;
   color: white;
-  background-color: #a30046;
-  border-color: #a30046;
+  background-color: #8C1D40;
+  border-color: #8C1D40;
   cursor: default;
 }
 .pagination > .disabled > span,

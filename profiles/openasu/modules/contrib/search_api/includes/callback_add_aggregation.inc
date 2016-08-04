@@ -1,9 +1,24 @@
 <?php
 
 /**
+ * @file
+ * Contains SearchApiAlterAddAggregation.
+ */
+
+/**
  * Search API data alteration callback that adds an URL field for all items.
  */
 class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
+
+  /**
+   * The type of aggregation currently performed.
+   *
+   * Used to temporarily store the current aggregation type for use of
+   * SearchApiAlterAddAggregation::reduce() with array_reduce().
+   *
+   * @var string
+   */
+  protected $reductionType;
 
   public function configurationForm() {
     $form['#attached']['css'][] = drupal_get_path('module', 'search_api') . '/search_api.admin.css';
@@ -11,7 +26,11 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
     $fields = $this->index->getFields(FALSE);
     $field_options = array();
     foreach ($fields as $name => $field) {
-      $field_options[$name] = $field['name'];
+      $field_options[$name] = check_plain($field['name']);
+      $field_properties[$name] = array(
+        '#attributes' => array('title' => $name),
+        '#description' => check_plain($field['description']),
+      );
     }
     $additional = empty($this->options['fields']) ? array() : $this->options['fields'];
 
@@ -63,14 +82,14 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
       foreach (array_keys($types) as $type) {
         $form['fields'][$name]['type_descriptions'][$type]['#states']['visible'][':input[name="callbacks[search_api_alter_add_aggregation][settings][fields][' . $name . '][type]"]']['value'] = $type;
       }
-      $form['fields'][$name]['fields'] = array(
+      $form['fields'][$name]['fields'] = array_merge($field_properties, array(
         '#type' => 'checkboxes',
         '#title' => t('Contained fields'),
         '#options' => $field_options,
         '#default_value' => drupal_map_assoc($field['fields']),
         '#attributes' => array('class' => array('search-api-alter-add-aggregation-fields')),
         '#required' => TRUE,
-      );
+      ));
       $form['fields'][$name]['actions'] = array(
         '#type' => 'actions',
         'remove' => array(
@@ -184,7 +203,20 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
         return isset($a) ? min($a, $b) : $b;
       case 'first':
         return isset($a) ? $a : $b;
+      case 'first_char':
+        $b = "$b";
+        if (isset($a) || $b === '') {
+          return $a;
+        }
+        return drupal_substr($b, 0, 1);
+      case 'list':
+        if (!isset($a)) {
+          $a = array();
+        }
+        $a[] = $b;
+        return $a;
     }
+    return NULL;
   }
 
   /**
@@ -237,10 +269,13 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
   /**
    * Helper method for getting all available aggregation types.
    *
-   * @param $info (optional)
-   *   One of "name", "type" or "description", to indicate what values should be
-   *   returned for the types. Defaults to "name".
+   * @param string $info
+   *   (optional) One of "name", "type" or "description", to indicate what
+   *   information should be returned for the types.
    *
+   * @return string[]
+   *   An associative array of aggregation type identifiers mapped to their
+   *   names, data types or descriptions, as requested.
    */
   protected function getTypes($info = 'name') {
     switch ($info) {
@@ -252,6 +287,8 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
           'max' => t('Maximum'),
           'min' => t('Minimum'),
           'first' => t('First'),
+          'first_char' => t('First letter'),
+          'list' => t('List'),
         );
       case 'type':
         return array(
@@ -261,6 +298,8 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
           'max' => 'integer',
           'min' => 'integer',
           'first' => 'string',
+          'first_char' => 'string',
+          'list' => 'list<string>',
         );
       case 'description':
         return array(
@@ -270,8 +309,11 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
           'max' => t('The Maximum aggregation computes the numerically largest contained field value.'),
           'min' => t('The Minimum aggregation computes the numerically smallest contained field value.'),
           'first' => t('The First aggregation will simply keep the first encountered field value. This is helpful foremost when you know that a list field will only have a single value.'),
+          'first_char' => t('The "First letter" aggregation uses just the first letter of the first encountered field value as the aggregated value. This can, for example, be used to build a Glossary view.'),
+          'list' => t('The List aggregation collects all field values into a multi-valued field containing all values.'),
         );
     }
+    return array();
   }
 
   /**
@@ -280,6 +322,8 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
   public function formButtonSubmit(array $form, array &$form_state) {
     $button_name = $form_state['triggering_element']['#name'];
     if ($button_name == 'op') {
+      // Increment $i until the corresponding field is not set, then create the
+      // field with that number as suffix.
       for ($i = 1; isset($this->options['fields']['search_api_aggregation_' . $i]); ++$i) {
       }
       $this->options['fields']['search_api_aggregation_' . $i] = array(

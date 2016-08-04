@@ -78,8 +78,8 @@ Creating a Subtheme.
     asu_webspark_bootstrap_bootstrap directory in /sites/all/libraries.
 13. Copy the regions section from profiles/openasu/themes/asu_webspark_bootstrap/asu_webspark_bootstrap.info 
     into the new subtheme's (mysite_asuwebsparkbootstrap) .info file to match the regions.
-14. (Optional) To retain Webspark's custom CSS styling, copy /profiles/openasu/themes/asu_webspark_bootstrap/css/main.css into 
-    /sites/all/themes/mysite_asuwebsparkbootstrap/css/.
+14. (Optional) To retain Webspark's custom CSS styling, copy the following files from left to right:
+    * /profiles/openasu/themes/asu_webspark_bootstrap/css/main.css -> /sites/all/themes/mysite_asuwebsparkbootstrap/css/main.css
 15. Push file changes back to Pantheon and commit all changes in the Pantheon Dashboard.
 
 -- Continuing steps for both Git and SFTP users:

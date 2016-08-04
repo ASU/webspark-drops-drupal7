@@ -22,7 +22,7 @@ function asu_gsa_init() {
     $exp = explode("/", $path);
     $type = $exp[0];
     if (isset($_POST['search_keys'])) {
-      $query = check_plain(filter_xss($_POST['search_keys']));
+      $query = check_plain($_POST['search_keys']);
       if (strpos($query, "quot;") != FALSE) {
         $query = str_replace('&quot;', '"', $query);
       }
@@ -31,7 +31,7 @@ function asu_gsa_init() {
       }
     }
     if (isset($_POST['search_header'])) {
-      $query = check_plain(filter_xss($_POST['search_header']));
+      $query = check_plain($_POST['search_header']);
       if (strpos($query, 'quot;') != FALSE) {
         $query = str_replace('&quot;', '"', $query);
       }
@@ -132,7 +132,7 @@ function asu_gsa_menu_alter(&$items) {
 
 function asu_gsa_local($search, $keys) {
   if ($keys != "") {
-    $keys = check_plain(filter_xss($keys));
+    $keys = check_plain($keys);
     if (strpos($keys, "quot;") != FALSE) {
       $keys = str_replace('&quot;', '"', $keys);
     }
@@ -277,7 +277,7 @@ function asu_gsa_sort() {
 
 function asu_gsa_collection($query, $sort) {
   if ($query != "") {
-    $query = check_plain(filter_xss($query));
+    $query = check_plain($query);
     if (strpos($query, "quot;") != FALSE) {
       $query = str_replace('&quot;', '"', $query);
     }
@@ -322,7 +322,7 @@ function asu_gsa_collection($query, $sort) {
 
 function asu_gsa_global($query, $sort) {
   if ($query != "") {
-    $query = check_plain(filter_xss($query));
+    $query = check_plain($query);
     if (strpos($query, "quot;") != FALSE) {
       $query = str_replace('&quot;', '"', $query);
     }
@@ -396,7 +396,7 @@ function asu_gsa_search_form($form, &$form_state, $query = '', $prompt = '') {
     '#attributes' => array(
       'title' => $prompt,
     ),
-    '#title' => check_plain(filter_xss($prompt)),
+    '#title' => check_plain($prompt),
     '#title_display' => 'invisible',
   );
 

@@ -14,35 +14,68 @@ function innovation_preprocess_html(&$variables) {
   // Add theme js file here rather than in .info to add a weight and ensure it loads last
   drupal_add_js(drupal_get_path('theme', 'innovation') . '/js/innovation.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 200));
 
-  // Add IE meta tag to force IE rendering mode
-  $meta_ie_render_engine = array(
-    '#type' => 'html_tag',
-    '#tag' => 'meta',
-    '#attributes' => array(
-      'content' => 'IE=edge,chrome=1',
-      'http-equiv' => 'X-UA-Compatible',
-    )
+  // WEBSPARK-825 - Add link tag to stop 404 errors on Apple icon requests in
+  // Drupal and server logs
+  $link_apple_icons = array(
+    'default' => array(
+      'rel' => 'apple-touch-icon',
+      'href' => '/profiles/openasu/themes/innovation/images/apple-touch-icon.png',
+    ),
+    'precomposed' => array(
+      'rel' => 'apple-touch-icon-precomposed',
+      'href' => '/profiles/openasu/themes/innovation/images/apple-touch-icon-precomposed.png',
+    ),
   );
-  drupal_add_html_head($meta_ie_render_engine, 'meta_ie_render_engine');
+  foreach ($link_apple_icons as $key => $value) {
+    drupal_add_html_head_link($value);
+  }
 
-  // WEBSPARK-667 - Add meta tag to identify Innovation as a "Webspark" theme
-  // in the DOM
-  $meta_webspark_id = array(
-    '#type' => 'html_tag',
-    '#tag' => 'meta',
-    '#attributes' => array(
-      'content' => 'Webspark:1.13.14 (Ferndale)',
-      'http-equiv' => 'X-Name-of-Distro',
-    )
+  // Add IE meta tag to force IE rendering mode
+  $meta_tags_html = array(
+    // WEBSPARK-667, 825 - Add meta tag to identify Innovation as a "Webspark" theme
+    // in the DOM, and added MS tablet <meta> tag
+    'meta_webspark_id' => array(
+      '#type' => 'html_tag',
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'content' => 'Webspark:1.37 (South Dakota)',
+        'http-equiv' => 'X-Name-of-Distro',
+      )
+    ),
+    'meta_ie_render_engine' => array(
+      '#type' => 'html_tag',
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'content' => 'IE=edge,chrome=1',
+        'http-equiv' => 'X-UA-Compatible',
+      )
+    ),
+    'mstile' => array(
+      '#type' => 'html_tag',
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'name' => 'TileImage',
+        'content' => '/profiles/openasu/themes/innovation/images/mstile.png',
+      )
+    ),
   );
-  drupal_add_html_head($meta_webspark_id, 'meta_webspark_id');
+  foreach ($meta_tags_html as $key => $value) {
+    drupal_add_html_head($value, $key);
+  }
 
   // WEBSPARK-189 - add actual HTTP header along with meta tag
   drupal_add_http_header('X-UA-Compatible', 'IE=Edge,chrome=1');
+}
 
-  // Add conditional stylesheets for IE
-  drupal_add_css(path_to_theme() . '/css/ie9.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 9', '!IE' => FALSE), 'preprocess' => FALSE));
-  drupal_add_css(path_to_theme() . '/css/ie8.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 8', '!IE' => FALSE), 'preprocess' => FALSE));
+/**
+ * Load Kalatheme dependencies.
+ *
+ * Implements template_process_html().
+ */
+function innovation_process_html(&$variables) {
+  // WEBSPARK-804 - Added Skip to Content link, below Google Analytics tags but before everything else.
+  $skip_html = '<div class="accessibility-hide"><a href="#main-wrapper" id="skip_to_content">Skip to Main Page Content</a></div>';
+  $variables['page_top'] = $skip_html . "\n" . $variables['page_top'];
 }
 
 /**
@@ -63,12 +96,13 @@ function innovation_preprocess_html(&$variables) {
 function innovation_preprocess_block(&$variables)
 {
   $block = $variables['block'];
+
   if ($block->delta == 'main-menu' && $block->module == 'system' && $block->status == 1 && $block->theme = 'innovation') {
     // Get the entire main menu tree.
     $main_menu_tree = array();
     $main_menu_tree = menu_tree_all_data('main-menu', NULL, 2);
+
     // Add the rendered output to the $main_menu_expanded variable.
-    //
     $main_menu_asu = menu_tree_output($main_menu_tree);
     $pri_attributes = array(
       'class' => array(
@@ -269,9 +303,7 @@ function innovation_links__system_main_menu($variables)
 * active child menu items.
 
 */
-
-function innovation_menuitem_has_active_children($menuitem)
-{
+function innovation_menuitem_has_active_children($menuitem) {
   if (is_array($menuitem) && isset($menuitem['below']) && !empty($menuitem['below'])) {
     foreach ($menuitem['below'] as $child) {
       if (isset($child['link']) && $child['link']['access'] && ($child['link']['hidden'] == 0)) return true;
@@ -280,47 +312,10 @@ function innovation_menuitem_has_active_children($menuitem)
   return false;
 }
 
-
-/**
- * Overides theme_checkbox
- */
-function innovation_checkbox($variables)
-{
-  $element = $variables['element'];
-  $element['#attributes']['type'] = 'checkbox';
-  element_set_attributes($element, array('id', 'name', '#return_value' => 'value'));
-
-  // Unchecked checkbox has #value of integer 0.
-  if (!empty($element['#checked'])) {
-    $element['#attributes']['checked'] = 'checked';
-  }
-  _form_set_class($element, array('form-checkbox'));
-
-  return '<input' . drupal_attributes($element['#attributes']) . ' /><span class="outer-wrap"><i class="fa fa-check"></i></span>';
-}
-
-/**
- * Overides theme_radio
- */
-function innovation_radio($variables)
-{
-  $element = $variables['element'];
-  $element['#attributes']['type'] = 'radio';
-  element_set_attributes($element, array('id', 'name', '#return_value' => 'value'));
-
-  if (isset($element['#return_value']) && $element['#value'] !== FALSE && $element['#value'] == $element['#return_value']) {
-    $element['#attributes']['checked'] = 'checked';
-  }
-  _form_set_class($element, array('form-radio'));
-
-  return '<input' . drupal_attributes($element['#attributes']) . ' /><span class="outer-wrap"><i class="fa fa-circle"></i></span>';
-}
-
 /**
  * Overrides theme_form_element().
  */
-function innovation_form_element(&$variables)
-{
+function innovation_form_element(&$variables) {
   $element = &$variables['element'];
   $is_checkbox = FALSE;
   $is_radio = FALSE;
@@ -417,16 +412,17 @@ function innovation_form_element(&$variables)
       break;
 
     case 'after':
-      if ($is_radio || $is_checkbox) {
-        $variables['#children'] = ' ' . $prefix . $element['#children'] . $suffix;
-
-      } else {
-        $output .= ' ' . $prefix . $element['#children'] . $suffix;
-      }
+      $output .= ' ' . $prefix . $element['#children'] . $suffix;
       $output .= ' ' . theme('form_element_label', $variables) . "\n";
       break;
 
     case 'none':
+      // Added output to ensure <label> tags are output for FontAwesome
+      // checkboxes and radio buttons to work. Was empty.
+      $output .= ' ' . $prefix . $element['#children'] . $suffix;
+      $output .= ' ' . theme('form_element_label', $variables) . "\n";
+      break;
+
     case 'attribute':
       // Output no label and no required marker, only the children.
       $output .= ' ' . $prefix . $element['#children'] . $suffix . "\n";
@@ -446,19 +442,25 @@ function innovation_form_element(&$variables)
 /**
  * Overrides theme_form_element_label().
  */
-function innovation_form_element_label(&$variables)
-{
+function innovation_form_element_label(&$variables) {
   $element = $variables['element'];
-
   // This is also used in the installer, pre-database setup.
   $t = get_t();
 
   // Determine if certain things should skip for checkbox or radio elements.
   $skip = (isset($element['#type']) && ('checkbox' === $element['#type'] || 'radio' === $element['#type']));
 
-  // If title and required marker are both empty, output no label.
-  if ((!isset($element['#title']) || $element['#title'] === '' && !$skip) && empty($element['#required'])) {
-    return '';
+  if (!$skip) {
+    // If title is empty or not defined, create blank title for empty <label> tag
+    if ((!isset($element['#title']) || $element['#title'] === '') && empty($element['#required'])) {
+      return '';
+    }
+    else {
+      $element['#title'] = (!isset($element['#title']) || $element['#title'] === '') ? '' : $element['#title'];
+    }
+  }
+  else {
+    $element['#title'] = (!isset($element['#title']) || $element['#title'] === '') ? '' : $element['#title'];
   }
 
   // If the element is required, a required marker is appended to the label.
@@ -467,7 +469,6 @@ function innovation_form_element_label(&$variables)
   $title = filter_xss_admin($element['#title']);
 
   $attributes = array();
-
   // Style the label as class option to display inline with the element.
   if ($element['#title_display'] == 'after' && !$skip) {
     $attributes['class'][] = $element['#type'];
@@ -480,15 +481,14 @@ function innovation_form_element_label(&$variables)
     $attributes['for'] = $element['#id'];
   }
 
-  // Insert radio and checkboxes inside label elements.
+  // Insert radio and checkboxes above label elements.
   $output = '';
   if (isset($variables['#children'])) {
     $output .= $variables['#children'];
   }
 
-  // Append label.
-  $output .= $t('!title !required', array('!title' => $title, '!required' => $required));
+  // Append original label info
+  $label_output = $t('!title !required', array('!title' => $title, '!required' => $required));
 
-  // The leading whitespace helps visually separate fields from inline labels.
-  return ' <label' . drupal_attributes($attributes) . '>' . $output . "</label>\n";
+  return $output . "\n" . ' <label' . drupal_attributes($attributes) . '>' . $label_output . "</label>\n";
 }

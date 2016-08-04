@@ -86,8 +86,9 @@ Creating a Subtheme.
     custominnovation_bootstrap directory in /sites/all/libraries.
 13. Copy the regions section from profiles/openasu/themes/innovation/innovation.info 
     into the new subtheme's (custominnovation) .info file to match the regions.
-14. (Optional) To retain Webspark's custom CSS styling, copy /profiles/openasu/themes/innovation/css/main.css into 
-    /sites/all/themes/custominnovation/css/.
+14. (Optional) To retain Webspark's custom CSS styling, copy the following files from left to right:
+    - /profiles/openasu/themes/innovation/css/main.css -> /sites/all/themes/custominnovation/css/main.css
+    - /profiles/openasu/themes/innovation/images/* -> /sites/all/themes/custominnovation/images/
 15. Push file changes back to Pantheon and commit all changes in the Pantheon Dashboard.
 
 -- Continuing steps for both Git and SFTP users:

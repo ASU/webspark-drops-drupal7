@@ -80,9 +80,9 @@ body {
 
 a,
 .ui-widget-content a {
-  border-bottom: 1px dotted #a30046;
+  border-bottom: 1px dotted #8C1D40;
   text-decoration: none;
-  color: #a30046;
+  color: #8C1D40;
   transition: all 0.25s ease-in-out 0s;
 }
 
@@ -263,6 +263,13 @@ h6, .h6 {
 
 /* =IMAGES
 -------------------------------------------------------------- */
+
+/* Added from Panopoly Images CSS file (removed in Panopoly 1.21) */
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: bottom;
+}
 
 /* wysiwyg image spacing */
 img.media-element.pull-right {
@@ -581,18 +588,17 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
   border-color: #859e11;
 }
 
-.alert-success > ul > li,
-.alert-info > ul > li,
-.alert-danger > ul > li,
-.alert-warning > ul > li a.close:hover {
-  color: white;
-  margin: 1em 0;
+.alert-warning *,
+.alert-warning a.close {
+  color: #000;
 }
 
-.alert-warning > ul > li,
-.alert-warning > ul > li a.close,
-{
-  color: black;
+.alert-success,
+.alert-info,
+.alert-danger,
+.alert-warning a.close:hover {
+  color: #fff;
+  margin: 1em 0;
 }
 
 .alert > ul > li > [class^=krumo] {
@@ -620,7 +626,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 #top-content #tabs .nav-pills > li.active > a,
 #top-content #tabs .nav-pills > li.active > a:hover,
 #top-content #tabs .nav-pills > li.active > a:focus {
-  background-color: #a30046;
+  background-color: #8C1D40;
 }
 
 /* IPE */
@@ -636,7 +642,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 }
 
 #modalContent .form-submit.btn {
-  margin-bottom: 2em;
+  margin-bottom: 1em;
   padding: 6px 20px;
   font-size: 18px;
 }

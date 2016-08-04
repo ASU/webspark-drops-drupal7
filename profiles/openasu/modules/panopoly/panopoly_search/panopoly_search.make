@@ -5,16 +5,16 @@ core = 7.x
 
 ; Search API and Facet API Modules
 
-projects[facetapi][version] = 1.3
+projects[facetapi][version] = 1.5
 projects[facetapi][subdir] = contrib
 
-projects[search_api][version] = 1.7
+projects[search_api][version] = 1.18
 projects[search_api][subdir] = contrib
 
-projects[search_api_solr][version] = 1.1
+projects[search_api_solr][version] = 1.10
 projects[search_api_solr][subdir] = contrib
 
-projects[search_api_db][version] = 1.0-rc2
+projects[search_api_db][version] = 1.5
 projects[search_api_db][subdir] = contrib
 
 ; Solr PHP Client Library

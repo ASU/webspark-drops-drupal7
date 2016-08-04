@@ -26,7 +26,8 @@
   text-align: center;
 }
 .the-event-date {
-  display: inline;
+  display:block; 
+  text-align: center;
   font-size: 42px;
 }
 .event-date-wrap {
@@ -35,6 +36,8 @@
   border: thin solid #a1a1a1;
   padding-left: 5px;
   padding-right: 5px;
+  border-radius: 3px; 
+  width: 7.25em;
 }
 .the-event-day {
   border: thin solid #a1a1a1;

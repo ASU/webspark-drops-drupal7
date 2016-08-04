@@ -10,7 +10,6 @@ dependencies[] = features
 dependencies[] = fieldable_panels_panes
 dependencies[] = image
 dependencies[] = strongarm
-dependencies[] = uto_carousel
 scripts[] = js/jquery.flexslider-min.js
 scripts[] = js/webspark_carousel.js
 stylesheets[all][] = css/webspark_carousel.css

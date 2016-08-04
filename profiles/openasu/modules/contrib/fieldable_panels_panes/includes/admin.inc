@@ -6,59 +6,70 @@
  */
 
 /**
- * List all bundles and administrative options for entity panes.
+ * Page callback for settings page.
  */
-function fieldable_panels_panes_entities_page() {
-  $entity_info = entity_get_info('fieldable_panels_pane');
+function fieldable_panels_panes_settings() {
+  $form = array();
 
-  $header = array(t('Name'), array('data' => t('Operations'), 'colspan' => 2));
-  $rows = array();
-
-  foreach ($entity_info['bundles'] as $bundle => $info) {
-    $type_url_str = str_replace('_', '-', $bundle);
-
-    $row = array();
-
-    $label = check_plain($info['label']);
-    $label .= ' <small>' . t('(Machine name: @type)', array('@type' => $bundle)) . '</small>';
-
-    $row[] = $label;
-
-    $operations = array();
-
-    $operations['list'] = array(
-      'title' => t('list'),
-      'href' => 'admin/structure/fieldable-panels-panes/manage/' . $type_url_str,
-    );
-
-    $operations['add'] = array(
-      'title' => t('add'),
-      'href' => 'admin/structure/fieldable-panels-panes/manage/' . $type_url_str . '/add',
-    );
-
-    $operations['fields'] = array(
-      'title' => t('manage fields'),
-      'href' => 'admin/structure/fieldable-panels-panes/manage/' . $type_url_str . '/fields',
-    );
-
-    $operations['display'] = array(
-      'title' => t('manage display'),
-      'href' => 'admin/structure/fieldable-panels-panes/manage/' . $type_url_str . '/display',
-    );
-
-    $ops = theme('links', array('links' => $operations, 'attributes' => array('class' => array('links', 'inline'))));
-
-    $row[] = $ops;
-    $rows[] = $row;
-  }
-
-  $build['panes_table'] = array(
-    '#theme' => 'table',
-    '#header' => $header,
-    '#rows' => $rows,
+  $form['fpp_revision_locking'] = array(
+    '#type' => 'radios',
+    '#title' => t('Should FPP CTools content panes reference FPP entities by entity ID or revision ID?'),
+    '#description' => t('For example, a panelized entity can revert the entity to previous revision and FPPs will also revert if they are referenced by revision ID. This also allows for editorial workflows using e.g. the Workbench Moderation or Revisioning modules.'),
+    '#options' => array(
+      'legacy' => t('Legacy: Use entity ID for all FPPs.'),
+      'lock' => t('Recommended: Use revision ID for non-reusable FPPs only; will also force each FPP update to create a new revision.'),
+    ),
+    '#default_value' => variable_get('fpp_revision_locking', 'lock'),
   );
 
-  return $build;
+  $form['fpp_hide_contextual_links'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Hide the FPP contextual menus?'),
+    '#description' => t('Being able to edit FPPs directly can cause problems with the editorial workflows when using e.g. Panelizer.'),
+    '#default_value' => variable_get('fpp_hide_contextual_links', FALSE),
+    '#disabled' => !module_exists('contextual'),
+  );
+
+  $form['fpp_blocks_expose'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Make fieldable panels panes available as blocks'),
+    '#description' => t('Fieldable panels panes that are reusable will be made available as blocks.'),
+    '#default_value' => variable_get('fpp_blocks_expose', FALSE),
+  );
+  $form['bundles'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('FPP Types Exposed as Blocks'),
+    '#description' => t('Select FPP types to be exposed as blocks. If none is selected, then all FPP types will be exposed as blocks.'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#states' => array(
+      'visible' => array(
+        ':input[name="fpp_blocks_expose"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+  // Render checkbox for each FPP bundle if any FPP bundles exist.
+  $bundles = fieldable_panels_panes_get_bundle_labels();
+  if (!empty($bundles)) {
+    foreach ($bundles as $bundle => $info) {
+      $form['bundles']['fpp_expose_' . $bundle] = array(
+        '#type' => 'checkbox',
+        '#title' => $info . ' (' . $bundle . ')',
+        '#default_value' => variable_get('fpp_expose_' . $bundle, FALSE),
+      );
+    }
+  }
+
+  // Remove fieldset description and add markup if no FPP bundles exist.
+  else {
+    $form['bundles']['empty'] = array(
+      '#markup' => t('<p>No FPP types exist.</p>'),
+    );
+    $form['bundles']['#description'] = NULL;
+  }
+
+  return system_settings_form($form);
 }
 
 /**
@@ -90,7 +101,7 @@ function fieldable_panels_panes_entities_add_page($type) {
  * panes (or blocks).
  */
 function fieldable_panels_panes_entity_view_page($entity) {
-  return fieldable_panels_panes_view($entity);
+  return fieldable_panels_panes_view($entity, 'preview');
 }
 
 /**

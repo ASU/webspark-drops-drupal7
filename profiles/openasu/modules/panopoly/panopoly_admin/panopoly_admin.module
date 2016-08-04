@@ -145,32 +145,73 @@ function panopoly_admin_ctools_content_subtype_alter(&$subtype, &$plugin) {
  * Implementation of hook_form_alter()
  */
 function panopoly_admin_form_alter(&$form, &$form_state, $form_id) {
+  global $base_url;
 
   // Improve the title field
   if (isset($form['title']['#title'])) {
+    $form['title']['#title_display'] = 'invisible';
     $form['title']['#attributes']['placeholder'] = $form['title']['#title'];
   }
 
-  // Improve the URL selection form
-  if (isset($form['#entity_type']) && $form['#entity_type'] == 'node' && isset($form['path']) && isset($form['path']['alias'])) {
-    unset($form['path']['#type']); // remove the fieldset
-    unset($form['path']['alias']['#description']); 
-    $form['path']['alias']['#title'] = '<strong>' . t('Permalink') . ':</strong> ';
-    $form['path']['alias']['#field_prefix'] = (isset($_SERVER['HTTPS'])) ? 'https://' . $_SERVER['HTTP_HOST'] . '/' : 'http://' . $_SERVER['HTTP_HOST'] . '/';
+  // Improve the node edit form
+  if (isset($form['#entity_type']) && $form['#entity_type'] == 'node') {
+    // Improve the URL selection form
+    if (isset($form['path']) && isset($form['path']['alias'])) {
+      unset($form['path']['#type']); // remove the fieldset
+      unset($form['path']['alias']['#description']);
+      $form['path']['alias']['#title'] = '<strong>' . t('Permalink') . ':</strong> ';
 
-    if (isset($form['path']['pathauto'])) {
-      $form['path']['pathauto']['#access'] = FALSE;
-      // Alter the place holder text based on the pathauto default value.
-      $form['path']['alias']['#attributes'] = array('placeholder' => '<' . t('magically generated') . '>');
-      $form['path']['alias']['#states'] = array();
-      $form['#submit'][] = 'panopoly_admin_pathauto_submit';
+      $form['path']['alias']['#field_prefix'] = $base_url . '/';
+
+      if (isset($form['path']['pathauto'])) {
+        $form['path']['pathauto']['#access'] = FALSE;
+        // Alter the place holder text based on the pathauto default value.
+        $form['path']['alias']['#attributes'] = array('placeholder' => '<' . t('magically generated') . '>');
+        $form['path']['alias']['#states'] = array();
+        $form['#submit'][] = 'panopoly_admin_pathauto_submit';
+      }
     }
-  }
-  
-  // Add clearfix to node body container to prevent clearing issue with
-  // vertical tabs - @see https://drupal.org/node/1686500
-  if (isset($form['#entity_type']) && $form['#entity_type'] == 'node' && isset($form['body']['#type']) && $form['body']['#type'] == 'container') {
-    $form['body']['#attributes']['class'][] = 'clearfix';
+
+    // Add clearfix to node body container to prevent clearing issue with
+    // vertical tabs - @see https://drupal.org/node/1686500
+    if (isset($form['body']['#type']) && $form['body']['#type'] == 'container') {
+      $form['body']['#attributes']['class'][] = 'clearfix';
+    }
+
+    // Hide the body label if it's 'Body' (which isn't terribly helpful) and the
+    // field is required.
+    if (!empty($form['body'][LANGUAGE_NONE][0]['#required']) && $form['body'][LANGUAGE_NONE][0]['#title'] == t('Body')) {
+      if ($form['body'][LANGUAGE_NONE][0]['summary']['#type'] == 'textarea') {
+        // We can't just set '#title_display' to invisible because it'll break
+        // the summary Javascript. So, we just set a class which we'll use in
+        // our own Javascript to hide the label.
+        $form['body']['#attributes']['class'][] = 'panopoly-admin-hide-body-label';
+      }
+      else {
+        $form['body'][LANGUAGE_NONE][0]['#title_display'] = 'invisible';
+      }
+    }
+
+    // Improve the publishing options by remove promote to front page and sticky
+    if (isset($form['options']) && !variable_get('panopoly_admin_front_page_and_sticky', 0)) {
+      $form['options']['promote']['#access'] = FALSE;
+      $form['options']['sticky']['#access'] = FALSE;
+    }
+
+    // Improve authoring options
+    if (isset($form['author'])) {
+      unset($form['author']['name']['#description']);
+      $form['author']['name']['#title'] = t('Author');
+      $form['author']['name']['#size'] = '40';
+      $form['author']['name']['#weight'] = 4;
+      $form['author']['date']['#weight'] = 5;
+
+      // Adjust options for Date Popup Module
+      if (module_exists('date_popup_authored')) {
+        $form['author']['date']['#title_display'] = 'invisible';
+        $form['author']['date']['#size'] = 20;
+      }
+    }
   }
 
   // Improve and potentially hide the machine name option from Default Content
@@ -183,12 +224,6 @@ function panopoly_admin_form_alter(&$form, &$form_state, $form_id) {
     unset($form['machine_name_fs']);
   }
 
-  // Improve the publishing options by remove promote to front page and sticky
-  if (isset($form['options']) && !variable_get('panopoly_admin_front_page_and_sticky', 0)) {
-    $form['options']['promote']['#access'] = FALSE;
-    $form['options']['sticky']['#access'] = FALSE;
-  }
-
   // Move the featured field into publishing options
   if (!empty($form['field_featured_status']) && $form['options']['#access']) {
     $form['options']['field_featured_status'] = $form['field_featured_status'];
@@ -197,28 +232,15 @@ function panopoly_admin_form_alter(&$form, &$form_state, $form_id) {
 
   // Remove the description from the featured image
   if (!empty($form['field_featured_image'])) {
-    $form['field_featured_image']['und'][0]['#description'] = '';
+    $form['field_featured_image'][LANGUAGE_NONE][0]['#title_display'] = 'invisible';
   }
 
-  // Hide the featured category field if there are no featured category options
-  if (!empty($form['field_featured_categories']) && $form['field_featured_categories']['und']['#type'] != 'textfield') {
-    if (count($form['field_featured_categories']['und']['#options']) == 0 || (!empty($form['field_featured_categories']['und']['#options']['_none']) && count($form['field_featured_categories']['und']['#options']) == 1)) {
+  if (!empty($form['field_featured_categories']) && $form['field_featured_categories'][LANGUAGE_NONE]['#type'] != 'textfield') {
+    $form['field_featured_categories'][LANGUAGE_NONE]['#title_display'] = 'invisible';
+
+    // Hide the featured category field if there are no featured category options
+    if (count($form['field_featured_categories'][LANGUAGE_NONE]['#options']) == 0 || (!empty($form['field_featured_categories'][LANGUAGE_NONE]['#options']['_none']) && count($form['field_featured_categories'][LANGUAGE_NONE]['#options']) == 1)) {
       $form['field_featured_categories']['#access'] = FALSE;
-    }
-  }
-
-  // Improve authoring options
-  if (isset($form['author']) && isset($form['#entity_type']) && $form['#entity_type'] == 'node') {
-    unset($form['author']['name']['#description']);
-    $form['author']['name']['#title'] = t('Author');
-    $form['author']['name']['#size'] = '40';
-    $form['author']['name']['#weight'] = 4;
-    $form['author']['date']['#weight'] = 5;
-
-    // Adjust options for Date Popup Module
-    if (module_exists('date_popup_authored')) {
-      $form['author']['date']['#title_display'] = 'invisible';
-      $form['author']['date']['#size'] = 20;
     }
   }
 
@@ -718,7 +740,7 @@ function _panopoly_admin_general_panes_get_status($plugin_name, $category_name, 
   if ($status == 'enable') {
     $link = array(
       '#type' => 'link',
-      '#title' => t('Disable?'),
+      '#title' => t('Disable'),
       '#href' => 'admin/panopoly/panes/pane/disable/' . $category_name . '/' . $plugin_name . '/' . drupal_get_token($plugin_name),
       '#ajax' => array(
         'wrapper' => 'panopoly-admin-pane-response-' . $category_name . '-' . str_replace(':', '_', $plugin_name),
@@ -731,7 +753,7 @@ function _panopoly_admin_general_panes_get_status($plugin_name, $category_name, 
   else {
     $link = array(
       '#type' => 'link',
-      '#title' => t('Enable?'),
+      '#title' => t('Enable'),
       '#href' => 'admin/panopoly/panes/pane/enable/' . $category_name . '/' . $plugin_name . '/' . drupal_get_token($plugin_name),
       '#ajax' => array(
         'wrapper' => 'panopoly-admin-pane-response-' . $category_name . '-' . str_replace(':', '_', $plugin_name),

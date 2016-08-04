@@ -29,7 +29,7 @@
 }
 
 #asu_directory_show_subs.sub_activated {
-    color: #a30046;
+    color: #8C1D40;
 }
 
 .asu_directory_toggle_subdirectory {
@@ -73,8 +73,8 @@ body .asu_directory_custom_group {
     float: right;
     /*min-width: 350px;*/
     font-weight: bold !important;
-    background-color: #a30046 !important;
-    border-color: #a30046 !important;
+    background-color: #8C1D40 !important;
+    border-color: #8C1D40 !important;
     color: white;
     margin-bottom: 30px;
     margin-top: 10px;
@@ -85,7 +85,7 @@ body .asu_directory_custom_group {
 }
 
 body .field-type-asu-directory .active {
-    background-color: #a30046;
+    background-color: #8C1D40;
     color: white;
 }
 
@@ -96,17 +96,17 @@ body .field-type-asu-directory .active {
 }
 
 body .asu_directory_custom_saved {
-    background-color: #a30046;
+    background-color: #8C1D40;
     color: white;
 }
 
 body .asu_directory_custom_saved:hover {
-    background-color: #a30046;
+    background-color: #8C1D40;
     color: white;
 }
 
 body .asu_directory_custom_saved:focus {
-    background-color: #a30046;
+    background-color: #8C1D40;
     color: white;
 }
 
@@ -190,12 +190,12 @@ body .asu_directory_custom_saved:focus {
 #asu_directory_people_controls_bottom {
     margin-top: 0px;
     display: inline-block;
-    color: #a30046;
+    color: #8C1D40;
 }
 
 #asu_directory_people_this_pg_btn > span {
-    background-color: #a30046;
-    border-color: #a30046;
+    background-color: #8C1D40;
+    border-color: #8C1D40;
     color: #ffffff;
 }
 
@@ -325,7 +325,7 @@ body .asu_directory_custom_saved:focus {
 }
 
 .field-type-asu-directory a {
-    color: #a30046;
+    color: #8C1D40;
     text-decoration: none;
     font-weight: normal;
     border-bottom: none;
@@ -496,7 +496,7 @@ select {
 }
 
 .dir-active-sort {
-    color: #a30046;
+    color: #8C1D40;
 }
 
 

@@ -117,6 +117,29 @@ function wysiwyg_template_theme() {
 }
 
 /**
+ * Implements hook_filter_info().
+ */
+function wysiwyg_template_filter_info() {
+  $filters['wysiwyg_template_cleanup'] = array(
+    'title' => t('Cleanup Wysiwyg Templates'),
+    'description' => t('Wysiwyg templates can contain code and attributes that are important for editing but should be removed on public pages.'),
+    'process callback' => '_wysiwyg_template_filter_cleanup',
+  );
+  return $filters;
+}
+
+/**
+ * Callback to cleanup content from wysiwyg template specific code for editors.
+ *
+ * @param $text
+ * @return string
+ */
+function _wysiwyg_template_filter_cleanup($text) {
+  $text = str_replace(array('contenteditable="true"', 'contenteditable="false"'), '', $text);
+  return $text;
+}
+
+/**
  * Wysiwyg template Wildcard menu loader - prepare item for the create/modify admin form
  *
  * @param $name
@@ -303,6 +326,7 @@ function wysiwyg_template_load_template($name) {
       'weight' => $template->weight,
       'fid' => $template->fid,
       'body' => $template->body,
+      'format' => $template->format,
       'name' => $name,
       'content_types' => wysiwyg_template_load_template_content_types($name),
     );
@@ -371,6 +395,7 @@ function wysiwyg_template_load_all($contentType = '_', $forSelect = FALSE, $incl
       'weight' => $dbTemplate->weight,
       'image' => $image_uri,
       'body' => token_replace($dbTemplate->body),
+      'format' => $dbTemplate->format,
       'name' => $dbTemplate->name,
     );
     $templates[] = $template;
@@ -396,9 +421,11 @@ function wysiwyg_template_save_template($template) {
     'name' => $template['name'],
     'title' => $template['title'],
     'description' => $template['description'],
-    'weight' => $template['weight'],
+    'weight' => (isset($template['weight']) ? $template['weight'] : 0),
     'fid' => $template['fid'],
-    'body' => (isset($template['body']['value']) && strlen($template['body']['value']) > 1) ? $template['body']['value'] : $template['body'],
+    'body' => $template['body'],
+    // Avoid PHP Notice when importing templates without format.
+    'format' => isset($template['format']) ? $template['format'] : filter_fallback_format(),
   );
 
   $existing = wysiwyg_template_name_exists($template['name']);
@@ -406,13 +433,15 @@ function wysiwyg_template_save_template($template) {
   // Save to database.
   if (drupal_write_record('wysiwyg_templates', $new_template, ($existing ? 'name' : array()))) {
     db_query("DELETE FROM {wysiwyg_templates_content_types} WHERE name = :name", array(':name' => $template['name']));
-    foreach ($template['content_types'] as $type) {
-      if (!empty($type)) {
-        $values = array(
-          'name' => $template['name'],
-          'type' => $type,
-        );
-        drupal_write_record('wysiwyg_templates_content_types', $values);
+    if (isset($template['content_types'])) {
+      foreach ($template['content_types'] as $key => $content_type) {
+        if (!empty($content_type)) {
+          $values = array(
+            'name' => $template['name'],
+            'type' => $key,
+          );
+          drupal_write_record('wysiwyg_templates_content_types', $values);
+        }
       }
     }
     return TRUE;

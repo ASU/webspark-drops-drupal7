@@ -1,0 +1,54 @@
+diff --git a/.gitignore b/.gitignore
+index ec14d1e..3eb013e 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -2,3 +2,5 @@ behat.yml
+ composer.phar
+ bin
+ vendor
++tests/behat.local.yml
++
+diff --git a/tests/features/basic_ipe.feature b/tests/features/basic_ipe.feature
+index 909890c..7c3d6a4 100644
+--- a/tests/features/basic_ipe.feature
++++ b/tests/features/basic_ipe.feature
+@@ -6,7 +6,13 @@ Feature: Make basic changes with the IPE
+   Background:
+     Given I am logged in as a user with the "administrator" role
+       And Panopoly magic live previews are disabled
+-      And I am viewing a "panopoly_test_page" with the title "Basic IPE Testing title"
++      When I visit "/node/add/panopoly-test-page"
++      And I fill in the following:
++        | Title  | Basic IPE Testing title |
++        | Editor | plain_text    |
++        | Body   | Basic IPE Testing body  |
++      And I press "edit-submit"
++      Then I should see "Basic IPE Testing title"
+
+   @api @javascript @webspark_broken @webspark_fixed
+   Scenario: Change layout
+diff --git a/tests/features/wysiwyg.feature b/tests/features/wysiwyg.feature
+index 2e848ec..7dd372e 100644
+--- a/tests/features/wysiwyg.feature
++++ b/tests/features/wysiwyg.feature
+@@ -39,10 +39,10 @@ Feature: Use rich text editor
+       | Align Center                  | p          | text-align      | center       |
+       | Align Right                   | p          | text-align      | right        |
+ 
+-  @api @javascript @panopoly_wysiwyg
++  # Removed actions related to buttons that were removed by Webspark WYSIWYG
++  @api @javascript @panopoly_wysiwyg @webspark_broken @webspark_fixed
+   Scenario Outline: Format text in the editor (advanced toolbar)
+-    When I expand the toolbar in the "edit-body-und-0-value" WYSIWYG editor
+-      And I click the "<Action>" button in the "edit-body-und-0-value" WYSIWYG editor
++    When I click the "<Action>" button in the "edit-body-und-0-value" WYSIWYG editor
+       And I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
+       #And I press "Publish"
+       And I press "edit-submit"
+@@ -50,6 +50,5 @@ Feature: Use rich text editor
+ 
+     Examples:
+       | Action          | Element | Property        | Value     |
+-      | Underline       | span    | text-decoration | underline |
+       | Align Full      | p       | text-align      | justify   |
+       | Increase Indent | p       | padding-left    | 30px      |

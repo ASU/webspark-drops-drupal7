@@ -6,9 +6,9 @@ files[] = wysiwyg_template.features.inc
 
 configure = admin/config/content/wysiwyg-templates
 
-; Information added by Drupal.org packaging script on 2014-03-10
-version = "7.x-2.11"
+; Information added by Drupal.org packaging script on 2016-05-18
+version = "7.x-2.12"
 core = "7.x"
 project = "wysiwyg_template"
-datestamp = "1394471606"
+datestamp = "1463555044"
 

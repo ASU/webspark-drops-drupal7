@@ -1,3 +1,9 @@
+WARNING! DO NOT EDIT OR DELETE THIS FILE, or any other README from this directory! These files are managed by UTO and
+need to be left intact to allow for Git updates. If you delete them and UTO chooses to update any of them, this will
+lead to a 'GIT CONFLICT' issue in the Pantheon dashboard or elsewhere.
+
+--------------------------------
+
 Themes allow you to change the look and feel of your Drupal site. You can use
 themes contributed by others or create your own.
 

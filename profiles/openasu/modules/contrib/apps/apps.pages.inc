@@ -19,6 +19,37 @@ function apps_app_title($app) {
 }
 
 /**
+ * Verify's token or presents a confirm form.
+ */
+function apps_display_confirm_form($question, $unique) {
+  // Can't easily pass query args to batch, so allow if install next is set to
+  // current page, as we set that.
+  if ((isset($_SESSION['apps_install_next']) && $_SESSION['apps_install_next']  == $_GET['q'])
+    || (isset($_REQUEST['token']) && drupal_valid_token($_REQUEST['token'], $unique))) {
+    return FALSE;
+  }
+  else {
+    $path = array($_GET['q'], array('query' => array('token' => drupal_get_token($unique))));
+    return drupal_get_form('apps_confirm_form', $question, $path);
+  }
+}
+
+/**
+ * Confirms the user wants to do the action.
+ */
+function apps_confirm_form($form, $form_state, $question, $path) {
+  $form['#redirect_path'] = $path;
+  return confirm_form($form, $question, 'admin/apps', t('This action can be undone.'));
+}
+
+/**
+ * Redirects user to same path but with token.
+ */
+function apps_confirm_form_submit($form, &$form_state) {
+  $form_state['redirect'] = $form['#redirect_path'];
+}
+
+/**
  * Callback for the market page
  *
  * If there is only one server, go directly to it. Otherwise, list 'em.
@@ -86,9 +117,33 @@ function apps_manage_page($server) {
  * Callback for listing of installed apps that have available updates
  */
 function apps_update_page($server) {
-  return array(
-    '#theme' => 'apps_update_page',
+  apps_include('manifest');
+  $element = array(
+     '#theme'=> 'apps_update_page',
+   );
+  // find all installed apps
+  try {
+    $apps = apps_apps($server, array("upgradeable" => TRUE), TRUE);
+    $element['apps'] = $apps;
+  }
+  catch (Exception $e) {
+    drupal_set_message(t("There was the following error - @error", array('@error' => $e->getMessage())), 'warning');
+  }
+  return $element;
+}
+
+/**
+ * Callpage for apps catelog page, an .md formatted app listing.
+ */
+function apps_catalog_page($server) {
+  apps_include('manifest');
+  drupal_add_http_header('Content-Type', 'text/x-markdown');
+  $render = array(
+    '#theme' => 'apps_catalog_page',
+    '#apps' => apps_apps($server, array(), FALSE),
+    '#server' => $server,
   );
+  print drupal_render($render);
 }
 
 /**
@@ -227,14 +282,27 @@ function apps_app_details_page($app) {
  * NOTE: it is expected that this page would be called with a drupal desination set
  */
 function apps_app_install($app) {
+  $token_name = 'install-' . $app['machine_name'];
+  if ($confirm_form = apps_display_confirm_form(t('Are you sure you want to install @name?', array('@name' => $app['name'])), $token_name)) {
+    return $confirm_form;
+  }
   apps_include('installer');
   require_once DRUPAL_ROOT . '/includes/authorize.inc';
   $action = arg(5);
   switch ($action) {
     case 'install':
       $_SESSION['apps_install_next'] = apps_app_page_path($app, 'enable');
-      return apps_install_downloads();
+      $install = apps_install_downloads();
+      // Error encountered during install.
+      if ($install === FALSE) {
+        drupal_goto(apps_app_page_path($app));
+      }
+      else {
+        return $install;
+      }
     default:
+      // Clear cache so downloads new files.
+      apps_clear_update_disk_cache();
       // Adds an extra path element to avoid an endless loop. If we check for
       // install at arg(4) we are usually there. So here we add an install at
       // arg(5) and that will get caught in the case above ^-^
@@ -245,43 +313,54 @@ function apps_app_install($app) {
 }
 
 /**
- * Centralize the generation of App paths
- *
- * @param $app
- *    The app array
- * @param string $op
- *    The path type
- * @return string
- *    A path to the app operation
- */
-function apps_app_page_path($app, $op = 'details') {
-  if (isset($app['machine_name'])) {
-    return "admin/apps/{$app['server']['name']}/{$app['machine_name']}/$op";
-  }
-}
-
-/**
  * Callback for the enable action
  *
  * Enables the app and got to config page if it exists
  */
 function apps_app_enable($app) {
-  $next = apps_app_page_path($app, 'configure');
-  $success = module_enable(array($app['machine_name']), TRUE);
-  if ($success) {
-    drupal_flush_all_caches();
-    drupal_set_message(t("Enabled @name app", array('@name' => $app['name'])));
-    if (!$app['disabled'] && ($cb = apps_app_callback($app, "post install callback"))) {
-      $cb($app);
+  $token_name = 'enable-' . $app['machine_name'];
+  if ($confirm_form = apps_display_confirm_form(t('Are you sure you want to enable @name?', array('@name' => $app['name'])), $token_name)) {
+    return $confirm_form;
+  }
+  $next = apps_app_page_path($app);
+  if ($app['status'] === APPS_DISABLED) {
+    $success = module_enable(array($app['machine_name']), TRUE);
+    if ($success) {
+      drupal_flush_all_caches();
+      drupal_set_message(t("Enabled @name app", array('@name' => $app['name'])));
+      if (!$app['disabled'] && ($cb = apps_app_callback($app, "post install callback"))) {
+        $cb($app);
+      }
+      if (apps_app_access('administer apps', $app, 'configure')) {
+        $next = apps_app_page_path($app, 'configure');
+      }
     }
-    if (!apps_app_access('administer apps', $app, 'configure')) {
-      $next = apps_app_page_path($app);
+    else {
+      drupal_set_message(t("@name App Not Enabled", array('@name' => $app['name'])));
     }
   }
-  else {
-    drupal_set_message(t("@name App Not Enabled", array('@name' => $app['name'])));
-    $next = apps_app_page_path($app);
+  elseif ($app['status'] === APPS_ENABLED) {
+    drupal_set_message(t("@name App already Enabled", array('@name' => $app['name'])), 'warning');
   }
+  elseif ($app['status'] === APPS_INCOMPATIBLE) {
+    $incompatible = array();
+    foreach ($app['dependencies'] as $depedency_name => $depedency) {
+      if ($depedency['incompatible']) {
+        $incompatible[] = $depedency_name;
+      }
+    }
+    drupal_set_message(t("@name App not compatible (incompatible dependencies: @dependencies)", array('@name' => $app['name'], '@dependencies' => implode(', ', $incompatible))), 'error');
+  }
+  elseif ($app['status'] === APPS_INSTALLABLE) {
+    $missing = array();
+    foreach ($app['dependencies'] as $depedency_name => $depedency) {
+      if (empty($depedency['installed'])) {
+        $missing[] = $depedency_name;
+      }
+    }
+    drupal_set_message(t("@name App has missing depedencies (missing depedencies: @dependencies)", array('@name' => $app['name'], '@dependencies' => implode(', ', $missing))), 'error');
+  }
+  unset($_SESSION['apps_install_next']);
   drupal_goto($next);
 }
 
@@ -289,6 +368,10 @@ function apps_app_enable($app) {
  * Callback for app disable
  */
 function apps_app_disable($app) {
+  $token_name = 'disable-' . $app['machine_name'];
+  if ($confirm_form = apps_display_confirm_form(t('Are you sure you want to disable @name?', array('@name' => $app['name'])), $token_name)) {
+    return $confirm_form;
+  }
   // Force the user to disable demo content before disabling the app
   if (($is_cb = apps_app_callback($app, "demo content enabled callback")) &&
     $is_cb($app)) {
@@ -308,6 +391,10 @@ function apps_app_disable($app) {
  * Callback for app uninstall
  */
 function apps_app_uninstall($app) {
+  $token_name = 'uninstall-' . $app['machine_name'];
+  if ($confirm_form = apps_display_confirm_form(t('Are you sure you want to uninstall @name?', array('@name' => $app['name'])), $token_name)) {
+    return $confirm_form;
+  }
   require_once DRUPAL_ROOT . '/includes/install.inc';
   $uninstall[] = $app['machine_name'];
   if (isset($app['demo content module']) && $app['demo content module']) {
@@ -323,6 +410,40 @@ function apps_app_uninstall($app) {
    }
   $next = apps_app_page_path($app);
   drupal_goto($next);
+}
+
+
+/**
+ * Callback for app update.
+ */
+function apps_app_update($app) {
+  $token_name = 'update-' . $app['machine_name'];
+  if ($confirm_form = apps_display_confirm_form(t('Are you sure you want to update @name?', array('@name' => $app['name'])), $token_name)) {
+    return $confirm_form;
+  }
+  // Redownload apps then run any updates.
+  apps_include('installer');
+  require_once DRUPAL_ROOT . '/includes/authorize.inc';
+  $action = arg(5);
+  switch ($action) {
+    case 'updatedb';
+      drupal_set_message($_SESSION['authorize_results']['page_message']['message'], $_SESSION['authorize_results']['page_message']['type']);
+      unset($_SESSION['apps_install_next']);
+      drupal_goto(apps_app_page_path($app));
+      break;
+    case 'update':
+      $_SESSION['apps_install_next'] = apps_app_page_path($app, 'update/updatedb');
+      return apps_install_downloads();
+    default:
+      // Need to clear update cache or it'll reuse all downloads.
+      apps_clear_update_disk_cache();
+      // Adds an extra path element to avoid an endless loop. If we check for
+      // install at arg(4) we are usually there. So here we add an install at
+      // arg(5) and that will get caught in the case above ^-^
+      $_SESSION['apps_install_next'] = apps_app_page_path($app, 'update/update');
+      apps_download_apps($app);
+      break;
+  }
 }
 
 /**
@@ -354,7 +475,19 @@ function apps_settings_form() {
     '#type' => 'textfield',
     '#default_value' => variable_get('apps_install_path', APPS_INSTALL_PATH),
   );
-  
+  $form['apps_grouping_mode'] = array(
+    '#title' => t('Allow Apps Grouping'),
+    '#description' => t('Allow grouping of Apps according to packages (as defined in app information via "package" key.)'),
+    '#type' => 'checkbox',
+    '#default_value'=> variable_get('apps_grouping_mode', FALSE),
+  );
+  $form['apps_grouping_vertical'] = array(
+    '#title' => t('Use vertical tabs for Apps Grouping'),
+    '#description' => t('Put the groupings into vertical tabs instead of collapsible fieldsets.'),
+    '#type' => 'checkbox',
+    '#default_value'=> variable_get('apps_grouping_vertical', TRUE),
+  );
+
   $form = system_settings_form($form);
   $form['#submit'][] = 'apps_settings_form_submit';
   return $form;
@@ -440,4 +573,13 @@ function apps_app_status_report($items, $header = NULL) {
     '#header' => $header,
     '#rows' => $rows,
   );
+}
+
+/**
+ * Provide development information.
+ */
+function apps_devel_load_array($type, $array) {
+  module_load_include('pages.inc', 'devel');
+  // Wth krumo, array is fine, but devel_print_object needs an object.
+  return devel_load_object($type, has_krumo() ? $array : (object) $array);
 }
