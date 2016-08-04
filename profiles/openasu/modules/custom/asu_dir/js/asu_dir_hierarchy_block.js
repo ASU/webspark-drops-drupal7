@@ -5,9 +5,15 @@
  * Provides AJAX behavior, pagination, modal, and sort for Department block
  *
  * @author Colton Testamarck (colt@asu.edu)
- * @author Robert Jenkins ( rjenkins@eaglecrk.com )
  * @author Michael Samuelson ( mlsamuel@asu.edu / mlsamuelson@gmail.com )
  */
+
+//avoid errors with the Department Manager Tool
+if (ASUPeople === undefined) {
+    var ASUPeople = {};
+    ASUPeople.dept_nid = 0;
+    ASUPeople.dept_id = '';
+}
 
 (function ($) {
     Drupal.behaviors.asu_dir_hierarchy_block = {
@@ -15,7 +21,6 @@
             if (settings.hasOwnProperty('asu_dir')) {
 
                 settings = settings.asu_dir;
-                var $people = jQuery('#people');
                 var $title = jQuery('#edit-title');
                 var top_nid = null;
                 var department = 'ASU';
@@ -51,8 +56,6 @@
                     top_nid = dept_nids[0];
                 }
 
-                var $people = $('#people');
-
                 var tree = [];
 
                 if (( top_nid != null) && ( tree = JSON.parse(settings.tree))) {
@@ -62,7 +65,7 @@
                     temp.push(asu_dir_hrc_find_root(tree, top_nid));
                     tree = temp;
 
-                    $people.data.tree_nids = asu_dir_get_tree_ids(asu_dir_hrc_find_root(tree, dept_nids[0]));
+                    ASUPeople.tree_nids = asu_dir_get_tree_ids(asu_dir_hrc_find_root(tree, dept_nids[0]));
                 }
 
                 if (tree != null && tree.length > 0) {
@@ -75,6 +78,7 @@
                         // First level open
                         autoOpen: 0,
                         selectable: true,
+                        keyboardSupport: false,
                         // Assign dept_id attribute to each tree <li>
                         onCreateLi: function (node, $li) {
                             $li.attr('dept_nid', node.dept_nid);
@@ -91,32 +95,32 @@
                     if (!standalone) {
                         jQuery('#treediv').bind('tree.click', function (event) {
 
-                            if ($people.data.field_configs.dept_id == event.node.dept_id || event.node.dept_id == top_level_ids.top_level_psid) {
+                            if (ASUPeople.field_configs.dept_id == event.node.dept_id || event.node.dept_id == top_level_ids.top_level_psid) {
                                 return false;
                             }
 
-                            $people.data.dept_nid = event.node.dept_nid;
+                            ASUPeople.dept_nid = event.node.dept_nid;
 
                             deptnid = event.node.dept_nid;
 
                             $title.val(event.node.name);
 
                             //set and save to Dept. ID, so that we can save and recreate tree
-                            $people.data.field_configs.dept_id = event.node.dept_id;
+                            ASUPeople.field_configs.dept_id = event.node.dept_id;
 
-                            $people.data.page = 0;
+                            ASUPeople.page = 0;
 
-                            $people.data.tree_nids = asu_dir_get_tree_ids(asu_dir_hrc_find_root(tree, deptnid));
+                            ASUPeople.tree_nids = asu_dir_get_tree_ids(asu_dir_hrc_find_root(tree, deptnid));
 
-                            if (field_configs.sub_toggle === true) {
-                                $people.data.field_items = $people.data.tree_nids;
+                            if (ASUPeople.field_configs.sub_toggle === true) {
+                                ASUPeople.field_items = ASUPeople.tree_nids;
                             } else {
-                                $people.data.field_items = [deptnid];
+                                ASUPeople.field_items = [deptnid];
                             }
 
-                            asu_dir_cleanup($people);
+                            asu_dir_cleanup();
 
-                            asu_dir_set_field($people);
+                            asu_dir_set_field();
                             //rebuild the table
                             asu_dir_build_table();
 

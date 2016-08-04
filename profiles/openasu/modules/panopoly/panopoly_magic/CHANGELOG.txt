@@ -1,3 +1,119 @@
+Panopoly Magic 7.x-1.37, 2016-06-16
+----------------------------
+- No changes since last release.
+
+Panopoly Magic 7.x-1.36, 2016-06-16
+----------------------------
+- No changes since last release.
+
+Panopoly Magic 7.x-1.35, 2016-05-04
+----------------------------
+- Title in FPP is double encoded when making a link.
+- Update to Fieldable Panels Panes 1.10 for SA-CONTRIB-2016-025.
+
+Panopoly Magic 7.x-1.34, 2016-04-20
+----------------------------
+- No changes since last release.
+
+Panopoly Magic 7.x-1.33, 2016-04-14
+----------------------------
+- Preview fieldset overflows in Firefox if using a very large image.
+
+Panopoly Magic 7.x-1.32, 2016-03-03
+----------------------------
+- No changes since last release.
+
+Panopoly Magic 7.x-1.31, 2016-02-25
+----------------------------
+- No changes since last release.
+
+Panopoly Magic 7.x-1.30, 2016-01-06
+----------------------------
+- No changes since last release.
+
+Panopoly Magic 7.x-1.29, 2015-11-18
+----------------------------
+- No changes since last release.
+
+Panopoly Magic 7.x-1.28, 2015-10-21
+----------------------------
+- No changes since last release.
+
+Panopoly Magic 7.x-1.27, 2015-09-02
+----------------------------
+- No changes since last release.
+
+Panopoly Magic 7.x-1.26, 2015-08-19
+----------------------------
+- Live preview after image upload breaks Spotlight (regression).
+- Update tablefield to version 2.4.
+
+Panopoly Magic 7.x-1.25, 2015-07-08
+----------------------------
+- No changes since last release.
+
+Panopoly Magic 7.x-1.24, 2015-07-02
+----------------------------
+- No changes since last release.
+
+Panopoly Magic 7.x-1.23, 2015-06-17
+----------------------------
+- Generate preview markup in a theme function/template.
+
+Panopoly Magic 7.x-1.22, 2015-06-04
+----------------------------
+- Only show one widget preview at a time when adding content in panels.
+- Update to latest Fieldable Panels Panes (FPP).
+- Editing body of node in FAPE via the IPE doesn't save changes.
+- Style settings form breaks 'managed_file' elements, puts 'Cancel' button in
+  'General Settings' fieldset, and gives PHP notices on region style settings.
+- Visual regression on 'Add content' dialog for the top-level widget buttons.
+- Provide a way for Views to opt out of allowing the "Display type" to be
+  changed on the pane settings.
+
+Panopoly Magic 7.x-1.21, 2015-04-29
+----------------------------
+- Allow panopoly magic to affect other forms.
+- PHP notice when adding Image pane as an editor.
+
+Panopoly Magic 7.x-1.20, 2015-03-25
+----------------------------
+- CHANGELOG.txt updates for 1.19 went wrong.
+
+Panopoly Magic 7.x-1.19, 2015-03-19
+-----------------------------
+- Updated CHANGELOG.txt for 7.x-1.19 release.
+- User profile: Unable to chage image field style formatter options because they
+  don't get saved.
+- Panopoly Magic abuses FPP revisions.
+- Audit Behat code for slowness and optimize.
+- Panopoly Magic update generates warning when FPP not installed.
+- Allow live preview to work with WYSIWYG.
+
+Panopoly Magic 7.x-1.18, 2015-02-26
+----------------------------
+- Upgrade causes fieldable panels panes Titles to appear twice.
+- Hide 'preview' and 'diff_standard' view modes when adding FPPs.
+- Make view modes removed from pane configuration a setting.
+
+Panopoly Magic 7.x-1.17, 2015-02-18
+----------------------------
+- Remove special handling for Pane titles.
+
+Panopoly Magic 7.x-1.16, 2015-02-12
+----------------------------
+- Stray select box when configuring Views widgets.
+- Avoid overwriting title of IPE buton.
+
+Panopoly Magic 7.x-1.15, 2015-01-12
+----------------------------
+- No changes since last release.
+
+Panopoly Magic 7.x-1.14, 2014-11-19
+----------------------------
+- Have Panopoly Theme depend on Radix Layouts (rather than providing it's own).
+- Added Can't turn off previews on Panels Add Content modal.
+
 Panopoly Magic 7.x-1.13, 2014-10-17
 ----------------------------
 - No changes since last release.

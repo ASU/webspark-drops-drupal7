@@ -13,7 +13,7 @@
  padding-left: 0;
 }
 .page-admin-content ul.action-links a {
-  background-color: #a30046;
+  background-color: #8C1D40;
   background-image: none;
   border: 1px solid transparent;
   border-radius: 4px;
@@ -26,4 +26,12 @@
 .page-admin-content ul.action-links a:hover {
   background-color: #d23153;
   text-decoration: none;
+}
+
+/* WEBSPARK-745 - font fix */
+.admin-menu #edit_menu_parent_chosen {
+	min-width: 250px;
+}
+.admin-menu .chosen-container {
+	font-size: 11px;
 }

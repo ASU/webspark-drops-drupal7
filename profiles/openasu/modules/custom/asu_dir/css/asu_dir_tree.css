@@ -7,10 +7,10 @@
 
 .asu-directory-tree-hierarchy {
     border: 1px solid #B8B8B8;
-    border-top-width: 3px;
-    margin: 1px 0px 3px 0px;
+    border-top: 8px solid #8C1D40;
+    margin: 1px 0px 200px 0px;
     overflow: auto;
-    padding: 10px;
+    padding: 30px;
     position: relative;
 }
 
@@ -29,14 +29,14 @@ ul.jqtree-tree li.jqtree-selected > .jqtree-element > span.jqtree-title, ul.jqtr
 ul.jqtree-tree li.jqtree-selected > .jqtree-element, ul.jqtree-tree li.jqtree-selected > .jqtree-element a, ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover {
     background: none;
     color: #fff;
-    background-color: #a30046;
+    background-color: #8C1D40;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
 }
 
 .jqtree-folder-icon {
-    color: #a30046;
+    color: #8C1D40;
 }
 
 /**************************************************************************
@@ -44,10 +44,6 @@ ul.jqtree-tree li.jqtree-selected > .jqtree-element, ul.jqtree-tree li.jqtree-se
  *************************************************************************/
 #block-asu-directory-asu-directory-dept-hrc a:hover {
     text-decoration: none;
-}
-
-ul.jqtree-tree {
-    margin-left: 18px;
 }
 
 ul.jqtree-tree a {

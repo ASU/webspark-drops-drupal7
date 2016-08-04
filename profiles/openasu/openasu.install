@@ -42,6 +42,8 @@ function openasu_install() {
     'panopoly_wysiwyg' => array('wysiwyg')
     )
   );
-
   watchdog('install', "openasu_install completed");
+  // WEBSPARK-696 - set initial log entries higher than default
+  variable_set('dblog_row_limit', '100000');
+  watchdog('install', "Raised dblog_row_limit from default to 100,000 entries");
 }

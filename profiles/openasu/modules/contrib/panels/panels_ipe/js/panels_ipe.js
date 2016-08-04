@@ -2,12 +2,7 @@
 // Ensure the $ alias is owned by jQuery.
 (function($) {
 
-// randomly lock a pane.
-// @debug only
 Drupal.settings.Panels = Drupal.settings.Panels || {};
-Drupal.settings.Panels.RegionLock = {
-  10: { 'top': false, 'left': true, 'middle': true }
-}
 
 Drupal.PanelsIPE = {
   editors: {},
@@ -215,7 +210,7 @@ function DrupalPanelsIPE(cache_key, cfg) {
 
     $('.panels-ipe-form-container', ipe.control).append(formdata);
 
-    $('input:submit:not(.ajax-processed)', ipe.control).addClass('ajax-processed').each(function() {
+    $('input:submit:not(.ajax-processed), button:not(.ajax-processed)', ipe.control).addClass('ajax-processed').each(function() {
       var element_settings = {};
 
       element_settings.url = $(this.form).attr('action');
@@ -285,7 +280,7 @@ function DrupalPanelsIPE(cache_key, cfg) {
           val += id;
         }
       });
-      $('input[name="panel[pane][' +  region + ']"]', ipe.control).val(val);
+      $('[name="panel[pane][' +  region + ']"]', ipe.control).val(val);
     });
   }
 

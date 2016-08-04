@@ -42,7 +42,7 @@
 
 .asu-degree-major-title {
     font-size: 21px;
-    color: #a30046;
+    color: #8C1D40;
 }
 
 .asu-degree-field-title {
@@ -95,7 +95,7 @@
 
 @media (min-width: 768px) {
     .node-type-asu-degree .field-name-body {
-        font-size : 24px;
+        font-size: 24px;
     }
     .node-type-asu-degree .col-sm-6 {
         width: 50%;

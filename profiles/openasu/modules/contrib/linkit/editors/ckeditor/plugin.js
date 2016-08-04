@@ -23,6 +23,12 @@
         command: 'linkit'
       });
 
+      // Ckeditor version lower then 4 needs to have a icon path.
+      if (version < 4) {
+        editor.ui._.items.linkit.icon = this.path + 'icons/linkit.png';
+        editor.ui._.items.linkit.args[0].icon = this.path + 'icons/linkit.png';
+      }
+
       // Add Command.
       editor.addCommand( 'linkit', {
         // FOR ACF in ckeditor 4.1+, allow everything.
@@ -35,8 +41,20 @@
 
           // Set the editor object.
           Drupal.settings.linkit.currentInstance.editor = editor;
-          // Set profile.
-          Drupal.settings.linkit.currentInstance.profile = Drupal.settings.linkit.fields[editor.name].profile;
+          // Find the current input format of the field we're looking at.
+          var format = '';
+          if (Drupal.wysiwyg) { // If using the WYSIWYG module with CKEditor as the editor
+            // Note that WYSIWYG prepends "profile" to the profile name, so we use .substring() to remove the "format".
+            format = Drupal.wysiwyg.instances[editor.name].format.substring(6);
+          }
+          else if (Drupal.settings.ckeditor) { // If using the CKEditor module
+            format = Drupal.settings.ckeditor.elements[editor.name];
+          } else {
+            alert(Drupal.t('Could not find the Linkit profile.'));
+            return;
+          }
+          // Set profile based on the current text format of this field.
+          Drupal.settings.linkit.currentInstance.profile = Drupal.settings.linkit.formats[format].profile;
           // Set the name of the source field.
           Drupal.settings.linkit.currentInstance.source = editor.name;
           // Set the source type.
@@ -102,18 +120,18 @@
 
       // Add a shortcut. Only CKeditor version 4 has this function.
       if (version >= 4) {
-        editor.setKeystroke( CKEDITOR.CTRL + 76 /*L*/, 'linkit' );
+        editor.setKeystroke(CKEDITOR.CTRL + 76 /*L*/, 'linkit');
       }
 
       // Add event listener.
-      editor.on( 'doubleclick', function( evt ) {
+      editor.on('doubleclick', function(evt) {
         // Delete the default link dialog.
         delete evt.data.dialog;
 
-        var element = CKEDITOR.plugins.link.getSelectedLink( editor ) || evt.data.element;
-        if ( !element.isReadOnly() ) {
-          if ( element.is( 'a' ) ) {
-            editor.getSelection().selectElement( element );
+        var element = CKEDITOR.plugins.link.getSelectedLink(editor) || evt.data.element;
+        if (!element.isReadOnly()) {
+          if (element.is( 'a' )) {
+            editor.getSelection().selectElement(element);
             if (version >= 4) {
               editor.commands.linkit.exec();
             }
@@ -125,7 +143,7 @@
       });
 
       // Register an extra fucntion, this will be used in the modal.
-      editor._.linkitFnNum = CKEDITOR.tools.addFunction( insertLink, editor );
+      editor._.linkitFnNum = CKEDITOR.tools.addFunction(insertLink, editor);
     }
   });
 
@@ -144,7 +162,7 @@
       var range = selection.getRanges(1)[0];
       if (range.collapsed) {
         var content = (Drupal.settings.linkit.currentInstance.linkContent) ? Drupal.settings.linkit.currentInstance.linkContent : data.path;
-        var text = new CKEDITOR.dom.text(content , editor.document );
+        var text = new CKEDITOR.dom.text(content , editor.document);
         range.insertNode(text);
         range.selectNodeContents(text);
       }

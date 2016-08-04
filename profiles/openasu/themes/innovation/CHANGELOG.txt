@@ -1,12 +1,43 @@
-
-Innovation 7.x-1.0-beta4, 2014-11-21
+Innovation 7.x-1.4, 2016-07-15
 ------------------------------
-- Added styles for accordions
-- Increased sitename h2 to 24px and decreased line-height to 1.
-- Added spacing to edit tabs and background color for improved UX.
-- Added header and spacing to panels modal list.
-- Increased size of submit button on panels modal.
-- Added styles for new panels modal help text.
+- Added second table style when creating an HTML table in the WYSIWYG editor
+- Added more 100% wide columns to the Beast layout
+- Added two new layouts (Brenhan Plus & Brenham Plus Flipped)
+
+Innovation 7.x-1.3, 2016-06-29
+------------------------------
+- Refactored checkboxes and radio buttons in Drupal forms to work better with typical Web Standards while
+  keeping ASU Web Standards intact.
+  - Removed custom innovation_checkbox and innovation_radio hooks from template.php, along with old CSS in forms.css
+  - Added and refactored CSS library from https://github.com/flatlogic/awesome-bootstrap-checkbox
+  - Updated innovation_form_element, innovation_form_element_label override hooks.
+
+Innovation 7.x-1.2, 2016-06-23
+------------------------------
+- Added apple icon + mstile PNGs (and their corresponding <link> and <meta> tags in <head>) to
+  stop superfluous 404 errors clogging the Drupal logs caused by Apple and MS tablets.
+- Reapplied lost CSS from Panopoly update in Montana that allowed images that were not pre-sized
+  breaking the layouts of images everywhere.
+
+Innovation 7.x-1.1, 2016-06-17
+------------------------------
+- Fixed the text legibility problem in the Drupal success alert messages by setting the text color back to white
+
+Innovation 7.x-1.0, 2016-04-18
+------------------------------
+- Added "Skip to Content" link in template.php (accessibility fix)
+
+Innovation 7.x-1.0-rc3, 2016-02-29
+------------------------------
+- Switched the site name in the header from an h1 to div, and removed the anchor tag.
+
+......
+See webspark release notes for beta8 -> rc2 notes).
+......
+
+Innovation 7.x-1.0-beta8, 2014-2-11
+------------------------------
+- Change ID on <footer> from #footer to #page-footer to eliminate duplication.
 
 Innovation 7.x-1.0-beta5, 2014-11-21
 ------------------------------
@@ -17,6 +48,11 @@ Innovation 7.x-1.0-beta5, 2014-11-21
 - Cleaning up files, removing old unused styles
 - Altered ctools widget link to "Add existing content" for improved UX
 
-Innovation 7.x-1.0-beta8, 2014-2-11
+Innovation 7.x-1.0-beta4, 2014-11-21
 ------------------------------
-- Change ID on <footer> from #footer to #page-footer to eliminate duplication.
+- Added styles for accordions
+- Increased sitename h2 to 24px and decreased line-height to 1.
+- Added spacing to edit tabs and background color for improved UX.
+- Added header and spacing to panels modal list.
+- Increased size of submit button on panels modal.
+- Added styles for new panels modal help text.

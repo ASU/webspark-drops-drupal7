@@ -1,7 +1,11 @@
 language: php
 
+# Latest version of 5.5.x on travis-ci.org
 php:
-  - 5.4
+  - 5.5.29
+
+# forces old Travis-CI infrastructure
+sudo: required
 
 mysql:
   database: drupal
@@ -15,53 +19,78 @@ branches:
     - 7.x-rc
     - travis-ci
 
+# Firefox 47.0 is currently breaking Selenium Server
+# TODO - Update from Selenium Server Standalone to alternative Marionette
+# https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver
+# Addons not working with Firefox. SeleniumHQ issue? Manually adding proper FF version.
+#addons:
+#  firefox: "46.0.1"
+
+# Cut down on git depth from default of 50
+git:
+  depth: 3
+
+before_install:
+  # Setup display for Selenium
+  - export DISPLAY=:99.0
+  #- sh -e /etc/init.d/xvfb start
+  #- sleep 3
+  # Added screen size (1024x768 - as defined in /etc/init.d/xvfb - isway too small)
+  - /sbin/start-stop-daemon --start --verbose --pidfile /tmp/cucumber_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1600x1200x16
+  - sleep 1
+
 install:
   - sudo apt-get update > /dev/null
   - "mysql -e 'create database drupal;'"
 
-  # Install latest Drush 6.
+  # Install Firefox manually until SeleniumHQ fixes the problem with the version not being reported to Travis-CI
+  - sudo mkdir /usr/local/bin/firefoxhack
+  - sudo wget --directory-prefix=/tmp http://ftp.mozilla.org/pub/firefox/releases/46.0.1/linux-x86_64/en-US/firefox-46.0.1.tar.bz2
+  - sudo tar -xjf /tmp/firefox-46.0.1.tar.bz2 -C /usr/local/bin/firefoxhack --strip-components=1
+  - export PATH="/usr/local/bin/firefoxhack:$PATH"
+  - echo "Using Firefox version $(firefox --version)"
+
+  # Install latest Drush 7.x.
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  - composer global require --no-interaction drush/drush:6.*
+  - composer global require --no-interaction drush/drush:7.*
 
   # Build Behat dependencies
-  - cd ./profiles/openasu/tests/behat
+  - cd profiles/openasu/modules/panopoly/panopoly_test/tests
   - composer install --no-interaction
-  # - cp behat.template.yml behat.local.yml
   - cd /home/travis/build/ASU/webspark-drops-drupal7
 
   # Build Codebase
-
   - mkdir private_files
 
   # Setup files
   - sudo chmod -R 777 sites/all
 
-  # Setup display for Selenium
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sleep 5
-
   # Get Selenium
-  - wget http://selenium.googlecode.com/files/selenium-server-standalone-2.39.0.jar
-  - java -jar selenium-server-standalone-2.39.0.jar > /dev/null 2>&1 &
-  - sleep 5
+  - wget https://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
+  - java -jar selenium-server-standalone-2.53.0.jar > /dev/null 2>&1 &
+  - sleep 3
 
   # Disable sendmail
   - echo sendmail_path=`which true` >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 before_script:
 
-
   # Do the site install
   - drush si openasu --db-url=mysql://root:@127.0.0.1/drupal --account-name=admin --account-pass=admin --site-mail=admin@example.com --site-name="Webspark" --yes
-
-  - drush runserver --server=builtin 8888 > /dev/null 2>&1 &
+  - drush runserver > /dev/null 2>&1 &
   - sleep 3
-  - cd profiles/openasu/tests/behat
+  - drush pm-enable panopoly_test --yes
+  - drush cc all
+  - cd ./profiles/openasu/modules/panopoly/panopoly_test/tests
 
 script:
 
-  - ./bin/behat --config behat.travis.yml
+  - bin/behat --colors --tags '~@webspark_ignore' --tags '~@panopoly_demo' --tags '~@panopoly_search' --config behat.travis.yml
+
+after_script:
+
+  - sleep 3
+  - drush pm-disable panopoly_test --yes
 
 notifications:
   email:

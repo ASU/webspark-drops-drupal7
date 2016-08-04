@@ -18,8 +18,24 @@ function webspark_featurescustom_enable() {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function webspark_featurescustom_update_dependencies() {
+  $deps = array();
+  // Makes doubly sure for older Panopoly updates that 7118 comes before 7005 (panopoly_search)
+  // Overrides panopoly_widgets_update_dependencies in panopoly_search.install
+  // Remove this once panopoly patches the issue on their end.
+  $deps['panopoly_search'][7005] = array(
+    'search_api' => 7118,
+    'search_api_db' => 7104,
+    'search_api_solr' => 7102,
+  );
+  return $deps;
+}
+
+/**
  * Implements hook_update_N()
- * + Enables ASU Webspark Carousel module for all Webspark userss
+ * + Enables ASU Webspark Carousel module for all Webspark users
  */
 function webspark_featurescustom_update_7000(&$sandbox) {
   if (!module_exists('uto_carousel')) {
@@ -54,6 +70,51 @@ function webspark_featurescustom_update_7001(&$sandbox) {
     else {
       drupal_set_message('No Webspark Content Callout settings were applied.');
       watchdog('webspark_updates', '7001 - No Webspark Content Callout settings were applied.');
+    }
+  }
+}
+
+/**
+ * Implements hook_update_N() -- Ferndale release
+ * + Increases the number of stored Drupal log entries to higher threshold if currently set to 1000 rows or lower.
+ * + Rebuilds Webspark WYSIWYG feature after adding lead paragraph styling
+ * + Forces enabling of Webspark Extras module (has HTTPS code now)
+ */
+
+function webspark_featurescustom_update_7002(&$sandbox) {
+  // WEBSPARK-696
+  $max_log_count = settype(variable_get('dblog_row_limit'), "int");
+  if ($max_log_count <= 1000 && $max_log_count != 0) {
+    variable_set('dblog_row_limit', '100000');
+    watchdog('webspark_updates', "Increased dblog_row_limit to 100,000 latest log entries.");
+  }
+  // WEBSPARK-366 - ensure this module is enabled
+  if (!module_exists('webspark_extras')) {
+    module_enable(array('webspark_extras'));
+  }
+  // WEBSPARK-796 - update ASU header to v4.4
+  if (variable_get('asu_brand_header_version') == '4.3') {
+    variable_set('asu_brand_header_version', '4.4');
+  }
+}
+
+/**
+ * Implements hook_update_N() -- Billings release
+ * + Disable and uninstall RespondJS module in preparation for removal
+ */
+
+function webspark_featurescustom_update_7003(&$sandbox) {
+  // WEBSPARK-891 - Disable and cleanup after respondjs module
+  if (module_exists('respondjs')) {
+    module_disable('respondjs');
+    watchdog('webspark_updates', "Disabled respondjs module, which will be removed with next Webspark release.");
+    if (is_null(variable_get('respondjs_scope'))) {
+      variable_del('respondjs_scope');
+      watchdog('webspark_updates', "Deleted respondJS module setting - respondjs_scope");
+    }
+    if (is_null(variable_get('respond_quiet'))) {
+      variable_del('respondjs_quiet');
+      watchdog('webspark_updates', "Deleted respondJS module setting - respondjs_quiet");
     }
   }
 }

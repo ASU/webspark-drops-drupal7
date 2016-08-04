@@ -2,7 +2,7 @@ name = ASU Directory Integration Reinvented
 description = Allows creation of ASU Directory nodes with optional hierarchy tree
 core = 7.x
 package = ASU
-version = 7.x-1.2
+version = 7.x-1.4
 project = asu_dir
 dependencies[] = block
 dependencies[] = ctools
@@ -13,6 +13,7 @@ dependencies[] = list
 dependencies[] = options
 dependencies[] = strongarm
 dependencies[] = jquery_update
+dependencies[] = asu_ajax_solr
 
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:2

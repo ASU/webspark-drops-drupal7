@@ -30,11 +30,14 @@ define('ASU_DIRECTORY_PAGE_ACCESS', 'access asu directory');
 // Form Field Variable Constants
 define('ASU_DIRECTORY_TOP_LEVEL_PS_ID', 'ASU');
 define('ASU_DIRECTORY_TOP_LEVEL_DEPT_NID', 1342);
-define('ASU_DIRECTORY_FORM_CACHE_DURATION', 1);//set to one hour
+define('ASU_DIRECTORY_FORM_CACHE_DURATION', 1);//# of hours, set to 1 initially
 define('ASU_DIRECTORY_MODULE_NAME', 'asu_dir');
 
 define('ASU_DIRECTORY_URL', 'https://isearch.asu.edu');
-define('ASU_DIRECTORY_SOLR_ENV', variable_get('asu_dir_solr_endpoint', 'https://asudir-solr.asu.edu/asudir/directory/select'));
+//TODO change this once we have field defined
+define('ASU_DIR_TITLESORT_PHOLDER', 'tsort');
+define('ASU_DIR_TITLESORT_FIELD', variable_get('asu_dir_titlesort_field', ASU_DIR_TITLESORT_PHOLDER));
+define('ASU_DIRECTORY_SOLR_ENV', variable_get('asu_dir_solr_endpoint', 'https://asudir-solr.asu.edu/asudir/directory/'));
 define('ASU_DIRECTORY_TREE_ENDPOINT', variable_get('asu_dir_tree_endpoint', 'https://isearch.asu.edu/endpoints/dept_tree/json'));
 define('ASU_EMPLOYEE_TYPES_ENDPOINT', variable_get('asu_dir_employee_types_endpoint', 'https://isearch.asu.edu/endpoints/employee-types'));
 
@@ -112,6 +115,14 @@ function asu_dir_admin($form, &$form_state) {
     '#required' => TRUE,
   );
 
+  $form['asu_dir_titlesort_field'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Titlesort Field',
+      '#default_value' => ASU_DIR_TITLESORT_FIELD,
+      '#description' => t('Name of Solr Academic Title Sorting field (for rank sorting)'),
+      '#required' => TRUE,
+  );
+
   $form['asu_dir_form_clear_cache'] = array(
     '#type' => 'button',
     '#value' => 'Clear caches for this module',
@@ -133,6 +144,7 @@ function asu_dir_admin_submit($form, &$form_state) {
   variable_set('asu_dir_solr_endpoint', $form['asu_dir_solr_env']['#value']);
   variable_set('asu_dir_tree_endpoint', $form['asu_dir_tree_endpoint']['#value']);
   variable_set('asu_dir_employee_types_endpoint', $form['asu_dir_employee_types_endpoint']['#value']);
+  variable_set('asu_dir_titlesort_field', $form['asu_dir_titlesort_field']['#value']);
 }
 
 

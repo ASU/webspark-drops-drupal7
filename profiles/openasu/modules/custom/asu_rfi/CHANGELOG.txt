@@ -1,5 +1,17 @@
+ASU RFI 7.x-1.5, 2016-07-15
+--------------------------
+- Fixed a typo in the auto-response email for users requesting information
 
-Drupal 7.x-1.2, 2015-07-27
+ASU RFI 7.x-1.3.1, 2016-04-15
+——————————————————————————
+- Implementing updated email templates for both grad and undergrad submissions
+- fixing grad environment check
+
+ASU RFI 7.x-1.3, 2016-04-15
+——————————————————————————
+- Adding Salesforce tracking code to the first part of the multistep form.
+
+ASU RFI 7.x-1.2, 2015-07-27
 ——————————————————————————
 - Updated module to send message to middleware upon App key request.
 — Updated module to show error log message to admins upon form submission failure if the connection between middleware and the form is lost.
@@ -11,16 +23,13 @@ Drupal 7.x-1.2, 2015-07-27
 - Added CSS to Date of birth modal message box
 - Fixed some upper case and lower case field names.
 
-
-
-Drupal 7.x-1.1, 2015-05-15
+ASU RFI 7.x-1.1, 2015-05-15
 ----------------------
 - Updated form mode variable value
 - Updated RFI module link settings
 - Updated title of ASU RFI settings menu
 - Added the ability to add customized confirmation node ids for Grad RFI form and Undergrad RFI form (if both exist in the site) on the admin settings page.
 
-
-Drupal 7.x-1.0, 2014-11-15
+ASU RFI 7.x-1.0, 2014-11-15
 ------------------------
 - Initial release

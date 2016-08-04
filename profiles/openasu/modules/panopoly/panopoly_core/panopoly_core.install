@@ -83,6 +83,12 @@ function panopoly_core_update_dependencies() {
   $deps['panopoly_core'][7002] = array(
     'pathauto' => 7006,
   );
+  $deps['module_filter'][7200] = array(
+    'panopoly_core' => 7105,
+  );
+  $deps['fieldable_panels_panes'][7111] = array(
+    'panopoly_core' => 7106,
+  );
   return $deps;
 }
 
@@ -139,4 +145,101 @@ function panopoly_core_update_7101() {
   if (!module_exists('redirect') || module_exists('globalredirect')) {
     variable_set('pathauto_update_action', '1');
   }
+}
+
+/**
+ * Disable Panopoly layouts and enable Radix ones.
+ */
+function panopoly_core_update_7102() {
+  $panopoly_layouts = array(
+    'bartlett',
+    'bartlett_flipped',
+    'boxton',
+    'brenham',
+    'brenham_flipped',
+    'brown',
+    'bryant',
+    'bryant_flipped',
+    'burr',
+    'burr_flipped',
+    'geary',
+    'harris',
+    'hewston',
+    'hewston_flipped',
+    'mccoppin',
+    'moscone',
+    'moscone_flipped',
+    'phelan',
+    'pond',
+    'rolph',
+    'sanderson',
+    'sanderson_flipped',
+    'selby',
+    'selby_flipped',
+    'sutro',
+    'sutro_double',
+    'taylor',
+    'taylor_flipped',
+    'webb',
+    'webb_flipped',
+    'whelan',
+  );
+  $allowed_layouts = unserialize(variable_get('panels_page_allowed_layouts', serialize((object)array())));
+  foreach ($panopoly_layouts as $layout_name) {
+    $allowed_layouts->allowed_layout_settings['radix_' . $layout_name] = TRUE;
+    // Work around misnamed layout.
+    if ($layout_name == 'bryant_flipped') {
+      $layout_name = 'bryant_flipped_flipped';
+    }
+    $allowed_layouts->allowed_layout_settings[$layout_name] = FALSE;
+  }
+  variable_set('panels_page_allowed_layouts', serialize($allowed_layouts));
+}
+
+/**
+ * Disown content types that belong to disabled modules.
+ */
+function panopoly_core_update_7103() {
+  $result = db_query("SELECT type, name, module FROM {node_type} WHERE module <> 'node'");
+  foreach ($result as $row) {
+    if (!module_exists($row->module)) {
+      db_update('node_type')
+        ->fields(array(
+            'module' => 'node',
+            'custom' => 1,
+            'modified' => 1,
+            'locked' => 0,
+            'disabled' => 0,
+          ))
+        ->condition('type', $row->type)
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Ensure that jquery_update in enabled and configured.
+ */
+function panopoly_core_update_7104() {
+  module_enable(array('jquery_update'));
+
+  // If the user never configured the jquery version, then we set it to our
+  // default of 1.7.
+  if (variable_get('jquery_update_jquery_version', 'not set') === 'not set') {
+    variable_set('jquery_update_jquery_version', '1.7');
+  }
+}
+
+/**
+ * Rebuild the code registry for views_autocomplete_filters 1.2.
+ */
+function panopoly_core_update_7105() {
+  registry_rebuild();
+}
+
+/**
+ * Use the new FPP revision locking mode.
+ */
+function panopoly_core_update_7106() {
+  variable_set('fpp_revision_locking', 'lock');
 }

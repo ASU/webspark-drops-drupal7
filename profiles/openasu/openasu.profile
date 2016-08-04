@@ -55,7 +55,7 @@ function openasu_theme_innovation_setup(&$install_state) {
   variable_set('admin_theme', 'webspark_seven');
 
   // ASU Header settings
-  variable_set('asu_brand_header_version', '4.3');
+  variable_set('asu_brand_header_version', '4.4');
   variable_set('asu_brand_header_template', 'default');
   variable_set('asu_brand_header_selector', 'default');
 

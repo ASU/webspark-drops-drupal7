@@ -15,9 +15,10 @@ DEPENDENCIES
 --------------------------
 
 Libraries
- - jqTree (current supported verion of jqTree is 0.22.0)
+ - jqTree (0.22.0 and up)
  - Bootstrap (3.0 and up)
  - Fontawesome
+ - Ajax Solr library
 
 Modules
  - ctools

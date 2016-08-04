@@ -77,7 +77,7 @@ function asu_dir_field_formatter_view($entity_type, $entity, $field, $instance, 
   $settings['standalone_tree'] = FALSE;
 
   $element = array(
-    '#theme' => 'asu_dir',
+    '#theme' => 'asu_dir_ajax_solr_field',
     '#items' => $items,
     '#settings' => $settings,
   );

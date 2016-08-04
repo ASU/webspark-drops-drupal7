@@ -3,10 +3,6 @@
 /**
  * Inplements hook_preprocess_html()
  */
-
-/**
- * Didn't work with preprocess_html, so doing page
- */
 function webspark_seven_preprocess_html(&$variables) {
   // WEBSPARK-667 - Add meta tag to identify Innovation as a "Webspark" theme
   // in the DOM

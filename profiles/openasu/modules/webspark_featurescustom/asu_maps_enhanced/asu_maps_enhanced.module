@@ -1,5 +1,7 @@
 <?php
 
+define('ASU_MAPS_ENHANCED_DEFAULT_HEIGHT', 650);
+
 /**
  * Implementation of hook_entity_info_alter()
  **/
@@ -21,6 +23,12 @@ function asu_maps_enhanced_entity_info_alter(&$entity_info) {
   );
 }
 
+/**
+ * Implements hook_field_info()
+ *
+ * @return array
+ */
+
 function asu_maps_enhanced_field_info() {
   return array(
     'asu_maps_enhanced' => array(
@@ -32,9 +40,7 @@ function asu_maps_enhanced_field_info() {
         //'uri_scheme' => variable_get('file_default_scheme', 'public'),
         //'default_image' => 1,
       ),
-      'instance_settings' => array(
-
-      ),
+      'instance_settings' => array(),
     ),
   );
 }
@@ -45,7 +51,7 @@ function asu_maps_enhanced_field_info() {
 */
 function asu_maps_enhanced_field_is_empty($item, $field) {
   if (empty($item['map_items'])) {
-      return TRUE;
+    return TRUE;
   }
   return FALSE;
 }
@@ -59,8 +65,7 @@ function asu_maps_enhanced_field_formatter_info() {
     'asu_maps_enhanced' => array(
       'label' => t('ASU Enhanced Maps'),
       'field types' => array('asu_maps_enhanced'),
-      'settings' => array(
-      ),
+      'settings' => array(),
     ),
   );
 }
@@ -86,63 +91,162 @@ function asu_maps_enhanced_theme($existing, $type, $theme, $path) {
 function asu_maps_enhanced_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $map_items = array();
   $element = array();
+  //default map settings
+
+  $map_settings = array(
+    'display_campus_select' => FALSE,
+    'campus' => 'TEMPE'
+  );
   $height = 642;
+
   $element[0]['#markup'] = '';
-  if(isset($entity->field_map_info['und'][0]['value']) && isset($entity->field_map_action_link['und'][0])) {
-      $map_info = $entity->field_map_info['und'][0]['value'];
-      $field_map_alink = $entity->field_map_action_link['und'][0]['url'];
-      $field_map_atitle = $entity->field_map_action_link['und'][0]['title'];
-      $element[0]['#markup'] = "<div class = 'row'><div class ='col-md-8'>$map_info</div><div class ='col-md-4'><a
+  if (isset($entity->field_map_info['und'][0]['value']) && isset($entity->field_map_action_link['und'][0])) {
+    $map_info = $entity->field_map_info['und'][0]['value'];
+    $field_map_alink = $entity->field_map_action_link['und'][0]['url'];
+    $field_map_atitle = $entity->field_map_action_link['und'][0]['title'];
+    $element[0]['#markup'] = "<div class = 'row'><div class ='col-md-8'>$map_info</div><div class ='col-md-4'><a
       id='map_button' class ='btn btn-primary' href='$field_map_alink'>$field_map_atitle</a></div></div>";
-      $height = 425;
-  }
-  if(isset($items[0]['map_items'])) {
-      $map_items = drupal_json_decode($items[0]['map_items']);
-      $settings = $display['settings'];
-      $formatter = $display['type'];
-  }
-  foreach ($items as $delta => $item_data) {
-      $element[$delta]['#markup'] .= theme('asu_maps_enhanced_view', array('items' => $map_items, 'delta' => $delta, 'settings' => $settings, 'height' => $height));
+    $height = 425;
   }
 
-  if(isset($items[0]['description'])) {
-          $element[0]['#markup'] .= '<div>'.$items[0]['description'].'</div>';
+  if (isset($items[0]['map_items'])) {
+    $map_items = drupal_json_decode($items[0]['map_items']);
+
+    if (!empty($map_items)) {
+      if ($map_items[0]['name'] == 'maps_enhanced_settings') {
+        $map_settings = $map_items[0];
+
+        if (isset($map_settings['map_height'])) {
+          $height = $map_settings['map_height'];
+        }
+
+        unset($map_items[0]);
+      }
+    }
+
+    $settings = $display['settings'];
+    $formatter = $display['type'];
+  }
+
+  foreach ($items as $delta => $item_data) {
+    $element[$delta]['#markup'] .= theme('asu_maps_enhanced_view', array(
+      'items' => $map_items,
+      'delta' => $delta,
+      'settings' => $settings,
+      'height' => $height,
+      'map_settings' => $map_settings
+    ));
+  }
+
+  if (isset($items[0]['description'])) {
+    $element[0]['#markup'] .= '<div>' . $items[0]['description'] . '</div>';
   }
 
   return $element;
 }
 
 /**
-* Theme function for asu_maps view
-**/
+ * Theme function for asu_maps view
+ **/
 function theme_asu_maps_enhanced_view($variables) {
   $height = $variables['height'];
   $output = '';
-  if(!empty($variables['items'])) {
-      $output .= '<div id="asu_map" style="height:'.$height.'px; width: 100%;"><iframe style="height: 100%;" id="embed-iframe" class="map dev" src="//myatlascms.maps.asu.edu/map/?id=120&amp;em=1#!f/';
+  $settings = $variables['map_settings'];
+  $ref = '';
 
-      $count = count($variables['items']);
-      $i = 1;
+  //if (!empty($variables['items'])) {
 
-      foreach($variables['items'] as $location) {
+  if ($settings['display_campus_select'] && $settings['display_campus_select'] == 'YES') {
 
-          $output .= $location['id'];
-          if($i!=$count) {
-            $output .= ',';
-          }
-          $i++;
-      }
+    $output .= "<div class=\"enhanced-map-nav\">
+                      <div class=\"list-nav\">
+                        <ul class=\"nav-left\">
+                          <li class=\"TEMPE\">Tempe</li>
+                          <li class=\"POLY\">Polytechnic</li>
+                          <li class=\"DOWNTOWN\">Downtown Phoenix</li>
+                          <li class=\"WEST\">West</li>
+                          <li class=\"RESEARCH\">Research Park</li>
+                          <li class=\"SKYSONG\">Skysong</li>
+                          <li class=\"HAVASU\">Lake Havasu</li>
+                        </ul>
+                      </div>
+                    </div>";
 
-      $output .='" frameborder="0" width="100%"></iframe></div>';
+    drupal_add_js(drupal_get_path('module', 'asu_maps_enhanced') . '/js/asu_maps_enhanced.js');
+    drupal_add_js(array('asu_maps_enhanced' => $settings), 'setting');
   }
+
+  $output .= '<div id="asu_map" style="height:' . $height . 'px; width: 100%;">
+      <iframe style="height: 100%;" id="embed-iframe" class="map dev" src="//myatlascms.maps.asu.edu/map/?id=120&amp;em=1#!';
+
+  $tsource = '//myatlascms.maps.asu.edu/map/?id=120&amp;em=1#!f';
+  $i = 1;
+
+  $count = count($variables['items']);
+
+  if (isset($settings['campus'])) {
+    $ref = asu_maps_enhanced_get_ref($settings['campus']);
+  }
+
+  if ($count > 0) {
+    $output .= 'f/';
+  }
+
+  foreach ($variables['items'] as $location) {
+
+    $output .= $location['id'];
+    if ($i != $count) {
+      $output .= ',';
+    }
+    $i++;
+  }
+
+  if ($ref != '') {
+    $output .= '?' . $ref;
+  }
+
+  $output .= '" frameborder="0" width="100%"></iframe></div>';
+
   return $output;
+}
+
+function asu_maps_enhanced_get_ref($campus) {
+
+  $ref = NULL;
+
+  switch ($campus) {
+    case 'POLY':
+      $ref = "mc/33.30463351165877,-111.67764695106507?z/16";
+      break;
+    case 'DOWNTOWN':
+      $ref = "mc/33.4517422046421,-112.06978201586912?z/16";
+      break;
+    case 'WEST':
+      $ref = "mc/33.60560202626335,-112.16131285054018?z/16";
+      break;
+    case 'RESEARCH':
+      $ref = "mc/33.34149389022663,-111.89817340740967?z/16";
+      break;
+    case 'SKYSONG':
+      $ref = "mc/33.46387500000001,-111.92400399999997?z/17";
+      break;
+    case 'HAVASU':
+      $ref = "mc/34.472362999999994,-114.32183099999997?z/18";
+      break;
+    case 'TEMPE':
+    default:
+      $ref = "mc/33.42184849843031,-111.9283177883301?z/15";
+      break;
+  }
+
+  return $ref;
 }
 
 
 //Originallly copied in and refactored from ASU Spotlight
 /**
-* Implements hook_field_widget_info().
-**/
+ * Implements hook_field_widget_info().
+ **/
 function asu_maps_enhanced_field_widget_info() {
   return array(
     'asu_maps_enhanced_form' => array(
@@ -194,7 +298,6 @@ function asu_maps_enhanced_field_formatter_settings_summary($field, $instance, $
 
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
-
   $summary = array();
 
   return $summary;
@@ -204,13 +307,18 @@ function asu_maps_enhanced_field_formatter_settings_summary($field, $instance, $
 /**
  * Implements hook_field_widget_form().
  */
-function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $instance,  $langcode, $items, $delta, $element) {
+function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
 
   if ($instance['widget']['type'] == 'asu_maps_enhanced_form') {
+
+    drupal_add_js(drupal_get_path('module', 'asu_maps_enhanced') . '/js/asu_maps_enhanced_form.js');
+
+    $field_name = $instance['field_name'];
+
     variable_set('panopoly_magic_live_preview', 0);
 
-    //Initial Campus Bird interation in order to grap categories and subcategories
-    $catarray = asu_maps_enhanced_get_cbird('categories', '', true);
+    //Initial Campus Bird integration in order to grap categories and subcategories
+    $catarray = asu_maps_enhanced_get_cbird('categories', '', TRUE);
 
     //get the top level categories, and place all other categories into  other_cats array
     $category_options = array();
@@ -218,40 +326,45 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
 
     //top_level is the array where we will store the actual top-level choices for the form
     $top_level = array();
-    foreach($catarray as $value) {
-      if($value['parent']==0) {
-          $category_options[$value['catId']]['parent']=$value['name'];
-          $category_options[$value['catId']]['children']= array();
-          $top_level[$value['catId']] = $value['name'];
-      } else {
-          $other_cats[$value['catId']]=$value;
+    foreach ($catarray as $value) {
+      if ($value['parent'] == 0) {
+        $category_options[$value['catId']]['parent'] = $value['name'];
+        $category_options[$value['catId']]['children'] = array();
+        $top_level[$value['catId']] = $value['name'];
+      }
+      else {
+        $other_cats[$value['catId']] = $value;
       }
     }
 
     //build out category_options array which has the parent category ids as keys
     //and a subarray 'children', which holds all child category ID's
-    foreach($category_options as $key => &$top) {
-        $i = 0;
-        foreach($other_cats as $thing) {
-              if($thing['parent']==$key) {
-                  $top['children'][$thing['catId']] = $thing['name'];
-                  $i++;
-              }
+    foreach ($category_options as $key => &$top) {
+      $i = 0;
+      foreach ($other_cats as $thing) {
+        if ($thing['parent'] == $key) {
+          $top['children'][$thing['catId']] = $thing['name'];
+          $i++;
         }
+      }
     }
 
     $prev_json_locations = array();
     //get the item values that we will need to populate the category and location default values
-    if(isset($items[$delta]['map_items'])) {
-        $prev_json_locations = drupal_json_decode($items[$delta]['map_items']);
+    if (!empty($items[$delta]['map_items'])) {
+      $prev_json_locations = drupal_json_decode($items[$delta]['map_items']);
+      if (!empty($prev_json_locations) && $prev_json_locations[0]['name'] == 'maps_enhanced_settings') {
+        $prev_settings = $prev_json_locations[0];
+        unset($prev_json_locations[0]);
+      }
     }
 
     //get the previous locations selected, and the previous categories selected
     $prev_loc_selects = array();
     $prev_cat_selects = array();
-    foreach($prev_json_locations as $pjl) {
-          $prev_cat_selects[$pjl['catId']] = $pjl['catId'];
-          $prev_loc_selects[$pjl['id']] = $pjl['id'];
+    foreach ($prev_json_locations as $pjl) {
+      $prev_cat_selects[$pjl['catId']] = $pjl['catId'];
+      $prev_loc_selects[$pjl['id']] = $pjl['id'];
     }
 
     $prev_cat_selects = array_unique($prev_cat_selects);
@@ -262,34 +375,95 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
     $prev_top_selects = array();
     $prev_sub_selects = array();
 
-    foreach($prev_cat_selects as $prev_key => $prev) {
-        $top_marker = 0;
-        foreach($top_level as $key => $top) {
-            if($key==$prev) {
-                $prev_top_selects[$key] = $prev;
-                $top_marker = 1;
-            }
+    foreach ($prev_cat_selects as $prev_key => $prev) {
+      $top_marker = 0;
+      foreach ($top_level as $key => $top) {
+        if ($key == $prev) {
+          $prev_top_selects[$key] = $prev;
+          $top_marker = 1;
         }
-        if($top_marker==0) {
-            //if category selected is not parent, insert into the prev_sub_selects array,
-            //and insert its parent into the prev_top_selects array
-            $prev_sub_selects[$prev] = $prev;
-            $prev_top_selects[$other_cats[$prev]['parent']] = $other_cats[$prev]['parent'];
-        }
+      }
+      if ($top_marker == 0) {
+        //if category selected is not parent, insert into the prev_sub_selects array,
+        //and insert its parent into the prev_top_selects array
+        $prev_sub_selects[$prev] = $prev;
+        $prev_top_selects[$other_cats[$prev]['parent']] = $other_cats[$prev]['parent'];
+      }
     }
 
-    $prev_sub_selects= array_unique($prev_sub_selects);
-    $prev_top_selects= array_unique($prev_top_selects);
+    $prev_sub_selects = array_unique($prev_sub_selects);
+    $prev_top_selects = array_unique($prev_top_selects);
 
     //Begin building the widget form
+    $element['campus_selection'] = array(
+      '#title' => t('Select Campus Map'),
+      '#type' => 'select',
+      '#prefix' => '<div class="row"><div id="map_campus_select" class="col-md-4">',
+      '#suffix' => '</div>',
+      '#ajax' => array(
+        'event' => 'change',
+        'callback' => 'asu_maps_enhanced_user_loc_choices',
+        //'wrapper' => 'bird_form_div',
+        //'method' => 'replace',
+        //'effect' => 'fade',
+      ),
+      '#options' => array(
+        'TEMPE' => 'Tempe',
+        'POLY' => 'Polytechnic',
+        'DOWNTOWN' => 'Downtown',
+        'WEST' => 'West',
+        'RESEARCH' => 'Research Park',
+        'SKYSONG' => 'Skysong',
+        'HAVASU' => 'Lake Havasu'
+      ),
+      '#default_value' => isset($prev_settings['campus']) ? $prev_settings['campus'] : 'TEMPE',
+      //'#default_value' => isset($loc_selected) ? $loc_selected : NULL,
+    );
 
+    $element['enhanced_map_height'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Height of Map (in pixels)'),
+      '#description' => t('Enter a number for the height of the map.  Entries are restricted to positive integers
+      greater than 425, and less than 1100.  If left blank, value will default to ' . ASU_MAPS_ENHANCED_DEFAULT_HEIGHT . '.'),
+      '#prefix' => '<div id="map-height-field" class="col-md-4">',
+      '#suffix' => '</div>',
+      '#element_validate' => array('asu_maps_enhanced_validate_height'),
+      /*'#ajax' => array(
+       'event' => 'input',
+       'callback' => 'asu_maps_enhanced_user_loc_choices',
+       //'wrapper' => 'bird_form_div',
+       //'method' => 'replace',
+       //'effect' => 'fade',
+     ),*/
+      '#default_value' => isset($prev_settings['map_height']) ? $prev_settings['map_height'] : ASU_MAPS_ENHANCED_DEFAULT_HEIGHT,
+    );
+
+    $element['display_campus_select'] = array(
+      '#title' => t('Display Campus Selection Menu (Overhead)'),
+      '#type' => 'select',
+      '#prefix' => '<div id="map_display_campus_box" class="col-md-4">',
+      '#suffix' => '</div></div>',
+      '#ajax' => array(
+        'event' => 'change',
+        'callback' => 'asu_maps_enhanced_user_loc_choices',
+        //'wrapper' => 'bird_form_div',
+        //'method' => 'replace',
+        //'effect' => 'fade',
+      ),
+      '#options' => array(
+        'YES' => 'Yes',
+        'NO' => 'No'
+      ),
+      '#default_value' => isset($prev_settings['display_campus_select']) ? $prev_settings['display_campus_select'] : 'NO',
+      //'#default_value' => isset($loc_selected) ? $loc_selected : NULL,
+    );
 
     $element['bird_fieldset'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Location Selection Form'),
-        // Set up the wrapper so that AJAX will be able to replace the fieldset.
-        '#prefix' => '<div class="col-md-12" id="bird_form_div">',
-        '#suffix' => '</div>',
+      '#type' => 'fieldset',
+      '#title' => t('Location Selection Form'),
+      // Set up the wrapper so that AJAX will be able to replace the fieldset.
+      '#prefix' => '<div class="col-md-12" id="bird_form_div">',
+      '#suffix' => '</div>',
     );
 
     //This is where the user selects the top categories he/she wishes to choose locations from.
@@ -302,32 +476,36 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       '#prefix' => '<div class="col-md-4">',
       '#suffix' => '</div>',
       '#ajax' => array(
-          'event' => 'change',
-          'callback' => 'asu_maps_enhanced_top_select',
+        'event' => 'change',
+        'callback' => 'asu_maps_enhanced_top_select',
       ),
       '#default_value' => isset($prev_top_selects) ? $prev_top_selects : NULL,
     );
 
     //Grab Sub-Categories (dependent on top categories)
     //
+
     $top_cat_selected = array();
-    if(isset($form_state['values']['field_asu_maps_enhanced_items']['und'][$delta]['bird_fieldset']['top_category_id'])) {
-        $top_cat_selected = $form_state['values']['field_asu_maps_enhanced_items']['und'][$delta]['bird_fieldset']['top_category_id'];
-    } else if (isset($prev_top_selects)) {
+    if (isset($form_state['values']['field_asu_maps_enhanced_items']['und'][$delta]['bird_fieldset']['top_category_id'])) {
+      $top_cat_selected = $form_state['values'][$field_name]['und'][$delta]['bird_fieldset']['top_category_id'];
+    }
+    else {
+      if (isset($prev_top_selects)) {
         $top_cat_selected = $prev_top_selects;
+      }
     }
 
     //Loop through the array of selected items, grabbing the subcategories for each
     //along the way
     $sub_options = array();
     $subarray = array();
-    foreach($top_cat_selected as $top_cat) {
-        if($top_cat!=0) {
-            $subarray = $category_options[$top_cat]['children'];
-            if(!empty($subarray)) {
-              $sub_options = $sub_options + $subarray;
-            }
+    foreach ($top_cat_selected as $top_cat) {
+      if ($top_cat != 0) {
+        $subarray = $category_options[$top_cat]['children'];
+        if (!empty($subarray)) {
+          $sub_options = $sub_options + $subarray;
         }
+      }
     }
 
     //SUB-CATEGORY FORM FIELD
@@ -339,64 +517,68 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       '#suffix' => '</div>',
       '#options' => $sub_options,
       '#ajax' => array(
-          'event' => 'change',
-          'callback' => 'asu_maps_enhanced_subcat_select',
+        'event' => 'change',
+        'callback' => 'asu_maps_enhanced_subcat_select',
       ),
-      '#default_value' => isset($prev_sub_selects) ? $prev_sub_selects: NULL
-      );
+      '#default_value' => isset($prev_sub_selects) ? $prev_sub_selects : NULL
+    );
 
-      //Grab the selected sub categories from the form state, or the prev_selected subs
-      //if unavailable
-      //
-      $sub_cat_selected = array();
-      if(isset($form_state['values']['field_asu_maps_enhanced_items']['und'][$delta]['bird_fieldset']['sub_category'])) {
-          $sub_cat_selected = $form_state['values']['field_asu_maps_enhanced_items']['und'][$delta]['bird_fieldset']['sub_category'];
-      } else if (isset($prev_sub_selects)) {
-          $sub_cat_selected = $prev_sub_selects;
+    //Grab the selected sub categories from the form state, or the prev_selected subs
+    //if unavailable
+    //
+    $sub_cat_selected = array();
+    if (isset($form_state['values'][$field_name]['und'][$delta]['bird_fieldset']['sub_category'])) {
+      $sub_cat_selected = $form_state['values'][$field_name]['und'][$delta]['bird_fieldset']['sub_category'];
+    }
+    else {
+      if (isset($prev_sub_selects)) {
+        $sub_cat_selected = $prev_sub_selects;
       }
+    }
 
 
-      //get the locations that the user has selected
-      $loc_selected = array();
-      if(isset($form_state['values']['field_asu_maps_enhanced_items']['und'][0]['bird_fieldset']['location_id'])) {
-          $loc_selected = $form_state['values']['field_asu_maps_enhanced_items']['und'][0]['bird_fieldset']['location_id'];
-      } else {
-          $loc_selected = $prev_loc_selects;
+    //get the locations that the user has selected
+    $loc_selected = array();
+    if (isset($form_state['values'][$field_name]['und'][0]['bird_fieldset']['location_id'])) {
+      $loc_selected = $form_state['values'][$field_name]['und'][0]['bird_fieldset']['location_id'];
+    }
+    else {
+      $loc_selected = $prev_loc_selects;
+    }
+
+
+    //Loop through the array of sub_category selected items, grabbing the locations for each
+    //along the way
+    $loc_by_subcat = array();
+    $loc_options = array();
+    $loc_array = array();
+
+    foreach ($sub_cat_selected as $subcat) {
+      if ($subcat != 0) {
+        $loc_array = asu_maps_enhanced_get_cbird('locations', $subcat, TRUE);
+        $loc_by_subcat[$subcat] = $loc_array;
       }
+    }
 
-
-      //Loop through the array of sub_category selected items, grabbing the locations for each
-      //along the way
-      $loc_by_subcat = array();
-      $loc_options = array();
-      $loc_array = array();
-
-      foreach($sub_cat_selected as $subcat) {
-          if($subcat!=0) {
-              $loc_array = asu_maps_enhanced_get_cbird('locations', $subcat, true);
-              $loc_by_subcat[$subcat] = $loc_array;
-          }
+    foreach ($loc_by_subcat as $locsub) {
+      foreach ($locsub as $lo) {
+        $loc_options[$lo['id']] = $lo;
       }
+    }
 
-      foreach($loc_by_subcat as $locsub) {
-          foreach($locsub as $lo) {
-              $loc_options[$lo['id']] = $lo;
-          }
-      }
+    //Grab Location Options, and compare against user locations selected
 
-      //Grab Location Options, and compare against user locations selected
-
-      //Now we need to to loop through each categorical array, and add the form element
-      //choices to the loc_choices array.  At the same time we are adding each of the
-      //json elements to an array which will then be selected from for final storage.
-      $loc_json = array();
-      $loc_choices = array();
-      $i = 0;
-      foreach($loc_options as $loc) {
-          $loc_choices[$loc['id']]=$loc['name'];
-          $loc_json[$i] = $loc;
-          $i++;
-      }
+    //Now we need to to loop through each categorical array, and add the form element
+    //choices to the loc_choices array.  At the same time we are adding each of the
+    //json elements to an array which will then be selected from for final storage.
+    $loc_json = array();
+    $loc_choices = array();
+    $i = 0;
+    foreach ($loc_options as $loc) {
+      $loc_choices[$loc['id']] = $loc['name'];
+      $loc_json[$i] = $loc;
+      $i++;
+    }
 
     asort($loc_choices);
 
@@ -407,11 +589,11 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       '#prefix' => '<div id="bird_locations_div" class="col-md-4">',
       '#suffix' => '</div>',
       '#ajax' => array(
-          'event' => 'change',
-          'callback' => 'asu_maps_enhanced_user_loc_choices',
-          //'wrapper' => 'bird_form_div',
-          //'method' => 'replace',
-          //'effect' => 'fade',
+        'event' => 'change',
+        'callback' => 'asu_maps_enhanced_user_loc_choices',
+        //'wrapper' => 'bird_form_div',
+        //'method' => 'replace',
+        //'effect' => 'fade',
       ),
       '#options' => $loc_choices,
       '#default_value' => isset($loc_selected) ? $loc_selected : NULL,
@@ -422,18 +604,45 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
     //loop through and fill final array, json_locations, with selected locations, then json encode
     //and send value to hidden map items element. This element is mapped to the map_items
     //text field in the database.
-    $i=0;
+    $i = 0;
     $json_locations = array();
-    foreach($loc_selected as $loc_item) {
+    foreach ($loc_selected as $loc_item) {
 
-        if($loc_item!=0) {
-            foreach($loc_json as $json_loc_item) {
-                if($loc_item==$json_loc_item['id']) {
-                    $json_locations[$i] = $json_loc_item;
-                    $i++;
-                }
-            }
+      if ($loc_item != 0) {
+        foreach ($loc_json as $json_loc_item) {
+          if ($loc_item == $json_loc_item['id']) {
+            $json_locations[$i] = $json_loc_item;
+            $i++;
+          }
         }
+      }
+    }
+
+    //Set Default Campus to Tempe
+    $map_settings = array(
+      'campus' => isset($prev_settings['campus']) ? $prev_settings['campus'] : 'TEMPE',
+      'name' => 'maps_enhanced_settings',
+      'map_height' => isset($prev_settings['map_height']) ? $prev_settings['map_height'] : ASU_MAPS_ENHANCED_DEFAULT_HEIGHT,
+      'display_campus_select' => isset($prev_settings['display_campus_select']) ? $prev_settings['display_campus_select'] : 'NO'
+    );
+
+    if (isset($form_state['values'][$field_name]['und'][0]['campus_selection'])) {
+      $map_settings['campus'] = $form_state['values'][$field_name]['und'][0]['campus_selection'];
+    }
+
+    if (isset($form_state['values'][$field_name]['und'][0]['enhanced_map_height'])) {
+      $map_settings['map_height'] = $form_state['values'][$field_name]['und'][0]['enhanced_map_height'];
+    }
+
+    if (isset($form_state['values'][$field_name]['und'][0]['display_campus_select'])) {
+      $map_settings['display_campus_select'] = $form_state['values'][$field_name]['und'][0]['display_campus_select'];
+    }
+
+    if (!empty($json_locations) && $json_locations[0]['name'] != 'maps_enhanced_settings') {
+      array_unshift($json_locations, $map_settings);
+    }
+    else {
+      $json_locations[0] = $map_settings;
     }
 
     $encoded_loc = drupal_json_encode($json_locations);
@@ -458,8 +667,46 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
   return $element;
 }
 
-function asu_maps_enhanced_top_select($form, &$form_state) {
+/*
+ * Implements hook_field_presave
+ *
+ * This is needed since we are modifying hidden form values with javascript
+ *
+ */
+function asu_maps_enhanced_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  if ($field['type'] == 'asu_maps_enhanced') {
+    foreach ($items as $delta => $item) {
+      $items[$delta]['map_items'] = $_POST['field_asu_maps_enhanced_items'][LANGUAGE_NONE][$delta]['map_items'];
+    }
+  }
+}
 
+/**
+ * Validation function for the height field.  Checks for valid integer values, and puts in our default if left blank
+ *
+ * @param $element
+ * @param $form_state
+ */
+function asu_maps_enhanced_validate_height($element, &$form_state) {
+  $value = $element['#value'];
+
+  if ($value == '' || $value == NULL) {
+    $value = ASU_MAPS_ENHANCED_DEFAULT_HEIGHT;
+  }
+
+  if ((!is_numeric($value) || intval($value) != $value || $value <= 0 || $value > 1100 || $value < 425)) {
+    drupal_add_js(drupal_get_path('module', 'asu_maps_enhanced') . '/js/asu_maps_enhanced_form.js');
+    form_error($element, t('%name must be a positive integer between 425 and 1100. ', array('%name' => $element['#title'])));
+  }
+
+  $items = drupal_json_decode($form_state['values']['field_asu_maps_enhanced_items']['und'][0]['map_items']);
+
+  $items[0]['map_height'] = $value;
+
+  $form_state['values']['field_asu_maps_enhanced_items']['und'][0]['map_items'] = drupal_json_encode($items);
+}
+
+function asu_maps_enhanced_top_select($form, &$form_state) {
   $commands = array();
   $commands[] = ajax_command_replace('#subcat_div', drupal_render($form['field_asu_maps_enhanced_items']['und'][0]['bird_fieldset']['sub_category']));
   $commands[] = ajax_command_replace('#bird_locations_div', drupal_render($form['field_asu_maps_enhanced_items']['und'][0]['bird_fieldset']['location_id']));
@@ -483,39 +730,41 @@ function asu_maps_enhanced_user_loc_choices($form, &$form_state) {
 }
 
 /**
-*Function to get json objects from campus bird
-*@param  string $type needs to be either locations or categories for now
-*@param string $category is the category id of locations to return (optional)
-*@param boolean $visible, if set to true, will only return an array of items
-*        which are set to visible=1 by Campus Bird
-*
-*/
-function asu_maps_enhanced_get_cbird($type, $category='', $visible=false) {
-    $visible = $visible || false;
-    $URL1 = 'http://myatlascms.com/map/api/v2/';
-    $KEY = '&api_key=ca4738acd976cc0702f7ef7dc25b3568';
-    $MAP = '?map=120';
-    $COD = null;
-    switch ($type) {
-        case 'locations':
-            //list of locations
-            $COD = $URL1 . $type . '/' . $category . $MAP . $KEY;
-            break;
-        case 'categories':
-            //list of categories
-            $COD = $URL1 . $type . $MAP . $KEY;
-            break;
-    }
+ *Function to get json objects from campus bird
+ * @param  string $type needs to be either locations or categories for now
+ * @param string $category is the category id of locations to return (optional)
+ * @param boolean $visible , if set to true, will only return an array of items
+ *        which are set to visible=1 by Campus Bird
+ *
+ */
+function asu_maps_enhanced_get_cbird($type, $category = '', $visible = FALSE) {
+  $visible = $visible || FALSE;
+  $URL1 = 'http://myatlascms.com/map/api/v2/';
+  $KEY = '&api_key=ca4738acd976cc0702f7ef7dc25b3568';
+  $MAP = '?map=120';
+  $COD = NULL;
+  switch ($type) {
+    case 'locations':
+      //list of locations
+      $COD = $URL1 . $type . '/' . $category . $MAP . $KEY;
+      break;
+    case 'categories':
+      //list of categories
+      $COD = $URL1 . $type . $MAP . $KEY;
+      break;
+  }
 
-    $request = drupal_http_request($COD);
-    $jsonarray = drupal_json_decode($request->data);
+  $request = drupal_http_request($COD);
+  $jsonarray = drupal_json_decode($request->data);
 
-    if($visible) {
-      $filtered = array_filter($jsonarray, function($x) { return $x['visible']=='1'; });
+  if ($visible) {
+    $filtered = array_filter($jsonarray, function ($x) {
+      return $x['visible'] == '1';
+    });
 
-      return $filtered;
-    }
-      return $jsonarray;
+    return $filtered;
+  }
+  return $jsonarray;
 }
 
 
@@ -523,12 +772,12 @@ function asu_maps_enhanced_get_cbird($type, $category='', $visible=false) {
  * Implements hook_field_insert().  Turns preview back on upon inserting new field.
  */
 function asu_maps_enhanced_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
-    variable_set('panopoly_magic_live_preview', 1);
+  variable_set('panopoly_magic_live_preview', 1);
 }
 
 /**
  * Implements hook_field_update().  Turns preview back on upon updating field.
  */
 function asu_maps_enhanced_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
-    variable_set('panopoly_magic_live_preview', 1);
+  variable_set('panopoly_magic_live_preview', 1);
 }

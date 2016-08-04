@@ -36,6 +36,8 @@ function apps_download_apps_batch($apps) {
           $download['name'],
           $download['url'],
           $download['type'],
+          $download['version'],
+          $app,
         ),
       );
     }
@@ -55,23 +57,33 @@ function apps_download_apps_batch($apps) {
  */
 function apps_download_apps_list($app) {
   $downloads = array();
+  $update = $app['installed'] && !empty($app['upgradeable']);
   // Find all downloads needed for dependencies.
-  foreach ($app['dependencies'] as $dep) {
-    if (!$dep['installed']) {
-      $downloads[$dep['downloadable']]['for'][] = $dep['version']['name'];
-      $downloads[$dep['downloadable']]['type'] = 'module';
-    }
-  }
-  foreach ($app['libraries'] as $lib) {
-    if (!$lib['installed']) {
-      $downloads[$lib['downloadable']]['for'][] = $lib['version']['name'];
-      $downloads[$lib['downloadable']]['type'] = 'library';
+  foreach (array('dependencies' => 'module', 'libraries' => 'library') as $download_key => $download_type) {
+    if (!empty($app[$download_key])) {
+      foreach ($app[$download_key] as $dep) {
+        if (!$dep['installed'] || $update) {
+          if ($dep['installed'] && $update && !empty($dep['version']['version'])) {
+            $info_file_location = $download_type == 'module' ? drupal_get_path('module', $dep['version']['name']) : 'sites/all/libraries/' . $dep['version']['name'];
+            if ($info = drupal_parse_info_file($info_file_location . '/' . APPS_APP_INFO)) {
+              // if don't have current version of version the same, skip this download.
+              if (empty($info['version']) || $dep['version']['version'] == $info['version']) {
+                continue;
+              }
+            }
+          }
+          $downloads[$dep['downloadable']]['for'][] = $dep['version']['name'];
+          $downloads[$dep['downloadable']]['type'] = $download_type;
+          $downloads[$dep['downloadable']]['version'] = isset($dep['version']['version']) ? $dep['version']['version'] : $app['version'];
+        }
+      }
     }
   }
   // Add our core modules download.
-  if (!$app['installed']) {
+  if (!$app['installed'] || !empty($app['upgradeable'])) {
     $downloads[$app['downloadable']]['for'][] = $app['machine_name'];
     $downloads[$app['downloadable']]['type'] = 'app';
+    $downloads[$app['downloadable']]['version'] = $app['version'];
   }
   // Foreach download find the URL.
   foreach ($downloads as $key => $download) {
@@ -102,7 +114,7 @@ function apps_download_batch_finished($success, $results) {
  * batch set the file param is for both the operations as well as the other
  * callbacks.
  */
-function apps_download_batch($project, $url, $type, &$context) {
+function apps_download_batch($project, $url, $type, $version, $app, &$context) {
   module_load_include("inc", "update", "update.manager");
 
   // This is here to show the user that we are in the process of downloading.
@@ -138,6 +150,17 @@ function apps_download_batch($project, $url, $type, &$context) {
         rename("$extract_directory/$file", "$extract_directory/$project");
       }
     }
+  }
+
+  // Update/create info file with download information for future updating.
+  if (is_dir("$extract_directory/$project")) {
+    // Need to make version is set.
+    $add = array('; Information created by apps module.', '');
+    $add[] = 'version = ' . $version;
+    $add[] = 'source_app = ' . $app['machine_name'];
+    $add[] = 'download_time = ' . time();
+    $add[] = '';
+    file_put_contents("$extract_directory/$project/" . APPS_APP_INFO, implode("\n", $add));
   }
 
   // Verify it.
@@ -195,7 +218,14 @@ function apps_install_downloads() {
       $directory = apps_extract_directory($type);
       foreach ($projects as $project => $url) {
         $project_location = $directory . '/' . $project;
-        $updater = Updater::factory($project_location);
+        try {
+          $updater = Updater::factory($project_location);
+        }
+        catch (Exception $e) {
+          drupal_set_message(t('Error installing @project: @message', array('@project' => $project, '@message' => $e->getMessage())), 'error');
+          return FALSE;
+        }
+  
         $project_real_location = drupal_realpath($project_location);
         $updates[] = array(
           'project' => $project,
@@ -314,16 +344,16 @@ function apps_update_authorize_batch_copy_project($project, $updater_name, $loca
 
   try {
     $args = array();
-    if ($updater_name == 'ModuleUpdater') {
-      $args = array(
-        'install_dir' => DRUPAL_ROOT . '/' . variable_get('apps_install_path', APPS_INSTALL_PATH),
-      );
-    }
     if ($updater->isInstalled()) {
       // This is an update.
       $tasks = $updater->update($filetransfer, $args);
     }
     else {
+      if ($updater_name == 'ModuleUpdater') {
+        $args = array(
+          'install_dir' => DRUPAL_ROOT . '/' . variable_get('apps_install_path', APPS_INSTALL_PATH),
+        );
+      }
       $tasks = $updater->install($filetransfer, $args);
     }
   }
@@ -342,4 +372,15 @@ function apps_update_authorize_batch_copy_project($project, $updater_name, $loca
   // This particular operation is now complete, even though the batch might
   // have other operations to perform.
   $context['finished'] = 1;
+}
+
+/**
+ * Delete the update cache directories so clean update is run.
+ */
+function apps_clear_update_disk_cache() {
+  file_unmanaged_delete_recursive(_update_manager_cache_directory(FALSE));
+  file_unmanaged_delete_recursive(_update_manager_extract_directory(FALSE));
+  // Recreate the directories.
+  _update_manager_cache_directory();
+   _update_manager_extract_directory();
 }

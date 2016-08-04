@@ -66,11 +66,21 @@ function asu_brand_get_cached_content($cache_id, $file_path, $reset = FALSE) {
 
   if ($reset || $output==NULL || !isset($output)) {
 
-    if ($output = file_get_contents($file_path)) {
+    // set timeout to 1.5 seconds.  if it takes too long, fall back
+    // to long term caching
+    $options = array(
+      'timeout' => 1.5
+    );
+
+    $output = drupal_http_request($file_path, $options);
+
+    //if ($output = drupal_http_request($file_path)) {//$output = file_get_contents($file_path)) {
+    if ($output->code == 200) {
+      $output = $output->data;
+
       cache_set($cache_id, $output, 'cache', time() + ASU_BRAND_CACHE_LIFETIME);
       variable_set($cache_id, $output);
-    }
-    else {
+    } else {
       // File resource is not available; use long term cache and cache it for 1 hour.
       $output = variable_get($cache_id, NULL);
       cache_set($cache_id, $output, 'cache', time() + 3600);

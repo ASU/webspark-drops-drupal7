@@ -2,7 +2,7 @@
 /* =NAVBAR
 -------------------------------------------------------------- */
 .navmenu {
-	background-color: #353535;	
+	background-color: #353535;
 }
 .navmenu .container {
 	padding-left: 0;
@@ -27,14 +27,14 @@
 }
 .navbar-nav > li:hover > a,
 .navbar-nav > li:focus > a,
-.navbar-nav > .active:hover > a, 
+.navbar-nav > .active:hover > a,
 .navbar-nav > .active:focus > a,
-.navbar-nav > li > a:hover, 
+.navbar-nav > li > a:hover,
 .navbar-nav > li > a:focus,
-.nav .open > a, 
-.nav .open > a:hover, 
+.nav .open > a,
+.nav .open > a:hover,
 .nav .open > a:focus,
-.navbar-nav > .active > a:hover, 
+.navbar-nav > .active > a:hover,
 .navbar-nav > .active > a:focus {
 	background-color: #000;
 	color: #ffb310;
@@ -57,9 +57,9 @@
 	font-size: 15px;
 	font-weight: normal;
 	line-height: 1;
-	padding: 9px 25px 10px;	
+	padding: 9px 25px 10px;
 }
-.navbar-nav .dropdown-menu > li > a:hover, 
+.navbar-nav .dropdown-menu > li > a:hover,
 .navbar-nav .dropdown-menu > li > a:focus {
 	background-color: #000;
 	color: #ffb310;
@@ -69,7 +69,7 @@
 -------------------------------------------------------------- */
 .pane-system-main-menu,
 .pane-menu-tree {
-	border-top: 8px solid #a30046;
+	border-top: 8px solid #8C1D40;
 	margin-top: 24px;
 	margin-bottom: 48px;
 	padding: 30px;
@@ -126,7 +126,7 @@
 	border-bottom: none;
 	display: block;
 	padding: 10px 5px;
-	color: #a30046;
+	color: #8C1D40;
 	font-weight: 200;
 	text-decoration: none;
 	font-size: 18px;
@@ -146,12 +146,18 @@
 /* =TABS
 -------------------------------------------------------------- */
 /* Removing panopoly styles */
+
+/* WEBSPARK-742 - panopoly-theme.css override */
+.ui-widget,
+.ui-widget-header,
+.ui-widget-content {
+	font-family: inherit;
+}
 .ui-widget-header {
 	background: none;
 	min-height: auto;
 	padding: 0;
 	color: #2a2a2a;
-	font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
 	font-size: 18px;
 	font-weight: 200;
 	line-height: 1.44;
@@ -176,24 +182,24 @@
   background-color: transparent;
   color: #a7a7a7;
 }
-.ui-tabs .ui-tabs-nav li.ui-state-hover, 
-.ui-tabs .ui-tabs-nav li.ui-state-active, 
+.ui-tabs .ui-tabs-nav li.ui-state-hover,
+.ui-tabs .ui-tabs-nav li.ui-state-active,
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected {
-	border-top: 5px solid #a30046;
+	border-top: 5px solid #8C1D40;
 	background: none;
 	background-color: transparent;
 	margin-bottom: -1px;
 	padding-bottom: 0;
 }
 .ui-tabs .ui-tabs-nav li.ui-state-default,
-.ui-tabs .ui-tabs-nav li.ui-state-hover, 
-.ui-tabs .ui-tabs-nav li.ui-state-active, 
+.ui-tabs .ui-tabs-nav li.ui-state-hover,
+.ui-tabs .ui-tabs-nav li.ui-state-active,
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected {
 	margin-bottom: -1px;
 }
 .ui-tabs .ui-tabs-nav li a {
 	display: block;
-  position: relative;
+    position: relative;
 	border-color: #d7d7d7 #d7d7d7 transparent #d7d7d7;
 	border-image: none;
 	border-radius: 0;
@@ -204,8 +210,8 @@
 	line-height: 1.44;
 	transition: all 0.25s ease-in-out 0s;
 }
-.ui-tabs .ui-tabs-nav li.ui-state-default a, 
-.ui-tabs .ui-tabs-nav li.ui-state-default a:link, 
+.ui-tabs .ui-tabs-nav li.ui-state-default a,
+.ui-tabs .ui-tabs-nav li.ui-state-default a:link,
 .ui-tabs .ui-tabs-nav li.ui-state-default a:visited {
   color: #a7a7a7;
 	transition: all 0.25s ease-in-out 0s;
@@ -230,11 +236,11 @@
 .nav-pills > li + li {
   margin-left: 2px;
 }
-.nav-pills > li.active > a, 
-.nav-pills > li.active > a:hover, 
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
   color: white;
-  background-color: #a30046;
+  background-color: #8C1D40;
 }
 
 /* =BREADCRUMBS
@@ -281,7 +287,7 @@
   padding: 6px 19px;
   line-height: 1.44;
   text-decoration: none;
-  color: #a30046;
+  color: #8C1D40;
   background-color: white;
   border: 1px solid #dddddd;
   margin-left: -1px;
@@ -310,8 +316,8 @@
 .pagination > .active > span:focus {
   z-index: 2;
   color: white;
-  background-color: #a30046;
-  border-color: #a30046;
+  background-color: #8C1D40;
+  border-color: #8C1D40;
   cursor: default;
 }
 .pagination > .disabled > span,

@@ -152,13 +152,15 @@ function asu_brand_get_version_options($reset = FALSE, $basepath = '') {
     libxml_use_internal_errors(TRUE);
     try {
       $items = new SimpleXMLElement((($basepath != '') ? $basepath : variable_get('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT)).'/gtmheaders.xml', 0, TRUE);
+
       if ($items) {
         $brand_module_info = system_get_info('module', $name = 'asu_brand');
         $brand_module_version = (isset($brand_module_info['version'])) ? $brand_module_info['version'] : null;
         foreach ($items->header as $header) {
           $dep_min = (isset($header->compatibility->brand_module->min)) ? $header->compatibility->brand_module->min : null;
           $dep_max = (isset($header->compatibility->brand_module->max)) ? $header->compatibility->brand_module->max : null;
-          if (asu_brand_dependancies_met($brand_module_version, $dep_min, $dep_max)) {
+
+          if (asu_brand_dependencies_met($brand_module_version, $dep_min, $dep_max)) {
             $options[(string) $header->version] = t((string) $header->name);
           }
         }
@@ -203,18 +205,28 @@ function asu_brand_get_site_menu_options() {
  * @param string $mac_version
  * @return boolean
  */
-function asu_brand_dependancies_met($current_version, $min_version, $max_version) {
+function asu_brand_dependencies_met($current_version, $min_version, $max_version) {
+
   if(count($curr_varr = explode('-', $current_version)) < 2) return FALSE;
   if(count($min_varr = explode('-', $min_version)) < 2) return FALSE;
   // min check
   if(floatval($curr_varr[0]) != floatval($min_varr[0])) return FALSE;
+
+  $min_varr = explode('.', $min_varr[1]);
+  $curr_varr = explode('.', $curr_varr[1]);
+
+  if (count($min_varr) < 2 || count($curr_varr) < 2) return FALSE;
+
   if(floatval($curr_varr[1]) < floatval($min_varr[1])) return FALSE;
   // max check (optional)
-  if ($max_version) {
+
+  //Removed Max check
+  /*if ($max_version) {
     if(count($max_varr = explode('-', $max_version)) < 2) return FALSE;
     if(floatval($curr_varr[0]) != floatval($max_varr[0])) return FALSE;
+
     if(floatval($curr_varr[1]) < floatval($max_varr[1])) return FALSE;
-  }
+  }*/
   // all checks successful
   return TRUE;
 }

@@ -27,6 +27,16 @@ function asu_dir_theme() {
       'template' => 'theme/asu_dir_form_field',
       'file' => 'theme/asu_dir.theme.inc',
     ),
+    // Ajax-Solr implementation
+    'asu_dir_ajax_solr_field' => array(
+      'variables' => array('items' => array(), 'settings' => array()),
+      'template' => 'theme/asu_dir_ajax_solr_field',
+      'file' => 'theme/asu_dir.theme.inc',
+    ),
+    'asu_dir_ajax_solr_people' => array(
+      'variables' => array('items' => array(), 'settings' => array()),
+      'file' => 'theme/asu_dir.theme.inc',
+    ),
     // Slide container
     'asu_dir_people_list' => array(
       'variables' => array('items' => array(), 'settings' => array()),
@@ -114,6 +124,108 @@ function theme_asu_dir_people_list(&$vars) {
 
 
 /**
+ * Theme implementation to build People listing with Ajax-Solr library
+ *
+ * About the settings passed here:
+ *
+ * disable_history : Disables the history stack handling
+ * isearch_mode : Since the search functionality for departments in iSearch is handled by a callback, we can disable features related
+ *                to this functionality, as well as facets
+ *
+ */
+function theme_asu_dir_ajax_solr_people(&$vars) {
+
+  $admin = $vars['settings']['admin'];
+  $field_configs = $vars['items'][0]['directory_config'];
+  $field_items = $vars['items'][0]['directory_items'];
+
+  //we need special configurations for iSearch, specifically, turning off the history handling, facets and search handling
+  if (!isset($field_configs['isearch_flag'])) {
+    $field_configs['isearch_flag'] = FALSE;
+    $isearch_mode = FALSE;
+  }
+  else {
+    $isearch_mode = $field_configs['isearch_flag'];
+  }
+
+
+  if (!isset($field_configs['show_breadcrumbs']) && !$isearch_mode) {
+    $field_configs['show_breadcrumbs'] = TRUE;
+  }
+  else {
+    if ($isearch_mode) {
+      $field_configs['show_breadcrumbs'] = FALSE;
+    }
+  }
+
+  $alias = drupal_get_path_alias();
+
+  $html = '';
+
+  //pass these module constants tot he JS
+  $top_level_ids = array(
+    'top_level_nid' => ASU_DIRECTORY_TOP_LEVEL_DEPT_NID,
+    'top_level_psid' => ASU_DIRECTORY_TOP_LEVEL_PS_ID
+  );
+
+  //get the dept tree
+  $tree = asu_dir_get_dept_tree();
+
+  libraries_load('ajax_solr');
+  libraries_load('jqtree');
+  libraries_load('fontawesome');
+
+  //add history.js
+  drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/jquery.history.js');
+
+  // add the custom js and css
+
+  //don't need these if we're in isearch mode
+  if (!$isearch_mode) {
+    drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirFacetWidget.js');
+    drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirTextWidget.js');
+    drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirCurrentSearchWidget.js');
+    drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirParameterHistoryStore.js');
+  }
+
+  drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asuAlphaBarWidget.js');
+  drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirSortWidget.js');
+  drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirResultWidget.js');
+  drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirTreeWidget.js');
+  drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir_ajax_solr_field.js');
+  drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_tree.css');
+  drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_people_block.css');
+
+  $settings = array(
+    'dept_nids' => $field_items,
+    'field_configs' => $field_configs,
+    'solr_server' => ASU_DIRECTORY_SOLR_ENV,
+    'admin' => $admin,
+    'top_level_ids' => $top_level_ids,
+    'tree' => $tree,
+    'page_alias' => $alias,
+    'titlesort_field' => ASU_DIR_TITLESORT_FIELD,
+    'tsort_placeholder' => ASU_DIR_TITLESORT_PHOLDER
+  );
+
+  drupal_add_js(array(ASU_DIRECTORY_MODULE_NAME => $settings), 'setting');
+
+  if ($field_configs['show_breadcrumbs']) {
+    drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir.breadcrumb.js');
+  }
+
+  // Markup for primary display block (to be altered via AJAX)
+  $html .= '<div class="row" id="asu-dir-people-wrapper"><div class="col-md-12" id="asu-dir-ajax-solr-people"></div></div>';
+
+  //Pagination Controls
+
+  $html .= '<div class="text-center asu_directory_bottom_container"><ul id="asu-dir-ajax-solr-pager" class="pagination"></ul></div>';
+
+  return $html;
+}
+
+
+/**
  * Default theme implementation for flexslider_list_item
  */
 function theme_asu_dir_dept_tree(&$vars) {
@@ -145,7 +257,7 @@ function theme_asu_dir_dept_tree(&$vars) {
     "top_level_nid" => ASU_DIRECTORY_TOP_LEVEL_DEPT_NID
   );
 
-  //dpm($top_level_ids);
+
   //Pass our items and configs to the JS
   //will need to pass extra configs if the tree is being used without the people display (standalone)
   if ($standalone) {
@@ -192,6 +304,24 @@ function template_process_asu_dir(&$vars) {
   if (!empty($vars['items'])) {
     foreach ($vars['items'] as &$item) {
       $item['directory_config'] = drupal_json_decode($item['directory_config']);
+      $item['directory_items'] = drupal_json_decode($item['directory_items']);
+    }
+  }
+  // Reference configuration variables
+  $vars['settings']['solr_url'] = ASU_DIRECTORY_SOLR_ENV;
+}
+
+function template_process_asu_dir_ajax_solr_field(&$vars) {
+  //if items are saved, need to json decode them
+  if (!empty($vars['items'])) {
+    foreach ($vars['items'] as &$item) {
+      $item['directory_config'] = drupal_json_decode($item['directory_config']);
+
+      //set the breadcrumb option, if it doesn't exist, due to template needs
+      if (!array_key_exists('show_breadcrumbs', $item['directory_config'])) {
+        $item['directory_config']['show_breadcrumbs'] = FALSE;
+      }
+
       $item['directory_items'] = drupal_json_decode($item['directory_items']);
     }
   }

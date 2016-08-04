@@ -1,49 +1,56 @@
 /**
- * ASU Directory module
- * People List JavaScript
+ * ASU Directory Integration Reinvented module
+ * Directory Node Form JavaScript, and also for use on iSearch
+ *
  *
  * Provides AJAX behavior, pagination, modal, and sort for People block
  *
  * @author Colton Testamarck (ctestama@asu.edu)
- * @author Robert Jenkins ( rjenkins@eaglecrk.com )
  */
+
+//
+//define the ASUPeople global variable, for keeping track of currently selected dept, and configuration state of the node
+var ASUPeople = {};
+ASUPeople.dept_nid = 0;
+ASUPeople.dept_id = '';
+
 (function ($) {
     Drupal.behaviors.asu_dir_ppl_block = {
         attach: function (context, settings) {
-            if (Drupal.settings && ( settings = Drupal.settings.asu_dir)) {
-                if (( dept_nids = settings.dept_nids) && ( solr_server = settings.solr_server) && (field_configs = settings.field_configs) && (settings.admin !== undefined) && (top_level_ids = settings.top_level_ids)) {
-                    $(window).bind('load', function () {
-                        jQuery('#asu_directory_people_controls_bottom').hide();
-                        var admin = settings.admin;
-                        var query = null;
+            if (settings.hasOwnProperty('asu_dir')) {
 
-                        //this is the main people container
-                        var $people = $('#people');
+                settings = settings.asu_dir;
 
-                        $people.data.field_items = dept_nids;
-                        $people.data.top_level_ids = top_level_ids;
-                        $people.data.field_configs = field_configs;
+                jQuery('#asu_directory_people_controls_bottom').hide();
 
-                        asu_dir_init_people($people);
+                var admin = ( settings.hasOwnProperty('admin') ? settings.admin : false);
+                var query = null;
+                var field_configs = settings.field_configs;
 
-                        if (field_configs.use_custom_q && field_configs.hasOwnProperty('custom_q')) {
-                            query = field_configs.custom_q;
-                        }
+                // if any errors are returned from initializing the ASUPeople global,
+                // stop execution and log the errors to the console.
+                var errors = asu_dir_init_people(settings);
 
-                        if (dept_nids[0] != top_level_ids.top_level_nid || field_configs.use_custom_q) {
-                            asu_dir_build_table(query);
-                        }
-
-                        if (admin) {
-                            asu_dir_activate_admin($people);
-                        }
-
-                        asu_dir_people_create_search(solr_server, settings.tree);
-
-                        asu_dir_create_pagination();
-
-                    })
+                if (errors.length > 0) {
+                    asu_dir_log_errors(errors);
+                    return false;
                 }
+
+                if (ASUPeople.field_configs.use_custom_q && ASUPeople.field_configs.hasOwnProperty('custom_q')) {
+                    query = field_configs.custom_q;
+                }
+
+                if (ASUPeople.dept_nid != ASUPeople.top_level_ids.top_level_nid || ASUPeople.field_configs.use_custom_q) {
+                    asu_dir_build_table(query);
+                }
+
+                if (admin) {
+                    asu_dir_activate_admin(ASUPeople);
+                }
+
+                asu_dir_people_create_search();
+
+                asu_dir_create_pagination();
             }
         }
     };
@@ -51,18 +58,47 @@
 
 
 /**
- * Assigns data to the people block to persist information for AJAX solr queries
+ * Assigns data to the ASUPeople object to persist information for AJAX solr queries,
+ * and returns an array of errors if there are any
  */
-function asu_dir_init_people($people) {
-    var $people = jQuery('#people');
+function asu_dir_init_people(settings) {
 
-    $people.data.sort = 'lastNameSort asc';
-    $people.data.solr_server = solr_server;
-    $people.data.manager_data = Object();
+    var errors = [];
 
-    $people.data.manager_data.department = 0;
-    $people.data.manager_data.people = null;
-    $people.data.manager_data.fq = '';
+    if (settings.hasOwnProperty('dept_nids')) {
+        ASUPeople.dept_nid = settings.dept_nids[0];
+        ASUPeople.field_items = settings.dept_nids;
+    } else {
+        errors.push("No Dept Node IDs were saved.");
+    }
+
+    if (settings.hasOwnProperty('solr_server')) {
+        //need to add on select, since the Drupal config does not save that part
+        ASUPeople.solr_server = settings.solr_server + 'select';
+    } else {
+        errors.push("No Solr server was specified.")
+    }
+
+    if (settings.hasOwnProperty('field_configs')) {
+        ASUPeople.field_configs = settings.field_configs;
+    } else {
+        errors.push("No field configs were saved");
+    }
+
+    if (settings.hasOwnProperty('top_level_ids')) {
+        ASUPeople.top_level_ids = settings.top_level_ids;
+    } else {
+        errors.push("No top-level ids specified.");
+    }
+
+    ASUPeople.sort = 'lastNameSort asc';
+    ASUPeople.manager_data = Object();
+
+    ASUPeople.manager_data.department = 0;
+    ASUPeople.manager_data.people = null;
+    ASUPeople.manager_data.fq = '';
+
+    return errors;
 }
 
 /**
@@ -72,68 +108,68 @@ function asu_dir_init_people($people) {
  * @param query
  * @returns {*}
  */
-function asu_dir_build_query($people, query) {
+function asu_dir_build_query(query) {
 
-    var field_configs = $people.data.field_configs;
+    var field_configs = ASUPeople.field_configs;
     var field_items = [];
     var solr_data = {};
-    var empl_types = $people.data.field_configs.employee_types;
+    var empl_types = ASUPeople.field_configs.employee_types;
 
 
     //if searching, search everything below the currently selected deparment
     //even if 'Show Sub-Departments' is not selected
-    if ($people.data.search_mode && $people.data.hasOwnProperty('tree_nids')) {
-        field_items = $people.data.tree_nids;
+    if (ASUPeople.search_mode && ASUPeople.hasOwnProperty('tree_nids')) {
+        field_items = ASUPeople.tree_nids;
     } else {
-        field_items = $people.data.field_items;
+        field_items = ASUPeople.field_items;
     }
 
-    if ((field_configs.dept_id == $people.data.top_level_ids.top_level_psid || field_configs.dept_id == "" ) &&
+    if ((field_configs.dept_id == ASUPeople.top_level_ids.top_level_psid || field_configs.dept_id == "" ) &&
         field_configs.use_custom_q === false) {
         return false;
     }
 
-    if (!$people.data.page) {
-        $people.data.page = 0;
+    if (!ASUPeople.page) {
+        ASUPeople.page = 0;
     }
 
     //if custom query is selected, use that, otherwise get the global properties
-    if ($people.data.field_configs.use_custom_q) {
+    if (ASUPeople.field_configs.use_custom_q) {
         if (query) {
             solr_data = query;
         } else {
-            var configs = $people.data.field_configs.custom_q;
+            var configs = ASUPeople.field_configs.custom_q;
 
             jQuery.each(configs, function (key, value) {
                 solr_data[key] = value;
             });
         }
     } else {
-        if ($people.data.hasOwnProperty('q')) {
-            solr_data.q = $people.data.q;
+        if (ASUPeople.hasOwnProperty('q')) {
+            solr_data.q = ASUPeople.q;
         }
         else {
             solr_data.q = asu_dir_solr_search_string(field_items, 'deptids');
         }
 
-        if ($people.data.hasOwnProperty('fq')) {
-            solr_data.fq = $people.data.fq;
+        if (ASUPeople.hasOwnProperty('fq')) {
+            solr_data.fq = ASUPeople.fq;
         } else {
             solr_data.fq = asu_dir_solr_search_string(empl_types, 'employeeTypes');
         }
 
-        if ($people.data.hasOwnProperty('sort')) {
-            solr_data.sort = $people.data.sort;
+        if (ASUPeople.hasOwnProperty('sort')) {
+            solr_data.sort = ASUPeople.sort;
 
         } else {
-            solr_data.sort = $people.data.sort = 'lastNameSort asc';
+            solr_data.sort = ASUPeople.sort = 'lastNameSort asc';
         }
     }
 
     var temp = solr_data.q;
 
-    if ($people.data.search_mode == true) {
-        solr_data.q = "(" + temp + ") AND " + $people.data.text;
+    if (ASUPeople.search_mode == true) {
+        solr_data.q = "(" + temp + ") AND " + ASUPeople.text;
     }
 
     //always return json format
@@ -143,23 +179,23 @@ function asu_dir_build_query($people, query) {
     if (query && query.hasOwnProperty('offset')) {
         switch (query.offset) {
             case 'begin':
-                $people.data.page = 0;
+                ASUPeople.page = 0;
                 break;
             case 'end':
-                $people.data.page = $people.data.num_pages - 1;
+                ASUPeople.page = ASUPeople.num_pages - 1;
                 break;
             case 'previous':
-                $people.data.page = $people.data.page - 1;
+                ASUPeople.page = ASUPeople.page - 1;
                 break;
             case 'next':
-                $people.data.page = $people.data.page + 1;
+                ASUPeople.page = ASUPeople.page + 1;
                 break;
             default:
-                $people.data.page = query.offset - 1;
+                ASUPeople.page = query.offset - 1;
         }
     }
 
-    solr_data.start = ($people.data.page) * 10;
+    solr_data.start = (ASUPeople.page) * 10;
 
     return solr_data;
 }
@@ -174,24 +210,23 @@ function asu_dir_build_query($people, query) {
  */
 function asu_dir_build_table(query) {
     var $people = jQuery('#people');
-    var solr_server = $people.data.solr_server;
+    var solr_server = ASUPeople.solr_server;
 
-    var show_managers = $people.data.field_configs.show_managers;
+    var show_managers = ASUPeople.field_configs.show_managers;
     var solr_data = {};
 
-    if (!(solr_data = asu_dir_build_query($people, query))) {
+    if (!(solr_data = asu_dir_build_query(query))) {
         return false;
     }
 
     //if new custom query in admin display, clearout the people div before request
-    if ($people.data.page === 0 && $people.data.field_configs.use_custom_q) {
+    if (ASUPeople.page === 0 && ASUPeople.field_configs.use_custom_q) {
         $people.html('');
         jQuery('#asu_directory_people_controls_bottom').hide();
     }
 
     //if the "Show Managers" Option is selected, and we are querying for the 1st page, run the management query
-    if (show_managers && !$people.data.search_mode && !$people.data.field_configs.use_custom_q) {
-
+    if (show_managers && !ASUPeople.search_mode && !ASUPeople.field_configs.use_custom_q) {
         asu_dir_management_query(solr_server, solr_data);
         return false;
     }
@@ -205,15 +240,19 @@ function asu_dir_build_table(query) {
         'dataType': 'jsonp',
         'jsonp': 'json.wrf',
         'success': function (data) {
-            asu_dir_process_results($people, data);
+            asu_dir_process_results(data);
         },
         // Handle timeout errors, since jsonp request will just hang if an error is thrown
         'timeout': 5000,
         'error': function (jqXHR, textStatus, errorThrown) {
-            asu_dir_display_errors($people, textStatus);
+            asu_dir_display_errors(textStatus);
         },
         'complete': function (jqXHR, textStatus) {
-            asu_dir_after_query($people);
+            asu_dir_after_query();
+            window.scrollTo(0, 0);
+            if (ASUPeople.field_configs.hasOwnProperty("isearch_flag") && ASUPeople.field_configs.isearch_flag) {
+                asu_dept_info_process_directory_admins(ASUPeople.dept_nid);
+            }
         }
     });
 }
@@ -222,18 +261,20 @@ function asu_dir_build_table(query) {
  * Process results from main build_table function
  *
  */
-function asu_dir_process_results($people, data) {
+function asu_dir_process_results(data) {
 
     var $controls_bottom = jQuery('#asu_directory_people_controls_bottom');
+    var $people = jQuery('#people');
+
 
     if (!data.hasOwnProperty('responseHeader') || data.responseHeader.status != 0) {
-        $people.html('<div>There was an error with this request.  Please try again later.</div>');
+        jQuery('#people').html('<div>There was an error with this request.  Please try again later.</div>');
         return false;
     }
 
     // Show controls if they were hidden
     $controls_bottom.show();
-    $people.data.num_pages = Math.ceil(data.response.numFound / 10);
+    ASUPeople.num_pages = Math.ceil(data.response.numFound / 10);
 
     // Create markup to display received data
     html = asu_dir_build_table_markup(data.response.docs);
@@ -260,7 +301,7 @@ function asu_dir_process_results($people, data) {
 
 /**
  *This is a function which will display managers at the top of the directory.  This operates differently since Solr cannot sort
- * by the managers field.   All solr data for the management will be queried and stored in the $people.data.manager, and
+ * by the managers field.   All solr data for the management will be queried and stored in the ASUPeople.manager, and
  * then pieced out by the asu_directory_build_ouput() function
  *
  * @param: {string} solr_server :  the url of the solr server
@@ -272,7 +313,7 @@ function asu_dir_management_query(solr_server, solr_data) {
     var $people = jQuery('#people');
     var with_management = '(' + solr_data.fq + ') AND (managers:1)';
     var without_management = '(' + solr_data.fq + ')';
-    var dept_id = $people.data.field_items[0].toString();
+    var dept_id = ASUPeople.field_items[0].toString();
     var $controls_bottom = jQuery('#asu_directory_people_controls_bottom');
     var all_people;
 
@@ -282,11 +323,11 @@ function asu_dir_management_query(solr_server, solr_data) {
     //sort alphabetically
     solr_data.sort = "lastNameSort asc";
 
-    if ($people.data.field_items[0] != $people.data.manager_data.department || $people.data.manager_data.people == null || $people.data.manager_data.fq != solr_data.fq) {
+    if (ASUPeople.field_items[0] != ASUPeople.manager_data.department || ASUPeople.manager_data.people == null || ASUPeople.manager_data.fq != solr_data.fq) {
 
-        $people.data.manager_data.fq = solr_data.fq;
+        ASUPeople.manager_data.fq = solr_data.fq;
 
-        $people.data.manager_data.department = $people.data.field_items[0];
+        ASUPeople.manager_data.department = ASUPeople.field_items[0];
 
         solr_data.rows = 2000;
         solr_data.fq = with_management;
@@ -349,32 +390,39 @@ function asu_dir_management_query(solr_server, solr_data) {
                             }
                         }
 
-                        all_people = $people.data.manager_data.people = results;
+                        all_people = ASUPeople.manager_data.people = results;
                         asu_dir_build_output(all_people, solr_data);
                     },
                     // Handle timeout errors
                     'timeout': 5000,
                     'error': function (jqXHR, textStatus, errorThrown) {
-                        asu_dir_display_errors($people, textStatus);
+                        asu_dir_display_errors(textStatus);
                     },
                     'complete': function (jqXHR, textStatus) {
-                        asu_dir_after_query($people);
+                        asu_dir_after_query();
+                        window.scrollTo(0, 0);
+                        if (ASUPeople.field_configs.hasOwnProperty("isearch_flag") && ASUPeople.field_configs.isearch_flag) {
+                            asu_dept_info_process_directory_admins(ASUPeople.dept_nid);
+                        }
                     }
                 });
             },
             // Handle timeout errors
             'timeout': 5000,
             'error': function (jqXHR, textStatus, errorThrown) {
-                asu_dir_display_errors($people, textStatus);
+                asu_dir_display_errors(textStatus);
             },
             'complete': function (jqXHR, textStatus) {
-                asu_dir_after_query($people);
+                asu_dir_after_query();
             }
         });
 
     } else {
-        all_people = $people.data.manager_data.people;
+        all_people = ASUPeople.manager_data.people;
         asu_dir_build_output(all_people, solr_data);
+        if (ASUPeople.field_configs.hasOwnProperty("isearch_flag") && ASUPeople.field_configs.isearch_flag) {
+            asu_dept_info_process_directory_admins(ASUPeople.dept_nid);
+        }
     }
 }
 
@@ -386,6 +434,7 @@ function asu_dir_management_query(solr_server, solr_data) {
  */
 function asu_dir_build_output(all_people, solr_data) {
 
+    //People div will display results
     var $people = jQuery('#people');
     var $controls_bottom = jQuery('#asu_directory_people_controls_bottom');
 
@@ -400,12 +449,12 @@ function asu_dir_build_output(all_people, solr_data) {
         var offset = solr_data.start;
         var sub_array = all_people.slice(offset, offset + 10);
 
-        $people.data.num_pages = Math.ceil(all_people.length / 10);
+        ASUPeople.num_pages = Math.ceil(all_people.length / 10);
 
         // Show controls if they were hidden
         $controls_bottom.show();
         // Assign data to the #people div for later use
-        $people.data.num_pages = Math.ceil(all_people.length / 10);
+        ASUPeople.num_pages = Math.ceil(all_people.length / 10);
 
         // Create markup to display received data
         html = asu_dir_build_table_markup(sub_array);
@@ -429,7 +478,7 @@ function asu_dir_build_output(all_people, solr_data) {
  * Function to attach click events to admin buttons
  *
  */
-function asu_dir_activate_admin($people) {
+function asu_dir_activate_admin() {
     var showtree_element = jQuery('#asu_directory_show_tree');
     var manager_element = jQuery('#asu_directory_show_managers');
     var breadcrumb_toggle = jQuery('#asu_directory_show_breadcrumbs');
@@ -439,32 +488,32 @@ function asu_dir_activate_admin($people) {
     var custom_button = jQuery('#asu_directory_custom_query');
     var custom_save = jQuery('#asu_directory_custom_q_submit');
 
-    if ($people.data.field_configs.sub_toggle == true) {
+    if (ASUPeople.field_configs.sub_toggle == true) {
         subtoggle_switch.addClass('sub_activated');
-        $people.data.field_configs.show_managers = false;
+        ASUPeople.field_configs.show_managers = false;
     }
 
-    if ($people.data.field_configs.show_managers == true) {
+    if (ASUPeople.field_configs.show_managers == true) {
         manager_element.addClass('active');
     }
 
-    if ($people.data.field_configs.show_tree == true) {
+    if (ASUPeople.field_configs.show_tree == true) {
         showtree_element.addClass('active');
     }
 
-    if ($people.data.field_configs.show_breadcrumbs == true) {
+    if (ASUPeople.field_configs.show_breadcrumbs == true) {
         breadcrumb_toggle.addClass('active');
     }
 
-    if ($people.data.field_configs.use_custom_q === true) {
+    if (ASUPeople.field_configs.use_custom_q === true) {
         custom_button.addClass('active');
         custom_group.show();
         custom_save.addClass('asu_directory_custom_saved');
         custom_save.find('.custom-status').html('Saved');
-        asu_dir_toggle_custom_query(true, $people, false);
+        asu_dir_toggle_custom_query(true, false);
     }
 
-    var selected_types = $people.data.field_configs.employee_types;
+    var selected_types = ASUPeople.field_configs.employee_types;
 
     for (i = 0; i < selected_types.length; i++) {
         jQuery('#asu_directory_employee_type_select :button[value="' + selected_types[i] + '"]').addClass('active');
@@ -472,16 +521,16 @@ function asu_dir_activate_admin($people) {
 
     showtree_element.click(function (event) {
         event.preventDefault();
-        $people.data.field_configs.show_tree = !$people.data.field_configs.show_tree;
+        ASUPeople.field_configs.show_tree = !ASUPeople.field_configs.show_tree;
         jQuery(this).toggleClass('active');
-        asu_dir_set_field($people);
+        asu_dir_set_field();
     });
 
     breadcrumb_toggle.click(function (event) {
         event.preventDefault();
-        $people.data.field_configs.show_breadcrumbs = !$people.data.field_configs.show_breadcrumbs;
+        ASUPeople.field_configs.show_breadcrumbs = !ASUPeople.field_configs.show_breadcrumbs;
         jQuery(this).toggleClass('active');
-        asu_dir_set_field($people);
+        asu_dir_set_field();
     });
 
 
@@ -489,20 +538,20 @@ function asu_dir_activate_admin($people) {
         event.preventDefault();
 
         //button should be disabled if sub_toggle is true, but in case it gets clicked
-        $people.data.field_configs.show_managers = !$people.data.field_configs.show_managers;
+        ASUPeople.field_configs.show_managers = !ASUPeople.field_configs.show_managers;
 
-        if ($people.data.field_configs.show_managers == true) {
-            $people.data.field_configs.sub_toggle = false;
+        if (ASUPeople.field_configs.show_managers == true) {
+            ASUPeople.field_configs.sub_toggle = false;
             subtoggle_switch.removeClass('sub_activated');
-            var temp = $people.data.field_items[0];
-            $people.data.field_items = [temp];
+            var temp = ASUPeople.field_items[0];
+            ASUPeople.field_items = [temp];
         }
 
         jQuery(this).toggleClass('active');
-        $people.data.page = 0;
-        asu_dir_set_field($people);
+        ASUPeople.page = 0;
+        asu_dir_set_field();
         asu_dir_build_table();
-        asu_dir_cleanup($people);
+        asu_dir_cleanup();
 
     });
 
@@ -511,7 +560,7 @@ function asu_dir_activate_admin($people) {
 
         jQuery(this).toggleClass('active');
 
-        delete $people.data.field_configs.employee_types;
+        delete ASUPeople.field_configs.employee_types;
 
         var temp_array = Array();
 
@@ -527,12 +576,12 @@ function asu_dir_activate_admin($people) {
             temp_array.push("Show All");
         }
 
-        $people.data.sort = 'lastNameSort asc';
-        $people.data.field_configs.employee_types = temp_array;
-        $people.data.page = 0;
+        ASUPeople.sort = 'lastNameSort asc';
+        ASUPeople.field_configs.employee_types = temp_array;
+        ASUPeople.page = 0;
 
-        asu_dir_set_field($people);
-        asu_dir_cleanup($people);
+        asu_dir_set_field();
+        asu_dir_cleanup();
         asu_dir_build_table();
 
     });
@@ -541,45 +590,44 @@ function asu_dir_activate_admin($people) {
 
         var show_managers = jQuery('#asu_directory_show_managers');
 
-        $people.data.page = 0;
-
-        $people.data.field_configs.sub_toggle = !$people.data.field_configs.sub_toggle;
+        ASUPeople.page = 0;
+        ASUPeople.field_configs.sub_toggle = !ASUPeople.field_configs.sub_toggle;
 
         //Store items and configs for our Drupal ASU_Directory field
-        if ($people.data.field_configs.sub_toggle == true) {
-            $people.data.field_items = $people.data.tree_nids;
+        if (ASUPeople.field_configs.sub_toggle == true) {
+            ASUPeople.field_items = ASUPeople.tree_nids;
             show_managers.removeClass('active');
-            $people.data.field_configs.show_managers = false;
+            ASUPeople.field_configs.show_managers = false;
 
         } else {
-            var temp = $people.data.field_items[0];
-            $people.data.field_items = [temp];
+            var temp = ASUPeople.field_items[0];
+            ASUPeople.field_items = [temp];
         }
 
         subtoggle_switch.toggleClass('sub_activated');
 
-        asu_dir_set_field($people);
-        asu_dir_cleanup($people);
+        asu_dir_set_field();
+        asu_dir_cleanup();
         asu_dir_build_table();
 
     });
 
     custom_button.click(function (event) {
         event.preventDefault();
-        $people.data.field_configs.use_custom_q = !$people.data.field_configs.use_custom_q;
+        ASUPeople.field_configs.use_custom_q = !ASUPeople.field_configs.use_custom_q;
         jQuery(this).toggleClass('active');
 
-        asu_dir_toggle_custom_query($people.data.field_configs.use_custom_q, $people, true);
-        if ($people.data.field_configs.use_custom_q === false) {
+        asu_dir_toggle_custom_query(ASUPeople.field_configs.use_custom_q, true);
+        if (ASUPeople.field_configs.use_custom_q === false) {
             asu_dir_build_table();
-            asu_dir_cleanup($people);
+            asu_dir_cleanup();
         }
     });
 
     custom_save.click(function (event) {
-        //$people.data.page = 0;
+        //ASUPeople.page = 0;
         event.preventDefault();
-        asu_dir_run_custom_query($people);
+        asu_dir_run_custom_query();
     });
 
     // Search event for input field
@@ -587,7 +635,7 @@ function asu_dir_activate_admin($people) {
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if (keycode == '13') {
             event.preventDefault();
-            asu_dir_run_custom_query($people);
+            asu_dir_run_custom_query();
         } else {
             custom_save.removeClass('asu_directory_custom_saved');
             custom_save.find('.custom-status').html('Save/Run');
@@ -601,16 +649,16 @@ function asu_dir_activate_admin($people) {
  *
  *
  */
-function asu_dir_run_custom_query($people) {
+function asu_dir_run_custom_query() {
     var q = jQuery('.asu_directory_q').val();
     var fq = jQuery('.asu_directory_fq').val();
     var sort = jQuery('.asu_directory_sort').val();
     var $button = jQuery('#asu_directory_custom_q_submit');
 
     //set other configs to false
-    $people.data.field_configs.show_tree = false;
-    $people.data.field_configs.show_breadcrumbs = false;
-    $people.data.field_configs.show_managers = false;
+    ASUPeople.field_configs.show_tree = false;
+    ASUPeople.field_configs.show_breadcrumbs = false;
+    ASUPeople.field_configs.show_managers = false;
 
     var query = {};
 
@@ -635,10 +683,10 @@ function asu_dir_run_custom_query($people) {
         $button.find('.custom-status').html('Saved');
         $button.addClass('asu_directory_custom_saved');
 
-        $people.data.field_configs.custom_q = query;
-        asu_dir_set_field($people);
+        ASUPeople.field_configs.custom_q = query;
+        asu_dir_set_field();
 
-        asu_dir_cleanup($people);
+        asu_dir_cleanup();
         asu_dir_build_table(query);
     }
 }
@@ -649,9 +697,9 @@ function asu_dir_run_custom_query($people) {
  * on and off.
  *
  */
-function asu_dir_toggle_custom_query(custom, $people, reset) {
+function asu_dir_toggle_custom_query(custom, reset) {
     if (reset === true) {
-        asu_dir_reset_configs($people);
+        asu_dir_reset_configs();
     }
 
     var custom_group = jQuery('.asu_directory_custom_group');
@@ -669,7 +717,7 @@ function asu_dir_toggle_custom_query(custom, $people, reset) {
 
         jQuery('#edit-title').val('Custom Query');
         jQuery('.asu_directory_breadcrumb').hide();
-        var custom_q = $people.data.field_configs.custom_q;
+        var custom_q = ASUPeople.field_configs.custom_q;
 
         if (custom_q.hasOwnProperty('q')) {
             jQuery('.asu_directory_q').val(custom_q.q);
@@ -702,14 +750,13 @@ function asu_dir_toggle_custom_query(custom, $people, reset) {
  * Reset ASU Directory configs on click event
  *
  */
-function asu_dir_set_field($people) {
-    // var $people = jQuery('#people');
+function asu_dir_set_field() {
 
     var configs = jQuery('#dhidden_config input');
-    configs.val(JSON.stringify($people.data.field_configs));
+    configs.val(JSON.stringify(ASUPeople.field_configs));
 
     var items = jQuery('#dhidden_items input');
-    items.val(JSON.stringify($people.data.field_items));
+    items.val(JSON.stringify(ASUPeople.field_items));
 }
 
 
@@ -720,16 +767,14 @@ function asu_dir_create_pagination() {
     var query = {};
     var $buttons = jQuery('#asu_directory_people_controls_bottom').find('.asu_directory_people_button');
     var $ellipses = jQuery('.asu_directory_people_ellipses');
-    var $people = jQuery('#people');
-
 
     $buttons.mousedown(function (event) {
 
         // Only fire on left click if button is not inactive
         if (event.which == 1 && !jQuery(this).hasClass('disabled')) {
 
-            if ($people.data.field_configs.use_custom_q && $people.data.field_configs.hasOwnProperty('custom_q')) {
-                query = $people.data.field_configs.custom_q;
+            if (ASUPeople.field_configs.use_custom_q && ASUPeople.field_configs.hasOwnProperty('custom_q')) {
+                query = ASUPeople.field_configs.custom_q;
             }
 
             // Determine offest based on which button was pressed
@@ -760,8 +805,8 @@ function asu_dir_create_pagination() {
         // Only fire on left click if button is not inactive
         if (event.which == 1 && !jQuery(this).hasClass('disabled')) {
 
-            if ($people.data.field_configs.use_custom_q && $people.data.field_configs.hasOwnProperty('custom_q')) {
-                query = $people.data.field_configs.custom_q;
+            if (ASUPeople.field_configs.use_custom_q && ASUPeople.field_configs.hasOwnProperty('custom_q')) {
+                query = ASUPeople.field_configs.custom_q;
             }
 
             // Determine offest based on which button was pressed
@@ -779,27 +824,26 @@ function asu_dir_create_pagination() {
  * Controls display of pagination interface
  */
 function asu_dir_set_page_buttons() {
-    var $people = jQuery('#people');
     var $buttons = jQuery('#asu_directory_people_controls_bottom').find('.asu_directory_people_button');
     var $ellipses = jQuery('.asu_directory_people_ellipses');
     $buttons.removeClass('disabled');
     // Remove page controls if there are not enough record to paginate
-    if ($people.data.num_pages <= 1) {
+    if (ASUPeople.num_pages <= 1) {
         jQuery('#asu_directory_people_controls_bottom').hide();
     }
     // Deactivate [previous] button if we are on the first page
-    else if ($people.data.page == 0) {
+    else if (ASUPeople.page == 0) {
         jQuery('#asu_directory_people_controls_bottom').show();
         $buttons.eq(0).addClass('disabled');
     }
     // Deactivate [next] button if we are on the last page
-    else if ($people.data.page >= $people.data.num_pages - 1) {
+    else if (ASUPeople.page >= ASUPeople.num_pages - 1) {
         jQuery('#asu_directory_people_controls_bottom').show();
         $buttons.eq(8).addClass('disabled');
     }
     // If fewer than three pages, hide the beginning / ending numerical buttons and
     // ellipses
-    if ($people.data.num_pages <= 3) {
+    if (ASUPeople.num_pages <= 3) {
         $buttons.eq(1).hide();
         $buttons.eq(7).hide();
         $ellipses.hide();
@@ -807,12 +851,12 @@ function asu_dir_set_page_buttons() {
     else {
 
         // If on 3rd or lower page, hide beginning numerical button and ellipse
-        if ($people.data.page > 2) {
+        if (ASUPeople.page > 2) {
             $buttons.eq(1).html('<span>1</span>').show();
 
-            if ($people.data.page == 3) {
+            if (ASUPeople.page == 3) {
                 $ellipses.eq(0).hide();
-            } else if ($people.data.page == 4) {
+            } else if (ASUPeople.page == 4) {
                 $ellipses.eq(0).html('<span>2</span>').removeClass('disabled').show();
             } else {
                 $ellipses.eq(0).html('<span>...</span>').addClass('disabled').show();
@@ -825,14 +869,14 @@ function asu_dir_set_page_buttons() {
         }
         // If on 3rd page from end or lower, hide ending numerical button and ellipse\\
 
-        if ($people.data.page < $people.data.num_pages - 3) {
-            $buttons.eq(7).html('<span>' + $people.data.num_pages + '</span>').show();
+        if (ASUPeople.page < ASUPeople.num_pages - 3) {
+            $buttons.eq(7).html('<span>' + ASUPeople.num_pages + '</span>').show();
 
-            if ($people.data.page == $people.data.num_pages - 4) {
+            if (ASUPeople.page == ASUPeople.num_pages - 4) {
                 $ellipses.eq(1).hide();
 
-            } else if ($people.data.page == $people.data.num_pages - 5) {
-                $ellipses.eq(1).html('<span>' + ($people.data.num_pages - 1) + '</span>').removeClass('disabled').show();
+            } else if (ASUPeople.page == ASUPeople.num_pages - 5) {
+                $ellipses.eq(1).html('<span>' + (ASUPeople.num_pages - 1) + '</span>').removeClass('disabled').show();
             } else {
                 $ellipses.eq(1).html('<span>...</span>').addClass('disabled').show();
             }
@@ -844,8 +888,8 @@ function asu_dir_set_page_buttons() {
             $ellipses.eq(1).hide();
         }
     }
-    var page = $people.data.page;
-    var num_pages = $people.data.num_pages;
+    var page = ASUPeople.page;
+    var num_pages = ASUPeople.num_pages;
     // Set text for center "current page" button
     $buttons.eq(4).html('<span>' + (page + 1) + '</span>');
     // Set behavior for remaining buttons
@@ -895,7 +939,7 @@ function asu_dir_build_table_markup(data) {
             even = 'asu_people_row_even';
         }
         //open row
-        markup += '<div eid="' + docs[i].eid + '" class="row row-header asu_directory_people_row ' + even + '" >';
+        markup += '<div eid="' + docs[i].eid + '" asurite="' + docs[i].asuriteId + '" class="row row-header asu_directory_people_row ' + even + '" >';
 
         var col_width = 'col-md-6';
 
@@ -944,17 +988,15 @@ function asu_dir_people_create_search() {
     var $input = jQuery('#asu_directory_people_search_box');
     var $button = jQuery('#asu_directory_people_search_btn');
     var $form = jQuery('#asu_directory_people_search_group');
-    var $people = jQuery('#people');
-    var list = [];
 
     // Search event for button
     $button.bind('click', function (event) {
         event.preventDefault();
-        if ($people.data.field_items.length > 2000) {
+        if (ASUPeople.field_items.length > 2000) {
             alert('There are too many departments to search through. Please narrow your search by selecting a sub-department from the Department Hierarchy and try again.');
         }
         else {
-            asu_dir_people_search($people, $input);
+            asu_dir_people_search($input);
         }
     });
     // Search event for input field
@@ -964,11 +1006,11 @@ function asu_dir_people_create_search() {
         if (keycode == '13') {
             event.preventDefault();
 
-            if ($people.data.field_items.length > 2000) {
+            if (ASUPeople.field_items.length > 2000) {
                 alert('There are too many departments to search through. Please narrow your search by selecting a sub-department from the Department Hierarchy and try again.');
             }
             else {
-                asu_dir_people_search($people, $input);
+                asu_dir_people_search($input);
             }
         }
     });
@@ -1000,27 +1042,25 @@ function asu_dir_people_find_root(data, dept_id) {
 /**
  * Creates a solr query and calls the method to rebuild the table
  * @param {object} $input : The jQuery object that holds the input field
- * @param {object} $people : The jQuery object that holds the people mock-table
  */
-function asu_dir_people_search($people, $input) {
+function asu_dir_people_search($input) {
     var text = $input.val();
 
     if (text != "" && text != undefined) {
         var text = text.split(' ');
         var query = {};
-        var $people = jQuery('#people');
 
         for (var i in text) {
             text[i] = "*" + text[i] + "*";
         }
-        $people.data.search_mode = true;
-        $people.data.text = text;
-        $people.data.page = 0;
+        ASUPeople.search_mode = true;
+        ASUPeople.text = text;
+        ASUPeople.page = 0;
         asu_dir_build_table();
 
     } else {
 
-        asu_dir_cleanup($people);
+        asu_dir_cleanup();
         asu_dir_build_table();
     }
 
@@ -1064,13 +1104,13 @@ function asu_dir_solr_search_string(items, field) {
  *
  *
  */
-function asu_dir_cleanup($people) {
-    $people.data.page = 0;
-    $people.data.search_mode = false;
-    delete $people.data.text;
-    delete $people.data.fq;
-    delete $people.data.q;
-    delete $people.data.sort;
+function asu_dir_cleanup() {
+    ASUPeople.page = 0;
+    ASUPeople.search_mode = false;
+    delete ASUPeople.text;
+    delete ASUPeople.fq;
+    delete ASUPeople.q;
+    delete ASUPeople.sort;
     jQuery('.asu_directory_people_search_group input').val('');
 }
 
@@ -1080,11 +1120,12 @@ function asu_dir_cleanup($people) {
  *
  * @param $people
  */
-function asu_dir_reset_configs($people) {
+function asu_dir_reset_configs() {
 
-    var custom_query_selected = $people.data.field_configs.use_custom_q;
-    var query = $people.data.field_configs.custom_q;
-    var field_configs = $people.data.field_configs;
+    var $people = jQuery('#people');
+    var custom_query_selected = ASUPeople.field_configs.use_custom_q;
+    var query = ASUPeople.field_configs.custom_q;
+    var field_configs = ASUPeople.field_configs;
 
     field_configs.show_breadcrumbs = false;
     field_configs.show_managers = false;
@@ -1093,7 +1134,7 @@ function asu_dir_reset_configs($people) {
 
     jQuery('#asu_directory_people_controls_bottom').hide();
 
-    asu_dir_set_field($people);
+    asu_dir_set_field();
 
     jQuery('#asu_directory_employee_type_select button').removeClass('active');
     jQuery("[value='Show All']").addClass('active');
@@ -1106,8 +1147,8 @@ function asu_dir_reset_configs($people) {
  *
  * @param $people
  */
-function asu_dir_after_query($people) {
-    if ($people.data.field_configs.use_custom_q === true) {
+function asu_dir_after_query() {
+    if (ASUPeople.field_configs.use_custom_q === true) {
         jQuery('#asu_directory_custom_q_submit').removeClass('active');
     }
 }
@@ -1118,11 +1159,26 @@ function asu_dir_after_query($people) {
  * @param $people
  * @param error_text
  */
-function asu_dir_display_errors($people, error_text) {
+function asu_dir_display_errors(error_text) {
+
+    var $people = $('#people');
     var $controls_top = jQuery('#asu_directory_people_controls_top');
     var $controls_bottom = jQuery('#asu_directory_people_controls_bottom');
 
     $controls_top.hide();
     $controls_bottom.hide();
     $people.text('Error: ' + error_text + '. This might be a bad request. Please contact a site administrator if the problem persists.');
+}
+
+/****
+ *  Log errors to the console.  This is intended more for developers and advanced users
+ *
+ */
+function asu_dir_log_errors(errors) {
+
+    for (var i = 0; i < errors.length; i++) {
+        console.error(errors[i]);
+    }
+
+    jQuery('#people').html('Directory failed to initialize.  Please try again later.');
 }

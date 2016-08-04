@@ -649,9 +649,13 @@ function asu_rfi_form_data_submit($form, &$form_state){
 		$form_state['storage']['submission_nodeid'] = $entity->nid;
 		$form_state['storage']['step'] = 'asu_rfi_second_form';
 		$form_state['storage']['submission_nodeid'] = $entity->nid; 
-      
+
 		//Load asu_rfi_email.inc file to send email
-		asu_rfi_email($form_state['storage']['program_code'], $form_state['storage']['email']);
+		if ($form_state['storage']['prospect_level'] == "Graduate") {
+      asu_rfi_grad_email($form_state['storage']['program_code'], $form_state['storage']['email'], $form_state['storage']['first_name']);
+    } else {
+      asu_rfi_undergrad_email($form_state['storage']['program_code'], $form_state['storage']['email'], $form_state['storage']['first_name']);
+    }
 	    }
 	    if(!empty($node_unique)){
 		//get the node id of the current node to be updated 
@@ -742,7 +746,7 @@ function asu_rfi_second_form($form, &$form_state){
    
     $form['markup'] = array(
 	'#type' => 'item',
-	'#markup' => '<div style="background: green; padding:2%; color: #ffffff !important; width: 100%; text-align: justify;"><strong>Thank you for your interest in Arizona State University!</strong> We will send you information that matches your unique interests. If you would like additional information, please specify below.</div>',
+	'#markup' => '<div id="asu-rfi-multi-part1-thanks" style="background: green; padding:2%; color: #ffffff !important; width: 100%; text-align: justify;"><strong>Thank you for your interest in Arizona State University!</strong> We will send you information that matches your unique interests. If you would like additional information, please specify below.</div>',
     );
     
     $form['citizenship'] = array(
@@ -1675,7 +1679,11 @@ function asu_rfi_long_form_data_submit($form, &$form_state){
     $ewrapper->save();
   
     //send the confirmation email
-    asu_rfi_email($form_state['values']['program_code'], $email);
+  if ($form_state['values']['prospect_level'] == "Graduate") {
+    asu_rfi_grad_email($form_state['values']['program_code'], $form_state['values']['email'], $form_state['values']['first_name']);
+  } else {
+    asu_rfi_undergrad_email($form_state['values']['program_code'], $form_state['values']['email'], $form_state['values']['first_name']);
+  }
     
     $form_state['values']['submission_nodeid'] = $entity->nid;
     
@@ -1889,7 +1897,7 @@ function asu_rfi_current_form_data_validate($form,&$form_state){
 /* submit handler of current students form*/
 function asu_rfi_current_form_data_submit($form, &$form_state){
     global $user;
-   
+
     $fname = $form_state['values']['first_name'];
     $lname = $form_state['values']['last_name'];
     $email = $form_state['values']['email'];
@@ -1937,7 +1945,11 @@ function asu_rfi_current_form_data_submit($form, &$form_state){
     $ewrapper->field_rfi_submission_status->set('Complete');
     $ewrapper->save();
     $coded_nid = base64_encode($entity->nid);
-    asu_rfi_email($program, $email);
+	if ($form_state['values']['degree_type'] !== "current_undergrad_form") {
+		asu_rfi_grad_email($form_state['values']['prog_plan'], $form_state['values']['email'], $form_state['values']['first_name']);
+	} else {
+		asu_rfi_undergrad_email($form_state['values']['prog_plan'], $form_state['values']['email'], $form_state['values']['first_name']);
+	}
     drupal_goto("degree-programs/request-info-thank-you/$coded_nid");
  
 }

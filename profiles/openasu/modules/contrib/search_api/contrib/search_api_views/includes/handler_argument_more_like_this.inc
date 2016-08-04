@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Contains SearchApiViewsHandlerArgumentMoreLikeThis.
+ */
+
+/**
  * Views argument handler providing a list of related items for search servers
  * supporting the "search_api_mlt" feature.
  */
@@ -13,6 +18,7 @@ class SearchApiViewsHandlerArgumentMoreLikeThis extends SearchApiViewsHandlerArg
     $options = parent::option_definition();
     unset($options['break_phrase']);
     unset($options['not']);
+    $options['entity_type'] = array('default' => FALSE);
     $options['fields'] = array('default' => array());
     return $options;
   }
@@ -26,6 +32,20 @@ class SearchApiViewsHandlerArgumentMoreLikeThis extends SearchApiViewsHandlerArg
     unset($form['not']);
 
     $index = search_api_index_load(substr($this->table, 17));
+
+    if ($index->datasource() instanceof SearchApiCombinedEntityDataSourceController) {
+      $types = array_intersect_key(search_api_entity_type_options_list(), array_flip($index->options['datasource']['types']));
+      $form['entity_type'] = array(
+        '#type' => 'select',
+        '#title' => t('Entity type'),
+        '#description' => t('Select the entity type of the argument.'),
+        '#options' => $types,
+        '#default_value' => $this->options['entity_type'],
+        '#required' => TRUE,
+      );
+    }
+
+
     if (!empty($index->options['fields'])) {
       $fields = array();
       foreach ($index->getFields() as $key => $field) {
@@ -57,23 +77,38 @@ class SearchApiViewsHandlerArgumentMoreLikeThis extends SearchApiViewsHandlerArg
    * The argument sent may be found at $this->argument.
    */
   public function query($group_by = FALSE) {
-    $server = $this->query->getIndex()->server();
-    if (!$server->supportsFeature('search_api_mlt')) {
-      $class = search_api_get_service_info($server->class);
-      throw new SearchApiException(t('The search service "@class" does not offer "More like this" functionality.',
-          array('@class' => $class['name'])));
-      return;
-    }
-    $fields = $this->options['fields'] ? $this->options['fields'] : array();
-    if (empty($fields)) {
-      foreach ($this->query->getIndex()->options['fields'] as $key => $field) {
-        $fields[] = $key;
+    try {
+      $server = $this->query->getIndex()->server();
+      if (!$server->supportsFeature('search_api_mlt')) {
+        $class = search_api_get_service_info($server->class);
+        watchdog('search_api_views', 'The search service "@class" does not offer "More like this" functionality.',
+          array('@class' => $class['name']), WATCHDOG_ERROR);
+        $this->query->abort();
+        return;
       }
+      $index_fields = array_keys($this->query->getIndex()->options['fields']);
+      if (empty($this->options['fields'])) {
+        $fields = $index_fields;
+      }
+      else {
+        $fields = array_intersect($this->options['fields'], $index_fields);
+      }
+      if ($this->query->getIndex()->datasource() instanceof SearchApiCombinedEntityDataSourceController) {
+        $id = $this->options['entity_type'] . '/' . $this->argument;
+      }
+      else {
+        $id = $this->argument;
+      }
+
+      $mlt = array(
+        'id' => $id,
+        'fields' => $fields,
+      );
+      $this->query->getSearchApiQuery()->setOption('search_api_mlt', $mlt);
     }
-    $mlt = array(
-      'id' => $this->argument,
-      'fields' => $fields,
-    );
-    $this->query->getSearchApiQuery()->setOption('search_api_mlt', $mlt);
+    catch (SearchApiException $e) {
+      $this->query->abort($e->getMessage());
+    }
   }
+
 }

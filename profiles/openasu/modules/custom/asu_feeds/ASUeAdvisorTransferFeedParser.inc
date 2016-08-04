@@ -67,25 +67,34 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
             case 'ONLNE':
               $value = 'Online';
               break;
-            //case 'DOWNTOWN':
+            case 'DOWNTOWN':
             case 'DTPHX':
               $value = 'Downtown';
               break;
             case 'POLY':
               $value = 'Polytechnic';
               break;
-            case 'WEST':
-              $value = 'West';
-              break;
             case 'TMPE':
             case 'TEMPE':
               $value = 'Tempe';
               break;
+            case 'WEST':
+              $value = 'West';
+              break;
             case 'CALHC':
-              $value = 'Lake Havasu';
+              $value = 'Havasu';
+              break;
+            case 'CAC':
+              $value = 'Pinal';
               break;
             case 'EAC':
-              $value = 'Eastern Arizona College';
+              $value = 'The Gila Valley';
+              break;
+            case 'TUCSN':
+              $value = 'Tucson';
+              break;
+            case 'AWC':
+              $value = 'Yuma';
               break;
             //Add case for missing campus from degree feed
             default:
@@ -235,6 +244,7 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
       'majorMapDefaultYear' => array('name' => t('Major map year')),
       'subPlnMajorMaps.SubplnMajorMapSubplanCode' => array('name' => t('Subplan code for URL')),
       'subPlnMajorMaps.SubplnMajorMapSubplanName' => array('name' => t('Subplan name for URL')),
+      // Michael Gilardi added the following
       'wueCampusConfirmed' => array('name' => t('WUE Confirmed')),
       'acceleratedDegree' => array('name' => t('Accelerated Degree')),
       'concurrentDegree' => array('name' => t('Concurrent Degree')),
