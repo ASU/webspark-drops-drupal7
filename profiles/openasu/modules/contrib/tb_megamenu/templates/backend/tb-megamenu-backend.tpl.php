@@ -51,7 +51,7 @@
                 <label for="toggleAutoArrow0" class="btn <?php print $block_config['auto-arrow'] ? '' : 'active btn-danger';?>" title="<?php print t('Hide the arrow next to items that have submenu.');?>">No</label>
                 <input type="radio" <?php print $block_config['auto-arrow'] ? 'checked="checked"' : '';?> value="1" name="tb-megamenu-auto-arrow" data-action="toggleAutoArrow" class="toolbox-toggle" id="toggleAutoArrow1">
                 <label for="toggleAutoArrow1" class="btn <?php print $block_config['auto-arrow'] ? 'active btn-success' : '';?>" title="<?php print t('Show the arrow next to items that have submenu.');?>">Yes</label>
-              </fieldset>        
+              </fieldset>
             </li>
             <li>
               <label class="hasTip" title="<?php print t('Show or collapse submenus when browsing on small screens');?>"><?php print t('Always show submenu') ?></label>
@@ -68,10 +68,10 @@
         <?php print $submenu_toolbox;?>
         <?php print $column_toolbox;?>
       </div>
-      
+
       <div class="toolbox-actions-group">
-        <button class="btn btn-success toolbox-action toolbox-saveConfig" data-action="saveConfig"><i class="icon-save"></i><?php print t('Save') ?></button>
-        <button class="btn btn-danger toolbox-action toolbox-resetConfig" data-action="resetConfig"><i class="icon-undo"></i><?php print t('Reset') ?></button>
+        <button class="btn btn-success toolbox-action toolbox-saveConfig" data-action="saveConfig"><i class="fa fa-save"></i> <?php print t('Save') ?></button>
+        <button class="btn btn-danger toolbox-action toolbox-resetConfig" data-action="resetConfig"><i class="fa fa-undo"></i> <?php print t('Reset') ?></button>
       </div>
       <div class="toolbox-links-groups">
         <a href="<?php print $edit_menu;?>" target="_blank">Edit menu</a>
@@ -83,5 +83,5 @@
 
   <div id="tb-megamenu-admin-mm-container" class="navbar clearfix">
     <?php print $menu_content;?>
-  </div> 
+  </div>
 </div>

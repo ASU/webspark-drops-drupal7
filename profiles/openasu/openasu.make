@@ -182,7 +182,7 @@ projects[tb_megamenu][type] = module
 projects[tb_megamenu][subdir] = contrib
 ; PATCH the CSS for tb_megamenu
 ;projects[tb_megamenu][patch][] = https://www.drupal.org/files/issues/webspark_megamenu-fixing_breakpoints.patch
-projects[tb_megamenu][patch][] = patches/nojira-webspark-megamenu_fixing-breakpoints.patch
+projects[tb_megamenu][patch][] = patches/webspark-919_tb-megamenu_fix-breakpoints.patch
 
 ;projects[uuid_features][version] = 1.0-alpha4
 ;; grabbing alpha-4+dev-37 commit
