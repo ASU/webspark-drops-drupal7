@@ -1,0 +1,65 @@
+diff --git a/jquery.treeTable.css b/jquery.treeTable.css
+index bec225a..5c8e3e9 100644
+--- a/jquery.treeTable.css
++++ b/jquery.treeTable.css
+@@ -16,11 +16,11 @@
+ }
+ 
+ .treeTable tr.collapsed td .expander {
+-  background-image: url(arrow-right.png);
++  background: transparent url(arrow-right.png) no-repeat 0 50%;
+ }
+ 
+ .treeTable tr.expanded td .expander {
+-  background-image: url(arrow-down.png);
++  background: transparent url(arrow-down.png) no-repeat 0 50%;
+ }
+ 
+ /* jquery.treeTable.sortable
+diff --git a/jquery.treeTable.js b/jquery.treeTable.js
+index 847b8f3..d75f553 100644
+--- a/jquery.treeTable.js
++++ b/jquery.treeTable.js
+@@ -39,7 +39,7 @@
+     childPrefix: "child-of-",
+     clickableNodeNames: false,
+     expandable: true,
+-    indent: 19,
++    indent: 16,
+     initialState: "collapsed",
+     treeColumn: 0
+   };
+diff --git a/token.css b/token.css
+index 5432f0f..1639992 100644
+--- a/token.css
++++ b/token.css
+@@ -1,6 +1,5 @@
+ 
+ .token-tree {
+-  font-size: 0.85em;
+   margin-left: 19px;
+ }
+ 
+@@ -13,6 +12,10 @@
+   padding-bottom: 0;
+ }
+ 
++.token-tree td:first-child {
++    padding-left: 19px;
++}
++
+ .token-group {
+   font-weight: bold;
+ }
+diff --git a/token.js b/token.js
+index 98d1ac3..f574df9 100644
+--- a/token.js
++++ b/token.js
+@@ -23,6 +23,7 @@ Drupal.behaviors.tokenDialog = {
+       dialog.dialog({
+         title: $(this).attr('title') || Drupal.t('Available tokens'),
+         width: 700,
++        dialogClass: 'token-browser-container',
+         close: function(event, ui) {
+           dialog.remove();
+         }

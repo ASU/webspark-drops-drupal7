@@ -23,6 +23,7 @@ Drupal.behaviors.tokenDialog = {
       dialog.dialog({
         title: $(this).attr('title') || Drupal.t('Available tokens'),
         width: 700,
+        dialogClass: 'token-browser-container',
         close: function(event, ui) {
           dialog.remove();
         }
