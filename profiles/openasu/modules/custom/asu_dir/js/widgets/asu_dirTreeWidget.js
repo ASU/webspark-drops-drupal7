@@ -46,9 +46,10 @@
                 onCreateLi: function (node, $li) {
                     $li.attr('dept_nid', node.dept_nid);
                     $li.attr('dept_id', node.dept_id);
+                    $li.find('.glyphicon').attr('name', node.name);
 
                     if (!node.hasChildren()) {
-                        $li.find('.jqtree-element').prepend('<span tabindex="0" class="jqtree-folder-icon fa fa-bookmark"></span>');
+                        $li.find('.jqtree-element').prepend('<span tabindex="0" class="jqtree-folder-icon fa fa-bookmark" name="' + node.name + '"></span>');
                     }
                 }
             });
@@ -83,9 +84,10 @@
                 self.manager.doRequest();
             });
 
-            var access_links = $('#treediv .fa-bookmark');
+            var access_links = $('#treediv .jqtree_common');
 
             var pluses = $('#treediv .glyphicon-plus-sign');
+            var mp = $('#treediv .fa-bookmark');
 
             pluses.on('focus', function(event) {
                 var parents = $(this).parents().eq(1);
@@ -97,6 +99,13 @@
             });
 
             access_links.on('keydown', function(event) {
+                if(event.which == 13) {
+                    var parent = $(this).parents().eq(0);
+                    parent.click();
+                }
+            });
+
+            mp.on('keydown', function(event) {
                 if(event.which == 13) {
                     var parent = $(this).parents().eq(0);
                     parent.click();
