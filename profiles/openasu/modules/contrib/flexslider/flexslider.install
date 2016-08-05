@@ -43,20 +43,6 @@ function flexslider_schema() {
         'not null' => TRUE,
         'default' => 'classic',
       ),
-      'imagestyle_normal' => array(
-        'description' => 'The image style for normal images.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => 'flexslider_full',
-      ),
-      'imagestyle_thumbnail' => array(
-        'description' => 'The image style for thumbnail images.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => 'flexslider_thumbnail',
-      ),
       'options' => array(
         'description' => 'The options array.',
         'type' => 'blob',
@@ -187,6 +173,16 @@ function flexslider_update_7201(&$sandbox) {
   );
   // Change the default image style
   db_add_field('flexslider_optionset', 'imagestyle_thumbnail', $field_new, array());
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Remove the image style settings from the optionset
+ */
+function flexslider_update_7202(&$sandbox) {
+  db_drop_field('flexslider_optionset', 'imagestyle_normal');
+  db_drop_field('flexslider_optionset', 'imagestyle_thumbnail');
 }
 
 /**
