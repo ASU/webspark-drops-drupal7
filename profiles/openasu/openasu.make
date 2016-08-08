@@ -280,12 +280,12 @@ libraries[modernizr_feature_d][directory_name] = modernizr/feature-detects
 libraries[modernizr_feature_d][download][sha256] = e9e8165a6ec2df5c9b72cafcee3c2b830656e010d9f64bbb1a571747359a8bd4
 
 libraries[jqtree][download][type] = file
-libraries[jqtree][download][url] = https://raw.githubusercontent.com/mbraak/jqTree/0.22.0/tree.jquery.js
+libraries[jqtree][download][url] = https://raw.githubusercontent.com/mbraak/jqTree/1.3.4/tree.jquery.js
 libraries[jqtree][directory_name] = jqtree
 libraries[jqtree][download][sha256] = 8fe0e380e95c627a02057fe20fbf5746cb7bd3974fa56169cbf9c20d647eec92
 
 libraries[jqtree_css][download][type] = file
-libraries[jqtree_css][download][url] = https://raw.githubusercontent.com/mbraak/jqTree/0.22.0/jqtree.css
+libraries[jqtree_css][download][url] = https://raw.githubusercontent.com/mbraak/jqTree/1.3.4/jqtree.css
 libraries[jqtree_css][directory_name] = jqtree
 libraries[jqtree_css][download][sha256] = bd821d008f7fbe1642677b2e8154b3457823df846f68236dd7e1ac60f5d36d1f
 
