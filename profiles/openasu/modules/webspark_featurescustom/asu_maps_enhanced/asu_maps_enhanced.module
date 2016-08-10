@@ -44,34 +44,28 @@ function asu_maps_enhanced_tree_response() {
 function asu_maps_enhanced_json_tree() {
 
   $tree = NULL;
-  //$tree = &drupal_static(__FUNCTION__);
 
-  if ($tree == NULL || $tree == "") {
     // Check for cache
-    if ($cache = cache_get('asu_maps_enhanced_cbird_tree')) {
-      $tree = $cache->data;
-    }
-    // Create content and cache if no cache available
-    else {
+  if ($cache = cache_get('asu_maps_enhanced_cbird_tree')) {
+    $tree = $cache->data;
+  }
+  // Create content and cache if no cache available
+  else {
 
-      //Get the tree and cache
-      $tree = asu_maps_enhanced_get_cbird_tree();
+    //Get the tree and cache
+    $tree = asu_maps_enhanced_get_cbird_tree();
 
-      // Create cache, set to hold cache for number of hours specified
-      if (count($tree['children']) > 0) {
+    // Create cache, set to hold cache for number of hours specified
+    if (count($tree['children']) > 0) {
 
-        $tree = json_encode($tree);
+      $tree = json_encode($tree);
 
-        $expire_date = time() + 3600 * ASU_MAPS_ENHANCED_TREE_CACHE_DURATION;
-        cache_set('asu_maps_enhanced_cbird_tree', $tree, 'cache', $expire_date);
-
-      }
+      $expire_date = time() + 3600 * ASU_MAPS_ENHANCED_TREE_CACHE_DURATION;
+      cache_set('asu_maps_enhanced_cbird_tree', $tree, 'cache', $expire_date);
     }
   }
 
   return $tree;
-
-
 }
 
 
@@ -372,10 +366,6 @@ function asu_maps_enhanced_field_formatter_view($entity_type, $entity, $field, $
     }
   }
 
-
-
-
-
   return $element;
 }
 
@@ -553,9 +543,8 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
 
   if ($instance['widget']['type'] == 'asu_maps_enhanced_form') {
 
-    drupal_add_js(drupal_get_path('module', 'asu_maps_enhanced') . '/js/asu_maps_enhanced_form.js');
-
-    $field_name = $instance['field_name'];
+    //drupal_add_js(drupal_get_path('module', 'asu_maps_enhanced') . '/js/asu_maps_enhanced_form.js');
+    $element['#attached']['js'][] = drupal_get_path('module', 'asu_maps_enhanced') . '/js/asu_maps_enhanced_form.js';
 
     variable_set('panopoly_magic_live_preview', 0);
 
@@ -650,7 +639,7 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
                            <h2 class="panel-title">Please Note:</h2>
                         </div>
                         <div class="panel-body">
-                            If a category is selected, then all locations under the category will be displayed.
+                            If a category is selected, then all locations directly under the category will be displayed.
                         </div>
                     </div><div id="asu-maps-enhanced-tree"></div><div style="display:none" id="map_items_hidden">',
       '#suffix' => '</div>',
