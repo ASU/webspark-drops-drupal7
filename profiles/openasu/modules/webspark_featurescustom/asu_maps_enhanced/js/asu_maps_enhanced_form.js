@@ -26,8 +26,8 @@
 
                 // Build Department Hierarchy tree list for display in block
                 tree_div.tree({
-                    closedIcon: $('<span tabindex="0" class="glyphicon glyphicon-plus-sign"></span>'),
-                    openedIcon: $('<span tabindex="0" class="glyphicon glyphicon-minus-sign"></span>'),
+                    closedIcon: $('<span tabindex="0" class="fa fa-plus-square"></span>'),
+                    openedIcon: $('<span tabindex="0" class="fa fa-minus-square"></span>'),
                     data: data,
                     // First level open
                     autoOpen: 0,
