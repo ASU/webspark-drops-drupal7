@@ -75,4 +75,8 @@
     window.location.hash = hash;
   }
 
+  // WEBSPARK-897 - Stop conflict between Token module (and its jQuery calls) and Bootstrap's button() function
+  // This was keeping Token dialog box's X button from rendering.
+  $.fn.bootstrapBtn = $.fn.button.noConflict();
+
 })(jQuery, Drupal);

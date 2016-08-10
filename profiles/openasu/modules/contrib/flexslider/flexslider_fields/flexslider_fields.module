@@ -63,21 +63,23 @@ function flexslider_fields_field_formatter_settings_form($field, $instance, $vie
       '#options' => $image_styles,
   );
 
-  // If the image field doesn't have the Title field enabled, tell the user.
-  if ($instance['settings']['title_field'] == FALSE) {
-    $form['caption'] = array(
-      '#title' => t('Use image title as the caption'),
-      '#type' => 'checkbox',
-      '#disabled' => TRUE,
-      '#description' => t('You need to <a href="@url">enable the Title field</a> for this image field to be able use it as a caption.', array('@url' => url('admin/structure/types/manage/' . $instance['bundle'] . '/fields/' . $instance['field_name'], array('fragment' => 'edit-instance-settings-title-field', 'query' => array('destination' => 'admin/structure/types/manage/' . $instance['bundle'] . '/display'))))),
-    );
-  }
-  else {
-    $form['caption'] = array(
-      '#title' => t('Use image title as the caption'),
-      '#type' => 'checkbox',
-      '#default_value' => $settings['caption'],
-    );
+  if (!empty($instance['settings'])) {
+    // If the image field doesn't have the Title field enabled, tell the user.
+    if ($instance['settings']['title_field'] == FALSE and $instance['bundle'] != 'ctools') {
+      $form['caption'] = array(
+        '#title' => t('Use image title as the caption'),
+        '#type' => 'checkbox',
+        '#disabled' => TRUE,
+        '#description' => t('You need to <a href="@url">enable the Title field</a> for this image field to be able use it as a caption.', array('@url' => url('admin/structure/types/manage/' . $instance['bundle'] . '/fields/' . $instance['field_name'], array('fragment' => 'edit-instance-settings-title-field', 'query' => array('destination' => 'admin/structure/types/manage/' . $instance['bundle'] . '/display'))))),
+      );
+    }
+    else {
+      $form['caption'] = array(
+        '#title' => t('Use image title as the caption'),
+        '#type' => 'checkbox',
+        '#default_value' => $settings['caption'],
+      );
+    }
   }
 
   return $form;
@@ -130,17 +132,30 @@ function flexslider_fields_field_formatter_view($entity_type, $entity, $field, $
   if (count($items) > 0) {
 
     foreach ($items as $key => $item) {
+      if(isset($item['item'])) continue;
       $tmp = $item;
       $item = array();
       $item['item'] = $tmp;
 
       // Setup the variables for calling theme_image_style
-      $item['slide']['path'] = $item['item']['uri'];
-      $item['slide']['style_name'] = $display['settings']['image_style'];
-      $item['slide']['width'] = $item['item']['width'];
-      $item['slide']['height'] = $item['item']['height'];
-      $item['slide']['alt'] = $item['item']['alt'];
-      $item['slide']['title'] = $item['item']['title'];
+      if (isset($item['item']['uri'])) {
+        $item['slide']['path'] = $item['item']['uri'];
+      }
+      if (isset($display['settings']['image_style'])) {
+        $item['slide']['style_name'] = $display['settings']['image_style'];
+      }
+      if (isset($item['item']['width'])) {
+        $item['slide']['width'] = $item['item']['width'];
+      }
+      if (isset($item['item']['height'])) {
+        $item['slide']['height'] = $item['item']['height'];
+      }
+      if (isset($item['item']['alt'])) {
+        $item['slide']['alt'] = $item['item']['alt'];
+      }
+      if (isset($item['item']['title'])) {
+        $item['slide']['title'] = $item['item']['title'];
+      }
 
       // Render the slide item
       // If not style set, we have to call theme_image since theme_image_style

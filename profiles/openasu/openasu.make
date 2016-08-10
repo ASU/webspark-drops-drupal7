@@ -266,18 +266,28 @@ libraries[fontawesome_fonts][download][url] = https://github.com/FortAwesome/Fon
 libraries[fontawesome_fonts][download][subtree] = Font-Awesome-4.6.3/fonts
 libraries[fontawesome_fonts][directory_name] = fontawesome/fonts
 
-; Temporarily in non-ASU repo for v3.3.1 custom build
-; @TODO - Move to official ASU repo
+; 1 of 2 - Modernizr.js
 libraries[modernizr][download][type] = get
-libraries[modernizr][download][url] = https://raw.githubusercontent.com/bjdevil21/asu-webspark-libraries/master/modernizr/modernizr-custom.js
+libraries[modernizr][download][url] = https://raw.githubusercontent.com/Modernizr/Modernizr/v2.8.3/modernizr.js
 libraries[modernizr][directory_name] = modernizr
-libraries[modernizr][download][sha256] = 4f940bc0eac68623dc3874e8ccff90d4f827465f18d746234b635a2aa5890ff9
+libraries[modernizr][download][sha256] = 7dfc3ef73c1284c7aff3c5cdac3812d212c8b899037d7860c8ba20a1defb9a7f
 
-libraries[jqtree][download][type] = get
-libraries[jqtree][download][url] = https://github.com/mbraak/jqTree/archive/0.22.0.zip
+; 2 of 2 - feature detect scripts
+libraries[modernizr_feature_d][download][type] = get
+libraries[modernizr_feature_d][download][url] = https://github.com/Modernizr/Modernizr/archive/v2.8.3.zip
+libraries[modernizr_feature_d][download][subtree] = Modernizr-2.8.3/feature-detects
+libraries[modernizr_feature_d][directory_name] = modernizr/feature-detects
+libraries[modernizr_feature_d][download][sha256] = e9e8165a6ec2df5c9b72cafcee3c2b830656e010d9f64bbb1a571747359a8bd4
+
+libraries[jqtree][download][type] = file
+libraries[jqtree][download][url] = https://raw.githubusercontent.com/mbraak/jqTree/1.3.4/tree.jquery.js
 libraries[jqtree][directory_name] = jqtree
-libraries[jqtree][destination] = libraries
-libraries[jqtree][download][sha256] = 1a52b655f49e0c0778e0776d7d7f2afc2aa37a26ce9be110d7bc31b6e274d67d
+libraries[jqtree][download][sha256] = 8fe0e380e95c627a02057fe20fbf5746cb7bd3974fa56169cbf9c20d647eec92
+
+libraries[jqtree_css][download][type] = file
+libraries[jqtree_css][download][url] = https://raw.githubusercontent.com/mbraak/jqTree/1.3.4/jqtree.css
+libraries[jqtree_css][directory_name] = jqtree
+libraries[jqtree_css][download][sha256] = bd821d008f7fbe1642677b2e8154b3457823df846f68236dd7e1ac60f5d36d1f
 
 ; PANOPOLY PROJECT PATCHES
 ;; These projects are installed first, before any other projects in the parent makefile.
