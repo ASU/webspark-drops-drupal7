@@ -543,9 +543,7 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
 
   if ($instance['widget']['type'] == 'asu_maps_enhanced_form') {
 
-    //drupal_add_js(drupal_get_path('module', 'asu_maps_enhanced') . '/js/asu_maps_enhanced_form.js');
-    $element['#attached']['js'][] = drupal_get_path('module', 'asu_maps_enhanced') . '/js/asu_maps_enhanced_form.js';
-
+    //turn off the panopoly magic preview, since it interferes with the form state
     variable_set('panopoly_magic_live_preview', 0);
 
     if (isset($items[0]['map_items'])) {
@@ -625,8 +623,9 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
 
     libraries_load('jqtree');
     libraries_load('fontawesome');
-    drupal_add_js(array('asu_maps_enhanced' => $settings), 'setting');
 
+    drupal_add_js(array('asu_maps_enhanced' => $settings), 'setting');
+    drupal_add_js(drupal_get_path('module', 'asu_maps_enhanced') . '/js/asu_maps_enhanced_form.js');
 
     // field to store the configuration, we set the style="display:none", rather than
     // a hidden field type.  this is so that the js can modify the values
