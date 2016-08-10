@@ -10,7 +10,7 @@
     Drupal.behaviors.asu_maps_enhanced = {
         attach: function (context, settings) {
 
-            if (settings.asu_maps_enhanced) {
+            if (settings.asu_maps_enhanced != null) {
                 var configs = settings.asu_maps_enhanced;
                 var data = JSON.parse(configs.tree);
                 var tree_div = $(configs.form_field_id);
