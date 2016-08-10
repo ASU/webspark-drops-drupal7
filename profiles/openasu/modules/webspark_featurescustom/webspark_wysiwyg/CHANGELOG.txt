@@ -1,3 +1,7 @@
+Webspark WYSIWYG 7.x-1.5-dev, 2016-6-27
+------------------------------
+Added bordered table style (per web standards)
+
 Webspark WYSIWYG 7.x-1.3-dev, 2015-1-30
 ------------------------------
 - Removed features_overrides settings
