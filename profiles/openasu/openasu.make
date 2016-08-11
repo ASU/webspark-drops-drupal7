@@ -177,6 +177,7 @@ projects[tb_megamenu][type] = module
 projects[tb_megamenu][subdir] = contrib
 ;; TODO - PATCH the CSS for tb_megamenu
 projects[tb_megamenu][patch][] = patches/webspark-919_tb-megamenu_fix-breakpoints.patch
+projects[tb_megamenu][patch][] = patches/webspark-935_tb-megamenu_fix-submenu-removal_7.x.patch
 
 ;projects[uuid_features][version] = 1.0-alpha4
 ;; grabbing alpha-4+dev-37 commit
