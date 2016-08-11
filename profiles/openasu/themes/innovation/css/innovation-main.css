@@ -202,9 +202,10 @@ h6, .h6 {
 .header__sitename {
   color: #2a2a2a;
   font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-weight: normal;
+  font-weight: bold;
   font-size: 24px;
   line-height: 1;
+  letter-spacing: -0.5px;
   margin-top: 0;
   margin-bottom: 0;
   padding: 0 0 12px 12px;
@@ -305,6 +306,7 @@ p.img-thumbnail img {
 
 /* =TABLES
 -------------------------------------------------------------- */
+/* Default table styles */
 table {
   background-color: white;
   margin-bottom: 24px;
@@ -330,6 +332,9 @@ table > thead > tr > td {
   vertical-align: bottom;
   font-weight: bold;
 }
+table > tbody > tr:nth-child(2n+1) {
+	background-color: #F5F5F5;
+}
 
 table > caption + thead > tr:first-child > th,
 table > caption + thead > tr:first-child > td,
@@ -343,6 +348,32 @@ table > thead:first-child > tr:first-child > td {
 table > tbody + tbody {
   border-top: 2px solid #b7b7b7;
 }
+
+/* WYSIWYG Bordered table */
+table.bordered {
+	border-bottom: 1px solid #b7b7b7;
+	border-left: 1px solid #b7b7b7;
+}
+table.bordered > thead > tr > th,
+table.bordered > thead > tr > td,
+table.bordered > tbody > tr > th,
+table.bordered > tbody > tr > td,
+table.bordered > tfoot > tr > th,
+table.bordered > tfoot > tr > td {
+  border-right: 1px solid #b7b7b7;
+}
+table.bordered > tbody > tr:nth-child(2n+1) {
+	background-color: #fff;
+}
+table.bordered > caption + thead > tr:first-child > th,
+table.bordered > caption + thead > tr:first-child > td,
+table.bordered > colgroup + thead > tr:first-child > th,
+table.bordered > colgroup + thead > tr:first-child > td,
+table.bordered > thead:first-child > tr:first-child > th,
+table.bordered > thead:first-child > tr:first-child > td {
+  border-top: 1px solid #b7b7b7;
+}
+
 
 /* =CONTENT CALLOUTS
 -------------------------------------------------------------- */
@@ -811,4 +842,29 @@ ul.help-text li.help-title {
 }
 #page-footer #block-asu-brand-asu-brand-footer {
   background-color: #E5E5E5;
+}
+
+/* Token browsing modal */
+
+.ui-widget-content.ui-dialog.token-browser-container {
+  background-color: #fff;
+  padding: 0.5em;
+  border: 1px solid #ddd;
+}
+.ui-widget-content.ui-dialog.token-browser-container,
+.token-browser-container .ui-dialog-titlebar {
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+}
+.token-browser-container .ui-dialog-titlebar {
+  background-color: #eaeaec;
+}
+.token-browser-container .ui-dialog-title {
+  color: #333;
+  padding-left: 1em;
+}
+.token-browser-container table.treeTable > tbody > tr > td:not(first-child) {
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
 }

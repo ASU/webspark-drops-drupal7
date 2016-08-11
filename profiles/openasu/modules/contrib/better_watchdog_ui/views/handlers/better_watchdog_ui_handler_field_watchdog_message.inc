@@ -41,10 +41,10 @@ class better_watchdog_ui_handler_field_watchdog_message extends views_handler_fi
    * Render the field.
    */
   public function render($values) {
-    $value = $this->get_value($values);
+    $message = $this->get_value($values);
     $variables = unserialize($this->get_value($values, 'variables'));
 
-    $data = $variables ? format_string($value, $variables) : $value;
+    $data = is_array($variables) ? format_string($message, $variables) : $message;
 
     $wid = $this->get_value($values, 'wid');
 

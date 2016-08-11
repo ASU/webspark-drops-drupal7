@@ -65,9 +65,6 @@ function innovation_preprocess_html(&$variables) {
 
   // WEBSPARK-189 - add actual HTTP header along with meta tag
   drupal_add_http_header('X-UA-Compatible', 'IE=Edge,chrome=1');
-
-  // Add conditional stylesheets for IE (need to remove soon)
-  drupal_add_css(path_to_theme() . '/css/ie9.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 9', '!IE' => FALSE), 'preprocess' => FALSE));
 }
 
 /**

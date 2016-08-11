@@ -8,9 +8,9 @@ hidden = TRUE
 ; code duplication we use several themes defined by that module.
 dependencies[] = cas_server
 
-; Information added by Drupal.org packaging script on 2014-06-09
-version = "7.x-1.4"
+; Information added by Drupal.org packaging script on 2016-02-09
+version = "7.x-1.5"
 core = "7.x"
 project = "cas"
-datestamp = "1402318728"
+datestamp = "1455051844"
 
