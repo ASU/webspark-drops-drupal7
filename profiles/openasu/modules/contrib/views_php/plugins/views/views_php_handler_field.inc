@@ -224,8 +224,9 @@ class views_php_handler_field extends views_handler_field {
         $value = check_plain($values->{$this->field_alias});
       }
     }
-      if (isset($value)) {
-        return $value;
-      }
+
+    if (isset($value)) {
+      return $value;
     }
+  }
 }
