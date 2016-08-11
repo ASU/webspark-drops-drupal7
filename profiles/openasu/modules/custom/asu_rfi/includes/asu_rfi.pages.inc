@@ -1700,7 +1700,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state){
 	asu_rfi_grad_post($form_state['values']);
 	$grad_confid =  variable_get('asu_rfi_grad_confirm_node');
 	if(!empty($grad_confid)){
-	    $galias = drupal_lookup_path('alias', $path = "node/$grad_confid_confid", $path_language = NULL);
+	    $galias = drupal_lookup_path('alias', $path = "node/$grad_confid", $path_language = NULL);
 	    if(!empty($galias)){
 		drupal_goto("$galias", array('query' => array('pro' => $coded_college, 'maj' => $coded_major, 'sub' => $coded_nid, 'ccode'=> $coded_college_code,'cat' => 'Grad RFI','zcode' => $coded_zip,'con' => $coded_country)));
 	    }
