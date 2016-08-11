@@ -121,7 +121,7 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
     }
     else {
       unbindEvents(sub);
-      if (liitem.find('ul.level'+liitem.attr('data-level')).length > 0) {
+      if (liitem.find('ul.level-'+liitem.attr('data-level')).length > 0) {
         sub.css('display','none');
         liitem.attr('data-hidesub', 1);
       }

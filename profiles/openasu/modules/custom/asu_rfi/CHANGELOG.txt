@@ -1,3 +1,7 @@
+ASU RFI 7.x-1.6, 2016-08-03
+--------------------------
+- Fixed a bug causing a white screen after some graduate submissions
+
 ASU RFI 7.x-1.5, 2016-07-15
 --------------------------
 - Fixed a typo in the auto-response email for users requesting information
