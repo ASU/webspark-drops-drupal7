@@ -1,0 +1,84 @@
+diff --git a/css/bootstrap.css b/css/bootstrap.css
+index 4701cb4..062544e 100644
+--- a/css/bootstrap.css
++++ b/css/bootstrap.css
+@@ -2402,7 +2402,7 @@
+ .tb-megamenu .visible-desktop {
+   display: inherit !important;
+ }
+-@media (min-width: 768px) and (max-width: 979px) {
++@media (min-width: 768px) and (max-width: 930px) {
+ .tb-megamenu .hidden-desktop {
+     display: inherit !important;
+   }
+@@ -2589,7 +2589,7 @@
+     position: static;
+   }
+ }
+-@media (min-width: 768px) and (max-width: 979px) {
++@media (min-width: 768px) and (max-width: 930px) {
+ .tb-megamenu .row {
+     margin-left: -20px;
+     *zoom: 1;
+@@ -3002,7 +3002,7 @@
+     margin-left: 0;
+   }
+ }
+-@media (max-width: 979px) {
++@media (max-width: 930px) {
+ .tb-megamenu body {
+     padding-top: 0;
+   }
+@@ -3153,9 +3153,9 @@
+     padding-right: 10px;
+   }
+ }
+-@media (min-width: 980px) {
++@media (min-width: 930px) {
+ .tb-megamenu .nav-collapse.collapse {
+     height: auto !important;
+     overflow: visible !important;
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/css/default.css b/css/default.css
+index 4c14842..bf13d02 100644
+--- a/css/default.css
++++ b/css/default.css
+@@ -695,7 +695,7 @@
+     width: 27px;
+   }
+ }
+-@media (min-width: 768px) and (max-width: 979px) {
++@media (min-width: 768px) and (max-width: 930px) {
+ .tb-megamenu .offset-12 {
+     margin-left: -736px;
+   }
+@@ -1339,7 +1339,7 @@
+   visibility: hidden;
+ }
+ 
+-@media (max-width: 979px) {
++@media (max-width: 930px) {
+ .tb-megamenu .always-show .mega > .mega-dropdown-menu,
+ .tb-megamenu .always-show .dropdown-menu {
+     display: block !important;
+@@ -1373,7 +1373,7 @@
+     bottom: 40px;
+   }
+ }
+-@media (max-width: 979px) {
++@media (max-width: 930px) {
+ .tb-megamenu {  
+     background-color: inherit;
+     height: auto;
+@@ -1553,7 +1553,7 @@
+   }
+ }
+ 
+-@media (max-width: 979px) {
++@media (max-width: 930px) {
+   .tb-megamenu .mega-inner {
+     padding: 10px 20px;
+   }

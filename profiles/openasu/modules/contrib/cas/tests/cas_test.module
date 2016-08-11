@@ -25,13 +25,17 @@ function cas_test_cas_phpcas_alter() {
     'absolute' => TRUE,
   )));
 
-  switch (variable_get('cas_version', '2.0')) {
+  switch (variable_get('cas_version', '3.0')) {
     case CAS_VERSION_1_0:
       phpCAS::setServerServiceValidateURL(url('cas_test/validate', array('absolute' => TRUE)));
       break;
     case CAS_VERSION_2_0:
       phpCAS::setServerServiceValidateURL(url('cas_test/serviceValidate', array('absolute' => TRUE)));
       phpCAS::setServerProxyValidateURL(url('cas_test/proxyValidate',  array('absolute' => TRUE)));
+      break;
+    case CAS_VERSION_3_0:
+      phpCAS::setServerServiceValidateURL(url('cas_test/p3/serviceValidate', array('absolute' => TRUE)));
+      phpCAS::setServerProxyValidateURL(url('cas_test/p3/proxyValidate',  array('absolute' => TRUE)));
       break;
     default:
       throw new Exception('Unknown CAS server version.');
@@ -70,6 +74,18 @@ function cas_test_menu() {
   $items['cas_test/proxyValidate'] = array(
     'page callback' => 'cas_test_service_validate',
     'title' => 'CAS Proxy Ticket Validate',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['cas_test/p3/serviceValidate'] = array(
+    'page callback' => 'cas_test_service_validate',
+    'title' => 'CAS 3.0 Service Validate',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['cas_test/p3/proxyValidate'] = array(
+    'page callback' => 'cas_test_service_validate',
+    'title' => 'CAS 3.0 Proxy Ticket Validate',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -151,7 +167,7 @@ function cas_test_validate() {
 }
 
 /**
- * Validate a ticket using the CAS 2.0 protocol.
+ * Validate a ticket using the CAS 2.0 and CAS 3.0 protocols.
  */
 function cas_test_service_validate() {
   // Prevent this page from being cached.

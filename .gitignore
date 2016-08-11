@@ -69,5 +69,7 @@ profiles/openasu/modules/**/.gitignore
 
 # Files for local development
 ######################
-webspark_rebuild_from_drush_make.bash
+webspark**.bash
 sites/default/settings.local.php
+profiles/openasu/modules/panopoly_test/tests/bin
+profiles/openasu/modules/panopoly_test/tests/vendor

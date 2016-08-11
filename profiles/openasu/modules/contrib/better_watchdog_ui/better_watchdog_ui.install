@@ -13,7 +13,7 @@ function better_watchdog_ui_enable() {
   // by increasing module weight in system database table.
   $weight = db_select('system', 's')
   ->fields('s', array('weight'))
-  ->condition('s.name', 'better_watchdog_ui', '=')
+  ->condition('s.name', 'dblog', '=')
   ->condition('type', 'module')
   ->execute()
   ->fetchField();
@@ -42,7 +42,7 @@ function better_watchdog_ui_disable() {
   // Reset the weight to be smaller than the dblog module.
   $weight = db_select('system', 's')
   ->fields('s', array('weight'))
-  ->condition('s.name', 'better_watchdog_ui', '=')
+  ->condition('s.name', 'dblog', '=')
   ->condition('type', 'module')
   ->execute()
   ->fetchField();

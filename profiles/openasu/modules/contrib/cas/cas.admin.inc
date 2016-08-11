@@ -47,10 +47,11 @@ function cas_admin_settings() {
   $form['server']['cas_version'] = array(
     '#type' => 'radios',
     '#title' => t('Version'),
-    '#default_value' => variable_get('cas_version', '2.0'),
+    '#default_value' => variable_get('cas_version', '3.0'),
     '#options' => array(
       '1.0' => '1.0',
-      '2.0' => t('2.0 or higher'),
+      '2.0' => t('2.0'),
+      '3.0' => t('3.0 or higher (requires phpCAS >= 1.3.3)'),
       'S1' => t('SAML Version 1.1'),
     ),
   );
@@ -105,7 +106,9 @@ function cas_admin_settings() {
     '#options' => array(
       CAS_NO_LINK => t('Do not add link to login forms'),
       CAS_ADD_LINK => t('Add link to login forms'),
-      CAS_MAKE_DEFAULT => t('Make CAS login default on login forms')),
+      CAS_MAKE_DEFAULT => t('Make CAS login default on login forms'),
+      CAS_REDIRECT => t('Redirect the login form to CAS'),
+    ),
   );
 
   $form['login']['cas_login_invite'] = array(
@@ -129,7 +132,7 @@ function cas_admin_settings() {
     '#description' => t('Message users see at the top of the CAS login form to warn them that they are being redirected to the CAS server.'),
   );
 
-  // Setting for message displayed to user upon successfull login
+  // Setting for message displayed to user upon successful login
   $form['login']['cas_login_message'] = array(
     '#type' => 'textfield',
     '#title' => t('Successful login message'),

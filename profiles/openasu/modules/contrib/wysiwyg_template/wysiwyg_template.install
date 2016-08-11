@@ -10,6 +10,7 @@ function wysiwyg_template_schema() {
         'description' => 'The machine name for the template.',
         'type' => 'varchar',
         'length' => 128,
+        'not null' => TRUE
       ),
       'title' => array(
         'description' => 'The title of the Wysiwyg template',
@@ -34,6 +35,11 @@ function wysiwyg_template_schema() {
         'description' => 'The Wysiwyg template HTML',
         'type' => 'text'
       ),
+      'format' => array(
+        'description' => 'The text format used for body field.',
+        'type' => 'varchar',
+        'length' => 255,
+      ),
       'weight' => array(
         'type' => 'int',
         'not null' => TRUE,
@@ -53,6 +59,7 @@ function wysiwyg_template_schema() {
         'description' => 'The machine name for the template.',
         'type' => 'varchar',
         'length' => 128,
+        'not null' => TRUE
       ),
       'type' => array(
         'description' => 'The {node_type}.type of this node.',
@@ -74,6 +81,7 @@ function wysiwyg_template_schema() {
         'description' => 'The machine name for the template.',
         'type' => 'varchar',
         'length' => 128,
+        'not null' => TRUE
       ),
       'type' => array(
         'description' => 'The {node_type}.type of this node.',
@@ -118,6 +126,7 @@ function wysiwyg_template_update_7200() {
     'description' => 'The machine name for the template.',
     'type' => 'varchar',
     'length' => 128,
+    'not null' => TRUE
   ));
 
   foreach ($templates as $tid => $title) {
@@ -192,4 +201,12 @@ function wysiwyg_template_update_7204() {
     $schema = wysiwyg_template_schema();
     db_create_table('wysiwyg_templates_content_types', $schema['wysiwyg_templates_content_types']);
   }
+}
+
+/**
+ * Add the format table field
+ */
+function wysiwyg_template_update_7205() {
+  $schema = wysiwyg_template_schema();
+  db_add_field('wysiwyg_templates', 'format', $schema['wysiwyg_templates']['fields']['format']);
 }

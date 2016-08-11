@@ -10,6 +10,7 @@
 define('CAS_NO_LINK', 0);
 define('CAS_ADD_LINK', 1);
 define('CAS_MAKE_DEFAULT', 2);
+define('CAS_REDIRECT', 3);
 define('CAS_LOGIN_INVITE_DEFAULT', 'Log in using CAS');
 define('CAS_LOGIN_DRUPAL_INVITE_DEFAULT', 'Cancel CAS login');
 define('CAS_LOGIN_REDIR_MESSAGE', 'You will be redirected to the secure CAS login page.');
@@ -31,6 +32,10 @@ function cas_init() {
   if (module_exists('cas_test') && arg(0) == 'cas_test') {
     // We are destined for a page handled by the cas_test module, so do not
     // do any processing here. Necessary for CAS gateway tests.
+    return;
+  }
+  elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE === 'install') {
+    // Do nothing on profile install.
     return;
   }
 
@@ -246,7 +251,7 @@ function cas_phpcas_init() {
   $initialized = TRUE;
 
   // Variable set
-  $server_version    = (string)variable_get('cas_version', '2.0');
+  $server_version    = (string)variable_get('cas_version', '3.0');
   $server_cas_server = (string)variable_get('cas_server', 'sso-cas.univ-rennes1.fr');
   $server_port       = (int)variable_get('cas_port', '443');
   $server_uri        = (string)variable_get('cas_uri', '');
@@ -392,7 +397,7 @@ function cas_user_is_logged_in() {
  * Implements hook_menu_site_status_alter().
  */
 function cas_menu_site_status_alter(&$menu_site_status, $path) {
-  if (user_is_logged_in() && $path == 'cas') {
+  if (user_is_logged_in() && strtolower($path) == 'cas') {
     // If user is logged in, redirect to '<front>' instead of giving 403.
     drupal_goto('');
   }
@@ -405,7 +410,7 @@ function cas_menu_site_status_alter(&$menu_site_status, $path) {
  * @see cas_translated_menu_link_alter()
  */
 function cas_menu_link_alter(&$item) {
-  if ($item['link_path'] == 'cas' || $item['link_path'] == 'caslogout') {
+  if (strtolower($item['link_path']) == 'cas' || strtolower($item['link_path']) == 'caslogout') {
     $item['options']['alter'] = TRUE;
   }
 }
@@ -416,10 +421,10 @@ function cas_menu_link_alter(&$item) {
  * Append dynamic query 'destination' to several menu items.
  */
 function cas_translated_menu_link_alter(&$item) {
-  if ($item['href'] == 'cas') {
+  if (strtolower($item['href']) == 'cas') {
     $item['localized_options']['query'] = drupal_get_destination();
   }
-  elseif ($item['href'] == 'caslogout' && !variable_get('cas_logout_destination', '')) {
+  elseif (strtolower($item['href']) == 'caslogout' && !variable_get('cas_logout_destination', '')) {
     $item['localized_options']['query'] = drupal_get_destination();
   }
 }
@@ -650,7 +655,7 @@ function cas_login_page() {
  * adjust the hook execution order using hook_module_implements_alter().
  *
  * @param $invoke_hook
- *   If TRUE, invoke hook_user_logout() and save a watchdog mesage indicating
+ *   If TRUE, invoke hook_user_logout() and save a watchdog message indicating
  *   that the user has logged out.
  */
 function cas_logout($invoke_hook = TRUE) {
@@ -661,7 +666,7 @@ function cas_logout($invoke_hook = TRUE) {
 
   if (isset($_GET['destination']) && !url_is_external($_GET['destination'])) {
     // Add destination override so that a destination can be specified on the
-    // logout link, e.g., caslogout?desination=http://foo.bar.com/foobar. We do
+    // logout link, e.g., caslogout?destination=http://foo.bar.com/foobar. We do
     // not allow absolute URLs to be passed via $_GET, as this can be an attack
     // vector.
     $destination = $_GET['destination'];
@@ -830,7 +835,7 @@ function _cas_allow_check_for_login() {
  */
 function _cas_force_login() {
   // The 'cas' page is a shortcut to force authentication.
-  if (arg(0) == 'cas') {
+  if (strtolower(arg(0)) == 'cas') {
     return TRUE;
   }
 
@@ -861,7 +866,7 @@ function _cas_force_login() {
   // Set the default behavior.
   $force_login = variable_get('cas_access', 0);
 
-  // If we match the speficied paths, reverse the behavior.
+  // If we match the specified paths, reverse the behavior.
   if ($pages = variable_get('cas_pages', '')) {
     $path = drupal_get_path_alias($_GET['q']);
     if (drupal_match_path($path, $pages)) {
@@ -877,6 +882,11 @@ function _cas_force_login() {
  * Overrides specific from settings based on user policy.
  */
 function cas_form_alter(&$form, &$form_state, $form_id) {
+  // Special handling of the user login page when the CAS login form is set to
+  // redirect.
+  if ($form_id == 'user_login' && variable_get('cas_login_form', CAS_NO_LINK) == CAS_REDIRECT) {
+    drupal_goto('cas');
+  }
 
   switch ($form_id) {
     case 'user_login':
@@ -1013,8 +1023,8 @@ function cas_form_alter(&$form, &$form_state, $form_id) {
 /**
  * Form element 'cas_name' validator.
  *
- * If the element is disaplying an existing {cas_user} entry, set
- * #cas_user_aid to the corresponing authmap id to avoid spurious
+ * If the element is displaying an existing {cas_user} entry, set
+ * #cas_user_aid to the corresponding authmap id to avoid spurious
  * validation errors.
  */
 function _cas_name_element_validate($element, &$form_state) {
@@ -1311,7 +1321,7 @@ function _cas_redirect_after_login($cas_first_login) {
   else {
     // If logged in through forced authentication ('/cas'), then redirect user to the
     // homepage, or to wherever the current "destination" parameter points.
-    if (current_path() == 'cas') {
+    if (strtolower(current_path()) == 'cas') {
       drupal_goto('');
     }
     // If logged in through gateway feature, then just reload the current path
