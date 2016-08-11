@@ -1,7 +1,7 @@
-diff --git a/profiles/openasu/modules/contrib/tb_megamenu/js/tb-megamenu-object.js b/profiles/openasu/modules/contrib/tb_megamenu/js/tb-megamenu-object.js
+diff --git a/js/tb-megamenu-object.js b/js/tb-megamenu-object.js
 index 4eaa01f..7f9d6e3 100644
---- a/profiles/openasu/modules/contrib/tb_megamenu/js/tb-megamenu-object.js
-+++ b/profiles/openasu/modules/contrib/tb_megamenu/js/tb-megamenu-object.js
+--- a/js/tb-megamenu-object.js
++++ b/js/tb-megamenu-object.js
 @@ -121,7 +121,7 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
      }
      else {
