@@ -172,7 +172,7 @@ projects[special_menu_items][version] = 2.0
 projects[special_menu_items][subdir] = contrib
 projects[special_menu_items][type] = module
 
-projects[tb_megamenu][version] = 1.0-beta5
+projects[tb_megamenu][version] = 1.0-rc2
 projects[tb_megamenu][type] = module
 projects[tb_megamenu][subdir] = contrib
 ;; TODO - PATCH the CSS for tb_megamenu
