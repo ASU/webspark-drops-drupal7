@@ -7,11 +7,11 @@
  * @author Colton Testamarck ( colt@asu.edu )
  */
 (function ($) {
-    Drupal.behaviors.asu_maps_enhanced = {
+    Drupal.behaviors.asu_maps_enhanced_form = {
         attach: function (context, settings) {
 
-            if (settings.asu_maps_enhanced != null) {
-                var configs = settings.asu_maps_enhanced;
+            if (settings.asu_maps_enhanced_form != null) {
+                var configs = settings.asu_maps_enhanced_form;
                 var data = JSON.parse(configs.tree);
                 var tree_div = $(configs.form_field_id);
                 var map_items = [];
@@ -24,42 +24,45 @@
                 //data needs to be array at top level
                 data = [data];
 
-                // Build Department Hierarchy tree list for display in block
-                tree_div.tree({
-                    closedIcon: $('<span tabindex="0" class="fa fa-plus-square"></span>'),
-                    openedIcon: $('<span tabindex="0" class="fa fa-minus-square"></span>'),
-                    data: data,
-                    // First level open
-                    autoOpen: 0,
-                    selectable: true,
-                    keyboardSupport: false,
-                    // Assign dept_id attribute to each tree <li>
-                    onCreateLi: function (node, $li) {
+                if (tree_div.length > 0) {
+                    // Build Department Hierarchy tree list for display in block
+                    tree_div.tree({
+                        closedIcon: $('<span tabindex="0" class="fa fa-plus-square"></span>'),
+                        openedIcon: $('<span tabindex="0" class="fa fa-minus-square"></span>'),
+                        data: data,
+                        // First level open
+                        autoOpen: 0,
+                        selectable: true,
+                        keyboardSupport: false,
+                        // Assign dept_id attribute to each tree <li>
+                        onCreateLi: function (node, $li) {
 
-                        var id = null;
+                            var id = null;
 
-                        if(node.hasOwnProperty('mrkId')) {
-                            id = node.mrkId;
-                        } else if (node.hasOwnProperty('catId')) {
-                            id = node.catId;
-                        }
-
-                        if (id != null) {
-                            $li.attr('id', id);
-                        }
-
-                        //$li.attr('dept_id', node.dept_id);
-                        $li.find('.glyphicon').attr('name', node.name);
-
-                        if (id != 0) {
-                            if (!node.hasChildren()) {
-                                $li.find('.jqtree-element').prepend('<span tabindex="0" class="jqtree-folder-icon fa fa-bookmark" name="' + node.name + '"></span>');
+                            if(node.hasOwnProperty('mrkId')) {
+                                id = node.mrkId;
+                            } else if (node.hasOwnProperty('catId')) {
+                                id = node.catId;
                             }
 
-                            $li.find('.jqtree-element').append('<input class="asu-maps-enhanced-check" type="checkbox"></input>');
+                            if (id != null) {
+                                $li.attr('id', id);
+                            }
+
+                            //$li.attr('dept_id', node.dept_id);
+                            $li.find('.glyphicon').attr('name', node.name);
+
+                            if (id != 0) {
+                                if (!node.hasChildren()) {
+                                    $li.find('.jqtree-element').prepend('<span tabindex="0" class="jqtree-folder-icon fa fa-bookmark" name="' + node.name + '"></span>');
+                                }
+
+                                $li.find('.jqtree-element').append('<input class="asu-maps-enhanced-check" type="checkbox"></input>');
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
 
                 for (var i = 0; i < map_items.length; i++) {
                     var item = map_items[i];
@@ -91,24 +94,24 @@
                         }
                     }
                 });
-            }
 
-            $(document).on('input', '#map-height-field input', function (event) {
+                $(document).on('input', '#map-height-field input', function (event) {
 
-                var data = $(this).val();
+                    var data = $(this).val();
 
-                if (!asu_maps_enhanced_isInt(data)) {
-                    $(this).val('');
-                } else {
-                    if ($(this).val() < 425 || $(this).val() > 1100) {
-                        $('.height-valid').remove();
-                        $('<span class="height-valid invalid-style" >Invalid</span>').insertAfter('#map-height-field input');
+                    if (!asu_maps_enhanced_isInt(data)) {
+                        $(this).val('');
                     } else {
-                        $('.height-valid').remove();
-                        $('<span class="height-valid valid-style" >Valid</span>').insertAfter('#map-height-field input');
+                        if ($(this).val() < 425 || $(this).val() > 1100) {
+                            $('.height-valid').remove();
+                            $('<span class="height-valid invalid-style" >Invalid</span>').insertAfter('#map-height-field input');
+                        } else {
+                            $('.height-valid').remove();
+                            $('<span class="height-valid valid-style" >Valid</span>').insertAfter('#map-height-field input');
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 }(jQuery));

@@ -621,11 +621,7 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       'map_items' => $map_items
     );
 
-    libraries_load('jqtree');
-    libraries_load('fontawesome');
 
-    drupal_add_js(array('asu_maps_enhanced' => $settings), 'setting');
-    drupal_add_js(drupal_get_path('module', 'asu_maps_enhanced') . '/js/asu_maps_enhanced_form.js');
 
     // field to store the configuration, we set the style="display:none", rather than
     // a hidden field type.  this is so that the js can modify the values
@@ -655,7 +651,11 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       '#default_value' => isset($items[0]['description']) ? $items[0]['description'] : NULL,
     );
 
-    $form['#attached']['css'][] = drupal_get_path('module', 'asu_maps_enhanced') . '/css/asu_maps_enhanced_form.css';
+    $element['#attached']['css'][] = drupal_get_path('module', 'asu_maps_enhanced') . '/css/asu_maps_enhanced_form.css';
+    libraries_load('jqtree');
+    libraries_load('fontawesome');
+    drupal_add_js(array('asu_maps_enhanced_form' => $settings), 'setting');
+    drupal_add_js(drupal_get_path('module', 'asu_maps_enhanced') . '/js/asu_maps_enhanced_form.js');
   }
 
   return $element;
@@ -725,6 +725,8 @@ function asu_maps_enhanced_field_presave($entity_type, $entity, $field, $instanc
     }
 
     $items[0]['map_items'] = drupal_json_encode($map_items);
+
+    cache_clear_all();
   }
 }
 
