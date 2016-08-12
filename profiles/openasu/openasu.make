@@ -55,7 +55,7 @@ projects[panopoly_test][patch][1372] = patches/webspark-847_panopoly-test-update
 
 projects[asu_drupal_modules][type] = module
 projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = e00f4ec6fa4a9d2fca82afc0c68629640e3fe0da
+projects[asu_drupal_modules][download][revision] = 140f912d0109b7a0b98bff23dcdbaeba2d3dbf97
 projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ; ASU Module Prerequisites
@@ -200,6 +200,7 @@ projects[wysiwyg_template][subdir] = contrib
 
 ;; Base Theme - Kalatheme
 
+; @TODO v3.2
 projects[kalatheme][version] = 3.0-rc2
 projects[kalatheme][type] = theme
 ;; WEBSPARK-188 - CSS img url fix
