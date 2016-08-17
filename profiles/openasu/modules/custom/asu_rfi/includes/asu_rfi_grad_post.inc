@@ -29,7 +29,7 @@ function asu_rfi_grad_post($data)
   $form_mode = variable_get('asu_rfi_form_mode');
   $type_of_form = $data['type_of_form'];
   $source = $domain . '-' . $type_of_form . '-G';
-  $campus = $data['campus'];
+  $campus = asu_rfi_correct_campus_id($data['campus']);
   $ipAddress = $data['ip_address'];
   //get athentication key
   $mw_auth_key = variable_get('asu_rfi_form_auth_key');
@@ -233,3 +233,35 @@ function asu_rfi_grad_post($data)
   }
 }
 
+function asu_rfi_correct_campus_id($campus)
+{
+
+  switch ($campus) {
+    case "Tempe":
+      $campusId = "TEMPE";
+      break;
+    case "Online":
+      $campusId = "ONLNE";
+      break;
+    case "East Arizona College":
+      $campusId = "EAC";
+      break;
+    case "Polytechnic":
+      $campusId = "POLY";
+      break;
+    case "Lake Havasu":
+      $campusId = "CALHC";
+      break;
+    case "West":
+      $campusId = "WEST";
+      break;
+    case "Downtown":
+      $campusId = "DTPHX";
+      break;
+    default:
+      $campusId = '';
+
+  }
+
+  return $campusId;
+}
