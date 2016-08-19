@@ -60,3 +60,12 @@ function asu_brand_update_7101(&$sandbox) {
     variable_set('asu_brand_header_basepath', 'http://www.asu.edu/asuthemes');
   }
 }
+/**
+ * Implements hook_update_N()
+ * + Updates ASU Header to v4.5
+ */
+function asu_brand_update_7102(&$sandbox) {
+  if (variable_get('theme_default') === 'innovation') {
+    variable_set('asu_brand_header_version', '4.5');
+  }
+}

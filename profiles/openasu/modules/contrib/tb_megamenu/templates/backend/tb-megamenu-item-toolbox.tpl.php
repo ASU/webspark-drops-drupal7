@@ -1,6 +1,6 @@
 <div id="tb-megamenu-admin-mm-toolitem" class="admin-toolbox">
   <h3><?php print t('Item Configuration') ?> (<a href="#" class="back-megamenu-toolbox"><?php print t("MegaMenu Toolbox");?></a>)</h3>
-  <p><?php print t('This allows you to configure each link you added in the Drupal core menu. You can: add block, have it styled by adding extra class, set icon (Bootstrap icons) and add description.') ?></p>
+  <p><?php print t('This allows you to configure each link you added in the Drupal core menu. You can: add block, have it styled by adding extra class, set icon (FontAwesome icons) and add description.') ?></p>
   <ul id="toogle-submenu-wrapper">
     <li>
       <label class="hasTip" title="<?php print t('Submenu') . ' - ' . t('Enable or disable submenu') ?>"><?php print t('Submenu') ?></label>
@@ -27,8 +27,8 @@
     <li>
       <label class="hasTip" title="<?php print t('Break column') . ' - ' . t('Move the item to the left/right column, create new column if there’s none on the chosen side.') ?>"><?php print t('Break column') ?></label>
       <fieldset class="btn-group">
-        <a href="" class="btn toolitem-moveleft toolbox-action" data-action="moveItemsLeft" title="<?php print t('Move the items to the left column.') ?>"><i class="icon-arrow-left"></i></a>
-        <a href="" class="btn toolitem-moveright toolbox-action" data-action="moveItemsRight" title="<?php print t('Move the items to the right column.') ?>"><i class="icon-arrow-right"></i></a>
+        <a href="" class="btn toolitem-moveleft toolbox-action" data-action="moveItemsLeft" title="<?php print t('Move the items to the left column.') ?>"><i class="fa fa-arrow-left"></i></a>
+        <a href="" class="btn toolitem-moveright toolbox-action" data-action="moveItemsRight" title="<?php print t('Move the items to the right column.') ?>"><i class="fa fa-arrow-right"></i></a>
       </fieldset>
     </li>
   </ul>
@@ -41,9 +41,9 @@
     </li>
   </ul>
   <ul>
-    <li title="<?php print t('Icon') . ' - ' . t('Add Icon for Menu Item. Click Icon label to visit Bootstrap icons page and get Icon Class. E.g.: icon-search') ?>">
+    <li title="<?php print t('Icon') . ' - ' . t('Add Icon for Menu Item. Click Icon label to visit FontAwesome icons page and get icon class. Ex: fa fa-search') ?>">
       <label class="hasTip">
-        <a href="http://twitter.github.com/bootstrap/base-css.html#icons" target="_blank"><i class="icon-search"></i><?php print t('Icon') ?></a>
+        <i class="fa fa-search"></i> <a href="https://fortawesome.github.io/Font-Awesome/icons/" target="_blank" title="FontAwesome Icon"><?php print t('Icon') ?></a>
       </label>
       <fieldset class="">
         <input type="text" class="input-medium toolitem-xicon toolbox-input" name="toolitem-xicon" data-name="xicon" value="" />

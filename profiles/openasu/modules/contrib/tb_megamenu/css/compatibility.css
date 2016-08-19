@@ -16,7 +16,7 @@
 .tb-megamenu .dropdown-submenu:hover .dropdown-menu{
   display:none;
 }
-@media (max-width: 979px) {
+@media (max-width: 991px) {
   .tb-megamenu .nav-collapse .dropdown-menu .views-field-field-image a{
     border-top:0 none;
   }
