@@ -1,0 +1,27 @@
+#asu-maps-enhanced-tree {
+    margin-left: 30px;
+}
+
+#modal-content .field-type-asu-maps-enhanced .form-item {
+    margin-top: 30px;
+}
+
+.maps-enhanced-form-text {
+    margin-left: 30px;
+    margin-right: 30px;
+
+}
+
+#map-hide-map-display {
+    margin-left: 30px;
+}
+
+#asu-maps-enhanced-tree .asu-maps-enhanced-check {
+    margin-left: 2px;
+}
+
+
+#asu-maps-enhanced-tree ul.jqtree-tree li.jqtree-selected>.jqtree-element {
+    background-color: transparent;
+    background: none;
+}

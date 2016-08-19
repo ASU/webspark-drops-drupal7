@@ -503,3 +503,8 @@ select {
 .asu-dir-hidden {
     display: none;
 }
+
+
+#asu-dir-ajax-solr-search .input-main-search {
+    width: 100%;
+}
