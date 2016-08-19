@@ -158,7 +158,7 @@ function asu_rfi_grad_post($data)
   }
 
   if ($location == 'Online' || $location == 'online') {
-
+    $submission_data['campus'] = "ONLNE";
     $asuOnlineList = asu_rfi_parse_programs();
     $managedOnline = asu_rfi_check_managed_online($data['program_code'], $asuOnlineList);
 
@@ -257,6 +257,9 @@ function asu_rfi_correct_campus_id($campus)
       break;
     case "Downtown":
       $campusId = "DTPHX";
+      break;
+    case "Arizona Western College":
+      $campusId = "AWC";
       break;
     default:
       $campusId = '';
