@@ -78,6 +78,12 @@ projects[cas_attributes][version] = 1.0-rc3
 projects[cas_attributes][type] = module
 projects[cas_attributes][subdir] = contrib
 
+;; For Webspark News & Events
+;; Will be removed when news & events is deleted
+projects[calendar][version] = 3.4
+projects[calendar][type] = module
+projects[calendar][subdir] = contrib
+
 projects[email][version] = 1.3
 projects[email][subdir] = contrib
 projects[email][type] = module
