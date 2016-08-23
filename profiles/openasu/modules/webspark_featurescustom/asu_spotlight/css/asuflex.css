@@ -83,8 +83,8 @@
   transform: translate(0%, -50%);
 }
 .blurbcontainer > .blurbshell.bottom-left {
-  left: 0.5em;
   bottom: 1.5em;
+  left: 0.5em;
 }
 .blurbcontainer > .blurbshell.bottom-center {
   bottom: 1.5em;
@@ -93,8 +93,8 @@
   transform: translate(-50%, 0%);
 }
 .blurbcontainer > .blurbshell.bottom-right {
-  right: 0.5em;
   bottom: 1.5em;
+  right: 0.5em;
 }
 
 @media (max-width: 992px) {
@@ -120,14 +120,17 @@
   .blurbcontainer .btn {
   font-size: 13px;
   }
-  .top-left {
-  top: 5px;
+  .slidecontainer .blurbcontainer > .blurbshell {
+    max-width: 50%;
   }
-  .top-center {
-  top: 5px;
+  .blurbcontainer > .blurbshell.top-left {
+  top: 0.3em;
   }
-  .top-right {
-  top: 5px;
+  .blurbcontainer > .blurbshell.top-center {
+  top: 0.3em;
+  }
+  .blurbcontainer > .blurbshell.top-right {
+  top: 0.3em;
   }
 
 }
@@ -147,39 +150,42 @@
     font-size: 30px;
   }
 
-  .top-left {
+  .slidecontainer .blurbcontainer > .blurbshell {
+    max-width: 80%;
+  }
+  .blurbcontainer > .blurbshell.top-left {
     top: 0;
     left: 0;
   }
-  .top-center {
-    top: 0;
-    right: 0;
-  }
-  .top-right {
-    top: 0;
-    right: 0;
-  }
-  .mid-left {
+  .blurbcontainer > .blurbshell.top-center {
     top: 0;
     left: 0;
   }
-  .mid-center {
+  .blurbcontainer > .blurbshell.top-right {
     top: 0;
     right: 0;
   }
-  .mid-right {
+  .blurbcontainer > .blurbshell.mid-left {
+    top: 0;
+    left: 0;
+  }
+  .blurbcontainer > .blurbshell.mid-center {
+    top: 0;
+    left: 0;
+  }
+  .blurbcontainer > .blurbshell.mid-right {
     top: 0;
     right: 0;
   }
-  .bottom-left {
+  .blurbcontainer > .blurbshell.bottom-left {
     bottom: 0;
     left: 0;
   }
-  .bottom-center {
+  .blurbcontainer > .blurbshell.bottom-center {
     bottom: 0;
-    right: 0;
+    left: 0;
   }
-  .bottom-right {
+  .blurbcontainer > .blurbshell.bottom-right {
     bottom: 0;
     right: 0;
   }
@@ -187,6 +193,9 @@
 
 @media (max-width: 450px) {
 
+  .slidecontainer .blurbcontainer > .blurbshell {
+    max-width: 100%;
+  }
   .slidecontainer h2 {
   font-size: 20px;
   }
