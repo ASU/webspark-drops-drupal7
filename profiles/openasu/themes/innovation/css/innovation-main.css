@@ -821,7 +821,8 @@ ul.help-text li.help-title {
   padding-right: 15px;
 }
 
-/*** 100% width issue - override for flexslider */
+/* 100% width issue - override for flexslider; asuflex.css carries the rest after this rule
+----------------------------------------------------- */
 .section > .container .row-full .pane-bundle-asu-spotlight [class^="pane-"] {
   width: 100% !important;
   padding-left: 0;
@@ -830,15 +831,6 @@ ul.help-text li.help-title {
   margin-right: 0;
   max-width: none !important;
 }
-
-/*
-.tester {
-  max-width: 1170px;
-  margin: 0 auto;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-*/
 
 .row {
   padding: 0px;
@@ -852,7 +844,7 @@ ul.help-text li.help-title {
   background-color: #E5E5E5;
 }
 
-/* Token browsing modal
+/** Token browsing modal
 ----------------------------------------------------- */
 
 .ui-widget-content.ui-dialog.token-browser-container {

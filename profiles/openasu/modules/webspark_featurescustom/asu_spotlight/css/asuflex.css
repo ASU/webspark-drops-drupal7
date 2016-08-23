@@ -3,7 +3,6 @@
   padding-left: 0;
   padding-right: 0;
 }
-
 .slidecontainer {
   position: relative; !important
 }
@@ -25,7 +24,6 @@
   padding: 10px 0;
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
-
 .blurbcontainer {
   display: block;
   position: absolute;
@@ -55,36 +53,46 @@
   max-width: 34%;
   position: absolute;
 }
-.blurbshell.top-left {
+.blurbcontainer > .blurbshell.top-left {
   top: 0.5em;
   left: 0.5em;
 }
-.blurbshell.top-center {
+.blurbcontainer > .blurbshell.top-center {
   top: 0.5em;
-  margin: 0 33%;
+  left: 50%;
+  transform: translate(-50%, 0%);
 }
-.blurbshell.top-right {
+.blurbcontainer > .blurbshell.top-right {
   top: 0.5em;
   right: 0.5em;
 }
-.blurbshell.mid-left {
+.blurbcontainer > .blurbshell.mid-left {
   left: 0.5em;
+  top: 50%;
+  transform: translate(0%, -50%);
 }
-.blurbshell.mid-center {
-  margin: 0 33%;
+.blurbcontainer > .blurbshell.mid-center {
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
 }
-.blurbshell.mid-right {
+.blurbcontainer > .blurbshell.mid-right {
+  top: 50%;
   right: 0.5em;
+  transform: translate(0%, -50%);
 }
-.blurbshell.bottom-left {
+.blurbcontainer > .blurbshell.bottom-left {
   left: 0.5em;
   bottom: 1.5em;
 }
-.blurbshell.bottom-center {
+.blurbcontainer > .blurbshell.bottom-center {
   bottom: 1.5em;
-  margin: 0 33%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, 0%);
 }
-.blurbshell.bottom-right {
+.blurbcontainer > .blurbshell.bottom-right {
   right: 0.5em;
   bottom: 1.5em;
 }
