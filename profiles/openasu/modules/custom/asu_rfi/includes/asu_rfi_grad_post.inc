@@ -149,7 +149,7 @@ function asu_rfi_grad_post($data)
     'zip' => $data['zipcode'],
     'iStudent' => $data['citizenship'],
     'smsNumber' => $mobile,
-    'campus' => $campus,
+    'campusSelection' => $campus,
 
   );
 
