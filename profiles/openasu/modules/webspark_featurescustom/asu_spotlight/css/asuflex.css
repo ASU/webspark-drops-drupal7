@@ -50,7 +50,6 @@
 }
 
 .slidecontainer .blurbcontainer > .blurbshell {
-  max-width: 34%;
   position: absolute;
 }
 .blurbcontainer > .blurbshell.top-left {
@@ -96,6 +95,20 @@
   bottom: 1.5em;
   right: 0.5em;
 }
+
+.blurbcontainer > .blurbshell.full-width {
+  max-width: 100%;
+}
+.blurbcontainer > .blurbshell.two-thirds {
+  max-width: 66%;
+}
+.blurbcontainer > .blurbshell.half-width {
+  max-width: 50%;
+}
+.blurbcontainer > .blurbshell.narrow-third {
+  max-width: 34%;
+}
+
 
 @media (max-width: 992px) {
 

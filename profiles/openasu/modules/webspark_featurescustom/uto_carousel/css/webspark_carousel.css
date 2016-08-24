@@ -97,10 +97,8 @@
 .pane-bundle-uto-carousel .flex-direction-nav .flex-next {
   right: 0px;
   text-align: inherit;
-
 }
 
-=
 .pane-bundle-uto-carousel .flex-direction-nav a.flex-next:before {
    content: '';
 }
