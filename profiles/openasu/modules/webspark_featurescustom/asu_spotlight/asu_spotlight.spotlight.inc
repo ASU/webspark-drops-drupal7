@@ -270,40 +270,43 @@ function asu_spotlight_field_widget_form(&$form, &$form_state, $field, $instance
     );
 
     $element['alt'] = array(
-      '#title' => t('Image alt text'),
+      '#title' => t('Image Alt Text'),
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]['alt']) ? $items[$delta]['alt'] : NULL,
     );
 
     $element['description'] = array(
-      '#title' => t('Text'),
+      '#title' => t('Tagline'),
       '#type' => 'textarea',
       '#rows' => '2',
       '#resizable' => FALSE,
       '#default_value' => isset($items[$delta]['description']) ? $items[$delta]['description'] : NULL,
+      '#description' => t('Text below the title of the image.'),
     );
 
     $element['actionlink'] = array(
       '#title' => t('Button Link'),
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]['actionlink']) ? $items[$delta]['actionlink'] : NULL,
+      '#description' => t('This is a relative URL by default. Lead with a forward slash or complete URL if desired.'),
     );
 
 
     $element['actiontitle'] = array(
-      '#title' => t('Button Title'),
+      '#title' => t('Button Text'),
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]['actiontitle']) ? $items[$delta]['actiontitle'] : NULL,
     );
 
     $element['actionlink2'] = array(
-      '#title' => t('Button Link 2'),
+      '#title' => t('Button 2 Link'),
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]['actionlink2']) ? $items[$delta]['actionlink2'] : NULL,
+      '#description' => t('This is a relative URL by default. Lead with a forward slash or complete URL if desired.'),
     );
 
     $element['actiontitle2'] = array(
-      '#title' => t('Button Title 2'),
+      '#title' => t('Button 2 Text'),
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]['actiontitle2']) ? $items[$delta]['actiontitle2'] : NULL,
     );
@@ -313,6 +316,7 @@ function asu_spotlight_field_widget_form(&$form, &$form_state, $field, $instance
       '#type' => 'select',
       '#options' => array('blue' => 'Blue', 'red' => 'Red'),
       '#default_value' => isset($items[$delta]['color']) ? $items[$delta]['color'] : 'blue',
+      '#description' => t("See the <a href='https://brandguide.asu.edu/web-standards/enterprise/ui-kit'>UI Kit</a> for more information on the usage for each color."),
     );
 
     $element['position'] = array(
@@ -327,10 +331,9 @@ function asu_spotlight_field_widget_form(&$form, &$form_state, $field, $instance
         'mid-right' => 'Middle Right',
         'bottom-left' => 'Bottom Left',
         'bottom-center' => 'Bottom Center',
-        'bottom-right' => 'Bottom Right'
+        'bottom-right' => 'Bottom Right',
       ),
-      '#description' => t('Overlay text placement can go anywhere in a 3x3 grid over 
-          the image. This effect is minimized with wider overlay text width settings.'),
+      '#description' => t('Overlay text placement, based on a 3x3 grid.'),
       '#default_value' => isset($items[$delta]['position']) ? $items[$delta]['position'] : 'top-left',
     );
     $element['overlaytextwidth'] = array(
@@ -340,7 +343,7 @@ function asu_spotlight_field_widget_form(&$form, &$form_state, $field, $instance
         'full-width' => 'Full',
         'two-thirds' => 'Two thirds',
         'half-width' => 'Half',
-        'narrow-third' => 'One third'
+        'narrow-third' => 'One third',
       ),
       '#description' => t('Overlay text width relative to the width of the web site body container.'),
       '#default_value' => isset($items[$delta]['overlaytextwidth']) ? $items[$delta]['overlaytextwidth'] : 'full-width',

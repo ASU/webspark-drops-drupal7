@@ -1,8 +1,14 @@
+/** main width settings */
 .section > .container .row-full .pane-bundle-asu-spotlight .pane-content {
   max-width: 100%;
   padding-left: 0;
   padding-right: 0;
 }
+.section > .container .row-full .pane-bundle-asu-spotlight > h2.pane-title {
+  margin: 0 auto;
+  max-width: 1170px !important;
+}
+
 .slidecontainer {
   position: relative; !important
 }
