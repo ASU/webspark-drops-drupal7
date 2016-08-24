@@ -46,11 +46,13 @@ function theme_asu_spotlight_list(&$vars) {
  * Default theme implementation for flexslider_list_item
  */
 function theme_asu_spotlight_list_item(&$vars) {
+  $vars['package']['item']['overlaytextwidth'] = (isset($vars['package']['item']['overlaytextwidth'])) ? $vars['package']['item']['overlaytextwidth'] : 'full-width';
   $list_item = '<li' . drupal_attributes($vars['settings']['attributes']) . '>
             <div class="slidecontainer" position="relative">' .
     $vars['package']['slide'] .
     '<div class="blurbcontainer"> ' .
-    '<div class="blurbshell ' . $vars['package']['item']['position'] . '">' .
+    '<div class="blurbshell ' . $vars['package']['item']['position'] . ' ' .
+    $vars['package']['item']['overlaytextwidth'] . '">' .
     '<a href="' . $vars['package']['item']['link'] . '"><h2>' . $vars['package']['item']['title'] . '</h2></a>' .
     '<p>' . $vars['package']['item']['description'] . '</p>';
 
