@@ -218,13 +218,12 @@ function asu_brand_dependencies_met($current_version, $min_version, $max_version
   if (count($min_varr) < 2 || count($curr_varr) < 2) return FALSE;
 
   if(floatval($curr_varr[1]) < floatval($min_varr[1])) return FALSE;
+
   // max check (optional)
-
-  $max_varr = explode('-', $max_version);
-  $curr_varr = explode('-', $current_version);
-
-  //max version check
   if ($max_version) {
+    $max_varr = explode('-', $max_version);
+    $curr_varr = explode('-', $current_version);
+
     if(count($max_varr) < 2) return FALSE;
     if($curr_varr[0] != $max_varr[0]) return FALSE;
 
