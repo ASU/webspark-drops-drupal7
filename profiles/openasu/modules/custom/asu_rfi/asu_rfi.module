@@ -1437,6 +1437,7 @@ function asu_rfi_preprocess_page(&$variables)
           $category = 'RFI';
           $subdomain = array_shift((explode(".", $_SERVER['HTTP_HOST'])));
           $ga_id = $subdomain . '-' . variable_get('asu_rfi_google_analytics_key') . '-' . $nid;
+          $price = '300.00';
           if ($country == "United States") {
             if (!empty($zip_section)) {
               if (($zip_section == "85") || ($zip_section == "86")) {
@@ -1445,8 +1446,6 @@ function asu_rfi_preprocess_page(&$variables)
                 $price = '200.00';
               }
             }
-          } else {
-            $price = '300.00';
           }
           drupal_add_js("(function ($) { 
           SI_dataLayer = [{
