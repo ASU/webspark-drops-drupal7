@@ -1,6 +1,7 @@
 ASU RFI 7.x-1.6, 2016-08-03
 --------------------------
 - Fixed a bug causing a white screen after some graduate submissions
+- Fixed the logic behind the Graduate submission routing.
 
 ASU RFI 7.x-1.5, 2016-07-15
 --------------------------
