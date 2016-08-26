@@ -221,7 +221,7 @@ h6, .h6 {
   box-sizing: content-box;
 }
 
-@media (max-width: 930px) {
+@media (max-width: 991px) {
   #header .container {
     width: 100%;
   }
@@ -721,7 +721,7 @@ ul.help-text li.help-title {
 /* =MEDIA QUERIES
 -------------------------------------------------------------- */
 
-@media (max-width: 992px) {
+@media (max-width: 991px) {
 
   .row .col-sm-6:nth-child(3),
   .row .col-sm-6:nth-child(5),

@@ -21,6 +21,17 @@ function asu_maps_enhanced_update_7001(&$sandbox) {
   features_revert_module('asu_maps_enhanced');
 }
 
+/**
+ * Implements hook_update_N
+ * @param $sandbox
+ *
+ * Update the db to hold a longer list of items for a map
+ */
+function asu_maps_enhanced_update_7002(&$sandbox) {
+  db_query('ALTER TABLE field_data_field_asu_maps_enhanced_items MODIFY field_asu_maps_enhanced_items_map_items longtext');
+  db_query('ALTER TABLE field_revision_field_asu_maps_enhanced_items MODIFY field_asu_maps_enhanced_items_map_items longtext');
+
+}
 
 /**
  * Implementation of hook_uninstall().
