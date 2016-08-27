@@ -46,32 +46,37 @@ function theme_asu_spotlight_list(&$vars) {
  * Default theme implementation for flexslider_list_item
  */
 function theme_asu_spotlight_list_item(&$vars) {
+  $vars['package']['item']['overlaytextwidth'] = (isset($vars['package']['item']['overlaytextwidth'])) ? $vars['package']['item']['overlaytextwidth'] : 'full-width';
   $list_item = '<li' . drupal_attributes($vars['settings']['attributes']) . '>
             <div class="slidecontainer" position="relative">' .
-                      $vars['package']['slide'] .
-                '<div class="blurbcontainer '.$vars['package']['item']['position'].'">' .
-                '<a href="'.$vars['package']['item']['link'].'"><h2>'.$vars['package']['item']['title'].'</h2></a>'.
-                      '<p>'.$vars['package']['item']['description'].'</p>';
+    $vars['package']['slide'] .
+    '<div class="blurbcontainer"> ' .
+    '<div class="blurbshell ' . $vars['package']['item']['position'] . ' ' .
+    $vars['package']['item']['overlaytextwidth'] . '">' .
+    '<a href="' . $vars['package']['item']['link'] . '"><h2>' . $vars['package']['item']['title'] . '</h2></a>' .
+    '<p>' . $vars['package']['item']['description'] . '</p>';
 
-  if($vars['package']['item']['color']=='red') {
+  if ($vars['package']['item']['color'] == 'red') {
     $color = 'primary';
-  } else {
+  }
+  else {
     $color = 'blue';
   }
 
-  if($vars['package']['item']['actiontitle'] != NULL && $vars['package']['item']['actionlink']!= NULL ) {
+  if ($vars['package']['item']['actiontitle'] != NULL && $vars['package']['item']['actionlink'] != NULL) {
 
-    $list_item .= '<a class="btn btn-'.$color.' btn-block" href="'.$vars['package']['item']['actionlink'].'">'
-          .$vars['package']['item']['actiontitle'].'</a>';
+    $list_item .= '<a class="btn btn-' . $color . ' btn-block" href="' . $vars['package']['item']['actionlink'] . '">'
+      . $vars['package']['item']['actiontitle'] . '</a>';
   }
 
-  if($vars['package']['item']['actiontitle2'] != NULL && $vars['package']['item']['actionlink2'] != NULL) {
+  if ($vars['package']['item']['actiontitle2'] != NULL && $vars['package']['item']['actionlink2'] != NULL) {
 
-    $list_item .= '<a class="btn btn-'.$color.' btn-block" href="'.$vars['package']['item']['actionlink2'].'">'
-          .$vars['package']['item']['actiontitle2'].'</a>';
+    $list_item .= '<a class="btn btn-' . $color . ' btn-block" href="' . $vars['package']['item']['actionlink2'] . '">'
+      . $vars['package']['item']['actiontitle2'] . '</a>';
   }
 
   $list_item .= '</div>
+              </div>
             </div>
           </li>';
 

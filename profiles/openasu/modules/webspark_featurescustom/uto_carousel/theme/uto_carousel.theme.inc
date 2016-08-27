@@ -43,40 +43,6 @@ function theme_uto_carousel_list(&$vars) {
 }
 
 /**
- * Default theme implementation for flexslider_list_item
- */
-/*function theme_uto_carousel_list_item(&$vars) {
-
-  $list_item = '<li' . drupal_attributes($vars['settings']['attributes']) . '>
-            <div class="slidecontainer" position="relative">' . 
-                      $vars['package']['slide'] .
-                '<div class="blurbcontainer '.$vars['package']['item']['position'].'">' . 
-                      '<h2>'.$vars['package']['item']['title'].'</h2>'.
-                      '<p>'.$vars['package']['item']['description'].'</p>';
-
-  if($vars['package']['item']['actiontitle'] != NULL && $vars['package']['item']['actionlink']!= NULL ) {
-
-    $list_item .= '<a class="btn btn-'.$vars['package']['item']['color'].' btn-block" href="'.$vars['package']['item']['actionlink'].'">'
-          .$vars['package']['item']['actiontitle'].'</a>';
-  }
-
-  if($vars['package']['item']['actiontitle2'] != NULL && $vars['package']['item']['actionlink2'] != NULL) {
-    
-    $list_item .= '<a class="btn btn-'.$vars['package']['item']['color'].' btn-block" href="'.$vars['package']['item']['actionlink2'].'">'
-          .$vars['package']['item']['actiontitle2'].'</a>';
-  }
-
-
-  $list_item .= '</div>
-            </div>
-          </li>\n';
-
-
-  return $list_item;          
-
-}*/
-
-/**
  * Template preprocess handler for 'flexslider' theme.
  */
 function template_process_uto_carousel(&$vars) {

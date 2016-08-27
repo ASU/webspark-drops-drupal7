@@ -91,6 +91,5 @@ function asu_spotlight_field_default_field_instances() {
 
   t('Items');
 
-
   return $field_instances;
 }
