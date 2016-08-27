@@ -16,7 +16,6 @@ mysql:
 branches:
   only:
     - master
-    - 7.x-rc
     - travis-ci
 
 # Firefox 47.0 is currently breaking Selenium Server
