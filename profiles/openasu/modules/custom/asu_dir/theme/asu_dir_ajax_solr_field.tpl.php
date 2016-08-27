@@ -48,13 +48,12 @@
             </select></div>
 
           <div id="asu-dir-ajax-solr-search" class="col-md-4">
-n-search form-control form-text required" placeholder="Search" type="text" id="edit-keys" name="keys" size="15" maxlength="128"/>
+            <input title="Search" class="input-main-search form-control form-text required" placeholder="Search" type="text" id="edit-keys" name="keys" size="15" maxlength="128"/>
             <button class="asu_dir_people_search_btn btn-main-search btn"
                     value="
               <i class=&quot;fa fa-search&quot; aria-hidden=&quot;true&quot;></i>"
                     type="submit">
-              <i class="fa fa-search" aria-hidden="true"></i><span
-                class="asu-dir-hidden">Search</span></button>
+              <i class="fa fa-search" aria-hidden="true"></i><span class="asu-dir-hidden">Search</span></button>
 
             <div id="asu-dir-ajax-solr-sort">
               Sort By: &nbsp;<span class="asu-dir-sort-item" id="dir-lastNameSort">Last Name </span>

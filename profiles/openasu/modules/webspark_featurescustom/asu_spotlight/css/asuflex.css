@@ -139,9 +139,6 @@
   .blurbcontainer .btn {
   font-size: 13px;
   }
-  .slidecontainer .blurbcontainer > .blurbshell {
-    max-width: 50%;
-  }
   .blurbcontainer > .blurbshell.top-left {
   top: 0.3em;
   }
@@ -168,50 +165,12 @@
   .slidecontainer h2 {
     font-size: 30px;
   }
-
   .slidecontainer .blurbcontainer > .blurbshell {
     max-width: 80%;
-  }
-  .blurbcontainer > .blurbshell.top-left {
-    top: 0;
-    left: 0;
-  }
-  .blurbcontainer > .blurbshell.top-center {
-    top: 0;
-    left: 0;
-  }
-  .blurbcontainer > .blurbshell.top-right {
-    top: 0;
-    right: 0;
-  }
-  .blurbcontainer > .blurbshell.mid-left {
-    top: 0;
-    left: 0;
-  }
-  .blurbcontainer > .blurbshell.mid-center {
-    top: 0;
-    left: 0;
-  }
-  .blurbcontainer > .blurbshell.mid-right {
-    top: 0;
-    right: 0;
-  }
-  .blurbcontainer > .blurbshell.bottom-left {
-    bottom: 0;
-    left: 0;
-  }
-  .blurbcontainer > .blurbshell.bottom-center {
-    bottom: 0;
-    left: 0;
-  }
-  .blurbcontainer > .blurbshell.bottom-right {
-    bottom: 0;
-    right: 0;
   }
 }
 
 @media (max-width: 450px) {
-
   .slidecontainer .blurbcontainer > .blurbshell {
     max-width: 100%;
   }
@@ -221,5 +180,4 @@
   .blurbcontainer .btn {
   font-size: 12px;
   }
-
 }

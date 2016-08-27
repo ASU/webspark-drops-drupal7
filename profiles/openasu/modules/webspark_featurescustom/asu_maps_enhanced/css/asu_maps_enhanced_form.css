@@ -19,3 +19,9 @@
 #asu-maps-enhanced-tree .asu-maps-enhanced-check {
     margin-left: 2px;
 }
+
+
+#asu-maps-enhanced-tree ul.jqtree-tree li.jqtree-selected>.jqtree-element {
+    background-color: transparent;
+    background: none;
+}

@@ -10,41 +10,41 @@ projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-pr
 
 ; The Panopoly Foundation
 
-projects[panopoly_core][version] = 1.37
+projects[panopoly_core][version] = 1.40
 projects[panopoly_core][subdir] = panopoly
 
-projects[panopoly_images][version] = 1.37
+projects[panopoly_images][version] = 1.40
 projects[panopoly_images][subdir] = panopoly
 
-projects[panopoly_theme][version] = 1.37
+projects[panopoly_theme][version] = 1.40
 projects[panopoly_theme][subdir] = panopoly
 
-projects[panopoly_magic][version] = 1.37
+projects[panopoly_magic][version] = 1.40
 projects[panopoly_magic][subdir] = panopoly
 
-projects[panopoly_widgets][version] = 1.37
+projects[panopoly_widgets][version] = 1.40
 projects[panopoly_widgets][subdir] = panopoly
 
-projects[panopoly_admin][version] = 1.37
+projects[panopoly_admin][version] = 1.40
 projects[panopoly_admin][subdir] = panopoly
 
-projects[panopoly_users][version] = 1.37
+projects[panopoly_users][version] = 1.40
 projects[panopoly_users][subdir] = panopoly
 
 ; The Panopoly Toolset
 
-projects[panopoly_pages][version] = 1.37
+projects[panopoly_pages][version] = 1.40
 projects[panopoly_pages][subdir] = panopoly
 
-projects[panopoly_wysiwyg][version] = 1.37
+projects[panopoly_wysiwyg][version] = 1.40
 projects[panopoly_wysiwyg][subdir] = panopoly
 
-projects[panopoly_search][version] = 1.37
+projects[panopoly_search][version] = 1.40
 projects[panopoly_search][subdir] = panopoly
 ; Fixes DB update dependency ordering
 projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
 
-projects[panopoly_test][version] = 1.37
+projects[panopoly_test][version] = 1.40
 projects[panopoly_test][subdir] = panopoly
 ; @TODO - Add patches for custom Webspark testing
 projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update.patch
@@ -55,7 +55,7 @@ projects[panopoly_test][patch][1372] = patches/webspark-847_panopoly-test-update
 
 projects[asu_drupal_modules][type] = module
 projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = 993c0b622b4f68d5d7939753e87e1f42447b5233
+projects[asu_drupal_modules][download][revision] = 83673f3349f7b3a243b2b190a041f81453e8b21e
 projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ; ASU Module Prerequisites
@@ -77,6 +77,12 @@ projects[better_watchdog_ui][subdir] = contrib
 projects[cas_attributes][version] = 1.0-rc3
 projects[cas_attributes][type] = module
 projects[cas_attributes][subdir] = contrib
+
+;; For Webspark News & Events
+;; Will be removed when news & events is deleted
+projects[calendar][version] = 3.4
+projects[calendar][type] = module
+projects[calendar][subdir] = contrib
 
 projects[email][version] = 1.3
 projects[email][subdir] = contrib
@@ -229,7 +235,7 @@ libraries[ajax_solr][download][type] = get
 libraries[ajax_solr][download][url] = https://github.com/evolvingweb/ajax-solr/archive/master.zip
 libraries[ajax_solr][directory_name] = ajax_solr
 libraries[ajax_solr][destination] = libraries
-libraries[ajax_solr][download][sha256] = dbc2da964c94b939b80a2688bff6af90e66f8f08672cb66e5e1286019f8e8b40
+libraries[ajax_solr][download][sha256] = d79493f28c47e8d5871d938d7146ab701f8666b785f50e00d9ab29e3a79f4376
 
 ; 1 of 2 - CAS
 libraries[CAS][download][type] = get
