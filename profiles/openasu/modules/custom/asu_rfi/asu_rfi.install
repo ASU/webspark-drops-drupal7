@@ -96,6 +96,8 @@ function asu_rfi_uninstall() {
   variable_del('asu_rfi_google_analytics_key');
   variable_del('asu_rfi_error_email');
   variable_del('asu_rfi_from_email_field');
+  variable_del('asu_rfi_cached_programs');
+  variable_del('asu_rfi_cached_programs_timestamp');
  }
 
 /**
@@ -107,4 +109,12 @@ function asu_rfi_update_7000(&$sandbox) {
   {
     module_enable(array('honeypot'));
   }
+}
+
+/**
+ * Implements hook_update_N
+ * + Forces a rebuild of the module's features to include the domain and location piece 
+ */
+function asu_rfi_update_7001(){
+  features_revert_module('asu_rfi_feature');
 }
