@@ -52,7 +52,7 @@ function asu_rfi_undergrad_post($data)
   $domain = isset($data['domain']) ? $data['domain'] : $_SERVER['HTTP_HOST'];;
   $source = $domain . '-' . $type_of_form . '-UG';
 
-  $campus = asu_rfi_correct_campus_id($campus);
+  $campus = asu_rfi_correct_campus_idu($campus);
 
   //mobile phone
   if (isset($data['mobile_check'])) {
@@ -244,7 +244,7 @@ function asu_rfi_check_managed_online($program, $getProgramsList)
   return false;
 }
 
-function asu_rfi_correct_campus_id($campus)
+function asu_rfi_correct_campus_idu($campus)
 {
 
   switch ($campus) {
