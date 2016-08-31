@@ -97,31 +97,22 @@
 .pane-bundle-uto-carousel .flex-direction-nav .flex-next {
   right: 0px;
   text-align: inherit;
-
 }
-
-=
 .pane-bundle-uto-carousel .flex-direction-nav a.flex-next:before {
    content: '';
 }
-
 .pane-bundle-uto-carousel .flex-direction-nav .flex-prev {
   left: 0px;
 }
-
 .pane-bundle-uto-carousel .flex-direction-nav a:before {
   font-family: inherit;
   font-size: inherit;
   display: inline-block;
   content: '';
 }
-
 .pane-bundle-uto-carousel .flex-direction-nav a.flex-next:before {
   content: '';
 }
-
-
-
 
 /* line 84, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-direction-nav a:hover, .pane-bundle-uto-carousel

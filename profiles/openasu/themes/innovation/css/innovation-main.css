@@ -221,7 +221,7 @@ h6, .h6 {
   box-sizing: content-box;
 }
 
-@media (max-width: 930px) {
+@media (max-width: 991px) {
   #header .container {
     width: 100%;
   }
@@ -721,7 +721,7 @@ ul.help-text li.help-title {
 /* =MEDIA QUERIES
 -------------------------------------------------------------- */
 
-@media (max-width: 992px) {
+@media (max-width: 991px) {
 
   .row .col-sm-6:nth-child(3),
   .row .col-sm-6:nth-child(5),
@@ -821,9 +821,9 @@ ul.help-text li.help-title {
   padding-right: 15px;
 }
 
-.section > .container .row-full .maxpayne [class^="pane-"],
-#footer > .container .row-full .maxpayne [class^="pane-"],
-#page-footer > .container .row-full .maxpayne [class^="pane-"] {
+/* 100% width issue - override for flexslider; asuflex.css carries the rest after this rule
+----------------------------------------------------- */
+.section > .container .row-full .pane-bundle-asu-spotlight [class^="pane-"] {
   width: 100% !important;
   padding-left: 0;
   padding-right: 0;
@@ -844,7 +844,8 @@ ul.help-text li.help-title {
   background-color: #E5E5E5;
 }
 
-/* Token browsing modal */
+/** Token browsing modal
+----------------------------------------------------- */
 
 .ui-widget-content.ui-dialog.token-browser-container {
   background-color: #fff;
