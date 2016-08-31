@@ -113,7 +113,7 @@ input[type="radio"] {
  width: 20px !important;
 }
 
-.form-item-campus label, .form-item-prog-plan label, .form-item-start-date label, .form-item-student-type label, .form-item-country label, .form-item-state label, .form-item-program-code label, #asu-rfi-form-data .form-type-textfield label, #asu-rfi-form-data .form-type-item label, #asu-rfi-form-data .form-item label, #asu_rfi_second_form .form-item label, #asu-rfi-current-form-data label{
+.form-item-campus label, .form-item-prog-plan label, .form-item-start-date label, .form-item-student-type label, .form-item-country label, .form-item-state label, .form-item-program-code label, #asu-rfi-form-data .form-type-textfield label, #asu-rfi-form-data .form-type-item label, #asu-rfi-form-data .form-item label, #asu-rfi-current-form-data label{
     display: block !important;
     font-weight: normal;
     font-size: smaller;
