@@ -5,7 +5,6 @@
         bindLocation();
         bindPrograms();
         futureRemoval();
-        //  console.log('hit');
         buildBoundCountry();
     }
 
@@ -80,7 +79,6 @@
 
         var reg = document.getElementById('edit-program-code');
         reg.addEventListener('change', function () {
-            console.log('bind prog');
             restoreAllCampuses();
             filterCampus(reg.value);
         }, true);
@@ -137,7 +135,6 @@
 
     /* -- Filter available campuses based on chosen program -- */
     function filterCampus(reg) {
-        console.log('called');
         if (reg) {
             var campusSelect = document.getElementById('edit-campus');
             var campuses = campusSelect.childNodes;
@@ -216,7 +213,6 @@
             var index = country.selectedIndex;
 
             document.getElementById('rfi-bound-country').selectedIndex = index;
-            console.log(country.options[country.selectedIndex].text);
 
             if (!onlineRadio.checked && (country.options[country.selectedIndex].text == "United States" || country.options[country.selectedIndex].text == "Canada")) {
                 addressArea.setAttribute('style', 'display: block;');
