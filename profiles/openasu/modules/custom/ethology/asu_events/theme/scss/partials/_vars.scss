@@ -1,0 +1,63 @@
+// FONTS
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,300i,400,500,700,900);
+
+// COLORS
+$cranberry: #990033;
+$black-two: #2a2a2a;
+$black-three: #353535;
+$white: #f2f2f2;
+$white-two: #d7d7d7;
+
+// MIXINS
+// CUSTOM MEDIA QUERY MIXIN BASED OFF BOOTSTRAP'S BREAKPOINTS
+$breakpoints-max: ("xsmall": (max-width: 568px), "small": (max-width: 768px), "medium": (max-width: 991px), "large": (max-width: 1200px));
+$breakpoints-min: ("xsmall": (min-width: 568px), "small": (min-width: 768px), "medium": (min-width: 991px), "large": (min-width: 1200px));
+
+@mixin respond-to-max($name) {
+    @media #{inspect(map-get($breakpoints-max, $name))} {
+        @content;
+    }
+}
+
+@mixin respond-to-min($name) {
+    @media #{inspect(map-get($breakpoints-min, $name))} {
+        @content;
+    }
+}
+
+// EXTENDS
+%light {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+}
+
+%lightitlaic {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-variant: italic;
+}
+
+%regular {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+}
+
+%medium {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+}
+
+%bold {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+}
+
+@function calculateRem($size) {
+    $remSize: $size / 10px;
+    @return #{$remSize}rem;
+}
+
+@mixin fontSize($size) {
+    font-size: $size;
+    font-size: calculateRem($size);
+}

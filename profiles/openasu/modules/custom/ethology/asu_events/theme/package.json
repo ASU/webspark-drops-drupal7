@@ -1,0 +1,24 @@
+{
+  "name": "asu_news",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "browser-sync": "^2.13.0",
+    "gulp-filter": "^4.0.0",
+    "gulp-notify": "^2.2.0",
+    "gulp-sourcemaps": "^1.6.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-load-plugins": "^1.2.4",
+    "gulp-sass": "^2.3.1"
+  },
+  "scripts": {
+    "start": "gulp",
+    "build": "gulp sass"
+  },
+  "author": "",
+  "license": "ISC"
+}
