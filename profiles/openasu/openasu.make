@@ -49,6 +49,7 @@ projects[panopoly_test][subdir] = panopoly
 ; @TODO - Add patches for custom Webspark testing
 projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update.patch
 projects[panopoly_test][patch][1372] = patches/webspark-847_panopoly-test-updates-3.patch
+projects[panopoly_test][patch][140] = patches/webspark-944_panopoly-test-image-widget-patches.patch
 
 ; ASU-specific, Webspark-agnostic modules
 ; Installed in /profiles/openasu/modules/custom
