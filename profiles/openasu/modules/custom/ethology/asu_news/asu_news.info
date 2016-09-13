@@ -1,0 +1,11 @@
+name = "ASU News"
+description = "Create and customize a ASU news block from a ASU news feed"
+core = 7.x
+package = ASU
+
+dependencies[] = panels
+dependencies[] = features
+dependencies[] = asu_now_saf_taxonomy
+dependencies[] = asu_news_fields_feature
+dependencies[] = asu_social_share
+dependencies[] = asu_news_importer

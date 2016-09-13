@@ -1,0 +1,124 @@
+<?php
+/**
+ * @file
+ * Install and update hooks.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function asu_events_install() {
+
+  // Disable panels for news and EventBase
+  _asu_news_disable_page_variants('node_view', array('node_view_panel_context'));
+  try {
+    _asu_events_disable_views_events_page('events');
+  }
+  catch (ErrorException $e) {
+    drupal_set_message('Unable to load view', 'status');
+  }
+  try {
+    _asu_events_disable_views_events_page('events_new');
+  }
+  catch (ErrorException $e) {
+    drupal_set_message('Unable to load view', 'status');
+  }
+  asu_events_update_7001();
+  asu_events_update_7002();
+}
+
+/**
+ * Disables page variants so that Events nodes are not panelized
+ * @param  string   $page_name   Name of the page with the variants
+ * @param  array()  $variant_ids String array with id names of the variants
+ * @return void
+ */
+function _asu_events_disable_page_variants($page_name, $variant_ids) {
+
+  $page = page_manager_get_page_cache($page_name);
+  foreach($variant_ids as $id) {
+    $page->handler_info[$id]['disabled'] = true;
+    $page->handler_info[$id]['changed'] = PAGE_MANAGER_CHANGED_STATUS;
+  }
+
+  page_manager_save_page_cache($page);
+}
+
+/**
+ * Add proper permisions for the download links
+ */
+function asu_events_update_7001() {
+  $permissions = array('download any image files');
+  foreach(array('anonymous user', 'authenticated user') as $role_name) {
+    $role = user_role_load_by_name($role_name);
+    user_role_grant_permissions($role->rid, $permissions);
+  }
+}
+
+/**
+ * Update the display for ddate field so addtocal will download ics
+ */
+function asu_events_update_7002() {
+  // Fetch an instance info array.
+  $instance_info = field_info_instance('node', 'field_asuevent_very_start_date', 'asu_event');
+  // Change a single property in the instance definition.
+  $instance_info['display']['default'] = array(
+    'type' => 'addtocal_view',
+    'label' => 'hidden',
+    'weight' => 5,
+    'module' => 'addtocal',
+    'settings' => array(
+      'format_type' => 'medium',
+      'fromto' => 'both',
+    ),
+  );
+  // Write the changed definition back.
+  field_update_instance($instance_info);
+
+  cache_clear_all();
+}
+
+/**
+ * Disable views displays for Example page and feed.
+ */
+function _asu_events_disable_views_events_page($name) {
+  $t = get_t();
+
+  $views_name = $name;
+  $views_displays = array('page');
+
+  $disabled_displays = array();
+  $variables = array('@view_name' => $views_name);
+
+  $view = views_get_view($views_name);
+  if ($view) {
+    foreach ($views_displays as $display_name) {
+      if (isset($view->display[$display_name])) {
+        $view->display[$display_name]->display_options['enabled'] = FALSE;
+        $disabled_displays[] = $display_name;
+      }
+    }
+    views_save_view($view);
+  }
+  else {
+    $message = 'Unable to load @view_name from views.';
+    throw new DrupalUpdateException($t($message, $variables));
+  }
+
+  if (count($disabled_displays)) {
+    $message = 'Disabled @view_name views displays named @displays. ';
+    $variables['@displays'] = implode(', ', $disabled_displays);
+
+    $missing_displays = array_diff($views_displays, $disabled_displays);
+    if (count($missing_displays)) {
+      $message .= 'Missing @view_name views displays named @displays could not be disabled. ';
+      $variables['@missing'] = implode(', ', $missing_displays);
+    }
+  }
+  else {
+    $message = 'Nothing to do. No @view_name views displays named @displays found to disable. ';
+    $variables['@displays'] = implode(', ', $views_displays);
+  }
+
+  return $t($message, $variables);
+}

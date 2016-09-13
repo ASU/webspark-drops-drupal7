@@ -1,0 +1,88 @@
+#gigya-login-admin-form .form-item-gigya-login-plugin-width {
+  float: left;
+  margin-right: 5px;
+}
+
+#gigya-login-admin-form .form-item-gigya-login-plugin-height {
+  clear: both;
+}
+
+.gigya-gm-settings-form .form-item {
+  margin: 0;
+  padding: 0;
+}
+
+.gigya-gm-settings-form .form-item-gigya-gm-blocks-block-name {
+  margin-bottom: 30px;
+}
+
+.gigya-gm-settings-form .gm-element {
+  margin-bottom: 60px;
+}
+.gigya-gm-settings-form .gm-element span.label {
+  display: block;
+  font-weight: bold;
+}
+.gigya-gm-settings-form .gm-element div {
+  float: left;
+}
+
+.gigya-gm-settings-form .gm-element .form-type-checkbox {
+  margin-top: 20px;
+  margin-right: 5px;
+}
+
+.gigya-gm-settings-form .gm-delete {
+  margin-right: 5%;
+  width: 335px;
+
+}
+
+#gigya-activity-feed-settings-form .form-item-gigya-activety-feed-width {
+  float: left;
+  margin-right: 10px;
+}
+#edit-gigya-login-mode .description .warnning {
+  color: red;
+}
+#edit-gigya-login-mode .form-disabled label {
+  color: #cccccc;
+}
+.gigya-hidden {
+  display: none;
+}
+
+#edit-gigya-raas-mappings .raas-mappings-add {
+  border: 1px solid #cccccc;
+  float: left;
+}
+#edit-gigya-raas-mappings .raas-add-button,
+#edit-gigya-raas-mappings .form-item-gigya-raas-mappings-target,
+#edit-gigya-raas-mappings .form-item-gigya-raas-mappings-source {
+  padding: 0 20px;
+  float: left;
+}
+
+#edit-gigya-raas-mappings-raas-map-add {
+  margin-top: 19px;
+  margin-bottom: 0;
+}
+#edit-gigya-raas-mappings-label-tbl {
+  float: left;
+  clear: both;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+ #raas-mapping-tbl-wrap {
+   float: left;
+   width: 100%;
+ }
+
+ .data-center-other {
+   display: inline-block;
+   margin-left: 5px;
+ }
+
+ .data-center-other .suffix {
+   margin-left: 3px;
+ }

@@ -1,0 +1,7 @@
+name = "ASU Feed Importer"
+description = "Create and customize ASU Feed Importers"
+core = 7.x
+package = ASU
+
+dependencies[] = feeds_tamper
+dependencies[] = feeds_tamper_ui

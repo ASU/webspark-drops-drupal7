@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file gigya_panels_panes.module
+ * TODO: Enter file description here.
+ */
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function gigya_panels_panes_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'ctools' && $plugin_type == 'content_types') {
+    return 'plugins/' . $plugin_type;
+  }
+}

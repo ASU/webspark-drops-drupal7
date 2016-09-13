@@ -1,0 +1,11 @@
+name = "ASU Events"
+description = "Create and customize a ASU events block from a ASU events feed"
+core = 7.x
+package = ASU
+
+dependencies[] = panels
+dependencies[] = features
+dependencies[] = asu_events_fields
+dependencies[] = asu_social_share
+dependencies[] = addtocal
+dependencies[] = asu_events_importer

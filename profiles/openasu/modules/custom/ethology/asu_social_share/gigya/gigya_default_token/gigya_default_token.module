@@ -1,0 +1,241 @@
+<?php
+
+/**
+ * @file
+ * Allows administrators to use php code snippets to
+ * define allowed values or default values. The snippets
+ * are stored in a database table and retrieved in
+ * callback functions.
+ */
+
+/**
+ * Implements hook_perm().
+ */
+function gigya_default_token_permission() {
+  return array(
+    // TODO : simplify machine name and update existing perms ?
+    'Use token default value' => array(
+      'title' => t('Use TOKENS string input for field settings'),
+      'description' => t('Enter TOKENS string in the field for the field settings that allow it.'),
+    ),
+  );
+}
+
+/**
+ * Add fields to allowed values form to allow users to input a function or a PHP
+ * snippet that will return the allowed values.
+ */
+function gigya_default_token_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'field_ui_field_edit_form') {
+    $field = $form['#field'];
+    if ($field['module'] == 'text') {
+      gigya_default_token_default_value_form($form, $form_state, $field);
+      $form['#validate'][] = 'gigya_default_token_default_value_validate';
+    }
+  }
+}
+
+/**
+ * Add fields to default value form to allow users to input a token string that
+ * will return the default values.
+ */
+function gigya_default_token_default_value_form(&$form, $form_state, $field) {
+  $instance = field_info_instance($form['instance']['entity_type']['#value'], $field['field_name'], $form['instance']['bundle']['#value']);
+  $token_string = gigya_default_token_field_get_setting('default_value_token', 'instance', $field, $instance);
+  if (!empty($token_string)) {
+    $default_value_function = 'gigya_default_token_default_value_token';
+  }
+  else {
+    $default_value_function = '';
+  }
+
+  // Add a field where users can specify some tokens that will return the
+  // default value.
+  module_load_include('install', $field['module']);
+  $schema = module_invoke($field['module'], 'field_schema', $field);
+  $columns = array_keys($schema['columns']);
+  $sample = t("return array(\n  0 => array(@columns),\n  // You'll usually want to stop here. Provide more values\n  // if you want your 'default value' to be multi-valued:\n  1 => array(@columns),\n  2 => ...\n);", array('@columns' => implode(', ', $columns)));
+
+  $form['instance']['default_value_widget']['default_value_token'] = array(
+    '#access' => user_access('Use token default value'),
+    '#type' => 'textfield',
+    '#title' => t('Default value TOKEN string'),
+    '#default_value' => $token_string,
+    '#weight' => 5,
+    '#parents' => array('instance', 'default_value_token'),
+    '#description' => theme('token_tree', array('token_types' => array('gigya'), 'global_types' => FALSE))
+    );
+  $form['instance']['default_value_widget']['default_value_function'] = array(
+      '#access' => FALSE,
+      '#type' => 'textfield',
+      '#title' => t('Default value function'),
+      '#default_value' => $default_value_function,
+      '#description' => t('The name of a function that will return the default value.'),
+      '#weight' => 6,
+      '#parents' => array('instance', 'default_value_function'),
+  );
+}
+
+/**
+ * Validation handler to store PHP default values.
+ */
+function gigya_default_token_default_value_validate(&$form, &$form_state) {
+  $field = $form['#field'];
+  $instance = $form['#instance'];
+
+  $token_string = $form_state['values']['instance']['default_value_token'];
+  if (!empty($token_string)) {
+    $default_value_function = 'gigya_default_token_default_value_token';
+  }
+  else {
+    $default_value_function = '';
+  }
+  form_set_value($form['instance']['default_value_widget']['default_value_function'], $default_value_function, $form_state);
+  // @todo This should be done at submit time, not validate.
+  gigya_default_token_field_set_setting('default_value_token', 'instance', $token_string, $field, $instance);
+}
+
+/**
+ * We store all settings in a flat text field, but some settings will be arrays
+ * that need to be serialized and unserialized, like the default_value.
+ */
+function gigya_default_token_serialized_settings() {
+  return array('default_value');
+}
+
+/**
+ * Helper function to retrieve field settings stored by gigya_default_token.
+ *
+ * gigya_default_token uses the 'gigya_default_token_field_settings' table to
+ * store custom settings not used by core.
+ *
+ * @param $settings
+ *   Will have no $instance nor a db bundle column.
+ * @param $setting_type
+ *   @todo document
+ * @param $field
+ *   @todo document
+ * @param $instance
+ *   @todo document
+ * @param $langcode
+ *   @todo document
+ *
+ * @return
+ *   @todo document
+ */
+function gigya_default_token_field_get_setting($setting, $setting_type, $field, $instance = NULL, $langcode = LANGUAGE_NONE) {
+  if ($setting_type == 'field' || empty($instance)) {
+    $value = db_select('gigya_default_token_field_settings', 'fs')->fields('fs', array('setting_option'))
+      ->condition('fs.field_name', $field['field_name'])
+      ->condition('fs.setting', $setting)
+      ->condition('fs.setting_type', $setting_type)
+      ->execute()->fetchField();
+  }
+  else {
+    $value = db_select('gigya_default_token_field_settings', 'fs')->fields('fs', array('setting_option'))
+      ->condition('fs.field_name', $field['field_name'])
+      ->condition('fs.entity_type', $instance['entity_type'])
+      ->condition('fs.bundle', $instance['bundle'])
+      ->condition('fs.language', $langcode)
+      ->condition('fs.setting', $setting)
+      ->condition('fs.setting_type', $setting_type)
+      ->execute()->fetchField();
+  }
+
+  if (in_array($setting, gigya_default_token_serialized_settings())) {
+    $value = unserialize($value);
+  }
+
+  return $value;
+}
+
+/**
+ * Helper function to set field settings stored by gigya_default_token.
+ *
+ * gigya_default_token uses the 'gigya_default_token_field_settings' table to
+ * store custom settings not used by core.
+ *
+ * @see gigya_default_token_field_get_setting()
+ */
+function gigya_default_token_field_set_setting($setting, $setting_type, $value, $field, $instance = NULL, $langcode = LANGUAGE_NONE) {
+  // Delete any prior values.
+  $bundle = ($setting_type == 'field' || empty($instance)) ? NULL : $instance['bundle'];
+  $entity_type = ($setting_type == 'field' || empty($instance)) ? NULL : $instance['entity_type'];
+  if ($setting_type == 'field' || empty($instance)) {
+    db_delete('gigya_default_token_field_settings')
+      ->condition('field_name', $field['field_name'])
+      ->condition('setting', $setting)
+      ->condition('setting_type', $setting_type)
+      ->execute();
+  }
+  else {
+    db_delete('gigya_default_token_field_settings')
+      ->condition('field_name', $field['field_name'])
+      ->condition('entity_type', $entity_type)
+      ->condition('bundle', $bundle)
+      ->condition('language', $langcode)
+      ->condition('setting', $setting)
+      ->condition('setting_type', $setting_type)
+      ->execute();
+  }
+  // Create the new values.
+  if (in_array($setting, gigya_default_token_serialized_settings())) {
+    $value = serialize($value);
+  }
+  $record = array(
+    'field_name' => $field['field_name'],
+    'entity_type' => $entity_type,
+    'bundle' => $bundle,
+    'language' => $langcode,
+    'setting' => $setting,
+    'setting_option' => $value,
+    'setting_type' => $setting_type,
+  );
+  $primary_keys = array();
+  drupal_write_record('gigya_default_token_field_settings', $record, $primary_keys);
+}
+
+/**
+ * Callback to return default value constructed from PHP code snippet.
+ *
+ * @see gigya_default_token_field_get_setting()
+ */
+function gigya_default_token_default_value_token($entity_type, $entity, $field, $instance, $langcode = LANGUAGE_NONE) {
+  $token_string = gigya_default_token_field_get_setting('default_value_token', 'instance', $field, $instance, $langcode);
+  return token_replace($token_string);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gigya_default_token_field_widget_form_alter(&$element, &$form_state, $context) {
+  if (!empty($context['instance']['default_value_token'])) {
+    if (isset($element['#base_type'])) {
+      $item = &$element;
+    }
+    else {
+      if (isset($element[0]['#base_type'])) {
+        $item = &$element[0];
+      }
+    }
+    if (!isset($item)) {
+      $item = &$element['value'];
+    }
+    if (empty($item['#default_value']) && !empty($context['items'])) {
+      if (is_array($context['items'])) {
+        $item['#default_value'] = $context['items']['0']['value'];
+      }
+      else {
+        $item['#default_value'] = $context['items'];
+      }
+    }
+    else {
+      $rep = token_replace($context['instance']['default_value_token'], array(), array('clear' => TRUE));
+
+      if ( !empty( $rep ) ) {
+        $item['#default_value'] = $rep;
+      }
+    }
+  }
+}
+
