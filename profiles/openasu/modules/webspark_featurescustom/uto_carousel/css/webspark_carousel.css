@@ -101,18 +101,15 @@
 .pane-bundle-uto-carousel .flex-direction-nav a.flex-next:before {
    content: '';
 }
-
 .pane-bundle-uto-carousel .flex-direction-nav .flex-prev {
   left: 0px;
 }
-
 .pane-bundle-uto-carousel .flex-direction-nav a:before {
   font-family: inherit;
   font-size: inherit;
   display: inline-block;
   content: '';
 }
-
 .pane-bundle-uto-carousel .flex-direction-nav a.flex-next:before {
   content: '';
 }
