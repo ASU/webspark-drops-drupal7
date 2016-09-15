@@ -1,3 +1,21 @@
+Panopoly Core 7.x-1.40, 2016-08-20
+---------------------------
+- Update to Panels 7.x-3.7 and Panelizer 7.x-3.4.
+- Data loss: Saving in IPE without changes can cause previous change to be lost.
+- Panels 3.6 converts user configured CSS IDs from underscores to dashes and
+  makes CSS classes lover-case.
+
+Panopoly Core 7.x-1.39, 2016-08-18
+---------------------------
+- Panels 3.5 converts user configured CSS IDs from underscores to dashes.
+- Update Panels and Panelizer for SA-CONTRIB-2016-047 and SA-CONTRIB-2016-048.
+- Update to latest Panelizer.
+- Patch Views Autocomplete Filters for clunky autocomplete message.
+
+Panopoly Core 7.x-1.38, 2016-08-03
+---------------------------
+- No changes since last release.
+
 Panopoly Core 7.x-1.37, 2016-06-16
 ---------------------------
 - Update Views to 3.14 for SA-CONTRIB-2016-036.
