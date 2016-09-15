@@ -79,16 +79,6 @@ function better_watchdog_ui_entity_menu() {
 }
 
 /**
- * Implements hook_watchdog().
- */
-function better_watchdog_ui_entity_watchdog(array $log_entry) {
-  if (module_exists('rules')) {
-    $entity = new WatchdogEntity($log_entry, 'better_watchdog_ui_watchdog');
-    rules_invoke_event('better_watchdog_ui_watchdog_create', $entity);
-  }
-}
-
-/**
  * Implements hook_theme().
  */
 function better_watchdog_ui_entity_theme($existing, $type, $theme, $path) {
@@ -105,17 +95,7 @@ function better_watchdog_ui_entity_theme($existing, $type, $theme, $path) {
  */
 function better_watchdog_ui_entity_preprocess_better_watchdog_ui_watchdog(&$variables) {
   $variables['wid'] = $variables['element']->wid;
-  $items_to_display = array(
-    'type',
-    'timestamp',
-    'user',
-    'location',
-    'referer',
-    'message',
-    'severity',
-    'hostname',
-    'operations',
-  );
+  $items_to_display = element_children($variables['element']->content);
   $content = $variables['element']->content;
   foreach ($items_to_display as $item) {
     $variables['items'][$content[$item]['#title']] = $content[$item]['#markup'];
@@ -316,11 +296,11 @@ class WatchdogEntityController extends EntityAPIController {
    * Override default delete function to invoke rules.
    */
   public function delete($ids, DatabaseTransaction $transaction = NULL) {
-    if (module_exists('rules')) {
+    if (module_exists('better_watchdog_ui_rules')) {
       rules_invoke_event('better_watchdog_ui_watchdog_before_delete', current($this->entityCache));
     }
     parent::delete($ids, $transaction);
-    if (module_exists('rules')) {
+    if (module_exists('better_watchdog_ui_rules')) {
       rules_invoke_event('better_watchdog_ui_watchdog_after_delete', current($this->entityCache));
     }
   }

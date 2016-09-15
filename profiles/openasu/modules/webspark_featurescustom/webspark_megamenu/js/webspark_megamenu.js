@@ -14,7 +14,7 @@
 
       if($('#ASUNavMenu').length){
         $(window).on('resize load', function () {
-          if (window.innerWidth > 930) {
+          if (window.innerWidth > 991) {
             var a = jQuery('#ASUNavMenu').find('li.tb-megamenu-item.level-1.mega');
             var x = $('#ASUNavMenu .container .navbar-collapse').width();
             var count = 0;

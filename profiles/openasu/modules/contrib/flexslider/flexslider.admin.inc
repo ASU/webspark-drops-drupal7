@@ -404,32 +404,6 @@ function flexslider_form_optionset_edit($form, &$form_state) {
     '#default_value' => $optionset->name,
   );
 
-  // Show select boxes for the various image styles (thumbnail, normal, big)
-  $image_style = image_style_options(FALSE);
-  $form['image_style'] = array(
-    '#type' => 'fieldset',
-    '#title' => 'Image style',
-    '#tree' => TRUE,
-  );
-  $form['image_style']['normal'] = array(
-    '#type' => 'select',
-    '#title' => t('Normal image style'),
-    '#description' => t('Image style for the main stage images.'),
-    '#empty_option' => t('None (original image)'),
-    '#options' => $image_style,
-    '#default_value' => $optionset->imagestyle_normal,
-  );
-  $form['image_style']['thumbnail'] = array(
-    '#type' => 'select',
-    '#title' => t('Thumbnail image style'),
-    '#description' => t('Image style for the thumbnail images.'),
-    '#empty_option' => t('None (original image)'),
-    '#options' => $image_style,
-    '#default_value' => $optionset->imagestyle_thumbnail,
-    // @todo enable/disable this option based on the type of options selected
-    // Ex: Thumbnails should be enabled
-  );
-
   // Options Vertical Tab Group table
   $form['options'] = array(
     '#type' => 'vertical_tabs',
@@ -547,13 +521,18 @@ function _flexslider_validate_selector($element, &$form_state) {
  */
 function _flexslider_validate_minimum_version_22($element, &$form_state) {
   $lib = libraries_detect('flexslider');
-  $version = $lib['version'];
-  $required = "2.2";
+  if (!isset($lib['version'])) {
+    drupal_set_message(t('Unable to detect FlexSlider library version. Some options may not function properly. Please review the README.md file for installation instructions.'), 'warning');
+  }
+  else {
+    $version = $lib['version'];
+    $required = "2.2";
 
-  if (!version_compare($version, $required, '>=')) {
-    form_error($element, t('To use %name you must install FlexSlider version !required or higher.', array(
-      '%name' => $element['#title'],
-      '!required' => l($required, 'https://github.com/woothemes/FlexSlider/tree/version/2.2'),
-    )));
+    if (!version_compare($version, $required, '>=')) {
+      form_error($element, t('To use %name you must install FlexSlider version !required or higher.', array(
+        '%name' => $element['#title'],
+        '!required' => l($required, 'https://github.com/woothemes/FlexSlider/tree/version/2.2'),
+      )));
+    }
   }
 }

@@ -29,7 +29,7 @@ function theme_cas_service_validate_success($variables) {
  * Returns CAS attributes as part of a CAS 2.0 service response.
  *
  * @param $variables
- *   An asociative array containing the keys 'attributes' and 'style', where
+ *   An associative array containing the keys 'attributes' and 'style', where
  *   the value of 'style' must be one of:
  *     - 'jasig' (default)
  *     - 'rubycas'
@@ -89,6 +89,24 @@ function theme_cas_service_validate_failure($variables) {
   $output .= "</cas:authenticationFailure>\n";
   $output .= "</cas:serviceResponse>\n";
 
+  return $output;
+}
+
+
+/**
+ * Returns a CAS 2.0 service response for a service not on the whitelist.
+ *
+ * @param $variables
+ *  An associative array containing the keys 'service' and 'error_code'.
+ */
+function theme_cas_service_validate_whitelist_failure($variables) {
+  $service = $variables['service'];
+  $error_code = $variables['error_code'];
+  $output = "<cas:serviceReponse xmlns:cas='http://www.yale.edu/tp/cas'>\n" .
+          "<cas:authenticationFailure code=\"$error_code\">\n" .
+          "Service $service not recognized.\n" .
+          "</cas:authenticationFailure>\n" .
+          "</cas:serviceResponse>\n";
   return $output;
 }
 

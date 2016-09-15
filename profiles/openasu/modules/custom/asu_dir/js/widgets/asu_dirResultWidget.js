@@ -278,10 +278,37 @@
             //concatenate string with all titles, and departments, followed by ; --limiting this to 3 titles/departments for display purposes
             var title_string = '';
             var titles = doc.titles;
+            var shortBio = doc.shortBio;
+            var primaryTitle = doc.primaryTitle;
+            var facultyTitles = doc.facultyTitles;
+            var primaryEmplClass = doc.primaryEmplClass;
+
 
             if (titles !== undefined) {
-                for (var j = 0; j < titles.length && j < 3; j++) {
-                    title_string += titles[j] + ", " + doc.departments[j] + "; ";
+
+                // Title logic.
+                // Solr has
+                // titles        (from relation field_employee_title/Title)
+                // primaryTitle  (from relation field_employee_title/Title - PRIMARY affiliation)
+                // workingTitle  (from HR)
+                // facultyTitles (from relation field_faculty_title/Faculty Title - PRIMARY affiliation)
+
+                // Person is faculty type, and "Named Professor", so display
+                // primary affiliation employee title (labelled "Title" in DAT
+                // UI).
+                if ((primaryEmplClass == "Faculty" || primaryEmplClass == "Academic Professional") && facultyTitles == "Named Professor") {
+                    title_string = primaryTitle; // Don't show facultyTitles
+                }
+                // Person is faculty type, so display primary affiliation
+                // faculty title (labelled "Faculty Title" in DAT UI). Note:
+                // Solr only returns the primary affiliation faculty title in
+                // facultyTitles.
+                else if ( (primaryEmplClass == "Faculty" || primaryEmplClass == "Academic Professional") && facultyTitles !== undefined) {
+                    title_string = facultyTitles;
+                }
+                // Default is to use the primary affiliation employee title.
+                else {
+                    title_string = primaryTitle;
                 }
             }
 

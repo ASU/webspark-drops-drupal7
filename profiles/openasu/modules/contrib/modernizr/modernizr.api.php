@@ -88,7 +88,7 @@ function hook_modernizr_load() {
 
     // If the test FAILS load these files. Example shows a Drupal path (don't
     // forget opening slash, or it won't work except at your site root)
-    'nope' => array('/'. drupal_get_path('module','modernizr') .'/fake/path/to/radius.css'),
+    'nope' => array('/' . drupal_get_path('module', 'modernizr') . '/fake/path/to/radius.css'),
 
     // These resources will always load regardless of the test results.
     // 'load' and 'both' offer the exact same functionality.

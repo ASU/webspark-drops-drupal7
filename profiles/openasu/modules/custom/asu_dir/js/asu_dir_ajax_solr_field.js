@@ -43,10 +43,16 @@ ASUPeople.dept_id = '';
                 // Add widget instances for each facet.
 
                 //these are the fields which will be used for faceted search
-                var fields = [/*'primaryTitle', */'expertiseAreasFacet'];
+
+                if (!isearch_mode) {
+                    var fields = ['expertiseAreasFacet'];
+                } else {
+                    var fields = ['facultyTitlesFacet'];
+                }
+
 
                 //these are fields which will override the manager sort, and also the alpha filter widget
-                var override_fields = ['expertiseAreasFacet', 'lastName'];
+                var override_fields = ['expertiseAreasFacet', 'lastName', 'facultyTitlesFacet'];
 
                 //stick with entire tree if top nid is not defined, or we are in iSearch mode
                 if (( top_nid != null) && ( tree = JSON.parse(settings.tree)) && !isearch_mode) {
@@ -103,10 +109,10 @@ ASUPeople.dept_id = '';
                 var sort_items = [{
                     'field_name': 'lastNameSort',
                     'field_id': '#dir-lastNameSort'
-                    },
+                },
                     {//field doesn't actually exist in solr yet
-                    'field_name': titlesort_field,
-                    'field_id': '#dir-rankSort'
+                        'field_name': titlesort_field,
+                        'field_id': '#dir-rankSort'
                     }
                 ];
 
@@ -141,23 +147,39 @@ ASUPeople.dept_id = '';
                     override_fields: override_fields
                 }));
 
+                var selection_target = 'asu-dir-ajax-solr-selections';
 
-                //If we're in iSearch mode, leave out the facet, current search , text (search), and history widgets
-                if (!isearch_mode) {
 
-                    Manager.addWidget(new AjaxSolr.asu_dirCurrentSearchWidget({
-                        id: 'currentSelections',
-                        target: '#asu-dir-ajax-solr-selections',
-                        field_configs: field_configs,
-                        tree: tree
+                if (isearch_mode) {
+
+                    selection_target = 'ajaxSolrSelections';
+
+                    Manager.addWidget(new AjaxSolr.asu_dirFacetWidget({
+                        id: 'facultyTitlesFacet',
+                        target: '#facultyTitlesFacet',
+                        field: 'facultyTitlesFacet'
                     }));
 
+                } else {
 
                     Manager.addWidget(new AjaxSolr.asu_dirFacetWidget({
                         id: 'expertiseAreasFacet',
                         target: '#expertiseAreasFacet',
                         field: 'expertiseAreasFacet'
                     }));
+
+                }
+
+
+                Manager.addWidget(new AjaxSolr.asu_dirCurrentSearchWidget({
+                    id: 'currentSelections',
+                    target: '#' + selection_target,
+                    field_configs: field_configs,
+                    tree: tree
+                }));
+
+                //If we're in iSearch mode, leave out the facet, current search , text (search), and history widgets
+                if (!isearch_mode) {
 
                     // Add in Text input/search widget. See our custom isTextWidget method
                     // extending AbstractWidget in js/widgets/isTextWidget.js.
@@ -185,7 +207,7 @@ ASUPeople.dept_id = '';
                 // Add Solr parameters for faceting.
                 var params = {
                     facet: true,
-                    'facet.field': [/*'primaryTitle',*/ 'expertiseAreasFacet'],
+                    'facet.field': fields,
                     'facet.limit': -1,
                     'facet.mincount': 1,
                     'f.topics.facet.limit': 50,
@@ -197,7 +219,7 @@ ASUPeople.dept_id = '';
                 }
 
                 Manager.asu_dirFacetDisplay = [];
-                Manager.asu_dirFacetDisplay.dropdownFacets = ['primaryTitle', 'expertiseAreasFacet'];
+                Manager.asu_dirFacetDisplay.dropdownFacets = fields;
 
                 // Assign all the params to the Manager's store.
                 for (var name in params) {

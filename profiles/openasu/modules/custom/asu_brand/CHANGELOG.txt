@@ -1,5 +1,9 @@
 CHANGELOG for ASU Brand module for Drupal 7
 
+7.x-1.13 2016-08-11
+-----------------------
+- Re-added max header version check
+
 7.x-1.9, 2015-05-06
 -----------------------
 - Updated default header version constant to 4.3
