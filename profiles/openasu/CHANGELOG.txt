@@ -1,3 +1,82 @@
+Webspark 1.40.1 (Hoople) release
+----------------
+- Contrib projects - Updates
+
+    - Panopoly-managed modules
+        * Media (v2.0-beta1 + patch) - Re-applied patch for issue with multiple Media content items on the same page 
+          showing an empty field that was supposedly resolved in beta1.
+
+    - Webspark-managed modules
+        * Calendar - Remaining elements from this module and its directory removed from profiles/openasu/modules/contrib
+
+- Web standards components in Webspark
+    * Innovation theme (v1.6) - Color of primary and blue button text now white on :hover
+
+Webspark 1.40 (North Dakota) release
+----------------
+- Webspark core
+
+  * Updated Panopoly from v1.37 to v1.40 - This update includes multiple security updates to Panopoly-managed modules.
+    See drupal.org/project/panopoly for more info.
+  * Contributed libraries are now checked to ensure they have not been tampered with before they are bundled into
+    Webspark
+  * Added "view the administrative theme" to the Editor role to allow other themes besides Innovation to be used
+    in the admin areas of the site.
+
+- Web standards components in Webspark
+
+    * ASU RFI (v1.6)
+        * Fixed WSOD on custom "thank you" pages for graduate-level submissions
+        * Fixed form submission routing for graduate RFI submissions
+        * Fixed a timeout issue that occurred when using views_bulk_submit() to resubmit graduate submissions
+    * ASU Spotlight (v1.6)
+        * Fixed CSS bug that allowed Flexslider slide text to go outside the 1170px page boundary
+        * Added ability to set width of slider text in ASU Spotlight form as "Overlay Text Width"
+    * ASU Maps Enhanced (v1.3)
+        * Added full interactive map tree functionality, leveraging the jqtree library
+        * Added modification of asu_maps_enhanced_items tables, to account for longer json_encoded strings
+        * Added ability to either show or hide map if no locations are selected
+        * Fixed bug which was breaking form saves with the workbench module
+    * Innovation theme (v1.5)
+        * Removed IE9 support (CSS file removed)
+        * Fixed Token module layout issue (Browse Available Tokens popup was broken)
+        * Updated the CSS styling for the main header title right below the ASU logo
+        * Added second <table> style ("Bordered table") to the WYSIWYG editor's Styling drop down list
+
+- Contrib projects - Updates
+
+  - Webspark-managed modules
+
+    * Better Watchdog UI (better_watchdog_ui) - v2.2
+    * CAS (cas) - v1.5
+    * Flexslider - v2.0-rc1
+    * Honeypot (honeypot) - v1.22
+    * MIME Mail (mimemail) - v1.0-beta4
+    * Modernizr (modernizr) - v3.9
+    * TB Megamenu - v1.0-rc2
+        * Patched a bug that didn't allow the removal of submenu items in the TB Megamenu WYSIWYG
+    * Views Data Export (views_data_export) - v3.0-beta9
+    * WYSIWYG Template plugin (wysiwyg_template) - v2.12
+
+- Webspark-managed libraries - Updates
+
+Some of the libraries have had their extemporaneous documentation and examples removed to shrink the size of
+the Webspark distribution.
+
+    * CAS - v1.3.4
+    * FontAwesome - v4.6.2
+    * jQTree - v1.3.4
+    * Modernizr - v2.8.3
+        * NOTE: The 3.x branch of Modernizr won't be added to Webspark due to its highly modular, customizable nature.
+
+- Webspark-managed libraries - Deletions
+
+    * RespondJS
+
+- ASU custom projects - Deletions
+
+    * ASU Directory (asu_directory)
+
 Webspark 1.37 (South Dakota) release
 ----------------
 

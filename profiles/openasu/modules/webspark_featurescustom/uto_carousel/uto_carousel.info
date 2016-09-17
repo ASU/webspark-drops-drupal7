@@ -1,5 +1,5 @@
 name = ASU Webspark Carousel
-description = Adds a carousel of images and text into Webspark.
+description = Adds the ability to create carousels of images and text for Webspark pages.
 core = 7.x
 package = ASU Webspark
 version = 7.x-1.04

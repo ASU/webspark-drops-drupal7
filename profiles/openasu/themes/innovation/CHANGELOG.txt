@@ -1,3 +1,14 @@
+Innovation 7.x-1.6, 2016-09-12
+------------------------------
+- Color of primary and blue button text now white on :hover
+
+Innovation 7.x-1.5, 2016-09-12
+------------------------------
+- Removed IE9 support (CSS file removed)
+- Fixed Token module layout issue (Browse Available Tokens popup was broken)
+- Updated the CSS styling for the main header title right below the ASU logo
+- Added second <table> style ("Bordered table") to the WYSIWYG editor's Styling drop down list
+
 Innovation 7.x-1.4, 2016-07-15
 ------------------------------
 - Added second table style when creating an HTML table in the WYSIWYG editor
