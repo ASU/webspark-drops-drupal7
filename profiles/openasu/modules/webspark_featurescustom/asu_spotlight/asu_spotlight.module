@@ -15,7 +15,8 @@ function asu_spotlight_entity_info_alter(&$entity_info) {
   // ASU Spotlight
   $entity_info['fieldable_panels_pane']['bundles']['asu_spotlight'] = array(
     'label' => t('Add ASU spotlight'),
-    'description' => t('Add ASU spotlight'),
+    'description' => t('Add a Flexslider-enabled slide show - complete with optional title, 
+      description, and action-button placement.'),
     'pane category' => t('Custom'),
     'pane top level' => TRUE,
     'pane icon' => drupal_get_path('module', 'panopoly_widgets') . '/images/icon_spotlight.png',

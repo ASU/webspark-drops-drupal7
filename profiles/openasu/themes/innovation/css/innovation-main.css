@@ -140,6 +140,14 @@ a.btn-primary,
   color: #fff;
   border-bottom: none;
 }
+/* WCS-980 */
+a.btn-blue:hover,
+.btn-blue a:hover,
+a.btn-primary:hover,
+.btn-primary a:hover {
+  color: #fff;
+  border-bottom: none;
+}
 
 /* =TYPOGRAPHY
 -------------------------------------------------------------- */

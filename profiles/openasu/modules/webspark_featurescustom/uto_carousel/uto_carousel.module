@@ -11,7 +11,7 @@ function uto_carousel_entity_info_alter(&$entity_info) {
     // Spotlight
     $entity_info['fieldable_panels_pane']['bundles']['uto_carousel'] = array(
         'label' => t('Add Carousel'),
-        'description' => t('Add Carousel'),
+        'description' => t('Add a customizable carousel of images and text.'),
         'pane category' => t('ASU Webspark'),
         'pane top level' => TRUE,
         'pane icon' => drupal_get_path('module', 'panopoly_widgets') . '/images/icon_spotlight.png',
@@ -25,39 +25,10 @@ function uto_carousel_entity_info_alter(&$entity_info) {
 }
 
 function uto_carousel_theme() {
-
     // Summary View
     $themes['uto_carousel'] = array(
         'template' => 'templates/uto-carousel-list',
-        //'original hook' => 'views-view',
-        /*'preprocess functions' => array(
-            'template_preprocess',
-            'template_preprocess_views_view',
-            //'uto_link_carousel_preprocess_views_view__asu_uto_article_summary__panel_pane'
-        ),*/
-        'variables' => array('items' => array(), 'settings' => array())
+        'variables' => array('items' => array(), 'settings' => array()),
     );
-
     return $themes;
-
-    /*return array(
-        // ASU flexslider container
-        'uto_carousel' => array(
-            'variables' => array('items' => array(), 'settings' => array()),
-            'template' => 'theme/uto_carousel',
-            'file' => 'theme/uto_carousel.theme.inc',
-        ),
-
-        // Slide container
-        'uto_carousel_list' => array(
-            'variables' => array('items' => array(), 'settings' => array()),
-            'file' => 'theme/uto_carousel.theme.inc',
-        ),
-
-        // Slide item
-        'uto_carousel_list_item' => array(
-            'variables' => array('item' => array(), 'settings' => array(), 'caption' => ''),
-            'file' => 'theme/uto_carousel.theme.inc',
-        ),
-    );*/
 }
