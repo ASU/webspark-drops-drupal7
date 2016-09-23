@@ -1,0 +1,5 @@
+ASU Spotlight (Flexslider)
+
+V 1.6
+------------------
+* Fixed CSS bug with slide text going outside of the 1170px width.

@@ -22,7 +22,7 @@ the CAS Server module, please see README_SERVER.txt
 
 Requirements
 ============
-PHP 5 with the following modules:
+PHP 5 with the following extensions:
   curl, openssl, dom, zlib, and xml
 phpCAS version 1.0.0 or later.
 
@@ -32,13 +32,13 @@ Installation
 * Place the cas folder in your Drupal modules directory.
 
 * Download phpCAS from https://wiki.jasig.org/display/CASC/phpCAS. You will
-  need version 1.0.0 or later. The most recent release is available at
-  http://downloads.jasig.org/cas-clients/php/current.tgz
+  need version 1.3.2 or later (1.3.3 for CAS 3.0 support). The most recent
+  release is available at http://downloads.jasig.org/cas-clients/php/current.tgz
 
 * There are several locations you can install the phpCAS library.
 
   1. Module directory installation. This means installing the library folder
-     under the moduels directory, so that the file
+     under the modules directory, so that the file
      sites/<site>/modules/cas/CAS/CAS.php exists.
 
   2. System wide installation. See the phpCAS installation guide, currently at

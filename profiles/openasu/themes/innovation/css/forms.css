@@ -8,7 +8,8 @@
   display: inline-block;
   padding-left: 0.2em;
   position: relative;
-  vertical-align: top; /* WAS: middle -- in case there's no text in the label tag */
+  vertical-align: top;
+  max-width: 95%;
 }
 .form-type-checkbox label::before {
   background-color: #fff;
@@ -89,6 +90,7 @@
   padding-left: 1em;
   position: relative;
   vertical-align: middle;
+  max-width: 95%;
 }
 .form-type-radio label::before {
   background-color: #fff;

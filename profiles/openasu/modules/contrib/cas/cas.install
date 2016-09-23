@@ -57,6 +57,8 @@ function cas_schema() {
     'unique keys' => array(
       'cas_name' => array('cas_name'),
     ),
+
+    'indexes' => array('cas_user' => array('uid')),
     'primary key' => array('aid'),
     'foreign keys' => array(
       'user' => array(
@@ -369,4 +371,13 @@ function cas_update_7101() {
     variable_set('cas_check_frequency', -2);
   }
   variable_del('cas_check_first');
+}
+
+/**
+ * Add index on cas_user.uid
+ */
+function cas_update_7102() {
+  if (!db_index_exists('cas_user', 'cas_user')) {
+    db_add_index('cas_user', 'cas_user', array('uid'));
+  }
 }

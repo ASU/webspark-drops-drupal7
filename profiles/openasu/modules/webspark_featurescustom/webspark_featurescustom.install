@@ -118,3 +118,17 @@ function webspark_featurescustom_update_7003(&$sandbox) {
     }
   }
 }
+
+/**
+ * Implements hook_update_N() -- Sioux Falls release
+ * + Add administrative theme viewing to the editor role.
+ */
+function webspark_featurescustom_update_7004(&$sandbox) {
+  // WEBSPARK-862 - Add administrative theme viewing to the editor role.
+  $role = user_role_load_by_name("editor");
+  if (!empty($role->rid)) {
+    $rid = (int) $role->rid;
+    user_role_grant_permissions($rid, array('view the administration theme'));
+    watchdog('webspark_updates', "Added view the administrative theme to the editor role.");
+  }
+}

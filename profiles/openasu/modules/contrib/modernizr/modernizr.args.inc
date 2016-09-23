@@ -6,7 +6,6 @@
  *   file is the glue that makes the drush command for
  *   custom builds possible.
  */
-
 function _modernizr_args_return($name) {
 
   $modernizr_args = array(
@@ -136,6 +135,10 @@ function _modernizr_args_return($name) {
       'type' => 'tests',
       'desc' => 'CSS property that allows for alpha transparency.',
     ),
+    'pointerevents' => array(
+      'type' => 'tests',
+      'desc' => 'JavaScript API for pointer events.',
+    ),
     'postmessage' => array(
       'type' => 'tests',
       'desc' => 'JavaScript API for cross-domain communication.',
@@ -164,7 +167,7 @@ function _modernizr_args_return($name) {
       'type' => 'tests',
       'desc' => 'CSS property that allows for drop-shadows behind text.',
     ),
-    'touch' => array(
+    'touchevents' => array(
       'type' => 'tests',
       'desc' => 'JavaScript API for touch events.',
     ),
@@ -226,11 +229,11 @@ function _modernizr_args_return($name) {
     // Extras
     'load' => array(
       'type' => 'extras',
-      'desc' => 'Provides yepnope.js, an asynchronous CSS/JS loader that allows use of Modernizr.load()',
+      'desc' => 'Provides yepnope.js, a conditional CSS/JS loader.',
     ),
-    'cssclasses' => array(
+    'setclasses' => array(
       'type' => 'extras',
-      'desc' => 'Allows Modernizr to inject CSS classes into &lt;html&gt;',
+      'desc' => 'Allows Modernizr to inject CSS classes into <code>&lt;html&gt;</code>.',
     ),
     'mq' => array(
       'type' => 'extras',

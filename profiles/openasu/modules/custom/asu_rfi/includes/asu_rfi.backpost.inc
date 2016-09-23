@@ -17,7 +17,8 @@ function asu_rfi_success_post($hash, $nid)
     cache_clear_all($cid, 'cache_field');
     print('Success');
   } else {
-    print('Not a valid Hash / Nid combination');
+    http_response_code(403);
+    watchdog('asu_rfi', 'On success post. Not a valid Hash / Nid combination');
   }
 }
 
@@ -36,7 +37,7 @@ function asu_rfi_fail_post($hash, $nid)
     $node = node_load($nid);
     $node_wrapper = entity_metadata_wrapper('node', $node);
 
-    if($node_wrapper->field_rfi_submission_status->value() == "Complete") {
+    if ($node_wrapper->field_rfi_submission_status->value() == "Complete") {
       $node_wrapper->field_rfi_submission_status->set("Pending");
     }
 
@@ -79,7 +80,8 @@ function asu_rfi_fail_post($hash, $nid)
     cache_clear_all($cid, 'cache_field');
     print('Posted error message');
   } else {
-    print('Not a valid Hash / Nid combination');
+    http_response_code(403);
+    watchdog('asu_rfi', 'On Fail post. Not a valid Hash / Nid combination');
   }
 }
 
@@ -115,6 +117,10 @@ function asu_rfi_middle_key($key)
   //Check if middleware key is already set. If set, don't update the key, else set the varable with key value
 
   global $conf;
+
+  if (!isset($conf['asu_rfi_form_auth_key'])) {
+    variable_set('asu_rfi_form_auth_key', FALSE);
+  }
 
   if (empty($conf['asu_rfi_form_auth_key'])) {
 

@@ -7,16 +7,11 @@
  */
 
 /**
- * Implements hook_init().
+ * Implements hook_views_pre_build().
  */
-function better_watchdog_ui_init() {
-  $path = drupal_strtolower(drupal_get_path_alias($_GET['q']));
-
-  if ($path != BETTER_WATCHDOG_UI_VIEW_PATH) {
-    return;
-  }
-
-  if (isset($_GET['type'])) {
+function better_watchdog_ui_views_pre_build(&$view) {
+  // Prevent form error if a type does not exist anymore after deleting entries.
+  if ($view->name == 'better_watchdog_ui_view' && isset($_GET['type'])) {
     foreach ($_GET['type'] as $id => $value) {
       if (!_better_watchdog_ui_type_exists($value)) {
         unset($_GET['type'][$id]);
