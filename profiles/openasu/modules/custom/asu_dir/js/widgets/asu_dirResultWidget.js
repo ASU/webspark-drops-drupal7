@@ -194,8 +194,8 @@
 
         contactDiv: function (doc, field_configs, classes) {
             var markup = '';
-            var room = doc.room;
-            var building = doc.building;
+            var addLine2 = doc.addressLine2;
+            var addLine1 = doc.addressLine1;
             var cols = classes.join(' ');
 
             //CONTACT INFO COLUMN
@@ -207,12 +207,12 @@
                 markup += '<div class="phone_number">' + doc.phone + '</div>';
             }
 
-            if (field_configs.display_building && building != null) {
-                markup += '<div class="building">Building: ' + building + '</div>';
-            }
+            if (field_configs.display_building && addLine1 != null) {
+                markup += '<div class="building">' + addLine1 + '</div>';
 
-            if (field_configs.display_room && room != null) {
-                markup += '<div class="room">Room: ' + room + '</div>';
+                if (addLine2 != null) {
+                    markup += '<div class="room">' + addLine2 + '</div>';
+                }
             }
 
             //end contact info
@@ -245,18 +245,18 @@
             var expertise = doc.expertiseAreas;
             var shortbio = doc.shortBio;
 
-            var markup = '<div class="asu-dir-grid-col gridborder col-1 col-md-3 "> <div class="grid-item">';
+            var markup = '<div class="asu-dir-grid-col gridborder col-1 col-md-3 "> <div class="grid-item"><div class="peopleImg row-profile-image">';
 
             if (field_configs.new_tab) {
                 target = 'target="_blank"';
             }
 
             if (doc.photoPreference != 'none' && doc.photoUrl != null && doc.photoUrl != '' && field_configs.display_photo) {
-                markup += '<div class="peopleImg row-profile-image"><a class="row-profile-image row-field" ' + target + ' href="' + url + '" title="'
-                    + doc.displayName + '"><img alt="' + doc.displayName + '" class = "asu-dir-grid-image " src="' + doc.photoUrl + '"></a></div>';
+                markup += '<a class="row-profile-image row-field" ' + target + ' href="' + url + '" title="'
+                    + doc.displayName + '"><img alt="' + doc.displayName + '" class = "asu-dir-grid-image " src="' + doc.photoUrl + '"></a>';
             }
 
-            markup += '<div class="fs-title"><a ' + target + '" href="' + url + '" title="' + doc.displayName + '">' + doc.displayName + '</a></div>';
+            markup += '</div><div class="fs-title"><a ' + target + '" href="' + url + '" title="' + doc.displayName + '">' + doc.displayName + '</a></div>';
             markup += '<div class="job-title">' + title_string + '</div>';
 
 

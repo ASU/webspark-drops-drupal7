@@ -8,7 +8,7 @@ asu_dir 7.x-1.5, 2016-09-27
 - Added sorting by first name
 - Added grid people display option
 - Added dependencies on asu_dir_utilities module, asu-dept-picker module, and react library
-
+- Added integration with the asu_isearch module, so listings will link to local people profiles if they have been imported
 
 asu_dir 7.x-1.4, 2016-02-03
 ---------------------------
