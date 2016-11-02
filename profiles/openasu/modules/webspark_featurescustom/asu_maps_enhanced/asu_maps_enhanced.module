@@ -31,9 +31,7 @@ function asu_maps_enhanced_menu() {
 function asu_maps_enhanced_tree_response() {
   $tree = asu_maps_enhanced_json_tree();
 
-  // We are returning JSON, so tell the browser.
   //drupal_add_http_header('Content-Type', 'application/json');
-
   echo $tree;
 }
 
@@ -45,7 +43,7 @@ function asu_maps_enhanced_json_tree() {
 
   $tree = NULL;
 
-    // Check for cache
+  // Check for cache
   if ($cache = cache_get('asu_maps_enhanced_cbird_tree')) {
     $tree = $cache->data;
   }
@@ -85,7 +83,7 @@ function asu_maps_enhanced_get_cbird_tree() {
   $stop = FALSE;
 
   //Add categories to the tree
-  while(!$stop) {
+  while (!$stop) {
 
     // We compare the count of categories before and after the foreach loop.
     // If no more items can be placed into the tree, then set stop to TRUE,
@@ -110,7 +108,7 @@ function asu_maps_enhanced_get_cbird_tree() {
   $stop = FALSE;
 
   // Add locations to the tree
-  while(!$stop) {
+  while (!$stop) {
 
     $before = count($locations);
 
@@ -148,7 +146,8 @@ function asu_maps_enhanced_find_parent(&$tree, $bird, $type) {
     if ($tree['catId'] == $bird['parent']) {
       if (isset($tree['children'])) {
         $tree['children'][] = $bird;
-      } else {
+      }
+      else {
         $tree['children'] = array(
           $bird
         );
@@ -156,56 +155,69 @@ function asu_maps_enhanced_find_parent(&$tree, $bird, $type) {
 
       return TRUE;
 
-    } else if (isset($tree['children'])) {
-      $test = FALSE;
-
-      foreach ($tree['children'] as $key => $child) {
-
-        $test = asu_maps_enhanced_find_parent($tree['children'][$key], $bird, $type);
-
-        if ($test) {
-          return TRUE;
-        }
-      }
-
-      return $test;
-
-    } else {
-      return FALSE;
     }
-
-  } else if ($type == 'location' && !isset($tree['mrkId']) && isset($bird['catId'])) {
-    //if the tree item has a category, id, and the item has a
-    if ($tree['catId'] == $bird['catId']) {
+    else {
       if (isset($tree['children'])) {
-        $tree['children'][] = $bird;
-      } else {
-        $tree['children'] = array(
-          $bird
-        );
+        $test = FALSE;
+
+        foreach ($tree['children'] as $key => $child) {
+
+          $test = asu_maps_enhanced_find_parent($tree['children'][$key], $bird, $type);
+
+          if ($test) {
+            return TRUE;
+          }
+        }
+
+        return $test;
+
       }
+      else {
+        return FALSE;
+      }
+    }
 
-      return TRUE;
+  }
+  else {
+    if ($type == 'location' && !isset($tree['mrkId']) && isset($bird['catId'])) {
+      //if the tree item has a category, id, and the item has a
+      if ($tree['catId'] == $bird['catId']) {
+        if (isset($tree['children'])) {
+          $tree['children'][] = $bird;
+        }
+        else {
+          $tree['children'] = array(
+            $bird
+          );
+        }
 
-    } else if (isset($tree['children'])) {
-      $test = FALSE;
+        return TRUE;
 
-      foreach ($tree['children'] as $key => $child) {
+      }
+      else {
+        if (isset($tree['children'])) {
+          $test = FALSE;
 
-        $test = asu_maps_enhanced_find_parent($tree['children'][$key], $bird, $type);
+          foreach ($tree['children'] as $key => $child) {
 
-        if ($test) {
-          return TRUE;
+            $test = asu_maps_enhanced_find_parent($tree['children'][$key], $bird, $type);
+
+            if ($test) {
+              return TRUE;
+            }
+          }
+
+          return $test;
+
+        }
+        else {
+          return FALSE;
         }
       }
-
-      return $test;
-
-    } else {
+    }
+    else {
       return FALSE;
     }
-  } else {
-    return FALSE;
   }
 }
 
@@ -296,11 +308,11 @@ function asu_maps_enhanced_theme($existing, $type, $theme, $path) {
 
 function asu_maps_enhanced_get_default_settings() {
   $map_settings = array(
-    'display_campus_select' => FALSE,
-    'campus' => 'TEMPE',
+    'display_campus_select' => 'NO',
+    'campus' => 'NONE',
     'name' => 'maps_enhanced_settings',
     'map_height' => 642,
-    'hide_map' => TRUE
+    'hide_map' => 'YES'
   );
 
   return $map_settings;
@@ -318,40 +330,48 @@ function asu_maps_enhanced_field_formatter_view($entity_type, $entity, $field, $
   $height = 642;
   $element[0]['#markup'] = '';
 
+
   //todo:  cleanup messy logic
-  if ($entity->bundle == 'asu_maps_enhanced' && isset($entity->field_map_info['und'][0]['value']) && isset($entity->field_map_action_link['und'][0])) {
+  if (isset($entity->bundle) && ($entity->bundle == 'asu_maps_enhanced') && isset($entity->field_map_info['und'][0]['value']) && isset($entity->field_map_action_link['und'][0])) {
     $map_info = $entity->field_map_info['und'][0]['value'];
     $field_map_alink = $entity->field_map_action_link['und'][0]['url'];
     $field_map_atitle = $entity->field_map_action_link['und'][0]['title'];
     $element[0]['#markup'] = "<div class = 'row'><div class ='col-md-8'>$map_info</div><div class ='col-md-4'><a
       id='map_button' class ='btn btn-primary' href='$field_map_alink'>$field_map_atitle</a></div></div>";
-  } else if ($entity->bundle == 'asu_maps_enhanced' && isset($entity->field_map_info['und'][0]['value']) ) {
-    $map_info = $entity->field_map_info['und'][0]['value'];
-    $element[0]['#markup'] = "<div class = 'row'><div class ='col-md-12'>$map_info</div></div>";
-  } else if ($entity->bundle == 'asu_maps_enhanced' && isset($entity->field_map_action_link['und'][0])) {
-    $field_map_alink = $entity->field_map_action_link['und'][0]['url'];
-    $field_map_atitle = $entity->field_map_action_link['und'][0]['title'];
-    $element[0]['#markup'] = "<div class = 'row'><div class ='col-md-12'><a
+  }
+  else {
+    if (isset($entity->bundle) && ($entity->bundle == 'asu_maps_enhanced') && isset($entity->field_map_info['und'][0]['value'])) {
+      $map_info = $entity->field_map_info['und'][0]['value'];
+      $element[0]['#markup'] = "<div class = 'row'><div class ='col-md-12'>$map_info</div></div>";
+    }
+    else {
+      if (isset($entity->bundle) && ($entity->bundle == 'asu_maps_enhanced') && isset($entity->field_map_action_link['und'][0])) {
+        $field_map_alink = $entity->field_map_action_link['und'][0]['url'];
+        $field_map_atitle = $entity->field_map_action_link['und'][0]['title'];
+        $element[0]['#markup'] = "<div class = 'row'><div class ='col-md-12'><a
       id='map_button' class ='btn btn-primary' href='$field_map_alink'>$field_map_atitle</a></div></div>";
+      }
+    }
   }
 
   $map_items = drupal_json_decode($items[0]['map_items']);
 
   if (!empty($map_items) && isset($map_items[0]['name']) && $map_items[0]['name'] == 'maps_enhanced_settings') {
-      $map_settings = $map_items[0];
-      $map_settings = array_merge($default_settings, $map_settings);
+    $map_settings = $map_items[0];
+    $map_settings = array_merge($default_settings, $map_settings);
 
-      if (isset($map_settings['map_height'])) {
-        $height = $map_settings['map_height'];
-      }
+    if (isset($map_settings['map_height'])) {
+      $height = $map_settings['map_height'];
+    }
 
-  } else {
+  }
+  else {
     $map_settings = $default_settings;
   }
 
   $settings = $display['settings'];
 
-  if (!$map_settings['hide_map'] || count($map_items) > 1) {
+  if (asu_maps_enhanced_get_select_value($map_settings, 'hide_map') === 'NO' || count($map_items) > 1) {
     foreach ($items as $delta => $item_data) {
       $element[$delta]['#markup'] .= theme('asu_maps_enhanced_view', array(
         'items' => $map_items,
@@ -381,7 +401,7 @@ function theme_asu_maps_enhanced_view($variables) {
 
   if (!empty($variables['items'])) {
 
-    if (isset($settings['display_campus_select']) && ( $settings['display_campus_select'] == 'YES' || $settings['display_campus_select'] == TRUE ) ) {
+    if (asu_maps_enhanced_get_select_value($settings, 'display_campus_select') === 'YES') {
 
       $output .= "<div class=\"enhanced-map-nav\">
                       <div class=\"list-nav\">
@@ -393,6 +413,7 @@ function theme_asu_maps_enhanced_view($variables) {
                           <li class=\"RESEARCH\">Research Park</li>
                           <li class=\"SKYSONG\">Skysong</li>
                           <li class=\"HAVASU\">Lake Havasu</li>
+                          <li class=\"THUNDERBIRD\">Thunderbird</li>
                         </ul>
                       </div>
                     </div>";
@@ -417,8 +438,11 @@ function theme_asu_maps_enhanced_view($variables) {
     foreach ($variables['items'] as $location) {
       if (isset($location['id'])) {
         $locations[] = $location['id'];
-      } else if (isset($location['catId'])) {
-        $categories[] = $location['catId'];
+      }
+      else {
+        if (isset($location['catId'])) {
+          $categories[] = $location['catId'];
+        }
       }
     }
 
@@ -448,6 +472,9 @@ function asu_maps_enhanced_get_ref($campus) {
   $ref = NULL;
 
   switch ($campus) {
+    case 'THUNDERBIRD':
+      $ref = 'mc/33.6224937,-112.1847479?z/17';
+    	break;
     case 'POLY':
       $ref = "mc/33.30463351165877,-111.67764695106507?z/16";
       break;
@@ -548,11 +575,13 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
 
     // Turn off the panopoly magic preview because it interferes with the form state.
     variable_set('panopoly_magic_live_preview', 0);
+    $default_configs = asu_maps_enhanced_get_default_settings();
 
     if (isset($items[0]['map_items'])) {
       $map_items = $items[0]['map_items'];
-    } else {
-      $default_configs = asu_maps_enhanced_get_default_settings();
+    }
+    else {
+
       $map_items = drupal_json_encode(array($default_configs));
     }
 
@@ -566,15 +595,17 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       '#prefix' => '<div class="row"><div id="map_campus_select" class="col-md-4">',
       '#suffix' => '</div>',
       '#options' => array(
+        'NONE'  => 'None',
         'TEMPE' => 'Tempe',
         'POLY' => 'Polytechnic',
         'DOWNTOWN' => 'Downtown',
         'WEST' => 'West',
         'RESEARCH' => 'Research Park',
         'SKYSONG' => 'Skysong',
-        'HAVASU' => 'Lake Havasu'
+        'HAVASU' => 'Lake Havasu',
+        'THUNDERBIRD' => 'Thunderbird'
       ),
-      '#default_value' => isset($prev_settings['campus']) ? $prev_settings['campus'] : 'TEMPE',
+      '#default_value' => isset($prev_settings['campus']) ? $prev_settings['campus'] : $default_configs['campus'],
       //'#default_value' => isset($loc_selected) ? $loc_selected : NULL,
     );
 
@@ -586,8 +617,11 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       '#prefix' => '<div id="map-height-field" class="col-md-4">',
       '#suffix' => '</div>',
       '#element_validate' => array('asu_maps_enhanced_validate_height'),
-      '#default_value' => isset($prev_settings['map_height']) ? $prev_settings['map_height'] : ASU_MAPS_ENHANCED_DEFAULT_HEIGHT,
+      '#default_value' => isset($prev_settings['map_height']) ? $prev_settings['map_height'] : $default_configs['map_height'],
     );
+
+
+    $default_val = asu_maps_enhanced_get_select_value($prev_settings, 'display_campus_select');
 
     $element['display_campus_select'] = array(
       '#title' => t('Display Campus Selection Menu (Overhead)'),
@@ -595,12 +629,14 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       '#prefix' => '<div id="map_display_campus_box" class="col-md-4">',
       '#suffix' => '</div></div>',
       '#options' => array(
-        TRUE => 'Yes',
-        FALSE => 'No'
+        'YES' => 'Yes',
+        'NO' => 'No'
       ),
-      '#default_value' => isset($prev_settings['display_campus_select']) ? $prev_settings['display_campus_select'] : 'NO',
+      '#default_value' => $default_val,
       //'#default_value' => isset($loc_selected) ? $loc_selected : NULL,
     );
+
+    $default_val = asu_maps_enhanced_get_select_value($prev_settings, 'hide_map');
 
     $element['hide_map'] = array(
       '#title' => t('Hide Map if No Locations Selected'),
@@ -608,10 +644,10 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       '#prefix' => '<div id="map-hide-map-display">',
       '#suffix' => '</div>',
       '#options' => array(
-        TRUE => 'Yes',
-        FALSE => 'No'
+        'YES' => 'Yes',
+        'NO' => 'No'
       ),
-      '#default_value' => isset($prev_settings['hide_map']) ? $prev_settings['hide_map'] : 'NO',
+      '#default_value' => $default_val,
       //'#default_value' => isset($loc_selected) ? $loc_selected : NULL,
     );
 
@@ -623,7 +659,6 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       'form_field_id' => '#asu-maps-enhanced-tree',
       'map_items' => $map_items
     );
-
 
 
     // field to store the configuration, we set the style="display:none", rather than
@@ -649,7 +684,7 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       '#type' => 'textfield',
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
-      '#description' =>  'This field is deprecated in favor of the Map Info field, and will be removed in a future version.',
+      '#description' => 'This field is deprecated in favor of the Map Info field, and will be removed in a future version.',
       '#rows' => 2,
       '#default_value' => isset($items[0]['description']) ? $items[0]['description'] : NULL,
     );
@@ -665,23 +700,26 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
 }
 
 
-/*
-function asu_maps_enhanced_form_alter(&$form, &$form_state, $form_id) {
+/***
+ * Get proper YES/NO value from the
+ *
+ */
+function asu_maps_enhanced_get_select_value($item, $key) {
 
-  if ($form_id == 'fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form' && $form['#bundle'] == 'asu_maps_enhanced') {
-    if (isset($form['field_map_action_link'])) {
-      $form['field_map_action_link']['#prefix'] = '<div class="panel panel-info">
-                                                        <div class="panel-heading">
-                                                           Note:
-                                                        </div>
-                                                        <div class="panel-body">
-                                                            Action Link will only be displayed if Map Info is populated.
-                                                        </div>
-                                                    </div>';
-    }
+  $defaults = asu_maps_enhanced_get_default_settings();
+
+  if (!isset($item[$key])) {
+    return $defaults[$key];
+  }
+
+  if ($item[$key] !== 'NO' && $item[$key] !== '0') {
+    $value = ($item[$key]) ? 'YES' : 'NO';
+
+    return $value;
+  } else {
+    return 'NO';
   }
 }
-*/
 
 /**
  * Validation function for the height field.  Checks for valid integer values, and puts in our default if left blank
@@ -708,28 +746,49 @@ function asu_maps_enhanced_validate_height($element, &$form_state) {
   $form_state['values']['field_asu_maps_enhanced_items']['und'][0]['map_items'] = drupal_json_encode($items);
 }
 
+
+/***
+ * Implements hook_field_presave
+ *
+ * Sets the values of the map items for the field
+ *
+ * @param $entity_type
+ * @param $entity
+ * @param $field
+ * @param $instance
+ * @param $langcode
+ * @param $items
+ */
 function asu_maps_enhanced_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  if ($field['type'] == 'asu_maps_enhanced') {
-
-    $settings = array(
-      'display_campus_select' => $items[0]['display_campus_select'],
-      'campus' => $items[0]['campus_selection'],
-      'name' => 'maps_enhanced_settings',
-      'map_height' => $items[0]['enhanced_map_height'],
-      'hide_map' => $items[0]['hide_map']
-    );
-
-    $map_items = drupal_json_decode($items[0]['map_items']);
-
-    if (!isset($map_items[0]['mrkId']) && !isset($map_items[0]['catId']) && !isset($map_items[0]['id'])) {
-      $map_items[0] = $settings;
-    } else {
-      array_unshift($map_items , $settings);
-    }
-
-    $items[0]['map_items'] = drupal_json_encode($map_items);
-
-    cache_clear_all();
+  if (isset($field['type']) && isset($items[0]['campus_selection'])) {
+  // the null check is necessary for workbench moderation, otherwise it will save
+  // null values upon publishing
+	if ($field['type'] == 'asu_maps_enhanced' && $items[0]['campus_selection'] != NULL) {
+  
+	  $settings = array(
+		'display_campus_select' => $items[0]['display_campus_select'],
+		'campus' => $items[0]['campus_selection'],
+		'name' => 'maps_enhanced_settings',
+		'map_height' => $items[0]['enhanced_map_height'],
+		'hide_map' => $items[0]['hide_map']
+	  );
+  
+	  $map_items = drupal_json_decode($items[0]['map_items']);
+  
+	  //if the first item is already settings, overwrite them
+	  if (!isset($map_items[0]['mrkId']) && !isset($map_items[0]['catId']) && !isset($map_items[0]['id'])) {
+		$map_items[0] = $settings;
+  
+		//else add the settings to beginning of array
+	  }
+	  else {
+		array_unshift($map_items, $settings);
+	  }
+  
+	  $items[0]['map_items'] = drupal_json_encode($map_items);
+  
+	  //cache_clear_all();
+	}
   }
 }
 
@@ -744,7 +803,7 @@ function asu_maps_enhanced_field_presave($entity_type, $entity, $field, $instanc
 function asu_maps_enhanced_get_cbird($type, $category = '', $visible = FALSE) {
   $visible = $visible || FALSE;
   $URL1 = 'http://myatlascms.com/map/api/v2/';
-  $KEY = '&api_key='.ASU_MAPS_ENHANCED_API_USAGE_KEY;
+  $KEY = '&api_key=' . ASU_MAPS_ENHANCED_API_USAGE_KEY;
   $MAP = '?map=120';
   $COD = NULL;
   switch ($type) {
