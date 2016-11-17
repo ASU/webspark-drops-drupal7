@@ -31,7 +31,7 @@ function webspark_banner_preprocess_fieldable_panels_pane(&$variables){
     $title = $variables['elements']['#fieldable_panels_pane']->title;
     $variables['elements']['title'] = array(
       '#theme' => 'html_tag',
-      '#tag' => 'h2',
+      '#tag' => 'h1',
       '#value' => $title
     );
   }
