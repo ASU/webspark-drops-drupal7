@@ -2,8 +2,11 @@ name = ASU Department Picker Field
 description = A custom field used to select an ASU department.
 core = 7.x
 package = ASU CLAS
-version = 7.x-1.0-beta1
+version = 7.x-1.0
 project = asu_dept_picker
 
 dependencies[] = libraries:libraries
 dependencies[] = react:react
+dependencies[] = asu_dir_utilities
+
+
