@@ -1,0 +1,134 @@
+.panels-dnd .isearch-profile-photo {
+    width: 16.666667%;
+    float: left;
+}
+
+.panels-dnd .isearch-profile-contact {
+    width: 82.666667%;
+    float: left;
+}
+
+.panels-dnd .isearch-profile-content {
+    width: 66.66666666666666%;
+    float: left;
+}
+
+.panels-dnd .isearch-profile-sidebar {
+    width: 33.33333333333332%;
+    float: left;
+}
+
+/* Quicktabs - iSearch theme style
+ */
+.quicktabs_main.quicktabs-style-isearch {
+    border: 1px solid #eee;
+    clear: both;
+    padding: 10px 5px 0 5px;
+    position: relative;
+    top: -0.1em;
+    background: #fff;
+}
+
+ul.quicktabs-tabs.quicktabs-style-isearch {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+ul.quicktabs-tabs.quicktabs-style-isearch li {
+    float: left;
+    font-weight: normal;
+    list-style: none;
+    margin: 0.3em 0 0 0;
+    height: 2.65em;
+    min-height: 2.95em;
+    padding: 0;
+}
+
+ul.quicktabs-tabs.quicktabs-style-isearch li.active {
+    border-top: 5px solid #a30046;
+}
+
+ul.quicktabs-tabs.quicktabs-style-isearch li.active > a {
+    color: #a30046;
+    border-top: none;
+    border-bottom: transparent;
+}
+
+ul.quicktabs-tabs.quicktabs-style-isearch li > a {
+    margin-right: 0;
+    border-radius: 0;
+    font-size: 18px;
+    color: #a9a9a9;
+    border: none;
+    border-left: thin solid #a9a9a9;
+    border-top: thin solid #a9a9a9;
+    padding: 10px 35px;
+}
+
+/* Tab titles */
+ul.quicktabs-tabs.quicktabs-style-isearch {
+    border-bottom: 1px solid #a9a9a9;
+}
+
+ul.quicktabs-tabs.quicktabs-style-isearch > li > a {
+    margin-right: 0;
+    border-radius: 0;
+    font-size: 18px;
+    color: #a9a9a9;
+    border: none;
+    border-left: thin solid #a9a9a9;
+    border-top: thin solid #a9a9a9;
+    padding: 10px 35px;
+}
+
+ul.quicktabs-tabs.quicktabs-style-isearch > li:last-of-type > a {
+    border-right: thin solid #a9a9a9;
+}
+
+ul.quicktabs-tabs.quicktabs-style-isearch > li.active > a {
+    color: #a30046;
+    border-top: none;
+    border-bottom: transparent;
+}
+
+ul.quicktabs-tabs.quicktabs-style-isearch > li {
+    border-top: 4px solid transparent;
+}
+
+ul.quicktabs-tabs.quicktabs-style-isearch > li.active {
+    border-top: 5px solid #a30046;
+}
+
+/* Tab content */
+.quicktabs-style-isearch .quicktabs-tabpage {
+    margin-top: 40px;
+}
+
+.quicktabs-style-isearch .quicktabs-tabpage .form-item {
+    margin-bottom: 20px;
+}
+
+.quicktabs-style-isearch .quicktabs-tabpage .field-label,
+.quicktabs-style-isearch .quicktabs-tabpage label {
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.quicktabs-style-isearch .quicktabs-tabpage .field {
+    padding-bottom: 25px;
+}
+
+@media (max-width: 1200px) {
+    ul.quicktabs-tabs.quicktabs-style-isearch > li > a {
+        padding: 10px 25px;
+    }
+}
+
+@media (max-width: 600px) {
+    ul.quicktabs-tabs.quicktabs-style-isearch > li > a {
+        padding: 10px 8px;
+        font-size: 14px;
+    }
+}

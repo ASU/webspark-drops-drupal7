@@ -1,0 +1,116 @@
+<?php
+/**
+ * @file
+ * ASU Dir Utilities Module
+ *
+ * @author Colton Testamarck (colt@asu.edu)
+ */
+
+include_once 'inc/asu_dir_utilities.functions.inc';
+include_once 'inc/asu_dir_utilities.admin.inc';
+
+// Access Permission Constants
+define('ASU_DIR_UTILITIES_ADMIN_CONFIG_SETTINGS', 'Administer ASU Directory Configuration');
+define('ASU_DIR_UTILITIES_PAGE_ACCESS', 'access asu directory');
+
+// Form Field Variable Constants
+define('ASU_DIR_UTILITIES_TOP_LEVEL_PS_ID', 'ASU');
+define('ASU_DIR_UTILITIES_TOP_LEVEL_DEPT_NID', 1342);
+define('ASU_DIR_UTILITIES_FORM_CACHE_DURATION', 4);//# of hours, set to 1 initially
+define('ASU_DIR_UTILITIES_MODULE_NAME', 'asu_dir_utilities');
+
+define('ASU_DIR_UTILITIES_ISEARCH_URL', variable_get('asu_dir_utilities_isearch_url', 'https://isearch.asu.edu'));
+define('ASU_DIR_UTILITIES_SOLR_ENV', variable_get('asu_dir_utilities_solr_endpoint', 'https://asudir-solr.asu.edu/asudir/directory/'));
+define('ASU_DIR_UTILITIES_TREE_ENDPOINT', variable_get('asu_dir_utilities_tree_endpoint', 'https://isearch.asu.edu/endpoints/dept_tree/json'));
+define('ASU_DIR_UTILITIES_EMPLOYEE_TYPES_ENDPOINT', variable_get('asu_dir_utilities_employee_types_endpoint', 'https://isearch.asu.edu/endpoints/employee-types'));
+define('ASU_DIR_UTILITIES_FACULTY_TITLES_ENDPOINT', variable_get('asu_dir_utilities_faculty_titles_endpoint', 'https://isearch.asu.edu/endpoints/faculty-title-taxonomy'));
+define('ASU_DIR_UTILITIES_SOLR_SCHEMA_ENDPOINT', variable_get('asu_dir_utilities_solr_schema_endpoint', 'https://asudir-solr.asu.edu/asudir/directory/schema/fields'));
+define('ASU_DIR_TITLESORT_PHOLDER', 'tsort');
+define('ASU_DIR_TITLESORT_FIELD', 'tsort');
+
+
+/**
+ * Implements hook_permission().
+ * Adds custom permission to configure the module
+ */
+function asu_dir_utilities_permission() {
+  $perms[ASU_DIR_UTILITIES_ADMIN_CONFIG_SETTINGS] = array(
+    'title' => t('Administer ASU Directory Configuration'),
+    'description' => t('Configure ASU Directory Utilities'),
+  );
+
+  return $perms;
+}
+
+/**
+ * Implements hook_menu()
+ * Role Provisioning Admin Config
+ *
+ * @return array
+ */
+function asu_dir_utilities_menu() {
+
+  $items = array();
+
+  // Admin menu.
+  $items['admin/config/search/asu_dir_utilities_settings'] = array(
+    'title' => t('ASU Dir Utilities Settings'),
+    'description' => 'Settings for ASU Dir Utilities',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('asu_dir_utilities_admin'),
+    'access callback' => 'user_access',
+    'access arguments' => array(ASU_DIR_UTILITIES_ADMIN_CONFIG_SETTINGS),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+
+/**
+ * Implements hook_libraries_info
+ *
+ * Adds the JQtree library
+ * Documentation for the library can be found here http://mbraak.github.io/jqTree/
+ *
+ * @return mixed
+ *
+ */
+function asu_dir_utilities_libraries_info() {
+  // Expected to be extracted into 'sites/all/libraries/jqtree'.
+  $libraries['jqtree'] = array(
+    'name' => 'jQTree Library',
+    'vendor url' => 'http://mbraak.github.io/jqTree/',
+    'download url' => 'https://github.com/mbraak/jqTree/archive/0.22.0.zip',
+    'version callback' => 'asu_dir_utilities_short_circuit_version',
+    'files' => array(
+      'js' => array('tree.jquery.js'),
+      'css' => array('jqtree.css'),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
+ * Short-circuit the version argument.
+ */
+function asu_dir_utilities_short_circuit_version() {
+  return TRUE;
+}
+
+
+/**
+ * Implements hook_cron()
+ *
+ *Refresh the cached directory tree and employee types every cron run
+ */
+function asu_dir_utilities_cron() {
+
+  asu_dir_utilities_refresh_dir_item(ASU_DIR_UTILITIES_TREE_ENDPOINT);
+  asu_dir_utilities_refresh_dir_item(ASU_DIR_UTILITIES_EMPLOYEE_TYPES_ENDPOINT);
+
+}
+
+
+
