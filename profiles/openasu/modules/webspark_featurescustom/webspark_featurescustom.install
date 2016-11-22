@@ -132,3 +132,20 @@ function webspark_featurescustom_update_7004(&$sandbox) {
     watchdog('webspark_updates', "Added view the administrative theme to the editor role.");
   }
 }
+
+/**
+ * Implements hook_update_N() --
+ * Enable the directory suite module
+ * @param $sandbox
+ */
+function webspark_featurescustom_update_7006(&$sandbox) {
+
+  if (drupal_get_path('module', 'asu_dirs') != '' && !module_exists('asu_dirs')) {
+    module_enable(array('asu_dirs'));
+  }
+
+  if (drupal_get_path('module', 'asu_dir_panel') != '' && !module_exists('asu_dir_panel')) {
+    module_enable(array('asu_dir_panel'));
+  }
+
+}
