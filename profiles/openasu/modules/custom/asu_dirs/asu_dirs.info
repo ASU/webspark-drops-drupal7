@@ -4,6 +4,20 @@ core = 7.x
 package = ASU Webspark
 project = asu_dirs
 files[] = asu_dirs.module
+dependencies[] = asu_dir_utilities
+dependencies[] = asu_dir
+dependencies[] = block
+dependencies[] = ctools
+dependencies[] = features
+dependencies[] = fontawesome
+dependencies[] = libraries
+dependencies[] = list
+dependencies[] = options
+dependencies[] = strongarm
+dependencies[] = jquery_update
+dependencies[] = asu_ajax_solr
+dependencies[] = asu_dept_picker
+dependencies[] = react
 
 ; See below for info on version number
 version = 7.x-1.0
