@@ -362,15 +362,15 @@ function asu_maps_enhanced_field_formatter_view($entity_type, $entity, $field, $
     if (isset($map_settings['map_height'])) {
       $height = $map_settings['map_height'];
     }
-
   }
   else {
     $map_settings = $default_settings;
   }
 
+
   $settings = $display['settings'];
 
-  if (asu_maps_enhanced_get_select_value($map_settings, 'hide_map') === 'NO' || count($map_items) > 1) {
+  if ((asu_maps_enhanced_get_select_value($map_settings, 'hide_map') === 'NO' || count($map_items) > 1) && $map_settings['campus'] != 'NONE') {
     foreach ($items as $delta => $item_data) {
       $element[$delta]['#markup'] .= theme('asu_maps_enhanced_view', array(
         'items' => $map_items,
@@ -473,7 +473,7 @@ function asu_maps_enhanced_get_ref($campus) {
   switch ($campus) {
     case 'THUNDERBIRD':
       $ref = 'mc/33.6224937,-112.1847479?z/17';
-    	break;
+      break;
     case 'POLY':
       $ref = "mc/33.30463351165877,-111.67764695106507?z/16";
       break;
@@ -592,7 +592,7 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       '#prefix' => '<div class="row"><div id="map_campus_select" class="col-md-4">',
       '#suffix' => '</div>',
       '#options' => array(
-        'NONE'  => 'None',
+        'NONE' => 'None',
         'TEMPE' => 'Tempe',
         'POLY' => 'Polytechnic',
         'DOWNTOWN' => 'Downtown',
@@ -713,7 +713,8 @@ function asu_maps_enhanced_get_select_value($item, $key) {
     $value = ($item[$key]) ? 'YES' : 'NO';
 
     return $value;
-  } else {
+  }
+  else {
     return 'NO';
   }
 }
@@ -758,34 +759,34 @@ function asu_maps_enhanced_validate_height($element, &$form_state) {
  */
 function asu_maps_enhanced_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
   if (isset($field['type']) && isset($items[0]['campus_selection'])) {
-  // the null check is necessary for workbench moderation, otherwise it will save
-  // null values upon publishing
-	if ($field['type'] == 'asu_maps_enhanced' && $items[0]['campus_selection'] != NULL) {
-  
-	  $settings = array(
-		'display_campus_select' => $items[0]['display_campus_select'],
-		'campus' => $items[0]['campus_selection'],
-		'name' => 'maps_enhanced_settings',
-		'map_height' => $items[0]['enhanced_map_height'],
-		'hide_map' => $items[0]['hide_map']
-	  );
-  
-	  $map_items = drupal_json_decode($items[0]['map_items']);
-  
-	  //if the first item is already settings, overwrite them
-	  if (!isset($map_items[0]['mrkId']) && !isset($map_items[0]['catId']) && !isset($map_items[0]['id'])) {
-		$map_items[0] = $settings;
-  
-		//else add the settings to beginning of array
-	  }
-	  else {
-		array_unshift($map_items, $settings);
-	  }
-  
-	  $items[0]['map_items'] = drupal_json_encode($map_items);
-  
-	  //cache_clear_all();
-	}
+    // the null check is necessary for workbench moderation, otherwise it will save
+    // null values upon publishing
+    if ($field['type'] == 'asu_maps_enhanced' && $items[0]['campus_selection'] != NULL) {
+
+      $settings = array(
+        'display_campus_select' => $items[0]['display_campus_select'],
+        'campus' => $items[0]['campus_selection'],
+        'name' => 'maps_enhanced_settings',
+        'map_height' => $items[0]['enhanced_map_height'],
+        'hide_map' => $items[0]['hide_map']
+      );
+
+      $map_items = drupal_json_decode($items[0]['map_items']);
+
+      //if the first item is already settings, overwrite them
+      if (!isset($map_items[0]['mrkId']) && !isset($map_items[0]['catId']) && !isset($map_items[0]['id'])) {
+        $map_items[0] = $settings;
+
+        //else add the settings to beginning of array
+      }
+      else {
+        array_unshift($map_items, $settings);
+      }
+
+      $items[0]['map_items'] = drupal_json_encode($map_items);
+
+      //cache_clear_all();
+    }
   }
 }
 
