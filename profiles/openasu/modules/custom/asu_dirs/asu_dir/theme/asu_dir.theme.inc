@@ -302,7 +302,7 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   }
 
   // Markup for primary display block (to be altered via AJAX)
-  $html .= '<div class="row dir-people-wrapper" id="asu-dir-people-wrapper' . $the_id . '"><div class="col-md-12 dir-ajax-solr-people" id="asu-dir-ajax-solr-people' . $the_id . '"></div></div>';
+  $html .= '<div class="dir-people-wrapper" id="asu-dir-people-wrapper' . $the_id . '"><div class="col-md-12 dir-ajax-solr-people" id="asu-dir-ajax-solr-people' . $the_id . '"></div></div>';
 
   //Pagination Controls
 

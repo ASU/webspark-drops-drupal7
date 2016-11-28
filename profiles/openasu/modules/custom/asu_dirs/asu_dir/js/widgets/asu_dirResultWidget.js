@@ -338,67 +338,69 @@
 
         getTitle: function (doc) {
 
-            //logic to get title string
+            // Logic to get title string
             var titles = doc.titles;
-            var facultyTitles = doc.facultyTitles;
-            var emplClasses = doc.emplClasses;
             var depts = doc.deptids;
-            var emplClass = '';
-            var facultyTitle = '';
             var title_string = '';
 
-            //get current dept id from the ASUPeople global, which is defined in the asu_dir module JS
+            // Get current dept id from the ASUPeople global, which is defined in the asu_dir module JS
             var dept_nid = ASUPeople.dept_nid;
 
             var index = 0;
 
-            // get the index of the current department in the deptids array,
-            // so that we can map the proper title and employee class
+            // Get the index of the current department in the deptids array,
+            // so that we can map the proper title and employee class.
 
             if (depts != null) {
-                for (var i = 0; i < depts.length; i++) {
+                for (var i=0; i < depts.length; i++) {
                     if (depts[i] == dept_nid) {
                         index = i;
                     }
                 }
             }
 
-            if (facultyTitles != null && facultyTitles.length > index) {
-                facultyTitle = facultyTitles[index];
+
+            if (doc.titleSource != null) {
+                var titleSource = doc.titleSource[index];
+            }
+            if (doc.titles != null) {
+                var title = doc.titles[index];
+            }
+            if (doc.workingTitle != null) {
+                var workingTitle = doc.workingTitle;
+            }
+            if (doc.primaryTitle != null) {
+                var primaryTitle = doc.primaryTitle;
             }
 
-            //default to the titles array
-            if (titles != null && titles[index] != null) {
-                title_string = titles[index];
+            if (doc.emplClasses != null) {
+                var displayEmplClass = doc.emplClasses[index];
             }
 
-            if (emplClasses != null && emplClasses.length > index) {
-                emplClass = emplClasses[index];
+
+            // Title to output.
+
+            if (titleSource == 'titles') { // Determine if using custom title field.
+                title_string = title;
+            }
+            else if (workingTitle != null) {
+                title_string = workingTitle;
+            }
+            else if (primaryTitle != null) {
+                title_string = primaryTitle;
+            }
+            else {
+                title_string = '';
             }
 
-            // Apply title logic ala
-            // https://docs.google.com/drawings/d/1KUao3TYRZV_vGZu6nSfat8ZUr5XXfi-R6DLaA0qdGfM/edit
-            if ((emplClass == "Faculty" || emplClass == "Academic Professional") && facultyTitle == "Named Professor") {
-                if (titles != null && titles[index] != null) {
-                    title_string = titles[index]; // Don't show facultyTitles
-                }
-            }
-            // Person is faculty type, so display primary iSearch affiliation
-            // faculty title (labelled "Faculty Title" in DAT UI). Note:
-            // Solr only returns the primary iSearch affiliation faculty title
-            // in facultyTitles.
-            else if (emplClass == "Faculty" || emplClass == "Academic Professional") {
-                if (facultyTitle != null && facultyTitle != '') {
-                    title_string = facultyTitle;
-                }
+            // If title_string is still empty, fall back to emplClass as a last
+            // option.
+            if (title_string == '' && displayEmplClass !== '' && displayEmplClass != null) {
+                title_string = displayEmplClass;
             }
 
+            // Trim the title, since it might show up as a blank space, like " "
             title_string = title_string.trim();
-
-            // if title_string is still empty, fall bck to primaryTitle, and then to emplClass as a last option
-            if (title_string == '' && emplClass !== '' && emplClass != null) {
-                title_string = emplClass;
-            }
 
             return title_string;
         },

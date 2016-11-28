@@ -260,8 +260,6 @@
                 // Load the state from the History object.
                 if (state.data && state.data.params) {
 
-                    console.log(state.data, 'THESTATE DATA')
-
                     if (id == id_num) {
                         $('#' + this.tab_link).click();
                         //index = url.indexOf(this.page_alias);
@@ -301,9 +299,6 @@
 
                     //remove the id parameter, since it does not exist in SolR
                     query_string = query_string.replace(id_string, '');
-                    console.log(field_configs, 'QUERY STRING RETURNED');
-                    console.log(search_string, 'THE SEARCH STRING');
-                    console.log(tree, 'THE TREE');
 
                     // Append the sub-departments to the query string if that option is selected
                     if (field_configs.sub_toggle || search_string == null) {
