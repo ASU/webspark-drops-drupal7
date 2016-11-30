@@ -352,7 +352,7 @@
             // so that we can map the proper title and employee class.
 
             if (depts != null) {
-                for (var i=0; i < depts.length; i++) {
+                for (var i = 0; i < depts.length; i++) {
                     if (depts[i] == dept_nid) {
                         index = i;
                     }
@@ -379,7 +379,6 @@
 
 
             // Title to output.
-
             if (titleSource == 'titles') { // Determine if using custom title field.
                 title_string = title;
             }

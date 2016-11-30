@@ -296,7 +296,36 @@ class MigrateIsearchProfileMigration extends Migration {
         $affiliation->id = $department_id;
         $affiliation->deptId = $department_id;
         $affiliation->deptName = $row->departments[$index];
-        $affiliation->title = $row->titles[$index];
+
+
+        $titlesource = 'workingTitle';
+
+        if (isset($row->titleSource)) {
+          $titlesource = $row->titleSource[$index];
+        }
+
+        $custom_title = $row->titles[$index];
+
+        if ($titlesource == 'titles') {
+          $affiliation->title = $custom_title;
+        }
+        else {
+          if (isset($row->workingTitle) && !empty($row->workingTitle)) {
+            $affiliation->title = $row->workingTitle;
+          }
+          else {
+            if (isset($row->primaryTitle) && !empty($row->primaryTitle)) {
+              $affiliation->title = $row->primaryTitle;
+            }
+            else {
+
+              // it's possible that courtesy affiliates might not have any titlesource value,
+              // but have a titles array value, so we use the custom title as a final fallback
+              $affiliation->title = $custom_title;
+            }
+          }
+        }
+
         $affiliation->vpArea = $row->vpAreas[$index];
         $affiliation->campus = $row->jobCampuses[$index];
         $affiliation->mailCode = $row->mailCodes[$index];

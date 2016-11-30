@@ -42,7 +42,6 @@ function asu_isearch_entity_presave($entity, $type) {
  * Implements hook_entity_load
  *
  * Use this for updating the profile upon loading
- * todo:  set sane intervals for node updating
  *
  */
 function asu_isearch_entity_load($entities, $type) {
@@ -66,7 +65,6 @@ function asu_isearch_entity_load($entities, $type) {
           $asurite = $item->field_isearch_asurite_id['und'][0]['value'];
 
           $person = asu_dir_utilities_get_solr_person($asurite);
-
 
           if ($person != NULL) {
             $photo_url = $person['photoUrl'];
@@ -98,8 +96,6 @@ function asu_isearch_entity_load($entities, $type) {
 
               //dpm($person, 'THE PERSON');
               //dpm($item, 'THE ITEM');
-
-
             }
           }
 
