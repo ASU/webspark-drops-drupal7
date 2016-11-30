@@ -41,14 +41,17 @@ define('ASU_ISEARCH_DEPT_CACHING_LIMIT', 10);
 
 // Feed URLs
 $asu_isearch_devmode = variable_get('asu_isearch_devmode', FALSE);
-$feed_endpoint = 'https://isearch.asu.edu/endpoints/dept-profiles/json/';
+
+
+/*
+$feed_endpoint = variable_get('asu_dir_utilities_feed_endpoint', 'https://isearch.asu.edu/endpoints/dept-profiles/json/');
 
 if ($asu_isearch_devmode) {
   $feed_endpoint = variable_get('asu_isearch_devmode_endpoint', $feed_endpoint);
 }
 
 define('ASU_ISEARCH_DIRECTORY_FEED_ENDPOINT', $feed_endpoint);
-
+*/
 
 /**
  * Implements hook_menu()

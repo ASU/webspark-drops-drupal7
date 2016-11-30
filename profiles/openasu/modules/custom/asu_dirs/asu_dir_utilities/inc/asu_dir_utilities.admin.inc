@@ -41,6 +41,14 @@ function asu_dir_utilities_admin($form, &$form_state) {
     '#required' => TRUE,
   );
 
+  $form['asu_dir_utilities_feed_endpoint'] = array(
+    '#type' => 'textfield',
+    '#title' => 'ASU iSearch Directory Feed Endpoint',
+    '#default_value' => ASU_DIR_UTILITIES_FEED_ENDPOINT,
+    '#description' => t('The URL of the iSearch directory feed endpoint.'),
+    '#required' => TRUE,
+  );
+
   $form['asu_dir_utilities_employee_types_endpoint'] = array(
     '#type' => 'textfield',
     '#title' => 'ASU Employee Types Endpoint',
@@ -77,10 +85,12 @@ function asu_dir_utilities_admin_submit($form, &$form_state) {
   /*maybe clear the cache after submitting*/
   variable_set('asu_dir_utilities_solr_endpoint', $form['asu_dir_utilities_solr_env']['#value']);
   variable_set('asu_dir_utilities_tree_endpoint', $form['asu_dir_utilities_tree_endpoint']['#value']);
+  variable_set('asu_dir_utilities_feed_endpoint', $form['asu_dir_utilities_feed_endpoint']['#value']);
   variable_set('asu_dir_utilities_employee_types_endpoint', $form['asu_dir_utilities_employee_types_endpoint']['#value']);
   variable_set('asu_dir_utilities_isearch_url', $form['asu_dir_utilities_isearch_url']['#value']);
   variable_set('asu_dir_utilities_faculty_titles_endpoint', $form['asu_dir_utilities_faculty_titles_endpoint']['#value']);
   variable_set('asu_dir_utilities_solr_schema_endpoint', $form['asu_dir_utilities_solr_schema_endpoint']['#value']);
+
 }
 
 

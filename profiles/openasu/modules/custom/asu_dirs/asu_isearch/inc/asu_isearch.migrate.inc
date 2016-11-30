@@ -224,7 +224,7 @@ function _asu_isearch_cache_dept_feed($build_source = FALSE) {
 }
 
 /***
- * Build the sourc efile
+ * Build the master source file
  *
  * @param bool|FALSE $build_source
  */
@@ -400,7 +400,11 @@ function asu_isearch_remove_from_tracker($dept_nid) {
   }
 }
 
-
+/***
+ * Returns the master source as an array
+ *
+ * @return array|mixed
+ */
 function asu_isearch_get_master_source() {
 
   $master_list = array();

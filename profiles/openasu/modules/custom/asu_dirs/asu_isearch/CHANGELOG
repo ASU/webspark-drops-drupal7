@@ -1,6 +1,8 @@
 asu_isearch 7.x-1.8
 -------------------
 - Added dependency on asu_dir_utilities
+- First/primary affiliation on a profile is open by default on view
+- Research activity links are fixed
 
 asu_isearch 7.x-1.7.1
 ---------------------

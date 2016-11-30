@@ -25,6 +25,9 @@ define('ASU_DIR_UTILITIES_TREE_ENDPOINT', variable_get('asu_dir_utilities_tree_e
 define('ASU_DIR_UTILITIES_EMPLOYEE_TYPES_ENDPOINT', variable_get('asu_dir_utilities_employee_types_endpoint', 'https://isearch.asu.edu/endpoints/employee-types'));
 define('ASU_DIR_UTILITIES_FACULTY_TITLES_ENDPOINT', variable_get('asu_dir_utilities_faculty_titles_endpoint', 'https://isearch.asu.edu/endpoints/faculty-title-taxonomy'));
 define('ASU_DIR_UTILITIES_SOLR_SCHEMA_ENDPOINT', variable_get('asu_dir_utilities_solr_schema_endpoint', 'https://asudir-solr.asu.edu/asudir/directory/schema/fields'));
+define('ASU_DIR_UTILITIES_FEED_ENDPOINT', variable_get('asu_dir_utilities_feed_endpoint', 'https://isearch.asu.edu/endpoints/dept-profiles/json/'));
+
+//todo:  cleanup this
 define('ASU_DIR_TITLESORT_PHOLDER', 'tsort');
 define('ASU_DIR_TITLESORT_FIELD', 'tsort');
 
