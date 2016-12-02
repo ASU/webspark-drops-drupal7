@@ -465,7 +465,7 @@ table.bordered > thead:first-child > tr:first-child > td {
   background-color: transparent;
   margin: 2em 0;
   padding: 0;
-  color: #828282;
+  color: #555;
   font-size: 14px;
 }
 
