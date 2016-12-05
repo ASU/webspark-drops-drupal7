@@ -87,19 +87,10 @@ a,
 }
 
 a:hover,
-a:focus,
-.ui-widget-content a:hover,
-.ui-widget-content a:focus {
+.ui-widget-content a:hover {
   color: #d23153;
   text-decoration: none;
   border-bottom: 1px dotted #d23153;
-}
-
-a:focus,
-.ui-widget-content a:focus {
-  outline: thin dotted;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
 }
 
 #header a,
@@ -120,8 +111,7 @@ a.btn, .btn {
   margin-top: 15px;
 }
 
-a.btn:hover, .btn a:hover,
-a.btn:focus, .btn a:focus {
+a.btn:hover, .btn a:hover {
   border-bottom: none;
 }
 
@@ -890,4 +880,17 @@ ul.help-text li.help-title {
 .token-browser-container table.treeTable > tbody > tr > td:not(first-child) {
   padding-top: 0.25em;
   padding-bottom: 0.25em;
+}
+
+a:focus,
+.ui-widget-content a:focus,
+input:focus,
+a.btn:focus, 
+.btn a:focus,
+#skip_to_content:focus,
+#top-content #tabs .nav-pills > li.active > a:focus {
+	 outline:none; 
+	 border:1px solid #4D90FE;
+	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
+	 box-shadow: 0px 0px 5px  #4D90FE;
 }
