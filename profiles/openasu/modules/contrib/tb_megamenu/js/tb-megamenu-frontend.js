@@ -49,6 +49,21 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
               mm_duration = $(this).data('duration');
             }
           });
+          $('a').focus(function(event){
+            if(!$(this).parent().hasClass('tb-megamenu-item')) {
+              $('.tb-megamenu .open').removeClass('open');
+            }
+          });
+          $('.nav > li > a, li.mega > a').focus(function(event) {
+            if($(this).next(".tb-megamenu-submenu")){
+              if(!$(this).parent().hasClass("open")){
+                $(this).parent().addClass("open");
+              }
+            }
+            if($(this).parent().siblings('.tb-megamenu-item').hasClass('open')) {
+              $(this).parent().siblings('.tb-megamenu-item').removeClass('open');
+            }
+          });
           var mm_timeout = mm_duration ? 100 + mm_duration : 500;
           $('.nav > li, li.mega').hover(function(event) {
             var $this = $(this);
