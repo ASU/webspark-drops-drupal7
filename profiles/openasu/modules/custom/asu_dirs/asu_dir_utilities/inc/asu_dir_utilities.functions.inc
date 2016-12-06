@@ -21,52 +21,11 @@ function asu_dir_utilities_clear_cache($test) {
   }
 }
 
-
-/***
- * Get the department hierarchy tree
- */
-function asu_dir_utilities_get_dept_tree() {
-
-  $tree = &drupal_static(__FUNCTION__);
-
-  if (!isset($tree) || $tree == "") {
-    // Check for cache
-    if ($cache = cache_get('asu_dir_utilities_directory_tree')) {
-      $tree = $cache->data;
-    }
-    // Create content and cache if no cache available
-    else {
-
-      //set timeout of request to 60 seconds
-      $options = array(
-        'timeout' => 60,
-      );
-
-      //Get the tree and cache
-      $tree_endpoint = ASU_DIR_UTILITIES_TREE_ENDPOINT;
-      $request = drupal_http_request($tree_endpoint, $options);
-
-      if ($request->code == 200) {
-        $tree = $request->data;
-      }
-
-      // Create cache, set to hold cache for number of hours specified
-      if ($tree != NULL) {
-        $set_date = time();
-        $expire_date = time() + 3600 * ASU_DIR_UTILITIES_FORM_CACHE_DURATION;
-        cache_set('asu_dir_utilities_directory_tree', $tree, 'cache', $expire_date);
-      }
-    }
-  }
-
-  return $tree;
-}
-
 /***
  * Get iSearch data, either form cache, or from endpoint
  *
  * @param $endpoint - the endpoint of the data in isearch, see the constants at the top of asu_dir_utilities.module
- * @param $decode - whether or not to json_decode the item - useful for passing to js
+ * @param $decode - json_decode the item - useful for passing to js
  * @return mixed
  */
 function asu_dir_utilities_get_isearch_data($endpoint, $decode = TRUE) {
@@ -79,10 +38,9 @@ function asu_dir_utilities_get_isearch_data($endpoint, $decode = TRUE) {
   if ($cache = cache_get($cachename)) {
     $item = $cache->data;
   }
+
   // Create content and cache if no cache available
   else {
-
-
     $item = asu_dir_utilities_refresh_dir_item($endpoint, $cachename);
   }
 
@@ -91,51 +49,90 @@ function asu_dir_utilities_get_isearch_data($endpoint, $decode = TRUE) {
     $item = drupal_json_decode($item);
   }
 
+  // attempt to get from long-term cache
+  if ($item == NULL) {
+    $item = asu_dir_utilities_get_longterm_cached_item($endpoint);
+  }
+
   return $item;
 }
 
+
+/***
+ * Returns long-term cached data from json file backup
+ *
+ *
+ * @param $endpoint
+ */
+function asu_dir_utilities_get_longterm_cached_item($endpoint) {
+  $backups = asu_dir_utilities_get_endpoint_list(TRUE);
+
+  $location = $backups[$endpoint];
+  $data = NULL;
+
+  if ($location != NULL) {
+
+    //todo:  check for master list
+    if (file_exists($location)) {
+      $master_data = file_get_contents(ASU_ISEARCH_MASTER_FILE_ENDPOINT);
+      $master_data = json_decode($master_data, TRUE);
+
+      if ($master_data != NULL) {
+        $data = $master_data;
+      }
+    }
+  }
+
+  return $data;
+
+}
+
+/***
+ * Save longterm cached files
+ *
+ */
+function asu_dir_utilities_set_longterm_cached_item($item, $endpoint) {
+
+  if (!file_exists(ASU_DIR_UTILITIES_CACHE_ENDPOINT)) {
+    mkdir(ASU_DIR_UTILITIES_CACHE_ENDPOINT, 0644, TRUE);
+  }
+
+  $longterm = asu_dir_utilities_get_endpoint_list(TRUE);
+
+  if (isset($longterm[$endpoint]) && !empty($longterm[$endpoint])) {
+    //write to the long-term cache file
+    file_save_data($item, $longterm[$endpoint], FILE_EXISTS_REPLACE);
+  }
+}
+
+
+/***
+ * Get the department hierarchy tree
+ */
+function asu_dir_utilities_get_dept_tree($decode = TRUE) {
+
+  $tree = &drupal_static(__FUNCTION__);
+
+  if (!isset($tree) || $tree == "") {
+    $tree = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_TREE_ENDPOINT, $decode);
+  }
+
+  return $tree;
+}
 
 /**
  * Get the employee types from the endpoint, or from cache
  *
  * @return mixed An array of employee types
  */
-function asu_dir_utilities_get_employee_types() {
+
+function asu_dir_utilities_get_employee_types($decode = TRUE) {
 
   $employee_types = &drupal_static(__FUNCTION__);
 
   if (!isset($employee_types) || $employee_types == "") {
     // Check for cache
-    if ($cache = cache_get('asu_dir_utilities_employee_types')) {
-      $employee_types = $cache->data;
-    }
-    // Create content and cache if no cache available
-    else {
-
-      //set timeout of request to 60 seconds
-      $options = array(
-        'timeout' => 60,
-      );
-
-      $endpoint = ASU_DIR_UTILITIES_EMPLOYEE_TYPES_ENDPOINT;
-      $request = drupal_http_request($endpoint, $options);
-
-      if ($request->code == 200) {
-        $employee_types = $request->data;
-      }
-
-      // Cache employee types for number of hours specified
-      if ($employee_types != NULL) {
-
-        $expire_date = time() + 3600 * ASU_DIR_UTILITIES_FORM_CACHE_DURATION;
-        cache_set('asu_dir_utilities_employee_types', $employee_types, 'cache', $expire_date);
-      }
-    }
-  }
-
-  // handle legacy config
-  if (!is_array($employee_types)) {
-    $employee_types = drupal_json_decode($employee_types);
+    $employee_types = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_EMPLOYEE_TYPES_ENDPOINT, $decode);
   }
 
   return $employee_types;
@@ -147,37 +144,14 @@ function asu_dir_utilities_get_employee_types() {
  *
  * @return mixed An array of employee types
  */
-function asu_dir_utilities_get_faculty_titles() {
+
+function asu_dir_utilities_get_faculty_titles($decode = TRUE) {
 
   $faculty_titles = &drupal_static(__FUNCTION__);
 
   if (!isset($faculty_titles) || $faculty_titles == "") {
     // Check for cache
-    if ($cache = cache_get('asu_dir_utilities_faculty_titles')) {
-      $faculty_titles = $cache->data;
-    }
-    // Create content and cache if no cache available
-    else {
-
-      //set timeout of request to 60 seconds
-      $options = array(
-        'timeout' => 60,
-      );
-
-      $endpoint = ASU_DIR_UTILITIES_FACULTY_TITLES_ENDPOINT;
-      $request = drupal_http_request($endpoint, $options);
-
-      if ($request->code == 200) {
-        $faculty_titles = $request->data;
-      }
-
-      // Cache employee types for number of hours specified
-      if ($faculty_titles != NULL) {
-
-        $expire_date = time() + 3600 * ASU_DIR_UTILITIES_FORM_CACHE_DURATION;
-        cache_set('asu_dir_utilities_faculty_titles', $faculty_titles, 'cache', $expire_date);
-      }
-    }
+    $faculty_titles = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_FACULTY_TITLES_ENDPOINT, $decode);
   }
 
   return $faculty_titles;
@@ -189,38 +163,14 @@ function asu_dir_utilities_get_faculty_titles() {
  *
  * @return mixed An array of employee types
  */
-function asu_dir_utilities_get_solr_schema() {
+
+function asu_dir_utilities_get_solr_schema($decode = TRUE) {
 
   $solr_schema = &drupal_static(__FUNCTION__);
 
   if (!isset($solr_schema) || $solr_schema == "") {
     // Check for cache
-    if ($cache = cache_get('asu_dir_utilities_solr_schema')) {
-      $solr_schema = $cache->data;
-    }
-    // Create content and cache if no cache available
-    else {
-
-      //set timeout of request to 60 seconds
-      $options = array(
-        'timeout' => 60,
-      );
-
-      $endpoint = ASU_DIR_UTILITIES_SOLR_SCHEMA_ENDPOINT;
-      $request = drupal_http_request($endpoint, $options);
-
-      if ($request->code == 200) {
-        $types = $request->data;
-        $solr_schema = drupal_json_decode($types);
-      }
-
-      // Cache employee types for number of hours specified
-      if ($solr_schema != NULL) {
-
-        $expire_date = time() + 3600 * ASU_DIR_UTILITIES_FORM_CACHE_DURATION;
-        cache_set('asu_dir_utilities_solr_schema', $solr_schema, 'cache', $expire_date);
-      }
-    }
+    $solr_schema = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_SOLR_SCHEMA_ENDPOINT, $decode);
   }
 
   return $solr_schema;
@@ -228,15 +178,11 @@ function asu_dir_utilities_get_solr_schema() {
 
 /****
  * Get local people from iSearch
- * todo:  performance improvement
+ *
  * @return array
  */
 function asu_dir_utilities_get_local_profile_list() {
   $people_list = &drupal_static(__FUNCTION__);
-
-
-  //dpm($result);
-  //todo: implement caching
 
 
   if (!isset($people_list) || $people_list == "") {
@@ -246,22 +192,6 @@ function asu_dir_utilities_get_local_profile_list() {
     }
     // Create content and cache if no cache available
     else {
-
-      /*
-      $nodes = node_load_multiple(array(), array('type' => 'asu_isearch_profile'));
-
-      $people_list = array();
-
-      foreach($nodes as $node) {
-       if (isset($node->field_isearch_asurite_id['und'][0]['value'])) {
-         $asurite = $node->field_isearch_asurite_id['und'][0]['value'];
-         $people_list[$asurite] = drupal_get_path_alias('node/' .$node->nid);
-       }
-      }
-
-      // Cache employee types for number of hours specified
-     if (!empty($people_list)) {
-      }*/
 
       // pull all imported profiles, which are published
       $query = db_query('SELECT field_data_field_isearch_asurite_id.field_isearch_asurite_id_value AS asurite,  
@@ -350,7 +280,7 @@ function asu_dir_utilities_dept_find_root($data, $dept_id, $lookup = 'dept_nid')
 }
 
 /**
- * Saves the ids of all departments under currently selected tree on #people's data object
+ * Returns the ids of all departments under currently selected tree
  * @param {object}
  *  Nested JSON object with department data
  */
@@ -411,6 +341,7 @@ function asu_dir_utilities_refresh_dir_item($endpoint) {
 
   $cachename = asu_dir_utilities_get_cache_name($endpoint);
 
+
   //Refresh and cache the Tree
   $item = NULL;
 
@@ -424,6 +355,7 @@ function asu_dir_utilities_refresh_dir_item($endpoint) {
   if ($item != NULL) {
     $expire_date = time() + 3600 * ASU_DIRECTORY_FORM_CACHE_DURATION;
     cache_set($cachename, $item, 'cache', $expire_date);
+    asu_dir_utilities_set_longterm_cached_item($item, $endpoint);
   }
 
   return $item;
@@ -441,8 +373,8 @@ function asu_dir_utilities_solr_health_check() {
 
   if (!empty($check) && $check->code == 200) {
     $data = drupal_json_decode($check->data);
-    if (isset($data['lock_status'])) {
 
+    if (isset($data['lock_status'])) {
       // if it is locked, then it is not healthy
       return !$data['lock_status'];
     }

@@ -261,7 +261,7 @@ function asu_isearch_update_7170() {
 }
 
 /**
- * Cleanup variables
+ * Enable asu_dir_utilities
  */
 function asu_isearch_update_7180() {
   variable_del('asu_dir_solr_endpoint');

@@ -138,12 +138,23 @@ class IsearchProfileDirectory {
 
       $contextual_filters = $this->contextualFilters;
       $contextual_filters[0] = 'all';
-
       $view = views_get_view('isearch_directory', TRUE);
+
+      $view->view_config = $this->viewConfig;
+      $view_config = $this->viewConfig;
       $view->set_display($display_id);
       $view->init_handlers();
-      $view->set_arguments($contextual_filters);
 
+      // Add the title filter
+      if (isset($view_config->filter_title)) {
+        if (trim($view_config->filter_title) != '') {
+          $view->filter['field_isearch_affil_title_value']->value = $view_config->filter_title;
+          $view->filter['field_isearch_affil_title_value']->options['value'] = $view_config->filter_title;
+        }
+      }
+
+      $view->set_arguments($contextual_filters);
+      $view->pre_execute();
       $view->execute();
 
       foreach ($view->result as $item) {

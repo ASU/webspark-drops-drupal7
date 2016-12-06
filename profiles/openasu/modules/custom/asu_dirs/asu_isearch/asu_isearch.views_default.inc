@@ -1408,6 +1408,13 @@ function asu_isearch_views_default_views() {
     'asu_isearch_profile' => 'asu_isearch_profile',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
+  /* Filter criterion: Field collection item: Title (field_isearch_affil_title) */
+  $handler->display->display_options['filters']['field_isearch_affil_title_value']['id'] = 'field_isearch_affil_title_value';
+  $handler->display->display_options['filters']['field_isearch_affil_title_value']['table'] = 'field_data_field_isearch_affil_title';
+  $handler->display->display_options['filters']['field_isearch_affil_title_value']['field'] = 'field_isearch_affil_title_value';
+  $handler->display->display_options['filters']['field_isearch_affil_title_value']['relationship'] = 'field_isearch_affiliations_value';
+  $handler->display->display_options['filters']['field_isearch_affil_title_value']['operator'] = 'regular_expression';
+  $handler->display->display_options['filters']['field_isearch_affil_title_value']['value'] = '.*';
   $handler->display->display_options['allow']['use_pager'] = 'use_pager';
   $handler->display->display_options['allow']['items_per_page'] = 'items_per_page';
   $handler->display->display_options['allow']['offset'] = 'offset';

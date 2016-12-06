@@ -65,7 +65,6 @@ var ASUPeople = {};
                     var page_alias = isettings.page_alias;
                     var isearch_mode = field_configs.isearch_flag;
                     var titlesort_field = isettings.titlesort_field;
-                    var tsort_placeholder = isettings.tsort_placeholder;
                     var id_num = field_configs.pane_id;
                     var res_per_page = 10;
                     var local_people = isettings.local_people;
@@ -87,7 +86,7 @@ var ASUPeople = {};
                     // Build the pre-configured filter values, and store them in the field_configs
 
                     // ADD FILTERING FOR TENURE OR NON-TENURE FACULTY TITLES, IF APPLICABLE
-                    if (field_configs.tenure_display && field_configs.faculty_titles.titles && field_configs.tenure_display != 'Both') {
+                    if (field_configs.tenure_display && field_configs.faculty_titles != null && field_configs.tenure_display != 'Both') {
                         var fac_titles = field_configs.faculty_titles.titles;
                         var filtered = [];
                         var title_search = '';
@@ -214,7 +213,6 @@ var ASUPeople = {};
                         field_configs: field_configs,
                         default_sort: default_sort,
                         titlesort_field: titlesort_field,
-                        tsort_placeholder: tsort_placeholder,
                         field_id: field_id
                     }));
                     // Add in Results widget. See our custom

@@ -164,6 +164,17 @@ function theme_asu_dir_isearch_view(&$vars) {
     // Add our configs to the exposed form, so that they are resubmitted as
     // part of the ajax process
     $form['omni_configs']['#value'] = drupal_json_encode($view_config);
+    $form['field_isearch_affil_title_value']['#title'] = t('Title');
+    $form['field_isearch_affil_title_value']['#title_display'] = 'invisible';
+    $form['field_isearch_expertise_areas_tid']['#title'] = t('Expertise Areas Filter');
+    $form['field_isearch_expertise_areas_tid']['#title_display'] = 'invisible';
+    $form['sort_by']['#title'] = t('Sort By');
+    $form['sort_by']['#title_display'] = 'invisible';
+    $form['field_isearch_local_tags_tid']['#title'] = t('Local Tags');
+    $form['field_isearch_local_tags_tid']['#title_display'] = 'invisible';
+
+    //dpm($form, 'THE FORM AFTER ALTERING');
+
 
     //$form['submit']['#ajax_processed'] = TRUE;
     $content['isearch_view_exposed_form'] = $form;
@@ -287,8 +298,7 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
     'top_level_ids' => $top_level_ids,
     'tree' => $tree,
     'page_alias' => $alias,
-    'titlesort_field' => ASU_DIR_TITLESORT_FIELD,
-    'tsort_placeholder' => ASU_DIR_TITLESORT_PHOLDER,
+    'titlesort_field' => ASU_DIR_UTILITIES_TITLESORT_FIELD,
     'pane_id' => $the_id,
     'local_people' => $local_people,
     'isearch_url' => ASU_DIR_UTILITIES_ISEARCH_URL
