@@ -138,7 +138,6 @@ class IsearchProfileDirectory {
 
       $contextual_filters = $this->contextualFilters;
       $contextual_filters[0] = 'all';
-      //dpm($this, 'THISSSS');
       $view = views_get_view('isearch_directory', TRUE);
 
       $view->view_config = $this->viewConfig;
