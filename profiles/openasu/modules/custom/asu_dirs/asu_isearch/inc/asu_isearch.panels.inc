@@ -188,6 +188,8 @@ function asu_isearch_preprocess_panels_pane(&$variables) {
 
   if (isset($variables['content']['#bundle']) && $variables['content']['#bundle'] === 'isearch_directory') {
 
+    dpm($variables, 'THE VARS');
+
     // shortcut to content render array
     $content = &$variables['content'];
 
@@ -243,6 +245,9 @@ function asu_isearch_preprocess_panels_pane(&$variables) {
     }
 
     // display filters? - Should we display or hide the filters
+
+
+    dpm($view_config, 'THE VIEW CONFIG');
 
     if ($view_config->show_filters) {
       // build the exposed form fields
@@ -307,6 +312,8 @@ function asu_isearch_preprocess_panels_pane(&$variables) {
       // Add our configs to the exposed form, so that they are resubmitted as
       // part of the ajax process
       $form['omni_configs']['#value'] = drupal_json_encode($view_config);
+
+      dpm($form, 'THE EXPOSED FORM');
 
       //$form['submit']['#ajax_processed'] = TRUE;
       $content['isearch_view_exposed_form'] = $form;

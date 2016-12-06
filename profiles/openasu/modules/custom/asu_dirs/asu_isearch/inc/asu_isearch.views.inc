@@ -85,6 +85,10 @@ function asu_isearch_views_pre_render(&$view) {
           $view->result[$key]->field_field_isearch_photo_url = array();
         }
       }
+
+      // add alt attribute to images
+      $view->result[$key]->field_field_isearch_photo_url[0]['rendered']['#item']['alt'] = $view->result[$key]->node_title;
+      $view->result[$key]->field_field_isearch_photo_url[0]['raw']['alt'] =  $view->result[$key]->node_title;
     }
   }
 }
@@ -156,6 +160,7 @@ function asu_isearch_get_views() {
  * Implements hook_views_query_alter()
  */
 function asu_isearch_views_query_alter(&$view, &$query) {
+
   if (asu_isearch_is_isearch_view($view) && isset($view->view_config)) {
 
     // reset the sort when passed in
@@ -333,6 +338,7 @@ function asu_isearch_views_ajax() {
     list($view_name, $display_id) = explode(':', $view_config->view_display);
 
     $view = views_get_view($view_name);
+
     $view->view_config = $view_config;
     $view->set_display($display_id);
     $view->init_handlers();

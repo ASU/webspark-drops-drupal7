@@ -20,7 +20,6 @@
                 field_configs: null,
                 default_sort: null,
                 titlesort_field: null,
-                tsort_placeholder: null,
                 field_id: null
             }, attributes);
         },

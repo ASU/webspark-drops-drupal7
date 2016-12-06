@@ -99,16 +99,30 @@ function asu_dir_utilities_admin_submit($form, &$form_state) {
  */
 
 
+
 /****
  * Returns a list of endpoints mapped to cache names
  */
-function asu_dir_utilities_get_endpoint_list() {
-  $endpoints = array(
-    ASU_DIR_UTILITIES_EMPLOYEE_TYPES_ENDPOINT => 'asu_dir_utilities_employee_types_endpoint',
-    ASU_DIR_UTILITIES_TREE_ENDPOINT => 'asu_dir_utilities_directory_tree',
-    ASU_DIR_UTILITIES_FACULTY_TITLES_ENDPOINT => 'asu_dir_utilities_faculty_titles',
-    ASU_DIR_UTILITIES_SOLR_SCHEMA_ENDPOINT => 'asu_dir_utilities_solr_schema'
-  );
+function asu_dir_utilities_get_endpoint_list($backup = FALSE) {
+
+
+  if ($backup === TRUE) {
+
+    // return the backup json file endpoints
+    $endpoints = array(
+      ASU_DIR_UTILITIES_EMPLOYEE_TYPES_ENDPOINT => ASU_DIR_UTILITIES_EMPLOYEE_TYPES_BACKUP,
+      ASU_DIR_UTILITIES_TREE_ENDPOINT => ASU_DIR_UTILITIES_TREE_BACKUP,
+      ASU_DIR_UTILITIES_FACULTY_TITLES_ENDPOINT => ASU_DIR_UTILITIES_FACULTY_TITLES_BACKUP
+    );
+  } else {
+    $endpoints = array(
+      ASU_DIR_UTILITIES_EMPLOYEE_TYPES_ENDPOINT => 'asu_dir_utilities_employee_types_endpoint',
+      ASU_DIR_UTILITIES_TREE_ENDPOINT => 'asu_dir_utilities_directory_tree',
+      ASU_DIR_UTILITIES_FACULTY_TITLES_ENDPOINT => 'asu_dir_utilities_faculty_titles',
+      ASU_DIR_UTILITIES_SOLR_SCHEMA_ENDPOINT => 'asu_dir_utilities_solr_schema'
+    );
+  }
+
 
   return $endpoints;
 }
@@ -157,7 +171,7 @@ function asu_dir_utilities_get_default_config($type = 'asu_dir') {
   $depts->items = array();
   $depts->options = new stdClass();
 
-  $tsort_field = ASU_DIR_TITLESORT_FIELD;
+  $tsort_field = ASU_DIR_UTILITIES_TITLESORT_FIELD;
 
   if ($type == 'asu_isearch') {
     $tsort_field = 'field_isearch_affil_rank_weight_value';
@@ -202,7 +216,6 @@ function asu_dir_utilities_get_default_config($type = 'asu_dir') {
     'hide_filter_rank_sort' => FALSE,
     'show_az_index' => TRUE,
     'default_rank_mode' => 'isearch',
-    //todo:  how to do this with Solr?
     'depts' => $depts,
     'top_level_ids' => array(
       'top_level_psid' => ASU_DIR_UTILITIES_TOP_LEVEL_PS_ID,

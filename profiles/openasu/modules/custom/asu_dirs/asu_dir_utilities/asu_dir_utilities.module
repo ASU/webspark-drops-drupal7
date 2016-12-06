@@ -26,10 +26,16 @@ define('ASU_DIR_UTILITIES_EMPLOYEE_TYPES_ENDPOINT', variable_get('asu_dir_utilit
 define('ASU_DIR_UTILITIES_FACULTY_TITLES_ENDPOINT', variable_get('asu_dir_utilities_faculty_titles_endpoint', 'https://isearch.asu.edu/endpoints/faculty-title-taxonomy'));
 define('ASU_DIR_UTILITIES_SOLR_SCHEMA_ENDPOINT', variable_get('asu_dir_utilities_solr_schema_endpoint', 'https://asudir-solr.asu.edu/asudir/directory/schema/fields'));
 define('ASU_DIR_UTILITIES_FEED_ENDPOINT', variable_get('asu_dir_utilities_feed_endpoint', 'https://isearch.asu.edu/endpoints/dept-profiles/json/'));
+define('ASU_DIR_UTILITIES_CACHE_ENDPOINT', 'private://isearch/feeds/');
 
-//todo:  cleanup this
-define('ASU_DIR_TITLESORT_PHOLDER', 'tsort');
-define('ASU_DIR_TITLESORT_FIELD', 'tsort');
+// backup endpoint data in files
+define('ASU_DIR_UTILITIES_EMPLOYEE_TYPES_BACKUP', 'private://isearch/employee_types.json');
+define('ASU_DIR_UTILITIES_FACULTY_TITLES_BACKUP', 'private://isearch/faculty_titles.json');
+define('ASU_DIR_UTILITIES_TREE_BACKUP', 'private://isearch/directory_tree.json');
+
+// since there is no inherent rank/title sorting field in Solr, we use this term to identify the sorting
+// mode in which we sort by either iSearch ranking, or faculty title ranking
+define('ASU_DIR_UTILITIES_TITLESORT_FIELD', 'tsort');
 
 
 /**
