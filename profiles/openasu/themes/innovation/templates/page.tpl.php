@@ -80,7 +80,7 @@
 <div id="page-wrapper"><div id="page">
 
   <!-- Page Header -->
-  <header id="header">
+  <header id="header" role="banner">
   	<div class="container">
   		<div class="row">
   			<div class="column col-md-12">
@@ -96,17 +96,17 @@
 
 
 	<!-- Nav Bar -->
-	<div id="ASUNavMenu" class="navmenu">
+	<div id="ASUNavMenu" class="navmenu" role="navigation" aria-label="Primary">
 		<div class="container">
       <!--Commented to work with mega menu-->
-                     <nav class="navbar-collapse collapse">
+      <div class="navbar-collapse collapse">
 					<?php print render($page['menu']); ?>
-			</nav><!-- /#navbar -->
+			</div><!-- /#navbar -->
 		</div><!-- /.container -->
 	</div><!-- /.navmenu -->
-
+	
     <!-- Page Main -->
-  <div id="main-wrapper" class="clearfix"><div id="main" class="clearfix">
+  <div id="main-wrapper" role="main" class="clearfix"><div id="main" class="clearfix">
     <a id="main-content"></a>
 
     <div id="top-content" class="column container">
