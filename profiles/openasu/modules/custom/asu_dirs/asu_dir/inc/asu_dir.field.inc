@@ -79,16 +79,21 @@ function asu_dir_field_formatter_view($entity_type, $entity, $field, $instance, 
 
   $settings['admin'] = FALSE;
   $settings['standalone_tree'] = FALSE;
-  $theconfig = drupal_json_decode($items[0]['directory_config']);
+  $savedconfigs = drupal_json_decode($items[0]['directory_config']);
+  $default_configs = asu_dir_utilities_get_default_config();
+
+  // merge with defaults, since some legacy panels might not've been set
+  $config = array_merge($default_configs, $savedconfigs);
+
   $healthy = asu_dir_utilities_solr_health_check();
 
   // if we are configured to display the view, or Solr is not healthy,
   // then display iSearch Profile List view
-  if ($theconfig['always_display_view'] || !$healthy) {
+  if ($config['always_display_view'] || !$healthy) {
 
     // map the proper sort value
-    $theconfig['default_sort_by'] = asu_dir_utilites_get_view_sort($theconfig['default_sort_by']);
-    $items[0]['directory_config'] = drupal_json_encode($theconfig);
+    $config['default_sort_by'] = asu_dir_utilites_get_view_sort($config['default_sort_by']);
+    $items[0]['directory_config'] = drupal_json_encode($config);
 
     $element = array(
       '#theme' => 'asu_dir_isearch_view',
