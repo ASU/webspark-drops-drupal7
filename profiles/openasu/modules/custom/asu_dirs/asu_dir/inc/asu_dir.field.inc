@@ -171,13 +171,13 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
 
     // handle the case of legacy configuration
     if (!empty($field_items) && isset($field_configs['dept_id']) && empty($config['depts']['items'])) {
-      $config['depts']->items[0] = array(
+      $config['depts']['items'][0] = array(
         'dept_id' => $field_configs['dept_id'],
         'dept_nid' => $field_items[0],
         'tree_nids' => $field_items
       );
 
-      $config['depts']['options'][$field_configs]['dept_id'] = array(
+      $config['depts']['options'][$field_configs['dept_id']] = array(
         'subdepts' => $config['sub_toggle']
       );
     }

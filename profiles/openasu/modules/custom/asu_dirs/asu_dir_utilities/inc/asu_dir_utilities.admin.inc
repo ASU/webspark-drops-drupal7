@@ -167,9 +167,9 @@ function asu_dir_utilities_get_default_view_config() {
  */
 function asu_dir_utilities_get_default_config($type = 'asu_dir') {
 
-  $depts = new stdClass();
-  $depts->items = array();
-  $depts->options = new stdClass();
+  $depts = array();
+  $depts['items'] = array();
+  $depts['options'] = array();
 
   $tsort_field = ASU_DIR_UTILITIES_TITLESORT_FIELD;
 
