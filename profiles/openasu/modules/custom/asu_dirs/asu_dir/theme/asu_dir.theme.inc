@@ -49,8 +49,6 @@ function theme_asu_dir_isearch_view(&$vars) {
   $view_config = json_decode($vars['items'][0]['directory_config']);
   $view_config = (object) array_merge($default_view_config, (array) $view_config);
 
-  //dpm($view_config, 'THE VIEW CONFIG');
-
   //set the view display option if there is none
   if (!isset($view_config->view_display)) {
     $view_config->view_display = 'isearch_directory:directory_list';
@@ -64,16 +62,10 @@ function theme_asu_dir_isearch_view(&$vars) {
   $view->set_display($view_display_id);
   $view->init_handlers();
 
-  //dpm($view, 'VIEW AFTER INIT HANDLERS');
-
   $contextual_filters = asu_isearch_get_filters($view_config, $view);
-
-  //dpm($view, 'THE VIEW AFTER ADDING FILTERS');
 
   // set the contextual filters arguments
   $view_display = asu_isearch_get_rendered_view($view_config, $view);
-
-  //dpm($view, 'THE VIEW AFTER GETTING RENDERED VIEW');
 
   // end edit
   $directory->setViewConfig($view_config);
@@ -172,9 +164,6 @@ function theme_asu_dir_isearch_view(&$vars) {
     $form['sort_by']['#title_display'] = 'invisible';
     $form['field_isearch_local_tags_tid']['#title'] = t('Local Tags');
     $form['field_isearch_local_tags_tid']['#title_display'] = 'invisible';
-
-    //dpm($form, 'THE FORM AFTER ALTERING');
-
 
     //$form['submit']['#ajax_processed'] = TRUE;
     $content['isearch_view_exposed_form'] = $form;
