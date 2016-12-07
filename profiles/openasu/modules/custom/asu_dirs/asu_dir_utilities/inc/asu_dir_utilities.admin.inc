@@ -221,7 +221,7 @@ function asu_dir_utilities_get_default_config($type = 'asu_dir') {
       'top_level_psid' => ASU_DIR_UTILITIES_TOP_LEVEL_PS_ID,
       'top_level_nid' => ASU_DIR_UTILITIES_TOP_LEVEL_DEPT_NID
     ),
-    'always_show_view' => FALSE,
+    'always_display_view' => FALSE,
     // asu_isearch_specific
     'show_filter_sort' => TRUE,
     'view_display' => 'isearch_directory:isearch_directory_list',
