@@ -88,7 +88,7 @@ function asu_isearch_views_pre_render(&$view) {
 
       // add alt attribute to images
       $view->result[$key]->field_field_isearch_photo_url[0]['rendered']['#item']['alt'] = $view->result[$key]->node_title;
-      $view->result[$key]->field_field_isearch_photo_url[0]['raw']['alt'] =  $view->result[$key]->node_title;
+      $view->result[$key]->field_field_isearch_photo_url[0]['raw']['alt'] = $view->result[$key]->node_title;
     }
   }
 }
