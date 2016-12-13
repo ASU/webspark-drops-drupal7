@@ -99,7 +99,6 @@ function asu_dir_utilities_admin_submit($form, &$form_state) {
  */
 
 
-
 /****
  * Returns a list of endpoints mapped to cache names
  */
@@ -114,7 +113,8 @@ function asu_dir_utilities_get_endpoint_list($backup = FALSE) {
       ASU_DIR_UTILITIES_TREE_ENDPOINT => ASU_DIR_UTILITIES_TREE_BACKUP,
       ASU_DIR_UTILITIES_FACULTY_TITLES_ENDPOINT => ASU_DIR_UTILITIES_FACULTY_TITLES_BACKUP
     );
-  } else {
+  }
+  else {
     $endpoints = array(
       ASU_DIR_UTILITIES_EMPLOYEE_TYPES_ENDPOINT => 'asu_dir_utilities_employee_types_endpoint',
       ASU_DIR_UTILITIES_TREE_ENDPOINT => 'asu_dir_utilities_directory_tree',
@@ -145,31 +145,21 @@ function asu_dir_utilities_get_cache_name($endpoint) {
   }
 }
 
-
-/**
- * Helper function to get the default view configuration
- * used on the iSearch directory list view.
- *
- * This will help avoid undefined warnings when new options added
- */
-/*
-function asu_dir_utilities_get_default_view_config() {
-  $depts = new stdClass();
-  $depts->items = array();
-  $depts->options = new stdClass();
-}*/
-
 /**
  * Helper function to get the default configuration
- * used for an ASU Directory field type.
+ * used for an ASU Directory field.
  *
- * This will help avoid undefined warnings when new options added
+ * This sets sane defaults
  */
 function asu_dir_utilities_get_default_config($type = 'asu_dir') {
 
   $depts = array();
   $depts['items'] = array();
-  $depts['options'] = array();
+
+  // note: options needs to be an object in our model, since
+  // we are using numeric 'keys' (properties) in order to store options
+  // for each dept
+  $depts['options'] = new stdClass();
 
   $tsort_field = ASU_DIR_UTILITIES_TITLESORT_FIELD;
 

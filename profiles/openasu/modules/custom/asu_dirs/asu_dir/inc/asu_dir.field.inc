@@ -555,8 +555,7 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       '#default_value' => $config['default_sort_by'],
       '#states' => array(
         'visible' => array(
-          ':input[name="field_asu_directory_items[und][0][horizontal_tabs]
-          [advanced][always_display_view]"]' => array('checked' => FALSE)
+          ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][always_display_view]"]' => array('checked' => FALSE)
         ),
       ),
     );
@@ -728,7 +727,13 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         '#suffix' => '<p>If checked, the iSearch Directory List view will be displayed, 
         instead of Solr results.  The view is subject to changes in local profiles via migrations, 
         and may not be up to date with iSearch.  Please note that in the event of a Solr outage, 
-        the view will be displayed automatically as a backup.</p></div></div>'
+        the view will be displayed automatically as a backup.</p></div></div>',
+        '#states' => array(
+          'visible' => array(
+            ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][use_custom_q]"]' => array('checked' => FALSE)
+          ),
+        )
+
       );
     }
 
@@ -741,7 +746,12 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         <div class="panel-body">',
       '#suffix' => '<p>Specify custom filter query value to use in the Solr query of department people.
         See the documentation on the "fq" param here:  https://wiki.apache.org/solr/CommonQueryParameters.
-        Also, the field schema for ASU Solr Directory can be found at:  https://asudir-solr.asu.edu/asudir/directory/schema/fields.</p></div></div>'
+        Also, the field schema for ASU Solr Directory can be found at:  https://asudir-solr.asu.edu/asudir/directory/schema/fields.</p></div></div>',
+      '#states' => array(
+        'visible' => array(
+          ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][always_display_view]"]' => array('checked' => FALSE)
+        ),
+      ),
     );
 
     $element['horizontal_tabs']['advanced']['fq'] = array(
@@ -885,7 +895,6 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
     'always_display_view' => $display_view
 
   );
-
 
   $root = $depts['items'][0]['dept_id'];
 

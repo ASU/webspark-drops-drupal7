@@ -504,8 +504,6 @@ class MigrateIsearchProfileMigration extends Migration {
       $term->name = $item->name;
       taxonomy_term_save($term);
 
-      watchdog('migrate_debugterm', '<pre>' . print_r($term, TRUE) . '</pre>');
-
       // add to list of expertise we will save on entity
       $existing_expertise[$expertise_key] = $term->tid;
 

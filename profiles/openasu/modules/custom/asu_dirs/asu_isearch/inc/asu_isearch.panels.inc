@@ -220,7 +220,6 @@ function asu_isearch_preprocess_panels_pane(&$variables) {
 
     // end edit
     $directory->setViewConfig($view_config);
-
     $directory->setContextualFilters($contextual_filters);
 
     if ($view_config->show_az_index) {
