@@ -46,8 +46,13 @@
 }
 .form-type-checkbox input[type="checkbox"]:focus + label::before,
 .form-type-radio input[type="radio"]:focus + label::before {
-  outline: thin dotted;
-  outline-offset: -0.0625em;
+	 outline:none; 
+	 border-top: 2px solid #4D90FE;
+	 border-right: 2px solid #4D90FE;
+	 border-bottom: 2px solid #4D90FE;
+	 border-left: 2px solid #4D90FE;
+	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
+	 box-shadow: 0px 0px 5px  #4D90FE;
 }
 .form-type-checkbox input[type="checkbox"]:indeterminate + label::after,
 .form-type-radio input[type="radio"]:indeterminate + label::after {
@@ -122,8 +127,13 @@
 }
 
 .form-type-radio input[type="radio"]:focus + label::before {
-  outline: thin dotted;
-  outline-offset: -0.125em;
+	 outline:none; 
+	 border-top: 2px solid #4D90FE;
+	 border-right: 2px solid #4D90FE;
+	 border-bottom: 2px solid #4D90FE;
+	 border-left: 2px solid #4D90FE;
+	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
+	 box-shadow: 0px 0px 5px  #4D90FE;
 }
 .form-type-radio input[type="radio"]:checked + label::after {
   transform: scale(1, 1);
