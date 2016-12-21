@@ -33,7 +33,11 @@ div.error label {
 
 /* =GLOBALS
 -------------------------------------------------------------- */
+html {
+	font-size: 100%;
+}
 body {
+	font-size: 1em;
   min-width: 320px;
 }
 
@@ -72,7 +76,6 @@ div.pane-menu-tree {
 body {
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 200;
-  font-size: 16px;
   line-height: 1.44;
   color: #2a2a2a;
   background-color: white;
