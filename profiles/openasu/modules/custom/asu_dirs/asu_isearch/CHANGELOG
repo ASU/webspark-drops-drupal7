@@ -1,3 +1,15 @@
+asu_isearch 7.x-1.8.2
+---------------------
+- Fixed bug where the legacy primary affiliation filter was breaking the view
+- Implemented pulling of subdepartment NIDs dynamically, which fixes bug where saved dept nids weren't updated
+
+asu_isearch 7.x-1.8.1
+---------------------
+- Fixed issue with pagination not functioning correctly when contextual form is removed
+- Webstandards pagination
+- Added iSearch profile photo styling
+
+
 asu_isearch 7.x-1.8
 -------------------
 - Added dependency on asu_dir_utilities

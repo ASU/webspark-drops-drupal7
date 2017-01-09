@@ -245,6 +245,7 @@ function asu_isearch_directory_list_form_alter(&$form, &$form_state, $form_id) {
   $form['field_isearch_affil_title_value']['#type'] = 'select';
   $form['field_isearch_affil_title_value']['#multiple'] = FALSE;
   unset($form['field_isearch_affil_title_value']['#size']);
+
   $form['field_isearch_affil_title_value']['#options'] = array('' => t('Select Title')) + asu_isearch_get_rank_titles();
 
   if (isset($_GET['field_isearch_affil_title_value'])) {
@@ -286,6 +287,5 @@ function asu_isearch_directory_list_form_alter(&$form, &$form_state, $form_id) {
   if (isset($form['field_isearch_expertise_areas_tid']['#options']) && count($form['field_isearch_expertise_areas_tid']['#options']) == 1) {
     $form['field_isearch_expertise_areas_tid']['#access'] = FALSE;
   }
-
 }
 
