@@ -840,14 +840,7 @@ function asu_isearch_views_default_views() {
     5 => 0,
   );
   $handler->display->display_options['filters']['field_isearch_local_tags_tid']['vocabulary'] = 'isearch_local_tags';
-  /* Filter criterion: Field collection item: Primary Affiliation (field_isearch_affil_primary) */
-  $handler->display->display_options['filters']['field_isearch_affil_primary_value']['id'] = 'field_isearch_affil_primary_value';
-  $handler->display->display_options['filters']['field_isearch_affil_primary_value']['table'] = 'field_data_field_isearch_affil_primary';
-  $handler->display->display_options['filters']['field_isearch_affil_primary_value']['field'] = 'field_isearch_affil_primary_value';
-  $handler->display->display_options['filters']['field_isearch_affil_primary_value']['relationship'] = 'field_isearch_affiliations_value';
-  $handler->display->display_options['filters']['field_isearch_affil_primary_value']['value'] = array(
-    1 => '1',
-  );
+
   /* Filter criterion: Global: Combine fields filter */
   $handler->display->display_options['filters']['combine']['id'] = 'combine';
   $handler->display->display_options['filters']['combine']['table'] = 'views';

@@ -41,7 +41,7 @@ function asu_dir_utilities_get_isearch_data($endpoint, $decode = TRUE) {
 
   // Create content and cache if no cache available
   else {
-    $item = asu_dir_utilities_refresh_dir_item($endpoint, $cachename);
+    $item = asu_dir_utilities_refresh_dir_item($endpoint);
   }
 
   // decode if option is set
@@ -51,7 +51,7 @@ function asu_dir_utilities_get_isearch_data($endpoint, $decode = TRUE) {
 
   // attempt to get from long-term cache
   if ($item == NULL) {
-    $item = asu_dir_utilities_get_longterm_cached_item($endpoint);
+    $item = asu_dir_utilities_get_longterm_cached_item($endpoint, $decode);
   }
 
   return $item;
@@ -64,7 +64,7 @@ function asu_dir_utilities_get_isearch_data($endpoint, $decode = TRUE) {
  *
  * @param $endpoint
  */
-function asu_dir_utilities_get_longterm_cached_item($endpoint) {
+function asu_dir_utilities_get_longterm_cached_item($endpoint, $decode = TRUE) {
   $backups = asu_dir_utilities_get_endpoint_list(TRUE);
 
   $location = $backups[$endpoint];
@@ -72,12 +72,15 @@ function asu_dir_utilities_get_longterm_cached_item($endpoint) {
 
   if ($location != NULL) {
 
-    //todo:  check for master list
     if (file_exists($location)) {
-      $master_data = file_get_contents(ASU_ISEARCH_MASTER_FILE_ENDPOINT);
-      $master_data = json_decode($master_data, TRUE);
+      $master_data = file_get_contents($location);
 
       if ($master_data != NULL) {
+
+        if ($decode && !is_array($master_data)) {
+          $master_data = json_decode($master_data, TRUE);
+        }
+
         $data = $master_data;
       }
     }
@@ -251,9 +254,31 @@ function asu_dir_utilities_get_solr_person($asurite) {
  * Tree Helper Functions
  ***********************/
 
+/***
+ * Returns all dept nids of a subtree starting at a root dept nid
+ *
+ * @param $nid - nid of the root dept
+ * @return array|bool
+ */
+function asu_dir_utilities_get_subtree_nids($nid) {
+
+  $tree = asu_dir_utilities_get_dept_tree();
+
+  if ($tree != NULL) {
+    $subtree = asu_dir_utilities_dept_find_root($tree, $nid);
+    $dept_nids = asu_dir_utilities_dept_get_tree_nids($subtree);
+
+    return $dept_nids;
+
+  } else {
+    return FALSE;
+  }
+}
+
+
 /**
  * Returns the node (and all children) where (node.nid == @param nid )
- * @param {Object} data
+ * @param Array data
  *  Nested JSON object with department data
  * @param {integer} dept_id
  *  ID of the department that should be the root of the hierarchy
@@ -263,12 +288,12 @@ function asu_dir_utilities_dept_find_root($data, $dept_id, $lookup = 'dept_nid')
 
   for ($i = 0; $i < count($data); $i++) {
     if (count($success) == 0 && $data[$i] != NULL) {
-      if ($data[$i]->$lookup == $dept_id) {
+      if ($data[$i][$lookup] == $dept_id) {
         return $data[$i];
       }
       else {
-        if (isset($data[$i]->children)) {
-          $success = asu_dir_utilities_dept_find_root($data[$i]->children, $dept_id, $lookup);
+        if (isset($data[$i]['children'])) {
+          $success = asu_dir_utilities_dept_find_root($data[$i]['children'], $dept_id, $lookup);
         }
       }
     }
@@ -307,18 +332,16 @@ function asu_dir_utilities_dept_get_tree_data($tree, $tree_ids = array()) {
  * @param array $tree_ids
  * @return array
  */
-function asu_dir_utilities_dept_get_tree_nids($tree, $tree_ids = array()) {
+function asu_dir_utilities_dept_get_tree_nids($tree, &$tree_ids = array()) {
 
-
-  if (isset($tree->dept_nid)) {
-    $newItem = $tree->dept_nid;
-
+  if (isset($tree['dept_nid'])) {
+    $newItem = $tree['dept_nid'];
     $tree_ids[] = $newItem;
   }
 
-  if (isset($tree->children)) {
-    for ($i = 0; $i < count($tree->children); $i++) {
-      $tree_ids = asu_dir_utilities_dept_get_tree_data($tree->children[$i], $tree_ids);
+  if (isset($tree['children'])) {
+    for ($i = 0; $i < count($tree['children']); $i++) {
+      asu_dir_utilities_dept_get_tree_nids($tree['children'][$i], $tree_ids);
     }
   }
 

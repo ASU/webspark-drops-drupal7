@@ -102,7 +102,7 @@ function asu_isearch_get_tenure_config($setting) {
 
 
 /**
- * Returns the
+ * Returns the global dept configuration
  */
 function asu_isearch_get_dept_config() {
   $default_feed_dept = array(
@@ -110,7 +110,28 @@ function asu_isearch_get_dept_config() {
     'options' => new stdClass(),
   );
 
-  return variable_get('isearch_admin_feed_dept', json_encode($default_feed_dept));
+  //todo:  make sure this still works for all cases (asu_isearch legacy and new)
+  $configs = variable_get('isearch_admin_feed_dept', json_encode($default_feed_dept));
+  $tree = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_TREE_ENDPOINT, TRUE);
+  $decoded = drupal_json_decode($configs);
+
+
+  // pull the subdepts dynamically, instead of using the saved copy
+  foreach($decoded['items'] as $key => $item) {
+    $nid = $item['dept_nid'];
+
+    $subtree = asu_dir_utilities_dept_find_root($tree, $nid);
+    $dept_nids = asu_dir_utilities_dept_get_tree_nids($subtree);
+
+    if (!empty($dept_nids)) {
+      $decoded['items'][$key]['tree_nids'] = $dept_nids;
+    }
+  }
+
+  // use regular json_encode, to encode back into an
+  $new_configs = json_encode($decoded);
+
+  return $new_configs;
 }
 
 /**

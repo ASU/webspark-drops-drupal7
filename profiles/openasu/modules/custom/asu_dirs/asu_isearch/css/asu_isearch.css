@@ -255,12 +255,44 @@ div.krumo-preview {
     padding: 0;
 }
 
+.isearch-profile-photo {
+    max-height: 180px;
+    overflow: hidden;
+}
+
 .isearch-directory-list .views-row-odd {
     background: #FAFAFA;
 }
 
 .isearch-directory-list .item-list .pager {
     margin: 20px 0;
+}
+/*
+.field-type-asu-directory .pagination .pager-current {
+    background-color: #a90044;
+    color: white;
+    margin-left: -1px !important;
+    margin-right: 0px !important;
+    font-weight: normal !important;
+    border: 1px solid #a90044;
+}*/
+
+.isearch-directory-list .pager li.first {
+    margin-left: 0;
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+}
+
+.isearch-directory-list .pager li.last {
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.isearch-directory-list .item-list .pager li {
+    background-image: none;
+    display: inline;
+    list-style-type: none;
+    padding: 0;
 }
 
 .isearch-directory-list .form-item-field-isearch-affil-title-value select {

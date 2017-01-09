@@ -272,3 +272,10 @@ function asu_isearch_update_7180() {
 
   features_revert_module('asu_isearch');
 }
+
+/**
+ * Revert to get rid of primary affil criteria
+ */
+function asu_isearch_update_7182() {
+  features_revert_module('asu_isearch');
+}

@@ -409,7 +409,7 @@ function asu_isearch_get_master_source() {
 
   $master_list = array();
 
-  //todo:  check for master list
+  // check for master list and return if exists
   if (file_exists(ASU_ISEARCH_MASTER_FILE_ENDPOINT)) {
     $master_data = file_get_contents(ASU_ISEARCH_MASTER_FILE_ENDPOINT);
 

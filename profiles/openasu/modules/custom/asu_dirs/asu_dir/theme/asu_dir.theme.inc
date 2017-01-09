@@ -8,7 +8,6 @@
  *
  */
 
-
 /**
  *Implements hook_theme()
  *
@@ -33,12 +32,13 @@ function asu_dir_theme() {
   );
 }
 
+
 /*****
  * Build the isearch people list
  */
 function theme_asu_dir_isearch_view(&$vars) {
   // shortcut to content render array
-  $content = array(); //&$variables['content'];
+  $content = array();
 
   // Setup variables here...
   $content['title'] = '';
@@ -83,14 +83,7 @@ function theme_asu_dir_isearch_view(&$vars) {
     '#markup' => $view_display,
   );
 
-  if (!$view_config->show_filter_titles
-    && !$view_config->show_filter_expertise
-    && !$view_config->show_filter_sort
-    && !$view_config->show_filter_omni
-  ) {
-    $view_config->show_filters = FALSE;
-  }
-
+  /*
   // display filters? - Should we display or hide the filters
   if ($view_config->show_filters) {
     // build the exposed form fields
@@ -156,6 +149,10 @@ function theme_asu_dir_isearch_view(&$vars) {
     // Add our configs to the exposed form, so that they are resubmitted as
     // part of the ajax process
     $form['omni_configs']['#value'] = drupal_json_encode($view_config);
+
+
+    //$form['submit']['#ajax_processed'] = TRUE;
+    $content['isearch_view_exposed_form'] = $form;
     $form['field_isearch_affil_title_value']['#title'] = t('Title');
     $form['field_isearch_affil_title_value']['#title_display'] = 'invisible';
     $form['field_isearch_expertise_areas_tid']['#title'] = t('Expertise Areas Filter');
@@ -164,10 +161,9 @@ function theme_asu_dir_isearch_view(&$vars) {
     $form['sort_by']['#title_display'] = 'invisible';
     $form['field_isearch_local_tags_tid']['#title'] = t('Local Tags');
     $form['field_isearch_local_tags_tid']['#title_display'] = 'invisible';
+  }*/
 
-    //$form['submit']['#ajax_processed'] = TRUE;
-    $content['isearch_view_exposed_form'] = $form;
-  }
+  _asu_isearch_build_contextual_filter_form($content, $view, $view_config, $directory);
 
   $html = $content['isearch_az_index']['#markup'];
   $html .= render($content['isearch_view_exposed_form']);
