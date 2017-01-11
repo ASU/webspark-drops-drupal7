@@ -244,7 +244,7 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       ),
       '#prefix' => '<div class="panel panel-default">
         <div class="panel-body">',
-      '#suffix' => '<p> Note:  This option is not available if \'Use Local iSearch View\' is enabled.</p>',
+      '#suffix' => '<p> Note:  This option is not available if \'Use Local iSearch View\' is enabled.</p></div></div>',
       '#description' => t('Displays a selectable directory tree to the left of the people listing, 
       which allows browsing of all departments below the root.'),
     );
