@@ -179,50 +179,9 @@ function asu_dir_utilities_get_solr_schema($decode = TRUE) {
   return $solr_schema;
 }
 
-/****
- * Get local people from iSearch
- *
- * @return array
- */
-function asu_dir_utilities_get_local_profile_list() {
-  $people_list = &drupal_static(__FUNCTION__);
 
 
-  if (!isset($people_list) || $people_list == "") {
-    // Check for cache
-    if ($cache = cache_get('asu_dir_utilities_people_list')) {
-      $people_list = $cache->data;
-    }
-    // Create content and cache if no cache available
-    else {
 
-      // pull all imported profiles, which are published
-      $query = db_query('SELECT field_data_field_isearch_asurite_id.field_isearch_asurite_id_value AS asurite,  
-          node.nid AS nid, 
-          node.title AS title,
-          tax.name AS facultytitle,
-          MIN(field_rank_weight.field_isearch_affil_rank_weight_value) AS rankweight,
-          alias.alias AS alias
-          FROM node as node 
-          LEFT JOIN field_data_field_isearch_affiliations AS field_data_field_isearch_affiliations ON node.nid = field_data_field_isearch_affiliations.entity_id AND field_data_field_isearch_affiliations.entity_type = \'node\'
-          INNER JOIN field_collection_item AS affiliations ON field_data_field_isearch_affiliations.field_isearch_affiliations_value = affiliations.item_id
-          LEFT JOIN field_data_field_isearch_asurite_id AS field_data_field_isearch_asurite_id ON node.nid = field_data_field_isearch_asurite_id.entity_id AND field_data_field_isearch_asurite_id.entity_type = \'node\'
-          LEFT JOIN field_data_field_isearch_affil_rank AS faculty_titles ON affiliations.item_id = faculty_titles.entity_id AND faculty_titles.entity_type = \'field_collection_item\'
-          LEFT JOIN field_data_field_isearch_affil_rank_weight AS field_rank_weight ON affiliations.item_id = field_rank_weight.entity_id AND field_rank_weight.entity_type = \'field_collection_item\'
-          LEFT JOIN taxonomy_term_data AS tax ON faculty_titles.field_isearch_affil_rank_tid = tax.tid
-          Left JOIN url_alias AS alias ON alias.source = CONCAT(\'node/\', node.nid)
-          WHERE (( (node.status = \'1\') AND (node.type IN  (\'asu_isearch_profile\')) ))
-          GROUP BY node.nid
-          ORDER BY rankweight ASC');
-
-      $people_list = $query->fetchAllAssoc('asurite');
-      $expire_date = time() + 3600 * ASU_DIR_UTILITIES_FORM_CACHE_DURATION;
-      cache_set('asu_dir_utilities_people_list', $people_list, 'cache', $expire_date);
-    }
-  }
-
-  return $people_list;
-}
 
 
 /****

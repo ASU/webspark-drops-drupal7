@@ -172,6 +172,7 @@
                 var eq = /(fq=employeeTypes:).*?(&)/gi;
                 var sort = /(&sort=.*?)(?=&|$)/gi;
                 var rows = /(&rows=.*?)(?=&|$)/gi;
+                var asurite = /(&fq=asuriteId:.*?)(?=&|$)/gi;
                 var field_id = this.field_id;
                 var qparam = /q=/gi;
                 var id_num = this.id_num;
@@ -208,6 +209,7 @@
                 url_hash = url_hash.replace(eq, "");
                 url_hash = url_hash.replace(sort, "");
                 url_hash = url_hash.replace(rows, "");
+                url_hash = url_hash.replace(asurite, "");
                 url_hash = url_hash.replace(re, 'dept=' + ASUPeople[field_id].dept_nid + '&');
 
 

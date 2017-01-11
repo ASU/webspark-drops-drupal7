@@ -457,7 +457,7 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       '#default_value' => $config['filter_title'],
     );
 
-    /*$local_tags_vocabulary = taxonomy_vocabulary_machine_name_load('isearch_local_tags');
+    $local_tags_vocabulary = taxonomy_vocabulary_machine_name_load('isearch_local_tags');
 
     if ($local_tags_terms = taxonomy_get_tree($local_tags_vocabulary->vid, 0, NULL, TRUE)) {
       $local_tags = array();
@@ -473,11 +473,11 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       $element['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_local_tags'] = array(
         '#type' => 'select',
         '#options' => $local_tags_areas,
-        '#default_value' => $config->local_tags,
+        '#default_value' => $config['local_tags'],
         '#multiple' => TRUE,
         '#title' => t('Filter profiles by these local tags'),
       );
-    }*/
+    }
 
     // Appearance horizontal tab definition
     $element['horizontal_tabs']['appearance'] = array(
@@ -839,6 +839,12 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
     $display_view = $values['horizontal_tabs']['advanced']['always_display_view'];
   }
 
+  $tags = array();
+
+  if (isset($values['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_local_tags'])) {
+    $tags = $values['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_local_tags'];
+  }
+
   $config = array(
 
     // Content -> Department
@@ -855,7 +861,8 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
 
     // Content -> Other filters
     'expertise_areas' => $values['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_expertise_areas'],
-    //'local_tags'=> $values['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_local_tags'],
+
+    'local_tags'=> $tags,
     'filter_title' => $values['horizontal_tabs']['content']['content_tabs']['otherfilters']['filter_title'],
 
     //Appearance -> Display

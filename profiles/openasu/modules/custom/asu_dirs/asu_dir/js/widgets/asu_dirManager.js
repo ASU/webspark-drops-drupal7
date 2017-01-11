@@ -66,6 +66,12 @@
                     }
                 }
 
+                if (field_configs.hasOwnProperty('filter_asurite')) {
+                    var sstring = asu_dir_solr_search_string(field_configs.filter_asurite, 'asuriteId', true);
+                    this.store.removeByValue('fq', sstring);
+                    this.store.addByValue('fq', sstring);
+                }
+
                 string = string || this.store.string();
                 handler = handler || function (data) {
                         self.handleResponse(data);
@@ -113,6 +119,8 @@
                                 var temp = docs[i];
                                 docs[i].mappedWeight = self.getEmployeeWeight(docs[i]);
                             }
+
+
 
                             // function to sort by rankweight
                             docs.sort(function (a, b) {

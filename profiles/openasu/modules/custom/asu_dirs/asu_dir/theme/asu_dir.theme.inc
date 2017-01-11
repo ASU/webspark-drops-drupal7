@@ -188,6 +188,8 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   $admin = $vars['settings']['admin'];
   $field_configs = $vars['items'][0]['directory_config'];
   $field_items = $vars['items'][0]['directory_items'];
+  $filter_people = array();
+  $local_people = array();
 
   $the_id = $field_configs['pane_id'];
 
@@ -214,6 +216,16 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
     $field_configs['display_type'] = 'list';
   }
 
+  // if local tags are set, we'll pass the tagged asurite ids to the js
+  if (!empty($field_configs['local_tags'])) {
+    $tags = array_keys($field_configs['local_tags']);
+    $tagged = asu_isearch_get_local_tag_people($tags);
+
+    if (!empty($tagged)) {
+      $field_configs['filter_asurite'] = array_keys($tagged);
+    }
+  }
+
   $alias = drupal_get_path_alias();
 
   $html = '';
@@ -230,7 +242,9 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   // get the faculty titles
   $faculty_titles = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_FACULTY_TITLES_ENDPOINT);
 
-  $local_people = asu_dir_utilities_get_local_profile_list();
+  if (module_exists('asu_isearch')) {
+    $local_people = asu_isearch_get_local_profile_list();
+  }
 
   $field_configs['faculty_titles'] = $faculty_titles;
 
