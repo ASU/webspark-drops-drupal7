@@ -142,7 +142,7 @@ function asu_isearch_get_migrate_source_urls($from_cache = FALSE) {
   $source_urls = array();
 
   // Check and see if we have configured our migration
-  $migrate_config = variable_get('isearch_admin_feed_dept', NULL);
+  $migrate_config = asu_isearch_get_dept_config();
 
   if (!is_null($migrate_config)) {
     $migrate_config = json_decode($migrate_config);
