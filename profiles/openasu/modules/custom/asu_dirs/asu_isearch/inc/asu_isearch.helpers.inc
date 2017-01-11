@@ -218,13 +218,84 @@ function asu_isearch_dept_find_root($data, $dept_id, $lookup = 'dept_nid') {
 }
 
 /****
- * Function to update profile from Solr
+ * Get local people from iSearch
  *
+ * @return array
  */
-function asu_isearch_solr_update_profile() {
+function asu_isearch_get_local_profile_list() {
+  $people_list = &drupal_static(__FUNCTION__);
 
+
+  if (!isset($people_list) || $people_list == "") {
+    // Check for cache
+    if ($cache = cache_get('asu_dir_utilities_people_list')) {
+      $people_list = $cache->data;
+    }
+    // Create content and cache if no cache available
+    else {
+
+      // pull all imported profiles, which are published
+      $query = db_query('SELECT field_data_field_isearch_asurite_id.field_isearch_asurite_id_value AS asurite,  
+          node.nid AS nid, 
+          node.title AS title,
+          tax.name AS facultytitle,
+          MIN(field_rank_weight.field_isearch_affil_rank_weight_value) AS rankweight,
+          alias.alias AS alias
+          FROM node as node 
+          LEFT JOIN field_data_field_isearch_affiliations AS field_data_field_isearch_affiliations ON node.nid = field_data_field_isearch_affiliations.entity_id AND field_data_field_isearch_affiliations.entity_type = \'node\'
+          INNER JOIN field_collection_item AS affiliations ON field_data_field_isearch_affiliations.field_isearch_affiliations_value = affiliations.item_id
+          LEFT JOIN field_data_field_isearch_asurite_id AS field_data_field_isearch_asurite_id ON node.nid = field_data_field_isearch_asurite_id.entity_id AND field_data_field_isearch_asurite_id.entity_type = \'node\'
+          LEFT JOIN field_data_field_isearch_affil_rank AS faculty_titles ON affiliations.item_id = faculty_titles.entity_id AND faculty_titles.entity_type = \'field_collection_item\'
+          LEFT JOIN field_data_field_isearch_affil_rank_weight AS field_rank_weight ON affiliations.item_id = field_rank_weight.entity_id AND field_rank_weight.entity_type = \'field_collection_item\'
+          LEFT JOIN taxonomy_term_data AS tax ON faculty_titles.field_isearch_affil_rank_tid = tax.tid
+          Left JOIN url_alias AS alias ON alias.source = CONCAT(\'node/\', node.nid)
+          WHERE (( (node.status = \'1\') AND (node.type IN  (\'asu_isearch_profile\')) ))
+          GROUP BY node.nid
+          ORDER BY rankweight ASC');
+
+      $people_list = $query->fetchAllAssoc('asurite');
+      $expire_date = time() + 3600 * ASU_DIR_UTILITIES_FORM_CACHE_DURATION;
+      cache_set('asu_dir_utilities_people_list', $people_list, 'cache', $expire_date);
+    }
+  }
+
+  return $people_list;
 }
 
+
+/***
+ * Return list of asurites of profiles with local tag(s)
+ *
+ * @return array
+ */
+function asu_isearch_get_local_tag_people($tags) {
+
+  $tags = implode(",", $tags);
+
+  $query = db_query('SELECT field_data_field_isearch_asurite_id.field_isearch_asurite_id_value AS asurite,  
+          node.nid AS nid, 
+          node.title AS title,
+          local_tags.field_isearch_local_tags_tid AS local_tags
+          
+          FROM node as node 
+          LEFT JOIN field_data_field_isearch_asurite_id AS field_data_field_isearch_asurite_id ON node.nid = field_data_field_isearch_asurite_id.entity_id AND field_data_field_isearch_asurite_id.entity_type = \'node\'
+          INNER JOIN field_data_field_isearch_local_tags AS local_tags ON node.nid = local_tags.entity_id
+          
+          WHERE (( (node.status = \'1\') AND (node.type IN  (\'asu_isearch_profile\')) )) AND (local_tags.field_isearch_local_tags_tid IN(:tags) )
+          #GROUP BY node.nid
+          ORDER BY asurite ASC', array(':tags' => $tags));
+
+
+  $people_list = $query->fetchAllAssoc('asurite');
+
+  return $people_list;
+}
+
+/***
+ * Returns Solr field mappings from asu_isearch profile migration
+ *
+ * @return array
+ */
 function asu_isearch_get_field_solr_mappings() {
 
   $map = array(

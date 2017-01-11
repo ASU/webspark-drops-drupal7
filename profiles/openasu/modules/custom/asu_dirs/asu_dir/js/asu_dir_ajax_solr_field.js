@@ -215,6 +215,7 @@ var ASUPeople = {};
                         titlesort_field: titlesort_field,
                         field_id: field_id
                     }));
+
                     // Add in Results widget. See our custom
                     // js/widgets/isPeopleResultWidget.js method extending AbstractWidget.
                     Manager.addWidget(new AjaxSolr.asu_dirResultWidget({
@@ -253,7 +254,7 @@ var ASUPeople = {};
 
                     // exclude these fields from the current search display, since they are pre-configured
                     // and either always in effect, or handled elsewhere
-                    var excludes = ["deptids", "employeeTypes", "lastName", "expertiseAreas:", "titles"];
+                    var excludes = ["deptids", "employeeTypes", "lastName", "expertiseAreas:", "titles", 'asuriteId'];
                     Array.prototype.push.apply(excludes, filters);
 
 
