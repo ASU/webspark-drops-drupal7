@@ -236,7 +236,17 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
     $element['horizontal_tabs']['content']['content_tabs']['department']['show_tree'] = array(
       '#type' => 'checkbox',
       '#title' => 'Show Department Tree',
-      '#default_value' => $config['show_tree']
+      '#default_value' => $config['show_tree'],
+      '#states' => array(
+        'visible' => array(
+          ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][always_display_view]"]' => array('checked' => FALSE)
+        ),
+      ),
+      '#prefix' => '<div class="panel panel-default">
+        <div class="panel-body">',
+      '#suffix' => '<p> Note:  This option is not available if \'Use Local iSearch View\' is enabled.</p></div></div>',
+      '#description' => t('Displays a selectable directory tree to the left of the people listing, 
+      which allows browsing of all departments below the root.'),
     );
 
     $element['horizontal_tabs']['content']['content_tabs']['department']['new_tab'] = array(
@@ -724,9 +734,9 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         '#default_value' => $config['always_display_view'],
         '#prefix' => '<div class="panel panel-default">
         <div class="panel-body">',
-        '#suffix' => '<p>If checked, the iSearch Directory List view will be displayed, 
-        instead of Solr results.  The view is subject to changes in local profiles via migrations, 
-        and may not be up to date with iSearch.  Please note that in the event of a Solr outage, 
+        '#suffix' => '<p>Notice:  If checked, the local iSearch Directory List view will be displayed, 
+        instead of real-time Solr results.  The view is subject to changes in local profiles via migrations, 
+        and may not be up to date with iSearch.  Also please note that in the event of a Solr outage, 
         the view will be displayed automatically as a backup.</p></div></div>',
         '#states' => array(
           'visible' => array(
