@@ -1,3 +1,8 @@
+asu_isearch 7.x-1.8.3
+---------------------
+- Added longterm backup caching for the iSearch assets
+- Improved expertise area option filtering for contextual filter form
+
 asu_isearch 7.x-1.8.2
 ---------------------
 - Fixed bug where the legacy primary affiliation filter was breaking the view

@@ -131,6 +131,11 @@ class IsearchProfileDirectory {
 
   public function getTitleOptions() {
     $options = array();
+    $expertise = array();
+    $titles = array();
+
+    $expertise['All'] = 'Select Expertise';
+    $titles[''] = 'Select Title';
 
     $display_id = 'isearch_directory_titles';
 
@@ -158,12 +163,24 @@ class IsearchProfileDirectory {
       $view->execute();
 
       foreach ($view->result as $item) {
-        if (isset($item->field_field_isearch_affil_title)) {
-          $title = $item->field_field_isearch_affil_title[0]['raw']['value'];
-          $options[$title] = $title;
+        if (isset($item->field_field_isearch_affil_title[0])) {
+          if (trim($item->field_field_isearch_affil_title[0]['raw']['value']) != '') {
+            $title = $item->field_field_isearch_affil_title[0]['raw']['value'];
+            $titles[$title] = $title;
+          }
+        }
+
+        if (isset($item->field_field_isearch_expertise_areas[0])) {
+          foreach($item->field_field_isearch_expertise_areas as $area) {
+            $tid = $area['raw']['tid'];
+            $expertise[$tid] = $area['rendered']['#markup'];
+          }
         }
       }
     }
+
+    $options['titles'] = $titles;
+    $options['expertise'] = $expertise;
 
     return $options;
   }
