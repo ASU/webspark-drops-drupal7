@@ -425,8 +425,8 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         $expertise_areas[$term->tid] = $term->name;
       }
 
-      if (!is_array($config->expertise_areas)) {
-        $config->expertise_areas = (array) $config->expertise_areas;
+      if (!is_array($config['expertise_areas'])) {
+        $config['expertise_areas'] = (array) $config['expertise_areas'];
       }
 
       if (!empty($expertise_areas)) {
@@ -466,8 +466,8 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         $local_tags_areas[$term->tid] = $term->name;
       }
 
-      if (!is_array($config->local_tags)) {
-        $config->local_tags = (array) $config->local_tags;
+      if (!is_array($config['local_tags'])) {
+        $config['local_tags'] = (array) $config['local_tags'];
       }
 
       $element['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_local_tags'] = array(
