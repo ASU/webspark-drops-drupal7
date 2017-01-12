@@ -270,21 +270,12 @@ function asu_isearch_get_local_profile_list() {
  */
 function asu_isearch_get_local_tag_people($tags) {
 
-  $tags = implode(",", $tags);
-
-  $query = db_query('SELECT field_data_field_isearch_asurite_id.field_isearch_asurite_id_value AS asurite,  
-          node.nid AS nid, 
-          node.title AS title,
-          local_tags.field_isearch_local_tags_tid AS local_tags
-          
+  $query = db_query('SELECT DISTINCT field_data_field_isearch_asurite_id.field_isearch_asurite_id_value AS asurite
           FROM node as node 
           LEFT JOIN field_data_field_isearch_asurite_id AS field_data_field_isearch_asurite_id ON node.nid = field_data_field_isearch_asurite_id.entity_id AND field_data_field_isearch_asurite_id.entity_type = \'node\'
           INNER JOIN field_data_field_isearch_local_tags AS local_tags ON node.nid = local_tags.entity_id
-          
-          WHERE (( (node.status = \'1\') AND (node.type IN  (\'asu_isearch_profile\')) )) AND (local_tags.field_isearch_local_tags_tid IN(:tags) )
-          #GROUP BY node.nid
+          WHERE (( (node.status = \'1\') AND (node.type IN  (\'asu_isearch_profile\')) )) AND (local_tags.field_isearch_local_tags_tid IN (:tags) )
           ORDER BY asurite ASC', array(':tags' => $tags));
-
 
   $people_list = $query->fetchAllAssoc('asurite');
 
