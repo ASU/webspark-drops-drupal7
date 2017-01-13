@@ -237,7 +237,7 @@ function asu_isearch_ctools_plugin_directory($module, $plugin) {
 function asu_isearch_entity_info_alter(&$entity_info) {
 
   //todo:  disable panel pane
-  if (variable_get('asu_isearch_overrride_panel', FALSE)) {
+  //if (variable_get('asu_isearch_overrride_panel', FALSE)) {
     // Add panel pane for iSearch directory
     $entity_info['fieldable_panels_pane']['bundles']['isearch_directory'] = array(
       'label' => t('Add iSearch directory'),
@@ -252,7 +252,7 @@ function asu_isearch_entity_info_alter(&$entity_info) {
         'access arguments' => array('administer fieldable panels panes'),
       ),
     );
-  }
+  //}
 }
 
 function asu_isearch_get_default_photo() {

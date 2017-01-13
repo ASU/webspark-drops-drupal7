@@ -840,7 +840,6 @@ function asu_isearch_views_default_views() {
     5 => 0,
   );
   $handler->display->display_options['filters']['field_isearch_local_tags_tid']['vocabulary'] = 'isearch_local_tags';
-
   /* Filter criterion: Global: Combine fields filter */
   $handler->display->display_options['filters']['combine']['id'] = 'combine';
   $handler->display->display_options['filters']['combine']['table'] = 'views';
@@ -1304,6 +1303,15 @@ function asu_isearch_views_default_views() {
   $handler->display->display_options['fields']['field_isearch_affil_title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_isearch_affil_title']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['field_isearch_affil_title']['type'] = 'text_plain';
+  /* Field: Content: Expertise Areas */
+  $handler->display->display_options['fields']['field_isearch_expertise_areas']['id'] = 'field_isearch_expertise_areas';
+  $handler->display->display_options['fields']['field_isearch_expertise_areas']['table'] = 'field_data_field_isearch_expertise_areas';
+  $handler->display->display_options['fields']['field_isearch_expertise_areas']['field'] = 'field_isearch_expertise_areas';
+  $handler->display->display_options['fields']['field_isearch_expertise_areas']['label'] = '';
+  $handler->display->display_options['fields']['field_isearch_expertise_areas']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_isearch_expertise_areas']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_isearch_expertise_areas']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_isearch_expertise_areas']['delta_offset'] = '0';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
   /* Sort criterion: Field collection item: Title (field_isearch_affil_title) */
   $handler->display->display_options['sorts']['field_isearch_affil_title_value']['id'] = 'field_isearch_affil_title_value';
