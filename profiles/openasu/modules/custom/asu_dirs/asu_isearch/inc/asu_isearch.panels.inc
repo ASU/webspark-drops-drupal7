@@ -272,10 +272,9 @@ function _asu_isearch_build_contextual_filter_form(&$content, $view, $view_confi
 
   // display filters? - Should we display or hide the filters
   if (!$view_config->show_filters) {
-    $form['#attached']['css'][] = array(
-      'data' => '.isearch-directory-filters { display: none; }',
-      'type' => 'inline',
-    );
+
+    $form['#prefix'] = '<div style="display:none;">';
+    $form['#suffix'] = '</div>';
   }
 
   $form['keys']['#weight'] = -100;
@@ -552,10 +551,14 @@ function asu_isearch_get_filters($view_config, &$view) {
 }
 
 function _asu_isearch_update_view_form_filters($view, &$form, $directory) {
-  if (isset($form['field_isearch_affil_title_value']) && $form['field_isearch_affil_title_value']['#type'] == 'select') {
-    $options = $directory->getTitleOptions();
 
-    $form['field_isearch_affil_title_value']['#options'] = $options['titles'];;
+  $options = $directory->getTitleOptions();
+
+  if (isset($form['field_isearch_affil_title_value']) && $form['field_isearch_affil_title_value']['#type'] == 'select') {
+    $form['field_isearch_affil_title_value']['#options'] = $options['titles'];
+  }
+
+  if (isset($form['field_isearch_expertise_areas_tid']) && $form['field_isearch_expertise_areas_tid']['#type'] == 'select') {
     $form['field_isearch_expertise_areas_tid']['#options'] = $options['expertise'];
   }
 }

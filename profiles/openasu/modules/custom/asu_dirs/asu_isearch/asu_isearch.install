@@ -279,3 +279,7 @@ function asu_isearch_update_7180() {
 function asu_isearch_update_7182() {
   features_revert_module('asu_isearch');
 }
+
+function asu_isearch_update_7183() {
+  features_revert_module('asu_isearch');
+}
