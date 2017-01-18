@@ -33,7 +33,11 @@ div.error label {
 
 /* =GLOBALS
 -------------------------------------------------------------- */
+html {
+	font-size: 100%;
+}
 body {
+	font-size: 1em;
   min-width: 320px;
 }
 
@@ -72,7 +76,6 @@ div.pane-menu-tree {
 body {
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 200;
-  font-size: 16px;
   line-height: 1.44;
   color: #2a2a2a;
   background-color: white;
@@ -87,19 +90,10 @@ a,
 }
 
 a:hover,
-a:focus,
-.ui-widget-content a:hover,
-.ui-widget-content a:focus {
+.ui-widget-content a:hover {
   color: #d23153;
   text-decoration: none;
   border-bottom: 1px dotted #d23153;
-}
-
-a:focus,
-.ui-widget-content a:focus {
-  outline: thin dotted;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
 }
 
 #header a,
@@ -120,8 +114,7 @@ a.btn, .btn {
   margin-top: 15px;
 }
 
-a.btn:hover, .btn a:hover,
-a.btn:focus, .btn a:focus {
+a.btn:hover, .btn a:hover {
   border-bottom: none;
 }
 
@@ -465,7 +458,7 @@ table.bordered > thead:first-child > tr:first-child > td {
   background-color: transparent;
   margin: 2em 0;
   padding: 0;
-  color: #828282;
+  color: #555;
   font-size: 14px;
 }
 
@@ -675,15 +668,15 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 
 /* Ctools Modals */
 .ctools-modal-content .btn {
-  margin-top: 3px;
+  margin-top: 0.25em;
   padding: 4px 10px;
-  font-size: 11px;
+  font-size: 0.6925em;
 }
 
 #modalContent .form-submit.btn {
   margin-bottom: 1em;
   padding: 6px 20px;
-  font-size: 18px;
+  font-size: 1.125em;
 }
 
 .ctools-modal-content #edit-settings-spacing {
@@ -700,14 +693,28 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 }
 
 h2.widget-list {
-  font-size: 14px;
+  font-size: 0.9em;
   line-height: 1.4;
-  margin: 0 0 0 10px;
+  margin: 0 0 0 0.625em;
 }
 
-.panels-section-column .content-type-button {
-  top: 3px;
-  line-height: 1.35em;
+#modalContent .panels-section-column .content-type-button {
+  top: 0.5em;
+  line-height: 1.1em;
+  font-size: 0.75em;
+}
+
+#modalContent .panels-section-column .content-type-button div,
+#modalContent .panels-section-column .content-type-button span {
+  left: 3em;
+  position: absolute;
+  top: 0.25em;
+  width: 80%;
+}
+
+#modalContent .panels-section-column-categories .content-type-button > a:hover > img,
+#modalContent .panels-section-column-categories .content-type-button > a > img:hover {
+  border: 2px solid white;
 }
 
 ul.help-text {
@@ -717,12 +724,12 @@ ul.help-text {
 
 ul.help-text li {
   list-style: none;
-  padding: 2px 0;
+  padding: 0.125em 0;
   line-height: 1.25;
 }
 
 ul.help-text li.help-title {
-  font-size: 14px;
+  font-size: 0.875em;
   font-weight: bold;
 }
 
@@ -876,4 +883,17 @@ ul.help-text li.help-title {
 .token-browser-container table.treeTable > tbody > tr > td:not(first-child) {
   padding-top: 0.25em;
   padding-bottom: 0.25em;
+}
+
+a:focus,
+.ui-widget-content a:focus,
+input:focus,
+a.btn:focus, 
+.btn a:focus,
+#skip_to_content:focus,
+#top-content #tabs .nav-pills > li.active > a:focus {
+	 outline:none; 
+	 border:1px solid #4D90FE;
+	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
+	 box-shadow: 0px 0px 5px  #4D90FE;
 }

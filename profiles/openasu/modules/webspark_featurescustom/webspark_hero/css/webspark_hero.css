@@ -25,6 +25,7 @@
 	margin: 0;
 	padding: 0;
 }
+.pane-bundle-hero h1,
 .pane-bundle-hero h2 {
 	color: white;
 	font-size: 60px;
@@ -70,6 +71,7 @@
 
 @media (max-width: 992px) { 
 
+	.pane-bundle-hero h1,
 	.pane-bundle-hero h2 {
 		font-size: 50px;
 	}
@@ -86,6 +88,7 @@
 
 @media (max-width: 768px) { 
 	
+	.pane-bundle-hero h1,
 	.pane-bundle-hero h2 {
 		padding-top: 30px;
 		font-size: 40px;
