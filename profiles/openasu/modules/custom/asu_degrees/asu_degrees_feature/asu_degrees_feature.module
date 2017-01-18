@@ -49,4 +49,27 @@ function asu_degrees_feature_field_default_field_instances_alter(&$fields) {
   if (isset($fields['node-asu_degree-field_asu_banner_image']['settings']['default_image'])) {
     $fields['node-asu_degree-field_asu_banner_image']['settings']['default_image'] = variable_get('asu_degrees_feature_banner_fid');
   }
+  if (isset($fields['node-asu_degree-field_degree_image']['settings']['default_image'])) {
+    $fields['node-asu_degree-field_degree_image']['settings']['default_image'] = variable_get('asu_degrees_feature_image_fid');
+  }
 }
+
+  /**
+   * Grab image within the Feature module. Then, create image in the new site to use for default image for the ASU Degree Banner Image field.
+	 */
+function _asu_degrees_feature_image($image, $key) {
+  $filename = $image;
+  $origfile = drupal_get_path('module', 'asu_degrees_feature') . '/images/' . $filename;
+  $uri = 'public://' . $filename;
+  $file = (object) array(
+    'uid' => 1,
+    'filename' => $filename,
+    'uri' => $origfile,
+    'filemime' => 'image/jpg',
+    'filesize' => filesize($origfile),
+    'status' => FILE_STATUS_PERMANENT,
+  );
+  $file = file_copy($file, $uri, FILE_EXISTS_REPLACE);
+  variable_set('asu_degrees_feature_' . $key . '_fid', $file->fid);
+}
+
