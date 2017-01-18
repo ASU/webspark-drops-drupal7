@@ -1,7 +1,7 @@
 name = ASU Degrees Views Output
-description = Manipulates the ASU Degree view's output (replaces Views PHP).
+description = Manipulates the ASU Degree view's output (replaces need for Views PHP).
 core = 7.x
 package = ASU
-; This was added at v1.9 of ASU Degrees
+; This was added in v1.10 of ASU Degrees
 version = 7.x-1.0
 project = asu_degrees_viewsoutput

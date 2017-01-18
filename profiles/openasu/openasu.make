@@ -55,7 +55,7 @@ projects[panopoly_test][patch][140] = patches/webspark-944_panopoly-test-image-w
 
 projects[asu_drupal_modules][type] = module
 projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = 4269ad64d8e80a2e0ae29b7735013e75f53baae3
+projects[asu_drupal_modules][download][revision] = cca3759aa20496ede80ec95ea609ce59138090e0
 projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ; ASU Module Prerequisites
