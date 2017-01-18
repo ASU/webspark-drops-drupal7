@@ -51,12 +51,11 @@ projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-upd
 projects[panopoly_test][patch][1372] = patches/webspark-847_panopoly-test-updates-3.patch
 projects[panopoly_test][patch][140] = patches/webspark-944_panopoly-test-image-widget-patches.patch
 
-; ASU-specific, Webspark-agnostic modules
-; Installed in /profiles/openasu/modules/custom
+; ASU-specific, Webspark-agnostic modules (/custom directory contents)
 
 projects[asu_drupal_modules][type] = module
 projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = 96592554724063196b7a41fb3eb4d37f90c4482d
+projects[asu_drupal_modules][download][revision] = 4269ad64d8e80a2e0ae29b7735013e75f53baae3
 projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ; ASU Module Prerequisites
