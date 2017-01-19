@@ -18,8 +18,8 @@
  * Inserts GTM snippet as immediate child of the opening body tag.
  */
 function asu_brand_page_process(&$children, $elements) {
-  
-  if (asu_brand_is_header_visible($elements)) {
+  // Added check for testing - Hide GTM code during testing
+  if (asu_brand_is_header_visible($elements) && (variable_get('asu_brand_ci_testing', 0) !== 1 )) {
      $custom_gtm = variable_get('asu_brand_gtm_override', '');
      $gtm = (trim($custom_gtm) != '') ? $custom_gtm : asu_brand_get_gtm_snippet();
      if ($gtm) {
@@ -27,7 +27,6 @@ function asu_brand_page_process(&$children, $elements) {
       $children = preg_replace('@<body[^>]*>@', '$0' . $gtm, $children, 1);
     }
   }
-  
   return $children;
 }
 
