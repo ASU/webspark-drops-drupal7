@@ -78,18 +78,23 @@ before_script:
   - drush si openasu --db-url=mysql://root:@127.0.0.1/drupal --account-name=admin --account-pass=admin --site-mail=admin@example.com --site-name="Webspark" --yes
   - drush runserver > /dev/null 2>&1 &
   - sleep 3
+  # Turn on ASU Brand filtering of GTM snippet
+  - drush vset --always-set asu_brand_ci_testing 1
+  # Enable Panopoly Test module
   - drush pm-enable panopoly_test --yes
   - drush cc all
   - cd ./profiles/openasu/modules/panopoly/panopoly_test/tests
 
 script:
 
-  - bin/behat --colors --tags '~@webspark_ignore' --tags '~@panopoly_demo' --tags '~@panopoly_search' --config behat.travis.yml
+  - bin/behat --colors --tags '~@webspark_ignore' --tags '~@panopoly_demo' --tags '~@panopoly_search' --tags '~@webspark_init' --tags '~@webspark_exit' --config behat.travis.yml
 
 after_script:
 
   - sleep 3
   - drush pm-disable panopoly_test --yes
+  # Turn off ASU Brand filtering of GTM snippet
+  - drush vset --always-set asu_brand_ci_testing 0
 
 notifications:
   email:
