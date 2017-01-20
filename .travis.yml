@@ -91,7 +91,7 @@ before_script:
 
 script:
 
-  - bin/behat --colors --tags '~@webspark_ignore' --tags '~@panopoly_demo' --tags '~@panopoly_search' --tags '~@webspark_init' --tags '~@webspark_exit' --config behat.travis.yml
+  - bin/behat --colors --tags '~@webspark_ignore' --tags '~@panopoly_demo' --tags '~@panopoly_search' --config behat.travis.yml
 
 after_script:
 
