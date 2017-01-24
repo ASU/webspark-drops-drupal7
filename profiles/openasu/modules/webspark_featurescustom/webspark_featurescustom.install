@@ -30,6 +30,10 @@ function webspark_featurescustom_update_dependencies() {
     'search_api_db' => 7104,
     'search_api_solr' => 7102,
   );
+  // Ensure that ASU Brand module updates to v4.5 last
+  $deps['asu_brand'][7102] = array(
+    'webspark_featurescustom' => 7002,
+  );
   return $deps;
 }
 
@@ -130,5 +134,18 @@ function webspark_featurescustom_update_7004(&$sandbox) {
     $rid = (int) $role->rid;
     user_role_grant_permissions($rid, array('view the administration theme'));
     watchdog('webspark_updates', "Added view the administrative theme to the editor role.");
+  }
+}
+
+/**
+ * Implements hook_update_N() -- Pillsbury release
+ * + Update header to 4.5 with different logic this time
+ */
+function webspark_featurescustom_update_7005(&$sandbox) {
+  if (module_exists('asu_brand')) {
+    $version = variable_get('asu_brand_header_version');
+    if (settype($version, "float") <= 4.5) {
+      variable_set('asu_brand_header_version', '4.5');
+    }
   }
 }
