@@ -1,3 +1,17 @@
+Webspark 1.40.1 (Hoople) release
+----------------
+- Contrib projects - Updates
+
+    - Panopoly-managed modules
+        * Media (v2.0-beta1 + patch) - Re-applied patch for issue with multiple Media content items on the same page 
+          showing an empty field that was supposedly resolved in beta1.
+
+    - Webspark-managed modules
+        * Calendar - Remaining elements from this module and its directory removed from profiles/openasu/modules/contrib
+
+- Web standards components in Webspark
+    * Innovation theme (v1.6) - Color of primary and blue button text now white on :hover
+
 Webspark 1.40 (North Dakota) release
 ----------------
 - Webspark core
@@ -15,7 +29,7 @@ Webspark 1.40 (North Dakota) release
         * Fixed WSOD on custom "thank you" pages for graduate-level submissions
         * Fixed form submission routing for graduate RFI submissions
         * Fixed a timeout issue that occurred when using views_bulk_submit() to resubmit graduate submissions
-     * ASU Spotlight (v1.6)
+    * ASU Spotlight (v1.6)
         * Fixed CSS bug that allowed Flexslider slide text to go outside the 1170px page boundary
         * Added ability to set width of slider text in ASU Spotlight form as "Overlay Text Width"
     * ASU Maps Enhanced (v1.3)

@@ -165,9 +165,10 @@
     replacePlaceholderWithToken: function(content) {
       Drupal.media.filter.ensure_tagmap();
 
+// WEBSPARK-679
       // Rewrite the tagmap in case any of the macros have changed.
-      Drupal.settings.tagmap = {};
-
+//      Drupal.settings.tagmap = {};
+//
       // Replace all media placeholders with their JSON macro representations.
       //
       // There are issues with using jQuery to parse the WYSIWYG content (see

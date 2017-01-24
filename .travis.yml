@@ -37,6 +37,8 @@ before_install:
   # Added screen size (1024x768 - as defined in /etc/init.d/xvfb - isway too small)
   - /sbin/start-stop-daemon --start --verbose --pidfile /tmp/cucumber_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1600x1200x16
   - sleep 1
+  # Disable PHP features - XDebug
+  - phpenv config-rm xdebug.ini
 
 install:
   - sudo apt-get update > /dev/null
@@ -67,6 +69,8 @@ install:
   # Get Selenium
   - wget https://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
   - java -jar selenium-server-standalone-2.53.0.jar > /dev/null 2>&1 &
+  #- wget https://selenium-release.storage.googleapis.com/3.0-beta2/selenium-server-standalone-3.0.0-beta2.jar
+  #- java -jar selenium-server-standalone-3.0.0-beta2.jar > /dev/null 2>&1 &
   - sleep 3
 
   # Disable sendmail
@@ -78,6 +82,9 @@ before_script:
   - drush si openasu --db-url=mysql://root:@127.0.0.1/drupal --account-name=admin --account-pass=admin --site-mail=admin@example.com --site-name="Webspark" --yes
   - drush runserver > /dev/null 2>&1 &
   - sleep 3
+  # Turn on ASU Brand filtering of GTM snippet
+  - drush vset --always-set asu_brand_ci_testing 1
+  # Enable Panopoly Test module
   - drush pm-enable panopoly_test --yes
   - drush cc all
   - cd ./profiles/openasu/modules/panopoly/panopoly_test/tests
@@ -90,6 +97,8 @@ after_script:
 
   - sleep 3
   - drush pm-disable panopoly_test --yes
+  # Turn off ASU Brand filtering of GTM snippet
+  - drush vset --always-set asu_brand_ci_testing 0
 
 notifications:
   email:

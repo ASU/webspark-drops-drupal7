@@ -5,7 +5,7 @@
  * ASU Directory module
  *
  * This module allows the configuration of custom
- * directory nodes, which displays employees in a
+ * directory fields, which displays employees in a
  * directory listing from a root department.
  *
  * @author Colton Testamarck (colt@asu.edu)
@@ -17,7 +17,8 @@
  *********************************************************************/
 include_once 'theme/asu_dir.theme.inc';
 include_once 'asu_dir.features.inc';
-include_once 'asu_dir.field.inc';
+include_once 'inc/asu_dir.field.inc';
+include_once 'inc/asu_dir.helpers.inc';
 
 /*********************************************************************
  * CONFIGS
@@ -32,14 +33,13 @@ define('ASU_DIRECTORY_TOP_LEVEL_PS_ID', 'ASU');
 define('ASU_DIRECTORY_TOP_LEVEL_DEPT_NID', 1342);
 define('ASU_DIRECTORY_FORM_CACHE_DURATION', 1);//# of hours, set to 1 initially
 define('ASU_DIRECTORY_MODULE_NAME', 'asu_dir');
-
 define('ASU_DIRECTORY_URL', 'https://isearch.asu.edu');
-//TODO change this once we have field defined
 define('ASU_DIR_TITLESORT_PHOLDER', 'tsort');
 define('ASU_DIR_TITLESORT_FIELD', variable_get('asu_dir_titlesort_field', ASU_DIR_TITLESORT_PHOLDER));
 define('ASU_DIRECTORY_SOLR_ENV', variable_get('asu_dir_solr_endpoint', 'https://asudir-solr.asu.edu/asudir/directory/'));
 define('ASU_DIRECTORY_TREE_ENDPOINT', variable_get('asu_dir_tree_endpoint', 'https://isearch.asu.edu/endpoints/dept_tree/json'));
 define('ASU_EMPLOYEE_TYPES_ENDPOINT', variable_get('asu_dir_employee_types_endpoint', 'https://isearch.asu.edu/endpoints/employee-types'));
+define('ASU_DIR_FACULTY_TITLES_ENDPOINT', variable_get('asu_dir_faculty_titles_endpoint', 'https://isearch.asu.edu/endpoints/faculty-title-taxonomy'));
 
 /**********************************************************************
  * HOOKS
@@ -49,6 +49,7 @@ define('ASU_EMPLOYEE_TYPES_ENDPOINT', variable_get('asu_dir_employee_types_endpo
  * Implements hook_permission().
  * Adds custom permission to configure the module
  */
+/*
 function asu_dir_permission() {
   $perms[ASU_DIRECTORY_ADMIN_CONFIG_SETTINGS] = array(
     'title' => t('Administer ASU Directory'),
@@ -56,7 +57,7 @@ function asu_dir_permission() {
   );
 
   return $perms;
-}
+}*/
 
 /**
  * Implements hook_menu()
@@ -64,6 +65,7 @@ function asu_dir_permission() {
  *
  * @return array
  */
+/*
 function asu_dir_menu() {
   $items = array();
 
@@ -79,13 +81,14 @@ function asu_dir_menu() {
   );
 
   return $items;
-}
+}*/
 
 
 /**
  * Implements hook_admin()
  * Creates a form for setting the root for the department hierarchy by department ID
  */
+/*
 function asu_dir_admin($form, &$form_state) {
   $form = array();
 
@@ -98,238 +101,26 @@ function asu_dir_admin($form, &$form_state) {
     '#description' => t('The Solr server you would like to pull data from.'),
     '#required' => TRUE,
   );
-
-  $form['asu_dir_tree_endpoint'] = array(
-    '#type' => 'textfield',
-    '#title' => 'ASU Directory Tree Enpoint',
-    '#default_value' => ASU_DIRECTORY_TREE_ENDPOINT,
-    '#description' => t('The URL of the directory tree endpoint.'),
-    '#required' => TRUE,
-  );
-
-  $form['asu_dir_employee_types_endpoint'] = array(
-    '#type' => 'textfield',
-    '#title' => 'ASU Employee Types Endpoint',
-    '#default_value' => ASU_EMPLOYEE_TYPES_ENDPOINT,
-    '#description' => t('The URL of the employee types endpoint.'),
-    '#required' => TRUE,
-  );
-
-  $form['asu_dir_titlesort_field'] = array(
-      '#type' => 'textfield',
-      '#title' => 'Titlesort Field',
-      '#default_value' => ASU_DIR_TITLESORT_FIELD,
-      '#description' => t('Name of Solr Academic Title Sorting field (for rank sorting)'),
-      '#required' => TRUE,
-  );
-
-  $form['asu_dir_form_clear_cache'] = array(
-    '#type' => 'button',
-    '#value' => 'Clear caches for this module',
-    // Send in part of the form_state array to know if this is initial page load or not
-    '#click' => asu_dir_clear_cache($form_state['buttons']),
-  );
-
-
   $form['#submit'][] = "asu_dir_admin_submit";
   return system_settings_form($form);
 }
-
+*/
 
 /**
  * Clear caches for module when form is submitted
  */
+/*
 function asu_dir_admin_submit($form, &$form_state) {
   /*maybe clear the cache after submitting*/
-  variable_set('asu_dir_solr_endpoint', $form['asu_dir_solr_env']['#value']);
-  variable_set('asu_dir_tree_endpoint', $form['asu_dir_tree_endpoint']['#value']);
-  variable_set('asu_dir_employee_types_endpoint', $form['asu_dir_employee_types_endpoint']['#value']);
-  variable_set('asu_dir_titlesort_field', $form['asu_dir_titlesort_field']['#value']);
-}
+/*variable_set('asu_dir_solr_endpoint', $form['asu_dir_solr_env']['#value']);
+variable_set('asu_dir_tree_endpoint', $form['asu_dir_tree_endpoint']['#value']);
+variable_set('asu_dir_employee_types_endpoint', $form['asu_dir_employee_types_endpoint']['#value']);
+//variable_set('asu_dir_titlesort_field', $form['asu_dir_titlesort_field']['#value']);
+}*/
 
 
-/**
- * Implements hook_libraries_info
- *
- * Adds the JQtree library
- * Documentation for the library can be found here http://mbraak.github.io/jqTree/
- *
- * @return mixed
- *
- */
-function asu_dir_libraries_info() {
-  // Expected to be extracted into 'sites/all/libraries/jqtree'.
-  $libraries['jqtree'] = array(
-    'name' => 'jQTree Library',
-    'vendor url' => 'http://mbraak.github.io/jqTree/',
-    'download url' => 'https://github.com/mbraak/jqTree/archive/0.22.0.zip',
-    'version callback' => 'asu_dir_short_circuit_version',
-    'files' => array(
-      'js' => array('tree.jquery.js'),
-      'css' => array('jqtree.css'),
-    ),
-  );
-
-  return $libraries;
-}
-
-/**
- * Short-circuit the version argument.
- */
-function asu_dir_short_circuit_version() {
-  return TRUE;
-}
 
 
-/**
- * Implements hook_cron()
- *
- *Refresh the cached directory tree and employee types every cron run
- */
-function asu_dir_cron() {
-
-  //set timeout of request to 60 seconds
-  $options = array(
-    'timeout' => 60,
-  );
-
-  //Refresh and cache the Tree
-  $tree = NULL;
-
-  $tree_endpoint = ASU_DIRECTORY_TREE_ENDPOINT;
-  $request = drupal_http_request($tree_endpoint, $options);
-
-  if ($request->code == 200) {
-    $tree = $request->data;
-  }
-  // Create cache, set to hold cache for number of hours specified
-  if ($tree != NULL) {
-    $expire_date = time() + 3600 * ASU_DIRECTORY_FORM_CACHE_DURATION;
-    cache_set('asu_directory_tree', $tree, 'cache', $expire_date);
-  }
-
-  //Refresh and cache the employee types
-  $employee_types = NULL;
-
-  $endpoint = ASU_EMPLOYEE_TYPES_ENDPOINT;
-  $request = drupal_http_request($endpoint, $options);
-
-  if ($request->code == 200) {
-    $types = $request->data;
-    $employee_types = drupal_json_decode($types);
-  }
-  // Create cache, set to hold cache for number of hours specified
-  if ($employee_types != NULL) {
-
-    $expire_date = time() + 3600 * ASU_DIRECTORY_FORM_CACHE_DURATION;
-    cache_set('asu_employee_types', $employee_types, 'cache', $expire_date);
-  }
-}
-
-
-/*********************************************************************
- * UTILITY FUNCTIONS
- *********************************************************************/
-
-
-/**
- * Clear tree and employee types from cache
- *
- * @param $test
- * @return bool
- */
-function asu_dir_clear_cache($test) {
-  // $test should determine whether or not this is the initial page load
-  if ($test) {
-    drupal_set_message(t('Caches for this module have been cleared.'));
-    cache_clear_all('asu_directory_tree', 'cache', TRUE);
-    return FALSE;
-  }
-}
-
-/***
- * Get the department hierarchy tree
- */
-function asu_dir_get_dept_tree() {
-
-  $tree = &drupal_static(__FUNCTION__);
-
-  if (!isset($tree) || $tree == "") {
-    // Check for cache
-    if ($cache = cache_get('asu_directory_tree')) {
-      $tree = $cache->data;
-    }
-    // Create content and cache if no cache available
-    else {
-
-      //set timeout of request to 60 seconds
-      $options = array(
-        'timeout' => 60,
-      );
-
-      //Get the tree and cache
-      $tree_endpoint = ASU_DIRECTORY_TREE_ENDPOINT;
-      $request = drupal_http_request($tree_endpoint, $options);
-
-      if ($request->code == 200) {
-        $tree = $request->data;
-      }
-
-      // Create cache, set to hold cache for number of hours specified
-      if ($tree != NULL) {
-        $set_date = time();
-        $expire_date = time() + 3600 * ASU_DIRECTORY_FORM_CACHE_DURATION;
-        cache_set('asu_directory_tree', $tree, 'cache', $expire_date);
-      }
-    }
-  }
-
-  return $tree;
-}
-
-
-/**
- *
- *
- * @return mixed An array of employee types
- */
-function asu_dir_get_employee_types() {
-
-  $employee_types = &drupal_static(__FUNCTION__);
-
-  if (!isset($employee_types) || $employee_types == "") {
-    // Check for cache
-    if ($cache = cache_get('asu_employee_types')) {
-      $employee_types = $cache->data;
-    }
-    // Create content and cache if no cache available
-    else {
-
-      //set timeout of request to 60 seconds
-      $options = array(
-        'timeout' => 60,
-      );
-
-      $endpoint = ASU_EMPLOYEE_TYPES_ENDPOINT;
-      $request = drupal_http_request($endpoint, $options);
-
-      if ($request->code == 200) {
-        $types = $request->data;
-        $employee_types = drupal_json_decode($types);
-      }
-
-      // Cache employee types for number of hours specified
-      if ($employee_types != NULL) {
-
-        $expire_date = time() + 3600 * ASU_DIRECTORY_FORM_CACHE_DURATION;
-        cache_set('asu_employee_types', $employee_types, 'cache', $expire_date);
-      }
-    }
-  }
-
-  return $employee_types;
-
-}
 
 
 

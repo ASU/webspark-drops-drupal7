@@ -20,141 +20,55 @@
                 field_configs: null,
                 managers: [],
                 saved_deptnid: 0,
-                override_fields: []
+                override_fields: [],
+                per_page: null,
+                local_people: null,
+                isearch_url: null
             }, attributes);
         },
 
         beforeRequest: function () {
-
+            //TODO: consolidate the preconfigured filters into the manager widget
             var self = this;
             var field_configs = self.field_configs;
-            var solr_url = self.solr_server;
-            var managers = [];
             var start = self.manager.store.get('start').val();
             var q = self.manager.store.get('q').val();
             var fq = self.manager.store.get('fq');
-            var manager_fq = '';
-            var override_fields = self.override_fields;
-            var override = false;
+            var etypes = field_configs.employee_types;
 
-            //empty the people listing, and scroll to top of page
-            $(this.target).empty();
-            window.scrollTo(0, 0);
+            // ADD EMPLOYEE TYPES FILTER TO QUERY
+            if (etypes != null && etypes.length > 0) {
+                //If employee types other than "Show All" are selected, add those as a filter query
+                var show_all = field_configs.employee_types.indexOf("All");
+                var legacy = field_configs.employee_types.indexOf("Show All");
 
-            //If employee types other than "Show All" are selected, add those as a filter query
-            var show_all = field_configs.employee_types.indexOf("Show All");
+                if (field_configs.employee_types.length > 0 && show_all == -1 && legacy == -1) {
+                    var types = field_configs.employee_types;
+                    var search_string = asu_dir_solr_search_string(types, 'employeeTypes', true);
 
-            if (show_all == -1 && !field_configs.use_custom_q) {
-                var types = field_configs.employee_types;
-                var search_string = asu_dir_solr_search_string(types, 'employeeTypes');
-
-                //need to add this to the manager query also
-                manager_fq += '&fq=' + search_string;
-                self.manager.store.addByValue('fq', search_string);
-            }
-
-
-            //if an override field is found as an fq, override the manager query
-            for (var i = 0; i < fq.length; i++) {
-                for (var j = 0; j < override_fields.length; j++) {
-
-                    if (fq[i] != null && fq[i].value != null && fq[i].value.indexOf(override_fields[j]) != -1) {
-                        override = true;
-                    }
+                    //need to add this to the manager query also
+                    self.manager.store.addByValue('fq', search_string);
                 }
             }
 
-            var active_letter = false;
 
-            //get rid of styling for active letter if it is not ther
-            for (var i = 0; i < fq.length; i++) {
-                if (fq[i] != null && fq[i].value != null && fq[i].value.indexOf('lastName') != -1) {
-                    active_letter = true;
-                }
+            // add the faculty titles filter if it is configured
+            if (field_configs.hasOwnProperty('ft_filter')) {
+                self.manager.store.addByValue('fq', field_configs.ft_filter);
             }
 
-            if (!active_letter) {
-                $('.alphabet .active-letter').removeClass('active-letter');
+            // ADD FILTERING FOR EXPERTISE AREAS
+            // TODO:  need to wrap field params with parentheses
+            if (field_configs.expertise_areas != null && field_configs.expertise_areas != '') {
+                self.manager.store.addByValue('fq', 'expertiseAreas:(' + field_configs.expertise_areas + ')');
             }
 
-
-            // To display managers at the beginning of the list is not possible since the managers field is
-            // multi-valued in Solr, so this workaround does a separate request and prepends the managers to the
-            // front page in alphabetical order
-            // If the show_managers options is selected, no facets are selected,
-            // and we are on the front page, prepend the managers to the front of the people listing
-            // Note:  we need to check the ASUPeople global field configs in this case, because selection the 'rank'
-            //      for sorting will need to switch the manager sort on
-            if (!override && q == "*:*" && ASUPeople.field_configs.show_managers && (start == 0 || start == null)) {
-
-                //if we don't have managers saved for current department, do separate AJAX request and prepend them
-                if (this.saved_deptnid != ASUPeople.dept_nid) {
-
-                    $.ajax({
-                        'url': solr_url + 'select?fq=deptids:' + ASUPeople.dept_nid + manager_fq + '&fq=managers:1&q=*:*&sort=lastNameSort asc&wt=json',
-                        'cache': false,
-                        'dataType': 'jsonp',
-                        'jsonp': 'json.wrf',
-                        'success': function (data) {
-                            if (data.response.docs.length > 0) {
-
-                                //array to store indexes of managers to remove
-                                var to_remove = [];
-
-                                managers = data.response.docs;
-
-                                // Remove any managers who are not managers for this dept,
-                                // since managers field is multi-valued
-                                for (var i = 0; i < managers.length; i++) {
-                                    var temp = managers[i];
-                                    var search = ASUPeople.dept_nid.toString();
-                                    var position = temp.deptids.indexOf(search);
-
-                                    if (position >= 0) {
-                                        //if person is not a manager of given department, add index to the to_remove array for later removal
-                                        if (temp.managers[position] != 1) {
-                                            to_remove.push(i);
-                                        }
-                                    }
-                                }
-
-                                // Traverse the array of indexes backwards, to avoid splicing
-                                // the wrong elements in subsequent iterations
-                                if (to_remove.length >= 1) {
-
-                                    for (var i = to_remove.length - 1; i >= 0; i--) {
-                                        managers.splice(to_remove[i], 1);
-                                    }
-                                }
-
-                                self.managers = managers;
-                                self.saved_deptnid = ASUPeople.dept_nid;
-
-                                //insert managers at the beginning of the list, in alphabetical order
-                                self.renderPeople(managers, true);
-                            }
-                        },
-                        // Handle timeout errors, since jsonp request will just hang if an error is thrown
-                        'timeout': 5000,
-                        'error': function (jqXHR, textStatus, errorThrown) {
-
-                        },
-                        'complete': function (jqXHR, textStatus) {
-
-                        }
-                    });
-
-                    //if managers for a department are already saved, use this.managers
-                } else if (this.managers.length > 0) {
-                    managers = this.managers;
-                    self.renderPeople(managers, true);
-                }
+            // ADD FILTERING FOR TITLES
+            if (field_configs.filter_title != null && field_configs.filter_title != '') {
+                self.manager.store.addByValue('fq', 'titles:(' + field_configs.filter_title + ')');
             }
-            /*
-            if (!field_configs.use_custom_q) {
-                //For now, always sort by last name alphabetically
-                self.manager.store.addByValue('sort', 'lastNameSort asc');
-            }*/
+
+            //self.manager.store.addByValue('rows', self.per_page);
         },
 
         facetLinks: function (facet_field, facet_values) {
@@ -193,59 +107,20 @@
             var field_configs = this.field_configs;
             var q = self.manager.store.get('q').val();
             var fq = self.manager.store.get('fq');
-            var override_fields = self.override_fields;
-            var override = false;
 
-            if (results.length == 0) { // Display no results message.
-                $('#asu-dir-ajax-solr-people').html('<div class="row-profile-text row-field row">No results found.</div>');
+            //empty the people listing
+            $(this.target).empty();
+
+            if (!results.length) { // Display no results message.
+                $(this.target).html('<div class="row-profile-text row-field row">No results found.</div>');
                 return false;
             }
 
-            //if an override field is found as an fq, override the stripping of managers
-            for (var i = 0; i < fq.length; i++) {
-                for (var j = 0; j < override_fields.length; j++) {
-                    if (fq[i] != null && fq[i].value != null && fq[i].value.indexOf(override_fields[j]) != -1) {
-                        override = true;
-                    }
-                }
-            }
-
-
-            // since we appended managers to the front of the listing, we
-            // remove them from the rest of the results, to avoid double-listings
-            if (q == "*:*" && !override && results.length > 0 && field_configs.show_managers) {
-
-                //an array of indexes of managers, which we later remove
-                var to_remove = [];
-
-                for (var i = 0; i < results.length; i++) {
-                    var temp = results[i];
-
-                    var search = ASUPeople.dept_nid.toString();
-                    var position = temp.deptids.indexOf(search);
-
-                    if (position >= 0) {
-                        //if person is not a manager of given department, add index to the to_remove array for later removal
-                        if (temp.managers[position] == 1) {
-                            to_remove.push(i);
-                        }
-                    }
-                }
-
-                if (to_remove.length >= 1) {
-                    //traverse in reverse order, since we are removing elements
-                    for (var i = to_remove.length - 1; i >= 0; i--) {
-                        results.splice(to_remove[i], 1);
-                    }
-                }
-            }
-
-            this.renderPeople(results, false);
+            this.renderPeople(results);
 
             if (Drupal.settings.asu_dept_info) {
-               var info_nid = $('.jqtree-selected').attr('dept_nid');
-
-               asu_dept_info_process_directory_admins(info_nid);
+                var info_nid = $('.jqtree-selected').attr('dept_nid');
+                asu_dept_info_process_directory_admins(info_nid);
             }
 
         },
@@ -254,80 +129,61 @@
 
             var markup = '';
             var getUrl = window.location;
-            var host = getUrl.host;
-            var isearch_env = 'isearch.asu.edu';
-
-            if (host == 'isearch-dev.asu.edu' || host == 'isearch-qa.asu.edu') {
-                isearch_env = host;
-            }
+            var eid = doc.eid;
+            var title_string = this.getTitle(doc);
+            var url = this.getprofileURL(doc);
+            var field_configs = this.field_configs;
+            var expertise = doc.expertiseAreas;
+            var shortbio = doc.shortBio;
+            var col_widths = this.getColWidths(field_configs);
 
             //open row
-            markup += '<div eid="' + doc.eid + '" asurite="' + doc.asuriteId + '" class="row row-header asu_directory_people_row " >';
-
-            var col_width = 'col-md-6';
+            markup += '<div eid="' + eid + '" asurite="' + doc.asuriteId + '" class="row row-header asu_directory_people_row " >';
 
             markup += '<div class="col-md-2 peopleImg">';
 
             //PHOTO COLUMN
-            if (doc.photoPreference != 'none' && doc.photoUrl != null && doc.photoUrl != '') {
+            if (doc.photoPreference != 'none' && doc.photoUrl != null && doc.photoUrl != '' && field_configs.display_photo) {
                 markup += '<div class="row-profile-image row-field"><img alt="' + doc.displayName + '" src="' + doc.photoUrl + '?size=medium"></div>';
             }
 
             markup += '</div>';
 
-            //concatenate string with all titles, and departments, followed by ; --limiting this to 3 titles/departments for display purposes
-            var title_string = '';
-            var titles = doc.titles;
-            var shortBio = doc.shortBio;
-            var primaryTitle = doc.primaryTitle;
-            var facultyTitles = doc.facultyTitles;
-            var primaryEmplClass = doc.primaryEmplClass;
+            //NAME AND TITLE COLUMN
+            markup += '<div class="' + col_widths.name_col + '"><div class="row-profile-text row-field"><a href="' + url + '"';
 
-
-            if (titles !== undefined) {
-
-                // Title logic.
-                // Solr has
-                // titles        (from relation field_employee_title/Title)
-                // primaryTitle  (from relation field_employee_title/Title - PRIMARY affiliation)
-                // workingTitle  (from HR)
-                // facultyTitles (from relation field_faculty_title/Faculty Title - PRIMARY affiliation)
-
-                // Person is faculty type, and "Named Professor", so display
-                // primary affiliation employee title (labelled "Title" in DAT
-                // UI).
-                if ((primaryEmplClass == "Faculty" || primaryEmplClass == "Academic Professional") && facultyTitles == "Named Professor") {
-                    title_string = primaryTitle; // Don't show facultyTitles
-                }
-                // Person is faculty type, so display primary affiliation
-                // faculty title (labelled "Faculty Title" in DAT UI). Note:
-                // Solr only returns the primary affiliation faculty title in
-                // facultyTitles.
-                else if ( (primaryEmplClass == "Faculty" || primaryEmplClass == "Academic Professional") && facultyTitles !== undefined) {
-                    title_string = facultyTitles;
-                }
-                // Default is to use the primary affiliation employee title.
-                else {
-                    title_string = primaryTitle;
-                }
+            //open in new tab?
+            if (field_configs.new_tab) {
+                markup += 'target="_blank"';
             }
 
-            //NAME AND TITLE COLUMN
-            markup += '<div class="' + col_width + '"><div class="row-profile-text row-field"><a href="//' + isearch_env + '/profile/' + doc.eid + '" target="_blank" class="displayName viewDetails" id="'
+            markup += 'class="displayName viewDetails" id="'
                 + doc.eid + '" class="displayName viewDetails">';
             markup += (doc.displayName != null ? doc.displayName : '') + '</a><br>';
-            markup += '<div class="job-title">' + title_string + '</div></div></div>';
+            markup += '<div class="job-title">' + title_string + '</div></div>'
 
-            //CONTACT INFO COLUMN
-            markup += '<div class="col-md-4 asu-dir-contact-col"><div class="row-profile-contact"><div class="row-profile-email row-field"><a class="emailAddress"';
-            markup += 'href="mailto:' + doc.emailAddress + '">' + doc.emailAddress + '</a>&nbsp; <span class="asu-dir-admin"></span><br>';
-
-            if (doc.hasOwnProperty('phone') && doc.phone != '') {
-                markup += '<div class="phone_number">' + doc.phone + '</div>';
+            if (field_configs.display_short_bio && shortbio != null) {
+                markup += '<div class="short-bio">' + shortbio + '</div>';
             }
-            markup += '</div></div></div>';
 
-            //markup += '<div class="col-md-3"><div id="expertise_links_' + doc.eid + '" class="row-profile-expertise-area row-field"></div></div>';
+            markup += '</div>';
+
+            //EXPERTISE AREAS COLUMN
+            if (col_widths.exp_col != null) {
+                markup += '<div class="' + col_widths.exp_col + '">';
+
+                if (expertise != null) {
+                    for (var i = 0; i < expertise.length; i++) {
+                        markup += '<div class="asu-dir-exp-item">' + expertise[i] + '</div>';
+                    }
+                }
+
+                markup += '</div>';
+            }
+
+            var wrappers = [col_widths.con_col, "asu-dir-contact-col"];
+
+            markup += this.contactDiv(doc, field_configs, wrappers);
 
             //close row
             markup += '</div>';
@@ -336,51 +192,229 @@
 
         },
 
+        contactDiv: function (doc, field_configs, classes) {
+            var markup = '';
+            var addLine2 = doc.addressLine2;
+            var addLine1 = doc.addressLine1;
+            var cols = classes.join(' ');
+
+            //CONTACT INFO COLUMN
+            markup += '<div class="' + cols + '"><div class="row-profile-contact"><div class="row-profile-email row-field"><a class="emailAddress"';
+            markup += 'href="mailto:' + doc.emailAddress + '">' + doc.emailAddress + '</a>&nbsp; <span class="asu-dir-admin"></span><br>';
+
+
+            if (doc.phone != null && doc.phone != '') {
+                markup += '<div class="phone_number">' + doc.phone + '</div>';
+            }
+
+            if (field_configs.display_building && addLine1 != null) {
+                markup += '<div class="building">' + addLine1 + '</div>';
+
+                if (addLine2 != null) {
+                    markup += '<div class="room">' + addLine2 + '</div>';
+                }
+            }
+
+            //end contact info
+            markup += '</div></div></div>';
+
+            return markup;
+        },
+
+        getColWidths: function (field_configs) {
+            var cols = {};
+            cols.name_col = 'col-md-6';
+            cols.con_col = 'col-md-4';
+
+            if (field_configs.display_expertise) {
+                cols.name_col = 'col-md-4';
+                cols.exp_col = 'col-md-3';
+                cols.con_col = 'col-md-3';
+            }
+
+            return cols;
+        },
+
+        gridTemplate: function (doc) {
+
+            var getUrl = window.location;
+            var title_string = this.getTitle(doc);
+            var url = this.getprofileURL(doc);
+            var target = '';
+            var field_configs = this.field_configs;
+            var expertise = doc.expertiseAreas;
+            var shortbio = doc.shortBio;
+
+            var markup = '<div class="asu-dir-grid-col gridborder col-1 col-md-3 "> <div class="grid-item"><div class="peopleImg row-profile-image">';
+
+            if (field_configs.new_tab) {
+                target = 'target="_blank"';
+            }
+
+            if (doc.photoPreference != 'none' && doc.photoUrl != null && doc.photoUrl != '' && field_configs.display_photo) {
+                markup += '<a class="row-profile-image row-field" ' + target + ' href="' + url + '" title="'
+                    + doc.displayName + '"><img alt="' + doc.displayName + '" class = "asu-dir-grid-image " src="' + doc.photoUrl + '"></a>';
+            }
+
+            markup += '</div><div class="fs-title"><a ' + target + '" href="' + url + '" title="' + doc.displayName + '">' + doc.displayName + '</a></div>';
+            markup += '<div class="job-title">' + title_string + '</div>';
+
+
+            var wrappers = ["asu-dir-contact-col"];
+            markup += this.contactDiv(doc, field_configs, wrappers);
+
+            if (field_configs.display_short_bio && shortbio != null) {
+                markup += '<div class="short-bio"><span class="short-title">Short Bio: </span>' + shortbio + '</div>';
+            }
+
+            if (field_configs.display_expertise) {
+
+                markup += '<div class="asu-dir-expertise">';
+
+                if (expertise != null) {
+                    markup += '<span class="asu-dir-expertise-title">Expertise: </span>';
+
+                    markup += expertise.join(', ');
+                }
+
+                markup += '</div>';
+            }
+
+            markup += '</div></div>';
+
+            return markup;
+
+        },
+
         // Parameters are an array of solr docs, and a flag on whether to prepend to the beginning of target div.
         // This allows us to run the manager and non-manager query at the same time.
-        renderPeople: function (docs, prepend) {
+        renderPeople: function (docs) {
+            var configs = this.field_configs;
+            var dtype = 'list';
+
+            if (configs.hasOwnProperty('display_type')) {
+                dtype = configs.display_type;
+            }
 
             if (docs.length > 0) {
 
-                if (prepend) {
+                var open = false;
 
-                    //prepend backwards for alphabetical order
-                    for (var i = docs.length - 1; i >= 0; i--) {
-                        var doc = docs[i];
-                        $(this.target).prepend(this.template(doc));
-                        /*
-                         // For display in results.
-                         var items = [];
-                         items = items.concat(this.facetLinks('expertiseAreasFacet', doc.expertiseAreasFacet));
-
-                         var $links = $('#expertise_links_' + doc.eid);
-                         $links.empty();
-                         for (var j = 0, m = items.length; j < m; j++) {
-                         $links.append($('<li></li>').append(items[j]));
-                         }*/
+                if (dtype == 'list') {
+                    for (var i = 1, l = docs.length; i <= l; i++) {
+                        var doc = docs[i - 1];
+                        $(this.target).append(this.template(doc));
                     }
                 } else {
-                    for (var i = 0, l = docs.length; i < l; i++) {
 
-                        var doc = docs[i];
+                    var markup = '';
 
-                        $(this.target).append(this.template(doc));
+                    for (var i = 1, l = docs.length; i <= l; i++) {
+                        var doc = docs[i - 1];
 
-                        // For display in results.
-                        /*
-                         var items = [];
-                         items = items.concat(this.facetLinks('expertiseAreasFacet', doc.expertiseAreasFacet));
+                        if (i % 4 == 1) {
+                            markup += "<div class='row asu-dir-grid-row asu_directory_people_row'>";
+                            open = true;
+                        }
 
-                         var $links = $('#expertise_links_' + doc.eid);
-                         $links.empty();
-                         for (var j = 0, m = items.length; j < m; j++) {
-                         $links.append($('<li></li>').append(items[j]));
-                         }*/
+                        markup += this.gridTemplate(doc);
+
+                        if (i % 4 == 0) {
+                            markup += "</div>";
+                            open = false;
+                        }
+                    }
+
+                    if (open) {
+                        markup += "</div>";
+                    }
+
+                    $(this.target).append(markup);
+                }
+
+            }
+        },
+
+        getTitle: function (doc) {
+
+            //logic to get title string
+            var titles = doc.titles;
+            var facultyTitles = doc.facultyTitles;
+            var emplClasses = doc.emplClasses;
+            var depts = doc.deptids;
+            var emplClass = '';
+            var facultyTitle = '';
+            var title_string = '';
+
+            //get current dept id from the ASUPeople global, which is defined in the asu_dir module JS
+            var dept_nid = ASUPeople.dept_nid;
+
+            var index = 0;
+
+            // get the index of the current department in the deptids array,
+            // so that we can map the proper title and employee class
+
+            if (depts != null) {
+                for (var i = 0; i < depts.length; i++) {
+                    if (depts[i] == dept_nid) {
+                        index = i;
                     }
                 }
             }
+
+            if (facultyTitles != null && facultyTitles.length > index) {
+                facultyTitle = facultyTitles[index];
+            }
+
+            //default to the titles array
+            if (titles != null && titles[index] != null) {
+                title_string = titles[index];
+            }
+
+            if (emplClasses != null && emplClasses.length > index) {
+                emplClass = emplClasses[index];
+            }
+
+            // Apply title logic ala
+            // https://docs.google.com/drawings/d/1KUao3TYRZV_vGZu6nSfat8ZUr5XXfi-R6DLaA0qdGfM/edit
+            if ((emplClass == "Faculty" || emplClass == "Academic Professional") && facultyTitle == "Named Professor") {
+                if (titles != null && titles[index] != null) {
+                    title_string = titles[index]; // Don't show facultyTitles
+                }
+            }
+            // Person is faculty type, so display primary iSearch affiliation
+            // faculty title (labelled "Faculty Title" in DAT UI). Note:
+            // Solr only returns the primary iSearch affiliation faculty title
+            // in facultyTitles.
+            else if (emplClass == "Faculty" || emplClass == "Academic Professional") {
+                if (facultyTitle != null && facultyTitle != '') {
+                    title_string = facultyTitle;
+                }
+            }
+
+            title_string = title_string.trim();
+
+            // if title_string is still empty, fall bck to primaryTitle, and then to emplClass as a last option
+            if (title_string == '' && emplClass !== '' && emplClass != null) {
+                title_string = emplClass;
+            }
+
+            return title_string;
+        },
+
+        getprofileURL: function (doc) {
+            var locals = this.local_people;
+            var url = this.isearch_url + '/profile/' + doc.eid;
+            if (doc.asuriteId) {
+                if (locals[doc.asuriteId] != null) {
+                    url = '/' + locals[doc.asuriteId];
+                }
+            }
+
+            return url;
         }
 
     });
+
 
 })(jQuery);
