@@ -21,7 +21,7 @@ projects[media][patch][2534724] = https://www.drupal.org/files/issues/media-brow
 ; WEBSPARK-679 - WYSIWYG + Media module issues
 projects[media][patch][] = patches/webspark-679_fix-HTML-encoded-macros-2028253-10.patch
 ; following taken from #56 on https://www.drupal.org/node/2317519
-projects[media][patch][] = patches/webspark-679_webspark-679_wysiwyg-multiple-editors-media-images-breaks.patch
+projects[media][patch][] = patches/webspark-679_wysiwyg-multiple-editors-media-images-breaks.patch
 
 ; Radix Layouts (module)
 projects[radix_layouts][type] = module

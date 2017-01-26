@@ -78,12 +78,6 @@ projects[cas_attributes][version] = 1.0-rc3
 projects[cas_attributes][type] = module
 projects[cas_attributes][subdir] = contrib
 
-;; For Webspark News & Events
-;; Will be removed when news & events is deleted
-projects[calendar][version] = 3.4
-projects[calendar][type] = module
-projects[calendar][subdir] = contrib
-
 projects[email][version] = 1.3
 projects[email][subdir] = contrib
 projects[email][type] = module
@@ -297,7 +291,7 @@ libraries[jqtree_css][download][sha256] = bde5928fc25fa22625e4a1ab42e7abff041a13
 libraries[reactjs][download][type] = get
 libraries[reactjs][download][url] = https://github.com/facebook/react/releases/download/v0.14.7/react-0.14.7.zip
 libraries[reactjs][download][subtree] = react-0.14.7/build
-libraries[reactjs][directory_name] = react
+libraries[reactjs][directory_name] = react/build
 libraries[reactjs][download][sha256] = 859ef4a715ded8aa32ab96544c26d0f7b7eba09dec964d44a6c63e3d8d842034
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
