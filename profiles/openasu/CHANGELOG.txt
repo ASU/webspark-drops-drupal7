@@ -1,4 +1,4 @@
-Webspark 1.40.2 (Pillsbury) release
+Webspark 1.40.2 (Pillsbury) release 
 ----------------
 - Webspark-managed libraries - Additions
 
