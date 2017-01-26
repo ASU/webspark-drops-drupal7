@@ -47,7 +47,7 @@ function innovation_preprocess_html(&$variables) {
       '#type' => 'html_tag',
       '#tag' => 'meta',
       '#attributes' => array(
-        'content' => 'Webspark:1.40.1 (Hoople)',
+        'content' => 'Webspark:1.40.2 (Pillsbury)',
         'http-equiv' => 'X-Name-of-Distro',
       )
     ),

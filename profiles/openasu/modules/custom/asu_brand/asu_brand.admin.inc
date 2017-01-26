@@ -109,7 +109,7 @@ function asu_brand_get_block_configure_form($delta) {
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_ID_alter().
  * Rebuild the version options and deselect item.
  */
 function asu_brand_form_block_admin_configure_alter(&$form, $form_state) {

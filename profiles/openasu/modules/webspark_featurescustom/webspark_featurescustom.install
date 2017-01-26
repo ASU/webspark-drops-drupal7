@@ -30,6 +30,10 @@ function webspark_featurescustom_update_dependencies() {
     'search_api_db' => 7104,
     'search_api_solr' => 7102,
   );
+  // Ensure that ASU Brand module updates to v4.5 last
+  $deps['asu_brand'][7102] = array(
+    'webspark_featurescustom' => 7002,
+  );
   return $deps;
 }
 
@@ -134,18 +138,14 @@ function webspark_featurescustom_update_7004(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N() --
- * Enable the directory suite module
- * @param $sandbox
+ * Implements hook_update_N() -- Pillsbury release
+ * + Update header to 4.5 with different logic this time
  */
-function webspark_featurescustom_update_7006(&$sandbox) {
-
-  if (drupal_get_path('module', 'asu_dirs') != '' && !module_exists('asu_dirs')) {
-    module_enable(array('asu_dirs'));
+function webspark_featurescustom_update_7005(&$sandbox) {
+  if (module_exists('asu_brand')) {
+    $version = variable_get('asu_brand_header_version');
+    if (settype($version, "float") <= 4.5) {
+      variable_set('asu_brand_header_version', '4.5');
+    }
   }
-
-  if (drupal_get_path('module', 'asu_dir_panel') != '' && !module_exists('asu_dir_panel')) {
-    module_enable(array('asu_dir_panel'));
-  }
-
 }
