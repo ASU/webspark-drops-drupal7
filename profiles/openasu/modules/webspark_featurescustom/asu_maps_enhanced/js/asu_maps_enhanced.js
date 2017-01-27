@@ -44,6 +44,9 @@ function getMC(campus) {
     var ref = null;
 
     switch (campus) {
+        case 'Thunderbird':
+            ref = 'mc/33.6224937,-112.1847479?z/17';
+            break;
         case 'Polytechnic':
             ref = "mc/33.30463351165877,-111.67764695106507?z/16";
             break;

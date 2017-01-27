@@ -52,6 +52,14 @@ function asu_brand_init() {
   }
 }
 
+/**
+ * Implements hook_cron().
+ */
+function asu_brand_cron() {
+  // Reset CI testing bypass of GTM code back to 0, just in case testing failed
+  // to complete and left on filtering
+  variable_set('asu_brand_ci_testing', 0);
+}
 
 /**
  * Implements hook_block_info().

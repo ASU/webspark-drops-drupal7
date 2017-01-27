@@ -24,21 +24,6 @@
     font-size: 15px;
 }
 
-#asu_directory_show_subs {
-    color: lightgray;
-}
-
-#asu_directory_show_subs.sub_activated {
-    color: #8C1D40;
-}
-
-.asu_directory_toggle_subdirectory {
-    cursor: pointer;
-    font-size: 16px;
-    margin-bottom: 20px;
-    color: black;
-}
-
 body .asu_directory_custom_group {
     display: none;
 }
@@ -64,20 +49,8 @@ body .asu_directory_custom_group {
     margin-top: 30px;
 }
 
-.field-type-asu-directory #asu-dir-people-wrapper {
-    margin-right: -15px;
-    margin-left: -15px;
-}
-
-.field-type-asu-directory .dept-mgr-btn {
-    float: right;
-    /*min-width: 350px;*/
-    font-weight: bold !important;
-    background-color: #8C1D40 !important;
-    border-color: #8C1D40 !important;
-    color: white;
-    margin-bottom: 30px;
-    margin-top: 10px;
+.field-type-asu-directory .form-control {
+    width: 100%;
 }
 
 .field-type-asu-directory .dept-mgr-btn:hover {
@@ -87,6 +60,11 @@ body .asu_directory_custom_group {
 body .field-type-asu-directory .active {
     background-color: #8C1D40;
     color: white;
+}
+
+body #page-wrapper div.field-type-asu-directory div.row > .dir-row-full {
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .asu_directory_custom_group .input-group, .asu_directory_custom_group
@@ -110,51 +88,13 @@ body .asu_directory_custom_saved:focus {
     color: white;
 }
 
-/**Custom Query Spinner stuff**/
-
-.spinner {
-    display: inline-block;
-    opacity: 0;
-    width: 0;
-
-    -webkit-transition: opacity 0.25s, width 0.25s;
-    -moz-transition: opacity 0.25s, width 0.25s;
-    -o-transition: opacity 0.25s, width 0.25s;
-    transition: opacity 0.25s, width 0.25s;
-}
-
-.has-spinner.active {
-    cursor: progress;
-}
-
-.has-spinner.active .spinner {
-    opacity: 1;
-    width: auto; /* This doesn't work, just fix for unkown width elements */
-}
-
-.has-spinner.btn-mini.active .spinner {
-    width: 10px;
-}
-
-.has-spinner.btn-small.active .spinner {
-    width: 13px;
-}
-
-.has-spinner.btn.active .spinner {
-    width: 16px;
-}
-
-.has-spinner.btn-large.active .spinner {
-    width: 19px;
-}
-
 /*Directory*/
-
-#asu-dir-ajax-solr-people {
+/*
+.dir-ajax-solr-people {
     margin: 0;
-}
+}*/
 
-#asu-dir-ajax-solr-people > div:first-child {
+.dir-ajax-solr-people > div:first-child {
     border-top: solid 2px #ccc;
 }
 
@@ -162,7 +102,9 @@ body .asu_directory_custom_saved:focus {
     font-size: 16px;
     font-weight: 400;
     margin: 0px 0px 5px 1px;
-    margin-bottom: 20px;
+    color: #a7a7a7;
+    background-color: transparent;
+    padding: 0;
 }
 
 .field-type-asu-directory .breadcrumb {
@@ -173,7 +115,7 @@ body .asu_directory_custom_saved:focus {
     padding: 0;
 }
 
-.field-type-asu-directory .asu-dir-selections {
+body #page-wrapper .field-type-asu-directory .asu-dir-selections {
     margin-bottom: 15px;
 }
 
@@ -203,15 +145,20 @@ body .asu_directory_custom_saved:focus {
     background-color: #fafafa;
 }
 
-/*Row in People block*/
-#asu-dir-ajax-solr-people .asu_directory_people_row {
+/* PEOPLE LISTING DISPLAY */
+
+.job-title {
+    font-weight: bold;
+}
+
+.dir-ajax-solr-people .asu_directory_people_row {
     border-bottom: solid 2px #ccc;
     padding: .5em 0 .5em 0;
     min-height: 130px;
     width: auto;
 }
 
-#asu-dir-ajax-solr-people .asu_directory_people_row .img-responsive {
+.dir-ajax-solr-people .asu_directory_people_row .img-responsive {
     max-width: 100%;
     margin: auto;
     display: block;
@@ -236,53 +183,15 @@ body .asu_directory_custom_saved:focus {
     display: block;
 }
 
-@media (min-width: 992px) {
-
-    #asu-dir-ajax-solr-people .asu_directory_people_row .row-profile-image img {
-        padding-left: 0;
-        width: 100%;
-    }
-
-    #asu-dir-ajax-solr-people .asu_directory_people_row .row-profile-image {
-        max-height:100px;
-        overflow:hidden;
-    }
-
-    .col-md-12 > #asu-dir-people-wrapper > #asu-dir-ajax-solr-people .row-profile-image {
-        max-height: 155px;
-        overflow: hidden;
-    }
-}
-
-@media (max-width: 991px) {
-
-    #asu-dir-ajax-solr-people .asu_directory_people_row .row-profile-image {
-        max-height:160px;
-        width: 160px;
-        overflow:hidden;
-        margin: 0 auto;
-    }
-
-    .asu-directory-tree-hierarchy {
-        margin-bottom: 20px;
-    }
 
 
-    #asu-dir-ajax-solr-people .asu_directory_people_row img {
-        width: 100%;
-    }
-
-    .asu_directory_people_row {
-        text-align: center;
-    }
-}
-
+/*
 .asu_directory_people_ellipses {
     cursor: pointer;
-}
+}*/
 
 /* A row of the mock-table */
-#asu-dir-ajax-solr-people .asu_directory_people_row:hover {
+.dir-ajax-solr-people .asu_directory_people_row:hover {
     background-color: #eee;
     cursor: pointer;
 }
@@ -335,6 +244,7 @@ body .asu_directory_custom_saved:focus {
     margin-right: -15px;
     margin-left: -15px;
     margin-bottom: 15px;
+
 }
 
 .asu_directory_breadcrumb {
@@ -345,7 +255,7 @@ body .asu_directory_custom_saved:focus {
 
 }
 
-.asu_directory_breadcrumb a {
+.dir_breadcrumb a {
     cursor: pointer;
 }
 
@@ -385,10 +295,14 @@ body .asu_directory_custom_saved:focus {
     color: black;
 }
 
-/* Alpha bar new */
+/* ALPHA BAR - A-Z INDEX FILTER */
 
 .asu-dir-alpha-bar .col-md-12 {
     margin-bottom: 10px;
+}
+
+body .field-type-asu-directory .asu-dir-alpha-bar.row {
+    margin-top: 10px;
 }
 
 .alphabet {
@@ -413,7 +327,7 @@ body .asu_directory_custom_saved:focus {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    width: 3.84%;
+    width: 3.70%;
     font-weight: 400;
 }
 
@@ -451,7 +365,6 @@ select {
 }
 
 /** ISearch-specific **/
-
 #block-asu-dept-info-asu-dept-info-people {
     margin-bottom: 35px;
 }
@@ -460,7 +373,7 @@ select {
     text-align: center;
 }
 
-.block-asu-dept-info #asu-dir-people-wrapper {
+.block-asu-dept-info .dir-people-wrapper {
     margin-left: 0px;
     margin-right: 0px;
 }
@@ -480,9 +393,7 @@ select {
     font-weight: normal;
 }
 
-
 /** Sort Items **/
-
 #asu-dir-ajax-solr-sort {
     font-size: 14px;
     margin-top: 4px;
@@ -495,16 +406,125 @@ select {
     font-weight: 400;
 }
 
-.dir-active-sort {
-    color: #8C1D40;
+.asu-dir-expertise-title {
+    font-weight: bold;
 }
 
+.asu-dir-expertise, .short-bio {
+    text-align: left;
+    margin: 4px 0 4px 0;
+}
+
+.dir-active-sort {
+    color: #8C1D40;
+    font-weight: bold;
+}
 
 .asu-dir-hidden {
     display: none;
 }
 
+/** Grid display Items **/
 
-#asu-dir-ajax-solr-search .input-main-search {
-    width: 100%;
+.asu-dir-grid-col {
+    text-align: center;
+}
+
+.dir-ajax-solr-people .asu_directory_people_row .asu-dir-grid-col .row-profile-image img {
+    max-width: 150px;
+}
+
+.field-type-asu-directory .dir-dropdowns {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.field-type-asu-directory .dir-search {
+    padding-right: 0;
+}
+
+.field-type-asu-directory .dir-dropdowns .col-md-6 {
+    padding-left: 0;
+}
+
+.dir-breadcrumb {
+    margin-bottom: 10px;
+}
+
+.dir-search .asu-dir-sort-item {
+    font-size: 12px;
+
+}
+
+.short-bio .short-title {
+    font-weight: bold;
+
+}
+
+.short-bio {
+    margin: 4px 0 4px 0;
+}
+
+.dir-search > div {
+    font-size: 12px;
+}
+
+/****NODE-SPECIFIC ****/
+body .dir-people-wrapper {
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
+.node-asu-directory .field-type-asu-directory .asu-dir-search {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+
+/*** RESPONSIVE ***/
+
+@media (min-width: 992px) {
+
+    .dir-ajax-solr-people .asu_directory_people_row .row-profile-image img {
+        padding-left: 0;
+        width: 100%;
+    }
+
+    .dir-ajax-solr-people .asu_directory_people_row .row-profile-image {
+        max-height: 100px;
+        overflow: hidden;
+    }
+
+    .dir-ajax-solr-people .asu_directory_people_row .asu-dir-grid-col .row-profile-image {
+        max-height: 175px;
+        height: 200px;
+        overflow: hidden;
+    }
+
+    .col-md-12 > .dir-people-wrapper > .dir-ajax-solr-people .row-profile-image {
+        max-height: 155px;
+        overflow: hidden;
+    }
+}
+
+@media (max-width: 991px) {
+
+    .dir-ajax-solr-people .asu_directory_people_row .row-profile-image {
+        max-height: 160px;
+        width: 160px;
+        overflow: hidden;
+        margin: 0 auto;
+    }
+
+    .asu-directory-tree-hierarchy {
+        margin-bottom: 20px;
+    }
+
+    .dir-ajax-solr-people .asu_directory_people_row img {
+        width: 100%;
+    }
+
+    .asu_directory_people_row {
+        text-align: center;
+    }
 }

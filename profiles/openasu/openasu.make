@@ -51,12 +51,11 @@ projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-upd
 projects[panopoly_test][patch][1372] = patches/webspark-847_panopoly-test-updates-3.patch
 projects[panopoly_test][patch][140] = patches/webspark-944_panopoly-test-image-widget-patches.patch
 
-; ASU-specific, Webspark-agnostic modules
-; Installed in /profiles/openasu/modules/custom
+; ASU-specific, Webspark-agnostic modules (/custom directory contents)
 
 projects[asu_drupal_modules][type] = module
 projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = 83673f3349f7b3a243b2b190a041f81453e8b21e
+projects[asu_drupal_modules][download][revision] = cca3759aa20496ede80ec95ea609ce59138090e0
 projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ; ASU Module Prerequisites
@@ -78,12 +77,6 @@ projects[better_watchdog_ui][subdir] = contrib
 projects[cas_attributes][version] = 1.0-rc3
 projects[cas_attributes][type] = module
 projects[cas_attributes][subdir] = contrib
-
-;; For Webspark News & Events
-;; Will be removed when news & events is deleted
-projects[calendar][version] = 3.4
-projects[calendar][type] = module
-projects[calendar][subdir] = contrib
 
 projects[email][version] = 1.3
 projects[email][subdir] = contrib
@@ -166,13 +159,18 @@ projects[panels_tabs][version] = 2.x-dev
 projects[panels_tabs][type] = module
 projects[panels_tabs][subdir] = contrib
 
-;; Going to Git repo for dev commit of quicktabs
+;; @TODO - Update away from Dev commit of quicktabs
 projects[quicktabs][type] = module
 projects[quicktabs][subdir] = contrib
 projects[quicktabs][download][type] = "git"
 projects[quicktabs][download][branch] = "7.x-3.x"
 projects[quicktabs][download][url] = "http://git.drupal.org/project/quicktabs.git"
 projects[quicktabs][download][revision] = "758de4cc4995149a2de1d566b4209ec343581d27"
+
+; Added for ASU Dir module
+projects[react][version] = 2.0-beta2
+projects[react][type] = module
+projects[react][subdir] = contrib
 
 ;; Webspark Megamenu
 projects[special_menu_items][version] = 2.0
@@ -288,6 +286,15 @@ libraries[jqtree_css][download][type] = file
 libraries[jqtree_css][download][url] = https://raw.githubusercontent.com/mbraak/jqTree/1.3.4/jqtree.css
 libraries[jqtree_css][directory_name] = jqtree
 libraries[jqtree_css][download][sha256] = bde5928fc25fa22625e4a1ab42e7abff041a13b7dcb6f9a29ca46d50b1a2dbf8
+
+; React JS - For ASU Dir module - https://github.com/facebook/react/releases
+libraries[reactjs][download][type] = get
+libraries[reactjs][download][url] = https://github.com/facebook/react/releases/download/v0.14.7/react-0.14.7.zip
+libraries[reactjs][download][subtree] = react-0.14.7/build
+libraries[reactjs][directory_name] = react/build
+libraries[reactjs][download][sha256] = 859ef4a715ded8aa32ab96544c26d0f7b7eba09dec964d44a6c63e3d8d842034
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; PANOPOLY PROJECT PATCHES
 ;; The projects in the file(s) listed below are overridden versions of contrib modules maintained by Panopoly.
