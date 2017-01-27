@@ -1,3 +1,7 @@
+asu_isearch 7.x-1.8.4
+---------------------
+- Affiliation accordions match iSearch styling
+
 asu_isearch 7.x-1.8.3
 ---------------------
 - Added longterm backup caching for the iSearch assets

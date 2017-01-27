@@ -286,7 +286,7 @@ function asu_isearch_views_default_views() {
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['style_plugin'] = 'views_bootstrap_accordion_plugin_style';
-  $handler->display->display_options['style_options']['title_field'] = 'field_isearch_affil_title';
+  $handler->display->display_options['style_options']['title_field'] = 'field_isearch_affil_dept_name';
   $handler->display->display_options['row_plugin'] = 'fields';
   /* Relationship: Field collection item: Entity with the Affiliations (field_isearch_affiliations) */
   $handler->display->display_options['relationships']['field_isearch_affiliations_node']['id'] = 'field_isearch_affiliations_node';
@@ -354,6 +354,40 @@ function asu_isearch_views_default_views() {
 
   /* Display: iSearch Profile Affiliations */
   $handler = $view->new_display('panel_pane', 'iSearch Profile Affiliations', 'panel_pane_1');
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Field collection item: Dept */
+  $handler->display->display_options['fields']['field_isearch_affil_dept_name']['id'] = 'field_isearch_affil_dept_name';
+  $handler->display->display_options['fields']['field_isearch_affil_dept_name']['table'] = 'field_data_field_isearch_affil_dept_name';
+  $handler->display->display_options['fields']['field_isearch_affil_dept_name']['field'] = 'field_isearch_affil_dept_name';
+  $handler->display->display_options['fields']['field_isearch_affil_dept_name']['label'] = '';
+  $handler->display->display_options['fields']['field_isearch_affil_dept_name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_isearch_affil_dept_name']['element_label_colon'] = FALSE;
+  /* Field: Field collection item: Title */
+  $handler->display->display_options['fields']['field_isearch_affil_title']['id'] = 'field_isearch_affil_title';
+  $handler->display->display_options['fields']['field_isearch_affil_title']['table'] = 'field_data_field_isearch_affil_title';
+  $handler->display->display_options['fields']['field_isearch_affil_title']['field'] = 'field_isearch_affil_title';
+  $handler->display->display_options['fields']['field_isearch_affil_title']['label'] = '';
+  $handler->display->display_options['fields']['field_isearch_affil_title']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_isearch_affil_title']['type'] = 'text_plain';
+  /* Field: Field collection item: Employee Type */
+  $handler->display->display_options['fields']['field_isearch_affil_empl_type']['id'] = 'field_isearch_affil_empl_type';
+  $handler->display->display_options['fields']['field_isearch_affil_empl_type']['table'] = 'field_data_field_isearch_affil_empl_type';
+  $handler->display->display_options['fields']['field_isearch_affil_empl_type']['field'] = 'field_isearch_affil_empl_type';
+  $handler->display->display_options['fields']['field_isearch_affil_empl_type']['label'] = '';
+  $handler->display->display_options['fields']['field_isearch_affil_empl_type']['element_label_colon'] = FALSE;
+  /* Field: Field collection item: Campus */
+  $handler->display->display_options['fields']['field_isearch_affil_campus']['id'] = 'field_isearch_affil_campus';
+  $handler->display->display_options['fields']['field_isearch_affil_campus']['table'] = 'field_data_field_isearch_affil_campus';
+  $handler->display->display_options['fields']['field_isearch_affil_campus']['field'] = 'field_isearch_affil_campus';
+  $handler->display->display_options['fields']['field_isearch_affil_campus']['label'] = '';
+  $handler->display->display_options['fields']['field_isearch_affil_campus']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_isearch_affil_campus']['alter']['text'] = '[field_isearch_affil_campus] Campus';
+  $handler->display->display_options['fields']['field_isearch_affil_campus']['element_label_colon'] = FALSE;
+  /* Field: Field collection item: Mailcode */
+  $handler->display->display_options['fields']['field_isearch_affil_mailcode']['id'] = 'field_isearch_affil_mailcode';
+  $handler->display->display_options['fields']['field_isearch_affil_mailcode']['table'] = 'field_data_field_isearch_affil_mailcode';
+  $handler->display->display_options['fields']['field_isearch_affil_mailcode']['field'] = 'field_isearch_affil_mailcode';
+  $handler->display->display_options['fields']['field_isearch_affil_mailcode']['element_label_colon'] = FALSE;
 
   /* Display: Entity Reference */
   $handler = $view->new_display('entityreference', 'Entity Reference', 'entityreference_1');

@@ -1,7 +1,7 @@
 <?php
 name = "ASU DIR Utilities"
 core = 7.x
-package = asu_dir_utilities
+package = ASU
 description = "Utilities useful for gathering data from iSearch and Solr."
 version = 7.x-1.0
 

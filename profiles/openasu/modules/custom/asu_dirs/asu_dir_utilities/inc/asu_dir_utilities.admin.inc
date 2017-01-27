@@ -13,7 +13,7 @@ function asu_dir_utilities_admin($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => 'Directory URL (iSearch)',
     '#default_value' => ASU_DIR_UTILITIES_ISEARCH_URL,
-    '#description' => t('The Solr server you would like to pull data from.'),
+    '#description' => t('URL of iSearch directory.'),
     '#required' => TRUE,
   );
 

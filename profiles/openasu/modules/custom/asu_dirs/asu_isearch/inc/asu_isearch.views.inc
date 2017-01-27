@@ -5,16 +5,17 @@
  * Implements hook_views_pre_render()
  */
 function asu_isearch_views_pre_render(&$view) {
-
+  /*
   if ($view->name == 'isearch_affiliations') {
     // If we're not displaying all affiliations, hide the title so it isn't redundant.
     $display_affiliations = (bool) variable_get('isearch_display_affiliations', 0);
     if (FALSE === $display_affiliations) {
       $view->field['field_isearch_affil_title']->options['exclude'] = TRUE;
     }
-  }
+  }*/
 
   if (asu_isearch_is_isearch_view($view) && isset($view->view_config)) {
+
 
     $view->exposed_data[] = drupal_json_encode($view->view_config);
 
@@ -48,7 +49,6 @@ function asu_isearch_views_pre_render(&$view) {
       $wrapper = entity_metadata_wrapper('node', $entity);
 
       // building code link
-
       if ($view_link_building && $global_link_buildings) {
         // TODO: Logic for linking building in view listing
         if (!empty($view->result[$key]->field_field_isearch_campus_building)) {

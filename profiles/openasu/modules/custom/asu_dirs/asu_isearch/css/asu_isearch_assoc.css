@@ -9,9 +9,19 @@
     margin-top: -15px;
 }
 
-.affiliations-region, .affiliations-region h4 {
+.view-id-isearch_affiliations h4.panel-title .accordion-toggle {
     font-family: Verdana, Arial, sans-serif;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #212121;
+    text-decoration: none;
 }
+
+.view-id-isearch_affiliations .views-field-field-isearch-affil-title {
+    font-weight: bold;
+    font-size: .92em;
+}
+
 
 .affiliations-region .panel-default > .panel-heading {
     background-color: #FBFBFB;
@@ -21,11 +31,7 @@
     border-top: 0;
 }
 
-.affiliations-region .view-isearch-affiliations .panel-heading h4 {
-    color: #a30056;
-    font-weight: normal;
-    text-decoration: none;
-}
+
 
 .affiliations-region .view-isearch-affiliations .panel-heading h4 a {
     border-bottom: none;
@@ -52,4 +58,40 @@
 .view-id-isearch_affiliations .views-field-field-isearch-affil-empl-type::after,
 .view-id-isearch_affiliations .views-field-field-isearch-affil-campus::after {
     content: ", ";
+}
+
+/***
+Accordion
+ */
+.accordion-toggle:before {
+    font-family: FontAwesome;
+    top:0;
+    left:-5px;
+    padding-right:10px;
+    content: "\25BE";
+}
+
+.accordion-toggle.collapsed:before {
+    content: "\25B8";
+}
+
+.view-id-isearch_affiliations .panel-body {
+    padding-top: .6em;
+    padding-left: 2.2em;
+}
+
+.affiliations-region .view-isearch-affiliations .panel-heading h4 {
+    color: #a30056;
+    font-weight: normal;
+    text-decoration: none;
+    font-size: .9em;
+}
+
+.view-id-isearch_affiliations .panel-heading {
+    padding-left: .5em;
+}
+
+.view-id-isearch_affiliations .views-field-field-isearch-affil-dept-name {
+    font-weight: bold;
+
 }

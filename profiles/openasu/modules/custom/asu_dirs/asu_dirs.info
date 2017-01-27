@@ -1,7 +1,7 @@
 name = "ASU Directory Integration Reinvented Suite"
 description = "Suite of modules for maintaining an ASU Webstandards-compliant local directory."
 core = 7.x
-package = ASU Webspark
+package = ASU
 project = asu_dirs
 files[] = asu_dirs.module
 dependencies[] = asu_dir_utilities

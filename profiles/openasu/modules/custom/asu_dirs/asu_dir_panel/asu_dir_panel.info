@@ -1,7 +1,7 @@
 name = ASU Directory Panel
 description = Creates a fieldable panel pane with an asu_dir field attached.
 core = 7.x
-package = ASU Webspark
+package = ASU
 version = 7.x-1.0
 project = asu_dir_panel
 dependencies[] = ctools
