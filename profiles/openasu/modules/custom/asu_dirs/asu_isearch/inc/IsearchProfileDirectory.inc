@@ -171,7 +171,7 @@ class IsearchProfileDirectory {
         }
 
         if (isset($item->field_field_isearch_expertise_areas[0])) {
-          foreach($item->field_field_isearch_expertise_areas as $area) {
+          foreach ($item->field_field_isearch_expertise_areas as $area) {
             $tid = $area['raw']['tid'];
             $expertise[$tid] = $area['rendered']['#markup'];
           }

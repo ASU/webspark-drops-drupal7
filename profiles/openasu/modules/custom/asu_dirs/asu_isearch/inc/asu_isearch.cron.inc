@@ -9,6 +9,13 @@
  */
 function asu_isearch_cron() {
 
+  // if we are locked from automatic update, then return false without updating
+  $lock = variable_get('isearch_local_lock', FALSE);
+
+  if ($lock) {
+    return FALSE;
+  }
+
   // it takes too much time to do both of these actions every cron run.
   // so switch between caching depts and migrating departments.
   $last_action = variable_get('asu_isearch_cron_action', 'import_depts');
@@ -24,11 +31,15 @@ function asu_isearch_cron() {
     _asu_isearch_begin_migrate(FALSE);
   }
 
-  // Cleanup the profiles which are no longer associated with
-  // unit depts in iSearch.  Only run once per day.
+  // cleanup any profiles which are not found in Solr
+  _asu_isearch_cleanup();
+
+  // Clear cache, and cleanup profile image caches
   $last_clean = variable_get('last_profile_cleanup', NULL);
 
   if ($last_clean != date('ymd', time())) {
+
+    variable_set('last_profile_cleanup', date('ymd', time()));
 
     // flush the image styles cache, so that updated photos show up
     $styles = array('asu_isearch_profile_list', 'asu_isearch_profile');
@@ -38,8 +49,8 @@ function asu_isearch_cron() {
       asu_isearch_image_style_flush($the_style);
     }
 
-    _asu_isearch_cleanup();
-    variable_set('last_profile_cleanup', date('ymd', time()));
+    // clear all cached content
+    cache_clear_all();
   }
 }
 
@@ -173,10 +184,6 @@ function _asu_isearch_cleanup() {
   foreach ($nodes as $key => $profile) {
     //we only cleanup profiles which have been imported from iSearch
     if ($profile->field_isearch_eid['und'][0]['value'] != -1) {
-
-      // for debugging purposes
-      //asu_isearch_cleanup_profile($profile);
-
       $queue->createItem($profile);
     }
   }
@@ -199,9 +206,9 @@ function asu_isearch_cleanup_profile($profile) {
     $person = asu_dir_utilities_get_solr_person($asurite);
 
 
-    if ($person != NULL) {
+    if (!empty($person)) {
       foreach ($configs['items'] as $item) {
-        if (in_array($item['dept_nid'], $person['deptids'])) {
+        if (isset($person['deptids']) && in_array($item['dept_nid'], $person['deptids'])) {
           $pfound = TRUE;
         }
 
@@ -210,7 +217,8 @@ function asu_isearch_cleanup_profile($profile) {
         ) {
 
           foreach ($item['tree_nids'] as $tree_item) {
-            if (in_array($tree_item, $person['deptids'])) {
+
+            if (isset($person['deptids']) && in_array($tree_item, $person['deptids'])) {
               $pfound = TRUE;
             }
           }

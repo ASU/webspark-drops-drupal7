@@ -180,10 +180,6 @@ function asu_dir_utilities_get_solr_schema($decode = TRUE) {
 }
 
 
-
-
-
-
 /****
  * Returns a single Solr record, given an asuriteid
  * @params asurite:  asurite ID of person

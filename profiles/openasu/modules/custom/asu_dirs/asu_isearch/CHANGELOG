@@ -1,3 +1,9 @@
+asu_isearch 7.x-1.8.5
+---------------------
+- Added 'isearch_local_lock' setting, allowing the disabling of automatic cron migration updates
+- Added onload profile check against Solr for FERPA purposes
+- Added migration data cache refresh functionality for running manual migrations
+
 asu_isearch 7.x-1.8.4
 ---------------------
 - Affiliation accordions match iSearch styling
@@ -17,7 +23,6 @@ asu_isearch 7.x-1.8.1
 - Fixed issue with pagination not functioning correctly when contextual form is removed
 - Webstandards pagination
 - Added iSearch profile photo styling
-
 
 asu_isearch 7.x-1.8
 -------------------

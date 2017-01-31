@@ -22,7 +22,6 @@
     font-size: .92em;
 }
 
-
 .affiliations-region .panel-default > .panel-heading {
     background-color: #FBFBFB;
 }
@@ -30,8 +29,6 @@
 .affiliations-region .panel-group .panel-heading + .panel-collapse .panel-body {
     border-top: 0;
 }
-
-
 
 .affiliations-region .view-isearch-affiliations .panel-heading h4 a {
     border-bottom: none;
@@ -65,9 +62,9 @@ Accordion
  */
 .accordion-toggle:before {
     font-family: FontAwesome;
-    top:0;
-    left:-5px;
-    padding-right:10px;
+    top: 0;
+    left: -5px;
+    padding-right: 10px;
     content: "\25BE";
 }
 

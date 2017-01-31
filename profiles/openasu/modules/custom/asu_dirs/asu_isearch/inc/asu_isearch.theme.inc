@@ -104,8 +104,18 @@ function theme_pager__isearch_directory__isearch_directory_list(&$variables) {
   $tags[3] = '<i class="fa fa-angle-double-right" aria-hidden="true"></i>';
 
   //$li_first = theme('pager_first', array('text' => (isset($tags[0]) ? $tags[0] : t('« first')), 'element' => $element, 'parameters' => $parameters));
-  $li_previous = theme('asu_dir_pager_previous', array('text' => (isset($tags[1]) ? $tags[1] : t('‹ previous')), 'element' => $element, 'interval' => 1, 'parameters' => $parameters));
-  $li_next = theme('asu_dir_pager_next', array('text' => (isset($tags[3]) ? $tags[3] : t('next ›')), 'element' => $element, 'interval' => 1, 'parameters' => $parameters));
+  $li_previous = theme('asu_dir_pager_previous', array(
+    'text' => (isset($tags[1]) ? $tags[1] : t('‹ previous')),
+    'element' => $element,
+    'interval' => 1,
+    'parameters' => $parameters
+  ));
+  $li_next = theme('asu_dir_pager_next', array(
+    'text' => (isset($tags[3]) ? $tags[3] : t('next ›')),
+    'element' => $element,
+    'interval' => 1,
+    'parameters' => $parameters
+  ));
   //$li_last = theme('pager_last', array('text' => (isset($tags[4]) ? $tags[4] : t('last »')), 'element' => $element, 'parameters' => $parameters));
 
   if ($pager_total[$element] > 1) {
@@ -135,7 +145,12 @@ function theme_pager__isearch_directory__isearch_directory_list(&$variables) {
         if ($i < $pager_current) {
           $items[] = array(
             'class' => array('pager-item'),
-            'data' => theme('asu_dir_pager_previous', array('text' => $i, 'element' => $element, 'interval' => ($pager_current - $i), 'parameters' => $parameters)),
+            'data' => theme('asu_dir_pager_previous', array(
+              'text' => $i,
+              'element' => $element,
+              'interval' => ($pager_current - $i),
+              'parameters' => $parameters
+            )),
           );
         }
         if ($i == $pager_current) {
@@ -147,7 +162,12 @@ function theme_pager__isearch_directory__isearch_directory_list(&$variables) {
         if ($i > $pager_current) {
           $items[] = array(
             'class' => array('pager-item'),
-            'data' => theme('asu_dir_pager_next', array('text' => $i, 'element' => $element, 'interval' => ($i - $pager_current), 'parameters' => $parameters)),
+            'data' => theme('asu_dir_pager_next', array(
+              'text' => $i,
+              'element' => $element,
+              'interval' => ($i - $pager_current),
+              'parameters' => $parameters
+            )),
           );
         }
       }
@@ -175,11 +195,10 @@ function theme_pager__isearch_directory__isearch_directory_list(&$variables) {
     }
 
 
-
     return '<h2 class="element-invisible">' . t('Pages') . '</h2>' . theme('item_list', array(
-      'items' => $items,
-      'attributes' => array('class' => array('pager')),
-    ));
+        'items' => $items,
+        'attributes' => array('class' => array('pager')),
+      ));
   }
 }
 
@@ -217,7 +236,12 @@ function theme_asu_dir_pager_previous($variables) {
   if ($pager_page_array[$element] > 0) {
     $page_new = pager_load_array($pager_page_array[$element] - $interval, $element, $pager_page_array);
 
-    $output = theme('asu_dir_pager_link', array('text' => $text, 'page_new' => $page_new, 'element' => $element, 'parameters' => $parameters));
+    $output = theme('asu_dir_pager_link', array(
+      'text' => $text,
+      'page_new' => $page_new,
+      'element' => $element,
+      'parameters' => $parameters
+    ));
     /*
     // If the previous page is the first page, mark the link as such.
     if ($page_new[$element] == -1) {
@@ -246,7 +270,12 @@ function theme_asu_dir_pager_next($variables) {
     // If the next page is the last page, mark the link as such.
 
 
-    $output = theme('asu_dir_pager_link', array('text' => $text, 'page_new' => $page_new, 'element' => $element, 'parameters' => $parameters));
+    $output = theme('asu_dir_pager_link', array(
+      'text' => $text,
+      'page_new' => $page_new,
+      'element' => $element,
+      'parameters' => $parameters
+    ));
     /*
     if ($page_new[$element] == ($pager_total[$element] - 1)) {
       $output = theme('pager_last', array('text' => $text, 'element' => $element, 'parameters' => $parameters));

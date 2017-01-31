@@ -21,12 +21,14 @@ function asu_isearch_admin_settings_form() {
     '#default_value' => variable_get('isearch_display_affiliations', FALSE),
   );
 
+
   $form['isearch_pull_isearch_weights'] = array(
-    '#type' => 'checkbox',
-    '#title' => 'Pull employee rank sorting values from iSearch?',
-    '#description' => t("This option will populate the local rank weight sorting data with the same sorting weights from iSearch."),
-    '#default_value' => variable_get('isearch_pull_isearch_weights', FALSE),
+  '#type' => 'checkbox',
+  '#title' => 'Pull employee rank sorting values from iSearch?',
+  '#description' => t("This option will populate the local rank weight sorting data with the same sorting weights from iSearch."),
+  '#default_value' => variable_get('isearch_pull_isearch_weights', FALSE),
   );
+
 
   $form['isearch_import_subdepts'] = array(
     '#type' => 'checkbox',
@@ -65,14 +67,13 @@ function asu_isearch_admin_settings_form() {
     '#default_value' => variable_get('isearch_link_buildings', TRUE),
     '#description' => t('Check this option to link building codes on profiles and directory listings to the ASU Campus map'),
   );
-  /*todo:  can we sensibly clear local weights?
-  $form['isearch_clear_local_weights'] = array(
-    '#type' => 'button',
-    '#value' => 'Remove All Local Weights on Affiliations',
-    '#executes_submit_callback' => TRUE,
-    // Send in part of the form_state array to know if this is initial page load or not
-    '#submit' => array('asu_isearch_remove_local_weights'),
-  );*/
+
+  $form['isearch_local_lock'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Lock Profiles from Automatic Updates.',
+    '#description' => t('This option will lock profiles so that they are not automatically updated when cron is run.  Migrations can still be run manually via the interface at <a href="@link">Migrate</a> or via drush.', array('@link' => '/admin/content/isearch/migrate')),
+    '#default_value' => variable_get('isearch_local_lock', FALSE),
+  );
 
   // retrieve global dept configuration
   $isearch_admin_feed_dept = asu_isearch_get_dept_config();
@@ -109,16 +110,6 @@ function asu_isearch_admin_settings_form() {
   $form['footer_actions']['#weight'] = 100;
 
   return $form;
-}
-
-function asu_isearch_remove_local_weights() {
-
-  $items = entity_load('field_collection_item', FALSE, 'field_isearch_affiliations');
-  /*
-  foreach( $items as $item ) {
-   $item->field_isearch_affil_local_weight = array();
-   entity_save('field_collection_item', $item);
-  }*/
 }
 
 /**

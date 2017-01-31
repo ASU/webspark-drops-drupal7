@@ -93,9 +93,6 @@ function asu_isearch_entity_load($entities, $type) {
               if ($newfile) {
                 $item->field_isearch_photo_url[LANGUAGE_NONE][0]['fid'] = $newfile->fid;
               }
-
-              //dpm($person, 'THE PERSON');
-              //dpm($item, 'THE ITEM');
             }
           }
 
@@ -109,4 +106,6 @@ function asu_isearch_entity_load($entities, $type) {
     }
   }
 }
+
+
 

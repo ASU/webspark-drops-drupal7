@@ -130,9 +130,16 @@ function _asu_isearch_begin_migrate($force_update = FALSE) {
   }
 }
 
-
+/***
+ * Manual import batch job
+ *
+ * @param bool $force_update
+ */
 function _asu_isearch_begin_batch($force_update = FALSE) {
   $limit = variable_get('isearch_import_limit', NULL);
+
+  // refresh the source TODO:  only on forceupdate?
+  _asu_isearch_cache_dept_feed(TRUE, ASU_ISEARCH_MANUAL_IMPORT_DEPT_CACHE_LIMIT);
 
   if (is_null($limit) || is_numeric($limit)) {
 
@@ -178,16 +185,13 @@ function _asu_isearch_begin_batch($force_update = FALSE) {
  * Cache the dept feed data, and build the source file for migration
  *
  * @param bool|FALSE $build_source - will append data to the master source file
+ * @param int|ASU_ISEARCH_DEPT_CACHING_LIMIT - limit on number of departments to cache in one run
  */
-function _asu_isearch_cache_dept_feed($build_source = FALSE) {
+function _asu_isearch_cache_dept_feed($build_source = FALSE, $limit = ASU_ISEARCH_DEPT_CACHING_LIMIT) {
 
   if (!file_exists(ASU_ISEARCH_DIRECTORY_FEED_CACHE_ENDPOINT)) {
     mkdir(ASU_ISEARCH_DIRECTORY_FEED_CACHE_ENDPOINT, 0644, TRUE);
   }
-
-  // limit for how many departments will be cached on each cron run.
-  // this is a needed because of the slow nature of the isearch endpoint
-  $limit = ASU_ISEARCH_DEPT_CACHING_LIMIT;
 
   // retrieve list of configured isearch dept urls for import
   $source_urls = asu_isearch_get_migrate_source_urls(FALSE);
@@ -262,6 +266,11 @@ function _asu_isearch_cache_dept($url) {
   $options = array(
     'timeout' => 60,
   );
+
+  // add the base_url for tracking of departments in Splunk
+  global $base_url;
+  $url .= '?dept=' . $base_url;
+
 
   $decoded = NULL;
   $data = NULL;
@@ -436,7 +445,7 @@ function _asu_isearch_reset_migration_sources() {
   foreach ($newtracker as $key => $item) {
     // we're likely to timeout if we're doing a ton of requests to the
     // endpoint, so we need to cap this at a reasonable number
-    if ($counter > 24) {
+    if ($counter > ASU_ISEARCH_DEPT_CACHING_LIMIT) {
       break;
     }
     else {

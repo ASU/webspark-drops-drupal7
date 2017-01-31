@@ -333,7 +333,6 @@ function _asu_isearch_build_contextual_filter_form(&$content, $view, $view_confi
 }
 
 
-
 /***
  * Function to render the custom view
  *
@@ -484,7 +483,8 @@ function asu_isearch_get_filters($view_config, &$view) {
 
         if (!empty($nids)) {
           $contextual_departments = array_merge($contextual_departments, $nids);
-        } else {
+        }
+        else {
           $contextual_departments = array_merge($contextual_departments, $dept_item->tree_nids);
         }
       }

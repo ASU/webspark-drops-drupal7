@@ -10,42 +10,42 @@
  */
 ?>
 <div
-  class="panel-display isearch-profile-2col clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
-  <section class="section profile-header clearfix">
-    <div class="container">
-      <div class="row">
-        <?php print $content['header']; ?>
-      </div>
-    </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-2 isearch-profile-photo">
-          <?php print $content['photo']; ?>
+        class="panel-display isearch-profile-2col clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+    <section class="section profile-header clearfix">
+        <div class="container">
+            <div class="row">
+              <?php print $content['header']; ?>
+            </div>
         </div>
-        <div class="col-sm-10 isearch-profile-contact">
-          <div class="contact-region">
-            <?php print $content['contact']; ?>
-          </div>
-          <div class="social-region">
-            <?php print $content['social']; ?>
-          </div>
-          <div class="affiliations-region">
-            <?php print $content['affiliations']; ?>
-          </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-2 isearch-profile-photo">
+                  <?php print $content['photo']; ?>
+                </div>
+                <div class="col-sm-10 isearch-profile-contact">
+                    <div class="contact-region">
+                      <?php print $content['contact']; ?>
+                    </div>
+                    <div class="social-region">
+                      <?php print $content['social']; ?>
+                    </div>
+                    <div class="affiliations-region">
+                      <?php print $content['affiliations']; ?>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
-  <section class="section clearfix">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8 isearch-profile-content">
-          <?php print $content['maincontent']; ?>
+    </section>
+    <section class="section clearfix">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 isearch-profile-content">
+                  <?php print $content['maincontent']; ?>
+                </div>
+                <div class="col-md-4 isearch-profile-sidebar">
+                  <?php print $content['sidebar']; ?>
+                </div>
+            </div>
         </div>
-        <div class="col-md-4 isearch-profile-sidebar">
-          <?php print $content['sidebar']; ?>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 </div><!-- /.isearch-profile-2col -->

@@ -117,7 +117,7 @@ function asu_isearch_get_dept_config() {
 
 
   // pull the subdepts dynamically, instead of using the saved copy
-  foreach($decoded['items'] as $key => $item) {
+  foreach ($decoded['items'] as $key => $item) {
     $nid = $item['dept_nid'];
 
     $subtree = asu_dir_utilities_dept_find_root($tree, $nid);
