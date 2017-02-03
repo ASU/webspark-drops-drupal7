@@ -361,4 +361,49 @@ function asu_dir_utilities_solr_health_check() {
   return FALSE;
 }
 
+/****
+ * Get local profiles
+ * @return array|mixed
+ */
+function asu_dir_utilities_get_local_profile_list() {
+  $people_list = &drupal_static(__FUNCTION__);
+
+  if (!isset($people_list) || $people_list == "") {
+    // Check for cache
+    if ($cache = cache_get('asu_dir_utilities_people_list')) {
+      $people_list = $cache->data;
+    }
+    // Create content and cache if no cache available
+    else {
+
+      //set timeout of request to 60 seconds
+      $options = array(
+        'timeout' => 60,
+      );
+
+      $nodes = node_load_multiple(array(), array('type' => 'asu_isearch_profile'));
+
+      $people_list = array();
+
+      foreach($nodes as $node) {
+        if (isset($node->field_isearch_asurite_id['und'][0]['value'])) {
+          $asurite = $node->field_isearch_asurite_id['und'][0]['value'];
+          $people_list[$asurite] = drupal_get_path_alias('node/' .$node->nid);
+
+        }
+      }
+
+      // Cache employee types for number of hours specified
+      if (!empty($people_list)) {
+
+        $expire_date = time() + 3600 * ASU_DIR_UTILITIES_FORM_CACHE_DURATION;
+        cache_set('asu_dir_utilities_people_list', $people_list, 'cache', $expire_date);
+      }
+    }
+  }
+
+  return $people_list;
+}
+
+
 

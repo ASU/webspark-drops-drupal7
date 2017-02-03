@@ -131,8 +131,15 @@ var ASUPeople = {};
 
                     //these are fields which will override the manager sort, and also the alpha filter widget
                     var override_fields = ['lastName', 'primaryTitle', 'expertiseAreasFacet', 'facultyTitlesFacet'];
+
+                    if (isettings.hasOwnProperty('tree') && isettings.tree.constructor != Array) {
+                        tree = JSON.parse(isettings.tree);
+                    } else {
+                        tree = isettings.tree;
+                    }
+
                     //stick with entire tree if top nid is not defined, or we are in iSearch mode
-                    if (( top_nid != null) && ( tree = JSON.parse(isettings.tree)) && !isearch_mode) {
+                    if (( top_nid != null) && ( tree) && !isearch_mode) {
                         // Set the root of the tree to the point defined by id -> set by asu_directory.module
                         temp = [];
                         temp.push(asu_dir_ajax_solr_find_root(tree, top_nid));

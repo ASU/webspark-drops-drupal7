@@ -177,7 +177,9 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         'tree_nids' => $field_items
       );
 
-      $config['depts']['options'][$field_configs['dept_id']] = array(
+      $dept_id = $field_configs['dept_id'];
+
+      $config['depts']['options']->$dept_id = array(
         'subdepts' => $config['sub_toggle']
       );
     }
