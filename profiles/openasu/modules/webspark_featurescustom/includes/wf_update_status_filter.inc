@@ -86,8 +86,18 @@ function webspark_featurescustom_update_projects_alter(&$projects) {
   foreach ($managed_things as $managed_module) {
     unset($projects[$managed_module]);
   }
-  // WEBSPARK-1043 - Remove LDAP Servers from updates list manually
-  unset($projects['ldap']);
+  // WEBSPARK-1043 - Remove LDAP modules from updates list manually
+  $package_toremove = 'ldap';
+  $length = strlen($package_toremove);
+  foreach ($projects as $project) {
+    if (strpos($project['name'], $package_toremove) === 0) {
+      // ensure only module and module_submodules (i.e. ldap, ldap_*) are removed
+      if (strlen($project['name']) === $length ||
+        (strlen($project['name']) > $length && strpos($project['name'], '_', $length))) {
+        unset($projects[$project['name']]);
+      }
+    }
+  }
 }
 
 /**
