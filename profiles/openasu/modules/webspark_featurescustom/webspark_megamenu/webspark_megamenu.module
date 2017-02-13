@@ -18,16 +18,5 @@ function webspark_megamenu_form_alter(&$form, &$form_state, &$form_id) {
   }
 }
 function webspark_megamenu_page_alter(&$page) {
-
-  if(isset($page['menu']['tb_megamenu_main-menu']) ){
-    $dom = new DOMDocument;
-    $dom->loadHTML($page['menu']['tb_megamenu_main-menu']['#markup']);
-    $nodes = $dom->getElementsByTagName('button');
-    if($nodes->item(0)) {
-      $nodes->item(0)->parentNode->removeChild($nodes->item(0));
-    }
-    $page['menu']['tb_megamenu_main-menu']['#markup'] = $dom->saveHTML();
-  }
-
   drupal_add_js(drupal_get_path('module', 'webspark_megamenu').'/js/webspark_megamenu_pre.js', array('scope'=>'header'));
 }
