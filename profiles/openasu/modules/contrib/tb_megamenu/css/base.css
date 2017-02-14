@@ -29,11 +29,19 @@
 }
 .tb-megamenu .mega > .mega-dropdown-menu {
   min-width: 200px;
-  display: none;
+  display: block;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px; width: 1px;
+  margin: -1px; padding: 0; border: 0;
 }
 .tb-megamenu .mega.open > .mega-dropdown-menu,
 .tb-megamenu .mega.dropdown-submenu:hover > .mega-dropdown-menu {
   display: block;
+  overflow: visible;
+  clip: auto;
+  height: auto;
+  width: auto;
 }
 .tb-megamenu .mega-group {
   *zoom: 1;
