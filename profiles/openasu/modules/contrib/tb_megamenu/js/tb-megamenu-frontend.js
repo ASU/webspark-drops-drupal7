@@ -49,20 +49,46 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
               mm_duration = $(this).data('duration');
             }
           });
+          /**
+           * Allow tabbing by appending the open class.
+           * Works in tandem with CSS changes that utilize opacity rather than display none
+           */
+          // If the selected anchor is not in the TB Megamenu, remove all "open" class occurrences
           $('a').focus(function(event){
             if(!$(this).parent().hasClass('tb-megamenu-item')) {
               $('.tb-megamenu .open').removeClass('open');
+              $('.tb-megamenu-item.dropdown-submenu.open').removeClass('open');
             }
           });
+
           $('.nav > li > a, li.mega > a').focus(function(event) {
-            if($(this).next(".tb-megamenu-submenu")){
+            // Remove all occurrences of "open" from other menu trees
+            var siblings = $(this).parents('.tb-megamenu-item').siblings();
+            // var siblings = $(this).closest('.tb-megamenu-item.level-1').siblings();
+            $.each(siblings, function(i, v){
+              var cousins = $(v).find('.open');
+              $.each(cousins, function(index, value){
+                $(value).removeClass('open');
+              });
+              $(v).removeClass('open');
+            });
+            // Open the submenu if the selected item has one
+            if($(this).next(".tb-megamenu-submenu").length > 0){
               if(!$(this).parent().hasClass("open")){
                 $(this).parent().addClass("open");
               }
             }
-            if($(this).parent().siblings('.tb-megamenu-item').hasClass('open')) {
-              $(this).parent().siblings('.tb-megamenu-item').removeClass('open');
+            // If the anchor's top-level parent is not open, open it
+            if(!$(this).closest('.tb-megamenu-item.dropdown').hasClass('open') && $(this).closest('.tb-megamenu-item.dropdown').find('.tb-megamenu-submenu').length > 0){
+              $(this).closest('.tb-megamenu-item.dropdown').addClass('open');
             }
+            // If anchor's parent submenus are not open, open them
+            var parents = $(this).parents('.tb-megamenu-item.dropdown-submenu');
+            $.each(parents, function(i, v){
+              if(!$(v).hasClass('open')){
+                $(v).addClass('open');
+              }
+            });
           });
           var mm_timeout = mm_duration ? 100 + mm_duration : 500;
           $('.nav > li, li.mega').hover(function(event) {

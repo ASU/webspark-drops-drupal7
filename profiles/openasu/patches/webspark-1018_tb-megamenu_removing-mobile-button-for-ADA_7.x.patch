@@ -1,7 +1,7 @@
-diff --git a/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu.tpl.php b/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu.tpl.php
+diff --git a/templates/tb-megamenu.tpl.php b/templates/tb-megamenu.tpl.php
 index c529cca..b1437c6 100644
---- a/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu.tpl.php
-+++ b/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu.tpl.php
+--- a/templates/tb-megamenu.tpl.php
++++ b/templates/tb-megamenu.tpl.php
 @@ -1,8 +1,5 @@
  <div <?php print $attributes;?> class="<?php print $classes;?>">
    <?php if($section == 'frontend') :?>
