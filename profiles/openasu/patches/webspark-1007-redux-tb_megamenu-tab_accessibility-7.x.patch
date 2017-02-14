@@ -1,7 +1,7 @@
-diff --git a/profiles/openasu/modules/contrib/tb_megamenu/css/base.css b/profiles/openasu/modules/contrib/tb_megamenu/css/base.css
+diff --git a/css/base.css b/css/base.css
 index 7d8ebb1..6e2f7da 100644
---- a/profiles/openasu/modules/contrib/tb_megamenu/css/base.css
-+++ b/profiles/openasu/modules/contrib/tb_megamenu/css/base.css
+--- a/css/base.css
++++ b/css/base.css
 @@ -29,11 +29,19 @@
  }
  .tb-megamenu .mega > .mega-dropdown-menu {
@@ -23,10 +23,10 @@ index 7d8ebb1..6e2f7da 100644
  }
  .tb-megamenu .mega-group {
    *zoom: 1;
-diff --git a/profiles/openasu/modules/contrib/tb_megamenu/js/tb-megamenu-frontend.js b/profiles/openasu/modules/contrib/tb_megamenu/js/tb-megamenu-frontend.js
+diff --git a/js/tb-megamenu-frontend.js b/js/tb-megamenu-frontend.js
 index 910914e..a80c94e 100644
---- a/profiles/openasu/modules/contrib/tb_megamenu/js/tb-megamenu-frontend.js
-+++ b/profiles/openasu/modules/contrib/tb_megamenu/js/tb-megamenu-frontend.js
+--- a/js/tb-megamenu-frontend.js
++++ b/js/tb-megamenu-frontend.js
 @@ -49,6 +49,50 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
                mm_duration = $(this).data('duration');
              }
