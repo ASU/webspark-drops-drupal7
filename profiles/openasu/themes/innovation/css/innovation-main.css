@@ -633,8 +633,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
   margin: 1em 0;
 }
 
-.alert > ul > li > [class^=krumo],
-.alert > [class^=krumo] {
+.alert > ul > li > [class^=krumo] {
   all: initial;
 }
 

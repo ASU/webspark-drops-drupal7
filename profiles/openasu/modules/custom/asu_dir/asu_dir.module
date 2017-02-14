@@ -1,0 +1,126 @@
+<?php
+
+/**
+ * @file
+ * ASU Directory module
+ *
+ * This module allows the configuration of custom
+ * directory fields, which displays employees in a
+ * directory listing from a root department.
+ *
+ * @author Colton Testamarck (colt@asu.edu)
+ *
+ */
+
+/*********************************************************************
+ * INCLUDES
+ *********************************************************************/
+include_once 'theme/asu_dir.theme.inc';
+include_once 'asu_dir.features.inc';
+include_once 'inc/asu_dir.field.inc';
+include_once 'inc/asu_dir.helpers.inc';
+
+/*********************************************************************
+ * CONFIGS
+ *********************************************************************/
+
+// Access Permission Constants
+define('ASU_DIRECTORY_ADMIN_CONFIG_SETTINGS', 'Administer ASU Directory Configuration');
+define('ASU_DIRECTORY_PAGE_ACCESS', 'access asu directory');
+
+// Form Field Variable Constants
+define('ASU_DIRECTORY_TOP_LEVEL_PS_ID', 'ASU');
+define('ASU_DIRECTORY_TOP_LEVEL_DEPT_NID', 1342);
+define('ASU_DIRECTORY_FORM_CACHE_DURATION', 1);//# of hours, set to 1 initially
+define('ASU_DIRECTORY_MODULE_NAME', 'asu_dir');
+define('ASU_DIRECTORY_URL', 'https://isearch.asu.edu');
+define('ASU_DIR_TITLESORT_PHOLDER', 'tsort');
+define('ASU_DIR_TITLESORT_FIELD', variable_get('asu_dir_titlesort_field', ASU_DIR_TITLESORT_PHOLDER));
+define('ASU_DIRECTORY_SOLR_ENV', variable_get('asu_dir_solr_endpoint', 'https://asudir-solr.asu.edu/asudir/directory/'));
+define('ASU_DIRECTORY_TREE_ENDPOINT', variable_get('asu_dir_tree_endpoint', 'https://isearch.asu.edu/endpoints/dept_tree/json'));
+define('ASU_EMPLOYEE_TYPES_ENDPOINT', variable_get('asu_dir_employee_types_endpoint', 'https://isearch.asu.edu/endpoints/employee-types'));
+define('ASU_DIR_FACULTY_TITLES_ENDPOINT', variable_get('asu_dir_faculty_titles_endpoint', 'https://isearch.asu.edu/endpoints/faculty-title-taxonomy'));
+
+/**********************************************************************
+ * HOOKS
+ **********************************************************************/
+
+/**
+ * Implements hook_permission().
+ * Adds custom permission to configure the module
+ */
+/*
+function asu_dir_permission() {
+  $perms[ASU_DIRECTORY_ADMIN_CONFIG_SETTINGS] = array(
+    'title' => t('Administer ASU Directory'),
+    'description' => t('Configure asu_dir Module Settings'),
+  );
+
+  return $perms;
+}*/
+
+/**
+ * Implements hook_menu()
+ * Declares the asu_dir config form for the menu
+ *
+ * @return array
+ */
+/*
+function asu_dir_menu() {
+  $items = array();
+
+  // Admin menu.
+  $items['admin/config/search/asu_dir'] = array(
+    'title' => t('ASU Directory Settings'),
+    'description' => 'Settings for ASU_DIR module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('asu_dir_admin'),
+    'access callback' => 'user_access',
+    'access arguments' => array(ASU_DIRECTORY_ADMIN_CONFIG_SETTINGS),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}*/
+
+
+/**
+ * Implements hook_admin()
+ * Creates a form for setting the root for the department hierarchy by department ID
+ */
+/*
+function asu_dir_admin($form, &$form_state) {
+  $form = array();
+
+  // Environment to determine which Solr Server URL to access
+  // (Actual URLs supplied by WSI Settings Endpoint based on chosen environment)
+  $form['asu_dir_solr_env'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Solr Environment',
+    '#default_value' => ASU_DIRECTORY_SOLR_ENV,
+    '#description' => t('The Solr server you would like to pull data from.'),
+    '#required' => TRUE,
+  );
+  $form['#submit'][] = "asu_dir_admin_submit";
+  return system_settings_form($form);
+}
+*/
+
+/**
+ * Clear caches for module when form is submitted
+ */
+/*
+function asu_dir_admin_submit($form, &$form_state) {
+  /*maybe clear the cache after submitting*/
+/*variable_set('asu_dir_solr_endpoint', $form['asu_dir_solr_env']['#value']);
+variable_set('asu_dir_tree_endpoint', $form['asu_dir_tree_endpoint']['#value']);
+variable_set('asu_dir_employee_types_endpoint', $form['asu_dir_employee_types_endpoint']['#value']);
+//variable_set('asu_dir_titlesort_field', $form['asu_dir_titlesort_field']['#value']);
+}*/
+
+
+
+
+
+
+

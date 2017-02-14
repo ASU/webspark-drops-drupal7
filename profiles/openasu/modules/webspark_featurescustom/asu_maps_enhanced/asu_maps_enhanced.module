@@ -230,8 +230,7 @@ function asu_maps_enhanced_entity_info_alter(&$entity_info) {
   // ASU Maps Enhanced Entity Info
   $entity_info['fieldable_panels_pane']['bundles']['asu_maps_enhanced'] = array(
     'label' => t('Add Enhanced ASU Map'),
-    'description' => t('Add a Google map overlaid with customizable, Campus Bird-based 
-        ASU objects - buildings, points of interest by category, etc.'),
+    'description' => t('Add Enhanced ASU Map'),
     'pane category' => t('Custom'),
     'pane top level' => TRUE,
     'pane icon' => drupal_get_path('module', 'panopoly_widgets') . '/images/icon_map.png',
@@ -511,8 +510,6 @@ function asu_maps_enhanced_field_widget_info() {
   return array(
     'asu_maps_enhanced_form' => array(
       'label' => t('ASU Enhanced Maps'),
-      'description' => t('Add a Google map overlaid with customizable, Campus Bird-based 
-        ASU objects - buildings, points of interest by category, etc.'),
       'field types' => array('asu_maps_enhanced'),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_DEFAULT,
@@ -573,7 +570,7 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
 
   if ($instance['widget']['type'] == 'asu_maps_enhanced_form') {
 
-    // Turn off the panopoly magic preview because it interferes with the form state.
+    //turn off the panopoly magic preview, since it interferes with the form state
     variable_set('panopoly_magic_live_preview', 0);
     $default_configs = asu_maps_enhanced_get_default_settings();
 
@@ -613,7 +610,7 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       '#type' => 'textfield',
       '#title' => t('Height of Map (in pixels)'),
       '#description' => t('Enter a number for the height of the map.  Entries are restricted to positive integers
-      greater than 425, and less than 1100. If left blank, value will default to ' . ASU_MAPS_ENHANCED_DEFAULT_HEIGHT . '.'),
+      greater than 425, and less than 1100.  If left blank, value will default to ' . ASU_MAPS_ENHANCED_DEFAULT_HEIGHT . '.'),
       '#prefix' => '<div id="map-height-field" class="col-md-4">',
       '#suffix' => '</div>',
       '#element_validate' => array('asu_maps_enhanced_validate_height'),

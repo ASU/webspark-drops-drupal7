@@ -13,7 +13,6 @@ module.exports = React.createClass({
   },
 
   getInitialState: function() {
-
     var default_config = {
       items: this.props.items || [],
       options: this.props.options || {}
@@ -131,7 +130,6 @@ module.exports = React.createClass({
   setDeptConfig: function(data) {
     // get the tree path to set the label
     var config = this.state.config;
-    var max_items = this.props.max_items;
 
     var unique = true;
     config.items.map(function(item, index) {
@@ -142,37 +140,16 @@ module.exports = React.createClass({
     }.bind(this));
 
     if (unique) {
+      config.items.push({
+        'dept_id': data.dept_id,
+        'dept_nid': data.dept_nid,
+        'tree_nids': data.tree_nids,
+        'tid': data.tid
+      });
 
-      // if we have a preconfigured max number of items - then replace the last item
-      // else add the item to the config items and options arrays
-      if (config.items.length < max_items || max_items == 0) {
-        config.items.push({
-          'dept_id': data.dept_id,
-          'dept_nid': data.dept_nid,
-          'tree_nids': data.tree_nids,
-          'tid': data.tid
-        });
-
-        config.options[data.dept_id] = {
-          subdepts: this.state.includeSubdepts
-        };
-      } else {
-        var index = config.items.length - 1;
-        var last_item = config.items[index];
-
-        delete config.options[last_item.dept_id];
-
-        config.items[index] = {
-          'dept_id': data.dept_id,
-          'dept_nid': data.dept_nid,
-          'tree_nids': data.tree_nids,
-          'tid': data.tid
-        };
-
-        config.options[data.dept_id] = {
-          subdepts: this.state.includeSubdepts
-        };
-      }
+      config.options[data.dept_id] = {
+        subdepts: this.state.includeSubdepts
+      };
     }
 
     this.setState({ config: config });

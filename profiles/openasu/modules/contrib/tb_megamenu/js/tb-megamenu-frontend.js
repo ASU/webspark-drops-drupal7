@@ -49,6 +49,7 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
               mm_duration = $(this).data('duration');
             }
           });
+
           /**
            * Allow tabbing by appending the open class.
            * Works in tandem with CSS changes that utilize opacity rather than display none
@@ -62,6 +63,7 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
           });
 
           $('.nav > li > a, li.mega > a').focus(function(event) {
+
             // Remove all occurrences of "open" from other menu trees
             var siblings = $(this).parents('.tb-megamenu-item').siblings();
             // var siblings = $(this).closest('.tb-megamenu-item.level-1').siblings();
@@ -74,13 +76,13 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
             });
             // Open the submenu if the selected item has one
             if($(this).next(".tb-megamenu-submenu").length > 0){
-              if(!$(this).parent().hasClass("open")){
-                $(this).parent().addClass("open");
-              }
+                if(!$(this).parent().hasClass("open")){
+                    $(this).parent().addClass("open");
+                }
             }
             // If the anchor's top-level parent is not open, open it
             if(!$(this).closest('.tb-megamenu-item.dropdown').hasClass('open') && $(this).closest('.tb-megamenu-item.dropdown').find('.tb-megamenu-submenu').length > 0){
-              $(this).closest('.tb-megamenu-item.dropdown').addClass('open');
+                $(this).closest('.tb-megamenu-item.dropdown').addClass('open');
             }
             // If anchor's parent submenus are not open, open them
             var parents = $(this).parents('.tb-megamenu-item.dropdown-submenu');
@@ -90,6 +92,7 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
               }
             });
           });
+
           var mm_timeout = mm_duration ? 100 + mm_duration : 500;
           $('.nav > li, li.mega').hover(function(event) {
             var $this = $(this);

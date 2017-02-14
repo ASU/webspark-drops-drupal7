@@ -28,13 +28,3 @@ function webspark_extras_boot() {
     }
   }
 }
-
-/**
- * Implements hook_admin_paths_alter().
- */
-function webspark_extras_admin_paths_alter(&$paths) {
-  // WEBSPARK-879 - stop sticky menu in admin areas
-  $paths['node/*/edit'] = TRUE;
-  $paths['node/*/edit/*'] = TRUE;
-  $paths['node/*/webfor*'] = TRUE;
-}

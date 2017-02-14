@@ -69,7 +69,7 @@ function theme_asu_dept_picker(&$vars) {
 
   // if we don't load any tree json data, use our default one (most common)
   if (!isset($element['#asu_dept_tree']['tree_json_data'])) {
-    $element['#asu_dept_tree']['tree_json_data'] = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_TREE_ENDPOINT, FALSE);
+    $element['#asu_dept_tree']['tree_json_data'] = asu_dept_picker_get_tree();
   }
 
   // detect value
@@ -80,7 +80,6 @@ function theme_asu_dept_picker(&$vars) {
   if (json_last_error() == JSON_ERROR_NONE) {
     $element['#asu_dept_tree']['items']   = isset($data->items) ? $data->items : array();
     $element['#asu_dept_tree']['options'] = isset($data->options) ? $data->options : new stdClass();
-    $element['#asu_dept_tree']['max_items'] = isset($element['#max_items']) ? $element['#max_items'] : 0;
   }
 
   // store the instance settings for use later
@@ -108,15 +107,15 @@ function theme_asu_dept_tree(&$vars) {
   _asu_dept_picker_load_libraries();
 
   // Load all tree data
-  $tree_json_data = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_TREE_ENDPOINT, FALSE);
+  $tree_json_data = asu_dept_picker_get_tree();
 
   // Define default top level ids
-  $top_level_ids = array(
-    'top_level_psid' => ASU_DIR_UTILITIES_TOP_LEVEL_PS_ID, //ASU_DEPT_PICKER_TOP_LEVEL_PS_ID,
-    'top_level_nid' => ASU_DIR_UTILITIES_TOP_LEVEL_DEPT_NID //ASU_DEPT_PICKER_TOP_LEVEL_DEPT_NID
+  $default_top_level_ids = array(
+    'top_level_psid' => ASU_DEPT_PICKER_TOP_LEVEL_PS_ID,
+    'top_level_nid' => ASU_DEPT_PICKER_TOP_LEVEL_DEPT_NID
   );
 
-  $nids = array(ASU_DIR_UTILITIES_TOP_LEVEL_DEPT_NID);
+  $nids = array(ASU_DEPT_PICKER_TOP_LEVEL_DEPT_NID);
 
   $settings = array(
     'tree_data' => $tree_json_data,

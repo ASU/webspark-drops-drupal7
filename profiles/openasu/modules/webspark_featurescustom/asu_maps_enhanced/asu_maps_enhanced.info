@@ -1,5 +1,5 @@
 name = ASU Maps Enhanced
-description = This module allows placement of customizable Campus Bird-overlayed Google maps of various ASU locations, points of interest, etc.
+description = This module allows placement of Campus Bird-overlayed Google maps
 core = 7.x
 package = ASU Webspark
 version = 7.x-1.4
