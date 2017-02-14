@@ -248,7 +248,7 @@ libraries[chosen][download][type] = get
 libraries[chosen][download][url] = https://github.com/harvesthq/chosen/releases/download/v1.6.1/chosen_v1.6.1.zip
 libraries[chosen][directory_name] = chosen
 libraries[chosen][destination] = libraries
-libraries[chosen][download][sha256] = e4b003203412771c9a554410561bb89a30975ba0e2d290f834ac5910ea7f8bc9
+libraries[chosen][download][sha256] = 410147ddfb08f9a87f0272516fff7cd5ed5a4f0777c76f1b298d1106aa8405bd
 
 libraries[flexslider][download][type] = get
 libraries[flexslider][download][url] = https://github.com/woothemes/FlexSlider/archive/version/2.2.2.zip
