@@ -698,15 +698,15 @@ h2.widget-list {
   line-height: 1.4;
   margin: 0 0 0 0.625em;
 }
-
-#modalContent .panels-section-column .content-type-button {
+/* LH side categories */
+#modalContent .panels-section-column-categories .content-type-button {
   top: 0.5em;
   line-height: 1.1em;
   font-size: 0.75em;
 }
 
-#modalContent .panels-section-column .content-type-button div,
-#modalContent .panels-section-column .content-type-button span {
+#modalContent .panels-section-column-categories .content-type-button div,
+#modalContent .panels-section-column-categories .content-type-button span {
   left: 3em;
   position: absolute;
   top: 0.25em;
@@ -716,6 +716,19 @@ h2.widget-list {
 #modalContent .panels-section-column-categories .content-type-button > a:hover > img,
 #modalContent .panels-section-column-categories .content-type-button > a > img:hover {
   border: 2px solid white;
+}
+
+/* Main body of columns with content */
+#modalContent .panels-section-columns > .panels-section-column .content-type-button {
+  font: normal 0.9rem/1.5em "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  top: 0em;
+}
+
+#modalContent .panels-section-columns > .panels-section-column .content-type-button div,
+#modalContent .panels-section-columns > .panels-section-column .content-type-button span {
+  position: relative;
+  top: 0;
+  left: 0;
 }
 
 ul.help-text {
