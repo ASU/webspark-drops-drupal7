@@ -284,14 +284,6 @@ function mega_footer_block_configure($delta = '') {
       '#required' => FALSE,
     );
 
-    $form['unit_title'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Unit Title'),
-      '#decription' => t('This will be the title of your organization displayed in the mega footer.'),
-      '#default_value' => variable_get('unit_title', 'ASU'),
-      '#required' => FALSE,
-    );
-
     $form['unit_description'] = array(
       '#type' => 'textfield',
       '#title' => t('Unit Description'),
