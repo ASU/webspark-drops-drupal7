@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the ASU News Fields Feature feature.
- */
-
-include_once 'asu_news_fields_feature.features.inc';

@@ -1,6 +1,0 @@
-name = "ASU Social Share"
-description = "Create and customize a ASU social share block for news and events"
-core = 7.x
-package = ASU
-
-dependencies[] = gigya
