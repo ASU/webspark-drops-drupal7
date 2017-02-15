@@ -34,25 +34,18 @@ define('ASU_ISEARCH_DIRECTORY_PHOTO_ENDPOINT', 'https://webapp4.asu.edu/photo-ws
 define('ASU_ISEARCH_DIRECTORY_FEED_CACHE_ENDPOINT', 'private://isearch/feeds/');
 define('ASU_ISEARCH_MASTER_FILE_ENDPOINT', 'private://isearch/feeds/asu_isearch_master.json');
 define('ASU_ISEARCH_DEPARTMENT_IMPORT_TRACKER', variable_get('asu_isearch_dept_tracker', NULL));
-define('ASU_ISEARCH_MASTER_SOURCE_LIMIT', 250);
-define('ASU_ISEARCH_PROFILE_CLEANUP_LIMIT', 100);
-define('ASU_ISEARCH_PROFILE_ONLOAD_UPDATE_INTERVAL', 6); // interval between profile load updates, in hours
-define('ASU_ISEARCH_DEPT_CACHING_LIMIT', 25);
-define('ASU_ISEARCH_MANUAL_IMPORT_DEPT_CACHE_LIMIT', 5);
 
-// Feed URLs
-$asu_isearch_devmode = variable_get('asu_isearch_devmode', FALSE);
+// Migration management variables
+// todo:  make this configurable
+define('ASU_ISEARCH_MASTER_SOURCE_LIMIT', variable_get('asu_isearch_master_source_limit', 250));
+define('ASU_ISEARCH_PROFILE_CLEANUP_LIMIT', variable_get('asu_isearch_profile_cleanup_limit', 100));
+define('ASU_ISEARCH_PROFILE_ONLOAD_UPDATE_INTERVAL', variable_get('asu_isearch_onload_update_interval', 6)); // interval between profile load updates, in hours
+define('ASU_ISEARCH_DEPT_CACHING_LIMIT', variable_get('asu_isearch_dept_caching_limit', 25));
+define('ASU_ISEARCH_MANUAL_IMPORT_DEPT_CACHE_LIMIT', variable_get('asu_isearch_manual_import_dept_cache_limit', 5));
+define('ASU_ISEARCH_MASTER_IMPORT_MINIMUM', variable_get('asu_isearch_master_import_minimum', 5));
 
-
-/*
-$feed_endpoint = variable_get('asu_dir_utilities_feed_endpoint', 'https://isearch.asu.edu/endpoints/dept-profiles/json/');
-
-if ($asu_isearch_devmode) {
-  $feed_endpoint = variable_get('asu_isearch_devmode_endpoint', $feed_endpoint);
-}
-
-define('ASU_ISEARCH_DIRECTORY_FEED_ENDPOINT', $feed_endpoint);
-*/
+// DEVMODE - variable to indicate development settings
+define('ASU_ISEARCH_DEVMODE', variable_get('asu_isearch_devmode', FALSE));
 
 /**
  * Implements hook_menu()
@@ -175,6 +168,10 @@ function asu_isearch_node_view($node, $view_mode, $langcode) {
         node_save($node);
         drupal_set_message('Profile not found.');
         drupal_goto('/');
+      } else {
+        /*
+        asu_isearch_update_profile_from_solr($node, $solr_profile);
+        */
       }
     }
   }

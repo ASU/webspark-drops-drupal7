@@ -129,7 +129,7 @@ function asu_isearch_get_dept_config() {
   }
 
   // use regular json_encode, to encode back into an
-  $new_configs = json_encode($decoded);
+  $new_configs = drupal_json_encode($decoded);
 
   return $new_configs;
 }
@@ -290,7 +290,7 @@ function asu_isearch_get_local_tag_people($tags) {
 function asu_isearch_get_field_solr_mappings() {
 
   $map = array(
-    'status' => 'status',
+    //'status' => 'status',
     'field_isearch_displayname' => 'displayName',
     'field_isearch_firstname' => 'firstName',
     'field_isearch_lastname' => 'lastName',
@@ -333,3 +333,38 @@ function asu_isearch_get_field_solr_mappings() {
   return $map;
 
 }
+
+/****
+ * Update iSearch profile from Solr data
+ *
+ * @param $node
+ * @param $solr_profile
+ */
+function asu_isearch_update_profile_From_solr($node, $solr_profile) {
+  $changed = FALSE;
+  $mappings = asu_isearch_get_field_solr_mappings();
+
+  foreach($mappings as $key => $item) {
+    if (isset($solr_profile[$item])) {
+      if (property_exists($node, $key) && isset($node->$key[LANGUAGE_NONE][0]['value'])) {
+
+        $current_safe = '';
+
+        $current = $node->$key[LANGUAGE_NONE][0]['value'];
+
+        if (isset($node->$key[LANGUAGE_NONE][0]['safe_value'])) {
+          $current_safe = $node->$key[LANGUAGE_NONE][0]['safe_value'];
+        }
+
+        $markup = check_markup($solr_profile[$item], 'isearch_html');
+
+        if ($current != $solr_profile[$item] && strcmp($current_safe, $markup) != 0) {
+
+          $node->$key[LANGUAGE_NONE][0]['value'] = $solr_profile[$item];
+
+          $changed = TRUE;
+        }
+      }
+    }
+  }
+ }

@@ -103,7 +103,8 @@
                     if (self.sorted_people[ASUPeople[field_id].dept_nid] == null) {
                         // grab all of the results and start from the beginning
                         // we'll need to sort all results as a group
-                        options.url = options.url + "&rows=2000";
+                        // todo:  remove if not needed
+                        //options.url = options.url + "&rows=200000";
 
                         var rep = /(start=).*?(&)/gi;
 
@@ -154,6 +155,8 @@
                                 return 0;
                             });
 
+                            console.log(docs, 'THE DOCS');
+
                             //maintain a complete array of sorted results for the dept.
                             self.sorted_people[ASUPeople[field_id].dept_nid] = docs;
 
@@ -167,8 +170,13 @@
 
                         }).fail(errorHandler);
                     } else {
+
+                        console.log(self.sorted_response, 'sorted response array');
                         var data = self.sorted_response[ASUPeople[field_id].dept_nid];
+
+                        console.log(data, 'DATA FROM ARRAY SORTED');
                         pag_results = self.sorted_people[ASUPeople[field_id].dept_nid].slice(start, start + self.per_page);
+                        console.log(pag_results, 'THE PAGINATED RESULTS');
                         data.response.docs = pag_results;
                         //self.sorted_response[ASUPeople[field_id].dept_nid] = data;
                         self.handleResponse(data);

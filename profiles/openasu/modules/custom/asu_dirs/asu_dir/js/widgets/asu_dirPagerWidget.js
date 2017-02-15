@@ -113,7 +113,7 @@
                     //if we are showing managers, we need to grab all results and reorder array
                     if (field_configs.show_managers && !override) {
                         self.manager.store.remove('rows');
-                        self.manager.store.addByValue('rows', 2000);
+                        self.manager.store.addByValue('rows', 200000);
 
                         //otherwise, set the number of row to per_page variable
                     } else {

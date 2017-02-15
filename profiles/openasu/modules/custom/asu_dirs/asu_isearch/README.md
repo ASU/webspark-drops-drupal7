@@ -1,4 +1,5 @@
-### NOTE! * currently under development *
+### NOTE: * currently under development *
+Be sure to test in development environment!
 
 # ASU iSearch Local Directory module
 

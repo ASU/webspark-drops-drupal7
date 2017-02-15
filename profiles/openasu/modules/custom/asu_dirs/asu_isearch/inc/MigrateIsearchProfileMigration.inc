@@ -39,7 +39,7 @@ class MigrateIsearchProfileMigration extends Migration {
     // of this migration to use in generating map and message tables.
     // And, pass schema definitions for the primary keys of the source and
     // destination - we need to be explicit for our source, but the destination
-    // class knows its schema already.
+    // class knows its schema already
 
     // Define the source schema
     $this->map = new MigrateSQLMap($this->machineName, array(
@@ -437,8 +437,8 @@ class MigrateIsearchProfileMigration extends Migration {
 
     // make sure that we're always removing from the list. we don't want to
     // stagnate if records keep getting skipped or ignored
-    if ($num < 25) {
-      $num = 25;
+    if ($num < ASU_ISEARCH_MASTER_IMPORT_MINIMUM) {
+      $num = ASU_ISEARCH_MASTER_IMPORT_MINIMUM;
     }
 
     $themaster = asu_isearch_get_master_source();
@@ -579,9 +579,26 @@ class MigrateIsearchProfileMigration extends Migration {
 
     // determine if we need to update or delete existing affiliations
     if (!empty($entity->field_isearch_affiliations)) {
+
       // loop through existing affiliations and see if we need to delete or update them
       foreach ($entity->field_isearch_affiliations[LANGUAGE_NONE] as $index => $item) {
+
         $affiliation = field_collection_item_load($item['value']);
+
+        // if the affil failed to load, unset it, delete it, and continue to next
+        if (empty($affiliation)) {
+
+          unset($entity->field_isearch_affiliations[LANGUAGE_NONE][$index]);
+          entity_delete('field_collection_item', $item['value']);
+
+          // might have orphaned reference, so we'll delete it from affiliations table
+          $deleted = db_delete('field_data_field_isearch_affiliations')
+            ->condition('field_isearch_affiliations_value', $item['value'])
+            ->execute();
+
+          watchdog('asu_isearch', "Removed @num orphaned iSearch affiliation(s).", array('@num' => $deleted));
+          continue;
+        }
 
         $affiliation_key = $affiliation->field_isearch_affil_dept_id[LANGUAGE_NONE][0]['value'];
 

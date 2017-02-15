@@ -385,7 +385,9 @@ function asu_isearch_get_dept_tracker() {
     // set to proper source urls, since we may have cached some depts since
     // getting the tracker last
     foreach ($tracker as $key => $track) {
-      $tracker[$key] = $source_urls[$key];
+      if (isset($source_urls[$key])) {
+        $tracker[$key] = $source_urls[$key];
+      }
     }
   }
 

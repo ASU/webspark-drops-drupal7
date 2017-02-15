@@ -76,8 +76,8 @@ var ASUPeople = {};
                     if (field_configs.pager_display == 'paged' && field_configs.pager_items_per_page != 0) {
                         res_per_page = field_configs.pager_items_per_page;
 
-                        // if we want to show all results, then we set the 'rows' parameter to 2000,
-                        // since that is the maximum request size we will want.
+                    // if we want to show all results, then we set the 'rows' parameter to 2000,
+                    // since that is the maximum request size we will want.
                     } else if (field_configs.pager_display == 'all' || field_configs.pager_items_per_page == 0) {
                         res_per_page = 2000;
                     }
@@ -139,7 +139,7 @@ var ASUPeople = {};
                     }
 
                     //stick with entire tree if top nid is not defined, or we are in iSearch mode
-                    if (( top_nid != null) && ( tree) && !isearch_mode) {
+                    if (( top_nid != null) && (tree) && !isearch_mode) {
                         // Set the root of the tree to the point defined by id -> set by asu_directory.module
                         temp = [];
                         temp.push(asu_dir_ajax_solr_find_root(tree, top_nid));
