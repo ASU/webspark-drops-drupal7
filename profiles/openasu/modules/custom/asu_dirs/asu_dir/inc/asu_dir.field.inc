@@ -438,6 +438,7 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
           '#default_value' => $config['expertise_areas'],
           '#multiple' => TRUE,
           '#title' => t('Limit to these expertise areas'),
+          '#prefix' => '<div class="alert alert-info">Note: To de-select or to select multiple items, use CMD+Click (Mac) or Ctrl+Click (Windows)</div>',
         );
       }
     }
