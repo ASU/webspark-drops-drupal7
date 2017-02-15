@@ -6,4 +6,4 @@ Feature: Alter standard Webspark settings for testing
   @api @webspark_added @webspark_init
   Scenario: Turn off ASU Brand module extras for CI testing
     Given I run drush "vset asu_brand_ci_testing 1"
-    Then drush output should contain 'asu_brand_ci_testing was set to 1'
+    Then drush output should contain 'asu_brand_ci_testing was set to "1"'
