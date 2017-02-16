@@ -1,3 +1,8 @@
+Innovation 7.x-1.8, 2017-02-15
+------------------------------
+- In-Page Editor selections now properly displays eligible content panes again when the "+" button is
+  clicked and a subcategory (such as "Views", "Blocks", etc.) is selected
+
 Innovation 7.x-1.7, 2017-01-19
 ------------------------------
 ACCESSIBILITY UPDATES
@@ -6,7 +11,8 @@ ACCESSIBILITY UPDATES
 - Darkening breadcrumb font colors and focus styling for better visibility contrast.
 - The In-Page Editor (IPE) link and image layouts now have responsive sizes.
 - Properly removing the unused ADA incompliant hamburger menu
-- Users are now able to tab through all Megamenu itemsHeaders are now semantically correct to better support site accessibility
+- Users are now able to tab through all Megamenu itemsHeaders are now semantically correct to better support site
+  accessibility
 
 Innovation 7.x-1.6, 2016-09-12
 ------------------------------

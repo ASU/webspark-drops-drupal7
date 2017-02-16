@@ -1,4 +1,39 @@
-Webspark 1.40.2 (Pillsbury) release 
+Webspark 1.40.3 (Shell Valley) release
+----------------
+- Webspark core
+
+    * Webspark Featurescustom (v1.5)
+        * The "Available Updates" list no longer incorrectly and confusingly lists any LDAP modules as needing updates
+          applied by the end user. (All LDAP modules in /profiles/openasu are managed by Webspark and not the end user.)
+
+- Web standards components in Webspark
+
+    * Innovation theme (v1.8)
+        * Updated all layout TPLs to remote <section> tags and replace them with <div class="section"> tag.
+            * IMPORTANT for Innovation subtheme users: Be sure to review your subtheme CSS files for any
+              "section" CSS selectors and replace "section" with "div.section" - and thoroughly test your changes
+              before pushing up to production. Barring any namespacing issues, subtheme ".section" CSS class
+              selectors should still work.
+        * In-Page Editor selections now properly displays eligible content panes again when the "+" button is
+          clicked and a subcategory (such as "Views", "Blocks", etc.) is selected
+    * Webspark Megamenu (v1.8)
+        * Regression from Pillsbury update fixed so it longer generates warning messages on page load
+        * Tabbing through the TB megamenu backwards now works as expected
+    * ASU Mega Footer (v1.6)
+        * Unit Title field is now optional
+
+- Webspark-managed libraries
+
+    * ASU Webspark Bootstrap library (no version number)
+        * Fixed left-alignment issue on radio and checkbox form elements with short labels/descriptions (i.e.
+          didn't have a line break)
+
+- Contrib projects - Updates
+
+    - Webspark-managed modules
+        * Webform - v4.14
+
+Webspark 1.40.2 (Pillsbury) release
 ----------------
 - Webspark-managed libraries - Additions
 
