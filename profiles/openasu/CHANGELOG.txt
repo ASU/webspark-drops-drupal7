@@ -9,6 +9,11 @@ Webspark 1.40.3 (Shell Valley) release
 - Web standards components in Webspark
 
     * Innovation theme (v1.8)
+        * Updated all layout TPLs to remote <section> tags and replace them with <div class="section"> tag.
+            * IMPORTANT for Innovation subtheme users: Be sure to review your subtheme CSS files for any
+              "section" CSS selectors and replace "section" with "div.section" - and thoroughly test your changes
+              before pushing up to production. Barring any namespacing issues, subtheme ".section" CSS class
+              selectors should still work.
         * In-Page Editor selections now properly displays eligible content panes again when the "+" button is
           clicked and a subcategory (such as "Views", "Blocks", etc.) is selected
     * Webspark Megamenu (v1.8)
