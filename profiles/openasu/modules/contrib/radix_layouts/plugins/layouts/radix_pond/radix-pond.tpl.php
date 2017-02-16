@@ -14,7 +14,7 @@
 ?>
 
 <div class="panel-display pond clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
-  <section class="section">
+  <div class="section">
     <div class="container">
       <div class="row row-full">
         <div class="col-md-12 pond-header-area radix-layouts-header panel-panel">
@@ -24,8 +24,8 @@
         </div>
       </div>
     </div>
-  </section>
-  <section class="section">
+  </div>
+  <div class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-4 pond-column-content-region-1 radix-layouts-column1 panel-panel">
@@ -45,8 +45,8 @@
         </div>
       </div>
     </div>
-  </section>
-  <section class="section">
+  </div>
+  <div class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-4 pond-secondary-column-content-region-1 radix-layouts-secondarycolumn1 panel-panel">
@@ -66,8 +66,8 @@
         </div>
       </div>
     </div>
-  </section>
-  <footer class="section" id="footer">
+  </div>
+  <div class="section" id="footer" role="region" arial-label="content4">
     <div class="container">
       <div class="row row-full">
         <div class="col-md-12 pond-footer-area radix-layouts-footer panel-panel">
@@ -77,5 +77,5 @@
         </div>
       </div>
     </div>
-  </footer>
+  </div>
 </div><!-- /.pond -->
