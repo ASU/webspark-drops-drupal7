@@ -155,9 +155,9 @@ function webspark_featurescustom_update_7005(&$sandbox) {
  * + Set theme to default Drupal theme if old ASU theme is current default.
  */
 function webspark_featurescustom_update_7006(&$sandbox) {
-  global $theme;
-  if ($theme == 'asu_webspark_bootstrap') {
-    variable_set('theme_default', 'seven');
+  $theme = variable_get('theme_default');
+  if ($theme === 'asu_webspark_bootstrap') {
+    variable_set('theme_default', 'webspark_seven');
     drupal_set_message("The old ASU Webspark Bootstrap theme has been removed from 
       Webspark's codebase because it no longer complies with ASU's current Web
       Standards (see " . l('the Marketing Hub web site', 'https://brandguide.asu.edu') .
