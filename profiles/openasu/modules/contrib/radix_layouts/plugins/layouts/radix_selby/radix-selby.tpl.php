@@ -14,7 +14,7 @@
 ?>
 
 <div class="panel-display selby clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
-  <section class="section">
+  <div class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-4 selby-sidebar-main-area radix-layouts-sidebar panel-panel">
@@ -44,5 +44,5 @@
         </div><!-- /.selby-content-container -->
       </div><!-- /.selby-content-container row-->
     </div>
-  </section>
+  </div>
 </div><!-- /.selby -->
