@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * @file
+ * Find modules missing in file system.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function missing_module_requirements($phase) {
+
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    // Required to use translation in .install  file.
+    $t = get_t();
+
+    // Get array of module names => module paths.
+    $missing_modules = missing_module_find_missing();
+
+    if (!$missing_modules) {
+      // Description is not needed if no missing modules detected.
+      $value = 'No missing modules detected.';
+      $description = '';
+      $severity = REQUIREMENT_OK;
+    }
+    else {
+      // In the value field list missing module count and paths to modules.
+      $value = $t('Missing modules detected: (@missing_count)<br /><ul>',
+                                                    array('@missing_count' => count($missing_modules)));
+
+      foreach ($missing_modules as $mm_name => $mm_path) {
+        $value .= $t('<li>@module_path | <a href="@module_url">link to module on drupal.org</a> | <a href="@module_disable">disable</a> | <a href="@module_remove">remove</a></li>',
+          array(
+            '@module_path' => $mm_path,
+            '@module_url' => "http://drupal.org/project/$mm_name",
+            '@module_name' => $mm_name,
+            '@module_disable' => '/admin/reports/status/disable_module/' . $mm_name,
+            '@module_remove' => '/admin/reports/status/remove_module/' . $mm_name,
+          ));
+      }
+      $value .= '</ul>';
+
+      // Add explanation, url to module page & drush command to resolve problem.
+      $description = "";
+      $description .= $t('This can have a large performance impact (200ms+!), please disable ');
+      $description .= $t(' or re-download these modules: ');
+      $description .= $t('drush dl @module_names', array('@module_names' => implode(array_keys($missing_modules), " ")));
+
+      $severity = REQUIREMENT_ERROR;
+    }
+
+    $requirements['missing_module_requirement'] = array(
+      'title' => $t('Check for missing modules in filesystem'),
+      'description' => $description,
+      'value' => $value,
+      'severity' => $severity,
+    );
+  }
+
+  return $requirements;
+}
