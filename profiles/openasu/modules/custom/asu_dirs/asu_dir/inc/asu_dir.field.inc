@@ -543,31 +543,35 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       '#default_value' => $config['default_sort_by'],
     );
 
-    $rank_sort_mode_options = array(
-      'isearch' => 'iSearch',
-      'local' => 'Local Rankweight',
-      'lowest' => 'Lowest'
-    );
+    if (module_exists('asu_isearch')) {
+      $rank_sort_mode_options = array(
+        'isearch' => 'iSearch',
+        'local' => 'Local Rankweight',
+        'lowest' => 'Lowest'
+      );
 
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['sorting']['default_rank_mode'] = array(
-      '#type' => 'select',
-      '#options' => $rank_sort_mode_options,
-      '#title' => 'Rank Sort Mode',
-      '#prefix' => '<div class="panel panel-default">
+      $element['horizontal_tabs']['appearance']['appearance_tabs']['sorting']['default_rank_mode'] = array(
+        '#type' => 'select',
+        '#options' => $rank_sort_mode_options,
+        '#title' => 'Rank Sort Mode',
+        '#prefix' => '<div class="panel panel-default">
         <div class="panel-body">',
-      '#suffix' => '<p>Select which method of rank sorting to use. <br>
+        '#suffix' => '<p>Select which method of rank sorting to use. <br>
       iSearch -- Uses the ordering specified on iSearch.<br>
       Local Rankweight -- Uses the imported facultyTitle rank weight (or overridden localweight field)<br>
       Lowest -- Uses the lowest of the above options<br><strong>Imporant Note</strong><br>
       This feature is only compatible with Solr sorting, 
       and not reflected when using the local directory view.</p></div></div>',
-      '#default_value' => $config['default_sort_by'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][always_display_view]"]' => array('checked' => FALSE)
+        '#default_value' => $config['default_sort_by'],
+        '#states' => array(
+          'visible' => array(
+            ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][always_display_view]"]' => array('checked' => FALSE)
+          ),
         ),
-      ),
-    );
+      );
+    }
+
+
 
     // Appearance -> Exposed filters group
     $element['horizontal_tabs']['appearance']['appearance_tabs']['exposed'] = array(
@@ -812,6 +816,8 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
   $values = $items[0];
 
   $employee_types = array();
+  $expertise_areas = array();
+  $rank_mode = 'isearch';
 
   if ($values['horizontal_tabs']['content']['content_tabs']['employeetypes']['select_all']) {
     $employee_types = array('All');
@@ -836,14 +842,25 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
   $display_view = FALSE;
 
   // only use the display view config if the asu_isearch module is enabled
-  if (drupal_get_path('module', 'asu_isearch') != '' && module_exists('asu_dirs')) {
+  if (module_exists('asu_isearch')) {
     $display_view = $values['horizontal_tabs']['advanced']['always_display_view'];
   }
 
   $tags = array();
 
+
+  // these 3 fields are asu_isearch specific, so they might not be set
   if (isset($values['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_local_tags'])) {
     $tags = $values['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_local_tags'];
+  }
+
+  // Content -> Other filters
+  if (isset($values['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_expertise_areas'])) {
+    $expertise_areas = $values['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_expertise_areas'];
+  }
+
+  if (isset($values['horizontal_tabs']['appearance']['appearance_tabs']['sorting']['default_rank_mode'])) {
+    $rank_mode = $values['horizontal_tabs']['appearance']['appearance_tabs']['sorting']['default_rank_mode'];
   }
 
   $config = array(
@@ -860,8 +877,8 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
     //'employee_type_exclude' => $values['horizontal_tabs']['content']['content_tabs']['employeetypes']['employee_type_exclude'],
     'tenure_display' => $values['horizontal_tabs']['content']['content_tabs']['employeetypes']['faculty']['tenure_display'],
 
-    // Content -> Other filters
-    'expertise_areas' => $values['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_expertise_areas'],
+
+    'expertise_areas' => $expertise_areas,
 
     'local_tags'=> $tags,
     'filter_title' => $values['horizontal_tabs']['content']['content_tabs']['otherfilters']['filter_title'],
@@ -873,7 +890,8 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
     //'show_managers'         => $values['horizontal_tabs']['appearance']['appearance_tabs']['sorting']['show_managers'],
     'default_sort_by' => $values['horizontal_tabs']['appearance']['appearance_tabs']['sorting']['default_sort_by'],
     'hide_filter_rank_sort' => $values['horizontal_tabs']['appearance']['appearance_tabs']['sorting']['show_filter_sort'],
-    'default_rank_mode' => $values['horizontal_tabs']['appearance']['appearance_tabs']['sorting']['default_rank_mode'],
+    'default_rank_mode' => $rank_mode,
+
     // Appearance -> Exposed Filters
     'show_filters' => $values['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_filters'],
     'show_filter_omni' => $values['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_filter_omni'],
@@ -882,7 +900,6 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
     //TODO:  see if a regular title facet is viable.  seem to remember a primaryTitlesFacet, but it doesn't appear to be there now
     //'show_filter_titles'    => $values['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_filter_titles'],
     'show_filter_faculty_titles' => $values['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_filter_faculty_titles'],
-
     'show_az_index' => $values['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_az_index'],
 
     // Appearance -> Paging
@@ -929,9 +946,6 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
 
   $items[0]['directory_config'] = drupal_json_encode($config);
   $items[0]['directory_items'] = drupal_json_encode($tree_nids);
-
-  //$form_state['entity']->field_isearch_config[LANGUAGE_NONE][0]['value'] = json_encode($config);
-  //entity_save('fieldable_panels_pane', $form_state['entity']);
 }
 
 /**
