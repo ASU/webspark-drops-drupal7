@@ -344,7 +344,7 @@ function asu_isearch_update_profile_From_solr($node, $solr_profile) {
   $changed = FALSE;
   $mappings = asu_isearch_get_field_solr_mappings();
 
-  foreach($mappings as $key => $item) {
+  foreach ($mappings as $key => $item) {
     if (isset($solr_profile[$item])) {
       if (property_exists($node, $key) && isset($node->$key[LANGUAGE_NONE][0]['value'])) {
 
@@ -367,4 +367,4 @@ function asu_isearch_update_profile_From_solr($node, $solr_profile) {
       }
     }
   }
- }
+}

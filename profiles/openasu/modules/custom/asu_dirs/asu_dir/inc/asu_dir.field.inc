@@ -89,7 +89,7 @@ function asu_dir_field_formatter_view($entity_type, $entity, $field, $instance, 
 
   // if we are configured to display the view, or Solr is not healthy,
   // then display iSearch Profile List view
-  if ($config['always_display_view'] || !$healthy) {
+  if (($config['always_display_view'] || !$healthy) && module_exists('asu_isearch')) {
 
     // map the proper sort value
     $config['default_sort_by'] = asu_dir_utilites_get_view_sort($config['default_sort_by']);

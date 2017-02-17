@@ -1,5 +1,5 @@
 <?php
-name = "ASU DIR Utilities"
+name = "ASU Directory Utilities"
 core = 7.x
 package = ASU
 description = "Utilities useful for gathering data from iSearch and Solr."

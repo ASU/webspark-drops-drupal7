@@ -168,7 +168,8 @@ function asu_isearch_node_view($node, $view_mode, $langcode) {
         node_save($node);
         drupal_set_message('Profile not found.');
         drupal_goto('/');
-      } else {
+      }
+      else {
         /*
         asu_isearch_update_profile_from_solr($node, $solr_profile);
         */

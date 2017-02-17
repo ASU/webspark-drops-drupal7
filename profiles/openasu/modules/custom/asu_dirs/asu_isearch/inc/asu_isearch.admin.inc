@@ -23,10 +23,10 @@ function asu_isearch_admin_settings_form() {
 
 
   $form['isearch_pull_isearch_weights'] = array(
-  '#type' => 'checkbox',
-  '#title' => 'Pull employee rank sorting values from iSearch?',
-  '#description' => t("This option will populate the local rank weight sorting data with the same sorting weights from iSearch."),
-  '#default_value' => variable_get('isearch_pull_isearch_weights', FALSE),
+    '#type' => 'checkbox',
+    '#title' => 'Pull employee rank sorting values from iSearch?',
+    '#description' => t("This option will populate the local rank weight sorting data with the same sorting weights from iSearch."),
+    '#default_value' => variable_get('isearch_pull_isearch_weights', FALSE),
   );
 
 

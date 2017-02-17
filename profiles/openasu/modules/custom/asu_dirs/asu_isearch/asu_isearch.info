@@ -1,4 +1,4 @@
-name = ASU Local iSearch Directory
+name = ASU Local iSearch Directory (ASU LID)
 description = Pulls iSearch data and stores/updates it locally. Sets up a default listing view and profile pages.
 core = 7.x
 package = ASU
