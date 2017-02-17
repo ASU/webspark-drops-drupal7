@@ -28,3 +28,12 @@ function webspark_extras_boot() {
     }
   }
 }
+
+function webspark_extras_page_alter(&$page) {
+  $page['header']['skip_html'] = array(
+    '#weight' => -100,
+    '#markup' => '<div class="accessibility-hide"><a href="#main-wrapper" id="skip_to_content">Skip to Main Page Content</a></div>',
+  );
+  $page['header']['#sorted'] = FALSE;
+}
+
