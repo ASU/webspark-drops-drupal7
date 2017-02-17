@@ -7,7 +7,7 @@ A suite of modules for building local iSearch-enabled directory listings.
 
 This suite includes the following projects:
 
-#### ASU Directory Integration Reinvented (ASU DIR)
+### ASU Directory Integration Reinvented (ASU DIR)
 The ASU DIR module allows creation and configuration of Solr-enabled directory people listings, which pull directly from iSearch.
 
 Features:
@@ -24,7 +24,7 @@ Features:
     * Now includes a Solr Health Check fallback.  If Solr is down, then the directory listing will automatically
     be replaced with a Drupal View of local profile profile nodes
 
-#### ASU Local iSearch Directory (ASU LID)
+### ASU Local iSearch Directory (ASU LID)
 
 Pulls iSearch profile data and stores/updates it locally. Sets up profile nodes and default listing view.
 
@@ -40,11 +40,11 @@ Features:
 Solr health check fails
  
     
-#### ASU Directory Panel
+### ASU Directory Panel
 
 Creates ASU Directory Panel Pane, for ease of use with Webspark and Panopoly
 
-#### ASU Directory Utilities
+### ASU Directory Utilities
 
 Utilities useful for gathering data from iSearch and Solr.
 
