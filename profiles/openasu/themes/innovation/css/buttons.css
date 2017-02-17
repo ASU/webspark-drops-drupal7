@@ -109,13 +109,12 @@
     background-color: whitesmoke;
     border-color: #b0b0b0;
     color: #505050;
-    border-bottom-width: medium !important; /* override innovation-main.css line 107 */
+    border-bottom: 1px solid #b0b0b0 !important; /* override innovation-main.css line 107 */
 }
 .btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open > .btn-default.dropdown-toggle {
     background-color: gainsboro;
-    border-color: #919191;
     color: #505050;
-    border-bottom-width: medium !important; /* override innovation-main.css line 107 */
+    border: 1px solid #919191 !important; /* override innovation-main.css line 107 */
 }
 .btn-default:active, .btn-default.active, .open > .btn-default.dropdown-toggle {
     background-image: none;
