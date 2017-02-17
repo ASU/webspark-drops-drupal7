@@ -32,8 +32,8 @@ Features:
 
 * Import profiles from iSearch according to site configs
     * Allows the display of iSearch profiles on local site
-* Automatic profile updating
-    * Profiles are updated from iSearch via periodic cron tasks
+* Automatic profile updating.
+    * Profiles are updated from iSearch via periodic cron tasks.
     * Periodic and load-time checking of profiles against iSearch Solr index, to ensure
     up-to-date affiliation data
 * ASU LID Profile View will automatically substitute for the ASU DIR Solr listings if iSearch
@@ -42,7 +42,7 @@ Solr health check fails
     
 ### ASU Directory Panel
 
-Creates ASU Directory Panel Pane, for ease of use with Webspark and Panopoly
+Creates ASU Directory Panel Pane, for ease of use with Webspark and Panopoly.
 
 ### ASU Directory Utilities
 
@@ -50,7 +50,7 @@ Utilities useful for gathering data from iSearch and Solr.
 
 ## Packaged with Webspark
 
-When ASUDIRS is enabled by Webspark, 3 modules will be enabled by default
+When ASUDIRS is enabled by Webspark, 3 modules will be enabled by default:
 
 * ASU DIR
 * ASU Directory Utilities

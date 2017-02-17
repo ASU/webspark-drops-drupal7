@@ -382,7 +382,6 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
     }
 
     // tenure control will be added to faculty employee types group for now
-
     $default_tenure_display = asu_dir_get_tenure_config($config['tenure_display']);
 
     $element['horizontal_tabs']['content']['content_tabs']['employeetypes']['faculty']['tenure_display'] = array(
@@ -402,48 +401,39 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       '#group' => 'content_tabs',
     );
 
-    /*$expertise_vocabulary = taxonomy_vocabulary_machine_name_load('isearch_expertise');
-    if ($expertise_terms = taxonomy_get_tree($expertise_vocabulary->vid, 0, NULL, TRUE)) {
-      $expertise_areas = array();
+    // ASU iSearch specific
+    if (module_exists('asu_isearch')) {
 
-      foreach ($expertise_terms as $term) {
-        $expertise_areas[$term->tid] = $term->name;
-      }
+      // only add this field if expertise terms have been imported from iSearch
+      $expertise_vocabulary = taxonomy_vocabulary_machine_name_load('isearch_expertise');
 
-      if (!is_array($config->expertise_areas)) {
-        $config->expertise_areas = (array) $config->expertise_areas;
-      }*/
+      if (is_object($expertise_vocabulary) &&
+        $expertise_terms = taxonomy_get_tree($expertise_vocabulary->vid, 0, NULL, TRUE)
+      ) {
+        $expertise_areas = array();
 
-    //if (!empty($expertise_areas)) {
+        foreach ($expertise_terms as $term) {
+          $expertise_areas[$term->tid] = $term->name;
+        }
 
-    $expertise_vocabulary = taxonomy_vocabulary_machine_name_load('isearch_expertise');
+        if (!is_array($config['expertise_areas'])) {
+          $config['expertise_areas'] = (array) $config['expertise_areas'];
+        }
 
-    if (is_object($expertise_vocabulary) &&
-      $expertise_terms = taxonomy_get_tree($expertise_vocabulary->vid, 0, NULL, TRUE)
-    ) {
-      $expertise_areas = array();
-
-      foreach ($expertise_terms as $term) {
-        $expertise_areas[$term->tid] = $term->name;
-      }
-
-      if (!is_array($config['expertise_areas'])) {
-        $config['expertise_areas'] = (array) $config['expertise_areas'];
-      }
-
-      if (!empty($expertise_areas)) {
-        $element['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_expertise_areas'] = array(
-          '#type' => 'select',
-          '#options' => $expertise_areas,
-          '#default_value' => $config['expertise_areas'],
-          '#multiple' => TRUE,
-          '#title' => t('Limit to these expertise areas'),
-          '#prefix' => '<div class="alert alert-info">Note: To de-select or to select multiple items, use CMD+Click (Mac) or Ctrl+Click (Windows)</div>',
-        );
+        if (!empty($expertise_areas)) {
+          $element['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_expertise_areas'] = array(
+            '#type' => 'select',
+            '#options' => $expertise_areas,
+            '#default_value' => $config['expertise_areas'],
+            '#multiple' => TRUE,
+            '#title' => t('Limit to these expertise areas'),
+            '#prefix' => '<div class="alert alert-info">Note: To de-select or to select multiple items, use CMD+Click (Mac) or Ctrl+Click (Windows)</div>',
+          );
+        }
       }
     }
 
-    //for right now we'll go with a regex filter like the  filter title
+    //todo:  remove this, or maybe put in some logic to use if asu_isearch disabled
     /*
     $element['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_expertise_areas'] = array(
       '#type' => 'textfield',
@@ -460,26 +450,32 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       '#default_value' => $config['filter_title'],
     );
 
-    $local_tags_vocabulary = taxonomy_vocabulary_machine_name_load('isearch_local_tags');
+    // ASU iSearch specific setting
+    if (module_exists('asu_isearch')) {
 
-    if ($local_tags_terms = taxonomy_get_tree($local_tags_vocabulary->vid, 0, NULL, TRUE)) {
-      $local_tags = array();
+      // if local tags have been created and applied to profiles, then add form element
+      // with select list of tags
+      $local_tags_vocabulary = taxonomy_vocabulary_machine_name_load('isearch_local_tags');
 
-      foreach ($local_tags_terms as $term) {
-        $local_tags_areas[$term->tid] = $term->name;
+      if ($local_tags_terms = taxonomy_get_tree($local_tags_vocabulary->vid, 0, NULL, TRUE)) {
+        $local_tags = array();
+
+        foreach ($local_tags_terms as $term) {
+          $local_tags_areas[$term->tid] = $term->name;
+        }
+
+        if (!is_array($config['local_tags'])) {
+          $config['local_tags'] = (array) $config['local_tags'];
+        }
+
+        $element['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_local_tags'] = array(
+          '#type' => 'select',
+          '#options' => $local_tags_areas,
+          '#default_value' => $config['local_tags'],
+          '#multiple' => TRUE,
+          '#title' => t('Filter profiles by these local tags'),
+        );
       }
-
-      if (!is_array($config['local_tags'])) {
-        $config['local_tags'] = (array) $config['local_tags'];
-      }
-
-      $element['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_local_tags'] = array(
-        '#type' => 'select',
-        '#options' => $local_tags_areas,
-        '#default_value' => $config['local_tags'],
-        '#multiple' => TRUE,
-        '#title' => t('Filter profiles by these local tags'),
-      );
     }
 
     // Appearance horizontal tab definition
@@ -729,7 +725,7 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
     );
 
 
-    if (drupal_get_path('module', 'asu_isearch') != '' && module_exists('asu_dirs')) {
+    if (module_exists('asu_isearch')) {
       // Advanced tab content
       $element['horizontal_tabs']['advanced']['always_display_view'] = array(
         '#type' => 'checkbox',
@@ -758,8 +754,10 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       '#prefix' => '<div class="panel panel-default">
         <div class="panel-body">',
       '#suffix' => '<p>Specify custom filter query value to use in the Solr query of department people.
-        See the documentation on the "fq" param here:  https://wiki.apache.org/solr/CommonQueryParameters.
-        Also, the field schema for ASU Solr Directory can be found at:  https://asudir-solr.asu.edu/asudir/directory/schema/fields.</p></div></div>',
+        See the documentation on the "fq" param here:  
+        <a target="_blank" href="https://wiki.apache.org/solr/CommonQueryParameters">https://wiki.apache.org/solr/CommonQueryParameters</a>.
+        Also, the field schema for ASU Solr Directory can be found at:  
+        <a target="_blank" href="https://asudir-solr.asu.edu/asudir/directory/schema/fields">https://asudir-solr.asu.edu/asudir/directory/schema/fields.</a></p></div></div>',
       '#states' => array(
         'visible' => array(
           ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][always_display_view]"]' => array('checked' => FALSE)
