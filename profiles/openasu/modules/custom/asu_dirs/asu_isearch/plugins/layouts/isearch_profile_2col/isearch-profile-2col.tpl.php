@@ -9,8 +9,7 @@
  * panel of the layout. This layout supports the following sections:
  */
 ?>
-<div
-        class="panel-display isearch-profile-2col clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
+<div class="panel-display isearch-profile-2col clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
     <section class="section profile-header clearfix">
         <div class="container">
             <div class="row">

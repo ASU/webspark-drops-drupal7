@@ -562,7 +562,7 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       Lowest -- Uses the lowest of the above options<br><strong>Imporant Note</strong><br>
       This feature is only compatible with Solr sorting, 
       and not reflected when using the local directory view.</p></div></div>',
-        '#default_value' => $config['default_sort_by'],
+        '#default_value' => $config['default_rank_mode'],
         '#states' => array(
           'visible' => array(
             ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][always_display_view]"]' => array('checked' => FALSE)
@@ -570,8 +570,6 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         ),
       );
     }
-
-
 
     // Appearance -> Exposed filters group
     $element['horizontal_tabs']['appearance']['appearance_tabs']['exposed'] = array(
@@ -848,13 +846,11 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
 
   $tags = array();
 
-
   // these 3 fields are asu_isearch specific, so they might not be set
   if (isset($values['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_local_tags'])) {
     $tags = $values['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_local_tags'];
   }
 
-  // Content -> Other filters
   if (isset($values['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_expertise_areas'])) {
     $expertise_areas = $values['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_expertise_areas'];
   }
