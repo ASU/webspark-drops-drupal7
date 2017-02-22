@@ -177,7 +177,7 @@
 .ui-widget-content {
 	font-family: inherit;
 }
-ul.quicktabs-tabs,
+ul.quicktabs-style-nostyle,
 .ui-widget-header {
 	background: none;
 	min-height: auto;
@@ -187,19 +187,19 @@ ul.quicktabs-tabs,
 	font-weight: 200;
 	line-height: 1.44;
 }
-ul.quicktabs-tabs,
+ul.quicktabs-style-nostyle,
 .ui-tabs .ui-tabs-nav {
 	border-bottom: 1px solid #dddddd !important;
 	padding: 0;
 }
-ul.quicktabs-tabs {
+ul.quicktabs-style-nostyle {
 	margin-bottom: 0;
 }
 .ui-tabs .ui-tabs-nav li.ui-corner-top {
 	border-top-right-radius: 0;
 	border-top-left-radius: 0;
 }
-ul.quicktabs-tabs li,
+ul.quicktabs-style-nostyle li,
 .ui-tabs .ui-tabs-nav li {
 	border-top: 5px solid transparent;
 	margin: 0;
@@ -207,17 +207,17 @@ ul.quicktabs-tabs li,
 	position: relative;
 	top: 0;
 }
-ul.quicktabs-tabs li {
+ul.quicktabs-style-nostyle li {
 	display: inline-block;
 }
-ul.quicktabs-tabs li,
+ul.quicktabs-style-nostyle li,
 .ui-tabs .ui-tabs-nav li.ui-state-default {
 	background: none;
   background-color: transparent;
   color: #a7a7a7;
 }
-ul.quicktabs-tabs li:hover,
-ul.quicktabs-tabs li.active,
+ul.quicktabs-style-nostyle li:hover,
+ul.quicktabs-style-nostyle li.active,
 .ui-tabs .ui-tabs-nav li.ui-state-hover,
 .ui-tabs .ui-tabs-nav li.ui-state-active,
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected {
@@ -227,7 +227,7 @@ ul.quicktabs-tabs li.active,
 	margin-bottom: -1px;
 	padding-bottom: 0;
 }
-ul.quicktabs-tabs li,
+ul.quicktabs-style-nostyle li,
 .ui-tabs .ui-tabs-nav li.ui-state-default,
 .ui-tabs .ui-tabs-nav li.ui-state-hover,
 .ui-tabs .ui-tabs-nav li.ui-state-active,
@@ -235,7 +235,7 @@ ul.quicktabs-tabs li,
 	margin-bottom: -1px;
 }
 
-ul.quicktabs-tabs li a,
+ul.quicktabs-style-nostyle li a,
 .ui-tabs .ui-tabs-nav li a {
 	display: block;
   position: relative;
@@ -249,7 +249,7 @@ ul.quicktabs-tabs li a,
 	line-height: 1.44;
 	transition: all 0.25s ease-in-out 0s;
 }
-ul.quicktabs-tabs li a {
+ul.quicktabs-style-nostyle li a {
 	display: inline-block;
 	padding: 9px 18px;
 	color: #a7a7a7;
@@ -263,13 +263,13 @@ ul.quicktabs-tabs li a {
   color: #a7a7a7;
 	transition: all 0.25s ease-in-out 0s;
 }
-ul.quicktabs-tabs li:hover a,
+ul.quicktabs-style-nostyle li:hover a,
 .ui-tabs .ui-tabs-nav li.ui-state-hover a {
 	background-color: #eee;
 	border-bottom-color: #d7d7d7;
 }
-ul.quicktabs-tabs li.active a,
-ul.quicktabs-tabs li.active:hover a,
+ul.quicktabs-style-nostyle li.active a,
+ul.quicktabs-style-nostyle li.active:hover a,
 .ui-tabs .ui-tabs-nav li.ui-state-active a {
 	background-color: transparent;
 	border-bottom-color: #fff;
