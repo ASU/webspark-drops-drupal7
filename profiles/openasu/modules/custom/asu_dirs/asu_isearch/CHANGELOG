@@ -1,7 +1,10 @@
 asu_isearch 7.x-1.8.7
 ---------------------
 - Added cleanup to migration for orphaned affiliations
-- Migration vars are now configurable
+- Migration vars are now configurable via variable_set
+- Added option enable profile updating during profile load, under Advance options
+- Added legacy mode in preparation for ASU DIRS release
+- Added 'Advanced' options tab, for less-common configs
 
 asu_isearch 7.x-1.8.6
 ---------------------

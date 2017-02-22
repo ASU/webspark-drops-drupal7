@@ -299,7 +299,7 @@ function asu_isearch_get_field_solr_mappings() {
     'field_isearch_asurite_id' => 'asuriteId',
     'field_isearch_email' => 'emailAddress',
     'field_isearch_phone' => 'phone',
-    'field_isearch_fax' => 'fax',
+    //'field_isearch_fax' => 'fax',
     'field_isearch_campus_building' => 'addressLine1',
     'field_isearch_campus_room' => 'addressLine2',
     'field_isearch_primary_campus' => 'primaryJobCampus',
@@ -356,15 +356,21 @@ function asu_isearch_update_profile_From_solr($node, $solr_profile) {
           $current_safe = $node->$key[LANGUAGE_NONE][0]['safe_value'];
         }
 
+        if ($item == 'phone') {
+          $solr_profile[$item] = asu_isearch_format_phone($solr_profile[$item]);
+        }
+
         $markup = check_markup($solr_profile[$item], 'isearch_html');
 
         if ($current != $solr_profile[$item] && strcmp($current_safe, $markup) != 0) {
-
           $node->$key[LANGUAGE_NONE][0]['value'] = $solr_profile[$item];
-
           $changed = TRUE;
         }
       }
     }
+  }
+
+  if ($changed) {
+    node_save($node);
   }
 }

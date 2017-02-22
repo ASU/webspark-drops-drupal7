@@ -53,12 +53,22 @@ define('ASU_ISEARCH_DEVMODE', variable_get('asu_isearch_devmode', FALSE));
 function asu_isearch_menu() {
   $items['admin/content/isearch/configure'] = array(
     'title' => 'Configure',
-    'description' => 'Configure iSearch directory settings',
+    'description' => 'Configure iSearch Directory Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('asu_isearch_admin_settings_form'),
     'access arguments' => array('administer isearch directory'),
     'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
     'weight' => 10,
+  );
+
+  $items['admin/content/isearch/advanced'] = array(
+    'title' => 'Advanced',
+    'description' => 'Configure Advanced Local iSearch Directory Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('asu_isearch_advanced_form'),
+    'access arguments' => array('administer isearch directory'),
+    'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
+    'weight' => 1001,
   );
 
   $items['admin/content/isearch/import'] = array(
@@ -170,9 +180,9 @@ function asu_isearch_node_view($node, $view_mode, $langcode) {
         drupal_goto('/');
       }
       else {
-        /*
-        asu_isearch_update_profile_from_solr($node, $solr_profile);
-        */
+        if (variable_get('isearch_update_profile_onload', FALSE)) {
+          asu_isearch_update_profile_from_solr($node, $solr_profile);
+        }
       }
     }
   }

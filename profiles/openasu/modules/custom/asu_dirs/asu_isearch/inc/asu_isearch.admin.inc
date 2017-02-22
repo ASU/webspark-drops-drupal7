@@ -21,15 +21,6 @@ function asu_isearch_admin_settings_form() {
     '#default_value' => variable_get('isearch_display_affiliations', FALSE),
   );
 
-
-  $form['isearch_pull_isearch_weights'] = array(
-    '#type' => 'checkbox',
-    '#title' => 'Pull employee rank sorting values from iSearch?',
-    '#description' => t("This option will populate the local rank weight sorting data with the same sorting weights from iSearch."),
-    '#default_value' => variable_get('isearch_pull_isearch_weights', FALSE),
-  );
-
-
   $form['isearch_import_subdepts'] = array(
     '#type' => 'checkbox',
     '#title' => 'Include sub-departments on import?',
@@ -61,6 +52,7 @@ function asu_isearch_admin_settings_form() {
     ),
   );
 
+  // todo: get this working for the solr listings
   $form['isearch_link_buildings'] = array(
     '#type' => 'checkbox',
     '#title' => 'Detect and link building codes?',
@@ -134,6 +126,7 @@ function asu_isearch_admin_settings_form_submit($form, &$form_state) {
     '@link' => '/admin/content/isearch/import',
   ));
 
+  // reset migration sources, since they might've changed
   _asu_isearch_reset_migration_sources();
 
   drupal_set_message($message, 'status');
@@ -221,8 +214,73 @@ function asu_isearch_import_isearch_form_submit($form, &$form_state) {
 }
 
 
-// Temporary function used with devel/php
-function asu_isearch_devel() {
+/****
+ * Advanced asu_isearch form
+ * @return array|mixed
+ */
+function asu_isearch_advanced_form() {
+
+  drupal_set_title('Advanced ASU LID Settings');
+
+  $form = array();
+
+  $form['isearch_update_profile_onload'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Update Profiles Upon View?',
+    '#description' => t("If this option is enabled, profile updates will be attempted upon loading."),
+    '#default_value' => variable_get('isearch_update_profile_onload', FALSE),
+  );
+
+  $form['asu_isearch_overrride_panel'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Enable ASU LID Legacy Mode.',
+    '#description' => t("Enable this option to allow placement of the legacy panel pane. This is useful if using the module as a standalone solution outside of the Webspark ASU DIR Suite."),
+    '#default_value' => variable_get('asu_isearch_overrride_panel', FALSE),
+  );
+
+  $form['isearch_pull_isearch_weights'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Pull employee rank sorting values from iSearch?',
+    '#description' => t("This options should only need to be enabled if using the module in legacy mode, with no Solr sorting available."),
+    '#default_value' => variable_get('isearch_pull_isearch_weights', FALSE),
+  );
+
+  /*
+  $form['isearch_link_buildings'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Detect and link building codes?',
+    '#default_value' => variable_get('isearch_link_buildings', TRUE),
+    '#description' => t('Check this option to link building codes on profiles and directory listings to the ASU Campus map'),
+  );
+
+  $form['isearch_local_lock'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Lock Profiles from Automatic Updates.',
+    '#description' => t('This option will lock profiles so that they are not automatically updated when cron is run.  Migrations can still be run manually via the interface at <a href="@link">Migrate</a> or via drush.', array('@link' => '/admin/content/isearch/migrate')),
+    '#default_value' => variable_get('isearch_local_lock', FALSE),
+  );*/
+
+  $form = system_settings_form($form);
+  $form['#submit'] = array('asu_isearch_advanced_settings_form_submit');
+
+  return $form;
 }
 
+
+/**
+ * Submit handler for settings form
+ */
+function asu_isearch_advanced_settings_form_submit($form, &$form_state) {
+  system_settings_form_submit($form, $form_state);
+
+  /*
+  $message = t('Click <a href="@link">Import iSearch Profiles</a> to begin the import.', array(
+    '@link' => '/admin/content/isearch/import',
+  ));
+
+  // reset migration sources, since they might've changed
+  _asu_isearch_reset_migration_sources();
+
+  drupal_set_message($message, 'status');*/
+}
 
