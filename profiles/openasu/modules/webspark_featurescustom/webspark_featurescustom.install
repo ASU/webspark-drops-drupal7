@@ -154,6 +154,8 @@ function webspark_featurescustom_update_7005(&$sandbox) {
 /**
  * Implements hook_update_N() -- Colorado release
  * + Set theme to default Drupal theme if old ASU theme is current default.
+ * + Enable Missing Module contrib module to help clean up new Drupal 7.52 errors.
+ *   See Colorado release notes for more information.
  */
 function webspark_featurescustom_update_7006(&$sandbox) {
   $display_message = FALSE;
@@ -178,5 +180,9 @@ function webspark_featurescustom_update_7006(&$sandbox) {
   // Now show message if necessary
   if ($display_message) {
     drupal_set_message($message, 'warning');
+  }
+  // Missimg Module - enable
+  if (!module_exists('missing_module')) {
+    module_enable('missing_module');
   }
 }
