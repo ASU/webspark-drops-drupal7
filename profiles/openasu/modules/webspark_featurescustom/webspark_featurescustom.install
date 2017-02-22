@@ -184,5 +184,8 @@ function webspark_featurescustom_update_7006(&$sandbox) {
   // Missimg Module - enable
   if (!module_exists('missing_module')) {
     module_enable('missing_module');
+    drupal_set_message("Make sure that your Webspark site's administrator role " .
+      "(usually 'administrator') receives all of the necessary permissions to " .
+      "use the Missing Module module at /admin/people/permissions", 'status');
   }
 }
