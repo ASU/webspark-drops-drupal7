@@ -12,7 +12,7 @@ function missing_module_find_missing($only_enabled = FALSE) {
   $missing = array();
 
   // Select all active modules from current database.
-  $query = db_select('system')->fields('system', array('filename', 'status', 'info'));
+  $query = db_select('system')->fields('system', array('filename', 'name', 'status', 'info'));
 
   if ($only_enabled) {
     $query->condition('status', '1', '=');
@@ -33,10 +33,7 @@ function missing_module_find_missing($only_enabled = FALSE) {
     $path = DRUPAL_ROOT . '/' . $node->filename;
 
     if (!file_exists($path)) {
-      $sections = explode("/", $node->filename);
-
-      // Find name of module, strip path and extension.
-      $module_name = str_replace(".module", '', array_pop($sections));
+      $module_name = $node->name;
 
       $missing[$module_name] = array(
         'path' => $path,
