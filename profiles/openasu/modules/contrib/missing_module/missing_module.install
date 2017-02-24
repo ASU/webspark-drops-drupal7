@@ -39,9 +39,9 @@ function missing_module_requirements($phase) {
           array(
             '@module_name' => (isset($mm_path['info']['name'])) ? $mm_path['info']['name'] : $mm_name,
             '@module_path' => $mm_path['path'],
-            '@module_disable' => '/admin/reports/status/disable_module/' . $mm_name,
-            '@module_remove' => '/admin/reports/status/remove_module/' . $mm_name,
-            '@module_url' => "http://drupal.org/project/$mm_name",
+            '@module_disable' => url('admin/reports/status/disable_module/' . $mm_name),
+            '@module_remove' => url('admin/reports/status/remove_module/' . $mm_name),
+            '@module_url' => url('http://drupal.org/project/" . $mm_name),
           ));
       }
       $value .= '</ul>';
