@@ -142,7 +142,6 @@ projects[flexslider][version] = 2.0-rc1
 projects[flexslider][type] = module
 projects[flexslider][subdir] = contrib
 
-; @TODO v1.1 (or v2.5)
 projects[fontawesome][version] = 1.0
 projects[fontawesome][type] = module
 projects[fontawesome][subdir] = contrib
@@ -155,6 +154,15 @@ projects[google_appliance][subdir] = contrib
 projects[maxlength][version] = 3.2-beta2
 projects[maxlength][type] = module
 projects[maxlength][subdir] = contrib
+
+;; @TODO - Remove patch when file when submitted patch gets pulled into module
+projects[missing_module][type] = module
+projects[missing_module][subdir] = contrib
+projects[missing_module][download][type] = "git"
+projects[missing_module][download][branch] = "7.x-1.x"
+projects[missing_module][download][url] = "http://git.drupal.org/project/missing_module.git"
+projects[missing_module][download][revision] = 19492ccee8b8ac683b3a384e8663c09af55dc3af
+projects[missing_module][patch][2854074] = patches/webspark-1052_missing-module_improvements-to-ux_2854074-5.patch
 
 projects[panels_tabs][version] = 2.x-dev
 projects[panels_tabs][type] = module
