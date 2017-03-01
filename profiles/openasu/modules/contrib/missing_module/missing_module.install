@@ -32,16 +32,16 @@ function missing_module_requirements($phase) {
       foreach ($missing_modules as $mm_name => $mm_path) {
         // @TODO - Hide @module_url for non-drupal.org projects
         $value .= $t('<li><strong>@module_name</strong> (reported directory: @module_path)
-            <br><em>Options</em>: 
-            <a href="@module_disable">Disable</a> | 
-            <a href="@module_remove">Remove</a> | 
+            <br><em>Options</em>:
+            <a href="@module_disable">Disable</a> |
+            <a href="@module_remove">Remove</a> |
             <a href="@module_url">Download from drupal.org</a></li>',
           array(
             '@module_name' => (isset($mm_path['info']['name'])) ? $mm_path['info']['name'] : $mm_name,
             '@module_path' => $mm_path['path'],
-            '@module_disable' => '/admin/reports/status/disable_module/' . $mm_name,
-            '@module_remove' => '/admin/reports/status/remove_module/' . $mm_name,
-            '@module_url' => "http://drupal.org/project/$mm_name",
+            '@module_disable' => url('admin/reports/status/disable_module/' . $mm_name),
+            '@module_remove' => url('admin/reports/status/remove_module/' . $mm_name),
+            '@module_url' => url('http://drupal.org/project/" . $mm_name),
           ));
       }
       $value .= '</ul>';
