@@ -1,3 +1,86 @@
+Webspark 1.40.3 (Shell Valley) release
+----------------
+- Webspark core
+
+    * Webspark Featurescustom (v1.5)
+        * The "Available Updates" list no longer incorrectly and confusingly lists any LDAP modules as needing updates
+          applied by the end user. (All LDAP modules in /profiles/openasu are managed by Webspark and not the end user.)
+
+- Web standards components in Webspark
+
+    * Innovation theme (v1.8)
+        * Updated all layout TPLs to remote <section> tags and replace them with <div class="section"> tag.
+            * IMPORTANT for Innovation subtheme users: Be sure to review your subtheme CSS files for any
+              "section" CSS selectors and replace "section" with "div.section" - and thoroughly test your changes
+              before pushing up to production. Barring any namespacing issues, subtheme ".section" CSS class
+              selectors should still work.
+        * In-Page Editor selections now properly displays eligible content panes again when the "+" button is
+          clicked and a subcategory (such as "Views", "Blocks", etc.) is selected
+    * Webspark Megamenu (v1.8)
+        * Regression from Pillsbury update fixed so it longer generates warning messages on page load
+        * Tabbing through the TB megamenu backwards now works as expected
+    * ASU Mega Footer (v1.6)
+        * Unit Title field is now optional
+
+- Webspark-managed libraries
+
+    * ASU Webspark Bootstrap library (no version number)
+        * Fixed left-alignment issue on radio and checkbox form elements with short labels/descriptions (i.e.
+          didn't have a line break)
+
+- Contrib projects - Updates
+
+    - Webspark-managed modules
+        * Webform - v4.14
+
+Webspark 1.40.2 (Pillsbury) release
+----------------
+- Webspark-managed libraries - Additions
+
+    * React JS (v0.14.7) - Used by the latest ASU Directory Intergration Reinvented module and now available for general use by Webspark users
+
+- Web standards components in Webspark
+
+    * ASU Brand (v1.14)
+        * Added the ability to supress code injected through the Google Tag Manager that's embedded in the ASU global header when automated tests are run as part of the build process for Webspark
+        * Improved the process to update the ASU global header and footer to the latest version to ensure they are updated to version 4.5
+    * ASU Degrees (v1.10)
+        * Moved the embedded PHP code in the view that provides the listing of degrees into its own module
+        * Added new default image and web standards compliant styling to the grid view and list view for the listing of degrees
+    * ASU Directory Integration Reinvented (v1.5)
+        * Added support for listing people using the custom sorting order that is set on iSearch
+        * Added custom pagination options to the field form
+        * Added support for displaying tenure/non-tenure faculty
+        * Added support for multiple directory displays on the same page
+        * Added customizable search and filter displays for: display of expertise, faculty title, and the "Name or Keyword" search field
+        * Added sorting by first name
+        * Added grid display option for the listing of people
+        * Added the asu_dir_utilities module, the asu-dept-picker module, and the react library as dependencies
+        * Added integration with the Local iSearch Directory (asu_isearch) module, so listings will link to local people profiles if they have been imported
+    * ASU Maps Enhanced (v1.4)
+        * Added Thunderbird as an option to the "Select Campus Map" select list
+        * Added "None" option to the "Select Campus Map" select list for better integration with events
+        * The map now hides when "None" is selected
+    * ASU RFI (v1.7)
+        * Fixed the parsing of the ASU Online online program feed so that their complete list of programs is available
+        * Increased the text limit for the "from" email to allow longer email addresses to be used
+        * Raised the maximum length of the college_name field on RFI forms
+    * ASU Spotlight (v1.6)
+    * Webspark Banner (v1.4-dev)
+    * Webspark Hero (v1.4-dev)
+        * Changed the <h2> header to an <h1> on the banner, hero, and spotlight for improved accessibility based on their almost exclusive use as replacements for the <h1> page title
+    * Innovation theme (v1.7) - Accessibility improvements
+        * The In-Page Editor (IPE) link and image layouts now have responsive sizes
+        * Properly removed the unused and ADA incompliant hamburger menu
+        * Overrode Bootstrap's fixed base font on HTML and body tags with relative values, as a first step toward making all font sizes relative, allowing for easier browser zooming
+        * Added ARIA role and label to the submenu block
+        * Added ARIA roles to the <header> and <footer> tags on page.tpl
+        * Replaced <section> and <footer> tags with <div> tags on all Radix layout .tpl files
+        * Enhanced focus states across browsers
+        * Changed the color of breadcrumbs to a darker gray to improve the background-font color contrast ratio
+        * Added a menu-block-wrapper.tpl.php with an aria-label to identify submenus
+    * Webspark Megamenu (v1.6.1) - Added ARIA role to main navigation menu to fix tab key navigation functionality
+
 Webspark 1.40.1 (Hoople) release
 ----------------
 - Contrib projects - Updates

@@ -14,7 +14,7 @@
 ?>
 
 <div class="panel-display geary clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
-  <section class="section">
+  <div class="section">
     <div class="container">
       <div class="row row-full">
         <div class="col-md-12 geary-main-container radix-layouts-header panel-panel">
@@ -24,8 +24,8 @@
         </div>
       </div>
     </div>
-  </section>
-  <section class="section">
+  </div>
+  <div class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-4 geary-column-content-region-1 radix-layouts-column1 panel-panel">
@@ -45,5 +45,5 @@
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </div><!-- /.geary -->
