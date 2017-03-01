@@ -104,11 +104,6 @@ projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
 projects[viewfield][subdir] = contrib
 
-; @TODO v1.0-alpha1 + patch (rollback from 1.x-dev)
-projects[views_php][version] = 1.x-dev
-projects[views_php][type] = module
-projects[views_php][subdir] = contrib
-
 projects[webform][version] = 4.14
 projects[webform][type] = module
 projects[webform][subdir] = contrib
