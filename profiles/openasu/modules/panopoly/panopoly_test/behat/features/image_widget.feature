@@ -10,8 +10,8 @@ Feature: Add image widget
       And I am viewing a landing page
     When I customize this page with the Panels IPE
       And I click "Add new pane"
-      And I click "Add image" in the "CTools modal" region
-    Then I should see "Configure new Add image"
+      And I click "Add responsive image" in the "CTools modal" region
+    Then I should see "Configure new Add responsive image"
     When I fill in the following:
       | Title   | Testing image widget title |
       | Editor  | plain_text                 |
@@ -46,8 +46,8 @@ Feature: Add image widget
       And I am viewing a landing page
     When I customize this page with the Panels IPE
       And I click "Add new pane"
-      And I click "Add image" in the "CTools modal" region
-    Then I should see "Configure new Add image"
+      And I click "Add responsive image" in the "CTools modal" region
+    Then I should see "Configure new Add responsive image"
     When I fill in the following:
       | Title   | Testing image widget title              |
       | Editor  | plain_text                              |
