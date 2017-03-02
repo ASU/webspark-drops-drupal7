@@ -6,7 +6,10 @@ Feature: Test pathauto for administrator users
   Background:
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
-    When I visit "/node/add/panopoly-test-page"
+    When I visit "/admin/appearance/settings/innovation"
+      And I check the box "edit-always-show-page-title"
+      And I press "edit-submit"
+      And I visit "/node/add/panopoly-test-page"
       And I fill in the following:
         | Title  | Testing title |
         | Editor | plain_text    |
@@ -15,35 +18,45 @@ Feature: Test pathauto for administrator users
     # don't use 'save_draft', and this makes this test compatible with them.
     #When I press "Publish"
     When I press "edit-submit"
-    Then the "h1" element should contain "Testing title"
+    Then I should see "Testing title"
 
   @api @panopoly_admin
   Scenario: Pathauto should automatically assign an url
     Then the url should match "testing-title"
 
-  @api @panopoly_admin
+  @api @panopoly_admin @webspark_broken @webspark_fixed
   Scenario: Pathauto should automatically assign a new url when changing the title
-    When I click "Edit" in the "Tabs" region
+    When I click "Edit" in the "TabsID" region
       And I fill in the following:
         | Title               | Completely other title |
       And I press "Save"
     Then the url should match "completely-other-title"
     # But visiting the old URL should continue to work
     When I visit "/content/testing-title"
-    Then the "h1" element should contain "Completely other title"
+    Then I should see "Completely other title"
 
   @api @panopoly_admin
   Scenario: My own permalink should be kept even if changing title
-    When I click "Edit" in the "Tabs" region
+    When I click "Edit" in the "TabsID" region
       And I fill in the following:
         | Permalink           | my-custom-permalink |
       And I press "Save"
     Then the url should match "my-custom-permalink"
-    When I click "Edit" in the "Tabs" region
+    When I click "Edit" in the "TabsID" region
       And I fill in the following:
         | Title               | Saving Title Again  |
       And I press "Save"
     Then the url should match "my-custom-permalink"
     Given I go to "my-custom-permalink"
     Then the response status code should be 200
+
+   @api @panopoly_admin @webspark_added
+   Scenario: Resetting the Innovation theme Always Show Page Title setting
+    Given I am logged in as a user with the "administrator" role
+      And Panopoly magic live previews are disabled
+    When I visit "/admin/appearance/settings/innovation"
+      And I uncheck the box "edit-always-show-page-title"
+      And I press "edit-submit"
+      And I visit "/admin/appearance/settings/innovation"
+    Then the "edit-always-show-page-title" checkbox should not be checked
 

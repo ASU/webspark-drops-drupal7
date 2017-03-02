@@ -57,7 +57,7 @@ Feature: Add media using the rich text editor
 
   # TODO: About 10% of the time this test will hang with Firefox, so for now,
   # we will run in Chrome only on Travis-CI to get consistent builds.
-  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files
+  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files @webspark_broken @webspark_fixed
   Scenario: The second alt/title text sticks
     When I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
     When I click the "Add media" button in the "edit-body-und-0-value" WYSIWYG editor
@@ -90,7 +90,7 @@ Feature: Add media using the rich text editor
       And I should see the image alt "Second alt text" in the "Bryant Content" region
     # Next, we edit the node again, so we can verify that the second
     # alt text will load when editing the image again.
-    When I click "Edit" in the "Tabs" region
+    When I click "Edit" in the "TabsID" region
       And I click the "img" element in the "edit-body-und-0-value" WYSIWYG editor
       And I click the "Add media" button in the "edit-body-und-0-value" WYSIWYG editor
       And I switch to the frame "mediaStyleSelector"
@@ -128,7 +128,7 @@ Feature: Add media using the rich text editor
       And I should see the image alt "Alt & some > \"character's\" <" in the "Bryant Content" region
     # Next, we edit the node again, so we can verify that the second
     # alt text will load when editing the image again.
-    When I click "Edit" in the "Tabs" region
+    When I click "Edit" in the "TabsID" region
       And I click the "img" element in the "edit-body-und-0-value" WYSIWYG editor
       And I click the "Add media" button in the "edit-body-und-0-value" WYSIWYG editor
       And I switch to the frame "mediaStyleSelector"
@@ -136,14 +136,14 @@ Feature: Add media using the rich text editor
       And the "Title Text" field should contain "Title & some > \"character's\" <"
       And I switch out of all frames
 
-  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files
+  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files @webspark_broken @webspark_fixed
   Scenario: Use an image from elsewhere on the web
     When I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
       And I click the "Add media" button in the "edit-body-und-0-value" WYSIWYG editor
       And I switch to the frame "mediaBrowser"
       And I click "Web"
     Then I should see "File URL or media resource"
-    When I fill in "File URL or media resource" with "https://www.drupal.org/files/drupal_logo-blue.png"
+    When I fill in "File URL or media resource" with "https://drupal.asu.edu/sites/default/files/styles/panopoly_image_original/public/icn-webspark_0.png"
       And I press "Next" in the "Media web tab" region
     Then I should see "Destination"
     # Select the destination (public/private files).
