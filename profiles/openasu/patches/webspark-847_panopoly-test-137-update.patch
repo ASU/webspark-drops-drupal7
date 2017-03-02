@@ -92,18 +92,6 @@ index 0000000..9d9568a
 +      subcontexts:
 +        paths:
 +          - "/home/travis/build/ASU/webspark-drops-drupal7/profiles/openasu/modules/panopoly/panopoly_test"
-diff --git a/behat/composer.json b/behat/composer.json
-index d42dea9..639b0b0 100644
---- a/behat/composer.json
-+++ b/behat/composer.json
-@@ -1,6 +1,6 @@
- {
-   "require": {
--    "drupal/drupal-extension": "3.0.10"
-+    "drupal/drupal-extension": "3.1.5"
- },
-   "config": {
-     "bin-dir": "bin/"
 diff --git a/behat/composer.lock b/behat/composer.lock
 index f7956a7..2c51c97 100644
 --- a/behat/composer.lock
@@ -2421,10 +2409,10 @@ index 1e73827..d39f42b 100644
    Scenario: Search queries are logged in the 'Top search phrases' report
      Given I am logged in as a user with the "administrator" role
        And I am on the homepage
-diff --git a/tests/features/wysiwyg_media.feature b/tests/features/wysiwyg_media.feature
+diff --git a/behat/features/wysiwyg_media.feature b/behat/features/wysiwyg_media.feature
 index 368b6cf..e639535 100644
---- a/tests/features/wysiwyg_media.feature
-+++ b/tests/features/wysiwyg_media.feature
+--- a/behat/features/wysiwyg_media.feature
++++ b/behat/features/wysiwyg_media.feature
 @@ -57,7 +57,7 @@ Feature: Add media using the rich text editor
 
    # TODO: About 10% of the time this test will hang with Firefox, so for now,
@@ -2469,11 +2457,11 @@ index 368b6cf..e639535 100644
        And I press "Next" in the "Media web tab" region
      Then I should see "Destination"
      # Select the destination (public/private files).
-diff --git a/tests/features/wysiwyg_webspark.feature b/tests/features/wysiwyg_webspark.feature
+diff --git a/behat/features/wysiwyg_webspark.feature b/behat/features/wysiwyg_webspark.feature
 new file mode 100644
 index 0000000..89fd64d
 --- /dev/null
-+++ b/tests/features/wysiwyg_webspark.feature
++++ b/behat/features/wysiwyg_webspark.feature
 @@ -0,0 +1,45 @@
 +Feature: Use rich text editor
 +  In order to format the content of my pages
@@ -2520,10 +2508,10 @@ index 0000000..89fd64d
 +    | edit-body-und-0-value_styleselect_text  | EOP button large                  | p        | class     | btn btn-blue btn-lg |
 +    | edit-body-und-0-value_styleselect_text  | EOP button full-col-wide          | p        | class     | btn btn-blue btn-block |
 +    | edit-body-und-0-value_styleselect_text  | EOP button large col-wide         | p        | class     | btn btn-blue btn-lg btn-block |
-diff --git a/tests/steps/panopoly_test.behat.inc b/tests/steps/panopoly_test.behat.inc
+diff --git a/behat/steps/panopoly_test.behat.inc b/behat/steps/panopoly_test.behat.inc
 index 51763fe..3c33019 100644
---- a/tests/steps/panopoly_test.behat.inc
-+++ b/tests/steps/panopoly_test.behat.inc
+--- a/behat/steps/panopoly_test.behat.inc
++++ b/behat/steps/panopoly_test.behat.inc
 @@ -404,7 +404,7 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
    public function waitForLivePreview() {
      // Make sure the live preview has triggered by bluring the current focus.
@@ -2533,10 +2521,10 @@ index 51763fe..3c33019 100644
    }
 
    /**
-diff --git a/tests/steps/panopoly_test_panels.behat.inc b/tests/steps/panopoly_test_panels.behat.inc
+diff --git a/behat/steps/panopoly_test_panels.behat.inc b/behat/steps/panopoly_test_panels.behat.inc
 index baa12ed..3b3bd42 100644
---- a/tests/steps/panopoly_test_panels.behat.inc
-+++ b/tests/steps/panopoly_test_panels.behat.inc
+--- a/behat/steps/panopoly_test_panels.behat.inc
++++ b/behat/steps/panopoly_test_panels.behat.inc
 @@ -33,7 +33,7 @@ class PanelsSubContext extends RawDrupalContext implements DrupalSubContextInter
     * @When I wait for the Panels IPE to activate
     */
@@ -2567,11 +2555,11 @@ index baa12ed..3b3bd42 100644
    }
 
  }
-diff --git a/tests/steps/panopoly_test_webspark.behat.inc b/tests/steps/panopoly_test_webspark.behat.inc
+diff --git a/behat/steps/panopoly_test_webspark.behat.inc b/behat/steps/panopoly_test_webspark.behat.inc
 new file mode 100644
 index 0000000..02e12d4
 --- /dev/null
-+++ b/tests/steps/panopoly_test_webspark.behat.inc
++++ b/behat/steps/panopoly_test_webspark.behat.inc
 @@ -0,0 +1,56 @@
 +<?php
 +/**
@@ -2629,11 +2617,11 @@ index 0000000..02e12d4
 +  }
 +
 +}
-diff --git a/tests/steps/panopoly_test_webspark_wysiwyg.behat.inc b/tests/steps/panopoly_test_webspark_wysiwyg.behat.inc
+diff --git a/behat/steps/panopoly_test_webspark_wysiwyg.behat.inc b/behat/steps/panopoly_test_webspark_wysiwyg.behat.inc
 new file mode 100644
 index 0000000..e9a0a30
 --- /dev/null
-+++ b/tests/steps/panopoly_test_webspark_wysiwyg.behat.inc
++++ b/behat/steps/panopoly_test_webspark_wysiwyg.behat.inc
 @@ -0,0 +1,136 @@
 +<?php
 +/**
