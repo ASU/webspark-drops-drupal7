@@ -1,7 +1,7 @@
-diff --git a/tests/features/image_widget.feature b/tests/features/image_widget.feature
+diff --git a/behat/features/image_widget.feature b/behat/features/image_widget.feature
 index 38a9047..3b39cc6 100644
---- a/tests/features/image_widget.feature
-+++ b/tests/features/image_widget.feature
+--- a/behat/features/image_widget.feature
++++ b/behat/features/image_widget.feature
 @@ -34,8 +34,8 @@ Feature: Add image widget
        And I am viewing a landing page
      When I customize this page with the Panels IPE

@@ -1,14 +1,14 @@
-diff --git a/tests/behat.common.yml b/tests/behat.common.yml
+diff --git a/behat/behat.common.yml b/behat/behat.common.yml
 index 82e7387..56eceae 100644
---- a/tests/behat.common.yml
-+++ b/tests/behat.common.yml
+--- a/behat/behat.common.yml
++++ b/behat/behat.common.yml
 @@ -1,8 +1,8 @@
  default:
    suites:
      default:
--      paths: 
+-      paths:
 -        features: 'features'
-+      #paths: 
++      #paths:
 +        #features: 'features'
        filters:
          tags: "~@chrome"
@@ -45,11 +45,11 @@ index 82e7387..56eceae 100644
 
  # Setup for Google Chrome only tests.
  chrome:
-diff --git a/tests/behat.local.yml b/tests/behat.local.yml
+diff --git a/behat/behat.local.yml b/behat/behat.local.yml
 new file mode 100644
 index 0000000..a44bb87
 --- /dev/null
-+++ b/tests/behat.local.yml
++++ b/behat/behat.local.yml
 @@ -0,0 +1,17 @@
 +imports:
 +    - behat.common.yml
@@ -68,11 +68,11 @@ index 0000000..a44bb87
 +      drupal:
 +        drupal_root: "/home/bryan/github.com/bjdevil21/webspark-drops-drupal7"
 +
-diff --git a/tests/behat.travis.yml b/tests/behat.travis.yml
+diff --git a/behat/behat.travis.yml b/behat/behat.travis.yml
 new file mode 100644
 index 0000000..9d9568a
 --- /dev/null
-+++ b/tests/behat.travis.yml
++++ b/behat/behat.travis.yml
 @@ -0,0 +1,18 @@
 +imports:
 +    - behat.common.yml
@@ -92,22 +92,10 @@ index 0000000..9d9568a
 +      subcontexts:
 +        paths:
 +          - "/home/travis/build/ASU/webspark-drops-drupal7/profiles/openasu/modules/panopoly/panopoly_test"
-diff --git a/tests/composer.json b/tests/composer.json
-index d42dea9..639b0b0 100644
---- a/tests/composer.json
-+++ b/tests/composer.json
-@@ -1,6 +1,6 @@
- {
-   "require": {
--    "drupal/drupal-extension": "3.0.10"
-+    "drupal/drupal-extension": "3.1.5"
- },
-   "config": {
-     "bin-dir": "bin/"
-diff --git a/tests/composer.lock b/tests/composer.lock
+diff --git a/behat/composer.lock b/behat/composer.lock
 index f7956a7..2c51c97 100644
---- a/tests/composer.lock
-+++ b/tests/composer.lock
+--- a/behat/composer.lock
++++ b/behat/composer.lock
 @@ -4,39 +4,39 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
@@ -1751,11 +1739,11 @@ index f7956a7..2c51c97 100644
          }
      ],
      "packages-dev": [],
-diff --git a/tests/features/asu_cas.feature b/tests/features/asu_cas.feature
+diff --git a/behat/features/asu_cas.feature b/behat/features/asu_cas.feature
 new file mode 100644
 index 0000000..8b052e1
 --- /dev/null
-+++ b/tests/features/asu_cas.feature
++++ b/behat/features/asu_cas.feature
 @@ -0,0 +1,17 @@
 +@api
 +Feature: ASU CAS Admin UI
@@ -1774,21 +1762,21 @@ index 0000000..8b052e1
 +    Given I am on "/user/1/edit"
 +    Then I should not see "CAS username"
 +    And I should see "ASURITE User ID"
-diff --git a/tests/features/basic_ipe.feature b/tests/features/basic_ipe.feature
+diff --git a/behat/features/basic_ipe.feature b/behat/features/basic_ipe.feature
 index 2a6ff3a..909890c 100644
---- a/tests/features/basic_ipe.feature
-+++ b/tests/features/basic_ipe.feature
+--- a/behat/features/basic_ipe.feature
++++ b/behat/features/basic_ipe.feature
 @@ -3,16 +3,15 @@ Feature: Make basic changes with the IPE
    As a site administrator
    I need to be able to manipulate them with the IPE
- 
--  Background: 
+
+-  Background:
 +  Background:
      Given I am logged in as a user with the "administrator" role
        And Panopoly magic live previews are disabled
 -      And I am viewing a "panopoly_test_page" with the title "Testing title"
 +      And I am viewing a "panopoly_test_page" with the title "Basic IPE Testing title"
- 
+
 -  @api @javascript
 +  @api @javascript @webspark_broken @webspark_fixed
    Scenario: Change layout
@@ -1799,14 +1787,14 @@ index 2a6ff3a..909890c 100644
 -    Then I should see "Testing title"
 -
 +    Then I should see "Basic IPE Testing title"
-diff --git a/tests/features/contentitem_widget.feature b/tests/features/contentitem_widget.feature
+diff --git a/behat/features/contentitem_widget.feature b/behat/features/contentitem_widget.feature
 index 76e4e30..aea5bae 100644
---- a/tests/features/contentitem_widget.feature
-+++ b/tests/features/contentitem_widget.feature
+--- a/behat/features/contentitem_widget.feature
++++ b/behat/features/contentitem_widget.feature
 @@ -3,73 +3,73 @@ Feature: Add content item
    As a site administrator
    I need to be able to choose which content item
- 
+
 -  @api @javascript @panopoly_widgets
 +  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
    Scenario: Content item autocomplete should only offer nodes of the selected type
@@ -1838,7 +1826,7 @@ index 76e4e30..aea5bae 100644
 -    Then the "exposed[title]" field should not contain "Test Page 1"
 +      And I select the first autocomplete option for "pano test" on the "exposed[title]" field
 +    Then the "exposed[title]" field should not contain "Pano Test 1"
- 
+
 -  @api @javascript @panopoly_widgets
 -  Scenario: Add content item (as "Fields")
 +  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
@@ -1869,7 +1857,7 @@ index 76e4e30..aea5bae 100644
 +      And I should see "Pano Test 1"
        And I should see "January 1, 2001"
        And I should see "Posted by Anonymous"
- 
+
 -  @api @javascript @panopoly_widgets
 -  Scenario: Add content item (as "Content")
 +  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
@@ -1907,7 +1895,7 @@ index 76e4e30..aea5bae 100644
      Then I should see "Test Widget Title"
 -     And I should not see "Test Page 1"
 +     And I should not see "Pano Test 1"
- 
+
 -  @api @javascript @panopoly_widgets
 +  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
    Scenario: Title override should work for all view modes
@@ -1952,7 +1940,7 @@ index 76e4e30..aea5bae 100644
      # Prevent modal popup from breaking subsequent tests.
      When I press "Save"
        And I wait for the Panels IPE to deactivate
- 
+
 -  @api @javascript @panopoly_widgets
 +  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
    Scenario: Title override should work with non-Panelizer content types
@@ -1997,7 +1985,7 @@ index 76e4e30..aea5bae 100644
      # Prevent modal popup from breaking subsequent tests.
      When I press "Save"
        And I wait for the Panels IPE to deactivate
- 
+
 -  @api @javascript @panopoly_widgets
 +  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
    Scenario: Content item widget continues to work after renaming content
@@ -2032,10 +2020,10 @@ index 76e4e30..aea5bae 100644
        And I fill in "Test Page 2" for "Title"
        And I press "edit-submit"
      # @todo: Find a better way to get back to the original page.
-diff --git a/tests/features/contentlist_widget.feature b/tests/features/contentlist_widget.feature
+diff --git a/behat/features/contentlist_widget.feature b/behat/features/contentlist_widget.feature
 index e27aee1..0afced8 100644
---- a/tests/features/contentlist_widget.feature
-+++ b/tests/features/contentlist_widget.feature
+--- a/behat/features/contentlist_widget.feature
++++ b/behat/features/contentlist_widget.feature
 @@ -24,11 +24,11 @@ Feature: Add content list widget
      When I select "Test Page" from "exposed[type]"
        And I select "Asc" from "exposed[sort_order]"
@@ -2050,12 +2038,12 @@ index e27aee1..0afced8 100644
      Then I should see "Content Page List Asc 1"
        And I should see "Test Page 1"
        And I should see "January 2, 2001"
-diff --git a/tests/features/contentpage.feature b/tests/features/contentpage.feature
+diff --git a/behat/features/contentpage.feature b/behat/features/contentpage.feature
 index bbdf206..cc90c92 100644
---- a/tests/features/contentpage.feature
-+++ b/tests/features/contentpage.feature
+--- a/behat/features/contentpage.feature
++++ b/behat/features/contentpage.feature
 @@ -14,20 +14,20 @@ Feature: Add content page
- 
+
    @api @panopoly_pages
    Scenario: Add a content page
 -    # Normally, here we'd press "Publish", however some child distribtions
@@ -2064,13 +2052,13 @@ index bbdf206..cc90c92 100644
      #When I press "Publish"
      When I press "edit-submit"
      Then the "h1" element should contain "Testing title"
- 
+
 -  @api @javascript @panopoly_pages @local_files
 +  @api @javascript @panopoly_pages @local_files @webspark_broken @webspark_ignore
    Scenario: Add a Featured Image with incorrect dimensions
      When I attach the file "test-sm.png" to "files[field_featured_image_und_0]"
      Then I should see "The specified file test-sm.png could not be uploaded. The image is too small; the minimum dimensions are 300x200 pixels."
- 
+
 -  @api @javascript @panopoly_pages @local_files
 +  @api @javascript @panopoly_pages @local_files @webspark_broken @webspark_ignore
    Scenario: Add a Featured image
@@ -2079,21 +2067,21 @@ index bbdf206..cc90c92 100644
      When I visit "/node/add/panopoly-page"
        And I fill in the following:
        | Title               | Testing title |
-diff --git a/tests/features/demo.feature b/tests/features/demo.feature
+diff --git a/behat/features/demo.feature b/behat/features/demo.feature
 index 6e68299..af5c910 100644
---- a/tests/features/demo.feature
-+++ b/tests/features/demo.feature
+--- a/behat/features/demo.feature
++++ b/behat/features/demo.feature
 @@ -3,13 +3,13 @@ Feature: Demo content
    As a site owner
    I need to view demo content
- 
+
 -  @panopoly_demo
 +  @panopoly_demo @webspark_broken @webspark_ignore
    Scenario: Homepage
      Given I am an anonymous user
      When I visit "/demo"
      Then the "h1" element should contain "Homepage Demo"
- 
+
 -  @panopoly_demo
 +  @panopoly_demo @webspark_broken @webspark_ignore
    Scenario: Demo content is imported via Migrate
@@ -2102,33 +2090,33 @@ index 6e68299..af5c910 100644
 @@ -20,7 +20,7 @@ Feature: Demo content
      When I click "Lovely Vegetables" in the "Main menu" region
      Then the "h1" element should contain "Lovely Vegetables"
- 
+
 -  @panopoly_demo @api
 +  @panopoly_demo @api @webspark_broken @webspark_ignore
    Scenario: Demo content menu items are created
      Given I am logged in as a user with the "administrator" role
      When I visit "/admin/structure/menu/manage/main-menu/edit"
-diff --git a/tests/features/help.feature b/tests/features/help.feature
+diff --git a/behat/features/help.feature b/behat/features/help.feature
 index 8a4ccec..0f17a8e 100644
---- a/tests/features/help.feature
-+++ b/tests/features/help.feature
+--- a/behat/features/help.feature
++++ b/behat/features/help.feature
 @@ -3,7 +3,7 @@ Feature: View system help
    As a site owner
    I need to be able to view content in the system help region
- 
+
 -  @api @panopoly_demo
 +  @api @panopoly_demo @webspark_broken @webspark_ignore
    Scenario: Create Test Page
      Given I am logged in as a user with the "administrator" role
      When I visit "/node/add/panopoly-test-page"
-diff --git a/tests/features/image_widget.feature b/tests/features/image_widget.feature
+diff --git a/behat/features/image_widget.feature b/behat/features/image_widget.feature
 index b4dbe92..8320642 100644
---- a/tests/features/image_widget.feature
-+++ b/tests/features/image_widget.feature
+--- a/behat/features/image_widget.feature
++++ b/behat/features/image_widget.feature
 @@ -3,15 +3,15 @@ Feature: Add image widget
    As a site administrator
    I need to be able to use the image widget
-  
+
 -  @api @javascript @panopoly_widgets @local_files
 +  @api @javascript @panopoly_widgets @local_files @webspark_broken @webspark_fixed
    Scenario: Add a image
@@ -2144,12 +2132,12 @@ index b4dbe92..8320642 100644
      When I fill in the following:
        | Title   | Testing image widget title |
        | Editor  | plain_text                 |
-diff --git a/tests/features/landingpage.feature b/tests/features/landingpage.feature
+diff --git a/behat/features/landingpage.feature b/behat/features/landingpage.feature
 index bb29ec9..181ea42 100644
---- a/tests/features/landingpage.feature
-+++ b/tests/features/landingpage.feature
+--- a/behat/features/landingpage.feature
++++ b/behat/features/landingpage.feature
 @@ -5,14 +5,24 @@ Feature: Add landing page
- 
+
    Background:
      Given I am logged in as a user with the "administrator" role
 -    When I visit "/node/add/panopoly-landing-page"
@@ -2160,7 +2148,7 @@ index bb29ec9..181ea42 100644
 +      And I visit "/node/add/panopoly-landing-page"
        And I fill in the following:
          | Title         | Testing landing page title |
- 
+
 -  @api @panopoly_pages
 +  @api @panopoly_pages @webspark_broken @webspark_fixed
    Scenario: Add a landing page
@@ -2175,10 +2163,10 @@ index bb29ec9..181ea42 100644
 +      And I press "edit-submit"
 +      And I visit "/admin/appearance/settings/innovation"
 +    Then the "edit-always-show-page-title" checkbox should not be checked
-diff --git a/tests/features/linkit.feature b/tests/features/linkit.feature
+diff --git a/behat/features/linkit.feature b/behat/features/linkit.feature
 index f091fe0..5158fa7 100644
---- a/tests/features/linkit.feature
-+++ b/tests/features/linkit.feature
+--- a/behat/features/linkit.feature
++++ b/behat/features/linkit.feature
 @@ -6,12 +6,15 @@ Feature: Link to page on the site
    Background:
      Given I am logged in as a user with the "administrator" role
@@ -2191,7 +2179,7 @@ index f091fe0..5158fa7 100644
        And I fill in the following:
          | Title  | Testing Linkit       |
          | Editor | panopoly_wysiwyg_text |
- 
+
 -  @api @javascript @panopoly_wysiwyg
 +  @api @javascript @panopoly_wysiwyg @webspark_broken @webspark_fixed
    Scenario: Add a link to an internal page
@@ -2203,7 +2191,7 @@ index f091fe0..5158fa7 100644
      When I click "Linkit Target"
 -    Then the "h1" element should contain "Linkit Target"
 +    Then I should see "Linkit Target"
- 
+
    @api @javascript @panopoly_wysiwyg
    Scenario: Add a link to an external page
 @@ -42,3 +45,13 @@ Feature: Link to page on the site
@@ -2220,14 +2208,14 @@ index f091fe0..5158fa7 100644
 +      And I press "edit-submit"
 +      And I visit "/admin/appearance/settings/innovation"
 +    Then the "edit-always-show-page-title" checkbox should not be checked
-diff --git a/tests/features/login.feature b/tests/features/login.feature
+diff --git a/behat/features/login.feature b/behat/features/login.feature
 index 746acb7..8281ca6 100644
---- a/tests/features/login.feature
-+++ b/tests/features/login.feature
+--- a/behat/features/login.feature
++++ b/behat/features/login.feature
 @@ -16,7 +16,7 @@ I want to be able to login
      And I press "Log in"
      Then I should see "Log out"
- 
+
 -  @standard_login @api
 +  @standard_login @api @webspark_broken @webspark_ignore
    Scenario: User can request a new password if it has been lost
@@ -2236,16 +2224,16 @@ index 746acb7..8281ca6 100644
 @@ -27,7 +27,7 @@ I want to be able to login
      Then I should see "Further instructions have been sent to your e-mail address."
        And I should see "Log in"
- 
+
 -  @drush @standard_login
 +  @drush @standard_login @webspark_broken @webspark_ignore
    Scenario: User can change password after using one-time-login-url
      Given I log in with the One Time Login Url
      Then I should see the heading "Reset password"
-diff --git a/tests/features/pathauto_administrator.feature b/tests/features/pathauto_administrator.feature
+diff --git a/behat/features/pathauto_administrator.feature b/behat/features/pathauto_administrator.feature
 index deadd93..0019210 100644
---- a/tests/features/pathauto_administrator.feature
-+++ b/tests/features/pathauto_administrator.feature
+--- a/behat/features/pathauto_administrator.feature
++++ b/behat/features/pathauto_administrator.feature
 @@ -6,7 +6,10 @@ Feature: Test pathauto for administrator users
    Background:
      Given I am logged in as a user with the "administrator" role
@@ -2264,11 +2252,11 @@ index deadd93..0019210 100644
      When I press "edit-submit"
 -    Then the "h1" element should contain "Testing title"
 +    Then I should see "Testing title"
- 
+
    @api @panopoly_admin
    Scenario: Pathauto should automatically assign an url
      Then the url should match "testing-title"
- 
+
 -  @api @panopoly_admin
 +  @api @panopoly_admin @webspark_broken @webspark_fixed
    Scenario: Pathauto should automatically assign a new url when changing the title
@@ -2282,7 +2270,7 @@ index deadd93..0019210 100644
      When I visit "/content/testing-title"
 -    Then the "h1" element should contain "Completely other title"
 +    Then I should see "Completely other title"
- 
+
    @api @panopoly_admin
    Scenario: My own permalink should be kept even if changing title
 -    When I click "Edit" in the "Tabs" region
@@ -2299,7 +2287,7 @@ index deadd93..0019210 100644
 @@ -47,3 +50,13 @@ Feature: Test pathauto for administrator users
      Given I go to "my-custom-permalink"
      Then the response status code should be 200
- 
+
 +   @api @panopoly_admin @webspark_added
 +   Scenario: Resetting the Innovation theme Always Show Page Title setting
 +    Given I am logged in as a user with the "administrator" role
@@ -2310,13 +2298,13 @@ index deadd93..0019210 100644
 +      And I visit "/admin/appearance/settings/innovation"
 +    Then the "edit-always-show-page-title" checkbox should not be checked
 +
-diff --git a/tests/features/pathauto_editor.feature b/tests/features/pathauto_editor.feature
+diff --git a/behat/features/pathauto_editor.feature b/behat/features/pathauto_editor.feature
 index 7356926..f105805 100644
---- a/tests/features/pathauto_editor.feature
-+++ b/tests/features/pathauto_editor.feature
+--- a/behat/features/pathauto_editor.feature
++++ b/behat/features/pathauto_editor.feature
 @@ -4,9 +4,13 @@ Feature: Test pathauto for editor users
    I need to be able to trust that pathauto works consistently
- 
+
    Background:
 -    Given I am logged in as a user with the "editor" role
 +    Given I am logged in as a user with the "administrator" role
@@ -2336,11 +2324,11 @@ index 7356926..f105805 100644
      When I press "edit-submit"
 -    Then the "h1" element should contain "Testing title"
 +    Then I should see "Testing title"
- 
+
    @api @panopoly_admin
    Scenario: Pathauto should automatically assign an url
      Then the url should match "testing-title"
- 
+
 -  @api @panopoly_admin
 +  @api @panopoly_admin @webspark_broken @webspark_fixed
    Scenario: Pathauto should automatically assign a new url when changing the title
@@ -2364,14 +2352,14 @@ index 7356926..f105805 100644
 +      And I press "edit-submit"
 +      And I visit "/admin/appearance/settings/innovation"
 +    Then the "edit-always-show-page-title" checkbox should not be checked
-diff --git a/tests/features/search.feature b/tests/features/search.feature
+diff --git a/behat/features/search.feature b/behat/features/search.feature
 index 1e73827..d39f42b 100644
---- a/tests/features/search.feature
-+++ b/tests/features/search.feature
+--- a/behat/features/search.feature
++++ b/behat/features/search.feature
 @@ -3,14 +3,14 @@ Feature: Search
    As an anonymous user
    I should be able to find content using the site search
- 
+
 -  @panopoly_search
 +  @panopoly_search @webspark_broken @webspark_ignore
    Scenario: Trying an empty search should yield a message
@@ -2379,7 +2367,7 @@ index 1e73827..d39f42b 100644
      When I press "Search" in the "Search" region
      Then I should see "Search Results"
        And I should see "Enter your keywords"
- 
+
 -  @panopoly_search
 +  @panopoly_search @webspark_broken @webspark_ignore
    Scenario: Trying a search with no results
@@ -2388,7 +2376,7 @@ index 1e73827..d39f42b 100644
 @@ -19,7 +19,7 @@ Feature: Search
        And I should see "0 items matched TkyXNk9NG2U7FjqtMvNvHXpv2xnfVv7Q"
        And I should see "Your search did not return any results."
- 
+
 -  @api @panopoly_search @wip
 +  @api @panopoly_search @wip @webspark_broken @webspark_ignore
    Scenario: Performing a search with results
@@ -2397,7 +2385,7 @@ index 1e73827..d39f42b 100644
 @@ -35,7 +35,7 @@ Feature: Search
        And I should see "Filter by Type"
        And I should not see "X9A1YXwc"
- 
+
 -  @api @javascript @panopoly_search
 +  @api @javascript @panopoly_search @webspark_broken @webspark_ignore
    Scenario: Search for content in widgets (not in the body)
@@ -2406,7 +2394,7 @@ index 1e73827..d39f42b 100644
 @@ -62,7 +62,7 @@ Feature: Search
        And I should see "1 item matched undominable"
        And I should see "Abracadabra"
- 
+
 -  @api @panopoly_search
 +  @api @panopoly_search @webspark_broken @webspark_ignore
    Scenario: New content should be indexed immediately
@@ -2415,18 +2403,18 @@ index 1e73827..d39f42b 100644
 @@ -82,7 +82,7 @@ Feature: Search
        And I should see "1 item matched RnJpIEZlYiAgNSAwODoyMToyMiBQU1QgMjAxNgo"
        And I should see "Searchable page"
- 
+
 -  @api @panopoly_search @dblog
 +  @api @panopoly_search @dblog @webspark_broken @webspark_ignore
    Scenario: Search queries are logged in the 'Top search phrases' report
      Given I am logged in as a user with the "administrator" role
        And I am on the homepage
-diff --git a/tests/features/wysiwyg_media.feature b/tests/features/wysiwyg_media.feature
+diff --git a/behat/features/wysiwyg_media.feature b/behat/features/wysiwyg_media.feature
 index 368b6cf..e639535 100644
---- a/tests/features/wysiwyg_media.feature
-+++ b/tests/features/wysiwyg_media.feature
+--- a/behat/features/wysiwyg_media.feature
++++ b/behat/features/wysiwyg_media.feature
 @@ -57,7 +57,7 @@ Feature: Add media using the rich text editor
- 
+
    # TODO: About 10% of the time this test will hang with Firefox, so for now,
    # we will run in Chrome only on Travis-CI to get consistent builds.
 -  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files
@@ -2455,7 +2443,7 @@ index 368b6cf..e639535 100644
 @@ -136,14 +136,14 @@ Feature: Add media using the rich text editor
        And the "Title Text" field should contain "Title & some > \"character's\" <"
        And I switch out of all frames
- 
+
 -  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files
 +  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files @webspark_broken @webspark_fixed
    Scenario: Use an image from elsewhere on the web
@@ -2469,11 +2457,11 @@ index 368b6cf..e639535 100644
        And I press "Next" in the "Media web tab" region
      Then I should see "Destination"
      # Select the destination (public/private files).
-diff --git a/tests/features/wysiwyg_webspark.feature b/tests/features/wysiwyg_webspark.feature
+diff --git a/behat/features/wysiwyg_webspark.feature b/behat/features/wysiwyg_webspark.feature
 new file mode 100644
 index 0000000..89fd64d
 --- /dev/null
-+++ b/tests/features/wysiwyg_webspark.feature
++++ b/behat/features/wysiwyg_webspark.feature
 @@ -0,0 +1,45 @@
 +Feature: Use rich text editor
 +  In order to format the content of my pages
@@ -2520,10 +2508,10 @@ index 0000000..89fd64d
 +    | edit-body-und-0-value_styleselect_text  | EOP button large                  | p        | class     | btn btn-blue btn-lg |
 +    | edit-body-und-0-value_styleselect_text  | EOP button full-col-wide          | p        | class     | btn btn-blue btn-block |
 +    | edit-body-und-0-value_styleselect_text  | EOP button large col-wide         | p        | class     | btn btn-blue btn-lg btn-block |
-diff --git a/tests/steps/panopoly_test.behat.inc b/tests/steps/panopoly_test.behat.inc
+diff --git a/behat/steps/panopoly_test.behat.inc b/behat/steps/panopoly_test.behat.inc
 index 51763fe..3c33019 100644
---- a/tests/steps/panopoly_test.behat.inc
-+++ b/tests/steps/panopoly_test.behat.inc
+--- a/behat/steps/panopoly_test.behat.inc
++++ b/behat/steps/panopoly_test.behat.inc
 @@ -404,7 +404,7 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
    public function waitForLivePreview() {
      // Make sure the live preview has triggered by bluring the current focus.
@@ -2531,12 +2519,12 @@ index 51763fe..3c33019 100644
 -    $this->getSession()->wait(5000, 'typeof jQuery !== "undefined" && jQuery.active === 0 && jQuery("#panopoly-form-widget-preview").length > 0 && !jQuery("#panopoly-form-widget-preview").hasClass("panopoly-magic-loading")');
 +    $this->getSession()->wait(2500, 'typeof jQuery !== "undefined" && jQuery.active === 0 && jQuery("#panopoly-form-widget-preview").length > 0 && !jQuery("#panopoly-form-widget-preview").hasClass("panopoly-magic-loading")');
    }
- 
+
    /**
-diff --git a/tests/steps/panopoly_test_panels.behat.inc b/tests/steps/panopoly_test_panels.behat.inc
+diff --git a/behat/steps/panopoly_test_panels.behat.inc b/behat/steps/panopoly_test_panels.behat.inc
 index baa12ed..3b3bd42 100644
---- a/tests/steps/panopoly_test_panels.behat.inc
-+++ b/tests/steps/panopoly_test_panels.behat.inc
+--- a/behat/steps/panopoly_test_panels.behat.inc
++++ b/behat/steps/panopoly_test_panels.behat.inc
 @@ -33,7 +33,7 @@ class PanelsSubContext extends RawDrupalContext implements DrupalSubContextInter
     * @When I wait for the Panels IPE to activate
     */
@@ -2544,7 +2532,7 @@ index baa12ed..3b3bd42 100644
 -    $this->getSession()->wait(5000, 'jQuery(".panels-ipe-editing").length > 0');
 +    $this->getSession()->wait(2500, 'jQuery(".panels-ipe-editing").length > 0');
    }
- 
+
    /**
 @@ -42,7 +42,7 @@ class PanelsSubContext extends RawDrupalContext implements DrupalSubContextInter
     * @When I wait for the Panels IPE to deactivate
@@ -2553,7 +2541,7 @@ index baa12ed..3b3bd42 100644
 -    $this->getSession()->wait(5000, 'jQuery(".panels-ipe-editing").length === 0');
 +    $this->getSession()->wait(2500, 'jQuery(".panels-ipe-editing").length === 0');
    }
- 
+
    /**
 @@ -63,9 +63,9 @@ class PanelsSubContext extends RawDrupalContext implements DrupalSubContextInter
     * @When I change layout with the Panels IPE
@@ -2565,13 +2553,13 @@ index baa12ed..3b3bd42 100644
 -    $this->getSession()->wait(5000, 'jQuery(".panels-choose-layout").length > 0');
 +    $this->getSession()->wait(2500, 'jQuery(".panels-choose-layout").length > 0');
    }
- 
+
  }
-diff --git a/tests/steps/panopoly_test_webspark.behat.inc b/tests/steps/panopoly_test_webspark.behat.inc
+diff --git a/behat/steps/panopoly_test_webspark.behat.inc b/behat/steps/panopoly_test_webspark.behat.inc
 new file mode 100644
 index 0000000..02e12d4
 --- /dev/null
-+++ b/tests/steps/panopoly_test_webspark.behat.inc
++++ b/behat/steps/panopoly_test_webspark.behat.inc
 @@ -0,0 +1,56 @@
 +<?php
 +/**
@@ -2629,11 +2617,11 @@ index 0000000..02e12d4
 +  }
 +
 +}
-diff --git a/tests/steps/panopoly_test_webspark_wysiwyg.behat.inc b/tests/steps/panopoly_test_webspark_wysiwyg.behat.inc
+diff --git a/behat/steps/panopoly_test_webspark_wysiwyg.behat.inc b/behat/steps/panopoly_test_webspark_wysiwyg.behat.inc
 new file mode 100644
 index 0000000..e9a0a30
 --- /dev/null
-+++ b/tests/steps/panopoly_test_webspark_wysiwyg.behat.inc
++++ b/behat/steps/panopoly_test_webspark_wysiwyg.behat.inc
 @@ -0,0 +1,136 @@
 +<?php
 +/**

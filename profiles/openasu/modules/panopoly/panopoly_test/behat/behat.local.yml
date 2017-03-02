@@ -1,0 +1,17 @@
+imports:
+    - behat.common.yml
+
+default:
+  extensions:
+    Behat\MinkExtension:
+      goutte: ~
+      selenium2:
+        browser: phantomjs
+      base_url: http://webspark.dev
+      files_path: '/var/www/webspark_drupal/profiles/openasu/modules/panopoly/panopoly_test/behat'
+    Drupal\DrupalExtension:
+      blackbox: ~
+      drush:
+        root: '/var/www/webspark_drupal'
+      drupal:
+        drupal_root: "/var/www/webspark_drupal"

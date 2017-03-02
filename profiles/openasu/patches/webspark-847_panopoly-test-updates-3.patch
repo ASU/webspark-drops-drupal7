@@ -8,10 +8,10 @@ index ec14d1e..3eb013e 100644
  vendor
 +tests/behat.local.yml
 +
-diff --git a/tests/features/basic_ipe.feature b/tests/features/basic_ipe.feature
+diff --git a/behat/features/basic_ipe.feature b/behat/features/basic_ipe.feature
 index 909890c..7c3d6a4 100644
---- a/tests/features/basic_ipe.feature
-+++ b/tests/features/basic_ipe.feature
+--- a/behat/features/basic_ipe.feature
++++ b/behat/features/basic_ipe.feature
 @@ -6,7 +6,13 @@ Feature: Make basic changes with the IPE
    Background:
      Given I am logged in as a user with the "administrator" role
@@ -27,10 +27,10 @@ index 909890c..7c3d6a4 100644
 
    @api @javascript @webspark_broken @webspark_fixed
    Scenario: Change layout
-diff --git a/tests/features/wysiwyg.feature b/tests/features/wysiwyg.feature
+diff --git a/behat/features/wysiwyg.feature b/behat/features/wysiwyg.feature
 index 2e848ec..7dd372e 100644
---- a/tests/features/wysiwyg.feature
-+++ b/tests/features/wysiwyg.feature
+--- a/behat/features/wysiwyg.feature
++++ b/behat/features/wysiwyg.feature
 @@ -39,10 +39,10 @@ Feature: Use rich text editor
        | Align Center                  | p          | text-align      | center       |
        | Align Right                   | p          | text-align      | right        |
