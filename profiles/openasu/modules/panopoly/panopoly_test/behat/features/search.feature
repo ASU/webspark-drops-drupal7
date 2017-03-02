@@ -3,14 +3,14 @@ Feature: Search
   As an anonymous user
   I should be able to find content using the site search
 
-  @panopoly_search @webspark_broken @webspark_ignore
+  @panopoly_search
   Scenario: Trying an empty search should yield a message
     Given I am on the homepage
     When I press "Search" in the "Search" region
     Then I should see "Search Results"
       And I should see "Enter your keywords"
 
-  @panopoly_search @webspark_broken @webspark_ignore
+  @panopoly_search
   Scenario: Trying a search with no results
     Given I am on the homepage
     When I fill in "TkyXNk9NG2U7FjqtMvNvHXpv2xnfVv7Q" for "Enter your keywords" in the "Search" region
@@ -19,7 +19,7 @@ Feature: Search
       And I should see "0 items matched TkyXNk9NG2U7FjqtMvNvHXpv2xnfVv7Q"
       And I should see "Your search did not return any results."
 
-  @api @panopoly_search @wip @webspark_broken @webspark_ignore
+  @api @panopoly_search @wip
   Scenario: Performing a search with results
     Given I am on the homepage
     And "panopoly_test_page" content:
@@ -35,7 +35,7 @@ Feature: Search
       And I should see "Filter by Type"
       And I should not see "X9A1YXwc"
 
-  @api @javascript @panopoly_search @webspark_broken @webspark_ignore
+  @api @javascript @panopoly_search
   Scenario: Search for content in widgets (not in the body)
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
@@ -62,7 +62,7 @@ Feature: Search
       And I should see "1 item matched undominable"
       And I should see "Abracadabra"
 
-  @api @panopoly_search @webspark_broken @webspark_ignore
+  @api @panopoly_search
   Scenario: New content should be indexed immediately
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
@@ -82,7 +82,7 @@ Feature: Search
       And I should see "1 item matched RnJpIEZlYiAgNSAwODoyMToyMiBQU1QgMjAxNgo"
       And I should see "Searchable page"
 
-  @api @panopoly_search @dblog @webspark_broken @webspark_ignore
+  @api @panopoly_search @dblog
   Scenario: Search queries are logged in the 'Top search phrases' report
     Given I am logged in as a user with the "administrator" role
       And I am on the homepage
