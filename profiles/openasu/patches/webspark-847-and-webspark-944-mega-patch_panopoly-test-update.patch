@@ -116,7 +116,7 @@ index 0000000..e872a73
 +  @api @webspark_added @webspark_init
 +  Scenario: Turn off ASU Brand module extras for CI testing
 +    Given I run drush "vset asu_brand_ci_testing 1"
-+    Then drush output should contain 'asu_brand_ci_testing was set to "1"'
++    Then drush output should contain 'asu_brand_ci_testing was set to 1'
 diff --git a/behat/features/asu_cas.feature b/behat/features/asu_cas.feature
 new file mode 100644
 index 0000000..8b052e1
@@ -922,7 +922,7 @@ index 0000000..69ebdb0
 +  @api @webspark_added @webspark_exit
 +  Scenario: Turn off ASU Brand module extras for CI testing
 +    Given I run drush "vset asu_brand_ci_testing 0"
-+    Then drush output should contain 'asu_brand_ci_testing was set to "0"'
++    Then drush output should contain 'asu_brand_ci_testing was set to 0'
 diff --git a/behat/steps/panopoly_test.behat.inc b/behat/steps/panopoly_test.behat.inc
 index 01fb66b..02faa86 100644
 --- a/behat/steps/panopoly_test.behat.inc
