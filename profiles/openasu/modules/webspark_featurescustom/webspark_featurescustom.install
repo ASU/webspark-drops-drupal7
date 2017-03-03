@@ -188,4 +188,6 @@ function webspark_featurescustom_update_7006(&$sandbox) {
       "(usually 'administrator') receives all of the necessary permissions to " .
       "use the Missing Module module at /admin/people/permissions", 'status');
   }
+  // WEBSPARK-1072 - Moved Webspark Seven theme info around. Need to rebuild.
+  drupal_theme_rebuild();
 }

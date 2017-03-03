@@ -19,7 +19,6 @@ dependencies[] = text
 dependencies[] = uuid
 dependencies[] = uuid_features
 dependencies[] = video_embed_field
-scripts[] = js/webspark_content_callout.js
 stylesheets[all][] = css/webspark_content_callout.css
 features[ctools][] = field_group:field_group:1
 features[ctools][] = strongarm:strongarm:1
