@@ -193,7 +193,7 @@ index c665714..f0a1f39 100644
 +            '@module_path' => $mm_path['path'],
              '@module_disable' => url('admin/reports/status/disable_module/' . $mm_name),
              '@module_remove' => url('admin/reports/status/remove_module/' . $mm_name),
-+            '@module_url' => url('http://drupal.org/project/" . $mm_name),
++            '@module_url' => url('http://drupal.org/project/' . $mm_name),
            ));
        }
        $value .= '</ul>';
