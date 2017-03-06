@@ -84,3 +84,11 @@ function asu_brand_update_7102(&$sandbox) {
 function asu_brand_update_7103(&$sandbox) {
   variable_set('asu_brand_ci_testing', 0);
 }
+
+/**
+ * Implements hook_update_N()
+ * + Updates ASU Header to v4.5 for all remaining non-Webspark Innovation users
+ */
+function asu_brand_update_7104(&$sandbox) {
+  variable_set('asu_brand_header_version', '4.5');
+}
