@@ -58,6 +58,14 @@ function innovation_preprocess_html(&$variables) {
         'content' => '/profiles/openasu/themes/innovation/images/mstile.png',
       )
     ),
+    'android-titlebar-bgcolor' => array(
+      '#type' => 'html_tag',
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'name' => 'theme-color',
+        'content' => '#ffffff',
+      )
+    ),
   );
   foreach ($meta_tags_html as $key => $value) {
     drupal_add_html_head($value, $key);
