@@ -63,7 +63,7 @@ function innovation_preprocess_html(&$variables) {
       '#tag' => 'meta',
       '#attributes' => array(
         'name' => 'theme-color',
-        'content' => '#ffffff',
+        'content' => '#8c1d40',
       )
     ),
   );
