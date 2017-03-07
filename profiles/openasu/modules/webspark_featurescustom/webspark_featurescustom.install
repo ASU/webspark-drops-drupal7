@@ -189,3 +189,18 @@ function webspark_featurescustom_update_7006(&$sandbox) {
       "use the Missing Module module at /admin/people/permissions", 'status');
   }
 }
+
+/**
+ * Implements hook_update_N() --
+ * Enable the directory suite module
+ * @param $sandbox
+ */
+function webspark_featurescustom_update_7007(&$sandbox) {
+  if (drupal_get_path('module', 'asu_dirs') != '' && !module_exists('asu_dirs')) {
+    module_enable(array('asu_dirs'));
+  }
+  if (drupal_get_path('module', 'asu_dir_panel') != '' && !module_exists('asu_dir_panel')) {
+    module_enable(array('asu_dir_panel'));
+  }
+}
+
