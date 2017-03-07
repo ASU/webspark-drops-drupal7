@@ -50,12 +50,13 @@ projects[panopoly_test][subdir] = panopoly
 projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update.patch
 projects[panopoly_test][patch][1372] = patches/webspark-847_panopoly-test-updates-3.patch
 projects[panopoly_test][patch][140] = patches/webspark-944_panopoly-test-image-widget-patches.patch
+projects[panopoly_test][patch][1402] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
 
 projects[asu_drupal_modules][type] = module
 projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = cca3759aa20496ede80ec95ea609ce59138090e0
+projects[asu_drupal_modules][download][revision] = 9c3c957f4bf36a4ee6f396add630018fe152b19b
 projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ; ASU Module Prerequisites
@@ -108,7 +109,7 @@ projects[views_php][version] = 1.x-dev
 projects[views_php][type] = module
 projects[views_php][subdir] = contrib
 
-projects[webform][version] = 4.12
+projects[webform][version] = 4.14
 projects[webform][type] = module
 projects[webform][subdir] = contrib
 
@@ -183,6 +184,8 @@ projects[tb_megamenu][subdir] = contrib
 ;; TODO - PATCH the CSS for tb_megamenu
 projects[tb_megamenu][patch][] = patches/webspark-919_tb-megamenu_fix-breakpoints.patch
 projects[tb_megamenu][patch][] = patches/webspark-935_tb-megamenu_fix-submenu-removal_7.x.patch
+projects[tb_megamenu][patch][] = patches/webspark-1007-redux-tb_megamenu-tab_accessibility-7.x.patch
+projects[tb_megamenu][patch][] = patches/webspark-1018_tb-megamenu_removing-mobile-button-for-ADA_7.x.patch
 
 ;projects[uuid_features][version] = 1.0-alpha4
 ;; grabbing alpha-4+dev-37 commit

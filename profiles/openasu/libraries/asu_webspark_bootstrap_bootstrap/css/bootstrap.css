@@ -1759,7 +1759,7 @@ input[type="date"] {
 }
 .radio + .radio,
 .checkbox + .checkbox {
-  margin-top: -5px;
+  margin-top: -4px;
 }
 .radio-inline,
 .checkbox-inline {
