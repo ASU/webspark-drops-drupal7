@@ -12,7 +12,7 @@ diff --git a/behat/behat.common.yml b/behat/behat.common.yml
 index 82e7387..de3fb85 100644
 --- a/behat/behat.common.yml
 +++ b/behat/behat.common.yml
-@@ -1,8 +1,8 @@
+@@ -1,8 +1,8 @@8
  default:
    suites:
      default:
@@ -102,21 +102,7 @@ index 0000000..9d9568a
 +      subcontexts:
 +        paths:
 +          - "/home/travis/build/ASU/webspark-drops-drupal7/profiles/openasu/modules/panopoly/panopoly_test"
-diff --git a/behat/features/aaa_webspark_init.feature b/behat/features/aaa_webspark_init.feature
-new file mode 100644
-index 0000000..e872a73
---- /dev/null
-+++ b/behat/features/aaa_webspark_init.feature
-@@ -0,0 +1,9 @@
-+Feature: Alter standard Webspark settings for testing
-+  In order to run tests without being interrupted by Javascript popups
-+  As a site administrator
-+  I need to be able to turn off GTM includes
-+
-+  @api @webspark_added @webspark_init
-+  Scenario: Turn off ASU Brand module extras for CI testing
-+    Given I run drush "vset asu_brand_ci_testing 1"
-+    Then drush output should contain 'asu_brand_ci_testing was set to 1'
+
 diff --git a/behat/features/asu_cas.feature b/behat/features/asu_cas.feature
 new file mode 100644
 index 0000000..8b052e1
@@ -480,33 +466,7 @@ index 8a4ccec..0f17a8e 100644
 +  @api @panopoly_demo @webspark_broken @webspark_ignore
    Scenario: Create Test Page
      Given I am logged in as a user with the "administrator" role
-     When I visit "/node/add/panopoly-test-page"
-diff --git a/behat/features/image_widget.feature b/behat/features/image_widget.feature
-index 2ca7eea..bdcfd27 100644
---- a/behat/features/image_widget.feature
-+++ b/behat/features/image_widget.feature
-@@ -10,8 +10,8 @@ Feature: Add image widget
-       And I am viewing a landing page
-     When I customize this page with the Panels IPE
-       And I click "Add new pane"
--      And I click "Add image" in the "CTools modal" region
--    Then I should see "Configure new Add image"
-+      And I click "Add responsive image" in the "CTools modal" region
-+    Then I should see "Configure new Add responsive image"
-     When I fill in the following:
-       | Title   | Testing image widget title |
-       | Editor  | plain_text                 |
-@@ -46,8 +46,8 @@ Feature: Add image widget
-       And I am viewing a landing page
-     When I customize this page with the Panels IPE
-       And I click "Add new pane"
--      And I click "Add image" in the "CTools modal" region
--    Then I should see "Configure new Add image"
-+      And I click "Add responsive image" in the "CTools modal" region
-+    Then I should see "Configure new Add responsive image"
-     When I fill in the following:
-       | Title   | Testing image widget title              |
-       | Editor  | plain_text                              |
+     When I visit "/node/add/panopoly-test-page"                            |
 diff --git a/behat/features/landingpage.feature b/behat/features/landingpage.feature
 index bb29ec9..181ea42 100644
 --- a/behat/features/landingpage.feature
@@ -908,21 +868,7 @@ index 0000000..89fd64d
 +    | edit-body-und-0-value_styleselect_text  | EOP button large                  | p        | class     | btn btn-blue btn-lg |
 +    | edit-body-und-0-value_styleselect_text  | EOP button full-col-wide          | p        | class     | btn btn-blue btn-block |
 +    | edit-body-und-0-value_styleselect_text  | EOP button large col-wide         | p        | class     | btn btn-blue btn-lg btn-block |
-diff --git a/behat/features/zzz_webspark_exit.feature b/behat/features/zzz_webspark_exit.feature
-new file mode 100644
-index 0000000..69ebdb0
---- /dev/null
-+++ b/behat/features/zzz_webspark_exit.feature
-@@ -0,0 +1,9 @@
-+Feature: Restore standard Webspark settings after testing
-+  In order to restore site to normal operations
-+  As a site administrator
-+  I need to be able to turn back on GTM includes
-+
-+  @api @webspark_added @webspark_exit
-+  Scenario: Turn off ASU Brand module extras for CI testing
-+    Given I run drush "vset asu_brand_ci_testing 0"
-+    Then drush output should contain 'asu_brand_ci_testing was set to 0'
+
 diff --git a/behat/steps/panopoly_test.behat.inc b/behat/steps/panopoly_test.behat.inc
 index 01fb66b..02faa86 100644
 --- a/behat/steps/panopoly_test.behat.inc

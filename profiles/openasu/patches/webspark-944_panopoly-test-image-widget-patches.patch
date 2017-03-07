@@ -1,8 +1,19 @@
 diff --git a/behat/features/image_widget.feature b/behat/features/image_widget.feature
-index 38a9047..3b39cc6 100644
+index 2ca7eea..bdcfd27 100644
 --- a/behat/features/image_widget.feature
 +++ b/behat/features/image_widget.feature
-@@ -34,8 +34,8 @@ Feature: Add image widget
+@@ -10,8 +10,8 @@ Feature: Add image widget
+       And I am viewing a landing page
+     When I customize this page with the Panels IPE
+       And I click "Add new pane"
+-      And I click "Add image" in the "CTools modal" region
+-    Then I should see "Configure new Add image"
++      And I click "Add responsive image" in the "CTools modal" region
++    Then I should see "Configure new Add responsive image"
+     When I fill in the following:
+       | Title   | Testing image widget title |
+       | Editor  | plain_text                 |
+@@ -46,8 +46,8 @@ Feature: Add image widget
        And I am viewing a landing page
      When I customize this page with the Panels IPE
        And I click "Add new pane"
@@ -12,15 +23,5 @@ index 38a9047..3b39cc6 100644
 +    Then I should see "Configure new Add responsive image"
      When I fill in the following:
        | Title   | Testing image widget title              |
-       | Editor  | plain_text                              |
-@@ -61,8 +61,8 @@ Feature: Add image widget
-       And I am viewing a landing page
-     When I customize this page with the Panels IPE
-       And I click "Add new pane"
--      And I click "Add image" in the "CTools modal" region
--    Then I should see "Configure new Add image"
-+      And I click "Add responsive image" in the "CTools modal" region
-+    Then I should see "Configure new Add responsive image"
-     When I click "Search for existing content" in the "CTools modal" region
-     Then I should see "Linkit"
- 
+       | Editor  | plain_text
+

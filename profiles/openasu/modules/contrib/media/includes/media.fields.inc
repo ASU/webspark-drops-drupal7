@@ -134,7 +134,7 @@ function media_field_widget_form(&$form, &$form_state, $field, $instance, $langc
   elseif (module_exists('translation') && $element['#entity_type'] == 'node' && translation_supported_type($element['#entity']->type)) {
     $element['#media_parent_entity_form_langcode'] = $element['#entity']->language;
     $element['#media_parent_entity_source_langcode'] = $element['#entity']->language;
-  } elseif ($element['#entity_type'] == 'field_collection_item' && !empty($form['#entity']) && property_exists($form['#entity'], 'language')) {
+  } elseif ($element['#entity_type'] == 'field_collection_item' && property_exists($form['#entity'], 'language')) {
     $element['#media_parent_entity_form_langcode'] = $form['#entity']->language;
   }
 
@@ -408,7 +408,6 @@ function media_field_widget_submit($form, &$form_state) {
     }
   }
 
-  ksort($submitted_values);
   // Re-index deltas after removing empty items.
   $submitted_values = array_values($submitted_values);
 
@@ -434,20 +433,8 @@ function theme_media_widget($variables) {
   $element = $variables['element'];
   $output = '';
 
-  // Merge provided attributes with existing ones.
   // The "form-media" class is required for proper Ajax functionality.
-  $attributes = array(
-    'class' => array("media-widget", "form-media", "clearfix"),
-  );
-  if (!empty($element['#attributes'])) {
-    $attributes = array_merge_recursive($attributes, $element['#attributes']);
-  }
-  if (!empty($element['#id'])) {
-    $attributes = array_merge_recursive($attributes, array('id' => $element['#id'] . '--widget'));
-  }
-
-  // Render attributes into div in one go.
-  $output .= '<div ' . drupal_attributes($attributes) . '>';
+  $output .= '<div class="media-widget form-media clearfix">';
   $output .= drupal_render_children($element);
   $output .= '</div>';
 

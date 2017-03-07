@@ -11,7 +11,7 @@
 ; Media (module) - matches Panopoly 1.37 (from panopoly_widgets.make)
 projects[media][type] = module
 projects[media][subdir] = contrib
-projects[media][version] = 2.0-rc11
+projects[media][version] = 2.0-rc3
 projects[media][sha256] = 4225713bdf9bf6f0eab8a2db92eb8c114125597d853f0a2d1cece71917f81d03
 ; TODO:  check media patches to see if now included, or new patches need to be made
 ;projects[media][patch][2126697] = https://www.drupal.org/files/issues/media_wysiwyg_2126697-53.patch

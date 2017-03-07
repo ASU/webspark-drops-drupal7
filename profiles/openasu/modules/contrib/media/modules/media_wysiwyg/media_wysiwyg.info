@@ -15,9 +15,9 @@ files[] = tests/media_wysiwyg.macro.test
 
 configure = admin/config/media/browser
 
-; Information added by Drupal.org packaging script on 2017-02-28
-version = "7.x-2.0-rc11"
+; Information added by Drupal.org packaging script on 2017-01-08
+version = "7.x-2.0-rc3"
 core = "7.x"
 project = "media"
-datestamp = "1488279796"
+datestamp = "1483894746"
 

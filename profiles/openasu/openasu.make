@@ -40,16 +40,16 @@ projects[panopoly_wysiwyg][subdir] = panopoly
 projects[panopoly_search][version] = 1.43
 projects[panopoly_search][subdir] = panopoly
 ; Fixes DB update dependency ordering
-;projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
+projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
 
 projects[panopoly_test][version] = 1.43
 projects[panopoly_test][subdir] = panopoly
 ; @TODO - Add patches for custom Webspark testing,
-projects[panopoly_test][patch][137] = patches/webspark-847-and-webspark-944-mega-patch_panopoly-test-update.patch
+;projects[panopoly_test][patch][137] = patches/webspark-847-and-webspark-944-mega-patch_panopoly-test-update.patch
 ;projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update.patch
-;projects[panopoly_test][patch][1372] = patches/webspark-847_panopoly-test-updates-3.patch
-;projects[panopoly_test][patch][140] = patches/webspark-944_panopoly-test-image-widget-patches.patch
-;projects[panopoly_test][patch][1402] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
+projects[panopoly_test][patch][1372] = patches/webspark-847_panopoly-test-updates-3.patch
+projects[panopoly_test][patch][140] = patches/webspark-944_panopoly-test-image-widget-patches.patch
+projects[panopoly_test][patch][1402] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
 
