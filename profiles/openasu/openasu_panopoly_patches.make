@@ -8,21 +8,28 @@
 ;
 ; These projects are installed first, before any other projects in the parent makefile.
 
-; Media (module) - matches Panopoly 1.37 (from panopoly_widgets.make)
+; Media (module) - matches Panopoly 1.43 (from panopoly_widgets.make)
 projects[media][type] = module
 projects[media][subdir] = contrib
 projects[media][version] = 2.0-rc3
 projects[media][sha256] = 4225713bdf9bf6f0eab8a2db92eb8c114125597d853f0a2d1cece71917f81d03
 ; TODO:  check media patches to see if now included, or new patches need to be made
+; new for 1.43
+projects[media][patch][2842446] = https://www.drupal.org/files/issues/media-2841331-3.patch
+projects[media][patch][2272567] = https://www.drupal.org/files/issues/media_dialog_appears_2272567-32.patch
+
+; old.  outdated?
 ;projects[media][patch][2126697] = https://www.drupal.org/files/issues/media_wysiwyg_2126697-53.patch
 projects[media][patch][2308487] = https://www.drupal.org/files/issues/media-alt-title-double-encoded-2308487-2.patch
 projects[media][patch][2084287] = https://www.drupal.org/files/issues/media-file-name-focus-2084287-2.patch
 ;projects[media][patch][2534724] = https://www.drupal.org/files/issues/media-browser_opens_twice-2534724-53.patch
+
+
 ; Patches - Webspark
 ; WEBSPARK-679 - WYSIWYG + Media module issues
 projects[media][patch][] = patches/webspark-679_fix-HTML-encoded-macros-2028253-10.patch
 ; following taken from #56 on https://www.drupal.org/node/2317519
-;projects[media][patch][] = patches/webspark-679_wysiwyg-multiple-editors-media-images-breaks.patch
+; projects[media][patch][] = patches/webspark-679_wysiwyg-multiple-editors-media-images-breaks.patch
 
 ; Radix Layouts (module)
 projects[radix_layouts][type] = module
