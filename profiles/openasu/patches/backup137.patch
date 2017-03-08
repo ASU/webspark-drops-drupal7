@@ -1,18 +1,8 @@
-diff --git a/.gitignore b/.gitignore
-index 9c355d8..91f8171 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -3,3 +3,5 @@ composer.phar
- composer.lock
- bin
- vendor
-+behat/behat.local.yml
-+
 diff --git a/behat/behat.common.yml b/behat/behat.common.yml
 index 82e7387..de3fb85 100644
 --- a/behat/behat.common.yml
 +++ b/behat/behat.common.yml
-@@ -1,8 +1,8 @@8
+@@ -1,8 +1,8 @@
  default:
    suites:
      default:
@@ -55,96 +45,18 @@ index 82e7387..de3fb85 100644
  
  # Setup for Google Chrome only tests.
  chrome:
-diff --git a/behat/behat.local.yml b/behat/behat.local.yml
-new file mode 100644
-index 0000000..a44bb87
---- /dev/null
-+++ b/behat/behat.local.yml
-@@ -0,0 +1,17 @@
-+imports:
-+    - behat.common.yml
-+
-+default:
-+  extensions:
-+    Behat\MinkExtension:
-+      goutte: ~
-+      selenium2: ~
-+      base_url: http://bjdevil21-webspark
-+      files_path: '/home/bryan/github.com/bjdevil21/webspark-drops-drupal7/profiles/openasu/modules/panopoly/panopoly_test/tests'
-+    Drupal\DrupalExtension:
-+      blackbox: ~
-+      drush:
-+        alias: bjdevil21-webspark
-+      drupal:
-+        drupal_root: "/home/bryan/github.com/bjdevil21/webspark-drops-drupal7"
-+
-diff --git a/behat/behat.travis.yml b/behat/behat.travis.yml
-new file mode 100644
-index 0000000..9d9568a
---- /dev/null
-+++ b/behat/behat.travis.yml
-@@ -0,0 +1,18 @@
-+imports:
-+    - behat.common.yml
-+#
-+default:
-+  extensions:
-+    Behat\MinkExtension:
-+      base_url: http://127.0.0.1:8888
-+      files_path: './profiles/openasu/modules/panopoly/panopoly_test/tests'
-+    Drupal\DrupalExtension:
-+      drush:
-+        root: "/home/travis/build/ASU/webspark-drops-drupal7"
-+      drupal:
-+        drupal_root: "/home/travis/build/ASU/webspark-drops-drupal7"
-+
-+      # Look in the profile modules directory and pull in module subcontexts.
-+      subcontexts:
-+        paths:
-+          - "/home/travis/build/ASU/webspark-drops-drupal7/profiles/openasu/modules/panopoly/panopoly_test"
-
-diff --git a/behat/features/asu_cas.feature b/behat/features/asu_cas.feature
-new file mode 100644
-index 0000000..8b052e1
---- /dev/null
-+++ b/behat/features/asu_cas.feature
-@@ -0,0 +1,17 @@
-+@api
-+Feature: ASU CAS Admin UI
-+  As an admin
-+  When I edit or add users
-+  I need to see ASURITE User ID and not CAS username
-+
-+  Scenario: Admin user adds ASURITE user
-+    Given I am logged in as a user with the "administrator" role
-+    And I am on "/admin/people"
-+    And I click "Add ASURITE User"
-+    Then I should see "Registration will proceed as if the user with the specified ASURITE User ID just logged in."
-+
-+  Scenario: Admin
-+    Given I am logged in as a user with the "administrator" role
-+    Given I am on "/user/1/edit"
-+    Then I should not see "CAS username"
-+    And I should see "ASURITE User ID"
 diff --git a/behat/features/basic_ipe.feature b/behat/features/basic_ipe.feature
-index 2a6ff3a..1088165 100644
+index 1088165..d3d03ee 100644
 --- a/behat/features/basic_ipe.feature
 +++ b/behat/features/basic_ipe.feature
-@@ -6,7 +6,13 @@ Feature: Make basic changes with the IPE
-   Background: 
-     Given I am logged in as a user with the "administrator" role
-       And Panopoly magic live previews are disabled
--      And I am viewing a "panopoly_test_page" with the title "Testing title"
-+      When I visit "/node/add/panopoly-test-page"
-+      And I fill in the following:
-+        | Title  | Basic IPE Testing title |
-+        | Editor | plain_text    |
-+        | Body   | Basic IPE Testing body  |
-+      And I press "edit-submit"
-+      Then I should see "Basic IPE Testing title"
- 
-   @api @javascript
-   Scenario: Change layout
+@@ -20,5 +20,4 @@ Feature: Make basic changes with the IPE
+       And I click "Phelan"
+       And I press "Save" in the "CTools modal" region
+       And I wait for the Panels IPE to deactivate
+-    Then I should see "Testing title"
+-
++    Then I should see "Basic IPE Testing title"
+\ No newline at end of file
 diff --git a/behat/features/contentitem_widget.feature b/behat/features/contentitem_widget.feature
 index 76e4e30..aea5bae 100644
 --- a/behat/features/contentitem_widget.feature
@@ -466,7 +378,33 @@ index 8a4ccec..0f17a8e 100644
 +  @api @panopoly_demo @webspark_broken @webspark_ignore
    Scenario: Create Test Page
      Given I am logged in as a user with the "administrator" role
-     When I visit "/node/add/panopoly-test-page"                            |
+     When I visit "/node/add/panopoly-test-page"
+diff --git a/behat/features/image_widget.feature b/behat/features/image_widget.feature
+index bdcfd27..dc60e16 100644
+--- a/behat/features/image_widget.feature
++++ b/behat/features/image_widget.feature
+@@ -2,8 +2,8 @@ Feature: Add image widget
+   In order to add an image to page
+   As a site administrator
+   I need to be able to use the image widget
+- 
+-  @api @javascript @panopoly_widgets @local_files
++
++  @api @javascript @panopoly_widgets @local_files @webspark_broken @webspark_fixed
+   Scenario: Add a image
+     Given I am logged in as a user with the "administrator" role
+       And Panopoly magic live previews are disabled
+@@ -85,8 +85,8 @@ Feature: Add image widget
+       And I am viewing a landing page
+     When I customize this page with the Panels IPE
+       And I click "Add new pane"
+-      And I click "Add image" in the "CTools modal" region
+-    Then I should see "Configure new Add image"
++      And I click "Add responsive image" in the "CTools modal" region
++    Then I should see "Configure new Add responsive image"
+     When I click the 2nd "Search for existing content" in the "CTools modal" region
+     Then I should see "Linkit"
+ 
 diff --git a/behat/features/landingpage.feature b/behat/features/landingpage.feature
 index bb29ec9..181ea42 100644
 --- a/behat/features/landingpage.feature
@@ -744,31 +682,6 @@ index 1e73827..d39f42b 100644
    Scenario: Search queries are logged in the 'Top search phrases' report
      Given I am logged in as a user with the "administrator" role
        And I am on the homepage
-diff --git a/behat/features/wysiwyg.feature b/behat/features/wysiwyg.feature
-index 2e848ec..7dd372e 100644
---- a/behat/features/wysiwyg.feature
-+++ b/behat/features/wysiwyg.feature
-@@ -39,10 +39,10 @@ Feature: Use rich text editor
-       | Align Center                  | p          | text-align      | center       |
-       | Align Right                   | p          | text-align      | right        |
- 
--  @api @javascript @panopoly_wysiwyg
-+  # Removed actions related to buttons that were removed by Webspark WYSIWYG
-+  @api @javascript @panopoly_wysiwyg @webspark_broken @webspark_fixed
-   Scenario Outline: Format text in the editor (advanced toolbar)
--    When I expand the toolbar in the "edit-body-und-0-value" WYSIWYG editor
--      And I click the "<Action>" button in the "edit-body-und-0-value" WYSIWYG editor
-+    When I click the "<Action>" button in the "edit-body-und-0-value" WYSIWYG editor
-       And I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
-       #And I press "Publish"
-       And I press "edit-submit"
-@@ -50,6 +50,5 @@ Feature: Use rich text editor
- 
-     Examples:
-       | Action          | Element | Property        | Value     |
--      | Underline       | span    | text-decoration | underline |
-       | Align Full      | p       | text-align      | justify   |
-       | Increase Indent | p       | padding-left    | 30px      |
 diff --git a/behat/features/wysiwyg_media.feature b/behat/features/wysiwyg_media.feature
 index 368b6cf..e639535 100644
 --- a/behat/features/wysiwyg_media.feature
@@ -817,58 +730,6 @@ index 368b6cf..e639535 100644
        And I press "Next" in the "Media web tab" region
      Then I should see "Destination"
      # Select the destination (public/private files).
-diff --git a/behat/features/wysiwyg_webspark.feature b/behat/features/wysiwyg_webspark.feature
-new file mode 100644
-index 0000000..89fd64d
---- /dev/null
-+++ b/behat/features/wysiwyg_webspark.feature
-@@ -0,0 +1,45 @@
-+Feature: Use rich text editor
-+  In order to format the content of my pages
-+  As a site builder
-+  I need to be able to use a WYSIWYG editor
-+
-+  Background:
-+    Given I am logged in as a user with the "administrator" role
-+    When I visit "/node/add/panopoly-test-page"
-+    And I fill in the following:
-+      | Title  | Testing WYSIWYG       |
-+      | Editor | panopoly_wysiwyg_text |
-+
-+  @api @javascript @panopoly_wysiwyg @webspark_added
-+  Scenario Outline: Format text with Webspark-specific styles in the WYSIWYG editor
-+    When I click the "<Styles>" element identified by the "id" attribute in the "edit-body-und-0-value" WYSIWYG editor
-+      And I click the "<Styling>" option in the opened "Styles" WYSIWYG editor drop down list
-+      And I type "Testing element" in the "edit-body-und-0-value" WYSIWYG editor
-+      #And I press "Publish"
-+      And I press "edit-submit"
-+    Then I should see "Testing element" in the "<Element>" element with the "<Attribute>" attribute set to "<Value>" in the "Bryant Content" region
-+
-+    Examples:
-+    | Styles                                  | Styling                           | Element  | Attribute | Value     |
-+    #| edit-body-und-0-value_styleselect_text  | Image align left                  | p        | class     | pull-left |
-+    | edit-body-und-0-value_styleselect_text  | Lead paragraph                    | p        | class     | lead-paragraph |
-+    | edit-body-und-0-value_styleselect_text  | Image align right                 | p        | class     | pull-right |
-+    | edit-body-und-0-value_styleselect_text  | Oval image                        | p        | class     | img-circle |
-+    | edit-body-und-0-value_styleselect_text  | Image with rounded corners        | p        | class     | img-rounded |
-+    | edit-body-und-0-value_styleselect_text  | Image with double-border          | p        | class     | img-thumbnail |
-+    | edit-body-und-0-value_styleselect_text  | Primary button                    | p        | class     | btn btn-primary |
-+    | edit-body-und-0-value_styleselect_text  | Primary button large              | p        | class     | btn btn-primary btn-lg |
-+    | edit-body-und-0-value_styleselect_text  | Primary button full-col-wide      | p        | class     | btn btn-primary btn-block |
-+    | edit-body-und-0-value_styleselect_text  | Primary button large col-wide     | p        | class     | btn btn-primary btn-lg btn-block |
-+    | edit-body-und-0-value_styleselect_text  | Secondary button                  | p        | class     | btn btn-secondary |
-+    | edit-body-und-0-value_styleselect_text  | Secondary button large            | p        | class     | btn btn-secondary btn-lg |
-+    | edit-body-und-0-value_styleselect_text  | Secondary button full-col-wide    | p        | class     | btn btn-secondary btn-block |
-+    | edit-body-und-0-value_styleselect_text  | Secondary button large col-wide   | p        | class     | btn btn-secondary btn-lg btn-block |
-+    | edit-body-und-0-value_styleselect_text  | RFI/Visit/Apply (RVA) button      | p        | class     | btn btn-gold |
-+    | edit-body-und-0-value_styleselect_text  | RVA button large                  | p        | class     | btn btn-gold btn-lg |
-+    | edit-body-und-0-value_styleselect_text  | RVA button full-col-wide          | p        | class     | btn btn-gold btn-block |
-+    | edit-body-und-0-value_styleselect_text  | RVA button large col-wide         | p        | class     | btn btn-gold btn-lg btn-block |
-+    | edit-body-und-0-value_styleselect_text  | Explore Our Programs (EOP) button | p        | class     | btn btn-blue |
-+    | edit-body-und-0-value_styleselect_text  | EOP button large                  | p        | class     | btn btn-blue btn-lg |
-+    | edit-body-und-0-value_styleselect_text  | EOP button full-col-wide          | p        | class     | btn btn-blue btn-block |
-+    | edit-body-und-0-value_styleselect_text  | EOP button large col-wide         | p        | class     | btn btn-blue btn-lg btn-block |
-
 diff --git a/behat/steps/panopoly_test.behat.inc b/behat/steps/panopoly_test.behat.inc
 index 01fb66b..02faa86 100644
 --- a/behat/steps/panopoly_test.behat.inc
@@ -916,208 +777,3 @@ index baa12ed..3b3bd42 100644
    }
  
  }
-diff --git a/behat/steps/panopoly_test_webspark.behat.inc b/behat/steps/panopoly_test_webspark.behat.inc
-new file mode 100644
-index 0000000..02e12d4
---- /dev/null
-+++ b/behat/steps/panopoly_test_webspark.behat.inc
-@@ -0,0 +1,56 @@
-+<?php
-+/**
-+ * @file
-+ * Provide Behat step-definitions for the Innovation theme, based on functions
-+ * from panopoly_test.behat.inc.
-+ */
-+
-+use Drupal\DrupalExtension\Context\DrupalSubContextInterface;
-+use Drupal\DrupalDriverManager;
-+use Drupal\DrupalExtension\Context\RawDrupalContext;
-+
-+class WebsparkBehatTests extends RawDrupalContext implements DrupalSubContextInterface {
-+
-+  /**
-+   * Contains the DrupalDriverManager.
-+   *
-+   * @var \Drupal\DrupalDriverManager
-+   */
-+  private $drupal;
-+
-+  /**
-+   * Initializes context.
-+   */
-+  public function __construct(DrupalDriverManager $drupal) {
-+    $this->drupal = $drupal;
-+  }
-+
-+  /**
-+   * @Then the :field Innovation radio button should be set to :option
-+   *
-+   * @description - Tweaked copy of the theRadioButtonShouldBeSetTo function in
-+   * panopoly_test.behat.inc. Built to deal with the Font Awesome icons in
-+   * <label> tags.
-+   */
-+  public function theInnovationRadioButtonShouldBeSetTo($field, $option) {
-+    $page = $this->getSession()->getPage();
-+    $div = $page->find('xpath', "//div[contains(., '$field') and @class[contains(.,'form-type-radio')]]");
-+    if ($div) {
-+      $radios = $div->find('xpath', "//input[@type='radio']");
-+      if ($radios) {
-+        // XPath altered for Webspark DOM customization
-+        $checkedRadio = $div->find('xpath', "//input[@type='radio' and @checked='checked']/parent::label[contains(., '$option')]");
-+        if (!$checkedRadio) {
-+          throw new \Exception(sprintf('We found the radio buttons for "%s", but "%s" was not selected.', $field, $option));
-+        }
-+      } elseif (!$radios) {
-+        throw new \Exception(sprintf('We found "%s", but it did not contain any radio buttons".', $field));
-+      }
-+    } elseif (!$div) {
-+      throw new \Exception(sprintf('We couldn\'nt find "%s" on the page', $field));
-+    } else {
-+      throw new \Exception('General exception from '.__FUNCTION__);
-+    }
-+  }
-+
-+}
-diff --git a/behat/steps/panopoly_test_webspark_wysiwyg.behat.inc b/behat/steps/panopoly_test_webspark_wysiwyg.behat.inc
-new file mode 100644
-index 0000000..e9a0a30
---- /dev/null
-+++ b/behat/steps/panopoly_test_webspark_wysiwyg.behat.inc
-@@ -0,0 +1,136 @@
-+<?php
-+/**
-+ * @file
-+ * Provide Behat step-definitions for the Innovation theme, based on functions
-+ * from panopoly_test.behat.inc.
-+ */
-+
-+use Drupal\DrupalExtension\Context\DrupalSubContextInterface;
-+use Drupal\DrupalDriverManager;
-+use Drupal\DrupalExtension\Context\RawDrupalContext;
-+
-+class WebsparkWysiwygBehatTests extends RawDrupalContext implements DrupalSubContextInterface {
-+
-+  /**
-+   * Contains the DrupalDriverManager.
-+   *
-+   * @var \Drupal\DrupalDriverManager
-+   */
-+  private $drupal;
-+
-+  /**
-+   * Initializes context.
-+   */
-+  public function __construct(DrupalDriverManager $drupal) {
-+    $this->drupal = $drupal;
-+  }
-+
-+  /**
-+   * Get the instance variable to use in Javascript.
-+   *
-+   * @param string $instanceId
-+   *   The instanceId used by the WYSIWYG module to identify the instance.
-+   *
-+   * @throws Exeception
-+   *   Throws an exception if the editor doesn't exist.
-+   *
-+   * @return string
-+   *   A Javascript expression representing the WYSIWYG instance.
-+   */
-+  protected function getWysiwygInstance($instanceId) {
-+    $instance = "Drupal.wysiwyg.instances['$instanceId']";
-+
-+    if (!$this->getSession()->evaluateScript("return !!$instance")) {
-+      throw new \Exception(sprintf('The editor "%s" was not found on the page %s', $instanceId, $this->getSession()->getCurrentUrl()));
-+    }
-+
-+    return $instance;
-+  }
-+
-+  /**
-+   * Get a Mink Element representing the WYSIWYG toolbar.
-+   *
-+   * @param string $instanceId
-+   *   The instanceId used by the WYSIWYG module to identify the instance.
-+   * @param string $editorType
-+   *   Identifies the underlying editor (for example, "tinymce").
-+   *
-+   * @throws Exeception
-+   *   Throws an exception if the toolbar can't be found.
-+   *
-+   * @return \Behat\Mink\Element\NodeElement
-+   *   The toolbar DOM Node.
-+   */
-+  protected function getWysiwygToolbar($instanceId, $editorType) {
-+    $driver = $this->getSession()->getDriver();
-+
-+    switch ($editorType) {
-+      case 'tinymce':
-+        $toolbarElement = $driver->find("//div[@id='{$instanceId}_toolbargroup']");
-+        $toolbarElement = !empty($toolbarElement) ? $toolbarElement[0] : NULL;
-+        break;
-+
-+      case 'markitup':
-+        $elementId = 'markItUp' . ucfirst($instanceId);
-+        $toolbarElement = $driver->find("//div[@id='{$elementId}']//div[@class='markItUpHeader']");
-+        $toolbarElement = !empty($toolbarElement) ? $toolbarElement[0] : NULL;
-+        break;
-+    }
-+
-+    if (!$toolbarElement) {
-+      throw new \Exception(sprintf('Toolbar for editor "%s" was not found on the page %s', $instanceId, $this->getSession()->getCurrentUrl()));
-+    }
-+
-+    return $toolbarElement;
-+  }
-+
-+
-+  /**
-+   * Click on the WYSIWYG drop down elements (<a> tags) to initially open them.
-+   *
-+   * @When I click the :action element identified by the :attributeType attribute in the :instanceId WYSIWYG editor
-+   */
-+  public function iClickTheDDInTheWysiwygEditor($action, $attributeType, $instanceId) {
-+    $driver = $this->getSession()->getDriver();
-+
-+    $instance = $this->getWysiwygInstance($instanceId);
-+    $editorType = $this->getSession()
-+      ->evaluateScript("return $instance.editor");
-+    $toolbarElement = $this->getWysiwygToolbar($instanceId, $editorType);
-+
-+    // Click the action button.
-+    $button = $toolbarElement->find("xpath", "//a[starts-with(@" . $attributeType . ", '$action')]");
-+    if (!$button) {
-+      throw new \Exception(sprintf('The "%s" element with attribute "%s" was not found in %s', $action, $attributeType, strtoupper($editorType)));
-+    }
-+    $button->click();
-+    $driver->wait(1000, TRUE);
-+  }
-+
-+  /**
-+   * Click on the WYSIWYG dropdown options (<a> tags)
-+   *
-+   * @When I click the :styling option in the opened :dropDownName WYSIWYG editor drop down list
-+   *
-+   */
-+  public function iClickTheDDOptionInTheWysiwygEditor($styling, $dropDownName) {
-+
-+    $page = $this->getSession()->getPage();
-+    $dropDownName = strtolower($dropDownName);
-+    $div = $page->find('xpath', "//div[@id[contains(., 'value_$dropDownName')] and @class[contains(., 'mceListBoxMenu')]]");
-+    if ($div) {
-+      $link = $div->find('xpath', "//span[@title='$styling']/parent::a");
-+      if (!$link) {
-+        throw new \Exception(sprintf('We found the text "%s" in the "%s" menu, but it wasn\'t a link.', $styling, $dropDownName));
-+      }
-+    } elseif (!$div) {
-+      throw new \Exception(sprintf('We couldn\'nt find "%s" on the page.', $styling));
-+    }
-+    if ($link) {
-+      $driver = $this->getSession()->getDriver();
-+      $link->click();
-+      $driver->wait(1000, TRUE);
-+    }
-+  }
-+
-+}
-\ No newline at end of file
