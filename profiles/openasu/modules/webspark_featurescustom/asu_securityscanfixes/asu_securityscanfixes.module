@@ -42,7 +42,11 @@ function asu_securityscanfixes_form_alter(&$form, &$form_state, $form_id) {
  */
 function asu_securityscanfixes_preprocess_page(&$vars) {
   // CSRF
-  drupal_add_js(drupal_get_path('module', 'asu_securityscanfixes') . '/js/asu_securityscanfixes.js');
-  $vars['scripts'] = drupal_get_js();
+  // D7.50+ does server-side HTTP headers to check for CSRF so this JS isn't
+  // necessary above that version.
+  $version = preg_match('/^(7\.\d{1,3}).*?$/', VERSION, $matches);
+  if ($version && (float)$matches[0] < 7.50) {
+    drupal_add_js(drupal_get_path('module', 'asu_securityscanfixes') . '/js/asu_securityscanfixes.js');
+    $vars['scripts'] = drupal_get_js();
+  }
 }
-
