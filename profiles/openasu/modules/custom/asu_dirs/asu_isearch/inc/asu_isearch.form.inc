@@ -36,16 +36,15 @@ function asu_isearch_form_alter(&$form, &$form_state, $form_id) {
       $form['field_isearch_employee_type']['#suffix'] = "</div>";
 
       $settings = array();
-      $configs = json_decode(asu_isearch_get_dept_config());
-      $dept_tree = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_TREE_ENDPOINT); //json_decode(asu_dir_utilities_get_dept_tree());
+      $configs = asu_isearch_get_dept_config();
+      $dept_tree = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_TREE_ENDPOINT);
 
       $locations = array();
 
-      foreach ($configs->items as $conf) {
-        $root = asu_isearch_dept_find_root($dept_tree, $conf->dept_nid);
-        $nid = $conf->dept_nid;
+      foreach ($configs['items'] as $conf) {
+        $root = asu_isearch_dept_find_root($dept_tree, $conf['dept_nid']);
 
-        if ($configs->options->$nid->subdepts === FALSE) {
+        if (isset($conf['options']) && $conf['options']['subdepts']) {
           $newItem = new stdClass();
           $newItem->name = $root->name;
           $newItem->dept_nid = $root->dept_nid;
