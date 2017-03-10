@@ -10,7 +10,7 @@
 }
 ul.quicktabs-tabs.quicktabs-style-asu-web-standards {
 	background: none;
-  border-bottom: 1px solid #dddddd !important;
+  border-bottom: 1px solid #777 !important;
 	min-height: auto;
 	padding: 0;
 	margin-bottom: 0;
@@ -35,17 +35,17 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li.active {
 }
 ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 	display: inline-block;
-	border-color: #d7d7d7 #d7d7d7 transparent #d7d7d7;
+	border-color: #777 #777 transparent #777;
 	border-image: none;
 	border-radius: 0;
 	border-style: solid;
 	border-width: 1px;
 	padding: 9px 18px;
-	color: #a7a7a7;
+	color: #777;
 }
 ul.quicktabs-tabs.quicktabs-style-asu-web-standards li:hover a {
 	background-color: #eee;
-	border-bottom-color: #d7d7d7;
+	border-bottom-color: #777;
 }
 ul.quicktabs-tabs.quicktabs-style-asu-web-standards li.active a,
 ul.quicktabs-tabs.quicktabs-style-asu-web-standards li.active:hover a {
