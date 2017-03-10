@@ -68,17 +68,6 @@ function innovation_preprocess_html(&$variables) {
 }
 
 /**
- * Load Kalatheme dependencies.
- *
- * Implements template_process_html().
- */
-function innovation_process_html(&$variables) {
-  // WEBSPARK-804 - Added Skip to Content link, below Google Analytics tags but before everything else.
-  $skip_html = '<div class="accessibility-hide"><a href="#main-wrapper" id="skip_to_content">Skip to Main Page Content</a></div>';
-  $variables['page_top'] = $skip_html . "\n" . $variables['page_top'];
-}
-
-/**
  * Override or insert variables into the page template.
  *
  * Implements template_process_page().
