@@ -187,7 +187,7 @@
 	line-height: 1.44;
 }
 .ui-tabs .ui-tabs-nav {
-	border-bottom: 1px solid #979797 !important;
+	border-bottom: 1px solid #777 !important;
 	padding: 1em 0 0 0;
 }
 .ui-tabs .ui-tabs-nav li.ui-corner-top {
@@ -224,7 +224,7 @@
 .ui-tabs .ui-tabs-nav li a {
 	display: block;
   position: relative;
-	border-color: #979797 #979797 transparent #979797;
+	border-color: #777 #777 transparent #777;
 	border-image: none;
 	border-radius: 0;
 	border-style: solid;
@@ -242,7 +242,7 @@
 }
 .ui-tabs .ui-tabs-nav li.ui-state-hover a {
 	background-color: #eee;
-	border-bottom-color: #979797;
+	border-bottom-color: #777;
 }
 .ui-tabs .ui-tabs-nav li.ui-state-active a {
 	background-color: transparent;
