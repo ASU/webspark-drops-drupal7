@@ -208,6 +208,10 @@ projects[wysiwyg_template][version] = 2.12
 projects[wysiwyg_template][type] = module
 projects[wysiwyg_template][subdir] = contrib
 
+projects[field_collection][version] = 1.0-beta11
+projects[field_collection][type] = module
+projects[field_collection][subdir] = contrib
+
 ; Bootstrap and Theme Frameworks - Moved to Webspark repo (see WEBSPARK-366)
 
 ;; Base Theme - Kalatheme
