@@ -1,9 +1,16 @@
+asu_isearch 7.x-1.8.9
+---------------------
+- Fixed bug with primary affiliation not mapping correctly
+- Removed duplicate update hooks
+- Removed access to timestamp field
+
 asu_isearch 7.x-1.8.8
 ---------------------
 - Fix for legacy isearch_admin configs
 - Moved included asu_dir_utilities back inline with Webspark to prevent asu_dir cached data errror
 - Cleaner configuration management for Drupal
 - Bug fix for Solr profile updating on view crashing due to older versions of PHP
+- Fix for custom profile form notices about directory tree object
 
 asu_isearch 7.x-1.8.7
 ---------------------

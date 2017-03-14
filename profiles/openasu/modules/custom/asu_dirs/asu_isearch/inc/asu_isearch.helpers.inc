@@ -228,12 +228,12 @@ function asu_isearch_dept_find_root($data, $dept_id, $lookup = 'dept_nid') {
 
   for ($i = 0; $i < count($data); $i++) {
     if (count($success) == 0 && $data[$i] != NULL) {
-      if ($data[$i]->$lookup == $dept_id) {
+      if ($data[$i][$lookup] == $dept_id) {
         return $data[$i];
       }
       else {
-        if (isset($data[$i]->children)) {
-          $success = asu_isearch_dept_find_root($data[$i]->children, $dept_id, $lookup);
+        if (isset($data[$i]['children'])) {
+          $success = asu_isearch_dept_find_root($data[$i]['children'], $dept_id, $lookup);
         }
       }
     }
