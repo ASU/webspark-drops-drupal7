@@ -68,7 +68,7 @@ function asu_isearch_admin_settings_form() {
   );
 
   // retrieve global dept configuration
-  $isearch_admin_feed_dept = asu_isearch_get_dept_config();
+  $isearch_admin_feed_dept = json_encode(asu_isearch_get_dept_config());
 
   $form['isearch_admin_feed_dept'] = array(
     '#type' => 'asu_dept_picker',
@@ -120,6 +120,16 @@ function asu_isearch_admin_settings_form_validate($form, &$form_state) {
  * Submit handler for settings form
  */
 function asu_isearch_admin_settings_form_submit($form, &$form_state) {
+
+  $config_value = drupal_json_decode($form_state['values']['isearch_admin_feed_dept']);
+
+  // if options key is set, unset it. in the future we can modify the asu_dept_picker
+  // to not pass this property. todo
+  if (isset($config_value['options'])) {
+    unset($config_value['options']);
+    $form_state['values']['isearch_admin_feed_dept'] = drupal_json_encode($config_value);
+  }
+
   system_settings_form_submit($form, $form_state);
 
   $message = t('Click <a href="@link">Import iSearch Profiles</a> to begin the import.', array(

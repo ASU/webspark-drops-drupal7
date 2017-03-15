@@ -349,7 +349,7 @@ class MigrateIsearchProfileMigration extends Migration {
           }
         }
 
-        $affiliation->isPrimary = ($row->deptids[$index] == $row->primaryDeptid);
+        $affiliation->isPrimary = ($row->departments[$index] == $row->primaryiSearchDepartmentAffiliation);
 
         $row->affiliations_info[$affiliation->id] = $affiliation;
 

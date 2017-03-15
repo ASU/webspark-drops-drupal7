@@ -679,13 +679,13 @@ function asu_isearch_form_fieldable_panels_panes_fieldable_panels_pane_content_t
 
     // get list of imported departments
     $dept_picker_items = array();
-    $feed_depts = json_decode(asu_isearch_get_dept_config(), TRUE);
+    $feed_depts = asu_isearch_get_dept_config();
     $feed_items = $feed_depts['items'];
 
     foreach ($feed_items as $dept) {
       $id = $dept['dept_id'];
 
-      if ($feed_depts['options'][$id]['subdepts']) {
+      if (isset($dept['options']) && $dept['options']['subdepts']) {//$feed_depts['options'][$id]['subdepts']) {
         $dept_picker_items = array_merge($dept_picker_items, $dept['tree_nids']);
       }
       else {
