@@ -198,13 +198,12 @@ function asu_isearch_cleanup_profile($profile) {
 
   $asurite = $profile->field_isearch_asurite_id['und'][0]['value'];
   $health = asu_dir_utilities_solr_health_check();
-  $configs = drupal_json_decode(asu_isearch_get_dept_config());
+  $configs = asu_isearch_get_dept_config();
 
   //check Solr department
   if ($health && $profile != NULL) {
     $pfound = FALSE;
     $person = asu_dir_utilities_get_solr_person($asurite);
-
 
     if (!empty($person)) {
       foreach ($configs['items'] as $item) {
@@ -212,9 +211,7 @@ function asu_isearch_cleanup_profile($profile) {
           $pfound = TRUE;
         }
 
-        if (!$pfound && isset($configs['options'][$item['dept_id']]) &&
-          $configs['options'][$item['dept_id']]['subdepts']
-        ) {
+        if (!$pfound && isset($item['options']) && $item['options']['subdepts'] ) {
 
           foreach ($item['tree_nids'] as $tree_item) {
 
@@ -257,7 +254,8 @@ function _asu_isearch_get_cleanup_list() {
   if (empty($nid_list)) {
     $node_type = "asu_isearch_profile";
 
-    $result = db_query("SELECT nid FROM node WHERE type = :nodeType ", array(':nodeType' => $node_type));
+    // only check published nodes
+    $result = db_query("SELECT nid FROM node WHERE type = :nodeType AND status = 1", array(':nodeType' => $node_type));
     foreach ($result as $obj) {
       $nid_list[] = $obj->nid;
     }

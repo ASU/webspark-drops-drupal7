@@ -8,13 +8,16 @@ function asu_isearch_form_alter(&$form, &$form_state, $form_id) {
   // hide the profile tabs placeholder field that can be rendered on a node display
   if ($form_id == 'asu_isearch_profile_node_form') {
 
+    // remove access to timestamp field
+    $form['field_previous_isearch_update']['#access'] = FALSE;
+
     // If we are adding a new custon node, or are editing a custom node, then display all fields
     // for editing
-    if (arg(1) == 'add' || $form['#node']->field_isearch_eid['und'][0]['value'] == -1) {
+    if (arg(1) == 'add' || $form['#node']->field_isearch_eid['und'][0]['value'] == -1 || ASU_ISEARCH_DEVMODE) {
 
       $form['field_isearch_local_photo_url']['#access'] = FALSE;
 
-      $form['field_isearch_eid']['und'][0]['value']['#default_value'] = -1;
+      $form['field_isearch_eid']['und'][0]['value']['#default_value'] = isset($form['#node']->field_isearch_eid['und'][0]['value']) ? $form['#node']->field_isearch_eid['und'][0]['value'] : -1;
       $form['field_isearch_eid']['#access'] = FALSE;
       $form['field_isearch_photo_preference']['#access'] = FALSE;
       $form['field_isearch_photo_permission']['#access'] = FALSE;
@@ -36,19 +39,18 @@ function asu_isearch_form_alter(&$form, &$form_state, $form_id) {
       $form['field_isearch_employee_type']['#suffix'] = "</div>";
 
       $settings = array();
-      $configs = json_decode(asu_isearch_get_dept_config());
-      $dept_tree = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_TREE_ENDPOINT); //json_decode(asu_dir_utilities_get_dept_tree());
+      $configs = asu_isearch_get_dept_config();
+      $dept_tree = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_TREE_ENDPOINT);
 
       $locations = array();
 
-      foreach ($configs->items as $conf) {
-        $root = asu_isearch_dept_find_root($dept_tree, $conf->dept_nid);
-        $nid = $conf->dept_nid;
+      foreach ($configs['items'] as $conf) {
+        $root = asu_isearch_dept_find_root($dept_tree, $conf['dept_nid']);
 
-        if ($configs->options->$nid->subdepts === FALSE) {
+        if (isset($conf['options']) && !$conf['options']['subdepts']) {
           $newItem = new stdClass();
-          $newItem->name = $root->name;
-          $newItem->dept_nid = $root->dept_nid;
+          $newItem->name = $root['name'];
+          $newItem->dept_nid = $root['dept_nid'];
 
           $locations[] = $newItem;
         }

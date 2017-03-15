@@ -241,6 +241,11 @@ function asu_dir_utilities_get_subtree_nids($nid) {
 function asu_dir_utilities_dept_find_root($data, $dept_id, $lookup = 'dept_nid') {
   $success = array();
 
+  // if tree is 'accidentally' passed as json_encoded, decode it
+  if (!is_array($data)) {
+    $data = drupal_json_decode($data);
+  }
+
   for ($i = 0; $i < count($data); $i++) {
     if (count($success) == 0 && $data[$i] != NULL) {
       if ($data[$i][$lookup] == $dept_id) {
@@ -267,13 +272,13 @@ function asu_dir_utilities_dept_find_root($data, $dept_id, $lookup = 'dept_nid')
 function asu_dir_utilities_dept_get_tree_data($tree, $tree_ids = array()) {
 
   $newItem = new stdClass();
-  $newItem->name = $tree->name;
-  $newItem->dept_nid = $tree->dept_nid;
+  $newItem->name = $tree['name'];
+  $newItem->dept_nid = $tree['dept_nid'];
 
   $tree_ids[] = $newItem;
 
-  for ($i = 0; $i < count($tree->children); $i++) {
-    $tree_ids = asu_dir_utilities_dept_get_tree_data($tree->children[$i], $tree_ids);
+  for ($i = 0; $i < count($tree['children']); $i++) {
+    $tree_ids = asu_dir_utilities_dept_get_tree_data($tree['children'][$i], $tree_ids);
   }
 
   return $tree_ids;

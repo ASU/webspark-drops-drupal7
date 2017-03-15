@@ -205,6 +205,7 @@
 
 
             if (doc.phone != null && doc.phone != '') {
+                doc.phone = doc.phone.replace(/\//g, "-");
                 markup += '<div class="phone_number">' + doc.phone + '</div>';
             }
 
