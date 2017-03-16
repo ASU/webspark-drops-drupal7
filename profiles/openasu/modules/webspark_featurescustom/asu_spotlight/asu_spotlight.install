@@ -90,6 +90,29 @@ function asu_spotlight_update_7005(&$sandbox) {
   field_cache_clear();
 }
 
+function asu_spotlight_update_7007(&$sandbox) {
+  $field_type = 'asu_spotlight';
+  $fields = field_info_fields();
+  foreach ($fields as $field_name => $field) {
+    if ($field['type'] == $field_type && $field['storage']['type'] == 'field_sql_storage') {
+      $schema = asu_spotlight_field_schema($field);
+      foreach ($field['storage']['details']['sql'] as $type => $table_info) {
+        foreach ($table_info as $table_name => $columns) {
+          foreach ($schema['columns'] as $column => $data) {
+            $column_name = _field_sql_storage_columnname($field_name, $column);
+            if ($column_name == 'field_asu_spotlight_items_overlaytextwidth' &&
+              !db_field_exists($table_name, 'field_asu_spotlight_items_overlaytextwidth')) {
+              db_add_field($table_name, $column_name, $schema['columns'][$column]);
+              //db_add_index($table_name, $column_name, array($column_name));
+            }
+          }
+        }
+      }
+    }
+  }
+  field_cache_clear();
+}
+
 
 /**
  * Implementation of hook_uninstall().
