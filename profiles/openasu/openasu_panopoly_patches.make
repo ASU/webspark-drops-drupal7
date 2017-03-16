@@ -59,5 +59,6 @@ projects[module_filter][patch][] = patches/nojira-module_filter-fix_layout_issue
 
 projects[token][version] = 1.6
 projects[token][subdir] = contrib
+projects[token][sha256] = 55eb5db5e703c3beba521207280af8be016f64925bc5d42ccf04b838a01f89b2
 ; Fixes arrows/theming issue in browse tokens window
 projects[token][patch][2773825] = patches/webspark-897_token-browse-available-theme-fixes-2773825-1.patch

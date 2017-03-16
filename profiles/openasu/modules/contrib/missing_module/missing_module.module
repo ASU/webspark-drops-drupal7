@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * Find modules missing in file system.
+ */
+
+/**
+ * Find modules that are missing from file system.
+ */
+function missing_module_find_missing($only_enabled = FALSE) {
+  $missing = array();
+
+  // Select all active modules from current database.
+  $query = db_select('system')->fields('system', array('filename', 'name', 'status', 'info'));
+
+  if ($only_enabled) {
+    $query->condition('status', '1', '=');
+  }
+  else {
+    $or = db_or();
+    $or->condition('status', '1', '=');
+    $and = db_and();
+    $and->condition('status', '0', '=');
+    $and->condition('schema_version', '-1', '>');
+    $or->condition($and);
+    $query->condition($or);
+  }
+
+  $result = $query->execute();
+
+  foreach ($result as $node) {
+    $path = DRUPAL_ROOT . '/' . $node->filename;
+
+    if (!file_exists($path)) {
+      $module_name = $node->name;
+
+      $missing[$module_name] = array(
+        'path' => $path,
+        'status' => $node->status,
+        'info' => unserialize($node->info),
+      );
+    }
+  }
+
+  return $missing;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function missing_module_menu() {
+  $items['admin/reports/status/disable_module/%'] = array(
+    'title' => 'Disable Module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('missing_module_disable_confirm', 4),
+    'access arguments' => array('administer modules'),
+    'type' => MENU_CALLBACK,
+    'file' => 'missing_module.form.inc',
+  );
+    $items['admin/reports/status/remove_module/%'] = array(
+    'title' => 'Remove Module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('missing_module_remove_confirm', 4),
+    'access arguments' => array('administer modules'),
+    'type' => MENU_CALLBACK,
+    'file' => 'missing_module.form.inc',
+  );
+  return $items;
+}

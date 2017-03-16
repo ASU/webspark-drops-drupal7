@@ -177,6 +177,10 @@
 .ui-widget-content {
 	font-family: inherit;
 }
+.ui-tabs-panel,
+.ui-tabs-panel p {
+	font-size: 1.2em;
+}
 .ui-widget-header {
 	background: none;
 	min-height: auto;

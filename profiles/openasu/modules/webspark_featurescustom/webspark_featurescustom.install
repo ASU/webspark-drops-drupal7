@@ -30,8 +30,9 @@ function webspark_featurescustom_update_dependencies() {
     'search_api_db' => 7104,
     'search_api_solr' => 7102,
   );
-  // Ensure that ASU Brand module updates to v4.5 last
+  // Ensure that ASU Brand module updates to v4.5 last, after other prior updates
   $deps['asu_brand'][7102] = array(
+    'asu_cas' => 7001,
     'webspark_featurescustom' => 7002,
   );
   return $deps;
@@ -153,17 +154,53 @@ function webspark_featurescustom_update_7005(&$sandbox) {
 /**
  * Implements hook_update_N() -- Colorado release
  * + Set theme to default Drupal theme if old ASU theme is current default.
+ * + Enable Missing Module contrib module to help clean up new Drupal 7.52 errors.
+ *   See Colorado release notes for more information.
  */
 function webspark_featurescustom_update_7006(&$sandbox) {
+  $display_message = FALSE;
   $theme = variable_get('theme_default');
-  if ($theme === 'asu_webspark_bootstrap') {
-    variable_set('theme_default', 'webspark_seven');
-    drupal_set_message("The old ASU Webspark Bootstrap theme has been removed from 
+  $admin_theme = variable_get('admin_theme');
+  $message_admin = ($admin_theme == 'asu_webspark_bootstrap') ? 'and administrative theme have both' : 'has';
+  $message = "The old ASU Webspark Bootstrap theme has been removed from 
       Webspark's codebase because it no longer complies with ASU's current Web
       Standards (see " . l('the Marketing Hub web site', 'https://brandguide.asu.edu') .
-      " for more information.) <br><br>The site has been set to a default Drupal 
-      theme called Seven. Go to " . l("/admin/appearance", "Drupal themes") . " 
+      " for more information.) <br><br>The main theme " . $message_admin . " been set to a default theme 
+      called Webspark Seven. Go to " . l("/admin/appearance", "Drupal themes") . " 
       page to select another theme, such as Innovation (the current ASU Web standards
-      theme included with Webspark.)", 'warning');
+      theme included with Webspark.)";
+  if ($theme === 'asu_webspark_bootstrap') {
+    variable_set('theme_default', 'webspark_seven');
+    $display_message = TRUE;
+  }
+  if ($admin_theme === 'asu_webspark_bootstrap') {
+    variable_set('admin_theme', 'webspark_seven');
+    $display_message = TRUE;
+  }
+  // Now show message if necessary
+  if ($display_message) {
+    drupal_set_message($message, 'warning');
+  }
+  // Missimg Module - enable
+  if (!module_exists('missing_module')) {
+    module_enable('missing_module');
+    drupal_set_message("Make sure that your Webspark site's administrator role " .
+      "(usually 'administrator') receives all of the necessary permissions to " .
+      "use the Missing Module module at /admin/people/permissions", 'status');
   }
 }
+
+/**
+ * Implements hook_update_N() --
+ * Enable the directory suite module
+ * @param $sandbox
+ */
+function webspark_featurescustom_update_7007(&$sandbox) {
+  if (drupal_get_path('module', 'asu_dirs') != '' && !module_exists('asu_dirs')) {
+    module_enable(array('asu_dirs'));
+  }
+  if (drupal_get_path('module', 'asu_dir_panel') != '' && !module_exists('asu_dir_panel')) {
+    module_enable(array('asu_dir_panel'));
+  }
+}
+

@@ -11,6 +11,15 @@
         var input = $(this).siblings('input[data-delta="'+delta+'"]');
 
         config.onChange = function(data) {
+
+          // save config options on the dept object
+          if (data.hasOwnProperty('items')) {
+              for (var i = 0; i < data.items.length; i++) {
+                   var deptid = data.items[i].dept_id;
+                   data.items[i].options = data.options[deptid];
+              }
+          }
+
           input.val(JSON.stringify(data));
         };
 
