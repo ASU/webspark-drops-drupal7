@@ -3,13 +3,6 @@ description = Find modules turned on in the database that aren't in file system.
 package = Performance
 core = 7.x
 
-; Information added by Drupal.org packaging script on 2016-07-22
-version = "7.x-1.1"
-core = "7.x"
-project = "missing_module"
-datestamp = "1469165340"
-
-
 ; Information added by drush on 2016-12-01
 version = "7.x-1.1+5-dev"
 project = "missing_module"
