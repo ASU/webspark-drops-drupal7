@@ -147,21 +147,6 @@ index fb6fa39..3275559 100644
    }
  
    $form_state['redirect'] = 'admin/reports/status';
-diff --git a/missing_module.info b/missing_module.info
-index 3c3db45..33b2488 100644
---- a/missing_module.info
-+++ b/missing_module.info
-@@ -2,3 +2,10 @@ name = Missing Module
- description = Find modules turned on in the database that aren't in file system.
- package = Performance
- core = 7.x
-+
-+; Information added by Drupal.org packaging script on 2016-07-22
-+version = "7.x-1.1"
-+core = "7.x"
-+project = "missing_module"
-+datestamp = "1469165340"
-+
 diff --git a/missing_module.install b/missing_module.install
 index c665714..f0a1f39 100644
 --- a/missing_module.install
