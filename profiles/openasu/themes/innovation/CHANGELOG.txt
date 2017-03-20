@@ -1,3 +1,7 @@
+Innovation 7.x-1.9, 2017-03-20
+------------------------------
+- Increased font size on QuickTab content
+
 Innovation 7.x-1.8, 2017-02-15
 ------------------------------
 - In-Page Editor selections now properly displays eligible content panes again when the "+" button is
