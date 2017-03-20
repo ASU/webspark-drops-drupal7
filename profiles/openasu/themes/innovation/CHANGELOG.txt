@@ -1,3 +1,8 @@
+Innovation 7.x-1.8, 2017-03-20
+------------------------------
+- moved the skip-to-content link inside a landmark (<header>)
+- increased the font size on QuickTab content
+
 Innovation 7.x-1.7, 2017-01-19
 ------------------------------
 ACCESSIBILITY UPDATES
