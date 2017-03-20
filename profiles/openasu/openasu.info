@@ -8,6 +8,7 @@ exclusive = 1
 version = 1.43
 
 ; Drupal Core
+dependencies[] = taxonomy
 dependencies[] = block
 dependencies[] = menu
 dependencies[] = image
@@ -15,7 +16,6 @@ dependencies[] = list
 dependencies[] = number
 dependencies[] = options
 dependencies[] = path
-dependencies[] = taxonomy
 dependencies[] = search
 dependencies[] = shortcut
 dependencies[] = field
