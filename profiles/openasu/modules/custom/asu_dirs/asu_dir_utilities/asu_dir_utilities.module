@@ -115,9 +115,10 @@ function asu_dir_utilities_short_circuit_version() {
  *Refresh the cached directory tree and employee types every cron run
  */
 function asu_dir_utilities_cron() {
-  asu_dir_utilities_refresh_dir_item(ASU_DIR_UTILITIES_TREE_ENDPOINT);
-  asu_dir_utilities_refresh_dir_item(ASU_DIR_UTILITIES_EMPLOYEE_TYPES_ENDPOINT);
-
+  if (!drupal_installation_attempted()) {
+    asu_dir_utilities_refresh_dir_item(ASU_DIR_UTILITIES_TREE_ENDPOINT);
+    asu_dir_utilities_refresh_dir_item(ASU_DIR_UTILITIES_EMPLOYEE_TYPES_ENDPOINT);
+  }
 }
 
 
