@@ -6,4 +6,4 @@ Feature: Restore standard Webspark settings after testing
   @api @webspark_added @webspark_exit
   Scenario: Turn off ASU Brand module extras for CI testing
     Given I run drush "vset asu_brand_ci_testing 0"
-    Then drush output should contain 'asu_brand_ci_testing was set to 0'
+    Then drush output should contain 'asu_brand_ci_testing was set to "0"'
