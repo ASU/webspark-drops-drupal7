@@ -1,0 +1,5 @@
+asu_dir_utilities 7.x-1.1
+-------------------------
+- long term caching functions for tree and employee types
+- streamlined cached data management
+- added support for Solr schema caching
