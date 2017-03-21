@@ -461,32 +461,6 @@ index 8a4ccec..0f17a8e 100644
    Scenario: Create Test Page
      Given I am logged in as a user with the "administrator" role
      When I visit "/node/add/panopoly-test-page"
-diff --git a/behat/features/image_widget.feature b/behat/features/image_widget.feature
-index bdcfd27..dc60e16 100644
---- a/behat/features/image_widget.feature
-+++ b/behat/features/image_widget.feature
-@@ -2,8 +2,8 @@ Feature: Add image widget
-   In order to add an image to page
-   As a site administrator
-   I need to be able to use the image widget
-- 
--  @api @javascript @panopoly_widgets @local_files
-+
-+  @api @javascript @panopoly_widgets @local_files @webspark_broken @webspark_fixed
-   Scenario: Add a image
-     Given I am logged in as a user with the "administrator" role
-       And Panopoly magic live previews are disabled
-@@ -85,8 +85,8 @@ Feature: Add image widget
-       And I am viewing a landing page
-     When I customize this page with the Panels IPE
-       And I click "Add new pane"
--      And I click "Add image" in the "CTools modal" region
--    Then I should see "Configure new Add image"
-+      And I click "Add responsive image" in the "CTools modal" region
-+    Then I should see "Configure new Add responsive image"
-     When I click the 2nd "Search for existing content" in the "CTools modal" region
-     Then I should see "Linkit"
- 
 diff --git a/behat/features/landingpage.feature b/behat/features/landingpage.feature
 index bb29ec9..181ea42 100644
 --- a/behat/features/landingpage.feature

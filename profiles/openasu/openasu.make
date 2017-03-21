@@ -53,8 +53,12 @@ projects[panopoly_test][subdir] = panopoly
 
 projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.43.patch
 
-projects[panopoly_test][patch][140] = patches/webspark-944_panopoly-test-image-widget-patches.patch
+; deprecated to roll image testing patches into 1066 patch
+;projects[panopoly_test][patch][140] = patches/webspark-944_panopoly-test-image-widget-patches.patch
 projects[panopoly_test][patch][1402] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
+
+;patch the image widget feature to set a private file path before testing
+projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v143.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
 ; commenting this out until we update this repo
