@@ -28,3 +28,8 @@ function webspark_extras_boot() {
     }
   }
 }
+
+function webspark_extras_quicktabs_tabstyles() {
+  $tabstyles_directory = drupal_get_path('module', 'webspark_extras') . '/tabstyles';
+  return array($tabstyles_directory . '/asu_web_standards/asu_web_standards.css' => t('ASU Web Standards'));
+}
