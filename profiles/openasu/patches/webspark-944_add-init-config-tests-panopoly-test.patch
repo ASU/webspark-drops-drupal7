@@ -1,8 +1,8 @@
-diff --git a/tests/features/aaa_webspark_init.feature b/tests/features/aaa_webspark_init.feature
+diff --git a/behat/features/aaa_webspark_init.feature b/behat/features/aaa_webspark_init.feature
 new file mode 100644
-index 0000000..2239a83
+index 0000000..e872a73
 --- /dev/null
-+++ b/tests/features/aaa_webspark_init.feature
++++ b/behat/features/aaa_webspark_init.feature
 @@ -0,0 +1,9 @@
 +Feature: Alter standard Webspark settings for testing
 +  In order to run tests without being interrupted by Javascript popups
@@ -13,11 +13,11 @@ index 0000000..2239a83
 +  Scenario: Turn off ASU Brand module extras for CI testing
 +    Given I run drush "vset asu_brand_ci_testing 1"
 +    Then drush output should contain 'asu_brand_ci_testing was set to "1"'
-diff --git a/tests/features/zzz_webspark_exit.feature b/tests/features/zzz_webspark_exit.feature
+diff --git a/behat/features/zzz_webspark_exit.feature b/behat/features/zzz_webspark_exit.feature
 new file mode 100644
-index 0000000..065f7b4
+index 0000000..69ebdb0
 --- /dev/null
-+++ b/tests/features/zzz_webspark_exit.feature
++++ b/behat/features/zzz_webspark_exit.feature
 @@ -0,0 +1,9 @@
 +Feature: Restore standard Webspark settings after testing
 +  In order to restore site to normal operations

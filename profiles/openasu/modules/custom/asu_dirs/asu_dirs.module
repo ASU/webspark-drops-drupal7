@@ -1,0 +1,7 @@
+<?php
+
+/**
+ * Placeholder module for various Webspark features/modules in this module's
+ * subdirectories
+ * Also includes other miscellaneous Webspark processes (see .inc files below)
+ */
