@@ -4,6 +4,7 @@ core = 7.x
 package = ASU
 project = asu_dirs
 files[] = asu_dirs.module
+dependencies[] = taxonomy
 dependencies[] = asu_dir_utilities
 dependencies[] = asu_dir
 dependencies[] = block

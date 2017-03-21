@@ -82,18 +82,63 @@ index 82e7387..de3fb85 100644
  
  # Setup for Google Chrome only tests.
  chrome:
+diff --git a/behat/behat.travis.yml b/behat/behat.travis.yml
+new file mode 100644
+index 0000000..9d9568a
+--- /dev/null
++++ b/behat/behat.travis.yml
+@@ -0,0 +1,18 @@
++imports:
++    - behat.common.yml
++#
++default:
++  extensions:
++    Behat\MinkExtension:
++      base_url: http://127.0.0.1:8888
++      files_path: './profiles/openasu/modules/panopoly/panopoly_test/behat'
++    Drupal\DrupalExtension:
++      drush:
++        root: "/home/travis/build/ASU/webspark-drops-drupal7"
++      drupal:
++        drupal_root: "/home/travis/build/ASU/webspark-drops-drupal7"
++
++      # Look in the profile modules directory and pull in module subcontexts.
++      subcontexts:
++        paths:
++          - "/home/travis/build/ASU/webspark-drops-drupal7/profiles/openasu/modules/panopoly/panopoly_test"
+
 diff --git a/behat/features/basic_ipe.feature b/behat/features/basic_ipe.feature
-index 1088165..d3d03ee 100644
+index b7f1684..7da1e39 100644
 --- a/behat/features/basic_ipe.feature
 +++ b/behat/features/basic_ipe.feature
-@@ -20,5 +20,4 @@ Feature: Make basic changes with the IPE
-       And I click "Phelan"
-       And I press "Save" in the "CTools modal" region
-       And I wait for the Panels IPE to deactivate
+@@ -5,14 +5,19 @@ Feature: Make basic changes with the IPE
+
+   Background:
+     Given I am logged in as a user with the "administrator" role
+-      And Panopoly magic live previews are disabled
+-      And I am viewing a "panopoly_test_page" with the title "Testing title"
++    And Panopoly magic live previews are disabled
++    When I visit "/node/add/panopoly-test-page"
++    And I fill in the following:
++      | Title  | Basic IPE Testing title |
++      | Editor | plain_text    |
++      | Body   | Basic IPE Testing body  |
++    And I press "edit-submit"
++    Then I should see "Basic IPE Testing title"
+
+-  @api @javascript
++  @api @javascript @webspark_broken @webspark_fixed
+   Scenario: Change layout
+     When I change layout with the Panels IPE
+-      And I click "Phelan"
+-      And I press "Save" in the "CTools modal" region
+-      And I wait for the Panels IPE to deactivate
 -    Then I should see "Testing title"
 -
++    And I click "Phelan"
++    And I press "Save" in the "CTools modal" region
++    And I wait for the Panels IPE to deactivate
 +    Then I should see "Basic IPE Testing title"
-\ No newline at end of file
 diff --git a/behat/features/contentitem_widget.feature b/behat/features/contentitem_widget.feature
 index 76e4e30..aea5bae 100644
 --- a/behat/features/contentitem_widget.feature
@@ -416,32 +461,6 @@ index 8a4ccec..0f17a8e 100644
    Scenario: Create Test Page
      Given I am logged in as a user with the "administrator" role
      When I visit "/node/add/panopoly-test-page"
-diff --git a/behat/features/image_widget.feature b/behat/features/image_widget.feature
-index bdcfd27..dc60e16 100644
---- a/behat/features/image_widget.feature
-+++ b/behat/features/image_widget.feature
-@@ -2,8 +2,8 @@ Feature: Add image widget
-   In order to add an image to page
-   As a site administrator
-   I need to be able to use the image widget
-- 
--  @api @javascript @panopoly_widgets @local_files
-+
-+  @api @javascript @panopoly_widgets @local_files @webspark_broken @webspark_fixed
-   Scenario: Add a image
-     Given I am logged in as a user with the "administrator" role
-       And Panopoly magic live previews are disabled
-@@ -85,8 +85,8 @@ Feature: Add image widget
-       And I am viewing a landing page
-     When I customize this page with the Panels IPE
-       And I click "Add new pane"
--      And I click "Add image" in the "CTools modal" region
--    Then I should see "Configure new Add image"
-+      And I click "Add responsive image" in the "CTools modal" region
-+    Then I should see "Configure new Add responsive image"
-     When I click the 2nd "Search for existing content" in the "CTools modal" region
-     Then I should see "Linkit"
- 
 diff --git a/behat/features/landingpage.feature b/behat/features/landingpage.feature
 index bb29ec9..181ea42 100644
 --- a/behat/features/landingpage.feature
