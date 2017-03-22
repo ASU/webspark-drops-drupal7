@@ -35,7 +35,7 @@ Webspark 1.43 (Colorado) release
             * Profiles are updated from iSearch via periodic cron tasks
             * Periodic and load-time checking of profiles against iSearch Solr index, to ensure up-to-date affiliation data
             * ASU LID Profile List View will automatically substitute for the ASU DIR Solr listings if iSearch Solr health check fails
-    * ASU Brand (v7.x-1.14)
+    * ASU Brand (v7.x-1.15)
         * Now updates theme_default value regardless of whether the module is part of Webspark or not.
     * ASU Spotlight (v7.x-1.6.1)
         * Fix for update hook which resulted in revision table not being updated
