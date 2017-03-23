@@ -5,8 +5,5 @@ core = 7.x
 
 ; Information added by drush on 2016-12-01
 version = "7.x-1.1+5-dev"
-core = "7.x"
 project = "missing_module"
 datestamp = "1480581667"
-
-; Plus 5 commits + pending patch from ASU

@@ -38,7 +38,7 @@ function innovation_preprocess_html(&$variables) {
       '#type' => 'html_tag',
       '#tag' => 'meta',
       '#attributes' => array(
-        'content' => 'Webspark:1.40.3 (Shell Valley)',
+        'content' => 'Webspark:1.43 (Colorado)',
         'http-equiv' => 'X-Name-of-Distro',
       )
     ),
@@ -73,17 +73,6 @@ function innovation_preprocess_html(&$variables) {
 
   // WEBSPARK-189 - add actual HTTP header along with meta tag
   drupal_add_http_header('X-UA-Compatible', 'IE=Edge,chrome=1');
-}
-
-/**
- * Load Kalatheme dependencies.
- *
- * Implements template_process_html().
- */
-function innovation_process_html(&$variables) {
-  // WEBSPARK-804 - Added Skip to Content link, below Google Analytics tags but before everything else.
-  $skip_html = '<div class="accessibility-hide"><a href="#main-wrapper" id="skip_to_content">Skip to Main Page Content</a></div>';
-  $variables['page_top'] = $skip_html . "\n" . $variables['page_top'];
 }
 
 /**

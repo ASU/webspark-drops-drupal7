@@ -1,6 +1,0 @@
-<?php
-name = "ASU DIR Utilities"
-core = 7.x
-package = asu_dir_utilities
-description = "Utilities useful for gathering data from iSearch and Solr."
-

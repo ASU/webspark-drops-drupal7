@@ -78,7 +78,6 @@
  */
 ?>
 <div id="page-wrapper"><div id="page">
-
   <!-- Page Header -->
   <header id="header" role="banner">
   	<div class="container">

@@ -234,30 +234,13 @@ function asu_isearch_update_7140() {
   }
 }
 
-
 /**
- * Reverts the module in order to default to accordions for affiliation display
- */
-function asu_isearch_update_7150() {
-  // this update requires the asu_dept_picker module to be enabled and installed
-  features_revert_module('asu_isearch');
-}
-
-/**
- * Reverts the module to updated view and image styles.  Also clears the deprecated queue,
+ * Clears the deprecated queue,
  * so that we're not trying to run multiple migrations per cron run
  */
 function asu_isearch_update_7152() {
-  features_revert_module('asu_isearch');
   $queue = DrupalQueue::get('isearch_fetch_department');
   $queue->deleteQueue();
-}
-
-/****
- * Revert the moduel to put in place the new changes
- */
-function asu_isearch_update_7170() {
-  features_revert_module('asu_isearch');
 }
 
 /**
@@ -269,21 +252,11 @@ function asu_isearch_update_7180() {
   if (drupal_get_path('module', 'asu_dir_utilities') != '' && !module_exists('asu_dir_utilities')) {
     module_enable(array('asu_dir_utilities'));
   }
-
-  features_revert_module('asu_isearch');
 }
 
 /**
  * Revert to get rid of primary affil criteria
  */
-function asu_isearch_update_7182() {
-  features_revert_module('asu_isearch');
-}
-
-function asu_isearch_update_7183() {
-  features_revert_module('asu_isearch');
-}
-
 function asu_isearch_update_7184() {
   features_revert_module('asu_isearch');
 }

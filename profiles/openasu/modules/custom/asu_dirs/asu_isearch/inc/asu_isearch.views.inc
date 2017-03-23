@@ -97,13 +97,17 @@ function asu_isearch_views_pre_render(&$view) {
  * Implements hook_views_pre_view()
  */
 function asu_isearch_views_pre_view(&$view, &$display_id, &$args) {
+
   if ($view->name == 'isearch_affiliations') {
+
     if ($node = menu_get_object()) {
+
       if (isset($node->type) && $node->type == 'asu_isearch_profile') {
         $args[0] = $node->nid;
       }
 
       $display_affiliations = (bool) variable_get('isearch_display_affiliations', 0);
+
       if (FALSE === $display_affiliations) {
 
         $local_primary_affiliation = (!empty($node->field_isearch_primary_aff))
@@ -115,6 +119,7 @@ function asu_isearch_views_pre_view(&$view, &$display_id, &$args) {
         }
 
         $args[1] = $local_primary_affiliation;
+
         $view->style_options['tab_field'] = 'affiliation_tab_title';
       }
     }

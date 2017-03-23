@@ -105,16 +105,19 @@ function asu_isearch_get_tenure_config($setting) {
  * Returns the global dept configuration
  */
 function asu_isearch_get_dept_config() {
+
   $default_feed_dept = array(
     'items' => array(),
-    'options' => new stdClass(),
+    'options' => new stdClass()
   );
 
-  //todo:  make sure this still works for all cases (asu_isearch legacy and new)
-  $configs = variable_get('isearch_admin_feed_dept', json_encode($default_feed_dept));
-  $tree = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_TREE_ENDPOINT, TRUE);
-  $decoded = drupal_json_decode($configs);
+  $legacy = FALSE;
 
+  //todo:  make sure this still works for all cases (asu_isearch legacy and new)
+  $configs = variable_get('isearch_admin_feed_dept', drupal_json_encode($default_feed_dept));
+  $tree = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_TREE_ENDPOINT, TRUE);
+
+  $decoded = drupal_json_decode($configs);
 
   // pull the subdepts dynamically, instead of using the saved copy
   foreach ($decoded['items'] as $key => $item) {
@@ -126,12 +129,38 @@ function asu_isearch_get_dept_config() {
     if (!empty($dept_nids)) {
       $decoded['items'][$key]['tree_nids'] = $dept_nids;
     }
+
+    // handle case of legacy configs
+    if (isset($decoded['options']) && isset($decoded['options'][$item['dept_id']])) {
+      $decoded['items'][$key]['options'] = $decoded['options'][$item['dept_id']];
+      $legacy = TRUE;
+    }
   }
 
-  // use regular json_encode, to encode back into an
-  $new_configs = drupal_json_encode($decoded);
+  // remove options and resave if we are dealing with a legacy config
+  if ($legacy) {
+    unset($decoded['options']);
+    variable_set('isearch_admin_feed_dept', drupal_json_encode($decoded));
+  }
 
-  return $new_configs;
+  // this is needed for dept picker right now
+  //todo: get rid of this once asu_dep_picker modified
+  $options = new stdClass();
+
+  foreach($decoded['items'] as $item) {
+    $dept_id = $item['dept_id'];
+    if (isset($item['options'])) {
+      $options->$dept_id = $item['options'];
+    } else {
+      $options->$dept_id = array(
+        'subdepts' => FALSE
+      );
+    }
+  }
+
+  $decoded['options'] = $options;
+
+  return $decoded;
 }
 
 /**
@@ -145,14 +174,12 @@ function asu_isearch_get_migrate_source_urls($from_cache = FALSE) {
   $migrate_config = asu_isearch_get_dept_config();
 
   if (!is_null($migrate_config)) {
-    $migrate_config = json_decode($migrate_config);
 
-    foreach ($migrate_config->items as $migrate_item) {
+    foreach ($migrate_config['items'] as $migrate_item) {
       // determine which endpoint to use
-      $dept_id = $migrate_item->dept_id;
 
-      if ($migrate_config->options->$dept_id->subdepts) {
-        foreach ($migrate_item->tree_nids as $department_nid) {
+      if (isset($migrate_item['options']['subdepts']) && $migrate_item['options']['subdepts']) { //$migrate_config->options->$dept_id->subdepts) {
+        foreach ($migrate_item['tree_nids'] as $department_nid) {
 
           if ($from_cache && file_exists(ASU_ISEARCH_DIRECTORY_FEED_CACHE_ENDPOINT . $department_nid)) {
             $endpoint = ASU_ISEARCH_DIRECTORY_FEED_CACHE_ENDPOINT;
@@ -166,14 +193,14 @@ function asu_isearch_get_migrate_source_urls($from_cache = FALSE) {
       }
       else {
         // determine which endpoint to use
-        if ($from_cache && file_exists(ASU_ISEARCH_DIRECTORY_FEED_CACHE_ENDPOINT . $migrate_item->dept_nid)) {
+        if ($from_cache && file_exists(ASU_ISEARCH_DIRECTORY_FEED_CACHE_ENDPOINT . $migrate_item['dept_nid'])) {
           $endpoint = ASU_ISEARCH_DIRECTORY_FEED_CACHE_ENDPOINT;
         }
         else {
           $endpoint = ASU_DIR_UTILITIES_FEED_ENDPOINT;
         }
 
-        $source_urls[$migrate_item->dept_nid] = $endpoint . $migrate_item->dept_nid;
+        $source_urls[$migrate_item['dept_nid']] = $endpoint . $migrate_item['dept_nid'];
       }
     }
   }
@@ -201,12 +228,12 @@ function asu_isearch_dept_find_root($data, $dept_id, $lookup = 'dept_nid') {
 
   for ($i = 0; $i < count($data); $i++) {
     if (count($success) == 0 && $data[$i] != NULL) {
-      if ($data[$i]->$lookup == $dept_id) {
+      if ($data[$i][$lookup] == $dept_id) {
         return $data[$i];
       }
       else {
-        if (isset($data[$i]->children)) {
-          $success = asu_isearch_dept_find_root($data[$i]->children, $dept_id, $lookup);
+        if (isset($data[$i]['children'])) {
+          $success = asu_isearch_dept_find_root($data[$i]['children'], $dept_id, $lookup);
         }
       }
     }
@@ -299,7 +326,7 @@ function asu_isearch_get_field_solr_mappings() {
     'field_isearch_asurite_id' => 'asuriteId',
     'field_isearch_email' => 'emailAddress',
     'field_isearch_phone' => 'phone',
-    //'field_isearch_fax' => 'fax',
+    'field_isearch_fax' => 'fax',
     'field_isearch_campus_building' => 'addressLine1',
     'field_isearch_campus_room' => 'addressLine2',
     'field_isearch_primary_campus' => 'primaryJobCampus',
@@ -341,19 +368,22 @@ function asu_isearch_get_field_solr_mappings() {
  * @param $solr_profile
  */
 function asu_isearch_update_profile_From_solr($node, $solr_profile) {
+
   $changed = FALSE;
   $mappings = asu_isearch_get_field_solr_mappings();
-
   foreach ($mappings as $key => $item) {
+
+    $temp = $node->$key;
+
     if (isset($solr_profile[$item])) {
-      if (property_exists($node, $key) && isset($node->$key[LANGUAGE_NONE][0]['value'])) {
-
+      if (property_exists($node, $key) && isset($temp[LANGUAGE_NONE][0]['value'])) {
         $current_safe = '';
+        $t2 = $node->$key;
 
-        $current = $node->$key[LANGUAGE_NONE][0]['value'];
+        $current = $t2[LANGUAGE_NONE][0]['value'];
 
-        if (isset($node->$key[LANGUAGE_NONE][0]['safe_value'])) {
-          $current_safe = $node->$key[LANGUAGE_NONE][0]['safe_value'];
+        if (isset($t2[LANGUAGE_NONE][0]['safe_value'])) {
+          $current_safe = $t2[LANGUAGE_NONE][0]['safe_value'];
         }
 
         if ($item == 'phone') {
@@ -363,13 +393,14 @@ function asu_isearch_update_profile_From_solr($node, $solr_profile) {
         $markup = check_markup($solr_profile[$item], 'isearch_html');
 
         if ($current != $solr_profile[$item] && strcmp($current_safe, $markup) != 0) {
-          $node->$key[LANGUAGE_NONE][0]['value'] = $solr_profile[$item];
+          $t2[LANGUAGE_NONE][0]['value'] = $solr_profile[$item];
+          $node->$key = $t2;
+
           $changed = TRUE;
         }
       }
     }
   }
-
   if ($changed) {
     node_save($node);
   }
