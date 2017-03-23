@@ -344,10 +344,11 @@
             var dept_names = doc.departments;
             var title_string = '';
             var is_tree = this.field_configs.show_tree;
+            var field_configs = this.field_configs;
+            var confob = 'asu_dir' + field_configs.pane_id;
 
             // Get current dept id from the ASUPeople global, which is defined in the asu_dir module JS
-            var dept_nid = ASUPeople.dept_nid;
-
+            var dept_nid = ASUPeople[confob].dept_nid;
             var index = -1;
 
             // Get the index of the current department in the deptids array,
