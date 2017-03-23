@@ -566,7 +566,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 .ui-accordion .ui-state-active .ui-icon,
 .ui-accordion .ui-state-default .ui-icon,
 .ui-accordion .ui-accordion .ui-state-active .ui-icon {
-  background-image: url("../images/accordion-arrows.png");
+  background-image: url("/profiles/openasu/themes/innovation/images/accordion-arrows.png");
 }
 
 .ui-accordion .ui-icon-triangle-1-e {
