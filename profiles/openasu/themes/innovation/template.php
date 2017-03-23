@@ -78,16 +78,6 @@ function innovation_preprocess_html(&$variables) {
 /**
  * Override or insert variables into the page template.
  *
- * Implements template_process_page().
- */
-// WEBSPARK-366 - removing preprocess_page for now
-//function innovation_preprocess_page(&$variables)
-//{
-//}
-
-/**
- * Override or insert variables into the page template.
- *
  * Implements template_process_block().
  */
 function innovation_preprocess_block(&$variables)

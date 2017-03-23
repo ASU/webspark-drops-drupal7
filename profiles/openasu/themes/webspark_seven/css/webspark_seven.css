@@ -4,8 +4,9 @@
  
 /* Prevent full html format textarea from floating over right sidebar,
    also, moves label flush left */
+
 .form-item-body-und-0-value label {
-	 clear: both;
+  clear: both;
 }
 
 /* Make add content link a more prominent button */
