@@ -59,6 +59,7 @@ projects[panopoly_test][patch][1402] = patches/webspark-944_add-init-config-test
 
 ;patch the image widget feature to set a private file path before testing
 projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v143.patch
+projects[panopoly_test][patch][1403] = patches/webspark-1066-panopoly-webspark-add-custom-tests-v143.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
 ; commenting this out until we update this repo
