@@ -42,6 +42,7 @@
   margin: auto;
   height: auto;
   padding: 0.5em;
+  width: 100%; /* Fix for IE9+; Capped below at 1170px */
   max-width: 1170px;
 }
 

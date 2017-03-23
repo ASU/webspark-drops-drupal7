@@ -1,0 +1,30 @@
+diff --git a/behat/features/aaa_webspark_init.feature b/behat/features/aaa_webspark_init.feature
+new file mode 100644
+index 0000000..e872a73
+--- /dev/null
++++ b/behat/features/aaa_webspark_init.feature
+@@ -0,0 +1,9 @@
++Feature: Alter standard Webspark settings for testing
++  In order to run tests without being interrupted by Javascript popups
++  As a site administrator
++  I need to be able to turn off GTM includes
++
++  @api @webspark_added @webspark_init
++  Scenario: Turn off ASU Brand module extras for CI testing
++    Given I run drush "vset asu_brand_ci_testing 1"
++    Then drush output should contain 'asu_brand_ci_testing was set to "1"'
+diff --git a/behat/features/zzz_webspark_exit.feature b/behat/features/zzz_webspark_exit.feature
+new file mode 100644
+index 0000000..69ebdb0
+--- /dev/null
++++ b/behat/features/zzz_webspark_exit.feature
+@@ -0,0 +1,9 @@
++Feature: Restore standard Webspark settings after testing
++  In order to restore site to normal operations
++  As a site administrator
++  I need to be able to turn back on GTM includes
++
++  @api @webspark_added @webspark_exit
++  Scenario: Turn off ASU Brand module extras for CI testing
++    Given I run drush "vset asu_brand_ci_testing 0"
++    Then drush output should contain 'asu_brand_ci_testing was set to "0"'

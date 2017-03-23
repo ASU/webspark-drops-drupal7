@@ -567,3 +567,13 @@ $conf['404_fast_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
 if (!isset($_SERVER['PANTHEON_ENVIRONMENT']) && file_exists(DRUPAL_ROOT . '/' . conf_path() . '/settings.local.php')) {
   include DRUPAL_ROOT . '/' . conf_path() . '/settings.local.php';
 }
+
+// Theme debugging locally
+$conf['theme_debug'] = TRUE;
+
+// Error reporting
+// Make sure php.ini has display_errors = 1
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+

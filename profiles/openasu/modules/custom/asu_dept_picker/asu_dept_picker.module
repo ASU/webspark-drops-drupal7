@@ -3,9 +3,7 @@
 include_once 'inc/asu_dept_picker.theme.inc';
 
 // Module constant definitions
-define('ASU_DEPT_PICKER_TREE_ENDPOINT', variable_get('asu_dept_picker_tree_endpoint', 'https://isearch.asu.edu/endpoints/dept_tree/json'));
-define('ASU_DEPT_PICKER_FORM_CACHE_DURATION', 24); // set to 24 hours
-define('ASU_DEPT_PICKER_TOP_LEVEL_PS_ID', 'ASU');
+ // set to 24 hours
 define('ASU_DEPT_PICKER_TOP_LEVEL_DEPT_NID', 1342);
 
 
@@ -71,48 +69,6 @@ function asu_dept_picker_field_validate($entity_type, $entity, $field, $instance
     }
   }
 }
-
-
-/**
- * Gets the ASU department hierarchy tree
- */
-function asu_dept_picker_get_tree() {
-
-  $tree = &drupal_static(__FUNCTION__);
-
-  if (!isset($tree) || $tree == "") {
-    // Check for cache
-    if ($cache = cache_get('asu_dept_tree')) {
-      $tree = $cache->data;
-    }
-    // Create content and cache if no cache available
-    else {
-
-      //set timeout of request to 60 seconds
-      $options = array(
-        'timeout' => 60,
-      );
-
-      //Get the tree and cache
-      $tree_endpoint = ASU_DEPT_PICKER_TREE_ENDPOINT;
-      $request = drupal_http_request($tree_endpoint, $options);
-
-      if ($request->code == 200) {
-        $tree = $request->data;
-      }
-
-      // Create cache, set to hold cache for number of hours specified
-      if ($tree != NULL) {
-        $set_date = time();
-        $expire_date = time() + 3600 * ASU_DEPT_PICKER_FORM_CACHE_DURATION;
-        cache_set('asu_dept_tree', $tree, 'cache', $expire_date);
-      }
-    }
-  }
-
-  return $tree;
-}
-
 
 /**
  * Implements hook_field_widget_form()

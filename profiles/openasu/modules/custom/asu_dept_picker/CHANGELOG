@@ -1,0 +1,4 @@
+asu_dept_picker 7.x-1.0.1
+-------------------------
+- modified config array items to include options, for easier Drupal manipulation
+- added max_items option, to allow limiting number of dept items selected

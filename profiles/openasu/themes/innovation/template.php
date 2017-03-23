@@ -38,7 +38,7 @@ function innovation_preprocess_html(&$variables) {
       '#type' => 'html_tag',
       '#tag' => 'meta',
       '#attributes' => array(
-        'content' => 'Webspark:1.40.2 (Pillsbury)',
+        'content' => 'Webspark:1.43 (Colorado)',
         'http-equiv' => 'X-Name-of-Distro',
       )
     ),
@@ -56,6 +56,14 @@ function innovation_preprocess_html(&$variables) {
       '#attributes' => array(
         'name' => 'TileImage',
         'content' => '/profiles/openasu/themes/innovation/images/mstile.png',
+      )
+    ),
+    'android-titlebar-bgcolor' => array(
+      '#type' => 'html_tag',
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'name' => 'theme-color',
+        'content' => '#8c1d40',
       )
     ),
   );
