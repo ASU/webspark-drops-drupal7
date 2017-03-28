@@ -1,8 +1,9 @@
 ASU Spotlight (Flexslider)
 
-asu_spotlight 7.x-1.6.1
+asu_spotlight 7.x-1.7
 -----------------------
 - fixed bug in update hook which result in revision table column not being added
+- fixed bug where the title link was empty if no link was provided in config
 
 V 1.6
 ------------------
