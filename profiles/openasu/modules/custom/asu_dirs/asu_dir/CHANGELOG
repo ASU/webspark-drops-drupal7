@@ -1,3 +1,8 @@
+asu_dir 7.x-1.6.1 2017-03-16
+----------------------------
+- if a directory tree is shown for a listing, the title displayed will be the person's title in the current dept,
+otherwise, the primary title is shown
+
 asu_dir 7.x-1.6, 2017-02-17
 ---------------------------
 - Added support for full integration with ASU Local iSearch Directory (ASU LID) module

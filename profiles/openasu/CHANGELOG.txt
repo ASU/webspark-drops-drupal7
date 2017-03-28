@@ -1,3 +1,75 @@
+Webspark 1.43 (Colorado) release
+----------------
+- Webspark core
+
+    * Drupal core (v7.54) - This includes security and non-security updates, including:
+        * Old module cruft cleanup - Background: Drupal 7.50+ has a new check for erroneous entries that remain
+          in the Drupal database system table when a previously enabled module's code is deleted without going through
+          the proper disable/uninstall process (usually if the module had an .install file with hook_uninstall in it.)
+          Webspark will start throwing new errors for logged-in site administrators in those cases. To get rid of these
+          error messages, go to /admin/reports/status and look for "Missing Module" instructions to follow.
+        * Some iframe tags will now work (as long as the iframe is pulling content from the SAMEORIGIN).
+    * Panopoly (v1.43) - Includes a security update to Views (v3.15), as well as updates to all of its core modules.
+      Read more...
+    * Webspark Featurescustom (v7.x-1.6) - Remove LOW warning-triggering comments from Webspark JS files to help
+      reduce LOW RiskSense warnings from security remediation scans.
+
+- Web standards components in Webspark
+
+    * ASU Directory Integration Reinvented (ASU DIR v7.x-1.6.1)
+        * Automatic integration with ASU Local iSearch Directory (ASU LID) module (if enabled)
+            * When ASU LID is enabled, and profiles have been imported from iSearch, the directory listings will automatically link to the imported profile nodes.
+            * Now includes a Solr Health Check fallback. If Solr is down, then the directory listing will automatically be replaced with a Drupal View of local profile profile nodes
+            * Form fields and directory will now respect ASU LID-style expertise and local tag settings, if applicable
+            * Added option to 'Always Use Local iSearch View', which will always use the ASU LID view instead of Solr view
+            * Added customizable sort option, allowing switching between iSearch customized sorting, and local iSearch imported
+    	    * Configuration management improved to allow interchanging of configs with ASU LID module
+        * Improved title logic to mirror iSearch
+    * ASU Directory Panel (v7.x-1.0)
+        * Easily place directory listing panel panes into panopoly layouts
+    * The ASU Local iSearch Directory (ASU LID v7.x-1.8.9) module is now part of Webspark
+        * Features:
+            * Import profiles from iSearch according to site configs
+            * Allows the display of iSearch profiles on local site
+            * Automatic profile updating
+            * Profiles are updated from iSearch via periodic cron tasks
+            * Periodic and load-time checking of profiles against iSearch Solr index, to ensure up-to-date affiliation data
+            * ASU LID Profile List View will automatically substitute for the ASU DIR Solr listings if iSearch Solr health check fails
+    * ASU Brand (v7.x-1.15)
+        * Now updates theme_default value regardless of whether the module is part of Webspark or not.
+    * ASU Spotlight (v7.x-1.6.1)
+        * Fix for update hook which resulted in revision table not being updated
+        * Added width:100%; to the blurbcontainer class in asuflex.css for IE 9+ users.
+    * Webspark Jumbohero (v7.x-1.2-dev)
+        * Fixed missing blurb and buttons issue (only the title field's contents were showing).
+    * Webspark Content Callout (v7.x-1.5-dev)
+        * Move Webspark Seven JS code out and into Webspark Seven theme.
+    * Webspark Extras (v.7.x-1.6)
+        * Added web standard QuickTab style
+    * Innovation theme (v1.9)
+        * Label tags for form elements now properly clear left when the label text is only a single line in the browser window (Chrome and IE issue).
+        * Fixed left-alignment issue on radio and checkbox form elements with short labels/descriptions (i.e. didn't have a line break)
+        * Fixed layout option buttons bottom border for ASU Degrees listings.
+        * Added theme color for browser windows in Android devices
+        * Increased font size on QuickTab content
+        * Increased the contrast ratio on QuickTab and widget tabs for improved accessibility
+        * Moved the skip-to-content link inside the header landmark for improved accessibility
+
+- Webspark-managed contrib modules & libraries
+
+    * Contrib projects – Additions
+        * Missing Module - Helps facilitate removing missing Drupal projects that create error messages.
+
+- Webspark custom projects - Changes/Deletions
+    * ASU Security Scan Fixes - Removed JS file that kept Webspark from using iframe tags.
+      (This is now handled in Drupal core with a SAMEORIGIN HTTP header.)
+    * ASU Webspark Bootstrap theme and library - The original (and non-standards compliant) Webspark theme
+      (asu_webspark_bootstrap) have been completely removed from Webspark. IMPORTANT: If your site is still
+      running this theme and using its accompanying Bootstrap library, do not update Webspark until you have moved
+      your site to a Web standards compliant theme (like Innovation).
+
+
+
 Webspark 1.40.3 (Shell Valley) release
 ----------------
 - Webspark core

@@ -194,8 +194,8 @@ ul.quicktabs-style-nostyle, .ui-tabs-panel,
 }
 ul.quicktabs-style-nostyle,
 .ui-tabs .ui-tabs-nav {
-	border-bottom: 1px solid #dddddd !important;
-	padding: 0;
+	border-bottom: 1px solid #777 !important;
+	padding: 1em 0 0 0;
 }
 ul.quicktabs-style-nostyle {
 	margin-bottom: 0;
@@ -219,7 +219,7 @@ ul.quicktabs-style-nostyle li,
 .ui-tabs .ui-tabs-nav li.ui-state-default {
 	background: none;
   background-color: transparent;
-  color: #a7a7a7;
+  color: #777;
 }
 ul.quicktabs-style-nostyle li:hover,
 ul.quicktabs-style-nostyle li.active,
@@ -244,13 +244,13 @@ ul.quicktabs-style-nostyle li a,
 .ui-tabs .ui-tabs-nav li a {
 	display: block;
   position: relative;
-	border-color: #d7d7d7 #d7d7d7 transparent #d7d7d7;
+	border-color: #777 #777 transparent #777;
 	border-image: none;
 	border-radius: 0;
 	border-style: solid;
 	border-width: 1px;
 	padding: 10px 15px;
-	color: #a7a7a7;
+	color: #777;
 	line-height: 1.44;
 	transition: all 0.25s ease-in-out 0s;
 }
@@ -265,19 +265,20 @@ ul.quicktabs-style-nostyle li a {
 .ui-tabs .ui-tabs-nav li.ui-state-default a,
 .ui-tabs .ui-tabs-nav li.ui-state-default a:link,
 .ui-tabs .ui-tabs-nav li.ui-state-default a:visited {
-  color: #a7a7a7;
+  color: #777;
 	transition: all 0.25s ease-in-out 0s;
 }
 ul.quicktabs-style-nostyle li:hover a,
 .ui-tabs .ui-tabs-nav li.ui-state-hover a {
 	background-color: #eee;
-	border-bottom-color: #d7d7d7;
+	border-bottom-color: #777;
 }
 ul.quicktabs-style-nostyle li.active a,
 ul.quicktabs-style-nostyle li.active:hover a,
 .ui-tabs .ui-tabs-nav li.ui-state-active a {
 	background-color: transparent;
 	border-bottom-color: #fff;
+	margin-left: 0.08em;
 }
 .ui-tabs .ui-tabs-nav li.ui-state-focus a {
 	outline:none; 

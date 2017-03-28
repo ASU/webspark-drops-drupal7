@@ -333,7 +333,6 @@
 
                     $(this.target).append(markup);
                 }
-
             }
         },
 
@@ -342,17 +341,20 @@
             // Logic to get title string
             var titles = doc.titles;
             var depts = doc.deptids;
+            var dept_names = doc.departments;
             var title_string = '';
+            var is_tree = this.field_configs.show_tree;
+            var field_configs = this.field_configs;
+            var confob = 'asu_dir' + field_configs.pane_id;
 
             // Get current dept id from the ASUPeople global, which is defined in the asu_dir module JS
-            var dept_nid = ASUPeople.dept_nid;
-
-            var index = 0;
+            var dept_nid = ASUPeople[confob].dept_nid;
+            var index = -1;
 
             // Get the index of the current department in the deptids array,
             // so that we can map the proper title and employee class.
-
-            if (depts != null) {
+            // edit - we only do this if a department tree is shown
+            if (depts != null && is_tree) {
                 for (var i = 0; i < depts.length; i++) {
                     if (depts[i] == dept_nid) {
                         index = i;
@@ -360,6 +362,19 @@
                 }
             }
 
+            // if no current dept index was set, set to the primary title
+            if (index == -1) {
+                for (var i = 0; i < dept_names.length; i++) {
+                    if (dept_names[i] == doc.primaryiSearchDepartmentAffiliation) {
+                        index = i;
+                    }
+                }
+            }
+
+            // if we failed to get a primary or current dept title, fallback to the first one found
+            if (index == -1) {
+                index = 0;
+            }
 
             if (doc.titleSource != null) {
                 var titleSource = doc.titleSource[index];
