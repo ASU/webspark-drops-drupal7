@@ -49,15 +49,14 @@ function asu_userpicker_field_widget_info() {
       'settings' => array(
         'autocomplete_match' => 'contains',
         'size' => 128,
-        'autocomplete_path' => 'autocomplete/asu/user',
+        'autocomplete_path' => variable_get('asu_userpicker_service_default', 'autocomplete/asu/user/solr'),
       ),
       //'behaviors' => array(
       //  'multiple values' => FIELD_BEHAVIOR_DEFAULT,
       //  'default value' => FIELD_BEHAVIOR_DEFAULT,
       //),
     ),  
-  ); 
-
+  );
 }
 
 
@@ -104,6 +103,44 @@ function asu_userpicker_field_attach_presave($entity_type, $entity) {
 */
 
 /**
+ * Implements hook_field_widget_settings_form()
+ */
+function asu_userpicker_field_widget_settings_form($field, $instance) {
+
+  $widget = $instance['widget'];
+  $settings = $widget['settings'];
+
+  //if ($widget['type'] == 'asu_userpicker_autocomplete') {
+    $form = array();
+    //$defaults = field_info_field_settings($field['type']);
+    //$settings = array_merge($defaults, $field['settings']);
+
+    //dpm($defaults, 'THE DEFAULTS');
+
+    $options = array(
+      'autocomplete/asu/user/solr' => 'Solr',
+      'autocomplete/asu/user' => 'LDAP'
+    );
+
+    $form['autocomplete_path'] = array(
+      '#type' => 'select',
+      '#title' => t('People Search Service'),
+      '#options' => $options,
+      '#default_value' => $settings['autocomplete_path'],
+      '#description' => t('Use Solr or Ldap for user searching.'),
+    );
+  //}
+
+
+
+
+  return $form;
+}
+
+
+
+
+/**
  * Implements hook_menu().
  *
  */
@@ -119,8 +156,17 @@ function asu_userpicker_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'asu_userpicker.admin.inc',
   );
+
   $items['autocomplete/asu/user'] = array(
     'page callback' => 'asu_userpicker_autocomplete',
+    //'access callback' => TRUE,
+    // Only outputting non-sensitive info, so tie to profile perms.
+    'access arguments' => array('access user profiles'),
+    'weight' => 1,
+  );
+
+  $items['autocomplete/asu/user/solr'] = array(
+    'page callback' => 'asu_userpicker_solr_autocomplete',
     //'access callback' => TRUE,
     // Only outputting non-sensitive info, so tie to profile perms.
     'access arguments' => array('access user profiles'),
@@ -139,10 +185,14 @@ function asu_userpicker_menu() {
 function asu_userpicker_form_cas_add_user_form_alter(&$form, &$form_state, $form_id) {
 
   // We don't have to set the field type, just set the autocomplete path...
-  $form['account']['cas_name']['#autocomplete_path'] = 'autocomplete/asu/user';
+  $form['account']['cas_name']['#autocomplete_path'] = variable_get('asu_userpicker_service_default', 'autocomplete/asu/user/solr');
   // Looks like we do not need this line, since CAS does user creation based on
   // ASURITE ID (which is what our autocomplete returns).
-  //$form['account']['cas_name']['#element_validate'] = 'asu_userpicker_autocomplete_validate';
+  $form['account']['cas_name']['#element_validate'] = 'asu_userpicker_autocomplete_validate';
+
+  //'#value_callback' => 'user_reference_autocomplete_value'
+
+  dpm($form, 'THE FORM');
   
 }
 
@@ -161,7 +211,6 @@ function asu_userpicker_autocomplete($string) {
   // 3. Remove dupes and display.
 
   // LOCAL SEARCH
-
   $local_results = asu_userpicker_search_local($string);
 
   $items = array();
@@ -182,6 +231,46 @@ function asu_userpicker_autocomplete($string) {
   foreach ($search_results as $search_result) {
     if ($search_result['asuriteid'][0]) {
       $items[$search_result['asuriteid'][0]] = $search_result['asuriteid'][0] . ' : ' . $search_result['cn'][0] . ' <' . $search_result['mail'][0] . '>';
+    }
+  }
+
+  print drupal_json_output($items);
+  exit();
+}
+
+/**
+ * Solr-enabled autocomplete callback for ASURITE textfield.
+ *
+ */
+function asu_userpicker_solr_autocomplete($string) {
+
+  // 1. Check existing users for asurite matches.
+  // 2. Check Solr for asurite matches.
+  // 3. Remove dupes and display.
+
+  // LOCAL SEARCH
+
+  $local_results = asu_userpicker_solr_search_local($string);
+
+  $items = array();
+
+  foreach ($local_results as $local_result) {
+    // This is the cas_name/asurite ID.
+    // We need to save on drupal users names.
+    // We just force all usernames to be the same as ASURITE IDs.
+    $items[$local_result->name] = 'Existing user : ' . check_plain($local_result->cas_name . ' : <' . check_plain($local_result->mail) . '>');
+  }
+
+
+  // SOLR SEARCH
+
+  // Query Solr on ASURITE ID and common name / full name.
+  $solr_data = asu_userpicker_solr_search_solr($string, $filters = array('asuriteid', 'cn'));
+
+  // Add users to our list
+  foreach ($solr_data['response']['docs'] as $solr_row) {
+    if ($solr_row['asuriteId']) {
+      $items[$solr_row['asuriteId']] = $solr_row['asuriteId'] . ' : ' . $solr_row['displayName'] . ' [' . $solr_row['emailAddress'] . ']';
     }
   }
 
@@ -320,6 +409,88 @@ function asu_userpicker_autocomplete_validate($element, &$form_state, $form) {
 /*********************************************************************
   API
 *********************************************************************/
+
+/**
+ * Autocomplete local Drupal query function.
+ *
+ * @param $string
+ *   String to seach on.
+ *
+ * @return
+ *   Array of raw results from query.
+ */
+function asu_userpicker_solr_search_local($string) {
+
+  // TODO how best to handle escaping here so cases like
+  // Smith-Jones and O'Malley are searchable...
+  // Need to consider this same issue for
+  // asu_userpicker_solr_search_local() ?
+  $string = check_plain($string);
+
+  $items = array();
+
+  // Query {user}.name
+  $query = db_select('users', 'u');
+  // JOIN {cas_user} with {users}
+  $query->leftJoin('cas_user', 'cu', 'cu.uid = u.uid');
+
+  // FIELDS
+  $query->fields('cu', array('uid', 'cas_name'));
+  $query->fields('u', array('name', 'mail'));
+
+  // Add in admin configured user fields, if any.
+  $user_search_fields = array_filter(variable_get('asu_userpicker_solr_search_user_fields', array()));
+
+  $user_field_conditions = '';
+  foreach ($user_search_fields as $user_search_field) {
+
+    $clean_user_search_field = check_plain($user_search_field);
+
+    // JOIN {<checked user field>} with {users}
+    $query->leftJoin('field_data_' . $clean_user_search_field, 'f_' . $clean_user_search_field, 'f_' . $clean_user_search_field . '.entity_id = u.uid');
+    // FIELDS to return in query
+    $query->fields('f_' . $clean_user_search_field, array($clean_user_search_field . '_value'));
+    // CONDITIONS in where clause
+    $user_field_conditions .= " OR (f_" . $clean_user_search_field . "." . $clean_user_search_field . "_value LIKE '%".$string."%')";
+
+  }
+
+  $query->where("((u.name LIKE '%".$string."%') OR (u.mail LIKE '%".$string."%') OR (cu.cas_name LIKE '%".$string."%')" . $user_field_conditions .")");
+
+  $local_results = $query->orderRandom()->execute();
+
+  return $local_results;
+}
+
+/**
+ * Autocomplete Solr query function.
+ *
+ * @param $string
+ *   String to seach on.
+ *
+ * @param $filters
+ *   Array of Solr filters to consult in query. Some examples are
+ *   asuriteid, cn, and eid.
+ *
+ * @param $wildcard
+ *   Boolean Whether or not to use wildcards. Don't if you've got int based
+ *    values.
+ *
+ * @return
+ *   Array of raw results from Solr.
+ */
+function asu_userpicker_solr_search_solr($string, $filters = array('asuriteid'), $wildcard = TRUE) {
+
+  // Search Solr, ala https://webapp4-qa.asu.edu/solr/directory/select?q={!edismax}*SOMESEARCHSTRING*&rows=10&wt=json
+  $solr_base_url = variable_get('asu_userpicker_solr_query_url', 'https://asudir-solr.asu.edu/asudir/directory/select');
+  $solr_query_url = $solr_base_url . '?q=%7B!edismax%7D*' . urlencode(check_plain($string)) . '*&rows=20&wt=json';
+
+  $solr_response = drupal_http_request($solr_query_url);
+  $solr_data = drupal_json_decode($solr_response->data);
+
+  return $solr_data;
+}
+
 
 /**
  * Autocomplete LDAP query function.
