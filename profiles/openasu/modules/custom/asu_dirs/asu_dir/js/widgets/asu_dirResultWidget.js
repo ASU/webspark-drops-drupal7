@@ -388,14 +388,13 @@
             if (doc.primaryTitle != null) {
                 var primaryTitle = doc.primaryTitle;
             }
-
             if (doc.emplClasses != null) {
                 var displayEmplClass = doc.emplClasses[index];
             }
 
 
             // Title to output.
-            if (titleSource == 'titles') { // Determine if using custom title field.
+            if (title != null && (titleSource == 'titles' || workingTitle == null) ) { // Determine if using custom title field.
                 title_string = title;
             }
             else if (workingTitle != null) {
@@ -404,6 +403,7 @@
             else if (primaryTitle != null) {
                 title_string = primaryTitle;
             }
+
             else {
                 title_string = '';
             }
@@ -426,7 +426,11 @@
 
             if (doc.asuriteId) {
                 if (locals[doc.asuriteId] != null) {
-                    url = '/' + locals[doc.asuriteId].alias;
+                    if (locals[doc.asuriteId].alias != null) {
+                        url = '/' + locals[doc.asuriteId].alias;
+                    } else if (locals[doc.asuriteId].nid != null) {
+                        url = '/node/' + locals[doc.asuriteId].nid;
+                    }
                 }
             }
 
