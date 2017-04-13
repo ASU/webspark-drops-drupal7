@@ -51,7 +51,6 @@ function initIsearchConfig() {
     }
 
     $('.asu-isearch-configuration .form-submit').click(function (event) {
-
         // when saving the asu directory panel
         // replace current state with reset flag, so that the parameter
         // history store widget knows to ignore History.js configs

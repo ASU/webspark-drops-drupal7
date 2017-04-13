@@ -251,17 +251,24 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       which allows browsing of all departments below the root.'),
     );
 
+    $element['horizontal_tabs']['content']['content_tabs']['department']['show_breadcrumbs'] = array(
+      '#type' => 'checkbox',
+      '#title' => 'Show Tree Breadcrumbs',
+      '#default_value' => $config['show_breadcrumbs'],
+      '#states' => array(
+        'visible' => array(
+          ':input[name="field_asu_directory_items[und][0][horizontal_tabs][content][content_tabs][department][show_tree]"]' => array('checked' => TRUE)
+        ),
+      ),
+    );
+
     $element['horizontal_tabs']['content']['content_tabs']['department']['new_tab'] = array(
       '#type' => 'checkbox',
       '#title' => 'Open Profile Links in New Tab',
       '#default_value' => $config['new_tab']
     );
 
-    $element['horizontal_tabs']['content']['content_tabs']['department']['show_breadcrumbs'] = array(
-      '#type' => 'checkbox',
-      '#title' => 'Show Breadcrumbs',
-      '#default_value' => $config['show_breadcrumbs']
-    );
+
 
     // get all nids of the dept tree, and pass them to
     // the dept picker

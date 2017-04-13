@@ -305,9 +305,9 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
 
   drupal_add_js(array(ASU_DIRECTORY_MODULE_NAME . $the_id => $settings), 'setting');
 
-  if ($field_configs['show_breadcrumbs']) {
+  if ($field_configs['show_breadcrumbs'] && $field_configs['show_tree']) {
     //todo:  uncomment this later
-    //drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir.breadcrumb.js');
+    drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir.breadcrumb.js');
   }
 
   // Markup for primary display block (to be altered via AJAX)

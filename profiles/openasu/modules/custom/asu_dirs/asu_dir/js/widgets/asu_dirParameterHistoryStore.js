@@ -145,8 +145,6 @@
 
                 //todo: only replace the q=
                 // so something like /(\/|&)q=/gi but with positive lookbehind-like behavior
-
-
                 if (ASUPeople.active == field_id) {
 
                     url_hash = this.cleanCustomString(url_hash, field_configs);
@@ -258,12 +256,20 @@
                     ASUPeople.active = 'asu_dir' + id;
                 }
 
+                var activetab = $('.ui-tabs-nav .ui-state-active a');
 
                 // Load the state from the History object.
                 if (state.data && state.data.params) {
 
                     if (id == id_num) {
-                        $('#' + this.tab_link).click();
+
+                        // if the active tab is not an iSearch view then make it active.
+                        // since the js gets reloaded upon an exposed view form submittal,
+                        // this is necessary to avoid the state popping back to the active asu_dir pane
+                        if (!activetab.hasClass('asu_isearch_view_tab')) {
+                            $('#' + this.tab_link).click();
+                        }
+
                         //index = url.indexOf(this.page_alias);
                         return state.data.params;
                     } else {
@@ -271,10 +277,13 @@
                     }
                 }
 
+
+
+
                 // If initial load, load the state from the URL.
                 if (index == -1) {
                     return '';
-                } else if (id == id_num) {
+                } else if (id == id_num && !activetab.hasClass('asu_isearch_view_tab')) {
 
                     //get the query string from URL
                     var query_string = url.substr(index + 1);
@@ -315,6 +324,9 @@
 
                     //set the active department, and tab
                     ASUPeople[field_id].dept_nid = nid;
+
+
+
 
 
                     ASUPeople.active = field_id;

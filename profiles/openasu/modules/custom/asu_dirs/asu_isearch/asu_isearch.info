@@ -4,7 +4,7 @@ core = 7.x
 package = ASU
 version = 7.x-1.8.9
 project = asu_isearch
-dependencies[] = asu_dept_picker
+dependencies[] = asu_dept_picker (>=7.x-1.0.1)
 dependencies[] = ctools
 dependencies[] = date
 dependencies[] = defaultconfig
@@ -44,7 +44,7 @@ dependencies[] = views_bootstrap
 dependencies[] = views_content
 dependencies[] = webspark_featurescustom
 dependencies[] = wysiwyg_filter
-dependencies[] = asu_dir_utilities
+dependencies[] = asu_dir_utilities (>=7.x-1.1)
 scripts[] = js/asu_isearch.js
 stylesheets[all][] = css/asu_isearch.css
 stylesheets[all][] = css/asu_isearch_assoc.css
