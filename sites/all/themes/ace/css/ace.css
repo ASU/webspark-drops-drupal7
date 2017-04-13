@@ -1,0 +1,7 @@
+/* ADDS SPACING FOR LOGIN & JOIN BUTTONS FOR ON MEMBERSHIP RENEW PAGE (AND PROBABLY GLOBALLY) */
+#page-content .content {
+	margin-bottom: 10px;
+}
+#page-content a.button {
+	margin: 10px;
+}

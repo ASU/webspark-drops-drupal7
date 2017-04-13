@@ -1,13 +1,6 @@
 <?php
 
 /**
- * Implements hook_install().
- */
-function asu_brand_install() {
-  variable_set('asu_brand_ci_testing', 0);
-}
-
-/**
  * Implements hook_uninstall().
  */
 function asu_brand_uninstall() {
@@ -75,12 +68,4 @@ function asu_brand_update_7102(&$sandbox) {
   if (variable_get('theme_default') === 'innovation') {
     variable_set('asu_brand_header_version', '4.5');
   }
-}
-
-/**
- * Implements hook_update_N()
- * + Adds Behat testing variable to turn off GTM during Behat testing
- */
-function asu_brand_update_7103(&$sandbox) {
-  variable_set('asu_brand_ci_testing', 0);
 }

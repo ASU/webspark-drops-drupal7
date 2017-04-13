@@ -1,0 +1,113 @@
+<?php
+/**
+ * @file
+ * Main file for the Commerce Event Ticket Services module.
+ */
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function commerce_event_ticket_services_ctools_plugin_api($owner, $api) {
+  if ($owner == 'services' && $api == 'services') {
+    return array(
+      'version' => 3,
+      'file' => 'commerce_event_ticket_services.services.inc',
+      'path' => drupal_get_path('module', 'commerce_event_ticket_services'),
+    );
+  }
+}
+
+/**
+ * Access callback for a ticket.
+ *
+ * @param string $op
+ *   The operation to perform (see commerce_event_ticket_access() for options).
+ * @param array $args
+ *   The arguments passed to this resource callback. The first element (keyed by
+ *   0) should be the ticket barcode token.
+ *
+ * @see commerce_event_ticket_services_services_resources()
+ */
+function commerce_event_ticket_services_access_ticket($op, array $args) {
+  // Allow XHR requests.
+  drupal_add_http_header('Access-Control-Allow-Origin', '*');
+  if (!commerce_event_ticket_lookup_access()) {
+    return FALSE;
+  }
+  $ticket = commerce_event_ticket_load_by_barcode($args[0]);
+  if (!$ticket) {
+    services_error(t('Ticket not found'), 404);
+    return FALSE;
+  }
+  // Defer to the main Commerce Event Ticket access system.
+  return commerce_event_ticket_access($op, $ticket);
+}
+
+/**
+ * Access callback to retrieve a list of nodes that have tickets.
+ *
+ * It is assumed that a node would be filtered out if the user cannot validate
+ * (mark used) that node's tickets.
+ */
+function commerce_event_ticket_services_access_ticket_nodes() {
+  return user_access('mark used any commerce event tickets')
+    || user_access('mark used commerce event tickets given node update access')
+    || user_access('update all commerce event tickets');
+}
+
+/**
+ * Access callback to validate multiple tickets.
+ */
+function commerce_event_ticket_services_access_validate_multiple() {
+  return user_access('update all commerce event tickets')
+    || user_access('mark used any commerce event tickets');
+}
+
+/**
+ * Access callback to retrieve a list of tickets for a product display node.
+ *
+ * @param array $args
+ *   The arguments passed to this resource callback.
+ *
+ * @see commerce_event_ticket_services_services_resources()
+ *
+ * @return bool
+ *   TRUE if access is granted, FALSE if denied.
+ */
+function commerce_event_ticket_services_access_tickets_per_node(array $args) {
+  // Allow XHR requests.
+  drupal_add_http_header('Access-Control-Allow-Origin', '*');
+
+  // Check permissions.
+  $update = user_access('view commerce event tickets given node update access');
+  $all = user_access('view all commerce event tickets');
+  if (!$update && !$all) {
+    return FALSE;
+  }
+
+  // Look up the node based on the provided node ID.
+  $node = node_load($args[0]);
+  if (!$node) {
+    services_error(t('Node not found'), 404);
+    return FALSE;
+  }
+  elseif ($all && node_access('view', $node)) {
+    return TRUE;
+  }
+  elseif ($update && node_access('update', $node)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function commerce_event_ticket_services_permission() {
+  return array(
+    'view all info for a commerce event ticket' => array(
+      'title' => t('Retrieve all information for a specified ticket'),
+      'description' => t('When accessing a ticket via its barcode through the event-ticket/BARCODE Services resource, this permission allows the user to see all associated information about a ticket (including order details) without having to have any further permissions (such as Commerce Order permissions). The user still needs permission to view the ticket itself.'),
+    ),
+  );
+}

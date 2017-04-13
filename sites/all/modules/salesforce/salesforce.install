@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @file
+ * Install/uninstall tasks for the Salesforce module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function salesforce_uninstall() {
+  variable_del('salesforce_consumer_key');
+  variable_del('salesforce_consumer_secret');
+  variable_del('salesforce_endpoint');
+  variable_del('salesforce_identity');
+  variable_del('salesforce_instance_url');
+  variable_del('salesforce_refresh_token');
+}
+
+/**
+ * Implements hook_schema().
+ */
+function salesforce_schema() {
+  $schema = array();
+  $schema['cache_salesforce_object'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_salesforce_object']['description'] = 'Cache table for detailed information about specific Salesforce objects.';
+  return $schema;
+}
+
+/**
+ * Create the cache bin for Salesforce objects.
+ */
+function salesforce_update_7300() {
+  if (!db_table_exists('cache_salesforce_object')) {
+    $schema_name = 'cache_salesforce_object';
+    $schema[$schema_name] = drupal_get_schema_unprocessed('system', 'cache');
+    $schema[$schema_name]['description'] = 'Cache table for detailed information about specific Salesforce objects.';
+    db_create_table($schema_name, $schema[$schema_name]);
+  }
+}
+
+/**
+ * Update API version to 29.0 for getUpdated() support.
+ */
+function salesforce_update_7301() {
+  $version = variable_get('salesforce_api_version', array());
+  if (empty($version) || version_compare($version['version'], "29.0") < 0) {
+    variable_set('salesforce_api_version', array(
+      "label" => "Winter '14",
+      "url" => "/services/data/v29.0/",
+      "version" => "29.0",
+    ));
+  }
+}
+

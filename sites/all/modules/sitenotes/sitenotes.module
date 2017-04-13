@@ -1,0 +1,448 @@
+<?php
+/**
+ * @file
+ * Creates site notes node type for admins and allowed roles.
+ */
+
+/**
+ * Implements hook_node_info().
+ * Min_word count is set just to make sure something is there.
+ * The type is locked because we use it in queries in this module. (default any way)
+ */
+function sitenotes_node_info() {
+  return array(
+    'sitenotes' => array(
+      'type' => 'sitenotes',
+      'name' => t('Site Note'),
+      'base' => 'node_content',
+      'description' => t('Create site notes for admin user(s).'),
+      'has_title' => TRUE,
+      'has_body' => TRUE,
+      'custom' => TRUE,
+      'modified' => TRUE,
+      'locked' => FALSE,
+      )
+    );
+}
+
+/**
+ * Implements hook_help().
+ *  The first case adds a little help text.
+ *  The second case adds some submission guidelines on the create content page.
+ */
+function sitenotes_help($path, $args) {
+  switch ($path) {
+
+    case 'admin/help#sitenotes':
+      $output = '<p>'
+        . t('The site designer can create site notes for later reference.
+        Usually only super users can read them, unless other roles are given persmissions.')
+        . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function sitenotes_permission() {
+  return array(
+    'access site notes' => array(
+      'title' => t('access site notes'),
+      'description' => t('Allow users to access site notes'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ *  Add a menu item to the Administer >> Site building menu for displaying the sitenotes.
+ */
+function sitenotes_menu() {
+  $items = array();
+
+  $items['admin/content/sitenotes'] = array(
+    'title' => 'Site notes display',
+    'description' => 'Show all site notes',
+    'page callback' => 'sitenotes_list',
+    'access arguments' => array('access site notes'),
+    );
+
+  return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function sitenotes_menu_alter(&$callbacks) {
+  $callbacks['node/add/sitenotes']['access callback'] = "user_access";
+  $callbacks['node/add/sitenotes']['access arguments'] = array("access site notes");
+}
+
+/**
+ * Implements hook_theme().
+ */
+function sitenotes_theme() {
+  return array(
+    'sitenotes_search_item' => array('arguments' => array('item', 'type')),
+    );
+}
+
+/**
+ * Implements hook_node_access().
+ */
+function sitenotes_node_access($node, $op, $account) {
+  global $user;
+  if ($op == 'create' || $op == 'update' || $op == 'delete' || $op == 'view') {
+    return user_access('access site notes', $account);
+  }
+}
+
+/**
+ * Implements hook_query_alter().
+ * Restrict accessing sitenote content if no permission given.
+ */
+function sitenotes_query_alter(QueryAlterableInterface $query) {
+  global $user;
+  if ($user->uid == 1) {
+    return;
+  }
+  $node = FALSE;
+  foreach ($query->getTables() as $alias => $table) {
+    if ($table['table'] == 'node') {
+      $node = $alias;
+    }
+  }
+  if ($node) {
+    if (user_access('access site notes')) {
+      return;
+    }
+    $db_and = db_and();
+    $db_and->condition($node . '.type', 'sitenotes', '!=');
+    $query->condition($db_and);
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for node_form().
+ * Disables the 'promote to front' option.
+ * Remove sitenotes content from the advanced search options to prevent it being found.
+ */
+function sitenotes_form_node_form_alter(&$form, &$form_state, $form_id) {
+  switch ($form_id) {
+    case 'sitenotes_node_form':
+      $form['options']['promote']['#value'] = 0;
+      break;
+
+    // Check for "advanced search form".
+    // If we don't allow search or the user doesn't have access, then turn off content type in form.
+    case 'search_form':
+      if (variable_get('sitenotes_search', FALSE) == FALSE || user_access('access site notes') == FALSE) {
+        unset($form['advanced']['type']['#options']['sitenotes']);
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_form().
+ * Creates the form for adding the sitnenotes content type.
+ */
+function sitenotes_form($node, $form_state) {
+  return node_content_form($node, $form_state);
+}
+
+/**
+ * Implements hook_search_info().
+ * Tell the search module that we're here.
+ */
+function sitenotes_search_info() {
+  return array(
+    'title' => 'Sitenotes',
+//    'path' => 'sitenotes',
+    );
+}
+
+/**
+ * Implements hook_search_admin().
+ * Allows the admin to set whether or not to be able to search the sitenotes content.
+ */
+function sitenotes_search_admin() {
+  $form = array();
+
+  $form['sitenotes'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Sitenotes'),
+      '#weight' => -1,
+      );
+
+  $form['sitenotes']['sitenotes_search'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Allow search for authorized users?'),
+      '#description' => t("Indexes Site Notes for searching. Only users with
+        'access site notes' permission will be able to see the results."),
+      '#default_value' => variable_get('sitenotes_search', FALSE),
+      );
+
+  return $form;
+}
+
+/**
+ * Menu callback.
+ * Called from the Administer >> Content menu to retrieve the sitenotes teasers.
+ * Note the use of styling classes for individual customization.
+ */
+function sitenotes_list() {
+  $how_many = variable_get('default_nodes_main', 10);
+  $build = array();
+
+  $query = db_select('node', 'n')->extend('PagerDefault')->limit($how_many);
+  $query->fields('n', array('nid'));
+  $query->condition('n.type', 'sitenotes')
+    ->condition('n.status', 1)
+    ->addTag('node_access')
+    ->orderBy('n.sticky', 'DESC')
+    ->orderBy('n.created', 'DESC');
+
+  $nids = $query->execute()->fetchCol();
+
+  $output = '>> ' . l(t('Add a new Site Note'), 'node/add/sitenotes') . "\n";
+  $output .= '<div class="sitenotes-list">' . "\n";
+
+  if (!empty($nids)) {
+    $nodes = node_load_multiple($nids);
+    $build += node_view_multiple($nodes, 'teaser');
+
+    $build['pager'] = array(
+      '#theme' => 'pager',
+      '#weight' => 5,
+    );
+  }
+  else {
+    drupal_set_message(t('No site notes have been created.'));
+  }
+
+  return $build;
+}
+
+/**
+ * Implements hook_view().
+ * List all the sitenotes and provide breadcrumbs on the display.
+ */
+function sitenotes_node_view($node, $view_mode) {
+  if ($node->type == 'sitenotes' && user_access('access site notes') && $view_mode == 'full') {
+    $breadcrumb = array();
+    $breadcrumb[] = l(t('Home'), '<front>');
+    $breadcrumb[] = l(t('Administration'), 'admin');
+    $breadcrumb[] = l(t('Content'), 'admin/content');
+    $breadcrumb[] = l(t('Site Notes'), 'admin/content/sitenotes');
+    drupal_set_breadcrumb($breadcrumb);
+  }
+}
+
+/**
+ * Implements hook_node_load().
+ */
+function sitenotes_node_load($nodes, $types) {
+  // Decide whether any of $types are relevant to our purposes.
+  if (count(array_intersect(array('sitenotes'), $types))) {
+    // Gather our extra data for each of these nodes.
+    $result = db_query('SELECT nid, sticky FROM {node} WHERE nid IN(:nids)', array(':nids' => array_keys($nodes)));
+
+    // Add our extra data to the node objects.
+    foreach ($result as $record) {
+      // Decode weight from sticky field.
+      $sticky = $record->sticky;
+      $nodes[$record->nid]->sticky = ($sticky > 0) ? 1 : 0;
+      $nodes[$record->nid]->weight = ($sticky > 0) ? 100 - $sticky : -100 - $sticky;
+    }
+  }
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function sitenotes_node_presave($node) {
+  // Encode weight into the sticky value for the database.
+  // Stickiness is the inverse of weight.
+  // - Stickiness is sorted DESC while weight is sorted ASC so we invert
+  //  the weight before saving. If sticky box is checked, add 100 to weight.
+  // Unweighted sticky nodes will have a value of 100.
+  if ($node->sticky) {
+    $node->sticky = 100 - $node->weight;
+  }
+}
+
+/**
+ * Implements hook_update_index.
+ *  Remove sitenotes content from the search index to prevent it being found,
+ *  if we are not allowing searching.
+ */
+function sitenotes_update_index() {
+  if (function_exists('search_reindex') && !variable_get('sitenotes_search', FALSE)) {
+    $last = variable_set('sitenotes_last_cron', 0);
+    $query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'sitenotes');
+    $query->condition('n.created', $last, '>=');
+
+    $result = $query->execute();
+    foreach ($result as $row) {
+      // Clear out existing data for this node.
+      search_reindex($row->nid, 'node');
+
+      // Now give it nothing to index.
+      search_index($row->nid, 'node', '');
+    }
+    variable_set('sitenotes_last_cron', REQUEST_TIME);
+  }
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function sitenotes_block_info() {
+  $blocks['recentnotes'] = array('info' => t('Recent Site Notes'));
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function sitenotes_block_configure($delta = '') {
+  if ($delta == 'recentnotes') {
+    // 1 day, 2 days, 3 days, 4 days, 5 days, 6 days, 1 week, 2 weeks, 3 weeks, 4 weeks,
+    //  6 weeks, 8 weeks, 12 weeks, 16 weeks, 26 weeks, 52 weeks
+    $how_recent = drupal_map_assoc(array(0, 86400, 172800, 259200, 345600, 432000, 518400, 604800, 1209600, 1814400, 2419200, 3628800, 4838400, 7257600, 9676800, 15724800, 31449600), 'format_interval');
+    $how_recent['0'] = t('All');
+
+    $form['sitenotes_block_recent_show_author'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show author?'),
+      '#default_value' => variable_get('sitenotes_block_show_author', FALSE),
+      '#description' => t("Show the author's user id?"),
+      );
+
+    $form['sitenotes_block_recent_show_when'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show when?'),
+      '#default_value' => variable_get('sitenotes_block_show_when', FALSE),
+      '#description' => t("Show the creation/update date?"),
+      );
+
+    $form['sitenotes_block_recent_range'] = array(
+      '#type' => 'select',
+      '#title' => t('How recent?'),
+      '#default_value' => variable_get('sitenotes_block_recent_range', 0),
+      '#options' => $how_recent,
+      '#description' => t("How long since it was created/updated?"),
+      );
+
+    $form['sitenotes_block_how_many'] = array(
+      '#type' => 'textfield',
+      '#title' => t('How many?'),
+      '#default_value' => variable_get('sitenotes_block_how_many', 5),
+      '#size' => 8,
+      '#description' => t("How many do you want shown?"),
+      );
+
+    return $form;
+  }
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function sitenotes_block_save($delta = '', $edit = array()) {
+  if ($delta == 'recentnotes') {
+    variable_set('sitenotes_block_show_author', $edit['sitenotes_block_recent_show_author']);
+    variable_set('sitenotes_block_show_when', $edit['sitenotes_block_recent_show_when']);
+    variable_set('sitenotes_block_recent_range', $edit['sitenotes_block_recent_range']);
+    variable_set('sitenotes_block_how_many', $edit['sitenotes_block_how_many']);
+  }
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function sitenotes_block_view($delta = '') {
+  if ($delta == 'recentnotes') {
+    if (user_access('access site notes')) {
+      $block['subject'] = t('Recent Site Notes');
+
+      $default = array(
+        'show_author' => FALSE,
+        'show_when' => FALSE,
+        'recent_range' => 0,
+        'how_many' => 5
+        );
+
+      $show_author = variable_get('sitenotes_block_show_author', FALSE);
+      $show_when = variable_get('sitenotes_block_show_when', FALSE);
+      $range = variable_get('sitenotes_block_recent_range', 0);
+      $how_many = variable_get('sitenotes_block_how_many', 5);
+
+      $query = db_select('node', 'n');
+      $query->fields('n', array('nid', 'title', 'changed', 'uid'));
+      $query->condition('n.type', 'sitenotes')
+        ->condition('n.status', 1)
+        ->addTag('node_access')
+        ->orderBy('n.sticky', 'DESC')
+        ->orderBy('n.created', 'DESC');
+
+      $result = $query->execute();
+      $rows = array();
+      $output_wrapper = '<div class="sitenotes-recent"><ul>';
+      $output = '';
+      foreach ($result as $rows) {
+        $output .= '<li>' . l($rows->title, 'node/' . $rows->nid, array('title' => t('View content.')));
+        if ($show_author || $show_when) {
+          $output .= '<div class="sitenotes-recent-info">';
+          if ($show_author) {
+            $uname_query = db_select('users', 'u');
+            $uname_query->fields('u', array('name'));
+            $uname_query->condition('u.uid', $rows->uid);
+            $uresult = $uname_query->execute();
+            foreach ($uresult as $uname) {
+              $author = $uname->name;
+            }
+            $output .= l($author, "user/$rows->uid", array('title' => t('View user profile.')));
+        }
+        $output .= $show_when ? ' ' . format_date($rows->changed, 'custom', 'j M y') : NULL;
+        $output .= '</div>';
+        }
+        $output .= '</li>';
+      }
+
+      if ($output == '') {
+        $output = t('No content available.');
+      }
+      $output_wrapper .= $output
+        . '</ul><div class="sitenotes-recent-info">' . l(t('Add a new Site Note'), 'node/add/sitenotes')
+        . '</div></div>';
+      $block['content'] = $output_wrapper;
+      return $block;
+    }
+  }
+}
+
+function theme_sitenotes_search_item($item, $type) {
+  $output = ' <dt class="title"><a href="' . check_url($item['link']) . '">' . check_plain($item['title']) . '</a></dt>';
+  $info = array();
+  if ($item['type']) {
+    $info[] = check_plain($item['type']);
+  }
+  if ($item['user']) {
+    $info[] = $item['user'];
+  }
+  if ($item['date']) {
+    $info[] = format_date($item['date'], 'small');
+  }
+  if (is_array($item['extra'])) {
+    $info = array_merge($info, $item['extra']);
+  }
+  $output .= ' <dd>'
+    . ($item['snippet'] ? '<p>' . $item['snippet'] . '</p>' : '')
+    . '<p class="search-info">' . implode(' - ', $info) . '</p></dd>';
+  return $output;
+}

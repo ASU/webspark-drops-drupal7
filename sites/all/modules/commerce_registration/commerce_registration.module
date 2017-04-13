@@ -1,0 +1,992 @@
+<?php
+/**
+ * @file
+ * Commerce Registration module code.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function commerce_registration_menu() {
+  $menu = array();
+
+  $menu['admin/commerce/registrations'] = array(
+    'title' => t('Registrations'),
+    'description' => t('Manage product registrations that have been purchased.'),
+    'access arguments' => array('administer registration'),
+    'page callback' => 'commerce_registration_admin_overview',
+    'file' => 'includes/commerce_registration.admin.inc',
+  );
+  $menu['admin/commerce/registrations/complete'] = array(
+    'title' => t('Completed Registrations'),
+    'description' => t('Manage product registrations that have been purchased.'),
+    'access arguments' => array('administer registration'),
+    'page callback' => 'commerce_registration_admin_overview',
+    'file' => 'includes/commerce_registration.admin.inc',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -1,
+  );
+  $menu['admin/commerce/registrations/all'] = array(
+    'title' => t('All Registrations'),
+    'description' => t('Manage product registrations that have been purchased.'),
+    'access arguments' => array('administer registration'),
+    'page callback' => 'commerce_registration_admin_overview_all',
+    'file' => 'includes/commerce_registration.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 0,
+  );
+
+  return $menu;
+}
+
+/**
+ * Implements hook_menu_alter().
+ *
+ * @param $menu
+ */
+function commerce_registration_menu_alter(&$menu) {
+  foreach (commerce_info_fields('commerce_product_reference') as $field_name => $field) {
+    foreach ($field['bundles'] as $type => $bundles) {
+      if ($type == "commerce_line_item" || $type == "commerce_product") {
+        continue;
+      }
+      $menu[$type . '/%entity_object/registrations'] = array(
+        'load arguments' => array($type),
+        'title' => t('Manage Registrations'),
+        'page callback' => 'commerce_registration_registration_page',
+        'page arguments' => array(0, 1),
+        'access callback' => 'commerce_registration_administer_registrations_access',
+        'access arguments' => array(0, 1),
+        'type' => MENU_LOCAL_TASK,
+      );
+      $menu[$type . '/%entity_object/registrations/list'] = array(
+        'load arguments' => array($type),
+        'title' => t('Registrations'),
+        'page callback' => 'commerce_registration_registration_page',
+        'page arguments' => array(0, 1),
+        'access callback' => 'commerce_registration_administer_registrations_access',
+        'access arguments' => array(0, 1),
+        'type' => MENU_DEFAULT_LOCAL_TASK,
+      );
+      $menu[$type . '/%entity_object/registrations/settings'] = array(
+        'load arguments' => array($type),
+        'title' => t('Settings'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array(
+          'commerce_registration_node_registrations_settings_form',
+          0,
+          1,
+        ),
+        'access callback' => 'commerce_registration_administer_registrations_access',
+        'access arguments' => array(0, 1),
+        'file path' => drupal_get_path('module', 'commerce_registration'),
+        'file' => 'includes/commerce_registration.forms.inc',
+        'weight' => 9,
+        'type' => MENU_LOCAL_TASK,
+      );
+      $menu[$type . '/%entity_object/registrations/broadcast'] = array(
+        'load arguments' => array($type),
+        'title' => t('Email Registrants'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array(
+          'commerce_registration_registrations_broadcast_form',
+          0,
+          1
+        ),
+        'access callback' => 'commerce_registration_administer_registrations_access',
+        'access arguments' => array(0, 1),
+        'file path' => drupal_get_path('module', 'commerce_registration'),
+        'file' => 'includes/commerce_registration.forms.inc',
+        'weight' => 10,
+        'type' => MENU_LOCAL_TASK,
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function commerce_registration_theme($existing, $type, $theme, $path) {
+  return array(
+    'commerce_registration_order' => array(
+      'variables' => array(
+        'registrations' => NULL,
+      ),
+      'file' => '/includes/commerce_registration.theme.inc',
+    ),
+  );
+}
+
+/**
+ * Access callback.
+ * Callback for modifying settings and sending emails for a given product display.
+ *
+ * @param $type
+ * @param $node
+ * @return bool
+ */
+function commerce_registration_administer_registrations_access($type, $node) {
+  // Loop through each product on the node, and if it contains a registration
+  // type and the user can administer them, then we allow it.
+  $fields = field_read_fields(array('type' => 'commerce_product_reference'));
+  foreach ($fields as $field) {
+    if (isset($node->{$field['field_name']})) {
+      foreach ($node->{$field['field_name']} as $product) {
+        $product = commerce_product_load($product[0]['product_id']);
+        if (registration_get_entity_registration_type('commerce_product', $product) && !commerce_registration_hide_tab($node)) {
+          $registration_type = registration_get_entity_registration_type('commerce_product', $product);
+          if ($registration_type && !commerce_registration_hide_tab($node)) {
+            return user_access('administer registration') || user_access("administer $registration_type registration");
+          }
+        }
+      }
+    }
+  }
+  return registration_administer_registrations_access($type, $node);
+}
+
+/**
+ * Checks if we should hide the Manage Registrations tab for this node.
+ */
+function commerce_registration_hide_tab($node) {
+  $node_settings = db_select('commerce_registration_node_settings', 'ns')
+    ->fields('ns', array('settings'))
+    ->condition('nid', $node->nid)
+    ->execute()
+    ->fetchCol();
+  $node_settings = (isset($node_settings[0]) ? $node_settings[0] : array());
+  if (!is_array($node_settings)) {
+    $node_settings = unserialize($node_settings);
+  }
+  if (isset($node_settings['hide_from_display'])) {
+    return $node_settings['hide_from_display'];
+  }
+  return FALSE;
+}
+
+/**
+ * Registration page callback for all registrations for a given product display.
+ */
+function commerce_registration_registration_page($type, $node) {
+  $out = "";
+  $prodids = array();
+  $fields = field_read_fields(array('type' => 'commerce_product_reference'));
+  // Check we have a product reference field before looping through them.
+  if (!empty($fields)) {
+    foreach ($fields as $field) {
+      if (!empty($node->{$field['field_name']})) {
+        foreach ($node->{$field['field_name']}[LANGUAGE_NONE] as $product) {
+          if (commerce_registration_product_has_registration_field($product['product_id'])) {
+            $prodids[] = (int)$product['product_id'];
+          }
+        }
+      }
+    }
+  }
+  $hasRegField = FALSE;
+  $fields = field_read_fields(array('type' => 'registration'));
+  foreach ($fields as $field) {
+    if (isset($node->{$field['field_name']})) {
+      $hasRegField = TRUE;
+    }
+  }
+  if (!empty($prodids)) {
+    foreach ($prodids as $product_id) {
+      $prod = commerce_product_load($product_id);
+      $out .= "<div class='commerce-product commerce-product-$product_id'>"
+              . registration_registrations_page('commerce_product', $prod) . "</div><hr>";
+    }
+  }
+  if ($hasRegField) {
+    $out .= "<div class='registration'>";
+    $out .= registration_registrations_page($type, $node);
+    $out .= "</div>";
+  }
+  return $out;
+}
+
+/**
+ * Implements hook_commerce_checkout_page_info().
+ */
+function commerce_registration_commerce_checkout_page_info() {
+  $pages = array();
+  $pages['registration'] = array(
+    'name' => t('Registration'),
+    'title' => t('Registration Information'),
+    'weight' => -1,
+    'status_cart' => TRUE,
+    'buttons' => TRUE,
+  );
+  return $pages;
+}
+
+/**
+ * Implements hook_commerce_checkout_pane_info().
+ */
+function commerce_registration_commerce_checkout_pane_info() {
+  $panes = array();
+  $panes['registration_information'] = array(
+    'title' => t('Registration Information'),
+    'base' => 'commerce_registration_information',
+    'page' => 'registration',
+    'enabled' => TRUE,
+    'weight' => -50,
+    'review' => TRUE,
+    'file' => 'includes/commerce_registration.checkout_pane.inc',
+  );
+  return $panes;
+}
+
+/**
+ * Implements hook_commerce_line_item_type_info_alter().
+ */
+function commerce_registration_commerce_line_item_type_info_alter(&$line_item_types) {
+  $line_item_types['product']['callbacks']['title'] = 'commerce_registration_product_title';
+}
+
+/**
+ * Product title line item callback.
+ *
+ * We alter the title of the default line item to show available slots if the
+ * product is register enabled.
+ *
+ * @param CommerceLineItem $line_item
+ *   The line item to get the title for.
+ *
+ * @return string
+ *   Title of the line item product plus available slots, if applicable.
+ */
+function commerce_registration_product_title($line_item) {
+  $line_item_wrapper = entity_metadata_wrapper('commerce_line_item', $line_item);
+  $fieldsettings = field_extra_fields_get_display('commerce_product', $line_item_wrapper->commerce_product->value()->type, 'line_item');
+  $showavail = isset($fieldsettings['registration_available'])
+    && isset($fieldsettings['registration_available']['visible'])
+    && $fieldsettings['registration_available']['visible'];
+  return commerce_registration_get_product_title($line_item_wrapper->commerce_product->value(), $showavail);
+}
+
+/**
+ * Returns a product title.
+ *
+ * @param CommerceProduct $product
+ *   Fully formed Commerce Product object.
+ *
+ * @return string
+ *   Product title with remaining capacity if available.
+ */
+function commerce_registration_get_product_title($product, $showavail = TRUE) {
+  $settings = registration_entity_settings('commerce_product', $product->product_id);
+  if (!empty($settings) && $settings['status'] == 1 && $showavail) {
+    $capacity = (int) $settings['capacity'];
+    $filled = (int) registration_event_count('commerce_product', $product->product_id);
+    $avail = $capacity - $filled;
+    $availtext = ($avail > 0 ? format_plural($avail, '1 slot available', '@count slots available') : 'No slots available');
+    $capacitytext = ($capacity == 0 ? t("Unlimited slots available") : $availtext);
+    return t('@title (@capacity)',
+      array(
+        '@title' => $product->title,
+        '@capacity' => $capacitytext,
+      )
+    );
+  }
+  return $product->title;
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Changes the product title in the add to cart form to have the remaining
+ * capacity if available.
+ */
+function commerce_registration_form_alter(&$form, &$form_state, $form_id) {
+  // Add slots available text to Add to Cart form.
+  if (substr($form_id, 0, 30) == 'commerce_cart_add_to_cart_form') {
+    $form['#validate'][] = 'commerce_registration_add_to_cart_validate';
+    if (!isset($form['product_id'])) {
+      return;
+    }
+    switch ($form['product_id']['#type']) {
+      case "select":
+        $count = 0;
+        $disabled = 0;
+        $total_regs = 0;
+        foreach ($form['product_id']['#options'] as $product_id => $title) {
+          $product = commerce_product_load($product_id);
+          $wrapper = entity_metadata_wrapper('commerce_product', $product);
+          $count++;
+          if (commerce_registration_product_has_registration_field($product->product_id)) {
+            $total_regs++;
+            $settings = registration_entity_settings('commerce_product', $product_id);
+            if (registration_get_entity_registration_type('commerce_product', $product) && !empty($settings)) {
+              if (registration_status('commerce_product', $product_id, TRUE) == 1
+                && registration_register_page_access('commerce_product', $product)) {
+                $fieldsettings = field_extra_fields_get_display('commerce_product', $product->type, 'default');
+                $showavail = isset($fieldsettings['registration_available'])
+                  && isset($fieldsettings['registration_available']['visible'])
+                  && $fieldsettings['registration_available']['visible'];
+                $title = ($showavail ? commerce_registration_get_product_title($product, $showavail) : $product->title);
+                $form['product_id']['#options'][$product_id] = $title;
+              }
+              else {
+                $price = commerce_currency_format($wrapper->commerce_price->amount->value(),
+                  $wrapper->commerce_price->currency_code->value());
+                $selector = ($count == count($form['product_id']['#options']) ? "prev" : "next");
+                drupal_add_js('(function ($) { $("select[name=\'product_id\'] option[value=\''
+                  . $product_id . '\']").attr(\'disabled\', \'disabled\'); $("select[name=\'product_id\'] option:selected").'
+                  . $selector . '(\'option\').attr(\'selected\', \'selected\'); $(window).load(function() { $("select[name=\'product_id\']").change(); }) }) (jQuery);', 'inline');
+                $form['unavailable']['product_unavailable_' . $product_id] = array(
+                  '#markup' => '<em>' . t('@product (@price)',
+                  array(
+                    '@product' => $product->title,
+                    '@price' => $price,
+                  )) . '</em>' . t(' is currently unavailable.'),
+                );
+                $disabled++;
+              }
+            }
+          }
+        }
+        if ($disabled === $count && $total_regs == $count) {
+          $form['product_id']['#type'] = 'hidden';
+          unset($form['submit']);
+          $form['unavailable'] = array(
+            '#markup' => t('There are no products available for registration at this time.'),
+          );
+        }
+        break;
+
+      case "hidden":
+        $product = commerce_product_load($form['product_id']['#value']);
+        $settings = registration_entity_settings('commerce_product', $form['product_id']['#value']);
+        if (commerce_registration_product_has_registration_field($product->product_id)
+            && !empty($settings)
+            && registration_status('commerce_product', $form['product_id']['#value'], TRUE)
+            && registration_register_page_access('commerce_product', $product)) {
+          $fieldsettings = field_extra_fields_get_display('commerce_product', $product->type, 'default');
+          $showavail = isset($fieldsettings['registration_available'])
+            && isset($fieldsettings['registration_available']['visible'])
+            && $fieldsettings['registration_available']['visible'];
+          $submit = $form['submit'];
+          unset($form['submit']);
+          $capacity = (int) $settings['capacity'];
+          $avail = $capacity - registration_event_count('commerce_product', $product->product_id);
+          $availtext = ($avail > 0
+            ? format_plural($avail, '1 slot available', '@count slots available')
+            : t('No slots available'));
+          $capacity = ($settings['capacity'] == 0 ? t("Unlimited slots available") : $availtext);
+          $form['capacity'] = array(
+            '#type' => 'markup',
+            '#markup' => '<em>' . $capacity . '</em>',
+          );
+          if (!$showavail) {
+            unset($form['capacity']);
+          }
+          if (registration_has_room('commerce_product', $product->product_id)) {
+            $form['submit'] = $submit;
+          }
+          else {
+            $form['not_available'] = array(
+              '#type' => 'markup',
+              '#markup' => '<p><strong>' . t('This item is currently unavailable.')
+              . '</strong></p>',
+            );
+          }
+        }
+        break;
+
+    }
+  }
+  elseif (substr($form_id, 0, 32) == 'commerce_product_ui_product_form') {
+    // Add settings to Commerce Product Add/Edit Form.
+    $product = $form_state['commerce_product'];
+    if (isset($product->product_id)) {
+      $settings = registration_entity_settings('commerce_product', $product->product_id);
+      if (commerce_registration_product_has_registration_field($product->product_id)) {
+        if (!function_exists("registration_entity_settings_form_validate")) {
+          form_load_include($form_state,'inc', 'registration', 'includes/registration.forms');
+        }
+        if (!function_exists("commerce_registration_registration_settings_form_validate")) {
+          form_load_include($form_state,'inc', 'commerce_registration', 'includes/commerce_registration.forms');
+        }
+        // Add validation and submission handlers to the form.
+        $form['#validate'][] = "commerce_registration_registration_settings_form_validate";
+        $form['actions']['submit']['#submit'][] = "commerce_registration_registration_settings_form_submit";
+        $collapsed = (empty($form['field_registration'][LANGUAGE_NONE]['0']['registration_type']['#default_value']['registration_type'])
+          ? TRUE : FALSE);
+        $form['registration_settings'] = array(
+          '#title' => t('Registration Settings'),
+          '#type' => "fieldset",
+          '#collapsible' => TRUE,
+          '#collapsed' => $collapsed,
+          '#weight' => 45,
+          '#tree' => TRUE,
+          '#states' => array(
+            'collapsed' => array(
+              ':input[name="field_registration[und][0][registration_type]"]' => array(
+                'value' => '',
+              ),
+            ),
+          ),
+        );
+        // Grab the registration settings form for this entity.
+        $addform = registration_entity_settings_form(array(), $form_state, $settings, "commerce_product", $product);
+        // Remove the save button for this form since we have one already.
+        unset($addform['save']);
+        // We rename the registration settings form's status field to be reg_status
+        // so our validation and submission doesn't overwrite the product's status.
+        $addform['reg_status'] = $addform['status'];
+        $addform['reg_status']['#weight'] = -20;
+        unset($addform['status']);
+        // Add parents to each registration setting so we can get the values.
+        foreach ($addform as $key => $array) {
+          $addform[$key]['#parents'] = array('registration_settings', $key);
+        }
+        // Add the registration settings form to the base form.
+        $form['registration_settings'] += $addform;
+        $form['registration_settings']['reminder']['#parents'] = array('registration_settings', 'reminder');
+        $form['registration_settings']['reminder']['reminder_settings']['#states']['visible'] = array(
+          ':input[name="registration_settings[send_reminder]"]' => array(
+            'checked' => TRUE,
+          ),
+        );
+        $form['registration_settings']['settings']['hide_from_display'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('Hide Manage Registrations tab from product display nodes'),
+          '#default_value' => (isset($settings['settings']['hide_from_display']) ? $settings['settings']['hide_from_display'] : 0),
+        );
+      }
+    }
+  }
+  elseif (substr($form_id, -9) == 'node_form') {
+    $node = $form_state['node'];
+    $fields = field_read_fields(array('type' => 'commerce_product_reference'));
+    $has_product_reference = FALSE;
+    foreach ($fields as $field) {
+      if (isset($node->{$field['field_name']}) && !isset($node->clone_from_original_nid)) {
+        $has_product_reference = TRUE;
+        break;
+      }
+    }
+    if ($has_product_reference) {
+      $node_settings = db_select('commerce_registration_node_settings', 'ns')
+        ->fields('ns', array('settings'))
+        ->condition('nid', $node->nid)
+        ->execute()
+        ->fetchCol();
+      $node_settings = (isset($node_settings[0]) ? $node_settings[0] : array());
+      if (!is_array($node_settings)) {
+        $node_settings = unserialize($node_settings);
+      }
+      $form['commerce_registration'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Commerce Registration settings'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+        '#group' => 'additional_settings',
+        '#tree' => TRUE,
+      );
+      $form['commerce_registration']['hide_from_display'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Hide Manage Registrations tab on this node'),
+        '#default_value' => (isset($node_settings['hide_from_display']) ? $node_settings['hide_from_display'] : 0),
+      );
+      $form['#submit'][] = 'commerce_registration_node_settings_form_submit';
+    }
+  }
+}
+
+/**
+ * Submit handler for node settings.
+ */
+function commerce_registration_node_settings_form_submit($form, $form_state) {
+  $settings = serialize($form_state['values']['commerce_registration']);
+  db_merge('commerce_registration_node_settings')
+    ->key(array('nid' => $form_state['node']->nid))
+    ->fields(array(
+      'settings' => $settings,
+    ))
+    ->execute();
+}
+
+/**
+ * Custom validation handler for add to cart form.
+ * Checks if the product being added is available for registration before
+ * adding it to the cart. If it is not available, it is not added and a message
+ * is shown to the user.
+ */
+function commerce_registration_add_to_cart_validate($form, &$form_state) {
+  global $user;
+  $product_id = $form_state['values']['product_id'];
+  $product = commerce_product_load($product_id);
+  if (commerce_registration_product_has_registration_field($product_id)) {
+    // Let the user know if they have an existing registration.
+    $query = new EntityFieldQuery;
+    $result = $query
+      ->entityCondition('entity_type', 'registration')
+      ->propertyCondition('entity_id', $product_id)
+      ->propertyCondition('user_uid', $user->uid)
+      ->propertyCondition('state', registration_get_active_states())
+      ->range(0, 1)
+      ->execute();
+    if (!empty($result)) {
+      $message = 'You have already registered for %product.';
+      $message_variables = array(
+        '%product' => $product->title,
+      );
+      // If the user has access to view their own registrations, include a link
+      // to the registration detail page.
+      $registration = registration_load(reset($result['registration'])->registration_id);
+      if (registration_access('view', $registration)) {
+        $message .= ' You can <a href="!uri">view your registration</a>.';
+        $uri = $registration->uri();
+        $message_variables['!uri'] = url($uri['path']);
+      }
+      drupal_set_message(t($message, $message_variables));
+    }
+
+    // Check that registrations are open and the user has access.
+    if (!registration_status('commerce_product', $product_id, TRUE) || !registration_register_page_access('commerce_product', $product)) {
+      form_set_error('product_id', t('This product is not available for registration at this time.'));
+      return FALSE;
+    }
+  }
+  return TRUE;
+}
+
+/**
+ * Implements hook_entity_property_info_alter().
+ */
+function commerce_registration_entity_property_info_alter(&$info) {
+  $info['registration']['properties']['order_id'] = array(
+    'label' => t('Order ID'),
+    'type' => 'integer',
+    'schema field' => 'order_id',
+    'setter callback' => 'entity_property_verbatim_set',
+    'description' => t('The order ID associated with this registration.'),
+  );
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function commerce_registration_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'commerce_registration') . '/includes/views',
+  );
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function commerce_registration_field_extra_fields() {
+  $items = array();
+  // Add registration availability display option to each commerce product type.
+  foreach (field_info_instances('commerce_product') as $product_bundle_name => $product_fields) {
+    foreach ($product_fields as $product_field_name => $product_field) {
+      if ($product_field['widget']['module'] == 'registration') {
+        $items['commerce_product'][$product_bundle_name]['display']['registration_available'] = array(
+          'label' => t('Registration Availability'),
+          'description' => t('The Registration availability text next to the product.'),
+          'weight' => -1,
+        );
+      }
+    }
+  }
+  return $items;
+}
+/**
+ * Implements hook_field_extra_fields_alter().
+ */
+function commerce_registration_field_extra_fields_alter(&$info) {
+  // Loop through the product reference fields.
+  foreach (commerce_info_fields('commerce_product_reference') as $field_name => $field) {
+    foreach ($field['bundles'] as $entity_type => $bundles) {
+      if ($entity_type == 'commerce_line_item' || $entity_type == 'commerce_product') {
+        // Skip line items and products, don't want to remove these fields.
+        continue;
+      }
+      foreach ($bundles as $bundle_name) {
+        $product_fields = commerce_product_field_extra_fields();
+        if (empty($product_fields['commerce_product'])) {
+          // Skip if there are no commerce product extra fields.
+          continue;
+        }
+        // Loop through each field on the product, and if it's a Registration,
+        // hide it.
+        foreach ($product_fields['commerce_product'] as $key => $value) {
+          foreach ($value['display'] as $product_extra_field_name => $product_extra_field) {
+            if ($product_extra_field['label'] == t('Registration')) {
+              $tempfield = &$info[$entity_type][$bundle_name]['display']['product:' . $product_extra_field_name]['display'];
+              foreach ($tempfield as $display => $settings) {
+                $tempfield[$display]['visible'] = FALSE;
+              }
+            }
+          }
+        }
+        // Loop through all field instances on products, and if each field is a
+        // registration, hide it.
+        foreach (field_info_instances('commerce_product') as $product_bundle_name => $product_fields) {
+          foreach ($product_fields as $product_field_name => $product_field) {
+            if ($product_field['label'] == t('Registration')) {
+              $info[$entity_type][$bundle_name]['display']['product:' . $product_field_name]['configurable'] = FALSE;
+              $info[$entity_type][$bundle_name]['display']['product:' . $product_field_name]['visible'] = FALSE;
+              $info[$entity_type][$bundle_name]['display']['product:' . $product_field_name]['weight'] = 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function commerce_registration_entity_info_alter(&$info) {
+  $info['registration']['view modes']['review_pane'] = array(
+    'label' => t('Commerce Checkout Review Pane'),
+    'custom settings' => TRUE,
+  );
+}
+
+/**
+ * Implements hook_commerce_checkout_complete().
+ */
+function commerce_registration_commerce_checkout_complete($order) {
+  if (!isset($order->data['register_entities'])) {
+    return;
+  }
+  $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+  foreach ($order_wrapper->commerce_line_items as $delta => $line_item_wrapper) {
+    if (!in_array($line_item_wrapper->type->value(), commerce_product_line_item_types())) {
+      continue;
+    }
+    $id = $line_item_wrapper->commerce_product->product_id->value();
+    $line_item_id = $line_item_wrapper->line_item_id->value();
+    $product = $line_item_wrapper->commerce_product;
+    if (!isset($order->data['register_entities'][$line_item_id . 'prod-' . $product->sku->value()])) {
+      // If we have no registration entities for this product in our order's
+      // data array, we skip to the next.
+      continue;
+    }
+    $quantity = (int) $line_item_wrapper->quantity->value();
+    for ($i = 0; $i < $quantity; $i++) {
+      if (!isset($order->data['register_entities'][$line_item_id . 'prod-' . $product->sku->value()][$i])) {
+        // If this registration doesn't exist in our data array, skip to the
+        // next entry.
+        continue;
+      }
+      $entity = $order->data['register_entities'][$line_item_id . 'prod-' . $product->sku->value()][$i];
+      registration_save($entity);
+    }
+  }
+}
+
+/**
+ * Checks if a product has a registration field attached.
+ *
+ * @param int $product_id The product id.
+ *
+ * @return boolean
+ *   Whether a product has a registration field attached.
+ */
+function commerce_registration_product_has_registration_field($product_id) {
+  $product = commerce_product_load($product_id);
+  $fields = field_read_fields(array('type' => 'registration'));
+  foreach ($fields as $field) {
+    if (isset($product->{$field['field_name']})
+        && !empty($product->{$field['field_name']}[LANGUAGE_NONE]['0']['registration_type'])) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function commerce_registration_entity_view_alter(&$build, $type) {
+  if ($type == "commerce_order") {
+    // If we're viewing an order, add registrations to the order if available.
+    $regs = db_select('registration', 'r')
+      ->fields('r', array('registration_id'))
+      ->condition('order_id', (int) $build['#entity']->order_id)
+      ->execute();
+    $build['commerce_registration'] = array(
+      '#title' => t('Registrations'),
+    );
+    $variables['registrations'] = array();
+    foreach ($regs as $row) {
+      $variables['registrations'][] = registration_load($row->registration_id);
+    }
+    if (!empty($variables['registrations'])) {
+      $build['commerce_registration'][0]['#markup'] = theme('commerce_registration_order', $variables);
+    }
+  }
+  else if ($type == "registration") {
+    // Add the Commerce Order to the registration view.
+    $vars = array(
+      '!num' => $build['#entity']->order_id,
+    );
+    $build['commerce_registration_order'][0]['#markup'] = l(t('Order !num', $vars), 'admin/commerce/orders/' . $build['#entity']->order_id);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function commerce_registration_form_commerce_order_ui_order_form_alter(&$form, &$form_state, $form_id) {
+  $form['registration_settings'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#title' => t('Registration Settings'),
+    '#weight' => -6,
+    '#collapsed' => TRUE,
+  );
+  if (isset($form_state['values']['commerce_line_items'])) {
+    $form['registration_settings']['#collapsed'] = FALSE;
+    $products = array();
+    foreach ($form_state['values']['commerce_line_items'] as $lang => $items) {
+      foreach ($items as $index => $data) {
+        $line_item = commerce_line_item_load((int) $data['line_item_id']);
+        $line_item_wrapper = entity_metadata_wrapper('commerce_line_item', $line_item);
+        if ($line_item_wrapper->type->value() != 'product') {
+          continue;
+        }
+        $product_id = $line_item_wrapper->commerce_product->product_id->value();
+        if (in_array($product_id, array_keys($products))) {
+          $products[$product_id]++;
+        }
+        else {
+          $products[$product_id] = 1;
+        }
+      }
+    }
+    $override_title = variable_get('commerce_registration_product_title', NULL);
+    $settings_form = array();
+    $show_settings = TRUE;
+    $label = 1;
+    foreach ($products as $product_id => $quantity) {
+      if (registration_status('commerce_product', $product_id, TRUE) == 1) {
+        $product = commerce_product_load((int) $product_id);
+        $product = entity_metadata_wrapper('commerce_product', $product);
+        $show_settings = TRUE;
+        $title_vars = array(
+          '@product' => $product->title->value(),
+          '@count' => $label++,
+        );
+        $title = check_plain(t('@product - Registrant #@count', $title_vars));
+        for ($i = 0; $i < $quantity; $i++) {
+          if (isset($override_title)) {
+            $label = $i + 1;
+            $title = str_replace('[title]', $product->title->value(), $override_title);
+            $title = str_replace('[index]', $label, $title);
+          }
+          $form['registration_settings']['prod-' . $product_id . '-' . $i] = array(
+            '#markup' => t('Tester'),
+          );
+          /*$form['registration_settings']['prod-' . $product_id . '-' . $i] = array(
+            '#type' => 'fieldset',
+            '#collapsible' => TRUE,
+            '#collapsed' => TRUE,
+            '#title' => $title,
+            '#tree' => TRUE,
+            '#description' => variable_get('commerce_registration_registrant_help', ''),
+          );*/
+          $bundle = registration_get_entity_registration_type('commerce_product',
+            $product->value());
+          if (!function_exists('commerce_registration_create_product_registration')) {
+            module_load_include('inc', 'commerce_registration', 'includes/commerce_registration.checkout_pane');
+          }
+          $entity = commerce_registration_create_product_registration(
+            $product_id,
+            $bundle,
+            0
+          );
+          /*
+          field_attach_form(
+            'registration',
+            $entity,
+            $form['registration_settings']['prod-' . $product_id . '-' . $i],
+            $form_state
+          );
+          */
+        }
+      }
+    }
+    if (!$show_settings) {
+      unset($form['registration_settings']);
+    }
+    $form_state['rebuild'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_commerce_cart_order_refresh().
+ *
+ * Alter the line items to make sure we are not overbooking a registration prod
+ * Based on https://www.drupal.org/node/2126417
+ *
+ * This has been tested and modified by imfaber
+ */
+function commerce_registration_commerce_cart_order_refresh($order_wrapper) {
+  $order = $order_wrapper->value();
+
+  // Make sure registration entities still match up to products.
+  if (isset($order->data['register_entities'])) {
+    // Save a copy of register_entities to find registrations no longer associated with a product.
+    $register_entities = $order->data['register_entities'];
+
+    foreach ($order_wrapper->commerce_line_items as $line_item_wrapper) {
+      if (!in_array($line_item_wrapper->type->value(), commerce_product_line_item_types())) {
+        continue;
+      }
+      $product = $line_item_wrapper->commerce_product;
+      $line_item_id = $line_item_wrapper->line_item_id->value();
+      if (isset($order->data['register_entities'][$line_item_id . 'prod-' . $product->sku->value()])) {
+        // This registration still has a product.
+        unset($register_entities[$line_item_id . 'prod-' . $product->sku->value()]);
+      }
+    }
+
+    // Delete registrations which no longer have a matching product in the cart.
+    $orphan_registration_ids = array();
+    foreach ($register_entities as $key => $registrations) {
+      foreach ($registrations as $registration) {
+        $orphan_registration_ids[] = $registration->registration_id;
+      }
+      unset($order->data['register_entities'][$key]);
+    }
+    registration_delete_multiple($orphan_registration_ids);
+  }
+
+  // Stop users overbooking registrations
+  if (!commerce_cart_order_is_cart($order_wrapper->value())) {
+    return FALSE;
+  }
+  // Keep an array with the sum of qty
+  $qty_sum = array();
+  // Keep an array with the list of potentially overbooked line items
+  $overbooked_prod_id = array();
+  // Keep list of Warning Messages
+  $msg_array = array();
+
+  $adjust_qty_text = (arg(0)=='cart') ? t('Please adjust your cart quantity.') : l(t('Please adjust your cart quantity.'), 'cart');
+
+  // ** First Pass:
+  // Make sure individual line items do not exceed available registrations
+  // For each of the line items in the order
+  foreach($order_wrapper->commerce_line_items as $delta => $line_item_wrapper) {
+    if (!in_array($line_item_wrapper->type->value() , commerce_product_line_item_types())) {
+      return FALSE;
+    }
+    // Get the line item  so we can work on it
+    $line_item = $line_item_wrapper->value();
+    // Gets the quantity of this line item in the cart
+    $qty = $line_item_wrapper->quantity->value();
+    // Gets the unique product id for the line item
+    $product_id = $line_item_wrapper->commerce_product->product_id->value();
+    // Attempt to get registration settings for this product
+    $settings = registration_entity_settings('commerce_product', $product_id);
+    // Check if this product is registration enabled
+    if (!empty($settings) && $settings['status'] == 1) {
+      // For this product id, see how many are available
+      $capacity = (int)$settings['capacity'];
+      $filled = (int)registration_event_count('commerce_product', $product_id);
+      $avail = $capacity - $filled;
+      // If the line item qty is more than available, set the
+      // line item to availability to avoid over booking
+      if ($capacity > 0 && $qty > $avail) {
+        // Set line item qty to availability
+        _commerce_registration_set_line_item_qty($line_item, $avail);
+        if (!array_key_exists($product_id, $qty_sum)) {
+          $qty_sum[$product_id] = $avail;
+        }
+        else {
+          $qty_sum[$product_id]+= $avail;
+        }
+        //  Display a warning message.
+        // @todo - put everything into the first t()
+        $msg_array[$product_id] = t("There are only @num available slots for @title. ", array('@num' => $avail, '@title' => $line_item_wrapper->commerce_product->title->value())) . $adjust_qty_text;
+      }
+      else {
+        // Let's add up the sum of all the same products in the cart
+        // needed since  disabled the
+        // 'Attempt to combine like products on the same line item in the cart.'
+        if (!array_key_exists($product_id, $qty_sum)) {
+          $qty_sum[$product_id] = $line_item_wrapper->quantity->value();
+        }
+        else {
+          $qty_sum[$product_id]+= $line_item_wrapper->quantity->value();
+        }
+      }
+      // Check if the sum in cart would result in overbooking
+      if ($capacity > 0 && $qty_sum[$product_id] > $avail) {
+        $overbooked_prod_id[$product_id] = TRUE;
+      }
+    } // if settings
+  } // for each line item
+
+  // ** Second Pass:
+  //  if Sum of line item quantities would cause overbooking
+  //  First try setting all of those products quantity to the slots available
+  //  then re-check qty sum.  if still exceeds, then remove line item
+  $qty_sum = array(); // reset
+  // For each of the line items in the order
+  if (!empty($overbooked_prod_id)) {
+    foreach($order_wrapper->commerce_line_items as $delta => $line_item_wrapper) {
+      // If this line item product id is in the overbooked array, set qty 1
+      $line_item = $line_item_wrapper->value();
+      // Gets the unique product id for the line item
+      $product_id = $line_item_wrapper->commerce_product->product_id->value();
+      if (isset($overbooked_prod_id[$product_id])) {
+        // Set line item qty to 1
+        _commerce_registration_set_line_item_qty($line_item, $avail);
+        if (!array_key_exists($product_id, $qty_sum)) {
+          $qty_sum[$product_id] = $avail;
+        }
+        else {
+          $qty_sum[$product_id] += $avail;
+        }
+        // For this product id, see how many are available
+        // Attempt to get registration settings for this product
+        $settings = registration_entity_settings('commerce_product', $product_id);
+        $capacity = (int)$settings['capacity'];
+        $filled = (int)registration_event_count('commerce_product', $product_id);
+        $avail = $capacity - $filled;
+        // Warning Message
+        // @todo - re-write so everything is in the first t()
+        $msg_array[$product_id] = t("There are only @num available slots for @title. ", array('@num' => $avail, '@title' => $line_item_wrapper->commerce_product->title->value())) . $adjust_qty_text;
+        // Check if the sum in cart would result in overbooking
+        // This time, we remove it.
+        if ($qty_sum[$product_id] > $avail) {
+          // Delete the line item
+          // do not need to save order, as done after the hook for us
+          commerce_cart_order_product_line_item_delete($order_wrapper->value() , $line_item->line_item_id, $skip_save = TRUE);
+          // $order_wrapper->value(), $line_item->line_item_id );
+          $qty_sum[$product_id] -= 1.0;
+          // Warning Message
+          $msg_array[$product_id] = t("There are only @num available slots for @title. Item was removed from your cart", array('@num' => $avail, '@title' => $line_item_wrapper->commerce_product->title->value()));
+        }
+      } // if isset overbook prod id
+    } // for each line item
+  } // not empty overbooked prod id array
+
+  // Display warning messages for any products that were overbooked
+  foreach($msg_array as $msg) {
+    drupal_set_message($msg, 'warning', TRUE);
+  }
+}
+
+/**
+ * Helper function to update the line item quantity
+ */
+function _commerce_registration_set_line_item_qty($line_item, $qty){
+  // force the line item quantity
+  $line_item->quantity = $qty;
+  // Save the updated line item and reset cache
+  commerce_line_item_save($line_item);
+  entity_get_controller('commerce_line_item')->resetCache(array($line_item->line_item_id));
+}

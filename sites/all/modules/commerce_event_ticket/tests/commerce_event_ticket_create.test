@@ -1,0 +1,62 @@
+<?php
+/**
+ * @file
+ * Test creating tickets for Commerce orders.
+ */
+
+class CommerceEventTicketCreateTestCase extends CommerceEventTicketBaseTestCase {
+
+  /**
+   * Provide basic information about the test.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Create tickets',
+      'description' => 'Test creating tickets for Commerce orders.',
+      'group' => 'Commerce Event Ticket',
+    );
+  }
+
+  /**
+   * Test creating an order and tickets (programmatically).
+   */
+  public function testCreating() {
+    $quantity = rand(1, 10);
+    $tickets = $this->createDummyTickets($quantity);
+    $this->assertTrue(count($tickets) > 0, t('Tickets created'));
+  }
+
+  /**
+   * Test changing the line item quantities.
+   */
+  public function testUpdating() {
+    $quantity = 5;
+    $tickets = $this->createDummyTickets($quantity);
+    $initial_ids = array_keys($tickets);
+    sort($initial_ids, SORT_NUMERIC);
+    $this->assertEqual(5, count($tickets), t('Correct number of tickets (5) created initially'));
+    $first = reset($tickets);
+
+    $line_item = commerce_line_item_load($first->line_item_id);
+    $order = commerce_order_load($first->order_id);
+
+    $line_item->quantity = 6;
+    commerce_line_item_save($line_item);
+    commerce_order_save($order);
+
+    $new_ids = array_keys(commerce_event_ticket_load_multiple(FALSE, array('order_id' => $order->order_id)));
+    sort($new_ids, SORT_NUMERIC);
+    $this->assertEqual(6, count($new_ids), t('Correct number of tickets exist after line item quantity increased to 6'));
+    $this->assertEqual($initial_ids, array_slice($new_ids, 0, 5), t('First 5 ticket IDs have not changed'));
+
+    $line_item->quantity = 2;
+    commerce_line_item_save($line_item);
+    commerce_order_save($order);
+
+    $new_ids = array_keys(commerce_event_ticket_load_multiple(FALSE, array('order_id' => $order->order_id)));
+    sort($new_ids, SORT_NUMERIC);
+    $this->assertEqual(2, count($new_ids), t('Correct number of tickets exist after line item quantity decreased to 2'));
+    $this->assertEqual(array_slice($initial_ids, 0, 2), $new_ids, t('First 2 ticket IDs have not changed'));
+  }
+
+}

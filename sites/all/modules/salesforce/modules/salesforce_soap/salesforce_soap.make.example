@@ -1,0 +1,8 @@
+api = 2
+core = 7.x
+projects[libraries] = 2
+
+libraries[salesforce][download][type] = "git"
+libraries[salesforce][download][url] = "git://github.com/developerforce/Force.com-Toolkit-for-PHP"
+libraries[salesforce][directory_name] = "salesforce"
+libraries[salesforce][destination] = "libraries"

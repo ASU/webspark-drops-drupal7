@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Installation tasks for the membership_entity_commerce module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function membership_entity_commerce_install() {
+  // Our hooks must run after all membership_entity hooks.
+  $weights = db_select('system', 's')
+    ->fields('s', array('weight'))
+    ->condition('type', 'module')
+    ->condition('name', array('membership_entity', 'membership_entity_type', 'membership_entity_term'), 'IN')
+    ->execute()
+    ->fetchCol();
+
+  db_update('system')
+    ->fields(array('weight' => max($weights) + 1))
+    ->condition('type', 'module')
+    ->condition('name', 'membership_entity_commerce')
+    ->execute();
+}

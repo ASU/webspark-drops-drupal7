@@ -1,0 +1,235 @@
+<?php
+
+/**
+ * @file
+ * Install, uninstall, and update hooks for the membership_entity_term module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function membership_entity_term_schema() {
+  $schema['membership_entity_term'] = array(
+    'description' => 'The base table for membership terms.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'The primary identifier for membership terms.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'mid' => array(
+        'description' => 'The membership identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'status' => array(
+        'description' => 'Integer code indicating the membership term status.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'term' => array(
+        'description' => 'The human readable term length. eg. 1 year.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'modifiers' => array(
+        'description' => 'A serialized list of term length modifiers. eg. +1 month.',
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+        'serialize' => TRUE,
+      ),
+      'start' => array(
+        'description' => 'The date when this term starts.',
+        'type' => 'datetime',
+        'mysql_type' => 'datetime',
+        'pgsql_type' => 'timestamp without time zone',
+        'sqlite_type' => 'varchar',
+        'sqlsrv_type' => 'smalldatetime',
+        'not null' => TRUE,
+        'sortable' => TRUE,
+      ),
+      'end' => array(
+        'description' => 'The date when this term ends.',
+        'type' => 'datetime',
+        'mysql_type' => 'datetime',
+        'pgsql_type' => 'timestamp without time zone',
+        'sqlite_type' => 'varchar',
+        'sqlsrv_type' => 'smalldatetime',
+        // Null value for lifetime terms.
+        'not null' => FALSE,
+        'sortable' => TRUE,
+      ),
+      'timezone' => array(
+        'description' => 'The database timezone for membership term dates.',
+        'type' => 'varchar',
+        'length' => 50,
+        // Null if no timezone handling.
+        'not null' => FALSE,
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when this membership term was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when this membership term was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'membership_entity_term_membership' => array('mid'),
+      'membership_entity_term_start' => array('mid', 'start'),
+      'membership_entity_term_end' => array('mid', 'end'),
+      'membership_entity_term_changed' => array('changed'),
+      'membership_entity_term_created' => array('created'),
+    ),
+    'primary key' => array('id'),
+    'foreign keys' => array(
+      'membership_entity_term_membership' => array(
+        'table' => 'membership_entity',
+        'columns' => array('mid' => 'mid'),
+      ),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Adds a status field.
+ */
+function membership_entity_term_update_7000() {
+  $field = array(
+    'description' => 'Integer code indicating the membership term status.',
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 1,
+  );
+  db_add_field('membership_entity_term', 'status', $field);
+
+  // Default to active. Cron will expire any old terms.
+  db_update('membership_entity_term')
+    ->fields(array('status' => MEMBERSHIP_ENTITY_ACTIVE))
+    ->execute();
+}
+
+/**
+ * Adds option to display/hide fields on the renew form.
+ */
+function membership_entity_term_update_7001() {
+  // Show on renew form options defaults to join form option.
+  $types = module_exists('membership_entity_type') ? array_keys(membership_entity_type_get_types()) : array('membership');
+  foreach ($types as $type) {
+    foreach (field_info_instances('membership_entity', $type) as $field_name => $instance) {
+      if (!empty($instance['settings']['membership_entity_join_form'])) {
+        $instance['settings']['membership_entity_term_renew_form'] = TRUE;
+        field_update_instance($instance);
+      }
+    }
+  }
+}
+
+/**
+ * Adds a timezone column for term dates.
+ */
+function membership_entity_term_update_7002() {
+  $field = array(
+    'description' => 'The database timezone for membership term dates.',
+    'type' => 'varchar',
+    'length' => 50,
+    'not null' => FALSE,
+    'default' => 'UTC',
+  );
+  db_add_field('membership_entity_term', 'timezone', $field);
+
+  // Till now dates were assumed to be UTC.
+  db_update('membership_entity_term')
+    ->fields(array('timezone' => 'UTC'))
+    ->execute();
+}
+
+/**
+ * Add created and changed columns for membership terms.
+ */
+function membership_entity_term_update_7003() {
+  // Add the new fields.
+  $fields = array(
+    'created' => array(
+      'description' => 'The Unix timestamp when this membership term was created.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+    'changed' => array(
+      'description' => 'The Unix timestamp when this membership term was most recently saved.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+  );
+  foreach ($fields as $column => $field) {
+    db_add_field('membership_entity_term', $column, $field);
+  }
+
+  // Add the new indexes.
+  $indexes = array(
+    'membership_entity_term_changed' => array('changed'),
+    'membership_entity_term_created' => array('created'),
+  );
+  foreach ($indexes as $name => $fields) {
+    db_add_index('membership_entity_term', $name, $fields);
+  }
+}
+
+/**
+ * Update created and changed dates for past membership terms.
+ */
+function membership_entity_term_update_7004(&$sandbox) {
+  $batch_size = 100;
+
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['current'] = 0;
+    $sandbox['max'] = db_query('SELECT COUNT(DISTINCT id) FROM {membership_entity_term}')
+      ->fetchField();
+  }
+
+  $terms = db_select('membership_entity_term', 'me')
+    ->fields('me', array('id', 'start', 'timezone', 'created', 'changed'))
+    ->condition('id', $sandbox['current'], '>')
+    ->range(0, $batch_size)
+    ->orderBy('id', 'ASC')
+    ->execute();
+
+  foreach ($terms as $term) {
+    // Default to start date for past terms.
+    $start = strtotime($term->start);
+    foreach (array('created', 'changed') as $field) {
+      if (empty($term->{$field})) {
+        $term->{$field} = $start;
+      }
+    }
+
+    db_update('membership_entity_term')
+      ->fields(array(
+        'created' => $term->created,
+        'changed' => $term->changed,
+        ))
+      ->condition('id', $term->id)
+      ->execute();
+
+    $sandbox['progress']++;
+    $sandbox['current'] = $term->id;
+  }
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+}

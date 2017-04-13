@@ -1,0 +1,531 @@
+<?php
+/**
+ * @file
+ * Install functions for the Commerce Event Ticket module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function commerce_event_ticket_schema() {
+  $schema = array();
+
+  $schema['commerce_event_ticket'] = array(
+    'description' => 'Stores the details of Commerce Event Tickets.',
+    'fields' => array(
+      'ticket_id' => array(
+        'description' => 'Primary key: an identifier for the ticket.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'revision_id' => array(
+        'description' => 'The current {commerce_event_ticket_revision}.revision_id version identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+      ),
+      'type' => array(
+        'description' => 'The type (bundle) of ticket.',
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+      ),
+      'barcode_token' => array(
+        'description' => 'A barcode token for the ticket.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'order_id' => array(
+        'description' => 'The {commerce_order}.order_id associated with the ticket.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'line_item_id' => array(
+        'description' => 'The {commerce_line_item}.line_item_id associated with the ticket.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'product_id' => array(
+        'description' => 'The {commerce_product}.product_id associated with the ticket.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'nid' => array(
+        'description' => 'The {node}.nid associated with the ticket.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+      ),
+      'used' => array(
+        'description' => 'Whether the ticket has already been used for admittance to the event.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'size' => 'tiny',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+      'number' => array(
+        'description' => 'The number of the ticket within the line item quantity.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'quantity' => array(
+        'description' => 'The total line item quantity.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'created' => array(
+        'description' => 'The UNIX timestamp when this record was created.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'changed' => array(
+        'description' => 'The UNIX timestamp when this record was last modified.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('ticket_id'),
+    'unique keys' => array(
+      'barcode_token' => array('barcode_token'),
+      'revision_id' => array('revision_id'),
+    ),
+    'indexes' => array(
+      'order_id' => array('order_id'),
+      'line_item_id' => array('line_item_id'),
+      'product_id' => array('product_id'),
+      'nid' => array('nid'),
+      'type' => array('type'),
+      'used' => array('used'),
+      'created' => array('created'),
+      'changed' => array('changed'),
+    ),
+  );
+
+  $schema['commerce_event_ticket_revision'] = array(
+    'description' => 'Saves information about each revision of a {commerce_event_ticket}.',
+    'fields' => array(
+      'revision_id' => array(
+        'description' => 'The primary identifier for this revision.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'ticket_id' => array(
+        'description' => 'The {commerce_event_ticket}.ticket_id of the ticket this revision belongs to.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'used' => array(
+        'description' => 'Whether the ticket has already been used, at this revision.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'size' => 'tiny',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+      'log' => array(
+        'description' => 'The log entry explaining the changes in this revision.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+      ),
+      'revision_uid' => array(
+        'description' => 'The {users}.uid that created this revision.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'revision_timestamp' => array(
+        'description' => 'The Unix timestamp when this revision was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('revision_id'),
+    'indexes' => array(
+      'ticket_id' => array('ticket_id'),
+      'revision_uid' => array('revision_uid'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function commerce_event_ticket_uninstall() {
+  variable_del('commerce_event_ticket_barcode_length');
+  variable_del('commerce_event_ticket_token_type');
+  variable_del('commerce_event_ticket_valid_statuses');
+  variable_del('commerce_event_ticket_statuses_create');
+  variable_del('commerce_event_ticket_date_enabled');
+  variable_del('commerce_event_ticket_date_strict');
+  variable_del('commerce_event_ticket_date_fields');
+  variable_del('commerce_event_ticket_date_default_duration');
+  variable_del('commerce_event_ticket_date_validity_period');
+
+  module_load_include('inc', 'commerce_event_ticket', 'includes/commerce_event_ticket.field');
+  commerce_event_ticket_delete_field_instances();
+}
+
+/**
+ * Implements hook_install().
+ */
+function commerce_event_ticket_install() {
+  module_load_include('inc', 'commerce_event_ticket', 'includes/commerce_event_ticket.field');
+  commerce_event_ticket_install_fields();
+}
+
+/**
+ * Add the 'used' column.
+ */
+function commerce_event_ticket_update_7001() {
+  db_add_field('commerce_event_ticket', 'used', array(
+    'description' => 'Whether the ticket has already been used for admittance to the event.',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'size' => 'tiny',
+    'default' => 0,
+    'not null' => TRUE,
+  ));
+  db_add_index('commerce_event_ticket', 'used', array('used'));
+}
+
+/**
+ * Add revisioning support.
+ */
+function commerce_event_ticket_update_7002(&$sandbox) {
+  if (!db_table_exists('commerce_event_ticket_revision')) {
+    $revision_schema = array(
+      'description' => 'Saves information about each revision of a {commerce_event_ticket}.',
+      'fields' => array(
+        'revision_id' => array(
+          'description' => 'The primary identifier for this revision.',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'ticket_id' => array(
+          'description' => 'The {commerce_event_ticket}.ticket_id of the ticket this revision belongs to.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'used' => array(
+          'description' => 'Whether the ticket has already been used, at this revision.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'size' => 'tiny',
+          'default' => 0,
+          'not null' => TRUE,
+        ),
+        'log' => array(
+          'description' => 'The log entry explaining the changes in this revision.',
+          'type' => 'text',
+          'not null' => TRUE,
+          'size' => 'big',
+        ),
+        'revision_uid' => array(
+          'description' => 'The {users}.uid that created this revision.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'revision_timestamp' => array(
+          'description' => 'The Unix timestamp when this revision was created.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+      ),
+      'primary key' => array('revision_id'),
+      'indexes' => array(
+        'ticket_id' => array('ticket_id'),
+        'revision_uid' => array('revision_uid'),
+      ),
+    );
+    db_create_table('commerce_event_ticket_revision', $revision_schema);
+    db_add_field('commerce_event_ticket', 'revision_id', array(
+      'description' => 'The current {commerce_event_ticket_revision}.revision_id version identifier.',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => FALSE,
+    ));
+    db_add_unique_key('commerce_event_ticket', 'revision_id', array('revision_id'));
+  }
+
+  if (!isset($sandbox['progress'])) {
+    $tickets_count = db_query('SELECT COUNT(DISTINCT ticket_id) FROM {commerce_event_ticket}')->fetchField();
+    $sandbox['progress'] = 0;
+    $sandbox['current_ticket_id'] = 0;
+    $sandbox['max'] = $tickets_count;
+  }
+
+  // Create the current revision for all existing tickets.
+  if (!$sandbox['max']) {
+    return;
+  }
+
+  $tickets = db_select('commerce_event_ticket', 'cet')
+    ->fields('cet', array('ticket_id', 'used', 'created'))
+    ->condition('ticket_id', $sandbox['current_ticket_id'], '>')
+    ->range(0, 50)
+    ->orderBy('ticket_id', 'ASC')
+    ->execute()->fetchAllAssoc('ticket_id', PDO::FETCH_ASSOC);
+  foreach ($tickets as $ticket) {
+    $revision = array();
+    $revision['log'] = t('Initial revision created during database update.');
+    $revision['ticket_id'] = $ticket['ticket_id'];
+    $revision['used'] = $ticket['used'];
+    $revision['revision_timestamp'] = $ticket['created'];
+    $revision['revision_uid'] = 1;
+    $revision_id = db_insert('commerce_event_ticket_revision')
+      ->fields($revision)
+      ->execute();
+    db_update('commerce_event_ticket')
+      ->fields(array('revision_id' => $revision_id))
+      ->condition('ticket_id', $ticket['ticket_id'])
+      ->execute();
+    $sandbox['progress']++;
+    $sandbox['current_ticket_id'] = $ticket['ticket_id'];
+  }
+  $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'] >= 1;
+  return t('The update for event ticket revisions ran successfully.');
+}
+
+/**
+ * Add the 'number' and 'quantity' columns.
+ */
+function commerce_event_ticket_update_7003() {
+  db_add_field('commerce_event_ticket', 'number', array(
+    'description' => 'The number of the ticket within the line item quantity, at this revision.',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 1,
+  ));
+  db_add_field('commerce_event_ticket', 'quantity', array(
+    'description' => 'The total line item quantity, at this revision.',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 1,
+  ));
+}
+
+/**
+ * Go through old tickets populating 'number' and 'quantity'.
+ */
+function commerce_event_ticket_update_7004(&$sandbox) {
+
+  if (!isset($sandbox['progress'])) {
+    $tickets_count = db_query('SELECT COUNT(DISTINCT cet.ticket_id) FROM {commerce_event_ticket} cet LEFT JOIN {commerce_line_item} cli USING(line_item_id) WHERE cli.quantity > 1 AND cet.quantity = 1')->fetchField();
+    $sandbox['progress'] = 0;
+    $sandbox['current_ticket_id'] = 0;
+    $sandbox['max'] = $tickets_count;
+  }
+
+  if (!$sandbox['max']) {
+    return;
+  }
+
+  $query = db_select('commerce_event_ticket', 'cet')
+    ->fields('cet', array('ticket_id'))
+    ->fields('cli', array('quantity'));
+  $query->join('commerce_line_item', 'cli', 'cet.line_item_id = cli.line_item_id');
+  $query->condition('cet.ticket_id', $sandbox['current_ticket_id'], '>')
+    ->condition('cet.quantity', 1, '=')
+    ->condition('cli.quantity', 1, '>')
+    ->range(0, 50)
+    ->orderBy('cli.line_item_id')
+    ->orderBy('cet.ticket_id');
+  $ticket_records = $query->execute()->fetchAllAssoc('ticket_id', PDO::FETCH_ASSOC);
+  $tickets = commerce_event_ticket_load_multiple(array_keys($ticket_records));
+  $i = FALSE;
+  $previous_line_item = FALSE;
+  foreach ($ticket_records as $ticket_id => $ticket_record) {
+    $ticket = $tickets[$ticket_id];
+    if (!$i || $ticket->line_item_id != $previous_line_item) {
+      $i = 1;
+    }
+    else {
+      $i++;
+    }
+    $ticket->number = $i;
+    $ticket->quantity = $ticket_record['quantity'];
+    commerce_event_ticket_save($ticket);
+    $previous_line_item = $ticket->line_item_id;
+    $sandbox['progress']++;
+    $sandbox['current_ticket_id'] = $ticket_id;
+  }
+  $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'] >= 1;
+}
+
+/**
+ * Add the 'nid' field.
+ */
+function commerce_event_ticket_update_7005() {
+  db_add_field('commerce_event_ticket', 'nid', array(
+    'description' => 'The {node}.nid associated with the ticket.',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => FALSE,
+  ));
+  db_add_index('commerce_event_ticket', 'nid', array('nid'));
+}
+
+/**
+ * Populate the 'nid' field for existing tickets.
+ */
+function commerce_event_ticket_update_7006(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $tickets_count = db_query('SELECT COUNT(ticket_id) FROM {commerce_event_ticket}')->fetchField();
+    $sandbox['progress'] = 0;
+    $sandbox['current_ticket_id'] = 0;
+    $sandbox['max'] = $tickets_count;
+  }
+
+  if (!$sandbox['max']) {
+    return;
+  }
+
+  $query = db_select('commerce_event_ticket', 'cet')
+    ->fields('cet', array('ticket_id'))
+    ->range(0, 50);
+  $ticket_ids = $query->execute()->fetchCol();
+  $tickets = commerce_event_ticket_load_multiple($ticket_ids);
+  foreach ($tickets as $ticket_id => $ticket) {
+    $node = commerce_event_ticket_get_product_node($ticket->product_id);
+    if (!$node) {
+      watchdog('commerce_event_ticket', 'Could not find the node for product @product_id', array(
+        '@product_id' => $ticket->product_id,
+      ), WATCHDOG_WARNING);
+    }
+    elseif ($ticket->nid != $node->nid) {
+      $ticket->nid = $node->nid;
+      commerce_event_ticket_save($ticket);
+    }
+    $sandbox['progress']++;
+    $sandbox['current_ticket_id'] = $ticket_id;
+  }
+
+  $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'] >= 1;
+}
+
+/**
+ * Rebuild the registry now that module files have moved.
+ */
+function commerce_event_ticket_update_7007() {
+  registry_rebuild();
+}
+
+/**
+ * Create cet_enable field and add it to product types.
+ */
+function commerce_event_ticket_update_7008() {
+  field_info_cache_clear();
+
+  $drush_log = function_exists('drush_log');
+
+  // Create the cet_enable field.
+  module_load_include('inc', 'commerce_event_ticket', 'includes/commerce_event_ticket.field_bases');
+  $field_bases = _commerce_event_ticket_field_bases();
+  field_create_field($field_bases['cet_enable']);
+
+  if ($drush_log) {
+    drush_log('Created the cet_enable field', 'ok');
+  }
+
+  // Create cet_enable instances for every product type that is already enabled,
+  // with a default value of 1 (enabled).
+  module_load_include('inc', 'commerce_event_ticket', 'includes/commerce_event_ticket.field_instances');
+  $field_instances = _commerce_event_ticket_product_field_instances();
+  $cet_enable_instance = $field_instances['cet_enable'];
+
+  // Check the old variable, commerce_event_ticket_product_types, to see if
+  // there are any product types already configured to have tickets.
+  $product_types = array_keys(commerce_product_types());
+  $enabled_products = variable_get('commerce_event_ticket_product_types', array());
+  foreach ($product_types as $bundle) {
+    if (empty($enabled_products[$bundle])) {
+      continue;
+    }
+    $cet_enable_instance['bundle'] = $bundle;
+    $cet_enable_instance['default_value'][0]['value'] = 1;
+    field_create_instance($cet_enable_instance);
+    if ($drush_log) {
+      drush_log(t('Added a cet_enable field instance to the product type @type', array(
+        '@type' => $bundle,
+      )), 'ok');
+    }
+  }
+}
+
+/**
+ * Set cet_enable to 1 for products that should be enabled for ticketing.
+ */
+function commerce_event_ticket_update_7009(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $enabled_product_types = array_filter(variable_get('commerce_event_ticket_product_types', array()));
+    if (empty($enabled_product_types)) {
+      return 'No enabled product types found';
+    }
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'commerce_product')
+      ->propertyCondition('type', $enabled_product_types);
+    $products_count = $query->count()->execute();
+    if (!$products_count) {
+      return 'No relevant products found';
+    }
+    $sandbox['enabled_product_types'] = $enabled_product_types;
+    $sandbox['progress'] = 0;
+    $sandbox['max'] = $products_count;
+  }
+
+  $batch_limit = 100;
+
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'commerce_product')
+    ->propertyCondition('type', $sandbox['enabled_product_types'])
+    ->propertyOrderBy('product_id')
+    ->range($sandbox['progress'], $batch_limit);
+  $result = $query->execute();
+  if (empty($result['commerce_product'])) {
+    return 'No relevant products found';
+  }
+
+  foreach ($result['commerce_product'] as $product) {
+    if (empty($product->cet_enable) || empty($product->cet_enable[LANGUAGE_NONE][0]['value'])) {
+      $product->cet_enable[LANGUAGE_NONE][0]['value'] = 1;
+      field_attach_update('commerce_product', $product);
+    }
+  }
+
+  entity_get_controller('commerce_product')->resetCache(array_keys($result['commerce_product']));
+
+  $sandbox['progress'] += count($result['commerce_product']);
+  $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'] >= 1;
+
+  return t('@func(): completed @progress of @max', array(
+    '@func' => __FUNCTION__,
+    '@progress' => $sandbox['progress'],
+    '@max' => $sandbox['max'],
+  ));
+}

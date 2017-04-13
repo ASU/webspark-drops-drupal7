@@ -1,0 +1,27 @@
+name = Membership Entity Commerce
+description = Purchase memberships with the Commerce module.
+package = Memberships
+core = 7.x
+
+dependencies[] = commerce
+dependencies[] = commerce_cart
+dependencies[] = commerce_line_item
+dependencies[] = commerce_order
+dependencies[] = commerce_payment
+dependencies[] = commerce_product
+dependencies[] = commerce_product_reference
+dependencies[] = entity
+dependencies[] = entityreference
+dependencies[] = membership_entity
+dependencies[] = membership_entity_term
+dependencies[] = rules
+
+; Rules integration
+files[] = membership_entity_commerce.rules.inc
+
+; Information added by Drupal.org packaging script on 2015-06-17
+version = "7.x-1.0-alpha2+5-dev"
+core = "7.x"
+project = "membership_entity_commerce"
+datestamp = "1434555181"
+

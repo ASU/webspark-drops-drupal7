@@ -1,0 +1,469 @@
+<?php
+
+/**
+ * @file
+ * Tests for mapping salesforce_mapping.
+ */
+
+module_load_include('test', 'salesforce_mapping', 'tests/salesforce_mapping');
+
+/**
+ * Tests the user interface for mapping Drupal entities to Salesforce objects.
+ */
+class SalesforceMappingMapTestCase extends SalesforceMappingTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Mapping UI',
+      'description' => 'Tests the user interface for mapping Drupal entities to Salesforce objects.',
+      'group' => 'Salesforce',
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  public function setUp($modules = array(), $permissions = array()) {
+    parent::setUp($modules);
+  }
+
+  /**
+   * Implementation of tearDown().
+   */
+  public function tearDown() {
+    parent::tearDown();
+  }
+
+  /**
+   * Tests mapping overview form.
+   */
+  public function testMapOverview() {
+    // Form throws message if it cannot connect to Salesforce.
+    $this->drupalGet($this->adminPath);
+    $this->assertText('You are not authorized to access this page.', 'Message appears when Salesforce is not connected.');
+
+    // Map overview page appears after connecting to Salesforce.
+    $this->salesforceConnect();
+    $this->drupalGet($this->adminPath);
+    $this->assertLink('Add salesforce mapping', 0, 'Add new mapping link appears.');
+    $this->assertLink('Import salesforce mapping', 0, 'Import mapping link appears.');
+    $this->assertRaw('<table id="entity-ui-overview-form"', 'Map listing table appears.');
+    $this->assertRaw('<td colspan="10" class="empty message">None.</td>', 'Map listing table is empty.');
+
+    // Create a map.
+    $this->createSalesforceMapping('foo', 'foobar');
+    $this->drupalGet($this->adminPath);
+    $this->assertRaw('<td>user</td>', 'Drupal entity type shows up in the table.');
+    $this->assertRaw('<td>Contact</td>', 'Salesforce object type shows up in the table.');
+    $this->assertRaw('<span class=\'entity-status-custom\' title=\'A custom configuration by a user.\'>Custom</span>', 'Status declared as custom.');
+    $this->assertRaw('<a href="/admin/structure/salesforce/mappings/manage/foobar">edit</a>', 'Edit link is in table.');
+    $this->assertRaw('<a href="/admin/structure/salesforce/mappings/manage/foobar/clone">clone</a>', 'Clone link is in table.');
+    $this->assertRaw('<a href="/admin/structure/salesforce/mappings/manage/foobar/delete?destination=admin/structure/salesforce/mappings">delete</a>', 'Delete link is in table.');
+    $this->assertRaw('<a href="/admin/structure/salesforce/mappings/manage/foobar/export">export</a>', 'Export link is in table.');
+
+    // Delete map.
+    $this->clickLink('delete');
+    $this->drupalPost(NULL, array(), 'Confirm');
+    $this->assertText('Deleted Salesforce Mapping foo.', 'Delete request posted correctly.');
+    $this->assertRaw('<td colspan="10" class="empty message">None.</td>', 'Map listing table is empty after deleting map.');
+  }
+
+  /**
+   * Tests the AJAX of the mapping form.
+   */
+  public function testMappingAjax() {
+    // Form throws message if it cannot connect to Salesforce.
+    $this->drupalGet($this->addMapPath);
+    $this->assertText('You are not authorized to access this page.', 'Message appears when Salesforce is not connected.');
+
+    // Add map page appears after connecting to Salesforce.
+    $this->salesforceConnect();
+    $this->drupalGet($this->addMapPath);
+    $this->assertFieldById('edit-label', '', 'Label field exists.');
+    $this->assertFieldById('edit-drupal-entity-type', '', 'Drupal entity type field exists.');
+    $this->assertFieldById('edit-salesforce-object-type', '', 'Salesforce object type field exists.');
+    $this->assertFieldById('edit-sync-triggers-1', '', 'Action triggers checkboxes exist.');
+    $this->assertFieldById('edit-push-async', '', 'Push async checkbox exists.');
+    $this->assertFieldById('edit-push-batch', '', 'Push batch checkbox exists.');
+
+    // Verify default values.
+    $this->assertOptionSelected('edit-drupal-entity-type', '', 'Drupal entity type field has correct default value.');
+    $this->assertOptionSelected('edit-salesforce-object-type', '', 'Salesforce object type field has correct default value.');
+    $this->assertNoFieldChecked('edit-sync-triggers-1', 'Trigger on Drupal entity create field has correct default value.');
+    $this->assertNoFieldChecked('edit-sync-triggers-2', 'Trigger on Drupal entity create field has correct default value.');
+    $this->assertNoFieldChecked('edit-sync-triggers-4', 'Trigger on Drupal entity create field has correct default value.');
+    $this->assertNoFieldChecked('edit-sync-triggers-8', 'Trigger on Drupal entity create field has correct default value.');
+    $this->assertNoFieldChecked('edit-sync-triggers-16', 'Trigger on Drupal entity create field has correct default value.');
+    $this->assertNoFieldChecked('edit-sync-triggers-32', 'Trigger on Drupal entity create field has correct default value.');
+    $this->assertNoFieldChecked('edit-push-async', 'Push async field has correct default value.');
+    $this->assertNoFieldChecked('edit-push-batch', 'Push batch field has correct default value.');
+
+    $edit = array();
+
+    // Select a Drupal entity type.
+    $this->assertRaw('<select disabled="disabled" id="edit-drupal-bundle"', 'Drupal bundle field is disabled when Drupal entity type is not selected.');
+    $this->assertText('Select a value for Drupal Entity Type and Drupal Entity Bundle and Salesforce object in order to map fields.', 'Fieldmap give proper initial instructions of what is required to start mapping.');
+    $edit['drupal_entity_type'] = 'user';
+    $this->drupalPostAjax(NULL, $edit, 'drupal_entity_type');
+    $this->assertNoRaw('<select disabled="disabled" id="edit-drupal-bundle"', 'Drupal bundle field is not disabled when Drupal entity type is selected.');
+    $this->assertRaw('<select id="edit-drupal-bundle"', 'Drupal bundle field is not disabled when Drupal entity type is selected.');
+    $this->assertNoText('Select a value for Drupal Entity Type and Drupal Entity Bundle and Salesforce object in order to map fields.', 'Initial fieldmap instructions have been replaced.');
+    $this->assertText('Select a value for Drupal Entity Bundle and Salesforce object in order to map fields.', 'Fieldmap instructions give updated information of what is required to start mapping.');
+
+    // Select a Salesforce object type.
+    $this->assertNoFieldById('edit-salesforce-record-type', '', 'Salesforce record type field does not exist when no object type is selected.');
+    $edit['salesforce_object_type'] = 'Opportunity';
+    $this->drupalPostAjax(NULL, $edit, 'salesforce_object_type');
+    $this->assertFieldById('edit-salesforce-record-type', '', 'Salesforce record type field showed up after object type was selected.');
+    $this->assertNoText('Select a value for Drupal Entity Type and Drupal Entity Bundle and Salesforce object in order to map fields.', 'Initial fieldmap instructions have been replaced.');
+    $this->assertNoText('Select a value for Drupal Entity Bundle and Salesforce object in order to map fields.', 'Updated fieldmap instructions have been replaced again.');
+    $this->assertText('Select a value for Drupal Entity Bundle in order to map fields.', 'Fieldmap instructions give updated information again of what is required to start mapping.');
+
+    // Select a Drupal bundle.
+    $edit['drupal_bundle'] = 'user';
+    $this->assertNoRaw('<table id="edit-salesforce-field-mappings"', 'Field map table does not yet exist.');
+    $this->drupalPostAjax(NULL, $edit, 'drupal_bundle');
+    $this->assertRaw('<table id="edit-salesforce-field-mappings"', 'Field map table has appeared.');
+    $this->assertNoText('Select a value for Drupal Entity Type and Drupal Entity Bundle and Salesforce object in order to map fields.', 'Initial fieldmap instructions have been removed from the page.');
+    $this->assertNoText('Select a value for Drupal Entity Bundle and Salesforce object in order to map fields.', 'Updated fieldmap instructions have been removed from the page.');
+    $this->assertNoText('Select a value for Drupal Entity Bundle in order to map fields.', 'Second updated fieldmap instructions have been removed from the page.');
+    $this->assertFieldById('edit-fieldmap-type-0', '', 'Drupal fieldmap type field has appeared.');
+    $this->assertFieldById('edit-salesforce-field-0', '', 'Salesforce map field has appeared.');
+    $this->assertFieldById('edit-key-0', '', 'Key field has appeared.');
+    $this->assertFieldById('edit-salesforce-field-mappings-0-direction-drupal-sf', '', 'Direction radios have appeared.');
+    $this->assertFieldById('edit-delete-field-mapping-0', '', 'Delete mapping field has appeared.');
+
+    // Unselect the Salesforce object type.
+    $edit['salesforce_object_type'] = '';
+    $this->drupalPostAjax(NULL, $edit, 'salesforce_object_type');
+    $this->assertNoFieldById('edit-salesforce-record-type', '', 'Salesforce record type field disappeared when salesforce object type field was deselected.');
+    $this->assertNoRaw('<table id="edit-salesforce-field-mappings"', 'Field map table disappeared when salesforce object type field was deslected.');
+    $this->assertText('Select a value for Salesforce object in order to map fields.', 'Instructions to select a salesforce object type have appeared.');
+
+    // Reset the Salesforce object type.
+    $edit['salesforce_object_type'] = 'Contact';
+    $this->drupalPostAjax(NULL, $edit, 'salesforce_object_type');
+    $this->assertRaw('<input type="hidden" name="salesforce_record_type" value="default">', 'Salesforce record type his hidden for a salesforce object without records.');
+    $this->assertRaw('<table id="edit-salesforce-field-mappings"', 'Field map table has appeared.');
+
+    // Set the drupal fieldmap type.
+    $edit['salesforce_field_mappings[0][drupal_field][fieldmap_type]'] = 'property';
+    $this->assertNoFieldById('edit-fieldmap-value-0', '', 'Drupal fieldmap value field does not appear when property field is not set.');
+    $this->drupalPostAjax(NULL, $edit, 'salesforce_field_mappings[0][drupal_field][fieldmap_type]');
+    $this->assertFieldById('edit-fieldmap-value-0', '', 'Drupal fieldmap value field has appeared when property field is set.');
+
+    // Add a new row.
+    $this->assertNoFieldById('edit-fieldmap-type-1', '', 'A second row does not exist yet.');
+    $this->drupalPostAjax(NULL, $edit, array('salesforce_add_field' => 'Add another field mapping'));
+    $this->assertFieldById('edit-fieldmap-type-0', '', 'Original row still exists.');
+    $this->assertFieldById('edit-fieldmap-type-1', '', 'Another row appeared after pressing the add field button.');
+    $this->assertOptionSelected('edit-fieldmap-type-0', 'property', 'Original row has retained its previous value.');
+
+    // Add another two rows.
+    $this->assertNoFieldById('edit-fieldmap-type-2', '', 'A third row does not exist yet.');
+    $this->assertNoFieldById('edit-fieldmap-type-3', '', 'A fourth row does not exist yet.');
+    $this->drupalPostAjax(NULL, $edit, array('salesforce_add_field' => 'Add another field mapping'));
+    $this->drupalPostAjax(NULL, $edit, array('salesforce_add_field' => 'Add another field mapping'));
+    $this->assertFieldById('edit-fieldmap-type-0', '', 'Original row still exists.');
+    $this->assertFieldById('edit-fieldmap-type-1', '', 'Second row still exists.');
+    $this->assertFieldById('edit-fieldmap-type-2', '', 'Third row added successfully.');
+    $this->assertFieldById('edit-fieldmap-type-3', '', 'Fourth row added successfully.');
+    $this->assertOptionSelected('edit-fieldmap-type-0', 'property', 'Original row has retained its previous value.');
+    $this->assertOptionSelected('edit-fieldmap-type-1', '', 'Previous new row retained its value.');
+
+    // Delete a row.
+    $edit['delete_field_mapping-1'] = TRUE;
+    $this->drupalPostAjax(NULL, $edit, 'delete_field_mapping-1');
+    unset($edit['delete_field_mapping-1']);
+    $this->assertFieldById('edit-fieldmap-type-0', '', 'First row still exists.');
+    $this->assertNoFieldById('edit-fieldmap-type-1', '', 'Second row successfully deleted.');
+    $this->assertFieldById('edit-fieldmap-type-2', '', 'Third row still exists.');
+    $this->assertFieldById('edit-fieldmap-type-3', '', 'Fourth row still exists.');
+
+    // Add another row.
+    $this->assertNoFieldById('edit-fieldmap-type-1', '', 'The deleted row has not reappeared.');
+    $this->assertNoFieldById('edit-fieldmap-type-4', '', 'A fourth row / 5th key has not appeared.');
+    $this->drupalPostAjax(NULL, $edit, array('salesforce_add_field' => 'Add another field mapping'));
+    $this->assertFieldById('edit-fieldmap-type-0', '', 'Row 0 still exists.');
+    $this->assertNoFieldById('edit-fieldmap-type-1', '', 'Row 1 still deleted.');
+    $this->assertFieldById('edit-fieldmap-type-2', '', 'Row 2 still exists.');
+    $this->assertFieldById('edit-fieldmap-type-3', '', 'Row 3 still exists.');
+    $this->assertFieldById('edit-fieldmap-type-3', '', 'Row 4 has appeared.');
+
+    // Map label and name interaction is done by javascript, not by ajax, and
+    // cannot be tested here.  There is a known interaction failure where if you
+    // show the machine name field and then trigger an ajax event, the machine
+    // name field will not show again, and will not be able to be shown again.
+  }
+
+  /**
+   * Tests the creation of a map.
+   */
+  public function testMappingCreate() {
+    $this->salesforceConnect();
+    $this->createSalesforceMapping('foo', 'foobar');
+
+    // Open the form and verify it reloaded correctly.
+    $this->drupalGet($this->manageMapPrefix . 'foobar');
+    $this->assertFieldById('edit-label', 'foo', 'Label has correct value.');
+    $this->assertFieldById('edit-name', 'foobar', 'Machine name has correct value.');
+    $this->assertOptionSelected('edit-drupal-entity-type', 'user', 'Drupal entity type has correct value.');
+    $this->assertOptionSelected('edit-drupal-bundle', 'user', 'Drupal bundle has correct value.');
+    $this->assertOptionSelected('edit-salesforce-object-type', 'Contact', 'Salesforce object has correct value.');
+    $this->assertFieldByName('salesforce_record_type', 'default', 'Salesforce record type has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-type-0', 'property', 'Row 0 fieldmap type has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-type-1', 'property', 'Row 1 fieldmap type has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-type-2', 'property', 'Row 2 fieldmap type has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-value-0', 'name', 'Row 0 fieldmap value has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-value-1', 'mail', 'Row 1 fieldmap value has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-value-2', 'created', 'Row 2 fieldmap value has correct value.');
+    $this->assertOptionSelected('edit-salesforce-field-0', 'Name', 'Row 0 Salesforce field has correct value.');
+    $this->assertOptionSelected('edit-salesforce-field-1', 'Email', 'Row 1 Salesforce field has correct value.');
+    $this->assertOptionSelected('edit-salesforce-field-2', 'CreatedDate', 'Row 2 Salesforce field has correct value.');
+    $this->assertRadioOptionSelected('salesforce_field_mappings[0][direction]', 'drupal_sf', 'Row 0 direction has correct value.');
+    $this->assertRadioOptionSelected('salesforce_field_mappings[1][direction]', 'sync', 'Row 1 direction has correct value.');
+    $this->assertRadioOptionSelected('salesforce_field_mappings[2][direction]', 'sf_drupal', 'Row 2 direction has correct value.');
+    $this->assertRadioOptionSelected('key', 1, 'Key has correct value.');
+    $this->assertFieldChecked('edit-sync-triggers-1', 'Trigger on Drupal entity create field has correct value.');
+    $this->assertFieldChecked('edit-sync-triggers-2', 'Trigger on Drupal entity update field has correct value.');
+    $this->assertFieldChecked('edit-sync-triggers-4', 'Trigger on Drupal entity delete field has correct value.');
+    $this->assertFieldChecked('edit-sync-triggers-8', 'Trigger on Salesforce object create field has correct value.');
+    $this->assertFieldChecked('edit-sync-triggers-16', 'Trigger on Salesforce object update field has correct value.');
+    $this->assertFieldChecked('edit-sync-triggers-32', 'Trigger on Salesforce object delete field has correct value.');
+    $this->assertFieldChecked('edit-push-async', 'Push async field has correct value.');
+    $this->assertNoFieldChecked('edit-push-batch', 'Push batch field has correct value.');
+
+    // Delete row.
+    $edit = array('delete_field_mapping-2' => TRUE);
+    $this->drupalPostAjax(NULL, $edit, 'delete_field_mapping-2');
+    $this->assertFieldById('edit-fieldmap-type-0', '', 'First row still exists.');
+    $this->assertOptionSelected('edit-fieldmap-value-0', 'name', 'Row 0 fieldmap value still has correct value.');
+    $this->assertFieldById('edit-fieldmap-type-1', '', 'Second row still exists.');
+    $this->assertOptionSelected('edit-fieldmap-value-1', 'mail', 'Row 1 fieldmap value still has correct value.');
+    $this->assertNoFieldById('edit-fieldmap-type-2', '', 'Third row successfully deleted.');
+
+    $edit = array();
+
+    // Add row.Initial_Registration_Date__c
+    $this->drupalPostAjax(NULL, $edit, array('salesforce_add_field' => 'Add another field mapping'));
+    $this->assertFieldById('edit-fieldmap-type-2', '', 'New row now exists.');
+    $edit['salesforce_field_mappings[2][drupal_field][fieldmap_type]'] = 'property';
+    $this->drupalPostAjax(NULL, $edit, 'salesforce_field_mappings[2][drupal_field][fieldmap_type]');
+    $edit['salesforce_field_mappings[2][drupal_field][fieldmap_value]'] = 'created';
+    $edit['salesforce_field_mappings[2][salesforce_field]'] = 'Initial_Registration_Date__c';
+    $edit['salesforce_field_mappings[2][direction]'] = 'drupal_sf';
+
+    // Modify row.
+    $edit['salesforce_field_mappings[0][salesforce_field]'] = 'LastName';
+
+    // Save, verify field alterations remained.
+    $this->drupalPost(NULL, $edit, 'Save mapping');
+    $this->drupalGet($this->manageMapPrefix . 'foobar');
+    $this->assertFieldById('edit-label', 'foo', 'Label has correct value.');
+    $this->assertFieldById('edit-name', 'foobar', 'Machine name has correct value.');
+    $this->assertOptionSelected('edit-drupal-entity-type', 'user', 'Drupal entity type has correct value.');
+    $this->assertOptionSelected('edit-drupal-bundle', 'user', 'Drupal bundle has correct value.');
+    $this->assertOptionSelected('edit-salesforce-object-type', 'Contact', 'Salesforce object has correct value.');
+    $this->assertFieldByName('salesforce_record_type', 'default', 'Salesforce record type has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-type-0', 'property', 'Row 0 fieldmap type has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-type-1', 'property', 'Row 1 fieldmap type has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-type-2', 'property', 'Row 2 fieldmap type has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-value-0', 'name', 'Row 0 fieldmap value has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-value-1', 'mail', 'Row 1 fieldmap value has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-value-2', 'created', 'Row 2 fieldmap value has correct value.');
+    $this->assertOptionSelected('edit-salesforce-field-0', 'LastName', 'Row 0 Salesforce field has correct value.');
+    $this->assertOptionSelected('edit-salesforce-field-1', 'Email', 'Row 1 Salesforce field has correct value.');
+    $this->assertOptionSelected('edit-salesforce-field-2', 'Initial_Registration_Date__c', 'Row 2 Salesforce field has correct value.');
+    $this->assertRadioOptionSelected('salesforce_field_mappings[0][direction]', 'drupal_sf', 'Row 0 direction has correct value.');
+    $this->assertRadioOptionSelected('salesforce_field_mappings[1][direction]', 'sync', 'Row 1 direction has correct value.');
+    $this->assertRadioOptionSelected('salesforce_field_mappings[2][direction]', 'drupal_sf', 'Row 2 direction has correct value.');
+    $this->assertRadioOptionSelected('key', 1, 'Key has correct value.');
+    $this->assertFieldChecked('edit-sync-triggers-1', 'Trigger on Drupal entity create field has correct value.');
+    $this->assertFieldChecked('edit-sync-triggers-2', 'Trigger on Drupal entity update field has correct value.');
+    $this->assertFieldChecked('edit-sync-triggers-4', 'Trigger on Drupal entity delete field has correct value.');
+    $this->assertFieldChecked('edit-sync-triggers-8', 'Trigger on Salesforce object create field has correct value.');
+    $this->assertFieldChecked('edit-sync-triggers-16', 'Trigger on Salesforce object update field has correct value.');
+    $this->assertFieldChecked('edit-sync-triggers-32', 'Trigger on Salesforce object delete field has correct value.');
+    $this->assertFieldChecked('edit-push-async', 'Push async field has correct value.');
+    $this->assertNoFieldChecked('edit-push-batch', 'Push batch field has correct value.');
+
+    // Change the Salesforce object type.
+    $edit = array('salesforce_object_type' => 'Account');
+    $this->drupalPostAjax(NULL, $edit, 'salesforce_object_type');
+    $this->assertOptionSelected('edit-fieldmap-type-0', 'property', 'Row 0 fieldmap type has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-type-1', 'property', 'Row 1 fieldmap type has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-type-2', 'property', 'Row 2 fieldmap type has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-value-0', 'name', 'Row 0 fieldmap value has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-value-1', 'mail', 'Row 1 fieldmap value has correct value.');
+    $this->assertOptionSelected('edit-fieldmap-value-2', 'created', 'Row 2 fieldmap value has correct value.');
+    $this->assertRadioOptionSelected('salesforce_field_mappings[0][direction]', 'drupal_sf', 'Row 0 direction has correct value.');
+    $this->assertRadioOptionSelected('salesforce_field_mappings[1][direction]', 'sync', 'FieldByName Row 1 direction has correct value.');
+    $this->assertRadioOptionSelected('salesforce_field_mappings[2][direction]', 'drupal_sf', 'Row 2 direction has correct value.');
+    $this->assertRadioOptionSelected('key', 1, 'Key has correct value.');
+
+    // Change the Drupal entity type.
+    $edit['drupal_entity_type'] = 'node';
+    $this->drupalPostAjax(NULL, $edit, 'drupal_entity_type');
+    $this->assertText('Select a value for Drupal Entity Bundle in order to map fields.', 'Fieldmap instructions give updated information again of what is required to start mapping.');
+  }
+
+  /**
+   * Test validation of the mapping form.
+   */
+  public function testMappingValidation() {
+    $this->salesforceConnect();
+    $this->createSalesforceMapping('foo', 'foobar');
+
+    // Cannot map the same entity, bundle and salesforce object combo.
+    $edit = array();
+    $this->drupalGet($this->addMapPath);
+    $edit['drupal_entity_type'] = 'user';
+    $this->drupalPostAjax(NULL, $edit, 'drupal_entity_type');
+    $edit['drupal_bundle'] = 'user';
+    $this->drupalPostAjax(NULL, $edit, 'drupal_bundle');
+    $edit['salesforce_object_type'] = 'Contact';
+    $this->drupalPostAjax(NULL, $edit, 'salesforce_object_type');
+    $this->drupalPost(NULL, $edit, 'Save mapping');
+    $this->assertText('This Drupal bundle has already been mapped to a Salesforce object', 'Validation failed when a new map was created to map the same entity, bundle an salesforce object that matched a previous mapping.');
+
+    // Label cannot exceed SALESFORCE_MAPPING_NAME_LENGTH.
+    $this->drupalGet($this->manageMapPrefix . 'foobar');
+    $length = SALESFORCE_MAPPING_NAME_LENGTH + 1;
+    $edit = array('label' => $this->randomName($length));
+    $this->drupalPost(NULL, $edit, 'Save mapping');
+    $this->assertText('Label cannot be longer than 128 characters but is currently 129 characters long.', 'Validation rejected label length that was too long.');
+
+    // When sync trigger Salesforce Create selected, at least one row must have
+    // direction 'sync' or 'sf_drupal'.
+    $edit = array(
+      'salesforce_field_mappings[0][direction]' => 'drupal_sf',
+      'salesforce_field_mappings[1][direction]' => 'drupal_sf',
+      'salesforce_field_mappings[2][direction]' => 'drupal_sf',
+      'sync_triggers[8]' => TRUE,
+    );
+    $this->drupalPost(NULL, $edit, 'Save mapping');
+    $this->assertText('One mapping must be set to "Sync" or "SF to Drupal" when "Salesforce object create" is selected', 'Validation rejected when salesforce create sync trigger is selected and no row had either "sync" or "sf to drupal" direction selected.');
+
+    // Key must be set on a field that is configured to be externalId.
+    $edit = array('key' => '0');
+    $this->drupalPost(NULL, $edit, 'Save mapping');
+    $this->assertText('is not configured as an external id', 'Validation rejected when row selected as "key" was not a salesforce field with a valid external id field.');
+    $edit = array('key' => '2');
+    $this->drupalPost(NULL, $edit, 'Save mapping');
+    $this->assertText('s not configured as an external id', 'Validation rejected when row selected as "key" was not a salesforce field with a valid external id field.');
+
+    // Verify salesforce_mapping_property_validation().
+    $property_tests = array(
+      'sync' => array(
+        'datetime' => array(
+          'sf_value' => 'CreatedDate',
+          'drupal_value' => array(
+            'integer' => 'uid',
+            'text' => 'name',
+            'uri' => 'url',
+          ),
+        ),
+        'email' => array(
+          'sf_value' => 'Email',
+          'drupal_value' => array(
+            'date' => 'created',
+            'integer' => 'uid',
+            'uri' => 'url',
+          ),
+        ),
+        'id' => array(
+          'sf_value' => 'Id',
+          'drupal_value' => array(
+            'date' => 'created',
+            'uri' => 'url',
+          ),
+        ),
+        'string' => array(
+          'sf_value' => 'LastName',
+          'drupal_value' => array(
+            'date' => 'created',
+            'integer' => 'uid',
+          ),
+        ),
+      ),
+      'drupal_sf' => array(
+        'datetime' => array(
+          'sf_value' => 'CreatedDate',
+          'drupal_value' => array(
+            'integer' => 'uid',
+            'text' => 'name',
+            'uri' => 'url',
+          ),
+        ),
+        'email' => array(
+          'sf_value' => 'Email',
+          'drupal_value' => array(
+            'date' => 'created',
+            'integer' => 'uid',
+            'uri' => 'url',
+          ),
+        ),
+        'id' => array(
+          'sf_value' => 'Id',
+          'drupal_value' => array(
+            'date' => 'created',
+            'uri' => 'url',
+          ),
+        ),
+        'string' => array(
+          'sf_value' => 'LastName',
+          'drupal_value' => array(),
+        ),
+      ),
+      'sf_drupal' => array(
+        'datetime' => array(
+          'sf_value' => 'CreatedDate',
+          'drupal_value' => array(
+            'integer' => 'uid',
+            'text' => 'name',
+            'uri' => 'url',
+          ),
+        ),
+        'email' => array(
+          'sf_value' => 'Email',
+          'drupal_value' => array(
+            'date' => 'created',
+            'integer' => 'uid',
+            'uri' => 'url',
+          ),
+        ),
+        'id' => array(
+          'sf_value' => 'Id',
+          'drupal_value' => array(
+            'date' => 'created',
+            'uri' => 'url',
+          ),
+        ),
+        'string' => array(
+          'sf_value' => 'LastName',
+          'drupal_value' => array(
+            'date' => 'created',
+            'uri' => 'url',
+          ),
+        ),
+      ),
+    );
+    foreach ($property_tests as $direction => $sf_field_types) {
+      foreach ($sf_field_types as $sf_field_type => $data) {
+        $sf_field = $data['sf_value'];
+        foreach ($data['drupal_value'] as $drupal_field_type => $drupal_field) {
+          $edit = array(
+            'salesforce_field_mappings[0][direction]' => $direction,
+            'salesforce_field_mappings[0][salesforce_field]' => $sf_field,
+            'salesforce_field_mappings[0][drupal_field][fieldmap_value]' => $drupal_field,
+          );
+          $this->drupalPost(NULL, $edit, 'Save mapping');
+          $this->assertText('and cannot be mapped in the ' . $direction . ' direction', 'Validation failed when direction is "' . $direction . '", salesforce field type is "' . $sf_field_type . '" and drupal field type is "' . $drupal_field_type . '".');
+        }
+      }
+    }
+  }
+}

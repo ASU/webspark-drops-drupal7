@@ -1,0 +1,124 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the membership_entity module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function membership_entity_type_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+
+  if ($phase == 'runtime') {
+    $types = db_query('SELECT type, label, data FROM {membership_entity_type}');
+    foreach ($types as $type) {
+      $data = unserialize($type->data);
+
+      if (empty($data)) {
+        $requirements["membership_entity_type_$type->type"] = array(
+          'title' => $t('@type Settings', array('@type' => $type->label)),
+          'value' => $t('Missing configuration'),
+          'description' => $t('Missing configuration settings for membership type %type. Please visit the <a href="!url">settings page</a> to configure the membership type.', array(
+            '%type' => $type->label,
+            '!url' => url("admin/memberships/types/manage/$type->type"),
+          )),
+          'severity' => REQUIREMENT_ERROR,
+        );
+      }
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_schema().
+ */
+function membership_entity_type_schema() {
+  $schema['membership_entity_type'] = array(
+    'description' => 'Stores information about all defined membership types (bundles).',
+    'fields' => array(
+      'id' => array(
+        'description' => 'Primary Key: Unique profile type ID.',
+        'type' => 'serial',
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'The machine-readable name of this membership entity type.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ),
+      'label' => array(
+        'description' => 'The human-readable name of this membership entity type.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'translatable' => TRUE,
+      ),
+      'weight' => array(
+        'description' => 'The weight of this membership entity type in relation to others.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'description' => array(
+        'description' => 'A brief description of this type.',
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'medium',
+        'translatable' => TRUE,
+      ),
+      'data' => array(
+        'description' => 'A serialized array of additional settings.',
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+      // Exportable fields.
+      // @see entity_exportable_schema_fields().
+      'status' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0x01,
+        'size' => 'tiny',
+        'description' => 'The exportable status of the entity.',
+      ),
+      'module' => array(
+        'description' => 'The name of the providing module if the entity has been defined in code.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+    ),
+    'unique keys' => array(
+      'type' => array('type'),
+      'label' => array('label'),
+    ),
+    'primary key' => array('id'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function membership_entity_type_install() {
+  $t = get_t();
+
+  // Add an initial membership type and copy existing configuration.
+  $type = entity_create('membership_entity_type', array(
+    'type' => 'membership',
+    'label' => $t('Membership'),
+    'description' => $t('A regular membership.'),
+    'weight' => 0,
+    'data' => variable_get('membership_entity_settings', array()),
+  ));
+  $type->save();
+}

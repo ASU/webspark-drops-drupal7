@@ -15,7 +15,7 @@
 ?>
 
 <div class="panel-display bartlett-flipped clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
-  <div class="section">
+  <section class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-8 bartlett-flipped-main panel-panel">
@@ -46,5 +46,5 @@
         </div>
       </div>
     </div><!-- /.container -->
-  </div><!--  /.section -->
+  </section><!--  /.section -->
 </div><!-- /.bartlett-flipped -->

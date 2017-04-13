@@ -13,8 +13,7 @@
             AjaxSolr.asuAlphaBarWidget.__super__.constructor.apply(this, arguments);
             AjaxSolr.extend(this, {
                 field_configs: null,
-                last_name_field: null,
-                field_id: null
+                last_name_field: null
 
             }, attributes);
         },
@@ -26,7 +25,18 @@
             var self = this;
             var state = history.getState();
             var lnamefield = self.last_name_field;
-            var field_id = this.field_id;
+
+            // if lastname parameter is passed in URL, highlight the proper alpha bar item
+            var url = state.cleanUrl;
+            url = decodeURIComponent(url);
+            var index = url.indexOf(lnamefield);
+
+            if (index != -1) {
+                index = index + lnamefield.length + 1;
+                var passed_letter = url.substr(index, 1);
+                var selected_letter = $(self.target).find('li').filter(':contains("' + passed_letter + '")');
+                selected_letter.addClass('active-letter');
+            }
 
             // select all letters in the alpha bar, and bind a click event
             // to run the proper query when selected
@@ -46,16 +56,13 @@
                     alphabar.removeClass('active-letter');
                     //if we already have a lastName filter, get rid of it;
                     for (var i = 0; i < fq.length; i++) {
-
                         if (fq[i] != null && fq[i].value != null && fq[i].value.indexOf(lnamefield) != -1) {
                             self.manager.store.removeByValue('fq', fq[i].value);
                         }
                     }
 
-                    if (letter != 'ALL') {
-                        $(this).addClass('active-letter');
-                        self.manager.store.addByValue('fq', lnamefield + ":" + letter + "*");
-                    }
+                    $(this).addClass('active-letter');
+                    self.manager.store.addByValue('fq', lnamefield + ":" + letter + "*");
                 }
 
                 // remove paging parameter, and do the request
@@ -63,51 +70,6 @@
                 self.manager.doRequest();
 
             });
-        },
-
-        // before the request, check if the lastname alphabar facet is active, then add or
-        // remove the active-class if applicable
-        beforeRequest: function () {
-
-            var self = this;
-            var start = self.manager.store.get('start').val();
-            var q = self.manager.store.get('q').val();
-            var fq = self.manager.store.get('fq');
-            var active_letter = false;
-            var last_name_field = this.last_name_field;
-            var passed_letter = '';
-
-            //get rid of styling for active letter if it is not there
-            for (var i = 0; i < fq.length; i++) {
-                if (fq[i] != null && fq[i].value != null && fq[i].value.indexOf('lastName') != -1) {
-
-                    var index = fq[i].value.indexOf(last_name_field);
-                    index = index + last_name_field.length + 1;
-                    passed_letter = fq[i].value.substr(index, 1);
-                    active_letter = true;
-                }
-            }
-
-            if (!active_letter) {
-                $(this.target + ' .alphabet .active-letter').removeClass('active-letter');
-
-                /*var all = $(self.target).find('li').filter(function() {
-                 return $(this).text() == 'ALL';
-                 });*/
-
-            } else {
-
-                $(this.target + ' .alphabet .active-letter').removeClass('active-letter');
-
-                //get the letter li by an exact match
-                var selected_letter = $(self.target).find('li').filter(function () {
-                    return $(this).text() == passed_letter;
-                });
-
-                if (!selected_letter.hasClass('active-letter')) {
-                    selected_letter.addClass('active-letter');
-                }
-            }
         }
     });
 

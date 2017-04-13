@@ -20,7 +20,8 @@
     margin-left: 2px;
 }
 
-#asu-maps-enhanced-tree ul.jqtree-tree li.jqtree-selected > .jqtree-element {
+
+#asu-maps-enhanced-tree ul.jqtree-tree li.jqtree-selected>.jqtree-element {
     background-color: transparent;
     background: none;
 }

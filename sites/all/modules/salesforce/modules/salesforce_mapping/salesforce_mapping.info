@@ -1,0 +1,26 @@
+name = Salesforce Mapping
+description = Map Drupal entities to Salesforce objects.
+package = Salesforce
+core = 7.x
+
+files[] = includes/salesforce_mapping.entity.inc
+files[] = includes/salesforce_mapping.ui_controller.inc
+files[] = includes/salesforce_mapping_object.entity.inc
+files[] = includes/salesforce_mapping_object.controller.inc
+files[] = includes/salesforce_mapping_object.ui_controller.inc
+files[] = includes/salesforce_mapping_object.metadata.inc
+files[] = tests/salesforce_mapping.entities.test
+files[] = tests/salesforce_mapping.map.test
+files[] = tests/salesforce_mapping.test
+
+configure = admin/structure/salesforce/mappings
+
+dependencies[] = salesforce
+dependencies[] = entity
+
+; Information added by Drupal.org packaging script on 2016-08-02
+version = "7.x-3.2"
+core = "7.x"
+project = "salesforce"
+datestamp = "1470109461"
+

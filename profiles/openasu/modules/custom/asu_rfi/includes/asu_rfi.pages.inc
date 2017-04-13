@@ -211,7 +211,8 @@ function asu_rfi_form_data($form, &$form_state)
 
     $form['college_name'] = array(
       '#type' => 'hidden',
-      '#maxlength' => 128,
+      '#size' => 30,
+      '#maxlength' => 64,
       '#default_value' => $college_name,
       '#size' => 50,
     );

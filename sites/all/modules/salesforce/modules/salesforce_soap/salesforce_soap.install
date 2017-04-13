@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Install hooks for the Salesforce SOAP module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function salesforce_soap_requirements($phase) {
+  $library_available = FALSE;
+  $requirements = array();
+  // Ensure translations don't break at install time.
+  $t = get_t();
+
+  if ($phase == 'runtime') {
+    $library = libraries_detect('salesforce');
+    $library_available = !empty($library['installed']);
+  }
+  else if ($phase == 'install') {
+    if (!function_exists('libraries_get_path')) {
+      module_load_include('module', 'libraries');
+    }
+    $library_available = libraries_get_path('salesforce');
+  }
+
+  if (!$library_available) {
+    $requirements['salesforce'] = array(
+      'title' => $t('Salesforce PHP Toolkit'),
+      'description' => $t(
+        'The Salesforce SOAP module requires the !toolkit in a valid library location. Consider installing it using the included make file.',
+        array('!toolkit' => l($t('Salesforce PHP Toolkit'), 'http://wiki.developerforce.com/page/Force.com_Toolkit_for_PHP'))
+      ),
+      'severity' => REQUIREMENT_ERROR,
+    );
+  }
+
+  return $requirements;
+}

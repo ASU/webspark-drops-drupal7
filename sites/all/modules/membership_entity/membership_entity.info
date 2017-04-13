@@ -1,0 +1,40 @@
+name = Membership Entity
+description = Create membership entities and attach user accounts to a membership.
+package = Memberships
+core = 7.x
+
+configure = admin/memberships/types/manage/membership
+
+dependencies[] = ctools
+dependencies[] = entity
+dependencies[] = rules
+dependencies[] = views
+
+files[] = membership_entity.module
+files[] = membership_entity.inc
+files[] = membership_entity.controller.inc
+
+; Entity API integrations.
+files[] = membership_entity.info.inc
+
+; CTools plugin definitions.
+files[] = plugins/member_id/abstract.inc
+
+; Custom views handlers.
+files[] = views/membership_entity.views.inc
+files[] = views/views_handler_field_membership_primary_member.inc
+files[] = views/views_handler_field_membership_secondary_member.inc
+files[] = views/views_handler_field_membership_link.inc
+
+; Migrate handlers.
+files[] = membership_entity.migrate.inc
+
+; Tests
+files[] = membership_entity.test
+
+; Information added by Drupal.org packaging script on 2015-07-16
+version = "7.x-1.0-beta1+1-dev"
+core = "7.x"
+project = "membership_entity"
+datestamp = "1437064446"
+

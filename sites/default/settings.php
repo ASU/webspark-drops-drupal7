@@ -210,7 +210,20 @@
  *   );
  * @endcode
  */
-$databases = array();
+
+$databases = array (
+  'default' => array (
+    'default' => array (
+      'database' => 'ace',
+      'username' => 'ace_app',
+      'password' => '$D6BGwav',
+      'host' => 'mysqldbdev.asu.edu',
+      'port' => '', 
+      'driver' => 'mysql',
+      'prefix' => '', 
+     ),  
+   ),  
+ );
 
 /**
  * Access control for update.php script.

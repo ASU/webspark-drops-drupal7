@@ -1,0 +1,1042 @@
+<?php
+
+/**
+ * @file
+ * Allow users to create time limited memberships.
+ */
+
+/**
+ * Regex to validate a term length option.
+ */
+define('MEMBERSHIP_ENTITY_TERM_LENGTH_REGEX', '/^((\d+ (sec|second|min|minute|hour|day|week|month|year)s?)\s?)$/i');
+
+/**
+ * Regex to validate a term length modifier.
+ */
+define('MEMBERSHIP_ENTITY_TERM_MODIFIER_REGEX', '/^[\+-]((\d+ (sec|second|min|minute|hour|day|week|month|year)s?)\s?)$/i');
+
+/**
+ * Implements hook_help().
+ */
+function membership_entity_term_help($path, $arg) {
+  // @TODO add help documentation.
+}
+
+/**
+ * Implements hook_entity_info().
+ */
+function membership_entity_term_entity_info() {
+  $info['membership_entity_term'] = array(
+    'label' => t('Membership term'),
+    'plural label' => t('Membership terms'),
+    'description' => t('Terms attached to a membership.'),
+    'entity class' => 'MembershipEntityTerm',
+    'controller class' => 'MembershipEntityTermController',
+    'base table' => 'membership_entity_term',
+    'label callback' => 'membership_entity_term_label',
+    'access callback' => 'membership_entity_term_access',
+    'uri callback' => 'entity_class_uri',
+    'fieldable' => TRUE,
+    'bundles' => array(),
+    'module' => 'membership_entity_term',
+    'entity keys' => array(
+      'id' => 'id',
+      'bundle' => 'membership_entity_type',
+    ),
+    'view modes' => array(),
+    'metadata controller class' => 'MembershipEntityTermMetadataController',
+    'views controller class' => 'MembershipEntityTermViewsController',
+  );
+
+  if (module_exists('membership_entity_type')) {
+    foreach (membership_entity_get_bundles() as $bundle => $type) {
+      $info['membership_entity_term']['bundles'][$type->type] = array(
+        'label' => t('@label terms', array('@label' => $type->label)),
+        'membership type' => $type->type,
+        'admin' => array(
+          'path' => 'admin/memberships/types/manage/%membership_entity_term_type/terms',
+          'bundle argument' => 4,
+          'real path' => 'admin/memberships/types/manage/' . strtr($type->type, array('_' => '-')) . '/terms',
+          'access arguments' => array('administer membership terms'),
+        ),
+      );
+    }
+  }
+  else {
+    $info['membership_entity_term']['bundles']['membership'] = array(
+      'label' => t('Membership terms'),
+      'membership type' => 'membership',
+      'admin' => array(
+        'path' => 'admin/memberships/types/manage/membership/terms',
+        'bundle argument' => 4,
+        'access arguments' => array('administer membership terms'),
+      ),
+    );
+  }
+
+  return $info;
+}
+
+/**
+ * Label callback for membership entity terms.
+ */
+function membership_entity_term_label($term, $entity_type) {
+  $membership = membership_entity_load($term->mid);
+  return t('@member_id (@term starting @start)', array(
+    '@member_id' => $membership->member_id,
+    '@term' => $term->term,
+    '@start' => format_date(strtotime($term->start), 'short'),
+  ));
+}
+
+/**
+ * Getter callback for entity property info.
+ */
+function membership_entity_term_get_properties($term, array $options, $name, $type, $info) {
+  switch ($name) {
+    case 'current':
+      $now = date_format_date(date_now($term->timezone), 'custom', DATE_FORMAT_DATETIME);
+      return ($term->start <= $now && $term->end >= $now);
+
+    default:
+      return entity_property_verbatim_get($term, $options, $name, $type, $info);
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function membership_entity_term_cron() {
+  $now = date_now('UTC');
+  $query_args = array(
+    ':now' => date_format_date($now, 'custom', DATE_FORMAT_DATETIME),
+    ':status' => MEMBERSHIP_ENTITY_ACTIVE,
+  );
+
+  // Find all expired membership terms.
+  $result = db_query("SELECT id FROM {membership_entity_term} WHERE end < :now AND status = :status AND term <> 'lifetime'", $query_args)
+    ->fetchAllAssoc('id');
+
+  // Queue them up for expiration.
+  $queue = DrupalQueue::get('membership_entity_term_expire');
+  foreach (array_keys($result) as $id) {
+    $queue->createItem($id);
+  }
+
+  // Find all active membership terms.
+  $result = db_query("SELECT t.mid FROM {membership_entity_term} t INNER JOIN {membership_entity} m ON m.mid = t.mid WHERE t.start <= :now AND (t.end IS NULL OR t.end >= :now) AND t.status = :status AND m.status <> :status", $query_args)
+    ->fetchAllAssoc('mid');
+
+  // Queue them up for activation.
+  $queue = DrupalQueue::get('membership_entity_term_activate');
+  foreach (array_keys($result) as $mid) {
+    $queue->createItem($mid);
+  }
+}
+
+/**
+ * Implements hook_cron_queue_info().
+ */
+function membership_entity_term_cron_queue_info() {
+  $queues['membership_entity_term_expire'] = array(
+    'worker callback' => 'membership_entity_term_expire_worker',
+    'time' => 120,
+  );
+  $queues['membership_entity_term_activate'] = array(
+    'worker callback' => 'membership_entity_term_activate_worker',
+    'time' => 120,
+  );
+  return $queues;
+}
+
+/**
+ * Worker callback to process membership expirations.
+ */
+function membership_entity_term_expire_worker($data) {
+  if ($term = membership_entity_term_load($data)) {
+    $membership = membership_entity_load($term->mid);
+    $term->status = MEMBERSHIP_ENTITY_EXPIRED;
+    membership_entity_term_save($term);
+    watchdog('membership_entity_term', 'Membership <a href="@url">%member_id</a> has expired.', array(
+      '@url' => url('membership/' . $membership->mid),
+      '%member_id' => $membership->member_id,
+    ), WATCHDOG_INFO);
+  }
+}
+
+/**
+ * Worker callback to process membership activations.
+ */
+function membership_entity_term_activate_worker($data) {
+  if ($membership = membership_entity_load($data)) {
+    $membership->status = MEMBERSHIP_ENTITY_ACTIVE;
+    membership_entity_save($membership);
+    watchdog('membership_entity_term', 'Membership <a href="@url">%member_id</a> has become active.', array(
+      '@url' => url('membership/' . $membership->mid),
+      '%member_id' => $membership->member_id,
+    ), WATCHDOG_INFO);
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function membership_entity_term_permission() {
+  $permissions = array(
+    'administer membership terms' => array(
+      'title' => t('Administer membership terms'),
+      'restrict access' => TRUE,
+    ),
+  );
+
+  if (!module_exists('membership_entity_type')) {
+    $permissions['membership renew any membership'] = array(
+      'title' => t('Renew any membership.'),
+    );
+    $permissions['membership renew own membership'] = array(
+      'title' => t('Renew own membership.'),
+    );
+  }
+
+  return $permissions;
+}
+
+/**
+ * Access callback for a membership term.
+ *
+ * @param $op
+ *   The operation being performed. (eg. edit, delete, renew)
+ * @param $entity
+ *   The entity object to check access. Depends on $op.
+ *     - if $op is 'renew', $entity is the membership object
+ *     - otherwise $entity is the term object
+ * @param (optional) $account
+ *   The user accout to check access for. Defaults to the logged in user.
+ * @return boolean
+ *   True if the user access to perform $op.
+ */
+function membership_entity_term_access($op, $entity, $account = NULL) {
+  switch ($op) {
+    case 'edit':
+    case 'delete':
+      return user_access('administer membership terms');
+
+    case 'renew':
+      // No renewal if the latest term is lifetime.
+      $latest_term = end($entity->terms);
+      if (!empty($latest_term) && $latest_term->term == 'lifetime') {
+        return FALSE;
+      }
+
+      if (user_access('administer membership terms')) {
+        return TRUE;
+      }
+      return membership_entity_access('renew', $entity);
+
+    default:
+      // Inherit other permissions from the membership.
+      $membership = membership_entity_load($entity->mid);
+      return membership_entity_access($op, $membership, $account);
+  }
+}
+
+/**
+ * Implements hook_admin_paths().
+ */
+function membership_entity_term_admin_paths() {
+  return array(
+    'membership/*/term/*/delete' => TRUE,
+    'membership/*/term/*/edit' => TRUE,
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function membership_entity_term_menu() {
+  $items['user/renew'] = array(
+    'title' => 'Renew',
+    'page callback' => 'membership_entity_term_renew_page',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => -9998,
+    'menu_name' => 'user-menu',
+    'file' => 'membership_entity_term.pages.inc',
+  );
+
+  $items['membership/%membership_entity/term/%membership_entity_term'] = array(
+    'title' => 'Edit Term',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('membership_entity_term_edit', 1, 3),
+    'access callback' => 'membership_entity_term_access',
+    'access arguments' => array('edit', 3),
+  );
+
+  $items['membership/%membership_entity/term/%membership_entity_term/edit'] = array(
+    'title' => 'Edit',
+    'weight' => 0,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    'file' => 'membership_entity_term.pages.inc',
+  );
+
+  $items['membership/%membership_entity/term/%membership_entity_term/delete'] = array(
+    'title' => 'Delete',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('membership_entity_term_delete_confirm', 1, 3),
+    'access callback' => 'membership_entity_term_access',
+    'access arguments' => array('delete', 3),
+    'weight' => 1,
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    'file' => 'membership_entity_term.pages.inc',
+  );
+
+  $items['membership/%membership_entity/renew'] = array(
+    'title' => 'Renew',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('membership_entity_term_renew', 1),
+    'access callback' => 'membership_entity_term_access',
+    'access arguments' => array('renew', 1),
+    'weight' => 1,
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    'file' => 'membership_entity_term.pages.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function membership_entity_term_menu_alter(&$items) {
+  // Adjust the Field UI tabs on admin/memberships/types/manage/[membership-type].
+  if (module_exists('membership_entity_type')) {
+    $items['admin/memberships/types/manage/%membership_entity_term_type/terms/fields']['title'] = 'Term fields';
+    $items['admin/memberships/types/manage/%membership_entity_term_type/terms/fields']['weight'] = 3;
+    $items['admin/memberships/types/manage/%membership_entity_term_type/terms/display']['title'] = 'Term display';
+    $items['admin/memberships/types/manage/%membership_entity_term_type/terms/display']['weight'] = 4;
+  }
+  else {
+    $items['admin/memberships/types/manage/membership/terms/fields']['title'] = 'Term fields';
+    $items['admin/memberships/types/manage/membership/terms/fields']['weight'] = 3;
+    $items['admin/memberships/types/manage/membership/terms/display']['title'] = 'Term display';
+    $items['admin/memberships/types/manage/membership/terms/display']['weight'] = 4;
+  }
+}
+
+/**
+ * Implements hook_menu_link_alter().
+ */
+function membership_entity_term_menu_link_alter(&$link) {
+  // Force the Renew link to appear on the top level of the 'user-menu' menu.
+  if ($link['link_path'] == 'user/renew' && $link['module'] == 'system' && empty($link['customized'])) {
+    $link['plid'] = 0;
+  }
+}
+
+/**
+ * Implements hook_membership_entity_bundle_settings_defaults().
+ */
+function membership_entity_term_membership_entity_bundle_settings_defaults() {
+  return array(
+    'grace_period' => 'none',
+    'tz_handling' => 'site',
+    'timezone_db' => 'UTC',
+    'available_term_lengths' => array(),
+  );
+}
+
+/**
+ * Implements hook_membership_entity_term_start_date_alter().
+ */
+function membership_entity_term_membership_entity_term_start_date_alter(&$start, $term) {
+  // Determine the renewal start date.
+  if (!empty($term->is_renewal)) {
+    $membership = membership_entity_load($term->mid);
+    $bundle_settings = membership_entity_get_bundle_settings($membership->type);
+    $latest_term = end($membership->terms);
+
+    if (!empty($latest_term)) {
+      $grace = new DateObject($latest_term->end, 'UTC');
+
+      // Check for grace period.
+      if (preg_match(MEMBERSHIP_ENTITY_TERM_LENGTH_REGEX, $bundle_settings['grace_period'])) {
+        $grace = _membership_entity_term_modify_date($grace, $bundle_settings['grace_period']);
+      }
+
+      // If the renewal is within the grace period there is no lapse in
+      // membership terms. The new term starts when the old term ended.
+      if ($grace > $start) {
+        $start = new DateObject($latest_term->end, 'UTC');
+      }
+    }
+  }
+}
+
+/**
+ * Menu load callback for Field UI paths.
+ */
+function membership_entity_term_type_load($name) {
+  if ($type = membership_entity_get_bundles(strtr($name, array('-' => '_')))) {
+    return $type->type;
+  }
+}
+
+/**
+ * Implements hook_membership_entity_type_insert().
+ */
+function membership_entity_term_membership_entity_type_insert($info) {
+  field_attach_create_bundle('membership_entity_term', 'membership_entity_term_' . $info->type);
+}
+
+/**
+ * Implements hook_membership_entity_type_update().
+ */
+function membership_entity_term_membership_entity_type_update($info) {
+  if (!empty($info->old_type) && $info->type != $info->old_type) {
+    field_attach_rename_bundle('membership_entity_term', 'membership_entity_term_' . $info->old_type, 'membership_entity_term_' . $info->type);
+  }
+}
+
+/**
+ * Implements hook_membership_entity_type_delete().
+ */
+function membership_entity_term_membership_entity_type_delete($info) {
+  field_attach_delete_bundle('membership_entity_term', 'membership_entity_term_' . $info->type);
+}
+
+/**
+ * Implements hook_membership_entity_term_insert().
+ */
+function membership_entity_term_membership_entity_term_insert($term) {
+  _membership_entity_term_insert_update($term);
+}
+
+/**
+ * Implements hook_membership_entity_term_update().
+ */
+function membership_entity_term_membership_entity_term_update($term) {
+  _membership_entity_term_insert_update($term);
+}
+
+/**
+ * Implements hook_membership_entity_term_delete().
+ */
+function membership_entity_term_membership_entity_term_delete($term) {
+  _membership_entity_term_insert_update($term);
+}
+
+/**
+ * Helper for membership term insert/update hooks.
+ */
+function _membership_entity_term_insert_update($term) {
+  $membership = membership_entity_load($term->mid);
+
+  // Membership status should always match the current or latest term.
+  if ($current = membership_entity_term_get_current($membership)) {
+    $membership->status = $current->status;
+    $membership->save();
+  }
+  else {
+    $latest = end($membership->terms);
+    $membership->status = $latest->status;
+    $membership->save();
+  }
+}
+
+/**
+ * Implements hook_membership_entity_create().
+ */
+function membership_entity_term_membership_entity_create($membership) {
+  // Add an empty list of terms.
+  $membership->terms = array();
+}
+
+/**
+ * Implements hook_membership_entity_load().
+ */
+function membership_entity_term_membership_entity_load($memberships) {
+  // Load membership terms.
+  foreach ($memberships as &$membership) {
+    $membership->terms = membership_entity_term_load_by_membership($membership);
+  }
+}
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function membership_entity_term_field_info_alter(&$info) {
+  // Add the 'membership_entity_term_renew_form' instance setting to all field types.
+  foreach ($info as $field_type => $field_type_info) {
+    $info[$field_type]['instance_settings']['membership_entity_term_renew_form'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function membership_entity_term_field_extra_fields() {
+  $fields = array();
+  foreach (membership_entity_get_bundles() as $type) {
+    $fields['membership_entity'][$type->type] = array(
+      'form' => array(
+        'membership_term' => array(
+          'label' => t('Membership term fields'),
+          'description' => t('Term fields on join and renew forms.'),
+          'weight' => 99,
+        ),
+      ),
+      'display' => array(
+        'membership_terms' => array(
+          'label' => t('Membership term list'),
+          'description' => t('A list of terms for the membership.'),
+          'weight' => -99,
+        ),
+      ),
+    );
+
+    // Term fields.
+    $fields['membership_entity_term'][$type->type] = array(
+      'form' => array(
+        'start' => array(
+          'label' => t('Start date'),
+          'description' => t('The term start date.'),
+          'weight' => 0,
+        ),
+        'term' => array(
+          'label' => t('Term Length'),
+          'description' => t('The term length options.'),
+          'weight' => 1,
+        ),
+        'status' => array(
+          'label' => t('Status'),
+          'description' => t('The term status.'),
+          'weight' => 2,
+        ),
+        'modifiers' => array(
+          'label' => t('Modifiers'),
+          'description' => t('Term modifiers (eg. +1 month)'),
+          'weight' => 3,
+        ),
+      ),
+    );
+  }
+  return $fields;
+}
+
+/**
+ * Implements hook_membership_entity_view().
+ */
+function membership_entity_term_membership_entity_view($membership, $view_mode, $langcode) {
+  $membership->content['membership_terms']['#markup'] = views_embed_view('membership_entity_terms', 'term_list', $membership->mid);
+
+  if ($view_mode == 'account' && membership_entity_access('renew', $membership)) {
+    // Add a renew link.
+    $membership->content['links']['membership_entity']['#links']['renew'] = array(
+      'title' => t('Renew membership'),
+      'href' => 'membership/' . $membership->mid . '/renew',
+      'attributes' => array(
+        'title' => t('Renew membership @member_id.', array('@member_id' => $membership->member_id)),
+      ),
+      'html' => FALSE,
+    );
+  }
+}
+
+/**
+ * Implements hook_membership_entity_delete().
+ */
+function membership_entity_term_membership_entity_delete($membership) {
+  // Remove membership terms.
+  db_delete('membership_entity_term')
+    ->condition('mid', $membership->mid)
+    ->execute();
+  watchdog('membership_entity_term', 'Deleted terms for membership %member_id', array('%member_id' => $membership->member_id));
+}
+
+/**
+ * Implements hook_theme().
+ */
+function membership_entity_term_theme() {
+  return array(
+    'membership_entity_term_available_term_lengths_element' => array(
+      'render element' => 'element',
+    ),
+    'membership_entity_term_modifiers_element' => array(
+      'render element' => 'element',
+    ),
+    'membership_entity_term_modifiers' => array(
+      'variables' => array(
+        'modifiers' => array(),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function membership_entity_term_form_alter(&$form, &$form_state, $form_id) {
+  switch ($form_id) {
+    case 'membership_entity_edit_form':
+    case 'membership_entity_join_form':
+      if (isset($form['#membership_entity'])) {
+        form_load_include($form_state, 'inc', 'membership_entity_term', 'membership_entity_term.pages');
+        membership_entity_term_create_form($form, $form_state);
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_membership_entity_settings_alter().
+ */
+function membership_entity_term_membership_entity_settings_alter(&$form, &$form_state, $data) {
+  form_load_include($form_state, 'inc', 'membership_entity_term', 'membership_entity_term.pages');
+  _membership_entity_term_settings_form($form, $form_state, $data);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for field_uid_field_edit_form().
+ *
+ * Add a checkbox for the 'membership_entity_term_renew_form' setting.
+ */
+function membership_entity_term_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
+  $instance = $form['#instance'];
+  if (in_array($instance['entity_type'], array('membership_entity', 'membership_entity_term')) && !$form['#field']['locked']) {
+    $form['instance']['settings']['membership_entity_term_renew_form'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Display on renew form.'),
+      '#default_value' => !empty($instance['settings']['membership_entity_term_renew_form']),
+      '#weight' => $form['instance']['settings']['membership_entity_join_form']['#weight'] + .1,
+    );
+
+    if ($instance['entity_type'] == 'membership_entity_term') {
+      $form['instance']['settings']['membership_entity_term_renew_form'] += array(
+        '#description' => t("This is compulsory for 'required' fields."),
+        '#default_value' => $instance['settings']['membership_entity_join_form'] || $instance['required'],
+        '#states' => array(
+          'enabled' => array('input[name="instance[required]"]' => array('checked' => FALSE)),
+        ),
+        '#attached' => array(
+          'js' => array(drupal_get_path('module', 'membership_entity_term') . '/js/membership-entity-term.js'),
+        ),
+      );
+
+      array_unshift($form['#submit'], 'membership_entity_term_form_field_ui_field_edit_form_submit');
+    }
+  }
+}
+
+/**
+ * Additional submit handler for the 'Edit field instance' form.
+ *
+ * Make sure the 'membership_entity_renew_form' setting is set for
+ * required fields.
+ */
+function membership_entity_term_form_field_ui_field_edit_form_submit($form, &$form_state) {
+  $instance = $form_state['values']['instance'];
+  if (!empty($instance['required'])) {
+    form_set_value($form['instance']['settings']['membership_entity_renew_form'], 1, $form_state);
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function membership_entity_term_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'membership_entity_term') . '/views',
+  );
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function membership_entity_term_preprocess_views_view(&$vars) {
+  $view = $vars['view'];
+  if ($view->name == 'membership_entity_terms') {
+    drupal_add_css(drupal_get_path('module', 'membership_entity_term') .'/css/membership_entity_term.css');
+  }
+}
+
+/**
+ * Convert a stdClass object to an instance of MembershipEntityTerm.
+ *
+ * Shallow copies all properties of $object to a new
+ * MembershipEntityTerm instance.
+ *
+ * @param stdClass $object
+ *   The object to convert.
+ *
+ * @return MembershipEntityTerm A new instance of MembershipEntityTerm with all
+ *   properties copied from $object.
+ */
+function membership_entity_term_create_from_stdclass(stdClass $object) {
+  $term = membership_entity_term_create();
+  foreach (get_object_vars($object) as $key => $value) {
+    $term->{$key} = $value;
+  }
+  return $term;
+}
+
+/**
+ * Create a new membership entity term with default values.
+ *
+ * @param array $values
+ *   An assciative array of values to override the defaults.
+ *
+ * @return MembershipEntityTerm The (unsaved) membership term object.
+ */
+function membership_entity_term_create($values = array()) {
+  return entity_create('membership_entity_term', $values);
+}
+
+/**
+ * Load a single membership term object.
+ */
+function membership_entity_term_load($id = NULL, $reset = FALSE) {
+  $terms = membership_entity_term_load_multiple(array($id), array(), $reset);
+  return is_array($terms) ? reset($terms) : FALSE;
+}
+
+/**
+ * Load all terms for a given membership.
+ */
+function membership_entity_term_load_by_membership($membership, $reset = FALSE) {
+  $controller = entity_get_controller('membership_entity_term');
+  if ($reset) {
+    $controller->resetCache();
+  }
+  return $controller->loadByMembership($membership);
+}
+
+/**
+ * Returns the start date of the first membership term.
+ *
+ * @param MembershipEntity $membership
+ *   A fully loaded membership object.
+ *
+ * @return DateTimeInterface|false
+ *   The start date of the first term. Use date_format_date() to create
+ *   a formatted date string. FALSE if there are no terms for the membership.
+ */
+function membership_entity_term_get_join_date(MembershipEntity $membership) {
+  // Find and return the first term start date.
+  if (!empty($membership->terms)) {
+    $terms = $membership->terms;
+    uasort($terms, '_membership_entity_term_sort_by_start_date');
+    $first = reset($terms);
+    return new DateObject($first->start, new DateTimezone($first->timezone));
+  }
+  return FALSE;
+}
+
+/**
+ * Returns the end date of the last membership term.
+ *
+ * @param MembershipEntity $membership
+ *   A fully loaded membership object or mid.
+ *
+ * @return DateTimeInterface
+ *   The end date of the latest active term. Use date_format_date() to create
+ *   a formatted date string. FALSE if there are no active or expired terms for
+ *   the membership or the latest term is a lifetime term.
+ */
+function membership_entity_term_get_expiration_date(MembershipEntity $membership) {
+  // Find and return the lastest active term end date.
+  if (!empty($membership->terms)) {
+    $terms = array_filter($membership->terms, '_membership_entity_term_array_filter_expiration_status');
+    if (empty($terms)) {
+      return FALSE;
+    }
+
+    uasort($terms, '_membership_entity_term_sort_by_end_date');
+    $last = end($terms);
+    if ($last->term == 'lifetime') {
+      return FALSE;
+    }
+    return new DateObject($last->end, new DateTimezone($last->timezone));
+  }
+  return FALSE;
+}
+
+/**
+ * Get the current term for a membership.
+ *
+ * @param MembershipEntity|int $mid
+ *   A membership object or mid.
+ * @return MembershipEntityTerm
+ *   The loaded membership term object or FALSE if there is no current term.
+ */
+function membership_entity_term_get_current($mid) {
+  // Support mid or fully loaded membership.
+  if (is_object($mid)) {
+    $mid = $mid->mid;
+  }
+
+  if ($id = db_query('SELECT id FROM {membership_entity_term} t WHERE mid = :mid AND (start <= :now AND end >= :now) LIMIT 1', array(
+      ':mid' => $mid,
+      ':now' => date_format_date(date_now('UTC'), 'custom', DATE_FORMAT_DATETIME),
+    ))->fetchField()) {
+    return membership_entity_term_load($id);
+  }
+  return FALSE;
+}
+
+/**
+ * Loads multiple membership objects.
+ */
+function membership_entity_term_load_multiple($ids = FALSE, $conditions = array(), $reset = FALSE) {
+  return entity_load('membership_entity_term', $ids, $conditions, $reset);
+}
+
+/**
+ * Delete a membership term.
+ */
+function membership_entity_term_delete($id) {
+  membership_entity_term_delete_multiple(array($id));
+}
+
+/**
+ * Delete multiple membership terms.
+ */
+function membership_entity_term_delete_multiple($ids) {
+  entity_delete_multiple('membership_entity_term', $ids);
+}
+
+/**
+ * Save a membership term.
+ */
+function membership_entity_term_save($term) {
+  return entity_save('membership_entity_term', $term);
+}
+
+/**
+ * Filter terms that are not active or expired.
+ *
+ * Callback for array_filter() within
+ * membership_entity_term_get_expiration_date().
+ *
+ * @param MembershipEntityTerm $term
+ *   The membership term to check status.
+ *
+ * @return bool
+ *   TRUE if the term is active or expired.
+ */
+function _membership_entity_term_array_filter_expiration_status($term) {
+  return ($term->status == MEMBERSHIP_ENTITY_ACTIVE || $term->status == MEMBERSHIP_ENTITY_EXPIRED);
+}
+
+/**
+ * Sort by term start date.
+ *
+ * Callback for usort() witin membership_entity_term_get_join_date().
+ *
+ * @param MembershipEntityTerm $a
+ *   The first membership entity term to sort against.
+ *
+ * @param MembershipEntityTerm $b
+ *   The second membership entity term to sort against.
+ *
+ * @return MembershipEntityTerm[]
+ *   An array of sorted terms by start date.
+ */
+function _membership_entity_term_sort_by_start_date($a, $b) {
+  $c = isset($a->start) ? $a->start : '';
+  $d = isset($b->start) ? $b->start : '';
+
+  if ($c == $d) {
+    return 0;
+  }
+  return ($c < $d) ? -1 : 1;
+}
+
+/**
+ * Sort by term end date.
+ *
+ * Callback for usort() within membership_entity_term_get_expiration_date().
+ *
+ * @param MembershipEntityTerm $a
+ *   The first term object to sort against.
+ *
+ * @param MembershipEntityTerm $b
+ *   The second term object to sort against.
+ *
+ * @return MembershipEntityTerm[]
+ *   An array of sorted terms by end date.
+ */
+function _membership_entity_term_sort_by_end_date($a, $b) {
+  // Lifetime terms trump all.
+  if ($a->term == 'lifetime') {
+    return 1;
+  }
+
+  if ($b->term == 'lifetime') {
+    return -1;
+  }
+
+  $c = isset($a->end) ? $a->end : '';
+  $d = isset($b->end) ? $b->end : '';
+
+  if ($c == $d) {
+    return 0;
+  }
+  return ($c < $d) ? -1 : 1;
+}
+
+/**
+ * Sort terms by weight value.
+ *
+ * Callback for usort() within theme_membership_entity_term_available_term_lengths_element().
+ */
+function _membership_entity_term_sort_items_by_weight($a, $b) {
+  $a_weight = (is_array($a) && isset($a['weight']['#value']) ? $a['weight']['#value'] : 0);
+  $b_weight = (is_array($b) && isset($b['weight']['#value']) ? $b['weight']['#value'] : 0);
+  return $a_weight - $b_weight;
+}
+
+/**
+ * Helper to correctly handle relative modifiers to a date object.
+ *
+ * PHP date handling does not correctly support month opperations for months
+ * with a different number of days or leap years.
+ *
+ * @param DateTime $date
+ *   The date object to modify.
+ *
+ * @param string $modifier
+ *   The relative date modifier.
+ *
+ * @return DateTime
+ *   The modified date object.
+ */
+function _membership_entity_term_modify_date(DateTime $date, $modifier) {
+  $start_day = $date->format('j');
+  $date->modify($modifier);
+
+  // Check if we are dealing with months or leap years.
+  if (preg_match('/^[\+-]?(\d+ (month|year)s?)$/i', $modifier)) {
+    $end_day = $date->format('j');
+    if ($start_day != $end_day) {
+      $date->modify('last day of last month');
+    }
+  }
+
+  return $date;
+}
+
+/**
+ * Returns HTML for the available term lengths form element.
+ */
+function theme_membership_entity_term_available_term_lengths_element($variables) {
+  $element = $variables['element'];
+  $order_class = $element['#id'] . '-term-weight';
+
+  // Sort items according to weight.
+  $items = array();
+  foreach (element_children($element) as $key) {
+    $items[] = &$element[$key];
+  }
+
+  if (!empty($items)) {
+    usort($items, '_membership_entity_term_sort_items_by_weight');
+  }
+
+  $table_id = 'available-term-lengths';
+  $header = array(
+    t('Available Term Lengths'),
+    t('Example (relative to now)'),
+    '',
+  );
+  $rows = array();
+
+  if (!empty($items)) {
+    $header[] = t('Order');
+
+    // Add the items as table rows.
+    foreach ($items as $key => $item) {
+      $item['weight']['#attributes']['class'][] = $order_class;
+      $rows[] = array(
+        'data' => array(
+          // We use #type => value instead of markup so that term_length will
+          // be included in $form_state['values'].
+          array('data' => $item['term_length']['#value']),
+          array('data' => drupal_render($item['example'])),
+          array('data' => drupal_render($item['remove'])),
+          array('data' => drupal_render($item['weight']), 'class' => array('term-weight')),
+        ),
+        'class' => array('draggable'),
+      );
+    }
+    drupal_add_tabledrag($table_id, 'order', 'sibling', $order_class);
+  }
+  else {
+    $rows[]['data'] = array(
+      array(
+        'data' => t('Select a term length and click "Add term length" to add it to the list of available term lengths.'),
+        'colspan' => 3,
+      ),
+    );
+  }
+
+  return theme('table', array(
+    'header' => $header,
+    'rows' => $rows,
+    'attributes' => array('id' => $table_id),
+    'caption' => $element['#description'],
+  ));
+}
+
+/**
+ * Returns HTML for the term modifiers form element.
+ */
+function theme_membership_entity_term_modifiers_element($variables) {
+  $element = $variables['element'];
+  $header = array(
+    array('data' => t('Modifier'), 'colspan' => 2),
+  );
+  $rows = array();
+  $items = element_children($element);
+  if (!empty($items)) {
+    foreach ($items as $key) {
+      $rows[] = array(
+        'data' => array(
+          // We use #type => value instead of markup so that the modifier will
+          // be included in $form_state['values'].
+          array('data' => $element[$key]['value']['#value']),
+          array('data' => drupal_render($element[$key]['remove'])),
+        ),
+      );
+    }
+  }
+  else {
+    $rows[]['data'] = array(
+      array(
+        'data' => t('Select a modifier and click "Add modifier" to add it to the list.'),
+        'colspan' => 2,
+      ),
+    );
+  }
+
+  return theme('table', array(
+    'header' => $header,
+    'rows' => $rows,
+    'attributes' => array('id' => 'term-modifers'),
+  ));
+}
+
+/**
+ * Returns HTML for a list of term modifiers.
+ */
+function theme_membership_entity_term_modifiers($variables) {
+  drupal_add_css(drupal_get_path('module', 'membership_entity_term') . '/membership_entity_term.css');
+  $modifiers = $variables['modifiers'];
+  $output = '<div class="membership-entity-term-modifiers">';
+  $output .= implode('<br />', array_map('check_plain', $modifiers));
+  $output .= '</div>';
+  return $output;
+}

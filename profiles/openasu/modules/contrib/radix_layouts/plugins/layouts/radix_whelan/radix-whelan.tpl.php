@@ -14,7 +14,7 @@
 ?>
 
 <div class="panel-display whelan clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
-  <div class="section">
+  <section class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-3 whelan-column-content-region-1 radix-layouts-column1 panel-panel">
@@ -34,5 +34,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </div><!-- /.whelan -->

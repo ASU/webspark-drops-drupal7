@@ -1,0 +1,119 @@
+@CHARSET "ISO-8859-1";
+div.block-coursereg {
+	padding-bottom: 2em;
+}
+div.product-details-hidden {
+	display: none;
+}
+div.no-products {
+	width: 100%;
+	font-size: 150%;
+	background-color: #eeeeee;
+	padding: 1em 0;
+	text-align: center;
+	font-style: italic;
+	clear: left;
+}
+table.products {
+	table-layout: fixed;
+	border-collapse: collapse;
+	width: 100%;
+	clear: left;
+}
+table.products tbody tr.odd {
+	background-color: #EEEEEE;
+}
+table.products tbody tr.even {
+	background-color: #FFFFFF;
+}
+table.products tbody tr.highlighted {	
+	background-color: #CADEFF;
+}
+table.products tr.expandable > td:first-child {
+	background-image: url("../images/plus.png");
+	background-position: center left;
+	background-repeat: no-repeat;
+}
+table.products tr.expanded > td:first-child {
+	background-image: url("../images/minus.png");
+}
+table.products tr.expandable {
+	cursor: pointer;
+}
+table.products tr.expanded {
+	border-bottom: none;	
+}
+table.products tbody td {
+	padding: .5em 0 .5em 0;
+}
+table.products td.date {
+	padding: .5em .5em .5em 1.5em;
+}
+table.products td.date span.date,
+table.products td.date span.time {
+	display: block;
+	float: left;
+	clear: left;
+}
+table.products td.date span.time {
+	margin-left: .5em;
+}
+table.products th.date {
+	padding-left: 1.5em;	
+}
+table.products tr.details {
+	cursor: pointer;	
+}
+table.products tr.details td {
+	padding: 0;
+}
+table.products td.member-price, 
+table.products td.non-member-price {
+	text-align: center;
+}
+table.products td.title a {
+	color: black;
+}
+table.products div.agenda-button {
+	float: right;
+	width: 90px;
+	text-align: left;
+	padding: 0;
+	margin: 0;
+}
+table.products div.location, 
+table.products div.location-title,
+table.products div.dates,
+table.products div.dates-title,
+table.products div.description,
+table.products div.description-title,
+table.products div.files,
+table.products div.files-title {
+	float: left;
+	padding: 0.5em;
+	width: 400px;
+}
+table.products div.location-title,
+table.products div.dates-title,
+table.products div.description-title,
+table.products div.files-title {
+	font-style: italic;
+	width: 96px;
+	clear: left;
+	text-align: right;
+}
+table.products div.more {
+	float: left;
+	clear: left;
+	margin-left: 115px;
+	padding-bottom: 10px;
+}
+table.products div.description p {
+	margin: 0 0 0.5em 0;
+	padding: 0;
+}
+table.products div.files ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}

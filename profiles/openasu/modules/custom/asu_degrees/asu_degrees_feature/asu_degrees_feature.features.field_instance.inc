@@ -10,7 +10,7 @@
 function asu_degrees_feature_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-asu_degree-body'.
+  // Exported field_instance: 'node-asu_degree-body'
   $field_instances['node-asu_degree-body'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -65,7 +65,7 @@ function asu_degrees_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_academic_plan'.
+  // Exported field_instance: 'node-asu_degree-field_asu_academic_plan'
   $field_instances['node-asu_degree-field_asu_academic_plan'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -117,7 +117,7 @@ function asu_degrees_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_academic_program'.
+  // Exported field_instance: 'node-asu_degree-field_asu_academic_program'
   $field_instances['node-asu_degree-field_asu_academic_program'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -169,7 +169,7 @@ function asu_degrees_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_banner_image'.
+  // Exported field_instance: 'node-asu_degree-field_asu_banner_image'
   $field_instances['node-asu_degree-field_asu_banner_image'] = array(
     'bundle' => 'asu_degree',
     'deleted' => 0,
@@ -204,7 +204,7 @@ function asu_degrees_feature_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
-      'default_image' => 4,
+      'default_image' => 3,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '',
@@ -254,7 +254,7 @@ function asu_degrees_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_college'.
+  // Exported field_instance: 'node-asu_degree-field_asu_college'
   $field_instances['node-asu_degree-field_asu_college'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -306,7 +306,7 @@ function asu_degrees_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_college_url'.
+  // Exported field_instance: 'node-asu_degree-field_asu_college_url'
   $field_instances['node-asu_degree-field_asu_college_url'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -338,7 +338,6 @@ function asu_degrees_feature_field_default_field_instances() {
     'label' => 'College URL',
     'required' => 0,
     'settings' => array(
-      'absolute_url' => 1,
       'attributes' => array(
         'class' => '',
         'configurable_title' => 0,
@@ -356,7 +355,6 @@ function asu_degrees_feature_field_default_field_instances() {
       ),
       'rel_remove' => 'default',
       'title' => 'optional',
-      'title_label_use_field_label' => FALSE,
       'title_maxlength' => 128,
       'title_value' => '',
       'url' => 0,
@@ -374,7 +372,7 @@ function asu_degrees_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree'
   $field_instances['node-asu_degree-field_asu_degree'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -426,7 +424,7 @@ function asu_degrees_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_acc_program'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_acc_program'
   $field_instances['node-asu_degree-field_asu_degree_acc_program'] = array(
     'bundle' => 'asu_degree',
     'default_value' => array(
@@ -477,7 +475,7 @@ function asu_degrees_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_addl_req'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_addl_req'
   $field_instances['node-asu_degree-field_asu_degree_addl_req'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -533,7 +531,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_admission_req'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_admission_req'
   $field_instances['node-asu_degree-field_asu_degree_admission_req'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -587,7 +585,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_asuds_url'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_asuds_url'
   $field_instances['node-asu_degree-field_asu_degree_asuds_url'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -619,7 +617,6 @@ Additional requirements for the degree can be entered in to display at the top o
     'label' => 'URL for degree at ASU Degree Search',
     'required' => 0,
     'settings' => array(
-      'absolute_url' => 1,
       'attributes' => array(
         'class' => '',
         'configurable_title' => 0,
@@ -637,7 +634,6 @@ Additional requirements for the degree can be entered in to display at the top o
       ),
       'rel_remove' => 'default',
       'title' => 'optional',
-      'title_label_use_field_label' => FALSE,
       'title_maxlength' => 128,
       'title_value' => '',
       'url' => 0,
@@ -655,7 +651,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_awarded'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_awarded'
   $field_instances['node-asu_degree-field_asu_degree_awarded'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -707,7 +703,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_campus'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_campus'
   $field_instances['node-asu_degree-field_asu_degree_campus'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -760,7 +756,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_career_opps'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_career_opps'
   $field_instances['node-asu_degree-field_asu_degree_career_opps'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -814,7 +810,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_career_outlook'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_career_outlook'
   $field_instances['node-asu_degree-field_asu_degree_career_outlook'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -869,7 +865,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_cert'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_cert'
   $field_instances['node-asu_degree-field_asu_degree_cert'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -921,7 +917,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_conc_program'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_conc_program'
   $field_instances['node-asu_degree-field_asu_degree_conc_program'] = array(
     'bundle' => 'asu_degree',
     'default_value' => array(
@@ -972,7 +968,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_cta_apply'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_cta_apply'
   $field_instances['node-asu_degree-field_asu_degree_cta_apply'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1004,7 +1000,6 @@ Additional requirements for the degree can be entered in to display at the top o
     'label' => 'CTA Button - How and when to apply',
     'required' => 0,
     'settings' => array(
-      'absolute_url' => 1,
       'attributes' => array(
         'class' => '',
         'configurable_title' => 0,
@@ -1023,7 +1018,6 @@ Additional requirements for the degree can be entered in to display at the top o
       ),
       'rel_remove' => 'default',
       'title' => 'none',
-      'title_label_use_field_label' => FALSE,
       'title_maxlength' => 128,
       'title_value' => '',
       'url' => 0,
@@ -1041,8 +1035,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance:
-  // 'node-asu_degree-field_asu_degree_cta_information'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_cta_information'
   $field_instances['node-asu_degree-field_asu_degree_cta_information'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1074,7 +1067,6 @@ Additional requirements for the degree can be entered in to display at the top o
     'label' => 'CTA Button - Request information',
     'required' => 0,
     'settings' => array(
-      'absolute_url' => 1,
       'attributes' => array(
         'class' => '',
         'configurable_title' => 0,
@@ -1093,7 +1085,6 @@ Additional requirements for the degree can be entered in to display at the top o
       ),
       'rel_remove' => 'default',
       'title' => 'none',
-      'title_label_use_field_label' => FALSE,
       'title_maxlength' => 128,
       'title_value' => '',
       'url' => 0,
@@ -1111,7 +1102,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_cta_visit'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_cta_visit'
   $field_instances['node-asu_degree-field_asu_degree_cta_visit'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1143,7 +1134,6 @@ Additional requirements for the degree can be entered in to display at the top o
     'label' => 'CTA Button - Schedule a visit',
     'required' => 0,
     'settings' => array(
-      'absolute_url' => 1,
       'attributes' => array(
         'class' => '',
         'configurable_title' => 0,
@@ -1162,7 +1152,6 @@ Additional requirements for the degree can be entered in to display at the top o
       ),
       'rel_remove' => 'default',
       'title' => 'none',
-      'title_label_use_field_label' => FALSE,
       'title_maxlength' => 128,
       'title_value' => '',
       'url' => 0,
@@ -1180,7 +1169,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_department'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_department'
   $field_instances['node-asu_degree-field_asu_degree_department'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1232,8 +1221,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance:
-  // 'node-asu_degree-field_asu_degree_department_code'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_department_code'
   $field_instances['node-asu_degree-field_asu_degree_department_code'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1285,7 +1273,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_ex_car_tf'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_ex_car_tf'
   $field_instances['node-asu_degree-field_asu_degree_ex_car_tf'] = array(
     'bundle' => 'asu_degree',
     'default_value' => array(
@@ -1335,8 +1323,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance:
-  // 'node-asu_degree-field_asu_degree_example_careers'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_example_careers'
   $field_instances['node-asu_degree-field_asu_degree_example_careers'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1390,7 +1377,7 @@ Additional requirements for the degree can be entered in to display at the top o
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_grad_app'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_grad_app'
   $field_instances['node-asu_degree-field_asu_degree_grad_app'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1446,8 +1433,7 @@ Displays \'Application Deadline\' information on graduate degree nodes. This wil
     ),
   );
 
-  // Exported field_instance:
-  // 'node-asu_degree-field_asu_degree_grad_desc_video'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_grad_desc_video'
   $field_instances['node-asu_degree-field_asu_degree_grad_desc_video'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1503,7 +1489,7 @@ Displays given video (use WYSIWYG \'Add media\' button to embed) next to top deg
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_grad_financing'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_grad_financing'
   $field_instances['node-asu_degree-field_asu_degree_grad_financing'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1559,7 +1545,7 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_grad_text_area'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_grad_text_area'
   $field_instances['node-asu_degree-field_asu_degree_grad_text_area'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1614,7 +1600,7 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_major_map_url'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_major_map_url'
   $field_instances['node-asu_degree-field_asu_degree_major_map_url'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1646,7 +1632,6 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     'label' => 'Major Map URL',
     'required' => 0,
     'settings' => array(
-      'absolute_url' => 1,
       'attributes' => array(
         'class' => '',
         'configurable_title' => 0,
@@ -1664,7 +1649,6 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
       ),
       'rel_remove' => 'default',
       'title' => 'optional',
-      'title_label_use_field_label' => FALSE,
       'title_maxlength' => 128,
       'title_value' => '',
       'url' => 0,
@@ -1682,7 +1666,7 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_major_map_year'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_major_map_year'
   $field_instances['node-asu_degree-field_asu_degree_major_map_year'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1734,7 +1718,7 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_min_math'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_min_math'
   $field_instances['node-asu_degree-field_asu_degree_min_math'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1786,7 +1770,7 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_new_program'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_new_program'
   $field_instances['node-asu_degree-field_asu_degree_new_program'] = array(
     'bundle' => 'asu_degree',
     'default_value' => array(
@@ -1837,7 +1821,7 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_program'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_program'
   $field_instances['node-asu_degree-field_asu_degree_program'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1889,7 +1873,7 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_program_fee'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_program_fee'
   $field_instances['node-asu_degree-field_asu_degree_program_fee'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1941,8 +1925,7 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     ),
   );
 
-  // Exported field_instance:
-  // 'node-asu_degree-field_asu_degree_relatedprograms'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_relatedprograms'
   $field_instances['node-asu_degree-field_asu_degree_relatedprograms'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -1989,7 +1972,7 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_req_desc'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_req_desc'
   $field_instances['node-asu_degree-field_asu_degree_req_desc'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -2043,8 +2026,7 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     ),
   );
 
-  // Exported field_instance:
-  // 'node-asu_degree-field_asu_degree_second_language'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_second_language'
   $field_instances['node-asu_degree-field_asu_degree_second_language'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -2096,7 +2078,7 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_short_desc'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_short_desc'
   $field_instances['node-asu_degree-field_asu_degree_short_desc'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -2151,7 +2133,7 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_subplan_title'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_subplan_title'
   $field_instances['node-asu_degree-field_asu_degree_subplan_title'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -2204,7 +2186,7 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_subplan_url'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_subplan_url'
   $field_instances['node-asu_degree-field_asu_degree_subplan_url'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -2236,7 +2218,6 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     'label' => 'Subplan: URL',
     'required' => 0,
     'settings' => array(
-      'absolute_url' => 1,
       'attributes' => array(
         'class' => '',
         'configurable_title' => 0,
@@ -2255,7 +2236,6 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
       ),
       'rel_remove' => 'default',
       'title' => 'optional',
-      'title_label_use_field_label' => FALSE,
       'title_maxlength' => 128,
       'title_value' => '',
       'url' => 0,
@@ -2273,7 +2253,7 @@ Displays \'Financing Your Education\' information on graduate degree nodes. This
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_degree_wue_available'.
+  // Exported field_instance: 'node-asu_degree-field_asu_degree_wue_available'
   $field_instances['node-asu_degree-field_asu_degree_wue_available'] = array(
     'bundle' => 'asu_degree',
     'default_value' => array(
@@ -2325,7 +2305,7 @@ Denotes whether or not this is a WUE eligible program. Undergraduate students fr
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_asu_diploma_description'.
+  // Exported field_instance: 'node-asu_degree-field_asu_diploma_description'
   $field_instances['node-asu_degree-field_asu_diploma_description'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -2377,7 +2357,7 @@ Denotes whether or not this is a WUE eligible program. Undergraduate students fr
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_degree_image'.
+  // Exported field_instance: 'node-asu_degree-field_degree_image'
   $field_instances['node-asu_degree-field_degree_image'] = array(
     'bundle' => 'asu_degree',
     'deleted' => 0,
@@ -2412,7 +2392,7 @@ Denotes whether or not this is a WUE eligible program. Undergraduate students fr
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
-      'default_image' => 5,
+      'default_image' => 0,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '',
@@ -2426,7 +2406,6 @@ Denotes whether or not this is a WUE eligible program. Undergraduate students fr
       'module' => 'media',
       'settings' => array(
         'allowed_schemes' => array(
-          'private' => 0,
           'public' => 'public',
           'vimeo' => 0,
           'youtube' => 0,
@@ -2442,6 +2421,7 @@ Denotes whether or not this is a WUE eligible program. Undergraduate students fr
           'media_default--media_browser_my_files' => 0,
           'media_internet' => 0,
           'upload' => 'upload',
+          'youtube' => 0,
         ),
         'manualcrop_crop_info' => 1,
         'manualcrop_default_crop_area' => 1,
@@ -2455,13 +2435,14 @@ Denotes whether or not this is a WUE eligible program. Undergraduate students fr
         'manualcrop_styles_list' => array(),
         'manualcrop_styles_mode' => 'include',
         'manualcrop_thumblist' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'media_generic',
       'weight' => 3,
     ),
   );
 
-  // Exported field_instance: 'node-asu_degree-field_scholarship_link'.
+  // Exported field_instance: 'node-asu_degree-field_scholarship_link'
   $field_instances['node-asu_degree-field_scholarship_link'] = array(
     'bundle' => 'asu_degree',
     'default_value' => NULL,
@@ -2494,7 +2475,6 @@ Add a link here to change from the default scholarship link to one specific to y
     'label' => 'Scholarship Link',
     'required' => 0,
     'settings' => array(
-      'absolute_url' => 1,
       'attributes' => array(
         'class' => '',
         'configurable_title' => 0,
@@ -2513,7 +2493,6 @@ Add a link here to change from the default scholarship link to one specific to y
       ),
       'rel_remove' => 'default',
       'title' => 'none',
-      'title_label_use_field_label' => FALSE,
       'title_maxlength' => 128,
       'title_value' => '',
       'url' => 0,

@@ -21,7 +21,7 @@ projects[media][patch][2534724] = https://www.drupal.org/files/issues/media-brow
 ; WEBSPARK-679 - WYSIWYG + Media module issues
 projects[media][patch][] = patches/webspark-679_fix-HTML-encoded-macros-2028253-10.patch
 ; following taken from #56 on https://www.drupal.org/node/2317519
-projects[media][patch][] = patches/webspark-679_wysiwyg-multiple-editors-media-images-breaks.patch
+projects[media][patch][] = patches/webspark-679_webspark-679_wysiwyg-multiple-editors-media-images-breaks.patch
 
 ; Radix Layouts (module)
 projects[radix_layouts][type] = module
@@ -32,7 +32,6 @@ projects[radix_layouts][sha256] =  9ead2347754b478b71cfa0ee16f343da1046a2e86e407
 projects[radix_layouts][patch][101] = patches/webspark-420_radix-layouts_TPL-customizations.patch
 projects[radix_layouts][patch][102] = patches/webspark-743_add-two-brenham-layouts.patch
 projects[radix_layouts][patch][103] = patches/webspark-743_added-png.patch
-projects[radix_layouts][patch][104] = patches/webspark-1003-remove-section-tags-radix-layouts.patch
 
 ; Field Group
 projects[field_group][type] = module

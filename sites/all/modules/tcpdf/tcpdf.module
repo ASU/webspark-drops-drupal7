@@ -1,0 +1,78 @@
+<?php
+/**
+ * @file
+ * TCPDF module provides an API to use TCPDF in Drupal environment.
+ */
+
+/**
+ * Gets an instance of TCPDFDrupal. Always use this function to get a fresh
+ * instance of the class.
+ *
+ * @param array $params
+ *   Associative array of parameters for the TCPDF constructor. Check out the
+ *   documentation of TCPDF.
+ * @param array $class
+ *   Associative array that tells tcpdf_get_instance to use a custom class instead
+ *   of TCPDFDrupal. The class should be the sibling of TCPDFDrupal. Note that this
+ *   functionality is not mature, and may be changed in later releases.
+ *     'class' => Name of the class.
+ *     'filetype' => Container file's type.
+ *     'filename' => Container file's name.
+ *     'module' => Module where the container file is.
+ * @param array $config
+ *   Associative array that tells tcdf_get_instance to use a different config file.
+ *     'filetype' => Config file's type.
+ *     'filename' => Config file's name.
+ *     'module' => Module where the config file is.
+ *
+ * @return mixed FALSE\TCPDFDrupal object
+ */
+function tcpdf_get_instance($params = array(), $class = array(), $config = array()) {
+  $default_params = array(
+    'orientation' => 'P',
+    'unit' => 'mm',
+    'format' => 'A4',
+    'unicode' => TRUE,
+    'encoding' => 'UTF-8',
+    'diskcache' => FALSE,
+    'pdfa' => FALSE,
+  );
+
+  $params = array_merge($default_params, $params);
+
+  if (!isset($class['class'])) {
+    $class = array(
+      'class' => 'TCPDFDrupal',
+      'filetype' => 'inc',
+      'filename' =>  'tcpdf.class',
+      'module' => 'tcpdf',
+    );
+  }
+
+    if (!isset($config['filename'])) {
+    $config = array(
+      'filetype' => 'inc',
+      'filename' =>  'tcpdf.config',
+      'module' => 'tcpdf',
+    );
+  }
+
+  if (!defined('K_TCPDF_EXTERNAL_CONFIG')) {
+    define('K_TCPDF_EXTERNAL_CONFIG', TRUE);
+  }
+
+  module_load_include($config['filetype'], $config['module'], $config['filename']);
+
+  $path = libraries_get_path('tcpdf');
+  if (($path) && (file_exists($path . '/tcpdf.php'))) {
+    require_once($path . '/tcpdf.php');
+  }
+  else {
+    drupal_set_message(t('TCPDF library not found!'), 'error');
+    return FALSE;
+  }
+
+  module_load_include($class['filetype'], $class['module'], $class['filename']);
+
+  return new $class['class']($params['orientation'], $params['unit'], $params['format'], $params['unicode'], $params['encoding'], $params['diskcache'], $params['pdfa']);
+}

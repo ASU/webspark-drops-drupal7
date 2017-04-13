@@ -14,7 +14,7 @@
 ?>
 
 <div class="panel-display hewston clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
-  <div class="section">
+  <section class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-8 hewston-slider-area radix-layouts-slider panel-panel">
@@ -29,8 +29,8 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="section">
+  </section>
+  <section class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-4 hewston-middle-region-1 radix-layouts-column1 panel-panel">
@@ -50,5 +50,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </div><!-- /.hewston -->

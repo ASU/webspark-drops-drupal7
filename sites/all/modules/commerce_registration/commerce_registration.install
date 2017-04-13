@@ -1,0 +1,74 @@
+<?php
+/**
+ * @file
+ * Commerce Registration install file.
+ *
+ * Modify the registration schema to accomodate a commerce order ID number.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function commerce_registration_schema() {
+  $schema = array();
+  $schema['commerce_registration_node_settings'] = array(
+    'description' => 'Registration settings for product display type nodes.',
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'description' => 'The node ID.',
+        'not null' => TRUE,
+      ),
+      'settings' => array(
+        'description' => 'Serialized array of settings for the node.',
+        'type' => 'text',
+        'size' => 'medium',
+        'serialized' => TRUE,
+      ),
+    ),
+    'primary key' => array('nid'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_schema_alter().
+ */
+function commerce_registration_schema_alter(&$schema) {
+  $schema['registration']['fields']['order_id'] = array(
+    'description' => 'The order associated with this registration, if any.',
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+  );
+}
+
+/**
+ * Implements hook_install().
+ */
+function commerce_registration_install() {
+  // Add the new commerce order ID field to registrations.
+  db_add_field("registration", "order_id", array(
+    'description' => 'The order associated with this registration, if any.',
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0)
+  );
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function commerce_registration_uninstall() {
+  // Drop the order_id field from the registration table.
+  db_drop_field("registration", "order_id");
+}
+
+/**
+ * Adds the commerce_registration_node_settings table.
+ */
+function commerce_registration_update_7201() {
+  if (!db_table_exists('commerce_registration_node_settings')) {
+    db_create_table('commerce_registration_node_settings', drupal_get_schema_unprocessed('commerce_registration', 'commerce_registration_node_settings'));
+  }
+}

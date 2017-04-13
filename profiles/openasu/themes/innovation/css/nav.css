@@ -64,20 +64,6 @@
 	background-color: #000;
 	color: #ffb310;
 }
-.navbar-nav > li:focus > a,
-.navbar-nav > .active:focus > a,
-.navbar-nav > li > a:focus,
-.nav .open > a:focus,
-.navbar-nav > .active > a:focus
-.navbar-nav .dropdown-menu > li > a:focus {
-	 outline:none; 
-	 border-top: 2px solid #4D90FE;
-	 border-right: 2px solid #4D90FE;
-	 border-bottom: 2px solid #4D90FE;
-	 border-left: 2px solid #4D90FE;
-	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
-	 box-shadow: 0px 0px 5px  #4D90FE;
-}
 
 /* =SIDEBAR MENUS
 -------------------------------------------------------------- */
@@ -156,16 +142,6 @@
 	background-color: #f5f5f5;
 	font-weight: bold;
 }
-.pane-system-main-menu ul.menu li a:focus,
-.pane-menu-tree ul.menu li a:focus {
-	 outline:none; 
-	 border-top: 2px solid #4D90FE;
-	 border-right: 2px solid #4D90FE;
-	 border-bottom: 2px solid #4D90FE;
-	 border-left: 2px solid #4D90FE;
-	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
-	 box-shadow: 0px 0px 5px  #4D90FE;	
-}
 
 /* =TABS
 -------------------------------------------------------------- */
@@ -223,7 +199,7 @@
 }
 .ui-tabs .ui-tabs-nav li a {
 	display: block;
-  position: relative;
+    position: relative;
 	border-color: #d7d7d7 #d7d7d7 transparent #d7d7d7;
 	border-image: none;
 	border-radius: 0;
@@ -248,15 +224,6 @@
 	background-color: transparent;
 	border-bottom-color: #fff;
 }
-.ui-tabs .ui-tabs-nav li.ui-state-focus a {
-	outline:none; 
-	border-top: 2px solid #4D90FE;
-	border-right: 2px solid #4D90FE;
-	border-bottom: 2px solid #4D90FE;
-	border-left: 2px solid #4D90FE;
-	-webkit-box-shadow: 0px 0px 5px  #4D90FE;
-	box-shadow: 0px 0px 5px  #4D90FE;
-}
 
 /* Nav pills */
 .nav-pills > li {
@@ -274,15 +241,6 @@
 .nav-pills > li.active > a:focus {
   color: white;
   background-color: #8C1D40;
-}
-.nav-pills > li.active > a:focus {
-	 outline:none; 
-	 border-top: 2px solid #4D90FE;
-	 border-right: 2px solid #4D90FE;
-	 border-bottom: 2px solid #4D90FE;
-	 border-left: 2px solid #4D90FE;
-	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
-	 box-shadow: 0px 0px 5px  #4D90FE;
 }
 
 /* =BREADCRUMBS

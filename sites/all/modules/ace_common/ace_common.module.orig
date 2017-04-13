@@ -1,0 +1,763 @@
+<?php
+/**
+ * @file
+ * Common ACE features.
+ */
+
+require_once('ProductTable.php');
+
+define('FILTER_FORMAT_SIMPLE', 4);
+define('FILTER_FORMAT_AGENDA', 5);
+define('WEBAPI_SALESFORCE_ACCOUNT_ID', '00580000001uRdv');
+
+function ace_common_menu() {
+  $items = array();
+  $items['admin/ace'] = array(
+    'title'            => 'ACE',
+    'access arguments' => array('access administration pages'),
+    'page callback'    => 'ace_menu_overview',
+    'type'             => MENU_NORMAL_ITEM,
+  );
+  $items['admin/ace/categories'] = array(
+    'title'            => 'ACE Categories',
+    'access arguments' => array('access administration pages'),
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('ace_categories_settings'),
+    'type'             => MENU_NORMAL_ITEM,
+    'file'             => 'ace_categories.inc',
+  );
+  $items['ace/test'] = array(
+    'title'            => 'Test Page',
+    'access arguments' => array('access administration pages'),
+    'page callback'    => 'ace_test_page',
+    'type'             => MENU_NORMAL_ITEM,
+  );
+  $items['ajax-description'] = array(
+    'title'            => 'Page',
+    'access arguments' => array('access content'),
+    'page callback'    => 'ajax_description_page',
+    'type'             => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function ace_menu_overview() {
+  return 'This is a general navigation category for ACE tasks.';
+}
+
+function ace_test_page() {
+  $result = db_query("SELECT n.nid FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE n.status = 1 AND (d.sid IS NULL OR d.reindex <> 0) ORDER BY d.reindex ASC, n.nid ASC LIMIT 1");
+  while ($node = db_fetch_object($result)) {
+    ace_message($node);
+    _node_index_node($node);
+  }
+  return 'OK';
+}
+
+function ace_common_perm() {
+  return array(
+    'counts as member',
+  );
+}
+
+/**
+ * Retrieve an ACE taxonomy vocabulary by a key instead of having to know the vocab's ID.
+ * @param $vocabulary_key the vocabulary to retrieve; 'topics', 'professions', or 'faqs'.
+ */
+function ace_categories($vocabulary_key) {
+  switch ($vocabulary_key) {
+    case 'topics':
+      $vid = variable_get('ace_common_taxonomy_topics_vid', '');
+      break;
+    case 'professions':
+      $vid = variable_get('ace_common_taxonomy_professions_vid', '');
+      break;
+    case 'faqs':
+      $vid = variable_get('ace_common_taxonomy_faqs_vid', '');
+      break;
+    default:
+      return NULL;
+  }
+
+  if (empty($vid)) {
+    $vocabs = taxonomy_get_vocabularies();
+    foreach ($vocabs as $v) {
+      switch ($v->name) {
+        case 'Topics':
+          variable_set('ace_common_taxonomy_topics_vid', $v->vid);
+          break;
+        case 'Professions':
+          variable_set('ace_common_taxonomy_professions_vid', $v->vid);
+          break;
+        case 'FAQs':
+          variable_set('ace_common_taxonomy_faqs_vid', $v->vid);
+          break;
+      }
+    }
+    return ace_categories($vocabulary_key);
+  } else {
+    return taxonomy_get_tree($vid);
+  }
+}
+
+function ajax_description_page() {
+  $path = $_REQUEST['path'];
+  if (empty($path)) {
+    print '';
+    exit();
+    return;
+  }
+  if (is_numeric($path)) {
+    $node = node_load($path);
+  } else {
+    $node_path = drupal_lookup_path('source', $path);
+    $parts = explode('/', $node_path);
+    if ($parts[0] == 'node') {
+      $node = node_load($parts[1]);
+    }
+  }
+  if (empty($node)) {
+    print '';
+    exit();
+    return;
+  }
+  print node_view($node);
+  exit();
+}
+
+/**
+ * Convenience method for formatting messages.
+ * @param $msg The message, array, or object to format.
+ * @param $return TRUE to return the formatted message, FALSE (default) to 
+ * send the formatted output to drupal_set_message()
+ */
+function ace_message($msg, $return = FALSE) {
+  if (!isset($msg) || is_null($msg)) {
+    $message = 'NULL';
+  } else if (is_array($msg) || is_object($msg)) {
+    $message = '<pre>'. print_r($msg, TRUE) .'</pre>';
+  } else if ($msg === 0) {
+    $message = 'ZERO';
+  } else if ($msg === FALSE) {
+    $message = 'FALSE';
+  } else if ($msg === TRUE) {
+    $message = 'TRUE';
+  } else {
+    $message = $msg;
+  }
+  
+  if ($return) {
+    return $message;
+  } else {
+    drupal_set_message($message);
+  }
+}
+
+function ace_log_email($mail) {
+  if ($mail['result'])
+    return;
+  
+  $msg  = 'Email failed to send.<br/>';
+  $msg .= ace_message($mail, TRUE);
+  watchdog('ACE Mail', $msg, array(), WATCHDOG_INFO);
+}
+
+function ace_log_salesforce($type, $message, $sf_response, $severity = WATCHDOG_ERROR) {
+  $msg = $message;
+  $msg .= '<br/><pre>!sf_resp</pre>';
+  watchdog($type, $msg, array('!sf_resp' => ace_message($sf_response, TRUE)), $severity);
+}
+
+/**
+ * Implementation of hook_form_alter. Used to disable flash footer for all node forms.
+ */
+function ace_common_form_alter(&$form, $form_state, $form_id) {
+  // For Node forms...
+  if (isset($form['#node']) && $form_id == $form['#node']->type .'_node_form') {
+    
+    // Collapse pathauto's path fieldset.
+    if (module_exists('pathauto')) {
+      $form['path']['#collapsed'] = TRUE;
+      $form['path']['#weight'] = 95;
+    }
+    
+    $form['menu']['#weight'] = 96;
+    $form['revision_information']['#weight'] = 97;
+    $form['author']['#weight'] = 98;
+    $form['options']['#weight'] = 99;
+  }
+}
+
+/**
+ * Implementation of hook_file_download. Used to enable member downloads and download of webfm files.
+ * @param $filepath the path of the file being requested.
+ */
+function ace_common_file_download($filepath) {
+  $file = db_fetch_object(db_query("SELECT * FROM {webfm_file} WHERE fpath = '%s'", file_create_path($filepath)));
+  if (empty($file)) {
+    return NULL; // Not a webfm file.
+  } else {
+    // If file is not in member directory, allow it. Otherwise, allow only members.
+    global $user;
+    if (stristr($filepath, '/up/member/') === FALSE || is_member($user)) {
+      return array('Content-type:' . $file->fmime, 'Content-disposition: attachment;');
+    } else {
+      return -1;
+    }
+  }
+}
+
+function ace_common_node_type($node, &$type, &$class = NULL) {
+  switch ($node->type) {
+    case 'course':
+      $class .= ' course';
+      switch ($node->field_course_type[0]['value']) {
+        case 'inperson':
+          $type   = 'In-person Course';
+          $class .= ' inperson';
+          break;
+          
+        case 'online_scheduled':
+          $type   = 'Online Course';
+          $class .= ' online';
+          break;
+          
+        case 'online_anytime':
+          $type   = 'Online Anytime';
+          $class .= ' online-anytime';
+          break;
+      }
+      break;
+    
+    case 'meeting':
+      $type   = 'Task Force Meeting';
+      $class .= ' meeting';
+      break;
+      
+    case 'event':
+      $type   = 'Event';
+      $class .= ' frevent'; // Short for fund raising event.
+      break;
+  }
+}
+
+function ace_common_views_pre_execute(&$view) {
+  if (strcasecmp($view->name, 'Programs') == 0 && $view->exposed_data['field_course_type_value_many_to_one'] == 'All') {
+    $new_query = str_replace(
+      "(DATE_FORMAT(ADDTIME(", 
+      "(node_data_field_date.field_date_value IS NULL OR DATE_FORMAT(ADDTIME(", 
+      $view->build_info['query']);
+    $view->build_info['query'] = $new_query;
+  }
+}
+
+function ace_common_views_pre_render(&$view) {
+  if(strcasecmp($view->name, 'Programs') == 0) {
+    // Alter Programs results so that NULL dates get sent to the end of the list rather than the front.
+    $nulled = array();
+    $valued = array();
+    foreach ($view->result as $r) {
+      if (is_null($r->node_data_field_date_field_date_value))
+        $nulled[] = $r;
+      else
+        $valued[] = $r;
+    }
+    $new_result = array_merge($valued, $nulled);
+    $view->result = $new_result;
+  }
+}
+
+function ace_common_views_pre_build(&$view) {
+  // Set filter values in response to query param for the TaskForces view.
+  if (strcasecmp($view->name, 'TaskForces') == 0 && isset($_REQUEST['tf'])) {
+    $tf_name = str_replace('-', ' ', $_REQUEST['tf']);
+    $tf = node_load(array('type' => 'taskforce', 'title' => $tf_name));
+    if ($tf != null)
+      $view->exposed_input['filter_id'] = $tf->nid;
+  }
+  
+  // Set filter values in response to query param for the Programs view.
+  if ($view->name == 'Programs' && isset($_REQUEST['ct'])) {
+    $course_type = str_replace('-', '_', $_REQUEST['ct']);
+    if (in_array($course_type, array('online_anytime', 'online_scheduled', 'inperson'))) {
+      $view->exposed_input['field_course_type_value_many_to_one'] = $course_type;
+      if (strpos($course_type, 'online') === 0) {
+        $view->display['page_1']->handler->options['filters']['date_filter']['default_date'] = '';
+      }
+    }
+  }
+}
+
+function ace_common_views_plugins() {
+  $plugins = array(
+    'style' => array(
+      'ace_accordion' => array(
+        'title' => t('ACE Accordion'),
+        'help' => t('Displays the view as a simple accordion.'),
+        'handler' => 'views_plugin_style_default',
+        'theme' => 'ace_view_accordion',
+        'uses row plugin' => FALSE,
+        'uses options' => FALSE,
+        'uses grouping' => FALSE,
+        'type' => 'normal',
+        'parent' => 'default',
+      ),
+      'ace_grid' => array(
+        'title' => t('ACE Grid'),
+        'help' => t('Displays the view as an accordion-topped grid with the exported form in a floating side-panel.'),
+        'handler' => 'views_plugin_style_default',
+        'theme' => 'ace_view_grid',
+        'uses row plugin' => FALSE,
+        'uses options' => FALSE,
+        'uses grouping' => FALSE,
+        'type' => 'normal',
+        'parent' => 'default',
+      	'even empty' => TRUE,
+      ),
+      'ace_news_panel' => array(
+        'title' => t('ACE News Panel'),
+        'help' => t('Displays the view as news panel listing.'),
+        'handler' => 'views_plugin_style_default',
+        'theme' => 'ace_view_news_panel',
+        'uses row plugin' => FALSE,
+        'uses options' => FALSE,
+        'uses grouping' => FALSE,
+        'type' => 'normal',
+        'parent' => 'default',
+      ),
+      'ace_grid_node_details' => array(
+        'title'=> t('ACE Grid Node Details'),
+        'help' => t('Displays the view using the top 7 nodes as tabs, with a floating side panel for filtering'),
+        'handler' => 'views_plugin_style_default',
+        'theme' => 'ace_view_grid_node_details',
+        'uses row plugin' => FALSE,
+        'uses options' => FALSE,
+        'uses grouping' => FALSE,
+        'type' => 'normal',
+        'parent' => 'default',
+      	'even empty' => TRUE,
+      ),
+      'ace_grid_node_parent_child' => array(
+        'title'=> t('ACE Grid Node Parent Child'),
+        'help' => t('Displays Parent nodes as tabs and children in the grid with a floating side panel for filtering'),
+        'handler' => 'views_plugin_style_default',
+        'theme' => 'ace_view_grid_node_parent_child',
+        'uses row plugin' => FALSE,
+        'uses options' => FALSE,
+        'uses grouping' => FALSE,
+        'type' => 'normal',
+        'parent' => 'default',
+        'even empty' => TRUE,
+      ),
+    ),
+    
+    'row' => array(
+      'ace_grid_page_fields_details' => array(
+        'title' => t('ACE Grid Fields Details'),
+        'help' => t('Displays fields for the ACE Grid style (removes top 7).'),
+        'handler' => 'views_plugin_row_fields',
+        'theme' => 'ace_view_grid_page_fields_details',
+        'uses fields' => TRUE,
+        'uses options' => TRUE,
+        'type' => 'normal',
+        'help topic' => 'style-row-fields',
+        'parent' => 'fields',
+      ),
+    ),
+  );
+  
+  return $plugins;
+}
+
+function validate_decimal($element, &$form_state) {
+  if (!_validate_decimal($element['#value'])) {
+    form_error($element, $element['#title'] . ' ' . t('must be a decimal number: e.g. 1132.74'));
+  }
+}
+
+function _validate_decimal($value) {
+  return preg_match('/^-?[0-9]*(\.[0-9]+)?$/', $value);
+}
+
+function _validate_decimal_nonnegative($value) {
+  return preg_match('/^[0-9]*(\.[0-9]+)?$/', $value);
+}
+
+function validate_integer_nonnegative($element, &$form_state) {
+  if (!_validate_integer_nonnegative($element['#value'])) {
+    form_error($element, $element['#title'] . ' ' . t('must be a non-negative integer: e.g. 42.'));
+  }
+}
+
+function _validate_integer($value) {
+  return ($value !== TRUE && preg_match('/^\-?[0-9]{1,}$/', $value));
+}
+
+function _validate_integer_nonnegative($value) {
+  return (_validate_integer($value) && $value >= 0);
+}
+
+/**
+ * Determines the fiscal year for either the given date
+ * or the current date.
+ * @param $date optionally the date whose fiscal year to retrieve,
+ * if NULL, the current fiscal year is returned instead.
+ */
+function get_fiscal_year($date = NULL) {
+  if (is_null($date)) {
+    $date = ace_get_cck_date();
+  }
+  $year = (int) date_format_date($date, 'custom', 'Y');
+  $month = (int) date_format_date($date, 'custom', 'm');
+  
+  if ($month < 7) {
+    return $year;
+  } else {
+    return $year + 1;
+  }
+}
+
+function get_category_campaign($category_key = NULL) {
+  static $category_campaigns = array();
+  $result = db_query('SELECT * FROM {ace_categories}');
+  while ($cat = db_fetch_object($result)) {
+    $category_campaigns[$cat->category_key] = $cat->campaign_id;
+  }
+  if (is_null($category_key)) {
+    return $category_campaigns;
+  } else {
+    return $category_campaigns[$category_key];
+  }
+}
+
+function _get_newsletter_options() {
+  $categories = ace_categories('topics');
+  $category_campaigns = get_category_campaign();
+  
+  $options = array(); 
+  foreach ($categories as $term) {
+    if (!empty($category_campaigns[$term->tkey])) {
+      $options[$term->tkey] = $term->name;
+    }
+  }
+  return $options;
+}
+
+/**
+ * Gets a Drupal node by its Salesforce ID, if a matching node exists.
+ * @param $sfid the Salesforce ID to search for.
+ */
+function get_node_by_sfid($sfid) {
+  $nid = db_result(db_query("SELECT drupal_id FROM {salesforce_ids} WHERE sfid = '%s' AND drupal_type = 'node'", $sfid));
+  return node_load($nid);
+}
+
+/**
+ * Determines if the given dated node has started - its first start date has passed. 
+ * This is the standard threshold beyond which things can't be registered for, etc.
+ * It is assumed the node will have a CCK field called 'field_date'.
+ * @param $node the node to check in fully loaded form.
+ * @return boolean true if the node has passed, false if it is in the future
+ * or has no specified date.
+ */
+function node_has_passed($node) {
+  $now = ace_get_cck_date(NULL, 'field_date');
+  $date = ace_get_cck_date($node->field_date[0], 'field_date', 'value');
+  if (!empty($date) && ($date < $now)) {
+    return TRUE; // Course date has passed.
+  } else {
+    return FALSE;
+  }
+}
+
+/**
+ * Determines if a node that has multiple dates is "in progress"
+ * It is assumed the node will have a CCK field called 'field_date'.
+ * @param $node
+ */
+function node_in_progress($node) {
+  if(count($node->field_date) < 2)
+  	return FALSE;
+  
+  if(!node_has_passed($node))
+  	return FALSE;
+  
+  $now = ace_get_cck_date(NULL, 'field_date');
+  
+  foreach($node->field_date as $fd) {
+	  $date = ace_get_cck_date($fd, 'field_date', 'value');
+	  if (!empty($date) && ($date > $now)) {
+	    return TRUE; // in progress
+	  }
+  }
+  
+  return FALSE;
+}
+
+/**
+ * Creates a PHP DateTime object for use with a CCK field.
+ * This can later be formatted with date_format_date().
+ * @param $data the CCK field data, e.g., $node->field_date[0]
+ * If this argument is passed as NULL, the current server time is used instead. 
+ * @param $field_name the name of the CCK field being processed
+ * @param $value_name the array key for the value to use, e.g., 'value' or 'value2'
+ */
+function ace_get_cck_date($data = NULL, $field_name = 'field_date', $value_name = 'value') {
+  $field = content_fields($field_name);
+  $timezone_db = date_get_timezone_db($field['tz_handling']);
+  if (is_null($data)) {
+    $timezone = date_default_timezone_name();
+    $timezone = date_get_timezone($field['tz_handling'], $timezone);
+    $date = date_make_date('now', $timezone_db, $field['type'], $field['granularity']);
+  } else {
+    $timezone = isset($data['timezone']) ? $data['timezone'] : '';
+    $timezone = date_get_timezone($field['tz_handling'], $timezone);
+    $date = date_make_date($data[$value_name], $timezone_db, $field['type'], $field['granularity']);
+  }
+  if (!is_null($date)) {
+    date_timezone_set($date, timezone_open($timezone));
+  }
+  return $date;
+}
+
+/**
+ * Creates an array containing date components from a CCK date field.
+ * @param $data the CCK field data, e.g., $node->field_date[0]
+ * If this argument is passed as NULL, the current server time is used instead.
+ * @param $value_name the array key for the value to use, e.g., 'value' or 'value2'. 
+ * @param $field_name the name of the CCK field being processed.
+ * @return an array with keys: year, month, day, hour, minute, meridiem (no leading zeroes).
+ */
+function ace_get_cck_date_array($data = NULL, $value_name = 'value', $field_name = 'field_date') {
+  $date = ace_get_cck_date($data, $field_name, $value_name);
+  
+  $arr = array(
+    'year' => date_format_date($date, 'custom', 'Y'),
+    'month' => date_format_date($date, 'custom', 'n'),
+    'day' => date_format_date($date, 'custom', 'j'),
+    'hour' => date_format_date($date, 'custom', 'g'),
+    'minute' => ltrim(date_format_date($date, 'custom', 'i'), '0'),
+    'meridiem' => date_format_date($date, 'custom', 'a'),
+  );
+  return $arr;
+}
+
+/**
+ * Shortcut for creating a DateTime and then formatting it.
+ */
+function ace_format_cck_date($data = NULL, $format = 'Y-m-d', $field_name = 'field_date', $value_name = 'value') {
+  $date = ace_get_cck_date($data, $field_name, $value_name);
+  return date_format_date($date, 'custom', $format);
+}
+
+/**
+ * Utility method to create a suitable HTML email template for a hook_mail() method.
+ * @param $message the $message parameter of hook_mail().
+ * @param $mail_id a unique identifier for this message.
+ * @param $subject the subject of the message.
+ * @param $body the body of the message: may be HTML.
+ */
+function ace_common_make_html_mail(&$message, $mail_id, $subject, $body) {
+  $message['mail_id'] = $mail_id;
+  $message['headers']['Content-Type'] = 'text/html; charset=UTF-8;';
+  $message['headers']['X-Mailer'] = 'Drupal';
+  $message['subject'] = $subject;
+  $message['body'] =
+  	"<html>\n" .
+    "<head>\n" .
+    "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n" .
+    "</head>\n" .
+    "<body>\n". $body ."</body>\n" .
+    "</html>\n";
+}
+
+function ace_common_simpletest() {
+  $dir = drupal_get_path('module', 'ace_common') . '/tests';
+  $tests = file_scan_directory($dir, '\.test$');
+  return array_keys($tests);
+}
+
+/**
+ * Case insensitive array value search that returns the
+ * appropriate key.
+ */
+function array_isearch($str, $array) {
+  $found = array();
+  foreach ($array as $k => $v) {
+    if (strtolower($v) == strtolower($str)) {
+      $found[] = $k;
+    }
+  }
+  $f = count($found);
+  if ($f === 0)
+    return false;
+  else if ($f === 1)
+    return $found[0];
+  else
+    return $found;
+}
+
+/**
+ * Given a $haystack array of entries with a 'value' property, see if $needle 
+ * matches (via ==) one of the values.
+ * @return TRUE if the needle is found, FALSE otherwise.
+ */
+function in_array_as_value_property($needle, $haystack) {
+  foreach ($haystack as $entry) {
+    if ($entry['value'] == $needle) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * A utility function to transfer category information
+ * from nodes that currently store their category in a CCK field
+ * to the taxonomy system. Can be deleted after it is run on production.
+ */
+function transfer_node_categories_to_taxonomy() {
+  $node_types = array('course', 'event', 'file', 'public_profile', 'taskforce', 'meeting');
+  $result = db_query('SELECT * FROM content_field_category');
+  while ($row = db_fetch_object($result)) {
+    $node = node_load($row->nid);
+    if (!in_array($node->type, $node_types))
+      continue;
+    $term = taxonomy_key_get_term(strtoupper($row->field_category_value));
+    if (!$term)
+      continue;
+    $term_node = new stdClass();
+    $term_node->nid = $row->nid;
+    $term_node->vid = $row->vid;
+    $term_node->tid = $term->tid;
+    drupal_write_record('term_node', $term_node);
+  }
+}
+
+/**
+ * Converts a country name to its two-letter code. If a match cannot be found,
+ * the original string is returned.
+ * @param $country the country name.
+ */
+function _convert_country_name_to_code($country) {
+  module_load_include('inc', 'addresses');
+  $country_list = _addresses_country_get();
+  
+  $us_equiv = array('', 'us', 'usa', 'unitedstates', 'unitedstatesofamerica', 'maricopa', 'test');
+  
+  $_c = preg_replace('/[^a-z]/', '', strtolower($country));
+  if (in_array($_c, $us_equiv)) {
+    return 'us';
+  } else {
+    $match = array_isearch($country, $country_list);
+    if (!empty($match)) {
+      return $match;
+    }
+  }
+  return $country;
+}
+
+/**
+ * Converts a state/province name to its letter-code. If a match cannot be found
+ * or an invalid country code is given, the original string is returned.
+ * @param $state the state name.
+ * @param $country_code the code for the country this state is in.
+ */
+function _convert_state_name_to_code($state, $country_code) {
+  if (empty($country_code)) {
+    return $state;
+  }
+  
+  module_load_include('inc', 'addresses');
+  $state_list = _addresses_province_get($country_code);
+  
+  $_s = preg_replace('/[^a-z]/', '', strtolower($state));
+  $match = array_isearch($_s, $state_list);
+  if (!empty($match)) {
+    return $match;
+  }
+  return $state;
+}
+
+function ace_labelfy($text, $maxlength = 27) {
+  return ace_shorten(strtoupper(str_replace("_", " ", $text)), $maxlength);
+}
+
+function ace_shorten($text, $maxlength = 130) {
+  if (empty($text))
+    return $text;
+    
+  $text = strip_tags($text);
+  
+  if (strlen($text) > $maxlength) {
+    // If string is longer than the max length...
+
+    // Truncate to length
+    $text = substr($text, 0, $maxlength);
+    
+    // Truncate to last space
+    $text = substr($text, 0, strrpos($text, " "));
+    
+    // Trim off the last run of non-alphanumeric characters.
+    preg_match('/[^a-zA-Z0-9)]+$/', $text, $matches, PREG_OFFSET_CAPTURE);
+    if (!empty($matches) && !empty($matches[0])) {
+      $text = substr($text, 0, $matches[0][1]);
+    }
+    
+    $text = $text . "...";
+  }
+  return $text;
+}
+
+function _taxonomy_get_real_tree($vid) {
+  $result_tree = array();
+  $terms = array();
+  foreach (taxonomy_get_tree($vid) as $term) {
+    if (isset($terms[$term->tid])) {
+      $term->children = $terms[$term->tid]->children;
+      $terms[$term->tid] = $term;
+    } else {
+      $terms[$term->tid] = $term;
+    }
+
+    if ($term->depth === 0) {
+      $result_tree[$term->tid] = &$terms[$term->tid];
+      continue;
+    }
+
+    foreach ($term->parents as $tid) {
+      if ($tid) {
+        if (!isset($terms[$tid])) {
+          $terms[$tid] = new stdClass();
+        }
+        $terms[$tid]->children[$term->tid] = &$terms[$term->tid];
+      }
+    }
+  }
+  return $result_tree;
+}
+
+
+
+function array_put_to_position(&$array, $object, $position, $name = null)
+{
+	$count = 0;
+	$return = array();
+	foreach ($array as $k => $v)
+	{
+		// insert new object
+		if ($count == $position)
+		{
+			if (!$name) $name = $count;
+			$return[$name] = $object;
+			$inserted = true;
+		}
+		// insert old object
+		$return[$k] = $v;
+		$count++;
+	}
+	if (!$name) $name = $count;
+	if (!$inserted) $return[$name];
+	$array = $return;
+	return $array;
+}

@@ -1,0 +1,89 @@
+<?php
+
+/**
+ * @file
+ * Simple tests for salesforce
+ */
+
+/**
+ * Sets up basic tools for testing Salesforce integration.
+ */
+class SalesforceTestCase extends DrupalWebTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Salesforce API',
+      'description' => 'Sets up basic tools for testing Salesforce integration',
+      'group' => 'Salesforce',
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  public function setUp($modules = array(), $permissions = array()) {
+    $modules = array_merge($modules, array(
+      'salesforce',
+    ));
+    parent::setUp($modules);
+
+    $permissions = array_merge($permissions, array(
+      'administer salesforce',
+    ));
+    $this->admin_user = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($this->admin_user);
+  }
+
+  /**
+   * Implementation of tearDown().
+   */
+  public function tearDown() {
+    user_cancel(array(), $this->admin_user->uid, 'user_cancel_delete');
+    parent::tearDown();
+  }
+
+  /**
+   * Grabs Salesforce connection information from the live db and authenticates.
+   *
+   * @return object
+   *   Salesforce Object
+   */
+  protected function salesforceConnect() {
+    // Steal the Salesforce configuration from the live database.
+    global $db_prefix;
+    $table = empty($db_prefix) ? 'variable' : $db_prefix . '_variable';
+    $salesforce_vars = array(
+      'salesforce_consumer_key',
+      'salesforce_consumer_secret',
+      'salesforce_endpoint',
+      'salesforce_instance_url',
+      'salesforce_refresh_token',
+      'salesforce_identity',
+    );
+    $vars = "'" . implode("', '", $salesforce_vars) . "'";
+    $sql = "SELECT v.name, v.value FROM $table v WHERE v.name IN ($vars)";
+    $result = db_query($sql);
+    foreach ($result as $record) {
+      variable_set($record->name, unserialize($record->value));
+    }
+
+    // Test the connection.
+    $sfapi = salesforce_get_api();
+    if ($sfapi->isAuthorized()) {
+      $this->Pass('Connected to Salesforce');
+    }
+    else {
+      $this->Fail('Could not connect to Salesforce.  Ensure the primary site these tests are running against has an authorized connection to Salesforce in order to proceed.');
+    }
+
+    // Make a call to Salesforce that will do nothing just so we can get an
+    // access token into our session.  This is dumb, but I can't think of any
+    // other way to get an access token because refreshToken() is protected.
+    $sfapi->apiCall('');
+
+    return $sfapi;
+  }
+}

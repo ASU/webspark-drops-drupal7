@@ -1,0 +1,36 @@
+<?php
+/**
+ * @file
+ * Installs and check the requirements of TCPDF module.
+ */
+
+/**
+ * Use requirements to ensure that the TCPDF cache directory can be
+ * created.
+ */
+function tcpdf_requirements($phase) {
+  $requirements = array();
+  if ($phase == 'runtime') {
+    $tcpdf_file_dir = 'temporary://tcpdf/cache';
+    $problematic_uris = array();
+    $cache_dir = $tcpdf_file_dir . 'cache';
+    if (!file_prepare_directory($cache_dir, FILE_CREATE_DIRECTORY)) {
+      $problematic_uris['cachedir'] = $cache_dir;
+    }
+    else {
+      $requirements['tcpdf_cachedir'] = array(
+        'title' => t('TCPDF cache directory'),
+        'severity' => REQUIREMENT_OK,
+        'value' => t('Exists'),
+      );
+    }
+
+    foreach ($problematic_uris as $uri) {
+      $requirements['tcpdf_cache']['description'] = t('The TCPDF cache directory, %path could not be created or modified due to a misconfigured files directory. Please ensure that the files directory is correctly configured and that the webserver has permission to create directories.', array('%path' => $uri));
+      $requirements['tcpdf_cache']['severity'] = REQUIREMENT_ERROR;
+      $requirements['tcpdf_cache']['value'] = t('Unable to create');
+    }
+  }
+
+  return $requirements;
+}

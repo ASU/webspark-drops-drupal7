@@ -1,0 +1,6 @@
+core = 7.x
+api = 2
+
+libraries[tcpdf][download][type] = "git"
+libraries[tcpdf][download][url] = "git://git.code.sf.net/p/tcpdf/code"
+libraries[tcpdf][type] = "libraries"

@@ -1,0 +1,8 @@
+INSTALL
+----
+
+1. Download and install library module.
+2. Download TCPDF library from http://sourceforge.net/projects/tcpdf/files/
+3. Extract it to sites/all/libraries.
+4. Download and install TCPDF module.
+5. Check the status report to verify if the installation was successful.

@@ -1,0 +1,7 @@
+name = ASU Foundation Integration
+description = Provides integration points for the ASU Foundation online payments system.
+package = ACE
+core = 7.x
+
+dependencies[] = ace_common
+dependencies[] = ace_payments

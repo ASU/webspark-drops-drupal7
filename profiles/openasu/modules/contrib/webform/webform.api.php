@@ -906,7 +906,8 @@ function _webform_render_component($component, $value = NULL, $filter = TRUE, $s
     '#weight' => $component['weight'],
     '#description'   => $filter ? webform_filter_descriptions($component['extra']['description']) : $component['extra']['description'],
     '#default_value' => $filter ? webform_replace_tokens($component['value']) : $component['value'],
-    '#theme_wrappers' => array('webform_element'),
+    '#prefix' => '<div class="webform-component-textfield" id="webform-component-' . $component['form_key'] . '">',
+    '#suffix' => '</div>',
   );
 
   if (isset($value)) {

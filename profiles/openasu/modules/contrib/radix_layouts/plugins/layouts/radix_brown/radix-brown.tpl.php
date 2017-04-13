@@ -14,7 +14,7 @@
 ?>
 
 <div class="panel-display brown clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
-  <div class="section">
+  <section class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-8 brown-header-1 radix-layouts-slider panel-panel">
@@ -29,8 +29,8 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="section">
+  </section>
+  <section class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-4 brown-middle-region-1 radix-layouts-column1 panel-panel">
@@ -50,8 +50,8 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="section" id="footer">
+  </section>
+  <footer class="section" id="footer">
     <div class="container">
       <div class="row">
         <div class="col-md-4 brown-footer-region1 radix-layouts-footercolumn1 panel-panel">
@@ -71,5 +71,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </footer>
 </div><!-- /.brown -->

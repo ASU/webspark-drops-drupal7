@@ -51,7 +51,7 @@ function webspark_featurescustom_update_projects_alter(&$projects) {
   // First check to see if the current enabled modules and themes are in the
   // Webspark profile directory AND being used as the active, default codebase
   // for the module (vs. code elsewhere, such as sites/*, etc.)
-  $query = db_select('system', 's')
+  $managed_things = db_select('system', 's')
     ->fields('s', array('name', 'filename'))
     ->condition('status', 1)
     ->condition(db_or()
@@ -59,9 +59,7 @@ function webspark_featurescustom_update_projects_alter(&$projects) {
       ->condition('type', 'theme')
     )
     ->condition('filename', 'profiles_openasu_%', 'LIKE')
-    ->orderBy('name', 'ASC');
-
-  $managed_things = $query
+    ->orderBy('name', 'ASC')
     ->execute()
     ->fetchCol();
 
@@ -82,21 +80,10 @@ function webspark_featurescustom_update_projects_alter(&$projects) {
       }
     }
   }
-  // Now remove all modules and themes managed by this distribution
+
+  // Now remove modules and themes managed by distribution
   foreach ($managed_things as $managed_module) {
     unset($projects[$managed_module]);
-  }
-  // WEBSPARK-1043 - Remove LDAP modules from updates list manually
-  $package_toremove = 'ldap';
-  $length = strlen($package_toremove);
-  foreach ($projects as $project) {
-    if (strpos($project['name'], $package_toremove) === 0) {
-      // ensure only module and module_submodules (i.e. ldap, ldap_*) are removed
-      if (strlen($project['name']) === $length ||
-        (strlen($project['name']) > $length && strpos($project['name'], '_', $length))) {
-        unset($projects[$project['name']]);
-      }
-    }
   }
 }
 

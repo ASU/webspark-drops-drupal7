@@ -1,0 +1,436 @@
+<?php
+
+/**
+ * @file
+ * Allows users to create different types of memberships.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function membership_entity_type_help($path, $arg) {
+  // @TODO add help documentation
+}
+
+/**
+ * Implements hook_entity_info().
+ */
+function membership_entity_type_entity_info() {
+  $info['membership_entity_type'] = array(
+    'label' => t('Membership type'),
+    'plural label' => t('Membership types'),
+    'description' => t('Types of memberships.'),
+    'entity class' => 'MembershipEntityType',
+    'controller class' => 'MembershipEntityTypeController',
+    'base table' => 'membership_entity_type',
+    'uri callback' => 'entity_class_uri',
+    // Design decision: Membership types are fieldable to allow other modules
+    // to programatically add fields at the membership type level but no field
+    // API UI is exposed to end users.
+    'fieldable' => TRUE,
+    'bundle of' => 'membership_entity',
+    'exportable' => TRUE,
+    'entity keys' => array(
+      'id' => 'id',
+      'name' => 'type',
+      'label' => 'label',
+    ),
+    'bundles' => array(
+      'membership_entity_type' => array(
+        'label' => t('Membership Entity Type'),
+      ),
+    ),
+    'view modes' => array(
+      'form' => array(
+        'label' => t('Membership add form'),
+        'custom settings' => TRUE,
+      ),
+    ),
+    'access callback' => 'membership_entity_type_admin_ui_access',
+    'module' => 'membership_entity_type',
+    'admin ui' => array(
+      'path' => 'admin/memberships/types',
+      'file' => 'membership_entity_type.ui.inc',
+      'menu wildcard' => '%membership_entity_type',
+      'controller class' => 'MembershipEntityTypeUIController',
+    ),
+    'metadata controller class' => 'MembershipEntityTypeMetadataController',
+    'views controller class' => 'MembershipEntityTypeViewsController',
+  );
+
+  return $info;
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function membership_entity_type_entity_info_alter(&$entity_info) {
+  // Remove the default bundle and add user defined bundles.
+  unset($entity_info['membership_entity']['bundles']);
+
+  $types = db_query('SELECT type, label FROM {membership_entity_type}');
+  foreach ($types as $type) {
+    $entity_info['membership_entity']['bundles'][$type->type] = array(
+      'label' => $type->label,
+      'admin' => array(
+        'path' => 'admin/memberships/types/manage/%membership_entity_type',
+        'real path' => 'admin/memberships/types/manage/' . $type->type,
+        'bundle argument' => 4,
+        'access arguments' => array('administer membership types'),
+      ),
+    );
+  }
+}
+
+/**
+ * Access callback for membership entity type admin ui.
+ */
+function membership_entity_type_admin_ui_access($op, $type = NULL, $account = NULL) {
+  return user_access('administer membership types', $account);
+}
+
+/**
+ * Implements hook_permission().
+ */
+function membership_entity_type_permission() {
+  $perms = array(
+    'administer membership types' => array(
+      'title' => t('Administer membership types'),
+      'restrict access' => TRUE,
+    ),
+  );
+
+  foreach (membership_entity_type_get_types() as $type_name => $type) {
+    $perms += array(
+      $type_name . ' join' => array(
+        'title' => t('Join as a %type member', array('%type' => $type->label)),
+      ),
+      $type_name . ' renew any membership' => array(
+        'title' => t('Renew any %type membership', array('%type' => $type->label)),
+      ),
+      $type_name . ' renew own membership' => array(
+        'title' => t('Renew own %type membership', array('%type' => $type->label)),
+      ),
+      $type_name . ' view any membership' => array(
+        'title' => t('View any %type membership', array('%type' => $type->label)),
+      ),
+      $type_name . ' view own membership' => array(
+        'title' => t('View own %type membership', array('%type' => $type->label)),
+      ),
+      $type_name . ' edit any membership' => array(
+        'title' => t('Edit any %type membership', array('%type' => $type->label)),
+      ),
+      $type_name . ' edit own membership' => array(
+        'title' => t('Edit own %type membership', array('%type' => $type->label)),
+      ),
+      $type_name . ' delete any membership' => array(
+        'title' => t('Delete any %type membership', array('%type' => $type->label)),
+      ),
+      $type_name . ' delete own membership' => array(
+        'title' => t('Delete own %type membership', array('%type' => $type->label)),
+      ),
+    );
+  }
+  return $perms;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function membership_entity_type_menu() {
+  $items = array();
+
+  foreach (membership_entity_type_get_types() as $type) {
+    $type_url_str = str_replace('_', '-', $type->type);
+
+    $items['admin/memberships/add/' . $type_url_str] = array(
+      'title' => $type->label,
+      'title callback' => 'check_plain',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('membership_entity_edit_form', NULL, $type->type),
+      'access arguments' => array('administer memberships'),
+      'description' => $type->description,
+      'file' => 'membership_entity.pages.inc',
+      'file path' => drupal_get_path('module', 'membership_entity'),
+    );
+
+    $items['user/join/' . $type_url_str] = array(
+      'title' => 'Join - ' . $type->label,
+      'title callback' => 'check_plain',
+      'description' => $type->description,
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('membership_entity_join_form', $type->type),
+      'access callback' => 'membership_entity_access',
+      'access arguments' => array('join', $type->type),
+      'file' => 'membership_entity.pages.inc',
+      'file path' => drupal_get_path('module', 'membership_entity'),
+    );
+
+    if (module_exists('membership_entity_term')) {
+      $items['user/renew/' . $type_url_str] = array(
+        'title' => 'Renew - ' . $type->label,
+        'title callback' => 'check_plain',
+        'description' => $type->description,
+        'page callback' => 'membership_entity_term_renew_page',
+        'page arguments' => array($type->type),
+        'access callback' => TRUE,
+        'file' => 'membership_entity_term.pages.inc',
+        'file path' => drupal_get_path('module', 'membership_entity_term'),
+      );
+    }
+  }
+  return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function membership_entity_type_menu_alter(&$items) {
+  $alter = array(
+    'admin/memberships/types' => array(
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 99,
+    ),
+    'admin/memberships/add' => array(
+      'page callback' => 'membership_entity_type_membership_add_page',
+      'page arguments' => array('admin'),
+      'file' => 'membership_entity_type.pages.inc',
+      'module' => 'membership_entity_type',
+      'type' => MENU_LOCAL_ACTION | MENU_NORMAL_ITEM,
+    ),
+    'user/join' => array(
+      'page callback' => 'membership_entity_type_membership_add_page',
+      'page arguments' => array('join'),
+      'access callback' => TRUE,
+      'file' => 'membership_entity_type.pages.inc',
+      'module' => 'membership_entity_type',
+    ),
+  );
+
+  // Override the renew page.
+  if (module_exists('membership_entity_term')) {
+    $alter['user/renew'] = array(
+      'page callback' => 'membership_entity_type_renew_page',
+      'file' => 'membership_entity_type.pages.inc',
+      'module' => 'membership_entity_type',
+    );
+  }
+
+  foreach ($alter as $path => $args) {
+    $items[$path] = array_merge($items[$path], $args);
+  }
+}
+
+/**
+ * Implements hook_admin_menu_map().
+ */
+function membership_entity_type_admin_menu_map() {
+  if (!user_access('administer membership types')) {
+    return;
+  }
+  return array(
+    'admin/memberships/types/manage/%membership_entity_type' => array(
+      'parent' => 'admin/memberships/types',
+      'arguments' => array(
+        array('%membership_entity_type' => array_keys(membership_entity_type_get_types())),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function membership_entity_type_form_alter(&$form, &$form_state, $form_id) {
+  if (!empty($form['#membership_entity_form'])) {
+    $type = $form['#membership_entity_type'] = membership_entity_type_load($form['#bundle']);
+    field_attach_prepare_view('membership_entity_type', array($type->id => $type), 'form');
+    $fields = field_attach_view('membership_entity_type', $type, 'form');
+    foreach (element_children($fields) as $field_name) {
+      $form[$field_name] = $fields[$field_name];
+    }
+  }
+}
+
+/**
+ * Implements hook_membership_entity_view_alter().
+ */
+function membership_entity_type_membership_entity_view_alter(&$build) {
+  $view_mode = $build['#view_mode'];
+  if ($view_mode == 'account') {
+    $membership = $build['#membership_entity'];
+    $type = membership_entity_type_load($membership->type);
+    $build['#title'] = t('@type @member_id', array(
+      '@type' => $type->label,
+      '@member_id' => $membership->member_id,
+    ));
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function membership_entity_type_theme($existing, $type, $theme, $path) {
+  return array(
+    'membership_entity_type_add_list' => array(
+      'variables' => array(
+        'context' => 'join',
+        'types' => NULL,
+      ),
+      'file' => 'membership_entity_type.pages.inc',
+    ),
+  );
+}
+
+/**
+ * Returns a list of membership types.
+ *
+ * @param string $machine_name
+ *   Get information about a specific type. NULL to return all types.
+ */
+function membership_entity_type_get_types($machine_name = NULL) {
+  $types = &drupal_static(__FUNCTION__, array());
+  if (empty($types)) {
+    $results = db_query('SELECT id, type, label, weight, description, data, status, module FROM {membership_entity_type}');
+    foreach ($results as $result) {
+      $result->data = unserialize($result->data);
+      $types[$result->type] = $result;
+    }
+  }
+
+  if (isset($machine_name)) {
+    return isset($types[$machine_name]) ? $types[$machine_name] : FALSE;
+  }
+  return $types;
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function membership_entity_type_field_extra_fields() {
+  $extra = array();
+  $fields = field_info_instances('membership_entity_type', 'membership_entity_type');
+
+  foreach (membership_entity_type_get_types() as $type) {
+    $extra['membership_entity'][$type->type]['form']['user'] = array(
+      'label' => t('User Information'),
+      'description' => t('User account fields on the join form.'),
+      'weight' => -10,
+    );
+
+    $extra['membership_entity'][$type->type]['form']['membership'] = array(
+      'label' => t('Membership Information'),
+      'description' => t('Member ID, primary and secondary members, status, etc.'),
+      'weight' => 0,
+    );
+
+    // Add membership type fields.
+    foreach ($fields as $field_name => $field) {
+      $extra['membership_entity'][$type->type]['form'][$field_name] = array(
+        'label' => t('Membership type: @label', array('@label' => $field['label'])),
+        'description' => t('The membership type @label field.', array('@label' => $field['label'])),
+        'weight' => 10,
+      );
+    }
+
+  }
+  return $extra;
+}
+
+/**
+ * Create a new membership entity type with default values.
+
+ * @param array $values
+ *   An associative array of settings to override the defaults.
+ *
+ * @return MembershipEntityType The new (unsaved) membership type object.
+ */
+function membership_entity_type_create($values = array()) {
+  return entity_create('membership_entity_type', $values);
+}
+
+/**
+ * Load a membership type object.
+ *
+ * @param int|string $id
+ *   The type id or machine name.
+ * @param boolean $reset
+ *   TRUE to rebuild cached data.
+ *
+ * @return MembershipEntityType The loaded membership type object.
+ */
+function membership_entity_type_load($id = NULL, $reset = FALSE) {
+  $types = membership_entity_type_load_multiple(array($id), array(), $reset);
+  return is_array($types) ? reset($types) : FALSE;
+}
+
+/**
+ * Loads multiple membership type objects.
+ */
+function membership_entity_type_load_multiple($ids = FALSE, $conditions = array(), $reset = FALSE) {
+  return entity_load('membership_entity_type', $ids, $conditions, $reset);
+}
+
+/**
+ * Save a membership entity type.
+ */
+function membership_entity_type_save(&$type) {
+  return entity_save('membership_entity_type', $type);
+}
+
+/**
+ * Delete a membership entity type.
+ */
+function membership_entity_type_delete($id) {
+  membership_entity_type_delete_multiple(array($id));
+}
+
+/**
+ * Delete multiple membership entities.
+ */
+function membership_entity_type_delete_multiple($ids) {
+  entity_delete_multiple('membership_entity_type', $ids);
+}
+
+/**
+ * Returns a list of membership type names.
+ */
+function membership_entity_type_get_names() {
+  $types = membership_entity_type_get_types();
+  $names = array();
+  foreach ($types as $type) {
+    $names[$type->type] = $type->label;
+  }
+  return $names;
+}
+
+/**
+ * Returns the human readable name of a membership object type.
+ *
+ * @param MembershipEntity $membership
+ *   The membership object to get the type name.
+ */
+function membership_entity_type_get_name($membership) {
+  $names = membership_entity_type_get_names();
+  return isset($names[$membership->type]) ? $names[$membership->type] : '';
+}
+
+/**
+ * Title callback for a membership type.
+ */
+function membership_entity_type_page_title($type) {
+  return $type->label;
+}
+
+/**
+ * Implements hook_forms().
+ */
+function membership_entity_forms() {
+  $forms = array();
+  if ($types = membership_entity_type_get_types()) {
+    foreach ($types as $type) {
+      $forms[$type->type . '_membership_entity_edit_form']['callback'] = 'membership_entity_edit_form';
+    }
+  }
+  return $forms;
+}

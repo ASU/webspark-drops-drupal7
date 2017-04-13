@@ -12,7 +12,7 @@
 
 <div class="panel-display beast clearfix <?php !empty($class) ? print $class : ''; ?>" <?php !empty($css_id) ? print "id=\"$css_id\"" : ''; ?>>
 
-  <div class="section section-post-header">
+  <section class="section section-post-header">
     <div class="container">
       <div class="row row-1 beast-single-column row-full">
         <div class="column col-md-12 beast-post-header-row1">
@@ -20,9 +20,9 @@
         </div>
       </div>
     </div><!-- /.container -->
-  </div><!-- /.section-post-header -->
+  </section><!-- /.section-post-header -->
 
-  <div class="section section-top">
+  <section class="section section-top">
     <div class="container">
       <div class="row row-1 beast-single-column row-full">
         <div class="column col-md-12 beast-top-row1">
@@ -80,10 +80,10 @@
 				</div>
 			</div>
     </div><!-- /.container -->
-  </div><!-- /.section-top -->
+  </section><!-- /.section-top -->
 
 
-  <div class="section section-middle">
+  <section class="section section-middle">
     <div class="container">
       <div class="row row-1 beast-single-column row-full">
         <div class="column col-md-12 beast-middle-row1">
@@ -141,10 +141,10 @@
 				</div>
 			</div>
     </div><!-- /.container -->
-  </div><!-- /.section-middle -->
+  </section><!-- /.section-middle -->
 
 
-  <div class="section section-bottom">
+  <section class="section section-bottom">
     <div class="container">
       <div class="row row-1 beast-single-column row-full">
         <div class="column col-md-12 beast-bottom-row1">
@@ -202,9 +202,9 @@
 				</div>
 			</div>
     </div><!-- /.container -->
-  </div><!-- /.section-bottom -->
+  </section><!-- /.section-bottom -->
 
-  <div class="section section-pre-footer">
+  <section class="section section-pre-footer">
     <div class="container">
       <div class="row row-1 beast-single-column row-full">
         <div class="column col-md-12 beast-pre-footer-row1">
@@ -212,6 +212,6 @@
         </div>
       </div>
     </div><!-- /.container -->
-  </div><!-- /.section-pre-footer -->
+  </section><!-- /.section-pre-footer -->
 
 </div><!-- /.beast -->

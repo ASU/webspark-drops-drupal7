@@ -1,0 +1,10 @@
+/**
+ * @file
+ * Styles for admin page.
+ */
+
+.membership-entity-radio-label {
+  display: inline-block;
+  line-height: 1em;
+  vertical-align: text-top;
+}

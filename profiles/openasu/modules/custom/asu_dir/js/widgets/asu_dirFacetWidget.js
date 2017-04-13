@@ -4,8 +4,19 @@
 (function ($) {
     AjaxSolr.asu_dirFacetWidget = AjaxSolr.AbstractFacetWidget.extend({
 
+
         init: function () {
             this.initStore();
+
+            // If we only have the default option in a dropdown facet, hide.
+            $('.facet-widget').each(function () {
+                // In toggle() TRUE == show, FALSE == hide
+                // We use 2 as display threshold because of label option, and
+                // if we've had a selection, we'll have 2. Also, if we only
+                // have one actual option, no need to allow select.
+                $(this).toggle($(this).find('option').size() > 2);
+            });
+
         },
 
 
@@ -77,10 +88,7 @@
                 if (count > maxCount) {
                     maxCount = count;
                 }
-
-                if (facet != '' && facet != ' ') {
-                    objectedItems.push({facet: facet, count: count});
-                }
+                objectedItems.push({facet: facet, count: count});
             }
 
             objectedItems.sort(function (a, b) {
@@ -116,8 +124,6 @@
                             .text(facet + ' (' + count + ')').attr('value', facet)
                         //.addClass('tagcloud_size_' + parseInt(objectedItems[i].count / maxCount * 10))
                     );
-
-
                     //only bind once
                     if (i == 0) {
                         $(this.target).unbind('change').change(this.selectClickHandler());
@@ -145,14 +151,7 @@
                 // We use 2 as display threshold because of label option, and
                 // if we've had a selection, we'll have 2. Also, if we only
                 // have one actual option, no need to allow select.
-                //$(this).toggle($(this).find('option').size() > 1);
-                if ($(this).find('option').size() > 1) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-
-
+                $(this).toggle($(this).find('option').size() > 2);
             });
 
 

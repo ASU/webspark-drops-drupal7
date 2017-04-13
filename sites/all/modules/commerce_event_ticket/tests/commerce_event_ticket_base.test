@@ -1,0 +1,88 @@
+<?php
+/**
+ * @file
+ * Base class for Commerce Event Ticket tests.
+ */
+
+abstract class CommerceEventTicketBaseTestCase extends CommerceBaseTestCase {
+
+  /**
+   * Overrides DrupalWebTestCase::setUp().
+   */
+  public function setUp($modules = array()) {
+    // DrupalWebTestCase::setUp() does accept $modules as a parameter, although
+    // it's not obvious in the method signature.
+    $combined_modules = array_merge(array(
+      'commerce_checkout',
+      'commerce_event_ticket',
+    ), $modules);
+    $final_modules = parent::setUpHelper('api', $combined_modules);
+    parent::setUp($final_modules);
+  }
+
+  /**
+   * Create a customer who has permission to view own event tickets.
+   */
+  protected function createDummyEventTicketCustomer() {
+    $permissions = array(
+      'view own commerce event tickets',
+    );
+    $permissions += $this->permissionBuilder('store customer');
+    return $this->drupalCreateUser($permissions);
+  }
+
+  /**
+   * Create a user who has permission to update all event tickets.
+   */
+  protected function createDummyEventTicketEditor() {
+    return $this->drupalCreateUser(array(
+      'view all commerce event tickets',
+      'update all commerce event tickets',
+    ));
+  }
+
+  /**
+   * Create a user who has permission to validate or reset all tickets.
+   */
+  protected function createDummyEventTicketValidator() {
+    return $this->drupalCreateUser(array(
+      'view all commerce event tickets',
+      'mark used any commerce event tickets',
+      'mark unused any commerce event tickets',
+    ));
+  }
+
+  /**
+   * Create a user who has permission to validate some tickets.
+   */
+  protected function createDummyEventTicketSelectiveValidator($node_type = 'product_display') {
+    return $this->drupalCreateUser(array(
+      'view commerce event tickets given node update access',
+      'mark used commerce event tickets given node update access',
+      'mark unused commerce event tickets given node update access',
+      "edit own $node_type content",
+    ));
+  }
+
+  /**
+   * Create dummy tickets.
+   *
+   * @param int $quantity
+   *   The quantity of tickets to create (default: 1).
+   * @param object $customer
+   *   An optional customer (Drupal user account object) for the tickets.
+   * @param object $product
+   *   An optional Commerce product object.
+   *
+   * @return CommerceEventTicketEntity[]
+   *   An array of ticket objects.
+   */
+  protected function createDummyTickets($quantity = 1, $customer = NULL, $product = NULL) {
+    $customer = $customer ? $customer : $this->createDummyEventTicketCustomer();
+    $product = $product ? $product : $this->createDummyProduct(NULL, NULL, 10, NULL, 1);
+    $product->cet_enable[LANGUAGE_NONE][0]['value'] = 1;
+    $order = $this->createDummyOrder($customer->uid, array($product->product_id => $quantity), 'checkout_complete');
+    return commerce_event_ticket_create_from_order($order);
+  }
+
+}

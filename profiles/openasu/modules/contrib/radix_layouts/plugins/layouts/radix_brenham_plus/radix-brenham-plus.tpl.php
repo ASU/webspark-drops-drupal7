@@ -14,7 +14,7 @@
 ?>
 
 <div class="panel-display brenham-plus clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
-  <div class="section alt" id="promo">
+  <section class="section alt" id="promo">
     <div class="container">
       <div class="row row-full">
       <div class="col-md-12 brenham-plus-promo radix-layouts-header panel-panel">
@@ -23,8 +23,8 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="section">
+  </section>
+  <section class="section">
     <div class="container">
       <div class="row">
       
@@ -56,5 +56,5 @@
         
       </div>
     </div>
-  </div>
+  </section>
 </div><!-- /.brenham-plus -->

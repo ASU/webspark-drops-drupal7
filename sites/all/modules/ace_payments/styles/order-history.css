@@ -1,0 +1,59 @@
+@CHARSET "ISO-8859-1";
+table.order-history {
+	table-layout: fixed;
+	border-collapse: collapse;
+	width: 100%;
+	border-top: 2px solid black;
+	border-bottom: 2px solid black;
+}
+table.order-history tbody,
+table.order-history thead,
+table.order-history tr,
+table.order-history th,
+table.order-history td {
+	margin: 0;
+	padding: 5px;
+	background-color: transparent;
+	border: none;
+}
+table.order-history thead th {
+	border-bottom: 1px solid black;
+}
+table.order-history th.date,
+table.order-history td.date,
+table.order-history td.amount,
+table.order-history td.fmv,
+table.order-history th.amount,
+table.order-history th.fmv {
+	width: 80px;
+	text-align: center;
+}
+
+table.order-history th {
+	vertical-align: bottom;
+}
+table.order-history td {
+	vertical-align: top;
+}
+
+table.order-history ul,
+table.order-history ul li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+ul.pager {
+	margin-top: 0.75em;
+}
+
+ul.pager,
+ul.pager a {
+	color: #555;
+}
+ul.pager .pager-current {
+	color: black;
+}
+.item-list ul.pager li {
+	margin-left: 1em;
+}

@@ -1,0 +1,1223 @@
+<?php
+/**
+ * @file
+ * Main file for the Commerce Event Ticket module.
+ */
+
+/**
+ * Implements hook_entity_info().
+ */
+function commerce_event_ticket_entity_info() {
+  $entities = array();
+
+  $entities['commerce_event_ticket'] = array(
+    'label' => t('Event ticket'),
+    'entity class' => 'CommerceEventTicketEntity',
+    'controller class' => 'CommerceEventTicketController',
+    'views controller class' => 'EntityDefaultViewsController',
+    'uri callback' => 'commerce_event_ticket_uri',
+    'access callback' => 'commerce_event_ticket_access',
+    'label callback' => 'commerce_event_ticket_label',
+    'base table' => 'commerce_event_ticket',
+    'revision table' => 'commerce_event_ticket_revision',
+    'token type' => 'commerce-event-ticket',
+    'entity keys' => array(
+      'id' => 'ticket_id',
+      'bundle' => 'type',
+      'revision' => 'revision_id',
+    ),
+    'bundle keys' => array(
+      'bundle' => 'type',
+    ),
+    'bundles' => array(),
+    'view callback' => 'entity_metadata_view_single',
+    'static cache' => TRUE,
+    'fieldable' => TRUE,
+    'module' => 'commerce_event_ticket',
+    'view modes' => array(
+      'administrator' => array(
+        'label' => t('Administrator'),
+        'custom settings' => FALSE,
+      ),
+      'customer' => array(
+        'label' => t('Customer'),
+        'custom settings' => FALSE,
+      ),
+    ),
+    'metatag' => FALSE,
+    'redirect' => FALSE,
+  );
+
+  foreach (commerce_event_ticket_types() as $key => $type) {
+    $entities['commerce_event_ticket']['bundles'][$key] = array(
+      'label' => $type['name'],
+      'admin' => array(
+        'path' => 'admin/commerce/config/event-ticket/' . $key,
+        'real path' => 'admin/commerce/config/event-ticket/' . $key,
+        'bundle argument' => 4,
+        'access arguments' => array('administer commerce event ticket'),
+      ),
+    );
+  }
+
+  return $entities;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function commerce_event_ticket_permission() {
+  return array(
+    'administer commerce event ticket' => array(
+      'title' => t('Administer event tickets'),
+      'restrict access' => TRUE,
+    ),
+    'update all commerce event tickets' => array(
+      'title' => t('Update any ticket'),
+      'description' => t('This grants access to edit any ticket values. The separate "Validate" and "Reset" permissions (below) are more restrictive.'),
+    ),
+    'mark used any commerce event tickets' => array(
+      'title' => t('Validate any ticket'),
+    ),
+    'mark used commerce event tickets given node update access' => array(
+      'title' => t('Validate tickets, given node edit access'),
+      'description' => t('This lets the user validate (mark used) tickets related to nodes that s/he may edit.'),
+    ),
+    'mark unused any commerce event tickets' => array(
+      'title' => t('Reset any ticket'),
+    ),
+    'mark unused commerce event tickets given node update access' => array(
+      'title' => t('Reset tickets, given node edit access'),
+      'description' => t('This lets the user reset (mark unused) tickets related to nodes that s/he may edit.'),
+    ),
+    'look up commerce event ticket barcodes' => array(
+      'title' => t('Look up tickets by their barcodes'),
+      'description' => t('This lets the user find a ticket by its barcode. This is unnecessary if the user already has the "View all tickets" permission.'),
+    ),
+    'view all commerce event tickets' => array(
+      'title' => t('View all tickets'),
+    ),
+    'view commerce event tickets given node update access' => array(
+      'title' => t('View tickets, given node edit access'),
+      'description' => t('This lets the user view tickets related to nodes that s/he may edit.'),
+    ),
+    'view own commerce event tickets' => array(
+      'title' => t('View own tickets'),
+    ),
+  );
+}
+
+/**
+ * Get information about Commerce Event Ticket types.
+ *
+ * @return array
+ *   An array of ticket types, keyed with a unique machine name. Each element is
+ *   a structured array, defining at least 'name' (a sanitized human-readable
+ *   name).
+ */
+function commerce_event_ticket_types() {
+  $types = &drupal_static(__FUNCTION__);
+  if ($types === NULL) {
+    $types = array(
+      'ticket' => array(
+        'name' => t('Event ticket'),
+      ),
+    );
+    $types += module_invoke_all('commerce_event_ticket_info');
+    drupal_alter('commerce_event_ticket_info', $types);
+  }
+  return $types;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function commerce_event_ticket_menu() {
+  // The configuration form.
+  $items['admin/commerce/config/event-ticket'] = array(
+    'title' => 'Commerce Event Ticket settings',
+    'description' => 'Configure settings for event tickets.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('commerce_event_ticket_config'),
+    'file' => 'includes/commerce_event_ticket.admin.inc',
+    'access arguments' => array('administer commerce event ticket'),
+  );
+  $items['admin/commerce/config/event-ticket/settings'] = array(
+    'title' => 'Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  // View a ticket (administrators).
+  $items['admin/commerce/tickets/%commerce_event_ticket'] = array(
+    'title callback' => 'commerce_event_ticket_label',
+    'title arguments' => array(3),
+    'page callback' => 'commerce_event_ticket_view',
+    'page arguments' => array(3, 'administrator'),
+    'access callback' => 'commerce_event_ticket_access',
+    'access arguments' => array('update', 3),
+  );
+  $items['admin/commerce/tickets/%commerce_event_ticket/view'] = array(
+    'title' => 'View',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  // Edit a ticket.
+  $items['admin/commerce/tickets/%commerce_event_ticket/edit'] = array(
+    'title' => 'Edit',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('commerce_event_ticket_edit_form', 3),
+    'file' => 'includes/commerce_event_ticket.forms.inc',
+    'access callback' => 'commerce_event_ticket_access',
+    'access arguments' => array('update', 3),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+  );
+  // View a ticket (customers).
+  $items['event-ticket/%commerce_event_ticket'] = array(
+    'title callback' => 'commerce_event_ticket_label',
+    'title arguments' => array(1),
+    'page callback' => 'commerce_event_ticket_view',
+    'page arguments' => array(1, 'customer'),
+    'access callback' => 'commerce_event_ticket_access',
+    'access arguments' => array('view', 1),
+  );
+  // Look up a ticket by its barcode. This allows tickets to be looked up easily
+  // from a mobile scanner app.
+  $items['event-ticket/lookup/%'] = array(
+    'title' => 'Look up barcode',
+    'page callback' => 'commerce_event_ticket_lookup_callback',
+    'page arguments' => array(2),
+    'access callback' => 'commerce_event_ticket_lookup_access',
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function commerce_event_ticket_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  // Add an action link to the ticket edit page from the customer ticket page.
+  if ($root_path == 'event-ticket/%') {
+    $ticket_id = $router_item['original_map'][1];
+    $view_item = menu_get_item('admin/commerce/tickets/' . $ticket_id);
+    if ($view_item['access']) {
+      // Override the title.
+      $view_item['title'] = t('View as administrator');
+      $data['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $view_item,
+      );
+    }
+  }
+}
+
+/**
+ * Access callback to look up event tickets by their barcodes.
+ *
+ * @param object $account
+ *   The Drupal user account object (defaults to the current user).
+ *
+ * @return bool
+ *   TRUE if the account has access, FALSE otherwise.
+ */
+function commerce_event_ticket_lookup_access($account = NULL) {
+  return user_access('view all commerce event tickets', $account)
+    || user_access('look up commerce event ticket barcodes', $account);
+}
+
+/**
+ * Menu callback: look up a ticket by its barcode.
+ *
+ * @param string $barcode_token
+ *   The barcode token.
+ */
+function commerce_event_ticket_lookup_callback($barcode_token) {
+  $ticket = commerce_event_ticket_load_by_barcode($barcode_token);
+  if (!$ticket) {
+    // Return an Access Denied error rather than Not Found, so that it is not so
+    // easy for an attacker to find out whether barcodes exist in the system.
+    return MENU_ACCESS_DENIED;
+  }
+  if (!commerce_event_ticket_access('mark used', $ticket)) {
+    return MENU_ACCESS_DENIED;
+  }
+  drupal_goto('admin/commerce/tickets/' . $ticket->ticket_id);
+}
+
+/**
+ * View callback for an event ticket.
+ */
+function commerce_event_ticket_view(CommerceEventTicketEntity $ticket, $view_mode = 'customer') {
+  $build = array();
+  // Add the validate form, for those with access.
+  if ($view_mode == 'administrator' && commerce_event_ticket_access('mark used', $ticket)) {
+    module_load_include('inc', 'commerce_event_ticket', 'includes/commerce_event_ticket.forms');
+    $build['edit_form'] = drupal_get_form('commerce_event_ticket_validate_form', $ticket);
+  }
+  // Add the ticket information.
+  $build['ticket'] = array(
+    '#theme' => 'commerce_event_ticket',
+    '#view_mode' => $view_mode,
+    '#ticket' => $ticket,
+  );
+  return $build;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function commerce_event_ticket_theme() {
+  return array(
+    'commerce_event_ticket' => array(
+      'variables' => array(
+        'view_mode' => 'customer',
+        'ticket' => NULL,
+      ),
+      'file' => 'includes/commerce_event_ticket.theme.inc',
+    ),
+  );
+}
+
+/**
+ * Validate a ticket.
+ *
+ * @param CommerceEventTicketEntity $ticket
+ *   The ticket entity to validate.
+ * @param bool $mark_used
+ *   Whether to mark the ticket as used (if it is valid). Defaults to TRUE.
+ * @param bool $revision
+ *   Whether to create a new revision for the ticket if it is updated. Defaults
+ *   to TRUE.
+ * @param string $log
+ *   A log entry to be saved to the ticket if it has been marked as used.
+ *   Defaults to t('Validated').
+ *
+ * @return string|TRUE
+ *   A string explaining why the ticket is not valid, or TRUE if it is valid
+ *   and has been validated.
+ */
+function commerce_event_ticket_validate(CommerceEventTicketEntity $ticket, $mark_used = TRUE, $revision = TRUE, $log = NULL) {
+  $validity = commerce_event_ticket_explain_validity($ticket, TRUE);
+  if ($validity !== TRUE) {
+    return $validity;
+  }
+  if ($mark_used) {
+    $ticket->used = 1;
+    if ($revision) {
+      $ticket->revision = TRUE;
+      $ticket->log = empty($log) ? t('Validated') : $log;
+    }
+    commerce_event_ticket_save($ticket);
+  }
+  return TRUE;
+}
+
+/**
+ * Reset a ticket so that it is no longer marked as used.
+ *
+ * This might be useful for developers.
+ *
+ * @param CommerceEventTicketEntity $ticket
+ *   The ticket entity to reset.
+ * @param bool $revision
+ *   Whether to create a new revision for the ticket if it is updated. Defaults
+ *   to TRUE.
+ * @param string $log
+ *   A log entry to be saved to the ticket if it has been updated. Defaults to
+ *   t('Reset').
+ */
+function commerce_event_ticket_reset(CommerceEventTicketEntity $ticket, $revision = TRUE, $log = NULL) {
+  if (!$ticket->used) {
+    return;
+  }
+  $ticket->used = 0;
+  if ($revision) {
+    $ticket->revision = TRUE;
+    $ticket->log = empty($log) ? t('Reset') : $log;
+  }
+  commerce_event_ticket_save($ticket);
+}
+
+/**
+ * Check whether a ticket is valid.
+ *
+ * @param CommerceEventTicketEntity $ticket
+ *   The ticket entity.
+ * @param bool $reset
+ *   Whether to re-check this ticket instead of using a static cache.
+ *
+ * @return bool
+ *   TRUE if the ticket is valid and may be used to enter the event, FALSE
+ *   otherwise.
+ */
+function commerce_event_ticket_is_valid(CommerceEventTicketEntity $ticket, $reset = FALSE) {
+  $explain = commerce_event_ticket_explain_validity($ticket, $reset);
+  return ($explain === TRUE);
+}
+
+/**
+ * Explain why a ticket is invalid.
+ *
+ * @param CommerceEventTicketEntity $ticket
+ *   The ticket entity.
+ * @param bool $reset
+ *   Whether to re-check this ticket instead of using a static cache.
+ *
+ * @return string|TRUE
+ *   A string explaining why the ticket is not valid, or TRUE if it is valid.
+ */
+function commerce_event_ticket_explain_validity(CommerceEventTicketEntity $ticket, $reset = FALSE) {
+  $reasons = &drupal_static(__FUNCTION__, array());
+  if (isset($reasons[$ticket->ticket_id]) && !$reset) {
+    return $reasons[$ticket->ticket_id];
+  }
+  // Check the date of the event.
+  if (variable_get('commerce_event_ticket_date_enabled', 1) && module_exists('date')) {
+    $strict = variable_get('commerce_event_ticket_date_strict', 0);
+    // If in strict mode, make sure that there is an event (product display
+    // node) for the ticket.
+    $node = $ticket->nid ? node_load($ticket->nid) : FALSE;
+    if ($node) {
+      $date = commerce_event_ticket_get_date($node);
+      if ($date) {
+        if (!commerce_event_ticket_check_date($date['start'], $date['end'])) {
+          $reasons[$ticket->ticket_id] = t('Event is in the past');
+          return $reasons[$ticket->ticket_id];
+        }
+      }
+      elseif ($strict) {
+        $reasons[$ticket->ticket_id] = t('Event date not found');
+        return $reasons[$ticket->ticket_id];
+      }
+    }
+    elseif ($strict) {
+      $reasons[$ticket->ticket_id] = t('Event not found');
+      return $reasons[$ticket->ticket_id];
+    }
+  }
+  // Check that the ticket's order still exists.
+  $order = commerce_order_load($ticket->order_id);
+  if (!$order) {
+    $reasons[$ticket->ticket_id] = t('Order not found.');
+    return $reasons[$ticket->ticket_id];
+  }
+  // Check the order status.
+  if (!commerce_event_ticket_check_order_status($order)) {
+    $status_title = commerce_order_status_get_title($order->status);
+    $reasons[$ticket->ticket_id] = t('Invalid order status: @status', array(
+      '@status' => $status_title ? $status_title : $order->status,
+    ));
+    return $reasons[$ticket->ticket_id];
+  }
+  // Check the product.
+  $product = commerce_product_load($ticket->product_id);
+  if (!$product) {
+    $reasons[$ticket->ticket_id] = t('Product not found');
+    return $reasons[$ticket->ticket_id];
+  }
+  elseif (!commerce_event_ticket_product_enabled($product)) {
+    $reasons[$ticket->ticket_id] = t('Invalid product');
+    return $reasons[$ticket->ticket_id];
+  }
+  // Check that the ticket has not already been used.
+  if ($ticket->used) {
+    $reasons[$ticket->ticket_id] = t('Ticket already used');
+    return $reasons[$ticket->ticket_id];
+  }
+  $reasons[$ticket->ticket_id] = TRUE;
+  return $reasons[$ticket->ticket_id];
+}
+
+/**
+ * Access callback for an event ticket.
+ *
+ * @param string $op
+ *   The operation to check access for: one of 'view', 'update', 'delete', 'mark
+ *   used', or 'mark unused'.
+ * @param CommerceEventTicketEntity $ticket
+ *   The event ticket object.
+ * @param object $account
+ *   The Drupal user account object (defaults to the current user).
+ *
+ * @return bool
+ *   TRUE if the account has access, FALSE otherwise.
+ */
+function commerce_event_ticket_access($op, CommerceEventTicketEntity $ticket, $account = NULL) {
+  if (!$account) {
+    $account = $GLOBALS['user'];
+  }
+  switch ($op) {
+    case 'view':
+      if (user_access('view all commerce event tickets', $account)) {
+        return TRUE;
+      }
+      // The 'owner' of a ticket is the owner of the order.
+      if ($account->uid && user_access('view own commerce event tickets', $account)) {
+        $order = commerce_order_load($ticket->order_id);
+        if ($order->uid == $account->uid) {
+          return TRUE;
+        }
+      }
+      if (user_access($op . ' commerce event tickets given node update access', $account)) {
+        $node = node_load($ticket->nid);
+        if ($node && node_access('update', $node, $account)) {
+          return TRUE;
+        }
+      }
+      break;
+
+    case 'update':
+      return user_access('update all commerce event tickets', $account);
+
+    case 'mark used':
+    case 'mark unused':
+      if (user_access('update all commerce event tickets', $account)) {
+        return TRUE;
+      }
+      if (user_access($op . ' any commerce event tickets', $account)) {
+        return TRUE;
+      }
+      if (!$account->uid) {
+        return FALSE;
+      }
+      if (user_access($op . ' commerce event tickets given node update access', $account)) {
+        $node = node_load($ticket->nid);
+        if ($node && node_access('update', $node, $account)) {
+          return TRUE;
+        }
+      }
+      break;
+
+  }
+  return FALSE;
+}
+
+/**
+ * Load an event ticket.
+ */
+function commerce_event_ticket_load($ticket_id) {
+  $tickets = commerce_event_ticket_load_multiple(array($ticket_id));
+  return $tickets ? reset($tickets) : FALSE;
+}
+
+/**
+ * Load multiple event ticket(s).
+ */
+function commerce_event_ticket_load_multiple($ticket_ids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('commerce_event_ticket', $ticket_ids, $conditions, $reset);
+}
+
+/**
+ * Load an event ticket by a given barcode token.
+ *
+ * @param string $barcode_token
+ *   The barcode for the ticket.
+ * @param bool $reset
+ *   Whether to bypass the static cache for this query. Defaults to FALSE.
+ *
+ * @return CommerceEventTicketEntity|FALSE
+ *   The ticket entity, or FALSE if a matching ticket does not exist.
+ */
+function commerce_event_ticket_load_by_barcode($barcode_token, $reset = FALSE) {
+  // Validate the provided barcode first.
+  if (!preg_match('/^[A-Z0-9]{6,12}$/i', $barcode_token)) {
+    return FALSE;
+  }
+  $tickets = commerce_event_ticket_load_multiple(FALSE, array('barcode_token' => $barcode_token), $reset);
+  return $tickets ? reset($tickets) : FALSE;
+}
+
+/**
+ * Get the unit price of a single event ticket.
+ *
+ * @param CommerceEventTicketEntity $ticket
+ *   The ticket object.
+ * @param EntityDrupalWrapper $line_item_wrapper
+ *   The entity metadata wrapper for the ticket's line item (optional).
+ *
+ * @return string|FALSE
+ *   The formatted unit price, or FALSE on failure.
+ */
+function commerce_event_ticket_get_unit_price(CommerceEventTicketEntity $ticket, EntityDrupalWrapper $line_item_wrapper = NULL) {
+  if (!$line_item_wrapper) {
+    $line_item = commerce_line_item_load($ticket->line_item_id);
+    if (!$line_item) {
+      return FALSE;
+    }
+    $line_item_wrapper = entity_metadata_wrapper('commerce_line_item', $line_item);
+  }
+  if (!isset($line_item_wrapper->commerce_unit_price)) {
+    return FALSE;
+  }
+  $unit_price = $line_item_wrapper->commerce_unit_price->value();
+  return commerce_currency_format($unit_price['amount'], $unit_price['currency_code']);
+}
+
+/**
+ * Count the number of products for a node.
+ *
+ * @param object $node
+ *   The product display node.
+ *
+ * @return int
+ *   The number of products referenced by the node.
+ */
+function commerce_event_ticket_count_node_products($node) {
+  $cache = &drupal_static(__FUNCTION__, array());
+  if (isset($cache[$node->nid])) {
+    return $cache[$node->nid];
+  }
+  $fields = commerce_info_fields('commerce_product_reference', 'node');
+  if (!$fields) {
+    return 0;
+  }
+  $node_wrapper = entity_metadata_wrapper('node', $node);
+  $count = 0;
+  foreach (array_keys($fields) as $field_name) {
+    if (empty($node_wrapper->$field_name)) {
+      continue;
+    }
+    $count += $node_wrapper->$field_name instanceof Countable ? count($node_wrapper->$field_name) : 1;
+  }
+  $cache[$node->nid] = $count;
+  return $count;
+}
+
+/**
+ * Check whether an event date is valid: i.e. for a current or future event.
+ *
+ * @param int $start_date
+ *   The start date as a UNIX timestamp.
+ * @param int $end_date
+ *   The end date as a UNIX timestamp. If the end date is the same as the start
+ *   date, then the duration of the event will be determined from the variable
+ *   'commerce_event_ticket_date_default_duration' (default: 1.5 hours).
+ *
+ * @return bool
+ *   FALSE if the event is in the past, otherwise TRUE.
+ */
+function commerce_event_ticket_check_date($start_date, $end_date) {
+  $validity_period = variable_get('commerce_event_ticket_date_validity_period', 0);
+  if ($start_date == $end_date) {
+    $end_date += variable_get('commerce_event_ticket_date_default_duration', 5400);
+  }
+  return REQUEST_TIME <= $end_date + $validity_period;
+}
+
+/**
+ * Get a date for a ticket's product display node.
+ *
+ * @param object $node
+ *   The node object.
+ *
+ * @return array|FALSE
+ *   An array containing two timestamps keyed by 'start' and 'end'; FALSE if
+ *   no date could be found.
+ */
+function commerce_event_ticket_get_date($node) {
+  $date_field_names = variable_get('commerce_event_ticket_date_fields');
+  // If no date field names are configured, then check in all the possible date
+  // fields.
+  if (!isset($date_field_names)) {
+    $date_field_names = commerce_event_ticket_get_date_fields();
+  }
+  if (!count($date_field_names)) {
+    return FALSE;
+  }
+  foreach ($date_field_names as $field_name) {
+    if (empty($node->$field_name)) {
+      continue;
+    }
+    // If there are multiple date values, use the last one. This should produce
+    // an array with at least the key 'value' (start date) and potentially the
+    // key 'value2' (end date).
+    $date = end($node->{$field_name}[LANGUAGE_NONE]);
+
+    // The Date module seems to sometimes provide DateObject objects and
+    // sometimes strings, perhaps due to different versions. The DateObject
+    // class extends the PHP core DateTime object.
+    if (isset($date['value']) && is_string($date['value'])) {
+      $date['start'] = strtotime($date['value']);
+      if (isset($date['value2'])) {
+        $date['end'] = strtotime($date['value2']);
+      }
+    }
+    elseif (isset($date['value']) && $date['value'] instanceof DateTime) {
+      // DateTime::getTimestamp() was added in PHP version 5.3.0.
+      if (method_exists($date['value'], 'getTimestamp')) {
+        $date['start'] = $date['value']->getTimestamp();
+      }
+      else {
+        $date['start'] = strtotime($date['value']->originalTime);
+      }
+      if (isset($date['value2']) && $date['value2'] instanceof DateTime) {
+        if (method_exists($date['value2'], 'getTimestamp')) {
+          $date['end'] = $date['value2']->getTimestamp();
+        }
+        else {
+          $date['end'] = $date['value2']->originalTime;
+        }
+      }
+    }
+    else {
+      watchdog('commerce_event_ticket', 'Failed to get the event date for node @nid.', array(
+        '@nid' => $node->nid,
+      ), WATCHDOG_ERROR);
+      return FALSE;
+    }
+
+    // If there is no end date, set it to the start date.
+    if (!isset($date['end'])) {
+      $date['end'] = $date['start'];
+    }
+
+    return $date;
+  }
+  return FALSE;
+}
+
+/**
+ * Get a list of Date fields attached to product display nodes.
+ *
+ * @param bool $reset
+ *   Whether to reset the static cache for this check (default: FALSE).
+ *
+ * @return array
+ *   An array of field names for the date fields.
+ */
+function commerce_event_ticket_get_date_fields($reset = FALSE) {
+  static $field_names;
+  if (!$reset && is_array($field_names)) {
+    return $field_names;
+  }
+  $product_reference_fields = commerce_info_fields('commerce_product_reference', 'node');
+  $product_display_node_types = array();
+  foreach ($product_reference_fields as $field_name => $field) {
+    if (isset($field['bundles']['node'])) {
+      $product_display_node_types = array_merge($product_display_node_types, $field['bundles']['node']);
+    }
+  }
+  if (!count($product_display_node_types)) {
+    return array();
+  }
+  $field_names = array();
+  $field_types = array('date', 'datetime', 'datestamp');
+  foreach (field_info_field_map() as $field_name => $field_stub) {
+    if (isset($field_stub['bundles']['node'])
+      && in_array($field_stub['type'], $field_types)
+      && array_intersect($product_display_node_types, $field_stub['bundles']['node'])) {
+      $field_names[] = $field_name;
+    }
+  }
+  return $field_names;
+}
+
+/**
+ * Get the display node associated with a product.
+ *
+ * @param int $product_id
+ *   The product ID.
+ *
+ * @return object|FALSE
+ *   The node object, or FALSE on failure.
+ */
+function commerce_event_ticket_get_product_node($product_id) {
+  $cache = &drupal_static(__FUNCTION__, array());
+  if (isset($cache[$product_id])) {
+    return $cache[$product_id];
+  }
+  $cache[$product_id] = FALSE;
+
+  // Get product reference field names.
+  if (!isset($cache['_field_names'])) {
+    $cache['_field_names'] = array();
+    foreach (field_info_field_map() as $field_name => $field_stub) {
+      if ($field_stub['type'] == 'commerce_product_reference' && isset($field_stub['bundles']['node'])) {
+        $cache['_field_names'][] = $field_name;
+      }
+    }
+    if (!$cache['_field_names']) {
+      return FALSE;
+    }
+  }
+  foreach ($cache['_field_names'] as $field_name) {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->fieldCondition($field_name, 'product_id', $product_id)
+      ->range(0, 1);
+    $result = $query->execute();
+    if ($result) {
+      $nids = array_keys($result['node']);
+      $nid = reset($nids);
+      $cache[$product_id] = node_load($nid);
+      break;
+    }
+  }
+  return $cache[$product_id];
+}
+
+/**
+ * Save an event ticket.
+ */
+function commerce_event_ticket_save(CommerceEventTicketEntity $ticket) {
+  return entity_get_controller('commerce_event_ticket')->save($ticket);
+}
+
+/**
+ * Delete an event ticket.
+ */
+function commerce_event_ticket_delete($ticket_id) {
+  return commerce_event_ticket_delete_multiple(array($ticket_id));
+}
+
+
+/**
+ * Delete multiple event ticket(s).
+ */
+function commerce_event_ticket_delete_multiple(array $ticket_ids, DatabaseTransaction $transaction = NULL) {
+  return entity_get_controller('commerce_event_ticket')->delete($ticket_ids, $transaction);
+}
+
+/**
+ * Delete all the tickets with the specified property and value combination.
+ *
+ * @return array
+ *   An array of all the ticket IDs that were deleted.
+ */
+function commerce_event_ticket_delete_by_property($name, $value, $operator = '=', DatabaseTransaction $transaction = NULL) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'commerce_event_ticket')
+    ->propertyCondition($name, $value);
+  $result = $query->execute();
+  if (!empty($result['commerce_event_ticket'])) {
+    $ids = array_keys($result['commerce_event_ticket']);
+    commerce_event_ticket_delete_multiple($ids, $transaction);
+    return $ids;
+  }
+  return array();
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function commerce_event_ticket_entity_delete($entity, $type) {
+  if ($type == 'commerce_line_item') {
+    commerce_event_ticket_delete_by_property('line_item_id', $entity->line_item_id);
+  }
+  elseif ($type == 'commerce_product') {
+    commerce_event_ticket_delete_by_property('product_id', $entity->product_id);
+  }
+}
+
+/**
+ * Implements hook_commerce_order_update().
+ */
+function commerce_event_ticket_commerce_order_update($order) {
+  // Create tickets for the order, if possible.
+  if (commerce_event_ticket_order_should_have_tickets($order, TRUE)) {
+    commerce_event_ticket_create_from_order($order);
+  }
+}
+
+/**
+ * Label callback for Commerce Event Ticket.
+ */
+function commerce_event_ticket_label($entity) {
+  return t('Ticket !ticket', array('!ticket' => $entity->ticket_id));
+}
+
+/**
+ * Generate a new random barcode token for the ticket.
+ *
+ * The core function drupal_get_token() is not used here, because barcode tokens
+ * may need to be quite short.
+ *
+ * @param int $length
+ *   The desired length of the token (default 10).
+ * @param bool $alpha
+ *   Whether to include alphabetical characters in the token (default TRUE).
+ * @param bool $unique
+ *   Whether to check that the token is unique (default TRUE). In some cases you
+ *   may not need a unique token, e.g. if you're going to prefix it by something
+ *   else.
+ *
+ * @return string
+ *   A random barcode token.
+ */
+function commerce_event_ticket_generate_barcode_token($length = 10, $alpha = TRUE, $unique = TRUE) {
+  static $chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  $limit = $alpha ? 35 : 9;
+  // Create the random token, using roughly the same logic as Drupal core's
+  // function, user_password().
+  // Lower-case characters are not included, because it's likely that tickets
+  // will be looked up in a case-insensitive search, depending on the database
+  // collation (see https://api.drupal.org/comment/45573#comment-45573).
+  for ($token = '', $i = 0; $i < $length; $i++) {
+    do {
+      $index = ord(drupal_random_bytes(1));
+    } while ($index > $limit);
+    $token .= $chars[$index];
+  }
+  // Uniqueness check. Find out whether the token already exists. If it does,
+  // recurse to find a new token.
+  if ($unique) {
+    $query = new EntityFieldQuery();
+    $count = $query->entityCondition('entity_type', 'commerce_event_ticket')
+      ->propertyCondition('barcode_token', $token)
+      ->count()
+      ->execute();
+    if ($count) {
+      return commerce_event_ticket_generate_barcode_token($length, $alpha);
+    }
+  }
+  return $token;
+}
+
+/**
+ * Check the status of an order to see whether its tickets are valid.
+ *
+ * @param object $order
+ *   The Commerce Order entity.
+ *
+ * @return bool
+ *   TRUE if the order has one of the configured statuses that represent whether
+ *   it is complete (for the purpose of validating tickets), FALSE otherwise.
+ */
+function commerce_event_ticket_check_order_status($order) {
+  $valid_statuses = variable_get('commerce_event_ticket_valid_statuses', array('checkout_complete', 'completed'));
+  return in_array($order->status, $valid_statuses);
+}
+
+/**
+ * Check whether an order should have tickets generated for it.
+ *
+ * @param object $order
+ *   The Commerce Order entity.
+ * @param bool $reset
+ *   Whether to reset the static cache for this check (default: FALSE).
+ *
+ * @return bool
+ *   TRUE if the order has one of the correct statuses AND contains at least one
+ *   product that is enabled for tickets. FALSE otherwise.
+ */
+function commerce_event_ticket_order_should_have_tickets($order, $reset = FALSE) {
+  if (empty($order->order_id)) {
+    return FALSE;
+  }
+  $cache = &drupal_static(__FUNCTION__, array());
+  if (!$reset && isset($cache[$order->order_id])) {
+    return $cache[$order->order_id];
+  }
+  $cache[$order->order_id] = FALSE;
+  // Check the order status.
+  if (!commerce_event_ticket_check_order_status($order)) {
+    return FALSE;
+  }
+  // Check line items in the order.
+  $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+  foreach ($order_wrapper->commerce_line_items as $line_item_wrapper) {
+    if (commerce_event_ticket_line_item_should_have_tickets($line_item_wrapper, $reset)) {
+      $cache[$order->order_id] = TRUE;
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Check whether a line item should have tickets.
+ *
+ * This does not check the order's status: it only does checking at the line
+ * item level.
+ *
+ * @param EntityDrupalWrapper $line_item_wrapper
+ *   The line item's entity metadata wrapper.
+ * @param bool $reset
+ *   Whether to bypass the static cache for this check (default: FALSE).
+ *
+ * @see commerce_event_ticket_order_should_have_tickets()
+ *
+ * @return bool
+ *   TRUE if the line item represents a product which is enabled to have
+ *   tickets.
+ */
+function commerce_event_ticket_line_item_should_have_tickets(EntityDrupalWrapper $line_item_wrapper, $reset = FALSE) {
+  static $cache;
+
+  $line_item = $line_item_wrapper->value();
+  if ($cache && isset($cache[$line_item->line_item_id]) && !$reset) {
+    return $cache[$line_item->line_item_id];
+  }
+
+  $cache[$line_item->line_item_id] = FALSE;
+
+  // Check that the line item is a product.
+  if (!in_array($line_item->type, commerce_product_line_item_types())) {
+    return FALSE;
+  }
+
+  // Check that the product is enabled to have tickets.
+  $product = $line_item_wrapper->commerce_product->value();
+  if (!commerce_event_ticket_product_enabled($product)) {
+    return FALSE;
+  }
+
+  // Find out the number of tickets to create.
+  if ($line_item->quantity < 1) {
+    return FALSE;
+  }
+
+  // Check the node's date, so that we don't create tickets for past events.
+  if (variable_get('commerce_event_ticket_date_enabled', 1) && module_exists('date')) {
+    $strict = variable_get('commerce_event_ticket_date_strict', 0);
+    $node = commerce_event_ticket_get_product_node($product->product_id);
+    if ($node) {
+      $date = commerce_event_ticket_get_date($node);
+      if ($date && !commerce_event_ticket_check_date($date['start'], $date['end'])) {
+        // The date is in the past.
+        return FALSE;
+      }
+      elseif (!$date && $strict) {
+        // The date could not be found (fail in strict mode).
+        return FALSE;
+      }
+    }
+    elseif ($strict) {
+      // The node could not be found (fail in strict mode).
+      return FALSE;
+    }
+  }
+
+  $cache[$line_item->line_item_id] = TRUE;
+  return TRUE;
+}
+
+/**
+ * Create event tickets for a line item.
+ *
+ * @param EntityDrupalWrapper $line_item_wrapper
+ *   The entity metadata wrapper (from Entity API) for the line item.
+ * @param bool $recreate
+ *   Whether to recreate the ticket(s) if they have already been created. The
+ *   default is FALSE, which means that this function will have no effect if
+ *   tickets already exist for the line item.
+ *
+ * @return CommerceEventTicketEntity[]
+ *   An array of saved ticket entities.
+ */
+function commerce_event_ticket_create_from_line_item(EntityDrupalWrapper $line_item_wrapper, $recreate = FALSE) {
+  if (!commerce_event_ticket_line_item_should_have_tickets($line_item_wrapper)) {
+    return array();
+  }
+
+  $line_item = $line_item_wrapper->value();
+
+  // Check the number of existing tickets for this line item.
+  $existing = commerce_event_ticket_load_multiple(FALSE, array(
+    'line_item_id' => $line_item->line_item_id,
+  ));
+
+  // If $recreate is not set, and the correct number of tickets exists, return
+  // the existing tickets.
+  $quantity = $line_item->quantity;
+  if (!$recreate && count($existing) == $quantity) {
+    return $existing;
+  }
+
+  $transaction = db_transaction();
+
+  try {
+
+    // Deal with existing tickets. If the line item quantity has been decreased
+    // then we want to delete surplus tickets. If it has been increased then we
+    // want to keep the existing tickets and generate the correct number of new
+    // ones.
+    if ($existing) {
+      // If $recreate is set, then delete all existing tickets so we can start
+      // again.
+      if ($recreate) {
+        commerce_event_ticket_delete_multiple(array_keys($existing), $transaction);
+        $existing = array();
+      }
+      else {
+        ksort($existing, SORT_NUMERIC);
+        if (count($existing) > $quantity) {
+          // Delete surplus tickets (if the line item quantity was decreased).
+          $surplus_ids = array_slice(array_keys($existing), $quantity);
+          commerce_event_ticket_delete_multiple($surplus_ids, $transaction);
+        }
+      }
+    }
+
+    // Create the new tickets.
+    $length = variable_get('commerce_event_ticket_barcode_length', 10);
+    $alpha = variable_get('commerce_event_ticket_token_type', 'alphanumeric') == 'alphanumeric';
+    $product_id = $line_item_wrapper->commerce_product->product_id->value();
+    $node = commerce_event_ticket_get_product_node($product_id);
+    $tickets = array();
+    $controller = entity_get_controller('commerce_event_ticket');
+    for ($ticket_number = 1; $ticket_number <= $quantity; $ticket_number++) {
+      $values = array(
+        'type' => 'ticket',
+        'product_id' => $product_id,
+        'nid' => $node ? $node->nid : NULL,
+        'order_id' => $line_item->order_id,
+        'line_item_id' => $line_item->line_item_id,
+        'number' => $ticket_number,
+        'quantity' => $quantity,
+      );
+      // Update existing tickets.
+      if ($ticket_element = each($existing)) {
+        $ticket = $ticket_element['value'];
+        $updated = FALSE;
+        foreach ($values as $key => $value) {
+          if ($ticket->$key != $value) {
+            $ticket->$key = $value;
+            $updated = TRUE;
+          }
+        }
+        if ($updated) {
+          $controller->save($ticket, $transaction);
+        }
+      }
+      // Create a new ticket.
+      else {
+        $ticket = $controller->create($values + array(
+          // Generate a secure barcode token for this individual ticket.
+          'barcode_token' => commerce_event_ticket_generate_barcode_token($length, $alpha),
+        ));
+        $controller->save($ticket, $transaction);
+      }
+      $tickets[$ticket->ticket_id] = $ticket;
+    }
+  }
+  catch (Exception $e) {
+    $transaction->rollback();
+    watchdog_exception('commerce_event_ticket', $e);
+  }
+
+  return $tickets;
+}
+
+/**
+ * Create event tickets for an order.
+ *
+ * @param object $order
+ *   The Commerce order object.
+ * @param bool $recreate
+ *   Whether to recreate tickets (invalidating any old ones). Defaults to FALSE.
+ *
+ * @return array
+ *   An array of the tickets that were created.
+ */
+function commerce_event_ticket_create_from_order($order, $recreate = FALSE) {
+  if (!commerce_event_ticket_order_should_have_tickets($order)) {
+    return array();
+  }
+  // Create new tickets (or recreate them if $recreate is TRUE).
+  $tickets = array();
+  $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+  foreach ($order_wrapper->commerce_line_items as $line_item_wrapper) {
+    $tickets += commerce_event_ticket_create_from_line_item($line_item_wrapper, $recreate);
+  }
+  // If no tickets were created, skip the rest of this function.
+  if (!count($tickets)) {
+    return $tickets;
+  }
+  // Allow other modules to act when all the tickets for this order have been
+  // created.
+  module_invoke_all('commerce_event_tickets_created_order', $tickets, $order);
+  return $tickets;
+}
+
+/**
+ * URI callback for Commerce Event Ticket.
+ */
+function commerce_event_ticket_uri(CommerceEventTicketEntity $ticket) {
+  return array(
+    'path' => 'event-ticket/' . $ticket->ticket_id,
+  );
+}
+
+/**
+ * Find out whether a product is enabled to have tickets.
+ *
+ * This invokes hook_commerce_event_ticket_product_enabled_alter().
+ *
+ * @param object $product
+ *   The Commerce product object.
+ *
+ * @return bool
+ *   TRUE if the product if tickets are enabled for the product.
+ */
+function commerce_event_ticket_product_enabled($product) {
+  $cache = &drupal_static(__FUNCTION__, array());
+  if (isset($cache[$product->product_id])) {
+    return $cache[$product->product_id];
+  }
+  $cache[$product->product_id] = FALSE;
+  $enabled = &$cache[$product->product_id];
+  if (isset($product->cet_enable) && !empty($product->cet_enable[LANGUAGE_NONE][0]['value'])) {
+    $enabled = TRUE;
+  }
+  drupal_alter('commerce_event_ticket_product_enabled', $enabled, $product);
+  return (bool) $enabled;
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function commerce_event_ticket_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'commerce_event_ticket') . '/includes',
+  );
+}
+
+/**
+ * Access callback for configuring Rules related to tickets.
+ */
+function commerce_event_ticket_rules_config_access($type, $name) {
+  return user_access('administer commerce event ticket');
+}
+
+/**
+ * Implements hook_action_info().
+ */
+function commerce_event_ticket_action_info() {
+  return array(
+    'commerce_event_ticket_validate_action' => array(
+      'type' => 'commerce_event_ticket',
+      'label' => t('Validate'),
+      'configurable' => FALSE,
+      'vbo_configurable' => FALSE,
+      'triggers' => array('any'),
+      'aggregate' => FALSE,
+    ),
+  );
+}
+
+/**
+ * The 'Validate ticket' action.
+ */
+function commerce_event_ticket_validate_action($object, $context = array()) {
+  $ticket = $object;
+  if (!commerce_event_ticket_access('mark used', $ticket)) {
+    return FALSE;
+  }
+  $message = t('Validated');
+  if (!empty($context['progress']['total']) && $context['progress']['total'] > 1) {
+    $message = t('Validated (in bulk with @others others)', array(
+      '@others' => $context['progress']['total'] - 1,
+    ));
+  }
+  $result = commerce_event_ticket_validate($ticket, TRUE, TRUE, $message);
+  $params = array('@id' => $ticket->ticket_id);
+  if ($result === TRUE) {
+    drupal_set_message(t('The ticket @id has been validated.', $params));
+  }
+  else {
+    $params['@ticket_url'] = url('admin/commerce/tickets/' . $ticket->ticket_id);
+    $params['%reason'] = $result;
+    drupal_set_message(t('The ticket <a href="@ticket_url">@id</a> is not valid. Reason: %reason', $params), 'error');
+  }
+}

@@ -649,11 +649,7 @@ function asu_rfi_repost_rfi($data)
       $gradpost['citizenship'] = isset($node->field_rfi_international['und'][0]['value']) ? $node->field_rfi_international['und'][0]['value'] : '';
       $gradpost['questions'] = isset($node->field_rfi_question['und'][0]['value']) ? $node->field_rfi_question['und'][0]['value'] : '';
       $gradpost['student_type'] = $node->field_rfi_student_type['und'][0]['value'];
-      if(isset($node->field_rfi_location['und'][0]['value'])){
-        $gradpost['location'] = $node->field_rfi_location['und'][0]['value'];
-      } else {
-        $gradpost['location'] = 'no_preference';
-      }
+      $gradpost['location'] = $node->field_rfi_location['und'][0]['value'];
       $gradpost['campus'] = $node->field_rfi_campus['und'][0]['value'];
       $gradpost['zipcode'] = isset($node->field_rfi_zipcode['und'][0]['value']) ? $node->field_rfi_zipcode['und'][0]['value'] : '';
       $gradpost['mobile_check'] = isset($node->field_rfi_sms_opted['und'][0]['value']) ? $node->field_rfi_sms_opted['und'][0]['value'] : '';
@@ -690,11 +686,7 @@ function asu_rfi_repost_rfi($data)
       $upost['citizenship'] = isset($node->field_rfi_international['und'][0]['value']) ? $node->field_rfi_international['und'][0]['value'] : '';
       $upost['questions'] = isset($node->field_rfi_question['und'][0]['value']) ? $node->field_rfi_question['und'][0]['value'] : '';
       $upost['student_type'] = $node->field_rfi_student_type['und'][0]['value'];
-      if(isset($node->field_rfi_location['und'][0]['value'])){
-        $upost['location'] = $node->field_rfi_location['und'][0]['value'];
-      } else {
-        $upost['location'] = 'no_preference';
-      }
+      $upost['location'] = $node->field_rfi_location['und'][0]['value'];
       $upost['campus'] = $node->field_rfi_campus['und'][0]['value'];
       $upost['zipcode'] = isset($node->field_rfi_zipcode['und'][0]['value']) ? $node->field_rfi_zipcode['und'][0]['value'] : '';
       $upost['mobile_check'] = isset($node->field_rfi_sms_opted['und'][0]['value']) ? $node->field_rfi_sms_opted['und'][0]['value'] : '';
@@ -1245,11 +1237,7 @@ function asu_rfi_bulk_submit_action(&$node, $context)
     $upost['citizenship'] = isset($node->field_rfi_international['und'][0]['value']) ? $node->field_rfi_international['und'][0]['value'] : '';
     $upost['questions'] = isset($node->field_rfi_question['und'][0]['value']) ? $node->field_rfi_question['und'][0]['value'] : '';
     $upost['student_type'] = $node->field_rfi_student_type['und'][0]['value'];
-    if(isset($node->field_rfi_location['und'][0]['value'])){
-      $upost['location'] = $node->field_rfi_location['und'][0]['value'];
-    } else {
-      $upost['location'] = 'no_preference';
-    }
+    $upost['location'] = $node->field_rfi_location['und'][0]['value'];
     $upost['campus'] = $node->field_rfi_campus['und'][0]['value'];
     $upost['zipcode'] = isset($node->field_rfi_zipcode['und'][0]['value']) ? $node->field_rfi_zipcode['und'][0]['value'] : '';
     $upost['mobile_check'] = isset($node->field_rfi_sms_opted['und'][0]['value']) ? $node->field_rfi_sms_opted['und'][0]['value'] : '';
@@ -1281,11 +1269,7 @@ function asu_rfi_bulk_submit_action(&$node, $context)
     $gradpost['citizenship'] = isset($node->field_rfi_international['und'][0]['value']) ? $node->field_rfi_international['und'][0]['value'] : '';
     $gradpost['questions'] = isset($node->field_rfi_question['und'][0]['value']) ? $node->field_rfi_question['und'][0]['value'] : '';
     $gradpost['student_type'] = $node->field_rfi_student_type['und'][0]['value'];
-    if(isset($node->field_rfi_location['und'][0]['value'])){
-      $gradpost['location'] = $node->field_rfi_location['und'][0]['value'];
-    } else {
-      $gradpost['location'] = 'no_preference';
-    }
+    $gradpost['location'] = $node->field_rfi_location['und'][0]['value'];
     $gradpost['campus'] = $node->field_rfi_campus['und'][0]['value'];
     $gradpost['zipcode'] = isset($node->field_rfi_zipcode['und'][0]['value']) ? $node->field_rfi_zipcode['und'][0]['value'] : '';
     $gradpost['mobile_check'] = isset($node->field_rfi_sms_opted['und'][0]['value']) ? $node->field_rfi_sms_opted['und'][0]['value'] : '';

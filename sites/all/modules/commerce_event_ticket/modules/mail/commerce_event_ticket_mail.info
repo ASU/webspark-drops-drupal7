@@ -1,0 +1,14 @@
+name = Commerce Event Ticket Mail
+description = E-mail PDF tickets to customers.
+core = 7.x
+package = Commerce Event Ticket
+dependencies[] = commerce_event_ticket
+dependencies[] = commerce_event_ticket_pdf
+dependencies[] = mimemail
+
+; Information added by Drupal.org packaging script on 2015-01-04
+version = "7.x-1.0-beta3"
+core = "7.x"
+project = "commerce_event_ticket"
+datestamp = "1420388882"
+

@@ -53,7 +53,7 @@ function theme_asu_spotlight_list_item(&$vars) {
     '<div class="blurbcontainer"> ' .
     '<div class="blurbshell ' . $vars['package']['item']['position'] . ' ' .
     $vars['package']['item']['overlaytextwidth'] . '">' .
-    '<a href="' . $vars['package']['item']['link'] . '"><h1>' . $vars['package']['item']['title'] . '</h1></a>' .
+    '<a href="' . $vars['package']['item']['link'] . '"><h2>' . $vars['package']['item']['title'] . '</h2></a>' .
     '<p>' . $vars['package']['item']['description'] . '</p>';
 
   if ($vars['package']['item']['color'] == 'red') {

@@ -1,13 +1,3 @@
-Webspark Megamenu 7.x-1.8, 2016-01-25
-------------------------------
-- Reverting ADA hamburger fix in favor of tb megamenu patch
-- The menu is now backwards tabbable
-
-Webspark Megamenu 7.x-1.7, 2017-06-01
-------------------------------
-- Implementing ADA hamburger button fix
-- You can now tab forward through the menu
-
 Webspark Megamenu 7.x-1.6.1, 2016-06-01
 ------------------------------
 - Resizing logic fixed to prevent resize on page load

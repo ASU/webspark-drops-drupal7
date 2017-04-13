@@ -1,0 +1,55 @@
+<?php
+/**
+ * @file
+ * Provide examples of using the TCPDF module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function tcpdf_example_menu() {
+  $items['tcpdf_example/download/%'] = array(
+    'title' => 'Download pdf',
+    'description' => 'TCPDF usage example.',
+    'page callback' => 'tcpdf_example_download',
+    'page arguments' => array(2),
+    'access arguments' => array('use tcpdf example'),
+    'file' => 'tcpdf_example.pages.inc',
+  );
+  $items['tcpdf_example/contents'] = array(
+    'title' => 'TCPDF examples',
+    'description' => 'List of TCPDF examples.',
+    'page callback' => 'tcpdf_example_contents',
+    'access arguments' => array('use tcpdf example'),
+    'file' => 'tcpdf_example.pages.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function tcpdf_example_theme($existing, $type, $theme, $path) {
+  switch ($type) {
+    case 'module':
+      $themes = array(
+        'tcpdf_example_basic_html' => array(
+          'template' => 'tpl/tcpdf_example_basic_html'
+        ),
+      );
+      break;
+  }
+  return $themes;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function tcpdf_example_permission() {
+  return array(
+    'use tcpdf example' => array(
+      'title' => t('Use TCPDF Examples'),
+      'description' => t('Generate the example pdfs that are provided by TCPDF Example module'),
+    ),
+  );
+}

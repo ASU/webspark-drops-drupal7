@@ -1,0 +1,37 @@
+Commerce Event Ticket 7.x-1.x-dev, 2014-07-05
+-----------------------
+ * Renamed cet_services module to commerce_event_ticket_services.
+
+Commerce Event Ticket 7.x-1.x-dev, 2014-07-04
+-----------------------
+ * Permissions for tickets related to *products* the user may edit have now been
+   removed. Instead, there are permissions for tickets related to *nodes* that
+   the user may edit.
+
+Commerce Event Ticket 7.x-1.x-dev, 2014-06-26
+-----------------------
+ * There is now a default Rule (enabled by default) in the
+   commerce_event_ticket_mail submodule called "Send the tickets to the
+   customer". Visit admin/config/workflow/rules to change this (if rules_admin
+   is enabled).
+
+Commerce Event Ticket 7.x-1.x-dev, 2014-06-25
+-----------------------
+ * E-mail functionality has been removed from the _pdf submodule and moved into
+   commerce_event_ticket_mail. If you have been using e-mails, you will need to
+   enable the commerce_event_ticket_mail module, and reconfigure your Rules.
+ * It's now possible to configure one e-mail with different content depending
+   on whether the message will have any tickets. So the Rules action "Send an
+   order's tickets by e-mail as attachments" could be used to send a
+   general-purpose order confirmation e-mail, whether or not tickets are
+   attached.
+
+Commerce Event Ticket 7.x-1.x-dev, 2014-06-19
+-----------------------
+ * Added the default field, 'cet_enable', to product types. This is now used to
+   determine whether a product is enabled to have tickets.
+ * Renamed the function commerce_event_ticket_product_is_ticket() to
+   commerce_event_ticket_product_enabled().
+ * Renamed hook_commerce_event_ticket_product_is_ticket_alter() to
+   hook_commerce_event_ticket_product_enabled_alter() (see
+   commerce_event_ticket.api.php).

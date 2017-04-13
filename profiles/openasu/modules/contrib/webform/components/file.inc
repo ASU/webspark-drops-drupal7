@@ -313,14 +313,12 @@ function theme_webform_edit_file_extensions($variables) {
   }
 
   // Add the row for additional types.
-  if (!isset($element['addextensions']['#access']) || $element['addextensions']['#access']) {
-    $row = array();
-    $title = $element['addextensions']['#title'];
-    $element['addextensions']['#title'] = NULL;
-    $row[] = array('data' => $title, 'colspan' => 2);
-    $row[] = drupal_render($element['addextensions']);
-    $rows[] = $row;
-  }
+  $row = array();
+  $title = $element['addextensions']['#title'];
+  $element['addextensions']['#title'] = NULL;
+  $row[] = array('data' => $title, 'colspan' => 2);
+  $row[] = drupal_render($element['addextensions']);
+  $rows[] = $row;
 
   $header = array(array('data' => t('Category'), 'colspan' => '2'), array('data' => t('Types')));
 

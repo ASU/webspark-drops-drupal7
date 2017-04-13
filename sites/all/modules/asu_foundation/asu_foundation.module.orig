@@ -1,0 +1,145 @@
+<?php 
+/**
+ * @file
+ * Module definition for ASU Foundation payments integration.
+ */
+
+include_once('gateway/AsuFoundationGateway.php');
+
+function asu_foundation_menu() {
+  $items = array();
+  $items['admin/ace/asuf'] = array(
+    'title'            => 'ASU Foundation Settings',
+    'description'      => 'Change ASU Foundation settings.',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('asu_foundation_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'type'             => MENU_NORMAL_ITEM,
+    'file'             => 'asu_foundation.admin.inc',
+  );
+  return $items;
+}
+
+function asu_foundation_xmlrpc() {
+  $methods = array();
+  $methods[] = array(
+    'asuf.paymentNotify',    //method name
+    'asu_foundation_notify', //handler function
+    array(
+      'string', // return: acknowledge
+      'string', // ACE order ID
+      'double', // amount
+      'string', // status
+      'string', // ASU Foundation transaction ID
+      'string', // timestamp in milliseconds
+      'string', // hash of all fields plus API key
+    ),
+    t('Handles ASU Foundation payment notifications.'), //description
+  );
+  return $methods;
+}
+
+function asu_foundation_notify($order_id, $amount, $status, $asuf_trx_id, $timestamp, $hash) {
+  // Make sure timestamp is less than 5 minutes old.
+  $timestamp_5_minutes_ago = (time() - 300);
+  $timestamp_int = (int) substr($timestamp, 0, -3); //chop off the last three digits
+  if($timestamp_int < $timestamp_5_minutes_ago) {
+    watchdog('ASUF', 'ASUF response failed timestamp check. Expected: %expected | Recieved: %recieved |', array('%expected' => $timestamp_5_minutes_ago, '%received' => $timestamp_int), WATCHDOG_DEBUG);
+    return xmlrpc_error(1, t('Request authentication failed.'));
+  }
+  
+  // Make sure status is valid.
+  $status_codes = asu_foundation_get_status_codes();
+  if (!in_array($status, array_keys($status_codes))) {
+    $status_results = array(
+      '%recieved' => $status,
+    );
+    watchdog('ASUF', 'ASUF response failed: invalid status code. Recieved: %recieved |', $status_results, WATCHDOG_DEBUG);
+    return xmlrpc_error(2, t('Request authentication failed.'));
+  }
+  
+  // Make sure hash value matches.
+  $hash_values = $order_id 
+               . $amount
+               . $status
+               . $asuf_trx_id
+               . $timestamp
+               . variable_get('asu_foundation_api_key', 'key');
+  $our_md5 = md5($hash_values);
+  if ($hash != $our_md5) {
+    $md5_results = array(
+      '%expected' => $our_md5,
+      '%recieved' => $hash,
+      '%hash_values' => $hash_values,
+    );
+    watchdog('ASUF', 'ASUF response failed md5 check. Expected: %expected | Recieved: %recieved | hash values: %hash_values |', $md5_results, WATCHDOG_DEBUG);
+    return xmlrpc_error(3, t('Request authentication failed.'));
+  }
+  
+  // This is now a verified request.
+  $gateway = ace_payments_gateways('asuf');
+  $args = array(
+    'order_id' => $order_id,
+    'amount' => $amount,
+    'status' => $status_codes[$status],
+    'asuf_trx_id' => $asuf_trx_id,
+    'timestamp' => $timestamp,
+    'hash' => $hash,
+  );
+  $state = $gateway->processPaymentResponse($args);
+  
+  if ($state['response_code'] == 'success') {
+    if ($state['payment_success']) {
+      checkout_finish($state['order_id']);
+      watchdog('ASUF', 'Successful ASUF payment notification.', array(), WATCHDOG_DEBUG);
+    } else {
+      watchdog('ASUF', 'ASUF payment notification of failed transaction.', array(), WATCHDOG_INFO);
+    }
+    return t('Acknowledged.');
+  }
+  
+  return xmlrpc_error(4, t('Internal error.'));
+}
+
+function asu_foundation_get_status_codes() {
+  return array(
+    'ACCEPT' => 1,
+    'REJECT' => 2,
+    'REVIEW' => 9,
+  );
+}
+
+function asu_foundation_test_client() {
+  // Parameter values.
+  $order_id    = '2734';        // The ACE-specific order number. 
+  $amount      = 1100.00;         // Transaction amount.
+  $status      = 'ACCEPT';       // Transaction status.
+  $asuf_trx_id = '1337802125908';      // The ASU Foundation-specific transaction identifier.
+  $timestamp   = time() . '000'; // time() returns seconds; pad to milliseconds.
+  $api_key     = variable_get('asu_foundation_api_key', 'key');          // Shared secret API key.
+  
+  // Concatenate above values for hash.
+  $hash_values = $order_id . $amount . $status . $asuf_trx_id . $timestamp . $api_key;
+  $hash = md5($hash_values);
+  
+  // Send request:
+  // Test URL: http://ace.dev.ephibian.com/xmlrpc.php
+  // Live URL: https://www.garyaller.com/xmlrpc.php
+  // XML-RPC Method Name: asuf.paymentNotify
+  $result = xmlrpc('https://www.ace4aec.com/xmlrpc.php', 'asuf.paymentNotify', 
+    $order_id, $amount, $status, $asuf_trx_id, $timestamp, $hash);
+  
+  // Handle possible error messages, otherwise the notification was successful.
+  if ($error = xmlrpc_error()) {
+    return t('Error: %message (@code).', array(
+      '%message' => $error->message,
+      '@code'    => $error->code,
+    ));
+  } else {
+    return t('OK');
+  }
+}
+
+function asu_foundation_ace_payments_gateways() {
+  return new AsuFoundationGateway();
+}

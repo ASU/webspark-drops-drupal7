@@ -1,0 +1,27 @@
+<?php
+/**
+ * @file
+ * Install/uninstall tasks for the Salesforce Push module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function salesforce_push_install() {
+  variable_set('salesforce_push_limit', 50);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function salesforce_push_uninstall() {
+  variable_del('salesforce_push_limit');
+}
+
+/**
+ * Rename variable "salesforce_pull_limit" to "salesforce_push_limit"
+ */
+function salesforce_push_update_7300() {
+  variable_set('salesforce_push_limit', variable_get('salesforce_pull_limit', 50));
+  variable_del('salesforce_pull_limit');
+}

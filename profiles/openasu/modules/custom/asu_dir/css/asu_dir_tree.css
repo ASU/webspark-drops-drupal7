@@ -36,9 +36,7 @@ ul.jqtree-tree li.jqtree-selected > .jqtree-element, ul.jqtree-tree li.jqtree-se
 }
 
 .jqtree-folder-icon {
-    color: #333;
-    margin-left: 0px;
-    font-size: 1.15em;
+    color: #8C1D40;
 }
 
 /**************************************************************************

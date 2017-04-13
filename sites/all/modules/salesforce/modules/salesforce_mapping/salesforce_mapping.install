@@ -1,0 +1,683 @@
+<?php
+
+/**
+ * Implements hook_requirements().
+ */
+function salesforce_mapping_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+  switch($phase) {
+    case 'install':
+      drupal_set_message(t('At least one sync method (Push or Pull) must be <a href="/admin/modules">enabled</a> to configure Salesforce Mappings.'), 'status', FALSE);
+      break;
+    case 'runtime':
+      if (!module_exists('salesforce_pull') && !module_exists('salesforce_push')) {
+        $requirements['salesforce_mapping'] = array(
+          'title' => $t('Salesforce Mapping'),
+          'description' => $t('<a href="/admin/modules">Enable</a> at least one sync method (Push or Pull) to configure Salesforce Mappings.'),
+          'severity' => REQUIREMENT_ERROR,
+        );
+      }
+      break;
+  }
+  return $requirements;
+}
+
+/**
+ * @file
+ * Install and uninstall instructions for salesforce_mapping.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function salesforce_mapping_schema() {
+
+  // Salesforce mapping table.
+  $schema['salesforce_mapping'] = array(
+    'description' => 'Drupal to Salesforce mappings',
+    'fields' => array(
+      'salesforce_mapping_id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique salesforce_mapping entity ID.',
+      ),
+      'name' => array(
+        'description' => 'The machine-readable name of this salesforce_mapping type.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+      ),
+      'label' => array(
+        'description' => 'The human-readable name of this salesforce_mapping type.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'The type/bundle of this salesforce_mapping.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'sync_triggers' => array(
+        'description' => 'Indicates when the sync should take place.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0x0000,
+        'size' => 'tiny',
+      ),
+      'salesforce_object_type' => array(
+        'description' => 'The Salesforce object type for this mapping.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'salesforce_record_types_allowed' => array(
+        'description' => 'The Salesforce record types available for this mapping.',
+        'type' => 'blob',
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+      'salesforce_record_type_default' => array(
+        'description' => 'The default Salesforce record type for this mapping.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'drupal_entity_type' => array(
+        'description' => 'The Drupal entity type for this mapping (e.g. "node", "user").',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'drupal_bundle' => array(
+        'description' => 'The Drupal bundle for this mapping (e.g. "page", "user")',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'field_mappings' => array(
+        'type' => 'text',
+        'serialize' => TRUE,
+        'size' => 'big',
+        'description' => 'A serialized object that stores the field mappings.',
+      ),
+      'pull_trigger_date' => array(
+        'description' => 'The Saleforce field to trigger pulls from.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => 'LastModifiedDate',
+      ),
+      'push_async' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Indicates this mapping should be processed asynchronously.',
+      ),
+      'push_batch' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Indicates if SOAP API batch processing should be used during async processing.',
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the salesforce_mapping was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => 'The weight of this salesforce_mapping type in relation to others.',
+      ),
+      // Following fields are for supporting exportable status.
+      'locked' => array(
+        'description' => 'A boolean indicating whether the administrator may delete this mapping.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+      'status' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        // Set the default to ENTITY_CUSTOM without using the constant as it is
+        // not safe to use it at this point.
+        'default' => 0x01,
+        'size' => 'tiny',
+        'description' => 'The exportable status of the entity.',
+      ),
+      'module' => array(
+        'description' => 'The name of the providing module if the entity has been defined in code.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('salesforce_mapping_id'),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
+    'indexes' => array(
+      'name_sf_type_drupal_type' => array(
+        'drupal_entity_type',
+        'drupal_bundle',
+        'salesforce_object_type',
+      ),
+    ),
+  );
+
+  // Object mapping table.
+  $schema['salesforce_mapping_object'] = array(
+    'description' => 'Drupal to Salesforce object mappings',
+    'fields' => array(
+      'salesforce_mapping_object_id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique salesforce_mapping_object entity ID.',
+      ),
+      'revision_id' => array(
+        'description' => 'The current {salesforce_mapping_object_revision}.revision_id version identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'salesforce_id' => array(
+        'description' => 'Salesforce object identifier',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'entity_id' => array(
+        'description' => 'Drupal entity Id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'entity_type' => array(
+        'description' => 'Drupal entity type.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the object mapping was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'entity_updated' => array(
+        'description' => 'The Unix timestamp when the mapped Drupal entity was last updated.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+      'last_sync' => array(
+        'description' => 'The Unix timestamp when the record was last synced with Salesforce.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+      'last_sync_action' => array(
+        'description' => 'The last sync action (typically push or pull).',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ),
+      'last_sync_status' => array(
+        'description' => 'The last sync status.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'unsigned' => TRUE,
+      ),
+      'last_sync_message' => array(
+        'description' => 'The message returned from the last sync activity',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('salesforce_mapping_object_id'),
+    'indexes' => array(
+      'drupal_entity' => array('entity_type', 'entity_id'),
+      'salesforce_object' => array('salesforce_id'),
+      'salesforce_mapping_object_revision' => array('revision_id'),
+    ),
+    'unique keys' => array(
+      'salesforce' => array('salesforce_id'),
+      'salesforce_drupal' => array('entity_type', 'entity_id'),
+      'revision_id' => array('revision_id'),
+    ),
+    'foreign keys' => array(
+      'salesforce_mapping_object_revision' => array(
+        'table' => 'salesforce_mapping_object_revision',
+        'columns' => array('revision_id' => 'revision_id'),
+      ),
+    ),
+  );
+
+  $schema['salesforce_mapping_object_revision'] = array(
+    'description' => 'Stores information about each saved version of a {salesforce_mapping_object}.',
+    'fields' => array(
+      'salesforce_mapping_object_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Primary Key: Unique salesforce_mapping_object entity ID.',
+      ),
+      'revision_id' => array(
+        'description' => 'The current {salesforce_mapping_object_revision}.revision_id version identifier.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'salesforce_id' => array(
+        'description' => 'Salesforce object identifier',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'entity_id' => array(
+        'description' => 'Drupal entity Id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'entity_type' => array(
+        'description' => 'Drupal entity type.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the object mapping was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'entity_updated' => array(
+        'description' => 'The Unix timestamp when the mapped Drupal entity was last updated.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+      'last_sync' => array(
+        'description' => 'The Unix timestamp when the record was last synced with Salesforce.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+      'last_sync_action' => array(
+        'description' => 'The last sync action (typically push or pull).',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ),
+      'last_sync_status' => array(
+        'description' => 'The last sync status.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 1, // 1 = Success
+        'unsigned' => TRUE,
+      ),
+      'last_sync_message' => array(
+        'description' => 'The message returned from the last sync activity',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('revision_id'),
+    'indexes' => array(
+      'drupal_entity' => array('entity_type', 'entity_id'),
+      'salesforce_object' => array('salesforce_id'),
+      'salesforce_mapping_object_id' => array('salesforce_mapping_object_id'),
+    ),
+    'foreign keys' => array(
+      'salesforce_mapping_object' => array(
+        'table' => 'salesforce_mapping_object',
+        'columns' => array('salesforce_mapping_object_id' => 'salesforce_mapping_object_id'),
+      ),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Increase length of salesforce_object_type database column to 255.
+ */
+function salesforce_mapping_update_7100(&$sandbox) {
+  db_drop_unique_key('salesforce_mapping', 'name_sf_type_drupal_type');
+  db_change_field('salesforce_mapping', 'salesforce_object_type', 'salesforce_object_type', array(
+    'description' => 'The Salesforce object type for this mapping.',
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+  ), array(
+    'unique keys' => array(
+      'name_sf_type_drupal_type' => array(
+        'drupal_entity_type',
+        'drupal_bundle',
+        'salesforce_object_type',
+        'salesforce_record_type',
+      ),
+    ),
+  )
+  );
+}
+
+/**
+ * Update Salesforce Mappings with new record type configuration.
+ */
+function salesforce_mapping_update_7301(&$sandbox) {
+  $schemas = salesforce_mapping_schema();
+
+  // Update Unique Keys to exclude salesforce_record_type:
+  db_drop_unique_key('salesforce_mapping', 'name');
+  db_drop_unique_key('salesforce_mapping', 'name_sf_type_drupal_type');
+  db_change_field('salesforce_mapping', 'salesforce_record_type', 'salesforce_record_type_default',
+    $schemas['salesforce_mapping']['fields']['salesforce_record_type_default'],
+    array('unique keys' => $schemas['salesforce_mapping']['unique keys']));
+
+  // Add salesforce_record_types_allowed column to salesforce_mapping table.
+  db_add_field('salesforce_mapping', 'salesforce_record_types_allowed', $schemas['salesforce_mapping']['fields']['salesforce_record_types_allowed']);
+
+  // Need to do some aggressive cache clearing, in particular the schema cache.
+  drupal_get_schema('salesforce_mapping', TRUE);
+  entity_info_cache_clear();
+
+  $mappings = salesforce_mapping_load_multiple();
+  foreach ($mappings as $mapping) {
+    $mapping->salesforce_record_types_allowed = array(
+      $mapping->salesforce_record_type_default => $mapping->salesforce_record_type_default,
+    );
+    $mapping->save();
+  }
+}
+
+/**
+ * Change index on Salesforce mapping to be non-unique.
+ */
+function salesforce_mapping_update_7302(&$sandbox) {
+
+  // Remove unique key.
+  db_drop_unique_key('salesforce_mapping', 'name_sf_type_drupal_type');
+
+  // Add non-unique key back.
+  db_add_index('salesforce_mapping', 'name_sf_type_drupal_type', array(
+    'drupal_entity_type',
+    'drupal_bundle',
+    'salesforce_object_type',
+  ));
+
+}
+
+/**
+ * Schema updates for mapping revisioning system.
+ */
+function salesforce_mapping_update_7303(&$sandbox) {
+  if (!isset($sandbox['max'])) {
+    $sf_mapping_object_revision_schema = array(
+      'description' => 'Stores information about each saved version of a {salesforce_mapping_object}.',
+      'fields' => array(
+        'salesforce_mapping_object_id' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => 'Primary Key: Unique salesforce_mapping_object entity ID.',
+        ),
+        'revision_id' => array(
+          'description' => 'The current {salesforce_mapping_object_revision}.revision_id version identifier.',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'salesforce_id' => array(
+          'description' => 'Salesforce object identifier',
+          'type' => 'varchar',
+          'length' => 32,
+          'not null' => TRUE,
+          'default' => '',
+        ),
+        'entity_id' => array(
+          'description' => 'Drupal entity Id.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'entity_type' => array(
+          'description' => 'Drupal entity type.',
+          'type' => 'varchar',
+          'length' => 128,
+          'not null' => TRUE,
+          'default' => '',
+        ),
+        'created' => array(
+          'description' => 'The Unix timestamp when the object mapping was created.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'entity_updated' => array(
+          'description' => 'The Unix timestamp when the mapped Drupal entity was last updated.',
+          'type' => 'int',
+          'not null' => FALSE,
+          'default' => 0,
+        ),
+        'last_sync' => array(
+          'description' => 'The Unix timestamp when the record was last synced with Salesforce.',
+          'type' => 'int',
+          'not null' => FALSE,
+          'default' => 0,
+        ),
+        'last_sync_action' => array(
+          'description' => 'The last sync action (typically push or pull).',
+          'type' => 'varchar',
+          'length' => 128,
+          'not null' => FALSE,
+        ),
+        'last_sync_status' => array(
+          'description' => 'The last sync status.',
+          'type' => 'int',
+          'size' => 'tiny',
+          'not null' => TRUE,
+          'default' => 1,
+          'unsigned' => TRUE,
+        ),
+        'last_sync_message' => array(
+          'description' => 'The message returned from the last sync activity',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => FALSE,
+        ),
+      ),
+      'primary key' => array('revision_id'),
+      'indexes' => array(
+        'drupal_entity' => array('entity_type', 'entity_id'),
+        'salesforce_object' => array('salesforce_id'),
+        'salesforce_mapping_object_id' => array('salesforce_mapping_object_id'),
+      ),
+      'foreign keys' => array(
+        'salesforce_mapping_object' => array(
+          'table' => 'salesforce_mapping_object',
+          'columns' => array('salesforce_mapping_object_id' => 'salesforce_mapping_object_id'),
+        ),
+      ),
+    );
+    db_create_table('salesforce_mapping_object_revision', $sf_mapping_object_revision_schema);
+
+    $revision_id_spec = array(
+      'description' => 'The current {salesforce_mapping_object_revision}.revision_id version identifier.',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+    );
+    $keys = array(
+      'indexes' => array(
+        'salesforce_mapping_object_revision' => array('revision_id'),
+      ),
+    );
+    db_add_field('salesforce_mapping_object', 'revision_id', $revision_id_spec, $keys);
+    db_update('salesforce_mapping_object')
+      ->expression('revision_id', 'salesforce_mapping_object_id')
+      ->execute();
+
+    $last_sync_action_spec = array(
+      'description' => 'The last sync action (typically push or pull).',
+      'type' => 'varchar',
+      'length' => 128,
+      'not null' => FALSE,
+      'initial' => 'created',
+    );
+    db_add_field('salesforce_mapping_object', 'last_sync_action', $last_sync_action_spec);
+
+    $last_sync_status_spec = array(
+      'description' => 'The last sync status.',
+      'type' => 'int',
+      'size' => 'tiny',
+      'not null' => TRUE,
+      'default' => 0,
+      'unsigned' => TRUE,
+      'initial' => 1,
+    );
+    db_add_field('salesforce_mapping_object', 'last_sync_status', $last_sync_status_spec);
+
+    $last_sync_message_spec = array(
+      'description' => 'The message returned from the last sync activity',
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => FALSE,
+      'initial' => 'initializing version system',
+    );
+    db_add_field('salesforce_mapping_object', 'last_sync_message', $last_sync_message_spec);
+
+    // Need to do some aggressive cache clearing, particularly the schema cache.
+    drupal_get_schema('salesforce_mapping_object', TRUE);
+    entity_info_cache_clear();
+    $count_query = db_select('salesforce_mapping_object', 'm')
+      ->fields('m');
+    $sandbox['max'] = $count_query->execute()->rowCount();
+    $sandbox['position'] = 0;
+    $sandbox['last'] = -1;
+  }
+  $limit = 500;
+  $insert_query = db_insert('salesforce_mapping_object_revision')->fields(array(
+    'salesforce_mapping_object_id',
+    'salesforce_id',
+    'entity_id',
+    'entity_type',
+    'created',
+    'entity_updated',
+    'last_sync',
+    'revision_id',
+    'last_sync_status',
+    'last_sync_action',
+    'last_sync_message',
+  ));
+  $object_query = db_select('salesforce_mapping_object', 'm')
+    ->fields('m',
+      array('salesforce_mapping_object_id',
+        'salesforce_id',
+        'entity_id',
+        'entity_type',
+        'created',
+        'entity_updated',
+        'last_sync',
+        'revision_id',
+        'last_sync_status',
+        'last_sync_action',
+        'last_sync_message',
+      ))
+    ->condition('m.salesforce_mapping_object_id', $sandbox['last'], '>')
+    ->orderBy('m.salesforce_mapping_object_id')
+    ->range(0, $limit);
+  $result = $object_query->execute();
+  while ($object = $result->fetchAssoc()) {
+    $insert_query->values($object);
+    $sandbox['last'] = $object['salesforce_mapping_object_id'];
+  }
+  $insert_query->execute();
+
+  $sandbox['position'] = min($sandbox['position'] + $limit, $sandbox['max']);
+  if ($sandbox['max'] > 0 && $sandbox['max'] > $sandbox['position']) {
+    $sandbox['#finished'] = $sandbox['position'] / $sandbox['max'];
+  }
+  else {
+    $sandbox['#finished'] = 1;
+    return $sandbox['max'] . " Salesforce sync records updated.";
+  }
+}
+
+/**
+ * Allow NULL in salesforce_mapping_object entity_updated and last_sync columns.
+ */
+function salesforce_mapping_update_7304(&$sandbox) {
+  $entity_updated_field = array(
+    'description' => 'The Unix timestamp when the mapped Drupal entity was last updated.',
+    'type' => 'int',
+    'not null' => FALSE,
+    'default' => 0,
+  );
+
+  db_change_field('salesforce_mapping_object', 'entity_updated', 'entity_updated', $entity_updated_field);
+
+  $last_sync_field = array(
+    'description' => 'The Unix timestamp when the record was last synced with Salesforce.',
+    'type' => 'int',
+    'not null' => FALSE,
+    'default' => 0,
+  );
+
+  db_change_field('salesforce_mapping_object', 'last_sync', 'last_sync', $last_sync_field);
+}
+
+/**
+ * Drop unused and problematic updated column from mappings.
+ */
+function salesforce_mapping_update_7305(&$sandbox) {
+  db_drop_field('salesforce_mapping', 'updated');
+  cache_clear_all('schema', 'cache');
+}
+
+/**
+ * Add the configurable Pull Trigger Date field to mappings.
+ */
+function salesforce_mapping_update_7306(&$sandbox) {
+  $pull_date_field = array(
+    'description' => 'The Saleforce field to trigger pulls from.',
+    'type' => 'varchar',
+    'length' => 128,
+    'not null' => TRUE,
+    'default' => 'LastModifiedDate',
+  );
+  db_add_field('salesforce_mapping', 'pull_trigger_date', $pull_date_field);
+}

@@ -1,0 +1,65 @@
+<?php
+/**
+ * @file
+ * Install functions for the Commerce Event Ticket PDF module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function commerce_event_ticket_pdf_schema() {
+  $schema = array();
+
+  $schema['commerce_event_ticket_pdf'] = array(
+    'description' => 'Maintain a registry of files linked to tickets.',
+    'fields' => array(
+      'ticket_id' => array(
+        'description' => 'Relates to {commerce_event_ticket}.ticket_id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'fid' => array(
+        'description' => 'Relates to {file_managed}.fid.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'entity_type' => array(
+        'description' => "The entity type the file relates to: one of 'commerce_event_ticket', 'commerce_order', or 'commerce_line_item'.",
+        'type' => 'varchar',
+        'length' => 30,
+        'not null' => TRUE,
+      ),
+      'entity_id' => array(
+        'description' => "The entity ID the file relates to.",
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'created' => array(
+        'description' => 'The UNIX timestamp when this record was created.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'changed' => array(
+        'description' => 'The UNIX timestamp when this record was last modified.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('ticket_id', 'fid', 'entity_type', 'entity_id'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function commerce_event_ticket_pdf_uninstall() {
+  variable_del('commerce_event_ticket_pdf_elements');
+  variable_del('commerce_event_ticket_pdf_limit');
+}

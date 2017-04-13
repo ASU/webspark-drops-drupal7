@@ -1,0 +1,19 @@
+name = Salesforce API
+description = Defines an API that enables modules to interact with the Salesforce REST API.
+package = Salesforce
+core = 7.x
+
+configure = admin/config/salesforce
+
+files[] = includes/salesforce.inc
+files[] = includes/salesforce.select_query.inc
+files[] = tests/salesforce.test
+
+php = 5.3
+
+; Information added by Drupal.org packaging script on 2016-08-02
+version = "7.x-3.2"
+core = "7.x"
+project = "salesforce"
+datestamp = "1470109461"
+

@@ -1,0 +1,177 @@
+<?php
+
+function ace_payments_install() {}
+
+function ace_payments_uninstall() {}
+
+function ace_payments_schema() 
+{
+  $schema = array();
+
+  $schema['ace_order'] = array(
+    'description' => t('Order information.'),
+    'fields' => array (
+      'order_id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'size' => 'big',
+        'not null' => TRUE,
+        'description' => t('The order identifier.'),
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'size' => 'normal',
+        'not null' => TRUE,
+        'description' => t('The user the order is for: {user}.uid.'),
+      ),
+      'admin_uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'size' => 'normal',
+        'not null' => FALSE,
+        'description' => t("If an admin placed this order, the admin's id: {user}.uid"),
+      ),
+      'total' => array(
+        'type' => 'float',
+        'unsigned' => FALSE,
+        'size' => 'normal',
+        'not null' => TRUE,
+        'description' => t('The total paid for the order.'),
+      ),
+      'gift_total' => array(
+        'type' => 'float',
+        'unsigned' => FALSE,
+        'size' => 'normal',
+        'not null' => TRUE,
+        'description' => t('The total gift for the order (for tax purposes).'),
+      ),
+      'status' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'size' => 'tiny',
+        'not null' => FALSE,
+        'description' => t('The status of the registration process: null if no response has been heard from the payment gateway.'),
+      ),
+      'create_time' => array(
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'size' => 'normal',
+        'not null' => TRUE,
+        'description' => t('The time this order was placed.'),
+      ),
+      'notification_time' => array(
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'size' => 'normal',
+        'not null' => FALSE,
+        'description' => t('The time a response was processed from the payment gateway: null if that response has not yet been processed.'),
+      ),
+      'transaction_id' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => t("The payment gateway's transaction id."),
+      ),
+      'transaction_code' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => t("The payment gateway's transaction-type-specific extra information."),
+      ),
+      'status_message' => array(
+        'type' => 'text',
+        'size' => 'normal',
+        'not null' => FALSE,
+        'description' => t('A plain English description of the status passed back from the payment gateway.'),
+      ),
+    ),
+    'primary key' => array('order_id'),
+    'indexes' => array(
+      'ace_order_uid_status' => array('uid', 'status'),
+      'ace_order_create_time' => array('create_time'),
+      'ace_order_status' => array('status'),
+    ),
+  );
+  $schema['ace_order_item'] = array(
+    'description' => t('The items within an order.'),
+    'fields' => array(
+      'order_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'size' => 'big',
+        'not null' => TRUE,
+        'description' => t('The order identifier {ace_order}.order_id.'),
+      ),
+      'cac' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => t('The accounting code of the item.'),
+      ),
+      'quantity' => array(
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'size' => 'normal',
+        'not null' => TRUE,
+        'description' => t('The number of items in the order.'),
+      ),
+      'amount' => array(
+        'type' => 'float',
+        'unsigned' => FALSE,
+        'size' => 'normal',
+        'not null' => TRUE,
+        'description' => t('The unit price of the item.'),
+      ),
+      'gift_amount' => array(
+        'type' => 'float',
+        'unsigned' => FALSE,
+        'size' => 'normal',
+        'not null' => TRUE,
+        'description' => t('The unit gift amount for the item (for tax purposes).'),
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => t('The type of item being ordered: i.e., course or file.'),
+      ),
+      'referrer' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => FALSE,
+        'description' => t('An optional referring page or node that caused this item to be added to cart.'),
+      ),
+    ),
+    'primary key' => array('order_id', 'cac'),
+  );
+
+  $schema['ace_order_status'] = array(
+    'description' => t('A mapping of transaction status to a description of that status.'),
+    'fields' => array(
+      'status' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'description' => t('The status code.'),
+      ),
+      'description' => array(
+        'type' => 'text',
+        'size' => 'normal',
+        'not null' => TRUE,
+        'description' => t('The status description.'),
+      ),
+      'successful' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('1 if this represents a successful status, 0 if not.'),
+      ),
+    ),
+    'primary key' => array('status'),
+  );
+
+  return $schema;
+}

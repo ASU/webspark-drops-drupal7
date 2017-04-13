@@ -1,0 +1,40 @@
+name = Membership Entity Terms
+description = Allow users to create time limited memberships.
+package = Memberships
+core = 7.x
+
+dependencies[] = ctools
+dependencies[] = date
+dependencies[] = date_api
+dependencies[] = date_views
+dependencies[] = entity
+dependencies[] = membership_entity
+dependencies[] = rules
+dependencies[] = views
+
+files[] = membership_entity_term.inc
+files[] = membership_entity_term.ui.inc
+files[] = membership_entity_term.controller.inc
+
+; Entity API integrations.
+files[] = membership_entity_term.info.inc
+
+; Custom views handlers
+files[] = views/membership_entity_term.views.inc
+files[] = views/views_handler_field_membership_term_modifier.inc
+files[] = views/views_handler_field_membership_term_datetime.inc
+files[] = views/views_handler_filter_membership_term_datetime.inc
+files[] = views/views_handler_relationship_term_groupwise_max.inc
+
+; Migrate handlers.
+files[] = membership_entity_term.migrate.inc
+
+; Tests
+files[] = membership_entity_term.test
+
+; Information added by Drupal.org packaging script on 2015-07-16
+version = "7.x-1.0-beta1+1-dev"
+core = "7.x"
+project = "membership_entity"
+datestamp = "1437064446"
+

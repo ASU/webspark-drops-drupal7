@@ -1,0 +1,440 @@
+<?php
+
+/**
+ * @file
+ * Tests for membership_entity_term.module.
+ */
+
+/**
+ * Defines a base class for testing the Membership Entity Term module.
+ */
+class MembershipEntityTermWebTestCase extends MembershipEntityWebTestCase {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
+    }
+    $modules += array(
+      'membership_entity_term',
+      'date',
+      'date_api',
+      'date_views',
+    );
+    parent::setUp($modules);
+
+    // Add default membership term settings.
+    $settings = variable_get('membership_entity_settings', array());
+    $settings += array(
+      'grace_period' => 'none',
+      'custom_grace_period' => 'none',
+      'tz_handling' => 'site',
+      'timezone_db' => 'UTC',
+      'available_term_lengths' => array(
+        0 => '1 year',
+        1 => '2 years',
+        2 => '3 years',
+      ),
+    );
+    variable_set('membership_entity_settings', $settings);
+  }
+
+  /**
+   * Create and save a membership term for testing.
+   *
+   * @param array $values
+   *   An associative array of default values for the membership type.
+   *
+   * @return MembershipEntityType The new membership tyep object.
+   */
+  public function createMembershipTerm($values = array()) {
+    $term = membership_entity_term_create($values);
+    $term->save();
+    return $term;
+  }
+
+}
+
+/**
+ * Test creating a membership term.
+ */
+class MembershipEntityTermCreateTestCase extends MembershipEntityTermWebTestCase {
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Membership term creation',
+      'description' => 'Test creating membership terms.',
+      'group' => 'Membership Entity Term',
+    );
+  }
+
+  /**
+   * Test creating a membership term.
+   */
+  public function testCreateMembershipTerm() {
+    $member = $this->drupalCreateUser(array('membership join'));
+    $membership = $this->createMembership(array('uid' => $member->uid));
+    $term = membership_entity_term_create(array(
+      'mid' => $membership->mid,
+      'term' => '1 year',
+      'status' => MEMBERSHIP_ENTITY_ACTIVE,
+    ));
+    $term->save();
+    $this->assertNotNull($term->id, 'Membership term created successfully.');
+
+    $loaded_term = membership_entity_term_load($term->id);
+    $this->assertTrue($loaded_term, 'Membership term found in database.');
+
+    $loaded_membership = membership_entity_load($membership->mid);
+    $this->assertTrue($loaded_membership->terms[$loaded_term->id], 'Membership term found on membership.');
+  }
+
+  /**
+   * Test creating a membership term from the admin form.
+   */
+  public function testCreateMembershipTermAdmin() {
+    // Create and login an admin user.
+    $admin = $this->drupalCreateUser(array('administer memberships', 'administer membership terms'));
+    $this->drupalLogin($admin);
+
+    $member = $this->drupalCreateUser(array('membership join'));
+    $edit = array(
+      'uid[0][value]' => $member->name,
+      'membership_term[status]' => MEMBERSHIP_ENTITY_ACTIVE,
+      'membership_term[start][year]' => '2015',
+      'membership_term[start][month]' => '1',
+      'membership_term[start][day]' => '1',
+      'membership_term[start][hour]' => '0',
+      'membership_term[start][minute]' => '00',
+      'membership_term[start][second]' => '00',
+      'membership_term[term]' => '1 year',
+    );
+    $this->drupalPost('admin/memberships/add', $edit, 'Save');
+    $this->assertText('Membership 00001 has been created.', 'Membership with term created by admin.');
+  }
+
+}
+
+/**
+ * Test term length calculations.
+ */
+class MembershipEntityTermLengthTestCase extends MembershipEntityTermWebTestCase {
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Membership term lengths',
+      'description' => 'Test term length calculations.',
+      'group' => 'Membership Entity Term',
+    );
+  }
+
+  /**
+   * Test creating a membership term.
+   */
+  public function testMembershipEntityTermLengths() {
+    $tests = array(
+      'simple yearly' => array('1 year', '2015-01-01 00:00:00', '2016-01-01 00:00:00'),
+      'simple monthly' => array('1 month', '2015-01-01 00:00:00', '2015-02-01 00:00:00'),
+      'end of month' => array('1 month', '2015-01-31 00:00:00', '2015-02-28 00:00:00'),
+      'leap year' => array('1 year', '2012-02-29 00:00:00', '2013-02-28 00:00:00'),
+      'lifetime' => array('lifetime', '2015-01-01 00:00:00', NULL),
+    );
+
+    $member = $this->drupalCreateUser(array('membership join'));
+    $membership = $this->createMembership(array('uid' => $member->uid));
+    foreach ($tests as $test => $values) {
+      $term = $this->createmembershipTerm(array(
+        'mid' => $membership->mid,
+        'term' => $values[0],
+        'start' => $values[1],
+      ));
+      $this->assertEqual($term->end, $values[2], format_string('End date calculated for @test term.', array('@test' => $test)));
+    }
+  }
+
+  /**
+   * Test term modifiers.
+   */
+  public function testMembershipEntityTermModifiers() {
+    $tests = array(
+      'extra year' => array('1 year', '+1 year', '2015-01-01 00:00:00', '2017-01-01 00:00:00'),
+      'extra 3 months' => array('1 year', '+3 months', '2015-01-01 00:00:00', '2016-04-01 00:00:00'),
+      'negative' => array('1 year', '-1 month', '2015-01-01 00:00:00', '2015-12-01 00:00:00'),
+      'multiple' => array('1 year', array('+1 year', '+2 months', '+1 day'), '2015-01-01 00:00:00', '2017-03-02 00:00:00'),
+    );
+
+    $member = $this->drupalCreateUser(array('membership join'));
+    $membership = $this->createMembership(array('uid' => $member->uid));
+    foreach ($tests as $test => $values) {
+      $modifiers = is_array($values[1]) ? $values[1] : array($values[1]);
+      $term = $this->createmembershipTerm(array(
+        'mid' => $membership->mid,
+        'term' => $values[0],
+        'start' => $values[2],
+        'modifiers' => $modifiers,
+      ));
+      $this->assertEqual($term->end, $values[3], format_string('End date calculated for @test modifier.', array('@test' => $test)));
+    }
+  }
+
+}
+
+/**
+ * Test membership term edit forms.
+ */
+class MembershipEntityTermEditTestCase extends MembershipEntityTermWebTestCase {
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Membership term edit',
+      'description' => 'Test membership term edit forms.',
+      'group' => 'Membership Entity Term',
+    );
+  }
+
+  /**
+   * Test editing a membership as an administrator.
+   */
+  public function testMembershipEditAsAdmin() {
+    $admin = $this->drupalCreateUser(array('administer memberships', 'administer membership terms'));
+    $this->drupalLogin($admin);
+
+    // Create a membership.
+    $member = $this->drupalCreateUser(array('membership join'));
+    $membership = $this->createMembership(array('uid' => $member->uid));
+    $term = $this->createMembershipTerm(array(
+      'mid' => $membership->mid,
+      'term' => '1 year',
+      'start' => '2015-01-01 00:00:00',
+    ));
+
+    $fields = array(
+      'membership_term[start][year]' => '2015',
+      'membership_term[start][month]' => '1',
+      'membership_term[start][day]' => '1',
+      'membership_term[start][hour]' => '0',
+      'membership_term[start][minute]' => '00',
+      'membership_term[start][second]' => '00',
+      'membership_term[term]' => '1 year',
+      'membership_term[status]' => MEMBERSHIP_ENTITY_ACTIVE,
+    );
+
+    $edit_path = "membership/$membership->mid/term/$term->id/edit";
+    $this->drupalGet($edit_path);
+    $this->assertTitle('Edit Term | Drupal', 'Membership term edit form displayed.');
+    foreach ($fields as $name => $value) {
+      $this->assertFieldByName($name, $value, format_string('The @name field is displayed on the term edit form.', array('@name' => $name)));
+    }
+
+    // Submit the form with some new values.
+    $edit = array(
+      'membership_term[start][year]' => '2015',
+      'membership_term[start][month]' => '2',
+      'membership_term[start][day]' => '15',
+      'membership_term[start][hour]' => '1',
+      'membership_term[start][minute]' => '30',
+      'membership_term[start][second]' => '45',
+      'membership_term[term]' => '2 years',
+    );
+    $this->drupalPost($edit_path, $edit, 'Save');
+
+
+    $this->assertText('The membership term has been updated.', 'Membership term updated by admin from the edit form.');
+    $this->assertText('2 years', 'Term length saved from edit form.');
+    $this->assertText('02/15/2015 - 01:30', 'Term start date saved from edit form.');
+    $this->assertText('02/15/2017 - 01:30', 'Term end date saved from edit form.');
+  }
+
+}
+
+/**
+ * Test membership renewal forms.
+ */
+class MembershipEntityTermRenewTestCase extends MembershipEntityTermWebTestCase {
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Membership term renew',
+      'description' => 'Test membership renewal forms.',
+      'group' => 'Membership Entity Term',
+    );
+  }
+
+  /**
+   * Test renewing a membership as an administrator.
+   */
+  public function testMembershipRenewAsAdmin() {
+    $admin = $this->drupalCreateUser(array('administer memberships', 'administer membership terms'));
+    $this->drupalLogin($admin);
+
+    // Create a membership.
+    $member = $this->drupalCreateUser(array('membership join'));
+    $membership = $this->createMembership(array('uid' => $member->uid));
+
+    // Create the initial term.
+    $start = REQUEST_TIME;
+    $end = strtotime('+1 year', $start);
+    $this->createMembershipTerm(array(
+      'mid' => $membership->mid,
+      'term' => '1 year',
+      'start' => format_date($start, 'custom', DATE_FORMAT_DATETIME),
+    ));
+
+    $fields = array(
+      'member_id' => $membership->member_id,
+      'uid[0][value]' => $member->name,
+      'membership_term[start][year]' => format_date($end, 'custom', 'Y'),
+      'membership_term[start][month]' => format_date($end, 'custom', 'n'),
+      'membership_term[start][day]' => format_date($end, 'custom', 'j'),
+      'membership_term[start][hour]' => format_date($end, 'custom', 'G'),
+      'membership_term[start][minute]' => format_date($end, 'custom', 'i'),
+      'membership_term[start][second]' => format_date($end, 'custom', 's'),
+      'membership_term[term]' => NULL,
+      'membership_term[status]' => MEMBERSHIP_ENTITY_ACTIVE,
+    );
+
+    $renew_path = "membership/$membership->mid/renew";
+    $this->drupalGet($renew_path);
+    $this->assertTitle("Renew membership $membership->member_id | Drupal", "The renew form is displayed for admin.");
+    foreach ($fields as $name => $value) {
+      $this->assertFieldByName($name, $value, format_string('The @name field is displayed on the renew form.', array('@name' => $name)));
+    }
+
+    // Submit the renew form with new values.
+    $edit = array(
+      'member_id' => $membership->member_id,
+      'uid[0][value]' => $member->name,
+      'membership_term[start][year]' => format_date($end, 'custom', 'Y'),
+      'membership_term[start][month]' => format_date($end, 'custom', 'n'),
+      'membership_term[start][day]' => format_date($end, 'custom', 'j'),
+      'membership_term[start][hour]' => format_date($end, 'custom', 'G'),
+      'membership_term[start][minute]' => format_date($end, 'custom', 'i'),
+      'membership_term[start][second]' => format_date($end, 'custom', 's'),
+      'membership_term[term]' => '2 years',
+      'membership_term[status]' => MEMBERSHIP_ENTITY_ACTIVE,
+    );
+    $this->drupalPost($renew_path, $edit, 'Renew');
+
+    $this->assertText('The membership has been renewed.', 'Membership renewed by admin.');
+    $terms = membership_entity_term_load_by_membership($membership);
+    $this->assertEqual(count($terms), 2, 'Renewal term found in the database.');
+    $this->assertText('2 years', 'New term length saved from renewal form.');
+
+    $this->assertText(format_date($end, 'custom', 'm/d/Y - H:i'), 'New term start date saved from renew form.');
+    $this->assertText(format_date(strtotime('+2 years', $end), 'custom', 'm/d/Y - H:i'), 'New term end date saved from renew form.');
+  }
+
+  /**
+   * Test renewing a membership as a member.
+   */
+  public function testMembershipRenewAsMember() {
+    $member = $this->drupalCreateUser(array(
+      'membership join',
+      'membership view own membership',
+      'membership edit own membership',
+      'membership renew own membership',
+    ));
+    $this->drupalLogin($member);
+
+    // Create a membership and initial term.
+    $membership = $this->createMembership(array('uid' => $member->uid));
+    $start = REQUEST_TIME;
+    $end = strtotime('+1 year', $start);
+    $this->createMembershipTerm(array(
+      'mid' => $membership->mid,
+      'term' => '1 year',
+      'start' => format_date($start, 'custom', DATE_FORMAT_DATETIME),
+    ));
+
+    $renew_path = "membership/$membership->mid/renew";
+    $this->drupalGet($renew_path);
+    $this->assertTitle("Renew membership $membership->member_id | Drupal", 'The renew form is displayed for a member.');
+    $this->assertNoFieldByName('member_id', $membership->member_id, 'The member id cannot be edited by a member on the renew form.');
+    $this->assertText('Unique membership id: ' . $membership->member_id, 'The member id is displayed for the member on the renew form.');
+    $this->assertNoFieldByName('uid[0][value]', $member->name, 'The primary member field cannot be edited by a member on the renew form.');
+    $this->assertNoFieldByName('membership_term[status]', $membership->status, 'The term status field cannot be edited by a member on the renew form.');
+    $this->assertFieldByName('membership_term[term]', NULL, 'The renewal term field is displayed for a member on the renew form.');
+
+    // Submit the renewal.
+    $this->drupalPost($renew_path, array('membership_term[term]' => '3 years'), 'Renew');
+    $this->assertText('The membership has been renewed.', 'Membership renewed by member.');
+    $terms = membership_entity_term_load_by_membership($membership);
+    $this->assertEqual(count($terms), 2, 'Renewal term found in the database.');
+    $this->assertText('3 years', 'New term length saved from renewal form.');
+    $this->assertText(format_date($end, 'custom', 'm/d/Y - H:i'), 'New term start date saved from renew form.');
+    $this->assertText(format_date(strtotime('+3 years', $end), 'custom', 'm/d/Y - H:i'), 'New term end date saved from renew form.');
+  }
+
+}
+
+/**
+ * Test membership term access control.
+ */
+class MembershipEntityTermAccessTestCase extends MembershipEntityTermWebTestCase {
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Membership term access',
+      'description' => 'Test membership term access control.',
+      'group' => 'Membership Entity Term',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setup() {
+    parent::setUp();
+    // Clear permissions for authenticated users.
+    db_delete('role_permission')
+      ->condition('rid', DRUPAL_AUTHENTICATED_RID)
+      ->execute();
+  }
+
+  /**
+   * Asserts membership_entity_term_access() correctly grants or denies access.
+   */
+  public function assertMembershipEntityTermAccess($ops, $membership, $account) {
+    foreach ($ops as $op => $result) {
+      $msg = format_string("membership_entity_term_access returns @result with operation '@op'.", array('@result' => $result ? 'TRUE' : 'FALSE', '@op' => $op));
+      $this->assertEqual($result, membership_entity_term_access($op, $membership, $account), $msg);
+    }
+  }
+
+  /**
+   * Test membership_entity_tern_access() function.
+   */
+  function testMembershipEntityTermAccess() {
+    // User with 'administer membership terms' permission can do everything.
+    $admin = $this->drupalCreateUser(array('administer membership terms'));
+    $membership1 = $this->createMembership(array('uid' => $admin->uid));
+    $term1 = $this->createMembershipTerm(array('mid' => $membership1->mid, 'start' => format_date(REQUEST_TIME, 'custom', DATE_FORMAT_DATETIME)));
+    $this->assertMembershipEntityTermAccess(array('edit' => TRUE, 'delete' => TRUE), $term1, $admin);
+    $this->assertMembershipEntityTermAccess(array('renew' => TRUE), $membership1, $admin);
+
+    // Member can renew own membership but not any membership.
+    $permissions = array('membership renew own membership');
+    $member1 = $this->drupalCreateUser($permissions);
+    $member2 = $this->drupalCreateUser($permissions);
+    $membership2 = $this->createMembership(array('uid' => $member1->uid));
+    $this->createMembershipTerm(array('mid' => $membership2->mid, 'start' => format_date(REQUEST_TIME, 'custom', DATE_FORMAT_DATETIME)));
+    $membership3 = $this->createMembership(array('uid' => $member2->uid));
+    $this->createMembershipTerm(array('mid' => $membership3->mid, 'start' => format_date(REQUEST_TIME, 'custom', DATE_FORMAT_DATETIME)));
+    $this->assertMembershipEntityTermAccess(array('renew' => TRUE), $membership2, $member1);
+    $this->assertMembershipEntityTermAccess(array('remew' => FALSE), $membership3, $member1);
+  }
+
+}
+

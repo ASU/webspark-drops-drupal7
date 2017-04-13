@@ -1,0 +1,718 @@
+<?php
+/**
+ * @file
+ * PDF generation functions for the Commerce Event Ticket module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function commerce_event_ticket_pdf_menu() {
+  // The configuration form.
+  $items['admin/commerce/config/event-ticket/pdf'] = array(
+    'title' => 'PDF settings',
+    'description' => 'Configure settings for event ticket PDFs.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('commerce_event_ticket_pdf_config'),
+    'file' => 'includes/commerce_event_ticket_pdf.admin.inc',
+    'access arguments' => array('administer commerce event ticket'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+  );
+  // Download or view a single ticket.
+  $items['event-ticket/pdf/%commerce_event_ticket/ticket.pdf'] = array(
+    'title' => 'Download ticket PDF',
+    'page callback' => 'commerce_event_ticket_pdf_download',
+    'page arguments' => array(2, 'commerce_event_ticket'),
+    'access callback' => 'commerce_event_ticket_pdf_access',
+    'access arguments' => array(2),
+    'type' => MENU_CALLBACK,
+  );
+  // Download or view all the tickets for an order.
+  $items['event-ticket/pdf/order/%commerce_order/tickets.pdf'] = array(
+    'title' => 'Download order ticket PDFs',
+    'page callback' => 'commerce_event_ticket_pdf_download',
+    'page arguments' => array(3, 'commerce_order'),
+    'access callback' => 'commerce_event_ticket_pdf_access',
+    'access arguments' => array(3, 'commerce_order'),
+    'type' => MENU_CALLBACK,
+  );
+  // Download or view all the tickets for a line item.
+  $items['event-ticket/pdf/item/%commerce_line_item/tickets.pdf'] = array(
+    'title' => 'Download line item ticket PDFs',
+    'page callback' => 'commerce_event_ticket_pdf_download',
+    'page arguments' => array(3, 'commerce_line_item'),
+    'access callback' => 'commerce_event_ticket_pdf_access',
+    'access arguments' => array(3, 'commerce_line_item'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Define the options for elements to be displayed in the PDF.
+ */
+function _commerce_event_ticket_pdf_elements_options() {
+  return array(
+    'logo' => t('Site logo'),
+    'barcode_1d_horizontal' => t('1D barcode (horizontal)'),
+    'barcode_2d' => t('2D barcode (QR code)'),
+    'metadata' => t('Ticket metadata'),
+    'page_numbering' => t('Page number and count'),
+  );
+}
+
+/**
+ * Create a PDF file for a ticket, order, or line item.
+ *
+ * @param object $entity
+ *   The entity object to create tickets for - a ticket, order, or line item.
+ * @param string $entity_type
+ *   The type of entity to create tickets for: this must describe the type of
+ *   $entity. Defaults to 'commerce_event_ticket'.
+ * @param array $tickets
+ *   The ticket objects, keyed by their ticket IDs. If this argument is omitted,
+ *   the tickets will be loaded automatically.
+ * @param bool $create
+ *   Whether to create a new file if it doesn't already exist (default: TRUE).
+ *   You can check whether the file exists already by setting this to FALSE.
+ * @param bool $recreate
+ *   Whether to recreate (replace) the file if it already exists (default:
+ *   FALSE).
+ *
+ * @return object|FALSE
+ *   A saved file object representing the PDF, or FALSE if the PDF cannot be
+ *   created.
+ */
+function commerce_event_ticket_pdf_create($entity, $entity_type = 'commerce_event_ticket', array $tickets = array(), $create = TRUE, $recreate = FALSE) {
+  // Get the entity ID.
+  $entity_ids = entity_extract_ids($entity_type, $entity);
+  $entity_id = $entity_ids[0];
+
+  // Get the tickets and order related to the specified entity.
+  switch ($entity_type) {
+    case 'commerce_event_ticket':
+      $tickets = array($entity_id => $entity);
+      break;
+
+    case 'commerce_order':
+      if (empty($tickets)) {
+        $tickets = commerce_event_ticket_load_multiple(FALSE, array('order_id' => $entity_id));
+      }
+      if (!count($tickets)) {
+        watchdog('commerce_event_ticket_pdf', 'There are no tickets for the order number @number.', array(
+          '@number' => $order->order_number,
+        ), WATCHDOG_WARNING);
+        return FALSE;
+      }
+      break;
+
+    case 'commerce_line_item':
+      if (empty($tickets)) {
+        $tickets = commerce_event_ticket_load_multiple(FALSE, array('line_item_id' => $entity_id));
+      }
+      if (!count($tickets)) {
+        watchdog('commerce_event_ticket_pdf', 'There are no tickets for the line item @entity_id.', array(
+          '@entity_id' => $entity_id,
+        ), WATCHDOG_WARNING);
+        return FALSE;
+      }
+      $ticket = reset($tickets);
+      break;
+
+    default:
+      throw new Exception(t('Invalid entity type @type', array(
+        '@type' => $entity_type,
+      )));
+  }
+
+  // Reduce duplicate files: if the order or line item only contains one ticket,
+  // then consider the entity type as 'commerce_event_ticket'.
+  if ($entity_type != 'commerce_event_ticket' && count($tickets) == 1) {
+    $entity_type = 'commerce_event_ticket';
+    $entity = reset($tickets);
+    $entity_id = $entity->ticket_id;
+  }
+
+  // Check if the file already exists.
+  $fid = db_select('commerce_event_ticket_pdf', 'p')
+    ->fields('p', array('fid'))
+    ->condition('entity_type', $entity_type)
+    ->condition('entity_id', $entity_id)
+    ->range(0, 1)
+    ->execute()
+    ->fetchField();
+  if ($fid) {
+    if ($recreate) {
+      file_delete_multiple(array($fid));
+    }
+    else {
+      $file = file_load($fid);
+      if ($file && file_exists($file->uri)) {
+        return $file;
+      }
+      elseif ($file) {
+        file_delete_multiple(array($fid));
+      }
+      else {
+        db_delete('commerce_event_ticket_pdf')
+          ->condition('fid', $fid)
+          ->execute();
+      }
+    }
+  }
+  elseif (!$create) {
+    return FALSE;
+  }
+
+  // Fail if there are going to be too many tickets to create a sensible-sized
+  // PDF.
+  if (count($tickets) > variable_get('commerce_event_ticket_pdf_limit', 100)) {
+    watchdog('commerce_event_ticket_pdf', 'Cannot create PDF: too many tickets (@count). The maximum is @limit.', array(
+      '@count' => count($tickets),
+      '@limit' => variable_get('commerce_event_ticket_pdf_limit', 100),
+    ), WATCHDOG_ERROR);
+    return FALSE;
+  }
+
+  // Acquire a lock, to prevent potential concurrent processes generating the
+  // same PDF. The following logic is similar to what the core Image module
+  // does.
+  // @see image_style_deliver()
+  $lock_name = 'commerce_event_ticket_pdf:' . $entity_type . ':' . $entity_id;
+  if (!lock_acquire($lock_name) && lock_wait($lock_name)) {
+    drupal_add_http_header('Status', '503 Service Unavailable');
+    drupal_add_http_header('Retry-After', 3);
+    print t('PDF generation in progress. Try again shortly.');
+    drupal_exit();
+  }
+
+  // Generate a new PDF (using the TCPDF library).
+  $pdf = commerce_event_ticket_pdf_generate($tickets);
+
+  // Get the filename for the PDF.
+  $order = $entity_type == 'commerce_order' ? $entity : commerce_order_load($entity->order_id);
+  $save_dir = commerce_event_ticket_pdf_get_save_dir($order, TRUE);
+  $filename = count($tickets) > 1 ? 'tickets' : 'ticket';
+  if ($entity_type == 'commerce_event_ticket') {
+    $filename .= '-' . $entity_id;
+  }
+  else {
+    $filename .= '-' . $order->order_number;
+    if ($entity_type == 'commerce_line_item') {
+      $filename .= '-' . $entity_id;
+    }
+  }
+  $filename .= '.pdf';
+  $destination = $save_dir . '/' . $filename;
+
+  // Save the PDF as a file.
+  $data = $pdf->Output('', 'S');
+  $file = file_save_data($data, $destination, FILE_EXISTS_REPLACE);
+
+  // Save memory if multiple PDFs are being generated in this process. This
+  // may or may not have any real effect, but it does no harm.
+  unset($pdf, $data);
+
+  // Fail if the file has not been created.
+  if (!$file) {
+    watchdog('commerce_event_ticket_pdf', 'Failed to create PDF for @entity_type @entity_id.', array(
+      '@entity_type' => $entity_type,
+      '@entity_id' => $entity_id,
+    ), WATCHDOG_ERROR);
+    return FALSE;
+  }
+
+  // Ensure that the file UID is the same as the order UID.
+  $file->uid = $order->uid;
+  file_save($file);
+
+  // Record that this file is associated with these tickets, and this entity.
+  file_usage_add($file, 'commerce_event_ticket_pdf', $entity_type, $entity_id);
+  $query = db_insert('commerce_event_ticket_pdf')
+    ->fields(array(
+      'fid',
+      'ticket_id',
+      'entity_type',
+      'entity_id',
+      'created',
+      'changed',
+    ));
+  foreach ($tickets as $ticket) {
+    $query->values(array(
+      'fid' => $file->fid,
+      'ticket_id' => $ticket->ticket_id,
+      'entity_type' => $entity_type,
+      'entity_id' => $entity_id,
+      'created' => REQUEST_TIME,
+      'changed' => REQUEST_TIME,
+    ));
+  }
+  $query->execute();
+
+  lock_release($lock_name);
+
+  $file->ticket_pdf_is_new = TRUE;
+
+  return $file;
+}
+
+/**
+ * Get a link to view or download a PDF.
+ *
+ * If the current user is authenticated, then this function will provide a CSRF
+ * token in the 'token' query parameter. The token is required for getting PDFs
+ * to generate on-demand. If the PDF already exists, then the token is not
+ * needed.
+ *
+ * @param int $entity_id
+ *   The ID of the entity represented by the PDF (a ticket, an order, or a line
+ *   item). The ID is passed instead of the entity itself, because this function
+ *   may be called from Views handlers.
+ * @param object $entity_type
+ *   The entity type ('commerce_event_ticket', 'commerce_order', or
+ *   'commerce_line_item').
+ * @param string $op
+ *   The operation for the link: 'view' or 'download'.
+ * @param bool $access_check
+ *   Whether to check access: link information will not be returned if the user
+ *   does not have access to the PDF. Defaults to TRUE.
+ * @param object $account
+ *   The user account to check access for. Defaults to the current user.
+ *
+ * @return array|FALSE
+ *   An array of link options, containing at least 'path', or FALSE if the
+ *   access check fails.
+ */
+function commerce_event_ticket_pdf_get_link($entity_id, $entity_type = 'commerce_event_ticket', $op = 'view', $access_check = TRUE, $account = NULL) {
+  if ($op != 'view' && $op != 'download') {
+    throw new Exception(t('Invalid operation: @op', array('@op' => $op)));
+  }
+  $account = $account ? $account : $GLOBALS['user'];
+  if ($access_check) {
+    $entities = entity_load($entity_type, array($entity_id));
+    if (!$entities) {
+      return FALSE;
+    }
+    $entity = reset($entities);
+    if (!commerce_event_ticket_pdf_access($entity, $entity_type, $account)) {
+      return FALSE;
+    }
+  }
+  $link = array();
+  if ($entity_type == 'commerce_order') {
+    $link['path'] = 'event-ticket/pdf/order/' . $entity_id . '/tickets.pdf';
+  }
+  elseif ($entity_type == 'commerce_line_item') {
+    $link['path'] = 'event-ticket/pdf/item/' . $entity_id . '/tickets.pdf';
+  }
+  elseif ($entity_type == 'commerce_event_ticket') {
+    $link['path'] = 'event-ticket/pdf/' . $entity_id . '/ticket.pdf';
+  }
+  else {
+    throw new Exception(t('Invalid entity type: @type', array(
+      '@type' => $entity_type,
+    )));
+  }
+  if ($account->uid && $account->uid == $GLOBALS['user']->uid) {
+    $link['query'] = array(
+      'token' => drupal_get_token('pdf-' . $entity_type . '-' . $entity_id),
+    );
+  }
+  if ($op == 'download') {
+    $link['query']['download'] = 1;
+  }
+  return $link;
+}
+
+/**
+ * Generate a PDF containing a group of one or more tickets.
+ *
+ * @param array $tickets
+ *   An array of ticket objects (CommerceEventTicketEntity), keyed by their
+ *   ticket IDs.
+ *
+ * @return TCPDF
+ *   A TCPDF object representing the PDF (not yet saved as a file).
+ */
+function commerce_event_ticket_pdf_generate(array $tickets) {
+  $pdf = _commerce_event_ticket_pdf_get_tcpdf_instance();
+
+  if (!$pdf) {
+    throw new Exception(t('Failed to get TCPDF instance: is the TCPDF library installed?'));
+  }
+
+  // Turn off the TCPDF header (a black line).
+  $pdf->setPrintHeader(FALSE);
+
+  // Turn of font subsetting (see http://www.tcpdf.org/performances.php).
+  $pdf->setFontSubsetting(FALSE);
+
+  // Get the configuration for elements in the PDF.
+  $options = _commerce_event_ticket_pdf_elements_options();
+  $defaults = drupal_map_assoc(array_keys($options));
+  $elements = variable_get('commerce_event_ticket_pdf_elements', $defaults);
+  $pdf->cet_elements = $elements;
+
+  $printing_footer = !empty($elements['footer']) || !empty($elements['metadata']);
+
+  $page_margin = 10;
+  $inner_padding = 10;
+  $pdf->SetAutoPageBreak(TRUE, $printing_footer ? $page_margin + 10 : $page_margin);
+  $pdf->SetMargins($page_margin, $page_margin);
+
+  // Get an absolute URL to the site's front page.
+  $site_url = url('<front>', array('absolute' => TRUE));
+
+  // Set PDF metadata.
+  $pdf->setAuthor(variable_get('site_name'));
+  $pdf->setCreator($site_url);
+  $pdf->setTitle(
+    format_plural(count($tickets), 'Ticket: @ids', 'Tickets: @ids', array('@ids' => implode(', ', array_keys($tickets))))
+  );
+
+  foreach ($tickets as $ticket) {
+    // Create a new page group. The page groups mean that page numbering can be
+    // per ticket, rather than for the whole file. This makes it easier to
+    // number the pages on multiple-page tickets.
+    $pdf->startPageGroup();
+
+    // Create a new page.
+    $pdf->addPage('P', 'A4');
+
+    // Add the ticket information.
+    $pdf->cet_ticket = $ticket;
+
+    // Get the page height and width for later calculations.
+    $page_height = $pdf->getPageHeight();
+    $page_width = $pdf->getPageWidth();
+
+    // Add a 1D code at the top right of the page (optionally).
+    $barcode_1d_width = 80;
+    $barcode_1d_height = 15;
+    $barcode_1d_top = $page_margin;
+    $barcode_1d_bottom = 0;
+    $barcode_format = 'C128';
+    if (!empty($elements['barcode_1d_horizontal'])) {
+      $barcode_1d_bottom = $barcode_1d_top + $barcode_1d_height;
+      $barcode_1d_x = $page_width - $barcode_1d_width - $page_margin;
+      $pdf->write1DBarcode(
+        $ticket->barcode_token,
+        $barcode_format,
+        $barcode_1d_x,
+        $barcode_1d_top,
+        $barcode_1d_width,
+        $barcode_1d_height,
+        NULL,
+        array('stretch' => TRUE)
+      );
+      // Write the token in plain text underneath the 1D barcode.
+      $pdf->SetFont('courier', NULL, 8);
+      $pdf->SetTextColor(50, 50, 50);
+      $pdf->SetY($barcode_1d_bottom + 1);
+      $pdf->SetX($barcode_1d_x);
+      $pdf->Cell($barcode_1d_width, 0, $ticket->barcode_token, 0, 0, 'C');
+      $pdf->SetTextColor(0, 0, 0);
+    }
+
+    // Add the site logo just under the barcode (optionally).
+    $logo_width = 30;
+    $logo_height = 0;
+    if (!empty($elements['logo'])) {
+      $logo_url = theme_get_setting('logo');
+      if ($logo_url) {
+        $logo_path = drupal_realpath(ltrim(parse_url($logo_url, PHP_URL_PATH), '/'));
+        $logo_x = $page_width - $logo_width - $page_margin;
+        $logo_y = $barcode_1d_bottom + $inner_padding;
+        if ($logo_path && is_readable($logo_path)) {
+          $logo_size = getimagesize($logo_path);
+          $logo_height = $logo_size[1] / ($logo_size[0] / $logo_width);
+          $pdf->Image($logo_path, $logo_x, $logo_y, $logo_width, $logo_height, NULL, $site_url);
+        }
+      }
+    }
+
+    // Add a QR code in the top left of the page (optionally).
+    $barcode_2d_width = 0;
+    $barcode_2d_height = 0;
+    if (!empty($elements['barcode_2d'])) {
+      $barcode_2d_width = 40;
+      $barcode_2d_height = 40;
+      $pdf->write2DBarcode($ticket->barcode_token, 'QRCODE', $page_margin, $page_margin, $barcode_2d_width, $barcode_2d_height);
+    }
+
+    // Set the position to be just after the barcodes.
+    $y = $page_margin;
+    if ($barcode_2d_height) {
+      $y += $barcode_2d_height + $inner_padding;
+    }
+    elseif ($barcode_1d_bottom) {
+      $y += $barcode_1d_bottom + $inner_padding - $page_margin;
+    }
+    $pdf->setX($page_margin);
+    $pdf->setY($y);
+
+    // Set up an array of information that other modules can use for altering
+    // the PDF layout.
+    $context = array(
+      // The size of the page margin.
+      'page_margin' => $page_margin,
+      // The padding between elements on the page.
+      'inner_padding' => $inner_padding,
+      // The Y coordinate after the optional 'elements' (barcodes and logo).
+      'y_after_elements' => $y,
+      // The X coordinate for the HTML ticket information to start.
+      'info_x' => $page_margin,
+      // The Y coordinate for the HTML ticket information to start. This can be
+      // altered. If left NULL it will be automatic.
+      'info_y' => NULL,
+    );
+
+    // Set the default font for any other content.
+    $pdf->SetFont('Helvetica', NULL, 12);
+
+    // Allow other modules to alter the PDF.
+    drupal_alter('commerce_event_ticket_pdf', $pdf, $ticket, $context);
+
+    // Generate HTML ticket information and write it to the page. Other modules
+    // can change this information by overriding
+    // theme_commerce_event_ticket_pdf_info().
+    $pdf->SetX($context['info_x']);
+    if ($context['info_y']) {
+      $pdf->SetY($context['info_y']);
+    }
+    $ticket_info = theme('commerce_event_ticket_pdf_info', array(
+      'ticket' => $ticket,
+    ));
+    $pdf->writeHTML($ticket_info);
+  }
+
+  return $pdf;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function commerce_event_ticket_pdf_theme() {
+  return array(
+    'commerce_event_ticket_pdf_info' => array(
+      'variables' => array(
+        'ticket' => NULL,
+      ),
+      'file' => 'includes/commerce_event_ticket_pdf.theme.inc',
+    ),
+  );
+}
+
+/**
+ * Get the directory for saving PDFs.
+ */
+function commerce_event_ticket_pdf_get_save_dir($order, $create = FALSE) {
+  // Use a directory structure that includes the date of the order - otherwise
+  // we might be creating 1000s of files in the same directory which may
+  // introduce performance issues.
+  $save_dir = 'private://commerce_event_ticket/pdf/' . date('Y/m', $order->created);
+  if ($create && !file_exists($save_dir)) {
+    mkdir($save_dir, 0775, TRUE);
+    chmod(drupal_realpath($save_dir), 0775);
+  }
+  return $save_dir;
+}
+
+/**
+ * Get a TCPDF instance.
+ *
+ * @return TCPDF
+ *   A TCPDF object.
+ */
+function _commerce_event_ticket_pdf_get_tcpdf_instance() {
+  $params = array();
+  $class = array(
+    'class' => 'CommerceEventTicketPDF_TCPDF',
+    'filetype' => 'inc',
+    'filename' => 'includes/commerceeventticketpdf_tcpdf.class',
+    'module' => 'commerce_event_ticket_pdf',
+  );
+  $config = array(
+    'filetype' => 'inc',
+    'filename' => 'includes/commerce_event_ticket_pdf.config',
+    'module' => 'commerce_event_ticket_pdf',
+  );
+  return tcpdf_get_instance($params, $class, $config);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function commerce_event_ticket_pdf_entity_delete($entity, $type) {
+  // Delete PDF files when tickets are deleted.
+  if ($type == 'commerce_event_ticket') {
+    $fids = db_select('commerce_event_ticket_pdf', 'p')
+      ->fields('p', array('fid'))
+      ->condition('ticket_id', $entity->ticket_id)
+      ->execute()
+      ->fetchCol();
+    if ($fids) {
+      file_delete_multiple($fids);
+    }
+  }
+  elseif ($type == 'file' && $entity->filemime == 'application/pdf') {
+    // Update the table tracking PDF files, when the files are deleted.
+    db_delete('commerce_event_ticket_pdf')
+      ->condition('fid', $entity->fid)
+      ->execute();
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function commerce_event_ticket_pdf_commerce_event_ticket_update(CommerceEventTicketEntity $ticket) {
+  if (isset($ticket->original) && $ticket->quantity != $ticket->original->quantity) {
+    // Delete any PDF files when the ticket quantity changes (this will reflect
+    // changes in the line item quantity).
+    $fids = db_select('commerce_event_ticket_pdf', 'p')
+      ->fields('p', array('fid'))
+      ->condition('ticket_id', $ticket->ticket_id)
+      ->execute()
+      ->fetchCol();
+    if ($fids) {
+      file_delete_multiple($fids);
+    }
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function commerce_event_ticket_pdf_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'commerce_event_ticket_pdf') . '/includes',
+  );
+}
+
+/**
+ * Access callback to view or download a PDF file containing ticket(s).
+ *
+ * @param object $entity
+ *   The entity (ticket, order, or line item) for which to view tickets.
+ * @param string $entity_type
+ *   The type of entity for which to view tickets - commerce_event_ticket,
+ *   commerce_order, or commerce_line_item.
+ * @param object $account
+ *   The user account to check access for (optional).
+ */
+function commerce_event_ticket_pdf_access($entity, $entity_type = 'commerce_event_ticket', $account = NULL) {
+  global $user;
+  $account = isset($account) ? $account : $user;
+  switch ($entity_type) {
+    case 'commerce_event_ticket':
+      // Check that the ticket is valid.
+      if (!commerce_event_ticket_is_valid($entity)) {
+        return FALSE;
+      }
+      // Check that the user has access to view the ticket.
+      return commerce_event_ticket_access('view', $entity, $account);
+
+    case 'commerce_line_item':
+    case 'commerce_order':
+      // Check that the relevant order or line item can have tickets.
+      $order = $entity_type == 'commerce_line_item' ? commerce_order_load($entity->order_id) : $entity;
+      if (!commerce_event_ticket_order_should_have_tickets($order)) {
+        return FALSE;
+      }
+      elseif ($entity_type == 'commerce_line_item') {
+        $wrapper = entity_metadata_wrapper($entity_type, $entity);
+        if (!commerce_event_ticket_line_item_should_have_tickets($wrapper)) {
+          return FALSE;
+        }
+      }
+      // Check that the user has access to view tickets for the order.
+      $own_order = $account->uid != 0 && $order->uid == $account->uid;
+      $access = user_access('view all commerce event tickets', $account)
+        || user_access('administer commerce event ticket', $account)
+        || ($own_order && user_access('view own commerce event tickets', $account) && commerce_entity_access('view', $entity, $account, $entity_type));
+      if (!$access) {
+        return FALSE;
+      }
+      // Check that the order or line item contains at least one valid ticket.
+      if ($entity_type == 'commerce_line_item') {
+        $filter = array('line_item_id' => $entity->line_item_id);
+      }
+      else {
+        $filter = array('order_id' => $entity->order_id);
+      }
+      foreach (commerce_event_ticket_load_multiple(FALSE, $filter) as $ticket) {
+        if (commerce_event_ticket_is_valid($ticket)) {
+          return TRUE;
+        }
+      }
+      return FALSE;
+
+  }
+  return FALSE;
+}
+
+/**
+ * Page callback for viewing or downloading a ticket PDF file.
+ *
+ * @param object $entity
+ *   The entity (ticket, order, or line item) for which to view tickets.
+ * @param string $entity_type
+ *   The type of entity for which to view tickets - commerce_event_ticket,
+ *   commerce_order, or commerce_line_item.
+ */
+function commerce_event_ticket_pdf_download($entity, $entity_type = 'commerce_event_ticket') {
+  // Check that a token is set and valid (protects against CSRF).
+  $entity_ids = entity_extract_ids($entity_type, $entity);
+  $entity_id = $entity_ids[0];
+  if (empty($_GET['token']) || !drupal_valid_token($_GET['token'], 'pdf-' . $entity_type . '-' . $entity_id)) {
+    // Check whether the file already exists.
+    $file = commerce_event_ticket_pdf_create($entity, $entity_type, array(), FALSE);
+    if (!$file) {
+      return MENU_ACCESS_DENIED;
+    }
+  }
+
+  $file = empty($file) ? commerce_event_ticket_pdf_create($entity, $entity_type) : $file;
+  if (!$file) {
+    // If this error happens, it's probably to do with file permissions.
+    drupal_set_message(t('The ticket file could not be generated.'), 'error');
+    return MENU_NOT_FOUND;
+  }
+
+  // If the 'download' GET parameter is not empty, attempt to force the PDF to
+  // be downloaded using File Entity module's download page callback.
+  if (!empty($_GET['download'])) {
+    $_GET['token'] = file_entity_get_download_token($file);
+    module_load_include('inc', 'file_entity', 'file_entity.pages');
+    return file_entity_download_page($file);
+  }
+
+  // Directly transfer the file. It's up to the user's browser how the file will
+  // be treated. A download might be triggered, but often the PDF will be
+  // displayed directly in the browser.
+  $headers = array(
+    'Content-Type' => $file->filemime,
+    'Content-Length' => $file->filesize,
+  );
+  // The following invocation of hook_file_download() uses the same logic as the
+  // core function file_download().
+  // @see file_download()
+  foreach (module_implements('file_download') as $module) {
+    $function = $module . '_file_download';
+    $result = $function($file->uri);
+    if ($result == -1) {
+      $headers = array();
+      break;
+    }
+    if (isset($result) && is_array($result)) {
+      $headers = array_merge($headers, $result);
+    }
+  }
+  if (count($headers)) {
+    file_transfer($file->uri, $headers);
+  }
+  return MENU_ACCESS_DENIED;
+}

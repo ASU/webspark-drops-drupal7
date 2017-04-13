@@ -1,0 +1,136 @@
+<?php
+
+/**
+ * @file
+ * Tests for membership_entity_type.module.
+ */
+
+/**
+ * Defines a base class for testing the Membership Entity Type module.
+ */
+class MembershipEntityTypeWebTestCase extends MembershipEntityWebTestCase {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
+    }
+    $modules += array('membership_entity_type');
+    parent::setUp($modules);
+
+    // Add default membership type settings.
+    $type = membership_entity_type_load('membership');
+    $type->label = 'Membership';
+    $type->data = array(
+      'member_id_format' => 'membership_entity_numeric_member_id',
+      'member_id_settings' => array(
+        'length' => 5,
+      ),
+      'cardinality' => 1,
+      'primary_role' => $this->member_role,
+      'secondary_role' => $this->secondary_role,
+      'show_on_profile' => 1,
+      'all_edit' => 0,
+    );
+    $type->save();
+  }
+
+  /**
+   * Create and save a membership type for testing.
+   *
+   * @param array $values
+   *   An associative array of default values for the membership type.
+   *
+   * @return MembershipEntityType The new membership tyep object.
+   */
+  public function createMembershipType($values = array()) {
+    if (!isset($values['data'])) {
+      $values['data'] = array();
+    }
+    $values['data'] += array(
+      'member_id_format' => 'membership_entity_numeric_member_id',
+      'member_id_settings' => array(
+        'length' => 5,
+      ),
+      'cardinality' => 1,
+      'primary_role' => $this->member_role,
+      'secondary_role' => $this->secondary_role,
+      'show_on_profile' => 1,
+      'all_edit' => 0,
+    );
+
+    $type = membership_entity_type_create($values);
+    $type->save();
+    return $type;
+  }
+
+}
+
+/**
+ * Test membership type creation functions.
+ */
+class MembershipEntityTypeCreateTestCase extends MembershipEntityTypeWebTestCase {
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Membership type creation',
+      'description' => 'Test creating membership types.',
+      'group' => 'Membership Entity Type',
+    );
+  }
+
+  /**
+   * Test creating a membership type.
+   */
+  public function testCreateMembershipType() {
+    $type = membership_entity_type_create(array(
+      'label' => 'Example Membership',
+      'type' => 'example_membership',
+      'description' => 'An example membership type.',
+      'weight' => 0,
+      'data' => array(),
+    ));
+    $type->save();
+    $this->assertNotNull($type->id, 'Membership type created successfully.');
+
+    $loaded_type = membership_entity_type_load($type->id);
+    $this->assertTrue($loaded_type, 'Membership type found in database.');
+  }
+
+  /**
+   * Test creating a membership type from the admin form.
+   */
+  public function testCreateMembershipTypeAdmin() {
+    // Create and login an admin user.
+    $admin = $this->drupalCreateUser(array('administer membership types'));
+    $this->drupalLogin($admin);
+
+    // Add a membership type.
+    $this->drupalGet('admin/memberships/types');
+    $this->clickLink('Add membership type');
+    $this->assertTitle('Add membership type | Drupal');
+
+    $label = $this->randomName();
+    $edit = array(
+      'label' => $label,
+      'type' => preg_replace('/[^a-z0-9_]+/', '_', strtolower($label)),
+      'description' => $this->randomString(),
+      'weight' => 1,
+      'member_id_format' => 'membership_entity_numeric_member_id',
+      'member_id_settings[length]' => 10,
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'primary_role' => $this->member_role,
+      'secondary_role' => 'primary',
+    );
+    $this->drupalPost('admin/memberships/types/add', $edit, 'Save configuration');
+    $this->assertText(format_string('Membership type @name has been created.', array('@name' => $label)), 'Membership type created by admin.');
+
+    $type = db_query('SELECT id FROM {membership_entity_type} WHERE label = :label', array(':label' => $label));
+    $this->assertTrue($type, 'Membership type found in database.');
+  }
+
+}

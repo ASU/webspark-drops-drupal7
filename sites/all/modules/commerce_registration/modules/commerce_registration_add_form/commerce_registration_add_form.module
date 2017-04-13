@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function commerce_registration_add_form_menu() {
+  $items['add-registration'] = array(
+    'title' => 'Add Registration',
+    'page callback' => 'commerce_registration_add_form_page',
+    'access arguments' => array('administer registration'),
+    'type' => MENU_SUGGESTED_ITEM,
+  );
+
+  return $items;
+}
+
+function commerce_registration_add_form_page($product_id) {
+  $type = 'commerce_product';
+  $product = commerce_product_load($product_id);
+  return registration_register_page($type, $product);
+}
+
+/*
+ * Implements hook_form_FORM_ID_alter
+ */
+
+function commerce_registration_add_form_form_alter(&$form, &$form_state, $form_id) {
+  //make sure this is the add to cart form
+  if (substr($form_id, 0, 30) == 'commerce_cart_add_to_cart_form') {
+    $product_available = FALSE;
+    if (isset($form['product_id']['#value'])) {
+      $product_id = $form['product_id']['#value'];
+      $product_available = TRUE;
+    }
+    elseif (isset($form['product_id']['#default_value'])) {
+      $product_id = $form['product_id']['#default_value'];
+      $product_available = TRUE;
+    }
+    if ($product_available && user_access('administer registration')) {
+      $form['admin_register'] = array(
+        '#markup' => l('Create Registration', 'add-registration/' . $product_id)
+      );
+    }
+  }
+}
+

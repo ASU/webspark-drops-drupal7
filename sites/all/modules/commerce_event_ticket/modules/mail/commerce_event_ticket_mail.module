@@ -1,0 +1,16 @@
+<?php
+/**
+ * @file
+ * Main file for the Commerce Event Ticket Mail module.
+ */
+
+/**
+ * Implements hook_mail().
+ */
+function commerce_event_ticket_mail_mail($key, &$message, $params) {
+  $message['body'] = $params['body'];
+  $message['subject'] = $params['subject'];
+  $message['params']['plaintext'] = $params['plaintext'];
+
+  mimemail_prepare_message($message);
+}

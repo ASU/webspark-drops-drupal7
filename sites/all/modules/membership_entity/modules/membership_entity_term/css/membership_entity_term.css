@@ -1,0 +1,15 @@
+/**
+ * @file
+ * Default styles for membership terms.
+ */
+
+/* Highlight the current term in term lists. */
+.view-membership-entity-terms tr.current {
+  background-color: #32cd32;
+  border-color: #be7;
+}
+
+/* Intentionally overspecified to override click sorting styles. */
+.view-membership-entity-terms tr.current td.active {
+  background-color: #32cd32;
+}

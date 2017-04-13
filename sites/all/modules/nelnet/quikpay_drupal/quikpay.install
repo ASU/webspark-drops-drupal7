@@ -1,0 +1,19 @@
+<?php
+/**
+ * @file
+ * Commerce Quikpay (un)install hooks.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function quikpay_install() {
+  variable_set("commerce_quikpay_accounts", array("Default"));
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function quikpay_uninstall() {
+  variable_del("commerce_quikpay_accounts");
+}

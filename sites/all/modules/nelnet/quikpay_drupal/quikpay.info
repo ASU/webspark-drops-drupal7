@@ -1,0 +1,6 @@
+name = QuikPay
+description = "Adds Nelnet Quickpay option to Commerce"
+core = 7.x
+dependencies[] = commerce_payment
+files[] = quikpay.pages.inc
+package = Commerce

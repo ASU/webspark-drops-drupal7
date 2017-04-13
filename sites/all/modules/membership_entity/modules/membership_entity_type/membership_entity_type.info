@@ -1,0 +1,28 @@
+name = Membership Entity Types
+description = Allows users to create different types of memberships.
+package = Memberships
+core = 7.x
+
+configure = admin/memberships/types
+
+dependencies[] = membership_entity
+
+files[] = membership_entity_type.inc
+files[] = membership_entity_type.ui.inc
+files[] = membership_entity_type.controller.inc
+
+; Entity API integrations.
+files[] = membership_entity_type.info.inc
+
+; Custom views handler.
+files[] = views/membership_entity_type.views.inc
+
+; Tests
+files[] = membership_entity_type.test
+
+; Information added by Drupal.org packaging script on 2015-07-16
+version = "7.x-1.0-beta1+1-dev"
+core = "7.x"
+project = "membership_entity"
+datestamp = "1437064446"
+

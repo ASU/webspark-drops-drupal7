@@ -1,0 +1,117 @@
+<?php
+/**
+ * @file
+ * Test access to event tickets.
+ */
+
+class CommerceEventTicketAccessTestCase extends CommerceEventTicketBaseTestCase {
+
+  /**
+   * Provide basic information about the test.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Access',
+      'description' => 'Test access to event tickets.',
+      'group' => 'Commerce Event Ticket',
+    );
+  }
+
+  /**
+   * Test customer access to tickets (programmatically).
+   */
+  public function testCustomerAccess() {
+    $customer = $this->createDummyEventTicketCustomer();
+    $tickets = $this->createDummyTickets(1, $customer);
+    $ticket = reset($tickets);
+
+    $anonymous = drupal_anonymous_user();
+    $this->assertFalse(commerce_event_ticket_access('view', $ticket, $anonymous), 'Anonymous may not view ticket');
+    $this->assertFalse(commerce_event_ticket_access('mark used', $ticket, $anonymous), 'Anonymous may not mark ticket used');
+    $this->assertFalse(commerce_event_ticket_access('mark unused', $ticket, $anonymous), 'Anonymous may not mark ticket unused');
+    $this->assertFalse(commerce_event_ticket_access('update', $ticket, $anonymous), 'Anonymous may not view ticket');
+
+    $this->assertTrue(commerce_event_ticket_access('view', $ticket, $customer), 'Customer may view own ticket');
+    $this->assertFalse(commerce_event_ticket_access('mark used', $ticket, $customer), 'Customer may not mark own ticket used');
+    $this->assertFalse(commerce_event_ticket_access('mark unused', $ticket, $customer), 'Customer may not mark own ticket unused');
+    $this->assertFalse(commerce_event_ticket_access('update', $ticket, $customer), 'Customer may not update own ticket');
+  }
+
+  /**
+   * Test editor access to tickets (programmatically).
+   */
+  public function testEditorAccess() {
+    $tickets = $this->createDummyTickets();
+    $ticket = reset($tickets);
+
+    $editor = $this->createDummyEventTicketEditor();
+    $this->assertTrue(commerce_event_ticket_access('view', $ticket, $editor), 'Editor may view ticket');
+    $this->assertTrue(commerce_event_ticket_access('mark used', $ticket, $editor), 'Editor may mark ticket used');
+    $this->assertTrue(commerce_event_ticket_access('mark unused', $ticket, $editor), 'Editor may mark ticket unused');
+    $this->assertTrue(commerce_event_ticket_access('update', $ticket, $editor), 'Editor may update ticket');
+  }
+
+  /**
+   * Test validator access to tickets (programmatically).
+   */
+  public function testValidatorAccess() {
+    $tickets = $this->createDummyTickets();
+    $ticket = reset($tickets);
+
+    $validator = $this->createDummyEventTicketValidator();
+    $this->assertTrue(commerce_event_ticket_access('view', $ticket, $validator), 'Validator may view ticket');
+    $this->assertTrue(commerce_event_ticket_access('mark used', $ticket, $validator), 'Validator may mark ticket used');
+    $this->assertTrue(commerce_event_ticket_access('mark unused', $ticket, $validator), 'Validator may mark ticket unused');
+    $this->assertFalse(commerce_event_ticket_access('update', $ticket, $validator), 'Validator may not update ticket');
+  }
+
+  /**
+   * Test selective validator access to tickets (programmatically).
+   */
+  public function testSelectiveValidatorAccess() {
+
+    // Create a product display content type.
+    $node_type = $this->createDummyProductDisplayContentType();
+    // Reset the permissions cache so that permissions for the new content type
+    // are available.
+    $this->checkPermissions(array(), TRUE);
+
+    // Create a product display node that the user can update.
+    $account = $this->createDummyEventTicketSelectiveValidator($node_type->name);
+    $own_node = $this->drupalCreateNode(array(
+      'uid' => $account->uid,
+      'type' => $node_type->name,
+    ));
+
+    // Create a dummy product, and reference it from the product display node.
+    $product = $this->createDummyProduct();
+    $own_node_wrapper = entity_metadata_wrapper('node', $own_node);
+    $own_node_wrapper->field_product->set($product);
+    $own_node_wrapper->save();
+
+    // Create a dummy ticket for the product.
+    $tickets = $this->createDummyTickets(1, NULL, $product);
+    $ticket = reset($tickets);
+
+    // Test the user's access to this ticket. The user should be allowed to
+    // view, validate (mark used), and reset (mark unused) the ticket.
+    $this->assertTrue(commerce_event_ticket_access('view', $ticket, $account), 'Selective validator may view ticket (for own node)');
+    $this->assertTrue(commerce_event_ticket_access('mark used', $ticket, $account), 'Selective validator may mark used ticket (for own node)');
+    $this->assertTrue(commerce_event_ticket_access('mark unused', $ticket, $account), 'Selective validator may mark unused ticket (for own node)');
+    $this->assertFalse(commerce_event_ticket_access('update', $ticket, $account), 'Selective validator may not update ticket');
+
+    // Create another product, *not* linked to the user's own node.
+    $other_product = $this->createDummyProduct();
+
+    // Create a dummy ticket for this product.
+    $tickets = $this->createDummyTickets(1, NULL, $other_product);
+    $ticket = reset($tickets);
+
+    // Test the user's access to this new ticket.
+    $this->assertFalse(commerce_event_ticket_access('view', $ticket, $account), 'Selective validator may not view ticket (for other product)');
+    $this->assertFalse(commerce_event_ticket_access('mark used', $ticket, $account), 'Selective validator may not mark used ticket (for other product)');
+    $this->assertFalse(commerce_event_ticket_access('mark unused', $ticket, $account), 'Selective validator may not mark unused ticket (for other product)');
+    $this->assertFalse(commerce_event_ticket_access('update', $ticket, $account), 'Selective validator may not update ticket');
+  }
+
+}

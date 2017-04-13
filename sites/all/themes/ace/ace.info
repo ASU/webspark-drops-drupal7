@@ -1,0 +1,20 @@
+name = ace
+description = A Kalatheme subtheme powered by Twitter Bootstrap & Science.
+base theme = innovation
+core = 7.x
+
+regions[header] = Header
+regions[menu] = Menu
+regions[content] = Content
+regions[asu_degree_marketing] = ASU Degree Marketing
+regions[asu_degree_sidebar] = ASU Degree Sidebar
+regions[prefooter] = Prefooter
+regions[footer] = Footer
+regions[closure] = Closure
+
+settings[toggle_logo] = 0
+
+stylesheets[all][] = css/main.css
+stylesheets[all][] = css/ace.css
+
+stylesheets[all][] = css/font-awesome.min.css

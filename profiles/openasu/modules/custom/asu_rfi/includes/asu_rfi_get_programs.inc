@@ -19,11 +19,10 @@ function asu_rfi_get_programs()
   if (!empty($header) && !empty($header[0])) {
 
     $code = explode(" ", $header[0]);
-    $finalHeader = count($header) - 1;
 
     if (isset($code[1]) && $code[1] >= 200 && $code[1] < 400) {
-      if (isset($header[$finalHeader]) && !empty($header[$finalHeader])) {
-        $data = $header[$finalHeader];
+      if (isset($header[22]) && !empty($header[22])) {
+        $data = $header[22];
         return $data;
       }
     } else {
@@ -43,7 +42,7 @@ function asu_rfi_check_programs()
   $timestamp = variable_get('asu_rfi_cached_programs_timestamp');
   $now = time();
 
-  if (!isset($programs) || !isset($timestamp) || $now - $timestamp > 86400 || strlen($programs) < 25) {
+  if (!isset($programs) || !isset($timestamp) || $now - $timestamp > 86400) {
     $getPrograms = asu_rfi_get_programs();
     if ($getPrograms == false) {
       watchdog('asu_rfi', 'Failed to set the cached Online Programs');

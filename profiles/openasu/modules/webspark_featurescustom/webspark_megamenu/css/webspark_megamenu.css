@@ -245,16 +245,3 @@ li.tb-megamenu-item.mega.active .mega-dropdown-inner a {
   text-transform: none;
   font-size: 16px;
 }
-/* [KM 12-5-16] Added stronger focus styles for keyboard accessibility */
-.tb-megamenu .nav > li > a:focus,
-.tb-megamenu .nav > .active > a:focus,
-.tb-megamenu .dropdown-menu li > a:focus,
-.tb-megamenu .nav li.dropdown.active a:focus {
-	 outline:none; 
-	 border-top: 2px solid #4D90FE;
-	 border-right: 2px solid #4D90FE;
-	 border-bottom: 2px solid #4D90FE;
-	 border-left: 2px solid #4D90FE;
-	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
-	 box-shadow: 0px 0px 5px  #4D90FE;
-}

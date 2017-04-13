@@ -1,0 +1,152 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the membership_entity module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function membership_entity_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+
+  if ($phase == 'runtime' && !module_exists('membership_entity_type')) {
+    $data = membership_entity_get_bundle_settings();
+    if (empty($data['status'])) {
+      $requirements['membership_entity_settings'] += array(
+        'title' => $t('Membership Settings'),
+        'value' => $t('Missing configuration'),
+        'description' => $t('The membership entity module is missing configuration settings. Please visit the <a href="!url">settings page</a> to configure the module.', array(
+          '!url' => url('admin/memberships/types/manage/membership'),
+        )),
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_schema().
+ */
+function membership_entity_schema() {
+  $schema['membership_entity'] = array(
+    'description' => 'The base table for memberships.',
+    'fields' => array(
+      'mid' => array(
+        'description' => 'The primary identifier for a membership.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'member_id' => array(
+        'description' => 'A user enterable unique member id.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'type' => array(
+        'description' => 'The type (bundle) of this membership.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'uid' => array(
+        'description' => 'The user id of the primary member.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'description' => 'Integer code indicating the membership status.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the membership was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the membership was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'membership_entity_uid' => array('uid'),
+      'membership_entity_changed' => array('changed'),
+      'membership_entity_created' => array('created'),
+      'membership_entity_status_type' => array('status', 'type', 'mid'),
+      'membership_entity_member_id_type' => array('member_id', array('type', 4)),
+      'membership_entity_type' => array(array('type', 4)),
+    ),
+    'unique keys' => array(
+      'member_id' => array('member_id'),
+    ),
+    'primary key' => array('mid'),
+    'foreign keys' => array(
+      'membership_entity_primary_member' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+  );
+
+  $schema['membership_entity_secondary_member'] = array(
+    'description' => 'Secondary members.',
+    'fields' => array(
+      'mid' => array(
+        'description' => 'The membership identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'The user id of the secondary member.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'weight' => array(
+        'description' => 'The display order for listing secondary members.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+    ),
+    'primary key' => array('mid', 'uid'),
+    'foreign keys' => array(
+      'membership_entity_membership' => array(
+        'table' => 'membership_entity',
+        'columns' => array('mid' => 'mid'),
+      ),
+      'membership_entity_secondary_member' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function membership_entity_uninstall() {
+  // Clean up settings.
+  variable_del('membership_entity_settings');
+  variable_del('membership_entity_next_member_id');
+  variable_del('membership_entity_user_register_required');
+}

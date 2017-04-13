@@ -20,8 +20,7 @@
                 field_configs: null,
                 default_sort: null,
                 titlesort_field: null,
-                tsort_placeholder: null,
-                field_id: null
+                tsort_placeholder: null
             }, attributes);
         },
 
@@ -29,24 +28,51 @@
             var self = this;
             var sort_items = self.sort_items;
             var field_configs = self.field_configs;
-            var default_sort = self.default_sort;
+            var default_sort  = 'lastNameSort asc';
             var titlesort_field = self.titlesort_field;
             var tsort_placeholder = self.tsort_placeholder;
-            var field_id = self.field_id;
 
-            // set the default sort
-            self.active_sort = default_sort;
-            self.direction = 'asc';
+            // if we are no longer using the ranksort placeholder, grab the sort value from
+            // the saved state if possible
+            if (titlesort_field != tsort_placeholder) {
 
-            self.manager.store.remove('sort');
+                var man_sort = self.manager.store.get('sort').val();
 
-            if (self.active_sort != titlesort_field) {
-                field_configs.show_managers = false;
-                self.manager.store.addByValue('sort', self.active_sort + ' ' + self.direction);
+                if (Array.isArray(man_sort)) {
+                    man_sort = man_sort[0];
+                }
+
+                if (man_sort != null) {
+                    default_sort  = man_sort.split(' ');
+                } else {
+                    default_sort  = self.default_sort.split(' ');
+                }
+
+                if (default_sort[0] != titlesort_field) {
+                    field_configs.show_managers = false;
+                }
+
             } else {
-                field_configs.show_managers = true;
+                default_sort  = self.default_sort.split(' ');
+            }
+
+            self.active_sort = default_sort[0];
+            self.direction = default_sort[1];
+
+            if (titlesort_field != tsort_placeholder) {
+                var starting_sort = self.active_sort + ' ' + self.direction;
+                self.manager.store.remove('sort');
+
+                if (self.active_sort == titlesort_field) {
+                    starting_sort += ',lastNameSort asc';
+                    self.manager.store.addByValue('sort', starting_sort);
+                }
+
+            } else {
+                self.manager.store.remove('sort');
                 self.manager.store.addByValue('sort', 'lastNameSort asc');
             }
+
 
             for (var i = 0; i < sort_items.length; i++) {
 
@@ -64,11 +90,11 @@
                     $(sort_items[i].field_id).addClass('dir-active-sort');
                 }
 
-                $(sort_items[i].field_id).click(function (field_name) {
+                $(sort_items[i].field_id).click('click', function(field_name) {
 
                     // return a click handler, with the name copied to field_name, because we are
                     // in a loop
-                    return function () {
+                    return function() {
 
                         //save prev sort before assigning new
                         var prev_sort = self.active_sort;
@@ -85,12 +111,12 @@
                         self.manager.store.remove('start');
 
                         //if there was a previous sort, then do some logic to add active classes, etc.
-                        //note:  there should always be a prev_sort, since we have a default
+                        //note:  there should always be a prev_sort, since we always have a default
 
                         //SPECIAL CASE FOR THE TITLESORT FIELD
                         if (field_name == titlesort_field) {
 
-                            ASUPeople[field_id].field_configs.show_managers = true;
+                            ASUPeople.field_configs.show_managers = true;
 
                             // special case.  if we haven't changed placeholder yet,
                             // then return false after doing request, but don't change manager store sort
@@ -103,15 +129,12 @@
                                 return false;
                             }
                         } else {
-                            ASUPeople[field_id].field_configs.show_managers = false;
+                            ASUPeople.field_configs.show_managers = false;
                         }
 
                         //special logic for ranksort, otherwise switch asc/desc
                         if (field_name == titlesort_field) {
-
-                            var target = $(self.target).find('.dir-active-sort');
-                            target.removeClass('dir-active-sort');
-                            f
+                            $(self.target).find('.dir-active-sort').removeClass('dir-active-sort');
                             $(this).addClass('dir-active-sort');
                             self.direction = 'asc';
 
@@ -123,8 +146,7 @@
                                 self.direction = 'asc';
                             }
                         } else {
-                            var t2 = $(self.target).find('.dir-active-sort');//.removeClass('dir-active-sort');
-                            t2.removeClass('dir-active-sort');
+                            $(self.target).find('.dir-active-sort').removeClass('dir-active-sort');
                             $(this).addClass('dir-active-sort');
                             self.direction = 'asc';
                         }
@@ -137,18 +159,22 @@
 
                         self.manager.store.remove('sort');
                         self.manager.store.addByValue('sort', new_sort);
-
                         self.manager.doRequest();
-
-                        $(this).find('.fa').remove();
+                        $(self.target).find('.fa').remove();
 
                         if (field_name != titlesort_field) {
                             $(this).append('<i class="dir-sort-icon fa fa-sort-' + self.direction + '"></i>');
                         }
                     }
-                }(name));
+                } (name) );
             }
+        },
+        beforeRequest: function () {
+            var self = this;
         }
+
+
+
     });
 
 })(jQuery, window.History);

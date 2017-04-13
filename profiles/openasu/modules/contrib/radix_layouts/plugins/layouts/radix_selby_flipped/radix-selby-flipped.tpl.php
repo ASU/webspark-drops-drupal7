@@ -14,7 +14,7 @@
 ?>
 
 <div class="panel-display selby-flipped selby-flipped-flipped-flipped clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
-  <div class="section">
+  <section class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-8 selby-flipped-column-content-region-area panel-panel">
@@ -44,5 +44,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </div><!-- /.selby-flipped --><!-- /.selby-flipped-flipped-flipped -->

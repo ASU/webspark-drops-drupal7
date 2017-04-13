@@ -1,0 +1,462 @@
+<?php
+
+/**
+ * @file
+ * Purchase memberships with the Commerce module.
+ */
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function membership_entity_commerce_entity_info_alter(&$entity_info) {
+  $entity_info['commerce_product']['view modes']['membership_entity_commerce'] = array(
+    'label' => t('Membership form'),
+    'custom settings' => TRUE,
+  );
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function membership_entity_commerce_entity_view_alter(&$build, $type) {
+  if ($type == 'commerce_product' && $build['#view_mode'] == 'membership_entity_commerce') {
+    // Make the theme system think this is a page view so no title
+    // will be rendered.
+    $build['#page'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_commerce_product_uri().
+ */
+function membership_entity_commerce_commerce_product_uri($product) {
+  // There is a bug in Entity API that causes a uri array to be created even
+  // when no uri path is returned. Until https://drupal.org/node/1934382 is
+  // fixed we need to return an empty path.
+  if (module_exists('commerce_product_ui') && commerce_product_access('update', $product)) {
+    return array(
+      'path' => 'admin/commerce/products/' . $product->product_id,
+    );
+  }
+
+  return array('path' => '');
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function membership_entity_commerce_form_alter(&$form, &$form_state, $form_id) {
+  if (!empty($form_state['line_items']) && isset($form['edit_quantity'])) {
+    // Build a list of membership line items.
+    $membership_line_items = array();
+    foreach ($form_state['line_items'] as $line_item_id => $line_item) {
+      if ($line_item->type == 'membership_entity_line_item') {
+        $membership_line_items[$line_item_id] = $line_item_id;
+      }
+    }
+
+    // Add a submit handler when removing membership line items.
+    if (isset($form['edit_delete'])) {
+      foreach (element_children($form['edit_delete']) as $delta) {
+        $element = &$form['edit_delete'][$delta];
+
+        if (in_array($element['#line_item_id'], $membership_line_items)) {
+          $element['#submit'][] = 'membership_entity_commerce_line_item_remove_submit';
+        }
+      }
+    }
+
+    // Disable the quantity field for membership line items.
+    if (isset($form['edit_quantity'])) {
+      foreach (element_children($form['edit_quantity']) as $delta) {
+        $element = &$form['edit_quantity'][$delta];
+
+        if (in_array($element['#line_item_id'], $membership_line_items)) {
+          $element['#attributes']['disabled'] = 'disabled';
+          $element['#element_validate'][] = 'membership_entity_commerce_validate_quantity';
+        }
+      }
+    }
+  }
+
+  // Only attach commerce fields to new and renewing memberships.
+  if (!empty($form['#membership_entity']->is_new) || (!empty($form['#membership_entity']->is_renewal))) {
+    $membership = $form['#membership_entity'];
+
+    // Check for a pending renewal.
+    $latest_term = end($membership->terms);
+    if (empty($latest_term) || $latest_term->status != MEMBERSHIP_ENTITY_PENDING) {
+      form_load_include($form_state, 'inc', 'membership_entity_commerce', 'membership_entity_commerce.forms');
+      membership_entity_commerce_create_order_form($form, $form_state, $form_id);
+    }
+  }
+}
+
+/**
+ * Submit handler to remove a membership product from the cart.
+ */
+function membership_entity_commerce_line_item_remove_submit($form, &$form_state) {
+  $line_item_id = $form_state['triggering_element']['#line_item_id'];
+
+  // Get the corresponding wrapper to show the correct title.
+  $line_item_wrapper = entity_metadata_wrapper('commerce_line_item', $form_state['line_items'][$line_item_id]);
+  if ($line_item_wrapper->type->value() != 'membership_entity_line_item') {
+    return;
+  }
+
+  $term = $line_item_wrapper->membership_entity_term_ref->value();
+  $membership = membership_entity_load($term->mid);
+
+  // Determine if this is a renewal or a new membership.
+  if (count($membership->terms) < 2) {
+    membership_entity_delete($membership->mid);
+    $form_state['redirect'] = 'user/join/';
+  }
+  else {
+    $form_state['redirect'] = "membership/{$membership->mid}/renew";
+    membership_entity_term_delete($term->id);
+  }
+}
+
+/**
+ * Validate single quantity on membership line items.
+ */
+function membership_entity_commerce_validate_quantity($element, &$form_state) {
+  if ($element['#value'] > 1) {
+    form_error($element, t('Membership product quantity must be 1.'));
+  }
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function membership_entity_commerce_field_extra_fields() {
+  $extra = array();
+
+  $extra['commerce_product']['membership_entity_product']['form']['membership_entity_commerce'] = array(
+    'label' => t('Membership Settings'),
+    'description' => t('The membership product settings.'),
+    'weight' => 10,
+  );
+
+  $types = module_exists('membership_entity_type') ? array_keys(membership_entity_type_get_types()) : array('membership');
+  foreach ($types as $type) {
+    $extra['membership_entity'][$type]['form'] = array(
+      'attributes' => array(
+        'label' => t('Membership Product Attributes'),
+        'description' => t('Product info and attributes for the membership.'),
+        'weight' => 99,
+      ),
+      'line_item_fields' => array(
+        'label' => t('Membership Line Item Fields'),
+        'description' => t('Fields for the commerce line item.'),
+        'weight' => 100,
+      ),
+    );
+  }
+
+  return $extra;
+}
+
+/**
+ * Implements hook_commerce_product_type_info().
+ */
+function membership_entity_commerce_commerce_product_type_info() {
+  return array(
+    'membership_entity_product' => array(
+      'type' => 'membership_entity_product',
+      'name' => t('Membership product'),
+      'description' => t('A product type to purchase a membership.'),
+      'revision' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_entity_property_info_alter().
+ */
+function membership_entity_commerce_entity_property_info_alter(&$info) {
+  $properties = &$info['commerce_product']['bundles']['membership_entity_product']['properties'];
+
+  $properties['term'] = array(
+    'label' => t('Term length'),
+    'description' => t('The membership term length.'),
+    'type' => 'text',
+    'getter callback' => 'membership_entity_commerce_term_get_properties',
+  );
+}
+
+/**
+ * Getter callback for term length entity property info.
+ */
+function membership_entity_commerce_term_get_properties($product, array $options, $name, $type, $info) {
+  return $product->data['membership_entity_commerce']['term'];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for commerce_product_ui_product_form().
+ */
+function membership_entity_commerce_form_commerce_product_ui_product_form_alter(&$form, &$form_state, $form_id) {
+  if ($form['#bundle'] != 'membership_entity_product') {
+    return;
+  }
+
+  $data = &$form['#entity']->data;
+  if (!empty($form_state['values']['membership_entity_commerce']['type'])) {
+    $type = $form_state['values']['membership_entity_commerce']['type'];
+  }
+  elseif (!empty($data['membership_entity_commerce']['type'])) {
+    $type = $data['membership_entity_commerce']['type'];
+  }
+  else {
+    $type = 'membership';
+  }
+
+  $form['#validate'][] = 'membership_entity_commerce_product_ui_form_submit';
+
+  // Add a container for membership settings.
+  $form['membership_entity_commerce'] = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('membership-entity-commerce-settings')),
+    '#tree' => TRUE,
+  );
+
+  $form['membership_entity_commerce']['type'] = array(
+    '#type' => 'value',
+    '#value' => $type,
+  );
+
+  $settings = membership_entity_get_bundle_settings($type);
+
+  $form['membership_entity_commerce']['term'] = array(
+    '#type' => 'select',
+    '#title' => t('Term length'),
+    '#options' => drupal_map_assoc($settings['available_term_lengths']),
+    '#default_value' => !empty($data['membership_entity_commerce']['term']) ? $data['membership_entity_commerce']['term'] : '',
+    '#required' => TRUE,
+    '#weight' => 1,
+  );
+
+  if (module_exists('membership_entity_type')) {
+    $type_options = membership_entity_type_get_names();
+
+    $form['membership_entity_commerce']['type'] = array(
+      '#type' => 'select',
+      '#title' => t('Membership type'),
+      '#options' => $type_options,
+      '#default_value' => $type,
+      '#required' => TRUE,
+      '#weight' => 0,
+    );
+
+    if (count($type_options) > 1) {
+      $wrapper_id = 'membership-entity-term-wrapper';
+      $form['membership_entity_commerce']['term']['#prefix'] = '<div id="' . $wrapper_id . '">';
+      $form['membership_entity_commerce']['term']['#suffix'] = '</div>';
+
+      $form['membership_entity_commerce']['type']['#ajax'] = array(
+        'callback' => '_membership_entity_commerce_type_callback',
+        'wrapper' => $wrapper_id,
+      );
+    }
+  }
+  else {
+    $form['membership_entity_commerce']['type'] = array(
+      '#type' => 'value',
+      '#value' => 'membership',
+    );
+  }
+}
+
+/**
+ * Custom submit handler for the product form.
+ */
+function membership_entity_commerce_product_ui_form_submit(&$form, &$form_state) {
+  // Save the membership settings.
+  $product = &$form_state['commerce_product'];
+  $product->data['membership_entity_commerce'] = $form_state['values']['membership_entity_commerce'];
+}
+
+/**
+ * Ajax callback for the membership type dropdown.
+ */
+function _membership_entity_commerce_type_callback($form, $form_state) {
+  return $form['membership_entity_commerce']['term'];
+}
+
+/**
+ * Implements hook_commerce_line_item_type_info().
+ */
+function membership_entity_commerce_commerce_line_item_type_info() {
+  return array(
+    'membership_entity_line_item' => array(
+      'name' => t('Membership Product'),
+      'description' => t('A line item for membership products'),
+      'product' => TRUE,
+      'add_form_submit_value' => t('Add membership product'),
+      'base' => 'membership_entity_commerce_line_item',
+      'callbacks' => array(
+        'title' => 'commerce_product_line_item_title',
+      ),
+    ),
+  );
+}
+
+/**
+ * Line item configuration callback.
+ */
+function membership_entity_commerce_line_item_configuration($line_item_type) {
+  $type = $line_item_type['type'];
+
+  // Create the standard product fields for the line item type.
+  commerce_product_line_item_configuration($line_item_type);
+
+  // Limit the product reference field to membership products.
+  $instance = field_info_instance('commerce_line_item', 'commerce_product', $type);
+  $instance['settings']['referenceable_types'] = drupal_map_assoc(array('membership_entity_product'));
+  field_update_instance($instance);
+
+  // Add the membership entity reference field.
+  $field_name = 'membership_entity_term_ref';
+  commerce_activate_field($field_name);
+  field_cache_clear();
+
+  $field = field_info_field($field_name);
+  $instance = field_info_instance('commerce_line_item', $field_name, $type);
+
+  if (empty($field)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'entityreference',
+      'cardinality' => 1,
+      'entity_types' => array('commerce_line_item'),
+      'translatable' => FALSE,
+      'locked' => TRUE,
+      'settings' => array(
+        'target_type' => 'membership_entity_term',
+        'handler' => 'base',
+        'handler_settings' => array(
+          'target_bundles' => array(),
+          'sort' => array(
+            'type' => 'property',
+            'property' => 'start',
+            'direction' => 'DESC',
+          ),
+        ),
+      ),
+    );
+    $field = field_create_field($field);
+  }
+
+  if (empty($instance)) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'commerce_line_item',
+      'bundle' => $type,
+      'label' => t('Membership term'),
+      'required' => TRUE,
+      'settings' => array(),
+      'widget' => array(
+        'type' => 'entityreference_autocomplete',
+        'weight' => 10,
+      ),
+      'display' => array(
+        'display' => array(
+          'label' => 'hidden',
+          'type' => 'entityreference_label',
+          'settings' => array('link' => TRUE),
+          'weight' => 10,
+        ),
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Line item add form callback.
+ */
+function membership_entity_commerce_line_item_add_form($element, &$form_state) {
+  $form = array();
+
+  $form['membership_product_sku'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Membership Product SKU'),
+    '#description' => t('Enter the SKU of the membership product to add to the order.'),
+    '#autocomplete_path' => 'commerce_product/autocomplete/commerce_line_item/commerce_product/membership_entity_line_item',
+    '#size' => 60,
+    '#maxlength' => 255,
+  );
+
+  $form['membership_term_ref'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Membership term'),
+    '#description' => t('Enter the ID of the membership term.'),
+    '#autocomplete_path' => 'entityreference/autocomplete/single/membership_entity_term_ref/commerce_line_item/membership_entity_line_item',
+    '#element_validate' => array('_entityreference_autocomplete_validate'),
+    '#size' => 60,
+    '#maxlength' => 1024,
+  );
+
+  return $form;
+}
+
+/**
+ * Line item form submit callback.
+ */
+function membership_entity_commerce_line_item_add_form_submit(&$line_item, $element, &$form_state, $form) {
+  // Load the selected product.
+  $product = commerce_product_load_by_sku($element['actions']['membership_product_sku']['#value']);
+  if (empty($product)) {
+    return t('You have entered an invalid membership product SKU.');
+  }
+
+  // Validate the selected membership. Taken from
+  // _entityreference_autocomplet_validate().
+  $value = '';
+  $input = $element['actions']['membership_term_ref']['#value'];
+  if (!empty($input)) {
+    // Take "label (entity id)', match the id from parenthesis.
+    if (preg_match("/.+\((\d+)\)/", $input, $matches)) {
+      $value = $matches[1];
+    }
+    else {
+      // Try to get a match from the input string when the user didn't use the
+      // autocomplete but filled in a value manually.
+      $field_name = 'membership_entity_term_ref';
+      $field = field_info_field($field_name);
+      $instance = field_info_instance('commerce_line_item', $field_name, 'membership_entity_line_item');
+      $handler = entityreference_get_selection_handler($field, $instance);
+      $entities = $handler->getReferencableEntities($input, '=', 1);
+      if (empty($entities)) {
+        // Error if there are no entities available for a required field.
+        return t('There are no memberships terms matching "%value"', array('%value' => $input));
+      }
+      $value = key(reset($entities));
+    }
+  }
+  $term = membership_entity_term_load($value);
+  if (empty($term)) {
+    return t('You have entered and invalid membershipe term id.');
+  }
+
+  // Populate the line item with the product.
+  commerce_product_line_item_populate($line_item, $product);
+
+  // Populate the line item with the membership term.
+  membership_entity_commerce_line_item_populate($line_item, $term);
+}
+
+/**
+ * Populates an existing membership line item with the membership term data.
+ *
+ * @param object $line_item
+ *   The fully loaded membership line item, populated by reference.
+ * @param object $term
+ *   The fully loaded membership term referenced by the line item.
+ */
+function membership_entity_commerce_line_item_populate($line_item, $term) {
+  $line_item_wrapper = entity_metadata_wrapper('commerce_line_item', $line_item);
+  $membership_wrapper = entity_metadata_wrapper('membership_entity_term', $term);
+  $line_item_wrapper->membership_entity_term_ref = $term;
+}

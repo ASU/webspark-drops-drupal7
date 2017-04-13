@@ -67,21 +67,3 @@ function asu_dir_update_7002(&$sandbox) {
 function asu_dir_update_7003(&$sandbox) {
   module_enable(array('asu_ajax_solr'));
 }
-
-/**
- * Enables the asu_dept_picker module which is required.
- */
-function asu_dir_update_7004(&$sandbox) {
-  // this update requires the asu_dept_picker module to be enabled and installed
-  if (drupal_get_path('module', 'asu_dept_picker') != '' && !module_exists('asu_dept_picker')) {
-    module_enable(array('asu_dept_picker'));
-  }
-
-  if (drupal_get_path('module', 'react') != '' && !module_exists('react')) {
-    module_enable(array('react'));
-  }
-
-  if (drupal_get_path('module', 'asu_dir_utilities') != '' && !module_exists('asu_dir_utilities')) {
-    module_enable(array('asu_dir_utilities'));
-  }
-}

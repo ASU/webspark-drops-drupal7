@@ -19,7 +19,6 @@ Libraries
  - Bootstrap (3.0 and up)
  - Fontawesome
  - Ajax Solr library
- - React
 
 Modules
  - ctools
@@ -29,8 +28,6 @@ Modules
  - list
  - options
  - jquery_update
- - asu_dept-picker
- - react
 
 
 USAGE

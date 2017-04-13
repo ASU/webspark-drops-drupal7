@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Install/uninstall tasks for the Salesforce Pull module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function salesforce_pull_uninstall() {
+  // Remove salesforce_pull* variables.
+  db_delete('variable')
+    ->condition('name', 'salesforce_pull%', 'LIKE')
+    ->execute();
+}

@@ -1,0 +1,55 @@
+<?php
+/**
+ * @file
+ * Test tokens for Commerce Event Ticket PDF.
+ */
+
+class CommerceEventTicketPdfTokensTestCase extends CommerceEventTicketBaseTestCase {
+
+  /**
+   * Provide basic information about the test.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'PDF file link token',
+      'description' => 'Test tokens providing links to event ticket PDF files.',
+      'group' => 'Commerce Event Ticket',
+    );
+  }
+
+  /**
+   * Overrides CommerceEventTicketBaseTestCase::setUp().
+   */
+  public function setUp($modules = array()) {
+    parent::setUp(array(
+      'commerce_event_ticket_pdf',
+    ));
+  }
+
+  /**
+   * Test PDF file link tokens.
+   */
+  public function testPdfTokens() {
+    $tickets = $this->createDummyTickets();
+    $ticket = reset($tickets);
+    $original = 'Ticket link: [commerce-event-ticket:ticket-pdf]';
+    $replaced = token_replace($original, array('commerce-event-ticket' => $ticket));
+    $this->assertTrue(strpos($replaced, '.pdf'), 'Token replaced for ticket');
+    $this->assertTrue(strpos($replaced, 'http') !== FALSE, 'Token replaced with absolute link for ticket');
+
+    $multiple_tickets = $this->createDummyTickets(2);
+    $ticket = reset($multiple_tickets);
+    $order = commerce_order_load($ticket->order_id);
+    $original = '[commerce-order:ticket-pdf]';
+    $replaced = token_replace($original, array('commerce-order' => $order));
+    $this->assertTrue(strpos($replaced, '.pdf'), 'Token replaced for order');
+    $this->assertTrue(strpos($replaced, 'http') !== FALSE, 'Token replaced with absolute link for order');
+
+    $line_item = commerce_line_item_load($ticket->line_item_id);
+    $original = '[commerce-line-item:ticket-pdf]';
+    $replaced = token_replace($original, array('commerce-line-item' => $line_item));
+    $this->assertTrue(strpos($replaced, '.pdf'), 'Token replaced for line item');
+    $this->assertTrue(strpos($replaced, 'http') !== FALSE, 'Token replaced with absolute link for line item');
+  }
+
+}

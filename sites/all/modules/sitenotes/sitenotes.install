@@ -1,0 +1,53 @@
+<?php
+/**
+ * @file
+ * Creates site notes node type for admins and allowed roles.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function sitenotes_install() {
+  node_types_rebuild();
+  $types = node_type_get_types();
+  node_add_body_field($types['sitenotes']);
+
+  // Set up search.
+  $search_modules = variable_get('search_active_modules', array('node', 'user'));
+  $search_modules[] = 'sitenotes';
+  variable_set('search_active_modules', array_unique($search_modules));
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function sitenotes_uninstall() {
+  $nids = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('type', array('sitenotes'), 'IN')
+    ->execute()
+    ->fetchCol();
+
+  if (!empty($nids)) {
+    node_delete_multiple($nids);
+    drupal_set_message(t('Deleted %count nodes.', array('%count' => count($nids))));
+  }
+
+  // Remove variables.
+  variable_del('sitenotes_block_show_author');
+  variable_del('sitenotes_block_show_when');
+  variable_del('sitenotes_block_recent_range');
+  variable_del('sitenotes_block_how_many');
+  variable_del('sitenotes_block_0');
+  variable_del('sitenotes_search');
+
+  // Remove the node type.
+  node_type_delete('sitenotes');
+
+  // clear the cache tables (see http://drupal.org/node/64279#comment-211282)
+  cache_clear_all('*', 'cache', TRUE);
+  cache_clear_all('*', 'cache_filter', TRUE);
+  cache_clear_all('*', 'cache_page', TRUE);
+
+  watchdog('SiteNotes', 'sitenotes module removed');
+}

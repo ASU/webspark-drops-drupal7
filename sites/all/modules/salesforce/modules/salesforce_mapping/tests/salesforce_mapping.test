@@ -1,0 +1,416 @@
+<?php
+
+/**
+ * @file
+ * Simple tests for salesforce_mapping
+ */
+
+module_load_include('test', 'salesforce', 'tests/salesforce');
+
+/**
+ * Sets up basic tools for the testing of mapping Drupal to Salesforce.
+ */
+class SalesforceMappingTestCase extends SalesforceTestCase {
+
+  protected $adminPath = 'admin/structure/salesforce/mappings';
+  protected $addMapPath = 'admin/structure/salesforce/mappings/add';
+  protected $manageMapPrefix = 'admin/structure/salesforce/mappings/manage/';
+
+  /**
+   * Implementation of getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Salesforce Mapping',
+      'description' => 'Sets up basic tools for the testing of mapping Drupal to Salesforce.',
+      'group' => 'Salesforce',
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  public function setUp($modules = array(), $permissions = array()) {
+    $modules = array_merge($modules, array(
+      'entity',
+      'salesforce_mapping',
+    ));
+    $permissions = array_merge($permissions, array(
+      'administer salesforce mapping',
+      'view salesforce mapping object',
+    ));
+    parent::setUp($modules, $permissions);
+  }
+
+  /**
+   * Implementation of tearDown().
+   */
+  public function tearDown() {
+    parent::tearDown();
+  }
+
+  /**
+   * Submits a salesforce mapping form of your configuration or a default one.
+   *
+   * @param string $label
+   *   Desired lable for the mapping.
+   * @param string $machine_name
+   *   Desired machine name of the mapping.  If none is provided, one will be
+   *   automatically generated from the label.
+   * @param array $config
+   *   Desired mapping configuration.  If none is provided, a default mapping
+   *   configuration will be generated.
+   */
+  protected function createSalesforceMapping($label, $machine_name = NULL, $config = array()) {
+    // Give a default configuration if one is not provided for us.
+    if (empty($config)) {
+      $config = array(
+        'drupal_entity_type' => 'user',
+        'drupal_bundle' => 'user',
+        'salesforce_object_type' => 'Contact',
+        'key' => 1,
+        'mapping' => array(
+          array(
+            'fieldmap_type' => 'property',
+            'fieldmap_value' => 'name',
+            'salesforce_field' => 'Name',
+            'direction' => 'drupal_sf',
+          ),
+          array(
+            'fieldmap_type' => 'property',
+            'fieldmap_value' => 'mail',
+            'salesforce_field' => 'Email',
+            'direction' => 'sync',
+          ),
+          array(
+            'fieldmap_type' => 'property',
+            'fieldmap_value' => 'name',
+            'salesforce_field' => 'LastName',
+            'direction' => 'sf_drupal',
+          ),
+        ),
+        'sync_triggers' => array(
+          '1' => TRUE,
+          '2' => TRUE,
+          '4' => TRUE,
+          '8' => TRUE,
+          '16' => TRUE,
+          '32' => TRUE,
+        ),
+        'push_async' => TRUE,
+      );
+    }
+
+    $edit = array();
+    $machine_name = is_null($machine_name) ? str_replace(' ', '_', strtolower($label)) : $machine_name;
+    $this->drupalGet($this->addMapPath);
+    $this->assertNoText('You are not authorized to access this page.', 'Able to access the create map page.');
+
+    // Get all of the AJAX behaviors out of the way.
+    $edit['drupal_entity_type'] = $config['drupal_entity_type'];
+    $this->drupalPostAjax(NULL, $edit, 'drupal_entity_type');
+    unset($config['drupal_entity_type']);
+    $edit['drupal_bundle'] = $config['drupal_bundle'];
+    $this->drupalPostAjax(NULL, $edit, 'drupal_bundle');
+    unset($config['drupal_bundle']);
+    $edit['salesforce_object_type'] = $config['salesforce_object_type'];
+    $this->drupalPostAjax(NULL, $edit, 'salesforce_object_type');
+    unset($config['salesforce_object_type']);
+    foreach ($config['mapping'] as $delta => $map) {
+      $edit['salesforce_field_mappings[' . $delta . '][drupal_field][fieldmap_type]'] = $map['fieldmap_type'];
+      $this->drupalPostAjax(NULL, $edit, 'salesforce_field_mappings[' . $delta . '][drupal_field][fieldmap_type]');
+      $this->drupalPostAjax(NULL, $edit, array('salesforce_add_field' => 'Add another field mapping'));
+      unset($config['mapping'][$delta]['fieldmap_type']);
+    }
+
+    // Fill out the rest of the form.
+    $edit['label'] = $label;
+    $edit['name'] = $machine_name;
+    foreach ($config as $key => $data) {
+      switch ($key) {
+        case 'mapping':
+          foreach ($data as $delta => $fields) {
+            foreach ($fields as $field => $value) {
+              if ($field == 'fieldmap_value') {
+                $edit['salesforce_field_mappings[' . $delta . '][drupal_field][fieldmap_value]'] = $value;
+              }
+              else {
+                $edit['salesforce_field_mappings[' . $delta . '][' . $field . ']'] = $value;
+              }
+            }
+          }
+          break;
+
+        case 'sync_triggers':
+          foreach ($data as $value => $flag) {
+            $edit['sync_triggers[' . $value . ']'] = $flag;
+          }
+          break;
+
+        default:
+          $edit[$key] = $data;
+      }
+    }
+
+    // Submit form unsuccessfully.
+    $this->drupalPost(NULL, $edit, 'Save mapping');
+    $this->assertText('Salesforce field Email is not configured as an external id.', 'Invalid key not allowed');
+    unset($edit['key']);
+
+    // Submit form.
+    $this->drupalPost(NULL, $edit, 'Save mapping');
+    $this->assertText('Salesforce field mapping saved.', 'Form posted as expected.');
+    $this->assertRaw('id="salesforce-mapping-overview-form"', 'Redirected to the mappings overview table.');
+    $this->assertRaw('(Machine name: ' . $machine_name . ')', 'New map successfully appears on overview page.');
+    $this->assertLink($label, 0, 'Link to edit new map appears.');
+  }
+
+  /**
+   * Execute an Ajax submission.
+   *
+   * This is unfortunately a modification of the original drupalPostAjax because
+   * it did not have support for cases where ajax commands were set manually.  I
+   * have added support for when a wrapper is declared as a single id.
+   *
+   * @param string $path
+   *   Location of the form containing the Ajax enabled element to test. Can be
+   *   either a Drupal path or an absolute path or NULL to use the current page.
+   * @param array $edit
+   *   Field data in an associative array. Changes the current input fields
+   *   (where possible) to the values indicated.
+   * @param string $triggering_element
+   *   The name of the form element that is responsible for triggering the Ajax
+   *   functionality to test. May be a string or, if the triggering element is
+   *   a button, an associative array where the key is the name of the button
+   *   and the value is the button label. i.e.) array('op' => t('Refresh')).
+   * @param string $ajax_path
+   *   (optional) Override the path set by the Ajax settings of the triggering
+   *   element. In the absence of both the triggering element's Ajax path and
+   *   $ajax_path 'system/ajax' will be used.
+   * @param array $options
+   *   (optional) Options to be forwarded to url().
+   * @param array $headers
+   *   (optional) An array containing additional HTTP request headers, each
+   *   formatted as "name: value". Forwarded to drupalPost().
+   * @param string $form_html_id
+   *   (optional) HTML ID of the form to be submitted, use when there is more
+   *   than one identical form on the same page and the value of the triggering
+   *   element is not enough to identify the form. Note this is not the Drupal
+   *   ID of the form but rather the HTML ID of the form.
+   * @param array $ajax_settings
+   *   (optional) An array of Ajax settings which if specified will be used in
+   *   place of the Ajax settings of the triggering element.
+   *
+   * @return array
+   *   An array of Ajax commands.
+   */
+  protected function drupalPostAJAX($path, $edit, $triggering_element, $ajax_path = NULL, array $options = array(), array $headers = array(), $form_html_id = NULL, $ajax_settings = NULL) {
+    // Get the content of the initial page prior to calling drupalPost(), since
+    // drupalPost() replaces $this->content.
+    if (isset($path)) {
+      $this->drupalGet($path, $options);
+    }
+    $content = $this->content;
+    $drupal_settings = $this->drupalSettings;
+
+    // Get the Ajax settings bound to the triggering element.
+    if (!isset($ajax_settings)) {
+      if (is_array($triggering_element)) {
+        $xpath = '//*[@name="' . key($triggering_element) . '" and @value="' . current($triggering_element) . '"]';
+      }
+      else {
+        $xpath = '//*[@name="' . $triggering_element . '"]';
+      }
+      if (isset($form_html_id)) {
+        $xpath = '//form[@id="' . $form_html_id . '"]' . $xpath;
+      }
+      $element = $this->xpath($xpath);
+      $element_id = (string) $element[0]['id'];
+      $ajax_settings = $drupal_settings['ajax'][$element_id];
+    }
+
+    // Add extra information to the POST data as ajax.js does.
+    $extra_post = '';
+    if (isset($ajax_settings['submit'])) {
+      foreach ($ajax_settings['submit'] as $key => $value) {
+        $extra_post .= '&' . urlencode($key) . '=' . urlencode($value);
+      }
+    }
+    foreach ($this->xpath('//*[@id]') as $element) {
+      $id = (string) $element['id'];
+      $extra_post .= '&' . urlencode('ajax_html_ids[]') . '=' . urlencode($id);
+    }
+    if (isset($drupal_settings['ajaxPageState'])) {
+      $extra_post .= '&' . urlencode('ajax_page_state[theme]') . '=' . urlencode($drupal_settings['ajaxPageState']['theme']);
+      $extra_post .= '&' . urlencode('ajax_page_state[theme_token]') . '=' . urlencode($drupal_settings['ajaxPageState']['theme_token']);
+      foreach ($drupal_settings['ajaxPageState']['css'] as $key => $value) {
+        $extra_post .= '&' . urlencode("ajax_page_state[css][$key]") . '=1';
+      }
+      foreach ($drupal_settings['ajaxPageState']['js'] as $key => $value) {
+        $extra_post .= '&' . urlencode("ajax_page_state[js][$key]") . '=1';
+      }
+    }
+
+    // Unless a particular path is specified, use the one specified by the
+    // Ajax settings, or else 'system/ajax'.
+    if (!isset($ajax_path)) {
+      $ajax_path = isset($ajax_settings['url']) ? $ajax_settings['url'] : 'system/ajax';
+    }
+
+    // Submit the POST request.
+    $return = drupal_json_decode($this->drupalPost(NULL, $edit, array('path' => $ajax_path, 'triggering_element' => $triggering_element), $options, $headers, $form_html_id, $extra_post));
+
+    // Change the page content by applying the returned commands.
+    if (!empty($ajax_settings) && !empty($return)) {
+      // ajax.js applies some defaults to the settings object, so do the same
+      // for what's used by this function.
+      $ajax_settings += array(
+        'method' => 'replaceWith',
+      );
+      // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
+      // them.
+      $dom = new DOMDocument();
+      @$dom->loadHTML($content);
+      // XPath allows for finding wrapper nodes better than DOM does.
+      $xpath = new DOMXPath($dom);
+      foreach ($return as $command) {
+        switch ($command['command']) {
+          case 'settings':
+            $drupal_settings = drupal_array_merge_deep($drupal_settings, $command['settings']);
+            break;
+
+          case 'insert':
+            $wrapper_node = NULL;
+            // When a command doesn't specify a selector, use the
+            // #ajax['wrapper'] which is always an HTML ID.
+            if (!isset($command['selector'])) {
+              $wrapper_node = $xpath->query('//*[@id="' . $ajax_settings['wrapper'] . '"]')->item(0);
+            }
+            // @todo Ajax commands can target any jQuery selector, but these are
+            //   hard to fully emulate with XPath. For now, just handle 'head'
+            //   and 'body', since these are used by ajax_render().
+            elseif (in_array($command['selector'], array('head', 'body'))) {
+              $wrapper_node = $xpath->query('//' . $command['selector'])->item(0);
+            }
+            // Begin modification.  When a custom command declares a single id
+            // as its selector.
+            elseif (substr($command['selector'], 0, 1) == '#') {
+              $wrapper_node = $xpath->query('//*[@id="' . substr($command['selector'], 1) . '"]')->item(0);
+            }
+            // End modification.
+            if ($wrapper_node) {
+              // ajax.js adds an enclosing DIV to work around a Safari bug.
+              $new_dom = new DOMDocument();
+              $new_dom->loadHTML('<div>' . $command['data'] . '</div>');
+              $new_node = $dom->importNode($new_dom->documentElement->firstChild->firstChild, TRUE);
+              $method = isset($command['method']) ? $command['method'] : $ajax_settings['method'];
+              // The "method" is a jQuery DOM manipulation function. Emulate
+              // each one using PHP's DOMNode API.
+              switch ($method) {
+                case 'replaceWith':
+                  $wrapper_node->parentNode->replaceChild($new_node, $wrapper_node);
+                  break;
+
+                case 'append':
+                  $wrapper_node->appendChild($new_node);
+                  break;
+
+                case 'prepend':
+                  // If no firstChild, insertBefore() falls back to
+                  // appendChild().
+                  $wrapper_node->insertBefore($new_node, $wrapper_node->firstChild);
+                  break;
+
+                case 'before':
+                  $wrapper_node->parentNode->insertBefore($new_node, $wrapper_node);
+                  break;
+
+                case 'after':
+                  // If no nextSibling, insertBefore() falls back to
+                  // appendChild().
+                  $wrapper_node->parentNode->insertBefore($new_node, $wrapper_node->nextSibling);
+                  break;
+
+                case 'html':
+                  foreach ($wrapper_node->childNodes as $child_node) {
+                    $wrapper_node->removeChild($child_node);
+                  }
+                  $wrapper_node->appendChild($new_node);
+                  break;
+              }
+            }
+            break;
+        }
+      }
+      $content = $dom->saveHTML();
+    }
+    $this->drupalSetContent($content);
+    $this->drupalSetSettings($drupal_settings);
+    return $return;
+  }
+
+  /**
+   * Assert if the given radio field has the given value selected.
+   *
+   * I could not find a reliable way of ensuring that a radio option was
+   * actually checked.  I added these helper asserts to streamline the testing
+   * of the mapping forms.
+   *
+   * @param string $name
+   *   Name of field to assert.
+   * @param string $value
+   *   (optional) Value of the field to assert.
+   * @param string $message
+   *   (optional) Message to display.
+   * @param string $group
+   *   (optional) The group this message belongs to.
+   *
+   * @return bool
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertRadioOptionSelected($name, $value, $message = '', $group = 'Other') {
+    $matches = $this->checkRadioOptionSelected($name, $value);
+    return $this->assertTrue($matches, $message, $group);
+  }
+
+  /**
+   * Assert if the given radio field does not have the given value selected.
+   *
+   * I could not find a reliable way of ensuring that a radio option was
+   * actually checked.  I added these helper asserts to streamline the testing
+   * of the mapping forms.
+   *
+   * @param string $name
+   *   Name of field to assert.
+   * @param string $value
+   *   (optional) Value of the field to assert.
+   * @param string $message
+   *   (optional) Message to display.
+   * @param string $group
+   *   (optional) The group this message belongs to.
+   *
+   * @return bool
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertNoRadioOptionSelected($name, $value, $message = '', $group = 'Other') {
+    $matches = $this->checkRadioOptionSelected($name, $value);
+    return $this->assertFalse($matches, $message, $group);
+  }
+
+  /**
+   * Helper to see if the given value is selected for the given radio field.
+   */
+  protected function checkRadioOptionSelected($name, $value) {
+    $fields = $this->xpath($this->constructFieldXpath('name', $name));
+    if (is_array($fields)) {
+      foreach ($fields as $field) {
+        if (isset($field['checked']) && $field['checked'] == 'checked') {
+          if ($field['value'] == $value) {
+            return TRUE;
+          }
+        }
+      }
+    }
+    return FALSE;
+  }
+}
