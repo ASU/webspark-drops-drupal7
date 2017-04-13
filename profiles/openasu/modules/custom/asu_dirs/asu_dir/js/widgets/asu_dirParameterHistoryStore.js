@@ -283,7 +283,7 @@
                 // If initial load, load the state from the URL.
                 if (index == -1) {
                     return '';
-                } else if (id == id_num && !activetab.hasClass('asu_isearch_view_tab')) {
+                } else if (id == id_num) {
 
                     //get the query string from URL
                     var query_string = url.substr(index + 1);
@@ -330,8 +330,12 @@
 
 
                     ASUPeople.active = field_id;
-                    $('#' + this.tab_link).click();
 
+                    // if an asu_isearch pane is active, don't click it
+                    // todo - add state management for asu_isearch panes
+                    if (!activetab.hasClass('asu_isearch_view_tab')) {
+                        $('#' + this.tab_link).click();
+                    }
 
                     return query_string;
                 } else {
