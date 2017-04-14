@@ -325,10 +325,6 @@
                     //set the active department, and tab
                     ASUPeople[field_id].dept_nid = nid;
 
-
-
-
-
                     ASUPeople.active = field_id;
 
                     // if an asu_isearch pane is active, don't click it
