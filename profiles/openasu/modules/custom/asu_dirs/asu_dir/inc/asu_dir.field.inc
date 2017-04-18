@@ -766,7 +766,12 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         See the documentation on the "fq" param here:  
         <a target="_blank" href="https://wiki.apache.org/solr/CommonQueryParameters">https://wiki.apache.org/solr/CommonQueryParameters</a>.
         Also, the field schema for ASU Solr Directory can be found at:  
-        <a target="_blank" href="https://asudir-solr.asu.edu/asudir/directory/schema/fields">https://asudir-solr.asu.edu/asudir/directory/schema/fields.</a></p></div></div>',
+        <a target="_blank" href="https://asudir-solr.asu.edu/asudir/directory/schema/fields">https://asudir-solr.asu.edu/asudir/directory/schema/fields.</a></p>
+        <br><br>
+        Some helpful examples of custom Solr filters for different categories:<br><br>
+        <strong>Instructional Faculty:</strong> facultyTitles:("Lecturer" OR "Instructor" OR "Clinical Professor" OR "Clinical Associate Professor" OR "Clinical Assistant Professor" OR "Professor of Practice" )<br>
+        <strong>Research Faculty:</strong> facultyTitles:("Research Professor" OR "Research Associate Professor" OR "Research Assistant Professor" OR "Research Scholar" OR "Faculty Research Associate")<br>
+        <strong>Affiliated Faculty:</strong> facultyTitles:("Visiting" OR "Faculty Associate" OR "Adjunct Faculty")</div></div>',
       '#states' => array(
         'visible' => array(
           ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][always_display_view]"]' => array('checked' => FALSE)
@@ -884,7 +889,7 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
     'expertise_areas' => $expertise_areas,
 
     'local_tags'=> $tags,
-    'filter_title' => $values['horizontal_tabs']['content']['content_tabs']['otherfilters']['filter_title'],
+    'filter_title' => trim($values['horizontal_tabs']['content']['content_tabs']['otherfilters']['filter_title']),
 
     //Appearance -> Display
     'display_type' => $values['horizontal_tabs']['appearance']['appearance_tabs']['display']['display_type'],
@@ -928,7 +933,7 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
     // Advanced
     'use_custom_q' => $values['horizontal_tabs']['advanced']['use_custom_q'],
     'custom_q' => array(
-      'fq' => $values['horizontal_tabs']['advanced']['fq']
+      'fq' => trim($values['horizontal_tabs']['advanced']['fq'])
     ),
     'always_display_view' => $display_view
 
