@@ -97,6 +97,7 @@ var ASUPeople = {};
                     var local_people = isettings.local_people;
                     var isearch_url = isettings.isearch_url;
                     var filters = [];
+                    var depts = field_configs.depts.items;
 
                     // set the number of results per page, this will be added to the manager store as the
                     // 'rows' parameter.
@@ -164,13 +165,21 @@ var ASUPeople = {};
                         tree = isettings.tree;
                     }
 
+
                     //stick with entire tree if top nid is not defined, or we are in iSearch mode
                     if (( top_nid != null) && (tree) && !isearch_mode) {
+                        var ttree = [];
+
+                        for (var i = 0; i < depts.length; i++) {
+                            var tnid = depts[i].dept_nid;
+                            ttree.push(asu_dir_ajax_solr_find_root(tree, tnid));
+                        }
+
+
                         // Set the root of the tree to the point defined by id -> set by asu_directory.module
-                        temp = [];
-                        temp.push(asu_dir_ajax_solr_find_root(tree, top_nid));
-                        tree = temp;
+                        tree = ttree;
                     }
+
 
                     //Configure AjaxSolr
                     Manager = new AjaxSolr.asu_dirManager({
@@ -438,7 +447,9 @@ function asu_dir_ajax_solr_find_root(data, dept_id) {
 
     for (var i = 0; i < data.length; i++) {
         if (success == null) {
+
             if (data[i].dept_nid == dept_id) {
+                success = true;
                 return data[i];
             } else if (data[i].hasOwnProperty('children')) {
                 success = asu_dir_ajax_solr_find_root(data[i].children, dept_id);

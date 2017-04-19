@@ -42,6 +42,13 @@ function asu_dir_field_is_empty($item, $field) {
   if (isset($item['horizontal_tabs']['content']['content_tabs']['department']['isearch_dept_tree'])) {
     $tree_items = drupal_json_decode($item['horizontal_tabs']['content']['content_tabs']['department']['isearch_dept_tree']);
     if (count($tree_items['items']) > 0) {
+
+      foreach($tree_items['items'] as $item) {
+        if ($item['dept_nid'] == ASU_DIR_UTILITIES_TOP_LEVEL_DEPT_NID) {
+          return TRUE;
+        }
+      }
+
       return FALSE;
     }
     else {
@@ -283,8 +290,7 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       '#delta' => 0,//$element['#entity']->fpid,
       '#asu_dept_tree' => array(
         'showOnly' => $tree_nids,
-      ),
-      '#max_items' => 1
+      )
     );
     /** end department picker **/
 
@@ -771,7 +777,8 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         Some helpful examples of custom Solr filters for different categories:<br><br>
         <strong>Instructional Faculty:</strong> facultyTitles:("Lecturer" OR "Instructor" OR "Clinical Professor" OR "Clinical Associate Professor" OR "Clinical Assistant Professor" OR "Professor of Practice" )<br>
         <strong>Research Faculty:</strong> facultyTitles:("Research Professor" OR "Research Associate Professor" OR "Research Assistant Professor" OR "Research Scholar" OR "Faculty Research Associate")<br>
-        <strong>Affiliated Faculty:</strong> facultyTitles:("Visiting" OR "Faculty Associate" OR "Adjunct Faculty")</div></div>',
+        <strong>Affiliated Faculty:</strong> facultyTitles:("Visiting" OR "Faculty Associate" OR "Adjunct Faculty")<br>
+        <strong>Emeritus Faculty:</strong> facultyTitles:("Emeritus")</div></div>',
       '#states' => array(
         'visible' => array(
           ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][always_display_view]"]' => array('checked' => FALSE)
@@ -779,11 +786,20 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       ),
     );
 
+    /****
+     *
+     * Instructional Faculty: facultyTitles:("Lecturer" OR "Instructor" OR "Clinical Professor" OR "Clinical Associate Professor" OR "Clinical Assistant Professor" OR "Professor of Practice")
+     * Research Faculty: facultyTitles:("Research Professor" OR "Research Associate Professor" OR "Research Assistant Professor" OR "Research Scholar" OR "Faculty Research Associate")
+     * Affiliated Faculty: facultyTitles:("Visiting" OR "Faculty Associate" OR "Adjunct Faculty")
+     * Emeritus Faculty: facultyTitles:("Emeritus")
+     *
+     ****/
+
     $element['horizontal_tabs']['advanced']['fq'] = array(
       '#type' => 'textarea',
-      '#title' => 'fq=',
+      '#title' => 'Filter Query (fq=)',
       '#default_value' => $config['custom_q']['fq'],
-      '#description' => t('The "fq" value for the Solr query.'),
+      '#description' => t('The Filter Query (fq=) value for the Solr query.'),
       '#states' => array(
         'visible' => array(
           ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][use_custom_q]"]' => array('checked' => TRUE)
@@ -828,6 +844,7 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
   $employee_types = array();
   $expertise_areas = array();
   $rank_mode = 'isearch';
+  $tree_nids = array();
 
   if ($values['horizontal_tabs']['content']['content_tabs']['employeetypes']['select_all']) {
     $employee_types = array('All');
@@ -941,13 +958,18 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
 
   $root = $depts['items'][0]['dept_id'];
 
-  if ($depts['options'][$root]['subdepts'] == TRUE) {
-    $tree_nids = $depts['items'][0]['tree_nids'];
-    $config['sub_toggle'] = TRUE;
-  }
-  else {
-    $tree_nids = array($depts['items'][0]['dept_nid']);
-    $config['sub_toggle'] = FALSE;
+
+  foreach($depts['items'] as $key => $item) {
+    if ($item['options']['subdepts'] == TRUE) {
+      $tree_nids = array_merge($tree_nids, $item['tree_nids']);
+    }
+    else {
+      $tree_nids = array_merge($tree_nids, array($item['dept_nid']));
+    }
+
+    if ($key == 0) {
+      $config['sub_toggle'] = $item['options']['subdepts'];
+    }
   }
 
   $config['dept_id'] = $root;

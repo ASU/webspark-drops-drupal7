@@ -53,15 +53,46 @@
                 var url = state.cleanUrl, index = url.indexOf("?");
                 var saved_dept_nids = this.saved_dept_nids;
                 var field_id = this.field_id;
+                var field_configs = this.field_configs;
+                var tree = this.tree;
+
+                // load the nids from the tree dynamically if possible
+                var dynamic_nids = [];
 
                 // Initial request on load
                 if (self.manager.store.params.q == null) {
 
                     //Set the global if no params are set
                     ASUPeople[field_id].dept_nid = saved_dept_nids[0];
+
+                    if (field_configs.depts != null && field_configs.depts.items != null) {
+
+                        var depts = field_configs.depts.items;
+
+                        for (var i = 0; i < depts.length; i++) {
+                            if (depts[i].options.subdepts) {
+
+                                var stree = asu_dir_ajax_solr_find_root(tree, depts[i].dept_nid);
+                                var sarray = asu_dir_get_tree_ids(stree);
+                                dynamic_nids = dynamic_nids.concat(sarray);
+                            } else {
+                                var tar = [depts[i].dept_nid];
+                                dynamic_nids = dynamic_nids.concat(tar);
+                            }
+
+                            if (field_configs.show_tree) {
+                                break;
+                            }
+                        }
+                    }
+
                     self.manager.store.addByValue('q', '*:*');
+
+
                     //Create the query string for depts
-                    self.manager.store.addByValue('fq', asu_dir_solr_search_string(saved_dept_nids, 'deptids'));
+                    if (dynamic_nids.length > 0) {
+                        self.manager.store.addByValue('fq', asu_dir_solr_search_string(dynamic_nids, 'deptids'));
+                    }
                 }
 
                 if (index != -1) {
