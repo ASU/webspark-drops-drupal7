@@ -104,14 +104,13 @@ var ASUPeople = {};
                     if (field_configs.pager_display == 'paged' && field_configs.pager_items_per_page != 0) {
                         res_per_page = field_configs.pager_items_per_page;
 
-                    // if we want to show all results, then we set the 'rows' parameter to 2000,
+                    // if we want to show all results, then we set the 'rows' parameter to 200000,
                     // since that is the maximum request size we will want.
                     } else if (field_configs.pager_display == 'all' || field_configs.pager_items_per_page == 0) {
                         res_per_page = 200000;
                     }
 
                     // Build the pre-configured filter values, and store them in the field_configs
-
                     // ADD FILTERING FOR TENURE OR NON-TENURE FACULTY TITLES, IF APPLICABLE
                     if (field_configs.tenure_display && field_configs.faculty_titles != null && field_configs.tenure_display != 'Both') {
                         var fac_titles = field_configs.faculty_titles.titles;
@@ -168,18 +167,19 @@ var ASUPeople = {};
 
                     //stick with entire tree if top nid is not defined, or we are in iSearch mode
                     if (( top_nid != null) && (tree) && !isearch_mode) {
+
                         var ttree = [];
 
-                        for (var i = 0; i < depts.length; i++) {
-                            var tnid = depts[i].dept_nid;
-                            ttree.push(asu_dir_ajax_solr_find_root(tree, tnid));
-                        }
+                        for (var k = 0; k < depts.length; k++) {
+                            var tnid = depts[k].dept_nid;
 
+                            ttree.push(asu_dir_ajax_solr_find_root(tree, tnid));
+
+                        }
 
                         // Set the root of the tree to the point defined by id -> set by asu_directory.module
                         tree = ttree;
                     }
-
 
                     //Configure AjaxSolr
                     Manager = new AjaxSolr.asu_dirManager({
@@ -284,13 +284,13 @@ var ASUPeople = {};
                         field: 'expertiseAreasFacet'
                     }));
 
-                    /*
-                     Manager.addWidget(new AjaxSolr.asu_dirFacetWidget({
-                     id: 'primaryTitleFacet'+id_num,
-                     target: '#primaryTitleFacet'+id_num,
-                     field: 'primaryTitlefacetf'
-                     }));
-                     */
+
+                    // Manager.addWidget(new AjaxSolr.asu_dirFacetWidget({
+                    // id: 'primaryTitleFacet'+id_num,
+                    // target: '#primaryTitleFacet'+id_num,
+                    // field: 'primaryTitlefacetf'
+                    // }));
+
 
                     var selection_target = 'asu-dir-ajax-solr-selections';
 
@@ -449,7 +449,6 @@ function asu_dir_ajax_solr_find_root(data, dept_id) {
         if (success == null) {
 
             if (data[i].dept_nid == dept_id) {
-                success = true;
                 return data[i];
             } else if (data[i].hasOwnProperty('children')) {
                 success = asu_dir_ajax_solr_find_root(data[i].children, dept_id);

@@ -53,6 +53,7 @@
 
 
             // add the faculty titles filter if it is configured
+            // todo: need this?
             if (field_configs.hasOwnProperty('ft_filter')) {
                 self.manager.store.addByValue('fq', field_configs.ft_filter);
             }

@@ -121,8 +121,6 @@
                                 docs[i].mappedWeight = self.getEmployeeWeight(docs[i]);
                             }
 
-
-
                             // function to sort by rankweight
                             docs.sort(function (a, b) {
 

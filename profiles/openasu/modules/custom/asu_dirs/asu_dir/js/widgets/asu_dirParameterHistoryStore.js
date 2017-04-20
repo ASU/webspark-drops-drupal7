@@ -208,6 +208,7 @@
 
                 //var ft = /(fq=facultyTitles:).*?(&)/gi;
                 // if we have the facultytitles config active, then remove it from URL
+                // todo: get rid of?
                 if (field_configs.hasOwnProperty('ft_filter')) {
 
                     var escaped = field_configs.ft_filter.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
