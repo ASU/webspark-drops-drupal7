@@ -25,12 +25,14 @@ var ASUPeople = {};
             // reset the ASUPeople global, because it can cause weirdness with panels IPE
             ASUPeople = {};
             ASUPeople.man_array = [];
+            ASUPeople.tab_list = [];
 
             if (tabs.length > 0) {
                 has_tabs = true;
                 //tab_id = tabs.get(0).closest(".ui-tabs");
                 tab_id = tabs.eq(0).parents('.ui-tabs').eq(0);
                 tab_id = tab_id.attr('id');
+
                 tab_links = $('#' + tab_id + ' .ui-tabs-nav a');
             }
 
@@ -43,11 +45,39 @@ var ASUPeople = {};
                 var tab_pane = null;
                 var tab_pane_id = '';
                 var tab_link = '';
+                var tlinkindex = 0;
 
                 if (has_tabs) {
+
+                    for (var j=0; j < tab_links.length; j++) {
+
+                        var tab = tab_links.eq(j);
+                        var theid = tab.attr('href');
+                        var found = $(theid).find('#' + field_id);
+
+
+                        if (found.length > 0) {
+                            tlinkindex = j;
+                        } else {
+                            // look for view in pane, and add class if so
+                            var is_view = $(theid).find('.view');
+                            if (is_view.length > 0) {
+                                if (!tab_links.eq(j).hasClass('asu_isearch_view_tab')) {
+                                    tab_links.eq(j).addClass('asu_isearch_view_tab')
+                                }
+                            }
+                        }
+                    }
+
                     tab_pane = tabs.eq(i).closest('.ui-tabs-panel');
                     tab_pane_id = tab_pane.attr('id');
-                    tab_link = tab_links.eq(i).attr('id');
+                    tab_link = tab_links.eq(tlinkindex).attr('id');
+
+                    ASUPeople.tab_list[i] = {};
+                    ASUPeople.tab_list[i].field_id = field_id;
+                    ASUPeople.tab_list[i].tab_pane = tab_pane;
+                    ASUPeople.tab_list[i].tab_pane_id = tab_pane_id;
+                    ASUPeople.tab_list[i].tab_link = tab_link;
                 }
 
                 if (settings.hasOwnProperty(field_id)) {
@@ -57,34 +87,30 @@ var ASUPeople = {};
                     var top_level_ids = isettings.top_level_ids;
                     var field_configs = isettings.field_configs;
                     ASUPeople[field_id].field_configs = field_configs;
-                    var admin = isettings.admin;
-                    var query = null;
                     var saved_dept_nids = isettings.dept_nids;
                     var saved_dept_id = field_configs.dept_id;
                     var solr_server = isettings.solr_server;
                     var page_alias = isettings.page_alias;
                     var isearch_mode = field_configs.isearch_flag;
-                    var titlesort_field = isettings.titlesort_field;
                     var id_num = field_configs.pane_id;
                     var res_per_page = 10;
                     var local_people = isettings.local_people;
                     var isearch_url = isettings.isearch_url;
                     var filters = [];
+                    var depts = field_configs.depts.items;
 
                     // set the number of results per page, this will be added to the manager store as the
                     // 'rows' parameter.
                     if (field_configs.pager_display == 'paged' && field_configs.pager_items_per_page != 0) {
                         res_per_page = field_configs.pager_items_per_page;
 
-                    // if we want to show all results, then we set the 'rows' parameter to 2000,
+                    // if we want to show all results, then we set the 'rows' parameter to 200000,
                     // since that is the maximum request size we will want.
                     } else if (field_configs.pager_display == 'all' || field_configs.pager_items_per_page == 0) {
-                        res_per_page = 2000;
+                        res_per_page = 200000;
                     }
 
-
                     // Build the pre-configured filter values, and store them in the field_configs
-
                     // ADD FILTERING FOR TENURE OR NON-TENURE FACULTY TITLES, IF APPLICABLE
                     if (field_configs.tenure_display && field_configs.faculty_titles != null && field_configs.tenure_display != 'Both') {
                         var fac_titles = field_configs.faculty_titles.titles;
@@ -138,12 +164,21 @@ var ASUPeople = {};
                         tree = isettings.tree;
                     }
 
+
                     //stick with entire tree if top nid is not defined, or we are in iSearch mode
                     if (( top_nid != null) && (tree) && !isearch_mode) {
+
+                        var ttree = [];
+
+                        for (var k = 0; k < depts.length; k++) {
+                            var tnid = depts[k].dept_nid;
+
+                            ttree.push(asu_dir_ajax_solr_find_root(tree, tnid));
+
+                        }
+
                         // Set the root of the tree to the point defined by id -> set by asu_directory.module
-                        temp = [];
-                        temp.push(asu_dir_ajax_solr_find_root(tree, top_nid));
-                        tree = temp;
+                        tree = ttree;
                     }
 
                     //Configure AjaxSolr
@@ -249,13 +284,13 @@ var ASUPeople = {};
                         field: 'expertiseAreasFacet'
                     }));
 
-                    /*
-                     Manager.addWidget(new AjaxSolr.asu_dirFacetWidget({
-                     id: 'primaryTitleFacet'+id_num,
-                     target: '#primaryTitleFacet'+id_num,
-                     field: 'primaryTitlefacetf'
-                     }));
-                     */
+
+                    // Manager.addWidget(new AjaxSolr.asu_dirFacetWidget({
+                    // id: 'primaryTitleFacet'+id_num,
+                    // target: '#primaryTitleFacet'+id_num,
+                    // field: 'primaryTitlefacetf'
+                    // }));
+
 
                     var selection_target = 'asu-dir-ajax-solr-selections';
 
@@ -291,7 +326,7 @@ var ASUPeople = {};
                         // keep track of which field the
                         var first = false;
 
-                        if (i == 0) {
+                        if (tlinkindex == 0) {
                             first = true;
                         }
 
@@ -307,7 +342,7 @@ var ASUPeople = {};
                             tab_id: tab_id,
                             tab_pane_id: tab_pane_id,
                             tab_link: tab_link,
-                            tab_num: i,
+                            tab_num: tlinkindex,
                             saved_dept_nids: saved_dept_nids
                         }));
                         Manager.store.exposed = ['fq', 'q', 'start', 'sort', 'rows'];
@@ -412,6 +447,7 @@ function asu_dir_ajax_solr_find_root(data, dept_id) {
 
     for (var i = 0; i < data.length; i++) {
         if (success == null) {
+
             if (data[i].dept_nid == dept_id) {
                 return data[i];
             } else if (data[i].hasOwnProperty('children')) {

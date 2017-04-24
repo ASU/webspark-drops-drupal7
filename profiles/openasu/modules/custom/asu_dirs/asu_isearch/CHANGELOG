@@ -1,3 +1,8 @@
+asu_isearch 7.x-1.8.10
+----------------------
+- Fixed bug with ampersands in title filter were not returning results
+- Fixed bug where first affil outside of selected departments would result in exclusion
+
 asu_isearch 7.x-1.8.9
 ---------------------
 - Fixed bug with primary affiliation not mapping correctly

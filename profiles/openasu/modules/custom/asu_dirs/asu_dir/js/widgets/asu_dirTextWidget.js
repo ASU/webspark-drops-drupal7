@@ -34,6 +34,7 @@
                     if (value) {
                         self.manager.store.remove('q');
                         self.manager.store.addByValue('q', value);
+
                         // If sub-departments toggle is not selected, then add sub-departments for search,
                         // and remove other fq values
                         if (!field_configs.sub_toggle && field_configs.show_tree) {

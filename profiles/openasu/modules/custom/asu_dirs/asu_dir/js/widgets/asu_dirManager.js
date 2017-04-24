@@ -121,8 +121,6 @@
                                 docs[i].mappedWeight = self.getEmployeeWeight(docs[i]);
                             }
 
-
-
                             // function to sort by rankweight
                             docs.sort(function (a, b) {
 
@@ -188,6 +186,7 @@
                 var localweight = 999;
                 var temp = doc;
                 var field_id = this.field_id;
+
                 var rank_mode = field_configs.default_rank_mode;
                 var search = ASUPeople[field_id].dept_nid.toString();
                 var asurite = doc.asuriteId;
