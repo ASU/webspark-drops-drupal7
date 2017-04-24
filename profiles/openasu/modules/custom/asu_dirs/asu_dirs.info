@@ -5,8 +5,8 @@ package = ASU
 project = asu_dirs
 files[] = asu_dirs.module
 dependencies[] = taxonomy
-dependencies[] = asu_dir_utilities
-dependencies[] = asu_dir
+dependencies[] = asu_dir_utilities (>=7.x-1.1)
+dependencies[] = asu_dir (>=7.x-1.6.1)
 dependencies[] = block
 dependencies[] = ctools
 dependencies[] = features
@@ -17,7 +17,7 @@ dependencies[] = options
 dependencies[] = strongarm
 dependencies[] = jquery_update
 dependencies[] = asu_ajax_solr
-dependencies[] = asu_dept_picker
+dependencies[] = asu_dept_picker (>=7.x-1.0.1)
 dependencies[] = react
 
 ; See below for info on version number

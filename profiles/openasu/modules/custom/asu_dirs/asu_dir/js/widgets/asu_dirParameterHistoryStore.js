@@ -53,15 +53,46 @@
                 var url = state.cleanUrl, index = url.indexOf("?");
                 var saved_dept_nids = this.saved_dept_nids;
                 var field_id = this.field_id;
+                var field_configs = this.field_configs;
+                var tree = this.tree;
+
+                // load the nids from the tree dynamically if possible
+                var dynamic_nids = [];
 
                 // Initial request on load
                 if (self.manager.store.params.q == null) {
 
                     //Set the global if no params are set
                     ASUPeople[field_id].dept_nid = saved_dept_nids[0];
+
+                    if (field_configs.depts != null && field_configs.depts.items != null) {
+
+                        var depts = field_configs.depts.items;
+
+                        for (var i = 0; i < depts.length; i++) {
+                            if (depts[i].options.subdepts) {
+
+                                var stree = asu_dir_ajax_solr_find_root(tree, depts[i].dept_nid);
+                                var sarray = asu_dir_get_tree_ids(stree);
+                                dynamic_nids = dynamic_nids.concat(sarray);
+                            } else {
+                                var tar = [depts[i].dept_nid];
+                                dynamic_nids = dynamic_nids.concat(tar);
+                            }
+
+                            if (field_configs.show_tree) {
+                                break;
+                            }
+                        }
+                    }
+
                     self.manager.store.addByValue('q', '*:*');
+
+
                     //Create the query string for depts
-                    self.manager.store.addByValue('fq', asu_dir_solr_search_string(saved_dept_nids, 'deptids'));
+                    if (dynamic_nids.length > 0) {
+                        self.manager.store.addByValue('fq', asu_dir_solr_search_string(dynamic_nids, 'deptids'));
+                    }
                 }
 
                 if (index != -1) {
@@ -145,8 +176,6 @@
 
                 //todo: only replace the q=
                 // so something like /(\/|&)q=/gi but with positive lookbehind-like behavior
-
-
                 if (ASUPeople.active == field_id) {
 
                     url_hash = this.cleanCustomString(url_hash, field_configs);
@@ -179,6 +208,7 @@
 
                 //var ft = /(fq=facultyTitles:).*?(&)/gi;
                 // if we have the facultytitles config active, then remove it from URL
+                // todo: get rid of?
                 if (field_configs.hasOwnProperty('ft_filter')) {
 
                     var escaped = field_configs.ft_filter.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -258,18 +288,29 @@
                     ASUPeople.active = 'asu_dir' + id;
                 }
 
+                var activetab = $('.ui-tabs-nav .ui-state-active a');
 
                 // Load the state from the History object.
                 if (state.data && state.data.params) {
 
                     if (id == id_num) {
-                        $('#' + this.tab_link).click();
+
+                        // if the active tab is not an iSearch view then make it active.
+                        // since the js gets reloaded upon an exposed view form submittal,
+                        // this is necessary to avoid the state popping back to the active asu_dir pane
+                        if (!activetab.hasClass('asu_isearch_view_tab')) {
+                            $('#' + this.tab_link).click();
+                        }
+
                         //index = url.indexOf(this.page_alias);
                         return state.data.params;
                     } else {
                         return '';
                     }
                 }
+
+
+
 
                 // If initial load, load the state from the URL.
                 if (index == -1) {
@@ -316,10 +357,13 @@
                     //set the active department, and tab
                     ASUPeople[field_id].dept_nid = nid;
 
-
                     ASUPeople.active = field_id;
-                    $('#' + this.tab_link).click();
 
+                    // if an asu_isearch pane is active, don't click it
+                    // todo - add state management for asu_isearch panes
+                    if (!activetab.hasClass('asu_isearch_view_tab')) {
+                        $('#' + this.tab_link).click();
+                    }
 
                     return query_string;
                 } else {

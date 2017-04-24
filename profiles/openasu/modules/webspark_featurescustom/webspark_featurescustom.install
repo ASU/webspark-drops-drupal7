@@ -194,14 +194,15 @@ function webspark_featurescustom_update_7006(&$sandbox) {
 
 /**
  * Implements hook_update_N() --
- * Enable the directory suite module
+ * Since the location of the asu_dir module has changed, rebuild the registry, then
+ * enable asu_dirs suite module, and dir panel module.
  * @param $sandbox
  */
-function webspark_featurescustom_update_7007(&$sandbox) {
-  if (drupal_get_path('module', 'asu_dirs') != '' && !module_exists('asu_dirs')) {
+function webspark_featurescustom_update_7008(&$sandbox) {
+  registry_rebuild();
+
+  if (module_exists('asu_dir')) {
     module_enable(array('asu_dirs'));
-  }
-  if (drupal_get_path('module', 'asu_dir_panel') != '' && !module_exists('asu_dir_panel')) {
     module_enable(array('asu_dir_panel'));
   }
 }

@@ -255,8 +255,8 @@ function asu_isearch_update_7180() {
 }
 
 /**
- * Revert to get rid of primary affil criteria
+ * Revert to get fix affiliation index issue in view
  */
-function asu_isearch_update_7184() {
+function asu_isearch_update_7185() {
   features_revert_module('asu_isearch');
 }

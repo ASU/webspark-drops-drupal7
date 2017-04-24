@@ -894,7 +894,7 @@ function asu_isearch_views_default_views() {
   $handler->display->display_options['relationships']['field_isearch_affiliations_value']['field'] = 'field_isearch_affiliations_value';
   $handler->display->display_options['relationships']['field_isearch_affiliations_value']['label'] = 'Affiliation';
   $handler->display->display_options['relationships']['field_isearch_affiliations_value']['required'] = TRUE;
-  $handler->display->display_options['relationships']['field_isearch_affiliations_value']['delta'] = '0';
+  $handler->display->display_options['relationships']['field_isearch_affiliations_value']['delta'] = '-1';
   /* Relationship: Content: Taxonomy terms on node */
   $handler->display->display_options['relationships']['term_node_tid']['id'] = 'term_node_tid';
   $handler->display->display_options['relationships']['term_node_tid']['table'] = 'node';

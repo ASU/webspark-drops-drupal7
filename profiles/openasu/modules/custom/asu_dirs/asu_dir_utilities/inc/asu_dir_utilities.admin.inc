@@ -189,6 +189,7 @@ function asu_dir_utilities_get_default_config($type = 'asu_dir') {
     'pager_display' => 'paged',
     'pager_items_per_page' => 10,
     'expertise_areas' => '',
+    'local_tags' => array(),
     'display_short_bio' => FALSE,
     'display_header' => TRUE,
     'display_photo' => TRUE,

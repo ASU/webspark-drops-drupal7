@@ -170,7 +170,7 @@ function asu_isearch_fetch_profile_photo($data) {
  */
 function _asu_isearch_cleanup() {
 
-  // get the cleanup list, remove 25 items, reset list,
+  // get the cleanup list, remove some items for pros, reset list,
   // and queue those to be checked
   $clean_list = _asu_isearch_get_cleanup_list();
   $to_process = array_slice($clean_list, 0, ASU_ISEARCH_PROFILE_CLEANUP_LIMIT);
@@ -226,6 +226,7 @@ function asu_isearch_cleanup_profile($profile) {
     //if the profile wasn't found, then unpublish
     if ($pfound == FALSE) {
       $title = $profile->title;
+
       watchdog('asu_isearch', "Profile'[@id]'unpublishedviacroncleanup", array('@id' => $title));
       $profile->status = 0;
       node_save($profile);
