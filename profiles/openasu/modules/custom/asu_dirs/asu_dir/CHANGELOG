@@ -1,3 +1,15 @@
+
+asu_dir 7.x-1.7 2017-04-24
+----------------------------
+- added checking for null node aliases when building profile urls, which will fall back to the node/% path if no alias
+exists for a given profile node
+- fallback to custom title if workingtitle is selected, and null
+- added examples of common custom Solr queries to ASU Directory field form
+- added logic to hide the 'breadcrumbs' option on the ASU Directory field form, when the show tree option is unselected
+- locked down the tab state history handling to only the asu_dir Solr-enabled panes, to avoid conflicts with LID directory
+view listings and weird state behavior
+- added ability to select multiple departments via the ASU Dept Picker
+
 asu_dir 7.x-1.6.1 2017-03-16
 ----------------------------
 - if a directory tree is shown for a listing, the title displayed will be the person's title in the current dept,
