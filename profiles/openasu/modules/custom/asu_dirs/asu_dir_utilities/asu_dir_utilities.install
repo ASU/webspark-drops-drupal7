@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * Implementation of hook_uninstall().
+ * Cleans out our module's DB items.
+ * Does not remove Page Manager page if it was edited and saved by Admin.
+ */
+function asu_dir_utilities_uninstall() {
+
+  //delete variables
+  variable_del('asu_dir_utilities_isearch_url');
+  variable_del('asu_dir_utilities_solr_endpoint');
+  variable_del('asu_dir_utilities_tree_endpoint');
+  variable_del('asu_dir_utilities_employee_types_endpoint');
+  variable_del('asu_dir_utilities_faculty_titles_endpoint');
+  variable_del('asu_dir_utilities_solr_schema_endpoint');
+}

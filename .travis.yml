@@ -56,7 +56,7 @@ install:
   - composer global require --no-interaction drush/drush:7.*
 
   # Build Behat dependencies
-  - cd profiles/openasu/modules/panopoly/panopoly_test/tests
+  - cd profiles/openasu/modules/panopoly/panopoly_test/behat
   - composer install --no-interaction
   - cd /home/travis/build/ASU/webspark-drops-drupal7
 
@@ -87,7 +87,7 @@ before_script:
   # Enable Panopoly Test module
   - drush pm-enable panopoly_test --yes
   - drush cc all
-  - cd ./profiles/openasu/modules/panopoly/panopoly_test/tests
+  - cd ./profiles/openasu/modules/panopoly/panopoly_test/behat
 
 script:
 

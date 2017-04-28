@@ -4,6 +4,11 @@
 
 /* =BOOTSTRAP, PANOPOLY & WEBSPARK OVERRIDES
 -------------------------------------------------------------- */
+/*
+html.js {
+  font-size: 100%;
+}*/
+
 #asu_footer ul {
   max-width: 1170px;
   margin: 0 auto;
@@ -566,7 +571,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 .ui-accordion .ui-state-active .ui-icon,
 .ui-accordion .ui-state-default .ui-icon,
 .ui-accordion .ui-accordion .ui-state-active .ui-icon {
-  background-image: url("../images/accordion-arrows.png");
+  background-image: url("/profiles/openasu/themes/innovation/images/accordion-arrows.png");
 }
 
 .ui-accordion .ui-icon-triangle-1-e {
@@ -910,3 +915,22 @@ a.btn:focus,
 	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
 	 box-shadow: 0px 0px 5px  #4D90FE;
 }
+
+/** UI Tabs **/
+
+/* fixes for stacked tabs */
+body #content .ui-tabs .ui-tabs-nav li.ui-state-focus a {
+  border-top: none;
+}
+
+body #content .ui-tabs .ui-tabs-nav li.ui-state-focus {
+  margin-bottom: 0;
+}
+
+body #content .ui-tabs .ui-tabs-nav li a {
+  margin-left: 0;
+  border-bottom: none;
+  clear: both;
+}
+
+

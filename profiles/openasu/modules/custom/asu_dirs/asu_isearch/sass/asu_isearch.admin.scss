@@ -1,0 +1,22 @@
+.asu-isearch-dept-config {
+  .form-item {
+    &.form-group,
+    &.checkbox {
+      display: none;
+    }
+  }
+
+  .ctools-modal-content & .btn {
+    font-size: 16px;
+  }
+}
+
+.form-type-isearch-dept-config {
+  .row {
+    margin-bottom: 20px;
+  }
+}
+
+.field-type-asu-isearch-dept-picker {
+  font-size: 16px;
+}

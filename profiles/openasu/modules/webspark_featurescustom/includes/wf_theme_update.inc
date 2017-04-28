@@ -6,6 +6,24 @@
  */
 
 /**
+ * Implementation of hook_libraries_info_alter()
+ *
+ * + If a subtheme has been created before Kalatheme 1.4, then connect
+ *   it to the default Innovation library.
+ * + Ensure the user doesn't have a Bootstrap library already
+ *   set up for their subtheme.
+ */
+function webspark_featurescustom_libraries_info_alter(&$libraries) {
+  global $theme_info;
+  if (isset($theme_info->name) && isset($theme_info->base_theme)) {
+    $library_path = DRUPAL_ROOT . '/sites/all/libraries/' . $theme_info->name . '_bootstrap/css/bootstrap.css';
+    if ($theme_info->name != 'innovation' && $theme_info->base_theme == 'innovation' && !file_exists($library_path)) {
+      $libraries[$theme_info->name . '_bootstrap']['machine name'] = 'innovation_bootstrap';
+    }
+  }
+}
+
+/**
  * Implements hook_menu_alter()
  */
 function webspark_featurescustom_menu_alter(&$items) {

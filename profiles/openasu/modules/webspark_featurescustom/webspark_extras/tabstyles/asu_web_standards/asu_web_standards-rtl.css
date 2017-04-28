@@ -1,0 +1,12 @@
+
+.quicktabs_main.quicktabs-style-asu-web-standards{
+  border:1px solid #aaa;
+}
+ul.quicktabs-tabs.quicktabs-style-asu-web-standards{
+  border-bottom:none;
+  padding:0 0 0 5px;
+}
+ul.quicktabs-tabs.quicktabs-style-asu-web-standards li{
+  float:right;
+  margin:0 0 0 3px;
+}

@@ -1,6 +1,7 @@
 behat.yml
 composer.phar
+composer.lock
 bin
 vendor
-tests/behat.local.yml
+behat/behat.local.yml
 
