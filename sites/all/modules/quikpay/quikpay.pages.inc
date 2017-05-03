@@ -7,7 +7,7 @@
  */
 
 // Handles a complete sale reported by Real Time Payment Notification.
-function quikpay_rtpn() { 
+function quikpay_rtpn() {
 
   // Default.
   $msg = "No data provided.";
@@ -21,11 +21,10 @@ function quikpay_rtpn() {
     watchdog('quikpay', 'No data submitted to rtpn page.', array(), WATCHDOG_WARNING);
     return FALSE;
   }
-  if (empty($post)) 
-   {
- watchdog('quikpay', 'RTPN method is not used.', array(), WATCHDOG_WARNING);
-  $msg = "No post data submitted";
-   }
+  if (empty($post)) {
+    watchdog('quikpay', 'RTPN method is not used.', array(), WATCHDOG_WARNING);
+    $msg = "No post data submitted";
+  }
   else {
     $method = 'rtpn';
     watchdog('quikpay', 'Post data is submitted.', array(), WATCHDOG_WARNING);
@@ -33,7 +32,7 @@ function quikpay_rtpn() {
     // Determine if we're operating with Test or Production values.
     $environ = quikpay_get_environ();
     $key = $environ['rtpn_key'];
-    
+
     // Timestamp in milliseconds.
     $timestamp = quikpay_get_timestamp();
     // Values will be received as post. Should expect to get everything.
@@ -57,7 +56,8 @@ function quikpay_rtpn() {
       'orderType' => $_POST['orderType'],
       'orderName' => $_POST['orderName'],
       'orderDescription' => $_POST['orderDescription'],
-      'orderAmount' => $_POST['orderAmount'], // TODO This an issue? amount or orderAmount?
+      'orderAmount' => $_POST['orderAmount'],
+      // TODO This an issue? amount or orderAmount?
       'orderFee' => $_POST['orderFee'],
       'orderDueDate' => $_POST['orderDueDate'],
       'orderAmountDue' => $_POST['orderAmountDue'],
@@ -92,14 +92,14 @@ function quikpay_rtpn() {
       'userChoice10' => $_POST['userChoice10'],
       'timestamp' => $_POST['timestamp'],
     );
-    }
-   if (isset($_GET['orderNumber'])) {
-      watchdog('quikpay', 'Get Redirect data is submitted.', array(), WATCHDOG_WARNING);
-      $method = 'url';
-      $environ = quikpay_get_environ();
-      $key = $environ['rtpn_key'];
-      $trans_variables = "transactionType,transactionStatus,transactionId,originalTransactionId,transactionTotalAmount,transactionDate,transactionAcountType,transactionEffectiveDate,transactionDescription,transactionResultDate,transactionResultEffectiveDate,transactionResultCode,transactionResultMessage,orderNumber,orderType,orderName,orderDescription,orderAmount,orderFee,orderAmountDue,orderDueDate,orderBalance,orderCurrentStatusBalance,orderCurrentStatusAmountDue";
-      $response = array(
+  }
+  if (isset($_GET['orderNumber'])) {
+    watchdog('quikpay', 'Get Redirect data is submitted.', array(), WATCHDOG_WARNING);
+    $method = 'url';
+    $environ = quikpay_get_environ();
+    $key = $environ['rtpn_key'];
+    $trans_variables = "transactionType,transactionStatus,transactionId,originalTransactionId,transactionTotalAmount,transactionDate,transactionAcountType,transactionEffectiveDate,transactionDescription,transactionResultDate,transactionResultEffectiveDate,transactionResultCode,transactionResultMessage,orderNumber,orderType,orderName,orderDescription,orderAmount,orderFee,orderAmountDue,orderDueDate,orderBalance,orderCurrentStatusBalance,orderCurrentStatusAmountDue";
+    $response = array(
       'transactionType' => $_GET['transactionType'],
       'transactionStatus' => $_GET['transactionStatus'],
       'transactionId' => $_GET['transactionId'],
@@ -117,27 +117,25 @@ function quikpay_rtpn() {
       'orderType' => $_GET['orderType'],
       'orderName' => $_GET['orderName'],
       'orderDescription' => $_GET['orderDescription'],
-      'orderAmount' => $_GET['orderAmount'], 
+      'orderAmount' => $_GET['orderAmount'],
       'orderFee' => $_GET['orderFee'],
       'orderDueDate' => $_GET['orderDueDate'],
       'orderAmountDue' => $_GET['orderAmountDue'],
       'orderBalance' => $_GET['orderBalance'],
       'orderCurrentStatusBalance' => $_GET['orderCurrentStatusBalance'],
       'orderCurrentStatusAmountDue' => $_GET['orderCurrentStatusAmountDue'],
-      );
-      $var = explode(",",$trans_variables);
-      $key = $environ['rtpn_key'];
-      foreach ($var as $param) {
-            $$param = $_GET[$param];
-            } 
-     }
-      else 
-       {
-  watchdog('quikpay', 'No data submitted to rtpn page.', array(), WATCHDOG_WARNING); 
-  $msg = "No data provided";
-        }
-    if ($method != "None") 
-   {
+    );
+    $var = explode(",", $trans_variables);
+    $key = $environ['rtpn_key'];
+    foreach ($var as $param) {
+      $$param = $_GET[$param];
+    }
+  }
+  else {
+    watchdog('quikpay', 'No data submitted to rtpn page.', array(), WATCHDOG_WARNING);
+    $msg = "No data provided";
+  }
+  if ($method != "None") {
     // Convenience variables.
     $order_id = check_plain($response['orderNumber']);
     $transaction_id = check_plain($response['transactionId']);
@@ -146,20 +144,18 @@ function quikpay_rtpn() {
     // Reverse QuikPAY number handling.
     // TODO No divide by 100 ?
     //$transaction_total_amount = check_plain($response['transactionTotalAmount']) / 100; 
-    $transaction_total_amount = check_plain($response['transactionTotalAmount']); 
+    $transaction_total_amount = check_plain($response['transactionTotalAmount']);
 
     // Build a hash.
-    if ($method == 'rtpn') 
-     {
+    if ($method == 'rtpn') {
       $hash = md5(implode('', $response) . $key);
       $check_hash = $_POST['hash'];
-     }
-    else 
-     {
+    }
+    else {
       //$hash = md5($orderNumber.$orderType.$orderAmount.$key);
       $hash = $_GET['hash'];
       $check_hash = $_GET['hash'];
-      }
+    }
     // Hash validation fails.
     if ($hash != $check_hash) { // Will also catch when no $_POST due to presence of $key.
 
@@ -174,23 +170,30 @@ function quikpay_rtpn() {
         //uc_order_comment_save($order_id, 0, t('QuikPAY Real Time Payment Notification failed. Could not validate response.'), 'admin');
 
 
-        watchdog('quikpay', 'QuikPAY Real Time Payment Notification hash did not match for order # %order_id. Received hash %remote_hash and built %local_hash.', 
-          array('%order_id' => $order_id, '%remote_hash' => check_plain($check_hash), '%local_hash' => $hash), WATCHDOG_NOTICE);
+        watchdog('quikpay', 'QuikPAY Real Time Payment Notification hash did not match for order # %order_id. Received hash %remote_hash and built %local_hash.',
+          array(
+            '%order_id' => $order_id,
+            '%remote_hash' => check_plain($check_hash),
+            '%local_hash' => $hash
+          ), WATCHDOG_NOTICE);
       }
 
       return t('Validation failed.');
     }
 
-    
+
     // Debug
     //$response_data = '';
     //foreach ($_POST as $key => $value) {
     //  $response_data .= "$key => $value \r\n";
     //}
     //error_log($response_data, 0);
-     global $base_url;
-    watchdog('quikpay', 'Received QuikPay Real Time Payment Notification for order # %order_id. Result message: %result_msg', 
-      array('%order_id' => $order_id, '%result_msg' => $transaction_result_message), WATCHDOG_NOTICE);
+    global $base_url;
+    watchdog('quikpay', 'Received QuikPay Real Time Payment Notification for order # %order_id. Result message: %result_msg',
+      array(
+        '%order_id' => $order_id,
+        '%result_msg' => $transaction_result_message
+      ), WATCHDOG_NOTICE);
 
     // Determine whether to complete payment based on transactionResultMessage.
     // Maybe there's a better option, but this looks best for now. 
@@ -212,20 +215,20 @@ function quikpay_rtpn() {
         $trans->message .= "<br />Result Code: @rescode";
         $trans->message_variables['@paynum'] = $transaction_id;
         $trans->message_variables['@rescode'] = $transaction_result_code;
-    
+
         watchdog('quikpay', 'Transaction successful', array(), WATCHDOG_WARNING);
         $trans->status = COMMERCE_PAYMENT_STATUS_SUCCESS;
         commerce_payment_transaction_save($trans);
         commerce_checkout_complete($order);
         rules_invoke_all('commerce_payment_order_paid_in_full', $order, $trans);
-	global $user;
-	$uid = $user->uid;
-        $order_link = $base_url."/user/".$uid."/orders/".$orderNumber;
+        global $user;
+        $uid = $user->uid;
+        $order_link = $base_url . "/user/" . $uid . "/orders/" . $orderNumber;
         $msg = $environ['success'];
-	$msg .= "<br /><a href='$order_link'>View your order</a>";
-	$msg .= "<br /><br /><a href='$base_url'>Return to the front page</a>";
-         //$msg = "Payment was successful";	
-        
+        $msg .= "<br /><a href='$order_link'>View your order</a>";
+        $msg .= "<br /><br /><a href='$base_url'>Return to the front page</a>";
+        //$msg = "Payment was successful";
+
         // LEGACY
         //$order = uc_order_load($order_id);
         //$context = array('revision' => 'formatted-original', 'location' => 'nelnet');
@@ -250,7 +253,7 @@ function quikpay_rtpn() {
         break;
 
       default:
-        
+
         // TODO Commerce version of this?
         //uc_order_comment_save($order_id, 0, t('Unrecognized transaction result message: @msg', 
         //  array('@msg' => $transaction_result_message)), 'admin');
@@ -264,8 +267,5 @@ function quikpay_rtpn() {
 
   }
 
-
-return t('Payment Notification: ' . $msg);
+  return t('Payment Notification: ' . $msg);
 }
-
-

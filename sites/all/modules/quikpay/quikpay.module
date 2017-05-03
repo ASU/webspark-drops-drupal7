@@ -3,13 +3,12 @@
  *
  * @file
  *  Adds Quikpay method to Drupal Commerce
- *  Authors: Zohair Zaidi <zohair.zaidi@asu.edu / zohair.zaidi@gmail.com> 
+ *  Authors: Zohair Zaidi <zohair.zaidi@asu.edu / zohair.zaidi@gmail.com>
  *           Michael Samuelson <mlsamuel@asu.edu / mlsamuelson@gmail.com>
- * /
  **/
- 
+
 function quikpay_menu() {
-  
+
   // Callback function for users returning from checkout.
   $items['quikpay/rtpn'] = array(
     'title' => 'QuikPAY Real Time Payment Notification',
@@ -17,7 +16,7 @@ function quikpay_menu() {
     'access arguments' => array('access checkout'),
     'type' => MENU_CALLBACK,
     'file' => 'quikpay.pages.inc',
-    );
+  );
   // LEGACY: should use the "quikpay" namespaced path. 
   // CE project is configured to use this path.
   $items['commerce_nelnet/rtpn'] = array(
@@ -26,11 +25,11 @@ function quikpay_menu() {
     'access arguments' => array('access checkout'),
     'type' => MENU_CALLBACK,
     'file' => 'quikpay.pages.inc',
-    );
+  );
 
   return $items;
 }
-  
+
 function quikpay_commerce_payment_method_info() {
 
   // Helpful reference at
@@ -38,50 +37,64 @@ function quikpay_commerce_payment_method_info() {
   // Get settings, if we have them.
   $settings = quikpay_get_settings();
   if ($settings && is_array($settings['quikpay_cc_images'])) {
-      $cards = array_values(array_filter($settings['quikpay_cc_images']));
-      $card_images = '';
-      foreach($cards as $card_name) {
-        $card_images .= theme('image', array('path' => drupal_get_path('module', 'quikpay') . '/images/'. $card_name . '.gif', 'alt' => $card_name));
-      }
-      $card_list = array(
-        '#type' => 'markup',
-        '#markup' => $card_images, 
-      );
+    $cards = array_values(array_filter($settings['quikpay_cc_images']));
+    $card_images = '';
+    foreach ($cards as $card_name) {
+      $card_images .= theme('image', array(
+        'path' => drupal_get_path('module', 'quikpay') . '/images/' . $card_name . '.gif',
+        'alt' => $card_name
+      ));
+    }
+    $card_list = array(
+      '#type' => 'markup',
+      '#markup' => $card_images,
+    );
   }
   else {
-      $cards = '';
+    $cards = '';
   }
 
   drupal_add_css(drupal_get_path('module', 'quikpay') . '/quikpay.css');
 
-  $forms = array();
-    $forms['quikpay'] = array(
-      'base'                  =>  'quikpay',
-      'title'                 =>  t('Quikpay'),
-      'display_title'         =>  '<div id="quikpay-cards">Credit Card ' . drupal_render($card_list) .'</div>',
-      'description'           =>  t('Nelnet Payment Gateway'),
-      'active'                =>  TRUE,
-      'terminal'              =>  FALSE,
-      'offsite'               =>  TRUE,
-      //'offsite_autoredirect'  =>  TRUE,
-      'offsite_autoredirect'  =>  FALSE,
-      'callbacks'             =>  array(
-        'settings_form'           =>  'quikpay_settings_form',
-        'redirect_form'           =>  'quikpay_redirect_form',
-      ),
-    
-    );
-  return $forms;
+  // Now build actual payment methods
+  $payment_methods = array();
+
+  $payment_methods['quikpay'] = array(
+    'base' => 'quikpay',
+    'title' => t('Quikpay'),
+    'display_title' => '<div id="quikpay-cards">Credit Card ' . drupal_render($card_list) . '</div>',
+    'description' => t('Nelnet Payment Gateway'),
+    'active' => TRUE,
+    'terminal' => FALSE,
+    'offsite' => TRUE,
+    'offsite_autoredirect' => FALSE,
+    'callbacks' => array(
+      'settings_form' => 'quikpay_settings_form',
+      'redirect_form' => 'quikpay_redirect_form',
+    ),
+  );
+  return $payment_methods;
 }
+
+/**
+ * Callback function from quikpay_commerce_payment_method_info()
+ *
+ * Generates commerce payment method's settings form
+ *
+ * @TODO - Pass in machine name of payment method
+ *
+ * @param null $settings
+ * @return array
+ */
 
 function quikpay_settings_form($settings = NULL) {
   $form = array();
   global $base_url;
-  $red_url = $base_url.'/commerce_nelnet/rtpn';
+  $red_url = $base_url . '/commerce_nelnet/rtpn';
   if (empty($settings)) {
     $settings['order_type'] = "";
     $settings['quikpay_title'] = "QuikPay Secure Payment Server";
-    $settings['quikpay_cc_images'] = array ();
+    $settings['quikpay_cc_images'] = array();
     $settings['quikpay_mode'] = 'test';
     $settings['quikpay_redirect'] = 'rtpn';
     $settings['quikpay_redirect_url'] = $red_url;
@@ -96,26 +109,31 @@ function quikpay_settings_form($settings = NULL) {
     $settings['quikpay_checkout_red'] = 'You will be directed to a payment page that will process your payment details. Once the payment is complete, you will automatically return to this site and will be able to view your completed order. You will receive an email receipt as well as an additional email containing course registration details.';
   }
   if (empty($settings['quikpay_redirect_url'])) {
-  $settings['quikpay_redirect_url'] = $red_url;
-}
+    $settings['quikpay_redirect_url'] = $red_url;
+  }
   $form['order_type'] = array(
     '#type' => 'textfield',
     '#title' => t('Nelnet order type'),
     '#default_value' => $settings['order_type'],
-    );
+  );
   $form['quikpay_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Nelnet payment method title'),
     '#default_value' => $settings['quikpay_title'],
     '#description' => t('Title for payment method displayed to users.'),
-    );
+  );
   $form['quikpay_cc_images'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Credit card images to display'),
     '#default_value' => $settings['quikpay_cc_images'],
-    '#options' => array('visa' => 'Visa', 'mastercard' => 'MasterCard', 'discover' => 'Discover', 'amex' => "American Express"),
+    '#options' => array(
+      'visa' => 'Visa',
+      'mastercard' => 'MasterCard',
+      'discover' => 'Discover',
+      'amex' => "American Express"
+    ),
     '#description' => t('Choose credit card images to display when checking out.'),
-    );
+  );
   $form['quikpay_mode'] = array(
     '#type' => 'select',
     '#title' => t('Operation mode'),
@@ -123,9 +141,9 @@ function quikpay_settings_form($settings = NULL) {
     '#options' => array(
       'test' => t('Test'),
       'prod' => t('Production'),
-      ),
+    ),
     '#description' => t('Global setting for the length of XML feed items that are output by default.'),
-    );
+  );
   $form['quikpay_redirect'] = array(
     '#type' => 'select',
     '#title' => t('Redirect Method'),
@@ -133,52 +151,52 @@ function quikpay_settings_form($settings = NULL) {
     '#options' => array(
       'rtpn' => t('RTPN'),
       'url' => t('Redirect URL'),
-      ),
+    ),
     '#description' => t('Select whether to use RTPN or the redirect url method upon completion of payment.'),
-    );
- $form['quikpay_redirect_url'] = array(
+  );
+  $form['quikpay_redirect_url'] = array(
     '#type' => 'textfield',
     '#title' => t('URL used for redirect if redirect method is selected above.'),
     '#default_value' => $settings['quikpay_redirect_url'],
     '#description' => t('<strong>Make sure there is no trailing / in the URL as it matters in being authenticated by Nelnet!</strong>'),
-    );
+  );
   $form['quikpay_test_pt_key'] = array(
     '#type' => 'textfield',
     '#title' => t('Nelnet pass through authentication test key'),
     '#default_value' => $settings['quikpay_test_pt_key'],
-    );
+  );
   $form['quikpay_test_rtpn_key'] = array(
     '#type' => 'textfield',
     '#title' => t('Nelnet real time payment notification test key'),
     '#default_value' => $settings['quikpay_test_rtpn_key'],
-    );
+  );
   $form['quikpay_prod_pt_key'] = array(
     '#type' => 'textfield',
     '#title' => t('Nelnet pass through authentication production key'),
     '#default_value' => $settings['quikpay_prod_pt_key'],
-    );
+  );
   $form['quikpay_prod_rtpn_key'] = array(
     '#type' => 'textfield',
     '#title' => t('Nelnet real time payment notification production key'),
     '#default_value' => $settings['quikpay_prod_rtpn_key'],
-    );
+  );
   $form['quikpay_test_url'] = array(
     '#type' => 'textfield',
     '#title' => t('Nelnet test URL'),
     '#default_value' => $settings['quikpay_test_url'],
-    );
+  );
   $form['quikpay_prod_url'] = array(
     '#type' => 'textfield',
     '#title' => t('Nelnet production URL'),
     '#default_value' => $settings['quikpay_prod_url'],
-    );
- $form['quikpay_success_text'] = array(
+  );
+  $form['quikpay_success_text'] = array(
     '#type' => 'textarea',
     '#title' => t('Success Message'),
     '#default_value' => $settings['quikpay_success_text'],
     '#description' => ('Text to display upon successful completion of payment'),
     '#required' => TRUE
-    );
+  );
   $checkout_text = 'IMPORTANT! In order to make an online payment a new window will open to receive and process your payment details. You may return to this site once your payment is complete by closing that window. You will receive an email receipt as well as an additional email containing course registration details.';
   $form['quikpay_checkout_text'] = array(
     '#type' => 'textarea',
@@ -186,14 +204,14 @@ function quikpay_settings_form($settings = NULL) {
     '#default_value' => $settings['quikpay_checkout_text'],
     '#description' => t('Instructional text to display below the proceed to checkout link.'),
     '#required' => TRUE
-    );  
-$form['quikpay_checkout_red'] = array(
+  );
+  $form['quikpay_checkout_red'] = array(
     '#type' => 'textarea',
     '#title' => t('Redirect Method Checkout instructions'),
     '#default_value' => $settings['quikpay_checkout_red'],
     '#description' => t('Instructional text to display below the proceed to checkout link.'),
     '#required' => TRUE
-    );
+  );
   return $form;
 }
 
@@ -234,6 +252,18 @@ function quikpay_settings_form_log_submit($form, &$form_state) {
 
 }
 
+/**
+ *
+ * Implements hook_form().
+ *
+ * Callback for quikpay_commerce_payment_method_info()
+ *
+ * @param $form
+ * @param $form_state
+ * @param $order - Order settings
+ * @param $payment_method - Payment method data
+ * @return mixed
+ */
 function quikpay_redirect_form($form, &$form_state, $order, $payment_method) {
 
   // Determine if we're connecting to Test or Production payment processing server.
@@ -248,20 +278,8 @@ function quikpay_redirect_form($form, &$form_state, $order, $payment_method) {
   $address = $order_data->commerce_customer_billing->commerce_customer_address->value();
   $amount_arr = $order_data->commerce_order_total->value();
 
-  //Debugging variables
-  //foreach ($order_data->commerce_line_items as $delta => $line_item_wrapper) {
-  //   print $line_item_wrapper->field_account->value();
-  //   print $line_item_wrapper->type->value();
-  //  if (in_array($line_item_wrapper->type->value(), commerce_product_line_item_types())) {
-  //    dpm(round($line_item_wrapper->quantity->value(), 2) . 'x ' . $line_item_wrapper->line_item_label->value());
-	//    dpm($line_item_wrapper->line_item_label->value());
-  //    dpm($line_item_wrapper->value()->data['context']['entity']['entity_id']);
-  //    $item_nids[] = ($line_item_wrapper->value()->data['context']['entity']['entity_id']);
-  //  }
-  //}
-
   // Get details for payload from order and line items.
-	
+
   // Format line item ids for load_multiple.
   $raw_line_item_ids = $order->commerce_line_items['und'];
   foreach ($raw_line_item_ids as $raw_line_item_id) {
@@ -270,12 +288,20 @@ function quikpay_redirect_form($form, &$form_state, $order, $payment_method) {
   $line_items = commerce_line_item_load_multiple($line_item_ids);
 
   $order_items = array();
-  foreach ($line_items as $line_item) { 
+  foreach ($line_items as $line_item) {
 
     if ($line_item->type == 'product') {
 
       $product = commerce_product_load($line_item->commerce_product['und'][0]['product_id']);
       $price_items = field_get_items('commerce_product', $product, 'commerce_price');
+
+      // Added support for multiple order types.
+      // See README.txt for the steps in the UI to implement this change to product
+      // types.
+      if (isset($product->field_quikpay_order_type[LANGUAGE_NONE][0]['target_id'])) {
+        $payment_method['settings']['order_type'] = taxonomy_term_load($product->field_quikpay_order_type[LANGUAGE_NONE][0]['target_id'])->name;
+      }
+
       $price = '$' . number_format($price_items[0]['amount'] / 100, 2);
       $quantity = number_format($line_item->quantity, 0);
       // TODO Handle this through a hook_alter instead of in the Quikpay module.
@@ -286,7 +312,7 @@ function quikpay_redirect_form($form, &$form_state, $order, $payment_method) {
       }
 
       // Finally, put it all together.
-      $item_entry  = 'SKU ' . $product->sku . ' | ';
+      $item_entry = 'SKU ' . $product->sku . ' | ';
       // TODO Handle this through a hook_alter instead of in the Quikpay module.
       if (module_exists('lp_courses')) {
         $item_entry .= ' [nid:' . $class->nid . '] | ';
@@ -297,16 +323,16 @@ function quikpay_redirect_form($form, &$form_state, $order, $payment_method) {
     }
     elseif ($line_item->type == 'commerce_coupon') {
 
-      $price = number_format($line_item->commerce_unit_price[LANGUAGE_NONE][0]['amount'] / 100, 2); 
-      $quantity = number_format($line_item->quantity, 0); 
+      $price = number_format($line_item->commerce_unit_price[LANGUAGE_NONE][0]['amount'] / 100, 2);
+      $quantity = number_format($line_item->quantity, 0);
 
-      $item_entry  = "Discount " . $line_item->line_item_label . " | " . $quantity . ' @ ' . $price;
+      $item_entry = "Discount " . $line_item->line_item_label . " | " . $quantity . ' @ ' . $price;
       $order_items[] = $item_entry;
 
     }
     else {
 
-      $item_entry  = "Misc " . $line_item->line_item_label . " | " . $line_item->type;
+      $item_entry = "Misc " . $line_item->line_item_label . " | " . $line_item->type;
       $order_items[] = $item_entry;
 
     }
@@ -321,24 +347,15 @@ function quikpay_redirect_form($form, &$form_state, $order, $payment_method) {
 
   // The digest/hash includes our pass through key and parameters. Order 
   // matters - check pass through authentication documentation.
- 
-  //$variables = "orderType,orderNumber,amount,streetOne,streetTwo,city,state,zip,email,timestamp";	
+
   $variables = "orderType,orderNumber,amount,userChoice2,userChoice3,userChoice4,userChoice5,userChoice6,userChoice7,userChoice8,userChoice9,userChoice10,streetOne,streetTwo,city,state,zip,email";
 
-// If method is url redirect, then add in the redirect parameters 
-	
-if ($redirect_method == 'url') {
-  $variables .= ",redirectUrl,redirectUrlParameters";
-} 
-  $variables .= ",timestamp";
+  // If method is url redirect, then add in the redirect parameters
 
-  // TODO Commented out. REMOVE? Doesn't seem necessary in light of use
-  // of $variables and then $vars assignment below.
-  // Setup list of variables to receive upon redirect
-  //$vars = "transactionType,transactionStatus,transactionId,transactionTotalAmount,";
-  //$vars .= "transactionDate,transactionAcountType,transactionEffectiveDate,transactionDescription,transactionResultDate,transactionResultEffectiveDate,transactionResultCode,";
-  //$vars .= "transactionResultMessage,orderNumber,";
-  //$vars .= "userChoice1,userChoice2,userChoice3,userChoice4,userChoice5,userChoice6,userChoice7,userChoice8,userChoice9,userChoice10";
+  if ($redirect_method == 'url') {
+    $variables .= ",redirectUrl,redirectUrlParameters";
+  }
+  $variables .= ",timestamp";
 
   // Set up parameters for payload.
   $param['orderType'] = $payment_method['settings']['order_type'];
@@ -356,8 +373,8 @@ if ($redirect_method == 'url') {
   $param['userChoice9'] = isset($order_items[6]) ? substr($order_items[6], 0, 48) : '';
   $param['userChoice10'] = isset($order_items[7]) ? substr($order_items[7], 0, 48) : '';
   // If we have an excess of 8 order items, overwrite last entry.
-  if (isset($order_items[8])) { 
-      $param['userChoice10'] = "More... For full details see order ID " . $order->order_id . ".";
+  if (isset($order_items[8])) {
+    $param['userChoice10'] = "More... For full details see order ID " . $order->order_id . ".";
   }
   $param['streetOne'] = $address['thoroughfare'];
   $param['streetTwo'] = $address['premise'];
@@ -366,16 +383,15 @@ if ($redirect_method == 'url') {
   $param['zip'] = $address['postal_code'];
   $param['email'] = $order_data->mail->value();
   if ($redirect_method == 'url') {
-  $param['redirectUrl'] = $redirect_url;
-  $trans_variables = "transactionType,transactionStatus,transactionId,originalTransactionId,transactionTotalAmount,transactionDate,transactionAcountType,transactionEffectiveDate,transactionDescription,transactionResultDate,transactionResultEffectiveDate,transactionResultCode,transactionResultMessage,orderNumber,orderType,orderName,orderDescription,orderAmount,orderFee,orderAmountDue,orderDueDate,orderBalance,orderCurrentStatusBalance,orderCurrentStatusAmountDue";
-  $param['redirectUrlParameters'] = $trans_variables;
+    $param['redirectUrl'] = $redirect_url;
+    $trans_variables = "transactionType,transactionStatus,transactionId,originalTransactionId,transactionTotalAmount,transactionDate,transactionAcountType,transactionEffectiveDate,transactionDescription,transactionResultDate,transactionResultEffectiveDate,transactionResultCode,transactionResultMessage,orderNumber,orderType,orderName,orderDescription,orderAmount,orderFee,orderAmountDue,orderDueDate,orderBalance,orderCurrentStatusBalance,orderCurrentStatusAmountDue";
+    $param['redirectUrlParameters'] = $trans_variables;
   }
 
 
   // Timestamp in milliseconds.
   $param['timestamp'] = quikpay_get_timestamp();
-  // Allow for alter of $variables and $param to add/change data.
-  // Be sure to keep the two in sync.
+  // Allow for alter of $variables and $param to add/change data. Be sure to keep the two in sync.
   // Function implementation signature:
   // hook_quikpay_hash_param_alter(&$variables, &$param, $order)
   drupal_alter('quikpay_hash_param', $variables, $param, $order);
@@ -386,66 +402,71 @@ if ($redirect_method == 'url') {
   foreach ($vars as $key) {
     $hash_string .= $param[$key];
   }
-// If using URL method, need to form truncated hash since most of the trans_variables are not available till post-processing
 
-  //$hash_string = $param['orderNumber'].$param['orderType'].$param['amount']; #Not working
+  // If using URL method, need to form truncated hash since most of the trans_variables are not available till post-processing
   $param['hash'] = hash('MD5', $hash_string . $ptkey);
+
   // Need to add this straggler.
   array_push($vars, "hash");
-  //Add each parameter as hidden form value
-  // It appears Commerce will submit these for us, correctly.
+
+  // Add each parameter as hidden form value. It appears Commerce will submit these for us, correctly.
   foreach ($vars as $key) {
     $form[$key] = array(
-      '#type'   =>  'hidden',
+      '#type' => 'hidden',
       '#value' => $param[$key],
     );
   }
-  //Redirect to the Quikpay url 
-  $form['#action'] = $url;   
- 
+
+  // Redirect to the Quikpay url
+  $form['#action'] = $url;
+
   $uid = $order->uid;
+
   $quikpay_settings = quikpay_get_settings();
+
   if (!$checkout_text = $quikpay_settings['quikpay_checkout_text']) {
     $checkout_text = t('IMPORTANT! In order to make an online payment a new window will open to receive and process your payment details. You may return to this site once your payment is complete by closing that window. You will receive a receipt via email.');
   }
   if ($redirect_method == 'rtpn') {
-   $checkout_text = $quikpay_settings['quikpay_checkout_text']; 
-}
-  else
-{
-   $checkout_text = $quikpay_settings['quikpay_checkout_red'];
-}
+    $checkout_text = $quikpay_settings['quikpay_checkout_text'];
+  }
+  else {
+    $checkout_text = $quikpay_settings['quikpay_checkout_red'];
+  }
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Complete checkout'),
     '#prefix' => '<div class="quikpay-instructions alert alert-status">' . $checkout_text . '</div>',
     '#suffix' => '<div class="quikpay-return">After paying: ' . l(t('View your orders'), 'user/' . $uid . '/orders') . '</div>',
-    );
+  );
 
   // Had issues with anything other than a button here - only a button
   // would render. So we use jquery to add target="_blank" to form so
   // we open in a new window. Kinda hacky, but it works.
   // See http://css-tricks.com/snippets/html/form-submission-new-window/
- if ($redirect_method == 'rtpn') { 
-drupal_add_js('jQuery(document).ready(function () { jQuery("form#quikpay-redirect-form").attr("target", "_blank"); });', 'inline');
-}
+  if ($redirect_method == 'rtpn') {
+    drupal_add_js('jQuery(document).ready(function () { jQuery("form#quikpay-redirect-form").attr("target", "_blank"); });', 'inline');
+  }
   return $form;
 }
 
 /**
- * Helper function to get environment values.
+ * Helper function to determine if we're connecting to Test or Production payment processing server.
  *
  */
 function quikpay_get_environ() {
 
   // Settings are stored in {rules_config}.
+  // @TODO Get which payment method programmatically
+
   $rule = rules_config_load('commerce_payment_quikpay');
+
   foreach ($rule->actions() as $action) {
     $settings[] = $action->settings;
   }
 
-  // Assuming only one...
-  // TODO Confirm this is safe.
+  // Assuming only one payment method. For multiple payment account / order
+  // types see README.txt.
 
   $environ['mode'] = $settings[0]['payment_method']['settings']['quikpay_mode'];
   $environ['redirect'] = $settings[0]['payment_method']['settings']['quikpay_redirect'];
@@ -458,20 +479,21 @@ function quikpay_get_environ() {
 }
 
 /**
- * Helper function to get environment values.
+ * Helper function to get the settings for the chosen payment method
  *
  */
 function quikpay_get_settings() {
 
   // Settings are stored in {rules_config}.
   $rule = rules_config_load('commerce_payment_quikpay');
+
   if (is_object($rule)) {
     foreach ($rule->actions() as $action) {
       $settings[] = $action->settings;
     }
 
-    // Assuming only one...
-    // TODO Confirm this is safe.
+    // Assuming only one payment method. For multiple payment account / order
+    // types see README.txt.
 
     return $settings[0]['payment_method']['settings'];
   }
@@ -502,7 +524,7 @@ function quikpay_mail($key, &$message, $params) {
     case 'rtpn':
       $message['subject'] = t('RTPN page is Hit');
       $message['body'] = t('Success.');
-      break;    
+      break;
   }
 }
 
@@ -516,7 +538,7 @@ function quikpay_transaction_complete() {
   }
   else {
     watchdog('quikpay', 'Post data is submitted.', array(), WATCHDOG_WARNING);
-  } 
+  }
 
 
   //Grab all the variables returned from quikpay
@@ -546,7 +568,7 @@ function quikpay_transaction_complete() {
   $trans->message .= "<br />Result Code: @rescode";
   $trans->message_variables['@paynum'] = $transactionId;
   $trans->message_variables['@rescode'] = $transactionResultCode;
-  
+
   $t_success = FALSE;
 
   //Check if payment was successful, if so save the transaction and change status to success
@@ -555,11 +577,11 @@ function quikpay_transaction_complete() {
     case 'This transaction has been approved.':
       watchdog('quikpay', 'Transaction is successful', array(), WATCHDOG_WARNING);
       $t_success = TRUE;
-	    $trans->status = COMMERCE_PAYMENT_STATUS_SUCCESS;
+      $trans->status = COMMERCE_PAYMENT_STATUS_SUCCESS;
       rules_invoke_all('commerce_payment_order_paid_in_full', $order, $trans);
       commerce_payment_transaction_save($trans);
       commerce_checkout_complete($order);
-      $msg = "Payment was successful";	
+      $msg = "Payment was successful";
   }
 
   return t($msg);

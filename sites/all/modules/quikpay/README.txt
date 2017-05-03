@@ -70,6 +70,25 @@ Services' Nelnet liaison. Please allow 10 days for processing of the final
 production setup. Enter the production keys and production Quikpay url into
 the Quikpay payment method settings, and switch to production mode.
 
+(NEW!) MULTIPLE Order Types support
+ Quikpay module supports multiple Nelnet Quikpay Order Types. To implement:
+ 1. You'll set up accounts for each Order Type with Financial Services, each
+    with a unique order type name string. All accounts should implement
+    identical keys, however, as they will use the same payment method in
+    Drupal as the base-config. 
+2. Choose one order type to serve as the default fallback order type. Set that
+    as the order type value in the Quikpay payment method configs. 
+3. Create a Drupal taxonomy with the machine name quikpay_order_type. Add all
+    order types as taxonomy terms. Use the order type name strings configured
+    with Nelnet as the term names. CAPs count. 
+4. Add a taxonomy term reference field to all products you'd like to be able
+    to reference custom order types (other than the default). Use the machine 
+   name field_quikpay_order_type. And be sure to hide the field in the display
+   settings.
+ 5. Create a Rule in the Rules UI that empties the shopping cart in the event
+    that a new item is added. This prevents accumulation of multiple products
+    pointing to differing order types.
+
 PERMISSIONS
 --------------------------
 Inherited from Commerce. Anonymous will need "access checkout" permission
