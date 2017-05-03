@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Handles installing, uninstalling, and updating CyberSource settings.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function commerce_cybersource_sawm_requirements($phase) {
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    $t = get_t();
+
+    $frameprevention_enabled = variable_get('frameprevention_enabled', 0);
+    if (empty($frameprevention_enabled)) {
+      $requirements['commerce_cybersource_sawm_frameprevention_enabled'] = array(
+        'title' => $t('Frameprevention'),
+        'value' => l($t('Disabled'), 'admin/config/system/frameprevention'),
+        'severity' => REQUIREMENT_WARNING,
+        'description' => $t('The June 2014 CyberSource Secure Acceptance Web/Mobile Configuration Guide requires clickjacking prevention through the use of "frame-busting" HTTP headers and code.'),
+      );
+    }
+  }
+
+  return $requirements;
+}

@@ -1,4 +1,0 @@
-name = ACE Shopping Cart and Payments
-description = Allows users to add items to a cart and pay for all of them at once.
-package = ACE
-core = 7.x

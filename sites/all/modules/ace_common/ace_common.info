@@ -1,4 +1,0 @@
-name = ACE Common Utilities
-description = Common features used in other ACE modules.
-package = ACE
-core = 7.x

@@ -1,0 +1,226 @@
+<?php
+
+/**
+ * @file
+ * Implements CyberSource Secure Acceptance Web/Mobile for Drupal Commerce.
+ */
+
+/**
+ * CyberSource server addresses.
+ *
+ *  Note:
+ *
+ *  1. If creating a subscription by itself (i.e. no payment or authorization),
+ *     then use [url]/token/create.
+ *  2. If authorizing or paying, regardless of whether also creating a token,
+ *     then use the [url]/pay option.
+ */
+define('COMMERCE_CYBERSOURCE_SAWM_LIVE_TOKEN_SERVER', 'https://secureacceptance.cybersource.com/token/create');
+define('COMMERCE_CYBERSOURCE_SAWM_TEST_TOKEN_SERVER', 'https://testsecureacceptance.cybersource.com/token/create');
+define('COMMERCE_CYBERSOURCE_SAWM_LIVE_TRANSACTION_SERVER', 'https://secureacceptance.cybersource.com/pay');
+define('COMMERCE_CYBERSOURCE_SAWM_TEST_TRANSACTION_SERVER', 'https://testsecureacceptance.cybersource.com/pay');
+
+/**
+ * CyberSource transaction types.
+ */
+define('COMMERCE_CYBERSOURCE_SAWM_TRANSACTION_AUTH', 'authorization');
+define('COMMERCE_CYBERSOURCE_SAWM_TRANSACTION_SALE', 'sale');
+define('COMMERCE_CYBERSOURCE_SAWM_TRANSACTION_CREATE_TOKEN', 'create_payment_token');
+define('COMMERCE_CYBERSOURCE_SAWM_TRANSACTION_AUTH_CREATE_TOKEN', 'authorization,create_payment_token');
+define('COMMERCE_CYBERSOURCE_SAWM_TRANSACTION_SALE_CREATE_TOKEN', 'sale,create_payment_token');
+define('COMMERCE_CYBERSOURCE_SAWM_TRANSACTION_UPDATE_TOKEN', 'update_payment_token');
+define('COMMERCE_CYBERSOURCE_SAWM_TRANSACTION_AUTH_UPDATE_TOKEN', 'authorization,update_payment_token');
+define('COMMERCE_CYBERSOURCE_SAWM_TRANSACTION_SALE_UPDATE_TOKEN', 'sale,update_payment_token');
+
+/**
+ * Implements hook_menu().
+ */
+function commerce_cybersource_sawm_menu() {
+  $items['cybersource_sawm/reply'] = array(
+    'title' => 'Order complete using CyberSource',
+    'page callback' => 'commerce_cybersource_sawm_reply',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'includes/commerce_cybersource_sawm.reply.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_commerce_payment_method_info().
+ */
+function commerce_cybersource_sawm_commerce_payment_method_info() {
+  $payment_methods['cybersource_sawm'] = array(
+    'base' => 'commerce_cybersource_sawm',
+    'title' => t('CyberSource Secure Acceptance Web/Mobile'),
+    'short_title' => t('CyberSource'),
+    'description' => t('CyberSource Secure Acceptance Web/Mobile'),
+    'display_title' => t('Pay via credit card'),
+    'active' => FALSE,
+    'terminal' => FALSE,
+    'offsite' => TRUE,
+    'offsite_autoredirect' => TRUE,
+    'file' => 'includes/commerce_cybersource_sawm.callbacks.inc',
+    'cardonfile' => array(
+      'update callback' => 'commerce_cybersource_sawm_cardonfile_update',
+      'update form callback' => 'commerce_cybersource_sawm_cardonfile_update_form',
+      'delete callback' => 'commerce_cybersource_sawm_cardonfile_delete',
+      'charge callback' => 'commerce_cybersource_sawm_cardonfile_charge',
+    ),
+  );
+  return $payment_methods;
+}
+
+/**
+ * Page callback for "Go back" button on payment page.
+ *
+ * @param object $order
+ *   Commerce order object.
+ */
+function commerce_cybersource_sawm_cancel_payment($order) {
+  $order = commerce_order_status_update($order, 'checkout_review');
+  drupal_goto(commerce_checkout_order_uri($order));
+}
+
+/**
+ * Generate a base64-encoded SHA256 hash of an array using a secret key.
+ *
+ * @param array $data_to_sign
+ *   An array of various strings to implode into a signature string.
+ * @param string $secret_key
+ *   The secret key configured as part of the payment method rule.
+ */
+function _commerce_cybersource_sawm_hash($data_to_sign, $secret_key) {
+  $pairs = implode(',', $data_to_sign);
+  return base64_encode(hash_hmac('sha256', $pairs, $secret_key, TRUE));
+}
+
+/**
+ * Implements cardonfile update callback.
+ *
+ * @param array $form
+ * @param array $form_state
+ * @param array $payment_method
+ * @param object $card_data
+ *
+ * @return bool
+ */
+function commerce_cybersource_sawm_cardonfile_update($form, $form_state, $payment_method, $card_data) {
+  return TRUE;
+}
+
+/**
+ * Builds the form for updating cardonfile data.
+ *
+ * Set the endpoint to token servers to keep from processing a transaction:
+ * @link https://testsecureacceptance.cybersource.com/token/update test transactions @endlink
+ * @link https://secureacceptance.cybersource.com/token/update live transactions @endlink
+ *
+ * @param array $form
+ * @param array $form_state
+ * @param object $card_data
+ *   The card on file entity.
+ *
+ * @return array
+ */
+function commerce_cybersource_sawm_cardonfile_update_form($form, &$form_state, $card_data) {
+  // Required. Access key generated in the Business Center SA profile.
+  $form['access_key'] = array(
+    '#type' => 'hidden',
+    '#value' => $payment_method['settings']['access_key'],
+  );
+  // Required. See General Settings in the Secure Acceptance profile.
+  $form['profile_id'] = array(
+    '#type' => 'hidden',
+    '#value' => $payment_method['settings']['profile_id'],
+  );
+  // Required. CyberSource recommends either an order or transaction ID here.
+  // Sending a user id because that's what we're updating from this form.
+  $form['reference_number'] = array(
+    '#type' => 'hidden',
+    '#value' => $card_data->uid,
+  );
+  // Required. Stored in cardonfile as a hash from CyberSource.
+  $form['payment_token'] = array(
+    '#type' => 'hidden',
+    '#value' => $card_data->remote_id,
+  );
+  $form['amount'] = array(
+    '#type' => 'hidden',
+    '#value' => '0.00',
+  );
+  $form['currency'] = array(
+    '#type' => 'hidden',
+    '#value' => commerce_default_currency(),
+  );
+  // Required. Language code, with country variant in ISO format, e.g., en-us.
+  $form['locale'] = array(
+    '#type' => 'hidden',
+    '#value' => $payment_method['settings']['locale'],
+  );
+  // CyberSource wants it genuinely unique here.
+  // This seems better for tracking replies back from CyberSource.
+  $form['transaction_uuid'] = array(
+    '#type' => 'hidden',
+    '#value' => $card_data->card_id,
+  );
+  /*
+  Required.
+  Date and time signature was generated. Must be in UTC date & time format.
+  Used by CyberSource to detect duplicate transaction attempts.
+  */
+  $form['signed_date_time'] = array(
+    '#type' => 'hidden',
+    '#value' => gmdate("Y-m-d\TH:i:s\Z"),
+  );
+  $form['transaction_type'] = array(
+    '#type' => 'hidden',
+    '#value' => 'update_payment_token',
+  );
+  $form['customer_ip_address'] = array(
+    '#type' => 'hidden',
+    '#value' => substr(ip_address(), 0, 15),
+  );
+  // Set the form action to the appropriate CyberSource URL.
+  switch ($payment_method['settings']['transaction_mode']) {
+    case 'live':
+      $url = COMMERCE_CYBERSOURCE_SAWM_LIVE_TOKEN_SERVER;
+      break;
+
+    case 'test':
+    default:
+      $url = COMMERCE_CYBERSOURCE_SAWM_TEST_TOKEN_SERVER;
+  }
+
+  $form['#action'] = $url;
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Update card'));
+
+  return $form;
+}
+
+/**
+ * Implements cardonfile delete callback.
+ *
+ * @param array $form
+ * @param array $form_state
+ * @param array $payment_method
+ * @param object $card_data
+ */
+function commerce_cybersource_sawm_cardonfile_delete($form, $form_state, $payment_method, $card_data) {
+  // CyberSource SA doesn't have API commands to delete tokens in Oct 2103 docs.
+}
+
+/**
+ * Implements cardonfile charge callback.
+ *
+ * @param array $payment_method
+ * @param object $card_data
+ * @param object $order
+ *   The order being charged.
+ * @param $charge
+ *
+ * @return bool
+ *   TRUE if the payment was successfully processed.
+ */
+function commerce_cybersource_sawm_cardonfile_charge($payment_method, $card_data, $order, $charge = NULL) {
+}
