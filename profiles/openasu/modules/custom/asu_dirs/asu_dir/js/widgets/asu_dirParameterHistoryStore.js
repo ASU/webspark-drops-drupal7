@@ -123,13 +123,25 @@
 
                     $("#" + this.tab_id).on("tabsactivate", function (event, ui) {
 
-                        var index = ui.newTab.index();
+                        // if the activated tab corresponds with this directory,
+                        // set the active directory state, then save the history
+                        // state
+                        var child = ui.newTab.children().first();
+                        var id = child.attr('id');
+                        var index = -1;
+                        var tab_list = ASUPeople.tab_list;
+
+                        for (var i = 0; i < tab_list.length; i++) {
+                            if (tab_list[i].tab_link == id) {
+                                index = i;
+                                break;
+                            }
+                        }
 
                         if (index == tab_num) {
                             ASUPeople.active = field_id;
                             self.save();
                         }
-
                     });
                 }
             },
@@ -173,6 +185,8 @@
                 var url_hash = this.hash;
                 var field_configs = this.field_configs;
                 var field_id = this.field_id;
+
+
 
                 //todo: only replace the q=
                 // so something like /(\/|&)q=/gi but with positive lookbehind-like behavior
@@ -311,7 +325,6 @@
 
 
 
-
                 // If initial load, load the state from the URL.
                 if (index == -1) {
                     return '';
@@ -387,6 +400,7 @@
 
                     hash = decodeURIComponent(hash);
                     self.hash = decodeURIComponent(self.hash);
+
 
                     if (ASUPeople.active == field_id) {
                         if (self.hash != hash) {

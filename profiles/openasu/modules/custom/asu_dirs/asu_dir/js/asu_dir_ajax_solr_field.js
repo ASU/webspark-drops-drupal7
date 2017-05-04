@@ -33,7 +33,10 @@ var ASUPeople = {};
                 tab_id = tabs.eq(0).parents('.ui-tabs').eq(0);
                 tab_id = tab_id.attr('id');
 
+
                 tab_links = $('#' + tab_id + ' .ui-tabs-nav a');
+
+                //var tabSet = $('.ui-tabs-nav').scrollTabs();
             }
 
             for (var i = 0; i < directories.length; i++) {
@@ -45,7 +48,12 @@ var ASUPeople = {};
                 var tab_pane = null;
                 var tab_pane_id = '';
                 var tab_link = '';
-                var tlinkindex = 0;
+
+                // the real tab num is the index of the asu_dir tab in the tab nav set
+                // the dir_tabnum keeps track of where the current asu_dir is being placed in the
+                // tab links array
+                var realtabnum = 0;
+                var dir_tabnum = 0;
 
                 if (has_tabs) {
 
@@ -57,7 +65,7 @@ var ASUPeople = {};
 
 
                         if (found.length > 0) {
-                            tlinkindex = j;
+                            realtabnum = j;
                         } else {
                             // look for view in pane, and add class if so
                             var is_view = $(theid).find('.view');
@@ -71,13 +79,14 @@ var ASUPeople = {};
 
                     tab_pane = tabs.eq(i).closest('.ui-tabs-panel');
                     tab_pane_id = tab_pane.attr('id');
-                    tab_link = tab_links.eq(tlinkindex).attr('id');
+                    tab_link = tab_links.eq(realtabnum).attr('id');
 
                     ASUPeople.tab_list[i] = {};
                     ASUPeople.tab_list[i].field_id = field_id;
                     ASUPeople.tab_list[i].tab_pane = tab_pane;
                     ASUPeople.tab_list[i].tab_pane_id = tab_pane_id;
                     ASUPeople.tab_list[i].tab_link = tab_link;
+                    dir_tabnum = i;
                 }
 
                 if (settings.hasOwnProperty(field_id)) {
@@ -326,7 +335,7 @@ var ASUPeople = {};
                         // keep track of which field the
                         var first = false;
 
-                        if (tlinkindex == 0) {
+                        if (dir_tabnum == 0) {
                             first = true;
                         }
 
@@ -342,13 +351,11 @@ var ASUPeople = {};
                             tab_id: tab_id,
                             tab_pane_id: tab_pane_id,
                             tab_link: tab_link,
-                            tab_num: tlinkindex,
+                            tab_num: dir_tabnum,
                             saved_dept_nids: saved_dept_nids
                         }));
                         Manager.store.exposed = ['fq', 'q', 'start', 'sort', 'rows'];
                     }
-                    //init was here
-
 
                     // Add Solr parameters for faceting.
                     var params = {
@@ -387,6 +394,13 @@ var ASUPeople = {};
                 ASUPeople.man_array[x].doRequest();
             }
 
+            if (tabs.length > 0) {
+                var jtab = $('#' + tab_id);
+
+                jtab.tabgroups({
+                    target: tab_id
+                });
+            }
 
         }
     };

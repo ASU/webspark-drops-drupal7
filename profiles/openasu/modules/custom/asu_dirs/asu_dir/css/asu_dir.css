@@ -386,6 +386,8 @@ div.krumo-preview {
     position: absolute;
 }
 
+
+
 @media (max-width: 600px) {
     .isearch-profile-contact .contact-region .pane-entity-field {
         display: block;
