@@ -57,7 +57,7 @@ var ASUPeople = {};
 
                 if (has_tabs) {
 
-                    for (var j=0; j < tab_links.length; j++) {
+                    for (var j = 0; j < tab_links.length; j++) {
 
                         var tab = tab_links.eq(j);
                         var theid = tab.attr('href');
@@ -113,8 +113,8 @@ var ASUPeople = {};
                     if (field_configs.pager_display == 'paged' && field_configs.pager_items_per_page != 0) {
                         res_per_page = field_configs.pager_items_per_page;
 
-                    // if we want to show all results, then we set the 'rows' parameter to 200000,
-                    // since that is the maximum request size we will want.
+                        // if we want to show all results, then we set the 'rows' parameter to 200000,
+                        // since that is the maximum request size we will want.
                     } else if (field_configs.pager_display == 'all' || field_configs.pager_items_per_page == 0) {
                         res_per_page = 200000;
                     }

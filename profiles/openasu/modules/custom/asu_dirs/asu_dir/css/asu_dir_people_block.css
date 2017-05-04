@@ -479,9 +479,7 @@ select {
     margin-top: 18px;
 }
 
-
-
-.item-list >.tabnav, .item-list > .ui-tabs-nav {
+.item-list > .tabnav, .item-list > .ui-tabs-nav {
     display: inline-block;
     border-radius: 0;
 }
@@ -502,7 +500,6 @@ body .ui-tabs .ui-tabs-nav li.ui-state-hover {
 
 }
 
-
 ul.quicktabs-style-nostyle li:hover, ul.quicktabs-style-nostyle li.active, .ui-tabs .ui-tabs-nav li.ui-state-hover, body .ui-tabs .ui-tabs-nav li.ui-state-active, .ui-tabs .ui-tabs-nav li.ui-tabs-selected {
     border-top: none;
     border-bottom: 5px solid #8C1D40;
@@ -518,7 +515,6 @@ body #content div .ui-tabs .ui-tabs-nav li a {
     margin-right: -15px;
     margin-left: -15px;
 }
-
 
 /****NODE-SPECIFIC ****/
 body .dir-people-wrapper {

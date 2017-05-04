@@ -267,8 +267,6 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   libraries_load('fontawesome');
 
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/plugins/jquery.tabgroups.js');
-  //drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/jquery_scrolltabs/js/jquery.mousewheel.js');
-  //drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/jquery_scrolltabs/css/scrolltabs.css');
 
   //add history.js
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/jquery.history.js');

@@ -395,7 +395,7 @@
 
 
             // Title to output.
-            if (title != null && (titleSource == 'titles' || workingTitle == null) ) { // Determine if using custom title field.
+            if (title != null && (titleSource == 'titles' || workingTitle == null)) { // Determine if using custom title field.
                 title_string = title;
             }
             else if (workingTitle != null) {

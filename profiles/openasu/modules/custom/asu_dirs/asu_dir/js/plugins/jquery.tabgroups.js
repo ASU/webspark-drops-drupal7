@@ -10,7 +10,7 @@
         navNext: null,
         groups: [],
         curgrp: 0,
-        _create: function() {
+        _create: function () {
             var self = this;
             var options = self.options;
 
@@ -39,18 +39,18 @@
                         // find which group the tab is in
                         var counter = 0;
 
-                        for (var j=0; j < self.groups.length; j++) {
-                                counter += self.groups[j].length;
+                        for (var j = 0; j < self.groups.length; j++) {
+                            counter += self.groups[j].length;
 
-                                if (i < counter) {
+                            if (i < counter) {
 
-                                    if (self.curgrp != j) {
-                                        self.curgrp = j;
-                                        self.activateGroup();
-                                    }
-
-                                    return;
+                                if (self.curgrp != j) {
+                                    self.curgrp = j;
+                                    self.activateGroup();
                                 }
+
+                                return;
+                            }
                         }
                     }
                 }
@@ -98,7 +98,7 @@
                     groups[0].push(ttab);
                     gwidth = twidth;
 
-                // else if the tab won't fit in current group, create new group and add to it
+                    // else if the tab won't fit in current group, create new group and add to it
                 } else if ((twidth + gwidth) > containWidth) {
                     curgrp++;
                     gwidth = 0;
@@ -106,7 +106,7 @@
                     groups[curgrp].push(ttab);
                     gwidth = twidth;
 
-                // else add it to active group, add it
+                    // else add it to active group, add it
                 } else {
                     gwidth += twidth;
                     groups[curgrp].push(ttab);
@@ -145,7 +145,7 @@
             next.hide();
             prev.hide();
 
-            if ( numgrps > 1 && (curgrp == 0 || curgrp != (numgrps - 1))) {
+            if (numgrps > 1 && (curgrp == 0 || curgrp != (numgrps - 1))) {
                 next.show();
             } else if (curgrp > 0) {
                 prev.show();

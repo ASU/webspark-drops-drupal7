@@ -238,12 +238,11 @@ function asu_isearch_views_query_alter(&$view, &$query) {
     }*/
 
 
-
     // replace the dropdown title filter value with the raw value gotten from the form.
     // need to do this because it trys to filter on a safe value of an ampersand (&amp)
     // which returns nothing
 
-    if (property_exists ($view->view_config , 'current_title')) {
+    if (property_exists($view->view_config, 'current_title')) {
       $curtitle = $view->view_config->current_title;
 
       if (strpos($curtitle, '&') !== FALSE) {
@@ -254,7 +253,7 @@ function asu_isearch_views_query_alter(&$view, &$query) {
 
         foreach ($query->where as $key => $clause) {
           if (!empty($clause['conditions'])) {
-            foreach($clause['conditions'] as $key2 => $cond) {
+            foreach ($clause['conditions'] as $key2 => $cond) {
 
               if ($cond['field'] == 'field_collection_item_field_data_field_isearch_affiliations__field_data_field_isearch_affil_title.field_isearch_affil_title_value' && !$changed) {
                 //$query->where[$key]['conditions'][$key2]['operator'] = 'RLIKE';

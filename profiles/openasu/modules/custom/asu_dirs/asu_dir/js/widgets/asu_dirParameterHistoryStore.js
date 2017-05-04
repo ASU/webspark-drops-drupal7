@@ -187,7 +187,6 @@
                 var field_id = this.field_id;
 
 
-
                 //todo: only replace the q=
                 // so something like /(\/|&)q=/gi but with positive lookbehind-like behavior
                 if (ASUPeople.active == field_id) {
@@ -322,7 +321,6 @@
                         return '';
                     }
                 }
-
 
 
                 // If initial load, load the state from the URL.
