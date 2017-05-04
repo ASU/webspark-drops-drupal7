@@ -1,4 +1,4 @@
-name = ASU Degrees Views Output
+name = ASU Degrees Views Output [DEPRECATED]
 description = Manipulates the ASU Degree view's output (replaces need for Views PHP).
 core = 7.x
 package = ASU
