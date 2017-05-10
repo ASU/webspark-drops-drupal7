@@ -393,15 +393,6 @@ var ASUPeople = {};
                 ASUPeople.man_array[x].init();
                 ASUPeople.man_array[x].doRequest();
             }
-
-            if (tabs.length > 0) {
-                var jtab = $('#' + tab_id);
-
-                jtab.tabgroups({
-                    target: tab_id
-                });
-            }
-
         }
     };
 })(jQuery, window.History);
