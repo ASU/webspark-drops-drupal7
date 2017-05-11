@@ -16,7 +16,7 @@ Webspark 1.43 (Colorado) release
 
 - Web standards components in Webspark
 
-    * ASU Directory Integration Reinvented (ASU DIR v7.x-1.6.1)
+    * ASU Directory Integration Reinvented (ASU DIR v7.x-1.7)
         * Automatic integration with ASU Local iSearch Directory (ASU LID) module (if enabled)
             * When ASU LID is enabled, and profiles have been imported from iSearch, the directory listings will automatically link to the imported profile nodes.
             * Now includes a Solr Health Check fallback. If Solr is down, then the directory listing will automatically be replaced with a Drupal View of local profile profile nodes
@@ -27,7 +27,7 @@ Webspark 1.43 (Colorado) release
         * Improved title logic to mirror iSearch
     * ASU Directory Panel (v7.x-1.0)
         * Easily place directory listing panel panes into panopoly layouts
-    * The ASU Local iSearch Directory (ASU LID v7.x-1.8.9) module is now part of Webspark
+    * The ASU Local iSearch Directory (ASU LID v7.x-1.8.10) module is now part of Webspark
         * Features:
             * Import profiles from iSearch according to site configs
             * Allows the display of iSearch profiles on local site
