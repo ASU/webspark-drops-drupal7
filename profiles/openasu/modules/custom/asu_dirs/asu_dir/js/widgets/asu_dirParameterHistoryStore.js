@@ -39,9 +39,8 @@
                     is_default: null,
                     id_num: null,
                     has_tabs: null,
-                    tab_id: null,
+                    tab_contain_id: null,
                     tab_pane_id: null,
-                    tab_link: null,
                     tab_num: null,
                     saved_dept_nids: null
                 }, attributes);
@@ -121,24 +120,15 @@
                 if (this.has_tabs) {
                     var tab_num = this.tab_num;
 
-                    $("#" + this.tab_id).on("tabsactivate", function (event, ui) {
+                    $("#" + this.tab_contain_id).on("tabsactivate", function (event, ui) {
 
-                        // if the activated tab corresponds with this directory,
-                        // set the active directory state, then save the history
-                        // state
-                        var child = ui.newTab.children().first();
-                        var id = child.attr('id');
-                        var index = -1;
-                        var tab_list = ASUPeople.tab_list;
+                        // check if this directory is located in the
+                        // new active tab, then set to active and save
+                        // state if so
+                        var newtab = ui.newTab.find('a');
+                        var href = newtab.attr('href');
 
-                        for (var i = 0; i < tab_list.length; i++) {
-                            if (tab_list[i].tab_link == id) {
-                                index = i;
-                                break;
-                            }
-                        }
-
-                        if (index == tab_num) {
+                        if (href == self.tab_pane_id) {
                             ASUPeople.active = field_id;
                             self.save();
                         }
@@ -312,7 +302,10 @@
                         // since the js gets reloaded upon an exposed view form submittal,
                         // this is necessary to avoid the state popping back to the active asu_dir pane
                         if (!activetab.hasClass('asu_isearch_view_tab')) {
-                            $('#' + this.tab_link).click();
+                            //$('#' + this.tab_link).click();
+                           // $( '#' + this.tab_contain_id).tabs("enable", self.tab_num);
+
+                            $('#' + this.tab_contain_id).tabs("option", "active", self.tab_num);
                         }
 
                         //index = url.indexOf(this.page_alias);
@@ -373,7 +366,9 @@
                     // if an asu_isearch pane is active, don't click it
                     // todo - add state management for asu_isearch panes
                     if (!activetab.hasClass('asu_isearch_view_tab')) {
-                        $('#' + this.tab_link).click();
+                        //$('#' + this.tab_link).click();
+                        //$(this.tab_contain_id).tabs( "enable", this.tab_num);
+                        $('#' + this.tab_contain_id).tabs("option", "active", self.tab_num);
                     }
 
                     return query_string;
