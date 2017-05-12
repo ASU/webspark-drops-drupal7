@@ -10,8 +10,9 @@ Configurable 'tabs' panel style. Provides 3 kinds of tabs:
   each tab and compares this to the total length of the text on all tabs. It
   then sets the width property of each tab according to the percentage of text
   the tab contains.
-- Organizes tabs into horizontally navigable container, if the width of the tabs overflows the panels region, via
-  the custom jquery.tabgroups.js plugin.
+
+Organizes tabs into horizontally navigable container, if the width of the tabs overflows the panels region, via
+the custom jquery.tabgroups.js plugin.
   
 Pager links inside panels (e.g. views with pagers) will automatically be
 updated to ensure that the same tab is opened when the page is loaded.

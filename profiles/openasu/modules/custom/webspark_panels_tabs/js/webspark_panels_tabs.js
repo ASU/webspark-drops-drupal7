@@ -5,9 +5,9 @@
  */
 Drupal.behaviors.panelsTabs = {
   attach: function (context) {
-    var tabsID = Drupal.settings.panelsTabs.tabsID;
+    var tabsID = Drupal.settings.websparkPanelsTabs.tabsID;
 
-    for (var key in Drupal.settings.panelsTabs.tabsID) {
+    for (var key in Drupal.settings.websparkPanelsTabs.tabsID) {
       $('#' + tabsID[key] +':not(.tabs-processed)', context)
         .addClass('tabs-processed')
         .tabs().tabgroups({

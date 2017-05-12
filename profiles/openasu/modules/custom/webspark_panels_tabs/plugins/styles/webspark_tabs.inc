@@ -35,6 +35,8 @@ function theme_webspark_panels_tabs_style_render_region($vars) {
   }
 
   $tab_class = '';
+
+
   if (!empty($settings['region_class'])) {
     $tab_class = ' class="' . check_plain($settings['region_class']) . '"';
   }
@@ -61,11 +63,14 @@ function theme_webspark_panels_tabs_style_render_region($vars) {
         drupal_get_path('module', 'webspark_panels_tabs') . '/js/jquery.tabgroups.js' => array('type' => 'file'),
         drupal_get_path('module', 'webspark_panels_tabs') . '/js/webspark_panels_tabs.js' => array('type' => 'file'),
       ),
+      'css' => array(
+        drupal_get_path('module', 'webspark_panels_tabs') . '/css/webspark_panels_tabs.css' => array('type' => 'file'),
+      )
     ),
   );
 
   $js_settings = array();
-  $js_settings['panelsTabs']['tabsID'][] = $tab_id;
+  $js_settings['websparkPanelsTabs']['tabsID'][] = $tab_id;
 
   $element['#attached']['js'][] = array(
     'type' => 'setting',
@@ -82,7 +87,7 @@ function theme_webspark_panels_tabs_style_render_region($vars) {
       if (!empty($panes[$pane_id])) {
         $title = webspark_panels_tabs_pane_titles($display->did, $pane_id);
         $title = $title ? $title : t('Tab @delta', array('@delta' => $delta));
-        $items[] = '<a href="#' . $tab_id . '-' . $delta . '">' . $title . '</a>';
+        $items[] = '<a href="#' . $tab_id . '-' . $delta . '" class="webspark-tab-link">' . $title . '</a>';
         $delta++;
       }
     }
@@ -98,7 +103,7 @@ function theme_webspark_panels_tabs_style_render_region($vars) {
   $delta = 1;
   foreach ($panes as $pane_id => $item) {
     $element['tabs_content'][$pane_id] = array(
-      '#prefix' => '<div id="' . $tab_id . '-' . $delta . '">',
+      '#prefix' => '<div id="' . $tab_id . '-' . $delta . '" class="webspark-panels-tabs">',
       '#suffix' => '</div>',
       '#markup' => $item,
     );
