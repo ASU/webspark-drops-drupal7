@@ -1,6 +1,6 @@
 Webspark 1.43 (Colorado) release
 ----------------
-- Webspark core
+- Webspark core 
 
     * Drupal core (v7.54) - This includes security and non-security updates, including:
         * Old module cruft cleanup - Background: Drupal 7.50+ has a new check for erroneous entries that remain
