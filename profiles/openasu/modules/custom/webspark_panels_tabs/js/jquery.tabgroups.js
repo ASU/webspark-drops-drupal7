@@ -94,15 +94,6 @@
             for (var i = 0; i < tabs.length; i++) {
                 var ttab = tabs.eq(i);
                 var twidth = ttab.outerWidth(true);
-                var width = ttab.width();
-                var el = ttab.get(0);
-                var wtwo = el.offsetWidth;
-
-                console.log(width, 'THE WIDTH');
-                console.log(ttab, 'THE JQUERY TAB');
-                console.log(el, 'DOM ELEMENT');
-                console.log(twidth, 'THE TWIDTH');
-                console.log(wtwo, 'THE OFFSET WIDTH');
 
                 // if first tab, create 1st group and add tab to it
                 if (i == 0) {
