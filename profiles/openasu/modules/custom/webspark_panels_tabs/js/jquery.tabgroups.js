@@ -18,16 +18,23 @@
             var thetabs = nav.find("li");
             var contain = self.element.find(".item-list");
 
-            var navPrev = $('<i class="fa fa-chevron-left fa-lg tabnav tabnav-left" aria-hidden="true"></i>').prependTo(nav);//.hide();
-            var navNext = $('<i class="fa fa-chevron-right fa-lg tabnav tabnav-right" aria-hidden="true"></i>').appendTo(nav);//.hide();
+            // add the nav arrows
+            var navPrev = $('<i class="fa fa-chevron-left fa-lg tabnav tabnav-left" aria-hidden="true"></i>').prependTo(nav).hide();
+            var navNext = $('<i class="fa fa-chevron-right fa-lg tabnav tabnav-right" aria-hidden="true"></i>').appendTo(nav).hide();
 
             self.navPrev = navPrev;
             self.navNext = navNext;
 
-            self.initializeGroups();
-            self.activateGroup();
+            // set timeout for half a second. needed because in Firefox, the CSS isn't applied yet when these functions are run,
+            // causing the tab widths to be calculated incorrectly. also attempted via the window.onload function; however
+            // with directory tabs, if there are a lot of images, there can be a fairly noticeable delay while waiting
+            // for all images to load
+            setTimeout(function(){
+                self.initializeGroups();
+                self.activateGroup();
+            }, 500);
 
-            // show the proper group whenever a tab is activated programmatically (
+            // show the proper group whenever a tab is activated programmatically
             self.element.on("tabsactivate", function (event, ui) {
 
                 // find the index of the current active tab
@@ -42,7 +49,7 @@
                         for (var j = 0; j < self.groups.length; j++) {
                             counter += self.groups[j].length;
 
-                            if (i < counter) {
+                            if ( i < counter ) {
 
                                 if (self.curgrp != j) {
                                     self.curgrp = j;
@@ -75,8 +82,7 @@
             self.element.addClass("ui-tabs-scrollable");
             // var scrollContainer = $('<div class="ui-tabs-scroll-container"></div>').prependTo(this.element);
             //self.header = $('<div class="ui-tabs-nav-scrollable ui-widget-header ui-corner-all"></div>').prependTo(scrollContainer);
-            var nav = $(".ui-tabs-nav");
-            var thetabs = nav.find('li');
+            var tabs = $(".ui-tabs-nav li");
 
             // array to hold groups of tabs
             // and an int to denote the current active group
@@ -85,12 +91,18 @@
             var gwidth = 0;
             var curgrp = 0;
 
-            for (var i = 0; i < thetabs.length; i++) {
-                var ttab = thetabs.eq(i);
+            for (var i = 0; i < tabs.length; i++) {
+                var ttab = tabs.eq(i);
                 var twidth = ttab.outerWidth(true);
-                var link = ttab.find('a');
+                var width = ttab.width();
+                var el = ttab.get(0);
+                var wtwo = el.offsetWidth;
 
-                var lwidth = link.outerWidth(true);
+                console.log(width, 'THE WIDTH');
+                console.log(ttab, 'THE JQUERY TAB');
+                console.log(el, 'DOM ELEMENT');
+                console.log(twidth, 'THE TWIDTH');
+                console.log(wtwo, 'THE OFFSET WIDTH');
 
                 // if first tab, create 1st group and add tab to it
                 if (i == 0) {
