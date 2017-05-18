@@ -18,7 +18,6 @@ body .ui-tabs .ui-tabs-nav li.ui-state-hover {
 .tabnav-right {
     float: right;
     padding-left: 10px;
-
 }
 
 .tabnav-left {
@@ -36,4 +35,8 @@ ul.quicktabs-style-nostyle li:hover, ul.quicktabs-style-nostyle li.active, .ui-t
 body #content div .ui-tabs .ui-tabs-nav li a {
     border: none;
     color: black;
+}
+
+.webspark-panels-tabs-region > .item-list > .ui-tabs-nav {
+    width: 100%;
 }

@@ -28,8 +28,8 @@
             // set timeout for half a second. needed because in Firefox, the CSS isn't applied yet when these functions are run,
             // causing the tab widths to be calculated incorrectly. also attempted via the window.onload function; however
             // with directory tabs, if there are a lot of images, there can be a fairly noticeable delay while waiting
-            // for all images to load
-            setTimeout(function(){
+            // for all images to load. a better option might be to calculate and set an inline width style attribute
+            setTimeout(function() {
                 self.initializeGroups();
                 self.activateGroup();
             }, 500);
@@ -78,10 +78,6 @@
             var self = this;
             var containWidth = this.element.outerWidth(true);
             var options = self.options;
-
-            self.element.addClass("ui-tabs-scrollable");
-            // var scrollContainer = $('<div class="ui-tabs-scroll-container"></div>').prependTo(this.element);
-            //self.header = $('<div class="ui-tabs-nav-scrollable ui-widget-header ui-corner-all"></div>').prependTo(scrollContainer);
             var tabs = $(".ui-tabs-nav li");
 
             // array to hold groups of tabs

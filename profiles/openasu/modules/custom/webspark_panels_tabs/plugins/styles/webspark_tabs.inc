@@ -34,12 +34,14 @@ function theme_webspark_panels_tabs_style_render_region($vars) {
     $tab_id .= $owner_id . '-' . $region_id;
   }
 
-  $tab_class = '';
+  $tab_class = ' class="webspark-panels-tabs-region';
 
 
   if (!empty($settings['region_class'])) {
-    $tab_class = ' class="' . check_plain($settings['region_class']) . '"';
+    $tab_class .= ' ' . check_plain($settings['region_class']);
   }
+
+  $tab_class .= '"';
 
   $region_title = '';
   if (!empty($settings['region_title'])) {
