@@ -54,6 +54,7 @@
                                 if (self.curgrp != j) {
                                     self.curgrp = j;
                                     self.activateGroup();
+                                    ui.newTab.focus();
                                 }
 
                                 return;
