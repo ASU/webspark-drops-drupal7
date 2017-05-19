@@ -1,9 +1,7 @@
 <?php
 /**
 * @file
-* A description of what your module does.
+* Alters the payment method selection dynamically, based on what event is selected.
 */
 
-function ace_commerce_form_alter(&$form, &$form_state, $form_id) {
-    dpm($form_id);
-}
+// Just here because a .module file is necessary.
