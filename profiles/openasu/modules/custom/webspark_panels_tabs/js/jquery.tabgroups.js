@@ -89,10 +89,6 @@
             for (var i = 0; i < tabs.length; i++) {
                 var ttab = tabs.eq(i);
                 var twidth = ttab.outerWidth(true);
-                console.log(twidth, 'THE TAB WIDTH');
-                console.log(ttab, 'THE TAB');
-
-
 
                 // if first tab, create 1st group and add tab to it
                 if (i == 0) {
