@@ -25,14 +25,12 @@
             self.navPrev = navPrev;
             self.navNext = navNext;
 
-            // set timeout for half a second. needed because in Firefox, the CSS isn't applied yet when these functions are run,
-            // causing the tab widths to be calculated incorrectly. also attempted via the window.onload function; however
-            // with directory tabs, if there are a lot of images, there can be a fairly noticeable delay while waiting
-            // for all images to load. a better option might be to calculate and set an inline width style attribute
-            setTimeout(function() {
+            // activate when page fullly loaded. needed because in Firefox, the CSS isn't applied yet when these functions are run,
+            // causing the tab widths to be calculated incorrectly.
+            window.onload = function () {
                 self.initializeGroups();
                 self.activateGroup();
-            }, 500);
+            };
 
             // show the proper group whenever a tab is activated programmatically
             self.element.on("tabsactivate", function (event, ui) {
@@ -91,6 +89,10 @@
             for (var i = 0; i < tabs.length; i++) {
                 var ttab = tabs.eq(i);
                 var twidth = ttab.outerWidth(true);
+                console.log(twidth, 'THE TAB WIDTH');
+                console.log(ttab, 'THE TAB');
+
+
 
                 // if first tab, create 1st group and add tab to it
                 if (i == 0) {
