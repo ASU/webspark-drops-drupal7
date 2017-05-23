@@ -89,7 +89,7 @@ function theme_webspark_panels_tabs_style_render_region($vars) {
       if (!empty($panes[$pane_id])) {
         $title = webspark_panels_tabs_pane_titles($display->did, $pane_id);
         $title = $title ? $title : t('Tab @delta', array('@delta' => $delta));
-        $items[] = '<a href="#' . $tab_id . '-' . $delta . '" class="webspark-tab-link">' . $title . '</a>';
+        $items[] = '<a style="padding: 0; font-weight: 400; font-size: 18px;" href="#' . $tab_id . '-' . $delta . '" class="webspark-tab-link">' . $title . '</a>';
         $delta++;
       }
     }

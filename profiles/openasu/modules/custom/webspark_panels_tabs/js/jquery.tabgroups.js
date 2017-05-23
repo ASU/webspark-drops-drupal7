@@ -12,11 +12,9 @@
         curgrp: 0,
         _create: function () {
             var self = this;
-            var options = self.options;
 
             var nav = self.element.find(".ui-tabs-nav");
             var thetabs = nav.find("li");
-            var contain = self.element.find(".item-list");
 
             // add the nav arrows
             var navPrev = $('<i class="fa fa-chevron-left fa-lg tabnav tabnav-left" aria-hidden="true"></i>').prependTo(nav).hide();
@@ -25,12 +23,18 @@
             self.navPrev = navPrev;
             self.navNext = navNext;
 
-            // activate when page fullly loaded. needed because in Firefox, the CSS isn't applied yet when these functions are run,
-            // causing the tab widths to be calculated incorrectly.
-            window.onload = function () {
+            // set the padding explicitly, before measuring the widths of the tabs. this avoids errors where css hasn't loaded, etc.
+            thetabs.css({
+                'padding': '9px 18px',
+                'font-size': '18px',
+                'text-size-adjust': '100%'
+            });
+
+            // run in setTimeout function, to make sure all needed styles have been applied
+            setTimeout(function () {
                 self.initializeGroups();
                 self.activateGroup();
-            };
+            });
 
             // show the proper group whenever a tab is activated programmatically
             self.element.on("tabsactivate", function (event, ui) {
@@ -38,6 +42,7 @@
                 // find the index of the current active tab
                 for (var i = 0; i < thetabs.length; i++) {
                     var ttab = thetabs.eq(i);
+
 
                     if (ttab.is(ui.newTab)) {
 
@@ -75,9 +80,10 @@
         },
         initializeGroups: function () {
             var self = this;
+
+            // get the container width
             var containWidth = this.element.outerWidth(true);
-            var options = self.options;
-            var tabs = $(".ui-tabs-nav li");
+            var tabs = self.element.find(".ui-tabs-nav li");
 
             // array to hold groups of tabs
             // and an int to denote the current active group
@@ -85,10 +91,14 @@
             var activegroup = 0;
             var gwidth = 0;
             var curgrp = 0;
+            var arrowWidth = $(self.navPrev).outerWidth(true);
 
             for (var i = 0; i < tabs.length; i++) {
                 var ttab = tabs.eq(i);
                 var twidth = ttab.outerWidth(true);
+
+                // account for the width of the navigation arrows
+                var freespace = (curgrp == 0) ? (containWidth - arrowWidth) : (containWidth - arrowWidth * 2);
 
                 // if first tab, create 1st group and add tab to it
                 if (i == 0) {
@@ -96,8 +106,8 @@
                     groups[0].push(ttab);
                     gwidth = twidth;
 
-                    // else if the tab won't fit in current group, create new group and add to it
-                } else if ((twidth + gwidth) > containWidth) {
+                // else if the tab won't fit in current group, create new group and add to it
+                } else if ((twidth + gwidth) > freespace) {
                     curgrp++;
                     gwidth = 0;
                     groups[curgrp] = [];
@@ -123,7 +133,6 @@
             var self = this;
             var curgrp = self.curgrp;
             var numgrps = self.groups.length;
-            var nav = this.element.find(".ui-tabs-nav");
             var next = self.navNext;
             var prev = self.navPrev;
 
