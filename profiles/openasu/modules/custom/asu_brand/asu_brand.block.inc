@@ -36,8 +36,8 @@ function asu_brand_get_block_settings($reset = FALSE) {
     // Set javascript settings.
     $js_settings = array(
       'asu_sso_signedin' => (user_is_logged_in() ? 'true' : 'false'),
-      'asu_sso_signinurl' => '',
-      'asu_sso_signouturl' => '',
+      'asu_sso_signinurl' => 'https://weblogin.asu.edu/cgi-bin/login?callapp=https%3A%2F%2Fmy.asu.edu',
+      'asu_sso_signouturl' => 'https://webapp4.asu.edu/myasu/Signout',
     );
 
     // Alter the signin/signout URL if cas in enabled.
