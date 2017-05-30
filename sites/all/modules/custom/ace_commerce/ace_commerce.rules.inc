@@ -22,7 +22,7 @@ function ace_commerce_rules_condition_info() {
     ),
     'group' => t('Commerce Order'), // Group the action will appear under when selecting an action/condition
     'callbacks' => array( // Function that actually returns true or false
-      'execute' => 'commerce_order_rules_no_payment_method',
+      'execute' => 'ace_commerce_order_rules_no_payment_method',
     ),
   );
 
@@ -32,7 +32,7 @@ function ace_commerce_rules_condition_info() {
 /**
  * Condition callback - No payment methods already attached to $order?
  */
-function commerce_order_rules_no_payment_method($order) {
+function ace_commerce_order_rules_no_payment_method($order) {
   if (isset($order->payment_methods)) {
     $payment_methods = array_filter($order->payment_methods);
     if (empty($payment_methods)) {
