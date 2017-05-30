@@ -1,7 +1,15 @@
 <?php
 /**
-* @file
-* Alters the payment method selection dynamically, based on what event is selected.
-*/
+ * @file
+ * Alters the payment method selection dynamically, based on what event is selected.
+ */
 
-// Just here because a .module file is necessary.
+/**
+ * Implements hook_commerce_payment_method_info_alter()
+ */
+function ace_commerce_commerce_payment_method_info_alter(&$payment_methods) {
+  // Improve the display title of the Cybersource
+  if (isset($payment_methods['cybersource_sawm']['display_title'])) {
+    $payment_methods['cybersource_sawm']['display_title'] = '<div id="cybersource-cards">Credit Card via CyberSource</div>';
+  }
+}
