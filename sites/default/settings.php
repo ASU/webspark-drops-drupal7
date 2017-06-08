@@ -568,12 +568,16 @@ if (!isset($_SERVER['PANTHEON_ENVIRONMENT']) && file_exists(DRUPAL_ROOT . '/' . 
   include DRUPAL_ROOT . '/' . conf_path() . '/settings.local.php';
 }
 
-// Theme debugging locally
-$conf['theme_debug'] = TRUE;
-
-// Error reporting
-// Make sure php.ini has display_errors = 1
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
+/**
+ * Pantheon-only setting - Turn on debugging in only dev environment
+ */
+if (isset($_SERVER['PANTHEON_ENVIRONMENT'])) {
+  if ($_SERVER['PANTHEON_ENVIRONMENT'] === 'dev') {
+    // Theme debugging
+    $conf['theme_debug'] = TRUE;
+    // Error reporting
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+  }
+}
