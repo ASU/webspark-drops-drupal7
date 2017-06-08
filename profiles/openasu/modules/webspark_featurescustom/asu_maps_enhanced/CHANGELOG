@@ -1,6 +1,10 @@
+asu_maps_enhanced 7.x-1.4, 2016-10-31
+-------------------------------------
+- added Thunderbird campus as option
+- added 'None' option for better integration with events
+
 asu_maps_enhanced 7.x-1.3, 2016-08-04
 -------------------------------------
-
 - added full interactive map tree functionality, leveraging the jqtree library
 - added modification of asu_maps_enhanced_items tables, to account for longer json_encoded strings
 - added ability to either show or hide map if no locations are selected
@@ -8,6 +12,5 @@ asu_maps_enhanced 7.x-1.3, 2016-08-04
 
 asu_maps_enhanced 7.x-1.2, 2016-02-03
 ---------------------------
-
 - Added option to select which campus to display
 - Added option to display campus toggle menu above the map

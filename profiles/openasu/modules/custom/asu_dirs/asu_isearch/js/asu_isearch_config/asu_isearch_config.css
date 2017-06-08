@@ -1,0 +1,114 @@
+.asu-isearch-configuration .tgl {
+    display: none !important;
+}
+
+.asu-isearch-configuration .tgl, .asu-isearch-configuration .tgl:after, .asu-isearch-configuration .tgl:before, .asu-isearch-configuration .tgl *, .asu-isearch-configuration .tgl *:after, .asu-isearch-configuration .tgl *:before, .asu-isearch-configuration .tgl + .tgl-btn {
+    box-sizing: border-box;
+}
+
+.asu-isearch-configuration .tgl::selection, .asu-isearch-configuration .tgl:after::selection, .asu-isearch-configuration .tgl:before::selection, .asu-isearch-configuration .tgl *::selection, .asu-isearch-configuration .tgl *:after::selection, .asu-isearch-configuration .tgl *:before::selection, .asu-isearch-configuration .tgl + .tgl-btn::selection {
+    background: none;
+}
+
+.asu-isearch-configuration .tgl + .tgl-btn {
+    outline: 0;
+    display: inline-block;
+    margin-bottom: -.35em !important;
+    margin-right: 5px;
+    width: 2.4em;
+    font-size: 16px !important;
+    height: 1.2em;
+    position: relative;
+    cursor: pointer !important;
+    float: none !important;
+    padding-left: 1px !important;
+    user-select: none;
+}
+
+.asu-isearch-configuration .tgl + .tgl-btn:after, .asu-isearch-configuration .tgl + .tgl-btn:before {
+    position: relative;
+    display: block;
+    content: "";
+    width: 50%;
+    height: 100%;
+}
+
+.asu-isearch-configuration .tgl + .tgl-btn:after {
+    left: 0;
+}
+
+.asu-isearch-configuration .tgl + .tgl-btn:before {
+    display: none;
+}
+
+.asu-isearch-configuration .tgl:checked + .tgl-btn:after {
+    left: 50%;
+}
+
+.asu-isearch-configuration .tgl-light + .tgl-btn {
+    background: #8C1D40;
+    border-radius: .2em;
+    padding: 1px;
+    transition: all .4s ease;
+}
+
+.asu-isearch-configuration .tgl-light + .tgl-btn:after {
+    border-radius: 12%;
+    background: #fff;
+    transition: all .2s ease;
+}
+
+.asu-isearch-configuration .tgl-light:checked + .tgl-btn {
+    background: #78BE20;
+}
+
+.asu-isearch-configuration .fake-label {
+    display: inline-block;
+    font-size: 1em;
+    font-family: Helvetica, Sans-serif;
+}
+
+.asu-isearch-configuration .tooltip-wrap {
+    color: #666;
+}
+
+.asu-isearch-configuration .tooltip {
+    pointer-events: none;
+}
+
+.asu-isearch-configuration .help-block {
+    display: inline;
+}
+
+.asu-isearch-configuration .employee-types-group {
+    display: inline-block;
+    width: 33%;
+    vertical-align: top;
+}
+
+.asu-isearch-configuration .employee-types-group legend {
+    background: none !important;
+    border: none !important;
+}
+
+.asu-isearch-configuration .employee-types-group .fieldset-wrapper {
+    margin: 0 !important;
+}
+
+.asu-isearch-configuration .form-type-checkbox label::after {
+    margin-left: 0;
+    top: 0;
+}
+
+.asu-isearch-configuration .form-type-checkbox label::before {
+    display: none;
+}
+
+.asu-isearch-configuration .form-type-checkbox input[type="checkbox"] {
+    opacity: 1;
+}
+
+.asu-isearch-configuration .form-type-checkbox input[type="checkbox"]:checked + label::after {
+    content: "";
+}
+

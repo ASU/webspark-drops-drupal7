@@ -7,38 +7,6 @@
  */
 
 /**
- * Implememtation of hook_system_info_alter()
- *
- * This is designed to update the subtheme from openasu_bootstrap to
- * asu_webspark_bootstrap as part of the 1.0 release.
- *
- * @TODO - Remove when Webspark Classic is removed.
- */
-function webspark_featurescustom_system_info_alter(&$info, $file, $type) {
-  if ($type == 'theme' && isset($info['base theme']) && $info['base theme'] == 'openasu_bootstrap') {
-    $info['base theme'] = 'asu_webspark_bootstrap';
-  }
-}
-
-/**
- * Implementation of hook_libraries_info_alter()
- *
- * This is designed to make sure that if a subtheme has been created before
- * Kalatheme 1.4 that we are connecting it to the default ASU Bootstrap
- * library. We also want to make sure that the user doesn't actually have a
- * correct Bootstrap library already set up for their subtheme.
- */
-function webspark_featurescustom_libraries_info_alter(&$libraries) {
-  global $theme_info;
-  if (isset($theme_info->name) && isset($theme_info->base_theme)) {
-    $library_path = DRUPAL_ROOT . '/sites/all/libraries/' . $theme_info->name . '_bootstrap/css/bootstrap.css';
-    if ($theme_info->name != 'asu_webspark_bootstrap' && $theme_info->base_theme == 'asu_webspark_bootstrap' && !file_exists($library_path)) {
-      $libraries[$theme_info->name . '_bootstrap']['machine name'] = 'asu_webspark_bootstrap_bootstrap';
-    }
-  }
-}
-
-/**
  * Implements hook_update_projects_alter()
  *
  * This function will remove any Webspark-managed project from
@@ -51,7 +19,7 @@ function webspark_featurescustom_update_projects_alter(&$projects) {
   // First check to see if the current enabled modules and themes are in the
   // Webspark profile directory AND being used as the active, default codebase
   // for the module (vs. code elsewhere, such as sites/*, etc.)
-  $managed_things = db_select('system', 's')
+  $query = db_select('system', 's')
     ->fields('s', array('name', 'filename'))
     ->condition('status', 1)
     ->condition(db_or()
@@ -59,7 +27,9 @@ function webspark_featurescustom_update_projects_alter(&$projects) {
       ->condition('type', 'theme')
     )
     ->condition('filename', 'profiles_openasu_%', 'LIKE')
-    ->orderBy('name', 'ASC')
+    ->orderBy('name', 'ASC');
+
+  $managed_things = $query
     ->execute()
     ->fetchCol();
 
@@ -80,10 +50,21 @@ function webspark_featurescustom_update_projects_alter(&$projects) {
       }
     }
   }
-
-  // Now remove modules and themes managed by distribution
+  // Now remove all modules and themes managed by this distribution
   foreach ($managed_things as $managed_module) {
     unset($projects[$managed_module]);
+  }
+  // WEBSPARK-1043 - Remove LDAP modules from updates list manually
+  $package_toremove = 'ldap';
+  $length = strlen($package_toremove);
+  foreach ($projects as $project) {
+    if (strpos($project['name'], $package_toremove) === 0) {
+      // ensure only module and module_submodules (i.e. ldap, ldap_*) are removed
+      if (strlen($project['name']) === $length ||
+        (strlen($project['name']) > $length && strpos($project['name'], '_', $length))) {
+        unset($projects[$project['name']]);
+      }
+    }
   }
 }
 
@@ -101,7 +82,8 @@ function webspark_featurescustom_update_status_alter(&$projects) {
   foreach ($projects as $project_name => $project_info) {
     if ($project_name == 'drupal') {
       $projects[$project_name]['status'] = UPDATE_CURRENT;
-      $projects[$project_name]['reason'] = t('Drupal core is managed by WebSpark. Do not update ANY code outside of the /sites directory manually.');
+      $projects[$project_name]['reason'] = t('Drupal core is managed by WebSpark. ' .
+          'Do not update ANY code outside of the /sites directory manually.');
     }
   }
 }

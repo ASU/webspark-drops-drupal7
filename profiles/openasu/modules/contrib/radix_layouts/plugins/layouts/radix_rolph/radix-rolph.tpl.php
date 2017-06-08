@@ -14,7 +14,7 @@
 ?>
 
 <div class="panel-display rolph clearfix <?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
-  <section class="section alt" id="promo">
+  <div class="section alt" id="promo">
     <div class="container">
       <div class="row row-full">
         <div class="col-md-12 rolph-header-area radix-layouts-header panel-panel">
@@ -24,8 +24,8 @@
         </div>
       </div>
     </div>
-  </section>
-  <section class="section">
+  </div>
+  <div class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-3 rolph-column-content-region-1 radix-layouts-quarter1 panel-panel">
@@ -50,8 +50,8 @@
         </div>
       </div>
     </div>
-  </section>
-   <footer class="section" id="footer">
+  </div>
+   <div class="section" id="footer">
     <div class="container">
       <div class="row row-full">
         <div class="col-md-12 rolph-footer-area radix-layouts-footer panel-panel">
@@ -61,5 +61,5 @@
         </div>
       </div>
     </div>
-  </footer>
+  </div>
 </div><!-- /.rolph -->

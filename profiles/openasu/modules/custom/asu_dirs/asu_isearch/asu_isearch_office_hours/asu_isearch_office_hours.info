@@ -1,0 +1,13 @@
+name = ASU Local iSearch Office Hours
+description = Adds office hours to iSearch profiles
+core = 7.x
+package = ASU
+version = 7.x-1.0-beta1
+project = asu_isearch_office_hours
+dependencies[] = asu_isearch
+dependencies[] = features
+dependencies[] = office_hours
+features[features_api][] = api:2
+features[field_base][] = field_isearch_local_office_hours
+features[field_instance][] = node-asu_isearch_profile-field_isearch_local_office_hours
+project path = sites/all/modules/asu_isearch

@@ -1,5 +1,14 @@
 CHANGELOG for ASU Brand module for Drupal 7
 
+7.x-1.15 2017-03-22
+-------------------
+-Now updates theme_default value regardless of whether the module is part of Webspark or not.
+
+7.x-1.14 2017-01-19
+-----------------------
+- Added check to disable GTM script during testing to keep faulty stats out of GTM records and to fix testing issues
+  introduced by GTM-injected content.
+
 7.x-1.13 2016-08-11
 -----------------------
 - Re-added max header version check
