@@ -63,7 +63,7 @@ function asu_isearch_admin_settings_form() {
   $form['isearch_local_lock'] = array(
     '#type' => 'checkbox',
     '#title' => 'Lock Profiles from Automatic Updates.',
-    '#description' => t('This option will lock profiles so that they are not automatically updated when cron is run.  Migrations can still be run manually via the interface at <a href="@link">Migrate</a> or via drush.', array('@link' => '/admin/content/isearch/migrate')),
+    '#description' => t('This option will lock profiles so that they are not updated automatically. This also turns off the Solr FERPA checking.  Migrations can still be run manually via the interface at <a href="@link">Migrate</a> or via drush.', array('@link' => '/admin/content/isearch/migrate')),
     '#default_value' => variable_get('isearch_local_lock', FALSE),
   );
 

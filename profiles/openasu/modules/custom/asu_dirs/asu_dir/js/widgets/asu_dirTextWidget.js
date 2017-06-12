@@ -58,8 +58,10 @@
                         self.manager.store.remove('q');
                         self.manager.store.addByValue('q', '*:*');
 
-                        //remove only the deptids parameter
-                        if (!field_configs.sub_toggle) {
+
+                        if (!field_configs.sub_toggle && field_configs.show_tree) {
+
+                            //remove only the deptids parameter
                             for (var i = 0; i < fq.length; i++) {
                                 if (fq[i].indexOf("deptids:") != -1) {
                                     self.manager.store.removeByValue('fq', fq[i]);

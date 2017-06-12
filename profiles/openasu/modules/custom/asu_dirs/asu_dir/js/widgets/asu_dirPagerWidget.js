@@ -94,6 +94,12 @@
                     this.currentPage = Math.ceil((offset + 1) / perPage);
                     this.totalPages = Math.ceil(total / perPage);
 
+                    if (this.totalPages === 1) {
+                        $(this.target).css('visibility', 'hidden');
+                    } else {
+                        $(this.target).css('visibility', 'inherit');
+                    }
+
                     $(this.target).empty();
 
                     this.renderLinks(this.windowedLinks());

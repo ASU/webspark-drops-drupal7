@@ -205,13 +205,21 @@ function asu_isearch_cleanup_profile($profile) {
     $pfound = FALSE;
     $person = asu_dir_utilities_get_solr_person($asurite);
 
+    // if the above function returns exactly NULL, then something went wrong and
+    // we should not unpublish
+    if ($person === NULL) {
+      return FALSE;
+    }
+
+    // check the person's dept affiliations in Solr against those imported on the local
+    // site. if a valid affil is found, set the pfound flag to true
     if (!empty($person)) {
       foreach ($configs['items'] as $item) {
         if (isset($person['deptids']) && in_array($item['dept_nid'], $person['deptids'])) {
           $pfound = TRUE;
         }
 
-        if (!$pfound && isset($item['options']) && $item['options']['subdepts'] ) {
+        if (!$pfound && isset($item['options']) && $item['options']['subdepts']) {
 
           foreach ($item['tree_nids'] as $tree_item) {
 
@@ -230,9 +238,10 @@ function asu_isearch_cleanup_profile($profile) {
       watchdog('asu_isearch', "Profile'[@id]'unpublishedviacroncleanup", array('@id' => $title));
       $profile->status = 0;
       node_save($profile);
-
+      return TRUE;
       //if node was unpublished, but was found on iSearch, republish the node
     }
+    // re-publish the profile if it was previously unpublished but has valid affiliations
     else {
       if ($pfound == TRUE && $profile->status == 0) {
         $profile->status = 1;
@@ -242,6 +251,8 @@ function asu_isearch_cleanup_profile($profile) {
       }
     }
   }
+
+  return FALSE;
 }
 
 /***
