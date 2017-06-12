@@ -1,75 +1,79 @@
 api = 2
 core = 7.x
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Drupal Core
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 projects[drupal][type] = core
-projects[drupal][version] = 7.44
+projects[drupal][version] = 7.54
 ; Drupal Core Patches
-projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-profile-ajax-1334818-8.patch
+;projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-profile-ajax-1334818-8.patch
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; The Panopoly Foundation
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-projects[panopoly_core][version] = 1.40
+projects[panopoly_core][version] = 1.43
 projects[panopoly_core][subdir] = panopoly
 
-projects[panopoly_images][version] = 1.40
+projects[panopoly_images][version] = 1.43
 projects[panopoly_images][subdir] = panopoly
 
-projects[panopoly_theme][version] = 1.40
+projects[panopoly_theme][version] = 1.43
 projects[panopoly_theme][subdir] = panopoly
 
-projects[panopoly_magic][version] = 1.40
+projects[panopoly_magic][version] = 1.43
 projects[panopoly_magic][subdir] = panopoly
 
-projects[panopoly_widgets][version] = 1.40
+projects[panopoly_widgets][version] = 1.43
 projects[panopoly_widgets][subdir] = panopoly
 
-projects[panopoly_admin][version] = 1.40
+projects[panopoly_admin][version] = 1.43
 projects[panopoly_admin][subdir] = panopoly
 
-projects[panopoly_users][version] = 1.40
+projects[panopoly_users][version] = 1.43
 projects[panopoly_users][subdir] = panopoly
 
 ; The Panopoly Toolset
-
-projects[panopoly_pages][version] = 1.40
+projects[panopoly_pages][version] = 1.43
 projects[panopoly_pages][subdir] = panopoly
 
-projects[panopoly_wysiwyg][version] = 1.40
+projects[panopoly_wysiwyg][version] = 1.43
 projects[panopoly_wysiwyg][subdir] = panopoly
 
-projects[panopoly_search][version] = 1.40
+projects[panopoly_search][version] = 1.43
 projects[panopoly_search][subdir] = panopoly
 ; Fixes DB update dependency ordering
 projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
 
-projects[panopoly_test][version] = 1.40
+projects[panopoly_test][version] = 1.43
 projects[panopoly_test][subdir] = panopoly
-; @TODO - Add patches for custom Webspark testing
-projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update.patch
-projects[panopoly_test][patch][1372] = patches/webspark-847_panopoly-test-updates-3.patch
-projects[panopoly_test][patch][140] = patches/webspark-944_panopoly-test-image-widget-patches.patch
+
+; @TODO - Add patches for custom Webspark testing,
+
+; deprecated patches have been commented out, and combined into the webspark-847_panopoly-test-137-update-v-1.43.patch
+;projects[panopoly_test][patch][1372] = patches/webspark-847_panopoly-test-updates-3.patch
+projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.43.patch
+
+; deprecated to roll image testing patches into 1066 patch
+;projects[panopoly_test][patch][140] = patches/webspark-944_panopoly-test-image-widget-patches.patch
 projects[panopoly_test][patch][1402] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
+; patch the image widget feature to set a private file path before testing
+projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v143.patch
+projects[panopoly_test][patch][1403] = patches/webspark-1066-panopoly-webspark-add-custom-tests-v143.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
-
+; commenting this out until we update this repo
+; @TODO - update the repo with latest modules
 projects[asu_drupal_modules][type] = module
 projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = 9c3c957f4bf36a4ee6f396add630018fe152b19b
+projects[asu_drupal_modules][download][revision] = 9cd96b13a33a2bd112fdecabd36f2d35b0ca83c0
 projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ASU Module Prerequisites
-
-projects[references][version] = 2.1
-projects[references][type] = module
-projects[references][subdir] = contrib
-
-projects[ldap][version] = 2.0-beta8
-projects[ldap][type] = module
-projects[ldap][subdir] = contrib
-;; patch - see https://drupal.org/node/2182413, comment #10 - remove upon ldap update beyond beta8
-projects[ldap][patch][2182413] = http://cgit.drupalcode.org/ldap/patch/?id=fe3a3d56ffebc9bd551c6d83a03172fae13517c3
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 projects[better_watchdog_ui][version] = 2.2
 projects[better_watchdog_ui][type] = module
@@ -96,6 +100,16 @@ projects[job_scheduler][version] = 2.0-alpha3
 projects[job_scheduler][type] = module
 projects[job_scheduler][subdir] = contrib
 
+projects[ldap][version] = 2.0-beta8
+projects[ldap][type] = module
+projects[ldap][subdir] = contrib
+;; patch - see https://drupal.org/node/2182413, comment #10 - remove upon ldap update beyond beta8
+projects[ldap][patch][2182413] = http://cgit.drupalcode.org/ldap/patch/?id=fe3a3d56ffebc9bd551c6d83a03172fae13517c3
+
+projects[references][version] = 2.1
+projects[references][type] = module
+projects[references][subdir] = contrib
+
 projects[smtp][version] = 1.4
 projects[smtp][subdir] = contrib
 projects[smtp][type] = module
@@ -104,16 +118,13 @@ projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
 projects[viewfield][subdir] = contrib
 
-; @TODO v1.0-alpha1 + patch (rollback from 1.x-dev)
-projects[views_php][version] = 1.x-dev
-projects[views_php][type] = module
-projects[views_php][subdir] = contrib
-
 projects[webform][version] = 4.14
 projects[webform][type] = module
 projects[webform][subdir] = contrib
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ASU Module prerequisites - Webspark Webstandards Components - contrib
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 projects[backgroundfield][version] = 1.5
 projects[backgroundfield][type] = module
@@ -138,6 +149,10 @@ projects[entity_view_mode][version] = 1.0-rc1
 projects[entity_view_mode][type] = module
 projects[entity_view_mode][subdir] = contrib
 
+projects[field_collection][version] = 1.0-beta11
+projects[field_collection][type] = module
+projects[field_collection][subdir] = contrib
+
 projects[flexslider][version] = 2.0-rc1
 projects[flexslider][type] = module
 projects[flexslider][subdir] = contrib
@@ -155,6 +170,15 @@ projects[google_appliance][subdir] = contrib
 projects[maxlength][version] = 3.2-beta2
 projects[maxlength][type] = module
 projects[maxlength][subdir] = contrib
+
+;; @TODO - Remove patch when file when submitted patch gets pulled into module
+projects[missing_module][type] = module
+projects[missing_module][subdir] = contrib
+projects[missing_module][download][type] = "git"
+projects[missing_module][download][branch] = "7.x-1.x"
+projects[missing_module][download][url] = "http://git.drupal.org/project/missing_module.git"
+projects[missing_module][download][revision] = 19492ccee8b8ac683b3a384e8663c09af55dc3af
+projects[missing_module][patch][2854074] = patches/webspark-1052_missing-module_improvements-to-ux_2854074-5.patch
 
 projects[panels_tabs][version] = 2.x-dev
 projects[panels_tabs][type] = module
@@ -204,11 +228,13 @@ projects[wysiwyg_template][version] = 2.12
 projects[wysiwyg_template][type] = module
 projects[wysiwyg_template][subdir] = contrib
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Bootstrap and Theme Frameworks - Moved to Webspark repo (see WEBSPARK-366)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Base Theme - Kalatheme
+;; @TODO - Remove completely
 
-; @TODO v3.2
 projects[kalatheme][version] = 3.0-rc2
 projects[kalatheme][type] = theme
 ;; WEBSPARK-188 - CSS img url fix
@@ -225,7 +251,9 @@ projects[kalatheme][patch][] = patches/nojira-20160715-kalatheme_fix-missing-ind
 projects[modernizr][version] = 3.9
 projects[modernizr][subdir] = contrib
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ASU Module prerequisites - Webstandards additions - Libraries
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 libraries[ajax_solr][download][type] = get
 libraries[ajax_solr][download][url] = https://github.com/evolvingweb/ajax-solr/archive/master.zip
@@ -297,11 +325,10 @@ libraries[reactjs][download][subtree] = react-0.14.7/build
 libraries[reactjs][directory_name] = react/build
 libraries[reactjs][download][sha256] = 859ef4a715ded8aa32ab96544c26d0f7b7eba09dec964d44a6c63e3d8d842034
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; PANOPOLY PROJECT PATCHES
-;; The projects in the file(s) listed below are overridden versions of contrib modules maintained by Panopoly.
-;; They are installed by Drush make before any other projects listed in any parent .make files - including
-;; Panopoly's make files.
-
+; The projects in the file(s) listed below are overridden versions of contrib modules maintained by Panopoly.
+; They are installed by Drush make before any other projects listed in any parent .make files - including
+; Panopoly's make files.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 includes[panopoly_patches] = openasu_panopoly_patches.make

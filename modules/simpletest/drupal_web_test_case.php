@@ -854,6 +854,13 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected $cookieFile = NULL;
 
   /**
+   * The cookies of the page currently loaded in the internal browser.
+   *
+   * @var array
+   */
+  protected $cookies = array();
+
+  /**
    * Additional cURL options.
    *
    * DrupalWebTestCase itself never sets this but always obeys what is set.
@@ -942,7 +949,6 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected function drupalCreateNode($settings = array()) {
     // Populate defaults array.
     $settings += array(
-      'body'      => array(LANGUAGE_NONE => array(array())),
       'title'     => $this->randomName(8),
       'comment'   => 2,
       'changed'   => REQUEST_TIME,
@@ -955,6 +961,12 @@ class DrupalWebTestCase extends DrupalTestCase {
       'type'      => 'page',
       'revisions' => NULL,
       'language'  => LANGUAGE_NONE,
+    );
+
+    // Add the body after the language is defined so that it may be set
+    // properly.
+    $settings += array(
+      'body' => array($settings['language'] => array(array())),
     );
 
     // Use the original node's created time for existing nodes.
@@ -1362,10 +1374,11 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @see DrupalWebTestCase::tearDown()
    */
   protected function prepareEnvironment() {
-    global $user, $language, $conf;
+    global $user, $language, $language_url, $conf;
 
     // Store necessary current values before switching to prefixed database.
     $this->originalLanguage = $language;
+    $this->originalLanguageUrl = $language_url;
     $this->originalLanguageDefault = variable_get('language_default');
     $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
     $this->originalProfile = drupal_get_profile();
@@ -1375,7 +1388,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Set to English to prevent exceptions from utf8_truncate() from t()
     // during install if the current language is not 'en'.
     // The following array/object conversion is copied from language_default().
-    $language = (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0, 'javascript' => '');
+    $language_url = $language = (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0, 'javascript' => '');
 
     // Save and clean the shutdown callbacks array because it is static cached
     // and will be changed by the test run. Otherwise it will contain callbacks
@@ -1433,7 +1446,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @see DrupalWebTestCase::prepareEnvironment()
    */
   protected function setUp() {
-    global $user, $language, $conf;
+    global $user, $language, $language_url, $conf;
 
     // Create the database prefix for this test.
     $this->prepareDatabasePrefix();
@@ -1530,7 +1543,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Set up English language.
     unset($conf['language_default']);
-    $language = language_default();
+    $language_url = $language = language_default();
 
     // Use the test mail class instead of the default mail handler class.
     variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
@@ -1624,7 +1637,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * and reset the database prefix.
    */
   protected function tearDown() {
-    global $user, $language;
+    global $user, $language, $language_url;
 
     // In case a fatal error occurred that was not in the test process read the
     // log to pick up any fatal errors.
@@ -1689,12 +1702,15 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Reset language.
     $language = $this->originalLanguage;
+    $language_url = $this->originalLanguageUrl;
     if ($this->originalLanguageDefault) {
       $GLOBALS['conf']['language_default'] = $this->originalLanguageDefault;
     }
 
-    // Close the CURL handler.
+    // Close the CURL handler and reset the cookies array so test classes
+    // containing multiple tests are not polluted.
     $this->curlClose();
+    $this->cookies = array();
   }
 
   /**
@@ -2760,7 +2776,7 @@ class DrupalWebTestCase extends DrupalTestCase {
         $path = substr($path, $length);
       }
       // Ensure that we have an absolute path.
-      if ($path[0] !== '/') {
+      if (empty($path) || $path[0] !== '/') {
         $path = '/' . $path;
       }
       // Finally, prepend the $base_url.
