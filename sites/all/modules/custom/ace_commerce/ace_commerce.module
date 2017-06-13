@@ -13,3 +13,55 @@ function ace_commerce_commerce_payment_method_info_alter(&$payment_methods) {
     $payment_methods['cybersource_sawm']['display_title'] = '<div id="cybersource-cards">Credit Card via CyberSource</div>';
   }
 }
+
+/**
+ * Implements hook_form_FORMID_alter().
+ */
+function ace_commerce_form_commerce_cart_add_to_cart_form_alter(&$form, &$form_state) {
+  $form['#validate'][] = '_ace_commerce_cart_add_to_cart_form_validate';
+}
+/**
+ * Helper function - Checks to see if there's a product already in the cart with
+ * a different payment method. If so, the product cannot be added.
+ */
+function _ace_commerce_cart_add_to_cart_form_validate($form, &$form_state) {
+  // Get cart from user ID and get payment method of current item
+  $order = commerce_cart_order_load($form_state['values']['uid']);
+
+  // #1 Get new product and its type - Is new product of product type?
+  $new_product = commerce_product_load($form_state['values']['product_id']);
+  $new_product_type = array(
+    $new_product->type => $new_product->type,
+  );
+  $item_is_cyber = rules_invoke_component('rules_is_cyber_product', $new_product, $new_product_type);
+
+  // #2 Get product types for all items in cart and compare with rules_are_products_of_type
+  $cart_has_cyber = FALSE;
+  $wrapper = entity_metadata_wrapper('commerce_order', $order);
+  foreach ($wrapper->commerce_line_items as $delta => $line_item_wrapper) {
+    if (rules_invoke_component('rules_are_products_of_type', $order)) {
+      $cart_has_cyber = TRUE;
+      $cart_cyber_item = $line_item_wrapper->commerce_product->value()->title;
+      break 1;
+    }
+  }
+  // Either all cart items and the new item should both be cyber (i.e. both TRUE)
+  // or not (both FALSE). If they don't match, stop the adding of the new item.
+  if ($cart_has_cyber !== $item_is_cyber) {
+    $payment_method = ($item_is_cyber) ? "CyberSource" : "Quikpay";
+    form_set_error('payment_methods_error', "The following item - " . $new_product->title . " - 
+    cannot be added to your cart at this time because it needs to be purchased 
+    using a payment method (" . $payment_method . ") that is incompatible with that 
+    of another item already in your cart (" . $cart_cyber_item . ").
+    <br><br>
+    To resolve this issue, either complete your purchase for the existing items 
+    in <a href='/cart'>your cart</a> and then 
+    return to the " . $new_product->title . " page to make your purchase, or 
+    <a href='/cart'>remove " . $cart_cyber_item . "</a> from your cart before attempting 
+    to add the item again.
+    <br><br>We're sorry for any inconvenience this may cause.");
+  }
+  else {
+    // They are the same. All is well.
+  }
+}
