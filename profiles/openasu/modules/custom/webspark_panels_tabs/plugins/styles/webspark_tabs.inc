@@ -20,7 +20,6 @@ $plugin = array(
  */
 function theme_webspark_panels_tabs_style_render_region($vars) {
 
-  dpm($vars, 'THE VARS IN THE STYLE RENDER REGION');
   $display = $vars['display'];
   $region_id = $vars['region_id'];
   $owner_id = $vars['owner_id'];
@@ -28,7 +27,6 @@ function theme_webspark_panels_tabs_style_render_region($vars) {
   $settings = $vars['settings'];
   $form_filters = '';
 
-  dpm($settings, 'THE SETTINGS');
   if ($settings['region_asu_dir_filter_form']) {
     $form_filters = webspark_panels_tabs_asu_dir_filters();
   }
