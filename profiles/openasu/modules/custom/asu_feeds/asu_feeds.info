@@ -1,5 +1,5 @@
 ; $Id$
-name = "ASU Feeds"
+name = "ASU Feeds [DEPRECATED]"
 description = "Integrate ASU data with Drupal using the Feeds module"
 version = 7.x-1.x-beta6
 package = "ASU"

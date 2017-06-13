@@ -1,8 +1,8 @@
 ; $Id$
-name = "IXR"
+name = "IXR [DEPRECATED]"
 description = "Provides a set of wrapper functions for using the full Incutio XML-RPC (IXR) Library"
 version = 7.x-1.x-beta2
-package = "ASU" 
+package = "ASU"
 core = 7.x
 php = 5.2
 files[] = IXRFeedsFetcher.inc
