@@ -35,7 +35,6 @@ function webspark_panels_tabs_panels_pane_content_alter(&$content, $pane, $args,
       }
     }
   }
-
 }
 
 /**

@@ -19,11 +19,19 @@ $plugin = array(
  * @ingroup themeable
  */
 function theme_webspark_panels_tabs_style_render_region($vars) {
+
+  dpm($vars, 'THE VARS IN THE STYLE RENDER REGION');
   $display = $vars['display'];
   $region_id = $vars['region_id'];
   $owner_id = $vars['owner_id'];
   $panes = $vars['panes'];
   $settings = $vars['settings'];
+  $form_filters = '';
+
+  dpm($settings, 'THE SETTINGS');
+  if ($settings['region_asu_dir_filter_form']) {
+    $form_filters = webspark_panels_tabs_asu_dir_filters();
+  }
 
   $tab_id = 'tabs-';
   $pattern = isset($settings['panel_tab_id_pattern']) ? $settings['panel_tab_id_pattern'] : 'region';
@@ -57,7 +65,7 @@ function theme_webspark_panels_tabs_style_render_region($vars) {
   }
 
   $element = array(
-    '#prefix' => '<div id="' . $tab_id . '"' . $tab_class .'>' . $region_title,
+    '#prefix' => $form_filters . '<div id="' . $tab_id . '"' . $tab_class .'>' . $region_title,
     '#suffix' => '</div>',
     '#attached' => array(
       'library' => array(array('system', 'ui.tabs')),
@@ -115,6 +123,64 @@ function theme_webspark_panels_tabs_style_render_region($vars) {
   return drupal_render($element);
 }
 
+function webspark_panels_tabs_asu_dir_filters() {
+
+  // open wrapper
+  $html = '<div class="row asu-dir-universal-filters">';
+
+  // search box
+  $html .= '<div id="asu-dir-ajax-solr-search-universal" class="col-md-3 asu-dir-search">
+              <input title="Search" class="input-main-search form-control form-text required" placeholder="Enter Name or Keyword" size="15" maxlength="128"\>
+            </div>';
+
+  // expertise dropdown
+  $html .= '<div class="col-md-2">
+              <div class="form-type-select">
+                <select title="Expertise Areas" id="asu-dir-ajax-solr-expertise-universal">
+                    <option value="0">Select Expertise
+                    </option>
+                </select>    
+              </div>
+            </div>';
+
+  // titles dropdown
+  $html .= '<div class="col-md-2">
+              <div class="form-type-select">
+                <select title="Titles" id="asu-dir-ajax-solr-title-universal">
+                    <option value="0">Select Title
+                    </option>
+                </select>    
+              </div>
+            </div>';
+
+  // titles dropdown
+  $html .= '<div class="col-md-2">
+              <div class="form-type-select">
+                <select title="Sort By" id="asu-dir-ajax-solr-sort-universal">
+                    <option value="tsort">Sort by Rank</option>
+                    <option value="lastNameSort">Sort by Last Name</option>
+                    <option value="firstNameSort">Sort by First Name</option>
+                </select>    
+              </div>
+            </div>';
+
+  // search/apply filter button
+  $html .= '<div class="col-md-3 asu-dir-universal-buttons">
+                <button class="asu-dir-universal-people-search-btn btn-main-search btn" type="submit">
+                    Search
+                </button>
+                <button class="asu-dir-universal-people-reset-btn btn-main-reset btn">
+                    Reset
+                </button>
+            </div>';
+
+  //close wrapper
+  $html .= '</div>';
+
+  return $html;
+
+}
+
 /**
  * Settings form for the plugin.
  */
@@ -143,6 +209,12 @@ function webspark_panels_tabs_pane_settings_form($style_settings) {
       'div' => t('div'),
     ),
     '#default_value' => empty($style_settings['region_title_tag']) ? 'none' : $style_settings['region_title_tag'],
+  );
+
+  $form['region_asu_dir_filter_form'] = array(
+    '#title' => t('Activate ASU DIRS Universal filters. Places a universal directory filter form into the region. Activate in regions with ASU Directory panels only.'),
+    '#type' => 'checkbox',
+    '#default_value' => empty($style_settings['region_asu_dir_filter_form']) ? FALSE : $style_settings['region_asu_dir_filter_form'],
   );
 
   $form['region_class'] = array(

@@ -30,11 +30,11 @@
                 'text-size-adjust': '100%'
             });
 
-            // run in setTimeout function, to make sure all needed styles have been applied
+            // run in setTimeout function, to make sure styles have been applied
             setTimeout(function () {
                 self.initializeGroups();
                 self.activateGroup();
-            });
+            }, 500);
 
             // show the proper group whenever a tab is activated programmatically
             self.element.on("tabsactivate", function (event, ui) {
@@ -98,7 +98,7 @@
                 var twidth = ttab.outerWidth(true);
 
                 // account for the width of the navigation arrows
-                var freespace = (curgrp == 0) ? (containWidth - arrowWidth) : (containWidth - arrowWidth * 2);
+                var freespace = (curgrp == 0) ? (containWidth - arrowWidth) : (containWidth - (arrowWidth * 2));
 
                 // if first tab, create 1st group and add tab to it
                 if (i == 0) {
@@ -154,7 +154,9 @@
 
             if (numgrps > 1 && (curgrp == 0 || curgrp != (numgrps - 1))) {
                 next.show();
-            } else if (curgrp > 0) {
+            }
+
+            if (curgrp > 0) {
                 prev.show();
             }
         }
