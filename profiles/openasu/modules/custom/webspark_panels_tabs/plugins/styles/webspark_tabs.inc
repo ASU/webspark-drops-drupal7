@@ -27,7 +27,7 @@ function theme_webspark_panels_tabs_style_render_region($vars) {
   $settings = $vars['settings'];
   $form_filters = '';
 
-  if ($settings['region_asu_dir_filter_form']) {
+  if (isset($settings['region_asu_dir_filter_form']) && $settings['region_asu_dir_filter_form']) {
     $form_filters = webspark_panels_tabs_asu_dir_filters();
   }
 
