@@ -580,3 +580,17 @@ $conf['404_fast_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
 if (!isset($_SERVER['PANTHEON_ENVIRONMENT']) && file_exists(DRUPAL_ROOT . '/' . conf_path() . '/settings.local.php')) {
   include DRUPAL_ROOT . '/' . conf_path() . '/settings.local.php';
 }
+
+/**
+ * Pantheon-only setting - Turn on debugging in only dev environment
+ */
+if (isset($_SERVER['PANTHEON_ENVIRONMENT'])) {
+  if ($_SERVER['PANTHEON_ENVIRONMENT'] === 'dev') {
+    // Theme debugging
+    $conf['theme_debug'] = TRUE;
+    // Error reporting
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+  }
+}
