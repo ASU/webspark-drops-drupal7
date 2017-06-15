@@ -109,14 +109,14 @@ function _ace_commerce_add_to_cart_check($uid, $product_id) {
     );
     $items = theme_item_list($variables);
     $error_msg = "<h3 class='header-unavailable'>Why is this item being listed as unavailable?</h3>
-    <p>It <em>" . $new_product->title . "</em> is available for purchase, but the it requires 
-    using an online payment method (" . $payment_method . ") that cannot be used   
-    to buy the following items already added to your cart:<br> </p>
+    <p>The <em>" . $new_product->title . "</em> is available for purchase, but this item 
+    requires using an online payment method (" . $payment_method . ") that cannot be used   
+    to buy the following items already added to your cart at the same time:<br> </p>
     " . $items . "<p>To resolve this issue, either a) complete your purchase 
     for the above items in <a href='/cart'>your cart</a> or b) remove all of the 
     listed items, and then return here to successfully add the " . $new_product->title .
      " to your cart.</p>
-    <p>We're sorry for any inconvenience this extra payment processing step may cause.</p>";
+    <p>We're sorry for any inconvenience this extra purchasing step may cause.</p>";
     return array(
       'validates' => 0,
       'error_msg' => $error_msg,
