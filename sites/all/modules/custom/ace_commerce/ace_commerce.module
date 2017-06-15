@@ -18,18 +18,59 @@ function ace_commerce_commerce_payment_method_info_alter(&$payment_methods) {
  * Implements hook_form_FORMID_alter().
  */
 function ace_commerce_form_commerce_cart_add_to_cart_form_alter(&$form, &$form_state) {
+  // ADI-66 - First check to see if commerce product should have add to cart at all.
+  $uid = (isset($form['uid']['#value']) && !empty($form['uid']['#value'])) ? (int) $form['uid']['#value'] : 0;
+  $product_id = (int) $form['product_id']['#value'];
+  $add_to_form_button = _ace_commerce_add_to_cart_check($uid, $product_id);
+  if ($add_to_form_button['validates'] === 0) {
+    // Replace submit button with disabled placeholder
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Product not available'),
+      '#weight' => 50,
+      // Do not set #disabled in order not to prevent submission.
+      '#attributes' => array('disabled' => 'disabled'),
+      '#validate' => array('commerce_cart_add_to_cart_form_disabled_validate'),
+    );
+    $form['explanation'] = array(
+      '#type' => 'markup',
+      '#weight' => 99,
+      '#markup' => '<div class="alert alert-block alert-warning alert-unavailable">' . $add_to_form_button['error_msg'] . '</div>',
+    );
+  }
+
+  // ADI-66 - Re-check to see if commerce product should be added
   $form['#validate'][] = '_ace_commerce_cart_add_to_cart_form_validate';
 }
+
+/**
+ * Implements hook_form_validate() as a callback in the Add to Cart form.
+ */
+function _ace_commerce_cart_add_to_cart_form_validate($form, &$form_state) {
+  $uid = (isset($form_state['values']['uid']) && !empty($form_state['values']['uid'])) ? (int) $form_state['values']['uid'] : 0;
+  $product_id = (int) $form_state['values']['product_id'];
+  $add_to_form_button = _ace_commerce_add_to_cart_check($uid, $product_id);
+
+  // Either all cart items and the new item should both be cyber (i.e. both TRUE)
+  // or not (both FALSE). If they don't match, stop the adding of the new item.
+  if ($add_to_form_button['validates'] === 0) {
+    form_set_error('payment_methods_error', "ERROR - Item cannot be added to cart.");
+  }
+  else {
+    // Payment methods for all items are the same. All is well.
+  }
+}
+
 /**
  * Helper function - Checks to see if there's a product already in the cart with
  * a different payment method. If so, the product cannot be added.
  */
-function _ace_commerce_cart_add_to_cart_form_validate($form, &$form_state) {
+function _ace_commerce_add_to_cart_check($uid, $product_id) {
   // Get cart from user ID and get payment method of current item
-  $order = commerce_cart_order_load($form_state['values']['uid']);
+  $order = commerce_cart_order_load($uid);
 
   // #1 Get new product and its type - Is new product of product type?
-  $new_product = commerce_product_load($form_state['values']['product_id']);
+  $new_product = commerce_product_load($product_id);
   $new_product_type = array(
     $new_product->type => $new_product->type,
   );
@@ -45,30 +86,40 @@ function _ace_commerce_cart_add_to_cart_form_validate($form, &$form_state) {
       $cart_cyber_items[] = $line_item_wrapper->commerce_product->value()->title;
     }
   }
+
   // Either all cart items and the new item should both be cyber (i.e. both TRUE)
   // or not (both FALSE). If they don't match, stop the adding of the new item.
-  if ($cart_has_cyber !== $item_is_cyber) {
+  if ($cart_has_cyber === $item_is_cyber) {
+    // All is well...
+    return array(
+      'validates' => 1,
+      'error_msg' => "",
+    );
+  }
+  else {
+    // build error message
     $payment_method = ($item_is_cyber) ? "CyberSource" : "Quikpay";
     $variables = array(
       'items' => $cart_cyber_items,
       'title' => NULL,
       'type' => 'ul',
-      'attributes' => array(),
+      'attributes' => array(
+        'class' => 'unavailable-items',
+      ),
     );
     $items = theme_item_list($variables);
-    form_set_error('payment_methods_error', "<strong>Error - Can't add " . $new_product->title
-      . " to your cart!</strong><br>
-    The following item - " . $new_product->title . " - 
-    cannot be added to your cart at this time because it needs to be purchased 
-    using a payment method (" . $payment_method . ") that cannot be used with the 
-    following items already in your cart: <br><br>
-    " . $items . "To resolve this issue, either complete your purchase for the above items 
+    $error_msg = "<h3 class='header-unavailable'>Why is this item unavailable?</h3>
+    <p>It requires being purchased using a payment method (" . $payment_method . ") 
+    that is incompatible with the 
+    following items that have already been added to your cart:<br> </p>
+    " . $items . "<p>To resolve this issue, either complete your purchase for the above items 
     in <a href='/cart'>your cart</a> or remove all of the above items, and then 
-    return to this page and try to add the " . $new_product->title . " to your cart 
-    again.
-    <br><br>We're sorry for any inconvenience this may cause.");
-  }
-  else {
-    // They are the same. All is well.
+    return here and try to add the " . $new_product->title . " to your cart 
+    again.</p>
+    <p>We're sorry for any inconvenience this may cause.</p>";
+    return array(
+      'validates' => 0,
+      'error_msg' => $error_msg,
+    );
   }
 }
