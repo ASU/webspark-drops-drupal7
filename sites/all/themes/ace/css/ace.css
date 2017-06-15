@@ -5,3 +5,12 @@
 #page-content a.button {
 	margin: 10px;
 }
+.alert.alert-unavailable {
+	margin-top: 0;
+}
+.alert-unavailable > h3.header-unavailable {
+	margin: 0;
+}
+.alert-unavailable .item-list .unavailable-items {
+	padding: 1em 2em 0;
+}
