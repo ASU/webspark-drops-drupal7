@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * Grab image within the Feature module. Then, create image in the new site to use for default image for the ASU Degree Banner Image and ASU Degree fields.
+ */
+function asu_ap_feature_install() {
+  _asu_ap_feature_image('asu_degree_banner_default.jpg', 'banner');
+  _asu_ap_feature_image('asu_ap_image.jpg', 'image');
+
+}
+
+/**
+* Delete nodes and content types.
+*/
+function asu_ap_feature_uninstall() {
+  $types = array(
+    'asu_ap',
+    'asu_ap_feed',
+  );
+  foreach($types as $type) {
+    // First, delete nodes
+    $results = db_select('node', 'n')
+                ->fields('n', array('nid'))
+                ->condition('type', $type)
+                ->execute();
+    foreach ($results as $result) {
+      $nids[] = $result->nid;
+    }
+    if (!empty($nids)) {
+      node_delete_multiple($nids);
+      drupal_set_message(t('%count nodes were successfully deleted.', array('%count' => count($nids))));
+    }
+    // Then, delete content type
+    if (node_type_load($type)) {
+      node_type_delete($type);
+      variable_del('node_preview_' . $type);
+      drupal_set_message(t('%type content type was successfully deleted.', array('%type' => $type)));
+    }
+  }
+  node_types_rebuild();
+  menu_rebuild();
+}
+
+/**
+ * Implementing hook_update_N
+ */
+function asu_ap_feature_update_7000(&$sandbox) {
+  features_revert_module('asu_ap_feature');
+}
