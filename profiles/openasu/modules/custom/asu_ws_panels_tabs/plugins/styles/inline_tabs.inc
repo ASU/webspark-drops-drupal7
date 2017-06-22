@@ -7,10 +7,10 @@
 
 // Plugin definition.
 $plugin = array(
-  'title' => t('Webspark Tabs'),
-  'description' => t('Show panel panes in a region as Webspark accessible tabs.'),
-  'render region' => 'webspark_panels_tabs_style_render_region',
-  'settings form' => 'webspark_panels_tabs_pane_settings_form',
+  'title' => t('Inline Tabs'),
+  'description' => t('Show panel panes in a region as inline Webspark-accessible tabs.'),
+  'render region' => 'asu_ws_panels_tabs_style_render_region',
+  'settings form' => 'asu_ws_panels_tabs_pane_settings_form',
 );
 
 /**
@@ -18,7 +18,7 @@ $plugin = array(
  *
  * @ingroup themeable
  */
-function theme_webspark_panels_tabs_style_render_region($vars) {
+function theme_asu_ws_panels_tabs_style_render_region($vars) {
 
   $display = $vars['display'];
   $region_id = $vars['region_id'];
@@ -27,9 +27,10 @@ function theme_webspark_panels_tabs_style_render_region($vars) {
   $settings = $vars['settings'];
   $form_filters = '';
 
+  /* todo: uncomment for universal filters
   if (isset($settings['region_asu_dir_filter_form']) && $settings['region_asu_dir_filter_form']) {
-    $form_filters = webspark_panels_tabs_asu_dir_filters();
-  }
+    $form_filters = asu_ws_panels_tabs_asu_dir_filters();
+  }*/
 
   $tab_id = 'tabs-';
   $pattern = isset($settings['panel_tab_id_pattern']) ? $settings['panel_tab_id_pattern'] : 'region';
@@ -68,11 +69,11 @@ function theme_webspark_panels_tabs_style_render_region($vars) {
     '#attached' => array(
       'library' => array(array('system', 'ui.tabs')),
       'js' => array(
-        drupal_get_path('module', 'webspark_panels_tabs') . '/js/jquery.tabgroups.js' => array('type' => 'file'),
-        drupal_get_path('module', 'webspark_panels_tabs') . '/js/webspark_panels_tabs.js' => array('type' => 'file'),
+        drupal_get_path('module', 'asu_ws_panels_tabs') . '/js/jquery.tabgroups.js' => array('type' => 'file'),
+        drupal_get_path('module', 'asu_ws_panels_tabs') . '/js/asu_ws_panels_tabs.js' => array('type' => 'file'),
       ),
       'css' => array(
-        drupal_get_path('module', 'webspark_panels_tabs') . '/css/webspark_panels_tabs.css' => array('type' => 'file'),
+        drupal_get_path('module', 'asu_ws_panels_tabs') . '/css/asu_ws_panels_tabs.css' => array('type' => 'file'),
       )
     ),
   );
@@ -93,7 +94,8 @@ function theme_webspark_panels_tabs_style_render_region($vars) {
     foreach ($display->panels[$region_id] as $pane_id) {
       // Make sure the pane exists.
       if (!empty($panes[$pane_id])) {
-        $title = webspark_panels_tabs_pane_titles($display->did, $pane_id);
+        $title = asu_ws_panels_tabs_pane_titles($display->did, $pane_id);
+
         $title = $title ? $title : t('Tab @delta', array('@delta' => $delta));
         $items[] = '<a style="padding: 0; font-weight: 400; font-size: 18px;" href="#' . $tab_id . '-' . $delta . '" class="webspark-tab-link">' . $title . '</a>';
         $delta++;
@@ -121,7 +123,7 @@ function theme_webspark_panels_tabs_style_render_region($vars) {
   return drupal_render($element);
 }
 
-function webspark_panels_tabs_asu_dir_filters() {
+function asu_ws_panels_tabs_asu_dir_filters() {
 
   // open wrapper
   $html = '<div class="row asu-dir-universal-filters">';
@@ -182,7 +184,7 @@ function webspark_panels_tabs_asu_dir_filters() {
 /**
  * Settings form for the plugin.
  */
-function webspark_panels_tabs_pane_settings_form($style_settings) {
+function asu_ws_panels_tabs_pane_settings_form($style_settings) {
   $form = array();
 
   $form['region_title'] = array(
@@ -209,11 +211,12 @@ function webspark_panels_tabs_pane_settings_form($style_settings) {
     '#default_value' => empty($style_settings['region_title_tag']) ? 'none' : $style_settings['region_title_tag'],
   );
 
+  /* todo: uncomment for universal filters
   $form['region_asu_dir_filter_form'] = array(
     '#title' => t('Activate ASU DIRS Universal filters. Places a universal directory filter form into the region. Activate in regions with ASU Directory panels only.'),
     '#type' => 'checkbox',
     '#default_value' => empty($style_settings['region_asu_dir_filter_form']) ? FALSE : $style_settings['region_asu_dir_filter_form'],
-  );
+  );*/
 
   $form['region_class'] = array(
     '#title' => t('Region CSS class'),

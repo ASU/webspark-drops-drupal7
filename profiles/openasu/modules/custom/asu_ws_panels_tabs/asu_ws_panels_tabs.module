@@ -8,7 +8,7 @@
 /**
  * Implements hook_ctools_plugin_directory().
  */
-function webspark_panels_tabs_ctools_plugin_directory($module, $plugin) {
+function asu_ws_panels_tabs_ctools_plugin_directory($module, $plugin) {
   if ($module == 'panels' && $plugin == 'styles') {
     return 'plugins/' . $plugin;
   }
@@ -20,16 +20,16 @@ function webspark_panels_tabs_ctools_plugin_directory($module, $plugin) {
  * Hold the title of the pane for later use (i.e. show it as the tab's title),
  * and remove it form the pane itself.
  */
-function webspark_panels_tabs_panels_pane_content_alter(&$content, $pane, $args, $context, $renderer, $display) {
+function asu_ws_panels_tabs_panels_pane_content_alter(&$content, $pane, $args, $context, $renderer, $display) {
   // Get the regions that should be themed as tabs.
   foreach ($display->panel_settings as $key => $values) {
     if ($key == 'style_settings') {
       continue;
     }
-    if ((is_array($values) && !empty($values['style']) && $values['style'] == 'webspark_tabs' && $pane->panel == $key) || ($key === 'style' && $values === 'webspark_tabs')) {
+    if ((is_array($values) && !empty($values['style']) && $values['style'] == 'inline_tabs' && $pane->panel == $key) || ($key === 'style' && $values === 'inline_tabs')) {
       if (!empty($content->title)) {
         // Capture the title.
-        webspark_panels_tabs_pane_titles($display->did, $pane->pid, $content->title);
+        asu_ws_panels_tabs_pane_titles($display->did, $pane->pid, $content->title);
         // Remove it form the pane.
         $content->title = '';
       }
@@ -51,8 +51,10 @@ function webspark_panels_tabs_panels_pane_content_alter(&$content, $pane, $args,
  * @return
  *   Unsanitized pane title, or NULL if doesn't exist.
  */
-function webspark_panels_tabs_pane_titles($did = NULL, $pid = NULL, $title = NULL) {
+function asu_ws_panels_tabs_pane_titles($did = NULL, $pid = NULL, $title = NULL) {
+
   $cache = &drupal_static(__FUNCTION__, array());
+
   if (!isset($title)) {
     return isset($cache[$did][$pid]) ? $cache[$did][$pid] : NULL;
   }
