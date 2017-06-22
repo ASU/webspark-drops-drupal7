@@ -17,23 +17,34 @@ var ASUPeople = {};
         attach: function (context, settings) {
 
             var directories = $('.field-type-asu-directory');
-            var tabs = $('.ui-tabs .field-type-asu-directory');
+            var tabs = null;
             var has_tabs = false;
-            var tab_id = '';
+            var tab_contain_id = '';
             var tab_links = [];
+            var tabsIDs = null;
 
-            // reset the ASUPeople global, because it can cause weirdness with panels IPE
+            // reset the ASUPeople global whenever reloading js, because it can cause weirdness with panels IPE
             ASUPeople = {};
             ASUPeople.man_array = [];
             ASUPeople.tab_list = [];
 
-            if (tabs.length > 0) {
-                has_tabs = true;
-                //tab_id = tabs.get(0).closest(".ui-tabs");
-                tab_id = tabs.eq(0).parents('.ui-tabs').eq(0);
-                tab_id = tab_id.attr('id');
+            // figure out if there are asu_dir tabbed panels
+            if (Drupal.settings.websparkPanelsTabs != null) {
+                tabsIDs = Drupal.settings.websparkPanelsTabs.tabsID;
+            } else if (Drupal.settings.panelsTabs != null) {
+                tabsIDs = Drupal.settings.panelsTabs.tabsID;
+            }
 
-                tab_links = $('#' + tab_id + ' .ui-tabs-nav a');
+            if (tabsIDs != null) {
+                for (var key in tabsIDs) {
+                    if ($('#' + tabsIDs[key] + ' .field-type-asu-directory').length > 0) {
+                        has_tabs = true;
+                        tab_contain_id = tabsIDs[key];
+                        tab_links = $('#' + tab_contain_id + ' .item-list a');
+                        tabs = $('#' + tab_contain_id + ' .field-type-asu-directory');
+                        break;
+                    }
+                }
             }
 
             for (var i = 0; i < directories.length; i++) {
@@ -45,19 +56,24 @@ var ASUPeople = {};
                 var tab_pane = null;
                 var tab_pane_id = '';
                 var tab_link = '';
-                var tlinkindex = 0;
+
+                // the real tab num is the index of the asu_dir tab in the tab nav set
+                // the dir_tabnum keeps track of where the current asu_dir is being placed in the
+                // tab links array
+                var realtabnum = 0;
+                var dir_tabnum = 0;
 
                 if (has_tabs) {
 
-                    for (var j=0; j < tab_links.length; j++) {
+                    for (var j = 0; j < tab_links.length; j++) {
 
                         var tab = tab_links.eq(j);
                         var theid = tab.attr('href');
+
                         var found = $(theid).find('#' + field_id);
 
-
                         if (found.length > 0) {
-                            tlinkindex = j;
+                            realtabnum = j;
                         } else {
                             // look for view in pane, and add class if so
                             var is_view = $(theid).find('.view');
@@ -69,15 +85,14 @@ var ASUPeople = {};
                         }
                     }
 
-                    tab_pane = tabs.eq(i).closest('.ui-tabs-panel');
-                    tab_pane_id = tab_pane.attr('id');
-                    tab_link = tab_links.eq(tlinkindex).attr('id');
+                    tab_pane_id = tab_links.eq(realtabnum).attr('href');
 
                     ASUPeople.tab_list[i] = {};
                     ASUPeople.tab_list[i].field_id = field_id;
                     ASUPeople.tab_list[i].tab_pane = tab_pane;
                     ASUPeople.tab_list[i].tab_pane_id = tab_pane_id;
-                    ASUPeople.tab_list[i].tab_link = tab_link;
+                    //ASUPeople.tab_list[i].tab_link = tab_link;
+                    dir_tabnum = i;
                 }
 
                 if (settings.hasOwnProperty(field_id)) {
@@ -104,8 +119,8 @@ var ASUPeople = {};
                     if (field_configs.pager_display == 'paged' && field_configs.pager_items_per_page != 0) {
                         res_per_page = field_configs.pager_items_per_page;
 
-                    // if we want to show all results, then we set the 'rows' parameter to 200000,
-                    // since that is the maximum request size we will want.
+                        // if we want to show all results, then we set the 'rows' parameter to 200000,
+                        // since that is the maximum request size we will want.
                     } else if (field_configs.pager_display == 'all' || field_configs.pager_items_per_page == 0) {
                         res_per_page = 200000;
                     }
@@ -326,7 +341,7 @@ var ASUPeople = {};
                         // keep track of which field the
                         var first = false;
 
-                        if (tlinkindex == 0) {
+                        if (dir_tabnum == 0) {
                             first = true;
                         }
 
@@ -339,16 +354,13 @@ var ASUPeople = {};
                             is_default: first,
                             id_num: id_num,
                             has_tabs: has_tabs,
-                            tab_id: tab_id,
+                            tab_contain_id: tab_contain_id,
                             tab_pane_id: tab_pane_id,
-                            tab_link: tab_link,
-                            tab_num: tlinkindex,
+                            tab_num: dir_tabnum,
                             saved_dept_nids: saved_dept_nids
                         }));
                         Manager.store.exposed = ['fq', 'q', 'start', 'sort', 'rows'];
                     }
-                    //init was here
-
 
                     // Add Solr parameters for faceting.
                     var params = {
@@ -386,8 +398,6 @@ var ASUPeople = {};
                 ASUPeople.man_array[x].init();
                 ASUPeople.man_array[x].doRequest();
             }
-
-
         }
     };
 })(jQuery, window.History);

@@ -455,7 +455,6 @@ select {
 
 .dir-search .asu-dir-sort-item {
     font-size: 12px;
-
 }
 
 .short-bio .short-title {
@@ -469,6 +468,12 @@ select {
 
 .dir-search > div {
     font-size: 12px;
+}
+
+
+.section > .container .field-type-asu-directory > .row {
+    margin-right: -15px;
+    margin-left: -15px;
 }
 
 /****NODE-SPECIFIC ****/
