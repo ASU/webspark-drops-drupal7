@@ -211,7 +211,7 @@ function asu_isearch_cleanup_profile($profile) {
           $pfound = TRUE;
         }
 
-        if (!$pfound && isset($item['options']) && $item['options']['subdepts'] ) {
+        if (!$pfound && isset($item['options']) && $item['options']['subdepts']) {
 
           foreach ($item['tree_nids'] as $tree_item) {
 
