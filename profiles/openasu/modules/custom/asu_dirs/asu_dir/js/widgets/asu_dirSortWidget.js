@@ -16,22 +16,22 @@
         constructor: function (attributes) {
             AjaxSolr.asu_dirTreeWidget.__super__.constructor.apply(this, arguments);
             AjaxSolr.extend(this, {
-                sort_tems: [],
-                field_configs: null,
-                default_sort: null,
-                titlesort_field: null,
-                field_id: null
+                sortItems: [],
+                fieldConfigs: null,
+                defaultSort: null,
+                titleSortField: null,
+                fieldId: null
             }, attributes);
         },
 
         init: function () {
             var self = this;
-            var sort_items = self.sort_items;
-            var field_configs = self.field_configs;
-            var default_sort = self.default_sort;
-            var titlesort_field = self.titlesort_field;
+            var sort_items = self.sortItems;
+            var fieldConfigs = self.fieldConfigs;
+            var default_sort = self.defaultSort;
+            var titlesort_field = self.titleSortField;
             //var tsort_placeholder = self.tsort_placeholder;
-            var field_id = self.field_id;
+            var fieldId = self.fieldId;
 
             // set the default sort
             self.active_sort = default_sort;
@@ -40,10 +40,10 @@
             self.manager.store.remove('sort');
 
             if (self.active_sort != titlesort_field) {
-                field_configs.show_managers = false;
+                fieldConfigs.show_managers = false;
                 self.manager.store.addByValue('sort', self.active_sort + ' ' + self.direction);
             } else {
-                field_configs.show_managers = true;
+                fieldConfigs.show_managers = true;
                 self.manager.store.addByValue('sort', 'lastNameSort asc');
             }
 
@@ -51,19 +51,19 @@
 
                 var name = sort_items[i].field_name;
 
-                if (field_configs.show_managers || self.active_sort == titlesort_field) {
+                if (fieldConfigs.show_managers || self.active_sort == titlesort_field) {
 
-                    field_configs.show_managers = true;
+                    fieldConfigs.show_managers = true;
 
                     if (name == titlesort_field) {
-                        $(sort_items[i].field_id).addClass('dir-active-sort');
+                        $(sort_items[i].fieldId).addClass('dir-active-sort');
                     }
                 } else if (name == self.active_sort) {
-                    $(sort_items[i].field_id).append('<i class="dir-sort-icon fa fa-sort-' + self.direction + '"></i>');
-                    $(sort_items[i].field_id).addClass('dir-active-sort');
+                    $(sort_items[i].fieldId).append('<i class="dir-sort-icon fa fa-sort-' + self.direction + '"></i>');
+                    $(sort_items[i].fieldId).addClass('dir-active-sort');
                 }
 
-                $(sort_items[i].field_id).click(function (field_name) {
+                $(sort_items[i].fieldId).click(function (field_name) {
 
                     // return a click handler, with the name copied to field_name, because we are
                     // in a loop
@@ -89,7 +89,7 @@
                         //SPECIAL CASE FOR THE TITLESORT FIELD
                         if (field_name == titlesort_field) {
 
-                            ASUPeople[field_id].field_configs.show_managers = true;
+                            ASUPeople[fieldId].fieldConfigs.show_managers = true;
 
                             // special case.  if we haven't changed placeholder yet,
                             // then return false after doing request, but don't change manager store sort
@@ -101,11 +101,11 @@
                             return false;
 
                         } else {
-                            ASUPeople[field_id].field_configs.show_managers = false;
+                            ASUPeople[fieldId].fieldConfigs.show_managers = false;
                         }
 
                         //special logic for ranksort, otherwise switch asc/desc
-                        /*if (field_name == titlesort_field) {
+                        /*if (field_name == titleSortField) {
 
                          var target = $(self.target).find('.dir-active-sort');
                          target.removeClass('dir-active-sort');

@@ -8,17 +8,17 @@
         constructor: function (attributes) {
             AjaxSolr.asu_dirTextWidget.__super__.constructor.apply(this, arguments);
             AjaxSolr.extend(this, {
-                field_configs: null,
+                fieldConfigs: null,
                 tree: null,
-                field_id: null
+                fieldId: null
             }, attributes);
         },
 
         init: function () {
             var self = this;
-            var field_configs = this.field_configs;
+            var fieldConfigs = this.fieldConfigs;
             var tree = this.tree;
-            var field_id = this.field_id;
+            var fieldId = this.fieldId;
 
 
             //behavior for the search box.  Bind to enter key, and
@@ -37,7 +37,8 @@
 
                         // If sub-departments toggle is not selected, then add sub-departments for search,
                         // and remove other fq values
-                        if (!field_configs.sub_toggle && field_configs.show_tree) {
+                        /*
+                        if (!fieldConfigs.sub_toggle && fieldConfigs.show_tree) {
                             //remove only the deptids fq parameter
                             for (var i = 0; i < fq.length; i++) {
                                 if (fq[i] != null && fq[i].indexOf("deptids:") != -1) {
@@ -45,21 +46,21 @@
                                 }
                             }
 
-                            var nid = ASUPeople[field_id].dept_nid;
+                            var nid = ASUPeople[fieldId].dept_nid;
                             var sub_tree = asu_dir_ajax_solr_find_root(tree, nid);
                             var tree_ids = asu_dir_get_tree_ids(sub_tree);
                             var search_string = asu_dir_solr_search_string(tree_ids, 'deptids');
 
                             self.manager.store.addByValue('fq', search_string);
-                        }
+                        }*/
 
                         self.doRequest();
                     } else {
                         self.manager.store.remove('q');
                         self.manager.store.addByValue('q', '*:*');
 
-
-                        if (!field_configs.sub_toggle && field_configs.show_tree) {
+                        /*
+                        if (!fieldConfigs.sub_toggle && fieldConfigs.show_tree) {
 
                             //remove only the deptids parameter
                             for (var i = 0; i < fq.length; i++) {
@@ -68,9 +69,9 @@
                                 }
                             }
                             //Manager.store.remove('fq');
-                            var nid = ASUPeople[field_id].dept_nid;
+                            var nid = ASUPeople[fieldId].dept_nid;
                             self.manager.store.addByValue('fq', 'deptids:' + nid);
-                        }
+                        }*/
                         self.doRequest();
                     }
                 }

@@ -41,7 +41,7 @@
                     AjaxSolr.asu_dirPagerWidget.__super__.constructor.apply(this, arguments);
                     AjaxSolr.extend(this, {
                         per_page: null,
-                        field_configs: null
+                        fieldConfigs: null
                     }, attributes);
                 },
 
@@ -112,12 +112,12 @@
                  */
                 beforeRequest: function () {
                     var self = this;
-                    var field_configs = this.field_configs;
+                    var fieldConfigs = this.fieldConfigs;
                     var override = this.manager.checkOverrides();
                     var per_page = this.per_page;
 
                     //if we are showing managers, we need to grab all results and reorder array
-                    if (field_configs.show_managers && !override) {
+                    if (fieldConfigs.show_managers && !override) {
                         self.manager.store.remove('rows');
                         self.manager.store.addByValue('rows', 200000);
 

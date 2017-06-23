@@ -358,6 +358,7 @@ function asu_dir_utilities_refresh_dir_item($endpoint) {
  */
 function asu_dir_utilities_solr_health_check() {
   $health_check_endpoint = ASU_DIR_UTILITIES_ISEARCH_URL . '/endpoints/solr-health-check';
+
   $check = drupal_http_request($health_check_endpoint);
 
   if (!empty($check) && $check->code == 200) {

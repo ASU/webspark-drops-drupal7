@@ -14,10 +14,10 @@
             AjaxSolr.asu_dirCurrentSearchWidget.__super__.constructor.apply(this, arguments);
             AjaxSolr.extend(this, {
                 breadcrumb_target: null,
-                field_configs: null,
+                fieldConfigs: null,
                 tree: null,
-                field_id: null,
-                id_num: null,
+                fieldId: null,
+                fidNum: null,
                 current_search_exclude: []
             }, attributes);
         },
@@ -29,16 +29,16 @@
 
         afterRequest: function () {
             var self = this;
-            var field_configs = this.field_configs;
+            var fieldConfigs = this.fieldConfigs;
             var tree = this.tree;
             var links = [];
-            var field_id = this.field_id;
-            var custom_q = field_configs.use_custom_q;
+            var fieldId = this.fieldId;
+            var custom_q = fieldConfigs.use_custom_q;
             var excludes = this.current_search_exclude;
             var custom_fq = null;
 
-            if (field_configs.custom_q != null && field_configs.custom_q.fq != null) {
-                custom_fq = field_configs.custom_q.fq;
+            if (fieldConfigs.custom_q != null && fieldConfigs.custom_q.fq != null) {
+                custom_fq = fieldConfigs.custom_q.fq;
             }
 
             var q = this.manager.store.get('q').val();
@@ -46,9 +46,9 @@
                 links.push($('<a href="#"></a>').text('"' + q + '"').append(' <i class="fa fa-close"></i> ').click(function () {
                     self.manager.store.get('q').val('*:*');
                     /*TODO: get rid of if not needed
-                     if (!field_configs.sub_toggle && !field_configs.use_custom_q) {
+                     if (!fieldConfigs.sub_toggle && !fieldConfigs.use_custom_q) {
                      self.manager.store.remove('fq');
-                     self.manager.store.addByValue('fq', 'deptids:' + ASUPeople[field_id].dept_nid);
+                     self.manager.store.addByValue('fq', 'deptids:' + ASUPeople[fieldId].dept_nid);
                      }*/
 
                     self.doRequest();
@@ -57,7 +57,7 @@
             }
 
             var fq = this.manager.store.values('fq');
-            var filters = field_configs.filters;
+            var filters = fieldConfigs.filters;
 
             for (var i = 0, l = fq.length; i < l; i++) {
                 var skip = false;

@@ -16,61 +16,21 @@
         constructor: function (attributes) {
             AjaxSolr.asu_dirResultWidget.__super__.constructor.apply(this, arguments);
             AjaxSolr.extend(this, {
-                solr_server: null,
-                field_configs: null,
+                solrServer: null,
+                fieldConfigs: null,
                 managers: [],
-                saved_deptnid: 0,
-                override_fields: [],
-                per_page: null,
-                local_people: null,
-                isearch_url: null
+                savedDeptNid: 0,
+                overrideFields: [],
+                perPage: null,
+                localPeople: null,
+                iSearchUrl: null
             }, attributes);
         },
 
         beforeRequest: function () {
-            //TODO: consolidate the preconfigured filters into the manager widget
-            var self = this;
-            var field_configs = self.field_configs;
-            var start = self.manager.store.get('start').val();
-            var q = self.manager.store.get('q').val();
-            var fq = self.manager.store.get('fq');
-            var etypes = field_configs.employee_types;
-
-            // ADD EMPLOYEE TYPES FILTER TO QUERY
-            if (etypes != null && etypes.length > 0) {
-                //If employee types other than "Show All" are selected, add those as a filter query
-                var show_all = field_configs.employee_types.indexOf("All");
-                var legacy = field_configs.employee_types.indexOf("Show All");
-
-                if (field_configs.employee_types.length > 0 && show_all == -1 && legacy == -1) {
-                    var types = field_configs.employee_types;
-                    var search_string = asu_dir_solr_search_string(types, 'employeeTypes', true);
-
-                    //need to add this to the manager query also
-                    self.manager.store.addByValue('fq', search_string);
-                }
-            }
 
 
-            // add the faculty titles filter if it is configured
-            // todo: need this?
-            if (field_configs.hasOwnProperty('ft_filter')) {
-                self.manager.store.addByValue('fq', field_configs.ft_filter);
-            }
-
-            // ADD FILTERING FOR EXPERTISE AREAS
-            // TODO:  need to wrap field params with parentheses
-            if (field_configs.expertise_areas != null && field_configs.expertise_areas != '') {
-                var exp_string = asu_dir_solr_search_string(field_configs.expertise_areas, 'expertiseAreas', true);
-                self.manager.store.addByValue('fq', exp_string);
-            }
-
-            // ADD FILTERING FOR TITLES
-            if (field_configs.filter_title != null && field_configs.filter_title != '') {
-                self.manager.store.addByValue('fq', 'titles:(' + field_configs.filter_title + ')');
-            }
-
-            //self.manager.store.addByValue('rows', self.per_page);
+            //self.manager.store.addByValue('rows', self.perPage);
         },
 
         facetLinks: function (facet_field, facet_values) {
@@ -106,7 +66,7 @@
 
             var results = this.manager.response.response.docs;
             var self = this;
-            var field_configs = this.field_configs;
+            var fieldConfigs = this.fieldConfigs;
             var q = self.manager.store.get('q').val();
             var fq = self.manager.store.get('fq');
 
@@ -134,10 +94,10 @@
             var eid = doc.eid;
             var title_string = this.getTitle(doc);
             var url = this.getprofileURL(doc);
-            var field_configs = this.field_configs;
+            var fieldConfigs = this.fieldConfigs;
             var expertise = doc.expertiseAreas;
             var shortbio = doc.shortBio;
-            var col_widths = this.getColWidths(field_configs);
+            var col_widths = this.getColWidths(fieldConfigs);
 
             //open row
             markup += '<div eid="' + eid + '" asurite="' + doc.asuriteId + '" class="row row-header asu_directory_people_row " >';
@@ -145,8 +105,10 @@
             markup += '<div class="col-md-2 peopleImg">';
 
             //PHOTO COLUMN
-            if (doc.photoPreference != 'none' && doc.photoUrl != null && doc.photoUrl != '' && field_configs.display_photo) {
+            if (doc.photoPreference != 'none' && doc.photoUrl != null && doc.photoUrl != '' && fieldConfigs.display_photo) {
                 markup += '<div class="row-profile-image row-field"><img alt="' + doc.displayName + '" src="' + doc.photoUrl + '?size=medium"></div>';
+            } else if (fieldConfigs.default_photo.display && fieldConfigs.default_photo.url != null) {
+                markup += '<div class="row-profile-image row-field"><img alt="Default photo" src="' + fieldConfigs.default_photo.url + '"></div>';
             }
 
             markup += '</div>';
@@ -155,7 +117,7 @@
             markup += '<div class="' + col_widths.name_col + '"><div class="row-profile-text row-field"><a href="' + url + '"';
 
             //open in new tab?
-            if (field_configs.new_tab) {
+            if (fieldConfigs.new_tab) {
                 markup += 'target="_blank"';
             }
 
@@ -164,7 +126,7 @@
             markup += (doc.displayName != null ? doc.displayName : '') + '</a><br>';
             markup += '<div class="job-title">' + title_string + '</div></div>'
 
-            if (field_configs.display_short_bio && shortbio != null) {
+            if (fieldConfigs.display_short_bio && shortbio != null) {
                 markup += '<div class="short-bio">' + shortbio + '</div>';
             }
 
@@ -185,7 +147,7 @@
 
             var wrappers = [col_widths.con_col, "asu-dir-contact-col"];
 
-            markup += this.contactDiv(doc, field_configs, wrappers);
+            markup += this.contactDiv(doc, fieldConfigs, wrappers);
 
             //close row
             markup += '</div>';
@@ -194,7 +156,7 @@
 
         },
 
-        contactDiv: function (doc, field_configs, classes) {
+        contactDiv: function (doc, fieldConfigs, classes) {
             var markup = '';
             var addLine2 = doc.addressLine2;
             var addLine1 = doc.addressLine1;
@@ -210,7 +172,7 @@
                 markup += '<div class="phone_number">' + doc.phone + '</div>';
             }
 
-            if (field_configs.display_building && addLine1 != null) {
+            if (fieldConfigs.display_building && addLine1 != null) {
                 markup += '<div class="building">' + addLine1 + '</div>';
 
                 if (addLine2 != null) {
@@ -224,12 +186,12 @@
             return markup;
         },
 
-        getColWidths: function (field_configs) {
+        getColWidths: function (fieldConfigs) {
             var cols = {};
             cols.name_col = 'col-md-6';
             cols.con_col = 'col-md-4';
 
-            if (field_configs.display_expertise) {
+            if (fieldConfigs.display_expertise) {
                 cols.name_col = 'col-md-4';
                 cols.exp_col = 'col-md-3';
                 cols.con_col = 'col-md-3';
@@ -244,19 +206,22 @@
             var title_string = this.getTitle(doc);
             var url = this.getprofileURL(doc);
             var target = '';
-            var field_configs = this.field_configs;
+            var fieldConfigs = this.fieldConfigs;
             var expertise = doc.expertiseAreas;
             var shortbio = doc.shortBio;
 
             var markup = '<div class="asu-dir-grid-col gridborder col-1 col-md-3 "> <div class="grid-item"><div class="peopleImg row-profile-image">';
 
-            if (field_configs.new_tab) {
+            if (fieldConfigs.new_tab) {
                 target = 'target="_blank"';
             }
 
-            if (doc.photoPreference != 'none' && doc.photoUrl != null && doc.photoUrl != '' && field_configs.display_photo) {
+            if (doc.photoPreference != 'none' && doc.photoUrl != null && doc.photoUrl != '' && fieldConfigs.display_photo) {
                 markup += '<a class="row-profile-image row-field" ' + target + ' href="' + url + '" title="'
                     + doc.displayName + '"><img alt="' + doc.displayName + '" class = "asu-dir-grid-image " src="' + doc.photoUrl + '"></a>';
+            } else if (fieldConfigs.default_photo.display && fieldConfigs.default_photo.url != null) {
+                markup += '<a class="row-profile-image row-field" ' + target + ' href="' + url + '" title="'
+                    + doc.displayName + '"><img alt="Default photo" class = "asu-dir-grid-image" src="' + fieldConfigs.default_photo.url + '"></a>';
             }
 
             markup += '</div><div class="fs-title"><a ' + target + '" href="' + url + '" title="' + doc.displayName + '">' + doc.displayName + '</a></div>';
@@ -264,13 +229,13 @@
 
 
             var wrappers = ["asu-dir-contact-col"];
-            markup += this.contactDiv(doc, field_configs, wrappers);
+            markup += this.contactDiv(doc, fieldConfigs, wrappers);
 
-            if (field_configs.display_short_bio && shortbio != null) {
+            if (fieldConfigs.display_short_bio && shortbio != null) {
                 markup += '<div class="short-bio"><span class="short-title">Short Bio: </span>' + shortbio + '</div>';
             }
 
-            if (field_configs.display_expertise) {
+            if (fieldConfigs.display_expertise) {
 
                 markup += '<div class="asu-dir-expertise">';
 
@@ -292,7 +257,7 @@
         // Parameters are an array of solr docs, and a flag on whether to prepend to the beginning of target div.
         // This allows us to run the manager and non-manager query at the same time.
         renderPeople: function (docs) {
-            var configs = this.field_configs;
+            var configs = this.fieldConfigs;
             var dtype = 'list';
 
             if (configs.hasOwnProperty('display_type')) {
@@ -344,9 +309,9 @@
             var depts = doc.deptids;
             var dept_names = doc.departments;
             var title_string = '';
-            var is_tree = this.field_configs.show_tree;
-            var field_configs = this.field_configs;
-            var confob = 'asu_dir' + field_configs.pane_id;
+            var is_tree = this.fieldConfigs.show_tree;
+            var fieldConfigs = this.fieldConfigs;
+            var confob = 'asu_dir' + fieldConfigs.pane_id;
 
             // Get current dept id from the ASUPeople global, which is defined in the asu_dir module JS
             var dept_nid = ASUPeople[confob].dept_nid;
@@ -422,8 +387,8 @@
         },
 
         getprofileURL: function (doc) {
-            var locals = this.local_people;
-            var url = this.isearch_url + '/profile/' + doc.eid;
+            var locals = this.localPeople;
+            var url = this.iSearchUrl + '/profile/' + doc.eid;
 
             if (doc.asuriteId) {
                 if (locals[doc.asuriteId] != null) {
