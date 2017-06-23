@@ -14,3 +14,20 @@
 .alert-unavailable .item-list .unavailable-items {
 	padding: 1em 2em 0;
 }
+
+/* Simple GMAP fix */
+.node-ace-task-force-meeting .field-name-field-task-force-meeting-date {
+  margin-bottom: 1em; 
+}
+.node-ace-task-force-meeting .field-name-field-task-force-meeting-date .date-display-single {
+  display: inline;
+  font-style: italic;
+  font-weight: bold;
+}
+.node-ace-task-force-meeting .field-name-field-task-force-meeting-date .date-display-range {
+  display: inline;
+  font-weight: normal;
+}
+.node-ace-task-force-meeting .simple-gmap-address {
+  margin-top: 0px;
+}
