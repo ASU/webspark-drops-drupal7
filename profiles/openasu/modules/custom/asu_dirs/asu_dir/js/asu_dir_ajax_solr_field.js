@@ -247,7 +247,7 @@ var ASUPeople = {};
                             target: '#treediv' + fidNum,
                             tree: tree,
                             fieldConfigs: fieldConfigs,
-                            top_level_ids: topLevelIds,
+                            topLevelIds: topLevelIds,
                             fieldId: fieldId,
                             fidNum: fidNum,
                             savedDeptId: savedDeptId
