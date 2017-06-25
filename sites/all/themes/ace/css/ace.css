@@ -34,3 +34,7 @@
 .node-ace-task-force-meeting .simple-gmap-address + iframe {
   display: none;
 }
+.node-ace-task-force-meeting .field-name-field-meeting-subtitle {
+  margin-bottom: 0.5em;
+  font-size: 2em;
+}
