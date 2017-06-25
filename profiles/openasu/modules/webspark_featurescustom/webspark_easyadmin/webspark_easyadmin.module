@@ -21,7 +21,11 @@ function webspark_easyadmin_form_alter(&$form, &$form_state, $form_id) {
 /**
  * Implementation of hook_menu_alter().
  */
+
+// BJR - Disabled so client could access Panelizer
+/*
 function webspark_easyadmin_menu_alter(&$items) {
   // Remove panelizer tab from node views
   $items['node/%node/panelizer']['type'] = MENU_CALLBACK;
 }
+*/
