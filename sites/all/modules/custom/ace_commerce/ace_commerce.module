@@ -86,10 +86,10 @@ function _ace_commerce_add_to_cart_check($uid, $product_id) {
       $cart_cyber_items[] = $line_item_wrapper->commerce_product->value()->title;
     }
   }
-
-  // Either all cart items and the new item should both be cyber (i.e. both TRUE)
-  // or not (both FALSE). If they don't match, stop the adding of the new item.
-  if ($cart_has_cyber === $item_is_cyber) {
+  // Either 1) the cart is empty, or 2) all cart items and the new item should both
+  // be cyber (i.e. both TRUE) or not (both FALSE). If they don't match, stop
+  // the adding of the new item.
+  if ($cart_has_cyber === $item_is_cyber || (empty($order->commerce_line_items))) {
     // All is well...
     return array(
       'validates' => 1,
@@ -108,10 +108,10 @@ function _ace_commerce_add_to_cart_check($uid, $product_id) {
       ),
     );
     $items = theme_item_list($variables);
-    $error_msg = "<h3 class='header-unavailable'>Why is this item being listed as unavailable?</h3>
+    $error_msg = "<h3 class='header-unavailable'>Why is this item currently listed as unavailable?</h3>
     <p>The <em>" . $new_product->title . "</em> is available for purchase, but this item 
     requires using an online payment method (" . $payment_method . ") that cannot be used   
-    to buy the following items already added to your cart at the same time:<br> </p>
+    for buying the following items already added to your cart at the same time:<br> </p>
     " . $items . "<p>To resolve this issue, either a) complete your purchase 
     for the above items in <a href='/cart'>your cart</a> or b) remove all of the 
     listed items, and then return here to successfully add the " . $new_product->title .

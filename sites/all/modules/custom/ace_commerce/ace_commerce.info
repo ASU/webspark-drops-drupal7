@@ -2,6 +2,7 @@ name = ACE Commerce
 description = A Commerce interface module for the Alliance for Construction Excellence.
 core = 7.x
 version = 7.x-1.0
+package = ACE customization
 
 dependencies[] = commerce_cybersource_sawm
 dependencies[] = quikpay
