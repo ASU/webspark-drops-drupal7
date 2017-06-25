@@ -18,3 +18,5 @@ stylesheets[all][] = css/main.css
 stylesheets[all][] = css/ace.css
 
 stylesheets[all][] = css/font-awesome.min.css
+
+scripts[] = js/ace.js
