@@ -1,0 +1,5 @@
+name = ACE Extras
+description = "Catch-all module for custom theme overrides, misc. drupal_alter(), etc."
+package = ACE customization
+core = 7.x
+version = 7.x-1.0
