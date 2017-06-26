@@ -1,7 +1,8 @@
-name = ace
+name = ACE
 description = A Kalatheme subtheme powered by Twitter Bootstrap & Science.
 base theme = innovation
 core = 7.x
+project = "ace"
 
 regions[header] = Header
 regions[menu] = Menu
@@ -14,7 +15,6 @@ regions[closure] = Closure
 
 settings[toggle_logo] = 0
 
-stylesheets[all][] = css/main.css
 stylesheets[all][] = css/ace.css
 
 stylesheets[all][] = css/font-awesome.min.css
