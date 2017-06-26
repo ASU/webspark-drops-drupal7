@@ -168,3 +168,9 @@
         margin-top: 48px;
     }
 }
+.view-asu-degrees-feature .view-header .btn-group {
+	padding: 1em 0 2em 0;
+}
+.view-asu-degrees-feature .table > thead > tr > th {
+    white-space: nowrap;
+}

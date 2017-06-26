@@ -13,7 +13,7 @@
  */
 ?>
 <div class="panel-display burr clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
-  <section class="section">
+  <div class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-4 burr-sidebar-region radix-layouts-sidebar panel-panel">
@@ -28,5 +28,5 @@
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </div><!-- /.burr -->

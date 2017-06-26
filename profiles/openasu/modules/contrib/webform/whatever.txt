@@ -1,0 +1,70 @@
+<div class="form-item webform-component webform-component-textfield webform-component--f1b--name">
+<label for="edit-submitted-f1b-name">Name </label>
+<input type="text" id="edit-submitted-f1b-name" name="submitted[f1b][name]" value="" size="60" maxlength="128" class="form-text" />
+</div>
+<fieldset class="webform-component-fieldset collapsible collapsed webform-component--f1b--f2 form-wrapper" aria-class="number6"><legend><span class="fieldset-legend">F2</span></legend><div class="fieldset-wrapper"><div class="form-item webform-component webform-component-textfield webform-component--f1b--f2--last-name">
+<label for="edit-submitted-f1b-f2-last-name">Last Name </label>
+<input type="text" id="edit-submitted-f1b-f2-last-name" name="submitted[f1b][f2][last_name]" value="" size="60" maxlength="128" class="form-text" />
+</div>
+<fieldset class="webform-component-fieldset collapsible collapsed webform-component--f1b--f2--f3 form-wrapper" aria-class="number5"><legend><span class="fieldset-legend">F3</span></legend><div class="fieldset-wrapper"><div class="form-item webform-component webform-component-textarea webform-component--f1b--f2--f3--address">
+<label for="edit-submitted-f1b-f2-f3-address">Address </label>
+<div class="form-textarea-wrapper resizable"><textarea id="edit-submitted-f1b-f2-f3-address" name="submitted[f1b][f2][f3][address]" cols="60" rows="5" class="form-textarea"></textarea></div>
+</div>
+<fieldset class="webform-component-fieldset collapsible collapsed webform-component--f1b--f2--f3--f4 form-wrapper" aria-class="number4"><legend><span class="fieldset-legend">F4</span></legend><div class="fieldset-wrapper"><div class="fieldset-description">Level 4</div><div class="form-item webform-component webform-component-date webform-component--f1b--f2--f3--f4--date">
+<label for="edit-submitted-f1b-f2-f3-f4-date">Date </label>
+<div class="webform-container-inline webform-datepicker"><div class="form-item form-type-select form-item-submitted-f1b-f2-f3-f4-date-month">
+<label class="element-invisible" for="edit-submitted-f1b-f2-f3-f4-date-month">Month </label>
+<select class="month form-select" id="edit-submitted-f1b-f2-f3-f4-date-month" name="submitted[f1b][f2][f3][f4][date][month]"><option value="" selected="selected">Month</option><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select>
+</div>
+<div class="form-item form-type-select form-item-submitted-f1b-f2-f3-f4-date-day">
+<label class="element-invisible" for="edit-submitted-f1b-f2-f3-f4-date-day">Day </label>
+<select class="day form-select" id="edit-submitted-f1b-f2-f3-f4-date-day" name="submitted[f1b][f2][f3][f4][date][day]"><option value="" selected="selected">Day</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select>
+</div>
+<div class="form-item form-type-select form-item-submitted-f1b-f2-f3-f4-date-year">
+<label class="element-invisible" for="edit-submitted-f1b-f2-f3-f4-date-year">Year </label>
+<select class="year form-select" id="edit-submitted-f1b-f2-f3-f4-date-year" name="submitted[f1b][f2][f3][f4][date][year]"><option value="" selected="selected">Year</option><option value="2015">2015</option><option value="2016">2016</option><option value="2017">2017</option><option value="2018">2018</option><option value="2019">2019</option></select>
+</div>
+<!-- THEME DEBUG -->
+<!-- CALL: theme('webform_calendar') -->
+<!-- BEGIN OUTPUT from 'profiles/openasu/modules/contrib/webform/templates/webform-calendar.tpl.php' -->
+<input type="image" src="/profiles/openasu/modules/contrib/webform/images/calendar.png" class="webform-calendar webform-calendar-start-2015-06-16 webform-calendar-end-2019-06-16 webform-calendar-day-0" alt="Open popup calendar" title="Open popup calendar" />
+<!-- END OUTPUT from 'profiles/openasu/modules/contrib/webform/templates/webform-calendar.tpl.php' -->
+</div>
+</div>
+<fieldset class="webform-component-fieldset collapsible collapsed webform-component--f1b--f2--f3--f4--f5 form-wrapper" aria-class="number3"><legend><span class="fieldset-legend">F5</span></legend><div class="fieldset-wrapper"><div class="form-item webform-component webform-component-email webform-component--f1b--f2--f3--f4--f5--email">
+<label for="edit-submitted-f1b-f2-f3-f4-f5-email">Email </label>
+<input class="email form-text form-email" type="email" id="edit-submitted-f1b-f2-f3-f4-f5-email" name="submitted[f1b][f2][f3][f4][f5][email]" size="60" />
+</div>
+<fieldset class="webform-component-fieldset collapsible collapsed webform-component--f1b--f2--f3--f4--f5--f6 form-wrapper" aria-class="number2"><legend><span class="fieldset-legend">F6</span></legend><div class="fieldset-wrapper"><div class="fieldset-description">Level 6</div><div class="form-item webform-component webform-component-number webform-component--f1b--f2--f3--f4--f5--f6--zip">
+<label for="edit-submitted-f1b-f2-f3-f4-f5-f6-zip">ZIP </label>
+<input type="text" id="edit-submitted-f1b-f2-f3-f4-f5-f6-zip" name="submitted[f1b][f2][f3][f4][f5][f6][zip]" step="1" class="form-text form-number" />
+</div>
+<div class="form-item webform-component webform-component-textfield webform-component--f1b--f2--f3--f4--f5--f6--some-other-stuff">
+<label for="edit-submitted-f1b-f2-f3-f4-f5-f6-some-other-stuff">Some other stuff </label>
+<input type="text" id="edit-submitted-f1b-f2-f3-f4-f5-f6-some-other-stuff" name="submitted[f1b][f2][f3][f4][f5][f6][some_other_stuff]" value="" size="60" maxlength="128" class="form-text" />
+</div>
+</div></fieldset>
+<div class="form-item webform-component webform-component-email webform-component--f1b--f2--f3--f4--f5--tail6">
+<label for="edit-submitted-f1b-f2-f3-f4-f5-tail6">Tail6 </label>
+<input class="email form-text form-email" type="email" id="edit-submitted-f1b-f2-f3-f4-f5-tail6" name="submitted[f1b][f2][f3][f4][f5][tail6]" size="60" />
+</div>
+</div></fieldset>
+<div class="form-item webform-component webform-component-textfield webform-component--f1b--f2--f3--f4--tail-5">
+<label for="edit-submitted-f1b-f2-f3-f4-tail-5">Tail 5 </label>
+<input type="text" id="edit-submitted-f1b-f2-f3-f4-tail-5" name="submitted[f1b][f2][f3][f4][tail_5]" value="" size="60" maxlength="128" class="form-text" />
+</div>
+</div></fieldset>
+<div class="form-item webform-component webform-component-textfield webform-component--f1b--f2--f3--tail-4">
+<label for="edit-submitted-f1b-f2-f3-tail-4">Tail 4 </label>
+<input type="text" id="edit-submitted-f1b-f2-f3-tail-4" name="submitted[f1b][f2][f3][tail_4]" value="" size="60" maxlength="128" class="form-text" />
+</div>
+</div></fieldset>
+<div class="form-item webform-component webform-component-select webform-component--f1b--f2--tail-3">
+<label for="edit-submitted-f1b-f2-tail-3">Tail 3 </label>
+<select id="edit-submitted-f1b-f2-tail-3" name="submitted[f1b][f2][tail_3]" class="form-select"><option value="" selected="selected">- None -</option><option value="sunday">Sunday</option><option value="monday">Monday</option><option value="tuesday">Tuesday</option><option value="wednesday">Wednesday</option><option value="thursday">Thursday</option><option value="friday">Friday</option><option value="saturday">Saturday</option></select>
+</div>
+</div></fieldset>
+<div class="form-item webform-component webform-component-select webform-component--f1b--tail-2">
+<label for="edit-submitted-f1b-tail-2">Tail 2 </label>
+<select id="edit-submitted-f1b-tail-2" name="submitted[f1b][tail_2]" class="form-select"><option value="" selected="selected">- None -</option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AS">American Samoa</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="DC">District of Columbia</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="GU">Guam</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MH">Marshall Islands</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="MP">Northern Marianas Islands</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PW">Palau</option><option value="PA">Pennsylvania</option><option value="PR">Puerto Rico</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VI">Virgin Islands</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option></select>
+</div>

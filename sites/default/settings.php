@@ -210,7 +210,7 @@
  *   );
  * @endcode
  */
-
+/*
 $databases = array (
   'default' => array (
     'default' => array (
@@ -224,7 +224,7 @@ $databases = array (
      ),  
    ),  
  );
-
+*/
 /**
  * Access control for update.php script.
  *
@@ -594,3 +594,4 @@ if (isset($_SERVER['PANTHEON_ENVIRONMENT'])) {
     error_reporting(E_ALL);
   }
 }
+

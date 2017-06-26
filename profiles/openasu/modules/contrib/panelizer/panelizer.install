@@ -1237,10 +1237,10 @@ function panelizer_update_7302(&$sandbox) {
     // Initialize batch update information.
     $sandbox['progress'] = (float)0;
     $sandbox['current_did'] = -1;
-    $sandbox['max'] = db_query("SELECT COUNT(p.did)
+    $sandbox['max'] = db_query("SELECT COUNT(pd.did)
       FROM {panels_display} pd
         JOIN {panelizer_defaults} p ON p.did = pd.did
-      WHERE p.name IS NOT NULL AND pd.storage_type = ''")->fetchField();
+      WHERE pd.storage_type = ''")->fetchField();
     if (empty($sandbox['max'])) {
       return t('Nothing to be fixed in Panelizer update 7302.');
     }
@@ -1249,12 +1249,12 @@ function panelizer_update_7302(&$sandbox) {
   // Set a limit of how many rows to process per batch.
   $limit = 100;
 
-  // Run the query.
-  $result = db_query_range("SELECT p.did, p.name
+  // Run the query
+  $result = db_query_range("SELECT pd.did, p.name
     FROM {panels_display} pd
       JOIN {panelizer_defaults} p ON p.did = pd.did
-    WHERE p.name IS NOT NULL AND pd.storage_type = '' AND p.did > :current_did
-    ORDER BY p.did ASC", 0, $limit, array(
+    WHERE pd.storage_type = '' AND pd.did > :current_did
+    ORDER BY pd.did ASC", 0, $limit, array(
       ':current_did' => $sandbox['current_did'],
     ));
 
@@ -1344,12 +1344,4 @@ function panelizer_update_7303(&$sandbox) {
   if ($sandbox['#finished']) {
     return t('Added the storage type for panelizer_entities to relevant panels displays');
   }
-}
-
-/**
- * Rerun update 7302. Set the storage type and ID on existing
- * {panelizer_default} records.
- */
-function panelizer_update_7304(&$sandbox) {
-  return panelizer_update_7302($sandbox);
 }

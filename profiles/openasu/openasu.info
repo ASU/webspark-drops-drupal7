@@ -5,16 +5,17 @@ core = 7.x
 exclusive = 1
 ;version = VERSION
 ; Remember to update in innovation as well for DOM
-version = 1.40.1
+version = 1.43
 
 ; Drupal Core
+dependencies[] = taxonomy
+dependencies[] = block
 dependencies[] = menu
 dependencies[] = image
 dependencies[] = list
 dependencies[] = number
 dependencies[] = options
 dependencies[] = path
-dependencies[] = taxonomy
 dependencies[] = search
 dependencies[] = shortcut
 dependencies[] = field
@@ -46,8 +47,6 @@ dependencies[] = save_draft
 dependencies[] = module_filter
 dependencies[] = date_popup_authored
 
-; OpenASU - Drupal Core
-dependencies[] = block
 
 ; OpenASU - Contrib recommended
 dependencies[] = views_ui

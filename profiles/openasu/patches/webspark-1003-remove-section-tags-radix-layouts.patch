@@ -1,0 +1,1007 @@
+diff --git a/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php b/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php
+index c023efa..bc3b2b7 100644
+--- a/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php
++++ b/plugins/layouts/radix_bartlett/radix-bartlett.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display bartlett clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 bartlett-side radix-layouts-sidebar panel-panel">
+@@ -45,5 +45,5 @@
+         </div>
+       </div>
+     </div><!-- /.container -->
+-  </section><!--  /.section -->
++  </div><!--  /.section -->
+ </div><!-- /.bartlett -->
+diff --git a/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php b/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php
+index 69fdd60..f994a78 100644
+--- a/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php
++++ b/plugins/layouts/radix_bartlett_flipped/radix-bartlett-flipped.tpl.php
+@@ -15,7 +15,7 @@
+ ?>
+ 
+ <div class="panel-display bartlett-flipped clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-8 bartlett-flipped-main panel-panel">
+@@ -46,5 +46,5 @@
+         </div>
+       </div>
+     </div><!-- /.container -->
+-  </section><!--  /.section -->
++  </div><!--  /.section -->
+ </div><!-- /.bartlett-flipped -->
+diff --git a/plugins/layouts/radix_boxton/radix-boxton.tpl.php b/plugins/layouts/radix_boxton/radix-boxton.tpl.php
+index 38052ea..41f18f3 100755
+--- a/plugins/layouts/radix_boxton/radix-boxton.tpl.php
++++ b/plugins/layouts/radix_boxton/radix-boxton.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display boxton clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 radix-layouts-content panel-panel">
+@@ -24,5 +24,5 @@
+         </div>
+       </div>
+     </div><!-- /.container -->
+-  </section><!--  /.section -->
++  </div><!--  /.section -->
+ </div><!-- /.boxton -->
+diff --git a/plugins/layouts/radix_brenham/radix-brenham.tpl.php b/plugins/layouts/radix_brenham/radix-brenham.tpl.php
+index d09289a..e571c9b 100644
+--- a/plugins/layouts/radix_brenham/radix-brenham.tpl.php
++++ b/plugins/layouts/radix_brenham/radix-brenham.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display brenham clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section alt" id="promo">
++  <div class="section alt" id="promo">
+     <div class="container">
+       <div class="row row-full">
+       <div class="col-md-12 brenham-promo radix-layouts-header panel-panel">
+@@ -23,8 +23,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 brenham-main-side radix-layouts-sidebar panel-panel">
+@@ -39,5 +39,5 @@
+         </div>
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.brenham -->
+diff --git a/plugins/layouts/radix_brenham_flipped/radix-brenham-flipped.tpl.php b/plugins/layouts/radix_brenham_flipped/radix-brenham-flipped.tpl.php
+index 01de43f..9e59f16 100644
+--- a/plugins/layouts/radix_brenham_flipped/radix-brenham-flipped.tpl.php
++++ b/plugins/layouts/radix_brenham_flipped/radix-brenham-flipped.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display brenham-flipped clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section alt" id="promo">
++  <div class="section alt" id="promo">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 brenham-flipped-promo radix-layouts-header panel-panel">
+@@ -24,8 +24,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-8 brenham-flipped-main-content radix-layouts-content panel-panel">
+@@ -40,5 +40,5 @@
+         </div>
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.brenham-flipped -->
+\ No newline at end of file
+diff --git a/plugins/layouts/radix_brenham_plus/radix-brenham-plus.tpl.php b/plugins/layouts/radix_brenham_plus/radix-brenham-plus.tpl.php
+index c93b38e..56650f6 100644
+--- a/plugins/layouts/radix_brenham_plus/radix-brenham-plus.tpl.php
++++ b/plugins/layouts/radix_brenham_plus/radix-brenham-plus.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display brenham-plus clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section alt" id="promo">
++  <div class="section alt" id="promo">
+     <div class="container">
+       <div class="row row-full">
+       <div class="col-md-12 brenham-plus-promo radix-layouts-header panel-panel">
+@@ -23,8 +23,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+       
+@@ -56,5 +56,5 @@
+         
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.brenham-plus -->
+diff --git a/plugins/layouts/radix_brenham_plus_flipped/radix-brenham-plus-flipped.tpl.php b/plugins/layouts/radix_brenham_plus_flipped/radix-brenham-plus-flipped.tpl.php
+index 832c92a..c7e43f7 100644
+--- a/plugins/layouts/radix_brenham_plus_flipped/radix-brenham-plus-flipped.tpl.php
++++ b/plugins/layouts/radix_brenham_plus_flipped/radix-brenham-plus-flipped.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display brenham-plus-flipped clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section alt" id="promo">
++  <div class="section alt" id="promo">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 brenham-plus-flipped-promo radix-layouts-header panel-panel">
+@@ -24,8 +24,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+ 
+@@ -57,5 +57,5 @@
+         
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.brenham-plus-flipped -->
+\ No newline at end of file
+diff --git a/plugins/layouts/radix_brown/radix-brown.tpl.php b/plugins/layouts/radix_brown/radix-brown.tpl.php
+index 42a4234..7deb0ce 100755
+--- a/plugins/layouts/radix_brown/radix-brown.tpl.php
++++ b/plugins/layouts/radix_brown/radix-brown.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display brown clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-8 brown-header-1 radix-layouts-slider panel-panel">
+@@ -29,8 +29,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 brown-middle-region-1 radix-layouts-column1 panel-panel">
+@@ -50,8 +50,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <footer class="section" id="footer">
++  </div>
++  <div class="section" id="footer">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 brown-footer-region1 radix-layouts-footercolumn1 panel-panel">
+@@ -71,5 +71,5 @@
+         </div>
+       </div>
+     </div>
+-  </footer>
++  </div>
+ </div><!-- /.brown -->
+diff --git a/plugins/layouts/radix_bryant/radix-bryant.tpl.php b/plugins/layouts/radix_bryant/radix-bryant.tpl.php
+index 5e29a2e..e4c9340 100755
+--- a/plugins/layouts/radix_bryant/radix-bryant.tpl.php
++++ b/plugins/layouts/radix_bryant/radix-bryant.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display bryant clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-3 bryant-sidebar-region radix-layouts-sidebar panel-panel">
+@@ -29,5 +29,5 @@
+         </div>
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.bryant -->
+diff --git a/plugins/layouts/radix_bryant_flipped/radix-bryant-flipped.tpl.php b/plugins/layouts/radix_bryant_flipped/radix-bryant-flipped.tpl.php
+index 0445153..12f54a4 100755
+--- a/plugins/layouts/radix_bryant_flipped/radix-bryant-flipped.tpl.php
++++ b/plugins/layouts/radix_bryant_flipped/radix-bryant-flipped.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display bryant-flipped clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-9 bryant-flipped-content-region radix-layouts-content panel-panel">
+@@ -29,5 +29,5 @@
+         </div>
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.bryant-flipped -->
+diff --git a/plugins/layouts/radix_burr/radix-burr.tpl.php b/plugins/layouts/radix_burr/radix-burr.tpl.php
+index 176a162..fb04217 100755
+--- a/plugins/layouts/radix_burr/radix-burr.tpl.php
++++ b/plugins/layouts/radix_burr/radix-burr.tpl.php
+@@ -13,7 +13,7 @@
+  */
+ ?>
+ <div class="panel-display burr clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 burr-sidebar-region radix-layouts-sidebar panel-panel">
+@@ -28,5 +28,5 @@
+         </div>
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.burr -->
+diff --git a/plugins/layouts/radix_burr_flipped/radix-burr-flipped.tpl.php b/plugins/layouts/radix_burr_flipped/radix-burr-flipped.tpl.php
+index e7bbd2c..ae4a409 100755
+--- a/plugins/layouts/radix_burr_flipped/radix-burr-flipped.tpl.php
++++ b/plugins/layouts/radix_burr_flipped/radix-burr-flipped.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display burr-flipped clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-8 burr-flipped-main-content radix-layouts-content panel-panel">
+@@ -29,5 +29,5 @@
+         </div>
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.burr-flipped -->
+diff --git a/plugins/layouts/radix_geary/radix-geary.tpl.php b/plugins/layouts/radix_geary/radix-geary.tpl.php
+index 64eca1e..fa6fd6c 100755
+--- a/plugins/layouts/radix_geary/radix-geary.tpl.php
++++ b/plugins/layouts/radix_geary/radix-geary.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display geary clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 geary-main-container radix-layouts-header panel-panel">
+@@ -24,8 +24,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 geary-column-content-region-1 radix-layouts-column1 panel-panel">
+@@ -45,5 +45,5 @@
+         </div>
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.geary -->
+diff --git a/plugins/layouts/radix_harris/radix-harris.tpl.php b/plugins/layouts/radix_harris/radix-harris.tpl.php
+index 36b7444..d8cecb4 100755
+--- a/plugins/layouts/radix_harris/radix-harris.tpl.php
++++ b/plugins/layouts/radix_harris/radix-harris.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display harris clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 harris-main-container radix-layouts-header panel-panel">
+@@ -24,8 +24,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-3 harris-column-content-region-1 radix-layouts-column1 panel-panel">
+@@ -45,5 +45,5 @@
+         </div>
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.harris -->
+diff --git a/plugins/layouts/radix_hewston/radix-hewston.tpl.php b/plugins/layouts/radix_hewston/radix-hewston.tpl.php
+index f9a1cb4..11ed567 100644
+--- a/plugins/layouts/radix_hewston/radix-hewston.tpl.php
++++ b/plugins/layouts/radix_hewston/radix-hewston.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display hewston clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-8 hewston-slider-area radix-layouts-slider panel-panel">
+@@ -29,8 +29,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 hewston-middle-region-1 radix-layouts-column1 panel-panel">
+@@ -50,5 +50,5 @@
+         </div>
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.hewston -->
+diff --git a/plugins/layouts/radix_hewston_flipped/radix-hewston-flipped.tpl.php b/plugins/layouts/radix_hewston_flipped/radix-hewston-flipped.tpl.php
+index 9391e60..7aadc88 100644
+--- a/plugins/layouts/radix_hewston_flipped/radix-hewston-flipped.tpl.php
++++ b/plugins/layouts/radix_hewston_flipped/radix-hewston-flipped.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display hewston-flipped clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 hewston-flipped-slider-gutter-area radix-layouts-slidergutter panel-panel">
+@@ -29,8 +29,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 hewston-flipped-middle-region-1 radix-layouts-column1 panel-panel">
+@@ -50,5 +50,5 @@
+         </div>
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.hewston-flipped -->
+diff --git a/plugins/layouts/radix_mccoppin/radix-mccoppin.tpl.php b/plugins/layouts/radix_mccoppin/radix-mccoppin.tpl.php
+index e0989f6..3e8bfef 100644
+--- a/plugins/layouts/radix_mccoppin/radix-mccoppin.tpl.php
++++ b/plugins/layouts/radix_mccoppin/radix-mccoppin.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display mccoppin clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 mccoppin-column-content-region-1 radix-layouts-column1 panel-panel">
+@@ -34,5 +34,5 @@
+         </div>
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.mccoppin -->
+diff --git a/plugins/layouts/radix_moscone/radix-moscone.tpl.php b/plugins/layouts/radix_moscone/radix-moscone.tpl.php
+index a08e84d..37112e3 100755
+--- a/plugins/layouts/radix_moscone/radix-moscone.tpl.php
++++ b/plugins/layouts/radix_moscone/radix-moscone.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display moscone clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 moscone-main-container radix-layouts-header panel-panel">
+@@ -24,8 +24,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 moscone-sidebar-area radix-layouts-sidebar panel-panel">
+@@ -40,8 +40,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <footer class="section" id="footer">
++  </div>
++  <div class="section" id="footer">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 moscone-footer-area radix-layouts-footer panel-panel">
+@@ -51,5 +51,5 @@
+         </div>
+       </div>
+     </div>
+-  </footer>
++  </div>
+ </div><!-- /.moscone -->
+\ No newline at end of file
+diff --git a/plugins/layouts/radix_moscone_flipped/radix-moscone-flipped.tpl.php b/plugins/layouts/radix_moscone_flipped/radix-moscone-flipped.tpl.php
+index f47a5f6..b22f704 100755
+--- a/plugins/layouts/radix_moscone_flipped/radix-moscone-flipped.tpl.php
++++ b/plugins/layouts/radix_moscone_flipped/radix-moscone-flipped.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display moscone-flipped clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 moscone-flipped-main-container radix-layouts-header panel-panel">
+@@ -24,8 +24,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-8 moscone-flipped-main-content radix-layouts-content panel-panel">
+@@ -40,8 +40,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <footer class="section" id="footer">
++  </div>
++  <div class="section" id="footer">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 moscone-flipped-footer-area radix-layouts-footer panel-panel">
+@@ -51,5 +51,5 @@
+         </div>
+       </div>
+     </div>
+-  </footer>
++  </div>
+ </div><!-- /.moscone-flipped -->
+diff --git a/plugins/layouts/radix_phelan/radix-phelan.tpl.php b/plugins/layouts/radix_phelan/radix-phelan.tpl.php
+index fefdbf7..fc1e6f6 100644
+--- a/plugins/layouts/radix_phelan/radix-phelan.tpl.php
++++ b/plugins/layouts/radix_phelan/radix-phelan.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display phelan clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-6 phelan-column-content-region-1 radix-layouts-column1 panel-panel">
+@@ -29,5 +29,5 @@
+         </div>
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.phelan -->
+diff --git a/plugins/layouts/radix_pond/radix-pond.tpl.php b/plugins/layouts/radix_pond/radix-pond.tpl.php
+index 4c3c0e2..5691393 100644
+--- a/plugins/layouts/radix_pond/radix-pond.tpl.php
++++ b/plugins/layouts/radix_pond/radix-pond.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display pond clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 pond-header-area radix-layouts-header panel-panel">
+@@ -24,8 +24,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 pond-column-content-region-1 radix-layouts-column1 panel-panel">
+@@ -45,8 +45,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 pond-secondary-column-content-region-1 radix-layouts-secondarycolumn1 panel-panel">
+@@ -66,8 +66,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <footer class="section" id="footer">
++  </div>
++  <div class="section" id="footer" role="region" arial-label="content4">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 pond-footer-area radix-layouts-footer panel-panel">
+@@ -77,5 +77,5 @@
+         </div>
+       </div>
+     </div>
+-  </footer>
++  </div>
+ </div><!-- /.pond -->
+diff --git a/plugins/layouts/radix_rolph/radix-rolph.tpl.php b/plugins/layouts/radix_rolph/radix-rolph.tpl.php
+index be1b9aa..bab1fcf 100644
+--- a/plugins/layouts/radix_rolph/radix-rolph.tpl.php
++++ b/plugins/layouts/radix_rolph/radix-rolph.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display rolph clearfix <?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section alt" id="promo">
++  <div class="section alt" id="promo">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 rolph-header-area radix-layouts-header panel-panel">
+@@ -24,8 +24,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-3 rolph-column-content-region-1 radix-layouts-quarter1 panel-panel">
+@@ -50,8 +50,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-   <footer class="section" id="footer">
++  </div>
++   <div class="section" id="footer">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 rolph-footer-area radix-layouts-footer panel-panel">
+@@ -61,5 +61,5 @@
+         </div>
+       </div>
+     </div>
+-  </footer>
++  </div>
+ </div><!-- /.rolph -->
+diff --git a/plugins/layouts/radix_sanderson/radix-sanderson.tpl.php b/plugins/layouts/radix_sanderson/radix-sanderson.tpl.php
+index 3e79a7e..ebda249 100644
+--- a/plugins/layouts/radix_sanderson/radix-sanderson.tpl.php
++++ b/plugins/layouts/radix_sanderson/radix-sanderson.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display sanderson clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-6 sanderson-column-content-region-1 radix-layouts-column1 panel-panel">
+@@ -29,8 +29,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <footer class="section" id="footer">
++  </div>
++  <div class="section" id="footer">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 sanderson-secondary-column-content-region-1 radix-layouts-secondarycolumn1 panel-panel">
+@@ -50,5 +50,5 @@
+         </div>
+       </div>
+     </div>
+-  </footer>
++  </div>
+ </div><!-- /.sanderson --
+\ No newline at end of file
+diff --git a/plugins/layouts/radix_sanderson_flipped/radix-sanderson-flipped.tpl.php b/plugins/layouts/radix_sanderson_flipped/radix-sanderson-flipped.tpl.php
+index 0b32c9a..8c4f054 100644
+--- a/plugins/layouts/radix_sanderson_flipped/radix-sanderson-flipped.tpl.php
++++ b/plugins/layouts/radix_sanderson_flipped/radix-sanderson-flipped.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display sanderson-flipped clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 sanderson-flipped-column-content-region-1 radix-layouts-column1 panel-panel">
+@@ -34,8 +34,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <footer class="section" id="footer">
++  </div>
++  <div class="section" id="footer">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-6 sanderson-flipped-secondary-column-content-region-1 radix-layouts-secondarycolumn1 panel-panel">
+@@ -50,5 +50,5 @@
+         </div>
+       </div>
+     </div>
+-  </footer>
++  </div>
+ </div><!-- /.sanderson-flipped -->
+diff --git a/plugins/layouts/radix_selby/radix-selby.tpl.php b/plugins/layouts/radix_selby/radix-selby.tpl.php
+index bacfd58..a840e87 100644
+--- a/plugins/layouts/radix_selby/radix-selby.tpl.php
++++ b/plugins/layouts/radix_selby/radix-selby.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display selby clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 selby-sidebar-main-area radix-layouts-sidebar panel-panel">
+@@ -44,5 +44,5 @@
+         </div><!-- /.selby-content-container -->
+       </div><!-- /.selby-content-container row-->
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.selby -->
+diff --git a/plugins/layouts/radix_selby_flipped/radix-selby-flipped.tpl.php b/plugins/layouts/radix_selby_flipped/radix-selby-flipped.tpl.php
+index 575293a..2b186f2 100644
+--- a/plugins/layouts/radix_selby_flipped/radix-selby-flipped.tpl.php
++++ b/plugins/layouts/radix_selby_flipped/radix-selby-flipped.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display selby-flipped selby-flipped-flipped-flipped clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-8 selby-flipped-column-content-region-area panel-panel">
+@@ -44,5 +44,5 @@
+         </div>
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.selby-flipped --><!-- /.selby-flipped-flipped-flipped -->
+diff --git a/plugins/layouts/radix_sutro/radix-sutro.tpl.php b/plugins/layouts/radix_sutro/radix-sutro.tpl.php
+index 50f166f..d08d694 100755
+--- a/plugins/layouts/radix_sutro/radix-sutro.tpl.php
++++ b/plugins/layouts/radix_sutro/radix-sutro.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display sutro clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 sutro-header-area radix-layouts-header panel-panel">
+@@ -24,8 +24,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-6 sutro-column-content-region-1 radix-layouts-column1 panel-panel">
+@@ -40,8 +40,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <footer class="section" id="footer">
++  </div>
++  <div class="section" id="footer">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 sutro-footer-area radix-layouts-footer panel-panel">
+@@ -51,5 +51,5 @@
+         </div>
+       </div>
+     </div>
+-  </footer>
++  </div>
+ </div><!-- /.sutro -->
+diff --git a/plugins/layouts/radix_sutro_double/radix-sutro-double.tpl.php b/plugins/layouts/radix_sutro_double/radix-sutro-double.tpl.php
+index c6f1c6f..1e1c471 100644
+--- a/plugins/layouts/radix_sutro_double/radix-sutro-double.tpl.php
++++ b/plugins/layouts/radix_sutro_double/radix-sutro-double.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display sutro-double clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 sutro-double-header-area radix-layouts-header panel-panel">
+@@ -24,8 +24,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-6 sutro-double-column-content-region-1 radix-layouts-column1 panel-panel">
+@@ -59,8 +59,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <footer class="section" id="footer">
++  </div>
++  <div class="section" id="footer">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 sutro-double-footer-area radix-layouts-footer panel-panel">
+@@ -70,5 +70,5 @@
+         </div>
+       </div>
+     </div>
+-  </footer>
++  </div>
+ </div><!-- /.sutro-double -->
+diff --git a/plugins/layouts/radix_taylor/radix-taylor.tpl.php b/plugins/layouts/radix_taylor/radix-taylor.tpl.php
+index eec1598..4ba1f3e 100755
+--- a/plugins/layouts/radix_taylor/radix-taylor.tpl.php
++++ b/plugins/layouts/radix_taylor/radix-taylor.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display taylor clearfix <?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 taylor-header-area radix-layouts-header panel-panel">
+@@ -24,8 +24,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-6 taylor-half-area radix-layouts-half panel-panel">
+@@ -45,8 +45,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <footer class="section" id="footer">
++  </div>
++  <div class="section" id="footer">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 taylor-footer-area radix-layouts-footer panel-panel">
+@@ -56,5 +56,5 @@
+         </div>
+       </div>
+     </div>
+-  </footer>
++  </div>
+ </div><!-- /.taylor -->
+diff --git a/plugins/layouts/radix_taylor_flipped/radix-taylor-flipped.tpl.php b/plugins/layouts/radix_taylor_flipped/radix-taylor-flipped.tpl.php
+index 8730d4f..b752cf4 100755
+--- a/plugins/layouts/radix_taylor_flipped/radix-taylor-flipped.tpl.php
++++ b/plugins/layouts/radix_taylor_flipped/radix-taylor-flipped.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display taylor-flipped clearfix <?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-   <section class="section">
++   <div class="section">
+     <div class="container">
+       <?php if ($content['header']): ?>
+         <div class="row row-full">
+@@ -26,8 +26,8 @@
+         </div>
+       <?php endif; ?>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-3 taylor-flipped-quarter-1-area radix-layouts-quarter1 panel-panel">
+@@ -47,9 +47,9 @@
+         </div>
+       </div>
+     </div>
+-  </section>
++  </div>
+   <?php if ($content['footer']): ?>
+-  <footer class="section" id="footer">
++  <div class="section" id="footer">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 taylor-flipped-footer-area radix-layouts-footer panel-panel">
+@@ -59,6 +59,6 @@
+         </div>
+       </div>
+     </div>
+-  </footer>
++  </div>
+   <?php endif; ?>
+ </div><!-- /.taylor -->
+diff --git a/plugins/layouts/radix_webb/radix-webb.tpl.php b/plugins/layouts/radix_webb/radix-webb.tpl.php
+index eef6b3e..a48070c 100755
+--- a/plugins/layouts/radix_webb/radix-webb.tpl.php
++++ b/plugins/layouts/radix_webb/radix-webb.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display webb clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 webb-header-area radix-layouts-header panel-panel">
+@@ -24,8 +24,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-4 webb-sidebar-area radix-layouts-sidebar panel-panel">
+@@ -56,5 +56,5 @@
+         </div>
+       </div>
+     </div><!-- /.webb-column-content -->
+-  </section>
++  </div>
+ </div><!-- /.webb -->
+diff --git a/plugins/layouts/radix_webb_flipped/radix-webb-flipped.tpl.php b/plugins/layouts/radix_webb_flipped/radix-webb-flipped.tpl.php
+index 60f5b11..b713ce8 100755
+--- a/plugins/layouts/radix_webb_flipped/radix-webb-flipped.tpl.php
++++ b/plugins/layouts/radix_webb_flipped/radix-webb-flipped.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display webb-flipped clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row row-full">
+         <div class="col-md-12 webb-flipped-header-area radix-layouts-header panel-panel">
+@@ -24,8 +24,8 @@
+         </div>
+       </div>
+     </div>
+-  </section>
+-  <section class="section">
++  </div>
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-8 webb-flipped-column-content-region-area panel-panel">
+@@ -56,5 +56,5 @@
+         </div>
+       </div>
+     </div><!-- /.webb-flipped-column-content -->
+-  </section>
++  </div>
+ </div><!-- /.webb-flipped -->
+diff --git a/plugins/layouts/radix_whelan/radix-whelan.tpl.php b/plugins/layouts/radix_whelan/radix-whelan.tpl.php
+index 42a071e..21d4918 100755
+--- a/plugins/layouts/radix_whelan/radix-whelan.tpl.php
++++ b/plugins/layouts/radix_whelan/radix-whelan.tpl.php
+@@ -14,7 +14,7 @@
+ ?>
+ 
+ <div class="panel-display whelan clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
+-  <section class="section">
++  <div class="section">
+     <div class="container">
+       <div class="row">
+         <div class="col-md-3 whelan-column-content-region-1 radix-layouts-column1 panel-panel">
+@@ -34,5 +34,5 @@
+         </div>
+       </div>
+     </div>
+-  </section>
++  </div>
+ </div><!-- /.whelan -->

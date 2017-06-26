@@ -14,7 +14,7 @@
 ?>
 
 <div class="panel-display taylor-flipped clearfix <?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
-   <section class="section">
+   <div class="section">
     <div class="container">
       <?php if ($content['header']): ?>
         <div class="row row-full">
@@ -26,8 +26,8 @@
         </div>
       <?php endif; ?>
     </div>
-  </section>
-  <section class="section">
+  </div>
+  <div class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-3 taylor-flipped-quarter-1-area radix-layouts-quarter1 panel-panel">
@@ -47,9 +47,9 @@
         </div>
       </div>
     </div>
-  </section>
+  </div>
   <?php if ($content['footer']): ?>
-  <footer class="section" id="footer">
+  <div class="section" id="footer">
     <div class="container">
       <div class="row row-full">
         <div class="col-md-12 taylor-flipped-footer-area radix-layouts-footer panel-panel">
@@ -59,6 +59,6 @@
         </div>
       </div>
     </div>
-  </footer>
+  </div>
   <?php endif; ?>
 </div><!-- /.taylor -->

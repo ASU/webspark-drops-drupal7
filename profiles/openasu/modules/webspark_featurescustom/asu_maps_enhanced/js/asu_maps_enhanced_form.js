@@ -39,7 +39,7 @@
 
                             var id = null;
 
-                            if(node.hasOwnProperty('mrkId')) {
+                            if (node.hasOwnProperty('mrkId')) {
                                 id = node.mrkId;
                             } else if (node.hasOwnProperty('catId')) {
                                 id = node.catId;
@@ -74,7 +74,7 @@
                     }
                 }
 
-                $('.asu-maps-enhanced-check').change(function() {
+                $('.asu-maps-enhanced-check').change(function () {
                     var parent = $(this).closest('li');
                     var node = tree_div.tree('getNodeByHtmlElement', parent);
 
@@ -147,20 +147,60 @@ function asu_maps_enhanced_insertObject(obj, list) {
 
     newnode.item_type = thetype;
 
+    if (obj.hasOwnProperty('author')) {
+        newnode.author = obj.author;
+    }
+
+    if (obj.hasOwnProperty('cam_altitude')) {
+        newnode.cam_altitude = obj.cam_altitude;
+    }
+
     if (obj.hasOwnProperty('catId')) {
         newnode.catId = obj.catId;
+    }
+
+    if (obj.hasOwnProperty('categoryType')) {
+        newnode.categoryType = obj.categoryType;
+    }
+
+    if (obj.hasOwnProperty('category_description')) {
+        newnode.category_description = obj.category_description;
+    }
+
+    if (obj.hasOwnProperty('category_keywords')) {
+        newnode.category_keywords = obj.category_keywords;
+    }
+
+    if (obj.hasOwnProperty('cf')) {
+        newnode.cf = obj.cf;
+    }
+
+    if (obj.hasOwnProperty('changed')) {
+        newnode.changed = obj.changed;
+    }
+
+    if (obj.hasOwnProperty('content')) {
+        newnode.content = obj.content;
     }
 
     if (obj.hasOwnProperty('description')) {
         newnode.description = obj.description;
     }
 
-    if (obj.hasOwnProperty('keywords')) {
-        newnode.keywords = obj.keywords;
+    if (obj.hasOwnProperty('edited')) {
+        newnode.edited = obj.edited;
     }
 
-    if (obj.hasOwnProperty('name')) {
-        newnode.name = obj.name;
+    if (obj.hasOwnProperty('feed')) {
+        newnode.feed = obj.feed;
+    }
+
+    if (obj.hasOwnProperty('id')) {
+        newnode.id = obj.id;
+    }
+
+    if (obj.hasOwnProperty('keywords')) {
+        newnode.keywords = obj.keywords;
     }
 
     if (obj.hasOwnProperty('labels')) {
@@ -171,16 +211,68 @@ function asu_maps_enhanced_insertObject(obj, list) {
         newnode.lat = obj.lat;
     }
 
+    if (obj.hasOwnProperty('level')) {
+        newnode.level = obj.level;
+    }
+
     if (obj.hasOwnProperty('lng')) {
         newnode.lng = obj.lng;
+    }
+
+    if (obj.hasOwnProperty('mapId')) {
+        newnode.mapId = obj.mapId;
+    }
+
+    if (obj.hasOwnProperty('marker_feed')) {
+        newnode.marker_feed = obj.marker_feed;
+    }
+
+    if (obj.hasOwnProperty('mf_type')) {
+        newnode.mf_type = obj.mf_type;
+    }
+
+    if (obj.hasOwnProperty('mf_url')) {
+        newnode.mf_url = obj.mf_url;
     }
 
     if (obj.hasOwnProperty('mrkId')) {
         newnode.mrkId = obj.mrkId;
     }
 
-    if (obj.hasOwnProperty('id')) {
-        newnode.id = obj.id;
+    if (obj.hasOwnProperty('name')) {
+        newnode.name = obj.name;
+    }
+
+    if (obj.hasOwnProperty('popup')) {
+        newnode.popup = obj.popup;
+    }
+
+    if (obj.hasOwnProperty('popup_url')) {
+        newnode.popup_url = obj.popup_url;
+    }
+
+    if (obj.hasOwnProperty('private')) {
+        newnode.private = obj.private;
+    }
+
+    if (obj.hasOwnProperty('reference')) {
+        newnode.reference = obj.reference;
+    }
+
+    if (obj.hasOwnProperty('schedule')) {
+        newnode.schedule = obj.schedule;
+    }
+
+    if (obj.hasOwnProperty('shape')) {
+        newnode.shape = obj.shape;
+    }
+
+    if (obj.hasOwnProperty('visible')) {
+        newnode.visible = obj.visible;
+    }
+
+    if (obj.hasOwnProperty('zoom')) {
+        newnode.zoom = obj.zoom;
     }
 
     list.push(newnode);
