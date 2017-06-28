@@ -266,6 +266,12 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   libraries_load('jqtree');
   libraries_load('fontawesome');
 
+  $options = array('weight' => 1000);
+
+
+
+  //drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/plugins/jquery.tabgroups.js');
+
   //add history.js
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/jquery.history.js');
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirManager.js');
@@ -285,7 +291,7 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirSortWidget.js');
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirResultWidget.js');
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirTreeWidget.js');
-  drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir_ajax_solr_field.js');
+  drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir_ajax_solr_field.js', $options);
   drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_tree.css');
   drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_people_block.css');
 

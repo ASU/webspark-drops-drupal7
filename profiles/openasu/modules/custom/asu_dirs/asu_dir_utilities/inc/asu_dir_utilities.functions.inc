@@ -225,7 +225,8 @@ function asu_dir_utilities_get_subtree_nids($nid) {
 
     return $dept_nids;
 
-  } else {
+  }
+  else {
     return FALSE;
   }
 }
@@ -390,10 +391,10 @@ function asu_dir_utilities_get_local_profile_list() {
 
       $people_list = array();
 
-      foreach($nodes as $node) {
+      foreach ($nodes as $node) {
         if (isset($node->field_isearch_asurite_id['und'][0]['value'])) {
           $asurite = $node->field_isearch_asurite_id['und'][0]['value'];
-          $people_list[$asurite] = drupal_get_path_alias('node/' .$node->nid);
+          $people_list[$asurite] = drupal_get_path_alias('node/' . $node->nid);
 
         }
       }

@@ -147,11 +147,12 @@ function asu_isearch_get_dept_config() {
   //todo: get rid of this once asu_dep_picker modified
   $options = new stdClass();
 
-  foreach($decoded['items'] as $item) {
+  foreach ($decoded['items'] as $item) {
     $dept_id = $item['dept_id'];
     if (isset($item['options'])) {
       $options->$dept_id = $item['options'];
-    } else {
+    }
+    else {
       $options->$dept_id = array(
         'subdepts' => FALSE
       );

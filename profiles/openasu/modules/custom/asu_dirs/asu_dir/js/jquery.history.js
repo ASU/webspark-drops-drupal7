@@ -6,9 +6,9 @@ typeof JSON != "object" && (JSON = {}), function () {
 
     function quote(e) {
         return escapable.lastIndex = 0, escapable.test(e) ? '"' + e.replace(escapable, function (e) {
-            var t = meta[e];
-            return typeof t == "string" ? t : "\\u" + ("0000" + e.charCodeAt(0).toString(16)).slice(-4)
-        }) + '"' : '"' + e + '"'
+                var t = meta[e];
+                return typeof t == "string" ? t : "\\u" + ("0000" + e.charCodeAt(0).toString(16)).slice(-4)
+            }) + '"' : '"' + e + '"'
     }
 
     function str(e, t) {
@@ -124,14 +124,14 @@ typeof JSON != "object" && (JSON = {}), function () {
             o.checkerFunction = null;
             var t = "", r, i, u, a, f = Boolean(o.getHash());
             return o.isInternetExplorer() ? (r = "historyjs-iframe", i = n.createElement("iframe"), i.setAttribute("id", r), i.setAttribute("src", "#"), i.style.display = "none", n.body.appendChild(i), i.contentWindow.document.open(), i.contentWindow.document.close(), u = "", a = !1, o.checkerFunction = function () {
-                if (a)return !1;
-                a = !0;
-                var n = o.getHash(), r = o.getHash(i.contentWindow.document);
-                return n !== t ? (t = n, r !== n && (u = r = n, i.contentWindow.document.open(), i.contentWindow.document.close(), i.contentWindow.document.location.hash = o.escapeHash(n)), o.Adapter.trigger(e, "hashchange")) : r !== u && (u = r, f && r === "" ? o.back() : o.setHash(r, !1)), a = !1, !0
-            }) : o.checkerFunction = function () {
-                var n = o.getHash() || "";
-                return n !== t && (t = n, o.Adapter.trigger(e, "hashchange")), !0
-            }, o.intervalList.push(s(o.checkerFunction, o.options.hashChangeInterval)), !0
+                    if (a)return !1;
+                    a = !0;
+                    var n = o.getHash(), r = o.getHash(i.contentWindow.document);
+                    return n !== t ? (t = n, r !== n && (u = r = n, i.contentWindow.document.open(), i.contentWindow.document.close(), i.contentWindow.document.location.hash = o.escapeHash(n)), o.Adapter.trigger(e, "hashchange")) : r !== u && (u = r, f && r === "" ? o.back() : o.setHash(r, !1)), a = !1, !0
+                }) : o.checkerFunction = function () {
+                    var n = o.getHash() || "";
+                    return n !== t && (t = n, o.Adapter.trigger(e, "hashchange")), !0
+                }, o.intervalList.push(s(o.checkerFunction, o.options.hashChangeInterval)), !0
         }, o.Adapter.onDomLoad(o.hashChangeInit)), o.emulated.pushState && (o.onHashChange = function (t) {
             var n = t && t.newURL || o.getLocationHref(), r = o.getHashByUrl(n), i = null, s = null, u = null, a;
             return o.isLastHash(r) ? (o.busy(!1), !1) : (o.doubleCheckComplete(), o.saveHash(r), r && o.isTraditionalAnchor(r) ? (o.Adapter.trigger(e, "anchorchange"), o.busy(!1), !1) : (i = o.extractState(o.getFullUrl(r || o.getLocationHref()), !0), o.isLastSavedState(i) ? (o.busy(!1), !1) : (s = o.getHashByState(i), a = o.discardedState(i), a ? (o.getHashByIndex(-2) === o.getHashByState(a.forwardState) ? o.back(!1) : o.forward(!1), !1) : (o.pushState(i.data, i.title, encodeURI(i.url).replace(/%25/g, "%"), !1), !0))))
@@ -199,21 +199,21 @@ typeof JSON != "object" && (JSON = {}), function () {
             return t ? (t.value += i + "\n-----\n", t.scrollTop = t.scrollHeight - t.clientHeight) : e || c(i), !0
         }, h.getInternetExplorerMajorVersion = function () {
             var e = h.getInternetExplorerMajorVersion.cached = typeof h.getInternetExplorerMajorVersion.cached != "undefined" ? h.getInternetExplorerMajorVersion.cached : function () {
-                var e = 3, t = r.createElement("div"), n = t.getElementsByTagName("i");
-                while ((t.innerHTML = "<!--[if gt IE " + ++e + "]><i></i><![endif]-->") && n[0]);
-                return e > 4 ? e : !1
-            }();
+                    var e = 3, t = r.createElement("div"), n = t.getElementsByTagName("i");
+                    while ((t.innerHTML = "<!--[if gt IE " + ++e + "]><i></i><![endif]-->") && n[0]);
+                    return e > 4 ? e : !1
+                }();
             return e
         }, h.isInternetExplorer = function () {
             var e = h.isInternetExplorer.cached = typeof h.isInternetExplorer.cached != "undefined" ? h.isInternetExplorer.cached : Boolean(h.getInternetExplorerMajorVersion());
             return e
         }, h.options.html4Mode ? h.emulated = {
-            pushState: !0,
-            hashChange: !0
-        } : h.emulated = {
-            pushState: !Boolean(e.history && e.history.pushState && e.history.replaceState && !/ Mobile\/([1-7][a-z]|(8([abcde]|f(1[0-8]))))/i.test(i.userAgent) && !/AppleWebKit\/5([0-2]|3[0-2])/i.test(i.userAgent)),
-            hashChange: Boolean(!("onhashchange" in e || "onhashchange" in r) || h.isInternetExplorer() && h.getInternetExplorerMajorVersion() < 8)
-        }, h.enabled = !h.emulated.pushState, h.bugs = {
+                pushState: !0,
+                hashChange: !0
+            } : h.emulated = {
+                pushState: !Boolean(e.history && e.history.pushState && e.history.replaceState && !/ Mobile\/([1-7][a-z]|(8([abcde]|f(1[0-8]))))/i.test(i.userAgent) && !/AppleWebKit\/5([0-2]|3[0-2])/i.test(i.userAgent)),
+                hashChange: Boolean(!("onhashchange" in e || "onhashchange" in r) || h.isInternetExplorer() && h.getInternetExplorerMajorVersion() < 8)
+            }, h.enabled = !h.emulated.pushState, h.bugs = {
             setHash: Boolean(!h.emulated.pushState && i.vendor === "Apple Computer, Inc." && /AppleWebKit\/5([0-2]|3[0-3])/.test(i.userAgent)),
             safariPoll: Boolean(!h.emulated.pushState && i.vendor === "Apple Computer, Inc." && /AppleWebKit\/5([0-2]|3[0-3])/.test(i.userAgent)),
             ieDoubleCheck: Boolean(h.isInternetExplorer() && h.getInternetExplorerMajorVersion() < 8),
@@ -226,7 +226,7 @@ typeof JSON != "object" && (JSON = {}), function () {
             return e ? (t = l.stringify(e), n = l.parse(t)) : n = {}, n
         }, h.getRootUrl = function () {
             var e = r.location.protocol + "//" + (r.location.hostname || r.location.host);
-            if (r.location.port || !1)e += ":" + r.location.port;
+            if (r.location.port || !1) e += ":" + r.location.port;
             return e += "/", e
         }, h.getBaseHref = function () {
             var e = r.getElementsByTagName("base"), t = null, n = "";
@@ -262,7 +262,7 @@ typeof JSON != "object" && (JSON = {}), function () {
             var t = h.extractId(e.url), n;
             if (!t) {
                 n = h.getStateString(e);
-                if (typeof h.stateToId[n] != "undefined")t = h.stateToId[n]; else if (typeof h.store.stateToId[n] != "undefined")t = h.store.stateToId[n]; else {
+                if (typeof h.stateToId[n] != "undefined") t = h.stateToId[n]; else if (typeof h.store.stateToId[n] != "undefined") t = h.store.stateToId[n]; else {
                     for (; ;) {
                         t = (new Date).getTime() + String(Math.random()).replace(/\D/g, "");
                         if (typeof h.idToState[t] == "undefined" && typeof h.store.idToState[t] == "undefined")break
@@ -273,9 +273,9 @@ typeof JSON != "object" && (JSON = {}), function () {
             return t
         }, h.normalizeState = function (e) {
             var t, n;
-            if (!e || typeof e != "object")e = {};
+            if (!e || typeof e != "object") e = {};
             if (typeof e.normalized != "undefined")return e;
-            if (!e.data || typeof e.data != "object")e.data = {};
+            if (!e.data || typeof e.data != "object") e.data = {};
             return t = {}, t.normalized = !0, t.title = e.title || "", t.url = h.getFullUrl(e.url ? e.url : h.getLocationHref()), t.hash = h.getShortUrl(t.url), t.data = h.cloneObject(e.data), t.id = h.getIdByState(t), t.cleanUrl = t.url.replace(/\??\&_suid.*/, ""), t.url = t.cleanUrl, n = !h.isEmptyObject(t.data), (t.title || n) && h.options.disableSuid !== !0 && (t.hash = h.getShortUrl(t.url).replace(/\??\&_suid.*/, ""), /\?/.test(t.hash) || (t.hash += "?"), t.hash += "&_suid=" + t.id), t.hashedUrl = h.getFullUrl(t.hash), (h.emulated.pushState || h.bugs.safariPoll) && h.hasUrlDuplicate(t) && (t.url = t.hashedUrl), t
         }, h.createStateObject = function (e, t, n) {
             var r = {data: e, title: t, url: n};
@@ -337,11 +337,11 @@ typeof JSON != "object" && (JSON = {}), function () {
         }, h.setHash = function (e, t) {
             var n, i;
             return t !== !1 && h.busy() ? (h.pushQueue({
-                scope: h,
-                callback: h.setHash,
-                args: arguments,
-                queue: t
-            }), !1) : (h.busy(!0), n = h.extractState(e, !0), n && !h.emulated.pushState ? h.pushState(n.data, n.title, n.url, !1) : h.getHash() !== e && (h.bugs.setHash ? (i = h.getPageUrl(), h.pushState(null, null, i + "#" + e, !1)) : r.location.hash = e), h)
+                    scope: h,
+                    callback: h.setHash,
+                    args: arguments,
+                    queue: t
+                }), !1) : (h.busy(!0), n = h.extractState(e, !0), n && !h.emulated.pushState ? h.pushState(n.data, n.title, n.url, !1) : h.getHash() !== e && (h.bugs.setHash ? (i = h.getPageUrl(), h.pushState(null, null, i + "#" + e, !1)) : r.location.hash = e), h)
         }, h.escapeHash = function (t) {
             var n = h.normalizeHash(t);
             return n = e.encodeURIComponent(n), h.bugs.hashEscape || (n = n.replace(/\%21/g, "!").replace(/\%26/g, "&").replace(/\%3D/g, "=").replace(/\%3F/g, "?")), n
@@ -394,22 +394,22 @@ typeof JSON != "object" && (JSON = {}), function () {
             return
         }, h.back = function (e) {
             return e !== !1 && h.busy() ? (h.pushQueue({
-                scope: h,
-                callback: h.back,
-                args: arguments,
-                queue: e
-            }), !1) : (h.busy(!0), h.doubleCheck(function () {
-                h.back(!1)
-            }), p.go(-1), !0)
+                    scope: h,
+                    callback: h.back,
+                    args: arguments,
+                    queue: e
+                }), !1) : (h.busy(!0), h.doubleCheck(function () {
+                    h.back(!1)
+                }), p.go(-1), !0)
         }, h.forward = function (e) {
             return e !== !1 && h.busy() ? (h.pushQueue({
-                scope: h,
-                callback: h.forward,
-                args: arguments,
-                queue: e
-            }), !1) : (h.busy(!0), h.doubleCheck(function () {
-                h.forward(!1)
-            }), p.go(1), !0)
+                    scope: h,
+                    callback: h.forward,
+                    args: arguments,
+                    queue: e
+                }), !1) : (h.busy(!0), h.doubleCheck(function () {
+                    h.forward(!1)
+                }), p.go(1), !0)
         }, h.go = function (e, t) {
             var n;
             if (e > 0)for (n = 1; n <= e; ++n)h.forward(t); else {
@@ -486,7 +486,7 @@ typeof JSON != "object" && (JSON = {}), function () {
         }, h.intervalList.push(a(h.onUnload, h.options.storeInterval)), h.Adapter.bind(e, "beforeunload", h.onUnload), h.Adapter.bind(e, "unload", h.onUnload));
         if (!h.emulated.pushState) {
             h.bugs.safariPoll && h.intervalList.push(a(h.safariStatePoll, h.options.safariPollInterval));
-            if (i.vendor === "Apple Computer, Inc." || (i.appCodeName || "") === "Mozilla")h.Adapter.bind(e, "hashchange", function () {
+            if (i.vendor === "Apple Computer, Inc." || (i.appCodeName || "") === "Mozilla") h.Adapter.bind(e, "hashchange", function () {
                 h.Adapter.trigger(e, "popstate")
             }), h.getHash() && h.Adapter.onDomLoad(function () {
                 h.Adapter.trigger(e, "hashchange")
