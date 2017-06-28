@@ -1,0 +1,13 @@
+name = Webform Validation
+description = Add validation rules to Webforms.
+core = 7.x
+package = Webform
+dependencies[] = webform
+php = 5.3
+
+; Information added by Drupal.org packaging script on 2017-01-04
+version = "7.x-1.13"
+core = "7.x"
+project = "webform_validation"
+datestamp = "1483565351"
+

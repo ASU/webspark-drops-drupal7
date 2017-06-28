@@ -1,0 +1,222 @@
+<?php
+
+/**
+ * @file
+ * webform_validation installation file
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function webform_validation_schema() {
+  $schema['webform_validation_rule'] = array(
+    'description' => 'Stores rule definitions',
+    'fields' => array(
+      'ruleid' => array(
+        'type' => 'serial',
+        'description' => 'Unique identifier for a rule',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'rulename' => array(
+        'type' => 'varchar',
+        'description' => 'Name for the rule',
+        'not null' => TRUE,
+        'default' => '',
+        'length' => 255,
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'description' => 'The webform {node}.nid',
+        'not null' => TRUE,
+        'default' => 0,
+        'unsigned' => TRUE,
+      ),
+      'validator' => array(
+        'type' => 'varchar',
+        'description' => 'The validator key',
+        'not null' => TRUE,
+        'default' => '',
+        'length' => 255,
+      ),
+      'data' => array(
+        'type' => 'text',
+        'description' => 'Additional rule data',
+        'not null' => FALSE,
+      ),
+      'error_message' => array(
+        'type' => 'text',
+        'description' => 'Rule error message',
+        'not null' => FALSE,
+      ),
+      'negate' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'description' => 'Validate the inverse of the rule',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'weight' => array(
+        'description' => 'Weight of the rule order.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'unsigned' => FALSE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('ruleid'),
+    'indexes' => array(
+      'nid' => array('nid'),
+    ),
+  );
+
+  $schema['webform_validation_rule_components'] = array(
+    'description' => 'Stores components linked to a rule',
+    'fields' => array(
+      'ruleid' => array(
+        'type' => 'int',
+        'description' => 'Unique identifier for a rule',
+        'not null' => TRUE,
+        'default' => 0,
+        'unsigned' => TRUE,
+      ),
+      'cid' => array(
+        'type' => 'int',
+        'description' => 'The webform component id',
+        'not null' => TRUE,
+        'default' => 0,
+        'unsigned' => TRUE,
+      ),
+    ),
+    'primary key' => array('ruleid', 'cid'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_update_N().
+ */
+
+/**
+ * Update numeric validator range to new syntax.
+ */
+function webform_validation_update_1() {
+  $ret = array();
+  $has_numeric_validator = FALSE;
+  $result = db_query("SELECT ruleid, data FROM {webform_validation_rule} WHERE validator = 'numeric'");
+  foreach ($result as $row) {
+    $has_numeric_validator = TRUE;
+    $range = $row->data;
+    $range = _webform_validation_update_range_syntax($range);
+    db_update('webform_validation_rule')
+      ->fields(array(
+        'data' => $range,
+      ))
+      ->condition('ruleid', $row->ruleid, '=')
+      ->execute();
+  }
+  if ($has_numeric_validator) {
+    drupal_set_message(t('The numeric validation rule range syntax has changed with this release. Existing numeric validation rules were found and updated. Please verify that they still work as expected!'), 'warning');
+  }
+  return $ret;
+}
+
+/**
+ * Helper function: update numeric validator range to new syntax
+ */
+function _webform_validation_update_range_syntax($range) {
+  // no longer use "0" as indicator for no validation. This should be an empty string
+  if ($range === "0") {
+    return "";
+  }
+
+  // replace "0-VAL" with "|VAL" as indicator for less than or equal to
+  if (preg_match('/^0 ?-/', $range)) {
+    $range_arr = explode('-', $range);
+    $range_end = $range_arr[1];
+    return "|" . trim($range_end);
+  }
+
+  // replace "-" as separator between range values in favor of "|"
+  $range = str_replace("-", "|", $range);
+  return $range;
+}
+
+/**
+ * Add column to track negated rules.
+ * Remove explicit length limit on data field.
+ * Remove regex escaping of blacklist data.
+ */
+function webform_validation_update_7101() {
+  db_add_field('webform_validation_rule', 'negate', array(
+    'type' => 'int',
+    'size' => 'tiny',
+    'unsigned' => TRUE,
+    'description' => 'Validate the inverse of the rule',
+    'not null' => TRUE,
+    'default' => 0,
+  ));
+
+  db_change_field('webform_validation_rule', 'data', 'data', array(
+    'type' => 'text',
+    'description' => 'Additional rule data',
+    'not null' => FALSE,
+  ));
+
+  $replace = array('.', '\\', '+', '*', '?', '[', '^', ']', '$', '(', ')', '{', '}', '=', '!', '<', '>', '|', ':', '-', '/');
+  $search = array();
+  foreach ($replace as $value) {
+    $search[] = '\\' . $value;
+  }
+  $result = db_query("SELECT DISTINCT data FROM {webform_validation_rule} WHERE validator = 'blacklist'");
+  foreach ($result as $row) {
+    $data_new = str_replace($search, $replace, $row->data);
+    if ($row->data !== $data_new) {
+      db_update('webform_validation_rule')
+        ->fields(array(
+          'data' => $data_new,
+        ))
+        ->condition('data', $row->data, '=')
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Rename oneoftwo and oneofseveral to someofseveral and default data to 1.
+ */
+function webform_validation_update_7104() {
+  db_update('webform_validation_rule')
+    ->fields(array(
+      'validator' => 'someofseveral',
+      'data' => 1,
+    ))
+    ->condition('validator', array('oneoftwo', 'oneofseveral'), 'IN')
+    ->execute();
+}
+
+/**
+ * Add a weight field to webform_validation rules, so they can be sorted.
+ */
+function webform_validation_update_7105() {
+  $spec = array(
+    'description' => 'Weight of the rule order.',
+    'type' => 'int',
+    'not null' => TRUE,
+    'unsigned' => FALSE,
+    'default' => 0,
+  );
+  db_add_field('webform_validation_rule', 'weight', $spec);
+}
+
+/**
+ * Alter error_message field to allow longer than 255 chars error messages.
+ */
+function webform_validation_update_7106() {
+  db_change_field('webform_validation_rule', 'error_message', 'error_message', array(
+    'type' => 'text',
+    'description' => 'Rule error message',
+    'not null' => FALSE,
+  ));
+}
