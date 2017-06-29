@@ -41,8 +41,8 @@
                     config_target = settings.config_target;
                 }
 
-                if (settings.hasOwnProperty('field_configs') && settings.field_configs.hasOwnProperty('dept_id')) {
-                    department = settings.field_configs.dept_id;
+                if (settings.hasOwnProperty('fieldConfigs') && settings.fieldConfigs.hasOwnProperty('dept_id')) {
+                    department = settings.fieldConfigs.dept_id;
                 } else {
                     department = settings.top_level_psid;
                 }

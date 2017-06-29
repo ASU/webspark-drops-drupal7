@@ -1,3 +1,9 @@
+asu_isearch 7.x-1.8.11
+----------------------
+- Improved Solr profile checking to avoid unnecessary unpublishing, and improved logging information
+- 'Exclude from automatic updating' option turns off Solr profile checking
+- Improved and consolidated profile onload updating logic
+
 asu_isearch 7.x-1.8.10
 ----------------------
 - Fixed bug with ampersands in title filter were not returning results
