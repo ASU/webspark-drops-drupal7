@@ -1221,6 +1221,7 @@ $form['form_middle_post'] = array(
   $form['my_interest']['campus'] = array(
     '#type' => 'select',
     '#title' => t('My campus of choice is'),
+    '#options' => array(),
 //		'#required' => FALSE,
     '#attributes' => array('class' => array('reqinfo_campus', 'chosen-disable')),
     '#states' => array(
