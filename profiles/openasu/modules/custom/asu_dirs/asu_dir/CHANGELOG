@@ -1,9 +1,12 @@
-asu_dir 7.x-1.7.1 2017-05-04
+asu_dir 7.x-1.7.1 2017-06-23
 ----------------------------
-- Added jQuery widget to group tabs into navigable sections when there are too many tabs for a panel region
+- Fixes bug where page state title was being set as null
+- Hides pagination if only one page of results
 - Fixed CSS which was hindering the directory pane from going completely full-width inside of its container
-- Minor bugfixes for history state handling, which was causing asu_dir higher index tab states to not be saved if there
-had been view-enabled panes placed before them
+- Bugfixes for history state handling, which was causing asu_dir higher index tab states to not be saved if there
+had been non-asu_dir panes placed before them
+- Cleaned up some of the js code and logic
+- Fixed the default photo behavior for the ASU Directory field
 
 asu_dir 7.x-1.7 2017-04-24
 --------------------------
