@@ -19,10 +19,12 @@
 .pane-node-field-meeting-subtitle .field-name-field-meeting-subtitle {
     font-size: 1.75em;
 }
+.pane-node-field-task-force-meeting-date .pane-title {
+    font-weight: bold;
+}
 .pane-node-field-task-force-meeting-date .field-name-field-task-force-meeting-date .date-display-single {
     display: inline;
     font-style: italic;
-    font-weight: bold;
 }
 .pane-node-field-task-force-meeting-date .field-name-field-task-force-meeting-date .date-display-range {
     display: inline;
