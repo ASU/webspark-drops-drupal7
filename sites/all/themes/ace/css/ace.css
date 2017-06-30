@@ -1,40 +1,42 @@
 /* ADDS SPACING FOR LOGIN & JOIN BUTTONS FOR ON MEMBERSHIP RENEW PAGE (AND PROBABLY GLOBALLY) */
 #page-content .content {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 #page-content a.button {
-	margin: 10px;
+    margin: 10px;
 }
 .alert.alert-unavailable {
-	margin-top: 0;
+    margin-top: 0;
 }
 .alert-unavailable > h3.header-unavailable {
-	margin: 0;
+    margin: 0;
 }
 .alert-unavailable .item-list .unavailable-items {
-	padding: 1em 2em 0;
+    padding: 1em 2em 0;
 }
 
 /* Simple GMAP fix */
-.node-ace-task-force-meeting .field-name-field-task-force-meeting-date {
-  margin-bottom: 1em; 
+.pane-node-field-meeting-subtitle .field-name-field-meeting-subtitle {
+    font-size: 1.75em;
 }
-.node-ace-task-force-meeting .field-name-field-task-force-meeting-date .date-display-single {
-  display: inline;
-  font-style: italic;
-  font-weight: bold;
+.pane-node-field-task-force-meeting-date .field-name-field-task-force-meeting-date .date-display-single {
+    display: inline;
+    font-style: italic;
+    font-weight: bold;
 }
-.node-ace-task-force-meeting .field-name-field-task-force-meeting-date .date-display-range {
-  display: inline;
-  font-weight: normal;
+.pane-node-field-task-force-meeting-date .field-name-field-task-force-meeting-date .date-display-range {
+    display: inline;
+    font-weight: normal;
 }
-.node-ace-task-force-meeting .simple-gmap-address {
-  margin-top: 0px;
+.pane-node-field-task-force-meeting-date .field-name-field-task-force-meeting-date {
+    margin-bottom: 1em;
 }
-.node-ace-task-force-meeting .simple-gmap-address + iframe {
-  display: none;
+.pane-node-field-meeting-location .field-name-field-location-name {
+    margin-bottom: -1em;
 }
-.node-ace-task-force-meeting .field-name-field-meeting-subtitle {
-  margin-bottom: 0.5em;
-  font-size: 2em;
+.pane-node-field-meeting-location .simple-gmap-address {
+    margin-top: 0px;
+}
+.pane-node-field-meeting-location .simple-gmap-address + iframe {
+    display: none;
 }
