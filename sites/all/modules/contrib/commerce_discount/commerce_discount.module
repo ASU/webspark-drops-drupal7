@@ -1,0 +1,1169 @@
+<?php
+
+/**
+ * @file
+ * Defines the discount and discount offer entities, bundles and functionality.
+ *
+ * Discount and offer entities are always managed together,
+ * their bundles, and all surrounding functionality (API, UI).
+ */
+
+/**
+ * Implements hook_commerce_cart_order_refresh().
+ *
+ * Remove any existing commerce discount line item.
+ *
+ * @param \EntityDrupalWrapper $order_wrapper
+ */
+function commerce_discount_commerce_cart_order_refresh(EntityDrupalWrapper $order_wrapper) {
+  $line_items_to_delete = array();
+  $cloned_line_items = array();
+  // Remove all discount references from the order.
+  // (If there are none, setting array() would modify the order, so test first.)
+  if (isset($order_wrapper->commerce_discounts) && $order_wrapper->commerce_discounts->value()) {
+    $order_wrapper->commerce_discounts = array();
+  }
+
+  // Remove discount components from the order total price.
+  commerce_discount_remove_discount_components($order_wrapper->commerce_order_total);
+
+  foreach ($order_wrapper->commerce_line_items as $delta => $wrapper_line_item) {
+    if ($wrapper_line_item->getBundle() == 'product_discount') {
+      // Delete the line item, and remove it from the order.
+      $line_items_to_delete[] = $wrapper_line_item->line_item_id->value();
+      $order_wrapper->commerce_line_items->offsetUnset($delta);
+    }
+    elseif ($line_item = $wrapper_line_item->value()) {
+      $cloned_line_items[$line_item->line_item_id] = clone $line_item;
+
+      // Remove discount components from the line item price fields; the line
+      // item may be a discount (so the price will become 0) or another line
+      // item like a product (so the price will become the 'original' price).
+      commerce_discount_remove_discount_components($wrapper_line_item->commerce_unit_price);
+      commerce_discount_remove_discount_components($wrapper_line_item->commerce_total);
+    }
+  }
+
+  // Save the line items which have changes after removing/re-adding discounts;
+  // except if one of our discount type line items still has price 0, delete it.
+  foreach ($order_wrapper->commerce_line_items as $delta => $wrapper_line_item) {
+    if ($wrapper_line_item->getBundle() != 'product_discount') {
+      $id = $wrapper_line_item->getIdentifier();
+
+      // Only check non-new line items; new ones have already been saved.
+      if (isset($cloned_line_items[$id])) {
+        $unit_price = commerce_price_wrapper_value($wrapper_line_item, 'commerce_unit_price', TRUE);
+        if ($wrapper_line_item->getBundle() == 'commerce_discount' && empty($unit_price['amount'])) {
+          $line_items_to_delete[] = $id;
+          $order_wrapper->commerce_line_items->offsetUnset($delta);
+        }
+        else {
+          // Check for changes, in commerce_unit_price (in the same way as
+          // commerce_cart_order_refresh() does) and quantity.
+          // (Don't check e.g. commerce_total; it may not be updated yet.)
+          $old_line_item_wrapper = entity_metadata_wrapper('commerce_line_item', $cloned_line_items[$id]);
+          $old_unit_price = commerce_price_wrapper_value($old_line_item_wrapper, 'commerce_unit_price', TRUE);
+
+          if ($unit_price['amount'] != $old_unit_price['amount'] ||
+            $unit_price['currency_code'] != $old_unit_price['currency_code'] ||
+            $unit_price['data']['components'] != $old_unit_price['data']['components']) {
+            // Save changed line item (which will correctly set commerce_total).
+            $wrapper_line_item->save();
+          }
+        }
+      }
+    }
+  }
+
+  // Delete line items.
+  commerce_line_item_delete_multiple($line_items_to_delete);
+
+  // Re-add all applicable discount price components and/or line items.
+  rules_invoke_event('commerce_discount_order', $order_wrapper);
+}
+
+/**
+ * Remove discount components from a given price and recalculate the total.
+ *
+ * @param object $price_wrapper
+ *   Wrapped commerce price.
+ */
+function commerce_discount_remove_discount_components($price_wrapper) {
+  $price = $price_wrapper->value();
+  // If there are no price or components, there is nothing to remove.
+  if (!$price || empty($price['data']['components'])) {
+    return;
+  }
+
+  $data = (array) $price['data'] + array('components' => array());
+  $component_removed = FALSE;
+  // Remove price components belonging to order discounts.
+  foreach ($data['components'] as $key => $component) {
+    $remove = FALSE;
+
+    // Remove all discount components.
+    if (!empty($component['price']['data']['discount_name'])) {
+      $discount_name = $component['price']['data']['discount_name'];
+      $wrapper = entity_metadata_wrapper('commerce_discount', $discount_name);
+      if (!$wrapper->value() || $wrapper->getBundle() == 'order_discount') {
+        $remove = TRUE;
+      }
+    }
+    elseif ($component['name'] != 'base_price') {
+      // As long as the component is neither base price nor discount, allow
+      // other modules to say whether it gets reset. This is so that discounts
+      // can apply against a price that has been stripped of components from
+      // modules that need to apply against a post-discount price.
+      drupal_alter('commerce_discount_remove_price_component', $component, $remove);
+    }
+
+    if ($remove) {
+      unset($data['components'][$key]);
+      $component_removed = TRUE;
+    }
+  }
+  // Don't alter the price components if no components were removed.
+  if (!$component_removed) {
+    return;
+  }
+
+  // Re-save the price without the discounts (if existed).
+  $price_wrapper->data->set($data);
+
+  // Re-set the total price.
+  $total = commerce_price_component_total($price_wrapper->value());
+  $price_wrapper->amount = $total['amount'];
+}
+
+/**
+ * Implements hook_commerce_cart_order_empty().
+ */
+function commerce_discount_commerce_cart_order_empty($order) {
+  // Clean-up task to remove commerce_discount line items when cart is emptied.
+  $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+  $line_items_to_delete = array();
+  foreach ($order_wrapper->commerce_line_items as $delta => $line_item_wrapper) {
+    if ($line_item_wrapper->getBundle() == 'commerce_discount') {
+      $line_items_to_delete[] = $line_item_wrapper->getIdentifier();
+      $order_wrapper->commerce_line_items->offsetUnset($delta);
+    }
+  }
+
+  // Delete line items.
+  commerce_line_item_delete_multiple($line_items_to_delete);
+}
+
+/**
+ * Implements hook_commerce_shipping_method_collect_rates().
+ *
+ * Invokes the events for the various types of shipping offers. Currently, to
+ * support ordering all discounts relative to one another, anything that reduces
+ * the price outside of a free shipping offer is evaluated as part of the
+ * "% off shipping" event. Free shipping offers run last, allowing sites to run
+ * offers that discount premium shipping rates while not reducing them to free
+ * shipping in the event the base events are free.
+ */
+function commerce_discount_commerce_shipping_method_collect_rates($method, $order) {
+  rules_invoke_event('commerce_discount_percent_off_shipping', $order);
+  rules_invoke_event('commerce_discount_free_shipping', $order);
+}
+
+/**
+ * Implements hook_entity_info().
+ */
+function commerce_discount_entity_info() {
+  $items['commerce_discount'] = array(
+    'label' => t('Commerce Discount'),
+    'controller class' => 'CommerceDiscountControllerExportable',
+    'entity class' => 'CommerceDiscount',
+    'base table' => 'commerce_discount',
+    'fieldable' => TRUE,
+    // For integration with Redirect module.
+    // @see http://drupal.org/node/1263884
+    'redirect' => FALSE,
+    'exportable' => TRUE,
+    'entity keys' => array(
+      'id' => 'discount_id',
+      'name' => 'name',
+      'label' => 'label',
+      'bundle' => 'type',
+      'status' => 'export_status',
+    ),
+    'bundles' => array(),
+    'module' => 'commerce_discount',
+    'uri callback' => 'entity_class_uri',
+    'access callback' => 'commerce_discount_access',
+    'metadata controller class' => 'CommerceDiscountMetadataController',
+    'views controller class' => 'CommerceDiscountViewsController',
+    // Enable the entity API's admin UI.
+    'admin ui' => array(
+      'path' => 'admin/commerce/discounts',
+      'file' => 'includes/commerce_discount.admin.inc',
+      'controller class' => 'CommerceDiscountUIController',
+    ),
+  );
+  foreach (commerce_discount_types() as $type => $info) {
+    $items['commerce_discount']['bundles'][$type] = array(
+      'label' => $info['label'],
+    );
+  }
+
+  $items['commerce_discount_offer'] = array(
+    'label' => t('Commerce Discount Offer'),
+    'controller class' => 'EntityAPIControllerExportable',
+    'entity class' => 'CommerceDiscountOffer',
+    'base table' => 'commerce_discount_offer',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'discount_offer_id',
+      'bundle' => 'type',
+    ),
+    'bundles' => array(),
+    'module' => 'commerce_discount',
+    'metadata controller class' => 'EntityDefaultMetadataController',
+    'inline entity form' => array(
+      'controller' => 'CommerceDiscountOfferInlineEntityFormController',
+    ),
+  );
+  foreach (commerce_discount_offer_types() as $type => $info) {
+    $items['commerce_discount_offer']['bundles'][$type] = array(
+      'label' => $info['label'],
+    );
+  }
+
+  return $items;
+}
+
+/**
+ * Implements hook_flush_caches().
+ */
+function commerce_discount_flush_caches() {
+  module_load_install('commerce_discount');
+  commerce_discount_install_helper();
+}
+
+/**
+ * Implements hook_permission().
+ */
+function commerce_discount_permission() {
+  $permissions = array();
+  $permissions['administer commerce discounts'] = array(
+    'title' => t('Administer discounts'),
+  );
+
+  return $permissions;
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function commerce_discount_views_api($module, $api) {
+  return array(
+    'version' => 3,
+    'path' => drupal_get_path('module', 'commerce_discount') . '/includes/views',
+  );
+}
+
+/**
+ * Implements hook_features_pipe_commerce_discount_alter().
+ *
+ * Pipe the related Commerce discount order entity.
+ */
+function commerce_discount_features_pipe_commerce_discount_alter(&$pipe, $data, $export) {
+  if (empty($data)) {
+    return;
+  }
+
+  foreach ($data as $name) {
+    $wrapper = entity_metadata_wrapper('commerce_discount', $name);
+    $pipe['commerce_discount_offer'][] = $wrapper->commerce_discount_offer->type->value();
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Hide the "Commerce discount offer" for the components list of features.
+ */
+function commerce_discount_form_features_export_form_alter(&$form, $from_state) {
+  unset($form['export']['components']['#options']['commerce_discount_offer']);
+}
+
+/**
+ * Implements hook_commerce_price_formatted_components_alter().
+ */
+function commerce_discount_commerce_price_formatted_components_alter(&$components, $price, $entity) {
+  if (isset($price['data']['components'])) {
+    // Loop into price components and alter the component title if the discount
+    // component label is found.
+    foreach ($price['data']['components'] as $component) {
+      if (!isset($component['price']['data']['discount_component_title'])) {
+        continue;
+      }
+      $components[$component['name']]['title'] = $component['price']['data']['discount_component_title'];
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Disable alteration of discounts with overriden rules.
+ */
+function commerce_discount_form_commerce_discount_form_alter(&$form, $form_state) {
+  // Add clearfix to the discount type container.
+  $form['commerce_discount_type']['#attributes']['class'][] = 'clearfix';
+  $form['commerce_discount_fields']['commerce_discount_offer']['#attributes']['class'][] = 'clearfix';
+
+  if (empty($form_state['commerce_discount']->discount_id)) {
+    // Entity is new.
+    return;
+  }
+
+  if (!empty($form_state['triggering_element']['#ajax'])) {
+    // We are inside an Ajax call.
+    return;
+  }
+
+  $rule = rules_config_load('commerce_discount_rule_' . $form_state['commerce_discount']->name);
+  if ($rule && $rule->hasStatus(ENTITY_OVERRIDDEN)) {
+    drupal_set_message(t('The rule associated with this discount is overriden, making it impossible to edit the discount.'), 'warning');
+    $form['actions']['submit']['#disabled'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function commerce_discount_field_widget_form_alter(&$element, &$form_state, $context) {
+  if (isset($element['#field_name']) && ($element['#field_name'] == 'commerce_free_shipping'
+    || $element['#field_name'] == 'commerce_percent_off_ship_serv')) {
+    $element['#options'] += commerce_shipping_service_options_list();
+    if ($form_state['op'] == 'edit') {
+      $wrapper_offer = entity_metadata_wrapper('commerce_discount_offer', $element['#entity']);
+      if ($element['#field_name'] == 'commerce_free_shipping') {
+        $element['#default_value'] = $wrapper_offer->commerce_free_shipping->value();
+      }
+      else {
+        $element['#default_value'] = $wrapper_offer->commerce_percent_off_ship_serv->value();
+      }
+    }
+  }
+
+  // If the current element is the free shipping discount strategy select list,
+  // alter it to only be visible when a free shipping service has been selected.
+  if (!empty($element['#field_name']) && $element['#field_name'] == 'commerce_free_shipping_strategy') {
+    $element['#states'] = array(
+      'invisible' => array(
+        ':input[name="commerce_discount_fields[commerce_discount_offer][' . LANGUAGE_NONE . '][form][commerce_free_shipping][' . LANGUAGE_NONE . ']"]' => array('value' => '_none'),
+      ),
+    );
+  }
+}
+
+/**
+ * Implements hook_commerce_discount_insert().
+ *
+ * Rebuild Rules configuration.
+ */
+function commerce_discount_commerce_discount_insert($entity) {
+  _commerce_discount_rebuild_rules_config($entity);
+}
+
+/**
+ * Implements hook_commerce_discount_update().
+ *
+ * Rebuild Rules configuration.
+ */
+function commerce_discount_commerce_discount_update($entity) {
+  _commerce_discount_rebuild_rules_config($entity);
+}
+
+/**
+ * Actually rebuild the defaults of a given entity.
+ *
+ * @see entity_defaults_rebuild().
+ *
+ * @param CommerceDiscount $discount
+ *   Fully loaded Commerce Discount entity to rebuild rules_config for.
+ */
+function _commerce_discount_rebuild_rules_config(CommerceDiscount $discount) {
+  // Return early if we can't aquire a lock on the rules config.
+  if (!lock_acquire('entity_rebuild_rules_config')) {
+    return;
+  }
+
+  $existing_rules_config = FALSE;
+  $rules_config_name = 'commerce_discount_rule_' . $discount->name;
+
+  $info = entity_get_info('rules_config');
+  $hook = isset($info['export']['default hook']) ? $info['export']['default hook'] : 'default_rules_config';
+  $keys = $info['entity keys'] + array(
+    'module' => 'module',
+    'status' => 'status',
+    'name' => $info['entity keys']['id'],
+  );
+
+  // Check for the existence of the module and status columns.
+  if (!in_array($keys['status'], $info['schema_fields_sql']['base table']) || !in_array($keys['module'], $info['schema_fields_sql']['base table'])) {
+    trigger_error("Missing database columns for the exportable entity 'rules_config' as defined by entity_exportable_schema_fields(). Update the according module and run update.php!", E_USER_WARNING);
+    return;
+  }
+
+  // Invoke the hook and collect default entities.
+  $entities = array();
+  foreach (module_implements($hook) as $module) {
+    /** @var RulesReactionRule $entity */
+    foreach ((array) module_invoke($module, $hook) as $name => $entity) {
+      if ($name == $rules_config_name) {
+        $entity->{$keys['name']} = $name;
+        $entity->{$keys['module']} = $module;
+        $entities[$name] = $entity;
+        $existing_rules_config = TRUE;
+      }
+    }
+  }
+  drupal_alter($hook, $entities);
+
+  // Check for defaults that disappeared or overridden?
+  if (!$existing_rules_config) {
+    $existing_defaults = entity_load_multiple_by_name('rules_config', FALSE, array($keys['status'] => array(ENTITY_OVERRIDDEN, ENTITY_IN_CODE, ENTITY_FIXED)));
+
+    foreach ($existing_defaults as $name => $entity) {
+      if (empty($entities[$name]) && $name == $rules_config_name) {
+        $entity->is_rebuild = TRUE;
+        if (entity_has_status('rules_config', $entity, ENTITY_OVERRIDDEN)) {
+          $entity->{$keys['status']} = ENTITY_CUSTOM;
+          entity_save('rules_config', $entity);
+        }
+        else {
+          entity_delete('rules_config', $name);
+        }
+        unset($entity->is_rebuild);
+      }
+    }
+  }
+
+  // Load all existing entities.
+  $existing_entities = entity_load_multiple_by_name('rules_config', array_keys($entities));
+
+  foreach ($existing_entities as $name => $entity) {
+    if (entity_has_status('rules_config', $entity, ENTITY_CUSTOM)) {
+      // If the entity already exists but is not yet marked as overridden, we
+      // have to update the status.
+      if (!entity_has_status('rules_config', $entity, ENTITY_OVERRIDDEN)) {
+        $entity->{$keys['status']} |= ENTITY_OVERRIDDEN;
+        $entity->{$keys['module']} = $entities[$name]->{$keys['module']};
+        $entity->is_rebuild = TRUE;
+        entity_save('rules_config', $entity);
+        unset($entity->is_rebuild);
+      }
+
+      // The entity is overridden, so we do not need to save the default.
+      unset($entities[$name]);
+    }
+  }
+
+  // Save defaults.
+  $originals = array();
+  foreach ($entities as $name => $entity) {
+    if (!empty($existing_entities[$name])) {
+      // Make sure we are updating the existing default.
+      $entity->{$keys['id']} = $existing_entities[$name]->{$keys['id']};
+      unset($entity->is_new);
+    }
+    // Pre-populate $entity->original as we already have it. So we avoid
+    // loading it again.
+    $entity->original = !empty($existing_entities[$name]) ? $existing_entities[$name] : FALSE;
+    // Keep original entities for hook_{entity_type}_defaults_rebuild()
+    // implementations.
+    $originals[$name] = $entity->original;
+
+    if (!isset($entity->{$keys['status']})) {
+      $entity->{$keys['status']} = ENTITY_IN_CODE;
+    }
+    else {
+      $entity->{$keys['status']} |= ENTITY_IN_CODE;
+    }
+    $entity->is_rebuild = TRUE;
+    entity_save('rules_config', $entity);
+    unset($entity->is_rebuild);
+  }
+
+  // Invoke an entity type-specific hook so modules may apply changes, e.g.
+  // efficiently rebuild caches.
+  module_invoke_all('rules_config_defaults_rebuild', $entities, $originals);
+
+  lock_release('entity_rebuild_rules_config');
+}
+
+/**
+ * Implements hook_commerce_discount_delete().
+ *
+ * Delete referenced commerce_discount_offer upon commerce_discount deletion.
+ */
+function commerce_discount_commerce_discount_delete($entity) {
+  $wrapper = entity_metadata_wrapper('commerce_discount', $entity);
+  // Delete the referenced commerce_discount_offer.
+  if ($wrapper->commerce_discount_offer->value()) {
+    entity_delete('commerce_discount_offer', $wrapper->commerce_discount_offer->getIdentifier());
+  }
+}
+
+/**
+ * Access callback for commerce_discount entities.
+ */
+function commerce_discount_access($op, $entity, $account, $entity_type) {
+  return user_access('administer commerce discounts', $account);
+}
+
+/**
+ * Implements hook_commerce_discount_type_info().
+ */
+function commerce_discount_commerce_discount_type_info() {
+  $types = array();
+  $types['order_discount'] = array(
+    'label' => t('Order discount'),
+    'event' => 'commerce_discount_order',
+    'entity type' => 'commerce_order',
+  );
+  $types['product_discount'] = array(
+    'label' => t('Product discount'),
+    'event' => 'commerce_product_calculate_sell_price',
+    // The line item of the product.
+    'entity type' => 'commerce_line_item',
+  );
+
+  return $types;
+}
+
+/**
+ * Implements hook_commerce_discount_offer_type_info().
+ */
+function commerce_discount_commerce_discount_offer_type_info() {
+  $types = array();
+  $types['fixed_amount'] = array(
+    'label' => t('@currency off', array('@currency' => commerce_currency_get_symbol(variable_get('commerce_default_currency', 'USD')))),
+    'action' => 'commerce_discount_fixed_amount',
+    'entity types' => array('commerce_order', 'commerce_line_item'),
+  );
+
+  $types['percentage'] = array(
+    'label' => t('% off'),
+    'action' => 'commerce_discount_percentage',
+    'entity types' => array('commerce_order', 'commerce_line_item'),
+  );
+
+  if (module_exists('commerce_shipping')) {
+    $types['free_shipping'] = array(
+      'label' => t('Free shipping'),
+      'action' => 'commerce_discount_free_shipping_service',
+      'entity types' => array('commerce_order'),
+      'event' => 'commerce_discount_free_shipping',
+    );
+    $types['percent_off_shipping'] = array(
+      'label' => t('% off of shipping'),
+      'action' => 'commerce_discount_percent_off_shipping_service',
+      'entity types' => array('commerce_order'),
+      'event' => 'commerce_discount_percent_off_shipping',
+    );
+    $types['shipping_upgrade'] = array(
+      'label' => t('Shipping service upgrade'),
+      'action' => 'commerce_discount_shipping_upgrade',
+      'entity types' => array('commerce_order'),
+      'event' => 'commerce_discount_percent_off_shipping',
+    );
+  }
+
+  $types['free_products'] = array(
+    'label' => t('Add free bonus products'),
+    'action' => 'commerce_discount_free_products',
+    'entity types' => array('commerce_order'),
+  );
+
+  return $types;
+}
+
+/**
+ * Implements hook_commerce_discount_rule_build().
+ */
+function commerce_discount_commerce_discount_rule_build($rule, $discount) {
+  $wrapper = entity_metadata_wrapper('commerce_discount', $discount);
+  $discount_offer = $wrapper->commerce_discount_offer->value();
+  $wrapper_discount_offer = entity_metadata_wrapper('commerce_discount_offer', $discount_offer);
+
+  // Check if property is attached to commerce free shipping!
+  if (isset($wrapper_discount_offer->commerce_free_shipping)) {
+    if (!$shipping_service = $wrapper_discount_offer->commerce_free_shipping->value()) {
+      // No need to change the rules event.
+      return;
+    }
+
+    // Add missing parameter.
+    foreach ($rule->actions() as $action) {
+      if ($action->getElementName() == 'commerce_discount_free_shipping_service') {
+        $action->settings['shipping_service'] = $shipping_service;
+      }
+    }
+  }
+
+  // Product level discounts must pass the line item's order.
+  $map = array(
+    'order_discount' => 'commerce-order',
+    'product_discount' => 'commerce-line-item:order',
+  );
+
+  if (isset($map[$discount->type])) {
+    // Add condition for per-person usage.
+    if ($wrapper->discount_usage_per_person->value()) {
+      $rule->condition(
+        'commerce_discount_usage_max_usage_per_person',
+        array(
+          'commerce_discount' => $discount->name,
+          'order:select' => $map[$discount->type],
+          'usage' => $wrapper->discount_usage_per_person->value(),
+        )
+      );
+    }
+    // For normal usage.
+    if ($wrapper->discount_usage_limit->value()) {
+      $rule->condition(
+        'commerce_discount_usage_max_usage',
+        array(
+          'commerce_discount' => $discount->name,
+          'order:select' => $map[$discount->type],
+          'usage' => $wrapper->discount_usage_limit->value(),
+        )
+      );
+    }
+  }
+
+  if (!empty($discount->commerce_discount_date)) {
+    // Wrap the discount to compare its date value against the current timestamp.
+    // A quick test showed this actually used less memory than invoking
+    // field_get_items() directly, but I'm sure a more rigorous test could be
+    // considered in the future for checks as straightforward as this.
+    $wrapper = entity_metadata_wrapper('commerce_discount', $discount);
+
+    // If the end date for the discount has already passed, disable the rule.
+    // Note that we add a day to the discount end date. The date field value is
+    // set for 12:00:00 AM on the end date, but we want the discount to remain
+    // valid through that day.
+    if (REQUEST_TIME >= $wrapper->commerce_discount_date->value2->value() + 86400) {
+      $rule->active = FALSE;
+    }
+
+    // Add condition to check usage didn't reach max uses.
+    $rule->condition('commerce_discount_date_condition', array(
+      'commerce_discount' => $discount->name,
+    ));
+  }
+}
+
+/**
+ * Return an array of all defined discount types.
+ *
+ * @return array
+ *   The array of types, keyed by type name.
+ */
+function commerce_discount_types() {
+  $discount_types = &drupal_static(__FUNCTION__);
+
+  if (!isset($discount_types)) {
+    $discount_types = array();
+
+    foreach (module_implements('commerce_discount_type_info') as $module) {
+      foreach (module_invoke($module, 'commerce_discount_type_info') as $type => $info) {
+        $info += array(
+          // Remember the providing module.
+          'module' => $module,
+        );
+        $discount_types[$type] = $info;
+      }
+    }
+
+    // Allow the type info to be altered by other modules.
+    drupal_alter('commerce_discount_type_info', $discount_types);
+  }
+
+  return $discount_types;
+}
+
+/**
+ * Loads the data for a specific discount type.
+ *
+ * @param string $discount_type
+ *   The machine name of a discount type.
+ *
+ * @return mixed
+ *   The requested array or FALSE if not found.
+ */
+function commerce_discount_type($discount_type) {
+  $discount_types = commerce_discount_types();
+
+  return isset($discount_types[$discount_type]) ? $discount_types[$discount_type] : FALSE;
+}
+
+/**
+ * Returns the human readable name of any or all discount types.
+ *
+ * @param string $type
+ *   Optional parameter specifying the type whose name to return.
+ *
+ * @return mixed
+ *   Either an array of all discount type names keyed by the machine name or a
+ *     string containing the human readable name for the specified type. If a
+ *     type is specified that does not exist, this function returns FALSE.
+ */
+function commerce_discount_type_get_name($type = NULL) {
+  $discount_types = commerce_discount_types();
+
+  // Return a type name if specified and it exists.
+  if (!empty($type)) {
+    if (isset($discount_types[$type])) {
+      return $discount_types[$type]['label'];
+    }
+    else {
+      // Return FALSE if it does not exist.
+      return FALSE;
+    }
+  }
+
+  // Otherwise turn the array values into the type name only.
+  foreach ($discount_types as $key => $value) {
+    $discount_types[$key] = $value['label'];
+  }
+
+  return $discount_types;
+}
+
+/**
+ * Return an array of all defined discount offer types.
+ *
+ * @return array
+ *   The array of types, keyed by type name.
+ */
+function commerce_discount_offer_types() {
+  $offer_types = &drupal_static(__FUNCTION__);
+
+  if (!isset($offer_types)) {
+    $offer_types = array();
+
+    foreach (module_implements('commerce_discount_offer_type_info') as $module) {
+      foreach (module_invoke($module, 'commerce_discount_offer_type_info') as $type => $info) {
+        $info += array(
+          // Remember the providing module.
+          'module' => $module,
+        );
+        $offer_types[$type] = $info;
+      }
+    }
+
+    // Allow the type info to be altered by other modules.
+    drupal_alter('commerce_discount_offer_type_info', $offer_types);
+  }
+
+  return $offer_types;
+}
+
+/**
+ * Loads the data for a specific discount offer type.
+ *
+ * @param string $offer_type
+ *   The machine name of an offer type.
+ *
+ * @return mixed
+ *   The requested array or FALSE if not found.
+ */
+function commerce_discount_offer_type($offer_type) {
+  $offer_types = commerce_discount_offer_types();
+
+  return isset($offer_types[$offer_type]) ? $offer_types[$offer_type] : FALSE;
+}
+
+/**
+ * Returns the human readable name of any or all discount offer types.
+ *
+ * @param string $type
+ *   Optional parameter specifying the offer type whose name to return.
+ *
+ * @return mixed
+ *   Either an array of all discount offer type names keyed by the machine name
+ *   or a string containing the human readable name for the specified type.
+ *   If a type is specified that does not exist, this function returns FALSE.
+ */
+function commerce_discount_offer_type_get_name($type = NULL) {
+  $offer_types = commerce_discount_offer_types();
+
+  // Return a type name if specified and it exists.
+  if (!empty($type)) {
+    if (isset($offer_types[$type])) {
+      return $offer_types[$type]['label'];
+    }
+    else {
+      // Return FALSE if it does not exist.
+      return FALSE;
+    }
+  }
+
+  // Otherwise turn the array values into the type name only.
+  foreach ($offer_types as $key => $value) {
+    $offer_types[$key] = $value['label'];
+  }
+
+  return $offer_types;
+}
+
+/**
+ * Return an array keyed by commerce discount name and label as value.
+ */
+function commerce_discount_entity_list() {
+  $options = array();
+  foreach (entity_load('commerce_discount') as $discount) {
+    $options[$discount->name] = $discount->label;
+  }
+
+  return $options;
+}
+
+/**
+ * Implements hook_commerce_line_item_type_info().
+ */
+function commerce_discount_commerce_line_item_type_info() {
+  return array(
+    'commerce_discount' => array(
+      'type' => 'commerce_discount',
+      'name' => t('Fixed amount discount'),
+      'description' => t('Line item for fixed amounts.'),
+      'add_form_submit_value' => t('Add discount'),
+      'base' => 'commerce_discount_line_item',
+    ),
+    'product_discount' => array(
+      'type' => 'product_discount',
+      'name' => t('Product discounted'),
+      'description' => t('References a discounted product.'),
+      'product' => TRUE,
+      'add_form_submit_value' => t('Add product'),
+      'base' => 'commerce_product_line_item',
+      'callbacks' => array(
+        'title' => 'commerce_discount_product_line_item_title',
+      ),
+    ),
+  );
+}
+
+/**
+ * Determine the discount's line item title.
+ *
+ * @return string
+ *   The line item title.
+ */
+function commerce_discount_line_item_title() {
+  return t('Fixed amount discount');
+}
+
+/**
+ * Determine the product_discount's line item title.
+ *
+ * This function wrap's the line item's title in a span element with a class to
+ * provide stylistic changes to a product which has a discount.
+ *
+ * @return string
+ *   The line item title.
+ */
+function commerce_discount_product_line_item_title($line_item) {
+  return '<span class="line-item-title--has-discount">' . commerce_product_line_item_title($line_item) . '</span>';
+}
+
+/**
+ * Returns an array of discount compatibility strategies for use in a radio
+ * buttons select list.
+ */
+function commerce_discount_compatibility_strategies() {
+  return array(
+    'any' => t('Any discount'),
+    'except' => t('Any discount except the selected discounts'),
+    'only' => t('Only with the selected discounts'),
+    'none' => t('Not with any other discounts'),
+  );
+}
+
+/**
+ * Returns the compatibility strategy for the given discount.
+ *
+ * @param \CommerceDiscount $discount
+ *   A Commerce Discount object with a commerce_compatibility_strategy field.
+ *
+ * @return string
+ *   The discount's compatibility strategy or 'any' if none is set.
+ */
+function commerce_discount_get_compatibility_strategy($discount) {
+  $discount_wrapper = entity_metadata_wrapper('commerce_discount', $discount);
+  $strategy = $discount_wrapper->commerce_compatibility_strategy->value();
+
+  // If the compatibility strategy is not set, default to 'any'.
+  if (empty($strategy)) {
+    $strategy = 'any';
+  }
+
+  // Note that if the field is set to an unknown value, we still return it. The
+  // default condition for evaluating discount compatibility will pass through
+  // unknown discount strategies, so modules that set them are responsible also
+  // to evaluate them on behalf of all discounts.
+  return $strategy;
+}
+
+/**
+ * Returns the compatibility selection for the given discount.
+ *
+ * @param \CommerceDiscount $discount
+ *   A Commerce Discount object with a commerce_compatibility_selection field.
+ *
+ * @return int[]
+ *   An array of discount IDs selected for the discount's compatibility strategy
+ *   or an empty array if none are selected (or a non-array value is found).
+ */
+function commerce_discount_get_compatibility_selection($discount) {
+  $discount_wrapper = entity_metadata_wrapper('commerce_discount', $discount);
+  $selection = $discount_wrapper->commerce_compatibility_selection->raw();
+
+  // Ensure the selection is an array.
+  if (!is_array($selection)) {
+    $selection = array();
+  }
+
+  return $selection;
+}
+
+/**
+ * Returns a list of discounts applied to make a particular price as determined
+ * by its price components.
+ *
+ * @param array $price
+ *   A price field value array including a data array with price components.
+ *
+ * @return array
+ */
+function commerce_discount_get_discounts_applied_to_price($price) {
+  $applied_discounts = array();
+
+  // Return early if the price has no components.
+  if (empty($price['data']['components'])) {
+    return array();
+  }
+
+  // Loop over the price components looking for known discount components.
+  foreach ($price['data']['components'] as $component) {
+    if (strpos($component['name'], 'discount|') === 0) {
+      // Load the discount entity represented by this component.
+      $applied_discount_name = substr($component['name'], 9);
+      $applied_discount = entity_load_single('commerce_discount', $applied_discount_name);
+
+      // Add it to the list of applied discounts keyed by ID to prevent duplicates.
+      if (!empty($applied_discount)) {
+        $applied_discounts[$applied_discount->discount_id] = $applied_discount_name;
+      }
+    }
+  }
+
+  return $applied_discounts;
+}
+
+/**
+ * Returns a list of discount strategies for free shipping offers.
+ */
+function commerce_discount_free_shipping_strategies() {
+  return array(
+    'only_selected' => t('Only discount the selected shipping service.'),
+    'discount_all' => t('Discount all other shipping services by the same amount as the selected shipping service.'),
+  );
+}
+
+/**
+ * Returns the free shipping strategy for the given discount.
+ *
+ * @param \CommerceDiscount $discount
+ *   A Commerce Discount object with a commerce_free_shipping_strategy field.
+ *
+ * @return string
+ *   The discount's free shipping strategy or 'only_selected' if none is set.
+ */
+function commerce_discount_get_free_shipping_strategy($discount) {
+  $discount_wrapper = entity_metadata_wrapper('commerce_discount', $discount);
+  $strategy = $discount_wrapper->commerce_discount_offer->commerce_free_shipping_strategy->value();
+
+  // If the free shipping strategy is not set, default to 'only_selected'.
+  if (empty($strategy)) {
+    $strategy = 'only_selected';
+  }
+
+  // Note that if the field is set to an unknown value, we still return it. The
+  // default action for applying a free shipping discount will pass through
+  // unknown discount strategies, so modules that set them are responsible also
+  // to evaluate them on behalf of all discounts.
+  return $strategy;
+}
+
+/**
+ * Get usage of a discount for a user, excluding a certain order id.
+ *
+ * @param string $discount_name
+ *   The discount name.
+ * @param string $mail
+ *   The user mail.
+ * @param bool $exclude_order_id
+ *   If TRUE, the order id will be excluded from the SQL request.
+ *
+ * @return int
+ *   Return the number of usage by mail.
+ */
+function commerce_discount_usage_get_usage_by_mail($discount_name, $mail, $exclude_order_id = FALSE) {
+  $query = db_select('commerce_discount_usage', 'g')
+    ->fields('g')
+    ->condition('g.mail', $mail)
+    ->condition('g.discount', $discount_name);
+
+  if ($exclude_order_id) {
+    $query->condition('g.order_id', $exclude_order_id, '<>');
+  }
+
+  return $query->execute()->rowCount();
+}
+
+/**
+ * Implements hook_commerce_order_update().
+ */
+function commerce_discount_commerce_order_update($order) {
+  commerce_discount_usage_record_order_usage($order);
+}
+
+/**
+ * Implements hook_commerce_order_insert().
+ */
+function commerce_discount_commerce_order_insert($order) {
+  commerce_discount_usage_record_order_usage($order);
+}
+
+/**
+ * Implements hook_commerce_order_delete().
+ */
+function commerce_discount_commerce_order_delete($order) {
+  commerce_discount_usage_reset_order_usage($order);
+}
+
+/**
+ * Load all discounts connected to an order, including line item level discounts
+ * traced through line item unit price components.
+ *
+ * @param object $order
+ *   A fully qualified order object.
+ *
+ * @return array
+ *  List of order discounts.
+ */
+function commerce_discount_usage_order_discounts($order) {
+  $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+  $order_discounts = array();
+
+  foreach ($order_wrapper->commerce_line_items as $line_item_wrapper) {
+    try {
+      $unit_price = commerce_price_wrapper_value($line_item_wrapper, 'commerce_unit_price', TRUE);
+    }
+    catch (Exception $ex) {
+      // Log and continue if we're unable to load the unit price.
+      // @TODO Resolve how to prevent commerce_cart_order_refresh() from firing
+      // inside an order save via entity_load_unchanged().
+      // @see https://www.drupal.org/node/2661530
+      $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS);
+      $watchdog_variables = array('@backtrace' => json_encode($backtrace, JSON_PRETTY_PRINT));
+      watchdog('commerce_discount', 'Discount usage line item is missing. Backtrace: <pre>@backtrace</pre>', $watchdog_variables, WATCHDOG_DEBUG);
+      continue;
+    }
+
+    foreach ($unit_price['data']['components'] as $key => $component) {
+      if (strpos($component['name'], 'discount|') === 0 && !empty($component['price']['data']['discount_name'])) {
+        $order_discount_name = $component['price']['data']['discount_name'];
+        $order_discount_wrapper = entity_metadata_wrapper('commerce_discount', $order_discount_name);
+        // Make a list of discounts present via the order's line item price
+        // components.
+        if ($order_discount_wrapper->value()) {
+          $order_discounts[] = $order_discount_wrapper->name->value();
+        }
+      }
+    }
+  }
+
+  // Add the set of discounts directly referenced on the order.
+  if (isset($order->commerce_discounts) && $order_wrapper->commerce_discounts->value()) {
+    foreach ($order_wrapper->commerce_discounts->value() as $discount) {
+      if (isset($discount->name)) {
+        $order_discounts[] = $discount->name;
+      }
+    }
+  }
+
+  $order_discounts = array_unique($order_discounts);
+
+  return $order_discounts;
+}
+
+/**
+ * Record order usage.
+ *
+ * @param object $order
+ *   A fully qualified order object.
+ */
+function commerce_discount_usage_record_order_usage($order) {
+  // Reset usage for this order first.
+  commerce_discount_usage_reset_order_usage($order);
+
+  // Only record discount usage if the order has an email.
+  $discount_names = commerce_discount_usage_order_discounts($order);
+
+  foreach ($discount_names as $discount_name) {
+    $record = array(
+      'discount' => $discount_name,
+      'mail' => $order->mail ? $order->mail : '',
+      'order_id' => $order->order_id,
+    );
+    drupal_write_record('commerce_discount_usage', $record);
+  }
+}
+
+/**
+ * Reset usage statistics for an entire order.
+ *
+ * @param object $order
+ *   A fully qualified order object.
+ *
+ * @return DeleteQuery
+ *   Return a new DeleteQuery object.
+ */
+function commerce_discount_usage_reset_order_usage($order) {
+  return db_delete('commerce_discount_usage')
+    ->condition('order_id', $order->order_id)
+    ->execute();
+}
+
+/**
+ * Get usage of a discount, excluding a certain order id.
+ *
+ * @param string $discount_name
+ *   The discount name.
+ * @param bool $exclude_order_id
+ *   If TRUE, the order id will be excluded from the SQL request.
+ *
+ * @return int
+ *   Return the number of usage.
+ */
+function commerce_discount_usage_get_usage($discount_name, $exclude_order_id = FALSE) {
+  $query = db_select('commerce_discount_usage', 'g')
+    ->fields('g')
+    ->condition('g.discount', $discount_name);
+
+  if ($exclude_order_id) {
+    $query->condition('g.order_id', $exclude_order_id, '<>');
+  }
+
+  return $query->execute()->rowCount();
+}
