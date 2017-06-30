@@ -1,0 +1,666 @@
+<?php
+
+/**
+ * @file
+ * Installs necessary fields for extra discounts.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function commerce_discount_extra_install() {
+  field_info_cache_clear();
+  $fields = field_info_fields();
+
+  // Create required field bases.
+  foreach (_commerce_discount_extra_offer_fields() as $field) {
+    if (empty($fields[$field['field_name']])) {
+      field_create_field($field);
+    }
+  }
+
+  $instances = field_info_instances();
+  $instance_definitions = _commerce_discount_extra_offer_field_instances();
+
+  // Add required field instances to our offer type bundles.
+  foreach (_commerce_discount_extra_offer_bundle_field_map() as $bundle_name => $field_names) {
+    foreach ($field_names as $field_name) {
+      if (empty($instances['commerce_discount_offer'][$bundle_name][$field_name])) {
+        $instance_definitions[$field_name]['bundle'] = $bundle_name;
+        field_create_instance($instance_definitions[$field_name]);
+      }
+    }
+  }
+}
+
+/**
+ * Maps this module's discount offer types to the fields they should have
+ * instances of.
+ */
+function _commerce_discount_extra_offer_bundle_field_map() {
+  return array(
+    'per_quantity_fixed' => array(
+      'commerce_trigger_qty',
+      'commerce_trigger_products',
+      'commerce_offer_qty',
+      'commerce_discount_products',
+      'commerce_fixed_amount',
+      'commerce_offer_limit',
+      'commerce_pricing_strategy',
+      'commerce_auto_add_behavior',
+    ),
+
+    'per_quantity_percentage' => array(
+      'commerce_trigger_qty',
+      'commerce_trigger_products',
+      'commerce_offer_qty',
+      'commerce_discount_products',
+      'commerce_percentage',
+      'commerce_offer_limit',
+      'commerce_pricing_strategy',
+      'commerce_auto_add_behavior',
+    ),
+
+    'fixed_product_price' => array(
+      'commerce_fixed_amount',
+    ),
+
+    'per_quantity_category_fixed' => array(
+      'commerce_trigger_qty',
+      'commerce_trigger_categories',
+      'commerce_offer_qty',
+      'commerce_offer_categories',
+      'commerce_fixed_amount',
+      'commerce_offer_limit',
+      'commerce_pricing_strategy',
+      'commerce_auto_add_behavior',
+    ),
+
+    'per_quantity_category_percentage' => array(
+      'commerce_trigger_qty',
+      'commerce_trigger_categories',
+      'commerce_offer_qty',
+      'commerce_offer_categories',
+      'commerce_percentage',
+      'commerce_offer_limit',
+      'commerce_pricing_strategy',
+      'commerce_auto_add_behavior',
+    ),
+  );
+}
+
+/**
+ * Returns an array of all fields used on this module's discount offer types.
+ */
+function _commerce_discount_extra_offer_fields() {
+  return array(
+    // Create the trigger quantity field if it doesn't exist. This represents
+    // the quantity of X in "Buy X, Get Y" offers.
+    array(
+      'entity_types' => array('commerce_discount_offer'),
+      'field_name' => 'commerce_trigger_qty',
+      'type' => 'number_integer',
+      'locked' => TRUE,
+    ),
+
+    // Create the trigger product field if it doesn't exist. This represents the
+    // product(s) of X in "Buy X, Get Y" offers.
+    array(
+      'entity_types' => array('commerce_discount_offer'),
+      'field_name' => 'commerce_trigger_products',
+      'type' => 'commerce_product_reference',
+      'locked' => TRUE,
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    ),
+
+    // Create the discount product field if it doesn't exist. This represents
+    // the product(s) being offered at discount in Y of "Buy X, Get Y" offers.
+    array(
+      'entity_types' => array('commerce_discount_offer'),
+      'field_name' => 'commerce_discount_products',
+      'type' => 'commerce_product_reference',
+      'locked' => TRUE,
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    ),
+
+    // Create the trigger category select list. This represents the category X
+    // in "Buy product(s) in category X, Get product(s) in category Y" offers.
+    // The allowed values are derived from the taxonomy reference fields on
+    // product display nodes.
+    array(
+      'field_name' => 'commerce_trigger_categories',
+      'type' => 'list_text',
+      'locked' => TRUE,
+      'cardinality' => '1',
+      'settings' => array(
+        'allowed_values' => array(),
+        'allowed_values_function' => 'commerce_discount_extra_product_categories',
+      ),
+    ),
+
+    // Create the offer category select list. This represents the category Y
+    // in "Buy product(s) in category X, Get product(s) in category Y" offers.
+    // The allowed values are derived from the taxonomy reference fields on
+    // product display nodes.
+    array(
+      'field_name' => 'commerce_offer_categories',
+      'type' => 'list_text',
+      'locked' => TRUE,
+      'cardinality' => '1',
+      'settings' => array(
+        'allowed_values' => array(),
+        'allowed_values_function' => 'commerce_discount_extra_product_categories',
+      ),
+    ),
+
+    // Create the discount quantity field if it doesn't exist. This represents
+    // the quantity of Y in "Buy X, Get Y" offers.
+    array(
+      'entity_types' => array('commerce_discount_offer'),
+      'field_name' => 'commerce_offer_qty',
+      'type' => 'number_integer',
+      'locked' => TRUE,
+    ),
+
+    // Create the discount percentage field if it doesn't exist and add it to
+    // the related offer type.
+    array(
+      'entity_types' => array('commerce_discount_offer'),
+      'field_name' => 'commerce_percentage',
+      'type' => 'number_decimal',
+      'locked' => TRUE,
+    ),
+
+    // Create the fixed discount amount field if it doesn't exist and add it to
+    // related offer types.
+    array(
+      'entity_types' => array('commerce_discount_offer'),
+      'field_name' => 'commerce_fixed_amount',
+      'type' => 'commerce_price',
+      'locked' => TRUE,
+    ),
+
+    // Create the discount limit field if it doesn't exist. This represents the
+    // number of products the offer amount can apply to.
+    array(
+      'entity_types' => array('commerce_discount_offer'),
+      'field_name' => 'commerce_offer_limit',
+      'type' => 'number_integer',
+      'locked' => TRUE,
+    ),
+
+    // Create the pricing strategy field if it doesn't exist. This instructs the
+    // action how to determine which products to discount first.
+    array(
+      'field_name' => 'commerce_pricing_strategy',
+      'type' => 'list_text',
+      'locked' => TRUE,
+      'cardinality' => '1',
+      'settings' => array(
+        'allowed_values' => array(
+          'low_first' => t('Discount the cheapest eligible product(s) first.'),
+          'high_first' => t('Discount the most expensive eligible product(s) first.'),
+        ),
+        'allowed_values_function' => '',
+        'entity_translation_sync' => FALSE,
+      ),
+    ),
+
+    // Create the automatic "Add to Cart" behavior field if it doesn't exist.
+    // This field is used to determine when / how offer products should be added
+    // to the cart when triggering conditions are met.
+    array(
+      'field_name' => 'commerce_auto_add_behavior',
+      'type' => 'list_text',
+      'locked' => TRUE,
+      'settings' => array(
+        'allowed_values' => array(
+          'nothing' => t('Do not automatically add offer products to the cart.'),
+          'add_first_offer_product' => t('Add the first available offer product to the cart.'),
+        ),
+        'allowed_values_function' => '',
+        'entity_translation_sync' => FALSE,
+      ),
+    ),
+  );
+}
+
+/**
+ * Returns an array of field instances to be defined on this module's discount
+ * offer types.
+ */
+function _commerce_discount_extra_offer_field_instances() {
+  return array(
+    'commerce_trigger_qty' => array(
+      'field_name' => 'commerce_trigger_qty',
+      'entity_type' => 'commerce_discount_offer',
+      'label' => t('Buy #'),
+      'required' => TRUE,
+      'widget' => array(
+        'weight' => 0,
+      ),
+    ),
+
+    'commerce_trigger_products' => array(
+      'field_name' => 'commerce_trigger_products',
+      'entity_type' => 'commerce_discount_offer',
+      'label' => t('Of any of these trigger products'),
+      'description' => t('Leave blank to trigger the discount when <em>any</em> product is purchased.'),
+      'widget' => array(
+        'type' => 'commerce_product_reference_autocomplete',
+        'weight' => 5,
+      ),
+    ),
+
+    'commerce_discount_products' => array(
+      'field_name' => 'commerce_discount_products',
+      'entity_type' => 'commerce_discount_offer',
+      'label' => t('Of any of these offer products'),
+      'required' => TRUE,
+      'widget' => array(
+        'type' => 'commerce_product_reference_autocomplete',
+        'weight' => 15,
+      ),
+    ),
+
+    'commerce_trigger_categories' => array(
+      'field_name' => 'commerce_trigger_categories',
+      'label' => t('Products in this trigger category'),
+      'entity_type' => 'commerce_discount_offer',
+      'required' => TRUE,
+      'widget' => array(
+        'weight' => 5,
+        'type' => 'options_select',
+        'module' => 'options',
+      ),
+    ),
+
+    'commerce_offer_categories' => array(
+      'field_name' => 'commerce_offer_categories',
+      'label' => t('Products in this offer category'),
+      'entity_type' => 'commerce_discount_offer',
+      'required' => TRUE,
+      'widget' => array(
+        'weight' => 15,
+        'type' => 'options_select',
+        'module' => 'options',
+      ),
+    ),
+
+    'commerce_offer_qty' => array(
+      'field_name' => 'commerce_offer_qty',
+      'entity_type' => 'commerce_discount_offer',
+      'label' => t('Get up to #'),
+      'required' => TRUE,
+      'widget' => array(
+        'weight' => 10,
+      ),
+    ),
+
+    'commerce_percentage' => array(
+      'field_name' => 'commerce_percentage',
+      'entity_type' => 'commerce_discount_offer',
+      'bundle' => 'per_quantity_percentage',
+      'label' => t('Discounted by'),
+      'required' => TRUE,
+      'settings' => array(
+        'suffix' => t('% as a decimal (e.g. .2 for 20% off)'),
+      ),
+      'widget' => array(
+        'weight' => 20,
+      ),
+    ),
+
+    'commerce_fixed_amount' => array(
+      'field_name' => 'commerce_fixed_amount',
+      'entity_type' => 'commerce_discount_offer',
+      'label' => t('Discounted by'),
+      'required' => TRUE,
+      'widget' => array(
+        'weight' => 20,
+      ),
+    ),
+
+    'commerce_offer_limit' => array(
+      'field_name' => 'commerce_offer_limit',
+      'entity_type' => 'commerce_discount_offer',
+      'default_value' => NULL,
+      'required' => FALSE,
+      'label' => t('On up to #'),
+      'settings' => array(
+        'min' => 0,
+        'suffix' => t('different products (leave blank for no limit)'),
+      ),
+      'widget' => array(
+        'weight' => 25,
+      ),
+    ),
+
+    'commerce_pricing_strategy' => array(
+      'label' => t('Use the following discounting strategy'),
+      'widget' => array(
+        'weight' => 30,
+        'type' => 'options_buttons',
+        'active' => TRUE,
+        'settings' => array(),
+      ),
+      'required' => TRUE,
+      'default_value' => array(
+        0 => array(
+          'value' => 'low_first',
+        ),
+      ),
+      'field_name' => 'commerce_pricing_strategy',
+      'entity_type' => 'commerce_discount_offer',
+    ),
+
+    'commerce_auto_add_behavior' => array(
+      'label' => t('When enough trigger products are in the cart but no offer products have been added'),
+      'widget' => array(
+        'weight' => 35,
+        'type' => 'options_buttons',
+        'active' => TRUE,
+        'settings' => array(),
+      ),
+      'required' => TRUE,
+      'default_value' => array(
+        0 => array(
+          'value' => 'nothing',
+        ),
+      ),
+      'field_name' => 'commerce_auto_add_behavior',
+      'entity_type' => 'commerce_discount_offer',
+    ),
+  );
+}
+
+/**
+ * Change per-qty discount product fields to multivalue.
+ */
+function commerce_discount_extra_update_7001() {
+  field_info_cache_clear();
+
+  $fields = field_info_fields();
+  $instances = field_info_instances();
+
+  foreach (array('commerce_discount_product', 'commerce_trigger_product') as $field_name) {
+    foreach (array('per_quantity_fixed', 'per_quantity_percentage') as $offer_type) {
+      if (!empty($instances['commerce_discount_offer'][$offer_type][$field_name])) {
+        // Delete instances.
+        field_delete_instance($instances['commerce_discount_offer'][$offer_type][$field_name]);
+      }
+    }
+
+    // Delete fields.
+    if (isset($fields[$field_name])) {
+      field_delete_field($field_name);
+    }
+  }
+
+  // Create multivalue discount products field.
+  $field = array(
+    'entity_types' => array('commerce_discount_offer'),
+    'field_name' => 'commerce_discount_products',
+    'type' => 'commerce_product_reference',
+    'locked' => TRUE,
+    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+  );
+  field_create_field($field);
+
+  // Create multivalue trigger products field.
+  $field = array(
+    'entity_types' => array('commerce_discount_offer'),
+    'field_name' => 'commerce_trigger_products',
+    'type' => 'commerce_product_reference',
+    'locked' => TRUE,
+    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+  );
+  field_create_field($field);
+
+  // Create instances.
+  foreach (array('per_quantity_fixed', 'per_quantity_percentage') as $offer_type) {
+    // Trigger products.
+    $instance = array(
+      'field_name' => 'commerce_trigger_products',
+      'entity_type' => 'commerce_discount_offer',
+      'bundle' => $offer_type,
+      'label' => t('product(s)'),
+      'required' => TRUE,
+      'widget' => array(
+        'type' => 'commerce_product_reference_autocomplete',
+        'weight' => 1,
+      ),
+    );
+    field_create_instance($instance);
+    // Offer products.
+    $instance = array(
+      'field_name' => 'commerce_discount_products',
+      'entity_type' => 'commerce_discount_offer',
+      'bundle' => $offer_type,
+      'label' => t('product(s)'),
+      'required' => TRUE,
+      'widget' => array(
+        'type' => 'commerce_product_reference_autocomplete',
+        'weight' => 3,
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Add pricing strategy field to per-qty offers.
+ */
+function commerce_discount_extra_update_7002() {
+  field_info_cache_clear();
+  $fields = field_info_fields();
+  $instances = field_info_instances();
+
+  /*
+   * BOGO pricing strategy
+   */
+  if (empty($fields['commerce_pricing_strategy'])) {
+    $field = array(
+      'settings' => array(
+        'allowed_values' => array(
+          'high_first' => 'Highest first',
+          'low_first' => 'Lowest first',
+        ),
+        'allowed_values_function' => '',
+        'entity_translation_sync' => FALSE,
+      ),
+      'field_name' => 'commerce_pricing_strategy',
+      'type' => 'list_text',
+      'locked' => TRUE,
+      'cardinality' => '1',
+    );
+    field_create_field($field);
+  }
+  foreach (array('per_quantity_fixed', 'per_quantity_percentage') as $type) {
+    if (empty($instances['commerce_discount_offer'][$type]['commerce_pricing_strategy'])) {
+      $instance = array(
+        'label' => 'Pricing strategy',
+        'widget' => array(
+          'weight' => 15,
+          'type' => 'options_select',
+          'active' => 1,
+          'settings' => array(),
+        ),
+        'required' => 1,
+        'description' => t('Determine whether the offer should discount lowest or highest price products first if there is a choice.'),
+        'default_value' => array(
+          0 => array(
+            'value' => 'low_first',
+          ),
+        ),
+        'field_name' => 'commerce_pricing_strategy',
+        'entity_type' => 'commerce_discount_offer',
+        'bundle' => $type,
+      );
+      field_create_instance($instance);
+    }
+  }
+}
+
+/**
+ * Update various settings for the per-quantity discount field instances.
+ */
+function commerce_discount_extra_update_7003() {
+  $bundle_names = array('per_quantity_fixed', 'per_quantity_percentage');
+
+  // Update the first set of field instances that exist on both offer types.
+  foreach ($bundle_names as $bundle_name) {
+    // Update the trigger quantity instances.
+    $instance = field_info_instance('commerce_discount_offer', 'commerce_trigger_qty', $bundle_name);
+    $instance['label'] = t('Buy #');
+    $instance['description'] = '';
+    $instance['widget']['weight'] = 0;
+    field_update_instance($instance);
+
+    // Update the trigger product instances.
+    $instance = field_info_instance('commerce_discount_offer', 'commerce_trigger_products', $bundle_name);
+    $instance['label'] = t('Of any of these trigger products');
+    $instance['description'] = t('Leave blank to trigger the discount when <em>any</em> product is purchased.');
+    $instance['required'] = FALSE;
+    $instance['widget']['weight'] = 5;
+    field_update_instance($instance);
+
+    // Update the offer quantity instances.
+    $instance = field_info_instance('commerce_discount_offer', 'commerce_offer_qty', $bundle_name);
+    $instance['label'] = t('Get up to #');
+    $instance['description'] = '';
+    $instance['widget']['weight'] = 10;
+    field_update_instance($instance);
+
+    // Update the offer product instances.
+    $instance = field_info_instance('commerce_discount_offer', 'commerce_discount_products', $bundle_name);
+    $instance['label'] = t('Of any of these offer products');
+    $instance['description'] = '';
+    $instance['widget']['weight'] = 15;
+    field_update_instance($instance);
+  }
+
+  // Then update the field instances that exist on just one offer type.
+  $instance = field_info_instance('commerce_discount_offer', 'commerce_percentage', 'per_quantity_percentage');
+  $instance['label'] = t('Discounted by');
+  $instance['description'] = '';
+  $instance['settings']['suffix'] = t('% as a decimal (e.g. .2 for 20% off)');
+  $instance['widget']['weight'] = 20;
+  field_update_instance($instance);
+
+  $instance = field_info_instance('commerce_discount_offer', 'commerce_fixed_amount', 'per_quantity_fixed');
+  $instance['label'] = t('Discounted by');
+  $instance['description'] = '';
+  $instance['widget']['weight'] = 20;
+  field_update_instance($instance);
+
+  // Update the second set of field instances that exist on both offer types.
+  foreach ($bundle_names as $bundle_name) {
+    // Update the offer limit instances.
+    $instance = field_info_instance('commerce_discount_offer', 'commerce_offer_limit', $bundle_name);
+    $instance['label'] = t('On up to #');
+    $instance['description'] = '';
+    $instance['settings']['suffix'] = t('different products (leave blank for no limit)');
+    $instance['widget']['weight'] = 25;
+    field_update_instance($instance);
+
+    // Update the pricing strategy instances.
+    $instance = field_info_instance('commerce_discount_offer', 'commerce_pricing_strategy', $bundle_name);
+    $instance['label'] = t('Use the following discounting strategy');
+    $instance['description'] = '';
+    $instance['widget']['weight'] = 30;
+    $instance['widget']['type'] = 'options_buttons';
+    field_update_instance($instance);
+  }
+
+  // Update the pricing strategy options as well.
+  $field = field_info_field('commerce_pricing_strategy');
+  $field['settings']['allowed_values'] = array(
+    'low_first' => t('Discount the cheapest eligible product(s) first.'),
+    'high_first' => t('Discount the most expensive eligible product(s) first.'),
+  );
+  field_update_field($field);
+
+  return st('Per-quantity discount field instances updated.');
+}
+
+/**
+ * Add a field to determine automatic "Add to Cart" behavior for offer products.
+ */
+function commerce_discount_extra_update_7004() {
+  field_info_cache_clear();
+  $fields = field_info_fields();
+  $instances = field_info_instances();
+
+  // Create the automatic "Add to Cart" behavior field if it doesn't exist. This
+  // field is used to determine when / how offer products should be added to the
+  // cart when triggering conditions are met.
+  if (empty($fields['commerce_auto_add_behavior'])) {
+    $field = array(
+      'settings' => array(
+        'allowed_values' => array(
+          'nothing' => t('Do not automatically add offer products to the cart.'),
+          'add_first_offer_product' => t('Add the first available offer product to the cart.'),
+        ),
+        'allowed_values_function' => '',
+        'entity_translation_sync' => FALSE,
+      ),
+      'field_name' => 'commerce_auto_add_behavior',
+      'type' => 'list_text',
+      'locked' => TRUE,
+    );
+    field_create_field($field);
+  }
+  foreach (array('per_quantity_fixed', 'per_quantity_percentage') as $bundle_name) {
+    if (empty($instances['commerce_discount_offer'][$bundle_name]['commerce_auto_add_behavior'])) {
+      $instance = array(
+        'label' => t('When enough trigger products are in the cart but no offer products have been added'),
+        'widget' => array(
+          'weight' => 35,
+          'type' => 'options_buttons',
+          'active' => TRUE,
+          'settings' => array(),
+        ),
+        'required' => TRUE,
+        'default_value' => array(
+          0 => array(
+            'value' => 'nothing',
+          ),
+        ),
+        'field_name' => 'commerce_auto_add_behavior',
+        'entity_type' => 'commerce_discount_offer',
+        'bundle' => $bundle_name,
+      );
+
+      field_create_instance($instance);
+    }
+  }
+
+  return st('New field added to offer types to automatically add offer products to the cart.');
+}
+
+/**
+ * Add the necessary price field to the fixed product price offer type.
+ */
+function commerce_discount_extra_update_7005() {
+  field_info_cache_clear();
+  $instances = field_info_instances();
+
+  if (empty($instances['commerce_discount_offer']['fixed_product_price']['commerce_fixed_amount'])) {
+    $instance = array(
+      'field_name' => 'commerce_fixed_amount',
+      'entity_type' => 'commerce_discount_offer',
+      'bundle' => 'fixed_product_price',
+      'label' => t('Fixed price'),
+      'required' => TRUE,
+      'widget' => array(
+        'weight' => 4,
+      ),
+    );
+    field_create_instance($instance);
+
+    return st('Price field added to the fixed product price offer type.');
+  }
+
+  return st('Price field already existed on the fixed product price offer type.');
+}
