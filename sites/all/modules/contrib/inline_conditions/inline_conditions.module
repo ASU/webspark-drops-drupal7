@@ -1,0 +1,547 @@
+<?php
+/**
+ * @file
+ * Extends Drupal 7 with a new field type to manage rules conditions directly
+ * from a field.
+ */
+
+// Inline conditions own constants.
+define('INLINE_CONDITIONS_AND', 1);
+define('INLINE_CONDITIONS_OR', 0);
+
+// Load all Field module hooks for Inline Conditions.
+module_load_include('inc', 'inline_conditions', 'inline_conditions.field');
+
+/**
+ * Implements hook_menu().
+ */
+function inline_conditions_menu() {
+  $items = array();
+
+  $items['inline_conditions/autocomplete/%/%/%'] = array(
+    'title' => 'Inline Conditions Autocomplete',
+    'page callback' => 'inline_conditions_autocomplete_callback',
+    'page arguments' => array(2, 3, 4, 5),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function inline_conditions_theme($existing, $type, $theme, $path) {
+  return array(
+    'inline_conditions_table' => array(
+      'render element' => 'element',
+    ),
+  );
+}
+
+/**
+ * Returns HTML for an individual inline conditions widget.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: A render element representing the widget.
+ *
+ * @ingroup themeable
+ *
+ * @return string
+ *   The HTML to be rendered.
+ */
+function theme_inline_conditions_table($variables) {
+  $element = $variables['element'];
+
+  // Initialize the variable which will store our table rows.
+  foreach (element_children($element) as $key) {
+    if (is_numeric($key) && $key > 0) {
+      // Render the logical operator form element and pop it into the upper row.
+      $rows[] = array(
+        'data' => array(
+          array(
+            'data' => $element[$key]['condition_logic_operator'],
+            'colspan' => 4,
+          ),
+        ),
+      );
+    }
+
+    if (is_numeric($key)) {
+      $rows[] = array(
+        'data' => array(
+          // Column: "Apply to".
+          array('data' => $element[$key]['condition_name']),
+          // Column: "Settings".
+          array('data' => $element[$key]['condition_settings']),
+          // Column: "Negate".
+          array('data' => $element[$key]['condition_negate']),
+          // Column: "Remove".
+          array('data' => $element[$key]['remove_condition']),
+        ),
+      );
+    }
+  }
+
+  // Render action buttons.
+  $rows[] = array(
+    'data' => array(
+      array(
+        'data' => array(
+          $element['and_condition'],
+          $element['or_condition'],
+        ),
+        'colspan' => 4,
+      ),
+    ),
+  );
+
+  return theme('table', array(
+    'header' => array(t('Apply to'), t('Settings'), t('Negate'), t('Remove')),
+    'rows' => $rows,
+    'attributes' => array('class' => array('inline-conditions-table')),
+    'caption' => isset($element['#caption']) ? $element['#caption'] : NULL,
+  ));
+}
+
+/**
+ * Implements hook_modules_enabled().
+ */
+function inline_conditions_modules_enabled() {
+  // New modules might offer additional inline conditions.
+  drupal_static_reset('inline_conditions_get_info');
+}
+
+/**
+ * Implements hook_modules_disabled().
+ */
+function inline_conditions_modules_disabled() {
+  drupal_static_reset('inline_conditions_get_info');
+}
+
+/**
+ * Implements hook_hook_info().
+ */
+function inline_conditions_hook_info() {
+  $hooks['inline_conditions_info'] = array(
+    'group' => 'inline_conditions',
+  );
+  $hooks['inline_conditions_info_alter'] = array(
+    'group' => 'inline_conditions',
+  );
+  $hooks['inline_conditions_build_alter'] = array(
+    'group' => 'inline_conditions',
+  );
+
+  return $hooks;
+}
+
+/**
+ * Menu callback: autocomplete the label of an entity.
+ *
+ * Assumes "tag mode" (multiple allowed entries).
+ * Mostly stolen from entityreference.
+ *
+ * @param string $entity_type
+ *   The entity type.
+ * @param bool $product_mode
+ *   Boolean indicating whether to limit taxonomy terms to vocabularies used by
+ *   commerce_product bundles.
+ * @param bool $single
+ *   Indicate a single value autocomple field.
+ * @param string $string
+ *   The label of the entity to query by.
+ */
+function inline_conditions_autocomplete_callback($entity_type, $product_mode, $single = FALSE, $string = '') {
+  $matches = array();
+  $entity_info = entity_get_info($entity_type);
+  if ($product_mode) {
+    $product_node_types = commerce_product_reference_node_types();
+    $product_node_types = array_keys($product_node_types);
+  }
+
+  // Single mode.
+  if ($single) {
+    // Get the current string from field.
+    $tag_last = $string;
+  }
+  else {
+    // The user enters a comma-separated list of tags.
+    // We only autocomplete the last tag.@
+    $tags_typed = drupal_explode_tags($string);
+    $tag_last = drupal_strtolower(array_pop($tags_typed));
+    if (!empty($tag_last)) {
+      $prefix = count($tags_typed) ? implode(', ', $tags_typed) . ', ' : '';
+    }
+  }
+
+  if (!empty($tag_last)) {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', $entity_type);
+    $query->propertyCondition($entity_info['entity keys']['label'], $tag_last, 'CONTAINS');
+    $query->addTag($entity_type . '_access');
+    $query->range(0, 10);
+    if ($entity_type == 'node') {
+      // Limit the query to product display node types.
+      if ($product_mode) {
+        $query->entityCondition('bundle', $product_node_types);
+      }
+
+      // If there are no access control modules enabled, and the user does not
+      // have permission to bypass node access, limit the nodes to 'published'.
+      if (!user_access('bypass node access') && !count(module_implements('node_grants'))) {
+        $query->propertyCondition(
+          'status',
+          NODE_PUBLISHED
+        );
+      }
+    }
+    elseif ($entity_type == 'taxonomy_term' && $product_mode) {
+      // Gather all vocabularies referenced from term reference fields on
+      // product display node types.
+      $vids = array();
+      $vocabulary_data = taxonomy_vocabulary_get_names();
+      foreach (field_info_instances('commerce_product') as $instance) {
+        foreach ($instance as $field_name => $field_properties) {
+          $field = field_info_field($field_name);
+          if ($field['type'] == 'taxonomy_term_reference') {
+            $vocabulary_name = $field['settings']['allowed_values'][0]['vocabulary'];
+            $vids[] = $vocabulary_data[$vocabulary_name]->vid;
+          }
+        }
+      }
+
+      // Limit the query to only those vocabularies.
+      if ($vids) {
+        $query->propertyCondition('vid', array_unique($vids));
+      }
+    }
+
+    $results = $query->execute();
+    if (!empty($results[$entity_type])) {
+      $entities = entity_load($entity_type, array_keys($results[$entity_type]));
+      foreach ($entities as $entity_id => $entity) {
+        $label = entity_label($entity_type, $entity);
+        $label = check_plain($label);
+
+        $key = "$label ($entity_id)";
+        // Strip things like starting/trailing white spaces,
+        // line breaks and tags.
+        $key = preg_replace('/\s\s+/', ' ', str_replace("\n", '', trim(decode_entities(strip_tags($key)))));
+        // Names containing commas or quotes must be wrapped in quotes.
+        if (strpos($key, ',') !== FALSE || strpos($key, '"') !== FALSE) {
+          $key = '"' . str_replace('"', '""', $key) . '"';
+        }
+        $matches[$prefix . $key] = '<div class="reference-autocomplete">' . $label . '</div>';
+      }
+    }
+  }
+
+  drupal_json_output($matches);
+}
+
+/**
+ * Private Callback: Ensure that autocomplete is valid.
+ *
+ * @param array $element
+ *   Current element array.
+ * @param array $form_state
+ *   The form state array.
+ * @param array $form
+ *   the form array.
+ */
+function _inline_conditions_autocomplete_validate($element, &$form_state, $form) {
+  $value = array();
+  // If a value was entered into the autocomplete...
+  if (!empty($element['#value'])) {
+    $entities = drupal_explode_tags($element['#value']);
+    $value = array();
+    foreach ($entities as $entity) {
+      // Take "label (entity id)', match the id from parenthesis.
+      if (preg_match("/.+\((\d+)\)/", $entity, $matches)) {
+        $value[] = array(
+          'target_id' => $matches[1],
+        );
+      }
+    }
+  }
+
+  // Update the value of this element with only the entity ids.
+  form_set_value($element, $value, $form_state);
+}
+
+/**
+ * Property callback for IC module.
+ */
+function inline_conditions_field_property_callback(&$info, $entity_type, $field, $instance, $field_type) {
+
+  // Apply the default behavior.
+  entity_metadata_field_default_property_callback($info, $entity_type, $field, $instance, $field_type);
+
+  // Alter both getter & setter callbacks.
+  $property =& $info[$entity_type]['bundles'][$instance['bundle']]['properties'][$field['field_name']];
+  $property['getter callback'] = 'inline_conditions_entity_metadata_field_property_get';
+  $property['setter callback'] = 'inline_conditions_entity_metadata_field_property_set';
+}
+
+/**
+ * Callback for getting field property values.
+ */
+function inline_conditions_entity_metadata_field_property_get($entity, array $options, $name, $entity_type, $info) {
+  $field = field_info_field($name);
+  $langcode = entity_metadata_field_get_language($entity_type, $entity, $field, isset($options['language']) ? $options['language']->language : LANGUAGE_NONE, TRUE);
+  $values = array();
+  if (isset($entity->{$name}[$langcode])) {
+    foreach ($entity->{$name}[$langcode] as $delta => $rows) {
+      $values[$delta] = $rows;
+    }
+  }
+
+  // For an empty single-valued field, we have to return NULL.
+  return $field['cardinality'] == 1 ? ($values ? reset(
+    $values
+  ) : NULL) : $values;
+}
+
+/**
+ * Callback for setting field property values.
+ *
+ * TODO: to be tested...
+ */
+function inline_conditions_entity_metadata_field_property_set($entity, $name, $value, $langcode, $entity_type) {
+  $field = field_info_field($name);
+  $langcode = entity_metadata_field_get_language($entity_type, $entity, $field, $langcode);
+  $values = $field['cardinality'] == 1 ? array($value) : (array) $value;
+
+  $items = array();
+  foreach ($values as $delta => $value) {
+    if (isset($delta)) {
+      $items[$delta] = $value;
+    }
+  }
+  $entity->{$name}[$langcode] = $items;
+  // Empty the static field language cache, so the field system picks up any
+  // possible new languages.
+  drupal_static_reset('field_language');
+}
+
+/**
+ * Defines a callback to add condition(s) to the given rule.
+ *
+ * When a rule is being built, it goes over the $field_values, and for each
+ * condition it calls the conditions "build" function.
+ *
+ * @param RulesReactionRule $rule
+ *   The parent rule.
+ * @param array $field_values
+ *   An array of values from an inline_conditions field.
+ *
+ * @see hook_inline_conditions_build_alter()
+ */
+function inline_conditions_build(RulesReactionRule $rule, $field_values) {
+  if (!empty($field_values)) {
+    // Initialising the variables needed to later build the rule.
+    $or = $and = $temp = NULL;
+
+    // Loop over field values.
+    foreach ($field_values as $delta => $value) {
+      // Give a chance to others module to alter the current field value.
+      drupal_alter('inline_conditions_build', $value);
+
+      // Get the condition info.
+      $info = inline_conditions_get_info($value['condition_name']);
+
+      // Ensure we got the condition and we have settings for the rule
+      // condition.
+      if (!$info || empty($value['condition_settings'])) {
+        continue;
+      }
+
+      // Fulfill the parameters variable with the expecting values.
+      $parameters = array('entity:select' => $info['entity type']) + $value['condition_settings'];
+
+      // Find the condition name in order to be attached on the passed rule.
+      $name = isset($info['rule condition name']) ? $info['rule condition name'] : $value['condition_name'];
+
+      $condition = rules_condition($name, $parameters)
+        ->negate(!empty($value['condition_negate']));
+
+      // Find out if we need to add a OR / AND condition before the one defined
+      // in the current field value.
+      if (isset($value['condition_logic_operator'])) {
+        switch ($value['condition_logic_operator']) {
+          case INLINE_CONDITIONS_AND:
+            if (is_null($and)) {
+              $and = rules_and();
+            }
+            // Attach the condition in the "AND" group.
+            $condition->setParent($and);
+            // Try to add the condition stored in temp variable in the current
+            // group.
+            if (isset($temp)) {
+              $temp->setParent($and);
+              unset($temp);
+            }
+            break;
+          case INLINE_CONDITIONS_OR:
+            if (is_null($or)) {
+              $or = rules_or();
+            }
+            // Attach the condition in the "OR" group.
+            $condition->setParent($or);
+            // Try to add the condition stored in temp variable in the current
+            // group.
+            if (isset($temp)) {
+              $temp->setParent($or);
+              unset($temp);
+            }
+            break;
+
+        }
+        continue;
+      }
+
+      // No logical operator found, so we put the condition in the temp array.
+      $temp = $condition;
+    }
+
+    // Add conditions based on logical operators groups to passed rule.
+    if (!is_null($and)) {
+      $rule->condition($and);
+    }
+    if (!is_null($or)) {
+      $rule->condition($or);
+    }
+
+    // If a condition is still present in the temp var, attach it to the rule
+    // using an AND operator.
+    if (isset($temp)) {
+      $rule->condition($temp);
+    }
+  }
+}
+
+/**
+ * Returns the info array of a condition.
+ *
+ * @param string $condition_name
+ *   The condition name for which the info shall be returned, or NULL to return
+ *   an array with info about all conditions.
+ *
+ * @return array
+ *   An array of conditions.
+ */
+function inline_conditions_get_info($condition_name = NULL) {
+  $conditions = &drupal_static(__FUNCTION__);
+
+  if (!isset($conditions)) {
+    $conditions = array();
+    foreach (module_implements('inline_conditions_info') as $module) {
+      foreach (module_invoke($module, 'inline_conditions_info') as $condition => $condition_info) {
+        $condition_info += array(
+          // Remember the providing module.
+          'module' => $module,
+          'callbacks' => array(),
+        );
+        // Provide default callbacks based on condition name when they are using
+        // the MODULE_CONDITION condition name's naming pattern.
+        $callback_prefix = $condition;
+        if (strpos($callback_prefix, $module . '_') !== 0) {
+          $callback_prefix = $module . '_' . $condition;
+        }
+        $condition_info['callbacks'] += array(
+          'configure' => $callback_prefix . '_configure',
+          'build' => $callback_prefix . '_build',
+        );
+
+        $conditions[$condition] = $condition_info;
+      }
+    }
+
+    drupal_alter('inline_conditions_info', $conditions);
+  }
+
+  if (isset($condition_name)) {
+    return !empty($conditions[$condition_name]) ? $conditions[$condition_name] : FALSE;
+  }
+  else {
+    return $conditions;
+  }
+}
+
+/**
+ * Get inline conditions per type.
+ *
+ * Return an array of defined inline conditions for the passed entity type and
+ * component type (if specified by the condition).
+ *
+ * @param string $entity_type
+ *   The type of the entity available to the rule.
+ * @param string $parent_entity_type
+ *   The type of the parent entity (that contains the IC field).
+ *   Used for comparison if a condition defines one as well.
+ *
+ * @return array
+ *   An array of conditions.
+ */
+function inline_conditions_get_info_by_type($entity_type, $parent_entity_type) {
+  $conditions = inline_conditions_get_info();
+
+  // Prepare the list of conditions to be returned.
+  // Filter first by entity type, then by parent entity type, if available.
+  $filtered_conditions = array();
+  foreach ($conditions as $condition_name => $condition_info) {
+    if ($condition_info['entity type'] != $entity_type) {
+      continue;
+    }
+    if (isset($condition_info['parent entity type']) && $condition_info['parent entity type'] != $parent_entity_type) {
+      continue;
+    }
+
+    $filtered_conditions[$condition_name] = $condition_info;
+  }
+
+  return $filtered_conditions;
+}
+
+/**
+ * Get inline conditions per module name.
+ *
+ * Return an array of conditions keyed by module name.
+ *
+ * @param string $module
+ *   The module name.
+ *
+ * @return array
+ *   An array of conditions.
+ */
+function inline_conditions_get_info_by_module($module = NULL) {
+  $filtered_conditions = array();
+
+  foreach (inline_conditions_get_info() as $name => $condition) {
+    $filtered_conditions[$condition['module']][$name] = $condition;
+  }
+
+  return $filtered_conditions;
+}
+
+/**
+ * Returns an options list of inline conditions per type.
+ *
+ * @param array $condition_info
+ *   An array of inline conditions.
+ *
+ * @return array
+ *   An array of inline conditions keyed by condition machine name.
+ */
+function inline_conditions_options_list($condition_info) {
+  // Complete an array ready to be used as value for a select form element.
+  $condition_list = array('' => t('- All -'));
+  foreach ($condition_info as $condition_name => $info) {
+    $condition_list[$condition_name] = $info['label'];
+  }
+
+  return $condition_list;
+}

@@ -1,0 +1,13 @@
+name = "Commerce Discount Extra"
+description = "Additional discount offer types"
+package = Commerce (contrib)
+core = 7.x
+
+dependencies[] = commerce_discount
+
+; Information added by Drupal.org packaging script on 2016-02-17
+version = "7.x-1.0-rc4"
+core = "7.x"
+project = "commerce_discount_extra"
+datestamp = "1455752941"
+

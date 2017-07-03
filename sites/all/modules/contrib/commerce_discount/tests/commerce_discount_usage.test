@@ -1,0 +1,128 @@
+<?php
+
+/**
+ * @file
+ * Commerce Discounts usage tests.
+ */
+
+/**
+ * Testing commerce discount usage module functionality.
+ */
+class CommerceDiscountUsageTest extends CommerceDiscountTestBase {
+
+  private $store_customer2;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Discounts usage',
+      'description' => 'Test discounts usage functionality',
+      'group' => 'Commerce Discount',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    $this->store_customer2 = $this->createStoreCustomer();
+  }
+
+  /**
+   * Test fixed order discounts.
+   */
+  public function testCommerceDiscountUsageFixedOrderDiscount() {
+    // Testing fixed discount.
+    // Create a fixed order discount of $3 limited to one use.
+    $this->createUsageDiscount('order_discount', 'fixed_amount', 300, 1);
+
+    // Create an order.
+    $order = $this->createDummyOrder($this->store_customer->uid, array($this->product->product_id => 1), 'completed');
+    // Recalculate discounts.
+    $order_wrapper = commerce_cart_order_refresh($order);
+    // Check if the discount was applied on the order total price.
+    $this->assertTrue($order_wrapper->commerce_order_total->amount->value() == 700, 'Fixed order discount is deducted correctly on the first use.');
+
+    // Create another order to make sure the discount isn't applied again.
+    $order = $this->createDummyOrder($this->store_customer2->uid, array($this->product->product_id => 1), 'completed');
+    // Recalculate discounts.
+    $order_wrapper = commerce_cart_order_refresh($order);
+    // Check if the discount was applied on the order total price.
+    $this->assertTrue($order_wrapper->commerce_order_total->amount->value() == 1000, 'Fixed order discount is ignored after maximal usage.');
+  }
+
+  /**
+   * Test percentage order discounts.
+   */
+  public function testCommerceDiscountUsagePercentageOrderDiscount() {
+    // Testing percentage discount.
+    // Create a percentage order discount of 5% limited to one use.
+    $this->createUsageDiscount('order_discount', 'percentage', 5, 1);
+
+    // Create a completed order.
+    $order = $this->createDummyOrder($this->store_customer->uid, array($this->product->product_id => 1), 'completed');
+    // Recalculate discounts.
+    $order_wrapper = commerce_cart_order_refresh($order);
+    // Check if the discount was applied on the order total price.
+    $this->assertTrue($order_wrapper->commerce_order_total->amount->value() == 950, 'Percentage order discount is deducted correctly.');
+
+    // Create another order to make sure the discount isn't applied again.
+    $order = $this->createDummyOrder($this->store_customer2->uid, array($this->product->product_id => 1), 'completed');
+    // Recalculate discounts.
+    $order_wrapper = commerce_cart_order_refresh($order);
+    // Check if the discount was applied on the order total price.
+    $this->assertTrue($order_wrapper->commerce_order_total->amount->value() == 1000, 'Percentage order discount is ignored after maximal usage.');
+  }
+
+  /**
+   * Test fixed product discounts.
+   */
+  public function testCommerceDiscountUsageFixedProductDiscount() {
+    $this->createUsageDiscount('product_discount', 'fixed_amount', 300, 1);
+
+    // Create an order.
+    $order = $this->createDummyOrder($this->store_customer->uid, array($this->product->product_id => 1), 'completed');
+    // Recalculate discounts.
+    $order_wrapper = commerce_cart_order_refresh($order);
+    // Check if the discount was added as a component to the line item.
+    $price = commerce_price_wrapper_value($order_wrapper->commerce_line_items->get(0), 'commerce_unit_price');
+    $this->assertTrue($price['data']['components'][1]['price']['amount'] == -300, 'Fixed product discount is added as a price component to the line item.');
+    commerce_order_save($order);
+
+    // Create another order to make sure the discount isn't applied again.
+    $order = $this->createDummyOrder($this->store_customer2->uid, array($this->product->product_id => 1), 'completed');
+    // Recalculate discounts.
+    $order_wrapper = commerce_cart_order_refresh($order);
+    // Check if the discount was added as a component to the line item.
+    $price = commerce_price_wrapper_value($order_wrapper->commerce_line_items->get(0), 'commerce_unit_price');
+    $this->assertTrue(count($price['data']['components']) === 1, 'Fixed product discount is ignored after maximal usage.');
+  }
+
+  /**
+   * Test percentage product discounts.
+   */
+  public function testCommerceDiscountUsagePercentageProductDiscount() {
+    $this->createUsageDiscount('product_discount', 'percentage', 5, 1);
+
+    // Create an order.
+    $order = $this->createDummyOrder($this->store_customer->uid, array($this->product->product_id => 1), 'completed');
+    // Recalculate discounts.
+    $order_wrapper = commerce_cart_order_refresh($order);
+    // Check if the discount was added as a component to the line item.
+    $price = commerce_price_wrapper_value($order_wrapper->commerce_line_items->get(0), 'commerce_unit_price');
+    $this->assertEqual($price['data']['components'][1]['price']['amount'], -50, 'Percentage product discount is added as a price component to the line item.');
+    commerce_order_save($order);
+
+    // Create another order to make sure the discount isn't applied again.
+    $order = $this->createDummyOrder($this->store_customer2->uid, array($this->product->product_id => 1), 'completed');
+    // Recalculate discounts.
+    $order_wrapper = commerce_cart_order_refresh($order);
+    // Check if the discount was added as a component to the line item.
+    $price = commerce_price_wrapper_value($order_wrapper->commerce_line_items->get(0), 'commerce_unit_price');
+    $this->assertTrue(count($price['data']['components']) === 1, 'Percentage product discount is ignored after maximal usage.');
+  }
+
+}

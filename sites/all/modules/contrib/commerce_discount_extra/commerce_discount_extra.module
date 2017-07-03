@@ -1,0 +1,931 @@
+<?php
+
+/**
+ * @file
+ * Provides necessary inline conditions and support for extra discounts.
+ */
+
+/**
+ * Implements hook_inline_conditions_info().
+ */
+function commerce_discount_extra_inline_conditions_info() {
+
+  // User has role: line item.
+  $conditions['commerce_discount_extra_line_item_user_has_role'] = array(
+    'label' => t('Role'),
+    'entity type' => 'commerce_line_item',
+    'callbacks' => array(
+      'configure' => 'commerce_discount_extra_user_has_role_configure',
+      'build' => 'commerce_discount_extra_user_has_role_build',
+    ),
+  );
+
+  // User has role: order.
+  $conditions['commerce_discount_extra_order_user_has_role'] = array(
+    'label' => t('Role'),
+    'entity type' => 'commerce_order',
+    'callbacks' => array(
+      'configure' => 'commerce_discount_extra_user_has_role_configure',
+      'build' => 'commerce_discount_extra_user_has_role_build',
+    ),
+  );
+
+  // Product price: line item.
+  $conditions['commerce_discount_extra_line_item_price_comp'] = array(
+    'label' => t('Product price'),
+    'entity type' => 'commerce_line_item',
+    'callbacks' => array(
+      'configure' => 'commerce_discount_extra_line_item_price_comp_configure',
+      'build' => 'commerce_discount_extra_line_item_price_comp_build',
+    ),
+  );
+
+  // Total items in order: line item.
+  $conditions['commerce_discount_extra_line_item_items_in_order'] = array(
+    'label' => t('Total items in order'),
+    'entity type' => 'commerce_line_item',
+    'callbacks' => array(
+      'configure' => 'commerce_discount_extra_items_in_order_configure',
+      'build' => 'commerce_discount_extra_items_in_order_build',
+    ),
+  );
+
+  // Total items in order: order.
+  $conditions['commerce_discount_extra_order_items_in_order'] = array(
+    'label' => t('Total items in order'),
+    'entity type' => 'commerce_order',
+    'callbacks' => array(
+      'configure' => 'commerce_discount_extra_items_in_order_configure',
+      'build' => 'commerce_discount_extra_items_in_order_build',
+    ),
+  );
+
+  // Products and quantity: line item.
+  $conditions['commerce_discount_extra_line_item_has_specific_quantity_products'] = array(
+    'label' => t('Order has product(s) and quantity'),
+    'entity type' => 'commerce_line_item',
+    'callbacks' => array(
+      'configure' => 'commerce_order_has_specific_quantity_products_configure',
+      'build' => 'commerce_discount_extra_line_item_has_specific_quantity_products_build',
+    ),
+  );
+
+  // Order total: line item.
+  $conditions['commerce_discount_extra_line_item_compare_order_amount'] = array(
+    'label' => t('Order amount'),
+    'entity type' => 'commerce_line_item',
+    'callbacks' => array(
+      'configure' => 'commerce_order_compare_order_amount_configure',
+      'build' => 'commerce_discount_extra_line_item_compare_order_amount_build',
+    ),
+  );
+
+  // Product type: line item.
+  $conditions['commerce_discount_extra_line_item_has_product_type'] = array(
+    'label' => t('Product type'),
+    'entity type' => 'commerce_line_item',
+    'callbacks' => array(
+      'configure' => 'commerce_discount_extra_line_item_has_product_type_configure',
+      'build' => 'commerce_discount_extra_line_item_has_product_type_build',
+    ),
+  );
+
+  return $conditions;
+}
+
+/**
+ * Inline condition build callback: compare line item product type.
+ *
+ * @param EntityDrupalWrapper $line_item_wrapper
+ *   The wrapped entity given by the rule.
+ * @param array $product_types
+ *   Array of product types.
+ *
+ * @return bool
+ *   Returns TRUE if condition is valid, FALSE otherwise.
+ */
+function commerce_discount_extra_line_item_has_product_type_build(EntityDrupalWrapper $line_item_wrapper, $product_types) {
+  if (in_array($line_item_wrapper->getBundle(), commerce_product_line_item_types()) && in_array($line_item_wrapper->commerce_product->getBundle(), $product_types)) {
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Inline condition build callback: compare order total for line items.
+ *
+ * @param EntityDrupalWrapper $line_item_wrapper
+ *   The wrapped entity given by the rule.
+ * @param string $operator
+ *   The comparison operator.
+ * @param array $total
+ *   A commerce_price type array.
+ *
+ * @return bool
+ *   Returns TRUE if condition is valid, FALSE otherwise.
+ */
+function commerce_discount_extra_line_item_compare_order_amount_build(EntityDrupalWrapper $line_item_wrapper, $operator, $total) {
+  module_load_include('inc', 'commerce_discount', 'commerce_discount.rules');
+
+  if ($line_item_wrapper->order->value() && $line_item_wrapper->order->order_id->value()) {
+    $order = commerce_order_load($line_item_wrapper->order->order_id->value());
+    if ($order) {
+      $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+
+      // Need to do this to trigger the total field update.
+      $line_item_wrapper->save();
+
+      // Run the order amount comparison function.
+      return commerce_order_compare_order_amount_build($order_wrapper, $operator, $total);
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Inline condition build callback: Order contains products.
+ *
+ * Determine whether the order associated with a line item, either by reference
+ * or by user's current cart, contains all of a list of skus.
+ *
+ * @param EntityDrupalWrapper $line_item_wrapper
+ *   The wrapped entity given by the rule.
+ * @param array $skus
+ *   Array of product SKUs given by the rule.
+ *
+ * @return bool
+ *   Returns TRUE if condition is valid, FALSE otherwise.
+ */
+function commerce_discount_extra_line_item_order_contains_products_build(EntityDrupalWrapper $line_item_wrapper, $skus) {
+  $products_sku = explode(', ', (string) $skus);
+
+  // If the line item has an order, run the "order has products" logic with that
+  // as the argument.
+  if ($line_item_wrapper->order->value()) {
+    $order_wrapper = $line_item_wrapper->order;
+  }
+
+  // If the line item does not have an order (the most common reason is that it
+  // is a line item spawned by a calculated price field display), use the user's
+  // current cart as the subject for the product search.
+  global $user;
+
+  $cart_order = commerce_cart_order_load($user->uid);
+  if ($cart_order) {
+    $order_wrapper = entity_metadata_wrapper('commerce_order', $cart_order);
+  }
+
+  if (isset($order_wrapper)) {
+    // Compare discount product ids with those of given order.
+    foreach ($order_wrapper->commerce_line_items as $wrapper_line_item) {
+      // Ensures that the type of current line item is product.
+      if ($wrapper_line_item->getBundle() == 'product') {
+        if (($key = array_search($wrapper_line_item->commerce_product->sku->value(), $products_sku)) !== FALSE) {
+          unset($products_sku[$key]);
+        }
+      }
+    }
+
+    return empty($products_sku);
+  }
+
+  return FALSE;
+}
+
+/**
+ * Inline conditions build callback: Determine if a user has a role.
+ *
+ * Discount-type agnostic.
+ *
+ * @param EntityDrupalWrapper $wrapper
+ *   The wrapped entity given by the rule.
+ * @param array $roles
+ *   Array of roles given by the rule.
+ *
+ * @return bool
+ *   Returns TRUE if condition is valid, FALSE otherwise.
+ */
+function commerce_discount_extra_user_has_role_build(EntityDrupalWrapper $wrapper, $roles) {
+  // Get the appropriate user.
+  switch ($wrapper->type()) {
+    case 'commerce_order':
+      if ($wrapper->owner->value()) {
+        $user = $wrapper->owner->value();
+      }
+      break;
+
+    case 'commerce_line_item':
+      if ($wrapper->order->value() && $wrapper->order->owner->value()) {
+        $user = $wrapper->order->owner->value();
+      }
+  }
+
+  if (!isset($user) || empty($user->roles)) {
+    return FALSE;
+  }
+
+  // Match role by name.
+  $user_roles = array_values($user->roles);
+
+  return array_intersect($roles, $user_roles);
+}
+
+/**
+ * Inline conditions build callback: line item product comparison.
+ *
+ * @param EntityDrupalWrapper $line_item_wrapper
+ *   The wrapped entity given by the rule.
+ * @param array $price
+ *   Price array structure.
+ * @param string $operator
+ *   The comparison operator.
+ * @param string $method
+ *   Calculation method.
+ *
+ * @return bool
+ *   Returns TRUE if condition is valid, FALSE otherwise.
+ */
+function commerce_discount_extra_line_item_price_comp_build(EntityDrupalWrapper $line_item_wrapper, $price, $operator, $method) {
+  // Ensure that it is a product line item and that it is the same currency as
+  // the price argument.
+  $line_item_total = $line_item_wrapper->commerce_total->value();
+  if (!in_array($line_item_wrapper->getBundle(), commerce_product_line_item_types()) || $line_item_total['currency_code'] != $price['currency_code']) {
+    return FALSE;
+  }
+
+  // Calculate line item amount.
+  switch ($method) {
+    case 'base':
+      // Get product base price.
+      $line_item_amount = $line_item_wrapper->commerce_product->commerce_price->amount->value();
+
+      break;
+
+    case 'calculated':
+      // Get line item total.
+      $line_item_amount = $line_item_wrapper->commerce_total->amount->value();
+      break;
+
+    // Invalid method.
+    default:
+      return FALSE;
+  }
+
+  // Evaluate expression.
+  return _commerce_discount_extra_expression_eval($line_item_amount, $price['amount'], $operator);
+}
+
+/**
+ * Inline conditions build callback: evaluate items in order condition.
+ *
+ * @param EntityDrupalWrapper $entity_wrapper
+ *   The wrapped entity given by the rule.
+ * @param int $number
+ *   The number given by the rule.
+ * @param string $operator
+ *   The comparison operator.
+ *
+ * @return bool
+ *   Returns TRUE if condition is valid, FALSE otherwise.
+ */
+function commerce_discount_extra_items_in_order_build(EntityDrupalWrapper $entity_wrapper, $number, $operator) {
+  // Find the order depending on if the argument is an order or a line item.
+  if ($entity_wrapper->type() == 'commerce_order') {
+    $order_wrapper = $entity_wrapper;
+  }
+  elseif ($entity_wrapper->order->value()) {
+    $order_wrapper = $entity_wrapper->order;
+  }
+
+  $qty = 0;
+
+  // Determine total item count on order.
+  if (isset($order_wrapper)) {
+    foreach ($order_wrapper->commerce_line_items as $line_item_wrapper) {
+      if (in_array($line_item_wrapper->getBundle(), commerce_product_line_item_types())) {
+        $qty += $line_item_wrapper->quantity->value();
+      }
+    }
+  }
+
+  // Evaluate.
+  return _commerce_discount_extra_expression_eval($qty, $number, $operator);
+}
+
+/**
+ * Inline conditions build callback: evaluate product quantity conditions.
+ *
+ * @param EntityDrupalWrapper $line_item_wrapper
+ *   The wrapped entity given by the rule.
+ * @param array $products
+ *   The array of products given by the rule.
+ * @param string $operator
+ *   The comparison operator.
+ * @param int $quantity
+ *   The quantity given by the rule.
+ *
+ * @return bool
+ *   Returns TRUE if condition is valid, FALSE otherwise.
+ */
+function commerce_discount_extra_line_item_has_specific_quantity_products_build(EntityDrupalWrapper $line_item_wrapper, $products, $operator, $quantity) {
+  module_load_include('inc', 'commerce_discount', 'commerce_discount.rules');
+
+  return commerce_order_has_specific_quantity_products_build($line_item_wrapper->order, $products, $operator, $quantity);
+}
+
+/**
+ * Inline conditions configure callback.
+ *
+ * Configure role selection form.
+ *
+ * @param array $settings
+ *   An array of rules condition settings.
+ *
+ * @return array
+ *   Return a form build array.
+ */
+function commerce_discount_extra_user_has_role_configure($settings) {
+  $form['roles'] = array(
+    '#type' => 'select',
+    '#title' => t('Select role(s)'),
+    '#options' => array_combine(user_roles(TRUE), user_roles(TRUE)),
+    '#default_value' => isset($settings['roles']) ? $settings['roles'] : array(),
+    '#required' => TRUE,
+    '#multiple' => TRUE,
+  );
+
+  return $form;
+}
+
+/**
+ * Inline conditions configure callback.
+ *
+ * Configure line item price comp form.
+ *
+ * @param array $settings
+ *   An array of rules condition settings.
+ *
+ * @return array
+ *   Return a form build array.
+ */
+function commerce_discount_extra_line_item_price_comp_configure($settings) {
+  // Expression operator.
+  $form['operator'] = array(
+    '#type' => 'select',
+    '#title' => t('Operator'),
+    '#title_display' => 'invisible',
+    '#options' => _commerce_discount_extra_operator_options(),
+    '#default_value' => !empty($settings['operator']) ? $settings['operator'] : '==',
+    '#required' => TRUE,
+  );
+
+  // Price container.
+  $form['price'] = array(
+    '#type' => 'container',
+    '#tree' => TRUE,
+    '#element_validate' => array('commerce_price_field_widget_validate'),
+    '#suffix' => '<div class="condition-instructions">' . t('Enter a value to compare to the product price.') . '</div>',
+  );
+
+  // Price amount.
+  $form['price']['amount'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Product price'),
+    '#title_display' => 'invisible',
+    '#default_value' => commerce_currency_amount_to_decimal($settings['price']['amount'], commerce_default_currency()),
+    '#size' => 10,
+    '#field_suffix' => commerce_default_currency(),
+    '#require' => TRUE,
+  );
+
+  // Price currency (hidden).
+  $form['price']['currency_code'] = array(
+    '#type' => 'value',
+    '#default_value' => commerce_default_currency(),
+  );
+
+  // Comparison method.
+  $form['method'] = array(
+    '#type' => 'radios',
+    '#title' => t('Compare using'),
+    '#options' => _commerce_discount_extra_comp_method_options(),
+    '#default_value' => !empty($settings['method']) ? $settings['method'] : 'base',
+    '#required' => TRUE,
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_commerce_discount_offer_type_info().
+ */
+function commerce_discount_extra_commerce_discount_offer_type_info() {
+  $types['per_quantity_fixed'] = array(
+    'label' => t('Per-quantity product discount ($ off)'),
+    'action' => 'commerce_discount_extra_per_quantity_discount',
+    'entity types' => array('commerce_order'),
+  );
+
+  $types['per_quantity_percentage'] = array(
+    'label' => t('Per-quantity product discount (% off)'),
+    'action' => 'commerce_discount_extra_per_quantity_discount',
+    'entity types' => array('commerce_order'),
+  );
+
+  $types['fixed_product_price'] = array(
+    'label' => t('Fixed price'),
+    'action' => 'commerce_discount_extra_fixed_product_price',
+    'entity types' => array('commerce_line_item'),
+  );
+
+  $types['per_quantity_category_fixed'] = array(
+    'label' => t('Per-quantity category discount ($ off)'),
+    'action' => 'commerce_discount_extra_per_quantity_category_discount',
+    'entity types' => array('commerce_order'),
+  );
+
+  $types['per_quantity_category_percentage'] = array(
+    'label' => t('Per-quantity category discount (% off)'),
+    'action' => 'commerce_discount_extra_per_quantity_category_discount',
+    'entity types' => array('commerce_order'),
+  );
+
+  return $types;
+}
+
+/**
+ * Inline conditions configure callback: configure items in order condition.
+ *
+ * @param array $settings
+ *   An array of rules condition settings.
+ *
+ * @return array
+ *   Return a form build array.
+ */
+function commerce_discount_extra_items_in_order_configure($settings) {
+  // Expression operator.
+  $form['operator'] = array(
+    '#type' => 'select',
+    '#title' => t('Operator'),
+    '#title_display' => 'invisible',
+    '#options' => _commerce_discount_extra_operator_options(),
+    '#default_value' => !empty($settings['operator']) ? $settings['operator'] : '==',
+    '#required' => TRUE,
+  );
+
+  // Comparison number.
+  $form['number'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Number'),
+    '#default_value' => !empty($settings['number']) ? $settings['number'] : '',
+    '#element_validate' => array('element_validate_integer'),
+    '#required' => TRUE,
+  );
+
+  return $form;
+}
+
+/**
+ * Inline conditions configure callback: configure product type condition.
+ *
+ * @param array $settings
+ *   An array of rules condition settings.
+ *
+ * @return array
+ *   Return a form build array.
+ */
+function commerce_discount_extra_line_item_has_product_type_configure($settings) {
+  $form['product_types'] = array(
+    '#type' => 'select',
+    '#multiple' => TRUE,
+    '#title' => t('Product types'),
+    '#description' => t('Select the product types that should get this discount'),
+    '#default_value' => !empty($settings['product_types']) ? $settings['product_types'] : array(),
+    '#options' => commerce_product_type_options_list(),
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_flush_caches().
+ */
+function commerce_discount_extra_flush_caches() {
+  module_load_install('commerce_discount_extra');
+  commerce_discount_extra_install();
+}
+
+/**
+ * Implements hook_inline_conditions_build_alter().
+ */
+function commerce_discount_extra_inline_conditions_build_alter(&$value) {
+  switch ($value['condition_name']) {
+    case 'commerce_discount_extra_line_item_has_specific_quantity_products':
+      // See commerce_order_inline_conditions_build_alter().
+      $entity_ids = array();
+      foreach ($value['condition_settings']['products'] as $delta) {
+        $entity_ids[] = reset($delta);
+      }
+      $products = commerce_product_load_multiple($entity_ids);
+
+      $value['condition_settings']['products'] = '';
+      foreach ($products as $product) {
+        $value['condition_settings']['products'] .= $product->sku;
+        if ($product !== end($products)) {
+          $value['condition_settings']['products'] .= ', ';
+        }
+      }
+
+      break;
+  }
+}
+
+/**
+ * Returns a list of operator labels keyed by symbol.
+ *
+ * @return array
+ *   Operator options.
+ */
+function _commerce_discount_extra_operator_options() {
+  return array(
+    '<' => t('lower than'),
+    '==' => t('equals'),
+    '>' => t('greater than'),
+  );
+}
+
+/**
+ * Returns a list of comparison method options.
+ *
+ * @return array
+ *   Comparison menthod options.
+ */
+function _commerce_discount_extra_comp_method_options() {
+  return array(
+    'base' => t('Product base price'),
+    'calculated' => t('Calculated price'),
+  );
+}
+
+/**
+ * Get the quantity of a given product in an order.
+ *
+ * @param EntityDrupalWrapper $order_wrapper
+ *   An order entity wrapper.
+ * @param array $product_ids
+ *   Array of product IDs.
+ *
+ * @return int
+ *   The quantity of a set of products on an order.
+ */
+function commerce_discount_extra_order_product_qty(EntityDrupalWrapper $order_wrapper, $product_ids) {
+  $qty = 0;
+  foreach ($order_wrapper->commerce_line_items as $line_item_wrapper) {
+    if ($line_item_wrapper->value() && in_array($line_item_wrapper->getBundle(), commerce_product_line_item_types()) &&
+        in_array($line_item_wrapper->commerce_product->getIdentifier(), $product_ids)) {
+      $qty += $line_item_wrapper->quantity->value();
+    }
+  }
+
+  return $qty;
+}
+
+/**
+ * Evalute a simple expression with two values and an operator.
+ *
+ * @param int $v1
+ *   First value to compare.
+ * @param int $v2
+ *   Second value to compare.
+ * @param string $operator
+ *   The comparison operator.
+ *
+ * @return bool
+ *   Returns TRUE if condition is valid, FALSE otherwise.
+ */
+function _commerce_discount_extra_expression_eval($v1, $v2, $operator) {
+  switch ($operator) {
+    case '>':
+      $result = $v1 > $v2;
+      break;
+
+    case '<':
+      $result = $v1 < $v2;
+      break;
+
+    case '==':
+      $result = $v1 == $v2;
+      break;
+  }
+
+  return $result;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function commerce_discount_extra_form_commerce_discount_form_alter(&$form, &$form_state) {
+  // Inline entity form has a problem where it interprets a blank integer field
+  // as a string rather than an integer. This causes a fatal error on write, as
+  // '' cannot be written to an integer column, even if it accepts NULL values.
+  if (isset($form['commerce_discount_fields']['commerce_discount_offer'][LANGUAGE_NONE]['form']['commerce_discount_offer_fields']['commerce_offer_limit'][LANGUAGE_NONE][0]['value'])) {
+    $element = &$form['commerce_discount_fields']['commerce_discount_offer'][LANGUAGE_NONE]['form']['commerce_discount_offer_fields']['commerce_offer_limit'][LANGUAGE_NONE][0]['value'];
+
+    // Add an element validate handler that converts empty values to 0 during
+    // the element validation step.
+    $element['#element_validate'][] = 'commerce_discount_extra_offer_limit_element_validate';
+
+    // Additioanlly, if the current default value of the element is 0, convert it
+    // to an empty string for dubious UX benefit.
+    // @todo Update the interface text to say use 0 or leave blank for no limit.
+    if (empty($element['#default_value'])) {
+      $element['#default_value'] = '';
+    }
+  }
+}
+
+/**
+ * Form validate callback: change empty string to integer for limit field.
+ */
+function commerce_discount_extra_offer_limit_element_validate(&$element, &$form_state) {
+  // If the offer limit field has an empty value, set it to 0 for save.
+  if (empty($element['#value'])) {
+    form_set_value($element, 0, $form_state);
+  }
+}
+
+/**
+ * Implements hook_commerce_cart_product_add().
+ *
+ * When a product is added to the cart, this function looks for any discounts
+ * that use per-quantity offers configured to automatically add their offer
+ * products to the cart when enough triggering products have been added.
+ */
+function commerce_discount_extra_commerce_cart_product_add($order, $product, $quantity, $line_item) {
+  // See if a product has already been added through this function. If so, bail
+  // as we only want to add the first available product to the cart.
+  $product_added = &drupal_static(__FUNCTION__);
+
+  if (isset($product_added)) {
+    return;
+  }
+  else {
+    $product_added = NULL;
+  }
+
+  // Build the base select query to find all per-quantity offer discounts.
+  $query = db_select('commerce_discount', 'cd', array('fetch' => PDO::FETCH_ASSOC))
+    ->fields('cd', array('discount_id', 'name'))
+    ->orderBy('cd.discount_id')
+    ->groupBy('cd.discount_id');
+
+  // Join to the relevant tables and retain their aliases.
+  $fcdo_alias = $query->leftJoin('field_data_commerce_discount_offer', 'fcdo', 'cd.discount_id = %alias.entity_id');
+  $cdo_alias = $query->leftJoin('commerce_discount_offer', 'cdo', $fcdo_alias . '.commerce_discount_offer_target_id = %alias.discount_offer_id');
+  $fcaab_alias = $query->leftJoin('field_data_commerce_auto_add_behavior', 'fcaab', $cdo_alias . '.discount_offer_id = %alias.entity_id');
+
+  // Add fields from the joined tables.
+  $query
+    ->fields($cdo_alias, array('type'))
+    ->fields($fcaab_alias, array('commerce_auto_add_behavior_value'));
+
+  // Add the conditions for the various tables.
+  $query
+    ->condition('cd.status', 1)
+    ->condition($fcdo_alias . '.entity_type', 'commerce_discount')
+    ->condition($fcaab_alias . '.entity_type', 'commerce_discount_offer')
+    ->where($fcaab_alias . ".commerce_auto_add_behavior_value IN ('add_first_offer_product')")
+    ->where($cdo_alias . ".type IN ('per_quantity_discount', 'per_quantity_percentage')");
+
+  // Fetch and loop over the results to find discount rules to evaluate.
+  $discount_rules = array();
+
+  foreach ($query->execute() as $result) {
+    $discount_rules[$result['discount_id']] = 'commerce_discount_rule_' . $result['name'];
+  }
+
+  // Load the sell price calculation event.
+  $event = rules_get_cache('event_commerce_discount_order');
+
+  // Load all of the relevant discount rules.
+  $rules = rules_config_load_multiple($discount_rules);
+
+  $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+
+  foreach ($discount_rules as $discount_id => $rule_name) {
+    // Evaluate each rule's conditions to see if the discount would apply to the
+    // current shopping cart.
+    $state = new RulesState();
+    $vars = $event->parameterInfo(TRUE);
+    $state->addVariable('commerce_order', $order, $vars['commerce_order']);
+
+    if ($rules[$rule_name]->conditionContainer()->evaluate($state)) {
+      // Load the discount related to the Rule.
+      $discount = entity_load('commerce_discount', array($discount_id));
+      $discount = reset($discount);
+      $discount_wrapper = entity_metadata_wrapper('commerce_discount', $discount);
+
+      // Check to ensure the product that was added to the cart qualifies as a
+      // trigger product for the discount's offer.
+      $trigger_product_ids = $discount_wrapper->commerce_discount_offer->commerce_trigger_products->raw();
+
+      if (!empty($trigger_product_ids) && !in_array($product->product_id, $trigger_product_ids)) {
+        continue;
+      }
+
+      // If any of the current discount's offer products have been added to the
+      // cart, continue to the next discount because we don't know for certain
+      // one of the products wasn't already added as a result of this discount.
+      foreach ($order_wrapper->commerce_line_items as $delta => $line_item_wrapper) {
+        $line_item_product_id = $line_item_wrapper->commerce_product->raw();
+
+        if (in_array($line_item_product_id, $discount_wrapper->commerce_discount_offer->commerce_discount_products->raw())) {
+          continue 2;
+        }
+      }
+
+      // If so, see if sufficient trigger products exist in the cart to activate
+      // the discount. We do this by maintaining a simplified reversal of the
+      // manifest in the discount action's callback: instead of removing items
+      // from an array, we add to it as the quantity of various line items on
+      // the current order are identified as trigger products and prevent this
+      // function from recognizing the same trigger products on multiple offers.
+      // Additionally, since we can't be assured the relevant offer product
+      // hasn't already been added to the cart, do not include any offer
+      // products in the trigger product count.
+      $trigger_quantity = $discount_wrapper->commerce_discount_offer->commerce_trigger_qty->raw();
+      $offer_quantity = $discount_wrapper->commerce_discount_offer->commerce_offer_qty->raw();
+      static $triggering_line_items = array();
+      $trigger_count = 0;
+
+      foreach ($order_wrapper->commerce_line_items as $delta => $line_item_wrapper) {
+        $line_item_id = $line_item_wrapper->raw();
+        $line_item_quantity = $line_item_wrapper->quantity->raw();
+        $line_item_product_id = $line_item_wrapper->commerce_product->raw();
+
+        // If the line item has already been fully counted, skip it.
+        if (!empty($triggering_line_items[$line_item_id]) && $triggering_line_items[$line_item_id] == $line_item_quantity) {
+          continue;
+        }
+
+        // If any product may trigger the discount or if the current product is
+        // one of the specified trigger products, increment the count as much as
+        // needed and log that amount in the $triggering_line_items array.
+        $trigger_product_ids = $discount_wrapper->commerce_discount_offer->commerce_trigger_products->raw();
+
+        if (empty($trigger_product_ids) || in_array($line_item_product_id, $trigger_product_ids)) {
+          if (empty($trigger_line_items[$line_item_id])) {
+            $triggering_line_items[$line_item_id] = 0;
+          }
+
+          $increment = min($line_item_quantity - $triggering_line_items[$line_item_id], $trigger_quantity - $trigger_count);
+
+          $triggering_line_items[$line_item_id] += $increment;
+          $trigger_count += $increment;
+
+          // If we've reached the trigger quantity, exit the loop.
+          if ($trigger_count == $trigger_quantity) {
+            break;
+          }
+        }
+      }
+
+      // If by this time, the trigger quantity hasn't been met, do not add any
+      // offer product to the cart.
+      if ($trigger_count < $trigger_quantity) {
+        break;
+      }
+
+      // Loop over the discount products looking for one to add.
+      foreach ($discount_wrapper->commerce_discount_offer->commerce_discount_products as $delta => $product_wrapper) {
+        // Check stock for the current product to see if the full offer amount
+        // is available for purchase.
+        if (module_exists('commerce_stock')) {
+          // Prepare the variables needed for a stock check.
+          $quantity_ordered = commerce_stock_check_cart_product_level($product_wrapper->raw());
+          $stock_state = '';
+          $message = '';
+
+          // Fetch the stock check messages to see if it failed.
+          commerce_stock_check_product_rule($product_wrapper->value(), $offer_quantity, $quantity_ordered, $stock_state, $message);
+
+          // If the $stock_state is non-empty, the product is not in stock, so
+          // we continue to pass on to the next discounted product.
+          if (!empty($stock_state)) {
+            continue;
+          }
+        }
+
+        // Create a line item for the offer product.
+        $offer_product_line_item = commerce_product_line_item_new($product_wrapper->value(), $offer_quantity, FALSE);
+
+        // Store this discount's name in the data array.
+        $offer_product_line_item->data['discount_name'] = $discount_wrapper->name->value();
+
+        // Add the new line item to the cart.
+        commerce_cart_product_add($order->uid, $offer_product_line_item);
+
+        // Reset $product_added so additional discount rules can activate an
+        // offer.
+        $product_added = NULL;
+        break;
+      }
+    }
+  }
+}
+
+/**
+ * Allowed values callback for the target and offer category fields used in per
+ * quantity category discounts.
+ */
+function commerce_discount_extra_product_categories() {
+  $options = &drupal_static(__FUNCTION__);
+
+  // Return the options from the cache if it's already been set.
+  if (isset($options)) {
+    return $options;
+  }
+
+  foreach (commerce_product_reference_node_types() as $bundle) {
+    $instances = field_info_instances('node', $bundle->type);
+
+    foreach ($instances as $instance) {
+      $field = field_info_field($instance['field_name']);
+
+      if ($field['type'] == 'taxonomy_term_reference') {
+        // Code copied from taxonomy_allowed_values() and changed to use option
+        // groups in the allowed values array. However, because of a core bug
+        // we currently cannot support option groups in a field's allowed values
+        // callback. If that gets resolved, this code can be updated.
+        // @see https://www.drupal.org/node/1180992
+        foreach ($field['settings']['allowed_values'] as $tree) {
+          if ($vocabulary = taxonomy_vocabulary_machine_name_load($tree['vocabulary'])) {
+            if ($terms = taxonomy_get_tree($vocabulary->vid, $tree['parent'])) {
+              foreach ($terms as $term) {
+                // @todo See comment above to resolve this when possible.
+                // $options[$vocabulary->name][$term->tid] = str_repeat('-', $term->depth) . $term->name;
+                $options[$term->tid] = str_repeat('-', $term->depth) . $term->name;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return $options;
+}
+
+/**
+ *  Returns the taxonomy term IDs associated with a product via its display(s).
+ */
+function commerce_discount_extra_product_terms($product_id) {
+  // Term IDs will be cached keyed by $product_id.
+  $tids = &drupal_static(__FUNCTION__);
+
+  // Cache the product's term IDs if they haven't been set already.
+  if (isset($tids[$product_id])) {
+    return $tids[$product_id];
+  }
+
+  // Loop over all known product display node types defined as node types with
+  // product reference fields.
+  foreach (commerce_product_reference_node_types() as $bundle) {
+    $instances = field_info_instances('node', $bundle->type);
+
+    // Look for taxonomy term reference fields on the node type.
+    foreach ($instances as $instance) {
+      $field = field_info_field($instance['field_name']);
+
+      // If we found one...
+      if ($field['type'] == 'taxonomy_term_reference') {
+        // Look for nodes of this type that reference our target product.
+        $product_reference = key(field_read_fields(array('entity_type' => 'node', 'type' => 'commerce_product_reference', 'bundle' => $bundle->type)));
+
+        // @todo Switch from using EFQ to using a direct query of term data.
+        $query = new EntityFieldQuery();
+        $result = $query
+          ->entityCondition('entity_type', 'node')
+          ->propertyCondition('type', $bundle->type)
+          ->fieldCondition($product_reference, 'product_id', $product_id, '=')
+          ->addTag('commerce_discount_node_query')
+          ->execute();
+
+        // If we found matching nodes...
+        if ($result) {
+          // Loop over them and extract the IDs of any terms referenced by the
+          // node through the current term reference field.
+          foreach ($result['node'] as $node_data) {
+            $node = entity_load_single('node', $node_data->nid);
+            $term_wrapper = entity_metadata_wrapper('node', $node)->{$field['field_name']};
+            $tids[$product_id][] = $term_wrapper->tid->value();
+          }
+        }
+      }
+    }
+  }
+
+  return $tids[$product_id];
+}

@@ -1,0 +1,44 @@
+/**
+ * @file
+ * Inline conditions main stylesheet.
+ *
+ * This file exposes the common style rules for the inline_conditions field
+ * widget and its child elements should be displayed.
+ */
+
+/*
+  Wrappers for select, checkbox, checkboxes and textfield elements are
+  displayed inline.
+  The #id selector is used to counter core's tr.odd .form-item styles.
+*/
+#inline-conditions-inline_conditions .inline-conditions-settings-wrapper .form-wrapper,
+#inline-conditions-inline_conditions .inline-conditions-settings-wrapper .form-type-select,
+#inline-conditions-inline_conditions .inline-conditions-settings-wrapper .form-type-checkbox,
+#inline-conditions-inline_conditions .inline-conditions-settings-wrapper .form-type-checkboxes,
+#inline-conditions-inline_conditions .inline-conditions-settings-wrapper .form-type-textfield {
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* Labels inside wrappers are displayed inline. */
+.inline-conditions-settings-wrapper .form-item label:not(.option) {
+  display: inline;
+  vertical-align: top;
+}
+
+/* Make bigger the logical operators to make them even more clear. */
+.inline-conditions-logic-operator {
+  font-size: 1.2em;
+}
+
+/* Add vertical space to direct children of the settings wrapper. */
+.inline-conditions-settings-wrapper > .form-item {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+/* Ensure alignment of controls in the cells. */
+#inline-conditions-inline_conditions th,
+#inline-conditions-inline_conditions td {
+  vertical-align: top;
+}
