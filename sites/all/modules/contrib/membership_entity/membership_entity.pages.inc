@@ -97,6 +97,8 @@ function membership_entity_settings_form($form, &$form_state, $data = array()) {
       '8' => t('8'),
       '9' => t('9'),
       '10' => t('10'),
+      '11' => t('11'),
+      '12' => t('12'),
     ),
     '#default_value' => $data['cardinality'],
     '#description' => t('Select the number of users that may belong to a single membership of this type. (Including the primary member.)'),
