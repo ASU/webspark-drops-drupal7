@@ -3,3 +3,10 @@
  * @file
  * Miscellaneous extra code that doesn't need an entire module for it.
  */
+
+function ace_extras_form_alter(&$form, &$form_state, $form_id) {
+    //dpm($form_id);
+    if ($form_id == 'membership_entity_edit_form') {
+        $form['membership']['member_id']['#access'] = FALSE;
+    }
+}
