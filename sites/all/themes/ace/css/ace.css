@@ -15,6 +15,11 @@
     padding: 1em 2em 0;
 }
 
+/* Adds spacing below "View" & "Edit" navigation pills */
+#top-content #tabs .nav-pills {
+    padding-bottom: 1em;
+}
+
 /* Simple GMAP fix */
 .pane-node-field-meeting-subtitle .field-name-field-meeting-subtitle {
     font-size: 1.75em;
@@ -53,5 +58,21 @@
 
 /* Registration page fixes */
 .registration-programs-and-courses {
+    margin-top: 1em;
+}
+
+/* Membership-related fixes */
+.field-name-field-mem-eme-mem-name, .field-name-field-mem-sus-org-name, .field-name-field-mem-cor-org-name, .field-name-field-mem-pub-org-name, .field-name-field-mem-ind-mem-name {
+    font-weight: bold;
+    font-size: 1.5em;
+}
+#edit-field-mem-eme-mem-name, #edit-field-mem-sus-org-name, #edit-field-mem-cor-org-name, #edit-field-mem-pub-org-name, #edit-field-mem-ind-mem-name {
+    font-weight: inherit !important;
+    font-size: inherit !important;
+}
+.membership-entity .membership-entity-label {
+    font-weight: bold;
+}
+.view-membership-entity-terms {
     margin-top: 1em;
 }
