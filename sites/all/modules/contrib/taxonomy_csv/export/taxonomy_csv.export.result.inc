@@ -90,6 +90,7 @@ function _taxonomy_csv_export_result($options, $worst_level, $summary, $results)
           }
           break;
 
+        case TAXONOMY_CSV_FORMAT_TREE_FIELDS:
         case TAXONOMY_CSV_FORMAT_FIELDS:
           $format = array();
           foreach ($vocabulary->fields as $field_name => &$field) {
@@ -98,6 +99,16 @@ function _taxonomy_csv_export_result($options, $worst_level, $summary, $results)
             }
             else {
               $format = array_merge($format, array_fill(0, $field['cardinality'], $field_name));
+            }
+          }
+
+          if ($options['export_format'] == TAXONOMY_CSV_FORMAT_TREE_FIELDS) {
+            array_unshift($format, 'tree');
+            foreach (array('name', 'parent', 'parents') as $field) {
+              $item = array_search($field, $format);
+              if ($item !== FALSE) {
+                unset($format[$item]);
+              }
             }
           }
 

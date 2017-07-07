@@ -7,6 +7,30 @@
 == CHANGELOG ==
   ===========
 
+Taxonomy csv import/export 7.x-5.11-dev, 2012-05-14
+-----------------------------------------------
+#1463902 by Guillaume Viguier-Just: Support for image fields and folder check.
+#1386904 by Daniel Berthereau: Added support to export list of tids and names.
+#1386904 by Daniel Berthereau: Added simultaneous import of structure and fields
+#1386904 by Daniel Berthereau: Added full support of Structure and fields.
+#1386904 by Daniel Berthereau: Added export of tree structure and fields.
+#1481120 by Daniel Berthereau: Fixed default option for Drush.
+#1535942 by James McKinney: Fixed undefined variable.
+#1534572 by James McKinney: Fixed check of target language.
+#1178366 by Mariano D'Agostino: Fixed compatibility of a query with MS SQL.
+#1567472 by Daniel Berthereau: Added export of terms and structure with tids.
+#1567472 by Daniel Berthereau: Added support of import or update terms by tids.
+#1567472 by Daniel Berthereau: Fixed import by Fields with a tid and a name.
+
+Taxonomy csv import/export 7.x-5.11-dev, 2012-04-17
+Taxonomy csv import/export 6.x-5.11-dev, 2012-04-17
+-----------------------------------------------
+#1465942 by dannymacom: Fixed path check for non English help of Taxonomy CSV.
+#1502856 by Guillaume Viguier-Just: Fixed error when using installation profile.
+#1528432 by Daniel Berthereau: Removed extra check of options for Drush.
+#1553054 by John Robinson: Cleaned .info file.
+
+
 Taxonomy csv import/export 7.x-5.10, 2012-02-22
 -----------------------------------------------
 #1410784 by Daniel Berthereau: Added import/export of multivalued fields.

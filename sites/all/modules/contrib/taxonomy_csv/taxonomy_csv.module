@@ -37,8 +37,6 @@
  * Implements hook_help().
  */
 function taxonomy_csv_help($path, $arg) {
-  global $language;
-
   switch ($path) {
     case 'admin/structure/taxonomy/csv_import':
       $output = '<p>' . t('Use this form to import a taxonomy, a structure or a list of terms into a vocabulary from a simple <a href="!link" title="Wikipedia definition">CSV</a> file, a url or a copy-and-paste text.', array(
@@ -61,8 +59,7 @@ function taxonomy_csv_help($path, $arg) {
       return $output;
 
     case 'admin/help#taxonomy_csv':
-      $check = drupal_realpath(drupal_get_path('module', 'taxonomy_csv') . '/taxonomy_csv.help.' . $language->prefix . '.html');
-      $output = file_get_contents($check ? $check : drupal_realpath(drupal_get_path('module', 'taxonomy_csv') . '/taxonomy_csv.help.html'));
+      $output = file_get_contents(drupal_realpath(drupal_get_path('module', 'taxonomy_csv') . '/taxonomy_csv.help.html'));
       return $output;
   }
 }

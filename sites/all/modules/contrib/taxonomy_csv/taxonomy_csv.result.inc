@@ -198,6 +198,7 @@ function _taxonomy_csv_message_text($message_code) {
       465 => t('More than three items.') . $warning,
       466 => t('Unmanaged predicate.') . $warning,
       467 => t('Each semantic field should be imported as "vocabulary" or "root_term".') . $warning,
+      470 => t("Line doesn't contain all needed items.") . $warning,
       480 => t('No first column term to import. Empty first column is allowed only with structure or multiple terms import.') . $warning,
       481 => t('No item in second or third column.') . $warning,
       482 => t("Some items aren't present.") . $warning,
@@ -207,6 +208,8 @@ function _taxonomy_csv_message_text($message_code) {
       491 => t('No item to import.') . $warning,
       492 => t('Nothing to import.') . $warning,
       493 => t('Empty line.') . $warning,
+      495 => t('A term id or a term name is missing.') . $warning,
+      496 => t('A false term id has been identified.') . $warning,
       499 => t('Warnings have been reported on this line.'),
 
       500 => t('Notice'),

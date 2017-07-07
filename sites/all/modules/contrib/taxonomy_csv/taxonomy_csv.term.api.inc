@@ -33,7 +33,12 @@
  */
 function taxonomy_csv_term_find($term, $all_vocabularies = FALSE, $parent_tid = NULL) {
   if (isset($term->tid) && $term->tid) {
-    return taxonomy_term_load($term->tid);
+    $result = taxonomy_term_load($term->tid);
+    if ($result) {
+      return $result;
+    }
+    unset($term->tid);
+    return FALSE;
   }
 
   static $flag_i18n = NULL;
@@ -46,41 +51,36 @@ function taxonomy_csv_term_find($term, $all_vocabularies = FALSE, $parent_tid = 
 
     // Only term id is selected, because taxonomy_term_load is used next in
     // order to take advantage of taxonomy cache.
-    $sql = '
-      SELECT t.tid
-      FROM {taxonomy_term_data} t
-      INNER JOIN {taxonomy_term_hierarchy} h ON t.tid = h.tid
-      WHERE :name LIKE LOWER(t.name)
-    ';
-    $args = array();
-    $args[':name'] = $name;
+    $query = db_select('taxonomy_term_data', 't');
+    $query->addField('t', 'tid');
+    $query->innerJoin('taxonomy_term_hierarchy', 'h', 't.tid = h.tid');
+    $query->where('LOWER(t.name) = :name', array(':name' => $name));
 
     if (isset($term->vid)
         && $term->vid
         && !$all_vocabularies) {
-      $sql .= ' AND t.vid = :vid';
-      $args[':vid'] = $term->vid;
+      $query->condition('t.vid', $term->vid);
     }
 
     if ($flag_i18n && isset($term->language)) {
-      $sql .= ' AND t.language = :language';
-      $args[':language'] = $term->language;
+      $query->condition('t.language', $term->language);
     }
 
     if ($parent_tid) {
-      $sql .= ' AND h.parent = :parent';
-      $args[':parent'] = $parent_tid;
+      $query->condition('h.parent', $parent_tid);
     }
 
-    $sql .= ' ORDER BY t.tid ASC LIMIT 1';
+    $query->orderBy('t.tid', 'ASC');
+    $query->extend('PagerDefault')->limit(1);
 
-    $result = db_query($sql, $args)->fetchField();
+    $result = $query->execute()->fetchField();
     if ($result) {
       return taxonomy_term_load($result);
     }
   }
 
   // Not found or error.
+  unset($term->tid);
   return FALSE;
 }
 

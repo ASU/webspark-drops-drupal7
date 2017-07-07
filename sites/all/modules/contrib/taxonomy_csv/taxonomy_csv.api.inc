@@ -16,6 +16,14 @@ define('TAXONOMY_CSV_FORMAT_TREE',          'tree');
 define('TAXONOMY_CSV_FORMAT_POLYHIERARCHY', 'polyhierarchy');
 define('TAXONOMY_CSV_FORMAT_FIELDS',        'fields');
 define('TAXONOMY_CSV_FORMAT_TRANSLATE',     'translate');
+define('TAXONOMY_CSV_FORMAT_TID',           'tid');
+define('TAXONOMY_CSV_FORMAT_TID_FLAT',      'tid_flat');
+define('TAXONOMY_CSV_FORMAT_TID_TREE',      'tid_tree');
+define('TAXONOMY_CSV_FORMAT_TID_POLYHIERARCHY', 'tid_polyhierarchy');
+
+// Specific export formats.
+define('TAXONOMY_CSV_FORMAT_FLAT_TID',      'flat_tid');
+define('TAXONOMY_CSV_FORMAT_TREE_FIELDS',   'tree_fields');
 
 /**
  * Available import options.
@@ -71,20 +79,26 @@ function _taxonomy_csv_values($list) {
         TAXONOMY_CSV_FORMAT_STRUCTURE => t('Structure'),
         TAXONOMY_CSV_FORMAT_FIELDS    => t('Fields'),
         TAXONOMY_CSV_FORMAT_TRANSLATE => t('Translation'),
+        TAXONOMY_CSV_FORMAT_TID       => t('Term ids (tid)'),
       );
 
     case 'export_format':
       return array(
-        TAXONOMY_CSV_FORMAT_FLAT      => t('Term names'),
-        TAXONOMY_CSV_FORMAT_TREE      => t('Hierarchical tree structure'),
-        TAXONOMY_CSV_FORMAT_FIELDS    => t('Fields'),
-        TAXONOMY_CSV_FORMAT_TRANSLATE => t('Translation'),
+        TAXONOMY_CSV_FORMAT_FLAT          => t('Term names'),
+        TAXONOMY_CSV_FORMAT_FLAT_TID      => t('Term ids'),
+        TAXONOMY_CSV_FORMAT_TID_FLAT      => t('Term ids and names'),
+        TAXONOMY_CSV_FORMAT_TREE          => t('Hierarchical tree structure'),
+        TAXONOMY_CSV_FORMAT_TID_TREE      => t('Hierarchical tree structure with term ids and names'),
+        TAXONOMY_CSV_FORMAT_FIELDS        => t('Fields'),
+        TAXONOMY_CSV_FORMAT_TREE_FIELDS   => t('Hierarchical tree structure and Fields'),
+        TAXONOMY_CSV_FORMAT_TRANSLATE     => t('Translations'),
       );
 
     case 'import_default_ui':
       return array(
         'import_format'                 => TAXONOMY_CSV_FORMAT_STRUCTURE,
         'structure_type'                => TAXONOMY_CSV_FORMAT_FLAT,
+        'tid_structure_type'            => TAXONOMY_CSV_FORMAT_TID_FLAT,
         'import_fields_format'          => 'name',
         'translate_by'                  => 'name',
         'translate_languages'           => '',
