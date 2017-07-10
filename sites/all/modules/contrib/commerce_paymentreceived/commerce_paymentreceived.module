@@ -1,0 +1,5 @@
+<?php
+/**
+ * @file
+ * Provides a 'Payment received' order state, status, and associated rules.
+ */
