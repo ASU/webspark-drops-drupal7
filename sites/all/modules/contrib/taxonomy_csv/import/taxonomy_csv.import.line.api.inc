@@ -58,12 +58,30 @@ function taxonomy_csv_line_import($line, $options, $previous_items = array(), $t
       case TAXONOMY_CSV_FORMAT_POLYHIERARCHY:
         // Internally, polyhierarchy import format doesn't support Ignore.
         $options['update_or_ignore'] = TAXONOMY_CSV_EXISTING_UPDATE;
-
         $result = taxonomy_csv_line_import_structure($line, $options, $previous_items, $terms_count);
         break;
 
+      case TAXONOMY_CSV_FORMAT_TID:
+      case TAXONOMY_CSV_FORMAT_TID_FLAT:
+        $result = taxonomy_csv_line_import_tid($line, $options, $terms_count);
+        break;
+
+      case TAXONOMY_CSV_FORMAT_TID_TREE:
+        // Internally, tree import format use ignore_previous and not update.
+        if ($options['update_or_ignore'] == TAXONOMY_CSV_EXISTING_UPDATE) {
+          $options['update_or_ignore'] = TAXONOMY_CSV_EXISTING_IGNORE_PREVIOUS;
+        }
+        $result = taxonomy_csv_line_import_tid($line, $options, $previous_items, $terms_count);
+        break;
+
+      case TAXONOMY_CSV_FORMAT_TID_POLYHIERARCHY:
+        // Internally, polyhierarchy import format doesn't support Ignore.
+        $options['update_or_ignore'] = TAXONOMY_CSV_EXISTING_UPDATE;
+        $result = taxonomy_csv_line_import_tid($line, $options, $previous_items, $terms_count);
+        break;
+
       case TAXONOMY_CSV_FORMAT_FIELDS:
-        $result = taxonomy_csv_line_import_fields($line, $options, $terms_count);
+        $result = taxonomy_csv_line_import_fields($line, $options, $previous_items, $terms_count);
         break;
 
       case TAXONOMY_CSV_FORMAT_TRANSLATE:
@@ -181,6 +199,12 @@ function taxonomy_csv_line_import_structure($line, $options, $previous_items = a
 
   // 3. Import each new term then store and check result.
   for ($c = $first; $c < count($line); $c++) {
+    // Don't import empty terms. Needed with import of 'Structure and Fields',
+    // if user chooses to keep fields on the same columns.
+    if ($line[$c] === '') {
+      continue;
+    }
+
     $term = new stdClass;
     $term->name = $line[$c];
     $term->vid = $options['vocabulary']->vid;
@@ -223,11 +247,62 @@ function taxonomy_csv_line_import_structure($line, $options, $previous_items = a
 }
 
 /**
+ * Import a flat or a structure line with tids and names.
+ *
+ * @see taxonomy_csv_line_import()
+ */
+function taxonomy_csv_line_import_tid($line, $options, $previous_items = array(), $terms_count = 0) {
+  // Define default values.
+  $result = array(
+    'name' => array(),
+    'tid'  => array(),
+    'msg'  => array(),
+    'terms_count' => $terms_count,
+  );
+
+  foreach ($line as $key => $term_tid) {
+    if (($key % 2) === 1) {
+      continue;
+    }
+
+    $term = new stdClass;
+    if (is_numeric($term_tid) && $term_tid != 0) {
+      $term->tid = $term_tid;
+    }
+    $term->name = $line[$key + 1];
+    $term->vid = $options['vocabulary']->vid;
+    $term->vocabulary_machine_name = $options['vocabulary']->machine_name;
+    $term->format = $options['filter_format'];
+    $term->language = $options['language'];
+
+    if (($options['import_format'] !== TAXONOMY_CSV_FORMAT_TID_FLAT) && isset($parent_tid)) {
+      $term->parent = array($parent_tid => $parent_tid);
+    }
+
+    // Weight is not set above in order to keep existing one if it exists.
+    ++$terms_count;
+    if ($options['keep_order']) {
+      $term->weight = $terms_count;
+    }
+
+    // Import term then store and check result.
+    $current_result = taxonomy_csv_term_import($term, $options['update_or_ignore']);
+    // Parent tid is not used with flat import, but to to a test is slower.
+    $parent_tid  = $current_result['tid'];
+    if (_taxonomy_csv_line_result($result, $current_result, $terms_count)) {
+      return $result;
+    }
+  }
+
+  return $result;
+}
+
+/**
  * Import a fields line.
  *
  * @see taxonomy_csv_line_import()
  */
-function taxonomy_csv_line_import_fields($line, $options, $terms_count = 0) {
+function taxonomy_csv_line_import_fields($line, $options, $previous_items = array(), $terms_count = 0) {
   // Define default values.
   $result = array(
     'name' => array(),
@@ -249,6 +324,26 @@ function taxonomy_csv_line_import_fields($line, $options, $terms_count = 0) {
   }
 
   $parents = array();
+
+  // Check if a structure is imported.
+  if ($options['fields_format'][0] == 'tree' || $options['fields_format'][0] == 'poly') {
+    $line_structure = array_slice($line, 0, count($line) - count($options['fields_format']) + 1);
+    $options_structure = $options;
+    $options_structure['import_format'] = ($options['fields_format'][0] == 'tree') ?
+      TAXONOMY_CSV_FORMAT_TREE :
+      TAXONOMY_CSV_FORMAT_POLYHIERARCHY;
+    $result = taxonomy_csv_line_import($line_structure, $options_structure, $previous_items, $term_count);
+    if (_taxonomy_csv_worst_message($result['msg']) < TAXONOMY_CSV_PROCESS_NOTICE) {
+      return $result;
+    }
+
+    // Fields will be attached to the last defined term on the line.
+    $term->name = $result['name'][count($result['name']) - 1];
+    $term->tid = $result['tid'][count($result['tid']) - 1];
+    $line = array_slice($line, count($line) - count($options['fields_format']) + 1);
+    array_shift($options['fields_format']);
+    $terms_count--;
+  }
 
   // Import normal fields according custom format.
   foreach ($options['fields_format'] as $key => $field_name) {
@@ -595,6 +690,9 @@ function taxonomy_csv_term_import($term, $update_or_ignore = TAXONOMY_CSV_EXISTI
         // not been set in new term.
         $term = (object) array_merge((array) $existing_term, (array) $term);
       }
+      else {
+        unset($term->tid);
+      }
       break;
 
     case TAXONOMY_CSV_EXISTING_IGNORE_PREVIOUS:
@@ -604,6 +702,9 @@ function taxonomy_csv_term_import($term, $update_or_ignore = TAXONOMY_CSV_EXISTI
         // All fields are replaced by new ones. Other existing fields of
         // existing term should be kept even if they are not set in new term.
         $term = (object) array_merge((array) $existing_term, (array) $term);
+      }
+      else {
+        unset($term->tid);
       }
       break;
 
@@ -724,12 +825,16 @@ function _taxonomy_csv_term_field_import($term, $update_or_ignore = TAXONOMY_CSV
           break;
 
         case 'file':
+        case 'image':
           $uri_scheme = $field['settings']['uri_scheme'];
           $file_directory = $instance['settings']['file_directory'];
           $file_extensions = $instance['settings']['file_extensions'];
 
           $source = $value;
           $destination = $uri_scheme . '://' . $file_directory;
+
+          // Try to create directory if it does not exist.
+          file_prepare_directory($destination, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
 
           // Import source if it exists.
           if (file_exists($source)) {

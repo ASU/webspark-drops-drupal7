@@ -48,7 +48,7 @@ require_once($module_dir . '/taxonomy_csv.term.api.inc');
  *   - delete_terms   : delete all terms before import (default: FALSE)
  *   - check_hierarchy: boolean. check (default) or not vocabulary hierarchy
  *   - set_hierarchy  : if hierarchy isn't checked, set it (0, 1 or 2 (default))
- *   - update_or_ignore : depends on import_format: 'update' (default) or 'ignore'
+ *   - update_or_ignore : depends on import_format: update (default) or ignore
  *   - check_options  : boolean. check or not (default) this array of options
  *   - result_display : boolean. display or not (default)
  *   - result_stats   : boolean. display or not (default) stats
@@ -271,7 +271,7 @@ function taxonomy_csv_vocabulary_import($options) {
   // Check options and return array of messages in case of errors.
   if ($options['check_options']) {
     $module_dir = drupal_get_path('module', 'taxonomy_csv');
-    require_once("$module_dir/import/taxonomy_csv.import.admin.inc");
+    require_once($module_dir . '/import/taxonomy_csv.import.admin.inc');
     $result = _taxonomy_csv_import_check_options($options);
     if (count($result)) {
       return $result;
@@ -418,11 +418,11 @@ function _taxonomy_csv_vocabulary_import_process($options, &$context) {
       ) {
       // Some formats use $result to save other infos, so it needs to be cleaned
       // before to be saved.
-      if (in_array($format['import_format'], array(
-        TAXONOMY_CSV_FORMAT_STRUCTURE,
-        TAXONOMY_CSV_FORMAT_TREE,
-        TAXONOMY_CSV_FORMAT_POLYHIERARCHY,
-      ))) {
+      if (in_array($options['import_format'], array(
+          TAXONOMY_CSV_FORMAT_STRUCTURE,
+          TAXONOMY_CSV_FORMAT_TREE,
+          TAXONOMY_CSV_FORMAT_POLYHIERARCHY,
+        ))) {
         // Don't remember previous previous items.
         $context['results'][0]['imported_terms'][0] = array_values($result['tid']);
       }
@@ -521,7 +521,9 @@ function _taxonomy_csv_vocabulary_import_finished($success, $results, $operation
       WATCHDOG_ERROR   => t('Errors have been reported during import process. Process failed at line !line of a total of !total_lines [!worst_msg].', $variables),
     );
     $worst_level = intval($options['worst_message'] / 100);
-    $message = $messages[$worst_level];
+    $message = isset($messages[$worst_level]) ?
+      $messages[$worst_level] :
+      $messages[WATCHDOG_DEBUG];
   }
   else {
     $message = t('Importation failed. Import process was successful until the line !line_count of a total of !total_lines. You can first check your file on this line and check file uploading.', array(
@@ -612,9 +614,11 @@ function _taxonomy_csv_import_vocabulary_prepare(&$options, $check = TRUE) {
     // Set default format to items of the custom format.
     foreach ($fields_custom as $key => $value) {
       if (in_array($key, array(
-          'tid',
-          'vid',
           'name',
+          'tid',
+          'tree',
+          'p',
+          'vid',
           'description',
           'format',
           'weight',
@@ -900,25 +904,63 @@ function _taxonomy_csv_line_import_check($line, $options, $previous_items = arra
       }
       break;
 
+    case TAXONOMY_CSV_FORMAT_TID:
+    case TAXONOMY_CSV_FORMAT_TID_FLAT:
+    case TAXONOMY_CSV_FORMAT_TID_TREE:
+    case TAXONOMY_CSV_FORMAT_TID_POLYHIERARCHY:
+      if (count($line) == 0) {
+        $messages[] = 491; // Warning no item.
+        break;
+      }
+      if (count($line) % 2 != 0) {
+        $messages[] = 495; // Warning a missing item.
+        break;
+      }
+      $checked_items = $line;
+      foreach ($checked_items as $name) {
+        if (drupal_strlen($name) > 255) {
+          $messages[] = 454; // Warning too long.
+          break;
+        }
+      }
+      // @todo To be completed.
+      break;
+
     case TAXONOMY_CSV_FORMAT_FIELDS:
       // Get number of items.
       $number_items = count($options['fields_format']);
-      if (count($line) < count($options['fields_format'])) {
-        $messages[] = 570; // Notice too little items.
-      }
-      elseif (count($line) > count($options['fields_format'])) {
-        $messages[] = 564; // Notice too many items.
-      }
-      if (count(array_keys($options['fields_format'], '')) >= 1) {
-        $messages[] = 513; // Notice empty items.
-      }
+      if (in_array($options['fields_format'][0], array('tree', 'poly'))) {
+        if (count($line) < count($options['fields_format'])) {
+          $messages[] = 470; // Warning not enought items.
+          break;
+        }
 
-      // @todo Add format check: required or not, type of datas...
+        $line_structure = array_slice($line, 0, count($line) - count($options['fields_format']) + 1);
+        // Check if there is at least one name. It can be anywhere.
+        $to_check = array_diff(array_unique($line_structure), array());
+        if (empty($to_check) || ($to_check == array(''))) {
+          $messages[] = 464; // Warning no name.
+          break;
+        }
+      }
+      else {
+        if (count($line) < count($options['fields_format'])) {
+          $messages[] = 570; // Notice too little items.
+        }
+        elseif (count($line) > count($options['fields_format'])) {
+          $messages[] = 564; // Notice too many items.
+        }
+        if (count(array_keys($options['fields_format'], '')) >= 1) {
+          $messages[] = 513; // Notice empty items.
+        }
 
-      // Currently, check only if the first field is empty or not.
-      if (empty($line[0])) {
-        $messages[] = 464; // Warning no name.
-        break;
+        // @todo Add format check: required or not, type of datas...
+
+        // Currently, check only if the first field is empty or not.
+        if (empty($line[0])) {
+          $messages[] = 464; // Warning no name.
+          break;
+        }
       }
       $checked_items = $line;
       break;
