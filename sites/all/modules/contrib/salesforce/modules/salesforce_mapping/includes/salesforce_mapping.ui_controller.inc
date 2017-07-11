@@ -31,10 +31,6 @@ class SalesforceMappingUIController extends EntityDefaultUIController {
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', $this->entityType);
 
-    if ($this->overviewPagerLimit) {
-      $query->pager($this->overviewPagerLimit);
-    }
-
     $results = $query->execute();
 
     $ids = isset($results[$this->entityType]) ? array_keys($results[$this->entityType]) : array();
