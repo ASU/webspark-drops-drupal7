@@ -27,13 +27,9 @@ class SalesforceMappingUIController extends EntityDefaultUIController {
    * Overrides EntityDefaultUIController::overviewForm().
    */
   public function overviewForm($form, &$form_state) {
-
+    
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', $this->entityType);
-
-    if ($this->overviewPagerLimit) {
-      $query->pager($this->overviewPagerLimit);
-    }
 
     $results = $query->execute();
 
