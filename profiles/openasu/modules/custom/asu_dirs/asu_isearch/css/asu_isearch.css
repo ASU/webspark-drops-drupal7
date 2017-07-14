@@ -6,6 +6,11 @@ div.krumo-preview {
     color: #000;
 }
 
+/* hide the 2col style on the change layout page */
+.panels-choose-layout a[href*="isearch_profile_2col"] {
+    display: none;
+}
+
 .isearch-profile-2col .section.profile-header {
     margin-bottom: 25px;
 }

@@ -3,6 +3,7 @@ asu_isearch 7.x-1.8.11
 - Improved Solr profile checking to avoid unnecessary unpublishing, and improved logging information
 - 'Exclude from automatic updating' option turns off Solr profile checking
 - Improved and consolidated profile onload updating logic
+- Hides the 'isearch_profile_2col' option in the Panopoly 'Choose Layout' menu
 
 asu_isearch 7.x-1.8.10
 ----------------------

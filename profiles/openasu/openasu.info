@@ -5,7 +5,7 @@ core = 7.x
 exclusive = 1
 ;version = VERSION
 ; Remember to update in innovation as well for DOM
-version = 1.43
+version = 1.46
 
 ; Drupal Core
 dependencies[] = taxonomy
