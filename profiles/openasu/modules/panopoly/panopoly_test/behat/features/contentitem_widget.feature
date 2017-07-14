@@ -41,7 +41,7 @@ Feature: Add content item
       And I fill in the following:
       | exposed[title] | Pano Test 1       |
       | widget_title   | Test Widget Title |
-      And I press "Save" in the "CTools modal" region
+      And I press "Add" in the "CTools modal" region
       And I press "Save"
       And I wait for the Panels IPE to deactivate
     Then I should see "Test Widget Title"
@@ -66,7 +66,7 @@ Feature: Add content item
       | exposed[title] | Pano Test 1       |
       And I select the radio button "Content"
       And I select the radio button "Teaser"
-      And I press "Save" in the "CTools modal" region
+      And I press "Add" in the "CTools modal" region
       And I press "Save"
       And I wait for the Panels IPE to deactivate
     Then I should see "Pano Test 1"
@@ -81,7 +81,7 @@ Feature: Add content item
       And I press "Save"
       And I wait for the Panels IPE to deactivate
     Then I should see "Test Widget Title"
-     And I should not see "Pano Test 1"
+      And I should not see "Pano Test 1"
 
   @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
   Scenario: Title override should work for all view modes
@@ -101,21 +101,21 @@ Feature: Add content item
       | widget_title   | Test Widget Title |
       And I select the radio button "Content"
       And I select the radio button "Teaser"
-      And I press "Save" in the "CTools modal" region
+      And I press "Add" in the "CTools modal" region
     Then I should see "Test Widget Title"
-     And I should not see "Pano Test 1"
+      And I should not see "Pano Test 1"
     # Next, try Full content.
     When I click "Settings" in the "Boxton Content" region
       And I select the radio button "Full content"
       And I press "Save" in the "CTools modal" region
     Then I should see "Test Widget Title"
-     And I should not see "Pano Test 1"
+      And I should not see "Pano Test 1"
     # Next, try Featured.
     When I click "Settings" in the "Boxton Content" region
       And I select the radio button "Featured"
       And I press "Save" in the "CTools modal" region
     Then I should see "Test Widget Title"
-     And I should not see "Pano Test 1"
+      And I should not see "Pano Test 1"
     # Prevent modal popup from breaking subsequent tests.
     When I press "Save"
       And I wait for the Panels IPE to deactivate
@@ -138,21 +138,21 @@ Feature: Add content item
       | widget_title   | Test Widget Title |
       And I select the radio button "Content"
       And I select the radio button "Teaser"
-      And I press "Save" in the "CTools modal" region
+      And I press "Add" in the "CTools modal" region
     Then I should see "Test Widget Title"
-     And I should not see "Pano Test 1"
+      And I should not see "Pano Test 1"
     # Next, try Full content.
     When I click "Settings" in the "Boxton Content" region
       And I select the radio button "Full content"
       And I press "Save" in the "CTools modal" region
     Then I should see "Test Widget Title"
-     And I should not see "Pano Test 1"
+      And I should not see "Pano Test 1"
     # Next, try Featured.
     When I click "Settings" in the "Boxton Content" region
       And I select the radio button "Featured"
       And I press "Save" in the "CTools modal" region
     Then I should see "Test Widget Title"
-     And I should not see "Pano Test 1"
+      And I should not see "Pano Test 1"
     # Prevent modal popup from breaking subsequent tests.
     When I press "Save"
       And I wait for the Panels IPE to deactivate
@@ -173,7 +173,7 @@ Feature: Add content item
       And I fill in the following:
       | exposed[title] | Pano Test 1       |
       | widget_title   | Test Widget Title |
-      And I press "Save" in the "CTools modal" region
+      And I press "Add" in the "CTools modal" region
       And I press "Save"
       And I wait for the Panels IPE to deactivate
     Then I should see "Test Widget Title"

@@ -8,28 +8,29 @@
 ;
 ; These projects are installed first, before any other projects in the parent makefile.
 
-; Media (module) - matches Panopoly 1.43 (from panopoly_widgets.make)
-projects[media][type] = module
+; Media (module) - matches Panopoly 1.46 (from panopoly_widgets.make)
+projects[media][version] = 2.1
 projects[media][subdir] = contrib
-projects[media][version] = 2.0-rc3
-projects[media][sha256] = 4225713bdf9bf6f0eab8a2db92eb8c114125597d853f0a2d1cece71917f81d03
-; TODO:  check media patches to see if now included, or new patches need to be made
-; new for 1.43
-projects[media][patch][2842446] = https://www.drupal.org/files/issues/media-2841331-3.patch
+projects[media][sha256] = 620425c4370733ef1a11fb06e3364337a030d1228303c700f9670e9b079b1ab9
+
+; panopoly patches in 1.46
 projects[media][patch][2272567] = https://www.drupal.org/files/issues/media_dialog_appears_2272567-32.patch
-
-; old.  outdated?
-;projects[media][patch][2126697] = https://www.drupal.org/files/issues/media_wysiwyg_2126697-53.patch
-projects[media][patch][2308487] = https://www.drupal.org/files/issues/media-alt-title-double-encoded-2308487-2.patch
-projects[media][patch][2084287] = https://www.drupal.org/files/issues/media-file-name-focus-2084287-2.patch
-;projects[media][patch][2534724] = https://www.drupal.org/files/issues/media-browser_opens_twice-2534724-53.patch
-
 
 ; Patches - Webspark
 ; WEBSPARK-679 - WYSIWYG + Media module issues
 projects[media][patch][] = patches/webspark-679_fix-HTML-encoded-macros-2028253-10.patch
 ; following taken from #56 on https://www.drupal.org/node/2317519
 ; projects[media][patch][] = patches/webspark-679_wysiwyg-multiple-editors-media-images-breaks.patch
+
+; Panelizer (module) matches Panopoly 1.46 (from panopoly_core.make)
+; fixes WEBSPARK 1033: https://asudev.jira.com/browse/WEBSPARK-1033
+; needed to avoid the 'undefined index Content' warning message during cron runs (see Drupal issue below)
+; todo: remove once this patch gets pulled into panelizer: https://www.drupal.org/node/2843119
+projects[panelizer][version] = 3.4
+projects[panelizer][subdir] = contrib
+projects[panelizer][patch][1549608] = https://www.drupal.org/files/issues/panelizer-n1549608-26.patch
+projects[panelizer][patch][2788851] = https://www.drupal.org/files/issues/panelizer-administer-panelizer-2788851-2.patch
+projects[panelizer][patch][2843119] = https://www.drupal.org/files/issues/panelizer-undefined_index-2843119-D7_2.patch
 
 ; Radix Layouts (module)
 projects[radix_layouts][type] = module
