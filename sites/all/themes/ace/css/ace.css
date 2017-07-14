@@ -65,6 +65,7 @@
 .field-name-field-mem-eme-mem-name, .field-name-field-mem-sus-org-name, .field-name-field-mem-cor-org-name, .field-name-field-mem-pub-org-name, .field-name-field-mem-ind-mem-name {
     font-weight: bold;
     font-size: 1.5em;
+    margin-top: 1em;
 }
 #edit-field-mem-eme-mem-name, #edit-field-mem-sus-org-name, #edit-field-mem-cor-org-name, #edit-field-mem-pub-org-name, #edit-field-mem-ind-mem-name {
     font-weight: inherit !important;
@@ -88,4 +89,10 @@
 }
 .field-group-fieldset, #edit-field-profile-address-info {
     margin-top: 2em;
+}
+fieldset.form-wrapper {
+    margin-bottom: 2em;
+}
+.pane-user-memberships .fieldset-legend {
+    font-size: 1em;
 }
