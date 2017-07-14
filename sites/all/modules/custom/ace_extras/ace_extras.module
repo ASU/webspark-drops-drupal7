@@ -8,23 +8,28 @@
  * Implements hook_form_alter(&$form, &$form_state, $form_id)
  */
 function ace_extras_form_alter(&$form, &$form_state, $form_id) {
-    // Grab the currently logged in user
-    global $user;
-
-    // Target the required form
-    //dpm($form_id);
-    if ($form_id == 'membership_entity_edit_form') {
-        $form['membership']['member_id']['#access'] = FALSE; // Auto-hide member ID field from all users
-        $rid = 3; // Set role ID to 3 for admin
-        if (isset($user->roles[$rid])) {
-            $form['membership']['member_id']['#access'] = TRUE; // If user is admin, show member ID field
-        }
+  // Grab the currently logged in user
+  global $user;
+  $admin_role_id = (!empty(variable_get('user_admin_role'))) ? variable_get('user_admin_role') : 3;
+  // Target the required form
+  if ($form_id == 'membership_entity_edit_form') {
+    $form['membership']['member_id']['#access'] = FALSE; // Auto-hide member ID field from all users
+    if (isset($user->roles[$admin_role_id])) {
+      $form['membership']['member_id']['#access'] = TRUE; // If user is admin, show member ID field
     }
-    if ($form_id == 'user_profile_form') {
-        $form['field_profile_eab']['#access'] = FALSE; // Auto-hide EAB member field from all users
-        $rid = 3; // Set role ID to 3 for admin
-        if (isset($user->roles[$rid])) {
-            $form['field_profile_eab']['#access'] = TRUE; // If user is admin, show EAB member field
-        }
+  }
+  if ($form_id == 'user_profile_form') {
+    $form['field_profile_eab']['#access'] = FALSE; // Auto-hide EAB member field from all users
+    if (isset($user->roles[$admin_role_id])) {
+      $form['field_profile_eab']['#access'] = TRUE; // If user is admin, show EAB member field
     }
+  }
+  if ($form_id == 'taxonomy_form_term') {
+    $form['description']['#access'] = FALSE; // Auto-hide term description field from all users
+    $form['relations']['#access'] = FALSE; // Auto-hide term relations field from all users
+    if (isset($user->roles[$admin_role_id])) {
+      $form['description']['#access'] = TRUE; // If user is admin, show term description field
+      $form['relations']['#access'] = TRUE; // If user is admin, show term relations field
+    }
+  }
 }

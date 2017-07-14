@@ -76,3 +76,16 @@
 .view-membership-entity-terms {
     margin-top: 1em;
 }
+
+/*
+ * Styling for Fieldsets, Fieldgroups and editing address info fieldset
+ *  Specifically to target Drupal user register page, but will be used
+ *  to help style across site as Webspark doesn't style said sets and groups.
+ */
+.fieldset-legend {
+    font-size: 1.5em;
+    font-weight: bolder;
+}
+.field-group-fieldset, #edit-field-profile-address-info {
+    margin-top: 2em;
+}
