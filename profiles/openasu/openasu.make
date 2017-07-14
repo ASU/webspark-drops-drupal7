@@ -6,7 +6,7 @@ core = 7.x
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 projects[drupal][type] = core
-projects[drupal][version] = 7.54
+projects[drupal][version] = 7.56
 ; Drupal Core Patches
 ;projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-profile-ajax-1334818-8.patch
 
@@ -14,62 +14,57 @@ projects[drupal][version] = 7.54
 ; The Panopoly Foundation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-projects[panopoly_core][version] = 1.43
+projects[panopoly_core][version] = 1.46
 projects[panopoly_core][subdir] = panopoly
 
-projects[panopoly_images][version] = 1.43
+projects[panopoly_images][version] = 1.46
 projects[panopoly_images][subdir] = panopoly
 
-projects[panopoly_theme][version] = 1.43
+projects[panopoly_theme][version] = 1.46
 projects[panopoly_theme][subdir] = panopoly
 
-projects[panopoly_magic][version] = 1.43
+projects[panopoly_magic][version] = 1.46
 projects[panopoly_magic][subdir] = panopoly
 
-projects[panopoly_widgets][version] = 1.43
+projects[panopoly_widgets][version] = 1.46
 projects[panopoly_widgets][subdir] = panopoly
 
-projects[panopoly_admin][version] = 1.43
+projects[panopoly_admin][version] = 1.46
 projects[panopoly_admin][subdir] = panopoly
 
-projects[panopoly_users][version] = 1.43
+projects[panopoly_users][version] = 1.46
 projects[panopoly_users][subdir] = panopoly
 
 ; The Panopoly Toolset
-projects[panopoly_pages][version] = 1.43
+projects[panopoly_pages][version] = 1.46
 projects[panopoly_pages][subdir] = panopoly
 
-projects[panopoly_wysiwyg][version] = 1.43
+projects[panopoly_wysiwyg][version] = 1.46
 projects[panopoly_wysiwyg][subdir] = panopoly
 
-projects[panopoly_search][version] = 1.43
+projects[panopoly_search][version] = 1.46
 projects[panopoly_search][subdir] = panopoly
 ; Fixes DB update dependency ordering
 projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
 
-projects[panopoly_test][version] = 1.43
+projects[panopoly_test][version] = 1.46
 projects[panopoly_test][subdir] = panopoly
 
 ; @TODO - Add patches for custom Webspark testing,
+projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.46.patch
 
-; deprecated patches have been commented out, and combined into the webspark-847_panopoly-test-137-update-v-1.43.patch
-;projects[panopoly_test][patch][1372] = patches/webspark-847_panopoly-test-updates-3.patch
-projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.43.patch
+projects[panopoly_test][patch][142] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
 
-; deprecated to roll image testing patches into 1066 patch
-;projects[panopoly_test][patch][140] = patches/webspark-944_panopoly-test-image-widget-patches.patch
-projects[panopoly_test][patch][1402] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
-; patch the image widget feature to set a private file path before testing
-projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v143.patch
+projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.patch
 projects[panopoly_test][patch][1403] = patches/webspark-1066-panopoly-webspark-add-custom-tests-v143.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
 ; commenting this out until we update this repo
 ; @TODO - update the repo with latest modules
-projects[asu_drupal_modules][type] = module
-projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = 9cd96b13a33a2bd112fdecabd36f2d35b0ca83c0
-projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
+;projects[asu_drupal_modules][type] = module
+;projects[asu_drupal_modules][directory_name] = custom
+;projects[asu_drupal_modules][download][revision] = 9cd96b13a33a2bd112fdecabd36f2d35b0ca83c0
+;projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ASU Module Prerequisites
@@ -117,6 +112,11 @@ projects[smtp][type] = module
 projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
 projects[viewfield][subdir] = contrib
+
+; @TODO v1.0-alpha1 + patch (rollback from 1.x-dev)
+projects[views_php][version] = 1.x-dev
+projects[views_php][type] = module
+projects[views_php][subdir] = contrib
 
 projects[webform][version] = 4.14
 projects[webform][type] = module
@@ -171,15 +171,6 @@ projects[maxlength][version] = 3.2-beta2
 projects[maxlength][type] = module
 projects[maxlength][subdir] = contrib
 
-;; @TODO - Remove patch when file when submitted patch gets pulled into module
-projects[missing_module][type] = module
-projects[missing_module][subdir] = contrib
-projects[missing_module][download][type] = "git"
-projects[missing_module][download][branch] = "7.x-1.x"
-projects[missing_module][download][url] = "http://git.drupal.org/project/missing_module.git"
-projects[missing_module][download][revision] = 19492ccee8b8ac683b3a384e8663c09af55dc3af
-projects[missing_module][patch][2854074] = patches/webspark-1052_missing-module_improvements-to-ux_2854074-5.patch
-
 projects[panels_tabs][version] = 2.x-dev
 projects[panels_tabs][type] = module
 projects[panels_tabs][subdir] = contrib
@@ -227,6 +218,42 @@ projects[video_embed_field][subdir] = contrib
 projects[wysiwyg_template][version] = 2.12
 projects[wysiwyg_template][type] = module
 projects[wysiwyg_template][subdir] = contrib
+
+; copied from asu_drupal_modules.make since the asu_drupal_modules repo needs to be updated and the
+; asu_drupal_modules.make file is being ignored at the moment
+; todo: remove if we go back to building from repo
+projects[views_bootstrap][version] = 3.1
+projects[views_bootstrap][type] = module
+projects[views_bootstrap][subdir] = contrib
+
+; ASU RFI make file contents
+
+; Upload multidev and patch it
+
+projects[multiblock][version] = 1.1
+projects[multiblock][type] = module
+projects[multiblock][subdir] = contrib
+projects[multiblock][patch][] = https://www.drupal.org/files/issues/multiblock_cache-2185235-5.patch
+projects[multiblock][patch][] = https://www.drupal.org/files/fix_config_per_instance-1370966-5.patch
+
+; Added RFI dependencies here, vs. in openasu.make
+
+projects[views_data_export][version] = 3.0-beta9
+projects[views_data_export][type] = module
+projects[views_data_export][subdir] = contrib
+
+projects[mimemail][version] = 1.0-beta4
+projects[mimemail][type] = module
+projects[mimemail][subdir] = contrib
+
+projects[honeypot][version] = 1.22
+projects[honeypot][type] = module
+projects[honeypot][subdir] = contrib
+
+; pre-req for mimemail
+projects[mailsystem][version] = 2.34
+projects[mailsystem][type] = module
+projects[mailsystem][subdir] = contrib
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Bootstrap and Theme Frameworks - Moved to Webspark repo (see WEBSPARK-366)
