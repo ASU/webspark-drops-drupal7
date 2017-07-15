@@ -1,0 +1,11 @@
+<?php
+
+/**
+ * Implements hook_mail_alter().
+ */
+function no_emailing_mail_alter(&$message) {
+  // NO EMAILS ARE SENT!!
+  if (isset($message['send']) || (isset($message['key'])) || (isset($message))) {
+    $message['send'] = FALSE;
+  }
+}
