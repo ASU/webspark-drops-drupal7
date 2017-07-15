@@ -11,7 +11,21 @@ function ace_extras_form_alter(&$form, &$form_state, $form_id) {
   // Grab the currently logged in user
   global $user;
   $admin_role_id = (!empty(variable_get('user_admin_role'))) ? variable_get('user_admin_role') : 3;
+
+  // Do not require personal profile address fields
+  switch ($form_id) {
+    case 'user_register_form':
+    case 'user_profile_form':
+    case 'membership_entity_modal_user_register_form':
+      $form['field_profile_address_info']['und'][0]['street_block']['thoroughfare']['#required'] = FALSE;
+      $form['field_profile_address_info']['und'][0]['locality_block']['postal_code']['#required'] = FALSE;
+      $form['field_profile_address_info']['und'][0]['locality_block']['locality']['#required'] = FALSE;
+      $form['field_profile_address_info']['und'][0]['locality_block']['administrative_area']['#required'] = FALSE;
+      break;
+  }
+
   // Target the required form
+  //dpm($form_id);
   if ($form_id == 'membership_entity_edit_form') {
     $form['membership']['member_id']['#access'] = FALSE; // Auto-hide member ID field from all users
     if (isset($user->roles[$admin_role_id])) {
