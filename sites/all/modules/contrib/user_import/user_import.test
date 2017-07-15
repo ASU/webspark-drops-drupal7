@@ -1,0 +1,586 @@
+<?php
+
+/**
+ * User Import module base test class.
+ */
+class UserImportWebTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+  protected $user_importer;
+
+  /**
+   *  Select CSV file (the included example file)
+  */
+  function settingsFileSelect() {
+    $edit = array('file_ftp' => 1);
+    $this->drupalPost('admin/people/user_import/add', $edit, t('Next'));
+
+    /* Check file was selected */
+    $this->assertText(t('Use Different CSV File'), '[assert] File was selected');
+  }
+
+  function settingsEmailMatch(&$edit) {
+    $edit['field_match[5][field_match]'] = 'user-email';
+  }
+
+  function settingsIgnoreFirstLine(&$edit) {
+    $edit['first_line_skip'] = 1;
+  }
+
+  function checkAccountsExist($list_failures = FALSE) {
+    $failures_list = '';
+    $users_email = $this->usersList();
+    $failed = array();
+
+    foreach ($users_email as $mail) {
+      $user = user_load_by_mail($mail);
+      if (empty($user)) $failed[] = $mail;
+    }
+
+    if (!empty($failed) && $list_failures) {
+      $failures_list = t('. Failed accounts: %failures', array('%failures' => implode(', ', $failed)));
+    }
+
+    $this->assertTrue(empty($failed), t('Accounts created for users imported') . $failures_list);
+  }
+
+  /**
+   *  List of users (email addresses) being imported
+   *  To Do - Generate this dynamically, bearing in mind it could be used for stress testing
+   */
+  function usersList() {
+    return array(
+        'john@example.com',
+        'mandy@example.com',
+        'charles@example.com',
+        'sarah@example.com',
+        'sarah_smith@example.com',
+        'helen@example.com',
+        'claire@example.com',
+        'victoria@example.com',
+        'james@example.com',
+        'anna@example.com',
+        'tino@example.com',
+        'sofia@example.com',
+        'steve@example.com',
+        'lucy@example.com',
+        'angie@example.com',
+        'carmen@example.com',
+        'paul@example.com',
+        'jason@example.com',
+        'mike@example.com',
+        'mary@example.com',
+        'simon@example.com',
+        'kieran@example.com',
+        'arthur@example.com',
+        'gwen@example.com',
+        'chester@example.com',
+        'dorothy@example.com',
+        'cameron@example.com',
+        'trisha@example.com',
+        'david@example.com',
+        'peter@example.com',
+        'saul@example.com',
+        'noel@example.com',
+        'matt@example.com',
+        'aston@example.com',
+        'mille@example.com',
+        'ernest@example.com',
+      );
+  }
+
+  /**
+   * Store import ID
+   * - set on import settings page, retrieve on later tasks
+   */
+  function importID($url = NULL) {
+    static $import_id = 0;
+
+    if (empty($import_id) && !empty($url)) {
+      $args = explode('/', $url);
+      $import_id = $args[7];
+    }
+
+    return $import_id;
+  }
+
+  /**
+   * SimpleTest core method: code run after each and every test method.
+  */
+  function tearDown() {
+
+    // delete accounts of users imported
+    $users_email = $this->usersList();
+
+    foreach ($users_email as $mail) {
+      $account = user_load_by_mail($mail);
+      if (!empty($account)) user_delete($account->uid);
+    }
+
+    // delete the import
+    $import_id = $this->importID();
+    $this->assertTrue(!empty($import_id), t('Import ID: !id', array('!id' => $import_id)));
+    _user_import_settings_deletion($import_id);
+
+    // Always call the tearDown() function from the parent class.
+    parent::tearDown();
+  }
+
+}
+
+
+/**
+ * User Import module base test class.
+ */
+class UserImportBasicsTestCase extends UserImportWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Import Users (Basics)',
+      'description' => 'Import users from a CSV file, test basic functions.',
+      'group' => 'User Import',
+    );
+  }
+
+  function setUp() {
+    parent::setUp(array('user_import'));
+    $this->admin_user = $this->drupalCreateUser(array('administer users', 'access administration pages', 'access overlay'));
+    $this->user_importer = $this->drupalCreateUser(array('import users'));
+  }
+
+  /**
+   *  User with right permissions creates import (with new settings)
+   *  - test core functions
+   */
+  function testCreateImport() {
+
+    // Prepare a user to do testing
+    $this->drupalLogin($this->user_importer);
+
+    // Select CSV file (the included example file)
+    $this->settingsFileSelect();
+
+    // import settings
+    $this->importID($this->getUrl()); // store import ID for later
+    $setting_edit = array();
+    $this->settingsEmailMatch($settings);
+    $this->settingsIgnoreFirstLine($settings);
+    $this->drupalPost($this->getUrl(), $settings, 'Import');
+
+    // check if users have been imported
+    $this->checkAccountsExist(TRUE);
+  }
+
+}
+
+
+/**
+ *  Test import of user data into Profile module
+ */
+//class UserImportNodeprofileTestCase extends UserImportWebTestCase {
+//
+//  public static function getInfo() {
+//    return array(
+//      'name' => 'Import Users (Nodeprofile)',
+//      'description' => 'Test import of user data into Nodeprofile module.',
+//      'group' => 'User Import',
+//    );
+//  }
+//
+//  function setUp() {
+//      parent::setUp('content', 'number', 'optionwidgets', 'text', 'link', 'date_api', 'date', 'node_import', 'content_profile', 'user_import');
+//      $this->admin_user = $this->drupalCreateUser(array('administer users', 'administer permissions', 'access administration pages', 'administer site configuration', 'administer content types', 'administer taxonomy'));
+//      $this->user_importer = $this->drupalCreateUser(array('import users'));
+//  }
+//
+//  /**
+//   *  User with right permissions creates import (with new settings)
+//   *  - test import of user data into Nodeprofile module
+//   */
+//  function testCreateImport() {
+//    $this->drupalLogin($this->admin_user);
+//    // $this->drupalGet('admin/build/modules');
+//    // file_put_contents('output.html', $this->drupalGetContent());
+//
+//    $this->nodeprofileConfiguration();
+//
+//    // Prepare a user to do testing
+//    $this->drupalGet('logout'); // log out first
+//    $this->drupalLogin($this->user_importer);
+//
+//    // Select CSV file (the included example file)
+//    $this->settingsFileSelect();
+//
+//    // import settings
+//    $this->importID($this->getUrl()); // store import ID for later
+//    $settings = array();
+//    $this->settingsEmailMatch($settings);
+//    $this->settingsNodeprofileMatch($settings);
+//    $this->settingsIgnoreFirstLine($settings);
+//    $this->drupalPost($this->getUrl(), $settings, 'Import');
+//
+//    // check if users have been imported
+//    $this->checkNodeprofileExist();
+//
+//  }
+//
+//  /**
+//   *  Configure modules
+//   */
+//  function nodeprofileConfiguration() {
+//
+//    // create Identity content type
+//    $edit = array('name' => 'Identity', 'type' => 'identity', 'title_label' => 'Title', 'body_label' => '', 'node_options[promote]' => 0, 'content_profile_use' => 1);
+//    $this->drupalPost('admin/content/types/add', $edit, t('Save content type'));
+//
+//    // create First Name field
+//    $edit = array('_add_new_field[label]' => 'First Name', '_add_new_field[field_name]' => 'first_name', '_add_new_field[type]' => 'text', '_add_new_field[widget_type]' => 'text_textfield');
+//    $this->drupalPost('admin/content/node-type/identity/fields', $edit, t('Save'));
+//
+//    $edit = array('required' => 1);
+//    $this->drupalPost('admin/content/node-type/identity/fields/field_first_name', $edit, t('Save field settings'));
+//
+//    // create Last Name field
+//    $edit = array('_add_new_field[label]' => 'Last Name', '_add_new_field[field_name]' => 'last_name', '_add_new_field[type]' => 'text', '_add_new_field[widget_type]' => 'text_textfield');
+//    $this->drupalPost('admin/content/node-type/identity/fields', $edit, t('Save'));
+//
+//    $edit = array('required' => 1);
+//    $this->drupalPost('admin/content/node-type/identity/fields/field_last_name', $edit, t('Save field settings'));
+//
+//    // create Biography content type
+//    $edit = array('name' => 'Biography', 'type' => 'biography', 'title_label' => 'Title', 'body_label' => '', 'node_options[promote]' => 0, 'content_profile_use' => 1);
+//    $this->drupalPost('admin/content/types/add', $edit, t('Save content type'));
+//
+//    // create CV field
+//    $edit = array('_add_new_field[label]' => 'CV', '_add_new_field[field_name]' => 'cv', '_add_new_field[type]' => 'text', '_add_new_field[widget_type]' => 'text_textarea');
+//    $this->drupalPost('admin/content/node-type/biography/fields', $edit, t('Save'));
+//
+//    $edit = array('required' => 1, 'rows' => 5);
+//    $this->drupalPost('admin/content/node-type/biography/fields/field_cv', $edit, t('Save field settings'));
+//
+//    // create Blog field (URL)
+//    $edit = array('_add_new_field[label]' => 'Blog', '_add_new_field[field_name]' => 'blog', '_add_new_field[type]' => 'link', '_add_new_field[widget_type]' => 'link');
+//    $this->drupalPost('admin/content/node-type/biography/fields', $edit, t('Save'));
+//
+//    // create Birthday field (date)
+//    $edit = array('_add_new_field[label]' => 'Birthday', '_add_new_field[field_name]' => 'birthday', '_add_new_field[type]' => 'datestamp', '_add_new_field[widget_type]' => 'date_text');
+//    $this->drupalPost('admin/content/node-type/biography/fields', $edit, t('Save'));
+//
+//    // create Interests Vocabulary
+//    $edit = array('name' => 'Interests', 'nodes[biography]' => 'biography', 'tags' => 1);
+//    $this->drupalPost('admin/content/taxonomy/add/vocabulary', $edit, t('Save'));
+//
+//    $vocabularies = taxonomy_get_vocabularies('biography');
+//
+//    foreach ($vocabularies as $vocabulary) {
+//      $this->vocabulary_id = $vocabulary->vid;
+//    }
+//
+//    // create Contact Details contact type
+//    $edit = array('name' => 'Contact Details', 'type' => 'contact_details', 'title_label' => 'Title', 'body_label' => '', 'node_options[promote]' => 0, 'content_profile_use' => 1);
+//    $this->drupalPost('admin/content/types/add', $edit, t('Save content type'));
+//
+//    // create Can Be Contacted field
+//    $edit = array('_add_new_field[label]' => 'Contact', '_add_new_field[field_name]' => 'can_be_contacted', '_add_new_field[type]' => 'number_integer', '_add_new_field[widget_type]' => 'optionwidgets_onoff');
+//    $this->drupalPost('admin/content/node-type/contact-details/fields', $edit, t('Save'));
+//
+//    $edit = array('allowed_values' => "0
+//    1|Can be contacted");
+//    $this->drupalPost('admin/content/node-type/contact-details/fields/field_can_be_contacted', $edit, t('Save field settings'));
+//
+//    // create Contact Preference field
+//    $edit = array('_add_new_field[label]' => 'Contact Preference', '_add_new_field[field_name]' => 'contact_preference', '_add_new_field[type]' => 'text', '_add_new_field[widget_type]' => 'optionwidgets_select');
+//    $this->drupalPost('admin/content/node-type/contact-details/fields', $edit, t('Save'));
+//
+//    $edit = array('allowed_values' => 'email|email
+//    telephone|telephone
+//    post|post');
+//    $this->drupalPost('admin/content/node-type/contact-details/fields/field_contact_preference', $edit, t('Save field settings'));
+//
+//    // set access perm for authenticated users to creade profile nodes
+//    $edit = array('2[create identity content]' => 'create identity content', '2[create biography content]' => 'create biography content', '2[create contact_details content]' => 'create contact_details content');
+//    $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
+//  }
+//
+//
+//  /**
+//   *  Match CSV columns to Profile fields
+//   */
+//  function settingsNodeprofileMatch(&$edit) {
+//    $edit['field_match[0][field_match]'] = 'content_profile-identity cck:field_first_name:value'; // First Name
+//    $edit['field_match[1][field_match]'] = 'content_profile-identity cck:field_last_name:value'; // Last Name
+//    $edit['field_match[10][field_match]'] = 'content_profile-biography cck:field_cv:value'; // CV
+//    $edit['field_match[7][field_match]'] = 'content_profile-contact_details cck:field_can_be_contacted:value'; // Contact Permision
+//    $edit['field_match[8][field_match]'] = 'content_profile-contact_details cck:field_contact_preference:value'; // Contact Preference
+////    $edit['field_match[9][field_match]'] = 'taxonomy-' . $this->vocabulary_id; // Interests
+//    $edit['field_match[6][field_match]'] = 'content_profile-biography cck:field_blog:url'; // Blog
+//    $edit['field_match[11][field_match]'] = 'content_profile-biography cck:field_birthday:value'; // Birthday
+//  }
+//
+//  /**
+//   *  Check data in CSV file matches data in profiles
+//   */
+//  function checkNodeprofileExist() {
+//    $file_path = drupal_get_path('module', 'user_import') . '/sample.txt';
+//    $handle = @fopen($file_path, "r");
+//    $row = 0;
+//
+//    while ($csv = fgetcsv($handle, 1000, ',')) {
+//
+//      if ($row > 0) {
+//
+//        $user = user_load_by_mail($csv[5]);
+//        // test each data cell against nodeprofile field content
+//        $identity = node_load(array('type' => 'identity', 'uid' => $user->uid), NULL, TRUE);
+//        $this->drupalGet("node/$identity->nid");
+//        $this->assertText(check_plain($csv[0]), "[Compare CSV and Profile data] Row: $row Field: First Name");
+//        $this->assertText(check_plain($csv[1]), "[Compare CSV and Profile data] Row: $row Field: Last Name " . $csv[1]);
+//
+//        $biography = node_load(array('type' => 'biography', 'uid' => $user->uid), NULL, TRUE);
+//        $this->drupalGet("node/$biography->nid");
+//        $this->assertText($csv[6], "[Compare CSV and Profile data] Row: $row Field: Blog");
+//        $this->assertText($csv[10], "[Compare CSV and Profile data] Row: $row Field: CV");
+//        $birthday = format_date(strtotime($csv[11]), 'custom', 'D, j/m/Y');
+//        $this->assertText($birthday, "[Compare CSV and Profile data] Row: $row Field: Birthday " . $birthday);
+//
+//
+//        $contact_details = node_load(array('type' => 'contact_details', 'uid' => $user->uid), NULL, TRUE);
+//        $this->drupalGet("node/$contact_details->nid");
+//
+//        if (isset($csv[7]) && !empty($csv[7])) {
+//          $this->assertText('Can be contacted', "[Compare CSV and Profile data] Row: $row Field: Contact Permission set");
+//        }
+//        else {
+//          $this->assertNoText('Can be contacted', "[Compare CSV and Profile data] Row: $row Field: Contact Permission not set");
+//        }
+//
+//        $this->assertText($csv[8], "[Compare CSV and Profile data] Row: $row Field: Contact Preference");
+//
+//        //test interests link on profile page
+//        if (!empty($user->profile_interests)) {
+//          $interests = explode(',', $user->profile_interests);
+//          $this->drupalGet('profile/profile_interests/' . $interests[0]);
+//          $this->assertWantedRaw('<a title="View user profile." href="/' . url('user/' . $user->uid) . '">' . $user->name . '</a>' , '[Freeform List] User is listed on page about item in list');
+//        }
+//
+//      }
+//
+//      $row++;
+//    }
+//
+//  }
+//
+//  /**
+//   * SimpleTest core method: code run after each and every test method.
+//  */
+//  function tearDown() {
+//
+//    // delete accounts of users imported
+//    $users_email = $this->usersList();
+//
+//    foreach ($users_email as $mail) {
+//      $account = user_load_by_mail($mail);
+//      // delete node profile nodes
+//      if (!empty($account)) {
+//        $identity = node_load(array('type' => 'identity', 'uid' => $account->uid));
+//        $biography = node_load(array('type' => 'biography', 'uid' => $account->uid));
+//        $contact_details = node_load(array('type' => 'contact_details', 'uid' => $account->uid));
+//        node_delete($identity->nid);
+//        node_delete($biography->nid);
+//        node_delete($contact_details->nid);
+//        user_delete(array(), $account->uid);
+//      }
+//    }
+//
+//    // delete the import
+//    $import_id = $this->importID();
+//    $this->assertTrue(!empty($import_id), t('Import ID: !id', array('!id' => $import_id)));
+//    _user_import_settings_deletion($import_id);
+//
+//    // delete vocabulary
+//    taxonomy_del_vocabulary($this->vocabulary_id);
+//
+//    // uninstall modules
+//    // - tear down disable doesn't seem to do this
+//    // foreach($this->modules as $module) {
+//    //   if (function_exists($module . '_uninstall')) {
+//    //     $result = call_user_func_array($module . '_uninstall', array());
+//    //   }
+//    // }
+//
+//    // delete nodeprofile content types
+//    node_type_delete('dummy'); // (for some reason) the first node_type_delete is completely ignored
+//    node_type_delete('identity');
+//    node_type_delete('biography');
+//    node_type_delete('contact_details');
+//
+//    // Always call the tearDown() function from the parent class.
+//    parent::tearDown();
+//  }
+//}
+
+/**
+ *  Test import of user data into Profile module
+ */
+//class UserImportProfileTestCase extends UserImportWebTestCase {
+//
+//
+//  public static function getInfo() {
+//    return array(
+//      'name' => 'Import Users (Profile)',
+//      'description' => 'Test import of user data into Profile module.',
+//      'group' => 'User Import',
+//    );
+//  }
+//
+//  function setUp() {
+//        parent::setUp('user_import', 'profile');
+//        $this->admin_user = $this->drupalCreateUser(array('administer users', 'access administration pages', 'administer site configuration'));
+//        $this->user_importer = $this->drupalCreateUser(array('import users'));
+//  }
+//
+//  /**
+//   *  User with right permissions creates import (with new settings)
+//   *  - test import of user data into Profile module
+//   */
+//  function testCreateImport() {
+//    $this->drupalLogin($this->admin_user);
+//    $this->profileFieldsCreate();
+//
+//    // Prepare a user to do testing
+//    $this->drupalGet('logout'); // log out first
+//    $this->drupalLogin($this->user_importer);
+//
+//    // Select CSV file (the included example file)
+//    $this->settingsFileSelect();
+//
+//    // import settings
+//    $this->importID($this->getUrl()); // store import ID for later
+//
+//    $settings = array();
+//    $this->settingsEmailMatch($settings);
+//    $this->settingsProfileMatch($settings);
+//    $this->settingsIgnoreFirstLine($settings);
+//    $this->drupalPost($this->getUrl(), $settings, 'Import');
+//
+//    // check if users have been imported
+//    $this->checkProfileExist();
+//  }
+//
+//  /**
+//   *  create profile fields
+//   */
+//  function profileFieldsCreate() {
+//
+//    // Textfield
+//    $edit = array('category' => 'Name', 'title' => 'First Name', 'name' => 'profile_first_name');
+//    $this->drupalPost('admin/people/profile/add/textfield', $edit, t('Save field'));
+//
+//    // Textfield
+//    $edit = array('category' => 'Name', 'title' => 'Last Name', 'name' => 'profile_last_name');
+//    $this->drupalPost('admin/people/profile/add/textfield', $edit, t('Save field'));
+//
+//    // Textarea
+//    $edit = array('category' => 'Biography', 'title' => 'CV', 'name' => 'profile_cv');
+//    $this->drupalPost('admin/people/profile/add/textarea', $edit, t('Save field'));
+//
+//    // Checkbox
+//    $edit = array('category' => 'Contact Details', 'title' => 'Can Be Contacted', 'name' => 'profile_contact_permission');
+//    $this->drupalPost('admin/people/profile/add/checkbox', $edit, t('Save field'));
+//
+//    // List
+//    $edit = array('category' => 'Contact Details', 'title' => 'Contact Preference', 'name' => 'profile_contact_preference', 'options' => 'email,telephone,post');
+//    $this->drupalPost('admin/people/profile/add/selection', $edit, t('Save field'));
+//
+//    // Freeform List
+//    $edit = array('category' => 'Biography', 'title' => 'Interests', 'name' => 'profile_interests');
+//    $this->drupalPost('admin/people/profile/add/list', $edit, t('Save field'));
+//
+//    // URL
+//    $edit = array('category' => 'Biography', 'title' => 'Blog', 'name' => 'profile_blog');
+//    $this->drupalPost('admin/people/profile/add/url', $edit, t('Save field'));
+//
+//    // Date
+//    $edit = array('category' => 'Biography', 'title' => 'Birthday', 'name' => 'profile_birthday');
+//    $this->drupalPost('admin/people/profile/add/date', $edit, t('Save field'));
+//  }
+//
+//  /**
+//   *  Match CSV columns to Profile fields
+//   */
+//  function settingsProfileMatch(&$edit) {
+//    $edit['field_match[0][field_match]'] = 'profile-1'; // First Name
+//    $edit['field_match[1][field_match]'] = 'profile-2'; // Last Name
+//    $edit['field_match[10][field_match]'] = 'profile-3'; // CV
+//    $edit['field_match[7][field_match]'] = 'profile-4'; // Contact Permision
+//    $edit['field_match[8][field_match]'] = 'profile-5'; // Contact Preference
+//    $edit['field_match[9][field_match]'] = 'profile-6'; // Interests
+//    $edit['field_match[6][field_match]'] = 'profile-7'; // Blog
+//    $edit['field_match[11][field_match]'] = 'profile-8'; // Birthday
+//  }
+//
+//  /**
+//   *  Check data in CSV file matches data in profiles
+//   */
+//  function checkProfileExist() {
+//
+//    $file_path = drupal_get_path('module', 'user_import') . '/sample.txt';
+//    $handle = @fopen($file_path, "r");
+//    $row = 0;
+//
+//    while ($csv = fgetcsv($handle, 1000, ',')) {
+//
+//      if ($row > 0) {
+//        $user = user_load_by_mail($csv[5]);
+//        // test each data cell against Profile field content
+//        $profile_first_name = isset($user->profile_first_name) ? $user->profile_first_name : '';
+//        $this->assertEqual($profile_first_name, $csv[0], "[Compare CSV data to Profile data] Row: $row Field: First Name");
+//
+//        $profile_last_name = isset($user->profile_last_name) ? $user->profile_last_name : '';
+//        $this->assertEqual($profile_last_name, $csv[1], "[Compare CSV data to Profile data] Row: $row Field: Last Name");
+//
+//        $profile_blog = isset($user->profile_blog) ? $user->profile_blog : '';
+//        $this->assertEqual($profile_blog, $csv[6], "[Compare CSV data to Profile data] Row: $row Field: Blog");
+//
+//        $profile_contact_permission = isset($user->profile_contact_permission) ? $user->profile_contact_permission : '';
+//        $file_field_value = (!isset($csv[7]) || empty($csv[7])) ? 0 : 1;
+//        $this->assertEqual($profile_contact_permission, $file_field_value, "[Compare CSV data to Profile data] Row: $row Field: Contact Permission");
+//
+//        $profile_contact_preference = isset($user->profile_contact_preference) ? $user->profile_contact_preference : '';
+//        $this->assertEqual($profile_contact_preference, $csv[8], "[Compare CSV data to Profile data] Row: $row Field: Contact Preference");
+//
+//        $profile_interests = isset($user->profile_interests) ? $user->profile_interests : '';
+//        $this->assertEqual($profile_interests, $csv[9], "[Compare CSV data to Profile data] Row: $row Field: Profile Interests");
+//
+//        $profile_cv = isset($user->profile_cv) ? $user->profile_cv : '';
+//        $this->assertEqual($profile_cv, $csv[10], "[Compare CSV data to Profile data] Row: $row Field: CV");
+//
+//        $profile_birthday = isset($user->profile_birthday) ? implode('/', $user->profile_birthday) : '';
+//
+//        if (isset($user->profile_birthday)) {
+//          $profile_birthday = $user->profile_birthday['month'] . '/' . $user->profile_birthday['day'] . '/' . $user->profile_birthday['year'];
+//        }
+//        else {
+//          $profile_birthday = '';
+//        }
+//
+//        $this->assertEqual($profile_birthday, $csv[11], "[Compare CSV data to Profile data] Row: $row Field: Birthday");
+//        /**
+//         * @todo test below fails because it gets an access denied message.
+//         */
+//        //test interests link on profile page
+//        // if (!empty($user->profile_interests)) {
+//        //   $interests = explode(',', $user->profile_interests);
+//        //   $this->drupalGet('profile/profile_interests/' . $interests[0]);
+//        //   $this->assertRaw('<a title="View user profile." href="/'. url('user/'. $user->uid) .'">'. $user->name .'</a>', '[Freeform List] User is listed on page about item in list');
+//        // }
+//
+//      }
+//
+//      $row++;
+//    }
+//  }
+//
+//}
+
+
+

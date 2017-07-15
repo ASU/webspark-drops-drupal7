@@ -1,0 +1,44 @@
+
+
+Overview
+========
+
+Import users into Drupal from a csv file (comma separated file).
+
+See files in user_import/supported/ for examples of the API in use.
+
+hook_user_import_form_field_match()
+===========================================
+Add options to list of Drupal fields to match against column of data being imported.
+
+
+hook_user_import_form_update_user()
+===========================================
+Add options to the import settings form.
+
+
+hook_user_import_data()
+===========================================
+Manipulate imported data before creating or amending user accounts.
+
+
+hook_user_import_after_save()
+===========================================
+Take action(s) after each user account is created or amended.
+
+
+hook_user_import_imported()
+===========================================
+Take action(s) after import is complete.
+
+hook_field_user_import_supported_alter(&$supported)
+===========================================
+Alter array of supported field types, allowing for adding custom field
+processors. Example:
+
+MODULE_field_user_import_supported_alter(&$supported) {
+ $supported['MODULE'] = array(
+   'validate' => 'MODULE_user_import_field_validator',
+   'save' => 'MODULE_user_import_field_processor',
+ );
+}

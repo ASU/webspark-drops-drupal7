@@ -1,0 +1,19 @@
+name = User Import
+description = "Import users into Drupal from a CSV file."
+core = 7.x
+package = Deployment
+files[] = user_import.module
+files[] = user_import.install
+files[] = user_import.admin.inc
+files[] = user_import.import.inc
+files[] = user_import.test
+
+
+
+
+; Information added by Drupal.org packaging script on 2016-03-06
+version = "7.x-3.2"
+core = "7.x"
+project = "user_import"
+datestamp = "1457261641"
+
