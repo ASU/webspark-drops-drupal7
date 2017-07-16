@@ -34,8 +34,10 @@ function ace_extras_form_alter(&$form, &$form_state, $form_id) {
   }
   if ($form_id == 'user_profile_form') {
     $form['field_profile_eab']['#access'] = FALSE; // Auto-hide EAB member field from all users
+    $form['field_profile_old_nid']['#access'] = FALSE; // Auto-hide old Profile NID from D6 import from all users
     if (isset($user->roles[$admin_role_id])) {
       $form['field_profile_eab']['#access'] = TRUE; // If user is admin, show EAB member field
+      $form['field_profile_old_nid']['#access'] = TRUE; // If user is admin, show old Profile NID from D6 import
     }
   }
   if ($form_id == 'taxonomy_form_term') {
