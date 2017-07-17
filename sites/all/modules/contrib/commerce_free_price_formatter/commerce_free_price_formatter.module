@@ -1,0 +1,133 @@
+<?php
+
+/**
+ * @file
+ * Module main file content.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function commerce_free_price_formatter_help($path, $arg) {
+  $output = '';
+
+  switch ($path) {
+    case 'admin/help#commerce_free_price_formatter':
+      $output = '<p>' . t('Formats a Drupal commerce price in a more user-friendly way. When the price is 0 it shows a text message (by default "Free!") while when different from 0 it calls other formatter.') . '</p>';
+      break;
+  }
+
+  return $output;
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function commerce_free_price_formatter_field_formatter_info() {
+  return array(
+    'commerce_price_free' => array(
+      'label' => t('Free formatter'),
+      'field types' => array('commerce_price'),
+      'settings' => array(
+        'message' => t('Free!'),
+        'fallback_formatter' => 'commerce_price_formatted_amount',
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function commerce_free_price_formatter_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  $element = array();
+
+  switch ($display['type']) {
+    case 'commerce_price_free':
+      $element['message'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Message to show when price is 0'),
+        '#default_value' => empty($settings['message']) ? t('Free!') : $settings['message'],
+      );
+
+      $valid_formatters = array();
+      foreach (commerce_free_price_formatter_get_formatters('commerce_price') as $key => $elem) {
+        if ($key !== 'commerce_price_free') {
+          $valid_formatters[$key] = $elem['label'];
+        }
+      }
+
+      $element['fallback_formatter'] = array(
+        '#type' => 'select',
+        '#title' => t('Fallback formatter'),
+        '#options' => $valid_formatters,
+        '#default_value' => 'commerce_price_formatted_amount',
+      );
+
+      break;
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function commerce_free_price_formatter_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $summary = t('Show the message "@message" when the price is 0. Otherwise show the correct price.', array(
+    '@message' => $settings['message'],
+  ));
+
+  return $summary;
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function commerce_free_price_formatter_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  $settings = $display['settings'];
+
+  foreach ($items as $delta => $item) {
+    switch ($display['type']) {
+      case 'commerce_price_free':
+        if ($item['amount'] == 0) {
+          $element[$delta] = array(
+            '#type' => '',
+            '#attributes' => array('class' => array('free-price')),
+            'content' => array(
+              '#markup' => t('@message', array('@message' => $settings['message'])),
+            ),
+          );
+        }
+        else {
+          $element[$delta] = field_view_value($entity_type, $entity,
+            $field['field_name'], $item,
+            array('type' => $settings['fallback_formatter']));
+        }
+        break;
+    }
+  }
+
+  return $element;
+}
+
+/**
+ * Return an array of formatters for a given field type.
+ *
+ * @param string $field_type
+ *   Field type such as "commerce_price".
+ *
+ * @return array
+ *   Filtered array with the same format as field_info_formatter_types().
+ */
+function commerce_free_price_formatter_get_formatters($field_type) {
+  return array_filter(field_info_formatter_types(), function($elem) use ($field_type) {
+    return in_array($field_type, $elem['field types']);
+  });
+}
