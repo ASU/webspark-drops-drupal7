@@ -15,6 +15,8 @@ function webspark_featurescustom_enable() {
     ))
     ->condition('name', 'webspark_featurescustom')
     ->execute();
+  
+  module_enable(array('taxonomy'));
 }
 
 /**
