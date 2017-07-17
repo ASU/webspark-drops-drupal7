@@ -1,0 +1,426 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions this module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function commerce_file_schema() {
+  $schema = array();
+
+  $schema['commerce_file_license'] = array(
+    'description' => 'The base table for licenses.',
+    'fields' => array(
+      'license_id' => array(
+        'description' => 'The primary identifier for a license.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'The type of this license.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'status' => array(
+        'description' => 'The status of this license.',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'The {users}.uid that owns this license.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the license was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the license was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'granted' => array(
+        'description' => 'The Unix timestamp when the license was initially granted.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('license_id'),
+    'indexes' => array(
+      'uid' => array('uid'),
+    ),
+    'foreign keys' => array(
+      'owner' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+  );
+
+  $schema['commerce_file_license_log'] = array(
+    'description' => 'Stores file download information for licensed files.',
+    'fields' => array(
+      'aid' => array(
+        'type' => 'serial',
+        'description' => 'Primary Key: Unique accesslog ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'license_id' => array(
+        'description' => 'The {commerce_file_license}.license_id being referenced in this log.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'unsigned' => TRUE,
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp of when the file was downloaded.',
+      ),
+      'hostname' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+        'description' => 'Hostname of user that downloaded the file.',
+      ),
+    ),
+    'primary key' => array('aid'),
+    'indexes' => array(
+      'license_id' => array('license_id'),
+    ),
+    'foreign keys' => array(
+      'log_license' => array(
+        'table' => 'commerce_file_license',
+        'columns' => array('license_id' => 'license_id'),
+      ),
+    ),
+  );
+
+
+  return $schema;
+}
+
+/**
+ * Implements hook_field_schema().
+ */
+function commerce_file_field_schema($field) {
+  if ($field['type'] == 'commerce_file') {
+    return array(
+      'columns' => array(
+        'fid' => array(
+          'description' => 'The {file_managed}.fid being referenced in this field.',
+          'type' => 'int',
+          'not null' => FALSE,
+          'unsigned' => TRUE,
+        ),
+        'data' => array(
+          'type' => 'blob',
+          'size' => 'big',
+          'not null' => FALSE,
+          'serialize' => TRUE,
+          'description' => 'Serialized data containing the license properties.',
+        ),
+      ),
+      'indexes' => array(
+        'fid' => array('fid'),
+      ),
+      'foreign keys' => array(
+        'fid' => array(
+          'table' => 'file_managed',
+          'columns' => array('fid' => 'fid'),
+        ),
+      ),
+    );
+  }
+}
+
+/**
+ * Implements hook_requirements() to check for a private file scheme.
+ */
+function commerce_file_requirements($phase) {
+  $requirements = array();
+  // Ensure translations don't break at install time
+  $t = get_t();
+
+  // Status report
+  if ($phase == 'runtime') {
+    $scheme_options = _commerce_file_get_private_stream_wrappers_options();
+    $requirements['commerce_file_private_schemes'] = array(
+      'title' => $t('Commerce File'),
+    );
+
+    if (!empty($scheme_options)) {
+      $requirements['commerce_file_private_schemes'] += array(
+        'value' => $t('Available schemes: %schemes', array(
+          '%schemes' => implode(', ', $scheme_options),
+        )),
+      );
+    }
+    else {
+      $requirements['commerce_file_private_schemes'] += array(
+        'severity' => REQUIREMENT_ERROR,
+        'value' => $t('No available private file schemes.'),
+        'description' => $t('Commerce file requires a private file scheme. Visit (<a href="@configure">configure</a>) to set your private file path. Optionally, a private scheme other than Drupal\'s may be implemented.',
+          array(
+            '@configure' => url('admin/config/media/file-system'),
+        )),
+      );
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_install().
+ */
+function commerce_file_install() {
+  // Make module weight heavier than field module
+  db_query("UPDATE {system} SET weight = 5 WHERE name = 'commerce_file'");
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function commerce_file_uninstall() {
+  drupal_load('module', 'commerce_file');
+
+  // Delete any field instance attached to a license type.
+  commerce_delete_instances('commerce_file_license');
+
+  // Delete any commerce_file created by this module.
+  _commerce_file_delete_line_item_fields();
+
+  // Delete any commerce_file fields.
+/** @todo: put this in separate field module once split apart **********************/
+  commerce_delete_fields('commerce_file');
+
+  // Delete variables
+  variable_del('commerce_file_license_help_text');
+
+  // Clear license info cache
+  cache_clear_all('commerce_file_license_info', 'cache');
+}
+
+/**
+ * Update fields for file scheme setting on field settings only
+ * @see http://drupal.org/node/1228854
+ */
+function commerce_file_update_7101(&$sandbox) {
+  field_info_cache_clear();
+  drupal_load('module', 'commerce_file');
+
+  $field_type = COMMERCE_FILE_FIELD_TYPE;
+  foreach (field_info_fields() as $field_name => $field) {
+    if ($field['type'] != $field_type) {
+      continue;
+    }
+
+    // field default scheme
+    $field_scheme = isset($field['settings']['uri_scheme']) ? $field['settings']['uri_scheme'] : NULL;
+
+    // clean up scheme options
+    unset($field['settings']['uri_scheme_options'], $field['uri_scheme_options']);
+
+    // update instance
+    foreach ($field['bundles'] as $entity_type => $bundles) {
+      foreach ($bundles as $bundle_name) {
+        $instance = field_info_instance($entity_type, $field_name, $bundle_name);
+        if (empty($instance)) {
+          continue;
+        }
+
+        // extract file scheme and remove instance setting
+        if (!isset($field_scheme)) {
+          // use scheme from first found instance for field setting
+          if (!empty($instance['settings']['uri_scheme'])) {
+            $field_scheme = $instance['settings']['uri_scheme'];
+          }
+          elseif (!empty($instance['uri_scheme'])) {
+            $field_scheme = $instance['uri_scheme'];
+          }
+        }
+        unset($instance['settings']['uri_scheme'], $instance['uri_scheme'], $instance['widget']['settings']['uri_scheme']);
+
+        // resolve file directory
+        if (empty($instance['settings']['file_directory'])) {
+          $directory = 'commerce-files';
+          if (!empty($instance['file_directory'])) {
+            $directory = $instance['file_directory'];
+          }
+
+          $instance['settings']['file_directory'] = $directory;
+        }
+        unset($instance['file_directory']);
+
+
+        // remove extensions not in $instance['settings']
+        unset($instance['file_extensions']);
+
+        // save instance
+        field_update_instance($instance);
+      }
+    }
+
+    // update field scheme
+    if (!isset($field_scheme)) {
+      $field_scheme = _commerce_file_default_system_scheme();
+      if (!empty($field['settings']['uri_scheme_options'])) {
+        $field_scheme = reset($field['settings']['uri_scheme_options']);
+      }
+      elseif (!empty($field['uri_scheme_options'])) {
+        $field_scheme = reset($field['uri_scheme_options']);
+      }
+    }
+
+    // set default scheme
+    $field['settings']['uri_scheme'] = $field_scheme;
+
+    // save field
+    field_update_field($field);
+  }
+
+  return t('Commerce File field settings have been updated.');
+}
+
+/**
+ * Update module weight heavier than field modules
+ * @see http://drupal.org/node/1309140
+ */
+function commerce_file_update_7102(&$sandbox) {
+  db_query("UPDATE {system} SET weight = 5 WHERE name = 'commerce_file'");
+  return t('Commerce File\'s module weight has been updated.');
+}
+
+/**
+ * Ensure all line item types have been configured
+ */
+function commerce_file_update_7103(&$sandbox) {
+  commerce_file_configure_line_item_fields();
+  return t('Commerce File fields have been configured for all line item types.');
+}
+
+/**
+ * Unlock Commerce File field on License entities
+ * @see http://drupal.org/node/1394892
+ */
+function commerce_file_update_7104(&$sandbox) {
+  field_info_cache_clear();
+  drupal_load('module', 'commerce_file');
+
+  $field_name = 'commerce_file_license_file';
+  $field = field_info_field($field_name);
+
+  if (!empty($field['locked'])) {
+    $field['locked'] = FALSE;
+    field_update_field($field);
+  }
+
+  return t('Unlocked Commerce File field on License entities');
+}
+
+/**
+ * Update field type permission from 'administer commerce_file' to 'administer commerce_file field type'
+ */
+function commerce_file_update_7105(&$sandbox) {
+  // Load utility functions.
+  module_load_install('commerce');
+
+  $map = array(
+    'administer commerce_file' => 'administer commerce_file field type',
+  );
+
+  commerce_update_rename_permissions($map);
+
+  return t('Role and custom View permissions updated for Commerce File field type admin. Access checks in modules and permissions on default Views must be updated manually.');
+}
+
+/**
+ * Rebuild the cache for hook_commerce_file_license_info() for UI improvements to take effect.
+ */
+function commerce_file_update_7106(&$sandbox) {
+  _commerce_file_collate_license_info_rebuild();
+
+  return t('The cache has been rebuilt for Commerce File access limit info defined by implementations of hook_commerce_file_license_info().');
+}
+
+/**
+ * Update field_schema to allow NULL for empty data arrays.
+ */
+function commerce_file_update_7107(&$sandbox) {
+  $data_spec = array(
+    'type' => 'blob',
+    'size' => 'big',
+    'not null' => FALSE,
+    'serialize' => TRUE,
+    'description' => 'Serialized data containing the license properties.',
+  );
+
+  $fields = _update_7000_field_read_fields(array(
+    'module' => 'commerce_file',
+    'type' => 'commerce_file',
+    'storage_type' => 'field_sql_storage',
+  ));
+
+  foreach ($fields as $field_name => $field) {
+    $tables = array(
+      _field_sql_storage_tablename($field),
+      _field_sql_storage_revision_tablename($field),
+    );
+    $data_column = $field['field_name'] . '_data';
+    foreach ($tables as $table) {
+      db_change_field($table, $data_column, $data_column, $data_spec);
+    }
+  }
+
+  field_info_cache_clear();
+
+  return t('The Commerce File field tables have been updated to allow NULL for empty data arrays.');
+}
+
+/**
+ * Re-run 7104 for Unlock Commerce File field on License entities to fix fresh installs
+ * @see http://drupal.org/node/1394892
+ */
+function commerce_file_update_7108(&$sandbox) {
+  return commerce_file_update_7104($sandbox);
+}
+
+/**
+ * Ensure that a default is set for progammatically created fields
+ */
+function commerce_file_update_7109(&$sandbox) {
+  field_info_cache_clear();
+  drupal_load('module', 'commerce_file');
+
+  $field_names = array(
+    'commerce_file_license_file',
+    'commerce_file_line_item_files',
+  );
+
+  foreach ($field_names as $field_name) {
+    $field = field_info_field($field_name);
+    if (!empty($field) && !empty($field['settings']) && empty($field['settings']['uri_scheme'])) {
+      $field['settings']['uri_scheme'] = _commerce_file_default_system_scheme();
+      field_update_field($field);
+    }
+  }
+
+  return t('The Commerce File fields have been updated.');
+}

@@ -1,0 +1,54 @@
+/** Limit elements **/
+.commerce-file-limit-element .commerce-file-limit-element-value {
+  margin-left: 2em;
+}
+
+.commerce-file-limit-integer-element .commerce-file-limit-element-value,
+.commerce-file-limit-duration-element .commerce-file-limit-element-value .form-text {
+  text-align: center;
+}
+
+.commerce-file-limit-duration-element .container-inline div.description {
+  display: block;
+}
+
+/** Commerce File widget **/
+.tabledrag-processed tr.file-commerce-file .file-widget > .form-item,
+.tabledrag-processed tr.file-commerce-file .file-widget > fieldset {
+  margin-left: 2.5em;
+}
+
+.field-widget-commerce-file-generic .commerce-file-limit-element,
+#field-ui-field-edit-form .commerce-file-limit-element {
+  float: left;
+  display: inline;
+  vertical-align: top;
+  width: 30%;
+  max-width: 280px;
+  margin: 0 1.5% 1.5% 1.5%;
+}
+
+.field-widget-commerce-file-generic .commerce-file-limit-duration-element,
+#field-ui-field-edit-form .commerce-file-limit-duration-element {
+  min-width: 180px;
+}
+
+/** inline edit form overrides **/
+.node-form .ief-product-attributes .field-widget-commerce-file-generic .form-managed-file .form-wrapper,
+.node-form .ief-product-details .field-widget-commerce-file-generic .form-managed-file .form-wrapper {
+  float: none !important;
+}
+
+.node-form .field-widget-inline-entity-form .fieldset-wrapper .fieldset-wrapper .field-widget-commerce-file-generic .fieldset-legend {
+  padding-left: 15px !important;
+}
+
+html.js .node-form .ief-product-attributes .field-widget-commerce-file-generic fieldset.collapsed,
+html.js .node-form .ief-product-details .field-widget-commerce-file-generic fieldset.collapsed {
+  height: auto !important;
+}
+
+.node-form .ief-product-attributes .field-widget-commerce-file-generic .form-item label,
+.node-form .ief-product-details .field-widget-commerce-file-generic .form-item label {
+  float: none !important;
+}

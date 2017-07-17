@@ -1,0 +1,1523 @@
+<?php
+
+/**
+ * @file
+ * Provides integration of file licenses with Commerce
+ */
+
+// -----------------------------------------------------------------------
+// Constants
+
+define('COMMERCE_FILE__DIR__', dirname(__FILE__));
+
+define('COMMERCE_FILE_DEFAULT_SCHEME', 'private');
+define('COMMERCE_FILE_ADMIN_PERM', 'administer commerce file');
+define('COMMERCE_FILE_HEADER_NAME', 'X-Private-File');
+
+// entities
+define('COMMERCE_FILE_LICENSE_ENTITY_NAME', 'commerce_file_license');
+define('COMMERCE_FILE_LICENSE_LOG_ENTITY_NAME', 'commerce_file_license_log');
+
+
+// -----------------------------------------------------------------------
+// Includes
+require_once COMMERCE_FILE__DIR__ . '/includes/commerce_file.field.inc';
+require_once COMMERCE_FILE__DIR__ . '/includes/commerce_file.entities.inc';
+require_once COMMERCE_FILE__DIR__ . '/includes/commerce_file.elements.inc';
+
+
+// -----------------------------------------------------------------------
+// Definitions
+
+/**
+ * Implements hook_entity_info().
+ */
+function commerce_file_entity_info() {
+  $module_path = drupal_get_path('module', 'commerce_file');
+
+  $return = array(
+    COMMERCE_FILE_LICENSE_ENTITY_NAME => array(
+      'module' => 'commerce_file',
+      'label' => _commerce_file_translatables('license_label'),
+      'base table' => COMMERCE_FILE_LICENSE_ENTITY_NAME,
+      'controller class' => 'CommerceFileLicenseEntityController',
+      'entity class' => 'CommerceFileLicenseEntity',
+      'rules controller class' => 'CommerceFileLicenseEntityRulesController', // FALSE to kill
+      'views controller class' => FALSE, // FALSE to kill
+      'fieldable' => TRUE,
+      'exportable' => FALSE,
+      'entity keys' => array(
+        'id' => 'license_id',
+        'bundle' => 'type',
+      ),
+      'bundle keys' => array(
+        'bundle' => 'type',
+      ),
+      'bundles' => array(
+        COMMERCE_FILE_LICENSE_ENTITY_NAME => array(
+          'label' => _commerce_file_translatables('license_label'),
+          'admin' => array(
+            'path' => 'admin/commerce/config/file-licenses',
+            'real path' => 'admin/commerce/config/file-licenses',
+            'access arguments' => array('administer ' . COMMERCE_FILE_LICENSE_ENTITY_NAME),
+          ),
+        ),
+      ),
+      'load hook' => 'commerce_file_license_load',
+      'uri callback' => 'entity_class_uri',
+      'label callback' => 'entity_class_label',
+      'access callback' => 'commerce_file_license_access',
+      'view modes' => array(
+        'admin' => array(
+          'label' => t('Administrator'),
+          'custom settings' => FALSE,
+        ),
+        'customer' => array(
+          'label' => t('Customer'),
+          'custom settings' => FALSE,
+        ),
+      ),
+      'admin ui' => array(
+        'path' => 'admin/commerce/file-licenses',
+        'file' => 'commerce_file_license.forms.inc',
+        'file path' => $module_path . '/includes',
+        'controller class' => 'CommerceFileLicenseEntityUIController',
+      ),
+    ),
+  );
+
+  // License log entity
+  $return[COMMERCE_FILE_LICENSE_LOG_ENTITY_NAME] = array(
+    'module' => 'commerce_file',
+    'label' => _commerce_file_translatables('log_label'),
+    'entity class' => 'CommerceFileLicenseLogEntity',
+    'controller class' => 'CommerceFileLicenseLogEntityController',
+    'base table' => COMMERCE_FILE_LICENSE_LOG_ENTITY_NAME,
+    'fieldable' => FALSE,
+    'exportable' => FALSE,
+    'entity keys' => array(
+      'id' => 'aid',
+    ),
+  );
+
+
+  return $return;
+}
+
+
+/**
+ * Implements hook_menu_alter()
+ * - add custom access callback to block deleting of fields on a license, while
+ *   still allowing updating of the field settings
+ */
+function commerce_file_menu_alter(&$items) {
+  $path = 'admin/commerce/config/file-licenses';
+  $field_position = count(explode('/', $path)) + 1;
+
+  // add custom access callback for field delete on licenses
+  if (isset($items["$path/fields/%field_ui_menu/delete"])) {
+    $items["$path/fields/%field_ui_menu/delete"]['access callback'] = 'commerce_file_license_field_config_delete_access';
+    $items["$path/fields/%field_ui_menu/delete"]['access arguments'] = array('administer ' . COMMERCE_FILE_LICENSE_ENTITY_NAME, $field_position);
+  }
+}
+
+/**
+ * Access callback for field ui delete on license entities
+ */
+function commerce_file_license_field_config_delete_access($perm, $field_instance) {
+  $non_deletable_fields = _commerce_file_get_field_names();
+
+  // block delete for non-deletable fields
+  if (isset($field_instance['field_name']) && in_array($field_instance['field_name'], $non_deletable_fields)) {
+    return FALSE;
+  }
+
+  // fallback to user permission
+  return user_access($perm);
+}
+
+
+/**
+ * Implements hook_hook_info().
+ */
+function commerce_file_hook_info() {
+  $hooks = array(
+    'commerce_file_license_state_info' => array(
+      'group' => 'commerce',
+    ),
+    'commerce_file_license_state_info_alter' => array(
+      'group' => 'commerce',
+    ),
+    'commerce_file_license_status_info' => array(
+      'group' => 'commerce',
+    ),
+    'commerce_file_license_status_info_alter' => array(
+      'group' => 'commerce',
+    ),
+    'commerce_file_license_info' => array(
+      'group' => 'commerce',
+    ),
+    'commerce_file_license_info_alter' => array(
+      'group' => 'commerce',
+    ),
+    'commerce_file_license_download' => array(
+      'group' => 'commerce',
+    ),
+    'commerce_file_license_access_denied' => array(
+      'group' => 'commerce',
+    ),
+    'commerce_file_license_log_download' => array(
+      'group' => 'commerce',
+    ),
+    'commerce_file_content_headers_alter' => array(
+      'group' => 'commerce',
+    ),
+    'commerce_file_download_unlicensed_access' => array(
+      'group' => 'commerce',
+    ),
+    'commerce_file_download_unlicensed_access_alter' => array(
+      'group' => 'commerce',
+    ),
+  );
+
+  foreach (array(COMMERCE_FILE_LICENSE_ENTITY_NAME, COMMERCE_FILE_LICENSE_LOG_ENTITY_NAME) as $entity_name) {
+    $hooks += array(
+      $entity_name . '_presave' => array('group' => 'commerce'),
+      $entity_name . '_update'  => array('group' => 'commerce'),
+      $entity_name . '_insert'  => array('group' => 'commerce'),
+      $entity_name . '_delete'  => array('group' => 'commerce'),
+    );
+  }
+
+  return $hooks;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function commerce_file_menu() {
+  $items = array();
+
+  $items['admin/commerce/config/file-licenses'] = array(
+    'title' => 'License settings',
+    'description' => 'Configure general license settings, fields, and displays.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('commerce_file_license_settings_form'),
+    'access arguments' => array('administer ' . COMMERCE_FILE_LICENSE_ENTITY_NAME),
+    'file' => 'includes/commerce_file_license_ui.types.inc',
+  );
+  $items['admin/commerce/config/file-licenses/settings'] = array(
+    'title' => 'Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function commerce_file_permission() {
+  $tokens = _commerce_file_translatables_tokenized();
+
+  $perms = array(
+    COMMERCE_FILE_ADMIN_PERM => array(
+      'title' => t('Administer Commerce File'),
+      'description' => t('Allows users to perform any action with the Commerce File module.'),
+      'restrict access' => TRUE,
+    ),
+  );
+
+  // license perms
+  $license_entity_name = COMMERCE_FILE_LICENSE_ENTITY_NAME;
+  $perms += array(
+    "administer $license_entity_name" => array(
+      'title' => t('Administer !license_label_plural', $tokens),
+      'description' => t('Allows users to perform any action on !license_label_plural of any type.', $tokens),
+      'restrict access' => TRUE,
+    ),
+    "access any $license_entity_name" => array(
+      'title' => t('Access any !license_label_plural', $tokens),
+      'description' => t('Allows users to view any !license_label_plural.', $tokens),
+      'restrict access' => TRUE,
+    ),
+    "create $license_entity_name" => array(
+      'title' => t('Create !license_label_plural', $tokens),
+      'restrict access' => TRUE,
+    ),
+    "edit any $license_entity_name" => array(
+      'title' => t('Edit or Delete any !license_label_plural', $tokens),
+      'restrict access' => TRUE,
+    ),
+  );
+
+  // log perms
+  $log_entity_name = COMMERCE_FILE_LICENSE_LOG_ENTITY_NAME;
+  $perms += array(
+    "administer $log_entity_name" => array(
+      'title' => t('Administer !log_label_plural', $tokens),
+      'description' => t('Allows users to perform any action on !log_label_plural of any type.', $tokens),
+      'restrict access' => TRUE,
+    ),
+    "access any $log_entity_name" => array(
+      'title' => t('Access any !log_label_plural', $tokens),
+      'description' => t('Allows users to view any !log_label_plural.', $tokens),
+      'restrict access' => TRUE,
+    ),
+    "access own $log_entity_name" => array(
+      'title' => t('Access own !log_label_plural', $tokens),
+      'description' => t('Allows users to view their own !log_label_plural.', $tokens),
+      'restrict access' => TRUE,
+    ),
+    "create $log_entity_name" => array(
+      'title' => t('Create !log_label_plural', $tokens),
+      'restrict access' => TRUE,
+    ),
+    "edit any $log_entity_name" => array(
+      'title' => t('Edit or Delete any !log_label_plural', $tokens),
+      'restrict access' => TRUE,
+    ),
+  );
+
+  // File Field perms
+  $perms += array(
+    'administer ' . COMMERCE_FILE_FIELD_TYPE . ' field type' => array(
+      'title' => t('Administer Commerce File field type'),
+      'description' => t('Allows users to perform any action for Commerce File field type.'),
+      'restrict access' => TRUE,
+    ),
+  );
+
+  return $perms;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function commerce_file_theme() {
+  return array(
+    'commerce_file_file_link_plain' => array(
+      'variables' => array('file' => NULL, 'icon_directory' => NULL),
+    ),
+    'commerce_file_file_formatter_table_plain' => array(
+      'variables' => array('items' => NULL),
+    ),
+  );
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function commerce_file_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'commerce_file') . '/views',
+  );
+}
+
+
+// -----------------------------------------------------------------------
+// License property handling
+
+/**
+ * Store information about license properties
+ */
+function _commerce_file_collate_license_info($reset = FALSE) {
+  $info = &drupal_static(__FUNCTION__);
+
+  if ($reset) {
+    $info = NULL;
+    cache_clear_all('commerce_file_license_info', 'cache');
+    return;
+  }
+
+  // initialize cache
+  if (!isset($info)) {
+    if ($cached = cache_get('commerce_file_license_info', 'cache')) {
+      // retrieve from stored cache
+      $info = $cached->data;
+    }
+    else {
+      // rebuild info and set stored cache
+      $info = module_invoke_all('commerce_file_license_info');
+      drupal_alter('commerce_file_license_info', $info);
+
+      // set defaults
+      foreach ($info as $k => &$data) {
+        $data += array(
+          'name' => $k,
+          'title' => $k,
+          'base_element' => array(
+            '#type' => 'commerce_file_limit_integer',
+            '#title' => $k,
+          ),
+          'callbacks' => array(),
+        );
+
+        $data['property info'] += array(
+          'type' => 'integer',
+          'label' => $data['title'],
+          'description' => $data['title'],
+          'getter callback' => 'entity_property_verbatim_get',
+          'setter callback' => 'entity_property_verbatim_set',
+          'validation callback' => '_commerce_file_metadata_validate_limit_integer_positive_or_zero',
+          'queryable' => FALSE,
+
+          // license custom property info
+          'default_value' => COMMERCE_FILE_FIELD_UNLIMITED,
+          'zero_value' => 0,
+          'aggregated' => TRUE,
+          'inheritable' => TRUE,
+        );
+      }
+      unset($data);
+
+      // store in cache
+      cache_set('commerce_file_license_info', $info, 'cache');
+    }
+  }
+
+  return $info;
+}
+
+/**
+ * Rebuild license info
+ */
+function _commerce_file_collate_license_info_rebuild() {
+  // reset cache
+  _commerce_file_collate_license_info(TRUE);
+
+  // rebuild cache
+  return _commerce_file_collate_license_info();
+}
+
+/**
+ * Extract property info from license info
+ *   - used in field definition for settings property info
+ */
+function _commerce_file_license_data_property_info() {
+  $info = _commerce_file_collate_license_info();
+  $property_info = array();
+  foreach ($info as $k => $data) {
+    if (isset($data['property info'])) {
+      $property_info[$k] = $data['property info'];
+    }
+  }
+
+  return $property_info;
+}
+
+
+/**
+ * Merge one or more property data arrays into the first
+ *  - assumes all settings have been resolved for all items
+ *  - aggregates properties
+ */
+function _commerce_file_license_property_merge($data1/*, $data2, ...*/) {
+  $args = func_get_args();
+
+  // extract trunk
+  $trunk = array_shift($args);
+  if (empty($trunk)) {
+    $trunk = array();
+  }
+
+  // return $trunk if no other arrays to merge
+  if (empty($args)) {
+    return $trunk;
+  }
+
+  // get license info
+  $license_info = _commerce_file_collate_license_info();
+
+  // merge arrays
+  foreach ($args as $data) {
+    $non_license_data = array_diff_key($data, $license_info);
+
+    // only operate on license properties
+    foreach ($license_info as $k => $info) {
+      $aggregated = !empty($info['property info']['aggregated']);
+
+      // populate trunk
+      if (isset($trunk[$k])) {
+        // combine if trunk and data
+        if (isset($data[$k])) {
+          $combined = _commerce_file_license_property_combine_values($trunk[$k], $data[$k], $aggregated);
+          if (isset($combined)) {
+            $trunk[$k] = $combined;
+          }
+        }
+      }
+      elseif (isset($data[$k])) {
+        $trunk[$k] = $data[$k];
+      }
+    }
+
+    // merge non license data to override trunk
+    $trunk = $non_license_data + $trunk;
+  }
+
+  return $trunk;
+}
+
+/**
+ * Combines 2 values of the same property
+ * - provides ability to add numbers, NULLs, unlimited values
+ */
+function _commerce_file_license_property_combine_values($a, $b, $aggregated = FALSE, $unlimited_value = COMMERCE_FILE_FIELD_UNLIMITED) {
+  if (!isset($a)) {
+    return $b;
+  }
+  if (!isset($b)) {
+    return $a;
+  }
+
+  // unlimited overrides all to unlimited
+  if ($a === $unlimited_value || $b === $unlimited_value) {
+    return $unlimited_value;
+  }
+
+  // override previous
+  if (empty($aggregated)) {
+    return $b;
+  }
+
+  // aggregate
+  return $a + $b;
+}
+
+/**
+ * Invoke a callback for a license property
+ */
+function _commerce_file_license_invoke_callback($callback, $property/*, ... */) {
+  // extract arguments
+  $args = func_get_args();
+  array_shift($args);
+  array_shift($args);
+
+  // get license info
+  $info = _commerce_file_collate_license_info();
+
+  if (isset($info[$property]) && isset($info[$property]['callbacks']) &&
+      !empty($info[$property]['callbacks'][$callback])) {
+    // load module implements for info hook to allow callbacks in the same file
+    module_implements('commerce_file_license_info');
+
+    // call function and return
+    $func = $info[$property]['callbacks'][$callback];
+    if (function_exists($func)) {
+      return call_user_func_array($func, $args);
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------
+// Translatables
+
+/**
+ * Return field names controlled by this module
+ *
+ * @param $key
+ *   Some sort of easy key to use in code.
+ */
+function _commerce_file_get_field_names($key = NULL) {
+  $names = &drupal_static(__FUNCTION__);
+  if (!isset($names)) {
+    $names = array(
+      'license_file' => 'commerce_file_license_file',
+      'license_line_items' => 'commerce_file_license_line_items',
+      'line_item_files' => 'commerce_file_line_item_files',
+    );
+  }
+
+  if (isset($key)) {
+    return $names[$key];
+  }
+
+  return $names;
+}
+
+/**
+ * Store various translatable strings for reuse
+ */
+function _commerce_file_translatables($key = NULL) {
+  $trans = &drupal_static(__FUNCTION__);
+  if (!isset($trans)) {
+    $trans = array(
+      'license_label' => t('Commerce File License'),
+      'license_label_plural' => t('Commerce File Licenses'),
+      'log_label' => t('Commerce File License Log'),
+      'log_label_plural' => t('Commerce File License Logs'),
+    );
+  }
+
+  if (isset($key)) {
+    return $trans[$key];
+  }
+
+  return $trans;
+}
+
+/**
+ * Tokenize the stored translated strings to be used in other t() calls
+ */
+function _commerce_file_translatables_tokenized($token_prefix = '!') {
+  $tokens = array();
+  $trans = _commerce_file_translatables();
+
+  foreach ($trans as $key => $t_string) {
+    $tokens[$token_prefix . $key] = $t_string;
+  }
+
+  return $tokens;
+}
+
+
+// -----------------------------------------------------------------------
+// System Hooks
+
+/**
+ * Implements hook_enable().
+ *  - Add our default line item file field to the line item types.
+ */
+function commerce_file_enable() {
+  // Add the default license fields.
+  commerce_file_license_configure_types();
+
+  // Add line item fields for all line item types
+  commerce_file_configure_line_item_fields();
+}
+
+/**
+ * Implements hook_disable().
+ *  - clear entity_info cache to flush 'admin ui' path
+ */
+function commerce_file_disable() {
+  cache_clear_all('entity_info', 'cache', TRUE);
+}
+
+/**
+ * Implements hook_modules_enabled().
+ *  - Add our default line item file field to the line item types.
+ *  - Rebuild license info cache if any enabled modules implements hook
+ */
+function commerce_file_modules_enabled($modules) {
+  // Configure line item fields for all line item types
+  commerce_file_configure_line_item_fields($modules);
+
+  // Reset license info cache
+  $info_reset = FALSE;
+  foreach ($modules as $module) {
+    // If the module implements hook_commerce_file_license_info()...
+    if (module_hook($module, 'commerce_file_license_info')) {
+      _commerce_file_collate_license_info_rebuild();
+      break;
+    }
+  }
+}
+
+/**
+ * Implements hook_system_info_alter().
+ *
+ * - Temporary fix to address field module not allowing disabling this module
+ *   if there are still fields of this field type.
+ *   Fix depends on commerce_file_update_7102().
+ *   @see http://drupal.org/node/1309140
+ *
+ * - @todo remove this when split into separate modules
+ */
+function commerce_file_system_info_alter(&$info, $file, $type) {
+  if ($type == 'module' && $file->name == 'commerce_file') {
+    // @ref field_system_info_alter()
+    $fields = field_read_fields(array('module' => $file->name), array('include_deleted' => TRUE));
+    if ($fields) {
+      // remove fields controlled by this module
+      $controlled_fields = _commerce_file_get_field_names();
+      foreach ($fields as $field_id => $field) {
+        if (in_array($field['field_name'], $controlled_fields)) {
+          unset($fields[$field_id]);
+        }
+      }
+
+      // if no more fields, then undo field module
+      if (empty($fields)) {
+        unset($info['explanation'], $info['required']);
+      }
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------
+// Form Handling
+
+/**
+ * Builds an appropriate issue license form ID based on the entity on the form.
+ *
+ * @see commerce_file_forms().
+ */
+function commerce_file_license_issue_by_host_form_id($entity_type, array $host_ids = array()) {
+  if (empty($host_ids)) {
+    return 'commerce_file_license_issue_by_host_form_' . $entity_type;
+  }
+
+  // Make sure the length of the form id is limited.
+  $data = implode('_', $host_ids);
+
+  if (strlen($data) > 50) {
+    $data = drupal_hash_base64($data);
+  }
+
+  return 'commerce_file_license_issue_by_host_form_' . $entity_type . '_' . $data;
+}
+
+/**
+ * Implements hook_forms().
+ */
+function commerce_file_forms($form_id, $args) {
+  $forms = array();
+
+  if (strpos($form_id, 'commerce_file_license_issue_by_host_form_') === 0) {
+    module_load_include('inc', 'commerce_file', 'includes/commerce_file_license.forms');
+    $forms[$form_id] = array(
+      'callback' => 'commerce_file_license_issue_by_host_form',
+    );
+  }
+
+  return $forms;
+}
+
+
+// -----------------------------------------------------------------------
+// File Hooks
+
+/**
+ * Implements hook_file_download().
+ */
+function commerce_file_file_download($uri) {
+  global $user;
+  $account = clone($user);
+  $file = NULL;
+
+  // Get the file record based on the URI. If not in the database just return.
+  // @see file_file_download()
+  $files = file_load_multiple(array(), array('uri' => $uri));
+  if (empty($files)) {
+    return;
+  }
+  if (count($files)) {
+    foreach ($files as $item) {
+      // Since some database servers sometimes use a case-insensitive comparison
+      // by default, double check that the filename is an exact match.
+      if ($item->uri === $uri) {
+        $file = $item;
+        break;
+      }
+    }
+  }
+
+  // PASS if the file does not exist
+  if (!isset($file)) {
+    return;
+  }
+
+  // PASS if the file is not permanent (ie temporary)
+  if ($file->status != FILE_STATUS_PERMANENT) {
+    return;
+  }
+
+  // determine if file is associated with a commerce_file field
+  $references = _commerce_file_get_file_references($file, NULL, FIELD_LOAD_CURRENT, COMMERCE_FILE_FIELD_TYPE);
+
+  // PASS if not a file in any commerce_file field
+  if (empty($references)) {
+    return;
+  }
+
+  // ALLOW if user has 'view' access with no license (ie. admin)
+  // - Note: This stops any license logging for admin users
+  if (commerce_file_license_admin_access('view', $account)) {
+    return commerce_file_get_content_headers($file);
+  }
+
+  // get user's licenses for this file
+  $licenses = commerce_file_license_load_by_property(array($file->fid), array(), $account);
+
+  // check license based access
+  if (!empty($licenses)) {
+    // find a valid license that can be downloaded by the user
+    ksort($licenses);
+    foreach ($licenses as $license_id => $license) {
+      // trigger download hook and check download was allowed by the hook actions
+      if ($license->can_download($account)) {
+        // return on first license allowed
+
+        // set time limit for large files
+        drupal_set_time_limit(0);
+
+        // store current licenses in this request for use in hook_exit()
+        _commerce_file_license_set_request_license($license);
+
+        // return additional file headers and PASS to file module and others to handle
+        return commerce_file_get_content_headers($file);
+      }
+    }
+  }
+
+
+  // if do not have any valid licenses ...
+
+  // let other modules ALLOW unlicensed access to the protected file
+  $grants = _commerce_file_download_unlicensed_access($file, $account, $licenses);
+  if (in_array(TRUE, $grants)) {
+    // If TRUE is returned, access is granted
+    return commerce_file_get_content_headers($file);
+  }
+
+
+  // DENY ALL
+  return -1;
+}
+
+/**
+ * Invoke hook_commerce_file_download_unlicensed_access()
+ */
+function _commerce_file_download_unlicensed_access($file, $account = NULL, $licenses = array()) {
+  global $user;
+
+  $account = isset($account) ? $account : $user;
+  $licenses = !empty($licenses) ? $licenses : array();
+
+  // Invoke hook and collect grants/denies for download access.
+  // Default to FALSE and let others overrule this ruling.
+  $grants = array('commerce_file' => FALSE);
+  $grant_hook = 'commerce_file_download_unlicensed_access';
+  foreach (module_implements($grant_hook) as $module) {
+    $grants = array_merge($grants, array($module => module_invoke($module, $grant_hook, $file, $account, $licenses)));
+  }
+
+  // Allow other modules to alter the returned grants/denies.
+  drupal_alter($grant_hook, $grants, $file, $account, $licenses);
+
+  return $grants;
+}
+
+/**
+ * Returns appropriate content headers for download
+ *
+ * @param $file
+ *   A file object
+ * @return
+ *   An associative array of headers, as expected by file_transfer()
+ */
+function commerce_file_get_content_headers($file) {
+  // Set special header to detect on hook_exit()
+  $headers = array(COMMERCE_FILE_HEADER_NAME => 1);
+
+  // merge default private file headerss
+  $headers += file_get_content_headers($file);
+
+  // Allow other modules to alter the returned headers.
+  drupal_alter('commerce_file_content_headers', $headers, $file);
+
+  return $headers;
+}
+
+/**
+ * Implements hook_exit().
+ */
+function commerce_file_exit($destination = NULL) {
+  global $user;
+
+  // check if our header is set to determine if file_download has allowed
+  if (drupal_get_http_header(COMMERCE_FILE_HEADER_NAME)) {
+    $licenses = _commerce_file_license_get_request_licenses();
+    if (!empty($licenses)) {
+      // log access for license owners
+      foreach ($licenses as $license) {
+        $license->invoke('log_download');
+      }
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------
+// Field API
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function commerce_file_field_formatter_info() {
+  return array(
+    'commerce_file_access_link' => array(
+      'label' => t('File link with License view access check'),
+      'field types' => array('commerce_file'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function commerce_file_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  global $user;
+  $element = array();
+
+  switch ($display['type']) {
+    case 'commerce_file_access_link':
+      $field_item_theme = 'commerce_file_file_link_plain';
+
+      $access = _commerce_file_field_view_access($entity_type, $entity, $field, $instance, $langcode, $items, $display, $user);
+      if ($access) {
+        $field_item_theme = 'file_link';
+      }
+
+      // process each field item
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array(
+          '#theme' => $field_item_theme,
+          '#file' => (object) $item,
+        );
+      }
+      break;
+  }
+
+  return $element;
+}
+
+/**
+ * Returns TRUE if a user has view access to commerce_file fields on any field instance
+ */
+function _commerce_file_field_view_access($entity_type, $entity, $field, $instance, $langcode, $items, $display, $account = NULL) {
+  global $user;
+  $access = FALSE;
+
+  $account = isset($account) ? $account : $user;
+
+  if (user_access('administer ' . COMMERCE_FILE_FIELD_TYPE . ' field type', $account)) {
+    // provide link to field type admins
+    $access = TRUE;
+  }
+  elseif ($entity_type == COMMERCE_FILE_LICENSE_ENTITY_NAME) {
+    // check license view access
+    $access = _commerce_file_field_view_access_license($entity, $account);
+  }
+  else {
+    // Extract fid's and query active licenses
+    $fids = array();
+    foreach ($items as $delta => $item) {
+      if (!empty($item['fid'])) {
+        $fids[] = $item['fid'];
+      }
+    }
+
+    if (!empty($fids)) {
+      $licenses = commerce_file_license_load_by_property($fids, array(), $account);
+      if (!empty($licenses)) {
+        foreach($licenses as $license) {
+          if (_commerce_file_field_view_access_license($license, $account)) {
+            $access = TRUE;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  return $access;
+}
+
+/**
+ * Returns TRUE if user has view access to commerce_file fields on a license instance
+ */
+function _commerce_file_field_view_access_license($entity, $account) {
+  $access = FALSE;
+
+  if (!empty($entity) && $entity->access('view', $account)) {
+    if ($entity->uid != $account->uid || $entity->is_allowed()) {
+      // provide link for admins withs view access -OR- owner if entity state is allowed
+      $access = TRUE;
+    }
+  }
+  elseif (commerce_file_license_admin_access('view', $account)) {
+    $access = TRUE;
+  }
+
+  return $access;
+}
+
+
+// -----------------------------------------------------------------------
+// Commerce API
+
+/**
+ * Implements hook_commerce_order_delete().
+ *
+ * - Remove license line item references on order delete. The line item will
+ *   not get deleted by commerce_line_item_field_attach_delete() if another
+ *   entity is referencing the line item, ie licenses.  Here we are just
+ *   removing the line item references on the licenses so the line item
+ *   entity will be orphaned.
+ */
+function commerce_file_commerce_order_delete($order) {
+  $line_item_field_items = field_get_items('commerce_order', $order, 'commerce_line_items');
+  if (empty($line_item_field_items)) {
+    return;
+  }
+
+  $line_item_ids = array();
+  foreach ($line_item_field_items as $line_item_field_item) {
+    $line_item_ids[] = $line_item_field_item['line_item_id'];
+  }
+
+  $line_items = commerce_line_item_load_multiple($line_item_ids);
+  foreach ($line_items as $line_item_id => $line_item) {
+    _commerce_file_license_line_item_delete_references($line_item);
+  }
+}
+
+/**
+ * Implements hook_commerce_cart_order_refresh().
+ */
+function commerce_file_commerce_cart_order_refresh($order_wrapper) {
+  $refreshed = &drupal_static(__FUNCTION__, array());
+  $order_id = $order_wrapper->getIdentifier();
+
+  if (isset($refreshed[$order_id])) {
+    return;
+  }
+  $refreshed[$order_id] = TRUE;
+
+  if (empty($order_wrapper->commerce_line_items)) {
+    return;
+  }
+
+  foreach ($order_wrapper->commerce_line_items as $delta => $line_item_wrapper) {
+    commerce_file_refresh_line_item($line_item_wrapper, $order_wrapper);
+  }
+}
+
+/**
+ * Refresh a line item with the current product license data
+ */
+function commerce_file_refresh_line_item($line_item_wrapper_dirty, $order_wrapper = NULL) {
+  $refreshed = &drupal_static(__FUNCTION__, array());
+  $line_item_field_name = _commerce_file_get_field_names('line_item_files');
+  $line_item_has_changed = FALSE;
+
+  // wrap line with clean wrapper
+  $line_item_wrapper = _commerce_file_clean_line_item_wrapper($line_item_wrapper_dirty);
+  if (empty($line_item_wrapper)) {
+    return;
+  }
+  $line_item_id = $line_item_wrapper->getIdentifier();
+
+  // exit if refreshed already
+  if (isset($refreshed[$line_item_id])) {
+    return;
+  }
+  $refreshed[$line_item_id] = TRUE;
+
+  // exit if no file field set up on line item
+  if (empty($line_item_wrapper->{$line_item_field_name})) {
+    return;
+  }
+
+  // get referenced product
+  if (empty($line_item_wrapper->commerce_product)) {
+    return;
+  }
+  $product_wrapper = $line_item_wrapper->commerce_product;
+
+  // find all instances of commerce file field
+  $product_file_instances = _commerce_file_field_info_instances('commerce_product', $product_wrapper->getBundle(), COMMERCE_FILE_FIELD_TYPE);
+  if (empty($product_file_instances)) {
+    return;
+  }
+
+  // transfer product file fields to line item
+  $all_product_file_items = array();
+  foreach ($product_file_instances as $product_file_fieldname => $product_file_instance) {
+    if (empty($product_wrapper->{$product_file_fieldname})) {
+      continue;
+    }
+
+    // get product field items
+    $product_file_instance_items = $product_wrapper->{$product_file_fieldname}->value();
+    if (empty($product_file_instance_items)) {
+      continue;
+    }
+
+    // handle a single value field
+    if (isset($product_file_instance_items['fid'])) {
+      $product_file_instance_items = array($product_file_instance_items);
+    }
+
+    // resolve settings of all items
+    foreach ($product_file_instance_items as $product_file_instance_item) {
+      $all_product_file_items[] = _commerce_file_license_resolve_settings($product_file_instance_item, $product_file_instance);
+    }
+  }
+
+
+  // set line item field to all file items found on all product fields
+  $line_item_wrapper->{$line_item_field_name} = $all_product_file_items;
+  _commerce_file_line_item_wrapper_save($line_item_wrapper);
+  return $line_item_wrapper;
+}
+
+
+// -----------------------------------------------------------------------
+// Line Item Integration
+
+/**
+ * Configures line item types defined by other modules that are enabled after
+ * the Commerce File module.
+ *
+ * @param $modules
+ *   An array of module names whose line item type fields should be configured;
+ *   if left NULL, will default to all modules that implement
+ *   hook_commerce_line_item_type_info().
+ */
+function commerce_file_configure_line_item_fields($modules = NULL) {
+  // If no modules array is passed, recheck the fields for all line item types
+  // defined by enabled modules.
+  if (empty($modules)) {
+    $modules = module_implements('commerce_line_item_type_info');
+  }
+
+  // Reset the line item cache to get the default options and callbacks.
+  commerce_line_item_types_reset();
+
+  // Loop through all the enabled modules.
+  foreach ($modules as $module) {
+    // If the module implements hook_commerce_line_item_type_info()...
+    if (module_hook($module, 'commerce_line_item_type_info')) {
+      // Loop through and configure the line item types defined by the module.
+      foreach (module_invoke($module, 'commerce_line_item_type_info') as $type => $line_item_type) {
+        // Load the line item type to ensure we have callbacks set.
+        $line_item_type = commerce_line_item_type_load($type);
+        commerce_file_configure_line_item_type($line_item_type);
+      }
+    }
+  }
+}
+
+/**
+ * Configure a line item type
+ * - add field to product line items
+ */
+function commerce_file_configure_line_item_type($line_item_type) {
+  if (!empty($line_item_type['product'])) {
+    $entity_type = 'commerce_line_item';
+
+    // add line item file field
+    $field_name = _commerce_file_get_field_names('line_item_files');
+    _commerce_file_create_instance(COMMERCE_FILE_FIELD_TYPE, $field_name, $entity_type, $line_item_type['type'], array(
+        'field' => array(
+          'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+          'locked' => TRUE,
+          'settings' => array(
+            'uri_scheme' => _commerce_file_default_system_scheme(),
+          ),
+        ),
+        'instance' => array(
+          'label' => 'Commerce File',
+          'required' => FALSE,
+          'settings' => array(
+            'file_extensions' => 'mp4 m4v flv wmv mp3 wav jpg jpeg png pdf doc docx ppt pptx xls xlsx',
+            'file_directory' => 'commerce-files',
+            'max_filesize' => '',
+          ),
+          'widget' => array(
+            'type' => 'commerce_file_generic',
+            'weight' => 20,
+          ),
+          'display' => array('default' => array('label' => 'hidden')),
+        ),
+    ));
+  }
+}
+
+/**
+ * Delete fields created by this module
+ */
+function _commerce_file_delete_line_item_fields() {
+  $field_names = _commerce_file_get_field_names();
+
+  foreach (array('line_item_files') as $field_key) {
+    if (isset($field_names[$field_key])) {
+      $params = array('field_name' => $field_names[$field_key]);
+      foreach (field_read_instances($params, array('include_inactive' => TRUE)) as $instance) {
+        commerce_delete_instance($instance);
+      }
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------
+// Theme functions
+
+/**
+ * Returns HTML for a plain text display of a file.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - file: A file object to which the link will be created.
+ *   - icon_directory: (optional) A path to a directory of icons to be used for
+ *     files. Defaults to the value of the "file_icon_directory" variable.
+ *
+ * @ingroup themeable
+ */
+function theme_commerce_file_file_link_plain($variables) {
+  $file = $variables['file'];
+  $icon_directory = $variables['icon_directory'];
+  $icon = theme('file_icon', array('file' => $file, 'icon_directory' => $icon_directory));
+
+  // Use the description as the link text if available.
+  if (empty($file->description)) {
+    $link_text = $file->filename;
+  }
+  else {
+    $link_text = $file->description;
+  }
+
+  return '<span class="file">' . $icon . ' ' . check_plain($link_text) . '</span>';
+}
+
+/**
+ * Returns HTML for a file table with no links to the files.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - items: An array of file attachments.
+ *
+ * @ingroup themeable
+ */
+function theme_commerce_file_file_formatter_table_plain($variables) {
+  $header = array(t('Attachment'), t('Size'));
+  $rows = array();
+  foreach ($variables['items'] as $delta => $item) {
+    $rows[] = array(
+      theme('commerce_file_file_link_plain', array('file' => (object) $item)),
+      format_size($item['filesize']),
+    );
+  }
+
+  return empty($rows) ? '' : theme('table', array('header' => $header, 'rows' => $rows));
+}
+
+
+// -----------------------------------------------------------------------
+// Stream Wrappers
+
+/**
+ * Return scheme options for a form element with optional filter
+ */
+function _commerce_file_get_private_stream_wrappers_options(array $filter = array()) {
+  $options = array();
+  if ($schemes = _commerce_file_get_private_stream_wrappers($filter)) {
+    foreach ($schemes as $scheme => $stream_wrapper) {
+      $options[$scheme] = $stream_wrapper['name'];
+    }
+  }
+  return $options;
+}
+
+/**
+ * Return available private file stream wrappers with optional filter
+ */
+function _commerce_file_get_private_stream_wrappers(array $filter = array()) {
+  $schemes = array();
+  if ($schemes = file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE)) {
+    // remove public schemes
+    /** @todo if stream wrappers get a private/public flag, then can remove all public schemes **************/
+    unset($schemes['public']);
+
+    if (!empty($schemes) && !empty($filter)) {
+      foreach ($schemes as $scheme => $stream_wrapper) {
+        if (!in_array($scheme, $filter)) {
+          unset($schemes[$scheme]);
+        }
+      }
+    }
+  }
+  return $schemes;
+}
+
+/**
+ * Returns system default file scheme
+ */
+function _commerce_file_default_system_scheme() {
+  $private_schemes = _commerce_file_get_private_stream_wrappers();
+
+  $default_scheme = variable_get('file_default_scheme', NULL);
+  if (empty($default_scheme)) {
+    $default_scheme = COMMERCE_FILE_DEFAULT_SCHEME;
+  }
+
+  if (isset($private_schemes[$default_scheme])) {
+    return $default_scheme;
+  }
+  elseif (!empty($private_schemes)) {
+    return key($private_schemes);
+  }
+
+  return 'private';
+}
+
+
+// -----------------------------------------------------------------------
+// Helpers
+
+/**
+ * Return entity type from an entity
+ */
+function _commerce_file_get_entity_type($entity) {
+  // entity implements an entity class
+  if (method_exists($entity, 'entityType')) {
+    return $entity->entityType();
+  }
+
+  // entity is an entity wrapper
+  if (method_exists($entity, 'type')) {
+    return $entity->type();
+  }
+
+  return NULL;
+}
+
+/**
+ * Retrieve a cleanly loaded and de-referenced line item wrapper
+ */
+function _commerce_file_clean_line_item_wrapper($dirty_wrapper) {
+  $field_name = _commerce_file_get_field_names('line_item_files');
+
+  // exit if no field
+  if (!isset($dirty_wrapper->{$field_name})) {
+    return;
+  }
+
+  // get field items
+  $field_items = $dirty_wrapper->{$field_name}->value();
+
+  // determine if wrapper is serialized
+  foreach ($dirty_wrapper->{$field_name} as $field_item) {
+    if (is_string($field_item->data->value())) {
+      // reload since other fields (commerce_unit_price) could be serialize
+      $line_item = commerce_line_item_load($dirty_wrapper->getIdentifier());
+      return entity_metadata_wrapper('commerce_line_item', $line_item);
+    }
+  }
+
+  return $dirty_wrapper;
+}
+
+/**
+ * Save a line item
+ */
+function _commerce_file_line_item_save($line_item) {
+  commerce_line_item_save(clone($line_item));
+  entity_get_controller('commerce_line_item')->resetCache(array($line_item->line_item_id));
+}
+
+/**
+ * Save a line item wrapper
+ */
+function _commerce_file_line_item_wrapper_save($line_item_wrapper) {
+  commerce_line_item_save(clone($line_item_wrapper->value()));
+  entity_get_controller('commerce_line_item')->resetCache(array($line_item_wrapper->line_item_id->value()));
+}
+
+/**
+ * Retrieve the owner account for a line item
+ */
+function commerce_file_line_item_owner($line_item, $order = NULL) {
+  $line_item_id = $line_item->line_item_id;
+
+  // exit if we issued this already
+  if (empty($line_item->line_item_id)) {
+    return;
+  }
+
+  // wrap the line
+  $line_item_wrapper = entity_metadata_wrapper('commerce_line_item', $line_item);
+  $line_item_wrapper = _commerce_file_clean_line_item_wrapper($line_item_wrapper);
+
+  // resolve order needed to determine order owner
+  if (empty($order)) {
+    // attempt to load order off of line item
+    $order = commerce_order_load($line_item->order_id);
+    if (empty($order)) {
+      return;
+    }
+  }
+
+  // wrap order and determine if owner exists
+  $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+  if (empty($order_wrapper->owner)) {
+    return;
+  }
+
+  // get owner account
+  $account = $order_wrapper->owner->value();
+  if (empty($account)) {
+    return;
+  }
+
+  return $account;
+}
+
+/**
+ * Create a field instance
+ */
+function _commerce_file_create_instance($field_type, $field_name, $entity_type, $bundle, $options = array()) {
+  // If a field type should exist and isn't found, clear the Field cache.
+  if (!field_info_field_types($field_type)) {
+    field_cache_clear();
+  }
+
+  $field = field_info_field($field_name);
+  $instance = field_info_instance($entity_type, $field_name, $bundle);
+
+  if (empty($field)) {
+    $field = (!empty($options['field']) ? $options['field'] : array()) + array(
+      'field_name' => $field_name,
+      'type' => $field_type,
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'entity_types' => array($entity_type),
+      'translatable' => FALSE,
+      'locked' => FALSE,
+      'settings' => array(),
+    );
+
+    try {
+      $field = field_create_field($field);
+    }
+    catch (Exception $e) {
+    }
+  }
+
+  if (empty($instance)) {
+    $instance = (!empty($options['instance']) ? $options['instance'] : array()) + array(
+      'field_name' => $field_name,
+      'entity_type' => $entity_type,
+      'bundle' => $bundle,
+      'label' => $field_name,
+      'required' => FALSE,
+      'settings' => array(),
+      'widget' => array(),
+      'display' => array(),
+    );
+
+    try {
+      $instance = field_create_instance($instance);
+    }
+    catch (Exception $e) {
+    }
+  }
+}
+
+/**
+ * Retrieves a list of references to a file.
+ * - @see file_get_file_references()
+ * - added access check bypass
+ */
+function _commerce_file_get_file_references($file, $field = NULL, $age = FIELD_LOAD_REVISION, $field_type = 'file', $allow_access_check = FALSE) {
+  $references = drupal_static(__FUNCTION__, array());
+  $fields = isset($field) ? array($field['field_name'] => $field) : field_info_fields();
+  $root_user = user_load(1);
+
+  foreach ($fields as $field_name => $file_field) {
+    if ((empty($field_type) || $file_field['type'] == $field_type) && !isset($references[$field_name])) {
+      // Get each time this file is used within a field.
+      $query = new EntityFieldQuery();
+      $query
+        ->fieldCondition($file_field, 'fid', $file->fid)
+        ->age($age);
+
+      // set tag to ensure that we get raw results not altered by the node access system
+      // @see http://drupal.org/node/1597378 - special tag added in Drupal 7.15
+      // @see http://drupal.org/node/997394#comment-5096664 - work-around being used below to support all versions
+      if (empty($allow_access_check)) {
+        $query->addMetaData('account', $root_user);
+      }
+
+      $references[$field_name] = $query->execute();
+    }
+  }
+
+  return isset($field) ? $references[$field['field_name']] : array_filter($references);
+}
+
+
+/**
+ * Finds all bundles of a particular field type
+ *
+ * @param $field_type
+ *   The type of field to search for.
+ * @param $entity_type
+ *   Optional entity type to restrict the search to.
+ *
+ * @return
+ *   An array of the matching bundles. If entity_type is not provided,
+ *   results are keyed by the entity_type.
+ */
+function _commerce_file_field_info_bundles($field_type, $entity_type) {
+  $bundles = array();
+
+  // Loop through the fields looking for any fields of the specified type.
+  foreach (field_info_fields() as $field_name => $field) {
+    if ($field['type'] == $field_type) {
+      // Add if the specified type exists in the field's bundles array.
+      if (!empty($field['bundles'][$entity_type])) {
+        $bundles += array_combine($field['bundles'][$entity_type], $field['bundles'][$entity_type]);
+      }
+    }
+  }
+
+  return $bundles;
+}
+
+/**
+ * Validate an element value as a positive integer or zero
+ */
+function _commerce_file_element_validate_integer_positive_or_zero($element, &$form_state) {
+  $value = $element['#value'];
+  if (!_commerce_file_is_integer_or_zero($value)) {
+    form_error($element, t('%name must be a positive integer.', array('%name' => $element['#title'])));
+  }
+}
+
+/**
+ * Returns TRUE if value is a postive integer, 0, unlimited, or inherited
+ */
+function _commerce_file_metadata_validate_limit_integer_positive_or_zero($value) {
+  return _commerce_file_limit_is_inherited($value) ||
+         _commerce_file_limit_is_unlimited($value) ||
+         _commerce_file_is_integer_or_zero($value);
+}
+
+/**
+ * Returns TRUE if value is a positive integer or 0
+ * - @see element_validate_integer_positive()
+ */
+function _commerce_file_is_integer_or_zero($value) {
+  $invalid = ($value !== '' && (!is_numeric($value) || intval($value) != $value || $value < 0));
+  return !$invalid;
+}
+
+/**
+ * Returns TRUE if value is considered empty
+ * - @see _form_validate()
+ */
+function _commerce_file_element_value_is_empty($value) {
+  $is_empty_string = (is_string($value) && drupal_strlen(trim($value)) == 0);
+  $is_empty_value = ($value === 0);
+  return $is_empty_string || $is_empty_value;
+}

@@ -1,0 +1,66 @@
+name = Commerce File
+description = Provides the ability to manage purchased files
+core = 7.x
+package = Commerce (contrib)
+
+dependencies[] = file
+dependencies[] = entity
+dependencies[] = rules
+dependencies[] = commerce
+dependencies[] = commerce_checkout
+dependencies[] = commerce_order
+dependencies[] = commerce_line_item
+dependencies[] = commerce_product
+dependencies[] = commerce_product_reference
+
+configure = admin/commerce/config/file-licenses
+
+recommends[] = filefield_sources
+
+; file includes
+files[] = commerce_file.info.inc
+files[] = commerce_file.rules.inc
+
+; Entity includes
+files[] = includes/commerce_file_license.controller.inc
+files[] = includes/commerce_file_license.ui.inc
+files[] = includes/commerce_file_license.entity.inc
+
+files[] = includes/commerce_file_license_log.controller.inc
+files[] = includes/commerce_file_license_log.entity.inc
+
+; Views includes
+files[] = views/commerce_file.views.inc
+
+; Views handlers
+files[] = views/handlers/commerce_file_handler_field_license.inc
+files[] = views/handlers/commerce_file_handler_field_license_status.inc
+files[] = views/handlers/commerce_file_handler_filter_license_status.inc
+
+files[] = views/handlers/commerce_file_handler_field_license_property.inc
+files[] = views/handlers/commerce_file_handler_field_license_limit.inc
+files[] = views/handlers/commerce_file_handler_field_license_expiration.inc
+files[] = views/handlers/commerce_file_handler_field_license_duration.inc
+
+files[] = views/handlers/commerce_file_handler_field_license_link.inc
+files[] = views/handlers/commerce_file_handler_field_license_link_delete.inc
+files[] = views/handlers/commerce_file_handler_field_license_link_edit.inc
+files[] = views/handlers/commerce_file_handler_field_license_link_clone.inc
+
+files[] = views/handlers/commerce_file_handler_filter_file_product_type.inc
+files[] = views/handlers/commerce_file_handler_area_license_issue_order_form.inc
+files[] = views/handlers/commerce_file_handler_field_license_issue_line_item_form.inc
+
+; Views plugins
+files[] = views/handlers/commerce_file_plugin_argument_validate_user.inc
+
+
+; Migrate plugins
+files[] = migrate/destinations/fields.inc
+
+; Information added by drupal.org packaging script on 2013-07-11
+version = "7.x-1.0"
+core = "7.x"
+project = "commerce_file"
+datestamp = "1373545269"
+
