@@ -51,7 +51,7 @@
 #views-form-commerce-cart-form-default .form-item {
     margin-top: 0;
 }
-#views-form-commerce-cart-form-default input#edit-edit-delete-0 {
+#views-form-commerce-cart-form-default .delete-line-item {
     margin-top: 0;
     padding: 4.8px 15.2px;
 }
