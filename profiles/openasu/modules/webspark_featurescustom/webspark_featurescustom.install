@@ -15,6 +15,12 @@ function webspark_featurescustom_enable() {
     ))
     ->condition('name', 'webspark_featurescustom')
     ->execute();
+
+  /* Since this module has 'required = TRUE' set, we can make certain that the
+  taxonomy module is enabled early in the drush site-install process, avoiding
+  bugs that pop up when panelizer is enabled before it:
+  see https://www.drupal.org/node/2183937 */
+  module_enable(array('taxonomy'));
 }
 
 /**

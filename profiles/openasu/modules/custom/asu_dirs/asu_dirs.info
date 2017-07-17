@@ -22,4 +22,3 @@ dependencies[] = react
 
 ; See below for info on version number
 version = 7.x-1.0
-required = TRUE
