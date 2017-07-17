@@ -1,14 +1,3 @@
-Commerce File is packaged for download at http://drupal.org/project/commerce_file.
-Learn more at http://drupal.org/node/1356212.
+This module extends Commerce License with the ability to sell access to files.
 
-Install
-  - Place the entirety of this directory in sites/all/modules/commerce_file
-  - Set your private file system path at admin/config/media/file-system.
-  - Navigate to administer >> build >> modules. Enable Commerce File.
-
-Recommended modules for use with Commerce File
-  - File Field Sources
-
-
-
-
+See https://drupal.org/node/2043917 for information on getting started.
