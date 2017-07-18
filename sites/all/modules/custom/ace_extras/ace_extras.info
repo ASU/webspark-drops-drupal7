@@ -3,3 +3,7 @@ description = "Catch-all module for custom theme overrides, misc. drupal_alter()
 package = ACE customization
 core = 7.x
 version = 7.x-1.0
+dependencies[] = ctools
+dependencies[] = page_manager
+dependencies[] = panels
+dependencies[] = membership_entity
