@@ -41,11 +41,57 @@ function ace_extras_form_alter(&$form, &$form_state, $form_id) {
     }
   }
   if ($form_id == 'taxonomy_form_term') {
+    dpm($form, 'form');
     $form['description']['#access'] = FALSE; // Auto-hide term description field from all users
     $form['relations']['#access'] = FALSE; // Auto-hide term relations field from all users
     if (isset($user->roles[$admin_role_id])) {
       $form['description']['#access'] = TRUE; // If user is admin, show term description field
       $form['relations']['#access'] = TRUE; // If user is admin, show term relations field
+    }
+  }
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function ace_extras_menu_alter(&$items) {
+  $items['taxonomy/term/%taxonomy_term/edit']['access callback'] = '_ace_extras_term_access';
+}
+
+/**
+ * Helper function - Additional access check for editing taxonomy terms.
+ *
+ * @param $term
+ * @return bool
+ */
+function _ace_extras_term_access($term) {
+  global $user;
+  // first, do regular user_access check
+  $original_access_check = taxonomy_term_edit_access($term);
+  if (!$original_access_check) {
+    return FALSE;
+  }
+  // Now check if user is a membership holder of a Commerce membership account?
+  $secondary_ids = db_select('membership_entity_secondary_member', 'mesm')
+    ->fields('mesm', array('mid'))
+    ->condition('mesm.uid', $user->uid, '=')
+    ->execute()
+    ->fetchAllKeyed();
+  if (count($secondary_ids) == 0) { // Not a secondary member
+    return TRUE;
+  }
+  else {
+    $primary_ids = db_select('membership_entity', 'me')
+      ->fields('me', array('mid'))
+      ->condition('me.uid', $user->uid, '=')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    if ($primary_ids == 0) { // Not a primary account holder
+      return FALSE;
+    }
+    else {
+      return TRUE;
     }
   }
 }
