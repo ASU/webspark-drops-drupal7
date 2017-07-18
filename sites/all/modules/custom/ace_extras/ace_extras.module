@@ -41,7 +41,6 @@ function ace_extras_form_alter(&$form, &$form_state, $form_id) {
     }
   }
   if ($form_id == 'taxonomy_form_term') {
-    dpm($form, 'form');
     $form['description']['#access'] = FALSE; // Auto-hide term description field from all users
     $form['relations']['#access'] = FALSE; // Auto-hide term relations field from all users
     if (isset($user->roles[$admin_role_id])) {
