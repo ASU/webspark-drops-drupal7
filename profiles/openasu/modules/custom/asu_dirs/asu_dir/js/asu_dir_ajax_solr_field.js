@@ -41,7 +41,7 @@ var ASUPeople = {};
                     if ($('#' + tabsIDs[key] + ' .field-type-asu-directory').length > 0) {
                         hasTabs = true;
                         tabContainId = tabsIDs[key];
-                        tabLinks = $('#' + tabContainId + ' .item-list a');
+                        tabLinks = $('#' + tabContainId + ' .item-list a.ui-tabs-anchor');
                         tabs = $('#' + tabContainId + ' .field-type-asu-directory');
                         break;
                     }
