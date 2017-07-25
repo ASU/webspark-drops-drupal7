@@ -30,6 +30,11 @@ Webspark 1.46 (Nebraska) release
         * New module for Webspark, which includes a new 'Inline Tabs' panel region style. This new style will display tabs
           inline with a maroon underline style for the active tab. If the tabs would otherwise overflow a region, they
           will be grouped into sets, which are navigable via a right/left arrow.
+    * ASU RFI (v7.x-1.7)
+        * Fixing EdPlus API call
+        * Increased "college_name" size on RFI forms
+        * Increased text limit for "From" email field
+        * Updated the auto-response email
 
 Webspark 1.43 (Colorado) release
 ----------------
