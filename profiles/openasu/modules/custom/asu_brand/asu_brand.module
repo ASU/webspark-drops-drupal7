@@ -121,7 +121,10 @@ function asu_brand_block_save($delta = '', $edit = array()) {
         $overrides = array_map('trim', explode(',', $edit['asu_brand_do_not_override']));
 
         $overrides = array_filter($overrides, function($val) {
-          return !empty(check_plain($val));
+
+          $val = check_plain($val);
+
+          return !empty($val);
         });
 
         variable_set('asu_brand_do_not_override', drupal_json_encode($overrides));
