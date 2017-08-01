@@ -37,6 +37,10 @@ Webspark 1.46 (Nebraska) release
         * Increased text limit for "From" email field
         * Updated the auto-response email
 
+- Webspark-managed libraries - Updates
+
+    * CAS (v1.3.5) - Applied security update to CAS library
+
 Webspark 1.43 (Colorado) release
 ----------------
 - Webspark core 
