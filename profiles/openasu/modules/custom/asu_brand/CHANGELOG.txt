@@ -1,5 +1,9 @@
 CHANGELOG for ASU Brand module for Drupal 7
 
+7.x-1.17 2017-08-07
+-------------------
+- Set brand header default version to 'stable', and also set header selection to 'stable' upon update
+
 7.x-1.16 2017-05-23
 -------------------
 - Added 'asu_brand_do_not_override' variable. This is a JSON-encoded array of host names. If the requested host is found
