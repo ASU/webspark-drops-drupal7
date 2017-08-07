@@ -4,9 +4,10 @@ Webspark 1.46 (Nebraska) release
 
     * Drupal core (v7.56) - This includes security and non-security updates, including:
         * Fixes security vulnerabilities outlined here: https://www.drupal.org/SA-CORE-2017-003
-        * Variety of improvements and bugfixes
+        * Variety of improvements and bugfixes, including better support of PHP 7.
     * Panopoly (v1.46) - Includes a number of minor bug fixes and module updates, including upgrading the media module to
         2.1. See Panopoly changelogs for more.
+    * Removed unnecessary debugging code from settings.php.
 
 - Web standards components in Webspark
 
@@ -35,6 +36,10 @@ Webspark 1.46 (Nebraska) release
         * Increased "college_name" size on RFI forms
         * Increased text limit for "From" email field
         * Updated the auto-response email
+
+- Webspark-managed libraries - Updates
+
+    * CAS (v1.3.5) - Applied security update to CAS library
 
 Webspark 1.43 (Colorado) release
 ----------------
