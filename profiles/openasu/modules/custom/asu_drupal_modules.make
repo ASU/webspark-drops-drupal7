@@ -1,8 +1,8 @@
 ; Master make file for Webspark drush make process
-; All of the modules' .make files contents have been copied into this file because Drush make won't 
+; All of the modules' .make files contents have been copied into this file because Drush make won't
 ; traverse subdirectories of a module for .make files.
 
-; ASU Degrees Make file contents
+; ASU Academic Programs makefile contents
 
 api = 2
 core = 7.x
@@ -11,7 +11,7 @@ projects[views_bootstrap][version] = 3.1
 projects[views_bootstrap][type] = module
 projects[views_bootstrap][subdir] = contrib
 
-; ASU RFI make file contents
+; ASU RFI makefile contents
 
 ; Upload multidev and patch it
 
@@ -39,4 +39,3 @@ projects[honeypot][subdir] = contrib
 projects[mailsystem][version] = 2.34
 projects[mailsystem][type] = module
 projects[mailsystem][subdir] = contrib
-
