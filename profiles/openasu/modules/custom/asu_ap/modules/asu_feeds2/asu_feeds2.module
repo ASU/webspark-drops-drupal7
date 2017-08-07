@@ -15,7 +15,7 @@ function asu_feeds2_feeds_plugins() {
       'parent' => 'FeedsParser',
       'class' => 'ASUeAdvisorFeedParser',
       'file' => 'ASUeAdvisorFeedParser.inc',
-      'path' => drupal_get_path('module', 'asu_feeds2'),
+      'path' => drupal_get_path('module', 'asu_feeds2') . '/includes/',
     ),
   );
   $info['ASUeAdvisorFeedFetcher'] = array(
@@ -25,7 +25,7 @@ function asu_feeds2_feeds_plugins() {
       'parent' => 'FeedsFetcher',
       'class' => 'ASUeAdvisorFeedFetcher',
       'file' => 'ASUeAdvisorFeedFetcher.inc',
-      'path' => drupal_get_path('module', 'asu_feeds2'),
+      'path' => drupal_get_path('module', 'asu_feeds2') . '/includes/',
     ),
   );
   return $info;

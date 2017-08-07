@@ -36,3 +36,11 @@
 .admin-menu .chosen-container {
 	font-size: 11px;
 }
+
+/* WEBSPARK- */
+fieldset.fieldset-nested-odd {
+  background-color: #ffffff;
+}
+fieldset.fieldset-nested-even {
+  background-color: #f7f7f3;
+}
