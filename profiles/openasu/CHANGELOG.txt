@@ -23,10 +23,11 @@ Webspark 1.46 (Nebraska) release
         * Improved Solr profile checking to avoid unnecessary unpublishing, and improved logging information
         * 'Exclude from automatic updating' option turns off Solr profile checking
         * Improved and consolidated profile onload updating logic
-    * ASU Brand (v7.x-1.16)
+    * ASU Brand (v7.x-1.17)
         * Added 'asu_brand_do_not_override' variable. This is a JSON-encoded array of host names. If the requested host is found
             in the list, the brand module will not pass in the CAS authentication URL if the CAS module is enabled.
         * Removed max version check
+        * Set brand header default version to 'stable', and also set header selection to 'stable' upon update
     * ASU Webspark Inline Panels Tabs (v7.x-1.0)
         * New module for Webspark, which includes a new 'Inline Tabs' panel region style. This new style will display tabs
           inline with a maroon underline style for the active tab. If the tabs would otherwise overflow a region, they
