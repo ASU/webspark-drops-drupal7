@@ -38,8 +38,9 @@ function innovation_preprocess_html(&$variables) {
       '#type' => 'html_tag',
       '#tag' => 'meta',
       '#attributes' => array(
-        'content' => 'Webspark:1.43 (Colorado)',
+        'content' => 'Webspark:1.46 (Nebraska)',
         'http-equiv' => 'X-Name-of-Distro',
+        'name' => 'cmsversion',
       )
     ),
     'meta_ie_render_engine' => array(
