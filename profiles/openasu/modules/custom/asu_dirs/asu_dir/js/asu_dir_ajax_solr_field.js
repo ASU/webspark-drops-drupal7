@@ -296,7 +296,7 @@ var ASUPeople = {};
                         fieldId: fieldId,
                         perPage: resPerPage,
                         localPeople: localPeople,
-                        isearchUrl: iSearchUrl
+                        iSearchUrl: iSearchUrl
                     }));
 
                     Manager.addWidget(new AjaxSolr.asu_dirFacetWidget({

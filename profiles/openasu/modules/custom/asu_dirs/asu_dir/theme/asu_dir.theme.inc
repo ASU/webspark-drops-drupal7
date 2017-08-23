@@ -328,7 +328,7 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
     'titleSortField' => ASU_DIR_UTILITIES_TITLESORT_FIELD,
     'fidNum' => $the_id,
     'localPeople' => $local_people,
-    'isearchUrl' => ASU_DIR_UTILITIES_ISEARCH_URL
+    'iSearchUrl' => ASU_DIR_UTILITIES_ISEARCH_URL
   );
 
   drupal_add_js(array(ASU_DIRECTORY_MODULE_NAME . $the_id => $settings), 'setting');
