@@ -181,6 +181,7 @@
 
                     url_hash = this.cleanCustomString(url_hash, fieldConfigs);
 
+
                     //only save the new state if it's different from the current state
                     if (state.data.params === undefined) {
                         history.replaceState({params: this.hash}, document.title, '/' + this.pageAlias + '?' + url_hash);
@@ -461,8 +462,7 @@
 
                     if (this.params[name] === undefined) {
                         this.params[name] = [param];
-                    }
-                    else {
+                    } else {
                         if (AjaxSolr.inArray(param.val(), this.values(name)) == -1) {
                             this.params[name].push(param);
                         }
