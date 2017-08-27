@@ -3,11 +3,12 @@ Webspark 1.46 (Nebraska) release
 - Webspark core
 
     * Drupal core (v7.56) - This includes security and non-security updates, including:
-        * Fixes security vulnerabilities outlined here: https://www.drupal.org/SA-CORE-2017-003
-        * Variety of improvements and bugfixes, including better support of PHP 7.
+        * Fixes security vulnerabilities
+        * Variety of improvements and bugfixes, including better support of PHP 7.0
     * Panopoly (v1.46) - Includes a number of minor bug fixes and module updates, including upgrading the media module to
         2.1. See Panopoly changelogs for more.
-    * Removed unnecessary debugging code from settings.php.
+    * Removed unnecessary debugging code (theme_debug mode) from settings.php, which was causing issues in multiple places,
+        including customized webform email templates errantly inserting debugging code.
 
 - Web standards components in Webspark
 
@@ -15,28 +16,38 @@ Webspark 1.46 (Nebraska) release
         * Fixes bug where page state title was being set as null
         * Hides pagination if only one page of results
         * Fixed CSS which was hindering the directory pane from going completely full-width inside of its container
-        * Bugfixes for history state handling, which was causing asu_dir higher index tab states to not be saved if there
-          had been non-asu_dir panes placed before them
-        * Cleaned up some of the js code and logic
-        * Fixed the default photo behavior for the ASU Directory field
+        * Bugfixes for history state handling, which was causing asu_dir higher index tab states to not be saved if there had been non-asu_dir panes placed before them
+        * Linted javascript code responsible for client side rendering (e.g., rendering directory lists, making AJAX requests
+          to Solr backend, handling for inputs, keeping track of the Solr parameters, history state handling, etc.) and removed code no longer in use
+        * Added default photo behavior for the ASU Directory field. Custom images as placeholders can be uploaded for the asu_dir module
     * The ASU Local iSearch Directory (ASU LID v7.x-1.8.11)
         * Improved Solr profile checking to avoid unnecessary unpublishing, and improved logging information
         * 'Exclude from automatic updating' option turns off Solr profile checking
         * Improved and consolidated profile onload updating logic
     * ASU Brand (v7.x-1.17)
-        * Added 'asu_brand_do_not_override' variable. This is a JSON-encoded array of host names. If the requested host is found
-            in the list, the brand module will not pass in the CAS authentication URL if the CAS module is enabled.
+        * Added 'asu_brand_do_not_override' variable. This is a JSON-encoded array of hostnames. If the requested host is
+          found in the list, the brand module will not pass in the standard CAS authentication URL if the CAS module is
+          enabled. It will instead pass in the standard weblogin.asu.edu login and logout URLs.
         * Removed max version check
-        * Set brand header default version to 'stable', and also set header selection to 'stable' upon update
     * ASU Webspark Inline Panels Tabs (v7.x-1.0)
-        * New module for Webspark, which includes a new 'Inline Tabs' panel region style. This new style will display tabs
-          inline with a maroon underline style for the active tab. If the tabs would otherwise overflow a region, they
-          will be grouped into sets, which are navigable via a right/left arrow.
+        * New module for Webspark, which includes a new 'Inline Tabs' panel region style.
+        * This new style will display tabs inline with a maroon underline style for the active tab.
+        * If the tabs would otherwise overflow a region, they will be grouped into sets, which are navigable via a right/left arrow.
     * ASU RFI (v7.x-1.7)
-        * Fixing EdPlus API call
-        * Increased "college_name" size on RFI forms
-        * Increased text limit for "From" email field
         * Updated the auto-response email
+    * ASU Academic Programs (v7.x-2.0)
+        * A revamped and revitalized module for Webspark that will replace the ASU Degrees module.
+        * Includes similar functionality and features as current ASU Degrees module with additional simplification of importing options and improved user interface.
+    * ASU Degrees (v7.x-1.10)
+        * asu_degrees deprecated for ASU Academic Programs
+    * ASU Degrees Feature (v7.x-1.10)
+        * asu_degrees_feature deprecated for ASU Academic Programs
+    * ASU Degrees Views Output (v7.x-1.0)
+        * asu_degrees_viewsoutput deprecated for ASU Academic Programs
+
+- Webspark custom projects - Changes/Deletions
+
+    * Webspark Seven - Updated the theming to better render deeply nested fieldsets by alternating the rendering styles for odd and even fields
 
 - Webspark-managed libraries - Updates
 
