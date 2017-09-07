@@ -103,13 +103,16 @@ class ASUeAdvisorFeedFetcher extends FeedsFetcher {
       'CLS' => t('College of Integrative Sciences & Arts'),
       'CLA' => t('College of Liberal Arts & Sciences'),
       'CNU' => t('College of Nursing & Health Innovation'),
-      'CPP' => t('College of Public Programs'),
+      'CPP' => t('College of Public Services & Community Solutions'),
       'CTS' => t('College of Technology & Innovation'),
       'CHI' => t('Herberger Institute for Design & the Arts'),
       'CES' => t('Ira A. Fulton Schools of Engineering'),
       'CTE' => t('Mary Lou Fulton Teachers College'),
       'CAS' => t('New College of Interdisciplinary Arts & Sciences'),
+      'CLW' => t('Sandra Day O\'Connor College of Law'),
+      'CFI' => t('School for the Future of Innovation in Society'),
       'CSS' => t('School of Sustainability'),
+      'CTB' => t('Thunderbird School of Global Management'),
       'CBA' => t('W. P. Carey School of Business'),
       'CCS' => t('Walter Cronkite School of Journalism & Mass Communication'),
     );
@@ -125,6 +128,7 @@ class ASUeAdvisorFeedFetcher extends FeedsFetcher {
       'DTPHX' => t('Downtown Phoenix campus'),
       'POLY' => t('Polytechnic campus'),
       'TEMPE' => t('Tempe campus'),
+      'TBIRD' => t('Thunderbird campus'),
       'WEST' => t('West campus'),
     );
 
