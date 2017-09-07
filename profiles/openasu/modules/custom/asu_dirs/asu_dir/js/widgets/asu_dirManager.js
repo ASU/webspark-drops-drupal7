@@ -199,7 +199,7 @@
                         var search_string = asu_dir_solr_search_string(types, 'employeeTypes', true);
 
                         //need to add this to the manager query also
-                        self.manager.store.addByValue('fq', search_string);
+                        self.store.addByValue('fq', search_string);
                     }
                 }
 

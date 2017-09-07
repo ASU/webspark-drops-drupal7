@@ -1,6 +1,12 @@
+Webspark 1.46.1 (Omaha) release
+----------------
+- Web standards components in Webspark
+    * ASU Directory Integration Reinvented (ASU DIR v7.x-1.7.2)
+        * Bugfix for broken employee types filter
+
 Webspark 1.46 (Nebraska) release
 ----------------
-- Webspark core
+- Webspark core 
 
     * Drupal core (v7.56) - This includes security and non-security updates, including:
         * Fixes security vulnerabilities
