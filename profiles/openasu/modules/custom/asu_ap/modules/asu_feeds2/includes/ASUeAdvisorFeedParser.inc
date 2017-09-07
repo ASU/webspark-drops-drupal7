@@ -28,16 +28,19 @@ class ASUeAdvisorFeedParser extends FeedsParser {
       // Unique ID for the plan
       $parsed_data[$key]['guid'] = md5($parsed_data[$key]['AcadPlan']);
 
+      // Accelerated degrees
       if (count($data['accelerateDegrees'])) {
         $acceleratedDegree = array();
         $parsed_data[$key]['acceleratedDegree'] = 1;
       }
 
+      // Concurrent degrees
       if (count($data['concurrentDegrees'])) {
         $concurrentDegree = array();
         $parsed_data[$key]['concurrentDegree'] = 1;
       }
 
+      // New degrees
       if (count($data['DegreeNew'])) {
         $newDegree = array();
         $ndVal = $data['DegreeNew'];
@@ -46,6 +49,7 @@ class ASUeAdvisorFeedParser extends FeedsParser {
         }
       }
 
+      // Whether or not the campus is part of WUE (boolean)
       if (count($data['CampusWueInfo'])) {
         $wueCampusConfirmed = array();
         foreach ($data['CampusWueInfo'] as $cwi) {
@@ -55,15 +59,16 @@ class ASUeAdvisorFeedParser extends FeedsParser {
         }
       }
 
+      // Additional admission information
       if (count($data['DescrlongExtns'])) {
         $additionalAdmissions = array();
         $parsed_data[$key]['additionalAdmissions'] = 1;
       }
 
       // Campuses
-      if(count($data['CampusStringArray'])){
-        foreach($data['CampusStringArray'] as $campus_key => $value){
-          switch(trim(strtoupper($value))){
+      if (count($data['CampusStringArray'])){
+        foreach ($data['CampusStringArray'] as $campus_key => $value) {
+          switch (trim(strtoupper($value))) {
             case 'ONLNE':
               $value = 'Online';
               break;
@@ -104,10 +109,10 @@ class ASUeAdvisorFeedParser extends FeedsParser {
               $value = $value;
               break;
           }
-          if($value == 'Online'){
+          if ($value == 'Online') {
             unset($parsed_data[$key]['CampusStringArray'][$campus_key]);
             array_push($parsed_data[$key]['CampusStringArray'],$value);
-          }else{
+          } else {
             $parsed_data[$key]['CampusStringArray'][$campus_key] = $value;
           }
         }

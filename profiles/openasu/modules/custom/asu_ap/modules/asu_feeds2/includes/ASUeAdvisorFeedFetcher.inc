@@ -4,7 +4,6 @@
  * Fetches feeds using IXR XML-RPC library
  * @todo Provide mechanism to pass arguments through to service.
  */
-//class IXRFeedsBatch extends FeedsImportBatch {
 class ASUeAdvisorFeedFetcherResult extends FeedsFetcherResult {
 
   // Parameters
@@ -131,6 +130,7 @@ class ASUeAdvisorFeedFetcher extends FeedsFetcher {
 
     $unit_options = array_merge($unit_options2, $campus_options);
 
+    // Program importer form
     $form = array();
     $form['service'] = array(
       '#type' => 'select',
