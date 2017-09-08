@@ -41,7 +41,7 @@ function asu_ap_feature_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups['group_asu_ap_grp_banner|node|asu_ap|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -71,7 +71,7 @@ function asu_ap_feature_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups['group_asu_ap_grp_career|node|asu_ap|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -103,7 +103,7 @@ function asu_ap_feature_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups['group_asu_ap_grp_desc|node|asu_ap|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -135,7 +135,7 @@ function asu_ap_feature_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups['group_asu_ap_grp_grad|node|asu_ap|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -176,19 +176,24 @@ function asu_ap_feature_field_group_info() {
       23 => 'field_asu_ap_second_language',
       24 => 'field_asu_ap_subplan_title',
       25 => 'field_asu_ap_subplan_url',
+      26 => 'field_asu_ap_college_j',
+      27 => 'field_asu_ap_college_url_j',
+      28 => 'field_asu_ap_department_j',
+      29 => 'field_asu_ap_department_code_j',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Hidden',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-asu-ap-grp-hidden field-group-fieldset',
-        'required_fields' => 1,
+        'required_fields' => 0,
         'id' => '',
+        'classes' => 'group-asu-ap-grp-hidden field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsible',
     ),
   );
-  $field_groups['group_asu_ap_grp_hidden|node|asu_ap|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -219,7 +224,7 @@ function asu_ap_feature_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups['group_asu_ap_grp_links|node|asu_ap|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -248,7 +253,7 @@ function asu_ap_feature_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups['group_asu_ap_grp_prog|node|asu_ap|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   // Translatables
   // Included for use with string extractors like potx.

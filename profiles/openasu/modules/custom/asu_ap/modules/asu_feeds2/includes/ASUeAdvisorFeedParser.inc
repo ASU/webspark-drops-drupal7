@@ -66,7 +66,7 @@ class ASUeAdvisorFeedParser extends FeedsParser {
       }
 
       // Campuses
-      if (count($data['CampusStringArray'])){
+      if (count($data['CampusStringArray'])) {
         foreach ($data['CampusStringArray'] as $campus_key => $value) {
           switch (trim(strtoupper($value))) {
             case 'ONLNE':
@@ -117,6 +117,38 @@ class ASUeAdvisorFeedParser extends FeedsParser {
           }
         }
         $parsed_data[$key]['CampusStringArray'] = array_values($parsed_data[$key]['CampusStringArray']);
+      }
+
+      // CollegeDescr100Joint
+      if (count($data['CollegeDescr100Joint'])) {
+        foreach ($data['CollegeDescr100Joint'] as $college_key => $value) {
+            $parsed_data[$key]['CollegeDescr100Joint'][$college_key] = $value;
+        }
+        $parsed_data[$key]['CollegeDescr100Joint'] = array_values($parsed_data[$key]['CollegeDescr100Joint']);
+      }
+
+      // CollegeUrlJoint
+      if (count($data['CollegeUrlJoint'])) {
+        foreach ($data['CollegeUrlJoint'] as $college_key => $value) {
+            $parsed_data[$key]['CollegeUrlJoint'][$college_key] = $value;
+        }
+        $parsed_data[$key]['CollegeUrlJoint'] = array_values($parsed_data[$key]['CollegeUrlJoint']);
+      }
+
+      // DepartmentCodeJoint
+      if (count($data['DepartmentCodeJoint'])) {
+        foreach ($data['DepartmentCodeJoint'] as $college_key => $value) {
+            $parsed_data[$key]['DepartmentCodeJoint'][$college_key] = $value;
+        }
+        $parsed_data[$key]['DepartmentCodeJoint'] = array_values($parsed_data[$key]['DepartmentCodeJoint']);
+      }
+
+      // DepartmentNameJoint
+      if (count($data['DepartmentCodeJoint'])) {
+        foreach ($data['DepartmentCodeJoint'] as $college_key => $value) {
+            $parsed_data[$key]['DepartmentCodeJoint'][$college_key] = $value;
+        }
+        $parsed_data[$key]['DepartmentCodeJoint'] = array_values($parsed_data[$key]['DepartmentCodeJoint']);
       }
 
       // Format careerData
@@ -213,45 +245,49 @@ class ASUeAdvisorFeedParser extends FeedsParser {
   public function getMappingSources() {
     return array(
       'guid' => array('name' => t('GUID - Unique ID for the transfer agreement')),
+      'keywords' => array('name' => t('Keywords')),
       'AcadPlan' => array('name' => t('Academic plan')),
       'AcadProg' => array('name' => t('Academic program')),
-      'CampusStringArray' => array('name' => t('Campus')),
+      'acceleratedDegree' => array('name' => t('Accelerated Degree')),
+      'AdmissionsDegRequirements' => array('name' => t('Admission requirements')),
       'AsuCareerOpp' => array('name' => t('Career opportunities')),
+      'AsuCritTrackUrl' => array('name' => t('Major map URL')),
+      'AsuLangReqFlag' => array('name' => t('Second language requirement')),
+      'AsuProgramFee' => array('name' => t('Additional program fee')),
+      'CampusStringArray' => array('name' => t('Campus')),
+      'careerData' => array('name' => t('Example Careers')),
+      'cert' => array('name' => t('Certificate option: True or False')),
       'CollegeDescr100' => array('name' => t('College name')),
+      'CollegeDescr100Joint' => array('name' => t('College name (joint)')),
       'CollegeUrl' => array('name' => t('College URL')),
-      'Descr100' => array('name' => t('Description (100)')),
-      'DegreeDescr' => array('name' => t('Degree description')),
-      'DescrlongExtns' => array('name' => t('Degree description (extended)')),
+      'CollegeUrlJoint' => array('name' => t('College URL (joint)')),
+      'concurrentDegree' => array('name' => t('Concurrent Degree')),
       'Degree' => array('name' => t('Degree'),'description' => t('BA / BFA / MFA / etc'),),
+      'DegreeDescr' => array('name' => t('Degree description')),
+      'degreeMajorMap' => array('name' => t('Program Requirements')),
+      'degreeSearchURL' => array('name' => t('ASU Degree Search URL')),
+      'DepartmentCode' => array('name' => t('Department code')),
+      'DepartmentCodeJoint' => array('name' => t('Department code (joint)')),
+      'DepartmentName' => array('name' => t('Department name')),
+      'DepartmentNameJoint' => array('name' => t('Department name (joint)')),
+      'Descr100' => array('name' => t('Description (100)')),
+      'DescrlongExtns' => array('name' => t('Degree description (extended)')),
       'DiplomaDescr' => array('name' => t('Diploma description')),
-      'keywords' => array('name' => t('Keywords')),
+      'majorMapDefaultYear' => array('name' => t('Major map year')),
+      'MinMathReq' => array('name' => t('Minimum math requirement')),
+      'newDegree' => array('name' => t('New Degree')),
+      'program' => array('name' => t('Program: Undergrad or Graduate')),
+      'Reqdescr' => array('name' => t('Requirement description')),
+      'subplan.code' => array('name' => t('Subplan code')),
+      'subplan.name' => array('name' => t('Subplan name')),
+      'subPlnMajorMaps.SubplnMajorMapSubplanCode' => array('name' => t('Subplan code for URL')),
+      'subPlnMajorMaps.SubplnMajorMapSubplanName' => array('name' => t('Subplan name for URL')),
+      'subPlnMajorMaps.SubPlnMajorMapUrl' => array('name' => t('Subplan major map URL')),
       'transferAgreementInfo.type' => array('name' => t('Transfer agreement type')),
       'transferAgreementInfo.year' => array('name' => t('Transfer agreement year')),
       'transferAgreementInfo.url' => array('name' => t('Transfer agreement URL')),
       'transferAgreementInfo.communityCollege' => array('name' => t('Transfer agreement community college')),
-      'DepartmentName' => array('name' => t('Department name')),
-      'DepartmentCode' => array('name' => t('Department code')),
-      'AsuCritTrackUrl' => array('name' => t('Major map URL')),
-      'degreeSearchURL' => array('name' => t('ASU Degree Search URL')),
-      'program' => array('name' => t('Program: Undergrad or Graduate')),
-      'cert' => array('name' => t('Certificate option: True or False')),
-      'Reqdescr' => array('name' => t('Requirement description')),
-      'AdmissionsDegRequirements' => array('name' => t('Admission requirements')),
-      'AsuProgramFee' => array('name' => t('Additional program fee')),
-      'AsuLangReqFlag' => array('name' => t('Second language requirement')),
-      'MinMathReq' => array('name' => t('Minimum math requirement')),
-      'careerData' => array('name' => t('Example Careers')),
-      'subPlnMajorMaps.SubPlnMajorMapUrl' => array('name' => t('Subplan major map URL')),
-      'subplan.code' => array('name' => t('Subplan code')),
-      'subplan.name' => array('name' => t('Subplan name')),
-      'majorMapDefaultYear' => array('name' => t('Major map year')),
-      'subPlnMajorMaps.SubplnMajorMapSubplanCode' => array('name' => t('Subplan code for URL')),
-      'subPlnMajorMaps.SubplnMajorMapSubplanName' => array('name' => t('Subplan name for URL')),
       'wueCampusConfirmed' => array('name' => t('WUE Confirmed')),
-      'acceleratedDegree' => array('name' => t('Accelerated Degree')),
-      'concurrentDegree' => array('name' => t('Concurrent Degree')),
-      'newDegree' => array('name' => t('New Degree')),
-      'degreeMajorMap' => array('name' => t('Program Requirements')),
     );
   }
 }

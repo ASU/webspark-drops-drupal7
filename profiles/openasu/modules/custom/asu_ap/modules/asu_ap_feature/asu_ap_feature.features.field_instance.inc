@@ -445,7 +445,7 @@ function asu_ap_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 34,
+      'weight' => 38,
     ),
   );
 
@@ -767,6 +767,59 @@ function asu_ap_feature_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_college_j'.
+  $field_instances['node-asu_ap-field_asu_ap_college_j'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 54,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_college_j',
+    'label' => 'College (joint)',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 21,
+    ),
+  );
+
   // Exported field_instance: 'node-asu_ap-field_asu_ap_college_url'.
   $field_instances['node-asu_ap-field_asu_ap_college_url'] = array(
     'bundle' => 'asu_ap',
@@ -831,7 +884,75 @@ function asu_ap_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 21,
+      'weight' => 22,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_college_url_j'.
+  $field_instances['node-asu_ap-field_asu_ap_college_url_j'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 55,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_college_url_j',
+    'label' => 'College URL (joint)',
+    'required' => 0,
+    'settings' => array(
+      'absolute_url' => 1,
+      'attributes' => array(
+        'class' => '',
+        'configurable_class' => 0,
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => 'default',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'optional',
+      'title_label_use_field_label' => 0,
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(),
+      'type' => 'link_field',
+      'weight' => 23,
     ),
   );
 
@@ -1141,7 +1262,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 22,
+      'weight' => 24,
     ),
   );
 
@@ -1193,7 +1314,113 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 23,
+      'weight' => 26,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_department_code_j'.
+  $field_instances['node-asu_ap-field_asu_ap_department_code_j'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 57,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_department_code_j',
+    'label' => 'Department Code (joint)',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 27,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_department_j'.
+  $field_instances['node-asu_ap-field_asu_ap_department_j'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 56,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_department_j',
+    'label' => 'Department (joint)',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 25,
     ),
   );
 
@@ -1350,7 +1577,7 @@ function asu_ap_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 24,
+      'weight' => 28,
     ),
   );
 
@@ -1638,7 +1865,7 @@ function asu_ap_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 25,
+      'weight' => 29,
     ),
   );
 
@@ -1690,7 +1917,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 26,
+      'weight' => 30,
     ),
   );
 
@@ -1742,7 +1969,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 27,
+      'weight' => 31,
     ),
   );
 
@@ -1848,7 +2075,7 @@ function asu_ap_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 28,
+      'weight' => 32,
     ),
   );
 
@@ -1900,7 +2127,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 10,
       ),
       'type' => 'text_textfield',
-      'weight' => 29,
+      'weight' => 33,
     ),
   );
 
@@ -2052,7 +2279,7 @@ function asu_ap_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 30,
+      'weight' => 34,
     ),
   );
 
@@ -2104,7 +2331,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 31,
+      'weight' => 35,
     ),
   );
 
@@ -2280,7 +2507,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 32,
+      'weight' => 36,
     ),
   );
 
@@ -2349,7 +2576,7 @@ function asu_ap_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 33,
+      'weight' => 37,
     ),
   );
 
@@ -2596,7 +2823,9 @@ function asu_ap_feature_field_default_field_instances() {
   t('Career Outlook description');
   t('Cert option: True or False');
   t('College');
+  t('College (joint)');
   t('College URL');
+  t('College URL (joint)');
   t('Concurrent Program');
   t('Degree');
   t('Degree Awarded');
@@ -2610,7 +2839,9 @@ function asu_ap_feature_field_default_field_instances() {
   t('Denotes whether or not this is a WUE eligible program. Undergraduate students from western states who enroll in this program are eligible for a discounted tuition rate.<br>
 <i>NOTE:</i> This field can be overridden, but will reapply the official catalog value to the degree program if the ASU Academic Programs feed is updated.');
   t('Department');
+  t('Department (joint)');
   t('Department Code');
+  t('Department Code (joint)');
   t('Diploma Description');
   t('Displays given information below grey section (containing "Degree Offered") on program nodes.');
   t('Displays given video (use WYSIWYG \'Add media\' button to embed) next to top program description (above yellow buttons) on graduate program nodes. <strong>Note:</strong> please do not add text to this section.');
