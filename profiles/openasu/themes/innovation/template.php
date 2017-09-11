@@ -38,7 +38,7 @@ function innovation_preprocess_html(&$variables) {
       '#type' => 'html_tag',
       '#tag' => 'meta',
       '#attributes' => array(
-        'content' => 'Webspark:1.46 (Nebraska)',
+        'content' => 'Webspark:1.46.1 (Omaha)',
         'http-equiv' => 'X-Name-of-Distro',
         'name' => 'cmsversion',
       )
