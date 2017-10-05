@@ -14,7 +14,7 @@
 ?>
 
 <div class="panel-display moscone-flipped clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
-  <section class="section">
+  <div class="section">
     <div class="container">
       <div class="row row-full">
         <div class="col-md-12 moscone-flipped-main-container radix-layouts-header panel-panel">
@@ -24,8 +24,8 @@
         </div>
       </div>
     </div>
-  </section>
-  <section class="section">
+  </div>
+  <div class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-8 moscone-flipped-main-content radix-layouts-content panel-panel">
@@ -40,8 +40,8 @@
         </div>
       </div>
     </div>
-  </section>
-  <footer class="section" id="footer">
+  </div>
+  <div class="section" id="footer">
     <div class="container">
       <div class="row row-full">
         <div class="col-md-12 moscone-flipped-footer-area radix-layouts-footer panel-panel">
@@ -51,5 +51,5 @@
         </div>
       </div>
     </div>
-  </footer>
+  </div>
 </div><!-- /.moscone-flipped -->

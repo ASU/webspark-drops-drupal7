@@ -1,0 +1,54 @@
+
+.quicktabs_main.quicktabs-style-asu-web-standards {
+  background-color:#fff;
+  border-top:none;
+  padding: 10px;
+  clear:both;
+}
+.quicktabs_main.quicktabs-style-asu-web-standards .pane-node-body {
+	margin-top: 0;
+}
+ul.quicktabs-tabs.quicktabs-style-asu-web-standards {
+	background: none;
+  border-bottom: 1px solid #777 !important;
+	min-height: auto;
+	padding: 0;
+	margin-bottom: 0;
+	color: #a7a7a7;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 1.44;
+}
+ul.quicktabs-tabs.quicktabs-style-asu-web-standards li {
+	display: inline-block;
+	border-top: 5px solid transparent;
+	margin-bottom: -1px;
+	padding: 0;
+}
+ul.quicktabs-tabs.quicktabs-style-asu-web-standards li:hover,
+ul.quicktabs-tabs.quicktabs-style-asu-web-standards li.active {
+	border-top: 5px solid #8C1D40;
+	background: none;
+	background-color: transparent;
+	padding-bottom: 0;
+	transition: all 0.25s ease-in-out 0s;
+}
+ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
+	display: inline-block;
+	border-color: #777 #777 transparent #777;
+	border-image: none;
+	border-radius: 0;
+	border-style: solid;
+	border-width: 1px;
+	padding: 9px 18px;
+	color: #777;
+}
+ul.quicktabs-tabs.quicktabs-style-asu-web-standards li:hover a {
+	background-color: #eee;
+	border-bottom-color: #777;
+}
+ul.quicktabs-tabs.quicktabs-style-asu-web-standards li.active a,
+ul.quicktabs-tabs.quicktabs-style-asu-web-standards li.active:hover a {
+	background-color: transparent;
+	border-bottom-color: #fff;
+}

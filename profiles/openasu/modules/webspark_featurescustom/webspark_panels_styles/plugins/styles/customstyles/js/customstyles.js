@@ -1,13 +1,12 @@
 /**
- * JavaScript file for Webspark Panels Styles: Custom Styles module.
- *
+ * Webspark Panels Styles: Custom Styles
  */
 
 (function ($, Drupal) {
 	Drupal.behaviors.customstyles = {
 		attach: function(context, settings) {
 		
-			/* Adding row-full and bagcolor class for rows with 2 or more columns */			
+			// Adding row-full and bgcolor CSS classes for rows with 2 or more columns
 			var a = document.getElementsByClassName('js-lightgraybg');
 			doIt(a,'lightgraybg');
 			var b = document.getElementsByClassName('js-darkgraybg');

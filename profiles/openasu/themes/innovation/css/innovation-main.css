@@ -4,6 +4,11 @@
 
 /* =BOOTSTRAP, PANOPOLY & WEBSPARK OVERRIDES
 -------------------------------------------------------------- */
+/*
+html.js {
+  font-size: 100%;
+}*/
+
 #asu_footer ul {
   max-width: 1170px;
   margin: 0 auto;
@@ -33,7 +38,11 @@ div.error label {
 
 /* =GLOBALS
 -------------------------------------------------------------- */
+html {
+	font-size: 100%;
+}
 body {
+	font-size: 1em;
   min-width: 320px;
 }
 
@@ -72,7 +81,6 @@ div.pane-menu-tree {
 body {
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 200;
-  font-size: 16px;
   line-height: 1.44;
   color: #2a2a2a;
   background-color: white;
@@ -87,19 +95,10 @@ a,
 }
 
 a:hover,
-a:focus,
-.ui-widget-content a:hover,
-.ui-widget-content a:focus {
+.ui-widget-content a:hover {
   color: #d23153;
   text-decoration: none;
   border-bottom: 1px dotted #d23153;
-}
-
-a:focus,
-.ui-widget-content a:focus {
-  outline: thin dotted;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
 }
 
 #header a,
@@ -120,8 +119,7 @@ a.btn, .btn {
   margin-top: 15px;
 }
 
-a.btn:hover, .btn a:hover,
-a.btn:focus, .btn a:focus {
+a.btn:hover, .btn a:hover {
   border-bottom: none;
 }
 
@@ -465,7 +463,7 @@ table.bordered > thead:first-child > tr:first-child > td {
   background-color: transparent;
   margin: 2em 0;
   padding: 0;
-  color: #828282;
+  color: #555;
   font-size: 14px;
 }
 
@@ -573,7 +571,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 .ui-accordion .ui-state-active .ui-icon,
 .ui-accordion .ui-state-default .ui-icon,
 .ui-accordion .ui-accordion .ui-state-active .ui-icon {
-  background-image: url("../images/accordion-arrows.png");
+  background-image: url("/profiles/openasu/themes/innovation/images/accordion-arrows.png");
 }
 
 .ui-accordion .ui-icon-triangle-1-e {
@@ -704,15 +702,15 @@ h2.widget-list {
   line-height: 1.4;
   margin: 0 0 0 0.625em;
 }
-
-#modalContent .panels-section-column .content-type-button {
+/* LH side categories */
+#modalContent .panels-section-column-categories .content-type-button {
   top: 0.5em;
   line-height: 1.1em;
   font-size: 0.75em;
 }
 
-#modalContent .panels-section-column .content-type-button div,
-#modalContent .panels-section-column .content-type-button span {
+#modalContent .panels-section-column-categories .content-type-button div,
+#modalContent .panels-section-column-categories .content-type-button span {
   left: 3em;
   position: absolute;
   top: 0.25em;
@@ -722,6 +720,19 @@ h2.widget-list {
 #modalContent .panels-section-column-categories .content-type-button > a:hover > img,
 #modalContent .panels-section-column-categories .content-type-button > a > img:hover {
   border: 2px solid white;
+}
+
+/* Main body of columns with content */
+#modalContent .panels-section-columns > .panels-section-column .content-type-button {
+  font: normal 0.9rem/1.5em "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  top: 0em;
+}
+
+#modalContent .panels-section-columns > .panels-section-column .content-type-button div,
+#modalContent .panels-section-columns > .panels-section-column .content-type-button span {
+  position: relative;
+  top: 0;
+  left: 0;
 }
 
 ul.help-text {
@@ -891,3 +902,35 @@ ul.help-text li.help-title {
   padding-top: 0.25em;
   padding-bottom: 0.25em;
 }
+
+a:focus,
+.ui-widget-content a:focus,
+input:focus,
+a.btn:focus, 
+.btn a:focus,
+#skip_to_content:focus,
+#top-content #tabs .nav-pills > li.active > a:focus {
+	 outline:none; 
+	 border:1px solid #4D90FE;
+	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
+	 box-shadow: 0px 0px 5px  #4D90FE;
+}
+
+/** UI Tabs **/
+
+/* fixes for stacked tabs */
+body #content .ui-tabs .ui-tabs-nav li.ui-state-focus a {
+  border-top: none;
+}
+
+body #content .ui-tabs .ui-tabs-nav li.ui-state-focus {
+  margin-bottom: 0;
+}
+
+body #content .ui-tabs .ui-tabs-nav li a {
+  margin-left: 0;
+  border-bottom: none;
+  clear: both;
+}
+
+

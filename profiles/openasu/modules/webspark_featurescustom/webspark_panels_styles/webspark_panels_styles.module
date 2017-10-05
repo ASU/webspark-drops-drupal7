@@ -1,13 +1,16 @@
 <?php
 
 /**
-  * Implementation of hook_ctools_plugin_directory().
-*/
-
+  * Implements hook_ctools_plugin_directory().
+ */
 function webspark_panels_styles_ctools_plugin_directory($module, $plugin) {
   return 'plugins/' . $plugin;
 }
 
+/**
+ * Implements hook_init().
+ */
 function webspark_panels_styles_init() {
-	drupal_add_js(drupal_get_path('module', 'webspark_panels_styles') . '/plugins/styles/customstyles/js/customstyles.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 99));
+  drupal_add_js(drupal_get_path('module', 'webspark_panels_styles') 
+    . '/plugins/styles/customstyles/js/customstyles.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 99));
 }

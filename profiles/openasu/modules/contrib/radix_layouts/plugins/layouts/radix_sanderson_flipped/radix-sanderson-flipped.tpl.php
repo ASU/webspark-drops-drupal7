@@ -14,7 +14,7 @@
 ?>
 
 <div class="panel-display sanderson-flipped clearfix <?php if (!empty($classes)) { print $classes; } ?><?php if (!empty($class)) { print $class; } ?>" <?php if (!empty($css_id)) { print "id=\"$css_id\""; } ?>>
-  <section class="section">
+  <div class="section">
     <div class="container">
       <div class="row">
         <div class="col-md-4 sanderson-flipped-column-content-region-1 radix-layouts-column1 panel-panel">
@@ -34,8 +34,8 @@
         </div>
       </div>
     </div>
-  </section>
-  <footer class="section" id="footer">
+  </div>
+  <div class="section" id="footer">
     <div class="container">
       <div class="row">
         <div class="col-md-6 sanderson-flipped-secondary-column-content-region-1 radix-layouts-secondarycolumn1 panel-panel">
@@ -50,5 +50,5 @@
         </div>
       </div>
     </div>
-  </footer>
+  </div>
 </div><!-- /.sanderson-flipped -->

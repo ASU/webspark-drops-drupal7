@@ -9,7 +9,19 @@
  */
 function asu_brand_get_block_settings($reset = FALSE) {
   $settings = &drupal_static(__FUNCTION__);
+
   if ($reset || !isset($settings)) {
+
+    // check the 'do not override' list, and don't override the default login
+    // and logout urls if found
+    $override = TRUE;
+    $http_request = $_SERVER['HTTP_HOST'];
+    $overrides = drupal_json_decode(ASU_BRAND_DO_NOT_OVERRIDE);
+
+    if (in_array($http_request, $overrides)) {
+      $override = FALSE;
+    }
+
     $settings = new StdClass;
     $settings->header_version = variable_get('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT);
     $settings->header_basebath = variable_get('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT);
@@ -24,18 +36,22 @@ function asu_brand_get_block_settings($reset = FALSE) {
     // Set javascript settings.
     $js_settings = array(
       'asu_sso_signedin' => (user_is_logged_in() ? 'true' : 'false'),
-      'asu_sso_signinurl' => '',
-      'asu_sso_signouturl' => '',
+      'asu_sso_signinurl' => 'https://weblogin.asu.edu/cgi-bin/login?callapp=https%3A%2F%2Fmy.asu.edu',
+      'asu_sso_signouturl' => 'https://webapp4.asu.edu/myasu/Signout',
     );
+
     // Alter the signin/signout URL if cas in enabled.
-    if(module_exists('cas')) {
-      $js_settings['asu_sso_signinurl'] = url('cas', array('https' => TRUE, 'query' => drupal_get_destination()));
-      $js_settings['asu_sso_signouturl'] = url('caslogout', array('https' => TRUE));
+    if ($override) {
+      if(module_exists('cas')) {
+        $js_settings['asu_sso_signinurl'] = url('cas', array('https' => TRUE, 'query' => drupal_get_destination()));
+        $js_settings['asu_sso_signouturl'] = url('caslogout', array('https' => TRUE));
+      }
+      else {
+        $js_settings['asu_sso_signinurl'] = url('user/login', array('query' => user_login_destination()));
+        $js_settings['asu_sso_signouturl'] = url('user/logout');
+      }
     }
-    else {
-      $js_settings['asu_sso_signinurl'] = url('user/login', array('query' => user_login_destination()));
-      $js_settings['asu_sso_signouturl'] = url('user/logout');
-    }
+
     $settings->js_settings = $js_settings;
     
     // Get cached data.

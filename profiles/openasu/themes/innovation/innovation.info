@@ -2,14 +2,12 @@ name = Innovation
 description = "Theme with ASU Web Standards styling. A Kalatheme subtheme, powered by Bootstrap."
 base theme = kalatheme
 core = 7.x
-version = "7.x-1.6"
+version = "7.x-1.8"
 project = "innovation"
 
 regions[header] = Header
 regions[menu] = Menu
 regions[content] = Content
-regions[asu_degree_marketing] = ASU Degree Marketing
-regions[asu_degree_sidebar] = ASU Degree Sidebar
 regions[prefooter] = Prefooter
 regions[footer] = Footer
 regions[closure] = Closure

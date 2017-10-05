@@ -1,9 +1,0 @@
-asu_dir 7.x-1.4, 2016-02-03
----------------------------
-
-- Added alphabet filter widget, which filters by first letter of last name.
-- Added sorting widget, which allows sorting by Rank, and Lastname (asc and desc)
-- Added expertise area facet dropdown box
-- Implemented query string writing for URL, to allow deep linking and browser history functionality
-- Fixed responsive styling for webstandards compliance
-- Fixed html markup structure for webstandards compliance

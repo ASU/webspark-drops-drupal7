@@ -1,0 +1,72 @@
+<?php
+
+/**
+ * @file
+ * Find modules missing in file system.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function missing_module_requirements($phase) {
+
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    // Required to use translation in .install  file.
+    $t = get_t();
+
+    // Get array of module names => module paths.
+    $missing_modules = missing_module_find_missing();
+
+    if (!$missing_modules) {
+      // Description is not needed if no missing modules detected.
+      $value = 'No missing modules detected.';
+      $description = '';
+      $severity = REQUIREMENT_OK;
+    }
+    else {
+      // In the value field list missing module count and paths to modules.
+      $value = $t('Missing modules detected (@missing_count):<br /><ul>',
+        array('@missing_count' => count($missing_modules)));
+      foreach ($missing_modules as $mm_name => $mm_path) {
+        // @TODO - Hide @module_url for non-drupal.org projects
+        $value .= $t('<li><strong>@module_name</strong> (reported directory: @module_path)
+            <br><em>Options</em>:
+            <a href="@module_disable">Disable</a> |
+            <a href="@module_remove">Remove</a> |
+            <a href="@module_url">Download from drupal.org</a></li>',
+          array(
+            '@module_name' => (isset($mm_path['info']['name'])) ? $mm_path['info']['name'] : $mm_name,
+            '@module_path' => $mm_path['path'],
+            '@module_disable' => url('admin/reports/status/disable_module/' . $mm_name),
+            '@module_remove' => url('admin/reports/status/remove_module/' . $mm_name),
+            '@module_url' => url('http://drupal.org/project/' . $mm_name),
+          ));
+      }
+      $value .= '</ul>';
+
+      // Add explanation, url to module page & drush command to resolve problem.
+
+      $module_list = $t('@module_names', array('@module_names' => implode(array_keys($missing_modules), " ")));
+      $description = "";
+      $description .= $t('Incorrect database entries related to missing modules ');
+      $description .= $t('may have a large performance impact on your site (200ms+ ');
+      $description .= $t('per page load)! Disable, remove or re-download (and ');
+      $description .= $t('if no longer wanted properly uninstall) the ');
+      $description .= $t('above-listed modules to fix the issues. Drush commands are ');
+      $description .= $t('available. See the module README.txt file for more information ');
+      $description .= $t('on using this module.');
+      $severity = REQUIREMENT_ERROR;
+    }
+
+    $requirements['missing_module_requirement'] = array(
+      'title' => $t('Missing modules in codebase'),
+      'description' => $description,
+      'value' => $value,
+      'severity' => $severity,
+    );
+  }
+
+  return $requirements;
+}

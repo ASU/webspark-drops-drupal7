@@ -1,0 +1,69 @@
+/**** TAB NAVIGATION *****/
+
+.tabnav {
+    cursor: pointer;
+    color: #8C1D40;
+    margin-top: 18px;
+}
+
+.item-list > .tabnav, .item-list > .ui-tabs-nav {
+    display: inline-block;
+    border-radius: 0;
+}
+
+body .ui-tabs .ui-tabs-nav li.ui-state-hover {
+    border-top: none;
+}
+
+.tabnav-right {
+    float: right;
+    padding-left: 10px;
+}
+
+.tabnav-left {
+    float: left;
+    padding-right: 10px;
+}
+
+ul.quicktabs-style-nostyle li:hover, ul.quicktabs-style-nostyle li.active, .ui-tabs .ui-tabs-nav li.ui-state-hover, body .ui-tabs .ui-tabs-nav li.ui-state-active, .ui-tabs .ui-tabs-nav li.ui-tabs-selected {
+    border-top: none;
+    border-bottom: 5px solid #8C1D40;
+}
+
+body #content div .ui-tabs .ui-tabs-nav li a {
+    border: none;
+    color: black;
+}
+
+.webspark-panels-tabs-region > .item-list > .ui-tabs-nav {
+    width: 100%;
+}
+
+.asu-dir-universal-filters > div {
+    padding-left: 0;
+}
+
+
+.asu-dir-universal-filters .asu-dir-universal-buttons {
+    padding-right: 0;
+}
+
+.asu-dir-universal-buttons button {
+    display: inline-block;
+    float: left;
+    margin-top: 0;
+    color: white;
+}
+
+.asu-dir-universal-people-search-btn {
+    background-color: #8C1D40;
+}
+
+.asu-dir-universal-people-reset-btn {
+    margin-left: 15px;
+    background-color: #5C6670;
+}
+
+#asu-dir-ajax-solr-search-universal input {
+    width: 100%;
+}

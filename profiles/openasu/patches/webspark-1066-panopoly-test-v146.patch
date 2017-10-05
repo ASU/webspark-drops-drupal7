@@ -1,0 +1,50 @@
+diff --git a/behat/features/image_widget.feature b/behat/features/image_widget.feature
+index b1f14b8..02cfd5d 100644
+--- behat/features/image_widget.feature
++++ behat/features/image_widget.feature
+@@ -3,14 +3,14 @@ Feature: Add image widget
+   As a site administrator
+   I need to be able to use the image widget
+  
+-  @api @javascript @panopoly_widgets @local_files
++  @api @javascript @panopoly_widgets @local_files @webspark_broken @webspark_fixed @drupal_private_files
+   Scenario: Add a image
+     Given I am logged in as a user with the "administrator" role
+       And Panopoly magic live previews are disabled
+       And I am viewing a landing page
+     When I customize this page with the Panels IPE
+       And I click "Add new pane"
+-      And I click "Add image" in the "CTools modal" region
+-    Then I should see "Configure new Add image"
++      And I click "Add responsive image" in the "CTools modal" region
++    Then I should see "Configure new Add responsive image"
+     When I fill in the following:
+       | Title   | Testing image widget title |
+@@ -40,14 +40,14 @@ Feature: Add image widget
+       And I should see the image alt "Testing alt text" in the "Boxton Content" region
+       And I should not see the link "Testing alt text" in the "Boxton Content" region
+ 
+-  @api @javascript @panopoly_widgets @local_files
++  @api @javascript @panopoly_widgets @local_files @drupal_private_files
+   Scenario: Add an image with link
+     Given I am logged in as a user with the "administrator" role
+       And Panopoly magic live previews are disabled
+       And I am viewing a landing page
+     When I customize this page with the Panels IPE
+       And I click "Add new pane"
+-      And I click "Add image" in the "CTools modal" region
+-    Then I should see "Configure new Add image"
++      And I click "Add responsive image" in the "CTools modal" region
++    Then I should see "Configure new Add responsive image"
+     When I fill in the following:
+       | Title   | Testing image widget title              |
+@@ -87,8 +87,8 @@ Feature: Add image widget
+       And I am viewing a landing page
+     When I customize this page with the Panels IPE
+       And I click "Add new pane"
+-      And I click "Add image" in the "CTools modal" region
+-    Then I should see "Configure new Add image"
++      And I click "Add responsive image" in the "CTools modal" region
++    Then I should see "Configure new Add responsive image"
+     When I click the 2nd "Search for existing content" in the "CTools modal" region
+     Then I should see "Linkit"

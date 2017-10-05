@@ -1,3 +1,6 @@
+Webspark Extras 7.x-1.6, 2017-03-20
+------------------------------
+- Added web standard quick tab style
 
 Webspark Extras 7.x-1.5, 2016-03-03
 ------------------------------

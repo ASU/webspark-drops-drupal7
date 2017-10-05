@@ -1,0 +1,171 @@
+<?php
+/**
+ * @file
+ * Code for the ASU Academic Programs module.
+ */
+
+/**
+ *  Implements hook_block_info().
+ */
+function asu_ap_block_info() {
+  $blocks = array();
+  $blocks['related_programs'] = array(
+    'info' => t('Related Programs'),
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'pages' => '/programs/*',
+  );
+
+  return $blocks;
+}
+
+/**
+ *  Implements hook_block_view().
+ */
+function asu_ap_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'related_programs':
+      $block['subject'] = '';
+      $block['content'] = _asu_ap_BLOCK_CONTENT();
+      break;
+    default:
+      $block['subject'] = '';
+      $block['content'] = array();
+      break;
+  }
+  return $block;
+}
+
+function _asu_ap_BLOCK_CONTENT() {
+  $node = node_load(arg(1));
+  $result = array();
+    if (arg(0) == 'node' && $node->type == 'asu_ap') {
+    if (count($node->field_asu_ap_related_programs)) {
+      foreach ($node->field_asu_ap_related_programs[LANGUAGE_NONE] as $key => $value) {
+        $result[] = array(
+          'data' => $node->field_asu_ap_related_programs[LANGUAGE_NONE][$key]['entity']->title,
+          'class' => array('list-group-item')
+        );
+      }
+      $output[] = array(
+        '#theme' => 'item_list',
+        '#items' => $result,
+        '#type' => 'ul',
+        '#attributes' => array('class' => 'list-group'),
+      );
+    }
+    else {
+      $output = array();
+    }
+  }
+  return $output;
+}
+
+/**
+ * Helper function to find and render a block.
+ */
+function asu_ap_render_block_content($module, $delta) {
+  $output = '';
+  if ($block = block_load($module, $delta)) {
+    if ($build = module_invoke($module, 'block_view', $delta)) {
+      $delta = str_replace('-', '_', $delta);
+      drupal_alter(array('block_view', "block_view_{$module}_{$delta}"), $build, $block);
+
+      if (!empty($build['content'])) {
+        return is_array($build['content']) ? render($build['content']) : $build['content'];
+      }
+    }
+  }
+  return $output;
+}
+
+/**
+ * Implements hook_menu_alter()
+ */
+function asu_ap_menu_alter(&$items) {
+  // WEBSPARK-511 - Hide "Add ASU degrees" link
+  $items['node/add/asu-ap']['access callback'] = FALSE;
+}
+
+/**
+ * Implements hook_preprocess_page()
+ */
+function asu_ap_preprocess_page(&$variables) {
+  // WEBSPARK-690 - move page tpl out of Innovation theme into this module
+  if (isset($variables['node'])) {
+    // Check for 'full' view mode so page__asu_degree is applied only on full view
+    if ($variables['node']->type == 'asu_ap' && is_numeric(arg(1)) && isset($variables['page']['content']['system_main']['nodes'])) {
+      if ($variables['page']['content']['system_main']['nodes'][arg(1)]['body']['#view_mode'] == 'full') {
+        // Set page tpl for A2P
+        $variables['theme_hook_suggestions'][] = 'page__asu_ap';
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function asu_ap_theme_registry_alter(&$theme_registry) {
+  // WEBSPARK-690 - move page tpl out of Innovation theme into this module
+  // Slightly altered for templates directory
+  // Defined path to the current module.
+  $module_template_path = drupal_get_path('module', 'asu_ap') . '/templates';
+  // Find all .tpl.php files in this module's folder recursively.
+  $template_file_objects = drupal_find_theme_templates($theme_registry, '.tpl.php', $module_template_path);
+  // Iterate through all found template file objects.
+  foreach ($template_file_objects as $key => $template_file_object) {
+    // If the template has not already been overridden by a theme.
+    if (!isset($theme_registry[$key]['theme path']) || !preg_match('#/themes/#', $theme_registry[$key]['theme path'])) {
+      // Alter the theme path and template elements.
+      $theme_registry[$key]['theme path'] = $module_template_path;
+      $theme_registry[$key] = array_merge($theme_registry[$key], $template_file_object);
+      $theme_registry[$key]['type'] = 'module';
+    }
+  }
+}
+
+/**
+ * Implements hook_views_pre_render()
+ */
+function asu_ap_views_pre_render(&$view) {
+  // Replaces second campus field with Yes/No, depending on whether the
+  // Online campus is listed. The "Degree" field is being rewritten in the Views
+  // UI to output this campus field.
+	if ($view->name == 'asu_ap_view') {
+    $results = &$view->result;
+		foreach ($results as $result) {
+      $result->field_field_asu_ap_campus_1[0]['rendered']['#markup'] = 'No';
+      foreach ($result->field_field_asu_ap_campus as $each_campus) {
+        if (strstr('Online', $each_campus['rendered']['#markup'])) {
+          $result->field_field_asu_ap_campus_1[0]['rendered']['#markup'] = 'Yes';
+          break 1;
+        }
+      }
+    }
+  }
+}
+
+/**
+* Implements hook_feeds_presave().
+*/
+function asu_ap_feeds_presave(FeedsSource $source, $entity, $item) {
+	// Check that this is fired only for the ASU Academic Programs feed importers
+  $sid = $source->importer->id;
+  if ($sid == 'asu_ap_feed') {
+    // Check for a custom unit filter, or default to NULL
+		$limitToUnit = variable_get('unit_filter', '');
+		if ($limitToUnit != NULL) {
+			if ($item['DepartmentName'] != $limitToUnit){
+				$entity->feeds_item->skip = TRUE;
+				drupal_set_message(t('Searching for programs associated with subunit !bold_text1' . $limitToUnit . '!bold_text2. Skipping irrelevant nodes...',
+          array(
+            '!bold_text1' => '<strong>',
+            '!bold_text2' => '</strong>',
+          )
+        ), 'status');
+      }
+		}
+	}
+}
