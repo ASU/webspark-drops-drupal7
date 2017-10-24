@@ -10,6 +10,8 @@ include_once 'asu_ap_feature.features.inc';
  *  Implements hook_form_alter().
  */
 function asu_ap_feature_form_alter(&$form, &$form_state, $form_id) {
+
+  // Hide irrelavant fields on ASU Academic Programs node edit form
   if ($form_id == 'asu_ap_node_form') {
     $form['some_text'] = array('#markup' => '<div class="messages warning">If information needs to be changed, please do so on the degree catalog by contacting the Provost\'s Office.</div>');
     $form['body']['#access'] = FALSE;
