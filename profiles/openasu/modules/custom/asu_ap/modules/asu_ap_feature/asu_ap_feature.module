@@ -93,3 +93,42 @@ function _asu_ap_feature_image($image, $key) {
   $file = file_copy($file, $uri, FILE_EXISTS_REPLACE);
   variable_set('asu_ap_feature_' . $key . '_fid', $file->fid);
 }
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * This modules needs to run it's implementation of hook_features_export_alter
+ * after the field_group module has run it's own implementation. To do this,
+ * we alter the order of implementors for hook_features_export_alter and move
+ * this module into last place.
+ */
+function asu_ap_feature_module_implements_alter(&$implementations, $hook) {
+
+    if ($hook == 'features_export_alter') {
+        $movetolast = $implementations['field_group_features_fix'];
+        unset($implementations['field_group_features_fix']);
+        $implementations['field_group_features_fix'] = $movetolast;
+    }
+
+}
+/**
+ * Implements hook_features_export_alter().
+ *
+ * ctools needs to tbe told that field_group exists so
+ * it can export the right code into .info and .features.inc
+ * files. This function checks to see if the current feature
+ * export is using field_groups and if yes it adds info about
+ * field_group for ctools to read.
+ *
+ * In other modules (ex. strongarm) hook_features_export
+ * is used instead of hook_features_export_alter and that somehow
+ * circumvents the need for this fix.
+ */
+function asu_ap_feature_features_export_alter(&$export, $module_name) {
+
+    if (!empty($export['features']['field_group']) || !empty($export['features']['dependencies']['field_group']) ) {
+        $identifier = "field_group:field_group:1";
+        $export['features']['ctools'][$identifier] = $identifier;
+    }
+
+}

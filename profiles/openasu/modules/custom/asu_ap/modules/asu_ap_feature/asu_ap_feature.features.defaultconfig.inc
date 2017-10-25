@@ -24,16 +24,9 @@ function asu_ap_feature_defaultconfig_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'chosen_minimum_multiple';
-  $strongarm->value = '25';
-  $export['chosen_minimum_multiple'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'chosen_minimum_single';
-  $strongarm->value = '25';
-  $export['chosen_minimum_single'] = $strongarm;
+  $strongarm->name = 'chosen_jquery_selector';
+  $strongarm->value = '.chosen-select';
+  $export['chosen_jquery_selector'] = $strongarm;
 
   return $export;
 }
