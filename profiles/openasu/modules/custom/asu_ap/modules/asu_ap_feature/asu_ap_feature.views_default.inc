@@ -74,7 +74,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['text'] = '<a href="/node/[nid]">[field_asu_ap_awarded]</a>';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['element_label_colon'] = FALSE;
-  /* Field: Content: Program Description (long) */
+  /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -353,7 +353,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['text'] = '<a href="/node/[nid]">[field_asu_ap_awarded]</a>';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['element_label_colon'] = FALSE;
-  /* Field: Content: Program Description (long) */
+  /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -452,7 +452,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['text'] = '<a href="/node/[nid]">[field_asu_ap_awarded]</a>';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['element_label_colon'] = FALSE;
-  /* Field: Content: Program Description (long) */
+  /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -1548,7 +1548,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['text'] = '<a href="/node/[nid]">[field_asu_ap_awarded]</a>';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['element_label_colon'] = FALSE;
-  /* Field: Content: Program Description (long) */
+  /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
