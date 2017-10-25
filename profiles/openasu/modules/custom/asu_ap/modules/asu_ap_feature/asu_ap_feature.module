@@ -18,7 +18,9 @@ function asu_ap_feature_form_alter(&$form, &$form_state, $form_id) {
     $form['field_asu_ap_acad_plan']['#access'] = FALSE;
     $form['field_asu_ap_acad_prog']['#access'] = FALSE;
     $form['field_asu_ap_college']['#access'] = FALSE;
+    $form['field_asu_ap_college_j']['#access'] = FALSE;
     $form['field_asu_ap_college_url']['#access'] = FALSE;
+    $form['field_asu_ap_college_url_j']['#access'] = FALSE;
     $form['field_asu_ap']['#access'] = FALSE;
     $form['field_asu_ap_admission_req']['#access'] = FALSE;
     $form['field_asu_ap_prog_req']['#access'] = FALSE;
@@ -28,7 +30,9 @@ function asu_ap_feature_form_alter(&$form, &$form_state, $form_id) {
     $form['field_asu_ap_career_opps']['#access'] = FALSE;
     $form['field_asu_ap_cert']['#access'] = FALSE;
     $form['field_asu_ap_department']['#access'] = FALSE;
+    $form['field_asu_ap_department_j']['#access'] = FALSE;
     $form['field_asu_ap_department_code']['#access'] = FALSE;
+    $form['field_asu_ap_department_code_j']['#access'] = FALSE;
     $form['field_asu_ap_example_careers']['#access'] = FALSE;
     $form['field_asu_ap_major_map_url']['#access'] = FALSE;
     $form['field_asu_ap_major_map_year']['#access'] = FALSE;
