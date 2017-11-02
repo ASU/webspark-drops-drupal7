@@ -41,7 +41,7 @@ function asu_ap_feature_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_asu_ap_grp_banner|node|asu_ap|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -71,7 +71,7 @@ function asu_ap_feature_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_asu_ap_grp_career|node|asu_ap|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -103,7 +103,7 @@ function asu_ap_feature_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_asu_ap_grp_desc|node|asu_ap|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -135,7 +135,7 @@ function asu_ap_feature_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_asu_ap_grp_grad|node|asu_ap|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -161,25 +161,25 @@ function asu_ap_feature_field_group_info() {
       8 => 'field_asu_ap_career_opps',
       9 => 'field_asu_ap_cert',
       10 => 'field_asu_ap_college',
-      11 => 'field_asu_ap_college_url',
-      12 => 'field_asu_ap_department',
-      13 => 'field_asu_ap_department_code',
-      14 => 'field_asu_ap_diploma_desc',
-      15 => 'field_asu_ap_example_careers',
-      16 => 'field_asu_ap_major_map_url',
-      17 => 'field_asu_ap_major_map_year',
-      18 => 'field_asu_ap_min_math',
-      19 => 'field_asu_ap_prog_req',
-      20 => 'field_asu_ap_program',
-      21 => 'field_asu_ap_program_fee',
-      22 => 'field_asu_ap_req_desc',
-      23 => 'field_asu_ap_second_language',
-      24 => 'field_asu_ap_subplan_title',
-      25 => 'field_asu_ap_subplan_url',
-      26 => 'field_asu_ap_college_j',
-      27 => 'field_asu_ap_college_url_j',
-      28 => 'field_asu_ap_department_j',
-      29 => 'field_asu_ap_department_code_j',
+      11 => 'field_asu_ap_college_j',
+      12 => 'field_asu_ap_college_url',
+      13 => 'field_asu_ap_college_url_j',
+      14 => 'field_asu_ap_department',
+      15 => 'field_asu_ap_department_code',
+      16 => 'field_asu_ap_department_code_j',
+      17 => 'field_asu_ap_department_j',
+      18 => 'field_asu_ap_diploma_desc',
+      19 => 'field_asu_ap_example_careers',
+      20 => 'field_asu_ap_major_map_url',
+      21 => 'field_asu_ap_major_map_year',
+      22 => 'field_asu_ap_min_math',
+      23 => 'field_asu_ap_prog_req',
+      24 => 'field_asu_ap_program',
+      25 => 'field_asu_ap_program_fee',
+      26 => 'field_asu_ap_req_desc',
+      27 => 'field_asu_ap_second_language',
+      28 => 'field_asu_ap_subplan_title',
+      29 => 'field_asu_ap_subplan_url',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -190,10 +190,10 @@ function asu_ap_feature_field_group_info() {
         'classes' => 'group-asu-ap-grp-hidden field-group-fieldset',
         'description' => '',
       ),
-      'formatter' => 'collapsible',
+      'formatter' => 'collapsed',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_asu_ap_grp_hidden|node|asu_ap|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -224,7 +224,7 @@ function asu_ap_feature_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_asu_ap_grp_links|node|asu_ap|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -253,7 +253,7 @@ function asu_ap_feature_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_asu_ap_grp_prog|node|asu_ap|form'] = $field_group;
 
   // Translatables
   // Included for use with string extractors like potx.
