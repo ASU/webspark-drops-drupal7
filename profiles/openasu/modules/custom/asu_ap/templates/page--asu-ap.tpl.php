@@ -362,14 +362,25 @@ if (module_exists('metatag')) {
                         <?php endif; ?>
                       <?php endif; ?>
                     </strong>
-                    <br>
-                    <?php if (isset($node_info['field_asu_ap_college']['#items'][0]['value'])): ?>
-                      <?php
-                        $asu_college_raw = $node_info['field_asu_ap_college']['#items'][0]['value'];
-                        list($asu_college_suffix, $asu_college_prefix) = explode(", ", $asu_college_raw);
-                        print $asu_college_prefix . " " . $asu_college_suffix;
-                      ?>
-                    <?php endif; ?>
+                    <br><br>
+                    <b>Offered by</b><br>
+                    <?php
+                      if (isset($node_info['field_asu_ap_college_j']['#items'][0]['value'])) {
+                        // $cc --> college_count; $ci --> college_index; $cn --> college_name
+                        $cc = count($node_info['field_asu_ap_college_j']['#items']) - 1;
+                        $ci = 0;
+                        foreach ($node_info['field_asu_ap_college_j']['#items'] as $cn) {
+                          $asu_college_raw = $cn['value'];
+                          list($asu_college_suffix, $asu_college_prefix) = explode(", ", $asu_college_raw);
+                          $asu_college = $asu_college_prefix . " " . $asu_college_suffix;
+                          echo $asu_college;
+                          if ($ci < $cc) {
+                            echo ', ';
+                          }
+                          ++$ci;
+                        }
+                      }
+                    ?>
                   </p>
                 </div>
                 <p>
