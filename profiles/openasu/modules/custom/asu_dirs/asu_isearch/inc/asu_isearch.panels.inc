@@ -29,6 +29,15 @@ function asu_isearch_panels_pane_content_alter($content, $pane, $args, $contexts
     ));
   }
 
+  if ($pane->subtype == 'node:field_isearch_google_scholar') {
+    $website = $content->content['#items'][0]['value'];
+    $content->content[0]['#markup'] = l('Google Scholar Profile', $website, array(
+      'attributes' => array(
+        'target' => '_blank',
+      )
+    ));
+  }
+
   // Get permission to display profile image
   if ($pane->subtype == 'node:field_isearch_photo_url') {
     // check and see if we have uploaded a local image

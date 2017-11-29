@@ -76,17 +76,6 @@ class MigrateIsearchProfileMigration extends Migration {
     }
 
     // Create a MigrateSource object, which manages retrieving the input data.
-    global $base_url;
-
-
-    /*$source_urls = $base_url . url(drupal_get_path('module', 'asu_isearch')) . '/inc/asu_isearch.migrate.json';
-
-    $config_source_urls = asu_isearch_get_migrate_source_urls(TRUE);
-
-    if (count($config_source_urls)) {
-      $source_urls = $config_source_urls;
-    }*/
-
     $source = ASU_ISEARCH_MASTER_FILE_ENDPOINT;
 
     $master = asu_isearch_get_master_source();
@@ -127,6 +116,7 @@ class MigrateIsearchProfileMigration extends Migration {
     $this->addFieldMapping('field_isearch_bio', 'bio');
     $this->addFieldMapping('field_isearch_education', 'education');
     $this->addFieldMapping('field_isearch_cv_url', 'cvUrl');
+    $this->addFieldMapping('field_isearch_google_scholar', 'googleScholar');
     $this->addFieldMapping('field_isearch_rsrch_website', 'researchWebsite');
     $this->addFieldMapping('field_isearch_rsrch_interests', 'researchInterests');
     $this->addFieldMapping('field_isearch_rsrch_group', 'researchGroup');
@@ -145,7 +135,9 @@ class MigrateIsearchProfileMigration extends Migration {
     $this->addFieldMapping('field_board', 'board');
     $this->addFieldMapping('field_industry_positions', 'industryPositions');
     $this->addFieldMapping('field_pro_bono', 'probono');
+    $this->addFieldMapping('field_executive_courses', 'executiveCourses');
 
+    $this->addFieldMapping('field_executive_courses:format', 'htmlFormat');
     $this->addFieldMapping('field_consulting:format', 'htmlFormat');
     $this->addFieldMapping('field_board:format', 'htmlFormat');
     $this->addFieldMapping('field_industry_positions:format', 'htmlFormat');
@@ -197,6 +189,7 @@ class MigrateIsearchProfileMigration extends Migration {
       'facebook' => 'Profile facebook link',
       'linkedin' => 'Profile linkedin link',
       'googlePlus' => 'Profile googleplus link',
+      'googleScholar' => 'Profile googlescholar link',
       'photoPreference' => 'Photo preference',
       'photoPermission' => 'Photo permission',
       'researchInterests' => 'Research interests',
@@ -225,6 +218,7 @@ class MigrateIsearchProfileMigration extends Migration {
       'board' => 'Board',
       'industryPositions' => 'Industry Positions',
       'probono' => 'Pro Bono',
+      'executiveCourses' => 'Executive Education Courses',
       'htmlFormat' => 'Placeholder source field used for setting HTML format on text fields',
       'migrateHash' => 'Migrate hash used to determine if the entity should be updated or skipped on import',
     );
@@ -335,6 +329,8 @@ class MigrateIsearchProfileMigration extends Migration {
         $affiliation->isRankTenure = $row->departmentTitleRanksTenure[$index];
         $affiliation->ranksTid = $row->departmentTitleRanksTids[$index];
         $affiliation->ranksWeight = $row->departmentTitleRanksWeight[$index];
+        $affiliation->affilHide = $row->affilHide[$index];
+        $affiliation->affilWeight = $row->affilWeight[$index];
 
         // Only add the employeeweight to the local weight field if it has been configured
         // to do so, it has been set in iSearch, it is less than rank weight,
@@ -400,15 +396,46 @@ class MigrateIsearchProfileMigration extends Migration {
 
   // This will get called just before the destination entity is saved
   public function prepare($entity, stdClass $row) {
-    // Some required adjustments to nodes that already exist
-    if (isset($entity->is_new) && $entity->is_new === FALSE) {
-      $node = node_load($entity->nid);
-      $entity->status = $node->status;
-      $entity->field_isearch_affiliations = $node->field_isearch_affiliations;
-      $entity->field_isearch_expertise_areas = $node->field_isearch_expertise_areas;
+
+
+    // If this is an existing entity, then we need to re-associate the affiliation
+    // field collections, since they are not explicitly mapped and loaded on the
+    // migration entity. See https://www.drupal.org/project/field_collection/issues/2183961
+    if (isset($entity->nid)) {
+      // load the original node object
+      $old_node = node_load($entity->nid);
+      // add original field collection data to our current node object
+      $entity->field_isearch_affiliations = $old_node->field_isearch_affiliations;
     }
 
+    // set the title as the displayname
     $entity->title = $row->displayName;
+
+    // Set Student Information.
+    $solr_record = (array) $row;
+    $student_info = NULL;
+
+    if (isset($solr_record['careers']) && is_array($solr_record['careers'])) {
+
+      $student_info = '';
+
+      foreach ($solr_record['careers'] as $key => $career) {
+        $student_info .= check_plain($career) . '<br>';
+
+        if (isset($solr_record['majors']) && is_array($solr_record['majors']) && isset($solr_record['majors'][$key])) {
+          $student_info .= check_plain($solr_record['majors'][$key]) . '<br>';
+        }
+
+        if (isset($solr_record['programs']) && is_array($solr_record['programs']) && isset($solr_record['programs'][$key])) {
+          $student_info .= check_plain($solr_record['programs'][$key]) . '<br><br>';
+        }
+      }
+    }
+
+    if ($student_info != NULL) {
+      $entity->field_isearch_student_info[LANGUAGE_NONE][0]['format'] = 'full_html';
+      $entity->field_isearch_student_info[LANGUAGE_NONE][0]['value'] = '<div class="is-profile-student-info">' . $student_info . '</div>';
+    }
 
     // Setup expertise taxonomy terms
     $this->setupExpertiseAreas($entity, $row);
@@ -441,17 +468,18 @@ class MigrateIsearchProfileMigration extends Migration {
       $num = ASU_ISEARCH_MASTER_IMPORT_MINIMUM;
     }
 
+    // get the master source, and remove the records which were successfully
+    // processed
     $themaster = asu_isearch_get_master_source();
-
     $themaster = array_slice($themaster, $num);
-
     _asu_isearch_refresh_source($themaster);
 
     //watchdog log the result
     watchdog('asu_isearch', "Successfully processed '[@num]' nodes.", array('@num' => $this->total_successes), WATCHDOG_INFO);
-
   }
 
+  // queues up the the process to fetch the profile photo for a given
+  // profile node
   private function fetchProfilePhoto($entity, stdClass $row) {
 
     if ($row->photoPreference != 'none') {
@@ -477,6 +505,7 @@ class MigrateIsearchProfileMigration extends Migration {
     // keeps track of existing expertise values
     $existing_expertise = array();
     //watchdog('migrate_debug','<pre>'.print_r(self::$expertiseAreasCache,TRUE).'</pre>');
+
 
     // Loop through the expertise areas we received from $row and add if necessary
     foreach ($row->expertise as $expertise_key => $item) {
@@ -576,12 +605,17 @@ class MigrateIsearchProfileMigration extends Migration {
   private function setupAffiliations($entity, stdClass $row) {
     $update_affiliations = array();
     $pull_weights = variable_get('isearch_pull_isearch_weights', FALSE);
+    $affils = array();
+
+    if (isset($entity->field_isearch_affiliations[LANGUAGE_NONE])) {
+      $affils = $entity->field_isearch_affiliations[LANGUAGE_NONE];
+    }
 
     // determine if we need to update or delete existing affiliations
-    if (!empty($entity->field_isearch_affiliations)) {
+    if (!empty($affils)) {
 
       // loop through existing affiliations and see if we need to delete or update them
-      foreach ($entity->field_isearch_affiliations[LANGUAGE_NONE] as $index => $item) {
+      foreach ($affils as $index => $item) {
 
         $affiliation = field_collection_item_load($item['value']);
 
@@ -598,20 +632,23 @@ class MigrateIsearchProfileMigration extends Migration {
 
           watchdog('asu_isearch', "Removed @num orphaned iSearch affiliation(s).", array('@num' => $deleted));
           continue;
-        }
 
-        $affiliation_key = $affiliation->field_isearch_affil_dept_id[LANGUAGE_NONE][0]['value'];
+        } else {
 
-        if (!isset($row->affiliations_info[$affiliation_key])) {
-          entity_delete('field_collection_item', $affiliation->item_id);
-        }
-        else {
-          $update_affiliations[$affiliation_key] = $affiliation;
+          $affiliation_key = $affiliation->field_isearch_affil_dept_id[LANGUAGE_NONE][0]['value'];
+
+          if (!isset($row->affiliations_info[$affiliation_key])) {
+            entity_delete('field_collection_item', $item['value']);
+          }
+          else {
+            $update_affiliations[$affiliation_key] = $affiliation;
+          }
         }
       }
     }
 
     // create/update new affiliations
+
     foreach ($row->affiliations_info as $affiliation_key => $item) {
       if (isset($update_affiliations[$affiliation_key])) {
         // update an existing affiliation
@@ -643,6 +680,15 @@ class MigrateIsearchProfileMigration extends Migration {
       $affiliation->field_isearch_affil_manager[LANGUAGE_NONE][0]['value'] = ($item->isManager) ? 1 : 0;
       $affiliation->field_isearch_affil_primary[LANGUAGE_NONE][0]['value'] = ($item->isPrimary) ? 1 : 0;
       $affiliation->field_isearch_affil_rank_tenure[LANGUAGE_NONE][0]['value'] = ($item->isRankTenure) ? 1 : 0;
+
+
+      if (variable_get('isearch_import_affil_weights', FALSE)) {
+        $affiliation->field_isearch_affil_weight[LANGUAGE_NONE][0]['value'] = $item->affilWeight;
+      }
+
+      if (variable_get('isearch_import_affil_hide', FALSE)) {
+        $affiliation->field_isearch_affil_hide[LANGUAGE_NONE][0]['value'] = ($item->affilHide) ? 1 : 0;
+      }
 
       if ($pull_weights && !empty($item->employeeWeight)) {
         $affiliation->field_isearch_affil_local_weight[LANGUAGE_NONE][0]['value'] = intval($item->employeeWeight);
