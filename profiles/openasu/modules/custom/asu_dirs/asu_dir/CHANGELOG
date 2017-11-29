@@ -1,3 +1,10 @@
+asu_dir 7.x-1.8 2017-10-13
+----------------------------
+- Added behavior to hide "People >" filter selection breadcrumb when no filters are shown
+- Added option to display department name under the title
+- Removed some css which was causing listing text size to be restricted
+- Fixed css for search selection breadcrumb
+
 asu_dir 7.x-1.7.2 2017-09-06
 ----------------------------
 - Fixed bug where employee types filter was broken
