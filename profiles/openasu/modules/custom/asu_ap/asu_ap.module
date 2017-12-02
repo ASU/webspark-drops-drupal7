@@ -37,6 +37,9 @@ function asu_ap_block_view($delta = '') {
   return $block;
 }
 
+/**
+ * Helper function for hook_block_view().
+ */
 function _asu_ap_BLOCK_CONTENT() {
   $node = node_load(arg(1));
   $result = array();
