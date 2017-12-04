@@ -11,7 +11,7 @@ function asu_isearch_form_alter(&$form, &$form_state, $form_id) {
     // remove access to timestamp field
     $form['field_previous_isearch_update']['#access'] = FALSE;
 
-    // If we are adding a new custon node, or are editing a custom node, then display all fields
+    // If we are adding a new custom node, or are editing a custom node, then display all fields
     // for editing
     if (arg(1) == 'add' || $form['#node']->field_isearch_eid['und'][0]['value'] == -1 || ASU_ISEARCH_DEVMODE) {
 
@@ -124,6 +124,8 @@ function asu_isearch_form_alter(&$form, &$form_state, $form_id) {
         'field_isearch_affiliations',
         'field_isearch_affil_local_weight',
         'field_isearch_link_building_code',
+        'field_isearch_affil_weight',
+        'field_isearch_affil_hide'
       );
 
       // also exclude the new fields,
@@ -132,7 +134,8 @@ function asu_isearch_form_alter(&$form, &$form_state, $form_id) {
         'field_consulting',
         'field_board',
         'field_industry_positions',
-        'field_pro_bono'
+        'field_pro_bono',
+        'field_executive_courses'
       );
 
       // Hide the rest of the fields
@@ -174,6 +177,12 @@ function asu_isearch_form_alter(&$form, &$form_state, $form_id) {
               if (preg_match('/^field_isearch_/', $field_key) && !in_array($field_key, $field_exception_manifest)) {
                 if (asu_isearch_devmode() === FALSE) {
                   $form[$field_collection][LANGUAGE_NONE][$item_key][$field_key]['#disabled'] = TRUE;
+                }
+              } else {
+
+                // Set the title for the hide_affil field
+                if ($field_key == 'field_isearch_affil_hide') {
+                  $form[$field_collection][LANGUAGE_NONE][$item_key][$field_key][LANGUAGE_NONE]['#title'] = 'Hide Affiliation';
                 }
               }
             }
