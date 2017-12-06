@@ -1,0 +1,12 @@
+name = ASU Directory Panel
+description = Creates a fieldable panel pane with an asu_dir field attached.
+core = 7.x
+package = ASU
+version = 7.x-1.0
+project = asu_dir_panel
+dependencies[] = ctools
+dependencies[] = features
+dependencies[] = asu_dir
+dependencies[] = fieldable_panels_panes
+features[features_api][] = api:2
+features[field_instance][] = fieldable_panels_pane-asu_dir-field_asu_directory_items

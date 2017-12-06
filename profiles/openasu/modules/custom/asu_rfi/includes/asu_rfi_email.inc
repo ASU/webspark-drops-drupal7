@@ -1,5 +1,5 @@
 <?php
-// $Id: asu_rfi.pages.inc 
+// $Id: asu_rfi.pages.inc
 
 /**
  * @file
@@ -50,14 +50,14 @@ function asu_rfi_undergrad_email($prog_plan, $e_email, $humanName)
     " . $degree_search_link . "
     <p>As you learn more about ASU, we invite you to get a full view of the Sun Devil experience. We'll keep you updated on student life, academic opportunities and admission timelines, and send you special invitations to events near you.</p>";
   $message_end = "<p>Sincerely,</p>
-                  <p>Matthew Ellis<br>
+                  <p>Matthew R. López<br>
                      Executive Director<br>
                      Admission Services
                   </p>";
   $helpfulResources = "<p><strong><i>Helpful Resources for Future Sun Devils</i></strong><br>
                         <i>Interactive viewbook and general information</i></p>                        
                         <ul>
-                            <li><a href='https://yourfuture.asu.edu/'>my future</a></li>    
+                            <li><a href='https://www.asu.edu/myfuture'>my future</a></li>    
                             <li><a href='http://www.asu.edu/prospective/video/'>about ASU (Video)</a></li>    
                             <li><a href='https://students.asu.edu/tuition'>cost calculator</a> and <a href='https://students.asu.edu/scholarships/estimator '>scholarship estimator</a></li>    
                         </ul>
@@ -67,8 +67,7 @@ function asu_rfi_undergrad_email($prog_plan, $e_email, $humanName)
 
 
   $footer = "<br /><div style='color:grey;'>This message sent by <a href = 'mailto:asurecruitment@asu.edu' >asurecruitment@asu.edu</a> is the result of your request for more information on the ASU website.
-  By providing your email address, you gave Arizona State University permission to send this email.
-  Please add <a href = 'mailto:asurecruitment@asu.edu' >asurecruitment@asu.edu</a> to your address book or safe sender list. Arizona State University, Undergraduate Admissions, PO Box 870112, Tempe, AZ 85287-0112.</div>";
+  By providing your email address, you gave Arizona State University permission to send this email.Arizona State University | Admission Services | PO Box 870112 | Tempe, AZ 85287-0112 Subscription Center | Unsubscribe | Privacy Policy</div>";
 
   $params['body'] = $message_start . $message_middle . $message_end . $description . $helpfulResources . $footer;
 
@@ -242,7 +241,7 @@ function asu_rfi_grad_email($prog_plan, $e_email, $humanName)
 
 }
 
-//function to to get career summary data 
+//function to to get career summary data
 /**
  * @param $data
  * @return array|string
@@ -278,4 +277,4 @@ function asu_rfi_career($data)
   }
   return $option;
 }
- 
+

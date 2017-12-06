@@ -1,0 +1,6 @@
+name = ASU Academic Programs
+description = Base configuration for ASU Academic Programs.
+core = 7.x
+package = ASU
+version = 7.x-2.0
+dependencies[] = asu_ap_feature

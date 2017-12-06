@@ -1,0 +1,11 @@
+name = ASU Webspark Inline Panels Tabs
+description = Show panel panes in a region as Webspark accessible inline tabs. This module extends the functionality of the panels_tabs module to handle the overflow of tabs within a panels region.
+core = 7.x
+package = Panels
+dependencies[] = panels
+
+; Information added by Drupal.org packaging script on 2014-03-18
+version = "7.x-1.0"
+core = "7.x"
+project = "asu_ws_panels_tabs"
+

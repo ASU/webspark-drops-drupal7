@@ -1,0 +1,92 @@
+asu_isearch 7.x-1.8.11
+----------------------
+- Improved Solr profile checking to avoid unnecessary unpublishing, and improved logging information
+- 'Exclude from automatic updating' option turns off Solr profile checking
+- Improved and consolidated profile onload updating logic
+- Hides the 'isearch_profile_2col' option in the Panopoly 'Choose Layout' menu
+
+asu_isearch 7.x-1.8.10
+----------------------
+- Fixed bug with ampersands in title filter were not returning results
+- Fixed bug where first affil outside of selected departments would result in exclusion
+
+asu_isearch 7.x-1.8.9
+---------------------
+- Fixed bug with primary affiliation not mapping correctly
+- Removed duplicate update hooks
+- Removed access to timestamp field
+
+asu_isearch 7.x-1.8.8
+---------------------
+- Fix for legacy isearch_admin configs
+- Moved included asu_dir_utilities back inline with Webspark to prevent asu_dir cached data errror
+- Cleaner configuration management for Drupal
+- Bug fix for Solr profile updating on view crashing due to older versions of PHP
+- Fix for custom profile form notices about directory tree object
+
+asu_isearch 7.x-1.8.7
+---------------------
+- Added cleanup to migration for orphaned affiliations
+- Migration vars are now configurable via variable_set
+- Added legacy mode in preparation for ASU DIRS release
+- Added 'Advanced' options tab, for less-common configs
+
+asu_isearch 7.x-1.8.6
+---------------------
+- Updated asu_dir_utilities module
+
+asu_isearch 7.x-1.8.5
+---------------------
+- Added 'isearch_local_lock' setting, allowing the disabling of automatic cron migration updates
+- Added onload profile check against Solr for FERPA purposes
+- Added migration data cache refresh functionality for running manual migrations
+
+asu_isearch 7.x-1.8.4
+---------------------
+- Affiliation accordions match iSearch styling
+
+asu_isearch 7.x-1.8.3
+---------------------
+- Added longterm backup caching for the iSearch assets
+- Improved expertise area option filtering for contextual filter form
+
+asu_isearch 7.x-1.8.2
+---------------------
+- Fixed bug where the legacy primary affiliation filter was breaking the view
+- Implemented pulling of subdepartment NIDs dynamically, which fixes bug where saved dept nids weren't updated
+
+asu_isearch 7.x-1.8.1
+---------------------
+- Fixed issue with pagination not functioning correctly when contextual form is removed
+- Webstandards pagination
+- Added iSearch profile photo styling
+
+asu_isearch 7.x-1.8
+-------------------
+- Added dependency on asu_dir_utilities
+- First/primary affiliation on a profile is open by default on view
+- Research activity links are fixed
+- Fixed bug where title filter contained extraneous titles
+
+asu_isearch 7.x-1.7.1
+---------------------
+- Added entity load hook to update profile image intermittently on load
+- Added limit to number of profiles checked for cleanup daily
+- Hotfix for non-primary affiliations being filtered from views
+
+asu_isearch 7.x-1.7
+-------------------
+- Views exposed contextual filters are now using ajax views functionality
+- A to Z index filters are now working
+- Added support for industry experience fields
+- Cleaned up the logic for grabbing iSearch weights - as of now the weight will only be pulled if less than the title
+  rank weight
+- Fixed bug where lastname secondary sort is not active while rank sort is active
+
+asu_isearch 7.x-1.6
+-------------------
+- Fixed bug where image styles aren't updating
+- Fixed image styles by removing cropping and using CSS similar to iSearch
+- Allows importing of custom sorting from iSearch, this is configurable at /admin/content/isearch/configure
+- Added update hook to clear old queued migrations
+- Added sane constraints to avoid extremely long cron tasks
