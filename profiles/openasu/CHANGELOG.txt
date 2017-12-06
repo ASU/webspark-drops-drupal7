@@ -1,66 +1,51 @@
-Webspark 1.46.1 (Omaha) release
-----------------
-- Web standards components in Webspark
-    * ASU Directory Integration Reinvented (ASU DIR v7.x-1.7.2)
-        * Bugfix for broken employee types filter
 
-Webspark 1.46 (Nebraska) release
-----------------
+Webspark 1.48 (Nevada), TBD
+-------------------------------------------------
+An upstream update, Webspark v1.48 (Nevada), has been released. It includes updates to the Panopoly (v1.48) distribution
+
 - Webspark core 
-
-    * Drupal core (v7.56) - This includes security and non-security updates, including:
-        * Fixes security vulnerabilities
-        * Variety of improvements and bugfixes, including better support of PHP 7.0
-    * Panopoly (v1.46) - Includes a number of minor bug fixes and module updates, including upgrading the media module to
-        2.1. See Panopoly changelogs for more.
-    * Removed unnecessary debugging code (theme_debug mode) from settings.php, which was causing issues in multiple places,
-        including customized webform email templates errantly inserting debugging code.
+  * Panopoly (v1.48) - Update to the 1.48 version of the panopoly distribution
 
 - Web standards components in Webspark
+  * ASU Academic Programs - 7.x-2.1 update
+    * Updated the ASU Academic Programs README.md with improved markdown styling
+    * Updated asu-drupal-modules README.md with more accurate information 
+    * Updated comments for ASU Academic Programs
+    * Added College of Law, SFIS, Thunderbird school and campus to importing options; updated PUBSRV's college display name
+    * Added support for joint ownership of programs
+    * Better module comments for ASU Academic Programs
+    * Node edit form - Hid new joint fields (replaced original fields)
+    * Added behavior to hide "People >" filter selection breadcrumb when no filters are shown
+    * Updated the ASU Academic Programs README.md with better markdown styling
+    * Updated asu-drupal-modules README.md with more accurate information
 
-    * ASU Directory Integration Reinvented (ASU DIR v7.x-1.7.1)
-        * Fixes bug where page state title was being set as null
-        * Hides pagination if only one page of results
-        * Fixed CSS which was hindering the directory pane from going completely full-width inside of its container
-        * Bugfixes for history state handling, which was causing asu_dir higher index tab states to not be saved if there had been non-asu_dir panes placed before them
-        * Linted javascript code responsible for client side rendering (e.g., rendering directory lists, making AJAX requests
-          to Solr backend, handling for inputs, keeping track of the Solr parameters, history state handling, etc.) and removed code no longer in use
-        * Added default photo behavior for the ASU Directory field. Custom images as placeholders can be uploaded for the asu_dir module
-    * The ASU Local iSearch Directory (ASU LID v7.x-1.8.11)
-        * Improved Solr profile checking to avoid unnecessary unpublishing, and improved logging information
-        * 'Exclude from automatic updating' option turns off Solr profile checking
-        * Improved and consolidated profile onload updating logic
-    * ASU Brand (v7.x-1.17)
-        * Added 'asu_brand_do_not_override' variable. This is a JSON-encoded array of hostnames. If the requested host is
-          found in the list, the brand module will not pass in the standard CAS authentication URL if the CAS module is
-          enabled. It will instead pass in the standard weblogin.asu.edu login and logout URLs.
-        * Removed max version check
-    * ASU Webspark Inline Panels Tabs (v7.x-1.0)
-        * New module for Webspark, which includes a new 'Inline Tabs' panel region style.
-        * This new style will display tabs inline with a maroon underline style for the active tab.
-        * If the tabs would otherwise overflow a region, they will be grouped into sets, which are navigable via a right/left arrow.
-    * ASU RFI (v7.x-1.7)
-        * Updated the auto-response email
-    * ASU Academic Programs (v7.x-2.0)
-        * A revamped and revitalized module for Webspark that will replace the ASU Degrees module.
-        * Includes similar functionality and features as current ASU Degrees module with additional simplification of importing options and improved user interface.
-    * ASU Degrees (v7.x-1.10)
-        * asu_degrees deprecated for ASU Academic Programs
-    * ASU Degrees Feature (v7.x-1.10)
-        * asu_degrees_feature deprecated for ASU Academic Programs
-    * ASU Degrees Views Output (v7.x-1.0)
-        * asu_degrees_viewsoutput deprecated for ASU Academic Programs
+  * ASU Directory Integrated Reinvented (ASU DIR v1.8)
+    * Added option to display department name under the title
+    * Removed CSS was causing listing text size to be restricted
+    * Fixed CSS for search selection breadcrumb
+    * Added addressLine3 to profile listing display
 
-- Webspark custom projects - Changes/Deletions
+  * The ASU Local iSearch Directory (ASU LID v7.x-1.8.12)
+    * Added affil_hide, affil_weight, Google scholar, student info, and executive courses fields to the profile
+    * Fixed dept file caching fallback for migrations
+    * Fixed issue where affiliations were being unnecessarily deleted and recreated during migrations
 
-    * Webspark Seven - Updated the theming to better render deeply nested fieldsets by alternating the rendering styles for odd and even fields
+  * ASU Brand (asu_brand v7.x-1.18)
+    * Fixed the 'do not override' list to use JS instead of relying on the hosts header
 
-- Webspark-managed libraries - Updates
+  * ASU Spotlight (asu_spotlight v7.x-1.7.1)
+    * Added gray and gold button colors
 
-    * CAS (v1.3.5) - Applied security update to CAS library
+Webspark 1.46.1 (Omaha) release notes, 2017-12-09 
+-------------------------------------------------
+An upstream update, Webspark v1.46.1 (Omaha), has been released. It provides a bug fix to the ASU Directory Integration Reinvented (ASU DIR) module. 
 
-Webspark 1.43 (Colorado) release
-----------------
+Webspark 1.46 (Nebraska) release notes, 2017-27-08
+--------------------------------------------------
+An upstream update, Webspark v1.46 (Nebraska), has been released. It includes major updates to Drupal core (v7.56) and the Panopoly (v1.46) distribution. Note that there will be no Webspark 1.44 or 1.45 releases since we are updating from Panopoly 1.43 to 1.46. 
+
+Webspark 1.43 (Colorado) release, 2017-16-05
+--------------------------------------------
 - Webspark core 
 
     * Drupal core (v7.54) - This includes security and non-security updates, including:
@@ -131,8 +116,8 @@ Webspark 1.43 (Colorado) release
 
 
 
-Webspark 1.40.3 (Shell Valley) release
-----------------
+Webspark 1.40.3 (Shell Valley) release, 2017-15-02 
+--------------------------------------------------
 - Webspark core
 
     * Webspark Featurescustom (v1.5)
@@ -166,8 +151,8 @@ Webspark 1.40.3 (Shell Valley) release
     - Webspark-managed modules
         * Webform - v4.14
 
-Webspark 1.40.2 (Pillsbury) release
-----------------
+Webspark 1.40.2 (Pillsbury) release, 2017-25-01 
+-----------------------------------------------
 - Webspark-managed libraries - Additions
 
     * React JS (v0.14.7) - Used by the latest ASU Directory Intergration Reinvented module and now available for general use by Webspark users
@@ -214,8 +199,8 @@ Webspark 1.40.2 (Pillsbury) release
         * Added a menu-block-wrapper.tpl.php with an aria-label to identify submenus
     * Webspark Megamenu (v1.6.1) - Added ARIA role to main navigation menu to fix tab key navigation functionality
 
-Webspark 1.40.1 (Hoople) release
-----------------
+Webspark 1.40.1 (Hoople) release, 2016-16-09 
+--------------------------------------------
 - Contrib projects - Updates
 
     - Panopoly-managed modules
@@ -228,8 +213,8 @@ Webspark 1.40.1 (Hoople) release
 - Web standards components in Webspark
     * Innovation theme (v1.6) - Color of primary and blue button text now white on :hover
 
-Webspark 1.40 (North Dakota) release
-----------------
+Webspark 1.40 (North Dakota) release, 2016-12-09 
+------------------------------------------------
 - Webspark core
 
   * Updated Panopoly from v1.37 to v1.40 - This update includes multiple security updates to Panopoly-managed modules.
@@ -293,8 +278,8 @@ the Webspark distribution.
 
     * ASU Directory (asu_directory)
 
-Webspark 1.37 (South Dakota) release
-----------------
+Webspark 1.37 (South Dakota) release, 2016-15-07
+------------------------------------------------
 
 - Webspark core
     * Added multiple patches for updating various contrib modules during the build process (located in /profiles/openasu/patches)
@@ -382,8 +367,8 @@ Webspark 1.37 (South Dakota) release
     * Panopoly Demo
 
 
-Webspark 1.27.1 (Ismay) release
-----------------
+Webspark 1.27.1 (Ismay) release, 2016-23-06
+-------------------------------------------
 - Drupal core
     * Updated to v7.44 (Security updates)
 
@@ -404,8 +389,8 @@ Webspark 1.27.1 (Ismay) release
         - Fixed issue where "Show" appears in horizontal tab title if node form is submitted through ajax
     * Font Awesome library (v4.6.3) - Adds new icons
 
-Webspark 1.27 (Montana) release (MAJOR Update)
-----------------
+Webspark 1.27 (Montana) release (MAJOR Update), 2016-17-06
+----------------------------------------------------------
 - Webspark core
     * Updated Panopoly core - v1.27
         * The Panopoly layout templates (which were part of the Kalatheme theme) were upgraded from their custom Panopoly layouts to Radix layouts. Any Webspark site pages/sections should be updated automatically to the new Radix layouts while keeping the same look/feel.
@@ -530,8 +515,8 @@ Webspark 1.27 (Montana) release (MAJOR Update)
     * OpenASU Demo
 
 
-Webspark 1.13.15 (Bellingham) release
-----------------
+Webspark 1.13.15 (Bellingham) release, 2016-28-04
+-------------------------------------------------
 - Drupal core:
     * The update to Drupal 7.43 broke file uploads attached to all Drupal forms submitted by unauthenticated users when
     form validation fails. A temporary patch to fix this regression has been applied until the issue is fixed in Drupal
@@ -589,8 +574,8 @@ Webspark 1.13.15 (Bellingham) release
         * Added additional padding in order to prevent elements from colliding with the Global ASU Footer
 
 
-Webspark 1.13.14 (Ferndale) release
-----------------
+Webspark 1.13.14 (Ferndale) release, 2016-04-03
+-----------------------------------------------
 
 - Drupal core:
     * Updated core from 7.39 to 7.43 (critical security updates) - Read more on drupal.org
@@ -634,8 +619,8 @@ Webspark 1.13.14 (Ferndale) release
         * Deprecated contact fields
         * Added alt text field for logo
 
-Webspark 1.13.13 (Hanford) release
-----------------
+Webspark 1.13.13 (Hanford) release, 2015-02-10
+----------------------------------------------
 
 - Contrib modules in Webspark:
     * The following contrib modules have been updated:
@@ -670,8 +655,8 @@ Webspark 1.13.13 (Hanford) release
     * Webspark Megamenu
         * Added Automatic resizing of the MegaMenu depending on the size of the screen
 
-Webspark 1.13.12 (Pullman) release
-----------------
+Webspark 1.13.12 (Pullman) release, 2015-02-09
+----------------------------------------------
 - ASU custom modules
     * ASU RFI - v1.2
         * Updated module to send message to middleware upon App key request
@@ -687,8 +672,8 @@ Webspark 1.13.12 (Pullman) release
         * Fixed some upper case and lower case field names
 
 
-Webspark 1.13.11 (Tacoma) release
-----------------
+Webspark 1.13.11 (Tacoma) release, 2015-28-08
+---------------------------------------------
 - Drupal Core
     * Updated to 7.39 (Security release)
 
@@ -711,8 +696,8 @@ Webspark 1.13.11 (Tacoma) release
         * Deeply nested menu tree links are now indented
 
 
-Webspark 1.13.10 (Spokane) release
-----------------
+Webspark 1.13.10 (Spokane) release, 2015-15-07
+----------------------------------------------
 - Contributed Drupal Modules in Webspark
     * Patched Media module to fix bug that made WYSIWYG fields disappear from ASU Degree edit forms when 1) more than
       one WYSIWYG editor was on the page, and 2) images were uploaded via the WYSIWYG editor
@@ -733,8 +718,8 @@ Webspark 1.13.10 (Spokane) release
       DB settings for the Webspark Content Callout module
 
 
-Webspark 1.13.9 (Washington) release
-----------------
+Webspark 1.13.9 (Washington) release, 2015-01-07 
+------------------------------------------------
 - Webspark Core
     * Added meta tag to better identify Webspark sites and their version
     * Moved the Webspark Featurescustom module into its own folder as part of code reorganization
@@ -752,14 +737,14 @@ Webspark 1.13.9 (Washington) release
       color to gold on hover
 
 
-Webspark 1.13.8 (Idaho II) release
-----------------
+Webspark 1.13.8 (Idaho II) release, 2015-18-06 
+----------------------------------------------
 - Drupal Core
     * Security update to Drupal 7.38
 
 
-Webspark 1.13.7 (Idaho) release
-----------------
+Webspark 1.13.7 (Idaho) release, 2015-09-06
+-------------------------------------------
 
 - Webspark Core
     * Enabled update notifications for user installed modules in sites/all/modules
@@ -792,10 +777,8 @@ Webspark 1.13.7 (Idaho) release
     * Updated title of ASU RFI settings menu
     * Updated RFI module with added functionality and bug fixes
 
-
-
-Webspark 1.13.6 (Wyoming) release
-----------------
+Webspark 1.13.6 (Wyoming) release, 2015-20-04
+---------------------------------------------
 
 - Webspark Core
     * Fixed issue where the custom WYSIWYG configuration settings were not
@@ -832,8 +815,8 @@ Webspark 1.13.6 (Wyoming) release
         - Fixed bug with the Accelerated Programs not being flagged properly
     * Updated the ASU RFI module to 1.1
 
-Webspark 1.13.5 (Utah) release
-----------------
+Webspark 1.13.5 (Utah) release, 2015-16-03
+------------------------------------------
 
 - Drupal Core
     * Security Update to Drupal 7.35
@@ -870,8 +853,8 @@ Webspark 1.13.5 (Utah) release
     * Added table template file for views to Kalatheme
     * Fixed duplicate ID properties in footer <div> tags
 
-Webspark 1.13.4 (Oklahoma II) release
-----------------
+Webspark 1.13.4 (Oklahoma II) release, 2015-09-02 
+-------------------------------------------------
 
 - Webspark Core
     * Added Special Menu Items module
@@ -891,8 +874,8 @@ Webspark 1.13.4 (Oklahoma II) release
     * Fixed layout issues in Mega Footer
     * Can now allow Donate instead of Contribute in Mega Footer
 
-Webspark 1.13.3 (Oklahoma) release
-----------------
+Webspark 1.13.3 (Oklahoma) release, 2015-27-01
+----------------------------------------------
 
 - Webspark Core
     * Updated editor role permissions
@@ -925,8 +908,8 @@ Webspark 1.13.3 (Oklahoma) release
       log/report entries
     * Patched Background Image module to fix default_image error
 
-Webspark 1.13.2 (New Mexico) release
-----------------
+Webspark 1.13.2 (New Mexico) release, 2015-11-01
+------------------------------------------------
 
 - Webspark Core
     * Made sure all Innovation modules are enabled when changing from Webspark
@@ -979,8 +962,8 @@ Webspark 1.13.2 (New Mexico) release
 - Breadcrumbs
     * Fixed incorrect text, URLs, and paths not going beyond third page
 
-Webspark 1.13.1 (Arizona) release
-----------------
+Webspark 1.13.1 (Arizona) release, 2014-05-12
+-----------------------------------------------
 
 - Webspark Core
     * ASU global header changed to version 4.2
@@ -1030,6 +1013,3 @@ Webspark 1.13.1 (Arizona) release
 - Contributed Drupal modules in Webspark
     * Added Easy Breadcrumbs module (a dependency for Webspark breadcrumbs
       feature)
-
-
-

@@ -81,6 +81,13 @@ div.krumo-preview {
     border-bottom: none;
 }
 
+.field-name-field-isearch-google-scholar a:before {
+    content: '\f1a0';
+    font-family: FontAwesome;
+    margin-right: 5px;
+}
+
+/*** EXPERTISE AREAS **/
 .pane-node-field-isearch-expertise-areas {
     border-top: 8px solid #a30046;
     margin-bottom: 24px;
@@ -273,6 +280,9 @@ div.krumo-preview {
     margin: 20px 0;
 }
 
+
+
+
 /*
 .field-type-asu-directory .pagination .pager-current {
     background-color: #a90044;
@@ -366,6 +376,15 @@ div.krumo-preview {
     color: #2a2a2a;
     border: none;
 }
+
+.isearch-profile-content .ui-tabs-nav li {
+    margin-bottom: -1px;
+}
+
+body .isearch-profile-content .ui-tabs-nav li.ui-state-active {
+    background-color: white;
+}
+
 
 .view-isearch-affiliations .view-content .nav-tabs > li {
     border: none;

@@ -255,8 +255,8 @@ function asu_isearch_update_7180() {
 }
 
 /**
- * Revert to get fix affiliation index issue in view
+ * Revert the feature to pick up changes
  */
-function asu_isearch_update_7185() {
+function asu_isearch_update_7186() {
   features_revert_module('asu_isearch');
 }
