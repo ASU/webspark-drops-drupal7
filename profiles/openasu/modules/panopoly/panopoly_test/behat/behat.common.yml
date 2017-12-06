@@ -3,6 +3,8 @@ default:
     default:
       #paths:
       #  features: 'features'
+      filters:
+        tags: "~@chrome"
       contexts:
         - FeatureContext
         - Drupal\DrupalExtension\Context\DrupalContext
@@ -14,25 +16,11 @@ default:
   extensions:
     Behat\MinkExtension:
       goutte: ~
-      selenium2:
-        browser: chrome
-        capabilities:
-          browser: chrome
-          browserName: chrome
-          browserVersion: ANY
-          chrome:
-            switches:
-              - "--headless"
-              - "--disable-gpu"
-          version: ANY
-      #base_url: http://mydrupalsite.com
-      #files_path: './profiles/panopoly/modules/panopoly/panopoly_test/tests'
+      selenium2: ~
+      #base_url: http://localhost
+      #files_path: './profiles/openasu/modules/panopoly/panopoly_test/tests'
     Drupal\DrupalExtension:
       blackbox: ~
-      #drush:
-      #  root: '/path/to/drupal/root'
-      #drupal:
-      #  drupal_root: '/path/to/drupal/root'
       api_driver: 'drupal'
       region_map:
         # The region on panopoly_page where the body appears (frequently
@@ -74,3 +62,15 @@ default:
         Panopoly Magic Style Settings: "#panels-edit-style-settings-form #edit-general-settings"
         # Webspark additions to fix incompatibilities with stock Panopoly tests
         TabsID: "#tabs"
+
+# Setup for Google Chrome only tests.
+chrome:
+  suites:
+    default:
+      filters:
+        tags: "@chrome"
+  extensions:
+    Behat\MinkExtension:
+      selenium2:
+        browser: chrome
+        capabilities: {"browser": "chrome", "browserName": "chrome", "browserVersion": "ANY", "version": "ANY"}
