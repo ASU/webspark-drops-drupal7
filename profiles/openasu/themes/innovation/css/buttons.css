@@ -69,6 +69,7 @@
     background-color: #2a2a2a;
     color: #dbdbdb;
 }
+
 .btn-gold {
     background-color: #FFC627;
     color: #2a2a2a;
@@ -92,18 +93,18 @@
     color: white;
 }
 .btn-blue:hover, .btn-blue:focus, .btn-blue:active, .btn-blue.active, .open > .btn-blue.dropdown-toggle {
-    background-color: #0aa9fc;
-    color: white;
+     background-color: #0aa9fc;
+     color: white;
 }
 .btn-blue:active, .btn-blue.active, .open > .btn-blue.dropdown-toggle {
-    background-image: none;
+     background-image: none;
 }
 .btn-blue.disabled, .btn-blue.disabled:hover, .btn-blue.disabled:focus, .btn-blue.disabled:active, .btn-blue.disabled.active, .btn-blue[disabled], .btn-blue[disabled]:hover, .btn-blue[disabled]:focus, .btn-blue[disabled]:active, .btn-blue.active[disabled], fieldset[disabled] .btn-blue, fieldset[disabled] .btn-blue:hover, fieldset[disabled] .btn-blue:focus, fieldset[disabled] .btn-blue:active, fieldset[disabled] .btn-blue.active {
-    background-color: #00A3E0;
+     background-color: #00A3E0;
 }
 .btn-blue .badge {
-    background-color: white;
-    color: #00A3E0;
+     background-color: white;
+     color: #00A3E0;
 }
 .btn-default {
     background-color: whitesmoke;
