@@ -59,8 +59,14 @@ function theme_asu_spotlight_list_item(&$vars) {
   if ($vars['package']['item']['color'] == 'red') {
     $color = 'primary';
   }
-  else {
+  else if ($vars['package']['item']['color'] == 'blue') {
     $color = 'blue';
+  }
+  else if ($vars['package']['item']['color'] == 'gold') {
+      $color = 'gold';
+  }
+  else if ($vars['package']['item']['color'] == 'secondary') {
+      $color = 'secondary';
   }
 
   if ($vars['package']['item']['actiontitle'] != NULL && $vars['package']['item']['actionlink'] != NULL) {

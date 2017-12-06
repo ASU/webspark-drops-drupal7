@@ -29,7 +29,6 @@ define('ASU_ISEARCH_DIRECTORY_FORM_CACHE_DURATION', 24); // set to 24 hours
 define('ASU_ISEARCH_DIRECTORY_IMPORT_INTERVAL', 24); // set to 24 hours
 define('ASU_ISEARCH_DIRECTORY_MODULE_NAME', 'asu_isearch');
 define('ASU_ISEARCH_DIRECTORY_URL', 'https://isearch.asu.edu');
-//define('ASU_ISEARCH_DIRECTORY_SOLR_ENV', variable_get('asu_dir_solr_endpoint', 'https://asudir-solr.asu.edu/asudir/directory/select'));
 define('ASU_ISEARCH_DIRECTORY_PHOTO_ENDPOINT', 'https://webapp4.asu.edu/photo-ws/directory_photo/');
 define('ASU_ISEARCH_DIRECTORY_FEED_CACHE_ENDPOINT', 'private://isearch/feeds/');
 define('ASU_ISEARCH_MASTER_FILE_ENDPOINT', 'private://isearch/feeds/asu_isearch_master.json');
@@ -167,13 +166,18 @@ function asu_isearch_node_view($node, $view_mode, $langcode) {
       return FALSE;
     }
 
+    $profile_tabs_weight = 0;
+
     // render the profile tabs
-    $profile_tabs_weight = $node->content['field_isearch_profile_tabs']['#weight'];
+    if (isset($node->content['field_isearch_profile_tabs'])) {
+      $profile_tabs_weight = $node->content['field_isearch_profile_tabs']['#weight'];
+    }
+
     $node->content['field_isearch_profile_tabs'] = asu_isearch_prepare_quicktabs($node);
     $node->content['field_isearch_profile_tabs']['#weight'] = $profile_tabs_weight;
 
     // check Solr health before operating with Solr data
-    if (asu_dir_utilities_solr_health_check() && !variable_get('asu_isearch_')) {
+    if (asu_dir_utilities_solr_health_check()) {
       $asurite = $node->field_isearch_asurite_id['und'][0]['value'];
       $solr_profile = asu_dir_utilities_get_solr_person($asurite);
 

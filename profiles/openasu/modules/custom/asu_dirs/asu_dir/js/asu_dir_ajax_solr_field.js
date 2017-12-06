@@ -110,6 +110,8 @@ var ASUPeople = {};
                     var fieldConfigs = isettings.fieldConfigs;
                     ASUPeople[fieldId].fieldConfigs = fieldConfigs;
 
+                    console.log(fieldConfigs, 'THE FIELD CONFIGS');
+
                     // array of all saved dept nids
                     var savedDeptNids = isettings.deptNids;
 
@@ -275,6 +277,8 @@ var ASUPeople = {};
                     var titlesort_field = 'tsort';
 
                     // Add Sorting widget
+                    // We add this even if the option to show_filters is not selected, because this handles the
+                    // initial selected sorting and sorting for subsequent requests
                     Manager.addWidget(new AjaxSolr.asu_dirSortWidget({
                         id: 'asuDirSort',
                         target: '#asu-dir-ajax-solr-sort' + fidNum,
@@ -284,6 +288,7 @@ var ASUPeople = {};
                         titleSortField: titlesort_field,
                         fieldId: fieldId
                     }));
+
 
                     // Add in Results widget. See our custom
                     // js/widgets/isPeopleResultWidget.js method extending AbstractWidget.
@@ -296,20 +301,28 @@ var ASUPeople = {};
                         fieldId: fieldId,
                         perPage: resPerPage,
                         localPeople: localPeople,
-                        isearchUrl: iSearchUrl
+                        iSearchUrl: iSearchUrl
                     }));
 
-                    Manager.addWidget(new AjaxSolr.asu_dirFacetWidget({
-                        id: 'facultyTitlesFacet' + fidNum,
-                        target: '#facultyTitlesFacet' + fidNum,
-                        field: 'facultyTitlesFacet'
-                    }));
+                    // only show these if the option is selected
+                    if (fieldConfigs.show_filters) {
 
-                    Manager.addWidget(new AjaxSolr.asu_dirFacetWidget({
-                        id: 'expertiseAreasFacet' + fidNum,
-                        target: '#expertiseAreasFacet' + fidNum,
-                        field: 'expertiseAreasFacet'
-                    }));
+                        if (fieldConfigs.show_filter_faculty_titles) {
+                            Manager.addWidget(new AjaxSolr.asu_dirFacetWidget({
+                                id: 'facultyTitlesFacet' + fidNum,
+                                target: '#facultyTitlesFacet' + fidNum,
+                                field: 'facultyTitlesFacet'
+                            }));
+                        }
+
+                        if (fieldConfigs.show_filter_expertise) {
+                            Manager.addWidget(new AjaxSolr.asu_dirFacetWidget({
+                                id: 'expertiseAreasFacet' + fidNum,
+                                target: '#expertiseAreasFacet' + fidNum,
+                                field: 'expertiseAreasFacet'
+                            }));
+                        }
+                    }
 
                     // Manager.addWidget(new AjaxSolr.asu_dirFacetWidget({
                     // id: 'primaryTitleFacet'+fidNum,
@@ -329,7 +342,7 @@ var ASUPeople = {};
                     // via a click to the 'x' near the active term.
                     // The universal filter form has a reset button and intuitive form filters,
                     // so there's no reason to have the current search breadcrumb showing
-                    if (!universalCheck) {
+                    if (!universalCheck && fieldConfigs.show_filters) {
                         Manager.addWidget(new AjaxSolr.asu_dirCurrentSearchWidget({
                             id: 'currentSelections' + fidNum,
                             target: '#' + selection_target + fidNum,

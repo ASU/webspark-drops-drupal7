@@ -12,7 +12,7 @@
 *********************************************************************/
 
 define('ASU_BRAND_HEADER_VERSION_XML_URL', 'http://asu.edu/asuthemes/headers.xml');
-define('ASU_BRAND_HEADER_VERSION_DEFAULT', '4.5');
+define('ASU_BRAND_HEADER_VERSION_DEFAULT', 'stable');
 define('ASU_BRAND_HEADER_BASEPATH_DEFAULT', 'http://www.asu.edu/asuthemes');
 define('ASU_BRAND_HEADER_TEMPLATE_DEFAULT', 'default');
 define('ASU_BRAND_FOOTER_COLOR_DEFAULT', '');
@@ -121,7 +121,10 @@ function asu_brand_block_save($delta = '', $edit = array()) {
         $overrides = array_map('trim', explode(',', $edit['asu_brand_do_not_override']));
 
         $overrides = array_filter($overrides, function($val) {
-          return !empty(check_plain($val));
+
+          $val = check_plain($val);
+
+          return !empty($val);
         });
 
         variable_set('asu_brand_do_not_override', drupal_json_encode($overrides));

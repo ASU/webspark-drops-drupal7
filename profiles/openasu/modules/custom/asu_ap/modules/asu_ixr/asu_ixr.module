@@ -108,7 +108,7 @@ function asu_ixr_feeds_plugins() {
       'parent' => 'FeedsFetcher',
       'class' => 'IXRFeedsFetcher',
       'file' => 'IXRFeedsFetcher.inc',
-      'path' => drupal_get_path('module', 'ixr'),
+      'path' => drupal_get_path('module', 'asu_ixr') . '/includes/',
     ),
   );
   return $info;

@@ -730,6 +730,13 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       '#description' => t('The short bio is displayed below the title in the name column.'),
     );
 
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_department'] = array(
+      '#type' => 'checkbox',
+      '#title' => 'Display department name under title?',
+      '#default_value' => $config['display_department'],
+      '#description' => t('The department nameis displayed below the title in the name column.'),
+    );
+
     // Advanced horizontal tab definition
     $element['horizontal_tabs']['advanced'] = array(
       '#type' => 'fieldset',
@@ -945,6 +952,7 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
     //'display_room' => $values['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_room'],
     //'link_building_codes' => $values['horizontal_tabs']['appearance']['appearance_tabs']['columns']['link_building_codes'],
     'display_short_bio' => $values['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_short_bio'],
+    'display_department' => $values['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_department'],
 
     // Advanced
     'use_custom_q' => $values['horizontal_tabs']['advanced']['use_custom_q'],
