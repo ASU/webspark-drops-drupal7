@@ -10,13 +10,17 @@ include_once 'asu_ap_feature.features.inc';
  *  Implements hook_form_alter().
  */
 function asu_ap_feature_form_alter(&$form, &$form_state, $form_id) {
+
+  // Hide irrelavant fields on ASU Academic Programs node edit form
   if ($form_id == 'asu_ap_node_form') {
     $form['some_text'] = array('#markup' => '<div class="messages warning">If information needs to be changed, please do so on the degree catalog by contacting the Provost\'s Office.</div>');
     $form['body']['#access'] = FALSE;
     $form['field_asu_ap_acad_plan']['#access'] = FALSE;
     $form['field_asu_ap_acad_prog']['#access'] = FALSE;
     $form['field_asu_ap_college']['#access'] = FALSE;
+    $form['field_asu_ap_college_j']['#access'] = FALSE;
     $form['field_asu_ap_college_url']['#access'] = FALSE;
+    $form['field_asu_ap_college_url_j']['#access'] = FALSE;
     $form['field_asu_ap']['#access'] = FALSE;
     $form['field_asu_ap_admission_req']['#access'] = FALSE;
     $form['field_asu_ap_prog_req']['#access'] = FALSE;
@@ -26,7 +30,9 @@ function asu_ap_feature_form_alter(&$form, &$form_state, $form_id) {
     $form['field_asu_ap_career_opps']['#access'] = FALSE;
     $form['field_asu_ap_cert']['#access'] = FALSE;
     $form['field_asu_ap_department']['#access'] = FALSE;
+    $form['field_asu_ap_department_j']['#access'] = FALSE;
     $form['field_asu_ap_department_code']['#access'] = FALSE;
+    $form['field_asu_ap_department_code_j']['#access'] = FALSE;
     $form['field_asu_ap_example_careers']['#access'] = FALSE;
     $form['field_asu_ap_major_map_url']['#access'] = FALSE;
     $form['field_asu_ap_major_map_year']['#access'] = FALSE;
@@ -90,4 +96,43 @@ function _asu_ap_feature_image($image, $key) {
   );
   $file = file_copy($file, $uri, FILE_EXISTS_REPLACE);
   variable_set('asu_ap_feature_' . $key . '_fid', $file->fid);
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * This modules needs to run it's implementation of hook_features_export_alter
+ * after the field_group module has run it's own implementation. To do this,
+ * we alter the order of implementors for hook_features_export_alter and move
+ * this module into last place.
+ */
+function asu_ap_feature_module_implements_alter(&$implementations, $hook) {
+
+    if ($hook == 'features_export_alter') {
+        $movetolast = $implementations['field_group_features_fix'];
+        unset($implementations['field_group_features_fix']);
+        $implementations['field_group_features_fix'] = $movetolast;
+    }
+
+}
+/**
+ * Implements hook_features_export_alter().
+ *
+ * ctools needs to tbe told that field_group exists so
+ * it can export the right code into .info and .features.inc
+ * files. This function checks to see if the current feature
+ * export is using field_groups and if yes it adds info about
+ * field_group for ctools to read.
+ *
+ * In other modules (ex. strongarm) hook_features_export
+ * is used instead of hook_features_export_alter and that somehow
+ * circumvents the need for this fix.
+ */
+function asu_ap_feature_features_export_alter(&$export, $module_name) {
+
+    if (!empty($export['features']['field_group']) || !empty($export['features']['dependencies']['field_group']) ) {
+        $identifier = "field_group:field_group:1";
+        $export['features']['ctools'][$identifier] = $identifier;
+    }
+
 }
