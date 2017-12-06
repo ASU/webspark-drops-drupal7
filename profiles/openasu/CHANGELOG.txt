@@ -33,6 +33,9 @@ An upstream update, Webspark v1.48 (Nevada), has been released. It includes upda
   * ASU Brand (asu_brand v7.x-1.18)
     * Fixed the 'do not override' list to use JS instead of relying on the hosts header
 
+  * ASU Spotlight (asu_spotlight v7.x-1.7.1)
+    * Added gray and gold button colors
+
 Webspark 1.46.1 (Omaha) release notes, 2017-12-09 
 -------------------------------------------------
 An upstream update, Webspark v1.46.1 (Omaha), has been released. It provides a bug fix to the ASU Directory Integration Reinvented (ASU DIR) module. 
