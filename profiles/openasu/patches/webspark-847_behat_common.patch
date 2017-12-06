@@ -1,0 +1,29 @@
+diff --git a/behat/behat.common.yml b/behat/behat.common.yml
+index 049fa16b5..a28a5ab6b 100644
+--- behat/behat.common.yml
++++ behat/behat.common.yml
+@@ -1,14 +1,16 @@
+ default:
+   suites:
+     default:
+-      paths: 
+-        features: 'features'
++      #paths:
++      #  features: 'features'
+       contexts:
+         - FeatureContext
+         - Drupal\DrupalExtension\Context\DrupalContext
+         - Drupal\DrupalExtension\Context\MinkContext
+         - Drupal\DrupalExtension\Context\MarkupContext
+         - Drupal\DrupalExtension\Context\DrushContext
++        - Drupal\DrupalExtension\Context\MessageContext
++        - Drupal\DrupalExtension\Context\RawDrupalContext
+   extensions:
+     Behat\MinkExtension:
+       goutte: ~
+@@ -70,3 +72,5 @@ default:
+         Footer: ".region-footer"
+         Search: "#search-form"
+         Panopoly Magic Style Settings: "#panels-edit-style-settings-form #edit-general-settings"
++        # Webspark additions to fix incompatibilities with stock Panopoly tests
++        TabsID: "#tabs"
