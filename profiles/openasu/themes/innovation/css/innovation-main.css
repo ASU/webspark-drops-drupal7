@@ -500,6 +500,7 @@ table.bordered > thead:first-child > tr:first-child > td {
   margin-top: 0;
 }
 
+h3.ui-accordion-header,
 h4.ui-accordion-header {
   padding: 10px 20px;
   text-transform: uppercase;
@@ -511,20 +512,29 @@ h4.ui-accordion-header.ui-corner-top {
   border-top-right-radius: 0;
   border-top-left-radius: 0;
 }
-
+h3.ui-accordion-header.ui-state-default,
 h4.ui-accordion-header.ui-state-default {
   background-color: #fff;
   border-top: 1px solid #e6e6e6;
   border-right: 1px solid #e6e6e6;
   border-bottom: 1px solid #fff;
   border-left: 1px solid #e6e6e6;
-  color: #909090;
+  color: #767676;
 }
-
-h4.ui-accordion-header.ui-state-hover {
+h3.ui-accordion-header.ui-state-default a,
+h3.ui-accordion-header.ui-state-default a:link,
+h3.ui-accordion-header.ui-state-default a:visited {
+  color: #767676;
+}
+h3.ui-accordion-header.ui-state-hover a,
+h3.ui-accordion-header.ui-state-hover a:focus,
+h3.ui-accordion-header.ui-state-default a:focus,
+h3.ui-accordion-header:focus,
+h4.ui-accordion-header.ui-state-hover,
+h4.ui-accordion-header:focus {
   color: #111;
 }
-
+h3.ui-accordion-header.ui-state-active,
 h4.ui-accordion-header.ui-state-active {
   border-top: 1px solid #e6e6e6;
   border-right: 1px solid #e6e6e6;
@@ -532,12 +542,20 @@ h4.ui-accordion-header.ui-state-active {
   border-left: 1px solid #e6e6e6;
   color: #111;
 }
-
+h3.ui-accordion-header.ui-state-active a,
+h3.ui-accordion-header.ui-state-active a:link,
+h3.ui-accordion-header.ui-state-active a:visited {
+  color: #111;
+}
+h3.ui-accordion-header.ui-state-default:last-of-type,
 h4.ui-accordion-header.ui-state-default:last-of-type {
   border-top: 1px solid #e6e6e6;
   border-right: 1px solid #e6e6e6;
   border-bottom: 1px solid #e6e6e6;
   border-left: 1px solid #e6e6e6;
+}
+.ui-widget h3.ui-accordion-header a {
+  border-bottom: none;
 }
 
 .ui-accordion .ui-accordion-content {
@@ -903,14 +921,17 @@ ul.help-text li.help-title {
   padding-bottom: 0.25em;
 }
 
+/* FOCUS */
 a:focus,
 .ui-widget-content a:focus,
 input:focus,
-a.btn:focus, 
+a.btn:focus,
 .btn a:focus,
 #skip_to_content:focus,
-#top-content #tabs .nav-pills > li.active > a:focus {
-	 outline:none; 
+#top-content #tabs .nav-pills > li.active > a:focus,
+h4.ui-accordion-header.ui-state-hover,
+h4.ui-accordion-header:focus {
+	 outline:none;
 	 border:1px solid #4D90FE;
 	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
 	 box-shadow: 0px 0px 5px  #4D90FE;
