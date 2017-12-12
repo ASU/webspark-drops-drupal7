@@ -69,7 +69,6 @@
     background-color: #2a2a2a;
     color: #dbdbdb;
 }
-
 .btn-gold {
     background-color: #FFC627;
     color: #2a2a2a;
@@ -89,22 +88,22 @@
     color: #FFC627;
 }
 .btn-blue {
-    background-color: #00A3E0;
+    background-color: #007bb6;
     color: white;
 }
 .btn-blue:hover, .btn-blue:focus, .btn-blue:active, .btn-blue.active, .open > .btn-blue.dropdown-toggle {
-     background-color: #0aa9fc;
-     color: white;
+    background-color: #0aa9fc;
+    color: white;
 }
 .btn-blue:active, .btn-blue.active, .open > .btn-blue.dropdown-toggle {
-     background-image: none;
+    background-image: none;
 }
 .btn-blue.disabled, .btn-blue.disabled:hover, .btn-blue.disabled:focus, .btn-blue.disabled:active, .btn-blue.disabled.active, .btn-blue[disabled], .btn-blue[disabled]:hover, .btn-blue[disabled]:focus, .btn-blue[disabled]:active, .btn-blue.active[disabled], fieldset[disabled] .btn-blue, fieldset[disabled] .btn-blue:hover, fieldset[disabled] .btn-blue:focus, fieldset[disabled] .btn-blue:active, fieldset[disabled] .btn-blue.active {
-     background-color: #00A3E0;
+    background-color: #007bb6;
 }
 .btn-blue .badge {
-     background-color: white;
-     color: #00A3E0;
+    background-color: white;
+    color: #007bb6;
 }
 .btn-default {
     background-color: whitesmoke;
@@ -150,7 +149,7 @@
     color: #148e4b;
 }
 .btn-info {
-    background-color: #008ed6;
+    background-color: #007bb6;
     border-color: #004a70;
     color: white;
 }
@@ -163,12 +162,12 @@
     background-image: none;
 }
 .btn-info.disabled, .btn-info.disabled:hover, .btn-info.disabled:focus, .btn-info.disabled:active, .btn-info.disabled.active, .btn-info[disabled], .btn-info[disabled]:hover, .btn-info[disabled]:focus, .btn-info[disabled]:active, .btn-info.active[disabled], fieldset[disabled] .btn-info, fieldset[disabled] .btn-info:hover, fieldset[disabled] .btn-info:focus, fieldset[disabled] .btn-info:active, fieldset[disabled] .btn-info.active {
-    background-color: #008ed6;
+    background-color: #007bb6;
     border-color: #004a70;
 }
 .btn-info .badge {
     background-color: white;
-    color: #008ed6;
+    color: #007bb6;
 }
 .btn-warning {
     background-color: #bfe319;
