@@ -65,7 +65,7 @@ function theme_asu_spotlight_list_item(&$vars) {
   else if ($vars['package']['item']['color'] == 'gold') {
       $color = 'gold';
   }
-  else if ($vars['package']['item']['color'] == 'secondary') {
+  else if ($vars['package']['item']['color'] == 'grey') {
       $color = 'secondary';
   }
 
