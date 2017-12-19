@@ -702,7 +702,6 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
   padding: 6px 20px;
   font-size: 1.125em;
 }
-
 .ctools-modal-content #edit-settings-spacing {
   -webkit-column-count: 3;
   -moz-column-count: 3;
@@ -753,7 +752,10 @@ h2.widget-list {
   top: 0;
   left: 0;
 }
-
+#modal-content .form-tablefield input.form-submit.btn,
+#modalContent .form-tablefield input.form-submit.btn {
+  background-color: #8C1D40 !important;
+}
 ul.help-text {
   background-color: #f6f6f6;
   padding: 0.5em 1em;
