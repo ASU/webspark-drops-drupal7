@@ -46,7 +46,7 @@
 }
 .form-type-checkbox input[type="checkbox"]:focus + label::before,
 .form-type-radio input[type="radio"]:focus + label::before {
-	 outline:none; 
+	 outline:none;
 	 border-top: 2px solid #4D90FE;
 	 border-right: 2px solid #4D90FE;
 	 border-bottom: 2px solid #4D90FE;
@@ -127,7 +127,7 @@
 }
 
 .form-type-radio input[type="radio"]:focus + label::before {
-	 outline:none; 
+	 outline:none;
 	 border-top: 2px solid #4D90FE;
 	 border-right: 2px solid #4D90FE;
 	 border-bottom: 2px solid #4D90FE;
