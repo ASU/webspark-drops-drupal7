@@ -1,0 +1,15 @@
+name = Webspark Test
+description = Provides configuration and functionality for use in the Panopoly automated tests.
+core = 7.x
+package = ASU Webspark
+project = webspark_test
+dependencies[] = panopoly_test
+dependencies[] = asu_dirs
+dependencies[] = asu_isearch
+dependencies[] = asu_dir_panel
+dependencies[] = webspark_wysiwyg
+version = "7.x-1.0"
+core = "7.x"
+project = "ASU Webspark"
+datestamp = "1498107373"
+
