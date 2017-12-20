@@ -156,7 +156,9 @@ function asu_brand_head_inject() {
     var hostname = window.location.hostname;
     var ASUHeader = ASUHeader || {};
     
+    
     if (overrides.indexOf(hostname) == -1) {  
+        ASUHeader.user_signedin = $asu_sso_signedin;
         ASUHeader.signout_url = "$asu_sso_signouturl";
     }
        
