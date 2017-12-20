@@ -36,6 +36,15 @@ An upstream update, Webspark v1.48 (Nevada), has been released. It includes upda
   * ASU Spotlight (asu_spotlight v7.x-1.7.1)
     * Added gray and gold button colors
 
+  * Webspark WYSIWYG (webspark_wysiwyg 7.x-1.6-dev)
+    * Switched 'css_classes' to 'theme_advanced_styles' in feature.inc file, which fixes bug where WYSIWYG styles
+    were broken for new installs
+
+  * Webspark Test (webspark_test 7.x-1.0)
+    * Moved ASU custom behat tests and steps into this module.
+    * Added Behat tests for the ASU DIRS suite and ASU Spotlight module
+
+
 Webspark 1.46.1 (Omaha) release notes, 2017-12-09 
 -------------------------------------------------
 An upstream update, Webspark v1.46.1 (Omaha), has been released. It provides a bug fix to the ASU Directory Integration Reinvented (ASU DIR) module. 

@@ -1,3 +1,8 @@
+Webspark WYSIWYG 7.x-1.6-dev, 2016-6-27
+------------------------------
+- Switched 'css_classes' to 'theme_advanced_styles' in feature.inc file, which fixes bug where WYSIWYG styles
+were broken for new installs
+
 Webspark WYSIWYG 7.x-1.5-dev, 2016-6-27
 ------------------------------
 Added bordered table style (per web standards)
