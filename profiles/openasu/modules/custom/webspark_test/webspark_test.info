@@ -1,5 +1,5 @@
 name = Webspark Test
-description = Provides configuration and functionality for use in the Panopoly automated tests.
+description = Provides configuration and functionality for use in the Webspark automated tests.
 core = 7.x
 package = ASU Webspark
 project = webspark_test
