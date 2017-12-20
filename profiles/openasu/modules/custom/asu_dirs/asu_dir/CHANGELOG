@@ -4,6 +4,7 @@ asu_dir 7.x-1.8 2017-10-13
 - Added option to display department name under the title
 - Removed some css which was causing listing text size to be restricted
 - Fixed css for search selection breadcrumb
+- Added addressLine3 to profile listing display
 
 asu_dir 7.x-1.7.2 2017-09-06
 ----------------------------
