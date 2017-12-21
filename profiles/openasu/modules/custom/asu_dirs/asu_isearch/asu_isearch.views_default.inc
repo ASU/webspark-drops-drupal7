@@ -355,6 +355,15 @@ function asu_isearch_views_default_views() {
   $handler->display->display_options['arguments']['item_id']['specify_validation'] = TRUE;
   $handler->display->display_options['arguments']['item_id']['validate']['type'] = 'numeric';
   $handler->display->display_options['arguments']['item_id']['break_phrase'] = TRUE;
+  $handler->display->display_options['filter_groups']['groups'] = array(
+    1 => 'OR',
+  );
+  /* Filter criterion: Field collection item: Hide Affiliation (field_isearch_affil_hide) */
+  $handler->display->display_options['filters']['field_isearch_affil_hide_value_1']['id'] = 'field_isearch_affil_hide_value_1';
+  $handler->display->display_options['filters']['field_isearch_affil_hide_value_1']['table'] = 'field_data_field_isearch_affil_hide';
+  $handler->display->display_options['filters']['field_isearch_affil_hide_value_1']['field'] = 'field_isearch_affil_hide_value';
+  $handler->display->display_options['filters']['field_isearch_affil_hide_value_1']['operator'] = 'empty';
+  $handler->display->display_options['filters']['field_isearch_affil_hide_value_1']['group'] = 1;
   /* Filter criterion: Field collection item: Hide Affiliation (field_isearch_affil_hide) */
   $handler->display->display_options['filters']['field_isearch_affil_hide_value']['id'] = 'field_isearch_affil_hide_value';
   $handler->display->display_options['filters']['field_isearch_affil_hide_value']['table'] = 'field_data_field_isearch_affil_hide';
@@ -362,6 +371,7 @@ function asu_isearch_views_default_views() {
   $handler->display->display_options['filters']['field_isearch_affil_hide_value']['value'] = array(
     0 => '0',
   );
+  $handler->display->display_options['filters']['field_isearch_affil_hide_value']['group'] = 1;
 
   /* Display: iSearch Profile Affiliations */
   $handler = $view->new_display('panel_pane', 'iSearch Profile Affiliations', 'panel_pane_1');
