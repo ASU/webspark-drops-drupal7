@@ -1,6 +1,6 @@
 
-Webspark 1.48 (Nevada), TBD
--------------------------------------------------
+Webspark 1.48 (Nevada) release notes, 2017-12-22
+------------------------------------------------
 An upstream update, Webspark v1.48 (Nevada), has been released. It includes updates to the Panopoly (v1.48) distribution
 
 - Webspark core 
