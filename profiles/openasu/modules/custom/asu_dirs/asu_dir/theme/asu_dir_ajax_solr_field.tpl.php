@@ -17,11 +17,12 @@
 
     <div class="row asu-dir-selections">
         <div class="col-md-12 <?php echo $dir_classes['dir_row_full']; ?>">
-
-            <div id="asu-dir-selection-wrapper<?php echo $id; ?>">
+          <?php if ($configs['show_filters']): ?>
+            <div class="asu-dir-selection-crumb" id="asu-dir-selection-wrapper<?php echo $id; ?>">
                 <span class="breadcrumb">People</span>
                 <span id="asu-dir-ajax-solr-selections<?php echo $id; ?>"></span>
             </div>
+          <?php endif; ?>
         </div>
     </div>
 

@@ -126,7 +126,8 @@ a.btn:hover, .btn a:hover {
 a.btn-secondary,
 .btn-secondary a,
 a.btn-gold,
-.btn-gold a {
+.btn-gold a
+{
   color: #2a2a2a;
   border-bottom: none;
 }

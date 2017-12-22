@@ -1,0 +1,4 @@
+7.x-1.0, 2017-12-19
+-------------------
+- Moved ASU custom behat tests and steps into this module.
+- Added Behat tests for the ASU DIRS suite and ASU Spotlight module

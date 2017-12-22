@@ -198,6 +198,7 @@ function asu_dir_utilities_get_default_config($type = 'asu_dir') {
     'display_expertise' => FALSE,
     'display_building' => FALSE,
     'display_room' => FALSE,
+    'display_department' => FALSE,
     'default_sort_by' => $tsort_field,
     'filter_title' => '',
     'show_filter_faculty_titles' => FALSE,
