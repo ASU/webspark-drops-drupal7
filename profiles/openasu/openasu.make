@@ -14,49 +14,50 @@ projects[drupal][version] = 7.56
 ; The Panopoly Foundation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-projects[panopoly_core][version] = 1.46
+projects[panopoly_core][version] = 1.48
 projects[panopoly_core][subdir] = panopoly
 
-projects[panopoly_images][version] = 1.46
+projects[panopoly_images][version] = 1.48
 projects[panopoly_images][subdir] = panopoly
 
-projects[panopoly_theme][version] = 1.46
+projects[panopoly_theme][version] = 1.48
 projects[panopoly_theme][subdir] = panopoly
 
-projects[panopoly_magic][version] = 1.46
+projects[panopoly_magic][version] = 1.48
 projects[panopoly_magic][subdir] = panopoly
 
-projects[panopoly_widgets][version] = 1.46
+projects[panopoly_widgets][version] = 1.48
 projects[panopoly_widgets][subdir] = panopoly
 
-projects[panopoly_admin][version] = 1.46
+projects[panopoly_admin][version] = 1.48
 projects[panopoly_admin][subdir] = panopoly
 
-projects[panopoly_users][version] = 1.46
+projects[panopoly_users][version] = 1.48
 projects[panopoly_users][subdir] = panopoly
 
 ; The Panopoly Toolset
-projects[panopoly_pages][version] = 1.46
+projects[panopoly_pages][version] = 1.48
 projects[panopoly_pages][subdir] = panopoly
 
-projects[panopoly_wysiwyg][version] = 1.46
+projects[panopoly_wysiwyg][version] = 1.48
 projects[panopoly_wysiwyg][subdir] = panopoly
 
-projects[panopoly_search][version] = 1.46
+projects[panopoly_search][version] = 1.48
 projects[panopoly_search][subdir] = panopoly
 ; Fixes DB update dependency ordering
-projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
+; projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
 
-projects[panopoly_test][version] = 1.46
+projects[panopoly_test][version] = 1.48
 projects[panopoly_test][subdir] = panopoly
 
 ; @TODO - Add patches for custom Webspark testing,
 projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.46.patch
-
+projects[panopoly_test][patch][1370] = patches/webspark-847_behat_common.patch
 projects[panopoly_test][patch][142] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
-
 projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.patch
-projects[panopoly_test][patch][1403] = patches/webspark-1066-panopoly-webspark-add-custom-tests-v143.patch
+; moved custom tests to webspark_test custom module
+;projects[panopoly_test][patch][1403] = patches/webspark-1066-panopoly-webspark-add-custom-tests-v143.patch
+
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
 ; commenting this out until we update this repo
@@ -294,15 +295,15 @@ libraries[ajax_solr][download][sha256] = d79493f28c47e8d5871d938d7146ab701f8666b
 
 ; 1 of 2 - CAS
 libraries[CAS][download][type] = get
-libraries[CAS][download][url] = https://github.com/Jasig/phpCAS/archive/1.3.4.zip
-libraries[CAS][download][subtree] = phpCAS-1.3.4/source
+libraries[CAS][download][url] = https://github.com/Jasig/phpCAS/archive/1.3.5.zip
+libraries[CAS][download][subtree] = phpCAS-1.3.5/source
 libraries[CAS][directory_name] = CAS/source
-libraries[CAS][download][sha256] = c8c73945c3503991d19e2a1f7f14b51c293dd2ed9ebae974450a85da03ca3eee
+;libraries[CAS][download][sha256] = c8c73945c3503991d19e2a1f7f14b51c293dd2ed9ebae974450a85da03ca3eee
 ; 2 of 2
 libraries[CAS_2][download][type] = file
-libraries[CAS_2][download][url] = https://raw.githubusercontent.com/Jasig/phpCAS/1.3.4/CAS.php
+libraries[CAS_2][download][url] = https://raw.githubusercontent.com/Jasig/phpCAS/1.3.5/CAS.php
 libraries[CAS_2][directory_name] = CAS
-libraries[CAS_2][download][sha256] = 74a3eeed33e84d927884a2cf01ab10c33cc445e891c6d773996ffb19cf841d23
+;libraries[CAS_2][download][sha256] = 74a3eeed33e84d927884a2cf01ab10c33cc445e891c6d773996ffb19cf841d23
 
 libraries[chosen][download][type] = get
 libraries[chosen][download][url] = https://github.com/harvesthq/chosen/releases/download/v1.1.0/chosen_v1.1.0.zip

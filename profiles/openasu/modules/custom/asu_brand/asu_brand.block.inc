@@ -12,16 +12,6 @@ function asu_brand_get_block_settings($reset = FALSE) {
 
   if ($reset || !isset($settings)) {
 
-    // check the 'do not override' list, and don't override the default login
-    // and logout urls if found
-    $override = TRUE;
-    $http_request = $_SERVER['HTTP_HOST'];
-    $overrides = drupal_json_decode(ASU_BRAND_DO_NOT_OVERRIDE);
-
-    if (in_array($http_request, $overrides)) {
-      $override = FALSE;
-    }
-
     $settings = new StdClass;
     $settings->header_version = variable_get('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT);
     $settings->header_basebath = variable_get('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT);
@@ -32,28 +22,29 @@ function asu_brand_get_block_settings($reset = FALSE) {
     $settings->footer_path = $settings->header_basebath . '/' . $settings->header_version . '/includes/footer' . $settings->footer_color . '.shtml';
     $settings->gtm_path = $settings->header_basebath . '/' . $settings->header_version . '/includes/gtm.shtml';
     $settings->students_footer_path = $settings->header_basebath . '/' . $settings->header_version . '/includes/students_footer.shtml';
-    
+
     // Set javascript settings.
     $js_settings = array(
       'asu_sso_signedin' => (user_is_logged_in() ? 'true' : 'false'),
-      'asu_sso_signinurl' => 'https://weblogin.asu.edu/cgi-bin/login?callapp=https%3A%2F%2Fmy.asu.edu',
-      'asu_sso_signouturl' => 'https://webapp4.asu.edu/myasu/Signout',
+      'asu_sso_signinurl' => '',
+      'asu_sso_signouturl' => '',
     );
 
     // Alter the signin/signout URL if cas in enabled.
-    if ($override) {
-      if(module_exists('cas')) {
-        $js_settings['asu_sso_signinurl'] = url('cas', array('https' => TRUE, 'query' => drupal_get_destination()));
-        $js_settings['asu_sso_signouturl'] = url('caslogout', array('https' => TRUE));
-      }
-      else {
-        $js_settings['asu_sso_signinurl'] = url('user/login', array('query' => user_login_destination()));
-        $js_settings['asu_sso_signouturl'] = url('user/logout');
-      }
+    if (module_exists('cas')) {
+      $js_settings['asu_sso_signinurl'] = url('cas', array(
+        'https' => TRUE,
+        'query' => drupal_get_destination()
+      ));
+      $js_settings['asu_sso_signouturl'] = url('caslogout', array('https' => TRUE));
+    }
+    else {
+      $js_settings['asu_sso_signinurl'] = url('user/login', array('query' => user_login_destination()));
+      $js_settings['asu_sso_signouturl'] = url('user/logout');
     }
 
     $settings->js_settings = $js_settings;
-    
+
     // Get cached data.
     $cache_ids = asu_brand_get_cache_ids();
     $settings->cache = cache_get_multiple($cache_ids);
@@ -143,28 +134,38 @@ function asu_brand_get_block_students_footer() {
  * how the includes are updating the header.
  */
 function asu_brand_head_inject() {
+
+  $overrides = ASU_BRAND_DO_NOT_OVERRIDE;
   $settings = asu_brand_get_block_settings();
   $cache_id = 'asu_brand:head';
-  
+
+  $settings->js_settings['overrides'] = $overrides;
   $head_output =  asu_brand_get_cached_content($cache_id, $settings->head_path);
 
   // Inject header javascript into <head> and set the weight to a high negative value.
   $asu_sso_signedin = $settings->js_settings['asu_sso_signedin'];
   $asu_sso_signinurl = $settings->js_settings['asu_sso_signinurl'];
   $asu_sso_signouturl = $settings->js_settings['asu_sso_signouturl'];
+
+
   $inline_script = <<<EOL
    <script type="text/javascript">
     <!--//--><![CDATA[//><!--
+    
+    var overrides = $overrides;
+    var hostname = window.location.hostname;
     var ASUHeader = ASUHeader || {};
-    ASUHeader.user_signedin = $asu_sso_signedin;
-    ASUHeader.signin_url = "$asu_sso_signinurl";
-    ASUHeader.signout_url = "$asu_sso_signouturl";
+    
+    
+    if (overrides.indexOf(hostname) == -1) {  
+        ASUHeader.user_signedin = $asu_sso_signedin;
+        ASUHeader.signout_url = "$asu_sso_signouturl";
+    }
+       
     //--><!]]>
   </script>
 EOL;
-  
-  // TODO: If asu.edu/asuthemes/x/headers/default.shtml and asu.edu/asuthemes/x/js/asu_header.js
-  // get updated we can remove the first drupal_add_html_head() and $inline_script above.
+
   drupal_add_js(array('asu_brand' => $settings->js_settings), 'setting');
   drupal_add_js(drupal_get_path('module', 'asu_brand') . '/asu_brand.js', array());
   drupal_add_html_head(array('#type' => 'markup', '#markup' => $inline_script, '#weight' => -100), 'asu_brand_head_js');

@@ -2,7 +2,7 @@ name = ASU Directory Integration Reinvented (ASU DIR)
 description = Allows creation and configuration of ASU Solr-enabled directory people listings, which pull directly from iSearch.
 core = 7.x
 package = ASU
-version = 7.x-1.7.2
+version = 7.x-1.8
 project = asu_dir
 dependencies[] = asu_dir_utilities (>=7.x-1.1)
 dependencies[] = block

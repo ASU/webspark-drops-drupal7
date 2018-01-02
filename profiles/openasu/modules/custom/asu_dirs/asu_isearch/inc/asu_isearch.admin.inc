@@ -63,8 +63,22 @@ function asu_isearch_admin_settings_form() {
   $form['isearch_local_lock'] = array(
     '#type' => 'checkbox',
     '#title' => 'Lock Profiles from Automatic Updates.',
-    '#description' => t('This option will lock profiles so that they are not updated automatically. This also turns off the Solr FERPA checking.  Migrations can still be run manually via the interface at <a href="@link">Migrate</a> or via drush.', array('@link' => '/admin/content/isearch/migrate')),
+    '#description' => t('This option will lock profiles so that they are not updated automatically. This also turns off the Solr FERPA checking.  Migrations can still be run manually via the interface at "/admin/content/isearch/migrate" or via drush.'),
     '#default_value' => variable_get('isearch_local_lock', FALSE),
+  );
+
+  $form['isearch_import_affil_weights'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Import affiliation ordering from iSearch.',
+    '#description' => t('If selected, the affiliation ordering from iSearch will be automatically imported into iSearch Profile nodes on this site whenever a migration is run.'),
+    '#default_value' => variable_get('isearch_import_affil_weights', FALSE),
+  );
+
+  $form['isearch_import_affil_hide'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Import affiliation hide values from iSearch.',
+    '#description' => t('If selected, the option to hide affiliations from display will be automatically imported into iSearch Profile nodes on this site.'),
+    '#default_value' => variable_get('isearch_import_affil_hide', FALSE),
   );
 
   // retrieve global dept configuration

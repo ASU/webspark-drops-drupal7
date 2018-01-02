@@ -35,53 +35,6 @@ index 2e848ec..7dd372e 100644
        | Align Full      | p       | text-align      | justify   |
        | Increase Indent | p       | padding-left    | 30px      |
 
-diff --git a/behat/behat.common.yml b/behat/behat.common.yml
-index 82e7387..de3fb85 100644
---- behat/behat.common.yml
-+++ behat/behat.common.yml
-@@ -1,8 +1,8 @@
- default:
-   suites:
-     default:
--      paths: 
--        features: 'features'
-+      #paths:
-+      #  features: 'features'
-       filters:
-         tags: "~@chrome"
-       contexts:
-@@ -11,18 +11,16 @@ default:
-         - Drupal\DrupalExtension\Context\MinkContext
-         - Drupal\DrupalExtension\Context\MarkupContext
-         - Drupal\DrupalExtension\Context\DrushContext
-+        - Drupal\DrupalExtension\Context\MessageContext
-+        - Drupal\DrupalExtension\Context\RawDrupalContext
-   extensions:
-     Behat\MinkExtension:
-       goutte: ~
-       selenium2: ~
--      #base_url: http://mydrupalsite.com
--      #files_path: './profiles/panopoly/modules/panopoly/panopoly_test/tests'
-+      #base_url: http://localhost
-+      #files_path: './profiles/openasu/modules/panopoly/panopoly_test/tests'
-     Drupal\DrupalExtension:
-       blackbox: ~
--      #drush:
--      #  root: '/path/to/drupal/root'
--      #drupal:
--      #  drupal_root: '/path/to/drupal/root'
-       api_driver: 'drupal'
-       region_map:
-         # The region on panopoly_page where the body appears (frequently
-@@ -62,6 +60,8 @@ default:
-         Footer: ".region-footer"
-         Search: "#search-form"
-         Panopoly Magic Style Settings: "#panels-edit-style-settings-form #edit-general-settings"
-+        # Webspark additions to fix incompatibilities with stock Panopoly tests
-+        TabsID: "#tabs"
- 
- # Setup for Google Chrome only tests.
- chrome:
 diff --git a/behat/behat.travis.yml b/behat/behat.travis.yml
 new file mode 100644
 index 0000000..9d9568a
@@ -817,3 +770,68 @@ index baa12ed..3b3bd42 100644
         And I press "Next" in the "Media web tab" region
       Then I should see "Destination"
       # Select the destination (public/private files).
+diff --git a/behat/features/spotlight_widget.feature b/behat/features/spotlight_widget.feature
+deleted file mode 100644
+index fe3185996..000000000
+--- behat/features/spotlight_widget.feature
++++ /dev/null
+@@ -1,58 +0,0 @@
+-Feature: Add spotlight widget
+-  In order to promote content
+-  As a site administrator
+-  I need to be able to add a spotlight
+-
+-  Background:
+-    Given I am logged in as a user with the "administrator" role
+-      And Panopoly magic live previews are disabled
+-      And I am viewing a landing page
+-    When I customize this page with the Panels IPE
+-      And I click "Add new pane"
+-      And I click "Add spotlight" in the "CTools modal" region
+-    Then I should see "Configure new Add spotlight"
+-
+-  @api @javascript @panopoly_widgets
+-  Scenario: Add a spotlight
+-    When I fill in the following:
+-      | Slide Duration                             | 3                   |
+-      | field_basic_spotlight_items[und][0][title] | Testing item title  |
+-      | Link                                       | http://drupal.org   |
+-      | Description                                | Testing description |
+-      And I click "Browse"
+-      And I switch to the frame "mediaBrowser"
+-      And I attach the file "test-sm.png" to "files[upload]"
+-      And I press "Next"
+-    Then I should see "Destination"
+-    When I select the radio button "Public local files served by the webserver."
+-      And I press "Next"
+-      And I wait 2 seconds
+-    Then I should see a "#edit-submit" element
+-      And I should see the "Crop" button
+-    When I press "Save"
+-      And I switch out of all frames
+-      And I wait 2 seconds
+-    When I press "Add" in the "CTools modal" region
+-      And I press "Save"
+-      And I wait for the Panels IPE to deactivate
+-    Then I should see "Testing description"
+-      And I should see "Testing item title"
+-      # Per an old bug described in issue #2075903
+-      And I should not see "Spotlight"
+-
+-  @api @javascript @panopoly_widgets
+-  Scenario: Image is required per issue #2075903
+-    When I fill in the following:
+-      | Slide Duration                             | 3                   |
+-      | field_basic_spotlight_items[und][0][title] | Testing item title  |
+-      | Link                                       | http://drupal.org   |
+-      | Description                                | Testing description |
+-      And I press "edit-return"
+-    Then I should see "Image field is required"
+-
+-  # NOTE: we use the @panopoly_wysiwyg tag because that is where Linkit comes
+-  #       from in a default install
+-  @api @javascript @panopoly_widgets @panopoly_wysiwig
+-  Scenario: Linkit is enabled on the link field
+-    When I click the 2nd "Search for existing content" in the "CTools modal" region
+-    Then I should see "Linkit"
+
