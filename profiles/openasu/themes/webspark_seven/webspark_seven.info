@@ -1,10 +1,9 @@
 name = Webspark Seven
 description = ASU Webspark customization of the Seven administration theme.
 package = Core
-version = VERSION
+version = 7.x-1.0.1
 core = 7.x
 base theme = seven
-scripts[] = js/webspark_seven.js
 stylesheets[screen][] = css/webspark_seven.css
 regions[content] = Content
 regions[help] = Help

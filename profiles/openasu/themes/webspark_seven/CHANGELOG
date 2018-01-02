@@ -1,0 +1,3 @@
+webspark_seven 7.x-1.0.1, 2018-01-02
+------------------------------------
+- removed content_callout specific js and moved to that module
