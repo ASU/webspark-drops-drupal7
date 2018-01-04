@@ -26,6 +26,7 @@ function asu_isearch_views_pre_render(&$view) {
       'display_contact' => $view->view_config->display_contact,
       'display_expertise' => $view->view_config->display_expertise,
     );
+
     $display_options = (object) $display_options;
     $view_column_widths = asu_isearch_get_view_column_widths($display_options);
 
@@ -236,6 +237,36 @@ function asu_isearch_views_query_alter(&$view, &$query) {
       }
     }*/
 
+
+    // replace the dropdown title filter value with the raw value gotten from the form.
+    // need to do this because it trys to filter on a safe value of an ampersand (&amp)
+    // which returns nothing
+
+    if (property_exists($view->view_config, 'current_title')) {
+      $curtitle = $view->view_config->current_title;
+
+      if (strpos($curtitle, '&') !== FALSE) {
+
+        $curtitle = str_replace('&', '%', $curtitle);
+
+        $changed = FALSE;
+
+        foreach ($query->where as $key => $clause) {
+          if (!empty($clause['conditions'])) {
+            foreach ($clause['conditions'] as $key2 => $cond) {
+
+              if ($cond['field'] == 'field_collection_item_field_data_field_isearch_affiliations__field_data_field_isearch_affil_title.field_isearch_affil_title_value' && !$changed) {
+                //$query->where[$key]['conditions'][$key2]['operator'] = 'RLIKE';
+                //unset($query->where[$key]['conditions'][$key2]);
+                $query->where[$key]['conditions'][$key2]['value'] = $curtitle;
+
+                $changed = TRUE;
+              }
+            }
+          }
+        }
+      }
+    }
 
     // Set the lastname filter if a letter is selected
     if (isset($view->view_config->index_letter) && $view->view_config->index_letter != 'ALL') {

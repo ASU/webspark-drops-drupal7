@@ -183,11 +183,13 @@ function asu_dir_utilities_get_solr_schema($decode = TRUE) {
 /****
  * Returns a single Solr record, given an asuriteid
  * @params asurite:  asurite ID of person
- * @return array of Solr data for person
+ * @return array of Solr data for person, or NULL if the request fails or asurite
+ * is Null
  */
 function asu_dir_utilities_get_solr_person($asurite) {
 
   if ($asurite != NULL) {
+
     $endpoint = ASU_DIR_UTILITIES_SOLR_ENV . 'select?q=asuriteId:' . $asurite . '&wt=json';
     $request = drupal_http_request($endpoint);
 
@@ -195,8 +197,11 @@ function asu_dir_utilities_get_solr_person($asurite) {
       $data = json_decode($request->data, TRUE);
       $data = $data['response']['docs'];
 
+      // return the profile data if it exists, otherwise return empty array
       if (!empty($data)) {
         return $data[0];
+      } else {
+        return array();
       }
     }
   }
@@ -225,7 +230,8 @@ function asu_dir_utilities_get_subtree_nids($nid) {
 
     return $dept_nids;
 
-  } else {
+  }
+  else {
     return FALSE;
   }
 }
@@ -352,6 +358,7 @@ function asu_dir_utilities_refresh_dir_item($endpoint) {
  */
 function asu_dir_utilities_solr_health_check() {
   $health_check_endpoint = ASU_DIR_UTILITIES_ISEARCH_URL . '/endpoints/solr-health-check';
+
   $check = drupal_http_request($health_check_endpoint);
 
   if (!empty($check) && $check->code == 200) {
@@ -390,10 +397,10 @@ function asu_dir_utilities_get_local_profile_list() {
 
       $people_list = array();
 
-      foreach($nodes as $node) {
+      foreach ($nodes as $node) {
         if (isset($node->field_isearch_asurite_id['und'][0]['value'])) {
           $asurite = $node->field_isearch_asurite_id['und'][0]['value'];
-          $people_list[$asurite] = drupal_get_path_alias('node/' .$node->nid);
+          $people_list[$asurite] = drupal_get_path_alias('node/' . $node->nid);
 
         }
       }

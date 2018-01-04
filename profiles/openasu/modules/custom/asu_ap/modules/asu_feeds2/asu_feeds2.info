@@ -1,0 +1,12 @@
+name = "ASU Feeds 2"
+description = "Integrate ASU data with Drupal using the Feeds module."
+version = 7.x-2.1
+package = "ASU"
+core = 7.x
+php = 5.2
+dependencies[] = "feeds"
+dependencies[] = "asu_ixr"
+files[] = includes/ASUeAdvisorFeedsFetcher.inc
+files[] = includes/ASUeAdvisorTransferFeedParser.inc
+stylesheets[all][] = css/asu_feeds2.css
+scripts[] = js/asu_feeds2.js

@@ -12,9 +12,9 @@
         constructor: function (attributes) {
             AjaxSolr.asuAlphaBarWidget.__super__.constructor.apply(this, arguments);
             AjaxSolr.extend(this, {
-                field_configs: null,
-                last_name_field: null,
-                field_id: null
+                fieldConfigs: null,
+                lastNameField: null,
+                fieldId: null
 
             }, attributes);
         },
@@ -25,8 +25,8 @@
         init: function () {
             var self = this;
             var state = history.getState();
-            var lnamefield = self.last_name_field;
-            var field_id = this.field_id;
+            var lnamefield = self.lastNameField;
+            var fieldId = this.fieldId;
 
             // select all letters in the alpha bar, and bind a click event
             // to run the proper query when selected
@@ -74,15 +74,15 @@
             var q = self.manager.store.get('q').val();
             var fq = self.manager.store.get('fq');
             var active_letter = false;
-            var last_name_field = this.last_name_field;
+            var lastNameField = this.lastNameField;
             var passed_letter = '';
 
             //get rid of styling for active letter if it is not there
             for (var i = 0; i < fq.length; i++) {
                 if (fq[i] != null && fq[i].value != null && fq[i].value.indexOf('lastName') != -1) {
 
-                    var index = fq[i].value.indexOf(last_name_field);
-                    index = index + last_name_field.length + 1;
+                    var index = fq[i].value.indexOf(lastNameField);
+                    index = index + lastNameField.length + 1;
                     passed_letter = fq[i].value.substr(index, 1);
                     active_letter = true;
                 }

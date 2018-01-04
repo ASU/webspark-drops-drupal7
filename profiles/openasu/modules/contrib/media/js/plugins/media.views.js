@@ -55,24 +55,6 @@ Drupal.behaviors.mediaViews = {
       });
     }
 
-    // Return focus to the correct part of the form.
-    $('.ctools-auto-submit-full-form .ctools-auto-submit-click', context).click(function () {
-      settings.lastFocus = document.activeElement.id;
-    });
-    if (settings.lastFocus) {
-      // Note, we just use each() so we can declare variables in a new scope.
-      $('#' + settings.lastFocus, context).each(function () {
-        var $this = $(this),
-            val = $this.val();
-
-        $this.focus();
-
-        // Clear and reset the value to put the cursor at the end.
-        $this.val('');
-        $this.val(val);
-      });
-    }
-
     // We loop through the views listed in Drupal.settings.media.browser.views
     // and set them up individually.
     var views_ids = [];
@@ -111,7 +93,7 @@ Drupal.media.browser.views.select = function(view) {
   Drupal.media.browser.selectMedia([]);
 
   // Reset all 'selected'-status.
-  $('.view-content .media-item', view).removeClass('selected');
+  $('.view-content .media-item', view).removeClass('selected').parent().attr('aria-checked', 'false');
 }
 
 /**
@@ -158,16 +140,15 @@ Drupal.media.browser.views.setup = function(view) {
   });
 
 
-  // Catch the click on a media item
-  $('.view-content .media-item', view).bind('click', function () {
+  function onSelectMediaItem() {
     var fid = $(this).closest('.media-item[data-fid]').data('fid'),
       selectedFiles = new Array();
 
     // Remove all currently selected files
-    $('.view-content .media-item', view).removeClass('selected');
+    $('.view-content .media-item', view).removeClass('selected').parent().attr('aria-checked', 'false');
 
     // Mark it as selected
-    $(this).addClass('selected');
+    $(this).addClass('selected').parent().attr('aria-checked', 'true');
 
     // Multiselect!
     if (Drupal.settings.media.browser.params.multiselect) {
@@ -178,7 +159,7 @@ Drupal.media.browser.views.setup = function(view) {
         // If the current file exists in the list of already selected
         // files, we deselect instead of selecting
         if (currentFid == fid) {
-          $(this).removeClass('selected');
+          $(this).removeClass('selected').parent().attr('aria-checked', 'false');
           // If we change the fid, the later matching won't
           // add it back again because it can't find it.
           fid = NaN;
@@ -191,7 +172,7 @@ Drupal.media.browser.views.setup = function(view) {
           selectedFiles.push(Drupal.media.browser.selectedMedia[index]);
 
           // Mark it as selected
-          $('.view-content *[data-fid=' + currentFid + '].media-item', view).addClass('selected');
+          $('.view-content *[data-fid=' + currentFid + '].media-item', view).addClass('selected').parent().attr('aria-checked', 'true');
         }
       }
     }
@@ -212,6 +193,15 @@ Drupal.media.browser.views.setup = function(view) {
       }
     }
     Drupal.media.browser.selectMedia(selectedFiles);
+  }
+
+  // Catch the click or space bar press on a media item.
+  $('.view-content .media-item', view).bind('click', onSelectMediaItem);
+  $('.view-content .media-item', view).parent().bind('keydown', function (evt) {
+    if (evt.which == 32 || evt.which == 13) {
+      onSelectMediaItem.call($('.media-item', this).get(0), evt);
+      return false;
+    }
   });
 
   // Add the processed class, so we dont accidentally process the same element twice..

@@ -92,3 +92,11 @@ function asu_brand_update_7103(&$sandbox) {
 function asu_brand_update_7104(&$sandbox) {
   variable_set('asu_brand_header_version', '4.5');
 }
+
+/**
+ * Implements hook_update_N()
+ * + Updates ASU Header to stable
+ */
+function asu_brand_update_7105(&$sandbox) {
+  variable_set('asu_brand_header_version', 'stable');
+}

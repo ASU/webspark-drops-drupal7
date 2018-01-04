@@ -9,11 +9,12 @@ projects[ctools][version] = 1.12
 projects[ctools][subdir] = contrib
 projects[ctools][patch][2607626] = https://www.drupal.org/files/issues/ctools-close-modal-2607626-5.patch
 projects[ctools][patch][2787045] = https://www.drupal.org/files/issues/ctools-jquery_compatibility-2787045-14.patch
+projects[ctools][patch][2897965] = https://www.drupal.org/files/issues/ctools-wizard-destination-2897965-2.patch
 
-projects[panels][version] = 3.8
+projects[panels][version] = 3.9
 projects[panels][subdir] = contrib
-projects[panels][patch][2790075] = https://www.drupal.org/files/issues/not_authorized_when-2790075-26.patch
-projects[panels][patch][2479879] = https://www.drupal.org/files/issues/panels-revert_allowed_types_to_variable-2479879-37.patch
+projects[panels][patch][1570120] = https://www.drupal.org/files/issues/move-image-1570120-31.patch
+projects[panels][patch][2897658] = https://www.drupal.org/files/issues/panels-menu-block-ipe-2897658-3.patch
 
 projects[panels_breadcrumbs][version] = 2.2
 projects[panels_breadcrumbs][subdir] = contrib
@@ -23,8 +24,9 @@ projects[panelizer][subdir] = contrib
 projects[panelizer][patch][1549608] = https://www.drupal.org/files/issues/panelizer-n1549608-26.patch
 projects[panelizer][patch][2788851] = https://www.drupal.org/files/issues/panelizer-administer-panelizer-2788851-2.patch
 
-projects[fieldable_panels_panes][version] = 1.10
+projects[fieldable_panels_panes][version] = 1.11
 projects[fieldable_panels_panes][subdir] = contrib
+projects[fieldable_panels_panes][patch][2826205] = https://www.drupal.org/files/issues/fieldable_panels_panes-n2826205-39.patch
 
 projects[pm_existing_pages][version] = 1.4
 projects[pm_existing_pages][subdir] = contrib
@@ -34,7 +36,7 @@ projects[fape][subdir] = contrib
 
 ; Views Magic
 
-projects[views][version] = 3.15
+projects[views][version] = 3.17
 projects[views][subdir] = contrib
 projects[views][patch][2037469] = http://drupal.org/files/views-exposed-sorts-2037469-1.patch
 
@@ -52,10 +54,10 @@ projects[views_bulk_operations][subdir] = contrib
 projects[pathauto][version] = 1.3
 projects[pathauto][subdir] = contrib
 
-projects[token][version] = 1.6
+projects[token][version] = 1.7
 projects[token][subdir] = contrib
 
-projects[entity][version] = 1.6
+projects[entity][version] = 1.8
 projects[entity][subdir] = contrib
 
 projects[libraries][version] = 2.2
@@ -70,14 +72,16 @@ projects[date][version] = 2.9
 projects[date][subdir] = contrib
 projects[date][patch][2375235] = https://www.drupal.org/files/issues/calendar_pager_broken-2375235-35.patch
 
-projects[entityreference][version] = 1.1
+projects[entityreference][version] = 1.5
 projects[entityreference][subdir] = contrib
 
 projects[field_group][version] = 1.5
 projects[field_group][subdir] = contrib
+projects[field_group][patch][2649648] = https://www.drupal.org/files/issues/php7_uniform_variable-2649648-5.patch
 
-projects[link][version] = 1.3
+projects[link][version] = 1.4
 projects[link][subdir] = contrib
+projects[link][patch][2666912] = https://www.drupal.org/files/issues/revert-url-validation-2666912.patch
 
 ; Harness the Power of Features and Apps with Default Content
 

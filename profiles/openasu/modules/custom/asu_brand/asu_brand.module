@@ -12,12 +12,13 @@
 *********************************************************************/
 
 define('ASU_BRAND_HEADER_VERSION_XML_URL', 'http://asu.edu/asuthemes/headers.xml');
-define('ASU_BRAND_HEADER_VERSION_DEFAULT', '4.5');
+define('ASU_BRAND_HEADER_VERSION_DEFAULT', 'stable');
 define('ASU_BRAND_HEADER_BASEPATH_DEFAULT', 'http://www.asu.edu/asuthemes');
 define('ASU_BRAND_HEADER_TEMPLATE_DEFAULT', 'default');
 define('ASU_BRAND_FOOTER_COLOR_DEFAULT', '');
 define('ASU_BRAND_CACHE_LIFETIME', 172800); // 48 Hours ( 60 x 60 x 48 )
 define('ASU_BRAND_PREVIEW_PAGES_DEFAULT', "system/ajax/*\npanels/ajax/*");
+define('ASU_BRAND_DO_NOT_OVERRIDE', variable_get('asu_brand_do_not_override', '["www.asu.edu"]'));
 
 /**
  * Delta of ASU Header block (declared in asu_brand.module)
@@ -113,6 +114,23 @@ function asu_brand_block_save($delta = '', $edit = array()) {
       variable_set('asu_brand_gtm_override', $edit['asu_brand_gtm_override']);
       variable_set('asu_brand_sitemenu_injection_flag', $edit['asu_brand_sitemenu_injection_flag']);
       variable_set('asu_brand_sitemenu_name', $edit['asu_brand_sitemenu_name']);
+
+      if (isset($edit['asu_brand_do_not_override'])) {
+
+        // explode and trim input on commas, then check for plain non-empty input
+        $overrides = array_map('trim', explode(',', $edit['asu_brand_do_not_override']));
+
+        $overrides = array_filter($overrides, function($val) {
+
+          $val = check_plain($val);
+
+          return !empty($val);
+        });
+
+        variable_set('asu_brand_do_not_override', drupal_json_encode($overrides));
+      }
+
+
       asu_brand_cache_clear();
       break;
     

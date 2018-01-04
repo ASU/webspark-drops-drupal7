@@ -18,15 +18,14 @@ Drupal.behaviors.mediaElement = {
     var elements;
 
     function initMediaBrowser(selector) {
-      // Finding with wildcard match as with AJAX, the form fields elements ids are
-      // updated with each call by a number, e.g. id--1, id--2 etc.
-      // Also doing a substring to remove the # in front.
-      $context.find('[id*="'+selector.substring(1)+'"]')
-        .once('media-browser-launch')
-        .siblings('.browse').show()
-        .siblings('.upload').hide()
-        .siblings('.attach').hide()
-        .siblings('.browse').bind('click', {configuration: settings.media.elements[selector]}, Drupal.media.openBrowser);
+      var widget=$context.find(selector).once('media-browser-launch');
+      var browse=widget.siblings('.browse').add(widget.find('.browse'));
+      var upload=browse.siblings('.upload').add(widget.find('.upload'));
+      var attach=upload.siblings('.attach').add(widget.find('.attach'));
+      browse.show();
+      upload.hide();
+      attach.hide();
+      browse.bind('click', {configuration: settings.media.elements[selector]}, Drupal.media.openBrowser);
     }
 
     if (settings.media && settings.media.elements) {
@@ -39,10 +38,7 @@ Drupal.behaviors.mediaElement = {
     var elements;
 
     function removeMediaBrowser(selector) {
-      // Finding with wildcard match as with AJAX, the form fields elements ids are
-      // updated with each call by a number, e.g. id--1, id--2 etc.
-      // Also doing a substring to remove the # in front.
-      $context.find('[id*="'+selector.substring(1)+'"]')
+      $context.find(selector)
         .removeOnce('media-browser-launch')
         .siblings('.browse').hide()
         .siblings('.upload').show()

@@ -1,0 +1,126 @@
+<?php
+// $Id$
+/**
+ * @file Provides a set of wrapper functions for using the full Incutio XML-RPC (IXR) Library
+ *
+ * @author Jeff Beeman (jeff.beeman@asu.edu)
+ */
+
+
+/**
+ * Includes IXR Library.
+ */
+function asu_ixr_startup() {
+  require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'asu_ixr') . '/includes/IXR_Library.inc.php';
+}
+
+
+/**
+ * Gets timeout value from IXR setting and creates IXR Client.
+ */
+function asu_ixr_create_client($server, $path = false, $port = 80) {
+  asu_ixr_startup();
+  $timeout = variable_get('ixr_client_timeout', 15);
+  return new IXR_Client($server, $path, $port, $timeout);
+}
+
+
+/**
+ * Creates IXR Client Multicall
+ */
+function asu_ixr_create_clientmulticall($server, $path = false, $port = 80) {
+  asu_ixr_startup();
+  return new IXR_ClientMulticall($server, $path, $port);
+}
+
+
+/**
+ * Gets timeout value from IXR setting and creates IXR SSL Client.
+ */
+function asu_ixr_create_clientssl($server, $path = false, $port = 443) {
+  asu_ixr_startup();
+  if (class_exists('IXR_ClientSSL')) {
+    $timeout = variable_get('ixr_clientssl_timeout', 15);
+    return new IXR_ClientSSL($server, $path, $port, $timeout);
+  }
+  else {
+    watchdog('asu_ixr', t('Class IXR_ClientSSL does not exist.  Version 1.7.1 of the IXR Library is required for this method.'), WATCHDOG_NOTICE);
+  }
+}
+
+
+/**
+ * Creates IXR Server.
+ */
+function asu_ixr_create_server($callbacks = false, $data = false) {
+  asu_ixr_startup();
+  return new IXR_Server($callbacks, $data);
+}
+
+
+/**
+ * Implements hook_menu().
+ */
+function asu_ixr_menu() {
+  $items = array();
+  $items['admin/config/asu-ixr'] = array(
+    'title' => t('ASU IXR settings'),
+    'description' => t('Settings for IXR library calls.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('asu_ixr_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+  );
+  return $items;
+}
+
+
+/**
+ * Menu callback
+ */
+function asu_ixr_admin_settings($form, &$form_state) { //Change - Chizuko
+
+  $form['ixr_client_timeout'] = array(
+    '#type' => 'textfield',
+    '#title' => t('IXR client timeout'),
+    '#default_value' => variable_get('ixr_client_timeout', 15),
+    '#description' => t('Timeout for IXR based service calls in seconds.'),
+  );
+  $form['ixr_clientssl_timeout'] = array(
+    '#type' => 'textfield',
+    '#title' => t('SSL IXR client timeout'),
+    '#default_value' => variable_get('ixr_clientssl_timeout', 15),
+    '#description' => t('Timeout for IXR based service calls over SSL in seconds.'),
+  );
+
+  return system_settings_form($form);
+}
+
+
+/**
+ * Implements hook_feeds_plugins().
+ */
+function asu_ixr_feeds_plugins() {
+  $info = array();
+  $info['IXRFetcher'] = array(
+    'name' => 'IXR Fetcher',
+    'description' => 'Fetch content via XML-RPC with the IXR library.',
+    'handler' => array(
+      'parent' => 'FeedsFetcher',
+      'class' => 'IXRFeedsFetcher',
+      'file' => 'IXRFeedsFetcher.inc',
+      'path' => drupal_get_path('module', 'asu_ixr') . '/includes/',
+    ),
+  );
+  return $info;
+}
+
+
+/**
+ * Implements hook_enable().
+ *
+ * Clear Feed's plugin cache so that this plugin shows up.
+ */
+function asu_ixr_enable() {
+  //clear the cache to display in Feeds as available plugin.
+  cache_clear_all('plugins:feeds:plugins', 'cache');
+}

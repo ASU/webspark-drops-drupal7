@@ -93,6 +93,27 @@ function asu_brand_get_block_configure_form($delta) {
           '#description' => t('This script should be provided by the ASU google Analytics Administrator.'),
       );
 
+
+      $form['asu_brand']['do_not_override'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Do Not Override Login URL'),
+      '#description' => t('If host is added to list, the brand module will not override the login URL with the CAS module path.'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      );
+
+      // format our do not override list array as a comma-delimted list in the form field, for easy editing
+      $overrides = drupal_json_decode(variable_get('asu_brand_do_not_override', '["www.asu.edu"]'));
+      $fstring = implode(', ', $overrides);
+
+      $form['asu_brand']['do_not_override']['asu_brand_do_not_override'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Do Not Override List'),
+        '#description' => t('Add hosts to list, separated by commas.'),
+        '#default_value' => $fstring,
+      );
+
+
       break;
       
       case 'asu_brand_footer':
@@ -145,6 +166,7 @@ function asu_brand_basepath_ajax_callback($form, $form_state) {
 function asu_brand_get_version_options($reset = FALSE, $basepath = '') {
   // disabling the caching of version options to enable sensitivity to basepath changes.
   //$options = &drupal_static(__FUNCTION__);
+
   if ($reset || !isset($options)) {
     $options = array('' => t('Select a version'));
     
@@ -152,7 +174,6 @@ function asu_brand_get_version_options($reset = FALSE, $basepath = '') {
     libxml_use_internal_errors(TRUE);
     try {
       $items = new SimpleXMLElement((($basepath != '') ? $basepath : variable_get('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT)).'/gtmheaders.xml', 0, TRUE);
-
       if ($items) {
         $brand_module_info = system_get_info('module', $name = 'asu_brand');
         $brand_module_version = (isset($brand_module_info['version'])) ? $brand_module_info['version'] : null;
@@ -209,6 +230,7 @@ function asu_brand_dependencies_met($current_version, $min_version, $max_version
 
   if(count($curr_varr = explode('-', $current_version)) < 2) return FALSE;
   if(count($min_varr = explode('-', $min_version)) < 2) return FALSE;
+
   // min check
   if(floatval($curr_varr[0]) != floatval($min_varr[0])) return FALSE;
 
@@ -217,20 +239,22 @@ function asu_brand_dependencies_met($current_version, $min_version, $max_version
 
   if (count($min_varr) < 2 || count($curr_varr) < 2) return FALSE;
 
-  if(floatval($curr_varr[1]) < floatval($min_varr[1])) return FALSE;
+  if (floatval($curr_varr[1]) < floatval($min_varr[1])) return FALSE;
 
   // max check (optional)
+  /* todo: get rid of this check?
   if ($max_version) {
     $max_varr = explode('-', $max_version);
     $curr_varr = explode('-', $current_version);
 
-    if(count($max_varr) < 2) return FALSE;
-    if($curr_varr[0] != $max_varr[0]) return FALSE;
+    if (count($max_varr) < 2) return FALSE;
+    if ($curr_varr[0] != $max_varr[0]) return FALSE;
 
     $max_varr = explode('.', $max_varr[1]);
     $curr_varr = explode('.', $curr_varr[1]);
     if(intval($curr_varr[1]) > intval($max_varr[1])) return FALSE;
-  }
+  }*/
+
   // all checks successful
   return TRUE;
 }

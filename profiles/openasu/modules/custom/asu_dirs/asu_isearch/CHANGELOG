@@ -1,3 +1,21 @@
+asu_isearch 7.x-1.8.12
+----------------------
+- Added affil_hide, affil_weight, Google scholar, student info, and executive courses fields to the profile
+- Fixed dept file caching fallback for migrations
+- Fixed issue where affiliations were being unnecessarily deleted and recreated during migrations
+
+asu_isearch 7.x-1.8.11
+----------------------
+- Improved Solr profile checking to avoid unnecessary unpublishing, and improved logging information
+- 'Exclude from automatic updating' option turns off Solr profile checking
+- Improved and consolidated profile onload updating logic
+- Hides the 'isearch_profile_2col' option in the Panopoly 'Choose Layout' menu
+
+asu_isearch 7.x-1.8.10
+----------------------
+- Fixed bug with ampersands in title filter were not returning results
+- Fixed bug where first affil outside of selected departments would result in exclusion
+
 asu_isearch 7.x-1.8.9
 ---------------------
 - Fixed bug with primary affiliation not mapping correctly

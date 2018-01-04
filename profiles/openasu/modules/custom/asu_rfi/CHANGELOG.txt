@@ -1,3 +1,10 @@
+Drupal 7.x-1.7, 2016-10-15
+——————————————————————————
+- Fixing EdPlus API call
+- Increased "college_name" size on RFI forms
+- Increased text limit for "From" email field
+- Updated the auto-response email
+
 Drupal 7.x-1.6, 2016-08-31
 ——————————————————————————
 - Implemented new location functionality

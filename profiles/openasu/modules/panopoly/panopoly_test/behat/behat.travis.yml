@@ -1,6 +1,5 @@
 imports:
     - behat.common.yml
-#
 default:
   extensions:
     Behat\MinkExtension:

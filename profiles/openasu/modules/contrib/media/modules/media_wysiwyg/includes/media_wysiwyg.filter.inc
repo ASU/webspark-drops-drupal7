@@ -5,7 +5,7 @@
  * Functions related to the WYSIWYG editor and the media input filter.
  */
 
-define('MEDIA_WYSIWYG_TOKEN_REGEX', '/\[\[.*?\]\]/s');
+define('MEDIA_WYSIWYG_TOKEN_REGEX', '/\[\[.+?"type":"media".+?\]\]/s');
 
 /**
  * Filter callback for media markup filter.
@@ -28,19 +28,68 @@ function media_wysiwyg_filter($text, $filter = NULL, $format = NULL, $langcode =
 }
 
 /**
+ * Filter callback to configure media_filter_paragraph_fix filter.
+ */
+function _media_filter_paragraph_fix_settings($form, &$form_state, $filter, $format, $defaults) {
+  $filter->settings += $defaults;
+  $settings['replace'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Replace paragraph tags with DIV.media-p tags'),
+    '#default_value' => $filter->settings['replace'],
+    '#description' => t('Default behaviour is to strip out parent P tags of media elements rather than replacing these.'),
+  );
+  return $settings;
+}
+
+/**
  * Filter callback to remove paragraph tags surrounding embedded media.
  */
-function media_wysiwyg_filter_paragraph_fix($text) {
+function media_wysiwyg_filter_paragraph_fix($text, $filter) {
   $html_dom = filter_dom_load($text);
+  // Store Nodes to remove to avoid inferferring with the NodeList iteration.
+  $dom_nodes_to_remove = array();
   foreach ($html_dom->getElementsByTagName('p') as $paragraph) {
     if (preg_match(MEDIA_WYSIWYG_TOKEN_REGEX, $paragraph->nodeValue)) {
-      $sibling = $paragraph->firstChild;
-      do {
-        $next = $sibling->nextSibling;
-        $paragraph->parentNode->insertBefore($sibling, $paragraph);
-      } while ($sibling = $next);
-      $paragraph->parentNode->removeChild($paragraph);
+      if (empty($filter->settings['replace'])) {
+        $sibling = $paragraph->firstChild;
+        do {
+          $next = $sibling->nextSibling;
+          $paragraph->parentNode->insertBefore($sibling, $paragraph);
+        } while ($sibling = $next);
+        $dom_nodes_to_remove[] = $paragraph;
+      }
+      else {
+        // Clone the P node into a DIV node.
+        $div = $html_dom->createElement('div');
+        $sibling = $paragraph->firstChild;
+        do {
+          $next = $sibling->nextSibling;
+          $div->appendChild($sibling);
+        } while ($sibling = $next);
+
+        $classes = array('media-p');
+        if ($paragraph->hasAttributes()) {
+          foreach ($paragraph->attributes as $attr) {
+            $name = $attr->nodeName;
+            $value = $attr->nodeValue;
+            if (strtolower($name) == 'class') {
+              $classes[] = $value;
+            }
+            else {
+              // Supressing errors with ID attribute or duplicate properties.
+              @$div->setAttribute($name, $value);
+            }
+          }
+        }
+        $div->setAttribute('class', implode(' ', $classes));
+
+        $paragraph->parentNode->insertBefore($div, $paragraph);
+        $dom_nodes_to_remove[] = $paragraph;
+      }
     }
+  }
+  foreach ($dom_nodes_to_remove as $paragraph) {
+    $paragraph->parentNode->removeChild($paragraph);
   }
   $text = filter_dom_serialize($html_dom);
   return $text;
@@ -97,7 +146,6 @@ function media_wysiwyg_token_to_markup($match, $wysiwyg = FALSE, $langcode = NUL
     }
 
     $tag_info = drupal_json_decode($tag);
-
     if (!isset($tag_info['fid'])) {
       throw new Exception('No file Id');
     }
@@ -158,21 +206,20 @@ function media_wysiwyg_token_to_markup($match, $wysiwyg = FALSE, $langcode = NUL
       $file->{$key} = $value;
     }
 
-    $attributes = is_array($tag_info['attributes']) ? $tag_info['attributes'] : array();
+    if (array_key_exists('attributes', $tag_info) && is_array($tag_info['attributes'])) {
+      $attributes = $tag_info['attributes'];
+    }
+    else {
+      $attributes = array();
+    }
     $attribute_whitelist = media_wysiwyg_allowed_attributes();
     $settings['attributes'] = array_intersect_key($attributes, array_flip($attribute_whitelist));
     $settings['fields'] = $fields;
-
+    if (isset($tag_info['fields']['external_url'])) {
+      $settings['fields']['external_url'] = $tag_info['fields']['external_url'];
+    }
     if (!empty($tag_info['attributes']) && is_array($tag_info['attributes'])) {
       $settings['attributes'] = array_intersect_key($tag_info['attributes'], array_flip($attribute_whitelist));
-
-      // Decode HTML entities when reading attributes from the token, because
-      // we are going to encode them before outputting as HTML.
-      foreach ($settings['attributes'] as $key => $value) {
-        if (is_string($value)) {
-          $settings['attributes'][$key] = html_entity_decode($value);
-        }
-      }
 
       // Many media formatters will want to apply width and height independently
       // of the style attribute or the corresponding HTML attributes, so pull
@@ -191,6 +238,11 @@ function media_wysiwyg_token_to_markup($match, $wysiwyg = FALSE, $langcode = NUL
             $settings[$dimension] = $settings['attributes'][$dimension];
           }
         }
+        // If the element is floated via WYSIWYG editor functionality, delegate
+        // that information to the outer element.
+        if (!empty($css_properties['float'])) {
+          $settings['float'] = $css_properties['float'];
+        }
       }
       foreach (array('title', 'alt') as $field_type) {
         if (isset($settings['attributes'][$field_type])) {
@@ -208,6 +260,18 @@ function media_wysiwyg_token_to_markup($match, $wysiwyg = FALSE, $langcode = NUL
   catch (Exception $e) {
     watchdog('media', 'Unable to render media from %tag. Error: %error', array('%tag' => $tag, '%error' => $e->getMessage()));
     return '';
+  }
+
+  // Remove any alignment classes from $settings, because it will be added later
+  // in this function to the media's wrapper, and we don't want to confuse CSS
+  // by having it on both the wrapper and the element.
+  if (isset($settings['attributes']['class'])) {
+    $alignment_classes = array(
+      'media-wysiwyg-align-left',
+      'media-wysiwyg-align-right',
+      'media-wysiwyg-align-center',
+    );
+    $settings['attributes']['class'] = array_diff($settings['attributes']['class'], $alignment_classes);
   }
 
   // If the tag has link text stored with it, override the filename with it for
@@ -272,6 +336,11 @@ function media_wysiwyg_token_to_markup($match, $wysiwyg = FALSE, $langcode = NUL
       field_attach_prepare_view('file', array($file->fid => $file), $tag_info['view_mode'], $langcode);
       entity_prepare_view('file', array($file->fid => $file), $langcode);
       $element['content'] += field_attach_view('file', $file, $tag_info['view_mode'], $langcode);
+
+      // Add any float information via an extra class
+      if (!empty($settings['float'])) {
+        $element['content']['file']['#attributes']['class'][] = drupal_html_class('media-float-' . $settings['float']);
+      }
     }
     if (count(element_children($element['content'])) > 1) {
       // Add surrounding divs to group them together.
@@ -283,12 +352,28 @@ function media_wysiwyg_token_to_markup($match, $wysiwyg = FALSE, $langcode = NUL
         'media-element-container',
         'media-' . $element['content']['file']['#view_mode'],
       );
+      // Add the float information to the outer element.
+      if (!empty($settings['float'])) {
+        $element['content']['#attributes']['class'][] = drupal_html_class('media-float-' . $settings['float']);
+      }
+      if (variable_get('media_wysiwyg_remove_media_class', FALSE)) {
+        $classes = $element['content']['#attributes']['class'];
+        $element['content']['#attributes']['class'] = array_diff($classes, array('media'));
+      }
     }
 
     // Conditionally add a pre-render if the media filter output is be cached.
     $filters = filter_get_filters();
     if (!isset($filters['media_filter']['cache']) || $filters['media_filter']['cache']) {
       $element['#pre_render'][] = 'media_wysiwyg_pre_render_cached_filter';
+    }
+  }
+  if (!empty($element['content']) && !empty($tag_info['fields']['alignment'])) {
+    // Set a CSS class if an alignment has been specified and is correct.
+    $alignment = $tag_info['fields']['alignment'];
+    if (in_array($alignment, array('left', 'right', 'center'))) {
+      $alignment_class = 'media-wysiwyg-align-' . $alignment;
+      $element['content']['#attributes']['class'][] = $alignment_class;
     }
   }
   drupal_alter('media_wysiwyg_token_to_markup', $element, $tag_info, $settings, $langcode);
@@ -313,9 +398,6 @@ function media_wysiwyg_filter_field_parser($tag_info) {
     }
 
     foreach($tag_info['fields'] as $field_name => $field_value) {
-      // Decode HTML entities in fields because they will be encoded again
-      // when we output the fields for the user to edit.
-      $field_value = html_entity_decode($field_value);
       if (strpos($field_name, 'field_') === 0) {
         $parsed_field = explode('[', str_replace(']', '', $field_name));
         $ref = &$fields;
@@ -334,7 +416,7 @@ function media_wysiwyg_filter_field_parser($tag_info) {
           }
         }
         // Multi-value select lists show up here with 3 array items.
-        elseif (count($parsed_field) == 3 && is_numeric($parsed_field[2])) {
+        elseif (count($parsed_field) == 3 && (empty($parsed_field[2]) || is_numeric($parsed_field[2]))) {
           $info = field_info_field($parsed_field[0]);
           // They just need the value column.
           $parsed_field[3] = key($info['columns']);
@@ -387,7 +469,7 @@ function _media_wysiwyg_generate_tagMap($text) {
   // between function calls. Since media_process_form is multiple times
   // with same form, this function is also called multiple times.
   static $tagmap = array();
-  preg_match_all("/\[\[.*?\]\]/s", $text, $matches, PREG_SET_ORDER);
+  preg_match_all("/\[\[(?!nid:).*?\]\]/s", $text, $matches, PREG_SET_ORDER);
   foreach ($matches as $match) {
     // Fix macros that may have gotten HTML-encoded due to this bug:
     // https://www.drupal.org/node/2028253

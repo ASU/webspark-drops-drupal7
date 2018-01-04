@@ -36,14 +36,30 @@
             constructor: function (attributes) {
                 AjaxSolr.asu_dirManager.__super__.constructor.apply(this, arguments);
                 AjaxSolr.extend(this, {
-                    field_configs: null,
-                    sorted_people: {},
-                    sorted_response: {},
-                    override_fields: [],
-                    field_id: null,
-                    per_page: null,
-                    local_people: null
+                    fieldConfigs: null,
+                    sortedPeople: {},
+                    sortedResponse: {},
+                    overrideFields: [],
+                    fieldId: null,
+                    perPage: null,
+                    localPeople: null
                 }, attributes);
+            },
+
+            // overriden to add the preconfigured filters.
+            init: function () {
+                this.initialized = true;
+                if (this.store === null) {
+                    this.setStore(new AjaxSolr.ParameterStore());
+                }
+                this.store.load(false);
+                for (var widgetId in this.widgets) {
+                    this.widgets[widgetId].init();
+                }
+                this.store.init();
+
+                // add the preconfigured filter values
+                this.addPreFilters();
             },
 
             executeRequest: function (servlet, string, handler, errorHandler) {
@@ -52,25 +68,9 @@
                 var fq = self.store.get('fq');
                 var q = self.store.get('q');
                 var pag_results;
-                var field_id = this.field_id;
-                var field_configs = self.field_configs;
-                var per_page = self.per_page;
+                var fieldId = this.fieldId;
+                var fieldConfigs = self.fieldConfigs;
                 var override = this.checkOverrides();
-                var locals = this.local_people;
-
-                //add custom fq value if configured
-                if (field_configs.use_custom_q) {
-                    if (this.field_configs.custom_q.fq != null && this.field_configs.custom_q.fq != '') {
-                        this.store.removeByValue('fq', field_configs.custom_q.fq);
-                        this.store.addByValue('fq', field_configs.custom_q.fq);
-                    }
-                }
-
-                if (field_configs.hasOwnProperty('filter_asurite')) {
-                    var sstring = asu_dir_solr_search_string(field_configs.filter_asurite, 'asuriteId', true);
-                    this.store.removeByValue('fq', sstring);
-                    this.store.addByValue('fq', sstring);
-                }
 
                 string = string || this.store.string();
                 handler = handler || function (data) {
@@ -90,7 +90,7 @@
 
                 // If we are using our custom manager sort, then we need to check if we already have a sorted array,
                 // or need to grab and sort from Solr
-                if (field_configs.show_managers && !override) {
+                if (fieldConfigs.show_managers && !override) {
 
                     //get the start parameter, if it exists.  we need this for
                     //pagination of results
@@ -100,7 +100,7 @@
                     }
 
                     // if we have not set sorted people for the current dept.
-                    if (self.sorted_people[ASUPeople[field_id].dept_nid] == null) {
+                    if (self.sortedPeople[ASUPeople[fieldId].dept_nid] == null) {
                         // grab all of the results and start from the beginning
                         // we'll need to sort all results as a group
                         // todo:  remove if not needed
@@ -120,8 +120,6 @@
                                 var temp = docs[i];
                                 docs[i].mappedWeight = self.getEmployeeWeight(docs[i]);
                             }
-
-
 
                             // function to sort by rankweight
                             docs.sort(function (a, b) {
@@ -156,22 +154,22 @@
                             });
 
                             //maintain a complete array of sorted results for the dept.
-                            self.sorted_people[ASUPeople[field_id].dept_nid] = docs;
+                            self.sortedPeople[ASUPeople[fieldId].dept_nid] = docs;
 
                             //substitute the proper page of the array
-                            pag_results = self.sorted_people[ASUPeople[field_id].dept_nid].slice(start, start + self.per_page);
+                            pag_results = self.sortedPeople[ASUPeople[fieldId].dept_nid].slice(start, start + self.perPage);
 
                             data.response.docs = pag_results;
-                            self.sorted_response[ASUPeople[field_id].dept_nid] = data;
+                            self.sortedResponse[ASUPeople[fieldId].dept_nid] = data;
 
                             self.handleResponse(data);
 
                         }).fail(errorHandler);
                     } else {
-                        var data = self.sorted_response[ASUPeople[field_id].dept_nid];
-                        pag_results = self.sorted_people[ASUPeople[field_id].dept_nid].slice(start, start + self.per_page);
+                        var data = self.sortedResponse[ASUPeople[fieldId].dept_nid];
+                        pag_results = self.sortedPeople[ASUPeople[fieldId].dept_nid].slice(start, start + self.perPage);
                         data.response.docs = pag_results;
-                        //self.sorted_response[ASUPeople[field_id].dept_nid] = data;
+                        //self.sortedResponse[ASUPeople[fieldId].dept_nid] = data;
                         self.handleResponse(data);
                     }
 
@@ -180,16 +178,76 @@
                 }
             },
 
+            // adds preconfigured filters to the manager
+            addPreFilters: function() {
+
+                var self = this;
+                var fieldConfigs = self.fieldConfigs;
+                var start = self.store.get('start').val();
+                var q = self.store.get('q').val();
+                var fq = self.store.get('fq');
+                var etypes = fieldConfigs.employee_types;
+
+                // ADD EMPLOYEE TYPES FILTER TO QUERY
+                if (etypes != null && etypes.length > 0) {
+                    //If employee types other than "Show All" are selected, add those as a filter query
+                    var show_all = fieldConfigs.employee_types.indexOf("All");
+                    var legacy = fieldConfigs.employee_types.indexOf("Show All");
+
+                    if (fieldConfigs.employee_types.length > 0 && show_all == -1 && legacy == -1) {
+                        var types = fieldConfigs.employee_types;
+                        var search_string = asu_dir_solr_search_string(types, 'employeeTypes', true);
+
+                        //need to add this to the manager query also
+                        self.store.addByValue('fq', search_string);
+                    }
+                }
+
+                // add the faculty titles filter if it is configured - tenure/non-tenure relies on this
+                if (fieldConfigs.hasOwnProperty('ft_filter')) {
+                    self.store.addByValue('fq', fieldConfigs.ft_filter);
+                }
+
+                // ADD FILTERING FOR EXPERTISE AREAS
+                if (fieldConfigs.expertise_areas != null && fieldConfigs.expertise_areas != '') {
+                    var exp_string = asu_dir_solr_search_string(fieldConfigs.expertise_areas, 'expertiseAreas', true);
+                    self.store.addByValue('fq', exp_string);
+                }
+
+                // ADD FILTERING FOR TITLES
+                if (fieldConfigs.filter_title != null && fieldConfigs.filter_title != '') {
+                    self.store.addByValue('fq', 'titles:(' + fieldConfigs.filter_title + ')');
+                }
+
+                //add custom fq value if configured
+                if (fieldConfigs.use_custom_q) {
+                    if (this.fieldConfigs.custom_q.fq != null && this.fieldConfigs.custom_q.fq != '') {
+                        //self.store.removeByValue('fq', fieldConfigs.custom_q.fq);
+                        self.store.addByValue('fq', fieldConfigs.custom_q.fq);
+                    }
+                }
+
+                // add preconfigured asurite filters - Right now this works through the use of the local tag taxonomy
+                // system--where terms can be added to the isearch_local_tags taxonomy, and then attached to
+                // local isearch_profile nodes.
+                if (fieldConfigs.hasOwnProperty('filter_asurite')) {
+                    var sstring = asu_dir_solr_search_string(fieldConfigs.filter_asurite, 'asuriteId', true);
+                    //self.store.removeByValue('fq', sstring);
+                    self.store.addByValue('fq', sstring);
+                }
+            },
+
 
             getEmployeeWeight: function (doc) {
-                var locals = this.local_people;
-                var field_configs = this.field_configs;
+                var locals = this.localPeople;
+                var fieldConfigs = this.fieldConfigs;
                 var iweight = 999;
                 var localweight = 999;
                 var temp = doc;
-                var field_id = this.field_id;
-                var rank_mode = field_configs.default_rank_mode;
-                var search = ASUPeople[field_id].dept_nid.toString();
+                var fieldId = this.fieldId;
+
+                var rank_mode = fieldConfigs.default_rank_mode;
+                var search = ASUPeople[fieldId].dept_nid.toString();
                 var asurite = doc.asuriteId;
 
                 // find the iSearch weight
@@ -223,12 +281,12 @@
             // if the fq value is listed as an override field (exposed facet, or search), then it overrides rank sorting
             checkOverrides: function () {
                 var self = this;
-                var override_fields = self.override_fields;
+                var override_fields = self.overrideFields;
                 var fq = self.store.get('fq');
                 var q = self.store.get('q');
                 var override = false;
-                var field_configs = self.field_configs;
-                var filters = field_configs.filters;
+                var fieldConfigs = self.fieldConfigs;
+                var filters = fieldConfigs.filters;
 
                 if (q != null && q.value != "*:*") {
                     return true;

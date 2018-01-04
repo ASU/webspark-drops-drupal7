@@ -89,11 +89,6 @@ body .asu_directory_custom_saved:focus {
 }
 
 /*Directory*/
-/*
-.dir-ajax-solr-people {
-    margin: 0;
-}*/
-
 .dir-ajax-solr-people > div:first-child {
     border-top: solid 2px #ccc;
 }
@@ -107,7 +102,7 @@ body .asu_directory_custom_saved:focus {
     padding: 0;
 }
 
-.field-type-asu-directory .breadcrumb {
+.field-type-asu-directory .asu-dir-selection-crumb span {
     font-weight: 400;
     color: #a7a7a7;
     font-size: 16px;
@@ -200,16 +195,17 @@ body #page-wrapper .field-type-asu-directory .asu-dir-selections {
 }
 
 /* People search button */
-.asu_dir_people_search_btn {
+body .asu_dir_people_search_btn {
     position: absolute;
     top: 0;
-    right: 5px;
+    right: 0;
     background: none;
     border: none;
     color: #2a2a2a;
-    font-size: 20px;
     margin-right: 0;
     margin-top: 0 !important;
+    padding-top: 3px;
+    padding-right: 10px;
 }
 
 /* Contains the input and submit objects for people search */
@@ -389,19 +385,11 @@ select {
     word-break: break-word;
 }
 
-.asu_directory_people_row {
-    font-size: 14px;
-    text-decoration: none;
-    font-weight: normal;
+.isearch-address {
+    display: inline-block;
 }
 
 /** Sort Items **/
-#asu-dir-ajax-solr-sort {
-    font-size: 14px;
-    margin-top: 4px;
-    float: right;
-    font-weight: 400;
-}
 
 .asu-dir-sort-item {
     cursor: pointer;
@@ -455,7 +443,6 @@ select {
 
 .dir-search .asu-dir-sort-item {
     font-size: 12px;
-
 }
 
 .short-bio .short-title {
@@ -469,6 +456,12 @@ select {
 
 .dir-search > div {
     font-size: 12px;
+}
+
+
+.section > .container .field-type-asu-directory > .row {
+    margin-right: -15px;
+    margin-left: -15px;
 }
 
 /****NODE-SPECIFIC ****/

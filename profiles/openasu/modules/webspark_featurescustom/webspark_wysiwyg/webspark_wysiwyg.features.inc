@@ -20,17 +20,19 @@ function webspark_wysiwyg_image_styles_alter(&$data) {
  */
 function webspark_wysiwyg_wysiwyg_default_profiles_alter(&$data) {
   if (isset($data['panopoly_html_text'])) {
-    $data['panopoly_html_text']['settings']['block_formats'] = 'p,h2,h3,h4,h5,h6'; /* WAS: 'h1,h2,h3,h4,h5,h6' */
+    $data['panopoly_html_text']['settings']['theme_advanced_blockformats'] = 'p,h2,h3,h4,h5,h6'; /* WAS: 'h1,h2,h3,h4,h5,h6' */
     $data['panopoly_html_text']['settings']['buttons']['linkit'] = array(
       'linkit' => 1,
     ); /* WAS: '' */
-    $data['panopoly_html_text']['settings']['show_toggle'] = 1; /* WAS: 0 */
-    $data['panopoly_html_text']['settings']['user_choose'] = 1; /* WAS: 0 */
+    $data['panopoly_html_text']['preferences']['show_toggle'] = 1; /* WAS: 0 */
+    $data['panopoly_html_text']['preferences']['user_choose'] = 1; /* WAS: 0 */
     unset($data['panopoly_html_text']['settings']['buttons']['default']['link']);
     unset($data['panopoly_html_text']['settings']['buttons']['default']['stroke']);
   }
   if (isset($data['panopoly_wysiwyg_text'])) {
-    $data['panopoly_wysiwyg_text']['settings']['block_formats'] = 'p,h2,h3,h4,h5,h6'; /* WAS: 'h1,h2,h3,h4,h5,h6' */
+    $data['panopoly_wysiwyg_text']['settings']['theme_advanced_blockformats'] = 'p,h2,h3,h4,h5,h6'; /* WAS: 'h1,h2,h3,h4,h5,h6' */
+    $data['panopoly_wysiwyg_text']['preferences']['show_toggle'] = 1; /* WAS: 0 */
+    $data['panopoly_wysiwyg_text']['preferences']['user_choose'] = 1; /* WAS: 0 */
     $data['panopoly_wysiwyg_text']['settings']['buttons']['default']['anchor'] = 1; /* WAS: '' */
     $data['panopoly_wysiwyg_text']['settings']['buttons']['default']['hr'] = 1; /* WAS: '' */
     $data['panopoly_wysiwyg_text']['settings']['buttons']['default']['styleselect'] = 1; /* WAS: '' */
@@ -40,7 +42,7 @@ function webspark_wysiwyg_wysiwyg_default_profiles_alter(&$data) {
     $data['panopoly_wysiwyg_text']['settings']['buttons']['template'] = array(
       'template' => 1,
     ); /* WAS: '' */
-    $data['panopoly_wysiwyg_text']['settings']['css_classes'] = 'Lead paragraph=lead-paragraph
+    $data['panopoly_wysiwyg_text']['settings']['theme_advanced_styles'] = 'Lead paragraph=lead-paragraph
         Bordered table=bordered
         Image align left=pull-left
         Image align right=pull-right
@@ -65,8 +67,6 @@ function webspark_wysiwyg_wysiwyg_default_profiles_alter(&$data) {
         EOP button large col-wide=btn btn-blue btn-lg btn-block'; /* WAS: '' */
     $data['panopoly_wysiwyg_text']['settings']['css_path'] = '%b%t/css/innovation-main.css,%b%t/css/buttons.css,%b%t/css/forms.css,%b%t/css/nav.css,%b%t/fonts/roboto/css/roboto.css'; /* WAS: '' */
     $data['panopoly_wysiwyg_text']['settings']['css_setting'] = 'self'; /* WAS: 'theme' */
-    $data['panopoly_wysiwyg_text']['settings']['show_toggle'] = 1; /* WAS: 0 */
-    $data['panopoly_wysiwyg_text']['settings']['user_choose'] = 1; /* WAS: 0 */
     unset($data['panopoly_wysiwyg_text']['settings']['buttons']['default']['forecolor']);
     unset($data['panopoly_wysiwyg_text']['settings']['buttons']['default']['underline']);
     unset($data['panopoly_wysiwyg_text']['settings']['buttons']['paste']['pastetext']);

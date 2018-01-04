@@ -15,6 +15,12 @@ function webspark_featurescustom_enable() {
     ))
     ->condition('name', 'webspark_featurescustom')
     ->execute();
+
+  /* Since this module has 'required = TRUE' set, we can make certain that the
+  taxonomy module is enabled early in the drush site-install process, avoiding
+  bugs that pop up when panelizer is enabled before it:
+  see https://www.drupal.org/node/2183937 */
+  module_enable(array('taxonomy'));
 }
 
 /**
@@ -194,14 +200,15 @@ function webspark_featurescustom_update_7006(&$sandbox) {
 
 /**
  * Implements hook_update_N() --
- * Enable the directory suite module
+ * Since the location of the asu_dir module has changed, rebuild the registry, then
+ * enable asu_dirs suite module, and dir panel module.
  * @param $sandbox
  */
-function webspark_featurescustom_update_7007(&$sandbox) {
-  if (drupal_get_path('module', 'asu_dirs') != '' && !module_exists('asu_dirs')) {
+function webspark_featurescustom_update_7008(&$sandbox) {
+  registry_rebuild();
+
+  if (module_exists('asu_dir')) {
     module_enable(array('asu_dirs'));
-  }
-  if (drupal_get_path('module', 'asu_dir_panel') != '' && !module_exists('asu_dir_panel')) {
     module_enable(array('asu_dir_panel'));
   }
 }

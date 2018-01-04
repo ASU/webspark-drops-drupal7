@@ -147,11 +147,12 @@ function asu_isearch_get_dept_config() {
   //todo: get rid of this once asu_dep_picker modified
   $options = new stdClass();
 
-  foreach($decoded['items'] as $item) {
+  foreach ($decoded['items'] as $item) {
     $dept_id = $item['dept_id'];
     if (isset($item['options'])) {
       $options->$dept_id = $item['options'];
-    } else {
+    }
+    else {
       $options->$dept_id = array(
         'subdepts' => FALSE
       );
@@ -401,7 +402,67 @@ function asu_isearch_update_profile_From_solr($node, $solr_profile) {
       }
     }
   }
+
+  // update the profile image also
+  if (asu_isearch_find_and_attach_profile_picture($node, $solr_profile)) {
+    $changed = TRUE;
+  }
+
   if ($changed) {
     node_save($node);
   }
+}
+
+
+/***
+ * Utility function which checks a profile's current downloaded photo against
+ * the Solr photoUrl. If the photo's are not the same, download the new photo
+ * then update the field.
+ */
+function asu_isearch_find_and_attach_profile_picture(&$node, $solr_person) {
+
+  $prev_update = NULL;
+  $current_time = time();
+  $interval = 60 * 60 * ASU_ISEARCH_PROFILE_ONLOAD_UPDATE_INTERVAL;
+
+  if (isset($node->field_previous_isearch_update['und'][0]['value'])) {
+    $prev_update = $node->field_previous_isearch_update['und'][0]['value'];
+  }
+
+  // if it's been longer than the update interval, then update from Solr
+  if ($prev_update == NULL || ($current_time - $interval) > $prev_update) {
+
+    if ($solr_person != NULL) {
+      $photo_url = $solr_person['photoUrl'];
+
+      // ensure the file is truly accessible
+      $response = drupal_http_request($photo_url);
+      $destination = file_build_uri('asu_isearch_photos') . '/' . $solr_person['eid'] . '.jpg';
+
+      if ($response->code == 200) {
+
+        $file = FALSE;
+        $newfile = FALSE;
+
+        $photo_exists = file_exists($destination);
+
+        // does the file already exist on the server?
+        // if yes, associate it
+        if ($photo_exists) {
+          $file = current(entity_load('file', array(), array('uri' => $destination . '')));
+        }
+
+        if (!$photo_exists || filesize($destination) != $response->headers['content-length'] || ($photo_exists && empty($file))) {
+          $newfile = system_retrieve_file($photo_url, $destination, TRUE, FILE_EXISTS_REPLACE);
+        }
+
+        if ($newfile) {
+          $node->field_isearch_photo_url[LANGUAGE_NONE][0]['fid'] = $newfile->fid;
+          return TRUE;
+        }
+      }
+    }
+  }
+
+  return FALSE;
 }

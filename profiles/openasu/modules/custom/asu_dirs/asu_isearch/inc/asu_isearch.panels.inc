@@ -29,6 +29,15 @@ function asu_isearch_panels_pane_content_alter($content, $pane, $args, $contexts
     ));
   }
 
+  if ($pane->subtype == 'node:field_isearch_google_scholar') {
+    $website = $content->content['#items'][0]['value'];
+    $content->content[0]['#markup'] = l('Google Scholar Profile', $website, array(
+      'attributes' => array(
+        'target' => '_blank',
+      )
+    ));
+  }
+
   // Get permission to display profile image
   if ($pane->subtype == 'node:field_isearch_photo_url') {
     // check and see if we have uploaded a local image
@@ -426,8 +435,12 @@ function asu_isearch_get_rendered_view($view_config, &$view) {
   // Add the title filter
   if (isset($view_config->filter_title)) {
     if (trim($view_config->filter_title) != '') {
-      $view->filter['field_isearch_affil_title_value_1']->value = $view_config->filter_title;
-      $view->filter['field_isearch_affil_title_value_1']->options['value'] = $view_config->filter_title;
+
+      // take the slashes off the beginning and end of string, if in use - for Solr compatibility
+      $filtered_title = preg_replace('{/$|^/}', '', $view_config->filter_title);
+
+      $view->filter['field_isearch_affil_title_value_1']->value = $filtered_title;
+      $view->filter['field_isearch_affil_title_value_1']->options['value'] = $filtered_title;
     }
   }
 

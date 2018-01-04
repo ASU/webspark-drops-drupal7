@@ -116,6 +116,7 @@ function media_field_widget_form(&$form, &$form_state, $field, $instance, $langc
         'max_filesize' => isset($field_settings['max_filesize']) ? $field_settings['max_filesize'] : 0,
         'uri_scheme' => !empty($field['settings']['uri_scheme']) ? $field['settings']['uri_scheme'] : file_default_scheme(),
         'multiselect' => $multiselect,
+        'field' => $field['field_name'],
       ),
     ),
     // Allows this field to return an array instead of a single value.
@@ -126,7 +127,7 @@ function media_field_widget_form(&$form, &$form_state, $field, $instance, $langc
   // on the elements for further usage in media_element_process().
   if (module_invoke('entity_translation', 'enabled', $element['#entity_type'], $element['#entity'])) {
     $translation_handler = entity_translation_get_handler($element['#entity_type'], $element['#entity']);
-    $element['#media_parent_entity_form_langcode'] = $translation_handler->getFormLanguage();
+    $element['#media_parent_entity_form_langcode'] = $translation_handler->getActiveLanguage();
     if ($source_langcode = $translation_handler->getSourceLanguage()) {
       $element['#media_parent_entity_source_langcode'] = $source_langcode;
     }
@@ -134,8 +135,15 @@ function media_field_widget_form(&$form, &$form_state, $field, $instance, $langc
   elseif (module_exists('translation') && $element['#entity_type'] == 'node' && translation_supported_type($element['#entity']->type)) {
     $element['#media_parent_entity_form_langcode'] = $element['#entity']->language;
     $element['#media_parent_entity_source_langcode'] = $element['#entity']->language;
-  } elseif ($element['#entity_type'] == 'field_collection_item' && property_exists($form['#entity'], 'language')) {
+  } elseif ($element['#entity_type'] == 'field_collection_item' && !empty($form['#entity']) && property_exists($form['#entity'], 'language')) {
     $element['#media_parent_entity_form_langcode'] = $form['#entity']->language;
+  }
+  else if ($element['#entity_type'] == 'paragraphs_item' && !empty($form['#entity'])) {
+    $host = $element['#entity']->hostEntity();
+    if (isset($host->language)) {
+      $element['#media_parent_entity_form_langcode'] = $host->language;
+      $element['#media_parent_entity_source_langcode'] = $host->language;
+    }
   }
 
   // Add image field specific validators.
@@ -408,6 +416,7 @@ function media_field_widget_submit($form, &$form_state) {
     }
   }
 
+  ksort($submitted_values);
   // Re-index deltas after removing empty items.
   $submitted_values = array_values($submitted_values);
 
@@ -433,8 +442,20 @@ function theme_media_widget($variables) {
   $element = $variables['element'];
   $output = '';
 
+  // Merge provided attributes with existing ones.
   // The "form-media" class is required for proper Ajax functionality.
-  $output .= '<div class="media-widget form-media clearfix">';
+  $attributes = array(
+    'class' => array("media-widget", "form-media", "clearfix"),
+  );
+  if (!empty($element['#attributes'])) {
+    $attributes = array_merge_recursive($attributes, $element['#attributes']);
+  }
+  if (!empty($element['#id'])) {
+    $attributes = array_merge_recursive($attributes, array('id' => $element['#id'] . '--widget'));
+  }
+
+  // Render attributes into div in one go.
+  $output .= '<div ' . drupal_attributes($attributes) . '>';
   $output .= drupal_render_children($element);
   $output .= '</div>';
 
@@ -538,10 +559,14 @@ function theme_media_widget_multiple($variables) {
     );
   }
 
+  $table = array('header' => $headers, 'rows' => $rows, 'attributes' => array('id' => $table_id));
+
+  drupal_alter('media_widget_multiple', $table, $element);
+
   drupal_add_tabledrag($table_id, 'order', 'sibling', $weight_class);
 
   $output = '';
-  $output = empty($rows) ? '' : theme('table', array('header' => $headers, 'rows' => $rows, 'attributes' => array('id' => $table_id)));
+  $output = empty($rows) ? '' : theme('table', $table);
   $output .= drupal_render_children($element);
   return $output;
 }
