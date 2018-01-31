@@ -1,8 +1,8 @@
 name = ASU Spotlight
-description = This module allows placement of a  flexslider-enabled slideshow; complete with optional title, description, and action-button placement.
+description = "Creates a flexslider-enabled slideshow widget, complete with optional title, description, and action-button placement."
 core = 7.x
 package = ASU Webspark
-version = 7.x-1.7.1
+version = 7.x-1.8
 project = asu_spotlight
 dependencies[] = asu_spotlight
 dependencies[] = ctools
@@ -12,7 +12,6 @@ dependencies[] = list
 dependencies[] = options
 dependencies[] = image
 stylesheets[all][] = css/asuflex.css
-;explanation = Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>
 features[features_api][] = api:2
 features[field_base][] = field_asu_spotlight_items
 features[field_base][] = field_optionset
