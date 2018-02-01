@@ -200,22 +200,21 @@ function asu_cas_update_7004(&$sandbox) {
     // update ASU spotlight perms
     if (module_exists('asu_spotlight')) {
       user_role_grant_permissions($admin_role, array(
-        'create fieldable spotlight',
-        'edit fieldable spotlight',
-        'delete fieldable spotlight',
+        'create fieldable asu_spotlight',
+        'edit fieldable asu_spotlight',
+        'delete fieldable asu_spotlight',
       ));
       user_role_grant_permissions($editor_role, array(
-        'create fieldable spotlight',
-        'edit fieldable spotlight',
-        'delete fieldable spotlight',
+        'create fieldable asu_spotlight',
+        'edit fieldable asu_spotlight',
+        'delete fieldable asu_spotlight',
       ));
     }
     // Add administrator theme to editor
     user_role_grant_permissions($editor_role, array(
-        'view the administration theme',
-        'create files',
-      )
-    );
+      'view the administration theme',
+      'create files',
+    ));
   }
 }
 
