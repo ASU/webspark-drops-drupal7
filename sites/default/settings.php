@@ -572,7 +572,7 @@ if (!isset($_SERVER['PANTHEON_ENVIRONMENT']) && file_exists(DRUPAL_ROOT . '/' . 
  * Pantheon-only setting - Turn on debugging in only dev environment
  */
 if (isset($_SERVER['PANTHEON_ENVIRONMENT'])) {
-  if ($_SERVER['PANTHEON_ENVIRONMENT'] === 'dev') {
+  if ($_SERVER['PANTHEON_ENVIRONMENT'] !== 'live' && $_SERVER['PANTHEON_ENVIRONMENT'] !== 'test') {
     // Theme debugging
     $conf['theme_debug'] = TRUE;
     // Error reporting
