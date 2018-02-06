@@ -97,7 +97,7 @@ function webspark_featurescustom_update_7002(&$sandbox) {
   $max_log_count = settype(variable_get('dblog_row_limit'), "int");
   if ($max_log_count <= 1000 && $max_log_count != 0) {
     variable_set('dblog_row_limit', '100000');
-    watchdog('webspark_updates', "Increased dblog_row_limit to 100,000 latest log entries.");
+    watchdog('webspark_updates', "7002 - Increased dblog_row_limit to 100,000 latest log entries.");
   }
   // WEBSPARK-366 - ensure this module is enabled
   if (!module_exists('webspark_extras')) {
@@ -118,7 +118,7 @@ function webspark_featurescustom_update_7003(&$sandbox) {
   // WEBSPARK-891 - Disable and cleanup after respondjs module
   if (module_exists('respondjs')) {
     module_disable(array('respondjs'));
-    watchdog('webspark_updates', "Disabled respondjs module, which will be removed with next Webspark release.");
+    watchdog('webspark_updates', "7003 - Disabled respondjs module, which will be removed with next Webspark release.");
     if (is_null(variable_get('respondjs_scope'))) {
       variable_del('respondjs_scope');
       watchdog('webspark_updates', "Deleted respondJS module setting - respondjs_scope");
@@ -140,19 +140,23 @@ function webspark_featurescustom_update_7004(&$sandbox) {
   if (!empty($role->rid)) {
     $rid = (int) $role->rid;
     user_role_grant_permissions($rid, array('view the administration theme'));
-    watchdog('webspark_updates', "Added view the administrative theme to the editor role.");
+    watchdog('webspark_updates', "7004 - Added view the administrative theme to the editor role.");
   }
 }
 
 /**
  * Implements hook_update_N() -- Pillsbury release
- * + Update header to 4.5 with different logic this time
+ * + Update header to 4.5 with different logic
  */
 function webspark_featurescustom_update_7005(&$sandbox) {
+  watchdog('webspark_updates', "7004 - Update header to 4.5 with different logic");
   if (module_exists('asu_brand')) {
     $version = variable_get('asu_brand_header_version');
     if (settype($version, "float") <= 4.5) {
       variable_set('asu_brand_header_version', '4.5');
+    }
+    else {
+      watchdog('webspark_updates', "7004 not applied. Header must already be v4.5 or higher.");
     }
   }
 }
@@ -186,6 +190,7 @@ function webspark_featurescustom_update_7006(&$sandbox) {
   // Now show message if necessary
   if ($display_message) {
     drupal_set_message($message, 'warning');
+    watchdog('webspark_updates', '7006 - ' . $message, WATCHDOG_INFO);
   }
   // Missimg Module - enable
   if (!module_exists('missing_module')) {
@@ -193,6 +198,7 @@ function webspark_featurescustom_update_7006(&$sandbox) {
     drupal_set_message("Make sure that your Webspark site's administrator role " .
       "(usually 'administrator') receives all of the necessary permissions to " .
       "use the Missing Module module at /admin/people/permissions", 'status');
+    watchdog('webspark_updates', '7006 - Missing Module contrib module enabled.');
   }
   // WEBSPARK-1072 - Moved Webspark Seven theme info around. Need to rebuild.
   drupal_theme_rebuild();
@@ -206,10 +212,26 @@ function webspark_featurescustom_update_7006(&$sandbox) {
  */
 function webspark_featurescustom_update_7008(&$sandbox) {
   registry_rebuild();
-
   if (module_exists('asu_dir')) {
     module_enable(array('asu_dirs'));
     module_enable(array('asu_dir_panel'));
   }
 }
 
+/**
+ * Implements hook_update_N()
+ * -- Reverts Panopoly Page feature to apply missing settings to the Landing Page content type
+ * @param $sandbox
+ */
+function webspark_featurescustom_update_7009(&$sandbox) {
+  // Create the new landing page content type.
+  if (module_exists('panopoly_pages')) {
+    $items = array();
+    $items['panopoly_pages'] = array('variable');
+    features_revert($items);
+    watchdog('webspark_updates', '7009 -- Reverts Panopoly Page feature to apply missing settings to the Landing Page content type');
+  }
+  else {
+    watchdog('webspark_updates', '7009 - Panopoly Pages module not enabled. No changes were made.', WATCHDOG_ALERT);
+  }
+}
