@@ -107,7 +107,7 @@ function mega_footer_block_view($delta = '') {
       $check = variable_get('unit_contact_us', NULL);
 
       if (!empty($check)) {
-          $footer_mark .= "<p><a class='contact-link' href='" . $check . "'>Contact Us</a></p>";
+          $footer_mark .= "<p><a class='contact-link' href='" . $check . "'>Contact us</a></p>";
       }
 
       //Social Media
@@ -268,7 +268,7 @@ function mega_footer_block_configure($delta = '') {
 
     $form['unit_contact_us'] = array(
       '#type' => 'textfield',
-      '#title' => t('Contact Us Link'),
+      '#title' => t('Contact us Link'),
       '#default_value' => variable_get('unit_contact_us', NULL),
       '#required' => FALSE,
     );

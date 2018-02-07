@@ -1,0 +1,173 @@
+@import "compass/css3";
+@import "base";
+
+#block-mega-footer-mega-footer {
+  background-color: #1e1e1e;
+}
+
+.megafoot-description {
+  font-size: 1em;
+  color: #fff;
+  margin-bottom: 1em;
+}
+
+.mega-dept-title {
+  margin-bottom: 1em;
+  line-height: 1.2;
+  color: #fff;
+  font-weight: normal;
+  margin-top: 1.25em;
+}
+
+.megafoot {
+  padding-top: 1.25em;
+
+  .row {
+    max-width: 1170px;
+    margin: auto;
+  }
+  h2 {
+    margin-bottom: 0.75em;
+    font-size: 1.3125em;
+    font-weight: normal;
+    color: #fff;
+  }
+  address {
+    color: #fff;
+    margin-bottom: 0;
+    font-weight: 200;
+    font-style: normal;
+    line-height: 1.44;
+  }
+  .phone-link {
+    color: $link-color-hover;
+    border-bottom: 0;
+    font-weight: normal;
+  }
+  .big-foot-nav > li {
+    margin-bottom: 0.75em;
+    & > a {
+      color: $link-color;
+      text-decoration: none;
+      border-bottom: 1px dotted #ccc;
+      &:hover, &:focus {
+        color: $link-color-hover;
+        border-bottom: 1px dotted $link-color-hover;
+      }
+    }
+  }
+  ul, ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  ul {
+    &:before, &:after {
+      content: " ";
+      display: table;
+    }
+  }
+  ol {
+    &:before, &:after {
+      content: " ";
+      display: table;
+    }
+  }
+  ul > li,
+  ol > li {
+    position: relative;
+    display: block;
+  }
+  ul:after, ol:after {
+    clear: both;
+  }
+  .contact-link {
+    color: $link-color;
+    border-bottom: 1px dotted $link-color;
+    &:hover {
+      color: $link-color-hover;
+      border-bottom-color: $link-color-hover;
+    }
+  }
+  .btn {
+    margin-bottom: 1.75em;
+  }
+  .social-media {
+    margin-bottom: 1.75em;
+    > li > a {
+      margin-right: 0.625em;
+      font-size: 2.375em;
+      color: $link-color;
+      border-bottom: 0;
+    }
+  }
+  ul > li > a, ol > li > a {
+    position: relative;
+    text-decoration: none;
+  }
+  .social-media > li {
+    float: left;
+  }
+  .fa:hover {
+    color: $link-color-hover;
+  }
+  .little-foot {
+    padding-top: 2.5em;
+    padding-bottom: 2.5em;
+    background-color: #e5e5e5;
+    width: 100%;
+  }
+}
+
+.little-foot-nav > li > a {
+  margin-right: 1.75em;
+  font-size: 1em;
+  font-weight: 400;
+  color: #333;
+  border-bottom: 0;
+  float: left;
+  &:hover, &:focus {
+    color: #595959;
+  }
+}
+
+.collapse.in {
+  display: block;
+}
+
+.big-foot-head .caret {
+  float: right;
+  margin-right: 1.75em;
+  margin-top: 0.9375em;
+  display: none;
+}
+
+#block-mega-footer-mega-footer .content,
+#block-asu-brand-asu-brand-footer .content {
+  padding: 0 !important;
+}
+
+@media (max-width: 991px) {
+  .megafoot h2 {
+    cursor: pointer;
+    margin-top: 0.625em;
+  }
+}
+
+@media (max-width: 768px) {
+  .big-foot-head .caret {
+    cursor: pointer;
+    margin-top: 0.625em;
+    display: inline-block;
+  }
+  .megafoot .row .space-bot-md {
+    border-bottom: 1px solid #383d3e;
+  }
+}
+
+/* [KM 12-5-16] Added stronger focus styles for keyboard accessibility */
+
+.megafoot a:focus, .big-foot-nav > li > a:focus,
+.little-foot-nav > li > a:focus {
+    @include a11y-strong-focus();
+}
