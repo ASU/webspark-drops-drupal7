@@ -314,7 +314,7 @@ function asu_spotlight_field_widget_form(&$form, &$form_state, $field, $instance
     $element['color'] = array(
       '#title' => t('Button color'),
       '#type' => 'select',
-      '#options' => array('blue' => 'Blue', 'red' => 'Red', 'gold' => 'Gold', 'secondary' => 'Grey'),
+      '#options' => array('blue' => 'Blue', 'red' => 'Red', 'gold' => 'Gold', 'grey' => 'Grey'),
       '#default_value' => isset($items[$delta]['color']) ? $items[$delta]['color'] : 'blue',
       '#description' => t("See the <a href='https://brandguide.asu.edu/web-standards/enterprise/ui-kit'>UI Kit</a> for more information on the usage for each color."),
     );

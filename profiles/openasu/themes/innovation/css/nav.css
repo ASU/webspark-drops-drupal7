@@ -70,7 +70,7 @@
 .nav .open > a:focus,
 .navbar-nav > .active > a:focus
 .navbar-nav .dropdown-menu > li > a:focus {
-	 outline:none; 
+	 outline:none;
 	 border-top: 2px solid #4D90FE;
 	 border-right: 2px solid #4D90FE;
 	 border-bottom: 2px solid #4D90FE;
@@ -158,13 +158,13 @@
 }
 .pane-system-main-menu ul.menu li a:focus,
 .pane-menu-tree ul.menu li a:focus {
-	 outline:none; 
+	 outline:none;
 	 border-top: 2px solid #4D90FE;
 	 border-right: 2px solid #4D90FE;
 	 border-bottom: 2px solid #4D90FE;
 	 border-left: 2px solid #4D90FE;
 	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
-	 box-shadow: 0px 0px 5px  #4D90FE;	
+	 box-shadow: 0px 0px 5px  #4D90FE;
 }
 
 /* =TABS & QuickTabs
@@ -178,9 +178,13 @@
 	font-family: inherit;
 }
 
-ul.quicktabs-style-nostyle, .ui-tabs-panel,
+ul.quicktabs-style-nostyle {
+  font-size: 1.2em;
+}
+
+.ui-tabs-panel,
 .ui-tabs-panel p {
-	font-size: 1.2em;
+	font-size: 1.111em;
 }
 
 .ui-widget-header {
@@ -219,7 +223,7 @@ ul.quicktabs-style-nostyle li,
 .ui-tabs .ui-tabs-nav li.ui-state-default {
 	background: none;
   background-color: transparent;
-  color: #777;
+  color: #767676;
 }
 ul.quicktabs-style-nostyle li:hover,
 ul.quicktabs-style-nostyle li.active,
@@ -257,7 +261,8 @@ ul.quicktabs-style-nostyle li a,
 ul.quicktabs-style-nostyle li a {
 	display: inline-block;
 	padding: 9px 18px;
-	color: #a7a7a7;
+	text-decoration: none;
+	color: #767676;
 	font-size: 18px;
 	font-weight: 400;
 	line-height: 1.44;
@@ -265,7 +270,7 @@ ul.quicktabs-style-nostyle li a {
 .ui-tabs .ui-tabs-nav li.ui-state-default a,
 .ui-tabs .ui-tabs-nav li.ui-state-default a:link,
 .ui-tabs .ui-tabs-nav li.ui-state-default a:visited {
-  color: #777;
+  color: #767676;
 	transition: all 0.25s ease-in-out 0s;
 }
 ul.quicktabs-style-nostyle li:hover a,
@@ -281,13 +286,15 @@ ul.quicktabs-style-nostyle li.active:hover a,
 	margin-left: 0.08em;
 }
 .ui-tabs .ui-tabs-nav li.ui-state-focus a {
-	outline:none; 
 	border-top: 2px solid #4D90FE;
 	border-right: 2px solid #4D90FE;
 	border-bottom: 2px solid #4D90FE;
 	border-left: 2px solid #4D90FE;
 	-webkit-box-shadow: 0px 0px 5px  #4D90FE;
 	box-shadow: 0px 0px 5px  #4D90FE;
+}
+ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
+  color: #767676;
 }
 
 /* Nav pills */
@@ -308,7 +315,7 @@ ul.quicktabs-style-nostyle li.active:hover a,
   background-color: #8C1D40;
 }
 .nav-pills > li.active > a:focus {
-	 outline:none; 
+	 outline:none;
 	 border-top: 2px solid #4D90FE;
 	 border-right: 2px solid #4D90FE;
 	 border-bottom: 2px solid #4D90FE;

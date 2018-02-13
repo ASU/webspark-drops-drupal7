@@ -1343,7 +1343,7 @@ function asu_rfi_js_alter(&$javascript)
 
 }
 
-//function to send data transaction variable SI_dataLayer to GTM tag
+//function to send data transaction variable dataLayer to GTM tag
 function asu_rfi_preprocess_page(&$variables)
 {
 
@@ -1401,7 +1401,7 @@ function asu_rfi_preprocess_page(&$variables)
       $college = 'RFI - ' . $locale . ' - ' . $prog_full_name;
 
       drupal_add_js("(function ($) { 
-        SI_dataLayer = [{
+        dataLayer = [{
            'event': 'ecommerce_event',
            'transactionId': '$ga_id',
           'transactionAffiliation': '$program_code',
@@ -1417,7 +1417,7 @@ function asu_rfi_preprocess_page(&$variables)
         })(jQuery)", array('type' => 'inline', 'scope' => 'header', 'weight' => 0));
 
 //    drupal_add_js("(function ($) {
-//       SI_dataLayer = [{
+//       dataLayer = [{
 //          'event': 'ecommerce_event',
 //          'transactionId': '$ga_id',
 //          'transactionAffiliation': '$program_name',
@@ -1464,7 +1464,7 @@ function asu_rfi_preprocess_page(&$variables)
             }
           }
           drupal_add_js("(function ($) { 
-          SI_dataLayer = [{
+          dataLayer = [{
              'event': 'ecommerce_event',
              'transactionId': '$ga_id',
              'transactionAffiliation': '$college_code',
@@ -1480,7 +1480,7 @@ function asu_rfi_preprocess_page(&$variables)
        })(jQuery)", array('type' => 'inline', 'scope' => 'header', 'weight' => 0));
 //       //GMT transaction variables
 //       drupal_add_js("(function ($) {
-//         SI_dataLayer = [{
+//         dataLayer = [{
 //            'event': 'ecommerce_event',
 //            'transactionId': '$ga_id',
 //            'transactionAffiliation': '$college',
@@ -1523,7 +1523,7 @@ function asu_rfi_preprocess_page(&$variables)
             }
             drupal_add_js("(function ($) { 
                    if($('#asu-rfi-multi-part1-thanks')){
-                    SI_dataLayer = [{
+                    dataLayer = [{
                       'event': 'ecommerce_event',
                       'transactionId': '$ga_id',
                       'transactionAffiliation': '$program_code',

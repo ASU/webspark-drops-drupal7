@@ -115,6 +115,7 @@ function uto_carousel_defaultconfig_user_default_permissions() {
     'name' => 'create fieldable uto_carousel',
     'roles' => array(
       'administrator' => 'administrator',
+      'editor' => 'editor',
     ),
     'module' => 'fieldable_panels_panes',
   );
@@ -124,6 +125,7 @@ function uto_carousel_defaultconfig_user_default_permissions() {
     'name' => 'delete fieldable uto_carousel',
     'roles' => array(
       'administrator' => 'administrator',
+      'editor' => 'editor',
     ),
     'module' => 'fieldable_panels_panes',
   );
@@ -133,6 +135,7 @@ function uto_carousel_defaultconfig_user_default_permissions() {
     'name' => 'edit fieldable uto_carousel',
     'roles' => array(
       'administrator' => 'administrator',
+      'editor' => 'editor',
     ),
     'module' => 'fieldable_panels_panes',
   );

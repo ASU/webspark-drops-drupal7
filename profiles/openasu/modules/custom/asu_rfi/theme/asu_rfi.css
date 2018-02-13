@@ -1,89 +1,95 @@
-
 /* CSS for RFI forms */
 
-.rfi_test_mode{
-    background: red;
-    padding: 2%;
-    color: #ffffff;
-    font-size: 16px;
-    width: 80%;
+.rfi_test_mode {
+  background: red;
+  padding: 2%;
+  color: #fff;
+  font-size: 16px;
+  width: 80%;
 }
 
-@media (min-width: 992px){
+@media (min-width: 992px) {
   .block-multiblock {
-     /*width: 931px;*/
+    /*width: 931px;*/
   }
 }
 
-@media (min-width: 1200px){
+@media (min-width: 1200px) {
   .block-multiblock {
-     /*width: 1170px;*/
- }
+    /*width: 1170px;*/
+  }
 }
 
-.block-multiblock{
-    margin-right: auto;
-    margin-left: auto;
-    padding-left: 20px;
-    padding-right: 20px;   
+.block-multiblock {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
-.rfi_test_mode a{
-    color : #000000 !important;
+.rfi_test_mode a {
+  color: #000000 !important;
 }
 
-.rfi_button{
-    background: #a30046 !important;
-    color: #ffffff !important;
-    margin-bottom: 20px !important;
-    margin-left:22px !important;
+.rfi_button {
+  background: #a30046 !important;
+  color: #ffffff !important;
+  margin-bottom: 20px !important;
+  margin-left: 22px !important;
 }
 
-@media screen and (min-width: 1110px){
+@media screen and (min-width: 1110px) {
 
-.rfi_mobile, .form-item-mobile-check{
+  .rfi_mobile, .form-item-mobile-check {
     margin-bottom: 6% !important;
-    /*margin-top: 60px !important;*/
-    /*margin-left: 250px !important;*/
- }
- 
- .phone_field_rfi{
+  }
+
+  .phone_field_rfi {
     margin-right: 10px;
-    /*float:left;*/
- }
+  }
 }
 
-@media screen and (max-width: 1001px){
-    
-  .rfi_mobile, .form-item-mobile-check{
+@media screen and (max-width: 1001px) {
+
+  .rfi_mobile, .form-item-mobile-check {
     margin-bottom: 5% !important;
     margin-left: 0px !important;
   }
-    
-  .phone_field_rfi{
-    float:none;
- }
 
- .form-item-mobile-check{
+  .phone_field_rfi {
+    float: none;
+  }
+
+  .form-item-mobile-check {
     padding-left: 0px !important;
   }
 }
 
-    
-#asu-rfi-long-form-data input[type="text"], #asu_rfi_second_form input[type="text"], #asu-rfi-form-data input[type="text"], #asu-rfi-current-form-data input[type="text"]{
- width: 230px;
+#asu-rfi-long-form-data input[type="text"],
+#asu_rfi_second_form input[type="text"],
+#asu-rfi-form-data input[type="text"],
+#asu-rfi-current-form-data input[type="text"] {
+  width: 230px;
 }
 
-#asu-rfi-long-form-data textarea, #asu_rfi_second_form textarea, #asu-rfi-form-data textarea, #asu-rfi-current-form-data  textarea{
- width: 80%;
+#asu-rfi-long-form-data textarea,
+#asu_rfi_second_form textarea,
+#asu-rfi-form-data textarea,
+#asu-rfi-current-form-data textarea {
+  width: 80%;
 }
 
-#asu-rfi-long-form-data .uneditable-input, #asu_rfi_second_form .uneditable-input, #asu-rfi-form-data .uneditable-input, #asu-rfi-current-form-data .uneditable-input{
- width: 240px;
+#asu-rfi-long-form-data .uneditable-input,
+#asu_rfi_second_form .uneditable-input,
+#asu-rfi-form-data .uneditable-input,
+#asu-rfi-current-form-data .uneditable-input {
+  width: 240px;
 }
 
-#asu_rfi_second_form .form-item-questions, #asu-rfi-long-form-data .form-item-questions, #asu-rfi-current-form-data .form-item-questions{
-    /*margin-left: 25px !important;*/
+#asu_rfi_second_form .form-item-questions,
+#asu-rfi-long-form-data .form-item-questions,
+#asu-rfi-current-form-data .form-item-questions {
+  /*margin-left: 25px !important;*/
 }
 
 select {
@@ -91,104 +97,112 @@ select {
 
 }
 
-.chosen-container{
-     width: 230px !important;
+.chosen-container {
+  width: 230px !important;
 }
 
-.chosen-search input[type="text"]{
-    max-width: 230px !important;
+.chosen-search input[type="text"] {
+  max-width: 230px !important;
 }
 
-.chosen-container.error{
-    background: none !important;
+.chosen-container.error {
+  background: none !important;
 }
 
-.form-item-birthdate label{
-    display: none !important;
+.form-item-birthdate label {
+  display: none !important;
 }
 
 input[type="radio"] {
- float: left;
- margin: 4px 5px 0;
- width: 20px !important;
+  float: left;
+  margin: 4px 5px 0;
+  width: 20px !important;
 }
 
-.form-item-campus label, .form-item-prog-plan label, .form-item-start-date label, .form-item-student-type label, .form-item-country label, .form-item-state label, .form-item-program-code label, #asu-rfi-form-data .form-type-textfield label, #asu-rfi-form-data .form-type-item label, #asu-rfi-form-data .form-item label, #asu-rfi-current-form-data label{
-    display: block !important;
-    font-weight: normal;
-    font-size: smaller;
+.form-item-campus label,
+.form-item-prog-plan label,
+.form-item-start-date label,
+.form-item-student-type label,
+.form-item-country label,
+.form-item-state label,
+.form-item-program-code label,
+#asu-rfi-form-data .form-type-textfield label,
+#asu-rfi-form-data .form-type-item label,
+#asu-rfi-form-data .form-item label,
+#asu-rfi-current-form-data label {
+  display: block !important;
+  font-weight: normal;
+  font-size: smaller;
 }
 
-
-/*
-#asu-rfi-form-data .form-wrapper, #asu_rfi_second_form .form-wrapper{
-    margin-top: 15px;
-    border-bottom: 1px solid grey;
-}
-*/
-.block-multiblock .form-wrapper, .block-multiblock .form-wrapper{
-    margin-top: 15px;
-    border-bottom: 1px solid grey;
+.block-multiblock .form-wrapper,
+.block-multiblock .form-wrapper {
+  margin-top: 15px;
+  border-bottom: 1px solid grey;
 }
 
-#asu-rfi-form-data span.form-required, #asu-rfi-current-form-data .form-required{
-    color: black;
-}
-#asu_rfi_second_form .form-item-military.form-group{
-    border-bottom: 1px solid grey;
-}
-#asu_rfi_second_form .form-item-citizenship{
-    border-bottom: 1px solid grey;
+#asu-rfi-form-data span.form-required,
+#asu-rfi-current-form-data .form-required {
+  color: black;
 }
 
-#asu-rfi-long-form-data .form-item-citizenship{
-    padding-left: 0px !important;
+#asu_rfi_second_form .form-item-military.form-group {
+  border-bottom: 1px solid grey;
 }
 
-/*#asu_rfi_second_form .form-item-military label{
-    padding-left: 2%;
-}*/
-
-#rfi_second_form{
-    margin-top: 20px;
+#asu_rfi_second_form .form-item-citizenship {
+  border-bottom: 1px solid grey;
 }
 
-
-div.fieldset-wrapper {
-    overflow:visible !important;
+#asu-rfi-long-form-data .form-item-citizenship {
+  padding-left: 0px !important;
 }
 
-#asu-rfi-long-form-data .form-item-mobile-check .fa-check, #asu_rfi_second_form .form-item-mobile-check .fa-check, #asu-rfi-form-data .form-item-mobile-check .fa-check{
-    position: relative !important;
+#rfi_second_form {
+  margin-top: 20px;
 }
 
-#edit-dob-field{
-    margin-bottom: -17px;
+form[id^=asu-rfi-] div.fieldset-wrapper {
+  overflow: visible !important;
+}
+
+#asu-rfi-long-form-data .form-item-mobile-check .fa-check,
+#asu_rfi_second_form .form-item-mobile-check .fa-check,
+#asu-rfi-form-data .form-item-mobile-check .fa-check {
+  position: relative !important;
+}
+
+#edit-dob-field {
+  margin-bottom: -17px;
 }
 
 #edit-dob-field .modal-body {
-    padding: 35px;
+  padding: 35px;
 }
+
 /* -- Change Request Additions -- */
 #edit-location .form-type-radio.form-item-location.form-item.radio {
-    display: inline;
-    margin-right: 30px;
+  display: inline;
+  margin-right: 30px;
 }
+
 #asu-rfi-long-form-data label {
-    font-weight: normal;
-    font-size: smaller;
+  font-weight: normal;
+  font-size: smaller;
 }
+
 #asu-rfi-long-form-data span.form-required {
-    color: black;
+  color: black;
 }
 
 #asu-rfi-long-form-data .fieldset-wrapper {
-    padding-left: 60px;
-    margin-bottom: 30px;
-    padding-bottom: 25px;
+  padding-left: 60px;
+  margin-bottom: 30px;
+  padding-bottom: 25px;
 
 }
+
 #asu-rfi-long-form-data .form-wrapper {
-    margin-top: 15px;
-    border-bottom: 1px solid grey;
+  margin-top: 15px;
+  border-bottom: 1px solid grey;
 }
