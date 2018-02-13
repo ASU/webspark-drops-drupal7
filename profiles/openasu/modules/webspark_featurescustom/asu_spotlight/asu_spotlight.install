@@ -76,7 +76,6 @@ function asu_spotlight_update_7007(&$sandbox) {
             if ($column_name == 'field_asu_spotlight_items_overlaytextwidth' &&
               !db_field_exists($table_name, 'field_asu_spotlight_items_overlaytextwidth')) {
               db_add_field($table_name, $column_name, $schema['columns'][$column]);
-              //db_add_index($table_name, $column_name, array($column_name));
             }
           }
         }
@@ -86,6 +85,13 @@ function asu_spotlight_update_7007(&$sandbox) {
   field_cache_clear();
 }
 
+/**
+ * Implements hook_update_N()
+ * + Updates permissions for ASU Spotlight (admin, editor roles)
+ **/
+function asu_spotlight_update_7008(&$sandbox) {
+  features_revert_module('asu_spotlight');
+}
 
 /**
  * Implementation of hook_uninstall().
