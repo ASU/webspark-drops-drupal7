@@ -1,3 +1,8 @@
+Innovation 7.x-1.9, 2017-02-15
+------------------------------
+- Modified some font colors and sizes on Quicktab and Panopoly tabs and accordions to make the ASU web standard.
+- Made the blue button darker so it has 4.5:1 contrast ratio.
+- Made the rebuild table button on the table widget visible and red.
 
 Innovation 7.x-1.8, 2017-02-15
 ------------------------------
