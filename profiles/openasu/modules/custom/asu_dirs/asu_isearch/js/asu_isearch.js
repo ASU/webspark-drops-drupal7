@@ -37,6 +37,8 @@
                     }
                 });
 
+                $('<br>').insertBefore('.panel-pane.pane-entity-field.pane-node-field-isearch-campus-building');
+
             });
         }
     }

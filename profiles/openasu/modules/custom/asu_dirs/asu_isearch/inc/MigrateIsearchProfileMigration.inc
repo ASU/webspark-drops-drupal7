@@ -104,7 +104,8 @@ class MigrateIsearchProfileMigration extends Migration {
     $this->addFieldMapping('field_isearch_fax', 'fax');
     $this->addFieldMapping('field_isearch_campus_building', 'addressLine1');
     $this->addFieldMapping('field_isearch_campus_room', 'addressLine2');
-    $this->addFieldMapping('field_isearch_primary_campus', 'primaryJobCampus');
+    $this->addFieldMapping('field_isearch_addr_line_three', 'addressLine3');
+    $this->addFieldMapping('field_isearch_city', 'city');
     $this->addFieldMapping('field_isearch_photo_preference', 'photoPreference');
     $this->addFieldMapping('field_isearch_photo_permission', 'photoPermission');
     $this->addFieldMapping('field_isearch_social_twitter', 'twitterLink');
@@ -179,6 +180,8 @@ class MigrateIsearchProfileMigration extends Migration {
       'fax' => 'Fax',
       'addressLine1' => 'Building',
       'addressLine2' => 'Room',
+      'addressLine3' => 'Address Line 3',
+      'city' => 'City',
       'primaryJobCampus' => 'Primary job campus',
       'shortBio' => 'Short bio',
       'bio' => 'Biography',
@@ -321,8 +324,8 @@ class MigrateIsearchProfileMigration extends Migration {
         }
 
         $affiliation->vpArea = $row->vpAreas[$index];
-        $affiliation->campus = $row->jobCampuses[$index];
-        $affiliation->mailCode = $row->mailCodes[$index];
+        $affiliation->campus = $row->primaryJobCampus;
+        $affiliation->mailCode = $row->primaryMailCode;
         $affiliation->employeeType = $row->employeeTypes[$index];
         $affiliation->employeeTypeKey = preg_replace('/[^a-zA-Z]/', '_', trim($row->employeeTypes[$index]));
         $affiliation->isManager = $row->managers[$index];

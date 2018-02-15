@@ -1,3 +1,9 @@
+
+/********************************************************************************************************************
+Profile Page CSS
+ ********************************************************************************************************************/
+
+
 div.krumo-element {
     color: #000;
 }
@@ -48,6 +54,7 @@ div.krumo-preview {
 
 .isearch-profile-contact .contact-region {
     margin-bottom: 10px;
+    font-weight: 400;
 }
 
 .isearch-profile-contact .contact-region .pane-entity-field {
@@ -55,8 +62,7 @@ div.krumo-preview {
     display: inline-block;
     vertical-align: top;
     zoom: 1;
-    *display: inline;
-    margin-right: 15px;
+    margin-top: 5px;
 }
 
 .isearch-profile-contact .social-region {
@@ -555,3 +561,120 @@ body .field-type-asu-directory .asu-isearch-alpha-bar.row {
 .isearch-profile-content {
     margin-bottom: 100px;
 }
+
+.pane-node-field-isearch-city {
+    margin-left: 8px;
+}
+
+
+/*************************************************************************************************
+Affiliation View CSS
+ *************************************************************************************************/
+.affiliations-region .panel {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    border: none;
+}
+
+.affiliations-region .panel .panel-body {
+    margin-top: -15px;
+}
+
+.view-id-isearch_affiliations h4.panel-title .accordion-toggle {
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #212121;
+    text-decoration: none;
+}
+
+.view-id-isearch_affiliations .views-field-field-isearch-affil-title {
+    font-weight: bold;
+    font-size: .92em;
+}
+
+.affiliations-region .panel-default > .panel-heading {
+    background-color: #FBFBFB;
+}
+
+.affiliations-region .panel-group .panel-heading + .panel-collapse .panel-body {
+    border-top: 0;
+}
+
+.affiliations-region .view-isearch-affiliations .panel-heading h4 a {
+    border-bottom: none;
+}
+
+.view-id-isearch_affiliations .views-field-field-isearch-affil-dept-name {
+    font-weight: bold;
+    font-size: .92em;
+}
+
+.view-id-isearch_affiliations .views-field-field-isearch-affil-campus,
+.view-id-isearch_affiliations .views-field-field-isearch-affil-mailcode {
+    margin-left: 5px;
+}
+
+.view-id-isearch_affiliations .views-field-field-isearch-affil-empl-type, .view-id-isearch_affiliations .views-field-field-isearch-affil-empl-type .field-content,
+.view-id-isearch_affiliations .views-field-field-isearch-affil-campus, .view-id-isearch_affiliations .views-field-field-isearch-affil-campus .field-content,
+.view-id-isearch_affiliations .views-field-field-isearch-affil-mailcode, .view-id-isearch_affiliations .views-field-field-isearch-affil-mailcode .field-content {
+    display: inline;
+    margin-right: -5px;
+    font-size: .92em;
+}
+
+.view-id-isearch_affiliations .views-field-field-isearch-affil-empl-type::after,
+.view-id-isearch_affiliations .views-field-field-isearch-affil-campus::after {
+    content: ", ";
+}
+
+/***
+Accordion
+ */
+.accordion-toggle:before {
+    font-family: FontAwesome;
+    top: 0;
+    left: -5px;
+    padding-right: 10px;
+    content: "\25BE";
+}
+
+.accordion-toggle.collapsed:before {
+    content: "\25B8";
+}
+
+.view-id-isearch_affiliations .panel-body {
+    padding-top: .6em;
+    padding-left: 2.2em;
+}
+
+.affiliations-region .view-isearch-affiliations .panel-heading h4 {
+    color: #a30056;
+    font-weight: normal;
+    text-decoration: none;
+    font-size: .9em;
+}
+
+.view-id-isearch_affiliations .panel-heading {
+    padding-left: .5em;
+}
+
+.view-id-isearch_affiliations .views-field-field-isearch-affil-dept-name {
+    font-weight: bold;
+
+}
+
+/*******************************************************************************************************************
+Profile List View CSS
+ *******************************************************************************************************************/
+
+.view-id-isearch_directory .views-field.user-name {
+    font-weight: 400;
+}
+
+.view-id-isearch_directory .views-field.user-name .title {
+    font-weight: bold;
+}
+
+

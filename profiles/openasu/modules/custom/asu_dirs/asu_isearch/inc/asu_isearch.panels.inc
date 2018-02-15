@@ -147,7 +147,7 @@ function asu_isearch_panels_pane_content_alter($content, $pane, $args, $contexts
     ));
   }
 
-
+  // todo: is this needed?
   if ($pane->panel == 'affiliations' && $pane->subtype == 'node:field_isearch_affiliations') {
 
     // unique quicktabs identifier
