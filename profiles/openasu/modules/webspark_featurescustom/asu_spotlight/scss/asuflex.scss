@@ -1,0 +1,198 @@
+/** main width settings */
+
+.section > .container .row-full .pane-bundle-asu-spotlight {
+  .pane-content {
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  & > {
+    h1.pane-title, h2.pane-title {
+      margin: 0 auto;
+      max-width: 1170px !important;
+    }
+  }
+}
+
+.slidecontainer {
+  position: relative !important;
+  p {
+    margin: 0 0 1.5em 0;
+    padding: 0;
+    color: #fff;
+    font-size: 1.33em;
+    line-height: 1.33em;
+    font-weight: 900;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  }
+  h1, h2 {
+    color: #fff;
+    font-size: 3.75rem;
+    font-weight: 900;
+    line-height: 1;
+    margin: 0;
+    padding: 0.625rem 0;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.blurbcontainer {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  height: auto;
+  padding: 0.5em;
+  width: 100%;
+  /* Fix for IE9+; Capped below at 1170px */
+  max-width: 1170px;
+  .btn {
+    display: inline;
+    margin-right: 1.25em;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.flexslider .flex-direction-nav a {
+  line-height: 2.5em;
+  border: none;
+}
+
+.slidecontainer .blurbcontainer > .blurbshell {
+  position: absolute;
+}
+
+.blurbcontainer > .blurbshell {
+  &.top-left {
+    top: 0.5em;
+    left: 0.5em;
+  }
+  &.top-center {
+    top: 0.5em;
+    left: 50%;
+    transform: translate(-50%, 0%);
+  }
+  &.top-right {
+    top: 0.5em;
+    right: 0.5em;
+  }
+  &.mid-left {
+    left: 0.5em;
+    top: 50%;
+    transform: translate(0%, -50%);
+  }
+  &.mid-center {
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+  }
+  &.mid-right {
+    top: 50%;
+    right: 0.5em;
+    transform: translate(0%, -50%);
+  }
+  &.bottom-left {
+    bottom: 1.5em;
+    left: 0.5em;
+  }
+  &.bottom-center {
+    bottom: 1.5em;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, 0%);
+  }
+  &.bottom-right {
+    bottom: 1.5em;
+    right: 0.5em;
+  }
+  &.full-width {
+    max-width: 100%;
+  }
+  &.two-thirds {
+    max-width: 66%;
+  }
+  &.half-width {
+    max-width: 50%;
+  }
+  &.narrow-third {
+    max-width: 34%;
+  }
+}
+
+@media (max-width: 992px) {
+  .slidecontainer {
+    h1, h2 {
+      font-size: 2.5rem;
+    }
+    p {
+      font-size: 1.125em;
+      line-height: 1.125em;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .slidecontainer {
+    h1, h2 {
+      font-size: 2.5rem;
+    }
+    p {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+  .blurbcontainer {
+    .btn {
+      font-size: 0.8125em;
+    }
+    > .blurbshell {
+      &.top-left, &.top-center, &.top-right {
+        top: 0.3em;
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  body .flexslider:hover {
+    .flex-next {
+      opacity: 0.7;
+      right: 10px;
+      top: 120px;
+    }
+    .flex-prev {
+      opacity: 0.7;
+      left: 10px;
+      top: 120px;
+    }
+  }
+  .slidecontainer {
+    h1, h2 {
+      font-size: 1.875rem;
+    }
+    .blurbcontainer > .blurbshell {
+      max-width: 80%;
+    }
+  }
+}
+
+@media (max-width: 450px) {
+  .slidecontainer {
+    .blurbcontainer > .blurbshell {
+      max-width: 100%;
+    }
+    h1, h2 {
+      font-size: 1.25rem;
+    }
+  }
+  .blurbcontainer .btn {
+    font-size: 0.75em;
+  }
+}
