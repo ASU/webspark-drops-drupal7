@@ -9,15 +9,20 @@
  * Implementation of hook_install().
  */
 function uto_carousel_install() {
-
 }
-
 
 /**
  * Implementation of hook_uninstall().
  */
 function uto_carousel_uninstall() {
+}
 
+/**
+ * Implements hook_update_N();
+ * + Updates UTO carousel permissions
+ */
+function uto_carousel_update_7000(&$sandbox) {
+  features_revert_module('uto_carousel');
 }
 
 /**
@@ -49,12 +54,6 @@ function uto_carousel_field_schema($field) {
       'not null' => FALSE,
     );
 
-    /*$schema['columns']['alt'] = array(
-      'type' => 'varchar',
-      'length' => '255',
-      'not null' => FALSE,
-    );*/
-
     $schema['indexes'] = array(
       'fid' => array('fid'),
     );
@@ -65,42 +64,6 @@ function uto_carousel_field_schema($field) {
         'columns' => array('fid' => 'fid'),
       ),
     );
-
-    /*$schema['columns']['actionlink'] = array(
-      'type' => 'varchar',
-      'length' => '255',
-      'not null' => FALSE,
-    );
-
-    $schema['columns']['actiontitle'] = array(
-      'type' => 'varchar',
-      'length' => '255',
-      'not null' => FALSE,
-    );
-
-    $schema['columns']['actionlink2'] = array(
-      'type' => 'varchar',
-      'length' => '255',
-      'not null' => FALSE,
-    );
-
-    $schema['columns']['actiontitle2'] = array(
-      'type' => 'varchar',
-      'length' => '255',
-      'not null' => FALSE,
-    );*/
-
-    /*$schema['columns']['position'] = array(
-      'type' => 'varchar',
-      'length' => '100',
-      'not null' => FALSE,
-    );*/
-
-    /*$schema['columns']['color'] = array(
-      'type' => 'varchar',
-      'length' => '100',
-      'not null' => FALSE,
-    );*/
 
     return $schema;
   }

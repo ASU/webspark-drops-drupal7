@@ -1,8 +1,8 @@
 name = ASU Webspark Carousel
-description = Adds a carousel of images and text into Webspark.
+description = [DEPRECATED - Use the ASU Spotlight instead.] Adds a carousel of images and text into Webspark.
 core = 7.x
-package = ASU Webspark
-version = 7.x-1.04
+package = ASU Deprecated
+version = 7.x-1.5
 project = uto_carousel
 dependencies[] = ctools
 dependencies[] = defaultconfig
