@@ -44,6 +44,11 @@ function initIsearchConfig() {
 
     $('.asu-isearch-configuration .form-type-checkbox:not([data-reactid])').each(function () {
         var label = $(this).find('label');
+
+        if (label.text() == '') {
+            label = $(this).find('.fake-label');
+        }
+
         var input = $(this).find('input');
         var targetId = input.attr('id');
         var className = targetId.replace(/^edit-/, '');
