@@ -1,3 +1,7 @@
+Webspark Content Callout 7.x-1.7, 2018-12-02
+--------------------------------------------
+- Removed js from webspark_seven theme and moved it back to this module.
+
 Webspark Content Callout 7.x-1.6, 2017-03-03
 ------------------------------
 - Removed Webspark Seven admin theme JS and moved it to that theme's folder.

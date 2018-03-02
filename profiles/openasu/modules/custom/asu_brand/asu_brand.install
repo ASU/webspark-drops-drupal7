@@ -100,3 +100,23 @@ function asu_brand_update_7104(&$sandbox) {
 function asu_brand_update_7105(&$sandbox) {
   variable_set('asu_brand_header_version', 'stable');
 }
+
+/**
+ * Implements hook_update_N()
+ * + Disable display of site name by Drupal, since the brand header is now handling it
+ */
+function asu_brand_update_7106(&$sandbox) {
+
+  variable_set('asu_brand_header_version', 'stable');
+
+  $themes = list_themes();
+
+  foreach ($themes AS $key => $item) {
+
+    $theme_key = 'theme_'.$key.'_settings';
+
+    $settings = variable_get($theme_key, array());
+    $settings['toggle_name'] = FALSE;
+    variable_set($theme_key, $settings);
+  }
+}
