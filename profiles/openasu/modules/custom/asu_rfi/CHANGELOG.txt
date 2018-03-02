@@ -1,4 +1,4 @@
-Drupal 7.x-1.7, 2017-03-02
+Drupal 7.x-1.8, 2017-03-02
 ——————————————————————————
 - Add misssing ->save() calls on the failed lead submission status 
   transitioning.
