@@ -1,10 +1,10 @@
-ASU Spotlight (Flexslider)
 
 asu_spotlight 7.x-1.8, 2018-01-31
 -----------------------
 - Added ellipsis to long image blurbs/taglines to fix mobile layout issues
 - Added SASS files for all future CSS development
 - Updated most element and font units from px to em or rem
+- fixed bug where the title link was empty if no link was provided in config
 
 asu_spotlight 7.x-1.7.1
 -----------------------
