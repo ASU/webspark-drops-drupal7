@@ -16,10 +16,12 @@ function asu_rfi_undergrad_post($data)
   if ($node_wrapper->field_rfi_submission_status->value() == "Incomplete") {
 
     $node_wrapper->field_rfi_submission_status->set('Pending');
+    $node_wrapper->save();
 
   } else if ($node_wrapper->field_rfi_submission_status->value() == "Pending") {
 
-    $node_wrapper->field_rfi_submission_status->set('Action Required');
+    $node_wrapper->field_rfi_submission_status->set('action_required');
+    $node_wrapper->save();
 
   }
 

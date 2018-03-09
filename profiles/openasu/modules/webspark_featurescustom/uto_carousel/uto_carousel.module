@@ -1,6 +1,5 @@
 <?php
 
-//include_once('uto_carousel.features.inc');
 include_once('uto_carousel.spotlight.inc');
 include_once('uto_carousel.features.inc');
 
@@ -24,40 +23,14 @@ function uto_carousel_entity_info_alter(&$entity_info) {
     );
 }
 
+/**
+ * Implements hook_theme()
+ */
 function uto_carousel_theme() {
-
     // Summary View
     $themes['uto_carousel'] = array(
         'template' => 'templates/uto-carousel-list',
-        //'original hook' => 'views-view',
-        /*'preprocess functions' => array(
-            'template_preprocess',
-            'template_preprocess_views_view',
-            //'uto_link_carousel_preprocess_views_view__asu_uto_article_summary__panel_pane'
-        ),*/
         'variables' => array('items' => array(), 'settings' => array())
     );
-
     return $themes;
-
-    /*return array(
-        // ASU flexslider container
-        'uto_carousel' => array(
-            'variables' => array('items' => array(), 'settings' => array()),
-            'template' => 'theme/uto_carousel',
-            'file' => 'theme/uto_carousel.theme.inc',
-        ),
-
-        // Slide container
-        'uto_carousel_list' => array(
-            'variables' => array('items' => array(), 'settings' => array()),
-            'file' => 'theme/uto_carousel.theme.inc',
-        ),
-
-        // Slide item
-        'uto_carousel_list_item' => array(
-            'variables' => array('item' => array(), 'settings' => array(), 'caption' => ''),
-            'file' => 'theme/uto_carousel.theme.inc',
-        ),
-    );*/
 }

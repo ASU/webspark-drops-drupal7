@@ -229,9 +229,21 @@ function webspark_featurescustom_update_7009(&$sandbox) {
     $items = array();
     $items['panopoly_pages'] = array('variable');
     features_revert($items);
-    watchdog('webspark_updates', '7009 -- Reverts Panopoly Page feature to apply missing settings to the Landing Page content type');
+    watchdog('webspark_updates', '7009 - Reverts Panopoly Page feature to apply missing settings to the Landing Page content type');
   }
   else {
     watchdog('webspark_updates', '7009 - Panopoly Pages module not enabled. No changes were made.', WATCHDOG_ALERT);
+  }
+  // WEBSPARK-1237 - Add ASU Spotlight permissions to editor role
+  $role = user_role_load_by_name("editor");
+  if (!empty($role->rid)) {
+    $rid = (int) $role->rid;
+    user_role_grant_permissions($rid, array(
+        'create fieldable asu_spotlight',
+        'edit fieldable asu_spotlight',
+        'delete fieldable asu_spotlight',
+      )
+    );
+    watchdog('webspark_updates', "7009 - Add ASU Spotlight permissions to editor role.");
   }
 }

@@ -254,6 +254,11 @@ function asu_spotlight_field_widget_form(&$form, &$form_state, $field, $instance
       '#title' => t('Title'),
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]['title']) ? $items[$delta]['title'] : NULL,
+      '#linkit' => array(
+        'enable' => TRUE,
+        'profile' => 'content_fields',
+        'button_text' => t('Search for existing content'),
+      ),
     );
 
     $element['link'] = array(
@@ -261,11 +266,35 @@ function asu_spotlight_field_widget_form(&$form, &$form_state, $field, $instance
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]['link']) ? $items[$delta]['link'] : NULL,
     );
+    // WEBSPARK-1069 - Added Media module integration (added to Panopoly 1.46 in panopoly_widgets)
+    $instance_settings = $instance['settings'];
+    $field_settings = $field['settings'];
 
     $element['fid'] = array(
       '#title' => t('Image'),
-      '#type' => 'managed_file',
-      '#upload_location' => file_field_widget_uri($field, $instance),
+      '#type' => 'media',
+      '#media_options' => array(
+        'global' => array(
+          'types' => array(
+            'image' => 'image'
+          ),
+          'enabledPlugins' => array(
+            'media_default--media_browser_1' => 'media_default--media_browser_1',
+            'upload' => 'upload',
+          ),
+          'schemes' => array(
+            'private' => 'private',
+            'public' => 'public',
+          ),
+          'file_directory' => isset($instance_settings['file_directory']) ? $instance_settings['file_directory'] : '',
+          'file_extensions' => isset($instance_settings['file_extensions']) ? $instance_settings['file_extensions'] : 'jpg jpeg gif png',
+          'max_filesize' => isset($instance_settings['max_filesize']) ? $instance_settings['max_filesize'] : 0,
+          'min_resolution' => isset($instance_settings['min_resolution']) ? $instance_settings['min_resolution'] : 0,
+          'max_resolution' => isset($instance_settings['max_resolution']) ? $instance_settings['max_resolution'] : 0,
+          'uri_scheme' => !empty($field_settings['uri_scheme']) ? $field_settings['uri_scheme'] : file_default_scheme(),
+          'multiselect' => FALSE,
+        ),
+      ),
       '#default_value' => isset($items[$delta]['fid']) ? $items[$delta]['fid'] : NULL,
     );
 
