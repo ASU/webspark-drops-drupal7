@@ -1,3 +1,15 @@
+7.x-1.51, 2018-02-22
+-------------------
+- No changes since last release.
+
+7.x-1.50, 2018-02-15
+-------------------
+- Undeclared radix_layouts dependency in panopoly_users.
+
+7.x-1.49, 2017-12-13
+-------------------
+- No changes since last release.
+
 7.x-1.48, 2017-11-30
 -------------------
 - No changes since last release.
