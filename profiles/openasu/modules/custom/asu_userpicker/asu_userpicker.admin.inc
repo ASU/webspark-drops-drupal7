@@ -21,7 +21,7 @@ function asu_userpicker_admin_settings($form, &$form_state) {
   $intro = '<p>The ASU Userpicker module provides an AJAX autocomplete ';
   $intro .= 'userpicker widget which allows you to search by name and ';
   $intro .= 'ASURITE ID to select users within your Drupal site as well as ';
-  $intro .= 'from ASU LDAP records.</p><p>If you select a user not yet in ';
+  $intro .= 'from ASU Solr or LDAP records.</p><p>If you select a user not yet in ';
   $intro .= 'your Drupal site, the userpicker creates the user when the ';
   $intro .= 'form is submitted.</p><p>This widget is easily assignable to ';
   $intro .= 'user reference fields using the Fields UI in Drupal and ';
@@ -38,9 +38,11 @@ function asu_userpicker_admin_settings($form, &$form_state) {
     '#markup' => t($intro, array('@add_cas_user' => url('admin/people/cas/create'))),
   );
 
-  $setup = '<p>When installed, the ASU Userpicker module creates an ';
-  $setup .= 'ASU LDAP server configuration. In order to begin using the ';
-  $setup .= 'userpicker <strong>you must obtain an LDAP ';
+  $setup = '<p>When installed, the ASU Userpicker module creates ';
+  $setup .= 'an ASU Solr server configuration. If the ldap_servers module is ';
+  $setup .= 'present and enabled at the time of install, then an ASU LDAP configuration will ';
+  $setup .= 'be created also. In order to begin using the ';
+  $setup .= 'userpicker with LDAP <strong>you must obtain an LDAP ';
   $setup .= 'application ID and password by emailing ';
   $setup .= '<a href="mailto:EDNATeam@asu.edu?subject=LDAP%20Application%20Account%20Request">EDNATeam@asu.edu</a>';
   $setup .= '</strong>. Please provide your site URLs and a brief ';
@@ -57,13 +59,40 @@ function asu_userpicker_admin_settings($form, &$form_state) {
     '#markup' => t($setup, array('@server_conf' => url('admin/config/people/ldap/servers/edit/asu_ldap'))),
   );
 
-  // Get the skinny on the LDAP server to use. User should consult ldap_server
-  // settings.
-  $form['asu_userpicker_ldap_server'] = array(
+  $form['asu_userpicker_solr_query_url'] = array(
     '#type' => 'textfield',
-    '#default_value' => variable_get('asu_userpicker_ldap_server', array()),
-    '#title' => t('LDAP server machine name'),
-    '#description' => t('Provide the machine name of the LDAP server to query.  ' . l('See LDAP servers available.', 'admin/config/people/ldap/servers')),
+    '#default_value' => variable_get('asu_userpicker_solr_query_url', 'https://asudir-solr.asu.edu/asudir/directory/select'),
+    '#title' => t('ASU Solr Query URL'),
+    '#description' => t('Provide the ASU Solr People Query URL. Probably https://asudir-solr.asu.edu/asudir/directory/select' ),
+    '#required' => TRUE,
+  );
+
+
+  $options = array(
+    'autocomplete/asu/user/solr' => 'Solr'
+  );
+
+  // If LDAP modules are present and enabled, then we add the option and the server config field
+  if (asu_userpicker_has_ldap()) {
+    // Get the skinny on the LDAP server to use. User should consult ldap_server
+    // settings.
+    $form['asu_userpicker_ldap_server'] = array(
+      '#type' => 'textfield',
+      '#default_value' => variable_get('asu_userpicker_ldap_server', array()),
+      '#title' => t('LDAP server machine name'),
+      '#description' => t('Provide the machine name of the LDAP server to query.  ' . l('See LDAP servers available.', 'admin/config/people/ldap/servers')),
+      '#required' => TRUE,
+    );
+
+    $options['autocomplete/asu/user'] = 'LDAP';
+  }
+
+  $form['asu_userpicker_service_default'] = array(
+    '#type' => 'select',
+    '#default_value' => variable_get('asu_userpicker_service_default', ASU_USERPICKER_SOLR_AUTOCOMPLETE_PATH),
+    '#title' => t('Default Service'),
+    '#description' => t('Use either the Solr or LDAP service by default for new ASU User Autocomplete field widgets.' ),
+    '#options' => $options,
     '#required' => TRUE,
   );
 

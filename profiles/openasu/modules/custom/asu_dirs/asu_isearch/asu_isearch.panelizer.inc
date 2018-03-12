@@ -227,6 +227,69 @@ function asu_isearch_panelizer_defaults() {
   $display->content['new-9469bf51-9918-42c4-a0c7-134e95eb5d92'] = $pane;
   $display->panels['contact'][3] = 'new-9469bf51-9918-42c4-a0c7-134e95eb5d92';
   $pane = new stdClass();
+  $pane->pid = 'new-9a12e3be-d622-4c94-ae3d-d3301f5da160';
+  $pane->panel = 'contact';
+  $pane->type = 'entity_field';
+  $pane->subtype = 'node:field_isearch_addr_line_three';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'label' => 'hidden',
+    'formatter' => 'text_default',
+    'delta_limit' => 0,
+    'delta_offset' => '0',
+    'delta_reversed' => FALSE,
+    'formatter_settings' => array(),
+    'context' => array(),
+    'override_title' => 0,
+    'override_title_text' => '',
+    'override_title_heading' => 'h2',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 4;
+  $pane->locks = array();
+  $pane->uuid = '9a12e3be-d622-4c94-ae3d-d3301f5da160';
+  $display->content['new-9a12e3be-d622-4c94-ae3d-d3301f5da160'] = $pane;
+  $display->panels['contact'][4] = 'new-9a12e3be-d622-4c94-ae3d-d3301f5da160';
+  $pane = new stdClass();
+  $pane->pid = 'new-0c7a0e2f-bdb3-400f-b9cf-9d26eb7a1b60';
+  $pane->panel = 'contact';
+  $pane->type = 'entity_field';
+  $pane->subtype = 'node:field_isearch_city';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'label' => 'hidden',
+    'formatter' => 'text_default',
+    'delta_limit' => 0,
+    'delta_offset' => '0',
+    'delta_reversed' => FALSE,
+    'formatter_settings' => array(),
+    'context' => array(),
+    'override_title' => 0,
+    'override_title_text' => '',
+    'override_title_heading' => 'h2',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array(
+    'css_id' => '',
+    'css_class' => '.isearch_city',
+  );
+  $pane->extras = array();
+  $pane->position = 5;
+  $pane->locks = array();
+  $pane->uuid = '0c7a0e2f-bdb3-400f-b9cf-9d26eb7a1b60';
+  $display->content['new-0c7a0e2f-bdb3-400f-b9cf-9d26eb7a1b60'] = $pane;
+  $display->panels['contact'][5] = 'new-0c7a0e2f-bdb3-400f-b9cf-9d26eb7a1b60';
+  $pane = new stdClass();
   $pane->pid = 'new-cab943f3-abd7-45bf-9f5d-19d5506307cf';
   $pane->panel = 'header';
   $pane->type = 'node_title';
@@ -257,7 +320,7 @@ function asu_isearch_panelizer_defaults() {
   $pane->pid = 'new-adfb4591-2608-4c80-a849-1c2924acf758';
   $pane->panel = 'maincontent';
   $pane->type = 'fieldable_panels_pane';
-  $pane->subtype = 'fpid:889';
+  $pane->subtype = 'fpid:3';
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
@@ -424,7 +487,7 @@ function asu_isearch_panelizer_defaults() {
   $pane->pid = 'new-8be2b6de-7166-4f46-9ad6-6a97b32073f1';
   $pane->panel = 'maincontent';
   $pane->type = 'fieldable_panels_pane';
-  $pane->subtype = 'fpid:890';
+  $pane->subtype = 'fpid:5';
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
@@ -620,7 +683,7 @@ function asu_isearch_panelizer_defaults() {
   $pane->pid = 'new-bc98b089-23f9-4c8f-b93e-138b7b6083ba';
   $pane->panel = 'maincontent';
   $pane->type = 'fieldable_panels_pane';
-  $pane->subtype = 'fpid:888';
+  $pane->subtype = 'fpid:2';
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
@@ -728,7 +791,7 @@ function asu_isearch_panelizer_defaults() {
   $pane->pid = 'new-ad7abd4f-b4e2-4c77-902e-75b4e3bf7984';
   $pane->panel = 'maincontent';
   $pane->type = 'fieldable_panels_pane';
-  $pane->subtype = 'fpid:891';
+  $pane->subtype = 'fpid:6';
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(

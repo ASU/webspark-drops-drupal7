@@ -72,6 +72,8 @@ function asu_isearch_field_group_info() {
       18 => 'field_isearch_photo_url',
       19 => 'field_isearch_primary_aff',
       20 => 'field_isearch_primary_campus',
+      21 => 'field_isearch_addr_line_three',
+      22 => 'field_isearch_city',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -96,7 +98,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Bio',
-    'weight' => '8',
+    'weight' => '9',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -147,7 +149,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Left',
-    'weight' => '4',
+    'weight' => '5',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -168,7 +170,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Right',
-    'weight' => '6',
+    'weight' => '7',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -189,7 +191,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Details',
-    'weight' => '3',
+    'weight' => '4',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -238,7 +240,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Industry Experience',
-    'weight' => '29',
+    'weight' => '30',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -263,9 +265,9 @@ function asu_isearch_field_group_info() {
     'children' => array(
       0 => 'field_board',
       1 => 'field_consulting',
-      2 => 'field_industry_positions',
-      3 => 'field_pro_bono',
-      4 => 'field_executive_courses',
+      2 => 'field_executive_courses',
+      3 => 'field_industry_positions',
+      4 => 'field_pro_bono',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -381,11 +383,12 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Contact',
-    'weight' => '1',
+    'weight' => '2',
     'children' => array(
       0 => 'field_isearch_campus_building',
       1 => 'field_isearch_email',
       2 => 'field_isearch_phone',
+      3 => 'field_isearch_addr_line_three',
     ),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -447,7 +450,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Portrait Section',
-    'weight' => '0',
+    'weight' => '1',
     'children' => array(
       0 => 'group_portrait_image',
     ),
@@ -479,7 +482,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Social',
-    'weight' => '2',
+    'weight' => '3',
     'children' => array(
       0 => 'field_isearch_social_facebook',
       1 => 'field_isearch_social_googleplus',
@@ -515,7 +518,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Public Work',
-    'weight' => '22',
+    'weight' => '23',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -600,7 +603,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Research',
-    'weight' => '13',
+    'weight' => '14',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -623,12 +626,12 @@ function asu_isearch_field_group_info() {
     'label' => 'Research',
     'weight' => '6',
     'children' => array(
-      0 => 'field_isearch_rsrch_activity',
-      1 => 'field_isearch_rsrch_group',
-      2 => 'field_isearch_rsrch_interests',
-      3 => 'field_isearch_rsrch_publications',
-      4 => 'field_isearch_rsrch_website',
-      5 => 'field_isearch_google_scholar',
+      0 => 'field_isearch_google_scholar',
+      1 => 'field_isearch_rsrch_activity',
+      2 => 'field_isearch_rsrch_group',
+      3 => 'field_isearch_rsrch_interests',
+      4 => 'field_isearch_rsrch_publications',
+      5 => 'field_isearch_rsrch_website',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -684,7 +687,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Tabs',
-    'weight' => '35',
+    'weight' => '36',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -733,7 +736,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Teaching',
-    'weight' => '36',
+    'weight' => '37',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(

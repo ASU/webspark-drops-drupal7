@@ -1,3 +1,13 @@
+asu_isearch 7.x-1.9
+-------------------
+- Fixed bug where default photo was being deleted upon cron run
+- Added addressLine3 and city fields to profile
+- Added js to move location info to line beneath contact info on profile
+- Affiliation campus and mailcode fields are now mapped to the primaryJobCampus and primaryMailCode fields in Solr
+- Fixed styling discrepancies on profile and listing views to bring them more in line with iSearch and Web Standards
+- Fixed bug where checkbox labels disappear after removing default photo on admin form
+- Removed broken default photo field logic where field was not being toggled as visible/invisible by checkbox
+
 asu_isearch 7.x-1.8.12
 ----------------------
 - Added affil_hide, affil_weight, Google scholar, student info, and executive courses fields to the profile
