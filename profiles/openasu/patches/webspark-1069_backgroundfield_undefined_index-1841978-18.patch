@@ -1,0 +1,17 @@
+diff --git a/backgroundfield.module b/backgroundfield.module
+index 21187dd..473dc27 100644
+--- a/backgroundfield.module
++++ b/backgroundfield.module
+@@ -192,6 +192,12 @@ function backgroundfield_field_delete_revision($entity_type, $entity, $field, $i
+ function backgroundfield_field_update_field($field, $prior_field, $has_data) {
+   // hack so we can use the default image function
+   $field['type'] = 'image';
++  if (!isset($field['settings']['default_image'])) {
++    $field['settings']['default_image'] = NULL;
++  }
++  if (!isset($prior_field['settings']['default_image'])) {
++    $prior_field['settings']['default_image'] = NULL;
++  }
+   image_field_update_field($field, $prior_field, $has_data);
+ }
+ 

@@ -125,8 +125,10 @@ projects[webform][subdir] = contrib
 projects[backgroundfield][version] = 1.5
 projects[backgroundfield][type] = module
 projects[backgroundfield][subdir] = contrib
-;; WEBSPARK-481 - BackgroundField image patch - default_image error
-projects[backgroundfield][patch][1841978] = https://www.drupal.org/files/backgroundfield_undefined_index-1841978-18.patch
+; WEBSPARK-481 - BackgroundField image patch - default_image error
+;https://www.drupal.org/files/backgroundfield_undefined_index-1841978-18.patch
+projects[backgroundfield][patch][1841978] = patches/webspark-1069_backgroundfield_undefined_index-1841978-18.patch
+projects[backgroundfield][patch][1936252] = patches/webspark-1069_backgroundfield-media-module-support.patch
 
 ; CAS SSO Integration
 projects[cas][version] = 1.5
