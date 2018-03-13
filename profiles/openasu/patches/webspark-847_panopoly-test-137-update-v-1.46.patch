@@ -11,8 +11,8 @@ index 9c355d8..91f8171 100644
 
 diff --git a/behat/features/wysiwyg.feature b/behat/features/wysiwyg.feature
 index 2e848ec..7dd372e 100644
---- behat/features/wysiwyg.feature
-+++ behat/features/wysiwyg.feature
+--- a/behat/features/wysiwyg.feature
++++ b/behat/features/wysiwyg.feature
 @@ -39,10 +39,10 @@ Feature: Use rich text editor
        | Align Center                  | p          | text-align      | center       |
        | Align Right                   | p          | text-align      | right        |
@@ -39,7 +39,7 @@ diff --git a/behat/behat.travis.yml b/behat/behat.travis.yml
 new file mode 100644
 index 0000000..9d9568a
 --- /dev/null
-+++ behat/behat.travis.yml
++++ b/behat/behat.travis.yml
 @@ -0,0 +1,18 @@
 +imports:
 +    - behat.common.yml
@@ -62,8 +62,8 @@ index 0000000..9d9568a
 
 diff --git a/behat/features/basic_ipe.feature b/behat/features/basic_ipe.feature
 index b7f1684..7da1e39 100644
---- behat/features/basic_ipe.feature
-+++ behat/features/basic_ipe.feature
+--- a/behat/features/basic_ipe.feature
++++ b/behat/features/basic_ipe.feature
 @@ -5,14 +5,19 @@ Feature: Make basic changes with the IPE
 
    Background:
@@ -94,8 +94,8 @@ index b7f1684..7da1e39 100644
 +    Then I should see "Basic IPE Testing title"
 diff --git a/behat/features/contentpage.feature b/behat/features/contentpage.feature
 index bbdf206..cc90c92 100644
---- behat/features/contentpage.feature
-+++ behat/features/contentpage.feature
+--- a/behat/features/contentpage.feature
++++ b/behat/features/contentpage.feature
 @@ -14,20 +14,20 @@ Feature: Add content page
  
    @api @panopoly_pages
@@ -123,8 +123,8 @@ index bbdf206..cc90c92 100644
        | Title               | Testing title |
 diff --git a/behat/features/demo.feature b/behat/features/demo.feature
 index 6e68299..af5c910 100644
---- behat/features/demo.feature
-+++ behat/features/demo.feature
+--- a/behat/features/demo.feature
++++ b/behat/features/demo.feature
 @@ -3,13 +3,13 @@ Feature: Demo content
    As a site owner
    I need to view demo content
@@ -152,8 +152,8 @@ index 6e68299..af5c910 100644
      When I visit "/admin/structure/menu/manage/main-menu/edit"
 diff --git a/behat/features/help.feature b/behat/features/help.feature
 index 8a4ccec..0f17a8e 100644
---- behat/features/help.feature
-+++ behat/features/help.feature
+--- a/behat/features/help.feature
++++ b/behat/features/help.feature
 @@ -3,7 +3,7 @@ Feature: View system help
    As a site owner
    I need to be able to view content in the system help region
@@ -165,8 +165,8 @@ index 8a4ccec..0f17a8e 100644
      When I visit "/node/add/panopoly-test-page"
 diff --git a/behat/features/landingpage.feature b/behat/features/landingpage.feature
 index bb29ec9..181ea42 100644
---- behat/features/landingpage.feature
-+++ behat/features/landingpage.feature
+--- a/behat/features/landingpage.feature
++++ b/behat/features/landingpage.feature
 @@ -5,14 +5,24 @@ Feature: Add landing page
  
    Background:
@@ -196,8 +196,8 @@ index bb29ec9..181ea42 100644
 +    Then the "edit-always-show-page-title" checkbox should not be checked
 diff --git a/behat/features/linkit.feature b/behat/features/linkit.feature
 index f091fe0..5158fa7 100644
---- behat/features/linkit.feature
-+++ behat/features/linkit.feature
+--- a/behat/features/linkit.feature
++++ b/behat/features/linkit.feature
 @@ -6,12 +6,15 @@ Feature: Link to page on the site
    Background:
      Given I am logged in as a user with the "administrator" role
@@ -241,8 +241,8 @@ index f091fe0..5158fa7 100644
 +    Then the "edit-always-show-page-title" checkbox should not be checked
 diff --git a/behat/features/login.feature b/behat/features/login.feature
 index 746acb7..8281ca6 100644
---- behat/features/login.feature
-+++ behat/features/login.feature
+--- a/behat/features/login.feature
++++ b/behat/features/login.feature
 @@ -16,7 +16,7 @@ I want to be able to login
      And I press "Log in"
      Then I should see "Log out"
@@ -263,8 +263,8 @@ index 746acb7..8281ca6 100644
      Then I should see the heading "Reset password"
 diff --git a/behat/features/pathauto_administrator.feature b/behat/features/pathauto_administrator.feature
 index deadd93..0019210 100644
---- behat/features/pathauto_administrator.feature
-+++ behat/features/pathauto_administrator.feature
+--- a/behat/features/pathauto_administrator.feature
++++ b/behat/features/pathauto_administrator.feature
 @@ -6,7 +6,10 @@ Feature: Test pathauto for administrator users
    Background:
      Given I am logged in as a user with the "administrator" role
@@ -331,8 +331,8 @@ index deadd93..0019210 100644
 +
 diff --git a/behat/features/pathauto_editor.feature b/behat/features/pathauto_editor.feature
 index 7356926..f105805 100644
---- behat/features/pathauto_editor.feature
-+++ behat/features/pathauto_editor.feature
+--- a/behat/features/pathauto_editor.feature
++++ b/behat/features/pathauto_editor.feature
 @@ -4,9 +4,13 @@ Feature: Test pathauto for editor users
    I need to be able to trust that pathauto works consistently
  
@@ -385,9 +385,9 @@ index 7356926..f105805 100644
 +    Then the "edit-always-show-page-title" checkbox should not be checked
 diff --git a/behat/steps/panopoly_test.behat.inc b/behat/steps/panopoly_test.behat.inc
 index 01fb66b..02faa86 100644
---- behat/steps/panopoly_test.behat.inc
-+++ behat/steps/panopoly_test.behat.inc
-@@ -474,7 +474,7 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
+--- a/behat/steps/panopoly_test.behat.inc
++++ b/behat/steps/panopoly_test.behat.inc
+@@ -516,7 +516,7 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
    public function waitForLivePreview() {
      // Make sure the live preview has triggered by bluring the current focus.
      $this->getSession()->executeScript("document.activeElement.blur()");
@@ -398,8 +398,8 @@ index 01fb66b..02faa86 100644
    /**
 diff --git a/behat/steps/panopoly_test_panels.behat.inc b/behat/steps/panopoly_test_panels.behat.inc
 index baa12ed..3b3bd42 100644
---- behat/steps/panopoly_test_panels.behat.inc
-+++ behat/steps/panopoly_test_panels.behat.inc
+--- a/behat/steps/panopoly_test_panels.behat.inc
++++ b/behat/steps/panopoly_test_panels.behat.inc
 @@ -33,7 +33,7 @@ class PanelsSubContext extends RawDrupalContext implements DrupalSubContextInter
     * @When I wait for the Panels IPE to activate
     */
@@ -430,350 +430,350 @@ index baa12ed..3b3bd42 100644
    }
  
  }
- diff --git a/behat/features/contentitem_widget.feature b/behat/features/contentitem_widget.feature
- index 3bfd3f6..2c772b2 100644
- --- behat/features/contentitem_widget.feature
- +++ behat/features/contentitem_widget.feature
- @@ -3,73 +3,73 @@ Feature: Add content item
-    As a site administrator
-    I need to be able to choose which content item
+diff --git a/behat/features/contentitem_widget.feature b/behat/features/contentitem_widget.feature
+index 3bfd3f6..2c772b2 100644
+--- a/behat/features/contentitem_widget.feature
++++ b/behat/features/contentitem_widget.feature
+@@ -3,73 +3,73 @@ Feature: Add content item
+   As a site administrator
+   I need to be able to choose which content item
 
- -  @api @javascript @panopoly_widgets
- +  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
-    Scenario: Content item autocomplete should only offer nodes of the selected type
-      Given I am logged in as a user with the "administrator" role
-        And Panopoly magic live previews are disabled
-        And "panopoly_test_page" content:
-        | title       | body      | created            | status |
- -      | Test Page 1 | Test body | 01/01/2001 11:00am |      1 |
- +      | Pano Test 1 | Test body | 01/01/2001 11:00am |      1 |
-        And I am viewing a landing page
-      When I customize this page with the Panels IPE
-        And I click "Add new pane"
- -      And I click "Add content item" in the "CTools modal" region
- -    Then I should see "Configure new Add content item"
- +      And I click "Add existing content" in the "CTools modal" region
- +    Then I should see "Configure new Add existing content"
-      When I select "- Any -" from "exposed[type]"
- -      And I select the first autocomplete option for "test" on the "exposed[title]" field
- -    Then the "exposed[title]" field should contain "Test Page 1"
- +      And I select the first autocomplete option for "pano test" on the "exposed[title]" field
- +    Then the "exposed[title]" field should contain "Pano Test 1"
-      When I select "Test Page" from "exposed[type]"
- -      And I select the first autocomplete option for "test" on the "exposed[title]" field
- -    Then the "exposed[title]" field should contain "Test Page 1"
- +      And I select the first autocomplete option for "pano test" on the "exposed[title]" field
- +    Then the "exposed[title]" field should contain "Pano Test 1"
-      When I select "Content Page" from "exposed[type]"
- -      And I select the first autocomplete option for "test" on the "exposed[title]" field
- -    Then the "exposed[title]" field should not contain "Test Page 1"
- +      And I select the first autocomplete option for "pano test" on the "exposed[title]" field
- +    Then the "exposed[title]" field should not contain "Pano Test 1"
+-  @api @javascript @panopoly_widgets
++  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
+   Scenario: Content item autocomplete should only offer nodes of the selected type
+     Given I am logged in as a user with the "administrator" role
+       And Panopoly magic live previews are disabled
+       And "panopoly_test_page" content:
+       | title       | body      | created            | status |
+-      | Test Page 1 | Test body | 01/01/2001 11:00am |      1 |
++      | Pano Test 1 | Test body | 01/01/2001 11:00am |      1 |
+       And I am viewing a landing page
+     When I customize this page with the Panels IPE
+       And I click "Add new pane"
+-      And I click "Add content item" in the "CTools modal" region
+-    Then I should see "Configure new Add content item"
++      And I click "Add existing content" in the "CTools modal" region
++    Then I should see "Configure new Add existing content"
+     When I select "- Any -" from "exposed[type]"
+-      And I select the first autocomplete option for "test" on the "exposed[title]" field
+-    Then the "exposed[title]" field should contain "Test Page 1"
++      And I select the first autocomplete option for "pano test" on the "exposed[title]" field
++    Then the "exposed[title]" field should contain "Pano Test 1"
+     When I select "Test Page" from "exposed[type]"
+-      And I select the first autocomplete option for "test" on the "exposed[title]" field
+-    Then the "exposed[title]" field should contain "Test Page 1"
++      And I select the first autocomplete option for "pano test" on the "exposed[title]" field
++    Then the "exposed[title]" field should contain "Pano Test 1"
+     When I select "Content Page" from "exposed[type]"
+-      And I select the first autocomplete option for "test" on the "exposed[title]" field
+-    Then the "exposed[title]" field should not contain "Test Page 1"
++      And I select the first autocomplete option for "pano test" on the "exposed[title]" field
++    Then the "exposed[title]" field should not contain "Pano Test 1"
 
- -  @api @javascript @panopoly_widgets
- -  Scenario: Add content item (as "Fields")
- +  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
- +  Scenario: Add existing content (as "Fields")
-      Given I am logged in as a user with the "administrator" role
-      And Panopoly magic live previews are disabled
-      And "panopoly_test_page" content:
-        | title       | body      | created            | status |
- -      | Test Page 1 | Test body | 01/01/2001 11:00am |      1 |
- +      | Pano Test 1 | Test body | 01/01/2001 11:00am |      1 |
-        And I am viewing a landing page
-      When I customize this page with the Panels IPE
-        And I click "Add new pane"
- -      And I click "Add content item" in the "CTools modal" region
- -    Then I should see "Configure new Add content item"
- +      And I click "Add existing content" in the "CTools modal" region
- +    Then I should see "Configure new Add existing content"
-      When I select "Test Page" from "exposed[type]"
-        And I fill in the following:
- -      | exposed[title] | Test Page 1       |
- +      | exposed[title] | Pano Test 1       |
-        | widget_title   | Test Widget Title |
-        And I press "Add" in the "CTools modal" region
-        And I press "Save"
-        And I wait for the Panels IPE to deactivate
-      Then I should see "Test Widget Title"
- -      And I should see "Test Page 1"
- +      And I should see "Pano Test 1"
-        And I should see "January 1, 2001"
-        And I should see "Posted by Anonymous"
+-  @api @javascript @panopoly_widgets
+-  Scenario: Add content item (as "Fields")
++  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
++  Scenario: Add existing content (as "Fields")
+     Given I am logged in as a user with the "administrator" role
+     And Panopoly magic live previews are disabled
+     And "panopoly_test_page" content:
+       | title       | body      | created            | status |
+-      | Test Page 1 | Test body | 01/01/2001 11:00am |      1 |
++      | Pano Test 1 | Test body | 01/01/2001 11:00am |      1 |
+       And I am viewing a landing page
+     When I customize this page with the Panels IPE
+       And I click "Add new pane"
+-      And I click "Add content item" in the "CTools modal" region
+-    Then I should see "Configure new Add content item"
++      And I click "Add existing content" in the "CTools modal" region
++    Then I should see "Configure new Add existing content"
+     When I select "Test Page" from "exposed[type]"
+       And I fill in the following:
+-      | exposed[title] | Test Page 1       |
++      | exposed[title] | Pano Test 1       |
+       | widget_title   | Test Widget Title |
+       And I press "Add" in the "CTools modal" region
+       And I press "Save"
+       And I wait for the Panels IPE to deactivate
+     Then I should see "Test Widget Title"
+-      And I should see "Test Page 1"
++      And I should see "Pano Test 1"
+       And I should see "January 1, 2001"
+       And I should see "Posted by Anonymous"
 
- -  @api @javascript @panopoly_widgets
- -  Scenario: Add content item (as "Content")
- +  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
- +  Scenario: Add existing content (as "Content")
-      Given I am logged in as a user with the "administrator" role
-        And Panopoly magic live previews are disabled
-        And "panopoly_test_page" content:
-        | title       | body      | created            | status |
- -      | Test Page 1 | Test body | 01/01/2001 11:00am |      1 |
- +      | Pano Test 1 | Test body | 01/01/2001 11:00am |      1 |
-        And I am viewing a landing page
-      When I customize this page with the Panels IPE
-        And I click "Add new pane"
- -      And I click "Add content item" in the "CTools modal" region
- -    Then I should see "Configure new Add content item"
- +      And I click "Add existing content" in the "CTools modal" region
- +    Then I should see "Configure new Add existing content"
-      When I select "Test Page" from "exposed[type]"
-        And I fill in the following:
- -      | exposed[title] | Test Page 1       |
- +      | exposed[title] | Pano Test 1       |
-        And I select the radio button "Content"
-        And I select the radio button "Teaser"
-        And I press "Add" in the "CTools modal" region
-        And I press "Save"
-        And I wait for the Panels IPE to deactivate
- -    Then I should see "Test Page 1"
- +    Then I should see "Pano Test 1"
-        And I should see "Test body"
-      # Now, if we override the title, the page title should disappear and be
-      # replaced by our override.
- @@ -81,59 +81,59 @@ Feature: Add content item
-        And I press "Save"
-        And I wait for the Panels IPE to deactivate
-      Then I should see "Test Widget Title"
- -     And I should not see "Test Page 1"
- +      And I should not see "Pano Test 1"
+-  @api @javascript @panopoly_widgets
+-  Scenario: Add content item (as "Content")
++  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
++  Scenario: Add existing content (as "Content")
+     Given I am logged in as a user with the "administrator" role
+       And Panopoly magic live previews are disabled
+       And "panopoly_test_page" content:
+       | title       | body      | created            | status |
+-      | Test Page 1 | Test body | 01/01/2001 11:00am |      1 |
++      | Pano Test 1 | Test body | 01/01/2001 11:00am |      1 |
+       And I am viewing a landing page
+     When I customize this page with the Panels IPE
+       And I click "Add new pane"
+-      And I click "Add content item" in the "CTools modal" region
+-    Then I should see "Configure new Add content item"
++      And I click "Add existing content" in the "CTools modal" region
++    Then I should see "Configure new Add existing content"
+     When I select "Test Page" from "exposed[type]"
+       And I fill in the following:
+-      | exposed[title] | Test Page 1       |
++      | exposed[title] | Pano Test 1       |
+       And I select the radio button "Content"
+       And I select the radio button "Teaser"
+       And I press "Add" in the "CTools modal" region
+       And I press "Save"
+       And I wait for the Panels IPE to deactivate
+-    Then I should see "Test Page 1"
++    Then I should see "Pano Test 1"
+       And I should see "Test body"
+     # Now, if we override the title, the page title should disappear and be
+     # replaced by our override.
+@@ -81,59 +81,59 @@ Feature: Add content item
+       And I press "Save"
+       And I wait for the Panels IPE to deactivate
+     Then I should see "Test Widget Title"
+-     And I should not see "Test Page 1"
++      And I should not see "Pano Test 1"
 
- -  @api @javascript @panopoly_widgets
- +  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
-    Scenario: Title override should work for all view modes
-      Given I am logged in as a user with the "administrator" role
-        And Panopoly magic live previews are disabled
-        And "panopoly_test_page" content:
-        | title       | body      | created            | status |
- -      | Test Page 1 | Test body | 01/01/2001 11:00am |      1 |
- +      | Pano Test 1 | Test body | 01/01/2001 11:00am |      1 |
-        And I am viewing a landing page
-      When I customize this page with the Panels IPE
-        And I click "Add new pane"
- -      And I click "Add content item" in the "CTools modal" region
- -    Then I should see "Configure new Add content item"
- +      And I click "Add existing content" in the "CTools modal" region
- +    Then I should see "Configure new Add existing content"
-      When I select "Test Page" from "exposed[type]"
-        And I fill in the following:
- -      | exposed[title] | Test Page 1       |
- +      | exposed[title] | Pano Test 1       |
-        | widget_title   | Test Widget Title |
-        And I select the radio button "Content"
-        And I select the radio button "Teaser"
-        And I press "Add" in the "CTools modal" region
-      Then I should see "Test Widget Title"
- -     And I should not see "Test Page 1"
- +      And I should not see "Pano Test 1"
-      # Next, try Full content.
-      When I click "Settings" in the "Boxton Content" region
-        And I select the radio button "Full content"
-        And I press "Save" in the "CTools modal" region
-      Then I should see "Test Widget Title"
- -     And I should not see "Test Page 1"
- +      And I should not see "Pano Test 1"
-      # Next, try Featured.
-      When I click "Settings" in the "Boxton Content" region
-        And I select the radio button "Featured"
-        And I press "Save" in the "CTools modal" region
-      Then I should see "Test Widget Title"
- -     And I should not see "Test Page 1"
- +      And I should not see "Pano Test 1"
-      # Prevent modal popup from breaking subsequent tests.
-      When I press "Save"
-        And I wait for the Panels IPE to deactivate
+-  @api @javascript @panopoly_widgets
++  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
+   Scenario: Title override should work for all view modes
+     Given I am logged in as a user with the "administrator" role
+       And Panopoly magic live previews are disabled
+       And "panopoly_test_page" content:
+       | title       | body      | created            | status |
+-      | Test Page 1 | Test body | 01/01/2001 11:00am |      1 |
++      | Pano Test 1 | Test body | 01/01/2001 11:00am |      1 |
+       And I am viewing a landing page
+     When I customize this page with the Panels IPE
+       And I click "Add new pane"
+-      And I click "Add content item" in the "CTools modal" region
+-    Then I should see "Configure new Add content item"
++      And I click "Add existing content" in the "CTools modal" region
++    Then I should see "Configure new Add existing content"
+     When I select "Test Page" from "exposed[type]"
+       And I fill in the following:
+-      | exposed[title] | Test Page 1       |
++      | exposed[title] | Pano Test 1       |
+       | widget_title   | Test Widget Title |
+       And I select the radio button "Content"
+       And I select the radio button "Teaser"
+       And I press "Add" in the "CTools modal" region
+     Then I should see "Test Widget Title"
+-     And I should not see "Test Page 1"
++      And I should not see "Pano Test 1"
+     # Next, try Full content.
+     When I click "Settings" in the "Boxton Content" region
+       And I select the radio button "Full content"
+       And I press "Save" in the "CTools modal" region
+     Then I should see "Test Widget Title"
+-     And I should not see "Test Page 1"
++      And I should not see "Pano Test 1"
+     # Next, try Featured.
+     When I click "Settings" in the "Boxton Content" region
+       And I select the radio button "Featured"
+       And I press "Save" in the "CTools modal" region
+     Then I should see "Test Widget Title"
+-     And I should not see "Test Page 1"
++      And I should not see "Pano Test 1"
+     # Prevent modal popup from breaking subsequent tests.
+     When I press "Save"
+       And I wait for the Panels IPE to deactivate
 
- -  @api @javascript @panopoly_widgets
- +  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
-    Scenario: Title override should work with non-Panelizer content types
-      Given I am logged in as a user with the "administrator" role
-        And Panopoly magic live previews are disabled
-        And "panopoly_test_page_simple" content:
-        | title       | body      | created            | status |
- -      | Test Page 1 | Test body | 01/01/2001 11:00am |      1 |
- +      | Pano Test 1 | Test body | 01/01/2001 11:00am |      1 |
-        And I am viewing a landing page
-      When I customize this page with the Panels IPE
-        And I click "Add new pane"
- -      And I click "Add content item" in the "CTools modal" region
- -    Then I should see "Configure new Add content item"
- +      And I click "Add existing content" in the "CTools modal" region
- +    Then I should see "Configure new Add existing content"
-      When I select "Test Page (without Panelizer)" from "exposed[type]"
-        And I fill in the following:
- -      | exposed[title] | Test Page 1       |
- +      | exposed[title] | Pano Test 1       |
-        | widget_title   | Test Widget Title |
-        And I select the radio button "Content"
- @@ -140,46 +140,46 @@ Feature: Add content item
-        And I select the radio button "Teaser"
-        And I press "Add" in the "CTools modal" region
-      Then I should see "Test Widget Title"
- -     And I should not see "Test Page 1"
- +      And I should not see "Pano Test 1"
-      # Next, try Full content.
-      When I click "Settings" in the "Boxton Content" region
-        And I select the radio button "Full content"
-        And I press "Save" in the "CTools modal" region
-      Then I should see "Test Widget Title"
- -     And I should not see "Test Page 1"
- +      And I should not see "Pano Test 1"
-      # Next, try Featured.
-      When I click "Settings" in the "Boxton Content" region
-        And I select the radio button "Featured"
-        And I press "Save" in the "CTools modal" region
-      Then I should see "Test Widget Title"
- -     And I should not see "Test Page 1"
- +      And I should not see "Pano Test 1"
-      # Prevent modal popup from breaking subsequent tests.
-      When I press "Save"
-        And I wait for the Panels IPE to deactivate
+-  @api @javascript @panopoly_widgets
++  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
+   Scenario: Title override should work with non-Panelizer content types
+     Given I am logged in as a user with the "administrator" role
+       And Panopoly magic live previews are disabled
+       And "panopoly_test_page_simple" content:
+       | title       | body      | created            | status |
+-      | Test Page 1 | Test body | 01/01/2001 11:00am |      1 |
++      | Pano Test 1 | Test body | 01/01/2001 11:00am |      1 |
+       And I am viewing a landing page
+     When I customize this page with the Panels IPE
+       And I click "Add new pane"
+-      And I click "Add content item" in the "CTools modal" region
+-    Then I should see "Configure new Add content item"
++      And I click "Add existing content" in the "CTools modal" region
++    Then I should see "Configure new Add existing content"
+     When I select "Test Page (without Panelizer)" from "exposed[type]"
+       And I fill in the following:
+-      | exposed[title] | Test Page 1       |
++      | exposed[title] | Pano Test 1       |
+       | widget_title   | Test Widget Title |
+       And I select the radio button "Content"
+@@ -140,46 +140,46 @@ Feature: Add content item
+       And I select the radio button "Teaser"
+       And I press "Add" in the "CTools modal" region
+     Then I should see "Test Widget Title"
+-     And I should not see "Test Page 1"
++      And I should not see "Pano Test 1"
+     # Next, try Full content.
+     When I click "Settings" in the "Boxton Content" region
+       And I select the radio button "Full content"
+       And I press "Save" in the "CTools modal" region
+     Then I should see "Test Widget Title"
+-     And I should not see "Test Page 1"
++      And I should not see "Pano Test 1"
+     # Next, try Featured.
+     When I click "Settings" in the "Boxton Content" region
+       And I select the radio button "Featured"
+       And I press "Save" in the "CTools modal" region
+     Then I should see "Test Widget Title"
+-     And I should not see "Test Page 1"
++      And I should not see "Pano Test 1"
+     # Prevent modal popup from breaking subsequent tests.
+     When I press "Save"
+       And I wait for the Panels IPE to deactivate
 
- -  @api @javascript @panopoly_widgets
- +  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
-    Scenario: Content item widget continues to work after renaming content
-      Given I am logged in as a user with the "administrator" role
-        And Panopoly magic live previews are disabled
-        And "panopoly_test_page" content:
-        | title       | body      | created            | status |
- -      | Test Page 1 | Test body | 01/01/2001 11:00am |      1 |
- +      | Pano Test 1 | Test body | 01/01/2001 11:00am |      1 |
-        And I am viewing a landing page
-      When I customize this page with the Panels IPE
-        And I click "Add new pane"
- -      And I click "Add content item" in the "CTools modal" region
- -    Then I should see "Configure new Add content item"
- +      And I click "Add existing content" in the "CTools modal" region
- +    Then I should see "Configure new Add existing content"
-      When I select "Test Page" from "exposed[type]"
-        And I fill in the following:
- -      | exposed[title] | Test Page 1       |
- +      | exposed[title] | Pano Test 1       |
-        | widget_title   | Test Widget Title |
-        And I press "Add" in the "CTools modal" region
-        And I press "Save"
-        And I wait for the Panels IPE to deactivate
-      Then I should see "Test Widget Title"
- -      And I should see "Test Page 1"
- -    When follow "Test Page 1"
- -      And I click "Edit" in the "Tabs" region
- +      And I should see "Pano Test 1"
- +    When follow "Pano Test 1"
- +      And I click "Edit" in the "TabsID" region
-        And I fill in "Test Page 2" for "Title"
-        And I press "edit-submit"
-      # @todo: Find a better way to get back to the original page.
- diff --git a/behat/features/search.feature b/behat/features/search.feature
- index 7a43e70..f1bff67 100644
- --- behat/features/search.feature
- +++ behat/features/search.feature
- @@ -3,7 +3,7 @@ Feature: Search
-    As an anonymous user
-    I should be able to find content using the site search
+-  @api @javascript @panopoly_widgets
++  @api @javascript @panopoly_widgets @webspark_broken @webspark_fixed
+   Scenario: Content item widget continues to work after renaming content
+     Given I am logged in as a user with the "administrator" role
+       And Panopoly magic live previews are disabled
+       And "panopoly_test_page" content:
+       | title       | body      | created            | status |
+-      | Test Page 1 | Test body | 01/01/2001 11:00am |      1 |
++      | Pano Test 1 | Test body | 01/01/2001 11:00am |      1 |
+       And I am viewing a landing page
+     When I customize this page with the Panels IPE
+       And I click "Add new pane"
+-      And I click "Add content item" in the "CTools modal" region
+-    Then I should see "Configure new Add content item"
++      And I click "Add existing content" in the "CTools modal" region
++    Then I should see "Configure new Add existing content"
+     When I select "Test Page" from "exposed[type]"
+       And I fill in the following:
+-      | exposed[title] | Test Page 1       |
++      | exposed[title] | Pano Test 1       |
+       | widget_title   | Test Widget Title |
+       And I press "Add" in the "CTools modal" region
+       And I press "Save"
+       And I wait for the Panels IPE to deactivate
+     Then I should see "Test Widget Title"
+-      And I should see "Test Page 1"
+-    When follow "Test Page 1"
+-      And I click "Edit" in the "Tabs" region
++      And I should see "Pano Test 1"
++    When follow "Pano Test 1"
++      And I click "Edit" in the "TabsID" region
+       And I fill in "Test Page 2" for "Title"
+       And I press "edit-submit"
+     # @todo: Find a better way to get back to the original page.
+diff --git a/behat/features/search.feature b/behat/features/search.feature
+index 7a43e70..f1bff67 100644
+--- a/behat/features/search.feature
++++ b/behat/features/search.feature
+@@ -3,7 +3,7 @@ Feature: Search
+   As an anonymous user
+   I should be able to find content using the site search
 
- -  @panopoly_search
- +  @panopoly_search @webspark_broken @webspark_ignore
-    Scenario: Trying an empty search should yield a message
-      Given I am on the homepage
-      When I press "Search" in the "Search" region
- @@ -12,7 +12,7 @@ Feature: Search
-        And I should see "Enter your keywords"
-        And I should see "Please enter some keywords"
+-  @panopoly_search
++  @panopoly_search @webspark_broken @webspark_ignore
+   Scenario: Trying an empty search should yield a message
+     Given I am on the homepage
+     When I press "Search" in the "Search" region
+@@ -12,7 +12,7 @@ Feature: Search
+       And I should see "Enter your keywords"
+       And I should see "Please enter some keywords"
 
- -  @panopoly_search
- +  @panopoly_search @webspark_broken @webspark_ignore
-    Scenario: Trying a search with no results
-      Given I am on the homepage
-      When I fill in "TkyXNk9NG2U7FjqtMvNvHXpv2xnfVv7Q" for "Enter your keywords" in the "Search" region
- @@ -21,7 +21,7 @@ Feature: Search
-        And I should see "0 items matched TkyXNk9NG2U7FjqtMvNvHXpv2xnfVv7Q"
-        And I should see "Your search did not return any results."
+-  @panopoly_search
++  @panopoly_search @webspark_broken @webspark_ignore
+   Scenario: Trying a search with no results
+     Given I am on the homepage
+     When I fill in "TkyXNk9NG2U7FjqtMvNvHXpv2xnfVv7Q" for "Enter your keywords" in the "Search" region
+@@ -21,7 +21,7 @@ Feature: Search
+       And I should see "0 items matched TkyXNk9NG2U7FjqtMvNvHXpv2xnfVv7Q"
+       And I should see "Your search did not return any results."
 
- -  @api @panopoly_search
- +  @api @panopoly_search @webspark_broken @webspark_ignore
-    Scenario: Performing a search with results
-      Given I am on the homepage
-      And "panopoly_test_page" content:
- @@ -37,7 +37,7 @@ Feature: Search
-        And I should see "Filter by Type"
-        And I should not see "X9A1YXwc"
+-  @api @panopoly_search
++  @api @panopoly_search @webspark_broken @webspark_ignore
+   Scenario: Performing a search with results
+     Given I am on the homepage
+     And "panopoly_test_page" content:
+@@ -37,7 +37,7 @@ Feature: Search
+       And I should see "Filter by Type"
+       And I should not see "X9A1YXwc"
 
- -  @api @javascript @panopoly_search
- +  @api @javascript @panopoly_search @webspark_broken @webspark_ignore
-    Scenario: Search for content in widgets (not in the body)
-      Given I am logged in as a user with the "administrator" role
-        And Panopoly magic live previews are disabled
- @@ -64,7 +64,7 @@ Feature: Search
-        And I should see "1 item matched undominable"
-        And I should see "Abracadabra"
+-  @api @javascript @panopoly_search
++  @api @javascript @panopoly_search @webspark_broken @webspark_ignore
+   Scenario: Search for content in widgets (not in the body)
+     Given I am logged in as a user with the "administrator" role
+       And Panopoly magic live previews are disabled
+@@ -64,7 +64,7 @@ Feature: Search
+       And I should see "1 item matched undominable"
+       And I should see "Abracadabra"
 
- -  @api @panopoly_search
- +  @api @panopoly_search @webspark_broken @webspark_ignore
-    Scenario: New content should be indexed immediately
-      Given I am logged in as a user with the "administrator" role
-        And Panopoly magic live previews are disabled
- @@ -84,7 +84,7 @@ Feature: Search
-        And I should see "1 item matched RnJpIEZlYiAgNSAwODoyMToyMiBQU1QgMjAxNgo"
-        And I should see "Searchable page"
+-  @api @panopoly_search
++  @api @panopoly_search @webspark_broken @webspark_ignore
+   Scenario: New content should be indexed immediately
+     Given I am logged in as a user with the "administrator" role
+       And Panopoly magic live previews are disabled
+@@ -84,7 +84,7 @@ Feature: Search
+       And I should see "1 item matched RnJpIEZlYiAgNSAwODoyMToyMiBQU1QgMjAxNgo"
+       And I should see "Searchable page"
 
- -  @api @panopoly_search @dblog
- +  @api @panopoly_search @dblog @webspark_broken @webspark_ignore
-    Scenario: Search queries are logged in the 'Top search phrases' report
-      Given I am logged in as a user with the "administrator" role
-        And I am on the homepage
- diff --git a/behat/features/wysiwyg_media.feature b/behat/features/wysiwyg_media.feature
- index e2533e2..04726f3 100644
- --- behat/features/wysiwyg_media.feature
- +++ behat/features/wysiwyg_media.feature
- @@ -58,7 +58,7 @@ Feature: Add media using the rich text editor
+-  @api @panopoly_search @dblog
++  @api @panopoly_search @dblog @webspark_broken @webspark_ignore
+   Scenario: Search queries are logged in the 'Top search phrases' report
+     Given I am logged in as a user with the "administrator" role
+       And I am on the homepage
+diff --git a/behat/features/wysiwyg_media.feature b/behat/features/wysiwyg_media.feature
+index e2533e2..04726f3 100644
+--- a/behat/features/wysiwyg_media.feature
++++ b/behat/features/wysiwyg_media.feature
+@@ -58,7 +58,7 @@ Feature: Add media using the rich text editor
 
-    # TODO: About 10% of the time this test will hang with Firefox, so for now,
-    # we will run in Chrome only on Travis-CI to get consistent builds.
- -  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files
- +  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files @webspark_broken @webspark_fixed
-    Scenario: The second alt/title text sticks
-      When I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
-      When I click the "Media browser" button in the "edit-body-und-0-value" WYSIWYG editor
- @@ -92,7 +92,7 @@ Feature: Add media using the rich text editor
-        And I should see the image alt "Second alt text" in the "Bryant Content" region
-      # Next, we edit the node again, so we can verify that the second
-      # alt text will load when editing the image again.
- -    When I click "Edit" in the "Tabs" region
- +    When I click "Edit" in the "TabsID" region
-        And I click the "img" element in the "edit-body-und-0-value" WYSIWYG editor
-        And I click the "Media browser" button in the "edit-body-und-0-value" WYSIWYG editor
-        And I switch to the frame "mediaStyleSelector"
- @@ -131,7 +131,7 @@ Feature: Add media using the rich text editor
-        And I should see the image alt "Alt & some > \"character's\" <" in the "Bryant Content" region
-      # Next, we edit the node again, so we can verify that the second
-      # alt text will load when editing the image again.
- -    When I click "Edit" in the "Tabs" region
- +    When I click "Edit" in the "TabsID" region
-        And I click the "img" element in the "edit-body-und-0-value" WYSIWYG editor
-        And I click the "Media browser" button in the "edit-body-und-0-value" WYSIWYG editor
-        And I switch to the frame "mediaStyleSelector"
- @@ -139,14 +139,14 @@ Feature: Add media using the rich text editor
-        And the "Title Text" field should contain "Title & some > \"character's\" <"
-        And I switch out of all frames
+   # TODO: About 10% of the time this test will hang with Firefox, so for now,
+   # we will run in Chrome only on Travis-CI to get consistent builds.
+-  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files
++  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files @webspark_broken @webspark_fixed
+   Scenario: The second alt/title text sticks
+     When I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
+     When I click the "Media browser" button in the "edit-body-und-0-value" WYSIWYG editor
+@@ -92,7 +92,7 @@ Feature: Add media using the rich text editor
+       And I should see the image alt "Second alt text" in the "Bryant Content" region
+     # Next, we edit the node again, so we can verify that the second
+     # alt text will load when editing the image again.
+-    When I click "Edit" in the "Tabs" region
++    When I click "Edit" in the "TabsID" region
+       And I click the "img" element in the "edit-body-und-0-value" WYSIWYG editor
+       And I click the "Media browser" button in the "edit-body-und-0-value" WYSIWYG editor
+       And I switch to the frame "mediaStyleSelector"
+@@ -131,7 +131,7 @@ Feature: Add media using the rich text editor
+       And I should see the image alt "Alt & some > \"character's\" <" in the "Bryant Content" region
+     # Next, we edit the node again, so we can verify that the second
+     # alt text will load when editing the image again.
+-    When I click "Edit" in the "Tabs" region
++    When I click "Edit" in the "TabsID" region
+       And I click the "img" element in the "edit-body-und-0-value" WYSIWYG editor
+       And I click the "Media browser" button in the "edit-body-und-0-value" WYSIWYG editor
+       And I switch to the frame "mediaStyleSelector"
+@@ -139,14 +139,14 @@ Feature: Add media using the rich text editor
+       And the "Title Text" field should contain "Title & some > \"character's\" <"
+       And I switch out of all frames
 
- -  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files
- +  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files @webspark_broken @webspark_fixed
-    Scenario: Use an image from elsewhere on the web
-      When I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
-        And I click the "Media browser" button in the "edit-body-und-0-value" WYSIWYG editor
-        And I switch to the frame "mediaBrowser"
-        And I click "Web"
-      Then I should see "File URL or media resource"
- -    When I fill in "File URL or media resource" with "https://www.drupal.org/files/drupal_logo-blue.png"
- +    When I fill in "File URL or media resource" with "https://drupal.asu.edu/sites/default/files/styles/panopoly_image_original/public/icn-webspark_0.png"
-        And I press "Next" in the "Media web tab" region
-      Then I should see "Destination"
-      # Select the destination (public/private files).
+-  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files
++  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files @webspark_broken @webspark_fixed
+   Scenario: Use an image from elsewhere on the web
+     When I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
+       And I click the "Media browser" button in the "edit-body-und-0-value" WYSIWYG editor
+       And I switch to the frame "mediaBrowser"
+       And I click "Web"
+     Then I should see "File URL or media resource"
+-    When I fill in "File URL or media resource" with "https://www.drupal.org/files/drupal_logo-blue.png"
++    When I fill in "File URL or media resource" with "https://drupal.asu.edu/sites/default/files/styles/panopoly_image_original/public/icn-webspark_0.png"
+       And I press "Next" in the "Media web tab" region
+     Then I should see "Destination"
+     # Select the destination (public/private files).
 diff --git a/behat/features/spotlight_widget.feature b/behat/features/spotlight_widget.feature
 deleted file mode 100644
 index fe3185996..000000000
---- behat/features/spotlight_widget.feature
+--- a/behat/features/spotlight_widget.feature
 +++ /dev/null
 @@ -1,58 +0,0 @@
 -Feature: Add spotlight widget

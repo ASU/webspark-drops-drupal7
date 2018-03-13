@@ -1,3 +1,20 @@
+7.x-1.51, 2018-02-22
+-------------------
+- No changes since last release.
+
+7.x-1.50, 2018-02-15
+-------------------
+- Validation for reusable FPP's "Admin Title" doesn't fire except when uploading
+  images.
+- Allow widgets to control how their "example" is rendered on the "Add content"
+  dialog (including using a static image rather than rendering).
+- Allow widgets to control how their "example" is rendered on the "Add content"
+  dialog (including using a static image rather than rendering).
+
+7.x-1.49, 2017-12-13
+-------------------
+- No changes since last release.
+
 7.x-1.48, 2017-11-30
 -------------------
 - Fieldable panels pane entities added erroneously to pane configuration.

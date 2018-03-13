@@ -1,3 +1,63 @@
+Webspark 1.51 (West Virginia) release, TBD
+------------------------------------------
+- Webspark core
+
+  * Drupal core (v7.57) - Includes security updates. Details...
+  * Panopoly (v1.51)- Multiple Panopoly releases (1.49-1.51) rolled into one update; Includes updates to contrib modules, security patches and bug fixes.
+  * Upgraded default version of Drush on Pantheon to v8.0 (The " --strict=0" flag no longer required at the end of every Drush command)
+  * All <!-- THEME DEBUG --> debugging calls in Pantheon Webspark sites are now automatically called only in the Pantheon dev and all multidev environments. They no longer appear in the test or live environments.
+  * The In-Page Editor bar now appears for Landing Page nodes by default
+  * The Media module widget has replaced the Drupal default as the default file browser for the Webspark Hero, Webspark Jumbohero, ASU Spotlight. Only the "Add file" widget still uses the default file browser.
+  * Panel pane previews of webforms in the In-Page Editor no longer bleed over into other panel pane previews
+
+- Web standards components in Webspark
+
+  * ASU Brand (v1.19)
+    * Added ability to specify parent organization, title and URL on the ASU Brand Header block configuration form
+  * ASU iSearch (v1.9)
+    * Default photo no longer deleted when cron runs
+    * Added addressLine3 and city fields to profiles
+    * Profile location info is now moved to line beneath contact information
+    * Affiliation campus and mailcode fields are now mapped to the primaryJobCampus and primaryMailCode fields in Solr
+    * Styling on profile and listing views are now more in line with iSearch and Web Standards
+    * Checkbox labels no longer disappear after removing default photo on admin form
+    * Default photo field's visibility now toggles correctly
+  * ASU Mega Footer (v1.7)
+    * The "Contact Us" link in the mega footer is now Web Standards compliant
+    * Removed legacy code
+    * Added SASS files for all future CSS development
+  * ASU RFI (v1.8)
+    * Added saving functionality when lead submission status transitioning fails
+    * Value of Action Required leads now matched what is configured
+  * ASU Spotlight (v1.8),
+    Webspark Banner (v1.5),
+    Webspark Hero (v1.4), 
+    Webspark Jumbohero (v1.4)
+    * Truncated longer blurbs/taglines with ellipsis in smaller screensizes (vs. removing longer blurbs completely)
+    * Added SASS files for all future CSS development
+    * Updated most sizing units from px to accessibility-friendly em or rem
+  * ASU Spotlight (v1.8)
+    * Fixed database update bug that only occurred in older installations of Webspark
+    * Webspark's editor role now has permissions to create/edit/delete ASU Spotlights
+    * Title link is no longer empty when no link is provided in the spotlight configuration form
+  * ASU Userpicker (v1.1)
+    * Userpicker's autocomplete can be configured to use either Solr or LDAP-enabled people search.
+    * Default searching service is now an option at /admin/config/people/asu_userpicker
+    * CAS user add field now allows autocompletion
+  * UTO carousel (v1.5)
+    * Deprecated in lieu of ASU Spotlight; This module will be completely removed from Webspark in the next release. Please use the ASU Spotlight for all future slideshows/carousels
+  * Webspark Banner (v1.5)
+    * Removed JS file and replaced its functionality with Drupal code
+  * Webspark Content Callout (v1.7)
+    * Readded Javascript removed from the Webspark Seven theme
+  * Webspark Seven (1.0.1)
+    * Removed content callout specific Javascript
+  * Webspark WYSIWYG (v1.7-dev)
+    * Added 'class' to allowed styles for the span tag
+
+- Panopoly-managed contrib module updates
+  * Entity API (v1.9)
+
 
 Webspark 1.48 (Nevada) release, 2017-12-22
 ------------------------------------------
