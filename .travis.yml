@@ -1,5 +1,9 @@
 language: php
 
+addons:
+  artifacts:
+    s3_region: "us-west-2" # defaults to "us-east-1"
+
 # PHP 7
 php:
   - 7.0
@@ -8,10 +12,6 @@ php:
 sudo: required
 dist: trusty
 group: edge
-
-# todo: set up artifacts for behat screenshots
-#addons:
-#  artifacts: true
 
 # Cache Composer & Drush directories.
 cache:
@@ -74,7 +74,7 @@ install:
   - cd ../../../custom/webspark_test/behat
   - composer install --no-interaction
 
-  - cd /home/travis/build/ASU/webspark-drops-drupal7
+  - cd $TRAVIS_BUILD_DIR
 
   # Build Codebase
   - mkdir private_files
