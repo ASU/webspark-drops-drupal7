@@ -1,8 +1,7 @@
 language: php
 
 addons:
-  artifacts:
-    s3_region: "us-west-2" # defaults to "us-east-1"
+  artifacts: true
 
 # PHP 7
 php:
@@ -80,7 +79,7 @@ install:
   - mkdir private_files
 
   # create directory for behat screenshots
-  - mkdir -p sites/default/files/behat_screenshot
+  - sudo mkdir -m 777 /behat_screenshot
   - mkdir -p sites/default/files/private/isearch/feeds
 
   # Setup files
