@@ -44,3 +44,7 @@ fieldset.fieldset-nested-odd {
 fieldset.fieldset-nested-even {
   background-color: #f7f7f3;
 }
+
+.page-node-add-panopoly-test-page .cirkuitSkin .mceMenu a {
+  padding: 0;
+}
