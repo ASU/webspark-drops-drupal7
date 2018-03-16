@@ -34,7 +34,6 @@
                     pageAlias: null,
                     tree: null,
                     fieldConfigs: null,
-                    deptNids: [],
                     fieldId: null,
                     isDefault: null,
                     fidNum: null,
@@ -42,7 +41,6 @@
                     tabContainId: null,
                     tabPaneId: null,
                     tabNum: null,
-                    savedDeptNids: null
                 }, attributes);
             },
 
@@ -50,89 +48,13 @@
                 var self = this;
                 var state = history.getState();
                 var url = state.cleanUrl, index = url.indexOf("?");
-                var savedDeptNids = this.savedDeptNids;
-                var fieldId = this.fieldId;
-                var fieldConfigs = this.fieldConfigs;
-                var tree = this.tree;
-
-                // load the nids from the tree dynamically if possible
-                var dynamic_nids = [];
-
-                // Initial request on load
-                if (self.manager.store.params.q == null) {
-
-                    //Set the global if no params are set
-                    ASUPeople[fieldId].dept_nid = savedDeptNids[0];
-
-                    if (fieldConfigs.depts != null && fieldConfigs.depts.items != null) {
-
-                        var depts = fieldConfigs.depts.items;
-
-                        for (var i = 0; i < depts.length; i++) {
-                            if (depts[i].options.subdepts) {
-
-                                var stree = asu_dir_ajax_solr_find_root(tree, depts[i].dept_nid);
-                                var sarray = asu_dir_get_tree_ids(stree);
-                                dynamic_nids = dynamic_nids.concat(sarray);
-                            } else {
-                                var tar = [depts[i].dept_nid];
-                                dynamic_nids = dynamic_nids.concat(tar);
-                            }
-
-                            if (fieldConfigs.show_tree) {
-                                break;
-                            }
-                        }
-                    }
-
-                    self.manager.store.addByValue('q', '*:*');
-
-
-                    //Create the query string for depts
-                    if (dynamic_nids.length > 0) {
-                        self.manager.store.addByValue('fq', asu_dir_solr_search_string(dynamic_nids, 'deptids'));
-                    }
-                }
-
-                if (index != -1) {
-                    var id_string = /id=(\d*)/gi;
-                    var id = url.match(id_string);
-
-                    if (id != null && id.length > 0) {
-                        id = parseInt(id[0].match(/(\d+)$/)[0], 10);
-                    }
-
-                    if (id == this.fidNum) {
-                        ASUPeople.active = this.fieldId;
-                    }
-                } else if (this.isDefault) {
-                    ASUPeople.active = this.fieldId;
-                }
 
                 if (this.exposed.length) {
                     if (!history) {
                         throw 'ParameterHistoryStore requires History.js';
                     }
-
-                    history.Adapter.bind(window, 'statechange', this.stateChangeFunction(this));
-                }
-
-                if (this.hasTabs) {
-                    var tabNum = this.tabNum;
-
-                    $("#" + this.tabContainId).on("tabsactivate", function (event, ui) {
-
-                        // check if this directory is located in the
-                        // new active tab, then set to active and save
-                        // state if so
-                        var newtab = ui.newTab.find('a');
-                        var href = newtab.attr('href');
-
-                        if (href == self.tabPaneId) {
-                            ASUPeople.active = fieldId;
-                            self.save();
-                        }
-                    });
+                    $(window).unbind('statechange.' + self.fieldId);
+                    history.Adapter.bind(window, 'statechange.' + self.fieldId, this.stateChangeFunction(this));
                 }
             },
 
@@ -157,10 +79,6 @@
                 }
             },
 
-            // Only need to replace these two methods. ?q= arg won't fly with Drupal,
-            // as it collides with Drupal's mod_rewrite to ?q=. So we use the search
-            // path + q= instead. And that seems to work alright.
-
             /**
              * Stores the values of the exposed parameters in both the local hash and History.js
              * No other code should be made to change these two values.
@@ -168,21 +86,18 @@
             save: function () {
 
                 var state = history.getState();
-                this.hash = this.exposedString();
-                var url = state.cleanUrl, index = url.indexOf("?");
-
-                this.hash = decodeURIComponent(this.hash);
-                var url_hash = this.hash;
+                this.hash = decodeURIComponent(this.exposedString());
+                var url = state.cleanUrl;
                 var fieldConfigs = this.fieldConfigs;
                 var fieldId = this.fieldId;
-                
+
                 // if this is the active tab, then save the param info into the history state object
                 if (ASUPeople.active == fieldId) {
 
-                    url_hash = this.cleanCustomString(url_hash, fieldConfigs);
+                    var url_hash = this.getPrettyQString();
 
-
-                    //only save the new state if it's different from the current state
+                    // Only save the new state if it's different from the current state. On initial load, replace the page
+                    // state
                     if (state.data.params === undefined) {
                         history.replaceState({params: this.hash}, document.title, '/' + this.pageAlias + '?' + url_hash);
                     } else if (state.data.params != this.hash && this.hash) {
@@ -194,63 +109,28 @@
             /***
              * Clean up the URL string before saving
              * @param hash
-             * @param fieldConfigs
              */
-            cleanCustomString: function (url_hash, fieldConfigs) {
+            getPrettyQString: function () {
                 //  Drupal doesn't like the q param, so we'll replace it in the saved uri with 'query'
                 //  Also remove parameters for configs which were set in the in the
-                var deptRegEx = /(fq=deptids:).*?(&|$)/gi;
-                var etypesRegEx = /(fq=employeeTypes:).*?(&)/gi;
-                var sort = /(&sort=.*?)(?=&|$)/gi;
-                var rows = /(&rows=.*?)(?=&|$)/gi;
-                var asurite = /(&fq=asuriteId:.*?)(?=&|$)/gi;
                 var fieldId = this.fieldId;
-                var qParam = /q=/gi;
                 var fidNum = this.fidNum;
+                var converted = {};
 
-                //var ft = /(fq=facultyTitles:).*?(&)/gi;
-                // if we have the facultytitles config active, then remove it from URL
-                if (fieldConfigs.hasOwnProperty('ft_filter')) {
+                converted.dept = ASUPeople[fieldId].dept_nid;
+                converted.id = fidNum;
 
-                    var escaped = fieldConfigs.ft_filter.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+                var qparam = decodeURIComponent(this.params.q.value);
 
-                    var ft_string = '(fq=' + escaped + '&?)';
-                    var ft = new RegExp(ft_string, 'gi');
-
-                    url_hash = url_hash.replace(ft, "");
-
+                if (qparam != "*:*") {
+                    converted.query = qparam;
                 }
 
-                // remove the custom fq value
-                if (fieldConfigs.use_custom_q) {
-                    if (this.fieldConfigs.custom_q.fq != null && this.fieldConfigs.custom_q.fq != '') {
-
-                        var custom_fq = fieldConfigs.custom_q.fq.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-                        var fq_string = '(fq=' + custom_fq + '&?)';
-                        var fq_regex = new RegExp(fq_string, 'gi');
-
-                        url_hash = url_hash.replace(fq_regex, "");
-                    }
+                if (this.params.start && this.params.start.value) {
+                    converted.start = this.params.start.value;
                 }
 
-                //clean up the URL for display.  this means removing all pre-configured filter values
-                url_hash = decodeURIComponent(url_hash);
-
-                //remove the sort and employee type parameters from the hash
-                url_hash = url_hash.replace(etypesRegEx, "");
-                url_hash = url_hash.replace(sort, "");
-                url_hash = url_hash.replace(rows, "");
-                url_hash = url_hash.replace(asurite, "");
-                url_hash = url_hash.replace(deptRegEx, 'dept=' + ASUPeople[fieldId].dept_nid + '&');
-
-
-                this.hash = this.hash.replace(sort, "");
-                this.hash = this.hash.replace(rows, "");
-
-                url_hash = url_hash.replace(qParam, 'query=');
-                url_hash = url_hash + '&id=' + fidNum;
-
-                return url_hash;
+                return $.param(converted);
 
             },
 
@@ -258,15 +138,11 @@
              * @see ParameterStore#storedString()
              */
             storedString: function () {
+
                 var state = history.getState();
-                var tree = this.tree;
                 var self = this;
-                var fieldConfigs = this.fieldConfigs;
-                var fieldId = this.fieldId;
-                var fidNum = this.fidNum;
                 var url = state.cleanUrl, index = url.indexOf("?");
-                var idString = /id=(\d*)/gi;
-                var id = null;
+                var id;
                 var currentState = window.history.state;
 
                 // manage state after saving in ipe. that logic found in asu_dir_config.js
@@ -280,106 +156,121 @@
                 // We only want to do a request on the current exposed/active directory, so all functions which do requests
                 // will key on this value
                 if (index != -1) {
-                    id = url.match(idString);
+                    id = this.getIdFromString(url);
 
-                    if (id != null && id.length > 0) {
-                        id = parseInt(id[0].match(/(\d+)$/)[0], 10);
+                    if (id == this.fidNum) {
+                        ASUPeople.active = this.fieldId;
                     }
-
-                    ASUPeople.active = 'asu_dir' + id;
+                } else if (this.isDefault) {
+                    ASUPeople.active = this.fieldId;
                 }
 
-                var activetab = $('.ui-tabs-nav .ui-state-active a');
+                // If this field's not active, return empty string
+                if (ASUPeople.active != this.fieldId) {
+                    return '';
+                }
+
+                // Set the active tab if applicable
+                if (this.hasTabs) {
+                    var activetab = $('.ui-tabs-nav .ui-state-active a');
+
+                    // if an asu_isearch pane is active, don't click it
+                    if (!activetab.hasClass('asu_isearch_view_tab')) {
+                        $('#' + this.tabContainId).tabs("option", "active", self.tabNum);
+                    }
+                }
 
                 // Load the state from the History object.
                 if (state.data && state.data.params) {
-
-                    if (id == fidNum) {
-
-                        // if the active tab is not an iSearch view then make it active.
-                        // since the js gets reloaded upon an exposed view form submittal,
-                        // this is necessary to avoid the state popping back to the active asu_dir pane
-                        if (!activetab.hasClass('asu_isearch_view_tab')) {
-                            //$('#' + this.tab_link).click();
-                           // $( '#' + this.tabContainId).tabs("enable", self.tabNum);
-
-                            $('#' + this.tabContainId).tabs("option", "active", self.tabNum);
-                        }
-
-                        //index = url.indexOf(this.pageAlias);
-                        return state.data.params;
-                    } else {
-                        return '';
-                    }
+                    //index = url.indexOf(this.pageAlias);
+                    return state.data.params;
                 }
-
 
                 // If initial load, load the state from the URL.
-                if (index == -1) {
-                    return '';
-                } else if (id == fidNum) {
+                if (index != -1) {
 
-                    //get the query string from URL
-                    var query_string = url.substr(index + 1);
-
-                    // Check if the query value is the default *:*, otherwise
-                    // append all sub-departments to deptids: fq, to search all sub-departments
-                    var search_re = /query=\*:\*/gi;
-
-                    var replace_search = /query=/gi;
-                    var search_string = query_string.match(search_re);
-
-                    if (search_string != -1) {
-                        query_string = query_string.replace(replace_search, 'q=');
-                    }
-
-                    query_string = decodeURIComponent(query_string);
-
-                    idString = /&id=(\d*)/gi;
-                    var q_dept = /dept=/gi;
-                    var nid = asu_dir_get_nid_from_hash(query_string);
-
-                    //change back to the deptids:
-                    query_string = query_string.replace(q_dept, 'fq=deptids:');
-
-                    //remove the id parameter, since it does not exist in SolR
-                    query_string = query_string.replace(idString, '');
-
-                    // Append the sub-departments to the query string if that option is selected
-                    if (fieldConfigs.sub_toggle || search_string == null) {
-
-                        var sub_tree = asu_dir_ajax_solr_find_root(tree, nid);
-                        var tree_ids = asu_dir_get_tree_ids(sub_tree);
-                        var new_string = asu_dir_solr_search_string(tree_ids, 'deptids');
-                        var old_string = query_string.match(/fq=deptids:.*?&/gi);
-
-                        query_string = query_string.replace(old_string, 'fq=' + new_string + '&');
-                    }
-
-                    //set the active department, and tab
-                    ASUPeople[fieldId].dept_nid = nid;
-
-                    ASUPeople.active = fieldId;
-
-                    // if an asu_isearch pane is active, don't click it
-                    // todo - add state management for asu_isearch panes
-                    if (!activetab.hasClass('asu_isearch_view_tab')) {
-                        //$('#' + this.tab_link).click();
-                        //$(this.tabContainId).tabs( "enable", this.tabNum);
-                        $('#' + this.tabContainId).tabs("option", "active", self.tabNum);
-                    }
+                    // get current prettified query string, convert it to Solr-compatible string, then return it
+                    var query_string = location.search.substring(1);
+                    query_string = this.processExposedQuery(query_string);
 
                     return query_string;
-                } else {
-                    return '';
                 }
+
+                return '';
+            },
+
+
+            /**
+             * Return the current active field ID from the cleanURL
+             * @param url
+             */
+            getIdFromString: function (url) {
+                var idString = /id=(\d*)/gi;
+                var id = url.match(idString);
+
+                if (id != null && id.length > 0) {
+                    id = parseInt(id[0].match(/(\d+)$/)[0], 10);
+                }
+
+                return id;
+            },
+
+            /**
+             * Return current query params as an object
+             * @param qstring - the query string
+             */
+            getQueryObject: function (qstring) {
+
+                // Convert query string to object
+                // https://stackoverflow.com/questions/8648892/convert-url-parameters-to-a-javascript-object
+                return qstring ? JSON.parse('{"' + qstring.replace(/&/g, '","').replace(/=/g, '":"') + '"}',
+                    function (key, value) {
+                        return key === "" ? value : decodeURIComponent(value)
+                    }) : {};
+            },
+
+            /**
+             * The cleanUrl we're storing and presenting to the user is not a Solr compatible query. We need to
+             * process and convert this to a proper Solr query to be compatible with the current state management.
+             */
+            processExposedQuery: function (qstring) {
+
+                // get the params as an object to make this easier
+                var qObj = this.getQueryObject(qstring);
+                var fieldConfigs = this.fieldConfigs;
+                var tree = this.tree;
+                var fieldId = this.fieldId;
+                var nid;
+
+                // Get the active nid if it was passed
+                if (qObj.hasOwnProperty('dept')) {
+                    nid = qObj.dept;
+                    delete qObj.dept;
+                }
+
+                if (qObj.hasOwnProperty('query')) {
+                    qObj.q = qObj.query;
+                    delete qObj.query;
+                }
+
+                if (qObj.hasOwnProperty('id')) {
+                    delete qObj.id;
+                }
+
+                // Set the active global department
+                if (nid != null) {
+                    ASUPeople[fieldId].dept_nid = nid;
+                }
+
+                // return string of parameters
+                return $.param(qObj);
             },
 
 
             /**
              * Called when History.js detects a state change. Checks if state is different to previous state,
              * and if so, sends a request to Solr. This needs to check if the state has changed since it also
-             * gets called when we call pushttp://dmod.dev/content/university-technology-office?fquery=deptids%3A1565&query=*%3A*&sort=lastNameSort%20aschState above.
+             * gets called when we call above.
              */
             stateChangeFunction: function (self) {
 
@@ -392,21 +283,19 @@
                     hash = decodeURIComponent(hash);
                     self.hash = decodeURIComponent(self.hash);
 
+                    // if this field is active
+                    if (ASUPeople.active == fieldId && self.hash != hash) {
 
-                    if (ASUPeople.active == fieldId) {
-                        if (self.hash != hash) {
+                        self.load();
+                        var nid = asu_dir_get_nid_from_hash(hash);
+                        ASUPeople[fieldId].dept_nid = nid;
 
-                            self.load();
-                            var nid = asu_dir_get_nid_from_hash(hash);
-                            ASUPeople[fieldId].dept_nid = nid;
+                        self.manager.doRequest();
 
-                            self.manager.doRequest();
-
-                            //if the tree and widget are loaded
-                            if (self.fieldConfigs.show_tree) {
-                                //select department tree node from the
-                                asu_dir_selectNode(self.tree, self.hash, fidNum);
-                            }
+                        //if the tree and widget are loaded
+                        if (self.fieldConfigs.show_tree) {
+                            //select department tree node from the
+                            asu_dir_selectNode(self.tree, self.hash, fidNum);
                         }
                     }
                 }

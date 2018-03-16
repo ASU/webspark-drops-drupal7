@@ -93,7 +93,6 @@ var ASUPeople = {};
 
                     tabPaneId = tabLinks.eq(realtabnum).attr('href');
 
-
                     // save pane to global tab_list object
                     ASUPeople.tab_list[fieldId] = {};
                     ASUPeople.tab_list[fieldId].realTabNum = realtabnum;
@@ -110,16 +109,13 @@ var ASUPeople = {};
                     var fieldConfigs = isettings.fieldConfigs;
                     ASUPeople[fieldId].fieldConfigs = fieldConfigs;
 
-                    console.log(fieldConfigs, 'THE FIELD CONFIGS');
-
                     // array of all saved dept nids
                     var savedDeptNids = isettings.deptNids;
 
                     // id of top level configured department
                     var savedDeptId = fieldConfigs.dept_id;
-
                     var solrServer = isettings.solrServer;
-                    var pageAlias = isettings.pageAlias;
+                    var pageAlias = window.location.pathname;
 
                     // this is the ASU Directory field id number from Drupa
                     var fidNum = fieldConfigs.pane_id;
@@ -128,14 +124,15 @@ var ASUPeople = {};
                     var iSearchUrl = isettings.iSearchUrl;
                     var filters = [];
                     var depts = fieldConfigs.depts.items;
+                    var lnameSort = isettings.lnameSort ? isettings.lnameSort : 'lastNameExact';
 
                     // set the number of results per page, this will be added to the manager store as the
                     // 'rows' parameter.
                     if (fieldConfigs.pager_display == 'paged' && fieldConfigs.pager_items_per_page != 0) {
                         resPerPage = fieldConfigs.pager_items_per_page;
 
-                    // if we want to show all results, then we set the 'rows' parameter to 200000,
-                    // since that is the maximum request size we will want.
+                        // if we want to show all results, then we set the 'rows' parameter to 200000,
+                        // since that is the maximum request size we will want.
                     } else if (fieldConfigs.pager_display == 'all' || fieldConfigs.pager_items_per_page == 0) {
                         resPerPage = 200000;
                     }
@@ -182,7 +179,6 @@ var ASUPeople = {};
 
                     // Add widget instances for each facet.
                     //these are the fields which will be used for faceted search
-                    //todo:  primary title facet?
                     var fields = ['expertiseAreasFacet', 'facultyTitlesFacet'];
 
                     //these are fields which will override the manager sort, and also the alpha filter widget
@@ -215,7 +211,9 @@ var ASUPeople = {};
                         overrideFields: overrideFields,
                         fieldId: fieldId,
                         perPage: resPerPage,
-                        localPeople: localPeople
+                        localPeople: localPeople,
+                        savedDeptNids: savedDeptNids,
+                        tree: tree
                     });
 
                     // Add in stock pager widget.
@@ -258,8 +256,8 @@ var ASUPeople = {};
                     //First Item in array will be the default Sort
                     var sort_items = [
                         {
-                        'field_name': 'lastNameSort',
-                        'fieldId': '#dir-lastNameSort' + fidNum
+                            'field_name': lnameSort,
+                            'fieldId': '#dir-lastNameExact' + fidNum
                         },
                         {//field doesn't actually exist in solr yet
                             'field_name': 'tsort',
@@ -375,33 +373,24 @@ var ASUPeople = {};
                         }));
                     }
 
-
-
                     // if this is the first manager created, make it the default.  this will allow us to
                     // keep track of which field the
-                    var first = false;
-
-                    if (dirTabNum == 0) {
-                        first = true;
-                    }
+                    var first = (dirTabNum == 0);
 
                     Manager.setStore(new AjaxSolr.asu_dirParameterHistoryStore({
                         pageAlias: pageAlias,
                         tree: tree,
                         fieldConfigs: fieldConfigs,
-                        deptNids: savedDeptNids,
                         fieldId: fieldId,
                         isDefault: first,
                         fidNum: fidNum,
                         hasTabs: hasTabs,
                         tabContainId: tabContainId,
                         tabPaneId: tabPaneId,
-                        tabNum: dirTabNum,
-                        savedDeptNids: savedDeptNids
+                        tabNum: dirTabNum
                     }));
 
                     Manager.store.exposed = ['fq', 'q', 'start', 'sort', 'rows'];
-
 
                     // Add Solr parameters for faceting.
                     var params = {
@@ -442,6 +431,29 @@ var ASUPeople = {};
             for (var x = 0; x < ASUPeople.man_array.length; x++) {
                 ASUPeople.man_array[x].init();
                 ASUPeople.man_array[x].doRequest();
+            }
+
+
+            // Bind to the 'tabsactivate' event and manage the state for tabs via the ASUPeople.active attribute
+            if (hasTabs) {
+                $("#" + tabContainId).off("tabsactivate").on("tabsactivate", function (event, ui) {
+
+                    // check if this directory is located in the
+                    // new active tab, then set to active and save
+                    // state if so
+                    var newtab = ui.newTab.find('a');
+                    var href = newtab.attr('href');
+                    var managers = ASUPeople.man_array;
+
+                    for (var n = 0; n < managers.length; n++) {
+
+                        if (managers[n].store.tabPaneId == href) {
+
+                            ASUPeople.active = managers[n].store.fieldId;
+                            managers[n].store.save();
+                        }
+                    }
+                });
             }
         }
     };

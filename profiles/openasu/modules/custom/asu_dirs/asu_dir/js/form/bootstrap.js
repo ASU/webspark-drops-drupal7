@@ -330,9 +330,9 @@
             placement == 'top' ? {top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2} :
                 placement == 'left' ? {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth} :
                     /* placement == 'right' */ {
-                        top: pos.top + pos.height / 2 - actualHeight / 2,
-                        left: pos.left + pos.width
-                    }
+                    top: pos.top + pos.height / 2 - actualHeight / 2,
+                    left: pos.left + pos.width
+                }
 
     }
 
