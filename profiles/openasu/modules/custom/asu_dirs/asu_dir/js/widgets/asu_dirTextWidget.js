@@ -34,44 +34,10 @@
                     if (value) {
                         self.manager.store.remove('q');
                         self.manager.store.addByValue('q', value);
-
-                        // If sub-departments toggle is not selected, then add sub-departments for search,
-                        // and remove other fq values
-                        /*
-                        if (!fieldConfigs.sub_toggle && fieldConfigs.show_tree) {
-                            //remove only the deptids fq parameter
-                            for (var i = 0; i < fq.length; i++) {
-                                if (fq[i] != null && fq[i].indexOf("deptids:") != -1) {
-                                    self.manager.store.removeByValue('fq', fq[i]);
-                                }
-                            }
-
-                            var nid = ASUPeople[fieldId].dept_nid;
-                            var sub_tree = asu_dir_ajax_solr_find_root(tree, nid);
-                            var tree_ids = asu_dir_get_tree_ids(sub_tree);
-                            var search_string = asu_dir_solr_search_string(tree_ids, 'deptids');
-
-                            self.manager.store.addByValue('fq', search_string);
-                        }*/
-
                         self.doRequest();
                     } else {
                         self.manager.store.remove('q');
                         self.manager.store.addByValue('q', '*:*');
-
-                        /*
-                        if (!fieldConfigs.sub_toggle && fieldConfigs.show_tree) {
-
-                            //remove only the deptids parameter
-                            for (var i = 0; i < fq.length; i++) {
-                                if (fq[i].indexOf("deptids:") != -1) {
-                                    self.manager.store.removeByValue('fq', fq[i]);
-                                }
-                            }
-                            //Manager.store.remove('fq');
-                            var nid = ASUPeople[fieldId].dept_nid;
-                            self.manager.store.addByValue('fq', 'deptids:' + nid);
-                        }*/
                         self.doRequest();
                     }
                 }

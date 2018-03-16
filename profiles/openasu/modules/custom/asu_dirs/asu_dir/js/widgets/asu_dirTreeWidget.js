@@ -67,22 +67,22 @@
                 ASUPeople[fieldId].dept_nid = event.node.dept_nid;
                 ASUPeople[fieldId].dept_id = event.node.dept_id;
 
-                //if showing people in sub-departments, get sub-departments and do request
-                if (fieldConfigs.sub_toggle === true) {
-                    dept_nids = asu_dir_get_tree_ids(asu_dir_ajax_solr_find_root(tree, ASUPeople[fieldId].dept_nid));
-                } else {
-                    dept_nids = [event.node.dept_nid];
-                }
+                /*
+                 //if showing people in sub-departments, get sub-departments and do request
+                 if (fieldConfigs.sub_toggle === true) {
+                 dept_nids = asu_dir_get_tree_ids(asu_dir_ajax_solr_find_root(tree, ASUPeople[fieldId].dept_nid));
+                 } else {
+                 dept_nids = [event.node.dept_nid];
+                 }
 
-                //remove other values and alphabar active class
-                /*var alphabar = $('#ajax-solr-alpha-bar ul li');
-                 alphabar.removeClass('active-letter');*/
+                 //remove other values and alphabar active class
 
-                self.manager.store.remove('q');
-                self.manager.store.addByValue('q', '*:*');
-                self.manager.store.remove('start');
-                self.manager.store.remove('fq');
-                self.manager.store.addByValue('fq', asu_dir_solr_search_string(dept_nids, 'deptids'));
+
+                 self.manager.store.remove('q');
+                 self.manager.store.addByValue('q', '*:*');
+                 self.manager.store.remove('start');
+                 self.manager.store.remove('fq');
+                 self.manager.store.addByValue('fq', asu_dir_solr_search_string(dept_nids, 'deptids'));*/
                 self.manager.doRequest();
             });
 

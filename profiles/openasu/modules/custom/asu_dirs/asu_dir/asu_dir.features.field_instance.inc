@@ -8,50 +8,50 @@
  * Implements hook_field_default_field_instances().
  */
 function asu_dir_field_default_field_instances() {
-  $field_instances = array();
+  $field_instances = [];
 
   // Exported field_instance: 'node-asu_directory-field_asu_directory_items'
-  $field_instances['node-asu_directory-field_asu_directory_items'] = array(
+  $field_instances['node-asu_directory-field_asu_directory_items'] = [
     'bundle' => 'asu_directory',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
-    'display' => array(
-      'default' => array(
+    'display' => [
+      'default' => [
         'label' => 'hidden',
         'module' => 'asu_dir',
-        'settings' => array(),
+        'settings' => [],
         'type' => 'asu_directory',
         'weight' => 0,
-      ),
-      'featured' => array(
+      ],
+      'featured' => [
         'label' => 'above',
-        'settings' => array(),
+        'settings' => [],
         'type' => 'hidden',
         'weight' => 0,
-      ),
-      'teaser' => array(
+      ],
+      'teaser' => [
         'label' => 'above',
-        'settings' => array(),
+        'settings' => [],
         'type' => 'hidden',
         'weight' => 0,
-      ),
-    ),
+      ],
+    ],
     'entity_type' => 'node',
     'field_name' => 'field_asu_directory_items',
     'label' => 'ASU Directory Items',
     'required' => TRUE,
-    'settings' => array(
+    'settings' => [
       'user_register_form' => FALSE,
-    ),
-    'widget' => array(
+    ],
+    'widget' => [
       'active' => 0,
       'module' => 'asu_dir',
-      'settings' => array(),
+      'settings' => [],
       'type' => 'asu_directory_form',
       'weight' => -4,
-    ),
-  );
+    ],
+  ];
 
   // Translatables
   // Included for use with string extractors like potx.

@@ -44,7 +44,7 @@
                 self.manager.store.addByValue('sort', self.active_sort + ' ' + self.direction);
             } else {
                 fieldConfigs.show_managers = true;
-                self.manager.store.addByValue('sort', 'lastNameSort asc');
+                self.manager.store.addByValue('sort', sort_items[0].field_name + ' asc');
             }
 
             for (var i = 0; i < sort_items.length; i++) {
@@ -93,7 +93,7 @@
                             $(self.target).find('.dir-active-sort').removeClass('dir-active-sort');
                             $(this).addClass('dir-active-sort');
                             self.manager.store.remove('sort');
-                            self.manager.store.addByValue('sort', 'lastNameSort asc');
+                            self.manager.store.addByValue('sort', sort_items[0].field_name + ' asc');
                             self.manager.doRequest();
                             return false;
 
@@ -101,7 +101,7 @@
                             ASUPeople[fieldId].fieldConfigs.show_managers = false;
                         }
 
-                        // switch diretion if clicking on previous sort
+                        // switch direction if clicking on previous sort
                         if (field_name == prev_sort) {
 
                             if (self.direction == 'asc') {
@@ -109,7 +109,7 @@
                             } else {
                                 self.direction = 'asc';
                             }
-                        // else add the new sort value
+                            // else add the new sort value
                         } else {
                             var t2 = $(self.target).find('.dir-active-sort');//.removeClass('dir-active-sort');
                             t2.removeClass('dir-active-sort');
@@ -119,13 +119,8 @@
 
                         var new_sort = self.active_sort + ' ' + self.direction;
 
-                        if (self.active_sort == titlesort_field) {
-                            new_sort += ',lastNameSort asc';
-                        }
-
                         self.manager.store.remove('sort');
                         self.manager.store.addByValue('sort', new_sort);
-
                         self.manager.doRequest();
 
                         $(this).find('.fa').remove();

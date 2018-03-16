@@ -115,3 +115,19 @@
 #modal-content .asu-isearch-configuration .field-widget-asu-directory-form .fieldset-wrapper {
     margin-top: 20px;
 }
+
+.asu-isearch-dept-config .form-item.form-group, .asu-isearch-dept-config .form-item.checkbox {
+    display: none;
+}
+
+.ctools-modal-content .asu-isearch-dept-config .btn {
+    font-size: 16px;
+}
+
+.form-type-isearch-dept-config .row {
+    margin-bottom: 20px;
+}
+
+.field-type-asu-isearch-dept-picker {
+    font-size: 16px;
+}
