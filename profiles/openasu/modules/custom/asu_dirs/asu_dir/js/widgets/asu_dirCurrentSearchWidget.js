@@ -45,12 +45,6 @@
             if (q != '*:*') {
                 links.push($('<a href="#"></a>').text('"' + q + '"').append(' <i class="fa fa-close"></i> ').click(function () {
                     self.manager.store.get('q').val('*:*');
-                    /*TODO: get rid of if not needed
-                     if (!fieldConfigs.sub_toggle && !fieldConfigs.use_custom_q) {
-                     self.manager.store.remove('fq');
-                     self.manager.store.addByValue('fq', 'deptids:' + ASUPeople[fieldId].dept_nid);
-                     }*/
-
                     self.doRequest();
                     return false;
                 }));

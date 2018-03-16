@@ -8,16 +8,16 @@
  * Implements hook_user_default_permissions().
  */
 function asu_dir_user_default_permissions() {
-  $permissions = array();
+  $permissions = [];
 
   // Exported permission: Administer ASU Directory Configuration
-  $permissions['Administer ASU Directory Configuration'] = array(
+  $permissions['Administer ASU Directory Configuration'] = [
     'name' => 'Administer ASU Directory Configuration',
-    'roles' => array(
+    'roles' => [
       0 => 'administrator',
-    ),
+    ],
     'module' => 'asu_dir',
-  );
+  ];
 
   return $permissions;
 }

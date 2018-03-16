@@ -36,6 +36,7 @@ define('ASU_DIR_UTILITIES_TREE_BACKUP', 'private://isearch/directory_tree.json')
 // since there is no inherent rank/title sorting field in Solr, we use this term to identify the sorting
 // mode in which we sort by either iSearch ranking, or faculty title ranking
 define('ASU_DIR_UTILITIES_TITLESORT_FIELD', 'tsort');
+define('ASU_DIR_UTILITIES_SOLR_LASTNAME_SORT_DEFAULT', 'lastNameSort');
 
 
 /**

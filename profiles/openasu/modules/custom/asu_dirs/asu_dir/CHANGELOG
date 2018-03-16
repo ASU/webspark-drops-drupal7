@@ -1,5 +1,18 @@
+asu_dir 7.x-1.9
+---------------
+- Addition of variable to specify the lastname sorting field. This will allow the use of the lastNameExact field which will
+sort all last names as if they were lowercase, instead of placing lowercase names after.
+- Rank sorting remains active when facets applied.
+- Changed tab state handling behavior to only bind once to tab container, fixing a bug where multiple IPE submits
+were resulting in redundant listeners.
+- Fixed bug where incorrect page alias was being passed to the directory parameter store initialization after saving the ASU Directory
+Panel form. This resulted in  errors when reloading the page after saving.
+- Consolidated the department filter init code into the asu_dirManager.js search manager widget. Now all pre-configured filters are initialized
+and maintained by the manager, instead of scattered among widgets.
+- Consolidated and minified CSS assets
+
 asu_dir 7.x-1.8 2017-10-13
-----------------------------
+--------------------------
 - Added behavior to hide "People >" filter selection breadcrumb when no filters are shown
 - Added option to display department name under the title
 - Removed some css which was causing listing text size to be restricted

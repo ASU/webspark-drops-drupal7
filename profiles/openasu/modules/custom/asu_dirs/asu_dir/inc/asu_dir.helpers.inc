@@ -9,6 +9,7 @@
  * Clear tree and employee types from cache
  *
  * @param $test
+ *
  * @return bool
  */
 function asu_dir_clear_cache($test) {
@@ -26,12 +27,12 @@ function asu_dir_clear_cache($test) {
  * used on the iSearch directory list view.
  */
 function asu_dir_get_view_column_widths(stdClass $display_options) {
-  $columns = array(
+  $columns = [
     'photo' => 2,
     'name' => 4,
     'contact' => 3,
     'expertise' => 3,
-  );
+  ];
 
   if (!$display_options->display_photo) {
     $columns['name'] += $columns['photo'];
@@ -90,7 +91,8 @@ function asu_dir_load_js() {
 }*/
 
 /**
- * Helper function for backwards compatibility when retrieving tenure display setting
+ * Helper function for backwards compatibility when retrieving tenure display
+ * setting
  */
 function asu_dir_get_tenure_config($setting) {
   if (!is_object($setting)) {
@@ -99,7 +101,7 @@ function asu_dir_get_tenure_config($setting) {
 
   $tenure_display = 'Both';
 
-  $tenure_display_values = array();
+  $tenure_display_values = [];
   foreach ($setting as $key => $value) {
     if ($value == 1) {
       $tenure_display_values[] = $key;
@@ -118,10 +120,10 @@ function asu_dir_get_tenure_config($setting) {
  * Returns the
  */
 function asu_dir_get_dept_config() {
-  $default_feed_dept = array(
-    'items' => array(),
-    'options' => array(),
-  );
+  $default_feed_dept = [
+    'items' => [],
+    'options' => [],
+  ];
 
   return variable_get('isearch_admin_feed_dept', json_encode($default_feed_dept));
 }

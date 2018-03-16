@@ -14,22 +14,22 @@
  *
  **/
 function asu_dir_theme() {
-  return array(
+  return [
     // Ajax-Solr implementation
-    'asu_dir_ajax_solr_field' => array(
-      'variables' => array('items' => array(), 'settings' => array()),
+    'asu_dir_ajax_solr_field' => [
+      'variables' => ['items' => [], 'settings' => []],
       'template' => 'theme/asu_dir_ajax_solr_field',
       'file' => 'theme/asu_dir.theme.inc',
-    ),
-    'asu_dir_ajax_solr_people' => array(
-      'variables' => array('items' => array(), 'settings' => array()),
+    ],
+    'asu_dir_ajax_solr_people' => [
+      'variables' => ['items' => [], 'settings' => []],
       'file' => 'theme/asu_dir.theme.inc',
-    ),
-    'asu_dir_isearch_view' => array(
-      'variables' => array('items' => array(), 'settings' => array()),
+    ],
+    'asu_dir_isearch_view' => [
+      'variables' => ['items' => [], 'settings' => []],
       'file' => 'theme/asu_dir.theme.inc',
-    )
-  );
+    ],
+  ];
 }
 
 
@@ -38,7 +38,7 @@ function asu_dir_theme() {
  */
 function theme_asu_dir_isearch_view(&$vars) {
   // shortcut to content render array
-  $content = array();
+  $content = [];
 
   // Setup variables here...
   $content['title'] = '';
@@ -73,15 +73,15 @@ function theme_asu_dir_isearch_view(&$vars) {
   $directory->setContextualFilters($contextual_filters);
 
   if ($view_config->show_az_index) {
-    $content['isearch_az_index'] = array(
+    $content['isearch_az_index'] = [
       '#markup' => $directory->renderIndex(),
       '#weight' => -10,
-    );
+    ];
   }
 
-  $content['isearch_view'] = array(
+  $content['isearch_view'] = [
     '#markup' => $view_display,
-  );
+  ];
 
   /*
   // display filters? - Should we display or hide the filters
@@ -179,8 +179,9 @@ function theme_asu_dir_isearch_view(&$vars) {
  * About the settings passed here:
  *
  * disable_history : Disables the history stack handling
- * isearch_mode : Since the search functionality for departments in iSearch is handled by a callback, we can disable features related
- *                to this functionality, as well as facets
+ * isearch_mode : Since the search functionality for departments in iSearch is
+ * handled by a callback, we can disable features related to this
+ * functionality, as well as facets
  *
  */
 function theme_asu_dir_ajax_solr_people(&$vars) {
@@ -188,8 +189,8 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   $admin = $vars['settings']['admin'];
   $field_configs = $vars['items'][0]['directory_config'];
   $field_items = $vars['items'][0]['directory_items'];
-  $filter_people = array();
-  $local_people = array();
+  $filter_people = [];
+  $local_people = [];
 
   $the_id = $field_configs['pane_id'];
 
@@ -226,15 +227,13 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
     }
   }
 
-  $alias = drupal_get_path_alias();
-
   $html = '';
 
   //pass these module constants tot he JS
-  $top_level_ids = array(
+  $top_level_ids = [
     'top_level_nid' => ASU_DIR_UTILITIES_TOP_LEVEL_DEPT_NID,
-    'top_level_psid' => ASU_DIR_UTILITIES_TOP_LEVEL_PS_ID
-  );
+    'top_level_psid' => ASU_DIR_UTILITIES_TOP_LEVEL_PS_ID,
+  ];
 
   //get the dept tree, don't decode it
   $tree = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_TREE_ENDPOINT, FALSE);
@@ -251,11 +250,10 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   // setup expertise area names for ajax solr
   if (!empty($field_configs['expertise_areas'])) {
 
-    $exp = array();
+    $exp = [];
 
     foreach ($field_configs['expertise_areas'] as $key => $item) {
       $term = taxonomy_term_load($item);
-
       $exp[] = $term->name;
     }
 
@@ -266,11 +264,7 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   libraries_load('jqtree');
   libraries_load('fontawesome');
 
-  $options = array('weight' => 1000);
-
-
-
-  //drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/plugins/jquery.tabgroups.js');
+  $options = ['weight' => 1000];
 
   //add history.js
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/jquery.history.js');
@@ -292,8 +286,8 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirResultWidget.js');
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirTreeWidget.js');
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir_ajax_solr_field.js', $options);
-  drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_tree.css');
-  drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_people_block.css');
+  drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_tree.min.css');
+  drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_people_block.min.css');
 
   // get the default photo url, if configured, and pass information
   // to the frontend
@@ -309,29 +303,28 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
     }
   }
 
-  $default_photo = array(
+  $default_photo = [
     'display' => $display_default_photo,
-    'url' => $photo_url
-  );
+    'url' => $photo_url,
+  ];
 
   $field_configs['default_photo'] = $default_photo;
 
-
-  $settings = array(
+  $settings = [
     'deptNids' => $field_items,
     'fieldConfigs' => $field_configs,
     'solrServer' => ASU_DIR_UTILITIES_SOLR_ENV,
     'admin' => $admin,
     'topLevelIds' => $top_level_ids,
     'tree' => $tree,
-    'pageAlias' => $alias,
     'titleSortField' => ASU_DIR_UTILITIES_TITLESORT_FIELD,
     'fidNum' => $the_id,
     'localPeople' => $local_people,
-    'iSearchUrl' => ASU_DIR_UTILITIES_ISEARCH_URL
-  );
+    'iSearchUrl' => ASU_DIR_UTILITIES_ISEARCH_URL,
+    'lnameSort' => variable_get('asu_dir_utilities_lname_sort_field', ASU_DIR_UTILITIES_SOLR_LASTNAME_SORT_DEFAULT),
+  ];
 
-  drupal_add_js(array(ASU_DIRECTORY_MODULE_NAME . $the_id => $settings), 'setting');
+  drupal_add_js([ASU_DIRECTORY_MODULE_NAME . $the_id => $settings], 'setting');
 
   if ($field_configs['show_breadcrumbs'] && $field_configs['show_tree']) {
     //todo:  uncomment this later
@@ -342,7 +335,6 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   $html .= '<div class="dir-people-wrapper" id="asu-dir-people-wrapper' . $the_id . '"><div class="col-md-12 dir-ajax-solr-people" id="asu-dir-ajax-solr-people' . $the_id . '"></div></div>';
 
   //Pagination Controls
-
   $html .= '<div class="text-center asu_directory_bottom_container"><ul id="asu-dir-ajax-solr-pager' . $the_id . '" class="pagination"></ul></div>';
 
   return $html;
@@ -381,7 +373,7 @@ function template_process_asu_dir_ajax_solr_field(&$vars) {
 }
 
 function _asu_dir_get_classes($configs) {
-  $columns = array();
+  $columns = [];
 
   if ($configs['show_tree']) {
     $columns['search'] = 'col-md-5';
