@@ -1,7 +1,7 @@
-name = ASU Degrees [DEPRECATED - Use new ASU Academic Programs module]
-description = Extends ASU Degrees Feature module.
+name = ASU Degrees
+description = [DEPRECATED - Use new ASU Academic Programs module] - Extends ASU Degrees Feature module.
 core = 7.x
-package = ASU
+package = ASU Deprecated
 version = 7.x-1.10
 project = asu_degrees
 dependencies[] = asu_degrees_feature
