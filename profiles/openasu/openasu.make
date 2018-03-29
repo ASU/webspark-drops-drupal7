@@ -6,7 +6,7 @@ core = 7.x
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 projects[drupal][type] = core
-projects[drupal][version] = 7.57
+projects[drupal][version] = 7.58
 ; Drupal Core Patches
 ;projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-profile-ajax-1334818-8.patch
 
@@ -14,40 +14,40 @@ projects[drupal][version] = 7.57
 ; The Panopoly Foundation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-projects[panopoly_core][version] = 1.51
+projects[panopoly_core][version] = 1.52
 projects[panopoly_core][subdir] = panopoly
 
-projects[panopoly_images][version] = 1.51
+projects[panopoly_images][version] = 1.52
 projects[panopoly_images][subdir] = panopoly
 
-projects[panopoly_theme][version] = 1.51
+projects[panopoly_theme][version] = 1.52
 projects[panopoly_theme][subdir] = panopoly
 
-projects[panopoly_magic][version] = 1.51
+projects[panopoly_magic][version] = 1.52
 projects[panopoly_magic][subdir] = panopoly
 
-projects[panopoly_widgets][version] = 1.51
+projects[panopoly_widgets][version] = 1.52
 projects[panopoly_widgets][subdir] = panopoly
 
-projects[panopoly_admin][version] = 1.51
+projects[panopoly_admin][version] = 1.52
 projects[panopoly_admin][subdir] = panopoly
 
-projects[panopoly_users][version] = 1.51
+projects[panopoly_users][version] = 1.52
 projects[panopoly_users][subdir] = panopoly
 
 ; The Panopoly Toolset
-projects[panopoly_pages][version] = 1.51
+projects[panopoly_pages][version] = 1.52
 projects[panopoly_pages][subdir] = panopoly
 
-projects[panopoly_wysiwyg][version] = 1.51
+projects[panopoly_wysiwyg][version] = 1.52
 projects[panopoly_wysiwyg][subdir] = panopoly
 
-projects[panopoly_search][version] = 1.51
+projects[panopoly_search][version] = 1.52
 projects[panopoly_search][subdir] = panopoly
 ; Fixes DB update dependency ordering
 ; projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
 
-projects[panopoly_test][version] = 1.51
+projects[panopoly_test][version] = 1.52
 projects[panopoly_test][subdir] = panopoly
 
 projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.46.patch
@@ -56,7 +56,8 @@ projects[panopoly_test][patch][142] = patches/webspark-944_add-init-config-tests
 projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.patch
 ; moved custom tests to webspark_test custom module
 ;projects[panopoly_test][patch][1403] = patches/webspark-1066-panopoly-webspark-add-custom-tests-v143.patch
-
+; Added v1.52 test patch after the fact this once - @TODO merge into a new patch in the next release
+projects[panopoly_test][patch][1258] = https://www.drupal.org/files/issues/2018-03-14/panopoly_test-update-tablefield-7.x-3.1-2919401-17.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
 ; commenting this out until we update this repo
