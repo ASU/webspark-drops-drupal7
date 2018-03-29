@@ -1,9 +1,10 @@
-Webspark 1.51 (West Virginia) release, TBD
-------------------------------------------
+Webspark 1.52 (West Virginia) release, 2018-03-28
+-------------------------------------------------
 - Webspark core
 
-  * Drupal core (v7.57) - Includes security updates. Details...
-  * Panopoly (v1.51)- Multiple Panopoly releases (1.49-1.51) rolled into one update; Includes updates to contrib modules, security patches and bug fixes.
+  * Drupal core (v7.58) - Includes security updates. See https://www.drupal.org/project/drupal/releases/7.58 for details
+  * Panopoly (v1.52)- Multiple Panopoly releases (1.49-1.52) rolled into one update; Includes updates to contrib modules, security patches and bug fixes.
+    See https://www.drupal.org/project/panopoly for more info.
   * Upgraded default version of Drush on Pantheon to v8.0 (The " --strict=0" flag no longer required at the end of every Drush command)
   * All <!-- THEME DEBUG --> debugging calls in Pantheon Webspark sites are now automatically called only in the Pantheon dev and all multidev environments. They no longer appear in the test or live environments.
   * The In-Page Editor bar now appears for Landing Page nodes by default
@@ -16,14 +17,14 @@ Webspark 1.51 (West Virginia) release, TBD
     * Added ability to specify parent organization, title and URL on the ASU Brand Header block configuration form
   * ASU Directory Integration Reinvented (v1.9)
     * Addition of variable to specify the lastname sorting field. This will allow the use of the lastNameExact field which will
-    sort all last names as if they were lowercase, instead of placing lowercase names after.
+      sort all last names as if they were lowercase, instead of placing lowercase names after.
     * Rank sorting remains active when facets applied.
     * Changed tab state handling behavior to only bind once to tab container, fixing a bug where multiple IPE submits
-    were resulting in redundant listeners.
+      were resulting in redundant listeners.
     * Fixed bug where incorrect page alias was being passed to the directory parameter store initialization after saving the ASU Directory
-    Panel form. This resulted in  errors when reloading the page after saving.
+      Panel form. This resulted in  errors when reloading the page after saving.
     * Consolidated the department filter init code into the asu_dirManager.js search manager widget. Now all pre-configured filters are initialized
-    and maintained by the manager, instead of scattered among widgets.
+      and maintained by the manager, instead of scattered among widgets.
     * Consolidated and minified CSS assets
   * ASU Directory Utilities (v1.3)
     * Added variable for configurable last name sorting field in Solr
@@ -33,24 +34,28 @@ Webspark 1.51 (West Virginia) release, TBD
     * Profile location info is now moved to line beneath contact information
     * Affiliation campus and mailcode fields are now mapped to the primaryJobCampus and primaryMailCode fields in Solr
     * Styling on profile and listing views are now more in line with iSearch and Web Standards
+      * Fixed the font weight for the title and names on listings
+      * Removed font-size from the listings CSS
+      * Removed the underline from beneath tabs on a profile
+      * Fixed the location line on profiles to appear the same as on iSearch
     * Checkbox labels no longer disappear after removing default photo on admin form
     * Default photo field's visibility now toggles correctly
   * ASU Mega Footer (v1.7)
-    * The "Contact Us" link in the mega footer is now Web Standards compliant
+    * The "Contact Us" link colors in the mega footer are now Web Standards compliant
     * Removed legacy code
     * Added SASS files for all future CSS development
   * ASU RFI (v1.8)
     * Added saving functionality when lead submission status transitioning fails
-    * Value of Action Required leads now matched what is configured
+    * Value of Action Required leads now matches what is configured
   * ASU Spotlight (v1.8),
     Webspark Banner (v1.5),
     Webspark Hero (v1.4), 
     Webspark Jumbohero (v1.4)
-    * Truncated longer blurbs/taglines with ellipsis in smaller screensizes (vs. removing longer blurbs completely)
+    * In smaller screen-sizes, longer blurbs/taglines that were previously removed are now truncated and suffixed with an ellipsis
     * Added SASS files for all future CSS development
     * Updated most sizing units from px to accessibility-friendly em or rem
   * ASU Spotlight (v1.8)
-    * Fixed database update bug that only occurred in older installations of Webspark
+    * Older installations of Webspark now get user permissions added properly to this widget
     * Webspark's editor role now has permissions to create/edit/delete ASU Spotlights
     * Title link is no longer empty when no link is provided in the spotlight configuration form
   * ASU Userpicker (v1.1)
@@ -62,9 +67,9 @@ Webspark 1.51 (West Virginia) release, TBD
   * Webspark Banner (v1.5)
     * Removed JS file and replaced its functionality with Drupal code
   * Webspark Content Callout (v1.7)
-    * Readded Javascript removed from the Webspark Seven theme
+    * Re-added Content Callout-related Javascript previously incorrectly included in Webspark Seven theme (code organizational change only)
   * Webspark Seven (1.0.1)
-    * Removed content callout specific Javascript
+    * Removed module-specific Javascript that belongs in the Content Callout module
   * Webspark WYSIWYG (v1.7-dev)
     * Added 'class' to allowed styles for the span tag
 
@@ -76,11 +81,11 @@ Webspark 1.48 (Nevada) release, 2017-12-22
 ------------------------------------------
 - Webspark core
 
-  * Panopoly (v1.48) - Update to the 1.48 version of the panopoly distribution
+  * Panopoly (v1.48) - Update to the 1.48 version of the panopoly distribution. See https://www.drupal.org/project/panopoly/releases/7.x-1.48 for details.
 
 - Web standards components in Webspark
 
-  * ASU Academic Programs - 7.x-2.1 update
+  * ASU Academic Programs (v2.1)
     * Updated the ASU Academic Programs README.md with improved markdown styling
     * Updated asu-drupal-modules README.md with more accurate information 
     * Updated comments for ASU Academic Programs
@@ -92,28 +97,28 @@ Webspark 1.48 (Nevada) release, 2017-12-22
     * Updated the ASU Academic Programs README.md with better markdown styling
     * Updated asu-drupal-modules README.md with more accurate information
 
-  * ASU Directory Integrated Reinvented (ASU DIR v1.8)
+  * ASU Directory Integrated Reinvented (v1.8)
     * Added option to display department name under the title
     * Removed CSS was causing listing text size to be restricted
     * Fixed CSS for search selection breadcrumb
     * Added addressLine3 to profile listing display
 
-  * The ASU Local iSearch Directory (ASU LID v7.x-1.8.12)
+  * The ASU Local iSearch Directory (v1.8.12)
     * Added affil_hide, affil_weight, Google scholar, student info, and executive courses fields to the profile
     * Fixed dept file caching fallback for migrations
     * Fixed issue where affiliations were being unnecessarily deleted and recreated during migrations
 
-  * ASU Brand (asu_brand v7.x-1.18)
+  * ASU Brand (v1.18)
     * Fixed the 'do not override' list to use JS instead of relying on the hosts header
 
-  * ASU Spotlight (asu_spotlight v7.x-1.7.1)
+  * ASU Spotlight (v1.7.1)
     * Added gray and gold button colors
 
-  * Webspark WYSIWYG (webspark_wysiwyg 7.x-1.6-dev)
+  * Webspark WYSIWYG (v1.6-dev)
     * Switched 'css_classes' to 'theme_advanced_styles' in feature.inc file, which fixes bug where WYSIWYG styles
     were broken for new installs
 
-  * Webspark Test (webspark_test 7.x-1.0)
+  * Webspark Test (v1.0)
     * Moved ASU custom behat tests and steps into this module.
     * Added Behat tests for the ASU DIRS suite and ASU Spotlight module
 
@@ -121,7 +126,7 @@ Webspark 1.46.1 (Omaha) release, 2017-12-09
 -------------------------------------------
 - Web standards components in Webspark
 
-    * ASU Directory Integration Reinvented (ASU DIR v7.x-1.7.2)
+    * ASU Directory Integration Reinvented (v1.7.2)
         * Bugfix for broken employee types filter
 
 Webspark 1.46 (Nebraska) release, 2017-27-08
@@ -132,13 +137,13 @@ Webspark 1.46 (Nebraska) release, 2017-27-08
         * Fixes security vulnerabilities
         * Variety of improvements and bugfixes, including better support of PHP 7.0
     * Panopoly (v1.46) - Includes a number of minor bug fixes and module updates, including upgrading the media module to
-        2.1. See Panopoly changelogs for more.
+        2.1. See https://www.drupal.org/project/panopoly/releases/7.x-1.46 for details.
     * Removed unnecessary debugging code (theme_debug mode) from settings.php, which was causing issues in multiple places,
         including customized webform email templates errantly inserting debugging code.
 
 - Web standards components in Webspark
 
-    * ASU Directory Integration Reinvented (ASU DIR v7.x-1.7.1)
+    * ASU Directory Integration Reinvented (v1.7.1)
         * Fixes bug where page state title was being set as null
         * Hides pagination if only one page of results
         * Fixed CSS which was hindering the directory pane from going completely full-width inside of its container
@@ -146,30 +151,30 @@ Webspark 1.46 (Nebraska) release, 2017-27-08
         * Linted javascript code responsible for client side rendering (e.g., rendering directory lists, making AJAX requests
           to Solr backend, handling for inputs, keeping track of the Solr parameters, history state handling, etc.) and removed code no longer in use
         * Added default photo behavior for the ASU Directory field. Custom images as placeholders can be uploaded for the asu_dir module
-    * The ASU Local iSearch Directory (ASU LID v7.x-1.8.11)
+    * The ASU Local iSearch Directory (v1.8.11)
         * Improved Solr profile checking to avoid unnecessary unpublishing, and improved logging information
         * 'Exclude from automatic updating' option turns off Solr profile checking
         * Improved and consolidated profile onload updating logic
-    * ASU Brand (v7.x-1.17)
+    * ASU Brand (v1.17)
         * Added 'asu_brand_do_not_override' variable. This is a JSON-encoded array of hostnames. If the requested host is
           found in the list, the brand module will not pass in the standard CAS authentication URL if the CAS module is
           enabled. It will instead pass in the standard weblogin.asu.edu login and logout URLs.
         * Removed max version check
         * Sets default brand header version to "stable"
-    * ASU Webspark Inline Panels Tabs (v7.x-1.0)
+    * ASU Webspark Inline Panels Tabs (v1.0)
         * New module for Webspark, which includes a new 'Inline Tabs' panel region style.
         * This new style will display tabs inline with a maroon underline style for the active tab.
         * If the tabs would otherwise overflow a region, they will be grouped into sets, which are navigable via a right/left arrow.
-    * ASU RFI (v7.x-1.7)
+    * ASU RFI (v1.7)
         * Updated the auto-response email
-    * ASU Academic Programs (v7.x-2.0)
+    * ASU Academic Programs (v2.0)
         * A revamped and revitalized module for Webspark that will replace the ASU Degrees module.
         * Includes similar functionality and features as current ASU Degrees module with additional simplification of importing options and improved user interface.
-    * ASU Degrees (v7.x-1.10)
+    * ASU Degrees (v1.10)
         * asu_degrees deprecated for ASU Academic Programs
-    * ASU Degrees Feature (v7.x-1.10)
+    * ASU Degrees Feature (v1.10)
         * asu_degrees_feature deprecated for ASU Academic Programs
-    * ASU Degrees Views Output (v7.x-1.0)
+    * ASU Degrees Views Output (v1.0)
         * asu_degrees_viewsoutput deprecated for ASU Academic Programs
 
 - Webspark custom projects - Changes/Deletions
@@ -192,13 +197,13 @@ Webspark 1.43 (Colorado) release, 2017-16-05
           error messages, go to /admin/reports/status and look for "Missing Module" instructions to follow.
         * Some iframe tags will now work (as long as the iframe is pulling content from the SAMEORIGIN).
     * Panopoly (v1.43) - Includes a security update to Views (v3.15), as well as updates to all of its core modules.
-      Read more...
-    * Webspark Featurescustom (v7.x-1.6) - Remove LOW warning-triggering comments from Webspark JS files to help
+      See https://www.drupal.org/project/panopoly/releases/7.x-1.43 for details.
+    * Webspark Featurescustom (v1.6) - Remove LOW warning-triggering comments from Webspark JS files to help
       reduce LOW RiskSense warnings from security remediation scans.
 
 - Web standards components in Webspark
 
-    * ASU Directory Integration Reinvented (ASU DIR v7.x-1.7)
+    * ASU Directory Integration Reinvented (v-1.7)
         * Automatic integration with ASU Local iSearch Directory (ASU LID) module (if enabled)
             * When ASU LID is enabled, and profiles have been imported from iSearch, the directory listings will automatically link to the imported profile nodes.
             * Now includes a Solr Health Check fallback. If Solr is down, then the directory listing will automatically be replaced with a Drupal View of local profile profile nodes
@@ -207,9 +212,9 @@ Webspark 1.43 (Colorado) release, 2017-16-05
             * Added customizable sort option, allowing switching between iSearch customized sorting, and local iSearch imported
     	    * Configuration management improved to allow interchanging of configs with ASU LID module
         * Improved title logic to mirror iSearch
-    * ASU Directory Panel (v7.x-1.0)
+    * ASU Directory Panel (v1.0)
         * Easily place directory listing panel panes into panopoly layouts
-    * The ASU Local iSearch Directory (ASU LID v7.x-1.8.10) module is now part of Webspark
+    * The ASU Local iSearch Directory (v1.8.10) module is now part of Webspark
         * Features:
             * Import profiles from iSearch according to site configs
             * Allows the display of iSearch profiles on local site
@@ -217,16 +222,16 @@ Webspark 1.43 (Colorado) release, 2017-16-05
             * Profiles are updated from iSearch via periodic cron tasks
             * Periodic and load-time checking of profiles against iSearch Solr index, to ensure up-to-date affiliation data
             * ASU LID Profile List View will automatically substitute for the ASU DIR Solr listings if iSearch Solr health check fails
-    * ASU Brand (v7.x-1.15)
+    * ASU Brand (v1.15)
         * Now updates theme_default value regardless of whether the module is part of Webspark or not.
-    * ASU Spotlight (v7.x-1.6.1)
+    * ASU Spotlight (v1.6.1)
         * Fix for update hook which resulted in revision table not being updated
         * Added width:100%; to the blurbcontainer class in asuflex.css for IE 9+ users.
-    * Webspark Jumbohero (v7.x-1.2-dev)
+    * Webspark Jumbohero (v1.2-dev)
         * Fixed missing blurb and buttons issue (only the title field's contents were showing).
-    * Webspark Content Callout (v7.x-1.5-dev)
+    * Webspark Content Callout (v1.5-dev)
         * Move Webspark Seven JS code out and into Webspark Seven theme.
-    * Webspark Extras (v.7.x-1.6)
+    * Webspark Extras (v1.6)
         * Added web standard QuickTab style
     * Innovation theme (v1.9)
         * Label tags for form elements now properly clear left when the label text is only a single line in the browser window (Chrome and IE issue).
@@ -355,7 +360,7 @@ Webspark 1.40 (North Dakota) release, 2016-12-09
 - Webspark core
 
   * Updated Panopoly from v1.37 to v1.40 - This update includes multiple security updates to Panopoly-managed modules.
-    See drupal.org/project/panopoly for more info.
+    See https://www.drupal.org/project/panopoly for more info.
   * Contributed libraries are now checked to ensure they have not been tampered with before they are bundled into
     Webspark
   * Added "view the administrative theme" to the Editor role to allow other themes besides Innovation to be used
