@@ -150,10 +150,10 @@
                   </div>
               <?php endif; ?>
 
-              <?php print theme('asu_dir_ajax_solr_people', [
+              <?php print theme('asu_dir_ajax_solr_people', array(
                 'items' => $items,
-                'settings' => $settings,
-              ]); ?>
+                'settings' => $settings
+              )); ?>
 
             </div>
 

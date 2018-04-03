@@ -20,15 +20,15 @@
 function asu_dir_field_schema($field) {
   if ($field['type'] == 'asu_directory') {
 
-    $schema['columns']['directory_config'] = [
+    $schema['columns']['directory_config'] = array(
       'type' => 'text',
       'not null' => FALSE,
-    ];
+    );
 
-    $schema['columns']['directory_items'] = [
+    $schema['columns']['directory_items'] = array(
       'type' => 'text',
       'not null' => FALSE,
-    ];
+    );
 
     return $schema;
   }
@@ -54,7 +54,7 @@ function asu_dir_update_7002(&$sandbox) {
  * Enable asu_ajax_solr module
  */
 function asu_dir_update_7003(&$sandbox) {
-  module_enable(['asu_ajax_solr']);
+  module_enable(array('asu_ajax_solr'));
 }
 
 /**
@@ -63,15 +63,15 @@ function asu_dir_update_7003(&$sandbox) {
 function asu_dir_update_7004(&$sandbox) {
   // this update requires the asu_dept_picker module to be enabled and installed
   if (drupal_get_path('module', 'asu_dept_picker') != '' && !module_exists('asu_dept_picker')) {
-    module_enable(['asu_dept_picker']);
+    module_enable(array('asu_dept_picker'));
   }
 
   if (drupal_get_path('module', 'react') != '' && !module_exists('react')) {
-    module_enable(['react']);
+    module_enable(array('react'));
   }
 
   if (drupal_get_path('module', 'asu_dir_utilities') != '' && !module_exists('asu_dir_utilities')) {
-    module_enable(['asu_dir_utilities']);
+    module_enable(array('asu_dir_utilities'));
   }
 
   // Delete variables used
