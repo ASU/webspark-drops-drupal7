@@ -61,3 +61,12 @@ projects[token][subdir] = contrib
 projects[token][sha256] = a84b6a1f43798d8d9da31915aa25fce0f62f59fae18c71e0775157e7aa9e1e44
 ; Fixes arrows/theming issue in browse tokens window
 projects[token][patch][2773825] = patches/webspark-897_token-browse-available-theme-fixes-2773825-1.patch
+
+projects[fieldable_panel_panes][type] = module
+projects[fieldable_panel_panes][subdir] = contrib
+projects[fieldable_panel_panes][version] = 1.11
+projects[fieldable_panel_panes][sha256] = db07832725054a264dfe536ac264f06032a9f816bf716bb89bc86667db5d7fa2
+; Patch included already in Panopoly here
+projects[fieldable_panel_panes][patch][2826205] = https://www.drupal.org/files/issues/fieldable_panels_panes-n2826205-39.patch
+; Fixes undefined index: bundle error - remove if v1.12 ever goes live in Panopoly
+projects[fieldable_panel_panes][patch][2825835] = patches/ws-1257_fpp-errors-after-bad-deletion_2825835.patch 
