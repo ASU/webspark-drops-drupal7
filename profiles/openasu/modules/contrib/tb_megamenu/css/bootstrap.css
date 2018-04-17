@@ -1931,7 +1931,7 @@
 .tb-megamenu .visible-desktop {
   display: inherit !important;
 }
-@media (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 768px) and (max-width: 979px) {
 .tb-megamenu .hidden-desktop {
     display: inherit !important;
   }
@@ -2118,7 +2118,7 @@
     position: static;
   }
 }
-@media (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 768px) and (max-width: 979px) {
 .tb-megamenu .row {
     margin-left: -20px;
     *zoom: 1;
@@ -2531,7 +2531,7 @@
     margin-left: 0;
   }
 }
-@media (max-width: 991px) {
+@media (max-width: 979px) {
 .tb-megamenu body {
     padding-top: 0;
   }
@@ -2682,7 +2682,7 @@
     padding-right: 10px;
   }
 }
-@media (min-width: 992px) {
+@media (min-width: 980px) {
 .tb-megamenu .nav-collapse.collapse {
     height: auto !important;
     overflow: visible !important;
