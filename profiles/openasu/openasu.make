@@ -25,6 +25,8 @@ projects[panopoly_theme][subdir] = panopoly
 
 projects[panopoly_magic][version] = 1.52
 projects[panopoly_magic][subdir] = panopoly
+; Validation error with reusable FPPs. Updated in 1.52; Custom patch different from drupal.org/node/2813395
+projects[panopoly_magic][patch][2813395] = patches/ws-1236_title-cant-reuse-error_2813395.patch
 
 projects[panopoly_widgets][version] = 1.52
 projects[panopoly_widgets][subdir] = panopoly
