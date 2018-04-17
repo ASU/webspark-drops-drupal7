@@ -17,6 +17,68 @@
  * CONFIG
  *********************************************************************/
 
+/**
+ * Settings function to improve future-proofing.
+ *
+ * Example usage:
+ * $degreeMappings = asu_rfi_get_degree_mappings();
+ * $degreeContentType = $degreeMappings['content_type'];
+ */
+function asu_rfi_get_degree_mappings() {
+  // Swap out mapping values based on module enabled.
+  // ASU AP takes priority, but default is to ASU
+  // Degrees (deprecated);
+  if (module_exists('asu_ap')) {
+    $map = array(
+      // Content Type
+      'content_type' => 'asu_ap',
+      // Tables
+      'table_asu_academic_plan' => 'field_data_field_asu_ap_acad_plan',
+      'table_asu_academic_program' => 'field_data_field_asu_ap_acad_prog',
+      'table_asu_degree_awarded' => 'field_data_field_asu_ap_awarded',
+      'table_asu_degree_program' => 'field_data_field_asu_ap_program',
+      'table_asu_diploma_description' => 'field_data_field_asu_ap_diploma_desc',
+      // Fields
+      'field_academic_plan' => 'field_asu_ap_acad_plan',
+      'field_academic_plan_value' => 'field_asu_ap_acad_plan_value',
+      'field_academic_program' => 'field_asu_ap_acad_prog',
+      'field_academic_program_value' => 'field_asu_ap_acad_prog_value',
+      'field_degree_awarded' => 'field_asu_ap_awarded',
+      'field_degree_awarded_value' => 'field_asu_ap_awarded_value',
+      'field_degree_campus' => 'field_asu_ap_campus',
+      'field_degree_program' => 'field_asu_ap_program',
+      'field_degree_program_value' => 'field_asu_ap_program_value',
+      'field_diploma_description' => 'field_asu_ap_diploma_desc',
+      'field_diploma_description_value' => 'field_asu_ap_diploma_desc_value',
+    );
+  } else { // asu_degrees
+    $map = array(
+      // Content Type
+      'content_type' => 'asu_degree',
+      // Tables
+      'table_asu_academic_plan' => 'field_data_field_asu_academic_plan',
+      'table_asu_academic_program' => 'field_data_field_asu_academic_program',
+      'table_asu_degree_awarded' => 'field_data_field_asu_degree_awarded',
+      'table_asu_degree_program' => 'field_data_field_asu_degree_program',
+      'table_asu_diploma_description' => 'field_data_field_asu_diploma_description',
+      // Fields
+      'field_academic_plan' => 'field_asu_academic_plan',
+      'field_academic_plan_value' => 'field_asu_academic_plan_value',
+      'field_academic_program' => 'field_asu_academic_program',
+      'field_academic_program_value' => 'field_asu_academic_program_value',
+      'field_degree_awarded' => 'field_asu_degree_awarded',
+      'field_degree_awarded_value' => 'field_asu_degree_awarded_value',
+      'field_degree_campus' => 'field_asu_degree_campus',
+      'field_degree_program' => 'field_asu_degree_program',
+      'field_degree_program_value' => 'field_asu_degree_program_value',
+      'field_diploma_description' => 'field_asu_diploma_description',
+      'field_diploma_description_value' => 'field_asu_diploma_description_value',
+    );
+  }
+  return $map;
+}
+
+
 
 /*********************************************************************
  * DRUPAL HOOKS
@@ -70,7 +132,7 @@ function asu_rfi_menu()
     'file' => 'includes/asu_rfi.pages.inc',
   );
 
-  // request info form admin settings page  
+  // request info form admin settings page
   $items['admin/config/content/asurfi'] = array(
     'title' => 'ASU RFI Form Settings',
     'description' => t('Administer RFI form settings.'),
@@ -230,6 +292,13 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL)
  */
 function asu_rfi_block_configure($delta = '', $multi_id = NULL)
 {
+
+  // Load the currently logged in user.
+  global $user;
+  // Check if the ASU Academic Programs module is disabled. If so, AND the user has the 'administrator' role OR is user-1, then set the warning.
+  if (!module_exists('asu_ap') && (in_array('administrator', $user->roles) || $user->uid == 1)) {
+    drupal_set_message('ASU Degrees has been deprecated and will be removed in a future release. Please switch to ASU Academic Programs as soon as possible to avoid data loss.', 'warning');
+  }
 
   $form = array();
 
@@ -743,7 +812,7 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id)
   }
   ////
 
-  //Change form type exposed filter in submissions view (/asu-rfi-submissions-report) form text field to select option   
+  //Change form type exposed filter in submissions view (/asu-rfi-submissions-report) form text field to select option
   if ($form['#id'] == 'views-exposed-form-asu-rfi-submissions-report-page') {
 
     $form_types = array('' => ' - All -');
@@ -892,6 +961,7 @@ function asu_rfi_disable_form(&$form, $decider)
  */
 function asu_rfi_query_codes($pcodes)
 {
+  $degreeMappings = asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
   $asuOnlineList = asu_rfi_parse_programs();
 
   $campusOptions = array();
@@ -899,13 +969,11 @@ function asu_rfi_query_codes($pcodes)
   foreach ($pcodes as $code => $prog) {
     $onlineError = false;
     $query = new EntityFieldQuery();
-
     $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'asu_degree')
-      ->fieldCondition('field_asu_academic_plan', 'value', $code)
+      ->entityCondition('bundle', $degreeMappings['content_type'])
+      ->fieldCondition($degreeMappings['field_academic_plan'], 'value', $code)
       ->range(0, 10)
       ->addMetaData('account', user_load(1)); // Run the query as user 1.
-
     $result = $query->execute();
 
     if (isset($result['node'])) {
@@ -913,14 +981,12 @@ function asu_rfi_query_codes($pcodes)
       $programs = entity_load('node', $program_nids);
       $programs = reset($programs);
       $programs = (array)$programs;
-
       $desiredProg = array(
-        'code' => $programs['field_asu_academic_plan']['und']['0']['value'],
+        'code' => $programs[$degreeMappings['field_academic_plan']]['und']['0']['value'],
         'vid' => $programs['vid'],
         'title' => $programs['title'],
-        'locations' => $programs['field_asu_degree_campus']['und'],
+        'locations' => $programs[$degreeMappings['field_degree_campus']]['und'],
       );
-
 
       $availableOnline = asu_rfi_compare_online_availability($desiredProg['code'], $asuOnlineList);
 
@@ -1086,12 +1152,12 @@ function asu_rfi_detect_browser()
  */
 function asu_rfi_get_undergrad_programs()
 {
-
+  $degreeMappings = asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
   //get the degree types from the database
-  $program_type = db_query('select distinct field_asu_degree_program_value from field_data_field_asu_degree_program');
+  $program_type = db_query('select distinct ' . $degreeMappings['field_degree_program_value'] . ' from ' . $degreeMappings['table_asu_degree_program']);
   //set the variables so they can be used to show degree programs based on the form type selections above in block settings
   foreach ($program_type as $programs) {
-    $degreetype = $programs->field_asu_degree_program_value;
+    $degreetype = $programs->$degreeMappings['field_degree_program_value'];
     if ($degreetype == "undergrad") {
       variable_set('asu_rfi_ugrad_degree_type', $degreetype);
     }
@@ -1102,17 +1168,15 @@ function asu_rfi_get_undergrad_programs()
 
   }
 
-
   $query = new EntityFieldQuery();
-
   $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'asu_degree')
+    ->entityCondition('bundle', $degreeMappings['content_type'])
     ->propertyCondition('status', 1)
-    ->fieldCondition('field_asu_degree_awarded', 'value', 'NULL', '!=')
-    ->fieldCondition('field_asu_academic_program', 'value', 'NULL', '!=')
-    ->fieldCondition('field_asu_academic_plan', 'value', 'NULL', '!=')
-    ->fieldCondition('field_asu_degree_program', 'value', 'undergrad', '=')
-    ->fieldOrderBy('field_asu_degree_awarded', 'value', 'ASC')
+    ->fieldCondition($degreeMappings['field_degree_awarded'], 'value', 'NULL', '!=')
+    ->fieldCondition($degreeMappings['field_academic_program'], 'value', 'NULL', '!=')
+    ->fieldCondition($degreeMappings['field_academic_plan'], 'value', 'NULL', '!=')
+    ->fieldCondition($degreeMappings['field_degree_program'], 'value', 'undergrad', '=')
+    ->fieldOrderBy($degreeMappings['field_degree_awarded'], 'value', 'ASC')
     ->addMetaData('account', user_load(1)); // Run the query as user 1.
   $result = $query->execute();
   if (isset($result['node'])) {
@@ -1124,10 +1188,9 @@ function asu_rfi_get_undergrad_programs()
   foreach ($items as $nid => $program) {
 
     $program_wrapper = entity_metadata_wrapper('node', $program);
-
-    $program_abbr = $program_wrapper->field_asu_degree_awarded->value();
-    $college_code = $program_wrapper->field_asu_academic_program->value();
-    $program_plan_code = $program_wrapper->field_asu_academic_plan->value();
+    $program_abbr = $program_wrapper->$degreeMappings['field_degree_awarded']->value();
+    $college_code = $program_wrapper->$degreeMappings['field_academic_program']->value();
+    $program_plan_code = $program_wrapper->$degreeMappings['field_academic_plan']->value();
 
     // Abbr in value matches how we present name in get programs Views
     // Datasource View.
@@ -1141,17 +1204,17 @@ function asu_rfi_get_undergrad_programs()
 //GTE grad programs if any exist
 function asu_rfi_get_grad_programs()
 {
+  $degreeMappings = asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
 
   $query = new EntityFieldQuery();
-
   $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'asu_degree')
+    ->entityCondition('bundle', $degreeMappings['content_type'])
     ->propertyCondition('status', 1)
-    ->fieldCondition('field_asu_degree_awarded', 'value', 'NULL', '!=')
-    ->fieldCondition('field_asu_academic_program', 'value', 'NULL', '!=')
-    ->fieldCondition('field_asu_academic_plan', 'value', 'NULL', '!=')
-    ->fieldCondition('field_asu_degree_program', 'value', 'graduate', '=')
-    ->fieldOrderBy('field_asu_degree_awarded', 'value', 'ASC')
+    ->fieldCondition($degreeMappings['field_degree_awarded'], 'value', 'NULL', '!=')
+    ->fieldCondition($degreeMappings['field_degree_program'], 'value', 'NULL', '!=')
+    ->fieldCondition($degreeMappings['field_academic_plan'], 'value', 'NULL', '!=')
+    ->fieldCondition($degreeMappings['field_degree_program'], 'value', 'graduate', '=')
+    ->fieldOrderBy($degreeMappings['field_degree_awarded'], 'value', 'ASC')
     ->addMetaData('account', user_load(1)); // Run the query as user 1.
   $result = $query->execute();
   if (isset($result['node'])) {
@@ -1164,10 +1227,9 @@ function asu_rfi_get_grad_programs()
     foreach ($items as $nid => $program) {
 
       $program_wrapper = entity_metadata_wrapper('node', $program);
-
-      $program_abbr = $program_wrapper->field_asu_degree_awarded->value();
-      $college_code = $program_wrapper->field_asu_academic_program->value();
-      $program_plan_code = $program_wrapper->field_asu_academic_plan->value();
+      $program_abbr = $program_wrapper->$degreeMappings['field_degree_awarded']->value();
+      $college_code = $program_wrapper->$degreeMappings['field_academic_program']->value();
+      $program_plan_code = $program_wrapper->$degreeMappings['field_academic_plan']->value();
 
       // Abbr in value matches how we present name in get programs Views
       // Datasource View.
@@ -1346,8 +1408,8 @@ function asu_rfi_js_alter(&$javascript)
 //function to send data transaction variable dataLayer to GTM tag
 function asu_rfi_preprocess_page(&$variables)
 {
-
-  //Check if /degree-programs/request-info-thank-you is loaded, grad the node id from the URL, load the node and get the variables. Add Google analytics code to the header. 
+  $degreeMappings = asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
+  //Check if /degree-programs/request-info-thank-you is loaded, grad the node id from the URL, load the node and get the variables. Add Google analytics code to the header.
   if (isset($variables['theme_hook_suggestions'][1])) {
     if ($variables['theme_hook_suggestions'][1] == "page__degree_programs__request_info_thank_you") {
       $nodeid = base64_decode(arg(2));
@@ -1400,17 +1462,17 @@ function asu_rfi_preprocess_page(&$variables)
       }
       $college = 'RFI - ' . $locale . ' - ' . $prog_full_name;
 
-      drupal_add_js("(function ($) { 
+      drupal_add_js("(function ($) {
         dataLayer = [{
            'event': 'ecommerce_event',
            'transactionId': '$ga_id',
           'transactionAffiliation': '$program_code',
-          'transactionTotal': '$price', 
+          'transactionTotal': '$price',
           'transactionProducts': [{
-                'sku': '$sku', 
-                'name': '$college',  
+                'sku': '$sku',
+                'name': '$college',
                 'category': '$category',
-                'price': '$price', 
+                'price': '$price',
                 'quantity': '1'
               }]
             }];
@@ -1463,17 +1525,17 @@ function asu_rfi_preprocess_page(&$variables)
               }
             }
           }
-          drupal_add_js("(function ($) { 
+          drupal_add_js("(function ($) {
           dataLayer = [{
              'event': 'ecommerce_event',
              'transactionId': '$ga_id',
              'transactionAffiliation': '$college_code',
-             'transactionTotal': '$price', 
+             'transactionTotal': '$price',
              'transactionProducts': [{
-                'sku': '$sku', 
-                'name': '$major_rfi', 
+                'sku': '$sku',
+                'name': '$major_rfi',
                 'category': '$category',
-                'price': '$price', 
+                'price': '$price',
                 'quantity': '1'
               }]
          }];
@@ -1497,7 +1559,7 @@ function asu_rfi_preprocess_page(&$variables)
         }
       } else {
         $thisNode = menu_get_object();
-        if (isset($thisNode->type) && $thisNode->type == "asu_degree" && isset($_SESSION['rfi_data'])) {
+        if (isset($thisNode->type) && $thisNode->type == $degreeMappings['content_type'] && isset($_SESSION['rfi_data'])) {
 
           $price = '100.00';
           $category = 'RFI';
@@ -1521,21 +1583,21 @@ function asu_rfi_preprocess_page(&$variables)
             } else {
               $price = '300.00';
             }
-            drupal_add_js("(function ($) { 
+            drupal_add_js("(function ($) {
                    if($('#asu-rfi-multi-part1-thanks')){
                     dataLayer = [{
                       'event': 'ecommerce_event',
                       'transactionId': '$ga_id',
                       'transactionAffiliation': '$program_code',
-                      'transactionTotal': '$price', 
+                      'transactionTotal': '$price',
                       'transactionProducts': [{
-                        'sku': '$sku', 
-                        'name': '$college',  
+                        'sku': '$sku',
+                        'name': '$college',
                         'category': '$category',
-                        'price': '$price', 
+                        'price': '$price',
                         'quantity': '1'
                       }]
-                    }]; 
+                    }];
                    }
                 })(jQuery)", array('type' => 'inline', 'scope' => 'header', 'weight' => 0));
           }

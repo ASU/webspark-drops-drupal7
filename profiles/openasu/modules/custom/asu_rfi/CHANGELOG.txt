@@ -1,6 +1,13 @@
+Drupal 7.x-1.9, 2018-03-15
+——————————————————————————
+- Removed ASU Degrees dependency.
+- Removed ASU Feeds dependency.
+- Added degree mappings helper function.
+- Changed degree variables to use degree mappings helper function.
+
 Drupal 7.x-1.8, 2017-03-02
 ——————————————————————————
-- Add misssing ->save() calls on the failed lead submission status 
+- Add missing ->save() calls on the failed lead submission status 
   transitioning.
 - Fix value used on "action_required" leads to match what's configured.
 
