@@ -1,0 +1,12 @@
+{
+    "name": "jquery-emulatetab",
+    "version": "0.2.9",
+    "main": "src/emulatetab.joelpurra.js",
+    "dependencies": {
+        "jquery": "^2.0.0"
+    },
+    "devDependencies": {
+        "console-shim": "*",
+        "qunit": "^1.3.0"
+    }
+}
