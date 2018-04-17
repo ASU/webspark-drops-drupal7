@@ -1,5 +1,29 @@
 Webspark 1.52 (West Virginia) release, 2018-03-28
 -------------------------------------------------
+- Panopoly core modules
+
+  * Panopoly Magic (v1.52+patch)
+    * Fixed erroneous validation error message when checking “Make this reusable” on new Webspark content panes
+      (e.g., Add text, Add responsive image, etc.)
+
+- Contrib modules maintained in Webspark
+
+  * Fieldable Panel Panes (v1.11+patch)
+    * Cleared up "Undefined index: bundle" errors when Fieldable Panel Panes (FPP) were deleted in the FPP admin area
+      instead of the Panels/Panelizer UI interfaces such as the In Page Editor.
+
+- Web standards components in Webspark
+
+  * ASU Directory Integration Reinvented (v1.10)
+    * Rolled back newer PHP formatting for Webspark sites still using PHP 5.3
+  * Innovation theme (v1.10)
+    * Removed comments and linted code to match Drupal coding standards
+  * UTO Carousel (v1.6)
+    * Rolled back deprecation of this module
+    * Fixed “Notice: Undefined index: alt in uto_carousel_field_formatter_view()” error
+
+Webspark 1.52 (West Virginia) release, 2018-03-28
+-------------------------------------------------
 - Webspark core
 
   * Drupal core (v7.58) - Includes security updates. See https://www.drupal.org/project/drupal/releases/7.58 for details
