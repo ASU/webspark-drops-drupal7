@@ -1,0 +1,10 @@
+name = "ASU Events"
+description = "Create and customize an ASU Events block from an ASU Events feed."
+core = 7.x
+package = ASU
+dependencies[] = addtocal
+dependencies[] = asu_events_importer
+dependencies[] = email
+dependencies[] = field_ellipsis
+dependencies[] = panels
+dependencies[] = viewfield
