@@ -1,3 +1,7 @@
+Innovation 7.x-1.10, 2017-04-17
+------------------------------
+- Reformatted and cleaned out code in template.php
+
 Innovation 7.x-1.9, 2017-02-15
 ------------------------------
 - Modified some font colors and sizes on Quicktab and Panopoly tabs and accordions to make the ASU web standard.
