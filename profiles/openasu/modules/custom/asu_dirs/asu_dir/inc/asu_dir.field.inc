@@ -18,16 +18,16 @@
  * @return array
  */
 function asu_dir_field_info() {
-  return [
-    'asu_directory' => [
+  return array(
+    'asu_directory' => array(
       'label' => t('ASU Directory'),
       'description' => t('A field to store ASU Directory items'),
       'default_widget' => 'asu_directory_form',
       'default_formatter' => 'asu_directory',
-      'settings' => [],
-      'instance_settings' => [],
-    ],
-  ];
+      'settings' => array(),
+      'instance_settings' => array(),
+    ),
+  );
 }
 
 /*
@@ -37,7 +37,7 @@ function asu_dir_field_info() {
 */
 function asu_dir_field_is_empty($item, $field) {
 
-  $tree_items = [];
+  $tree_items = array();
 
   if (isset($item['horizontal_tabs']['content']['content_tabs']['department']['isearch_dept_tree'])) {
     $tree_items = drupal_json_decode($item['horizontal_tabs']['content']['content_tabs']['department']['isearch_dept_tree']);
@@ -67,13 +67,13 @@ function asu_dir_field_is_empty($item, $field) {
  *
  */
 function asu_dir_field_formatter_info() {
-  return [
-    'asu_directory' => [
+  return array(
+    'asu_directory' => array(
       'label' => t('ASU Directory'),
-      'field types' => ['asu_directory'],
-      'settings' => [],
-    ],
-  ];
+      'field types' => array('asu_directory'),
+      'settings' => array(),
+    ),
+  );
 }
 
 
@@ -102,19 +102,19 @@ function asu_dir_field_formatter_view($entity_type, $entity, $field, $instance, 
     $config['default_sort_by'] = asu_dir_utilites_get_view_sort($config['default_sort_by']);
     $items[0]['directory_config'] = drupal_json_encode($config);
 
-    $element = [
+    $element = array(
       '#theme' => 'asu_dir_isearch_view',
       '#items' => $items,
       '#settings' => $settings,
-    ];
+    );
 
   }
   else {
-    $element = [
+    $element = array(
       '#theme' => 'asu_dir_ajax_solr_field',
       '#items' => $items,
       '#settings' => $settings,
-    ];
+    );
   }
 
   return $element;
@@ -127,16 +127,16 @@ function asu_dir_field_formatter_view($entity_type, $entity, $field, $instance, 
 * Registers custom field_widget
 **/
 function asu_dir_field_widget_info() {
-  return [
-    'asu_directory_form' => [
+  return array(
+    'asu_directory_form' => array(
       'label' => t('ASU Directory'),
-      'field types' => ['asu_directory'],
-      'behaviors' => [
+      'field types' => array('asu_directory'),
+      'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_DEFAULT,
         'default value' => FIELD_BEHAVIOR_DEFAULT,
-      ],
-    ],
-  ];
+      ),
+    ),
+  );
 }
 
 /**
@@ -152,7 +152,6 @@ function asu_dir_field_widget_info() {
  * @param $items
  * @param $delta
  * @param $element
- *
  * @return mixed
  */
 function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
@@ -173,107 +172,108 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
     $default_configs = asu_dir_utilities_get_default_config();
 
     $field_configs = isset($items[$delta]['directory_config']) ? drupal_json_decode($items[$delta]['directory_config']) : $default_configs;
-    $field_items = isset($items[$delta]['directory_items']) ? drupal_json_decode($items[$delta]['directory_items']) : []; //'[' . ASU_DIR_UTILITIES_TOP_LEVEL_DEPT_NID . ']';
+    $field_items = isset($items[$delta]['directory_items']) ? drupal_json_decode($items[$delta]['directory_items']) : array(); //'[' . ASU_DIR_UTILITIES_TOP_LEVEL_DEPT_NID . ']';
 
     $config = array_merge($default_configs, $field_configs);
 
     // handle the case of legacy configuration
     if (!empty($field_items) && isset($field_configs['dept_id']) && empty($config['depts']['items'])) {
-      $config['depts']['items'][0] = [
+      $config['depts']['items'][0] = array(
         'dept_id' => $field_configs['dept_id'],
         'dept_nid' => $field_items[0],
-        'tree_nids' => $field_items,
-      ];
+        'tree_nids' => $field_items
+      );
 
       $dept_id = $field_configs['dept_id'];
 
-      $config['depts']['options']->$dept_id = [
-        'subdepts' => $config['sub_toggle'],
-      ];
+      $config['depts']['options']->$dept_id = array(
+        'subdepts' => $config['sub_toggle']
+      );
     }
 
     $element['#attributes']['class'][] = 'asu-isearch-configuration';
 
-    //add css and js attributes
-    $element['#attached']['css'][] = drupal_get_path('module', 'asu_dir') . '/css/asu_dir_config.min.css';
+    $element['#attached']['css'][] = drupal_get_path('module', 'asu_dir') . '/css/asu_dir_form.css';
+    //asu_isearch_load_js();
+    $element['#attached']['css'][] = drupal_get_path('module', 'asu_dir') . '/css/asu_dir_config.css';
     $element['#attached']['js'][] = drupal_get_path('module', 'asu_dir') . '/js/form/bootstrap.js';
     $element['#attached']['js'][] = drupal_get_path('module', 'asu_dir') . '/js/form/asu_dir_config.js';
     $element['#attached']['js'][] = drupal_get_path('module', 'asu_dir') . '/js/form/asu_dir_field_config.js';
 
     // Horizontal tabs definition
-    $element['horizontal_tabs'] = [
+    $element['horizontal_tabs'] = array(
       '#type' => 'horizontal_tabs',
       '#tree' => TRUE,
       '#prefix' => '<div id="isearch-config-tabs">',
       '#suffix' => '</div>',
-      '#attached' => [
-        'css' => [drupal_get_path('module', 'field_group') . '/horizontal-tabs/horizontal-tabs.css'],
-        'js' => [drupal_get_path('module', 'field_group') . '/horizontal-tabs/horizontal-tabs.js'],
-      ],
-    ];
+      '#attached' => array(
+        'css' => array(drupal_get_path('module', 'field_group') . '/horizontal-tabs/horizontal-tabs.css'),
+        'js' => array(drupal_get_path('module', 'field_group') . '/horizontal-tabs/horizontal-tabs.js'),
+      ),
+    );
 
     // Content horizontal tab definition
-    $element['horizontal_tabs']['content'] = [
+    $element['horizontal_tabs']['content'] = array(
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#title' => t('Content'),
-    ];
+    );
 
     // Content vertical tabs definition
-    $element['horizontal_tabs']['content']['content_tabs'] = [
+    $element['horizontal_tabs']['content']['content_tabs'] = array(
       '#type' => 'vertical_tabs',
       '#default_tab' => '',
-    ];
+    );
 
 
     // Content -> Department group
-    $element['horizontal_tabs']['content']['content_tabs']['department'] = [
+    $element['horizontal_tabs']['content']['content_tabs']['department'] = array(
       '#type' => 'fieldset',
       '#title' => t('Department'),
       '#collapsible' => TRUE,
       '#group' => 'content_tabs',
-    ];
+    );
 
-    $element['horizontal_tabs']['content']['content_tabs']['department']['include_subdepts'] = [
+    $element['horizontal_tabs']['content']['content_tabs']['department']['include_subdepts'] = array(
       '#type' => 'checkbox',
       '#title' => 'Include sub-departments',
       '#default_value' => $config['include_subdepts'],
       '#access' => FALSE,
-    ];
+    );
 
-    $element['horizontal_tabs']['content']['content_tabs']['department']['show_tree'] = [
+    $element['horizontal_tabs']['content']['content_tabs']['department']['show_tree'] = array(
       '#type' => 'checkbox',
       '#title' => 'Show Department Tree',
       '#default_value' => $config['show_tree'],
-      '#states' => [
-        'visible' => [
-          ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][always_display_view]"]' => ['checked' => FALSE],
-        ],
-      ],
+      '#states' => array(
+        'visible' => array(
+          ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][always_display_view]"]' => array('checked' => FALSE)
+        ),
+      ),
       '#prefix' => '<div class="panel panel-default">
         <div class="panel-body">',
       '#suffix' => '<p> Note:  This option is not available if \'Use Local iSearch View\' is enabled.</p></div></div>',
       '#description' => t('Displays a selectable directory tree to the left of the people listing, 
       which allows browsing of all departments below the root.'),
-    ];
+    );
 
-    $element['horizontal_tabs']['content']['content_tabs']['department']['show_breadcrumbs'] = [
+    $element['horizontal_tabs']['content']['content_tabs']['department']['show_breadcrumbs'] = array(
       '#type' => 'checkbox',
       '#title' => 'Show Tree Breadcrumbs',
       '#default_value' => $config['show_breadcrumbs'],
-      '#states' => [
-        'visible' => [
-          ':input[name="field_asu_directory_items[und][0][horizontal_tabs][content][content_tabs][department][show_tree]"]' => ['checked' => TRUE],
-        ],
-      ],
-    ];
+      '#states' => array(
+        'visible' => array(
+          ':input[name="field_asu_directory_items[und][0][horizontal_tabs][content][content_tabs][department][show_tree]"]' => array('checked' => TRUE)
+        ),
+      ),
+    );
 
-    $element['horizontal_tabs']['content']['content_tabs']['department']['new_tab'] = [
+    $element['horizontal_tabs']['content']['content_tabs']['department']['new_tab'] = array(
       '#type' => 'checkbox',
       '#title' => 'Open Profile Links in New Tab',
-      '#default_value' => $config['new_tab'],
-    ];
+      '#default_value' => $config['new_tab']
+    );
 
 
     // get all nids of the dept tree, and pass them to
@@ -282,25 +282,25 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
 
     $tree_nids = asu_dir_utilities_dept_get_tree_nids($tree);
 
-    $element['horizontal_tabs']['content']['content_tabs']['department']['isearch_dept_tree'] = [
+    $element['horizontal_tabs']['content']['content_tabs']['department']['isearch_dept_tree'] = array(
       '#type' => 'asu_dept_picker',
       '#default_value' => json_encode($config['depts']),
-      '#attributes' => ['id' => 'filter_departments'],
+      '#attributes' => array('id' => 'filter_departments'),
       '#delta' => 0,//$element['#entity']->fpid,
-      '#asu_dept_tree' => [
+      '#asu_dept_tree' => array(
         'showOnly' => $tree_nids,
-      ],
-    ];
+      )
+    );
     /** end department picker **/
 
 
     // Content -> Employee Types group
-    $element['horizontal_tabs']['content']['content_tabs']['employeetypes'] = [
+    $element['horizontal_tabs']['content']['content_tabs']['employeetypes'] = array(
       '#type' => 'fieldset',
       '#title' => t('Employee Types'),
       '#collapsible' => TRUE,
       '#group' => 'content_tabs',
-    ];
+    );
 
     /*
     $element['horizontal_tabs']['content']['content_tabs']['employeetypes']['employee_type_exclude'] = array(
@@ -312,25 +312,25 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
     );*/
 
     // build employee types field groups
-    $default_employee_types = [];
+    $default_employee_types = array();
     foreach ($config['employee_types'] as $value) {
       $default_employee_types[] = $value;
     }
 
     // helper checkbox to check all employee types
-    $element['horizontal_tabs']['content']['content_tabs']['employeetypes']['select_all'] = [
+    $element['horizontal_tabs']['content']['content_tabs']['employeetypes']['select_all'] = array(
       '#type' => 'checkbox',
       '#title' => 'Toggle All',
       '#default_value' => in_array('All', $default_employee_types) ? 1 : 0,
       '#description' => t('Toggle all the employee type options below.'),
-      '#attributes' => [
+      '#attributes' => array(
         'id' => 'toggle-all-employee-types',
-      ],
-    ];
+      ),
+    );
 
     // create a map of how we want to organize known employee types
     // if the api fetches a new item, we will drop it under 'other'
-    $employee_type_map = [
+    $employee_type_map = array(
       // Faculty
       'Faculty' => 'faculty',
       'Faculty w/Admin Appointment' => 'faculty',
@@ -344,38 +344,38 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       'Post Doctoral Scholars' => 'other',
       'Graduate Assistant/Associate' => 'other',
       'Student Worker' => 'other',
-    ];
+    );
 
     // create our groups...
-    $employee_type_groups = ['Faculty', 'Staff', 'Other'];
+    $employee_type_groups = array('Faculty', 'Staff', 'Other');
 
     // dynamically create our field groups
     foreach ($employee_type_groups as $group_name) {
       $group_key = strtolower($group_name);
-      $element['horizontal_tabs']['content']['content_tabs']['employeetypes'][$group_key] = [
+      $element['horizontal_tabs']['content']['content_tabs']['employeetypes'][$group_key] = array(
         '#title' => $group_name,
         '#type' => 'fieldset',
         '#collapsible' => FALSE,
-        '#options' => [],
-        '#attributes' => [
-          'class' => [
+        '#options' => array(),
+        '#attributes' => array(
+          'class' => array(
             'employee-types-group',
-            'employee-types-group-' . $group_key,
-          ],
-        ],
-      ];
-      $element['horizontal_tabs']['content']['content_tabs']['employeetypes'][$group_key]['options'] = [
+            'employee-types-group-' . $group_key
+          ),
+        ),
+      );
+      $element['horizontal_tabs']['content']['content_tabs']['employeetypes'][$group_key]['options'] = array(
         '#type' => 'checkboxes',
-        '#options' => [],
+        '#options' => array(),
         '#default_value' => $default_employee_types,
-      ];
+      );
     }
 
     // fetch employee types
     $employee_types = asu_dir_utilities_get_isearch_data(ASU_DIR_UTILITIES_EMPLOYEE_TYPES_ENDPOINT);
 
     // employee type options array
-    $employee_types_options = [];
+    $employee_types_options = array();
 
     // loop over our employee types and assign to field group
     foreach ($employee_types['nodes'] as $employee_type_node) {
@@ -396,22 +396,22 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
     // tenure control will be added to faculty employee types group for now
     $default_tenure_display = asu_dir_get_tenure_config($config['tenure_display']);
 
-    $element['horizontal_tabs']['content']['content_tabs']['employeetypes']['faculty']['tenure_display'] = [
+    $element['horizontal_tabs']['content']['content_tabs']['employeetypes']['faculty']['tenure_display'] = array(
       '#type' => 'radios',
-      '#options' => drupal_map_assoc(['Tenure', 'Non-Tenure', 'Both']),
+      '#options' => drupal_map_assoc(array('Tenure', 'Non-Tenure', 'Both')),
       '#default_value' => $default_tenure_display,
       '#title' => 'Show Tenure/Non-Tenure/Both',
       '#description' => t('This selection will only apply to types in the Faculty list above.'),
       '#weight' => 10,
-    ];
+    );
 
     // Content -> Other Filters group
-    $element['horizontal_tabs']['content']['content_tabs']['otherfilters'] = [
+    $element['horizontal_tabs']['content']['content_tabs']['otherfilters'] = array(
       '#type' => 'fieldset',
       '#title' => t('Other Filters'),
       '#collapsible' => TRUE,
       '#group' => 'content_tabs',
-    ];
+    );
 
     // ASU iSearch specific
     if (module_exists('asu_isearch')) {
@@ -422,7 +422,7 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       if (is_object($expertise_vocabulary) &&
         $expertise_terms = taxonomy_get_tree($expertise_vocabulary->vid, 0, NULL, TRUE)
       ) {
-        $expertise_areas = [];
+        $expertise_areas = array();
 
         foreach ($expertise_terms as $term) {
           $expertise_areas[$term->tid] = $term->name;
@@ -433,14 +433,14 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         }
 
         if (!empty($expertise_areas)) {
-          $element['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_expertise_areas'] = [
+          $element['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_expertise_areas'] = array(
             '#type' => 'select',
             '#options' => $expertise_areas,
             '#default_value' => $config['expertise_areas'],
             '#multiple' => TRUE,
             '#title' => t('Limit to these expertise areas'),
             '#prefix' => '<div class="alert alert-info">Note: To de-select or to select multiple items, use CMD+Click (Mac) or Ctrl+Click (Windows)</div>',
-          ];
+          );
         }
       }
     }
@@ -455,12 +455,12 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
     /*}
   }*/
 
-    $element['horizontal_tabs']['content']['content_tabs']['otherfilters']['filter_title'] = [
+    $element['horizontal_tabs']['content']['content_tabs']['otherfilters']['filter_title'] = array(
       '#type' => 'textfield',
       '#title' => 'Filter Title',
       '#description' => t('Limit results by the affiliation title. Regular expression allowed.'),
       '#default_value' => $config['filter_title'],
-    ];
+    );
 
     // ASU iSearch specific setting
     if (module_exists('asu_isearch')) {
@@ -470,7 +470,7 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       $local_tags_vocabulary = taxonomy_vocabulary_machine_name_load('isearch_local_tags');
 
       if ($local_tags_terms = taxonomy_get_tree($local_tags_vocabulary->vid, 0, NULL, TRUE)) {
-        $local_tags = [];
+        $local_tags = array();
 
         foreach ($local_tags_terms as $term) {
           $local_tags_areas[$term->tid] = $term->name;
@@ -480,91 +480,91 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
           $config['local_tags'] = (array) $config['local_tags'];
         }
 
-        $element['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_local_tags'] = [
+        $element['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_local_tags'] = array(
           '#type' => 'select',
           '#options' => $local_tags_areas,
           '#default_value' => $config['local_tags'],
           '#multiple' => TRUE,
           '#title' => t('Filter profiles by these local tags'),
-        ];
+        );
       }
     }
 
     // Appearance horizontal tab definition
-    $element['horizontal_tabs']['appearance'] = [
+    $element['horizontal_tabs']['appearance'] = array(
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#title' => t('Appearance'),
-    ];
+    );
 
     // Appearance vertical tabs definition
-    $element['horizontal_tabs']['appearance']['appearance_tabs'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs'] = array(
       '#type' => 'vertical_tabs',
       '#default_tab' => '',
-    ];
+    );
 
 
-    $display_types = [
+    $display_types = array(
       'list' => 'List',
-      'grid' => 'Grid',
-    ];
+      'grid' => 'Grid'
+    );
 
     // Appearance -> Display group
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['display'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['display'] = array(
       '#type' => 'fieldset',
       '#title' => t('Display'),
       '#collapsible' => TRUE,
       '#group' => 'appearance_tabs',
-    ];
+    );
 
     // Appearance -> Sorting group
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['display']['display_type'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['display']['display_type'] = array(
       '#type' => 'select',
       '#options' => $display_types,
       '#title' => 'Display Type',
       '#default_value' => $config['display_type'],
-    ];
+    );
 
     // Appearance -> Sorting group
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['sorting'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['sorting'] = array(
       '#type' => 'fieldset',
       '#title' => t('Sorting'),
       '#collapsible' => TRUE,
       '#group' => 'appearance_tabs',
-    ];
+    );
 
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['sorting']['show_filter_sort'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['sorting']['show_filter_sort'] = array(
       '#type' => 'checkbox',
       '#title' => 'Hide Rank Sort Option',
       '#default_value' => $config['hide_filter_rank_sort'],
       '#description' => t('Hide the sorting option to sort employees by rank within a department. The rank sort order can be modified at
         https://isearch.asu.edu/asu_dept_mgr.'),
-    ];
+    );
 
     $lnameSort = variable_get('asu_dir_utilities_lname_sort_field', ASU_DIR_UTILITIES_SOLR_LASTNAME_SORT_DEFAULT);
 
-    $default_sort_by_options = [
+    $default_sort_by_options = array(
       'tsort' => 'Rank',
       $lnameSort => 'Last Name',
       'firstNameSort' => 'First Name',
-    ];
+    );
 
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['sorting']['default_sort_by'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['sorting']['default_sort_by'] = array(
       '#type' => 'select',
       '#options' => $default_sort_by_options,
       '#title' => 'Default sort order',
       '#default_value' => $config['default_sort_by'],
-    ];
+    );
 
     if (module_exists('asu_isearch')) {
-      $rank_sort_mode_options = [
+      $rank_sort_mode_options = array(
         'isearch' => 'iSearch',
         'local' => 'Local Rankweight',
-        'lowest' => 'Lowest',
-      ];
+        'lowest' => 'Lowest'
+      );
 
-      $element['horizontal_tabs']['appearance']['appearance_tabs']['sorting']['default_rank_mode'] = [
+      $element['horizontal_tabs']['appearance']['appearance_tabs']['sorting']['default_rank_mode'] = array(
         '#type' => 'select',
         '#options' => $rank_sort_mode_options,
         '#title' => 'Rank Sort Mode',
@@ -577,42 +577,42 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       This feature is only compatible with Solr sorting, 
       and not reflected when using the local directory view.</p></div></div>',
         '#default_value' => $config['default_rank_mode'],
-        '#states' => [
-          'visible' => [
-            ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][always_display_view]"]' => ['checked' => FALSE],
-          ],
-        ],
-      ];
+        '#states' => array(
+          'visible' => array(
+            ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][always_display_view]"]' => array('checked' => FALSE)
+          ),
+        ),
+      );
     }
 
     // Appearance -> Exposed filters group
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['exposed'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['exposed'] = array(
       '#type' => 'fieldset',
       '#title' => t('Exposed Filters'),
       '#collapsible' => TRUE,
       '#group' => 'appearance_tabs',
-    ];
+    );
 
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_filters'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_filters'] = array(
       '#type' => 'checkbox',
       '#title' => 'Show filters',
       '#default_value' => $config['show_filters'],
       '#description' => t('These options are shown to visitors, allowing them to further sort and filter the list.'),
-    ];
+    );
 
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_filter_omni'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_filter_omni'] = array(
       '#type' => 'checkbox',
       '#title' => 'Search box',
       '#default_value' => $config['show_filter_omni'],
       '#description' => t('This will allow visitors to search for keywords in titles, expertise areas, and short bios (even if these columns are not enabled in appearance).'),
-    ];
+    );
 
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_filter_expertise'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_filter_expertise'] = array(
       '#type' => 'checkbox',
       '#title' => 'Expertise dropdown',
       '#default_value' => $config['show_filter_expertise'],
       '#description' => t('This will allow visitors to filter the list to the specified expertise area. This dropdown will list all expertise areas associated with people in the department.'),
-    ];
+    );
 
     /*  TODO:  can we have a primary title facet?
     $element['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_filter_titles'] = array(
@@ -622,54 +622,54 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       '#description' => t('This will allow visitors to filter the list by people of a specified title. This dropdown is populated with titles of people in the current list only.'),
     );*/
 
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_filter_faculty_titles'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_filter_faculty_titles'] = array(
       '#type' => 'checkbox',
       '#title' => 'Faculty Title dropdown',
       '#default_value' => $config['show_filter_faculty_titles'],
       '#description' => t('This will allow visitors to filter the list by people of a specified faculty title. This dropdown is populated with titles of people in the current list only.'),
-    ];
+    );
 
 
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_az_index'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['exposed']['show_az_index'] = array(
       '#type' => 'checkbox',
       '#title' => 'Show A-Z index',
       '#default_value' => $config['show_az_index'],
       '#description' => t('Allows visitors to click on a letter that will filter the directory list to profiles with last names beginning with that letter.'),
-    ];
+    );
 
 
     // Appearance -> Paging group
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['paging'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['paging'] = array(
       '#type' => 'fieldset',
       '#title' => t('Paging'),
       '#collapsible' => TRUE,
       '#group' => 'appearance_tabs',
-    ];
+    );
 
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['paging']['pager_display'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['paging']['pager_display'] = array(
       '#type' => 'select',
-      '#options' => [
+      '#options' => array(
         'paged' => 'Paged output',
-        'all' => 'Display all items',
-      ],
+        'all' => 'Display all items'
+      ),
       '#title' => 'Display pagination',
       '#default_value' => $config['pager_display'],
-    ];
+    );
 
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['paging']['pager_items_per_page'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['paging']['pager_items_per_page'] = array(
       '#type' => 'textfield',
       '#title' => 'Items to display per page.',
       '#description' => t('The number of items to display per page. Enter 0 for no limit.'),
       '#default_value' => $config['pager_items_per_page'],
-    ];
+    );
 
     // Appearance -> Columns group
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['columns'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['columns'] = array(
       '#type' => 'fieldset',
       '#title' => t('Columns'),
       '#collapsible' => TRUE,
       '#group' => 'appearance_tabs',
-    ];
+    );
     /*
     $element['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_header'] = array(
       '#type' => 'checkbox',
@@ -677,11 +677,11 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       '#default_value' => $config->display_header,
     );*/
 
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_photo'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_photo'] = array(
       '#type' => 'checkbox',
       '#title' => 'Photo',
       '#default_value' => $config['display_photo'],
-    ];
+    );
     /*
     $element['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_name'] = array(
       '#type' => 'checkbox',
@@ -695,18 +695,18 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       '#default_value' => $config->display_contact,
     );*/
 
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_expertise'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_expertise'] = array(
       '#type' => 'checkbox',
       '#title' => 'Expertise column',
       '#default_value' => $config['display_expertise'],
-    ];
+    );
 
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_building'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_building'] = array(
       '#type' => 'checkbox',
       '#title' => 'Location',
       '#default_value' => $config['display_building'],
       '#description' => t('The building and room fields are displayed in the contact column. They are populated from the first and second lines of Campus Address.'),
-    ];
+    );
 
     /*
     $element['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_room'] = array(
@@ -725,31 +725,31 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       '#description' => t('This will link properly formatted building codes to the ASU interactive map. If the building code is not properly formatted, it will not be linked.'),
     );*/
 
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_short_bio'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_short_bio'] = array(
       '#type' => 'checkbox',
       '#title' => 'Display short bio field?',
       '#default_value' => $config['display_short_bio'],
       '#description' => t('The short bio is displayed below the title in the name column.'),
-    ];
+    );
 
-    $element['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_department'] = [
+    $element['horizontal_tabs']['appearance']['appearance_tabs']['columns']['display_department'] = array(
       '#type' => 'checkbox',
       '#title' => 'Display department name under title?',
       '#default_value' => $config['display_department'],
       '#description' => t('The department nameis displayed below the title in the name column.'),
-    ];
+    );
 
     // Advanced horizontal tab definition
-    $element['horizontal_tabs']['advanced'] = [
+    $element['horizontal_tabs']['advanced'] = array(
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#title' => t('Advanced'),
-    ];
+    );
 
     if (module_exists('asu_isearch')) {
       // Advanced tab content
-      $element['horizontal_tabs']['advanced']['always_display_view'] = [
+      $element['horizontal_tabs']['advanced']['always_display_view'] = array(
         '#type' => 'checkbox',
         '#title' => 'Use Local iSearch View',
         '#default_value' => $config['always_display_view'],
@@ -759,17 +759,17 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         instead of real-time Solr results.  The view is subject to changes in local profiles via migrations, 
         and may not be up to date with iSearch.  Also please note that in the event of a Solr outage, 
         the view will be displayed automatically as a backup.</p></div></div>',
-        '#states' => [
-          'visible' => [
-            ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][use_custom_q]"]' => ['checked' => FALSE],
-          ],
-        ],
+        '#states' => array(
+          'visible' => array(
+            ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][use_custom_q]"]' => array('checked' => FALSE)
+          ),
+        )
 
-      ];
+      );
     }
 
     // Advanced tab content
-    $element['horizontal_tabs']['advanced']['use_custom_q'] = [
+    $element['horizontal_tabs']['advanced']['use_custom_q'] = array(
       '#type' => 'checkbox',
       '#title' => 'Custom Solr Filter',
       '#default_value' => $config['use_custom_q'],
@@ -786,12 +786,12 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         <strong>Research Faculty:</strong> facultyTitles:("Research Professor" OR "Research Associate Professor" OR "Research Assistant Professor" OR "Research Scholar" OR "Faculty Research Associate")<br>
         <strong>Affiliated Faculty:</strong> facultyTitles:("Visiting" OR "Faculty Associate" OR "Adjunct Faculty")<br>
         <strong>Emeritus Faculty:</strong> facultyTitles:("Emeritus")</div></div>',
-      '#states' => [
-        'visible' => [
-          ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][always_display_view]"]' => ['checked' => FALSE],
-        ],
-      ],
-    ];
+      '#states' => array(
+        'visible' => array(
+          ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][always_display_view]"]' => array('checked' => FALSE)
+        ),
+      ),
+    );
 
     /****
      *
@@ -802,42 +802,42 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
      *
      ****/
 
-    $element['horizontal_tabs']['advanced']['fq'] = [
+    $element['horizontal_tabs']['advanced']['fq'] = array(
       '#type' => 'textarea',
       '#title' => 'Filter Query (fq=)',
       '#default_value' => $config['custom_q']['fq'],
       '#description' => t('The Filter Query (fq=) value for the Solr query.'),
-      '#states' => [
-        'visible' => [
-          ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][use_custom_q]"]' => ['checked' => TRUE],
-        ],
-      ],
-    ];
+      '#states' => array(
+        'visible' => array(
+          ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][use_custom_q]"]' => array('checked' => TRUE)
+        ),
+      )
+    );
 
     // Advanced horizontal tab definition
-    $element['horizontal_tabs']['preview'] = [
+    $element['horizontal_tabs']['preview'] = array(
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#title' => t('Preview'),
       '#access' => FALSE,
-    ];
+    );
 
-    $element['horizontal_tabs']['preview']['preview_placeholder'] = [
+    $element['horizontal_tabs']['preview']['preview_placeholder'] = array(
       '#type' => 'item',
       '#markup' => '<div id="isearch-preview"></div>',
-    ];
+    );
 
     // executes iSearch configuration form visuals
-    $element['footer']['react'] = [
+    $element['footer']['react'] = array(
       '#type' => 'item',
       '#markup' => '<script type="text/javascript">initIsearchConfig();</script>',
-    ];
+    );
 
     // Hide isearch config field
     $element['field_isearch_config']['#access'] = FALSE;
     unset($element['#validate']);
-    $element['#validate'] = ['asu_dir_field_validate'];
+    $element['#validate'] = array('asu_dir_field_validate');
 
     return $element;
   }
@@ -848,16 +848,16 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
   // store values
   $values = $items[0];
 
-  $employee_types = [];
-  $expertise_areas = [];
+  $employee_types = array();
+  $expertise_areas = array();
   $rank_mode = 'isearch';
-  $tree_nids = [];
+  $tree_nids = array();
 
   if ($values['horizontal_tabs']['content']['content_tabs']['employeetypes']['select_all']) {
-    $employee_types = ['All'];
+    $employee_types = array('All');
   }
   else {
-    $employee_type_groups = ['faculty', 'staff', 'other'];
+    $employee_type_groups = array('faculty', 'staff', 'other');
     foreach ($employee_type_groups as $group_key) {
       foreach ($values['horizontal_tabs']['content']['content_tabs']['employeetypes'][$group_key]['options'] as $value) {
         if ($value !== 0) {
@@ -880,7 +880,7 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
     $display_view = $values['horizontal_tabs']['advanced']['always_display_view'];
   }
 
-  $tags = [];
+  $tags = array();
 
   // these 3 fields are asu_isearch specific, so they might not be set
   if (isset($values['horizontal_tabs']['content']['content_tabs']['otherfilters']['isearch_local_tags'])) {
@@ -895,7 +895,7 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
     $rank_mode = $values['horizontal_tabs']['appearance']['appearance_tabs']['sorting']['default_rank_mode'];
   }
 
-  $config = [
+  $config = array(
 
     // Content -> Department
     //'include_subdepts'      => $values['horizontal_tabs']['content']['content_tabs']['department']['include_subdepts'],
@@ -957,12 +957,12 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
 
     // Advanced
     'use_custom_q' => $values['horizontal_tabs']['advanced']['use_custom_q'],
-    'custom_q' => [
-      'fq' => trim($values['horizontal_tabs']['advanced']['fq']),
-    ],
-    'always_display_view' => $display_view,
+    'custom_q' => array(
+      'fq' => trim($values['horizontal_tabs']['advanced']['fq'])
+    ),
+    'always_display_view' => $display_view
 
-  ];
+  );
 
   $root = $depts['items'][0]['dept_id'];
 
@@ -972,7 +972,7 @@ function asu_dir_field_presave($entity_type, $entity, $field, $instance, $langco
       $tree_nids = array_merge($tree_nids, $item['tree_nids']);
     }
     else {
-      $tree_nids = array_merge($tree_nids, [$item['dept_nid']]);
+      $tree_nids = array_merge($tree_nids, array($item['dept_nid']));
     }
 
     if ($key == 0) {
@@ -996,10 +996,10 @@ function asu_dir_field_validate($entity_type, $entity, $field, $instance, $langc
 
   foreach ($items as $delta => $item) {
     if (asu_dir_field_is_empty($item, $field)) {
-      $errors[$field['field_name']][$langcode][$delta][] = [
+      $errors[$field['field_name']][$langcode][$delta][] = array(
         'error' => 'Please select a valid root department',
-        'message' => t('!name root department is not valid.', ['!name' => t('ASU Directory')]),
-      ];
+        'message' => t('!name root department is not valid.', array('!name' => t('ASU Directory'))),
+      );
     }
   }
 }

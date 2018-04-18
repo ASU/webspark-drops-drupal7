@@ -192,12 +192,12 @@ function uto_carousel_field_formatter_view($entity_type, $entity, $field, $insta
       $item['item'] = $tmp;
 
       // Setup the variables for calling theme_image_style
-      $item['slide']['path'] = $item['item']['uri'];
-      $item['slide']['style_name'] = $display['settings']['image_style'];
-      $item['slide']['width'] = $item['item']['metadata']['width'];
-      $item['slide']['height'] = $item['item']['metadata']['height'];
-      $item['slide']['alt'] = $item['item']['alt'];
-      $item['slide']['title'] = $item['item']['title'];
+      $item['slide']['path'] = isset($item['item']['uri']) ? $item['item']['uri'] : "";
+      $item['slide']['style_name'] = isset($display['settings']['image_style']) ? $display['settings']['image_style'] : "";
+      $item['slide']['width'] = isset($item['item']['metadata']['width']) ? $item['item']['metadata']['width'] : "";
+      $item['slide']['height'] = isset($item['item']['metadata']['height']) ? $item['item']['metadata']['height'] : "";
+      $item['slide']['alt'] = isset($item['item']['alt']) ? $item['item']['alt'] : "";
+      $item['slide']['title'] = isset($item['item']['title']) ? $item['item']['title'] : "";
 
       // Render the slide item
       // If not style set, we have to call theme_image since theme_image_style
