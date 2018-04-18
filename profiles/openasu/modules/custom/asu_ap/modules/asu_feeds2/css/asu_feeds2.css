@@ -1,15 +1,3 @@
-/* Legacy code */
-/*.text-yellow {
-    color: #FFC627;
-}
-.text-green {
-    color: #006838;
-}
-.asu-degrees-example-careers-small {
-    font-size: 75%;
-}*/
-
-
 /* Prepends text before 'Feed' display title on ASU Degrees node form */
 #asu-ap-feed-node-form .fieldset-legend::before {
   content: "ASU Academic Programs ";
