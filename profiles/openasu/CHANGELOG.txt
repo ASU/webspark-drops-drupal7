@@ -1,4 +1,4 @@
-Webspark 1.52 (West Virginia) release, 2018-03-28
+Webspark 1.52.1 (Morgantown) release, 2018-04-17
 -------------------------------------------------
 - Panopoly core modules
 
