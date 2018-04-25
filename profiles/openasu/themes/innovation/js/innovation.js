@@ -14,8 +14,8 @@
 
     }
   };
+  // Add support for sticky menu
   var navOffset = 0;
-  // Show hidden Mega Menu slider when needed
   $(window).scroll(function () {
     if ($('#navbar-administration'.length > 0)) {
       navOffset = $('#navbar-bar').height() + $('#navbar-tray').height();
@@ -23,13 +23,9 @@
         navOffset = navOffset - $('#navbar-tray').height();
       }
     }
-    if (($('#ASUNavMenu').offset().top - ($(window).scrollTop() + navOffset)) < 1 && $('.ghostSlider').length < 1) {
-      $('#ASUNavMenu').clone(true).prependTo(document.body).addClass('ghostSlider')
-          .css({"position": "fixed", "z-index": "1000", "width": "100%", "visibility": "visible"})
-          .removeAttr('id');
-    } else if (($('#ASUNavMenu').offset().top - ($(window).scrollTop() + navOffset)) >= 1) {
-      $('.ghostSlider').remove();
-    }
+    navOffsetUnits = navOffset + "px";
+    var navStyles = {"position": "sticky", "top": navOffsetUnits, "z-index": "1000", "width": "100%", "visibility": "visible"};
+    $('#ASUNavMenu').addClass('sticky-menu').css(navStyles);
   });
 
   // Used to determine if RFI form is on the page.
