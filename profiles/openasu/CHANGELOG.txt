@@ -1,4 +1,24 @@
-Webspark 1.52 (West Virginia) release, 2018-03-28
+Webspark 1.53 (Kansas) release, 2018-04-25
+------------------------------------------
+- Webspark core
+
+  * Drupal (v7.59)
+    * Includes security updates. See https://www.drupal.org/project/drupal/releases/7.59 for details.
+  * Panopoly Widgets (v1.53) 
+    * Includes security updates to contrib modules and updates to Panopoly Widgets.
+
+- Contrib modules maintained in Panopoly
+
+  * Media (v2.13)
+    * Applied Highly critical security bug fix.
+
+- Web standards components in Webspark
+
+  * ASU RFI (v1.9) 
+    * Added initial support for the ASU AP module, which will be replacing the ASU Degrees module.
+
+
+Webspark 1.52.1 (Morgantown) release, 2018-04-17
 -------------------------------------------------
 - Panopoly core modules
 
@@ -21,6 +41,7 @@ Webspark 1.52 (West Virginia) release, 2018-03-28
   * UTO Carousel (v1.6)
     * Rolled back deprecation of this module
     * Fixed “Notice: Undefined index: alt in uto_carousel_field_formatter_view()” error
+
 
 Webspark 1.52 (West Virginia) release, 2018-03-28
 -------------------------------------------------

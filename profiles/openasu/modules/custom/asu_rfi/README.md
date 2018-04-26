@@ -5,9 +5,13 @@ automatic posting to ASU's SalesForce middleware.
 
 INSTALLATION
 --------------------------
-Prerequisites: ASU Degrees and ASU Degrees Features modules.
-And others. See the .info files. Of note are the Multiblock and 
-Ajax Block modules. 
+Prerequisites: ASU Academic Programs.
+Prerequisites (deprecated): ASU Degrees and ASU Degrees Features modules.
+And others. See the .info files. Of note are the Multiblock and
+Ajax Block modules.
+
+IMPORTANT: After enabling the ASU Academic Programs module, the RFI module will
+no longer work with the ASU Degrees module.
 
 In order to avoid a per-instance bug with the Multiblock module where it
 forgets settings, you should apply the patch in comment #5 on:
@@ -27,7 +31,7 @@ module's README.txt for more information.
 Post installation, the ASU RFI module requires configuration in order to post
 to the middleware and deploy the forms throughout your site.
 
-GENERAL CONFIGS: 
+GENERAL CONFIGS:
 
 General sitewide RFI settings are made at /admin/config/asu/asurfi.
 To use the middleware, you must obtain an authentication key from
@@ -49,7 +53,7 @@ From this Views Bulk Operation view of lead submissions, you can see which
 submissions have succeeded or failed, resubmit failed leads to the middleware
 and export leads to CSV.
 
-RFI FORM DEPLOYMENT AND CONFIGS: 
+RFI FORM DEPLOYMENT AND CONFIGS:
 
 RFI forms are deployed to your site via the Drupal blocks system, with help
 from the Multiblock module.
@@ -107,7 +111,7 @@ TABLES
 
 BLOCKS
 --------------------------
-RFI Master block - do not use. 
+RFI Master block - do not use.
 Create Block Instances for individual RFI forms based off the RFI Master
 block.
 
