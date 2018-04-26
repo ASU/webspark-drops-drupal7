@@ -37,7 +37,8 @@ function innovation_preprocess_html(&$variables) {
       '#type' => 'html_tag',
       '#tag' => 'meta',
       '#attributes' => array(
-        'content' => 'Webspark:1.52.1 (Morgantown)',
+      // Don't forget to update openasu.info as well!!
+        'content' => 'Webspark:1.53 (Kansas)',
         'http-equiv' => 'X-Name-of-Distro',
         'name' => 'cmsversion',
       )
