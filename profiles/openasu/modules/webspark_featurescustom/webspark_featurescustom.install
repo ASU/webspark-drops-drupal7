@@ -221,20 +221,20 @@ function webspark_featurescustom_update_7008(&$sandbox) {
 /**
  * Implements hook_update_N()
  * -- Reverts Panopoly Page feature to apply missing settings to the Landing Page content type
+ * -- Adds ASU Spotlight permissions to editor role.
  * @param $sandbox
  */
 function webspark_featurescustom_update_7009(&$sandbox) {
   // Create the new landing page content type.
   if (module_exists('panopoly_pages')) {
-    $items = array();
-    $items['panopoly_pages'] = array('variable');
-    features_revert($items);
-    watchdog('webspark_updates', '7009 - Reverts Panopoly Page feature to apply missing settings to the Landing Page content type');
+    features_rebuild(array('panopoly_pages' => array('variable', 'panelizer_defaults')));
+    watchdog('webspark_updates', t('7009 - Rebuilds Panopoly Page feature via features_rebuild() to apply missing settings 
+        to the Landing Page content type.'));
   }
   else {
-    watchdog('webspark_updates', '7009 - Panopoly Pages module not enabled. No changes were made.', WATCHDOG_ALERT);
+    watchdog('webspark_updates', t('7009 - Panopoly Pages module not enabled. No features_rebuild() was attempted.'));
   }
-  // WEBSPARK-1237 - Add ASU Spotlight permissions to editor role
+  // Add ASU Spotlight permissions to editor role
   $role = user_role_load_by_name("editor");
   if (!empty($role->rid)) {
     $rid = (int) $role->rid;
