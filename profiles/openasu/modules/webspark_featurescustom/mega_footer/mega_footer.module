@@ -112,7 +112,7 @@ function mega_footer_block_view($delta = '') {
 
       //Social Media
 
-      $footer_mark .= "<ul class='social-media'>";
+      $footer_mark .= "<ul class='dgtl-mkting-101'>";
 
       $footer_mark = mega_footer_social_media('facebook','facebook-square','Facebook',$footer_mark);
       $footer_mark = mega_footer_social_media('twitter','twitter-square','Twitter',$footer_mark);

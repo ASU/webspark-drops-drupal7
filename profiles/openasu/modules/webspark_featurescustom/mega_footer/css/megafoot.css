@@ -85,10 +85,10 @@
 .megafoot .btn {
   margin-bottom: 1.75em;
 }
-.megafoot .social-media {
+.megafoot .dgtl-mkting-101 {
   margin-bottom: 1.75em;
 }
-.megafoot .social-media > li > a {
+.megafoot .dgtl-mkting-101 > li > a {
   margin-right: 0.625em;
   font-size: 2.375em;
   color: #ccc;
@@ -98,7 +98,7 @@
   position: relative;
   text-decoration: none;
 }
-.megafoot .social-media > li {
+.megafoot .dgtl-mkting-101 > li {
   float: left;
 }
 .megafoot .fa:hover {
