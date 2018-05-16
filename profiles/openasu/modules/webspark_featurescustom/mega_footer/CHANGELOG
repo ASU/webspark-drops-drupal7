@@ -6,6 +6,7 @@ mega_footer 7.x-1.8, 2018-05-01
 - Added DB update to delete mega_footer_ variable table entries upon uninstall
 - Broke out social media functions into .inc file
 - Added validation of URLs
+- Changed CSS class of social media icons
 
 mega_footer 7.x-1.7, 2018-02-01
 —————————————————————————
