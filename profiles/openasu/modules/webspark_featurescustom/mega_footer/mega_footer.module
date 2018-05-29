@@ -439,10 +439,10 @@ function mega_footer_block_validate(&$form, $form_state) {
   $delta = $form['delta']['#value'];
   if ($delta == 'mega_footer') {
     foreach ($form_state['values'] as $haystack => $straw) {
-      if (!is_array($straw)) {
+      if (!is_array($straw) && !empty($straw)) {
         if (stristr($haystack, '_link')) {
           $absolute = TRUE;
-          if ($straw == 'mega_footer_unit_contact_us_link' || $straw == 'mega_footer_contribute_link' || $straw == 'mega_footer_unit_rss_link') {
+          if ($haystack == 'mega_footer_unit_contact_us_link' || $haystack == 'mega_footer_contribute_link' || $haystack == 'mega_footer_unit_rss_link') {
             $absolute = FALSE;
           }
           if (!valid_url($straw, $absolute)) {
