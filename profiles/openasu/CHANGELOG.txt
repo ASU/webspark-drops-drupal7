@@ -1,5 +1,22 @@
+Webspark 1.53.1 (Topeka) release, 2018-05-14 
+-------------------------------------------------
+- Webspark core
+
+  * Webspark Featurescustom (v1.7)
+    * The DB updates added in Kansas (v1.53) now correctly keep Drupal user's preexisting overrides to content types while still properly updating the Landing Page content type.
+
+- Web standards components in Webspark
+
+  * Mega Footer (v1.8)
+    * Significantly refactored code
+    * Updated all Drupal DB variable name to "mega_footer_" naming convention
+    * Improved cleanup on uninstall of the module
+    * Added validation of URLs
+  * ASU RFI (v1.10) - Amended RFI module logic to better behave with ASU Academic Programs module after switching from ASU Degrees.
+
+
 Webspark 1.53 (Kansas) release, 2018-04-25
-------------------------------------------
+-------------------------------------------------
 - Webspark core
 
   * Drupal (v7.59)
