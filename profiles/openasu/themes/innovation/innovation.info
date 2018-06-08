@@ -32,7 +32,7 @@ stylesheets[all][] = fonts/roboto/css/roboto.css
 ; Theme settings
 
 settings[toggle_logo] = 0
-settings[toggle_name] = 1
+settings[toggle_name] = 0
 settings[toggle_slogan] = 0
 settings[toggle_node_user_picture] = 0
 settings[toggle_comment_user_picture] = 0
