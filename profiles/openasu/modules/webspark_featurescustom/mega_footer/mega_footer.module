@@ -440,14 +440,16 @@ function mega_footer_block_validate(&$form, $form_state) {
   if ($delta == 'mega_footer') {
     foreach ($form_state['values'] as $haystack => $straw) {
       if (!is_array($straw)) {
-        if (stristr($haystack, '_link')) {
+        if (stristr($haystack, '_link') && !empty($straw)) {
           $absolute = TRUE;
-          if ($straw == 'mega_footer_unit_contact_us_link' || $straw == 'mega_footer_contribute_link' || $straw == 'mega_footer_unit_rss_link') {
+          $error_message_addendum = " The URL must also be an absolute URL (i.e. begin with an http:// or https://).";
+          if ($haystack == 'mega_footer_unit_contact_us_link' || $haystack == 'mega_footer_contribute_link' || $haystack == 'mega_footer_unit_rss_link') {
             $absolute = FALSE;
+            $error_message_addendum = "";
           }
           if (!valid_url($straw, $absolute)) {
-            form_set_error($haystack, t('The value provided for %field is not a valid URL.',
-              array('%field' => $haystack)));
+            form_set_error($haystack, t('%value is not a valid URL for %field.' . $error_message_addendum,
+              array('%field' => $haystack, '%value' => $straw)));
           }
         }
       }
