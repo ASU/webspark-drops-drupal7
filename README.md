@@ -20,14 +20,18 @@ This process will let us know that you have submitted a fix for us to review.
 
 *NOTES:*
 
-- All pull requests should ideally be flattened down to one (1) Git commit. (Use git rebase or git reset --mixed && git 
-add && git commit to accomplish this.) Failure to do this will delay consideration of your proposed updates.
-- Any Git commit messages you write will be public and permanent, so make them useful, concise, and clean. Work with 
-commit messages like, "more updates", "Webspark fixes", "#&%#!&%* fixes", etc.
-- Please do not attempt to submit any pull requests to the following branches because they will be rejected without 
+- Please do not make any pull requests to the following branches because they will be rejected outright without 
 consideration:
   - master
   - 7.x-rc
   - 7.x-dev
+- Use Drupal's coding standards when writing any code (see https://www.drupal.org/docs/develop/standards/coding-standards). 
+Any submitted pull requests not using those standards will be returned to the submitter without correction. (We recommend 
+using an IDE or text editor that automatically formats the code.)
+- All pull requests should ideally be flattened down to one (1) Git commit. (Use git rebase or git reset --mixed && 
+git add && git commit to accomplish this.) Failure to do this will delay consideration of the pull request.
+- Any included Git commit messages written by submitters will be public and permanent, so please make them useful, 
+concise, and clean. Pull requests with commit messages like, "more updates", "Webspark fixes", "#&%#!&%* fixes", etc. 
+will be rejected.
 
 If you have any further questions about this process, please email webconsulting(--AT--)asu(--DOT--)edu.
