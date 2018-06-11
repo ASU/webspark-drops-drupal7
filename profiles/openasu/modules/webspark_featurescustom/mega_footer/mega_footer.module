@@ -92,6 +92,7 @@ function mega_footer_block_view($delta = '') {
       $footer_mark = _mega_footer_social_media('vimeo', 'vimeo-square', 'Vimeo', $footer_mark);
       $footer_mark = _mega_footer_social_media('flickr', 'flickr', 'Flickr', $footer_mark);
       $footer_mark = _mega_footer_social_media('pinterest', 'pinterest-square', 'Pinterest', $footer_mark);
+      $footer_mark = _mega_footer_social_media('tumblr', 'tumblr-square', 'Tumblr', $footer_mark);
       $footer_mark = _mega_footer_social_media('rss', 'rss-square', 'RSS', $footer_mark);
       $footer_mark = _mega_footer_custom_icon_and_link('social_media', '1', $footer_mark);
       $footer_mark = _mega_footer_custom_icon_and_link('social_media', '2', $footer_mark);

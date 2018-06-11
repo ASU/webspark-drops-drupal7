@@ -31,7 +31,7 @@ li.tb-megamenu-item.mega a {
   color: #ededed;
 }
 
-.tb-megamenu i.fa.fa-home.icon-white {
+.tb-megamenu .fa.fa-home.icon-white {
   margin-right: 0;
   display: block !important;
   font-size: 16px;
