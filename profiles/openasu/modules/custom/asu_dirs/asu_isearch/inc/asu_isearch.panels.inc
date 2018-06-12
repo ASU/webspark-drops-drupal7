@@ -247,7 +247,35 @@ function asu_isearch_preprocess_panels_pane(&$variables) {
 
     // hide configuration
     unset($content['field_isearch_config']);
+
+
   }
+
+  // prepare video field panel for template
+  if (isset($variables['content']['#field_name']) && $variables['content']['#field_name'] == 'field_isearch_video') {
+
+    $variables['title'] = $variables['content']['#title'];
+
+    $items = $variables['content'];
+
+    foreach ($items as $key => $value) {
+      if (!is_int($key)) {
+        unset($items[$key]);
+      }
+    }
+
+    $variables['items'] = $items;
+
+    if ($variables['pane']->configuration['label'] == 'hidden') {
+      $variables['label_hidden'] = TRUE;
+    } else {
+      $variables['label_hidden'] = FALSE;
+    }
+
+    $variables['items'] = $items;
+  }
+
+
 }
 
 /****

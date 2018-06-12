@@ -18,9 +18,9 @@ function _mega_footer_social_media($name, $class, $title, $mark) {
   $check = variable_get('mega_footer_unit_' . $name . '_link', NULL);
   $className = 'fa-' . $class;
 
-  if (!empty($check)) {
-    $mark .= "<li><a href='" . $check . "' title=$title><span class='sr-only'>$title</span>
-    <i class='fa $className' aria-hidden='true'></i></a>
+   if (!empty($check)) {
+    $mark .= "<li><a href='" . $check . "' title=$title>
+    <span class='fa $className'><span class='sr-only'>$title</span></span></a>
 </li>";
   }
   return $mark;
@@ -47,6 +47,7 @@ function _social_media_form_array($name, $title) {
  * Think custom theme_socialmedia_icon output
  *
  * @param $type kind of custom field
+ * @param $num count of custom field
  * @param $num count of custom field
  * @param $mark footer to add to
  * @return string

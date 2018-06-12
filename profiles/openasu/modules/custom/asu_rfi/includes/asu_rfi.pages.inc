@@ -790,7 +790,6 @@ function asu_rfi_second_form($form, &$form_state)
     unset($form_state['storage']);
   }
 
-  drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/theme/asu_rfi.js', 'file');
   // Add no-store in Cache-Control to clear all data when browser back button is clicked
   drupal_add_http_header(
     'Cache-Control',

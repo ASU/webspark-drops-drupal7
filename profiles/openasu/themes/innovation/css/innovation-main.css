@@ -269,6 +269,15 @@ h6, .h6 {
   width: 100%;
 }
 
+.sticky-menu {
+  position: sticky;
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
+  top: 0px;
+}
+
 /* =IMAGES
 -------------------------------------------------------------- */
 
@@ -956,5 +965,3 @@ body #content .ui-tabs .ui-tabs-nav li a {
   border-bottom: none;
   clear: both;
 }
-
-

@@ -14,6 +14,7 @@
 
     }
   };
+
   // Add support for sticky menu
   var navOffset = 0;
   $(window).scroll(function () {
@@ -24,18 +25,11 @@
       }
     }
     navOffsetUnits = navOffset + "px";
-    var navStyles = {"position": "sticky", "top": navOffsetUnits, "z-index": "1000", "width": "100%", "visibility": "visible"};
-    $('#ASUNavMenu').addClass('sticky-menu').css(navStyles);
-  });
-
-  // Used to determine if RFI form is on the page.
-  // Go to div if it is go to URL if it isn't #block-asu-rfi-asu-rfi-form-block
-  $('#take-me-to-rfi').on('click', function (e) {
-    e.preventDefault();
-    if ($('#asu-rfi-form-data').length == 0) {
-      location.href = 'https://students.asu.edu/typeofstudent';
-    } else {
-      location.href = '#asu-rfi-form-data';
+    var navOffsetTop = {"top": navOffsetUnits};
+    if (($('#ASUNavMenu').offset().top - ($(window).scrollTop() + navOffset)) < 1 && $('.sticky-menu').length < 1) {
+      $('#ASUNavMenu').addClass('sticky-menu').css(navOffsetTop);
+    } else if (($('#ASUNavMenu').offset().top - ($(window).scrollTop() + navOffset)) >= 1) {
+      $('#ASUNavMenu').removeClass('sticky-menu').removeAttr("style");
     }
   });
 
