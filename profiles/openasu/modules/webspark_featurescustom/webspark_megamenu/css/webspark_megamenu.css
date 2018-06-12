@@ -37,10 +37,10 @@ li.tb-megamenu-item.mega a {
   font-size: 16px;
 }
 
-.tb-megamenu .nav li.dropdown.open > .dropdown-toggle, .tb-megamenu .nav > li > a:focus, .tb-megamenu .nav > .active > a:focus, .tb-megamenu .nav li.dropdown.open.active > .dropdown-toggle, .tb-megamenu .nav > li.dropdown.open.active > a:hover, .tb-megamenu .nav > li > a:hover {
-  color: #ffb310;
-  background-color: #000000;
-}
+.tb-megamenu .nav li.dropdown.open > .dropdown-toggle, .tb-megamenu .nav > li > a:focus, .tb-megamenu .nav > .active > a:focus, .tb-megamenu .nav li.dropdown.open.active > .dropdown-toggle, .tb-megamenu .nav > li.dropdown.open.active > a:hover, .tb-megamenu .nav > li > a:hover, .tb-megamenu .nav > li.dropdown.open.active > a:focus { 
+  color: #ffb310; 
+  background-color: #000000; 
+} 
 
 .tb-megamenu .nav > .active > a:hover {
   color: #ffb310;
