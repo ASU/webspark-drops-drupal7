@@ -91,7 +91,6 @@ class MigrateIsearchProfileMigration extends Migration {
 
     // Setup profile photo directory
     $this->setupProfilePhotoDirectory();
-
     $this->addFieldMapping('status', 'status');
     $this->addFieldMapping('field_isearch_displayname', 'displayName');
     $this->addFieldMapping('field_isearch_firstname', 'firstName');
@@ -108,7 +107,7 @@ class MigrateIsearchProfileMigration extends Migration {
     $this->addFieldMapping('field_isearch_city', 'city');
     $this->addFieldMapping('field_isearch_photo_preference', 'photoPreference');
     $this->addFieldMapping('field_isearch_photo_permission', 'photoPermission');
-    $this->addFieldMapping('field_isearch_social_twitter', 'twitterLink');
+    $this->addFieldMapping('field_isearch_social_twitter', 'twitter');
     $this->addFieldMapping('field_isearch_social_facebook', 'facebook');
     $this->addFieldMapping('field_isearch_social_linkedin', 'linkedin');
     $this->addFieldMapping('field_isearch_social_googleplus', 'googlePlus');
@@ -129,7 +128,7 @@ class MigrateIsearchProfileMigration extends Migration {
     $this->addFieldMapping('field_isearch_honors_awards', 'honorsAwards');
     $this->addFieldMapping('field_isearch_editorships', 'editorships');
     $this->addFieldMapping('field_isearch_prof_associations', 'professionalAssociations');
-    $this->addFieldMapping('field_isearch_graduate_faculties', 'graduateFaculties');
+    $this->addFieldMapping('field_isearch_graduate_faculties', 'gradFaculties');
     $this->addFieldMapping('field_isearch_work_history', 'workHistory');
     $this->addFieldMapping('field_isearch_service', 'service');
     $this->addFieldMapping('field_consulting', 'consulting');
@@ -154,6 +153,9 @@ class MigrateIsearchProfileMigration extends Migration {
     $this->addFieldMapping('field_isearch_service:format', 'htmlFormat');
     $this->addFieldMapping('field_isearch_short_bio:format', 'htmlFormat');
     $this->addFieldMapping('field_isearch_tch_presentations:format', 'htmlFormat');
+    $this->addFieldMapping('field_isearch_prof_associations:format', 'htmlFormat');
+    $this->addFieldMapping('field_isearch_work_history:format', 'htmlFormat');
+    $this->addFieldMapping('field_isearch_graduate_faculties:format', 'htmlFormat');
     $this->addFieldMapping('field_isearch_tch_courses:format', 'coursesFormat');
     $this->addFieldMapping('field_isearch_hash', 'migrateHash');
   }
@@ -206,7 +208,7 @@ class MigrateIsearchProfileMigration extends Migration {
       'honorsAwards' => 'Honors awards',
       'editorships' => 'Editorships',
       'professionalAssociations' => 'Professional associations',
-      'graduateFaculties' => 'Graduate Faculties',
+      'gradFaculties' => 'Graduate Faculties',
       'workHistory' => 'Work history',
       'service' => 'Service',
       'primaryAffiliation' => 'PrimaryAffiliation',
@@ -400,15 +402,18 @@ class MigrateIsearchProfileMigration extends Migration {
   // This will get called just before the destination entity is saved
   public function prepare($entity, stdClass $row) {
 
-
     // If this is an existing entity, then we need to re-associate the affiliation
     // field collections, since they are not explicitly mapped and loaded on the
     // migration entity. See https://www.drupal.org/project/field_collection/issues/2183961
     if (isset($entity->nid)) {
       // load the original node object
-      $old_node = node_load($entity->nid);
+      $node = node_load($entity->nid);
+
       // add original field collection data to our current node object
-      $entity->field_isearch_affiliations = $old_node->field_isearch_affiliations;
+      $entity->field_isearch_affiliations = $node->field_isearch_affiliations;
+      $entity->field_isearch_video = $node->field_isearch_video;
+
+      module_invoke_all('asu_isearch_prepare_migration', $entity, $node, $row);
     }
 
     // set the title as the displayname
@@ -451,12 +456,14 @@ class MigrateIsearchProfileMigration extends Migration {
   // giving access to the entity id to perform other operations
   public function complete($entity, stdClass $row) {
 
+    // set up the video Urls field collections
+    $this->setupVideos($entity, $row);
+
     // Setup affiliations
     $this->setupAffiliations($entity, $row);
 
     // Fetch and store profile photo
     $this->fetchProfilePhoto($entity, $row);
-
   }
 
   //run after migration
@@ -501,7 +508,6 @@ class MigrateIsearchProfileMigration extends Migration {
       $queue->createItem($data);
     }
   }
-
 
   private function setupExpertiseAreas($entity, stdClass $row) {
 
@@ -598,11 +604,72 @@ class MigrateIsearchProfileMigration extends Migration {
       $existing_ranks[$rank_key] = $term->tid;
 
       // store these values in our cache
-      // TODO:  make sure this works
       self::$titleRanksCache[$rank_key] = $term;
     }
 
     $row->existing_ranks = $existing_ranks;
+  }
+
+  /***
+   * Since the video data from iSearch is broken up into 2 multi-valued Solr
+   * fields, this maps the Solr fields to the Video embed field of the profile
+   *
+   * @param $entity
+   * @param \stdClass $row
+   */
+  private function setupVideos($entity, stdClass $row) {
+
+    $videos = array();
+    $titles = array();
+    $update_vids = array();
+    $changed = FALSE;
+
+    if (isset($row->videoUrls)) {
+      $videos = $row->videoUrls;
+      $titles = $row->videoTitles;
+    }
+
+    // Check existing video field collections, and delete if needed
+    if (!empty($entity->field_isearch_video)) {
+
+      $evids = $entity->field_isearch_video[LANGUAGE_NONE];
+
+      // loop through existing affiliations and see if we need to delete or update them
+      foreach ($evids as $index => $item) {
+
+        // if the affil failed to load, unset it, delete it, and continue to next
+        $vidurl = $item['video_url'];
+
+        // If existing video is not found on Solr profile, delete it
+        if (!in_array($vidurl, $videos)) {
+          unset($entity->field_isearch_video[LANGUAGE_NONE][$index]);
+          $changed = TRUE;
+        }
+        else {
+          $update_vids[$vidurl] = $index;
+        }
+      }
+    }
+
+    // Add or update video field collections
+    if (!empty($videos)) {
+      foreach ($videos as $i => $v) {
+        if (isset($update_vids[$v])) {
+          // update an existing affiliation
+          $index = $update_vids[$v];
+          $entity->field_isearch_video[LANGUAGE_NONE][$index]['description'] = $titles[$i];
+        }
+        else {
+          $next = count($entity->field_isearch_video[LANGUAGE_NONE]);
+          $entity->field_isearch_video[LANGUAGE_NONE][$next]['video_url'] = $v;
+          $entity->field_isearch_video[LANGUAGE_NONE][$next]['description'] = $titles[$i];
+        }
+
+        $changed = TRUE;
+      }
+    }
+
+    if ($changed) { node_save($entity); }
   }
 
   private function setupAffiliations($entity, stdClass $row) {
