@@ -14,10 +14,3 @@ files[] = views/handlers/better_watchdog_ui_handler_field_watchdog_message.inc
 ; Views FILTER handlers
 files[] = views/handlers/better_watchdog_ui_handler_filter_watchdog_type.inc
 files[] = views/handlers/better_watchdog_ui_handler_filter_watchdog_severity.inc
-
-; Information added by Drupal.org packaging script on 2016-03-08
-version = "7.x-2.2"
-core = "7.x"
-project = "better_watchdog_ui"
-datestamp = "1457431440"
-

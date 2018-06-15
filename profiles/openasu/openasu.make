@@ -73,9 +73,13 @@ projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-
 ; ASU Module Prerequisites
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-projects[better_watchdog_ui][version] = 2.2
+; Latest Better Watchdog UI dev as of 20180615
 projects[better_watchdog_ui][type] = module
 projects[better_watchdog_ui][subdir] = contrib
+projects[better_watchdog_ui][download][type] = "git"
+projects[better_watchdog_ui][download][branch] = "7.x-3.x"
+projects[better_watchdog_ui][download][url] = "https://git.drupal.org/project/better_watchdog_ui.git"
+projects[better_watchdog_ui][download][revision] = "758de4cc4995149a2de1d566b4209ec343581d27"
 
 projects[cas_attributes][version] = 1.0-rc3
 projects[cas_attributes][type] = module

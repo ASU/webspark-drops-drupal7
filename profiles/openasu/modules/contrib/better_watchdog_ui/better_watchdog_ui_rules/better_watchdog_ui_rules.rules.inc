@@ -58,7 +58,7 @@ class WatchdogRulesController {
 /**
  * Implements hook_rules_event_info().
  */
-function better_watchdog_ui_rules_event_info() {
+function better_watchdog_ui_rules_rules_event_info() {
   $wd_info = entity_get_info('better_watchdog_ui_watchdog');
   $wd_rules_controller = new $wd_info['rules controller class']();
   return $wd_rules_controller->eventInfo();
@@ -67,10 +67,10 @@ function better_watchdog_ui_rules_event_info() {
 /**
  * Implements hook_rules_condition_info().
  */
-function better_watchdog_ui_rules_condition_info() {
+function better_watchdog_ui_rules_rules_condition_info() {
   $conditions = array();
 
-  $conditions['better_watchdog_ui_condition_watchdog_severity'] = array(
+  $conditions['better_watchdog_ui_rules_condition_watchdog_severity'] = array(
     'label' => t('Watchdog severity is'),
     'group' => t('Better Watchdog UI'),
     'parameter' => array(
@@ -87,7 +87,7 @@ function better_watchdog_ui_rules_condition_info() {
     ),
   );
 
-  $conditions['better_watchdog_ui_condition_watchdog_type'] = array(
+  $conditions['better_watchdog_ui_rules_condition_watchdog_type'] = array(
     'label' => t('Watchdog type is'),
     'group' => t('Better Watchdog UI'),
     'parameter' => array(
@@ -104,7 +104,7 @@ function better_watchdog_ui_rules_condition_info() {
     ),
   );
 
-  $conditions['better_watchdog_ui_condition_watchdog_message'] = array(
+  $conditions['better_watchdog_ui_rules_condition_watchdog_message'] = array(
     'label' => t('Watchdog message contains'),
     'group' => t('Better Watchdog UI'),
     'parameter' => array(
@@ -121,7 +121,7 @@ function better_watchdog_ui_rules_condition_info() {
     ),
   );
 
-  $conditions['better_watchdog_ui_condition_watchdog_uid'] = array(
+  $conditions['better_watchdog_ui_rules_condition_watchdog_uid'] = array(
     'label' => t('Watchdog user is'),
     'group' => t('Better Watchdog UI'),
     'parameter' => array(
@@ -145,7 +145,7 @@ function better_watchdog_ui_rules_condition_info() {
     ),
   );
 
-  $conditions['better_watchdog_ui_condition_watchdog_location'] = array(
+  $conditions['better_watchdog_ui_rules_condition_watchdog_location'] = array(
     'label' => t('Watchdog location is'),
     'group' => t('Better Watchdog UI'),
     'parameter' => array(
@@ -162,7 +162,7 @@ function better_watchdog_ui_rules_condition_info() {
     ),
   );
 
-  $conditions['better_watchdog_ui_condition_watchdog_referer'] = array(
+  $conditions['better_watchdog_ui_rules_condition_watchdog_referer'] = array(
     'label' => t('Watchdog referer is'),
     'group' => t('Better Watchdog UI'),
     'parameter' => array(
@@ -179,7 +179,7 @@ function better_watchdog_ui_rules_condition_info() {
     ),
   );
 
-  $conditions['better_watchdog_ui_condition_watchdog_hostname'] = array(
+  $conditions['better_watchdog_ui_rules_condition_watchdog_hostname'] = array(
     'label' => t('Watchdog hostname is'),
     'group' => t('Better Watchdog UI'),
     'parameter' => array(
@@ -202,10 +202,10 @@ function better_watchdog_ui_rules_condition_info() {
 /**
  * Implements hook_rules_action_info().
  */
-function better_watchdog_ui_rules_action_info() {
+function better_watchdog_ui_rules_rules_action_info() {
   $actions = array();
 
-  $actions['better_watchdog_ui_action_add_watchdog'] = array(
+  $actions['better_watchdog_ui_rules_action_add_watchdog'] = array(
     'label' => t('Add watchdog entry'),
     'group' => t('Better Watchdog UI'),
     'type' => 'better_watchdog_ui_watchdog',
@@ -233,14 +233,14 @@ function better_watchdog_ui_rules_action_info() {
 /**
  * Watchdog entry severity condition.
  */
-function better_watchdog_ui_condition_watchdog_severity($better_watchdog_ui_watchdog, $severity) {
+function better_watchdog_ui_rules_condition_watchdog_severity($better_watchdog_ui_watchdog, $severity) {
   return in_array($better_watchdog_ui_watchdog->getSeverity(), $severity);
 }
 
 /**
  * Watchdog entry type condition.
  */
-function better_watchdog_ui_condition_watchdog_type($better_watchdog_ui_watchdog, $type) {
+function better_watchdog_ui_rules_condition_watchdog_type($better_watchdog_ui_watchdog, $type) {
   $types_array = preg_split("/[\r\n,]+/", $type, -1, PREG_SPLIT_NO_EMPTY);
   return in_array($better_watchdog_ui_watchdog->getType(), $types_array);
 }
@@ -248,7 +248,7 @@ function better_watchdog_ui_condition_watchdog_type($better_watchdog_ui_watchdog
 /**
  * Watchdog entry message condition.
  */
-function better_watchdog_ui_condition_watchdog_message($better_watchdog_ui_watchdog, $message) {
+function better_watchdog_ui_rules_condition_watchdog_message($better_watchdog_ui_watchdog, $message) {
   $wd_message = $better_watchdog_ui_watchdog->getMessage();
   $messages_array = preg_split("/[\r\n]+/", $message, -1, PREG_SPLIT_NO_EMPTY);
   foreach ($messages_array as $message_fragment) {
@@ -262,7 +262,7 @@ function better_watchdog_ui_condition_watchdog_message($better_watchdog_ui_watch
 /**
  * Watchdog entry user condition.
  */
-function better_watchdog_ui_condition_watchdog_uid($better_watchdog_ui_watchdog, $accounts, $include_anonymus) {
+function better_watchdog_ui_rules_condition_watchdog_uid($better_watchdog_ui_watchdog, $accounts, $include_anonymus) {
   $account_array = preg_split("/[\r\n]+/", $accounts, -1, PREG_SPLIT_NO_EMPTY);
   $wd_uid = $better_watchdog_ui_watchdog->getUid();
   $wd_user = user_load($wd_uid);
@@ -280,7 +280,7 @@ function better_watchdog_ui_condition_watchdog_uid($better_watchdog_ui_watchdog,
 /**
  * Watchdog entry location condition.
  */
-function better_watchdog_ui_condition_watchdog_location($better_watchdog_ui_watchdog, $location) {
+function better_watchdog_ui_rules_condition_watchdog_location($better_watchdog_ui_watchdog, $location) {
   $location_array = preg_split("/[\r\n]+/", $location, -1, PREG_SPLIT_NO_EMPTY);
   foreach ($location_array as $location_fragment) {
     if (strpos($better_watchdog_ui_watchdog->getLocation(), $location_fragment) !== FALSE) {
@@ -293,7 +293,7 @@ function better_watchdog_ui_condition_watchdog_location($better_watchdog_ui_watc
 /**
  * Watchdog entry referer condition.
  */
-function better_watchdog_ui_condition_watchdog_referer($better_watchdog_ui_watchdog, $referer) {
+function better_watchdog_ui_rules_condition_watchdog_referer($better_watchdog_ui_watchdog, $referer) {
   $referer_array = preg_split("/[\r\n]+/", $referer, -1, PREG_SPLIT_NO_EMPTY);
   foreach ($referer_array as $referer_fragment) {
     if (strpos($better_watchdog_ui_watchdog->getReferer(), $referer_fragment) !== FALSE) {
@@ -306,7 +306,7 @@ function better_watchdog_ui_condition_watchdog_referer($better_watchdog_ui_watch
 /**
  * Watchdog entry hostname condition.
  */
-function better_watchdog_ui_condition_watchdog_hostname($better_watchdog_ui_watchdog, $hostname) {
+function better_watchdog_ui_rules_condition_watchdog_hostname($better_watchdog_ui_watchdog, $hostname) {
   $hostname_array = preg_split("/[\r\n]+/", $hostname, -1, PREG_SPLIT_NO_EMPTY);
   $wd_hostname = $better_watchdog_ui_watchdog->getHostname();
   foreach ($hostname_array as $hostname_option) {
@@ -320,7 +320,7 @@ function better_watchdog_ui_condition_watchdog_hostname($better_watchdog_ui_watc
 /**
  * Add a watchdog entry as action.
  */
-function better_watchdog_ui_action_add_watchdog($type, $message, $severity) {
+function better_watchdog_ui_rules_action_add_watchdog($type, $message, $severity) {
   watchdog($type, $message, array(), $severity);
 }
 
