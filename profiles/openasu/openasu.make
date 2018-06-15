@@ -141,8 +141,7 @@ projects[backgroundfield][patch][1936252] = patches/webspark-1069_backgroundfiel
 projects[cas][version] = 1.5
 projects[cas][subdir] = contrib
 
-; @TODO v.2.0-beta5
-projects[chosen][version] = 2.0-beta4
+projects[chosen][version] = 2.1
 projects[chosen][type] = module
 projects[chosen][subdir] = contrib
 
