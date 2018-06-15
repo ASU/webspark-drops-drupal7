@@ -182,8 +182,7 @@ projects[missing_module][subdir] = contrib
 projects[missing_module][download][type] = "git"
 projects[missing_module][download][branch] = "7.x-1.x"
 projects[missing_module][download][url] = "http://git.drupal.org/project/missing_module.git"
-projects[missing_module][download][revision] = 19492ccee8b8ac683b3a384e8663c09af55dc3af
-projects[missing_module][patch][2854074] = patches/webspark-1052_missing-module_improvements-to-ux_2854074-5.patch
+projects[missing_module][download][revision] = "7509d5f036c1c714822598d2f82fa64ee730a021"
 
 projects[panels_tabs][version] = 2.x-dev
 projects[panels_tabs][type] = module
