@@ -175,7 +175,6 @@ projects[maxlength][version] = 3.2-beta2
 projects[maxlength][type] = module
 projects[maxlength][subdir] = contrib
 
-;; @TODO - Remove patch when file when submitted patch gets pulled into module
 projects[missing_module][type] = module
 projects[missing_module][subdir] = contrib
 projects[missing_module][download][type] = "git"
