@@ -94,7 +94,7 @@ projects[feeds_xpathparser][version] = 1.1
 projects[feeds_xpathparser][type] = module
 projects[feeds_xpathparser][subdir] = contrib
 
-projects[job_scheduler][version] = 2.0-alpha3
+projects[job_scheduler][version] = 2.0
 projects[job_scheduler][type] = module
 projects[job_scheduler][subdir] = contrib
 
