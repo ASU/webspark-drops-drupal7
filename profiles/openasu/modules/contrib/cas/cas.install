@@ -27,6 +27,12 @@ function cas_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
+      'created' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp when this record was created.',
+      ),
     ),
     'primary key' => array('cas_session_id'),
   );
@@ -107,6 +113,7 @@ function cas_uninstall() {
   variable_del('cas_uri');
   variable_del('cas_user_register');
   variable_del('cas_version');
+  variable_del('cas_single_logout_session_lifetime');
 
   // And old (un-used) variables.
   variable_del('cas_cert_verify');
@@ -144,8 +151,25 @@ function cas_requirements($phase) {
       $requirements['phpcas']['severity'] = REQUIREMENT_ERROR;
       $requirements['phpcas']['description'] = $t('phpCAS could not be loaded. Please <a href="@phpcas_url">download phpCAS</a> and <a href="@cas_url">configure its location</a>.', array('@phpcas_url' => $phpcas_url, '@cas_url' => url('admin/config/people/cas')));
     }
+
+    $cert = variable_get('cas_cert');
+    if (empty($cert)) {
+      $requirements['cas_cert'] = array(
+        'title' => $t('CAS SSL certificate bundle'),
+        'severity' => REQUIREMENT_ERROR,
+        'value' => $t('Not set'),
+        'description' => $t('The CAS authentication process is not completely secure. Please <a href="@settings_url">visit the CAS settings page</a> and provide the path to the certificate authority bundle.', array('@settings_url' => url('admin/config/people/cas'))),
+      );
+    }
   }
   return $requirements;
+}
+
+/**
+ * Implements hook_enable().
+ */
+function cas_enable() {
+  drupal_set_message(t('CAS has been enabled. Please <a href="@url">configure</a> it.', array('@url' => url('admin/config/people/cas'))), 'warning');
 }
 
 /**
@@ -379,5 +403,37 @@ function cas_update_7101() {
 function cas_update_7102() {
   if (!db_index_exists('cas_user', 'cas_user')) {
     db_add_index('cas_user', 'cas_user', array('uid'));
+  }
+}
+
+/**
+ * Add created column to cas_login_data table.
+ */
+function cas_update_7103() {
+  db_add_field('cas_login_data', 'created', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'Timestamp when this record was created.',
+  ));
+  $now = time();
+  // Assume that all data was inserted today. This is obviously not true, but
+  // it will prevent us from deleting the existing data for some time, since
+  // the cron task will only delete data older than X days.
+  db_update('cas_login_data')
+    ->fields(array('created' => $now))
+    ->execute();
+}
+
+/**
+ * Hash all existing CAS session IDs in cas_login_data.
+ */
+function cas_update_7104() {
+  $result = db_query('SELECT cas_session_id FROM {cas_login_data}');
+  foreach ($result as $data) {
+    db_update('cas_login_data')
+      ->fields(array('cas_session_id' => hash('sha256', $data->cas_session_id)))
+      ->condition('cas_session_id', $data->cas_session_id)
+      ->execute();
   }
 }

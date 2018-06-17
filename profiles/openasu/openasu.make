@@ -134,7 +134,7 @@ projects[backgroundfield][patch][1841978] = patches/webspark-1069_backgroundfiel
 projects[backgroundfield][patch][1936252] = patches/webspark-1069_backgroundfield-media-module-support.patch
 
 ; CAS SSO Integration
-projects[cas][version] = 1.5
+projects[cas][version] = 1.7
 projects[cas][subdir] = contrib
 
 ; @TODO v.2.0-beta5

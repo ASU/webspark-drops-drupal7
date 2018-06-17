@@ -16,7 +16,7 @@ function cas_server_schema() {
     'fields' => array(
       'service' => array(
         'type' => 'varchar',
-        'length' => 255,
+        'length' => 1024,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -53,6 +53,8 @@ function cas_server_schema() {
 function cas_server_uninstall() {
   variable_del('cas_server_service_whitelist');
   variable_del('cas_server_whitelist_failure');
+  variable_get('cas_server_slo_individual_timeout');
+  variable_get('cas_server_slo_group_timeout');
 }
 
 /**
@@ -103,4 +105,16 @@ function cas_server_update_7101() {
   if (!db_field_exists('cas_server_tickets', 'valid')) {
     db_add_field('cas_server_tickets', 'valid', array('type' => 'int', 'not null' => TRUE, 'default' => 1, ));
   }
+}
+
+/**
+ * Increases 'service' field size to 1024.
+ */
+function cas_server_update_7102() {
+  db_change_field('cas_server_tickets', 'service', 'service', array(
+    'type' => 'varchar',
+    'length' => 1024,
+    'not null' => TRUE,
+    'default' => '',
+  ));
 }

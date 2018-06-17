@@ -31,6 +31,9 @@ class CasTestHelper extends DrupalWebTestCase {
     // in phpCAS.
     variable_set('clean_url', TRUE);
 
+    // Set CAS server url (will be altered).
+    variable_set('cas_server', 'example.com');
+
     // Create admin user.
     $this->admin_user = $this->drupalCreateUser(array('administer users', 'administer cas'));
 
@@ -51,7 +54,7 @@ class CasTestHelper extends DrupalWebTestCase {
     // Find the most URL of the most recent phpCAS version.
     $directory = 'CAS-' . $version;
     $filename = 'CAS-' . $version . '.tgz';
-    $url = 'http://downloads.jasig.org/cas-clients/php/' . $version . '/' . $filename;
+    $url = 'https://developer.jasig.org/cas-clients/php/' . $version . '/' . $filename;
 
     // Avoid downloading the file dozens of times
     $simpletest_cache = $this->originalFileDirectory . '/simpletest/cas';
