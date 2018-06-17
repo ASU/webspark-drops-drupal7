@@ -212,14 +212,15 @@ projects[tb_megamenu][patch][] = patches/webspark-935_tb-megamenu_fix-submenu-re
 projects[tb_megamenu][patch][] = patches/webspark-1007-redux-tb_megamenu-tab_accessibility-7.x.patch
 projects[tb_megamenu][patch][] = patches/webspark-1018_tb-megamenu_removing-mobile-button-for-ADA_7.x.patch
 
+; UUID Features Integration
 ;projects[uuid_features][version] = 1.0-alpha4
-;; grabbing alpha-4+dev-37 commit
+;; grabbing latest version of DEV as of 2018-06-17
 projects[uuid_features][type] = module
 projects[uuid_features][subdir] = contrib
 projects[uuid_features][download][type] = "git"
 projects[uuid_features][download][branch] = "7.x-1.x"
 projects[uuid_features][download][url] = "http://git.drupal.org/project/uuid_features.git"
-projects[uuid_features][download][revision] = "55a2d5070b6f238f40372070f70314cc4f8197d8"
+projects[uuid_features][download][revision] = "63a676b0243838a1624a758a373aaca9444cce06"
 
 projects[video_embed_field][version] = 2.0-beta11
 projects[video_embed_field][type] = module

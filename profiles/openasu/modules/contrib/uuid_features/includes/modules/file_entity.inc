@@ -64,14 +64,16 @@ function file_entity_uuid_entity_features_export_render_alter($entity_type, &$ex
         foreach ($field_values as $i => $field_value) {
           if (!empty($field_value)) {
             $file_entity = (object) $field_value;
-            // Export as file entity or inline?
-            if (!empty($enabled_types[$file_entity->type])) {
-              $uuids = entity_get_uuid_by_id('file', array($file_entity->fid));
+            // Export as file entity or inline? Also check that there's an uuid
+            // on the file object - if not we're better off with the inline file
+            // handling.
+            if (!empty($enabled_types[$file_entity->type]) && !empty($file_entity->uuid)) {
+              $files_loaded = entity_uuid_load('file', array($file_entity->uuid));
               // Ensure additional keys added to the field value are preserved
               // but all the other properties are removed in favor of the uuid.
               $file_export = array(
-                'file_uuid' => reset($uuids),
-              ) + array_diff_key($field_value, (array) file_load($file_entity->fid));
+                'file_uuid' => $file_entity->uuid,
+              ) + array_diff_key($field_value, (array) reset($files_loaded));
             }
             else {
               $file_entity_type = 'file';
@@ -108,6 +110,7 @@ function file_entity_uuid_entity_features_rebuild_alter($entity_type, &$entity, 
 
   // Ensure the file entity import was run first. The function has a static
   // cache to avoid multiple runs in the same feature module.
+  module_load_include('inc', 'uuid_features', 'includes/uuid_file_entity.features');
   uuid_file_entity_features_rebuild($module);
 
   // Handle referenced file entities in fields.

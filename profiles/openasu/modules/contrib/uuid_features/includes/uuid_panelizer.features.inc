@@ -16,6 +16,7 @@ function uuid_panelizer_features_export_options() {
     ->isNull('name')
     ->groupBy('entity_type')
     ->groupBy('entity_id')
+    ->addTag('uuid_panelizer_features_export_options')
     ->execute();
 
   foreach ($results as $panelizer_entity) {
