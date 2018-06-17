@@ -285,9 +285,6 @@ projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-spelling-fix.pa
 projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-admin-spelling-fix.patch
 projects[kalatheme][patch][] = patches/nojira-20160715-kalatheme_fix-missing-index.patch
 
-projects[modernizr][version] = 3.9
-projects[modernizr][subdir] = contrib
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ASU Module prerequisites - Webstandards additions - Libraries
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -331,18 +328,6 @@ libraries[fontawesome_fonts][download][type] = get
 libraries[fontawesome_fonts][download][url] = https://github.com/FortAwesome/Font-Awesome/archive/v4.6.3.zip
 libraries[fontawesome_fonts][download][subtree] = Font-Awesome-4.6.3/fonts
 libraries[fontawesome_fonts][directory_name] = fontawesome/fonts
-
-; 1 of 2 - Modernizr.js
-libraries[modernizr][download][type] = get
-libraries[modernizr][download][url] = https://raw.githubusercontent.com/Modernizr/Modernizr/v2.8.3/modernizr.js
-libraries[modernizr][directory_name] = modernizr
-libraries[modernizr][download][sha256] = 7dfc3ef73c1284c7aff3c5cdac3812d212c8b899037d7860c8ba20a1defb9a7f
-; 2 of 2
-libraries[modernizr_feature_d][download][type] = get
-libraries[modernizr_feature_d][download][url] = https://github.com/Modernizr/Modernizr/archive/v2.8.3.zip
-libraries[modernizr_feature_d][download][subtree] = Modernizr-2.8.3/feature-detects
-libraries[modernizr_feature_d][directory_name] = modernizr/feature-detects
-libraries[modernizr_feature_d][download][sha256] = e9e8165a6ec2df5c9b72cafcee3c2b830656e010d9f64bbb1a571747359a8bd4
 
 ; 1 of 2 - jQTree
 libraries[jqtree][download][type] = file
