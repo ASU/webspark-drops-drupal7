@@ -115,7 +115,8 @@ projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
 projects[viewfield][subdir] = contrib
 
-projects[webform][version] = 4.14
+; Don't update to v4.17 until https://www.drupal.org/project/webform/issues/2966816 is worked out
+projects[webform][version] = 4.16
 projects[webform][type] = module
 projects[webform][subdir] = contrib
 
