@@ -85,7 +85,6 @@ projects[email][version] = 1.3
 projects[email][subdir] = contrib
 projects[email][type] = module
 
-; @TODO v2.0-beta2
 projects[feeds][version] = 2.0-alpha9
 projects[feeds][type] = module
 projects[feeds][subdir] = contrib
@@ -142,7 +141,7 @@ projects[chosen][version] = 2.0-beta4
 projects[chosen][type] = module
 projects[chosen][subdir] = contrib
 
-projects[easy_breadcrumb][version] = 2.12
+projects[easy_breadcrumb][version] = 2.15
 projects[easy_breadcrumb][type] = module
 projects[easy_breadcrumb][subdir] = contrib
 

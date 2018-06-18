@@ -1,11 +1,12 @@
 <?php
+
 /**
  * @file
  * Module's contants.
  */
 
 /**
- * EasyBreadcrumb module's contants
+ * EasyBreadcrumb module's contants.
  */
 class EasyBreadcrumbConstants {
 
@@ -30,7 +31,12 @@ class EasyBreadcrumbConstants {
   const DB_VAR_EXCLUDED_PATHS = 'easy_breadcrumb-excluded_paths';
 
   /**
-   *  Separator between segments.
+   * List of titles to be replaced.
+   */
+  const DB_VAR_REPLACED_TITLES = 'easy_breadcrumb-replaced_titles';
+
+  /**
+   * Separator between segments.
    */
   const DB_VAR_SEGMENTS_SEPARATOR = 'easy_breadcrumb-segments_separator';
 
@@ -69,6 +75,43 @@ class EasyBreadcrumbConstants {
    * List of words to be ignored by the 'capitalizator'. E.g.: of and.
    */
   const DB_VAR_CAPITALIZATOR_IGNORED_WORDS = 'easy_breadcrumb-capitalizator_ignored_words';
+
+  /**
+   * List of words to be forced by the 'capitalizator'. E.g.: your brand's name.
+   */
+  const DB_VAR_CAPITALIZATOR_FORCED_WORDS = 'easy_breadcrumb-capitalizator_forced_words';
+
+  /**
+   * List of words to be forced by the 'capitalizator'. E.g.: your brand's name.
+   */
+  const DB_VAR_CAPITALIZATOR_FORCED_WORDS_FIRST_LETTER = 'easy_breadcrumb-capitalizator_forced_words_first_letter';
+
+  /**
+   * Logical value to 'Make the first letters of each segment capitalized'.
+   */
+  const DB_VAR_CAPITALIZATOR_FORCED_WORDS_CASE_SENSITIVITY = 'easy_breadcrumb-capitalizator_forced_words_case_sensitivity';
+
+  /**
+   * Flag for printing the page's title as a link, or printing it as a text.
+   */
+  const DB_VAR_SEPERATOR_ENDING = 'easy_breadcrumb-seperator_ending';
+
+  /**
+   * Use the segment text as the title instead of main page title.
+   */
+  const DB_VAR_SEGMENT_TEXT_AS_TITLE = 'easy_breadcrumb-segment_text_as_title';
+
+  /**
+   * Transformation mode for crumbs without HTML tags.
+   */
+  const DB_VAR_HTML_TAGS = 'easy_breadcrumb-html_tags';
+
+  /**
+   * Variables for truncator.
+   */
+  const DB_VAR_TRUNCATOR_MODE = 'easy_breadcrumb_truncator_mode';
+  const DB_VAR_TRUNCATOR_LENGTH = 'easy_breadcrumb_truncator_length';
+  const DB_VAR_TRUNCATOR_DOTS = 'easy_breadcrumb_truncator_dots';
 
   /**
    * Default list of excluded paths.
