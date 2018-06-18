@@ -62,11 +62,9 @@ projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.p
 projects[panopoly_test][patch][1258] = https://www.drupal.org/files/issues/2018-03-14/panopoly_test-update-tablefield-7.x-3.1-2919401-17.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
-; commenting this out until we update this repo
-; @TODO - update the repo with latest modules
 projects[asu_drupal_modules][type] = module
 projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = 0bbbe56949418fd5ac3df85672455b3af766a2b3
+projects[asu_drupal_modules][download][revision] = 7e86f7fed3a06597335c7ca8850e95cb9f56c373
 projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

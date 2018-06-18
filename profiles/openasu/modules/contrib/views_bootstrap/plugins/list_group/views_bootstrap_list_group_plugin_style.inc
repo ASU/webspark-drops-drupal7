@@ -7,18 +7,19 @@
 /**
  * Class to define a style plugin handler.
  */
-class ViewsBootstrapAccordionPluginStyle extends views_plugin_style {
+class ViewsBootstrapListGroupPluginStyle extends views_plugin_style {
   /**
    * Definition.
    */
   public function option_definition() {
     $options = parent::option_definition();
-    $options['title_field'] = array('default' => NULL);
+    $options['link_field'] = array('default' => NULL);
+
     return $options;
   }
 
   /**
-   * Options form.
+   * Form.
    */
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
@@ -31,13 +32,12 @@ class ViewsBootstrapAccordionPluginStyle extends views_plugin_style {
         }
       }
 
-      $form['title_field'] = array(
+      $form['link_field'] = array(
         '#type' => 'select',
-        '#title' => t('Title field'),
+        '#title' => t('Link field'),
         '#options' => $options,
-        '#required' => TRUE,
-        '#default_value' => $this->options['title_field'],
-        '#description' => t('Select the field that will be used as the title.'),
+        '#default_value' => $this->options['link_field'],
+        '#description' => t('Select the field that will be used as the link.'),
       );
     }
   }
