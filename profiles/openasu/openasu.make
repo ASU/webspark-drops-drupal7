@@ -153,7 +153,7 @@ projects[field_collection][version] = 1.0-beta11
 projects[field_collection][type] = module
 projects[field_collection][subdir] = contrib
 
-projects[flexslider][version] = 2.0-rc1
+projects[flexslider][version] = 2.0-rc2
 projects[flexslider][type] = module
 projects[flexslider][subdir] = contrib
 
