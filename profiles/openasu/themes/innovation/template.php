@@ -10,12 +10,13 @@
  * Implements template_preprocess_html().
  */
 function innovation_preprocess_html(&$variables) {
-
   // Add theme js file here rather than in .info to add a weight and ensure it loads last
-  drupal_add_js(drupal_get_path('theme', 'innovation') . '/js/innovation.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 200));
+  drupal_add_js(drupal_get_path('theme', 'innovation') . '/js/innovation.js', array(
+    'scope' => 'footer',
+    'group' => JS_THEME,
+    'weight' => 200
+  ));
 
-  // WEBSPARK-825 - Add link tag to stop 404 errors on Apple icon requests in
-  // Drupal and server logs
   $link_apple_icons = array(
     'default' => array(
       'rel' => 'apple-touch-icon',
@@ -32,13 +33,12 @@ function innovation_preprocess_html(&$variables) {
 
   // Add IE meta tag to force IE rendering mode
   $meta_tags_html = array(
-    // WEBSPARK-667, 825 - Add meta tag to identify Innovation as a "Webspark" theme
-    // in the DOM, and added MS tablet <meta> tag
     'meta_webspark_id' => array(
       '#type' => 'html_tag',
       '#tag' => 'meta',
       '#attributes' => array(
-        'content' => 'Webspark:1.52 (West Virginia)',
+      // Don't forget to update openasu.info as well!!
+        'content' => 'Webspark:1.53 (Kansas)',
         'http-equiv' => 'X-Name-of-Distro',
         'name' => 'cmsversion',
       )
@@ -72,7 +72,7 @@ function innovation_preprocess_html(&$variables) {
     drupal_add_html_head($value, $key);
   }
 
-  // WEBSPARK-189 - add actual HTTP header along with meta tag
+  // Add HTTP header along with meta tag for IE compatibility
   drupal_add_http_header('X-UA-Compatible', 'IE=Edge,chrome=1');
 }
 
@@ -81,8 +81,7 @@ function innovation_preprocess_html(&$variables) {
  *
  * Implements template_process_block().
  */
-function innovation_preprocess_block(&$variables)
-{
+function innovation_preprocess_block(&$variables) {
   $block = $variables['block'];
 
   if ($block->delta == 'main-menu' && $block->module == 'system' && $block->status == 1 && $block->theme = 'innovation') {
@@ -116,8 +115,7 @@ function innovation_preprocess_block(&$variables)
 /**
  * Implements hook_ctools_plugin_post_alter()
  */
-function innovation_ctools_plugin_post_alter(&$plugin, &$info)
-{
+function innovation_ctools_plugin_post_alter(&$plugin, &$info) {
   if ($info['type'] == 'styles') {
     if ($plugin['name'] == 'kalacustomize') {
       $plugin['title'] = 'ASU Customize';
@@ -128,8 +126,7 @@ function innovation_ctools_plugin_post_alter(&$plugin, &$info)
 /**
  * Implements hook_ctools_content_subtype_alter()
  */
-function innovation_ctools_content_subtype_alter(&$subtype, &$plugin)
-{
+function innovation_ctools_content_subtype_alter(&$subtype, &$plugin) {
   if ($plugin['module'] == 'views_content' && $subtype['title'] == 'Add content item') {
     $subtype['title'] = t('Add existing content');
   }
@@ -142,8 +139,7 @@ function innovation_ctools_content_subtype_alter(&$subtype, &$plugin)
  * Header so that it can also activate the local menu.
  *
  */
-function innovation_block_view_alter(&$data, $block)
-{
+function innovation_block_view_alter(&$data, $block) {
   // Add the attributes if applicable
   if (($block->module == 'asu_brand') && ($block->delta == 'asu_brand_header')) {
     $data['content'] = str_replace('<a href="javascript:toggleASU();">', '<a href="javascript:toggleASU();" data-target=".navbar-collapse" data-toggle="collapse">', $data['content']);
@@ -153,8 +149,7 @@ function innovation_block_view_alter(&$data, $block)
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function innovation_form_panels_edit_style_settings_form_alter(&$form, &$form_state)
-{
+function innovation_form_panels_edit_style_settings_form_alter(&$form, &$form_state) {
   // Add some extra ASU styles if extra styles are on
   if (isset($form['general_settings']['settings']['title'])) {
     $styles = array('title', 'content');
@@ -169,8 +164,7 @@ function innovation_form_panels_edit_style_settings_form_alter(&$form, &$form_st
 /**
  * Implements theme_links__system_main_menu.
  */
-function innovation_links__system_main_menu($variables)
-{
+function innovation_links__system_main_menu($variables) {
   $links = $variables['links'];
   $attributes = $variables['attributes'];
   $heading = $variables['heading'];
@@ -245,7 +239,8 @@ function innovation_links__system_main_menu($variables)
       if (isset($link['#href'])) {
         // Pass in $link as $options, they share the same keys.
         $output .= l($link['#title'], $link['#href'], array('attributes' => $link['#attributes']));
-      } elseif (!empty($link['#title'])) {
+      }
+      elseif (!empty($link['#title'])) {
         // Wrap non-<a> links in <span> for adding title and class attributes.
         if (empty($link['#html'])) {
           $link['#title'] = check_plain($link['#title']);
@@ -294,10 +289,12 @@ function innovation_links__system_main_menu($variables)
 function innovation_menuitem_has_active_children($menuitem) {
   if (is_array($menuitem) && isset($menuitem['below']) && !empty($menuitem['below'])) {
     foreach ($menuitem['below'] as $child) {
-      if (isset($child['link']) && $child['link']['access'] && ($child['link']['hidden'] == 0)) return true;
+      if (isset($child['link']) && $child['link']['access'] && ($child['link']['hidden'] == 0)) {
+        return TRUE;
+      }
     }
   }
-  return false;
+  return FALSE;
 }
 
 /**
@@ -349,10 +346,12 @@ function innovation_form_element(&$variables) {
     if ($element['#type'] == "radio") {
       $attributes['class'][] = 'radio';
       $is_radio = TRUE;
-    } elseif ($element['#type'] == "checkbox") {
+    }
+    elseif ($element['#type'] == "checkbox") {
       $attributes['class'][] = 'checkbox';
       $is_checkbox = TRUE;
-    } else {
+    }
+    else {
       $attributes['class'][] = 'form-group';
     }
   }
@@ -386,7 +385,8 @@ function innovation_form_element(&$variables) {
       $prefix .= isset($element['#field_prefix']) ? '<span class="input-group-addon">' . $element['#field_prefix'] . '</span>' : '';
       $suffix .= isset($element['#field_suffix']) ? '<span class="input-group-addon">' . $element['#field_suffix'] . '</span>' : '';
       $suffix .= '</div>';
-    } else {
+    }
+    else {
       $prefix .= isset($element['#field_prefix']) ? $element['#field_prefix'] : '';
       $suffix .= isset($element['#field_suffix']) ? $element['#field_suffix'] : '';
     }
@@ -476,7 +476,10 @@ function innovation_form_element_label(&$variables) {
   }
 
   // Append original label info
-  $label_output = $t('!title !required', array('!title' => $title, '!required' => $required));
+  $label_output = $t('!title !required', array(
+    '!title' => $title,
+    '!required' => $required
+  ));
 
   return $output . "\n" . ' <label' . drupal_attributes($attributes) . '>' . $label_output . "</label>\n";
 }

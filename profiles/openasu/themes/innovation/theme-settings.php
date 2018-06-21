@@ -14,8 +14,7 @@
 function innovation_form_system_theme_settings_alter(&$form, &$form_state) {
   // Removed old Webspark theme settings;
   // Leaving in submt callback to clear caches for ASU Brand module
-  // TODO - Set header to default white header in this value
-    // variable_set('asu_brand_header_selector', $form_state['values']['asu_brand_header_selector']);
+  // variable_set('asu_brand_header_selector', $form_state['values']['asu_brand_header_selector']);
   $form['#submit'][] = 'innovation_settings_submit';
   //$form['#validate'][] = 'innovation_settings_validate';
 }
@@ -27,5 +26,3 @@ function innovation_settings_submit($form, &$form_state) {
     asu_brand_cache_clear();
   }
 }
-
-/* Removed validation */
