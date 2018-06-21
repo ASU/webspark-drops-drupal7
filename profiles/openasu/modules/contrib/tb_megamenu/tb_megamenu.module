@@ -76,7 +76,7 @@ function tb_megamenu_theme($existing, $type, $theme, $path) {
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_tb_megamenu',
-    ),
+    ),    
   );
 
   $items['tb_megamenu_nav'] = array(

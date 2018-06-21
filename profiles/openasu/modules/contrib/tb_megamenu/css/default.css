@@ -379,7 +379,7 @@
   padding-right: 20px;
 }
 
-@media (min-width: 992px) and (max-width: 1199px) {
+@media (min-width: 980px) and (max-width: 1199px) {
 .tb-megamenu .row {
     margin-left: -40px;
     *zoom: 1;
@@ -695,7 +695,7 @@
     width: 27px;
   }
 }
-@media (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 768px) and (max-width: 979px) {
 .tb-megamenu .offset-12 {
     margin-left: -736px;
   }
@@ -733,7 +733,7 @@
     margin-left: -43px;
   }
 }
-@media (min-width: 992px) and (max-width: 1199px) {
+@media (min-width: 980px) and (max-width: 1199px) {
 .tb-megamenu .offset-12 {
     margin-left: -932px;
   }
@@ -1339,7 +1339,7 @@
   visibility: hidden;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 979px) {
 .tb-megamenu .always-show .mega > .mega-dropdown-menu,
 .tb-megamenu .always-show .dropdown-menu {
     display: block !important;
@@ -1373,7 +1373,7 @@
     bottom: 40px;
   }
 }
-@media (max-width: 991px) {
+@media (max-width: 979px) {
 .tb-megamenu {
     background-color: inherit;
     height: auto;
@@ -1466,7 +1466,7 @@
 }
 }
 
-@media (min-width: 992px) {
+@media (min-width: 980px) {
 .tb-megamenu.animate .mega > .mega-dropdown-menu {
     transition: all 400ms;
     -webkit-transition: all 400ms;
@@ -1553,7 +1553,7 @@
   }
 }
 
-@media (max-width: 991px) {
+@media (max-width: 979px) {
   .tb-megamenu .mega-inner {
     padding: 10px 20px;
   }
