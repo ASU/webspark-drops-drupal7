@@ -4,12 +4,13 @@
  * Drupal needs this blank file.
  */
 function webspark_megamenu_init() {
-drupal_add_js(drupal_get_path('module', 'webspark_megamenu') .'/js/webspark_megamenu.js', 'file');
-drupal_add_css(drupal_get_path('module', 'webspark_megamenu') . '/css/webspark_megamenu.css', array('weight' => 99, 'group' => CSS_DEFAULT));
+  drupal_add_js(drupal_get_path('module', 'webspark_megamenu') .'/js/webspark_megamenu.js', 'file');
+  drupal_add_css(drupal_get_path('module', 'webspark_megamenu') . '/css/webspark_megamenu.css', array('weight' => 99, 'group' => CSS_DEFAULT));
+  drupal_add_js('profiles/openasu/libraries/emulatetab/src/emulatetab.joelpurra.js');
 }
 
 /**
-*  
+*
 **/
 function webspark_megamenu_form_alter(&$form, &$form_state, &$form_id) {
   if ($form_id == "menu_edit_item") {

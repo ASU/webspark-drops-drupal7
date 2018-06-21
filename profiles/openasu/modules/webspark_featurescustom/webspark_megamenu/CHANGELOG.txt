@@ -1,29 +1,28 @@
-Webspark Megamenu 7.x-1.8, 2016-01-25
-------------------------------
+# Webspark Mega Menu Changelog
+
+### Webspark Mega Menu 7.x-1.9, 2018-05-15
+- Fix tabbing/arrowing through non-accessible Mega Menu items
+
+### Webspark Mega Menu 7.x-1.8, 2018-01-25
 - Reverting ADA hamburger fix in favor of tb megamenu patch
 - The menu is now backwards tabbable
 
-Webspark Megamenu 7.x-1.7, 2017-06-01
-------------------------------
+### Webspark Mega Menu 7.x-1.7, 2017-06-01
 - Implementing ADA hamburger button fix
 - You can now tab forward through the menu
 
-Webspark Megamenu 7.x-1.6.1, 2016-06-01
-------------------------------
+### Webspark Mega Menu 7.x-1.6.1, 2016-06-01
 - Resizing logic fixed to prevent resize on page load
 - Menu no longer shows over overlay
 
-Webspark Megamenu 7.x-1.6, 2016-04-14
-------------------------------
+### Webspark Mega Menu 7.x-1.6, 2016-04-14
 - Moved around JS inside of the module for better Drupal aggregation
 - Added better error handling
 - Implementing Web Standard styling for more variations of TB MegaMenu configurations
 
-Webspark Megamenu 7.x-1.4, 2015-10-02
-------------------------------
+### Webspark Mega Menu 7.x-1.4, 2015-10-02
 - Added Automatic resizing of the MegaMenu depending on the size of the screen
 
-Webspark Megamenu 7.x-1.3, 2015-4-16
-------------------------------
+### Webspark Mega Menu 7.x-1.3, 2015-4-16
 - Made Changes to MegaMenu styling
 
