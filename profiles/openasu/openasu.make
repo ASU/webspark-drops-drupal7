@@ -203,14 +203,16 @@ projects[special_menu_items][version] = 2.0
 projects[special_menu_items][subdir] = contrib
 projects[special_menu_items][type] = module
 
-projects[tb_megamenu][version] = 1.0-rc2
 projects[tb_megamenu][type] = module
 projects[tb_megamenu][subdir] = contrib
-;; TODO - PATCH the CSS for tb_megamenu
-projects[tb_megamenu][patch][] = patches/webspark-919_tb-megamenu_fix-breakpoints.patch
-projects[tb_megamenu][patch][] = patches/webspark-935_tb-megamenu_fix-submenu-removal_7.x.patch
-projects[tb_megamenu][patch][] = patches/webspark-1007-redux-tb_megamenu-tab_accessibility-7.x.patch
-projects[tb_megamenu][patch][] = patches/webspark-1018_tb-megamenu_removing-mobile-button-for-ADA_7.x.patch
+projects[tb_megamenu][download][type] = "git"
+projects[tb_megamenu][download][branch] = "7.x-1.x"
+projects[tb_megamenu][download][url] = "http://git.drupal.org/project/tb_megamenu.git"
+projects[tb_megamenu][download][revision] = "dd9469f608002256657da56bf71128d542d25243"
+projects[tb_megamenu][patch][919] = patches/webspark-919_tb-megamenu_fix-breakpoints.patch
+projects[tb_megamenu][patch][1007] = patches/webspark-1007-redux-tb_megamenu-tab_accessibility-7.x.patch
+projects[tb_megamenu][patch][1018] = patches/webspark-1018_tb-megamenu_removing-mobile-button-for-ADA_7.x.patch
+projects[tb_megamenu][patch][1184] = patches/webspark-1184_tb-megamenu_accessibility-fixes.patch
 
 ;projects[uuid_features][version] = 1.0-alpha4
 ;; grabbing alpha-4+dev-37 commit
@@ -308,13 +310,18 @@ libraries[CAS][directory_name] = CAS/source
 libraries[CAS_2][download][type] = file
 libraries[CAS_2][download][url] = https://raw.githubusercontent.com/Jasig/phpCAS/1.3.5/CAS.php
 libraries[CAS_2][directory_name] = CAS
-;libraries[CAS_2][download][sha256] = 74a3eeed33e84d927884a2cf01ab10c33cc445e891c6d773996ffb19cf841d23
 
 libraries[chosen][download][type] = get
 libraries[chosen][download][url] = https://github.com/harvesthq/chosen/releases/download/v1.1.0/chosen_v1.1.0.zip
 libraries[chosen][directory_name] = chosen
 libraries[chosen][destination] = libraries
 libraries[chosen][download][sha256] = 410147ddfb08f9a87f0272516fff7cd5ed5a4f0777c76f1b298d1106aa8405bd
+
+libraries[emulatetab][download][type] = file
+libraries[emulatetab][download][url] = https://raw.githubusercontent.com/joelpurra/emulatetab/gh-pages/dist/emulatetab.joelpurra.min.js
+libraries[emulatetab][directory_name] = emulatetab/src
+libraries[emulatetab][destination] = libraries
+libraries[emulatetab][download][sha256] = 0417244f39d6905dc63e33c65f0d6601a639df6608d94ed2ac2805216c4d92e9
 
 libraries[flexslider][download][type] = get
 libraries[flexslider][download][url] = https://github.com/woothemes/FlexSlider/archive/version/2.2.2.zip
