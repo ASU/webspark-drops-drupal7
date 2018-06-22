@@ -284,7 +284,7 @@ projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-spelling-fix.pa
 projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-admin-spelling-fix.patch
 projects[kalatheme][patch][] = patches/nojira-20160715-kalatheme_fix-missing-index.patch
 
-projects[modernizr][version] = 3.10
+projects[modernizr][version] = 3.9
 projects[modernizr][subdir] = contrib
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
