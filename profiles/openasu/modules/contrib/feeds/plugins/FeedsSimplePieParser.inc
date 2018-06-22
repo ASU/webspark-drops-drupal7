@@ -22,7 +22,7 @@ class FeedsSimplePieEnclosure extends FeedsEnclosure {
   /**
    * Serialization helper.
    *
-   * Handle the simplepie enclosure class seperately ourselves.
+   * Handle the simplepie enclosure class separately ourselves.
    */
   public function __sleep() {
     $this->_serialized_simplepie_enclosure = serialize($this->simplepie_enclosure);
@@ -52,6 +52,7 @@ class FeedsSimplePieEnclosure extends FeedsEnclosure {
   public function getMIMEType() {
     return $this->simplepie_enclosure->get_real_type();
   }
+
 }
 
 /**
@@ -66,10 +67,6 @@ class FeedsSimplePieParser extends FeedsParser {
    */
   public function parse(FeedsSource $source, FeedsFetcherResult $fetcher_result) {
     feeds_include_simplepie();
-
-    // Please be quiet SimplePie.
-    $level = error_reporting();
-    error_reporting($level ^ E_DEPRECATED ^ E_STRICT);
 
     // Initialize SimplePie.
     $parser = new SimplePie();
@@ -149,8 +146,7 @@ class FeedsSimplePieParser extends FeedsParser {
     }
     // Release parser.
     unset($parser);
-    // Set error reporting back to its previous value.
-    error_reporting($level);
+
     return $result;
   }
 
@@ -220,6 +216,15 @@ class FeedsSimplePieParser extends FeedsParser {
   }
 
   /**
+   * Overrides FeedsParser::providesSourceTitle().
+   *
+   * This parser supports retrieving a title from the source.
+   */
+  public function providesSourceTitle() {
+    return TRUE;
+  }
+
+  /**
    * Returns cache directory. Creates it if it doesn't exist.
    */
   protected function cacheDirectory() {
@@ -237,4 +242,5 @@ class FeedsSimplePieParser extends FeedsParser {
     $words = array_slice($words, 0, 3);
     return implode(' ', $words);
   }
+
 }

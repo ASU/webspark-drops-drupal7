@@ -1,0 +1,1209 @@
+<?php
+/**
+ *  Create and customize a asu news block from a asu news feed
+ */
+
+//require_once __DIR__ . '/asu_events.forms.inc';
+require_once __DIR__ . '/asu_events.callbacks.inc';
+//require_once __DIR__ . '/asu_events.blocks.inc';
+require_once __DIR__ . '/asu_events.helpers.inc';
+define('HOUR', 60*60);
+
+/**
+  * Implementation of hook_ctools_plugin_api().
+  */
+function asu_events_ctools_plugin_api($module, $api) {
+  if ($module == 'page_manager' && $api == 'pages_default') {
+    return array('version' => 1);
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function asu_events_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'ctools' && $plugin_type == 'content_types') {
+    return 'plugins/' . $plugin_type;
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function asu_events_menu() {
+  $items['events/autocomplete'] = array(
+    'title' => t('Events AutoComp Menu'),
+    'page callback' => 'select_all_asu_events',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['content_types/autocomplete'] = array(
+    'title' => t('Content Type AutoComp Menu'),
+    'page callback' => 'select_all_content_types',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['asu_vocab/autocomplete'] = array(
+    'title' => t('Vocab AutoComp Menu'),
+    'page callback' => 'get_all_asu_events_vocab',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['asu_vocab/terms/%'] = array(
+    'title' => t('Vocab AutoComp Menu'),
+    'page arguments' => array(2),
+    'page callback' => 'get_all_asu_events_term_by_parent',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['other_dates/%ctools_js/%'] = array(
+      'title' => 'Other Dates',
+      'page arguments' => array(1, 2),
+      'page callback' => 'other_dates_modal_page',
+      'access callback' => TRUE,
+      'type' => MENU_NORMAL_ITEM,
+      'modal' => TRUE,
+  );
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_image_default_styles().
+ */
+function asu_events_image_default_styles() {
+  $styles = array();
+
+  $styles['asu_events_small_teaser_img'] = array(
+    'effects' => array(
+      array(
+        'name' => 'image_scale',
+        'data' => array(
+          'width' => 360,
+          'height' => 200,
+          'upscale' => 1,
+        ),
+        'weight' => 0,
+      ),
+      array(
+        'name' => 'image_scale',
+        'data' => array(
+          'width' => 360,
+          'height' => 200,
+          'upscale' => 1,
+        ),
+        'weight' => 0,
+      ),
+    ),
+  );
+
+  $styles['asuevents_featured_teaser'] = array(
+    'effects' => array(
+      array(
+        'name' => 'image_scale',
+        'data' => array(
+          'width' => 553,
+          'height' => 311,
+          'upscale' => 1,
+        ),
+        'weight' => 0,
+      ),
+    ),
+  );;
+
+  $styles['asu_event_image_style'] = array(
+    'effects' => array(
+      array(
+        'name' => 'image_scale',
+        'data' => array(
+          'width' => 843,
+          'upscale' => 1,
+        ),
+        'weight' => 0,
+      ),
+      array(
+        'name' => 'image_crop',
+        'data' => array(
+          'width' => 843,
+          'height' => 474,
+          'anchor' => 'left-top',
+        ),
+        'weight' => 1,
+      ),
+    ),
+  );
+
+  return $styles;
+}
+
+/**
+ * Implementation of hook_entity_info_alters().
+ */
+function asu_events_entity_info_alter(&$entity_info) {
+  $entity_info['node']['view modes']['degrees_three_teaser'] = array(
+    'label' => t('Degrees Three Teaser'),
+    'custom settings' => TRUE,
+  );
+  $entity_info['node']['view modes']['events_small_teaser'] = array(
+    'label' => t('Events Small Teaser'),
+    'custom settings' => TRUE,
+  );
+  $entity_info['node']['view modes']['events_three_teaser'] = array(
+    'label' => t('Events Three Teaser'),
+    'custom settings' => TRUE,
+  );
+  $entity_info['node']['view modes']['events_full_teaser'] = array(
+     'label' => t('Events Medium Teaser'),
+     'custom settings' => TRUE,
+  );
+  $entity_info['node']['view modes']['events_featured_teaser'] = array(
+    'label' => t('Events Featured Teaser'),
+    'custom settings' => TRUE,
+  );
+  $entity_info['node']['view modes']['events_list_page_teaser'] = array(
+    'label' => t('Events List Page Teaser'),
+    'custom settings' => TRUE,
+  );
+  $entity_info['node']['view modes']['events_list_page_featured_teaser'] = array(
+    'label' => t('News List Page Featured Teaser'),
+    'custom settings' => TRUE,
+  );
+  $entity_info['node']['view modes']['events_list_other_dates'] = array(
+    'label' => t('List Only the Date for the Event'),
+    'custom settings' => TRUE,
+  );
+  // $entity_info['node']['view modes']['news_list_page_compact_teaser'] = array(
+  //   'label' => t('News List Page Compact Teaser'),
+  //   'custom settings' => TRUE,
+  // );
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function asu_events_theme(){
+  $path = drupal_get_path('module', 'asu_events') . '/theme/templates';
+  return array(
+    'node__asu_degrees__degrees_three_teaser' => array(
+      'base hook' => 'node',
+      'template' => 'node--asu-degrees--degrees-three-teaser',
+      'path' => $path,
+    ),
+    'node__asu_events__full' => array(
+      'base hook' => 'node',
+      'template' => 'node--asu-events--full',
+      'path' => $path,
+    ),
+    'node__asu_events__events_small_teaser' => array(
+      'base hook' => 'node',
+      'template' => 'node--asu-events--events-small-teaser',
+      'path' => $path,
+    ),
+    'node__asu_events__events_three_teaser' => array(
+      'base hook' => 'node',
+      'template' => 'node--asu-events--events-three-teaser',
+      'path' => $path,
+    ),
+    'node__asu_events__events_full_teaser' => array(
+      'base hook' => 'node',
+      'template' => 'node--asu-events--events-full-teaser',
+      'path' => $path,
+    ),
+    'node__asu_events__events_featured_teaser' => array(
+      'base hook' => 'node',
+      'template' => 'node--asu-events--events-featured-teaser',
+      'path' => $path,
+    ),
+    'node__asu_events__events_list_page_teaser' => array(
+      'base hook' => 'node',
+      'template' => 'node--asu-events--events-list-page-teaser',
+      'path' => $path,
+    ),
+    'node__asu_events__events_list_page_featured_teaser' => array(
+      'base hook' => 'node',
+      'template' => 'node--asu-events--events-list-page-featured-teaser',
+      'path' => $path,
+    ),
+    'asu_events_full_block' => array(
+      'variables' => array('featured' => NULL, 'events_items' => NULL, 'class' => NULL),
+      'template' => 'asu-events-full-block',
+      'path' => $path,
+    ),
+    'asu_events_highlighted_block' => array(
+      'variables' => array('events_items' => NULL, 'class' => NULL),
+      'template' => 'asu-events-highlighted-block',
+      'path' => $path,
+    ),
+    'asu_events_taxonomy_search_filter' => array(
+      'variables' => array('filters' => NULL),
+      'template' => 'asu-events-taxonomy-search-filter',
+      'path' => $path,
+    ),
+    'page__asu_events' => array(
+      'render element' => 'page',
+      'base_hook' => 'page',
+      'variables' => array('vars' => NULL),
+      'template' => 'page--asu-events',
+      'path' => $path,
+    ),
+    'asu_events_search_block' => array(
+      'render element' => 'page',
+      'base_hook' => 'page',
+      'variables' => array('vars' => NULL),
+      'template' => 'asu-events-search-block',
+      'path' => $path,
+    ),
+    // To deal with default image.
+    'asu_events_image_style_outside_files' => array(
+	    'variables' => array(
+	      'style_name' => NULL,
+	      'path' => NULL,
+	      'alt' => '',
+	      'title' => NULL,
+	      'attributes' => array(),
+	    ),
+	  ),
+    'asu_events_taxonomy_search_filter' => array(
+      'template' => 'asu-events-taxonomy-search-filter',
+      'path' => $path,
+    ),
+    'node__asu_events__events_list_other_dates' => array(
+      'render element' => 'page',
+      'base_hook' => 'page',
+      'variables' => array('vars' => NULL),
+      'template' => 'node--asu-events--events-other-dates',
+      'path' => $path,
+    ),
+  );
+}
+
+/**
+ * This theme function is designed to deal with the limitation that
+ * theme_image_style does not work with images outside the files directory.
+ *
+ * Usage is the same as theme_image_style.
+ *
+ * @param $variables
+ */
+function theme_asu_events_image_style_outside_files($variables) {
+ $styled_path = image_style_path($variables['style_name'], $variables['path']);
+ if (!file_exists($styled_path)) {
+   $style = image_style_load($variables['style_name']);
+   image_style_create_derivative($style, $variables['path'], $styled_path);
+ }
+ $variables['path'] = $styled_path;
+ return theme('image', $variables);
+}
+
+/**
+ * Implementation of hook_process_html().
+ */
+function asu_events_process_html(&$vars) {
+  if (arg(0) == 'events') {
+    $vars['head_title'] = implode(' | ', $vars['head_title_array']);
+  }
+}
+
+/**
+ * Implementation of hook_preprocess_page().
+ */
+function asu_events_preprocess_page (&$vars) {
+  // ASU news listing page
+
+  if (arg(0) == 'events' && !path_is_admin(current_path())) {
+    drupal_add_css(drupal_get_path('module', 'asu_events') . '/theme/css/asumod-events.css', array('group' => CSS_THEME, 'every_page' => TRUE));
+
+    drupal_set_title('Events');
+    $vars['title'] = 'Events';
+    global $pager_total;
+    $pager_settings = array(
+      'pager_total' => $pager_total,
+    );
+
+    drupal_add_js(array('asu_events' => $pager_settings), 'setting');
+
+  }
+
+  if (!empty($vars['node']) && $vars['node']->type == 'asu_event' && !path_is_admin(current_path())) {
+    drupal_add_css(drupal_get_path('module', 'asu_events') . '/theme/css/asumod-events.css', array('group' => CSS_THEME, 'every_page' => TRUE));
+    if (!empty($vars['page'])) {
+      $vars['theme_hook_suggestions'][] = 'page__asu_events';
+    }
+    $breadcrumbs = block_load('easy_breadcrumb', 'easy_breadcrumb');
+    $bc_render_array = _block_get_renderable_array(_block_render_blocks(array($breadcrumbs)));
+    $bc_render_array['easy_breadcrumb_easy_breadcrumb']['easy_breadcrumb']['#prefix'] = '<div class="column container">';
+    $bc_render_array['easy_breadcrumb_easy_breadcrumb']['easy_breadcrumb']['#suffix'] = '</div>';
+
+    $vars['breadcrumbs'] = $bc_render_array;
+
+  }
+}
+
+/**
+ * Implementation of hook_preprocess_node().
+ */
+function asu_events_preprocess_node(&$vars) {
+  if ($vars['node']->type == 'asu_event'  && !path_is_admin(current_path())) {
+    $node = $vars['node'];
+    $node->body['und'][0]['format'] = 'panopoly_html_text';
+    $wrapper =  entity_metadata_wrapper('node', $node);
+    switch ($vars['view_mode']) {
+      case 'events_small_teaser':
+        $vars['theme_hook_suggestions'][] = 'node__asu_events__events_small_teaser';
+        $content = $vars['content'];
+
+        $content['location'] = field_view_field('node', $vars['node'], 'field_asuevent_location', array(
+          'label'=>'hidden',
+          'type' => 'text',
+        ));
+
+        $content['campus'] = field_view_field('node', $vars['node'], 'field_asuevent_campus', array(
+          'label'=>'hidden',
+          'type' => 'text',
+        ));
+        $date_field = $wrapper->field_asuevent_very_start_date->value();
+        // Start Time
+        $month_1 = format_date(strtotime($date_field['value']), 'custom', 'F');
+        $day_1 = format_date(strtotime($date_field['value']), 'custom', 'j');
+        $week_day_1 = format_date(strtotime($date_field['value']), 'custom', 'l');
+        $time_1 = format_date(strtotime($date_field['value']) + (7*HOUR), 'custom', 'g:i a');
+
+        // End Time
+        $month_2 = format_date(strtotime($date_field['value2']), 'custom', 'F');
+        $day_2 = format_date(strtotime($date_field['value2']), 'custom', 'j');
+        $week_day_2 = format_date(strtotime($date_field['value2']), 'custom', 'l');
+        $time_2 = format_date(strtotime($date_field['value2']) + (7*HOUR), 'custom', 'g:i a');
+
+        $time_1 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_1);
+        $time_2 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_2);
+
+        $time_1 = str_replace(':00', '', $time_1);
+        $time_2 = str_replace(':00', '', $time_2);
+
+        $content['start_time'] = array(
+          'month' => $month_1,
+          'day' => $day_1,
+          'week' => $week_day_1,
+          'time' => $time_1,
+        );
+        $content['end_time'] = array(
+          'month' => $month_2,
+          'day' => $day_2,
+          'week' => $week_day_2,
+          'time' => $time_2,
+        );
+
+        $content['same_month'] = FALSE;
+
+        if ($month_1 == $month_2) {
+          $content['same_month'] = TRUE;
+        }
+
+        $content['event_img'] = _asu_events_get_image('asu_events_small_teaser_img', $vars['node']);
+        $type_term = taxonomy_get_term_by_name('exhibit');
+        $event_type = $wrapper->field_asuevent_tax_type->value();
+        $is_exhibit = ($event_type[0]->tid == $type_term->tid) ? true : false;
+        $content['time_description'] = field_view_field('node', $node, 'field_event_date_time_descriptio', array(
+          'label'=>'hidden',
+          'type' => 'plain_text',
+        ));
+        //
+        $vars['content'] = $content;
+
+        //kpr($content['event_img']);
+        break;
+      case 'events_full_teaser':
+        $vars['theme_hook_suggestions'][] = 'node__asu_events__events_full_teaser';
+        $content = $vars['content'];
+        $content['location'] = field_view_field('node', $vars['node'], 'field_asuevent_location', array(
+          'label'=>'hidden',
+          'type' => 'text',
+        ));
+
+        $content['campus'] = field_view_field('node', $vars['node'], 'field_asuevent_campus', array(
+          'label'=>'hidden',
+          'type' => 'text',
+        ));
+        $date_field = $wrapper->field_asuevent_very_start_date->value();
+        // Start Time
+        $month_1 = format_date(strtotime($date_field['value']), 'custom', 'F');
+        $day_1 = format_date(strtotime($date_field['value']), 'custom', 'j');
+        $week_day_1 = format_date(strtotime($date_field['value']), 'custom', 'l');
+        $time_1 = format_date(strtotime($date_field['value']) + (7*HOUR), 'custom', 'g:i a');
+        // End Time
+        $month_2 = format_date(strtotime($date_field['value2']), 'custom', 'F');
+        $day_2 = format_date(strtotime($date_field['value2']), 'custom', 'j');
+        $week_day_2 = format_date(strtotime($date_field['value2']), 'custom', 'l');
+        $time_2 = format_date(strtotime($date_field['value2']) + (7*HOUR), 'custom', 'g:i a');
+
+        $time_1 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_1);
+        $time_2 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_2);
+
+        $time_1 = str_replace(':00', '', $time_1);
+        $time_2 = str_replace(':00', '', $time_2);
+
+        $content['start_time'] = array(
+          'month' => $month_1,
+          'day' => $day_1,
+          'week' => $week_day_1,
+          'time' => $time_1,
+        );
+        $content['end_time'] = array(
+          'month' => $month_2,
+          'day' => $day_2,
+          'week' => $week_day_2,
+          'time' => $time_2,
+        );
+
+        $content['same_month'] = FALSE;
+
+        if ($month_1 == $month_2) {
+          $content['same_month'] = TRUE;
+        }
+
+        $content['event_img'] = _asu_events_get_image('asuevents_featured_teaser', $vars['node']);
+
+        $body = field_view_field('node', $node, 'body', array(
+          'label'=>'hidden',
+          'type' => 'text_trimmed_ellipsis',
+          'settings'=> array('trim_length' => 240),
+        ));
+
+        $type_term = taxonomy_get_term_by_name('exhibit');
+        $event_type = $wrapper->field_asuevent_tax_type->value();
+        $is_exhibit = ($event_type[0]->tid == $type_term->tid) ? true : false;
+
+        $content['time_description'] = field_view_field('node', $node, 'field_event_date_time_descriptio', array(
+          'label'=>'hidden',
+          'type' => 'plain_text',
+        ));
+
+        $content['asuevents_body'] = $body;
+        $vars['content'] = $content;
+        break;
+      case 'events_featured_teaser':
+        $vars['theme_hook_suggestions'][] = 'node__asu_events__events_featured_teaser';
+        $content = $vars['content'];
+
+        $content['event_img'] = _asu_events_get_image('asuevents_featured_teaser', $vars['node']);
+
+        $content['location'] = field_view_field('node', $vars['node'], 'field_asuevent_location', array(
+          'label'=>'hidden',
+          'type' => 'text',
+        ));
+
+        $content['campus'] = field_view_field('node', $vars['node'], 'field_asuevent_campus', array(
+          'label'=>'hidden',
+          'type' => 'text',
+        ));
+        $date_field = $wrapper->field_asuevent_very_start_date->value();
+        // Start Time
+        $month_1 = format_date(strtotime($date_field['value']), 'custom', 'F');
+        $day_1 = format_date(strtotime($date_field['value']), 'custom', 'j');
+        $week_day_1 = format_date(strtotime($date_field['value']), 'custom', 'l');
+        $time_1 = format_date(strtotime($date_field['value']) + (7*HOUR), 'custom', 'g:i a');
+        // End Time
+        $month_2 = format_date(strtotime($date_field['value2']), 'custom', 'F');
+        $day_2 = format_date(strtotime($date_field['value2']), 'custom', 'j');
+        $week_day_2 = format_date(strtotime($date_field['value2']), 'custom', 'l');
+        $time_2 = format_date(strtotime($date_field['value2']) + (7*HOUR), 'custom', 'g:i a');
+
+        $time_1 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_1);
+        $time_2 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_2);
+
+        $time_1 = str_replace(':00', '', $time_1);
+        $time_2 = str_replace(':00', '', $time_2);
+
+        $content['start_time'] = array(
+          'month' => $month_1,
+          'day' => $day_1,
+          'week' => $week_day_1,
+          'time' => $time_1,
+        );
+        $content['end_time'] = array(
+          'month' => $month_2,
+          'day' => $day_2,
+          'week' => $week_day_2,
+          'time' => $time_2,
+        );
+
+        $content['same_month'] = FALSE;
+
+        if ($month_1 == $month_2) {
+          $content['same_month'] = TRUE;
+        }
+
+        $body = field_view_field('node', $node, 'body', array(
+          'label'=>'hidden',
+          'type' => 'text_trimmed_ellipsis',
+          'settings'=> array('trim_length' => 140),
+        ));
+
+        $content['asuevents_body'] = $body;
+
+        $type_term = taxonomy_get_term_by_name('exhibit');
+        $event_type = $wrapper->field_asuevent_tax_type->value();
+        $is_exhibit = ($event_type[0]->tid == $type_term->tid) ? true : false;
+
+        $content['time_description'] = field_view_field('node', $node, 'field_event_date_time_descriptio', array(
+          'label'=>'hidden',
+          'type' => 'plain_text',
+        ));
+
+        $vars['content'] = $content;
+        break;
+      case 'events_list_page_teaser':
+        $vars['theme_hook_suggestions'][] = 'node__asu_events__events_list_page_teaser';
+        $content = $vars['content'];
+
+        $content['event_img'] = _asu_events_get_image('asu_events_small_teaser_img', $vars['node']);
+
+        $content['location'] = field_view_field('node', $vars['node'], 'field_asuevent_location', array(
+          'label'=>'hidden',
+          'type' => 'text',
+        ));
+
+        $content['campus'] = field_view_field('node', $vars['node'], 'field_asuevent_campus', array(
+          'label'=>'hidden',
+          'type' => 'text',
+        ));
+        $date_field = $wrapper->field_asuevent_very_start_date->value();
+        // Start Time
+        $month_1 = format_date(strtotime($date_field['value']), 'custom', 'F');
+        $day_1 = format_date(strtotime($date_field['value']), 'custom', 'j');
+        $week_day_1 = format_date(strtotime($date_field['value']), 'custom', 'l');
+        $time_1 = format_date(strtotime($date_field['value']) + (7*HOUR), 'custom', 'g:i a');
+        // End Time
+        $month_2 = format_date(strtotime($date_field['value2']), 'custom', 'F');
+        $day_2 = format_date(strtotime($date_field['value2']), 'custom', 'j');
+        $week_day_2 = format_date(strtotime($date_field['value2']), 'custom', 'l');
+        $time_2 = format_date(strtotime($date_field['value2']) + (7*HOUR), 'custom', 'g:i a');
+
+        $time_1 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_1);
+        $time_2 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_2);
+
+        $time_1 = str_replace(':00', '', $time_1);
+        $time_2 = str_replace(':00', '', $time_2);
+
+        $content['start_time'] = array(
+          'month' => $month_1,
+          'day' => $day_1,
+          'week' => $week_day_1,
+          'time' => $time_1,
+        );
+        $content['end_time'] = array(
+          'month' => $month_2,
+          'day' => $day_2,
+          'week' => $week_day_2,
+          'time' => $time_2,
+        );
+
+        $content['same_month'] = FALSE;
+
+        if ($month_1 == $month_2) {
+          $content['same_month'] = TRUE;
+        }
+
+        $body = field_view_field('node', $node, 'body', array(
+          'label'=>'hidden',
+          'type' => 'text_trimmed_ellipsis',
+          'settings'=> array('trim_length' => 240),
+        ));
+
+        $content['asuevents_body'] = $body;
+
+        $type_term = taxonomy_get_term_by_name('exhibit');
+        $event_type = $wrapper->field_asuevent_tax_type->value();
+        $is_exhibit = ($event_type[0]->tid == $type_term->tid) ? true : false;
+
+        $content['time_description'] = field_view_field('node', $node, 'field_event_date_time_descriptio', array(
+          'label'=>'hidden',
+          'type' => 'plain_text',
+        ));
+
+        $vars['content'] = $content;
+        break;
+      case 'events_list_page_featured_teaser':
+        $vars['theme_hook_suggestions'][] = 'node__asu_events__events_list_page_featured_teaser';
+        $content = $vars['content'];
+
+        $event_img = _asu_events_get_image('asuevents_featured_teaser', $node);
+
+        $link_img = array(
+          '#type'    => 'link',
+          '#title'   => render($event_img),
+          '#href'    => drupal_lookup_path('alias',"node/" . $node->nid),
+          '#options' => array('html' => TRUE, 'title' => 'link1'),
+        );
+        $content['event_img'] = $link_img;
+
+        $content['location'] = field_view_field('node', $vars['node'], 'field_asuevent_location', array(
+          'label'=>'hidden',
+          'type' => 'text',
+        ));
+
+        $content['campus'] = field_view_field('node', $vars['node'], 'field_asuevent_campus', array(
+          'label'=>'hidden',
+          'type' => 'text',
+        ));
+        $date_field = $wrapper->field_asuevent_very_start_date->value();
+        // Start Time
+        $month_1 = format_date(strtotime($date_field['value']), 'custom', 'F');
+        $day_1 = format_date(strtotime($date_field['value']), 'custom', 'j');
+        $week_day_1 = format_date(strtotime($date_field['value']), 'custom', 'l');
+        $time_1 = format_date(strtotime($date_field['value']) + (7*HOUR), 'custom', 'g:i a');
+        // End Time
+        $month_2 = format_date(strtotime($date_field['value2']), 'custom', 'F');
+        $day_2 = format_date(strtotime($date_field['value2']), 'custom', 'j');
+        $week_day_2 = format_date(strtotime($date_field['value2']), 'custom', 'l');
+        $time_2 = format_date(strtotime($date_field['value2']) + (7*HOUR), 'custom', 'g:i a');
+
+        $time_1 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_1);
+        $time_2 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_2);
+
+        $time_1 = str_replace(':00', '', $time_1);
+        $time_2 = str_replace(':00', '', $time_2);
+
+        $content['start_time'] = array(
+          'month' => $month_1,
+          'day' => $day_1,
+          'week' => $week_day_1,
+          'time' => $time_1,
+        );
+        $content['end_time'] = array(
+          'month' => $month_2,
+          'day' => $day_2,
+          'week' => $week_day_2,
+          'time' => $time_2,
+        );
+
+        $content['same_month'] = FALSE;
+
+        if ($month_1 == $month_2) {
+          $content['same_month'] = TRUE;
+        }
+
+        $body = field_view_field('node', $node, 'body', array(
+          'label'=>'hidden',
+          'type' => 'text_trimmed_ellipsis',
+          'settings'=> array('trim_length' => 240),
+        ));
+
+        $map_link_url = ($wrapper->__isset('field_event_location') && $wrapper->field_event_location->getIdentifier()) ? $wrapper->field_event_location->url->value() : '';
+
+        $content['asuevents_body'] = $body;
+
+        if (!empty($map_link_url)) {
+          $content['map'] = array(
+            '#type'    => 'link',
+            '#title'   => 'Map',
+            '#href'    => $map_link_url,
+            '#options' => array('html' => TRUE, 'title' => 'link1'),
+            '#attributes' => array(
+              'class' => array('event-map-link')
+            )
+          );
+        }
+
+        $type_term = taxonomy_get_term_by_name('exhibit');
+        $event_type = $wrapper->field_asuevent_tax_type->value();
+        $is_exhibit = ($event_type[0]->tid == $type_term->tid) ? true : false;
+
+        $content['time_description'] = field_view_field('node', $node, 'field_event_date_time_descriptio', array(
+          'label'=>'hidden',
+          'type' => 'plain_text',
+        ));
+
+        $vars['content'] = $content;
+        break;
+      case 'news_list_page_compact_teaser':
+        $vars['theme_hook_suggestions'][] = 'node__asu_events__news_list_page_compact_teaser';
+        $content = $vars['content'];
+
+        $body = field_view_field('node', $vars['node'], 'body', array(
+          'label'=>'hidden',
+          'type' => 'text_trimmed_ellipsis',
+          'settings'=> array('trim_length' => 240),
+        ));
+        $content['asunews_body'] = $body;
+
+        $content['time_description'] = field_view_field('node', $node, 'field_event_date_time_descriptio', array(
+          'label'=>'hidden',
+          'type' => 'plain_text',
+        ));
+
+        $vars['content'] = $content;
+        break;
+      case 'events_list_other_dates':
+        $vars['theme_hook_suggestions'][] = 'node__asu_events__events_list_other_dates';
+        $content = $vars['content'];
+
+        $date_field = $wrapper->field_asuevent_very_start_date->value();
+
+        // Start Time
+        $month_1 = format_date(strtotime($date_field['value']), 'custom', 'F');
+        $day_1 = format_date(strtotime($date_field['value']), 'custom', 'j');
+        $week_day_1 = format_date(strtotime($date_field['value']), 'custom', 'l');
+        $time_1 = format_date(strtotime($date_field['value']) + (7*HOUR), 'custom', 'g:i a');
+        // End Time
+        $month_2 = format_date(strtotime($date_field['value2']), 'custom', 'F');
+        $day_2 = format_date(strtotime($date_field['value2']), 'custom', 'j');
+        $week_day_2 = format_date(strtotime($date_field['value2']), 'custom', 'l');
+        $time_2 = format_date(strtotime($date_field['value2']) + (7*HOUR), 'custom', 'g:i a');
+
+        $time_1 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_1);
+        $time_2 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_2);
+
+        $time_1 = str_replace(':00', '', $time_1);
+        $time_2 = str_replace(':00', '', $time_2);
+
+        $content['start_time'] = array(
+          'month' => $month_1,
+          'day' => $day_1,
+          'week' => $week_day_1,
+          'time' => $time_1,
+        );
+        $content['end_time'] = array(
+          'month' => $month_2,
+          'day' => $day_2,
+          'week' => $week_day_2,
+          'time' => $time_2,
+        );
+
+        $type_term = taxonomy_get_term_by_name('exhibit');
+        $event_type = $wrapper->field_asuevent_tax_type->value();
+        $is_exhibit = ($event_type[0]->tid == $type_term->tid) ? true : false;
+
+        $content['time_description'] = field_view_field('node', $node, 'field_event_date_time_descriptio', array(
+          'label'=>'hidden',
+          'type' => 'plain_text',
+        ));
+
+        $vars['content'] = $content;
+        break;
+      case 'full':
+        $vars['theme_hook_suggestions'][] = 'node__asu_events__full';
+        $content = $vars['content'];
+
+        $content['event_img'] = _asu_events_get_image('asu_event_image_style', $vars['node']);
+
+        $content['location'] = field_view_field('node', $vars['node'], 'field_asuevent_location', array(
+          'label'=>'hidden',
+          'type' => 'text',
+        ));
+
+        $content['map_link'] = field_view_field('node', $vars['node'], 'field_event_location', array(
+          'label'=>'hidden',
+          'type' => 'link_default',
+        ));
+
+        if (empty($content['map_link'])) {
+          $content['campus'] = field_view_field('node', $vars['node'], 'field_asuevent_campus', array(
+            'label'=>'hidden',
+            'type' => 'text',
+          ));
+        }
+
+        $date_field = $wrapper->field_asuevent_very_start_date->value();
+
+        // Start Time
+        $month_1 = format_date(strtotime($date_field['value']), 'custom', 'F');
+        $day_1 = format_date(strtotime($date_field['value']), 'custom', 'j');
+        $week_day_1 = format_date(strtotime($date_field['value']), 'custom', 'l');
+        $time_1 = format_date(strtotime($date_field['value']) + (7*HOUR), 'custom', 'g:i a');
+        // End Time
+        $month_2 = format_date(strtotime($date_field['value2']), 'custom', 'F');
+        $day_2 = format_date(strtotime($date_field['value2']), 'custom', 'j');
+        $week_day_2 = format_date(strtotime($date_field['value2']), 'custom', 'l');
+        $time_2 = format_date(strtotime($date_field['value2']) + (7*HOUR), 'custom', 'g:i a');
+
+        $time_1 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_1);
+        $time_2 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_2);
+
+        $time_1 = str_replace(':00', '', $time_1);
+        $time_2 = str_replace(':00', '', $time_2);
+
+        $content['start_time'] = array(
+          'month' => $month_1,
+          'day' => $day_1,
+          'week' => $week_day_1,
+          'time' => $time_1,
+        );
+        $content['end_time'] = array(
+          'month' => $month_2,
+          'day' => $day_2,
+          'week' => $week_day_2,
+          'time' => $time_2,
+        );
+
+        $content['same_month'] = FALSE;
+
+        if ($month_1 == $month_2) {
+          $content['same_month'] = TRUE;
+        }
+
+        $body = field_view_field('node', $node, 'body', array(
+          'label'=>'hidden',
+          'type' => 'text_default',
+          'settings'=> array('trim_length' => 240),
+        ));
+
+        if (empty($body[0]['#markup'])) {
+          $body[0]['#markup'] = $body['#items'][0]['value'];
+        }
+
+        $content['tickets'] = field_view_field('node', $node, 'field_asuevent_ticketing_url', array(
+          'label'=>'hidden',
+          'type' => 'link_default',
+        ));
+
+        $content['add_to_cal'] = field_view_field('node', $node, 'field_asuevent_very_start_date', array(
+          'label'=>'hidden',
+          'type' => 'addtocal_view',
+          'settings' => array(
+            'format_type' => 'long',
+            'view_mode' => 'default',
+            'location' => array(
+              'field' => 'field_asuevent_location',
+              'tokenized' => '',
+            ),
+            'description' => array(
+              'field' => 'body',
+              'tokenized' => '',
+            ),
+          ),
+        ));
+
+        $content['flyer'] = $wrapper->__isset('field_asuevent_pdf') ? $wrapper->field_asuevent_pdf->value() : false;
+
+        if($content['flyer']) {
+          $content['flyer'] = $content['flyer'][0]['url'];
+        }
+
+        $content['flyer']['#access'] = TRUE;
+        $content['contact'] = field_view_field('node', $node, 'field_asuevent_contact_name', array(
+          'label'=>'hidden',
+          'type' => 'text',
+        ));
+        $content['email'] = $wrapper->field_asuevent_email->value();
+        $content['phone'] = field_view_field('node', $node, 'field_asuevent_phone', array(
+          'label'=>'hidden',
+          'type' => 'text',
+        ));
+        $content['dept'] = field_view_field('node', $node, 'field_asuevent_dept', array(
+          'label'=>'hidden',
+          'type' => 'text',
+        ));
+
+        $content['map'] = field_view_field('node', $node, 'field_rendered_map', array(
+          'label'=>'hidden',
+          'type' => 'plain_text',
+        ));
+
+        $content['map'] = _asu_events_render_map_from_json(decode_entities($content['map'][0]['#markup']));
+
+        // @TODO - ASU Social Share - reuse?
+        // $content['share'] = field_view_field('node', $node, 'field_asu_social_share', array(
+        //   'label'=>'hidden',
+        //   'type' => 'gigya_sharebar',
+        // ));
+
+        $content['buzz_articles'] = field_view_field('node', $node, 'field_event_buzz_articles', array(
+          'label'=>'hidden',
+          'type' => 'link_default',
+        ));
+
+        $type_term = taxonomy_get_term_by_name('Exhibit');
+        $type_term = current($type_term);
+        $event_type = $wrapper->field_asuevent_tax_type->value();
+        $is_exhibit = ($event_type[0]->tid == $type_term->tid) ? true : false;
+        $content['is_exhibit'] = $is_exhibit;
+
+        $content['time_description'] = field_view_field('node', $node, 'field_event_date_time_descriptio', array(
+          'label'=>'hidden',
+          'type' => 'plain_text',
+        ));
+        $content['other_dates'] = array();
+        $content['asuevents_body'] = $body;
+        if ( _asu_events_has_other_dates($node)) {
+          // other dates link
+          // Include the CTools tools that we need.
+          ctools_include('ajax');
+          ctools_include('modal');
+          ctools_modal_add_js();
+          $name = 'Other Dates';
+          // Create a path for the url that is like our hook_menu() declaration above.
+          $href = 'other_dates/nojs/' . $node->nid;
+          // Here's the ctools function that generates the trigger inside the link
+          // ctools_modal_text_button($text, $dest, $alt, $class = '')
+          // http://api.drupalize.me/api/drupal/function/ctools_modal_text_button/7
+          // IMPORTANT: Include ctools-modal-[your declared style name] as a class so
+          // Ctools knows what Javascript settings to use in generating the modal:
+          $content['other_dates'] = ctools_modal_text_button($name, $href, t('@name', array('@name' => $name)), 'ctools-modal-other-dates-modal-style');
+
+          _asu_events_insert_other_dates_modal();
+        }
+        $vars['content'] = $content;
+       break;
+     case 'events_three_teaser':
+       $vars['theme_hook_suggestions'][] = 'node__asu_events__events_three_teaser';
+       $content = $vars['content'];
+
+       $content['location'] = field_view_field('node', $vars['node'], 'field_asuevent_location', array(
+         'label'=>'hidden',
+         'type' => 'text',
+       ));
+
+       $content['campus'] = field_view_field('node', $vars['node'], 'field_asuevent_campus', array(
+         'label'=>'hidden',
+         'type' => 'text',
+       ));
+       $date_field = $wrapper->field_asuevent_very_start_date->value();
+       // Start Time
+       $month_1 = format_date(strtotime($date_field['value']), 'custom', 'F');
+       $day_1 = format_date(strtotime($date_field['value']), 'custom', 'j');
+       $week_day_1 = format_date(strtotime($date_field['value']), 'custom', 'l');
+       $time_1 = format_date(strtotime($date_field['value']) + (7*HOUR), 'custom', 'g:i a');
+
+       // End Time
+       $month_2 = format_date(strtotime($date_field['value2']), 'custom', 'F');
+       $day_2 = format_date(strtotime($date_field['value2']), 'custom', 'j');
+       $week_day_2 = format_date(strtotime($date_field['value2']), 'custom', 'l');
+       $time_2 = format_date(strtotime($date_field['value2']) + (7*HOUR), 'custom', 'g:i a');
+
+       $time_1 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_1);
+       $time_2 = str_replace(array('am','pm'),array('a.m.','p.m.'),$time_2);
+
+       $time_1 = str_replace(':00', '', $time_1);
+       $time_2 = str_replace(':00', '', $time_2);
+
+       $content['start_time'] = array(
+         'month' => $month_1,
+         'day' => $day_1,
+         'week' => $week_day_1,
+         'time' => $time_1,
+       );
+       $content['end_time'] = array(
+         'month' => $month_2,
+         'day' => $day_2,
+         'week' => $week_day_2,
+         'time' => $time_2,
+       );
+
+       $content['same_month'] = FALSE;
+
+       if ($month_1 == $month_2) {
+         $content['same_month'] = TRUE;
+       }
+
+       $type_term = taxonomy_get_term_by_name('Exhibit');
+       $type_term = current($type_term);
+       $event_type = $wrapper->field_asuevent_tax_type->value();
+       $is_exhibit = ($event_type[0]->tid == $type_term->tid) ? true : false;
+       $content['is_exhibit'] = $is_exhibit;
+
+       $content['time_description'] = field_view_field('node', $node, 'field_event_date_time_descriptio', array(
+         'label'=>'hidden',
+         'type' => 'plain_text',
+       ));
+
+       $content['event_img'] = _asu_events_get_image('asuevents_featured_teaser', $vars['node']);
+
+       $vars['content'] = $content;
+
+       break;
+    }
+  }
+  if ($vars['node']->type == 'asu_degree') {
+    $node = $vars['node'];
+    $wrapper =  entity_metadata_wrapper('node', $node);
+    switch ($vars['view_mode']) {
+      case 'degrees_three_teaser':
+        $vars['theme_hook_suggestions'][] = 'node__asu_degrees__degrees_three_teaser';
+        $content = $vars['content'];
+        $images = field_get_items('node', $node, 'field_degree_image');
+        $image = field_view_value('node', $node, 'field_degree_image', $images[0], array(
+            'type' => 'image',
+            'settings' => array(
+              'image_style' => 'asuevents_featured_teaser', // could be 'thumbnail'
+            )
+          )
+        );
+        $image['#item']['attributes'] = array(
+         'data-object-fit' => 'cover',
+        );
+
+        $content['img'] = $image;
+
+        $vars['content'] = $content;
+
+        break;
+    }
+  }
+}
+
+/**
+ * Implementation of hook_preprocess_field().
+ */
+function asu_events_preprocess_field(&$vars) {
+	if($vars['element']['#field_name'] == 'field_asuevent_very_start_date') {
+    $vars['items'][0]['date']['#markup'] = '';
+	}
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function asu_events_form_alter(&$form, &$form_state, $form_id){
+  if ($form_id == 'asu_events_asu_events_block_edit_form' || $form_id == 'asu_events_asu_events_listing_edit_form') {
+    unset($form['override_title']);
+    unset($form['override_title_text']);
+    unset($form['override_title_markup']);
+  }
+}
+
+/**
+ * Implementation of hook_feeds_processor_targets_alter().
+ */
+function asu_events_feeds_processor_targets_alter(&$targets, $entity_type, $bundle_name) {
+  if ($entity_type == 'node') {
+    $targets['field_event_map']['name'] = t('Event Map');
+    $targets['field_event_map']['callback'] = 'asu_events_field_event_map_set_target';
+
+    $targets['buzz_articles_url'] = array(
+      'name' => t('Buzz Articles Url'),
+      'callback' => 'asu_events_buzz_articles_url',
+    );
+
+    $targets['buzz_articles_title'] = array(
+      'name' => t('Buzz Articles Title'),
+      'callback' => 'asu_events_buzz_articles_title',
+    );
+  }
+}
+
+function asu_events_field_event_map_set_target($source, $entity, $target, $value, $mapping) {
+  // This is where you would do whatever custom processing you need to to.
+  // $value contains the raw value from the source.
+  //$processed = do_something($value);
+
+  // Remove any existing values from the entity in case this is an update.
+  //unset($entity->{'field_'.$target}[$entity->language]);
+
+  $entity->{$target}[$entity->language] = array();
+
+  // Now assign the processed value to the entity.
+  // This example only shows a single value but this is easily adapted
+  // for multiple values.
+  $entity->{$target}[$entity->language][]['map_items'] = $value;
+
+}
+
+function asu_events_buzz_articles_url($source, $entity, $target, $value, $mapping) {
+  // Remove any existing values from the entity in case this is an update.
+  //unset($entity->{'field_'.$target}[$entity->language]);
+
+  if (!isset($entity->{'field_event_buzz_articles'})) {
+    $entity->{'field_event_buzz_articles'}[$entity->language] = array();
+  }
+
+  // Now assign the processed value to the entity.
+  // This example only shows a single value but this is easily adapted
+  // for multiple values.
+  //$value_array = explode(',', $value);
+  foreach ($value as $key => $item) {
+    $entity->{'field_event_buzz_articles'}[$entity->language][$key]['url'] = $item;
+  }
+}
+
+function asu_events_buzz_articles_title($source, $entity, $target, $value, $mapping) {
+  // Remove any existing values from the entity in case this is an update.
+  //unset($entity->{'field_'.$target}[$entity->language]);
+  if (!isset($entity->{'field_event_buzz_articles'})) {
+    $entity->{'field_event_buzz_articles'}[$entity->language] = array();
+  }
+  // Now assign the processed value to the entity.
+  // This example only shows a single value but this is easily adapted
+  // for multiple values.
+  //$value_array = explode(',', $value);
+  foreach ($value as $key => $item) {
+    $entity->{'field_event_buzz_articles'}[$entity->language][$key]['title'] = $item;
+  }
+}
+
+/**
+ * A modal static page callback.
+ * @param $js
+ *   boolean CTools determination whether the user's browser is javascript enabled.
+ * @param $nid
+ *   string The node ID of passed as an argument from the hook_menu() path
+ * @return
+ *   string The contents of the node, that will fill the modal window.
+ */
+function other_dates_modal_page($js = NULL, $nid = NULL) {
+  if ($nid == NULL) {
+    // You can customize the string below, or use a drupal_goto() to
+    // send the user to a custom error page.
+    return 'No node id was sent. Error.';
+  }
+  if ($js) {
+    // Required includes for ctools to work:
+    ctools_include('modal');
+    ctools_include('ajax');
+  }
+  $node = node_load($nid);
+
+  $title = $node->title;
+
+  $query = new EntityFieldQuery();
+
+
+ $entities = $query->entityCondition('entity_type', 'node')
+  ->propertyCondition('type', 'asu_event')
+  ->propertyCondition('title', $title)
+  ->propertyCondition('status', 1)
+  ->fieldCondition('field_asuevent_very_start_date', 'value', date("Y-m-d"), '>=')
+  ->execute();
+
+  $event_items = array();
+
+  if (isset($entities['node'][$node->nid])) {
+    unset($entities['node'][$node->nid]);
+  }
+
+  if (!empty($entities['node'])) {
+    $event_items_nids = array_keys($entities['node']);
+    $event_items = entity_load('node', $event_items_nids);
+  }
+
+  $nodes_rendered = node_view_multiple($event_items, 'events_list_other_dates');
+  // Drupal 7 requires a render of the node object in order to obtain a string.
+  // Note that I am able to customize the fields by using the "Teaser" display mode
+  // under admin/structure/types.
+  //$contents = render(node_view($node, 'teaser', NULL));
+  $title = '<span class="other-dates-modal-title">All upcoming showings for</span>';
+  $title .= '<span class="other-dates-node-title">' . $node->title . '</span>';
+  return ctools_modal_render($title, $nodes_rendered) ;
+}
+
+function asu_events_addtocal_extract_event_info_alter(&$info, $entity_type, $entity) {
+  // Change the event description.
+  $info['start'] = format_date(strtotime($info['start']) + (7*HOUR), 'custom', 'd-m-Y g:i a');
+  $info['end'] = format_date(strtotime($info['end']) + (7*HOUR), 'custom', 'd-m-Y g:i a');
+}
+
+/**
+ * Theme function for the breadcrumb.
+ *
+ * @param Assoc $variables
+ *   arguments
+ *
+ * @return string
+ *   HTML for the themed breadcrumb.
+ */
+function asu_events_preprocess_easy_breadcrumb(&$vars) {
+  if($vars['breadcrumb'][1]['content'] == 'Event') {
+    $vars['breadcrumb'][1]['content'] = 'Events';
+    $vars['breadcrumb'][1]['url'] = 'events';
+  }
+}
