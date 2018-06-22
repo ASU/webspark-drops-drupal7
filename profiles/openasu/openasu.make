@@ -85,7 +85,6 @@ projects[email][version] = 1.3
 projects[email][subdir] = contrib
 projects[email][type] = module
 
-; @TODO v2.0-beta2
 projects[feeds][version] = 2.0-alpha9
 projects[feeds][type] = module
 projects[feeds][subdir] = contrib
@@ -116,7 +115,8 @@ projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
 projects[viewfield][subdir] = contrib
 
-projects[webform][version] = 4.14
+; Don't update to v4.17 until https://www.drupal.org/project/webform/issues/2966816 is worked out
+projects[webform][version] = 4.16
 projects[webform][type] = module
 projects[webform][subdir] = contrib
 
@@ -142,7 +142,7 @@ projects[chosen][version] = 2.0-beta4
 projects[chosen][type] = module
 projects[chosen][subdir] = contrib
 
-projects[easy_breadcrumb][version] = 2.12
+projects[easy_breadcrumb][version] = 2.15
 projects[easy_breadcrumb][type] = module
 projects[easy_breadcrumb][subdir] = contrib
 
@@ -154,7 +154,7 @@ projects[field_collection][version] = 1.0-beta11
 projects[field_collection][type] = module
 projects[field_collection][subdir] = contrib
 
-projects[flexslider][version] = 2.0-rc1
+projects[flexslider][version] = 2.0-rc2
 projects[flexslider][type] = module
 projects[flexslider][subdir] = contrib
 
