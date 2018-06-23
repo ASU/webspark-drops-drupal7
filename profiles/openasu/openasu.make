@@ -98,11 +98,9 @@ projects[job_scheduler][version] = 2.0-alpha3
 projects[job_scheduler][type] = module
 projects[job_scheduler][subdir] = contrib
 
-projects[ldap][version] = 2.0-beta8
+projects[ldap][version] = 2.3
 projects[ldap][type] = module
 projects[ldap][subdir] = contrib
-;; patch - see https://drupal.org/node/2182413, comment #10 - remove upon ldap update beyond beta8
-projects[ldap][patch][2182413] = http://cgit.drupalcode.org/ldap/patch/?id=fe3a3d56ffebc9bd551c6d83a03172fae13517c3
 
 projects[references][version] = 2.1
 projects[references][type] = module

@@ -9,7 +9,6 @@ files[] = LdapServerAdmin.class.php
 files[] = ldap_servers.admin.inc
 files[] = ldap_servers.encryption.inc
 files[] = ldap_servers.functions.inc
-files[] = ldap_servers.inc
 files[] = ldap_servers.install
 files[] = ldap_servers.module
 files[] = ldap_servers.settings.inc
@@ -17,10 +16,3 @@ files[] = ldap_servers.test_form.inc
 files[] = ldap_servers.theme.inc
 files[] = tests/ldap_servers.test
 configure = admin/config/people/ldap/servers
-
-; Information added by Drupal.org packaging script on 2014-01-08
-version = "7.x-2.0-beta8"
-core = "7.x"
-project = "ldap"
-datestamp = "1389150511"
-

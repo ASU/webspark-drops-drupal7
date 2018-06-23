@@ -32,7 +32,7 @@ define('LDAP_SERVERS_ENC_TYPE_SHA', 8);
 define('LDAP_SERVERS_ENC_TYPE_SALTED_SHA', 9);
 define('LDAP_SERVERS_ENC_TYPE_CLEARTEXT', 10);
 
-define('LDAP_SERVERS_CYPHER_MODE', 'cfb', 12);
+define('LDAP_SERVERS_CYPHER_MODE', 'cfb');
 
 define('LDAP_SERVERS_BIND_METHOD_SERVICE_ACCT', 1);
 define('LDAP_SERVERS_BIND_METHOD_USER', 2);
@@ -93,6 +93,8 @@ define('LDAP_INVALID_DN_SYNTAX', 0x22);
 
 define('LDAP_IS_LEAF', 0x23);
 define('LDAP_ALIAS_DEREF_PROBLEM', 0x24);
+if ( ! defined('LDAP_DEREF_NEVER') )
+  define('LDAP_DEREF_NEVER', 0x25);
 
 define('LDAP_INAPPROPRIATE_AUTH', 0x30);
 define('LDAP_INVALID_CREDENTIALS', 0x31);
@@ -255,11 +257,6 @@ function ldap_servers_theme() {
       'render element' => 'element',
       'file' => 'ldap_servers.theme.inc'
     ),
-     'ldap_servers_https_required' => array(
-      'variables' => array('site_name' => NULL, 'site_mail' => FALSE, 'site_contact_link' => FALSE),
-      'render element' => 'element',
-      'file' => 'ldap_servers.theme.inc'
-    ),
     'ldap_server_token_table' => array(
       'variables' => array('tokens' => array()),
       'render element' => 'element',
@@ -318,11 +315,14 @@ function ldap_servers_theme() {
       if (!isset($attributes[$ldap_server->mail_attr])) {
         $attributes[$ldap_server->mail_attr] = ldap_servers_set_attribute_map();
       }
-      if (!isset($attributes[$ldap_server->picture_attr])) {
+      if ($ldap_server->picture_attr && !isset($attributes[$ldap_server->picture_attr])) {
         $attributes[$ldap_server->picture_attr] = ldap_servers_set_attribute_map();
       }
       if ($ldap_server->unique_persistent_attr && !isset($attributes[$ldap_server->unique_persistent_attr])) {
         $attributes[$ldap_server->unique_persistent_attr] = ldap_servers_set_attribute_map();
+      }
+      if ($ldap_server->groupUserMembershipsAttr && !isset($attributes[$ldap_server->groupUserMembershipsAttr])) {
+        $attributes[$ldap_server->groupUserMembershipsAttr] = ldap_servers_set_attribute_map();
       }
       if ($ldap_server->user_dn_expression) {
         ldap_servers_token_extract_attributes($attributes, $ldap_server->user_dn_expression, TRUE);
@@ -342,7 +342,6 @@ function ldap_servers_theme() {
  */
 
 function ldap_servers_ldap_user_attrs_list_alter(&$available_user_attrs, &$params) {
-  //debug('ldap_servers_ldap_user_attrs_list_alter'); debug($available_user_attrs); debug($params);
 
   if (isset($params['ldap_server']) && $params['ldap_server']) {
     $ldap_server = $params['ldap_server'];
@@ -482,8 +481,6 @@ function ldap_servers_ldap_user_attrs_list_alter(&$available_user_attrs, &$param
       }
     }
   }
- // debug('available_user_attrs2'); debug($available_user_attrs);
-
 }
 
 /**
@@ -533,7 +530,6 @@ function ldap_servers_get_servers($sid = NULL, $type = NULL, $flatten = FALSE, $
  * see ldap_servers_get_servers()
  */
 function _ldap_servers_get_servers($sid, $type, $flatten, $reset) {
- // dpm('_ldap_servers_get_servers params'); dpm(array($sid, $type, $flatten, $reset));
   ldap_servers_module_load_include('php', 'ldap_servers', 'LdapServerAdmin.class');
   static $servers;
   $type = ($type) ? $type : 'all';
@@ -696,9 +692,9 @@ function ldap_servers_get_user_ldap_data($drupal_user, $sid = NULL, $ldap_contex
   // if no explicit $sid, find most appropriate one
   if (module_exists('ldap_user') && (!$sid || $sid == LDAP_USER_AUTH_SERVER_SID)) {
     if (property_exists($drupal_user, 'ldap_user_puid_sid') &&
-        !empty($drupal_user->ldap_user_puid_sid['und'][0]['value'])
+        !empty($drupal_user->ldap_user_puid_sid[LANGUAGE_NONE][0]['value'])
       ) {
-      $sid = $drupal_user->ldap_user_puid_sid['und'][0]['value'];
+      $sid = $drupal_user->ldap_user_puid_sid[LANGUAGE_NONE][0]['value'];
     }
     else {
       $ldap_user_conf = ldap_user_conf();
@@ -801,26 +797,6 @@ function ldap_servers_convert_attribute($value, $conversion = NULL) {
   return $value;
 }
 
-
-/**
- * disable a logon form if ldap preferences exclude http logon forms
- *
- * @param drupal logon form array $form
- */
-function ldap_servers_disable_http_check(&$form) {
-
-  if (variable_get('ldap_servers_require_ssl_for_credentails', 0) == 1 && @$_SERVER['HTTPS'] != 'on') {
-
-    $tokens = array(
-      'site_name' => variable_get('site_name', 'this site'),
-      'site_mail' =>  variable_get('site_mail', ''),
-      );
-
-    drupal_set_message(t(theme('ldap_servers_https_required', $tokens)), 'error');
-    $form['#disabled'] = TRUE;
-  }
-}
-
 function ldap_servers_ldap_extension_summary($op = 'data') {
   ldap_servers_module_load_include('inc', 'ldap_servers', 'ldap_servers.status');
   return _ldap_servers_ldap_extension_summary($op);
@@ -863,8 +839,6 @@ function ldap_servers_help($path, $arg) {
    case 'admin/help#ldap_servers':
       $servers_help .= '<h3>' . t('Configuration - Settings') . '</h3>';
       $servers_help .= '<dl>';
-      $servers_help .= '<dt>' . t('REQUIRE HTTPS ON CREDENTIAL PAGES') . '</dt>';
-      $servers_help .= '<dd>' . t('If checked, modules using LDAP will not allow credentials to be entered on or submitted to HTTP pages, only HTTPS. This option should be used with an approach to get all logon forms to be HTTPS.') . '</dd>';
       $servers_help .= '<dt>' . t('ENCRYPTION') . '</dt>';
       $servers_help .= '<dd>' . t('With encryption enabled, passwords will be stored in encrypted form. This is two way encryption because the actual password needs to used to bind to LDAP. So it offers minimal defense if someone gets in the filespace. It mainly helps avoid the accidental discovery of a clear text password.') . '</dd>';
       $servers_help .= '<dt>' . t('LOG DETAILED LDAP ACTIONS') . '</dt>';
