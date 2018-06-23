@@ -73,9 +73,13 @@ projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-
 ; ASU Module Prerequisites
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-projects[better_watchdog_ui][version] = 2.2
+; Latest Better Watchdog UI dev as of 20180615
 projects[better_watchdog_ui][type] = module
 projects[better_watchdog_ui][subdir] = contrib
+projects[better_watchdog_ui][download][type] = "git"
+projects[better_watchdog_ui][download][branch] = "7.x-3.x"
+projects[better_watchdog_ui][download][url] = "https://git.drupal.org/project/better_watchdog_ui.git"
+projects[better_watchdog_ui][download][revision] = "758de4cc4995149a2de1d566b4209ec343581d27"
 
 projects[cas_attributes][version] = 1.0-rc3
 projects[cas_attributes][type] = module
@@ -137,8 +141,7 @@ projects[backgroundfield][patch][1936252] = patches/webspark-1069_backgroundfiel
 projects[cas][version] = 1.5
 projects[cas][subdir] = contrib
 
-; @TODO v.2.0-beta5
-projects[chosen][version] = 2.0-beta4
+projects[chosen][version] = 2.1
 projects[chosen][type] = module
 projects[chosen][subdir] = contrib
 
@@ -172,14 +175,12 @@ projects[maxlength][version] = 3.2-beta2
 projects[maxlength][type] = module
 projects[maxlength][subdir] = contrib
 
-;; @TODO - Remove patch when file when submitted patch gets pulled into module
 projects[missing_module][type] = module
 projects[missing_module][subdir] = contrib
 projects[missing_module][download][type] = "git"
 projects[missing_module][download][branch] = "7.x-1.x"
 projects[missing_module][download][url] = "http://git.drupal.org/project/missing_module.git"
-projects[missing_module][download][revision] = 19492ccee8b8ac683b3a384e8663c09af55dc3af
-projects[missing_module][patch][2854074] = patches/webspark-1052_missing-module_improvements-to-ux_2854074-5.patch
+projects[missing_module][download][revision] = "7509d5f036c1c714822598d2f82fa64ee730a021"
 
 projects[panels_tabs][version] = 2.x-dev
 projects[panels_tabs][type] = module

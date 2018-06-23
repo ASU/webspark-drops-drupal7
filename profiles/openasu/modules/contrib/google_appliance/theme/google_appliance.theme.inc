@@ -34,6 +34,13 @@ function google_appliance_theme() {
     'path' => $ga_template_dir,
   );
 
+  // Spelling suggestion.
+  $registry['google_appliance_spelling_suggestion'] = array(
+    'variables' => array('spelling_suggestion' => NULL),
+    'template' => 'google-appliance-spelling-suggestion',
+    'path' => $ga_template_dir,
+  );
+
   // Single result within the results page.
   $registry['google_appliance_result'] = array(
     'variables' => array('result_data' => NULL),
@@ -52,6 +59,20 @@ function google_appliance_theme() {
   $registry['google_appliance_synonym'] = array(
     'variables' => array('synonyms' => NULL),
     'template' => 'google-appliance-synonym',
+    'path' => $ga_template_dir,
+  );
+
+  // Single Onebox module within a block.
+  $registry['google_appliance_onebox_module'] = array(
+    'variables' => array('onebox' => NULL),
+    'template' => 'google-appliance-onebox-module',
+    'path' => $ga_template_dir,
+  );
+
+  // Single Onebox result within a Onebox module.
+  $registry['google_appliance_onebox_result'] = array(
+    'variables' => array('result' => NULL),
+    'template' => 'google-appliance-onebox-result',
     'path' => $ga_template_dir,
   );
 
@@ -165,6 +186,11 @@ function template_preprocess_google_appliance_results(&$vars) {
     $vars['search_query_data']['gsa_query_params']['q']
   );
 
+  // Get spelling suggestion.
+  $vars['spelling_suggestion'] = $settings['spelling_suggestions'] && isset($vars['response_data']['spelling_suggestion'])
+   ? theme('google_appliance_spelling_suggestion', $vars['response_data'])
+   : '';
+
   // If we have errors, decode them and skip building results entities.
   if (isset($vars['response_data']['error'])) {
 
@@ -174,12 +200,8 @@ function template_preprocess_google_appliance_results(&$vars) {
 
     // Build hook_help-based error messages for display.
     foreach ($vars['response_data']['error'] as $error_key => $error_response) {
-      // Replace error responses with hook_help messages that exist,
-      // if they don't exist, just relay the error response.
-      $help_message = google_appliance_help(
-        'google_appliance#error_' . $error_key,
-        drupal_help_arg()
-      );
+      // Replace error responses with those configured.
+      $help_message = check_markup($settings['error_' . $error_key], $settings['error_' . $error_key . '_format']);
       $vars['error_reason'] .= ($help_message != '') ? $help_message : $error_response;
 
       // Build error message for the log (ignore 'no results' condition).
@@ -253,7 +275,62 @@ function template_preprocess_google_appliance_results(&$vars) {
       'last_result_index' => $vars['response_data']['last_result'],
     );
     $vars['pager'] = theme('google_appliance_pager', $pager_data);
+
+    // Add Advanced Search Reporting if applicable.
+    if ($settings['advanced_search_reporting']) {
+      // Path to callback.
+      // When clean URLs are disabled we do not want the '?q=' version which won't work.
+      // Hence we do not use url() -- we build the path ourselves from $base_url.
+      global $base_url;
+      $callback_path = $base_url . '/' . drupal_get_path('module', 'google_appliance') . '/google_appliance.callback.click.php';
+      // Add javascript.
+      drupal_add_js(array(
+        'google_appliance' => array(
+          'clickTracking' => array(
+            'host' => $callback_path,
+            'pathPart' => '',
+            'collection' => $vars['search_query_data']['gsa_query_params']['site'],
+            'query' => $vars['search_query_data']['gsa_query_params']['q'],
+            'start' => $vars['search_query_data']['gsa_query_params']['start'],
+            'clickTypes' => array(
+              'c' => '.google-appliance-result a',
+              'cluster' => '#block-google-appliance-ga-related-searches .content a',
+              'logo' => 'a#logo',
+              'nav.page' => '.content .pager-item a',
+              'nav.next' => '.content .pager-next a',
+              'nav.prev' => '.content .pager-previous a, .content .pager-first a',
+              'keymatch' => '.google-appliance-keymatch-results a',
+              'onebox' => '.google-appliance-onebox-module a',
+              'sort' => '.google-appliance-sorter a',
+              'synonym' => '.google-appliance-synonym a',
+              'spell' => '.google-appliance-spelling-suggestion a',
+            ),
+          ),
+        ),
+      ), 'setting');
+      drupal_add_library('google_appliance', 'jquery.gsa-clicks');
+      drupal_add_js(drupal_get_path('module', 'google_appliance') . '/js/clicklog.js');
+    }
   }
+
+  // Render template.
+}
+
+/**
+ * Preprocess a spelling suggestion.
+ */
+function template_preprocess_google_appliance_spelling_suggestion(&$vars) {
+  $menu_item = menu_get_item();
+
+  // Pop the existing search query to get the base path for the search results.
+  array_pop($menu_item['original_map']);
+  $search_base = implode('/', $menu_item['original_map']);
+  $query_plain = filter_xss($vars['spelling_suggestion'], array());
+
+  $link = l($vars['spelling_suggestion'], $search_base . '/' . $query_plain, array(
+    'html' => TRUE,
+  ));
+  $vars['spelling_suggestion'] = t('Did you mean !linked_suggestion?', array('!linked_suggestion' => $link));
 
   // Render template.
 }
@@ -273,9 +350,10 @@ function template_preprocess_google_appliance_result(&$vars) {
   if ( $vars['mime']['type'] != '' ) {
     $file = new stdClass;
     $file->filemime = $vars['mime']['type'];
-    $vars['mime']['icon'] = theme_file_icon( array(
+    $vars['mime']['icon'] = theme('file_icon', array(
       'file' => $file,
-      'icon_directory' => variable_get('file_icon_directory', drupal_get_path('module', 'file') . '/icons')
+      'icon_directory' => variable_get('file_icon_directory', drupal_get_path('module', 'file') . '/icons'),
+      'alt' => $vars['mime']['type']
     ));
   }
 
@@ -311,10 +389,46 @@ function template_preprocess_google_appliance_keymatch(&$vars) {
  * Preprocess a single synonym.
  */
 function template_preprocess_google_appliance_synonym(&$vars) {
+  $settings = _google_appliance_get_settings();
   $description = filter_xss($vars['description'], array('b', 'strong'));
-  $url = check_url('gsearch/' . $vars['url']);
-  $vars['link'] = l($description, $url, array('atrributes' => array('class' => array('synonym-description'))));
+  $url = check_url($settings['drupal_path'] . '/' . $vars['url']);
+  $vars['link'] = l($description, $url, array('attributes' => array('class' => array('synonym-description'))));
 }
+
+/**
+ * Preprocess a single Onebox module.
+ */
+function template_preprocess_google_appliance_onebox_module(&$vars) {
+  // Render results.
+  $vars['results'] = array();
+  foreach ($vars['onebox']['results'] as $key => $result) {
+    $vars['results'][$key]['rendered'] = theme('google_appliance_onebox_result', array('result' => $result));
+  }
+
+  // Provide top-level variables for the onebox.
+  $vars['module_name'] = $vars['onebox']['module_name'];
+  $vars['provider'] = $vars['onebox']['provider'];
+  $vars['url_text'] = $vars['onebox']['url_text'];
+  $vars['url_link'] = $vars['onebox']['url_link'];
+  $vars['image'] = $vars['onebox']['image'];
+  $vars['description'] = $vars['onebox']['description'];
+}
+
+/**
+ * Preprocess a single Onebox result.
+ */
+function template_preprocess_google_appliance_onebox_result(&$vars) {
+  // Combine <U> and <Title> to build a linked title.
+  $title_linked = empty($vars['result']['title']) ? '' : $vars['result']['title'];
+  $title_linked = empty($vars['result']['abs_url']) ? $title_linked : l($title_linked, $vars['result']['abs_url']);
+
+  // Provide top-level variables for this onebox result.
+  $vars['abs_url'] = $vars['result']['abs_url'];
+  $vars['title'] = $vars['result']['title'];
+  $vars['title_linked'] = $title_linked;
+  $vars['fields'] = $vars['result']['fields'];
+}
+
 
 /**
  * Set up Drupal pager for pagination of GSA-provided search results.
@@ -378,6 +492,7 @@ function theme_google_appliance_pager(&$vars) {
  * Preprocess google-appliance-sort-headers.tpl.php.
  */
 function template_preprocess_google_appliance_sort_headers(&$vars) {
+  $settings = _google_appliance_get_settings();
 
   // Possible sort options.
   $vars['sort_options'] = array(
@@ -446,7 +561,7 @@ function template_preprocess_google_appliance_sort_headers(&$vars) {
       );
 
       // Append the query to the base url of the serach page.
-      $link_path = 'gsearch/' . $vars['gsa_query_params']['q'];
+      $link_path = $settings['drupal_path'] . '/' . $vars['gsa_query_params']['q'];
 
       // Append the sort param if any.
       $link_path .= '/' . $sort_opt['sort'];
@@ -474,4 +589,15 @@ function template_preprocess_google_appliance_search_stats(&$vars) {
   );
 
   // render
+}
+
+/**
+ * Implements hook_preprocess_block().
+ *
+ * Used to target onebox links for advanced search click tracking.
+ */
+function google_appliance_preprocess_block(&$vars) {
+  if (isset($vars['elements']['#onebox'])) {
+    $vars['classes_array'][] = 'google-appliance-onebox-module';
+  }
 }

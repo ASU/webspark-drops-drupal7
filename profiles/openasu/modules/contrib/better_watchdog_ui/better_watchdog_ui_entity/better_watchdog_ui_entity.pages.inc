@@ -6,13 +6,6 @@
  */
 
 /**
- * Callback for Watchdog entry title.
- */
-function better_watchdog_ui_watchdog_title($watchdog) {
-  return t('Details #!wid', array('!wid' => $watchdog->wid));
-}
-
-/**
  * Callback for Watchdog entry view.
  */
 function better_watchdog_ui_watchdog_view($watchdog, $view_mode = 'full') {

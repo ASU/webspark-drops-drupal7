@@ -103,6 +103,13 @@ function better_watchdog_ui_entity_preprocess_better_watchdog_ui_watchdog(&$vari
 }
 
 /**
+ * Callback for Watchdog entry title.
+ */
+function better_watchdog_ui_watchdog_title($watchdog) {
+  return t('Details #!wid', array('!wid' => $watchdog->wid));
+}
+
+/**
  * Watchdog entity uri callback.
  */
 function better_watchdog_ui_watchdog_uri($watchdog) {
@@ -207,6 +214,17 @@ function better_watchdog_ui_entity_entity_property_info_alter(&$info) {
  * Watchdog class.
  */
 class WatchdogEntity extends Entity {
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $values = array(), $entityType = NULL) {
+    parent::__construct($values, $entityType);
+
+    if (isset($values['request_uri'])) {
+      $this->location = $values['request_uri'];
+    }
+  }
+
   /**
    * Deafult label callback.
    */
