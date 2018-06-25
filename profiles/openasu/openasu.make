@@ -58,8 +58,6 @@ projects[panopoly_test][patch][142] = patches/webspark-944_add-init-config-tests
 projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.patch
 ; moved custom tests to webspark_test custom module
 ;projects[panopoly_test][patch][1403] = patches/webspark-1066-panopoly-webspark-add-custom-tests-v143.patch
-; Added v1.52 test patch after the fact this once - @TODO merge into a new patch in the next release
-projects[panopoly_test][patch][1258] = https://www.drupal.org/files/issues/2018-03-14/panopoly_test-update-tablefield-7.x-3.1-2919401-17.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
 ; commenting this out until we update this repo
