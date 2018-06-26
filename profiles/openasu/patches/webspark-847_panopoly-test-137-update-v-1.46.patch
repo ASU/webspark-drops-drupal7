@@ -195,9 +195,9 @@ index bb29ec9..181ea42 100644
 +      And I visit "/admin/appearance/settings/innovation"
 +    Then the "edit-always-show-page-title" checkbox should not be checked
 diff --git a/behat/features/linkit.feature b/behat/features/linkit.feature
-index f091fe0..5158fa7 100644
+index 2775902..0ac6662 100644
 --- a/behat/features/linkit.feature
-+++ b/behat/features/linkit.feature
++++ b/features/linkit.feature
 @@ -6,12 +6,15 @@ Feature: Link to page on the site
    Background:
      Given I am logged in as a user with the "administrator" role
@@ -210,7 +210,7 @@ index f091fe0..5158fa7 100644
        And I fill in the following:
          | Title  | Testing Linkit       |
          | Editor | panopoly_wysiwyg_text |
- 
+
 -  @api @javascript @panopoly_wysiwyg
 +  @api @javascript @panopoly_wysiwyg @webspark_broken @webspark_fixed
    Scenario: Add a link to an internal page
@@ -222,13 +222,13 @@ index f091fe0..5158fa7 100644
      When I click "Linkit Target"
 -    Then the "h1" element should contain "Linkit Target"
 +    Then I should see "Linkit Target"
- 
+
    @api @javascript @panopoly_wysiwyg
    Scenario: Add a link to an external page
-@@ -42,3 +45,13 @@ Feature: Link to page on the site
+@@ -41,3 +44,13 @@ Feature: Link to page on the site
+       And I press "edit-submit"
      Then I should see "https://drupal.org/project/panopoly" in the "a" element with the "title" attribute set to "Testing title" in the "Bryant Content" region
-     When I click "https://drupal.org/project/panopoly"
-     Then the "h1" element should contain "Panopoly"
+       And I should see "https://drupal.org/project/panopoly" in the "a" element with the "href" attribute set to "https://drupal.org/project/panopoly" in the "Bryant Content" region
 +
 +  @api @panopoly_admin @webspark_added
 +  Scenario: Resetting the Innovation theme Always Show Page Title setting
@@ -387,7 +387,7 @@ diff --git a/behat/steps/panopoly_test.behat.inc b/behat/steps/panopoly_test.beh
 index 01fb66b..02faa86 100644
 --- a/behat/steps/panopoly_test.behat.inc
 +++ b/behat/steps/panopoly_test.behat.inc
-@@ -516,7 +516,7 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
+@@ -528,7 +528,7 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
    public function waitForLivePreview() {
      // Make sure the live preview has triggered by bluring the current focus.
      $this->getSession()->executeScript("document.activeElement.blur()");
