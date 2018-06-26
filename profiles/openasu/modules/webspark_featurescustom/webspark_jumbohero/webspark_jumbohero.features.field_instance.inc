@@ -225,7 +225,7 @@ function webspark_jumbohero_field_default_field_instances() {
     'bundle' => 'jumbohero',
     'deleted' => 0,
     'description' => '<ul class="help-text">
-<li class="help-title">Tips & Instructions</li>
+<li class="help-title">Image Tips & Instructions</li>
 <li>Heroes should be added <strong>only to the top region</strong> of your page.</li>
 <li>Images should be 1170 x 700 px for optimal display.</li>
 <li>When adding a new image, <strong>refresh the page</strong> after saving to view the image.</li>
@@ -279,7 +279,12 @@ function webspark_jumbohero_field_default_field_instances() {
     'bundle' => 'jumbohero',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => '<ul class="help-text">
+<li class="help-title">IMPORTANT!</li>
+<li>This byline field is only for smaller subtitles or bylines included <b>below</b> the 
+larger, primary jumbohero text.</li>
+<li>Enter the primary jumbohero text in the Title text field under "General Settings" section.</li>
+</ul>',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -291,7 +296,7 @@ function webspark_jumbohero_field_default_field_instances() {
     ),
     'entity_type' => 'fieldable_panels_pane',
     'field_name' => 'field_webspark_jumbohero_blurb',
-    'label' => 'Blurb',
+    'label' => 'Subtitle, Blurb, or Byline',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
