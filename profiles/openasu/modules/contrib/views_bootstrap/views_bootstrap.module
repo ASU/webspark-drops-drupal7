@@ -12,61 +12,153 @@ function views_bootstrap_views_api() {
 }
 
 /**
- * Split items by rows and columns.
- * - Stolen from Drupal 8 template_preprocess_views_view_grid().
+ * Distribute items in rows/columns as required for horizontal alignment.
  *
- * @param $vars
- * @param $columns
- * @param bool $horizontal
+ * @param array $rows The rendered views result rows.
+ * @param int $nb_columns The desired number of columns per row.
  *
- * @return array
- *
- * @TODO: Use array_chunk().
+ * @return array A multi-dimensional array with the calculated rows and columns.
  */
-function _views_bootstrap_split_rows($vars, $columns, $horizontal = TRUE) {
+function _views_bootstrap_split_rows_horizontal($results, $nb_columns) {
   $col = 0;
   $row = 0;
   $items = array();
-  $remainders = count($vars['rows']) % $columns;
-  $num_rows = floor(count($vars['rows']) / $columns);
 
   // Iterate over each rendered views result row.
-  foreach ($vars['rows'] as $item) {
-
+  foreach ($results as $item) {
     // Add the item.
-    if ($horizontal) {
-      $items[$row]['content'][$col]['content'] = $item;
-    }
-    else {
-      $items[$col]['content'][$row]['content'] = $item;
-    }
+    $items[$row]['content'][$col]['content'] = $item;
 
-    // Increase, decrease or reset appropriate integers.
-    if ($horizontal) {
-      if ($col == 0 && $col != ($columns - 1)) {
-        $col++;
-      }
-      elseif ($col >= ($columns - 1)) {
-        $col = 0;
-        $row++;
-      }
-      else {
-        $col++;
-      }
-    }
-    else {
+    // If we've reached the maximum number of columns per row, reset the column
+    // index and proceed to the next row.
+    if ($col == ($nb_columns - 1)) {
+      $col = 0;
       $row++;
-      if (!$remainders && $row == $num_rows) {
-        $row = 0;
-        $col++;
-      }
-      elseif ($remainders && $row == $num_rows + 1) {
-        $row = 0;
-        $col++;
-        $remainders--;
-      }
+    }
+    // Otherwise, proceed to the next column.
+    else {
+      $col++;
     }
   }
 
   return $items;
+}
+
+/**
+ * Distribute items in columns as required for vertical alignment.
+ *
+ * @param array $rows The rendered views result rows.
+ * @param int $nb_columns The desired number of columns per row.
+ *
+ * @return array A multi-dimensional array with the calculated columns.
+ */
+function _views_bootstrap_split_rows_vertical($rows, $nb_columns) {
+  $col = 0;
+  $row = 0;
+  $items = array();
+  $remainders = count($rows) % $nb_columns;
+  $num_rows = floor(count($rows) / $nb_columns);
+
+  // Iterate over each rendered views result row.
+  foreach ($rows as $item) {
+    // Add the item.
+    $items[$col]['content'][$row]['content'] = $item;
+
+    // Increase, decrease or reset appropriate integers.
+    $row++;
+    if (!$remainders && $row == $num_rows) {
+      $row = 0;
+      $col++;
+    }
+    elseif ($remainders && $row == $num_rows + 1) {
+      $row = 0;
+      $col++;
+      $remainders--;
+    }
+  }
+
+  return $items;
+}
+
+/**
+ * View preprocessing that prepares the results as a Bootstrap grid.
+ *
+ * Depending on the options selected on the style plugin handler, this function
+ * distributes the results into rows and columns, calculates where clearfix divs
+ * should be added (if applicable), and prepares the bootstrap classes that
+ * should be added to each column.
+ *
+ * Used by the Bootstrap Grid and Bootstrap Thumbnail plugins.
+ *
+ * @see template_preprocess_views_bootstrap_grid_plugin_style().
+ * @see template_preprocess_views_bootstrap_thumbnail_plugin_style().
+ */
+function _views_bootstrap_preprocess_views_style_plugin_prepare_grid(&$vars) {
+  $options = $vars['view']->style_plugin->options;
+
+  // Prepare column css classes. Add the class for each device size if set and if
+  // different than 0 ("Do not define" option).
+  $col_classes = explode(' ', $options['column_class']);
+  foreach (array('xs', 'sm', 'md', 'lg') as $size) {
+    if (!empty($options["columns_$size"])) {
+      $col_classes[] = 'col-' . $size . '-' . $options["columns_$size"];
+    }
+  }
+  $vars['col_classes'] = join(' ', $col_classes);
+
+  if ($options['alignment'] === 'horizontal') {
+    _views_bootstrap_preprocess_views_style_plugin_prepare_grid_horizontal($vars);
+    return;
+  }
+
+  _views_bootstrap_preprocess_views_style_plugin_prepare_grid_vertical($vars);
+}
+
+/**
+ * Further preprocessing for horizontal alignment.
+ * @see _views_bootstrap_preprocess_views_style_plugin_prepare_grid().
+ */
+function _views_bootstrap_preprocess_views_style_plugin_prepare_grid_horizontal(&$vars) {
+  $options = $vars['view']->style_plugin->options;
+
+  // If columns are set to 0 (Auto), apply the maximum from the number of columns
+  // defined per device size.
+  if (!$options['columns_horizontal']) {
+    $options['columns_horizontal'] = 1;
+    foreach (array('xs', 'sm', 'md', 'lg') as $size) {
+      if (isset($options["columns_$size"]) && $options["columns_$size"] > 0) {
+        $tmpColumns = 12 / $options["columns_$size"];
+        if ($tmpColumns > $options['columns_horizontal']) {
+          $options['columns_horizontal'] = $tmpColumns;
+        }
+      }
+    }
+  }
+
+  // Distribute items in rows and columns.
+  $vars['items'] = _views_bootstrap_split_rows_horizontal($vars['rows'], $options['columns_horizontal']);
+
+  // If the number of columns is set to -1 ("Single row" option), calculate the
+  // number of columns after which the clearfix divs should be placed for each
+  // screen size. No clearfix is necessary for large screens (lg) and when the
+  // size of the column is 12 (full row).
+  if ($options['columns_horizontal'] == -1) {
+    $vars['clearfix'] = array();
+    foreach (array('xs', 'sm', 'md', 'lg') as $size) {
+      if (!empty($options["columns_$size"]) && $options["columns_$size"] != 12) {
+        $vars['clearfix'][$size] = 12 / $options["columns_$size"];
+      }
+    }
+  }
+}
+
+/**
+ * Further preprocessing for vertical alignment.
+ * @see _views_bootstrap_preprocess_views_style_plugin_prepare_grid().
+ */
+function _views_bootstrap_preprocess_views_style_plugin_prepare_grid_vertical(&$vars) {
+  $options = $vars['view']->style_plugin->options;
+
+  // Distribute items in rows and columns.
+  $vars['items'] = _views_bootstrap_split_rows_vertical($vars['rows'], $options['columns_vertical']);
 }

@@ -1,0 +1,92 @@
+<?php
+/**
+ * @file
+ * Install and uninstall tasks for Views Bootstrap.
+ */
+
+/**
+ * Update views_display grid style_options breakpoint control.
+ */
+function views_bootstrap_update_7100(&$sandbox) {
+  // If this is the first pass through this update function then set some variables.
+  if (!isset($sandbox['total'])) {
+    $result = db_query("SELECT vid FROM {views_display}");
+    $sandbox['total'] = $result->rowCount();
+    $sandbox['current'] = 0;
+  }
+
+  // The number of view_displays to process per pass.
+  $items_per_pass = 10;
+
+  // Get the view_displays to process during this pass.
+  $result = db_query_range("SELECT vid, id, display_options FROM {views_display}", $sandbox['current'], $items_per_pass);
+  while ($row = $result->fetchAssoc()) {
+    // Unserialize display_options.
+    $options = unserialize($row['display_options']);
+    // If the style_plugin is bootstrap grids and we have the old column config.
+    if ($options['style_plugin'] == 'views_bootstrap_grid_plugin_style' &&
+      isset($options['style_options']['columns'])) {
+      // Get the column count.
+      $columns = $options['style_options']['columns'];
+      // Convert the deprecated column count to the updated column count.
+      switch ($columns) {
+        case '1':
+          $columns = '12';
+          break;
+
+        case '2':
+          $columns = '6';
+          break;
+
+        case '3':
+          $columns = '4';
+          break;
+
+        case '4':
+          $columns = '3';
+          break;
+
+        case '6':
+          $columns = '2';
+          break;
+
+        case '12':
+          $columns = '1';
+          break;
+      }
+
+      // Set the style options.
+      $style_options = array(
+        'uses_fields' => $options['style_options']['uses_fields'],
+        'alignment' => $options['style_options']['alignment'],
+        'columns_horizontal' => '-1',
+        'columns_vertical' => $columns,
+        'clear_columns' => 1,
+        'columns_xs' => '12',
+        'columns_sm' => '0',
+        'columns_md' => '0',
+        'columns_lg' => $columns,
+        'column_class' => '',
+      );
+      // Overrite the style options on $options.
+      $options['style_options'] = $style_options;
+      // Serialize the options array.
+      $options = serialize($options);
+      // Update the value in the database.
+      db_update('views_display')
+      ->fields(array('display_options' => $options))
+      ->condition('vid', $row['vid'])
+      ->condition('id', $row['id'])
+      ->execute();
+
+      // Output a message about this change.
+      drupal_set_message(t('Updated view: @vid for view_display: @id', array('@vid' => $row['vid'], '@id' => $row['id'])));
+    }
+
+    // Increment "current" by 1.
+    $sandbox['current']++;
+
+    // Set the value for finished. If current == total then finished will be 1, signifying we are done.
+    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
+  }
+}

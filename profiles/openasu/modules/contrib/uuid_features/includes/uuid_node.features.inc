@@ -11,14 +11,21 @@ function uuid_node_features_export_options() {
   $options = array();
 
   // Check what content types are enabled for uuid features export.
-  $enabled_types = variable_get('uuid_features_entity_node', FALSE);
+  $enabled_types = array();
+  $entity_info = entity_get_info('node');
+  foreach ($entity_info['bundles'] as $key => $value) {
+    if (variable_get("uuid_features_entity_node_${key}", FALSE)) {
+      $enabled_types[$key] = $key;
+    }
+  }
   if (!empty($enabled_types)) {
     $types = node_type_get_names();
     $query = db_select('node', 'n');
     $query->fields('n', array('nid', 'title', 'type', 'uuid'))
       ->condition('type', $enabled_types)
       ->orderBy('type')
-      ->orderBy('title');
+      ->orderBy('title')
+      ->addTag('uuid_node_features_export_options');
     $nodes = $query->execute()->fetchAll();
     foreach ($nodes as $node) {
       $options[$node->uuid] = t('@type: @title', array(
@@ -44,6 +51,7 @@ function uuid_node_features_export($data, &$export, $module_name = '') {
   foreach ($nids as $uuid => $nid) {
     // Load the existing node, with a fresh cache.
     $node = node_load($nid, NULL, TRUE);
+    entity_make_entity_universal('node', array($node));
 
     $export['features']['uuid_node'][$uuid] = $uuid;
     $pipe['node'][$node->type] = $node->type;
@@ -67,11 +75,13 @@ function uuid_node_features_export($data, &$export, $module_name = '') {
  * Implements hook_features_export_render().
  */
 function uuid_node_features_export_render($module, $data) {
-  $translatables = $code = array();
+  $translatables = $code = $files = $return = array();
 
   $code[] = '  $nodes = array();';
   $code[] = '';
   $nids = entity_get_id_by_uuid('node', $data);
+  // Always sort by the uuid to ensure the order is maintained.
+  ksort($nids);
   foreach ($nids as $uuid => $nid) {
     // Only export the node if it exists.
     if ($nid === FALSE) {
@@ -92,13 +102,13 @@ function uuid_node_features_export_render($module, $data) {
     // node_object_prepare().
     $export->date = format_date($export->created, 'custom', 'Y-m-d H:i:s O');
 
-    // Don't cause conflicts with nid/vid/revision_timestamp/changed fields.
-    uuid_features_file_field_export($export, 'node');
+    $files = uuid_features_file_field_export($export, 'node');
 
     $entity_type = 'node';
     drupal_alter('uuid_entity_features_export_render', $entity_type, $export, $node, $module);
     drupal_alter('uuid_node_features_export_render', $export, $node, $module);
 
+    // Don't cause conflicts with nid/vid/revision_timestamp/changed fields.
     unset($export->revision_uid);
     unset($export->revision_timestamp);
     unset($export->nid);
@@ -112,6 +122,13 @@ function uuid_node_features_export_render($module, $data) {
     unset($export->cid);
 
     $code[] = '  $nodes[] = ' . features_var_export($export) . ';';
+
+    // Add packaged files, if any.
+    if (!empty($files)) {
+      foreach ($files as $filename => $src_path) {
+        $return[$filename] = $src_path;
+      }
+    }
   }
 
   if (!empty($translatables)) {
@@ -119,7 +136,9 @@ function uuid_node_features_export_render($module, $data) {
   }
   $code[] = '  return $nodes;';
   $code = implode("\n", $code);
-  return array('uuid_features_default_content' => $code);
+  $return['uuid_features_default_content'] = $code;
+
+  return $return;
 }
 
 /**
@@ -214,8 +233,8 @@ function uuid_node_features_rebuild_nodes($nodes, $module, $max_nesting = 5, $ne
       drupal_alter('uuid_node_features_rebuild', $node, $module);
 
       $node = node_submit($node);
-      uuid_features_file_field_import($node, 'node');
-      node_save($node);
+      uuid_features_file_field_import($node, 'node', $module);
+      entity_uuid_save('node', $node);
     }
     catch (Exception $e) {
       $second_run_nodes[] = $data;

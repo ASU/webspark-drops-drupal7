@@ -43,5 +43,24 @@ function cas_server_admin_settings() {
     '#default_value' => variable_get('cas_server_whitelist_failure', t('You do not have permission to login to CAS from this service.')),
   );
 
+  $form['single_logout'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Single Logout Settings'),
+    '#description' => t('When a user logs out, this module will send a logout request (via HTTP POST request) to each service that the user authenticated with. These settings are related to that functionality.'),
+  );
+
+  $form['single_logout']['cas_server_slo_group_timeout'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Request timeout (all requests)'),
+    '#description' => t('If this amount of time (in seconds) has elapsed when sending all logout requests, abort any remaining requests.'),
+    '#default_value' => variable_get('cas_server_slo_group_timeout', 15),
+  );
+  $form['single_logout']['cas_server_slo_individual_timeout'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Request timeout (individual requests)'),
+    '#description' => t('The number of seconds to allow an individual logout request to take before aborting it.'),
+    '#default_value' => variable_get('cas_server_slo_group_timeout', 5),
+  );
+
   return system_settings_form($form);
 }

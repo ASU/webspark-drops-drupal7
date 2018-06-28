@@ -16,7 +16,9 @@ function uuid_book_features_export_options() {
 
   // Use nid as no uuid for books.
   $book_nids = array();
-  $books = book_get_books();
+  // Call with param for possible fix from here:
+  // @link https://www.drupal.org/node/760102
+  $books = book_get_books(TRUE);
   foreach ($books as $book) {
     $book_nids[] = $book['nid'];
   }
@@ -26,7 +28,8 @@ function uuid_book_features_export_options() {
     $query
       ->entityCondition('entity_type', 'node')
       ->propertyCondition('nid', $book_nids, 'IN')
-      ->propertyOrderBy('title');
+      ->propertyOrderBy('title')
+      ->addTag('uuid_book_features_export_options');
     $result = $query->execute();
     if (!empty($result['node'])) {
       $nodes = node_load_multiple(array_keys($result['node']));

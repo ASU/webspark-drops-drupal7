@@ -62,11 +62,9 @@ projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.p
 projects[panopoly_test][patch][1258] = https://www.drupal.org/files/issues/2018-03-14/panopoly_test-update-tablefield-7.x-3.1-2919401-17.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
-; commenting this out until we update this repo
-; @TODO - update the repo with latest modules
 projects[asu_drupal_modules][type] = module
 projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = 0bbbe56949418fd5ac3df85672455b3af766a2b3
+projects[asu_drupal_modules][download][revision] = 7e86f7fed3a06597335c7ca8850e95cb9f56c373
 projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -97,7 +95,7 @@ projects[feeds_xpathparser][version] = 1.1
 projects[feeds_xpathparser][type] = module
 projects[feeds_xpathparser][subdir] = contrib
 
-projects[job_scheduler][version] = 2.0-alpha3
+projects[job_scheduler][version] = 2.0
 projects[job_scheduler][type] = module
 projects[job_scheduler][subdir] = contrib
 
@@ -138,7 +136,7 @@ projects[backgroundfield][patch][1841978] = patches/webspark-1069_backgroundfiel
 projects[backgroundfield][patch][1936252] = patches/webspark-1069_backgroundfield-media-module-support.patch
 
 ; CAS SSO Integration
-projects[cas][version] = 1.5
+projects[cas][version] = 1.7
 projects[cas][subdir] = contrib
 
 projects[chosen][version] = 2.1
@@ -213,14 +211,15 @@ projects[tb_megamenu][patch][] = patches/webspark-935_tb-megamenu_fix-submenu-re
 projects[tb_megamenu][patch][] = patches/webspark-1007-redux-tb_megamenu-tab_accessibility-7.x.patch
 projects[tb_megamenu][patch][] = patches/webspark-1018_tb-megamenu_removing-mobile-button-for-ADA_7.x.patch
 
+; UUID Features Integration
 ;projects[uuid_features][version] = 1.0-alpha4
-;; grabbing alpha-4+dev-37 commit
+;; grabbing latest version of DEV as of 2018-06-17
 projects[uuid_features][type] = module
 projects[uuid_features][subdir] = contrib
 projects[uuid_features][download][type] = "git"
 projects[uuid_features][download][branch] = "7.x-1.x"
 projects[uuid_features][download][url] = "http://git.drupal.org/project/uuid_features.git"
-projects[uuid_features][download][revision] = "55a2d5070b6f238f40372070f70314cc4f8197d8"
+projects[uuid_features][download][revision] = "63a676b0243838a1624a758a373aaca9444cce06"
 
 projects[video_embed_field][version] = 2.0-beta11
 projects[video_embed_field][type] = module

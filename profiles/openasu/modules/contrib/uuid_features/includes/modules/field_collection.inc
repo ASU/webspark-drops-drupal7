@@ -22,3 +22,26 @@ function field_collection_uuid_entity_features_rebuild_alter($entity_type, &$ent
     'revision_id' => 'revision_id',
   ));
 }
+
+/**
+ * Implements hook_uuid_entity_features_export_alter().
+ */
+function field_collection_uuid_entity_features_export_alter($entity_type, &$data, $entity, $module) {
+  $fields = uuid_features_get_field_items_iterator($entity, $entity_type, 'field_collection');
+
+  if (!empty($fields)) {
+    $field_collection_ids = array();
+    foreach ($fields as $field) {
+      foreach ($field as $lang_items) {
+        foreach ($lang_items as $values) {
+          $field_collection_ids[] = $values['value'];
+        }
+      }
+    }
+    // Add dependencies to field collection items.
+    $uuids = entity_get_uuid_by_id('field_collection_item', $field_collection_ids);
+    foreach ($uuids as $uuid) {
+      $data['features']['uuid_field_collection'][$uuid] = $uuid;
+    }
+  }
+}
