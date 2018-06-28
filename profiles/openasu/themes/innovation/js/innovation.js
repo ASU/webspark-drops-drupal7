@@ -17,11 +17,16 @@
   // Add support for sticky menu
   var navOffset = 0;
   $(window).scroll(function () {
-    if ($('#navbar-administration'.length > 0)) {
+    // Mobile Friendly Navbar - Drupal default
+    if ($('#navbar-administration').length > 0) {
       navOffset = $('#navbar-bar').height() + $('#navbar-tray').height();
       if (typeof($('#navbar-tray').attr('data-offset-left')) !== typeof undefined) {
         navOffset = navOffset - $('#navbar-tray').height();
       }
+    }
+    // Admin Menu - Popular alternative
+    else if ($('#admin-menu').length > 0) {
+      navOffset = $('#admin-menu').height();
     }
     navOffsetUnits = navOffset + "px";
     var navStyles = {"position": "sticky", "top": navOffsetUnits, "z-index": "1000", "width": "100%", "visibility": "visible"};
