@@ -462,7 +462,12 @@ function webspark_jumbohero_defaultconfig_field_default_fields() {
       'bundle' => 'jumbohero',
       'default_value' => NULL,
       'deleted' => 0,
-      'description' => '',
+      'description' => '<ul class="help-text">
+<li class="help-title">IMPORTANT!</li>
+<li>This byline field is only for smaller subtitles or bylines included <b>below</b> the 
+larger, primary jumbohero text.</li>
+<li>Enter the primary jumbohero text in the Title text field under "General Settings" section.</li>
+</ul>',
       'display' => array(
         'default' => array(
           'label' => 'hidden',
@@ -474,7 +479,7 @@ function webspark_jumbohero_defaultconfig_field_default_fields() {
       ),
       'entity_type' => 'fieldable_panels_pane',
       'field_name' => 'field_webspark_jumbohero_blurb',
-      'label' => 'Blurb',
+      'label' => 'Subtitle, Blurb, or Byline',
       'required' => 0,
       'settings' => array(
         'linkit' => array(
