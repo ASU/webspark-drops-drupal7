@@ -247,14 +247,13 @@ function backgroundfield_field_widget_form(&$form, &$form_state, $field, $instan
   // expected by image field
   $instance['widget']['settings']['preview_image_style'] = 0;
 
+  $elements = image_field_widget_form($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
   if (module_exists('media')) {
     $elements = media_field_widget_form($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
   }
   else {
     $elements = image_field_widget_form($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
   }
-
-  return $elements;
 }
 
 /**

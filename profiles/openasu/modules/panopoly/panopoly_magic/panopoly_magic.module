@@ -809,7 +809,6 @@ function panopoly_magic_form_fieldable_panels_panes_fieldable_panels_pane_conten
   }
 
   // Add custom validation function for the reusable title
-  //$form['reusable']['admin_title']['#element_validate'][] = 'panopoly_magic_reusable_entity_validate';
   if (!(!empty($form_state['triggering_element']) && $form_state['triggering_element']['#value'] == 'Update Preview')) {
     $form['admin']['admin_title']['#element_validate'][] = 'panopoly_magic_reusable_entity_validate';
   }
