@@ -13,11 +13,13 @@ function tb_megamenu_schema() {
         'not null' => TRUE
       ),
       'block_config' => array(
-        'type' => 'mediumtext',
+        'type' => 'text',
+        'size' => 'medium',
         'not null' => FALSE
       ),
       'menu_config' => array(
-        'type' => 'mediumtext',
+        'type' => 'text',
+        'size' => 'medium',
         'not null' => FALSE
       ),
       'language' => array(
