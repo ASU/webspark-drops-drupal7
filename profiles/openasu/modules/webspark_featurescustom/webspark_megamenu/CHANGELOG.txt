@@ -1,5 +1,9 @@
 Webspark Megamenu 7.x-1.8, 2016-01-25
 ------------------------------
+- Reverted focus indicators from border to outline.
+
+Webspark Megamenu 7.x-1.8, 2016-01-25
+------------------------------
 - Reverting ADA hamburger fix in favor of tb megamenu patch
 - The menu is now backwards tabbable
 

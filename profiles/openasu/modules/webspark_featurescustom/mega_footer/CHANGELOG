@@ -1,3 +1,7 @@
+mega_footer 7.x-1.9, 2018-06-26
+—————————————————————————
+- Reverted focus indicators from border to outline. Kept stronger styling.
+
 mega_footer 7.x-1.8, 2018-05-01
 —————————————————————————
 - Significantly refactored code

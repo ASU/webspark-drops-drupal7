@@ -934,6 +934,7 @@ ul.help-text li.help-title {
 }
 
 /* FOCUS */
+/* [RN 6-12-18] Applied previous styles to outline and removed border properties for accessibility */
 a:focus,
 .ui-widget-content a:focus,
 input:focus,
@@ -943,8 +944,7 @@ a.btn:focus,
 #top-content #tabs .nav-pills > li.active > a:focus,
 h4.ui-accordion-header.ui-state-hover,
 h4.ui-accordion-header:focus {
-	 outline:none;
-	 border:1px solid #4D90FE;
+	 outline: 2px solid #4D90FE;
 	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
 	 box-shadow: 0px 0px 5px  #4D90FE;
 }
