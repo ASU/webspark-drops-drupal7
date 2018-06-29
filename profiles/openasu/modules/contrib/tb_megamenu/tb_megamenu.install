@@ -5,7 +5,6 @@
  */
 function tb_megamenu_schema() {
   $schema = array();
-
   $schema['tb_megamenus'] = array(
     'fields' => array(
       'menu_name' => array(
@@ -14,11 +13,11 @@ function tb_megamenu_schema() {
         'not null' => TRUE
       ),
       'block_config' => array(
-        'type' => 'text',
+        'type' => 'mediumtext',
         'not null' => FALSE
       ),
       'menu_config' => array(
-        'type' => 'text',
+        'type' => 'mediumtext',
         'not null' => FALSE
       ),
       'language' => array(
@@ -30,12 +29,11 @@ function tb_megamenu_schema() {
     ),
     'primary key' => array('menu_name', 'language')
   );
-
   return $schema;
 }
 
 /**
- * Add language field
+ * Add language field.
  */
 function tb_megamenu_update_7101(&$sandbox) {
   // remove existing primary key
@@ -54,5 +52,25 @@ function tb_megamenu_update_7101(&$sandbox) {
   );
   db_add_field('tb_megamenus', 'language', $field, $keys_new);
   // set all existing menus to current language
-  db_query("UPDATE {tb_megamenus} SET language = '" . $GLOBALS['language']->language . "'");
+  db_query("UPDATE {tb_megamenus} SET language = :language",
+      array(':language' => $GLOBALS['language']->language));
+  return t('Added language field and set all existing menus to current language');
+
+}
+
+/**
+ * Deprecated update - rolled into 7101 to prevent possible data loss.
+ */
+function tb_megamenu_update_7102(&$sandbox) {
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function tb_megamenu_update_7103(&$sandbox) {
+  // Increased column sizes so large menus can be saved properly.
+  // The API's db_change_field() is unnecessary because no keys or indices are
+  // affected.
+  db_query('ALTER TABLE {tb_megamenus} MODIFY COLUMN block_config MEDIUMTEXT');
+  db_query('ALTER TABLE {tb_megamenus} MODIFY COLUMN menu_config MEDIUMTEXT');
 }
