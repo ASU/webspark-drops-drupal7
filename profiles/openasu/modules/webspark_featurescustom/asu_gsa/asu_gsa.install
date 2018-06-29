@@ -75,5 +75,5 @@ function asu_gsa_update_7000(&$sandbox) {
   }
   drupal_form_submit($form_id, $form_state);
   watchdog('update', 'asu_gsa_update_7000 was applied.', array(), WATCHDOG_NOTICE);
-  drupal_set_message('If your search results are broken after this ASU GSA module update, please go to /admin/config/search/google_appliance/settings and re-save that form.', 'status');
+  drupal_set_message('If your search results are broken after this ASU GSA module update, please go to /admin/config/search/google_appliance/settings and re-save that form.', 'warning');
 }
