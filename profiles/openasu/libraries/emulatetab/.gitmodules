@@ -1,3 +1,0 @@
-[submodule "site/theme"]
-	path = site/theme
-	url = https://github.com/joelpurra/jekyll-theme-demivolte.git
