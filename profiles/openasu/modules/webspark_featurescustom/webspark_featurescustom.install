@@ -299,3 +299,34 @@ function webspark_featurescustom_update_7010(&$sandbox) {
     drupal_set_message($message, 'warning');
   }
 }
+
+/**
+ * Implements hook_update_N().
+ * + Update Panopoly magic settings to Webspark-first values if values haven't been set.
+ * @param $sandbox
+ */
+function webspark_featurescustom_update_7011(&$sandbox) {
+  // Panopoly Magic settings for Webspark set (form is at /admin/panopoly/settings/panopoly_magic)
+  $panopoly_magic_settings = array(
+    'panopoly_magic_live_preview' => '0',
+    'panopoly_magic_pane_add_preview' => '1',
+    'panopoly_magic_preview_use_legacy_fieldset' => '1',
+    'panopoly_magic_show_panels_styles' => '0',
+    'panopoly_magic_strip_js_from_preview' => '0',
+  );
+  $count = 0;
+  foreach ($panopoly_magic_settings as $key => $value) {
+    if (variable_get($key) == NULL) {
+      variable_set($key, $value);
+      $count++;
+    }
+  }
+  $link = l('Panopoly Magic settings', DRUPAL_ROOT . '/admin/panopoly/settings/panopoly_magic.');
+  if ($count > 0) {
+    watchdog('webspark_featurescustom', '7011 - ' . $count . ' ' . $link . ' were updated by ' . __FUNCTION__ . '.', array(), WATCHDOG_NOTICE);
+    drupal_set_message('Your default ' . $link . ' have been updated to more Webspark-friendly settings.', 'status');
+  }
+  else {
+    drupal_set_message('No ' . $link . ' were updated by ' . __FUNCTION__ . '.', 'status');
+  }
+}
