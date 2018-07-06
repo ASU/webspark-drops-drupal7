@@ -1,5 +1,5 @@
 name = Webspark MegaMenu Academic Add-on
-description = Academic add-on links (degree programs, admissions, student life, about) for the TB Mega Menu module.
+description = [DEPRECATED] - Academic add-on links (degree programs, admissions, student life, about) for the TB Mega Menu module.
 core = 7.x
 package = ASU Deprecated
 version = 7.x-1.1
