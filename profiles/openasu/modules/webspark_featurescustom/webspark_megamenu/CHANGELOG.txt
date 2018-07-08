@@ -2,6 +2,7 @@
 
 ### Webspark Mega Menu 7.x-1.9, 2018-05-15
 - Fix tabbing/arrowing through non-accessible Mega Menu items
+- Reverted focus indicators from border to outline.
 
 ### Webspark Mega Menu 7.x-1.8, 2018-01-25
 - Reverting ADA hamburger fix in favor of tb megamenu patch
