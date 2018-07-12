@@ -49,7 +49,6 @@ function _ldap_authentication_login_form_alter(&$form, &$form_state, $form_id) {
 
     $form['links']['#markup'] = theme('ldap_authentication_user_login_block_links', $vars);
   }
-  ldap_servers_disable_http_check($form);
 
   // Add help information for entering in username/password
   $auth_conf = ldap_authentication_get_valid_conf();
@@ -81,7 +80,7 @@ function _ldap_authentication_form_user_profile_form_alter(&$form, $form_state) 
   $auth_conf = ldap_authentication_get_valid_conf();
   if ($auth_conf && ldap_authentication_ldap_authenticated($form['#user'])) {
     if ($auth_conf->emailOption == LDAP_AUTHENTICATION_EMAIL_FIELD_REMOVE) {
-      $form['account']['mail']['#type'] = 'hidden';
+      $form['account']['mail']['#access'] = FALSE;
     }
     elseif ($auth_conf->emailOption == LDAP_AUTHENTICATION_EMAIL_FIELD_DISABLE) {
       $form['account']['mail']['#disabled'] = TRUE;
@@ -121,7 +120,7 @@ function _ldap_authentication_form_user_profile_form_alter(&$form, $form_state) 
 /**
  * Replaces the email address in $ldap_user with one from the template in
  * $auth_conf.
- * 
+ *
  * @param array $ldap_user
  *   LDAP user entry
  * @param LdapAuthenticationConf $auth_conf
@@ -156,17 +155,21 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
 
   // Default to name
   $entered_name = $form_state['values']['name'];
-  $authname_drupal_property = 'name';
+  $authname_drupal_property = $form_field_name = 'name';
 
   // Email registration module populates name even though user entered email
   if (!empty($form_state['values']['email'])) {
     $entered_name = $form_state['values']['email'];
     $authname_drupal_property = 'mail';
+    $form_field_name = 'email';
   }
 
   // $authname is the name the user is authenticated with from the logon form // patch 1599632
   $authname = $entered_name;
 
+  if (empty($form_state['values']['pass']) || empty ($form_state['values'][$form_field_name])) {
+    return FALSE;
+  }
   /*
    * If a fake form state was passed into this function from
    * _ldap_authentication_user_login_sso(), there will be a value outside of the
@@ -233,6 +236,7 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
    * IV. test credentials and if available get corresponding ldap user and ldap server
    */
   list($authentication_result, $ldap_user, $ldap_server_authenticated_on) = ldap_authentication_test_credentials($auth_conf, $sso_login, $authname, $form_state['values']['pass'], $watchdog_tokens);
+  drupal_alter('ldap_entry', $ldap_user);
   if ($authentication_result != LDAP_AUTHENTICATION_RESULT_SUCCESS) {
     ldap_authentication_fail_response($authentication_result, $auth_conf, $detailed_watchdog_log, $watchdog_tokens);
     return;
@@ -266,9 +270,9 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
   $email_template_tokens = array(
     '@username' => $drupal_accountname,
   );
-  
+
   $email_template_used = FALSE;
-  
+
   /**
    * Ensures that we respect the email template handling settings.
    */
@@ -288,7 +292,7 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
         break;
     }
   }
-  
+
   /**
    * VI. Find or create corresponding drupal account and set authmaps
    *
@@ -354,9 +358,9 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
    * VI.C: existing Drupal account with incorrect email.  fix email if appropriate
    *
    */
-  if ((!($auth_conf->templateUsageNeverUpdate && $email_template_used)) && 
-      $drupal_account_exists && 
-      $drupal_account->mail != $ldap_user['mail'] && 
+  if ((!($auth_conf->templateUsageNeverUpdate && $email_template_used)) &&
+      $drupal_account_exists &&
+      $drupal_account->mail != $ldap_user['mail'] &&
       (
         $auth_conf->emailUpdate == LDAP_AUTHENTICATION_EMAIL_UPDATE_ON_LDAP_CHANGE_ENABLE_NOTIFY ||
         $auth_conf->emailUpdate == LDAP_AUTHENTICATION_EMAIL_UPDATE_ON_LDAP_CHANGE_ENABLE
@@ -386,7 +390,7 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
   if (!$drupal_account_exists) {
 
     // VI.C.1 Do not provision Drupal account if another account has same email.
-    if ($account_with_same_email = user_load_by_mail($ldap_user['mail'])) {
+    if (($auth_conf->ldapUser->acctCreation == LDAP_USER_ACCOUNTS_WITH_SAME_EMAIL_DISABLED) && ($account_with_same_email = user_load_by_mail($ldap_user['mail']))) {
       $error = TRUE;
       /**
        * username does not exist but email does.  Since user_external_login_register does not deal with
@@ -448,7 +452,7 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
     else {
       $user_edit = array('name' => $drupal_accountname, 'status' => 1);
     }
-    
+
     // If the email template was used, we want to pass in the email that was
     // generated so that its not overridden by the provisioner.
     if ($email_template_used) {
@@ -457,7 +461,7 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
 
     // don't pass in ldap user to provisionDrupalAccount, because want to requery with correct attributes needed
     // this may be a case where efficiency dictates querying for all attributes
-    $drupal_account = $auth_conf->ldapUser->provisionDrupalAccount(NULL, $user_edit, NULL, TRUE);
+    $drupal_account = $auth_conf->ldapUser->provisionDrupalAccount(NULL, $user_edit, $ldap_user, TRUE);
 
     if ($drupal_account === FALSE) {
       watchdog('ldap_user', 'Failed to find or create %drupal_accountname on logon.', $watchdog_tokens, WATCHDOG_ERROR);
@@ -654,6 +658,14 @@ function ldap_authentication_test_credentials($auth_conf, $sso_login, $authname,
         * server authentication.
         */
       $credentials_pass = (boolean)($ldap_user);
+    }
+    elseif ($ldap_server->bind_method == LDAP_SERVERS_BIND_METHOD_USER) {
+       /**
+        * With user bind method, the only way we can reach this part of the
+        * code is when the pw has already been checked and $ldap_user could be
+        * loaded, so we're good to go.
+        */
+      $credentials_pass = true;
     }
     else {
       $credentials_pass = ($ldap_server->bind($ldap_user['dn'], $password, FALSE) == LDAP_SUCCESS);

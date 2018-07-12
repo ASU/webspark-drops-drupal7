@@ -18,7 +18,7 @@ function ldap_servers_install() {
  */
 function ldap_servers_uninstall() {
   variable_del('ldap_servers_encryption');
-  variable_del('ldap_servers_require_ssl_for_credentails');
+  variable_del('ldap_servers_require_ssl_for_credentials');
   variable_del('ldap_servers_encrypt_key');
 
 }
@@ -28,6 +28,7 @@ function ldap_servers_uninstall() {
  */
 function ldap_servers_requirements($phase) {
   $requirements = array();
+  $t = get_t();
 
   if ($phase == 'install') {
     $requirements['ldap_extension_loaded']['title'] = t('LDAP Extension Loaded');
@@ -55,6 +56,55 @@ function ldap_servers_requirements($phase) {
       See http://drupal.org/node/1023016. This message will go away when the ldapauth database table is removed.');
   }
   // check that ldapauth not installed.
+
+  // Check enabled LDAP servers are configured and Drupal can connect to them.
+  if ($phase == 'runtime') {
+    $requirements['ldap_servers_enabled'] = array(
+      'title' => $t('LDAP Server status'),
+      'value' =>  $t('Disabled'),
+      'severity' => REQUIREMENT_WARNING,
+    );
+
+    $servers = ldap_servers_get_servers(NULL, 'enabled');
+    if (!empty($servers)) {
+      unset($requirements['ldap_servers_enabled']);
+
+      foreach ($servers as $server) {
+        $server_req_key = 'ldap_servers_sid_' . $server->sid;
+        $server_tokens = array(
+          '@host' => $server->address,
+          '@sid' => $server->sid,
+        );
+        $requirements[$server_req_key] = array(
+          'title' => $t('LDAP Server status: @sid (@host)', $server_tokens),
+          'value' =>  $t('Connection: Failed, check logs for details.', $server_tokens),
+          'severity' => REQUIREMENT_ERROR,
+        );
+
+        try {
+          $connect_result = $server->connect();
+          if ($connect_result == LDAP_SUCCESS) {
+            if ($server->bind_method == LDAP_SERVERS_BIND_METHOD_USER) {
+              // Check bind anonymously if set to bind via user credentials.
+              // The user has already logged in and so their is no dn or password
+              // to check since LDAP doesn't store passwords.
+              $bind_result = $server->bind(NULL, NULL, TRUE);
+            } else {
+              $bind_result = $server->bind();
+            }
+            if ($bind_result == LDAP_SUCCESS) {
+              $requirements[$server_req_key]['value'] = $t('Connection: Success, Bind: Success', $server_tokens);
+              $requirements[$server_req_key]['severity'] = REQUIREMENT_OK;
+            }
+          }
+          $server->disconnect();
+        }
+        catch (Exception $e) {
+        }
+      }
+    }
+  }
+
   return $requirements;
 }
 
@@ -287,7 +337,7 @@ function ldap_servers_update_7107() {
 
 
 function ldap_servers_db_field_exists($table, $field_name) {
-  if (!ldap_servers_db_field_exists($table, $field_name) && !ldap_servers_db_field_exists($table, drupal_strtolower($field_name)) ) {
+  if (!db_field_exists($table, $field_name) && !db_field_exists($table, drupal_strtolower($field_name)) ) {
     return false;
   }
   else {
@@ -300,7 +350,7 @@ function ldap_servers_db_field_exists($table, $field_name) {
 function ldap_servers_update_7108() {
 
   foreach (array('groupFunctionalityUnused', 'groupNested', 'groupSearchAll', 'groupUserMembershipsAttrExists', 'groupDeriveFromDn', 'groupUserMembershipsAttrExists') as $tinyint_field_name) {
-    if (!ldap_servers_ldap_servers_db_field_exists('ldap_servers', $tinyint_field_name))  {
+    if (!ldap_servers_db_field_exists('ldap_servers', $tinyint_field_name))  {
       db_add_field('ldap_servers', $tinyint_field_name, array(
         'type' => 'int',
         'size' => 'tiny',
@@ -653,6 +703,10 @@ function ldap_servers_update_7201() {
   //5. ldap_authentication and ldap_user changes are in variables, not tables
 
   $ldap_authentication_conf_data = variable_get('ldap_authentication_conf', array());
+  if (!is_array($ldap_authentication_conf_data['sids'])) {
+    $ldap_authentication_conf_data['sids'] = array();
+  }
+
   $ldap_user_conf_data = variable_get('ldap_user_conf', array());
 
   $ldap_authentication_sids = array_keys($ldap_authentication_conf_data['sids']);
@@ -707,7 +761,7 @@ function ldap_servers_update_7201() {
       'title' => 'Changes in 7.x-1.x to 7.x-2.x update')
     );
 
-  watchdog('ldap_servers', $summary, WATCHDOG_INFO);
+  watchdog('ldap_servers', $summary, array(), WATCHDOG_INFO);
   return $summary;
 
 
@@ -796,21 +850,41 @@ function ldap_servers_update_7205() {
 }
 
 
-
 /**
  * Add LDAP Referrals fields in schema
  */
 function ldap_servers_update_7206() {
-  db_add_field(
-    'ldap_servers',
-    'followrefs',
-    array(
-      'type' => 'int',
-      'size' => 'tiny',
-      'not null' => FALSE,
-      'default' => 0,
-    )
-  );
+  if (!ldap_servers_db_field_exists('ldap_servers', 'followrefs')) {
+    db_add_field(
+      'ldap_servers',
+      'followrefs',
+      array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => FALSE,
+        'default' => 0,
+      )
+    );
+  }
+}
+
+/**
+ * Fixes a typo in an LDAP variable name.
+ */
+function ldap_servers_update_7207() {
+    if (!is_null($old_var = variable_get('ldap_servers_require_ssl_for_credentails'))) {
+      variable_set('ldap_servers_require_ssl_for_credentials', $old_var);
+      variable_del('ldap_servers_require_ssl_for_credentails');
+    }
+}
+
+/**
+ * Removes HTTPS checking.
+ */
+function ldap_servers_update_7208() {
+  variable_del('ldap_servers_require_ssl_for_credentials');
+  return t('HTTPS validation was removed, if you need mixed mode consider another module such as securelogin for this. Mixed mode is strongly discouraged.');
+
 }
 
 function ldap_servers_install_update_schema($schema, &$change_log) {

@@ -1,4 +1,10 @@
-// $Id$
+IMPORTANT: The module suite that used this module (asu_degrees) has been
+deprecated, so this library has been as well.
+
+If you are still using the ASU Degrees module, please upgrade to its replacement -
+ASU Academic Programs - ASAP.
+
+========================
 
 DESCRIPTION
 ------------------------

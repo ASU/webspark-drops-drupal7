@@ -1,0 +1,6 @@
+name = References UUID
+description = UUID for References project.
+core = 7.x
+package = Fields
+dependencies[] = references
+dependencies[] = uuid

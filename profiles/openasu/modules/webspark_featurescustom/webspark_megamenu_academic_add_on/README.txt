@@ -1,3 +1,14 @@
+UPDATED: Do not use or enable this module because it will be deleted in the next release sometime
+in mid-to-late 2018.
+
+If you are already using this module and want to keep using it, then:
+
+1) copy this module's entire directory to your /sites/all/modules directory, and 
+2) run "drush rr" from the CLI (or go to your site's Modules page (/admin/modules) 
+   and re-save the list of modules.
+
+========================
+
 This module was created to separate the Academic links out from the core Webspark build.
 
 Enabling this feature creates the four academic menu items in the Drupal "Main Menu":

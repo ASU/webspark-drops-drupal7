@@ -16,10 +16,3 @@ files[] = ldap_servers.theme.inc
 files[] = tests/ldap_query.test
 
 configure = admin/config/people/ldap/query
-
-; Information added by Drupal.org packaging script on 2014-01-08
-version = "7.x-2.0-beta8"
-core = "7.x"
-project = "ldap"
-datestamp = "1389150511"
-

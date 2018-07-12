@@ -14,42 +14,42 @@ projects[drupal][version] = 7.59
 ; The Panopoly Foundation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-projects[panopoly_core][version] = 1.54
+projects[panopoly_core][version] = 1.55
 projects[panopoly_core][subdir] = panopoly
 
-projects[panopoly_images][version] = 1.54
+projects[panopoly_images][version] = 1.55
 projects[panopoly_images][subdir] = panopoly
 
-projects[panopoly_theme][version] = 1.54
+projects[panopoly_theme][version] = 1.55
 projects[panopoly_theme][subdir] = panopoly
 
-projects[panopoly_magic][version] = 1.54
+projects[panopoly_magic][version] = 1.55
 projects[panopoly_magic][subdir] = panopoly
 ; Validation error with reusable FPPs. Updated in 1.52; Custom patch different from drupal.org/node/2813395
 projects[panopoly_magic][patch][2813395] = patches/ws-1236_title-cant-reuse-error_2813395.patch
 
-projects[panopoly_widgets][version] = 1.54
+projects[panopoly_widgets][version] = 1.55
 projects[panopoly_widgets][subdir] = panopoly
 
-projects[panopoly_admin][version] = 1.54
+projects[panopoly_admin][version] = 1.55
 projects[panopoly_admin][subdir] = panopoly
 
-projects[panopoly_users][version] = 1.54
+projects[panopoly_users][version] = 1.55
 projects[panopoly_users][subdir] = panopoly
 
 ; The Panopoly Toolset
-projects[panopoly_pages][version] = 1.54
+projects[panopoly_pages][version] = 1.55
 projects[panopoly_pages][subdir] = panopoly
 
-projects[panopoly_wysiwyg][version] = 1.54
+projects[panopoly_wysiwyg][version] = 1.55
 projects[panopoly_wysiwyg][subdir] = panopoly
 
-projects[panopoly_search][version] = 1.54
+projects[panopoly_search][version] = 1.55
 projects[panopoly_search][subdir] = panopoly
 ; Fixes DB update dependency ordering
 ; projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
 
-projects[panopoly_test][version] = 1.54
+projects[panopoly_test][version] = 1.55
 projects[panopoly_test][subdir] = panopoly
 
 projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.46.patch
@@ -97,11 +97,9 @@ projects[job_scheduler][version] = 2.0
 projects[job_scheduler][type] = module
 projects[job_scheduler][subdir] = contrib
 
-projects[ldap][version] = 2.0-beta8
+projects[ldap][version] = 2.3
 projects[ldap][type] = module
 projects[ldap][subdir] = contrib
-;; patch - see https://drupal.org/node/2182413, comment #10 - remove upon ldap update beyond beta8
-projects[ldap][patch][2182413] = http://cgit.drupalcode.org/ldap/patch/?id=fe3a3d56ffebc9bd551c6d83a03172fae13517c3
 
 projects[references][version] = 2.1
 projects[references][type] = module

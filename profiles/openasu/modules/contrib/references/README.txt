@@ -1,19 +1,39 @@
+CONTENTS OF THIS FILE
+---------------------
+   
+ * Introduction
+ * Requirements
+ * Installation
+ * Goals and limitations
+ * Configuration
+ * Maintainers
 
--- SUMMARY --
 
-The References project contains straight ports of the node_reference and 
+INTRODUCTION
+------------
+
+The References project contains straight ports of the node_reference and
 user_reference modules to the Drupal 7 API.
 
 For a full description of the module, visit the project page:
-  http://drupal.org/project/references
-  
--- REQUIREMENTS --
+http://drupal.org/project/references
 
-None. 
 
-CCK for Drupal 7 is /not/ a requirement for these modules.
+REQUIREMENTS
+------------
 
--- GOALS AND LIMITATIONS -- 
+No special requirements
+
+
+INSTALLATION
+------------
+
+Install as you would normally install a contributed Drupal module. See:
+https://drupal.org/documentation/install/modules-themes/modules-7 for further
+information.
+
+GOALS AND LIMITATIONS
+---------------------
   
 It is not envisioned as a final solution, but as a way to actually deploy 
 Drupal 7 from release day on sites using node and user references much as on 
@@ -27,10 +47,22 @@ someday be project Relation:
 In short: use these modules now, but be ready to migrate to a different entity
 referencing solution during the D7 life cycle.
 
--- CONTACT --
+
+CONFIGURATION
+-------------
+
+ * There is no configuration.
+
+
+MAINTAINERS
+-----------
 
 Current maintainers:
-
-* References: Frederic G. MARAND (fgm) - http://drupal.org/user/27985
-* CCK D7: Yves CHEDEMOIS (yched) - http://drupal.org/user/39567
-
+ * Alexandru Andrascu (Alex Andrascu) - https://www.drupal.org/user/429248
+ * Karen Stevenson (KarenS) - https://www.drupal.org/user/45874
+ * Nick Veenhof (Nick_vh) - https://www.drupal.org/user/122682
+ * Renato Gonçalves (RenatoG) - https://www.drupal.org/user/3326031
+ * Thomas De Beuckelaer (Thomasdbcklr) - https://www.drupal.org/user/2945061
+ * Frédéric G. Marand (fgm) - https://www.drupal.org/user/27985
+ * Niels Aers (nielsaers) - https://www.drupal.org/user/752444
+ * Yves Chedemois (yched) - https://www.drupal.org/user/39567
