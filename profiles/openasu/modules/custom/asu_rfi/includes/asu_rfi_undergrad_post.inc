@@ -167,7 +167,14 @@ function asu_rfi_undergrad_post($data)
   } else {
     $country = '';
   }
-  
+
+  //enterpriseclientid for EdPlus Leads
+  if (isset($data['enterpriseclientid'])) {
+    $enterpriseclientid = $data['enterpriseclientid'];
+  } else {
+    $enterpriseclientid = '';
+  }
+
   if($location == "no_preference" && sizeof($availableCampuses) == 1 && ($availableCampuses[0] == "Online" || $availableCampuses[0] == "online")){
     $location = "Online";
   }
@@ -209,7 +216,7 @@ function asu_rfi_undergrad_post($data)
     $managedOnline = asu_rfi_check_managed_online($prog_code, $asuOnlineList);
 
     if ($managedOnline == true) {
-      $fields = asu_rfi_online_fields($fields, $nodeid, $ipAddress, $college_code, $type_of_form);
+      $fields = asu_rfi_online_fields($fields, $nodeid, $ipAddress, $college_code, $type_of_form, $enterpriseclientid);
 
       $body = json_encode($fields);
 
@@ -342,7 +349,7 @@ function asu_rfi_correct_campus_idu($campus)
   return $campusId;
 }
 
-function asu_rfi_online_fields($fields, $nodeid, $ip, $college_code, $type_of_form)
+function asu_rfi_online_fields($fields, $nodeid, $ip, $college_code, $type_of_form, $enterpriseclientid)
 {
 
   $fieldsUpdated = array(
@@ -353,10 +360,12 @@ function asu_rfi_online_fields($fields, $nodeid, $ip, $college_code, $type_of_fo
     'phone' => $fields['phone'],
     'prod_test_flag' => $fields['prod_test_flag'],
     'base_url' => $fields['base_url'],
+    'origin_uri' => $GLOBALS['base_url'] . '/' . request_path(),
     'remote_nid' => $nodeid,
     'ldetect_v' => $ip,
     'campaign' => $fields['base_url'] . '-' . $type_of_form . '-UG',
-    'sourceid' => $nodeid,
+    'sourceid' => $nodeid, // Overwritten with API key in Middleware.
+    'enterpriseclientid' => $enterpriseclientid,
   );
 
   return $fieldsUpdated;

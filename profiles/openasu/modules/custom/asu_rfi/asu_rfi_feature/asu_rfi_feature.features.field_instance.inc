@@ -10,7 +10,7 @@
 function asu_rfi_feature_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_address'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_address'.
   $field_instances['node-asu_rfi-field_rfi_address'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -56,7 +56,53 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_city'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_campus'.
+  $field_instances['node-asu_rfi-field_rfi_campus'] = array(
+    'bundle' => 'asu_rfi',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 9,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_rfi_campus',
+    'label' => 'Campus',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 3,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_rfi-field_rfi_city'.
   $field_instances['node-asu_rfi-field_rfi_city'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -102,7 +148,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_college_code'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_college_code'.
   $field_instances['node-asu_rfi-field_rfi_college_code'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -148,7 +194,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_college_name'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_college_name'.
   $field_instances['node-asu_rfi-field_rfi_college_name'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -199,7 +245,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_country'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_country'.
   $field_instances['node-asu_rfi-field_rfi_country'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -245,7 +291,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_dob'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_dob'.
   $field_instances['node-asu_rfi-field_rfi_dob'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -291,7 +337,53 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_email'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_domain'.
+  $field_instances['node-asu_rfi-field_rfi_domain'] = array(
+    'bundle' => 'asu_rfi',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 4,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_rfi_domain',
+    'label' => 'Domain',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_rfi-field_rfi_email'.
   $field_instances['node-asu_rfi-field_rfi_email'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -337,7 +429,60 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_error_message'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_enterpriseclientid'.
+  $field_instances['node-asu_rfi-field_rfi_enterpriseclientid'] = array(
+    'bundle' => 'asu_rfi',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 35,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_rfi_enterpriseclientid',
+    'label' => 'GA Enterprise Client ID',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 34,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_rfi-field_rfi_error_message'.
   $field_instances['node-asu_rfi-field_rfi_error_message'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -383,7 +528,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_first_name'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_first_name'.
   $field_instances['node-asu_rfi-field_rfi_first_name'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -429,7 +574,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_form_name'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_form_name'.
   $field_instances['node-asu_rfi-field_rfi_form_name'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -475,7 +620,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_form_type'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_form_type'.
   $field_instances['node-asu_rfi-field_rfi_form_type'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -521,7 +666,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_international'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_international'.
   $field_instances['node-asu_rfi-field_rfi_international'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -567,7 +712,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_ip_address'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_ip_address'.
   $field_instances['node-asu_rfi-field_rfi_ip_address'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -619,7 +764,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_last_name'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_last_name'.
   $field_instances['node-asu_rfi-field_rfi_last_name'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -665,142 +810,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_domain'
-  $field_instances['node-asu_rfi-field_rfi_domain'] = array(
-    'bundle' => 'asu_rfi',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 4,
-      ),
-      'featured' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_rfi_domain',
-    'label' => 'Domain',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 5,
-    ),
-  );
-  
-  // Exported field_instance: 'node-asu_rfi-field_rfi_phone'
-  $field_instances['node-asu_rfi-field_rfi_phone'] = array(
-    'bundle' => 'asu_rfi',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 4,
-      ),
-      'featured' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_rfi_phone',
-    'label' => 'Phone',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 5,
-    ),
-  );
-
-  $field_instances['node-asu_rfi-field_rfi_campus'] = array(
-    'bundle' => 'asu_rfi',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 9,
-      ),
-      'featured' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_rfi_campus',
-    'label' => 'Campus',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 3,
-    ),
-  );
+  // Exported field_instance: 'node-asu_rfi-field_rfi_location'.
   $field_instances['node-asu_rfi-field_rfi_location'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -846,7 +856,53 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_program'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_phone'.
+  $field_instances['node-asu_rfi-field_rfi_phone'] = array(
+    'bundle' => 'asu_rfi',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 4,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_rfi_phone',
+    'label' => 'Phone',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_rfi-field_rfi_program'.
   $field_instances['node-asu_rfi-field_rfi_program'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -892,7 +948,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_program_name'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_program_name'.
   $field_instances['node-asu_rfi-field_rfi_program_name'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -938,7 +994,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_prospect_level'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_prospect_level'.
   $field_instances['node-asu_rfi-field_rfi_prospect_level'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -989,7 +1045,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_province'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_province'.
   $field_instances['node-asu_rfi-field_rfi_province'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -1035,7 +1091,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_question'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_question'.
   $field_instances['node-asu_rfi-field_rfi_question'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -1081,7 +1137,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_sms_opted'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_sms_opted'.
   $field_instances['node-asu_rfi-field_rfi_sms_opted'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -1132,7 +1188,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_start_term'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_start_term'.
   $field_instances['node-asu_rfi-field_rfi_start_term'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -1178,7 +1234,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_start_term_code'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_start_term_code'.
   $field_instances['node-asu_rfi-field_rfi_start_term_code'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -1224,7 +1280,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_state'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_state'.
   $field_instances['node-asu_rfi-field_rfi_state'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -1270,7 +1326,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_student_type'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_student_type'.
   $field_instances['node-asu_rfi-field_rfi_student_type'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -1316,7 +1372,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_submission_status'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_submission_status'.
   $field_instances['node-asu_rfi-field_rfi_submission_status'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -1364,7 +1420,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_uniquedata'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_uniquedata'.
   $field_instances['node-asu_rfi-field_rfi_uniquedata'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -1410,7 +1466,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_veteran'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_veteran'.
   $field_instances['node-asu_rfi-field_rfi_veteran'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -1456,7 +1512,7 @@ function asu_rfi_feature_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-asu_rfi-field_rfi_zipcode'
+  // Exported field_instance: 'node-asu_rfi-field_rfi_zipcode'.
   $field_instances['node-asu_rfi-field_rfi_zipcode'] = array(
     'bundle' => 'asu_rfi',
     'default_value' => NULL,
@@ -1504,21 +1560,24 @@ function asu_rfi_feature_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Domain');
   t('Address');
+  t('Campus');
   t('City');
   t('College code');
   t('College name');
   t('Country');
   t('DOB');
+  t('Domain');
   t('Email');
   t('Error message from MW');
   t('First name');
   t('Form name');
   t('Form type');
+  t('GA Enterprise Client ID');
   t('IP address');
   t('International');
   t('Last name');
+  t('Location');
   t('Phone');
   t('Program');
   t('Program name');
@@ -1534,8 +1593,6 @@ function asu_rfi_feature_field_default_field_instances() {
   t('Veteran');
   t('Zipcode');
   t('uniquedata');
-  t('Campus');
-  t('Location');
 
   return $field_instances;
 }

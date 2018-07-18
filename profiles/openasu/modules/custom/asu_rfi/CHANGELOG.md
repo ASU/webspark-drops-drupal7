@@ -1,5 +1,9 @@
 # ASU Request for Information Changelog
 
+### ASU RFI 7.x-1.12, 2017-07-17
+- Update Lead API Programs URL
+- Update Lead API submissions to Lead API 4.0 and handling to support.
+
 ### ASU RFI 7.x-1.11, 2018-05-24
 - Add RFI-specific jQuery to module instead of Innovation theme
 - Fix program name text when email is rendered and sent
