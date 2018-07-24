@@ -27,7 +27,7 @@ function asu_rfi_undergrad_email($prog_plan, $e_email, $humanName)
       $degree = $ball_arr["Degree"];
       $desc = $ball_arr["DescrlongExtns"];
 
-      if (isset($name)) {
+      if (isset($name) && strstr($name, ', ')) {
         list($degree_name_before_comma, $degree_name_after_comma) = explode(", ", $name);
         $name = $degree_name_before_comma;
       }
