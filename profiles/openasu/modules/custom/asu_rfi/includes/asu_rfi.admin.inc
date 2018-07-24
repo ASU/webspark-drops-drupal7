@@ -16,7 +16,7 @@ function asu_rfi_admin_settings($form_state)
 
   $form['form_stage'] = array(
     '#type' => 'item',
-    '#markup' => t('<div class="rfi_note">Important: The RFI submissions will not be posted to Sales force via Middleware unless Authentication code has been added. You can request the authentication key from <a href="https://webforms.asu.edu/content/access-rfi-middleware-request">here</a>. Note that RFI submissions will not be posted to Sales force via Middle ware unless this code has been added</div>'),
+    '#markup' => t('<div class="rfi_note">Important: The RFI submissions will not be posted to Salesforce via Middleware unless Authentication code has been added. You can request the authentication key from <a href="https://webforms.asu.edu/content/access-rfi-middleware-request">here</a>. Note that RFI submissions will not be posted to Sales force via Middle ware unless this code has been added</div>'),
   );
 
   $form['asu_rfi_form_access'] = array(
@@ -44,7 +44,7 @@ function asu_rfi_admin_settings($form_state)
     '#title' => t('Authentication code'),
     '#default_value' => variable_get('asu_rfi_form_auth_key'),
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
-    '#description' => t("Specifiy the form authentication key from middle wear. You can request the authentication key from <a href='https://webforms.asu.edu/content/access-rfi-middleware-request'>here</a>. Note that RFI submissions will not be posted to Sales force via Middle ware unless this code has been added"),
+    '#description' => t("Specifiy the form authentication key from Middleware. You can request the authentication key from <a href='https://webforms.asu.edu/content/access-rfi-middleware-request'>here</a>. Note that RFI submissions will not be posted to Salesforce via Middleware unless this code has been added"),
     '#required' => FALSE,
   );
 
@@ -54,7 +54,7 @@ function asu_rfi_admin_settings($form_state)
     '#title' => t('Email(s) for error notification'),
     '#default_value' => variable_get('asu_rfi_error_email', NULL),
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
-    '#description' => t("Email ID(s) of the personnel to be notified if site cannot post RFI submissions to salesforce for more than 2 days."),
+    '#description' => t("Email ID(s) of the personnel to be notified if site cannot post RFI submissions to Salesforce for more than 2 days."),
     '#size' => 60,
     '#maxlength' => 150,
   );

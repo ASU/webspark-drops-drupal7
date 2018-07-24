@@ -158,6 +158,13 @@ function asu_rfi_grad_post($data)
     $location = '';
   }
 
+  //enterpriseclientid for use in EdPlus Leads submissions.
+  if (isset($data['enterpriseclientid'])) {
+    $enterpriseclientid = $data['enterpriseclientid'];
+  } else {
+    $enterpriseclientid = '';
+  }
+
   //Get siteDomain variable to see if it's dev or qa site.
   global $base_url;
 
@@ -237,10 +244,12 @@ function asu_rfi_grad_post($data)
         'phone' => $data['phone'],
         'prod_test_flag' => $form_mode,
         'base_url' => $data['domain'],
+        'origin_uri' => $GLOBALS['base_url'] . '/' . request_path(),
         'remote_nid' => $nodeid,
         'ldetect_v' => $ipAddress,
         'campaign' => $data['domain'] . '-' . $type_of_form . '-G',
-        'sourceid' => $nodeid,
+        'sourceid' => $nodeid, // Overwritten with API key in Middleware.
+        'enterpriseclientid' => $enterpriseclientid,
       );
 
       $submission_data = json_encode($submission_data);
