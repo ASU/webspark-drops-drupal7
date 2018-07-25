@@ -1,6 +1,7 @@
 name = ASU Now Tags
 core = 7.x
-package = ASU
+; Added to staging module package 
+package = "ASU Staging"
 dependencies[] = features
 dependencies[] = image
 dependencies[] = list

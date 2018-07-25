@@ -1,6 +1,7 @@
 name = ASU Now SAF Taxonomy
 core = 7.x
-package = ASU
+; Added to staging module package 
+package = "ASU Staging"
 dependencies[] = features
 dependencies[] = list
 dependencies[] = options
