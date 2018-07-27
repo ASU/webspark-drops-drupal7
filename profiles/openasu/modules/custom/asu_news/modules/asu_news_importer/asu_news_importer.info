@@ -1,8 +1,9 @@
 name = ASU News Importer
 description = Import ASU News via Feeds.
 core = 7.x
+version = "7.x-3.0-alpha1"
 ; Added to staging module package 
-package = "ASU Staging"
+package = "ASU Experimental"
 dependencies[] = asu_feeds2
 dependencies[] = ctools
 dependencies[] = defaultconfig
