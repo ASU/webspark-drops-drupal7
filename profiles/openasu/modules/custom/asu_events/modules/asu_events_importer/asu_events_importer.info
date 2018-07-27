@@ -1,0 +1,27 @@
+name = ASU Events Importer
+description = Import ASU Events via Feeds.
+core = 7.x
+; Added to staging module package 
+package = "ASU Staging"
+dependencies[] = asu_feeds2
+dependencies[] = ctools
+dependencies[] = defaultconfig
+dependencies[] = features
+dependencies[] = feeds_crawler
+features[ctools][] = feeds:feeds_importer_default:1
+features[ctools][] = feeds_tamper:feeds_tamper_default:2
+features[ctools][] = strongarm:strongarm:1
+features[defaultconfig][] = strongarm:pathauto_node_asu_event_pattern
+features[features_api][] = api:2
+features[feeds_importer][] = asu_events_importer
+features[feeds_tamper][] = asu_events_importer-xpathparser_0-rewrite
+features[feeds_tamper][] = asu_events_importer-xpathparser_1-html_entity_decode
+features[feeds_tamper][] = asu_events_importer-xpathparser_1-html_entity_decode_1
+features[feeds_tamper][] = asu_events_importer-xpathparser_31-rewrite
+features[feeds_tamper][] = asu_events_importer-xpathparser_55-explode
+features[feeds_tamper][] = asu_events_importer-xpathparser_56-explode
+features[variable][] = pathauto_node_asu_event_pattern
+features_exclude[dependencies][feeds] = feeds
+features_exclude[dependencies][feeds_tamper] = feeds_tamper
+features_exclude[dependencies][feeds_xpathparser] = feeds_xpathparser
+features_exclude[dependencies][strongarm] = strongarm

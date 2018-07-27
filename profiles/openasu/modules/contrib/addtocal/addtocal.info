@@ -1,0 +1,13 @@
+name = Add to Cal
+description = A field formatter providing a widget for exporting events to various formats.
+core = 7.x
+
+dependencies[] = date
+dependencies[] = entity
+
+; Information added by Drupal.org packaging script on 2016-08-29
+version = "7.x-1.0"
+core = "7.x"
+project = "addtocal"
+datestamp = "1472493842"
+

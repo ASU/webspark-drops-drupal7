@@ -233,17 +233,30 @@ projects[views_bootstrap][version] = 3.1
 projects[views_bootstrap][type] = module
 projects[views_bootstrap][subdir] = contrib
 
-; ASU RFI make file contents
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; ASU Custom (modules/custom) module dependencies
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+; ASU News + Events dependencies
+projects[addtocal][version] = 1.0
+projects[addtocal][type] = module
+projects[addtocal]subdir] = contrib
+
+projects[feeds_tamper][version] = 1.2
+projects[feeds_tamper][type] = module
+projects[feeds_tamper][subdir] = contrib
+
+projects[field_ellipsis][version] = 1.4
+projects[field_ellipsis][type] = module
+projects[field_ellipsis][subdir] = contrib
+
+; ASU RFI dependencies - make file contents
 ; Upload multidev and patch it
-
 projects[multiblock][version] = 1.1
 projects[multiblock][type] = module
 projects[multiblock][subdir] = contrib
 projects[multiblock][patch][] = https://www.drupal.org/files/issues/multiblock_cache-2185235-5.patch
 projects[multiblock][patch][] = https://www.drupal.org/files/fix_config_per_instance-1370966-5.patch
-
-; Added RFI dependencies here, vs. in openasu.make
 
 projects[views_data_export][version] = 3.0-beta9
 projects[views_data_export][type] = module

@@ -3,6 +3,7 @@
  * @file
  *   Utilizes Feeds module architecture to import and process feeds.
  */
+
 /**
  * Implementation of hook_feeds_plugins().
  */
@@ -144,4 +145,10 @@ function theme_asu_feeds2_example_career_table($vars) {
         <li><i class="fa fa-leaf text-green"></i> Green Occupation</li>
       </ul>';
 
+}
+
+function asu_feeds2_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'feeds_tamper' && $plugin_type == 'plugins') {
+    return 'plugins/';
+  }
 }
