@@ -1,4 +1,103 @@
-Webspark 1.53.1 (Topeka) release, 2018-05-14 
+Webspark 1.55 (Oregon) release, 2018-07-27
+-------------------------------------------------
+- Webspark core
+
+    * Panopoly (v1.55) - See the latest release notes for more information
+    * Webspark Featurescustom (v1.8) - Upon running update.php:
+        * Modernizr library + module will be automatically uninstalled
+        * Panopoly Magic settings that haven't been previously customized will be updated to Webspark-friendly settings
+    * Font Awesome <i> tags were replaced with <span> for better accessibility
+    * Removed obsolete patch files no longer be used in Drush make build process
+    * Updated Webspark documentation README.md
+
+- Web standards components in Webspark
+
+    * ASU News & Events (v3.0-alpha1) - PLEASE READ THE FOLLOWING!
+        * This is an early alpha release of the replacement for the existing Webspark News & Events modules.
+        * Do not use this module in a live/production site until it is out of its alpha state. That announcement will come in future release notes and in the #webstandards Slack channel.
+        * When testing, do not enable this module alongside the current Webspark News & Events modules. This will likely lead to unexpected results. If you have those modules enabled, first do the following:
+            * Go to /import and delete any imported news and events items.
+            * Disable and uninstall the Webspark News & Events modules.
+        * If you have any questions or concerns about this process, please email webconsulting@asu.edu for assistance.
+    * ASU Academic Programs (v2.3)
+        * Added CHANGELOG.txt file to module
+    * ASU DIRS (v1.10)
+        * Fixed mapping of Twitter field for profile imports
+        * Fixed configuration for proper HTML field filtering
+        * Added profile video importing and display functionality
+        * Added asu_isearch_prepare_migration hook to allow for the programatic modification of the migrated entity before it is saved by Drupal
+        * Fixed mapping of gradFaculties field for profile imports
+    * ASU GSA (v1.1)
+        * Fixed issues preventing the contrib Google Appliance module from being updated above v1.14.
+        * Removed ASU GSA admin configuration settings page (this functionality can be handled by the Google Appliance)
+        * Added Local Search option to Google Appliance settings page.
+        * General cleanup/maintenance/refactoring of code and added CHANGELOG.txt file
+    * ASU RFI (v1.10)
+        * Moved RFI-specific jQuery from the Innovation theme to the project's folder
+        * Fixed program name text when email is rendered and sent
+    * Innovation theme (v1.11)
+        * Added Administration Menu module support when used with the sticky menu
+        * Added native CSS sticky menu support for the main ASU menu
+        * Duplicate site title that showed up in the header region for new sites has been deduplicated
+        * Removed legacy EOT font support to improve font rendering in Windows environments
+        * Set correct colors for :focus without :hover for keyboard users
+    * Mega Footer (v1.9)
+        * Added Tumbler social media icon
+        * Fixed social media icon URL "field is required" bug
+        * Made Font Awesome icons web accessible
+        * Improved error messaging when entering bad configuration values
+        * Set correct colors for :focus without :hover for keyboard users
+    * Webspark Hero (v1.6), Jumbohero (v1.5)
+        * Added help text and changed the name of blurb field to help avoid confusion about which field to use for different types of messaging
+    * Webspark Megamenu (v1.9)
+        * Improved tabbing through Megamenu with keyboard
+        * Megamenu subitems now correctly hover over the Web standards main menu
+        * Fixed background color
+        * Set correct colors for :focus without :hover for keyboard users
+        * Layout changes done through the TB Megamenu UI to menus with more than 65KB of data will now save and render
+    * UTO Carousel (v1.7)
+        * Set correct colors for :focus without :hover for keyboard users
+
+- Contrib module updates
+
+    NOTE: If you have 1) manually installed any of the following contrib modules in the /sites folder, and 2) the versions below are the same or newer, then delete them from the /sites directory and do a registry rebuild on the site ASAP to improve site performance.
+
+    - Managed by Panopoly
+
+    * Apps (v1.1)
+    * Breakpoints (v1.6)
+    * CTools (v1.14)
+    * Date (v2.10)
+    * Date Popup Authored (v1.2)
+    * Devel (v1.6)
+    * Field Group (v1.6)
+    * Libraries (v2.3)
+    * Migrate (v2.9)
+    * Module Filter (v2.1)
+    * Views (v3.20)
+    * Views Bulk Operations (v3.4)
+
+    - Managed by Webspark
+
+    * LDAP (v2.3)
+    * References (v2.2+dev-29)
+    * SMTP (v1.7+dev-2)
+    * Views Data Export (v3.2)
+
+- Contrib project deletions
+
+    If any of the following projects need to remain in your Webspark site, place a copy of those project directories in their appropriate end-user managed directories under /sites (ex. sites/all/themes, sites/all/libraries, or sites/all/modules).
+
+    * Modernizr (module and library)
+
+- Webspark project deprecations
+
+    The following Webspark projects have been deprecated and will be removed in the next Webspark release.
+
+    * Webspark Megamenu Academic Add-on
+
+
+Webspark 1.53.1 (Topeka) release, 2018-05-14
 -------------------------------------------------
 - Webspark core
 
