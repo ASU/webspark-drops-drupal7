@@ -1,7 +1,7 @@
 name = ASU Now SAF Taxonomy
 core = 7.x
-version = "7.x-3.0-alpha1"
-; Added to staging module package 
+version = "7.x-3.0-rc1"
+; Added to staging module package
 package = "ASU Experimental"
 dependencies[] = features
 dependencies[] = list
