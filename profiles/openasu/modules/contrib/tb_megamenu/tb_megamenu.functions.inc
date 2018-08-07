@@ -426,7 +426,7 @@ function tb_megamenu_edit_block_config(&$block_config) {
     $block_config['style'] = "";
   }
   if (!isset($block_config['auto-arrow'])) {
-    $block_config['auto-arrow'] = true;
+    $block_config['auto-arrow'] = TRUE;
   }
   if (!isset($block_config['duration'])) {
     $block_config['duration'] = 400;

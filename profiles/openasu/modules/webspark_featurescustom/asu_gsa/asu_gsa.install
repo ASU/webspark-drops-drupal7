@@ -1,10 +1,79 @@
 <?php
 
+/**
+ * Implements hook_enable()
+ */
 function asu_gsa_enable() {
   $js = 'ASUHeader.gsa = True';
-  drupal_add_js($js, array('type' => 'inline', 'scope' => 'header', 'group' => JS_THEME, 'weight' => -10));
-  variable_set('google_appliance_hostname','http://search.asu.edu');
-  variable_set('google_appliance_frontend','asu_frontend');
-  variable_set('google_appliance_search_title','ASU Search Results');
+  drupal_add_js($js, array(
+    'type' => 'inline',
+    'scope' => 'header',
+    'group' => JS_THEME,
+    'weight' => -10
+  ));
+  variable_set('google_appliance_hostname', 'http://search.asu.edu');
+  variable_set('google_appliance_frontend', 'asu_frontend');
+  variable_set('google_appliance_search_title', 'ASU Search Results');
 }
 
+/**
+ * Implements hook_update_dependencies().
+ */
+function asu_gsa_update_dependencies() {
+  $dependencies['asu_gsa'][7000] = array(
+    'google_appliance' => 7100,
+  );
+}
+
+/**
+ * Implements hook_update_N().
+ * + Resave all Google Appliance admin settings after that module is updated from v1.12 to v1.14.
+ */
+function asu_gsa_update_7000(&$sandbox) {
+  // Google Appliance doesn't rebuild its form settings after it adds many
+  // values between v1.12 and v1.14. This takes care of that issue.
+
+  // Load existing settings values
+  module_load_include('inc', 'google_appliance', 'google_appliance.admin');
+  $form_id = 'google_appliance_admin_settings';
+  $form = drupal_get_form($form_id);
+
+  $updates = array(
+    'connection_info' => array(
+      'google_appliance_hostname' => $form['connection_info']['google_appliance_hostname']['#default_value'],
+      'google_appliance_collection' => $form['connection_info']['google_appliance_collection']['#default_value'],
+      'google_appliance_frontend' => $form['connection_info']['google_appliance_frontend']['#default_value'],
+      'google_appliance_timeout' => $form['connection_info']['google_appliance_timeout']['#default_value'],
+    ),
+    'query_param' => array(
+      'google_appliance_autofilter' => $form['query_param']['google_appliance_autofilter']['#default_value'],
+      'google_appliance_query_inspection' => $form['query_param']['google_appliance_query_inspection']['#default_value'],
+    ),
+    'display_settings' => array(
+      'google_appliance_drupal_path' => $form['display_settings']['google_appliance_drupal_path']['#default_value'],
+      'google_appliance_search_title' => $form['display_settings']['google_appliance_search_title']['#default_value'],
+      'google_appliance_results_per_page' => $form['display_settings']['google_appliance_results_per_page']['#default_value'],
+      'google_appliance_spelling_suggestions' => $form['display_settings']['google_appliance_spelling_suggestions']['#default_value'],
+      'google_appliance_advanced_search_reporting' => $form['display_settings']['google_appliance_advanced_search_reporting']['#default_value'],
+      'google_appliance_sitelinks_search_box' => $form['display_settings']['google_appliance_sitelinks_search_box']['#default_value'],
+      'google_appliance_onebox_modules' => $form['display_settings']['google_appliance_onebox_modules']['#default_value'],
+      'google_appliance_error_gsa_no_results' => $form['display_settings']['google_appliance_error_gsa_no_results']['#default_value'],
+      'google_appliance_error_curl_error' => $form['display_settings']['google_appliance_error_curl_error']['#default_value'],
+      'google_appliance_error_lib_xml_parse_error' => $form['display_settings']['google_appliance_error_lib_xml_parse_error']['#default_value'],
+    ),
+  );
+  $form_state = array(
+    'values' => array(),
+  );
+
+  // Re-save values.
+  foreach ($updates as $parent => $nested) {
+    foreach ($nested as $key => $value) {
+      $form_state['values'][$parent][$key] = $value;
+      variable_set($key, $value);
+    }
+  }
+  drupal_form_submit($form_id, $form_state);
+  watchdog('update', 'asu_gsa_update_7000 was applied.', array(), WATCHDOG_NOTICE);
+  drupal_set_message('If your search results are broken after this ASU GSA module update, please go to /admin/config/search/google_appliance/settings and re-save that form.', 'warning');
+}

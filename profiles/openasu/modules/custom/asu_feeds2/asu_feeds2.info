@@ -1,0 +1,20 @@
+name = "ASU Feeds"
+; Module formerly known as "ASU Feeds 2"
+description = "Integrate ASU data with Drupal using the Feeds module."
+version = "7.x-3.0-alpha1"
+; Added to staging module package 
+package = "ASU Experimental"
+core = 7.x
+php = 5.2
+dependencies[] = feeds
+dependencies[] = feeds_import
+dependencies[] = feeds_tamper
+dependencies[] = feeds_tamper_ui
+dependencies[] = feeds_ui
+dependencies[] = feeds_xpathparser
+dependencies[] = pathauto
+dependencies[] = strongarm
+files[] = includes/ASUeAdvisorFeedsFetcher.inc
+files[] = includes/ASUeAdvisorTransferFeedParser.inc
+stylesheets[all][] = css/asu_feeds2.css
+scripts[] = js/asu_feeds2.js

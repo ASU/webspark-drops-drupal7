@@ -17,13 +17,9 @@ Requirements
 
 Configuration
 =============
-There is no configuration for the CAS server. Simply enable the module.
+Configuration can be found at /admin/config/people/cas_server, but the module
+will start working right away without any configuration.
 
 If your Drupal site is https://site.example.com/, other CAS enabled
 applications should be configured to use https://site.example.com/cas as the
 CAS server.
-
-Caveats & Limitations
-=====================
-
-Single Sign-Out is not currently supported.

@@ -43,8 +43,7 @@ Feature: Link to page on the site
       #And I press "Publish"
       And I press "edit-submit"
     Then I should see "https://drupal.org/project/panopoly" in the "a" element with the "title" attribute set to "Testing title" in the "Bryant Content" region
-    When I click "https://drupal.org/project/panopoly"
-    Then the "h1" element should contain "Panopoly"
+      And I should see "https://drupal.org/project/panopoly" in the "a" element with the "href" attribute set to "https://drupal.org/project/panopoly" in the "Bryant Content" region
 
   @api @panopoly_admin @webspark_added
   Scenario: Resetting the Innovation theme Always Show Page Title setting

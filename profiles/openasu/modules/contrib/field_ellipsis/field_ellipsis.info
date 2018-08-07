@@ -1,0 +1,22 @@
+name = Field ellipsis
+description = Defines simple text field types ellipsis at the end.
+package = Fields
+version = VERSION
+core = 7.x
+dependencies[] = field
+
+
+
+; Information added by drupal.org packaging script on 2012-05-04
+version = "7.x-1.0"
+core = "7.x"
+project = "field_ellipsis"
+datestamp = "1336140055"
+
+
+; Information added by Drupal.org packaging script on 2016-04-04
+version = "7.x-1.4"
+core = "7.x"
+project = "field_ellipsis"
+datestamp = "1459784341"
+

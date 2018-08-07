@@ -62,14 +62,10 @@ dependencies[] = fontawesome
 dependencies[] = google_appliance
 dependencies[] = maxlength
 dependencies[] = panels_tabs
-;dependencies[] = quicktabs
 dependencies[] = uuid_features
 dependencies[] = features_override
 dependencies[] = video_embed_field
 dependencies[] = wysiwyg_template
-
-; OpenASU - Toolset
-dependencies[] = modernizr
 
 ; OpenASU - Custom
 dependencies[] = asu_brand

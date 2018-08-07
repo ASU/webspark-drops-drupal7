@@ -1,0 +1,16 @@
+<?php
+/**
+ * @file
+ * Install and update hooks.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function asu_feeds2_install() {
+  $modules = array('feeds_tamper', 'feeds_xpathparser', 'feeds_tamper_ui', 'feeds_crawler', 'feeds', 'feeds_import', 'feeds_ui');
+  $enable_dependencies = TRUE; // Whether or not to enable dependant modules
+
+  module_enable($modules, $enable_dependencies);
+  cache_clear_all();
+}

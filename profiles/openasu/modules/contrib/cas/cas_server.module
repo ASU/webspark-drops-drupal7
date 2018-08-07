@@ -314,7 +314,7 @@ function _cas_server_save_ticket($uid, $service) {
  */
 function cas_server_logout() {
   // Check service against whitelist
-  if (!_cas_server_check_service_whitelist($_GET['service'])) {
+  if (isset($_GET['service']) && !_cas_server_check_service_whitelist($_GET['service'])) {
     return variable_get('cas_server_whitelist_failure', t('You do not have permission to login to CAS from this service.'));
   }
 
@@ -325,7 +325,7 @@ function cas_server_logout() {
   // Skip triggering user logout related processes if there is not a valid user in session.
   if(user_is_logged_in()) {
     // Log the successful logout process.
-    watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+    watchdog('user', 'Session closed for %name.', array('%name' => format_username($user)));
     // Tell modules about the logout.
     module_invoke_all('user_logout', $user);
   }
@@ -350,7 +350,14 @@ function cas_server_logout_clients($account) {
    $result = db_query("SELECT service, ticket, valid FROM {cas_server_tickets} WHERE uid= :uid", array(':uid' => $account->uid));
     if ($result !== FALSE) {
       $expired_tickets = array();
+      // Set a time limit for all logout requests. This is useful if a user has
+      // accumulated a lot of login sessions for services that may be
+      // unresponsive.
+      $timelimit = time() + (int) variable_get('cas_server_slo_group_timeout', 15);
       foreach ($result as $client) {
+        if (time() > $timelimit) {
+          break;
+        }
         $expired_tickets[] = $client->ticket;
         if (!$client->valid)  {
           $id = 'LR-' . user_password();
@@ -363,6 +370,7 @@ function cas_server_logout_clients($account) {
               'headers' => array('Content-Type' => 'application/x-www-form-urlencoded'),
               'method' =>  'POST',
               'data' => 'logoutRequest=' . urlencode($logout_request),
+              'timeout' => (int) variable_get('cas_server_slo_individual_timeout', 5),
             )
           );
           if (@$response->error) {

@@ -277,7 +277,9 @@ function ldap_servers_test_form_submit($form, &$form_state) {
     $group_dn = $values['grp_test_grp_dn'];
 
     $result = @ldap_read($ldap_server->connection, $group_dn, 'objectClass=*');
-    $group_entry = ldap_get_entries($ldap_server->connection, $result);
+    if (is_array($result)) {
+      $group_entry = ldap_get_entries($ldap_server->connection, $result);
+    }
     $user = isset($values['testing_drupal_username']) ? $values['testing_drupal_username'] : NULL;
 
     foreach (array(FALSE, TRUE) as $nested) { //FALSE
@@ -330,21 +332,27 @@ function ldap_servers_test_form_submit($form, &$form_state) {
       $results_tables['groupfromDN'][] = array("Groups from DN", theme('item_list', array('items' => $groups_from_dn, 'type' => 'ul')));
     }
 
-    list($has_errors, $more_results, $ldap_user) = ldap_servers_test_user_mapping($values['testing_drupal_username'], $ldap_server);
-
-    $tokens = ($ldap_user && isset($ldap_user['attr'])) ? ldap_servers_token_tokenize_entry($ldap_user['attr'], 'all') : array();
-    foreach ($tokens as $key => $value) {
-      $results_tables['tokens'][] = array($key, $value);
-    }
-    $form_state['ldap_server_test_data'] = array(
-      'username' => $values['testing_drupal_username'],
-      'group_entry' => $group_entry,
-      'results_tables' => $results_tables,
-    );
-    if (isset($ldap_user)) {
-      $form_state['ldap_server_test_data']['ldap_user'] = $ldap_user;
-    }
   }
+
+  list($has_errors, $more_results, $ldap_user) = ldap_servers_test_user_mapping($values['testing_drupal_username'], $ldap_server);
+
+  $tokens = ($ldap_user && isset($ldap_user['attr'])) ? ldap_servers_token_tokenize_entry($ldap_user['attr'], 'all') : array();
+  foreach ($tokens as $key => $value) {
+    $results_tables['tokens'][] = array($key, $value);
+  }
+  $form_state['ldap_server_test_data'] = array(
+    'username' => $values['testing_drupal_username'],
+    'results_tables' => $results_tables,
+  );
+
+  if (isset($ldap_user)) {
+    $form_state['ldap_server_test_data']['ldap_user'] = $ldap_user;
+  }
+
+  if (isset($group_entry) ) {
+    $form_state['ldap_server_test_data']['group_entry'] = $group_entry;
+  }
+  
 }
 
 /**

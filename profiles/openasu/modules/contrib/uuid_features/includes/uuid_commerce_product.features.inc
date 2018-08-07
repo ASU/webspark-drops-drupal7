@@ -9,16 +9,24 @@
  */
 function uuid_commerce_product_features_export_options() {
   $options = array();
+  $enabled_types = array();
 
   // Check what content types are enabled for uuid features export.
-  $enabled_types = variable_get('uuid_features_entity_commerce_product', FALSE);
+  $types = commerce_product_types();
+
+  foreach ($types as $type => $info) {
+    if (variable_get('uuid_features_entity_commerce_product_' . $type, FALSE)) {
+      $enabled_types[] = $type;
+    }
+  }
+
   if (!empty($enabled_types)) {
-    $types = commerce_product_types();
     $query = db_select('commerce_product', 'cp');
     $query->fields('cp', array('product_id', 'title', 'type', 'uuid'))
       ->condition('type', $enabled_types)
       ->orderBy('type')
-      ->orderBy('title');
+      ->orderBy('title')
+      ->addTag('uuid_commerce_product_features_export_options');
     $products = $query->execute()->fetchAll();
     foreach ($products as $product) {
       $options[$product->uuid] = t('@type: @title', array(
@@ -72,6 +80,8 @@ function uuid_commerce_product_features_export_render($module, $data) {
   $code[] = '  $products = array();';
   $code[] = '';
   $product_ids = entity_get_id_by_uuid('commerce_product', $data);
+  // Always sort by the uuid to ensure the order is maintained.
+  ksort($product_ids);
   foreach ($product_ids as $uuid => $product_id) {
     // Only export the node if it exists.
     if ($product_id === FALSE) {

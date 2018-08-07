@@ -1,8 +1,8 @@
 ; $Id$
 name = "ASU Feeds [DEPRECATED]"
-description = "Integrate ASU data with Drupal using the Feeds module"
-version = 7.x-1.x-beta6
-package = "ASU"
+description = "[DEPRECATED] - Integrate ASU data with Drupal using the Feeds module"
+version = 7.x-1.0
+package = "ASU Deprecated"
 core = 7.x
 php = 5.2
 project status url = https://webconsulting.asu.edu/fserver

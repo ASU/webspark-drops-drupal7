@@ -15,6 +15,10 @@
 //dsm($variables);
 ?>
 <?php print drupal_render($search_form); ?>
+
+  <?php if (!empty($spelling_suggestion)): ?>
+    <?php print $spelling_suggestion; ?>
+  <?php endif; ?>
   
  <?php if (isset($show_synonyms) && $show_synonyms) : ?>
   <div class="synonyms google-appliance-synonyms">

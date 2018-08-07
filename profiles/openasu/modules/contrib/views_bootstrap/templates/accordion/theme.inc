@@ -11,8 +11,8 @@ function template_preprocess_views_bootstrap_accordion_plugin_style(&$vars) {
 
   // Get titles.
   if (isset($view->field[$title_field])) {
-    foreach ($vars['view']->result as $key => $field) {
-      $vars['titles'][$key] = strip_tags($view->style_plugin->get_field($key, $title_field));
+    foreach (array_keys($vars['rows']) as $key) {
+      $vars['titles'][$key] = $view->style_plugin->get_field($key, $title_field);
     }
   }
 }

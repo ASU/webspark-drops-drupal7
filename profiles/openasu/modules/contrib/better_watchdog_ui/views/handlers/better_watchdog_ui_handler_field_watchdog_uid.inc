@@ -20,6 +20,15 @@ class better_watchdog_ui_handler_field_watchdog_uid extends views_handler_field_
 
     $author = user_load($data);
     if (!empty($this->options['link_to_user']) || !$data) {
+      if (!$author) {
+        $author = (object) array('uid' => 0);
+      }
+      $author->wid = $values->wid;
+      $author->severity = $values->watchdog_severity;
+      $author->type = $values->watchdog_type;
+      $author->timestamp = $values->watchdog_timestamp;
+      $author->message = $values->watchdog_message;
+      $author->variables = $values->watchdog_variables;
       $data = theme('username', array('account' => $author));
     }
     else {

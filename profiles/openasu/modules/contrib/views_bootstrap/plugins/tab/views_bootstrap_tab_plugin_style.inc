@@ -33,9 +33,6 @@ class ViewsBootstrapTabPluginStyle extends views_plugin_style {
         }
       }
 
-      // Delete grouping.
-      unset($form['grouping']);
-
       $form['tab_field'] = array(
         '#type' => 'select',
         '#title' => t('Tab field'),

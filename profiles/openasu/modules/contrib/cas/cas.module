@@ -79,12 +79,26 @@ function cas_login_check($force_authentication = TRUE) {
   drupal_session_start();
   _cas_single_sign_out_save_ticket();  // We use this later for CAS 3 logoutRequests
 
-  // Initialize phpCAS.
-  cas_phpcas_init();
+  // Initialize phpCAS if possible, otherwise just back out.
+  if (cas_phpcas_init() === FALSE) {
+    return;
+  }
 
   // We're going to try phpCAS auth test
   if ($force_authentication) {
-    phpCAS::forceAuthentication();
+    try {
+      phpCAS::forceAuthentication();
+    }
+    catch (CAS_AuthenticationException $e) {
+      drupal_set_message(t('Error authenticating with CAS. Please try again or contact your website administrator if the problem persists.'), 'error');
+      watchdog_exception('cas', $e);
+      // We have to redirect the user somewhere else because the CAS exception
+      // will have written error details directly to stdout, and we don't want
+      // to show anything like that to the user.
+      // This bring users to the homepage or to the page set in destination
+      // param.
+      drupal_goto('');
+    }
   }
   else {
     $logged_in = phpCAS::checkAuthentication();
@@ -178,7 +192,7 @@ function cas_login_check($force_authentication = TRUE) {
     $user = user_save($account, $edit);
     user_login_finalize($edit);
 
-    drupal_set_message(t(variable_get('cas_login_message', 'Logged in via CAS as %cas_username.'), array('%cas_username' => $user->name)));
+    drupal_set_message(t(variable_get('cas_login_message', 'Logged in via CAS as %cas_username.'), array('%cas_username' => format_username($user))));
     if (!empty($edit['persistent_login'])) {
       drupal_set_message(t('You will remain logged in on this computer even after you close your browser.'));
     }
@@ -252,11 +266,19 @@ function cas_phpcas_init() {
 
   // Variable set
   $server_version    = (string)variable_get('cas_version', '3.0');
-  $server_cas_server = (string)variable_get('cas_server', 'sso-cas.univ-rennes1.fr');
+  $server_cas_server = (string)variable_get('cas_server', '');
   $server_port       = (int)variable_get('cas_port', '443');
   $server_uri        = (string)variable_get('cas_uri', '');
   $cas_cert          = (string)variable_get('cas_cert', '');
   $debug_file        = (string)variable_get('cas_debugfile', '');
+
+  // Back out if there's no configured CAS server hostname. This is the
+  // minimum required configuration to initialize phpCAS.
+  if (empty($server_cas_server)) {
+    watchdog('cas', 'Unable to initialize phpCAS because no CAS server hostname has been configured.', array(), WATCHDOG_ERROR);
+    return FALSE;
+  }
+
   if ($debug_file != '') {
     phpCAS::setDebug($debug_file);
   }
@@ -389,6 +411,21 @@ function cas_menu() {
   return $items;
 }
 
+/**
+ * Implements hook_cron().
+ */
+function cas_cron() {
+  // Clear old single logout session mapping data.
+  $max_days = (int) variable_get('cas_single_logout_session_lifetime', 25);
+  $seconds_in_day = 86400;
+  $seconds = $max_days * $seconds_in_day;
+  if ($seconds > 0) {
+    db_delete('cas_login_data')
+      ->condition('created', time() - $seconds, '<=')
+      ->execute();
+  }
+}
+
 function cas_user_is_logged_in() {
   return user_is_logged_in() || !empty($_SESSION['phpCAS']['user']);
 }
@@ -410,7 +447,8 @@ function cas_menu_site_status_alter(&$menu_site_status, $path) {
  * @see cas_translated_menu_link_alter()
  */
 function cas_menu_link_alter(&$item) {
-  if (strtolower($item['link_path']) == 'cas' || strtolower($item['link_path']) == 'caslogout') {
+  $link_path = strtolower($item['link_path']);
+  if ($link_path == 'cas' || $link_path == 'caslogout') {
     $item['options']['alter'] = TRUE;
   }
 }
@@ -418,14 +456,20 @@ function cas_menu_link_alter(&$item) {
 /**
  * Implements hook_translated_menu_item_alter().
  *
- * Append dynamic query 'destination' to several menu items.
+ * Append dynamic query 'destination' to CAS menu links.
  */
 function cas_translated_menu_link_alter(&$item) {
-  if (strtolower($item['href']) == 'cas') {
-    $item['localized_options']['query'] = drupal_get_destination();
-  }
-  elseif (strtolower($item['href']) == 'caslogout' && !variable_get('cas_logout_destination', '')) {
-    $item['localized_options']['query'] = drupal_get_destination();
+  $href = strtolower($item['href']);
+  $append_destination = $href == 'cas' || ($href == 'caslogout' && !variable_get('cas_logout_destination', ''));
+  if ($append_destination) {
+    // Don't overwrite existing query params that may exist in the menu link.
+    if (isset($item['localized_options']['query'])) {
+      $menu_link_query_params = array_merge(drupal_get_destination(), $item['localized_options']['query']);
+    }
+    else {
+      $menu_link_query_params = drupal_get_destination();
+    }
+    $item['localized_options']['query'] = $menu_link_query_params;
   }
 }
 
@@ -689,7 +733,7 @@ function cas_logout($invoke_hook = TRUE) {
 
   // Mimic user_logout().
   if ($invoke_hook) {
-    watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+    watchdog('user', 'Session closed for %name.', array('%name' => format_username($user)));
     module_invoke_all('user_logout', $user);
   }
 
@@ -917,7 +961,7 @@ function cas_form_alter(&$form, &$form_state, $form_id) {
           '#theme' => 'item_list',
           '#items' => $items,
           '#attributes' => array('class' => array('cas-links')),
-          '#weight' => 1,
+          '#weight' => 101,
         );
 
         $form['links']['#weight'] = 2;
@@ -1082,8 +1126,8 @@ function _cas_single_sign_out_check() {
         // Log them out now.
         // first lets find out who we want to log off
 
-
-        $record = db_query_range("SELECT cld.uid, u.name FROM {users} u JOIN {cas_login_data} cld ON u.uid = cld.uid WHERE cld.cas_session_id = :ticket", 0, 1, array(':ticket' => $cas_session_index))->fetchObject();
+        $hashed_ticket = hash('sha256', $cas_session_index);
+        $record = db_query_range("SELECT cld.uid, u.name FROM {users} u JOIN {cas_login_data} cld ON u.uid = cld.uid WHERE cld.cas_session_id = :ticket", 0, 1, array(':ticket' => $hashed_ticket))->fetchObject();
         if ($record) {
           watchdog('user', 'Session closed for %name by CAS logout request.', array('%name' => $record->name));
           //remove all entry for user id in cas_login_data
@@ -1134,11 +1178,14 @@ function _cas_single_sign_out_save_token($user) {
   // Ok lets save the CAS service ticket to DB so
   // we can handle CAS logoutRequests when they come
   if ($user->uid && $user->uid > 0 && !empty($_SESSION['cas_ticket'])) {
-    db_insert('cas_login_data')
+    $hashed_ticket = hash('sha256', $_SESSION['cas_ticket']);
+    db_merge('cas_login_data')
+      ->key(array('cas_session_id' => $hashed_ticket))
       ->fields(array(
-        'cas_session_id' => $_SESSION['cas_ticket'],
+        'cas_session_id' => $hashed_ticket,
         'uid' => $user->uid,
-        ))
+        'created' => time(),
+      ))
       ->execute();
     unset($_SESSION['cas_ticket']);
   }
@@ -1231,7 +1278,7 @@ function cas_user_register($cas_name, $options = array()) {
 
   // Create the user account.
   $account = user_save(drupal_anonymous_user(), $edit);
-  watchdog("user", 'new user: %n (CAS)', array('%n' => $account->name), WATCHDOG_NOTICE, l(t("edit user"), "admin/user/edit/$account->uid"));
+  watchdog("user", 'new user: %n (CAS)', array('%n' => format_username($account)), WATCHDOG_NOTICE, l(t("edit user"), "user/edit/$account->uid"));
 
   if (!empty($options['invoke_cas_user_presave'])) {
     // Populate $edit with some basic properties.

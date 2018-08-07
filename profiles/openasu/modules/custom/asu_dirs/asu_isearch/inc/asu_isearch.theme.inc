@@ -19,6 +19,11 @@ function asu_isearch_theme() {
       'file' => 'inc/asu_isearch.theme.inc',
       'type' => 'module'
     ),
+    'panels_pane__entity_field__node_field_isearch_video' => array(
+      'template' => 'theme/panels-pane--entity-field--node-field-isearch-video'
+      //'file' => 'inc/asu_isearch.theme.inc'
+    ),
+
     // ASU Spotlight container
     'asu_isearch_dept_picker' => array(
       'variables' => array(

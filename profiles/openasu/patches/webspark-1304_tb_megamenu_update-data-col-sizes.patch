@@ -1,0 +1,31 @@
+diff --git a/tb_megamenu.install b/tb_megamenu.install
+index de33ba5..3329e93 100755
+--- a/tb_megamenu.install
++++ b/tb_megamenu.install
+@@ -63,3 +63,25 @@ function tb_megamenu_update_7101(&$sandbox) {
+  */
+ function tb_megamenu_update_7102(&$sandbox) {
+ }
++
++/**
++ * Implements hook_update_N()
++ */
++function tb_megamenu_update_7103(&$sandbox) {
++  // Increase menu_config, block_config columns in tb_megamenus table to allow
++  // larger menus to save. (No primary keys to drop/add.)
++  db_change_field('tb_megamenus', 'block_config', 'block_config',
++    array(
++      'type' => 'text',
++      'size' => 'medium',
++      'not null' => FALSE
++    )
++  );
++  db_change_field('tb_megamenus', 'menu_config', 'menu_config',
++    array(
++      'type' => 'text',
++      'size' => 'medium',
++      'not null' => FALSE
++    )
++  );
++}
+\ No newline at end of file

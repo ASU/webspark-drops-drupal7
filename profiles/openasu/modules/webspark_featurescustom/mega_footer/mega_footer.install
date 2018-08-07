@@ -76,7 +76,6 @@ function mega_footer_uninstall() {
   $variables =  db_query("SELECT name FROM {variable} WHERE name LIKE 'mega_footer_%'");
   $records = $variables->fetchAll();
   $count = count($records);
-  dpm($count);
   if (!empty($records)) {
     foreach ($records as $record) {
       variable_del($record->name);

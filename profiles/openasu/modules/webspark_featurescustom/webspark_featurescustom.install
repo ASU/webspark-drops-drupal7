@@ -247,3 +247,86 @@ function webspark_featurescustom_update_7009(&$sandbox) {
     watchdog('webspark_updates', "7009 - Add ASU Spotlight permissions to editor role.");
   }
 }
+
+/**
+ * Implements hook_update_N()
+ * -- Manually disables and uninstall the Modernizr module (since the code was removed)
+ */
+function webspark_featurescustom_update_7010(&$sandbox) {
+  // Check for non-Webspark Modernizr module installs
+  $count = db_select('system', 's')
+    ->fields('s', array('filename', 'name'))
+    ->condition('filename', 'profiles_openasu%', 'NOT LIKE')
+    ->condition('type', 'module', 'LIKE')
+    ->condition('name', 'modernizr', 'LIKE')
+    ->countQuery()->execute()->fetchField();
+  if ((int) $count == 0) {
+    // Manually remove all Modernizr settings (taken from hook_uninstall)
+    db_delete('system')
+      ->condition('type', 'module', 'LIKE')
+      ->condition('name', 'modernizr', 'LIKE')
+      ->execute();
+    db_delete('role_permission')
+      ->condition('module', 'modernizr', 'LIKE')
+      ->execute();
+    variable_del('modernizr_load');
+    variable_del('modernizr_scope');
+    variable_del('modernizr_type');
+    variable_del('modernizr_quiet');
+    variable_del('modernizr_cb_printshiv');
+    variable_del('modernizr_cb_load');
+    variable_del('modernizr_serverside');
+    $message = "The Modernizr module has been manually uninstalled.";
+    watchdog('update', $message, array(), WATCHDOG_NOTICE);
+    drupal_set_message($message, 'status');
+  }
+  else {
+    // Drupal could not delete Modernizr from system table.
+    $second_count = db_select('system', 's')
+      ->fields('s', array('filename', 'name'))
+      ->condition('filename', 'sites%', 'LIKE')
+      ->condition('type', 'module', 'LIKE')
+      ->condition('name', 'modernizr', 'LIKE')
+      ->countQuery()->execute()->fetchField();
+    $reason = (int) $second_count != 0 ? ' because another copy of the Modernizr module 
+        is installed somewhere in the sites directory. No more action will be taken.' : ' for an 
+        unknown reason. Go to Reports -> Status Report and check the Missing Modules 
+        list for Modernizr. If it is there, follow the instructions there to remove it. 
+        Otherwise, no other action is necessary.';
+    $message = "While the Modernizr module was removed from the Webspark profile, it could not be 
+        uninstalled from the database " . $reason;
+    watchdog('update', $message, array(), WATCHDOG_WARNING);
+    drupal_set_message($message, 'warning');
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ * + Update Panopoly magic settings to Webspark-first values if values haven't been set.
+ * @param $sandbox
+ */
+function webspark_featurescustom_update_7011(&$sandbox) {
+  // Panopoly Magic settings for Webspark set (form is at /admin/panopoly/settings/panopoly_magic)
+  $panopoly_magic_settings = array(
+    'panopoly_magic_live_preview' => '0',
+    'panopoly_magic_pane_add_preview' => '1',
+    'panopoly_magic_preview_use_legacy_fieldset' => '1',
+    'panopoly_magic_show_panels_styles' => '0',
+    'panopoly_magic_strip_js_from_preview' => '0',
+  );
+  $count = 0;
+  foreach ($panopoly_magic_settings as $key => $value) {
+    if (variable_get($key) == NULL) {
+      variable_set($key, $value);
+      $count++;
+    }
+  }
+  $link = l('Panopoly Magic settings', DRUPAL_ROOT . '/admin/panopoly/settings/panopoly_magic.');
+  if ($count > 0) {
+    watchdog('webspark_featurescustom', '7011 - ' . $count . ' ' . $link . ' were updated by ' . __FUNCTION__ . '.', array(), WATCHDOG_NOTICE);
+    drupal_set_message('Your default ' . $link . ' have been updated to more Webspark-friendly settings.', 'status');
+  }
+  else {
+    drupal_set_message('No ' . $link . ' were updated by ' . __FUNCTION__ . '.', 'status');
+  }
+}

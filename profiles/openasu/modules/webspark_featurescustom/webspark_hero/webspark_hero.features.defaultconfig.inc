@@ -132,7 +132,12 @@ function webspark_hero_defaultconfig_field_default_fields() {
       'bundle' => 'hero',
       'default_value' => NULL,
       'deleted' => 0,
-      'description' => '',
+      'description' => '<ul class="help-text">
+<li class="help-title">IMPORTANT!</li>
+<li>This byline field is only for smaller subtitles or bylines included <b>below</b> the 
+larger, primary hero text.</li>
+<li>Enter the primary hero text in the Title text field under "General Settings" section.</li>
+</ul>',
       'display' => array(
         'default' => array(
           'label' => 'hidden',
@@ -144,7 +149,7 @@ function webspark_hero_defaultconfig_field_default_fields() {
       ),
       'entity_type' => 'fieldable_panels_pane',
       'field_name' => 'field_webspark_hero_blurb',
-      'label' => 'Blurb',
+      'label' => 'Subtitle, Blurb, or Byline',
       'required' => 0,
       'settings' => array(
         'linkit' => array(
@@ -440,7 +445,7 @@ function webspark_hero_defaultconfig_field_default_fields() {
 <li>Images should be 1170 x 380 px for optimal display.</li>
 <li>When adding a new image, <strong>refresh the page</strong> after saving to view the image.</li>
 </ul>');
-  t('Blurb');
+  t('Subtitle, Blurb, or Byline');
   t('Explore graduate programs button  (recommended)');
   t('Explore undergraduate programs button (recommended)');
   t('Hero image');
