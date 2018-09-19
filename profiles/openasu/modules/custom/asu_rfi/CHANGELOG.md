@@ -1,5 +1,9 @@
 # ASU Request for Information Changelog
 
+### ASU RFI 7.x-1.13, 2017-07-17
+- Syntax updates to make compatible with PHP 7. Credit to Jeremy Leggat,
+  Cronkite School IT.
+
 ### ASU RFI 7.x-1.12, 2017-07-17
 - Update Lead API Programs URL
 - Update Lead API submissions to Lead API 4.0 and handling to support.
@@ -10,7 +14,8 @@
 - Fix up the changelog
 
 ### ASU RFI 7.x-1.10, 2018-05-09
-- Amended RFI module logic to better behave with ASU Academic Programs module after switching from ASU Degrees
+- Amended RFI module logic to better behave with ASU Academic Programs module 
+  after switching from ASU Degrees
 
 ### ASU RFI 7.x-1.9, 2018-03-15
 - Removed ASU Degrees dependency

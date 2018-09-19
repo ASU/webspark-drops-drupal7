@@ -1190,7 +1190,7 @@ function asu_rfi_get_undergrad_programs() {
   $program_type = db_query('select distinct ' . $degreeMappings['field_degree_program_value'] . ' from ' . $degreeMappings['table_asu_degree_program']);
   //set the variables so they can be used to show degree programs based on the form type selections above in block settings
   foreach ($program_type as $programs) {
-    $degreetype = $programs->$degreeMappings['field_degree_program_value'];
+    $degreetype = $programs->{$degreeMappings['field_degree_program_value']};
     if ($degreetype == "undergrad") {
       variable_set('asu_rfi_ugrad_degree_type', $degreetype);
     }
@@ -1221,9 +1221,9 @@ function asu_rfi_get_undergrad_programs() {
   foreach ($items as $nid => $program) {
 
     $program_wrapper = entity_metadata_wrapper('node', $program);
-    $program_abbr = $program_wrapper->$degreeMappings['field_degree_awarded']->value();
-    $college_code = $program_wrapper->$degreeMappings['field_academic_program']->value();
-    $program_plan_code = $program_wrapper->$degreeMappings['field_academic_plan']->value();
+    $program_abbr = $program_wrapper->{$degreeMappings['field_degree_awarded']}->value();
+    $college_code = $program_wrapper->{$degreeMappings['field_academic_program']}->value();
+    $program_plan_code = $program_wrapper->{$degreeMappings['field_academic_plan']}->value();
 
     // Abbr in value matches how we present name in get programs Views
     // Datasource View.
@@ -1259,9 +1259,9 @@ function asu_rfi_get_grad_programs() {
     foreach ($items as $nid => $program) {
 
       $program_wrapper = entity_metadata_wrapper('node', $program);
-      $program_abbr = $program_wrapper->$degreeMappings['field_degree_awarded']->value();
-      $college_code = $program_wrapper->$degreeMappings['field_academic_program']->value();
-      $program_plan_code = $program_wrapper->$degreeMappings['field_academic_plan']->value();
+      $program_abbr = $program_wrapper->{$degreeMappings['field_degree_awarded']}->value();
+      $college_code = $program_wrapper->{$degreeMappings['field_academic_program']}->value();
+      $program_plan_code = $program_wrapper->{$degreeMappings['field_academic_plan']}->value();
 
       // Abbr in value matches how we present name in get programs Views
       // Datasource View.
