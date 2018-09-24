@@ -11,7 +11,7 @@
  * Includes IXR Library.
  */
 function asu_ixr_startup() {
-  require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'asu_ixr') . '/includes/IXR_Library.inc.php';
+  require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'asu_ixr') . '/includes/IXR_Library.php';
 }
 
 
