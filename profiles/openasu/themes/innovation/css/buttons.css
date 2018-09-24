@@ -92,7 +92,7 @@
     color: white;
 }
 .btn-blue:hover, .btn-blue:focus, .btn-blue:active, .btn-blue.active, .open > .btn-blue.dropdown-toggle {
-    background-color: #0aa9fc;
+    background-color: #0085E2;
     color: white;
 }
 .btn-blue:active, .btn-blue.active, .open > .btn-blue.dropdown-toggle {
