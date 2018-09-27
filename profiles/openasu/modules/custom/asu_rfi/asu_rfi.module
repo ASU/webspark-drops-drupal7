@@ -310,7 +310,7 @@ function asu_rfi_block_configure($delta = '', $multi_id = NULL) {
 
       if ((sizeof($ugrad_degree_type) > 0) && (sizeof($graduate_degree_type) > 0)) {
         $form_types = array(
-          'multiform' => 'Multi step form (This multi step form will be shown only on degree pages. Select content type and choose "ASU Degree" in block Visibility settings)',
+          'multiform' => 'Multi step form (This multi step form will be shown only on degree pages. Select content type and choose "ASU Academic Programs" in block Visibility settings)',
           'ugrad_longform' => 'Undergraduate Long form',
           'graduate_longform' => 'Graduate Long form',
           'current_undergrad_form' => 'Current undergrad form',
@@ -319,14 +319,14 @@ function asu_rfi_block_configure($delta = '', $multi_id = NULL) {
       }
       elseif ((sizeof($ugrad_degree_type) > 0) && (sizeof($graduate_degree_type) == 0)) {
         $form_types = array(
-          'multiform' => 'Multi step form (This multi step form will be shown only on degree pages. Select content type and choose "ASU Degree" in block Visibility settings)',
+          'multiform' => 'Multi step form (This multi step form will be shown only on degree pages. Select content type and choose "ASU Academic Programs" in block Visibility settings)',
           'ugrad_longform' => 'Undergraduate Long form',
           'current_undergrad_form' => 'Current undergrad form'
         );
       }
       elseif ((sizeof($ugrad_degree_type) == 0) && (sizeof($graduate_degree_type) > 0)) {
         $form_types = array(
-          'multiform' => 'Multi step form (This multi step form will be shown only on degree pages. Select content type and choose "ASU Degree" in block Visibility settings)',
+          'multiform' => 'Multi step form (This multi step form will be shown only on degree pages. Select content type and choose "ASU Academic Programs" in block Visibility settings)',
           'graduate_longform' => 'Graduate Long form',
           'current_grad_form' => 'Current Grad form'
         );
@@ -1020,22 +1020,23 @@ function asu_rfi_query_codes($pcodes) {
 
       $locations = $desiredProg['locations'];
 
-      foreach ($locations as $location) {
-        $hasOnline = FALSE;
-        if ($location['value'] == "Online") {
-          $hasOnline = TRUE;
-        }
+      if ($locations) {
+        foreach ($locations as $location) {
+          $hasOnline = FALSE;
+          if ($location['value'] == "Online") {
+            $hasOnline = TRUE;
+          }
 
-        if ((($hasOnline == TRUE && $availableOnline == TRUE) || ($hasOnline == FALSE)) && !in_array($location['value'], $campusOptions)) {
-          array_push($campusOptions, $location['value']);
-        }
-        else {
-          if ($hasOnline == TRUE && $availableOnline == FALSE) {
-            $onlineError = TRUE;
+          if ((($hasOnline == TRUE && $availableOnline == TRUE) || ($hasOnline == FALSE)) && !in_array($location['value'], $campusOptions)) {
+            array_push($campusOptions, $location['value']);
+          } else {
+            if ($hasOnline == TRUE && $availableOnline == FALSE) {
+              $onlineError = TRUE;
 
-            for ($i = 0; $i < sizeof($desiredProg['locations']); $i++) {
-              if ($desiredProg['locations'][$i]['value'] == 'Online') {
-                unset($desiredProg['locations'][$i]);
+              for ($i = 0; $i < sizeof($desiredProg['locations']); $i++) {
+                if ($desiredProg['locations'][$i]['value'] == 'Online') {
+                  unset($desiredProg['locations'][$i]);
+                }
               }
             }
           }

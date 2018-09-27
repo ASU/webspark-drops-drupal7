@@ -30,22 +30,17 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @package IXR
- * @since 1.5.0
+ * @since 1.5
  *
  * @copyright  Incutio Ltd 2010 (http://www.incutio.com)
  * @version    1.7.4 7th September 2010
  * @author     Simon Willison
  * @link       http://scripts.incutio.com/xmlrpc/ Site/manual
- * @license    http://www.opensource.org/licenses/bsd-license.php BSD
  */
 
-/**
- * IXR_Value
- *
- * @package IXR
- * @since 1.5.0
- */
-class IXR_Value {
+
+class IXR_Value
+{
   var $data;
   var $type;
 
@@ -133,7 +128,6 @@ class IXR_Value {
       case 'struct':
         $return = '<struct>'."\n";
         foreach ($this->data as $name => $value) {
-          $name = htmlspecialchars($name);
           $return .= "  <member><name>$name</name><value>";
           $return .= $value->getXml()."</value></member>\n";
         }
@@ -171,7 +165,7 @@ class IXR_Value {
  * IXR_MESSAGE
  *
  * @package IXR
- * @since 1.5.0
+ * @since 1.5
  *
  */
 class IXR_Message
@@ -203,34 +197,11 @@ class IXR_Message
   {
     // first remove the XML declaration
     // merged from WP #10698 - this method avoids the RAM usage of preg_replace on very large messages
-    $header = preg_replace( '/<\?xml.*?\?'.'>/s', '', substr( $this->message, 0, 100 ), 1 );
-    $this->message = trim( substr_replace( $this->message, $header, 0, 100 ) );
-    if ( '' == $this->message ) {
+    $header = preg_replace( '/<\?xml.*?\?'.'>/', '', substr($this->message, 0, 100), 1);
+    $this->message = substr_replace($this->message, $header, 0, 100);
+    if (trim($this->message) == '') {
       return false;
     }
-
-    // Then remove the DOCTYPE
-    $header = preg_replace( '/^<!DOCTYPE[^>]*+>/i', '', substr( $this->message, 0, 200 ), 1 );
-    $this->message = trim( substr_replace( $this->message, $header, 0, 200 ) );
-    if ( '' == $this->message ) {
-      return false;
-    }
-
-    // Check that the root tag is valid
-    $root_tag = substr( $this->message, 0, strcspn( substr( $this->message, 0, 20 ), "> \t\r\n" ) );
-    if ( '<!DOCTYPE' === strtoupper( $root_tag ) ) {
-      return false;
-    }
-    if ( ! in_array( $root_tag, array( '<methodCall', '<methodResponse', '<fault' ) ) ) {
-      return false;
-    }
-
-    // Bail if there are too many elements to parse
-    $element_limit = 30000;
-    if ( $element_limit && 2 * $element_limit < substr_count( $this->message, '<' ) ) {
-      return false;
-    }
-
     $this->_parser = xml_parser_create();
     // Set XML parser to take the case of tags in to account
     xml_parser_set_option($this->_parser, XML_OPTION_CASE_FOLDING, false);
@@ -239,7 +210,6 @@ class IXR_Message
     xml_set_element_handler($this->_parser, 'tag_open', 'tag_close');
     xml_set_character_data_handler($this->_parser, 'cdata');
     $chunk_size = 262144; // 256Kb, parse in chunks to avoid the RAM usage on very large messages
-    $final = false;
     do {
       if (strlen($this->message) <= $chunk_size) {
         $final = true;
@@ -367,7 +337,7 @@ class IXR_Message
  * IXR_Server
  *
  * @package IXR
- * @since 1.5.0
+ * @since 1.5
  */
 class IXR_Server
 {
@@ -465,7 +435,7 @@ EOD;
     } else {
       // It's a function - does it exist?
       if (is_array($method)) {
-        if (!is_callable(array($method[0], $method[1]))) {
+        if (!method_exists($method[0], $method[1])) {
           return new IXR_Error(-32601, 'server error. requested object method "'.$method[1].'" does not exist.');
         }
       } else if (!function_exists($method)) {
@@ -571,7 +541,7 @@ EOD;
  * IXR_Request
  *
  * @package IXR
- * @since 1.5.0
+ * @since 1.5
  */
 class IXR_Request
 {
@@ -614,7 +584,7 @@ EOD;
  * IXR_Client
  *
  * @package IXR
- * @since 1.5.0
+ * @since 1.5
  *
  */
 class IXR_Client
@@ -626,16 +596,12 @@ class IXR_Client
   var $response;
   var $message = false;
   var $debug = false;
-  /** @var int Connection timeout in seconds */
   var $timeout;
-  /** @var null|int Timeout for actual data transfer; in seconds */
-  var $timeout_io = null;
-  var $headers = array();
 
   // Storage place for an error message
   var $error = false;
 
-  function __construct($server, $path = false, $port = 80, $timeout = 15, $timeout_io = null)
+  function __construct($server, $path = false, $port = 80, $timeout = 15)
   {
     if (!$path) {
       // Assume we have been given a URL instead
@@ -648,10 +614,6 @@ class IXR_Client
       if (!$this->path) {
         $this->path = '/';
       }
-
-      if ( ! empty( $bits['query'] ) ) {
-        $this->path .= '?' . $bits['query'];
-      }
     } else {
       $this->server = $server;
       $this->path = $path;
@@ -659,7 +621,6 @@ class IXR_Client
     }
     $this->useragent = 'The Incutio XML-RPC PHP Library';
     $this->timeout = $timeout;
-    $this->timeout_io = $timeout_io;
   }
 
   function query()
@@ -698,9 +659,6 @@ class IXR_Client
     if (!$fp) {
       $this->error = new IXR_Error(-32300, 'transport error - could not open socket');
       return false;
-    }
-    if (null !== $this->timeout_io) {
-      stream_set_timeout($fp, $this->timeout_io);
     }
     fputs($fp, $request);
     $contents = '';
@@ -770,25 +728,6 @@ class IXR_Client
   {
     return $this->error->message;
   }
-
-  /**
-   * Gets the current timeout set for data transfer
-   * @return int|null
-   */
-  public function getTimeoutIo()
-  {
-    return $this->timeout_io;
-  }
-
-  /**
-   * Sets the timeout for data transfer
-   * @param int $timeout_io
-   * @return $this
-   */
-  public function setTimeoutIo($timeout_io)
-  {
-    $this->timeout_io = $timeout_io;
-  }
 }
 
 
@@ -796,7 +735,7 @@ class IXR_Client
  * IXR_Error
  *
  * @package IXR
- * @since 1.5.0
+ * @since 1.5
  */
 class IXR_Error
 {
@@ -838,7 +777,7 @@ EOD;
  * IXR_Date
  *
  * @package IXR
- * @since 1.5.0
+ * @since 1.5
  */
 class IXR_Date {
   var $year;
@@ -849,7 +788,7 @@ class IXR_Date {
   var $second;
   var $timezone;
 
-  function __construct($time)
+  function __contruct($time)
   {
     // $time can be a PHP timestamp or an ISO one
     if (is_numeric($time)) {
@@ -901,7 +840,7 @@ class IXR_Date {
  * IXR_Base64
  *
  * @package IXR
- * @since 1.5.0
+ * @since 1.5
  */
 class IXR_Base64
 {
@@ -922,7 +861,7 @@ class IXR_Base64
  * IXR_IntrospectionServer
  *
  * @package IXR
- * @since 1.5.0
+ * @since 1.5
  */
 class IXR_IntrospectionServer extends IXR_Server
 {
@@ -1085,7 +1024,7 @@ class IXR_IntrospectionServer extends IXR_Server
  * IXR_ClientMulticall
  *
  * @package IXR
- * @since 1.5.0
+ * @since 1.5
  */
 class IXR_ClientMulticall extends IXR_Client
 {
@@ -1162,9 +1101,9 @@ class IXR_ClientSSL extends IXR_Client
    * @param string $server URL of the Server to connect to
    * @since 0.1.0
    */
-  function __construct($server, $path = false, $port = 443, $timeout = false, $timeout_io = null)
+  function __construct($server, $path = false, $port = 443, $timeout = false)
   {
-    parent::__construct($server, $path, $port, $timeout, $timeout_io);
+    parent::__construct($server, $path, $port, $timeout);
     $this->useragent = 'The Incutio XML-RPC PHP Library for SSL';
 
     // Set class fields
@@ -1257,10 +1196,7 @@ class IXR_ClientSSL extends IXR_Client
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
     //Since 23Jun2004 (0.1.2) - Made timeout a class field
-    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $this->timeout);
-    if (null !== $this->timeout_io) {
-      curl_setopt($curl, CURLOPT_TIMEOUT, $this->timeout_io);
-    }
+    curl_setopt($curl, CURLOPT_TIMEOUT, $this->timeout);
 
     if ($this->debug) {
       curl_setopt($curl, CURLOPT_VERBOSE, 1);
