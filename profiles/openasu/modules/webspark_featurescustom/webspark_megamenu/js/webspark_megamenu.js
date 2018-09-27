@@ -125,7 +125,7 @@
       var firstNavItem = $(".tb-megamenu-nav>li:first-child>a");
       try {
         if (firstNavItem.text().trim() == "Home") {
-          var a = "<i class=\"fa fa-home icon-white\"><span style=\"display:none\">Home</span></i>";
+          var a = "<span class=\"fa fa-home icon-white\"><span class=\"sr-only\">Home</span></span>";
           $(".tb-megamenu-nav>li:first-child>a").empty().append(a);
         }
       } catch (e) {
