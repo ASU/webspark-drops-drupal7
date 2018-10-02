@@ -120,9 +120,12 @@ class ASUeAdvisorFeedFetcher extends FeedsFetcher {
     // Available campus codes for importing
     $campus_options = array(
       'ONLNE' => t('ASU Online'),
+      'COCHS' => t('ASU@Cochise'),
       'EAC' => t('ASU@TheGilaValley'),
+      'PIMA' => t('ASU@Pima'),
       'CAC' => t('ASU@Pinal'),
       'TUCSN' => t('ASU@Tucson'),
+      'YAVAP' => t('ASU@Yavapai'),
       'AWC' => t('ASU@Yuma'),
       'CALHC' => t('Colleges at Lake Havasu City'),
       'DTPHX' => t('Downtown Phoenix campus'),

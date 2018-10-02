@@ -411,25 +411,32 @@ if (module_exists('metatag')) {
                             echo '<a href="//tours.asu.edu/west">'.$campus['value'].'</a>';
                             break;
                           case 'ASU@TheGilaValley':
-                            echo '<a href="//transfer.asu.edu/eac">'.$campus['value'].'</a>';
+                            echo '<a href="//admission.asu.edu/transfer/eastern-arizona">'.$campus['value'].'</a>';
                             break;
                           case 'ASU@Pinal':
-                            echo '<a href="//transfer.asu.edu/central-az">'.$campus['value'].'</a>';
+                            echo '<a href="//admission.asu.edu/transfer/central-arizona">'.$campus['value'].'</a>';
                             break;
                           case 'ASU@Tucson':
                             echo '<a href="//transfer.asu.edu/asutucson'.$campus['value'].'</a>';
                             break;
                           case 'ASU@Yuma':
-                            echo '<a href="//transfer.asu.edu/azwestern">'.$campus['value'].'</a>';
+                            echo '<a href="//admission.asu.edu/transfer/arizona-western">'.$campus['value'].'</a>';
+                            break;
+                          case 'ASU@Yavapai':
+                            echo '<a href="//admission.asu.edu/transfer/asuyavapai">'.$campus['value'].'</a>';
+                            break;
+                          case 'ASU@Cochise':
+                            echo '<a href="//admission.asu.edu/transfer/asu-cochise">'.$campus['value'].'</a>';
+                            break;
+                          case 'ASU@Pima':
+                            echo '<a href="//admission.asu.edu/transfer/pima">'.$campus['value'].'</a>';
                             break;
                           case 'Online':
                             echo '<a href="//asuonline.asu.edu/">'.$campus['value'].'</a>';
                             break;
                           //Check ASU Feeds Parser.  The campus being used doesn't exist.
                           default:
-                            echo 'Campus Not Found';
-                            //$a = false;
-                            echo '<!--'.$campus['value'].'-->';
+                            echo $campus['value'];
                             break;
                         }
                         if($i < $c && $a) {

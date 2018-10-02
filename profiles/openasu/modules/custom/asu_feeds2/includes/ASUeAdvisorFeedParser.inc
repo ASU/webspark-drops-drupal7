@@ -104,6 +104,15 @@ class ASUeAdvisorFeedParser extends FeedsParser {
             case 'TBIRD':
               $value = 'Thunderbird';
               break;
+            case 'YAVAP':
+              $value = 'ASU@Yavapai';
+              break;
+            case 'PIMA':
+              $value = 'ASU@Pima';
+              break;
+            case 'COCHS':
+              $value = 'ASU@Cochise';
+              break;
             //Add case for missing campus from degree feed
             default:
               $value = $value;
