@@ -206,7 +206,9 @@ projects[tb_megamenu][patch][] = patches/webspark-919_tb-megamenu_fix-breakpoint
 projects[tb_megamenu][patch][] = patches/webspark-935_tb-megamenu_fix-submenu-removal_7.x.patch
 projects[tb_megamenu][patch][] = patches/webspark-1007-redux-tb_megamenu-tab_accessibility-7.x.patch
 projects[tb_megamenu][patch][] = patches/webspark-1018_tb-megamenu_removing-mobile-button-for-ADA_7.x.patch
-projects[tb_megamenu][patch][] = webspark-1304_tb_megamenu_update-data-col-sizes.patch
+; added patches/ path to 1304 path - rknesbit
+projects[tb_megamenu][patch][] = patches/webspark-1304_tb_megamenu_update-data-col-sizes.patch
+projects[tb_megamenu][patch][] = patches/webspark-1379_megamenu-classes-missing.patch
 
 ; UUID Features Integration
 ;projects[uuid_features][version] = 1.0-alpha4
