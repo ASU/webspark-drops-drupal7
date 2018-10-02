@@ -86,14 +86,14 @@ function asu_rfi_grad_post($data)
 
   }
 
-  $domain = isset($data['domain']) ? $data['domain'] : $_SERVER['HTTP_HOST'];;
+  $domain = isset($data['domain']) ? $data['domain'] : $_SERVER['HTTP_HOST'];
   $phone = preg_replace('[\D]', '', $data['phone']);
   $state = $data['state'];
   $form_mode = variable_get('asu_rfi_form_mode');
   $type_of_form = $data['type_of_form'];
   $source = $domain . '-' . $type_of_form . '-G';
   $campus = asu_rfi_correct_campus_id($data['campus']);
-  $ipAddress = $data['ip_address'];
+  $ipAddress = isset($data['ip_address']) ? $data['ip_address'] : $_SERVER['REMOTE_ADDR'];
   //get athentication key
   $mw_auth_key = variable_get('asu_rfi_form_auth_key');
   $hashkey = sha1($mw_auth_key . '+' . $nodeid);
