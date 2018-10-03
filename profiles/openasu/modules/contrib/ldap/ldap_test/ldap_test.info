@@ -17,3 +17,7 @@ files[] = ldap_test.module
 files[] = LdapServerTest.class.php
 files[] = LdapTestFunctions.class.php
 files[] = LdapUserTestCase.class.php
+
+; Manual version insertion
+version = "7.x-2.3+25-dev"
+

@@ -4,3 +4,7 @@ core = 7.x
 package = Fields
 dependencies[] = references
 dependencies[] = uuid
+
+; Manual version insertion
+version = "7.x-2.2+27-dev"
+

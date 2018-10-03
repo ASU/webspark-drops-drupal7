@@ -18,3 +18,6 @@ files[] = tests/Og2Tests.test
 configure = admin/config/people/ldap/authorization
 
 test_dependencies[] = ldap_sso:ldap_sso
+
+; Manual version insertion
+version = "7.x-2.3+25-dev"

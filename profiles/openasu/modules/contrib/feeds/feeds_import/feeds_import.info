@@ -9,3 +9,8 @@ features[features_api][] = api:2
 features[feeds_importer][] = node
 features[feeds_importer][] = user
 files[] = feeds_import.test
+
+; Manual version insertion
+version = "7.x-2.0-beta4+16-dev"
+
+

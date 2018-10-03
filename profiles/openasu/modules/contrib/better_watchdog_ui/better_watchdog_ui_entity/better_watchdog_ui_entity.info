@@ -5,3 +5,7 @@ core = 7.x
 
 dependencies[] = dblog
 dependencies[] = entity
+
+; Manual version insertion
+version = "7.x-3.0+6-dev"
+

@@ -2,3 +2,7 @@ name = Missing Module
 description = Find modules turned on in the database that aren't in file system.
 package = Performance
 core = 7.x
+
+; Manual version insertion
+version = "7.x-1.2"
+

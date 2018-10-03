@@ -6,3 +6,7 @@ dependencies[] = field
 dependencies[] = references
 dependencies[] = options
 files[] = node_reference.test
+
+; Manual version insertion
+version = "7.x-2.2+27-dev"
+

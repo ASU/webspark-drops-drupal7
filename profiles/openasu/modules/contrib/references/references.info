@@ -9,3 +9,7 @@ files[] = views/references_handler_argument.inc
 files[] = views/references_plugin_display.inc
 files[] = views/references_plugin_style.inc
 files[] = views/references_plugin_row_fields.inc
+
+; Manual version insertion
+version = "7.x-2.2+27-dev"
+

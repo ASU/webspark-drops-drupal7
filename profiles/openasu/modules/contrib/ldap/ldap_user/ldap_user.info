@@ -24,3 +24,7 @@ stylesheets[all][] = ldap_user.css
 configure = admin/config/people/ldap/user
 
 test_dependencies[] = ldap_sso:ldap_sso
+
+; Manual version insertion
+version = "7.x-2.3+25-dev"
+

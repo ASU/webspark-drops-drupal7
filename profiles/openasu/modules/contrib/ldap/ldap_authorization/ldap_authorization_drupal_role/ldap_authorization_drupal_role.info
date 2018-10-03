@@ -8,3 +8,7 @@ configure = admin/config/people/ldap/authorization
 files[] = LdapAuthorizationConsumerRole.class.php
 files[] = ldap_authorization_drupal_role.module
 files[] = ldap_authorization_drupal_role.inc
+
+; Manual version insertion
+version = "7.x-2.3+25-dev"
+
