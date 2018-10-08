@@ -6,4 +6,4 @@ package = "ASU"
 core = 7.x
 php = 5.2
 files[] = IXRFeedsFetcher.inc
-files[] = includes/IXR_Library.inc.php
+files[] = includes/IXR_Library.php

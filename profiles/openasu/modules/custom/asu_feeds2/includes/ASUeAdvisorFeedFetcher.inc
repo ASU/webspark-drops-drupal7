@@ -22,7 +22,7 @@ class ASUeAdvisorFeedFetcherResult extends FeedsFetcherResult {
     $this->unit_identifier = strtoupper($unit_identifier);
     $this->program = $program;
     $this->cert = (boolean) $cert;
-    parent::__construct();
+    parent::__construct(NULL);
   }
 
   // GET methods to use $program and $cert in asu_programs_feed_parser.inc
