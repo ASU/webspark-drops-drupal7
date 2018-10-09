@@ -41,6 +41,10 @@ function webspark_featurescustom_update_dependencies() {
     'asu_cas' => 7001,
     'webspark_featurescustom' => 7002,
   );
+  // Apply version change AFTER update to jQuery Update 3.x.
+  $deps['webspark_featurescustom'][7012] = array(
+    'jquery_update' => 7001,
+  );
   return $deps;
 }
 
@@ -328,5 +332,47 @@ function webspark_featurescustom_update_7011(&$sandbox) {
   }
   else {
     drupal_set_message('No ' . $link . ' were updated by ' . __FUNCTION__ . '.', 'status');
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ * + Update jQuery to v1.12.2 for default themes (not also set as admin_theme)
+ * @param $sandbox
+ */
+function webspark_featurescustom_update_7012(&$sandbox) {
+  // Make sure the admin theme isn't getting updated
+  if (module_exists('jquery_update')) {
+    $theme_default = variable_get('theme_default', FALSE);
+    $admin_theme = variable_get('admin_theme', FALSE);
+    $messaging = array(
+      'msg' => '',
+      'msg_state' => 'warning',
+      'watch_state' => WATCHDOG_WARNING,
+    );
+    if ($admin_theme !== $theme_default) {
+      $jquery_current_version = theme_get_setting('jquery_update_jquery_version', $theme_default);
+      // Don't update if set jQuery version is HIGHER than 1.12.x
+      // Forces regression back from 1.12.3+ (security hole)
+      if (version_compare($jquery_current_version, "1.12", "<=")) {
+        _jquery_update_set_theme_version($theme_default, '1.12');
+        $messaging['msg'] = 'jQuery was updated/modified to v1.12.2 for the default theme (' . $theme_default . ').';
+        $messaging['msg_state'] = 'status';
+        $messaging['watch_state'] = WATCHDOG_NOTICE;
+      }
+      else {
+        $messaging['msg'] = 'jQuery was not updated (it was already at v' . $jquery_current_version . ').';
+      }
+    }
+    else {
+      $messaging['msg'] = 'jQuery was not updated by because 1) ' . $theme_default .
+        ' is set as the administrative theme, and 2) most of the administrative 
+        areas are not compatible with jQuery 1.8+. Consider selecting Webspark 
+        Seven for the administrative section of your site at 
+        /admin/appearance and manually setting jQuery to 1.12 at 
+        /admin/config/development/jquery_update.';
+    }
+    drupal_set_message($messaging['msg'], $messaging['msg_state']);
+    watchdog('webspark_featurescustom', $messaging['msg'], array(), $messaging['watch_state']);
   }
 }
