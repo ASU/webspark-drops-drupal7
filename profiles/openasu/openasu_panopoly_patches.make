@@ -31,6 +31,16 @@ projects[token][sha256] = a84b6a1f43798d8d9da31915aa25fce0f62f59fae18c71e0775157
 ; Webspark - Fixes arrows/theming issue in browse tokens window
 projects[token][patch][2773825] = patches/webspark-897_token-browse-available-theme-fixes-2773825-1.patch
 
+; panopoly_admin.make
+
+; jQuery Update was moved to Panopoly Core, but is left in Panopoly Admin's
+; .make file to retain a stable 1.x branch of Panopoly. See the following URL
+; for more information: http://drupal.org/node/2492811
+projects[jquery_update][version] = 3.0-alpha5
+projects[jquery_update][subdir] = contrib
+projects[jquery_update][patch][1251] = patches/ws-1251_jquery-update_downgradeto-1.12.2.patch
+; @TODO -- Add patch for lowering jQuery_update's jQuery 1.12 trueversion to 1.12.2.
+
 ; panopoly_theme.make
 
 projects[radix_layouts][type] = module
