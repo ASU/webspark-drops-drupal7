@@ -8,6 +8,9 @@ Webspark 1.55.1 (Salem) release, 2018-10-19
 
 - Web standards components in Webspark
 
+  * ASU CAS (v1.8)
+    * Fills in the PEM certificate location setting, further securing the CAS authentication process and clearing out the 
+      ASU SSL Certificate bundle warning from the site Status page.
   * ASU GSA (v1.2)
     * Adds TPLs to override Google Appliance and core Search TPLs for CSS-namespaced search page markup
     * Removes old, unfinished cruft code
