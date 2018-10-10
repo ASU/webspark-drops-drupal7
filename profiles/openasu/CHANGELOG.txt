@@ -1,3 +1,54 @@
+Webspark 1.55.1 (Salem) release, 2018-10-19
+------------------------------------------
+- Webspark core
+
+  * Webspark Featurescustom (v1.9)
+    * Updates default theme version of jQuery to v1.12.2 upon running update.php (in conjunction with the jQuery Update
+      module update.)
+
+- Web standards components in Webspark
+
+  * ASU GSA (v1.2)
+    * Adds TPLs to override Google Appliance and core Search TPLs for CSS-namespaced search page markup
+    * Removes old, unfinished cruft code
+    * Fixes search box + button layouts
+    * Namespaces CSS to stop from overreaching into other projects.
+  * ASU IXR (v2.1)
+    * Updated current version of IXR for PHP 7.
+    * Updated README.txt in light of changes.
+    * Fixed wording in asu_rfi and add defensive code.
+  * ASU RFI (v1.13), ASU Feeds (asu_feeds2 - v3.0-alpha2)
+    * Syntax updates to make compatible with PHP 7 (credit to Jeremy Leggat, Cronkite School IT)
+  * Webspark Megamenu (v1.10)
+    * Font Awesome <i> tags were replaced with <span> for better accessibility.
+    * Accessibility fix for display of 'home' icon in the menu bar. Changed the code to meet accessibility standards.
+    * Correct missing styles for the menu items.
+  * Innovation theme (v1.12)
+    * Changed rollover color of the blue buttons to one with a higher contrast.
+
+- Contrib module updates
+
+  - Managed by Panopoly
+
+    * jQuery Update (v3.0-alpha5)
+      * Includes latest (and most secure) version of jQuery 1.x available for Drupal 7 and Webspark.
+      * Now allows for per-theme application of jQuery version choices.
+    * Panopoly Magic (v1.55+1-dev)
+      * Patched regression of reusable-enabled fieldable panel panes/widgets; No more false errors
+        claiming that there is no administrative title entered.
+
+  - Managed by Webspark
+
+    * Restored missing module version numbers to help with applying database updates for the
+      following contrib modules:
+      * Better Watchdog UI
+      * Feeds
+      * LDAP
+      * Missing Module
+      * References
+      * UUID Features
+
+
 Webspark 1.55 (Oregon) release, 2018-07-27
 ------------------------------------------
 - Webspark core
