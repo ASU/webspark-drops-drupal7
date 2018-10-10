@@ -3,7 +3,7 @@ description = "Provide CAS-SSO functionality for ASU integration of Drupal web s
 core = 7.x
 package = ASU
 php = 5.2.4
-version = 7.x-1.7
+version = 7.x-1.8
 project = asu_cas
 
 dependencies[] = asu_brand
