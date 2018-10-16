@@ -341,22 +341,26 @@ function webspark_featurescustom_update_7011(&$sandbox) {
  * @param $sandbox
  */
 function webspark_featurescustom_update_7012(&$sandbox) {
-  // Make sure the admin theme isn't getting updated
+
   if (module_exists('jquery_update')) {
+    // INIT values
     $theme_default = variable_get('theme_default', FALSE);
     $admin_theme = variable_get('admin_theme', FALSE);
+    $jquery_current_version_admin = theme_get_setting('jquery_update_jquery_version', $admin_theme);
     $messaging = array(
       'msg' => '',
       'msg_state' => 'warning',
       'watch_state' => WATCHDOG_WARNING,
     );
+
+    // Set current default theme's jQuery version to 1.12.x if the admin_theme isn't also the default theme.
     if ($admin_theme !== $theme_default) {
       $jquery_current_version = theme_get_setting('jquery_update_jquery_version', $theme_default);
       // Don't update if set jQuery version is HIGHER than 1.12.x
       // Forces regression back from 1.12.3+ (security hole)
       if (version_compare($jquery_current_version, "1.12", "<=")) {
         _jquery_update_set_theme_version($theme_default, '1.12');
-        $messaging['msg'] = 'jQuery was updated/modified to v1.12.2 for the default theme (' . $theme_default . ').';
+        $messaging['msg'] = 'jQuery was updated/modified to v1.12.2 for the default theme (' . $theme_default . '). ' . "\n";
         $messaging['msg_state'] = 'status';
         $messaging['watch_state'] = WATCHDOG_NOTICE;
       }
@@ -365,14 +369,26 @@ function webspark_featurescustom_update_7012(&$sandbox) {
       }
     }
     else {
-      $messaging['msg'] = 'jQuery was not updated by because 1) ' . $theme_default .
+      $messaging['msg'] = 'jQuery was not updated for ' . $theme_default . ' because 1) ' . $theme_default .
         ' is set as the administrative theme, and 2) most of the administrative 
         areas are not compatible with jQuery 1.8+. Consider selecting Webspark 
         Seven for the administrative section of your site at 
-        /admin/appearance and manually setting jQuery to 1.12 at 
-        /admin/config/development/jquery_update.';
+        /admin/appearance and manually setting jQuery to 1.12 for the ' . $theme_default . ' default theme at 
+        /admin/config/development/jquery_update. ' . "\n";
     }
+
+    // Set admin_theme to v1.7, regardless of the default theme is because 1) 1.8+ won't work in the admin area, and 2) v1.4.x is buggy with other 
+    // jQuery updates in at least one reported case.
+    if (version_compare($jquery_current_version_admin, "1.7", "<")) {
+      _jquery_update_set_theme_version($admin_theme, '1.7');
+      $messaging['msg'] .= "\n" . 'jQuery was updated to v1.7.2 for the ' . $admin_theme . ' admin theme.';
+    }
+    else {
+      $messaging['msg'] .= "\n" . 'jQuery is already set to at least 1.7.x for the ' . $admin_theme . ' admin theme.';
+    }
+
     drupal_set_message($messaging['msg'], $messaging['msg_state']);
     watchdog('webspark_featurescustom', $messaging['msg'], array(), $messaging['watch_state']);
   }
+
 }
