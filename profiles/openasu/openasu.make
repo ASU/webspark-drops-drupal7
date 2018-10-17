@@ -209,6 +209,7 @@ projects[tb_megamenu][patch][] = patches/webspark-1018_tb-megamenu_removing-mobi
 ; added patches/ path to 1304 path - rknesbit
 projects[tb_megamenu][patch][] = patches/webspark-1304_tb_megamenu_update-data-col-sizes.patch
 projects[tb_megamenu][patch][] = patches/webspark-1379_megamenu-classes-missing.patch
+projects[tb_megamenu][patch][] = patches/webspark-1086_tb-megamenu_fix-undefined-index_2571547-23.patch
 
 ; UUID Features Integration
 ;projects[uuid_features][version] = 1.0-alpha4
