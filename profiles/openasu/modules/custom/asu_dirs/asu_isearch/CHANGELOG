@@ -1,3 +1,11 @@
+asu_isearch 7.x-1.10
+-------------------_
+- Fixed mapping of Twitter field for profile imports
+- Fixed configuration for proper HTML field filtering
+- Added profile video importing and display functionality
+- Added asu_isearch_prepare_migration hook
+- Fixed mapping of gradFaculties field for profile imports
+
 asu_isearch 7.x-1.9
 -------------------
 - Fixed bug where default photo was being deleted upon cron run

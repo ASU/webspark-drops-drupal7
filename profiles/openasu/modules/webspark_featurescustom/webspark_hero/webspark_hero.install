@@ -1,0 +1,9 @@
+<?php
+
+// Implements hook_update_N().
+/**
+ * + Updates Hero configuration form descriptions.
+ */
+function webspark_hero_update_7000(&$sandbox) {
+  features_revert(array('webspark_hero' => array('field_base', 'field_instance')));
+}

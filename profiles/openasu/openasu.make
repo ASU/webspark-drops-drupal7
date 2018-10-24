@@ -14,42 +14,42 @@ projects[drupal][version] = 7.59
 ; The Panopoly Foundation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-projects[panopoly_core][version] = 1.53
+projects[panopoly_core][version] = 1.55
 projects[panopoly_core][subdir] = panopoly
 
-projects[panopoly_images][version] = 1.53
+projects[panopoly_images][version] = 1.55
 projects[panopoly_images][subdir] = panopoly
 
-projects[panopoly_theme][version] = 1.53
+projects[panopoly_theme][version] = 1.55
 projects[panopoly_theme][subdir] = panopoly
 
-projects[panopoly_magic][version] = 1.53
+projects[panopoly_magic][version] = 1.55
 projects[panopoly_magic][subdir] = panopoly
 ; Validation error with reusable FPPs. Updated in 1.52; Custom patch different from drupal.org/node/2813395
 projects[panopoly_magic][patch][2813395] = patches/ws-1236_title-cant-reuse-error_2813395.patch
 
-projects[panopoly_widgets][version] = 1.53
+projects[panopoly_widgets][version] = 1.55
 projects[panopoly_widgets][subdir] = panopoly
 
-projects[panopoly_admin][version] = 1.53
+projects[panopoly_admin][version] = 1.55
 projects[panopoly_admin][subdir] = panopoly
 
-projects[panopoly_users][version] = 1.53
+projects[panopoly_users][version] = 1.55
 projects[panopoly_users][subdir] = panopoly
 
 ; The Panopoly Toolset
-projects[panopoly_pages][version] = 1.53
+projects[panopoly_pages][version] = 1.55
 projects[panopoly_pages][subdir] = panopoly
 
-projects[panopoly_wysiwyg][version] = 1.53
+projects[panopoly_wysiwyg][version] = 1.55
 projects[panopoly_wysiwyg][subdir] = panopoly
 
-projects[panopoly_search][version] = 1.53
+projects[panopoly_search][version] = 1.55
 projects[panopoly_search][subdir] = panopoly
 ; Fixes DB update dependency ordering
 ; projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
 
-projects[panopoly_test][version] = 1.53
+projects[panopoly_test][version] = 1.55
 projects[panopoly_test][subdir] = panopoly
 
 projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.46.patch
@@ -58,24 +58,24 @@ projects[panopoly_test][patch][142] = patches/webspark-944_add-init-config-tests
 projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.patch
 ; moved custom tests to webspark_test custom module
 ;projects[panopoly_test][patch][1403] = patches/webspark-1066-panopoly-webspark-add-custom-tests-v143.patch
-; Added v1.52 test patch after the fact this once - @TODO merge into a new patch in the next release
-projects[panopoly_test][patch][1258] = https://www.drupal.org/files/issues/2018-03-14/panopoly_test-update-tablefield-7.x-3.1-2919401-17.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
-; commenting this out until we update this repo
-; @TODO - update the repo with latest modules
 projects[asu_drupal_modules][type] = module
 projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = 0bbbe56949418fd5ac3df85672455b3af766a2b3
+projects[asu_drupal_modules][download][revision] = 7e86f7fed3a06597335c7ca8850e95cb9f56c373
 projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ASU Module Prerequisites
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-projects[better_watchdog_ui][version] = 2.2
+; Latest Better Watchdog UI dev as of 20180615
 projects[better_watchdog_ui][type] = module
 projects[better_watchdog_ui][subdir] = contrib
+projects[better_watchdog_ui][download][type] = "git"
+projects[better_watchdog_ui][download][branch] = "7.x-3.x"
+projects[better_watchdog_ui][download][url] = "https://git.drupal.org/project/better_watchdog_ui.git"
+projects[better_watchdog_ui][download][revision] = "758de4cc4995149a2de1d566b4209ec343581d27"
 
 projects[cas_attributes][version] = 1.0-rc3
 projects[cas_attributes][type] = module
@@ -85,7 +85,6 @@ projects[email][version] = 1.3
 projects[email][subdir] = contrib
 projects[email][type] = module
 
-; @TODO v2.0-beta2
 projects[feeds][version] = 2.0-alpha9
 projects[feeds][type] = module
 projects[feeds][subdir] = contrib
@@ -94,15 +93,13 @@ projects[feeds_xpathparser][version] = 1.1
 projects[feeds_xpathparser][type] = module
 projects[feeds_xpathparser][subdir] = contrib
 
-projects[job_scheduler][version] = 2.0-alpha3
+projects[job_scheduler][version] = 2.0
 projects[job_scheduler][type] = module
 projects[job_scheduler][subdir] = contrib
 
-projects[ldap][version] = 2.0-beta8
+projects[ldap][version] = 2.3
 projects[ldap][type] = module
 projects[ldap][subdir] = contrib
-;; patch - see https://drupal.org/node/2182413, comment #10 - remove upon ldap update beyond beta8
-projects[ldap][patch][2182413] = http://cgit.drupalcode.org/ldap/patch/?id=fe3a3d56ffebc9bd551c6d83a03172fae13517c3
 
 projects[references][version] = 2.1
 projects[references][type] = module
@@ -116,7 +113,8 @@ projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
 projects[viewfield][subdir] = contrib
 
-projects[webform][version] = 4.14
+; Don't update to v4.17 until https://www.drupal.org/project/webform/issues/2966816 is worked out
+projects[webform][version] = 4.16
 projects[webform][type] = module
 projects[webform][subdir] = contrib
 
@@ -134,15 +132,14 @@ projects[backgroundfield][patch][1841978] = patches/webspark-1069_backgroundfiel
 projects[backgroundfield][patch][1936252] = patches/webspark-1069_backgroundfield-media-module-support.patch
 
 ; CAS SSO Integration
-projects[cas][version] = 1.5
+projects[cas][version] = 1.7
 projects[cas][subdir] = contrib
 
-; @TODO v.2.0-beta5
-projects[chosen][version] = 2.0-beta4
+projects[chosen][version] = 2.1
 projects[chosen][type] = module
 projects[chosen][subdir] = contrib
 
-projects[easy_breadcrumb][version] = 2.12
+projects[easy_breadcrumb][version] = 2.15
 projects[easy_breadcrumb][type] = module
 projects[easy_breadcrumb][subdir] = contrib
 
@@ -154,7 +151,7 @@ projects[field_collection][version] = 1.0-beta11
 projects[field_collection][type] = module
 projects[field_collection][subdir] = contrib
 
-projects[flexslider][version] = 2.0-rc1
+projects[flexslider][version] = 2.0-rc2
 projects[flexslider][type] = module
 projects[flexslider][subdir] = contrib
 
@@ -172,14 +169,12 @@ projects[maxlength][version] = 3.2-beta2
 projects[maxlength][type] = module
 projects[maxlength][subdir] = contrib
 
-;; @TODO - Remove patch when file when submitted patch gets pulled into module
 projects[missing_module][type] = module
 projects[missing_module][subdir] = contrib
 projects[missing_module][download][type] = "git"
 projects[missing_module][download][branch] = "7.x-1.x"
 projects[missing_module][download][url] = "http://git.drupal.org/project/missing_module.git"
-projects[missing_module][download][revision] = 19492ccee8b8ac683b3a384e8663c09af55dc3af
-projects[missing_module][patch][2854074] = patches/webspark-1052_missing-module_improvements-to-ux_2854074-5.patch
+projects[missing_module][download][revision] = "7509d5f036c1c714822598d2f82fa64ee730a021"
 
 projects[panels_tabs][version] = 2.x-dev
 projects[panels_tabs][type] = module
@@ -211,15 +206,20 @@ projects[tb_megamenu][patch][] = patches/webspark-919_tb-megamenu_fix-breakpoint
 projects[tb_megamenu][patch][] = patches/webspark-935_tb-megamenu_fix-submenu-removal_7.x.patch
 projects[tb_megamenu][patch][] = patches/webspark-1007-redux-tb_megamenu-tab_accessibility-7.x.patch
 projects[tb_megamenu][patch][] = patches/webspark-1018_tb-megamenu_removing-mobile-button-for-ADA_7.x.patch
+; added patches/ path to 1304 path - rknesbit
+projects[tb_megamenu][patch][] = patches/webspark-1304_tb_megamenu_update-data-col-sizes.patch
+projects[tb_megamenu][patch][] = patches/webspark-1379_megamenu-classes-missing.patch
+projects[tb_megamenu][patch][] = patches/webspark-1086_tb-megamenu_fix-undefined-index_2571547-23.patch
 
+; UUID Features Integration
 ;projects[uuid_features][version] = 1.0-alpha4
-;; grabbing alpha-4+dev-37 commit
+;; grabbing latest version of DEV as of 2018-06-17
 projects[uuid_features][type] = module
 projects[uuid_features][subdir] = contrib
 projects[uuid_features][download][type] = "git"
 projects[uuid_features][download][branch] = "7.x-1.x"
 projects[uuid_features][download][url] = "http://git.drupal.org/project/uuid_features.git"
-projects[uuid_features][download][revision] = "55a2d5070b6f238f40372070f70314cc4f8197d8"
+projects[uuid_features][download][revision] = "63a676b0243838a1624a758a373aaca9444cce06"
 
 projects[video_embed_field][version] = 2.0-beta11
 projects[video_embed_field][type] = module
@@ -236,17 +236,30 @@ projects[views_bootstrap][version] = 3.1
 projects[views_bootstrap][type] = module
 projects[views_bootstrap][subdir] = contrib
 
-; ASU RFI make file contents
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; ASU Custom (modules/custom) module dependencies
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+; ASU News + Events dependencies
+projects[addtocal][version] = 1.0
+projects[addtocal][type] = module
+projects[addtocal]subdir] = contrib
+
+projects[feeds_tamper][version] = 1.2
+projects[feeds_tamper][type] = module
+projects[feeds_tamper][subdir] = contrib
+
+projects[field_ellipsis][version] = 1.4
+projects[field_ellipsis][type] = module
+projects[field_ellipsis][subdir] = contrib
+
+; ASU RFI dependencies - make file contents
 ; Upload multidev and patch it
-
 projects[multiblock][version] = 1.1
 projects[multiblock][type] = module
 projects[multiblock][subdir] = contrib
 projects[multiblock][patch][] = https://www.drupal.org/files/issues/multiblock_cache-2185235-5.patch
 projects[multiblock][patch][] = https://www.drupal.org/files/fix_config_per_instance-1370966-5.patch
-
-; Added RFI dependencies here, vs. in openasu.make
 
 projects[views_data_export][version] = 3.0-beta9
 projects[views_data_export][type] = module
@@ -284,9 +297,6 @@ projects[kalatheme][patch][] = patches/webspark-565-add-views-tpl-to-kalatheme.p
 projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-spelling-fix.patch
 projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-admin-spelling-fix.patch
 projects[kalatheme][patch][] = patches/nojira-20160715-kalatheme_fix-missing-index.patch
-
-projects[modernizr][version] = 3.9
-projects[modernizr][subdir] = contrib
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ASU Module prerequisites - Webstandards additions - Libraries
@@ -331,18 +341,6 @@ libraries[fontawesome_fonts][download][type] = get
 libraries[fontawesome_fonts][download][url] = https://github.com/FortAwesome/Font-Awesome/archive/v4.6.3.zip
 libraries[fontawesome_fonts][download][subtree] = Font-Awesome-4.6.3/fonts
 libraries[fontawesome_fonts][directory_name] = fontawesome/fonts
-
-; 1 of 2 - Modernizr.js
-libraries[modernizr][download][type] = get
-libraries[modernizr][download][url] = https://raw.githubusercontent.com/Modernizr/Modernizr/v2.8.3/modernizr.js
-libraries[modernizr][directory_name] = modernizr
-libraries[modernizr][download][sha256] = 7dfc3ef73c1284c7aff3c5cdac3812d212c8b899037d7860c8ba20a1defb9a7f
-; 2 of 2
-libraries[modernizr_feature_d][download][type] = get
-libraries[modernizr_feature_d][download][url] = https://github.com/Modernizr/Modernizr/archive/v2.8.3.zip
-libraries[modernizr_feature_d][download][subtree] = Modernizr-2.8.3/feature-detects
-libraries[modernizr_feature_d][directory_name] = modernizr/feature-detects
-libraries[modernizr_feature_d][download][sha256] = e9e8165a6ec2df5c9b72cafcee3c2b830656e010d9f64bbb1a571747359a8bd4
 
 ; 1 of 2 - jQTree
 libraries[jqtree][download][type] = file

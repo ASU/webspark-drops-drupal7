@@ -38,7 +38,7 @@ function webspark_seven_fieldset($variables) {
   $element = $variables['element'];
   element_set_attributes($element, array('id'));
 
-  $no_of_parents = count($element['#parents']) - 1;
+  $no_of_parents = (isset($element['#parents'])) ? count($element['#parents']) - 1 : 0;
   $additional_class = ($no_of_parents % 2 == 0) ? 'fieldset-nested-even' : 'fieldset-nested-odd';
   _form_set_class($element, array('form-wrapper', $additional_class));
 

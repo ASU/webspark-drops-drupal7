@@ -13,8 +13,10 @@
  *
  * Modules implementing this hook may wish to alter 'name' if the CAS server
  * returns user names which contain excess information or are not directly
- * machine readable. This field is not the Drupal name of the user. Instead,
- * this is used to load a Drupal user via the mapping in the {cas_user} table.
+ * machine readable. This name is used to lookup existing local Drupal
+ * CAS accounts via the {cas_user} mapping table. If the user does not exist
+ * locally, and automatic registration is enabled, this name will be also 
+ * be as the local Drupal user account name that's created.
  *
  * The 'login' parameter controls whether the user is able to login. By
  * default this will be set to TRUE, but modules may set this flag to FALSE

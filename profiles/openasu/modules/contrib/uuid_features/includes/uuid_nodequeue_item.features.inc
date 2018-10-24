@@ -12,6 +12,7 @@ function uuid_nodequeue_item_features_export_options() {
   $result = db_select('nodequeue_nodes', 'qn')
     ->fields('qn', array('qid', 'sqid', 'nid', 'position'))
     ->orderBy('position', 'ASC')
+    ->addTag('uuid_nodequeue_item_features_export_options')
     ->execute();
   while ($row = $result->fetchAssoc()) {
     $queue = nodequeue_load($row['qid']);

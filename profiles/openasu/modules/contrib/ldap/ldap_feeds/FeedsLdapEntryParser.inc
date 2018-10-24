@@ -22,6 +22,10 @@ class FeedsLdapEntryParser extends FeedsParser {
       $parsed_item = array('dn' => (string)$ldap_entry['dn']);
       foreach ($mappings as $j => $map) {
         $source_lcase = drupal_strtolower($map['source']);
+        // dn is already parsed
+        if ($source_lcase == 'dn') {
+          continue;
+        }
         $source = $map['source'];
         if (isset($ldap_entry['attr'])) {
           // exception need because of unconvential format of ldap data returned from $ldap_server->userUserNameToExistingLdapEntry
@@ -30,9 +34,13 @@ class FeedsLdapEntryParser extends FeedsParser {
         else {
           $ldap_attributes = $ldap_entry;
         }
-        if ($source_lcase != 'dn' && isset($ldap_attributes[$source_lcase][0])) {
+        if (isset($ldap_attributes[$source_lcase][0])) {
           if ($ldap_attributes[$source_lcase]['count'] == 1 && is_scalar($ldap_attributes[$source_lcase][0])) {
             $parsed_item[$source] = (string)$ldap_attributes[$source_lcase][0];
+          }
+          else {
+            unset($ldap_attributes[$source_lcase]['count']);
+            $parsed_item[$source] = $ldap_attributes[$source_lcase];
           }
         }
         else {

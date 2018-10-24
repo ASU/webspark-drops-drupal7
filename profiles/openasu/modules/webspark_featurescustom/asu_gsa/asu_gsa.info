@@ -1,7 +1,7 @@
 name = ASU GSA
-description = Adding ASU customization for Google Search Appliance
+description = "ASU-specific customizations for Google Search Appliance results, and the Google Appliance contrib module."
 core = 7.x
 package = ASU
-version = 7.x-1.0
+version = 7.x-1.2
 project = asu_gsa
 dependencies[] = google_appliance

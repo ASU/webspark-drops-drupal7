@@ -93,6 +93,7 @@ function asu_rfi_form($delta)
   );
   // Hack for Safari
   drupal_add_js('jQuery(window).unload(function(){});', array('type' => 'inline'));
+
 }
 
 function asu_rfi_form_data($form, &$form_state)
@@ -111,6 +112,10 @@ function asu_rfi_form_data($form, &$form_state)
   // Hack for Safari
   drupal_add_js('jQuery(window).unload(function(){});', array('type' => 'inline'));
 
+  // Add js to gather enterpriseclientid from GA to add to payload for
+  // submissions destined for EdPlus and their Lead API 4.0 by way of the
+  // Middleware.
+  drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.fields.js', 'file');
 
   if (isset($form_state['storage'])) {
 
@@ -293,6 +298,15 @@ function asu_rfi_form_data($form, &$form_state)
       '#maxlength' => 128,
       '#default_value' => $college_name,
       '#size' => 50,
+    );
+
+    $form['enterpriseclientid'] = array(
+      '#type' => 'hidden',
+      '#maxlength' => 255,
+      // Will be filled in using JS to obtain from GA, per EdPlus.
+      // See WEBSPARK-1198.
+      '#default_value' => '',
+      '#size' => 60,
     );
 
     $form['my_interest']['start_date'] = array(
@@ -653,6 +667,8 @@ function asu_rfi_form_data_submit($form, &$form_state)
 
   $form_state['storage']['college_name'] = check_plain($form_state['values']['college_name']);
 
+  $form_state['storage']['enterpriseclientid'] = check_plain($form_state['values']['enterpriseclientid']);
+
   $form_state['storage']['birthdate'] = $dobdate;
 
   //get start date array
@@ -728,6 +744,7 @@ function asu_rfi_form_data_submit($form, &$form_state)
     $ewrapper->field_rfi_sms_opted->set($form_state['storage']['mobile_check']);
     $ewrapper->field_rfi_program_name->set($form_state['storage']['prog_plan']);
     $ewrapper->field_rfi_college_name->set($form_state['storage']['college_name']);
+    $ewrapper->field_rfi_enterpriseclientid->set($form_state['storage']['enterpriseclientid']);
     $ewrapper->field_rfi_prospect_level->set($form_state['storage']['prospect_level']);
     $ewrapper->field_rfi_campus->set($form_state['storage']['campus']);
     $ewrapper->save();
@@ -770,6 +787,7 @@ function asu_rfi_form_data_submit($form, &$form_state)
     $ewrapper->field_rfi_sms_opted->set($form_state['storage']['mobile_check']);
     $ewrapper->field_rfi_program_name->set($form_state['storage']['prog_plan']);
     $ewrapper->field_rfi_college_name->set($form_state['storage']['college_name']);
+    $ewrapper->field_rfi_enterpriseclientid->set($form_state['storage']['enterpriseclientid']);
     $ewrapper->field_rfi_prospect_level->set($form_state['storage']['prospect_level']);
     $ewrapper->field_rfi_campus->set($form_state['storage']['campus']);
     $ewrapper->save();
@@ -799,6 +817,11 @@ function asu_rfi_second_form($form, &$form_state)
   );
   // Hack for Safari
   drupal_add_js('jQuery(window).unload(function(){});', array('type' => 'inline'));
+
+  // Add js to gather enterpriseclientid from GA to add to payload for
+  // submissions destined for EdPlus and their Lead API 4.0 by way of the
+  // Middleware.
+  drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.fields.js', 'file');
 
   //If the form is in test mode, display test mode message
   drupal_add_css(drupal_get_path('module', 'asu_rfi') . '/theme/asu_rfi.css', 'file');
@@ -1203,6 +1226,11 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type)
   drupal_add_js('jQuery(window).unload(function(){});', array('type' => 'inline'));
   drupal_page_is_cacheable(FALSE);
 
+  // Add js to gather enterpriseclientid from GA to add to payload for
+  // submissions destined for EdPlus and their Lead API 4.0 by way of the
+  // Middleware.
+  drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.fields.js', 'file');
+
   $start_dates = _asu_rfi_sem_dates();
   $country = asu_rfi_countries_data();
   $states = asu_rfi_states_data();
@@ -1592,6 +1620,14 @@ $form['form_middle_post'] = array(
     '#default_value' => 'LF',
   );
 
+  $form['enterpriseclientid'] = array(
+    '#type' => 'hidden',
+    '#maxlength' => 255,
+    // Will be filled in using JS to obtain from GA, per EdPlus.
+    // See WEBSPARK-1198.
+    '#default_value' => '',
+    '#size' => 60,
+  );
 
   $form['submit'] = array(
     '#type' => 'submit',
@@ -1918,6 +1954,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state)
   $form_state['values']['phone'] = $form_state['values']['phone'];
   $location = $form_state['values']['location'];
   $campus = $form_state['values']['campus'];
+  $enterpriseclientid = $form_state['values']['enterpriseclientid'];
 
   $sms_opted = $form_state['values']['mobile_check'];
 
@@ -1989,7 +2026,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state)
   }
 
   //Query database to get program name based on the program code submitted in the form
-  $program_name = db_query('select ' . $degreeMappings['field_degree_awarded_value'] . ' from ' . $degreeMappings['table_asu_academic_program'] . ' mj join ' . $degreeMappings['table_asu_academic_plan'] . ' ap on mj.entity_id = ap.entity_id where ap.' . $degreeMappings['field_academic_plan_value'] . ' = :plan', array(':plan' => $program))->fetchField();
+  $program_name = db_query('select ' . $degreeMappings['field_degree_awarded_value'] . ' from ' . $degreeMappings['table_asu_degree_awarded'] . ' mj join ' . $degreeMappings['table_asu_academic_plan'] . ' ap on mj.entity_id = ap.entity_id where ap.' . $degreeMappings['field_academic_plan_value'] . ' = :plan', array(':plan' => $program))->fetchField();
 
   //Get college code from database based on program code
   $college_code = db_query('select ' . $degreeMappings['field_academic_program_value'] . ' from ' . $degreeMappings['table_asu_academic_program'] . ' prog join ' . $degreeMappings['table_asu_academic_plan'] . ' plan on prog.entity_id = plan.entity_id where plan.' . $degreeMappings['field_academic_plan_value'] . ' = :plancode', array(':plancode' => $program))->fetchField();
@@ -2031,6 +2068,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state)
   $ewrapper->field_rfi_start_term->set($semester_name);
   $ewrapper->field_rfi_program_name->set($program_name);
   $ewrapper->field_rfi_college_name->set($college_name);
+  $ewrapper->field_rfi_enterpriseclientid->set($enterpriseclientid);
   $ewrapper->field_rfi_prospect_level->set($form_state['values']['prospect_level']);
   $ewrapper->field_rfi_location->set($location);
   $ewrapper->field_rfi_campus->set($campus);

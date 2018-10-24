@@ -1,0 +1,36 @@
+diff --git a/panopoly_magic.module b/panopoly_magic.module
+index 4e83365..1e69058 100644
+--- a/panopoly_magic.module
++++ b/panopoly_magic.module
+@@ -809,7 +809,9 @@ function panopoly_magic_form_fieldable_panels_panes_fieldable_panels_pane_conten
+   }
+ 
+   // Add custom validation function for the reusable title
+-  $form['reusable']['admin_title']['#element_validate'][] = 'panopoly_magic_reusable_entity_validate';
++  if (!(!empty($form_state['triggering_element']) && $form_state['triggering_element']['#value'] == 'Update Preview')) {
++    $form['admin']['admin_title']['#element_validate'][] = 'panopoly_magic_reusable_entity_validate';
++  }
+ 
+   // Customize the view mode setting
+   if (!empty($form['view_mode'])) {
+@@ -841,10 +843,6 @@ function panopoly_magic_form_fieldable_panels_panes_fieldable_panels_pane_conten
+     $form['reusable']['#type'] = '';
+     $form['reusable']['#title'] = '';
+     $form['reusable']['reusable']['#title'] = t('Make this reusable');
+-    $form['reusable']['admin_title']['#field_prefix'] = t('Admin Title');
+-    $form['reusable']['admin_title']['#title'] = '';
+-    $form['reusable']['admin_title']['#size'] = '';
+-    $form['reusable']['admin_title']['#description'] = '';
+     $form['widget_settings']['reusable'] = $form['reusable'];
+     unset($form['reusable']);
+   }
+@@ -1422,7 +1420,7 @@ function panopoly_magic_reusable_entity_validate($element, &$form_state, $form)
+   if (!empty($form_state['values']['reusable'])) {
+     // Ensure a title is present.
+     if (empty($element['#value'])) {
+-      form_error($element, t('If you would like this entity to be reusable, please add a title.'));
++      form_error($element, t('Please add an administrative title to make this entity reusable.'));
+     }
+   }
+ }
+

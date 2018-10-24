@@ -82,7 +82,7 @@ function mega_footer_block_view($delta = '') {
           $check . "'>Contact us</a></p>": "";
 
       // Social Media icons
-      $footer_mark .= "<ul class='social-media'>";
+      $footer_mark .= "<ul class='dgtl-mkting-101'>";
       $footer_mark = _mega_footer_social_media('facebook', 'facebook-square', 'Facebook', $footer_mark);
       $footer_mark = _mega_footer_social_media('twitter', 'twitter-square', 'Twitter', $footer_mark);
       $footer_mark = _mega_footer_social_media('google', 'google', 'Google+', $footer_mark);
@@ -92,6 +92,7 @@ function mega_footer_block_view($delta = '') {
       $footer_mark = _mega_footer_social_media('vimeo', 'vimeo-square', 'Vimeo', $footer_mark);
       $footer_mark = _mega_footer_social_media('flickr', 'flickr', 'Flickr', $footer_mark);
       $footer_mark = _mega_footer_social_media('pinterest', 'pinterest-square', 'Pinterest', $footer_mark);
+      $footer_mark = _mega_footer_social_media('tumblr', 'tumblr-square', 'Tumblr', $footer_mark);
       $footer_mark = _mega_footer_social_media('rss', 'rss-square', 'RSS', $footer_mark);
       $footer_mark = _mega_footer_custom_icon_and_link('social_media', '1', $footer_mark);
       $footer_mark = _mega_footer_custom_icon_and_link('social_media', '2', $footer_mark);
@@ -440,14 +441,16 @@ function mega_footer_block_validate(&$form, $form_state) {
   if ($delta == 'mega_footer') {
     foreach ($form_state['values'] as $haystack => $straw) {
       if (!is_array($straw)) {
-        if (stristr($haystack, '_link')) {
+        if (stristr($haystack, '_link') && !empty($straw)) {
           $absolute = TRUE;
-          if ($straw == 'mega_footer_unit_contact_us_link' || $straw == 'mega_footer_contribute_link' || $straw == 'mega_footer_unit_rss_link') {
+          $error_message_addendum = " The URL must also be an absolute URL (i.e. begin with an http:// or https://).";
+          if ($haystack == 'mega_footer_unit_contact_us_link' || $haystack == 'mega_footer_contribute_link' || $haystack == 'mega_footer_unit_rss_link') {
             $absolute = FALSE;
+            $error_message_addendum = "";
           }
           if (!valid_url($straw, $absolute)) {
-            form_set_error($haystack, t('The value provided for %field is not a valid URL.',
-              array('%field' => $haystack)));
+            form_set_error($haystack, t('%value is not a valid URL for %field.' . $error_message_addendum,
+              array('%field' => $haystack, '%value' => $straw)));
           }
         }
       }

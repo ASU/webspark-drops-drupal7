@@ -31,9 +31,6 @@ class ViewsBootstrapAccordionPluginStyle extends views_plugin_style {
         }
       }
 
-      // Delete grouping.
-      unset($form['grouping']);
-
       $form['title_field'] = array(
         '#type' => 'select',
         '#title' => t('Title field'),

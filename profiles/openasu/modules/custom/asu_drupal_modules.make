@@ -7,7 +7,7 @@
 api = 2
 core = 7.x
 
-projects[views_bootstrap][version] = 3.1
+projects[views_bootstrap][version] = 3.2
 projects[views_bootstrap][type] = module
 projects[views_bootstrap][subdir] = contrib
 
@@ -23,7 +23,7 @@ projects[multiblock][patch][] = https://www.drupal.org/files/fix_config_per_inst
 
 ; Added RFI dependencies here, vs. in openasu.make
 
-projects[views_data_export][version] = 3.0-beta9
+projects[views_data_export][version] = 3.2
 projects[views_data_export][type] = module
 projects[views_data_export][subdir] = contrib
 

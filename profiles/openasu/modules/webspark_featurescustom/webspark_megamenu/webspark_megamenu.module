@@ -3,13 +3,18 @@
  * @file
  * Drupal needs this blank file.
  */
+
+/**
+ * Implements hook_init().
+ **/
 function webspark_megamenu_init() {
-drupal_add_js(drupal_get_path('module', 'webspark_megamenu') .'/js/webspark_megamenu.js', 'file');
-drupal_add_css(drupal_get_path('module', 'webspark_megamenu') . '/css/webspark_megamenu.css', array('weight' => 99, 'group' => CSS_DEFAULT));
+  drupal_add_js(drupal_get_path('module', 'webspark_megamenu') .'/js/webspark_megamenu.js', 'file');
+  drupal_add_js(libraries_get_path('emulatetab') . '/src/emulatetab.joelpurra.min.js');
+  drupal_add_css(drupal_get_path('module', 'webspark_megamenu') . '/css/webspark_megamenu.css', array('weight' => 99, 'group' => CSS_DEFAULT));
 }
 
 /**
-*  
+* Implements hook_form_alter().
 **/
 function webspark_megamenu_form_alter(&$form, &$form_state, &$form_id) {
   if ($form_id == "menu_edit_item") {
@@ -17,6 +22,27 @@ function webspark_megamenu_form_alter(&$form, &$form_state, &$form_id) {
     //$form['link_path']['#default_value'] = $GLOBALS['base_url'].'/'.variable_get('site_frontpage', 'node');
   }
 }
+
+/**
+ * Implements hook_page_alter().
+ **/
 function webspark_megamenu_page_alter(&$page) {
   drupal_add_js(drupal_get_path('module', 'webspark_megamenu').'/js/webspark_megamenu_pre.js', array('scope'=>'header'));
+}
+
+/**
+ * Implements hook_libraries_info().
+ */
+function webspark_megamenu_libraries_info() {
+  $libraries['emulatetab'] = array(
+    'name' => 'EmulateTab',
+    'vendor url' => 'https://github.com/joelpurra/emulatetab',
+    'download url' => 'https://raw.githubusercontent.com/joelpurra/emulatetab/gh-pages/dist/emulatetab.joelpurra.min.js',
+    'path' => 'profiles/openasu/libraries/emulatetab/src',
+    // Version v0.2.8
+    'files' => array(
+      'js' => array('emulatetab.joelpurra.js'),
+    ),
+  );
+  return $libraries;
 }

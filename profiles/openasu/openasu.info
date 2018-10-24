@@ -5,7 +5,7 @@ core = 7.x
 exclusive = 1
 ;version = VERSION
 ; Remember to update in innovation as well for DOM
-version = 1.53.1
+version = 1.55.1
 
 ; Drupal Core
 dependencies[] = taxonomy
@@ -62,14 +62,10 @@ dependencies[] = fontawesome
 dependencies[] = google_appliance
 dependencies[] = maxlength
 dependencies[] = panels_tabs
-;dependencies[] = quicktabs
 dependencies[] = uuid_features
 dependencies[] = features_override
 dependencies[] = video_embed_field
 dependencies[] = wysiwyg_template
-
-; OpenASU - Toolset
-dependencies[] = modernizr
 
 ; OpenASU - Custom
 dependencies[] = asu_brand

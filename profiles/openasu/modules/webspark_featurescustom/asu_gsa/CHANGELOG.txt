@@ -1,0 +1,17 @@
+ASU GSA 7.x-1.2, 2018-10-05
+—————————————————————————
+- Namespaces CSS to stop from overreaching into other projects
+- Adds TPLs to override Google Appliance and core Search TPLs for results
+- Removes ASU GSA theme inc file
+- Fixes search box + button layouts
+
+ASU GSA 7.x-1.1, 2018-06-16
+—————————————————————————
+- Now updates the Google Appliance module when it is updated from prior releases up to v1.14.
+- Added this CHANGELOG.txt file
+- Removed ASU GSA admin configuration settings page (Google Appliance can handle this)
+  - Added Local Search option to Google Appliance settings page.
+
+ASU GSA 7.x-1.0, unknown
+—————————————————————————
+- Initial creation and installation of ASU GSA module.

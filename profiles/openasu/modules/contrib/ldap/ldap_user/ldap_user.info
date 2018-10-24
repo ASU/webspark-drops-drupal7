@@ -23,9 +23,8 @@ files[] = tests/ldap_user.test
 stylesheets[all][] = ldap_user.css
 configure = admin/config/people/ldap/user
 
-; Information added by Drupal.org packaging script on 2014-01-08
-version = "7.x-2.0-beta8"
-core = "7.x"
-project = "ldap"
-datestamp = "1389150511"
+test_dependencies[] = ldap_sso:ldap_sso
+
+; Manual version insertion
+version = "7.x-2.3+25-dev"
 

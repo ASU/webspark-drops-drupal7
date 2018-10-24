@@ -1,0 +1,713 @@
+<?php
+/**
+ * @file addtocal.module
+ * General functions and hook implementations.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function addtocal_menu() {
+
+  $items = array();
+  
+  foreach (addtocal_get_addtocal_entities() as $entity_name => $values) {
+    $items[$entity_name . '/%entity_object/%/%/addtocal.ics'] = array(
+      'load arguments' => array($entity_name),
+      'title' => 'Download Event',
+      'page callback' => 'addtocal_download_ics',
+      'page arguments' => array(1, 2, 3),
+      'access callback' => 'entity_access',
+      'access arguments' => array('view', $entity_name, 1),
+    );
+    $items[$entity_name . '/%entity_object/%/%/addtocal-google'] = array(
+      'load arguments' => array($entity_name),
+      'title' => 'Download Event',
+      'page callback' => 'addtocal_google_link',
+      'page arguments' => array(1, 2, 3),
+      'access callback' => 'entity_access',
+      'access arguments' => array('view', $entity_name, 1),
+    );
+    $items[$entity_name . '/%entity_object/%/%/addtocal-yahoo'] = array(
+      'load arguments' => array($entity_name),
+      'title' => 'Download Event',
+      'page callback' => 'addtocal_yahoo_link',
+      'page arguments' => array(1, 2, 3),
+      'access callback' => 'entity_access',
+      'access arguments' => array('view', $entity_name, 1),
+    );
+  }
+
+  return $items;
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function addtocal_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'token_info_alter') {
+    // This is sometimes happening before the token module adds fields. Lets
+    // move it down in order to make it so it doesn't cause tokens to not
+    // run for date fields.
+    unset($implementations['addtocal']);
+    $implementations['addtocal'] = 'tokens';
+  }
+}
+
+/**
+ * Returns a list of all eligible entities to use with Add to Cal, along with their eligible fields and matching view modes.
+ *
+ * Output structure: [$entity_name][$field_name][$view_mode_name]
+ *
+ * @return array
+ */
+function addtocal_get_addtocal_entities() {
+  $entities = field_info_instances();
+  $entity_info = array();
+
+  foreach ($entities as $entity_name => $entity) {
+    foreach ($entity as $bundle_name => $bundle) {
+      foreach ($bundle as $field_name => $field) {
+        foreach ($field['display'] as $display_name => $display) {
+          if ($display['type'] == 'addtocal_view') {
+
+            // This awkward elif structures the output
+            if (!array_key_exists($entity_name, $entity_info)) {
+              $entity_info[$entity_name] = array(
+                $field_name => array(
+                  $display_name,
+                ),
+              );
+            } else if (!array_key_exists($field_name, $entity_info[$entity_name])) {
+              $entity_info[$entity_name][$field_name] = array(
+                $display_name,
+              );
+            } else if (!array_key_exists($display_name, $entity_info[$entity_name][$field_name])) {
+              $entity_info[$entity_name][$field_name][] = $display_name;
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+
+  return $entity_info;
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function addtocal_field_formatter_info() {
+  return array(
+    'addtocal_view' => array(
+      'label' => t('Add to Cal'),
+      'field types' => array('date', 'datestamp', 'datetime'),
+      'settings' => array(
+        'format_type' => 'long',
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_to' => '',
+        'fromto' => 'both',
+        'location' => array(
+          'field' => -1,
+          'tokenized' => '',
+        ),
+        'description' => array(
+          'field' => -1,
+          'tokenized' => '',
+        ),
+        'description_tokenized' => '',
+        'past_events' => FALSE,
+        'show_repeat_rule' => 'hide',
+        'view_mode' => '',
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function addtocal_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  switch ($display['type']) {
+    case 'addtocal_view':
+      $element = array();
+      $date_element = date_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display);
+      $view_mode = $display['settings']['view_mode'];
+
+      if ($date_element) {
+        $element[0]['date'] = $date_element[0];
+
+        list($entity_id) = entity_extract_ids($entity_type, $entity);
+
+        $info = addtocal_extract_event_info($entity_type, $entity, $entity_id, $field['field_name'], $display);
+        $dates = field_get_items($entity_type, $entity, $field['field_name']);
+
+        $start_date = $dates[(count($dates) - 1)]['value'];
+
+         // Build URLs
+        $base_url = $entity_type . '/' . $entity_id . '/' . $field['field_name'] . '/' . $view_mode;
+        $ics_url = $base_url . '/addtocal.ics';
+        $google_url = $base_url . '/addtocal-google';
+        $yahoo_url = $base_url . '/addtocal-yahoo';
+
+        // Check setting for past events and show widget accordingly
+        if (strtotime($start_date) >= time() ||
+          ($display['settings']['past_events'] == TRUE && strtotime($start_date) < time())) {
+          $element[0] += addtocal_render(
+            $entity_type,
+            $entity_id,
+            $info['start'],
+            $info['end'],
+            $info['timezone'],
+            $info['url'],
+            $ics_url,
+            $google_url,
+            $yahoo_url
+          );
+        }
+
+        return $element;
+      }
+
+      break;
+  }
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function addtocal_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+
+  $bundle_name = $field['bundles'][$instance['entity_type']][0];
+
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $field_list = field_info_instances($instance['entity_type'], $bundle_name);
+
+  $description_options = $location_options = array('-1' => 'None');
+
+  $location_field_types = array(
+    'text',
+    'text_long',
+    'text_with_summary',
+    'addressfield',
+  );
+  $description_field_types = array(
+    'text',
+    'text_long',
+    'text_with_summary',
+  );
+
+  foreach ($field_list as $field_i) {
+    // Get the full field array
+    $field_i_full = field_info_field($field_list[$field_i['field_name']]['field_name']);
+    // Get its type
+    $field_i_type = $field_i_full['type'];
+    // Check for location/description compatibility, add to appropriate arrays.
+    if (in_array($field_i_type, $location_field_types)) {
+      $location_options[$field_i['field_name']] = $field_i['label'];
+    }
+    if (in_array($field_i_type, $description_field_types)) {
+      $description_options[$field_i['field_name']] = $field_i['label'];
+    }
+  }
+  $tokens_enabled = module_exists('token');
+  if ($tokens_enabled) {
+    $location_options['tokenize output'] = 'Use Tokens';
+    $description_options['tokenize output'] = 'Use Tokens';
+  }
+
+  $element['location'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Location'),
+    '#collapsible' => TRUE,
+    '#weight' => 0,
+  );
+  $element['location']['field'] = array(
+    '#title' => t('Location Field:'),
+    '#type' => 'select',
+    '#options' => $location_options,
+    '#default_value' => $settings['location']['field'],
+    '#description' => 'A field to use as the location for calendar events.',
+    '#weight' => 0,
+  );
+  $element['location']['tokenized'] = array(
+    '#title' => t('Tokenized Location Contents:'),
+    '#type' => 'textarea',
+    '#default_value' => isset($settings['location']['tokenized']) ? $settings['location']['tokenized'] : '',
+    '#description' => 'You can insert static text or use tokens (see the token chart below).',
+    '#weight' => 1,
+  );
+
+
+  $element['description'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Description'),
+    '#collapsible' => TRUE,
+    '#weight' => 1,
+  );
+  $element['description']['field'] = array(
+    '#title' => t('Description Field:'),
+    '#type' => 'select',
+    '#options' => $description_options,
+    '#default_value' => $settings['description']['field'],
+    '#description' => 'A field to use as the description for calendar events.<br />The contents used from this field will be truncated to 1024 characters.',
+    '#weight' => 0,
+  );
+  $element['description']['tokenized'] = array(
+    '#title' => t('Tokenized Description Contents:'),
+    '#type' => 'textarea',
+    '#default_value' => isset($settings['description']['tokenized']) ? $settings['description']['tokenized'] : '',
+    '#description' => 'You can insert static text or use tokens (see the token chart below).',
+    '#weight' => 1,
+  );
+
+  $element['past_events'] = array(
+    '#title' => t('Show Add to Cal widget for Past Events'),
+    '#type' => 'checkbox',
+    '#default_value' => $settings['past_events'],
+    '#description' => 'Show the widget for past events.',
+    '#weight' => 2,
+  );
+
+  $element['view_mode'] = array(
+    '#title' => t('You Should Not Be Able To See This'),
+    '#type' => 'hidden',
+    '#default_value' => $view_mode,
+    '#tree' => TRUE,
+  );
+
+  $element += date_field_formatter_settings_form($field, $instance, $view_mode, $form, $form_state);
+
+  $element['format_type']['#weight'] = 3;
+  $element['fromto']['#weight'] = 4;
+  $element['multiple_number']['#weight'] = 5;
+  $element['multiple_from']['#weight'] = 6;
+  $element['multiple_to']['#weight'] = 7;
+
+  if (module_exists('date_repeat_field')) {
+    $element['show_repeat_rule'] = array(
+      '#title' => t('Repeat rule:'),
+      '#type' => 'select',
+      '#options' => array(
+        'show' => t('Show repeat rule'),
+        'hide' => t('Hide repeat rule')),
+      '#default_value' => isset($element['show_repeat_rule']) ? $element['show_repeat_rule'] : 'hide',
+      '#access' => $field['settings']['repeat'],
+      '#weight' => 8,
+    );
+  }
+
+  if ($tokens_enabled) {
+    $element['tokens'] = array(
+      '#theme' => 'token_tree',
+      '#token_types' => array('node'), // The token types that have specific context. Can be multiple token types like 'term' and/or 'user'
+      '#global_types' => TRUE, // A boolean TRUE or FALSE whether to include 'global' context tokens like [current-user:*] or [site:*]. Defaults to TRUE.
+      '#click_insert' => TRUE, // A boolean whether to include the 'Click this token to insert in into the the focused textfield' JavaScript functionality. Defaults to TRUE.
+      '#weight' => 9,
+    );
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ * @todo: update for tokenized changes
+ */
+function addtocal_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  if ($settings['location']['field'] == -1) {
+    $location_output = 'None';
+  }
+  else {
+    $location_output = $settings['location']['field'];
+  }
+
+  if ($settings['description']['field'] == -1) {
+    $description_output = 'None';
+  }
+  else {
+    $description_output = $settings['description']['field'];
+  }
+
+  $location_output = t('Location field: !field', array('!field' => $location_output));
+  $description_output = t('Description field: !field', array('!field' => $description_output));
+
+  $output = $location_output . ', ' . $description_output;
+
+  if ($settings['past_events'] == 1) {
+    $output .= '<br />' . t('Showing the widget for past events.');
+  }
+
+  return $output;
+}
+
+/**
+ * Return the value of a field
+ *
+ * @param $entity_type
+ * @param $entity
+ * @param $field_name
+ * @return string
+ */
+function addtocal_field_get_value($entity_type, $entity, $field_name) {
+  if (!empty($field_name)) {
+    if (!$field_name['tokenized'])  {     // Unless tokenization has been applied,
+      $field_name = $field_name['field']; // just use the raw content of the field.
+
+      $value = field_get_items($entity_type, $entity, $field_name);
+
+
+      $field_info = field_info_field($field_name);
+
+      if ($field_info['type'] == 'addressfield') {
+        $address = $value[0];
+
+        $string = '';
+
+        if (!empty($address['thoroughfare'])) $string .= $address['thoroughfare'] . ' ';
+        if (!empty($address['premise'])) $string .= $address['premise'] . ', ';
+        if (!empty($address['locality'])) $string .= $address['locality'] . ', ';
+        if (!empty($address['administrative_area'])) $string .= $address['administrative_area'] . ' ';
+        if (!empty($address['postal_code'])) $string .= $address['postal_code'] . ', ';
+        if (!empty($address['country'])) $string .= $address['country'];
+
+        $output = $string;
+      }
+      else {
+        $replace_strings = array(
+          '&nbsp;' => '',
+          '<br />' => '\n',
+          PHP_EOL => '\n',
+        );
+
+        $output = $value[0]['value'];
+
+        foreach ($replace_strings as $search => $replace) {
+          $output = str_replace($search, $replace, $output);
+        }
+      }
+
+    }
+    else {
+      $output = token_replace($field_name['tokenized'], array('node' => $entity), array('clear' => TRUE));
+    }
+    return $output;
+  }
+  else {
+    return '';
+  }
+}
+
+/**
+ * Return event information in an associative array based on a given entity.
+ *
+ * @param $entity_type
+ * @param $entity
+ * @param int $entity_id
+ * @param $field_name
+ * @param $display
+ *
+ * @return array
+ */
+function addtocal_extract_event_info($entity_type, $entity, $entity_id, $field_name, $display) {
+  $dates = field_get_items($entity_type, $entity, $field_name);
+
+  $start_date = $dates[0]['value'];
+
+  if (array_key_exists('value2', $dates[0])) {
+    $end_date = $dates[0]['value2'];
+  } else {
+    $end_date = $start_date;
+  }
+
+  $timezone = $dates[0]['timezone_db'];
+
+  if (isset($display['settings']['location_field'])) {
+    $location = addtocal_field_get_value($entity_type, $entity, $display['settings']['location_field']);
+  }
+  if (isset($display['settings']['description_field'])) {
+    $description = addtocal_field_get_value($entity_type, $entity, $display['settings']['description_field']);
+    if (strlen($description) > 1024) {
+      $description = truncate_utf8($description, 1024, TRUE, TRUE);
+    }
+  }
+
+  $uri = entity_uri($entity_type, $entity);
+  $url = $uri['path'];
+
+  $info = array(
+    'title'       => check_plain($entity->title),
+    'start'       => $start_date,
+    'end'         => $end_date,
+    'timezone'    => $timezone,
+    'location'    => isset($location) ? $location : NULL,
+    'description' => isset($description) ? $description : NULL,
+    'entity_id'   => $entity_id,
+    'entity_type' => $entity_type,
+    'url'         => $url,
+  );
+
+  // Allow other modules to directly alter the addtocal info.
+  drupal_alter('addtocal_extract_event_info', $info, $entity_type, $entity);
+
+  return $info;
+}
+
+/**
+ * Generate a render array for the addtocal widget.
+ *
+ * @param $entity_type
+ * @param $entity_id
+ * @param $start_date
+ * @param $end_date
+ * @param $timezone
+ * @param $url
+ * @param $ics_url
+ * @param $google_url
+ * @param $yahoo_url
+ * @return array
+ */
+function addtocal_render($entity_type, $entity_id, $start_date, $end_date, $timezone, $url, $ics_url, $google_url, $yahoo_url, $email_format = false) {
+  $rfc_dates = addtocal_rfc_3339_date($start_date, $end_date, $timezone);
+
+  $element_id = 'addtocal_' . $entity_type . '_' . $entity_id;
+
+  $render = array(
+    'button' => array(
+      '#markup' => t('Add to Calendar'),
+      '#prefix' => '<div class="addtocal" id="' . $element_id . '">',
+      '#suffix' => '</div>',
+      '#weight' => 1,
+    ),
+    'menu' => array(
+      '#weight' => 2,
+      '#theme' => 'item_list',
+      '#items' => array(
+        l(t('iCalendar'), $ics_url, array()),
+        l(t('Outlook'), $ics_url, array()),
+        l(t('Google'), $google_url, array('attributes' => array('target' => '_blank'))),
+        l(t('Yahoo'), $yahoo_url, array('attributes' => array('target' => '_blank'))),
+      ),
+      '#type' => 'ul',
+      '#attributes' => array(
+        'id' => $element_id . '_menu',
+        'class' => array('addtocal_menu'),
+      ),
+    )
+  );
+
+  if (!$email_format) {
+    $render['#attached'] = array();
+    $render['#attached']['js'] = array(
+      drupal_get_path('module', 'addtocal') . '/addtocal.js',
+    );
+    $render['#attached']['css'] = array(
+      drupal_get_path('module', 'addtocal') . '/addtocal.css',
+    );
+  }
+
+  return $render;
+}
+
+/**
+ * Returns an array containing RFC 3339 formatted start and end dates.
+ *
+ * @param $start
+ *   Start date
+ * @param $end
+ *   End date
+ * @param $timezone
+ *   Timezone for the supplied dates
+ *
+ * @return array
+ */
+function addtocal_rfc_3339_date($start, $end, $timezone) {
+  if (!$end) {
+    $end = $start;
+  }
+
+  $tz_utc = new DateTimeZone('UTC');
+  // When $timezone is an empty string no default is used and we see a Unknown or bad timezone () in DateTimeZone->__construct() error.
+  if (empty($timezone)) {
+    $tz = NULL;
+  }
+  else {
+    $tz = new DateTimeZone($timezone);
+  }
+
+
+  $startDate = new DateTime($start, $tz);
+  $startDate->setTimezone($tz_utc);
+
+  $endDate = new DateTime($end, $tz);
+  $endDate->setTimezone($tz_utc);
+
+  $start_timestamp = $startDate->getTimestamp();
+  $end_timestamp = $endDate->getTimestamp();
+
+  $diff_timestamp = $end_timestamp - $start_timestamp;
+
+  $start_date = gmdate('Ymd', $start_timestamp) . 'T' . gmdate('His', $start_timestamp) . 'Z';
+  $local_start_date = date('Ymd', $start_timestamp) . 'T' . date('His', $start_timestamp) . '';
+  $end_date = gmdate('Ymd', $end_timestamp) . 'T' . gmdate('His', $end_timestamp) . 'Z';
+  $local_end_date = date('Ymd', $end_timestamp) . 'T' . date('His', $end_timestamp) . '';
+
+  $diff_hours = str_pad(round(($diff_timestamp / 60) / 60), 2, '0', STR_PAD_LEFT);
+  $diff_minutes = str_pad(abs(round($diff_timestamp / 60) - ($diff_hours * 60)), 2, '0', STR_PAD_LEFT);
+
+  return array(
+    'start' => $start_date,
+    'end' => $end_date,
+    'both' => $start_date . '/' . $end_date,
+    'local_start' => $local_start_date,
+    'local_end' => $local_end_date,
+  );
+}
+
+/**
+ * Outputs an ICS file containing event information for the selected entity.
+ * Called by hook_menu.
+ *
+ * @param $entity
+ * @param $field_name
+ * @param $view_mode
+ */
+function addtocal_download_ics($entity, $field_name, $view_mode) {
+  drupal_add_http_header('Content-Type', 'application/calendar; charset=utf-8');
+
+  // Set the filename.
+  $filename = preg_replace('/[\x00-\x1F]/u', '_', strip_tags($entity->title));
+  drupal_add_http_header('Content-Disposition', 'attachment; filename="' . $filename . '.ics"');
+
+  // Get entity type from the current path
+  $entity_type = arg(0);
+
+  // Get the entity_id.
+  list($entity_id) = entity_extract_ids($entity_type, $entity);
+
+  // Get query.
+  $query = drupal_get_query_parameters();
+
+  // Get display and info.
+  $display = addtocal_get_display($entity, $entity_type, $field_name, $view_mode);
+  $info = addtocal_extract_event_info($entity_type, $entity, $entity_id, $field_name, $display);
+
+  $url = isset($query['url']) ? $query['url'] : '';
+  $description = $info['description'];
+  $location = $info['location'];
+  $title = $info['title'];
+
+  $dates = field_get_items($entity_type, $entity, $field_name);
+  $start_date = $dates[0]['value'];
+  if (array_key_exists('value2', $dates[0])) {
+    $end_date = $dates[0]['value2'];
+  } else {
+    $end_date = $start_date;
+  }
+  $rfc_dates = addtocal_rfc_3339_date($start_date, $end_date, $info['timezone']);
+
+  echo 'BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:' . $entity_type . '-' . $entity_id . '@' . $_SERVER['HTTP_HOST'] . '
+DTSTAMP:' . $rfc_dates['start'] . '
+DTSTART:' . $rfc_dates['start'] . '
+DTEND:' . $rfc_dates['end'] . '
+SUMMARY:' . check_plain($title) . '
+DESCRIPTION:' . $description . '
+LOCATION:' . $location . '
+END:VEVENT
+END:VCALENDAR';
+
+  drupal_exit();
+}
+
+/**
+ * Redirects to a Google Calendar event.
+ * Called by hook_menu().
+ *
+ * @param $entity
+ * @param $field_name
+ * @param $view_mode
+ */
+function addtocal_google_link($entity, $field_name, $view_mode) {
+
+  // Get entity type from the current path
+  $entity_type = arg(0);
+
+  list($entity_id) = entity_extract_ids($entity_type, $entity);
+  $display = addtocal_get_display($entity, $entity_type, $field_name, $view_mode);
+  $info = addtocal_extract_event_info($entity_type, $entity, $entity_id, $field_name, $display);
+
+  $rfc_dates = addtocal_rfc_3339_date($info['start'], $info['end'], $info['timezone']);
+
+  $google_url = url('http://www.google.com/calendar/event', array(
+    'query' => array(
+      'action' => 'TEMPLATE',
+      'text' => $info['title'],
+      'dates' => $rfc_dates['both'],
+      'sprop' => 'website:' . $_SERVER['HTTP_HOST'],
+      'location' => $info['location'],
+      'details' => $info['description'],
+      'website' => url($info['url'], array('absolute' => TRUE))
+    ),
+  ));
+
+  drupal_goto($google_url);
+}
+
+/**
+ * Redirects to a Yahoo Calendar event.
+ * Called by hook_menu().
+ *
+ * @param $entity
+ * @param $field_name
+ * @param $view_mode
+ */
+function addtocal_yahoo_link($entity, $field_name, $view_mode) {
+
+  // Get entity type from the current path
+  $entity_type = arg(0);
+
+  list($entity_id) = entity_extract_ids($entity_type, $entity);
+  $display = addtocal_get_display($entity, $entity_type, $field_name, $view_mode);
+  $info = addtocal_extract_event_info($entity_type, $entity, $entity_id, $field_name, $display);
+
+  $rfc_dates = addtocal_rfc_3339_date($info['start'], $info['end'], $info['timezone']);
+
+  $yahoo_url = url('http://calendar.yahoo.com/', array(
+    'query' => array(
+      'v' => 60,
+      'TITLE' => $info['title'],
+      'ST' => $rfc_dates['start'],
+      'ET' => $rfc_dates['end'],
+      'URL' => $_SERVER['HTTP_HOST'],
+      'in_loc' => $info['location'],
+      'desc' => $info['description'],
+    ),
+  ));
+
+  drupal_goto($yahoo_url);
+}
+
+/**
+ * Helper function returns current display for menu callbacks.
+ *
+ * @param $entity
+ * @param $entity_type
+ * @param $field_name
+ * @param $view_mode
+ * @return mixed
+ */
+function addtocal_get_display($entity, $entity_type, $field_name, $view_mode) {
+  return field_get_display(field_info_instance($entity_type, $field_name, $entity->type), $view_mode, $entity);
+}

@@ -25,6 +25,7 @@ function better_watchdog_ui_views_data_alter(&$data) {
         'left_field' => 'uid',
       ),
     ),
+    'entity type' => 'better_watchdog_ui_watchdog',
   );
 
   // --- FIELDS ---.

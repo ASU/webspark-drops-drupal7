@@ -12,10 +12,3 @@ files[] = ldap_authorization_og.inc
 
 
 core = "7.x"
-
-; Information added by Drupal.org packaging script on 2014-01-08
-version = "7.x-2.0-beta8"
-core = "7.x"
-project = "ldap"
-datestamp = "1389150511"
-

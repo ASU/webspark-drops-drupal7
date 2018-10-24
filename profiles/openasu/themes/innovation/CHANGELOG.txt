@@ -1,3 +1,15 @@
+Innovation 7.x-1.12, 2018-09-24
+-------------------------------
+- Changed rollover color of the blue buttons to one with a higher contrast.
+
+Innovation 7.x-1.11, 2018-08-22
+------------------------------
+- Added Administration Menu module support when used with the sticky menu
+- Added native CSS sticky menu support for the main ASU menu
+- Duplicate site title that showed up in the header region for new sites has been deduplicated
+- Removed legacy EOT font support to improve font rendering in Windows environments
+- Set correct colors for :focus without :hover for keyboard users
+
 Innovation 7.x-1.10, 2017-04-17
 ------------------------------
 - Reformatted and cleaned out code in template.php

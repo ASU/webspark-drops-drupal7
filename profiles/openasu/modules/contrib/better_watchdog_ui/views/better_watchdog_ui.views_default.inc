@@ -177,23 +177,12 @@ function better_watchdog_ui_views_default_views() {
   $handler->display->display_options['fields']['uid']['id'] = 'uid';
   $handler->display->display_options['fields']['uid']['table'] = 'watchdog';
   $handler->display->display_options['fields']['uid']['field'] = 'uid';
-  /* Filter criterion: Watchdog: Type */
-  $handler->display->display_options['filters']['type']['id'] = 'type';
-  $handler->display->display_options['filters']['type']['table'] = 'watchdog';
-  $handler->display->display_options['filters']['type']['field'] = 'type';
-  $handler->display->display_options['filters']['type']['group'] = 1;
-  $handler->display->display_options['filters']['type']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['type']['expose']['operator_id'] = 'type_op';
-  $handler->display->display_options['filters']['type']['expose']['label'] = 'Type';
-  $handler->display->display_options['filters']['type']['expose']['use_operator'] = TRUE;
-  $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
-  $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
-  $handler->display->display_options['filters']['type']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['type']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-  );
+  /* Field: Watchdog: Link */
+  $handler->display->display_options['fields']['link']['id'] = 'link';
+  $handler->display->display_options['fields']['link']['table'] = 'watchdog';
+  $handler->display->display_options['fields']['link']['field'] = 'link';
+  $handler->display->display_options['fields']['link']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['link']['link_to_user'] = FALSE;
   /* Filter criterion: Watchdog: Severity */
   $handler->display->display_options['filters']['severity']['id'] = 'severity';
   $handler->display->display_options['filters']['severity']['table'] = 'watchdog';
@@ -207,6 +196,23 @@ function better_watchdog_ui_views_default_views() {
   $handler->display->display_options['filters']['severity']['expose']['identifier'] = 'severity';
   $handler->display->display_options['filters']['severity']['expose']['multiple'] = TRUE;
   $handler->display->display_options['filters']['severity']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: Watchdog: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'watchdog';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['group'] = 1;
+  $handler->display->display_options['filters']['type']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['type']['expose']['operator_id'] = 'type_op';
+  $handler->display->display_options['filters']['type']['expose']['label'] = 'Type';
+  $handler->display->display_options['filters']['type']['expose']['use_operator'] = TRUE;
+  $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
+  $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
+  $handler->display->display_options['filters']['type']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['type']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
     3 => 0,
@@ -245,11 +251,38 @@ function better_watchdog_ui_views_default_views() {
     1 => 0,
     3 => 0,
   );
+  /* Filter criterion: Watchdog: Hostname */
+  $handler->display->display_options['filters']['hostname']['id'] = 'hostname';
+  $handler->display->display_options['filters']['hostname']['table'] = 'watchdog';
+  $handler->display->display_options['filters']['hostname']['field'] = 'hostname';
+  $handler->display->display_options['filters']['hostname']['operator'] = 'starts';
+  $handler->display->display_options['filters']['hostname']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['hostname']['expose']['operator_id'] = 'hostname_op';
+  $handler->display->display_options['filters']['hostname']['expose']['label'] = 'IP address';
+  $handler->display->display_options['filters']['hostname']['expose']['use_operator'] = TRUE;
+  $handler->display->display_options['filters']['hostname']['expose']['operator'] = 'hostname_op';
+  $handler->display->display_options['filters']['hostname']['expose']['identifier'] = 'hostname';
+  $handler->display->display_options['filters']['hostname']['expose']['remember'] = TRUE;
+  $handler->display->display_options['filters']['hostname']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+    6 => 0,
+  );
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['path'] = 'admin/reports/dblog';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Recent log messages';
+  $handler->display->display_options['menu']['description'] = 'View events that have recently been logged.';
+  $handler->display->display_options['menu']['weight'] = '-1';
+  $handler->display->display_options['menu']['name'] = 'management';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
 
   $views[$view->name] = $view;
 

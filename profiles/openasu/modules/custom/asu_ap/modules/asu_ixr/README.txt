@@ -11,7 +11,7 @@ INSTALLATION
 ------------------------
 Due to license incompatabilities, the IXR Library must be downloaded separately 
 and placed into this module's 'includes' folder (i.e. 
-'sites/all/modules/ixr/includes/IXR_Library.inc.php').
+'sites/all/modules/ixr/includes/IXR_Library.php').
 The library can be obtained from the locations below.
 
 The original library:
@@ -20,6 +20,9 @@ http://scripts.incutio.com/xmlrpc/
 A more recent version with SSL support (recommended):
 http://griffin.oobleyboo.com/projects/xmlrpc/
 
+Please note, for PHP 7+ support, you'll need to update from PHP 4 style
+constructors (where the constructor has the same name as the class), to the
+modern PHP practice of "__constructor()".
 
 EXAMPLE USAGE
 ------------------------

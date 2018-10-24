@@ -257,3 +257,60 @@ function asu_cas_update_7007(&$sandbox) {
       ->execute();
   }
 }
+
+/**
+ * Implements hook_update_N()
+ * - Set Certificate Authority PEM Certificate field
+ */
+function asu_cas_update_7008(&$sandbox) {
+  if (module_exists('cas')) {
+    // List of possible crt files taken from
+    // https://github.com/guzzle/guzzle/blob/4a11aba4d5cb7d45d51027f54a506d1a0df4daee/src/functions.php#L160
+    static $ca_files = array(
+      // Red Hat, CentOS, Fedora (provided by the ca-certificates package)
+      '/etc/pki/tls/certs/ca-bundle.crt',
+      // Ubuntu, Debian (provided by the ca-certificates package)
+      '/etc/ssl/certs/ca-certificates.crt',
+      // FreeBSD (provided by the ca_root_nss package)
+      '/usr/local/share/certs/ca-root-nss.crt',
+      // SLES 12 (provided by the ca-certificates package)
+      '/var/lib/ca-certificates/ca-bundle.pem',
+      // OS X provided by homebrew (using the default path)
+      '/usr/local/etc/openssl/cert.pem',
+      // Google app engine
+      '/etc/ca-certificates.crt',
+      // Windows?
+      'C:\\windows\\system32\\curl-ca-bundle.crt',
+      'C:\\windows\\curl-ca-bundle.crt',
+    );
+
+    $message = '';
+    $cert = variable_get('cas_cert', '');
+    if (empty($cert)) {
+      foreach($ca_files as $ca_file) {
+        if (file_exists($ca_file)) {
+          variable_set('cas_cert', $ca_file);
+          $message = t('The location of the Certificate Authority PEM Certificate for the
+              CAS module has been set to :cert at /admin/config/people/cas
+              for improved security. ', array(':cert' => $ca_file)
+          );
+          break 1;
+        }
+        else {
+          $message = t('The location of the Certificate Authority PEM Certificate on your
+             web server was not found amongst the usual common locations for it. Please
+             contact your server administrator for assistance with finding that certificate
+             for the CAS module and set it manually at /admin/config/people/cas.');
+        }
+      }
+    }
+    else {
+      // No Certificate Authority PEM Certificate changes.
+      $message = t('The Certificate Authority PEM Certificate location for the CAS module
+         was already set to :cert at /admin/config/people/cas, so no action was taken.',
+        array(':cert' => $cert));
+    }
+    drupal_set_message($message, 'status');
+    watchdog('asu_cas', $message, WATCHDOG_NOTICE);
+  }
+}

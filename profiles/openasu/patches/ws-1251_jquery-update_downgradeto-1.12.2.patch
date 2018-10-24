@@ -1,0 +1,13 @@
+diff --git a/jquery_update.module b/jquery_update.module
+index 18898ec..df97ec0 100644
+--- a/jquery_update.module
++++ b/jquery_update.module
+@@ -298,7 +298,7 @@ function jquery_update_jquery_replace(&$javascript, $cdn, $path, $min, $version)
+       break;
+ 
+     case '1.12':
+-      $trueversion = '1.12.4';
++      $trueversion = '1.12.2';
+       break;
+ 
+     case '2.1':
