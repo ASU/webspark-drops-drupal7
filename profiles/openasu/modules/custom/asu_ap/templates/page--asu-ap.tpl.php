@@ -232,8 +232,19 @@ if (module_exists('metatag')) {
         </div>
         <!-- /#top-content -->
 
+        <!-- Breadcrumb -->
+        <div class="asu-degrees-breadcrumb-container">
+          <?php
+            if (module_exists('easy_breadcrumb')) {
+              print theme('easy_breadcrumb');
+            } else {
+              print theme('breadcrumb', array('breadcrumb' => drupal_get_breadcrumb()));
+            }
+          ?>
+        </div>
+        <!-- /Breadcrumb -->
+
         <!--Start degree content-->
-        <?php print theme('breadcrumb', array('breadcrumb' => drupal_get_breadcrumb())); ?>
         <div class="container">
 
           <?php if ($program_decider_value == 'undergrad'): ?>
