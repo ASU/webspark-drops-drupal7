@@ -1,7 +1,9 @@
-Webspark 1.55.1 (Salem) release, 2018-10-19
-------------------------------------------
+Webspark 1.55.1 (Salem) release, 2018-10-24
+-------------------------------------------
 - Webspark core
 
+  * Drupal (v7.60)
+    * Includes security updates. See https://www.drupal.org/project/drupal/releases/7.60 for details.
   * Webspark Featurescustom (v1.9)
     * Updates jQuery upon running update.php (in conjunction with the jQuery Update module update) to the following versions:
       * Default theme (usually Innovation - could be a subtheme)- v1.12.2
@@ -10,25 +12,26 @@ Webspark 1.55.1 (Salem) release, 2018-10-19
 - Web standards components in Webspark
 
   * ASU CAS (v1.8)
-    * Fills in the PEM certificate location setting, further securing the CAS authentication process and clearing out the 
-      ASU SSL Certificate bundle warning from the site Status page.
+    * Fixed the "CAS SSL certificate bundle" error when the PEM certification location is left blank that the update 
+      to CAS v1.7 introduced. If the PEM certificate location is not set, the default value for the hosting server 
+      is set for the most common server configurations. 
   * ASU GSA (v1.2)
     * Adds TPLs to override Google Appliance and core Search TPLs for CSS-namespaced search page markup
     * Removes old, unfinished cruft code
-    * Fixes search box + button layouts
-    * Namespaces CSS to stop from overreaching into other projects.
+    * Fixes search box and button layouts
+    * Namespaces CSS to stop from overreaching into other projects
   * ASU IXR (v2.1)
-    * Updated current version of IXR for PHP 7.
-    * Updated README.txt in light of changes.
-    * Fixed wording in asu_rfi and add defensive code.
+    * Updated current version of IXR for PHP 7
+    * Updated README.txt in light of changes
+    * Fixed wording in asu_rfi and add defensive code
   * ASU RFI (v1.13), ASU Feeds (asu_feeds2 - v3.0-alpha2)
     * Syntax updates to make compatible with PHP 7 (credit to Jeremy Leggat, Cronkite School IT)
   * Webspark Megamenu (v1.10)
-    * Font Awesome <i> tags were replaced with <span> for better accessibility.
+    * Font Awesome <i> tags were replaced with <span> for better accessibility
     * Accessibility fix for display of 'home' icon in the menu bar. Changed the code to meet accessibility standards.
-    * Correct missing styles for the menu items.
+    * Styles for the menu items that were inadvertently stripped in the previous release are once again being applied. 
   * Innovation theme (v1.12)
-    * Changed rollover color of the blue buttons to one with a higher contrast.
+    * Changed rollover color of the blue buttons to one with a higher contrast
 
 - Contrib module updates
 
@@ -43,21 +46,21 @@ Webspark 1.55.1 (Salem) release, 2018-10-19
 
   - Managed by Webspark
 
-    * Restored missing module version numbers to help with applying database updates for the
-      following contrib modules:
-      * Better Watchdog UI
-      * Feeds
-      * LDAP
-      * Missing Module
-      * References
-      * UUID Features
+    * Better Watchdog UI (v3.0+6-dev),
+      Feeds (v2.0-beta4+16-dev),
+      LDAP (v2.3+25-dev),
+      Missing Module (v1.2),
+      References (v2.2+27-dev),
+      UUID Features (v1.0+4-dev)
+      * Restored missing module version numbers to help with applying database updates
 
-
-Webspark 1.55 (Oregon) release, 2018-07-27
+Webspark 1.55 (Oregon) release, 2018-08-20
 ------------------------------------------
 - Webspark core
 
-  * Panopoly (v1.55) - See the latest release notes for more information
+  * Panopoly (v1.55)
+    * Includes a security update to the UUID contrib module as well as bug fixes.
+      See https://www.drupal.org/project/panopoly/releases/7.x-1.55 for more info.
   * Webspark Featurescustom (v1.8) - Upon running update.php:
     * Modernizr library + module will be automatically uninstalled
     * Panopoly Magic settings that haven't been previously customized will be updated to Webspark-friendly settings
@@ -91,7 +94,7 @@ Webspark 1.55 (Oregon) release, 2018-07-27
     * Set correct colors for :focus without :hover for keyboard users
   * Mega Footer (v1.9)
     * Added Tumbler social media icon
-    * Fixed social media icon URL "field is required" bug
+    * Fixed: Social media icon can be removed by leaving their URL field blank once again
     * Made Font Awesome icons web accessible
     * Improved error messaging when entering bad configuration values
     * Set correct colors for :focus without :hover for keyboard users
@@ -125,6 +128,7 @@ Webspark 1.55 (Oregon) release, 2018-07-27
 
   - Managed by Webspark
 
+    * CAS (v1.7)
     * LDAP (v2.3)
     * References (v2.2+dev-29)
     * SMTP (v1.7+dev-2)
