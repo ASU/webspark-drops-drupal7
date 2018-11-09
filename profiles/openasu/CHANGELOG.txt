@@ -3,11 +3,7 @@ Webspark 1.55.1 (Salem) release, 2018-10-24
 - Webspark core
 
   * Drupal (v7.60)
-<<<<<<< HEAD
     * Includes security updates. See https://www.drupal.org/project/drupal/releases/7.60 for details.
-=======
-      * Includes security updates. See https://www.drupal.org/project/drupal/releases/7.60 for details.
->>>>>>> b82dc72ac22eaab153dbe1cab7646bc97fa364aa
   * Webspark Featurescustom (v1.9)
     * Updates jQuery upon running update.php (in conjunction with the jQuery Update module update) to the following versions:
       * Default theme (usually Innovation - could be a subtheme)- v1.12.2
