@@ -16,6 +16,7 @@
 function google_appliance_admin_settings($form) {
 
   // grab current settings
+  module_load_include('inc', 'google_appliance', 'google_appliance.helpers');
   $settings = _google_appliance_get_settings();
 
   // connection information

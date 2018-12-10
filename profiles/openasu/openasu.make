@@ -164,6 +164,7 @@ projects[fontawesome][subdir] = contrib
 projects[google_appliance][version] = 1.12
 projects[google_appliance][type] = module
 projects[google_appliance][subdir] = contrib
+projects[google_appliance][patch][] = https://www.drupal.org/files/issues/2018-12-09/google_appliance-undefined_function-3018659-4.patch
 
 projects[maxlength][version] = 3.2-beta2
 projects[maxlength][type] = module
@@ -232,7 +233,7 @@ projects[wysiwyg_template][subdir] = contrib
 ; copied from asu_drupal_modules.make since the asu_drupal_modules repo needs to be updated and the
 ; asu_drupal_modules.make file is being ignored at the moment
 ; todo: remove if we go back to building from repo
-projects[views_bootstrap][version] = 3.1
+projects[views_bootstrap][version] = 3.2
 projects[views_bootstrap][type] = module
 projects[views_bootstrap][subdir] = contrib
 
