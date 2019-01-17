@@ -1,5 +1,13 @@
 # ASU Academic Programs Changelog
 
+### ASU Academic Programs 7.x-2.4, 2019-01-17
+- Fix related programs field display on program nodes and node edit forms
+- Fix misaligned/missing breadcrumbs on program nodes
+- Fix truncated Views exposed filter text
+- Add Yavapai, Pima and Cochise campus support
+- Fix data importing for college/department joint programs
+- Fix Views grid display on program overview grid pages
+
 ### ASU Academic Programs 7.x-2.3, 2018-05-23
 - Add changelog to module
 
