@@ -55,7 +55,7 @@ projects[radix_layouts][patch][104] = patches/webspark-1003-remove-section-tags-
 
 ; panopoly_widgets.make
 
-projects[media][version] = 2.19
+projects[media][version] = 2.21
 projects[media][subdir] = contrib
 ; WEBSPARK-679 - WYSIWYG + Media module issues
 projects[media][patch][679] = patches/webspark-679_fix-HTML-encoded-macros-2028253-10.patch
