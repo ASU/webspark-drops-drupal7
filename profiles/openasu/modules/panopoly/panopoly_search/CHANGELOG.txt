@@ -1,3 +1,23 @@
+7.x-1.60, 2019-01-23
+-------------------
+- No changes since last release.
+
+7.x-1.59, 2019-01-17
+-------------------
+- No changes since last release.
+
+7.x-1.58, 2018-12-11
+-------------------
+- Update search_api to 1.25 and search_api_db to 1.7.
+
+7.x-1.57, 2018-10-18
+-------------------
+- No changes since last release.
+
+7.x-1.56, 2018-10-10
+-------------------
+- Update to search_api_solr 1.14 for SA-CONTRIB-2018-065.
+
 7.x-1.55, 2018-07-04
 -------------------
 - No changes since last release.
