@@ -1,0 +1,43 @@
+diff --git a/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu-item.tpl.php b/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu-item.tpl.php
+index 050c9f345..2f61cc15b 100644
+--- a/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu-item.tpl.php
++++ b/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu-item.tpl.php
+@@ -1,8 +1,8 @@
+-<li <?php print $attributes;?> class="<?php print $classes;?>" role="listitem" aria-level="<?php print $level; ?>">
++<li <?php print $attributes;?> class="<?php print $classes;?>" aria-level="<?php print $level; ?>">
+   <a href="<?php print in_array($item['link']['href'], array('<nolink>')) ? "#" : url($item['link']['href'], $item['link']['options']);?>" <?php echo drupal_attributes($item['link']['#attributes']); ?><?php if ($submenu): ?> aria-haspopup="true"<?php endif; ?>>
+     <?php if(!empty($item_config['xicon'])) : ?>
+       <span class="<?php print $item_config['xicon'];?>"></span>
+-    <?php endif;?>    
++    <?php endif;?>
+     <?php print t($item['link']['title']);?>
+     <?php if($submenu && $block_config['auto-arrow']) :?>
+       <span class="caret"></span>
+diff --git a/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu-nav.tpl.php b/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu-nav.tpl.php
+index b4cb221ec..b4a263ab4 100644
+--- a/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu-nav.tpl.php
++++ b/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu-nav.tpl.php
+@@ -1,3 +1,3 @@
+-<ul <?php print $attributes;?> class="<?php print $classes;?>" role="list">
++<ul <?php print $attributes;?> class="<?php print $classes;?>">
+   <?php print $lis;?>
+ </ul>
+diff --git a/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu-subnav.tpl.php b/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu-subnav.tpl.php
+index b4cb221ec..b4a263ab4 100644
+--- a/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu-subnav.tpl.php
++++ b/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu-subnav.tpl.php
+@@ -1,3 +1,3 @@
+-<ul <?php print $attributes;?> class="<?php print $classes;?>" role="list">
++<ul <?php print $attributes;?> class="<?php print $classes;?>">
+   <?php print $lis;?>
+ </ul>
+diff --git a/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu.tpl.php b/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu.tpl.php
+index 5400fc87f..c529cca24 100644
+--- a/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu.tpl.php
++++ b/profiles/openasu/modules/contrib/tb_megamenu/templates/tb-megamenu.tpl.php
+@@ -1,4 +1,4 @@
+-<div <?php print $attributes;?> class="<?php print $classes;?>" role="navigation">
++<div <?php print $attributes;?> class="<?php print $classes;?>">
+   <?php if($section == 'frontend') :?>
+     <button data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar tb-megamenu-button" type="button">
+       <i class="fa fa-reorder"></i>

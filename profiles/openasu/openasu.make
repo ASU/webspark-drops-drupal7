@@ -211,6 +211,7 @@ projects[tb_megamenu][patch][] = patches/webspark-1018_tb-megamenu_removing-mobi
 ; added patches/ path to 1304 path - rknesbit
 projects[tb_megamenu][patch][] = patches/webspark-1086_tb-megamenu_fix-undefined-index_2571547-23.patch
 projects[tb_megamenu][patch][] = patches/webspark-1379-AND-webspark-1304-tb_megamenu-classes-missing-AND-update-data-col-sizes.patch
+projects[tb_megamenu][patch][] = patches/webspark-1445_tb-megamenu_remove-redundant-aria-roles.patch
 
 ; UUID Features Integration
 ;projects[uuid_features][version] = 1.0-alpha4
