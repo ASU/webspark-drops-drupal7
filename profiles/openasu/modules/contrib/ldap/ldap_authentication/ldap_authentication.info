@@ -15,3 +15,9 @@ files[] = ldap_authentication.admin.inc
 files[] = tests/ldap_authentication.test
 
 test_dependencies[] = ldap_sso:ldap_sso
+
+; Information added by Drupal.org packaging script on 2017-08-27
+version = "7.x-2.3"
+project = "ldap"
+datestamp = "1503841448"
+

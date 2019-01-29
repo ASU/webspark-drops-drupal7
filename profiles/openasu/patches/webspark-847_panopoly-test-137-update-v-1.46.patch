@@ -11,8 +11,8 @@ index 9c355d8..91f8171 100644
 
 diff --git a/behat/features/wysiwyg.feature b/behat/features/wysiwyg.feature
 index 2e848ec..7dd372e 100644
---- a/behat/features/wysiwyg.feature
-+++ b/behat/features/wysiwyg.feature
+--- behat/features/wysiwyg.feature
++++ behat/features/wysiwyg.feature
 @@ -39,10 +39,10 @@ Feature: Use rich text editor
        | Align Center                  | p          | text-align      | center       |
        | Align Right                   | p          | text-align      | right        |
@@ -39,7 +39,7 @@ diff --git a/behat/behat.travis.yml b/behat/behat.travis.yml
 new file mode 100644
 index 0000000..9d9568a
 --- /dev/null
-+++ b/behat/behat.travis.yml
++++ behat/behat.travis.yml
 @@ -0,0 +1,18 @@
 +imports:
 +    - behat.common.yml
@@ -62,8 +62,8 @@ index 0000000..9d9568a
 
 diff --git a/behat/features/basic_ipe.feature b/behat/features/basic_ipe.feature
 index b7f1684..7da1e39 100644
---- a/behat/features/basic_ipe.feature
-+++ b/behat/features/basic_ipe.feature
+--- behat/features/basic_ipe.feature
++++ behat/features/basic_ipe.feature
 @@ -5,14 +5,19 @@ Feature: Make basic changes with the IPE
 
    Background:
@@ -94,8 +94,8 @@ index b7f1684..7da1e39 100644
 +    Then I should see "Basic IPE Testing title"
 diff --git a/behat/features/contentpage.feature b/behat/features/contentpage.feature
 index bbdf206..cc90c92 100644
---- a/behat/features/contentpage.feature
-+++ b/behat/features/contentpage.feature
+--- behat/features/contentpage.feature
++++ behat/features/contentpage.feature
 @@ -14,20 +14,20 @@ Feature: Add content page
  
    @api @panopoly_pages
@@ -123,8 +123,8 @@ index bbdf206..cc90c92 100644
        | Title               | Testing title |
 diff --git a/behat/features/demo.feature b/behat/features/demo.feature
 index 6e68299..af5c910 100644
---- a/behat/features/demo.feature
-+++ b/behat/features/demo.feature
+--- behat/features/demo.feature
++++ behat/features/demo.feature
 @@ -3,13 +3,13 @@ Feature: Demo content
    As a site owner
    I need to view demo content
@@ -152,8 +152,8 @@ index 6e68299..af5c910 100644
      When I visit "/admin/structure/menu/manage/main-menu/edit"
 diff --git a/behat/features/help.feature b/behat/features/help.feature
 index 8a4ccec..0f17a8e 100644
---- a/behat/features/help.feature
-+++ b/behat/features/help.feature
+--- behat/features/help.feature
++++ behat/features/help.feature
 @@ -3,7 +3,7 @@ Feature: View system help
    As a site owner
    I need to be able to view content in the system help region
@@ -165,8 +165,8 @@ index 8a4ccec..0f17a8e 100644
      When I visit "/node/add/panopoly-test-page"
 diff --git a/behat/features/landingpage.feature b/behat/features/landingpage.feature
 index bb29ec9..181ea42 100644
---- a/behat/features/landingpage.feature
-+++ b/behat/features/landingpage.feature
+--- behat/features/landingpage.feature
++++ behat/features/landingpage.feature
 @@ -5,14 +5,24 @@ Feature: Add landing page
  
    Background:
@@ -196,8 +196,8 @@ index bb29ec9..181ea42 100644
 +    Then the "edit-always-show-page-title" checkbox should not be checked
 diff --git a/behat/features/linkit.feature b/behat/features/linkit.feature
 index 2775902..0ac6662 100644
---- a/behat/features/linkit.feature
-+++ b/features/linkit.feature
+--- behat/features/linkit.feature
++++ behat/features/linkit.feature
 @@ -6,12 +6,15 @@ Feature: Link to page on the site
    Background:
      Given I am logged in as a user with the "administrator" role
@@ -241,8 +241,8 @@ index 2775902..0ac6662 100644
 +    Then the "edit-always-show-page-title" checkbox should not be checked
 diff --git a/behat/features/login.feature b/behat/features/login.feature
 index 746acb7..8281ca6 100644
---- a/behat/features/login.feature
-+++ b/behat/features/login.feature
+--- behat/features/login.feature
++++ behat/features/login.feature
 @@ -16,7 +16,7 @@ I want to be able to login
      And I press "Log in"
      Then I should see "Log out"
@@ -263,8 +263,8 @@ index 746acb7..8281ca6 100644
      Then I should see the heading "Reset password"
 diff --git a/behat/features/pathauto_administrator.feature b/behat/features/pathauto_administrator.feature
 index deadd93..0019210 100644
---- a/behat/features/pathauto_administrator.feature
-+++ b/behat/features/pathauto_administrator.feature
+--- behat/features/pathauto_administrator.feature
++++ behat/features/pathauto_administrator.feature
 @@ -6,7 +6,10 @@ Feature: Test pathauto for administrator users
    Background:
      Given I am logged in as a user with the "administrator" role
@@ -331,8 +331,8 @@ index deadd93..0019210 100644
 +
 diff --git a/behat/features/pathauto_editor.feature b/behat/features/pathauto_editor.feature
 index 7356926..f105805 100644
---- a/behat/features/pathauto_editor.feature
-+++ b/behat/features/pathauto_editor.feature
+--- behat/features/pathauto_editor.feature
++++ behat/features/pathauto_editor.feature
 @@ -4,9 +4,13 @@ Feature: Test pathauto for editor users
    I need to be able to trust that pathauto works consistently
  
@@ -385,8 +385,8 @@ index 7356926..f105805 100644
 +    Then the "edit-always-show-page-title" checkbox should not be checked
 diff --git a/behat/steps/panopoly_test.behat.inc b/behat/steps/panopoly_test.behat.inc
 index 01fb66b..02faa86 100644
---- a/behat/steps/panopoly_test.behat.inc
-+++ b/behat/steps/panopoly_test.behat.inc
+--- behat/steps/panopoly_test.behat.inc
++++ behat/steps/panopoly_test.behat.inc
 @@ -528,7 +528,7 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
    public function waitForLivePreview() {
      // Make sure the live preview has triggered by bluring the current focus.
@@ -398,8 +398,8 @@ index 01fb66b..02faa86 100644
    /**
 diff --git a/behat/steps/panopoly_test_panels.behat.inc b/behat/steps/panopoly_test_panels.behat.inc
 index baa12ed..3b3bd42 100644
---- a/behat/steps/panopoly_test_panels.behat.inc
-+++ b/behat/steps/panopoly_test_panels.behat.inc
+--- behat/steps/panopoly_test_panels.behat.inc
++++ behat/steps/panopoly_test_panels.behat.inc
 @@ -33,7 +33,7 @@ class PanelsSubContext extends RawDrupalContext implements DrupalSubContextInter
     * @When I wait for the Panels IPE to activate
     */
@@ -432,8 +432,8 @@ index baa12ed..3b3bd42 100644
  }
 diff --git a/behat/features/contentitem_widget.feature b/behat/features/contentitem_widget.feature
 index 3bfd3f6..2c772b2 100644
---- a/behat/features/contentitem_widget.feature
-+++ b/behat/features/contentitem_widget.feature
+--- behat/features/contentitem_widget.feature
++++ behat/features/contentitem_widget.feature
 @@ -3,73 +3,73 @@ Feature: Add content item
    As a site administrator
    I need to be able to choose which content item
@@ -666,8 +666,8 @@ index 3bfd3f6..2c772b2 100644
      # @todo: Find a better way to get back to the original page.
 diff --git a/behat/features/search.feature b/behat/features/search.feature
 index 7a43e70..f1bff67 100644
---- a/behat/features/search.feature
-+++ b/behat/features/search.feature
+--- behat/features/search.feature
++++ behat/features/search.feature
 @@ -3,7 +3,7 @@ Feature: Search
    As an anonymous user
    I should be able to find content using the site search
@@ -724,8 +724,8 @@ index 7a43e70..f1bff67 100644
        And I am on the homepage
 diff --git a/behat/features/wysiwyg_media.feature b/behat/features/wysiwyg_media.feature
 index e2533e2..04726f3 100644
---- a/behat/features/wysiwyg_media.feature
-+++ b/behat/features/wysiwyg_media.feature
+--- behat/features/wysiwyg_media.feature
++++ behat/features/wysiwyg_media.feature
 @@ -58,7 +58,7 @@ Feature: Add media using the rich text editor
 
    # TODO: About 10% of the time this test will hang with Firefox, so for now,
@@ -773,7 +773,7 @@ index e2533e2..04726f3 100644
 diff --git a/behat/features/spotlight_widget.feature b/behat/features/spotlight_widget.feature
 deleted file mode 100644
 index fe3185996..000000000
---- a/behat/features/spotlight_widget.feature
+--- behat/features/spotlight_widget.feature
 +++ /dev/null
 @@ -1,58 +0,0 @@
 -Feature: Add spotlight widget

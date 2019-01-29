@@ -1,3 +1,24 @@
+Webspark 1.60 (Minnesota) release
+---------------------------------
+- Webspark core
+  * Panopoly (v1.60)
+    * This release includes a fix for a Moderately Critical security vulnerability in the Panels Breadcrumbs module.
+
+- Contrib module updates
+
+  - Managed by Panopoly
+
+    * Panels Breadcrumbs (v2.4)
+    * Search API (v1.25)
+    * Search API Database Search (v1.7)
+    * Search API Solr Search (v1.14)
+    * Views Bulk Operations (v3.5)
+    * Libraries API (v2.5)
+    * Media (v2.21)
+    * File Entity (2.22)
+    * UUID Services (v1.2)
+
+
 Webspark 1.55.1 (Salem) release, 2018-10-24
 -------------------------------------------
 - Webspark core
