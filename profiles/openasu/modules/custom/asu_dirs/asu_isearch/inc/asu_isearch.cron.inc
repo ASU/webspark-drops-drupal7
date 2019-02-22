@@ -31,15 +31,20 @@ function asu_isearch_cron() {
     _asu_isearch_begin_migrate(FALSE);
   }
 
-  // cleanup any profiles which are not found in Solr
-  _asu_isearch_cleanup();
-
-  // Clear cache, and cleanup profile image caches
+  // Clear cache, and cleanup profile image caches once per day
   $last_clean = variable_get('last_profile_cleanup', NULL);
 
   if ($last_clean != date('ymd', time())) {
 
     variable_set('last_profile_cleanup', date('ymd', time()));
+
+    // cleanup any profiles which are not found in Solr
+    $queue = DrupalQueue::get("isearch_clean_profiles");
+    $count = $queue->numberOfItems();
+
+    if ($count < ASU_ISEARCH_QUEUE_SIZE_LIMIT) {
+      _asu_isearch_cleanup();
+    }
 
     // flush the image styles cache, so that updated photos show up
     $styles = array('asu_isearch_profile_list', 'asu_isearch_profile');
@@ -182,9 +187,18 @@ function _asu_isearch_cleanup() {
   $queue = DrupalQueue::get("isearch_clean_profiles");
 
   foreach ($nodes as $key => $profile) {
+
+    $asurite = $profile->field_isearch_asurite_id['und'][0]['value'];
+    $nid = $profile->nid;
+
+    $data = array(
+      'asurite' => $asurite,
+      'nid' => $nid
+    );
+
     //we only cleanup profiles which have been imported from iSearch
     if ($profile->field_isearch_eid['und'][0]['value'] != -1) {
-      $queue->createItem($profile);
+      $queue->createItem($data);
     }
   }
 }
@@ -194,14 +208,16 @@ function _asu_isearch_cleanup() {
  *
  * Worker callback for cleaning up dept profiles
  */
-function asu_isearch_cleanup_profile($profile) {
+function asu_isearch_cleanup_profile($data) {
 
-  $asurite = $profile->field_isearch_asurite_id['und'][0]['value'];
+  $asurite = $data['asurite'];
+  $nid = $data['nid'];
+
   $health = asu_dir_utilities_solr_health_check();
   $configs = asu_isearch_get_dept_config();
 
   //check Solr department
-  if ($health && $profile != NULL) {
+  if ($health && $asurite != NULL) {
     $pfound = FALSE;
     $person = asu_dir_utilities_get_solr_person($asurite);
 
@@ -231,10 +247,11 @@ function asu_isearch_cleanup_profile($profile) {
       }
     }
 
+    $profile = node_load($nid);
+
     //if the profile wasn't found, then unpublish
     if ($pfound == FALSE) {
       $title = $profile->title;
-
       watchdog('asu_isearch', "Profile'[@id]'unpublishedviacroncleanup", array('@id' => $title));
       $profile->status = 0;
       node_save($profile);
@@ -242,13 +259,12 @@ function asu_isearch_cleanup_profile($profile) {
       //if node was unpublished, but was found on iSearch, republish the node
     }
     // re-publish the profile if it was previously unpublished but has valid affiliations
-    else {
-      if ($pfound == TRUE && $profile->status == 0) {
+    else if ($pfound == TRUE && $profile->status == 0) {
         $profile->status = 1;
         $title = $profile->title;
         watchdog('asu_isearch', "Profile'[@id]'REpublishedviacroncleanup", array('@id' => $title));
         node_save($profile);
-      }
+      
     }
   }
 
