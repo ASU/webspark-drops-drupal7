@@ -583,15 +583,15 @@ if (module_exists('metatag')) {
             <div class="col-md-4">
               <div class="pane-menu-tree">
                 <h4>Related Programs</h4>
-                <?php for ($it = 0; $it < 1000; $it++) {
-                  if (isset($node_info['field_asu_ap_related_programs'][$it]['#markup'])) {
-                    $rp_result = $node_info['field_asu_ap_related_programs'][$it]['#markup'];
+                <?php for ($it = 0; $it < count($node_info['field_asu_ap_related_programs']); $it++) {
+                  if (isset($node_info['field_asu_ap_related_programs'][$it]['#label'])) {
+                    $rp_result = $node_info['field_asu_ap_related_programs'][$it]['#label'];
                   }
                   if (!empty($rp_result)) {
-                    print $rp_result;
+                    echo '<a href="/'.$node_info['field_asu_ap_related_programs'][$it]['#uri']['path'].'">'.$rp_result.'</a>';
                     unset($rp_result);
                   } else {
-                    break 1;
+                    break;
                   }
                 ?>
                 <br>

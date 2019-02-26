@@ -32,7 +32,6 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'views_bootstrap_grid_plugin_style';
-  $handler->display->display_options['style_options']['columns'] = '2';
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['row_options']['separator'] = '<br>';
   $handler->display->display_options['row_options']['hide_empty'] = TRUE;
@@ -74,7 +73,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['text'] = '<a href="/node/[nid]">[field_asu_ap_awarded]</a>';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['element_label_colon'] = FALSE;
-  /* Field: Content: Body */
+  /* Field: Content: Program Description (long) */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -314,7 +313,12 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['display_description'] = 'Displays all undergraduate degrees';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'views_bootstrap_grid_plugin_style';
-  $handler->display->display_options['style_options']['columns'] = '2';
+  $handler->display->display_options['style_options']['columns_horizontal'] = '4';
+  $handler->display->display_options['style_options']['columns_vertical'] = '4';
+  $handler->display->display_options['style_options']['columns_xs'] = '12';
+  $handler->display->display_options['style_options']['columns_sm'] = '6';
+  $handler->display->display_options['style_options']['columns_md'] = '4';
+  $handler->display->display_options['style_options']['columns_lg'] = '3';
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'fields';
@@ -353,7 +357,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['text'] = '<a href="/node/[nid]">[field_asu_ap_awarded]</a>';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['element_label_colon'] = FALSE;
-  /* Field: Content: Body */
+  /* Field: Content: Program Description (long) */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -420,6 +424,20 @@ function asu_ap_feature_views_default_views() {
   $handler = $view->new_display('page', 'Page - UG majors', 'page_1');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Undergraduate Majors';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'views_bootstrap_grid_plugin_style';
+  $handler->display->display_options['style_options']['columns_horizontal'] = '4';
+  $handler->display->display_options['style_options']['columns_vertical'] = '4';
+  $handler->display->display_options['style_options']['columns_xs'] = '12';
+  $handler->display->display_options['style_options']['columns_sm'] = '6';
+  $handler->display->display_options['style_options']['columns_md'] = '4';
+  $handler->display->display_options['style_options']['columns_lg'] = '3';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['row_options']['separator'] = '<br>';
+  $handler->display->display_options['row_options']['hide_empty'] = TRUE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
   /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
@@ -452,7 +470,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['text'] = '<a href="/node/[nid]">[field_asu_ap_awarded]</a>';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['element_label_colon'] = FALSE;
-  /* Field: Content: Body */
+  /* Field: Content: Program Description (long) */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -689,6 +707,20 @@ function asu_ap_feature_views_default_views() {
   $handler = $view->new_display('page', 'Page - UG minors/certs', 'page_2');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Undergraduate Minors & Certificates';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'views_bootstrap_grid_plugin_style';
+  $handler->display->display_options['style_options']['columns_horizontal'] = '4';
+  $handler->display->display_options['style_options']['columns_vertical'] = '4';
+  $handler->display->display_options['style_options']['columns_xs'] = '12';
+  $handler->display->display_options['style_options']['columns_sm'] = '6';
+  $handler->display->display_options['style_options']['columns_md'] = '4';
+  $handler->display->display_options['style_options']['columns_lg'] = '3';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['row_options']['separator'] = '<br>';
+  $handler->display->display_options['row_options']['hide_empty'] = TRUE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
   /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
@@ -1516,6 +1548,20 @@ function asu_ap_feature_views_default_views() {
   $handler = $view->new_display('page', 'Page - Grad', 'page_3');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'All Graduate Programs';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'views_bootstrap_grid_plugin_style';
+  $handler->display->display_options['style_options']['columns_horizontal'] = '4';
+  $handler->display->display_options['style_options']['columns_vertical'] = '4';
+  $handler->display->display_options['style_options']['columns_xs'] = '12';
+  $handler->display->display_options['style_options']['columns_sm'] = '6';
+  $handler->display->display_options['style_options']['columns_md'] = '4';
+  $handler->display->display_options['style_options']['columns_lg'] = '3';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['row_options']['separator'] = '<br>';
+  $handler->display->display_options['row_options']['hide_empty'] = TRUE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
   /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
@@ -1548,7 +1594,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['text'] = '<a href="/node/[nid]">[field_asu_ap_awarded]</a>';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['element_label_colon'] = FALSE;
-  /* Field: Content: Body */
+  /* Field: Content: Program Description (long) */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
