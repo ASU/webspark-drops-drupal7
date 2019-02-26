@@ -1695,12 +1695,12 @@ function asu_ap_feature_views_default_views() {
     1 => array(
       'title' => 'Masters',
       'operator' => 'word',
-      'value' => 'EMSL LL.M. MA MAcc MArch MAS MBA MC MCS MCSt MEd MEng MFA MGM MHI MIA MID MIHC MLA MLS MLSt MM MMC MNLM MNS MPA MPE MPP MPSLA MR',
+      'value' => 'EMPA EMSL LL.M. MA MAcc MALM MArch MAS MBA MC MCS MCSt MEd MEng MFA MGM MHI MIA MID MIHC MLA MLS MLSt MM MMC MNLM MNS MPA MPE MPP MPSLA MREDev MS',
     ),
     2 => array(
       'title' => 'Doctorate',
       'operator' => 'word',
-      'value' => 'AUD DBA DBH DMA DNP EdD PHD',
+      'value' => 'AUD DBA DBH DMA DNP EdD JD PHD',
     ),
     3 => array(
       'title' => 'Certificate',
