@@ -1,3 +1,7 @@
+mega_footer 7.x-1.10
+--------------------
+-  Updated Mega Footer unit description links with correct color
+
 mega_footer 7.x-1.9, 2018-06-26
 —————————————————————————
 - Reverted focus indicators from border to outline. Kept stronger styling.
