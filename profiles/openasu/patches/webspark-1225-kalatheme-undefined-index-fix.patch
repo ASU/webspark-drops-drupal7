@@ -1,0 +1,24 @@
+commit 68c115c3784f680aaab9918ee6c793d87c3de3f0
+Author: Reg Proctor <work@regproctor.com>
+Date:   Mon Jan 28 21:00:00 2019 -0700
+
+    Undefined index in kalatheme fix
+
+diff --git a/styles/kalacustomize/kalacustomize.inc b/styles/kalacustomize/kalacustomize.inc
+index 129091438..e5ac0364a 100644
+--- styles/kalacustomize/kalacustomize.inc
++++ styles/kalacustomize/kalacustomize.inc
+@@ -55,8 +55,11 @@ function theme_kalatheme_kalacustomize_render_pane($vars) {
+     $content->css_class = '';
+   }
+ 
+-  $content->css_class .= _kalatheme_get_styles($settings['devices']);
+-  $content->css_class .= _kalatheme_get_styles($settings['pane_style']);
++  foreach (array('devices', 'pane_style') as $key) {
++    if (isset($settings[$key])) {
++      $content->css_class .=  _kalatheme_get_styles($settings[$key]);
++    }
++  }
+ 
+   $output = theme('panels_pane', $vars);
+ 

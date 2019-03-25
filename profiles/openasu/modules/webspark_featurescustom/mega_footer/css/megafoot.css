@@ -2,6 +2,16 @@
   background-color: #1e1e1e;
 }
 
+.megafoot-description a {
+    color: #ffb310;
+    border-bottom: 1px dotted #ffb310;
+}
+
+.megafoot-description:hover a {
+    color: #ffb310;
+    border-bottom: 1px dotted #ffb310;
+}
+
 .megafoot-description {
   font-size: 1em;
   color: #fff;

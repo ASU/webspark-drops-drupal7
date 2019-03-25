@@ -50,7 +50,7 @@ function asu_rfi_undergrad_email($prog_plan, $e_email, $humanName)
   }
 
   $message_start = " <p>" . $humanName . ",</p>";
-  $message_middle = " <p> Thank you for your interest in pursuing a degree at <a href='https://www.asu.edu'>Arizona State University</a>. U.S. News & World Report ranks ASU the #1 most innovative school in the country, ahead of Stanford (#2) and MIT (#3). From engaging in meaningful, innovative research and entrepreneurial projects to collaborating with classmates and faculty, you will be elevating your career when you enroll in undergraduate studies at ASU. </p>
+  $message_middle = " <p> Thank you for your interest in pursuing a degree at <a href='https://www.asu.edu'>Arizona State University</a>. U.S. News & World Report ranks ASU the #1 most innovative school in the country, ahead of Stanford and MIT. From engaging in meaningful, innovative research and entrepreneurial projects to collaborating with classmates and faculty, you will be elevating your career when you enroll in undergraduate studies at ASU. </p>
     <p>With <a href='https://webapp4.asu.edu/programs/'>more than 350 excellent undergraduate degree programs and certificates</a>, including new degree programs in emerging fields, there is a degree path here to fit your career goals.</p><p>Below you will find a link to degree search, which has more information about the degree program in which you indicated interest.</p>
     " . $degree_search_link . "
     <p>As you learn more about ASU, we invite you to get a full view of the Sun Devil experience. We'll keep you updated on student life, academic opportunities and admission timelines, and send you special invitations to events near you.</p>";

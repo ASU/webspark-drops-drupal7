@@ -291,45 +291,28 @@ index 804f4f8c8..9e90b49b4 100644
  
    $items['tb_megamenu_nav'] = array(
 diff --git a/templates/tb-megamenu-item.tpl.php b/templates/tb-megamenu-item.tpl.php
-index 8ba942d67..050c9f345 100644
+index 8ba942d67..2f61cc15b 100644
 --- templates/tb-megamenu-item.tpl.php
 +++ templates/tb-megamenu-item.tpl.php
-@@ -1,7 +1,7 @@
+@@ -1,8 +1,8 @@
 -<li <?php print $attributes;?> class="<?php print $classes;?>">
 -  <a href="<?php print in_array($item['link']['href'], array('<nolink>')) ? "#" : url($item['link']['href'], $item['link']['options']);?>" <?php echo drupal_attributes($item['link']['#attributes']); ?>>
-+<li <?php print $attributes;?> class="<?php print $classes;?>" role="listitem" aria-level="<?php print $level; ?>">
++<li <?php print $attributes;?> class="<?php print $classes;?>" aria-level="<?php print $level; ?>">
 +  <a href="<?php print in_array($item['link']['href'], array('<nolink>')) ? "#" : url($item['link']['href'], $item['link']['options']);?>" <?php echo drupal_attributes($item['link']['#attributes']); ?><?php if ($submenu): ?> aria-haspopup="true"<?php endif; ?>>
      <?php if(!empty($item_config['xicon'])) : ?>
 -      <i class="<?php print $item_config['xicon'];?>"></i>
+-    <?php endif;?>    
 +      <span class="<?php print $item_config['xicon'];?>"></span>
-     <?php endif;?>    
++    <?php endif;?>
      <?php print t($item['link']['title']);?>
      <?php if($submenu && $block_config['auto-arrow']) :?>
-diff --git a/templates/tb-megamenu-nav.tpl.php b/templates/tb-megamenu-nav.tpl.php
-index b4a263ab4..b4cb221ec 100644
---- templates/tb-megamenu-nav.tpl.php
-+++ templates/tb-megamenu-nav.tpl.php
-@@ -1,3 +1,3 @@
--<ul <?php print $attributes;?> class="<?php print $classes;?>">
-+<ul <?php print $attributes;?> class="<?php print $classes;?>" role="list">
-   <?php print $lis;?>
- </ul>
-diff --git a/templates/tb-megamenu-subnav.tpl.php b/templates/tb-megamenu-subnav.tpl.php
-index b4a263ab4..b4cb221ec 100644
---- templates/tb-megamenu-subnav.tpl.php
-+++ templates/tb-megamenu-subnav.tpl.php
-@@ -1,3 +1,3 @@
--<ul <?php print $attributes;?> class="<?php print $classes;?>">
-+<ul <?php print $attributes;?> class="<?php print $classes;?>" role="list">
-   <?php print $lis;?>
- </ul>
+       <span class="caret"></span>
 diff --git a/templates/tb-megamenu.tpl.php b/templates/tb-megamenu.tpl.php
-index b1437c690..5400fc87f 100644
+index b1437c690..c529cca24 100644
 --- templates/tb-megamenu.tpl.php
 +++ templates/tb-megamenu.tpl.php
 @@ -1,5 +1,8 @@
--<div <?php print $attributes;?> class="<?php print $classes;?>">
-+<div <?php print $attributes;?> class="<?php print $classes;?>" role="navigation">
+ <div <?php print $attributes;?> class="<?php print $classes;?>">
    <?php if($section == 'frontend') :?>
 +    <button data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar tb-megamenu-button" type="button">
 +      <i class="fa fa-reorder"></i>
