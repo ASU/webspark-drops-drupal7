@@ -505,7 +505,10 @@ class MigrateIsearchProfileMigration extends Migration {
       );
 
       $queue = DrupalQueue::get('isearch_fetch_profile_photo');
-      $queue->createItem($data);
+
+      if ($queue->numberOfItems() < ASU_ISEARCH_QUEUE_SIZE_LIMIT) {
+        $queue->createItem($data);
+      }
     }
   }
 

@@ -290,7 +290,7 @@ function asu_ap_feature_field_default_field_bases() {
   // Exported field_base: 'field_asu_ap_college_j'.
   $field_bases['field_asu_ap_college_j'] = array(
     'active' => 1,
-    'cardinality' => 1,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_asu_ap_college_j',
@@ -340,7 +340,7 @@ function asu_ap_feature_field_default_field_bases() {
   // Exported field_base: 'field_asu_ap_college_url_j'.
   $field_bases['field_asu_ap_college_url_j'] = array(
     'active' => 1,
-    'cardinality' => 1,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_asu_ap_college_url_j',
@@ -523,7 +523,7 @@ function asu_ap_feature_field_default_field_bases() {
   // Exported field_base: 'field_asu_ap_department_code_j'.
   $field_bases['field_asu_ap_department_code_j'] = array(
     'active' => 1,
-    'cardinality' => 1,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_asu_ap_department_code_j',
@@ -544,7 +544,7 @@ function asu_ap_feature_field_default_field_bases() {
   // Exported field_base: 'field_asu_ap_department_j'.
   $field_bases['field_asu_ap_department_j'] = array(
     'active' => 1,
-    'cardinality' => 1,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_asu_ap_department_j',

@@ -77,6 +77,10 @@ function asu_brand_init() {
     $js .= 'ASUHeader.site_menu.json = \''.json_encode($menu_array, JSON_HEX_APOS).'\';';
     $js .= 'ASUHeader.site_menu.site_name = '.json_encode($site_name, JSON_HEX_APOS).';';
     $js .= 'ASUHeader.site_title = '.json_encode($site_title_array, JSON_HEX_APOS).';';
+
+    if (variable_get('asu_brand_ci_testing', 0) == 1) {
+      $js .= 'ASUHeader.disableCookieConsent = true;';
+    }
     
     drupal_add_js($js, array('type' => 'inline', 'scope' => 'header', 'group' => JS_THEME, 'weight' => -10));
   }

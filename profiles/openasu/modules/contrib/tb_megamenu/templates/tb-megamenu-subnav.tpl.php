@@ -1,3 +1,3 @@
-<ul <?php print $attributes;?> class="<?php print $classes;?>" role="list">
+<ul <?php print $attributes;?> class="<?php print $classes;?>">
   <?php print $lis;?>
 </ul>

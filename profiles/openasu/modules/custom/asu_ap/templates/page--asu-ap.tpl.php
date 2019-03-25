@@ -232,8 +232,19 @@ if (module_exists('metatag')) {
         </div>
         <!-- /#top-content -->
 
+        <!-- Breadcrumb -->
+        <div class="asu-degrees-breadcrumb-container">
+          <?php
+            if (module_exists('easy_breadcrumb')) {
+              print theme('easy_breadcrumb');
+            } else {
+              print theme('breadcrumb', array('breadcrumb' => drupal_get_breadcrumb()));
+            }
+          ?>
+        </div>
+        <!-- /Breadcrumb -->
+
         <!--Start degree content-->
-        <?php print theme('breadcrumb', array('breadcrumb' => drupal_get_breadcrumb())); ?>
         <div class="container">
 
           <?php if ($program_decider_value == 'undergrad'): ?>
@@ -411,25 +422,32 @@ if (module_exists('metatag')) {
                             echo '<a href="//tours.asu.edu/west">'.$campus['value'].'</a>';
                             break;
                           case 'ASU@TheGilaValley':
-                            echo '<a href="//transfer.asu.edu/eac">'.$campus['value'].'</a>';
+                            echo '<a href="//admission.asu.edu/transfer/eastern-arizona">'.$campus['value'].'</a>';
                             break;
                           case 'ASU@Pinal':
-                            echo '<a href="//transfer.asu.edu/central-az">'.$campus['value'].'</a>';
+                            echo '<a href="//admission.asu.edu/transfer/central-arizona">'.$campus['value'].'</a>';
                             break;
                           case 'ASU@Tucson':
                             echo '<a href="//transfer.asu.edu/asutucson'.$campus['value'].'</a>';
                             break;
                           case 'ASU@Yuma':
-                            echo '<a href="//transfer.asu.edu/azwestern">'.$campus['value'].'</a>';
+                            echo '<a href="//admission.asu.edu/transfer/arizona-western">'.$campus['value'].'</a>';
+                            break;
+                          case 'ASU@Yavapai':
+                            echo '<a href="//admission.asu.edu/transfer/asuyavapai">'.$campus['value'].'</a>';
+                            break;
+                          case 'ASU@Cochise':
+                            echo '<a href="//admission.asu.edu/transfer/asu-cochise">'.$campus['value'].'</a>';
+                            break;
+                          case 'ASU@Pima':
+                            echo '<a href="//admission.asu.edu/transfer/pima">'.$campus['value'].'</a>';
                             break;
                           case 'Online':
                             echo '<a href="//asuonline.asu.edu/">'.$campus['value'].'</a>';
                             break;
                           //Check ASU Feeds Parser.  The campus being used doesn't exist.
                           default:
-                            echo 'Campus Not Found';
-                            //$a = false;
-                            echo '<!--'.$campus['value'].'-->';
+                            echo $campus['value'];
                             break;
                         }
                         if($i < $c && $a) {
@@ -576,15 +594,15 @@ if (module_exists('metatag')) {
             <div class="col-md-4">
               <div class="pane-menu-tree">
                 <h4>Related Programs</h4>
-                <?php for ($it = 0; $it < 1000; $it++) {
-                  if (isset($node_info['field_asu_ap_related_programs'][$it]['#markup'])) {
-                    $rp_result = $node_info['field_asu_ap_related_programs'][$it]['#markup'];
+                <?php for ($it = 0; $it < count($node_info['field_asu_ap_related_programs']); $it++) {
+                  if (isset($node_info['field_asu_ap_related_programs'][$it]['#label'])) {
+                    $rp_result = $node_info['field_asu_ap_related_programs'][$it]['#label'];
                   }
                   if (!empty($rp_result)) {
-                    print $rp_result;
+                    echo '<a href="/'.$node_info['field_asu_ap_related_programs'][$it]['#uri']['path'].'">'.$rp_result.'</a>';
                     unset($rp_result);
                   } else {
-                    break 1;
+                    break;
                   }
                 ?>
                 <br>

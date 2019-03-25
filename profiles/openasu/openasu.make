@@ -6,7 +6,7 @@ core = 7.x
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 projects[drupal][type] = core
-projects[drupal][version] = 7.63
+projects[drupal][version] = 7.65
 ; Drupal Core Patches
 ;projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-profile-ajax-1334818-8.patch
 
@@ -14,50 +14,49 @@ projects[drupal][version] = 7.63
 ; The Panopoly Foundation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-projects[panopoly_core][version] = 1.60
+projects[panopoly_core][version] = 1.64
 projects[panopoly_core][subdir] = panopoly
 
-projects[panopoly_images][version] = 1.60
+projects[panopoly_images][version] = 1.64
 projects[panopoly_images][subdir] = panopoly
 
-projects[panopoly_theme][version] = 1.60
+projects[panopoly_theme][version] = 1.64
 projects[panopoly_theme][subdir] = panopoly
 
-projects[panopoly_magic][version] = 1.60
+projects[panopoly_magic][version] = 1.64
 projects[panopoly_magic][subdir] = panopoly
 ; Validation error with reusable FPPs. Updated in 1.52; Custom patch different from drupal.org/node/2813395
 projects[panopoly_magic][patch][2813395] = patches/ws-1236_title-cant-reuse-error_2813395.patch
 
-projects[panopoly_widgets][version] = 1.60
+projects[panopoly_widgets][version] = 1.64
 projects[panopoly_widgets][subdir] = panopoly
 
-projects[panopoly_admin][version] = 1.60
+projects[panopoly_admin][version] = 1.64
 projects[panopoly_admin][subdir] = panopoly
 
-projects[panopoly_users][version] = 1.60
+projects[panopoly_users][version] = 1.64
 projects[panopoly_users][subdir] = panopoly
 
 ; The Panopoly Toolset
-projects[panopoly_pages][version] = 1.60
+projects[panopoly_pages][version] = 1.64
 projects[panopoly_pages][subdir] = panopoly
 
-projects[panopoly_wysiwyg][version] = 1.60
+projects[panopoly_wysiwyg][version] = 1.64
 projects[panopoly_wysiwyg][subdir] = panopoly
 
-projects[panopoly_search][version] = 1.60
+projects[panopoly_search][version] = 1.64
 projects[panopoly_search][subdir] = panopoly
 ; Fixes DB update dependency ordering
 ; projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
 
-projects[panopoly_test][version] = 1.60
+projects[panopoly_test][version] = 1.64
 projects[panopoly_test][subdir] = panopoly
 
 projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.46.patch
 projects[panopoly_test][patch][1370] = patches/webspark-847_behat_common.patch
 projects[panopoly_test][patch][142] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
 projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.patch
-; moved custom tests to webspark_test custom module
-;projects[panopoly_test][patch][1403] = patches/webspark-1066-panopoly-webspark-add-custom-tests-v143.patch
+projects[panopoly_test][patch][1640] = patches/v1.64-behat-test-disable-video-test.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
 ;projects[asu_drupal_modules][type] = module
@@ -210,7 +209,7 @@ projects[tb_megamenu][patch][] = patches/webspark-1007-redux-tb_megamenu-tab_acc
 projects[tb_megamenu][patch][] = patches/webspark-1018_tb-megamenu_removing-mobile-button-for-ADA_7.x.patch
 ; added patches/ path to 1304 path - rknesbit
 projects[tb_megamenu][patch][] = patches/webspark-1086_tb-megamenu_fix-undefined-index_2571547-23.patch
-projects[tb_megamenu][patch][] = patches/webspark-1379-AND-webspark-1304-tb_megamenu-classes-missing-AND-update-data-col-sizes.patch
+projects[tb_megamenu][patch][] = patches/webspark-1379-AND-webspark-1304-tb_megamenu-classes-missing-AND-update-data-col-sizes-v1.64.patch
 
 ; UUID Features Integration
 ;projects[uuid_features][version] = 1.0-alpha4
@@ -244,7 +243,7 @@ projects[views_bootstrap][subdir] = contrib
 ; ASU News + Events dependencies
 projects[addtocal][version] = 1.0
 projects[addtocal][type] = module
-projects[addtocal]subdir] = contrib
+projects[addtocal][subdir] = contrib
 
 projects[feeds_tamper][version] = 1.2
 projects[feeds_tamper][type] = module
@@ -279,6 +278,10 @@ projects[mailsystem][version] = 2.34
 projects[mailsystem][type] = module
 projects[mailsystem][subdir] = contrib
 
+projects[feeds_crawler][version] = 1.0-beta2
+projects[feeds_crawler][type] = module
+projects[feeds_crawler][subdir] = contrib
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Bootstrap and Theme Frameworks - Moved to Webspark repo (see WEBSPARK-366)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -298,6 +301,7 @@ projects[kalatheme][patch][] = patches/webspark-565-add-views-tpl-to-kalatheme.p
 projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-spelling-fix.patch
 projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-admin-spelling-fix.patch
 projects[kalatheme][patch][] = patches/nojira-20160715-kalatheme_fix-missing-index.patch
+projects[kalatheme][patch][] = patches/webspark-1225-kalatheme-undefined-index-fix.patch
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ASU Module prerequisites - Webstandards additions - Libraries
