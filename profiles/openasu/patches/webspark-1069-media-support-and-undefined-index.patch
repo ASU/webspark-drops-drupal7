@@ -1,8 +1,21 @@
 diff --git a/backgroundfield.module b/backgroundfield.module
-index c251a8a..4d0fcdb 100644
+index c251a8a56..7f0fa1818 100644
 --- a/backgroundfield.module
 +++ b/backgroundfield.module
-@@ -198,6 +198,15 @@ function backgroundfield_field_widget_info() {
+@@ -178,6 +178,12 @@ function backgroundfield_field_delete_revision($entity_type, $entity, $field, $i
+ function backgroundfield_field_update_field($field, $prior_field, $has_data) {
+   // hack so we can use the default image function
+   $field['type'] = 'image';
++  if (!isset($field['settings']['default_image'])) {
++    $field['settings']['default_image'] = NULL;
++  }
++  if (!isset($prior_field['settings']['default_image'])) {
++    $prior_field['settings']['default_image'] = NULL;
++  }
+   image_field_update_field($field, $prior_field, $has_data);
+ }
+ 
+@@ -198,6 +204,15 @@ function backgroundfield_field_widget_info() {
        'label' => t('Background Field'),
        'field types' => array('backgroundfield'),
        'description' => t('Allows users to apply a background image to a field defined css selector'),
@@ -18,7 +31,7 @@ index c251a8a..4d0fcdb 100644
        'behaviors' => array(
          'multiple values' => FIELD_BEHAVIOR_CUSTOM,
          'default value' => FIELD_BEHAVIOR_NONE,
-@@ -216,7 +225,13 @@ function backgroundfield_field_widget_settings_form($field, $instance) {
+@@ -216,7 +231,13 @@ function backgroundfield_field_widget_settings_form($field, $instance) {
    if (!isset($instance['widget']['settings']['progress_indicator'])) {
      $instance['widget']['settings']['progress_indicator'] = '';
    }
@@ -33,17 +46,18 @@ index c251a8a..4d0fcdb 100644
  }
  
  /**
-@@ -227,7 +242,12 @@ function backgroundfield_field_widget_form(&$form, &$form_state, $field, $instan
+@@ -226,7 +247,13 @@ function backgroundfield_field_widget_form(&$form, &$form_state, $field, $instan
+   // expected by image field
    $instance['widget']['settings']['preview_image_style'] = 0;
  
-   $elements = image_field_widget_form($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
--  return $elements;
+-  $elements = image_field_widget_form($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
 +  if (module_exists('media')) {
 +    $elements = media_field_widget_form($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
 +  }
 +  else {
 +    $elements = image_field_widget_form($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
 +  }
++
+   return $elements;
  }
  
- /**

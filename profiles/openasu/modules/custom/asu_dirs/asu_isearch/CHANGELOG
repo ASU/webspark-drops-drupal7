@@ -1,5 +1,9 @@
+asu_isearch 7.x-1.11
+--------------------
+- Added queue cleanup update and limits to avoid bloating database
+
 asu_isearch 7.x-1.10
--------------------_
+--------------------
 - Fixed mapping of Twitter field for profile imports
 - Fixed configuration for proper HTML field filtering
 - Added profile video importing and display functionality

@@ -6,7 +6,7 @@ core = 7.x
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 projects[drupal][type] = core
-projects[drupal][version] = 7.60
+projects[drupal][version] = 7.65
 ; Drupal Core Patches
 ;projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-profile-ajax-1334818-8.patch
 
@@ -14,68 +14,64 @@ projects[drupal][version] = 7.60
 ; The Panopoly Foundation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-projects[panopoly_core][version] = 1.55
+projects[panopoly_core][version] = 1.64
 projects[panopoly_core][subdir] = panopoly
 
-projects[panopoly_images][version] = 1.55
+projects[panopoly_images][version] = 1.64
 projects[panopoly_images][subdir] = panopoly
 
-projects[panopoly_theme][version] = 1.55
+projects[panopoly_theme][version] = 1.64
 projects[panopoly_theme][subdir] = panopoly
 
-projects[panopoly_magic][version] = 1.55
+projects[panopoly_magic][version] = 1.64
 projects[panopoly_magic][subdir] = panopoly
 ; Validation error with reusable FPPs. Updated in 1.52; Custom patch different from drupal.org/node/2813395
 projects[panopoly_magic][patch][2813395] = patches/ws-1236_title-cant-reuse-error_2813395.patch
 
-projects[panopoly_widgets][version] = 1.55
+projects[panopoly_widgets][version] = 1.64
 projects[panopoly_widgets][subdir] = panopoly
 
-projects[panopoly_admin][version] = 1.55
+projects[panopoly_admin][version] = 1.64
 projects[panopoly_admin][subdir] = panopoly
 
-projects[panopoly_users][version] = 1.55
+projects[panopoly_users][version] = 1.64
 projects[panopoly_users][subdir] = panopoly
 
 ; The Panopoly Toolset
-projects[panopoly_pages][version] = 1.55
+projects[panopoly_pages][version] = 1.64
 projects[panopoly_pages][subdir] = panopoly
 
-projects[panopoly_wysiwyg][version] = 1.55
+projects[panopoly_wysiwyg][version] = 1.64
 projects[panopoly_wysiwyg][subdir] = panopoly
 
-projects[panopoly_search][version] = 1.55
+projects[panopoly_search][version] = 1.64
 projects[panopoly_search][subdir] = panopoly
 ; Fixes DB update dependency ordering
 ; projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
 
-projects[panopoly_test][version] = 1.55
+projects[panopoly_test][version] = 1.64
 projects[panopoly_test][subdir] = panopoly
 
 projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.46.patch
 projects[panopoly_test][patch][1370] = patches/webspark-847_behat_common.patch
 projects[panopoly_test][patch][142] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
 projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.patch
-; moved custom tests to webspark_test custom module
-;projects[panopoly_test][patch][1403] = patches/webspark-1066-panopoly-webspark-add-custom-tests-v143.patch
+projects[panopoly_test][patch][1640] = patches/v1.64-behat-test-disable-video-test.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
-projects[asu_drupal_modules][type] = module
-projects[asu_drupal_modules][directory_name] = custom
-projects[asu_drupal_modules][download][revision] = 7e86f7fed3a06597335c7ca8850e95cb9f56c373
-projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
+;projects[asu_drupal_modules][type] = module
+;projects[asu_drupal_modules][directory_name] = custom
+;projects[asu_drupal_modules][download][revision] = 7e86f7fed3a06597335c7ca8850e95cb9f56c373
+;projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ASU Module Prerequisites
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Latest Better Watchdog UI dev as of 20180615
+; Latest Better Watchdog UI
 projects[better_watchdog_ui][type] = module
 projects[better_watchdog_ui][subdir] = contrib
-projects[better_watchdog_ui][download][type] = "git"
-projects[better_watchdog_ui][download][branch] = "7.x-3.x"
-projects[better_watchdog_ui][download][url] = "https://git.drupal.org/project/better_watchdog_ui.git"
-projects[better_watchdog_ui][download][revision] = "758de4cc4995149a2de1d566b4209ec343581d27"
+projects[better_watchdog_ui][version] = 3.1
 
 projects[cas_attributes][version] = 1.0-rc3
 projects[cas_attributes][type] = module
@@ -85,9 +81,12 @@ projects[email][version] = 1.3
 projects[email][subdir] = contrib
 projects[email][type] = module
 
-projects[feeds][version] = 2.0-alpha9
 projects[feeds][type] = module
 projects[feeds][subdir] = contrib
+projects[feeds][download][type] = "git"
+projects[feeds][download][branch] = "7.x-2.x"
+projects[feeds][download][url] = "https://git.drupal.org/project/feeds.git"
+projects[feeds][download][revision] = "2ae6421979af46752c2697759567d85b5a79c9e1"
 
 projects[feeds_xpathparser][version] = 1.1
 projects[feeds_xpathparser][type] = module
@@ -97,15 +96,18 @@ projects[job_scheduler][version] = 2.0
 projects[job_scheduler][type] = module
 projects[job_scheduler][subdir] = contrib
 
-projects[ldap][version] = 2.3
 projects[ldap][type] = module
 projects[ldap][subdir] = contrib
+projects[ldap][version] = 2.3
 
-projects[references][version] = 2.1
 projects[references][type] = module
 projects[references][subdir] = contrib
+projects[references][download][type] = "git"
+projects[references][download][branch] = "7.x-2.x"
+projects[references][download][url] = "https://git.drupal.org/project/references.git"
+projects[references][download][revision] = "a7ad6b794f72dd4e669706b64bd8d6f1612cc0b4"
 
-projects[smtp][version] = 1.4
+projects[smtp][version] = 1.7
 projects[smtp][subdir] = contrib
 projects[smtp][type] = module
 
@@ -125,11 +127,10 @@ projects[webform][subdir] = contrib
 projects[backgroundfield][version] = 1.5
 projects[backgroundfield][type] = module
 projects[backgroundfield][subdir] = contrib
-; WEBSPARK-481 - BackgroundField image patch - default_image error
+
 ; From https://www.drupal.org/files/backgroundfield_undefined_index-1841978-18.patch
-projects[backgroundfield][patch][1841978] = patches/webspark-1069_backgroundfield_undefined_index-1841978-18.patch
 ; Webspark-1069
-projects[backgroundfield][patch][1936252] = patches/webspark-1069_backgroundfield-media-module-support.patch
+projects[backgroundfield][patch][1936252] = patches/webspark-1069-media-support-and-undefined-index.patch
 
 ; CAS SSO Integration
 projects[cas][version] = 1.7
@@ -161,7 +162,7 @@ projects[fontawesome][type] = module
 projects[fontawesome][subdir] = contrib
 
 ; @TODO v1.15
-projects[google_appliance][version] = 1.12
+projects[google_appliance][version] = 1.14
 projects[google_appliance][type] = module
 projects[google_appliance][subdir] = contrib
 
@@ -170,11 +171,8 @@ projects[maxlength][type] = module
 projects[maxlength][subdir] = contrib
 
 projects[missing_module][type] = module
+projects[missing_module][version] = 1.2
 projects[missing_module][subdir] = contrib
-projects[missing_module][download][type] = "git"
-projects[missing_module][download][branch] = "7.x-1.x"
-projects[missing_module][download][url] = "http://git.drupal.org/project/missing_module.git"
-projects[missing_module][download][revision] = "7509d5f036c1c714822598d2f82fa64ee730a021"
 
 projects[panels_tabs][version] = 2.x-dev
 projects[panels_tabs][type] = module
@@ -198,18 +196,20 @@ projects[special_menu_items][version] = 2.0
 projects[special_menu_items][subdir] = contrib
 projects[special_menu_items][type] = module
 
-projects[tb_megamenu][version] = 1.0-rc2
+
 projects[tb_megamenu][type] = module
 projects[tb_megamenu][subdir] = contrib
+projects[tb_megamenu][download][branch] = "7.x-1.x"
+projects[tb_megamenu][download][url] = "http://git.drupal.org/project/tb_megamenu.git"
+projects[tb_megamenu][downloads][revision] = "dd9469f608002256657da56bf71128d542d25243"
 ;; TODO - PATCH the CSS for tb_megamenu
 projects[tb_megamenu][patch][] = patches/webspark-919_tb-megamenu_fix-breakpoints.patch
-projects[tb_megamenu][patch][] = patches/webspark-935_tb-megamenu_fix-submenu-removal_7.x.patch
+
 projects[tb_megamenu][patch][] = patches/webspark-1007-redux-tb_megamenu-tab_accessibility-7.x.patch
 projects[tb_megamenu][patch][] = patches/webspark-1018_tb-megamenu_removing-mobile-button-for-ADA_7.x.patch
 ; added patches/ path to 1304 path - rknesbit
-projects[tb_megamenu][patch][] = patches/webspark-1304_tb_megamenu_update-data-col-sizes.patch
-projects[tb_megamenu][patch][] = patches/webspark-1379_megamenu-classes-missing.patch
 projects[tb_megamenu][patch][] = patches/webspark-1086_tb-megamenu_fix-undefined-index_2571547-23.patch
+projects[tb_megamenu][patch][] = patches/webspark-1379-AND-webspark-1304-tb_megamenu-classes-missing-AND-update-data-col-sizes-v1.64.patch
 
 ; UUID Features Integration
 ;projects[uuid_features][version] = 1.0-alpha4
@@ -232,7 +232,7 @@ projects[wysiwyg_template][subdir] = contrib
 ; copied from asu_drupal_modules.make since the asu_drupal_modules repo needs to be updated and the
 ; asu_drupal_modules.make file is being ignored at the moment
 ; todo: remove if we go back to building from repo
-projects[views_bootstrap][version] = 3.1
+projects[views_bootstrap][version] = 3.2
 projects[views_bootstrap][type] = module
 projects[views_bootstrap][subdir] = contrib
 
@@ -243,7 +243,7 @@ projects[views_bootstrap][subdir] = contrib
 ; ASU News + Events dependencies
 projects[addtocal][version] = 1.0
 projects[addtocal][type] = module
-projects[addtocal]subdir] = contrib
+projects[addtocal][subdir] = contrib
 
 projects[feeds_tamper][version] = 1.2
 projects[feeds_tamper][type] = module
@@ -261,7 +261,7 @@ projects[multiblock][subdir] = contrib
 projects[multiblock][patch][] = https://www.drupal.org/files/issues/multiblock_cache-2185235-5.patch
 projects[multiblock][patch][] = https://www.drupal.org/files/fix_config_per_instance-1370966-5.patch
 
-projects[views_data_export][version] = 3.0-beta9
+projects[views_data_export][version] = 3.2
 projects[views_data_export][type] = module
 projects[views_data_export][subdir] = contrib
 
@@ -277,6 +277,10 @@ projects[honeypot][subdir] = contrib
 projects[mailsystem][version] = 2.34
 projects[mailsystem][type] = module
 projects[mailsystem][subdir] = contrib
+
+projects[feeds_crawler][version] = 1.0-beta2
+projects[feeds_crawler][type] = module
+projects[feeds_crawler][subdir] = contrib
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Bootstrap and Theme Frameworks - Moved to Webspark repo (see WEBSPARK-366)
@@ -297,6 +301,7 @@ projects[kalatheme][patch][] = patches/webspark-565-add-views-tpl-to-kalatheme.p
 projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-spelling-fix.patch
 projects[kalatheme][patch][] = patches/nojira-20150812-kalatheme-admin-spelling-fix.patch
 projects[kalatheme][patch][] = patches/nojira-20160715-kalatheme_fix-missing-index.patch
+projects[kalatheme][patch][] = patches/webspark-1225-kalatheme-undefined-index-fix.patch
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ASU Module prerequisites - Webstandards additions - Libraries

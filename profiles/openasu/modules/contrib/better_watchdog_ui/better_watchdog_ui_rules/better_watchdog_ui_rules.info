@@ -7,6 +7,7 @@ files[] = better_watchdog_ui_rules.rules.inc
 dependencies[] = better_watchdog_ui
 dependencies[] = rules
 
-; Manual version insertion
-version = "7.x-3.0+6-dev"
-
+; Information added by Drupal.org packaging script on 2018-07-28
+version = "7.x-3.1"
+project = "better_watchdog_ui"
+datestamp = "1532752688"

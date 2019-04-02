@@ -1,3 +1,45 @@
+7.x-1.64, 2019-03-20
+-------------------
+- No changes since last release.
+
+7.x-1.63, 2019-03-14
+-------------------
+- No changes since last release.
+
+7.x-1.62, 2019-02-21
+-------------------
+- No changes since last release.
+
+7.x-1.61, 2019-02-13
+-------------------
+- PHP Errors are generated when deleted FPP objects do not exist.
+- Update TableField to tablefield-7.x-3.2.
+- Update Menu Block to menu_block-7.x-2.8.
+- Upgrade File Entity (file_entity) to 7.x-2.25.
+
+7.x-1.60, 2019-01-23
+-------------------
+- No changes since last release.
+
+7.x-1.59, 2019-01-17
+-------------------
+- No changes since last release.
+
+7.x-1.58, 2018-12-11
+-------------------
+- File entity overwriting slide title on spotlight widgets.
+- Normalize "Slide duration" for Spotlight widgets.
+- Update Media to 2.21.
+- Update file_entity to 2.22.
+
+7.x-1.57, 2018-10-18
+-------------------
+- No changes since last release.
+
+7.x-1.56, 2018-10-10
+-------------------
+- No changes since last release.
+
 7.x-1.55, 2018-07-04
 -------------------
 - No changes since last release.

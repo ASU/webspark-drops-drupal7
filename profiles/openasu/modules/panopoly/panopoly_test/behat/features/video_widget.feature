@@ -12,7 +12,7 @@ Feature: Add video widget
       And I click "Add video" in the "CTools modal" region
     Then I should see "Configure new Add video"
 
-  @api @javascript @panopoly_widgets
+  @api @javascript @panopoly_widgets @webspark_broken @webspark_ignore
   Scenario: Add a YouTube video
     When I fill in "Testing video" for "edit-title"
     When I click "Browse"

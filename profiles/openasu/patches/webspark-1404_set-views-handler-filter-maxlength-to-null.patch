@@ -1,0 +1,12 @@
+diff --git a/handlers/views_handler_filter_string.inc b/handlers/views_handler_filter_string.inc
+index 0b0ad377..c7b2dcd6 100644
+--- a/handlers/views_handler_filter_string.inc
++++ b/handlers/views_handler_filter_string.inc
+@@ -218,6 +218,7 @@ class views_handler_filter_string extends views_handler_filter {
+         '#title' => t('Value'),
+         '#size' => 30,
+         '#default_value' => $this->value,
++        '#maxlength' => NULL,
+       );
+       if (!empty($form_state['exposed']) && !isset($form_state['input'][$identifier])) {
+         $form_state['input'][$identifier] = $this->value;
