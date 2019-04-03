@@ -1,3 +1,26 @@
+Webspark 1.64.1 (San Diego), 2019-04-05
+---------------------------------------
+- Web standards components in Webspark
+
+  * ASU Google Custom Search Engine (asu_gcse) - v1.0
+    * Initial release of the ASU Google Custom Search Engine module
+    * Replaces the functionality of the ASU GSA module
+  * ASU Google Search Appliance (asu_gsa) - v1.2
+    * Deprecated module
+  * ASU News (asu_news) - v3.0-alpha1
+    * Deprecated module
+    * Added hooks to disable module in preparation for removal in next release
+  * ASU Events (asu_events) - v3.0-alpha1
+    * Deprecated module
+    * Added hooks to disable module in preparation for removal in next release
+    
+- Contrib module updates
+
+  - Managed by Webspark
+
+    * Google Custom Search Engine (google_cse) - v2.5
+      * Added as a dependency for the new ASU Google Custom Search Engine module
+
 Webspark 1.64 (California) release, 2019-03-25
 ----------------------------------------------
 - Webspark core
