@@ -166,6 +166,10 @@ projects[google_appliance][version] = 1.14
 projects[google_appliance][type] = module
 projects[google_appliance][subdir] = contrib
 
+projects[google_cse][version] = 2.5
+projects[google_cse][type] = module
+projects[google_cse][subdir] = contrib
+
 projects[maxlength][version] = 3.2-beta2
 projects[maxlength][type] = module
 projects[maxlength][subdir] = contrib
