@@ -1,5 +1,5 @@
 name = "ASU News"
-description = "[DEVELOPMENT PREVIEW] Create and customize an ASU News block from a ASU News feed."
+description = "[DEPRECATED - DO NOT USE - This module will be removed in the next release.] Create and customize an ASU News block from a ASU News feed."
 core = 7.x
 version = "7.x-3.0-alpha1"
 ; Added to staging module package 

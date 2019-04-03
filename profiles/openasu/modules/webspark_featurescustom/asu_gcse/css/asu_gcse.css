@@ -1,0 +1,119 @@
+/* GOOGLE SEARCH */
+
+/* Removes border that's being added to nav pills on hover */
+.page-search #top-content #tabs .nav-pills li a:hover {
+  border: none !important;
+}
+
+/* Forces ASU brand standard button styling */
+.page-search #top-content #tabs .nav-pills > li.active > a {
+  background-color: #8c1d40 !important;
+  color: #ffffff !important;
+  font-weight: 400 !important;
+}
+.page-search #top-content #tabs .nav-pills > li.active > a:hover {
+  background-color: #d23153 !important;
+  color: #ffffff !important;
+  font-weight: 400 !important;
+}
+.page-search #top-content #tabs .nav-pills li a {
+  background-color: #dbdbdb !important;
+  color: #2a2a2a !important;
+  font-weight: 400 !important;
+}
+.page-search #top-content #tabs .nav-pills li a:hover {
+  background-color: #f2f2f2 !important;
+  color: #2a2a2a !important;
+  font-weight: 400 !important;
+}
+
+/* Hides various unneeded elements on the page (e.g. the ad area, the extra search box, files showing in results, etc) */
+.page-search .gsc-wrapper .gsc-adBlock,
+.page-search .gsc-search-box,
+.page-search .gsc-search-box-tools,
+.page-search .gsc-resultsHeader,
+.page-search .gs-fileFormat {
+  display: none !important;
+}
+
+/* Forces the Google search background color to transparent (versus white) */
+.page-search .gsc-table-result > tbody > tr,
+.page-search .gsc-above-wrapper-area-container > tbody > tr {
+  background-color: transparent !important;
+}
+
+/* Adds spacing between the 'About xxx results' element and the search results below it */
+.page-search .gsc-above-wrapper-area {
+  margin-bottom: 3em !important;
+}
+
+/* Removes space between text snippet and URL elements (in order to appear more like a Google search) */
+.page-search .gs-snippet {
+  margin-top: -.5em !important;
+}
+
+/* Adds space between URL and result title elements (in order to appear more like a Google search) */
+.page-search .gs-visibleUrl-long {
+  margin-top: .25em !important;
+}
+
+/* Removes an extra border that is created due to Google and Webspark styling incompatibilities */
+.page-search #google-cse-results tbody,
+.page-search #google-cse-results table tbody tr td {
+  border-top: none !important;
+}
+
+/* Removes the whitespace to the left of the Google search results */
+.page-search .gsc-table-result,
+.page-search .gsc-thumbnail-inside,
+.page-search .gsc-url-top,
+.page-search .gsc-control-cse,
+.page-search .gsc-result-info-container,
+.page-search .gsc-result-info {
+  padding-left: 0 !important;
+}
+
+/* Adds appropriate ASU gray text color for 'About xxx results' and 'Sort by' elements */
+.page-search .gsc-above-wrapper-area-container .gsc-result-info,
+.page-search .gsc-above-wrapper-area-container .gsc-orderby-label{
+  color: #5C6670;
+}
+
+/* Adds ASU brand standard-like styling to the bottom pager */
+.page-search .gsc-results .gsc-cursor-page {
+  padding: 8px !important;
+  font-size: 1.5em !important;
+}
+.page-search .gsc-results .gsc-cursor-box .gsc-cursor-current-page {
+  color: #FFFFFF !important;
+}
+.page-search .gsc-results .gsc-cursor-box {
+  text-align: center !important;
+}
+
+
+
+
+/* LOCAL SITE (NODE) SEARCH */
+
+/* Hides the advanced search options */
+.page-search .search-form .search-advanced {
+  display: none !important;
+}
+
+/* Removes the whitespace to the left of the local search results */
+.page-search .search-results,
+.page-search .node-results {
+  padding-left: 0 !important;
+}
+
+
+
+
+/* COMMON CSS */
+
+/* Forces search box and search submit button onto the same line */
+.page-search .search-form .container-inline div,
+.page-search .search-form #edit-submit {
+  display: inline-block !important;
+}

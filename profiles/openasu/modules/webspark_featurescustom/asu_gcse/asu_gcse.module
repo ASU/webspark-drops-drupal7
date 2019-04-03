@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * Implements hook_init().
+ */
+function asu_gcse_init() {
+
+  // Sending JS variable to ASU header to tell it we are using the ASU GCSE module in order to handle search locally
+  drupal_add_js('var ASUHeader = ASUHeader || {};', 'inline');
+  $js_to_send = 'ASUHeader.gsa = "**d"'; // @TODO Change value in ASU Header to accept ASUHeader.gcse instead
+  drupal_add_js($js_to_send, array(
+    'type' => 'inline',
+    'scope' => 'header',
+    'group' => JS_THEME,
+    'weight' => -10
+  ));
+
+  // Checking if a search has been done on the site and if so, check which type and redirect to appropriate search type
+  if (isset($_POST['search_keys']) || isset($_POST['search_header'])) {
+
+    // Get current path and set variables for later use
+    $path = current_path();
+    $exp = explode("/", $path);
+    $type = $exp[0];
+    $query = '';
+
+    if (isset($_POST['search_keys'])) {
+      $query = check_plain($_POST['search_keys']);
+      if (strpos($query, "quot;") != FALSE) {
+        $query = str_replace('&quot;', '"', $query);
+      }
+      if ($query != $_POST['search_keys']) {
+        $query = '"' . $query . '"';
+      }
+    }
+
+    if (isset($_POST['search_header'])) {
+      $query = check_plain($_POST['search_header']);
+      if (strpos($query, 'quot;') != FALSE) {
+        $query = str_replace('&quot;', '"', $query);
+      }
+      $type = 'search';
+      if ($query != $_POST['search_header']) {
+        $query = '"' . $query . '"';
+      }
+    }
+
+    // Send query to redirect function for processing search type
+    asu_gcse_redirect($query, $type);
+  }
+
+}
+
+/**
+ * Redirect to the appropriate search engine based on search type
+ */
+function asu_gcse_redirect($query, $type) {
+  if ($query != "") {
+    if ($type == "search") {
+      drupal_goto('search/node/' . $query);
+    } else if ($type == "global") {
+      drupal_goto('search/google/' . $query);
+    } else {
+      drupal_goto('search/node/' . $query);
+    }
+  } else {
+    drupal_set_message(t("Please enter a valid search query."), 'error');
+  }
+}

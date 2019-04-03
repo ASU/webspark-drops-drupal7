@@ -3,42 +3,12 @@
  * @file
  * Install and update hooks.
  */
-
-/**
- * Implements hook_install().
- */
-function asu_news_install() {
-  // Create ASU News Content type
-  _asu_news_create_node_type();
-  $modules = array('asu_now_saf_taxonomy', 'asu_now_tags', 'asu_news_importer');// Array of module names
-  $enable_dependencies = TRUE; // Whether or not to enable dependant modules
-
-  module_enable($modules, $enable_dependencies);
-  cache_clear_all();
-  // Create Fields
-  _asu_news_create_fields();
-
-  // Disable panels for news and EventBase
-  try {
-    _asu_news_disable_page_variants('node_view', array('node_view_panel_context'));
-  }
-  catch (ErrorException $e) {
-    drupal_set_message('Unable to disable node_view', 'status');
-  }
-
-  try{
-    _asu_news_disable_views_news_page();
-  }
-  catch (ErrorException $e) {
-    drupal_set_message('Unable to load view', 'status');
-  }
-
-  $modules = array('asu_news_importer', 'asu_feeds2');// Array of module names
-  $enable_dependencies = TRUE; // Whether or not to enable dependant modules
-
-  module_enable($modules, $enable_dependencies);
-  cache_clear_all();
+function asu_news_enable() {
+  drupal_set_message("Prevented enabling deprecated module.");
+  module_disable(array('asu_news'));
+  drupal_uninstall_modules(array('asu_news'));
 }
+
 
 function _asu_news_disable_page_variants($page_name, $variant_ids) {
 
@@ -5726,4 +5696,14 @@ function _asu_news_create_fields_helper($data) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_update_N().
+ * + Disable asu_news deprecated experimental module
+ * @param $sandbox
+ */
+function asu_news_update_7001(&$sandbox) {
+  module_disable(array('asu_news'));
+  drupal_uninstall_modules(array('asu_news'));
 }

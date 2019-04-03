@@ -3,49 +3,10 @@
  * @file
  * Install and update hooks.
  */
-
-/**
- * Implements hook_install().
- */
-function asu_events_install() {
-  // Create Asu Events Content type
-  _asu_events_create_node_type();
-  $modules = array('addtocal', 'field_ellipsis');// Array of module names
-  $enable_dependencies = TRUE; // Whether or not to enable dependant modules
-
-  module_enable($modules, $enable_dependencies);
-  cache_clear_all();
-  // Create vocab
-  _asu_events_create_taxonomy();
-  // Create fields
-  _asu_events_create_fields();
-  // Disable panels for news and EventBase
-
-  try {
-    _asu_events_disable_page_variants('node_view', array('node_view_panel_context_2'));
-  }
-  catch (ErrorException $e) {
-    drupal_set_message('Unable to disable node_view', 'status');
-  }
-  try {
-    _asu_events_disable_views_events_page('events');
-  }
-  catch (ErrorException $e) {
-    drupal_set_message('Unable to load view', 'status');
-  }
-  try {
-    _asu_events_disable_views_events_page('events_new');
-  }
-  catch (ErrorException $e) {
-    drupal_set_message('Unable to load view', 'status');
-  }
-  $modules = array('asu_events_importer', 'asu_feeds2');// Array of module names
-  $enable_dependencies = TRUE; // Whether or not to enable dependant modules
-
-  module_enable($modules, $enable_dependencies);
-  cache_clear_all();
-  asu_events_update_7001();
-  asu_events_update_7002();
+function asu_events_enable() {
+  drupal_set_message("Prevented enabling deprecated module.");
+  module_disable(array('asu_events'));
+  drupal_uninstall_modules(array('asu_events'));
 }
 
 function asu_events_uninstall(){
@@ -6320,4 +6281,15 @@ function _asu_events_create_fields_helper($data) {
       }
     }
   }
+}
+
+
+/**
+ * Implements hook_update_N().
+ * + Disable deprecated experimental modules
+ * @param $sandbox
+ */
+function asu_events_update_7003(&$sandbox) {
+    module_disable(array('asu_events'));
+    drupal_uninstall_modules(array('asu_events'));
 }
