@@ -4,12 +4,12 @@
 
       // Get URL path and set search variable
       var url_path_name = window.location.pathname;
-      var url_search = 'search';
+      var url_search = '/search/';
       var node_search = 'search/node';
       var google_search = 'search/google';
 
       // If user is currently on a page with 'search' in the path
-      if (url_path_name.indexOf(url_search) != -1) {
+      if (url_path_name.indexOf(url_search) === 0) {
 
         var first_nav_pill_text_check = $('.nav-pills li:first-child a').text();
 
@@ -37,7 +37,7 @@
         $('#page-title').text("Search Results");
 
         // If the first nav pill URL matches the node_search form ('search/node') then proceed
-        if (first_nav_pill_url.indexOf(node_search) != -1) {
+        if (first_nav_pill_url && first_nav_pill_url.indexOf(node_search) != -1) {
           // Change 'Content' nav pill label to 'This site'
           $('.nav-pills li:first-child a').text("This site");
 
@@ -48,7 +48,7 @@
         }
 
         // If the last nav pill URL matches the node_search form ('search/google') then proceed
-        if (last_nav_pill_url.indexOf(google_search) != -1) {
+        if (last_nav_pill_url && last_nav_pill_url.indexOf(google_search) != -1) {
           // Google engine-specific JS here
         }
 

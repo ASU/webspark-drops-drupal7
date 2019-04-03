@@ -31,11 +31,14 @@ function webspark_featurescustom_update_dependencies() {
   // Makes doubly sure for older Panopoly updates that 7118 comes before 7005 (panopoly_search)
   // Overrides panopoly_widgets_update_dependencies in panopoly_search.install
   // Remove this once panopoly patches the issue on their end.
+
+  /* Removing panopoly_search from Webspark
   $deps['panopoly_search'][7005] = array(
     'search_api' => 7118,
     'search_api_db' => 7104,
     'search_api_solr' => 7102,
-  );
+  );*/
+
   // Ensure that ASU Brand module updates to v4.5 last, after other prior updates
   $deps['asu_brand'][7102] = array(
     'asu_cas' => 7001,
