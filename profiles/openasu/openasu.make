@@ -56,7 +56,6 @@ projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-upd
 projects[panopoly_test][patch][1370] = patches/webspark-847_behat_common.patch
 projects[panopoly_test][patch][142] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
 projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.patch
-projects[panopoly_test][patch][1640] = patches/v1.64-behat-test-disable-video-test.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
 ;projects[asu_drupal_modules][type] = module
@@ -165,6 +164,10 @@ projects[fontawesome][subdir] = contrib
 projects[google_appliance][version] = 1.14
 projects[google_appliance][type] = module
 projects[google_appliance][subdir] = contrib
+
+projects[google_cse][version] = 2.5
+projects[google_cse][type] = module
+projects[google_cse][subdir] = contrib
 
 projects[maxlength][version] = 3.2-beta2
 projects[maxlength][type] = module
