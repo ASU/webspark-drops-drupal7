@@ -33,10 +33,6 @@
         // Forced a document title, because it doesn't reflect the h1 title (on both search pages)
         document.title = "Search Results | " + asu_site_title;
 
-        var thetitle = $('#page-title');
-        // Set page title (h1) to 'Search Results' (on both search pages)
-        thetitle.text("Search Results");
-
         // If the first nav pill URL matches the node_search form ('search/node') then proceed
         if (first_nav_pill_url && first_nav_pill_url.indexOf(node_search) != -1) {
           // Change 'Content' nav pill label to 'This site'

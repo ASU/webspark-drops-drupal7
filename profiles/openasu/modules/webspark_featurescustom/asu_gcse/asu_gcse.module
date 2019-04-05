@@ -67,3 +67,15 @@ function asu_gcse_redirect($query, $type) {
     drupal_set_message(t("Please enter a valid search query."), 'error');
   }
 }
+
+/**
+ * Implements hook_process_page
+ * @param $variables
+ */
+function asu_gcse_process_page(&$variables) {
+
+  // Set the 'Search Results' title on search pages
+  if (arg(0) == 'search') {
+    $variables['title'] = 'Search Results';
+  }
+}
