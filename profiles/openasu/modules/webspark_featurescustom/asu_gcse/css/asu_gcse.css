@@ -1,11 +1,13 @@
 /* GOOGLE SEARCH */
 
 /* Removes border that's being added to nav pills on hover */
+/*
 .page-search #top-content #tabs .nav-pills li a:hover {
   border: none !important;
-}
+}*/
 
 /* Forces ASU brand standard button styling */
+/*
 .page-search #top-content #tabs .nav-pills > li.active > a {
   background-color: #8c1d40 !important;
   color: #ffffff !important;
@@ -26,7 +28,7 @@
   color: #2a2a2a !important;
   font-weight: 400 !important;
 }
-
+*/
 /* Hides various unneeded elements on the page (e.g. the ad area, the extra search box, files showing in results, etc) */
 .page-search .gsc-wrapper .gsc-adBlock,
 .page-search .gsc-search-box,
@@ -115,5 +117,32 @@
 /* Forces search box and search submit button onto the same line */
 .page-search .search-form .container-inline div,
 .page-search .search-form #edit-submit {
-  display: inline-block !important;
+  display: inline-block;
+}
+
+.page-search #top-content #tabs .nav-pills > li.active > a, .page-search #top-content #tabs .nav-pills > li.active > a:hover {
+  background-color: transparent;
+  color: #2a2a2a;
+  border-bottom: 5px solid #a30046;
+  padding-left: 0;
+  padding-right: 0;
+  margin-right: 2.2em;
+  border-radius: 0;
+  font-size: 18px;
+}
+
+.page-search #top-content #tabs .nav-pills li a, .page-search #top-content #tabs .nav-pills li a:hover {
+  background-color: transparent;
+  color: #2a2a2a;
+  font-weight: 400;
+  padding-left: 0;
+  padding-right: 0;
+  margin-right: 2.2em;
+  border-radius: 0;
+  font-size: 18px;
+}
+
+.page-search #top-content #tabs .nav-pills li a:hover {
+  color: #000;
+  border-bottom: 5px solid #a30046;
 }
