@@ -77,3 +77,24 @@ function asu_gsa_update_7000(&$sandbox) {
   watchdog('update', 'asu_gsa_update_7000 was applied.', array(), WATCHDOG_NOTICE);
   drupal_set_message('If your search results are broken after this ASU GSA module update, please go to /admin/config/search/google_appliance/settings and re-save that form.', 'warning');
 }
+
+/**
+* Implements hook_update_N().
+* Automagically enable GCSE module and disable GSA module.
+*/
+function asu_gsa_update_7101(&$sandbox) {
+  // Array for modules that we want to enable with update.php (GCSE)
+  $modules_to_enable = array(
+    'asu_gcse'
+  );
+  // Array for modules that we want to disable with update.php (GSA)
+  $modules_to_disable = array(
+    'asu_gsa',
+    'google_appliance',
+    'panopoly_search',
+    'search_api_solr'
+  );
+  drupal_set_message("Attempting to disable asu_gsa and enable asu_gcse in its place.");
+  module_enable($modules_to_enable, TRUE); // Adding TRUE forces dependencies to also be enabled
+  module_disable($modules_to_disable);
+}
