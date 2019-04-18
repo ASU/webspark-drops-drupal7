@@ -35,31 +35,6 @@ index 2e848ec..7dd372e 100644
        | Align Full      | p       | text-align      | justify   |
        | Increase Indent | p       | padding-left    | 30px      |
 
-diff --git a/behat/behat.travis.yml b/behat/behat.travis.yml
-new file mode 100644
-index 0000000..9d9568a
---- /dev/null
-+++ behat/behat.travis.yml
-@@ -0,0 +1,18 @@
-+imports:
-+    - behat.common.yml
-+#
-+default:
-+  extensions:
-+    Behat\MinkExtension:
-+      base_url: http://127.0.0.1:8888
-+      files_path: './profiles/openasu/modules/panopoly/panopoly_test/behat'
-+    Drupal\DrupalExtension:
-+      drush:
-+        root: "/home/travis/build/ASU/webspark-drops-drupal7"
-+      drupal:
-+        drupal_root: "/home/travis/build/ASU/webspark-drops-drupal7"
-+
-+      # Look in the profile modules directory and pull in module subcontexts.
-+      subcontexts:
-+        paths:
-+          - "/home/travis/build/ASU/webspark-drops-drupal7/profiles/openasu/modules/panopoly/panopoly_test"
-
 diff --git a/behat/features/basic_ipe.feature b/behat/features/basic_ipe.feature
 index b7f1684..7da1e39 100644
 --- behat/features/basic_ipe.feature
