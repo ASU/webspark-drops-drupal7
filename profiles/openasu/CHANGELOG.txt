@@ -1,3 +1,19 @@
+Webspark 1.66 (Wisconsin), 2019-04-18
+-------------------------------------
+- Webspark core
+
+  * Drupal - v7.66
+    * This release fixes security vulnerabilities. See https://www.drupal.org/project/drupal/releases/7.66 for more details.
+  * Panopoly - v1.66
+    * Multiple Panopoly releases (1.65-1.66) rolled into one update; Includes updates to contrib modules. See https://www.drupal.org/project/panopoly/releases/7.x-1.66 for more info.
+
+- Contrib module updates
+
+  - Managed by Panopoly
+
+    * Module Filter (module_filter) - v2.2
+    * Tablefield (tablefield) - v3.4
+
 Webspark 1.64.1 (San Diego), 2019-04-05
 ---------------------------------------
 - Web standards components in Webspark
