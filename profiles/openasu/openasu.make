@@ -147,7 +147,7 @@ projects[entity_view_mode][version] = 1.0-rc1
 projects[entity_view_mode][type] = module
 projects[entity_view_mode][subdir] = contrib
 
-projects[field_collection][version] = 1.0-beta11
+projects[field_collection][version] = 1.0-beta13
 projects[field_collection][type] = module
 projects[field_collection][subdir] = contrib
 
