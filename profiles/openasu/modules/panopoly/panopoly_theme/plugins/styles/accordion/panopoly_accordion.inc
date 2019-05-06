@@ -23,23 +23,17 @@ function theme_panopoly_theme_panopoly_accordion_style_render_region($vars) {
 
   // Include Some Basic Information
   $display = $vars['display'];
-  $region_id = $vars['region_id'];
   $panes = $vars['panes'];
   $settings = $vars['settings'];
 
-  if (empty($display->css_id) ) {
-    $region_id = 'accordion-panels-' . $region_id;
-  } 
-  else {
-    $region_id = 'accordion-' . $display->css_id;
-  }
+  $accordion_id = 'accordion-panels-' . $vars['region_id'];
 
   // Display the Output
-  $output = '<div class="drulog-panels-accordion" id="' . $region_id . '">';
+  $output = '<div class="drulog-panels-accordion" id="' . $accordion_id . '">';
   foreach ($panes as $pane_id => $pane) {
     if ($pane_id != 'empty_placeholder') {
       $output .= !empty($display->content[$pane_id]->title) ? '<h4 class="accordion-title">' . $display->content[$pane_id]->title . '</h4>' : '<h4 class="accordion-title">' . '&nbsp;' . '</h4>';
-      $output .= '<div class="accordion-content ' . $region_id . '-' . $pane_id . '">' . $pane . '</div>';
+      $output .= '<div class="accordion-content ' . $accordion_id . '-' . $pane_id . '">' . $pane . '</div>';
     } 
   }
   $output .= '</div>' ;
@@ -51,29 +45,29 @@ function theme_panopoly_theme_panopoly_accordion_style_render_region($vars) {
 
   // Inject the Javascript
   $settings_js = array(
-    'accordion' => array($region_id  => array('options' => array('header' => 'h4.accordion-title')))
+    'accordion' => array($accordion_id  => array('options' => array('header' => 'h4.accordion-title')))
   );
-  $settings_js['accordion'][$region_id]['options'] += $settings;
-  if (isset($settings_js['accordion'][$region_id]['options']['active'])) {
-    if ($settings_js['accordion'][$region_id]['options']['active'] == -1) {
-      $settings_js['accordion'][$region_id]['options']['active'] = FALSE;
+  $settings_js['accordion'][$accordion_id]['options'] += $settings;
+  if (isset($settings_js['accordion'][$accordion_id]['options']['active'])) {
+    if ($settings_js['accordion'][$accordion_id]['options']['active'] == -1) {
+      $settings_js['accordion'][$accordion_id]['options']['active'] = FALSE;
     }
     else {
-      $settings_js['accordion'][$region_id]['options']['active'] = (int)$settings_js['accordion'][$region_id]['options']['active'];
+      $settings_js['accordion'][$accordion_id]['options']['active'] = (int)$settings_js['accordion'][$accordion_id]['options']['active'];
     }
   }
-  if (empty($settings_js['accordion'][$region_id]['options']['heightStyle'])) {
-    if (!empty($settings_js['accordion'][$region_id]['options']['fillSpace'])) {
-      $settings_js['accordion'][$region_id]['options']['heightStyle'] = 'fill';
+  if (empty($settings_js['accordion'][$accordion_id]['options']['heightStyle'])) {
+    if (!empty($settings_js['accordion'][$accordion_id]['options']['fillSpace'])) {
+      $settings_js['accordion'][$accordion_id]['options']['heightStyle'] = 'fill';
     }
-    else if (!empty($settings_js['accordion'][$region_id]['options']['clearStyle'])) {
-      $settings_js['accordion'][$region_id]['options']['heightStyle'] = 'content';
+    else if (!empty($settings_js['accordion'][$accordion_id]['options']['clearStyle'])) {
+      $settings_js['accordion'][$accordion_id]['options']['heightStyle'] = 'content';
     }
     else {
-      $settings_js['accordion'][$region_id]['options']['heightStyle'] = 'auto';
+      $settings_js['accordion'][$accordion_id]['options']['heightStyle'] = 'auto';
     }
   }
-  unset($settings_js['accordion'][$region_id]['options']['fillSpace'], $settings_js['accordion'][$region_id]['options']['clearStyle'], $settings_js['accordion'][$region_id]['options']['autoHeight']);
+  unset($settings_js['accordion'][$accordion_id]['options']['fillSpace'], $settings_js['accordion'][$accordion_id]['options']['clearStyle'], $settings_js['accordion'][$accordion_id]['options']['autoHeight']);
   drupal_add_js($settings_js, 'setting');
   return $output;
 }
