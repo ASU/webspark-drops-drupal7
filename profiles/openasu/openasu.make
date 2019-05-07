@@ -318,15 +318,15 @@ libraries[ajax_solr][download][sha256] = d79493f28c47e8d5871d938d7146ab701f8666b
 
 ; 1 of 2 - CAS
 libraries[CAS][download][type] = get
-libraries[CAS][download][url] = https://github.com/Jasig/phpCAS/archive/1.3.5.zip
-libraries[CAS][download][subtree] = phpCAS-1.3.5/source
+libraries[CAS][download][url] = https://github.com/Jasig/phpCAS/archive/1.3.6.zip
+libraries[CAS][download][subtree] = phpCAS-1.3.6/source
 libraries[CAS][directory_name] = CAS/source
-;libraries[CAS][download][sha256] = c8c73945c3503991d19e2a1f7f14b51c293dd2ed9ebae974450a85da03ca3eee
+;libraries[CAS][download][sha256] = 97d3ae33445c42d20c4933c888724247b21f0a4282b0e5b2cf9b7b08410d1c59
 ; 2 of 2
 libraries[CAS_2][download][type] = file
-libraries[CAS_2][download][url] = https://raw.githubusercontent.com/Jasig/phpCAS/1.3.5/CAS.php
+libraries[CAS_2][download][url] = https://raw.githubusercontent.com/Jasig/phpCAS/1.3.6/CAS.php
 libraries[CAS_2][directory_name] = CAS
-;libraries[CAS_2][download][sha256] = 74a3eeed33e84d927884a2cf01ab10c33cc445e891c6d773996ffb19cf841d23
+;libraries[CAS_2][download][sha256] = c21352f1cef5fa8622f71637c7bfc8328aac4d15d34ad914859c2e725109d397
 
 libraries[chosen][download][type] = get
 libraries[chosen][download][url] = https://github.com/harvesthq/chosen/releases/download/v1.1.0/chosen_v1.1.0.zip
