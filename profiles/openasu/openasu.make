@@ -64,7 +64,7 @@ projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.p
 ;projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; ASU Module Prerequisites
+; ASU Module Prerequisites -- Webspark
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Latest Better Watchdog UI
@@ -84,7 +84,7 @@ projects[feeds][type] = module
 projects[feeds][subdir] = contrib
 projects[feeds][download][type] = "git"
 projects[feeds][download][branch] = "7.x-2.x"
-projects[feeds][download][url] = "https://git.drupal.org/project/feeds.git"
+projects[feeds][download][url] = "https://git.drupalcode.org/project/feeds.git"
 projects[feeds][download][revision] = "2ae6421979af46752c2697759567d85b5a79c9e1"
 
 projects[feeds_xpathparser][version] = 1.1
@@ -103,7 +103,7 @@ projects[references][type] = module
 projects[references][subdir] = contrib
 projects[references][download][type] = "git"
 projects[references][download][branch] = "7.x-2.x"
-projects[references][download][url] = "https://git.drupal.org/project/references.git"
+projects[references][download][url] = "https://git.drupalcode.org/project/references.git"
 projects[references][download][revision] = "a7ad6b794f72dd4e669706b64bd8d6f1612cc0b4"
 
 projects[smtp][version] = 1.7
@@ -120,7 +120,7 @@ projects[webform][type] = module
 projects[webform][subdir] = contrib
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; ASU Module prerequisites - Webspark Webstandards Components - contrib
+; ASU Module prerequisites - Webspark Web Standards components - contrib
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 projects[backgroundfield][version] = 1.5
@@ -147,9 +147,11 @@ projects[entity_view_mode][version] = 1.0-rc1
 projects[entity_view_mode][type] = module
 projects[entity_view_mode][subdir] = contrib
 
-projects[field_collection][version] = 1.0-beta11
 projects[field_collection][type] = module
 projects[field_collection][subdir] = contrib
+projects[field_collection][download][branch] = "7.x-1.x"
+projects[field_collection][download][url] = "https://git.drupalcode.org/project/field_collection.git"
+projects[field_collection][download][revision] = "605e0e4e029edf7a2adea41ad59849fd25bc8ed3"
 
 projects[flexslider][version] = 2.0-rc2
 projects[flexslider][type] = module
@@ -186,7 +188,7 @@ projects[quicktabs][type] = module
 projects[quicktabs][subdir] = contrib
 projects[quicktabs][download][type] = "git"
 projects[quicktabs][download][branch] = "7.x-3.x"
-projects[quicktabs][download][url] = "http://git.drupal.org/project/quicktabs.git"
+projects[quicktabs][download][url] = "http://git.drupalcode.org/project/quicktabs.git"
 projects[quicktabs][download][revision] = "758de4cc4995149a2de1d566b4209ec343581d27"
 
 ; Added for ASU Dir module
@@ -199,12 +201,12 @@ projects[special_menu_items][version] = 2.0
 projects[special_menu_items][subdir] = contrib
 projects[special_menu_items][type] = module
 
-
+; TB Megamenu
 projects[tb_megamenu][type] = module
 projects[tb_megamenu][subdir] = contrib
 projects[tb_megamenu][download][branch] = "7.x-1.x"
-projects[tb_megamenu][download][url] = "http://git.drupal.org/project/tb_megamenu.git"
-projects[tb_megamenu][downloads][revision] = "dd9469f608002256657da56bf71128d542d25243"
+projects[tb_megamenu][download][url] = "https://git.drupalcode.org/project/tb_megamenu.git"
+projects[tb_megamenu][download][revision] = "dd9469f608002256657da56bf71128d542d25243"
 ;; TODO - PATCH the CSS for tb_megamenu
 projects[tb_megamenu][patch][] = patches/webspark-919_tb-megamenu_fix-breakpoints.patch
 
@@ -221,7 +223,7 @@ projects[uuid_features][type] = module
 projects[uuid_features][subdir] = contrib
 projects[uuid_features][download][type] = "git"
 projects[uuid_features][download][branch] = "7.x-1.x"
-projects[uuid_features][download][url] = "http://git.drupal.org/project/uuid_features.git"
+projects[uuid_features][download][url] = "https://git.drupalcode.org/project/uuid_features.git"
 projects[uuid_features][download][revision] = "63a676b0243838a1624a758a373aaca9444cce06"
 
 projects[video_embed_field][version] = 2.0-beta11
