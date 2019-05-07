@@ -106,9 +106,12 @@ projects[references][download][branch] = "7.x-2.x"
 projects[references][download][url] = "https://git.drupal.org/project/references.git"
 projects[references][download][revision] = "a7ad6b794f72dd4e669706b64bd8d6f1612cc0b4"
 
-projects[smtp][version] = 1.7
 projects[smtp][subdir] = contrib
 projects[smtp][type] = module
+projects[smtp][download][type] = "git"
+projects[smtp][download][branch] = "7.x-1.x"
+projects[smtp][download][url] = "https://git.drupalcode.org/project/smtp.git"
+projects[smtp][download][revision] = "47f4114b1e6d357708b6ffcade01241a11c41ef1"
 
 projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
