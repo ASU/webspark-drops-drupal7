@@ -268,7 +268,7 @@ projects[views_data_export][version] = 3.2
 projects[views_data_export][type] = module
 projects[views_data_export][subdir] = contrib
 
-projects[mimemail][version] = 1.0-beta4
+projects[mimemail][version] = 1.1
 projects[mimemail][type] = module
 projects[mimemail][subdir] = contrib
 
