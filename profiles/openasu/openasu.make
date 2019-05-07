@@ -271,6 +271,7 @@ projects[views_data_export][subdir] = contrib
 projects[mimemail][version] = 1.1
 projects[mimemail][type] = module
 projects[mimemail][subdir] = contrib
+projects[mimemail][patch][2947006] = https://www.drupal.org/files/issues/2018-05-28/mimemail-support_php_72-2947006-4.patch
 
 projects[honeypot][version] = 1.22
 projects[honeypot][type] = module

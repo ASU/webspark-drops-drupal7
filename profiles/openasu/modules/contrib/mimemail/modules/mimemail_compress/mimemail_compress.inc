@@ -112,7 +112,7 @@ class mimemail_compress {
     $nodes = @$xpath->query('//*[@style]');
     if ($nodes->length > 0) {
       foreach ($nodes as $node) {
-        $style = preg_replace_callback('/[A-z\-]+(?=\:)/S', create_function('$matches', 'return strtolower($matches[0]);'), $node->getAttribute('style'));
+        $style = preg_replace_callback('/[A-z\-]+(?=\:)/S', array($this, 'string_to_lower'), $node->getAttribute('style'));
         $all_selectors[] = array(
           'selector' => $this->calculateXPath($node),
           'attributes' => $style,
@@ -169,6 +169,24 @@ class mimemail_compress {
     error_reporting($err);
 
     return $doc->saveHTML();
+  }
+
+  /**
+   * Converts a string to lowercase.
+   *
+   * This is a helper method for the previous method when it is converting
+   * strings to lower case. This is being done this way to support PHP versions
+   * from 5.2.4 (the minimum version Druapl 7 supports) to PHP 7.2 (the current
+   * version at the time of this writing).
+   *
+   * @param array $matches
+   *   The results from a call to preg_replace_callback().
+   *
+   * @return string
+   *   The original string converted to lowercase.
+   */
+  public function string_to_lower($matches) {
+    return strtolower($matches[0]);
   }
 
   private static function sort_selector_precedence($a, $b) {
