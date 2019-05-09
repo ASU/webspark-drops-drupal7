@@ -151,12 +151,12 @@ Webspark 1.55.1 (Salem) release, 2018-10-24
 
   - Managed by Webspark
 
-    * Better Watchdog UI (v3.0+6-dev),
-      Feeds (v2.0-beta4+16-dev),
-      LDAP (v2.3+25-dev),
-      Missing Module (v1.2),
-      References (v2.2+27-dev),
-      UUID Features (v1.0+4-dev)
+    * Better Watchdog UI (v3.0+6-dev)
+    * Feeds (v2.0-beta4+16-dev)
+    * LDAP (v2.3+25-dev)
+    * Missing Module (v1.2)
+    * References (v2.2+27-dev)
+    * UUID Features (v1.0+4-dev)
       * Restored missing module version numbers to help with applying database updates
 
 Webspark 1.55 (Oregon) release, 2018-08-20
