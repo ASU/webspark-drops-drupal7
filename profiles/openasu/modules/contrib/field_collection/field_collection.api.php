@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains API documentation and examples for the Field collection module.
+ * Contains API documentation and examples for the Field Collection.
  */
 
 /**
@@ -16,7 +16,7 @@
  * This hook allows modules to determine whether a field collection is empty
  * before it is saved.
  *
- * @param boolean $empty
+ * @param bool $is_empty
  *   Whether or not the field should be considered empty.
  * @param FieldCollectionItemEntity $item
  *   The field collection we are currently operating on.
@@ -66,7 +66,8 @@ function hook_field_collection_item_insert(FieldCollectionItemEntity $field_coll
 /**
  * Acts on a field collection item being inserted or updated.
  *
- * This hook is invoked before the field collection item is saved to the database.
+ * This hook is invoked before the field collection item is saved to the
+ * database.
  *
  * @param FieldCollectionItemEntity $field_collection_item
  *   The field collection item that is being inserted or updated.
@@ -140,7 +141,7 @@ function hook_field_collection_item_view($field_collection_item, $view_mode, $la
 /**
  * Alter the results of entity_view() for field collection items.
  *
-  * This hook is called after the content has been assembled in a structured
+ * This hook is called after the content has been assembled in a structured
  * array and may be used for doing processing which requires that the complete
  * field collection item content structure has been built.
  *
@@ -182,7 +183,7 @@ function hook_field_collection_item_label($item, $host, $field) {
     case 'field_my_first_collection':
       $item_wrapper = entity_metadata_wrapper('field_collection_item', $item);
 
-      $title  = $item_wrapper->field_title->value();
+      $title = $item_wrapper->field_title->value();
       $author = $item_wrapper->field_author->value();
 
       return "{$title} by {$author}";

@@ -13,9 +13,8 @@ files[] = tests/smtp.unit.test
 ; For the tests the Maillog module is also required.
 test_dependencies[] = maillog
 
-; Information added by Drupal.org packaging script on 2017-06-27
-version = "7.x-1.7"
+; Information added by Drupal.org packaging script on 2018-08-04
+version = "7.x-1.7+4-dev"
 core = "7.x"
 project = "smtp"
-datestamp = "1498593247"
-
+datestamp = "1533400990"
