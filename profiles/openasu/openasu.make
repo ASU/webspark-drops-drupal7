@@ -52,7 +52,7 @@ projects[panopoly_search][subdir] = panopoly
 projects[panopoly_test][version] = 1.67
 projects[panopoly_test][subdir] = panopoly
 ; ASU custom tests and modifications
-projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.46.patch
+;projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.46.patch
 projects[panopoly_test][patch][1370] = patches/webspark-847_behat_common.patch
 projects[panopoly_test][patch][142] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
 projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.patch
@@ -321,7 +321,7 @@ libraries[ajax_solr][download][type] = get
 libraries[ajax_solr][download][url] = https://github.com/evolvingweb/ajax-solr/archive/master.zip
 libraries[ajax_solr][directory_name] = ajax_solr
 libraries[ajax_solr][destination] = libraries
-libraries[ajax_solr][download][sha256] = d79493f28c47e8d5871d938d7146ab701f8666b785f50e00d9ab29e3a79f4376
+libraries[ajax_solr][download][sha256] = 5445d07305f99719e1cb9f277aaf0c3315728b0ea34df98f6990b45870007183
 
 ; 1 of 2 - CAS
 libraries[CAS][download][type] = get
