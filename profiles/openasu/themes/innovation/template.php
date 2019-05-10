@@ -38,7 +38,7 @@ function innovation_preprocess_html(&$variables) {
       '#tag' => 'meta',
       '#attributes' => array(
         // Don't forget to update openasu.info as well!!
-        'content' => 'Webspark:1.66 (Wisconsin)',
+        'content' => 'Webspark:1.67 (Iowa)',
         'http-equiv' => 'X-Name-of-Distro',
         'name' => 'cmsversion',
       )

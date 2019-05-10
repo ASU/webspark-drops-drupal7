@@ -1,3 +1,41 @@
+Webspark 1.67 (Iowa), 2019-05-10
+--------------------------------
+- Webspark core
+
+  * Drupal core (v7.67)
+    * Security update! See the latest release notes at https://www.drupal.org/project/drupal/releases/7.67 for more
+      information
+  * Panopoly (v1.67)
+    * See the latest release notes at https://www.drupal.org/project/panopoly/releases/7.x-1.67 for more information
+
+- Web standards components in Webspark
+
+  * Panopoly Theme (panopoly_theme) - v1.67+patch - Multiple accordions now work on a single page.
+
+- Contrib module updates
+
+  - Managed by Webspark
+
+  * MIME Mail (mimemail) - v1.1+ASU-patch
+  * SMTP (smtp) - v1.4+dev-47f4114b1e6d357708b6ffcade01241a11c41ef1
+  * Field Collection (field_collection) - v7.x-1.0-beta13+40-dev
+
+- Contrib library updates
+
+  - Managed by Webspark
+
+  * CAS (cas) - v1.3.6
+
+- Experimental modules in Webspark
+
+  - If you wish to keep using the modules below outside of production, copy their root directory
+  (in /profiles/openasu/modules/custom) into /sites/all/modules/custom (create if necessary) BEFORE applying
+  this (Iowa) update.
+  - Please send any questions about the future of these modules to webconsulting@asu.edu.
+
+  * ASU Events, (v3.0-alpha1), ASU News (v3.0-alpha1)
+
+
 Webspark 1.66 (Wisconsin), 2019-04-18
 -------------------------------------
 - Webspark core
@@ -13,6 +51,7 @@ Webspark 1.66 (Wisconsin), 2019-04-18
 
     * Module Filter (module_filter) - v2.2
     * Tablefield (tablefield) - v3.4
+
 
 Webspark 1.64.1 (San Diego), 2019-04-05
 ---------------------------------------
@@ -36,6 +75,7 @@ Webspark 1.64.1 (San Diego), 2019-04-05
 
     * Google Custom Search Engine (google_cse) - v2.5
       * Added as a dependency for the new ASU Google Custom Search Engine module
+
 
 Webspark 1.64 (California) release, 2019-03-25
 ----------------------------------------------
@@ -78,6 +118,7 @@ Webspark 1.64 (California) release, 2019-03-25
     * Menu Block (v2.8)
     * TableField (v3.2)
     * Views (v3.21)
+
 
 Webspark 1.60 (Minnesota) release, 2019-01-29
 ---------------------------------------------
@@ -158,6 +199,7 @@ Webspark 1.55.1 (Salem) release, 2018-10-24
     * References (v2.2+27-dev)
     * UUID Features (v1.0+4-dev)
       * Restored missing module version numbers to help with applying database updates
+
 
 Webspark 1.55 (Oregon) release, 2018-08-20
 ------------------------------------------
@@ -262,6 +304,7 @@ Webspark 1.55 (Oregon) release, 2018-08-20
       lead to unexpected results. If you have those modules enabled, first do the following:
       * Go to /import and delete any imported news and events items
       * Disable and uninstall the Webspark News & Events modules
+
 
 Webspark 1.53.1 (Topeka) release, 2018-05-14
 --------------------------------------------
