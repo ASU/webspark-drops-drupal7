@@ -6,7 +6,3 @@ dependencies[] = feeds
 configure = admin/structure/feeds
 
 files[] = feeds_ui.test
-
-; Manual version insertion
-version = "7.x-2.0-beta4+16-dev"
-

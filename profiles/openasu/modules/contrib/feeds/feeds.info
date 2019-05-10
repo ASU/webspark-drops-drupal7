@@ -98,7 +98,3 @@ files[] = views/feeds_views_handler_field_severity.inc
 files[] = views/feeds_views_handler_field_source.inc
 files[] = views/feeds_views_handler_filter_severity.inc
 files[] = views/feeds_views_plugin_argument_validate_feed_nid.inc
-
-; Manual version insertion
-version = "7.x-2.0-beta4+16-dev"
-

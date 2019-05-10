@@ -9,5 +9,6 @@ dependencies[] = rules
 
 ; Information added by Drupal.org packaging script on 2018-07-28
 version = "7.x-3.1"
+core = "7.x"
 project = "better_watchdog_ui"
 datestamp = "1532752688"

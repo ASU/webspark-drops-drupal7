@@ -17,7 +17,3 @@ features[node][] = feed
 features[node][] = feed_item
 features[views_view][] = feeds_defaults_feed_items
 files[] = feeds_news.test
-
-; Manual version insertion
-version = "7.x-2.0-beta4+16-dev"
-

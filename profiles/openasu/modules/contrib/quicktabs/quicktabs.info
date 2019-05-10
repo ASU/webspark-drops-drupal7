@@ -7,8 +7,3 @@ files[] = includes/quicktabs_style_plugin.inc
 files[] = tests/quicktabs.test
 configure = admin/structure/quicktabs
 dependencies[] = "ctools"
-
-; Information added by drush on 2015-01-08
-version = "7.x-3.6+9-dev"
-project = "quicktabs"
-datestamp = "1420698362"
