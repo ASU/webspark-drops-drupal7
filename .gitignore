@@ -75,6 +75,7 @@ profiles/openasu/modules/**/.gitignore
 # Files for local development
 ######################
 webspark**.bash
+__webspark**.bash
 sites/default/settings.local.php
 profiles/openasu/modules/panopoly_test/tests/bin
 profiles/openasu/modules/panopoly_test/tests/vendor
