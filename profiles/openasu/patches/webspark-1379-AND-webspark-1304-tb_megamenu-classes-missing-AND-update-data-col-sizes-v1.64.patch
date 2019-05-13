@@ -2,7 +2,7 @@ diff --git a/js/tb-megamenu-frontend.js b/js/tb-megamenu-frontend.js
 index a80c94e37..00cb32847 100644
 --- js/tb-megamenu-frontend.js
 +++ js/tb-megamenu-frontend.js
-@@ -25,6 +25,74 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
+@@ -25,6 +25,72 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
    
    Drupal.behaviors.tbMegaMenuAction = {
      attach: function(context) {
@@ -33,7 +33,6 @@ index a80c94e37..00cb32847 100644
 +        });
 +      };
 +      var showMenu = function ($menuItem, mm_timeout) {
-+        console.log("showMenu");
 +        if ($menuItem.hasClass ('mega')) {
 +          $menuItem.addClass ('animating');
 +          clearTimeout ($menuItem.data('animatingTimeout'));
@@ -53,7 +52,6 @@ index a80c94e37..00cb32847 100644
 +        }
 +      };
 +      var hideMenu = function ($menuItem, mm_timeout) {
-+        console.log("hideMenu");
 +        $menuItem.children('.dropdown-toggle').attr('aria-expanded', 'false');
 +        if ($menuItem.hasClass ('mega')) {
 +          $menuItem.addClass ('animating');
@@ -77,7 +75,7 @@ index a80c94e37..00cb32847 100644
        $('.tb-megamenu-button', context).once('menuIstance', function () {
          var This = this;
          $(This).click(function() {
-@@ -38,89 +106,85 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
+@@ -38,89 +106,83 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
            }
          });
        });
@@ -140,7 +138,6 @@ index a80c94e37..00cb32847 100644
 +          $('.nav > li > .dropdown-toggle, li.mega > .dropdown-toggle', context).bind('focus', function(event) {
 +            var $this = $(this);
 +            var $subMenu = $this.closest('li');
-+            console.log("showMenu call");
 +            showMenu($subMenu, mm_timeout);
 +            // If the focus moves outside of the subMenu, close it.
 +            $(document).bind('focusin', function(event) {
@@ -148,7 +145,6 @@ index a80c94e37..00cb32847 100644
 +                return;
                }
 +              $(document).unbind(event);
-+              console.log("hideMenu call");
 +              hideMenu($subMenu, mm_timeout);
              });
            });
