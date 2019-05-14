@@ -6,8 +6,3 @@ dependencies[] = field
 dependencies[] = references
 dependencies[] = options
 files[] = node_reference.test
-
-; Information added by drush on 2018-04-19
-version = "7.x-2.2+29-dev"
-project = "references"
-datestamp = "1524149731"

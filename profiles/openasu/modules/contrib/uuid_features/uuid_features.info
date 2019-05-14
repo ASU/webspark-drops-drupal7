@@ -7,7 +7,3 @@ dependencies[] = entity
 package = Features
 
 configure = admin/structure/features/uuid_features
-
-; Manual version insertion
-version = "7.x-1.0+4-dev"
-

@@ -52,7 +52,6 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
         });
       };
       var showMenu = function ($menuItem, mm_timeout) {
-        console.log("showMenu");
         if ($menuItem.hasClass ('mega')) {
           $menuItem.addClass ('animating');
           clearTimeout ($menuItem.data('animatingTimeout'));
@@ -72,7 +71,6 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
         }
       };
       var hideMenu = function ($menuItem, mm_timeout) {
-        console.log("hideMenu");
         $menuItem.children('.dropdown-toggle').attr('aria-expanded', 'false');
         if ($menuItem.hasClass ('mega')) {
           $menuItem.addClass ('animating');
@@ -124,7 +122,6 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
           $('.nav > li > .dropdown-toggle, li.mega > .dropdown-toggle', context).bind('focus', function(event) {
             var $this = $(this);
             var $subMenu = $this.closest('li');
-            console.log("showMenu call");
             showMenu($subMenu, mm_timeout);
             // If the focus moves outside of the subMenu, close it.
             $(document).bind('focusin', function(event) {
@@ -132,7 +129,6 @@ Drupal.TBMegaMenu = Drupal.TBMegaMenu || {};
                 return;
               }
               $(document).unbind(event);
-              console.log("hideMenu call");
               hideMenu($subMenu, mm_timeout);
             });
           });

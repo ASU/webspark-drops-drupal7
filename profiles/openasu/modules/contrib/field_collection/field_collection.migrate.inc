@@ -83,10 +83,10 @@ class MigrateDestinationFieldCollection extends MigrateDestinationEntity {
   /**
    * Import a single field collection item.
    *
-   * @param $collection
+   * @param \stdClass $collection
    *   Collection object to build. Pre-filled with any fields mapped in the
    *   migration.
-   * @param $row
+   * @param \stdClass $row
    *   Raw source data object - passed through to prepare/complete handlers.
    *
    * @return array|bool
@@ -139,7 +139,8 @@ class MigrateDestinationFieldCollection extends MigrateDestinationEntity {
         if ('field_' != substr($field, 0, 6)) {
           continue;
         }
-        elseif (property_exists($entity_old, $field) && !property_exists($collection, $field)) {
+
+        if (property_exists($entity_old, $field) && !property_exists($collection, $field)) {
           $entity->$field = $entity_old->$field;
         }
       }
@@ -159,9 +160,8 @@ class MigrateDestinationFieldCollection extends MigrateDestinationEntity {
       }
       return array($entity->item_id);
     }
-    else {
-      return FALSE;
-    }
+
+    return FALSE;
   }
 
   /**

@@ -71,5 +71,5 @@ projects[views][version] = 3.23
 projects[views][patch][] = https://www.drupal.org/files/issues/views-exposed-sorts-2037469-26.patch
 projects[views][patch][] = patches/webspark-1404_set-views-handler-filter-maxlength-to-null.patch
 
-; fix for Webspark-1507 - issue with accordions
+; WEBSPARK-1507
 projects[panopoly_theme][patch][] = https://www.drupal.org/files/issues/accordion-style-id-fix.2777847.8.patch
