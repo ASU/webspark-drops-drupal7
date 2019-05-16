@@ -9,6 +9,7 @@ projects[drupal][type] = core
 projects[drupal][version] = 7.67
 ; Drupal Core Patches
 ;projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-profile-ajax-1334818-8.patch
+projects[drupal][patch][1803048] = patches/ws-1514_array-flip-error-travis-ci-tests_1803048.patch
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; The Panopoly Foundation
