@@ -28,12 +28,14 @@ Webspark 1.67 (Iowa), 2019-05-10
 
 - Experimental modules in Webspark
 
-  - If you wish to keep using the modules below outside of production, copy their root directory
-  (in /profiles/openasu/modules/custom) into /sites/all/modules/custom (create if necessary) BEFORE applying
-  this (Iowa) update.
-  - Please send any questions about the future of these modules to webconsulting@asu.edu.
+  - The following modules have been removed in this release. If you wish to keep using the modules below outside of production, copy their root directory
+  in /profiles/openasu/modules/custom into /sites/all/modules/custom (create if necessary) BEFORE applying
+  this update):
 
-  * ASU Events, (v3.0-alpha1), ASU News (v3.0-alpha1)
+  * ASU Events (asu_events) - v3.0-alpha1
+  * ASU News (asu_news) - v3.0-alpha1
+
+  - Please send any questions about the future of these modules to webconsulting@asu.edu.
 
 
 Webspark 1.66 (Wisconsin), 2019-04-18
