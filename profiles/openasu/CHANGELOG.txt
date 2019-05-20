@@ -2,10 +2,12 @@ Webspark 1.67 (Iowa), 2019-05-10
 --------------------------------
 - Webspark core
 
-  * Drupal core (v7.67)
+  * Drupal core - v7.67
     * Security update! See the latest release notes at https://www.drupal.org/project/drupal/releases/7.67 for more
       information
-  * Panopoly (v1.67)
+    * Fixed array_flip() issues in core Entity API include. See https://drupal.org/node/1803048 for 
+      more information.
+  * Panopoly - v1.67
     * See the latest release notes at https://www.drupal.org/project/panopoly/releases/7.x-1.67 for more information
 
 - Web standards components in Webspark
@@ -30,7 +32,7 @@ Webspark 1.67 (Iowa), 2019-05-10
 
   - The following modules have been removed in this release. If you wish to keep using the modules below outside of production, copy their root directory
   in /profiles/openasu/modules/custom into /sites/all/modules/custom (create if necessary) BEFORE applying
-  this update):
+  this update:
 
   * ASU Events (asu_events) - v3.0-alpha1
   * ASU News (asu_news) - v3.0-alpha1
