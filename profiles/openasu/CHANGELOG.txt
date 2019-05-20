@@ -1,4 +1,4 @@
-Webspark 1.67 (Iowa), 2019-05-10
+Webspark 1.67 (Iowa), 2019-05-20
 --------------------------------
 - Webspark core
 
