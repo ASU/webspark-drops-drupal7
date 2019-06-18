@@ -1162,7 +1162,7 @@ class EntityListWrapper extends EntityMetadataWrapper implements IteratorAggrega
   public function label() {
     if ($options = $this->optionsList('view')) {
       $options = entity_property_options_flatten($options);
-      $labels = array_intersect_key($options, array_flip((array) parent::value()));
+      $labels = array_intersect_key($options, array_flip(array_filter((array) parent::value())));
     }
     else {
       // Get each label on its own, e.g. to support getting labels of a list
