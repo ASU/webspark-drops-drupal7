@@ -11,3 +11,4 @@ files[] = views/field_collection_handler_relationship.inc
 files[] = field_collection.migrate.inc
 configure = admin/structure/field-collections
 package = Fields
+version = "7.x-1.0-beta13+48-dev"

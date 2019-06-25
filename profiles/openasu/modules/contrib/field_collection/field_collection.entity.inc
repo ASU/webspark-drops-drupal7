@@ -226,19 +226,18 @@ class FieldCollectionItemEntity extends Entity {
     // not saved in the DB yet then fill in info about the hostEntity manually.
     // This happens when creating a new revision of a field collection entity
     // and it needs to relate to the new revision of the host entity.
-    if (!$this->hostEntityType) {
+    if (!$this->hostEntityType || isset($entity->tid)) {
       $this->hostEntityType = $host_entity_type;
       $this->hostEntity = $entity;
       list($this->hostEntityId, $this->hostEntityRevisionId) = entity_extract_ids($this->hostEntityType, $this->hostEntity);
     }
     list($recieved_id) = entity_extract_ids($this->hostEntityType, $entity);
 
-    if ($this->isInUse() && !empty($this->hostEntityId)) {
+    if (!empty($this->hostEntityId) && $this->isInUse()) {
       if (is_array($this->hostEntityId)) {
-        $current_id = in_array(
-          $recieved_id,
-          $this->hostEntityId
-        ) ? $recieved_id : FALSE;
+        $current_id = in_array($recieved_id, $this->hostEntityId)
+          ? $recieved_id
+          : FALSE;
       }
       else {
         $current_id = $this->hostEntityId;
@@ -246,7 +245,7 @@ class FieldCollectionItemEntity extends Entity {
     }
     else {
       $current_host = entity_revision_load($this->hostEntityType, $this->hostEntityRevisionId);
-      list($current_id) = entity_extract_ids($this->hostEntityType, $current_host);
+      list($current_id) = $current_host ? entity_extract_ids($this->hostEntityType, $current_host) : array($recieved_id);
     }
 
     if ($current_id == $recieved_id) {
@@ -326,10 +325,14 @@ class FieldCollectionItemEntity extends Entity {
         if ($hostEntity) {
           $entity_type = key($field_info['bundles']);
           $bundle = current($field_info['bundles'][$entity_type]);
+          $entity_info = entity_get_info($entity_type);
+          $key = $entity_info['entity keys']['id'];
           $query->entityCondition('entity_type', $entity_type);
-          $query->entityCondition('entity_id', $hostEntity->nid);
+          $query->entityCondition('entity_id', $hostEntity->{$key});
           $query->entityCondition('bundle', $bundle);
-          $query->propertyCondition('language', $hostEntity->language);
+          if (isset($entity_info['entity keys']['language'])) {
+            $query->propertyCondition('language', $hostEntity->language);
+          }
         }
         $query->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT');
         if (!$this->isInUse()) {
@@ -342,7 +345,7 @@ class FieldCollectionItemEntity extends Entity {
 
           if ($this->isInUse()) {
             $data_array_keys = array_keys($data);
-            $this->hostEntityId = $data ? $data_array_keys : FALSE;
+            $this->hostEntityId = $data ? end($data_array_keys) : FALSE;
             $this->hostEntityRevisionId = FALSE;
           }
           // If we are querying for revisions, we get the revision ID.
@@ -412,7 +415,7 @@ class FieldCollectionItemEntity extends Entity {
    * Determines the language code under which the item is stored.
    */
   public function langcode() {
-    if ($this->delta() === NULL || empty($this->langcode)) {
+    if (empty($this->langcode) || $this->delta() === NULL) {
       $this->langcode = field_collection_entity_language('field_collection_item', $this);
     }
 
@@ -463,7 +466,7 @@ class FieldCollectionItemEntity extends Entity {
     }
 
     // Copy the values of translatable fields for a new field collection item.
-    if (field_collection_item_is_translatable() && !empty($this->is_new) && $this->langcode() == LANGUAGE_NONE) {
+    if (!empty($this->is_new) && field_collection_item_is_translatable() && $this->langcode() == LANGUAGE_NONE) {
       $this->copyTranslations();
     }
 
