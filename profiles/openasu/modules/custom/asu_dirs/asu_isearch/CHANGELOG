@@ -1,3 +1,8 @@
+asu_isearch 7.x-1.12
+--------------------
+- Fixed bug where local rank weight couldn't be removed with node edit form
+- Added error handling to better detect field_collection-related failures
+
 asu_isearch 7.x-1.11
 --------------------
 - Added queue cleanup update and limits to avoid bloating database

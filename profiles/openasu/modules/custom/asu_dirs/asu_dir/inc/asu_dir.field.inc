@@ -758,13 +758,19 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         '#suffix' => '<p>Notice:  If checked, the local iSearch Directory List view will be displayed, 
         instead of real-time Solr results.  The view is subject to changes in local profiles via migrations, 
         and may not be up to date with iSearch.  Also please note that in the event of a Solr outage, 
-        the view will be displayed automatically as a backup.</p></div></div>',
+        the view will be displayed automatically as a backup.</p>
+        <p>Also note that Selecting this option will invalidate some of the options you may have selected in this interface. 
+        For example, if you have selected the \'Grid\'
+         Display Type, the View will not reflect that. 
+         The View being used for this directory is named \'iSearch Directory\', with a subview named \'Directory - List.\'. 
+         We do not recommend modifying this view directly. 
+         We suggest making a copy of the view which can then be customized.</p>
+        </div></div>',
         '#states' => array(
           'visible' => array(
             ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][use_custom_q]"]' => array('checked' => FALSE)
           ),
         )
-
       );
     }
 
