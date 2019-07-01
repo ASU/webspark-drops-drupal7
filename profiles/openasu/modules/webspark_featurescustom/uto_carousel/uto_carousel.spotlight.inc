@@ -162,11 +162,9 @@ function uto_carousel_field_formatter_settings_summary($field, $instance, $view_
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
 
-  $summary = array();
+  $summary = t('Image Style: @style', array('@style' => $settings['image_style'])). '<br \>';
 
-  $summary[] = t('Image Style: @style', array('@style' => $settings['image_style']));
-
-  $summary[] = !empty($settings['caption']) ? t('Display captions') : t('Do not display captions');
+  $summary .= (!empty($settings['caption']) ? t('Display captions') : t('Do not display captions')) . '<br \>';
 
   // Load option set
   ctools_include('export');
@@ -175,7 +173,7 @@ function uto_carousel_field_formatter_settings_summary($field, $instance, $view_
   }
 
   $optionset = isset($optionset) ? $optionset->title : t('Default settings');
-  $summary[] = t('Option set: %optionset', array('%optionset' => $optionset));
+  $summary .= t('Option set: %optionset', array('%optionset' => $optionset));
   return $summary;
 }
 

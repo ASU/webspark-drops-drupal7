@@ -2,6 +2,7 @@ language: php
 
 addons:
   artifacts: true
+  chrome: stable
 
 # PHP 7
 php:
@@ -27,14 +28,7 @@ branches:
   only:
     - master
     - travis-ci
-
-# Firefox 47.0 is currently breaking Selenium Server
-# TODO - Update from Selenium Server Standalone to alternative Marionette
-# https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver
-# Addons not working with Firefox. SeleniumHQ issue? Manually adding proper FF version.
-addons:
-  chrome: stable
-
+    
 # Cut down on git depth from default of 50
 git:
   depth: 3

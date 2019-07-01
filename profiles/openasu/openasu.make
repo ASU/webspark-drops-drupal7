@@ -152,11 +152,12 @@ projects[entity_view_mode][version] = 1.0-rc1
 projects[entity_view_mode][type] = module
 projects[entity_view_mode][subdir] = contrib
 
+; field_collection latest dev verion as of 06/25/2019
 projects[field_collection][type] = module
 projects[field_collection][subdir] = contrib
 projects[field_collection][download][branch] = "7.x-1.x"
 projects[field_collection][download][url] = "https://git.drupalcode.org/project/field_collection.git"
-projects[field_collection][download][revision] = "605e0e4e029edf7a2adea41ad59849fd25bc8ed3"
+projects[field_collection][download][revision] = "5f127681fcada4df97ce2903e65e1e4c52cc0dcd"
 
 projects[flexslider][version] = 2.0-rc2
 projects[flexslider][type] = module

@@ -730,7 +730,14 @@ class MigrateIsearchProfileMigration extends Migration {
       else {
         // this affiliation does not exist, create it
         $affiliation = entity_create('field_collection_item', array('field_name' => 'field_isearch_affiliations'));
-        $affiliation->setHostEntity('node', $entity);
+        
+        try {
+          $affiliation->setHostEntity('node', $entity);
+        }
+        catch (Exception $e) {
+          // Log the exception to watchdog.
+          watchdog_exception('type', $e);
+        }
       }
 
       // store the affiliation title
@@ -754,7 +761,6 @@ class MigrateIsearchProfileMigration extends Migration {
       $affiliation->field_isearch_affil_primary[LANGUAGE_NONE][0]['value'] = ($item->isPrimary) ? 1 : 0;
       $affiliation->field_isearch_affil_rank_tenure[LANGUAGE_NONE][0]['value'] = ($item->isRankTenure) ? 1 : 0;
 
-
       if (variable_get('isearch_import_affil_weights', FALSE)) {
         $affiliation->field_isearch_affil_weight[LANGUAGE_NONE][0]['value'] = $item->affilWeight;
       }
@@ -771,7 +777,13 @@ class MigrateIsearchProfileMigration extends Migration {
         $affiliation->field_isearch_affil_rank[LANGUAGE_NONE][0]['tid'] = $row->existing_ranks[$item->ranksTid];
       }
 
-      $affiliation->save();
+      try {
+        $affiliation->save();
+      }
+      catch (Exception $e) {
+        // Log the exception to watchdog.
+        watchdog_exception('type', $e);
+      }
 
       if ($row->localPrimaryAffiliation == $item->deptId) {
         $entity->field_isearch_primary_aff[LANGUAGE_NONE][0]['target_id'] = $affiliation->item_id;
