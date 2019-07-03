@@ -1,11 +1,8 @@
 <?php
 
 /**
- * @file
  * Views handler to display data value of a webform submission component.
- */
-
-/**
+ *
  * Field handler to show submission data.
  *
  * @ingroup views_field_handlers
@@ -13,7 +10,7 @@
 class webform_handler_field_submission_data extends views_handler_field {
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function construct() {
     // We need to set this property before calling the construct() chain
@@ -23,7 +20,7 @@ class webform_handler_field_submission_data extends views_handler_field {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function option_definition() {
     $options = parent::option_definition();
@@ -36,7 +33,7 @@ class webform_handler_field_submission_data extends views_handler_field {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
@@ -83,7 +80,7 @@ class webform_handler_field_submission_data extends views_handler_field {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function options_validate(&$form, &$form_state) {
     parent::options_validate($form, $form_state);
@@ -93,7 +90,7 @@ class webform_handler_field_submission_data extends views_handler_field {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function options_submit(&$form, &$form_state) {
     parent::options_submit($form, $form_state);
@@ -195,8 +192,9 @@ class webform_handler_field_submission_data extends views_handler_field {
       $component = $webform->webform['components'][$cid];
       $submission = $this->view->_webform_submissions[$nid][$sid];
       if ($submission->nid != $nid) {
-        // The actual submission is from a different webform than the one used to define the view.
-        // Rather than using the component with the same cid, try to match the form_key.
+        // The actual submission is from a different webform than the one used
+        // to define the view. Rather than using the component with the same
+        // cid, try to match the form_key.
         if (!isset($this->view->_webform_components[$nid][$submission->nid][$cid])) {
           if (!isset($this->view->_webform_components[$nid][$submission->nid]['webform'])) {
             $this->view->_webform_components[$nid][$submission->nid]['webform'] = $webform;
@@ -213,8 +211,9 @@ class webform_handler_field_submission_data extends views_handler_field {
         }
         $webform = $this->view->_webform_components[$nid][$submission->nid]['webform'];
         $component = $this->view->_webform_components[$nid][$submission->nid][$cid];
-        // Note: $nid and $cid refer to the definition webform, not the submission webform
-        // whereas $component refers to the submission component.
+        // Note: $nid and $cid refer to the definition webform, not the
+        // submission webform whereas $component refers to the submission
+        // component.
       }
 
       if ($this->options['format'] == 'html') {
@@ -225,7 +224,8 @@ class webform_handler_field_submission_data extends views_handler_field {
         $render['#theme_wrappers'] = array();
       }
       else {
-        // Plain text format is generated via invoking the table output to ensure output is sanitised.
+        // Plain text format is generated via invoking the table output to
+        // ensure output is sanitised.
         $data = isset($submission->data[$component['cid']]) ? $submission->data[$component['cid']] : NULL;
         $render = webform_component_invoke($component['type'], 'table', $component, $data);
       }

@@ -1,17 +1,22 @@
 imports:
     - behat.common.yml
-#
 default:
   extensions:
     Behat\MinkExtension:
       selenium2:
-        # This will probably be the same always, if you follow the guide for browsers below.
         wd_host: http://localhost:4444/wd/hub
-        capabilities:
+        capabilities: 
+          extra_capabilities:
+            chromeOptions:
+              args:
+                - "--start-maximized"
+                - "--headless"
+                - "--disable-gpu"
           chrome:
             switches:
               - "--headless"
               - "--disable-gpu"
+              - "--window-size=1920,1080"
               - "--no-sandbox"
       javascript_session: selenium2
       browser_name: chrome

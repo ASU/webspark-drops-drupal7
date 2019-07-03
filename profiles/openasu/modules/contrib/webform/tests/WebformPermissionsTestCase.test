@@ -1,12 +1,7 @@
 <?php
 
 /**
- * @file
  * Webform module permission tests.
- */
-
-/**
- *
  */
 class WebformPermissionsTestCase extends WebformTestCase {
 
@@ -43,8 +38,9 @@ class WebformPermissionsTestCase extends WebformTestCase {
     // The anonymous user should not be able to submit.
     $this->drupalGet('node/' . $node->nid);
 
-    // Note: Should be: You must <a href="!login">login</a> or <a href="!register">register</a> to view this form.
-    // Something in SimpleTest isn't handling the string correctly.
+    // Note: Should be: You must <a href="!login">login</a> or
+    // <a href="!register">register</a> to view this form. Something in
+    // SimpleTest isn't handling the string correctly.
     $this->assertText('to view this form.', t('Anonymous user is not allowed to submit form.'), t('Webform'));
   }
 

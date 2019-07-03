@@ -486,6 +486,9 @@ class SmtpMailSystem implements MailSystemInterface {
         if (isset($attachment['filecontent'])) {
           $mailer->AddStringAttachment($attachment['filecontent'], $attachment['filename'], 'base64', $attachment['filemime']);
         }
+        if (!isset($attachment['filepath']) && isset($attachment['uri'])) {
+          $attachment['filepath'] = $attachment['uri'];
+        }
         if (isset($attachment['filepath'])) {
           $filename = isset($attachment['filename']) ? $attachment['filename'] : basename($attachment['filepath']);
           $filemime = isset($attachment['filemime']) ? $attachment['filemime'] : file_get_mimetype($attachment['filepath']);
