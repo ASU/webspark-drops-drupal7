@@ -2,6 +2,8 @@
 
 /**
  * @file
+ * Submission handling functions.
+ *
  * This file is loaded when handling submissions, either submitting new,
  * editing, or viewing. It also contains all CRUD functions for submissions.
  *
@@ -54,7 +56,7 @@ function webform_submission_data($node, $submitted) {
  * @return object
  *   A new submission object, possibly for preview
  */
-function webform_submission_create($node, $account, $form_state, $is_preview = FALSE, $prototype = NULL) {
+function webform_submission_create($node, $account, array $form_state, $is_preview = FALSE, $prototype = NULL) {
   $data = webform_submission_data($node, $form_state['values']['submitted']);
   if (is_object($prototype)) {
     $submission = clone $prototype;
@@ -89,7 +91,7 @@ function webform_submission_create($node, $account, $form_state, $is_preview = F
  * @param $submission
  *   The webform submission object to be saved into the database.
  *
- * @return
+ * @return int
  *   The existing submission SID.
  */
 function webform_submission_update($node, $submission) {
@@ -139,7 +141,7 @@ function webform_submission_update($node, $submission) {
  * @param $submission
  *   The webform submission object to be saved into the database.
  *
- * @return
+ * @return int
  *   The new submission SID.
  */
 function webform_submission_insert($node, $submission) {
@@ -231,163 +233,24 @@ function webform_submission_delete($node, $submission) {
  *   Number of mail sent.
  */
 function webform_submission_send_mail($node, $submission, $emails = NULL) {
-  global $user;
-
   // Get the list of e-mails we'll be sending.
   $emails = isset($emails) ? $emails : $node->webform['emails'];
 
   // Create a themed message for mailing.
   $send_count = 0;
   foreach ($emails as $eid => $email) {
-    // Continue with next email recipients array if disabled for current.
-    if (!$email['status']) {
+    $mail = _webform_submission_prepare_mail($node, $submission, $email);
+    if (!$mail) {
       continue;
     }
 
-    // Set the HTML property based on availablity of MIME Mail.
-    $email['html'] = ($email['html'] && webform_variable_get('webform_email_html_capable'));
-
-    // Pass through the theme layer if using the default template.
-    if ($email['template'] == 'default') {
-      $email['message'] = theme(array('webform_mail_' . $node->nid, 'webform_mail', 'webform_mail_message'), array('node' => $node, 'submission' => $submission, 'email' => $email));
-    }
-    else {
-      $email['message'] = $email['template'];
-    }
-
-    // Replace tokens in the message.
-    $email['message'] = webform_replace_tokens($email['message'], $node, $submission, $email, (boolean) $email['html']);
-
-    // Build the e-mail headers.
-    $email['headers'] = theme(array('webform_mail_headers_' . $node->nid, 'webform_mail_headers'), array('node' => $node, 'submission' => $submission, 'email' => $email));
-
-    // Assemble the From string.
-    if (isset($email['headers']['From'])) {
-      // If a header From is already set, don't override it.
-      $email['from'] = $email['headers']['From'];
-      unset($email['headers']['From']);
-    }
-    else {
-      // Format the From address.
-      $mapping = isset($email['extra']['from_address_mapping']) ? $email['extra']['from_address_mapping'] : NULL;
-      $email['from'] = webform_format_email_address($email['from_address'], $email['from_name'], $node, $submission, TRUE, TRUE, NULL, $mapping);
-    }
-
-    // If requested and not already set, set Reply-To to the From and re-format From address.
-    if (webform_variable_get('webform_email_replyto') &&
-        empty($email['headers']['Reply-To']) &&
-        ($default_from_name = webform_variable_get('webform_default_from_name')) &&
-        ($default_from_address = webform_variable_get('webform_default_from_address')) &&
-        ($default_from_parts = explode('@', $default_from_address)) &&
-        count($default_from_parts) == 2 &&
-        $default_from_parts[1] &&
-        stripos($email['from'], '@' . $default_from_parts[1]) === FALSE) {
-      // Message is not already being sent from the domain of the default
-      // webform from address.
-      $email['headers']['Reply-To'] = $email['from'];
-      $email['from'] = $default_from_address;
-      if (webform_variable_get('webform_email_address_format') == 'long') {
-        $email_parts = webform_parse_email_address($email['headers']['Reply-To']);
-        $from_name = t('!name via !site_name',
-                        array(
-                          '!name' => strlen($email_parts['name']) ? $email_parts['name'] : $email_parts['address'],
-                          '!site_name' => $default_from_name,
-                        ));
-        $from_name = implode(' ', array_map('mime_header_encode', explode(' ', $from_name)));
-        $email['from'] = '"' . $from_name . '" <' . $email['from'] . '>';
-      }
-    }
-
-    // Update the subject if set in the themed headers.
-    if (isset($email['headers']['Subject'])) {
-      $email['subject'] = $email['headers']['Subject'];
-      unset($email['headers']['Subject']);
-    }
-    else {
-      $email['subject'] = webform_format_email_subject($email['subject'], $node, $submission);
-    }
-
-    // Update the to e-mail if set in the themed headers.
-    if (isset($email['headers']['To'])) {
-      $email['email'] = $email['headers']['To'];
-      unset($email['headers']['To']);
-      $addresses = array_filter(explode(',', $email['email']));
-    }
-    else {
-      // Format the To address(es).
-      $mapping = isset($email['extra']['email_mapping']) ? $email['extra']['email_mapping'] : NULL;
-      $addresses = webform_format_email_address($email['email'], NULL, $node, $submission, TRUE, FALSE, NULL, $mapping);
-      $email['email'] = implode(',', $addresses);
-    }
-
-    // Generate the list of addresses that this e-mail will be sent to.
-    $addresses_final = array_filter($addresses, 'webform_valid_email_address');
-
-    if (!$addresses_final) {
-      continue;
-    }
-
-    // Verify that this submission is not attempting to send any spam hacks.
-    foreach ($addresses_final as $address) {
-      if (_webform_submission_spam_check($address, $email['subject'], $email['from'], $email['headers'])) {
-        watchdog('webform', 'Possible spam attempt from @remote !message',
-          array('@remote' => ip_address(), '!message' => "<br />\n" . nl2br(htmlentities($email['message']))));
-        drupal_set_message(t('Illegal information. Data not submitted.'), 'error');
-        return FALSE;
-      }
-    }
-
-    // Consolidate addressees into one message if permitted by configuration.
-    $send_increment = 1;
-    if (!webform_variable_get('webform_email_address_individual')) {
-      $send_increment = count($addresses_final);
-      $addresses_final = array(implode(', ', $addresses_final));
-    }
+    $addresses_final = $mail['addresses_final'];
+    $send_increment = $mail['send_increment'];
+    $language = $mail['language'];
+    $mail_params = $mail['mail_params'];
 
     // Mail the webform results.
     foreach ($addresses_final as $address) {
-
-      $language = $user->uid ? user_preferred_language($user) : language_default();
-      $mail_params = array(
-        'message' => $email['message'],
-        'subject' => $email['subject'],
-        'headers' => $email['headers'],
-        'node' => $node,
-        'submission' => $submission,
-        'email' => $email,
-      );
-
-      if (webform_variable_get('webform_email_html_capable')) {
-        // Load attachments for the e-mail.
-        $attachments = array();
-        if ($email['attachments']) {
-          webform_component_include('file');
-          foreach ($node->webform['components'] as $component) {
-            if (webform_component_feature($component['type'], 'attachment') && !empty($submission->data[$component['cid']][0])) {
-              if (webform_component_implements($component['type'], 'attachments')) {
-                $files = webform_component_invoke($component['type'], 'attachments', $component, $submission->data[$component['cid']]);
-                if ($files) {
-                  $attachments = array_merge($attachments, $files);
-                }
-              }
-            }
-          }
-        }
-
-        // Add the attachments to the mail parameters.
-        $mail_params['attachments'] = $attachments;
-
-        // Set all other properties for HTML e-mail handling.
-        $mail_params['plain'] = !$email['html'];
-        $mail_params['plaintext'] = $email['html'] ? NULL : $email['message'];
-        $mail_params['headers'] = $email['headers'];
-        if ($email['html']) {
-          // MIME Mail requires this header or it will filter all text.
-          $mail_params['headers']['Content-Type'] = 'text/html; charset=UTF-8';
-        }
-      }
-
-      // Mail the submission.
       $message = drupal_mail('webform', 'submission', $address, $language, $mail_params, $email['from']);
       if ($message['result']) {
         $send_count += $send_increment;
@@ -396,6 +259,173 @@ function webform_submission_send_mail($node, $submission, $emails = NULL) {
   }
 
   return $send_count;
+}
+
+/**
+ * Prepare a submission email for use by webform_submission_send_mail()
+ *
+ * @param $node
+ *   The node object containing the current webform.
+ * @param $submission
+ *   The webform submission object to be used in sending e-mails.
+ * @param $email
+ *   The e-mail settings to be used. This will have some of its values adjusted.
+ *
+ * @return array|null
+ *   An array of the information about the email needed by drupal_mail().
+ */
+function _webform_submission_prepare_mail($node, $submission, &$email) {
+  global $user;
+
+  // Don't process disabled emails.
+  if (!$email['status']) {
+    return;
+  }
+
+  // Set the HTML property based on availablity of MIME Mail.
+  $email['html'] = ($email['html'] && webform_variable_get('webform_email_html_capable'));
+
+  // Pass through the theme layer if using the default template.
+  if ($email['template'] == 'default') {
+    $email['message'] = theme(array('webform_mail_' . $node->nid, 'webform_mail', 'webform_mail_message'), array('node' => $node, 'submission' => $submission, 'email' => $email));
+  }
+  else {
+    $email['message'] = $email['template'];
+  }
+
+  // Replace tokens in the message.
+  $email['message'] = webform_replace_tokens($email['message'], $node, $submission, $email, (boolean) $email['html']);
+
+  // Build the e-mail headers.
+  $email['headers'] = theme(array('webform_mail_headers_' . $node->nid, 'webform_mail_headers'), array('node' => $node, 'submission' => $submission, 'email' => $email));
+
+  // Assemble the From string.
+  if (isset($email['headers']['From'])) {
+    // If a header From is already set, don't override it.
+    $email['from'] = $email['headers']['From'];
+    unset($email['headers']['From']);
+  }
+  else {
+    // Format the From address.
+    $mapping = isset($email['extra']['from_address_mapping']) ? $email['extra']['from_address_mapping'] : NULL;
+    $email['from'] = webform_format_email_address($email['from_address'], $email['from_name'], $node, $submission, TRUE, TRUE, NULL, $mapping);
+  }
+
+  // If "Use Reply-To header" is set in Webform settings and the Reply-To
+  // header is not already set, set Reply-To to the From and set From address
+  // to webform_default_from_name and webform_default_from_address.
+  if (webform_variable_get('webform_email_replyto') &&
+      empty($email['headers']['Reply-To']) &&
+      ($default_from_name = webform_variable_get('webform_default_from_name')) &&
+      ($default_from_address = webform_variable_get('webform_default_from_address')) &&
+      $email['from'] !== $default_from_name) {
+    $email['headers']['Reply-To'] = $email['from'];
+    $email['from'] = $default_from_address;
+    if (webform_variable_get('webform_email_address_format') == 'long') {
+      $email_parts = webform_parse_email_address($email['headers']['Reply-To']);
+      $from_name = t('!name via !site_name',
+                      array(
+                        '!name' => strlen($email_parts['name']) ? $email_parts['name'] : $email_parts['address'],
+                        '!site_name' => $default_from_name,
+                      ));
+      $from_name = implode(' ', array_map('mime_header_encode', explode(' ', $from_name)));
+      $email['from'] = '"' . $from_name . '" <' . $email['from'] . '>';
+    }
+  }
+
+  // Update the subject if set in the themed headers.
+  if (isset($email['headers']['Subject'])) {
+    $email['subject'] = $email['headers']['Subject'];
+    unset($email['headers']['Subject']);
+  }
+  else {
+    $email['subject'] = webform_format_email_subject($email['subject'], $node, $submission);
+  }
+
+  // Update the to e-mail if set in the themed headers.
+  if (isset($email['headers']['To'])) {
+    $email['email'] = $email['headers']['To'];
+    unset($email['headers']['To']);
+    $addresses = array_filter(explode(',', $email['email']));
+  }
+  else {
+    // Format the To address(es).
+    $mapping = isset($email['extra']['email_mapping']) ? $email['extra']['email_mapping'] : NULL;
+    $addresses = webform_format_email_address($email['email'], NULL, $node, $submission, TRUE, FALSE, NULL, $mapping);
+    $email['email'] = implode(',', $addresses);
+  }
+
+  // Generate the list of addresses that this e-mail will be sent to.
+  $addresses_final = array_filter($addresses, 'webform_valid_email_address');
+
+  if (!$addresses_final) {
+    return;
+  }
+
+  // Verify that this submission is not attempting to send any spam hacks.
+  foreach ($addresses_final as $address) {
+    if (_webform_submission_spam_check($address, $email['subject'], $email['from'], $email['headers'])) {
+      watchdog('webform', 'Possible spam attempt from @remote !message',
+        array('@remote' => ip_address(), '!message' => "<br />\n" . nl2br(htmlentities($email['message']))));
+      drupal_set_message(t('Illegal information. Data not submitted.'), 'error');
+      return;
+    }
+  }
+
+  // Consolidate addressees into one message if permitted by configuration.
+  $send_increment = 1;
+  if (!webform_variable_get('webform_email_address_individual')) {
+    $send_increment = count($addresses_final);
+    $addresses_final = array(implode(', ', $addresses_final));
+  }
+
+  // Prepare the variables used by drupal_mail().
+  $language = $user->uid ? user_preferred_language($user) : language_default();
+  $mail_params = array(
+    'message' => $email['message'],
+    'subject' => $email['subject'],
+    'headers' => $email['headers'],
+    'node' => $node,
+    'submission' => $submission,
+    'email' => $email,
+  );
+
+  if (webform_variable_get('webform_email_html_capable')) {
+    // Load attachments for the e-mail.
+    $attachments = array();
+    if ($email['attachments']) {
+      webform_component_include('file');
+      foreach ($node->webform['components'] as $component) {
+        if (webform_component_feature($component['type'], 'attachment') && !empty($submission->data[$component['cid']][0])) {
+          if (webform_component_implements($component['type'], 'attachments')) {
+            $files = webform_component_invoke($component['type'], 'attachments', $component, $submission->data[$component['cid']]);
+            if ($files) {
+              $attachments = array_merge($attachments, $files);
+            }
+          }
+        }
+      }
+    }
+
+    // Add the attachments to the mail parameters.
+    $mail_params['attachments'] = $attachments;
+
+    // Set all other properties for HTML e-mail handling.
+    $mail_params['plain'] = !$email['html'];
+    $mail_params['plaintext'] = $email['html'] ? NULL : $email['message'];
+    $mail_params['headers'] = $email['headers'];
+    if ($email['html']) {
+      // MIME Mail requires this header or it will filter all text.
+      $mail_params['headers']['Content-Type'] = 'text/html; charset=UTF-8';
+    }
+  }
+
+  return array(
+    'addresses_final' => $addresses_final,
+    'send_increment' => $send_increment,
+    'language' => $language,
+    'mail_params' => $mail_params,
+  );
 }
 
 /**
@@ -417,7 +447,6 @@ function webform_submission_delete_form($form, $form_state, $node, $submission) 
   drupal_set_title(webform_submission_title($node, $submission));
 
   // Keep the NID and SID in the same location as the webform_client_form().
-  // This helps mollom identify the same fields when deleting a submission.
   $form['#tree'] = TRUE;
   $form['details']['nid'] = array(
     '#type' => 'value',
@@ -434,7 +463,7 @@ function webform_submission_delete_form($form, $form_state, $node, $submission) 
 }
 
 /**
- *
+ * Form submit handler.
  */
 function webform_submission_delete_form_submit($form, &$form_state) {
   $node = node_load($form_state['values']['details']['nid']);
@@ -609,7 +638,7 @@ function webform_submission_resend_submit($form, &$form_state) {
  *
  * @throws Exception
  */
-function theme_webform_submission_resend($variables) {
+function theme_webform_submission_resend(array $variables) {
   $form = $variables['form'];
 
   $header = array(t('Send'), t('E-mail to'), t('Subject'));
@@ -724,6 +753,7 @@ function webform_get_submissions($filters = array(), $header = NULL, $pager_coun
  *   Optional. The number of submissions to include in the results.
  *
  * @return QueryExtendableInterface|SelectQueryInterface
+ *   The query object.
  */
 function webform_get_submissions_query($filters = array(), $header = NULL, $pager_count = 0) {
   if (!is_array($filters)) {
@@ -902,8 +932,8 @@ function webform_get_submissions_load($pager_query) {
  *   Optional; NULL for all, truthy for drafts only, falsy for completed only.
  *   The default is completed submissions only.
  *
- * @return
- *   An integer value of the number of submissions.
+ * @return int
+ *   The number of submissions.
  */
 function webform_get_submission_count($nid, $uid = NULL, $is_draft = 0) {
   $counts = &drupal_static(__FUNCTION__);
@@ -951,7 +981,7 @@ function webform_get_submission($nid, $sid) {
 }
 
 /**
- *
+ * Verify that an email is not attempting to send any spam.
  */
 function _webform_submission_spam_check($to, $subject, $from, $headers = array()) {
   $headers = implode('\n', (array) $headers);

@@ -1,17 +1,14 @@
 <?php
 
 /**
- * @file
  * Views handler to display a results link for Webform submissions.
- */
-
-/**
+ *
  * Field handler to present a link node edit.
  */
 class webform_handler_field_node_link_results extends views_handler_field_node_link {
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function option_definition() {
     $options = parent::option_definition();
@@ -20,7 +17,7 @@ class webform_handler_field_node_link_results extends views_handler_field_node_l
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
@@ -36,7 +33,8 @@ class webform_handler_field_node_link_results extends views_handler_field_node_l
    * Renders the link.
    */
   public function render_link($node, $values) {
-    // Ensure node is webform-enabled and user has access node's webform results.
+    // Ensure node is webform-enabled and the user has access node's webform
+    // results.
     if (!in_array($node->type, webform_node_types()) || !webform_results_access($node)) {
       return;
     }

@@ -43,6 +43,7 @@ define('ASU_ISEARCH_PROFILE_ONLOAD_UPDATE_INTERVAL', variable_get('asu_isearch_o
 define('ASU_ISEARCH_DEPT_CACHING_LIMIT', variable_get('asu_isearch_dept_caching_limit', 25));
 define('ASU_ISEARCH_MANUAL_IMPORT_DEPT_CACHE_LIMIT', variable_get('asu_isearch_manual_import_dept_cache_limit', 5));
 define('ASU_ISEARCH_MASTER_IMPORT_MINIMUM', variable_get('asu_isearch_master_import_minimum', 5));
+define('ASU_ISEARCH_DEFAULT_LOCAL_WEIGHT', variable_get('asu_isearch_default_local_weight', 999));
 
 // DEVMODE - variable to indicate development settings
 define('ASU_ISEARCH_DEVMODE', variable_get('asu_isearch_devmode', FALSE));

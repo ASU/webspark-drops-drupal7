@@ -224,7 +224,7 @@ function webform_expand_date($element) {
     unset($element['#value']);
   }
 
-  // Set defaults according to existing #default_value (set by Form API)
+  // Set defaults according to existing #default_value (set by Form API).
   if (isset($element['#default_value']['month']) || isset($element['#default_value']['day']) || isset($element['#default_value']['year'])) {
     $default_values = array(
       'month' => $element['#default_value']['month'],
@@ -409,7 +409,8 @@ function theme_webform_date($variables) {
 function webform_validate_date($element, $form_state) {
   $field_types = array('day', 'month', 'year');
 
-  // Determine if the user has specified a date. Hidden parts of the date will be submitted automatically.
+  // Determine if the user has specified a date. Hidden parts of the date will
+  // be submitted automatically.
   foreach ($field_types as $field_type) {
     if (!in_array($field_type, $element['#exclude']) && $element[$field_type]['#value'] !== '') {
       $field_found = TRUE;

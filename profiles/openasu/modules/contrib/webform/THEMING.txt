@@ -1,9 +1,9 @@
 Overview
 --------
-Webform supports theming similar to the CCK or Views modules. Any webform
-may be themed on the server side, though doing so may require a reasonable
-amount of knowledge about the Drupal Form API. More information about the Form
-API may be found at http://api.drupal.org/api/file/developer/topics/forms_api.html
+Webform supports theming similar to the CCK or Views modules. Any webform may be
+themed on the server side, though doing so may require a reasonable amount of
+knowledge about the Drupal Form API. More information about the Form API may be
+found at: http://api.drupal.org/api/file/developer/topics/forms_api.html
 
 Theme submission e-mails
 -----------------------

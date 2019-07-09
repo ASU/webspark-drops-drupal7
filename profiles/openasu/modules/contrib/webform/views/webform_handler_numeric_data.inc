@@ -15,7 +15,7 @@ class webform_handler_field_numeric_data extends views_handler_field_numeric {
   public $formula = NULL;
 
   /**
-   * Constructor.
+   * {@inheritdoc}
    */
   public function construct() {
     parent::construct();

@@ -2,14 +2,18 @@ language: php
 
 addons:
   artifacts: true
+  chrome: stable
 
 # PHP 7
 php:
-  - 7.0
+  - 7.2
 
-# make sure we test on latest trusty environment
+# make sure we test on latest xenial environment
 sudo: required
-dist: trusty
+dist: xenial
+
+services:
+  - mysql
 
 # Cache Composer & Drush directories.
 cache:
@@ -27,14 +31,7 @@ branches:
   only:
     - master
     - travis-ci
-
-# Firefox 47.0 is currently breaking Selenium Server
-# TODO - Update from Selenium Server Standalone to alternative Marionette
-# https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver
-# Addons not working with Firefox. SeleniumHQ issue? Manually adding proper FF version.
-addons:
-  chrome: stable
-
+    
 # Cut down on git depth from default of 50
 git:
   depth: 3

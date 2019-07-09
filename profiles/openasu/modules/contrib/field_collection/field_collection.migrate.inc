@@ -150,7 +150,7 @@ class MigrateDestinationFieldCollection extends MigrateDestinationEntity {
     $status = entity_save('field_collection_item', $entity);
     migrate_instrument_stop('field_collection_save');
 
-    if (in_array($this->hostEntityType, array('node', 'field_collection_item')) || ($status !== FALSE)) {
+    if ($status !== FALSE || in_array($this->hostEntityType, array('node', 'field_collection_item'))) {
       $this->complete($entity, $row);
       if ($updating) {
         $this->numUpdated++;

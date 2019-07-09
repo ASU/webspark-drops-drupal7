@@ -828,9 +828,9 @@ function webform_uninstall() {
   file_unmanaged_delete_recursive($filepath);
 
   // Delete the content type "webform" if:
-  //   a) there are no existing nodes of type webform and
-  //   b) no additional fields have been defined for node type webform, beyond
-  //      the default body field.
+  // 1. there are no existing nodes of type webform and
+  // 2. no additional fields have been defined for node type webform, beyond the
+  //    default body field.
   $query = new EntityFieldQuery();
   $results = $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'webform')
@@ -861,6 +861,12 @@ function webform_update_dependencies() {
   $dependencies['webform'][7320] = array(
     'system' => 7059,
   );
+  if (module_exists('rules')) {
+    // Ensure rules tables and fields exist before trying to use it.
+    $dependencies['webform'][7420] = array(
+      'rules' => 7213,
+    );
+  }
   return $dependencies;
 }
 
@@ -1658,8 +1664,9 @@ function webform_update_7403(&$sandbox) {
 }
 
 /**
- * Remove files left over from deleted submissions. Such files are now deleted
- * automatically.
+ * Remove files left over from deleted submissions.
+ *
+ * Such files are now deleted automatically.
  */
 function webform_update_7404() {
   module_load_include('inc', 'webform', 'components/file');
@@ -2044,8 +2051,9 @@ function webform_update_7417() {
 }
 
 /**
- * Upgrade the "extra" column in the e-mail table to be consistent with a new
- * webform installation.
+ * Upgrade the "extra" column in the e-mail table.
+ *
+ * Make the column consistent with a new webform installation.
  *
  * In version 7.x-4.0-rc6 and earlier, the extra field was added with 'not null'
  * FALSE, cause the schema module to report in mismatch. While functionally this
@@ -2350,4 +2358,24 @@ function webform_update_7430() {
   }
 
   return t('Webform emails may now be disabled.');
+}
+
+/**
+ * Preserve progress bar as not active for one-page webforms.
+ */
+function webform_update_7431() {
+  // Get a list of all Webforms containing a pagebreak.
+  $multipage_webform_nids = db_select('webform_component');
+  $multipage_webform_nids->distinct();
+  $multipage_webform_nids->addField('webform_component', 'nid');
+  $multipage_webform_nids->condition('type', 'pagebreak');
+
+  // Remove confirmation page from the progress bar for single-page Webforms.
+  $updated_count = db_update('webform')
+    ->fields(array('progressbar_include_confirmation' => 0))
+    ->condition('preview', 0)
+    ->condition('nid', $multipage_webform_nids, 'NOT IN')
+    ->execute();
+
+  return t("Disabled progress bar for @count single-page webforms.", array('@count' => $updated_count));
 }

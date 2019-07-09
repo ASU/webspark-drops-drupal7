@@ -58,8 +58,7 @@ function _webform_theme_number() {
 }
 
 /**
- * Adjusts the view field(s) that are automatically generated for number
- * components.
+ * Fix the view field(s) that are automatically generated for number components.
  */
 function _webform_view_field_number($component, $fields) {
   foreach ($fields as &$field) {
@@ -610,12 +609,13 @@ function _webform_csv_data_number($component, $export_options, $value) {
 }
 
 /**
- * A Drupal Form API Validation function. Validates the entered values from
- * number components on the client-side form.
+ * A Drupal Form API Validation function.
  *
- * @param $element
+ * Validates the entered values from number components on the client-side form.
+ *
+ * @param array $element
  *   The form element. May either be a select or a webform_number element.
- * @param $form_state
+ * @param array $form_state
  *   The full form state for the webform.
  */
 function _webform_validate_number($element, &$form_state) {
@@ -815,17 +815,18 @@ function _webform_number_format($component, $value) {
  * This function allows the thousands separator to be optional, but decimal
  * points must be in the right location.
  *
+ * A valid number is:
+ *   1. optional minus sign.
+ *   2. optional space.
+ *   3. the rest of the string can't be just a decimal or blank.
+ *   4. optional integer portion, with thousands separators.
+ *   5. optional decimal portion, starting is a decimal separator.
+ * Don't use preg_quote because a space is a valid thousands separator and
+ * needs quoting for the 'x' option to preg_match.
+ *
  * Based on http://stackoverflow.com/questions/5917082/regular-expression-to-match-numbers-with-or-without-commas-and-decimals-in-text.
  */
 function webform_number_format_match($value, $point, $separator) {
-  // A valid number is:
-  //   1. optional minus sign.
-  //   2. optional space.
-  //   3. the rest of the string can't be just a decimal or blank.
-  //   4. optional integer portion, with thousands separators.
-  //   5. optional decimal portion, starting is a decimal separator.
-  // Don't use preg_quote because a space is a valid thousands separator and
-  // needs quoting for the 'x' option to preg_match.
   $thousands = $separator ? "\\$separator?" : '';
   $decimal = "\\$point";
   return preg_match("/
@@ -882,10 +883,11 @@ function webform_number_format($value, $decimals = NULL, $point = '.', $separato
  *
  * @param string $value
  *   The string value to be standardized into a numeric string.
- * @param $point
+ * @param string $point
  *   The point separator between the whole number and the decimals.
  *
- * @return mixed|string
+ * @return string
+ *   The converted number.
  */
 function webform_number_standardize($value, $point) {
   // For simplicity, strip everything that's not the decimal point.
