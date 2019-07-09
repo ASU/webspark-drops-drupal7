@@ -11,6 +11,7 @@ Webspark 1.70 (Texas), 2019-07-02
   * ASU Local iSearch Directory (asu_isearch) - v1.12
     * Fixed bug where local rank weight for an affiliation couldn't be removed using the node edit form
     * Added error handling to better detect field_collection-related failures
+    * Fixed bug where absolute URLs imported from iSearch were being rewritten
   * ASU Directory Integration Reinvented (asu_dir) - v1.10.1
     * Added helpful description for the 'Use local iSearch view' option in the ASU Directory panel configs
   * ASU Webspark Carousel (uto_carousel) - v1.8
