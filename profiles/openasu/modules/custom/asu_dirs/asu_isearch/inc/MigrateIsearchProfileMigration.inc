@@ -295,8 +295,6 @@ class MigrateIsearchProfileMigration extends Migration {
         $affiliation->id = $department_id;
         $affiliation->deptId = $department_id;
         $affiliation->deptName = $row->departments[$index];
-
-
         $titlesource = 'workingTitle';
 
         if (isset($row->titleSource)) {

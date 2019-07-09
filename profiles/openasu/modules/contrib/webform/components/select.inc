@@ -965,11 +965,11 @@ function _webform_select_options_info() {
 /**
  * Execute a select option callback.
  *
- * @param $name
+ * @param string $name
  *   The name of the options group.
- * @param $component
+ * @param array $component
  *   The full Webform component.
- * @param $flat
+ * @param bool $flat
  *   Whether the information returned should exclude any nested groups.
  */
 function _webform_select_options_callback($name, $component, $flat = FALSE) {
@@ -996,8 +996,7 @@ function _webform_select_options_callback($name, $component, $flat = FALSE) {
 }
 
 /**
- * Utility function to split user-entered values from new-line separated
- * text into an array of options.
+ * Splits user values from new-line separated text into an array of options.
  *
  * @param string $text
  *   Text to be converted into a select option array.

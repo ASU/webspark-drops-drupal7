@@ -1,11 +1,8 @@
 <?php
 
 /**
- * @file
  * Contains the submission view row style plugin.
- */
-
-/**
+ *
  * Plugin which performs a webform_submission_render on the resulting object.
  *
  * Most of the code on this object is in the theme function.
@@ -13,20 +10,25 @@
  * @ingroup views_row_plugins
  */
 class webform_views_plugin_row_submission_view extends views_plugin_row {
+
   /**
    * Basic properties that let the row style follow relationships.
+   *
+   * @var string
    */
   public $base_table = 'webform_submissions';
   public $base_field = 'sid';
 
   /**
    * Stores the nodes loaded with pre_render.
+   *
+   * @var array
    */
   private $submissions = array();
   private $nodes = array();
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function option_definition() {
     $options = parent::option_definition();
@@ -37,7 +39,7 @@ class webform_views_plugin_row_submission_view extends views_plugin_row {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
@@ -106,7 +108,8 @@ class webform_views_plugin_row_submission_view extends views_plugin_row {
       }
       $build['#theme'] = $themes;
 
-      // Render built submission, and if unsanitized plain text is used, make it safe for display.
+      // Render built submission, and if unsanitized plain text is used, make
+      // it safe for display.
       $render = drupal_render($build);
       return $format == 'html' ? $render : nl2br(check_plain($render));
     }

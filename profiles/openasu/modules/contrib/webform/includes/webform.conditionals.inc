@@ -34,9 +34,9 @@ function webform_conditionals_form($form, &$form_state, $node) {
   // Drop PHP reference.
   unset($conditional);
 
-  // Check the current topological sort order for the conditionals and report any errors,
-  // but only for actual form submissions and not for ajax-related form builds, such as
-  // adding or removing a condition or conditional group.
+  // Check the current topological sort order for the conditionals and report
+  // any errors, but only for actual form submissions and not for ajax-related
+  // form builds, such as adding or removing a condition or conditional group.
   if (empty($form_state['triggering_element']['#ajax'])) {
     $node->webform['conditionals'] = $conditionals;
     webform_get_conditional_sorter($node)->reportErrors($conditionals);
@@ -143,10 +143,11 @@ function webform_conditionals_form($form, &$form_state, $node) {
     '#submit' => array('webform_conditionals_form_submit'),
   );
 
-  // Estimate if the form is too long for PHP max_input_vars and detect whether a previous submission was truncated.
-  // The estimate will be accurate because the form elements for this page are well known. Ajax use of this
-  // page will not generate user-visible errors, so a preflight may be the only indication to the user that
-  // the page is too long.
+  // Estimate if the form is too long for PHP max_input_vars and detect whether
+  // a previous submission was truncated. The estimate will be accurate because
+  // the form elements for this page are well known. Ajax use of this page will
+  // not generate user-visible errors, so a preflight may be the only indication
+  // to the user that the page is too long.
   webform_input_vars_check($form, $form_state, 'conditionals', '');
   return $form;
 }
@@ -221,7 +222,7 @@ function webform_conditionals_form_validate($form, &$form_state) {
           $component_type = $node->webform['components'][$action['target']['#value']]['type'];
           if (!webform_conditional_action_able($component_type, $action['action']['#value'])) {
             form_set_error('conditionals][' . $conditional_key . '][actions][' . $action_key . '][action',
-              t('A component of type %type can\'t be %action. (%target)',
+              t("A component of type %type can't be %action. (%target)",
               array(
                 '%action' => $action['action']['#options'][$action['action']['#value']],
                 '%type' => $component_options[$component_type],
@@ -341,9 +342,11 @@ function theme_webform_conditional_group_row($variables) {
  * Form API #process function to expand a webform conditional element.
  */
 function _webform_conditional_expand($element) {
+  $default_operator = 'and';
+
   $element['#tree'] = TRUE;
   $element['#default_value'] += array(
-    'andor' => 'and',
+    'andor' => $default_operator,
   );
 
   $wrapper_id = drupal_clean_css_identifier(implode('-', $element['#parents'])) . '-ajax';
@@ -381,7 +384,7 @@ function _webform_conditional_expand($element) {
           'remove' => _webform_conditional_remove_expand($element, $rid),
         );
         $andor_stack[++$level] = array(
-          'value' => $conditional['operator'],
+          'value' => isset($conditional['operator']) ? $conditional['operator'] : $default_operator,
           'parents' => array_merge($element['#parents'], array('rules', $rid, 'operator')),
           'rid' => $rid,
           'first' => TRUE,
@@ -463,8 +466,7 @@ function _webform_conditional_add_expand($element, $rid, $subconditional) {
     '#value' => $subconditional ? t('(+)') : t('+'),
     '#submit' => array('webform_conditional_element_add'),
     '#subconditional' => $subconditional,
-    '#name' => implode('_', $element['#parents']) . '_rules_' . $rid .
-    ($subconditional ? '_add_subconditional' : '_add'),
+    '#name' => implode('_', $element['#parents']) . '_rules_' . $rid . ($subconditional ? '_add_subconditional' : '_add'),
     '#attributes' => array('class' => array('webform-conditional-rule-add')),
     '#ajax' => array(
       'progress' => 'none',
@@ -546,10 +548,10 @@ function _webform_conditional_action_expand($element, $aid, $action) {
     ),
     'invert' => array(
       '#type' => 'select',
-      '#title' => t('Is/Isn\'t'),
+      '#title' => t("Is/Isn't"),
       '#options' => array(
         '0' => t('is'),
-        '1' => t('isn\'t'),
+        '1' => t("isn't"),
       ),
       '#default_value' => $action['invert'],
     ),
@@ -618,11 +620,11 @@ function _webform_conditional_action_expand($element, $aid, $action) {
  *     );
  * @endcode
  *   - forms[$form_key]: A string representing an HTML form for an operator.
- *   - forms[$form_key][$source]: Or instead of a single form for all components,
- *     if each component requires its own form, key each component by its source
- *     value (currently always the component ID).
+ *   - forms[$form_key][$source]: Or instead of a single form for all
+ *     components, if each component requires its own form, key each component
+ *     by its source value (currently always the component ID).
  *
- * @param $node
+ * @param object $node
  *   The Webform node for which these forms are being generated.
  */
 function _webform_conditional_expand_value_forms($node) {
@@ -664,7 +666,7 @@ function _webform_conditional_expand_value_forms($node) {
  *   The rid of the found rule, or -1 if none. Note that NULL is not used as a
  *   semaphore for "not found" because it casts to 0, which is a valid rule id.
  */
-function _webform_conditional_find_end($rules, $origin_rid, $target_delta_level = 0) {
+function _webform_conditional_find_end(array $rules, $origin_rid, $target_delta_level = 0) {
   $rids = array_keys($rules);
   $offset = array_search($origin_rid, $rids);
   $delta_level = 0;
@@ -756,7 +758,7 @@ function webform_conditional_element_add($form, &$form_state) {
                     );
 
   if (empty($button['#subconditional'])) {
-    $new[0] = $parent_values[$rid]['source_type'] == 'component' ? $parent_values[$rid] : $default_rule;
+    $new[0] = (isset($parent_values[$rid]['source_type']) && $parent_values[$rid]['source_type'] == 'component') ? $parent_values[$rid] : $default_rule;
   }
   else {
     // The default andor operator is opposite of current subconditional's
@@ -819,7 +821,7 @@ function webform_conditional_element_remove($form, &$form_state) {
  * @return array
  *   Array of deleted subconditionals. Empty array if none were deleted.
  */
-function webform_delete_empty_subconditionals(&$conditional) {
+function webform_delete_empty_subconditionals(array &$conditional) {
   $deleted = array();
   do {
     $empty_deleted = FALSE;
@@ -901,9 +903,9 @@ function theme_webform_conditional($variables) {
 
       default:
         // Hide labels.
-        $rule['source']['#title_display'] = 'none';
-        $rule['operator']['#title_display'] = 'none';
-        $rule['value']['#title_display'] = 'none';
+        $rule['source']['#title_display'] = 'invisible';
+        $rule['operator']['#title_display'] = 'invisible';
+        $rule['value']['#title_display'] = 'invisible';
 
         $source = '<div class="webform-conditional-source">' . drupal_render($rule['source']) . '</div>';
         $operator = '<div class="webform-conditional-operator">' . drupal_render($rule['operator']) . '</div>';
@@ -926,7 +928,7 @@ function theme_webform_conditional($variables) {
     $output .= '</div>';
 
     if (isset($rule['andor'])) {
-      $rule['andor']['#title_display'] = 'none';
+      $rule['andor']['#title_display'] = 'invisible';
       $output .= '<div class="webform-conditional-andor webform-container-inline">';
       $output .= drupal_render($rule['andor']);
       $output .= '</div>';
@@ -946,10 +948,10 @@ function theme_webform_conditional($variables) {
   // Hide labels.
   foreach (element_children($element['actions']) as $aid) {
     // Hide labels.
-    $element['actions'][$aid]['target']['#title_display'] = 'none';
-    $element['actions'][$aid]['invert']['#title_display'] = 'none';
-    $element['actions'][$aid]['action']['#title_display'] = 'none';
-    $element['actions'][$aid]['argument']['#title_display'] = 'none';
+    $element['actions'][$aid]['target']['#title_display'] = 'invisible';
+    $element['actions'][$aid]['invert']['#title_display'] = 'invisible';
+    $element['actions'][$aid]['action']['#title_display'] = 'invisible';
+    $element['actions'][$aid]['argument']['#title_display'] = 'invisible';
 
     $target = '<div class="webform-conditional-target">' . drupal_render($element['actions'][$aid]['target']) . '</div>';
     $invert = '<div class="webform-conditional-invert">' . drupal_render($element['actions'][$aid]['invert']) . '</div>';
@@ -1273,7 +1275,7 @@ function webform_conditional_form_select($node) {
   webform_component_include('select');
   foreach ($node->webform['components'] as $cid => $component) {
     if (webform_component_property($component['type'], 'conditional_type') == 'select') {
-      // TODO: Use a pluggable mechanism for retrieving select list values.
+      // @todo: Use a pluggable mechanism for retrieving select list values.
       $options = _webform_select_options($component);
       $element = array(
         '#type' => 'select',
@@ -1299,7 +1301,7 @@ function webform_conditional_form_date($node) {
   static $count = 0;
   $element = array(
     '#title' => NULL,
-    '#title_display' => 'none',
+    '#title_display' => 'invisible',
     '#size' => 24,
     '#attributes' => array('placeholder' => t('@format or valid date', array('@format' => webform_date_format('short')))),
     '#type' => 'textfield',
@@ -1315,7 +1317,7 @@ function webform_conditional_form_time($node) {
   static $count = 0;
   $element = array(
     '#title' => NULL,
-    '#title_display' => 'none',
+    '#title_display' => 'invisible',
     '#size' => 24,
     '#attributes' => array('placeholder' => t('HH:MMam or valid time')),
     '#type' => 'textfield',
@@ -1399,7 +1401,7 @@ function webform_conditional_delete($node, $conditional) {
  * @return array
  *   Array of settings to be send to the browser as javascript settings.
  */
-function webform_conditional_prepare_javascript($node, $submission_data, $page_num) {
+function webform_conditional_prepare_javascript($node, array $submission_data, $page_num) {
   $settings = array(
     'ruleGroups' => array(),
     'sourceMap' => array(),
@@ -1439,8 +1441,9 @@ function webform_conditional_prepare_javascript($node, $submission_data, $page_n
           $source_parents = webform_component_parent_keys($node, $source_component);
           $source_id = 'webform-component--' . str_replace('_', '-', implode('--', $source_parents));
 
-          // If this source has a value set, add that as a setting.
-          // NULL or array(NULL) should be sent as an empty array to simplify the jQuery.
+          // If this source has a value set, add that as a setting. NULL or
+          // array(NULL) should be sent as an empty array to simplify the
+          // jQuery.
           if (isset($submission_data[$source_component['cid']])) {
             $source_value = $submission_data[$source_component['cid']];
             $source_value = is_array($source_value) ? $source_value : array($source_value);
@@ -1747,12 +1750,13 @@ function webform_conditional_value_datetime($input_values) {
  * @param array $options
  *   Associative array where the $a and $b are within the keys.
  *
- * @return integer based upon position of $a and $b in $options
+ * @return int|null
+ *   Based upon position of $a and $b in $options:
  *   -N if $a above (<) $b
  *   0 if $a = $b
  *   +N if $a is below (>) $b
  */
-function webform_compare_select($a, $b, $options) {
+function webform_compare_select($a, $b, array $options) {
   // Select keys that are integer-like strings are numeric indices in PHP.
   // Convert the array keys to an array of strings.
   $options_array = array_map(function ($i) {
@@ -1760,6 +1764,5 @@ function webform_compare_select($a, $b, $options) {
   }, array_keys($options));
   $a_position = array_search($a, $options_array, TRUE);
   $b_position = array_search($b, $options_array, TRUE);
-  return ($a_position === FALSE || $a_position === FALSE) ? NULL : $a_position - $b_position;
-
+  return ($a_position === FALSE || $b_position === FALSE) ? NULL : $a_position - $b_position;
 }

@@ -158,7 +158,12 @@ function _webform_render_textfield($component, $value = NULL, $filter = TRUE, $s
     '#description' => $filter ? webform_filter_descriptions($component['extra']['description'], $node) : $component['extra']['description'],
     '#attributes' => $component['extra']['attributes'],
     '#theme_wrappers' => array('webform_element'),
-    '#translatable' => array('title', 'description', 'field_prefix', 'field_suffix'),
+    '#translatable' => array(
+      'title',
+      'description',
+      'field_prefix',
+      'field_suffix',
+    ),
   );
 
   if ($component['required']) {
@@ -263,7 +268,10 @@ function _webform_analysis_textfield($component, $sids = array(), $single = FALS
   $rows[0] = array(t('Left Blank'), ($submissions - $nonblanks));
   $rows[1] = array(t('User entered value'), $nonblanks);
 
-  $other[] = array(t('Average submission length in words (ex blanks)'), ($nonblanks != 0 ? number_format($wordcount / $nonblanks, 2) : '0'));
+  $other[] = array(
+    t('Average submission length in words (ex blanks)'),
+    $nonblanks != 0 ? number_format($wordcount / $nonblanks, 2) : '0',
+  );
 
   return array(
     'table_rows' => $rows,
