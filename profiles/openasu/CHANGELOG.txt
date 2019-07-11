@@ -1,4 +1,4 @@
-Webspark 1.70 (Texas), 2019-07-02
+Webspark 1.70 (Texas), 2019-07-12
 ---------------------------------
 - Webspark core
 
@@ -17,6 +17,11 @@ Webspark 1.70 (Texas), 2019-07-02
   * ASU Webspark Carousel (uto_carousel) - v1.8
     * Fixed bug where field settings summary was being returned as array instead of string
     * Added flexslider dependency
+  * Webspark Test (webspark_test) - v1.1
+    * Added feature steps to mock the asu_isearch directory import source
+    * Added scenario to asu_directory_import.feature which tests that both profile nodes and affiliation 
+      field_collections are created, updated, and loaded correctly
+    * Updated behat.travis.yml config so that Chromedriver starts with a fullscreen window
 
 - Contrib module updates
 
