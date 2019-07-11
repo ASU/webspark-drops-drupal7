@@ -1,0 +1,113 @@
+[
+    {
+        "eid": "1111111",
+        "asuriteId": "asurite1",
+        "lastName": "Webspark",
+        "firstName": "Sparky",
+        "middleName": "",
+        "displayName": "Sparky Webspark",
+        "preferredFirstName": "",
+        "affiliations": [
+            "Employee"
+        ],
+        "affiliationsFacet": [
+            "Employee"
+        ],
+        "emailAddress": "spark@example.com",
+        "addressLine1": "5555 Webspark Test",
+        "addressLine2": "",
+        "addressLine3": "",
+        "city": "Tempe",
+        "postalCode": "55555",
+        "titleSource": [
+            "workingTitle"
+        ],
+        "titles": [
+            "Drupal Developer Senior"
+        ],
+        "departments": [
+            "Applications and Design"
+        ],
+        "departmentsFacet": [
+            "Applications and Design"
+        ],
+        "deptids": [
+            "2163"
+        ],
+        "vpAreas": [
+            "U01"
+        ],
+        "emplClasses": [
+            "University Staff"
+        ],
+        "simplifiedEmplClasses": [
+            "University Staff"
+        ],
+        "psDeptids": [
+            "U0106004"
+        ],
+        "jobCampuses": [
+            "TEMPE"
+        ],
+        "mailCodes": [
+            "6312"
+        ],
+        "locations": [
+            "TEMPE"
+        ],
+        "employeeTypes": [
+            "University Staff"
+        ],
+        "managers": [
+            0
+        ],
+        "primaryTitle": "Drupal Developer Senior",
+        "workingTitle": "Super Drupal Developer Senior",
+        "primaryDepartment": "DEV Applications and Design",
+        "primaryEmplClass": "University Staff",
+        "primarySimplifiedEmplClass": "University Staff",
+        "primaryMailCode": "6312",
+        "primaryDeptid": "DEV Applications and Design",
+        "primaryJobCampus": "TEMPE",
+        "primaryiSearchDepartmentAffiliation": "Applications and Design",
+        "photoUrl": "",
+        "photoPermission": "private",
+        "photoPreference": "suncard",
+        "bio": "\u003Cp\u003EThis is a mock bio.\u0026nbsp;\u003C\/p\u003E",
+        "website": "",
+        "facebook": "",
+        "twitter": "",
+        "googlePlus": "",
+        "linkedin": "",
+        "teachingWebsite": "",
+        "fax": "",
+        "researchWebsite": "",
+        "employeeWeight": [
+            "0"
+        ],
+        "imageUrls": [
+            ""
+        ],
+        "_version_": 1638562985797484544,
+        "profileNid": "999999",
+        "affilWeight": [
+            999
+        ],
+        "affilHide": [
+            0
+        ],
+        "departmentTitleRanks": [
+            null
+        ],
+        "departmentTitleRanksWeight": [
+            null
+        ],
+        "departmentTitleRanksTenure": [
+            0
+        ],
+        "departmentTitleRanksTids": [
+            null
+        ],
+        "researchActivity": "<ul>\r\n\t<li class=\"first\"><a href=\"/asu-people/testvalue\">behat test value</a><a href=\"https://www.asu.edu/\">ASU</a></li>\r\n</ul>"
+    }
+]
