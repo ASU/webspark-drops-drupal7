@@ -1,4 +1,4 @@
-Feature: Import iSearch Profiles
+Feature: Import and display iSearch Profiles
   Background:
     Given I am logged in as a user with the "administrator" role
 
