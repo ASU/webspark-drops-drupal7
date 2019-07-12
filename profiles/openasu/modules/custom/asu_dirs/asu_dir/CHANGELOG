@@ -1,3 +1,11 @@
+asu_dir 7.x-1.10.1
+------------------
+- Added more helpful description for the 'Use local iSearch view' option in the panel configs
+
+asu_dir 7.x-1.10
+----------------
+- Removed short array syntax
+
 asu_dir 7.x-1.9
 ---------------
 - Addition of variable to specify the lastname sorting field. This will allow the use of the lastNameExact field which will

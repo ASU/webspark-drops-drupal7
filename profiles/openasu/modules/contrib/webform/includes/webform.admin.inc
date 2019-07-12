@@ -64,7 +64,7 @@ function webform_admin_settings() {
     '#type' => 'checkbox',
     '#title' => t('Use Reply-To header'),
     '#default_value' => webform_variable_get('webform_email_replyto'),
-    '#description' => t('Sends all e-mail from the domain of the default address above and sets the "Reply-To" header to the actual sender. Helps prevent e-mail from being flagged as spam.'),
+    '#description' => t('If the default from name and address are set above, send all e-mail from the default address set the "Reply-To" header to the actual sender. This helps prevent e-mail from being flagged as spam.'),
   );
 
   $form['email']['webform_email_html_capable'] = array(
@@ -312,7 +312,8 @@ function theme_webform_admin_settings($variables) {
  * Menu callback for admin/content/webform. Displays all webforms on the site.
  */
 function webform_admin_content() {
-  // Determine whether views or hard-coded tables should be used for the webforms table.
+  // Determine whether views or hard-coded tables should be used for the
+  // webforms table.
   if (!webform_variable_get('webform_table')) {
     $view = views_get_view('webform_webforms');
     return $view->preview('default');

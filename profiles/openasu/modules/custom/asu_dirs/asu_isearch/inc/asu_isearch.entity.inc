@@ -31,11 +31,12 @@ function asu_isearch_entity_presave($entity, $type) {
       $affiliation_rank_weight = $affiliation->field_isearch_affil_local_weight->value();
     }
 
-    // set the rank weight
-    if ($affiliation_rank_weight != NULL) {
-      $entity->field_isearch_affil_rank_weight[LANGUAGE_NONE][0]['value'] = $affiliation_rank_weight;
+    if ($affiliation_rank_weight === NULL) {
+      $affiliation_rank_weight = ASU_ISEARCH_DEFAULT_LOCAL_WEIGHT;
     }
 
+    $entity->field_isearch_affil_rank_weight[LANGUAGE_NONE][0]['value'] = $affiliation_rank_weight;
+    
     // set this field for proper filtering
     if (empty($entity->field_isearch_affil_hide)) {
       $entity->field_isearch_affil_hide[LANGUAGE_NONE][0]['value'] = 0;

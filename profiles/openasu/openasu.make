@@ -15,45 +15,45 @@ projects[drupal][patch][1803048] = patches/ws-1514_array-flip-error-travis-ci-te
 ; The Panopoly Foundation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-projects[panopoly_core][version] = 1.67
+projects[panopoly_core][version] = 1.70
 projects[panopoly_core][subdir] = panopoly
 
-projects[panopoly_images][version] = 1.67
+projects[panopoly_images][version] = 1.70
 projects[panopoly_images][subdir] = panopoly
 
-projects[panopoly_theme][version] = 1.67
+projects[panopoly_theme][version] = 1.70
 projects[panopoly_theme][subdir] = panopoly
 
-projects[panopoly_magic][version] = 1.67
+projects[panopoly_magic][version] = 1.70
 projects[panopoly_magic][subdir] = panopoly
 ; Validation error with reusable FPPs. Updated in 1.52; Custom patch different from drupal.org/node/2813395
 projects[panopoly_magic][patch][2813395] = patches/ws-1236_title-cant-reuse-error_2813395.patch
 
-projects[panopoly_widgets][version] = 1.67
+projects[panopoly_widgets][version] = 1.70
 projects[panopoly_widgets][subdir] = panopoly
 
-projects[panopoly_admin][version] = 1.67
+projects[panopoly_admin][version] = 1.70
 projects[panopoly_admin][subdir] = panopoly
 
-projects[panopoly_users][version] = 1.67
+projects[panopoly_users][version] = 1.70
 projects[panopoly_users][subdir] = panopoly
 
 ; The Panopoly Toolset
-projects[panopoly_pages][version] = 1.67
+projects[panopoly_pages][version] = 1.70
 projects[panopoly_pages][subdir] = panopoly
 
-projects[panopoly_wysiwyg][version] = 1.67
+projects[panopoly_wysiwyg][version] = 1.70
 projects[panopoly_wysiwyg][subdir] = panopoly
 
-projects[panopoly_search][version] = 1.67
+projects[panopoly_search][version] = 1.70
 projects[panopoly_search][subdir] = panopoly
 ; Fixes DB update dependency ordering
 ; projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
 
-projects[panopoly_test][version] = 1.67
+projects[panopoly_test][version] = 1.70
 projects[panopoly_test][subdir] = panopoly
 ; ASU custom tests and modifications
-;projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.46.patch
+projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.46.patch
 projects[panopoly_test][patch][1370] = patches/webspark-847_behat_common.patch
 projects[panopoly_test][patch][142] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
 projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.patch
@@ -114,13 +114,15 @@ projects[smtp][download][type] = "git"
 projects[smtp][download][branch] = "7.x-1.x"
 projects[smtp][download][url] = "https://git.drupalcode.org/project/smtp.git"
 projects[smtp][download][revision] = "47f4114b1e6d357708b6ffcade01241a11c41ef1"
+; https://www.drupal.org/project/webform/issues/2966816
+projects[smtp][patch][] = https://www.drupal.org/files/issues/2018-11-13/smtp-filepath_uri-2966816-27-D7_0.patch
+
 
 projects[viewfield][version] = 2.0
 projects[viewfield][type] = module
 projects[viewfield][subdir] = contrib
 
-; Don't update to v4.17 until https://www.drupal.org/project/webform/issues/2966816 is worked out
-projects[webform][version] = 4.16
+projects[webform][version] = 4.19
 projects[webform][type] = module
 projects[webform][subdir] = contrib
 
@@ -152,11 +154,12 @@ projects[entity_view_mode][version] = 1.0-rc1
 projects[entity_view_mode][type] = module
 projects[entity_view_mode][subdir] = contrib
 
+; field_collection latest dev verion as of 06/25/2019
 projects[field_collection][type] = module
 projects[field_collection][subdir] = contrib
 projects[field_collection][download][branch] = "7.x-1.x"
 projects[field_collection][download][url] = "https://git.drupalcode.org/project/field_collection.git"
-projects[field_collection][download][revision] = "605e0e4e029edf7a2adea41ad59849fd25bc8ed3"
+projects[field_collection][download][revision] = "5f127681fcada4df97ce2903e65e1e4c52cc0dcd"
 
 projects[flexslider][version] = 2.0-rc2
 projects[flexslider][type] = module

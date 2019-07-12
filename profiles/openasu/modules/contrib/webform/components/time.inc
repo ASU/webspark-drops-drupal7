@@ -130,7 +130,7 @@ function _webform_edit_time_validate($form, &$form_state) {
   foreach (array('start_time', 'end_time') as $field) {
     $time[$field] = FALSE;
     if (trim($form_state['values']['extra'][$field]) && ($time[$field] = strtotime('1-1-1970 UTC ' . $form_state['values']['extra'][$field])) === FALSE) {
-      form_set_error("extra][$field", t('The @field isn\'t a valid time.', array('@field' => $form['validation'][$field]['#title'])));
+      form_set_error("extra][$field", t("The @field isn't a valid time.", array('@field' => $form['validation'][$field]['#title'])));
     }
   }
 }
@@ -188,7 +188,7 @@ function webform_expand_time($element) {
   else {
     $default_values = array(
       'hour' => '',
-      'minute' => '0',
+      'minute' => '',
       'second' => '',
     );
   }
@@ -304,7 +304,7 @@ function theme_webform_time($variables) {
 }
 
 /**
- *
+ * Validate that the time data is valid, calling form_error() if not.
  */
 function webform_validate_time($element, $form_state) {
   // Check if the user filled the required fields.
@@ -495,12 +495,12 @@ function _webform_csv_data_time($component, $export_options, $value) {
 /**
  * Convert a time between a 24-hour and a 12-hour value.
  *
- * @param $array
+ * @param array $array
  *   An array of hour, minute, second, and optionally ampm.
- * @param $format
+ * @param string $format
  *   Either 12-hour or 24-hour.
  *
- * @return
+ * @return array
  *   An array with hour, minute, second, and ampm (if using "12-hour").
  */
 function webform_time_convert($array, $format) {

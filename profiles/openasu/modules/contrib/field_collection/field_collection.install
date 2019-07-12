@@ -374,7 +374,7 @@ function field_collection_update_7008() {
         ->fieldLanguageCondition($f_name, LANGUAGE_NONE);
       $query_result = $query->execute();
       if (isset($query_result['field_collection_item'])) {
-        $results = $results + $query_result['field_collection_item'];
+        $results += $query_result['field_collection_item'];
       }
     }
   }

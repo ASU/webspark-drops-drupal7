@@ -1,11 +1,8 @@
 <?php
 
 /**
- * @file
  * Definition of views_handler_area_result.
- */
-
-/**
+ *
  * Views area handler to display some configurable result summary.
  *
  * @ingroup views_area_handlers
@@ -13,7 +10,7 @@
 class webform_handler_area_result_pager extends views_handler_area_result {
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function option_definition() {
     $options = parent::option_definition();
@@ -23,7 +20,7 @@ class webform_handler_area_result_pager extends views_handler_area_result {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);

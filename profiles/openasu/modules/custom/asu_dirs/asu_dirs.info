@@ -21,4 +21,4 @@ dependencies[] = asu_dept_picker (>=7.x-1.0.1)
 dependencies[] = react
 
 ; See below for info on version number
-version = 7.x-1.1
+version = 7.x-1.2

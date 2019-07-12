@@ -1,3 +1,40 @@
+Webspark 1.70 (Texas), 2019-07-02
+---------------------------------
+- Webspark core
+
+  * Panopoly - v1.70
+    * Multiple Panopoly releases (1.68-1.70) rolled into one update; Includes updates to contrib modules. 
+      See https://www.drupal.org/project/panopoly/releases/7.x-1.70 for more info.
+
+- Web standards components in webspark
+
+  * ASU Local iSearch Directory (asu_isearch) - v1.12
+    * Fixed bug where local rank weight for an affiliation couldn't be removed using the node edit form
+    * Added error handling to better detect field_collection-related failures
+    * Fixed bug where absolute URLs imported from iSearch were being rewritten
+  * ASU Directory Integration Reinvented (asu_dir) - v1.10.1
+    * Added helpful description for the 'Use local iSearch view' option in the ASU Directory panel configs
+  * ASU Webspark Carousel (uto_carousel) - v1.8
+    * Fixed bug where field settings summary was being returned as array instead of string
+    * Added flexslider dependency
+
+- Contrib module updates
+
+  - Managed by Webspark
+
+    * Views (views) - v3.23
+    * Webform (webform) - v4.19
+    * SMTP (smtp) - v1.7+patch (https://www.drupal.org/project/smtp/issues/2979682)
+  
+  - Managed by Panopoly
+
+    * Chaos Tool Suite (ctools) - v1.15
+    * Universally Unique Identifier (uuid) - v1.3
+    * Devel (devel) - v1.7
+    * Search API (search_api) - v1.26
+    * Tablefield (tablefield) - v3.5
+    * Media: Youtube (media_youtube) - v3.8
+
 Webspark 1.67 (Iowa), 2019-05-20
 --------------------------------
 - Webspark core
