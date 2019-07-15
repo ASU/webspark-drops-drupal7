@@ -10,6 +10,16 @@
  * Implements template_preprocess_html().
  */
 function innovation_preprocess_html(&$variables) {
+
+  // Readded page title to <title> tag after Kalatheme's errant scraping
+  if (!isset($variables['head_title_array']['title'])) {
+    $name = $variables['head_title_array']['name'];
+    unset($variables['head_title_array']['name']);
+    $variables['head_title_array']['title'] = check_plain(menu_get_active_title());
+    $variables['head_title_array']['name'] = $name;
+    $variables['head_title'] = implode(' | ', $variables['head_title_array']);
+  }
+
   // Add theme js file here rather than in .info to add a weight and ensure it loads last
   drupal_add_js(drupal_get_path('theme', 'innovation') . '/js/innovation.js', array(
     'scope' => 'footer',
