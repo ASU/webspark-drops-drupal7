@@ -8,7 +8,9 @@ dependencies[] = ctools
 dependencies[] = defaultconfig
 dependencies[] = features
 dependencies[] = fieldable_panels_panes
+; Media replaces the image module, but leaving dependency
 dependencies[] = image
+dependencies[] = media
 dependencies[] = strongarm
 dependencies[] = flexslider
 scripts[] = js/jquery.flexslider-min.js

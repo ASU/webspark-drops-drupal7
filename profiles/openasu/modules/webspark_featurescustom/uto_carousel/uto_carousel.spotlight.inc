@@ -2,7 +2,8 @@
 
 /**
  * @file
- * A specification for the custom spotlight entity that is part of Panopoly Widgets
+ * A specification for the custom UTO Carousel entity to be included with the
+ * other Panopoly Widgets
  */
 
 /**
@@ -32,9 +33,13 @@ function uto_carousel_field_info() {
   );
 }
 
-
-
-
+/**
+ * Helper funciton - Checks if field is empty.
+ *
+ * @param $item
+ * @param $field
+ * @return bool
+ */
 function uto_carousel_field_is_empty($item, $field) {
   if (empty($item['title']) && empty($item['link']) && empty($item['description']) && empty($item['fid'])) {
     return TRUE;
@@ -83,7 +88,7 @@ function uto_carousel_field_settings_form($field, $instance, $has_data) {
   // page. So image_field_update_field() can handle this change.
   $form['default_image'] = array(
     '#title' => t('Default image'),
-    '#type' => 'managed_file',
+    '#type' => 'media',
     '#description' => t('If no image is uploaded, this image will be shown on display.'),
     '#default_value' => $field['settings']['default_image'],
     '#upload_location' => $settings['uri_scheme'] . '://default_images/',
@@ -102,9 +107,9 @@ function uto_carousel_field_instance_settings_form($field, $instance) {
 
 /**
  * Implementation of hook_field_formatter_info().
- * We're going to be using our own formatter based on our own theme.
  */
 function uto_carousel_field_formatter_info() {
+  // We're going to be using our own formatter based on our own theme.
   return array(
     'uto_carousel' => array(
       'label' => t('Carousel'),
@@ -252,16 +257,10 @@ function uto_carousel_field_widget_form(&$form, &$form_state, $field, $instance,
 
     $element['fid'] = array(
       '#title' => t('Image'),
-      '#type' => 'managed_file',
+      '#type' => 'media',
       '#upload_location' => file_field_widget_uri($field, $instance),
       '#default_value' => isset($items[$delta]['fid']) ? $items[$delta]['fid'] : NULL,
     );
-
-    /*$element['alt'] = array(
-      '#title' => t('Alt text'),
-      '#type' => 'textfield',
-      '#default_value' => isset($items[$delta]['alt']) ? $items[$delta]['alt'] : NULL,
-    );*/
 
     $element['description'] = array(
       '#title' => t('Description'),
@@ -270,47 +269,6 @@ function uto_carousel_field_widget_form(&$form, &$form_state, $field, $instance,
       '#resizable' => FALSE,
       '#default_value' => isset($items[$delta]['description']) ? $items[$delta]['description'] : NULL,
     );
-
-    /*$element['actionlink'] = array(
-      '#title' => t('Action Link'),
-      '#type' => 'textfield',
-      '#default_value' => isset($items[$delta]['actionlink']) ? $items[$delta]['actionlink'] : NULL,
-    );
-
-
-    $element['actiontitle'] = array(
-      '#title' => t('Action Title'),
-      '#type' => 'textfield',
-      '#default_value' => isset($items[$delta]['actiontitle']) ? $items[$delta]['actiontitle'] : NULL,
-    );
-
-    $element['actionlink2'] = array(
-      '#title' => t('Action Link 2'),
-      '#type' => 'textfield',
-      '#default_value' => isset($items[$delta]['actionlink2']) ? $items[$delta]['actionlink2'] : NULL,
-    );
-
-    $element['actiontitle2'] = array(
-      '#title' => t('Action Title 2'),
-      '#type' => 'textfield',
-      '#default_value' => isset($items[$delta]['actiontitle2']) ? $items[$delta]['actiontitle2'] : NULL,
-    );*/
-
-    /*$element['position'] = array(
-      '#title' => t('Position'),
-      '#type' => 'select',
-      '#options' => array('top-left' => 'top-left', 'top-center' => 'top-center', 'top-right' => 'top-right',
-        'mid-left' => 'mid-left', 'mid-center' => 'mid-center', 'mid-right' => 'mid-right', 'bottom-left' => 'bottom-left',
-        'bottom-center' => 'bottom-center', 'bottom-right' => 'bottom-right'),
-      '#default_value' => isset($items[$delta]['position']) ? $items[$delta]['position'] : 'top-left',
-    );*/
-
-    /*$element['color'] = array(
-      '#title' => t('Color'),
-      '#type' => 'select',
-      '#options' => array('blue' => 'blue', 'red' => 'red'),
-      '#default_value' => isset($items[$delta]['color']) ? $items[$delta]['color'] : 'blue',
-    );*/
   }
   return $element;
 
