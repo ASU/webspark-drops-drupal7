@@ -6,7 +6,7 @@ $middleware_host = "webforms.asu.edu";
 
 $url = "https://$middleware_host/salesforce_query/api/$type/$name";
 
-https://webforms.asu.edu/salesforce_query/api/select/rfi_dedupe_list_terms
+// https://webforms.asu.edu/salesforce_query/api/select/rfi_dedupe_list_terms
 
 $fields = array(
   'condition_Term_Status__c' => TRUE,
@@ -32,25 +32,30 @@ $result = json_decode($response);
 curl_close($ch);
 
 if (count($result)) {
-  foreach ($result as $semes) {
-    db_query("INSERT INTO {asu_rfi_sem_dates} (semId, semLabel) VALUES (:sem_id, :sem_label)", array(
-      ':sem_id' => $semes->Id,
-      ':sem_label' => $semes->Name
-    ));
+  foreach ($result as $semester) {
+    $id = (!empty($semester->Id)) ? check_plain($semester->Id) : 'NA';
+    $name = (!empty($semester->Name)) ? check_plain($semester->Name) : 'NA';
+    if ($id !== 'NA' && $name !== 'NA') {
+      db_merge('asu_rfi_sem_dates')
+        ->key(array('semId' => $id))
+        ->fields(array(
+          'semId' => $id,
+          'semLabel' => $name,
+        ))
+        ->execute();
+      $message = $name . ' with key ID ' . $id . ' inserted into (or updated in ) the semester options list for ASU RFI forms.';
+      watchdog('asu_rfi', $message, array(), WATCHDOG_NOTICE);
+    }
+    else {
+      $message = t('Semester ID or name returned from asu_rfi_sem_dates DB table was empty. Returned values == ID - :id, Name - :name ', array(':id' => $id, ':name'));
+      watchdog('asu_rfi', $message, array(), WATCHDOG_NOTICE);
+    }
   }
 }
 
 else {
-  $sem_sql = "INSERT INTO {asu_rfi_sem_dates} (semId, semLabel) VALUES
-    ('a0Jd000000GZFqKEAX', '2018 Summer'),
-    ('a0Jd000000GZFqZEAX', '2018 Fall'),
-    ('a0Jd000000OH742EAD', '2019 Fall'),
-    ('a0Jd000000OH743EAD', '2019 Spring'),
-    ('a0Jd000000OH744EAD', '2019 Summer'),
-    ('a0Jd000000OH746EAD', '2020 Fall'),
-    ('a0Jd000000OH747EAD', '2020 Spring'),
-    ('a0Jd000000OH748EAD', '2020 Summer'),
-    ('a0Jd000000OH74BEAT', '2021 Spring')";
-
-  db_query($sem_sql);
+  $message = 'No semester IDs/names for RFI forms could be pulled from ' . $url .
+    ' to insert into asu_rfi_sem_dates DB table. Check the feed to make sure it is returning values.';
+  drupal_set_message($message, 'warning');
+  watchdog('asu_rfi', $message, array(), WATCHDOG_WARNING);
 }
