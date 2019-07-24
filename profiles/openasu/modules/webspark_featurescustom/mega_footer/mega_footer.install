@@ -27,6 +27,16 @@ function mega_footer_update_7001(&$sandbox) {
 }
 
 /**
+ * Implements hook_update_N().
+ * - Remove Google+ social media icon
+ */
+function mega_footer_update_7002(&$sandbox) {
+  variable_del('mega_footer_unit_google_link');
+  watchdog('mega_footer', 'Removed Google Plus from variable table.', array(), WATCHDOG_NOTICE);
+  drupal_set_message('The Google+ icon have been removed from the site.', 'status');
+}
+
+/**
  * One-time definition for update 7000 above.
  * If no new variables are added in the module, it could be used as a list of all variable table values.
  */
@@ -45,7 +55,6 @@ function _mega_footer_variables_define() {
     'unit_contact_us' => 'mega_footer_unit_contact_us_link',
     'unit_facebook_connect' => 'mega_footer_unit_facebook_link',
     'unit_twitter_connect' => 'mega_footer_unit_twitter_link',
-    'unit_google_connect' => 'mega_footer_unit_google_link',
     'unit_linkedin_connect' => 'mega_footer_unit_linkedin_link',
     'unit_youtube_connect' => 'mega_footer_unit_youtube_link',
     'unit_instagram_connect' => 'mega_footer_unit_instagram_link',

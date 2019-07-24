@@ -85,7 +85,6 @@ function mega_footer_block_view($delta = '') {
       $footer_mark .= "<ul class='dgtl-mkting-101'>";
       $footer_mark = _mega_footer_social_media('facebook', 'facebook-square', 'Facebook', $footer_mark);
       $footer_mark = _mega_footer_social_media('twitter', 'twitter-square', 'Twitter', $footer_mark);
-      $footer_mark = _mega_footer_social_media('google', 'google', 'Google+', $footer_mark);
       $footer_mark = _mega_footer_social_media('linkedin', 'linkedin-square', 'LinkedIn', $footer_mark);
       $footer_mark = _mega_footer_social_media('youtube', 'youtube-square', 'YouTube', $footer_mark);
       $footer_mark = _mega_footer_social_media('instagram', 'instagram', 'Instagram', $footer_mark);
@@ -226,7 +225,6 @@ function mega_footer_block_configure($delta = '') {
 
     $form['social_media']['mega_footer_unit_facebook_link'] = _social_media_form_array('facebook', 'Facebook');
     $form['social_media']['mega_footer_unit_twitter_link'] = _social_media_form_array('twitter', 'Twitter');
-    $form['social_media']['mega_footer_unit_google_link'] = _social_media_form_array('google', 'Google+');
     $form['social_media']['mega_footer_unit_linkedin_link'] = _social_media_form_array('linkedin', 'LinkedIn');
     $form['social_media']['mega_footer_unit_youtube_link'] = _social_media_form_array('youtube', 'YouTube');
     $form['social_media']['mega_footer_unit_instagram_link'] = _social_media_form_array('instagram', 'Instagram');
@@ -371,7 +369,6 @@ function mega_footer_block_save($delta = '', $edit = array()) {
     // Social media
     variable_set('mega_footer_unit_facebook_link', $edit['mega_footer_unit_facebook_link']);
     variable_set('mega_footer_unit_twitter_link', $edit['mega_footer_unit_twitter_link']);
-    variable_set('mega_footer_unit_google_link', $edit['mega_footer_unit_google_link']);
     variable_set('mega_footer_unit_linkedin_link', $edit['mega_footer_unit_linkedin_link']);
     variable_set('mega_footer_unit_youtube_link', $edit['mega_footer_unit_youtube_link']);
     variable_set('mega_footer_unit_instagram_link', $edit['mega_footer_unit_instagram_link']);
