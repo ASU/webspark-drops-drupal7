@@ -12,7 +12,7 @@ function uto_carousel_field_info() {
   return array(
     'uto_carousel' => array(
       'label' => t('UTO Carousel'),
-      'description' => t('A wonderfully (ASU modified) widgetsal carousel field'),
+      'description' => t('An ASU-themed widget carousel field'),
       'default_widget' => 'uto_carousel_form',
       'default_formatter' => 'uto_carousel',
       'settings' => array(
