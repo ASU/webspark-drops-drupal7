@@ -1,116 +1,85 @@
 <?php
 
+/**
+ * Helper functions
+ * Get state names and IDs for RFI form dropdowns
+ */
+function _asu_rfi_get_state_names($installing = FALSE) {
+  // JSON configs
   $type = 'fieldinfo';
   $name = 'state_province';
-  
-  
-  $middleware_host = "webforms.asu.edu";
-  
-  
+  $middleware_host = 'webforms.asu.edu';
   $url = "https://$middleware_host/salesforce_query/api/$type/$name";
+  $db_tbl = 'asu_rfi_states_list';
 
-  $ch = curl_init();
-  $options = array(
-    CURLOPT_URL => $url,
-    CURLOPT_RETURNTRANSFER => 1,
-    CURLOPT_HTTPHEADER => array('Content-Type: text/json', 'Authorization: Basic 7755:e7acf2e698751f4cac11718d97df6ebf64b94372'),
-
-  );  
-
-  curl_setopt_array($ch, $options);
-
-  $response = curl_exec($ch);
-
-  $result = json_decode($response);
-  curl_close($ch);
-  //if results exist, insert values in db for webservice call
-  if(count($result)){
-   foreach($result as $state){
-     db_query("INSERT INTO {asu_rfi_states_list} (stateCode, stateDesc) VALUES (:state_value, :state_label)", array(':state_value' => $state->value, ':state_label' => $state->label));
-   }
+  // Clean out DB table if initial install
+  if ($installing) {
+    db_truncate($db_tbl)->execute();
   }
-  
-  //else insert values into db
-  else{
-    $sql =   "INSERT INTO {asu_rfi_states_list} (stateCode, stateDesc) VALUES
-('AA', 'Armed Forces Americas'),
-('AB', 'Alberta'),
-('AE', 'Armed Forces Europe'),
-('AK', 'Alaska'),
-('AL', 'Alabama'),
-('AP', 'Armed Forces Pacific'),
-('AR', 'Arkansas'),
-('AS', 'American Samoa'),
-('AZ', 'Arizona'),
-('BC', 'British Columbia'),
-('CA', 'California'),
-('CO', 'Colorado'),
-('CT', 'Connecticut'),
-('DC', 'District of Columbia'),
-('DE', 'Delaware'),
-('FL', 'Florida'),
-('GA', 'Georgia'),
-('GU', 'Guam'),
-('HI', 'Hawaii'),
-('IA', 'Iowa'),
-('ID', 'Idaho'),
-('IL', 'Illinois'),
-('IN', 'Indiana'),
-('KS', 'Kansas'),
-('KY', 'Kentucky'),
-('LA', 'Louisiana'),
-('MA', 'Massachusetts'),
-('MB', 'Manitoba'),
-('MD', 'Maryland'),
-('ME', 'Maine'),
-('MH', 'Marshall Islands'),
-('MI', 'Michigan'),
-('MN', 'Minnesota'),
-('MO', 'Missouri'),
-('MP', 'Northern Mariana Islands'),
-('MS', 'Mississippi'),
-('MT', 'Montana'),
-('NB', 'New Brunswick'),
-('NC', 'North Carolina'),
-('ND', 'North Dakota'),
-('NE', 'Nebraska'),
-('NH', 'New Hampshire'),
-('NJ', 'New Jersey'),
-('NL', 'Newfoundland and Labrador'),
-('NM', 'New Mexico'),
-('NS', 'Nova Scotia'),
-('NT', 'Northwest Territories'),
-('NU', 'Nunavut'),
-('NV', 'Nevada'),
-('NY', 'New York'),
-('OH', 'Ohio'),
-('OK', 'Oklahoma'),
-('ON', 'Ontario'),
-('OR', 'Oregon'),
-('PA', 'Pennsylvania'),
-('PE', 'Prince Edward Island'),
-('PR', 'Puerto Rico'),
-('QC', 'Quebec'),
-('RI', 'Rhode Island'),
-('SC', 'South Carolina'),
-('SD', 'South Dakota'),
-('SK', 'Saskatchewan'),
-('TN', 'Tennessee'),
-('TX', 'Texas'),
-('UM', 'United States Minor Outlying Islands'),
-('UT', 'Utah'),
-('VA', 'Virginia'),
-('VI', 'US Virgin Islands'),
-('VT', 'Vermont'),
-('WA', 'Washington'),
-('WI', 'Wisconsin'),
-('WV', 'West Virginia'),
-('WY', 'Wyoming'),
-('YT', 'Yukon Territories')"; 
 
-db_query($sql);
+  // Do CURL call to JSON feed
+  try {
+    $ch = curl_init();
+    $options = array(
+      CURLOPT_URL => $url,
+      CURLOPT_RETURNTRANSFER => 1,
+      CURLOPT_HTTPHEADER => _asu_rfi_get_curl_auth(),
+    );
+    curl_setopt_array($ch, $options);
+    $response = curl_exec($ch);
+    $result = json_decode($response);
+    curl_close($ch);
+
+    if (FALSE === $response) {
+      throw new Exception(curl_error($ch), curl_errno($ch));
+    }
+  } catch (Exception $e) {
+    trigger_error(sprintf(
+      'Curl call to get states list from ' . $url . ' failed with error #%d: %s',
+      $e->getCode(), $e->getMessage()),
+      E_USER_ERROR);
   }
-  
-  
 
-?>
+  // Do DB upsert if values are returned from JSON feed...
+  if (count($result)) {
+    foreach ($result as $state) {
+      $value = (!empty($state->value)) ? check_plain($state->value) : 'EMPTY';
+      $label = (!empty($state->label)) ? check_plain($state->label) : 'EMPTY';
+      if ($value !== 'EMPTY' || $label !== 'EMPTY') {
+        db_merge($db_tbl)
+          ->key(array('stateCode' => $value))
+          ->fields(array(
+            'stateCode' => $value,
+            'stateDesc' => $label,
+          ))
+          ->execute();
+        $message = $label . ' with state ID ' . $value . ' inserted into (or updated in) ' . $db_tbl . '.';
+        watchdog('asu_rfi', $message, array(), WATCHDOG_NOTICE);
+      }
+      else {
+        $message = t('State value returned from ' . $url . ' were rejected: value - :key, label - :name ',
+          array(':key' => $value, ':name' => $value,));
+        watchdog('asu_rfi', $message, array(), WATCHDOG_NOTICE);
+      }
+    }
+  }
+
+  // Or error out if no states are in list...
+  else {
+    $status = 'warning';
+    $wd_status = WATCHDOG_WARNING;
+    $message = 'No states for RFI forms could be pulled from ' . $url .
+      ' to insert into ' . $db_tbl . '. Check your existing RFI forms to see if they still have all expected semester date options.' .
+      ' If it does not, please contact webconsulting@asu.edu for assistance.';
+
+    // Check to see if any option entries (valid or not) still exist in the table from past pulls.
+    if (_asu_rfi_check_form_values($db_tbl) === 0 ) {
+      $message .= ' The RFI form will not function properly until this issue has been resolved.';
+      $status = 'error';
+      $wd_status = WATCHDOG_ERROR;
+    }
+    drupal_set_message($message, $status);
+    watchdog('asu_rfi', $message, array(), $wd_status);
+  }
+
+}
