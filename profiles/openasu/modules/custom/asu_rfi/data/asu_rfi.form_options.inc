@@ -58,12 +58,12 @@ function asu_rfi_get_options_data($name, $installing = FALSE) {
       }
     }
     if ($cntry_cnt > 0) {
-      $message = $cntry_cnt . ' ' . $name . ' out of ' . count($result) . ' entries were 
+      $message = $cntry_cnt . ' out of ' . count($result) . ' ' . $name . ' entries were
         upserted in ' . $db_tbl . ' DB table.';
       watchdog('asu_rfi', $message, array(), WATCHDOG_NOTICE);
     } else { // no $result entries got in
-      watchdog('asu_rfi', 'None of the ' . count($result) . ' ' . $name . ' entries were 
-      added to the ' . $db_tbl . ' DB table.');
+      watchdog('asu_rfi', 'None of the ' . count($result) . ' ' . $name . ' entries were
+        added to the ' . $db_tbl . ' DB table.');
     }
   }
 
