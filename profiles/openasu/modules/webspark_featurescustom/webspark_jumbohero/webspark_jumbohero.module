@@ -13,7 +13,7 @@ include_once 'webspark_jumbohero.features.inc';
 function webspark_jumbohero_entity_info_alter(&$entity_info) {
   $entity_info['fieldable_panels_pane']['bundles']['jumbohero'] = array(
     'label' => t('Add a jumbo hero'),
-    'description' => t('Add 1170x700 px jumbo hero to full-width panel row'),
+    'description' => t('Add a jumbo hero image. Should be 1170x700 px and placed in the top row/region.'),
     'pane category' => t('Custom'),
     'pane top level' => TRUE,
     'pane icon' => drupal_get_path('module', 'webspark_jumbohero') . '/images/icon_jumbohero.png',
