@@ -11,7 +11,11 @@ dependencies[] = views_bulk_operations
 dependencies[] = honeypot
 version = "7.x-1.14"
 scripts[] = js/asu_rfi_form.js
+
+files[] = data/asu_rfi.form_options.inc
+
 ;files[] = asu_rfi.email.inc
 ;files[] = asu_rfi.pages.inc
+
 ;scripts[] = asu_rfi.js
 ;scripts[] = session_clear.js
