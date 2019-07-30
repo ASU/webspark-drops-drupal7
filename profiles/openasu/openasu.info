@@ -58,7 +58,6 @@ dependencies[] = easy_breadcrumb
 dependencies[] = entity_view_mode
 dependencies[] = flexslider
 dependencies[] = fontawesome
-dependencies[] = google_appliance
 dependencies[] = maxlength
 dependencies[] = panels_tabs
 dependencies[] = uuid_features

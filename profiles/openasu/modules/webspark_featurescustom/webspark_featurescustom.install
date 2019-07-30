@@ -395,3 +395,21 @@ function webspark_featurescustom_update_7012(&$sandbox) {
   }
 
 }
+
+/**
+ * Implements hook_update_N().
+ * + Disable and uninstall ASU GSA, Google Appliance modules.
+ * @param $sandbox
+ */
+function webspark_featurescustom_update_7013(&$sandbox) {
+  if (module_exists('asu_gsa') || module_exists('google_appliance')) {
+    module_disable(array('asu_gsa', 'google_appliance'));
+  }
+  // If first variable for the GA module exist, run uninstall
+  if (variable_get('google_appliance_hostname')) {
+    drupal_uninstall_modules(array('google_appliance', 'asu_gsa'));
+    $message = 'Google Appliance and ASU GSA modules have been disabled and uninstalled.';
+    drupal_set_message($message, 'status');
+    watchdog('webspark_featurescustom', $message, array(), WATCHDOG_NOTICE);
+  }
+}
