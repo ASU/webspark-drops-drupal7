@@ -62,7 +62,7 @@ function uto_carousel_field_widget_info() {
  * Implements hook_field_settings_form()
  */
 function uto_carousel_field_settings_form($field, $instance, $has_data) {
-  dpm(__FUNCTION__);
+
   $form = array();
   $defaults = field_info_field_settings($field['type']);
   $settings = array_merge($defaults, $field['settings']);
@@ -97,7 +97,7 @@ function uto_carousel_field_settings_form($field, $instance, $has_data) {
  * Implements hook_field_instance_settings_form()
  */
 function uto_carousel_field_instance_settings_form($field, $instance) {
-  dpm(__FUNCTION__);
+
   $form = image_field_instance_settings_form($field, $instance);
   return $form;
 }
@@ -125,7 +125,7 @@ function uto_carousel_field_formatter_info() {
  *
  */
 function uto_carousel_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
-  dpm(__FUNCTION__);
+
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
   $element = array();
@@ -160,7 +160,7 @@ function uto_carousel_field_formatter_settings_form($field, $instance, $view_mod
  *
  */
 function uto_carousel_field_formatter_settings_summary($field, $instance, $view_mode) {
-  dpm(__FUNCTION__);
+
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
 
@@ -183,7 +183,7 @@ function uto_carousel_field_formatter_settings_summary($field, $instance, $view_
  * Implements hook_field_formatter_view().
  */
 function uto_carousel_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  dpm(__FUNCTION__);
+
   $element = array();
 
   if (!empty($items)) {
@@ -233,7 +233,7 @@ function uto_carousel_field_formatter_view($entity_type, $entity, $field, $insta
  * Implements hook_field_widget_form().
  */
 function uto_carousel_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  dpm(__FUNCTION__);
+
   if ($instance['widget']['type'] == 'uto_carousel_form') {
     // Make it a multipart form
     $form['#attributes']['enctype'] = 'multipart/form-data';

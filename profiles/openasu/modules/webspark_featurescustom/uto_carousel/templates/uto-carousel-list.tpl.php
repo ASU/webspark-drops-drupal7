@@ -56,7 +56,7 @@
       directionNav: true,
       slideshow: true,
       slideshowSpeed: 7000,
-      randomize: true,
+      randomize: false,
       startAt: 0 // Could add a random number here to start at
     });
   });
