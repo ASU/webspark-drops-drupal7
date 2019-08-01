@@ -1,4 +1,9 @@
-uto_carousel 7.x-1.8
+ASU Carousel (uto_carousel) - 7.x-1.9
+--------------------
+- Code cleanup
+- Changed file browsing widget to Media module.
+
+ASU Carousel (uto_carousel) - 7.x-1.8
 --------------------
 - Fixed bug where field settings summary was being returned as array instead of string
 - Added flexslider dependency
