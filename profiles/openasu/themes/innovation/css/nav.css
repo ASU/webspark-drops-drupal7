@@ -37,7 +37,7 @@
 .navbar-nav > .active > a:hover,
 .navbar-nav > .active > a:focus {
 	background-color: #000;
-	color: #ffb310;
+	color: #ffc627;
 }
 .navbar-nav > li > a.dropdown-toggle {
 	padding: 20px 25px 20px 7px;
@@ -62,7 +62,7 @@
 .navbar-nav .dropdown-menu > li > a:hover,
 .navbar-nav .dropdown-menu > li > a:focus {
 	background-color: #000;
-	color: #ffb310;
+	color: #ffc627;
 }
 .navbar-nav > li:focus > a,
 .navbar-nav > .active:focus > a,
