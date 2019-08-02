@@ -222,9 +222,8 @@ function hook_admin_paths() {
  * This allows us to populate the proper options and default for selecting optionsets on the form
  */
 function asu_spotlight_form_alter(&$form, &$form_state, $form_id) {
-
-  if ($form_id == 'fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form') {
-
+  if ($form_id == 'fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form' &&
+    $form['#bundle'] === 'asu_spotlight') {   // Only ASU Spotlight FPPs...
     $optionsets = array();
     ctools_include('export');
     foreach (flexslider_optionset_load_all() as $name => $optionset) {
