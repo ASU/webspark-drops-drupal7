@@ -666,8 +666,13 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
   margin: 1em 0;
 }
 
-.alert > ul > li > [class^=krumo] {
+/* Devel debugging */
+.logged-in .alert > ul > li > [class^=krumo] {
   all: initial;
+}
+
+.logged-in .alert .krumo-root .krumo-element:not(a) {
+  color: green;
 }
 
 /* =ADMIN UI

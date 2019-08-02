@@ -150,10 +150,10 @@
 }
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
-  background-image: -webkit-linear-gradient(top, #ffb310 0%, #f6a700 100%);
-  background-image: linear-gradient(to bottom, #ffb310 0%, #f6a700 100%);
+  background-image: -webkit-linear-gradient(top, #ffc627 0%, #f6a700 100%);
+  background-image: linear-gradient(to bottom, #ffc627 0%, #f6a700 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffb310', endColorstr='#fff6a700', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffc627', endColorstr='#fff6a700', GradientType=0);
   background-color: #f6a700;
 }
 .dropdown-menu > .active > a,
