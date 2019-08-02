@@ -359,7 +359,7 @@ h6,
   font-family: inherit;
   font-weight: bold;
   line-height: 1.1;
-  color: #ffb310;
+  color: #ffc627;
 }
 h1 small,
 h2 small,
@@ -3037,12 +3037,12 @@ input[type="button"].btn-block {
 .dropdown-menu > li > a:focus {
   text-decoration: none;
   color: #000000;
-  background-color: #ffb310;
+  background-color: #ffc627;
 }
 .dropdown-menu > .active > a,
 .dropdown-menu > .active > a:hover,
 .dropdown-menu > .active > a:focus {
-  color: #ffb310;
+  color: #ffc627;
   text-decoration: none;
   outline: 0;
   background-color: #4f5557;
@@ -3957,13 +3957,13 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
-  color: #ffb310;
+  color: #ffc627;
   background-color: #000000;
 }
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-  color: #ffb310;
+  color: #ffc627;
   background-color: #000000;
 }
 .navbar-default .navbar-nav > .disabled > a,
@@ -3990,7 +3990,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-default .navbar-nav > .open > a:hover,
 .navbar-default .navbar-nav > .open > a:focus {
   background-color: #000000;
-  color: #ffb310;
+  color: #ffc627;
 }
 @media (max-width: 929px) {
   .navbar-default .navbar-nav .open .dropdown-menu > li > a {
@@ -3998,13 +3998,13 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
   .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
   .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
-    color: #ffb310;
+    color: #ffc627;
     background-color: #000000;
   }
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
-    color: #ffb310;
+    color: #ffc627;
     background-color: #000000;
   }
   .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a,
@@ -4018,7 +4018,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   color: #ffffff;
 }
 .navbar-default .navbar-link:hover {
-  color: #ffb310;
+  color: #ffc627;
 }
 .navbar-inverse {
   background-color: #222222;
