@@ -275,7 +275,14 @@ function theme_webform_number($variables) {
       $element['#attributes'][$property] = $element['#' . $property];
     }
   }
-  _form_set_class($element, array('form-text', 'form-number'));
+
+  // Add form-control class if display is not inline
+  $number_classes = array('form-text', 'form-number');
+  if ($element['#title_display'] !== 'inline') {
+    $number_classes[] = 'form-control';
+  }
+
+  _form_set_class($element, $number_classes);
 
   return '<input' . drupal_attributes($element['#attributes']) . ' />';
 }

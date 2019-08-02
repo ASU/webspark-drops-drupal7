@@ -234,7 +234,14 @@ function theme_webform_email($variables) {
       $element['#attributes'][$property] = $element['#' . $property];
     }
   }
-  _form_set_class($element, array('form-text', 'form-email'));
+
+  // Add form-control class if display is not inline
+  $email_classes = array('form-text', 'form-email');
+  if ($element["#title_display"] !== "inline") {
+    $email_classes[] = 'form-control';
+  }
+
+  _form_set_class($element, $email_classes);
 
   return '<input' . drupal_attributes($element['#attributes']) . ' />';
 }
