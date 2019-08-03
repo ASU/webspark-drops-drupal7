@@ -1,17 +1,18 @@
 mega_footer 7.x-1.11
 --------------------
 - Removed Google+ social media icon
+- Codified and unified CSS value for ASU gold to #fffc732
 
 mega_footer 7.x-1.10
 --------------------
 - Updated Mega Footer unit description links with correct color
 
 mega_footer 7.x-1.9, 2018-06-26
-—————————————————————————
+--------------------
 - Reverted focus indicators from border to outline. Kept stronger styling.
 
 mega_footer 7.x-1.8, 2018-05-01
-—————————————————————————
+--------------------
 - Significantly refactored code
 - Updated all Drupal DB variable name to "mega_footer_" naming convention
 - Added DB update to change existing variable names

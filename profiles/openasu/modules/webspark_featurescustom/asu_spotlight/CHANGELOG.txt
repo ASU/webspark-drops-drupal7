@@ -1,3 +1,7 @@
+ASU Spotlight 7.x-1.9, 2019-08-02
+-----------------------
+- Increased PHP performance when the site is creating a spotlight editing form.
+- Improved mouseover description when a link to create an ASU spotlight is rendered in the In-Page Editor.
 
 asu_spotlight 7.x-1.8, 2018-01-31
 -----------------------

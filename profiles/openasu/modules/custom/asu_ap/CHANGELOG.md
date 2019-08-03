@@ -1,5 +1,8 @@
 # ASU Academic Programs Changelog
 
+### ASU Academic Programs 7.x-2.5, 2019-08-02
+- Codified and unified CSS value for ASU gold to #fffc732
+
 ### ASU Academic Programs 7.x-2.4, 2019-01-17
 - Fix related programs field display on program nodes and node edit forms
 - Fix misaligned/missing breadcrumbs on program nodes

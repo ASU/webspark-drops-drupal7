@@ -1,7 +1,10 @@
 ASU Carousel (uto_carousel) - 7.x-1.9
 --------------------
-- Code cleanup
-- Changed file browsing widget to Media module.
+- Changed file browsing widget to Media module
+- Turned off carousel randomization by default
+- Improved mouseover description when a link to create an ASU spotlight is rendered in the In-Page Editor
+- Cleaned out code
+- Fixed URL in Field description link
 
 ASU Carousel (uto_carousel) - 7.x-1.8
 --------------------
