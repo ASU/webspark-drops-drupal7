@@ -57,7 +57,7 @@ function asu_maps_enhanced_entity_info_alter(&$entity_info) {
   // ASU Maps Enhanced Entity Info
   $entity_info['fieldable_panels_pane']['bundles']['asu_maps_enhanced'] = array(
     'label' => t('Add Enhanced ASU Map'),
-    'description' => t('Add Enhanced ASU Map'),
+    'description' => t('Add Google-based map with ASU-enhanced features, including ASU landmarks and locations.'),
     'pane category' => t('Custom'),
     'pane top level' => TRUE,
     'pane icon' => drupal_get_path('module', 'panopoly_widgets') . '/images/icon_map.png',

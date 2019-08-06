@@ -106,14 +106,12 @@ function asu_rfi_permission() {
 function asu_rfi_menu() {
   $items = array();
 
-
   $items['countries/autocomplete'] = array(
     'page callback' => 'asu_rfi_countries',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
     'file' => 'includes/asu_rfi.pages.inc',
   );
-
   $items['degree-programs/request-info-thank-you/%'] = array(
     'page callback' => 'asu_rfi_confirmation',
     'page arguments' => array(2),
@@ -121,15 +119,12 @@ function asu_rfi_menu() {
     'access arguments' => array('access content'),
     'file' => 'includes/asu_rfi_confirmation.inc',
   );
-
-
   $items['states/autocomplete'] = array(
     'page callback' => 'asu_rfi_usStates',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
     'file' => 'includes/asu_rfi.pages.inc',
   );
-
   // request info form admin settings page
   $items['admin/config/content/asurfi'] = array(
     'title' => 'ASU RFI Form Settings',
@@ -141,9 +136,7 @@ function asu_rfi_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'includes/asu_rfi.admin.inc'
   );
-
   //menu for rfi submissions call back webservices
-
   $items['asu_rfi/success/%/%'] = array(
     'page callback' => 'asu_rfi_success_post',
     'page arguments' => array(2, 3),
@@ -151,7 +144,6 @@ function asu_rfi_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'includes/asu_rfi.backpost.inc',
   );
-
   $items['asu_rfi/failure/%/%'] = array(
     'page callback' => 'asu_rfi_fail_post',
     'page arguments' => array(2, 3),
@@ -159,7 +151,6 @@ function asu_rfi_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'includes/asu_rfi.backpost.inc',
   );
-
   $items['asu_rfi/test_mode/%/%'] = array(
     'page callback' => 'asu_rfi_test_post',
     'page arguments' => array(2, 3),
@@ -167,9 +158,7 @@ function asu_rfi_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'includes/asu_rfi.backpost.inc',
   );
-
   //menu to grab middle ware key
-
   $items["asu_rfi/key/%"] = array(
     'page callback' => 'asu_rfi_middle_key',
     'page arguments' => array(2),
@@ -177,7 +166,6 @@ function asu_rfi_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'includes/asu_rfi.backpost.inc',
   );
-
 
   return $items;
 }
@@ -193,8 +181,7 @@ function asu_rfi_perm() {
  * Implements hook_block_info().
  */
 function asu_rfi_block_info() {
-
-  // A block to call the RFI form.
+  // Call the RFI form.
   $blocks['asu_rfi_form_block'] = array(
     'info' => t('RFI Master'),
     'cache' => DRUPAL_NO_CACHE,
@@ -460,8 +447,6 @@ function asu_rfi_cron() {
 
   asu_rfi_check_programs();
 
-  $middleware_host = "webforms.asu.edu";
-
   // Set as system variables so we can adjust via devel/php if desired.
 
   $last_ran = variable_get('asu_rfi_cron_last_ran', 0);
@@ -469,138 +454,20 @@ function asu_rfi_cron() {
 
   if (($last_ran + $stale_time) < time()) { // If we last ran over $stale_time seconds ago.
 
+    module_load_include('inc', 'asu_rfi', 'data/asu_rfi.form_options');
     drupal_flush_all_caches();
 
-    //update countries
-    $ctype = 'fieldinfo';
-    $cname = 'country';
-    $curl = "https://webforms.asu.edu/salesforce_query/api/$ctype/$cname";
-    try {
-      $c_ch = curl_init();
-      $coptions = array(
-        CURLOPT_URL => $curl,
-        CURLOPT_RETURNTRANSFER => 1,
-        CURLOPT_HTTPHEADER => array(
-          'Content-Type: text/json',
-          'Authorization: Basic 7755:e7acf2e698751f4cac11718d97df6ebf64b94372'
-        ),
-      );
+    // Update countries table
+    asu_rfi_get_options_data('country', TRUE);
+    // Update states table
+    asu_rfi_get_options_data('state_province', TRUE);
+    // Update semester dates table
+    asu_rfi_get_options_data('rfi_dedupe_list_terms', TRUE);
 
-      curl_setopt_array($c_ch, $coptions);
-
-      $cresponse = curl_exec($c_ch);
-
-      $cresult = json_decode($cresponse);
-      curl_close($c_ch);
-
-      if (FALSE === $cresponse) {
-        throw new Exception(curl_error($c_ch), curl_errno($c_ch));
-      }
-    } catch (Exception $e) {
-      trigger_error(sprintf(
-        'Curl failed with error #%d: %s',
-        $e->getCode(), $e->getMessage()),
-        E_USER_ERROR);
-    }
-
-
-    if (count($cresult)) {
-
-      // Only clear table if we had a result.
-      db_query("TRUNCATE TABLE {asu_rfi_countries}");
-
-      // Refresh table.
-      foreach ($cresult as $country) {
-        db_query("INSERT INTO {asu_rfi_countries} (countryCode3, countryDesc) VALUES (:country_value, :country_label)", array(
-          ':country_value' => $country->value,
-          ':country_label' => $country->label
-        ));
-      }
-
-    }
-
-    //update states
-    $type = 'fieldinfo';
-    $name = 'state_province';
-    $url = "https://webforms.asu.edu/salesforce_query/api/$type/$name";
-
-    $ch = curl_init();
-    $options = array(
-      CURLOPT_URL => $url,
-      CURLOPT_RETURNTRANSFER => 1,
-      CURLOPT_HTTPHEADER => array(
-        'Content-Type: text/json',
-        'Authorization: Basic 7755:e7acf2e698751f4cac11718d97df6ebf64b94372'
-      ),
-    );
-
-    curl_setopt_array($ch, $options);
-
-    $response = curl_exec($ch);
-
-    $result = json_decode($response);
-    curl_close($ch);
-
-    if (count($result)) {
-
-      // Only clear table if we had a result.
-      db_query("TRUNCATE TABLE {asu_rfi_states_list}");
-
-      foreach ($result as $state) {
-        db_query("INSERT INTO {asu_rfi_states_list} (stateCode, stateDesc) VALUES (:state_value, :state_label)", array(
-          ':state_value' => $state->value,
-          ':state_label' => $state->label
-        ));
-      }
-
-    }
-
-    //update asu_rfi_sem_dates
-    $semtype = 'select';
-    $semname = 'rfi_dedupe_list_terms';
-    $semurl = "https://webforms.asu.edu/salesforce_query/api/$semtype/$semname";
-
-    $semfields = array(
-      'condition_Term_Status__c' => TRUE,
-    );
-
-    $sembody = json_encode($semfields);
-
-    $semch = curl_init();
-    $semoptions = array(
-      CURLOPT_URL => $semurl,
-      CURLOPT_POST => 1,
-      CURLOPT_POSTFIELDS => $sembody,
-      CURLOPT_RETURNTRANSFER => 1,
-      CURLOPT_HTTPHEADER => array(
-        'Content-Type: text/json',
-        'Authorization: Basic 7755:e7acf2e698751f4cac11718d97df6ebf64b94372'
-      ),
-    );
-
-    curl_setopt_array($semch, $semoptions);
-
-    $semresponse = curl_exec($semch);
-    $semresult = json_decode($semresponse);
-    curl_close($semch);
-
-    if (count($semresult)) {
-
-      // Only clear table if we had a result.
-      db_query("TRUNCATE TABLE {asu_rfi_sem_dates}");
-
-      foreach ($semresult as $serres) {
-        db_query("INSERT INTO {asu_rfi_sem_dates} (semId, semLabel) VALUES (:sem_id, :sem_label)", array(
-          ':sem_id' => $serres->Id,
-          ':sem_label' => $serres->Name
-        ));
-      }
-
-    }
     // Update asu_rfi_cron_last_ran time.
     variable_set('asu_rfi_cron_last_ran', time());
-  }
 
+  }
 
   // Check for unposted leads (confirmation == -1), and add them to the cron
   // queue.
@@ -1515,24 +1382,11 @@ function asu_rfi_preprocess_page(&$variables) {
         'weight' => 0
       ));
 
-//    drupal_add_js("(function ($) {
-//       dataLayer = [{
-//          'event': 'ecommerce_event',
-//          'transactionId': '$ga_id',
-//          'transactionAffiliation': '$program_name',
-//          'transactionTotal': '$price',
-//          'transactionProducts': [{
-//                'sku': '$sku',
-//                'name': '$college',
-//                'category': '$category',
-//                'price': '$price',
-//                'quantity': '1'
-//              }]
-//            }];
-//        })(jQuery)", array('type' => 'inline', 'scope' => 'header','weight' => 0));
-    } //if confirmation node id specified in module settings page is called instead, run below code
-    else {
+    }
 
+    // If confirmation node id specified in module settings page is called instead:
+
+    else {
       $undergrad_confirm_nid = variable_get('asu_rfi_undergrad_confirm_node');
       $grad_confirm_nid = variable_get('asu_rfi_grad_confirm_node');
 
@@ -1550,7 +1404,8 @@ function asu_rfi_preprocess_page(&$variables) {
           $zip_section = substr($zip, 0, 2);
           //$category = $_GET['cat'];
           $category = 'RFI';
-          $subdomain = array_shift((explode(".", $_SERVER['HTTP_HOST'])));
+          $tmp_host = explode(".", $_SERVER['HTTP_HOST']);
+          $subdomain = array_shift($tmp_host);
           $ga_id = $subdomain . '-' . variable_get('asu_rfi_google_analytics_key') . '-' . $nid;
           $price = '300.00';
           if ($country == "United States") {
@@ -1582,22 +1437,6 @@ function asu_rfi_preprocess_page(&$variables) {
             'scope' => 'header',
             'weight' => 0
           ));
-//       //GMT transaction variables
-//       drupal_add_js("(function ($) {
-//         dataLayer = [{
-//            'event': 'ecommerce_event',
-//            'transactionId': '$ga_id',
-//            'transactionAffiliation': '$college',
-//            'transactionTotal': '$price',
-//            'transactionProducts': [{
-//               'sku': '$sku',
-//               'name': '$major_rfi',
-//               'category': '$category',
-//               'price': '$price',
-//               'quantity': '1'
-//             }]
-//        }];
-//      })(jQuery)", array('type' => 'inline', 'scope' => 'header','weight' => 0));
         }
       }
       else {
@@ -1666,4 +1505,25 @@ function asu_rfi_form_after_build($form, &$form_state) {
     }
   }
   return $form;
+}
+
+/**
+ * Helper function - CURL options for JSON feed pulls in data inc files
+ */
+function _asu_rfi_get_curl_auth() {
+  return array(
+    'Content-Type: text/json',
+    'Authorization: Basic 7755:e7acf2e698751f4cac11718d97df6ebf64b94372'
+  );
+}
+
+/**
+ * Helper function - Check if any options (valid or not) still exist from past pulls
+ * so it can possibly (at least partially) function?
+ */
+function _asu_rfi_check_form_values($db_tbl) {
+  $query = Database::getConnection('default')
+    ->select($db_tbl);
+  $result = $query->countQuery()->execute()->fetchField();
+  return (int) $result;
 }

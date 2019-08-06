@@ -12,7 +12,7 @@ function asu_spotlight_field_info() {
   return array(
     'asu_spotlight' => array(
       'label' => t('ASU Spotlight'),
-      'description' => t('A wonderfully modified, ASU-specific spotlight field'),
+      'description' => t('An ASU-specific spotlight field'),
       'default_widget' => 'asu_spotlight_form',
       'default_formatter' => 'asu_spotlight',
       'settings' => array(
@@ -222,9 +222,8 @@ function hook_admin_paths() {
  * This allows us to populate the proper options and default for selecting optionsets on the form
  */
 function asu_spotlight_form_alter(&$form, &$form_state, $form_id) {
-
-  if ($form_id == 'fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form') {
-
+  if ($form_id == 'fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form' &&
+    $form['#bundle'] === 'asu_spotlight') {   // Only ASU Spotlight FPPs...
     $optionsets = array();
     ctools_include('export');
     foreach (flexslider_optionset_load_all() as $name => $optionset) {

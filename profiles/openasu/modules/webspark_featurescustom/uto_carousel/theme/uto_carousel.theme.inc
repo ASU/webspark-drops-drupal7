@@ -45,6 +45,7 @@ function theme_uto_carousel_list(&$vars) {
 /**
  * Template preprocess handler for 'flexslider' theme.
  */
+// @TODO - broken?
 function template_process_uto_carousel(&$vars) {
   // Reference configuration variables
   $optionset = &$vars['settings']['optionset'];

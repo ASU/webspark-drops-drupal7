@@ -1,4 +1,12 @@
-uto_carousel 7.x-1.8
+ASU Carousel (uto_carousel) - 7.x-1.9
+--------------------
+- Changed file browsing widget to Media module
+- Turned off carousel randomization by default
+- Improved mouseover description when a link to create an ASU spotlight is rendered in the In-Page Editor
+- Cleaned out code
+- Fixed URL in Field description link
+
+ASU Carousel (uto_carousel) - 7.x-1.8
 --------------------
 - Fixed bug where field settings summary was being returned as array instead of string
 - Added flexslider dependency

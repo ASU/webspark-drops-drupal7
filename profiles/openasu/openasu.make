@@ -7,9 +7,12 @@ api = 2
 
 projects[drupal][type] = core
 projects[drupal][version] = 7.67
+
 ; Drupal Core Patches
+
 ;projects[drupal][patch][1334818] = https://drupal.org/files/issues/D7-install-profile-ajax-1334818-8.patch
 projects[drupal][patch][1803048] = patches/ws-1514_array-flip-error-travis-ci-tests_1803048.patch
+projects[drupal][patch][1497] = patches/ws-1497_removed-seven-theme-IE-css.patch
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; The Panopoly Foundation
@@ -125,6 +128,7 @@ projects[viewfield][subdir] = contrib
 projects[webform][version] = 4.19
 projects[webform][type] = module
 projects[webform][subdir] = contrib
+projects[webform][patch][3078020] = https://www.drupal.org/files/issues/2019-08-01/webform_7.x-4.19_conditional-form-control-css-class-email-number.patch
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ASU Module prerequisites - Webspark Web Standards components - contrib
