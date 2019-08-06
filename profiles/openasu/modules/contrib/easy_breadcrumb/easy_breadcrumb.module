@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @file
- * The Easy Breadcrumb module provides a block to be embedded in any page,
- * typically at some place near the page's header.
+ * The Easy Breadcrumb module provides a block to be embedded in any page.
+ *
+ * Typically at some place near the page's header.
  * Easy Breadcrumb uses the URL (path alias) and the current page's title
  * (when available) to obtain the breadcrumb's segments and its respective
  * links. The resulting block will be something like:
@@ -26,10 +28,24 @@ function easy_breadcrumb_permission() {
  * Implements hook_init().
  */
 function easy_breadcrumb_init() {
-  $disable_drupal_default_breadcrumb = variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_DEFAULT_DRUPAL_BREADCRUMB, TRUE);
-  if ($disable_drupal_default_breadcrumb) {
-    // Sets the Drupal's default breadcrumb as an empty array to disable it.
-    drupal_set_breadcrumb(array());
+  global $theme;
+  $site_theme = variable_get('theme_default', 'bartik');
+  $admin_theme = variable_get('admin_theme', 'seven');
+  // Disable Admin theme breadcrumb, but only if different to site theme.
+  if ($theme === $admin_theme && $site_theme !== $admin_theme) {
+    $disable_admin_breadcrumb = variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_ADMIN_BREADCRUMB, FALSE);
+    if ($disable_admin_breadcrumb) {
+      // Set the Drupal's default breadcrumb as an empty array to disable it.
+      drupal_set_breadcrumb(array());
+    }
+  }
+  // Disable front-end breadcrumbs.
+  else {
+    $disable_drupal_default_breadcrumb = variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_DEFAULT_DRUPAL_BREADCRUMB, TRUE);
+    if ($disable_drupal_default_breadcrumb) {
+      // Set the Drupal's default breadcrumb as an empty array to disable it.
+      drupal_set_breadcrumb(array());
+    }
   }
 }
 
@@ -133,7 +149,6 @@ function template_preprocess_easy_breadcrumb(&$variables) {
     $variables['list_type'] = 'http://data-vocabulary.org/Breadcrumb';
   }
   foreach ($breadcrumbs as $i => $breadcrumb) {
-    $content = decode_entities($breadcrumb['content']);
     if (isset($breadcrumb['url'])) {
       $variables['breadcrumb'][$i] = '<span itemprop="title">';
 
@@ -142,20 +157,20 @@ function template_preprocess_easy_breadcrumb(&$variables) {
       if (isset($parsed_url['query'])) {
         parse_str($parsed_url['query'], $parsed_query);
       }
-      $variables['breadcrumb'][$i] .= l($content, $parsed_url['path'], array(
+      $variables['breadcrumb'][$i] .= l($breadcrumb['content'], $parsed_url['path'], array(
         'attributes' => array('class' => $breadcrumb['class']),
         'query' => $parsed_query,
-        'html' => $breadcrumb['html'],
+        'html' => (!empty($breadcrumb['html'])) ? $breadcrumb['html'] : FALSE,
       ));
 
       $variables['breadcrumb'][$i] .= '</span>';
     }
     else {
       $class = implode(' ', $breadcrumb['class']);
-      $variables['breadcrumb'][$i] = '<span class="' . $class . '" itemprop="title">' . check_plain($content) . '</span>';
+      $variables['breadcrumb'][$i] = '<span class="' . $class . '" itemprop="title">' . $breadcrumb['content'] . '</span>';
     }
   }
-  $variables['segments_quantity'] = count($variables['breadcrumb']);
+  $variables['segments_quantity'] = isset($variables['breadcrumb']) ? count($variables['breadcrumb']) : 0;
   $variables['separator_ending'] = variable_get(EasyBreadcrumbConstants::DB_VAR_SEPERATOR_ENDING, FALSE) ? 0 : 1;
   $variables['separator'] = filter_xss(variable_get(EasyBreadcrumbConstants::DB_VAR_SEGMENTS_SEPARATOR, '»'));
 }
@@ -183,7 +198,8 @@ function _easy_breadcrumb_build_items() {
     $breadcrumb[] = _easy_breadcrumb_build_item($front_text, $segments_classes, '<front>');
   }
 
-  // There won't be more segments if visiting the front page, the don't waste resources.
+  // There won't be more segments if visiting the front page,
+  // the don't waste resources.
   if (!drupal_is_front_page()) {
     // Gets the flag saying the capitalizator mode.
     $capitalizator_mode = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE, 'ucwords');
@@ -222,7 +238,6 @@ function _easy_breadcrumb_build_items() {
     // Allow the alias to be altered.
     drupal_alter('easy_breadcrumb_path', $alias);
 
-
     // Get the segments of the current path.
     $alias_arr = explode('/', $alias);
 
@@ -241,7 +256,8 @@ function _easy_breadcrumb_build_items() {
       // first iteration this array will be array('blog'), the second
       // (and last in that case) the array will be array('blog','article').
       $segment_url_arr[] = $alias_arr[$idx_0];
-      // String with the potential-path of the segment being processed (e.g. 'blog/article').
+      // String with the potential-path of the segment being processed
+      // (e.g. 'blog/article').
       $segment_url = implode('/', $segment_url_arr);
 
       // Jump to the next segment if this url is configured to be excluded.
@@ -269,7 +285,7 @@ function _easy_breadcrumb_build_items() {
 
       // Get the segment's raw text from the URL.
       $segment_text = $alias_arr[$idx_0];
-      // Normalized segment's text (e.g. 'Blog');
+      // Normalized segment's text (e.g. 'Blog');.
       $segment_title = _easy_breadcrumb_obtain_segment_title($segment_normal_path, $segment_valid_path, $segment_text);
       _easy_breadcrumb_check_replaced_title($segment_title);
 
@@ -292,7 +308,8 @@ function _easy_breadcrumb_build_items() {
 
     // Adds the page's title to the breadcrumb.
     if ($include_page_title_segment) {
-      // Marks the page's-title-segment with an identifier class (useful for CSS).
+      // Marks the page's-title-segment with an identifier class
+      // (useful for CSS).
       $segments_classes[1] = 'easy-breadcrumb_segment-title';
       // The title is the last segment in the URL.
       $segment_text = $alias_arr[$segments_quantity - 1];
@@ -320,9 +337,7 @@ function _easy_breadcrumb_build_items() {
  */
 function _easy_breadcrumb_obtain_home_title() {
   $front_text = variable_get(EasyBreadcrumbConstants::DB_VAR_HOME_SEGMENT_TITLE);
-  if (isset($front_text) && $front_text !== '') {
-    $front_text = t($front_text);
-  } else {
+  if (!isset($front_text) || $front_text === '') {
     $front_text = t('Home');
   }
   return $front_text;
@@ -354,18 +369,21 @@ function _easy_breadcrumb_obtain_page_title($page_text) {
  * Build a breadcrumb item.
  *
  * @param string $item_title
- *   title of the item.
+ *   Title of the item.
  * @param array $item_classes
- *   classes.
+ *   Classes.
  * @param string $item_url
- *   url of the item.
- * @param boolean $as_link
- *   denotes if the item is an url or plain text.
+ *   Url of the item.
+ * @param bool $as_link
+ *   Denotes if the item is an url or plain text.
  *
  * @return array
  *   the generated breadcrumb item.
  */
-function _easy_breadcrumb_build_item($item_title, $item_classes, $item_url, $as_link = TRUE) {
+function _easy_breadcrumb_build_item($item_title, array $item_classes, $item_url, $as_link = TRUE) {
+  if (variable_get(EasyBreadcrumbConstants::DB_VAR_HTML_TAGS, TRUE)) {
+    $item_title = filter_xss($item_title);
+  }
   if (variable_get(EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_MODE, FALSE)) {
     $item_title = truncate_utf8(
       $item_title,
@@ -390,10 +408,10 @@ function _easy_breadcrumb_build_item($item_title, $item_classes, $item_url, $as_
  * Check if the given segment is a valid path.
  *
  * @param string $segment_path
- *   path of the segment.
+ *   Path of the segment.
  *
  * @return bool
- *   true if the segment is a valid path, false otherwise.
+ *   True if the segment is a valid path, false otherwise.
  */
 function _easy_breadcrumb_validate_segment_path($segment_path) {
   $is_valid_path = drupal_valid_path($segment_path);
@@ -436,7 +454,7 @@ function _easy_breadcrumb_check_replaced_title(&$segment_title) {
  * @param string $url
  *   URL to be verified.
  *
- * @return boolean
+ * @return bool
  *   TRUE if should be excluded, FALSE otherwise.
  */
 function _easy_breadcrumb_check_excluded_path($url) {
@@ -471,7 +489,8 @@ function _easy_breadcrumb_check_excluded_path($url) {
  *   segment title.
  */
 function _easy_breadcrumb_obtain_segment_title($normal_path, $valid_path, $segment_text) {
-  // If path is valid then try to obtain the title from the menu router (if available).
+  // If path is valid then try to obtain the title from the menu router
+  // (if available).
   if ($valid_path) {
     $router_item = menu_get_item($normal_path);
     // If not using segment text as title then use the menu router title.
@@ -487,17 +506,22 @@ function _easy_breadcrumb_obtain_segment_title($normal_path, $valid_path, $segme
 }
 
 /**
- * Normalizes a text. E.g., transforms "about-us" to "About Us" or "About us", according to parameters.
+ * Normalizes a text.
+ *
+ * E.g., transforms "about-us" to "About Us" or "About us",
+ * according to parameters.
  *
  * @param string $raw_text
- *   text to be normalized.
+ *   Text to be normalized.
  *
  * @return string
  *   normalized title.
  */
 function _easy_breadcrumb_normalize_text($raw_text) {
+  // Filter the raw text against XSS.
+  $normalized_text = check_url($raw_text);
   // Transforms '-hello--world_javascript-' on 'hello world javascript'.
-  $normalized_text = str_replace(array('-', '_'), ' ', $raw_text);
+  $normalized_text = str_replace(array('-', '_'), ' ', $normalized_text);
   $normalized_text = trim($normalized_text);
   $normalized_text = preg_replace('/\s{2,}/', ' ', $normalized_text);
 
@@ -516,7 +540,7 @@ function _easy_breadcrumb_normalize_text($raw_text) {
         $words_arr[$idx_1] = drupal_ucfirst($words_arr[$idx_1]);
       }
     }
-    $normalized_text = join(' ', $words_arr);
+    $normalized_text = implode(' ', $words_arr);
   }
   elseif ($capitalizator_mode === 'ucall') {
     // Transforms the text 'once a time' to 'ONCE A TIME'.
@@ -526,7 +550,8 @@ function _easy_breadcrumb_normalize_text($raw_text) {
     // Transforms the text 'once a time' to 'once a TIME'.
     // List of words to be forced by the capitalizator.
     $forced_words = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS, '');
-    // If case sensitivity is false make all the forced words uncapitalized by default.
+    // If case sensitivity is false make all the forced words
+    // uncapitalized by default.
     if (!variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_CASE_SENSITIVITY, FALSE)) {
       $forced_words = array_map('drupal_strtolower', $forced_words);
     }
@@ -536,7 +561,8 @@ function _easy_breadcrumb_normalize_text($raw_text) {
       $words_arr[0] = drupal_ucfirst($words_arr[0]);
     }
     for ($idx_1 = 0, $words_quantity = count($words_arr); $idx_1 < $words_quantity; ++$idx_1) {
-    // If case sensitivity is false make the compared word uncapitalized in order to allow the comparison well.
+      // If case sensitivity is false make the compared word uncapitalized
+      // in order to allow the comparison well.
       if (!variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_CASE_SENSITIVITY, FALSE)) {
         $selected_word = drupal_strtolower($words_arr[$idx_1]);
       }
@@ -548,7 +574,7 @@ function _easy_breadcrumb_normalize_text($raw_text) {
         $words_arr[$idx_1] = drupal_strtoupper($selected_word);
       }
     }
-    $normalized_text = join(' ', $words_arr);
+    $normalized_text = implode(' ', $words_arr);
   }
   else {
     // Transforms the text 'once a time' to 'Once a time' (ucfirst).
@@ -561,14 +587,15 @@ function _easy_breadcrumb_normalize_text($raw_text) {
 /**
  * Apply title replacements.
  *
- * @param String $title
+ * @param string $title
  *   Page title.
- *
- * @param Array $replacements.
+ * @param array $replacements
  *   Replacement rules map.
  */
-function _easy_breadcrumb_apply_title_replacement(&$title, $replacements) {
-  if (!is_string($title)) return;
+function _easy_breadcrumb_apply_title_replacement(&$title, array $replacements) {
+  if (!is_string($title)) {
+    return;
+  }
 
   if (array_key_exists($title, $replacements)) {
     $title = $replacements[$title];

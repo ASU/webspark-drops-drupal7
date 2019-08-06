@@ -69,9 +69,10 @@ Configurable parameters:
    prefix ("/en") is used.
  * Use menu title as fallback instead of raw path component.
  * Remove segments of the breadcrumb that are identical.
- * Use a custom separator between the breadcrumb's segments. (TODO)
- * Choose a transformation mode for the segments' title.(TODO)
- * Make the 'capitalizator' ignore some words. (TODO)
+ * Disable system breadcrumbs in site and admin themes.
+ * Use a custom separator between the breadcrumb's segments.
+ * Choose a transformation mode for the segments' title.
+ * Make the 'capitalizator' ignore some words.
 
 
 MAINTAINERS
@@ -85,4 +86,4 @@ MAINTAINERS
 Supporting organization:
 
  * Hook 42 - https://www.drupal.org/hook-42
-
+ * Petend - https://www.drupal.org/petend

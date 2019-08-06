@@ -146,7 +146,7 @@ projects[chosen][version] = 2.1
 projects[chosen][type] = module
 projects[chosen][subdir] = contrib
 
-projects[easy_breadcrumb][version] = 2.15
+projects[easy_breadcrumb][version] = 2.17
 projects[easy_breadcrumb][type] = module
 projects[easy_breadcrumb][subdir] = contrib
 

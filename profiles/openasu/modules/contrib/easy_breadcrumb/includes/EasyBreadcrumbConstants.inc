@@ -16,6 +16,11 @@ class EasyBreadcrumbConstants {
   const MODULE_NAME = 'easy_breadcrumb';
 
   /**
+   * Flag for disabling or not the default admin theme breadcrumb.
+   */
+  const DB_VAR_DISABLE_ADMIN_BREADCRUMB = 'easy_breadcrumb-disable_admin_breadcrumb';
+
+  /**
    * Flag for disabling or not the default Drupal's breadcrumb.
    */
   const DB_VAR_DISABLE_DEFAULT_DRUPAL_BREADCRUMB = 'easy_breadcrumb-disable_drupal_breadcrumb';
@@ -61,8 +66,9 @@ class EasyBreadcrumbConstants {
   const DB_VAR_TITLE_SEGMENT_AS_LINK = 'easy_breadcrumb-title_segment_as_link';
 
   /**
-   * Use the page's title when it is available instead of always trying to
-   * deduce it from the URL.
+   * Use the page's title when it is available.
+   *
+   * Instead of always trying to deduce it from the URL.
    */
   const DB_VAR_TITLE_FROM_PAGE_WHEN_AVAILABLE = 'easy_breadcrumb-title_from_page_when_available';
 
