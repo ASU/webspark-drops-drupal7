@@ -26,6 +26,21 @@ function asu_gsa_update_dependencies() {
 }
 
 /**
+ * Implements hook_uninstall()
+ */
+function asu_gsa_uninstall() {
+  // Removes only custom google_appliance_% variable not in google_appliance module
+  $query = Database::getConnection('default', 'default')
+    ->delete('variable')
+    ->condition('name', 'google_appliance_local_search', 'LIKE')
+    ->execute();
+  $query = Database::getConnection('default', 'default')
+    ->delete('variable')
+    ->condition('name', 'original collection', 'LIKE')
+    ->execute();
+}
+
+/**
  * Implements hook_update_N().
  * + Resave all Google Appliance admin settings after that module is updated from v1.12 to v1.14.
  */

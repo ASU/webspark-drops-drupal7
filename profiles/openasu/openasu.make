@@ -174,11 +174,6 @@ projects[fontawesome][version] = 1.0
 projects[fontawesome][type] = module
 projects[fontawesome][subdir] = contrib
 
-; @TODO v1.15
-projects[google_appliance][version] = 1.14
-projects[google_appliance][type] = module
-projects[google_appliance][subdir] = contrib
-
 projects[google_cse][version] = 2.5
 projects[google_cse][type] = module
 projects[google_cse][subdir] = contrib
