@@ -1,3 +1,11 @@
+asu_maps_enhanced 7.x-1.5, 2019
+-------------------------------
+- Switched to new API and map URL for Concept3d maps
+- Refactored and adjusted campus coordinate config for new map URL
+- Moved custom utility functions to asu_maps_enhanced.helpers.inc
+- Deprecated functionality which allowed multiple location markers
+  to be selected
+
 asu_maps_enhanced 7.x-1.4, 2016-10-31
 -------------------------------------
 - added Thunderbird campus as option

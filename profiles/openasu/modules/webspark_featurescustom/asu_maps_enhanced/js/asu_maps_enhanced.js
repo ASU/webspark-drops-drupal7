@@ -11,17 +11,20 @@
         attach: function (context, settings) {
             //document.domain = 'asu.edu';
             var campus = 'TEMPE';
+            var map_settings;
+
 
             if (settings.hasOwnProperty('asu_maps_enhanced')) {
-                var map_settings = settings.asu_maps_enhanced;
+                map_settings = settings.asu_maps_enhanced;
                 var campus = map_settings.campus;
             }
 
             $('.enhanced-map-nav .' + campus).addClass('cHover');
 
             $(document).on('click tap touch', '.nav-left li', function () {
-                var c = $(this).html();
-                var mc = '?' + getMC(c);
+                var c = $(this).attr('class');
+
+                var mc = map_settings.campus_coords[c] ? '?' + map_settings.campus_coords[c] : '';
                 var mc_reg = /\?(mc.*)/;
 
                 var currentSrc = $('#embed-iframe').attr('src');
