@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Module's admin forms.
@@ -24,8 +25,15 @@ function _easy_breadcrumb_general_settings_form() {
 
   $fieldset_general[EasyBreadcrumbConstants::DB_VAR_DISABLE_DEFAULT_DRUPAL_BREADCRUMB] = array(
     '#type' => 'checkbox',
-    '#title' => t('Disable the system breadcrumbs.'),
-    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_DEFAULT_DRUPAL_BREADCRUMB, TRUE),
+    '#title' => t('Disable the system breadcrumbs in site theme.'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_DEFAULT_DRUPAL_BREADCRUMB, FALSE),
+  );
+
+  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_DISABLE_ADMIN_BREADCRUMB] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Disable the system breadcrumbs in admin theme.'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_ADMIN_BREADCRUMB, FALSE),
+    '#description' => t('Default drupal breadcrumb is only disabled when the admin theme is different to site theme. If both themes are the same, this option has no effect.'),
   );
 
   $fieldset_general[EasyBreadcrumbConstants::DB_VAR_SEGMENTS_SEPARATOR] = array(
@@ -33,13 +41,13 @@ function _easy_breadcrumb_general_settings_form() {
     '#size' => 10,
     '#title' => t('Breadcrumb separator:'),
     '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_SEGMENTS_SEPARATOR, '»'),
-   );
+  );
 
   $fieldset_general[EasyBreadcrumbConstants::DB_VAR_SEPERATOR_ENDING] = array(
     '#type' => 'checkbox',
     '#title' => t('Show breadcrumb separator after the final breadcrumb.'),
     '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_SEPERATOR_ENDING, FALSE),
-   );
+  );
 
   // Fieldset for grouping text settings.
   $fieldset_general['first'] = array(
@@ -106,7 +114,7 @@ function _easy_breadcrumb_general_settings_form() {
   // before displaying them.
   $excluded_paths_arr = variable_get(EasyBreadcrumbConstants::DB_VAR_EXCLUDED_PATHS,
     EasyBreadcrumbConstants::defaultExcludedPaths());
-  $excluded_paths = @join("\r\n", $excluded_paths_arr);
+  $excluded_paths = @implode("\r\n", $excluded_paths_arr);
   $fieldset_general['paths'][EasyBreadcrumbConstants::DB_VAR_EXCLUDED_PATHS] = array(
     '#type' => 'textarea',
     '#title' => t('Breadcrumb paths to be excluded:'),
@@ -217,7 +225,7 @@ function _easy_breadcrumb_general_settings_form() {
   // (word1 word2 wordN) before displaying them.
   $capitalizator_ignored_words_arr = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_IGNORED_WORDS,
     EasyBreadcrumbConstants::defaultIgnoredWords());
-  $capitalizator_ignored_words = @join(' ', $capitalizator_ignored_words_arr);
+  $capitalizator_ignored_words = @implode(' ', $capitalizator_ignored_words_arr);
 
   $form['caps'][EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_IGNORED_WORDS] = array(
     '#type' => 'textfield',
@@ -231,14 +239,14 @@ function _easy_breadcrumb_general_settings_form() {
       ),
       'invisible' => array(
         ':input[name="' . EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE . '"]' => array('!value' => 'ucwords'),
-      )
-    )
+      ),
+    ),
   );
 
   // Formats the forced-words array as space separated list of words
   // (word1 word2 wordN) before displaying them.
   $capitalizator_forced_words_arr = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS, '');
-  $capitalizator_forced_words = @join(' ', $capitalizator_forced_words_arr);
+  $capitalizator_forced_words = @implode(' ', $capitalizator_forced_words_arr);
 
   $form['caps'][EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS] = array(
     '#type' => 'textfield',
@@ -253,8 +261,8 @@ function _easy_breadcrumb_general_settings_form() {
       ),
       'invisible' => array(
         ':input[name="' . EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE . '"]' => array('!value' => 'ucforce'),
-      )
-    )
+      ),
+    ),
   );
 
   $form['caps'][EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_CASE_SENSITIVITY] = array(
@@ -267,7 +275,7 @@ function _easy_breadcrumb_general_settings_form() {
       ),
       'invisible' => array(
         ':input[name="' . EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE . '"]' => array('!value' => 'ucforce'),
-      )
+      ),
     ),
     '#description' => t('When unchecked, drupal will match both Drupal and drupaL.'),
   );
@@ -282,8 +290,8 @@ function _easy_breadcrumb_general_settings_form() {
       ),
       'invisible' => array(
         ':input[name="' . EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE . '"]' => array('!value' => 'ucforce'),
-      )
-    )
+      ),
+    ),
   );
 
   // Adds buttons for processing the form.
@@ -306,12 +314,12 @@ function _easy_breadcrumb_general_settings_form() {
 /**
  * Process the submitting of the administration form of this module.
  *
- * @param Assoc $form
- *   renderable form.
- * @param Assoc $form_state
- *   form state.
+ * @param array $form
+ *   Renderable form.
+ * @param array $form_state
+ *   Form state.
  */
-function _easy_breadcrumb_admin_submit($form, &$form_state) {
+function _easy_breadcrumb_admin_submit(array $form, array &$form_state) {
 
   // Pre-processes the list of ignored words for storing them as an array.
   // Replaces line-endings by spaces and splits words by spaces.
