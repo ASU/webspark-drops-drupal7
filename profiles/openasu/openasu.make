@@ -99,7 +99,7 @@ projects[job_scheduler][subdir] = contrib
 
 projects[ldap][type] = module
 projects[ldap][subdir] = contrib
-projects[ldap][version] = 2.3
+projects[ldap][version] = 2.5
 
 projects[references][type] = module
 projects[references][subdir] = contrib
