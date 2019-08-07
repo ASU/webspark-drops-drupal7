@@ -1,3 +1,10 @@
+Fieldable Panels Panes 7.x-1.x-dev, xxxx-xx-xx
+----------------------------------------------
+#3039610 by DamienMcKenna: Prefix admin title with bundle label.
+#3039612 by DamienMcKenna: Don't show "reusable" in pane admin title if
+  can't be loaded.
+
+
 Fieldable Panels Panes 7.x-1.13, 2019-03-12
 -------------------------------------------
 #3039427 by DamienMcKenna: Failure if an FPP can't be loaded in a Panelizer

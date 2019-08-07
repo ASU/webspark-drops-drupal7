@@ -208,28 +208,42 @@ function fieldable_panels_panes_fieldable_panels_pane_content_type_render($subty
  */
 function _fieldable_panels_panes_admin_title_from_entity($entity) {
   if (!empty($entity) && is_object($entity)) {
+    $title = array();
+
+    // Start with the entity bundle label.
+    $info = entity_get_info('fieldable_panels_pane');
+    if (!empty($info['bundles'][$entity->bundle]['label'])) {
+      $title[] = $info['bundles'][$entity->bundle]['label'];
+    }
+
+    // Add the admin title, if it isn't the same as what was returned above.
     if (!empty($entity->admin_title)) {
-      $output = $entity->admin_title;
+      if (!in_array(trim($entity->admin_title), $title)) {
+        $title[] = trim($entity->admin_title);
+      }
     }
+
+    // Otherwise, add the title field if it's different than what was returned
+    // above.
     elseif (!empty($entity->title)) {
-      $output = $entity->title;
+      if (!in_array(trim($entity->title), $title)) {
+        $title[] = trim($entity->title);
+      }
     }
-    else {
-      $output = entity_label('fieldable_panels_pane', $entity);
-    }
+
     // Make sure no XSS strings go through the title.
-    $output = filter_xss($output);
+    $title = filter_xss(implode(': ', $title));
+
+    // Indicate when the FPP is reusable.
+    if (!empty($entity->reusable)) {
+      $title .= ' (' . t('reusable') . ')';
+    }
   }
   else {
-    $output = t('Deleted/removed entity pane');
+    $title = t('Deleted/removed entity pane');
   }
 
-  // Indicate when the FPP is reusable.
-  if (!empty($entity->reusable)) {
-    $output .= ' (' . t('reusable') . ')';
-  }
-
-  return $output;
+  return $title;
 }
 
 /**
