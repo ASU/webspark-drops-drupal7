@@ -37,8 +37,8 @@ function asu_maps_enhanced_update_7002(&$sandbox) {
  * Implementation of hook_uninstall().
  */
 function asu_maps_enhanced_uninstall() {
-
-
+  variable_del('asu_maps_enhanced_api_endpoint');
+  variable_del('asu_maps_enhanced_map_url');
 }
 
 /**
