@@ -13,15 +13,6 @@ api = 2
 
 ; panopoly_core.make
 
-projects[fieldable_panels_panes][type] = module
-projects[fieldable_panels_panes][subdir] = contrib
-projects[fieldable_panels_panes][version] = 1.11
-projects[fieldable_panels_panes][sha256] = db07832725054a264dfe536ac264f06032a9f816bf716bb89bc86667db5d7fa2
-projects[fieldable_panels_panes][patch][2826205] = https://www.drupal.org/files/issues/fieldable_panels_panes-n2826205-39.patch
-projects[fieldable_panels_panes][patch][2848997] = https://www.drupal.org/files/issues/2018-12-10/2848997-cant-access-admin-too-many-redirects.patch
-; Webspark - Fixes undefined index: bundle error - Will go into v1.12
-projects[fieldable_panels_panes][patch][2825835] = patches/ws-1257_fpp-errors-after-bad-deletion_2825835.patch
-
 projects[panelizer][version] = 3.4
 projects[panelizer][subdir] = contrib
 projects[panelizer][patch][1549608] = https://www.drupal.org/files/issues/panelizer-n1549608-26.patch
