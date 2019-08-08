@@ -82,21 +82,25 @@ function mega_footer_block_view($delta = '') {
           $check . "'>Contact us</a></p>": "";
 
       // Social Media icons
-      $footer_mark .= "<ul class='dgtl-mkting-101'>";
-      $footer_mark = _mega_footer_social_media('facebook', 'facebook-square', 'Facebook', $footer_mark);
-      $footer_mark = _mega_footer_social_media('twitter', 'twitter-square', 'Twitter', $footer_mark);
-      $footer_mark = _mega_footer_social_media('google', 'google', 'Google+', $footer_mark);
-      $footer_mark = _mega_footer_social_media('linkedin', 'linkedin-square', 'LinkedIn', $footer_mark);
-      $footer_mark = _mega_footer_social_media('youtube', 'youtube-square', 'YouTube', $footer_mark);
-      $footer_mark = _mega_footer_social_media('instagram', 'instagram', 'Instagram', $footer_mark);
-      $footer_mark = _mega_footer_social_media('vimeo', 'vimeo-square', 'Vimeo', $footer_mark);
-      $footer_mark = _mega_footer_social_media('flickr', 'flickr', 'Flickr', $footer_mark);
-      $footer_mark = _mega_footer_social_media('pinterest', 'pinterest-square', 'Pinterest', $footer_mark);
-      $footer_mark = _mega_footer_social_media('tumblr', 'tumblr-square', 'Tumblr', $footer_mark);
-      $footer_mark = _mega_footer_social_media('rss', 'rss-square', 'RSS', $footer_mark);
-      $footer_mark = _mega_footer_custom_icon_and_link('social_media', '1', $footer_mark);
-      $footer_mark = _mega_footer_custom_icon_and_link('social_media', '2', $footer_mark);
-      $footer_mark = _mega_footer_custom_icon_and_link('social_media', '3', $footer_mark);
+
+      // Open external check?
+      $external = (theme_get_setting('social_media_exit') == 1) ? 'target="_new" ' : '';
+
+      $footer_mark .= '<ul class="dgtl-mkting-101">';
+      $footer_mark = _mega_footer_social_media('facebook', 'facebook-square', 'Facebook', $footer_mark, $external);
+      $footer_mark = _mega_footer_social_media('twitter', 'twitter-square', 'Twitter', $footer_mark, $external);
+      $footer_mark = _mega_footer_social_media('google', 'google', 'Google+', $footer_mark, $external);
+      $footer_mark = _mega_footer_social_media('linkedin', 'linkedin-square', 'LinkedIn', $footer_mark, $external);
+      $footer_mark = _mega_footer_social_media('youtube', 'youtube-square', 'YouTube', $footer_mark, $external);
+      $footer_mark = _mega_footer_social_media('instagram', 'instagram', 'Instagram', $footer_mark, $external);
+      $footer_mark = _mega_footer_social_media('vimeo', 'vimeo-square', 'Vimeo', $footer_mark, $external);
+      $footer_mark = _mega_footer_social_media('flickr', 'flickr', 'Flickr', $footer_mark, $external);
+      $footer_mark = _mega_footer_social_media('pinterest', 'pinterest-square', 'Pinterest', $footer_mark, $external);
+      $footer_mark = _mega_footer_social_media('tumblr', 'tumblr-square', 'Tumblr', $footer_mark, $external);
+      $footer_mark = _mega_footer_social_media('rss', 'rss-square', 'RSS', $footer_mark, $external);
+      $footer_mark = _mega_footer_custom_icon_and_link('social_media', '1', $footer_mark, $external);
+      $footer_mark = _mega_footer_custom_icon_and_link('social_media', '2', $footer_mark, $external);
+      $footer_mark = _mega_footer_custom_icon_and_link('social_media', '3', $footer_mark, $external);
       $footer_mark .= "</ul>";
 
       // Add Contribute button
