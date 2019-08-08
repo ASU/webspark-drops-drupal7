@@ -99,3 +99,9 @@
     padding-left: 0;
   }
 }
+/* media print issues */
+@media print {
+  .pane-bundle-hero .hero-wrapper {
+  height: unset;
+  }
+}

@@ -162,3 +162,11 @@
     width: 90%;
   }
 }
+/* media print issues */
+@media print {
+  .pane-bundle-hero .hero-wrapper,
+  .pane-bundle-jumbohero .hero-wrapper,
+  .pane-bundle-banner .hero-wrapper {
+  height: unset;
+  }
+}

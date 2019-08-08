@@ -972,3 +972,18 @@ body #content .ui-tabs .ui-tabs-nav li a {
   border-bottom: none;
   clear: both;
 }
+
+/* fixes @media print issues - WEBSPARK-764 */
+@media print {
+  .megafoot > .row div:not(.megafoot-border) {
+    display: none; }
+  .megafoot ul.social-media li a {
+    font-size: 1em;
+  }
+  .ui-tabs-nav {
+    display: none;
+  }
+  .ui-tabs .ui-tabs-hide {
+    display: block !important;
+  }
+}
