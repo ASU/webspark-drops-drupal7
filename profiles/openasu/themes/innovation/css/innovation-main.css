@@ -986,4 +986,7 @@ body #content .ui-tabs .ui-tabs-nav li a {
   .ui-tabs .ui-tabs-hide {
     display: block !important;
   }
+  #innovation-footer {
+    position: revert;
+  }
 }

@@ -165,9 +165,52 @@
   }
 }
 
+@media print {
+  .megafoot {
+    & > .row div:not(.megafoot-border) {
+      display: none;
+    }
+    ul.social-media li a {
+      font-size: 1em;
+    }
+  }
+  .ui-tabs-nav {
+    display: none;
+    .ui-tabs-hide {
+      display: block !important;
+    }
+  }
+  .view-footer-contact .social-links .field {
+    width: 100% !important;
+    margin-bottom: 0.5em;
+  }
+  #block-views-footer-contact-block .social-links a[href]:after {
+    display: block;
+    float: right;
+    min-width: 96%;
+    font-size: 0.9em;
+  }
+  #block-views-footer-contact-block, #block-mega-footer-mega-footer {
+    clear:left;
+    width: unset;
+  }
+  #top-content #tabs .nav.nav-pills,
+  .region-closure,
+  #innovation-bar,
+  #ASUNavMenu.sticky-menu {
+    display: none !important;
+  }
+  .pane-bundle-hero .hero-wrapper,
+  .pane-bundle-jumbohero .hero-wrapper,
+  .pane-bundle-banner .hero-wrapper {
+    height: unset;
+  }
+}
+
+
 /* [KM 12-5-16] Added stronger focus styles for keyboard accessibility */
 
 .megafoot a:focus, .big-foot-nav > li > a:focus,
 .little-foot-nav > li > a:focus {
-    @include a11y-strong-focus();
+  @include a11y-strong-focus();
 }
