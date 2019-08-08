@@ -26,6 +26,7 @@ stylesheets[all][] = css/buttons.css
 stylesheets[all][] = css/forms.css
 stylesheets[all][] = css/nav.css
 stylesheets[all][] = fonts/roboto/css/roboto.css
+stylesheets[print][] = css/print.css
 
 ; Scripts
 
