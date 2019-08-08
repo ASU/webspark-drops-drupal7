@@ -687,12 +687,20 @@ function webform_submission_render($node, $submission, $email, $format, $exclude
     foreach ($excluded_components as $cid) {
       unset($components[$cid]);
     }
-    if (!empty($email['exclude_empty'])) {
-      foreach ($submission->data as $cid => $data) {
-        // Caution. Grids store their data in an array index by question key.
-        if (implode($data) == '') {
-          unset($components[$cid]);
+    if ($email && $email['exclude_empty']) {
+      foreach ($components as $cid => $component) {
+        // When there is no data, component is not referenced into submission
+        // data array leading to false positives without this additional check.
+        if (!empty($submission->data[$cid])) {
+          // Caution. Grids store their data in an array index by question key.
+          foreach ($submission->data[$cid] as $value) {
+            if ($value != '') {
+              // This component has a non-empty value. Continue the outer loop.
+              continue 2;
+            }
+          }
         }
+        unset($components[$cid]);
       }
     }
   }
