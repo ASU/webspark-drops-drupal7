@@ -9,29 +9,31 @@ Webspark 1.70.1 (College Station), 2019-08-09
   * All projects providing widgets/panes for the In-Place Editor
     * Improved mouseover description when a link to create an ASU spotlight is rendered in the In-Page Editor
   * Innovation theme (innovation) - v1.14,
-  * Webspark Megamenu (webspark_megamenu) - v1.11,
-  * Webspark Mega Footer (mega_footer) - v1.11,
-  * ASU Academic Programs (asu_ap) - v2.5
-  * ASU Feeds (DEPRECATED) (asu_feeds) - v1.1
+     Webspark Megamenu (webspark_megamenu) - v1.11,
+     Webspark Mega Footer (mega_footer) - v1.11,
+     ASU Academic Programs (asu_ap) - v2.5,
+     ASU Feeds (DEPRECATED) (asu_feeds) - v1.1
     * Codified and unified CSS value for ASU gold to #fffc732
-  * ASU Spotlight (asu_spotlight) - v1.9
-    * Increased PHP performance when the site is creating a spotlight editing form
   * ASU Enhanced Maps (asu_maps_enhanced) - v1.5
     * Updated endpoint URL for pulling in maps data
   * ASU Request for Info (asu_rfi) - v1.15
     * Refactored code for form dropdown with pre-populated options (states, countries, semester dates)
     * Updated file permissions for PHP files
-  * Webspark Mega Footer (mega_footer) - v1.11
-    * Removed Google+ social media icon
+  * ASU Spotlight (asu_spotlight) - v1.9
+    * Increased PHP performance when the site is creating a spotlight editing form
+  * Innovation (innovation) - v1.14
+    * Added page title back to <title> tag to 1) readd the title to a browser's rendering of the page title in the top bar, and 2) to improve accessibility
+    * Improved the layout/content of hard-copy printed web pages
+    * Improved readability of Devel module's dpm() output
   * Webspark Carousel (uto_carousel) - v1.11
     * Changed file browsing widget to Media module
     * Turned off carousel randomization by default
     * Cleaned out code
     * Fixed URL in Field description link
-  * Innovation (innovation) - v1.14
-    * Added page title back to <title> tag to 1) readd the title to a browser's rendering of the page
-      title in the top bar, and 2) to improve accessibility
-    * Improved readability of Devel module's dpm() output
+  * Webspark Mega Footer (mega_footer) - v1.11
+    * Removed Google+ social media icon
+    * Added Innovation theme setting to choose whether to make social media icons in the ASU mega footer open in a new window/tab (off by default)
+
 
 - Contrib module updates
 
@@ -42,6 +44,10 @@ Webspark 1.70.1 (College Station), 2019-08-09
 
   - Managed by Webspark
 
+    * Easy Breadcrumb (easy_breadcrumb) - v2.17 (CRITICAL SECURITY UPDATE)
+    * Fieldable Panels Panes (fieldable_panels_panes) - v2.13
+    * LDAP module suite (ldap_*) - v2.5
+    * Mail System (mailsystem) - v2.35
     * Views (views) - v3.23+patch
       * Resolved PHP error in a Views plugin that was created by the last update to v3.23
         (see https://www.drupal.org/project/views/issues/3054091).
