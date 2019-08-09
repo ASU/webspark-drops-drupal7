@@ -120,6 +120,7 @@ function innovation_preprocess_block(&$variables) {
     ));
     $block->subject = '';
   }
+
 }
 
 /**
