@@ -16546,7 +16546,7 @@ tinymce.ForceBlocks = function(editor) {
 			register({
 				alignleft : [
 					{selector : 'figure,p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'left'}, defaultBlock: 'div'},
-					{selector : 'img,table', collapsed : false, styles : {'float' : 'inline-start', 'margin' : '0 1em 0 0'}}
+					{selector : 'img,table', collapsed : false, styles : {'float' : 'left', 'margin' : '0 1em 0 0'}}
 				],
 
 				aligncenter : [
@@ -16557,7 +16557,7 @@ tinymce.ForceBlocks = function(editor) {
 
 				alignright : [
 					{selector : 'figure,p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'right'}, defaultBlock: 'div'},
-					{selector : 'img,table', collapsed : false, styles : {'float' : 'inline-end', 'margin' : '0 0 0 1em'}}
+					{selector : 'img,table', collapsed : false, styles : {'float' : 'right', 'margin' : '0 0 0 1em'}}
 				],
 
 				alignfull : [
