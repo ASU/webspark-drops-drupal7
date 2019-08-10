@@ -4,6 +4,10 @@ Webspark 1.70.1 (College Station), 2019-08-09
 
   * Seven (seven) - Removed calls to IE-specific CSS files that were filling logs of sites with subthemes.
 
+- Webspark core
+
+  * Updated Drush to v8.x in Pantheon sites
+
 - Web standards components in Webspark
 
   * All projects providing widgets/panes for the In-Place Editor
@@ -14,6 +18,8 @@ Webspark 1.70.1 (College Station), 2019-08-09
      ASU Academic Programs (asu_ap) - v2.5,
      ASU Feeds (DEPRECATED) (asu_feeds) - v1.1
     * Codified and unified CSS value for ASU gold to #fffc732
+  * ASU Directory Integration Reinvented Suite - v1.3
+    * Updated minor academic grammar issue in asu_dir, asu_isearch.
   * ASU Enhanced Maps (asu_maps_enhanced) - v1.5
     * Updated endpoint URL for pulling in maps data
   * ASU Request for Info (asu_rfi) - v1.15
