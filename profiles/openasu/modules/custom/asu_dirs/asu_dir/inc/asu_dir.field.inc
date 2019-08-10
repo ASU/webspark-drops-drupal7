@@ -341,7 +341,7 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       'University Staff' => 'staff',
       'Classified' => 'staff',
       // Other
-      'Post Doctoral Scholars' => 'other',
+      'Postdoctoral Scholars' => 'other',
       'Graduate Assistant/Associate' => 'other',
       'Student Worker' => 'other',
     );

@@ -792,7 +792,7 @@ function asu_isearch_form_fieldable_panels_panes_fieldable_panels_pane_content_t
       'University Staff' => 'staff',
       'Classified' => 'staff',
       // Other
-      'Post Doctoral Scholars' => 'other',
+      'Postdoctoral Scholars' => 'other',
       'Graduate Assistant/Associate' => 'other',
       'Student Worker' => 'other',
     );
