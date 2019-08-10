@@ -1,3 +1,7 @@
+asu_isearch 7.x-1.13
+--------------------
+- Academic grammar fix
+
 asu_isearch 7.x-1.12
 --------------------
 - Fixed bug where local rank weight couldn't be removed with node edit form
