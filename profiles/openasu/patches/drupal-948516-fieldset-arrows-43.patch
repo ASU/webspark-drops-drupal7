@@ -1,0 +1,37 @@
+diff --git a/modules/system/system.theme-rtl.css b/modules/system/system.theme-rtl.css
+index 0cd7fa643..f7fa0f90d 100644
+--- a/modules/system/system.theme-rtl.css
++++ b/modules/system/system.theme-rtl.css
+@@ -41,12 +41,12 @@ th {
+ /**
+  * Collapsible fieldsets.
+  */
+-html.js fieldset.collapsible .fieldset-legend {
++html.js fieldset.collapsible .fieldset-legend a {
+   background-position: 98% 75%;
+   padding-left: 0;
+   padding-right: 15px;
+ }
+-html.js fieldset.collapsed .fieldset-legend {
++html.js fieldset.collapsed .fieldset-legend a {
+   background-image: url(../../misc/menu-collapsed-rtl.png);
+   background-position: 98% 50%;
+ }
+diff --git a/modules/system/system.theme.css b/modules/system/system.theme.css
+index 73cebee73..730d4587d 100644
+--- a/modules/system/system.theme.css
++++ b/modules/system/system.theme.css
+@@ -173,11 +173,11 @@ input.form-radio {
+  *
+  * @see collapse.js
+  */
+-html.js fieldset.collapsible .fieldset-legend {
++html.js fieldset.collapsible .fieldset-legend a {
+   background: url(../../misc/menu-expanded.png) 5px 65% no-repeat; /* LTR */
+   padding-left: 15px; /* LTR */
+ }
+-html.js fieldset.collapsed .fieldset-legend {
++html.js fieldset.collapsed .fieldset-legend a {
+   background-image: url(../../misc/menu-collapsed.png); /* LTR */
+   background-position: 5px 50%; /* LTR */
+ }
