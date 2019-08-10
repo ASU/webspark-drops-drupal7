@@ -1,14 +1,12 @@
 <?php
 
-
 /**
  * @file
- * test script functions for testing ldap functionality outside of Drupal
- * see README.txt for instructions
+ * Test script functions for testing ldap functionality outside of Drupal
+ * see README.txt for instructions.
  */
 
-
-require_once('functions.inc');
+require_once 'functions.inc';
 
 $config = ldap_help_config();
 
@@ -27,7 +25,7 @@ if (!extension_loaded('ldap')) {
 foreach ($config['servers'] as $sid => $server) {
 
   /**
-   * Test LDAP Connect
+   * Test LDAP Connect.
    */
   $results = ldap_help_connect($server['server_address'], $server['server_port'], $server['server_tls'], TRUE);
   $test_name = "\"" . $sid . "\"";
@@ -41,7 +39,7 @@ foreach ($config['servers'] as $sid => $server) {
   ldap_help_display('anonymous bind', $anon_bind_text);
 
   ldap_help_display('connect result', $results[1]);
-  ldap_help_display('connect context', join("", array("server: ", $server['server_address'], ", port: ", $server['server_port'], ", tls= $tls")));
+  ldap_help_display('connect context', join("", ["server: ", $server['server_address'], ", port: ", $server['server_port'], ", tls= $tls"]));
   $con = FALSE;
   if ($results[0] == LDAP_SUCCESS) {
     $con = $results[2];
@@ -55,23 +53,23 @@ foreach ($config['servers'] as $sid => $server) {
   }
 
   /**
-   * Test LDAP Bind
+   * Test LDAP Bind.
    */
 
   ldap_help_display(NULL, "------------------------------------------\n$test_name bind\n------------------------------------------");
 
   if ($anon_bind) {
     if (@!ldap_bind($con)) {
-      $results = array(ldap_errno($con), "LDAP anonymous bind error." . ldap_help_show_error($con));
+      $results = [ldap_errno($con), "LDAP anonymous bind error." . ldap_help_show_error($con)];
     }
   }
   else {
     $bind_result = @ldap_bind($con, $server['server_bind_dn'], $server['server_bind_pw']);
     if (!$bind_result) {
-      $results = array(ldap_errno($con), "LDAP bind failure for user " . $server['server_bind_dn'] . "." . ldap_help_show_error($con));
+      $results = [ldap_errno($con), "LDAP bind failure for user " . $server['server_bind_dn'] . "." . ldap_help_show_error($con)];
     }
     else {
-      $results = array(LDAP_SUCCESS, "LDAP bind success.");
+      $results = [LDAP_SUCCESS, "LDAP bind success."];
     }
   }
 
@@ -82,7 +80,7 @@ foreach ($config['servers'] as $sid => $server) {
   }
 
   /**
-   * Test LDAP Queries
+   * Test LDAP Queries.
    */
   foreach ($server['test_queries'] as $query_id => $query) {
     ldap_help_display(NULL, "------------------------------------------\n$test_name query \"$query_id\" \n------------------------------------------");
@@ -98,9 +96,9 @@ foreach ($config['servers'] as $sid => $server) {
     if (!$query_result) {
       ldap_help_display(ldap_errno($con), "LDAP search failure for user $filter." . ldap_help_show_error($con));
     }
-    else {// display results
+    // Display results.
+    else {
       $entries = ldap_get_entries($con, $query_result);
-     // print_r($entries);
       ldap_help_display('search result');
       if (is_array($entries)) {
         $entry_count = $entries['count'];
@@ -108,16 +106,16 @@ foreach ($config['servers'] as $sid => $server) {
           ldap_help_display('no entries found');
         }
         else {
-          for ($j=0; $j<$entry_count; $j++) {
+          for ($j = 0; $j < $entry_count; $j++) {
             $entry = $entries[$j];
             $attr_count = $entry['count'];
             ldap_help_display(NULL, "\nsearch results, entry[$j]:");
             ldap_help_display('  dn[' . $j . ']', $entry['dn']);
-            for ($i=0; $i<$attr_count; $i++) {
+            for ($i = 0; $i < $attr_count; $i++) {
               $attr_name = $entry[$i];
               if (in_array($attr_name, $query['show_attr'])) {
                 $values_count = $entry[$attr_name]['count'];
-                for ($k=0; $k<$values_count; $k++) {
+                for ($k = 0; $k < $values_count; $k++) {
                   ldap_help_display('  ' . $attr_name . '[' . $k . ']', $entry[$attr_name][$k]);
                 }
               }
@@ -128,8 +126,8 @@ foreach ($config['servers'] as $sid => $server) {
     }
   }
 
-   /**
-   * Test LDAP Provisioning
+  /**
+   * Test LDAP Provisioning.
    */
   foreach ($server['test_provisions'] as $provision_id => $provision) {
     ldap_help_display(NULL, "------------------------------------------\n$test_name provision \"$provision_id\"\n------------------------------------------");
@@ -152,7 +150,7 @@ foreach ($config['servers'] as $sid => $server) {
           }
         }
         else {
-          // no entry exists
+          // No entry exists.
         }
       }
     }
