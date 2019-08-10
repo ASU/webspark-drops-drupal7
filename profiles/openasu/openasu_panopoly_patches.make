@@ -65,3 +65,15 @@ projects[views][patch][] = https://www.drupal.org/files/issues/2019-06-01/n30540
 
 ; WEBSPARK-1507
 projects[panopoly_theme][patch][] = https://www.drupal.org/files/issues/accordion-style-id-fix.2777847.8.patch
+
+; WEBSPARK-819
+; Overrides drupal-org.make from project ID: panopoly
+; Patches MUST be applied in this order.
+;; Panopoly
+libraries[tinymce][download][type] = get
+libraries[tinymce][download][url] = http://download.moxiecode.com/tinymce/tinymce_3.5.11.zip
+libraries[tinymce][patch][1561882] = http://drupal.org/files/1561882-cirkuit-theme-tinymce-3.5.8.patch
+libraries[tinymce][patch][2876031] = https://www.drupal.org/files/issues/tinymce-chrome58-fix-2876031-5.patch
+;; WEBSPARK-819 patches
+libraries[tinymce][patch][2876032] = https://raw.githubusercontent.com/ASU/asu-drupal-modules/master/patches/ws-819_img-padding-TinyMCE.patch
+libraries[tinymce][patch][2876033] = https://raw.githubusercontent.com/ASU/asu-drupal-modules/master/patches/ws-819_img-padding-TinyMCE_min.patch
