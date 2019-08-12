@@ -62,7 +62,8 @@ function webspark_featurescustom_entity_info_alter(&$entity_info) {
   );
 
   /* WEBSPARK-1123 - Obscuring Panopoly Widgets-generated spotlight in IPE UI */
-  $entity_info['fieldable_panels_pane']['bundles']['spotlight']['pane category'] = t('DEPRECATED by Webspark');
   $entity_info['fieldable_panels_pane']['bundles']['map']['pane category'] = t('DEPRECATED by Webspark');
-
+  $entity_info['fieldable_panels_pane']['bundles']['map']['pane icon'] = drupal_get_path('module', 'webspark_panels_styles') . '/images/icon_map_DEP.png';
+  $entity_info['fieldable_panels_pane']['bundles']['spotlight']['pane category'] = t('DEPRECATED by Webspark');
+  $entity_info['fieldable_panels_pane']['bundles']['spotlight']['pane icon'] = drupal_get_path('module', 'webspark_panels_styles') . '/images/icon_spotlight_DEP.png';
 }

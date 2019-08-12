@@ -9,11 +9,11 @@ include_once('uto_carousel.features.inc');
 function uto_carousel_entity_info_alter(&$entity_info) {
     // Spotlight
     $entity_info['fieldable_panels_pane']['bundles']['uto_carousel'] = array(
-        'label' => t('Add Carousel'),
+        'label' => t('Add ASU Carousel'),
         'description' => t('Add Carousel'),
         'pane category' => t('ASU Webspark'),
         'pane top level' => TRUE,
-        'pane icon' => drupal_get_path('module', 'panopoly_widgets') . '/images/icon_spotlight.png',
+        'pane icon' => drupal_get_path('module', 'uto_carousel') . '/images/icon_carousel_ASU.png',
         'admin' => array(
             'path' => 'admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type',
             'bundle argument' => 4,
