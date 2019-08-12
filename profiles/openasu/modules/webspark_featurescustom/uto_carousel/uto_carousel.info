@@ -12,7 +12,6 @@ dependencies[] = image
 dependencies[] = strongarm
 dependencies[] = flexslider
 scripts[] = js/jquery.flexslider-min.js
-scripts[] = js/webspark_carousel.js
 stylesheets[all][] = css/webspark_carousel.css
 explanation = Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>
 features[ctools][] = strongarm:strongarm:1
