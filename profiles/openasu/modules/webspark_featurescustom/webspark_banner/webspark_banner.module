@@ -13,7 +13,7 @@ function webspark_banner_entity_info_alter(&$entity_info) {
     'description' => t("Add 1170x200 px image title banner to a page's top row"),
     'pane category' => t('Custom'),
     'pane top level' => TRUE,
-    'pane icon' => drupal_get_path('module', 'webspark_banner') . '/images/icon_banner.png',
+    'pane icon' => drupal_get_path('module', 'webspark_banner') . '/images/icon_banner_ASU.png',
     'admin' => array(
       'path' => 'admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type',
       'bundle argument' => 4,

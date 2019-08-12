@@ -233,7 +233,7 @@ function asu_maps_enhanced_entity_info_alter(&$entity_info) {
     'description' => t('Add Enhanced ASU Map'),
     'pane category' => t('Custom'),
     'pane top level' => TRUE,
-    'pane icon' => drupal_get_path('module', 'panopoly_widgets') . '/images/icon_map.png',
+    'pane icon' => drupal_get_path('module', 'asu_maps_enhanced') . '/images/icon_map_ASU.png',
     'admin' => array(
       'path' => 'admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type',
       'bundle argument' => 4,

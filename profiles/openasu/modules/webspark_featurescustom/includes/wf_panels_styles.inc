@@ -60,4 +60,9 @@ function webspark_featurescustom_entity_info_alter(&$entity_info) {
       'access arguments' => array('administer fieldable panels panes'),
     ),
   );
+
+  /* WEBSPARK-1123 - Obscuring Panopoly Widgets-generated spotlight in IPE UI */
+  $entity_info['fieldable_panels_pane']['bundles']['spotlight']['pane category'] = t('DEPRECATED by Webspark');
+  $entity_info['fieldable_panels_pane']['bundles']['map']['pane category'] = t('DEPRECATED by Webspark');
+
 }

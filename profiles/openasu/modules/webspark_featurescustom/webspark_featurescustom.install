@@ -393,5 +393,14 @@ function webspark_featurescustom_update_7012(&$sandbox) {
     drupal_set_message($messaging['msg'], $messaging['msg_state']);
     watchdog('webspark_featurescustom', $messaging['msg'], array(), $messaging['watch_state']);
   }
+}
 
+/**
+ * Implements hook_update_N()
+ * - Rebuild Panopoly Widgets feature to update widget categories.
+ */
+function webspark_featurescustom_update_7014(&$sandbox) {
+  features_revert_module('webspark_banner');
+  features_revert_module('asu_spotlight');
+  features_revert_module('asu_maps_enhanced');
 }
