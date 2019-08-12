@@ -1,5 +1,5 @@
 name = ASU Userpicker
-description = Provides a custom user field widget for picking users in Drupal and ASU Solr or LDAP, and creating those not yet in Drupal.
+description = "Provides a custom user field widget for picking users in Drupal and ASU Solr (or LDAP), that creates users in Drupal based on that information."
 core = 7.x
 version = 7.x-1.1
 package = ASU 

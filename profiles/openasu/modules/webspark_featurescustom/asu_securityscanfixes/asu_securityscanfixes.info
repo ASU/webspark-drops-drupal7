@@ -1,5 +1,5 @@
 name = ASU Security Report fixes
-description = "Contains fixes for common ASU security scan problems."
+description = "Contains fixes for common ASU security scan warnings/problems."
 package = ASU
 
 files[] = asu_securityscanfixes.module
