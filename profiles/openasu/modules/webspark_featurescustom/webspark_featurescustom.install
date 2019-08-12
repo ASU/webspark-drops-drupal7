@@ -403,4 +403,9 @@ function webspark_featurescustom_update_7014(&$sandbox) {
   features_revert_module('webspark_banner');
   features_revert_module('asu_spotlight');
   features_revert_module('asu_maps_enhanced');
+  features_rebuild(array(
+    'panopoly_widgets' => array(
+       'field_base', 'field_instance',
+    )
+  ));
 }
