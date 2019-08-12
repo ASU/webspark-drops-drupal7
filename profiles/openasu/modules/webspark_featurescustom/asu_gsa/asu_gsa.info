@@ -1,7 +1,9 @@
 name = ASU GSA [DEPRECATED]
-description = "[DEPRECATED] ASU-specific customizations for Google Search Appliance results, and the Google Appliance contrib module."
+description = "[DEPRECATED - DO NOT ENABLE] ASU-specific customizations for Google Search Appliance results, and the Google Appliance contrib module."
 core = 7.x
 package = ASU Deprecated
 version = 7.x-1.2
 project = asu_gsa
 dependencies[] = google_appliance
+; Adding below so it can't be enabled via the Drupal UI anymore.
+hidden = TRUE

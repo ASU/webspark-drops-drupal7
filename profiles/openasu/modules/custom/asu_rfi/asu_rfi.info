@@ -1,5 +1,5 @@
 name = ASU Request for information form
-description = The ASU RFI module provides ASU sites with RFI form functionality with automatic posting to ASU's SalesForce.
+description = "Provides ASU sites with RFI form functionality. Designed to be integrated with ASU's SalesForce instance."
 core = 7.x
 package = ASU
 dependencies[] = multiblock

@@ -12,7 +12,7 @@ function asu_isearch_views_default_views() {
 
   $view = new view();
   $view->name = 'isearch_admin';
-  $view->description = '';
+  $view->description = 'List of iSearch profiles for administration purposes.';
   $view->tag = 'default';
   $view->base_table = 'node';
   $view->human_name = 'iSearch Admin';
@@ -269,7 +269,7 @@ function asu_isearch_views_default_views() {
 
   $view = new view();
   $view->name = 'isearch_affiliations';
-  $view->description = '';
+  $view->description = 'Generates dynamic panel pane that lists affiliations values (grouped by affiliation) based on the iSearch profile NID. Rendered in iSearch profile nodes.';
   $view->tag = 'default';
   $view->base_table = 'field_collection_item';
   $view->human_name = 'iSearch Affiliations';
@@ -464,7 +464,7 @@ function asu_isearch_views_default_views() {
 
   $view = new view();
   $view->name = 'isearch_directory';
-  $view->description = '';
+  $view->description = 'Generates panel pane of iSearch profile info, based on multiple possible filters.';
   $view->tag = 'default';
   $view->base_table = 'node';
   $view->human_name = 'iSearch Directory';
@@ -1619,7 +1619,7 @@ function asu_isearch_views_default_views() {
 
   $view = new view();
   $view->name = 'isearch_expertise_people';
-  $view->description = '';
+  $view->description = 'List of iSearch profiles based on their expertise (terms from iSearch expertise taxonomy library).';
   $view->tag = 'default';
   $view->base_table = 'taxonomy_term_data';
   $view->human_name = 'iSearch Expertise People';

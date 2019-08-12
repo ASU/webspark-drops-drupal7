@@ -1,5 +1,5 @@
 name = Webspark Seven
-description = ASU Webspark customization of the Seven administration theme.
+description = "A customization of the Seven administration theme for Webspark, it is the default for site administration."
 package = Core
 version = 7.x-1.0.1
 core = 7.x
