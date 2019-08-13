@@ -9,7 +9,7 @@ include_once('uto_carousel.features.inc');
 function uto_carousel_entity_info_alter(&$entity_info) {
     // Spotlight
     $entity_info['fieldable_panels_pane']['bundles']['uto_carousel'] = array(
-        'label' => t('Add ASU Carousel'),
+        'label' => t('Add ASU carousel'),
         'description' => t('Add Carousel'),
         'pane category' => t('ASU Webspark'),
         'pane top level' => TRUE,

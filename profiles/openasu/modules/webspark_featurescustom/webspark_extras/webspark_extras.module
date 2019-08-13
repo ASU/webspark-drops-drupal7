@@ -44,3 +44,15 @@ function webspark_extras_quicktabs_tabstyles() {
   return array($tabstyles_directory . '/asu_web_standards/asu_web_standards.css' => t('ASU Web Standards'));
 }
 
+/**
+ * Implementation of hook_entity_info_alter()
+ */
+function webspark_extras_entity_info_alter(&$entity_info) {
+  /* WEBSPARK-1123 - Obscuring Panopoly Widgets-generated spotlight in IPE UI */
+  $entity_info['fieldable_panels_pane']['bundles']['map']['pane category'] = t('Deprecated');
+  $entity_info['fieldable_panels_pane']['bundles']['map']['pane icon'] = drupal_get_path('module', 'webspark_panels_styles') . '/images/icon_map_DEP.png';
+  $entity_info['fieldable_panels_pane']['bundles']['map']['pane top level'] = FALSE;
+  $entity_info['fieldable_panels_pane']['bundles']['spotlight']['pane category'] = t('Deprecated');
+  $entity_info['fieldable_panels_pane']['bundles']['spotlight']['pane icon'] = drupal_get_path('module', 'webspark_panels_styles') . '/images/icon_spotlight_DEP.png';
+  $entity_info['fieldable_panels_pane']['bundles']['spotlight']['pane top level'] = FALSE;
+}
