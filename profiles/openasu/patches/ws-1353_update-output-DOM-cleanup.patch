@@ -1,0 +1,91 @@
+diff --git a/modules/update/update-rtl.css b/modules/update/update-rtl.css
+index f181c8454..de698eece 100644
+--- a/modules/update/update-rtl.css
++++ b/modules/update/update-rtl.css
+@@ -12,7 +12,8 @@
+   padding-left: 10px;
+ }
+ 
+-.update .version-status .icon {
++.update .version-status .icon,
++.update-status-msg .icon {
+   padding-right: .5em;
+ }
+ 
+diff --git a/modules/update/update.css b/modules/update/update.css
+index ba45fe6b9..e36f08ad4 100644
+--- a/modules/update/update.css
++++ b/modules/update/update.css
+@@ -17,7 +17,12 @@
+   height: 20px;
+ }
+ 
+-.update .version-status .icon {
++.update-status-msg {
++  padding: 1em;
++}
++
++.update .version-status .icon,
++.update-status-msg .icon {
+   padding-left: .5em; /* LTR */
+ }
+ 
+@@ -35,12 +40,14 @@
+   border: none;
+ }
+ 
+-.update tr td {
++.update tr td,
++.update-status-msg {
+   border-top: 1px solid #ccc;
+   border-bottom: 1px solid #ccc;
+ }
+ 
+-.update tr.error {
++.update tr.error,
++.update-status.error {
+   background: #fcc;
+ }
+ 
+@@ -48,11 +55,13 @@
+   background: #fdd;
+ }
+ 
+-.update tr.ok {
++.update tr.ok,
++.update-status.ok {
+   background: #dfd;
+ }
+ 
+-.update tr.warning {
++.update tr.warning,
++.update-status.warning {
+   background: #ffd;
+ }
+ 
+diff --git a/modules/update/update.manager.inc b/modules/update/update.manager.inc
+index c7c4e4a68..d6fcafd4c 100644
+--- a/modules/update/update.manager.inc
++++ b/modules/update/update.manager.inc
+@@ -69,7 +69,9 @@ function update_manager_update_form($form, $form_state, $context) {
+   $available = update_get_available(TRUE);
+   if (empty($available)) {
+     $form['message'] = array(
++      '#prefix' => '<div class="update-status warning update-status-msg">',
+       '#markup' => t('There was a problem getting update information. Try again later.'),
++      '#suffix' => '<span class="icon">' . $icon . '</span></div>',
+     );
+     return $form;
+   }
+@@ -203,8 +205,11 @@ function update_manager_update_form($form, $form_state, $context) {
+   }
+ 
+   if (empty($projects)) {
++    $icon = theme('image', array('path' => 'misc/watchdog-ok.png', 'width' => 18, 'height' => 18, 'alt' => t('ok'), 'title' => t('ok')));
+     $form['message'] = array(
++      '#prefix' => '<div class="update-status ok update-status-msg">',
+       '#markup' => t('All of your projects are up to date.'),
++      '#suffix' => '<span class="icon">' . $icon . '</span></div>',
+     );
+     return $form;
+   }
