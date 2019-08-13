@@ -1,5 +1,5 @@
 name = ASU CAS and More
-description = "Provide CAS-SSO functionality for ASU integration of Drupal web sites"
+description = "Provides CAS-SSO functionality for ASU integration of Drupal web sites."
 core = 7.x
 package = ASU
 php = 5.2.4

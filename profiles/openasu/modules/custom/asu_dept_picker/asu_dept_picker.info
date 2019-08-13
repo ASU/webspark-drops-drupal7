@@ -1,5 +1,5 @@
 name = ASU Department Picker Field
-description = A custom field used to select an ASU department.
+description = "Creates a custom field used to select an ASU department."
 core = 7.x
 package = ASU CLAS
 version = 7.x-1.0.1

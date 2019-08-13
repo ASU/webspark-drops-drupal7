@@ -1,5 +1,5 @@
 name = ASU Academic Programs
-description = Base configuration for ASU Academic Programs.
+description = "Contains the base configuration for the ASU Academic Programs module."
 core = 7.x
 package = ASU
 version = 7.x-2.5

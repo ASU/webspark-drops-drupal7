@@ -12,7 +12,7 @@ function asu_rfi_feature_views_default_views() {
 
   $view = new view();
   $view->name = 'asu_rfi_submissions_report';
-  $view->description = '';
+  $view->description = 'Listing of RFI submissions sitting in various queueing statuses in this site (on their way to Salesforce).';
   $view->tag = 'default';
   $view->base_table = 'node';
   $view->human_name = 'ASU RFI submissions report';

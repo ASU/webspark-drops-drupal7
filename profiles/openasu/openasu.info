@@ -1,6 +1,6 @@
 name = ASU Webspark
 distribution_name = ASU Webspark
-description = A starting point for websites at ASU
+description = "A good starting point for ASU Web standards compliant web sites with Drupal."
 core = 7.x
 exclusive = 1
 

@@ -1,5 +1,5 @@
 name = "AJAX Solr (ASU)"
-description = "Module to integrate AJAX Solr library with Drupal Libraries API"
+description = "Integrates the AJAX Solr library with Drupal Libraries API."
 core = "7.x"
 version = "7.x-1.0"
 package = ASU
