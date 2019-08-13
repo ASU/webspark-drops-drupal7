@@ -17,7 +17,12 @@
   height: 20px;
 }
 
-.update .version-status .icon {
+.update-status-msg {
+  padding: 1em;
+}
+
+.update .version-status .icon,
+.update-status-msg .icon {
   padding-left: .5em; /* LTR */
 }
 
@@ -35,12 +40,14 @@
   border: none;
 }
 
-.update tr td {
+.update tr td,
+.update-status-msg {
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
 }
 
-.update tr.error {
+.update tr.error,
+.update-status.error {
   background: #fcc;
 }
 
@@ -48,11 +55,13 @@
   background: #fdd;
 }
 
-.update tr.ok {
+.update tr.ok,
+.update-status.ok {
   background: #dfd;
 }
 
-.update tr.warning {
+.update tr.warning,
+.update-status.warning {
   background: #ffd;
 }
 
