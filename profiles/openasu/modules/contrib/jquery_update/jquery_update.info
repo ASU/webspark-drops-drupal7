@@ -6,4 +6,4 @@ core = 7.x
 configure = admin/config/development/jquery_update
 
 version = "7.x-3.0-alpha5"
-project = 'jquery_update"
+project = "jquery_update"
