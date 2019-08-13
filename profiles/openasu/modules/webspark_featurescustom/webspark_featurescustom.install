@@ -400,12 +400,22 @@ function webspark_featurescustom_update_7012(&$sandbox) {
  * - Rebuild Panopoly Widgets feature to update widget categories.
  */
 function webspark_featurescustom_update_7014(&$sandbox) {
-  features_revert_module('webspark_banner');
-  features_revert_module('webspark_hero');
-  features_revert_module('webspark_jumbohero');
-  features_revert_module('asu_spotlight');
-  features_revert_module('asu_maps_enhanced');
-  features_revert_module('uto_carousel');
+
+  $features = array(
+    'asu_isearch',
+    'asu_dir_panel',
+    'asu_spotlight',
+    'asu_maps_enhanced',
+    'uto_carousel',
+    'webspark_banner',
+    'webspark_hero',
+    'webspark_jumbohero',
+  );
+  foreach ($features as $feature) {
+    if (module_exists($feature)) {
+      features_revert_module($feature);
+    }
+  }
   features_rebuild(array(
     'panopoly_widgets' => array(
        'field_base', 'field_instance',
