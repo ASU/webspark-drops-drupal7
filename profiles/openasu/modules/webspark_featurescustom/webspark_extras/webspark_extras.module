@@ -44,3 +44,66 @@ function webspark_extras_quicktabs_tabstyles() {
   return array($tabstyles_directory . '/asu_web_standards/asu_web_standards.css' => t('ASU Web Standards'));
 }
 
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function webspark_extras_form_update_manager_update_form_alter(&$form, &$form_state, $form_id) {
+
+  if (isset($_SERVER['PANTHEON_ENVIRONMENT'])) {
+
+    $summary = "<p>Only apply updates to projects (modules/themes) <strong>explicitly listed in Webspark</strong> as needing to be updated
+    - regardless of what projects the Pantheon Dashboard is listing as projects to update under 'Status -> Extensions'.</p>";
+
+    $long_message = "
+  <p><strong>Q</strong>: Why is Pantheon's Dashboard telling me to update modules or themes, but they aren't listed here?</p>
+  <p><img src='/" . drupal_get_path('module', 'webspark_extras') . "/images/Pantheon-dashboard-project-status.jpg'
+  style='float: right; margin: 0 0 0 1em;' title='Pantheon Dashboard with update list' alt='Pantheon Dashboard with update list' />
+  <strong>A:</strong> Webspark has many projects (modules/themes) installed in the /profiles/openasu directory that only Webspark
+  maintainers are supposed to update. Those projects' update statuses have been intentionally filtered out of update lists in
+  Webspark users don't errantly assume that they need to update them.</p>
+  <p>Pantheon's dashboard, however, is showing an unfiltered list of every included project under Status -> Extensions
+  regardless of where they're installed (see attached image).</p>
+  <p>As a result, some Webspark users have dutifully but errantly updated those projects outside of the normal Webspark
+  update workflow - and created problems that later popped up the next time Webspark updates had to be applied to
+  those same projects.</p>
+  <p><strong>Q:</strong> What projects am I responsible for updating?</p>
+  <p><strong>A:</strong> Only projects that have been added to the site and aren't part of Webspark out-of-the-box
+  (If they were installed correctly, they'll be somewhere in the /sites directory).</p>
+  <p><strong>Q:</strong> What if I still want to override the Webspark-maintained version of a project (with a newer, patched, or otherwise different version)?</p>
+  <p><strong>A:</strong> This can be done by adding the custom version of the project in its appropriate /sites/all directory
+  (modules/themes/libraries), and then rebuilding the site's registry by either a) using Drush or b) going to
+  /admin/modules and clicking Save at the bottom of the page. This will ensure that Drupal is now using the custom
+  version's code.</p>
+  <p>Note: This practice is discouraged and not supporter because it can:</p>
+  <ol>
+  <li>Affect site performance,</li>
+  <li>Create database continuity issues (different releases/versions of projects may not match up
+  with the current DB structure), and</li>
+  <li>Future Webspark updates to the module will not take effect on this site.</li>
+  </ol>
+  ";
+
+    $form['webspark_system'] = array(
+      '#weight' => 1001,
+      '#type' => 'fieldset',
+      '#collapsible' => FALSE,
+      '#title' => "Attention Pantheon users:",
+    );
+    $form['webspark_system']['summary'] = array(
+      '#type' => 'markup',
+      '#markup' => $summary,
+    );
+    $form['webspark_system']['explanation'] = array (
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#title' => t("More information..."),
+      '#prefix' => '<div class="explanation-summary">',
+      '#suffix' => '</div>',
+    );
+    $form['webspark_system']['explanation']['summary'] = array(
+      '#type' => 'markup',
+      '#markup' => $long_message,
+    );
+  }
+}
