@@ -46,6 +46,7 @@ before_install:
   - sleep 1
   # Disable PHP features - XDebug
   - phpenv config-rm xdebug.ini
+  - phpenv config-add travis.php.ini
   #- google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 
 install:

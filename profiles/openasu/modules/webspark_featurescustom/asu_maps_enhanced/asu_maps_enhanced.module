@@ -237,7 +237,7 @@ function theme_asu_maps_enhanced_view($variables) {
     }
 
     $output .= "<div id='asu_map' style='height: $height\px; width: 100%;'>
-      <iframe style='height: 100%;' id='embed-iframe' class='map dev' src=". ASU_MAPS_ENHANCED_MAP_URL ."?id=120&sbh&tbh#!sbc?lh/";
+      <iframe name='enhanced-map-frame' style='height: 100%;' id='embed-iframe' class='map dev' src=". ASU_MAPS_ENHANCED_MAP_URL ."?id=120&sbh&tbh#!sbc?lh/";
 
     if (isset($settings['campus']) && isset($coords[$settings['campus']])) {
       $ref = $coords[$settings['campus']];
