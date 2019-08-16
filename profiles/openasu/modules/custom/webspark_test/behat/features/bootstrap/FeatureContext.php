@@ -3,7 +3,6 @@
  * @file
  * The main Behat context.
  */
-
 use Drupal\DrupalExtension\Context\RawDrupalContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
 
@@ -49,5 +48,13 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
       }
 
       $element->click();
+  }
+
+  /**
+   * @Given /^I switch to the iframe "([^"]*)"$/
+   */
+  public function iSwitchToIframe($arg1 = null)
+  {
+      $this->getSession()->switchToIFrame($arg1);
   }
 }
