@@ -494,3 +494,76 @@ function innovation_form_element_label(&$variables) {
 
   return $output . "\n" . ' <label' . drupal_attributes($attributes) . '>' . $label_output . "</label>\n";
 }
+
+/**
+ * Overrides theme_item_list() in Drupal core.
+ *
+ * Adds wrapper CSS classes for all passed in item-list type classes
+ * (i.e. ul class='pager' => additional wrapper 'item-list-pager' class).
+ */
+function innovation_item_list($variables) {
+  $items = $variables['items'];
+  $title = $variables['title'];
+  $type = $variables['type'];
+  $attributes = $variables['attributes'];
+
+  $original_class = "item-list";
+  $more_classes = "";
+  if (isset($variables['attributes']['class'])
+    && is_array($variables['attributes']['class'])) {
+    foreach($variables['attributes']['class'] as $key => $class) {
+      $more_classes .= " item-list-" . check_plain($class);
+    }
+  }
+
+  // Only output the list container and title, if there are any list items.
+  // Check to see whether the block title exists before adding a header.
+  // Empty headers are not semantic and present accessibility challenges.
+  $output = '<div class="' . $original_class . ' ' . $more_classes . '">';
+
+  if (isset($title) && $title !== '') {
+    $output .= '<h3>' . $title . '</h3>';
+  }
+
+  if (!empty($items)) {
+    $output .= "<$type" . drupal_attributes($attributes) . '>';
+    $num_items = count($items);
+    $i = 0;
+    foreach ($items as $item) {
+      $attributes = array();
+      $children = array();
+      $data = '';
+      $i++;
+      if (is_array($item)) {
+        foreach ($item as $key => $value) {
+          if ($key == 'data') {
+            $data = $value;
+          }
+          elseif ($key == 'children') {
+            $children = $value;
+          }
+          else {
+            $attributes[$key] = $value;
+          }
+        }
+      }
+      else {
+        $data = $item;
+      }
+      if (count($children) > 0) {
+        // Render nested list.
+        $data .= innovation_item_list(array('items' => $children, 'title' => NULL, 'type' => $type, 'attributes' => $attributes));
+      }
+      if ($i == 1) {
+        $attributes['class'][] = 'first';
+      }
+      if ($i == $num_items) {
+        $attributes['class'][] = 'last';
+      }
+      $output .= '<li' . drupal_attributes($attributes) . '>' . $data . "</li>\n";
+    }
+    $output .= "</$type>";
+  }
+  $output .= '</div>';
+  return $output;
+}
