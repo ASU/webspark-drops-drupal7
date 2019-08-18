@@ -1,0 +1,160 @@
+/**
+ * @description - If Innovation is the admin theme, add these changes to clean up the UI
+ */
+
+/* -------- Admin-wide CSS selectors ---------- */
+
+.page-admin h1#page-title {
+  margin-bottom: 0.3333em;
+}
+.page-admin table a.tabledrag-handle {
+  margin-left: inherit;
+  border-bottom: none;
+  margin: -0.2em 0.5em;
+}
+
+/* System Help block theming (if enabled) */
+#block-system-help {
+  padding: 1em;
+  border: 1px solid #00A3E0;
+  background-color: #e1f8ff;
+  margin: 1em 0;
+}
+#block-system-help:first-child:before {
+  content: "Drupal Help --";
+  font-weight: bold;
+}
+#block-system-help .content:last-child {
+  margin: 0;
+}
+
+/* Alerts with links in text */
+.page-admin #block-system-main .alert-danger a,
+.page-admin #block-system-main .alert-info a {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+/* Fieldset theming */
+.page-admin fieldset.fieldset-nested- {
+  margin: 0.5em 0;
+  padding: 1em;
+  border: 1px solid #E0E0DC !important;
+}
+.page-admin fieldset.fieldset-nested-odd {
+  background-color: #f7f7f3;
+}
+.page-admin fieldset.fieldset-nested-even {
+  background-color: #edf9dd;
+}
+.page-admin #block-system-main fieldset legend {
+  width: initial;
+  margin-bottom: 0;
+  font-weight: bold;
+}
+
+/* Category lists on main admin landing pages */
+.page-admin #block-system-main .admin-list dt {
+  margin-top: 0.25em;
+}
+
+/* Tables */
+/* striping added EXCEPT on Reports -> Status */
+body:not(.page-admin-reports-status) table > tbody > tr:nth-child(2n+1) {
+  background-color: #F5F5F5;
+}
+.page-admin #block-system-main table thead {
+  background-color: #FFD45D;
+}
+.page-admin #block-system-main {
+  margin-top: 1em;
+}
+
+/* Restore browser-native checkboxes, radio buttons */
+.page-admin #block-system-main table tr .form-type-checkbox > input[type="checkbox"],
+.page-admin #block-system-main table tr .form-type-checkbox > input[type="radio"] {
+  opacity: initial;
+}
+.page-admin #block-system-main table tr .form-type-checkbox > label.element-invisible,
+.page-admin #block-system-main .views-field-views-bulk-operations .form-type-checkbox > input.form-checkbox + label {
+  display: none;
+}
+
+/* Filter button */
+.page-admin #block-system-main .container-inline div, .container-inline label {
+  display: inline-block;
+}
+
+/* Views exposed forms - /admin/content */
+.page-admin .vbo-views-form div.form-item + input.btn {
+  margin-top: 0;
+}
+.page-admin .views-exposed-form div.form-item > .help-block {
+  font-size: 0.8em;
+}
+
+
+
+/** ------------- Custom CSS selectors for individual sections --------- */
+
+/* Blocks administration*/
+#block-admin-display-form table .region-title {
+  background-color: #e1f8c4;
+}
+
+/* Available updates */
+.page-admin table.update .alert {
+  color: initial;
+}
+.page-admin table.update .alert.alert-success {
+  background-color: #e1f8c4;
+}
+.page-admin table.update .alert.alert-success {
+  background-color: #e1f8c4;
+}
+.page-admin #module-filter-update-status-form .module-filter-inputs-wrapper .form-item-module-filter-name {
+  margin-bottom: 1em;
+}
+.page-admin #module-filter-update-status-form #module-filter-show-wrapper .form-item {
+  padding: 0 1.5em;
+}
+.page-admin .update tr.ok,
+.page-admin .update-status.ok {
+  background: #e1f8c4;
+}
+
+/* Configuration - Landing page */
+.page-admin .admin-panel {
+  padding: 0 1em;
+  border: 1px solid #E0E0DC !important;
+}
+
+/* URL aliases - column all gray due to bootstrap */
+.page-admin #block-system-main .table > tbody > tr.active > td,
+.page-admin #block-system-main .table > tbody > tr.active > th,
+.page-admin #block-system-main .table > tbody > tr > td.active,
+.page-admin #block-system-main .table > tbody > tr > th.active,
+.page-admin #block-system-main .table > tfoot > tr.active > td,
+.page-admin #block-system-main .table > tfoot > tr.active > th,
+.page-admin #block-system-main .table > tfoot > tr > td.active,
+.page-admin #block-system-main .table > tfoot > tr > th.active,
+.page-admin #block-system-main .table > thead > tr.active > td,
+.page-admin #block-system-main .table > thead > tr.active > th,
+.page-admin #block-system-main .table > thead > tr > td.active, .table > thead > tr > th.active {
+  background-color: initial;
+}
+
+/* Recent Log Entries */
+.page-admin .better_watchdog_ui_watchdog-detail table > thead > tr > th,
+.page-admin .better_watchdog_ui_watchdog-detail table > thead > tr > td,
+.page-admin .better_watchdog_ui_watchdog-detail table > tbody > tr > th,
+.page-admin .better_watchdog_ui_watchdog-detail table > tbody > tr > td,
+.page-admin .better_watchdog_ui_watchdog-detail table > tfoot > tr > th,
+.page-admin .better_watchdog_ui_watchdog-detail table > tfoot > tr > td {
+  border: 1px solid #b7b7b7;
+}
+
+/* Module Filter + absolutely positioned ASU global footer don't jive together. */
+.page-admin-modules footer#page-footer {
+  display: none;
+}

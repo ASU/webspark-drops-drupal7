@@ -10,6 +10,21 @@
  * Implements template_preprocess_html().
  */
 function innovation_preprocess_html(&$variables) {
+
+  // If Innovation is currently showing in an admin page, add special CSS.
+  if (path_is_admin(current_path())) {
+    drupal_add_css(path_to_theme() . '/css/admin.css');
+  }
+
+  // Readded page title to <title> tag after Kalatheme's errant scraping
+  if (!isset($variables['head_title_array']['title'])) {
+    $name = $variables['head_title_array']['name'];
+    unset($variables['head_title_array']['name']);
+    $variables['head_title_array']['title'] = check_plain(menu_get_active_title());
+    $variables['head_title_array']['name'] = $name;
+    $variables['head_title'] = implode(' | ', $variables['head_title_array']);
+  }
+
   // Add theme js file here rather than in .info to add a weight and ensure it loads last
   drupal_add_js(drupal_get_path('theme', 'innovation') . '/js/innovation.js', array(
     'scope' => 'footer',
@@ -38,7 +53,7 @@ function innovation_preprocess_html(&$variables) {
       '#tag' => 'meta',
       '#attributes' => array(
         // Don't forget to update openasu.info as well!!
-        'content' => 'Webspark:1.70 (Texas)',
+        'content' => 'Webspark:1.70.1 (College Station)',
         'http-equiv' => 'X-Name-of-Distro',
         'name' => 'cmsversion',
       )
@@ -110,6 +125,7 @@ function innovation_preprocess_block(&$variables) {
     ));
     $block->subject = '';
   }
+
 }
 
 /**
@@ -482,4 +498,109 @@ function innovation_form_element_label(&$variables) {
   ));
 
   return $output . "\n" . ' <label' . drupal_attributes($attributes) . '>' . $label_output . "</label>\n";
+}
+
+/**
+ * Overrides theme_item_list() in Drupal core.
+ *
+ * Adds wrapper CSS classes for all passed in item-list type classes
+ * (i.e. ul class='pager' => additional wrapper 'item-list-pager' class).
+ */
+function innovation_item_list($variables) {
+  $items = $variables['items'];
+  $title = $variables['title'];
+  $type = $variables['type'];
+  $attributes = $variables['attributes'];
+
+  $original_class = "item-list";
+  $more_classes = "";
+  if (isset($variables['attributes']['class'])
+    && is_array($variables['attributes']['class'])) {
+    foreach($variables['attributes']['class'] as $key => $class) {
+      $more_classes .= " item-list-" . check_plain($class);
+    }
+  }
+
+  // Only output the list container and title, if there are any list items.
+  // Check to see whether the block title exists before adding a header.
+  // Empty headers are not semantic and present accessibility challenges.
+  $output = '<div class="' . $original_class . ' ' . $more_classes . '">';
+
+  if (isset($title) && $title !== '') {
+    $output .= '<h3>' . $title . '</h3>';
+  }
+
+  if (!empty($items)) {
+    $output .= "<$type" . drupal_attributes($attributes) . '>';
+    $num_items = count($items);
+    $i = 0;
+    foreach ($items as $item) {
+      $attributes = array();
+      $children = array();
+      $data = '';
+      $i++;
+      if (is_array($item)) {
+        foreach ($item as $key => $value) {
+          if ($key == 'data') {
+            $data = $value;
+          }
+          elseif ($key == 'children') {
+            $children = $value;
+          }
+          else {
+            $attributes[$key] = $value;
+          }
+        }
+      }
+      else {
+        $data = $item;
+      }
+      if (count($children) > 0) {
+        // Render nested list.
+        $data .= innovation_item_list(array('items' => $children, 'title' => NULL, 'type' => $type, 'attributes' => $attributes));
+      }
+      if ($i == 1) {
+        $attributes['class'][] = 'first';
+      }
+      if ($i == $num_items) {
+        $attributes['class'][] = 'last';
+      }
+      $output .= '<li' . drupal_attributes($attributes) . '>' . $data . "</li>\n";
+    }
+    $output .= "</$type>";
+  }
+  $output .= '</div>';
+  return $output;
+}
+
+/**
+ * Override of theme_fieldset().
+ *
+ * Added odd/even classes for more fieldset theming options.
+ */
+function innovation_fieldset($variables) {
+  $element = $variables['element'];
+  element_set_attributes($element, array('id'));
+
+  $no_of_parents = (isset($element['#array_parents'])) ? count($element['#array_parents']) : 0;
+
+  $additional_class = ($no_of_parents % 2 == 1) ? 'fieldset-nested-even' : 'fieldset-nested-odd';
+  _form_set_class($element, array('form-wrapper', 'fieldset-nested-', $additional_class));
+
+  $output = '<fieldset' . drupal_attributes($element['#attributes']) . '>';
+  if (!empty($element['#title'])) {
+    // Always wrap fieldset legends in a SPAN for CSS positioning.
+    $output .= '<legend><span class="fieldset-legend">' . $element['#title'] . '</span></legend>';
+  }
+  $output .= '<div class="fieldset-wrapper">';
+  if (!empty($element['#description'])) {
+    $output .= '<div class="fieldset-description">' . $element['#description'] . '</div>';
+  }
+  $output .= $element['#children'];
+  if (isset($element['#value'])) {
+    $output .= $element['#value'];
+  }
+  $output .= '</div>';
+  $output .= "</fieldset>\n";
+  return $output;
 }

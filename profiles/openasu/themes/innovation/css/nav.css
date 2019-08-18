@@ -37,7 +37,7 @@
 .navbar-nav > .active > a:hover,
 .navbar-nav > .active > a:focus {
 	background-color: #000;
-	color: #ffb310;
+	color: #ffc627;
 }
 .navbar-nav > li > a.dropdown-toggle {
 	padding: 20px 25px 20px 7px;
@@ -62,7 +62,7 @@
 .navbar-nav .dropdown-menu > li > a:hover,
 .navbar-nav .dropdown-menu > li > a:focus {
 	background-color: #000;
-	color: #ffb310;
+	color: #ffc627;
 }
 .navbar-nav > li:focus > a,
 .navbar-nav > .active:focus > a,
@@ -289,6 +289,12 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
   color: #767676;
 }
 
+/* WEBSPARK-1197 */
+.panel-panel-inner ul.quicktabs-style-nostyle, .panel-panel-inner .ui-tabs .ui-tabs-nav {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
 /* Nav pills */
 .nav-pills > li {
   float: left;
@@ -432,7 +438,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 }
 .pager {
   padding-left: 0;
-  margin: 24px 0;
+  margin: 1em 0;
   list-style: none;
   text-align: center;
 }
@@ -474,4 +480,46 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
   color: #777777;
   background-color: white;
   cursor: not-allowed;
+}
+
+/* theme_item_list pager CSS */
+.item-list.item-list-pager {
+	text-align: center;
+	clear: both;
+}
+.item-list.item-list-pager .pager {
+	margin: 1em;
+	display: inline-block;
+}
+.item-list.item-list-pager .pager li {
+	padding: 0;
+	margin: 0;
+	float: left;
+}
+.item-list.item-list-pager .pager li a {
+	background-color: #fff;
+	border-radius: 0px;
+	border: 1px solid #ccc;
+	border-right: none;
+}
+.item-list.item-list-pager .pager :first-child a,
+.item-list.item-list-pager .pager .pager-current.first {
+	border-top-left-radius: 0.25em;
+	border-bottom-left-radius: 0.25em;
+}
+.item-list.item-list-pager .pager :last-of-type a,
+.item-list.item-list-pager .pager .pager-current.last {
+	border-top-right-radius: 0.25em;
+	border-bottom-right-radius: 0.25em;
+	border: 1px solid #ccc;
+}
+.item-list.item-list-pager .pager .pager-current,
+#media-browser-tabset .item-list.item-list-pager .pager .pager-current {
+	border: 1px solid #8C1D40;
+	padding: 5px 14px;
+	background-color: #8C1D40;
+	color: #fff;
+}
+.item-list.item-list-pager .pager-ellipsis {
+	display: none;
 }
