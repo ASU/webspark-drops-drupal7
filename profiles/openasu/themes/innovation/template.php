@@ -582,7 +582,7 @@ function innovation_fieldset($variables) {
   $element = $variables['element'];
   element_set_attributes($element, array('id'));
 
-  $no_of_parents = (isset($element['#array_parents'])) ? count($element['#array_parents']) : 0;
+  $no_of_parents = (isset($element['#array_parents'])) ? count($element['#array_parents']) + 1 : 0;
 
   $additional_class = ($no_of_parents % 2 == 1) ? 'fieldset-nested-even' : 'fieldset-nested-odd';
   _form_set_class($element, array('form-wrapper', 'fieldset-nested-', $additional_class));

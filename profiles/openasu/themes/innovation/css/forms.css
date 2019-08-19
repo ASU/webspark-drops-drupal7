@@ -194,7 +194,8 @@ div.ctools-modal-content .dependent-options {
   margin-top: 0;
 }
 #modal-content .form-actions,
-.page-admin .form-actions {
+.page-admin .form-actions,
+#block-system-main .node-form .form-actions {
   background-color: #FFD45D;
   border-radius: 0.25em;
   margin: 0 1em 1em 0;

@@ -10,7 +10,7 @@
 .page-admin table a.tabledrag-handle {
   margin-left: inherit;
   border-bottom: none;
-  margin: -0.2em 0.5em;
+  margin: auto;
 }
 
 /* System Help block theming (if enabled) */
@@ -29,10 +29,22 @@
 }
 
 /* Alerts with links in text */
-.page-admin #block-system-main .alert-danger a,
-.page-admin #block-system-main .alert-info a {
+.page-admin .alert-danger a,
+.page-admin .alert-info a {
   color: #fff;
   border-bottom-color: #fff;
+}
+
+/* Form border */
+.page-admin #top-content #action-links {
+  margin-bottom: 1em;
+}
+
+.page-admin #block-system-main > .content > form[id] {
+  margin: 0;
+  padding: 1em;
+  border: 1px solid #ddd;
+  box-shadow: 4px 6px 3px #f7f7f7;
 }
 
 /* Fieldset theming */
@@ -54,8 +66,35 @@
 }
 
 /* Category lists on main admin landing pages */
-.page-admin #block-system-main .admin-list dt {
-  margin-top: 0.25em;
+.page-admin .admin-list > dt,
+#block-system-main .content > dl > dt {
+  border: 1px solid #ddd;
+  border-bottom: none;
+  padding: 0.25em 0.25em 0 0.25em;
+
+}
+.page-admin .admin-list > dl > dt + dd,
+#block-system-main .content > dl > dt + dd {
+  border: 1px solid #ddd;
+  border-top: none;
+  margin-bottom: 0.5em;
+  padding: 0 0.25em 0.25em 0.25em;
+}
+.page-admin .admin-list > dt:nth-of-type(2n),
+#block-system-main .content > dl > dt:nth-of-type(2n) {
+  background-color: #fff;
+}
+.page-admin .admin-list > dd:nth-of-type(2n),
+#block-system-main .content > dl > dd:nth-of-type(2n) {
+  background-color: #fff;
+}
+.page-admin .admin-list > dt:nth-of-type(2n+1),
+#block-system-main .content > dl > dt:nth-of-type(2n+1) {
+  background-color: #f9f9f9;
+}
+.page-admin .admin-list > dd:nth-of-type(2n+1),
+#block-system-main .content > dl > dd:nth-of-type(2n+1) {
+  background-color: #f9f9f9;
 }
 
 /* Tables */
@@ -66,17 +105,32 @@ body:not(.page-admin-reports-status) table > tbody > tr:nth-child(2n+1) {
 .page-admin #block-system-main table thead {
   background-color: #FFD45D;
 }
+/* Tables - Field settings */
+.page-admin table[id] .form-item,
+.page-admin table[id] .form-actions .btn,
+.page-admin table[id] .form-submit {
+  margin: 0.25em;
+}
+
+/* Main system block container for most admin pages */
 .page-admin #block-system-main {
-  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 /* Restore browser-native checkboxes, radio buttons */
+.page-admin #block-system-main table tr .form-type-checkbox,
+.page-admin #block-system-main table tr .form-type-radio {
+  margin-top: 0.25em;
+}
 .page-admin #block-system-main table tr .form-type-checkbox > input[type="checkbox"],
 .page-admin #block-system-main table tr .form-type-checkbox > input[type="radio"] {
   opacity: initial;
+  padding: 0 0.5em;
 }
 .page-admin #block-system-main table tr .form-type-checkbox > label.element-invisible,
-.page-admin #block-system-main .views-field-views-bulk-operations .form-type-checkbox > input.form-checkbox + label {
+.page-admin #block-system-main .views-field-views-bulk-operations .form-type-checkbox > input.form-checkbox + label,
+.page-admin #block-system-main table tr .form-type-checkbox > input.form-checkbox + label:before,
+.page-admin #block-system-main table tr .form-type-checkbox > input.form-checkbox + label:after {
   display: none;
 }
 
@@ -85,15 +139,38 @@ body:not(.page-admin-reports-status) table > tbody > tr:nth-child(2n+1) {
   display: inline-block;
 }
 
-/* Views exposed forms - /admin/content */
-.page-admin .vbo-views-form div.form-item + input.btn {
-  margin-top: 0;
+/* Views exposed filters */
+.page-admin .view-better-watchdog-ui-view .views-operator {
+  margin-bottom: 1em;
 }
-.page-admin .views-exposed-form div.form-item > .help-block {
-  font-size: 0.8em;
+.page-admin .view-better-watchdog-ui-view .views-exposed-widgets .description {
+  font-size: 0.75em;
 }
-
-
+.page-admin .views-exposed-widget.views-submit-button {
+  clear: both;
+}
+.page-admin .views-exposed-widget > .form-submit {
+  margin: 1em 0 0 0;
+}
+/** layout of entire exposed form **/
+/** CTools export forms added **/
+.page-admin .view-filters > form,
+.page-admin #ctools-export-ui-list-form {
+  padding: 1em;
+  border: 1px solid #ddd;
+  background-color: #f7f7f7;
+}
+.page-admin .view-filters .form-control,
+.page-admin #ctools-export-ui-list-form .form-control {
+  padding: 0.25em;
+}
+.page-admin .views-exposed-form .views-exposed-widget {
+  padding-top: 0;
+}
+/** CTools exports forms additional */
+.page-admin #ctools-export-ui-list-form {
+  margin-top: 1em;
+}
 
 /** ------------- Custom CSS selectors for individual sections --------- */
 
@@ -126,7 +203,16 @@ body:not(.page-admin-reports-status) table > tbody > tr:nth-child(2n+1) {
 /* Configuration - Landing page */
 .page-admin .admin-panel {
   padding: 0 1em;
+  margin-bottom: 1em;
   border: 1px solid #E0E0DC !important;
+}
+.page-admin .admin-panel .body {
+  padding: 0;
+}
+.page-admin.page-admin-config .admin > .clearfix {
+  margin-left: 0;
+  margin-right: 0;
+  width: 48%;
 }
 
 /* URL aliases - column all gray due to bootstrap */
@@ -153,8 +239,23 @@ body:not(.page-admin-reports-status) table > tbody > tr:nth-child(2n+1) {
 .page-admin .better_watchdog_ui_watchdog-detail table > tfoot > tr > td {
   border: 1px solid #b7b7b7;
 }
+.page-admin .view-better-watchdog-ui-view table .form-type-checkbox {
+  padding: 0 0.25em;
+}
 
 /* Module Filter + absolutely positioned ASU global footer don't jive together. */
 .page-admin-modules footer#page-footer {
   display: none;
+}
+
+/* Views exposed forms - /admin/content */
+.page-admin .vbo-views-form div.form-item + input.btn {
+  margin-top: 0;
+}
+.page-admin div.form-item > .help-block {
+  font-size: 0.8em;
+  margin-top: 0;
+}
+.views-exposed-form .views-widget-filter-severity {
+  max-width: 15%;
 }
