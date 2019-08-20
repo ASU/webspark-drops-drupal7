@@ -6,8 +6,8 @@
   position: relative;
 }
 .module-filter-clear a {
-  margin-left: 5px;
-  font-size: 11px;
+  margin-left: 0.5em;
+  font-size: 0.9em;
   position: absolute;
 }
 #module-filter-show-wrapper .form-item {

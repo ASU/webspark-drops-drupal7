@@ -11,9 +11,19 @@
  */
 function innovation_preprocess_html(&$variables) {
 
+//  dpm(path_get_admin_paths(), __FUNCTION__ . ' - path_get_admin_paths');
+
+  $path = current_path();
   // If Innovation is currently showing in an admin page, add special CSS.
-  if (path_is_admin(current_path())) {
+  if (path_is_admin($path)) {
+    if (isset($variables['classes_array'])) {
+      $variables['classes_array'][] = 'path-is-admin';
+      $variables['classes_array'][] = 'pia';
+    }
     drupal_add_css(path_to_theme() . '/css/admin.css');
+    if (strstr($path,'admin/reports/dblog')) {
+      drupal_add_js(path_to_theme() . '/js/innovation-admin.js');
+    }
   }
 
   // Readded page title to <title> tag after Kalatheme's errant scraping

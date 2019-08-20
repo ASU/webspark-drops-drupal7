@@ -45,6 +45,12 @@ projects[jquery_update][subdir] = contrib
 projects[jquery_update][patch][1251] = patches/ws-1251_jquery-update_downgradeto-1.12.2.patch
 ; @TODO -- Add patch for lowering jQuery_update's jQuery 1.12 trueversion to 1.12.2.
 
+; Module filter theming changes
+; Remove this if https://www.drupal.org/project/module_filter/issues/3075908 is ever adopted.
+projects[module_filter][version] = 2.2
+projects[module_filter][subdir] = contrib
+projects[module_filter][patch][3075908] = https://www.drupal.org/files/issues/2019-08-19/module_filter-top_filter_theming_changes.patch
+
 ; panopoly_theme.make
 
 projects[radix_layouts][type] = module
