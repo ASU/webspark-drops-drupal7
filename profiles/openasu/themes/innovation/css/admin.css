@@ -103,7 +103,7 @@ body:not(.page-admin-reports-status) table > tbody > tr:nth-child(2n+1) {
   background-color: #F5F5F5;
 }
 .pia #block-system-main table thead {
-  background-color: #FFD45D;
+  background-color: #edf9dd;
 }
 /*** Form elements for field settings */
 .pia table[id] .form-item,
@@ -120,12 +120,12 @@ body:not(.page-admin-reports-status) table > tbody > tr:nth-child(2n+1) {
 /** Restore browser-native checkboxes, radio buttons */
 .pia #block-system-main table tr .form-type-checkbox,
 .pia #block-system-main table tr .form-type-radio,
-.pia-page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox {
+.pia.page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox {
   margin-top: 0.25em;
 }
 .pia #block-system-main table tr .form-type-checkbox > input[type="checkbox"],
 .pia #block-system-main table tr .form-type-checkbox > input[type="radio"],
-.pia-page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox > input[type="checkbox"] {
+.pia.page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox > input[type="checkbox"] {
   opacity: initial;
   padding: 0 0.5em;
 }
@@ -133,8 +133,8 @@ body:not(.page-admin-reports-status) table > tbody > tr:nth-child(2n+1) {
 .pia #block-system-main .views-field-views-bulk-operations .form-type-checkbox > input.form-checkbox + label,
 .pia #block-system-main table tr .form-type-checkbox > input.form-checkbox + label:before,
 .pia #block-system-main table tr .form-type-checkbox > input.form-checkbox + label:after,
-.pia-page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox > input.form-checkbox + label:before,
-.pia-page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox > input.form-checkbox + label:after {
+.pia.page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox > input.form-checkbox + label:before,
+.pia.page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox > input.form-checkbox + label:after {
   display: none;
 }
 
@@ -218,7 +218,7 @@ body:not(.page-admin-reports-status) table > tbody > tr:nth-child(2n+1) {
 .pia .admin-panel .body {
   padding: 0;
 }
-.pia.pia-page-admin-config .admin > .clearfix {
+.pia.page-admin-config .admin > .clearfix {
   margin-left: 0;
   margin-right: 0;
   width: 48%;
@@ -253,14 +253,14 @@ body:not(.page-admin-reports-status) table > tbody > tr:nth-child(2n+1) {
 }
 
 /** Module Filter + absolutely positioned ASU global footer don't jive together. */
-html.js.pia-page-admin-modules footer#page-footer {
+html.js .pia.page-admin-modules footer#page-footer {
   display: none;
 }
-html.js.pia-page-admin-modules .module-filter-inputs-wrapper .checkbox input[type="checkbox"],
-html.js.pia-page-admin-modules .module-filter-inputs-wrapper .checkbox-inline input[type="checkbox"] {
+html.js .pia.page-admin-modules .module-filter-inputs-wrapper .checkbox input[type="checkbox"],
+html.js .pia.page-admin-modules .module-filter-inputs-wrapper .checkbox-inline input[type="checkbox"] {
   float: initial;
 }
-html.js.pia-page-admin-modules .module-filter-inputs-wrapper .module-filter-clear a {
+html.js .pia.page-admin-modules .module-filter-inputs-wrapper .module-filter-clear a {
   float: none;
 }
 
