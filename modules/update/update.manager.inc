@@ -69,7 +69,9 @@ function update_manager_update_form($form, $form_state, $context) {
   $available = update_get_available(TRUE);
   if (empty($available)) {
     $form['message'] = array(
+      '#prefix' => '<div class="update-status warning update-status-msg">',
       '#markup' => t('There was a problem getting update information. Try again later.'),
+      '#suffix' => '<span class="icon">' . $icon . '</span></div>',
     );
     return $form;
   }
@@ -203,8 +205,11 @@ function update_manager_update_form($form, $form_state, $context) {
   }
 
   if (empty($projects)) {
+    $icon = theme('image', array('path' => 'misc/watchdog-ok.png', 'width' => 18, 'height' => 18, 'alt' => t('ok'), 'title' => t('ok')));
     $form['message'] = array(
+      '#prefix' => '<div class="update-status ok update-status-msg">',
       '#markup' => t('All of your projects are up to date.'),
+      '#suffix' => '<span class="icon">' . $icon . '</span></div>',
     );
     return $form;
   }

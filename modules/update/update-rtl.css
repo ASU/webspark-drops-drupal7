@@ -12,7 +12,8 @@
   padding-left: 10px;
 }
 
-.update .version-status .icon {
+.update .version-status .icon,
+.update-status-msg .icon {
   padding-right: .5em;
 }
 
