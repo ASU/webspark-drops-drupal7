@@ -42,7 +42,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'body',
-    'label' => 'Program Description (long)',
+    'label' => 'Program description (long)',
     'required' => 0,
     'settings' => array(
       'display_summary' => 1,
@@ -146,7 +146,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_acad_plan',
-    'label' => 'Academic Plan',
+    'label' => 'Academic plan',
     'required' => 1,
     'settings' => array(
       'linkit' => array(
@@ -198,7 +198,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_acad_prog',
-    'label' => 'Academic Program',
+    'label' => 'Academic program',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -255,7 +255,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_acc_program',
-    'label' => 'Accelerated Program',
+    'label' => 'Accelerated program',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -277,7 +277,7 @@ function asu_ap_feature_field_default_field_instances() {
     'bundle' => 'asu_ap',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Additional requirements for the program can be entered in to display at the top of the "Application Requirements" region on undergraduate program nodes.',
+    'description' => 'Additional requirements for the program can be entered in to display at the top of the "Application requirements" region on undergraduate program nodes.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -301,7 +301,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_addl_req',
-    'label' => 'Additional Requirements',
+    'label' => 'Additional requirements',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -356,7 +356,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_admission_req',
-    'label' => 'Admission Requirements',
+    'label' => 'Admission requirements',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -478,7 +478,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_awarded',
-    'label' => 'Degree Awarded',
+    'label' => 'Degree awarded',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -583,7 +583,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_career_opps',
-    'label' => 'Career Opportunities',
+    'label' => 'Career opportunities',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -637,7 +637,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_career_outlook',
-    'label' => 'Career Outlook description',
+    'label' => 'Career outlook description',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -990,7 +990,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_conc_program',
-    'label' => 'Concurrent Program',
+    'label' => 'Concurrent program',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1036,7 +1036,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_cta_apply',
-    'label' => 'CTA Button - How and when to apply',
+    'label' => 'CTA button - How and when to apply',
     'required' => 0,
     'settings' => array(
       'absolute_url' => 1,
@@ -1105,7 +1105,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_cta_information',
-    'label' => 'CTA Button - Request information',
+    'label' => 'CTA button - Request information',
     'required' => 0,
     'settings' => array(
       'absolute_url' => 1,
@@ -1174,7 +1174,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_cta_visit',
-    'label' => 'CTA Button - Schedule a visit',
+    'label' => 'CTA button - Schedule a visit',
     'required' => 0,
     'settings' => array(
       'absolute_url' => 1,
@@ -1295,7 +1295,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_department_code',
-    'label' => 'Department Code',
+    'label' => 'Department code',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -1347,7 +1347,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_department_code_j',
-    'label' => 'Department Code (joint)',
+    'label' => 'Department code (joint)',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -1453,7 +1453,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_diploma_desc',
-    'label' => 'Diploma Description',
+    'label' => 'Diploma description',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -1509,7 +1509,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_ex_car_tf',
-    'label' => 'Example Careers: True/False',
+    'label' => 'Example careers: True/False',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1555,7 +1555,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_example_careers',
-    'label' => 'Example Careers',
+    'label' => 'Example careers',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -1610,7 +1610,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_grad_app',
-    'label' => 'Application Deadline',
+    'label' => 'Application deadline',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -1665,7 +1665,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_grad_desc_video',
-    'label' => 'Program Description Video',
+    'label' => 'Program description video',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -1720,7 +1720,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_grad_financing',
-    'label' => 'Financing Your Education',
+    'label' => 'Financing your education',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -1775,7 +1775,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_grad_text_area',
-    'label' => 'Marketing Text Area',
+    'label' => 'Marketing textarea',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -1830,7 +1830,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_major_map_url',
-    'label' => 'Major Map URL',
+    'label' => 'Major map URL',
     'required' => 0,
     'settings' => array(
       'absolute_url' => 1,
@@ -1898,7 +1898,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_major_map_year',
-    'label' => 'Major Map Year',
+    'label' => 'Major map year',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -2007,7 +2007,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_new_program',
-    'label' => 'New Program',
+    'label' => 'New program',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -2053,7 +2053,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_prog_req',
-    'label' => 'Program Requirements',
+    'label' => 'Program requirements',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -2159,7 +2159,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_program_fee',
-    'label' => 'Additional Program Fee',
+    'label' => 'Additional program fee',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -2214,7 +2214,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_related_programs',
-    'label' => 'Related Programs',
+    'label' => 'Related programs',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -2313,7 +2313,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_second_language',
-    'label' => 'Second Language Requirement',
+    'label' => 'Second language requirement',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -2365,7 +2365,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_short_desc',
-    'label' => 'Short Description',
+    'label' => 'Short description',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -2420,7 +2420,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_sl',
-    'label' => 'Scholarship Link',
+    'label' => 'Scholarship link',
     'required' => 0,
     'settings' => array(
       'absolute_url' => 1,
@@ -2662,7 +2662,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_banner_image',
-    'label' => 'ASU Banner Image',
+    'label' => 'ASU banner image',
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
@@ -2746,7 +2746,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_degree_image',
-    'label' => 'Degree Image',
+    'label' => 'Degree image',
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
@@ -2802,35 +2802,35 @@ function asu_ap_feature_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('ASU Banner Image');
-  t('Academic Plan');
-  t('Academic Program');
-  t('Accelerated Program');
+  t('Academic plan');
+  t('Academic program');
+  t('Accelerated program');
   t('Add a description here to override the default career outlook description for your specific needs.');
   t('Add a description here to override the default program catalog description for your specific needs. A "Read more" link will appear below your custom description that will expand to show the default program catalog description.');
   t('Add a link here to change from the default "How and when to apply" link to one specific to your needs.');
   t('Add a link here to change from the default "Request information" link to one specific to your needs.');
   t('Add a link here to change from the default "Schedule a visit" link to one specific to your needs.');
   t('Add a link here to change from the default scholarship link to one specific to your needs.');
-  t('Additional Program Fee');
-  t('Additional Requirements');
-  t('Additional requirements for the program can be entered in to display at the top of the "Application Requirements" region on undergraduate program nodes.');
-  t('Admission Requirements');
-  t('Application Deadline');
+  t('Additional program Fee');
+  t('Additional requirements');
+  t('Additional requirements for the program can be entered in to display at the top of the "Application requirements" region on undergraduate program nodes.');
+  t('Admission requirements');
+  t('Application deadline');
   t('CTA Button - How and when to apply');
   t('CTA Button - Request information');
   t('CTA Button - Schedule a visit');
   t('Campus');
-  t('Career Opportunities');
-  t('Career Outlook description');
+  t('Career opportunities');
+  t('Career outlook description');
   t('Cert option: True or False');
   t('College');
   t('College (joint)');
   t('College URL');
   t('College URL (joint)');
-  t('Concurrent Program');
+  t('Concurrent program');
   t('Degree');
-  t('Degree Awarded');
-  t('Degree Image');
+  t('Degree awarded');
+  t('Degree image');
   t('Denotes the ASU catalog value (on/off) for "accelerated program" with respect to this degree program.<br>
 <i>NOTE:</i> This field can be overridden, but will reapply the official catalog value to the degree program if the ASU Academic Program feed is updated.');
   t('Denotes the ASU catalog value (on/off) for "concurrent program" with respect to this degree program.<br>
@@ -2841,31 +2841,31 @@ function asu_ap_feature_field_default_field_instances() {
 <i>NOTE:</i> This field can be overridden, but will reapply the official catalog value to the degree program if the ASU Academic Programs feed is updated.');
   t('Department');
   t('Department (joint)');
-  t('Department Code');
-  t('Department Code (joint)');
-  t('Diploma Description');
+  t('Department code');
+  t('Department code (joint)');
+  t('Diploma description');
   t('Displays given information below grey section (containing "Degree Offered") on program nodes.');
   t('Displays given video (use WYSIWYG \'Add media\' button to embed) next to top program description (above yellow buttons) on graduate program nodes. <strong>Note:</strong> please do not add text to this section.');
   t('Displays information related to financing education on graduate program nodes. <strong>Note:</strong> you will need to create your own section title using the provided WYSIWYG, such as "Financing Your Education".');
   t('Displays information related to the application deadline on graduate program nodes. <strong>Note:</strong> you will need to create your own section title using the provided WYSIWYG, such as "Application Deadline".');
-  t('Example Careers');
-  t('Example Careers: True/False');
-  t('Financing Your Education');
+  t('Example careers');
+  t('Example careers: True/False');
+  t('Financing your education');
   t('Major Map URL');
-  t('Major Map Year');
-  t('Marketing Text Area');
+  t('Major Map year');
+  t('Marketing text area');
   t('Minimum math requirement');
-  t('New Program');
-  t('Program Description (long)');
-  t('Program Description Video');
-  t('Program Requirements');
+  t('New program');
+  t('Program description (long)');
+  t('Program description video');
+  t('Program requirements');
   t('Program: Undergrad or Graduate');
-  t('Related Programs');
+  t('Related programs');
   t('Requirement description');
-  t('Scholarship Link');
-  t('Second Language Requirement');
-  t('Short Description');
-  t('Subplan: Title');
+  t('Scholarship link');
+  t('Second language requirement');
+  t('Short description');
+  t('Subplan: title');
   t('Subplan: URL');
   t('This image only shows up on the view page.  Horizontal images work best.');
   t('This is the banner image across the top of the academic programs pages.');

@@ -274,7 +274,7 @@ if (module_exists('metatag')) {
                 <div class="container">
                   <div class="row">
                     <div class="col-sm-6 col-md-4">
-                      <h2>Degree Offered</h2>
+                      <h2>Degree offered</h2>
 
                       <div class="asu-degree-page-degree-offered">
                         <p>
@@ -336,7 +336,7 @@ if (module_exists('metatag')) {
                         ?>
                       </p>
 
-                      <h2>Major Map</h2>
+                      <h2>Major map</h2>
 
                       <p>A major map outlines the degree’s requirements for graduation.</p>
                       <?php if (isset($node_info['field_asu_degree_major_map_url'])): ?>
@@ -361,7 +361,7 @@ if (module_exists('metatag')) {
                       </div>
                     </div>
                     <div class="col-sm-6 col-md-4">
-                      <h2>Application Requirements</h2>
+                      <h2>Application requirements</h2>
 
                         <?php if (isset($node_info['field_asu_degree_addl_req']['#items'][0]['safe_value'])): ?>
                           <p>
@@ -379,7 +379,7 @@ if (module_exists('metatag')) {
                       </p>
                     </div>
                     <div class="col-sm-6 col-md-4">
-                      <h2>Affording College</h2>
+                      <h2>Affording college</h2>
 
                       <p>
                         <?php if (isset($node_info['field_scholarship_link']['#items'][0]['url'])): ?>
@@ -422,7 +422,7 @@ if (module_exists('metatag')) {
                   <?php endif ?>
 
                   <?php if (isset($node_info['field_asu_degree_career_opps'])): ?>
-                    <h2>Career Outlook</h2>
+                    <h2>Career outlook</h2>
                     <?php if (isset($node_info['field_asu_degree_career_outlook']['#items'][0]['safe_value'])): ?>
                         <?php print render($node_info['field_asu_degree_career_outlook']['#items'][0]['safe_value']); ?>
                     <?php elseif (isset($node_info['field_asu_degree_career_opps'])): ?>
@@ -431,7 +431,7 @@ if (module_exists('metatag')) {
                   <?php endif; ?>
                   <?php if (isset($node_info['field_asu_degree_example_careers'])): ?>
                     <?php if (isset($node_info['field_asu_degree_ex_car_tf']['#items'][0]['value']) && $node_info['field_asu_degree_ex_car_tf']['#items'][0]['value'] == 1): ?>
-                      <h2>Example Careers</h2>
+                      <h2>Example careers</h2>
                       <?php print render($node_info['field_asu_degree_example_careers']); ?>
                     <?php endif; ?>
                   <?php endif; ?>
@@ -439,7 +439,7 @@ if (module_exists('metatag')) {
                 <?php if (isset($node_info['field_asu_degree_relatedprograms'])): ?>
                   <div class="col-md-4">
                     <div class="pane-menu-tree">
-                      <h4>Related Programs</h4>
+                      <h4>Related programs</h4>
                       <?php for ($it = 0; $it < 1000; $it++) {
                         if (isset($node_info['field_asu_degree_relatedprograms'][$it]['#markup'])) {
                           $rp_result = $node_info['field_asu_degree_relatedprograms'][$it]['#markup'];
@@ -645,7 +645,7 @@ if (module_exists('metatag')) {
                 <div class="container">
                   <div class="row">
                     <div class="col-sm-6 col-md-4">
-                      <h2>Degree Offered</h2>
+                      <h2>Degree offered</h2>
 
                       <div class="asu-degree-page-degree-offered">
                         <p>
@@ -704,9 +704,9 @@ if (module_exists('metatag')) {
                         ?>
                       </p>
 
-                      <h2>Plan of Study</h2>
+                      <h2>Plan of study</h2>
 
-                      <p>The Plan of Study is the required curriculum to complete the program.</p>
+                      <p>The Plan of study is the required curriculum to complete the program.</p>
                       <?php if (isset($node_info['field_asu_degree_asuds_url'])): ?>
                         <p><a
                             href="<?php echo $node_info['field_asu_degree_asuds_url']['#items'][0]['url']; ?>"
