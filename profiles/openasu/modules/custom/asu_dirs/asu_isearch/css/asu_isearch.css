@@ -351,23 +351,23 @@ div.krumo-preview {
     display: inline;
 }
 
-.ui-tabs .ui-tabs-panel {
+.isearch-profile-content .ui-tabs .ui-tabs-panel {
     padding: 0;
     margin-top: 40px;
 }
 
-.ui-tabs .ui-tabs-panel .panel-pane .pane-title {
+.isearch-profile-content .ui-tabs .ui-tabs-panel .panel-pane .pane-title {
     font-size: 18px;
     margin-bottom: 15px;
     margin-top: 0;
     font-weight: bold;
 }
 
-.ui-tabs .ui-tabs-panel .pane-content .field {
+.isearch-profile-content .ui-tabs .ui-tabs-panel .pane-content .field {
     padding-bottom: 25px;
 }
 
-.ui-tabs .ui-tabs-panel .pane-content .field-label {
+.isearch-profile-content .ui-tabs .ui-tabs-panel .pane-content .field-label {
     font-size: 18px;
     margin-bottom: 15px;
     font-weight: bold;
