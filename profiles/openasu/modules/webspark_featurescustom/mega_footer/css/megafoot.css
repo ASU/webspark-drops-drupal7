@@ -2,16 +2,6 @@
   background-color: #1e1e1e;
 }
 
-.megafoot-description a {
-    color: #ffb310;
-    border-bottom: 1px dotted #ffb310;
-}
-
-.megafoot-description:hover a {
-    color: #ffb310;
-    border-bottom: 1px dotted #ffb310;
-}
-
 .megafoot-description {
   font-size: 1em;
   color: #fff;
@@ -84,11 +74,13 @@
 .megafoot ul:after, .megafoot ol:after {
   clear: both;
 }
-.megafoot .contact-link {
+.megafoot .contact-link,
+.megafoot .row a {
   color: #ccc;
   border-bottom: 1px dotted #ccc;
 }
-.megafoot .contact-link:hover {
+.megafoot .contact-link:hover,
+.megafoot .row a:hover {
   color: #fff;
   border-bottom-color: #fff;
 }
