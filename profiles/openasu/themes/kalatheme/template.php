@@ -124,8 +124,13 @@ function kalatheme_process_page(&$variables) {
   );
 
   // Add local actions as the last item in the local tasks.
-  if (!empty($variables['action_links'])) {
-    $variables['tabs']['#primary'][]['#markup'] = theme('menu_local_actions', array('menu_actions' => $variables['action_links'], 'attributes' => $dropdown_attributes));
+  if (!empty($variables['action_links']) && is_array($variables['tabs']['#primary'])) {
+    $variables['tabs']['#primary'][] = array(
+      '#markup' => theme('menu_local_actions', array(
+        'menu_actions' => $variables['action_links'],
+        'attributes' => $dropdown_attributes,
+      ))
+    );
     $variables['action_links'] = FALSE;
   }
 

@@ -348,7 +348,7 @@ table > thead > tr > td {
   vertical-align: bottom;
   font-weight: bold;
 }
-table > tbody > tr:nth-child(2n+1) {
+body:not(.page-admin) table > tbody > tr:nth-child(2n+1) {
 	background-color: #F5F5F5;
 }
 
@@ -634,23 +634,23 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 }
 
 .alert-success {
-  background-color: #148e4b;
-  border-color: #0b4b28;
+  background-color: #78BE20;
+  border-color: #3E7E1F;
 }
 
 .alert-info {
-  background-color: #008ed6;
-  border-color: #005b8a;
+  background-color: #00A3E0;
+  border-color: #006B92;
 }
 
 .alert-danger {
-  background-color: #ec5937;
-  border-color: #c43413;
+  background-color: #9e3f5d; /* 75% opacity of official maroon */
+  border-color: #8C1D40;
 }
 
 .alert-warning {
-  background-color: #bfe319;
-  border-color: #859e11;
+  background-color: #FFC627;
+  border-color: #ec5937;
 }
 
 .alert-warning *,
@@ -672,7 +672,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 }
 
 .logged-in .alert .krumo-root .krumo-element:not(a) {
-  color: green;
+  color: #497415;
 }
 
 /* =ADMIN UI

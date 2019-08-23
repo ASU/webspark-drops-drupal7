@@ -289,6 +289,12 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
   color: #767676;
 }
 
+/* WEBSPARK-1197 */
+.panel-panel-inner ul.quicktabs-style-nostyle, .panel-panel-inner .ui-tabs .ui-tabs-nav {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
 /* Nav pills */
 .nav-pills > li {
   float: left;
@@ -507,7 +513,8 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 	border-bottom-right-radius: 0.25em;
 	border: 1px solid #ccc;
 }
-.item-list.item-list-pager .pager .pager-current {
+.item-list.item-list-pager .pager .pager-current,
+#media-browser-tabset .item-list.item-list-pager .pager .pager-current {
 	border: 1px solid #8C1D40;
 	padding: 5px 14px;
 	background-color: #8C1D40;

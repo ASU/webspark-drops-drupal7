@@ -10,6 +10,18 @@
  * Implements template_preprocess_html().
  */
 function innovation_preprocess_html(&$variables) {
+  $path = current_path();
+  // If Innovation is currently showing in an admin page, add special CSS.
+  if (path_is_admin($path)) {
+    if (isset($variables['classes_array'])) {
+      $variables['classes_array'][] = 'path-is-admin';
+      $variables['classes_array'][] = 'pia';
+    }
+    drupal_add_css(path_to_theme() . '/css/admin.css');
+    if (strstr($path,'admin/reports/dblog')) {
+      drupal_add_js(path_to_theme() . '/js/innovation-admin.js');
+    }
+  }
 
   // Readded page title to <title> tag after Kalatheme's errant scraping
   if (!isset($variables['head_title_array']['title'])) {
@@ -565,5 +577,37 @@ function innovation_item_list($variables) {
     $output .= "</$type>";
   }
   $output .= '</div>';
+  return $output;
+}
+
+/**
+ * Override of theme_fieldset().
+ *
+ * Added odd/even classes for more fieldset theming options.
+ */
+function innovation_fieldset($variables) {
+  $element = $variables['element'];
+  element_set_attributes($element, array('id'));
+
+  $no_of_parents = (isset($element['#array_parents'])) ? count($element['#array_parents']) + 1 : 0;
+
+  $additional_class = ($no_of_parents % 2 == 1) ? 'fieldset-nested-even' : 'fieldset-nested-odd';
+  _form_set_class($element, array('form-wrapper', 'fieldset-nested-', $additional_class));
+
+  $output = '<fieldset' . drupal_attributes($element['#attributes']) . '>';
+  if (!empty($element['#title'])) {
+    // Always wrap fieldset legends in a SPAN for CSS positioning.
+    $output .= '<legend><span class="fieldset-legend">' . $element['#title'] . '</span></legend>';
+  }
+  $output .= '<div class="fieldset-wrapper">';
+  if (!empty($element['#description'])) {
+    $output .= '<div class="fieldset-description">' . $element['#description'] . '</div>';
+  }
+  $output .= $element['#children'];
+  if (isset($element['#value'])) {
+    $output .= $element['#value'];
+  }
+  $output .= '</div>';
+  $output .= "</fieldset>\n";
   return $output;
 }
