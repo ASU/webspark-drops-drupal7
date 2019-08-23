@@ -81,7 +81,7 @@
   ul:after, ol:after {
     clear: both;
   }
-  .contact-link {
+  .contact-link, .row a {
     color: $link-color;
     border-bottom: 1px dotted $link-color;
     &:hover {
