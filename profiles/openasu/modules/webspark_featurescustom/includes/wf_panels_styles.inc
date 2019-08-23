@@ -5,7 +5,7 @@
  */
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function webspark_featurescustom_form_panopoly_page_node_form_alter(&$form, &$form_state, $form_id) {
   // Content Page node form
@@ -15,6 +15,9 @@ function webspark_featurescustom_form_panopoly_page_node_form_alter(&$form, &$fo
   $form['field_featured_status']['#access'] = FALSE;
 }
 
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
 function webspark_featurescustom_form_panels_edit_style_settings_form_alter(&$form, &$form_state, $form_id) {
   // Panels styles accordion settings form
   // + Set default configuration settings

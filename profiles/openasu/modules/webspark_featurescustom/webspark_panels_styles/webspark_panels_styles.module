@@ -14,3 +14,26 @@ function webspark_panels_styles_init() {
   drupal_add_js(drupal_get_path('module', 'webspark_panels_styles') 
     . '/plugins/styles/customstyles/js/customstyles.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 99));
 }
+
+/**
+ * Implements hook_preprocess_panels_add_content_modal()
+ * Overrides theming function output of list in add-content.inc (Panels) and the preprocessing in Panopoly
+ */
+function webspark_panels_styles_preprocess_panels_add_content_modal(&$vars) {
+
+  // Remove Panels module rendered root_content
+  $vars['root_content'] = '';
+
+  if (!empty($vars['categories']['root'])) {
+    // Create new, reordered list of root category content
+    $content = (isset($vars['categories']['root']['content'])) ? $vars['categories']['root']['content']: '';
+    ksort($content);
+    $vars['categories']['root']['content'] = $content;
+
+    // Then RE-render the root buttons
+    foreach ($vars['categories']['root']['content'] as $content_type) {
+      $vars['root_content'] .= theme('panels_add_content_link', array('renderer' => $vars['renderer'], 'region' => $vars['region'], 'content_type' => $content_type));
+    }
+  }
+
+}
