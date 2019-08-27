@@ -62,13 +62,11 @@ projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-upd
 projects[panopoly_test][patch][1370] = patches/webspark-847_behat_common.patch
 projects[panopoly_test][patch][142] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
 projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.patch
+; Last patch must be applied until the patches are combined down the road
+projects[panopoly_test][patch][1560] = patches/ws-1560-1353_panopoly-behat-widget-name-changes.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
-
-;projects[asu_drupal_modules][type] = module
-;projects[asu_drupal_modules][directory_name] = custom
-;projects[asu_drupal_modules][download][revision] = 7e86f7fed3a06597335c7ca8850e95cb9f56c373
-;projects[asu_drupal_modules][download][url] = https://github.com/ASU/asu-drupal-modules.git
+; No longer pulled from asu_drupal_modules repo
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ASU Module Prerequisites -- Webspark
