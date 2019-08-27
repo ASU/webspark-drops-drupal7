@@ -1,0 +1,97 @@
+diff --git a/profiles/openasu/modules/custom/webspark_test/behat/features/asu_directory_import.feature b/profiles/openasu/modules/custom/webspark_test/behat/features/asu_directory_import.feature
+index 6c96ceacc..22e264a59 100644
+--- a/profiles/openasu/modules/custom/webspark_test/behat/features/asu_directory_import.feature
++++ b/profiles/openasu/modules/custom/webspark_test/behat/features/asu_directory_import.feature
+@@ -28,7 +28,7 @@ Feature: Import and display iSearch Profiles
+     And I press the "Publish" button
+     And I click "Customize this page"
+     And I click "Add new pane"
+-    And I click "Add ASU Directory Panel"
++    And I click "Add ASU directory panel"
+     And I press the "Browse" button
+     And I click the '[dept_nid="1359"] a.jqtree-toggler' element
+     And I click the '[dept_nid="1569"] a.jqtree-toggler' element
+diff --git a/profiles/openasu/modules/custom/webspark_test/behat/features/asu_directory_panel.feature b/profiles/openasu/modules/custom/webspark_test/behat/features/asu_directory_panel.feature
+index c084ffe38..fd74526a1 100644
+--- a/profiles/openasu/modules/custom/webspark_test/behat/features/asu_directory_panel.feature
++++ b/profiles/openasu/modules/custom/webspark_test/behat/features/asu_directory_panel.feature
+@@ -11,7 +11,7 @@ Feature: Add ASU directory panel
+     And I press the "Publish" button
+     And I click "Customize this page"
+     And I click "Add new pane"
+-    And I click "Add ASU Directory Panel"
++    And I click "Add ASU directory panel"
+     And I press the "Browse" button
+     And I click on the element "li" which has property "dept_nid" with value "1359"
+     And I press the "Submit" button
+diff --git a/profiles/openasu/modules/custom/webspark_test/behat/features/asu_directory_panel_options.feature b/profiles/openasu/modules/custom/webspark_test/behat/features/asu_directory_panel_options.feature
+index 9efdac971..5c4dbfc25 100644
+--- a/profiles/openasu/modules/custom/webspark_test/behat/features/asu_directory_panel_options.feature
++++ b/profiles/openasu/modules/custom/webspark_test/behat/features/asu_directory_panel_options.feature
+@@ -11,7 +11,7 @@ Feature: Add ASU directory panel with options
+     And I press the "Publish" button
+     And I click "Customize this page"
+     And I click "Add new pane"
+-    And I click "Add ASU Directory Panel"
++    And I click "Add ASU directory panel"
+     And I press the "Browse" button
+     And I click on the element "li" which has property "dept_nid" with value "1359"
+     And I press the "Submit" button
+@@ -31,7 +31,7 @@ Feature: Add ASU directory panel with options
+     And I press the "Publish" button
+     And I click "Customize this page"
+     And I click "Add new pane"
+-    And I click "Add ASU Directory Panel"
++    And I click "Add ASU directory panel"
+     And I press the "Browse" button
+     And I click on the element "li" which has property "dept_nid" with value "1359"
+     And I press the "Submit" button
+@@ -52,7 +52,7 @@ Feature: Add ASU directory panel with options
+     And I press the "Publish" button
+     And I click "Customize this page"
+     And I click "Add new pane"
+-    And I click "Add ASU Directory Panel"
++    And I click "Add ASU directory panel"
+     And I press the "Browse" button
+     And I click on the element "li" which has property "dept_nid" with value "1359"
+     And I press the "Submit" button
+@@ -73,7 +73,7 @@ Feature: Add ASU directory panel with options
+     And I press the "Publish" button
+     And I click "Customize this page"
+     And I click "Add new pane"
+-    And I click "Add ASU Directory Panel"
++    And I click "Add ASU directory panel"
+     And I press the "Browse" button
+     And I click on the element "li" which has property "dept_nid" with value "1359"
+     And I press the "Submit" button
+@@ -94,7 +94,7 @@ Feature: Add ASU directory panel with options
+     And I press the "Publish" button
+     And I click "Customize this page"
+     And I click "Add new pane"
+-    And I click "Add ASU Directory Panel"
++    And I click "Add ASU directory panel"
+     And I press the "Browse" button
+     And I click on the element "li" which has property "dept_nid" with value "1359"
+     And I press the "Submit" button
+diff --git a/profiles/openasu/modules/custom/webspark_test/behat/features/asu_maps_enhanced.feature b/profiles/openasu/modules/custom/webspark_test/behat/features/asu_maps_enhanced.feature
+index 3435eaa44..b14164cd4 100644
+--- a/profiles/openasu/modules/custom/webspark_test/behat/features/asu_maps_enhanced.feature
++++ b/profiles/openasu/modules/custom/webspark_test/behat/features/asu_maps_enhanced.feature
+@@ -11,7 +11,7 @@ Feature: Configure and display an interactive map showing an ASU building locati
+     And I press the "Publish" button
+     And I click "Customize this page"
+     And I click "Add new pane"
+-    And I click "Add Enhanced ASU Map"
++    And I click "Add ASU enhanced map"
+     And I wait 30 seconds
+     Then I should see "Title"
+     And I click the "#6268>div>a" element
+@@ -36,7 +36,7 @@ Feature: Configure and display an interactive map showing an ASU building locati
+     And I press the "Publish" button
+     And I click "Customize this page"
+     And I click "Add new pane"
+-    And I click "Add Enhanced ASU Map"
++    And I click "Add ASU enhanced map"
+     And I wait 30 seconds
+     Then I should see "Title"
+     And I click the "#6268>div>a" element

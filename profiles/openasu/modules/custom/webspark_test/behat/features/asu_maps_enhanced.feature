@@ -11,7 +11,7 @@ Feature: Configure and display an interactive map showing an ASU building locati
     And I press the "Publish" button
     And I click "Customize this page"
     And I click "Add new pane"
-    And I click "Add Enhanced ASU Map"
+    And I click "Add ASU enhanced map"
     And I wait 30 seconds
     Then I should see "Title"
     And I click the "#6268>div>a" element
@@ -36,7 +36,7 @@ Feature: Configure and display an interactive map showing an ASU building locati
     And I press the "Publish" button
     And I click "Customize this page"
     And I click "Add new pane"
-    And I click "Add Enhanced ASU Map"
+    And I click "Add ASU enhanced map"
     And I wait 30 seconds
     Then I should see "Title"
     And I click the "#6268>div>a" element
