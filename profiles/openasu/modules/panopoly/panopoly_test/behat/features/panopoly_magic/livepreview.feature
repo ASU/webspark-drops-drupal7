@@ -141,7 +141,9 @@ Feature: Live preview
       And I am viewing a landing page
     When I customize this page with the Panels IPE
       And I click "Add new pane"
-      And I click "Add spotlight" in the "CTools modal" region
+      And I click "ASU Deprecated" in the "CTools modal category" region
+      And I wait 2 seconds
+      And I click "Add spotlight" in the "CTools modal list" region
     Then I should see "Configure new Add spotlight"
     When I fill in "Description" with "Testing description"
       And I wait for live preview to finish
