@@ -202,7 +202,8 @@ function mega_footer_block_configure($delta = '') {
     $form['unit_information']['mega_footer_unit_description'] = array(
       '#type' => 'textfield',
       '#title' => t('Unit Description'),
-      '#description' => t('Displayed below the department title, similar to a byline.'),
+      '#maxlength' => 255,
+      '#description' => t('Displayed below the department title, similar to a byline. Max length of 255 characters.'),
       '#default_value' => variable_get('mega_footer_unit_descrip', NULL),
       '#required' => FALSE,
     );
