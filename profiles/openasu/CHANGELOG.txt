@@ -2,53 +2,59 @@ Webspark 1.70.1 (College Station), 2019-08-09
 ---------------------------------
 - Drupal core
 
-  * Seven (seven) - Removed calls to IE-specific CSS files that were filling logs of sites with subthemes.
+(Note: Patches were used so project version information remained the same. They will not be noted here.)
 
-- Webspark core
-
-  * Updated Drush to v8.x in Pantheon sites
+  * Seven (seven) - Removed calls to IE-specific CSS files that were filling logs of sites with subthemes
+  * System (system) - Made arrows in fieldsets labels clickable to open/close fieldsets
+  * Update (update) - Added warning and explanation to Webspark's internal updates page for Pantheon-specific users to alleviate confusion about what to update in Webspark caused by the Pantheon Dashboard's incorrect list of "Available Updates"
 
 - Web standards components in Webspark
 
-  * All projects providing widgets/panes for the In-Place Editor
-    * Improved mouseover description when a link to create an ASU spotlight is rendered in the In-Page Editor
   * Innovation theme (innovation) - v1.14,
-     Webspark Megamenu (webspark_megamenu) - v1.11,
-     Webspark Mega Footer (mega_footer) - v1.11,
-     ASU Academic Programs (asu_ap) - v2.5,
-     ASU Feeds (DEPRECATED) (asu_feeds) - v1.1
-    * Codified and unified CSS value for ASU gold to #fffc732
-  * ASU Directory Integration Reinvented Suite - v1.3
-    * Updated minor academic grammar issue in asu_dir, asu_isearch.
+  * Webspark Megamenu (webspark_megamenu) - v1.11,
+  * Webspark Mega Footer (mega_footer) - v1.11,
+  * ASU Academic Programs (asu_ap) - v2.5
+  * ASU Feeds (DEPRECATED) (asu_feeds) - v1.1
+    * Codified and unified CSS value for ASU gold to #fffc732 and its :hover state to #FFD45D.
   * ASU Enhanced Maps (asu_maps_enhanced) - v1.5
     * Updated endpoint URL for pulling in maps data
+    * Added Behat tests for developers
+  * ASU iSearch (asu_isearch) - v1.13
+    * Fixed grammar error in postdoctoral title
+    * Scoped down jQuery UI-altering CSS to only affect asu_isearch output
   * ASU Request for Info (asu_rfi) - v1.15
     * Refactored code for form dropdown with pre-populated options (states, countries, semester dates)
-    * Updated file permissions for PHP files
+    * Updated incorrect file permissions for PHP files.
   * ASU Spotlight (asu_spotlight) - v1.9
-    * Increased PHP performance when the site is creating a spotlight editing form
+    * Reduced rendering time when creating an ASU spotlight
+  * In-Page Editor (panels_ipe) - (patches)
+    * Improved labeling and help text given when selecting widgets.
+    * Re-ordered widgets alphabetically, with ASU-themed widgets grouped at the top.
+    * Updated widget icons for ASU-created widgets to make them stand out from their Panopoly counterparts.
   * Innovation (innovation) - v1.14
-    * Added page title back to <title> tag to 1) readd the title to a browser's rendering of the page 
-      title in the top bar, and 2) to improve accessibility
-    * Added standardized styling to pagers
+    * Fixed multiple theming bugs only visible in the administrative areas of the site to allow its usage as an administration theme in place of Webspark Seven (if desired).
+    * Added page title back to <title> tag to 1) readd the title to a browser's rendering of the page title in the top bar, and 2) to improve accessibility
+    * Added Innovation theme setting (at /admin/appearance/settings/innovation) to choose whether to make social media icons in the ASU mega footer open in a new window/tab (off by default)
+    * Added standardized, ASU Web standards styling to Views-generated pagers
     * Improved the layout/content of hard-copy printed web pages
-    * Improved readability of Devel module's dpm() output for developers
+    * Improved readability of Devel module's dpm() output
   * Webspark Carousel (uto_carousel) - v1.11
     * Changed file browsing widget to Media module
     * Turned off carousel randomization by default
-    * Cleaned out code
+    * Cleaned out code no longer in use
     * Fixed URL in Field description link
   * Webspark Mega Footer (mega_footer) - v1.11
+    * Changed the footer's maroon on black links to white to improve visibility
+    * Increased the unit description size to 255 characters.
     * Removed Google+ social media icon
-    * Added Innovation theme setting to choose whether to make social media icons in the ASU mega footer 
-      open in a new window/tab (off by default)
+    * Improved the layout/content of hard-copy printed web pages
 
 - Contrib module updates
 
   - Managed by Panopoly
 
-    * Entity (entity_api) - v1.9+patch
-      * Patched for PHP 7.2+ compatibility issues.
+  * Entity (entity_api) - v1.9+patch
+    * Patched for PHP 7.2+ compatibility issues.
 
   - Managed by Webspark
 
@@ -57,19 +63,21 @@ Webspark 1.70.1 (College Station), 2019-08-09
     * LDAP module suite (ldap_*) - v2.5
     * Mail System (mailsystem) - v2.35
     * Views (views) - v3.23+patch
-      * Resolved PHP error in a Views plugin that was created by the last update to v3.23
-        (see https://www.drupal.org/project/views/issues/3054091).
+      * Resolved PHP error in a Views plugin that was created by the last update to v3.23 (see https://www.drupal.org/project/views/issues/3054091).
     * Webform (webform) - v4.19+patch
-      * Added CSS class "form-control" back to name and email webform components
-        (see https://www.drupal.org/project/webform/issues/3072080).
+      * Added CSS class "form-control" back to name and email webform components for theming fixes (see https://www.drupal.org/project/webform/issues/3072080).
+      * Empty components now hidden in email receipts sent upon webform submission
 
 - Contrib library updates
 
   - Managed by Panopoly
 
     * TinyMCE (tinymce) - v3.5.11 + patch
-      * Added left/right margins on WYSIWYG-inserted images and tables. (Will not apply to existing elements; 
-        Will only apply to new or manually updated images/tables).
+      * Added the corrent left/right margins on WYSIWYG-inserted images and tables.
+      * Notes:
+        * This change will apply to new elements/images.
+        * It will not automatically apply to existing elements in current pages, however. Existing pages need to either be opened to edit and then resaved, or programmatically updated by some user-generated, customized Drupal code for their site (not included).
+
 
 Webspark 1.70 (Texas), 2019-07-12
 ---------------------------------
@@ -112,6 +120,7 @@ Webspark 1.70 (Texas), 2019-07-12
     * Search API (search_api) - v1.26
     * Tablefield (tablefield) - v3.5
     * Media: Youtube (media_youtube) - v3.8
+
 
 Webspark 1.67 (Iowa), 2019-05-20
 --------------------------------
