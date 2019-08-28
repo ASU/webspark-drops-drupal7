@@ -898,12 +898,35 @@ ul.help-text li.help-title {
 
 .section > .container .row-full [class^="pane-"],
 #footer > .container .row-full .content,
-#page-footer > .container .row-full .content {
+#page-footer > .container .row-full .region > div:not(.block-asu-brand) .content {
   max-width: 1170px;
   margin: 0 auto;
   padding-left: 15px;
   padding-right: 15px;
 }
+
+#page-footer #innovation-top {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/** @TODO - remove these overrides when added to ASU global header/footer CSS */
+#innovation-footer {
+  position: relative;
+}
+#innovation-footer .footer-menu ul {
+  padding: 1em;
+}
+#innovation-footer .footer-menu ul li {
+  padding-bottom: 0;
+}
+@media (max-width: 768px)
+{
+  #innovation-footer .footer-menu ul li {
+    padding-bottom: 0.5em;
+  }
+}
+
 
 /* 100% width issue - override for flexslider; asuflex.css carries the rest after this rule
 ----------------------------------------------------- */
