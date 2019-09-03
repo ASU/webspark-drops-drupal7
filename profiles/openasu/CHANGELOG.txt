@@ -2,9 +2,9 @@ Webspark 1.70.1 (College Station), 2019-09-04
 ---------------------------------------------
 - Drupal core
 
-  * Seven (seven) - Removed calls to IE-specific CSS files that were filling logs of sites with subthemes
-  * System (system) - Made arrows in fieldsets labels clickable to open/close fieldsets
-  * Update (update) - Added warning and explanation to Webspark's internal updates page for Pantheon-specific users to alleviate confusion about what to update in Webspark caused by the Pantheon Dashboard's incorrect list of "Available Updates"
+  * Seven (seven) - v7.60-dev+1 - Removed calls to IE-specific CSS files that were filling logs of sites with subthemes
+  * System (system) - v7.60-dev+1 - Made arrows in fieldsets labels clickable to open/close fieldsets
+  * Update (update) - v7.60-dev+1 - Added warning and explanation to Webspark's internal updates page for Pantheon-specific users to alleviate confusion about what to update in Webspark caused by the Pantheon Dashboard's incorrect list of "Available Updates"
 
 - Webspark core
 
