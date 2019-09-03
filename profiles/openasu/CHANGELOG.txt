@@ -1,12 +1,14 @@
-Webspark 1.70.1 (College Station), 2019-08-09
----------------------------------
+Webspark 1.70.1 (College Station), 2019-09-04
+---------------------------------------------
 - Drupal core
-
-(Note: Patches were used so project version information remained the same. They will not be noted here.)
 
   * Seven (seven) - Removed calls to IE-specific CSS files that were filling logs of sites with subthemes
   * System (system) - Made arrows in fieldsets labels clickable to open/close fieldsets
   * Update (update) - Added warning and explanation to Webspark's internal updates page for Pantheon-specific users to alleviate confusion about what to update in Webspark caused by the Pantheon Dashboard's incorrect list of "Available Updates"
+
+- Webspark core
+
+  * Webspark (openasu) - v1.70.1 - Set the Drush default version used by Pantheon hosted sites to 8.x
 
 - Web standards components in Webspark
 
@@ -15,47 +17,49 @@ Webspark 1.70.1 (College Station), 2019-08-09
   * Webspark Mega Footer (mega_footer) - v1.11,
   * ASU Academic Programs (asu_ap) - v2.5
   * ASU Feeds (DEPRECATED) (asu_feeds) - v1.1
-    * Codified and unified CSS value for ASU gold to #fffc732 and its :hover state to #FFD45D.
+    * Updated gold color to match ASU Gold (#FFC627) and its :hover state counterpart (#FFD45D).
   * ASU Enhanced Maps (asu_maps_enhanced) - v1.5
     * Updated endpoint URL for pulling in maps data
-    * Added Behat tests for developers
+    * Added Behat tests for automated testing
   * ASU iSearch (asu_isearch) - v1.13
     * Fixed grammar error in postdoctoral title
     * Scoped down jQuery UI-altering CSS to only affect asu_isearch output
   * ASU Request for Info (asu_rfi) - v1.15
     * Refactored code for form dropdown with pre-populated options (states, countries, semester dates)
-    * Updated incorrect file permissions for PHP files.
+    * Updated incorrect file permissions for PHP files
   * ASU Spotlight (asu_spotlight) - v1.9
     * Reduced rendering time when creating an ASU spotlight
   * In-Page Editor (panels_ipe) - (patches)
-    * Improved labeling and help text given when selecting widgets.
-    * Re-ordered widgets alphabetically, with ASU-themed widgets grouped at the top.
-    * Updated widget icons for ASU-created widgets to make them stand out from their Panopoly counterparts.
+    * Improved labeling and help text given when selecting widgets
+    * Re-ordered widgets alphabetically, with ASU-themed widgets grouped at the top
+    * Changed icon color for ASU-created widgets from black to maroon to differentiate them from their Panopoly counterparts
+    * Updated icon for ASU title banner widget
+    * Added icon for ASU carousel widget
   * Innovation (innovation) - v1.14
     * Fixed multiple theming bugs only visible in the administrative areas of the site to allow its usage as an administration theme in place of Webspark Seven (if desired).
     * Added page title back to <title> tag to 1) readd the title to a browser's rendering of the page title in the top bar, and 2) to improve accessibility
     * Added Innovation theme setting (at /admin/appearance/settings/innovation) to choose whether to make social media icons in the ASU mega footer open in a new window/tab (off by default)
-    * Added standardized, ASU Web standards styling to Views-generated pagers
+    * Added standardized, ASU web standards styling to Views-generated pagers
     * Fixed ASU global footer CSS to allow for blocks to render properly beneath it (for administrative purposes only).
-    * Improved the layout/content of hard-copy printed web pages
+    * Improved content layout for web page printouts
     * Improved readability of Devel module's dpm() output
   * Webspark Carousel (uto_carousel) - v1.11
     * Changed file browsing widget to Media module
     * Turned off carousel randomization by default
     * Cleaned out code no longer in use
-    * Fixed URL in Field description link
+    * Fixed the URL for the field list page link that's displayed in the module information page
   * Webspark Mega Footer (mega_footer) - v1.11
     * Changed the footer's maroon on black links to white to improve visibility
-    * Increased the unit description size to 255 characters.
+    * Increased the unit description size to 255 characters
     * Removed Google+ social media icon
-    * Improved the layout/content of hard-copy printed web pages
+    * Improved content layout for web page printouts
 
 - Contrib module updates
 
   - Managed by Panopoly
 
   * Entity (entity_api) - v1.9+patch
-    * Patched for PHP 7.2+ compatibility issues.
+    * Patched for PHP 7.2+ compatibility issues
 
   - Managed by Webspark
 
