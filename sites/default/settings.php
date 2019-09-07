@@ -83,11 +83,13 @@
  * webserver.  For most other drivers, you must specify a
  * username, password, host, and database name.
  *
- * Some database engines support transactions.  In order to enable
- * transaction support for a given database, set the 'transactions' key
- * to TRUE.  To disable it, set it to FALSE.  Note that the default value
- * varies by driver.  For MySQL, the default is FALSE since MyISAM tables
- * do not support transactions.
+ * Transaction support is enabled by default for all drivers that support it,
+ * including MySQL. To explicitly disable it, set the 'transactions' key to
+ * FALSE.
+ * Note that some configurations of MySQL, such as the MyISAM engine, don't
+ * support it and will proceed silently even if enabled. If you experience
+ * transaction related crashes with such configuration, set the 'transactions'
+ * key to FALSE.
  *
  * For each database, you may optionally specify multiple "target" databases.
  * A target database allows Drupal to try to send certain queries to a
@@ -123,6 +125,37 @@
  *   'collation' => 'utf8_general_ci',
  * );
  * @endcode
+ * For handling full UTF-8 in MySQL, including multi-byte characters such as
+ * emojis, Asian symbols, and mathematical symbols, you may set the collation
+ * and charset to "utf8mb4" prior to running install.php:
+ * @code
+ * $databases['default']['default'] = array(
+ *   'driver' => 'mysql',
+ *   'database' => 'databasename',
+ *   'username' => 'username',
+ *   'password' => 'password',
+ *   'host' => 'localhost',
+ *   'charset' => 'utf8mb4',
+ *   'collation' => 'utf8mb4_general_ci',
+ * );
+ * @endcode
+ * When using this setting on an existing installation, ensure that all existing
+ * tables have been converted to the utf8mb4 charset, for example by using the
+ * utf8mb4_convert contributed project available at
+ * https://www.drupal.org/project/utf8mb4_convert, so as to prevent mixing data
+ * with different charsets.
+ * Note this should only be used when all of the following conditions are met:
+ * - In order to allow for large indexes, MySQL must be set up with the
+ *   following my.cnf settings:
+ *     [mysqld]
+ *     innodb_large_prefix=true
+ *     innodb_file_format=barracuda
+ *     innodb_file_per_table=true
+ *   These settings are available as of MySQL 5.5.14, and are defaults in
+ *   MySQL 5.7.7 and up.
+ * - The PHP MySQL driver must support the utf8mb4 charset (libmysqlclient
+ *   5.5.3 and up, as well as mysqlnd 5.0.9 and up).
+ * - The MySQL server must support the utf8mb4 charset (5.5.3 and up).
  *
  * You can optionally set prefixes for some or all database table names
  * by using the 'prefix' setting. If a prefix is specified, the table
