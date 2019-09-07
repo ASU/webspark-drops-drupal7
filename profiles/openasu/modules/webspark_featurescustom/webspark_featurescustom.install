@@ -440,3 +440,16 @@ function webspark_featurescustom_update_7014(&$sandbox) {
     )
   ));
 }
+
+/**
+ * Implements hook_update_N()
+ * - Rebuild Panopoly Widgets feature to update widget categories.
+ */
+function webspark_featurescustom_update_7015(&$sandbox) {
+  features_revert_module('webspark_wysiwyg');
+  features_rebuild(array(
+    'panopoly_wysiwyg' => array(
+      'wysiwyg'
+    )
+  ));
+}

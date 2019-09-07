@@ -71,6 +71,5 @@ function webspark_wysiwyg_wysiwyg_default_profiles_alter(&$data) {
     unset($data['panopoly_wysiwyg_text']['settings']['buttons']['default']['underline']);
     unset($data['panopoly_wysiwyg_text']['settings']['buttons']['paste']['pastetext']);
     unset($data['panopoly_wysiwyg_text']['settings']['buttons']['pdw']);
-    unset($data['panopoly_wysiwyg_text']['settings']['buttons']['spellchecker']);
   }
 }
