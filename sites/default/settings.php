@@ -634,6 +634,32 @@ $conf['404_fast_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
 # $conf['theme_debug'] = TRUE;
 
 /**
+ * CSS identifier double underscores allowance:
+ *
+ * To allow CSS identifiers to contain double underscores (.example__selector)
+ * for Drupal's BEM-style naming standards, uncomment the line below.
+ * Note that if you change this value in existing sites, existing page styles
+ * may be broken.
+ *
+ * @see drupal_clean_css_identifier()
+ */
+# $conf['allow_css_double_underscores'] = TRUE;
+
+/**
+ * The default list of directories that will be ignored by Drupal's file API.
+ *
+ * By default ignore node_modules and bower_components folders to avoid issues
+ * with common frontend tools and recursive scanning of directories looking for
+ * extensions.
+ *
+ * @see file_scan_directory()
+ */
+$conf['file_scan_ignore_directories'] = array(
+  'node_modules',
+  'bower_components',
+);
+
+/**
  * Smart start:
  *
  * If you would prefer to be redirected to the installation system when a
