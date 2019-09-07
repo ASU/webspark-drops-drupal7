@@ -304,7 +304,7 @@ $drupal_hash_salt = '';
  *
  * To see what PHP settings are possible, including whether they can be set at
  * runtime (by using ini_set()), read the PHP documentation:
- * http://www.php.net/manual/en/ini.list.php
+ * http://www.php.net/manual/ini.list.php
  * See drupal_environment_initialize() in includes/bootstrap.inc for required
  * runtime settings and the .htaccess file for non-runtime settings. Settings
  * defined there should not be duplicated here so as to avoid conflict issues.
@@ -340,7 +340,7 @@ ini_set('session.cookie_lifetime', 2000000);
  * output filter may not have sufficient memory to process it.  If you
  * experience this issue, you may wish to uncomment the following two lines
  * and increase the limits of these variables.  For more information, see
- * http://php.net/manual/en/pcre.configuration.php.
+ * http://php.net/manual/pcre.configuration.php.
  */
 # ini_set('pcre.backtrack_limit', 200000);
 # ini_set('pcre.recursion_limit', 200000);
@@ -464,6 +464,35 @@ ini_set('session.cookie_lifetime', 2000000);
  */
 # $conf['css_gzip_compression'] = FALSE;
 # $conf['js_gzip_compression'] = FALSE;
+
+/**
+ * Block caching:
+ *
+ * Block caching may not be compatible with node access modules depending on
+ * how the original block cache policy is defined by the module that provides
+ * the block. By default, Drupal therefore disables block caching when one or
+ * more modules implement hook_node_grants(). If you consider block caching to
+ * be safe on your site and want to bypass this restriction, uncomment the line
+ * below.
+ */
+# $conf['block_cache_bypass_node_grants'] = TRUE;
+
+/**
+ * Expiration of cache_form entries:
+ *
+ * Drupal's Form API stores details of forms in cache_form and these entries are
+ * kept for at least 6 hours by default. Expired entries are cleared by cron.
+ * Busy sites can encounter problems with the cache_form table becoming very
+ * large. It's possible to mitigate this by setting a shorter expiration for
+ * cached forms. In some cases it may be desirable to set a longer cache
+ * expiration, for example to prolong cache_form entries for Ajax forms in
+ * cached HTML.
+ *
+ * @see form_set_cache()
+ * @see system_cron()
+ * @see ajax_get_form()
+ */
+# $conf['form_cache_expiration'] = 21600;
 
 /**
  * String overrides:
