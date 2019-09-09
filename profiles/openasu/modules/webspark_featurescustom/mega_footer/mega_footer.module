@@ -44,11 +44,12 @@ function mega_footer_block_view($delta = '') {
       // Logo
       $logo = variable_get('mega_footer_unit_logo', '');
       $check = variable_get('mega_footer_logo_alt', NULL);
-      $alt = (!empty($check)) ? $check : "";
+      $alt = (!empty($check)) ? check_plain($check) : "";
       if ($logo != '' && $logo != NULL) {
         $file = file_load($logo);
         $file_url = file_create_url($file->uri);
-        $footer_mark .= (!empty($file_url)) ? "<img src='$file_url' alt='$alt' title='$alt'/>" : "";
+        $footer_mark .= (!empty($file_url)) ? '<img id="mega-footer-org-logo" src="'
+         . $file_url . '" alt="' . $alt . '" title="' . $alt . '" />' : "";
       }
 
       // Title & Description
@@ -174,7 +175,9 @@ function mega_footer_block_configure($delta = '') {
       '#title' => t('Choose an endorsed ASU logo image'),
       '#default_value' => variable_get('mega_footer_unit_logo', ''),
       '#upload_location' => 'public://',
-      '#description' => t('Only ASU-endorsed logos may be used.'),
+      '#description' => t("IMPORTANT: 1) Only ASU-endorsed logos may be used.
+      2) For best results, upload a logo with no margins around its edge and no wider than 330px.
+      Logo images that don't meet those technical requirements may experience distortion at different resolutions."),
     );
     $form['custom_logo']['mega_footer_logo_alt'] = array(
       '#type' => 'textfield',

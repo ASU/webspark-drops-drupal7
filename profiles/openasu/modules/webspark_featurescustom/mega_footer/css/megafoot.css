@@ -112,6 +112,10 @@
   background-color: #e5e5e5;
   width: 100%;
 }
+.megafoot #mega-footer-org-logo {
+    max-width: 330px;
+    margin-top: 1em;
+}
 
 .little-foot-nav > li > a {
   margin-right: 1.75em;
