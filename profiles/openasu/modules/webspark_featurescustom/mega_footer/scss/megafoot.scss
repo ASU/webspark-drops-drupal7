@@ -117,6 +117,10 @@
     background-color: #e5e5e5;
     width: 100%;
   }
+  #mega-footer-org-logo {
+    max-width: 330px; /* 33% of 992px */
+    margin-top: 1em; /* based on 17px margin-top of menu col <h2>s */
+  }
 }
 
 .little-foot-nav > li > a {
