@@ -24,7 +24,7 @@ function cas_batch_user_add($cas_name, &$context) {
 
   if ($existing_account == TRUE){
     $uri = entity_uri('user', $existing_account);
-    $context['results']['messages']['already_exist'][] = t('<a href="@url">%name</a>', array('@url' => url($uri['path'], $uri['options']), '%name' => $existing_account->name));;
+    $context['results']['messages']['already_exist'][] = t('<a href="@url">%name</a>', array('@url' => url($uri['path'], $uri['options']), '%name' => format_username($existing_account)));;
     return;
   }
 
@@ -36,7 +36,7 @@ function cas_batch_user_add($cas_name, &$context) {
   }
   else {
     $uri = entity_uri('user', $account);
-    $context['results']['messages']['newly_created'][] = t('<a href="@url">%name</a>', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name));
+    $context['results']['messages']['newly_created'][] = t('<a href="@url">%name</a>', array('@url' => url($uri['path'], $uri['options']), '%name' => format_username($account)));
     return $account;
   }
 }

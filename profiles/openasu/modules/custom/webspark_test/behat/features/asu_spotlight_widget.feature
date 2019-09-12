@@ -12,7 +12,7 @@ Feature: Add ASU spotlight widget
     And I click "Add ASU spotlight" in the "CTools modal" region
     Then I should see "Configure new Add ASU spotlight"
 
-  @api @javascript
+  @api @javascript @drupal_private_files
   Scenario: Add a ASU spotlight
     When I fill in the following:
       | field_asu_spotlight_items[und][0][title]  | Testing item title  |
@@ -21,7 +21,19 @@ Feature: Add ASU spotlight widget
       | Button Text                               | test button            |
       | Button color                              | red              |
       | Text position over image                  | mid-center    |
-    And I attach the file "test-lg.png" to "files[field_asu_spotlight_items_und_0_fid]"
+    And I click "Browse"
+    And I switch to the frame "mediaBrowser"
+    And I attach the file "test-lg.png" to "files[upload]"
+    And I press "Next"
+    Then I should see "Destination"
+    When I select the radio button "Public local files served by the webserver."
+    And I press "Next"
+    And I wait 2 seconds
+    Then I should see a "#edit-submit" element
+    And I should see the "Crop" button
+    When I press "Save"
+    And I switch out of all frames
+    And I wait 2 seconds
     And I press the "Add" button
     And I press the "Save" button
     And I wait for the Panels IPE to deactivate

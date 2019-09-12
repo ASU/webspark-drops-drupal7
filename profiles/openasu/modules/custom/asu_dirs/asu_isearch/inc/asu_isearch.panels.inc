@@ -147,7 +147,7 @@ function asu_isearch_panels_pane_content_alter($content, $pane, $args, $contexts
     ));
   }
 
-
+  // todo: is this needed?
   if ($pane->panel == 'affiliations' && $pane->subtype == 'node:field_isearch_affiliations') {
 
     // unique quicktabs identifier
@@ -247,7 +247,35 @@ function asu_isearch_preprocess_panels_pane(&$variables) {
 
     // hide configuration
     unset($content['field_isearch_config']);
+
+
   }
+
+  // prepare video field panel for template
+  if (isset($variables['content']['#field_name']) && $variables['content']['#field_name'] == 'field_isearch_video') {
+
+    $variables['title'] = $variables['content']['#title'];
+
+    $items = $variables['content'];
+
+    foreach ($items as $key => $value) {
+      if (!is_int($key)) {
+        unset($items[$key]);
+      }
+    }
+
+    $variables['items'] = $items;
+
+    if ($variables['pane']->configuration['label'] == 'hidden') {
+      $variables['label_hidden'] = TRUE;
+    } else {
+      $variables['label_hidden'] = FALSE;
+    }
+
+    $variables['items'] = $items;
+  }
+
+
 }
 
 /****
@@ -764,7 +792,7 @@ function asu_isearch_form_fieldable_panels_panes_fieldable_panels_pane_content_t
       'University Staff' => 'staff',
       'Classified' => 'staff',
       // Other
-      'Post Doctoral Scholars' => 'other',
+      'Postdoctoral Scholars' => 'other',
       'Graduate Assistant/Associate' => 'other',
       'Student Worker' => 'other',
     );

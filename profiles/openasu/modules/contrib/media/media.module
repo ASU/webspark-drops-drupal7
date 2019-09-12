@@ -168,6 +168,9 @@ function media_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 function media_admin_paths() {
   $paths['media/*/edit/*'] = TRUE;
   $paths['media/*/format-form'] = TRUE;
+  if (module_exists('admin_language')) {
+    $paths['media/ajax/*'] = TRUE; // For admin_language module compatibility.
+  }
 
   // If the media browser theme is set to the admin theme, ensure it gets set
   // as an admin path as well.
@@ -244,6 +247,9 @@ function media_theme() {
 function media_ajax_upload() {
   $form_parents = func_get_args();
   $form_build_id = (string) array_pop($form_parents);
+
+  // Sanitize form parents before using them.
+  $form_parents = array_filter($form_parents, 'element_child');
 
   if (empty($_POST['form_build_id']) || $form_build_id != $_POST['form_build_id']) {
     // Invalid request.
@@ -662,12 +668,20 @@ function media_parse_to_file($url, $params = array()) {
 }
 
 /**
- * Utility function to recursively run check_plain on an array.
+ * Custom implementation of array_walk_recursive() that works around a crash
+ * some users have been experiencing with that function in PHP 7.
  *
- * @todo There is probably something in core I am not aware of that does this.
+ * @see https://www.drupal.org/project/media/issues/2998097
  */
-function media_recursive_check_plain(&$value, $key) {
-  $value = check_plain($value);
+function media_array_walk_recursive(&$array) {
+  foreach ($array as $key => $value) {
+    if (is_array($array[$key])) {
+      media_array_walk_recursive($array[$key]);
+    }
+    else {
+      $array[$key] = check_plain($array[$key]);
+    }
+  }
 }
 
 /**
@@ -1187,6 +1201,9 @@ function media_file_displays_alter(&$displays, $file, $view_mode) {
   if (!empty($title)) {
     $file->title = decode_entities(token_replace($title, array('file' => $file), $replace_options));
   }
+
+  // Reduce memory footprint and response size in media browser.
+  $file->file_contents = '';
 }
 
 /**
@@ -1254,7 +1271,7 @@ function media_set_browser_params() {
       }
     }
 
-    array_walk_recursive($params, 'media_recursive_check_plain');
+    media_array_walk_recursive($params);
 
     // Provide some default parameters.
     $params += array(

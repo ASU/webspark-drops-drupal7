@@ -100,7 +100,6 @@ function _webspark_featurescustom_webstandards_theme_config($theme) {
   $modules[] = 'entity_view_mode';
   $modules[] = 'flexslider';
   $modules[] = 'fontawesome';
-  $modules[] = 'google_appliance';
   $modules[] = 'maxlength';
   $modules[] = 'panels_tabs';
   $modules[] = 'uuid_features';
@@ -111,7 +110,6 @@ function _webspark_featurescustom_webstandards_theme_config($theme) {
   // OpenASU custom modules, features - keep this up with openasu.info
   // TODO - automate this process by reading in .info file
   $modules[] = 'webspark_featurescustom';
-  $modules[] = 'asu_gsa';
   $modules[] = 'asu_maps_enhanced';
   $modules[] = 'asu_spotlight';
   $modules[] = 'uto_carousel';

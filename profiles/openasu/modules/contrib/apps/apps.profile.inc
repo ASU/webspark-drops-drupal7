@@ -146,7 +146,7 @@ function apps_profile_apps_select_form($form, $form_state, &$install_state) {
         '#parents' => array('apps', $name),
         '#return_value' => $name,
         '#description' =>
-          (!empty($app['logo']['path']) ? 
+          (!empty($app['logo']['path']) ?
             theme('image', array('path' => $app['logo']['path'], 'height' => '32', 'width' => '32', 'attributes' => array('class' => array('apps-image')))) : '') .
           (!empty($app['description']) ? $app['description'] : '') . '<span class="clearfix"></span>',
         '#default_value' => in_array($name,  $_SESSION['apps_server']['default apps']),
@@ -509,7 +509,7 @@ function apps_profile_check_dependencies($module_list) {
   // Create an associative array with weights as values.
   $module_list = array_flip(array_values($module_list));
 
-  while (list($module) = each($module_list)) {
+  foreach ($module_list as $module => $info) {
     if (!isset($module_data[$module])) {
       // This module is not found in the filesystem, abort.
       return FALSE;

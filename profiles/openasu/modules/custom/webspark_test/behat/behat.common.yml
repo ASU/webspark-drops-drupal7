@@ -1,8 +1,8 @@
 default:
   suites:
     default:
-      #paths:
-      #  features: 'features'
+      paths:
+        features: '%paths.base%/features'
       filters:
         tags: "~@chrome"
       contexts:

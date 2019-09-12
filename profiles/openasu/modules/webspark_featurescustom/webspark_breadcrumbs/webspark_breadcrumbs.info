@@ -1,5 +1,5 @@
-name = Webspark breadcrumbs
-description = Adds easy_breadcrumbs; configures content page panel with title, breadcrumb and moscone default layout
+name = Webspark Breadcrumbs
+description = "This adds the option of inserting ASU-themed breadcrumbs into a page. Powered by Easy Breadcrumb."
 core = 7.x
 package = ASU Webspark
 version = 7.x-1.0-dev

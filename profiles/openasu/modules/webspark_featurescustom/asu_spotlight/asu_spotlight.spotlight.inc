@@ -12,7 +12,7 @@ function asu_spotlight_field_info() {
   return array(
     'asu_spotlight' => array(
       'label' => t('ASU Spotlight'),
-      'description' => t('A wonderfully modified, ASU-specific spotlight field'),
+      'description' => t('An ASU-specific spotlight field'),
       'default_widget' => 'asu_spotlight_form',
       'default_formatter' => 'asu_spotlight',
       'settings' => array(
@@ -222,9 +222,8 @@ function hook_admin_paths() {
  * This allows us to populate the proper options and default for selecting optionsets on the form
  */
 function asu_spotlight_form_alter(&$form, &$form_state, $form_id) {
-
-  if ($form_id == 'fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form') {
-
+  if ($form_id == 'fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form' &&
+    $form['#bundle'] === 'asu_spotlight') {   // Only ASU Spotlight FPPs...
     $optionsets = array();
     ctools_include('export');
     foreach (flexslider_optionset_load_all() as $name => $optionset) {
@@ -254,6 +253,11 @@ function asu_spotlight_field_widget_form(&$form, &$form_state, $field, $instance
       '#title' => t('Title'),
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]['title']) ? $items[$delta]['title'] : NULL,
+      '#linkit' => array(
+        'enable' => TRUE,
+        'profile' => 'content_fields',
+        'button_text' => t('Search for existing content'),
+      ),
     );
 
     $element['link'] = array(
@@ -261,11 +265,35 @@ function asu_spotlight_field_widget_form(&$form, &$form_state, $field, $instance
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]['link']) ? $items[$delta]['link'] : NULL,
     );
+    // WEBSPARK-1069 - Added Media module integration (added to Panopoly 1.46 in panopoly_widgets)
+    $instance_settings = $instance['settings'];
+    $field_settings = $field['settings'];
 
     $element['fid'] = array(
       '#title' => t('Image'),
-      '#type' => 'managed_file',
-      '#upload_location' => file_field_widget_uri($field, $instance),
+      '#type' => 'media',
+      '#media_options' => array(
+        'global' => array(
+          'types' => array(
+            'image' => 'image'
+          ),
+          'enabledPlugins' => array(
+            'media_default--media_browser_1' => 'media_default--media_browser_1',
+            'upload' => 'upload',
+          ),
+          'schemes' => array(
+            'private' => 'private',
+            'public' => 'public',
+          ),
+          'file_directory' => isset($instance_settings['file_directory']) ? $instance_settings['file_directory'] : '',
+          'file_extensions' => isset($instance_settings['file_extensions']) ? $instance_settings['file_extensions'] : 'jpg jpeg gif png',
+          'max_filesize' => isset($instance_settings['max_filesize']) ? $instance_settings['max_filesize'] : 0,
+          'min_resolution' => isset($instance_settings['min_resolution']) ? $instance_settings['min_resolution'] : 0,
+          'max_resolution' => isset($instance_settings['max_resolution']) ? $instance_settings['max_resolution'] : 0,
+          'uri_scheme' => !empty($field_settings['uri_scheme']) ? $field_settings['uri_scheme'] : file_default_scheme(),
+          'multiselect' => FALSE,
+        ),
+      ),
       '#default_value' => isset($items[$delta]['fid']) ? $items[$delta]['fid'] : NULL,
     );
 
@@ -314,7 +342,7 @@ function asu_spotlight_field_widget_form(&$form, &$form_state, $field, $instance
     $element['color'] = array(
       '#title' => t('Button color'),
       '#type' => 'select',
-      '#options' => array('blue' => 'Blue', 'red' => 'Red', 'gold' => 'Gold', 'secondary' => 'Grey'),
+      '#options' => array('blue' => 'Blue', 'red' => 'Red', 'gold' => 'Gold', 'grey' => 'Grey'),
       '#default_value' => isset($items[$delta]['color']) ? $items[$delta]['color'] : 'blue',
       '#description' => t("See the <a href='https://brandguide.asu.edu/web-standards/enterprise/ui-kit'>UI Kit</a> for more information on the usage for each color."),
     );

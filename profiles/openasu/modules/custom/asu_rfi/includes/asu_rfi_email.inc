@@ -27,6 +27,11 @@ function asu_rfi_undergrad_email($prog_plan, $e_email, $humanName)
       $degree = $ball_arr["Degree"];
       $desc = $ball_arr["DescrlongExtns"];
 
+      if (isset($name) && strstr($name, ', ')) {
+        list($degree_name_before_comma, $degree_name_after_comma) = explode(", ", $name);
+        $name = $degree_name_before_comma;
+      }
+
       if (isset($desc)) {
         $description = "<strong><i> Program description</strong> </i><br />" . $desc;
       }
@@ -45,7 +50,7 @@ function asu_rfi_undergrad_email($prog_plan, $e_email, $humanName)
   }
 
   $message_start = " <p>" . $humanName . ",</p>";
-  $message_middle = " <p> Thank you for your interest in pursuing a degree at <a href='https://www.asu.edu'>Arizona State University</a>. U.S. News & World Report ranks ASU the #1 most innovative school in the country, ahead of Stanford (#2) and MIT (#3). From engaging in meaningful, innovative research and entrepreneurial projects to collaborating with classmates and faculty, you will be elevating your career when you enroll in undergraduate studies at ASU. </p>
+  $message_middle = " <p> Thank you for your interest in pursuing a degree at <a href='https://www.asu.edu'>Arizona State University</a>. U.S. News & World Report ranks ASU the #1 most innovative school in the country, ahead of Stanford and MIT. From engaging in meaningful, innovative research and entrepreneurial projects to collaborating with classmates and faculty, you will be elevating your career when you enroll in undergraduate studies at ASU. </p>
     <p>With <a href='https://webapp4.asu.edu/programs/'>more than 350 excellent undergraduate degree programs and certificates</a>, including new degree programs in emerging fields, there is a degree path here to fit your career goals.</p><p>Below you will find a link to degree search, which has more information about the degree program in which you indicated interest.</p>
     " . $degree_search_link . "
     <p>As you learn more about ASU, we invite you to get a full view of the Sun Devil experience. We'll keep you updated on student life, academic opportunities and admission timelines, and send you special invitations to events near you.</p>";
@@ -55,11 +60,11 @@ function asu_rfi_undergrad_email($prog_plan, $e_email, $humanName)
                      Admission Services
                   </p>";
   $helpfulResources = "<p><strong><i>Helpful Resources for Future Sun Devils</i></strong><br>
-                        <i>Interactive viewbook and general information</i></p>                        
+                        <i>Interactive viewbook and general information</i></p>
                         <ul>
-                            <li><a href='https://www.asu.edu/myfuture'>my future</a></li>    
-                            <li><a href='http://www.asu.edu/prospective/video/'>about ASU (Video)</a></li>    
-                            <li><a href='https://students.asu.edu/tuition'>cost calculator</a> and <a href='https://students.asu.edu/scholarships/estimator '>scholarship estimator</a></li>    
+                            <li><a href='https://www.asu.edu/myfuture'>my future</a></li>
+                            <li><a href='http://www.asu.edu/prospective/video/'>about ASU (Video)</a></li>
+                            <li><a href='https://students.asu.edu/tuition'>cost calculator</a> and <a href='https://students.asu.edu/scholarships/estimator '>scholarship estimator</a></li>
                         </ul>
                         <p><strong>Explore the campus for your degree:</strong><br>
                             <a href='https://www.asu.edu/tour/'>Take a tour</a>
@@ -144,6 +149,11 @@ function asu_rfi_grad_email($prog_plan, $e_email, $humanName)
       $degree = $ball_arr["Degree"];
       $desc = $ball_arr["DescrlongExtns"];
 
+      if (isset($name)) {
+        list($degree_name_before_comma, $degree_name_after_comma) = explode(", ", $name);
+        $name = $degree_name_before_comma;
+      }
+
       if (isset($desc)) {
         $description = "<strong><i> Program description</strong> </i><br />" . $desc;
       }
@@ -173,10 +183,10 @@ function asu_rfi_grad_email($prog_plan, $e_email, $humanName)
                      Admission Services
                   </p>";
   $helpfulResources = "<p><strong><i>Review these additional resources</i></strong><br>
-                            <a href='https://students.asu.edu/graduate'>How and When to Apply for ASU Graduate Admission</a><br>    
+                            <a href='https://students.asu.edu/graduate'>How and When to Apply for ASU Graduate Admission</a><br>
                             <a href='https://graduate.asu.edu/egss'>Preparing for Graduate School Seminars</a><br>
                             <a href='https://students.asu.edu/tuition'>Cost Estimator</a> and <a href='https://students.asu.edu/graduate/finances'>Graduate Funding Options</a></p>
-                            
+
                         <p><strong>Explore the campus for your degree:</strong><br>
                             <a href='https://www.asu.edu/tour/'>Take a tour</a>
                         </p>";
@@ -277,4 +287,3 @@ function asu_rfi_career($data)
   }
   return $option;
 }
-

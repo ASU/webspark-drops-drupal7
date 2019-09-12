@@ -83,86 +83,6 @@ function theme_asu_dir_isearch_view(&$vars) {
     '#markup' => $view_display,
   );
 
-  /*
-  // display filters? - Should we display or hide the filters
-  if ($view_config->show_filters) {
-    // build the exposed form fields
-    $form_state = array(
-      'view' => $view,
-      'display' => $view->display_handler->display,
-      'exposed_form_plugin' => $view->display_handler->get_plugin('exposed_form'),
-      'method' => 'get',
-      'rerender' => TRUE,
-      'no_redirect' => TRUE,
-      'ajax' => TRUE
-    );
-
-
-    $form = drupal_build_form('views_exposed_form', $form_state);
-
-    // Attach our custom ajax handling script, if ajax is enabled
-    if ($view->use_ajax) {
-      $form['#attached']['js'][] = drupal_get_path('module', 'asu_isearch') . '/js/asu_isearch_omni.js';
-    }
-
-    $form['keys']['#weight'] = -100;
-    $form['keys']['#attributes']['placeholder'] = t('Name or Keyword');
-
-
-    // update search filters
-    $view->set_items_per_page(0);
-    $view->set_offset(0);
-
-    if ($view_config->show_filter_titles) {
-      _asu_isearch_update_view_form_filters($view, $form, $directory);
-    }
-
-    // change some values to correctly display the form
-    $form['#action'] = '/' . drupal_get_path_alias(current_path());
-    $form['#weight'] = -5;
-
-    $form['field_isearch_affil_title_value']['#access'] = (bool) $view_config->show_filter_titles;
-    $form['field_isearch_expertise_areas_tid']['#access'] = (bool) $view_config->show_filter_expertise;
-    $form['sort_by']['#access'] = (bool) $view_config->show_filter_sort;
-    $form['keys']['#access'] = (bool) $view_config->show_filter_omni;
-
-    // set the default sort by
-    $form['sort_by']['#value'] = $view_config->default_sort_by;
-
-    // set some form defaults when submitted ...
-    $params = drupal_get_query_parameters();
-
-    if (isset($params['field_isearch_expertise_areas_tid'])) {
-      $form['field_isearch_expertise_areas_tid']['#value'] = intval($params['field_isearch_expertise_areas_tid']);
-
-      if (isset($params['sort_by'])) {
-        $form['sort_by']['#default_value'] = check_url($params['sort_by']);
-        $form['sort_by']['#value'] = check_url($params['sort_by']);
-      }
-
-      if (isset($params['sort_order'])) {
-        // Forcing ascending sort order for now
-        $form['sort_order']['#value'] = 'ASC';
-      }
-    }
-
-    // Add our configs to the exposed form, so that they are resubmitted as
-    // part of the ajax process
-    $form['omni_configs']['#value'] = drupal_json_encode($view_config);
-
-
-    //$form['submit']['#ajax_processed'] = TRUE;
-    $content['isearch_view_exposed_form'] = $form;
-    $form['field_isearch_affil_title_value']['#title'] = t('Title');
-    $form['field_isearch_affil_title_value']['#title_display'] = 'invisible';
-    $form['field_isearch_expertise_areas_tid']['#title'] = t('Expertise Areas Filter');
-    $form['field_isearch_expertise_areas_tid']['#title_display'] = 'invisible';
-    $form['sort_by']['#title'] = t('Sort By');
-    $form['sort_by']['#title_display'] = 'invisible';
-    $form['field_isearch_local_tags_tid']['#title'] = t('Local Tags');
-    $form['field_isearch_local_tags_tid']['#title_display'] = 'invisible';
-  }*/
-
   _asu_isearch_build_contextual_filter_form($content, $view, $view_config, $directory);
 
   $html = $content['isearch_az_index']['#markup'];
@@ -226,8 +146,6 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
     }
   }
 
-  $alias = drupal_get_path_alias();
-
   $html = '';
 
   //pass these module constants tot he JS
@@ -255,7 +173,6 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
 
     foreach ($field_configs['expertise_areas'] as $key => $item) {
       $term = taxonomy_term_load($item);
-
       $exp[] = $term->name;
     }
 
@@ -267,10 +184,6 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   libraries_load('fontawesome');
 
   $options = array('weight' => 1000);
-
-
-
-  //drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/plugins/jquery.tabgroups.js');
 
   //add history.js
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/jquery.history.js');
@@ -292,8 +205,8 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirResultWidget.js');
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/widgets/asu_dirTreeWidget.js');
   drupal_add_js(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/js/asu_dir_ajax_solr_field.js', $options);
-  drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_tree.css');
-  drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_people_block.css');
+  drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_tree.min.css');
+  drupal_add_css(drupal_get_path('module', ASU_DIRECTORY_MODULE_NAME) . '/css/asu_dir_people_block.min.css');
 
   // get the default photo url, if configured, and pass information
   // to the frontend
@@ -316,7 +229,6 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
 
   $field_configs['default_photo'] = $default_photo;
 
-
   $settings = array(
     'deptNids' => $field_items,
     'fieldConfigs' => $field_configs,
@@ -324,11 +236,11 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
     'admin' => $admin,
     'topLevelIds' => $top_level_ids,
     'tree' => $tree,
-    'pageAlias' => $alias,
     'titleSortField' => ASU_DIR_UTILITIES_TITLESORT_FIELD,
     'fidNum' => $the_id,
     'localPeople' => $local_people,
-    'iSearchUrl' => ASU_DIR_UTILITIES_ISEARCH_URL
+    'iSearchUrl' => ASU_DIR_UTILITIES_ISEARCH_URL,
+    'lnameSort' => variable_get('asu_dir_utilities_lname_sort_field', ASU_DIR_UTILITIES_SOLR_LASTNAME_SORT_DEFAULT)
   );
 
   drupal_add_js(array(ASU_DIRECTORY_MODULE_NAME . $the_id => $settings), 'setting');
@@ -342,7 +254,6 @@ function theme_asu_dir_ajax_solr_people(&$vars) {
   $html .= '<div class="dir-people-wrapper" id="asu-dir-people-wrapper' . $the_id . '"><div class="col-md-12 dir-ajax-solr-people" id="asu-dir-ajax-solr-people' . $the_id . '"></div></div>';
 
   //Pagination Controls
-
   $html .= '<div class="text-center asu_directory_bottom_container"><ul id="asu-dir-ajax-solr-pager' . $the_id . '" class="pagination"></ul></div>';
 
   return $html;

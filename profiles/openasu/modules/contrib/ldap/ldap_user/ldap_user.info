@@ -6,6 +6,7 @@ dependencies[] = entity
 dependencies[] = number
 
 core = 7.x
+php = 5.4
 
 files[] = ldap_user.api.php
 files[] = ldap_user.inc
@@ -15,17 +16,17 @@ files[] = ldap_user.functions.inc
 files[] = ldap_user.admin.inc
 files[] = ldap_user.test_form.inc
 files[] = ldap_user.theme.inc
-;files[] = ldap_user.ws.inc
+
 files[] = LdapUserConf.class.php
 files[] = LdapUserConfAdmin.class.php
 files[] = tests/ldap_user.test
 
-stylesheets[all][] = ldap_user.css
 configure = admin/config/people/ldap/user
 
-; Information added by Drupal.org packaging script on 2014-01-08
-version = "7.x-2.0-beta8"
+test_dependencies[] = ldap_sso:ldap_sso
+
+; Information added by Drupal.org packaging script on 2019-04-20
+version = "7.x-2.5"
 core = "7.x"
 project = "ldap"
-datestamp = "1389150511"
-
+datestamp = "1555751588"

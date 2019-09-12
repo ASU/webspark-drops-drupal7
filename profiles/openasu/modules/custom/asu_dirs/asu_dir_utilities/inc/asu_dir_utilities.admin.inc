@@ -219,49 +219,30 @@ function asu_dir_utilities_get_default_config($type = 'asu_dir') {
     'view_display' => 'isearch_directory:isearch_directory_list',
     'link_building_codes' => variable_get('isearch_link_buildings', FALSE),
   );
-
-
-  /*  ASU_ISEARCH ORIGINAL CONFIGS
-  return array(
-    'employee_types' => array('All'),
-    'employee_type_exclude' => 0,
-    'tenure_display' => 0,
-    'show_managers' => 0,
-    'show_filters' => 1,
-    'include_subdepts' => 0,
-
-    'pager_display' => 'paged',
-    'pager_items_per_page' => 10,
-    'pager_offset' => 0,
-    'expertise_areas' => array(),
-    'local_tags' => array(),
-    'display_short_bio' => TRUE,
-    'display_header' => TRUE,
-    'display_photo' => TRUE,
-    'display_name' => TRUE,
-    'display_contact' => TRUE,
-    'display_expertise' => TRUE,
-    'display_building' => TRUE,
-    'display_room' => TRUE,
-    'default_sort_by' => 'field_isearch_affil_rank_weight_value',
-    'filter_title' => '',
-    'show_filter_titles' => TRUE,
-    'show_filter_omni' => TRUE,
-    'show_filter_expertise' => TRUE,
-
-    'show_az_index' => FALSE,
-
-    'depts' => $depts,
-  );*/
 }
 
+/***
+ * Maps an asu_dir Solr sorting field or mode to an ASU LID parameter
+ *
+ * @param $sort
+ *
+ * @return mixed
+ */
 function asu_dir_utilites_get_view_sort($sort) {
+
+  // Allow lastname sorting field to be configurable, defaulting to the lastNameExact field
+  $lnamefield = variable_get('asu_dir_utilities_lname_sort_field', ASU_DIR_UTILITIES_SOLR_LASTNAME_SORT_DEFAULT);
+
   $sorts = array(
     'tsort' => 'field_isearch_affil_rank_weight_value',
-    'lastNameSort' => 'field_isearch_lastname_value',
+    $lnamefield => 'field_isearch_lastname_value',
     'firstNameSort' => 'field_isearch_firstname_value'
   );
 
-  return $sorts[$sort];
-
+  // If requested key not set, return the rank weight field as default
+  if (array_key_exists($sort, $sorts)) {
+    return $sorts[$sort];
+  } else {
+    return 'field_isearch_affil_rank_weight_value';
+  }
 }

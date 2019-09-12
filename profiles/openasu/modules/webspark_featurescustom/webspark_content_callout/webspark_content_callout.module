@@ -5,3 +5,15 @@
  */
 
 include_once 'webspark_content_callout.features.inc';
+
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Adds the form js for the content callout node form
+ */
+function webspark_content_callout_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'content_callout_node_form') {
+    drupal_add_js(drupal_get_path('module', 'webspark_content_callout') . '/js/webspark_content_callout.js');
+  }
+}

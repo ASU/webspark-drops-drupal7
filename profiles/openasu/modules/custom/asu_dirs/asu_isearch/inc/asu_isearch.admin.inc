@@ -41,15 +41,7 @@ function asu_isearch_admin_settings_form() {
     '#default_value' => variable_get('isearch_default_photo', ''),
     '#description' => t("Upload an image to use as the default photo for profiles that are not displaying a photo."),
     '#required' => FALSE,
-    '#upload_location' => 'public://asu_isearch_photos/',
-    '#states' => array(
-      'visible' => array(
-        ':input[name="isearch_display_default_photo"]' => array('checked' => TRUE),
-      ),
-      'required' => array(
-        ':input[name="isearch_display_default_photo"]' => array('checked' => TRUE),
-      ),
-    ),
+    '#upload_location' => 'public://asu_isearch_photos/'
   );
 
   // todo: get this working for the solr listings
@@ -142,6 +134,25 @@ function asu_isearch_admin_settings_form_submit($form, &$form_state) {
   if (isset($config_value['options'])) {
     unset($config_value['options']);
     $form_state['values']['isearch_admin_feed_dept'] = drupal_json_encode($config_value);
+  }
+
+  // handle the default photo separately from system_settings_form_submit, so that
+  // FILE_STATUS_PERMANENT is set and photo doesn't get deleted
+  if (isset($form_state['values']['isearch_default_photo'])) {
+    $file = file_load($form_state['values']['isearch_default_photo']);
+
+    if ($file) {
+      // Change status to permanent.
+      $file->status = FILE_STATUS_PERMANENT;
+      // Save.
+      file_save($file);
+      // Save file to variable.
+      variable_set('isearch_default_photo', $file->fid);
+      // Record that the module is using the file
+      file_usage_add($file, 'asu_isearch', 'profile_default', $file->fid);
+
+      unset($form_state['values']['isearch_default_photo']);
+    }
   }
 
   system_settings_form_submit($form, $form_state);

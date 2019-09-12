@@ -99,6 +99,7 @@ function search_api_views_views_data() {
       $table['search_api_relevance']['title'] = t('Relevance');
       $table['search_api_relevance']['help'] = t('The relevance of this search result with respect to the query.');
       $table['search_api_relevance']['field']['type'] = 'decimal';
+      $table['search_api_relevance']['field']['float'] = TRUE;
       $table['search_api_relevance']['field']['handler'] = 'entity_views_handler_field_numeric';
       $table['search_api_relevance']['field']['click sortable'] = TRUE;
       $table['search_api_relevance']['sort']['handler'] = 'SearchApiViewsHandlerSort';
@@ -219,6 +220,9 @@ function _search_api_views_add_handlers($id, array $field, EntityMetadataWrapper
       $table[$id]['filter']['vocabulary'] = $vocabulary;
     }
   }
+  elseif (in_array($inner_type, array('integer', 'decimal', 'duration', 'string'))) {
+    $table[$id]['filter']['handler'] = 'SearchApiViewsHandlerFilterNumeric';
+  }
   else {
     $table[$id]['filter']['handler'] = 'SearchApiViewsHandlerFilter';
   }
@@ -282,6 +286,16 @@ function search_api_views_views_plugins() {
       'use more' => TRUE,
       'accept attachments' => TRUE,
       'admin' => t('Facets block'),
+    );
+  }
+
+  if (module_exists('views_content_cache')) {
+    $ret['cache']['search_api_views_content_cache'] = array(
+      'title' => t('Search-specific content-based'),
+      'help' => t("Cache Search API views based on content updates. (Requires Views Content Cache)"),
+      'base' => $bases,
+      'handler' => 'SearchApiViewsContentCache',
+      'uses options' => TRUE,
     );
   }
 

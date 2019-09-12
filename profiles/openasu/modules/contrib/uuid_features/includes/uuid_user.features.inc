@@ -10,14 +10,20 @@
 function uuid_user_features_export_options() {
   $options = array();
 
-  $query = 'SELECT u.uid, u.name, u.mail, u.uuid
-    FROM {users} u WHERE uid > 0 ORDER BY u.name ASC';
-  $results = db_query($query);
-  foreach ($results as $user) {
-    $options[$user->uuid] = t('@name: @mail', array(
-      '@name' => $user->name,
-      '@mail' => $user->mail,
-    ));
+  if (variable_get('uuid_features_entity_user_user', FALSE)) {
+    $query = db_select('users', 'u')
+      ->fields('u', array('uid', 'name', 'mail', 'uuid'))
+      ->condition('u.uid', 0, '>')
+      ->orderBy('u.name', 'ASC')
+      ->addTag('uuid_user_features_export_options');
+
+    $results = $query->execute()->fetchAll();
+    foreach ($results as $user) {
+      $options[$user->uuid] = t('@name: @mail', array(
+        '@name' => $user->name,
+        '@mail' => $user->mail,
+      ));
+    }
   }
 
   return $options;
@@ -58,6 +64,8 @@ function uuid_user_features_export_render($module, $data) {
   $code[] = '  $users = array();';
   $code[] = '';
   $uids = entity_get_id_by_uuid('user', $data);
+  // Always sort by the uuid to ensure the order is maintained.
+  ksort($uids);
   foreach ($uids as $uuid => $uid) {
     // Only export the user if it exists.
     if ($uid === FALSE) {
@@ -73,7 +81,12 @@ function uuid_user_features_export_render($module, $data) {
 
     // Use date instead of created - same format used by node_object_prepare.
     $export->date = format_date($export->created, 'custom', 'Y-m-d H:i:s O');
-    unset($export->uid, $export->pass);
+    unset(
+      $export->uid,
+      $export->pass,
+      $export->access,
+      $export->login
+    );
 
     $entity_type = 'user';
     drupal_alter('uuid_entity_features_export_render', $entity_type, $export, $account, $module);

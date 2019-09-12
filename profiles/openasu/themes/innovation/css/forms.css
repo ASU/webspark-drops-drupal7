@@ -46,11 +46,7 @@
 }
 .form-type-checkbox input[type="checkbox"]:focus + label::before,
 .form-type-radio input[type="radio"]:focus + label::before {
-	 outline:none; 
-	 border-top: 2px solid #4D90FE;
-	 border-right: 2px solid #4D90FE;
-	 border-bottom: 2px solid #4D90FE;
-	 border-left: 2px solid #4D90FE;
+	 outline: 2px solid #4D90FE;
 	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
 	 box-shadow: 0px 0px 5px  #4D90FE;
 }
@@ -127,11 +123,7 @@
 }
 
 .form-type-radio input[type="radio"]:focus + label::before {
-	 outline:none; 
-	 border-top: 2px solid #4D90FE;
-	 border-right: 2px solid #4D90FE;
-	 border-bottom: 2px solid #4D90FE;
-	 border-left: 2px solid #4D90FE;
+	 outline: 2px solid #4D90FE;
 	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
 	 box-shadow: 0px 0px 5px  #4D90FE;
 }
@@ -201,17 +193,23 @@ div.ctools-modal-content .dependent-options {
   margin-bottom: 1em;
   margin-top: 0;
 }
-#modal-content .form-actions {
-  background-color: #eee;
+#modal-content .form-actions,
+.page-admin .form-actions,
+#block-system-main .node-form .form-actions {
+  background-color: #ffe9ac;
   border-radius: 0.25em;
-  clear: right;
-  float: right;
-  margin: 0 0 1em 1em;
+  margin: 0 1em 1em 0;
   min-width: 25%;
   width: auto;
 }
+#modal-content .form-actions {
+  float: right;
+  clear: right;
+  margin: 0 0 1em 1em;
+}
+
 #modal-content .form-submit.btn {
-  margin: 1em;
+  margin: 1em 0;
 }
 
 #modal-content .form-type-checkbox {
@@ -220,5 +218,36 @@ div.ctools-modal-content .dependent-options {
 
 /* Webform fixes */
 .webform-container-inline div, .webform-container-inline div.form-item {
-	display: inline-block; /* WAS: inline */
+  display: inline-block; /* WAS: inline */
+}
+
+/* Global i798 */
+
+#modal-content .form-submit.btn {
+  margin: 1em 1em 1em 0; /* LTR */
+}
+#modal-content .form-submit.btn:last-child {
+  margin-right: 0; /* LTR */
+}
+
+/* Add title banner -> Browse... button click to Media modal */
+
+/* Add padding to panel #1 */
+#media-browser-page-wrapper #media-tab-upload,
+#media-browser-tabset .media-browser-tab {
+  padding: 0 1em;
+}
+
+/* Add LH margin to button */
+#media-browser-page-wrapper #edit-upload-upload-button {
+  margin-left: 1.125em;
+}
+
+/* Hide preview content if empty */
+#modal-content div.preview:empty {
+  display: none;
+}
+
+#media-browser-page-wrapper .manualcrop-style-button-holder {
+  padding-top: 0;
 }

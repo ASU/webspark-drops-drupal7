@@ -1,20 +1,19 @@
 <?php
+
 /**
  * @file
- * The Easy Breadcrumb module provides a block to be embedded in any page,
- * typically at some place near the page's header.
+ * The Easy Breadcrumb module provides a block to be embedded in any page.
+ *
+ * Typically at some place near the page's header.
  * Easy Breadcrumb uses the URL (path alias) and the current page's title
  * (when available) to obtain the breadcrumb's segments and its respective
  * links. The resulting block will be something like:
- * "Home >> Contact Us" or "Home / Contact us".
+ * "Home » Contact Us" or "Home / Contact us".
  * Such presentation could vary depending on the configuration of the module.
  */
 
 /**
  * Implements hook_permission().
- *
- * @return Assoc
- *   permission items.
  */
 function easy_breadcrumb_permission() {
   return array(
@@ -29,18 +28,55 @@ function easy_breadcrumb_permission() {
  * Implements hook_init().
  */
 function easy_breadcrumb_init() {
-  $disable_drupal_default_breadcrumb = variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_DEFAULT_DRUPAL_BREADCRUMB, TRUE);
-  if ($disable_drupal_default_breadcrumb) {
-    // Sets the Drupal's default breadcrumb as an empty array to disable it.
-    drupal_set_breadcrumb(array());
+  global $theme;
+  $site_theme = variable_get('theme_default', 'bartik');
+  $admin_theme = variable_get('admin_theme', 'seven');
+  // Disable Admin theme breadcrumb, but only if different to site theme.
+  if ($theme === $admin_theme && $site_theme !== $admin_theme) {
+    $disable_admin_breadcrumb = variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_ADMIN_BREADCRUMB, FALSE);
+    if ($disable_admin_breadcrumb) {
+      // Set the Drupal's default breadcrumb as an empty array to disable it.
+      drupal_set_breadcrumb(array());
+    }
+  }
+  // Disable front-end breadcrumbs.
+  else {
+    $disable_drupal_default_breadcrumb = variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_DEFAULT_DRUPAL_BREADCRUMB, TRUE);
+    if ($disable_drupal_default_breadcrumb) {
+      // Set the Drupal's default breadcrumb as an empty array to disable it.
+      drupal_set_breadcrumb(array());
+    }
+  }
+}
+
+/**
+ * Implements hook_help().
+ */
+function easy_breadcrumb_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#easy_breadcrumb':
+      $readme = file_get_contents(dirname(__FILE__) . '/README.md');
+      $output = '';
+
+      if (module_exists('markdown')) {
+        $filters = module_invoke('markdown', 'filter_info');
+        $info = $filters['filter_markdown'];
+
+        if (function_exists($info['process callback'])) {
+          $output = $info['process callback']($readme, NULL);
+        }
+      }
+
+      if ($output === '') {
+        $output = '<pre>' . $readme . '</pre>';
+      }
+
+      return $output;
   }
 }
 
 /**
  * Implements hook_menu().
- *
- * @return Assoc
- *   menu items.
  */
 function easy_breadcrumb_menu() {
   $items = array();
@@ -57,30 +93,6 @@ function easy_breadcrumb_menu() {
 
 /**
  * Implements hook_theme().
- *
- * @param array $existing
- *   An array of existing implementations that may be used for override
- *   purposes. This is primarily useful for themes that may wish to examine
- *   existing implementations to extract data (such as arguments) so that it may
- *   properly register its own, higher priority implementations.
- * @param string $type
- *   What 'type' is being processed. This is primarily useful so that themes
- *   tell if they are the actual theme being called or a parent theme. May be
- *   one of: module: A module is being checked for theme implementations.
- *   base_theme_engine: A theme engine is being checked for a theme which is a
- *   parent of the actual theme being used. theme_engine: A theme engine is
- *   being checked for the actual theme being used. base_theme: A base theme is
- *   being checked for theme implementations. theme: The actual theme in use is
- *   being checked.
- * @param string $theme
- *   The actual name of theme that is being being checked (mostly only useful
- *   for theme engine).
- * @param string $path
- *   The directory path of the theme or module, so that it doesn't need to be
- *   looked up.
- *
- * @return Assoc
- *   A keyed array of theme hooks.
  */
 function easy_breadcrumb_theme($existing, $type, $theme, $path) {
   return array(
@@ -89,16 +101,16 @@ function easy_breadcrumb_theme($existing, $type, $theme, $path) {
         'breadcrumb' => NULL,
         'segments_quantity' => NULL,
         'separator' => NULL,
+        'separator_ending' => NULL,
       ),
+      'template' => 'easy-breadcrumb',
+      'path' => drupal_get_path('module', 'easy_breadcrumb') . '/tpl',
     ),
   );
 }
 
 /**
  * Implements hook_block_info().
- *
- * @return Assoc
- *   the blocks' info.
  */
 function easy_breadcrumb_block_info() {
   $block = array();
@@ -111,62 +123,481 @@ function easy_breadcrumb_block_info() {
 
 /**
  * Implements hook_block_view().
- *
- * @param string $delta
- *   the identifier of the requested block.
- *
- * @return Assoc
- *   the requested block's view.
  */
 function easy_breadcrumb_block_view($delta = NULL) {
   $block = array();
   switch ($delta) {
     case 'easy_breadcrumb':
-      require_once 'includes/easy_breadcrumb.blocks.inc';
       $block['subject'] = NULL;
-      $block['content'] = _easy_breadcrumb_block();
+      $block['content'] = theme('easy_breadcrumb');
       break;
   }
   return $block;
 }
 
 /**
- * Theme function for the breadcrumb.
+ * Process variables for easy-breadcrumb.tpl.php.
  *
- * @param Assoc $variables
- *   arguments
- *
- * @return string
- *   HTML for the themed breadcrumb.
+ * @see easy-breadcrumb.tpl.php
  */
-function theme_easy_breadcrumb($variables) {
+function template_preprocess_easy_breadcrumb(&$variables) {
+  $breadcrumbs = _easy_breadcrumb_build_items();
+  if (module_exists('schemaorg')) {
+    $variables['list_type'] = 'https://schema.org/BreadcrumbList';
+  }
+  else {
+    $variables['list_type'] = 'http://data-vocabulary.org/Breadcrumb';
+  }
+  foreach ($breadcrumbs as $i => $breadcrumb) {
+    if (isset($breadcrumb['url'])) {
+      $variables['breadcrumb'][$i] = '<span itemprop="title">';
 
-  $breadcrumb = $variables['breadcrumb'];
-  $segments_quantity = $variables['segments_quantity'];
-  $separator = $variables['separator'];
+      $parsed_query = '';
+      $parsed_url = parse_url($breadcrumb['url']);
+      if (isset($parsed_url['query'])) {
+        parse_str($parsed_url['query'], $parsed_query);
+      }
+      $variables['breadcrumb'][$i] .= l($breadcrumb['content'], $parsed_url['path'], array(
+        'attributes' => array('class' => $breadcrumb['class']),
+        'query' => $parsed_query,
+        'html' => (!empty($breadcrumb['html'])) ? $breadcrumb['html'] : FALSE,
+      ));
 
-  $html = '';
-
-  if ($segments_quantity > 0) {
-
-    $html .= '<div class="easy-breadcrumb">';
-
-    for ($i = 0, $s = $segments_quantity - 1; $i < $segments_quantity; ++$i) {
-			$it = $breadcrumb[$i];
-      $content = decode_entities($it['content']);
-			if (isset($it['url'])) {
-				$html .= l($content, $it['url'], array('attributes' => array('class' => $it['class'])));
-			} else {
-        $class = implode(' ', $it['class']);
-				$html .= '<span class="' . $class . '">'	. check_plain($content) . '</span>';
-			}
-			if ($i < $s) {
-				$html .= '<span class="easy-breadcrumb_segment-separator"> ' . $separator . ' </span>';
-			}
+      $variables['breadcrumb'][$i] .= '</span>';
     }
-    
-    $html .= '</div>';
+    else {
+      $class = implode(' ', $breadcrumb['class']);
+      $variables['breadcrumb'][$i] = '<span class="' . $class . '" itemprop="title">' . $breadcrumb['content'] . '</span>';
+    }
+  }
+  $variables['segments_quantity'] = isset($variables['breadcrumb']) ? count($variables['breadcrumb']) : 0;
+  $variables['separator_ending'] = variable_get(EasyBreadcrumbConstants::DB_VAR_SEPERATOR_ENDING, FALSE) ? 0 : 1;
+  $variables['separator'] = filter_xss(variable_get(EasyBreadcrumbConstants::DB_VAR_SEGMENTS_SEPARATOR, '»'));
+}
+
+/**
+ * Helper function to generate breadcrumb items.
+ *
+ * @return array
+ *   Items of the breadcrumb.
+ */
+function _easy_breadcrumb_build_items() {
+  // Array storing the breadcrumb's segments.
+  $breadcrumb = array();
+  // Default classes for the segments.
+  $segments_classes = array('easy-breadcrumb_segment');
+  // Gets the flag saying if the front page segment should be included.
+  $include_front_page_segment = variable_get(EasyBreadcrumbConstants::DB_VAR_INCLUDE_HOME_SEGMENT, TRUE);
+
+  // Conditionally include the front page segment in the breadcrumb.
+  if ($include_front_page_segment) {
+    $front_text = _easy_breadcrumb_obtain_home_title();
+    // Marks the front--segment with an identifier class (useful for CSS).
+    $segments_classes[1] = 'easy-breadcrumb_segment-front';
+    // Adds a segment for the front page.
+    $breadcrumb[] = _easy_breadcrumb_build_item($front_text, $segments_classes, '<front>');
   }
 
-  return $html;
+  // There won't be more segments if visiting the front page,
+  // the don't waste resources.
+  if (!drupal_is_front_page()) {
+    // Gets the flag saying the capitalizator mode.
+    $capitalizator_mode = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE, 'ucwords');
+
+    // List of words to be ignored by the capitalizator.
+    $capitalizator_ignored_words = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_IGNORED_WORDS,
+        EasyBreadcrumbConstants::defaultIgnoredWords());
+
+    // Flag for including invalid paths as plain-text segments.
+    $include_invalid_paths = variable_get(EasyBreadcrumbConstants::DB_VAR_INCLUDE_INVALID_PATHS, TRUE);
+
+    // List of path to be excluded while generating segments.
+    $excluded_paths_arr = variable_get(EasyBreadcrumbConstants::DB_VAR_EXCLUDED_PATHS,
+          EasyBreadcrumbConstants::defaultExcludedPaths());
+
+    // Obtains the alias of the current path.
+    $alias = drupal_get_path_alias();
+
+    // We need to pass our path through hook_url_outbound_alter(). This fixes
+    // clean URLs not working when they don't exist in the {url_alias} table and
+    // are created with something like subpathauto.
+    $normalized_path = current_path();
+
+    // hook_url_outbound_alter() expects defaults in url() options.
+    $options = array(
+      'fragment' => '',
+      'query' => array(),
+      'absolute' => FALSE,
+      'alias' => FALSE,
+      'prefix' => '',
+      'external' => FALSE,
+    );
+
+    drupal_alter('url_outbound', $alias, $options, $normalized_path);
+
+    // Allow the alias to be altered.
+    drupal_alter('easy_breadcrumb_path', $alias);
+
+    // Get the segments of the current path.
+    $alias_arr = explode('/', $alias);
+
+    // Get the quantity of segments in the current path.
+    $segments_quantity = count($alias_arr);
+
+    $segment_url_arr = array();
+
+    // Iterates over the segments of the current URL
+    // ("blog/article/hello-world") excepting the last segment
+    // (the title, 'hello-world' in that case).
+    $last_segment_title = '';
+    for ($idx_0 = 0, $idx_1 = 1; $idx_1 < $segments_quantity; ++$idx_0, ++$idx_1) {
+      // Build an array containing the URL of the segment being currently
+      // processed. E.g., having $alias as "blog/article/hello-world", at the
+      // first iteration this array will be array('blog'), the second
+      // (and last in that case) the array will be array('blog','article').
+      $segment_url_arr[] = $alias_arr[$idx_0];
+      // String with the potential-path of the segment being processed
+      // (e.g. 'blog/article').
+      $segment_url = implode('/', $segment_url_arr);
+
+      // Jump to the next segment if this url is configured to be excluded.
+      $excluded_path = _easy_breadcrumb_check_excluded_path($segment_url);
+      if ($excluded_path) {
+        continue;
+      }
+
+      $segments_classes[1] = 'easy-breadcrumb_segment-' . $idx_1;
+      // Obtain the internal path it represents.
+      $segment_normal_path = drupal_get_normal_path($segment_url);
+
+      // Check if this is a valid path.
+      $segment_valid_path = _easy_breadcrumb_validate_segment_path($segment_normal_path);
+
+      if (!$segment_valid_path && module_exists('redirect')) {
+        global $language;
+        $redirect = redirect_load_by_source($segment_url, $language->language);
+        if ($redirect) {
+          $segment_normal_path = $redirect->redirect;
+          $segment_valid_path = _easy_breadcrumb_validate_segment_path($segment_normal_path);
+          $segment_url = drupal_get_path_alias($segment_normal_path);
+        }
+      }
+
+      // Get the segment's raw text from the URL.
+      $segment_text = $alias_arr[$idx_0];
+      // Normalized segment's text (e.g. 'Blog');.
+      $segment_title = _easy_breadcrumb_obtain_segment_title($segment_normal_path, $segment_valid_path, $segment_text);
+      _easy_breadcrumb_check_replaced_title($segment_title);
+
+      // Don't duplicate breadcrumbs for menu default local tasks.
+      if ($segment_title == $last_segment_title) {
+        $item = menu_get_item($segment_url);
+        if ($item['type'] != MENU_VISIBLE_IN_BREADCRUMB) {
+          continue;
+        }
+      }
+
+      if ($segment_valid_path || $include_invalid_paths) {
+        $breadcrumb[] = _easy_breadcrumb_build_item($segment_title, $segments_classes, $segment_url, $segment_valid_path);
+      }
+      $last_segment_title = $segment_title;
+    }
+
+    // Gets the flag saying if the title should be appended to the breadcrumb.
+    $include_page_title_segment = variable_get(EasyBreadcrumbConstants::DB_VAR_INCLUDE_TITLE_SEGMENT, TRUE);
+
+    // Adds the page's title to the breadcrumb.
+    if ($include_page_title_segment) {
+      // Marks the page's-title-segment with an identifier class
+      // (useful for CSS).
+      $segments_classes[1] = 'easy-breadcrumb_segment-title';
+      // The title is the last segment in the URL.
+      $segment_text = $alias_arr[$segments_quantity - 1];
+      $segment_title = _easy_breadcrumb_obtain_page_title($segment_text);
+
+      _easy_breadcrumb_check_replaced_title($segment_title);
+
+      $title_segment_as_link = variable_get(EasyBreadcrumbConstants::DB_VAR_TITLE_SEGMENT_AS_LINK, FALSE);
+      // If the page's title will be a link or just a text.
+      $breadcrumb[] = _easy_breadcrumb_build_item($segment_title, $segments_classes, $alias, $title_segment_as_link);
+    }
+  }
+
+  // Allow the entire breadcrumb to be altered.
+  drupal_alter('easy_breadcrumb_breadcrumb', $breadcrumb);
+
+  return $breadcrumb;
+}
+
+/**
+ * Obtain the title of the front page.
+ *
+ * @return string
+ *   The front-page's title.
+ */
+function _easy_breadcrumb_obtain_home_title() {
+  $front_text = variable_get(EasyBreadcrumbConstants::DB_VAR_HOME_SEGMENT_TITLE);
+  if (!isset($front_text) || $front_text === '') {
+    $front_text = t('Home');
+  }
+  return $front_text;
+}
+
+/**
+ * Obtain the title of the page.
+ *
+ * @param string $page_text
+ *   Raw text to be use as fallback to infer the page's title.
+ *
+ * @return string
+ *   the page's title.
+ */
+function _easy_breadcrumb_obtain_page_title($page_text) {
+  $use_page_title_when_available = variable_get(EasyBreadcrumbConstants::DB_VAR_TITLE_FROM_PAGE_WHEN_AVAILABLE, TRUE);
+  // Tries to get the title of the current page (if available).
+  if ($use_page_title_when_available) {
+    $title = drupal_get_title();
+  }
+  // Just deduce the title from the given fallback.
+  if (!isset($title) || $title === '') {
+    $title = _easy_breadcrumb_normalize_text($page_text);
+  }
+  return $title;
+}
+
+/**
+ * Build a breadcrumb item.
+ *
+ * @param string $item_title
+ *   Title of the item.
+ * @param array $item_classes
+ *   Classes.
+ * @param string $item_url
+ *   Url of the item.
+ * @param bool $as_link
+ *   Denotes if the item is an url or plain text.
+ *
+ * @return array
+ *   the generated breadcrumb item.
+ */
+function _easy_breadcrumb_build_item($item_title, array $item_classes, $item_url, $as_link = TRUE) {
+  if (variable_get(EasyBreadcrumbConstants::DB_VAR_HTML_TAGS, TRUE)) {
+    $item_title = filter_xss($item_title);
+  }
+  if (variable_get(EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_MODE, FALSE)) {
+    $item_title = truncate_utf8(
+      $item_title,
+      variable_get(EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_LENGTH, 100),
+      TRUE,
+      variable_get(EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_DOTS, TRUE)
+    );
+  }
+  $item = array('class' => $item_classes, 'html' => TRUE);
+  if (!variable_get(EasyBreadcrumbConstants::DB_VAR_HTML_TAGS, TRUE)) {
+    $item_title = strip_tags(html_entity_decode($item_title));
+    $item['html'] = TRUE;
+  }
+  $item['content'] = $item_title;
+  if ($as_link) {
+    $item['url'] = $item_url;
+  }
+  return $item;
+}
+
+/**
+ * Check if the given segment is a valid path.
+ *
+ * @param string $segment_path
+ *   Path of the segment.
+ *
+ * @return bool
+ *   True if the segment is a valid path, false otherwise.
+ */
+function _easy_breadcrumb_validate_segment_path($segment_path) {
+  $is_valid_path = drupal_valid_path($segment_path);
+
+  return $is_valid_path;
+}
+
+/**
+ * Check if the title should be replaced.
+ *
+ * @param string $segment_title
+ *   Segment's title by reference.
+ *
+ * @return mix
+ *   String with segment title if necessary or FALSE otherwise.
+ */
+function _easy_breadcrumb_check_replaced_title(&$segment_title) {
+  $replaced_titles = variable_get(EasyBreadcrumbConstants::DB_VAR_REPLACED_TITLES);
+
+  if (empty($replaced_titles)) {
+    return FALSE;
+  }
+
+  $map_values = preg_split('/[\r\n]/', $replaced_titles);
+
+  foreach ($map_values as $map_value) {
+    $values = explode("::", $map_value);
+    if (count($values) == 2) {
+      $replaced_titles_values[$values[0]] = $values[1];
+    }
+  }
+
+  _easy_breadcrumb_apply_title_replacement($segment_title, $replaced_titles_values);
+
+}
+
+/**
+ * Verifies if the given path should be exclude from the breadcrumb.
+ *
+ * @param string $url
+ *   URL to be verified.
+ *
+ * @return bool
+ *   TRUE if should be excluded, FALSE otherwise.
+ */
+function _easy_breadcrumb_check_excluded_path($url) {
+  // List of path to be excluded while generating segments.
+  $excluded_paths_arr = variable_get(EasyBreadcrumbConstants::DB_VAR_EXCLUDED_PATHS,
+    EasyBreadcrumbConstants::defaultExcludedPaths());
+  $excluded = FALSE;
+  foreach ($excluded_paths_arr as $excluded_path) {
+    $exlusion_pattern = '@^' . $excluded_path . '$@';
+    $excluded = preg_match($exlusion_pattern, $url);
+    if ($excluded) {
+      break;
+    }
+  }
+
+  drupal_alter('easy_breadcrumb_exclude_path', $excluded, $url);
+
+  return $excluded;
+}
+
+/**
+ * Obtain the title of the given segment.
+ *
+ * @param string $normal_path
+ *   Segment's normal path.
+ * @param string $valid_path
+ *   Flag if the URL of the segment if valid.
+ * @param string $segment_text
+ *   Raw text to be used as fallback to infer the segment's title.
+ *
+ * @return string
+ *   segment title.
+ */
+function _easy_breadcrumb_obtain_segment_title($normal_path, $valid_path, $segment_text) {
+  // If path is valid then try to obtain the title from the menu router
+  // (if available).
+  if ($valid_path) {
+    $router_item = menu_get_item($normal_path);
+    // If not using segment text as title then use the menu router title.
+    if (!variable_get(EasyBreadcrumbConstants::DB_VAR_SEGMENT_TEXT_AS_TITLE, FALSE)) {
+      $title = $router_item['title'];
+    }
+  }
+  // Just infer the title from the segment text.
+  if (!isset($title) || $title === '') {
+    $title = _easy_breadcrumb_normalize_text($segment_text);
+  }
+  return $title;
+}
+
+/**
+ * Normalizes a text.
+ *
+ * E.g., transforms "about-us" to "About Us" or "About us",
+ * according to parameters.
+ *
+ * @param string $raw_text
+ *   Text to be normalized.
+ *
+ * @return string
+ *   normalized title.
+ */
+function _easy_breadcrumb_normalize_text($raw_text) {
+  // Filter the raw text against XSS.
+  $normalized_text = check_url($raw_text);
+  // Transforms '-hello--world_javascript-' on 'hello world javascript'.
+  $normalized_text = str_replace(array('-', '_'), ' ', $normalized_text);
+  $normalized_text = trim($normalized_text);
+  $normalized_text = preg_replace('/\s{2,}/', ' ', $normalized_text);
+
+  // Gets the flag saying the capitalizator mode.
+  $capitalizator_mode = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE, 'ucwords');
+  if ($capitalizator_mode === 'ucwords') {
+    // Transforms the text 'once a time' to 'Once a Time'.
+    // List of words to be ignored by the capitalizator.
+    $ignored_words = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_IGNORED_WORDS, EasyBreadcrumbConstants::defaultIgnoredWords());
+    $words_arr = explode(' ', $normalized_text);
+    // Transforms the non-ignored words of the segment.
+    $words_arr[0] = drupal_ucfirst($words_arr[0]);
+    for ($idx_1 = 1, $words_quantity = count($words_arr); $idx_1 < $words_quantity; ++$idx_1) {
+      // Transforms this word only if it is not in the list of ignored words.
+      if (!isset($ignored_words[$words_arr[$idx_1]])) {
+        $words_arr[$idx_1] = drupal_ucfirst($words_arr[$idx_1]);
+      }
+    }
+    $normalized_text = implode(' ', $words_arr);
+  }
+  elseif ($capitalizator_mode === 'ucall') {
+    // Transforms the text 'once a time' to 'ONCE A TIME'.
+    $normalized_text = drupal_strtoupper($normalized_text);
+  }
+  elseif ($capitalizator_mode === 'ucforce') {
+    // Transforms the text 'once a time' to 'once a TIME'.
+    // List of words to be forced by the capitalizator.
+    $forced_words = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS, '');
+    // If case sensitivity is false make all the forced words
+    // uncapitalized by default.
+    if (!variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_CASE_SENSITIVITY, FALSE)) {
+      $forced_words = array_map('drupal_strtolower', $forced_words);
+    }
+    $words_arr = explode(' ', $normalized_text);
+    // Transforms the non-ignored words of the segment.
+    if (variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_FIRST_LETTER, '')) {
+      $words_arr[0] = drupal_ucfirst($words_arr[0]);
+    }
+    for ($idx_1 = 0, $words_quantity = count($words_arr); $idx_1 < $words_quantity; ++$idx_1) {
+      // If case sensitivity is false make the compared word uncapitalized
+      // in order to allow the comparison well.
+      if (!variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_CASE_SENSITIVITY, FALSE)) {
+        $selected_word = drupal_strtolower($words_arr[$idx_1]);
+      }
+      else {
+        $selected_word = $words_arr[$idx_1];
+      }
+      // Transforms this word only if it is in the list of forced words.
+      if (in_array($selected_word, $forced_words)) {
+        $words_arr[$idx_1] = drupal_strtoupper($selected_word);
+      }
+    }
+    $normalized_text = implode(' ', $words_arr);
+  }
+  else {
+    // Transforms the text 'once a time' to 'Once a time' (ucfirst).
+    $normalized_text = drupal_ucfirst($normalized_text);
+  }
+
+  return $normalized_text;
+}
+
+/**
+ * Apply title replacements.
+ *
+ * @param string $title
+ *   Page title.
+ * @param array $replacements
+ *   Replacement rules map.
+ */
+function _easy_breadcrumb_apply_title_replacement(&$title, array $replacements) {
+  if (!is_string($title)) {
+    return;
+  }
+
+  if (array_key_exists($title, $replacements)) {
+    $title = $replacements[$title];
+  }
 }

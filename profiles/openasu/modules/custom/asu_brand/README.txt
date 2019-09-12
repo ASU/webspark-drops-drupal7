@@ -20,7 +20,6 @@ A: Yes. <nolink> menu items will link to current page ('#')
 
 HOOKS
 --------------------------
-
 /**
  * Implements hook_asu_brand_sitemenu_alter().
  * Modify site menu before injection into ASU Header
@@ -35,5 +34,13 @@ function MODULENAME_asu_brand_sitemenu_alter(&$menu_array) {
  * Modify site name before injection into ASU Header
  */
 function MODULENAME_asu_brand_sitename_alter(&$site_name) {
+  // you can modify the $site_name here
+}
+
+/**
+ * Implements hook_asu_brand_site_url_alter().
+ * Modify site name before injection into ASU Header
+ */
+function MODULENAME_asu_brand_site_url_alter(&$site_url) {
   // you can modify the $site_name here
 }

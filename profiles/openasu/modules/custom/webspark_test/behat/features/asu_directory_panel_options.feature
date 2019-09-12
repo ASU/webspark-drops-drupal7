@@ -11,7 +11,7 @@ Feature: Add ASU directory panel with options
     And I press the "Publish" button
     And I click "Customize this page"
     And I click "Add new pane"
-    And I click "Add ASU Directory Panel"
+    And I click "Add ASU directory panel"
     And I press the "Browse" button
     And I click on the element "li" which has property "dept_nid" with value "1359"
     And I press the "Submit" button
@@ -31,7 +31,7 @@ Feature: Add ASU directory panel with options
     And I press the "Publish" button
     And I click "Customize this page"
     And I click "Add new pane"
-    And I click "Add ASU Directory Panel"
+    And I click "Add ASU directory panel"
     And I press the "Browse" button
     And I click on the element "li" which has property "dept_nid" with value "1359"
     And I press the "Submit" button
@@ -52,7 +52,7 @@ Feature: Add ASU directory panel with options
     And I press the "Publish" button
     And I click "Customize this page"
     And I click "Add new pane"
-    And I click "Add ASU Directory Panel"
+    And I click "Add ASU directory panel"
     And I press the "Browse" button
     And I click on the element "li" which has property "dept_nid" with value "1359"
     And I press the "Submit" button
@@ -73,7 +73,7 @@ Feature: Add ASU directory panel with options
     And I press the "Publish" button
     And I click "Customize this page"
     And I click "Add new pane"
-    And I click "Add ASU Directory Panel"
+    And I click "Add ASU directory panel"
     And I press the "Browse" button
     And I click on the element "li" which has property "dept_nid" with value "1359"
     And I press the "Submit" button
@@ -94,7 +94,7 @@ Feature: Add ASU directory panel with options
     And I press the "Publish" button
     And I click "Customize this page"
     And I click "Add new pane"
-    And I click "Add ASU Directory Panel"
+    And I click "Add ASU directory panel"
     And I press the "Browse" button
     And I click on the element "li" which has property "dept_nid" with value "1359"
     And I press the "Submit" button

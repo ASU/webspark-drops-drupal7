@@ -51,27 +51,29 @@ function asu_isearch_field_group_info() {
     'label' => 'Basic',
     'weight' => '2',
     'children' => array(
-      0 => 'field_isearch_affiliations',
-      1 => 'field_isearch_asurite_id',
-      2 => 'field_isearch_campus_building',
-      3 => 'field_isearch_campus_room',
-      4 => 'field_isearch_displayname',
-      5 => 'field_isearch_eid',
-      6 => 'field_isearch_email',
-      7 => 'field_isearch_employee_type',
-      8 => 'field_isearch_employment_title',
-      9 => 'field_isearch_fax',
-      10 => 'field_isearch_firstname',
-      11 => 'field_isearch_lastname',
-      12 => 'field_isearch_link_building_code',
-      13 => 'field_isearch_local_photo_url',
-      14 => 'field_isearch_local_primary_aff',
-      15 => 'field_isearch_phone',
-      16 => 'field_isearch_photo_permission',
-      17 => 'field_isearch_photo_preference',
-      18 => 'field_isearch_photo_url',
-      19 => 'field_isearch_primary_aff',
-      20 => 'field_isearch_primary_campus',
+      0 => 'field_isearch_addr_line_three',
+      1 => 'field_isearch_affiliations',
+      2 => 'field_isearch_asurite_id',
+      3 => 'field_isearch_campus_building',
+      4 => 'field_isearch_campus_room',
+      5 => 'field_isearch_city',
+      6 => 'field_isearch_displayname',
+      7 => 'field_isearch_eid',
+      8 => 'field_isearch_email',
+      9 => 'field_isearch_employee_type',
+      10 => 'field_isearch_employment_title',
+      11 => 'field_isearch_fax',
+      12 => 'field_isearch_firstname',
+      13 => 'field_isearch_lastname',
+      14 => 'field_isearch_link_building_code',
+      15 => 'field_isearch_local_photo_url',
+      16 => 'field_isearch_local_primary_aff',
+      17 => 'field_isearch_phone',
+      18 => 'field_isearch_photo_permission',
+      19 => 'field_isearch_photo_preference',
+      20 => 'field_isearch_photo_url',
+      21 => 'field_isearch_primary_aff',
+      22 => 'field_isearch_primary_campus',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -96,7 +98,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Bio',
-    'weight' => '8',
+    'weight' => '10',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -147,7 +149,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Left',
-    'weight' => '4',
+    'weight' => '6',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -168,7 +170,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Right',
-    'weight' => '6',
+    'weight' => '8',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -189,7 +191,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Details',
-    'weight' => '3',
+    'weight' => '5',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -238,7 +240,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Industry Experience',
-    'weight' => '29',
+    'weight' => '31',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -263,9 +265,9 @@ function asu_isearch_field_group_info() {
     'children' => array(
       0 => 'field_board',
       1 => 'field_consulting',
-      2 => 'field_industry_positions',
-      3 => 'field_pro_bono',
-      4 => 'field_executive_courses',
+      2 => 'field_executive_courses',
+      3 => 'field_industry_positions',
+      4 => 'field_pro_bono',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -325,7 +327,7 @@ function asu_isearch_field_group_info() {
     'children' => array(
       0 => 'field_isearch_audio',
       1 => 'field_isearch_images',
-      2 => 'field_isearch_videos',
+      2 => 'field_isearch_video',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -381,11 +383,12 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Contact',
-    'weight' => '1',
+    'weight' => '3',
     'children' => array(
-      0 => 'field_isearch_campus_building',
-      1 => 'field_isearch_email',
-      2 => 'field_isearch_phone',
+      0 => 'field_isearch_addr_line_three',
+      1 => 'field_isearch_campus_building',
+      2 => 'field_isearch_email',
+      3 => 'field_isearch_phone',
     ),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -447,7 +450,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Portrait Section',
-    'weight' => '0',
+    'weight' => '2',
     'children' => array(
       0 => 'group_portrait_image',
     ),
@@ -479,7 +482,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Social',
-    'weight' => '2',
+    'weight' => '4',
     'children' => array(
       0 => 'field_isearch_social_facebook',
       1 => 'field_isearch_social_googleplus',
@@ -515,7 +518,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Public Work',
-    'weight' => '22',
+    'weight' => '24',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -600,7 +603,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Research',
-    'weight' => '13',
+    'weight' => '15',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -623,12 +626,12 @@ function asu_isearch_field_group_info() {
     'label' => 'Research',
     'weight' => '6',
     'children' => array(
-      0 => 'field_isearch_rsrch_activity',
-      1 => 'field_isearch_rsrch_group',
-      2 => 'field_isearch_rsrch_interests',
-      3 => 'field_isearch_rsrch_publications',
-      4 => 'field_isearch_rsrch_website',
-      5 => 'field_isearch_google_scholar',
+      0 => 'field_isearch_google_scholar',
+      1 => 'field_isearch_rsrch_activity',
+      2 => 'field_isearch_rsrch_group',
+      3 => 'field_isearch_rsrch_interests',
+      4 => 'field_isearch_rsrch_publications',
+      5 => 'field_isearch_rsrch_website',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -684,7 +687,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Tabs',
-    'weight' => '35',
+    'weight' => '37',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(
@@ -733,7 +736,7 @@ function asu_isearch_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Teaching',
-    'weight' => '36',
+    'weight' => '38',
     'children' => array(),
     'format_type' => 'hidden',
     'format_settings' => array(

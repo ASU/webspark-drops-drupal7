@@ -113,11 +113,11 @@
                 beforeRequest: function () {
                     var self = this;
                     var fieldConfigs = this.fieldConfigs;
-                    var override = this.manager.checkOverrides();
+                    //var override = this.manager.checkOverrides();
                     var per_page = this.per_page;
 
-                    //if we are showing managers, we need to grab all results and reorder array
-                    if (fieldConfigs.show_managers && !override) {
+                    //if we are sorting by rank, we need to grab all results and reorder array
+                    if (fieldConfigs.show_managers) {
                         self.manager.store.remove('rows');
                         self.manager.store.addByValue('rows', 200000);
 

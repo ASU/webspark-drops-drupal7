@@ -5,7 +5,7 @@
  */
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function webspark_featurescustom_form_panopoly_page_node_form_alter(&$form, &$form_state, $form_id) {
   // Content Page node form
@@ -15,6 +15,9 @@ function webspark_featurescustom_form_panopoly_page_node_form_alter(&$form, &$fo
   $form['field_featured_status']['#access'] = FALSE;
 }
 
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
 function webspark_featurescustom_form_panels_edit_style_settings_form_alter(&$form, &$form_state, $form_id) {
   // Panels styles accordion settings form
   // + Set default configuration settings
@@ -43,10 +46,9 @@ function webspark_featurescustom_entity_info_alter(&$entity_info) {
     ),
   );
 
-  // Changing description of Basic text for clarity
   $entity_info['fieldable_panels_pane']['bundles']['text'] = array(
     'label' => t('Add text'),
-    'description' => t('Add text and media'),
+    'description' => t('Add new, separate body of text.'),
     'pane category' => t('Custom'),
     'pane top level' => TRUE,
     'pane icon' => drupal_get_path('module', 'panopoly_widgets') . '/images/icon_text.png',
@@ -57,4 +59,18 @@ function webspark_featurescustom_entity_info_alter(&$entity_info) {
       'access arguments' => array('administer fieldable panels panes'),
     ),
   );
+
+  // Changing descriptions of Panopoly's FPP-based content widgets for clarity
+  $entity_info['fieldable_panels_pane']['bundles']['quick_links']['description'] = t('Creates bullet list of added URLs/links.'); // Add Links
+  $entity_info['fieldable_panels_pane']['bundles']['basic_file']['description'] = t('Upload a file and display a link to it.
+    Optional description text is displayed above the file link.'); // Add file
+  $entity_info['fieldable_panels_pane']['bundles']['image']['description'] = t('Add 100%-wide responsive image'); // Add Responsive image
+  $entity_info['fieldable_panels_pane']['bundles']['text']['description'] = t('Add new, separate body of text/content.'); // Add text
+  $entity_info['fieldable_panels_pane']['bundles']['map']['description'] = t('Add a Google map based on a street address.
+    IMPORTANT: Use the more detailed Enhanced ASU map when pointing at ASU-related locations.'); // Add map
+  $entity_info['fieldable_panels_pane']['bundles']['table']['description'] = t('Adds an HTML formatted data table.
+    Customizable number of rows and columns.'); // Add table
+  $entity_info['fieldable_panels_pane']['bundles']['video']['description'] = t('Adds a URL for videos from online video from Youtube or Vimeo 
+    (other video sites are not supported).'); // Add video
+  $entity_info['fieldable_panels_pane']['bundles']['spotlight']['description'] = t('DEPRECATED - Use ASU Spotlight instead.'); // Add Spotlight
 }

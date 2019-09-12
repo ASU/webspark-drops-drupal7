@@ -107,6 +107,10 @@ function panopoly_widgets_update_dependencies() {
       'linkit' => 7301,
     );
   }
+  $deps['panopoly_widgets'][7021] = array(
+    // Wait for tablefield to update itself.
+    'tablefield' => 7006,
+  );
   return $deps;
 }
 
@@ -440,5 +444,98 @@ function panopoly_widgets_update_7020() {
       db_delete('media_view_mode_wysiwyg')
         ->execute();
     }
+  }
+}
+
+/**
+ * Grant new tablefield permission to admin roles. Update field settings.
+ */
+function panopoly_widgets_update_7021() {
+  // Make sure new permissions from tablefield get added to the admin role.
+  if (function_exists('user_modules_installed')) {
+    user_modules_installed(array('tablefield'));
+  }
+
+  $instance_info = field_info_instance('fieldable_panels_pane', 'field_basic_table_table', 'table');
+  $instance_info['display']['default']['settings']['sticky_header'] = 1;
+  $instance_info['display']['default']['settings']['striping'] = 1;
+  $instance_info['display']['default']['settings']['trim_trailing_cols'] = 1;
+  $instance_info['display']['default']['settings']['trim_trailing_rows'] = 1;
+  
+  field_update_instance($instance_info);
+}
+
+/**
+ * Mark important widget fields as required.
+ */
+function panopoly_widgets_update_7022() {
+  $required_bundle_fields = array(
+    'basic_file' => array('field_basic_file_file'),
+    'map' => array('field_map_address'),
+    'quick_links' => array('field_quick_links_links'),
+    'table' => array('field_basic_table_table'),
+    'text' => array('field_basic_text_text'),
+    'video' => array('field_video_file'),
+  );
+  foreach ($required_bundle_fields as $bundle => $required_fields) {
+    foreach ($required_fields as $field_name) {
+      $instance_info = field_info_instance('fieldable_panels_pane', $field_name, $bundle);
+      $instance_info['required'] = 1;
+      field_update_instance($instance_info);
+    }
+  }
+}
+
+/**
+ * Make sure that "Slide duration" on Spotlight widgets always has a value.
+ */
+function panopoly_widgets_update_7023(&$sandbox) {
+  if (!isset($sandbox['fpids'])) {
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'fieldable_panels_pane')
+      ->entityCondition('bundle', 'spotlight');
+    $result = $query->execute();
+    if (isset($result['fieldable_panels_pane'])) {
+      $sandbox['fpids'] = array_keys($result['fieldable_panels_pane']);
+    }
+  }
+  else {
+    $count = 10;
+    while (!empty($sandbox['fpids']) && $count >= 0) {
+      $fpp = fieldable_panels_panes_load(array_shift($sandbox['fpids']));
+      $wrapper = entity_metadata_wrapper('fieldable_panels_pane', $fpp);
+      if (!$wrapper->field_basic_spotlight_duration->value()) {
+        $wrapper->field_basic_spotlight_duration->set(variable_get('panopoly_widgets_spotlight_rotation_time', 5));
+        $wrapper->save();
+      }
+    }
+  }
+
+  $sandbox['#finished'] = empty($sandbox['fpids']);
+
+  if ($sandbox['#finished']) {
+    variable_del('panopoly_widgets_spotlight_rotation_time');
+  }
+}
+
+/**
+ * Update field instance settings for duration fields on Spotlight widgets.
+ */
+function panopoly_widgets_update_7024() {
+  // Remove legacy field if it's still around.
+  if ($instance_info = field_info_instance('fieldable_panels_pane', 'field_spotlight_rotation_time', 'spotlight')) {
+    field_delete_instance($instance_info);
+  }
+
+  // Make the default value 5 and mark as required.
+  if ($instance_info = field_info_instance('fieldable_panels_pane', 'field_basic_spotlight_duration', 'spotlight')) {
+    $instance_info['default_value'] = array(
+      0 => array(
+        'value' => 5,
+      ),
+    );
+    $instance_info['required'] = 1;
+    field_update_instance($instance_info);
   }
 }

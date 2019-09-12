@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Install hooks.
@@ -22,4 +23,11 @@ function easy_breadcrumb_uninstall() {
       variable_del($constant_value);
     }
   }
+}
+
+/**
+ * Theme-registry has to be flushed because of new tpl logic is implemented.
+ */
+function easy_breadcrumb_update_7001() {
+  drupal_theme_rebuild();
 }

@@ -43,15 +43,17 @@ typeof JSON != "object" && (JSON = {}), function () {
     }, String.prototype.toJSON = Number.prototype.toJSON = Boolean.prototype.toJSON = function (e) {
         return this.valueOf()
     });
-    var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, gap, indent, meta = {
-        "\b": "\\b",
-        "	": "\\t",
-        "\n": "\\n",
-        "\f": "\\f",
-        "\r": "\\r",
-        '"': '\\"',
-        "\\": "\\\\"
-    }, rep;
+    var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
+        escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
+        gap, indent, meta = {
+            "\b": "\\b",
+            "	": "\\t",
+            "\n": "\\n",
+            "\f": "\\f",
+            "\r": "\\r",
+            '"': '\\"',
+            "\\": "\\\\"
+        }, rep;
     typeof JSON.stringify != "function" && (JSON.stringify = function (e, t, n) {
         var r;
         gap = "", indent = "";
@@ -91,7 +93,8 @@ typeof JSON != "object" && (JSON = {}), function () {
     }, typeof n.init != "undefined" && n.init()
 }(window), function (e, t) {
     "use strict";
-    var n = e.document, r = e.setTimeout || r, i = e.clearTimeout || i, s = e.setInterval || s, o = e.History = e.History || {};
+    var n = e.document, r = e.setTimeout || r, i = e.clearTimeout || i, s = e.setInterval || s,
+        o = e.History = e.History || {};
     if (typeof o.initHtml4 != "undefined")throw new Error("History.js HTML4 Support has already been loaded...");
     o.initHtml4 = function () {
         if (typeof o.initHtml4.initialized != "undefined")return !1;
@@ -124,14 +127,14 @@ typeof JSON != "object" && (JSON = {}), function () {
             o.checkerFunction = null;
             var t = "", r, i, u, a, f = Boolean(o.getHash());
             return o.isInternetExplorer() ? (r = "historyjs-iframe", i = n.createElement("iframe"), i.setAttribute("id", r), i.setAttribute("src", "#"), i.style.display = "none", n.body.appendChild(i), i.contentWindow.document.open(), i.contentWindow.document.close(), u = "", a = !1, o.checkerFunction = function () {
-                    if (a)return !1;
-                    a = !0;
-                    var n = o.getHash(), r = o.getHash(i.contentWindow.document);
-                    return n !== t ? (t = n, r !== n && (u = r = n, i.contentWindow.document.open(), i.contentWindow.document.close(), i.contentWindow.document.location.hash = o.escapeHash(n)), o.Adapter.trigger(e, "hashchange")) : r !== u && (u = r, f && r === "" ? o.back() : o.setHash(r, !1)), a = !1, !0
-                }) : o.checkerFunction = function () {
-                    var n = o.getHash() || "";
-                    return n !== t && (t = n, o.Adapter.trigger(e, "hashchange")), !0
-                }, o.intervalList.push(s(o.checkerFunction, o.options.hashChangeInterval)), !0
+                if (a)return !1;
+                a = !0;
+                var n = o.getHash(), r = o.getHash(i.contentWindow.document);
+                return n !== t ? (t = n, r !== n && (u = r = n, i.contentWindow.document.open(), i.contentWindow.document.close(), i.contentWindow.document.location.hash = o.escapeHash(n)), o.Adapter.trigger(e, "hashchange")) : r !== u && (u = r, f && r === "" ? o.back() : o.setHash(r, !1)), a = !1, !0
+            }) : o.checkerFunction = function () {
+                var n = o.getHash() || "";
+                return n !== t && (t = n, o.Adapter.trigger(e, "hashchange")), !0
+            }, o.intervalList.push(s(o.checkerFunction, o.options.hashChangeInterval)), !0
         }, o.Adapter.onDomLoad(o.hashChangeInit)), o.emulated.pushState && (o.onHashChange = function (t) {
             var n = t && t.newURL || o.getLocationHref(), r = o.getHashByUrl(n), i = null, s = null, u = null, a;
             return o.isLastHash(r) ? (o.busy(!1), !1) : (o.doubleCheckComplete(), o.saveHash(r), r && o.isTraditionalAnchor(r) ? (o.Adapter.trigger(e, "anchorchange"), o.busy(!1), !1) : (i = o.extractState(o.getFullUrl(r || o.getLocationHref()), !0), o.isLastSavedState(i) ? (o.busy(!1), !1) : (s = o.getHashByState(i), a = o.discardedState(i), a ? (o.getHashByIndex(-2) === o.getHashByState(a.forwardState) ? o.back(!1) : o.forward(!1), !1) : (o.pushState(i.data, i.title, encodeURI(i.url).replace(/%25/g, "%"), !1), !0))))
@@ -145,7 +148,8 @@ typeof JSON != "object" && (JSON = {}), function () {
                 queue: i
             }), !1;
             o.busy(!0);
-            var s = o.createStateObject(t, n, r), u = o.getHashByState(s), a = o.getState(!1), f = o.getHashByState(a), l = o.getHash(), c = o.expectedStateId == s.id;
+            var s = o.createStateObject(t, n, r), u = o.getHashByState(s), a = o.getState(!1), f = o.getHashByState(a),
+                l = o.getHash(), c = o.expectedStateId == s.id;
             return o.storeState(s), o.expectedStateId = s.id, o.recycleState(s), o.setTitle(s), u === f ? (o.busy(!1), !1) : (o.saveState(s), c || o.Adapter.trigger(e, "statechange"), !o.isHashEqual(u, l) && !o.isHashEqual(u, o.getShortUrl(o.getLocationHref())) && o.setHash(u, !1), o.busy(!1), !0)
         }, o.replaceState = function (t, n, r, i) {
             r = encodeURI(r).replace(/%25/g, "%");
@@ -157,7 +161,8 @@ typeof JSON != "object" && (JSON = {}), function () {
                 queue: i
             }), !1;
             o.busy(!0);
-            var s = o.createStateObject(t, n, r), u = o.getHashByState(s), a = o.getState(!1), f = o.getHashByState(a), l = o.getStateByIndex(-2);
+            var s = o.createStateObject(t, n, r), u = o.getHashByState(s), a = o.getState(!1), f = o.getHashByState(a),
+                l = o.getStateByIndex(-2);
             return o.discardState(a, s, l), u === f ? (o.storeState(s), o.expectedStateId = s.id, o.recycleState(s), o.setTitle(s), o.saveState(s), o.Adapter.trigger(e, "statechange"), o.busy(!1)) : o.pushState(s.data, s.title, s.url, !1), !0
         }), o.emulated.pushState && o.getHash() && !o.emulated.hashChange && o.Adapter.onDomLoad(function () {
             o.Adapter.trigger(e, "hashchange")
@@ -165,7 +170,8 @@ typeof JSON != "object" && (JSON = {}), function () {
     }, typeof o.init != "undefined" && o.init()
 }(window), function (e, t) {
     "use strict";
-    var n = e.console || t, r = e.document, i = e.navigator, s = !1, o = e.setTimeout, u = e.clearTimeout, a = e.setInterval, f = e.clearInterval, l = e.JSON, c = e.alert, h = e.History = e.History || {}, p = e.history;
+    var n = e.console || t, r = e.document, i = e.navigator, s = !1, o = e.setTimeout, u = e.clearTimeout,
+        a = e.setInterval, f = e.clearInterval, l = e.JSON, c = e.alert, h = e.History = e.History || {}, p = e.history;
     try {
         s = e.sessionStorage, s.setItem("TEST", "1"), s.removeItem("TEST")
     } catch (d) {
@@ -186,7 +192,8 @@ typeof JSON != "object" && (JSON = {}), function () {
         }, h.debug = function () {
             (h.options.debug || !1) && h.log.apply(h, arguments)
         }, h.log = function () {
-            var e = typeof n != "undefined" && typeof n.log != "undefined" && typeof n.log.apply != "undefined", t = r.getElementById("log"), i, s, o, u, a;
+            var e = typeof n != "undefined" && typeof n.log != "undefined" && typeof n.log.apply != "undefined",
+                t = r.getElementById("log"), i, s, o, u, a;
             e ? (u = Array.prototype.slice.call(arguments), i = u.shift(), typeof n.debug != "undefined" ? n.debug.apply(n, [i, u]) : n.log.apply(n, [i, u])) : i = "\n" + arguments[0] + "\n";
             for (s = 1, o = arguments.length; s < o; ++s) {
                 a = arguments[s];
@@ -199,21 +206,21 @@ typeof JSON != "object" && (JSON = {}), function () {
             return t ? (t.value += i + "\n-----\n", t.scrollTop = t.scrollHeight - t.clientHeight) : e || c(i), !0
         }, h.getInternetExplorerMajorVersion = function () {
             var e = h.getInternetExplorerMajorVersion.cached = typeof h.getInternetExplorerMajorVersion.cached != "undefined" ? h.getInternetExplorerMajorVersion.cached : function () {
-                    var e = 3, t = r.createElement("div"), n = t.getElementsByTagName("i");
-                    while ((t.innerHTML = "<!--[if gt IE " + ++e + "]><i></i><![endif]-->") && n[0]);
-                    return e > 4 ? e : !1
-                }();
+                var e = 3, t = r.createElement("div"), n = t.getElementsByTagName("i");
+                while ((t.innerHTML = "<!--[if gt IE " + ++e + "]><i></i><![endif]-->") && n[0]);
+                return e > 4 ? e : !1
+            }();
             return e
         }, h.isInternetExplorer = function () {
             var e = h.isInternetExplorer.cached = typeof h.isInternetExplorer.cached != "undefined" ? h.isInternetExplorer.cached : Boolean(h.getInternetExplorerMajorVersion());
             return e
         }, h.options.html4Mode ? h.emulated = {
-                pushState: !0,
-                hashChange: !0
-            } : h.emulated = {
-                pushState: !Boolean(e.history && e.history.pushState && e.history.replaceState && !/ Mobile\/([1-7][a-z]|(8([abcde]|f(1[0-8]))))/i.test(i.userAgent) && !/AppleWebKit\/5([0-2]|3[0-2])/i.test(i.userAgent)),
-                hashChange: Boolean(!("onhashchange" in e || "onhashchange" in r) || h.isInternetExplorer() && h.getInternetExplorerMajorVersion() < 8)
-            }, h.enabled = !h.emulated.pushState, h.bugs = {
+            pushState: !0,
+            hashChange: !0
+        } : h.emulated = {
+            pushState: !Boolean(e.history && e.history.pushState && e.history.replaceState && !/ Mobile\/([1-7][a-z]|(8([abcde]|f(1[0-8]))))/i.test(i.userAgent) && !/AppleWebKit\/5([0-2]|3[0-2])/i.test(i.userAgent)),
+            hashChange: Boolean(!("onhashchange" in e || "onhashchange" in r) || h.isInternetExplorer() && h.getInternetExplorerMajorVersion() < 8)
+        }, h.enabled = !h.emulated.pushState, h.bugs = {
             setHash: Boolean(!h.emulated.pushState && i.vendor === "Apple Computer, Inc." && /AppleWebKit\/5([0-2]|3[0-3])/.test(i.userAgent)),
             safariPoll: Boolean(!h.emulated.pushState && i.vendor === "Apple Computer, Inc." && /AppleWebKit\/5([0-2]|3[0-3])/.test(i.userAgent)),
             ieDoubleCheck: Boolean(h.isInternetExplorer() && h.getInternetExplorerMajorVersion() < 8),
@@ -337,11 +344,11 @@ typeof JSON != "object" && (JSON = {}), function () {
         }, h.setHash = function (e, t) {
             var n, i;
             return t !== !1 && h.busy() ? (h.pushQueue({
-                    scope: h,
-                    callback: h.setHash,
-                    args: arguments,
-                    queue: t
-                }), !1) : (h.busy(!0), n = h.extractState(e, !0), n && !h.emulated.pushState ? h.pushState(n.data, n.title, n.url, !1) : h.getHash() !== e && (h.bugs.setHash ? (i = h.getPageUrl(), h.pushState(null, null, i + "#" + e, !1)) : r.location.hash = e), h)
+                scope: h,
+                callback: h.setHash,
+                args: arguments,
+                queue: t
+            }), !1) : (h.busy(!0), n = h.extractState(e, !0), n && !h.emulated.pushState ? h.pushState(n.data, n.title, n.url, !1) : h.getHash() !== e && (h.bugs.setHash ? (i = h.getPageUrl(), h.pushState(null, null, i + "#" + e, !1)) : r.location.hash = e), h)
         }, h.escapeHash = function (t) {
             var n = h.normalizeHash(t);
             return n = e.encodeURIComponent(n), h.bugs.hashEscape || (n = n.replace(/\%21/g, "!").replace(/\%26/g, "&").replace(/\%3D/g, "=").replace(/\%3F/g, "?")), n
@@ -394,22 +401,22 @@ typeof JSON != "object" && (JSON = {}), function () {
             return
         }, h.back = function (e) {
             return e !== !1 && h.busy() ? (h.pushQueue({
-                    scope: h,
-                    callback: h.back,
-                    args: arguments,
-                    queue: e
-                }), !1) : (h.busy(!0), h.doubleCheck(function () {
-                    h.back(!1)
-                }), p.go(-1), !0)
+                scope: h,
+                callback: h.back,
+                args: arguments,
+                queue: e
+            }), !1) : (h.busy(!0), h.doubleCheck(function () {
+                h.back(!1)
+            }), p.go(-1), !0)
         }, h.forward = function (e) {
             return e !== !1 && h.busy() ? (h.pushQueue({
-                    scope: h,
-                    callback: h.forward,
-                    args: arguments,
-                    queue: e
-                }), !1) : (h.busy(!0), h.doubleCheck(function () {
-                    h.forward(!1)
-                }), p.go(1), !0)
+                scope: h,
+                callback: h.forward,
+                args: arguments,
+                queue: e
+            }), !1) : (h.busy(!0), h.doubleCheck(function () {
+                h.forward(!1)
+            }), p.go(1), !0)
         }, h.go = function (e, t) {
             var n;
             if (e > 0)for (n = 1; n <= e; ++n)h.forward(t); else {

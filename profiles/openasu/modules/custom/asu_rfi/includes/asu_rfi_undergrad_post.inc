@@ -1,7 +1,70 @@
 <?php
 
+/**
+ * Settings function to improve future-proofing.
+ *
+ * Example usage:
+ * $degreeMappings = asu_rfi_get_degree_mappings_pages();
+ * $degreeContentType = $degreeMappings['content_type'];
+ */
+function asu_rfi_get_degree_mappings_undergrad_post() {
+  // Swap out mapping values based on module enabled.
+  // ASU AP takes priority, but default is to ASU
+  // Degrees (deprecated);
+  if (module_exists('asu_ap')) {
+    $map = array(
+      // Content Type
+      'content_type' => 'asu_ap',
+      // Tables
+      'table_asu_academic_plan' => 'field_data_field_asu_ap_acad_plan',
+      'table_asu_academic_program' => 'field_data_field_asu_ap_acad_prog',
+      'table_asu_degree_awarded' => 'field_data_field_asu_ap_awarded',
+      'table_asu_degree_program' => 'field_data_field_asu_ap_program',
+      'table_asu_diploma_description' => 'field_data_field_asu_ap_diploma_desc',
+      // Fields
+      'field_academic_plan' => 'field_asu_ap_acad_plan',
+      'field_academic_plan_value' => 'field_asu_ap_acad_plan_value',
+      'field_academic_program' => 'field_asu_ap_acad_prog',
+      'field_academic_program_value' => 'field_asu_ap_acad_prog_value',
+      'field_degree_awarded' => 'field_asu_ap_awarded',
+      'field_degree_awarded_value' => 'field_asu_ap_awarded_value',
+      'field_degree_campus' => 'field_asu_ap_campus',
+      'field_degree_program' => 'field_asu_ap_program',
+      'field_degree_program_value' => 'field_asu_ap_program_value',
+      'field_diploma_description' => 'field_asu_ap_diploma_desc',
+      'field_diploma_description_value' => 'field_asu_ap_diploma_desc_value',
+    );
+  } else { // asu_degrees
+    $map = array(
+      // Content Type
+      'content_type' => 'asu_degree',
+      // Tables
+      'table_asu_academic_plan' => 'field_data_field_asu_academic_plan',
+      'table_asu_academic_program' => 'field_data_field_asu_academic_program',
+      'table_asu_degree_awarded' => 'field_data_field_asu_degree_awarded',
+      'table_asu_degree_program' => 'field_data_field_asu_degree_program',
+      'table_asu_diploma_description' => 'field_data_field_asu_diploma_description',
+      // Fields
+      'field_academic_plan' => 'field_asu_academic_plan',
+      'field_academic_plan_value' => 'field_asu_academic_plan_value',
+      'field_academic_program' => 'field_asu_academic_program',
+      'field_academic_program_value' => 'field_asu_academic_program_value',
+      'field_degree_awarded' => 'field_asu_degree_awarded',
+      'field_degree_awarded_value' => 'field_asu_degree_awarded_value',
+      'field_degree_campus' => 'field_asu_degree_campus',
+      'field_degree_program' => 'field_asu_degree_program',
+      'field_degree_program_value' => 'field_asu_degree_program_value',
+      'field_diploma_description' => 'field_asu_diploma_description',
+      'field_diploma_description_value' => 'field_asu_diploma_description_value',
+    );
+  }
+  return $map;
+}
+
 function asu_rfi_undergrad_post($data)
 {
+  $degreeMappings = asu_rfi_get_degree_mappings_undergrad_post();
+
   $nodeid = $data['submission_nodeid'];
 
   $node = node_load($nodeid);
@@ -16,10 +79,12 @@ function asu_rfi_undergrad_post($data)
   if ($node_wrapper->field_rfi_submission_status->value() == "Incomplete") {
 
     $node_wrapper->field_rfi_submission_status->set('Pending');
+    $node_wrapper->save();
 
   } else if ($node_wrapper->field_rfi_submission_status->value() == "Pending") {
 
-    $node_wrapper->field_rfi_submission_status->set('Action Required');
+    $node_wrapper->field_rfi_submission_status->set('action_required');
+    $node_wrapper->save();
 
   }
 
@@ -29,11 +94,7 @@ function asu_rfi_undergrad_post($data)
   $email = $data['email'];
   $ipAddress = $data['ip_address'];
   $phone = preg_replace('[\D]', '', $data['phone']);
-  if (!empty($data['start_date'])) {
-    $term = $data['start_date'];
-  } else {
-    $term = '';
-  }
+  $term = (!empty($data['start_date'])) ? $data['start_date'] : '';
 
   $location = $data['location'];
   $campus = $data['campus'];
@@ -44,68 +105,40 @@ function asu_rfi_undergrad_post($data)
     $college_code = null;
   } else {
     //Get college code from database based on program code
-    $college_code = db_query('select field_asu_academic_program_value from field_data_field_asu_academic_program prog join field_data_field_asu_academic_plan plan on prog.entity_id = plan.entity_id where plan.field_asu_academic_plan_value = :plancode', array(':plancode' => $prog_code))->fetchField();
+    $college_code = db_query(
+      'select ' . $degreeMappings['field_academic_program_value'] . ' from ' .
+      $degreeMappings['table_asu_academic_program'] . ' prog join ' .
+      $degreeMappings['table_asu_academic_plan'] .
+      ' plan on prog.entity_id = plan.entity_id where plan.' .
+      $degreeMappings['field_academic_plan_value'] .
+      ' = :plancode',
+      array(':plancode' => $prog_code))
+      ->fetchField();
   }
+
   $form_mode = variable_get('asu_rfi_form_mode');
   $hashkey = sha1($mw_auth_key . '+' . $nodeid);
   $type_of_form = $data['type_of_form'];
-  $domain = isset($data['domain']) ? $data['domain'] : $_SERVER['HTTP_HOST'];;
+  $domain = isset($data['domain']) ? $data['domain'] : $_SERVER['HTTP_HOST'];
   $source = $domain . '-' . $type_of_form . '-UG';
-
   $campus = asu_rfi_correct_campus_idu($campus);
 
-  //mobile phone
-  if (isset($data['mobile_check'])) {
-    $mobile = str_replace('-', '', $data['mobile_check']);
-  } else {
-    $mobile = '';
-  }
+  $mobile = (isset($data['mobile_check'])) ? str_replace('-', '', $data['mobile_check']) : '';   // mobile phone
+  $dob = (isset($data['birthdate'])) ? $data['birthdate'] : ''; // date of birth
+  $military = (isset($data['military'])) ? $data['military'] : '';  // Military
+  $comment = (isset($data['questions'])) ? $data['questions'] : ''; // Comment
+  $city = (isset($data['city'])) ? $data['city'] : ''; // City
+  $address = (isset($data['address'])) ? $data['address'] : ''; // Address
+  $country = (isset($data['country'])) ? $data['country'] : ''; // country
+  $enterpriseclientid = (isset($data['enterpriseclientid'])) ? $data['enterpriseclientid'] : '';   // Enterprise clientid for EdPlus Leads
 
-  //date of birth
-  if (isset($data['birthdate'])) {
-    $dob = $data['birthdate'];
-  } else {
-    $dob = '';
-  }
-
-  //Military
-  if (isset($data['military'])) {
-    $military = $data['military'];
-  } else {
-    $military = '';
-  }
-
-  //Comment
-  if (isset($data['questions'])) {
-    $comment = $data['questions'];
-  } else {
-    $comment = '';
-  }
-
-  //city
-  if (isset($data['city'])) {
-    $city = $data['city'];
-  } else {
-    $city = '';
-  }
-
-  //address
-  if (isset($data['address'])) {
-    $address = $data['address'];
-  } else {
-    $address = '';
-  }
-
-  //country
-  if (isset($data['country'])) {
-    $country = $data['country'];
-  } else {
-    $country = '';
-  }
-  
-  if($location == "no_preference" && sizeof($availableCampuses) == 1 && ($availableCampuses[0] == "Online" || $availableCampuses[0] == "online")){
+  if ($location == "no_preference" &&
+    sizeof($availableCampuses) == 1 &&
+    ($availableCampuses[0] == "Online" || $availableCampuses[0] == "online")) {
     $location = "Online";
   }
+
+  // Compile RFI submission data
 
   $url = "https://webforms.asu.edu/asu_rfi_dedupe/submit_rfi/$hashkey/$nodeid";
 
@@ -126,7 +159,6 @@ function asu_rfi_undergrad_post($data)
     'country' => $country,
     'sms' => $mobile,
     'comments' => $comment,
-    'prod_test_flag' => $form_mode,
     'street' => $address,
     'city' => $city,
     'state' => $state,
@@ -138,13 +170,13 @@ function asu_rfi_undergrad_post($data)
 
   $body = json_encode($fields);
 
-  if ($location == 'Online' || $location == 'online') {
+  if (strtolower($location) == 'online') {
 
     $asuOnlineList = asu_rfi_parse_programs();
     $managedOnline = asu_rfi_check_managed_online($prog_code, $asuOnlineList);
 
     if ($managedOnline == true) {
-      $fields = asu_rfi_online_fields($fields, $nodeid, $ipAddress, $college_code, $type_of_form);
+      $fields = asu_rfi_online_fields($fields, $nodeid, $ipAddress, $college_code, $type_of_form, $enterpriseclientid);
 
       $body = json_encode($fields);
 
@@ -277,7 +309,7 @@ function asu_rfi_correct_campus_idu($campus)
   return $campusId;
 }
 
-function asu_rfi_online_fields($fields, $nodeid, $ip, $college_code, $type_of_form)
+function asu_rfi_online_fields($fields, $nodeid, $ip, $college_code, $type_of_form, $enterpriseclientid)
 {
 
   $fieldsUpdated = array(
@@ -288,10 +320,12 @@ function asu_rfi_online_fields($fields, $nodeid, $ip, $college_code, $type_of_fo
     'phone' => $fields['phone'],
     'prod_test_flag' => $fields['prod_test_flag'],
     'base_url' => $fields['base_url'],
+    'origin_uri' => $GLOBALS['base_url'] . '/' . request_path(),
     'remote_nid' => $nodeid,
     'ldetect_v' => $ip,
     'campaign' => $fields['base_url'] . '-' . $type_of_form . '-UG',
-    'sourceid' => $nodeid,
+    'sourceid' => $nodeid, // Overwritten with API key in Middleware.
+    'enterpriseclientid' => $enterpriseclientid,
   );
 
   return $fieldsUpdated;

@@ -24,6 +24,13 @@ function asu_ap_feature_defaultconfig_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'chosen_include';
+  $strongarm->value = '1';
+  $export['chosen_include'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'chosen_jquery_selector';
   $strongarm->value = '.chosen-select';
   $export['chosen_jquery_selector'] = $strongarm;

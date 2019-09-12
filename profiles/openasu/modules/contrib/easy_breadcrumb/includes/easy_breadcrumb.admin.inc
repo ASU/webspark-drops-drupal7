@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Module's admin forms.
@@ -24,15 +25,88 @@ function _easy_breadcrumb_general_settings_form() {
 
   $fieldset_general[EasyBreadcrumbConstants::DB_VAR_DISABLE_DEFAULT_DRUPAL_BREADCRUMB] = array(
     '#type' => 'checkbox',
-    '#title' => t("Disable the default Drupal's breadcrumb"),
-    '#description' => t("Always disable the default Drupal's breadcrumb."),
-    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_DEFAULT_DRUPAL_BREADCRUMB, TRUE),
+    '#title' => t('Disable the system breadcrumbs in site theme.'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_DEFAULT_DRUPAL_BREADCRUMB, FALSE),
   );
 
-  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_INCLUDE_INVALID_PATHS] = array(
+  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_DISABLE_ADMIN_BREADCRUMB] = array(
     '#type' => 'checkbox',
-    '#title' => t("Include invalid paths alias as plain-text segments"),
-    '#description' => t("Include the invalid paths alias as plain-text segments in the breadcrumb."),
+    '#title' => t('Disable the system breadcrumbs in admin theme.'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_ADMIN_BREADCRUMB, FALSE),
+    '#description' => t('Default drupal breadcrumb is only disabled when the admin theme is different to site theme. If both themes are the same, this option has no effect.'),
+  );
+
+  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_SEGMENTS_SEPARATOR] = array(
+    '#type' => 'textfield',
+    '#size' => 10,
+    '#title' => t('Breadcrumb separator:'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_SEGMENTS_SEPARATOR, '»'),
+  );
+
+  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_SEPERATOR_ENDING] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show breadcrumb separator after the final breadcrumb.'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_SEPERATOR_ENDING, FALSE),
+  );
+
+  // Fieldset for grouping text settings.
+  $fieldset_general['first'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('First Breadcrumb'),
+    '#collapsible' => FALSE,
+  );
+
+  $fieldset_general['first'][EasyBreadcrumbConstants::DB_VAR_INCLUDE_HOME_SEGMENT] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Include the a link to the home page as the first breadcrumb.'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_INCLUDE_HOME_SEGMENT, TRUE),
+  );
+
+  $fieldset_general['first'][EasyBreadcrumbConstants::DB_VAR_HOME_SEGMENT_TITLE] = array(
+    '#type' => 'textfield',
+    '#title' => t('Home page link text:'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_HOME_SEGMENT_TITLE, t('Home')),
+    '#attributes' => array('placeholder' => 'Home'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="' . EasyBreadcrumbConstants::DB_VAR_INCLUDE_HOME_SEGMENT . '"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+  $fieldset_general['final'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Final Breadcrumb'),
+    '#collapsible' => FALSE,
+  );
+
+  $fieldset_general['final'][EasyBreadcrumbConstants::DB_VAR_INCLUDE_TITLE_SEGMENT] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Include the current page as the final breadcrumb.'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_INCLUDE_TITLE_SEGMENT, TRUE),
+  );
+
+  $fieldset_general['final'][EasyBreadcrumbConstants::DB_VAR_TITLE_SEGMENT_AS_LINK] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Make the current page breadcrumb into a link (not recommended).'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_TITLE_SEGMENT_AS_LINK, FALSE),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="' . EasyBreadcrumbConstants::DB_VAR_INCLUDE_TITLE_SEGMENT . '"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+  $fieldset_general['paths'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Path settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+
+  $fieldset_general['paths'][EasyBreadcrumbConstants::DB_VAR_INCLUDE_INVALID_PATHS] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Include invalid paths as plain-text breadcrumbs (not recommended).'),
     '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_INCLUDE_INVALID_PATHS, TRUE),
   );
 
@@ -40,67 +114,110 @@ function _easy_breadcrumb_general_settings_form() {
   // before displaying them.
   $excluded_paths_arr = variable_get(EasyBreadcrumbConstants::DB_VAR_EXCLUDED_PATHS,
     EasyBreadcrumbConstants::defaultExcludedPaths());
-  $excluded_paths = @join("\r\n", $excluded_paths_arr);
-
-  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_EXCLUDED_PATHS] = array(
+  $excluded_paths = @implode("\r\n", $excluded_paths_arr);
+  $fieldset_general['paths'][EasyBreadcrumbConstants::DB_VAR_EXCLUDED_PATHS] = array(
     '#type' => 'textarea',
-    '#title' => t("Paths to be excluded while generating segments"),
-    '#description' => t("Enter a line separated list of paths to be excluded while generating the segments.
-			Paths may use simple regex, i.e.: report/2[0-9][0-9][0-9]."),
+    '#title' => t('Breadcrumb paths to be excluded:'),
+    '#description' => t('Enter paths or simple regular expressions. Place one on each line. Example: <em>report</em> or <em>report/2[0-9][0-9][0-9].</em>'),
     '#default_value' => $excluded_paths,
   );
 
-  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_INCLUDE_HOME_SEGMENT] = array(
-    '#type' => 'checkbox',
-    '#title' => t("Include the front page as a segment in the breadcrumb"),
-    '#description' => t("Include the front page as the first segment in the breacrumb."),
-    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_INCLUDE_HOME_SEGMENT, TRUE),
+  $form = array();
+
+  // Inserts the fieldset for grouping general settings.
+  $form[EasyBreadcrumbConstants::MODULE_NAME] = $fieldset_general;
+
+  // Fieldset for grouping text settings.
+  $form['text'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Breadcrumb text settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
   );
 
-  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_HOME_SEGMENT_TITLE] = array(
-    '#type' => 'textfield',
-    '#title' => t("Title for the front page segment in the breadcrumb"),
-    '#description' => t("Text to be displayed as the from page segment."),
-    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_HOME_SEGMENT_TITLE, t('Home')),
+  $form['text'][EasyBreadcrumbConstants::DB_VAR_HTML_TAGS] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Allow HTML tags in breadcrumb text.'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_HTML_TAGS, TRUE),
   );
 
-  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_INCLUDE_TITLE_SEGMENT] = array(
+  $form['text'][EasyBreadcrumbConstants::DB_VAR_TITLE_FROM_PAGE_WHEN_AVAILABLE] = array(
     '#type' => 'checkbox',
-    '#title' => t("Include the current page's title as a segment in the breadcrumb"),
-    '#description' => t("Include the current page's title as the last segment in the breacrumb."),
-    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_INCLUDE_TITLE_SEGMENT, TRUE),
-  );
-
-  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_TITLE_FROM_PAGE_WHEN_AVAILABLE] = array(
-    '#type' => 'checkbox',
-    '#title' => t("Use the real page's title when available"),
-    '#description' => t("Use the real page's title when it is available instead of always deducing it from the URL."),
+    '#title' => t('Use the page title (when available) instead of the text from the URL.'),
     '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_TITLE_FROM_PAGE_WHEN_AVAILABLE, TRUE),
   );
 
-  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_TITLE_SEGMENT_AS_LINK] = array(
+  $form['text'][EasyBreadcrumbConstants::DB_VAR_SEGMENT_TEXT_AS_TITLE] = array(
     '#type' => 'checkbox',
-    '#title' => t("Make the page's title segment a link"),
-    '#description' => t("Prints the page's title segment as a link."),
-    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_TITLE_SEGMENT_AS_LINK, FALSE),
+    '#title' => t('Use the text from the URL instead of the page title.'),
+    '#description' => t("This setting is usefull for views page displays with contextual filters."),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_SEGMENT_TEXT_AS_TITLE, FALSE),
   );
 
-  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_SEGMENTS_SEPARATOR] = array(
+  $form['text'][EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_MODE] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Limit the breadcrumb text to a maximum number of characters.'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_MODE, FALSE),
+  );
+
+  $form['text'][EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_LENGTH] = array(
     '#type' => 'textfield',
-    '#title' => t('Segments separator'),
-    '#description' => t("Separator to be used between the breadcrumb's segments."),
-    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_SEGMENTS_SEPARATOR, '>>'),
+    '#title' => t('Breadcrumb character Limit'),
+    '#description' => t('Breaks at word boundaries. Example: When set to 10, <em>Long page title</em> will be <em>Long page...</em>'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_LENGTH, 20),
+    '#attributes' => array('placeholder' => '20'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="' . EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_MODE . '"]' => array('checked' => TRUE),
+      ),
+      'invisible' => array(
+        ':input[name="' . EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_MODE . '"]' => array('checked' => FALSE),
+      ),
+    ),
   );
 
-  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE] = array(
+  $form['text'][EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_DOTS] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Add an elipsis (...) to shortened titles.'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_DOTS, TRUE),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="' . EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_MODE . '"]' => array('checked' => TRUE),
+      ),
+      'invisible' => array(
+        ':input[name="' . EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_MODE . '"]' => array('checked' => FALSE),
+      ),
+    ),
+  );
+
+  $replaced_titles = variable_get(EasyBreadcrumbConstants::DB_VAR_REPLACED_TITLES);
+  $form['text'][EasyBreadcrumbConstants::DB_VAR_REPLACED_TITLES] = array(
+    '#type' => 'textarea',
+    '#title' => t('Breadcrumb text to be replaced'),
+    '#description' => t('Enter current breadcrumb and replacement text seperated by two colons (::). Place one breadcrumb on each line.'),
+    '#attributes' => array('placeholder' => 'Administration::Admin'),
+    '#default_value' => $replaced_titles,
+  );
+
+  // Fieldset for grouping capitalization settings.
+  $form['caps'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Capitalization'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+
+  $form['caps'][EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE] = array(
     '#type' => 'select',
-    '#title' => t("Transformation mode for the segments' titles"),
+    '#title' => t('Breadcrumb capitalization'),
     '#options' => array(
       'none' => t('None'),
-      'ucwords' => t("Capitalize the first letter of each word in the segment"),
-      'ucfirst' => t("Only capitalize the first letter of each segment"),
+      'ucfirst' => t('Only capitalize the first letter'),
+      'ucwords' => t('Capitalize the first letter of each word'),
+      'ucall' => t('Capitalize all the letters'),
+      'ucforce' => t('Only capitalize all the letters in the words defined below'),
     ),
-    '#description' => t("Choose the transformation mode you want to apply to the segments' titles. E.g.: 'blog/once-a-time' -> 'Home >> Blog >> Once a Time'."),
+    '#description' => t("Example: 'blog/once-upon-a-time' -> 'Home » Blog » Once upon a time'."),
     '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE, 'ucwords'),
   );
 
@@ -108,20 +225,74 @@ function _easy_breadcrumb_general_settings_form() {
   // (word1 word2 wordN) before displaying them.
   $capitalizator_ignored_words_arr = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_IGNORED_WORDS,
     EasyBreadcrumbConstants::defaultIgnoredWords());
-  $capitalizator_ignored_words = @join(' ', $capitalizator_ignored_words_arr);
+  $capitalizator_ignored_words = @implode(' ', $capitalizator_ignored_words_arr);
 
-  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_IGNORED_WORDS] = array(
-    '#type' => 'textarea',
-    '#rows' => 3,
-    '#title' => t("Words to be ignored by the 'capitalizator'"),
-    '#description' => t("Enter a space separated list of words to be ignored by the 'capitalizator'. This will be applyed only to the words not at the beginning of each segment. E.g.: of and."),
+  $form['caps'][EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_IGNORED_WORDS] = array(
+    '#type' => 'textfield',
+    '#size' => '180',
+    '#title' => t('Words that should not be capitalized'),
+    '#description' => t('Separate each word with a space. Note: The first word of each breadcrumb will always be capitalized.'),
     '#default_value' => $capitalizator_ignored_words,
+    '#states' => array(
+      'visible' => array(
+        ':input[name="' . EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE . '"]' => array('value' => 'ucwords'),
+      ),
+      'invisible' => array(
+        ':input[name="' . EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE . '"]' => array('!value' => 'ucwords'),
+      ),
+    ),
   );
 
-  $form = array();
+  // Formats the forced-words array as space separated list of words
+  // (word1 word2 wordN) before displaying them.
+  $capitalizator_forced_words_arr = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS, '');
+  $capitalizator_forced_words = @implode(' ', $capitalizator_forced_words_arr);
 
-  // Inserts the fieldset for grouping general settings fields.
-  $form[EasyBreadcrumbConstants::MODULE_NAME] = $fieldset_general;
+  $form['caps'][EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS] = array(
+    '#type' => 'textfield',
+    '#size' => '180',
+    '#title' => t('Words that should have all letters capitalized'),
+    '#description' => t('Separate each word with a space. Useful for capitalizing your organization or brand name.'),
+    '#default_value' => $capitalizator_forced_words,
+    '#attributes' => array('placeholder' => 'NASA'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="' . EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE . '"]' => array('value' => 'ucforce'),
+      ),
+      'invisible' => array(
+        ':input[name="' . EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE . '"]' => array('!value' => 'ucforce'),
+      ),
+    ),
+  );
+
+  $form['caps'][EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_CASE_SENSITIVITY] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Compare case when matching words'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_CASE_SENSITIVITY, FALSE),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="' . EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE . '"]' => array('value' => 'ucforce'),
+      ),
+      'invisible' => array(
+        ':input[name="' . EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE . '"]' => array('!value' => 'ucforce'),
+      ),
+    ),
+    '#description' => t('When unchecked, drupal will match both Drupal and drupaL.'),
+  );
+
+  $form['caps'][EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_FIRST_LETTER] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Capitalize the first letters of each breadcrumb.'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_FIRST_LETTER, TRUE),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="' . EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE . '"]' => array('value' => 'ucforce'),
+      ),
+      'invisible' => array(
+        ':input[name="' . EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE . '"]' => array('!value' => 'ucforce'),
+      ),
+    ),
+  );
 
   // Adds buttons for processing the form.
   $form['buttons'] = array(
@@ -143,12 +314,12 @@ function _easy_breadcrumb_general_settings_form() {
 /**
  * Process the submitting of the administration form of this module.
  *
- * @param Assoc $form
- *   renderable form.
- * @param Assoc $form_state
- *   form state.
+ * @param array $form
+ *   Renderable form.
+ * @param array $form_state
+ *   Form state.
  */
-function _easy_breadcrumb_admin_submit($form, &$form_state) {
+function _easy_breadcrumb_admin_submit(array $form, array &$form_state) {
 
   // Pre-processes the list of ignored words for storing them as an array.
   // Replaces line-endings by spaces and splits words by spaces.
@@ -172,11 +343,18 @@ function _easy_breadcrumb_admin_submit($form, &$form_state) {
     $excluded_paths_arr[$path] = $path;
   }
 
+  $forced_words_arr = array();
+  $forced_words = $form_state['values'][EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS];
+  $forced_words = preg_replace('/\r*\n+/', ' ', $forced_words);
+  $forced_words = trim($forced_words);
+  $forced_words_arr_aux = $forced_words === '' ? array() : preg_split('/\s+/', $forced_words);
+  foreach ($forced_words_arr_aux as $word) {
+    $forced_words_arr[$word] = $word;
+  }
   // Updates the $form_state before passing it to the Drupal system.
   $form_state['values'][EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_IGNORED_WORDS] = $ignored_words_arr;
-
-  // Updates the $form_state before passing it to the Drupal system.
   $form_state['values'][EasyBreadcrumbConstants::DB_VAR_EXCLUDED_PATHS] = $excluded_paths_arr;
+  $form_state['values'][EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS] = $forced_words_arr;
 
   // Delegates persistence to the existing Drupal system.
   system_settings_form_submit($form, $form_state);

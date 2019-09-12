@@ -12,7 +12,7 @@ function webspark_newsevents_views_default_views() {
 
   $view = new view();
   $view->name = 'asu_news_new';
-  $view->description = 'Views of ASU News Feeds';
+  $view->description = 'Generates news nodes of content type ASU Events. They can be manually created or (ideally) periodically imported from asunow.asu.edu. (Contact the ASU Marketing Hub directly to set up a news feed.)';
   $view->tag = 'default';
   $view->base_table = 'node';
   $view->human_name = 'ASU News new';
@@ -439,7 +439,7 @@ function webspark_newsevents_views_default_views() {
 
   $view = new view();
   $view->name = 'asu_newsevent_images';
-  $view->description = '';
+  $view->description = 'Renders imported news item images in a panel pane. The panes render the image (if available) based on the imported news item node ID.';
   $view->tag = 'default';
   $view->base_table = 'node';
   $view->human_name = 'ASU News Event Images';
@@ -613,7 +613,7 @@ function webspark_newsevents_views_default_views() {
 
   $view = new view();
   $view->name = 'events_new';
-  $view->description = '';
+  $view->description = 'Generates events nodes of content type ASU Events. They can be manually created or (ideally) periodically imported from asuevents.asu.edu. (Contact the ASU Marketing Hub directly to set up an events feed.)';
   $view->tag = 'default';
   $view->base_table = 'node';
   $view->human_name = 'ASU Events new';

@@ -6,7 +6,7 @@
 function asu_rfi_schema() {
 
 /* US states schema */
- $schema['asu_rfi_states_list'] = array(
+$schema['asu_rfi_states_list'] = array(
   'description' => 'List of US states',
   'fields' => array(
      'stateCode' => array(
@@ -23,8 +23,6 @@ function asu_rfi_schema() {
        ),
        'primary key' => array('stateCode'),
   );
-  
-  
 
 /* US countries schema */ 
  $schema['asu_rfi_countries'] = array(
@@ -61,32 +59,33 @@ function asu_rfi_schema() {
     ),
     'primary key' => array('semId'),
    );
-   
 
    return $schema;
- 
 }
 
 function asu_rfi_install() {
- 
-  include('data/asu_rfi_states_data.inc');
-  include('data/asu_rfi_sem_dates.inc');
-  include('data/asu_rfi_countries_data.inc');
+
+  // Call initial configuration for form options upon install
+  include('data/asu_rfi.form_options.inc');
+  asu_rfi_get_options_data('country', TRUE);
+  asu_rfi_get_options_data('state_province', TRUE);
+  asu_rfi_get_options_data('rfi_dedupe_list_terms', TRUE);
+
   drupal_set_message('ASU RFI module has been installed. Configure module settings at <a href="/admin/config/content/asurfi">admin settings page</a>');
  
-  //Check if CAS module exists and enabled and update cas_exclude variables with asu_rfi callback urls
+  // Check if CAS module exists and enabled and update cas_exclude variables with asu_rfi callback urls
   if (module_exists('cas')) {
     $out = variable_get('cas_exclude', 'none');
     $out = $out . "\r\nasu_rfi/success/*\r\nasu_rfi/failure/*";
     variable_set('cas_exclude',$out);
   }
   
-  //If honeypot module exists, set it's variable value
+  // If honeypot module exists, set it's variable value
   if(module_exists('honeypot')){
       variable_set('honeypot_element_name','rfihurl');
   }
   
-  //Set the RFI form mode to "Test" initially upon module installation
+  // Set the RFI form mode to "Test" initially upon module installation
   variable_set('asu_rfi_form_mode','test');
 }
 

@@ -113,6 +113,34 @@ function asu_brand_get_block_configure_form($delta) {
         '#default_value' => $fstring,
       );
 
+      $form['asu_brand']['custom_title'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Site Name/URL Settings'),
+        '#description' => t('Settings to override the site name link URL. Also allows setting a parent organization name and URL.'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+      );
+
+      $form['asu_brand']['custom_title']['asu_brand_override_url'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Override Site Name Base URL'),
+        '#default_value' => variable_get('asu_brand_override_url', '/'),
+        '#description' => t("Overrides the URL for the site name link in the header. If not provided, the link will be set to the root '/'"),
+      );
+
+      $form['asu_brand']['custom_title']['asu_brand_parent_org_title'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Parent Organization Title'),
+        '#default_value' => variable_get('asu_brand_parent_org_title', ''),
+        '#description' => t('The parent org name will be placed before the site title in the header, and separated by a \'|\'.'),
+      );
+
+      $form['asu_brand']['custom_title']['asu_brand_parent_org_url'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Parent Organization URL'),
+        '#default_value' => variable_get('asu_brand_parent_org_url', ''),
+        '#description' => t('The href value for the parent organization link.'),
+      );
 
       break;
       

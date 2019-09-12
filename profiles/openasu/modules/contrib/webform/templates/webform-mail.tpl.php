@@ -17,11 +17,11 @@
  * - $ip_address: The IP address of the user submitting the form or '(unknown)'
  *   for confidential submissions.
  *
- * The $email['email'] variable can be used to send different e-mails to different users
- * when using the "default" e-mail template.
+ * The $email['email'] variable can be used to send different e-mails to
+ * different users when using the "default" e-mail template.
  */
 ?>
-<?php print ($email['html'] ? '<p>' : '') . t('Submitted on [submission:date:long]'). ($email['html'] ? '</p>' : ''); ?>
+<?php print ($email['html'] ? '<p>' : '') . t('Submitted on [submission:date:long]') . ($email['html'] ? '</p>' : ''); ?>
 
 <?php if ($user->uid): ?>
 <?php print ($email['html'] ? '<p>' : '') . t('Submitted by user: [submission:user]') . ($email['html'] ? '</p>' : ''); ?>
@@ -33,6 +33,6 @@
 
 [submission:values]
 
-<?php print ($email['html'] ? '<p>' : '') . t('The results of this submission may be viewed at:') . ($email['html'] ? '</p>' : '') ?>
+<?php print ($email['html'] ? '<p>' : '') . t('The results of this submission may be viewed at:') . ($email['html'] ? '</p>' : ''); ?>
 
 <?php print ($email['html'] ? '<p>' : ''); ?>[submission:url]<?php print ($email['html'] ? '</p>' : ''); ?>

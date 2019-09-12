@@ -15,10 +15,10 @@ function asu_spotlight_entity_info_alter(&$entity_info) {
   // ASU Spotlight
   $entity_info['fieldable_panels_pane']['bundles']['asu_spotlight'] = array(
     'label' => t('Add ASU spotlight'),
-    'description' => t('Add ASU spotlight'),
+    'description' => t('An ASU-themed spotlight/slideshow with background images, call-to-action buttons, descriptive text/tagline, etc. for each added slide.'),
     'pane category' => t('Custom'),
     'pane top level' => TRUE,
-    'pane icon' => drupal_get_path('module', 'panopoly_widgets') . '/images/icon_spotlight.png',
+    'pane icon' => drupal_get_path('module', 'asu_spotlight') . '/images/icon_spotlight_ASU.png',
     'admin' => array(
       'path' => 'admin/structure/fieldable-panels-panes/manage/%fieldable_panels_panes_type',
       'bundle argument' => 4,
@@ -29,8 +29,6 @@ function asu_spotlight_entity_info_alter(&$entity_info) {
 
   unset($entity_info['fieldable_panels_pane']['bundles']['spotlight']);
 }
-
-
 
 /**
 * Implements hook_theme()

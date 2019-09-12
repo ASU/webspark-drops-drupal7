@@ -36,7 +36,6 @@ function openasu_install_tasks_alter(&$tasks, $install_state) {
  *
  * Implements hook_form_submit()
  */
-
 function openasu_theme_innovation_setup(&$install_state) {
   // Set install state to
   $install_state['parameters']['whichtheme'] = 'innovation';
@@ -53,9 +52,10 @@ function openasu_theme_innovation_setup(&$install_state) {
   theme_enable(array($theme));
   variable_set('theme_default', $theme);
   variable_set('admin_theme', 'webspark_seven');
+  variable_set('node_admin_theme', 1);
 
   // ASU Header settings
-  variable_set('asu_brand_header_version', '4.5');
+  variable_set('asu_brand_header_version', 'stable');
   variable_set('asu_brand_header_template', 'default');
   variable_set('asu_brand_header_selector', 'default');
 

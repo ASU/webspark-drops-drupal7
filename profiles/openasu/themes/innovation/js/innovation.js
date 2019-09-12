@@ -14,32 +14,27 @@
 
     }
   };
+
+  // Add support for sticky menu
   var navOffset = 0;
-  // Show hidden Mega Menu slider when needed
   $(window).scroll(function () {
-    if ($('#navbar-administration'.length > 0)) {
+    // Mobile Friendly Navbar - Drupal default
+    if ($('#navbar-administration').length > 0) {
       navOffset = $('#navbar-bar').height() + $('#navbar-tray').height();
       if (typeof($('#navbar-tray').attr('data-offset-left')) !== typeof undefined) {
         navOffset = navOffset - $('#navbar-tray').height();
       }
     }
-    if (($('#ASUNavMenu').offset().top - ($(window).scrollTop() + navOffset)) < 1 && $('.ghostSlider').length < 1) {
-      $('#ASUNavMenu').clone(true).prependTo(document.body).addClass('ghostSlider')
-          .css({"position": "fixed", "z-index": "1000", "width": "100%", "visibility": "visible"})
-          .removeAttr('id');
-    } else if (($('#ASUNavMenu').offset().top - ($(window).scrollTop() + navOffset)) >= 1) {
-      $('.ghostSlider').remove();
+    // Admin Menu - Popular alternative
+    else if ($('#admin-menu').length > 0) {
+      navOffset = $('#admin-menu').height();
     }
-  });
-
-  // Used to determine if RFI form is on the page.
-  // Go to div if it is go to URL if it isn't #block-asu-rfi-asu-rfi-form-block
-  $('#take-me-to-rfi').on('click', function (e) {
-    e.preventDefault();
-    if ($('#asu-rfi-form-data').length == 0) {
-      location.href = 'https://students.asu.edu/typeofstudent';
-    } else {
-      location.href = '#asu-rfi-form-data';
+    navOffsetUnits = navOffset + "px";
+    var navOffsetTop = {"top": navOffsetUnits};
+    if (($('#ASUNavMenu').offset().top - ($(window).scrollTop() + navOffset)) < 1 && $('.sticky-menu').length < 1) {
+      $('#ASUNavMenu').addClass('sticky-menu').css(navOffsetTop);
+    } else if (($('#ASUNavMenu').offset().top - ($(window).scrollTop() + navOffset)) >= 1) {
+      $('#ASUNavMenu').removeClass('sticky-menu').removeAttr("style");
     }
   });
 

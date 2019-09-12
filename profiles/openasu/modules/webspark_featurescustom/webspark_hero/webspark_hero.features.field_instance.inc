@@ -69,7 +69,12 @@ function webspark_hero_field_default_field_instances() {
     'bundle' => 'hero',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => '<ul class="help-text">
+<li class="help-title">IMPORTANT!</li>
+<li>This byline field is only for smaller subtitles or bylines included <b>below</b> the 
+larger, primary hero text.</li>
+<li>Enter the primary hero text in the Title text field under "General Settings" section.</li>
+</ul>',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -81,7 +86,7 @@ function webspark_hero_field_default_field_instances() {
     ),
     'entity_type' => 'fieldable_panels_pane',
     'field_name' => 'field_webspark_hero_blurb',
-    'label' => 'Blurb',
+    'label' => 'Subtitle, Blurb, or Byline',
     'required' => 0,
     'settings' => array(
       'linkit' => array(

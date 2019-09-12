@@ -5,13 +5,11 @@
  * Administrative page callbacks for the ldap_authorization module.  Consumer configuration form and index.
  */
 
-
 /**
- * index of ldap authorization configurations
+ * Index of ldap authorization configurations.
  *
  * @return string html table
  */
-
 function ldap_authorizations_admin_index() {
 
   $consumers = ldap_authorization_get_consumers(NULL, TRUE, FALSE);
@@ -29,22 +27,22 @@ function ldap_authorizations_admin_index() {
   foreach ($consumers as $consumer_type => $consumer) {
     $consumers[$consumer_type] = ldap_authorization_get_consumer_object($consumer_type);
   }
-  return theme('ldap_authorization_admin_index', array('consumers' => $consumers));
+  return theme('ldap_authorization_admin_index', ['consumers' => $consumers]);
 
 }
 
-
-
 /**
- * form for adding, updating, and deleting a single ldap authorization configuration
+ * Form for adding, updating, and deleting a single ldap authorization configuration.
  *
- * @param form array $form
- * @param form state array $form_state
- * @param string $op (add, edit, or delete)
- * @param string $consumer_type e.g. drupal_roles, og_group, etc.  Only needed for adds
- * @return drupal form array
+ * @param array $form
+ * @param array $form_state
+ * @param string $op
+ *   (add, edit, or delete)
+ * @param string $consumer_type
+ *   e.g. drupal_roles, og_group, etc.  Only needed for adds.
+ *
+ * @return array
  */
-
 function ldap_authorization_admin_form($form, &$form_state, $consumer_type, $op = NULL) {
   ldap_servers_module_load_include('php', 'ldap_authorization', 'LdapAuthorizationConsumerConfAdmin.class');
   $consumer = ldap_authorization_get_consumer_object($consumer_type);
@@ -52,7 +50,7 @@ function ldap_authorization_admin_form($form, &$form_state, $consumer_type, $op 
   if ($op == 'add' && is_object($consumer->consumerConf) && $consumer->consumerConf->inDatabase) {
     drupal_set_message(t('Only one configuration is allowed per consumer type.
       Configuration already exists for the cosumer type %consumer_type.  Please edit that configuration.',
-      array('%consumer_type' => $consumer_type)), 'warning');
+      ['%consumer_type' => $consumer_type]), 'warning');
     drupal_goto(LDAP_SERVERS_MENU_BASE_PATH . '/authorization');
   }
 
@@ -67,7 +65,6 @@ function ldap_authorization_admin_form($form, &$form_state, $consumer_type, $op 
     drupal_goto('admin/config/people/ldap/authorization');
   }
 
-
   $new = ($op == 'add');
   $consumer_conf_admin = new LdapAuthorizationConsumerConfAdmin($consumer, $new);
 
@@ -78,14 +75,12 @@ function ldap_authorization_admin_form($form, &$form_state, $consumer_type, $op 
 
 }
 
-
 /**
- * validate handler for the ldap_authorization_admin_form
+ * Validate handler for the ldap_authorization_admin_form.
  */
-
 function ldap_authorization_admin_form_validate($form, &$form_state) {
 
-  list($consumer, $op, $op_past, $new)  = _ldap_authorization_admin_parse_form($form, $form_state);
+  list($consumer, $op, $op_past, $new) = _ldap_authorization_admin_parse_form($form, $form_state);
   $values = $form_state['values'];
   ldap_servers_module_load_include('php', 'ldap_authorization', 'LdapAuthorizationConsumerConfAdmin.class');
   $consumer_conf_admin = new LdapAuthorizationConsumerConfAdmin($consumer, $new);
@@ -98,20 +93,19 @@ function ldap_authorization_admin_form_validate($form, &$form_state) {
 
 }
 
-
 /**
- * submit handler function for ldap_authorization_admin_form
+ * Submit handler function for ldap_authorization_admin_form.
  */
-
 function ldap_authorization_admin_form_submit($form, &$form_state) {
-  list($consumer, $op, $op_past_tense, $new)  = _ldap_authorization_admin_parse_form($form, $form_state);
+  list($consumer, $op, $op_past_tense, $new) = _ldap_authorization_admin_parse_form($form, $form_state);
   $values = $form_state['values'];
   ldap_servers_module_load_include('php', 'ldap_authorization', 'LdapAuthorizationConsumerConfAdmin.class');
   $consumer_conf = new LdapAuthorizationConsumerConfAdmin($consumer, $new);
-  $consumer_conf->drupalFormSubmit($op, $values);  // add form data to object and save or create
+  // Add form data to object and save or create.
+  $consumer_conf->drupalFormSubmit($op, $values);
 
   if ($consumer_conf->hasError == FALSE) {
-    drupal_set_message(t('LDAP Authorization %name !verb', array('!verb' => $op_past_tense, '%name' => $consumer->name)), 'status');
+    drupal_set_message(t('LDAP Authorization %name !verb', ['!verb' => $op_past_tense, '%name' => $consumer->name]), 'status');
     drupal_goto(LDAP_SERVERS_MENU_BASE_PATH . '/authorization');
   }
 
@@ -121,9 +115,8 @@ function ldap_authorization_admin_form_submit($form, &$form_state) {
 }
 
 /**
- * helper function for parsing ldap authorization config form
+ * Helper function for parsing ldap authorization config form.
  */
-
 function _ldap_authorization_admin_parse_form($form, &$form_state) {
   $op = drupal_strtolower($form_state['clicked_button']['#value']);
   $values = $form_state['values'];
@@ -140,21 +133,21 @@ function _ldap_authorization_admin_parse_form($form, &$form_state) {
     case 'add':
       $op_past_tense = 'Added';
       $new = TRUE;
-    break;
+      break;
 
     case 'save':
     case 'update':
     case 'edit':
       $op_past_tense = 'Updated';
       $new = FALSE;
-    break;
+      break;
 
     case 'delete':
       $op_past_tense = 'Deleted';
       $new = FALSE;
-    break;
+      break;
   }
 
-  return array($consumer, $op, $op_past_tense, $new);
+  return [$consumer, $op, $op_past_tense, $new];
 
 }

@@ -1,0 +1,4 @@
+/* Prepends text before 'Feed' display title on ASU Degrees node form */
+#asu-ap-feed-node-form .fieldset-legend::before {
+  content: "ASU Academic Programs ";
+}

@@ -1,4 +1,17 @@
+Webspark Jumbohero - 7.x-1.6, 2019-08-02
+------------------------------
+- Improved mouseover description when a link to create an ASU spotlight is rendered in the In-Page Editor
 
-Webspark Jumbo Hero 7.x-1.1-dev, 2014-11-21
+Webspark Jumbohero - 7.x-1.4, 2018-01-31
+------------------------------
+- Added ellipsis to long image blurbs/taglines to fix mobile layout issues
+- Added SASS files for all future CSS development
+- Updated most element and font units from px to em or rem
+
+Webspark Jumbohero - 7.x-1.2, 7.x-1.3
+------------------------------
+- Unknown edits
+
+Webspark Jumbohero - 7.x-1.1-dev, 2014-11-21
 ------------------------------
 - Reworked help text.

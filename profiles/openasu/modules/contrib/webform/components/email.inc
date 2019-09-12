@@ -142,7 +142,6 @@ function _webform_edit_email_validate($element, &$form_state) {
  * Implements _webform_render_component().
  */
 function _webform_render_email($component, $value = NULL, $filter = TRUE, $submission = NULL) {
-  global $user;
   $node = isset($component['nid']) ? node_load($component['nid']) : NULL;
 
   $element = array(
@@ -176,8 +175,8 @@ function _webform_render_email($component, $value = NULL, $filter = TRUE, $submi
     // pattern validation. This means that long format email addresses must be
     // rendered as text.
     $element['#attributes']['type'] = 'text';
-    
-    // html5 patterns have implied delimters and start and end patterns.
+
+    // html5 patterns have implied delimiters and start and end patterns.
     // The are also case sensitive, not global, and not multi-line.
     // See https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5/Constraint_validation
     // See http://stackoverflow.com/questions/19605773/html5-email-validation
@@ -235,31 +234,40 @@ function theme_webform_email($variables) {
       $element['#attributes'][$property] = $element['#' . $property];
     }
   }
-  _form_set_class($element, array('form-text', 'form-email'));
+
+  // Add form-control class if display is not inline
+  $email_classes = array('form-text', 'form-email');
+  if ($element["#title_display"] !== "inline") {
+    $email_classes[] = 'form-control';
+  }
+
+  _form_set_class($element, $email_classes);
 
   return '<input' . drupal_attributes($element['#attributes']) . ' />';
 }
 
 /**
- * A Drupal Form API Validation function. Validates the entered values from
- * email components on the client-side form.
+ * A Drupal Form API Validation function.
  *
- * @param $form_element
+ * Validates the entered values from email components on the client-side form.
+ * Calls a form_set_error if the e-mail is not valid.
+ *
+ * @param array $form_element
  *   The e-mail form element.
- * @param $form_state
+ * @param array $form_state
  *   The full form state for the webform.
- * @return
- *   None. Calls a form_set_error if the e-mail is not valid.
  */
 function _webform_validate_email($form_element, &$form_state) {
   $component = $form_element['#webform_component'];
   $format = webform_variable_get('webform_email_address_format') == 'long' ? $component['extra']['format'] : 'short';
   webform_email_validate($form_element['#value'],
-                         implode('][', $form_element ['#parents']),
-                         TRUE,  // Required validation is done elsewhere.
-                         $component['extra']['multiple'],
-                         FALSE, // No tokens are allowed in user input.
-                         $format);
+    implode('][', $form_element['#parents']),
+    // Required validation is done elsewhere.
+    TRUE,
+    $component['extra']['multiple'],
+    // No tokens are allowed in user input.
+    FALSE,
+    $format);
 }
 
 /**
@@ -320,13 +328,15 @@ function _webform_analysis_email($component, $sids = array(), $single = FALSE, $
   $rows[0] = array(t('Left Blank'), ($submissions - $nonblanks));
   $rows[1] = array(t('User entered value'), $nonblanks);
 
-  $other[0] = array(t('Average submission length in words (ex blanks)'), ($nonblanks != 0 ? number_format($wordcount/$nonblanks, 2) : '0'));
+  $other[0] = array(
+    t('Average submission length in words (ex blanks)'),
+    ($nonblanks != 0 ? number_format($wordcount / $nonblanks, 2) : '0'),
+  );
 
   return array(
     'table_rows' => $rows,
     'other_data' => $other,
   );
-
 }
 
 /**

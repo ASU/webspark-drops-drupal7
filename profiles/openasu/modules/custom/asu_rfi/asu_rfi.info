@@ -1,5 +1,5 @@
 name = ASU Request for information form
-description = The ASU RFI module provides ASU sites with RFI form functionality with automatic posting to ASU's SalesForce.
+description = "Provides ASU sites with RFI form functionality. Designed to be integrated with ASU's SalesForce instance."
 core = 7.x
 package = ASU
 dependencies[] = multiblock
@@ -7,11 +7,15 @@ dependencies[] = views
 dependencies[] = views_data_export
 dependencies[] = asu_rfi_feature
 dependencies[] = mimemail
-dependencies[] = asu_degrees
 dependencies[] = views_bulk_operations
 dependencies[] = honeypot
-version = "7.x-1.7"
+version = "7.x-1.15"
+scripts[] = js/asu_rfi_form.js
+
+files[] = data/asu_rfi.form_options.inc
+
 ;files[] = asu_rfi.email.inc
 ;files[] = asu_rfi.pages.inc
+
 ;scripts[] = asu_rfi.js
 ;scripts[] = session_clear.js

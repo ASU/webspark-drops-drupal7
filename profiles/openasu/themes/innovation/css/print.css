@@ -1,0 +1,19 @@
+/* @media print rules for Innovation theme */
+
+/* fixes @media print issues - WEBSPARK-764 */
+@media print {
+  #top-content #tabs .nav.nav-pills,
+  .region-closure,
+  #innovation-bar,
+  #ASUNavMenu.sticky-menu {
+    display: none !important;
+  }
+  #page .container, 
+  #innovation-footer .footer-menu ul, 
+  #innovation-bar .innovation-top {
+    width: 100%;
+  }
+  aside.right-sidebar, aside.left-sidebar {
+    width: 25% !important;
+  }
+}

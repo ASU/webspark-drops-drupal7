@@ -1,11 +1,11 @@
 name = ASU Webspark
 distribution_name = ASU Webspark
-description = A starting point for websites at ASU
+description = "A good starting point for ASU Web standards compliant web sites with Drupal."
 core = 7.x
 exclusive = 1
-;version = VERSION
+
 ; Remember to update in innovation as well for DOM
-version = 1.48
+version = 1.70.1
 
 ; Drupal Core
 dependencies[] = taxonomy
@@ -36,7 +36,6 @@ dependencies[] = panopoly_widgets
 
 ; Panopoly Toolset
 dependencies[] = panopoly_pages
-dependencies[] = panopoly_search
 dependencies[] = panopoly_wysiwyg
 
 ; Panopoly Recommended - Admin
@@ -59,24 +58,19 @@ dependencies[] = easy_breadcrumb
 dependencies[] = entity_view_mode
 dependencies[] = flexslider
 dependencies[] = fontawesome
-dependencies[] = google_appliance
 dependencies[] = maxlength
 dependencies[] = panels_tabs
-;dependencies[] = quicktabs
 dependencies[] = uuid_features
 dependencies[] = features_override
 dependencies[] = video_embed_field
 dependencies[] = wysiwyg_template
-
-; OpenASU - Toolset
-dependencies[] = modernizr
 
 ; OpenASU - Custom
 dependencies[] = asu_brand
 
 ; Container module built for Webspark custom features
 dependencies[] = webspark_featurescustom
-dependencies[] = asu_gsa
+dependencies[] = asu_gcse
 dependencies[] = asu_maps_enhanced
 dependencies[] = asu_spotlight
 dependencies[] = uto_carousel

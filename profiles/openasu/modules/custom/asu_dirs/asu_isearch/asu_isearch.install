@@ -255,8 +255,19 @@ function asu_isearch_update_7180() {
 }
 
 /**
- * Revert the feature to pick up changes
+ * Revert the field features to pick up text processing configuration
  */
-function asu_isearch_update_7186() {
-  features_revert_module('asu_isearch');
+function asu_isearch_update_7188() {
+  $components = array('field_base', 'field_group', 'field_instance');
+  features_revert(array('asu_isearch' => $components));
+}
+
+/***
+ * Clean up the cron processing queues
+ */
+function asu_isearch_update_7189() {
+  $queue = DrupalQueue::get('isearch_clean_profiles');
+  $queue->deleteQueue();
+  $queue = DrupalQueue::get('isearch_fetch_profile_photo');
+  $queue->deleteQueue();
 }

@@ -1,8 +1,8 @@
 name = Innovation
-description = "Theme with ASU Web Standards styling. A Kalatheme subtheme, powered by Bootstrap."
+description = "Default Webspark theme that contains ASU Web Standards styling. Uses Bootstrap 3.x CSS/JS library. Is a Kalatheme subtheme."
 base theme = kalatheme
 core = 7.x
-version = "7.x-1.8"
+version = "7.x-1.14"
 project = "innovation"
 
 regions[header] = Header
@@ -26,13 +26,14 @@ stylesheets[all][] = css/buttons.css
 stylesheets[all][] = css/forms.css
 stylesheets[all][] = css/nav.css
 stylesheets[all][] = fonts/roboto/css/roboto.css
+stylesheets[print][] = css/print.css
 
 ; Scripts
 
 ; Theme settings
 
 settings[toggle_logo] = 0
-settings[toggle_name] = 1
+settings[toggle_name] = 0
 settings[toggle_slogan] = 0
 settings[toggle_node_user_picture] = 0
 settings[toggle_comment_user_picture] = 0

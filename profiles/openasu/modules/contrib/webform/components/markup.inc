@@ -102,7 +102,7 @@ function _webform_render_markup($component, $value = NULL, $filter = TRUE, $subm
   return $element;
 }
 
- /**
+/**
  * Helper function to replace tokens in markup component.
  *
  * Required to have access to current form values from $form_state.
@@ -132,7 +132,8 @@ function _webform_render_markup_after_build($form_element, &$form_state) {
     }
     $conditional_value = $sorter->componentMarkup($component['cid'], $component['page_num']);
     if (isset($conditional_value)) {
-      // Provide original value, should conditional logic no longer set the value.
+      // Provide original value, should conditional logic no longer set the
+      // value.
       $form_element['#wrapper_attributes']['data-webform-markup'] = $value;
       if (is_string($conditional_value)) {
         $value = check_markup($conditional_value, $component['extra']['format']);
@@ -143,7 +144,6 @@ function _webform_render_markup_after_build($form_element, &$form_state) {
   $form_element['#markup'] = $value;
   return $form_element;
 }
-
 
 /**
  * Implements _webform_display_component().

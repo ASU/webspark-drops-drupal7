@@ -206,38 +206,6 @@ function asu_isearch_views_query_alter(&$view, &$query) {
       );
     }
 
-    /* deprecated
-    if ($view->view_config->employee_type_exclude == 1) {
-      $dept_id_field = 'field_collection_item_field_data_field_isearch_affiliations__field_data_field_isearch_affil_empl_key.field_isearch_affil_empl_key_value';
-      $found_employee_type_filter = FALSE;
-
-      foreach ($query->where as $item_index => $item) {
-        if (!empty($item['conditions'])) {
-          foreach ($item['conditions'] as $condition_index => $condition) {
-            if (!is_object($condition['field']) && $condition['field'] == $dept_id_field) {
-              $found_employee_type_filter = TRUE;
-              if (is_array($query->where[$item_index]['conditions'][$condition_index]['value'])) {
-                $operator = 'NOT IN';
-              }
-              else {
-                $operator = '!=';
-              }
-              $query->where[$item_index]['conditions'][$condition_index]['operator'] = $operator;
-            }
-          }
-        }
-      }
-
-      if (!$found_employee_type_filter) {
-        $query->where[0]['conditions'][] = array(
-          'field' => $dept_id_field,
-          'operator' => '=',
-          'value' => 'unknown',
-        );
-      }
-    }*/
-
-
     // replace the dropdown title filter value with the raw value gotten from the form.
     // need to do this because it trys to filter on a safe value of an ampersand (&amp)
     // which returns nothing

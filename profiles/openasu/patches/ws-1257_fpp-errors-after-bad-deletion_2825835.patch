@@ -1,0 +1,26 @@
+diff --git a/fieldable_panels_panes.module b/fieldable_panels_panes.module
+index 8f190ad..c89472e 100644
+--- a/fieldable_panels_panes.module
++++ b/fieldable_panels_panes.module
+@@ -980,8 +980,8 @@ function fieldable_panels_panes_load($fpid, $vid = NULL) {
+  *   A string combining an indicator of the type of ID, e.g. 'fpid', 'vid' or
+  *   'vuuid', and an integer ID, separated by a colon; e.g. "fpid:123".
+  *
+- * @return object
+- *   The requested FPP object.
++ * @return object|bool
++ *   The requested FPP object, FALSE otherwise.
+  */
+ function fieldable_panels_panes_load_from_subtype($subtype_name) {
+   ctools_include('content');
+@@ -990,6 +990,10 @@ function fieldable_panels_panes_load_from_subtype($subtype_name) {
+   // Next, check to see how the subtype is configured.
+   $subtype_info = ctools_content_get_subtype($plugin, $subtype_name);
+ 
++  if (!isset($subtype_info['bundle'])) {
++    return FALSE;
++  }
++
+   // This means we're probably in the process of creating a new one.
+   if (!isset($subtype_info['entity_id'])) {
+     return fieldable_panels_panes_create(array('bundle' => $subtype_info['bundle']));

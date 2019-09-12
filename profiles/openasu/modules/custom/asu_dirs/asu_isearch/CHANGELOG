@@ -1,3 +1,35 @@
+asu_isearch 7.x-1.13
+--------------------
+- Academic grammar fix
+
+asu_isearch 7.x-1.12
+--------------------
+- Fixed bug where local rank weight couldn't be removed with node edit form
+- Added error handling to better detect field_collection-related failures
+- Fixed bug where absolute URLs imported from iSearch were being rewritten
+
+asu_isearch 7.x-1.11
+--------------------
+- Added queue cleanup update and limits to avoid bloating database
+
+asu_isearch 7.x-1.10
+--------------------
+- Fixed mapping of Twitter field for profile imports
+- Fixed configuration for proper HTML field filtering
+- Added profile video importing and display functionality
+- Added asu_isearch_prepare_migration hook
+- Fixed mapping of gradFaculties field for profile imports
+
+asu_isearch 7.x-1.9
+-------------------
+- Fixed bug where default photo was being deleted upon cron run
+- Added addressLine3 and city fields to profile
+- Added js to move location info to line beneath contact info on profile
+- Affiliation campus and mailcode fields are now mapped to the primaryJobCampus and primaryMailCode fields in Solr
+- Fixed styling discrepancies on profile and listing views to bring them more in line with iSearch and Web Standards
+- Fixed bug where checkbox labels disappear after removing default photo on admin form
+- Removed broken default photo field logic where field was not being toggled as visible/invisible by checkbox
+
 asu_isearch 7.x-1.8.12
 ----------------------
 - Added affil_hide, affil_weight, Google scholar, student info, and executive courses fields to the profile

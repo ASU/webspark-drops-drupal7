@@ -1,0 +1,277 @@
+/**
+ * @description - If Innovation is the admin theme, add these changes to clean up the UI
+ */
+
+/* -------- Admin-wide CSS selectors ---------- */
+
+.pia h1#page-title {
+  margin-bottom: 0.3333em;
+}
+.pia table a.tabledrag-handle {
+  margin-left: inherit;
+  border-bottom: none;
+  margin: auto;
+}
+
+/** System Help block theming (if enabled) */
+#block-system-help {
+  padding: 1em;
+  border: 1px solid #00A3E0;
+  background-color: #e1f8ff;
+  margin: 1em 0;
+}
+#block-system-help:first-child:before {
+  content: "Drupal Help --";
+  font-weight: bold;
+}
+#block-system-help .content:last-child {
+  margin: 0;
+}
+
+/** Alerts with links in text */
+.pia .alert-danger a,
+.pia .alert-info a {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+/** All admin area forms */
+.pia #top-content #action-links {
+  margin-bottom: 1em;
+}
+/** wrap admin forms that are panelized and the <form> tag is rendered outside the node TPL (/node/add, etc.) */
+.pia #block-system-main > .content > form[id] {
+  margin: 0;
+  padding: 1em;
+  border: 1px solid #ddd;
+  box-shadow: 4px 6px 3px #f7f7f7;
+}
+
+  /** Fieldset theming */
+.pia fieldset.fieldset-nested- {
+  margin: 0.5em 0;
+  padding: 1em;
+  border: 1px solid #E0E0DC !important;
+}
+.pia fieldset.fieldset-nested-odd {
+  background-color: #f7f7f3;
+}
+.pia fieldset.fieldset-nested-even {
+  background-color: #edf9dd;
+}
+.pia #block-system-main fieldset legend {
+  width: initial;
+  margin-bottom: 0;
+  font-weight: bold;
+}
+
+/** Category lists on main admin landing pages */
+.pia .admin-list > dt,
+.pia #block-system-main .content > dl > dt {
+  border: 1px solid #ddd;
+  border-bottom: none;
+  padding: 0.25em 0.25em 0 0.25em;
+
+}
+.pia .admin-list > dl > dt + dd,
+.pia #block-system-main .content > dl > dt + dd {
+  border: 1px solid #ddd;
+  border-top: none;
+  margin-bottom: 0.5em;
+  padding: 0 0.25em 0.25em 0.25em;
+}
+.pia .admin-list > dt:nth-of-type(2n),
+.pia #block-system-main .content > dl > dt:nth-of-type(2n) {
+  background-color: #fff;
+}
+.pia .admin-list > dd:nth-of-type(2n),
+.pia #block-system-main .content > dl > dd:nth-of-type(2n) {
+  background-color: #fff;
+}
+.pia .admin-list > dt:nth-of-type(2n+1),
+.pia #block-system-main .content > dl > dt:nth-of-type(2n+1) {
+  background-color: #f9f9f9;
+}
+.pia .admin-list > dd:nth-of-type(2n+1),
+.pia #block-system-main .content > dl > dd:nth-of-type(2n+1) {
+  background-color: #f9f9f9;
+}
+
+/** Tables */
+/*** striping added EXCEPT on Reports -> Status */
+body:not(.page-admin-reports-status) table > tbody > tr:nth-child(2n+1) {
+  background-color: #F5F5F5;
+}
+.pia #block-system-main table thead {
+  background-color: #edf9dd;
+}
+/*** Form elements for field settings */
+.pia table[id] .form-item,
+.pia table[id] .form-actions .btn,
+.pia table[id] .form-submit {
+  margin: 0.25em;
+}
+
+/** Main system block container for most /admin based pages */
+.pia #block-system-main {
+  margin-bottom: 1em;
+}
+
+/** Restore browser-native checkboxes, radio buttons */
+.pia #block-system-main table tr .form-type-checkbox,
+.pia #block-system-main table tr .form-type-radio,
+.pia.page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox {
+  margin-top: 0.25em;
+}
+.pia #block-system-main table tr .form-type-checkbox > input[type="checkbox"],
+.pia #block-system-main table tr .form-type-checkbox > input[type="radio"],
+.pia.page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox > input[type="checkbox"] {
+  opacity: initial;
+  padding: 0 0.5em;
+}
+.pia #block-system-main table tr .form-type-checkbox > label.element-invisible,
+.pia #block-system-main .views-field-views-bulk-operations .form-type-checkbox > input.form-checkbox + label,
+.pia #block-system-main table tr .form-type-checkbox > input.form-checkbox + label:before,
+.pia #block-system-main table tr .form-type-checkbox > input.form-checkbox + label:after,
+.pia.page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox > input.form-checkbox + label:before,
+.pia.page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox > input.form-checkbox + label:after {
+  display: none;
+}
+
+/** Filter button */
+.pia #block-system-main .container-inline div, .container-inline label {
+  display: inline-block;
+}
+
+/** Views exposed filters */
+.pia .view-better-watchdog-ui-view .views-operator {
+  margin-bottom: 1em;
+}
+.pia .view-better-watchdog-ui-view .views-exposed-widgets .description {
+  font-size: 0.75em;
+}
+.pia .views-exposed-widget.views-submit-button {
+  clear: both;
+}
+.pia .views-exposed-form .views-submit-button,
+.pia .views-exposed-form .views-reset-button {
+  padding-right: 0;
+}
+.pia .views-exposed-widget > .form-submit {
+  margin: 1em 1em 0 0;
+}
+/** layout of entire exposed form **/
+/** CTools export forms added **/
+.pia .view-filters > form,
+.pia #ctools-export-ui-list-form {
+  padding: 1em;
+  border: 1px solid #ddd;
+  background-color: #f7f7f7;
+}
+.pia .view-filters .form-control,
+.pia #ctools-export-ui-list-form .form-control {
+  padding: 0.25em;
+}
+.pia .views-exposed-form .views-exposed-widget {
+  padding-top: 0;
+}
+
+/** CTools exports forms additional */
+.pia #ctools-export-ui-list-form {
+  margin-top: 1em;
+}
+
+/** ------------- Custom CSS selectors for individual sections --------- */
+
+/** Blocks administration */
+#block-admin-display-form table .region-title {
+  background-color: #e1f8c4;
+}
+
+/** Available updates */
+.pia table.update .alert {
+  color: initial;
+}
+.pia table.update .alert.alert-success {
+  background-color: #e1f8c4;
+}
+.pia table.update .alert.alert-success {
+  background-color: #e1f8c4;
+}
+.pia #module-filter-update-status-form .module-filter-inputs-wrapper .form-item-module-filter-name {
+  margin-bottom: 1em;
+}
+.pia #module-filter-update-status-form #module-filter-show-wrapper .form-item {
+  padding: 0 1.5em;
+}
+.pia .update tr.ok,
+.pia .update-status.ok {
+  background: #e1f8c4;
+}
+
+/* Configuration - Landing page */
+.pia .admin-panel {
+  padding: 0 1em;
+  margin-bottom: 1em;
+  border: 1px solid #E0E0DC !important;
+}
+.pia .admin-panel .body {
+  padding: 0;
+}
+.pia.page-admin-config .admin > .clearfix {
+  margin-left: 0;
+  margin-right: 0;
+  width: 48%;
+}
+
+/** URL aliases - column all gray due to bootstrap */
+.pia #block-system-main .table > tbody > tr.active > td,
+.pia #block-system-main .table > tbody > tr.active > th,
+.pia #block-system-main .table > tbody > tr > td.active,
+.pia #block-system-main .table > tbody > tr > th.active,
+.pia #block-system-main .table > tfoot > tr.active > td,
+.pia #block-system-main .table > tfoot > tr.active > th,
+.pia #block-system-main .table > tfoot > tr > td.active,
+.pia #block-system-main .table > tfoot > tr > th.active,
+.pia #block-system-main .table > thead > tr.active > td,
+.pia #block-system-main .table > thead > tr.active > th,
+.pia #block-system-main .table > thead > tr > td.active, .table > thead > tr > th.active {
+  background-color: initial;
+}
+
+/** Recent Log Entries */
+.pia .better_watchdog_ui_watchdog-detail table > thead > tr > th,
+.pia .better_watchdog_ui_watchdog-detail table > thead > tr > td,
+.pia .better_watchdog_ui_watchdog-detail table > tbody > tr > th,
+.pia .better_watchdog_ui_watchdog-detail table > tbody > tr > td,
+.pia .better_watchdog_ui_watchdog-detail table > tfoot > tr > th,
+.pia .better_watchdog_ui_watchdog-detail table > tfoot > tr > td {
+  border: 1px solid #b7b7b7;
+}
+.pia .view-better-watchdog-ui-view table .form-type-checkbox {
+  padding: 0 0.25em;
+}
+
+/** Module Filter + absolutely positioned ASU global footer don't jive together. */
+html.js .pia.page-admin-modules footer#page-footer {
+  display: none;
+}
+html.js .pia.page-admin-modules .module-filter-inputs-wrapper .checkbox input[type="checkbox"],
+html.js .pia.page-admin-modules .module-filter-inputs-wrapper .checkbox-inline input[type="checkbox"] {
+  float: initial;
+}
+html.js .pia.page-admin-modules .module-filter-inputs-wrapper .module-filter-clear a {
+  float: none;
+}
+
+/** Views exposed forms - /admin/content */
+.pia .vbo-views-form div.form-item + input.btn {
+  margin-top: 1em;
+}
+.pia div.form-item > .help-block {
+  font-size: 0.8em;
+  margin-top: 0;
+}
+.views-exposed-form .views-widget-filter-severity {
+  max-width: 15%;
+}

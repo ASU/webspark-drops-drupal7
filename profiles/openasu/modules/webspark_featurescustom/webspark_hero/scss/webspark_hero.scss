@@ -1,0 +1,117 @@
+/**
+ * CSS file for Webspark hero module.
+ */
+
+/* Increase font size of modal warning and move higher */
+
+.hero-warning {
+  position: relative;
+  top: -105px;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+/* Make hero background image responsive */
+
+.pane-bundle-hero {
+  background-size: cover;
+  width: 100%;
+  margin-top: -1px;
+  .hero-wrapper {
+    height: 380px;
+  }
+  .pane-content {
+    padding: 0 0.9375em;
+  }
+  p {
+    margin: 0;
+    padding: 0;
+  }
+  h1, h2 {
+    color: white;
+    font-size: 3.75rem;
+    font-weight: 900;
+    line-height: 1;
+    margin: 0;
+    padding: 5.3125rem 0.9375rem 0.625rem 0.9375rem;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  }
+  .field-name-field-webspark-hero-blurb {
+    max-width: 900px;
+    margin-bottom: 1.5em;
+    color: white;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    font-weight: 900;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  }
+  .field-name-field-webspark-hero-ugradbtn,
+  .field-name-field-webspark-hero-gradbtn {
+    width: 41.6667%;
+    display: inline-block;
+    margin-bottom: 0.75em;
+    padding-left: 0.9375em;
+    padding-right: 0.9375em;
+  }
+  .field-name-field-webspark-hero-ugradbtn {
+    padding-left: 0;
+  }
+}
+
+/* Button styles */
+
+/* =MEDIA QUERIES
+-------------------------------------------------------------- */
+@media (min-width: 1200px) {
+  .pane-bundle-hero {
+    .field-name-field-webspark-hero-ugradbtn,
+    .field-name-field-webspark-hero-gradbtn {
+      width: 33.3333%;
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .pane-bundle-hero {
+    h1,
+    h2 {
+      font-size: 3.125rem;
+    }
+    .field-name-field-webspark-hero-blurb {
+      font-size: 1.3125em;
+      line-height: 1.3125em;
+    }
+    .field-name-field-webspark-hero-ugradbtn,
+    .field-name-field-webspark-hero-gradbtn {
+      width: 50%;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .pane-bundle-hero {
+    h1,
+    h2 {
+      padding-top: 1.875rem;
+      font-size: 2.5rem;
+    }
+    // Hide overflow blurbs
+    .field-name-field-webspark-hero-blurb .field-item {
+      & > *:first-child {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      // If multiple paragraphs or other DOM elements, hide them all but the first
+      & > *:nth-child(n+2) {
+        display: none;
+      }
+    }
+    .field-name-field-webspark-hero-ugradbtn,
+    .field-name-field-webspark-hero-gradbtn {
+      display: block;
+      width: 100%;
+      padding-left: 0;
+    }
+  }
+}

@@ -1,0 +1,49 @@
+commit d601e75beb66b7ce484b4fe056ae06355773a3e6
+Author: Bryan <aubjr@asu.edu>
+Date:   Mon Aug 26 18:39:48 2019 -0700
+
+    WEBSPARK-1560 - Panopoly Behat feature/scenario patches for widget locations in IPE
+
+diff --git a/profiles/openasu/modules/panopoly/panopoly_test/behat/behat.common.yml b/profiles/openasu/modules/panopoly/panopoly_test/behat/behat.common.yml
+index d1200119a..2f8cd1e31 100644
+--- a/profiles/openasu/modules/panopoly/panopoly_test/behat/behat.common.yml
++++ b/profiles/openasu/modules/panopoly/panopoly_test/behat/behat.common.yml
+@@ -34,6 +34,8 @@ default:
+         Bryant Flipped Sidebar: ".bryant-flipped .radix-layouts-sidebar"
+         # For Panels / Panopoly specific regions.
+         CTools modal: "#modalContent"
++        CTools modal category: "#modalContent .panels-categories-box"
++        CTools modal list: "#modalContent .panels-section-columns"
+         Live preview: ".panopoly-magic-preview"
+         Linkit modal: "#linkit-modal"
+         # For the Media Browser
+diff --git a/profiles/openasu/modules/panopoly/panopoly_test/behat/features/maps_widget.feature b/profiles/openasu/modules/panopoly/panopoly_test/behat/features/maps_widget.feature
+index 50672e2fb..369c02e67 100644
+--- a/profiles/openasu/modules/panopoly/panopoly_test/behat/features/maps_widget.feature
++++ b/profiles/openasu/modules/panopoly/panopoly_test/behat/features/maps_widget.feature
+@@ -10,7 +10,9 @@ Feature: Add map widget
+       And I am viewing a landing page
+     When I customize this page with the Panels IPE
+       And I click "Add new pane"
+-      And I click "Add map" in the "CTools modal" region
++      And I click "ASU Deprecated" in the "CTools modal category" region
++      And I wait 2 seconds
++      And I click "Add map" in the "CTools modal list" region
+     Then I should see "Configure new Add map"
+     When I fill in the following:
+       | Title       | Widget title            |
+diff --git a/profiles/openasu/modules/panopoly/panopoly_test/behat/features/panopoly_magic/livepreview.feature b/profiles/openasu/modules/panopoly/panopoly_test/behat/features/panopoly_magic/livepreview.feature
+index a40a7e9af..fc54230dc 100644
+--- a/profiles/openasu/modules/panopoly/panopoly_test/behat/features/panopoly_magic/livepreview.feature
++++ b/profiles/openasu/modules/panopoly/panopoly_test/behat/features/panopoly_magic/livepreview.feature
+@@ -141,7 +141,9 @@ Feature: Live preview
+       And I am viewing a landing page
+     When I customize this page with the Panels IPE
+       And I click "Add new pane"
+-      And I click "Add spotlight" in the "CTools modal" region
++      And I click "ASU Deprecated" in the "CTools modal category" region
++      And I wait 2 seconds
++      And I click "Add spotlight" in the "CTools modal list" region
+     Then I should see "Configure new Add spotlight"
+     When I fill in "Description" with "Testing description"
+       And I wait for live preview to finish

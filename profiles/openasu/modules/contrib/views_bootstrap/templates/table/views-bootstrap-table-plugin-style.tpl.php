@@ -16,9 +16,19 @@
  *   $rows are keyed by row number, fields within rows are keyed by field ID.
  * - $field_classes: An array of classes to apply to each field, indexed by
  *   field id, then row number. This matches the index in $rows.
+ * - $responsive: A flag indicating whether table is responsive.
  * @ingroup views_templates
  */
 ?>
+
+<?php if (!empty($title)): ?>
+  <h3><?php print $title ?></h3>
+<?php endif ?>
+
+<?php if ($responsive): ?>
+  <div class="table-responsive">
+<?php endif ?>
+
 <table <?php if ($classes) { print 'class="'. $classes . '" '; } ?><?php print $attributes; ?>>
   <?php if (!empty($title) || !empty($caption)) : ?>
     <caption><?php print $caption . $title; ?></caption>
@@ -46,3 +56,7 @@
   <?php endforeach; ?>
   </tbody>
 </table>
+
+<?php if ($responsive): ?>
+  </div>
+<?php endif ?>

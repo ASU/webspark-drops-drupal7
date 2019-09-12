@@ -1,5 +1,13 @@
 CHANGELOG for ASU Brand module for Drupal 7
 
+asu_brand  7.x-1.20
+-------------------
+- Added check for asu_brand_ci_testing variable which will disable cookie consent for Travis-CI testing
+
+7.x-1.19 2017-11-09
+-------------------
+- Added ability to specify parent org. title and URL on the ASU Brand Header block config form
+
 7.x-1.18 2017-11-09
 -------------------
 - Fixed the 'do not override' list to use js instead of relying on the hosts header

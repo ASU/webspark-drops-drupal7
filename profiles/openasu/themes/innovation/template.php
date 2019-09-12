@@ -10,12 +10,35 @@
  * Implements template_preprocess_html().
  */
 function innovation_preprocess_html(&$variables) {
+  $path = current_path();
+  // If Innovation is currently showing in an admin page, add special CSS.
+  if (path_is_admin($path)) {
+    if (isset($variables['classes_array'])) {
+      $variables['classes_array'][] = 'path-is-admin';
+      $variables['classes_array'][] = 'pia';
+    }
+    drupal_add_css(path_to_theme() . '/css/admin.css');
+    if (strstr($path,'admin/reports/dblog')) {
+      drupal_add_js(path_to_theme() . '/js/innovation-admin.js');
+    }
+  }
+
+  // Readded page title to <title> tag after Kalatheme's errant scraping
+  if (!isset($variables['head_title_array']['title'])) {
+    $name = $variables['head_title_array']['name'];
+    unset($variables['head_title_array']['name']);
+    $variables['head_title_array']['title'] = check_plain(menu_get_active_title());
+    $variables['head_title_array']['name'] = $name;
+    $variables['head_title'] = implode(' | ', $variables['head_title_array']);
+  }
 
   // Add theme js file here rather than in .info to add a weight and ensure it loads last
-  drupal_add_js(drupal_get_path('theme', 'innovation') . '/js/innovation.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 200));
+  drupal_add_js(drupal_get_path('theme', 'innovation') . '/js/innovation.js', array(
+    'scope' => 'footer',
+    'group' => JS_THEME,
+    'weight' => 200
+  ));
 
-  // WEBSPARK-825 - Add link tag to stop 404 errors on Apple icon requests in
-  // Drupal and server logs
   $link_apple_icons = array(
     'default' => array(
       'rel' => 'apple-touch-icon',
@@ -32,13 +55,12 @@ function innovation_preprocess_html(&$variables) {
 
   // Add IE meta tag to force IE rendering mode
   $meta_tags_html = array(
-    // WEBSPARK-667, 825 - Add meta tag to identify Innovation as a "Webspark" theme
-    // in the DOM, and added MS tablet <meta> tag
     'meta_webspark_id' => array(
       '#type' => 'html_tag',
       '#tag' => 'meta',
       '#attributes' => array(
-        'content' => 'Webspark:1.48 (Nevada)',
+        // Don't forget to update openasu.info as well!!
+        'content' => 'Webspark:1.70.1 (College Station)',
         'http-equiv' => 'X-Name-of-Distro',
         'name' => 'cmsversion',
       )
@@ -72,7 +94,7 @@ function innovation_preprocess_html(&$variables) {
     drupal_add_html_head($value, $key);
   }
 
-  // WEBSPARK-189 - add actual HTTP header along with meta tag
+  // Add HTTP header along with meta tag for IE compatibility
   drupal_add_http_header('X-UA-Compatible', 'IE=Edge,chrome=1');
 }
 
@@ -81,8 +103,7 @@ function innovation_preprocess_html(&$variables) {
  *
  * Implements template_process_block().
  */
-function innovation_preprocess_block(&$variables)
-{
+function innovation_preprocess_block(&$variables) {
   $block = $variables['block'];
 
   if ($block->delta == 'main-menu' && $block->module == 'system' && $block->status == 1 && $block->theme = 'innovation') {
@@ -111,13 +132,13 @@ function innovation_preprocess_block(&$variables)
     ));
     $block->subject = '';
   }
+
 }
 
 /**
  * Implements hook_ctools_plugin_post_alter()
  */
-function innovation_ctools_plugin_post_alter(&$plugin, &$info)
-{
+function innovation_ctools_plugin_post_alter(&$plugin, &$info) {
   if ($info['type'] == 'styles') {
     if ($plugin['name'] == 'kalacustomize') {
       $plugin['title'] = 'ASU Customize';
@@ -128,8 +149,7 @@ function innovation_ctools_plugin_post_alter(&$plugin, &$info)
 /**
  * Implements hook_ctools_content_subtype_alter()
  */
-function innovation_ctools_content_subtype_alter(&$subtype, &$plugin)
-{
+function innovation_ctools_content_subtype_alter(&$subtype, &$plugin) {
   if ($plugin['module'] == 'views_content' && $subtype['title'] == 'Add content item') {
     $subtype['title'] = t('Add existing content');
   }
@@ -142,8 +162,7 @@ function innovation_ctools_content_subtype_alter(&$subtype, &$plugin)
  * Header so that it can also activate the local menu.
  *
  */
-function innovation_block_view_alter(&$data, $block)
-{
+function innovation_block_view_alter(&$data, $block) {
   // Add the attributes if applicable
   if (($block->module == 'asu_brand') && ($block->delta == 'asu_brand_header')) {
     $data['content'] = str_replace('<a href="javascript:toggleASU();">', '<a href="javascript:toggleASU();" data-target=".navbar-collapse" data-toggle="collapse">', $data['content']);
@@ -153,8 +172,7 @@ function innovation_block_view_alter(&$data, $block)
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function innovation_form_panels_edit_style_settings_form_alter(&$form, &$form_state)
-{
+function innovation_form_panels_edit_style_settings_form_alter(&$form, &$form_state) {
   // Add some extra ASU styles if extra styles are on
   if (isset($form['general_settings']['settings']['title'])) {
     $styles = array('title', 'content');
@@ -169,8 +187,7 @@ function innovation_form_panels_edit_style_settings_form_alter(&$form, &$form_st
 /**
  * Implements theme_links__system_main_menu.
  */
-function innovation_links__system_main_menu($variables)
-{
+function innovation_links__system_main_menu($variables) {
   $links = $variables['links'];
   $attributes = $variables['attributes'];
   $heading = $variables['heading'];
@@ -245,7 +262,8 @@ function innovation_links__system_main_menu($variables)
       if (isset($link['#href'])) {
         // Pass in $link as $options, they share the same keys.
         $output .= l($link['#title'], $link['#href'], array('attributes' => $link['#attributes']));
-      } elseif (!empty($link['#title'])) {
+      }
+      elseif (!empty($link['#title'])) {
         // Wrap non-<a> links in <span> for adding title and class attributes.
         if (empty($link['#html'])) {
           $link['#title'] = check_plain($link['#title']);
@@ -294,10 +312,12 @@ function innovation_links__system_main_menu($variables)
 function innovation_menuitem_has_active_children($menuitem) {
   if (is_array($menuitem) && isset($menuitem['below']) && !empty($menuitem['below'])) {
     foreach ($menuitem['below'] as $child) {
-      if (isset($child['link']) && $child['link']['access'] && ($child['link']['hidden'] == 0)) return true;
+      if (isset($child['link']) && $child['link']['access'] && ($child['link']['hidden'] == 0)) {
+        return TRUE;
+      }
     }
   }
-  return false;
+  return FALSE;
 }
 
 /**
@@ -349,10 +369,12 @@ function innovation_form_element(&$variables) {
     if ($element['#type'] == "radio") {
       $attributes['class'][] = 'radio';
       $is_radio = TRUE;
-    } elseif ($element['#type'] == "checkbox") {
+    }
+    elseif ($element['#type'] == "checkbox") {
       $attributes['class'][] = 'checkbox';
       $is_checkbox = TRUE;
-    } else {
+    }
+    else {
       $attributes['class'][] = 'form-group';
     }
   }
@@ -386,7 +408,8 @@ function innovation_form_element(&$variables) {
       $prefix .= isset($element['#field_prefix']) ? '<span class="input-group-addon">' . $element['#field_prefix'] . '</span>' : '';
       $suffix .= isset($element['#field_suffix']) ? '<span class="input-group-addon">' . $element['#field_suffix'] . '</span>' : '';
       $suffix .= '</div>';
-    } else {
+    }
+    else {
       $prefix .= isset($element['#field_prefix']) ? $element['#field_prefix'] : '';
       $suffix .= isset($element['#field_suffix']) ? $element['#field_suffix'] : '';
     }
@@ -476,7 +499,115 @@ function innovation_form_element_label(&$variables) {
   }
 
   // Append original label info
-  $label_output = $t('!title !required', array('!title' => $title, '!required' => $required));
+  $label_output = $t('!title !required', array(
+    '!title' => $title,
+    '!required' => $required
+  ));
 
   return $output . "\n" . ' <label' . drupal_attributes($attributes) . '>' . $label_output . "</label>\n";
+}
+
+/**
+ * Overrides theme_item_list() in Drupal core.
+ *
+ * Adds wrapper CSS classes for all passed in item-list type classes
+ * (i.e. ul class='pager' => additional wrapper 'item-list-pager' class).
+ */
+function innovation_item_list($variables) {
+  $items = $variables['items'];
+  $title = $variables['title'];
+  $type = $variables['type'];
+  $attributes = $variables['attributes'];
+
+  $original_class = "item-list";
+  $more_classes = "";
+  if (isset($variables['attributes']['class'])
+    && is_array($variables['attributes']['class'])) {
+    foreach($variables['attributes']['class'] as $key => $class) {
+      $more_classes .= " item-list-" . check_plain($class);
+    }
+  }
+
+  // Only output the list container and title, if there are any list items.
+  // Check to see whether the block title exists before adding a header.
+  // Empty headers are not semantic and present accessibility challenges.
+  $output = '<div class="' . $original_class . ' ' . $more_classes . '">';
+
+  if (isset($title) && $title !== '') {
+    $output .= '<h3>' . $title . '</h3>';
+  }
+
+  if (!empty($items)) {
+    $output .= "<$type" . drupal_attributes($attributes) . '>';
+    $num_items = count($items);
+    $i = 0;
+    foreach ($items as $item) {
+      $attributes = array();
+      $children = array();
+      $data = '';
+      $i++;
+      if (is_array($item)) {
+        foreach ($item as $key => $value) {
+          if ($key == 'data') {
+            $data = $value;
+          }
+          elseif ($key == 'children') {
+            $children = $value;
+          }
+          else {
+            $attributes[$key] = $value;
+          }
+        }
+      }
+      else {
+        $data = $item;
+      }
+      if (count($children) > 0) {
+        // Render nested list.
+        $data .= innovation_item_list(array('items' => $children, 'title' => NULL, 'type' => $type, 'attributes' => $attributes));
+      }
+      if ($i == 1) {
+        $attributes['class'][] = 'first';
+      }
+      if ($i == $num_items) {
+        $attributes['class'][] = 'last';
+      }
+      $output .= '<li' . drupal_attributes($attributes) . '>' . $data . "</li>\n";
+    }
+    $output .= "</$type>";
+  }
+  $output .= '</div>';
+  return $output;
+}
+
+/**
+ * Override of theme_fieldset().
+ *
+ * Added odd/even classes for more fieldset theming options.
+ */
+function innovation_fieldset($variables) {
+  $element = $variables['element'];
+  element_set_attributes($element, array('id'));
+
+  $no_of_parents = (isset($element['#array_parents'])) ? count($element['#array_parents']) + 1 : 0;
+
+  $additional_class = ($no_of_parents % 2 == 1) ? 'fieldset-nested-even' : 'fieldset-nested-odd';
+  _form_set_class($element, array('form-wrapper', 'fieldset-nested-', $additional_class));
+
+  $output = '<fieldset' . drupal_attributes($element['#attributes']) . '>';
+  if (!empty($element['#title'])) {
+    // Always wrap fieldset legends in a SPAN for CSS positioning.
+    $output .= '<legend><span class="fieldset-legend">' . $element['#title'] . '</span></legend>';
+  }
+  $output .= '<div class="fieldset-wrapper">';
+  if (!empty($element['#description'])) {
+    $output .= '<div class="fieldset-description">' . $element['#description'] . '</div>';
+  }
+  $output .= $element['#children'];
+  if (isset($element['#value'])) {
+    $output .= $element['#value'];
+  }
+  $output .= '</div>';
+  $output .= "</fieldset>\n";
+  return $output;
 }

@@ -1,8 +1,17 @@
-
-Webspark Hero 7.x-1.3-dev, 2014-11-21
+Webspark Hero - 7.x-1.7, 2019-08-02
 ------------------------------
-- Reworked help text.
+- Improved mouseover description when a link to create an ASU spotlight is rendered in the In-Page Editor
 
-Webspark Hero 7.x-1.4-dev, 2014-11-25
+Webspark Hero - 7.x-1.4, 2018-01-31
+------------------------------
+- Added ellipsis to long image blurbs/taglines to fix mobile layout issues
+- Added SASS files for all future CSS development
+- Updated most element and font units from px to em or rem
+
+Webspark Hero - 7.x-1.4-dev, 2014-11-25
 ------------------------------
 - Restored old css class "hero-bg-img"
+
+Webspark Hero - 7.x-1.3-dev, 2014-11-21
+------------------------------
+- Reworked help text.

@@ -1,5 +1,4 @@
 <?php
-// $Id:
 
 /**
  * @file
@@ -14,7 +13,8 @@
  * - $table: The table[] array consists of three keys:
  * - $table['#header']: Table header.
  * - $table['#rows']: Table rows.
- * - $table['#operation_total']: Maximum number of operations in the operation column.
+ * - $table['#operation_total']: Maximum number of operations in the operation
+ *   column.
  */
 ?>
 

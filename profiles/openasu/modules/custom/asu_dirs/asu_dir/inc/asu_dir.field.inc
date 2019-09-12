@@ -341,7 +341,7 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       'University Staff' => 'staff',
       'Classified' => 'staff',
       // Other
-      'Post Doctoral Scholars' => 'other',
+      'Postdoctoral Scholars' => 'other',
       'Graduate Assistant/Associate' => 'other',
       'Student Worker' => 'other',
     );
@@ -542,9 +542,11 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         https://isearch.asu.edu/asu_dept_mgr.'),
     );
 
+    $lnameSort = variable_get('asu_dir_utilities_lname_sort_field', ASU_DIR_UTILITIES_SOLR_LASTNAME_SORT_DEFAULT);
+
     $default_sort_by_options = array(
       'tsort' => 'Rank',
-      'lastNameSort' => 'Last Name',
+      $lnameSort => 'Last Name',
       'firstNameSort' => 'First Name',
     );
 
@@ -745,7 +747,6 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       '#title' => t('Advanced'),
     );
 
-
     if (module_exists('asu_isearch')) {
       // Advanced tab content
       $element['horizontal_tabs']['advanced']['always_display_view'] = array(
@@ -757,13 +758,19 @@ function asu_dir_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         '#suffix' => '<p>Notice:  If checked, the local iSearch Directory List view will be displayed, 
         instead of real-time Solr results.  The view is subject to changes in local profiles via migrations, 
         and may not be up to date with iSearch.  Also please note that in the event of a Solr outage, 
-        the view will be displayed automatically as a backup.</p></div></div>',
+        the view will be displayed automatically as a backup.</p>
+        <p>Also note that Selecting this option will invalidate some of the options you may have selected in this interface. 
+        For example, if you have selected the \'Grid\'
+         Display Type, the View will not reflect that. 
+         The View being used for this directory is named \'iSearch Directory\', with a subview named \'Directory - List.\'. 
+         We do not recommend modifying this view directly. 
+         We suggest making a copy of the view which can then be customized.</p>
+        </div></div>',
         '#states' => array(
           'visible' => array(
             ':input[name="field_asu_directory_items[und][0][horizontal_tabs][advanced][use_custom_q]"]' => array('checked' => FALSE)
           ),
         )
-
       );
     }
 

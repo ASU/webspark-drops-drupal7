@@ -1,0 +1,5 @@
+asu_userpicker 7.x-1.1
+----------------------
+- allows configuration of userpicker autocomplete to use either Solr or LDAP-enabled people search
+- added configuration option for default searching service at admin/config/people/asu_userpicker
+- switched CAS user add field to textfield in form alter, to allow autocompletion

@@ -94,7 +94,7 @@
 
 .node-type-asu-ap .container .field-name-body, .asu-ap-short-description {
     font-size: 20px;
-    margin-top: 48px;
+    /*margin-top: 48px;*/
 }
 
 .node-type-asu-ap .asu-degree-banner-image img {
@@ -261,4 +261,24 @@ span.asu-ap-program-flag {
 
 a.ttCourse {
   border-bottom: none;
+}
+
+/* Styling for icons and small print in "Example Careers" sections on degree pages */
+.text-yellow {
+  color: #ffc627;
+}
+.text-green {
+  color: #006838;
+}
+.asu-degrees-example-careers-small {
+  font-size: 75%;
+  margin: 0 0 24px 0 !important;
+}
+
+/* Degree page breadcrumb styling */
+.asu-degrees-breadcrumb-container {
+    max-width: 1170px;
+    margin: 0 auto;
+    padding-left: 15px;
+    padding-right: 15px;
 }

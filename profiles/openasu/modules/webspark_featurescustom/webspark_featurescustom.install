@@ -31,15 +31,22 @@ function webspark_featurescustom_update_dependencies() {
   // Makes doubly sure for older Panopoly updates that 7118 comes before 7005 (panopoly_search)
   // Overrides panopoly_widgets_update_dependencies in panopoly_search.install
   // Remove this once panopoly patches the issue on their end.
+
+  /* Removing panopoly_search from Webspark
   $deps['panopoly_search'][7005] = array(
     'search_api' => 7118,
     'search_api_db' => 7104,
     'search_api_solr' => 7102,
-  );
+  );*/
+
   // Ensure that ASU Brand module updates to v4.5 last, after other prior updates
   $deps['asu_brand'][7102] = array(
     'asu_cas' => 7001,
     'webspark_featurescustom' => 7002,
+  );
+  // Apply version change AFTER update to jQuery Update 3.x.
+  $deps['webspark_featurescustom'][7012] = array(
+    'jquery_update' => 7001,
   );
   return $deps;
 }
@@ -97,7 +104,7 @@ function webspark_featurescustom_update_7002(&$sandbox) {
   $max_log_count = settype(variable_get('dblog_row_limit'), "int");
   if ($max_log_count <= 1000 && $max_log_count != 0) {
     variable_set('dblog_row_limit', '100000');
-    watchdog('webspark_updates', "Increased dblog_row_limit to 100,000 latest log entries.");
+    watchdog('webspark_updates', "7002 - Increased dblog_row_limit to 100,000 latest log entries.");
   }
   // WEBSPARK-366 - ensure this module is enabled
   if (!module_exists('webspark_extras')) {
@@ -118,7 +125,7 @@ function webspark_featurescustom_update_7003(&$sandbox) {
   // WEBSPARK-891 - Disable and cleanup after respondjs module
   if (module_exists('respondjs')) {
     module_disable(array('respondjs'));
-    watchdog('webspark_updates', "Disabled respondjs module, which will be removed with next Webspark release.");
+    watchdog('webspark_updates', "7003 - Disabled respondjs module, which will be removed with next Webspark release.");
     if (is_null(variable_get('respondjs_scope'))) {
       variable_del('respondjs_scope');
       watchdog('webspark_updates', "Deleted respondJS module setting - respondjs_scope");
@@ -140,19 +147,23 @@ function webspark_featurescustom_update_7004(&$sandbox) {
   if (!empty($role->rid)) {
     $rid = (int) $role->rid;
     user_role_grant_permissions($rid, array('view the administration theme'));
-    watchdog('webspark_updates', "Added view the administrative theme to the editor role.");
+    watchdog('webspark_updates', "7004 - Added view the administrative theme to the editor role.");
   }
 }
 
 /**
  * Implements hook_update_N() -- Pillsbury release
- * + Update header to 4.5 with different logic this time
+ * + Update header to 4.5 with different logic
  */
 function webspark_featurescustom_update_7005(&$sandbox) {
+  watchdog('webspark_updates', "7004 - Update header to 4.5 with different logic");
   if (module_exists('asu_brand')) {
     $version = variable_get('asu_brand_header_version');
     if (settype($version, "float") <= 4.5) {
       variable_set('asu_brand_header_version', '4.5');
+    }
+    else {
+      watchdog('webspark_updates', "7004 not applied. Header must already be v4.5 or higher.");
     }
   }
 }
@@ -186,6 +197,7 @@ function webspark_featurescustom_update_7006(&$sandbox) {
   // Now show message if necessary
   if ($display_message) {
     drupal_set_message($message, 'warning');
+    watchdog('webspark_updates', '7006 - ' . $message, WATCHDOG_INFO);
   }
   // Missimg Module - enable
   if (!module_exists('missing_module')) {
@@ -193,6 +205,7 @@ function webspark_featurescustom_update_7006(&$sandbox) {
     drupal_set_message("Make sure that your Webspark site's administrator role " .
       "(usually 'administrator') receives all of the necessary permissions to " .
       "use the Missing Module module at /admin/people/permissions", 'status');
+    watchdog('webspark_updates', '7006 - Missing Module contrib module enabled.');
   }
   // WEBSPARK-1072 - Moved Webspark Seven theme info around. Need to rebuild.
   drupal_theme_rebuild();
@@ -206,10 +219,224 @@ function webspark_featurescustom_update_7006(&$sandbox) {
  */
 function webspark_featurescustom_update_7008(&$sandbox) {
   registry_rebuild();
-
   if (module_exists('asu_dir')) {
     module_enable(array('asu_dirs'));
     module_enable(array('asu_dir_panel'));
   }
 }
 
+/**
+ * Implements hook_update_N()
+ * -- Reverts Panopoly Page feature to apply missing settings to the Landing Page content type
+ * -- Adds ASU Spotlight permissions to editor role.
+ * @param $sandbox
+ */
+function webspark_featurescustom_update_7009(&$sandbox) {
+  // Create the new landing page content type.
+  if (module_exists('panopoly_pages')) {
+    features_rebuild(array('panopoly_pages' => array('variable', 'panelizer_defaults')));
+    watchdog('webspark_updates', t('7009 - Rebuilds Panopoly Page feature via features_rebuild() to apply missing settings 
+        to the Landing Page content type.'));
+  }
+  else {
+    watchdog('webspark_updates', t('7009 - Panopoly Pages module not enabled. No features_rebuild() was attempted.'));
+  }
+  // Add ASU Spotlight permissions to editor role
+  $role = user_role_load_by_name("editor");
+  if (!empty($role->rid)) {
+    $rid = (int) $role->rid;
+    user_role_grant_permissions($rid, array(
+        'create fieldable asu_spotlight',
+        'edit fieldable asu_spotlight',
+        'delete fieldable asu_spotlight',
+      )
+    );
+    watchdog('webspark_updates', "7009 - Add ASU Spotlight permissions to editor role.");
+  }
+}
+
+/**
+ * Implements hook_update_N()
+ * -- Manually disables and uninstall the Modernizr module (since the code was removed)
+ */
+function webspark_featurescustom_update_7010(&$sandbox) {
+  // Check for non-Webspark Modernizr module installs
+  $count = db_select('system', 's')
+    ->fields('s', array('filename', 'name'))
+    ->condition('filename', 'profiles_openasu%', 'NOT LIKE')
+    ->condition('type', 'module', 'LIKE')
+    ->condition('name', 'modernizr', 'LIKE')
+    ->countQuery()->execute()->fetchField();
+  if ((int) $count == 0) {
+    // Manually remove all Modernizr settings (taken from hook_uninstall)
+    db_delete('system')
+      ->condition('type', 'module', 'LIKE')
+      ->condition('name', 'modernizr', 'LIKE')
+      ->execute();
+    db_delete('role_permission')
+      ->condition('module', 'modernizr', 'LIKE')
+      ->execute();
+    variable_del('modernizr_load');
+    variable_del('modernizr_scope');
+    variable_del('modernizr_type');
+    variable_del('modernizr_quiet');
+    variable_del('modernizr_cb_printshiv');
+    variable_del('modernizr_cb_load');
+    variable_del('modernizr_serverside');
+    $message = "The Modernizr module has been manually uninstalled.";
+    watchdog('update', $message, array(), WATCHDOG_NOTICE);
+    drupal_set_message($message, 'status');
+  }
+  else {
+    // Drupal could not delete Modernizr from system table.
+    $second_count = db_select('system', 's')
+      ->fields('s', array('filename', 'name'))
+      ->condition('filename', 'sites%', 'LIKE')
+      ->condition('type', 'module', 'LIKE')
+      ->condition('name', 'modernizr', 'LIKE')
+      ->countQuery()->execute()->fetchField();
+    $reason = (int) $second_count != 0 ? ' because another copy of the Modernizr module 
+        is installed somewhere in the sites directory. No more action will be taken.' : ' for an 
+        unknown reason. Go to Reports -> Status Report and check the Missing Modules 
+        list for Modernizr. If it is there, follow the instructions there to remove it. 
+        Otherwise, no other action is necessary.';
+    $message = "While the Modernizr module was removed from the Webspark profile, it could not be 
+        uninstalled from the database " . $reason;
+    watchdog('update', $message, array(), WATCHDOG_WARNING);
+    drupal_set_message($message, 'warning');
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ * + Update Panopoly magic settings to Webspark-first values if values haven't been set.
+ * @param $sandbox
+ */
+function webspark_featurescustom_update_7011(&$sandbox) {
+  // Panopoly Magic settings for Webspark set (form is at /admin/panopoly/settings/panopoly_magic)
+  $panopoly_magic_settings = array(
+    'panopoly_magic_live_preview' => '0',
+    'panopoly_magic_pane_add_preview' => '1',
+    'panopoly_magic_preview_use_legacy_fieldset' => '1',
+    'panopoly_magic_show_panels_styles' => '0',
+    'panopoly_magic_strip_js_from_preview' => '0',
+  );
+  $count = 0;
+  foreach ($panopoly_magic_settings as $key => $value) {
+    if (variable_get($key) == NULL) {
+      variable_set($key, $value);
+      $count++;
+    }
+  }
+  $link = l('Panopoly Magic settings', DRUPAL_ROOT . '/admin/panopoly/settings/panopoly_magic.');
+  if ($count > 0) {
+    watchdog('webspark_featurescustom', '7011 - ' . $count . ' ' . $link . ' were updated by ' . __FUNCTION__ . '.', array(), WATCHDOG_NOTICE);
+    drupal_set_message('Your default ' . $link . ' have been updated to more Webspark-friendly settings.', 'status');
+  }
+  else {
+    drupal_set_message('No ' . $link . ' were updated by ' . __FUNCTION__ . '.', 'status');
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ * + Update jQuery to v1.12.2 for default themes (not also set as admin_theme)
+ * @param $sandbox
+ */
+function webspark_featurescustom_update_7012(&$sandbox) {
+
+  if (module_exists('jquery_update')) {
+    // INIT values
+    $theme_default = variable_get('theme_default', FALSE);
+    $admin_theme = variable_get('admin_theme', FALSE);
+    $jquery_current_version_admin = theme_get_setting('jquery_update_jquery_version', $admin_theme);
+    $messaging = array(
+      'msg' => '',
+      'msg_state' => 'warning',
+      'watch_state' => WATCHDOG_WARNING,
+    );
+
+    // Set current default theme's jQuery version to 1.12.x if the admin_theme isn't also the default theme.
+    if ($admin_theme !== $theme_default) {
+      $jquery_current_version = theme_get_setting('jquery_update_jquery_version', $theme_default);
+      // Don't update if set jQuery version is HIGHER than 1.12.x
+      // Forces regression back from 1.12.3+ (security hole)
+      if (version_compare($jquery_current_version, "1.12", "<=")) {
+        _jquery_update_set_theme_version($theme_default, '1.12');
+        $messaging['msg'] = 'jQuery was updated/modified to v1.12.2 for the default theme (' . $theme_default . '). ' . "\n";
+        $messaging['msg_state'] = 'status';
+        $messaging['watch_state'] = WATCHDOG_NOTICE;
+      }
+      else {
+        $messaging['msg'] = 'jQuery was not updated (it was already at v' . $jquery_current_version . ').';
+      }
+    }
+    else {
+      $messaging['msg'] = 'jQuery was not updated for ' . $theme_default . ' because 1) ' . $theme_default .
+        ' is set as the administrative theme, and 2) most of the administrative 
+        areas are not compatible with jQuery 1.8+. Consider selecting Webspark 
+        Seven for the administrative section of your site at 
+        /admin/appearance and manually setting jQuery to 1.12 for the ' . $theme_default . ' default theme at 
+        /admin/config/development/jquery_update. ' . "\n";
+    }
+
+    // Set admin_theme to v1.7, regardless of the default theme is because 1) 1.8+ won't work in the admin area, and 2) v1.4.x is buggy with other 
+    // jQuery updates in at least one reported case.
+    if (version_compare($jquery_current_version_admin, "1.7", "<")) {
+      _jquery_update_set_theme_version($admin_theme, '1.7');
+      $messaging['msg'] .= "\n" . 'jQuery was updated to v1.7.2 for the ' . $admin_theme . ' admin theme.';
+    }
+    else {
+      $messaging['msg'] .= "\n" . 'jQuery is already set to at least 1.7.x for the ' . $admin_theme . ' admin theme.';
+    }
+
+    drupal_set_message($messaging['msg'], $messaging['msg_state']);
+    watchdog('webspark_featurescustom', $messaging['msg'], array(), $messaging['watch_state']);
+  }
+
+}
+
+/**
+ * Implements hook_update_N().
+ * + Disable and uninstall ASU GSA, Google Appliance modules.
+ * @param $sandbox
+ */
+function webspark_featurescustom_update_7013(&$sandbox) {
+  if (module_exists('asu_gsa') || module_exists('google_appliance')) {
+    module_disable(array('asu_gsa', 'google_appliance'));
+  }
+  // If first variable for the GA module exist, run uninstall
+  if (variable_get('google_appliance_hostname')) {
+    drupal_uninstall_modules(array('google_appliance', 'asu_gsa'));
+    $message = 'Google Appliance and ASU GSA modules have been disabled and uninstalled.';
+    drupal_set_message($message, 'status');
+    watchdog('webspark_featurescustom', $message, array(), WATCHDOG_NOTICE);
+  }
+}
+
+/**
+ * Implements hook_update_N()
+ * - Rebuild Panopoly Widgets feature to update widget categories.
+ */
+function webspark_featurescustom_update_7014(&$sandbox) {
+  $features = array(
+    'asu_isearch',
+    'asu_dir_panel',
+    'asu_spotlight',
+    'asu_maps_enhanced',
+    'uto_carousel',
+    'webspark_banner',
+    'webspark_hero',
+    'webspark_jumbohero',
+  );
+  foreach ($features as $feature) {
+    if (module_exists($feature)) {
+      features_revert_module($feature);
+    }
+  }
+  features_rebuild(array(
+    'panopoly_widgets' => array(
+       'field_base', 'field_instance',
+    )
+  ));
+}

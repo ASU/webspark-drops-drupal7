@@ -386,7 +386,7 @@ function entity_metadata_user_get_properties($account, array $options, $name, $e
 function entity_metadata_user_set_properties($account, $name, $value) {
   switch ($name) {
     case 'roles':
-      $account->roles = array_intersect_key(user_roles(), array_flip($value));
+      $account->roles = array_intersect_key(user_roles(), array_flip(array_filter((array) $value)));
       break;
   }
 }
@@ -673,7 +673,7 @@ function entity_metadata_no_hook_node_access($op, $node = NULL, $account = NULL)
     if (empty($node->vid) && in_array($op, array('create', 'update'))) {
       // This is a new node or the original node.
       if (isset($node->type)) {
-        $op = !empty($node->is_new) && $node->is_new ? 'create' : 'update';
+        $op = empty($node->nid) || !empty($node->is_new) ? 'create' : 'update';
         return node_access($op, $op == 'create' ? $node->type : $node, $account);
       }
       else {

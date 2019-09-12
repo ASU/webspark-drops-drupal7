@@ -1,8 +1,8 @@
 name = Webspark MegaMenu
-description = The TB Mega Menu module and CSS for webspark.
+description = "Adds an ASU Web standards compliant, top-level menu. Includes own UI for generating megamenus along with Drupal's core menu system. Powered by the TB Mega Menu module."
 core = 7.x
 package = ASU Webspark
-version = 7.x-1.8
+version = 7.x-1.11
 project = webspark_megamenu
 dependencies[] = defaultcontent
 dependencies[] = features

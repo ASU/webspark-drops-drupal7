@@ -7,9 +7,9 @@ configure = admin/config/people/cas
 files[] = cas.test
 files[] = includes/views/handlers/cas_handler_field_cas_name.inc
 
-; Information added by Drupal.org packaging script on 2016-02-09
-version = "7.x-1.5"
+; Information added by Drupal.org packaging script on 2018-02-12
+version = "7.x-1.7"
 core = "7.x"
 project = "cas"
-datestamp = "1455051844"
+datestamp = "1518448970"
 

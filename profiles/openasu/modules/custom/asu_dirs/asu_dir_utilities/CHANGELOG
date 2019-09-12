@@ -1,3 +1,7 @@
+asu_dir_utilities 7.x-1.3
+-------------------------
+- Added variable for configurable last name sorting field in Solr
+
 asu_dir_utilities 7.x-1.2
 -------------------------
 - added default config for displaying department

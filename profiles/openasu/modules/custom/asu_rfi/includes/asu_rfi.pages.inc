@@ -1,10 +1,11 @@
 <?php
-// $Id: asu_rfi.pages.inc 
+// $Id: asu_rfi.pages.inc
 
 /**
  * @file
  * Request info form generation using form API
  */
+
 //clear page cache
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
@@ -12,13 +13,72 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-
 /* Implementation of hook_int() ***/
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_email');
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_grad_post');
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_undergrad_post');
 drupal_add_css(drupal_get_path('module', 'asu_rfi') . '/theme/asu_rfi.css', 'file');
 
+/**
+ * Settings function to improve future-proofing.
+ *
+ * Example usage:
+ * $degreeMappings = asu_rfi_get_degree_mappings_pages();
+ * $degreeContentType = $degreeMappings['content_type'];
+ */
+function asu_rfi_get_degree_mappings_pages() {
+  // Swap out mapping values based on module enabled.
+  // ASU AP takes priority, but default is to ASU
+  // Degrees (deprecated);
+  if (module_exists('asu_ap')) {
+    $map = array(
+      // Content Type
+      'content_type' => 'asu_ap',
+      // Tables
+      'table_asu_academic_plan' => 'field_data_field_asu_ap_acad_plan',
+      'table_asu_academic_program' => 'field_data_field_asu_ap_acad_prog',
+      'table_asu_degree_awarded' => 'field_data_field_asu_ap_awarded',
+      'table_asu_degree_program' => 'field_data_field_asu_ap_program',
+      'table_asu_diploma_description' => 'field_data_field_asu_ap_diploma_desc',
+      // Fields
+      'field_academic_plan' => 'field_asu_ap_acad_plan',
+      'field_academic_plan_value' => 'field_asu_ap_acad_plan_value',
+      'field_academic_program' => 'field_asu_ap_acad_prog',
+      'field_academic_program_value' => 'field_asu_ap_acad_prog_value',
+      'field_degree_awarded' => 'field_asu_ap_awarded',
+      'field_degree_awarded_value' => 'field_asu_ap_awarded_value',
+      'field_degree_campus' => 'field_asu_ap_campus',
+      'field_degree_program' => 'field_asu_ap_program',
+      'field_degree_program_value' => 'field_asu_ap_program_value',
+      'field_diploma_description' => 'field_asu_ap_diploma_desc',
+      'field_diploma_description_value' => 'field_asu_ap_diploma_desc_value',
+    );
+  } else { // asu_degrees
+    $map = array(
+      // Content Type
+      'content_type' => 'asu_degree',
+      // Tables
+      'table_asu_academic_plan' => 'field_data_field_asu_academic_plan',
+      'table_asu_academic_program' => 'field_data_field_asu_academic_program',
+      'table_asu_degree_awarded' => 'field_data_field_asu_degree_awarded',
+      'table_asu_degree_program' => 'field_data_field_asu_degree_program',
+      'table_asu_diploma_description' => 'field_data_field_asu_diploma_description',
+      // Fields
+      'field_academic_plan' => 'field_asu_academic_plan',
+      'field_academic_plan_value' => 'field_asu_academic_plan_value',
+      'field_academic_program' => 'field_asu_academic_program',
+      'field_academic_program_value' => 'field_asu_academic_program_value',
+      'field_degree_awarded' => 'field_asu_degree_awarded',
+      'field_degree_awarded_value' => 'field_asu_degree_awarded_value',
+      'field_degree_campus' => 'field_asu_degree_campus',
+      'field_degree_program' => 'field_asu_degree_program',
+      'field_degree_program_value' => 'field_asu_degree_program_value',
+      'field_diploma_description' => 'field_asu_diploma_description',
+      'field_diploma_description_value' => 'field_asu_diploma_description_value',
+    );
+  }
+  return $map;
+}
 
 /* Implementation of hook_form **/
 
@@ -33,10 +93,12 @@ function asu_rfi_form($delta)
   );
   // Hack for Safari
   drupal_add_js('jQuery(window).unload(function(){});', array('type' => 'inline'));
+
 }
 
 function asu_rfi_form_data($form, &$form_state)
 {
+  $degreeMappings = asu_rfi_get_degree_mappings_pages();
   $domain = $_SERVER['HTTP_HOST'];
 
   //Clear all data when browser back button is clicked
@@ -50,6 +112,10 @@ function asu_rfi_form_data($form, &$form_state)
   // Hack for Safari
   drupal_add_js('jQuery(window).unload(function(){});', array('type' => 'inline'));
 
+  // Add js to gather enterpriseclientid from GA to add to payload for
+  // submissions destined for EdPlus and their Lead API 4.0 by way of the
+  // Middleware.
+  drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.fields.js', 'file');
 
   if (isset($form_state['storage'])) {
 
@@ -72,30 +138,48 @@ function asu_rfi_form_data($form, &$form_state)
   $country = asu_rfi_countries_data();
   $node = menu_get_object();
   if (!empty($node)) {
-    if (!empty($node->field_asu_academic_plan[LANGUAGE_NONE][0]['value'])) {
-      $dcode = $node->field_asu_academic_plan[LANGUAGE_NONE][0]['value'];
+    if (!empty($degreeMappings)) {
+      $field_academic_plan = $degreeMappings['field_academic_plan'];
+      $field_degree_awarded = $degreeMappings['field_degree_awarded'];
+      $field_degree_program = $degreeMappings['field_degree_program'];
+      $field_academic_program = $degreeMappings['field_academic_program'];
+      $field_diploma_description = $degreeMappings['field_diploma_description'];
+      $academic_plan = &$node->$field_academic_plan;
+      $degree_awarded = &$node->$field_degree_awarded;
+      $degree_program = &$node->$field_degree_program;
+      $academic_program = &$node->$field_academic_program;
+      $diploma_description = &$node->$field_diploma_description;
+    } else {
+      $academic_plan = '';
+      $degree_awarded = '';
+      $degree_program = '';
+      $academic_program = '';
+      $diploma_description = '';
+    }
+    if (!empty($academic_plan[LANGUAGE_NONE][0]['value'])) {
+      $dcode = $academic_plan[LANGUAGE_NONE][0]['value'];
     } else {
       $dcode = '';
     }
 
-    if (!empty($node->field_asu_degree_awarded[LANGUAGE_NONE][0]['value'])) {
-      $dname = $node->field_asu_degree_awarded[LANGUAGE_NONE][0]['value'];
+    if (!empty($degree_awarded[LANGUAGE_NONE][0]['value'])) {
+      $dname = $degree_awarded[LANGUAGE_NONE][0]['value'];
     } else {
       $dname = '';
     }
     $degree[$dcode] = $dname;
-    if (!empty($node->field_asu_degree_program[LANGUAGE_NONE][0]['value'])) {
-      $type_degree = $node->field_asu_degree_program[LANGUAGE_NONE][0]['value'];
+    if (!empty($degree_program[LANGUAGE_NONE][0]['value'])) {
+      $type_degree = $degree_program[LANGUAGE_NONE][0]['value'];
     } else {
       $type_degree = '';
     }
-    if (!empty($node->field_asu_academic_program)) {
-      $college_code = $node->field_asu_academic_program[LANGUAGE_NONE][0]['value'];
+    if (!empty($academic_program)) {
+      $college_code = $academic_program[LANGUAGE_NONE][0]['value'];
     } else {
       $college_code = "None";
     }
-    if (!empty($node->field_asu_diploma_description)) {
-      $college_name = $node->field_asu_diploma_description[LANGUAGE_NONE][0]['value'];
+    if (!empty($diploma_description)) {
+      $college_name = $diploma_description[LANGUAGE_NONE][0]['value'];
     } else {
       $college_name = '';
     }
@@ -214,6 +298,15 @@ function asu_rfi_form_data($form, &$form_state)
       '#maxlength' => 128,
       '#default_value' => $college_name,
       '#size' => 50,
+    );
+
+    $form['enterpriseclientid'] = array(
+      '#type' => 'hidden',
+      '#maxlength' => 255,
+      // Will be filled in using JS to obtain from GA, per EdPlus.
+      // See WEBSPARK-1198.
+      '#default_value' => '',
+      '#size' => 60,
     );
 
     $form['my_interest']['start_date'] = array(
@@ -574,6 +667,8 @@ function asu_rfi_form_data_submit($form, &$form_state)
 
   $form_state['storage']['college_name'] = check_plain($form_state['values']['college_name']);
 
+  $form_state['storage']['enterpriseclientid'] = check_plain($form_state['values']['enterpriseclientid']);
+
   $form_state['storage']['birthdate'] = $dobdate;
 
   //get start date array
@@ -649,6 +744,7 @@ function asu_rfi_form_data_submit($form, &$form_state)
     $ewrapper->field_rfi_sms_opted->set($form_state['storage']['mobile_check']);
     $ewrapper->field_rfi_program_name->set($form_state['storage']['prog_plan']);
     $ewrapper->field_rfi_college_name->set($form_state['storage']['college_name']);
+    $ewrapper->field_rfi_enterpriseclientid->set($form_state['storage']['enterpriseclientid']);
     $ewrapper->field_rfi_prospect_level->set($form_state['storage']['prospect_level']);
     $ewrapper->field_rfi_campus->set($form_state['storage']['campus']);
     $ewrapper->save();
@@ -665,7 +761,7 @@ function asu_rfi_form_data_submit($form, &$form_state)
     }
   }
   if (!empty($node_unique)) {
-    //get the node id of the current node to be updated 
+    //get the node id of the current node to be updated
     $get_nodeid = db_query('SELECT entity_id FROM {field_data_field_rfi_uniquedata} WHERE field_rfi_uniquedata_value = :unid', array(':unid' => $uniqueid))->fetchField();
 
     $node = node_load($get_nodeid);
@@ -691,6 +787,7 @@ function asu_rfi_form_data_submit($form, &$form_state)
     $ewrapper->field_rfi_sms_opted->set($form_state['storage']['mobile_check']);
     $ewrapper->field_rfi_program_name->set($form_state['storage']['prog_plan']);
     $ewrapper->field_rfi_college_name->set($form_state['storage']['college_name']);
+    $ewrapper->field_rfi_enterpriseclientid->set($form_state['storage']['enterpriseclientid']);
     $ewrapper->field_rfi_prospect_level->set($form_state['storage']['prospect_level']);
     $ewrapper->field_rfi_campus->set($form_state['storage']['campus']);
     $ewrapper->save();
@@ -720,6 +817,11 @@ function asu_rfi_second_form($form, &$form_state)
   );
   // Hack for Safari
   drupal_add_js('jQuery(window).unload(function(){});', array('type' => 'inline'));
+
+  // Add js to gather enterpriseclientid from GA to add to payload for
+  // submissions destined for EdPlus and their Lead API 4.0 by way of the
+  // Middleware.
+  drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.fields.js', 'file');
 
   //If the form is in test mode, display test mode message
   drupal_add_css(drupal_get_path('module', 'asu_rfi') . '/theme/asu_rfi.css', 'file');
@@ -831,21 +933,21 @@ function asu_rfi_second_form($form, &$form_state)
 '#collapsible' => FALSE,
 '#collapsed' => FALSE,
   );
-   
+
   $form['address_info']['address'] = array(
 '#type' => 'textfield',
 '#title' => t('Address'),
 '#size' => 30,
 '#maxlength' => 64,
   );
-  
+
   $form['address_info']['city'] = array(
 '#type' => 'textfield',
 '#title' => t('City'),
 '#size' => 30,
 '#maxlength' => 30,
   );
- 
+
   $form['address_info']['state'] = array(
 '#id' => 'rfi-state',
 '#type' => 'select',
@@ -1123,6 +1225,11 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type)
   // Hack for Safari
   drupal_add_js('jQuery(window).unload(function(){});', array('type' => 'inline'));
   drupal_page_is_cacheable(FALSE);
+
+  // Add js to gather enterpriseclientid from GA to add to payload for
+  // submissions destined for EdPlus and their Lead API 4.0 by way of the
+  // Middleware.
+  drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.fields.js', 'file');
 
   $start_dates = _asu_rfi_sem_dates();
   $country = asu_rfi_countries_data();
@@ -1513,6 +1620,14 @@ $form['form_middle_post'] = array(
     '#default_value' => 'LF',
   );
 
+  $form['enterpriseclientid'] = array(
+    '#type' => 'hidden',
+    '#maxlength' => 255,
+    // Will be filled in using JS to obtain from GA, per EdPlus.
+    // See WEBSPARK-1198.
+    '#default_value' => '',
+    '#size' => 60,
+  );
 
   $form['submit'] = array(
     '#type' => 'submit',
@@ -1525,13 +1640,15 @@ $form['form_middle_post'] = array(
 
 function asu_rfi_progloc_confirm($prog, $campus, $loc)
 {
+  $degreeMappings = asu_rfi_get_degree_mappings_pages();
+
   $campusOptions = array();
 
   $query = new EntityFieldQuery();
 
   $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'asu_degree')
-    ->fieldCondition('field_asu_academic_plan', 'value', $prog)
+    ->entityCondition('bundle', $degreeMappings['content_type'])
+    ->fieldCondition($degreeMappings['field_academic_plan'], 'value', $prog)
     ->range(0, 10)
     ->addMetaData('account', user_load(1));
 
@@ -1544,13 +1661,13 @@ function asu_rfi_progloc_confirm($prog, $campus, $loc)
     $programs = (array)$programs;
 
     $desiredProg = array(
-      'code' => $programs['field_asu_academic_plan']['und']['0']['value'],
+      'code' => $programs[$degreeMappings['field_academic_plan']]['und']['0']['value'],
       'vid' => $programs['vid'],
       'title' => $programs['title'],
-      'locations' => $programs['field_asu_degree_campus']['und'],
+      'locations' => $programs[$degreeMappings['field_degree_campus']]['und'],
     );
 
-    $locations = $programs['field_asu_degree_campus']['und'];
+    $locations = $programs[$degreeMappings['field_degree_campus']]['und'];
     foreach ($locations as $location) {
       if (!in_array($location['value'], $campusOptions)) {
         array_push($campusOptions, $location['value']);
@@ -1817,6 +1934,8 @@ function asu_rfi_long_form_data_submit($form, &$form_state)
 
   global $user;
 
+  $degreeMappings = asu_rfi_get_degree_mappings_pages();
+
   //Get the type of the form. If the form is grad form, set prospect_level value to "Graduate", else "Undergraduate"
   if (($form_state['values']['degree_type']) == "graduate_longform") {
     $stype = 'Graduate';
@@ -1835,6 +1954,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state)
   $form_state['values']['phone'] = $form_state['values']['phone'];
   $location = $form_state['values']['location'];
   $campus = $form_state['values']['campus'];
+  $enterpriseclientid = $form_state['values']['enterpriseclientid'];
 
   $sms_opted = $form_state['values']['mobile_check'];
 
@@ -1906,14 +2026,13 @@ function asu_rfi_long_form_data_submit($form, &$form_state)
   }
 
   //Query database to get program name based on the program code submitted in the form
-  $program_name = db_query('select field_asu_degree_awarded_value from field_data_field_asu_degree_awarded mj join field_data_field_asu_academic_plan ap on mj.entity_id = ap.entity_id where ap.field_asu_academic_plan_value = :plan', array(':plan' => $program))->fetchField();
+  $program_name = db_query('select ' . $degreeMappings['field_degree_awarded_value'] . ' from ' . $degreeMappings['table_asu_degree_awarded'] . ' mj join ' . $degreeMappings['table_asu_academic_plan'] . ' ap on mj.entity_id = ap.entity_id where ap.' . $degreeMappings['field_academic_plan_value'] . ' = :plan', array(':plan' => $program))->fetchField();
 
   //Get college code from database based on program code
-  $college_code = db_query('select field_asu_academic_program_value from field_data_field_asu_academic_program prog join field_data_field_asu_academic_plan plan on prog.entity_id = plan.entity_id where plan.field_asu_academic_plan_value = :plancode', array(':plancode' => $program))->fetchField();
-
-
+  $college_code = db_query('select ' . $degreeMappings['field_academic_program_value'] . ' from ' . $degreeMappings['table_asu_academic_program'] . ' prog join ' . $degreeMappings['table_asu_academic_plan'] . ' plan on prog.entity_id = plan.entity_id where plan.' . $degreeMappings['field_academic_plan_value'] . ' = :plancode', array(':plancode' => $program))->fetchField();
   //Get college name from database based on program code
-  $college_name = db_query('select field_asu_diploma_description_value from field_data_field_asu_diploma_description progn join field_data_field_asu_academic_plan plann on progn.entity_id = plann.entity_id where plann.field_asu_academic_plan_value = :plancode', array(':plancode' => $program))->fetchField();
+  $college_name = db_query('select ' . $degreeMappings['field_diploma_description_value'] . ' from ' . $degreeMappings['table_asu_diploma_description'] . ' progn join ' . $degreeMappings['table_asu_academic_plan'] . ' plann on progn.entity_id = plann.entity_id where plann.' . $degreeMappings['field_academic_plan_value'] . ' = :plancode', array(':plancode' => $program))->fetchField();
+
   //Create node
   $ent_values = array(
     'type' => 'asu_rfi',
@@ -1949,6 +2068,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state)
   $ewrapper->field_rfi_start_term->set($semester_name);
   $ewrapper->field_rfi_program_name->set($program_name);
   $ewrapper->field_rfi_college_name->set($college_name);
+  $ewrapper->field_rfi_enterpriseclientid->set($enterpriseclientid);
   $ewrapper->field_rfi_prospect_level->set($form_state['values']['prospect_level']);
   $ewrapper->field_rfi_location->set($location);
   $ewrapper->field_rfi_campus->set($campus);
@@ -2181,6 +2301,8 @@ function asu_rfi_current_form_data_submit($form, &$form_state)
 {
   global $user;
 
+  $degreeMappings = asu_rfi_get_degree_mappings_pages();
+
   $domain = $form_state['values']['domain'];
   $fname = $form_state['values']['first_name'];
   $lname = $form_state['values']['last_name'];
@@ -2201,7 +2323,7 @@ function asu_rfi_current_form_data_submit($form, &$form_state)
 
 
   //Query database to get program name based on the program code submitted in the form
-  $program_name = db_query('select field_asu_degree_awarded_value from field_data_field_asu_degree_awarded mj join field_data_field_asu_academic_plan ap on mj.entity_id = ap.entity_id where ap.field_asu_academic_plan_value = :plan', array(':plan' => $program))->fetchField();
+  $program_name = db_query('select ' . $degreeMappings['field_degree_awarded_value'] . ' from ' . $degreeMappings['table_asu_degree_awarded'] . ' mj join ' . $degreeMappings['table_asu_academic_plan'] . ' ap on mj.entity_id = ap.entity_id where ap.' . $degreeMappings['field_academic_plan_value'] . ' = :plan', array(':plan' => $program))->fetchField();
 
   //Create node
   $ent_values = array(
@@ -2351,11 +2473,21 @@ function _asu_rfi_sem_dates()
 //Function to get program data from the node on which the block is displayed
 function _asu_rfi_program()
 {
+  $degreeMappings = asu_rfi_get_degree_mappings_pages();
   $program = array();
   $node = menu_get_object();
+  if (!empty($degreeMappings)) {
+    $field_academic_plan = $degreeMappings['field_academic_plan'];
+    $field_degree_awarded = $degreeMappings['field_degree_awarded'];
+    $academic_plan = &$node->$field_academic_plan;
+    $degree_awarded = &$node->$field_degree_awarded;
+  } else {
+      $academic_plan = '';
+      $degree_awarded = '';
+  }
   $dcode = $node->title;
-  $dname = $node->field_asu_degree_awarded[LANGUAGE_NONE][0]['value'];
-  $college_code = $node->field_asu_academic_plan[LANGUAGE_NONE][0]['value'];
+  $dname = $degree_awarded[LANGUAGE_NONE][0]['value'];
+  $college_code = $academic_plan[LANGUAGE_NONE][0]['value'];
   $program[$dcode] = $dname;
 
   return $program;

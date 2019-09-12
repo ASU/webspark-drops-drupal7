@@ -31,39 +31,39 @@ li.tb-megamenu-item.mega a {
   color: #ededed;
 }
 
-.tb-megamenu i.fa.fa-home.icon-white {
+.tb-megamenu .fa.fa-home.icon-white {
   margin-right: 0;
   display: block !important;
   font-size: 16px;
 }
 
-.tb-megamenu .nav li.dropdown.open > .dropdown-toggle, .tb-megamenu .nav > li > a:focus, .tb-megamenu .nav > .active > a:focus, .tb-megamenu .nav li.dropdown.open.active > .dropdown-toggle, .tb-megamenu .nav > li.dropdown.open.active > a:hover, .tb-megamenu .nav > li > a:hover {
-  color: #ffb310;
-  background-color: #000000;
-}
+.tb-megamenu .nav li.dropdown.open > .dropdown-toggle, .tb-megamenu .nav > li > a:focus, .tb-megamenu .nav > .active > a:focus, .tb-megamenu .nav li.dropdown.open.active > .dropdown-toggle, .tb-megamenu .nav > li.dropdown.open.active > a:hover, .tb-megamenu .nav > li > a:hover, .tb-megamenu .nav > li.dropdown.open.active > a:focus { 
+  color: #ffc627;
+  background-color: #000000; 
+} 
 
 .tb-megamenu .nav > .active > a:hover {
-  color: #ffb310;
+  color: #ffc627;
   background: #1F1F1F;
 }
 
 .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child {
   background: #1f1f1f;
-  color: #ffb130;
+  color: #ffc627;
   font-size: 16px;
   font-weight: bold;
   border : none;
 }
 .tb-megamenu .nav li.dropdown.active > .dropdown-toggle {
   background: #1f1f1f;
-  color: #ffb130;
+  color: #ffc627;
   font-size: 16px;
   font-weight: bold;
   border : none;
 }
  li.tb-megamenu-item.mega.active a {
   background: #1f1f1f;
-  color: #ffb130;
+  color: #ffc627;
   font-size: 16px;
   font-weight: bold;
   border : none;
@@ -212,11 +212,11 @@ li.tb-megamenu-item.mega.active .mega-dropdown-inner a {
   transition: all 0.25s ease-in 0s;
 }
 .tb-megamenu .nav li.dropdown.open .caret, .tb-megamenu .nav li.dropodown.open.active .caret, .tb-megamenu .nav li.dropdown.open a:hover .caret, .tb-megamenu .nav li.dropdown.open a:focus .caret {
-  border-top-color:#ffb130;    
+  border-top-color:#ffc627;
 }
 .tb-megamenu .nav li.dropdown.open > .dropdown-toggle .caret, .tb-megamenu .nav li.dropdown.active > .dropdown-toggle .caret, .tb-megamenu .nav li.dropdown.open.active > .dropdown-toggle .caret {
   border-bottom-color: #eee;
-  border-top-color: #ffb130 ;
+  border-top-color: #ffc627 ;
 }
 .tb-megamenu-submenu {
   border: none;
@@ -231,7 +231,7 @@ li.tb-megamenu-item.mega.active .mega-dropdown-inner a {
 }
 .tb-megamenu .dropdown-menu .mega-nav .mega-group > a.mega-group-title {
   font-weight: normal;
-  color: #FFB130;
+  color: #ffc627;
 }
 .tb-megamenu-subnav>.dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child, 
 .tb-megamenu-subnav>.dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child a {
@@ -245,16 +245,11 @@ li.tb-megamenu-item.mega.active .mega-dropdown-inner a {
   text-transform: none;
   font-size: 16px;
 }
-/* [KM 12-5-16] Added stronger focus styles for keyboard accessibility */
 .tb-megamenu .nav > li > a:focus,
 .tb-megamenu .nav > .active > a:focus,
 .tb-megamenu .dropdown-menu li > a:focus,
 .tb-megamenu .nav li.dropdown.active a:focus {
-	 outline:none; 
-	 border-top: 2px solid #4D90FE;
-	 border-right: 2px solid #4D90FE;
-	 border-bottom: 2px solid #4D90FE;
-	 border-left: 2px solid #4D90FE;
+	 outline: 2px solid #4D90FE;
 	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
 	 box-shadow: 0px 0px 5px  #4D90FE;
 }

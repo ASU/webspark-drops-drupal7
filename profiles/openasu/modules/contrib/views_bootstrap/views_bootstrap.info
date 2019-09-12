@@ -1,6 +1,7 @@
 name = Views Bootstrap
 package = Views
 description = Bootstrap Components
+core = 7.x
 
 dependencies[] = views
 
@@ -20,9 +21,11 @@ files[] = plugins/media/views_bootstrap_media_plugin_style.inc
 
 files[] = plugins/table/views_bootstrap_table_plugin_style.inc
 
-; Information added by Drupal.org packaging script on 2014-04-27
-version = "7.x-3.1"
+files[] = plugins/list_group/views_bootstrap_list_group_plugin_style.inc
+
+; Information added by Drupal.org packaging script on 2017-09-17
+version = "7.x-3.2"
 core = "7.x"
 project = "views_bootstrap"
-datestamp = "1398607429"
+datestamp = "1505670247"
 

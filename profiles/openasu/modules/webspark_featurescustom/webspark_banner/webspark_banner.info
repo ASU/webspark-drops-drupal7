@@ -1,8 +1,8 @@
 name = Webspark Banner
-description = Adds a title banner widget for use with Panels' IPE.
+description = "Adds the option of inserting an ASU-themed title banner. They each can have title text and a background image."
 core = 7.x
 package = ASU Webspark
-version = 7.x-1.4-dev
+version = 7.x-1.6
 project = webspark_banner
 dependencies[] = backgroundfield
 dependencies[] = ctools

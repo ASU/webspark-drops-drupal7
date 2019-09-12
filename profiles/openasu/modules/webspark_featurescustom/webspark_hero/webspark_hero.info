@@ -1,8 +1,8 @@
 name = Webspark Hero
-description = "Adds a standard (1170x380px) hero widget for use with Panels IPE."
+description = "Adds the option to create and insert an ASU-standards compliant, 1170x380px hero image (with text, buttons, etc.)"
 core = 7.x
 package = ASU Webspark
-version = 7.x-1.4-dev
+version = 7.x-1.7
 project = webspark_hero
 dependencies[] = backgroundfield
 dependencies[] = ctools

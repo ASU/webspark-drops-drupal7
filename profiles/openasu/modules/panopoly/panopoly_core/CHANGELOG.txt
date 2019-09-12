@@ -1,3 +1,109 @@
+Panopoly Core 7.x-1.70, 2019-06-28
+-------------------
+- Getting ready for the 1.69 release.
+
+7.x-1.69, 2019-06-07
+-------------------
+- Update Panopoly Core to use views-7.x-3.22.
+- Update Panopoly Core to fieldable_panels_panes-7.x-1.13.
+- Update Panopoly Core to use devel-7.x-1.7.
+- Update to ctools-7.x-1.15.
+
+7.x-1.68, 2019-05-29
+-------------------
+- Update UUID to 7.x-1.3 for SA-CONTRIB-2019-052.
+
+7.x-1.67, 2019-05-09
+-------------------
+- Update default jQuery version to 1.10 on new sites.
+
+7.x-1.66, 2019-04-18
+-------------------
+- No changes since last release.
+
+7.x-1.65, 2019-03-27
+-------------------
+- No changes since last release.
+
+7.x-1.64, 2019-03-20
+-------------------
+- No changes since last release.
+
+7.x-1.63, 2019-03-14
+-------------------
+- Update to Views 3.21.
+
+7.x-1.62, 2019-02-21
+-------------------
+- Update to link-7.x-1.6.
+
+7.x-1.61, 2019-02-13
+-------------------
+- Update Administration Menu to admin_menu-7.x-3.0-rc6.
+- Upgrade Link module to 1.5.
+- Update Features to features-7.x-2.11.
+
+7.x-1.60, 2019-01-23
+-------------------
+- Update panels_breadcrumbs for SA-CONTRIB-2019-004.
+
+7.x-1.59, 2019-01-17
+-------------------
+- No changes since last release.
+
+7.x-1.58, 2018-12-11
+-------------------
+- Patch defaultcontent module to remove PHP7 deprecation warning.
+- Allow overriding "more" text on Views-based widgets.
+- Update uuid module to 1.2.
+- Patch panels breadcrumb module to remove deprecation notice in PHP 7.2.
+- Patch/update views bulk operations to remove deprecation warnings in PHP 7.2.
+- Patch features to remove deprecation warning in PHP 7.2.
+- Upgrade & patch migrate module to make it compatible with PHP 7.
+- Patch Views for PHP 7.1 issue.
+- Patch apps to remove PHP 7 deprecation warning.
+- Update libraries module to resolve deprecation warning for PHP 7.
+- Out-of-date dependency processing in panopoly_core.
+
+7.x-1.57, 2018-10-18
+-------------------
+- No changes since last release.
+
+7.x-1.56, 2018-10-10
+-------------------
+- No changes since last release.
+
+7.x-1.55, 2018-07-04
+-------------------
+- Update UUID to version 1.1.
+
+7.x-1.54, 2018-05-10
+-------------------
+- Date popup hover issue.
+- Update Views to version 3.20.
+- Update to migrate 2.9.
+- Update Apps module to 7.x-1.1.
+- Update devel to version 1.6.
+- Update field_group to version 1.6.
+- Update libraries to version 2.3.
+- Update date to version 2.10.
+- Update views_bulk_operations to version 3.4.
+- Update to ctools 7.x-1.14.
+- Update views to version 3.18 (add Views patch).
+- Update views to version 3.18.
+
+7.x-1.51, 2018-02-22
+-------------------
+- No changes since last release.
+
+7.x-1.50, 2018-02-15
+-------------------
+- Update to Entity API 1.9.
+
+7.x-1.49, 2017-12-13
+-------------------
+- Improvements to breadcrumb handling.
+
 7.x-1.48, 2017-11-30
 -------------------
 - Widget output when editing with IPE can be different than when viewing the

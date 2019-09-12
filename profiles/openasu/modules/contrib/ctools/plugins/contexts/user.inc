@@ -2,8 +2,7 @@
 
 /**
  * @file
- *
- * Plugin to provide a user context
+ * Plugin to provide a user context.
  */
 
 /**
@@ -118,7 +117,7 @@ function ctools_context_user_settings_form_validate($form, &$form_state) {
     return;
   }
 
-  // Validate the autocomplete
+  // Validate the autocomplete.
   if (empty($form_state['values']['uid']) && empty($form_state['values']['user'])) {
     form_error($form['user'], t('You must select a user.'));
     return;
@@ -153,6 +152,7 @@ function ctools_context_user_settings_form_submit($form, &$form_state) {
  */
 function ctools_context_user_convert_list() {
   $tokens = token_info();
+  $list = array();
   foreach ($tokens['tokens']['user'] as $id => $info) {
     if (!isset($list[$id])) {
       $list[$id] = $info['name'];

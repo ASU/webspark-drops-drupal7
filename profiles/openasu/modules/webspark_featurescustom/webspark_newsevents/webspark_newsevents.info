@@ -1,8 +1,8 @@
 name = Webspark News and Events (Step 2)
-description = Set up News and Events
+description = "Creates the ability to pull in news and events feeds from ASU-run websites (currently Marketing Hub sites). Contains the majority of the nuts and bolts of Webspark News and Events (Step 1). Powered by the Feeds module."
 core = 7.x
 package = ASU Webspark
-version = 7.x-1.0-beta4
+version = 7.x-1.0
 project = webspark_newsevents
 dependencies[] = ctools
 dependencies[] = date

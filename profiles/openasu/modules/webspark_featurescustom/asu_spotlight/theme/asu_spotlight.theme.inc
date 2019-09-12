@@ -47,13 +47,18 @@ function theme_asu_spotlight_list(&$vars) {
  */
 function theme_asu_spotlight_list_item(&$vars) {
   $vars['package']['item']['overlaytextwidth'] = (isset($vars['package']['item']['overlaytextwidth'])) ? $vars['package']['item']['overlaytextwidth'] : 'full-width';
+  $title_string = '<h1>' . $vars['package']['item']['title'] . '</h1>';
+  if(!empty($vars['package']['item']['link']))
+  {
+      $title_string = '<a href="' . $vars['package']['item']['link'] . '">' . $title_string . '</a>';
+  }
   $list_item = '<li' . drupal_attributes($vars['settings']['attributes']) . '>
             <div class="slidecontainer" position="relative">' .
     $vars['package']['slide'] .
     '<div class="blurbcontainer"> ' .
     '<div class="blurbshell ' . $vars['package']['item']['position'] . ' ' .
     $vars['package']['item']['overlaytextwidth'] . '">' .
-    '<a href="' . $vars['package']['item']['link'] . '"><h1>' . $vars['package']['item']['title'] . '</h1></a>' .
+    $title_string .
     '<p>' . $vars['package']['item']['description'] . '</p>';
 
   if ($vars['package']['item']['color'] == 'red') {
@@ -65,7 +70,7 @@ function theme_asu_spotlight_list_item(&$vars) {
   else if ($vars['package']['item']['color'] == 'gold') {
       $color = 'gold';
   }
-  else if ($vars['package']['item']['color'] == 'secondary') {
+  else if ($vars['package']['item']['color'] == 'grey') {
       $color = 'secondary';
   }
 

@@ -12,7 +12,7 @@ function template_preprocess_views_bootstrap_media_plugin_style(&$vars) {
 
   $vars['items'] = array();
 
-  foreach ($view->result as $key => $field) {
+  foreach (array_keys($vars['rows']) as $key) {
     $vars['items'][] = array(
       'image_field' => isset($view->field[$image_field]) ? $view->style_plugin->get_field($key, $image_field) : NULL,
       'heading_field' => isset($view->field[$heading_field]) ? $view->style_plugin->get_field($key, $heading_field) : NULL,

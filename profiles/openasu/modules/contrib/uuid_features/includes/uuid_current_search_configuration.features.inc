@@ -12,6 +12,7 @@ function uuid_current_search_configuration_features_export_options() {
 
   $current_search_items = db_select('block_current_search', 'b')
     ->fields('b', array('delta', 'searcher'))
+    ->addTag('uuid_current_search_configuration_features_export_options')
     ->execute()
     ->fetchAllAssoc('delta');
 

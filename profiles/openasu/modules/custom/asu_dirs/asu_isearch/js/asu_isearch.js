@@ -29,15 +29,25 @@
                 // add the complete/absolute url for the people links
                 $.each(acts, function (index, value) {
                     var href = $(this).attr('href');
-                    var isearch = href.indexOf("isearch.asu.edu");
 
-                    if (isearch == -1) {
+                    // rewrite only relative URLs which were imported from iSearch
+                    if (!isUrlAbsolute(href)) {
                         href = 'https://isearch.asu.edu' + href;
                         $(this).attr('href', href);
                     }
                 });
 
+                $('<br>').insertBefore('.panel-pane.pane-entity-field.pane-node-field-isearch-campus-building');
+
             });
         }
     }
 })(jQuery);
+
+/***
+ * Checks if a URL is absolute
+ * Copied from Stackoverflow user Philipp's answer here: https://stackoverflow.com/questions/10687099/how-to-test-if-a-url-string-is-absolute-or-relative
+ */
+function isUrlAbsolute(url) { 
+    return (url.indexOf('://') > 0 || url.indexOf('//') === 0);
+}

@@ -4,6 +4,7 @@ package = Lightweight Directory Access Protocol
 dependencies[] = ldap_servers
 dependencies[] = ldap_user
 core = 7.x
+php = 5.4
 
 files[] = LdapAuthorizationConsumerAbstract.class.php
 files[] = LdapAuthorizationConsumer.class.php
@@ -14,13 +15,13 @@ files[] = ldap_authorization.admin.inc
 files[] = ldap_authorization.admin.test.inc
 files[] = ldap_authorization.theme.inc
 files[] = tests/BasicTests.test
-files[] = tests/Og1Tests.test
 files[] = tests/Og2Tests.test
 configure = admin/config/people/ldap/authorization
 
-; Information added by Drupal.org packaging script on 2014-01-08
-version = "7.x-2.0-beta8"
+test_dependencies[] = ldap_sso:ldap_sso
+
+; Information added by Drupal.org packaging script on 2019-04-20
+version = "7.x-2.5"
 core = "7.x"
 project = "ldap"
-datestamp = "1389150511"
-
+datestamp = "1555751588"

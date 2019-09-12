@@ -37,17 +37,50 @@ define('ASU_BRAND_SITE_MENU_NAME_DEFAULT', 'main-menu');
  * Implements hook_init().
  */
 function asu_brand_init() {
+
   if (variable_get('asu_brand_sitemenu_injection_flag', 1)) {
     $menu_array = asu_brand_get_site_menu_array();
     drupal_alter('asu_brand_sitemenu', $menu_array); // Invoke alter
     
     $site_name = asu_brand_get_site_name();
     drupal_alter('asu_brand_sitename', $site_name); // Invoke alter
+
+    $site_url = variable_get('asu_brand_override_url', '/');
+
+    if (empty($site_url)) {
+      $site_url = '/';
+    }
+
+    drupal_alter('asu_brand_site_url', $site_url); // Invoke alter
+
+    $parent_org_title = variable_get('asu_brand_parent_org_title', '');
+
+    $parent_org_url = variable_get('asu_brand_parent_org_url', '');
+
+    $site_title_array = array(
+      'title' => $site_name,
+      'site_url' => $site_url
+    );
+
+    if (!empty($parent_org_title)) {
+      $site_title_array['parent_org'] = $parent_org_title;
+    }
+
+    if (!empty($parent_org_url)) {
+      $site_title_array['parent_org_url'] = $parent_org_url;
+    }
+
+    //ASUHeader.site_title = {title: "Name of Site", parent_org: "Name of Parent Organization"};
     
     $js = 'window.ASUHeader = window.ASUHeader || {};';
     $js .= 'ASUHeader.site_menu = ASUHeader.site_menu || {};';
     $js .= 'ASUHeader.site_menu.json = \''.json_encode($menu_array, JSON_HEX_APOS).'\';';
     $js .= 'ASUHeader.site_menu.site_name = '.json_encode($site_name, JSON_HEX_APOS).';';
+    $js .= 'ASUHeader.site_title = '.json_encode($site_title_array, JSON_HEX_APOS).';';
+
+    if (variable_get('asu_brand_ci_testing', 0) == 1) {
+      $js .= 'ASUHeader.disableCookieConsent = true;';
+    }
     
     drupal_add_js($js, array('type' => 'inline', 'scope' => 'header', 'group' => JS_THEME, 'weight' => -10));
   }
@@ -130,6 +163,9 @@ function asu_brand_block_save($delta = '', $edit = array()) {
         variable_set('asu_brand_do_not_override', drupal_json_encode($overrides));
       }
 
+      variable_set('asu_brand_parent_org_title', $edit['asu_brand_parent_org_title']);
+      variable_set('asu_brand_parent_org_url', $edit['asu_brand_parent_org_url']);
+      variable_set('asu_brand_override_url', $edit['asu_brand_override_url']);
 
       asu_brand_cache_clear();
       break;

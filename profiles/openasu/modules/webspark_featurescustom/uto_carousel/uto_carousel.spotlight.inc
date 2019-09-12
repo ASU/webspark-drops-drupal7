@@ -2,7 +2,8 @@
 
 /**
  * @file
- * A specification for the custom spotlight entity that is part of Panopoly Widgets
+ * A specification for the custom UTO Carousel entity to be included with the
+ * other Panopoly Widgets
  */
 
 /**
@@ -12,7 +13,7 @@ function uto_carousel_field_info() {
   return array(
     'uto_carousel' => array(
       'label' => t('UTO Carousel'),
-      'description' => t('A wonderfully (ASU modified) widgetsal carousel field'),
+      'description' => t('An ASU-themed widget carousel field'),
       'default_widget' => 'uto_carousel_form',
       'default_formatter' => 'uto_carousel',
       'settings' => array(
@@ -32,9 +33,13 @@ function uto_carousel_field_info() {
   );
 }
 
-
-
-
+/**
+ * Helper funciton - Checks if field is empty.
+ *
+ * @param $item
+ * @param $field
+ * @return bool
+ */
 function uto_carousel_field_is_empty($item, $field) {
   if (empty($item['title']) && empty($item['link']) && empty($item['description']) && empty($item['fid'])) {
     return TRUE;
@@ -83,7 +88,7 @@ function uto_carousel_field_settings_form($field, $instance, $has_data) {
   // page. So image_field_update_field() can handle this change.
   $form['default_image'] = array(
     '#title' => t('Default image'),
-    '#type' => 'managed_file',
+    '#type' => 'media',
     '#description' => t('If no image is uploaded, this image will be shown on display.'),
     '#default_value' => $field['settings']['default_image'],
     '#upload_location' => $settings['uri_scheme'] . '://default_images/',
@@ -102,9 +107,9 @@ function uto_carousel_field_instance_settings_form($field, $instance) {
 
 /**
  * Implementation of hook_field_formatter_info().
- * We're going to be using our own formatter based on our own theme.
  */
 function uto_carousel_field_formatter_info() {
+  // We're going to be using our own formatter based on our own theme.
   return array(
     'uto_carousel' => array(
       'label' => t('Carousel'),
@@ -162,11 +167,9 @@ function uto_carousel_field_formatter_settings_summary($field, $instance, $view_
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
 
-  $summary = array();
+  $summary = t('Image Style: @style', array('@style' => $settings['image_style'])). '<br \>';
 
-  $summary[] = t('Image Style: @style', array('@style' => $settings['image_style']));
-
-  $summary[] = !empty($settings['caption']) ? t('Display captions') : t('Do not display captions');
+  $summary .= (!empty($settings['caption']) ? t('Display captions') : t('Do not display captions')) . '<br \>';
 
   // Load option set
   ctools_include('export');
@@ -175,7 +178,7 @@ function uto_carousel_field_formatter_settings_summary($field, $instance, $view_
   }
 
   $optionset = isset($optionset) ? $optionset->title : t('Default settings');
-  $summary[] = t('Option set: %optionset', array('%optionset' => $optionset));
+  $summary .= t('Option set: %optionset', array('%optionset' => $optionset));
   return $summary;
 }
 
@@ -192,12 +195,12 @@ function uto_carousel_field_formatter_view($entity_type, $entity, $field, $insta
       $item['item'] = $tmp;
 
       // Setup the variables for calling theme_image_style
-      $item['slide']['path'] = $item['item']['uri'];
-      $item['slide']['style_name'] = $display['settings']['image_style'];
-      $item['slide']['width'] = $item['item']['metadata']['width'];
-      $item['slide']['height'] = $item['item']['metadata']['height'];
-      $item['slide']['alt'] = $item['item']['alt'];
-      $item['slide']['title'] = $item['item']['title'];
+      $item['slide']['path'] = isset($item['item']['uri']) ? $item['item']['uri'] : "";
+      $item['slide']['style_name'] = isset($display['settings']['image_style']) ? $display['settings']['image_style'] : "";
+      $item['slide']['width'] = isset($item['item']['metadata']['width']) ? $item['item']['metadata']['width'] : "";
+      $item['slide']['height'] = isset($item['item']['metadata']['height']) ? $item['item']['metadata']['height'] : "";
+      $item['slide']['alt'] = isset($item['item']['alt']) ? $item['item']['alt'] : "";
+      $item['slide']['title'] = isset($item['item']['title']) ? $item['item']['title'] : "";
 
       // Render the slide item
       // If not style set, we have to call theme_image since theme_image_style
@@ -254,16 +257,10 @@ function uto_carousel_field_widget_form(&$form, &$form_state, $field, $instance,
 
     $element['fid'] = array(
       '#title' => t('Image'),
-      '#type' => 'managed_file',
+      '#type' => 'media',
       '#upload_location' => file_field_widget_uri($field, $instance),
       '#default_value' => isset($items[$delta]['fid']) ? $items[$delta]['fid'] : NULL,
     );
-
-    /*$element['alt'] = array(
-      '#title' => t('Alt text'),
-      '#type' => 'textfield',
-      '#default_value' => isset($items[$delta]['alt']) ? $items[$delta]['alt'] : NULL,
-    );*/
 
     $element['description'] = array(
       '#title' => t('Description'),
@@ -272,47 +269,6 @@ function uto_carousel_field_widget_form(&$form, &$form_state, $field, $instance,
       '#resizable' => FALSE,
       '#default_value' => isset($items[$delta]['description']) ? $items[$delta]['description'] : NULL,
     );
-
-    /*$element['actionlink'] = array(
-      '#title' => t('Action Link'),
-      '#type' => 'textfield',
-      '#default_value' => isset($items[$delta]['actionlink']) ? $items[$delta]['actionlink'] : NULL,
-    );
-
-
-    $element['actiontitle'] = array(
-      '#title' => t('Action Title'),
-      '#type' => 'textfield',
-      '#default_value' => isset($items[$delta]['actiontitle']) ? $items[$delta]['actiontitle'] : NULL,
-    );
-
-    $element['actionlink2'] = array(
-      '#title' => t('Action Link 2'),
-      '#type' => 'textfield',
-      '#default_value' => isset($items[$delta]['actionlink2']) ? $items[$delta]['actionlink2'] : NULL,
-    );
-
-    $element['actiontitle2'] = array(
-      '#title' => t('Action Title 2'),
-      '#type' => 'textfield',
-      '#default_value' => isset($items[$delta]['actiontitle2']) ? $items[$delta]['actiontitle2'] : NULL,
-    );*/
-
-    /*$element['position'] = array(
-      '#title' => t('Position'),
-      '#type' => 'select',
-      '#options' => array('top-left' => 'top-left', 'top-center' => 'top-center', 'top-right' => 'top-right',
-        'mid-left' => 'mid-left', 'mid-center' => 'mid-center', 'mid-right' => 'mid-right', 'bottom-left' => 'bottom-left',
-        'bottom-center' => 'bottom-center', 'bottom-right' => 'bottom-right'),
-      '#default_value' => isset($items[$delta]['position']) ? $items[$delta]['position'] : 'top-left',
-    );*/
-
-    /*$element['color'] = array(
-      '#title' => t('Color'),
-      '#type' => 'select',
-      '#options' => array('blue' => 'blue', 'red' => 'red'),
-      '#default_value' => isset($items[$delta]['color']) ? $items[$delta]['color'] : 'blue',
-    );*/
   }
   return $element;
 

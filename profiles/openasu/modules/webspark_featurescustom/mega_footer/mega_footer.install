@@ -1,0 +1,97 @@
+<?php
+
+/**
+ * Implements hook_install()
+ */
+function mega_footer_install(){
+}
+
+/**
+ * Implements hook_update_N().
+ * - Swap out all old names with their new Drupal-standard names and re-add their existing values
+ */
+function mega_footer_update_7001(&$sandbox) {
+  // Set mega_footer_hide_logo_address
+  variable_set('mega_footer_hide_logo_address', FALSE);
+
+  // $old_name => $new_name
+  $update_fail = 0;
+  $variables = _mega_footer_variables_define();
+
+  foreach ($variables as $old_key => $new_key) {
+    $value = variable_get($old_key);
+    variable_set($new_key, $value);
+    variable_del($old_key);
+    watchdog('mega_footer', 'Replaced ' . $old_key . ' with ' . $new_key . ' in variable table.', array(), WATCHDOG_NOTICE);
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ * - Remove Google+ social media icon
+ */
+function mega_footer_update_7002(&$sandbox) {
+  variable_del('mega_footer_unit_google_link');
+  watchdog('mega_footer', 'Removed Google Plus from variable table.', array(), WATCHDOG_NOTICE);
+  drupal_set_message('The Google+ icon have been removed from the site.', 'status');
+}
+
+/**
+ * One-time definition for update 7000 above.
+ * If no new variables are added in the module, it could be used as a list of all variable table values.
+ */
+function _mega_footer_variables_define() {
+  return array(
+    'megafoot_show_contact_info' => 'mega_footer_show_contact_info',
+    'megafoot_logo_alt' => 'mega_footer_logo_alt',
+    'unit_logo' => 'mega_footer_unit_logo',
+    'megafoot_unit_descrip' => 'mega_footer_unit_descrip',
+    'unit_title' => 'mega_footer_unit_title',
+    'unit_address_one' => 'mega_footer_unit_address_one',
+    'unit_address_two' => 'mega_footer_unit_address_two',
+    'unit_address_three' => 'mega_footer_unit_address_three',
+    'unit_phone' => 'mega_footer_unit_phone',
+    'unit_fax' => 'mega_footer_unit_fax',
+    'unit_contact_us' => 'mega_footer_unit_contact_us_link',
+    'unit_facebook_connect' => 'mega_footer_unit_facebook_link',
+    'unit_twitter_connect' => 'mega_footer_unit_twitter_link',
+    'unit_linkedin_connect' => 'mega_footer_unit_linkedin_link',
+    'unit_youtube_connect' => 'mega_footer_unit_youtube_link',
+    'unit_instagram_connect' => 'mega_footer_unit_instagram_link',
+    'unit_vimeo_connect' => 'mega_footer_unit_vimeo_link',
+    'unit_flickr_connect' => 'mega_footer_unit_flickr_link',
+    'unit_pinterest_connect' => 'mega_footer_unit_pinterest_link',
+    'unit_tumblr_connect' => 'mega_footer_unit_tumblr_link',
+    'contribute_button' => 'mega_footer_contribute_button',
+    'contribute_link' => 'mega_footer_contribute_link',
+    'unit_rss_feed' => 'mega_footer_unit_rss_link',
+    'unit_custom_social_media_1' => 'mega_footer_unit_custom_social_media_1_link',
+    'unit_custom_social_media_1_name' => 'mega_footer_unit_custom_social_media_1_name',
+    'unit_custom_social_media_1_logo' => 'mega_footer_unit_custom_social_media_1_logo',
+    'unit_custom_social_media_2' => 'mega_footer_unit_custom_social_media_2_link',
+    'unit_custom_social_media_2_name' => 'mega_footer_unit_custom_social_media_2_name',
+    'unit_custom_social_media_2_logo' => 'mega_footer_unit_custom_social_media_2_logo',
+    'unit_custom_social_media_3' => 'mega_footer_unit_custom_social_media_3_link',
+    'unit_custom_social_media_3_name' => 'mega_footer_unit_custom_social_media_3_name',
+    'unit_custom_social_media_3_logo' => 'mega_footer_unit_custom_social_media_3_logo'
+  );
+}
+
+/**
+ * Implements hook_uninstall()
+ */
+function mega_footer_uninstall() {
+  // Remove mega_footer values
+  $variables =  db_query("SELECT name FROM {variable} WHERE name LIKE 'mega_footer_%'");
+  $records = $variables->fetchAll();
+  $count = count($records);
+  if (!empty($records)) {
+    foreach ($records as $record) {
+      variable_del($record->name);
+    }
+    watchdog('mega_footer', t('removed @count mega_footer_% values from Drupal variable table.'), array('@count' => $count), WATCHDOG_NOTICE);
+  }
+  else {
+    watchdog('mega_footer', t('No mega_footer_% values found in the Drupal variable table.'), array('@count' => $count), WATCHDOG_NOTICE);
+  }
+}

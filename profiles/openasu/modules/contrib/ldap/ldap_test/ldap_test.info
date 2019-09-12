@@ -6,6 +6,7 @@ dependencies[] = ldap_servers
 dependencies[] = entity
 
 core = 7.x
+php = 5.4
 
 files[] = ldap_servers.conf.inc
 files[] = ldap_user.conf.inc
@@ -18,9 +19,8 @@ files[] = LdapServerTest.class.php
 files[] = LdapTestFunctions.class.php
 files[] = LdapUserTestCase.class.php
 
-; Information added by Drupal.org packaging script on 2014-01-08
-version = "7.x-2.0-beta8"
+; Information added by Drupal.org packaging script on 2019-04-20
+version = "7.x-2.5"
 core = "7.x"
 project = "ldap"
-datestamp = "1389150511"
-
+datestamp = "1555751588"

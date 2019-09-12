@@ -1,12 +1,26 @@
-
-Webspark Title Banner 7.x-1.1-dev, 2014-11-21
+Webspark Banner 7.x-1.6, 2019-08-02
 ------------------------------
-- Setting background image on .pane-bundle-banner
+- Improved mouseover description when a link to create an ASU spotlight is rendered in the In-Page Editor
 
-Webspark Title Banner 7.x-1.2-dev, 2014-11-25
+Webspark Banner 7.x-1.5, 2018-01-31
+------------------------------
+- Removed superfluous JS file and replaced its functionality with Drupal code
+- Added ellipsis to long image blurbs/taglines to fix mobile layout issues
+- Added SASS files for all future CSS development
+- Updated most element and font units from px to em or rem
+
+Webspark Banner 7.x-1.4-dev, unknwon
+------------------------------
+- @TODO Get changes from webspark-drops-drupal7 Git repo
+
+Webspark Banner 7.x-1.3-dev, 2014-11-25
+------------------------------
+- Fixing classes on tpl file
+
+Webspark Banner 7.x-1.2-dev, 2014-11-25
 ------------------------------
 - Restoring old css class title-banner
 
-Webspark Title Banner 7.x-1.3-dev, 2014-11-25
+Webspark Banner 7.x-1.1-dev, 2014-11-21
 ------------------------------
-- Fixing classes on tpl file
+- Setting background image on .pane-bundle-banner

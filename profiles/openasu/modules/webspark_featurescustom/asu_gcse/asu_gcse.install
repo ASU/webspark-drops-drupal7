@@ -1,0 +1,8 @@
+<?php
+
+/***
+ * Implements hook_enable()
+ */
+function asu_gcse_enable() {
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('search Google CSE'));
+}

@@ -30,13 +30,7 @@
 /*
  * Flex Resets
  */
-/* line 10, ../scss/_home-slider.scss */
-.pane-bundle-uto-carousel .flex-container a:hover,
-.pane-bundle-uto-carousel .flex-container a:focus,
-.pane-bundle-uto-carousel .flex-slider a:hover,
-.pane-bundle-uto-carousel .flex-slider a:focus {
-    outline: none;
-}
+
 
 /* line 16, ../scss/_home-slider.scss */
 .slides,

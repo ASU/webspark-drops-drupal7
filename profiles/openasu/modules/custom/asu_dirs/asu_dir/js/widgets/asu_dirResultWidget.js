@@ -1,4 +1,4 @@
- /**
+/**
  * Define the IS People Result widget.  This part handles the output of the people listing after the Solr request.
  * The logic and functions to append managers to the front of the list is also here, since that functionality needs to
  * act on the template during/after the request.
@@ -184,7 +184,7 @@
                 markup += '<div class="isearch-address building">' + addLine1 + '</div>';
 
                 if (addLine2 != null) {
-                    markup += '<div class="isearch-address room">&nbsp;'+ addLine2 + '</div>';
+                    markup += '<div class="isearch-address room">&nbsp;' + addLine2 + '</div>';
                 }
 
                 if (addLine3 != null) {
@@ -345,11 +345,7 @@
 
             // if no current dept index was set, set to the primary title
             if (index == -1) {
-                for (var i = 0; i < dept_names.length; i++) {
-                    if (dept_names[i] == doc.primaryiSearchDepartmentAffiliation) {
-                        index = i;
-                    }
-                }
+                index = $.inArray(doc.primaryiSearchDepartmentAffiliation, doc.departments);
             }
 
             // if we failed to get a primary or current dept title, fallback to the first one found
@@ -398,10 +394,10 @@
             }
 
             // Trim the title, since it might show up as a blank space, like " "
-            title_string = '<div class="job-title">' +  title_string.trim();
+            title_string = '<div class="job-title">' + title_string.trim();
 
             if (fieldConfigs.display_department && department != null) {
-                title_string +=  '<br>' + department ;
+                title_string += '<br>' + department;
             }
 
             title_string += '</div>';

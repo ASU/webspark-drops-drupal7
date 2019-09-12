@@ -10,9 +10,13 @@
 function uuid_fpp_features_export_options() {
   $options = array();
 
-  $query = 'SELECT f.fpid, f.admin_title, f.title, f.bundle, f.uuid
-    FROM {fieldable_panels_panes} f ORDER BY f.bundle, f.title ASC';
-  $results = db_query($query);
+  $query = db_select('fieldable_panels_panes', 'f')
+    ->fields('f', array('fpid', 'admin_title', 'title', 'bundle', 'uuid'))
+    ->orderBy('f.bundle', 'ASC')
+    ->orderBy('f.title', 'ASC')
+    ->addTag('uuid_fpp_features_export_options');
+
+  $results = $query->execute()->fetchAll();
   foreach ($results as $fpp) {
     $bundle_name = ucwords(str_replace('_', ' ', $fpp->bundle));
     $display_title = ($fpp->admin_title) ? $fpp->admin_title : $fpp->uuid;
@@ -31,7 +35,7 @@ function uuid_fpp_features_export($data, &$export, $module_name = '') {
   $export['dependencies']['uuid_features'] = 'uuid_features';
 
   // Add extra dependencies so we don't lose track of bundles.
-  $fpp_modules = _uuid_fp_features_provides_bundle();
+  $fpp_modules = _uuid_fpp_features_dependencies($data);
   foreach ($fpp_modules as $module) {
     $export['dependencies'][$module] = $module;
   }
@@ -57,7 +61,7 @@ function uuid_fpp_features_export($data, &$export, $module_name = '') {
     // for the hook_*_alter() implementations.  The hook_alter signature is
     // hook_uuid_fpp_features_export_alter(&$export, &$pipe, $fpp).
     $data = &$export;
-    $data['__drupal_alter_by_ref'] = array(&$pipe);
+    $data['__drupal_alter_by_ref']['pipe'] = array(&$pipe);
     drupal_alter('uuid_fpp_features_export', $data, $fpp);
   }
 
@@ -82,6 +86,9 @@ function uuid_fpp_features_export_render($module, $data) {
 
     $first_fpp = reset($fpps);
     $export = clone $first_fpp;
+
+    $entity_type = 'fieldable_panels_pane';
+    drupal_alter('uuid_entity_features_export_render', $entity_type, $export, $first_fpp, $module);
 
     // Do not export ids.
     unset($export->vid);
@@ -162,29 +169,132 @@ function uuid_fpp_features_rebuild($module) {
 }
 
 /**
- * Discovers modules which provide FPP bundles for dependency mapping.
- *
- * Same process as module_invoke_all().
+ * Discovers modules which affect the FPP bundle info for dependency mapping.
  */
-function _uuid_fp_features_provides_bundle() {
-
+function _uuid_fpp_features_dependencies($uuids) {
   $implements = array();
-  $entity_info = fieldable_panels_panes_entity_info();
 
-  // Discover all modules which implement entity_info_alter
+  $entity_info = array();
+  $bundles = array();
+  foreach (entity_uuid_load('fieldable_panels_pane', $uuids) as $entity) {
+    list(, , $bundle) = entity_extract_ids('fieldable_panels_pane', $entity);
+    $bundles[$bundle] = $bundle;
+  }
+
+  // Check for modules that affect the bundle info of the given entity's bundle.
+  foreach (module_implements('entity_info') as $module) {
+    $result = module_invoke($module, 'entity_info');
+    foreach ($bundles as $bundle) {
+      if (isset($result['fieldable_panels_pane']['bundles'][$bundle])) {
+        $implements[$module] = $module;
+      }
+
+      if (isset($result) && is_array($result)) {
+        $entity_info = array_replace_recursive($entity_info, $result);
+      }
+    }
+  }
+
+  foreach ($entity_info as $name => $data) {
+    $entity_info[$name] += array(
+      'fieldable' => FALSE,
+      'controller class' => 'DrupalDefaultEntityController',
+      'static cache' => TRUE,
+      'field cache' => TRUE,
+      'load hook' => $name . '_load',
+      'bundles' => array(),
+      'view modes' => array(),
+      'entity keys' => array(),
+      'translation' => array(),
+    );
+    $entity_info[$name]['entity keys'] += array(
+      'revision' => '',
+      'bundle' => '',
+    );
+    foreach ($entity_info[$name]['view modes'] as $view_mode => $view_mode_info) {
+      $entity_info[$name]['view modes'][$view_mode] += array(
+        'custom settings' => FALSE,
+      );
+    }
+    // If no bundle key is provided, assume a single bundle, named after
+    // the entity type.
+    if (empty($entity_info[$name]['entity keys']['bundle']) && empty($entity_info[$name]['bundles'])) {
+      $entity_info[$name]['bundles'] = array($name => array('label' => $entity_info[$name]['label']));
+    }
+    // Prepare entity schema fields SQL info for
+    // DrupalEntityControllerInterface::buildQuery().
+    if (isset($entity_info[$name]['base table'])) {
+      $entity_info[$name]['schema_fields_sql']['base table'] = drupal_schema_fields_sql($entity_info[$name]['base table']);
+      if (isset($entity_info[$name]['revision table'])) {
+        $entity_info[$name]['schema_fields_sql']['revision table'] = drupal_schema_fields_sql($entity_info[$name]['revision table']);
+      }
+    }
+  }
+
+  // Discover all modules which implement entity_info_alter.
   foreach (module_implements('entity_info_alter') as $module) {
     $function = $module . '_entity_info_alter';
     if (function_exists($function)) {
-
-      // Essentially we need to invoke the hook_alter() and see if our target
-      // entity had some values added.
+      // Keep a backup of the FPP entity info so we can compare it later.
+      $backup = $entity_info['fieldable_panels_pane']['bundles'];
       $function($entity_info);
 
-      // If we have a key for our entity, log the module.
-      if (isset($entity_info['fieldable_panels_pane'])) {
-        $implements[] = $module;
+      foreach ($bundles as $bundle) {
+        // Check if the module changes anything in the entity info.
+        if (isset($backup[$bundle]) && !isset($entity_info['fieldable_panels_pane']['bundles'][$bundle])) {
+          $implements[$module] = $module;
+        }
+        elseif ($backup[$bundle] != $entity_info['fieldable_panels_pane']['bundles'][$bundle]) {
+          $implements[$module] = $module;
+        }
       }
     }
   }
   return $implements;
+}
+
+/**
+ * If the PHP version is < 5.3.0 we need to create array_replace_recursive().
+ */
+if (!function_exists('array_replace_recursive')) {
+  /**
+   * Replaces elements from passed arrays into the first array recursively.
+   *
+   * @link http://php.net/manual/en/function.array-replace-recursive.php
+   *
+   * @param array $array
+   *   The array in which elements are replaced.
+   * @param array $array1
+   *   The array from which elements will be extracted.
+   *
+   * @return array|NULL
+   *   An array, or NULL if an error occurs.
+   */
+  function array_replace_recursive(array $array, array $array1) {
+    // Get array arguments.
+    $arrays = func_get_args();
+
+    // Define the original array.
+    $original = array_shift($arrays);
+
+    // Loop through arrays.
+    foreach ($arrays as $array) {
+      // Loop through array key/value pairs.
+      foreach ($array as $key => $value) {
+        // Value is an array.
+        if (is_array($value)) {
+          // Traverse the array; replace or add result to original array.
+          $original[$key] = array_replace_recursive($original[$key], $array[$key]);
+        }
+        // Value is not an array.
+        else {
+          // Replace or add current value to original array.
+          $original[$key] = $value;
+        }
+      }
+    }
+
+    // Return the joined array.
+    return $original;
+  }
 }

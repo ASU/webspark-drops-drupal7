@@ -101,19 +101,17 @@ html.js #module-filter-submit input {
 }
 html.js .module-filter-inputs-wrapper {
   text-align: center;
+  padding: 1em;
 }
 html.js .module-filter-inputs-wrapper .form-item {
   margin: 0;
-  padding: 9px;
+  padding: 0 1em 0.5em 0;
 }
 html.js .module-filter-inputs-wrapper label {
   display: inline;
 }
 html.js .module-filter-inputs-wrapper input[name="module_filter[name]"] {
-  width: 80%;
-}
-html.js #module-filter-show-wrapper {
-  margin-bottom: 1em;
+  width: 50%;
 }
 html.js #module-filter-modules {
   margin-left: 240px;
@@ -166,9 +164,6 @@ html.js #module-filter-modules table td {
 }
 .admin-version {
   white-space: nowrap;
-}
-.admin-operations {
-  float: right;
 }
 .admin-operations a.module-link {
   display: inline;
