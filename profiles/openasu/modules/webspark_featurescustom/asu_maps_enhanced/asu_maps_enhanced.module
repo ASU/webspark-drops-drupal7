@@ -15,16 +15,6 @@ define('ASU_MAPS_ENHANCED_API_USAGE_KEY', 'ca4738acd976cc0702f7ef7dc25b3568');
 define('ASU_MAPS_ENHANCED_TREE_CACHE_DURATION', 12); //12 HOURS
 define('ASU_MAPS_ENHANCED_API_ENDPOINT', variable_get('asu_maps_enhanced_api_endpoint', 'https://api.concept3d.com/'));
 define('ASU_MAPS_ENHANCED_MAP_URL', variable_get('asu_maps_enhanced_map_url', 'https://map.m.asu.edu/'));
-define('ASU_MAPS_ENHANCED_CAMPUS_COORDS', array(
-  "THUNDERBIRD" => "mc/33.6224937,-112.1847479?z/17",
-  "POLY" => "mc/33.30463351165877,-111.67764695106507?z/16",
-  "DOWNTOWN" => "mc/33.4517422046421,-112.06978201586912?z/16",
-  "WEST" => "mc/33.60560202626335,-112.16131285054018?z/16",
-  "RESEARCH" => "mc/33.34149389022663,-111.89817340740967?z/16",
-  "SKYSONG" => "mc/33.46387500000001,-111.92400399999997?z/17",
-  "HAVASU" => "mc/34.472362999999994,-114.32183099999997?z/18",
-  "TEMPE" => "mc/33.42184849843031,-111.9283177883301?z/15"
-));
 
 /**
  * Implements hook_menu()
@@ -38,7 +28,7 @@ function asu_maps_enhanced_menu() {
   return $items;
 }
 
-/***
+/**
  * Returns a JSON Response with the campus bird tree
  *
  */
@@ -51,7 +41,7 @@ function asu_maps_enhanced_tree_response() {
 
 /**
  * Implementation of hook_entity_info_alter()
- **/
+ */
 function asu_maps_enhanced_entity_info_alter(&$entity_info) {
 
   // ASU Maps Enhanced Entity Info
@@ -211,7 +201,7 @@ function theme_asu_maps_enhanced_view($variables) {
   $output = '';
   $settings = $variables['map_settings'];
   $ref = '';
-  $coords = ASU_MAPS_ENHANCED_CAMPUS_COORDS;
+  $coords = asu_maps_enhanced_get_campus_coords();
 
   if (!empty($variables['items'])) {
 

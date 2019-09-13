@@ -911,7 +911,8 @@ ul.help-text li.help-title {
   padding-right: 15px;
 }
 
-/** @TODO - remove these overrides when added to ASU global header/footer CSS */
+/* WEBSPARK-1561 - footer positioning issues */
+/* @TODO - remove these overrides when added to ASU global header/footer CSS */
 #innovation-footer {
   position: relative;
 }
@@ -994,7 +995,8 @@ h4.ui-accordion-header:focus {
 	 box-shadow: 0px 0px 5px  #4D90FE;
 }
 
-/** UI Tabs **/
+/** UI Tabs
+----------------------------------------------------- */
 
 /* fixes for stacked tabs */
 body #content .ui-tabs .ui-tabs-nav li.ui-state-focus a {
@@ -1027,4 +1029,10 @@ body #content .ui-tabs .ui-tabs-nav li a {
   #innovation-footer {
     position: revert;
   }
+}
+
+/** WEBSPARK-1118 - Temporary footer link fix */
+#innovation-footer .footer-menu ul li a:hover {
+  color: #8C1D40;
+  border-bottom: 1px dotted #8C1D40;
 }
