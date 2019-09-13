@@ -46,44 +46,58 @@ function theme_asu_spotlight_list(&$vars) {
  * Default theme implementation for flexslider_list_item
  */
 function theme_asu_spotlight_list_item(&$vars) {
-  $vars['package']['item']['overlaytextwidth'] = (isset($vars['package']['item']['overlaytextwidth'])) ? $vars['package']['item']['overlaytextwidth'] : 'full-width';
-  $title_string = '<h1>' . $vars['package']['item']['title'] . '</h1>';
-  if(!empty($vars['package']['item']['link']))
-  {
-      $title_string = '<a href="' . $vars['package']['item']['link'] . '">' . $title_string . '</a>';
+
+  $item = $vars['package']['item'];
+
+  // INIT values
+  $overlaytextwidth = (isset($item['overlaytextwidth'])) ? $item['overlaytextwidth'] : 'full-width';
+  $description = (isset($item['description'])) ? $item['description'] : '';
+  $position = (isset($item['position'])) ? $item['position'] : '';
+  $title_string = '<h1>' . $item['title'] . '</h1>';
+
+  if(!empty($item['link'])) {
+    $title_string = '<a href="' . $item['link'] . '">' . $title_string . '</a>';
   }
   $list_item = '<li' . drupal_attributes($vars['settings']['attributes']) . '>
             <div class="slidecontainer" position="relative">' .
     $vars['package']['slide'] .
     '<div class="blurbcontainer"> ' .
-    '<div class="blurbshell ' . $vars['package']['item']['position'] . ' ' .
-    $vars['package']['item']['overlaytextwidth'] . '">' .
+    '<div class="blurbshell ' . $position . ' ' .
+    $overlaytextwidth . '">' .
     $title_string .
-    '<p>' . $vars['package']['item']['description'] . '</p>';
+    '<p>' . $description . '</p>';
 
-  if ($vars['package']['item']['color'] == 'red') {
-    $color = 'primary';
-  }
-  else if ($vars['package']['item']['color'] == 'blue') {
-    $color = 'blue';
-  }
-  else if ($vars['package']['item']['color'] == 'gold') {
+  if (isset($item['color'])) {
+    if ($item['color'] == 'red') {
+      $color = 'primary';
+    }
+    elseif ($item['color'] == 'blue') {
+      $color = 'blue';
+    }
+    elseif ($item['color'] == 'gold') {
       $color = 'gold';
-  }
-  else if ($vars['package']['item']['color'] == 'grey') {
+    }
+    elseif ($item['color'] == 'grey') {
       $color = 'secondary';
+    }
+    else {
+      $color = '-not-defined'; // not defined
+    }
+  } else {
+    $color = '-not-defined'; // not defined
   }
 
-  if ($vars['package']['item']['actiontitle'] != NULL && $vars['package']['item']['actionlink'] != NULL) {
-
-    $list_item .= '<a class="btn btn-' . $color . ' btn-block" href="' . $vars['package']['item']['actionlink'] . '">'
-      . $vars['package']['item']['actiontitle'] . '</a>';
+  if (isset($item['actiontitle']) && isset($item['actionlink'])) {
+    if ($item['actiontitle'] != NULL && $item['actionlink'] != NULL) {
+      $list_item .= '<a class="btn btn-' . $color . ' btn-block" href="' . $item['actionlink'] . '">'
+        . $item['actiontitle'] . '</a>';
+    }
   }
-
-  if ($vars['package']['item']['actiontitle2'] != NULL && $vars['package']['item']['actionlink2'] != NULL) {
-
-    $list_item .= '<a class="btn btn-' . $color . ' btn-block" href="' . $vars['package']['item']['actionlink2'] . '">'
-      . $vars['package']['item']['actiontitle2'] . '</a>';
+  if (isset($item['actiontitle2']) && isset($item['actionlink2'])) {
+    if ($item['actiontitle2'] != NULL && $item['actionlink2'] != NULL) {
+      $list_item .= '<a class="btn btn-' . $color . ' btn-block" href="' . $item['actionlink2'] . '">'
+        . $item['actiontitle2'] . '</a>';
+    }
   }
 
   $list_item .= '</div>
