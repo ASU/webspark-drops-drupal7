@@ -3,7 +3,7 @@
   <div class="row row-padding-top row-padding-bottom">
     <div class="col-md-12">
       <div class="flexslider-ws">
-        <ul class="slides" aria-label="Carousel pager" role="navigation">
+        <ul class="slides">
         <?php foreach ($variables['items'] as $item):
 
         $thisItem = $item['item'];
