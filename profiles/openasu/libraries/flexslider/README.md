@@ -1,7 +1,63 @@
-# FlexSlider 2.2.2
-http://www.woothemes.com/flexslider/ - Copyright (c) 2013 WooThemes
+[![Gitter chat](https://badges.gitter.im/woothemes/FlexSlider.png)](https://gitter.im/woothemes/FlexSlider)
+
+# FlexSlider 2.7.2
+http://www.woocommerce.com/flexslider/ - Copyright (c) 2015 WooThemes
+
+## Releases
+
+The `master` branch of this repository is always the latest development version of FlexSlider. Please view the [Releases](https://github.com/woocommerce/FlexSlider/releases) section for a list of official FlexSlider builds.
+
+### Contributing
+
+We encourage contributions to FlexSlider and will review all pull requests submitted.
+
+Before contributing, please see our [Contributing Guide](https://github.com/woocommerce/FlexSlider/blob/master/CONTRIBUTING.md).
+
+### Roadmap
+
+To keep up to date with how FlexSlider's development roadmap looks, please see our [development roadmap](https://github.com/woocommerce/FlexSlider/wiki/Roadmap).
 
 ## Updates
+
+** Version 2.7.2 **
+
+** Refactor jQuery HTML output for img attributes.
+
+** Version 2.7.1 **
+
+** RTL fixes for Firefox browser.
+
+** Version 2.7.0 **
+
+** Fixes resize method call for orientationchange. Adds RTL feature - param "rtl" added. **
+
+** Version 2.6.3 **
+
+** Rollback fade fixes, due to harsh fade reports. **
+
+** Version 2.6.2 **
+
+** Minor update to fix issues with varying heights and overflow onto content below the slider. Fixes the visibility of the pagination and the navigation in the "fade" mode. **
+
+** Version 2.6.1 **
+
+** SmoothHeight now uses innerHeight() instead of height() to account for padding in calculation. Defining var altText to prevent error. bower.json add fonts folder on main field. Changed true to false in order to make sure whether or not to allow a slider comprised of a single slide. **
+
+** Version 2.6.0 **
+
+** Adds composer json file, scope fix for focused keyword, fixes bower demo folder exclusion, z-index fix for disabled nav arrow, play/pause accessibility fix, itemMargin fix for slider items, fixes accessibility for in focus elements and pagination controls, firefox fix for text selection on slider carousel, adds data-thumb-alt image alt attribute. **
+
+** Version 2.5.0 **
+
+** Bumped compatibility support starting with jQuery 1.7+. pausePlay icon fix. Firefox touch event fix. Adds customDirectionNav param. **
+
+** Version 2.4.0 **
+
+** Update for improved standards. Adds classes to li nav elements. Reset for li elements in stylesheet. **
+
+** Version 2.3.0 **
+
+** Fixes pauseInvisible attribute issue with Chrome and the Page Visibility API. **
 
 ** Version 2.2.2 **
 
@@ -18,9 +74,9 @@ http://www.woothemes.com/flexslider/ - Copyright (c) 2013 WooThemes
 -----
 
 ## General Notes
-FlexSlider is no longer licensed under the MIT license. FlexSlider now shares the common licensed used for all WooThemes themes, GPLv2.
+FlexSlider is no longer licensed under the MIT license. FlexSlider now uses the license, GPLv2 and later.
 
-In an effort to move the plugin forward, support for jQuery 1.3.2 has been dropped. The plugin now requires jQuery 1.4.2+. If you don't have access to the later versions of jQuery, [FlexSlider 1.8](https://github.com/woothemes/FlexSlider/tree/flexslider1) should be a perfectly suitable substitute for your needs!
+In an effort to move the plugin forward, support for jQuery 1.4.2 has been dropped. The plugin now requires jQuery 1.7.0+. If you don't have access to the later versions of jQuery, [FlexSlider 1.8](https://github.com/woocommerce/FlexSlider/tree/flexslider1) should be a perfectly suitable substitute for your needs!
 
 Your old styles and properties *might not work out of the box*. Some property names have been changed, noted below, as well as namespacing prefixes being applied to all elements. This means that `.flex-direction-nav .next` is now `.flex-direction-nav .flex-next` by default. The namespacing property is exposed, free for you to change.
 
@@ -45,13 +101,21 @@ Two new methods are available for adding/removing slides, `slider.addSlide()` an
 ## Examples
 
 - [Basic Slider](http://flexslider.woothemes.com/)
+- [Basic Slider customDirectionNav](http://flexslider.woothemes.com/basic-slider-with-custom-direction-nav.html)
+- [Basic Slider with Simple Caption](http://flexslider.woothemes.com/basic-slider-with-caption.html)
 - [Slider w/thumbnail controlNav pattern](http://flexslider.woothemes.com/thumbnail-controlnav.html)
 - [Slider w/thumbnail slider](http://flexslider.woothemes.com/thumbnail-slider.html)
 - [Basic Carousel](http://flexslider.woothemes.com/basic-carousel.html)
 - [Carousel with min and max ranges](http://flexslider.woothemes.com/carousel-min-max.html)
+- [Carousel with min and max ranges](http://flexslider.woothemes.com/dynamic-carousel-min-max.html)
 - [Video with Vimeo API](http://flexslider.woothemes.com/video.html)
 - [Video with Wistia API](http://flexslider.woothemes.com/video-wistia.html)
 
+## RTL Examples
+
+- [Basic Slider](http://flexslider.woothemes.com/index-rtl.html)
+- [Slider with Simple Caption w/thumbnail slider](http://flexslider.woothemes.com/asnavfor-rtl.html)
+- [Basic Slider with Simple Caption](http://flexslider.woothemes.com/basic-carousel-rtl.html)
 
 ## Properties
 
@@ -113,6 +177,11 @@ Previously called "keyboardNav" in v1.8 and below.
 ### controlsContainer: *{updated}*
 `controlsContainer` is one of the more painstaking, potentially confusing properties within FlexSlider. First, the property is no longer required to workaround `overflow: hidden` on slide animation. Second, the property now accepts a **jQuery object**, giving you precise control over the object you want. The plugin no longer attempts to guess what element you are selecting.
 
+### customDirectionNav: *{new}*
+`customDirectionNav` allows the ability to add custom directional navigation elements. Can be used in conjunction with controlsContainer for pagination controls container.
+
+*[Example of customDirectionNav being used](http://flexslider.woothemes.com/basic-slider-with-custom-direction-nav.html)*
+
 ### sync: *{new}*
 `sync` is a new property that will allow other slider(s) to hook into the current slider via a given selector. The selector should describe an object that has already been initialized as a FlexSlider. Right now, `sync` will synchronize animation, play, and pause behaviors. More behaviors can be added in the future as the property matures.
 
@@ -146,3 +215,11 @@ Description to be added.
 
 ### allowOneSlide: *{new}*
 Boolean. Whether or not you'd like FlexSlider to initialize as usual if only one slide is present.
+
+### rtl: *{new}*
+Boolean. False by default. Supports RTL functionality in the slider.
+*Note: you must add `style="direction:rtl"` to your container div in order for this to work.*
+
+### isFirefox: *{new}*
+Boolean. False by default. Set to true if the Firefox browser is in use.
+*Note: used for RTL compatibility logic.*
