@@ -139,15 +139,15 @@ function template_process_uto_carousel_list_item(&$vars) {
     }
   }
 
-  if (isset($settings['optionset']->options['thumbCaptions']) and $settings['optionset']->options['thumbCaptions'] and !empty($caption)) {
+  if (isset($settings['optionset']->options['thumbCaptions']) && $settings['optionset']->options['thumbCaptions'] && !empty($caption)) {
     $attributes['data-thumbcaption'] = $caption;
     // Prevent captions from appearing in the slider as well
-    if (isset($settings['optionset']->options['thumbCaptionsBoth']) and FALSE === $settings['optionset']->options['thumbCaptionsBoth']) {
+    if (isset($settings['optionset']->options['thumbCaptionsBoth']) && FALSE === $settings['optionset']->options['thumbCaptionsBoth']) {
       $caption = '';      
     }
   }
 
   if (!empty($caption)) {
-    $caption = '<div class="flex-caption">' . $caption . '</div>';
+    $caption = '<div class="flex-caption">' . check_markup($caption) . '</div>';
   }
 }
