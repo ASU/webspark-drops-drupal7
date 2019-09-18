@@ -27,6 +27,11 @@
 #block-system-help .content:last-child {
   margin: 0;
 }
+/** Field help-block override */
+.help-block {
+  color: inherit;
+  opacity: 0.8;
+}
 
 /** Alerts with links in text */
 .pia .alert-danger a,
