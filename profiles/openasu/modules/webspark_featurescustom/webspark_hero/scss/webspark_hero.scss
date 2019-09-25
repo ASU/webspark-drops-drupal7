@@ -19,9 +19,16 @@
   margin-top: -1px;
   .hero-wrapper {
     height: 380px;
+    overflow: scroll; /* Added for overflow of text elements */
+    overflow: -moz-scrollbars-none;
+    -ms-overflow-style: none;  /* IE 10+ */
+    scrollbar-width: none;  /* Firefox */
+    &::-webkit-scrollbar {
+      display: none;  /* Safari and Chrome */
+    }
   }
   .pane-content {
-    padding: 0 0.9375em;
+    padding: 0 0.9375em 1em 0.9375em;
   }
   p {
     margin: 0;
@@ -38,7 +45,7 @@
   }
   .field-name-field-webspark-hero-blurb {
     max-width: 900px;
-    margin-bottom: 1.5em;
+    margin-bottom: 1em;
     color: white;
     font-size: 1.5em;
     line-height: 1.5em;
@@ -98,9 +105,7 @@
     // Hide overflow blurbs
     .field-name-field-webspark-hero-blurb .field-item {
       & > *:first-child {
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+        white-space: normal;
       }
       // If multiple paragraphs or other DOM elements, hide them all but the first
       & > *:nth-child(n+2) {

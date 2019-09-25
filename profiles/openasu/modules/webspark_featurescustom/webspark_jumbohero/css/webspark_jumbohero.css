@@ -18,11 +18,26 @@
 .pane-bundle-jumbohero .pane-content {
   position: relative;
   height: 700px;
-  padding: 0 0.9375em;
+  padding: 0 0.9375em 1em 0.9375em;
 }
 .pane-bundle-jumbohero .jumbotext-wrapper {
   width: 100%;
 }
+
+.pane-bundle-jumbohero .jumbotext-wrapper {
+  height: 380px;
+  overflow: scroll; /* Added for overflow of text elements */
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+.pane-bundle-hero .hero-wrapper::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+
+
+
+
 .pane-bundle-jumbohero .field-name-field-webspark-jumbo-position {
   display: none;
 }
@@ -41,7 +56,7 @@
 }
 .pane-bundle-jumbohero .field-name-field-webspark-jumbohero-blurb {
   max-width: 900px;
-  margin-bottom: 1.5em;
+  margin-bottom: 1em;
   color: white;
   font-size: 1.5em;
   line-height: 1.5em;
