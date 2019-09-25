@@ -23,21 +23,10 @@
 .pane-bundle-jumbohero .jumbotext-wrapper {
   width: 100%;
 }
-
 .pane-bundle-jumbohero .jumbotext-wrapper {
   height: 380px;
   overflow: scroll; /* Added for overflow of text elements */
-  overflow: -moz-scrollbars-none;
-  -ms-overflow-style: none; /* IE 10+ */
-  scrollbar-width: none; /* Firefox */
 }
-.pane-bundle-hero .hero-wrapper::-webkit-scrollbar {
-  display: none;  /* Safari and Chrome */
-}
-
-
-
-
 .pane-bundle-jumbohero .field-name-field-webspark-jumbo-position {
   display: none;
 }
