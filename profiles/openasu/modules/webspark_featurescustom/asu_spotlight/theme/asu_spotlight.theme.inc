@@ -93,8 +93,8 @@ function theme_asu_spotlight_list_item(&$vars) {
           'attributes' => array(
             'class' => array(
               'btn',
-              'btn-block',
               $class,
+              'btn-block',
             ),
           ),
         ));
@@ -109,8 +109,8 @@ function theme_asu_spotlight_list_item(&$vars) {
           'attributes' => array(
             'class' => array(
               'btn',
-              'btn-block',
               $class,
+              'btn-block',
             ),
           ),
         ));
