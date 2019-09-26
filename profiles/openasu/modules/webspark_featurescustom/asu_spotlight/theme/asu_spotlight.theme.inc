@@ -16,7 +16,7 @@ function theme_asu_spotlight_list(&$vars) {
   $optionset = &$vars['settings']['optionset'];
   $items = &$vars['items'];
   $attributes = &$vars['settings']['attributes'];
-  $type = &$vars['settings']['type'];
+  $type = check_plain($vars['settings']['type']);
   $output = '';
   // Build the list
   if (!empty($items)) {
@@ -50,23 +50,23 @@ function theme_asu_spotlight_list_item(&$vars) {
   $item = $vars['package']['item'];
 
   // INIT values
-  $overlaytextwidth = (isset($item['overlaytextwidth'])) ? $item['overlaytextwidth'] : 'full-width';
-  $description = (isset($item['description'])) ? $item['description'] : '';
-  $position = (isset($item['position'])) ? $item['position'] : '';
-  $title_string = '<h1>' . $item['title'] . '</h1>';
-
+  $overlaytextwidth = (isset($item['overlaytextwidth'])) ? check_plain($item['overlaytextwidth']) : 'full-width';
+  $description = (isset($item['description'])) ? check_markup($item['description']) : '';
+  $position = (isset($item['position'])) ? check_plain($item['position']) : '';
+  $title_string = check_plain($item['title']);
   if(!empty($item['link'])) {
-    $title_string = '<a href="' . $item['link'] . '">' . $title_string . '</a>';
+    $title_string = l($title_string, $item['link']);
   }
-  $list_item = '<li' . drupal_attributes($vars['settings']['attributes']) . '>
-            <div class="slidecontainer" position="relative">' .
-    $vars['package']['slide'] .
+  $title_string = '<h1>' . $title_string . '</h1>';
+
+  $list_item = '<li' . drupal_attributes($vars['settings']['attributes']) . '>' .
+    '<div class="slidecontainer" position="relative">' . $vars['package']['slide'] .
     '<div class="blurbcontainer"> ' .
     '<div class="blurbshell ' . $position . ' ' .
     $overlaytextwidth . '">' .
-    $title_string .
-    '<p>' . $description . '</p>';
+    $title_string . '<div class="asu-spotlight-item-description"><p>' . $description . '</p></div>';
 
+  // Button color
   if (isset($item['color'])) {
     if ($item['color'] == 'red') {
       $color = 'primary';
@@ -87,16 +87,36 @@ function theme_asu_spotlight_list_item(&$vars) {
     $color = '-not-defined'; // not defined
   }
 
+  // Button #1
   if (isset($item['actiontitle']) && isset($item['actionlink'])) {
     if ($item['actiontitle'] != NULL && $item['actionlink'] != NULL) {
-      $list_item .= '<a class="btn btn-' . $color . ' btn-block" href="' . $item['actionlink'] . '">'
-        . $item['actiontitle'] . '</a>';
+      $class = "btn-" . $color;
+      $list_item .= l($item['actiontitle'], $item['actionlink'],
+        array (
+          'attributes' => array(
+            'class' => array(
+              'btn',
+              'btn-block',
+              $class,
+            ),
+          ),
+        ));
     }
   }
+  // Button #2
   if (isset($item['actiontitle2']) && isset($item['actionlink2'])) {
     if ($item['actiontitle2'] != NULL && $item['actionlink2'] != NULL) {
-      $list_item .= '<a class="btn btn-' . $color . ' btn-block" href="' . $item['actionlink2'] . '">'
-        . $item['actiontitle2'] . '</a>';
+      $class = "btn-" . $color;
+      $list_item .= l($item['actiontitle2'], $item['actionlink2'],
+        array (
+          'attributes' => array(
+            'class' => array(
+              'btn',
+              'btn-block',
+              $class,
+            ),
+          ),
+        ));
     }
   }
 
@@ -117,7 +137,6 @@ function template_process_asu_spotlight(&$vars) {
 
   $optionset = &$vars['settings']['optionset'];
   $settings = &$vars['settings'];
-  $items = &$vars['items'];
 
   // Set the default container type
   if (empty($settings['type'])) {
@@ -133,7 +152,7 @@ function template_process_asu_spotlight(&$vars) {
   if (empty($optionset)) {
     // Fall back to 'default' option set
     $optionset = flexslider_optionset_load('default');
-    watchdog('asu_spotlight', 'Fallback to default optionset.', array(), WATCHDOG_WARNING);
+    watchdog('asu_spotlight', 'Fallback to default optionset.', array(), WATCHDOG_NOTICE);
   }
 
   // Configure attributes for containing elements
@@ -207,15 +226,23 @@ function template_process_asu_spotlight_list_item(&$vars) {
     }
   }
 
-  if (isset($settings['optionset']->options['thumbCaptions']) and $settings['optionset']->options['thumbCaptions'] and !empty($caption)) {
+  if (isset($settings['optionset']->options['thumbCaptions']) && $settings['optionset']->options['thumbCaptions'] && !empty($caption)) {
     $attributes['data-thumbcaption'] = $caption;
     // Prevent captions from appearing in the slider as well
-    if (isset($settings['optionset']->options['thumbCaptionsBoth']) and FALSE === $settings['optionset']->options['thumbCaptionsBoth']) {
+    if (isset($settings['optionset']->options['thumbCaptionsBoth']) && FALSE === $settings['optionset']->options['thumbCaptionsBoth']) {
+      $caption = '';
+    }
+  }
+
+  if (isset($settings['optionset']->options['thumbCaptions']) && $settings['optionset']->options['thumbCaptions'] && !empty($caption)) {
+    $attributes['data-thumbcaption'] = $caption;
+    // Prevent captions from appearing in the slider as well
+    if (isset($settings['optionset']->options['thumbCaptionsBoth']) && FALSE === $settings['optionset']->options['thumbCaptionsBoth']) {
       $caption = '';
     }
   }
 
   if (!empty($caption)) {
-    $caption = '<div class="flex-caption">' . $caption . '</div>';
+    $caption = '<div class="flex-caption">' . check_plain($caption) . '</div>';
   }
 }
