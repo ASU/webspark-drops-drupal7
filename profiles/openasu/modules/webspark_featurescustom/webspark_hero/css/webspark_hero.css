@@ -17,9 +17,10 @@
 }
 .pane-bundle-hero .hero-wrapper {
   height: 380px;
+  overflow: scroll; /* Added for overflow of text elements */
 }
 .pane-bundle-hero .pane-content {
-  padding: 0 0.9375em;
+  padding: 0 0.9375em 1em 0.9375em;
 }
 .pane-bundle-hero p {
   margin: 0;
@@ -36,7 +37,7 @@
 }
 .pane-bundle-hero .field-name-field-webspark-hero-blurb {
   max-width: 900px;
-  margin-bottom: 1.5em;
+  margin-bottom: 1em;
   color: white;
   font-size: 1.5em;
   line-height: 1.5em;
@@ -85,12 +86,10 @@
     font-size: 2.5rem;
   }
   .pane-bundle-hero .field-name-field-webspark-hero-blurb .field-item > *:first-child {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+    white-space: normal;
   }
   .pane-bundle-hero .field-name-field-webspark-hero-blurb .field-item > *:nth-child(n+2) {
-    display: none;
+    /*display: none; */
   }
   .pane-bundle-hero .field-name-field-webspark-hero-ugradbtn,
   .pane-bundle-hero .field-name-field-webspark-hero-gradbtn {
