@@ -2,9 +2,6 @@
 /**
  * @file
  * Theming functions for the ASU Spotlight module.
- *
- *
- *
  */
 
 /**
@@ -46,66 +43,78 @@ function theme_asu_spotlight_list(&$vars) {
  * Default theme implementation for flexslider_list_item
  */
 function theme_asu_spotlight_list_item(&$vars) {
-  $vars['package']['item']['overlaytextwidth'] = (isset($vars['package']['item']['overlaytextwidth'])) ? $vars['package']['item']['overlaytextwidth'] : 'full-width';
-  $title_string = check_plain($vars['package']['item']['title']);
-  // if link, wrap in <a> tag
-  if (!empty($vars['package']['item']['link'])) {
-      $title_string = l($title_string, $vars['package']['item']['link']);
+
+  $item = $vars['package']['item'];
+
+  // INIT values
+  $overlaytextwidth = (isset($item['overlaytextwidth'])) ? check_plain($item['overlaytextwidth']) : 'full-width';
+  $description = (isset($item['description'])) ? check_markup($item['description']) : '';
+  $position = (isset($item['position'])) ? check_plain($item['position']) : '';
+  $title_string = check_plain($item['title']);
+  if(!empty($item['link'])) {
+    $title_string = l($title_string, $item['link']);
   }
   $title_string = '<h1>' . $title_string . '</h1>';
 
-  $list_item = '<li' . drupal_attributes($vars['settings']['attributes']) . '>
-            <div class="slidecontainer" position="relative">' . $vars['package']['slide'] .
+  $list_item = '<li' . drupal_attributes($vars['settings']['attributes']) . '>' .
+    '<div class="slidecontainer" position="relative">' . $vars['package']['slide'] .
     '<div class="blurbcontainer"> ' .
-    '<div class="blurbshell ' . check_plain($vars['package']['item']['position']) . ' ' .
-    check_plain($vars['package']['item']['overlaytextwidth']) . '">' .
-    $title_string .
-    check_markup($vars['package']['item']['description']);
+    '<div class="blurbshell ' . $position . ' ' .
+    $overlaytextwidth . '">' .
+    $title_string . '<div class="asu-spotlight-item-description"><p>' . $description . '</p></div>';
 
-  if ($vars['package']['item']['color'] == 'red') {
-    $color = 'primary';
-  }
-  elseif ($vars['package']['item']['color'] == 'blue') {
-    $color = 'blue';
-  }
-  elseif ($vars['package']['item']['color'] == 'gold') {
-    $color = 'gold';
-  }
-  elseif ($vars['package']['item']['color'] == 'grey') {
-    $color = 'secondary';
-  }
-  else {
-    $color = 'none'; // there are no btn-none CSS rules
-  }
-
-  // Button #1
-  if ($vars['package']['item']['actiontitle'] != NULL && $vars['package']['item']['actionlink'] != NULL) {
-    $class = "btn-" . $color;
-    $list_item .= l($vars['package']['item']['actiontitle'], $vars['package']['item']['actionlink'],
-      array (
-        'attributes' => array(
-          'class' => array(
-            'btn',
-            'btn-block',
-            $class,
-          ),
-        ),
-      ));
+  // Button color
+  if (isset($item['color'])) {
+    if ($item['color'] == 'red') {
+      $color = 'primary';
+    }
+    elseif ($item['color'] == 'blue') {
+      $color = 'blue';
+    }
+    elseif ($item['color'] == 'gold') {
+      $color = 'gold';
+    }
+    elseif ($item['color'] == 'grey') {
+      $color = 'secondary';
+    }
+    else {
+      $color = '-not-defined'; // not defined
+    }
+  } else {
+    $color = '-not-defined'; // not defined
   }
 
   // Button #1
-  if ($vars['package']['item']['actiontitle2'] != NULL && $vars['package']['item']['actionlink2'] != NULL) {
-    $class = "btn-" . $color;
-    $list_item .= l($vars['package']['item']['actiontitle2'], $vars['package']['item']['actionlink2'],
-      array (
-        'attributes' => array(
-          'class' => array(
-            'btn',
-            'btn-block',
-            $class,
+  if (isset($item['actiontitle']) && isset($item['actionlink'])) {
+    if ($item['actiontitle'] != NULL && $item['actionlink'] != NULL) {
+      $class = "btn-" . $color;
+      $list_item .= l($item['actiontitle'], $item['actionlink'],
+        array (
+          'attributes' => array(
+            'class' => array(
+              'btn',
+              'btn-block',
+              $class,
+            ),
           ),
-        ),
-      ));
+        ));
+    }
+  }
+  // Button #2
+  if (isset($item['actiontitle2']) && isset($item['actionlink2'])) {
+    if ($item['actiontitle2'] != NULL && $item['actionlink2'] != NULL) {
+      $class = "btn-" . $color;
+      $list_item .= l($item['actiontitle2'], $item['actionlink2'],
+        array (
+          'attributes' => array(
+            'class' => array(
+              'btn',
+              'btn-block',
+              $class,
+            ),
+          ),
+        ));
+    }
   }
 
   $list_item .= '</div>
@@ -125,7 +134,6 @@ function template_process_asu_spotlight(&$vars) {
 
   $optionset = &$vars['settings']['optionset'];
   $settings = &$vars['settings'];
-  $items = &$vars['items'];
 
   // Set the default container type
   if (empty($settings['type'])) {
@@ -212,6 +220,14 @@ function template_process_asu_spotlight_list_item(&$vars) {
 
     if (!empty($src[1])) {
       $attributes['data-thumb'] = $src[1];
+    }
+  }
+
+  if (isset($settings['optionset']->options['thumbCaptions']) && $settings['optionset']->options['thumbCaptions'] && !empty($caption)) {
+    $attributes['data-thumbcaption'] = $caption;
+    // Prevent captions from appearing in the slider as well
+    if (isset($settings['optionset']->options['thumbCaptionsBoth']) && FALSE === $settings['optionset']->options['thumbCaptionsBoth']) {
+      $caption = '';
     }
   }
 
