@@ -259,6 +259,9 @@ h6, .h6 {
   .header__sitename a {
     color: #FFF
   }
+  #asu_hdr_title_gen {
+     white-space: initial;
+   }
 }
 
 /* =STICKY NAV BAR
