@@ -220,6 +220,10 @@ h6, .h6 {
   overflow: hidden;
 }
 
+.header__sitename.element-invisible {
+  white-space: inherit;
+}
+
 .header__sitename a {
   color: #2a2a2a;
 }
