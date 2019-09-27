@@ -951,7 +951,7 @@ body #content .ui-tabs .ui-tabs-nav li a {
     color: #FFF
   }
   #asu_hdr_title_gen {
-    white-space: initial;
+    white-space: normal;
   }
 }
 
