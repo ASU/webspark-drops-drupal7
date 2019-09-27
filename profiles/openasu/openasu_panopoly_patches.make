@@ -61,13 +61,14 @@ projects[media][subdir] = contrib
 ; WEBSPARK-679 - WYSIWYG + Media module issues
 projects[media][patch][679] = patches/webspark-679_fix-HTML-encoded-macros-2028253-10.patch
 
-; WEBSPARK-1404
+; WEBSPARK-1404, WEBSPARK-1544, others
 projects[views][type] = module
 projects[views][subdir] = contrib
 projects[views][version] = 3.23
 projects[views][patch][] = https://www.drupal.org/files/issues/views-exposed-sorts-2037469-26.patch
 projects[views][patch][] = patches/webspark-1404_set-views-handler-filter-maxlength-to-null.patch
 projects[views][patch][] = https://www.drupal.org/files/issues/2019-06-01/n3054091-14-hard.patch
+projects[views][patch][3069508] = https://www.drupal.org/files/issues/2019-07-29/views-glossary-ajax-not-working-3069508-8-D7.patch
 
 ; WEBSPARK-1507
 projects[panopoly_theme][patch][] = https://www.drupal.org/files/issues/accordion-style-id-fix.2777847.8.patch
