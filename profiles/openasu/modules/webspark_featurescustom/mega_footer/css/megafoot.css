@@ -23,8 +23,8 @@
   max-width: 1170px;
   margin: auto;
 }
-.megafoot #mega-footer-logo-wrapper a {
-  border-bottom: none;
+.megafoot .space-bot-md { /* from webspark_panels_styles */
+  padding-bottom: 3.75em;
 }
 .megafoot h2 {
   margin-bottom: 0.75em;

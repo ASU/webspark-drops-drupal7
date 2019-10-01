@@ -1,38 +1,25 @@
+/** ----------------------------------------------
+Carousel + Flex Slider CSS
+-------------------------------------------------- */
 
-
-@media (min-width: 768px) {
-    .pane-content .flex-slider-wrapper > .container,
-    .pane-content .flex-control-wrapper > .container
-    {
-        width: 750px;
-    }
+/* White space customization */
+.row.uto-carousel-wrapper {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+.row.uto-carousel-wrapper .col-md-12 {
+    padding: 0 0 1em 0;
+}
+.row.uto-carousel-wrapper .col-md-12 ul.slides li > .col-sm-6.carousel-slide-asset {
+    padding-left: 0;
+    padding-right: 0.5em;
+}
+.row.uto-carousel-wrapper .col-md-12 ul.slides li > .col-sm-6.carousel-slide-text {
+    padding-left: 1em;
+    padding-right: 0;
 }
 
-@media (min-width: 992px) {
-    .pane-content .flex-slider-wrapper > .container,
-    .pane-content .flex-control-wrapper > .container
-    {
-        width: 970px;
-    }
-}
-
-@media (min-width: 1200px) {
-    .pane-content .flex-slider-wrapper > .container,
-    .pane-content .flex-control-wrapper > .container
-    {
-        width: 1170px;
-    }
-}
-
-/*
-// Homepage Slider
-// -------------------------------------------------- */
-/*
- * Flex Resets
- */
-
-
-/* line 16, ../scss/_home-slider.scss */
+/** Flex Resets */
 .slides,
 .flex-control-nav,
 .flex-direction-nav {
@@ -40,17 +27,15 @@
     padding: 0;
     list-style: none;
 }
+.flex-direction-nav {
+    margin-bottom: 1em;
+}
 
-/* line 24, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-pauseplay span {
     text-transform: capitalize;
 }
 
-/*
- * Flex Base
- */
-
-/* line 55, ../scss/_home-slider.scss */
+/** Flex Base */
 .pane-bundle-uto-carousel .no-js .uto-flexslider .slides > li:first-child {
     display: block;
 }
@@ -58,15 +43,16 @@
 /*
  * Flex Direction Nav
  */
-/* line 65, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-direction-nav {
     *height: 0;
+    overflow: auto;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
 }
-/* line 68, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-direction-nav li {
     display: inline;
 }
-/* line 72, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-direction-nav a {
     display: inline-block;
     padding: 5px 14px;
@@ -81,13 +67,11 @@
     -webkit-transition: all 500ms ease-in-out;
     -o-transition: all 500ms ease-in-out;
     transition: all 500ms ease-in-out;
-
     height: auto;
     margin: 0;
     position: relative;
     opacity: 100;
 }
-
 .pane-bundle-uto-carousel .flex-direction-nav .flex-next {
   right: 0px;
   text-align: inherit;
@@ -107,23 +91,18 @@
 .pane-bundle-uto-carousel .flex-direction-nav a.flex-next:before {
   content: '';
 }
-
-/* line 84, ../scss/_home-slider.scss */
-.pane-bundle-uto-carousel .flex-direction-nav a:hover, .pane-bundle-uto-carousel
-.flex-direction-nav a:focus {
+.pane-bundle-uto-carousel .flex-direction-nav a:hover,
+.pane-bundle-uto-carousel .flex-direction-nav a:focus {
     text-decoration: none;
     background-color: #eee;
     border: 1px solid #ddd;
 }
-/* line 92, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-direction-nav a.flex-prev {
     float: left;
 }
-/* line 95, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-direction-nav a.flex-next {
     float: right;
 }
-/* line 98, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-direction-nav a.flex-prev:before {
     display: inline-block;
     margin-right: 10px;
@@ -133,7 +112,6 @@
     line-height: 1;
     content: '\f104';
 }
-/* line 107, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-direction-nav a.flex-next:after {
     display: inline-block;
     margin-left: 10px;
@@ -143,15 +121,11 @@
     line-height: 1;
     content: '\f105';
 }
-/* line 117, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-direction-nav .flex-disabled {
     color: #777;
 }
 
-/*
- * Flex Pause/Play
- */
-/* line 126, ../scss/_home-slider.scss */
+/** Flex Pause/Play */
 .pane-bundle-uto-carousel .flex-pauseplay a {
     display: block;
     width: 20px;
@@ -165,26 +139,20 @@
     cursor: pointer;
     color: #000;
 }
-/* line 139, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-pauseplay a:before {
     font-family: "uto-flexslider-icon";
     font-size: 20px;
     display: inline-block;
     content: '\f004';
 }
-/* line 145, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-pauseplay a:hover {
     opacity: 1;
 }
-/* line 148, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-pauseplay a .flex-play:before {
     content: '\f003';
 }
 
-/*
- * Flex Nav
- */
-/* line 156, ../scss/_home-slider.scss */
+/** Flex Nav */
 .pane-bundle-uto-carousel .flex-control-nav {
     position: absolute;
     display: none;
@@ -193,7 +161,6 @@
     right: 130px;
     text-align: center;
 }
-/* line 163, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-control-nav li {
     margin: 6px;
     display: inline-block;
@@ -201,10 +168,7 @@
     *display: inline;
 }
 
-/*
- * Flex Paging
- */
-/* line 175, ../scss/_home-slider.scss */
+/** Flex Paging */
 .pane-bundle-uto-carousel .flex-control-paging li a {
     position: relative;
     width: 27px;
@@ -216,7 +180,6 @@
     border-radius: 50%;
     border: 1px solid #b0b0b0;
 }
-/* line 186, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-control-paging li a.flex-active:before {
     content: "";
     position: absolute;
@@ -229,20 +192,16 @@
     background-color: #505050;
     cursor: pointer;
 }
-
-/* line 200, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-control-thumbs {
     margin: 5px 0 0;
     position: static;
     overflow: hidden;
 }
-/* line 204, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-control-thumbs li {
     width: 25%;
     float: left;
     margin: 0;
 }
-/* line 210, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-control-thumbs img {
     width: 100%;
     display: block;
@@ -252,40 +211,70 @@
     -o-transition: all 1s ease-in-out;
     transition: all 1s ease-in-out;
 }
-/* line 217, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-control-thumbs img:hover {
     opacity: 1;
 }
-/* line 219, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-control-thumbs .flex-active {
     opacity: 1;
     cursor: default;
 }
-
-
-/* line 286, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .flex-viewport {
     max-height: 2000px;
     -webkit-transition: all 1s ease-in-out;
     -o-transition: all 1s ease-in-out;
     transition: all 1s ease-in-out;
 }
-/* line 291, ../scss/_home-slider.scss */
 .pane-bundle-uto-carousel .loading .flex-viewport {
     max-height: 300px;
 }
 
-/*
- * Flex Responsive
- */
+.pane-bundle-uto-carousel .flexslider-ws .slides li img {
+  margin-bottom: 24px;
+}
+
+/** MEDIA RULES
+--------------------------------*/
+
+@media (min-width: 768px) {
+    .pane-content .flex-slider-wrapper > .container,
+    .pane-content .flex-control-wrapper > .container {
+        width: 750px;
+    }
+}
+
+@media (min-width: 992px) {
+    .pane-content .flex-slider-wrapper > .container,
+    .pane-content .flex-control-wrapper > .container
+    {
+        width: 970px;
+    }
+}
+
+/* Flex Responsive */
 @media screen and (min-width: 992px) {
-    /* line 304, ../scss/_home-slider.scss */
     .pane-bundle-uto-carousel .flex-control-nav {
         display: block;
         /* show the paging */
     }
 }
 
-.pane-bundle-uto-carousel .flexslider-ws .slides li img {
-  margin-bottom: 24px;
+@media (min-width: 1200px) {
+    .pane-content .flex-slider-wrapper > .container,
+    .pane-content .flex-control-wrapper > .container
+    {
+        width: 1170px;
+    }
 }
+
+@media (max-width: 767px) {
+    .row.uto-carousel-wrapper ul.slides li > div h4 {
+        margin-bottom: 0.5em;
+    }
+    .row.uto-carousel-wrapper .col-md-12 ul.slides li > .col-sm-6.carousel-slide-asset {
+        padding-right: 0;
+    }
+    .row.uto-carousel-wrapper .col-md-12 ul.slides li > .col-sm-6.carousel-slide-text {
+        padding-left: 0;
+    }
+}
+
