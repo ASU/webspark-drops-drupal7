@@ -106,16 +106,18 @@
   };
 
   /**
-   * Attach the ajax behavior to a singe link.
+   * Attach the ajax behavior to a single link.
    */
   Drupal.views.ajaxView.prototype.attachPagerLinkAjax = function(id, link) {
     var $link = $(link);
-    // Don't attach to pagers inside nested views.
-    if ($link.closest('.view')[0] !== this.$view[0]) {
-      return;
-    }
     var viewData = {};
     var href = $link.attr('href');
+    // Don't attach to pagers inside nested views.
+    if ($link.closest('.view')[0] !== this.$view[0] &&
+      $link.closest('.view').parent().hasClass('attachment') === false) {
+      return;
+    }
+
 
     // Provide a default page if none has been set. This must be done
     // prior to merging with settings to avoid accidentally using the
