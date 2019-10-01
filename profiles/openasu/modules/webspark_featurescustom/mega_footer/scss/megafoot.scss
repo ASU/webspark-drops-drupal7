@@ -21,10 +21,12 @@
 
 .megafoot {
   padding-top: 1.25em;
-
   .row {
     max-width: 1170px;
     margin: auto;
+  }
+  .space-bot-md { /* from webspark_panels_styles */
+    padding-bottom: 3.75em;
   }
   h2 {
     margin-bottom: 0.75em;

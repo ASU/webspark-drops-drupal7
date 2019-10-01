@@ -1,6 +1,6 @@
 <!-- Web Standards - Webspark FlexSlider -->
 <div class="container">
-  <div class="row row-padding-top row-padding-bottom">
+  <div class="row uto-carousel-wrapper">
     <div class="col-md-12">
       <div class="flexslider-ws">
         <ul class="slides">
@@ -13,12 +13,12 @@
         if(!empty($thisItem['link'])): ?>
 
           <li>
-            <div class="col-sm-6 text-center">
+            <div class="col-sm-6 col-md-6 text-center carousel-slide-asset">
               <a href="<?php print $thisItem['link'] ?>">
                 <img src="<?php print $thumbnailUri ?>" class="img-responsive img-link">
               </a>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6 col-md-6 carousel-slide-text">
               <h4><a href="<?php print $thisItem['link'] ?>"><?php print $thisItem['title'] ?></a></h4>
               <p><?php print $thisItem['description'] ?></p>
             </div>
@@ -27,10 +27,10 @@
           <?php else: ?>
 
           <li>
-            <div class="col-sm-6 text-center">
+            <div class="col-sm-6 col-md-6 text-center carousel-slide-asset">
                 <img src="<?php print $thumbnailUri ?>" class="img-responsive img-link">
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6 col-md-6 carousel-slide-text">
                 <h4><?php print $thisItem['title'] ?></h4>
                 <p><?php print $thisItem['description'] ?></p>
             </div>
