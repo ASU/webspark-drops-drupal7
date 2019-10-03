@@ -31,21 +31,36 @@ function webspark_warranty_block_view($delta = '')
   return $block;
 }
 
+function getAllInstalledModules()
+{
+  $allModulesStd = db_select('system', 's')
+                    ->fields('s', array('name'))
+                    ->condition('status', '1')
+                    ->execute()
+                    ->fetchAll();
+
+  $allModulesArr = json_decode(json_encode($allModulesStd), true);
+
+  return $allModulesArr;
+}
+
+function getModulesWithinWarranty()
+{
+  $warrantyModulesJSON = file_get_contents("contrib/standardModuleList.json", true);
+  $warrantyModulesArr = json_decode($warrantyModulesJSON, true);
+
+  return $warrantyModulesArr;
+}
+
 function checkWarrantyStatus()
 {
-  $systemTableValue = db_select('system', 's')
-                                ->fields('s', array('name'))
-                                ->condition('status', '1')
-                                ->execute()
-                                ->fetchAll();
+  $status = true;
 
-  $json = file_get_contents("contrib/standardModuleList.json", true);
-  $moduleList = json_decode($json, true);
+  $installedModules = getAllInstalledModules();
+  $supportedModules = getModulesWithinWarranty();
 
-//  print_r($moduleList[0]["name"]);
-  print_r($systemTableValue);
-
-  $status = false;
+  if (sizeof(array_diff_assoc($installedModules, $supportedModules)) > 0)
+    $status = false;
 
   return $status ? 'True' : 'False';
 }
