@@ -12,16 +12,28 @@ function webspark_warranty_block_info()
   return $blocks;
 }
 
+/**
+ * Implements hook_block_view().
+ */
 function webspark_warranty_block_view($delta = '')
 {
+  $currentStatus = checkWarrantyStatus();
+
   switch ($delta)
   {
     case 'warranty_status':
-      $block['subject'] = t('Subject of Webspark Warranty');
-      $block['content'] = t('Content of Webspark Warranty');
+      $block['subject'] = t('Subject of Webspark Warranty:');
+      $block['content'] = t($currentStatus);
 
       break;
   }
 
   return $block;
+}
+
+function checkWarrantyStatus()
+{
+  $status = false;
+
+  return $status ? 'True' : 'False';
 }
