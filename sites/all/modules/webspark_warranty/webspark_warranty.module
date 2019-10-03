@@ -34,15 +34,16 @@ function webspark_warranty_block_view($delta = '')
 function checkWarrantyStatus()
 {
   $systemTableValue = db_select('system', 's')
-                                ->fields('s')
+                                ->fields('s', array('name'))
+                                ->condition('status', '1')
                                 ->execute()
                                 ->fetchAll();
 
   $json = file_get_contents("contrib/standardModuleList.json", true);
   $moduleList = json_decode($json, true);
 
-//  print_r($moduleList);
-//  print_r($systemTableValue[0]->name);
+//  print_r($moduleList[0]["name"]);
+  print_r($systemTableValue);
 
   $status = false;
 
