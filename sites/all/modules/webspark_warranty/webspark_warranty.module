@@ -1,3 +1,27 @@
 <?php
 
+/**
+ * Implements hook_block_info().
+ */
+function webspark_warranty_block_info()
+{
+  $blocks['warranty_status'] = array(
+    'info'  =>  t('Warranty Status')
+  );
 
+  return $blocks;
+}
+
+function webspark_warranty_block_view($delta = '')
+{
+  switch ($delta)
+  {
+    case 'warranty_status':
+      $block['subject'] = t('Subject of Webspark Warranty');
+      $block['content'] = t('Content of Webspark Warranty');
+
+      break;
+  }
+
+  return $block;
+}
