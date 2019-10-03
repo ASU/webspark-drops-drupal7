@@ -37,7 +37,12 @@ function checkWarrantyStatus()
                                 ->fields('s')
                                 ->execute()
                                 ->fetchAll();
-  print_r($systemTableValue);
+
+  $json = file_get_contents("contrib/standardModuleList.json", true);
+  $moduleList = json_decode($json, true);
+
+//  print_r($moduleList);
+//  print_r($systemTableValue[0]->name);
 
   $status = false;
 
