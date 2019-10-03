@@ -33,6 +33,12 @@ function webspark_warranty_block_view($delta = '')
 
 function checkWarrantyStatus()
 {
+  $systemTableValue = db_select('system', 's')
+                                ->fields('s')
+                                ->execute()
+                                ->fetchAll();
+  print_r($systemTableValue);
+
   $status = false;
 
   return $status ? 'True' : 'False';
