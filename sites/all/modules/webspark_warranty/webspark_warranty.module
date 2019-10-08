@@ -23,7 +23,7 @@ function webspark_warranty_block_view($delta = '')
   {
     case 'warranty_status':
       $block['subject'] = t('Subject of Webspark Warranty:');
-      $block['content'] = t($currentStatus);
+      $block['content'] = t("<h1><strong>" . $currentStatus . "</strong></h1>");
 
       break;
   }
@@ -32,11 +32,31 @@ function webspark_warranty_block_view($delta = '')
 }
 
 /**
+ * checkWarrantyStatus() - Compares all installed modules to all warranty-covered
+ *                         modules and returns whether not discrepancies exist
+ *
+ * @return $status - String that is either 'True' or 'False' depending on the
+ *                   warranty status
+ */
+function checkWarrantyStatus()
+{
+  $status = true;
+
+  $installedModules = getAllInstalledModules();
+  $supportedModules = getModulesWithinWarranty();
+
+  if (sizeof(array_diff($installedModules, $supportedModules)) > 0)
+    $status = false;
+
+  return $status ? 'True' : 'False';
+}
+
+/**
  * getAllInstalledModules() - Uses Drupal's Database API to get all of the modules
  *                            currently installed on the site (which resides within
  *                            the {system} table)
  *
- * @return $allModulesArr - All installed modules in an associative array
+ * @return $allModulesArr - All installed modules in a flattened array
  */
 function getAllInstalledModules()
 {
@@ -50,7 +70,7 @@ function getAllInstalledModules()
   // Converts from Standard Class Objects to an associative array
   $allModulesArr = json_decode(json_encode($allModulesStd), true);
 
-  return $allModulesArr;
+  return flattenArray($allModulesArr);
 }
 
 /**
@@ -59,25 +79,33 @@ function getAllInstalledModules()
  *                              associative array
  *
  * @return $warrantyModulesArr - All modules covered under Webspark's warranty
- *                               in an associative array
+ *                               in a flattened array
  */
 function getModulesWithinWarranty()
 {
   $warrantyModulesJSON = file_get_contents("contrib/standardModuleList.json", true);
   $warrantyModulesArr = json_decode($warrantyModulesJSON, true);
 
-  return $warrantyModulesArr;
+  return flattenArray($warrantyModulesArr);
 }
 
-function checkWarrantyStatus()
+/**
+ * flattenArray() - Helper function that converts multi-dimensional array to
+ *                  1D array (to make manipulations and comparisons easier).
+ *                  Stolen from StackOverflow because I have no shame :/
+ *
+ * @param $array - Array to flatten
+ *
+ * @return $return - Flattened array
+ */
+function flattenArray(array $array)
 {
-  $status = true;
+  // Empty array that will hold all values of $array
+  $return = array();
 
-  $installedModules = getAllInstalledModules();
-  $supportedModules = getModulesWithinWarranty();
+  // Lib function with closure that appends all values in $array to $return
+  array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
 
-  if (sizeof(array_diff_assoc($installedModules, $supportedModules)) > 0)
-    $status = false;
-
-  return $status ? 'True' : 'False';
+  // Return flattened array
+  return $return;
 }
