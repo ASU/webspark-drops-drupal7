@@ -28,30 +28,31 @@ function webspark_warranty_status_page()
     $warrantyMessage .= '<h1>Current Status: <span style="color: green">In Warranty</span></h1>';
   else
   {
+    $unsupportedModules = getUnsupportedModules();
+
     $warrantyMessage .= '<h1>Current Status: <span style="color: red">Out of Warranty</span></h1>';
     $warrantyMessage .= '<h2> The following modules / themes are not covered by the Webspark Warranty: </h2>';
-    $warrantyMessage .= '<table class="table">
+
+
+    $moduleList = '<table class="table">
                           <thead>
                             <tr>
                               <th>Name</th>
                               <th>Type</th>
                             </tr>
                           </thead>
-                          <tbody>
-                            <tr>
-                              <td>John</td>
-                              <td>Doe</td>
-                            </tr>
-                            <tr>
-                              <td>Mary</td>
-                              <td>Moe</td>
-                            </tr>
-                            <tr>
-                              <td>July</td>
-                              <td>Dooley</td>
-                            </tr>
-                          </tbody>
+                          <tbody>';
+    foreach ($unsupportedModules as $unsupportedModule)
+    {
+      $moduleList .= '<tr>
+        <td>' . $unsupportedModule . '</td>
+        <td>Module</td>
+      </tr>';
+    }
+    $moduleList .= '</tbody>
                         </table>';
+
+    $warrantyMessage .= $moduleList;
   }
 
   return '<div> ' . $warrantyMessage . '</div>';
@@ -158,7 +159,7 @@ function getAllInstalledModules()
  */
 function getModulesWithinWarranty()
 {
-  $warrantyModulesJSON = file_get_contents("contrib/standardModuleList.json", true);
+  $warrantyModulesJSON = file_get_contents("assets/standardModuleList.json", true);
   $warrantyModulesArr = json_decode($warrantyModulesJSON, true);
 
   return flattenArray($warrantyModulesArr);
