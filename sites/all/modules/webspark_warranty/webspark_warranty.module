@@ -3,7 +3,8 @@
 /**
  * Implements hook_menu().
  */
-function webspark_warranty_menu() {
+function webspark_warranty_menu()
+{
   $items['admin/reports/warranty'] = array(
     'title' => 'Warranty Status',
     'description' => 'Check the status of your site pertaining to the Webspark warranty',
@@ -16,10 +17,44 @@ function webspark_warranty_menu() {
 }
 
 /**
- * Page callback for /hello.
+ * Page callback for /reports/warranty.
  */
-function webspark_warranty_status_page() {
-  return 'Hello world!';
+function webspark_warranty_status_page()
+{
+  $warrantyMessage = "";
+  $status = getWarrantyStatus();
+
+  if ($status == 'True')
+    $warrantyMessage .= '<h1>Current Status: <span style="color: green">In Warranty</span></h1>';
+  else
+  {
+    $warrantyMessage .= '<h1>Current Status: <span style="color: red">Out of Warranty</span></h1>';
+    $warrantyMessage .= '<h2> The following modules / themes are not covered by the Webspark Warranty: </h2>';
+    $warrantyMessage .= '<table class="table">
+                          <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Type</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>John</td>
+                              <td>Doe</td>
+                            </tr>
+                            <tr>
+                              <td>Mary</td>
+                              <td>Moe</td>
+                            </tr>
+                            <tr>
+                              <td>July</td>
+                              <td>Dooley</td>
+                            </tr>
+                          </tbody>
+                        </table>';
+  }
+
+  return '<div> ' . $warrantyMessage . '</div>';
 }
 
 /**
@@ -39,7 +74,7 @@ function webspark_warranty_block_info()
  */
 function webspark_warranty_block_view($delta = '')
 {
-  $currentStatus = checkWarrantyStatus();
+  $currentStatus = getWarrantyStatus();
 
   switch ($delta)
   {
@@ -54,20 +89,17 @@ function webspark_warranty_block_view($delta = '')
 }
 
 /**
- * checkWarrantyStatus() - Compares all installed modules to all warranty-covered
+ * getWarrantyStatus() - Compares all installed modules to all warranty-covered
  *                         modules and returns whether not discrepancies exist
  *
  * @return $status - String that is either 'True' or 'False' depending on the
  *                   warranty status
  */
-function checkWarrantyStatus()
+function getWarrantyStatus()
 {
   $status = true;
 
-  $installedModules = getAllInstalledModules();
-  $supportedModules = getModulesWithinWarranty();
-
-  $unsupportedmodules = array_diff($installedModules, $supportedModules);
+  $unsupportedmodules = getUnsupportedModules();
 
   if (sizeof($unsupportedmodules) > 0)
   {
@@ -75,6 +107,23 @@ function checkWarrantyStatus()
   }
 
   return $status ? 'True' : 'False';
+}
+
+/**
+ * getUnsupportedModules() - Gets all modules installed that are not covered in
+ *                           the Webspark Warranty
+ *
+ * @return $unsupportedmodules - Array of names of all unsupported modules
+ *                               installed
+ */
+function getUnsupportedModules()
+{
+  $installedModules = getAllInstalledModules();
+  $supportedModules = getModulesWithinWarranty();
+
+  $unsupportedmodules = array_diff($installedModules, $supportedModules);
+
+  return $unsupportedmodules;
 }
 
 /**
