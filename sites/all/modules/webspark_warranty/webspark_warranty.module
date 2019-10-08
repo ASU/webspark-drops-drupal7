@@ -1,6 +1,28 @@
 <?php
 
 /**
+ * Implements hook_menu().
+ */
+function webspark_warranty_menu() {
+  $items['admin/reports/warranty'] = array(
+    'title' => 'Warranty Status',
+    'description' => 'Check the status of your site pertaining to the Webspark warranty',
+    'page callback' => 'webspark_warranty_status_page',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM
+  );
+
+  return $items;
+}
+
+/**
+ * Page callback for /hello.
+ */
+function webspark_warranty_status_page() {
+  return 'Hello world!';
+}
+
+/**
  * Implements hook_block_info().
  */
 function webspark_warranty_block_info()
@@ -45,8 +67,12 @@ function checkWarrantyStatus()
   $installedModules = getAllInstalledModules();
   $supportedModules = getModulesWithinWarranty();
 
-  if (sizeof(array_diff($installedModules, $supportedModules)) > 0)
-    $status = false;
+  $unsupportedmodules = array_diff($installedModules, $supportedModules);
+
+  if (sizeof($unsupportedmodules) > 0)
+  {
+    $status = FALSE;
+  }
 
   return $status ? 'True' : 'False';
 }
