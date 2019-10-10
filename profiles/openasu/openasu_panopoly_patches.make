@@ -26,6 +26,11 @@ projects[token][sha256] = a84b6a1f43798d8d9da31915aa25fce0f62f59fae18c71e0775157
 ; Webspark - Fixes arrows/theming issue in browse tokens window
 projects[token][patch][2773825] = patches/webspark-897_token-browse-available-theme-fixes-2773825-1.patch
 
+; WEBSPARK-1573
+projects[date][version] = 2.10
+projects[date][subdir] = contrib
+projects[date][patch][2843367] = https://www.drupal.org/files/issues/2019-01-16/2843367-php71-string-offset-47.patch
+
 ; panopoly_admin.make
 
 ; jQuery Update was moved to Panopoly Core, but is left in Panopoly Admin's
