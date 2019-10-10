@@ -83,3 +83,10 @@ libraries[tinymce][patch][2876031] = https://www.drupal.org/files/issues/tinymce
 ;; WEBSPARK-819 patches
 libraries[tinymce][patch][2876032] = https://raw.githubusercontent.com/ASU/asu-drupal-modules/master/patches/ws-819_img-padding-TinyMCE.patch
 libraries[tinymce][patch][2876033] = https://raw.githubusercontent.com/ASU/asu-drupal-modules/master/patches/ws-819_img-padding-TinyMCE_min.patch
+
+; WEBSPARK-1517
+;; Patches Entity API contrib module
+projects[entity][type] = module
+projects[entity][subdir] = contrib
+projects[entity][version] = 1.9
+projects[entity][patch][] = https://www.drupal.org/files/issues/warning_array_flip-1803048-16.patch
