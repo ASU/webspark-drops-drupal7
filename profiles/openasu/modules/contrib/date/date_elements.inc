@@ -101,7 +101,7 @@ function date_field_widget_form(&$form, &$form_state, $field, $instance, $langco
     '#type' => 'date_combo',
     '#theme_wrappers' => array('date_combo'),
     '#weight' => $delta,
-    '#default_value' => isset($items[$delta]) ? $items[$delta] : '',
+    '#default_value' => isset($items[$delta]) ? $items[$delta] : array(),
     '#date_timezone' => $timezone,
     '#element_validate' => array('date_combo_validate'),
     '#date_is_default' => $is_default,
