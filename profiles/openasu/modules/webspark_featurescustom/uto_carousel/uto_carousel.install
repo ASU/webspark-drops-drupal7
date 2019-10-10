@@ -18,7 +18,6 @@ function uto_carousel_uninstall() {
 }
 
 /**
- * Implements hook_update_N();
  * + Updates UTO carousel permissions
  */
 function uto_carousel_update_7000(&$sandbox) {

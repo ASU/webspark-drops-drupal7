@@ -1,9 +1,8 @@
 <?php
 
-// Implements hook_update_N().
 /**
-* + Updates Jumbohero configuration form descriptions.
-*/
+ * + Updates Jumbohero configuration form descriptions.
+ */
 function webspark_jumbohero_update_7000(&$sandbox) {
   features_revert(array('webspark_jumbohero' => array('field_base', 'field_instance')));
 }

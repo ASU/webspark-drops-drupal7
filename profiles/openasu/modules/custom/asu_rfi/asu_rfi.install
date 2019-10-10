@@ -100,7 +100,6 @@ function asu_rfi_uninstall() {
  }
 
 /**
- * Implements hook_update_N
  * + Enable Honeypot module if ASU RFI module is enabled (Now required for 1.2+)
  */
 function asu_rfi_update_7000(&$sandbox) {

@@ -1,6 +1,5 @@
 <?php
 
-// Implements hook_update_N().
 /**
  * + Updates Hero configuration form descriptions.
  */
