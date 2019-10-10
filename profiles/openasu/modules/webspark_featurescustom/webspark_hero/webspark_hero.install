@@ -7,3 +7,10 @@
 function webspark_hero_update_7000(&$sandbox) {
   features_revert(array('webspark_hero' => array('field_base', 'field_instance')));
 }
+
+/**
+ * + Adds Webspark Hero height selector (hero vs. jumbo hero).
+ */
+function webspark_hero_update_7001(&$sandbox) {
+  features_revert(array('webspark_hero' => array('default_config', 'field_base', 'field_instance')));
+}
