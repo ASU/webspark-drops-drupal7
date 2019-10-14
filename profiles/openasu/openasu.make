@@ -179,7 +179,7 @@ projects[google_cse][version] = 2.5
 projects[google_cse][type] = module
 projects[google_cse][subdir] = contrib
 
-projects[maxlength][version] = 3.2-beta2
+projects[maxlength][version] = 3.3
 projects[maxlength][type] = module
 projects[maxlength][subdir] = contrib
 
