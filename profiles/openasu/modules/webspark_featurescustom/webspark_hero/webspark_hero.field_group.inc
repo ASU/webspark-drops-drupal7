@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * webspark_hero.field_group.inc
@@ -8,7 +9,7 @@
  * Implements hook_field_group_info().
  */
 function webspark_hero_field_group_info() {
-  $export = array();
+  $field_groups = array();
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -21,7 +22,7 @@ function webspark_hero_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Recommended buttons',
-    'weight' => '3',
+    'weight' => '4',
     'children' => array(
       0 => 'field_webspark_hero_gradbtn',
       1 => 'field_webspark_hero_primarybtn',
@@ -42,7 +43,11 @@ function webspark_hero_field_group_info() {
       'formatter' => 'open',
     ),
   );
-  $export['group_webspark_hero_buttons|fieldable_panels_pane|hero|form'] = $field_group;
+  $field_groups['group_webspark_hero_buttons|fieldable_panels_pane|hero|form'] = $field_group;
 
-  return $export;
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Recommended buttons');
+
+  return $field_groups;
 }

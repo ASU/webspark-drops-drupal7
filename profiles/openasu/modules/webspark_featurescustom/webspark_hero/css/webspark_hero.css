@@ -15,10 +15,20 @@
   width: 100%;
   margin-top: -1px;
 }
+
+/* Added for overflow of text elements */
 .pane-bundle-hero .hero-wrapper {
-  height: 380px;
-  overflow: scroll; /* Added for overflow of text elements */
+  overflow: scroll;
 }
+
+/* Select element height */
+.pane-bundle-hero.hero-height-hero .hero-wrapper {
+  height: 380px;
+}
+.pane-bundle-hero.hero-height-jumbohero .hero-wrapper {
+  height: 700px;
+}
+
 .pane-bundle-hero .pane-content {
   padding: 0 0.9375em 1em 0.9375em;
 }
@@ -44,6 +54,8 @@
   font-weight: 900;
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
+
+/* Button styles */
 .pane-bundle-hero .field-name-field-webspark-hero-ugradbtn,
 .pane-bundle-hero .field-name-field-webspark-hero-gradbtn {
   width: 41.6667%;
@@ -56,7 +68,7 @@
   padding-left: 0;
 }
 
-/* Button styles */
+
 /* =MEDIA QUERIES
 -------------------------------------------------------------- */
 @media (min-width: 1200px) {
@@ -98,7 +110,7 @@
     padding-left: 0;
   }
 }
-/* media print issues */
+/* @media print issues */
 @media print {
   .pane-bundle-hero .hero-wrapper {
   height: unset;

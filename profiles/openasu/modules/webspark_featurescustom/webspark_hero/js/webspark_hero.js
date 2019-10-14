@@ -3,10 +3,13 @@
  */
 
 (function ($, Drupal) {
-  Drupal.behaviors.webspark_hero = {
+  Drupal.behaviors.websparkHero = {
     attach: function (context, settings) {
-      $(".pane-bundle-hero").wrapInner("<div class='hero-wrapper'></div>");
-      $(".pane-bundle-hero").addClass("hero-bg-img");
+      // image height and style name now availabe in settings for future use
+      $('.pane-bundle-hero', context).once('websparkHero', function () {
+        $(this).wrapInner("<div class='hero-wrapper'></div>");
+        $(this).addClass("hero-bg-img");
+      });
 
       $(function () {
         $('.form-item-field-webspark-hero-bgimg-und-0 :file').change(function () {

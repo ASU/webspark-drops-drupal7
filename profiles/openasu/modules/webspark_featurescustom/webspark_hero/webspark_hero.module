@@ -13,7 +13,7 @@ function webspark_hero_entity_info_alter(&$entity_info) {
   // Webspark Hero Widget.
   $entity_info['fieldable_panels_pane']['bundles']['hero'] = array(
     'label' => t('Add ASU hero'),
-    'description' => t('Add a 1170 x 380 px hero to the top row'),
+    'description' => t('Add a 1170px wide hero to the top of your pages'),
     'pane category' => t('Custom'),
     'pane top level' => TRUE,
     'pane icon' => drupal_get_path('module', 'webspark_hero') . '/images/icon_hero.png',
@@ -31,7 +31,27 @@ function webspark_hero_entity_info_alter(&$entity_info) {
  */
 function webspark_hero_preprocess_panels_pane(&$variables){
   if(isset($variables['content']['#bundle']) && $variables['content']['#bundle']==='hero' ){
-   $variables['title_heading'] = 'h1'; 
+    $variables['title_heading'] = 'h1';
+    // Adds class for region sizing
+    $content = $variables['content'];
+    if (isset($content['field_webspark_hero_height']) && is_array($content['field_webspark_hero_height'])) {
+      $h = $content['field_webspark_hero_height'];
+      $height = (int) (isset($h['#items'][0]['value'])) ? $h['#items'][0]['value'] : 380; // DEFAULT is hero size (380px)
+      $label = ($height == 700) ? 'jumbohero' : 'hero';
+      if (is_array($variables['classes_array'])) {
+        $settings = array(
+          'heightOfImage' => array(
+            'value' => $height,
+            'classLabel' => $label,
+          )
+        );
+        // set height for Drupal.behaviors.websparkHero
+        drupal_add_js(array('websparkHero' => $settings), 'setting');
+        $variables['classes_array'][] = 'hero-height-' . $label;
+        // Strip out field content.
+        $variables['content']['field_webspark_hero_height'][0]['#markup'] = '';
+      }
+    }
   }
 }
 
