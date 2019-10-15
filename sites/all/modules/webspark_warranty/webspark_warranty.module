@@ -33,7 +33,6 @@ function webspark_warranty_status_page()
     $warrantyMessage .= '<h1>Current Status: <span style="color: red">Out of Warranty</span></h1>';
     $warrantyMessage .= '<h2> The following modules / themes are not covered by the Webspark Warranty: </h2>';
 
-
     $moduleList = '<table class="table">
                           <thead>
                             <tr>
@@ -42,11 +41,12 @@ function webspark_warranty_status_page()
                             </tr>
                           </thead>
                           <tbody>';
+
     foreach ($unsupportedModules as $unsupportedModule)
     {
       $moduleList .= '<tr>
-        <td>' . $unsupportedModule . '</td>
-        <td>Module</td>
+        <td>' . $unsupportedModule["name"] . '</td>
+        <td>' . $unsupportedModule["type"] . '</td>
       </tr>';
     }
     $moduleList .= '</tbody>
@@ -122,7 +122,7 @@ function getUnsupportedModules()
   $installedModules = getAllInstalledModules();
   $supportedModules = getModulesWithinWarranty();
 
-  $unsupportedmodules = array_diff($installedModules, $supportedModules);
+  $unsupportedmodules = arrayRecursiveDiff($installedModules, $supportedModules);
 
   return $unsupportedmodules;
 }
@@ -138,7 +138,7 @@ function getAllInstalledModules()
 {
   // All installed modules output as a flat array with Standard Class Objects
   $allModulesStd = db_select('system', 's')
-                    ->fields('s', array('name'))
+                    ->fields('s', array('name', 'type'))
                     ->condition('status', '1')
                     ->execute()
                     ->fetchAll();
@@ -146,7 +146,7 @@ function getAllInstalledModules()
   // Converts from Standard Class Objects to an associative array
   $allModulesArr = json_decode(json_encode($allModulesStd), true);
 
-  return flattenArray($allModulesArr);
+  return $allModulesArr;
 }
 
 /**
@@ -162,26 +162,26 @@ function getModulesWithinWarranty()
   $warrantyModulesJSON = file_get_contents("assets/standardModuleList.json", true);
   $warrantyModulesArr = json_decode($warrantyModulesJSON, true);
 
-  return flattenArray($warrantyModulesArr);
+  return $warrantyModulesArr;
 }
 
-/**
- * flattenArray() - Helper function that converts multi-dimensional array to
- *                  1D array (to make manipulations and comparisons easier).
- *                  Stolen from StackOverflow because I have no shame :/
- *
- * @param $array - Array to flatten
- *
- * @return $return - Flattened array
- */
-function flattenArray(array $array)
+function arrayRecursiveDiff($arr1, $arr2)
 {
-  // Empty array that will hold all values of $array
-  $return = array();
+  $outputDiff = [];
 
-  // Lib function with closure that appends all values in $array to $return
-  array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
+  foreach ($arr1 as $key1 => $value1)
+  {
+    $found = false;
 
-  // Return flattened array
-  return $return;
+    foreach ($arr2 as $key2 => $value2)
+    {
+      if (count(array_diff_assoc($value1, $value2)) < 1)
+        $found = true;
+    }
+
+    if (!$found)
+      $outputDiff[] = $value1;
+  }
+
+  return $outputDiff;
 }
