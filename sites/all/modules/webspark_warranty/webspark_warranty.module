@@ -1,61 +1,25 @@
 <?php
 
+require_once drupal_get_path('module', 'webspark_warranty') . '/includes/webspark_warranty.fetch.inc';
+require_once drupal_get_path('module', 'webspark_warranty') . '/includes/webspark_warranty.misc.inc';
+
 /**
  * Implements hook_menu().
  */
 function webspark_warranty_menu()
 {
-  $items['admin/reports/warranty'] = array(
+  $items['admin/reports/warranty'] = array
+  (
     'title' => 'Warranty Status',
     'description' => 'Check the status of your site pertaining to the Webspark warranty',
     'page callback' => 'webspark_warranty_status_page',
+    'file' => 'webspark_warranty.view.inc',
+    'file path' => drupal_get_path('module', 'webspark_warranty') . '/views/',
     'access callback' => TRUE,
     'type' => MENU_NORMAL_ITEM
   );
 
   return $items;
-}
-
-/**
- * Page callback for /reports/warranty.
- */
-function webspark_warranty_status_page()
-{
-  $warrantyMessage = "";
-  $status = getWarrantyStatus();
-
-  if ($status == 'True')
-    $warrantyMessage .= '<h1>Current Status: <span style="color: green">In Warranty</span></h1>';
-  else
-  {
-    $unsupportedModules = getUnsupportedModules();
-
-    $warrantyMessage .= '<h1>Current Status: <span style="color: red">Out of Warranty</span></h1>';
-    $warrantyMessage .= '<h2> The following modules / themes are not covered by the Webspark Warranty: </h2>';
-
-    $moduleList = '<table class="table">
-                          <thead>
-                            <tr>
-                              <th>Name</th>
-                              <th>Type</th>
-                            </tr>
-                          </thead>
-                          <tbody>';
-
-    foreach ($unsupportedModules as $unsupportedModule)
-    {
-      $moduleList .= '<tr>
-        <td>' . $unsupportedModule["name"] . '</td>
-        <td>' . $unsupportedModule["type"] . '</td>
-      </tr>';
-    }
-    $moduleList .= '</tbody>
-                        </table>';
-
-    $warrantyMessage .= $moduleList;
-  }
-
-  return '<div> ' . $warrantyMessage . '</div>';
 }
 
 /**
@@ -75,7 +39,7 @@ function webspark_warranty_block_info()
  */
 function webspark_warranty_block_view($delta = '')
 {
-  $currentStatus = getWarrantyStatus();
+  $currentStatus = webspark_warranty_get_warranty_status();
 
   switch ($delta)
   {
@@ -87,112 +51,4 @@ function webspark_warranty_block_view($delta = '')
   }
 
   return $block;
-}
-
-/**
- * getWarrantyStatus() - Compares all installed modules to all warranty-covered
- *                         modules and returns whether not discrepancies exist
- *
- * @return $status - String that is either 'True' or 'False' depending on the
- *                   warranty status
- */
-function getWarrantyStatus()
-{
-  $status = true;
-
-  $unsupportedmodules = getUnsupportedModules();
-
-  if (sizeof($unsupportedmodules) > 0)
-  {
-    $status = FALSE;
-  }
-
-  return $status ? 'True' : 'False';
-}
-
-/**
- * getUnsupportedModules() - Gets all modules installed that are not covered in
- *                           the Webspark Warranty
- *
- * @return $unsupportedmodules - Array of names of all unsupported modules
- *                               installed
- */
-function getUnsupportedModules()
-{
-  $installedModules = getAllInstalledModules();
-  $supportedModules = getModulesWithinWarranty();
-
-  $unsupportedmodules = arrayRecursiveDiff($installedModules, $supportedModules);
-
-  return $unsupportedmodules;
-}
-
-/**
- * getAllInstalledModules() - Uses Drupal's Database API to get all of the modules
- *                            currently installed on the site (which resides within
- *                            the {system} table)
- *
- * @return $allModulesArr - All installed modules in a flattened array
- */
-function getAllInstalledModules()
-{
-  // All installed modules output as a flat array with Standard Class Objects
-  $allModulesStd = db_select('system', 's')
-                    ->fields('s', array('name', 'type'))
-                    ->condition('status', '1')
-                    ->execute()
-                    ->fetchAll();
-
-  // Converts from Standard Class Objects to an associative array
-  $allModulesArr = json_decode(json_encode($allModulesStd), true);
-
-  return $allModulesArr;
-}
-
-/**
- * getModulesWithinWarranty() - Imports all warranty-covered module names listed
- *                              within a JSON file and puts them all into one PHP
- *                              associative array
- *
- * @return $warrantyModulesArr - All modules covered under Webspark's warranty
- *                               in a flattened array
- */
-function getModulesWithinWarranty()
-{
-  $warrantyModulesJSON = file_get_contents("assets/standardModuleList.json", true);
-  $warrantyModulesArr = json_decode($warrantyModulesJSON, true);
-
-  return $warrantyModulesArr;
-}
-
-/**
- * arrayRecursiveDiff($a, $b) - Recursively finds the difference between two
- *                              arrays. Shamelessly stolen from Stack Overflow
- *                              :/
- *
- * @param $arr1 - First array that is compared to $arr2
- * @param $arr2 - Second array that is being compared from $arr1
- *
- * @return $outputDiff - Returns an array that holds elements found in $arr1
- *                       not found in $arr2
- */
-function arrayRecursiveDiff($arr1, $arr2)
-{
-  $outputDiff = [];
-
-  foreach ($arr1 as $key1 => $value1)
-  {
-    $found = false;
-
-    foreach ($arr2 as $key2 => $value2)
-    {
-      if (count(array_diff_assoc($value1, $value2)) < 1)
-        $found = true;
-    }
-
-    if (!$found)
-      $outputDiff[] = $value1;
-  }
-
-  return $outputDiff;
 }
