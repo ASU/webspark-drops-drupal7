@@ -16,6 +16,10 @@ function webspark_warranty_status_page()
   return '<div class="container"> ' . $warrantyMessage . '</div>';
 }
 
+/**
+ * webspark_warranty_under_warranty_message() - Returns HTML string with message
+ *                                              stating site is under warranty
+ */
 function webspark_warranty_under_warranty_message()
 {
   return '<div class="container">
@@ -52,6 +56,7 @@ function webspark_warranty_violates_warranty_message()
         <td>' . $unsupportedModule["type"] . '</td>
       </tr>';
   }
+
   $moduleList .= '</tbody>
                         </table>';
 
