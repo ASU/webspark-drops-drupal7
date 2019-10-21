@@ -206,3 +206,40 @@ form[id^=asu-rfi-] div.fieldset-wrapper {
   margin-top: 15px;
   border-bottom: 1px solid grey;
 }
+
+/* GDPR styles begin here */
+
+.gdpr-list {
+  list-style: none;
+  counter-reset: item;
+  margin-left: -2.5em;
+}
+
+.gdpr-list > li {
+  counter-increment: item;
+  margin-bottom: 5px;
+  padding-left: 2em;
+  text-indent: -2em;
+}
+
+.gdpr-list > li:before {
+  text-indent: 0;
+  margin-right: 10px;
+  content: counter(item);
+  background: #5C6670;
+  border-radius: 25%;
+  color: #FFF;
+  width: 1.2em;
+  text-align: center;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.gdpr-link
+{
+  font-weight: bold;
+  text-decoration: underline;
+  border-bottom: none;
+}
+
+/* GDPR styles end here */
