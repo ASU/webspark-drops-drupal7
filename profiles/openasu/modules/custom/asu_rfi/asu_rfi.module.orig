@@ -295,7 +295,7 @@ function asu_rfi_block_configure($delta = '', $multi_id = NULL) {
       $graduate_degree_type = variable_get('asu_rfi_graduate_degree_type');
       //check if the site has grad and undergrad degrees and show form type options accordingly
 
-      if ((!empty($ugrad_degree_type)) && (!empty($graduate_degree_type))) {
+      if ((sizeof($ugrad_degree_type) > 0) && (sizeof($graduate_degree_type) > 0)) {
         $form_types = array(
           'multiform' => 'Multi step form (This multi step form will be shown only on degree pages. Select content type and choose "ASU Academic Programs" in block Visibility settings)',
           'ugrad_longform' => 'Undergraduate Long form',
@@ -304,14 +304,14 @@ function asu_rfi_block_configure($delta = '', $multi_id = NULL) {
           'current_grad_form' => 'Current Grad form'
         );
       }
-      elseif ((!empty($ugrad_degree_type)) && (empty($graduate_degree_type))) {
+      elseif ((sizeof($ugrad_degree_type) > 0) && (sizeof($graduate_degree_type) == 0)) {
         $form_types = array(
           'multiform' => 'Multi step form (This multi step form will be shown only on degree pages. Select content type and choose "ASU Academic Programs" in block Visibility settings)',
           'ugrad_longform' => 'Undergraduate Long form',
           'current_undergrad_form' => 'Current undergrad form'
         );
       }
-      elseif ((empty($ugrad_degree_type)) && (!empty($graduate_degree_type))) {
+      elseif ((sizeof($ugrad_degree_type) == 0) && (sizeof($graduate_degree_type) > 0)) {
         $form_types = array(
           'multiform' => 'Multi step form (This multi step form will be shown only on degree pages. Select content type and choose "ASU Academic Programs" in block Visibility settings)',
           'graduate_longform' => 'Graduate Long form',
@@ -358,8 +358,8 @@ function asu_rfi_block_configure($delta = '', $multi_id = NULL) {
           ),
         ),
       );
-      // if grad degrees are available, populate the grad degrees field
-      if (variable_get('asu_rfi_graduate_degree_type') == 'graduate') {
+      //if grad degrees are available, populate the grad degrees field
+      if (sizeof(variable_get('asu_rfi_graduate_degree_type')) > 0) {
         $grad_program_settings = $instance_settings['grad_programs'] ? $instance_settings['grad_programs'] : NULL;
         $grad_program_options = asu_rfi_get_grad_programs();
 
