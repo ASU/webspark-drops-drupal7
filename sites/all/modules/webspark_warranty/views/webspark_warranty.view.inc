@@ -5,10 +5,12 @@
  */
 function webspark_warranty_status_page()
 {
+  // Determines message based on whether site is in warranty or not
   $status = webspark_warranty_get_warranty_status();
 
   if ($status == 'True')
   {
+    // Outputs renderable array that holds message with contact info for WCS
     $output = array(
       'message' => array(
         '#type' => 'markup',
@@ -23,6 +25,7 @@ function webspark_warranty_status_page()
 
   else
   {
+    // Outputs renderable array that holds violation message and table holding unsupported modules
     $output = array(
       'message' => array(
         '#type' => 'markup',
