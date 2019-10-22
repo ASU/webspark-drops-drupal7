@@ -1,5 +1,27 @@
 <?php
 
+require_once drupal_get_path('module', 'webspark_warranty') . '/includes/webspark_warranty.fetch.inc';
+require_once drupal_get_path('module', 'webspark_warranty') . '/includes/webspark_warranty.misc.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function webspark_warranty_menu()
+{
+  $items['admin/reports/warranty'] = array
+  (
+    'title' => 'Warranty Status',
+    'description' => 'Check the status of your site pertaining to the Webspark warranty',
+    'page callback' => 'webspark_warranty_status_page',
+    'file' => 'webspark_warranty.view.inc',
+    'file path' => drupal_get_path('module', 'webspark_warranty') . '/views/',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM
+  );
+
+  return $items;
+}
+
 /**
  * Implements hook_block_info().
  */
@@ -17,7 +39,7 @@ function webspark_warranty_block_info()
  */
 function webspark_warranty_block_view($delta = '')
 {
-  $currentStatus = checkWarrantyStatus();
+  $currentStatus = webspark_warranty_get_warranty_status();
 
   switch ($delta)
   {
@@ -29,83 +51,4 @@ function webspark_warranty_block_view($delta = '')
   }
 
   return $block;
-}
-
-/**
- * checkWarrantyStatus() - Compares all installed modules to all warranty-covered
- *                         modules and returns whether not discrepancies exist
- *
- * @return $status - String that is either 'True' or 'False' depending on the
- *                   warranty status
- */
-function checkWarrantyStatus()
-{
-  $status = true;
-
-  $installedModules = getAllInstalledModules();
-  $supportedModules = getModulesWithinWarranty();
-
-  if (sizeof(array_diff($installedModules, $supportedModules)) > 0)
-    $status = false;
-
-  return $status ? 'True' : 'False';
-}
-
-/**
- * getAllInstalledModules() - Uses Drupal's Database API to get all of the modules
- *                            currently installed on the site (which resides within
- *                            the {system} table)
- *
- * @return $allModulesArr - All installed modules in a flattened array
- */
-function getAllInstalledModules()
-{
-  // All installed modules output as a flat array with Standard Class Objects
-  $allModulesStd = db_select('system', 's')
-                    ->fields('s', array('name'))
-                    ->condition('status', '1')
-                    ->execute()
-                    ->fetchAll();
-
-  // Converts from Standard Class Objects to an associative array
-  $allModulesArr = json_decode(json_encode($allModulesStd), true);
-
-  return flattenArray($allModulesArr);
-}
-
-/**
- * getModulesWithinWarranty() - Imports all warranty-covered module names listed
- *                              within a JSON file and puts them all into one PHP
- *                              associative array
- *
- * @return $warrantyModulesArr - All modules covered under Webspark's warranty
- *                               in a flattened array
- */
-function getModulesWithinWarranty()
-{
-  $warrantyModulesJSON = file_get_contents("contrib/standardModuleList.json", true);
-  $warrantyModulesArr = json_decode($warrantyModulesJSON, true);
-
-  return flattenArray($warrantyModulesArr);
-}
-
-/**
- * flattenArray() - Helper function that converts multi-dimensional array to
- *                  1D array (to make manipulations and comparisons easier).
- *                  Stolen from StackOverflow because I have no shame :/
- *
- * @param $array - Array to flatten
- *
- * @return $return - Flattened array
- */
-function flattenArray(array $array)
-{
-  // Empty array that will hold all values of $array
-  $return = array();
-
-  // Lib function with closure that appends all values in $array to $return
-  array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
-
-  // Return flattened array
-  return $return;
 }
