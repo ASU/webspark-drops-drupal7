@@ -52,7 +52,7 @@ function webspark_warranty_get_installed_modules()
 {
   // All installed modules output as a flat array with Standard Class Objects
   $allModulesStd = db_select('system', 's')
-    ->fields('s', array('name', 'type'))
+    ->fields('s', array('name', 'filename', 'type'))
     ->condition('status', '1')
     ->orderBy('name', 'ASC')
     ->execute()
