@@ -54,6 +54,7 @@ function webspark_warranty_get_installed_modules()
   $allModulesStd = db_select('system', 's')
     ->fields('s', array('name', 'type'))
     ->condition('status', '1')
+    ->orderBy('name', 'ASC')
     ->execute()
     ->fetchAll();
 
