@@ -42,7 +42,7 @@ function webspark_warranty_get_unsupported_modules()
 
 /**
  * webspark_warranty_get_installed_modules() - Uses Drupal's Database API to get
-                                              all of the modules currently installed
+ *                                            all of the modules currently installed
  *                                            on the site (which resides within
  *                                            the {system} table)
  *
