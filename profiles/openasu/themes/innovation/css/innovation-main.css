@@ -658,6 +658,15 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
   color: #000;
 }
 
+/* unknown, undefined alert */
+div[class='alert alert-block'] {
+  background-color: #fbfbfb;
+  border-color: #d7d7d7;
+}
+div[class='alert alert-block'] a.close {
+  color: #000;
+}
+
 .alert-success,
 .alert-info,
 .alert-danger,
