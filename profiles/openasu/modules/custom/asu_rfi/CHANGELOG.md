@@ -1,10 +1,13 @@
 # ASU Request for Information Changelog
 
+### ASU RFI 7.x-1.16, 2019-10-04
+- Fixed PHP 7.x compatibility issues/warnings
+- More refactoring of code
+  
 ### ASU RFI 7.x-1.15, 2019-08-02
 - Fixed file permissions (755 to 644) for PHP files
 - Refactored and reduced code for form widgets with pre-populating values/options 
   (states, countries, semester dates)
-
 
 ### ASU RFI 7.x-1.14, 2019-02-25
 - Update RFI confirmation email wording
