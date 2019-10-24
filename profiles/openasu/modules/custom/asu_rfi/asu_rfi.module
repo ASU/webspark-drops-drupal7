@@ -423,8 +423,12 @@ function asu_rfi_block_save($delta = '', $edit = array()) {
  */
 function asu_rfi_get_block_instance_settings($multi_id = NULL, $endpoint_build = FALSE) {
 
+  dpm($multi_id, __FUNCTION__ . ' - multi_id');
   // $multi_id if you got 'em.
   $multi_id = $multi_id ? '_' . $multi_id : NULL;
+
+  dpm($multi_id, __FUNCTION__ . ' - multi_id - after');
+
   $block_instance_settings = array();
   if (!$endpoint_build) {
     $block_instance_settings['programs'] = variable_get('asu_rfi_form_block_programs' . $multi_id, array());
