@@ -1,4 +1,10 @@
 <?php
+/***
+ * @file - webspark_warranty.misc.inc
+ *
+ * Includes file that holds miscellaneous helper functions which aid with the execution of other tasks
+ * throughout the module
+ */
 
 /**
  * webspark_warranty_moduleDiff($installedModules, $supportedModules) - Recursively finds the difference between two

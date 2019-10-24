@@ -1,4 +1,13 @@
 <?php
+/*** @file - webspark_warranty.view.inc
+ *
+ * Includes file that acts as the view template for a Drupal menu page
+ *
+ * Refer to following external docs for further assistance:
+ * https://www.drupal.org/docs/7/api/render-arrays/render-arrays-overview
+ * https://api.drupal.org/api/drupal/includes%21bootstrap.inc/function/t/7.x
+ * https://api.drupal.org/api/drupal/includes!common.inc/function/l/7.x
+ */
 
 /**
  * Page callback for /reports/warranty.

@@ -1,4 +1,17 @@
 <?php
+/***
+ * @file - webspark_warranty.fetch.inc
+ *
+ * Includes file that holds all functions relating to fetching data, either in local files or
+ * through the database, as well as simple manipulations of data
+ *
+ * Refer to following external docs for further assistance:
+ * https://api.drupal.org/api/drupal/includes!database!database.inc/function/db_select/7.x
+ * https://api.drupal.org/api/drupal/includes%21common.inc/function/drupal_get_path/7.x
+ * https://www.php.net/manual/en/function.file-get-contents.php
+ * https://www.php.net/manual/en/function.json-decode.php
+ * https://www.php.net/manual/en/function.json-encode.php
+ */
 
 /**
  * webspark_warranty_get_warranty_status() - Compares all installed modules to
