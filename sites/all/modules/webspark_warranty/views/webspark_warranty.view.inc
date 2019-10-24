@@ -26,18 +26,23 @@ function webspark_warranty_status_page()
   else
   {
     // Outputs renderable array that holds violation message and table holding unsupported modules
-    $output = array();
     $warrantyViolations = webspark_warranty_get_warranty_violations();
     $unsupportedModules = $warrantyViolations[0];
     $misplacedModules = $warrantyViolations[1];
+
+    $output = array(
+      'violationMessage' => array(
+        '#type' => 'markup',
+        '#markup' => '<h1>' . t('Current Status: ') . '<span style="color: red">' . t('Out of Warranty') . '</span></h1>'
+      )
+    );
 
     if (sizeof($unsupportedModules) > 0)
     {
       $output[] = array(
         'unsupportedMessage' => array(
           '#type' => 'markup',
-          '#markup' => '<h1>' . t('Current Status: ') . '<span style="color: red">' . t('Out of Warranty') . '</span></h1>' .
-            '<h2>' . t('The following modules / themes are not covered by the Webspark Warranty:') . '</h2>'
+          '#markup' => '<h2>' . t('The following modules / themes are not covered by the Webspark Warranty:') . '</h2>'
         ),
         'unsupportedTable' => array(
           '#theme' => 'table',

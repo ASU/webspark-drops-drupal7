@@ -15,9 +15,7 @@ function webspark_warranty_get_warranty_status()
   $warrantyViolations = webspark_warranty_get_warranty_violations();
 
   if (sizeof($warrantyViolations[0]) > 0 || sizeof($warrantyViolations[1]) > 0)
-  {
     $status = FALSE;
-  }
 
   return $status ? 'True' : 'False';
 }
@@ -52,11 +50,11 @@ function webspark_warranty_get_installed_modules()
 {
   // All installed modules output as a flat array with Standard Class Objects
   $allModulesStd = db_select('system', 's')
-    ->fields('s', array('name', 'filename', 'type'))
-    ->condition('status', '1')
-    ->orderBy('name', 'ASC')
-    ->execute()
-    ->fetchAll();
+                    ->fields('s', array('name', 'filename', 'type'))
+                    ->condition('status', '1')
+                    ->orderBy('name', 'ASC')
+                    ->execute()
+                    ->fetchAll();
 
   // Converts from Standard Class Objects to an associative array
   $allModulesArr = json_decode(json_encode($allModulesStd), true);
