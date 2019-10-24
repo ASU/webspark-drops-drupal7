@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Enhances the block API, as provided by D7 Core.
+ */
+
+/**
  * Implements hook_menu().
  */
 function multiblock_menu() {
@@ -35,7 +40,7 @@ function multiblock_block_info() {
   foreach ($blocks as $block) {
     $blocks[$block->delta] = array('info' => $block->title);
     $cache = db_query('SELECT cache FROM {block} WHERE module = :module AND delta = :orig_delta', array(':module' => $block->module, ':orig_delta' => $block->orig_delta))->fetchField();
-    if ($cache){
+    if ($cache) {
       $blocks[$block->delta]['cache'] = $cache;
     }
   }
@@ -70,7 +75,7 @@ function multiblock_block_configure($delta = 0, $edit = array()) {
  *   Optional. Retreive a single block based on this delta. If none specified,
  *   all multiblock instances are returned.
  * @param $reset
- *   Optional. Boolean value to reset the interal cache of this function.
+ *   Optional. Boolean value to reset the internal cache of this function.
  */
 function multiblock_get_block($delta = NULL, $reset = FALSE) {
   static $blocks;
@@ -78,36 +83,74 @@ function multiblock_get_block($delta = NULL, $reset = FALSE) {
   if (!isset($blocks) || $reset) {
     $blocks = array();
     $result = db_query("SELECT * FROM {multiblock}");
+    $modules = array();
     foreach ($result as $row) {
-      $blocks[$row->delta] = $row;
+      // If we've not checked this module is enabled yet do so.
+      if (!isset($modules[$row->module])) {
+        $modules[$row->module] = module_exists($row->module);
+      }
+      // Only add this block if the module is enabled.
+      if ($modules[$row->module]) {
+        $blocks[$row->delta] = $row;
+      }
     }
   }
 
-  return is_numeric($delta) ? $blocks[$delta] : $blocks;
+  return is_numeric($delta) ? (isset($blocks[$delta]) ? $blocks[$delta] : FALSE) : $blocks;
 }
 
 /**
- * Dispatch a hook_block call to it's respective module. Paramater $delta
+ * Dispatch a hook_block call to its respective module. Paramater $delta
  * is the new multiblock delta that we're using and $op is the op we are
  * dispatching.
+ *
+ * @param $delta
+ *   The delta of the multiblock block, which is different from the delta
+ *   of the block in the original module
+ *
+ * @param $op
+ *   Can be configure, view, save...
+ *
+ * @edit
+ *   Information originally passed to multiblock's corresponding hook.
+ *   For example, a call to multiblock_block_view($delta, $edit) will
+ *   result in a call to multiblock_call_block($delta, 'view', $edit).
+ *   Note that Drupal's API does not call for $edit parameters for
+ *   hook_node_view() or hook_node_configure(), but multiblock does.
+ *
+ * @return
+ *   Information returned by the corresponding module_invoke() call.
  */
 function multiblock_call_block($delta, $op, $edit) {
-  $result = db_query("SELECT module, orig_delta, delta, multi_settings FROM {multiblock} WHERE delta = :delta", array(
-    ':delta' => $delta,
-  ));
-  if ($block_info = $result->fetchObject()) {
+  // Get block info from multiblock_get_block() which now checks that the original module
+  // still exists before returning the info.
+  $block_info = multiblock_get_block($delta);
+  // Check we actually have a block to render.
+  if ($block_info) {
     // If this block is multiblock enabled, send it the delta of the block we're using.
     if ($block_info->multi_settings == 1 ) {
       $edit['multiblock_delta'] = array(
         '#type' => 'value',
         '#value' => $block_info->delta,
-        );
+      );
     }
-    if ($op == 'save') {
-      $block = module_invoke($block_info->module, 'block_'. $op, $block_info->orig_delta, $edit);
-    }
-    else {
-      $block = module_invoke($block_info->module, 'block_'. $op, $block_info->orig_delta, $block_info->delta);
+    // This will result in a call to the original module's hook_block_view(),
+    // hook_block_configure(), or hook_block_save() function. In cases where
+    // modules define multiblock-enabled blocks (that is, in their
+    // hook_block_info() function, they return an associative array of block
+    // machine names to arrays with 'mb_enabled' => TRUE for each mb-enabled
+    // block), these modules' hook_block_view() and hook_block_configure()
+    // functions will have an extra $edit = array() parameter, in which
+    // information about multiblock is passed. This will allow blocks to
+    // contain and display different configuration information per instance.
+    $block = module_invoke($block_info->module, 'block_' . $op, $block_info->orig_delta, $edit);
+    if ($op == 'view') {
+      if (isset($block['content']['#form_id'])) {
+        // Handle duplicate form IDs
+        $block['content']['#id'] = drupal_html_id($block['content']['#id']);
+      }
+      $block['orig_module'] = $block_info->module;
+      $block['orig_delta'] = $block_info->orig_delta;
     }
     return $block;
   }
@@ -129,10 +172,12 @@ function multiblock_general() {
 
   // Fetch "Add Instance" form.
   if (isset($req_block)) {
-    $form = drupal_render(drupal_get_form('multiblock_add_form', $blocks, $req_block));
+    $get_form = drupal_get_form('multiblock_add_form', $blocks, $req_block);
+    $form = drupal_render($get_form);
   }
   else {
-    $form = drupal_render(drupal_get_form('multiblock_add_form', $blocks));
+    $get_form = drupal_get_form('multiblock_add_form', $blocks);
+    $form = drupal_render($get_form);
   }
 
   // Get an array of existing blocks.
@@ -166,7 +211,7 @@ function multiblock_add_form($form, &$form_state, $blocks, $update = NULL) {
     foreach ($blocks as $block) {
       // Don't include multiblock module blocks in the list.
       if ($block['module'] != 'multiblock') {
-        $options[$block['module'] .'***MB***'. $block['delta']] = $block['info'];
+        $options[$block['module'] . '***MB***' . $block['delta']] = $block['info'];
       }
     }
   
@@ -294,8 +339,8 @@ function multiblock_add_form_submit($form, &$form_state) {
 
       $cache = db_query('SELECT cache FROM {block} WHERE module = :module AND delta = :orig_delta', array(":module" => $block->module, ":orig_delta" => $block->orig_delta))->fetchField();
       
-      if ($cache){
-        db_query('UPDATE {block} SET cache = :cache WHERE delta = :delta AND module = "multiblock"', array(':cache' => $cache, ':delta' => $block->delta));
+      if ($cache) {
+        db_query('UPDATE {block} SET cache = :cache WHERE delta = :delta AND module = :multiblock', array(':cache' => $cache, ':delta' => $block->delta, ':multiblock' => 'multiblock'));
       }
 
     $form_state['redirect'] = 'admin/structure/block/instances';
@@ -351,6 +396,19 @@ function multiblock_theme() {
 }
 
 /**
+ * Implements hook_preprocess_block().
+ *
+ * Add "{orig_module}" and "{orig_module}-{orig_delta}-instance" classes to
+ * multiblock blocks.
+ */
+function multiblock_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'multiblock') {
+    $variables['classes_array'][] = drupal_html_class('block-' . $variables['block']->orig_module);
+    $variables['classes_array'][] = drupal_html_class('block-' . $variables['block']->orig_module) . '-' . $variables['block']->orig_delta . '-instance';
+  }
+}
+
+/**
  * Theme function for the "Manage Block Instances" page.
  */
 function theme_multiblock_general($variables) {
@@ -358,14 +416,14 @@ function theme_multiblock_general($variables) {
   $output = '';
   $noyes = array('misc/watchdog-error.png', 'misc/watchdog-ok.png');
   
-  $output .= '<p><h3>'. ($edit ? t('Edit Instance') : t('Add Instance')) .'</h3>'. $add_block_form .'</p>';
+  $output .= '<p><h3>' . ($edit ? t('Edit Instance') : t('Add Instance')) . '</h3>' . $add_block_form . '</p>';
   
   $header = array(t('Title'), t('Original Block Title'), t('Original Module'), t('MultiBlock Enabled'), t('Original Delta'), t('Action'));
   
   $rows = array();
   foreach ($multiblocks as $row) {
-    $ops_link = l(t('Edit'), 'admin/structure/block/instances/edit/'. $row->delta)
-      .' '. l(t('Delete'), 'admin/structure/block/instances/delete/'. $row->delta);
+    $ops_link = l(t('Edit'), 'admin/structure/block/instances/edit/' . $row->delta)
+      . ' ' . l(t('Delete'), 'admin/structure/block/instances/delete/' . $row->delta);
     $title = multiblock_get_block_title($row->module, $row->orig_delta);
     $mb_enabled = $noyes[$row->multi_settings];
     $alt = t('Not Multiblock enabled');
@@ -384,7 +442,7 @@ function theme_multiblock_general($variables) {
       );
   }
 
-  $output .= '<p><h3>'. t('Manage Instances') .'</h3>';
+  $output .= '<p><h3>' . t('Manage Instances') . '</h3>';
   if (!empty($rows)) {
     $output .= theme('table', array('header' => $header, 'rows' => $rows));
   }
@@ -394,4 +452,14 @@ function theme_multiblock_general($variables) {
   $output .= '</p>';
 
   return $output;
+}
+
+/**
+ * Implements hook_modules_uninstalled().
+ */
+function hook_modules_uninstalled($modules) {
+  // Delete all multiblock instances for the disabled modules.
+  db_delete('multiblock')
+    ->condition('module', $modules, 'IN')
+    ->execute();
 }
