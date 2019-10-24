@@ -13,7 +13,8 @@
  */
 function arrayRecursiveDiff($arr1, $arr2)
 {
-  $outputDiff = [];
+  $unsupportedDiff = [];
+  $misplacedDiff = [];
 
   foreach ($arr1 as $key1 => $value1)
   {
@@ -21,13 +22,20 @@ function arrayRecursiveDiff($arr1, $arr2)
 
     foreach ($arr2 as $key2 => $value2)
     {
-      if (count(array_diff_assoc($value1, $value2)) < 1)
+      if ($value1['name'] == $value2['name'] &&
+        $value1['type'] == $value2['type'] &&
+        $value1['filename'] != $value2['filename'])
+          $misplacedDiff[] = array('name' => $value1['name'], 'filename' => $value1['filename']);
+
+      else if ($value1['name'] == $value2['name'] &&
+          $value1['type'] == $value2['type'] &&
+          $value1['filename'] == $value2['filename'])
         $found = true;
     }
 
     if (!$found)
-      $outputDiff[] = $value1;
+      $unsupportedDiff[] = array('name' => $value1['name'], 'type' => $value1['type']);
   }
 
-  return $outputDiff;
+  return array($unsupportedDiff, $misplacedDiff);
 }

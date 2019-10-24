@@ -12,9 +12,9 @@ function webspark_warranty_get_warranty_status()
 {
   $status = true;
 
-  $unsupportedmodules = webspark_warranty_get_unsupported_modules();
+  $warrantyViolations = webspark_warranty_get_warranty_violations();
 
-  if (sizeof($unsupportedmodules) > 0)
+  if (sizeof($warrantyViolations[0]) > 0 || sizeof($warrantyViolations[1]) > 0)
   {
     $status = FALSE;
   }
@@ -23,14 +23,14 @@ function webspark_warranty_get_warranty_status()
 }
 
 /**
- * webspark_warranty_get_unsupported_modules() - Gets all modules installed that
+ * webspark_warranty_get_warranty_violations() - Gets all modules installed that
  *                                               are not covered in the Webspark
  *                                               Warranty
  *
  * @return $unsupportedmodules - Array of names of all unsupported modules
  *                               installed
  */
-function webspark_warranty_get_unsupported_modules()
+function webspark_warranty_get_warranty_violations()
 {
   $installedModules = webspark_warranty_get_installed_modules();
   $supportedModules = webspark_warranty_get_warranty_modules();
