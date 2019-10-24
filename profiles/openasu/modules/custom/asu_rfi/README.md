@@ -1,88 +1,89 @@
 DESCRIPTION
 --------------------------
 The ASU RFI module provides ASU sites with RFI form functionality with
-automatic posting to ASU's SalesForce middleware.
+automatic posting to ASU's SalesForce middleware (which forwards
+submissions into Salesforce separately from this site).
 
 INSTALLATION
 --------------------------
-Prerequisites: ASU Academic Programs.
-Prerequisites (deprecated): ASU Degrees and ASU Degrees Features modules.
-And others. See the .info files. Of note are the Multiblock and
-Ajax Block modules.
+**Prerequisite**: ASU Academic Programs (asu_ap). In order to populate the
+program/degree options in the RFI forms, you must use the ASU Academic Programs
+module to import degree programs into your site. While installing the asu_ap
+module doesn't have to be done prior to installing this module, the
+configuration forms for the RFI forms will not function properly until that 
+is completed. (See the asu_ap module's README.txt for more information.)
 
-IMPORTANT: After enabling the ASU Academic Programs module, the RFI module will
-no longer work with the ASU Degrees module.
-
-In order to avoid a per-instance bug with the Multiblock module where it
-forgets settings, you should apply the patch in comment #5 on:
-https://www.drupal.org/node/1370966#comment-6408056
-If you are using WebSpark, that patch is already in place.
-
-Now you're ready to install the ASU RFI module along with the ASU RFI Feature
-module. Enable the modules as usual, see http://drupal.org/node/70151 for
-further information.
+Simply enable the ASU Request for Information (asu_rfi) and ASU RFI feature
+(asu_rfi_feature) modules as usual (See http://drupal.org/node/70151 for
+further information on enabling Drupal modules).
 
 CONFIGURATION
 --------------------------
-In order to populate the program/degree options in the RFI forms, you must
-use the ASU Degrees module to import degree programs into your site. See that
-module's README.txt for more information.
-
 Post installation, the ASU RFI module requires configuration in order to post
 to the middleware and deploy the forms throughout your site.
 
-GENERAL CONFIGS:
+### Global configuration
 
-General sitewide RFI settings are made at /admin/config/asu/asurfi.
-To use the middleware, you must obtain an authentication key from
+* Site-wide RFI settings are made at /admin/config/asu/asurfi.
+
+* To use the middleware, you *must* obtain an authentication key from
 https://webforms.asu.edu/content/access-rfi-middleware-request
 If you deploy forms to your site without an authentication key configured,
 your site will collect lead submissions but not submit them to middleware.
 
-The Google Analytics identifier is a short string you choose yourself, and
-which will show up in ASU's Google Analytics reports, to help diffrentiate
-your entries from other sites.
+* The Google Analytics identifier is a short string you choose yourself. It will
+show up in ASU's Google Analytics reports, to help differentiate your entries
+from other sites.
 
-The Confirmation Web Page settings allows you to provide the Node ID (NID)
+* The Confirmation Web Page settings allows you to provide the Node ID (NID)
 of a page you've created, from which to obtain confirmation/thank you content.
 The content used will come from that page's body.
 
-View the forms stored in your site at
+* View the RFI form submissions stored in your site at
 /admin/reports/asu-rfi-submissions-report
 From this Views Bulk Operation view of lead submissions, you can see which
-submissions have succeeded or failed, resubmit failed leads to the middleware
+submissions have succeeded or failed, resubmit failed leads to the middleware,
 and export leads to CSV.
 
-RFI FORM DEPLOYMENT AND CONFIGS:
+### RFI Form deployment & configuration
+
+#### Creating a RFI form block
 
 RFI forms are deployed to your site via the Drupal blocks system, with help
 from the Multiblock module.
 
-How it works: The ASU RFI module provides a master block titled "RFI Master."
-Browse to Admin > Structure > Blocks > Instances. The Mutiblock Instances page
-allows you to create a copy, or "instance," of the RFI Master block, to use
-in creating individual RFI form blocks for use in your site. You can create
-as many instances of the RFI Master block as you want - giving them descriptive
-names, to aid in administration. Once you've created an instance, it will
-appear in the main blocks admin page (Admin > Structure > Blocks), where you
-can deploy it to regions in your theme, apply access controls, etc. If your
-site uses Panopoly/Panels/WebSpark, RFI forms can be assigned to panels in
-the site through that interface.
+The ASU RFI module provides a master block titled "RFI Master." You won't use
+that block; instead, you will instead create an "instance" (i.e. copy) of that
+block that will contain a new, individual RFI form to place in your site.
+
+You can create as many instances of the RFI Master block as you want. (We
+recommend giving them descriptive names, to aid in administering them later.)
+
+Go to Admin > Structure > Blocks > Instances (/admin/structure/block/instances).
+Under Add Instance, enter a descriptive name and select "RFI Master" for Block type.
+
+#### Adding a RFI form block to web content
+
+Once you've created an instance, it will appear in the main blocks admin page
+(Admin > Structure > Blocks, or /admin/structure/block), where you can deploy it to
+regions in your theme, apply access controls, etc.
+
+**For WebSpark (or Panopoly/Panels) users**: RFI forms can also be assigned to
+panels in the site through its interface the same way you would add other ASU Web
+standards elements.
+
+#### Configuring individual RFI form blocks
 
 Each RFI block instance has its own independent settings, configurable through
 Admin > Structure  > Blocks > [your block] Configure. It's here where you
 define which form type to use (multistep, undegraduate long form, graduate
-long form, current undergraduate form, current graduate form). Some of the
-form types automatically define which programs will be listed in the form
+long form, current undergraduate form, current graduate form).
+
+Some of the form types automatically define which programs will be listed in the form
 while others allow you to manually determine the program options.
 
-IMPORTANT NOTE: If you use caching in your site, RFI form blocks configured so
-they automatically detect context and determine which programs to display can
-get cached and display incorrect options. To avoid this issue, enable the Ajax
-Block module, and on the block configuration page, set the block to load via
-Ajax. That means an un-cached copy of the form will be added to the page via
-Javascript after the cached page loads. This occurs very quickly and doesn't
-affect the user experience to any great degree.
+For more detailed instructions on configuration, go to 
+https://brandguide.asu.edu/executing-the-brand/web-and-mobile/webspark/features/asu_rfi.
 
 PERMISSIONS
 --------------------------
@@ -108,6 +109,9 @@ Block and Instances configurations
 
 TABLES
 --------------------------
+* asu_rfi_states_list - List of states for RFI forms
+* asu_rfi_countries - List of countries for RFI forms
+* asu_rfi_sem_dates - List of available semester dates
 
 BLOCKS
 --------------------------
@@ -117,10 +121,51 @@ block.
 
 HOOKS
 --------------------------
-Provides none.
+None.
+
+TROUBLESHOOTING
+--------------------------
+#### Known issues
+
+**No available majors are available to select in the block's configuration form.**
+
+Make sure the ASU Academic Programs module is enabled, and that you have imported
+the desired degrees/programs. (See that module's README for more information.)
+
+**This module was working with the ASU Degrees module pulling in the desired degrees,
+but it broke after a Webspark update. What happened?**
+
+The ASU Degrees module has been superseded by the ASU Academic Programs (asu_ap) module.
+The former module no longer works with the ASU Degrees module. (See the asu_ap
+module's README for more information.)
+
+**I've updated the degrees in the site, but the new major options aren't
+appearing in the block's configuration form.**
+
+If you use caching in your site, RFI form blocks configured so they automatically
+detect context and determine which programs to display can get cached and display
+incorrect options. To avoid this issue, enable the Ajax Block module, and on the
+block configuration page, set the block to load via Ajax. That means an un-cached
+copy of the form will be added to the page via Javascript after the cached page loads.
+This occurs very quickly and doesn't affect the user experience to any great degree.
+
+**I'm a non-Webspark user, and the block configurations on RFI form instances are not saving.**
+
+In order to avoid a per-instance bug with the Multiblock module where it forgets
+settings, you should apply the patch in comment #5 on:
+https://www.drupal.org/node/1370966#comment-6408056.) Webspark has had that patch
+applied to resolve that issue.
+
+**I don't see my issue listed below, and I've read through the instructions at
+https://brandguide.asu.edu/executing-the-brand/web-and-mobile/webspark/features/asu_rfi.
+What do I do?**
+
+Go to https://drupal.asu.edu/wcs for assistance.
 
 CREDITS
 --------------------------
 ASU RFI module was created by
 Archana Puliroju <apuliroj@asu.edu> and
 Michael Samuelson <mlsamuel@asu.edu>
+
+Maintained by Development, Applications and Design in the UTO.
