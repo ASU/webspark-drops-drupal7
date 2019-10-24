@@ -66,6 +66,13 @@ function webspark_warranty_status_page()
         )
       );
     }
+
+    $output[] = array(
+      'recommendedActionsMesage' => array(
+        '#type' => 'markup',
+        '#markup' => '<h2>' . t('TENTATIVE: Please resolve the issues listed above before contacting Web Consulting Services') . '</h2>'
+      )
+    );
   }
 
   return $output;
