@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Install, update and uninstall functions for the multiblock module.
+ */
+
 function multiblock_schema() {
   $schema = array();
 
