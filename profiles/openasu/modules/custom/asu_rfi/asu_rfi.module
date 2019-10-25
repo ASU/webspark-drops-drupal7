@@ -426,8 +426,6 @@ function asu_rfi_get_block_instance_settings($multi_id = NULL, $endpoint_build =
   // Get multi_id value from array (no longer a string in Multiblock v1.1 -> 1.6)
   $multi_id = isset($multi_id['multiblock_delta']['#value']) ? '_' . $multi_id['multiblock_delta']['#value'] : NULL;
 
-  dpm($multi_id, __FUNCTION__ . ' - multi_id - after');
-
   $block_instance_settings = array();
   if (!$endpoint_build) {
     $block_instance_settings['programs'] = variable_get('asu_rfi_form_block_programs' . $multi_id, array());
@@ -1421,4 +1419,94 @@ function _asu_rfi_check_form_values($db_tbl) {
     ->execute()
     ->fetchField();
   return (int) $result;
+}
+
+function _asu_rfi_validate_electronic_contacts($email, $phone) {
+  if (!preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)*(\.[a-zA-Z]{2,6})+$/", $email)) {
+    form_set_error('email', t('You entered an invalid email.'));
+  }
+//validation for phone number
+  /** If mobile number field is checked, then check for USA format, else check for special characters **/
+  $scam_num = substr($phone, 0, 3);
+  if (!empty($mobile_check) && $mobile_check != 0) {
+    if (!preg_match("/^([1]-)?([0-9]{3}[-|.][0-9]{3}[-|.][0-9]{4})$/i", $phone) || ($scam_num == "555")) {
+      form_set_error('phone', t('You entered an invalid Phone number.'));
+    }
+  }
+  else {
+    if (!preg_match("/^[0-9\.\s-_+\(\)]+$/", $phone) || ($scam_num == "555")) {
+      form_set_error('phone', t('You entered an invalid Phone number.'));
+    }
+  }
+}
+
+function _asu_rfi_validate_birthdate($birthdate) {
+  //get number of occurences of '/' in dob
+  //get number of occurences of '/' in dob
+  $slashes = substr_count($birthdate, '/');
+  if ($slashes == 2) {
+    $date_format = explode('/', $birthdate);
+    $month = $date_format[0];
+    $day = $date_format[1];
+    $year = $date_format[2];
+    $current_year = date('Y');
+    $year_limit = $current_year - 1;
+    $isLeapYear = date('L');
+
+    if (strlen($birthdate) < 11) {
+      if (($month < 1) || ($month > 12)) {
+        form_set_error('birthdate', t('Month range has to be between 1 and 12.'));
+        form_set_error('dob_field', t(' '));
+      }
+
+      if (($month == 1) || ($month == 3) || ($month == 5) || ($month == 7) || ($month == 8) || ($month == 10) || ($month == 12)) {
+        if (($day < 1) || ($day > 31)) {
+          form_set_error('birthdate', t('Date range has to be between 1 and 31.'));
+          form_set_error('dob_field', t(' '));
+        }
+      }
+
+      if (($month == 4) || ($month == 6) || ($month == 9) || ($month == 11)) {
+        if (($day < 1) || ($day > 30)) {
+          form_set_error('birthdate', t('Date range has to be between 1 and 30.'));
+          form_set_error('dob_field', t(' '));
+        }
+      }
+
+      if ($month == 2) {
+        if ($isLeapYear == 1) {
+          if (($day < 1) || ($day > 29)) {
+            form_set_error('birthdate', t('Date range has to be between 1 and 29.'));
+            form_set_error('dob_field', t(' '));
+          }
+        }
+        if ($isLeapYear == 0) {
+          if (($day < 1) || ($day > 28)) {
+            form_set_error('birthdate', t('Date range has to be between 1 and 28.'));
+            form_set_error('dob_field', t(' '));
+          }
+        }
+      }
+
+      if (strlen($year) != 4) {
+        form_set_error('birthdate', t('Year has to be 4 digits.'));
+      }
+
+      if ($year > $year_limit) {
+        form_set_error('birthdate', t('Year cannot be greater than ' . $year_limit));
+      }
+
+      if (!preg_match("/^(0[1-9]|1[012])[\-\/.](0[1-9]|[12][0-9]|3[01])[\-\/.](19|20)\d\d$/", $birthdate)) {
+        form_set_error('birthdate', t('Date of birth accepts the format mm/dd/yyyy.'));
+        form_set_error('dob_field', t(' '));
+      }
+
+    } else {
+      form_set_error('birthdate', t('Date of birth is invalid, it accepts the format mm/dd/yyyy.'));
+      form_set_error('dob_field', t(' '));
+    }
+  } else {
+    form_set_error('birthdate', t('Date of birth is invalid, it accepts the format mm/dd/yyyy.'));
+    form_set_error('dob_field', t(' '));
+  }
 }
