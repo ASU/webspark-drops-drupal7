@@ -51,14 +51,14 @@ function asu_rfi_form($delta)
 }
 
 /**
- * Implements hook_form_data().
+ * Implements hook_form_data()
  */
 function asu_rfi_form_data($form, &$form_state)
 {
   $degreeMappings = asu_rfi_get_degree_mappings_pages();
   $domain = $_SERVER['HTTP_HOST'];
-
-  //Clear all data when browser back button is clicked
+  dpm(time());
+    //Clear all data when browser back button is clicked
   session_set_cookie_params(0);
   // Add no-store in Cache-Control to clear all data when browser back button is clicked
   drupal_add_http_header(

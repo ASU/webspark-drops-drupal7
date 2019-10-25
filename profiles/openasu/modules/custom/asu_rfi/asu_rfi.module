@@ -680,11 +680,10 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
     drupal_add_css('#modal-content fieldset.widget-preview-single .fieldset-wrapper{ max-height: 1975px !important;}', array('type' => 'inline'));
     drupal_add_css('#modal-content .widget-preview .fieldset-wrapper{ max-height: 75% !important;}', array('type' => 'inline'));
   }
-  ////
 
-  //Change form type exposed filter in submissions view (/asu-rfi-submissions-report) form text field to select option
+  // Change form type exposed filter in submissions view (/asu-rfi-submissions-report)
+  // form text field to select option
   if ($form['#id'] == 'views-exposed-form-asu-rfi-submissions-report-page') {
-
     $form_types = array('' => ' - All -');
     $form_types_query = db_query('SELECT DISTINCT field_rfi_form_type_value FROM {field_data_field_rfi_form_type}');
     foreach ($form_types_query as $form_types_options) {
@@ -698,15 +697,15 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
     $form['field_rfi_form_type_value']['#default_values'] = array(0);
   }
 
-  //Add js file to second multistep form
+  // Add js file to second multistep form
   if (isset($form['#prefix'])) {
     if ($form['#prefix'] == '<div id="rfi_second_form">') {
       drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/theme/session_clear.js', 'file');
     }
   }
 
+  // RFI Long form
   if ($form['#id'] == "asu-rfi-long-form-data") {
-
     if (isset($form['my_interest']['program_code']['#options'])) {
       drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/theme/session_clear.js', 'file');
       drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.js');
@@ -720,7 +719,6 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
         if (!in_array("Online", $possibleLocations)) {
           $form['my_interest']['location']['online'] = array('#disabled' => TRUE);
           $form['my_interest']['location']['no_preference'] = array('#disabled' => TRUE);
-
           $form['my_interest']['location']['#default_value'] = 'on_campus';
         }
         else {
@@ -745,7 +743,6 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
           }
         }
       }
-
       $newLocationArr = array();
       if ($possibleLocations !== FALSE) {
         foreach ($possibleLocations as $key => $value) {
@@ -753,29 +750,24 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
         }
       }
       $possibleLocations = $newLocationArr;
-
       $form['my_interest']['campus']['#options'] = $possibleLocations;
     }
   }
 
+  // ASU RFI
   if ($form['#id'] == "asu-rfi-form-data") {
-    if (isset($form['program_code']['#default_value'])) {
+    if (isset($form['program_code']['#default_value']) && !empty($form['program_code']['#default_value'])) {
       $pcode = $form['program_code']['#default_value'];
       $pcode2 = array($pcode => $form['my_interest']['prog_plan']['#default_value']);
       $possibleLocations = asu_rfi_query_codes($pcode2);
       asu_rfi_disable_form($form, $possibleLocations);
-
       $newLocationArr = array();
-
       foreach ($possibleLocations as $key => $value) {
         $newLocationArr[$value] = $value;
       }
-
       $possibleLocations = $newLocationArr;
-
       $form['my_interest']['campus']['#options'] = $possibleLocations;
     }
-
     drupal_add_js("(function ($) { $(window).on('unload', function(){ $('#asu-rfi-form-data').trigger('reset'); }) })(jQuery)", array(
       'type' => 'inline',
       'scope' => 'header',
@@ -785,8 +777,8 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
     $form['#after_build'][] = 'asu_rfi_form_after_build';
   }
 
-
-  //Disable Google analytics site transactions key in asu_rfi admin settings page
+  // RFI Admin Settings
+  // * Disable Google analytics site transactions key in asu_rfi admin settings page
   if ($form['#id'] == "asu-rfi-admin-settings") {
     if (!empty($form['asu_rfi_form_access']['asu_rfi_google_analytics_key']['#default_value'])) {
       $form['asu_rfi_form_access']['asu_rfi_google_analytics_key']['#disabled'] = TRUE;
@@ -795,16 +787,13 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
       $form['asu_rfi_form_access']['asu_rfi_google_analytics_key']['#disabled'] = FALSE;
     }
   }
-
-  //Get the RFI form mode settings, if form is in test mode, give only admins access to the form view
+  // * Get the RFI form mode settings, if form is in test mode, give only admins access to the form view
   $rfi_mode = variable_get('asu_rfi_form_mode');
   global $user;
-
   if ((($rfi_mode == "test") || empty($rfi_mode)) && ($form['#id'] == "asu-rfi-form-data" || $form['#id'] == "asu-rfi-long-form-data" || $form['#id'] == 'views-exposed-form-asu-rfi-submissions-report-page')) {
     if (user_access('administer nodes', $user) == 1 || user_access('administer asu rfi', $user) == 1) {
       return TRUE;
-    }
-    else {
+    } else {
       $form['#access'] = FALSE;
       drupal_set_message("You do not have access to view this form", 'warning');
       return FALSE;
@@ -828,9 +817,7 @@ function asu_rfi_disable_form(&$form, $decider) {
 
 /**
  * Queries the degrees in order to configure the location piece.
- *
  * @param array $pcodes A list of the plan codes used in the RFI
- *
  * @return array $campusOptions Returns an array of the available campuses
  */
 function asu_rfi_query_codes($pcodes) {
