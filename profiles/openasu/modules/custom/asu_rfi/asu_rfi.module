@@ -18,76 +18,6 @@
  */
 
 /*********************************************************************
- * CONFIG
- *********************************************************************/
-
-/**
- * Settings function to improve future-proofing.
- *
- * Example usage:
- * $degreeMappings = asu_rfi_get_degree_mappings();
- * $degreeContentType = $degreeMappings['content_type'];
- */
-function asu_rfi_get_degree_mappings() {
-  $map = &drupal_static(__FUNCTION__);
-  // Swap out mapping values based on module enabled.
-  // ASU AP takes priority, but default is to ASU
-  // Degrees (deprecated);
-  if (!isset($map)) {
-    if (module_exists('asu_ap')) {
-      $map = array(
-        // Content Type
-        'content_type' => 'asu_ap',
-        // Tables
-        'table_asu_academic_plan' => 'field_data_field_asu_ap_acad_plan',
-        'table_asu_academic_program' => 'field_data_field_asu_ap_acad_prog',
-        'table_asu_degree_awarded' => 'field_data_field_asu_ap_awarded',
-        'table_asu_degree_program' => 'field_data_field_asu_ap_program',
-        'table_asu_diploma_description' => 'field_data_field_asu_ap_diploma_desc',
-        // Fields
-        'field_academic_plan' => 'field_asu_ap_acad_plan',
-        'field_academic_plan_value' => 'field_asu_ap_acad_plan_value',
-        'field_academic_program' => 'field_asu_ap_acad_prog',
-        'field_academic_program_value' => 'field_asu_ap_acad_prog_value',
-        'field_degree_awarded' => 'field_asu_ap_awarded',
-        'field_degree_awarded_value' => 'field_asu_ap_awarded_value',
-        'field_degree_campus' => 'field_asu_ap_campus',
-        'field_degree_program' => 'field_asu_ap_program',
-        'field_degree_program_value' => 'field_asu_ap_program_value',
-        'field_diploma_description' => 'field_asu_ap_diploma_desc',
-        'field_diploma_description_value' => 'field_asu_ap_diploma_desc_value',
-      );
-    }
-    else { // asu_degrees
-      $map = array(
-        // Content Type
-        'content_type' => 'asu_degree',
-        // Tables
-        'table_asu_academic_plan' => 'field_data_field_asu_academic_plan',
-        'table_asu_academic_program' => 'field_data_field_asu_academic_program',
-        'table_asu_degree_awarded' => 'field_data_field_asu_degree_awarded',
-        'table_asu_degree_program' => 'field_data_field_asu_degree_program',
-        'table_asu_diploma_description' => 'field_data_field_asu_diploma_description',
-        // Fields
-        'field_academic_plan' => 'field_asu_academic_plan',
-        'field_academic_plan_value' => 'field_asu_academic_plan_value',
-        'field_academic_program' => 'field_asu_academic_program',
-        'field_academic_program_value' => 'field_asu_academic_program_value',
-        'field_degree_awarded' => 'field_asu_degree_awarded',
-        'field_degree_awarded_value' => 'field_asu_degree_awarded_value',
-        'field_degree_campus' => 'field_asu_degree_campus',
-        'field_degree_program' => 'field_asu_degree_program',
-        'field_degree_program_value' => 'field_asu_degree_program_value',
-        'field_diploma_description' => 'field_asu_diploma_description',
-        'field_diploma_description_value' => 'field_asu_diploma_description_value',
-      );
-    }
-  }
-  return $map;
-}
-
-
-/*********************************************************************
  * DRUPAL HOOKS
  *********************************************************************/
 
@@ -176,12 +106,6 @@ function asu_rfi_menu() {
   return $items;
 }
 
-/**
- * Implements hook_perm().
- */
-function asu_rfi_perm() {
-  return array('administer request info form module settings');
-}
 
 /**
  * Implements hook_block_info().
@@ -193,7 +117,6 @@ function asu_rfi_block_info() {
     'cache' => DRUPAL_NO_CACHE,
     'mb_enabled' => TRUE, // Multiblock module integration.
   );
-
   return $blocks;
 }
 
@@ -212,10 +135,13 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
     case 'asu_rfi_form_block':
       // If we have a multiblock ID, line it up for use getting settings.
       $multi_id = $multi_id ? $multi_id : NULL;
+
       // Default programs array
       $programs = array();
+
       // Get instance settings.
       $instance_settings = asu_rfi_get_block_instance_settings($multi_id);
+
       if ($instance_settings['form_type'] == 'multiform') {
         $block['subject'] = t('Request information');
         module_load_include('inc', 'asu_rfi', 'includes/asu_rfi.pages');
@@ -264,7 +190,7 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
 
       // Default - ERROR: No programs selected by above logic.
       if (empty($programs)) {
-        watchdog('asu_rfi', 'No instance settings selected for programs.', array(), WATCHDOG_ERROR);
+        watchdog('asu_rfi', 'No instance_settings for block @multi_id', array('multi_id' => $multi_id), WATCHDOG_ERROR);
       }
 
       break;
@@ -274,6 +200,7 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
 
 /**
  * Implements hook_block_configure().
+ * @throws \EntityFieldQueryException
  */
 function asu_rfi_block_configure($delta = '', $multi_id = NULL) {
   // Load the currently logged in user.
@@ -573,9 +500,9 @@ function asu_rfi_cron_queue_info() {
 /*********************************************************************
  * CALLBACKS
  *********************************************************************/
+
 /**
- * Reposts data to Salesforce
- *
+ * Reposts data to Salesforce for all programs
  * @param $node
  * @param array $post
  * @param string $program
@@ -635,6 +562,7 @@ function _asu_rfi_repost_data($node, $post = array(), $program = 'Undergraduate'
   }
   variable_set('last_attempt_SF_posting', time());
 }
+
 /**
  * Cron worker callback.
  * Called once for each item.
@@ -654,11 +582,6 @@ function asu_rfi_repost_rfi($data) {
     }
   }
 }
-
-/*********************************************************************
- * THEMING
- *********************************************************************/
-
 
 /*********************************************************************
  * FORMS
@@ -799,6 +722,73 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
   }
 }
 
+/*********************************************************************
+ * CONFIG
+ *********************************************************************/
+/**
+ * Settings function to improve future-proofing.
+ *
+ * Example usage:
+ * $degreeMappings = _asu_rfi_get_degree_mappings();
+ * $degreeContentType = $degreeMappings['content_type'];
+ */
+function _asu_rfi_get_degree_mappings() {
+  $map = &drupal_static(__FUNCTION__);
+  // Swap out mapping values based on module enabled.
+  // ASU AP takes priority, but default is to ASU
+  // Degrees (deprecated);
+  if (!isset($map)) {
+    if (module_exists('asu_ap')) {
+      $map = array(
+        // Content Type
+        'content_type' => 'asu_ap',
+        // Tables
+        'table_asu_academic_plan' => 'field_data_field_asu_ap_acad_plan',
+        'table_asu_academic_program' => 'field_data_field_asu_ap_acad_prog',
+        'table_asu_degree_awarded' => 'field_data_field_asu_ap_awarded',
+        'table_asu_degree_program' => 'field_data_field_asu_ap_program',
+        'table_asu_diploma_description' => 'field_data_field_asu_ap_diploma_desc',
+        // Fields
+        'field_academic_plan' => 'field_asu_ap_acad_plan',
+        'field_academic_plan_value' => 'field_asu_ap_acad_plan_value',
+        'field_academic_program' => 'field_asu_ap_acad_prog',
+        'field_academic_program_value' => 'field_asu_ap_acad_prog_value',
+        'field_degree_awarded' => 'field_asu_ap_awarded',
+        'field_degree_awarded_value' => 'field_asu_ap_awarded_value',
+        'field_degree_campus' => 'field_asu_ap_campus',
+        'field_degree_program' => 'field_asu_ap_program',
+        'field_degree_program_value' => 'field_asu_ap_program_value',
+        'field_diploma_description' => 'field_asu_ap_diploma_desc',
+        'field_diploma_description_value' => 'field_asu_ap_diploma_desc_value',
+      );
+    } else { // asu_degrees
+      $map = array(
+        // Content Type
+        'content_type' => 'asu_degree',
+        // Tables
+        'table_asu_academic_plan' => 'field_data_field_asu_academic_plan',
+        'table_asu_academic_program' => 'field_data_field_asu_academic_program',
+        'table_asu_degree_awarded' => 'field_data_field_asu_degree_awarded',
+        'table_asu_degree_program' => 'field_data_field_asu_degree_program',
+        'table_asu_diploma_description' => 'field_data_field_asu_diploma_description',
+        // Fields
+        'field_academic_plan' => 'field_asu_academic_plan',
+        'field_academic_plan_value' => 'field_asu_academic_plan_value',
+        'field_academic_program' => 'field_asu_academic_program',
+        'field_academic_program_value' => 'field_asu_academic_program_value',
+        'field_degree_awarded' => 'field_asu_degree_awarded',
+        'field_degree_awarded_value' => 'field_asu_degree_awarded_value',
+        'field_degree_campus' => 'field_asu_degree_campus',
+        'field_degree_program' => 'field_asu_degree_program',
+        'field_degree_program_value' => 'field_asu_degree_program_value',
+        'field_diploma_description' => 'field_asu_diploma_description',
+        'field_diploma_description_value' => 'field_asu_diploma_description_value',
+      );
+    }
+  }
+  return $map;
+}
+
 /**
  * Hides the RFI form ONLY if there is a missing data value.
  * @param array $form The RFI form
@@ -819,7 +809,7 @@ function asu_rfi_disable_form(&$form, $decider) {
  * @return array $campusOptions Returns an array of the available campuses
  */
 function asu_rfi_query_codes($pcodes) {
-  $degreeMappings = asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
+  $degreeMappings = _asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
   $asuOnlineList = asu_rfi_parse_programs();
 
   $campusOptions = array();
@@ -944,6 +934,7 @@ function asu_rfi_detect_os() {
     'BeOS' => 'BeOS',
     'OS/2' => 'OS\/2'
   );
+
   if (isset($_SERVER['HTTP_USER_AGENT'])) {
     foreach ($os_list as $current_os => $match) {
       if (preg_match('#' . $match . '#i', $_SERVER['HTTP_USER_AGENT'])) {
@@ -993,7 +984,7 @@ function asu_rfi_detect_browser() {
  */
 function asu_rfi_get_undergrad_programs() {
   // Get degree mappings to grab content type specific values
-  $degreeMappings = asu_rfi_get_degree_mappings();
+  $degreeMappings = _asu_rfi_get_degree_mappings();
   // Get the degree types from the database
   $program_type = db_query('SELECT DISTINCT ' . $degreeMappings['field_degree_program_value']
     . ' from ' . $degreeMappings['table_asu_degree_program']);
@@ -1037,7 +1028,7 @@ function asu_rfi_get_undergrad_programs() {
  * @throws \EntityFieldQueryException
  */
 function asu_rfi_get_grad_programs() {
-  $degreeMappings = asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
+  $degreeMappings = _asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
 
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
@@ -1069,7 +1060,7 @@ function asu_rfi_get_grad_programs() {
  * @return array $out
  */
 function _asu_rfi_get_program_results($items, $out = array()) {
-  $degreeMappings = asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
+  $degreeMappings = _asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
   foreach ($items as $nid => $program) {
     $program_wrapper = entity_metadata_wrapper('node', $program);
     $program_abbr = $program_wrapper->{$degreeMappings['field_degree_awarded']}->value();
@@ -1087,7 +1078,7 @@ function _asu_rfi_get_program_results($items, $out = array()) {
  * @return array
  */
 function _asu_rfi_get_query_codes($r_nodes) {
-  $degreeMappings = asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
+  $degreeMappings = _asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
   $program_nids = array_keys($r_nodes);
   $programs = entity_load('node', $program_nids);
   $programs = reset($programs);
@@ -1187,13 +1178,17 @@ function asu_rfi_js_alter(&$javascript) {
 
 }
 
+/*********************************************************************
+ * THEMING
+ *********************************************************************/
+
 /**
  * Implements hook_preprocess_page().
  */
 function asu_rfi_preprocess_page(&$variables) {
   // Send data transaction variable dataLayer to GTM tag.
   // Get degree mappings to grab content type specific values
-  $degreeMappings = asu_rfi_get_degree_mappings();
+  $degreeMappings = _asu_rfi_get_degree_mappings();
   // Check if /degree-programs/request-info-thank-you is loaded, grad the node id from the URL, load the node and get the variables. Add Google analytics code to the header.
   if (isset($variables['theme_hook_suggestions'][1])) {
     if ($variables['theme_hook_suggestions'][1] == "page__degree_programs__request_info_thank_you") {

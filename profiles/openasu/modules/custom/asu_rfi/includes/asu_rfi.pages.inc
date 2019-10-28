@@ -27,7 +27,7 @@ drupal_add_css(drupal_get_path('module', 'asu_rfi') . '/theme/asu_rfi.css', 'fil
  * Settings function to improve future-proofing.
  */
 function asu_rfi_get_degree_mappings_pages() {
-  return asu_rfi_get_degree_mappings();
+  return _asu_rfi_get_degree_mappings();
 }
 
 /**
