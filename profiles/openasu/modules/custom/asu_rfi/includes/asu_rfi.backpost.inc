@@ -1,9 +1,11 @@
 <?php
 
-/* Callback service function sent for success posting to SF  */
-
-function asu_rfi_success_post($hash, $nid)
-{
+/**
+ * Callback service function sent for success posting to SF
+ * @param $hash
+ * @param $nid
+ */
+function asu_rfi_success_post($hash, $nid) {
   header('Content-Type: text/json');
   $mw_auth_key = variable_get('asu_rfi_form_auth_key');
   $real_hash = sha1($mw_auth_key . '+' . $nid);
@@ -22,11 +24,13 @@ function asu_rfi_success_post($hash, $nid)
   }
 }
 
-
-/* Fialed posts submissions update */
-
-function asu_rfi_fail_post($hash, $nid)
-{
+/**
+ * Post failed submissions update
+ * @param $hash
+ * @param $nid
+ * @throws \Exception
+ */
+function asu_rfi_fail_post($hash, $nid) {
   header('Content-Type: text/json');
   $mw_auth_key = variable_get('asu_rfi_form_auth_key');
   $real_hash = sha1($mw_auth_key . '+' . $nid);
@@ -41,38 +45,9 @@ function asu_rfi_fail_post($hash, $nid)
       $node_wrapper->field_rfi_submission_status->set("Pending");
     }
 
-    $to_email = variable_get('asu_rfi_error_email', NULL); //get error reporting email address from rfi admin settings page
+    $to_email = variable_get('asu_rfi_error_email', NULL); // get error reporting email address from rfi admin settings page
     if (!empty($to_email)) {
-      //send email to admin reporting the issue
-      $host = $_SERVER['HTTP_HOST'];
-      $content = "The following <a href='https://$host/node/$nid'>submission</a> from " . $_SERVER['HTTP_HOST'] . " has some problem and hasn't been submitted to middleware";
-      $subject = "Failed submissions to Sales Force from " . $_SERVER['HTTP_HOST'];
-      $my_module = 'mimemail';
-      $my_mail_token = '';
-      $MimeMailSystem = drupal_mail_system($my_module, $my_mail_token);
-      $default_from = variable_get('site_mail', ini_get('sendmail_from'));
-      $message = array(
-        'id' => $my_module . '_' . $my_mail_token,
-        'from' => $default_from,
-        'key' => '',
-        'subject' => $subject,
-        'body' => array($content),
-        'to' => $to_email,
-        'module' => 'mimemail',
-        'headers' => array(
-          'From' => $default_from,
-          'Sender' => $default_from,
-          'Return-Path' => $default_from,
-          'Content-Type' => 'text/html; charset=UTF-8;',
-          'to' => $to_email
-        ),
-      );
-
-      $emailmessage = $MimeMailSystem->format($message);
-      if ($MimeMailSystem->mail($emailmessage)) {
-        watchdog('asu_rfi', 'SF Error message email sent to ' . $to_email);
-        variable_set('SF_error_message_sent', time());
-      }
+      _asu_rfi_failed_post_email($to_email, $nid);
     }
     $node_wrapper->field_rfi_error_message->set($error_message);
     $node_wrapper->save();
@@ -86,10 +61,11 @@ function asu_rfi_fail_post($hash, $nid)
 }
 
 
-/* Test submissions post data update */
-
-function asu_rfi_test_post($hash, $nid)
-{
+/** Test submissions post data update
+ * @param $hash
+ * @param $nid
+ */
+function asu_rfi_test_post($hash, $nid) {
   header('Content-Type: text/json');
   $mw_auth_key = variable_get('asu_rfi_form_auth_key');
   $real_hash = sha1($mw_auth_key . '+' . $nid);
@@ -111,19 +87,18 @@ function asu_rfi_test_post($hash, $nid)
   }
 }
 
-/* The function to save middleware key in the admin settings page App key field */
-function asu_rfi_middle_key($key)
-{
-  //Check if middleware key is already set. If set, don't update the key, else set the varable with key value
-
+/**
+ * Saves middleware key in the admin settings page App key field
+ * @param $key
+ */
+function asu_rfi_middle_key($key) {
+  //Check if middleware key is already set. If set, don't update the key, else set the variable with key value
   global $conf;
 
   if (!isset($conf['asu_rfi_form_auth_key'])) {
     variable_set('asu_rfi_form_auth_key', FALSE);
   }
-
   if (empty($conf['asu_rfi_form_auth_key'])) {
-
     $middle_key = base64_decode($key);
     variable_set('asu_rfi_form_auth_key', $middle_key);
   } else {
@@ -131,6 +106,9 @@ function asu_rfi_middle_key($key)
   }
 }
 
+/**
+ * Adds http_response_code if not already compiled into PHP or added in Drupal
+ */
 if (!function_exists('http_response_code')) {
   function http_response_code($newcode = NULL)
   {

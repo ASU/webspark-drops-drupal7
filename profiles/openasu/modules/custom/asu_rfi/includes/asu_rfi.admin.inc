@@ -1,24 +1,19 @@
-<?php
-// $Id: asu_rfi.admin.inc 
+<?php /** @noinspection PhpUnusedParameterInspection */
+/** @noinspection PhpUnused */
 
 /**
- * @file
- * Administrative request info module settings
+ * Form definition for ASU RFI form admin settings
+ * @param $form_state
+ * @return mixed
  */
-
-
-function asu_rfi_admin_settings($form_state)
-{
-
+function asu_rfi_admin_settings($form_state) {
   $form = array();
-
   $form_modes = array('test' => 'Test', 'prod' => 'Production');
 
   $form['form_stage'] = array(
     '#type' => 'item',
     '#markup' => t('<div class="rfi_note">Important: The RFI submissions will not be posted to Salesforce via Middleware unless Authentication code has been added. You can request the authentication key from <a href="https://webforms.asu.edu/content/access-rfi-middleware-request">here</a>. Note that RFI submissions will not be posted to Sales force via Middle ware unless this code has been added</div>'),
   );
-
   $form['asu_rfi_form_access'] = array(
     '#type' => 'fieldset',
     '#title' => 'Request info form access settings',
@@ -26,8 +21,6 @@ function asu_rfi_admin_settings($form_state)
     '#collapsed' => FALSE,
     '#attributes' => array('class' => array('asu_rfi_admin_field asu_rfi_form_access')),
   );
-
-
   $form['asu_rfi_form_access']['asu_rfi_form_mode'] = array(
     '#type' => 'select',
     '#title' => t('Test/Live Mode'),
@@ -37,8 +30,7 @@ function asu_rfi_admin_settings($form_state)
     '#description' => t("Specify if the forms are in Test mode or Live mode. Note: This is a sitewide configuration and will affect all forms. Only site admins can view the forms if they are in Test mode."),
     '#required' => TRUE,
   );
-
-  //Will be enabled in future
+  // Will be enabled in future
   $form['asu_rfi_form_access']['asu_rfi_form_auth_key'] = array(
     '#type' => 'hidden',
     '#title' => t('Authentication code'),
@@ -47,8 +39,7 @@ function asu_rfi_admin_settings($form_state)
     '#description' => t("Specifiy the form authentication key from Middleware. You can request the authentication key from <a href='https://webforms.asu.edu/content/access-rfi-middleware-request'>here</a>. Note that RFI submissions will not be posted to Salesforce via Middleware unless this code has been added"),
     '#required' => FALSE,
   );
-
-  //Error notification email if submissions to Sales force failed for more than 2 days
+  // Error notification email if submissions to Sales force failed for more than 2 days
   $form['asu_rfi_error_email'] = array(
     '#type' => 'textfield',
     '#title' => t('Email(s) for error notification'),
@@ -58,8 +49,6 @@ function asu_rfi_admin_settings($form_state)
     '#size' => 60,
     '#maxlength' => 150,
   );
-
-
   $form['asu_rfi_form_access']['asu_rfi_google_analytics_key'] = array(
     '#type' => 'textfield',
     '#title' => t('Site identifier for Google Analytics'),
@@ -69,21 +58,18 @@ function asu_rfi_admin_settings($form_state)
     '#required' => TRUE,
     '#disabled' => FALSE,
   );
-
   $form['undergrad_degree_type'] = array(
     '#type' => 'hidden',
     '#size' => 30,
     '#maxlength' => 64,
     '#default_value' => variable_get('asu_rfi_ugrad_degree_type'),
   );
-
   $form['grad_degree_type'] = array(
     '#type' => 'hidden',
     '#size' => 30,
     '#maxlength' => 64,
     '#default_value' => variable_get('asu_rfi_graduate_degree_type'),
   );
-
   $form['asu_rfi_confirm_content'] = array(
     '#type' => 'fieldset',
     '#title' => 'Confirmation webpage content settings. Text box to enter node id will appear after the form has been created.',
@@ -91,7 +77,6 @@ function asu_rfi_admin_settings($form_state)
     '#collapsed' => FALSE,
     '#attributes' => array('class' => array('asu_rfi_confirm_email_fields')),
   );
-
   $form['asu_rfi_confirm_content']['asu_rfi_undergrad_confirm_node'] = array(
     '#type' => 'textfield',
     '#title' => t('Enter undergraduate confirmation node id'),
@@ -104,7 +89,6 @@ function asu_rfi_admin_settings($form_state)
       ),
     ),
   );
-
   $form['asu_rfi_confirm_content']['asu_rfi_grad_confirm_node'] = array(
     '#type' => 'textfield',
     '#title' => t('Enter graduate confirmation node id'),
@@ -117,7 +101,6 @@ function asu_rfi_admin_settings($form_state)
       ),
     ),
   );
-
   $form['asu_rfi_confirm_email'] = array(
     '#type' => 'fieldset',
     '#title' => 'Confirmation email settings',
@@ -125,8 +108,6 @@ function asu_rfi_admin_settings($form_state)
     '#collapsed' => FALSE,
     '#attributes' => array('class' => array('asu_rfi_confirm_email_fields')),
   );
-
-
   $form['asu_rfi_confirm_email']['asu_rfi_from_email_field'] = array(
     '#type' => 'textfield',
     '#title' => t('"From" email field'),
@@ -136,7 +117,6 @@ function asu_rfi_admin_settings($form_state)
     '#maxlength' => 64,
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
   );
-
   $form['asu_rfi_confirm_email']['asu_rfi_from_name_field'] = array(
     '#type' => 'textfield',
     '#title' => t('"From" name field'),
@@ -146,8 +126,6 @@ function asu_rfi_admin_settings($form_state)
     '#maxlength' => 64,
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
   );
-
-
   $form['asu_rfi_confirm_email']['asu_rfi_email_subject_field'] = array(
     '#type' => 'textfield',
     '#title' => t('"Subject" field'),
@@ -160,8 +138,6 @@ function asu_rfi_admin_settings($form_state)
   );
 
   return system_settings_form($form);
-
-  drupal_set_message('Next steps: Please start adding instances of RFI Master form <a href="/admin/structure/block/instances"><strong>here</strong></a>');
-
+  // drupal_set_message('Next steps: Please start adding instances of RFI Master form <a href="/admin/structure/block/instances"><strong>here</strong></a>');
 }
 

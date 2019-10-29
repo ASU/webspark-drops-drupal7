@@ -4,67 +4,68 @@
  * Implementation of hook_schema().
  */
 function asu_rfi_schema() {
-
-/* US states schema */
-$schema['asu_rfi_states_list'] = array(
-  'description' => 'List of US states',
-  'fields' => array(
-     'stateCode' => array(
-          'description' => 'State code',
-          'type' => 'varchar',
-          'length' => 225,
-          'not null' => TRUE),
-     'stateDesc' => array(
-          'description' => 'State Name',
-          'type' => 'varchar',
-          'length' => 225,
-          'not null' => TRUE
-          )
-       ),
-       'primary key' => array('stateCode'),
+  /* US states schema */
+  $schema['asu_rfi_states_list'] = array(
+    'description' => 'List of US states',
+    'fields' => array(
+    'stateCode' => array(
+      'description' => 'State code',
+      'type' => 'varchar',
+      'length' => 225,
+      'not null' => TRUE
+    ),
+    'stateDesc' => array(
+      'description' => 'State Name',
+      'type' => 'varchar',
+      'length' => 225,
+      'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('stateCode'),
   );
-
-/* US countries schema */ 
- $schema['asu_rfi_countries'] = array(
-   'description' => 'Countries list',
-   'fields' => array(
-     'countryCode3' => array(
+  /* US countries schema */
+  $schema['asu_rfi_countries'] = array(
+    'description' => 'Countries list',
+    'fields' => array(
+      'countryCode3' => array(
         'description' => 'Country code',
         'type' => 'varchar',
         'length' => 225,
-        'not null' => TRUE),
-     'countryDesc' => array(
+        'not null' => TRUE
+      ),
+      'countryDesc' => array(
         'description' => 'Country name',
         'type' => 'varchar',
         'length' => 225,
-        'not null' => TRUE),
+        'not null' => TRUE
+      ),
     ),
     'primary key' => array('countryCode3'),
-   );
-   
-   /* US countries schema */ 
- $schema['asu_rfi_sem_dates'] = array(
-   'description' => 'Start term dates',
-   'fields' => array(
-     'semId' => array(
+  );
+  /* Semester dates */
+  $schema['asu_rfi_sem_dates'] = array(
+    'description' => 'Start term dates',
+    'fields' => array(
+      'semId' => array(
         'description' => 'Semeter term ID',
         'type' => 'varchar',
         'length' => 225,
-        'not null' => TRUE),
-     'semLabel' => array(
+        'not null' => TRUE
+      ),
+      'semLabel' => array(
         'description' => 'Semester term label',
         'type' => 'varchar',
         'length' => 225,
-        'not null' => TRUE),
+        'not null' => TRUE
+      ),
     ),
     'primary key' => array('semId'),
-   );
+  );
 
-   return $schema;
+  return $schema;
 }
 
 function asu_rfi_install() {
-
   // Call initial configuration for form options upon install
   include('data/asu_rfi.form_options.inc');
   asu_rfi_get_options_data('country', TRUE);
@@ -72,36 +73,35 @@ function asu_rfi_install() {
   asu_rfi_get_options_data('rfi_dedupe_list_terms', TRUE);
 
   drupal_set_message('ASU RFI module has been installed. Configure module settings at <a href="/admin/config/content/asurfi">admin settings page</a>');
- 
+
   // Check if CAS module exists and enabled and update cas_exclude variables with asu_rfi callback urls
   if (module_exists('cas')) {
     $out = variable_get('cas_exclude', 'none');
     $out = $out . "\r\nasu_rfi/success/*\r\nasu_rfi/failure/*";
     variable_set('cas_exclude',$out);
   }
-  
+
   // If honeypot module exists, set it's variable value
   if(module_exists('honeypot')){
       variable_set('honeypot_element_name','rfihurl');
   }
-  
+
   // Set the RFI form mode to "Test" initially upon module installation
   variable_set('asu_rfi_form_mode','test');
 }
 
+/**
+ * Delete all variables and remove DB tables
+ */
 function asu_rfi_uninstall() {
   drupal_uninstall_schema('asu_rfi');
-  variable_del('asu_rfi_form_mode');
-  variable_del('asu_rfi_google_analytics_key');
-  variable_del('asu_rfi_error_email');
-  variable_del('asu_rfi_from_email_field');
-  variable_del('asu_rfi_cached_programs');
-  variable_del('asu_rfi_cached_programs_timestamp');
+  db_delete('variable')
+    ->condition('name', 'asu_rfi_%', 'LIKE')
+    ->execute();
  }
 
 /**
- * Implements hook_update_N
- * + Enable Honeypot module if ASU RFI module is enabled (Now required for 1.2+)
+ * Enable Honeypot module if ASU RFI module is enabled (Now required for 1.2+)
  */
 function asu_rfi_update_7000(&$sandbox) {
   if (module_exists('asu_rfi') && !module_exists('honeypot'))
@@ -111,9 +111,54 @@ function asu_rfi_update_7000(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N
- * + Forces a rebuild of the module's features to include the domain and location piece 
+ * Forces a rebuild of the module's features to include the domain and location piece
  */
 function asu_rfi_update_7001(){
   features_revert_module('asu_rfi_feature');
+}
+
+/**
+ * Updates variable names not properly set by ASU RFI module
+ */
+function asu_rfi_update_7002(){
+  $or = db_or()
+    ->condition('v.name', 'last_attempt_SF_posting', 'LIKE')
+    ->condition('v.name', 'last_success_SF_posting', 'LIKE')
+    ->condition('v.name', 'last_failure_SF_posting', 'LIKE')
+    ->condition('v.name', 'SF_error_message_sent', 'LIKE')
+    ->condition('v.name', 'siteDomain', 'LIKE');
+  $updates_needed = Database::getConnection('default', 'default')
+    ->select('variable', 'v')
+    ->fields('v', array('name', 'value'))
+    ->condition($or)
+    ->execute()
+    ->fetchAllKeyed();
+  if (count($updates_needed) > 0) {
+    $additions = array();
+    foreach ($updates_needed as $name => $value) {
+      $additions['asu_rfi_' . $name] = $value;
+    }
+    foreach ($additions as $name => $value) {
+      db_merge('variable')
+        ->key(array(
+          'name' => $name))
+        ->fields(array(
+          'name' => $name,
+          'value' => $value,
+        ))
+        ->execute();
+    }
+    foreach ($updates_needed as $name => $value) {
+      Database::getConnection('default', 'default')
+        ->delete('variable')
+        ->condition('name', $name, 'LIKE')
+        ->execute();
+    }
+    $message = count($updates_needed) . " names of the ASU RFI module settings in
+     the variable table were updated. See the ASU RFI module CHANGELOG file for more information.";
+  } else {
+    $message = "No updates were needed for the ASU RFI module.";
+  }
+  watchdog('asu_rfi', $message, array(), WATCHDOG_INFO);
+  drupal_set_message($message, 'status');
 }

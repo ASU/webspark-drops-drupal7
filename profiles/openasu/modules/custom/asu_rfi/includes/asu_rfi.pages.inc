@@ -1238,7 +1238,6 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
     ),
   );
 
-
   //include modal help text for date of birth
   $modal_data = '<!-- Button trigger modal -->
     <span class="fa fa-info-circle" data-toggle="modal" data-target="#myModal"></span>
@@ -1247,7 +1246,8 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-body">
-            Your birthday is important! Not only will we send you a birthday message, it helps us keep your information secure as a unique identifier for your online submission.
+            Your birthday is important! Not only will we send you a birthday message, 
+            it helps us keep your information secure as a unique identifier for your online submission.
           </div>
           <div class="modal-footer">
             <div class="btn btn-default" data-dismiss="modal">Close</div>
@@ -1256,7 +1256,8 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
       </div>
     </div>';
 
-  // The below field creates illusion as part of date of birth field. I had to add this field to avoid validation error message containing modal data
+  // The below field creates illusion as part of date of birth field. I had to add
+  // this field to avoid validation error message containing modal data.
   $form['about_me']['dob_field'] = array(
     '#type' => 'item',
     '#markup' => '<label><strong>Date of birth</strong></label> ' . $modal_data,
@@ -1394,13 +1395,19 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
 
 }
 
-function asu_rfi_progloc_confirm($prog, $campus, $loc) {
-  $degreeMappings = asu_rfi_get_degree_mappings_pages();
+/**
+ * Confirms if the given locations available for a program?
+ * @param $prog - program
+ * @param $campus - Campus
+ * @param $loc - Location
+ * @return bool
+ */
+function asu_rfi_program_location_confirm($prog, $campus, $loc) {
 
+  $degreeMappings = asu_rfi_get_degree_mappings_pages();
   $campusOptions = array();
 
   $query = new EntityFieldQuery();
-
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', $degreeMappings['content_type'])
     ->fieldCondition($degreeMappings['field_academic_plan'], 'value', $prog)
@@ -1410,9 +1417,10 @@ function asu_rfi_progloc_confirm($prog, $campus, $loc) {
   $result = $query->execute();
 
   if (isset($result['node'])) {
-    $r_nodes = $result['node'];
-    $desiredProg = _asu_rfi_get_query_codes($r_nodes);
+    $result_nodes = $result['node'];
+    $programs = _asu_rfi_get_program_codes($result_nodes, 'programs');
     $locations = $programs[$degreeMappings['field_degree_campus']]['und'];
+    dpm($locations, __FUNCTION__ . ' - locations');
     foreach ($locations as $location) {
       if (!in_array($location['value'], $campusOptions)) {
         array_push($campusOptions, $location['value']);
@@ -1440,7 +1448,7 @@ function asu_rfi_progloc_confirm($prog, $campus, $loc) {
 }
 
 /**
- * Form validation
+ * Form validation for ugrad and graduate RFI forms
  * @param $form
  * @param $form_state
  */
@@ -1450,7 +1458,7 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
       form_set_error('program_code', t('My program of interest field required.'));
     }
   }
-  if (!asu_rfi_progloc_confirm($form_state['input']['program_code'], $form_state['input']['campus'], $form_state['input']['location'])) {
+  if (!asu_rfi_program_location_confirm($form_state['input']['program_code'], $form_state['input']['campus'], $form_state['input']['location'])) {
     form_set_error('campus', t('Your campus choice is not valid.'));
   }
 
@@ -1474,10 +1482,11 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
   // validation for email and phone
   _asu_rfi_validate_electronic_contacts($email, $phone);
 
-  // Custom fields per student type
+  // Custom fields per student type (online vs. all others)
+
   //// Only Online student validation
-  if ($form_state['input']['location'] == 'online') {
-    // No fields not included in global validation above
+  if (strtolower($form_state['input']['location']) == 'online') {
+    // No fields not already included in shared validation above
   }
 
   //// Non-online student validation

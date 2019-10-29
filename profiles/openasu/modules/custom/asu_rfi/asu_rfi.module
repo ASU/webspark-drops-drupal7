@@ -384,10 +384,9 @@ function asu_rfi_get_block_instance_settings($multi_id = NULL, $endpoint_build =
  */
 function asu_rfi_cron() {
 
-  asu_rfi_check_programs();
+  asu_rfi_check_cached_programs();
 
   // Set as system variables so we can adjust via devel/php if desired.
-
   $last_ran = variable_get('asu_rfi_cron_last_ran', 0);
   $stale_time = variable_get('asu_rfi_stale_time', 86400); // 86400 seconds == 1 day
 
@@ -446,12 +445,12 @@ function asu_rfi_cron() {
 
   //check if the site hasn't posted submissions to salesforce for two days. If yes, send an email to administrator.
   //Get last time site had successful submission
-  $last_sf_success = variable_get('last_success_SF_posting', 0);
-  $last_sf_failure = variable_get('last_failure_SF_posting', 0);
+  $last_sf_success = variable_get('asu_rfi_last_success_SF_posting', 0);
+  $last_sf_failure = variable_get('asu_rfi_last_failure_SF_posting', 0);
   $timediff = $last_sf_failure - $last_sf_success;
-  $last_sf_attempt = variable_get('last_attempt_SF_posting', 0);
+  $last_sf_attempt = variable_get('asu_rfi_last_attempt_SF_posting', 0);
   $timediff_attempt = $last_sf_attempt - $last_sf_success;
-  $last_email_sent = variable_get('SF_error_message_sent', 0);
+  $last_email_sent = variable_get('asu_rfi_SF_error_message_sent', 0);
   $to_email = variable_get('asu_rfi_error_email', NULL); //get error reporting email address from rfi admin settings page
 
   if (($last_email_sent - time()) > 86400) { // If the email was sent within 24hrs, don't send it again.
@@ -485,7 +484,7 @@ function asu_rfi_cron() {
         $emailmessage = $MimeMailSystem->format($emailmessage);
         if ($MimeMailSystem->mail($emailmessage)) {
           watchdog('asu_rfi', 'SF Error message email sent to ' . $to_email);
-          variable_set('SF_error_message_sent', time());
+          variable_set('asu_rfi_SF_error_message_sent', time());
         }
       }
     }
@@ -530,12 +529,12 @@ function _asu_rfi_repost_data($node, $post = array(), $program = 'Undergraduate'
   $post['citizenship'] = isset($node->field_rfi_international['und'][0]['value']) ? $node->field_rfi_international['und'][0]['value'] : '';
   $post['questions'] = isset($node->field_rfi_question['und'][0]['value']) ? $node->field_rfi_question['und'][0]['value'] : '';
   $post['student_type'] = $node->field_rfi_student_type['und'][0]['value'];
-  if (isset($node->field_rfi_location['und'][0]['value'])) {
-    $post['location'] = $node->field_rfi_location['und'][0]['value'];
-  }
-  else {
-    $post['location'] = 'no_preference';
-  }
+
+  // Location
+  $post['location'] = (isset($node->field_rfi_location['und'][0]['value']) && !empty($node->field_rfi_location['und'][0]['value']))
+    ? $node->field_rfi_location['und'][0]['value']
+    : 'no_preference';
+
   $post['campus'] = $node->field_rfi_campus['und'][0]['value'];
   $post['zipcode'] = isset($node->field_rfi_zipcode['und'][0]['value']) ? $node->field_rfi_zipcode['und'][0]['value'] : '';
   $post['mobile_check'] = isset($node->field_rfi_sms_opted['und'][0]['value']) ? $node->field_rfi_sms_opted['und'][0]['value'] : '';
@@ -568,7 +567,7 @@ function _asu_rfi_repost_data($node, $post = array(), $program = 'Undergraduate'
     asu_rfi_undergrad_post($post);
     drupal_set_message('Posted undergrad to Middleware');
   }
-  variable_set('last_attempt_SF_posting', time());
+  variable_set('asu_rfi_last_attempt_SF_posting', time());
 }
 
 /**
@@ -812,13 +811,13 @@ function asu_rfi_disable_form(&$form, $decider) {
 }
 
 /**
- * Queries the degrees in order to configure the location piece.
- * @param array $pcodes A list of the plan codes used in the RFI
- * @return array $campusOptions Returns an array of the available campuses
+ * Queries the degrees in order to configure the location element of the form.
+ * @param array $pcodes A list of the plan codes used in the RFI form
+ * @return mixed $campusOptions An array of the available campuses
  */
 function _asu_rfi_query_codes($pcodes) {
   $degreeMappings = _asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
-  $asuOnlineList = asu_rfi_parse_programs();
+  $asuOnlineList = _asu_rfi_parse_programs();
 
   $campusOptions = array();
 
@@ -833,8 +832,8 @@ function _asu_rfi_query_codes($pcodes) {
     $result = $query->execute();
 
     if (isset($result['node'])) {
-      $r_nodes = $result['node'];
-      $desiredProg = _asu_rfi_get_query_codes($r_nodes);
+      $result_nodes = $result['node'];
+      $desiredProg = _asu_rfi_get_program_codes($result_nodes, 'desiredProg');
       $availableOnline = _asu_rfi_compare_online_availability($desiredProg['code'], $asuOnlineList);
 
       $locations = $desiredProg['locations'];
@@ -844,7 +843,8 @@ function _asu_rfi_query_codes($pcodes) {
           if ($location['value'] == "Online") {
             $hasOnline = TRUE;
           }
-          if ((($hasOnline == TRUE && $availableOnline == TRUE) || ($hasOnline == FALSE)) && !in_array($location['value'], $campusOptions)) {
+          if ((($hasOnline == TRUE && $availableOnline == TRUE) || ($hasOnline == FALSE))
+            && !in_array($location['value'], $campusOptions)) {
             array_push($campusOptions, $location['value']);
           } else {
             if ($hasOnline == TRUE && $availableOnline == FALSE) {
@@ -863,7 +863,9 @@ function _asu_rfi_query_codes($pcodes) {
     if ($onlineError == TRUE) {
       global $user;
       if (in_array('administrator', $user->roles)) {
-        drupal_set_message("This degree program(" . $desiredProg['title'] . ") is not yet fully online. We may need more details from you to complete it’s launch. Please contact EdPlus at ASU for more information; EdPlus@asu.edu", 'error');
+        drupal_set_message("This degree program(" . $desiredProg['title']
+          . ") is not yet fully online. We may need more details from you to complete
+          its launch. Please email EdPlus@asu.edu for more information.", 'error');
       }
     }
   }
@@ -1063,11 +1065,10 @@ function _asu_rfi_get_grad_programs() {
 
 /**
  * Get programs from query results
- * @param $items
- * @param array $out - list of programs
- * @return array $out
+ * @param array $items - array of nodes to pull program information from
+ * @return array $out - list of programs
  */
-function _asu_rfi_get_program_results($items, $out = array()) {
+function _asu_rfi_get_program_results($items) {
   $degreeMappings = _asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
   foreach ($items as $nid => $program) {
     $program_wrapper = entity_metadata_wrapper('node', $program);
@@ -1076,17 +1077,19 @@ function _asu_rfi_get_program_results($items, $out = array()) {
     // Abbr in value matches how we present name in get programs Views Datasource View.
     $out[$program_plan_code] = $program_abbr;
   }
+  dpm($out, __FUNCTION__ . ' - programs for input ');
   return $out;
 }
 
 /**
- * Return desired programs from list of nodes.
- * @param $r_nodes
+ * Return desired programs from list of nodes OR list of programs, depending in $data_type
+ * @param $result_nodes
+ * @param (str) $data_type - Must be 'programs' or 'desiredProg'
  * @return array
  */
-function _asu_rfi_get_query_codes($r_nodes) {
+function _asu_rfi_get_program_codes($result_nodes, $data_type) {
   $degreeMappings = _asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
-  $program_nids = array_keys($r_nodes);
+  $program_nids = array_keys($result_nodes);
   $programs = entity_load('node', $program_nids);
   $programs = reset($programs);
   $programs = (array) $programs;
@@ -1096,7 +1099,9 @@ function _asu_rfi_get_query_codes($r_nodes) {
     'title' => $programs['title'],
     'locations' => $programs[$degreeMappings['field_degree_campus']]['und'],
   );
-  return $desiredProg;
+  $out = ${$data_type};
+  dpm(${$data_type}['locations'], __FUNCTION__ . ' - ' . $desiredProg['code'] . ' - ' . $desiredProg['title']);
+  return $out;
 }
 
 /**
@@ -1120,13 +1125,17 @@ function asu_rfi_determine_environment() {
   else {
     $environ = 'unknown';
   }
-  variable_set('siteDomain', $environ);
+  variable_set('asu_rfi_siteDomain', $environ);
   return $environ;
 }
 
 /*******************************************************************************
  * Views bulk operation hook to do bulk submissions of RFI submissions to middleware
  ********************************************************************************/
+
+/**
+ * Implements hook_action_info().
+ */
 function asu_rfi_action_info() {
   return array(
     'asu_rfi_bulk_submit_action' => array(
@@ -1140,6 +1149,11 @@ function asu_rfi_action_info() {
   );
 }
 
+/**
+ * Callback for hook_action_info
+ * @param $node
+ * @param $context
+ */
 function asu_rfi_bulk_submit_action(&$node, $context) {
   if ($node->field_rfi_prospect_level['und'][0]['value'] == "Graduate") {
     _asu_rfi_repost_data($node, array(), 'Graduate');
@@ -1545,4 +1559,38 @@ function _asu_rfi_correct_campus_id($campus) {
       $campusId = '';
   }
   return $campusId;
+}
+
+function _asu_rfi_failed_post_email($to_email, $nid) {
+  $host = $_SERVER['HTTP_HOST'];
+  //send email to admin reporting the issue
+  $content = "The following <a href='https://$host/node/$nid'>submission</a> from " . $_SERVER['HTTP_HOST']
+    . " has a problem and hasn't been submitted to middleware.";
+  $subject = "Failed submissions to SalesForce from " . $_SERVER['HTTP_HOST'];
+  $my_module = 'mimemail';
+  $my_mail_token = '';
+  $MimeMailSystem = drupal_mail_system($my_module, $my_mail_token);
+  $default_from = variable_get('site_mail', ini_get('sendmail_from'));
+  $message = array(
+    'id' => $my_module . '_' . $my_mail_token,
+    'from' => $default_from,
+    'key' => '',
+    'subject' => $subject,
+    'body' => array($content),
+    'to' => $to_email,
+    'module' => 'mimemail',
+    'headers' => array(
+      'From' => $default_from,
+      'Sender' => $default_from,
+      'Return-Path' => $default_from,
+      'Content-Type' => 'text/html; charset=UTF-8;',
+      'to' => $to_email
+    ),
+  );
+
+  $email_message = $MimeMailSystem->format($message);
+  if ($MimeMailSystem->mail($email_message)) {
+    watchdog('asu_rfi', 'SF Error message email sent to ' . $to_email);
+    variable_set('asu_rfi_SF_error_message_sent', time());
+  }
 }

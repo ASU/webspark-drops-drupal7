@@ -2,20 +2,19 @@
 
 /**
  * Get degree mappings
- * Same as grad
- *
- * Example usage:
- * $degreeMappings = _asu_rfi_get_degree_mappings();
- * $degreeContentType = $degreeMappings['content_type'];
  */
 function asu_rfi_get_degree_mappings_undergrad_post() {
   return _asu_rfi_get_degree_mappings();
 }
 
+/**
+ * Post data to SalesForce
+ * @param $data
+ */
 function asu_rfi_undergrad_post($data) {
   $degreeMappings = asu_rfi_get_degree_mappings_undergrad_post();
-  $nodeid = $data['submission_nodeid'];
-  $node = node_load($nodeid);
+  $nid = $data['submission_nodeid'];
+  $node = node_load($nid);
   $nodeArr = array(
     $node->field_rfi_program['und'][0]['value'] => $node->field_rfi_program_name['und'][0]['value']
   );
@@ -36,7 +35,7 @@ function asu_rfi_undergrad_post($data) {
   $email = $data['email'];
   $ipAddress = isset($data['ip_address']) ? $data['ip_address'] : $_SERVER['REMOTE_ADDR'];
   $phone = preg_replace('[\D]', '', $data['phone']);
-  // $term = (!empty($data['start_date'])) ? $data['start_date'] : '';
+  // $term = (!empty($data['start_date'])) ? $data['start_date'] : ''; // unused?
 
   $location = $data['location'];
   $campus = $data['campus'];
@@ -59,20 +58,23 @@ function asu_rfi_undergrad_post($data) {
   }
 
   $form_mode = variable_get('asu_rfi_form_mode');
-  $hashkey = sha1($mw_auth_key . '+' . $nodeid);
+  $hashkey = sha1($mw_auth_key . '+' . $nid);
   $type_of_form = $data['type_of_form'];
   $domain = isset($data['domain']) ? $data['domain'] : $_SERVER['HTTP_HOST'];
   $source = $domain . '-' . $type_of_form . '-UG';
   $campus = _asu_rfi_correct_campus_id($campus);
 
-  $mobile = (isset($data['mobile_check'])) ? str_replace('-', '', $data['mobile_check']) : '';   // mobile phone
+  $mobile = (isset($data['mobile_check']))
+    ? str_replace('-', '', $data['mobile_check'])
+    : ''; // mobile phone
   $dob = (isset($data['birthdate'])) ? $data['birthdate'] : ''; // date of birth
   $military = (isset($data['military'])) ? $data['military'] : '';  // Military
   $comment = (isset($data['questions'])) ? $data['questions'] : ''; // Comment
   $city = (isset($data['city'])) ? $data['city'] : ''; // City
   $address = (isset($data['address'])) ? $data['address'] : ''; // Address
   $country = (isset($data['country'])) ? $data['country'] : ''; // country
-  $enterpriseclientid = (isset($data['enterpriseclientid'])) ? $data['enterpriseclientid'] : '';   // Enterprise clientid for EdPlus Leads
+  $enterpriseclientid = (isset($data['enterpriseclientid']))
+    ? $data['enterpriseclientid'] : ''; // Enterprise clientid for EdPlus Leads
 
   if ($location == "no_preference" &&
     sizeof($availableCampuses) == 1 &&
@@ -82,7 +84,7 @@ function asu_rfi_undergrad_post($data) {
 
   // Compile RFI submission data
 
-  $url = "https://webforms.asu.edu/asu_rfi_dedupe/submit_rfi/$hashkey/$nodeid";
+  $url = "https://webforms.asu.edu/asu_rfi_dedupe/submit_rfi/$hashkey/$nid";
 
   $fields = array(
     'source_id' => $source,
@@ -114,11 +116,11 @@ function asu_rfi_undergrad_post($data) {
 
   if (strtolower($location) == 'online') {
 
-    $asuOnlineList = asu_rfi_parse_programs();
+    $asuOnlineList = _asu_rfi_parse_programs();
     $managedOnline = asu_rfi_check_managed_online($prog_code, $asuOnlineList);
 
     if ($managedOnline == true) {
-      $fields = asu_rfi_online_fields($fields, $nodeid, $ipAddress, $college_code, $type_of_form, $enterpriseclientid);
+      $fields = asu_rfi_online_fields($fields, $nid, $ipAddress, $college_code, $type_of_form, $enterpriseclientid);
       $body = json_encode($fields);
       $fieldHash = sha1($mw_auth_key . '+' . $body);
       $url = "https://webforms.asu.edu/asu_edplus_middleware/submit/$fieldHash";
@@ -152,44 +154,13 @@ function asu_rfi_undergrad_post($data) {
       if (!empty($mw_auth_key)) {
         if (!empty($to_email)) {
           if (!isset($data['cron_run']) || ($data['cron_run'] != "Cron_running")) {
-            $host = $_SERVER['HTTP_HOST'];
-            //send email to admin reporting the issue
-            $content = "The following <a href='https://$host/node/$nodeid'>submission</a> from " . $_SERVER['HTTP_HOST'] . " has some problem and hasn't been submitted to middleware";
-            $subject = "Failed submissions to Sales Force from " . $_SERVER['HTTP_HOST'];
-            $my_module = 'mimemail';
-            $my_mail_token = '';
-            $MimeMailSystem = drupal_mail_system($my_module, $my_mail_token);
-            $default_from = variable_get('site_mail', ini_get('sendmail_from'));
-            $message = array(
-              'id' => $my_module . '_' . $my_mail_token,
-              'from' => $default_from,
-              'key' => '',
-              'subject' => $subject,
-              'body' => array($content),
-              'to' => $to_email,
-              'module' => 'mimemail',
-              'headers' => array(
-                'From' => $default_from,
-                'Sender' => $default_from,
-                'Return-Path' => $default_from,
-                'Content-Type' => 'text/html; charset=UTF-8;',
-                'to' => $to_email
-              ),
-            );
-
-            $emailmessage = $MimeMailSystem->format($message);
-            if ($MimeMailSystem->mail($emailmessage)) {
-              watchdog('asu_rfi', 'SF Error message email sent to ' . $to_email);
-              variable_set('SF_error_message_sent', time());
-            }
+            _asu_rfi_failed_post_email($to_email, $nid);
           }
         }
       }
-
       if (drupal_valid_path('admin')) {
         drupal_set_message('Error message from Middleware: ' . $error_message);
       }
-
     }
     curl_close($ch);
 
@@ -213,7 +184,7 @@ function asu_rfi_check_managed_online($program, $getProgramsList) {
   return false;
 }
 
-function asu_rfi_online_fields($fields, $nodeid, $ip, $college_code, $type_of_form, $enterpriseclientid) {
+function asu_rfi_online_fields($fields, $nid, $ip, $college_code, $type_of_form, $enterpriseclientid) {
   $fieldsUpdated = array(
     'first_name' => $fields['first_name'],
     'last_name' => $fields['last_name'],
@@ -223,10 +194,10 @@ function asu_rfi_online_fields($fields, $nodeid, $ip, $college_code, $type_of_fo
     'prod_test_flag' => $fields['prod_test_flag'],
     'base_url' => $fields['base_url'],
     'origin_uri' => $GLOBALS['base_url'] . '/' . request_path(),
-    'remote_nid' => $nodeid,
+    'remote_nid' => $nid,
     'ldetect_v' => $ip,
     'campaign' => $fields['base_url'] . '-' . $type_of_form . '-UG',
-    'sourceid' => $nodeid, // Overwritten with API key in Middleware.
+    'sourceid' => $nid, // Overwritten with API key in Middleware.
     'enterpriseclientid' => $enterpriseclientid,
   );
   return $fieldsUpdated;
