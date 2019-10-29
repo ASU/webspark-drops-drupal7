@@ -4,12 +4,11 @@
 
       setTimeout(function () {
         var fname = $('#edit-first-name').val();
-        //  alert(fname.length);
 
         if (fname.length > 0) {
           window.location = window.location;
           $("#asu-rfi-form-data")[0].reset();
-          $("#asu_rfi_second_form")[0].reset();
+          $("#asu-rfi-second_form")[0].reset();
           $('#asu-rfi-long-form-data')[0].reset();
         }
       }, 180000);
@@ -19,10 +18,10 @@
         if ($('#asu-rfi-form-data').length) {
           $('#asu-rfi-form-data')[0].reset();
         }
-        if ($('#asu_rfi_second_form').length) {
-          $('#asu_rfi_second_form')[0].reset();
+        if ($('#asu-rfi-second-form').length) {
+          $('#asu-rfi-second-form')[0].reset();
         }
-      })
+      });
 
 
       // Hide empty date of birth <li> alert text
@@ -73,16 +72,16 @@
       $('#asu-rfi-form-data').submit(function () {
         $(window).on('unload', function () {
           $('#asu-rfi-form-data')[0].reset();
-          // $('#asu_rfi_second_form').trigger("reset");
+          // $('#asu-rfi-second-form').trigger("reset");
         });
-      })
+      });
 
-      $('#asu_rfi_second_form').submit(function () {
+      $('#asu-rfi-second-form').submit(function () {
         $(window).on('unload', function () {
           $('#asu-rfi-form-data')[0].reset();
-          $('#asu_rfi_second_form').trigger("reset");
+          $('#asu-rfi-second-form').trigger("reset");
         });
-      })
+      });
 
       /* Add CSS to date of birth field */
       $('#asu-rfi-form-data').submit(function () {
@@ -94,5 +93,4 @@
 
     }
   }
-})
-(jQuery);
+})(jQuery);
