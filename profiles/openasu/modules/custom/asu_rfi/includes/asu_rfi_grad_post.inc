@@ -1,171 +1,64 @@
 <?php
 
 /**
- * Settings function to improve future-proofing.
+ * Get degree mappings
+ * Same as undergrad
  *
  * Example usage:
- * $degreeMappings = asu_rfi_get_degree_mappings_pages();
+ * $degreeMappings = _asu_rfi_get_degree_mappings();
  * $degreeContentType = $degreeMappings['content_type'];
  */
 function asu_rfi_get_degree_mappings_grad_post() {
-  // Swap out mapping values based on module enabled.
-  // ASU AP takes priority, but default is to ASU
-  // Degrees (deprecated);
-  if (module_exists('asu_ap')) {
-    $map = array(
-      // Content Type
-      'content_type' => 'asu_ap',
-      // Tables
-      'table_asu_academic_plan' => 'field_data_field_asu_ap_acad_plan',
-      'table_asu_academic_program' => 'field_data_field_asu_ap_acad_prog',
-      'table_asu_degree_awarded' => 'field_data_field_asu_ap_awarded',
-      'table_asu_degree_program' => 'field_data_field_asu_ap_program',
-      'table_asu_diploma_description' => 'field_data_field_asu_ap_diploma_desc',
-      // Fields
-      'field_academic_plan' => 'field_asu_ap_acad_plan',
-      'field_academic_plan_value' => 'field_asu_ap_acad_plan_value',
-      'field_academic_program' => 'field_asu_ap_acad_prog',
-      'field_academic_program_value' => 'field_asu_ap_acad_prog_value',
-      'field_degree_awarded' => 'field_asu_ap_awarded',
-      'field_degree_awarded_value' => 'field_asu_ap_awarded_value',
-      'field_degree_campus' => 'field_asu_ap_campus',
-      'field_degree_program' => 'field_asu_ap_program',
-      'field_degree_program_value' => 'field_asu_ap_program_value',
-      'field_diploma_description' => 'field_asu_ap_diploma_desc',
-      'field_diploma_description_value' => 'field_asu_ap_diploma_desc_value',
-    );
-  } else { // asu_degrees
-    $map = array(
-      // Content Type
-      'content_type' => 'asu_degree',
-      // Tables
-      'table_asu_academic_plan' => 'field_data_field_asu_academic_plan',
-      'table_asu_academic_program' => 'field_data_field_asu_academic_program',
-      'table_asu_degree_awarded' => 'field_data_field_asu_degree_awarded',
-      'table_asu_degree_program' => 'field_data_field_asu_degree_program',
-      'table_asu_diploma_description' => 'field_data_field_asu_diploma_description',
-      // Fields
-      'field_academic_plan' => 'field_asu_academic_plan',
-      'field_academic_plan_value' => 'field_asu_academic_plan_value',
-      'field_academic_program' => 'field_asu_academic_program',
-      'field_academic_program_value' => 'field_asu_academic_program_value',
-      'field_degree_awarded' => 'field_asu_degree_awarded',
-      'field_degree_awarded_value' => 'field_asu_degree_awarded_value',
-      'field_degree_campus' => 'field_asu_degree_campus',
-      'field_degree_program' => 'field_asu_degree_program',
-      'field_degree_program_value' => 'field_asu_degree_program_value',
-      'field_diploma_description' => 'field_asu_diploma_description',
-      'field_diploma_description_value' => 'field_asu_diploma_description_value',
-    );
-  }
-  return $map;
+  return _asu_rfi_get_degree_mappings();
 }
 
-function asu_rfi_grad_post($data)
-{
-
+function asu_rfi_grad_post($data) {
   $degreeMappings = asu_rfi_get_degree_mappings_grad_post();
-
   $nodeid = $data['submission_nodeid'];
-
   $node = node_load($nodeid);
-
   $nodeArr = array(
     $node->field_rfi_program['und'][0]['value'] => $node->field_rfi_program_name['und'][0]['value']
   );
-  $availableCampuses = asu_rfi_query_codes($nodeArr);
+  $availableCampuses = _asu_rfi_query_codes($nodeArr);
 
   $node_wrapper = entity_metadata_wrapper('node', $node);
   if ($node_wrapper->field_rfi_submission_status->value() == "Incomplete") {
-
     $node_wrapper->field_rfi_submission_status->set('Pending');
-
   } else if ($node_wrapper->field_rfi_submission_status->value() == "Pending") {
-
     $node_wrapper->field_rfi_submission_status->set('Action Required');
-
   }
 
-  $domain = isset($data['domain']) ? $data['domain'] : $_SERVER['HTTP_HOST'];
-  $phone = preg_replace('[\D]', '', $data['phone']);
-  $state = $data['state'];
   $form_mode = variable_get('asu_rfi_form_mode');
+  $domain = isset($data['domain']) ? $data['domain'] : $_SERVER['HTTP_HOST'];
   $type_of_form = $data['type_of_form'];
   $source = $domain . '-' . $type_of_form . '-G';
-  $campus = asu_rfi_correct_campus_id($data['campus']);
-  $ipAddress = isset($data['ip_address']) ? $data['ip_address'] : $_SERVER['REMOTE_ADDR'];
-  //get athentication key
+
+  // Get authentication key
   $mw_auth_key = variable_get('asu_rfi_form_auth_key');
   $hashkey = sha1($mw_auth_key . '+' . $nodeid);
 
-  //mobile number
-  if (isset($data['mobile_check'])) {
-    $mobile = str_replace('-', '', $data['mobile_check']);
-  } else {
-    $mobile = '';
-  }
-
-
-  //date of birth
-  if (isset($data['birthdate'])) {
-    $dob = $data['birthdate'];
-  } else {
-    $dob = '';
-  }
-
-  //Military
-  if (isset($data['military'])) {
-    $military = $data['military'];
-  } else {
-    $military = '';
-  }
-
-  if (isset($data['semester_name'])) {
-    $term = $data['semester_name'];
-  } else {
-    $term = '';
-  }
-
-  //Comment
-  if (isset($data['questions'])) {
-    $comment = $data['questions'];
-  } else {
-    $comment = '';
-  }
-
-  //city
-  if (isset($data['city'])) {
-    $city = $data['city'];
-  } else {
+  $ipAddress = isset($data['ip_address']) ? $data['ip_address'] : $_SERVER['REMOTE_ADDR'];
+  $term = (isset($data['semester_name'])) ? $data['semester_name'] : '';
+  $campus = _asu_rfi_correct_campus_id($data['campus']);
+  $phone = preg_replace('[\D]', '', $data['phone']);
+  $mobile = (isset($data['mobile_check'])) ? str_replace('-', '', $data['mobile_check']) : '';   // mobile phone
+  $dob = (isset($data['birthdate'])) ? $data['birthdate'] : ''; // date of birth
+  $military = (isset($data['military'])) ? $data['military'] : '';  // Military
+  $comment = (isset($data['questions'])) ? $data['questions'] : ''; // Comment
+  $address = (isset($data['address'])) ? $data['address'] : ''; // Address
+  $city = (isset($data['city'])) ? $data['city'] : ''; // City
+  $state = (isset($data['state'])) ? $data['state'] : ''; //
+  $country = (isset($data['country'])) ? $data['country'] : ''; // country
+  if ($country !== "United States" || $country !== "Canada") {
+    $address = '';
+    $state = '';
     $city = '';
   }
-  if (isset($data['address'])) {
-    $address = $data['address'];
-  } else {
-    $address = '';
-  }
+  $location = (isset($data['location'])) ? $data['location'] : '';
+  // enterpriseclientid for use in EdPlus Leads submissions.
+  $enterpriseclientid = (isset($data['enterpriseclientid'])) ? $data['enterpriseclientid'] : '';
 
-  //country
-  if (isset($data['country'])) {
-    $country = $data['country'];
-  } else {
-    $country = '';
-  }
-
-  if (isset($data['location'])) {
-    $location = $data['location'];
-  } else {
-    $location = '';
-  }
-
-  //enterpriseclientid for use in EdPlus Leads submissions.
-  if (isset($data['enterpriseclientid'])) {
-    $enterpriseclientid = $data['enterpriseclientid'];
-  } else {
-    $enterpriseclientid = '';
-  }
-
-  //Get siteDomain variable to see if it's dev or qa site.
+  // Get siteDomain variable to see if it's dev or qa site.
   global $base_url;
 
   if ((strpos($base_url, 'https://localhost') === 0) || (strpos($base_url, 'http://localhost') === 0)) {
@@ -192,14 +85,6 @@ function asu_rfi_grad_post($data)
     }
   }
 
-
-
-  if ($country !== "United States" || $country !== "Canada") {
-    $address = '';
-    $state = '';
-    $city = '';
-  }
-
   // build data array to post
   $submission_data = array(
     'source' => $source,
@@ -220,7 +105,6 @@ function asu_rfi_grad_post($data)
     'iStudent' => $data['citizenship'],
     'smsNumber' => $mobile,
     'campusSelection' => $campus,
-
   );
 
   if(!isset($campus) && sizeof($availableCampuses) == 1 && ($availableCampuses[0] == "Online" || $availableCampuses[0] == "online")){
@@ -234,7 +118,11 @@ function asu_rfi_grad_post($data)
 
     if ($managedOnline == true) {
 
-      $college_code = db_query('select ' . $degreeMappings['field_academic_program_value'] . ' from ' . $degreeMappings['table_asu_academic_program'] . ' prog join ' . $degreeMappings['table_asu_academic_plan'] . ' plan on prog.entity_id = plan.entity_id where plan.' . $degreeMappings['field_academic_plan_value'] . ' = :plancode', array(':plancode' => $data['program_code']))->fetchField();
+      $college_code = db_query('select ' . $degreeMappings['field_academic_program_value']
+        . ' from ' . $degreeMappings['table_asu_academic_program'] . ' prog join '
+        . $degreeMappings['table_asu_academic_plan'] . ' plan on prog.entity_id = plan.entity_id where plan.'
+        . $degreeMappings['field_academic_plan_value'] . ' = :plancode',
+        array(':plancode' => $data['program_code']))->fetchField();
 
       $submission_data = array(
         'first_name' => $data['first_name'],
@@ -295,7 +183,7 @@ function asu_rfi_grad_post($data)
     $node_wrapper->field_rfi_submission_status->set('SF_Complete');
     $node_wrapper->field_rfi_error_message->set('');
     $node_wrapper->save();
-    //if succesfully to post to SF, the set "last_failure_SF_posting" variable to current time
+    // If successfully to post to SF, the set "last_failure_SF_posting" variable to current time
     variable_set('last_success_SF_posting', time());
   }
 
@@ -303,40 +191,4 @@ function asu_rfi_grad_post($data)
   if (($info['http_code'] != 200)) {
     variable_set('last_failure_SF_posting', time());
   }
-}
-
-function asu_rfi_correct_campus_id($campus)
-{
-
-  switch ($campus) {
-    case "Tempe":
-      $campusId = "TEMPE";
-      break;
-    case "Online":
-      $campusId = "ONLNE";
-      break;
-    case "East Arizona College":
-      $campusId = "EAC";
-      break;
-    case "Polytechnic":
-      $campusId = "POLY";
-      break;
-    case "Lake Havasu":
-      $campusId = "CALHC";
-      break;
-    case "West":
-      $campusId = "WEST";
-      break;
-    case "Downtown":
-      $campusId = "DTPHX";
-      break;
-    case "Arizona Western College":
-      $campusId = "AWC";
-      break;
-    default:
-      $campusId = '';
-
-  }
-
-  return $campusId;
 }
