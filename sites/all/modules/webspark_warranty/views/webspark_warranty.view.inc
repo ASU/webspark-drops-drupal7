@@ -1,5 +1,6 @@
 <?php
-/*** @file - webspark_warranty.view.inc
+/***
+ * @file - webspark_warranty.view.inc
  *
  * Includes file that acts as the view template for a Drupal menu page
  *
