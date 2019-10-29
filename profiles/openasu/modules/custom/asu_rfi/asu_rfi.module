@@ -129,7 +129,6 @@ function asu_rfi_block_info() {
  * @return array
  */
 function asu_rfi_block_view($delta = '', $multi_id = NULL) {
-
   $block = array();
   switch ($delta) {
     case 'asu_rfi_form_block':
@@ -138,7 +137,6 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
 
       // Default programs array
       $programs = array();
-
       // Get instance settings.
       $instance_settings = asu_rfi_get_block_instance_settings($multi_id);
 
@@ -148,20 +146,26 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
         //Load the multi form
         $block['content'] = asu_rfi_form($delta);
       }
-      // Undergrad long form settings
-      // Only array keys are passed, so load all programs and compare with saved instance setting using array_intersect_key function
-      if (($instance_settings['form_type'] == 'ugrad_longform') || ($instance_settings['form_type'] == 'current_undergrad_form')) {
+
+      // Undergrad long form settings ONLY
+        // Only array keys are passed, so load all programs and compare with saved
+        // instance setting using array_intersect_key function
+      if (($instance_settings['form_type'] == 'ugrad_longform')
+        || ($instance_settings['form_type'] == 'current_undergrad_form')) {
         $program_options = asu_rfi_get_undergrad_programs();
         if (!empty($instance_settings['programs'])) {
           $programs = array_intersect_key($program_options, array_flip($instance_settings['programs']));
-        } //If none of the programs is selected in block settings page, show all the programs in the RFI form drop down
+        }
+        // If none of the programs is selected in block settings page, show all
+        // the programs in the RFI form drop down.
         else {
           $programs = $program_options;
         }
       }
 
-      // Grad long form settings
-      if (($instance_settings['form_type'] == 'graduate_longform') || ($instance_settings['form_type'] == 'current_grad_form')) {
+      // Grad long form settings ONLY
+      if (($instance_settings['form_type'] == 'graduate_longform')
+        || ($instance_settings['form_type'] == 'current_grad_form')) {
         $program_options = asu_rfi_get_grad_programs();
         if (!empty($instance_settings['grad_programs'])) {
           $programs = array_intersect_key($program_options, array_flip($instance_settings['grad_programs']));
@@ -170,17 +174,18 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
           $programs = $program_options;
         }
       }
-
-      if (($instance_settings['form_type'] == 'ugrad_longform') || ($instance_settings['form_type'] == 'graduate_longform')) {
+      // Future student form settings (ugrad or grad)
+      if (($instance_settings['form_type'] == 'ugrad_longform')
+        || ($instance_settings['form_type'] == 'graduate_longform')) {
         $form_type = $instance_settings['form_type'];
         $block['subject'] = t('Future Student Form');
         module_load_include('inc', 'asu_rfi', 'includes/asu_rfi.pages');
         // TODO Load the RFI form in this block.
         $block['content'] = asu_rfi_long_form($delta, $programs, $form_type);
       }
-
-      // Current student form settings
-      if (($instance_settings['form_type'] == 'current_undergrad_form') || ($instance_settings['form_type'] == 'current_grad_form')) {
+      // Current student form settings (ugrad or grad)
+      if (($instance_settings['form_type'] == 'current_undergrad_form')
+        || ($instance_settings['form_type'] == 'current_grad_form')) {
         $form_type = $instance_settings['form_type'];
         $block['subject'] = t('Current Student Form');
         module_load_include('inc', 'asu_rfi', 'includes/asu_rfi.pages');
@@ -189,8 +194,11 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
       }
 
       // Default - ERROR: No programs selected by above logic.
-      if (empty($programs)) {
-        watchdog('asu_rfi', 'No instance_settings for block @multi_id', array('multi_id' => $multi_id), WATCHDOG_ERROR);
+      if (empty($programs) && !($instance_settings['form_type'] == 'multiform')) {
+        $message = "No relevant programs set for this "
+          . check_plain($instance_settings['form_type']) . " form.";
+        watchdog('asu_rfi', $message, array(), WATCHDOG_ERROR);
+        drupal_set_message($message, 'error', FALSE);
       }
 
       break;
@@ -620,7 +628,7 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
 
   // Add js file to second multistep form
   if (isset($form['#prefix'])) {
-    if ($form['#prefix'] == '<div id="rfi_second_form">') {
+    if ($form['#prefix'] == '<div id="rfi-second-form">') {
       drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/theme/session_clear.js', 'file');
     }
   }

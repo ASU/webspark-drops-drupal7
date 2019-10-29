@@ -130,7 +130,8 @@ function asu_rfi_form_data($form, &$form_state) {
     if (($form_mode == "test") || (empty($form_mode))) {
       $form['form_stage'] = array(
         '#type' => 'item',
-        '#markup' => t('<div class="rfi_test_mode">The form is in test mode, you can change the mode in <a href="/admin/config/content/asurfi">admin settings page</a></div>')
+        '#markup' => t('<div class="alert alert-warning"><b>NOTE</b>: The form is in <b>testing mode</b>.
+        Change the mode in the <a href="/admin/config/content/asurfi">the ASU RFI module settings</a>.</div>')
       );
     }
     $form['req_header_text'] = array(
@@ -339,7 +340,7 @@ function asu_rfi_form_data($form, &$form_state) {
     );
     $form['submit'] = array(
       '#type' => 'submit',
-      '#attributes' => array('class' => array('rfi_button')),
+      '#attributes' => array('class' => array('rfi-button')),
       '#submit' => array('asu_rfi_form_data_submit'),
       '#value' => t('Next'),
     );
@@ -462,7 +463,7 @@ function asu_rfi_form_data_submit($form, &$form_state) {
   $form_state['storage']['enterpriseclientid'] = check_plain($form_state['values']['enterpriseclientid']);
   $form_state['storage']['birthdate'] = $dob_date;
 
-  //get start date array
+  // get start date array
 
   $sem_dates = _asu_rfi_sem_dates();
 
@@ -493,13 +494,6 @@ function asu_rfi_form_data_submit($form, &$form_state) {
   $unique_id = $form_state['values']['first_name'] . $form_state['values']['email'] . $form_state['values']['prog_plan'];
 
   // Check for duplicate submissions - check_duplicate never used
-  /*
-  $check_duplicate = db_select('field_data_field_rfi_uniquedata', 'afu')
-    ->fields('afu')
-    ->condition('field_rfi_uniquedata_value', $unique_id, '=')
-    ->execute()
-    ->fetchField();
-  */
 
   //check if unique id exists in the database
   $node_unique = db_query('SELECT field_rfi_uniquedata_value FROM {field_data_field_rfi_uniquedata} WHERE field_rfi_uniquedata_value = :unid', array(':unid' => $unique_id))->fetchField();
@@ -627,7 +621,6 @@ function asu_rfi_second_form($form, &$form_state) {
       unset($_SESSION['rfi_data']);
       unset($form_state['values']);
       unset($form_state['storage']);
-      // drupal_set_message(t('Your session has expired, please fill out the form again'), 'error');
       $form['sess_expire_message'] = array(
         '#type' => 'item',
         '#markup' => '<div class="alert-danger" style="padding:2%;">Your session has expired, please fill out the form again.</div>',
@@ -642,13 +635,14 @@ function asu_rfi_second_form($form, &$form_state) {
     'time_restriction'
   ));
   $form['#id'] = 'asu_rfi_second_form';
-  $form['#prefix'] = '<div id="rfi_second_form">';
+  $form['#prefix'] = '<div id="rfi-second-form">';
   $form['#suffix'] = '</div>';
   $form_mode = variable_get('asu_rfi_form_mode');
   if (($form_mode == "test") || (empty($form_mode))) {
     $form['form_stage'] = array(
       '#type' => 'item',
-      '#markup' => t('<div class="rfi_test_mode">The form is in test mode, you can change the mode in <a href="/admin/config/asu/asurfi">admin settings page</a></div>')
+      '#markup' => t('<div class="alert alert-warning">This form is in testing mode! You can 
+         change the mode in <a href="/admin/config/asu/asurfi">admin settings page</a></div>')
     );
   }
 
@@ -676,7 +670,7 @@ function asu_rfi_second_form($form, &$form_state) {
   if (isset($_SESSION['rfi_data']) && isset($_SESSION['rfi_data']['country']) && ($_SESSION['rfi_data']['country'] == "United States" || $_SESSION['rfi_data']['country'] == "Canada")) {
     $form['address_info'] = array(
       '#type' => 'fieldset',
-      '#title' => 'Please also send me information to the following address',
+      '#title' => 'Please also send me information to the following address...',
       '#collapsible' => FALSE,
       '#collapsed' => FALSE,
     );
@@ -743,7 +737,7 @@ function asu_rfi_second_form($form, &$form_state) {
   );
   $form['back'] = array(
     '#type' => 'submit',
-    '#attributes' => array('class' => array('rfi_button')),
+    '#attributes' => array('class' => array('rfi-button')),
     '#value' => t('Back'),
     '#submit' => array('asu_rfi_form_data'),
   );
@@ -753,7 +747,7 @@ function asu_rfi_second_form($form, &$form_state) {
   );
   $form['submit'] = array(
     '#type' => 'submit',
-    '#attributes' => array('class' => array('rfi_button')),
+    '#attributes' => array('class' => array('rfi-button')),
     '#value' => t('I Agree / Submit'),
   );
 
@@ -1027,7 +1021,8 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
   if ((variable_get('asu_rfi_form_mode') == "test") || empty($form_mode)) {
     $form['form_stage'] = array(
       '#type' => 'item',
-      '#markup' => t('<div class="rfi_test_mode">The form is in test mode, you can change the mode in <a href="/admin/config/content/asurfi">admin settings page</a></div>')
+      '#markup' => t('<div class="alert alert-warning"><b>NOTE</b>: The form is in <b>TEST MODE</b>.
+        <a href="/admin/config/content/asurfi">Toggle TEST MODE off</a> under "Test/Live Mode".</div>')
     );
   }
   $form['req_header_text'] = array(
@@ -1050,7 +1045,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
   );
   $form['my_interest'] = array(
     '#type' => 'fieldset',
-    '#title' => 'I\'m Interested In...',
+    '#title' => 'I\'m interested in...',
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
     '#size' => 10,
@@ -1325,7 +1320,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
   );
   $form['address_info'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Please also send me information to the following address',
+    '#title' => 'Please also send me information to the following address...',
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
     '#states' => array(
@@ -1393,7 +1388,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('I Agree / Submit'),
-    '#attributes' => array('class' => array('rfi_button')),
+    '#attributes' => array('class' => array('rfi-button')),
   );
   return $form;
 
@@ -1809,7 +1804,8 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type) {
   if ((variable_get('asu_rfi_form_mode') == "test") || empty($form_mode)) {
     $form['form_stage'] = array(
       '#type' => 'item',
-      '#markup' => t('<div class="rfi_test_mode">The form is in test mode, you can change the mode in <a href="/admin/config/content/asurfi">admin settings page</a></div>')
+      '#markup' => t('<div class="alert alert-warning"><b>NOTE</b>: The form is in <b>testing mode</b>.
+        Change the mode in the <a href="/admin/config/content/asurfi">the ASU RFI module settings</a>.</div>')
     );
   }
   $form['req_header_text'] = array(
@@ -1832,7 +1828,7 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type) {
   );
   $form['about_me'] = array(
     '#type' => 'fieldset',
-    '#title' => 'About me',
+    '#title' => 'About me...',
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
   );
@@ -1897,7 +1893,7 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type) {
   );
   $form['submit'] = array(
     '#type' => 'submit',
-    '#attributes' => array('class' => array('rfi_button')),
+    '#attributes' => array('class' => array('rfi-button')),
     '#value' => t('I Agree / Submit'),
   );
   return $form;
