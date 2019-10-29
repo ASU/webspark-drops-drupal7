@@ -119,10 +119,9 @@ function asu_rfi_form_data($form, &$form_state) {
         unset($_SESSION['rfi_data']);
         unset($form_state['storage']);
         unset($form_state['values']);
-        // drupal_set_message('Your session has expired, please fill out the form again.');
         $form['sess_expire_message'] = array(
           '#type' => 'item',
-          '#markup' => '<div class="alert-danger" style="padding:2%;">Your session has expired, please fill out the form again.</div>',
+          '#markup' => '<div class="alert-danger" style="padding:2%;">Your session has expired. Please fill out the form again.</div>',
         );
       }
     }
@@ -130,8 +129,8 @@ function asu_rfi_form_data($form, &$form_state) {
     if (($form_mode == "test") || (empty($form_mode))) {
       $form['form_stage'] = array(
         '#type' => 'item',
-        '#markup' => t('<div class="alert alert-warning"><b>NOTE</b>: The form is in <b>testing mode</b>.
-        Change the mode in the <a href="/admin/config/content/asurfi">the ASU RFI module settings</a>.</div>')
+        '#markup' => t('<div class="alert alert-warning"><b>NOTE</b>: The form is in <b>TEST MODE</b>.
+        <a href="/admin/config/content/asurfi">Toggle TEST MODE off</a> under "Test/Live Mode".</div>')
       );
     }
     $form['req_header_text'] = array(
@@ -641,8 +640,8 @@ function asu_rfi_second_form($form, &$form_state) {
   if (($form_mode == "test") || (empty($form_mode))) {
     $form['form_stage'] = array(
       '#type' => 'item',
-      '#markup' => t('<div class="alert alert-warning">This form is in testing mode! You can 
-         change the mode in <a href="/admin/config/asu/asurfi">admin settings page</a></div>')
+      '#markup' => t('<div class="alert alert-warning"><b>NOTE</b>: The form is in <b>TEST MODE</b>.
+        <a href="/admin/config/content/asurfi">Toggle TEST MODE off</a> under "Test/Live Mode".</div>')
     );
   }
 
@@ -736,12 +735,6 @@ function asu_rfi_second_form($form, &$form_state) {
     '#maxlength' => 64,
     '#default_value' => 'MF',
   );
-  $form['back'] = array(
-    '#type' => 'submit',
-    '#attributes' => array('class' => array('rfi-button')),
-    '#value' => t('Back'),
-    '#submit' => array('asu_rfi_form_data'),
-  );
   $form['gdpr_message'] = array(
     '#type' => 'item',
     '#markup' => _asu_get_gdpr_markup()
@@ -751,6 +744,12 @@ function asu_rfi_second_form($form, &$form_state) {
     '#attributes' => array('class' => array('rfi-button')),
     '#value' => t('I Agree / Submit'),
   );
+  $form['back'] = array(
+    '#type' => 'submit',
+    '#attributes' => array('class' => array('rfi-button')),
+    '#value' => t('Back'),
+    '#submit' => array('asu_rfi_form_data'),
+  );
 
   return $form;
 }
@@ -758,7 +757,7 @@ function asu_rfi_second_form($form, &$form_state) {
 
 function asu_rfi_second_form_validate($form, &$form_state) {
 
-//When Back button on multi-step form is clicked, skip validation on the current page
+// When Back button on multi-step form is clicked, skip validation on the current page
   if ($form_state['values']['op'] == 'Back') {
     drupal_get_messages('error');
     drupal_add_js("$('html, body').animate({ scrollTop: $('#asu-rfi-form-data').offset().top - 100}, 1000);", 'inline');
@@ -887,7 +886,7 @@ function asu_rfi_second_form_submit($form, &$form_state) {
 
   node_save($node);
 
-  //used in confirmation nodes
+  // Used in confirmation nodes
   $coded_nid = base64_encode($node_entity_id);
   $coded_major = base64_encode($form_state['storage']['program_code']);
   $coded_college = base64_encode($form_state['storage']['college_name']);
