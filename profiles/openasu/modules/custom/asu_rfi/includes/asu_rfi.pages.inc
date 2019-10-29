@@ -157,7 +157,7 @@ function asu_rfi_form_data($form, &$form_state) {
     );
     $form['my_interest'] = array(
       '#type' => 'fieldset',
-      '#title' => 'I\'m interested in',
+      '#title' => 'I\'m interested in...',
       '#collapsible' => FALSE,
       '#collapsed' => FALSE,
       '#size' => 10,
@@ -623,7 +623,7 @@ function asu_rfi_second_form($form, &$form_state) {
       unset($form_state['storage']);
       $form['sess_expire_message'] = array(
         '#type' => 'item',
-        '#markup' => '<div class="alert-danger" style="padding:2%;">Your session has expired, please fill out the form again.</div>',
+        '#markup' => '<div class="alert-danger" style="padding:2%;">Your session has expired. Please fill out the form again.</div>',
       );
       $form_state['storage']['step'] = 'asu_rfi_form_data';
     }
@@ -714,10 +714,11 @@ function asu_rfi_second_form($form, &$form_state) {
   }
   $form['questions'] = array(
     '#type' => 'textarea',
-    '#title' => t('I also need assistance with the following - limit 255 characters'),
+    '#title' => t('I also need assistance with the following:'),
     '#cols' => 60,
     '#resizable' => TRUE,
     '#rows' => 5,
+    '#description' => '(Limit of 255 characters)',
   );
   $form['webform_url'] = array(
     '#type' => 'hidden',
