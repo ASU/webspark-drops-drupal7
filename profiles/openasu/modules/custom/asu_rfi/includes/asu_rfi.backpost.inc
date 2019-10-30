@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 /**
  * Callback service function sent for success posting to SF
@@ -12,8 +12,12 @@ function asu_rfi_success_post($hash, $nid) {
   if ($real_hash == $hash) {
     $node = node_load($nid);
     $node_wrapper = entity_metadata_wrapper('node', $node);
-    $node_wrapper->field_rfi_submission_status->set('SF_Complete');
-    $node_wrapper->field_rfi_error_message->set('');
+    if (isset($node_wrapper->field_rfi_submission_status)) {
+      $node_wrapper->field_rfi_submission_status->set('SF_Complete');
+    }
+    if (isset($node_wrapper->field_rfi_error_message)) {
+      $node_wrapper->field_rfi_error_message->set('');
+    }
     $node_wrapper->save();
     $cid = 'field:node:' . $nid;
     cache_clear_all($cid, 'cache_field');
@@ -41,15 +45,19 @@ function asu_rfi_fail_post($hash, $nid) {
     $node = node_load($nid);
     $node_wrapper = entity_metadata_wrapper('node', $node);
 
-    if ($node_wrapper->field_rfi_submission_status->value() == "Complete") {
-      $node_wrapper->field_rfi_submission_status->set("Pending");
+    if (isset($node_wrapper->field_rfi_submission_status)) {
+      if ($node_wrapper->field_rfi_submission_status->value() == "Complete") {
+        $node_wrapper->field_rfi_submission_status->set("Pending");
+      }
     }
 
     $to_email = variable_get('asu_rfi_error_email', NULL); // get error reporting email address from rfi admin settings page
     if (!empty($to_email)) {
       _asu_rfi_failed_post_email($to_email, $nid);
     }
-    $node_wrapper->field_rfi_error_message->set($error_message);
+    if (isset($node_wrapper->field_rfi_error_message)) {
+      $node_wrapper->field_rfi_error_message->set($error_message);
+    }
     $node_wrapper->save();
     $cid = 'field:node:' . $nid;
     cache_clear_all($cid, 'cache_field');
@@ -75,8 +83,12 @@ function asu_rfi_test_post($hash, $nid) {
 
     $node = node_load($nid);
     $node_wrapper = entity_metadata_wrapper('node', $node);
-    $node_wrapper->field_rfi_submission_status->set('SF_Complete');
-    $node_wrapper->field_rfi_error_message->set($error_message);
+    if (isset($node_wrapper->field_rfi_submission_status)) {
+      $node_wrapper->field_rfi_submission_status->set('SF_Complete');
+    }
+    if (isset($node_wrapper->field_rfi_error_message)) {
+      $node_wrapper->field_rfi_error_message->set($error_message);
+    }
     $node_wrapper->save();
 
     $cid = 'field:node:' . $nid;

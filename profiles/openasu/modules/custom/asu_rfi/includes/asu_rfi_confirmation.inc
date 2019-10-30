@@ -11,7 +11,7 @@
  */
 function asu_rfi_confirmation($nid) {
   $decoded_nid = base64_decode($nid);
-  //get the node data
+  // get the node data
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'asu_rfi')
@@ -20,8 +20,8 @@ function asu_rfi_confirmation($nid) {
 
   $result = $query->execute();
   if (isset($result['node'])) {
-    $items_nids = array_keys($result['node']);
-    $items = entity_load('node', $items_nids);
+    $items_node_ids = array_keys($result['node']);
+    $items = entity_load('node', $items_node_ids);
   }
 
   foreach ($items as $nid => $submissions) {

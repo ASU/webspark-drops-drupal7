@@ -1,18 +1,11 @@
 <?php
 
 /**
- * Get degree mappings
- */
-function asu_rfi_get_degree_mappings_undergrad_post() {
-  return _asu_rfi_get_degree_mappings();
-}
-
-/**
  * Post data to SalesForce
  * @param $data
  */
 function asu_rfi_undergrad_post($data) {
-  $degreeMappings = asu_rfi_get_degree_mappings_undergrad_post();
+  $degreeMappings = _asu_rfi_get_degree_mappings();
   $nid = $data['submission_nodeid'];
   $node = node_load($nid);
   $nodeArr = array(
@@ -21,12 +14,16 @@ function asu_rfi_undergrad_post($data) {
   $availableCampuses = _asu_rfi_query_codes($nodeArr);
 
   $node_wrapper = entity_metadata_wrapper('node', $node);
-  if ($node_wrapper->field_rfi_submission_status->value() == "Incomplete") {
-    $node_wrapper->field_rfi_submission_status->set('Pending');
-    $node_wrapper->save();
-  } else if ($node_wrapper->field_rfi_submission_status->value() == "Pending") {
-    $node_wrapper->field_rfi_submission_status->set('action_required');
-    $node_wrapper->save();
+  if (isset($node_wrapper->field_rfi_submission_status)) {
+    if ($node_wrapper->field_rfi_submission_status->value() == "Incomplete") {
+      $node_wrapper->field_rfi_submission_status->set('Pending');
+      $node_wrapper->save();
+    } else {
+      if ($node_wrapper->field_rfi_submission_status->value() == "Pending") {
+        $node_wrapper->field_rfi_submission_status->set('action_required');
+        $node_wrapper->save();
+      }
+    }
   }
 
   $mw_auth_key = variable_get('asu_rfi_form_auth_key');
@@ -135,7 +132,8 @@ function asu_rfi_undergrad_post($data) {
       CURLOPT_POSTFIELDS => $body,
       CURLOPT_RETURNTRANSFER => 1,
       CURLOPT_HTTPHEADER => array('Content-Type: text/json'),
-      CURLOPT_SSLVERSION => 1,
+      // UPDATE: Disabling below to let the web server choose a default SSL Version is better.
+      // CURLOPT_SSLVERSION => 1,
       CURLOPT_SSL_VERIFYPEER => FALSE,
     );
     curl_setopt_array($ch, $options);
@@ -146,11 +144,14 @@ function asu_rfi_undergrad_post($data) {
     // submission node and send message onto the confirmation page screen
     // if ($response == "Access Denied - hashed value does not match any registered site") {
     if (($curl_code['http_code'] == 403 || $curl_code['http_code'] == 500)) {
-      $error_message = $response;
-      $node_wrapper->field_rfi_error_message->set($error_message);
+      if (isset($node_wrapper->field_rfi_error_message)) {
+        $error_message = $response;
+        $node_wrapper->field_rfi_error_message->set($error_message);
+      }
       $node_wrapper->save();
-      $to_email = variable_get('asu_rfi_error_email', NULL); //get error reporting email address from rfi admin settings page
-      //get middleware app key. If it's empty, don't send error email to admins.
+      // Get admin email address from admin settings page
+      $to_email = variable_get('asu_rfi_error_email', NULL);
+      // Get middleware app key. If it's empty, don't send error email to admins.
       if (!empty($mw_auth_key)) {
         if (!empty($to_email)) {
           if (!isset($data['cron_run']) || ($data['cron_run'] != "Cron_running")) {
@@ -177,7 +178,7 @@ function asu_rfi_undergrad_post($data) {
 
 function asu_rfi_check_managed_online($program, $getProgramsList) {
   foreach ($getProgramsList as $onlineItem){
-    if ($onlineItem->plancode == $program && $onlineItem->crmdestination !== "asu"){
+    if ($onlineItem->plancode == $program && $onlineItem->crmdestination !== "asu") {
       return true;
     }
   }

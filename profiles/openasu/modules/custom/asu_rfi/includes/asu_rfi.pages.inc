@@ -1,11 +1,8 @@
-<?php /** @noinspection ALL */
-/** @noinspection PhpUnused */
-/** @noinspection PhpIllegalStringOffsetInspection */
-// $Id: asu_rfi.pages.inc
+<?php /** @noinspection HtmlUnknownTarget */
 
 /**
  * @file
- * Request info form generation using form API
+ * Request info form generation using Form API
  */
 
 // clear page cache
@@ -66,16 +63,16 @@ function asu_rfi_form_data($form, &$form_state) {
     }
   }
 
-  // Get states
+  // Get semester start options
   $start_dates = _asu_rfi_sem_dates();
 
   for ($idate = 0; $idate < 4; $idate++) {
     $date = date('Y') + $idate;
-    $datekey = substr_replace($date, '', 1, -2);
-    $year[$datekey] = $date;
+    $date_key = substr_replace($date, '', 1, -2);
+    $year[$date_key] = $date;
   }
 
-  //Load the current node object to get program name and degree type
+  // Load the current node object to get program name and degree type
   $country = asu_rfi_countries_data();
   $node = menu_get_object();
   if (!empty($node)) {
@@ -110,7 +107,7 @@ function asu_rfi_form_data($form, &$form_state) {
       'time_restriction'
     ));
 
-    // If the session is set for more than 5 min, clear the session data
+    // If the session is set for more than 3 min, clear the session data
     if (isset($_SESSION['rfi_data'])) {
       $current_time = time();
       $session_start_time = $_SESSION['rfi_data']['start_time'];
@@ -121,7 +118,7 @@ function asu_rfi_form_data($form, &$form_state) {
         unset($form_state['values']);
         $form['sess_expire_message'] = array(
           '#type' => 'item',
-          '#markup' => '<div class="alert-danger" style="padding:2%;">Your session has expired. Please fill out the form again.</div>',
+          '#markup' => '<div class="alert alert-danger" style="padding: 2%;">Your session has expired. Please fill out the form again.</div>',
         );
       }
     }
@@ -384,31 +381,13 @@ function asu_rfi_form_data_validate($form, &$form_state) {
   // Validation for email and phone
  _asu_rfi_validate_electronic_contacts($email, $phone);
 
-  //validate zip code
+  // validate zip code
   if (empty($zip)) {
     if (!empty($country) && ($country == "United States")) {
       form_set_error('zipcode', t('Postal code field is required.'));
     }
-  }
-  if (!empty($zip)) {
-    if ($country == "United States") {
-      if ((strlen($zip) < 5)) {
-        form_set_error('zipcode', t('Postal code cannot be less than 5 digits.'));
-      }
-      if (!preg_match("/^[0-9]{5}+$/", $zip)) {
-        form_set_error('zipcode', t('Postal code accepts 5 digits only.'));
-      }
-    } else {
-      if (!preg_match("/^[a-zA-Z0-9\s-_+-]+$/", $zip)) {
-        form_set_error('zipcode', t('Postal code is not valid'));
-      }
-      if ((strlen($zip) < 4)) {
-        form_set_error('zipcode', t('Postal code cannot be less than 4 characters.'));
-      }
-      if (strlen($zip) > 20) {
-        form_set_error('zipcode', t('Postal code cannot be longer than 20 characters.'));
-      }
-    }
+  } else {
+    _asu_rfi_validate_zipcode($country, $zip);
   }
 
   // Validate birth date
@@ -421,12 +400,13 @@ function asu_rfi_form_data_validate($form, &$form_state) {
 }
 
 
-/* First form submit handler */
+/**
+ * First form submit handler
+ */
 function asu_rfi_form_data_submit($form, &$form_state) {
   if (isset($form_state['storage'])) {
     if ($form_state['storage']['step'] == 'asu_rfi_second_form') {
       return asu_rfi_second_form_submit($form, $form_state);
-      $form_state['complete'] = TRUE;
     }
   }
 
@@ -463,9 +443,7 @@ function asu_rfi_form_data_submit($form, &$form_state) {
   $form_state['storage']['birthdate'] = $dob_date;
 
   // get start date array
-
   $sem_dates = _asu_rfi_sem_dates();
-
   if (array_key_exists($form_state['storage']['start_date'], $sem_dates)) {
     $form_state['storage']['semester_name'] = $sem_dates[$form_state['storage']['start_date']];
   }
@@ -493,8 +471,7 @@ function asu_rfi_form_data_submit($form, &$form_state) {
   $unique_id = $form_state['values']['first_name'] . $form_state['values']['email'] . $form_state['values']['prog_plan'];
 
   // Check for duplicate submissions - check_duplicate never used
-
-  //check if unique id exists in the database
+  // by looking to see if unique id already exists in the database
   $node_unique = db_query('SELECT field_rfi_uniquedata_value FROM {field_data_field_rfi_uniquedata} WHERE field_rfi_uniquedata_value = :unid', array(':unid' => $unique_id))->fetchField();
 
   // If unique id doesn't exist, create the nodes
@@ -520,7 +497,7 @@ function asu_rfi_form_data_submit($form, &$form_state) {
     $wrapper->field_rfi_start_term_code->set($form_state['storage']['start_date']);
     $wrapper->field_rfi_program->set($form_state['storage']['program_code']);
     $wrapper->field_rfi_form_type->set($multi_form_type);
-    $wrapper->field_rfi_ip_address->set(intval($form_state['storage']['ip_address']));
+    $wrapper->field_rfi_ip_address->set(intval($form_state['storage']['ip_address'])); // IP address == (int)? Who did this and why???
     $wrapper->field_rfi_college_code->set($form_state['storage']['college_code']);
     $wrapper->field_rfi_submission_status->set('Incomplete');
     $wrapper->field_rfi_dob->set(base64_encode($dob_date));
@@ -533,7 +510,7 @@ function asu_rfi_form_data_submit($form, &$form_state) {
     $wrapper->field_rfi_prospect_level->set($form_state['storage']['prospect_level']);
     $wrapper->field_rfi_campus->set($form_state['storage']['campus']);
     $wrapper->save();
-  $form_state['storage']['submission_nodeid'] = $entity->nid;
+    $form_state['storage']['submission_nodeid'] = $entity->nid;
     $form_state['storage']['step'] = 'asu_rfi_second_form';
     $form_state['storage']['submission_nodeid'] = $entity->nid;
 
@@ -544,8 +521,8 @@ function asu_rfi_form_data_submit($form, &$form_state) {
       asu_rfi_undergrad_email($form_state['storage']['program_code'], $form_state['storage']['email'], $form_state['storage']['first_name']);
     }
   }
-  if (!empty($node_unique)) {
-    //get the node id of the current node to be updated
+  if (!empty($node_unique)) { // Update the existing node.
+    // Get the node id of the current node to be updated
     $get_nodeid = db_query('SELECT entity_id FROM {field_data_field_rfi_uniquedata} WHERE field_rfi_uniquedata_value = :unid', array(':unid' => $unique_id))->fetchField();
 
     $node = node_load($get_nodeid);
@@ -756,21 +733,20 @@ function asu_rfi_second_form($form, &$form_state) {
 
 
 function asu_rfi_second_form_validate($form, &$form_state) {
-
-// When Back button on multi-step form is clicked, skip validation on the current page
+  // When Back button on multi-step form is clicked, skip validation on the current page
   if ($form_state['values']['op'] == 'Back') {
     drupal_get_messages('error');
     drupal_add_js("$('html, body').animate({ scrollTop: $('#asu-rfi-form-data').offset().top - 100}, 1000);", 'inline');
     return TRUE;
   }
-  $stcountry = $form_state['storage']['country'];
+  $country = $form_state['storage']['country'];
   $address = check_plain($form_state['values']['address']);
   $city = check_plain($form_state['values']['city']);
-  $state = check_plain($form_state['values']['state']);
+  // $state = check_plain($form_state['values']['state']);
   $zip = check_plain($form_state['values']['zipcode']);
   //validate address
   if (!empty($address)) {
-    if (!preg_match("/^[a-zA-Z0-9\.\s-_,#]+$/", $address)) {
+    if (!preg_match("/^[a-zA-Z0-9.\s-_,#]+$/", $address)) {
       form_set_error('address', t('Address field accepts only plain text.'));
     }
   }
@@ -784,33 +760,14 @@ function asu_rfi_second_form_validate($form, &$form_state) {
 
   //validate zip code
   if (empty($zip)) {
-    if (!empty($stcountry) && ($stcountry == "United States")) {
+    if (!empty($country) && ($country == "United States")) {
       form_set_error('zipcode', t('Postal code field is required.'));
     }
+  } else {
+    _asu_rfi_validate_zipcode($country, $zip);
   }
 
-  if (!empty($zip)) {
-    if ($stcountry == "United States") {
-      if ((strlen($zip) < 5)) {
-        form_set_error('zipcode', t('Postal code cannot be less than 5 digits.'));
-      }
-      if (!preg_match("/^[0-9]{5}+$/", $zip)) {
-        form_set_error('zipcode', t('Postal code accepts 5 digits only.'));
-      }
-    } else {
-      if (!preg_match("/^[a-zA-Z0-9\s-_]+$/", $zip)) {
-        form_set_error('zipcode', t('Postal code is not valid.'));
-      }
-      if ((strlen($zip) < 4)) {
-        form_set_error('zipcode', t('Postal code cannot be less than 4 characters.'));
-      }
-      if (strlen($zip) > 20) {
-        form_set_error('zipcode', t('Postal code cannot be longer than 20 characters.'));
-      }
-    }
-  }
-
-  //validate comments
+  // validate comments
   if (!empty($form_state['values']['questions'])) {
     if (strlen($form_state['values']['questions']) > 255) {
       form_set_error('questions', t('Comments are limited to a maximum of 255 characters.'));
@@ -819,14 +776,19 @@ function asu_rfi_second_form_validate($form, &$form_state) {
 }
 
 
-/* Second form submit handler */
+/**
+ * Second form submit handler
+ * @param $form
+ * @param $form_state
+ * @throws \Exception
+ */
 function asu_rfi_second_form_submit($form, &$form_state) {
   unset($_SESSION['rfi_data']);
 
-  $fname = check_plain($form_state['storage']['first_name']);
-  $fname = ucfirst(check_plain($fname));
-  $lname = check_plain($form_state['storage']['last_name']);
-  $lname = ucfirst(check_plain($lname));
+  $f_name = check_plain($form_state['storage']['first_name']);
+  $f_name = ucfirst(check_plain($f_name));
+  $l_name = check_plain($form_state['storage']['last_name']);
+  $l_name = ucfirst(check_plain($l_name));
   $phone = $form_state['storage']['phone'];
   $dob = check_plain($form_state['storage']['birthdate']);
   $email = check_plain($form_state['storage']['email']);
@@ -837,42 +799,31 @@ function asu_rfi_second_form_submit($form, &$form_state) {
   $student_type = $form_state['storage']['student_type'];
   $address = check_plain($form_state['values']['address']);
   $form_state['storage']['address'] = $address;
+
   $uniqueid = $email . $major;
-  if ($form_state['values']['state'] == '0') {
-    $state = '';
-  } else {
-    $state = $form_state['values']['state'];
-  }
-  //just to make sure if the zipcode has been updated in the second form
+
+  // Just to make sure if the zipcode has been updated in the second form
   $form_state['storage']['zipcode'] = $zipcode;
   $city = check_plain($form_state['values']['city']);
   $form_state['storage']['city'] = $city;
+  $state = ($form_state['values']['state'] == '0') ? '' : $form_state['values']['state'];
   $form_state['storage']['state'] = $state;
   $veteran = $form_state['values']['military'];
   $form_state['storage']['military'] = $veteran;
-  $webform_url = $form_state['values']['webform_url'];
-  $ip_address = $form_state['storage']['ip_address'];
+  // $webform_url = $form_state['values']['webform_url'];
+  // $ip_address = $form_state['storage']['ip_address'];
   $citizen = $form_state['values']['citizenship'];
   $node_entity_id = $form_state['storage']['submission_nodeid'];
   $form_state['storage']['type_of_form'] = $form_state['values']['type_of_form'];
 
-  if (empty($citizen)) {
-    $international = "FALSE";
-    $form_state['storage']['citizenship'] = "FALSE";
-  } else {
-    $international = "TRUE";
-    $form_state['storage']['citizenship'] = "TRUE";
-  }
-  if (!empty($veteran)) {
-    $military = $form_state['values']['military'];
-  } else {
-    $military = "";
-  }
+  $international = (empty($citizen)) ? "FALSE" : "TRUE";
+  $form_state['storage']['citizenship'] = $international;
+  $military = (!empty($veteran)) ? $form_state['values']['military'] : "";
   $form_state['storage']['military'] = $military;
 
   $questions = check_plain($form_state['values']['questions']);
   $form_state['storage']['questions'] = $questions;
-  $current_time = time();
+  // $current_time = time();
   $node = node_load($node_entity_id);
 
   $node->field_rfi_state[LANGUAGE_NONE][0]['value'] = $state;
@@ -886,21 +837,23 @@ function asu_rfi_second_form_submit($form, &$form_state) {
 
   node_save($node);
 
-  // Used in confirmation nodes
+  // Info used in confirmation nodes
   $coded_nid = base64_encode($node_entity_id);
   $coded_major = base64_encode($form_state['storage']['program_code']);
   $coded_college = base64_encode($form_state['storage']['college_name']);
   $coded_college_code = base64_encode($form_state['storage']['college_code']);
   $coded_zip = base64_encode($zipcode);
   $coded_country = base64_encode($country);
-  /*If graduate degree is submitted, root the from to graduate posting function.
-   *Grab the node id of cinfirmation page from admin settings page if exists and redirect the user to confirmation node. If the node id doesn't exist, take the user to built in confirmation page*
+  /* If graduate degree is submitted, root the from to graduate posting function.
+   * Grab the node id of information page from admin settings page if it exists and
+   * redirect the user to confirmation node. If the node id doesn't exist, take
+   * the user to built in confirmation page.
    */
   if ($form_state['storage']['prospect_level'] == "Graduate") {
     asu_rfi_grad_post($form_state['storage']);
-    $grad_confid = variable_get('asu_rfi_grad_confirm_node');
-    if (!empty($grad_confid)) {
-      $galias = drupal_lookup_path('alias', $path = "node/$grad_confid", $path_language = NULL);
+    $grad_conf_id = variable_get('asu_rfi_grad_confirm_node');
+    if (!empty($grad_conf_id)) {
+      $galias = drupal_lookup_path('alias', $path = "node/$grad_conf_id", $path_language = NULL);
       if (!empty($alias)) {
         drupal_goto("$galias", array(
           'query' => array(
@@ -914,7 +867,7 @@ function asu_rfi_second_form_submit($form, &$form_state) {
           )
         ));
       } else {
-        drupal_goto("node/$grad_confid", array(
+        drupal_goto("node/$grad_conf_id", array(
           'query' => array(
             'pro' => $coded_college,
             'maj' => $coded_major,
@@ -933,17 +886,19 @@ function asu_rfi_second_form_submit($form, &$form_state) {
     unset($_SESSION['rfi_data']);
   }
 
-  /*If undergraduate degree is submitted, root the from to undergraduate posting function below.
-   *Grab the node id of cinfirmation page from admin settings page if exists and redirect the user to confirmation node. If the node id doesn't exist, take the user to built in confirmation page*
+  /* If undergraduate degree is submitted, root the from to undergraduate posting function below.
+   * Grab the node id of information page from admin settings page if exists and
+   * redirect the user to confirmation node. If the node id doesn't exist, take
+   * the user to built in confirmation page*
    */
   if ($form_state['storage']['prospect_level'] == "Undergraduate") {
     asu_rfi_undergrad_post($form_state['storage']); //-- To be used in future
-    $undergrad_confid = variable_get('asu_rfi_undergrad_confirm_node');
+    $undergrad_conf_id = variable_get('asu_rfi_undergrad_confirm_node');
 
-    if (!empty($undergrad_confid)) {
-      $ualias = drupal_lookup_path('alias', $path = "node/$undergrad_confid", $path_language = NULL);
-      if (!empty($ualias)) {
-        drupal_goto("$ualias", array(
+    if (!empty($undergrad_conf_id)) {
+      $u_alias = drupal_lookup_path('alias', $path = "node/$undergrad_conf_id", $path_language = NULL);
+      if (!empty($u_alias)) {
+        drupal_goto("$u_alias", array(
           'query' => array(
             'pro' => $coded_college,
             'maj' => $coded_major,
@@ -955,7 +910,7 @@ function asu_rfi_second_form_submit($form, &$form_state) {
           )
         ));
       } else {
-        drupal_goto("node/$undergrad_confid", array(
+        drupal_goto("node/$undergrad_conf_id", array(
           'query' => array(
             'pro' => $coded_college,
             'maj' => $coded_major,
@@ -975,14 +930,23 @@ function asu_rfi_second_form_submit($form, &$form_state) {
 }
 
 
-/******Long RFI form generation******/
-/***********************************/
-/**********************************/
+/** Long RFI form generation
+ * @param $delta
+ * @param $programs
+ * @param $form_type
+ * @return array|mixed
+ */
 function asu_rfi_long_form($delta, $programs, $form_type) {
   return drupal_get_form('asu_rfi_long_form_data', $programs, $form_type);
 }
 
-/** construct the form **/
+/** construct the form *
+ * @param $form
+ * @param $form_state
+ * @param $programs
+ * @param $form_type
+ * @return array
+ */
 function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
   $domain = $_SERVER['HTTP_HOST'];
   //include theme css
@@ -1088,8 +1052,6 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
       ),
     );
   }
-
-
   $form['my_interest']['campus'] = array(
     '#type' => 'select',
     '#title' => t('My campus of choice is'),
@@ -1128,9 +1090,6 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
       'optional' => array(
         ':input[name="location"]' => array('value' => 'online'),
       ),
-//			'invisible' => array(
-//				':input[name="location"]' => array('value' => 'online'),
-//			),
     ),
     '#attributes' => array(
       'class' => array(
@@ -1351,10 +1310,11 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
   );
   $form['questions'] = array(
     '#type' => 'textarea',
-    '#title' => t('I also need assistance with the following - limit 255 characters'),
+    '#title' => t('I also need assistance with the following:'),
     '#cols' => 60,
     '#resizable' => TRUE,
     '#rows' => 5,
+    '#description' => '(Limit of 255 characters)',
   );
   $form['webform_url'] = array(
     '#type' => 'hidden',
@@ -1420,7 +1380,6 @@ function asu_rfi_program_location_confirm($prog, $campus, $loc) {
     $result_nodes = $result['node'];
     $programs = _asu_rfi_get_program_codes($result_nodes, 'programs');
     $locations = $programs[$degreeMappings['field_degree_campus']]['und'];
-    dpm($locations, __FUNCTION__ . ' - locations');
     foreach ($locations as $location) {
       if (!in_array($location['value'], $campusOptions)) {
         array_push($campusOptions, $location['value']);
@@ -1443,7 +1402,6 @@ function asu_rfi_program_location_confirm($prog, $campus, $loc) {
       }
     }
   }
-
   return FALSE;
 }
 
@@ -1472,11 +1430,11 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
   $phone = $form_state['values']['phone'];
 
   // validate first name
-  if (!preg_match("/^[a-zA-Z\.\s-_]+$/", $fname)) {
+  if (!preg_match("/^[a-zA-Z.\s-_]+$/", $fname)) {
     form_set_error('first_name', t('First name field accepts only plain text.'));
   }
   // validate last name
-  if (!preg_match("/^[a-zA-Z\.\s-_]+$/", $lname)) {
+  if (!preg_match("/^[a-zA-Z.\s-_]+$/", $lname)) {
     form_set_error('last_name', t('Last name field accepts only plain text.'));
   }
   // validation for email and phone
@@ -1484,12 +1442,12 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
 
   // Custom fields per student type (online vs. all others)
 
-  //// Only Online student validation
+  //// ONLY Online student validation
   if (strtolower($form_state['input']['location']) == 'online') {
     // No fields not already included in shared validation above
   }
 
-  //// Non-online student validation
+  //// ONLY Non-online student validation
   else {
     $address = check_plain($form_state['values']['address']);
     $city = check_plain($form_state['values']['city']);
@@ -1516,27 +1474,8 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
       if (!empty($country) && ($country == "United States")) {
         form_set_error('zipcode', t('Postal code field is required.'));
       }
-    }
-
-    if (!empty($zip)) {
-      if ($country == "United States") {
-        if ((strlen($zip) < 5)) {
-          form_set_error('zipcode', t('Postal code cannot be less than 5 digits.'));
-        }
-        if (!preg_match('/^[0-9]{5}+$/', $zip)) {
-          form_set_error('zipcode', t('Postal code accepts 5 digits only.'));
-        }
-      } else {
-        if (!preg_match("/^[a-zA-Z0-9\s-]+$/", $zip)) {
-          form_set_error('zipcode', t('Postal code is not valid.'));
-        }
-        if ((strlen($zip) < 4)) {
-          form_set_error('zipcode', t('Postal code cannot be less than 4 characters.'));
-        }
-        if (strlen($zip) > 20) {
-          form_set_error('zipcode', t('Postal code cannot be longer than 20 characters.'));
-        }
-      }
+    } else {
+      _asu_rfi_validate_zipcode($country, $zip);
     }
 
     // Validate birth date
@@ -1650,7 +1589,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
   // Get college name from database based on program code
   $college_name = db_query('select ' . $degreeMappings['field_diploma_description_value'] . ' from ' . $degreeMappings['table_asu_diploma_description'] . ' progn join ' . $degreeMappings['table_asu_academic_plan'] . ' plann on progn.entity_id = plann.entity_id where plann.' . $degreeMappings['field_academic_plan_value'] . ' = :plancode', array(':plancode' => $program))->fetchField();
 
-  //Create node
+  // Create node
   $ent_values = array(
     'type' => 'asu_rfi',
     'uid' => $user->uid,
@@ -1879,10 +1818,11 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type) {
   );
   $form['questions'] = array(
     '#type' => 'textarea',
-    '#title' => t('I also need assistance with the following - limit 255 characters'),
+    '#title' => t('I also need assistance with the following:'),
     '#cols' => 60,
     '#resizable' => TRUE,
     '#rows' => 5,
+    '#description' => '(Limit of 255 characters)',
   );
   $form['webform_url'] = array(
     '#type' => 'hidden',

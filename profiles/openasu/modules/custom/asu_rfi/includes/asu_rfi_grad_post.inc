@@ -1,14 +1,9 @@
 <?php
 
-/**
- * Get degree mappings
- */
-function asu_rfi_get_degree_mappings_grad_post() {
-  return _asu_rfi_get_degree_mappings();
-}
-
 function asu_rfi_grad_post($data) {
-  $degreeMappings = asu_rfi_get_degree_mappings_grad_post();
+  $degreeMappings = _asu_rfi_get_degree_mappings();
+  $form_mode = variable_get('asu_rfi_form_mode');
+
   $nodeid = $data['submission_nodeid'];
   $node = node_load($nodeid);
   $nodeArr = array(
@@ -17,20 +12,23 @@ function asu_rfi_grad_post($data) {
   $availableCampuses = _asu_rfi_query_codes($nodeArr);
 
   $node_wrapper = entity_metadata_wrapper('node', $node);
-  if ($node_wrapper->field_rfi_submission_status->value() == "Incomplete") {
-    $node_wrapper->field_rfi_submission_status->set('Pending');
-  } else if ($node_wrapper->field_rfi_submission_status->value() == "Pending") {
-    $node_wrapper->field_rfi_submission_status->set('Action Required');
+  if (isset($node_wrapper->field_rfi_submission_status)) {
+    if ($node_wrapper->field_rfi_submission_status->value() == "Incomplete") {
+      $node_wrapper->field_rfi_submission_status->set('Pending');
+    } else {
+      if ($node_wrapper->field_rfi_submission_status->value() == "Pending") {
+        $node_wrapper->field_rfi_submission_status->set('Action Required');
+      }
+    }
   }
 
-  $form_mode = variable_get('asu_rfi_form_mode');
   $domain = isset($data['domain']) ? $data['domain'] : $_SERVER['HTTP_HOST'];
   $type_of_form = $data['type_of_form'];
   $source = $domain . '-' . $type_of_form . '-G';
 
   // Get authentication key
   $mw_auth_key = variable_get('asu_rfi_form_auth_key');
-  $hashkey = sha1($mw_auth_key . '+' . $nodeid);
+  //$hashkey = sha1($mw_auth_key . '+' . $nodeid); // Not used??
 
   $ipAddress = isset($data['ip_address']) ? $data['ip_address'] : $_SERVER['REMOTE_ADDR'];
   $term = (isset($data['semester_name'])) ? $data['semester_name'] : '';
@@ -53,24 +51,11 @@ function asu_rfi_grad_post($data) {
   // enterpriseclientid for use in EdPlus Leads submissions.
   $enterpriseclientid = (isset($data['enterpriseclientid'])) ? $data['enterpriseclientid'] : '';
 
-  // Get asu_rfi_siteDomain variable to see if it's dev or qa site.
-  global $base_url;
-
-  if ((strpos($base_url, 'https://localhost') === 0) || (strpos($base_url, 'http://localhost') === 0)) {
-    $environ = 'dev';
-  }
-  if ((strpos($base_url, 'https://dev-') === 0) || (strpos($base_url, 'http://dev-') === 0) || (strpos($base_url, '-dev') > 0)) {
-    $environ = 'dev';
-  }
-  if ((strpos($base_url, 'https://qa-') === 0) || (strpos($base_url, 'http://qa-') === 0) || (strpos($base_url, '-qa') > 0)) {
-    $environ = 'qa';
-  }
-  if ((strpos($base_url, 'https://test-') === 0) || (strpos($base_url, 'http://test-') > 0)) {
-    $environ = 'qa';
-  }
+  // Get asu_rfi_siteDomain variable to see if it's dev or qa site. (this comment doesn't match logic??)
+  $environ = _asu_rfi_determine_environment();
 
   // Salesforce URL to post data to
-  if ((isset($environ) && $environ == "dev") || (isset($environ) && $environ == "qa")) {
+  if (($environ == "dev") || ($environ == "qa")) {
     $url = 'https://requestinfo-qa.asu.edu/prospect_form_post';
   } else {
     if ($form_mode == 'test') {
@@ -102,7 +87,7 @@ function asu_rfi_grad_post($data) {
     'campusSelection' => $campus,
   );
 
-  if(!isset($campus) && sizeof($availableCampuses) == 1 && ($availableCampuses[0] == "Online" || $availableCampuses[0] == "online")){
+  if(!isset($campus) && sizeof($availableCampuses) == 1 && ($availableCampuses[0] == "Online" || $availableCampuses[0] == "online")) {
     $location = "Online";
   }
 
@@ -149,40 +134,46 @@ function asu_rfi_grad_post($data) {
     }
   }
 
-  //url to post data to salesforce
+  // Post data to salesforce via cURL
   $curl = curl_init($url);
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE); //If you don't want to use any of the return information, set to false
-  curl_setopt($curl, CURLOPT_HEADER, FALSE); //Set this to false to remove informational headers
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE); // If you don't want to use any of the return information, set to false
+  curl_setopt($curl, CURLOPT_HEADER, FALSE); // FALSE Remove informational headers
   curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
-  curl_setopt($curl, CURLOPT_POSTFIELDS, $submission_data); //data mapping
-  curl_setopt($curl, CURLOPT_SSLVERSION, 1); //This will set the security protocol to TLSv1
+  curl_setopt($curl, CURLOPT_POSTFIELDS, $submission_data); // data mapping
+  // curl_setopt($curl, CURLOPT_SSLVERSION, 1); // Sets the security protocol to TLSv1
+  // UPDATE: Disabling to let the web server choose a default SSL Version is better.
   curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
   $response = curl_exec($curl);
-
-  $info = curl_getinfo($curl); //Used by your drupal messages below
-
+  $info = curl_getinfo($curl); // Used by your drupal messages below
   curl_close($curl);
 
   if (strpos($response, "-1 ") == 0) {
     $message = explode(':', $response);
   }
 
-  //Get the response from Salesforce. If the submission is not successfull, update the previous submission status to Incomplete
+  // Get the response from Salesforce. If the submission is not successful, update the previous submission status to Incomplete
   if (($info['http_code'] == 400) || ($info['http_code'] == 500)) {
     //update error message
-    $node_wrapper->field_rfi_error_message->set($message[1]);
-    $node_wrapper->save();
+    if (isset($node_wrapper->field_rfi_error_message)) {
+      if (isset($message)) {
+        $node_wrapper->field_rfi_error_message->set($message[1]);
+      }
+      $node_wrapper->save();
+    }
   }
 
   if (($info['http_code'] == 200)) {
     $node_wrapper->field_rfi_submission_status->set('SF_Complete');
     $node_wrapper->field_rfi_error_message->set('');
     $node_wrapper->save();
-    // If successfully to post to SF, the set "asu_rfi_last_failure_SF_posting" variable to current time
+    // If this successfully posts to SF, the set "asu_rfi_last_failure_SF_posting"
+    // variable to current time.
     variable_set('asu_rfi_last_attempt_SF_posting', time());
   }
 
-  //if failed to post to SF, the set "asu_rfi_last_failure_SF_posting" variable to current time
+  // If failed to post to SF, the set "asu_rfi_last_failure_SF_posting" variable
+  // to current time
   if (($info['http_code'] != 200)) {
     variable_set('asu_rfi_last_failure_SF_posting', time());
   }

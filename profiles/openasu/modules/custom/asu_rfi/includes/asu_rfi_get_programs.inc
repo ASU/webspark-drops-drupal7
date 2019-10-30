@@ -5,12 +5,13 @@
  * @return mixed|bool
  */
 function asu_rfi_import_online_programs() {
-  $url = "asuonline.asu.edu/lead-submissions-v3.3/programs";
+  $url = "https://asuonline.asu.edu/lead-submissions-v3.3/programs";
   $curl = curl_init();
   curl_setopt_array($curl, array(
     CURLOPT_URL => $url,
     CURLOPT_HEADER => true,
-    CURLOPT_SSLVERSION => 5,
+    // UPDATE: Letting the web server pick which version to use
+    // CURLOPT_SSLVERSION => 5,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_HTTPHEADER => array('Accept: application/json')
   ));
@@ -73,7 +74,6 @@ function _asu_rfi_parse_programs() {
   if (!isset($programs)) {
     $programString = variable_get('asu_rfi_cached_programs');
     if (isset($programString)) {
-      dpm($programString, __FUNCTION__);
       $programs = json_decode($programString);
       if ($programs == NULL) {
         watchdog('asu_rfi', __FUNCTION__ . ' -- The cached JSON of

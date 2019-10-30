@@ -135,10 +135,10 @@ function asu_rfi_undergrad_email($prog_plan, $e_email, $humanName)
  * @param string $humanName The name of the form requester
  * @return boolean Email generation success status
  */
-function asu_rfi_grad_email($prog_plan, $e_email, $humanName)
-{
+function asu_rfi_grad_email($prog_plan, $e_email, $humanName) {
   if (!isset($e_email)) {
-    watchdog('asu_rfi', 'An undergraduate RFI form attempted to send an email without an destination address.');
+    watchdog('asu_rfi', 'An undergraduate RFI form attempted to send
+     an email without a destination address.', array(), WATCHDOG_INFO);
     return false;
   }
   if (!empty($prog_plan)) {
@@ -155,7 +155,7 @@ function asu_rfi_grad_email($prog_plan, $e_email, $humanName)
       }
 
       if (isset($desc)) {
-        $description = "<strong><i> Program description</strong> </i><br />" . $desc;
+        $description = "<strong><em> Program description</em></strong><br />" . $desc;
       }
 
     }
@@ -200,19 +200,10 @@ function asu_rfi_grad_email($prog_plan, $e_email, $humanName)
 
   //Get email configuration varible values from the rfi admin settings page
   $from_email = variable_get('asu_rfi_from_email_field');
-  if (!empty($from_email)) {
-    $from = $from_email;
-  } else {
-    $from = 'asurecruitment@asu.edu';
-  }
+  $from = (!empty($from_email)) ? $from_email : 'asurecruitment@asu.edu';
 
   $subject = variable_get('asu_rfi_email_subject_field');
-  if (!empty($subject)) {
-    $params['subject'] = $subject;
-  } else {
-    $params['subject'] = 'Your requested ASU degree information.';
-  }
-
+  $params['subject'] = (!empty($subject)) ? $subject : 'Your requested ASU degree information.';
 
   try {
     // send the mail to the user
@@ -256,16 +247,11 @@ function asu_rfi_grad_email($prog_plan, $e_email, $humanName)
  * @param $data
  * @return array|string
  */
-function asu_rfi_career($data)
-{
+function asu_rfi_career($data) {
   foreach ($data as $var_arr) {
-
     foreach ($var_arr["careerData"] as $career_summary) {
-
-      $careerdata_title = $career_summary["careerDataOnetTitle"];
-
+      $career_data_title = $career_summary["careerDataOnetTitle"];
       $growth = $career_summary["careerDataGrowth"];
-
       $median = $career_summary["careerDataSalary"];
 
       if (!empty($growth)) {
@@ -277,13 +263,10 @@ function asu_rfi_career($data)
       if (empty($median)) {
         $median = "not available";
       }
-      $career_option[] = "<tr><td>" . $careerdata_title . "&nbsp;&nbsp;&nbsp;&nbsp;</td><td>" . $growth . "</td><td>" . $median . "</td></tr>";
+      $career_option[] = "<tr><td>" . $career_data_title . "&nbsp;&nbsp;&nbsp;&nbsp;</td><td>" . $growth . "</td><td>" . $median . "</td></tr>";
     }
   }
-  if (isset($career_option)) {
-    $option = $career_option;
-  } else {
-    $option = '';
-  }
+  $option = (isset($career_option)) ? $career_option : '';
+
   return $option;
 }

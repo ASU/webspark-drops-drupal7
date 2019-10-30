@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
+/** @noinspection SqlNoDataSourceInspection */
 /** @noinspection PhpUnusedParameterInspection */
 /** @noinspection PhpUndefinedMethodInspection */
 /** @noinspection PhpDocSignatureInspection */
@@ -208,7 +209,6 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
 
 /**
  * Implements hook_block_configure().
- * @throws \EntityFieldQueryException
  */
 function asu_rfi_block_configure($delta = '', $multi_id = NULL) {
   // Load the currently logged in user.
@@ -333,7 +333,6 @@ function asu_rfi_block_configure($delta = '', $multi_id = NULL) {
  * @param array $edit (for Multiblock)
  */
 function asu_rfi_block_save($delta = '', $edit = array()) {
-
   switch ($delta) {
     case 'asu_rfi_form_block':
       $multi_id = isset($edit['multiblock_delta']) ? '_' . $edit['multiblock_delta']['#value'] : NULL;
@@ -353,7 +352,6 @@ function asu_rfi_block_save($delta = '', $edit = array()) {
  *
  * @param mixed (string or integer) $multi_id Multiblock block delta value
  * @param boolean
- *
  * @return array
  */
 function asu_rfi_get_block_instance_settings($multi_id = NULL, $endpoint_build = FALSE) {
@@ -367,14 +365,12 @@ function asu_rfi_get_block_instance_settings($multi_id = NULL, $endpoint_build =
     //Below line added by Archana
     $block_instance_settings['form_type'] = variable_get('asu_rfi_form_block_type' . $multi_id, NULL);
     $block_instance_settings['grad_programs'] = variable_get('asu_rfi_form_block_grad_programs' . $multi_id, NULL);
-
   }
   else { // Default build settings, used by our GET/POST endpoint.
     $block_instance_settings['programs'] = array();
     $block_instance_settings['form_type'] = NULL;
     $block_instance_settings['grad_programs'] = array();
   }
-
   return $block_instance_settings;
 }
 
@@ -421,11 +417,11 @@ function asu_rfi_cron() {
     ->propertyCondition('created', array(
       REQUEST_TIME - 864000,
       REQUEST_TIME - 900
-    ), 'between')// Created in the last 20 days (864000 = 10(24 * 3600)).
+    ), 'between')// Created in the last 10 days (864000 = 10(24 * 3600)).
     ->propertyCondition('changed', array(
       REQUEST_TIME - 864000,
       REQUEST_TIME
-    ), 'between')// changed in the last 20 days (864000 = 10(24 * 3600)).
+    ), 'between')// changed in the last 10 days (864000 = 10(24 * 3600)).
     ->propertyOrderBy('created', 'DESC')
     ->fieldCondition('field_rfi_submission_status', 'value', array(
       'Incomplete',
@@ -440,7 +436,6 @@ function asu_rfi_cron() {
     foreach ($results['node'] as $key => $failed_rfi_lead) {
       $queue->createItem($failed_rfi_lead);
     }
-
   }
 
   //check if the site hasn't posted submissions to salesforce for two days. If yes, send an email to administrator.
@@ -454,38 +449,10 @@ function asu_rfi_cron() {
   $to_email = variable_get('asu_rfi_error_email', NULL); //get error reporting email address from rfi admin settings page
 
   if (($last_email_sent - time()) > 86400) { // If the email was sent within 24hrs, don't send it again.
-    if (($timediff > 17280) || ($timediff_attempt > 17280)) { // greater that two days
+    if (($timediff > 172800) || ($timediff_attempt > 172800)) { // greater that two days
       if (!empty($to_email)) {
-
-        //send email to admin reporting the issue
-        $content = "The site " . $_SERVER['HTTP_HOST'] . " hasn\'t been submitting to Salesforce since 2 days";
-        $subject = "Failed submissions to Sales Force from " . $_SERVER['HTTP_HOST'];
-        $my_module = 'mimemail';
-        $my_mail_token = '';
-        $MimeMailSystem = drupal_mail_system($my_module, $my_mail_token);
-        $default_from = variable_get('site_mail', ini_get('sendmail_from'));
-        $emailmessage = array(
-          'id' => $my_module . '_' . $my_mail_token,
-          'from' => $default_from,
-          'key' => '',
-          'subject' => $subject,
-          'body' => array($content),
-          'to' => $to_email,
-          'module' => 'mimemail',
-          'headers' => array(
-            'From' => $default_from,
-            'Sender' => $default_from,
-            'Return-Path' => $default_from,
-            'Content-Type' => 'text/html; charset=UTF-8;',
-            'to' => $to_email
-          ),
-        );
-
-        $emailmessage = $MimeMailSystem->format($emailmessage);
-        if ($MimeMailSystem->mail($emailmessage)) {
-          watchdog('asu_rfi', 'SF Error message email sent to ' . $to_email);
-          variable_set('asu_rfi_SF_error_message_sent', time());
-        }
+        // send email to admin reporting the issue
+        _asu_rfi_failed_post_email($to_email, 0);
       }
     }
   }
@@ -617,7 +584,6 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
     foreach ($form_types_query as $form_types_options) {
       $form_types[$form_types_options->field_rfi_form_type_value] = $form_types_options->field_rfi_form_type_value;
     }
-
     $form['field_rfi_form_type_value']['#type'] = "select";
     $form['field_rfi_form_type_value']['#size'] = 1;
     $form['field_rfi_form_type_value']['#options'] = $form_types;
@@ -648,8 +614,7 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
           $form['my_interest']['location']['online'] = array('#disabled' => TRUE);
           $form['my_interest']['location']['no_preference'] = array('#disabled' => TRUE);
           $form['my_interest']['location']['#default_value'] = 'on_campus';
-        }
-        else {
+        } else {
           if (count($possibleLocations) == 1 && $possibleLocations[0] == "Online") {
             $form['my_interest']['location']['on_campus'] = array('#disabled' => TRUE);
             $form['my_interest']['location']['no_preference'] = array('#disabled' => TRUE);
@@ -682,7 +647,7 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
     }
   }
 
-  // ASU RFI
+  // ASU RFI forms
   if ($form['#id'] == "asu-rfi-form-data") {
     if (isset($form['program_code']['#default_value']) && !empty($form['program_code']['#default_value'])) {
       $pcode = $form['program_code']['#default_value'];
@@ -705,7 +670,7 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
     $form['#after_build'][] = 'asu_rfi_form_after_build';
   }
 
-  // RFI Admin Settings
+  // ASU RFI module's admin settings
   // * Disable Google analytics site transactions key in asu_rfi admin settings page
   if ($form['#id'] == "asu-rfi-admin-settings") {
     if (!empty($form['asu_rfi_form_access']['asu_rfi_google_analytics_key']['#default_value'])) {
@@ -729,9 +694,6 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
   }
 }
 
-/*********************************************************************
- * CONFIG
- *********************************************************************/
 /**
  * Settings function to improve future-proofing.
  *
@@ -880,10 +842,9 @@ function _asu_rfi_query_codes($pcodes) {
 
 /**
  * Compares the degree feed programs listed with online availability with the cached Get Programs API list
- *
+
  * @param string $programsFromDegreeFeed The current program
  * @param array $getProgramsAPIList The cached list of programs currently available with ASU Online. Cached Daily
- *
  * @return boolean $available True False value determining whether it can be handled by ASU Online.
  */
 function _asu_rfi_compare_online_availability($programsFromDegreeFeed, $getProgramsAPIList) {
@@ -900,8 +861,8 @@ function _asu_rfi_compare_online_availability($programsFromDegreeFeed, $getProgr
 
 /**
  * Adds program data to a JS object available to the form on the client side.
+
  * @param array $desiredProg The current program
- *
  */
 function _asu_rfi_update_program_object_js($desiredProg) {
   drupal_add_js(
@@ -1070,6 +1031,7 @@ function _asu_rfi_get_grad_programs() {
  */
 function _asu_rfi_get_program_results($items) {
   $degreeMappings = _asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
+  $out = array();
   foreach ($items as $nid => $program) {
     $program_wrapper = entity_metadata_wrapper('node', $program);
     $program_abbr = $program_wrapper->{$degreeMappings['field_degree_awarded']}->value();
@@ -1077,7 +1039,6 @@ function _asu_rfi_get_program_results($items) {
     // Abbr in value matches how we present name in get programs Views Datasource View.
     $out[$program_plan_code] = $program_abbr;
   }
-  dpm($out, __FUNCTION__ . ' - programs for input ');
   return $out;
 }
 
@@ -1093,6 +1054,7 @@ function _asu_rfi_get_program_codes($result_nodes, $data_type) {
   $programs = entity_load('node', $program_nids);
   $programs = reset($programs);
   $programs = (array) $programs;
+  /** @noinspection PhpUnusedLocalVariableInspection */
   $desiredProg = array(
     'code' => $programs[$degreeMappings['field_academic_plan']]['und']['0']['value'],
     'vid' => $programs['vid'],
@@ -1100,32 +1062,34 @@ function _asu_rfi_get_program_codes($result_nodes, $data_type) {
     'locations' => $programs[$degreeMappings['field_degree_campus']]['und'],
   );
   $out = ${$data_type};
-  dpm(${$data_type}['locations'], __FUNCTION__ . ' - ' . $desiredProg['code'] . ' - ' . $desiredProg['title']);
   return $out;
 }
 
 /**
- * Determine which environment we're operating in.
+ * Determine which type of environment we're operating in.
  * @return string $environ - Name of the environment. dev, qa, or prod
  */
-function asu_rfi_determine_environment() {
-  global $base_url;
-  if ((strpos($base_url, 'https://localhost') > 0) || (strpos($base_url, 'http://localhost') > 0)) {
-    $environ = 'dev';
+function _asu_rfi_determine_environment() {
+  $environ = &drupal_static(__FUNCTION__);
+  if (!isset($environ)) {
+    global $base_url;
+    if ((strpos($base_url, 'https://localhost') > 0) || (strpos($base_url, 'http://localhost') > 0)) {
+      $environ = 'dev';
     }
-  elseif ((strpos($base_url, 'https://dev-') > 0) || (strpos($base_url, 'http://dev-') > 0) || (strpos($base_url, '-dev') > 0)) {
-    $environ = 'dev';
+    elseif ((strpos($base_url, 'https://dev-') > 0) || (strpos($base_url, 'http://dev-') > 0) || (strpos($base_url, '-dev') > 0)) {
+      $environ = 'dev';
     }
-  elseif ((strpos($base_url, 'https://qa-') > 0) || (strpos($base_url, 'http://qa-') > 0) || (strpos($base_url, '-qa') > 0)) {
-    $environ = 'qa';
+    elseif ((strpos($base_url, 'https://qa-') > 0) || (strpos($base_url, 'http://qa-') > 0) || (strpos($base_url, '-qa') > 0)) {
+      $environ = 'qa';
+    }
+    elseif ((strpos($base_url, 'https://test-') > 0) || (strpos($base_url, 'http://test-') > 0)) {
+      $environ = 'qa';
+    }
+    else {
+      $environ = 'unknown';
+    }
+    variable_set('asu_rfi_siteDomain', $environ);
   }
-  elseif ((strpos($base_url, 'https://test-') > 0) || (strpos($base_url, 'http://test-') > 0)) {
-    $environ = 'qa';
-  }
-  else {
-    $environ = 'unknown';
-  }
-  variable_set('asu_rfi_siteDomain', $environ);
   return $environ;
 }
 
@@ -1198,7 +1162,6 @@ function asu_rfi_js_alter(&$javascript) {
       'scope' => 'header'
     );
   }
-
 }
 
 /**
@@ -1225,19 +1188,24 @@ function asu_rfi_preprocess_page(&$variables) {
         $items = entity_load('node', $items_nids);
       }
 
-      $out = array();
       foreach ($items as $nid => $submissions) {
         $sub_wrapper = entity_metadata_wrapper('node', $submissions);
-        $prog_full_name = $sub_wrapper->field_rfi_program_name->value();
-        $plan_code = $sub_wrapper->field_rfi_program->value();
-        $program_code = $sub_wrapper->field_rfi_college_code->value();
-        $program_name = $sub_wrapper->field_rfi_college_name->value();
-        $prospect_level = $sub_wrapper->field_rfi_prospect_level->value();
-        $zip = $sub_wrapper->field_rfi_zipcode->value();
-        $country = $sub_wrapper->field_rfi_country->value();
+        $prog_full_name = (!empty($sub_wrapper->field_rfi_program_name)) ? $sub_wrapper->field_rfi_program_name->value() : '';
+        $plan_code = (!empty($sub_wrapper->field_rfi_program)) ? $sub_wrapper->field_rfi_program->value() : '';
+        $program_code = (!empty($sub_wrapper->field_rfi_college_code)) ? $sub_wrapper->field_rfi_college_code->value() : '';
+        /*
+        // NOT USED ANYWHERE?
+        if (!empty($sub_wrapper->field_rfi_college_name)) {
+          $program_name = $sub_wrapper->field_rfi_college_name->value();
+        }
+        if (!empty($sub_wrapper->field_rfi_prospect_level)) {
+          $prospect_level = $sub_wrapper->field_rfi_prospect_level->value();
+        }
+        */
+        $zip = (!empty($sub_wrapper->field_rfi_zipcode)) ? $sub_wrapper->field_rfi_zipcode->value() : '';
+        $country = (!empty($sub_wrapper->field_rfi_country)) ? $sub_wrapper->field_rfi_country->value() : '';
       }
       $subdomain = array_shift(explode(".", $_SERVER['HTTP_HOST']));
-      $college = $program_code . '-RFI';
       $sku = $program_code . $plan_code . '-RFI';
       $ga_id = $subdomain . '-' . variable_get('asu_rfi_google_analytics_key') . '-' . $nid;
       $category = 'RFI';
@@ -1283,7 +1251,6 @@ function asu_rfi_preprocess_page(&$variables) {
         'scope' => 'header',
         'weight' => 0
       ));
-
     }
 
     // If confirmation node id specified in module settings page is called instead:
@@ -1294,8 +1261,8 @@ function asu_rfi_preprocess_page(&$variables) {
 
       if (isset($variables['node']) && ($variables['node']->nid == $undergrad_confirm_nid || $variables['node']->nid == $grad_confirm_nid)) {
         if (isset($_GET['pro']) || isset($_GET['ccode']) || isset($_GET['maj']) || isset($_GET['sub'])) {
-          $college = base64_decode($_GET['pro']);
-          $college_rfi = $college . " - RFI";
+          //$college = base64_decode($_GET['pro']); // NOT USED??
+          //$college_rfi = $college . " - RFI"; // NOT USED??
           $college_code = base64_decode($_GET['ccode']);
           $major = base64_decode($_GET['maj']);
           $major_rfi = $college_code . '-RFI';
@@ -1304,7 +1271,7 @@ function asu_rfi_preprocess_page(&$variables) {
           $zip = base64_decode($_GET['zcode']);
           $country = base64_decode($_GET['con']);
           $zip_section = substr($zip, 0, 2);
-          //$category = $_GET['cat'];
+          //$category = $_GET['cat']; // NOT USED
           $category = 'RFI';
           $tmp_host = explode(".", $_SERVER['HTTP_HOST']);
           $subdomain = array_shift($tmp_host);
@@ -1401,7 +1368,7 @@ function asu_rfi_preprocess_page(&$variables) {
  * Implementation of hook form_after_build().
  */
 function asu_rfi_form_after_build($form, &$form_state) {
-  // Remove requirement on student type field for Grad forms
+  // Remove requirement on student type field on Graduate forms
   if (isset($form['degree_type']['#default_value'])) {
     if (($form['degree_type']['#default_value'] == "graduate_longform") || ($form['degree_type']['#default_value'] == "graduate")) {
       $form['my_interest']['student_type']['#required'] = FALSE;
@@ -1434,11 +1401,15 @@ function _asu_rfi_check_form_values($db_tbl) {
   return (int) $result;
 }
 
+/**
+ * Validation for phone number
+ * @param $email
+ * @param $phone
+ */
 function _asu_rfi_validate_electronic_contacts($email, $phone) {
-  if (!preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)*(\.[a-zA-Z]{2,6})+$/", $email)) {
+  if (!preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9._-]+)*(\.[a-zA-Z]{2,6})+$/", $email)) {
     form_set_error('email', t('You entered an invalid email.'));
   }
-//validation for phone number
   /** If mobile number field is checked, then check for USA format, else check for special characters **/
   $scam_num = substr($phone, 0, 3);
   if (!empty($mobile_check) && $mobile_check != 0) {
@@ -1447,14 +1418,17 @@ function _asu_rfi_validate_electronic_contacts($email, $phone) {
     }
   }
   else {
-    if (!preg_match("/^[0-9\.\s-_+\(\)]+$/", $phone) || ($scam_num == "555")) {
+    if (!preg_match("/^[0-9.\s-_+()]+$/", $phone) || ($scam_num == "555")) {
       form_set_error('phone', t('You entered an invalid Phone number.'));
     }
   }
 }
 
+/**
+ * Birthdate validation
+ * @param $birthdate
+ */
 function _asu_rfi_validate_birthdate($birthdate) {
-  //get number of occurences of '/' in dob
   //get number of occurences of '/' in dob
   $slashes = substr_count($birthdate, '/');
   if ($slashes == 2) {
@@ -1525,9 +1499,36 @@ function _asu_rfi_validate_birthdate($birthdate) {
 }
 
 /**
+ * Validation for zipcodes
+ * @param $country
+ * @param $zip
+ */
+function _asu_rfi_validate_zipcode($country, $zip) {
+  if ($country == "United States") {
+    if ((strlen($zip) < 5)) {
+      form_set_error('zipcode', t('Postal code cannot be less than 5 digits.'));
+    }
+    if (!preg_match('/^[0-9]{5}+$/', $zip)) {
+      form_set_error('zipcode', t('Postal code accepts 5 digits only.'));
+    }
+  } else {
+    if (!preg_match("/^[a-zA-Z0-9\s-]+$/", $zip)) {
+      form_set_error('zipcode', t('Postal code is not valid.'));
+    }
+    if ((strlen($zip) < 4)) {
+      form_set_error('zipcode', t('Postal code cannot be less than 4 characters.'));
+    }
+    if (strlen($zip) > 20) {
+      form_set_error('zipcode', t('Postal code cannot be longer than 20 characters.'));
+    }
+  }
+}
+
+/**
  * Returns correct campusID for Salesforce
  * @param $campus
  * @return string
+ * @TODO pull in from feed to stay up to date
  */
 function _asu_rfi_correct_campus_id($campus) {
   switch ($campus) {
@@ -1561,11 +1562,19 @@ function _asu_rfi_correct_campus_id($campus) {
   return $campusId;
 }
 
-function _asu_rfi_failed_post_email($to_email, $nid) {
+/**
+ * Create and deliver email receipt to admin about failed SF submissions
+ * @param $to_email
+ * @param $nid
+ * @throws \Exception
+ */
+function _asu_rfi_failed_post_email($to_email, $nid = 0) {
   $host = $_SERVER['HTTP_HOST'];
-  //send email to admin reporting the issue
-  $content = "The following <a href='https://$host/node/$nid'>submission</a> from " . $_SERVER['HTTP_HOST']
-    . " has a problem and hasn't been submitted to middleware.";
+  // form submission posting vs. hook_cron() running
+  $content = ($nid != 0)
+    ? "The following <a href='https://$host/node/$nid'>submission</a> from " . $_SERVER['HTTP_HOST']
+      . " has a problem and hasn't been submitted to middleware."
+    : "The site " . $_SERVER['HTTP_HOST'] . " hasn\'t been submitting to Salesforce for at least 2 days.";
   $subject = "Failed submissions to SalesForce from " . $_SERVER['HTTP_HOST'];
   $my_module = 'mimemail';
   $my_mail_token = '';
@@ -1587,7 +1596,6 @@ function _asu_rfi_failed_post_email($to_email, $nid) {
       'to' => $to_email
     ),
   );
-
   $email_message = $MimeMailSystem->format($message);
   if ($MimeMailSystem->mail($email_message)) {
     watchdog('asu_rfi', 'SF Error message email sent to ' . $to_email);
