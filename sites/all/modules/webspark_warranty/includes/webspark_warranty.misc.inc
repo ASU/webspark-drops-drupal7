@@ -7,7 +7,7 @@
  */
 
 /**
- * webspark_warranty_moduleDiff($installedModules, $supportedModules) - Recursively finds the difference between two
+ * webspark_warranty_module_diff($installedModules, $supportedModules) - Recursively finds the difference between two
  *                                                                      arrays. Edited from Stack Overflow answer
  *
  * @param $installedModules - Installed modules array that is compared to the supported modules array
@@ -16,8 +16,10 @@
  * @return $outputDiff - Returns an associative array that holds modules that are either unsupported, or installed in the
  *                       wrong directory (misplaced)
  */
-function webspark_warranty_moduleDiff($installedModules, $supportedModules)
+function webspark_warranty_module_diff($installedModules, $supportedModules)
 {
+  // change module name capitalization
+
   $unsupportedDiff = []; // Installed modules not supported under warranty
   $misplacedDiff = []; // Installed modules that are under warranty, but are misplaced
 

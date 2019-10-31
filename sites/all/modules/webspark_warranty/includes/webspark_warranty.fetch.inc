@@ -47,7 +47,7 @@ function webspark_warranty_get_warranty_violations()
   $installedModules = webspark_warranty_get_installed_modules(); // All modules installed on the site
   $supportedModules = webspark_warranty_get_warranty_modules(); // All modules supported under the warranty
 
-  $warrantyViolations = webspark_warranty_moduleDiff($installedModules, $supportedModules); // Any unsupported or misplaced modules
+  $warrantyViolations = webspark_warranty_module_diff($installedModules, $supportedModules); // Any unsupported or misplaced modules
 
   return $warrantyViolations;
 }
