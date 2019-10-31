@@ -1,4 +1,15 @@
 <?php
+/***
+ * @file - webspark_warranty.module
+ *
+ * Module file that holds all hooks for module
+ *
+ * Refer to following external docs for further assistance:
+ * https://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_menu/7.x
+ * https://api.drupal.org/api/drupal/modules%21block%21block.api.php/function/hook_block_info/7.x
+ * https://api.drupal.org/api/drupal/modules%21block%21block.api.php/function/hook_block_view/7.x
+ * https://api.drupal.org/api/drupal/includes%21module.inc/function/module_load_include/7.x
+ */
 
 require_once drupal_get_path('module', 'webspark_warranty') . '/includes/webspark_warranty.fetch.inc';
 require_once drupal_get_path('module', 'webspark_warranty') . '/includes/webspark_warranty.misc.inc';
