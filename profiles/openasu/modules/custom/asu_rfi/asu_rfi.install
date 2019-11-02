@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnusedParameterInspection */
 
 /**
  * Implementation of hook_schema().
@@ -113,14 +113,14 @@ function asu_rfi_update_7000(&$sandbox) {
 /**
  * Forces a rebuild of the module's features to include the domain and location piece
  */
-function asu_rfi_update_7001(){
+function asu_rfi_update_7001(&$sandbox){
   features_revert_module('asu_rfi_feature');
 }
 
 /**
  * Updates variable names not properly set by ASU RFI module
  */
-function asu_rfi_update_7002(){
+function asu_rfi_update_7002(&$sandbox){
   $or = db_or()
     ->condition('v.name', 'last_attempt_SF_posting', 'LIKE')
     ->condition('v.name', 'last_success_SF_posting', 'LIKE')
@@ -161,4 +161,13 @@ function asu_rfi_update_7002(){
   }
   watchdog('asu_rfi', $message, array(), WATCHDOG_INFO);
   drupal_set_message($message, 'status');
+}
+/**
+ * Delete deprecated asu_rfi_siteDomain variable
+ */
+function asu_rfi_update_7003(&$sandbox) {
+  Database::getConnection('default', 'default')
+    ->delete('variable')
+    ->condition('name', 'asu_rfi_siteDomain', 'LIKE')
+    ->execute();
 }

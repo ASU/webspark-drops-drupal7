@@ -48,13 +48,14 @@ function asu_rfi_grad_post($data) {
     $city = '';
   }
   $location = (isset($data['location'])) ? $data['location'] : '';
+
   // enterpriseclientid for use in EdPlus Leads submissions.
   $enterpriseclientid = (isset($data['enterpriseclientid'])) ? $data['enterpriseclientid'] : '';
 
-  // Get asu_rfi_siteDomain variable to see if it's dev or qa site. (this comment doesn't match logic??)
+  // See if it's dev or qa site.
   $environ = _asu_rfi_determine_environment();
 
-  // Salesforce URL to post data to
+  // Salesforce URL for posting data
   if (($environ == "dev") || ($environ == "qa")) {
     $url = 'https://requestinfo-qa.asu.edu/prospect_form_post';
   } else {
@@ -65,7 +66,7 @@ function asu_rfi_grad_post($data) {
     }
   }
 
-  // build data array to post
+  // Build data array to post to Salesforce
   $submission_data = array(
     'source' => $source,
     'firstName' => $data['first_name'],
