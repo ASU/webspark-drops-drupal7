@@ -461,7 +461,7 @@ function asu_rfi_form_data_submit($form, &$form_state) {
   $form_state['storage']['ip_address'] = $form_state['values']['ip_address'];
   $form_state['storage']['college_code'] = $form_state['values']['college'];
   $form_state['storage']['program_code'] = $form_state['values']['program_code'];
-  $ip_address = $form_state['values']['ip_address'];
+  $ip_address = $form_state['values']['ip_address']; // UNUSED
 
   $current_time = time();
   $form_state['storage']['submit_time'] = $current_time;
@@ -475,11 +475,6 @@ function asu_rfi_form_data_submit($form, &$form_state) {
     ->condition('field_rfi_uniquedata_value', $unique_id, '=')
     ->execute()
     ->fetchField();
-
-  /* $node_unique = db_query('SELECT field_rfi_uniquedata_value
-      FROM {field_data_field_rfi_uniquedata}
-      WHERE field_rfi_uniquedata_value = :unid',
-    array(':unid' => $unique_id))->fetchField(); */
 
   // If unique id doesn't exist, create the nodes
   if (empty($node_unique)) {
@@ -1535,27 +1530,69 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
   if (isset($wrapper->field_rfi_country)) {
     $wrapper->field_rfi_country->set($country);
   }
-  $wrapper->field_rfi_zipcode->set($zip);
-  $wrapper->field_rfi_start_term_code->set($semester);
-  $wrapper->field_rfi_program->set($program);
-  $wrapper->field_rfi_college_code->set($college_code);
-  $wrapper->field_rfi_form_type->set($long_form_type);
-  $wrapper->field_rfi_ip_address->set(intval($ip_address));
-  $wrapper->field_rfi_state->set($state);
-  $wrapper->field_rfi_veteran->set($veteran);
-  $wrapper->field_rfi_question->set(check_plain($questions));
-  $wrapper->field_rfi_dob->set(base64_encode($dob_date));
-  $wrapper->field_rfi_submission_status->set('Complete');
-  $wrapper->field_rfi_address->set($address);
-  $wrapper->field_rfi_city->set($city);
-  $wrapper->field_rfi_international->set($international);
-  $wrapper->field_rfi_start_term->set($semester_name);
-  $wrapper->field_rfi_program_name->set($program_name);
-  $wrapper->field_rfi_college_name->set($college_name);
-  $wrapper->field_rfi_enterpriseclientid->set($enterpriseclientid);
-  $wrapper->field_rfi_prospect_level->set($form_state['values']['prospect_level']);
-  $wrapper->field_rfi_location->set($location);
-  $wrapper->field_rfi_campus->set($campus);
+  if (isset($wrapper->field_rfi_zipcode)) {
+    $wrapper->field_rfi_zipcode->set($zip);
+  }
+  if (isset($wrapper->field_rfi_start_term_code)) {
+    $wrapper->field_rfi_start_term_code->set($semester);
+  }
+  if (isset($wrapper->field_rfi_program)) {
+    $wrapper->field_rfi_program->set($program);
+  }
+  if (isset($wrapper->field_rfi_college_code)) {
+    $wrapper->field_rfi_college_code->set($college_code);
+  }
+  if (isset($wrapper->field_rfi_form_type)) {
+    $wrapper->field_rfi_form_type->set($long_form_type);
+  }
+  if (isset($wrapper->field_rfi_ip_address)) {
+    $wrapper->field_rfi_ip_address->set(intval($ip_address));
+  }
+  if (isset($wrapper->field_rfi_state)) {
+    $wrapper->field_rfi_state->set($state);
+  }
+  if (isset($wrapper->field_rfi_veteran)) {
+    $wrapper->field_rfi_veteran->set($veteran);
+  }
+  if (isset($wrapper->field_rfi_question)) {
+    $wrapper->field_rfi_question->set(check_plain($questions));
+  }
+  if (isset($wrapper->field_rfi_dob)) {
+    $wrapper->field_rfi_dob->set(base64_encode($dob_date));
+  }
+  if (isset($wrapper->field_rfi_submission_status)) {
+    $wrapper->field_rfi_submission_status->set('Complete');
+  }
+  if (isset($wrapper->field_rfi_address)) {
+    $wrapper->field_rfi_address->set($address);
+  }
+  if (isset($wrapper->field_rfi_city)) {
+    $wrapper->field_rfi_city->set($city);
+  }
+  if (isset($wrapper->field_rfi_international)) {
+    $wrapper->field_rfi_international->set($international);
+  }
+  if (isset($wrapper->field_rfi_start_term)) {
+    $wrapper->field_rfi_start_term->set($semester_name);
+  }
+  if (isset($wrapper->field_rfi_program_name)) {
+    $wrapper->field_rfi_program_name->set($program_name);
+  }
+  if (isset($wrapper->field_rfi_college_name)) {
+    $wrapper->field_rfi_college_name->set($college_name);
+  }
+  if (isset($wrapper->field_rfi_enterpriseclientid)) {
+    $wrapper->field_rfi_enterpriseclientid->set($enterpriseclientid);
+  }
+  if (isset($wrapper->field_rfi_prospect_level)) {
+    $wrapper->field_rfi_prospect_level->set($form_state['values']['prospect_level']);
+  }
+  if (isset($wrapper->field_rfi_location)) {
+    $wrapper->field_rfi_location->set($location);
+  }
+  if (isset($wrapper->field_rfi_campus)) {
+    $wrapper->field_rfi_campus->set($campus);
+  }
 
   $wrapper->save();
 
@@ -1983,13 +2020,14 @@ function _asu_rfi_program_location_confirm($prog, $campus, $loc) {
 function _asu_rfi_get_country_list() {
   $other_countries = &drupal_static(__FUNCTION__);
   if (!isset($other_countries)) {
-    $all_countries = array();
-    $countries = db_query("select countryDesc from asu_rfi_countries order by countryDesc asc");
-    foreach ($countries as $country_select) {
-      $all_countries[$country_select->countryDesc] = $country_select->countryDesc;
-    }
+    /*$countries = db_query("select countryDesc from asu_rfi_countries order by countryDesc asc"); */
+    $countries = db_select('asu_rfi_countries', 'arc')
+      ->fields('arc', array('countryDesc'))
+      ->orderBy('countryDesc')
+      ->execute()
+      ->fetchAllKeyed(0,0);
     $us_cont = array("United States" => "United States");
-    $other_countries = array_diff($all_countries, $us_cont);
+    $other_countries = array_diff($countries, $us_cont);
     $other_countries = $us_cont + $other_countries;
   }
   return $other_countries;
@@ -1999,16 +2037,17 @@ function _asu_rfi_get_country_list() {
  * Get states list for forms
  */
 function _asu_rfi_get_state_list() {
-  $all_states = &drupal_static(__FUNCTION__);
-  if (!isset($all_states)) {
-    $states_query = db_query("select stateDesc from asu_rfi_states_list order by stateDesc asc");
-    foreach ($states_query as $states) {
-      $all_states[$states->stateDesc] = $states->stateDesc;
-    }
+  $all_state_options = &drupal_static(__FUNCTION__);
+  if (!isset($all_state_options)) {
+    $all_state_options = db_select('asu_rfi_states_list', 'arsl')
+      ->fields('arsl', array('stateDesc'))
+      ->orderBy('stateDesc')
+      ->execute()
+      ->fetchAllKeyed(0,0);
     $option = 'None';
-    array_unshift($all_states, $option);
+    array_unshift($all_state_options, $option);
   }
-  return $all_states;
+  return $all_state_options;
 }
 
 /**

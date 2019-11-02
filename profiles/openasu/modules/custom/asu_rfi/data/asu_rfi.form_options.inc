@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnusedParameterInspection */
 
 /**
  * Get list names and IDs for various RFI form dropdowns
@@ -14,6 +14,7 @@ function asu_rfi_get_options_data($name, $installing = FALSE) {
   $url = $config['url'];
   $db_tbl = $config['db_tbl'];
   $json_options = $config['json_options'];
+  $result = array();
 
   // Do CURL call to JSON feed
   try {
@@ -34,8 +35,8 @@ function asu_rfi_get_options_data($name, $installing = FALSE) {
   }
 
   // Do DB upsert if values are returned from JSON feed...
-  if (count($result)) {
-    $cntry_cnt = 0;
+  if (count($result) > 0) {
+    $data_count = 0;
     foreach ($result as $datum) {
       $datum_key = (!empty($datum->{$config['datum_key']})) ? check_plain($datum->{$config['datum_key']}) : 'EMPTY';
       $datum_value = (!empty($datum->{$config['datum_value']})) ? check_plain($datum->{$config['datum_value']}) : 'EMPTY';
@@ -49,7 +50,7 @@ function asu_rfi_get_options_data($name, $installing = FALSE) {
             $db_value => $datum_value,
           ))
           ->execute();
-        $cntry_cnt++;
+        $data_count++;
       }
       else {
         $message = t($name . ' record from ' . $url . ' was rejected. Debugging info: key - :key, value - :name ',
@@ -57,8 +58,8 @@ function asu_rfi_get_options_data($name, $installing = FALSE) {
         watchdog('asu_rfi', $message, array(), WATCHDOG_NOTICE);
       }
     }
-    if ($cntry_cnt > 0) {
-      $message = $cntry_cnt . ' out of ' . count($result) . ' ' . $name . ' entries were
+    if ($data_count > 0) {
+      $message = $data_count . ' out of ' . count($result) . ' ' . $name . ' entries were
         upserted in ' . $db_tbl . ' DB table.';
       watchdog('asu_rfi', $message, array(), WATCHDOG_NOTICE);
     } else { // no $result entries got in

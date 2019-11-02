@@ -392,11 +392,11 @@ function asu_rfi_cron() {
     drupal_flush_all_caches();
 
     // Update countries table
-    asu_rfi_get_options_data('country', TRUE);
+    asu_rfi_get_options_data('country');
     // Update states table
-    asu_rfi_get_options_data('state_province', TRUE);
+    asu_rfi_get_options_data('state_province');
     // Update semester dates table
-    asu_rfi_get_options_data('rfi_dedupe_list_terms', TRUE);
+    asu_rfi_get_options_data('rfi_dedupe_list_terms');
 
     // Update asu_rfi_cron_last_ran time.
     variable_set('asu_rfi_cron_last_ran', time());
