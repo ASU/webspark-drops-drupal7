@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Actually POSTs form data to Salesforce for GRADUATE submissions.
+ * Used by multiple forms (long form, multiform)
+ * @param $data
+ */
+
 function asu_rfi_grad_post($data) {
   $degreeMappings = _asu_rfi_get_degree_mappings();
   $form_mode = variable_get('asu_rfi_form_mode');
