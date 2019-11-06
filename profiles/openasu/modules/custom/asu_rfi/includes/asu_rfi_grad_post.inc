@@ -7,7 +7,7 @@
  */
 
 function asu_rfi_grad_post($data) {
-  $degreeMappings = _asu_rfi_get_degree_mappings();
+  $degreeMappings = _asu_rfi_degree_field_mappings();
   $form_mode = variable_get('asu_rfi_form_mode');
 
   $nodeid = $data['submission_nodeid'];
@@ -46,7 +46,7 @@ function asu_rfi_grad_post($data) {
   $comment = (isset($data['questions'])) ? $data['questions'] : ''; // Comment
   $address = (isset($data['address'])) ? $data['address'] : ''; // Address
   $city = (isset($data['city'])) ? $data['city'] : ''; // City
-  $state = (isset($data['state'])) ? $data['state'] : ''; //
+  $state = (isset($data['state'])) ? $data['state'] : ''; // State
   $country = (isset($data['country'])) ? $data['country'] : ''; // country
   if ($country !== "United States" || $country !== "Canada") {
     $address = '';
@@ -94,7 +94,8 @@ function asu_rfi_grad_post($data) {
     'campusSelection' => $campus,
   );
 
-  if(!isset($campus) && sizeof($availableCampuses) == 1 && ($availableCampuses[0] == "Online" || $availableCampuses[0] == "online")) {
+  if(!isset($campus) && sizeof($availableCampuses) == 1
+    && (ucfirst($availableCampuses[0]) == "Online")) {
     $location = "Online";
   }
 
@@ -147,8 +148,6 @@ function asu_rfi_grad_post($data) {
   curl_setopt($curl, CURLOPT_HEADER, FALSE); // FALSE Remove informational headers
   curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
   curl_setopt($curl, CURLOPT_POSTFIELDS, $submission_data); // data mapping
-  // curl_setopt($curl, CURLOPT_SSLVERSION, 1); // Sets the security protocol to TLSv1
-  // UPDATE: Disabling to let the web server choose a default SSL Version is better.
   curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
   $response = curl_exec($curl);

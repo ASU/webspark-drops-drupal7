@@ -51,7 +51,7 @@ function asu_rfi_form_data($form, &$form_state) {
 
   $domain = $_SERVER['HTTP_HOST'];
   // Get form options
-  $degreeMappings = _asu_rfi_get_degree_mappings();
+  $degreeMappings = _asu_rfi_degree_field_mappings();
   $start_dates = _asu_rfi_get_sem_dates();
   $country = _asu_rfi_get_country_list();
 
@@ -403,6 +403,7 @@ function asu_rfi_form_data_submit($form, &$form_state) {
   // SECOND FORM? Go to other submit
   if (isset($form_state['storage'])) {
     if ($form_state['storage']['step'] == 'asu_rfi_second_form') {
+      /** @noinspection PhpVoidFunctionResultUsedInspection */
       return asu_rfi_second_form_submit($form, $form_state);
     }
   }
@@ -423,7 +424,7 @@ function asu_rfi_form_data_submit($form, &$form_state) {
   // number to sms field, else prepend 1.
   if (!empty($sms_opted)) {
     if (substr($form_state['values']['phone'], 0, 1) != "1") {
-      $form_state['storage']['mobile_check'] = '1' . $form_state['values']['phone'];
+      $form_state['storage']['mobile_check'] = '1-' . $form_state['values']['phone'];
     } else {
       $form_state['storage']['mobile_check'] = $form_state['values']['phone'];
     }
@@ -448,16 +449,18 @@ function asu_rfi_form_data_submit($form, &$form_state) {
 
   $form_state['storage']['prog_plan'] = check_plain($form_state['values']['prog_plan']);
 
-  if (($form_state['values']['degree_type']) != "undergrad") {
-    $form_state['values']['student_type'] = "Graduate";
-    $form_state['storage']['student_type'] = "Graduate";
+  if (($form_state['values']['degree_type']) != "undergrad") { // Graduate
+    $form_state['values']['student_type'] = ASU_RFI_PROSPECT_LEVEL_GRAD;
+    $form_state['storage']['student_type'] = ASU_RFI_PROSPECT_LEVEL_GRAD;
     $multi_form_type = "Graduate multi form";
-    $form_state['storage']['prospect_level'] = "Graduate";
-  } else {
+    $form_state['storage']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_GRAD;
+  }
+  else { // Undergraduate
     $form_state['storage']['student_type'] = $form_state['values']['student_type'];
     $multi_form_type = "Undergraduate multi form";
-    $form_state['storage']['prospect_level'] = "Undergraduate";
+    $form_state['storage']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
   }
+
   $form_state['storage']['campus'] = $form_state['values']['campus'];
   $form_state['storage']['ip_address'] = $form_state['values']['ip_address'];
   $form_state['storage']['college_code'] = $form_state['values']['college'];
@@ -496,7 +499,7 @@ function asu_rfi_form_data_submit($form, &$form_state) {
     $form_state['storage']['submission_nodeid'] = $entity->nid;
 
     // Send email
-    if ($form_state['storage']['prospect_level'] == "Graduate") {
+    if ($form_state['storage']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_GRAD) {
       asu_rfi_grad_email($form_state['storage']['program_code'],
         $form_state['storage']['email'],
         $form_state['storage']['first_name']);
@@ -736,7 +739,7 @@ function asu_rfi_second_form_validate($form, &$form_state) {
 
 
 /**
- * Second form submit handler
+ * Second form submit handler (for undergrad and grad students)
  * @param $form
  * @param $form_state
  * @throws \Exception
@@ -761,7 +764,7 @@ function asu_rfi_second_form_submit($form, &$form_state) {
 
   $unique_id = $email . $major;
 
-  // Just to make sure if the zipcode has been updated in the second form
+  // Make sure various fields have been updated in the second form
   $form_state['storage']['zipcode'] = $zipcode;
   $city = check_plain($form_state['values']['city']);
   $form_state['storage']['city'] = $city;
@@ -802,54 +805,13 @@ function asu_rfi_second_form_submit($form, &$form_state) {
   $coded_college_code = base64_encode($form_state['storage']['college_code']);
   $coded_zip = base64_encode($zipcode);
   $coded_country = base64_encode($country);
-  /* If graduate degree is submitted, root the from to graduate posting function.
-   * Grab the node id of information page from admin settings page if it exists and
-   * redirect the user to confirmation node. If the node id doesn't exist, take
-   * the user to built in confirmation page.
-   */
-  if ($form_state['storage']['prospect_level'] == "Graduate") {
-    asu_rfi_grad_post($form_state['storage']);
-    $grad_conf_id = variable_get('asu_rfi_grad_confirm_node');
-    if (!empty($grad_conf_id)) {
-      $galias = drupal_lookup_path('alias', $path = "node/$grad_conf_id", $path_language = NULL);
-      if (!empty($alias)) {
-        drupal_goto("$galias", array(
-          'query' => array(
-            'pro' => $coded_college,
-            'maj' => $coded_major,
-            'sub' => $coded_nid,
-            'ccode' => $coded_college_code,
-            'cat' => 'Grad RFI',
-            'zcode' => $coded_zip,
-            'con' => $coded_country
-          )
-        ));
-      } else {
-        drupal_goto("node/$grad_conf_id", array(
-          'query' => array(
-            'pro' => $coded_college,
-            'maj' => $coded_major,
-            'sub' => $coded_nid,
-            'ccode' => $coded_college_code,
-            'cat' => 'Grad RFI',
-            'zcode' => $coded_zip,
-            'con' => $coded_country
-          )
-        ));
-      }
-    } else {
-      drupal_goto("degree-programs/request-info-thank-you/$coded_nid");
-    }
-    //clear session data
-    unset($_SESSION['rfi_data']);
-  }
 
   /* If undergraduate degree is submitted, root the from to undergraduate posting function below.
-   * Grab the node id of information page from admin settings page if exists and
-   * redirect the user to confirmation node. If the node id doesn't exist, take
-   * the user to built in confirmation page*
-   */
-  if ($form_state['storage']['prospect_level'] == "Undergraduate") {
+ * Grab the node id of information page from admin settings page if exists and
+ * redirect the user to confirmation node. If the node id doesn't exist, take
+ * the user to built in confirmation page*
+ */
+  if ($form_state['storage']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
     asu_rfi_undergrad_post($form_state['storage']); //-- To be used in future
     $undergrad_conf_id = variable_get('asu_rfi_undergrad_confirm_node');
 
@@ -885,8 +847,49 @@ function asu_rfi_second_form_submit($form, &$form_state) {
     }
     unset($_SESSION['rfi_data']);
   }
-}
 
+  /* If graduate degree is submitted, root the from to graduate posting function.
+   * Grab the node id of information page from admin settings page if it exists and
+   * redirect the user to confirmation node. If the node id doesn't exist, take
+   * the user to built in confirmation page.
+   */
+  if ($form_state['storage']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_GRAD) {
+    asu_rfi_grad_post($form_state['storage']);
+    $grad_conf_id = variable_get('asu_rfi_grad_confirm_node');
+    if (!empty($grad_conf_id)) {
+      $galias = drupal_lookup_path('alias', $path = "node/$grad_conf_id", $path_language = NULL);
+      if (!empty($alias)) {
+        drupal_goto("$galias", array(
+          'query' => array(
+            'pro' => $coded_college,
+            'maj' => $coded_major,
+            'sub' => $coded_nid,
+            'ccode' => $coded_college_code,
+            'cat' => 'Grad RFI',
+            'zcode' => $coded_zip,
+            'con' => $coded_country
+          )
+        ));
+      } else {
+        drupal_goto("node/$grad_conf_id", array(
+          'query' => array(
+            'pro' => $coded_college,
+            'maj' => $coded_major,
+            'sub' => $coded_nid,
+            'ccode' => $coded_college_code,
+            'cat' => 'Grad RFI',
+            'zcode' => $coded_zip,
+            'con' => $coded_country
+          )
+        ));
+      }
+    } else {
+      drupal_goto("degree-programs/request-info-thank-you/$coded_nid");
+    }
+    //clear session data
+    unset($_SESSION['rfi_data']);
+  }
+}
 
 /** Long RFI form generation
  * @param $delta
@@ -1424,18 +1427,18 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
 
   global $user;
 
-  $degreeMappings = _asu_rfi_get_degree_mappings();
+  $degreeMappings = _asu_rfi_degree_field_mappings();
 
   // Get the type of the form. If the form is grad form, set prospect_level
   // value to "Graduate", else "Undergraduate"
   if (($form_state['values']['degree_type']) == "graduate_longform") {
-    $s_type = 'Graduate';
+    $s_type = ASU_RFI_PROSPECT_LEVEL_GRAD;
     $long_form_type = "Graduate long form";
-    $form_state['values']['prospect_level'] = "Graduate";
-  } else {
-    $s_type = $form_state['values']['student_type'];
+    $form_state['values']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_GRAD;
+  } else { // assume undergrad
+    $s_type = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
     $long_form_type = "Undergraduate long form";
-    $form_state['values']['prospect_level'] = "Undergraduate";
+    $form_state['values']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
   }
   $domain = check_plain($form_state['values']['domain']);
   $f_name = check_plain($form_state['values']['first_name']);
@@ -1448,10 +1451,10 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
 
   $sms_opted = $form_state['values']['mobile_check'];
 
-  //check if the phone number already has 1 prepended. If yes, just pass phone number to sms field, else prepend 1.
+  // check if the phone number already has 1 prepended. If yes, just pass phone number to sms field, else prepend "1-".
   if (!empty($sms_opted)) {
     $form_state['values']['mobile_check'] = (substr($form_state['values']['phone'], 0, 1) != "1")
-      ? '1' . $form_state['values']['phone']
+      ? '1-' . $form_state['values']['phone']
       : $form_state['values']['phone'];
   } else {
     $form_state['values']['mobile_check'] = '';
@@ -1599,7 +1602,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
 
   // Send the confirmation email
   if (($location !== 'Online' && $location !== 'online')) {
-    if ($form_state['values']['prospect_level'] == "Graduate") {
+    if ($form_state['values']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_GRAD) {
       asu_rfi_grad_email($form_state['values']['program_code'], $form_state['values']['email'], $form_state['values']['first_name']);
     } else {
       asu_rfi_undergrad_email($form_state['values']['program_code'], $form_state['values']['email'], $form_state['values']['first_name']);
@@ -1616,7 +1619,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
   $coded_zip = base64_encode($zip);
   $coded_country = base64_encode($country);
 
-  if ($form_state['values']['prospect_level'] == "Graduate") {
+  if ($form_state['values']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_GRAD) {
     asu_rfi_grad_post($form_state['values']);
     $grad_conf_id = variable_get('asu_rfi_grad_confirm_node');
     if (!empty($grad_conf_id)) {
@@ -1652,7 +1655,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
   }
 
 
-  if ($form_state['values']['prospect_level'] == "Undergraduate") {
+  if ($form_state['values']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
     asu_rfi_undergrad_post($form_state['values']);
     $undergrad_confid = variable_get('asu_rfi_undergrad_confirm_node');
     if (!empty($undergrad_confid)) {
@@ -1866,7 +1869,7 @@ function asu_rfi_current_form_data_validate($form, &$form_state) {
 function asu_rfi_current_form_data_submit($form, &$form_state) {
   global $user;
 
-  $degreeMappings = _asu_rfi_get_degree_mappings();
+  $degreeMappings = _asu_rfi_degree_field_mappings();
 
   $domain = $form_state['values']['domain'];
   $f_name = $form_state['values']['first_name'];
@@ -1974,7 +1977,7 @@ function _asu_rfi_initial_form_settings() {
  * @return bool
  */
 function _asu_rfi_program_location_confirm($prog, $campus, $loc) {
-  $degreeMappings = _asu_rfi_get_degree_mappings();
+  $degreeMappings = _asu_rfi_degree_field_mappings();
   $campusOptions = array();
 
   $query = new EntityFieldQuery();

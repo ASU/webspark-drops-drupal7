@@ -5,7 +5,7 @@
  * @param $data
  */
 function asu_rfi_undergrad_post($data) {
-  $degreeMappings = _asu_rfi_get_degree_mappings();
+  $degreeMappings = _asu_rfi_degree_field_mappings();
   $nid = $data['submission_nodeid'];
   $node = node_load($nid);
   $nodeArr = array(
@@ -89,7 +89,7 @@ function asu_rfi_undergrad_post($data) {
     'prod_test_flag' => $form_mode,
     'first_name' => $f_name,
     'last_name' => $l_name,
-    'prospect_level' => 'Undergraduate',
+    'prospect_level' => ASU_RFI_PROSPECT_LEVEL_UNDERGRAD,
     'student_type' => $data['student_type'],
     'program' => $prog_code,
     'starting_semester' => $data['start_date'],

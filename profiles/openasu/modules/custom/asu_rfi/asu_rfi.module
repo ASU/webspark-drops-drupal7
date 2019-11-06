@@ -20,13 +20,16 @@
  * Module provides ASU RFI form submission functionality.
  */
 
-/*********************************************************************
- * DRUPAL HOOKS
- *********************************************************************/
+define('ASU_RFI_PROSPECT_LEVEL_UNDERGRAD', "Undergraduate");
+define('ASU_RFI_PROSPECT_LEVEL_GRAD', "Graduate");
 
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_grad_post');
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_undergrad_post');
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_get_programs');
+
+/*********************************************************************
+ * DRUPAL HOOKS
+ *********************************************************************/
 
 /**
  * Implements hook_permission().
@@ -183,7 +186,7 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
         $form_type = $instance_settings['form_type'];
         $block['subject'] = t('Future Student Form');
         module_load_include('inc', 'asu_rfi', 'includes/asu_rfi.pages');
-        // TODO Load the RFI form in this block.
+        // @TODO Load the RFI form in this block.
         $block['content'] = asu_rfi_long_form($delta, $programs, $form_type);
       }
       // Current student form settings (ugrad or grad)
@@ -192,7 +195,7 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
         $form_type = $instance_settings['form_type'];
         $block['subject'] = t('Current Student Form');
         module_load_include('inc', 'asu_rfi', 'includes/asu_rfi.pages');
-        // TODO Load the RFI form in this block.
+        // @TODO Load the RFI form in this block.
         $block['content'] = asu_rfi_current_form($delta, $programs, $form_type);
       }
 
@@ -217,7 +220,8 @@ function asu_rfi_block_configure($delta = '', $multi_id = NULL) {
   global $user;
   // Check if the ASU Academic Programs module is disabled. If so, AND the user has the 'administrator' role OR is user-1, then set the warning.
   if (!module_exists('asu_ap') && (in_array('administrator', $user->roles) || $user->uid == 1)) {
-    drupal_set_message('ASU Degrees has been deprecated and will be removed in a future release. Please switch to ASU Academic Programs as soon as possible to avoid data loss.', 'warning');
+    drupal_set_message('ASU Degrees has been deprecated and will be removed in a future release.
+     Please switch to ASU Academic Programs as soon as possible to avoid data loss.', 'warning');
   }
 
   $form = array();
@@ -389,20 +393,18 @@ function asu_rfi_cron() {
   $stale_time = variable_get('asu_rfi_stale_time', 86400); // 86400 seconds == 1 day
 
   if (($last_ran + $stale_time) < time()) { // If we last ran over $stale_time seconds ago.
-
     module_load_include('inc', 'asu_rfi', 'data/asu_rfi.form_options');
     drupal_flush_all_caches();
 
-    // Update countries table
+    // Update countries DB table
     asu_rfi_get_options_data('country');
-    // Update states table
+    // Update states DB table
     asu_rfi_get_options_data('state_province');
-    // Update semester dates table
+    // Update semester dates DB table
     asu_rfi_get_options_data('rfi_dedupe_list_terms');
 
     // Update asu_rfi_cron_last_ran time.
     variable_set('asu_rfi_cron_last_ran', time());
-
   }
 
   // Check for unposted leads (confirmation == -1), and add them to the cron
@@ -483,7 +485,7 @@ function asu_rfi_cron_queue_info() {
  * @param array $post - data to submit
  * @param string $program - program type (ugrad, grad)
  */
-function _asu_rfi_repost_data($node, $post = array(), $program = 'Undergraduate') {
+function _asu_rfi_repost_data($node, $post = array(), $program = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
   $post['domain'] = $node->field_rfi_domain['und'][0]['value'];
   $post['first_name'] = $node->field_rfi_first_name['und'][0]['value'];
   $post['last_name'] = $node->field_rfi_last_name['und'][0]['value'];
@@ -512,7 +514,7 @@ function _asu_rfi_repost_data($node, $post = array(), $program = 'Undergraduate'
   // NOW - Grad or undergrad??
   // Graduate program
   $type_of_form = isset($node->field_rfi_form_type['und'][0]['value']) ? $node->field_rfi_form_type['und'][0]['value'] : '';
-  if ($program == 'Graduate') {
+  if ($program == ASU_RFI_PROSPECT_LEVEL_GRAD) {
     if ($type_of_form == "Graduate long form") {
       $post['type_of_form'] = 'LF';
     }
@@ -521,7 +523,7 @@ function _asu_rfi_repost_data($node, $post = array(), $program = 'Undergraduate'
     }
     $post['semester_name'] = isset($node->field_rfi_start_term['und'][0]['value']) ? $node->field_rfi_start_term['und'][0]['value'] : '';
     asu_rfi_grad_post($post);
-    drupal_set_message('Posted graduate to Middleware');
+    drupal_set_message('Posted graduate form submission to SF Middleware');
   }
   // Undergrad program (default)
   else {
@@ -534,7 +536,7 @@ function _asu_rfi_repost_data($node, $post = array(), $program = 'Undergraduate'
     $post['ip_address'] = isset($node->field_rfi_ip_address['und'][0]['value']) ? $node->field_rfi_ip_address['und'][0]['value'] : '';
     $post['start_date'] = $node->field_rfi_start_term_code['und'][0]['value'];
     asu_rfi_undergrad_post($post);
-    drupal_set_message('Posted undergrad to Middleware');
+    drupal_set_message('Posted undergrad form submission to Middleware');
   }
   variable_set('asu_rfi_last_attempt_SF_posting', time());
 }
@@ -548,14 +550,10 @@ function _asu_rfi_repost_rfi($data) {
   // Load and repost the RFI submissions based on the Prospect level
   $node = node_load($data->nid);
   // if graduate submission node, try to repost it to asu_rfi_grad_post file.
-  if (sizeof($node->field_rfi_prospect_level) != 0) {
-    if ($node->field_rfi_prospect_level['und'][0]['value'] == "Graduate") {
-      _asu_rfi_repost_data($node, array(), 'Graduate');
-    }
-    // repost undergrad submissions to middleware
-    if ($node->field_rfi_prospect_level['und'][0]['value'] == "Undergraduate") {
-      _asu_rfi_repost_data($node, array(), 'Undergraduate');
-    }
+  $student_type = (sizeof($node->field_rfi_prospect_level) != 0) ? $node->field_rfi_prospect_level['und'][0]['value'] : '';
+  if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
+      || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
+    _asu_rfi_repost_data($node, array(), $student_type);
   }
 }
 
@@ -703,7 +701,7 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
  * $degreeMappings = _asu_rfi_get_degree_mappings();
  * $degreeContentType = $degreeMappings['content_type'];
  */
-function _asu_rfi_get_degree_mappings() {
+function _asu_rfi_degree_field_mappings() {
   $map = &drupal_static(__FUNCTION__);
   // Swap out mapping values based on module enabled.
   // ASU AP takes priority, but default is to ASU
@@ -780,7 +778,7 @@ function asu_rfi_disable_form(&$form, $decider) {
  * @return mixed $campusOptions An array of the available campuses
  */
 function _asu_rfi_query_codes($pcodes) {
-  $degreeMappings = _asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
+  $degreeMappings = _asu_rfi_degree_field_mappings(); // Get degree mappings to grab content type specific values
   $asuOnlineList = _asu_rfi_parse_programs();
 
   $campusOptions = array();
@@ -957,7 +955,7 @@ function _asu_rfi_detect_browser() {
  */
 function _asu_rfi_get_undergrad_programs() {
   // Get degree mappings to grab content type specific values
-  $degreeMappings = _asu_rfi_get_degree_mappings();
+  $degreeMappings = _asu_rfi_degree_field_mappings();
   // Get the degree types from the database
   $program_type = db_query('SELECT DISTINCT ' . $degreeMappings['field_degree_program_value']
     . ' from ' . $degreeMappings['table_asu_degree_program']);
@@ -1001,7 +999,7 @@ function _asu_rfi_get_undergrad_programs() {
  * @throws \EntityFieldQueryException
  */
 function _asu_rfi_get_grad_programs() {
-  $degreeMappings = _asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
+  $degreeMappings = _asu_rfi_degree_field_mappings(); // Get degree mappings to grab content type specific values
 
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
@@ -1032,7 +1030,7 @@ function _asu_rfi_get_grad_programs() {
  * @return array $out - list of programs
  */
 function _asu_rfi_get_program_results($items) {
-  $degreeMappings = _asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
+  $degreeMappings = _asu_rfi_degree_field_mappings(); // Get degree mappings to grab content type specific values
   $out = array();
   foreach ($items as $nid => $program) {
     $program_wrapper = entity_metadata_wrapper('node', $program);
@@ -1051,7 +1049,7 @@ function _asu_rfi_get_program_results($items) {
  * @return array
  */
 function _asu_rfi_get_program_codes($result_nodes, $data_type) {
-  $degreeMappings = _asu_rfi_get_degree_mappings(); // Get degree mappings to grab content type specific values
+  $degreeMappings = _asu_rfi_degree_field_mappings(); // Get degree mappings to grab content type specific values
   $program_nids = array_keys($result_nodes);
   $programs = entity_load('node', $program_nids);
   $programs = reset($programs);
@@ -1120,11 +1118,10 @@ function asu_rfi_action_info() {
  * @param $context
  */
 function asu_rfi_bulk_submit_action(&$node, $context) {
-  if ($node->field_rfi_prospect_level['und'][0]['value'] == "Graduate") {
-    _asu_rfi_repost_data($node, array(), 'Graduate');
-  }
-  if ($node->field_rfi_prospect_level['und'][0]['value'] == "Undergraduate") {
-    _asu_rfi_repost_data($node, array(), 'Undergraduate');
+  $student_type = (isset($node->field_rfi_prospect_level['und'][0]['value'])) ? $node->field_rfi_prospect_level['und'][0]['value'] : '';
+  if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
+      || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
+    _asu_rfi_repost_data($node, array(), $student_type);
   }
 }
 
@@ -1171,7 +1168,7 @@ function asu_rfi_js_alter(&$javascript) {
 // Send data transaction variable dataLayer to GTM JS object.
 // Get degree mappings to grab content type specific values.
 function asu_rfi_preprocess_page(&$variables) {
-  $degreeMappings = _asu_rfi_get_degree_mappings();
+  $degreeMappings = _asu_rfi_degree_field_mappings();
 
   // If /degree-programs/request-info-thank-you is loaded, then grab the node
   // id from the URL, load the node and get the variables, and add Google
@@ -1264,6 +1261,7 @@ function asu_rfi_preprocess_page(&$variables) {
     }
 
     // If confirmation node id specified in module settings page is called instead:
+
     else {
       $undergrad_confirm_nid = variable_get('asu_rfi_undergrad_confirm_node');
       $grad_confirm_nid = variable_get('asu_rfi_grad_confirm_node');
