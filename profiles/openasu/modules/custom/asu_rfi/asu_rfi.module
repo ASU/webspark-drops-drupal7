@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpUnhandledExceptionInspection */
+<?php /** @noinspection SqlDialectInspection */
+/** @noinspection PhpInconsistentReturnPointsInspection */
+/** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection SqlNoDataSourceInspection */
 /** @noinspection PhpUnusedParameterInspection */
 /** @noinspection PhpUndefinedMethodInspection */
@@ -824,8 +826,9 @@ function _asu_rfi_query_codes($pcodes) {
     }
     if ($onlineError == TRUE) {
       global $user;
+      $desiredProgram = (isset($desiredProg) && isset($desiredProg['title'])) ? $desiredProg['title'] : '';
       if (in_array('administrator', $user->roles)) {
-        drupal_set_message("This degree program(" . $desiredProg['title']
+        drupal_set_message("This degree program(" . $desiredProgram
           . ") is not yet fully online. We may need more details from you to complete
           its launch. Please email EdPlus@asu.edu for more information.", 'error');
       }
@@ -1165,13 +1168,18 @@ function asu_rfi_js_alter(&$javascript) {
 /**
  * Implements hook_preprocess_page().
  */
+// Send data transaction variable dataLayer to GTM JS object.
+// Get degree mappings to grab content type specific values.
 function asu_rfi_preprocess_page(&$variables) {
-  // Send data transaction variable dataLayer to GTM tag.
-  // Get degree mappings to grab content type specific values
   $degreeMappings = _asu_rfi_get_degree_mappings();
-  // Check if /degree-programs/request-info-thank-you is loaded, grad the node id from the URL, load the node and get the variables. Add Google analytics code to the header.
+
+  // If /degree-programs/request-info-thank-you is loaded, then grab the node
+  // id from the URL, load the node and get the variables, and add Google
+  // analytics code to the header.
   if (isset($variables['theme_hook_suggestions'][1])) {
+
     if ($variables['theme_hook_suggestions'][1] == "page__degree_programs__request_info_thank_you") {
+
       $nodeid = base64_decode(arg(2));
       // Get node data
       $query = new EntityFieldQuery();
@@ -1184,51 +1192,55 @@ function asu_rfi_preprocess_page(&$variables) {
       if (isset($result['node'])) {
         $items_nids = array_keys($result['node']);
         $items = entity_load('node', $items_nids);
+      } else {
+        $items = array();
+        watchdog('asu_rfi', __FUNCTION__ . ':No nodes selected for ', array(), WATCHDOG_NOTICE);
       }
 
-      foreach ($items as $nid => $submissions) {
+      $price = $locale = 'unset';
+
+      foreach ($items as $nid => $submissions) { // Are there more than one ever? EntityFieldQuery above shouldn't ever be plural.
         $sub_wrapper = entity_metadata_wrapper('node', $submissions);
         $prog_full_name = (!empty($sub_wrapper->field_rfi_program_name)) ? $sub_wrapper->field_rfi_program_name->value() : '';
         $plan_code = (!empty($sub_wrapper->field_rfi_program)) ? $sub_wrapper->field_rfi_program->value() : '';
         $program_code = (!empty($sub_wrapper->field_rfi_college_code)) ? $sub_wrapper->field_rfi_college_code->value() : '';
-        /*
-        // NOT USED ANYWHERE?
-        if (!empty($sub_wrapper->field_rfi_college_name)) {
-          $program_name = $sub_wrapper->field_rfi_college_name->value();
-        }
-        if (!empty($sub_wrapper->field_rfi_prospect_level)) {
-          $prospect_level = $sub_wrapper->field_rfi_prospect_level->value();
-        }
-        */
+        $program_name = (!empty($sub_wrapper->field_rfi_college_name)) ? $sub_wrapper->field_rfi_college_name->value() : '';
+        $prospect_level = (!empty($sub_wrapper->field_rfi_prospect_level)) ? $sub_wrapper->field_rfi_prospect_level->value() : '';
         $zip = (!empty($sub_wrapper->field_rfi_zipcode)) ? $sub_wrapper->field_rfi_zipcode->value() : '';
         $country = (!empty($sub_wrapper->field_rfi_country)) ? $sub_wrapper->field_rfi_country->value() : '';
       }
+
       $subdomain = array_shift(explode(".", $_SERVER['HTTP_HOST']));
-      $sku = $program_code . $plan_code . '-RFI';
-      $ga_id = $subdomain . '-' . variable_get('asu_rfi_google_analytics_key') . '-' . $nid;
+      $sku = (isset($program_code) && isset($plan_code)) ? $program_code . $plan_code . '-RFI' : 'unset00000-RFI';
+      $ga_id = (isset($nid)) ? $subdomain . '-' . variable_get('asu_rfi_google_analytics_key') . '-' . $nid : '';
       $category = 'RFI';
-      $zip_section = substr($zip, 0, 2);
-      if ($country == "United States") {
-        if (!empty($zip_section) && (($zip_section == "85") || ($zip_section == "86"))) {
-          $price = '100.00';
-          $locale = 'In State';
+      $zip_section = (isset($zip)) ? substr($zip, 0, 2) : '00000';
+
+      if (isset($country)) {
+        if ($country == "United States") {
+          if (!empty($zip_section) && (($zip_section == "85") || ($zip_section == "86"))) {
+            $price = '100.00';
+            $locale = 'In State';
+          }
+          else {
+            $price = '200.00';
+            $locale = 'Out of State';
+          }
         }
         else {
-          $price = '200.00';
-          $locale = 'Out of State';
+          if (!empty($country) && $country !== "United States") {
+            $price = '300.00';
+            $locale = "International";
+          }
+          else {
+            $price = '100';
+            $locale = 'Online';
+          }
         }
       }
-      else {
-        if (!empty($country) && $country !== "United States") {
-          $price = '300.00';
-          $locale = "International";
-        }
-        else {
-          $price = '100';
-          $locale = 'Online';
-        }
-      }
-      $college = 'RFI - ' . $locale . ' - ' . $prog_full_name;
+
+      $college = (isset($prog_full_name)) ? 'RFI - ' . $locale . ' - ' . $prog_full_name : 'unset';
+      $program_code = (isset($program_code)) ? $program_code : 'unset';
 
       drupal_add_js("(function ($) {
         dataLayer = [{
@@ -1252,7 +1264,6 @@ function asu_rfi_preprocess_page(&$variables) {
     }
 
     // If confirmation node id specified in module settings page is called instead:
-
     else {
       $undergrad_confirm_nid = variable_get('asu_rfi_undergrad_confirm_node');
       $grad_confirm_nid = variable_get('asu_rfi_grad_confirm_node');

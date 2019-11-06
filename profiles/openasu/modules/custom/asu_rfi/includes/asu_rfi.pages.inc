@@ -39,14 +39,15 @@ function asu_rfi_form_data($form, &$form_state) {
   // INIT form settings (JS, HTTP headers, etc.)
   _asu_rfi_initial_form_settings();
 
-  ///////////////// Do we want the 2nd form instead? Return second form.
+  ///////////////// Do we want the 2nd form instead? Return second form
+  /// from asu_rfi_second_form
   if (isset($form_state['storage'])) {
     if ($form_state['storage']['step'] == 'asu_rfi_second_form') {
       return asu_rfi_second_form($form, $form_state);
     }
   }
 
-  ///////////////// No??? We BUILD THE FIRST FORM
+  ///////////////// Otherwise, we BUILD THE FIRST FORM below
 
   $domain = $_SERVER['HTTP_HOST'];
   // Get form options
