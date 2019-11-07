@@ -11,7 +11,7 @@ function asu_rfi_undergrad_post($data) {
   $nodeArr = array(
     $node->field_rfi_program['und'][0]['value'] => $node->field_rfi_program_name['und'][0]['value']
   );
-  $availableCampuses = _asu_rfi_query_codes($nodeArr);
+  $availableCampuses = _asu_rfi_campus_location_options($nodeArr);
 
   $node_wrapper = entity_metadata_wrapper('node', $node);
   if (isset($node_wrapper->field_rfi_submission_status)) {
@@ -59,7 +59,7 @@ function asu_rfi_undergrad_post($data) {
   $type_of_form = $data['type_of_form'];
   $domain = isset($data['domain']) ? $data['domain'] : $_SERVER['HTTP_HOST'];
   $source = $domain . '-' . $type_of_form . '-UG';
-  $campus = _asu_rfi_correct_campus_id($campus);
+  $campus = _asu_rfi_get_correct_campus_id($campus);
 
   $mobile = (isset($data['mobile_check']))
     ? str_replace('-', '', $data['mobile_check'])
@@ -80,9 +80,7 @@ function asu_rfi_undergrad_post($data) {
   }
 
   // Compile RFI submission data
-
   $url = "https://webforms.asu.edu/asu_rfi_dedupe/submit_rfi/$hashkey/$nid";
-
   $fields = array(
     'source_id' => $source,
     'base_url' => $domain,
@@ -108,14 +106,12 @@ function asu_rfi_undergrad_post($data) {
     'campus' => $campus,
     'location' => $location,
   );
-
   $body = json_encode($fields);
 
+  // Alter middleware submission data IF Online program
   if (strtolower($location) == 'online') {
-
     $asuOnlineList = _asu_rfi_parse_programs();
     $managedOnline = asu_rfi_check_managed_online($prog_code, $asuOnlineList);
-
     if ($managedOnline == true) {
       $fields = asu_rfi_online_fields($fields, $nid, $ipAddress, $college_code, $type_of_form, $enterpriseclientid);
       $body = json_encode($fields);
@@ -124,6 +120,9 @@ function asu_rfi_undergrad_post($data) {
     }
   }
 
+  ///////////////////////////////////
+  // Post data to SalesForce middleware via cURL
+  ///////////////////////////////////
   try {
     $ch = curl_init();
     $options = array(
@@ -132,18 +131,17 @@ function asu_rfi_undergrad_post($data) {
       CURLOPT_POSTFIELDS => $body,
       CURLOPT_RETURNTRANSFER => 1,
       CURLOPT_HTTPHEADER => array('Content-Type: text/json'),
-      // UPDATE: Disabling below to let the web server choose a default SSL Version is better.
-      // CURLOPT_SSLVERSION => 1,
       CURLOPT_SSL_VERIFYPEER => FALSE,
     );
     curl_setopt_array($ch, $options);
     $response = curl_exec($ch);
-    $curl_code = curl_getinfo($ch);
+    $curl_info = curl_getinfo($ch);
 
     // If response from middleware is not a success message, save the error message
     // submission node and send message onto the confirmation page screen
     // if ($response == "Access Denied - hashed value does not match any registered site") {
-    if (($curl_code['http_code'] == 403 || $curl_code['http_code'] == 500)) {
+    if (($curl_info['http_code'] == 403 || $curl_info['http_code'] == 500)) {
+      $error_message = "INIT (not set yet)";
       if (isset($node_wrapper->field_rfi_error_message)) {
         $error_message = $response;
         $node_wrapper->field_rfi_error_message->set($error_message);

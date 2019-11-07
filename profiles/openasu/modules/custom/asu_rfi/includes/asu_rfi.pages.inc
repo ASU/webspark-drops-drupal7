@@ -1,4 +1,8 @@
-<?php /** @noinspection PhpIllegalStringOffsetInspection */
+<?php /** @noinspection PhpInconsistentReturnPointsInspection */
+/** @noinspection PhpUnused */
+/** @noinspection SqlDialectInspection */
+/** @noinspection SqlNoDataSourceInspection */
+/** @noinspection PhpIllegalStringOffsetInspection */
 /** @noinspection HtmlUnknownTarget */
 /** @noinspection PhpUnusedParameterInspection */
 /**
@@ -19,10 +23,11 @@ header("Pragma: no-cache");
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_email');
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_grad_post');
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_undergrad_post');
-drupal_add_css(drupal_get_path('module', 'asu_rfi') . '/theme/asu_rfi.css', 'file');
 
 /**
  * Implementation of hook_form().
+ * @param $delta
+ * @return array|mixed
  */
 function asu_rfi_form($delta) {
   // MULTIFORM - Form definition
@@ -39,7 +44,7 @@ function asu_rfi_form($delta) {
  */
 function asu_rfi_form_data($form, &$form_state) {
   // INIT form settings (JS, HTTP headers, etc.)
-  _asu_rfi_initial_form_settings();
+  _asu_rfi_initial_form_settings('multiform');
 
   ///////////////// Do we want the 2nd form instead? Return second form
   /// from asu_rfi_second_form
@@ -113,15 +118,8 @@ function asu_rfi_form_data($form, &$form_state) {
       }
     }
 
-    // Is the form in TEST mode?
-    $form_mode = variable_get('asu_rfi_form_mode');
-    if (($form_mode == "test") || (empty($form_mode))) {
-      $form['form_stage'] = array(
-        '#type' => 'item',
-        '#markup' => t('<div class="alert alert-warning"><b>NOTE</b>: The form is in <b>TEST MODE</b>.
-        <a href="/admin/config/content/asurfi">Toggle TEST MODE off</a> under "Test/Live Mode".</div>')
-      );
-    }
+    // Is the form in "Test Mode"? If so, add markup
+    _asu_rfi_form_test_mode_markup($form);
 
     // Form field definitions
     $form['req_header_text'] = array(
@@ -341,8 +339,9 @@ function asu_rfi_form_data($form, &$form_state) {
 
 
 /**
- * Validation handler for the MULTIFORM form, as defined by asu_rfi_form_data()
- * // NOT SURE THIS IS GETTING USED??
+ * MULTIFORM (BOTH) - VALIDATE handler
+ * Defaults to FIRST FORM
+ * // NOT GETTING DEFINED OR USED??
  *
  * @param $form
  * @param $form_state
@@ -393,9 +392,9 @@ function asu_rfi_form_data_validate($form, &$form_state) {
   }
 }
 
-
 /**
- * MULTIFORM (BOTH) - SUBMIT handler, as defined by the form from asu_rfi_form_data().
+ * MULTIFORM (BOTH) - SUBMIT handler
+ * as defined by the form from asu_rfi_form_data().
  * Defaults to FIRST FORM
  * @param $form
  * @param $form_state
@@ -422,14 +421,11 @@ function asu_rfi_form_data_submit($form, &$form_state) {
   $form_state['storage']['phone'] = $form_state['values']['phone'];
   $sms_opted = $form_state['values']['mobile_check'];
 
-  // Check if the phone number already has 1 prepended. If yes, just pass phone
-  // number to sms field, else prepend 1.
+  // Check if the phone number already has 1 prepended. If not, prepend with 1.
   if (!empty($sms_opted)) {
-    if (substr($form_state['values']['phone'], 0, 1) != "1") {
-      $form_state['storage']['mobile_check'] = '1-' . $form_state['values']['phone'];
-    } else {
-      $form_state['storage']['mobile_check'] = $form_state['values']['phone'];
-    }
+    $form_state['storage']['mobile_check'] = (substr($form_state['values']['phone'], 0, 1) != "1")
+      ? '1' . $form_state['values']['phone']
+      : $form_state['values']['phone'];
   } else {
     $form_state['storage']['mobile_check'] = '';
   }
@@ -468,7 +464,7 @@ function asu_rfi_form_data_submit($form, &$form_state) {
   $form_state['storage']['ip_address'] = $form_state['values']['ip_address'];
   $form_state['storage']['college_code'] = $form_state['values']['college'];
   $form_state['storage']['program_code'] = $form_state['values']['program_code'];
-  $ip_address = $form_state['values']['ip_address']; // UNUSED
+  //$ip_address = $form_state['values']['ip_address']; // UNUSED
 
   $current_time = time();
   $form_state['storage']['submit_time'] = $current_time;
@@ -532,7 +528,7 @@ function asu_rfi_form_data_submit($form, &$form_state) {
 }
 
 /**
- * MULTIFORM - FIRST FORM - Construct the second form
+ * MULTIFORM - SECOND FORM - Construct the second form
  * @param $form
  * @param $form_state
  * @return mixed
@@ -577,14 +573,9 @@ function asu_rfi_second_form($form, &$form_state) {
   $form['#id'] = 'asu_rfi_second_form';
   $form['#prefix'] = '<div id="rfi-second-form">';
   $form['#suffix'] = '</div>';
-  $form_mode = variable_get('asu_rfi_form_mode');
-  if (($form_mode == "test") || (empty($form_mode))) {
-    $form['form_stage'] = array(
-      '#type' => 'item',
-      '#markup' => t('<div class="alert alert-warning"><b>NOTE</b>: The form is in <b>TEST MODE</b>.
-        <a href="/admin/config/content/asurfi">Toggle TEST MODE off</a> under "Test/Live Mode".</div>')
-    );
-  }
+
+  // Is the form in "Test Mode"? If so, add markup
+  _asu_rfi_form_test_mode_markup($form);
 
   $form['markup'] = array(
     '#type' => 'item',
@@ -713,21 +704,20 @@ function asu_rfi_second_form_validate($form, &$form_state) {
   $city = check_plain($form_state['values']['city']);
   // $state = check_plain($form_state['values']['state']);
   $zip = check_plain($form_state['values']['zipcode']);
-  //validate address
+  // validate address
   if (!empty($address)) {
     if (!preg_match("/^[a-zA-Z0-9.\s-_,#]+$/", $address)) {
       form_set_error('address', t('Address field accepts only plain text.'));
     }
   }
-  //validate city
+  // validate city
   if (!empty($city)) {
     if (!preg_match('/^[\p{L}\p{N} .-]+$/u', $city)) {
       form_set_error('city', t('City is invalid.'));
     }
   }
 
-
-  //validate zip code
+  // validate zip code
   if (empty($zip)) {
     if (!empty($country) && ($country == "United States")) {
       form_set_error('zipcode', t('Postal code field is required.'));
@@ -812,12 +802,12 @@ function asu_rfi_second_form_submit($form, &$form_state) {
   $coded_college_code = base64_encode($form_state['storage']['college_code']);
   $coded_zip = base64_encode($zipcode);
   $coded_country = base64_encode($country);
-
-  /* If undergraduate degree is submitted, root the from to undergraduate posting function below.
- * Grab the node id of information page from admin settings page if exists and
- * redirect the user to confirmation node. If the node id doesn't exist, take
- * the user to built in confirmation page*
- */
+  /* If undergraduate degree is submitted, route the from to undergraduate posting
+   * function below.
+   * Grab the node id of information page from admin settings page if exists and
+   * redirect the user to confirmation node.
+   * If the node id doesn't exist, redirect the user to builtin confirmation page.
+   */
   if ($form_state['storage']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
     asu_rfi_undergrad_post($form_state['storage']); //-- To be used in future
     $undergrad_conf_id = variable_get('asu_rfi_undergrad_confirm_node');
@@ -903,6 +893,10 @@ function asu_rfi_second_form_submit($form, &$form_state) {
  * using entity_metadata_wrapper().
  *
  * @param $entity - submission entity/node
+ * @param $form_state
+ * @param $multi_form_type
+ * @param $dob_date
+ * @param $unique_id -
  */
 function _asu_rfi_update_submission_future_fields($entity, $form_state, $multi_form_type, $dob_date, $unique_id) {
   $wrapper = entity_metadata_wrapper('node', $entity);
@@ -1000,49 +994,28 @@ function asu_rfi_long_form($delta, $programs, $form_type) {
  * @return array
  */
 function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
-  $domain = $_SERVER['HTTP_HOST'];
-  //include theme css
-  drupal_add_css(drupal_get_path('module', 'asu_rfi') . '/theme/asu_rfi.css');
-  // Add no-store in Cache-Control to clear all data when browser back button is clicked
-  drupal_add_http_header(
-    'Cache-Control',
-    'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
-    FALSE
-  );
-  // Hack for Safari
-  drupal_add_js('jQuery(window).unload(function(){});', array('type' => 'inline'));
-  drupal_page_is_cacheable(FALSE);
 
-  // Add js to gather enterpriseclientid from GA to add to payload for
-  // submissions destined for EdPlus and their Lead API 4.0 by way of the
-  // Middleware.
-  drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.fields.js', 'file');
+  _asu_rfi_initial_form_settings('long_form');
 
+  $form = array();
   $start_dates = _asu_rfi_get_sem_dates();
   $country = _asu_rfi_get_country_list();
   $states = _asu_rfi_get_state_list();
   for ($idate = 0; $idate < 4; $idate++) {
     $date = date('Y') + $idate;
-    $datekey = substr_replace($date, '', 1, -2);
-    $year[$datekey] = $date;
+    $date_key = substr_replace($date, '', 1, -2);
+    $year[$date_key] = $date;
   }
-
-  $form = array();
 
   honeypot_add_form_protection($form, $form_state, array(
     'honeypot',
     'time_restriction'
   ));
-  $form_mode = variable_get('asu_rfi_form_mode');
-  if ((variable_get('asu_rfi_form_mode') == "test") || empty($form_mode)) {
-    $form['form_stage'] = array(
-      '#type' => 'item',
-      '#markup' => t('<div class="alert alert-warning"><b>NOTE</b>: The form is in <b>TEST MODE</b>.
-        <a href="/admin/config/content/asurfi">Toggle TEST MODE off</a> under "Test/Live Mode".</div>')
-    );
-  }
+
+  _asu_rfi_form_test_mode_markup($form);
+
   $form['req_header_text'] = array(
-    '#value' => '<h4>Please complete and submit the form below, and a representative will contact you about enrolling at ASU</h4>'
+    '#value' => '<h4>Please complete and submit the form below, and a representative will contact you about enrolling at ASU.</h4>'
   );
   $form['req_helper'] = array(
     '#value' => '<p>Fields marked with <span style = "color:black;">*</span> are required.</p>',
@@ -1051,7 +1024,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
     '#type' => 'hidden',
     '#size' => 30,
     '#maxlength' => 64,
-    '#default_value' => $domain,
+    '#default_value' => (string) $_SERVER['HTTP_HOST'],
   );
   $form['degree_type'] = array(
     '#type' => 'hidden',
@@ -1510,14 +1483,12 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
 }
 
 /**
- * LONG FORM submit handler (undergrad or graduate)
+ * LONG FORM - SUBMIT handler (undergrad or graduate)
  * @param $form
  * @param $form_state
  */
 function asu_rfi_long_form_data_submit($form, &$form_state) {
-
   global $user;
-
   $degreeMappings = _asu_rfi_degree_field_mappings();
 
   // Get the type of the form. If the form is grad form, set prospect_level
@@ -1542,14 +1513,15 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
 
   $sms_opted = $form_state['values']['mobile_check'];
 
-  // check if the phone number already has 1 prepended. If yes, just pass phone number to sms field, else prepend "1-".
+  // Check if the phone number already has 1 prepended. If not, prepend with 1.
   if (!empty($sms_opted)) {
     $form_state['values']['mobile_check'] = (substr($form_state['values']['phone'], 0, 1) != "1")
-      ? '1-' . $form_state['values']['phone']
+      ? '1' . $form_state['values']['phone']
       : $form_state['values']['phone'];
   } else {
     $form_state['values']['mobile_check'] = '';
   }
+  $sms_number = $form_state['values']['mobile_check'];
 
   $address = check_plain($form_state['values']['address']);
   $city = check_plain($form_state['values']['city']);
@@ -1591,7 +1563,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
   // Get college name from database based on program code
   $college_name = db_query('select ' . $degreeMappings['field_diploma_description_value'] . ' from ' . $degreeMappings['table_asu_diploma_description'] . ' progn join ' . $degreeMappings['table_asu_academic_plan'] . ' plann on progn.entity_id = plann.entity_id where plann.' . $degreeMappings['field_academic_plan_value'] . ' = :plancode', array(':plancode' => $program))->fetchField();
 
-  // Create node
+  // Create new RFI submission node
   $ent_values = array(
     'type' => 'asu_rfi',
     'uid' => $user->uid,
@@ -1600,6 +1572,8 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
     'promote' => 0,
   );
   $entity = entity_create('node', $ent_values);
+
+  // Now update new RFI submission node
   $wrapper = entity_metadata_wrapper('node', $entity);
   if (isset($wrapper->title)) {
     $wrapper->title->set($f_name);
@@ -1621,6 +1595,9 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
   }
   if (isset($wrapper->field_rfi_phone)) {
     $wrapper->field_rfi_phone->set($phone);
+  }
+  if (isset($wrapper->field_rfi_sms_opted)) {
+    $wrapper->field_rfi_sms_opted->set($sms_number);
   }
   if (isset($wrapper->field_rfi_country)) {
     $wrapper->field_rfi_country->set($country);
@@ -1783,7 +1760,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
 }
 
 /**
- * Build Current students form
+ * CURRENT STUDENTS - $form construction call
  * @param $delta
  * @param $programs
  * @param $form_type
@@ -1794,7 +1771,7 @@ function asu_rfi_current_form($delta, $programs, $form_type) {
 }
 
 /**
- * Construct the "current student" form
+ * CURRENT STUDENTS - $form definition
  * @param $form
  * @param $form_state
  * @param $programs
@@ -1802,20 +1779,16 @@ function asu_rfi_current_form($delta, $programs, $form_type) {
  * @return array
  */
 function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type) {
-  $domain = $_SERVER['HTTP_HOST'];
+
   $form = array();
   honeypot_add_form_protection($form, $form_state, array(
     'honeypot',
     'time_restriction'
   ));
-  $form_mode = variable_get('asu_rfi_form_mode');
-  if ((variable_get('asu_rfi_form_mode') == "test") || empty($form_mode)) {
-    $form['form_stage'] = array(
-      '#type' => 'item',
-      '#markup' => t('<div class="alert alert-warning"><b>NOTE</b>: The form is in <b>testing mode</b>.
-        Change the mode in the <a href="/admin/config/content/asurfi">the ASU RFI module settings</a>.</div>')
-    );
-  }
+
+  // Is the form in "Test Mode"? If so, add markup
+  _asu_rfi_form_test_mode_markup($form);
+
   $form['req_header_text'] = array(
     '#value' => '<h4>Please complete and submit the form below, and a representative will contact you about enrolling at ASU</h4>'
   );
@@ -1826,7 +1799,7 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type) {
     '#type' => 'hidden',
     '#size' => 30,
     '#maxlength' => 64,
-    '#default_value' => $domain,
+    '#default_value' => (string) $_SERVER['HTTP_HOST'],
   );
   $form['degree_type'] = array(
     '#type' => 'hidden',
@@ -1910,7 +1883,7 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type) {
 
 
 /**
- * Validate current student form submitted values
+ * CURRENT STUDENTS - Validate handler
  * @param $form
  * @param $form_state
  */
@@ -1952,7 +1925,7 @@ function asu_rfi_current_form_data_validate($form, &$form_state) {
 }
 
 /**
- * Submit handler of "current students" forms
+ * CURRENT STUDENTS - SUBMIT handler
  *
  * @param $form
  * @param $form_state
@@ -2044,24 +2017,32 @@ function asu_rfi_current_form_data_submit($form, &$form_state) {
 }
 
 /**
- * INIT settings/assets to add to forms.
+ * INIT settings/assets to optionally add to any RFI forms.
+ * @param string $form_main_type - multiform, long_form, or current_form
  */
-function _asu_rfi_initial_form_settings() {
-// Add no-store in Cache-Control to clear all data when browser back button is clicked
-  drupal_add_http_header(
-    'Cache-Control',
-    'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0',
-    FALSE
-  );
-// Hack for Safari
-  drupal_add_js('jQuery(window).unload(function(){});', array('type' => 'inline'));
-// Add js to gather enterpriseclientid from GA to add to payload for
-// submissions destined for EdPlus and their Lead API 4.0 by way of the Middleware.
-  drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.fields.js', 'file');
+function _asu_rfi_initial_form_settings($form_main_type) {
+  drupal_add_css(drupal_get_path('module', 'asu_rfi') . '/theme/asu_rfi.css', 'file');
+  if ($form_main_type === 'multiform' || $form_main_type === 'long_form') {
+    // Add no-store in Cache-Control to clear all data when browser back button is clicked
+    drupal_add_http_header(
+      'Cache-Control',
+      'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0',
+      FALSE
+    );
+    // Hack for Safari bug
+    drupal_add_js('jQuery(window).unload(function(){});', array('type' => 'inline'));
+    // Add js to gather enterpriseclientid from GA to add to payload for
+    // submissions destined for EdPlus and their Lead API 4.0 by way of the Middleware.
+    drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.fields.js', 'file');
+  }
+  if ($form_main_type === 'long_form') {
+    drupal_page_is_cacheable(FALSE);
+  }
 }
 
 /**
  * Confirms if the given locations available for a program?
+ *
  * @param $prog - program
  * @param $campus - Campus
  * @param $loc - Location
@@ -2146,7 +2127,7 @@ function _asu_rfi_get_state_list() {
 }
 
 /**
- * Build start dates
+ * Build semester start dates
  * @return array|mixed $sem_dates_array
  */
 function _asu_rfi_get_sem_dates() {

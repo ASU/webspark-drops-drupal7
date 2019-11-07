@@ -37,10 +37,18 @@ function asu_rfi_confirmation($nid) {
 
   // Build array to be used in google analytics coding
   // GA code has been removed for now - leaving for future use.
-  $trans = array('id' => $ga_id, 'affiliation' => $program_name,
-    'revenue' => '100');
-
-  $items = array('sku' => $sku, 'name' => $college, 'category' => 'RFI', 'price' => '100', 'quantity' => '1');
+  $trans = array(
+    'id' => $ga_id,
+    'affiliation' => $program_name,
+    'revenue' => '100'
+  );
+  $items = array(
+    'sku' => $sku,
+    'name' => $college,
+    'category' => 'RFI',
+    'price' => '100',
+    'quantity' => '1'
+  );
 
   $confirm_message = "<div style='padding:8% 0 8% 0;'>Thank you for your interest in ASU. An ASU representative will contact you soon!</div>";
 
