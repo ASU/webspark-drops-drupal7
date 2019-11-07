@@ -3,7 +3,7 @@
 /**
  * Actually POSTs form data to Salesforce for GRADUATE submissions.
  * Used by multiple forms (long form, multiform)
- * @param $data
+ * @param $data (was $post - why renamed here??)
  */
 
 function asu_rfi_grad_post($data) {
@@ -58,10 +58,9 @@ function asu_rfi_grad_post($data) {
   // enterpriseclientid for use in EdPlus Leads submissions.
   $enterpriseclientid = (isset($data['enterpriseclientid'])) ? $data['enterpriseclientid'] : '';
 
-  // See if it's dev or qa site.
-  $environ = _asu_rfi_determine_environment();
-
   // Salesforce URL for posting data
+  // Is it a dev or qa site, or in "test mode"?
+  $environ = _asu_rfi_determine_environment();
   if (($environ == "dev") || ($environ == "qa")) {
     $url = 'https://requestinfo-qa.asu.edu/prospect_form_post';
   } else {
@@ -94,11 +93,12 @@ function asu_rfi_grad_post($data) {
     'campusSelection' => $campus,
   );
 
+  // But WAIT! There's custom management for Online (and ONLY online) campus people
   if(!isset($campus) && sizeof($availableCampuses) == 1
     && (ucfirst($availableCampuses[0]) == "Online")) {
     $location = "Online";
   }
-
+  // Online?
   if (strtolower($location) == 'online') {
     $submission_data['campusSelection'] = "ONLNE";
     $asuOnlineList = _asu_rfi_parse_programs();
@@ -129,12 +129,12 @@ function asu_rfi_grad_post($data) {
       );
 
       $submission_data = json_encode($submission_data);
-
       $fieldHash = sha1($mw_auth_key . '+' . $submission_data);
-
       $url = "https://webforms.asu.edu/asu_edplus_middleware/submit/$fieldHash";
     }
-  } else {
+  }
+  // NOT online
+  else {
     foreach ($submission_data as $key_value => $result_array) {
       if (($result_array == "None")) {
         unset($submission_data[$key_value]);
@@ -143,44 +143,54 @@ function asu_rfi_grad_post($data) {
   }
 
   // Post data to salesforce via cURL
-  $curl = curl_init($url);
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE); // If you don't want to use any of the return information, set to false
-  curl_setopt($curl, CURLOPT_HEADER, FALSE); // FALSE Remove informational headers
-  curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
-  curl_setopt($curl, CURLOPT_POSTFIELDS, $submission_data); // data mapping
-  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+  try {
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE); // If you don't want to use any of the return information, set to false
+    curl_setopt($curl, CURLOPT_HEADER, FALSE); // FALSE Remove informational headers
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $submission_data); // data mapping
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
 
-  $response = curl_exec($curl);
-  $info = curl_getinfo($curl); // Used by your drupal messages below
-  curl_close($curl);
+    $response = curl_exec($curl);
+    $info = curl_getinfo($curl); // Used by your drupal messages below
+    curl_close($curl);
 
-  if (strpos($response, "-1 ") == 0) {
-    $message = explode(':', $response);
-  }
-
-  // Get the response from Salesforce. If the submission is not successful, update the previous submission status to Incomplete
-  if (($info['http_code'] == 400) || ($info['http_code'] == 500)) {
-    //update error message
-    if (isset($node_wrapper->field_rfi_error_message)) {
-      if (isset($message)) {
-        $node_wrapper->field_rfi_error_message->set($message[1]);
-      }
-      $node_wrapper->save();
+    if (strpos($response, "-1 ") == 0) {
+      $message = explode(':', $response);
     }
+
+    // Get the response from Salesforce. If the submission is not successful, update the previous submission status to Incomplete
+    if (($info['http_code'] == 400) || ($info['http_code'] == 500)) {
+      // update error message
+      if (isset($node_wrapper->field_rfi_error_message)) {
+        if (isset($message)) {
+          $node_wrapper->field_rfi_error_message->set($message[1]);
+        }
+        $node_wrapper->save();
+      }
+    }
+    if (($info['http_code'] == 200)) {
+      $node_wrapper->field_rfi_submission_status->set('SF_Complete');
+      $node_wrapper->field_rfi_error_message->set('');
+      $node_wrapper->save();
+      // If this successfully posts to SF, the set "asu_rfi_last_failure_SF_posting"
+      // variable to current time.
+      variable_set('asu_rfi_last_attempt_SF_posting', time());
+    }
+    // If failed to post to SF, the set "asu_rfi_last_failure_SF_posting" variable
+    // to current time
+    if (($info['http_code'] != 200)) {
+      variable_set('asu_rfi_last_failure_SF_posting', time());
+    }
+
+    if (FALSE === $response) {
+      throw new Exception(curl_error($ch), curl_errno($ch));
+    }
+  } catch (Exception $e) {
+    trigger_error(sprintf(
+      'Curl failed with error #%d: %s',
+      $e->getCode(), $e->getMessage()),
+      E_USER_ERROR);
   }
 
-  if (($info['http_code'] == 200)) {
-    $node_wrapper->field_rfi_submission_status->set('SF_Complete');
-    $node_wrapper->field_rfi_error_message->set('');
-    $node_wrapper->save();
-    // If this successfully posts to SF, the set "asu_rfi_last_failure_SF_posting"
-    // variable to current time.
-    variable_set('asu_rfi_last_attempt_SF_posting', time());
-  }
-
-  // If failed to post to SF, the set "asu_rfi_last_failure_SF_posting" variable
-  // to current time
-  if (($info['http_code'] != 200)) {
-    variable_set('asu_rfi_last_failure_SF_posting', time());
-  }
 }

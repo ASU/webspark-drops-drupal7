@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Post data to SalesForce
+ * Post data stored in an ASU RFI node to SalesForce
  * @param $data
  */
 function asu_rfi_undergrad_post($data) {
@@ -176,6 +176,12 @@ function asu_rfi_undergrad_post($data) {
   }
 }
 
+/**
+ * Is the program managed by Online folks? (i.e. not "asu")
+ * @param $program
+ * @param $getProgramsList
+ * @return bool
+ */
 function asu_rfi_check_managed_online($program, $getProgramsList) {
   foreach ($getProgramsList as $onlineItem){
     if ($onlineItem->plancode == $program && $onlineItem->crmdestination !== "asu") {
@@ -185,6 +191,16 @@ function asu_rfi_check_managed_online($program, $getProgramsList) {
   return false;
 }
 
+/**
+ * Build online submission data array
+ * @param $fields
+ * @param $nid
+ * @param $ip
+ * @param $college_code
+ * @param $type_of_form
+ * @param $enterpriseclientid
+ * @return array
+ */
 function asu_rfi_online_fields($fields, $nid, $ip, $college_code, $type_of_form, $enterpriseclientid) {
   $fieldsUpdated = array(
     'first_name' => $fields['first_name'],
