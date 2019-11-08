@@ -10,6 +10,8 @@ function asu_rfi_grad_post($data) {
   $degreeMappings = _asu_rfi_degree_field_mappings();
   $form_mode = variable_get('asu_rfi_form_mode');
 
+  dpm($data, __FUNCTION__ . ' $data');
+
   $nodeid = $data['submission_nodeid'];
   $node = node_load($nodeid);
   $nodeArr = array(
@@ -44,11 +46,13 @@ function asu_rfi_grad_post($data) {
   $dob = (isset($data['birthdate'])) ? $data['birthdate'] : ''; // date of birth
   $military = (isset($data['military'])) ? $data['military'] : '';  // Military
   $comment = (isset($data['questions'])) ? $data['questions'] : ''; // Comment
+
   $address = (isset($data['address'])) ? $data['address'] : ''; // Address
   $city = (isset($data['city'])) ? $data['city'] : ''; // City
   $state = (isset($data['state'])) ? $data['state'] : ''; // State
   $country = (isset($data['country'])) ? $data['country'] : ''; // country
-  if ($country !== "United States" || $country !== "Canada") {
+  // If NEITHER the USA NOR Canada, drop the address data.
+  if ($country !== "United States" && $country !== "Canada") {
     $address = '';
     $state = '';
     $city = '';
@@ -171,17 +175,7 @@ function asu_rfi_grad_post($data) {
       $message = explode(':', $response);
     }
     dpm($message, 'message');
-    
-    // If the submission is not successful, update the previous submission status to Incomplete.
-    if (($curl_info['http_code'] == 400) || ($curl_info['http_code'] == 500)) {
-      // update error message
-      if (isset($node_wrapper->field_rfi_error_message)) {
-        if (isset($message)) {
-          $node_wrapper->field_rfi_error_message->set($message[1]);
-        }
-        $node_wrapper->save();
-      }
-    }
+
     // Successful POST of submission to middleware.
     if (($curl_info['http_code'] == 200)) {
       $node_wrapper->field_rfi_submission_status->set('SF_Complete');
@@ -191,9 +185,24 @@ function asu_rfi_grad_post($data) {
       // variable to current time.
       variable_set('asu_rfi_last_attempt_SF_posting', time());
     }
-    // If failed to post to SF, set "asu_rfi_last_failure_SF_posting" variable
-    // to current time
-    if (($curl_info['http_code'] != 200)) {
+    // If the POST to the middleware is not successful
+    else {
+      if (($curl_info['http_code'] >= 400)) { // errors !== 400
+        // update error message
+        if (isset($node_wrapper->field_rfi_error_message)) {
+          if (isset($message)) {
+            $msg = $message[1];
+          } else {
+            $msg = 'HTTP Code: ' . $curl_info['http_code'] . ' - See Exception error.';
+          }
+        }
+      } else {
+
+      }
+      // Update the failed submission status to Incomplete.
+      $node_wrapper->field_rfi_error_message->set($msg);
+      $node_wrapper->field_rfi_submission_status->set('Incomplete');
+      $node_wrapper->save();
       variable_set('asu_rfi_last_failure_SF_posting', time());
     }
 

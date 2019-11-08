@@ -692,7 +692,7 @@ function _asu_rfi_check_form_values($db_tbl) {
 }
 
 /**
- * Validation - phone numbers
+ * Validation - Email + phone numbers
  * @param $email
  * @param $phone
  */
@@ -819,7 +819,7 @@ function _asu_rfi_validate_zipcode($country, $zip) {
  *********************************************************************/
 
 /**
- * POSTs data to Salesforce for all programs and forms
+ * RE-POSTs data to Salesforce middleware for all programs and forms
  * @param $node - ASU RFI node storing the data
  * @param array $post - data to submit
  * @param string $program - program type (ugrad, grad)

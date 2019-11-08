@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Post data stored in an ASU RFI node to SalesForce
+ * Post data stored in an ASU RFI node to SalesForce middleware
+ * Done one submission at a time.
  * @param $data
  */
 function asu_rfi_undergrad_post($data) {
@@ -33,10 +34,10 @@ function asu_rfi_undergrad_post($data) {
   $ipAddress = isset($data['ip_address']) ? $data['ip_address'] : $_SERVER['REMOTE_ADDR'];
   $phone = preg_replace('[\D]', '', $data['phone']);
   // $term = (!empty($data['start_date'])) ? $data['start_date'] : ''; // unused?
-
   $location = $data['location'];
   $campus = $data['campus'];
   $state = $data['state'];
+
   $prog_code = $data['program_code'];
   if ($prog_code == "" || empty($prog_code)) {
     $prog_code = "Exploratory";
@@ -79,7 +80,7 @@ function asu_rfi_undergrad_post($data) {
     $location = "Online";
   }
 
-  // Compile RFI submission data
+  // Compile Undergrad RFI submission data array
   $url = "https://webforms.asu.edu/asu_rfi_dedupe/submit_rfi/$hashkey/$nid";
   $fields = array(
     'source_id' => $source,
@@ -137,16 +138,20 @@ function asu_rfi_undergrad_post($data) {
     $response = curl_exec($ch);
     $curl_info = curl_getinfo($ch);
 
-    // If response from middleware is not a success message, save the error message
-    // submission node and send message onto the confirmation page screen
+    // If response from middleware is a fail (HTTP code !== 200),
+    // 1) save the error message in the submission node and send message
+    // onto the confirmation page screen. And set the submission status to
+    // Incomplete.
+
     // if ($response == "Access Denied - hashed value does not match any registered site") {
-    if (($curl_info['http_code'] == 403 || $curl_info['http_code'] == 500)) {
-      $error_message = "INIT (not set yet)";
-      if (isset($node_wrapper->field_rfi_error_message)) {
-        $error_message = $response;
-        $node_wrapper->field_rfi_error_message->set($error_message);
-      }
+    if (($curl_info['http_code'] >= 400)) {
+      $error_message = (isset($node_wrapper->field_rfi_error_message)) ? $response
+        : 'cURL error - HTTP CODE: ' . $curl_info['http_code'];
+
+      $node_wrapper->field_rfi_error_message->set($error_message);
+      $node_wrapper->field_rfi_submission_status->set('Incomplete');  // Why wasn't this here before???
       $node_wrapper->save();
+
       // Get admin email address from admin settings page
       $to_email = variable_get('asu_rfi_error_email', NULL);
       // Get middleware app key. If it's empty, don't send error email to admins.

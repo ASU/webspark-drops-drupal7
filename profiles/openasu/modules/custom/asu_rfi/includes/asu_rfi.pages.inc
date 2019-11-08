@@ -44,7 +44,7 @@ function asu_rfi_form($delta) {
  */
 function asu_rfi_form_data($form, &$form_state) {
   // INIT form settings (JS, HTTP headers, etc.)
-  _asu_rfi_initial_form_settings('multiform');
+  _asu_rfi_form_initial_web_assets('multiform');
 
   ///////////////// Do we want the 2nd form instead? Return second form
   /// from asu_rfi_second_form
@@ -491,7 +491,7 @@ function asu_rfi_form_data_submit($form, &$form_state) {
     $entity = entity_create('node', $ent_values);
 
     // ...and update new submission entity/node field values using entity_metadata_wrapper.
-    _asu_rfi_update_submission_future_fields($entity, $form_state, $multi_form_type, $dob_date, $unique_id);
+    _asu_rfi_update_multiform_submission_fields($entity, $form_state, $multi_form_type, $dob_date, $unique_id);
 
     $form_state['storage']['submission_nodeid'] = $entity->nid;
     $form_state['storage']['step'] = 'asu_rfi_second_form';
@@ -520,7 +520,7 @@ function asu_rfi_form_data_submit($form, &$form_state) {
 
     // Update ASU RFI node values
     $node = node_load($get_nodeid);
-    _asu_rfi_update_submission_future_fields($node, $form_state, $multi_form_type, $dob_date, $unique_id);
+    _asu_rfi_update_multiform_submission_fields($node, $form_state, $multi_form_type, $dob_date, $unique_id);
 
     $form_state['storage']['submission_nodeid'] = $get_nodeid;
     $form_state['storage']['step'] = 'asu_rfi_second_form';
@@ -574,7 +574,7 @@ function asu_rfi_second_form($form, &$form_state) {
   $form['#prefix'] = '<div id="rfi-second-form">';
   $form['#suffix'] = '</div>';
 
-  // Is the form in "Test Mode"? If so, add markup
+  // If the form in "Test Mode", add Test mode warning message markup
   _asu_rfi_form_test_mode_markup($form);
 
   $form['markup'] = array(
@@ -898,7 +898,7 @@ function asu_rfi_second_form_submit($form, &$form_state) {
  * @param $dob_date
  * @param $unique_id -
  */
-function _asu_rfi_update_submission_future_fields($entity, $form_state, $multi_form_type, $dob_date, $unique_id) {
+function _asu_rfi_update_multiform_submission_fields($entity, $form_state, $multi_form_type, $dob_date, $unique_id) {
   $wrapper = entity_metadata_wrapper('node', $entity);
   if (isset($wrapper->title)) {
     $wrapper->title->set($form_state['storage']['first_name']);
@@ -976,7 +976,8 @@ function _asu_rfi_update_submission_future_fields($entity, $form_state, $multi_f
 }
 
 
-/** LONG FORM RFI generation
+/**
+ * LONG FORM RFI generation
  * @param $delta
  * @param $programs
  * @param $form_type
@@ -986,7 +987,8 @@ function asu_rfi_long_form($delta, $programs, $form_type) {
   return drupal_get_form('asu_rfi_long_form_data', $programs, $form_type);
 }
 
-/** LONG FORM - construct the form *
+/**
+ * LONG FORM - Form API construction of the form
  * @param $form
  * @param $form_state
  * @param $programs
@@ -995,7 +997,7 @@ function asu_rfi_long_form($delta, $programs, $form_type) {
  */
 function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
 
-  _asu_rfi_initial_form_settings('long_form');
+  _asu_rfi_form_initial_web_assets('long_form');
 
   $form = array();
   $start_dates = _asu_rfi_get_sem_dates();
@@ -1502,19 +1504,19 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
     $long_form_type = "Undergraduate long form";
     $form_state['values']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
   }
-  $domain = check_plain($form_state['values']['domain']);
+
+  ////////////////////////////////////////////
+  // Bio information
   $f_name = check_plain($form_state['values']['first_name']);
   $l_name = check_plain($form_state['values']['last_name']);
+  $dob_date = $form_state['values']['birthdate'];
   $email = check_plain($form_state['values']['email']);
   $phone = $form_state['values']['phone'];
-  $location = $form_state['values']['location'];
-  $campus = $form_state['values']['campus'];
-  $enterpriseclientid = $form_state['values']['enterpriseclientid'];
 
+  // Texting ok?
   $sms_opted = $form_state['values']['mobile_check'];
-
-  // Check if the phone number already has 1 prepended. If not, prepend with 1.
   if (!empty($sms_opted)) {
+    // Check if the phone number already has 1 prepended. If not, prepend with 1.
     $form_state['values']['mobile_check'] = (substr($form_state['values']['phone'], 0, 1) != "1")
       ? '1' . $form_state['values']['phone']
       : $form_state['values']['phone'];
@@ -1523,15 +1525,20 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
   }
   $sms_number = $form_state['values']['mobile_check'];
 
+  // Campus information
+  $location = $form_state['values']['location'];
+  $campus = $form_state['values']['campus'];
+  $enterpriseclientid = $form_state['values']['enterpriseclientid'];
+  $ip_address = $form_state['values']['ip_address'];
+  $domain = check_plain($form_state['values']['domain']);
+
+  // Address/location
   $address = check_plain($form_state['values']['address']);
   $city = check_plain($form_state['values']['city']);
   $state = ($form_state['values']['state'] == '0') ? '' : $form_state['values']['state'];
   $form_state['values']['state'] = $state;
   $zip = check_plain($form_state['values']['zipcode']);
   $country = (!empty($form_state['values']['country'])) ? check_plain($form_state['values']['country']) : '';
-
-  $semester = check_plain($form_state['values']['start_date']);
-  $ip_address = $form_state['values']['ip_address'];
 
   // Questions
   $questions = (!empty($form_state['values']['questions'])) ? check_plain($form_state['values']['questions']) : '';
@@ -1547,22 +1554,21 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
   // Veteran status
   $veteran = (!empty($form_state['values']['military'])) ? $form_state['values']['military'] : '';
 
-  $program = $form_state['values']['program_code'];
-  $dob_date = $form_state['values']['birthdate'];
-
-  // Get start date array
+  // Semester start dates
+  $semester = check_plain($form_state['values']['start_date']);
   $sem_dates = _asu_rfi_get_sem_dates();
-
   $semester_name = (array_key_exists($semester, $sem_dates)) ? $sem_dates[$semester] : '';
   $form_state['values']['semester_name'] = (!empty($semester_name)) ? $semester_name : '';
 
   // Get program name based on the program code submitted in the form
+  $program = $form_state['values']['program_code'];
   $program_name = db_query('select ' . $degreeMappings['field_degree_awarded_value'] . ' from ' . $degreeMappings['table_asu_degree_awarded'] . ' mj join ' . $degreeMappings['table_asu_academic_plan'] . ' ap on mj.entity_id = ap.entity_id where ap.' . $degreeMappings['field_academic_plan_value'] . ' = :plan', array(':plan' => $program))->fetchField();
   // Get college code from database based on program code
   $college_code = db_query('select ' . $degreeMappings['field_academic_program_value'] . ' from ' . $degreeMappings['table_asu_academic_program'] . ' prog join ' . $degreeMappings['table_asu_academic_plan'] . ' plan on prog.entity_id = plan.entity_id where plan.' . $degreeMappings['field_academic_plan_value'] . ' = :plancode', array(':plancode' => $program))->fetchField();
   // Get college name from database based on program code
   $college_name = db_query('select ' . $degreeMappings['field_diploma_description_value'] . ' from ' . $degreeMappings['table_asu_diploma_description'] . ' progn join ' . $degreeMappings['table_asu_academic_plan'] . ' plann on progn.entity_id = plann.entity_id where plann.' . $degreeMappings['field_academic_plan_value'] . ' = :plancode', array(':plancode' => $program))->fetchField();
 
+  ////////////////////////////////////////////
   // Create new RFI submission node
   $ent_values = array(
     'type' => 'asu_rfi',
@@ -1687,8 +1693,15 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
   $coded_zip = base64_encode($zip);
   $coded_country = base64_encode($country);
 
+  //////////////////////////////////////////////
+  // Post values to middleware, based on program level), and redirect to thank
+  // you page. DONE!
+
+  // Graduate
   if ($form_state['values']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_GRAD) {
+
     asu_rfi_grad_post($form_state['values']);
+
     $grad_conf_id = variable_get('asu_rfi_grad_confirm_node');
     if (!empty($grad_conf_id)) {
       $grad_alias = drupal_lookup_path('alias', $path = "node/$grad_conf_id", $path_language = NULL);
@@ -1722,9 +1735,11 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
     }
   }
 
-
+  // Undergrad
   if ($form_state['values']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
+
     asu_rfi_undergrad_post($form_state['values']);
+
     $undergrad_confid = variable_get('asu_rfi_undergrad_confirm_node');
     if (!empty($undergrad_confid)) {
       $u_alias = drupal_lookup_path('alias', $path = "node/$undergrad_confid", $path_language = NULL);
@@ -2020,7 +2035,7 @@ function asu_rfi_current_form_data_submit($form, &$form_state) {
  * INIT settings/assets to optionally add to any RFI forms.
  * @param string $form_main_type - multiform, long_form, or current_form
  */
-function _asu_rfi_initial_form_settings($form_main_type) {
+function _asu_rfi_form_initial_web_assets($form_main_type) {
   drupal_add_css(drupal_get_path('module', 'asu_rfi') . '/theme/asu_rfi.css', 'file');
   if ($form_main_type === 'multiform' || $form_main_type === 'long_form') {
     // Add no-store in Cache-Control to clear all data when browser back button is clicked
