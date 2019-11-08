@@ -1597,23 +1597,35 @@ function _asu_rfi_detect_browser() {
  * @return string $environ - Name of the environment. dev, qa, or prod
  */
 function _asu_rfi_detect_environment() {
+  dpm(PANTHEON_ENVIRONMENT, __FUNCTION__ . 'PANTHEON_ENVIRONMENT');
   $environ = &drupal_static(__FUNCTION__);
   if (!isset($environ)) {
     global $base_url;
-    if ((strpos($base_url, 'https://localhost') > 0) || (strpos($base_url, 'http://localhost') > 0)) {
+    // Pantheon ENVs
+    if (defined('PANTHEON_ENVIRONMENT')) {
+      if ($_ENV["PANTHEON_ENVIRONMENT"] === 'live') {
+        $environ = 'prod';
+      }
+      elseif ($_ENV["PANTHEON_ENVIRONMENT"] === 'test') {
+        $environ = 'qa';
+      }
+      else { // All multidevs, dev ENV
+        $environ = 'dev';
+      }
+    }
+    // Non-Pantheon ENVs (Enterprise Drupal, etc.)
+    elseif ((preg_match('|^http(s?)://dev-|', $base_url) === 1) || (strpos($base_url, '-dev.') >= 0)) {
       $environ = 'dev';
     }
-    elseif ((strpos($base_url, 'https://dev-') > 0) || (strpos($base_url, 'http://dev-') > 0) || (strpos($base_url, '-dev') > 0)) {
-      $environ = 'dev';
-    }
-    elseif ((strpos($base_url, 'https://qa-') > 0) || (strpos($base_url, 'http://qa-') > 0) || (strpos($base_url, '-qa') > 0)) {
+    elseif ((preg_match('|^http(s?)://(test|qa)-|', $base_url) === 1)
+      || (strpos($base_url, '-qa.') || strpos($base_url, '-test.') >= 0)) {
       $environ = 'qa';
     }
-    elseif ((strpos($base_url, 'https://test-') > 0) || (strpos($base_url, 'http://test-') > 0)) {
-      $environ = 'qa';
-    }
+    elseif ((strpos($base_url, 'localhost') >= 0)) {
+        $environ = 'dev';
+      }
     else {
-      $environ = 'unknown';
+      $environ = 'unknown'; // Unknown defaults to dev mode
     }
   }
   return $environ;
