@@ -33,7 +33,6 @@ function asu_rfi_undergrad_post($data) {
   $email = $data['email'];
   $ipAddress = isset($data['ip_address']) ? $data['ip_address'] : $_SERVER['REMOTE_ADDR'];
   $phone = preg_replace('[\D]', '', $data['phone']);
-  // $term = (!empty($data['start_date'])) ? $data['start_date'] : ''; // unused?
   $location = $data['location'];
   $campus = $data['campus'];
   $state = $data['state'];

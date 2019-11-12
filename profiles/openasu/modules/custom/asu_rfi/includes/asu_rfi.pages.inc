@@ -124,7 +124,7 @@ function asu_rfi_form_data($form, &$form_state) {
     // Form field definitions
     $form['req_header_text'] = array(
       '#type' => 'item',
-      '#markup' => '<h4>Please complete and submit the form below, and a representative will contact you about enrolling at ASU</h4>'
+      '#markup' => _asu_rfi_form_header_text(),
     );
     $form['req_helper'] = array(
       '#type' => 'item',
@@ -515,8 +515,6 @@ function asu_rfi_form_data_submit($form, &$form_state) {
       ->condition('field_rfi_uniquedata_value', $unique_id, '=')
       ->execute()
       ->fetchField();
-    /*    $get_nodeid = db_query('SELECT entity_id FROM {field_data_field_rfi_uniquedata}
-      WHERE field_rfi_uniquedata_value = :unid', array(':unid' => $unique_id))->fetchField(); */
 
     // Update ASU RFI node values
     $node = node_load($get_nodeid);
@@ -577,10 +575,10 @@ function asu_rfi_second_form($form, &$form_state) {
   // If the form in "Test Mode", add Test mode warning message markup
   _asu_rfi_form_test_mode_markup($form);
 
-  $form['markup'] = array(
-    '#type' => 'item',
-    '#markup' => '<div id="asu-rfi-multi-part1-thanks" style="background: green; padding:2%; color: #ffffff !important; width: 100%; text-align: justify;"><strong>Thank you for your interest in Arizona State University!</strong> We will send you information that matches your unique interests. If you would like additional information, please specify below.</div>',
-  );
+  // Thank you for submitting first part of form messaging.
+  $thanks_msg = _asu_rfi_form_multi_part1_thanks();
+  drupal_set_message($thanks_msg, 'success', FALSE);
+
   $form['citizenship'] = array(
     '#type' => 'checkbox',
     '#title' => t('I am not a U.S. citizen and do not have a green card.'),
@@ -744,16 +742,9 @@ function asu_rfi_second_form_validate($form, &$form_state) {
 function asu_rfi_second_form_submit($form, &$form_state) {
   unset($_SESSION['rfi_data']);
 
-  //$f_name = check_plain($form_state['storage']['first_name']); // unused??
-  //$f_name = ucfirst(check_plain($f_name)); // unused??
-  //$l_name = check_plain($form_state['storage']['last_name']); // unused??
-  //$l_name = ucfirst(check_plain($l_name)); // unused??
-  //$phone = $form_state['storage']['phone']; // unused??
-  //$dob = check_plain($form_state['storage']['birthdate']); // unused??
   $email = check_plain($form_state['storage']['email']);
   $zipcode = check_plain($form_state['values']['zipcode']);
   $country = $form_state['storage']['country'];
-  //$semester = $form_state['storage']['semester_name']; // unused??
   $major = $form_state['storage']['prog_plan'];
   //$student_type = $form_state['storage']['student_type']; // unused??
   $address = check_plain($form_state['values']['address']);
@@ -802,6 +793,7 @@ function asu_rfi_second_form_submit($form, &$form_state) {
   $coded_college_code = base64_encode($form_state['storage']['college_code']);
   $coded_zip = base64_encode($zipcode);
   $coded_country = base64_encode($country);
+
   /* If undergraduate degree is submitted, route the from to undergraduate posting
    * function below.
    * Grab the node id of information page from admin settings page if exists and
@@ -1017,7 +1009,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
   _asu_rfi_form_test_mode_markup($form);
 
   $form['req_header_text'] = array(
-    '#value' => '<h4>Please complete and submit the form below, and a representative will contact you about enrolling at ASU.</h4>'
+    '#value' => _asu_rfi_form_header_text(),
   );
   $form['req_helper'] = array(
     '#value' => '<p>Fields marked with <span style = "color:black;">*</span> are required.</p>',
@@ -1388,8 +1380,6 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
  * @param $form_state
  */
 function asu_rfi_long_form_data_validate($form, &$form_state) {
-
-  dpm(PANTHEON_ENVIRONMENT, __FUNCTION__ . 'PANTHEON_ENVIRONMENT');
 
   if ($form_state['input']['degree_type'] == 'graduate_longform' || $form_state['input']['location'] == 'online') {
     if (empty($form_state['input']['program_code'])) {
@@ -1808,7 +1798,7 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type) {
   _asu_rfi_form_test_mode_markup($form);
 
   $form['req_header_text'] = array(
-    '#value' => '<h4>Please complete and submit the form below, and a representative will contact you about enrolling at ASU</h4>'
+    '#value' => _asu_rfi_form_header_text(),
   );
   $form['req_helper'] = array(
     '#value' => '<p>Fields marked with <span style = "color:black;">*</span> are required.</p>',
@@ -2244,4 +2234,12 @@ function _asu_get_gdpr_markup() {
   ";
 
   return $gdpr_markup;
+}
+
+/**
+ * Get standardized form header for all forms (excluding part 2 of the multiform).
+ * @return string
+ */
+function _asu_rfi_form_header_text() {
+  return "<h4>Please complete and submit the form below, and a representative will contact you about enrolling at ASU.";
 }

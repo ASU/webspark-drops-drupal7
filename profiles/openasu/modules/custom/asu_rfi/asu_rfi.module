@@ -622,14 +622,18 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
   // * Get the RFI form mode settings, if form is in test mode, give only admins access to the form view
   $rfi_mode = variable_get('asu_rfi_form_mode');
   global $user;
-  if ((($rfi_mode == "test") || empty($rfi_mode)) && ($form['#id'] == "asu-rfi-form-data" || $form['#id'] == "asu-rfi-long-form-data" || $form['#id'] == 'views-exposed-form-asu-rfi-submissions-report-page')) {
-    if (user_access('administer nodes', $user) == 1 || user_access('administer asu rfi', $user) == 1) {
+  if ((($rfi_mode == "test") || empty($rfi_mode)) && ($form['#id'] == "asu-rfi-form-data"
+      || $form['#id'] == "asu-rfi-long-form-data"
+      || $form['#id'] == 'views-exposed-form-asu-rfi-submissions-report-page')) {
+//    if (user_access('administer nodes', $user) == 1 || user_access('administer asu rfi', $user) == 1) {
       return TRUE;
-    } else {
+/*    } else {
       $form['#access'] = FALSE;
       drupal_set_message("You do not have access to view this form", 'warning');
       return FALSE;
+
     }
+*/
   }
 }
 
@@ -1709,4 +1713,31 @@ function _asu_rfi_failed_post_email($to_email, $nid = 0) {
     watchdog('asu_rfi', 'SF Error message email sent to ' . $to_email);
     variable_set('asu_rfi_SF_error_message_sent', time());
   }
+}
+
+/**
+ * Get multiform thanks messaging for posting in site outside of the form.
+ */
+function _asu_rfi_form_multi_part1_thanks() {
+  $message = <<<EOT
+  <div class="alert alert-success">
+  <h4>Thank you for your interest in Arizona State University!</h4>
+  <p>We will send you information that matches your unique interests. If you would like additional information,
+   please <a href="#asu-rfi-second-form">specify below in the form</a>, under the program information.</p>
+  </div>
+EOT;
+  return $message;
+}
+
+/**
+ * Get multiform thanks messaging for posting in site outside of the form.
+ */
+function _asu_rfi_form_multi_part2_thanks() {
+  $message = <<<EOT
+  <div class="alert alert-success">
+  <h4>Thank you for your interest in ASU.</h4>
+  <p>An ASU representative will contact you soon!</p>
+  </div>
+EOT;
+  return $message;
 }

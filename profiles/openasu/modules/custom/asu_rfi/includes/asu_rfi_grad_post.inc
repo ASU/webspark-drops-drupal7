@@ -7,6 +7,7 @@
  */
 
 function asu_rfi_grad_post($data) {
+  global $base_url;
   $degreeMappings = _asu_rfi_degree_field_mappings();
   $form_mode = variable_get('asu_rfi_form_mode');
 
@@ -97,6 +98,8 @@ function asu_rfi_grad_post($data) {
     'campusSelection' => $campus,
   );
 
+  dpm($submission_data, __FUNCTION__ . ' - $submission_data');
+
   // But WAIT! There's custom management for Online (and ONLY online) campus people
   if(!isset($campus) && sizeof($availableCampuses) == 1
     && (ucfirst($availableCampuses[0]) == "Online")) {
@@ -122,7 +125,7 @@ function asu_rfi_grad_post($data) {
         'phone' => $data['phone'],
         'prod_test_flag' => $form_mode,
         'base_url' => $data['domain'],
-        'origin_uri' => $GLOBALS['base_url'] . '/' . request_path(),
+        'origin_uri' => $base_url . '/' . request_path(),
         'remote_nid' => $nodeid,
         'ldetect_v' => $ipAddress,
         'campaign' => $data['domain'] . '-' . $type_of_form . '-G',
@@ -225,11 +228,11 @@ function asu_rfi_grad_post($data) {
         E_USER_ERROR);
     }
   } else {
-    $msg_added = 'IMPORTANT: Testing SalesForce RFI
-      submissions is not possible in this web hosting environment. The SalesForce
-      endpoint for testing is not reachable from this web server due to ASU network access
-      restrictions.';
+    $msg_added = 'IMPORTANT: While submissions can be checked in this site, testing SalesForce RFI
+      submissions is not possible from this web hosting environment (' . $base_url . ')
+      because the SalesForce endpoint for testing is not reachable from this
+       web server due to ASU network access restrictions.';
     watchdog('asu_rfi', $msg_added, array(), WATCHDOG_WARNING);
-    drupal_set_message($message, 'warning');
+    drupal_set_message($msg_added, 'warning');
   }
 }
