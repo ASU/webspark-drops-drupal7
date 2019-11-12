@@ -634,23 +634,6 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * "Is the form in Test Mode" check?
- * @param array $form
- * @return string $form_mode - if "test", then it's in test mode
- */
-function _asu_rfi_form_test_mode_markup(&$form) {
-  $form_mode = variable_get('asu_rfi_form_mode');
-  if (($form_mode == "test") || empty($form_mode)) {
-    $form['form_stage'] = array(
-      '#type' => 'item',
-      '#markup' => t('<div class="alert alert-warning"><b>NOTE</b>: The form is in <b>TEST MODE</b>.
-        Its submissions will not go to Salesforce. <a href="/admin/config/content/asurfi">Toggle
-        TEST MODE off</a> under "Test/Live Mode"</div>')
-    );
-  }
-}
-
-/**
  * Hides the RFI form ONLY if there is a missing data value.
  * @param array $form The RFI form
  * @param $decider
@@ -676,6 +659,23 @@ function asu_rfi_form_after_build($form, &$form_state) {
     }
   }
   return $form;
+}
+
+/**
+ * "Is the form in Test Mode" check?
+ * @param array $form
+ * @return string $form_mode - if "test", then it's in test mode
+ */
+function _asu_rfi_form_test_mode_markup(&$form) {
+  $form_mode = variable_get('asu_rfi_form_mode');
+  if (($form_mode == "test") || empty($form_mode)) {
+    $form['form_stage'] = array(
+      '#type' => 'item',
+      '#markup' => t('<div class="alert alert-warning"><b>NOTE</b>: The form is in <b>TEST MODE</b>.
+        Its submissions will not go to Salesforce. <a href="/admin/config/content/asurfi">Toggle
+        TEST MODE off</a> under "Test/Live Mode"</div>')
+    );
+  }
 }
 
 /**
@@ -1478,6 +1478,21 @@ function _asu_rfi_program_online_availability($programsFromDegreeFeed, $getProgr
 }
 
 /**
+ * Is the program managed by Online folks? (i.e. not "asu")
+ * @param $program
+ * @param $getProgramsList
+ * @return bool
+ */
+function _asu_rfi_check_managed_online($program, $getProgramsList) {
+  foreach ($getProgramsList as $onlineItem){
+    if ($onlineItem->plancode == $program && $onlineItem->crmdestination !== "asu") {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
  * Adds program data to a JS object available to the form
  * @param array $desiredProg The current program
  */
@@ -1593,42 +1608,52 @@ function _asu_rfi_detect_browser() {
 }
 
 /**
- * Determine type of environment (live or testing)
- * @return string $environ - Name of the environment. dev, qa, or prod
+ * Determine type of site environment (dev, test, or live)
+ * NOTE: This will work for all Pantheon sites, but everywhere else it won't
+ * catch everything. The "test mode" setting will have to catch the rest.
+ * @return string $env - Name of the environment. dev, qa, or prod
  */
 function _asu_rfi_detect_environment() {
-  dpm(PANTHEON_ENVIRONMENT, __FUNCTION__ . 'PANTHEON_ENVIRONMENT');
-  $environ = &drupal_static(__FUNCTION__);
-  if (!isset($environ)) {
+  $env = &drupal_static(__FUNCTION__);
+  if (!isset($env)) {
+    $env = array(
+      'type' => '',
+      'endpoint_access' => true,
+    );
     global $base_url;
     // Pantheon ENVs
     if (defined('PANTHEON_ENVIRONMENT')) {
       if ($_ENV["PANTHEON_ENVIRONMENT"] === 'live') {
-        $environ = 'prod';
+        $env['type'] = 'prod_pantheon';
       }
       elseif ($_ENV["PANTHEON_ENVIRONMENT"] === 'test') {
-        $environ = 'qa';
+        $env['type'] = 'qa';
+      } else { // All remaining multidevs + Dev ENV
+        $env['type'] = 'dev';
       }
-      else { // All multidevs, dev ENV
-        $environ = 'dev';
-      }
+      $env['endpoint_access'] = false; // No access to Enterprise dev/QA web service endpoints
     }
-    // Non-Pantheon ENVs (Enterprise Drupal, etc.)
-    elseif ((preg_match('|^http(s?)://dev-|', $base_url) === 1) || (strpos($base_url, '-dev.') >= 0)) {
-      $environ = 'dev';
-    }
-    elseif ((preg_match('|^http(s?)://(test|qa)-|', $base_url) === 1)
-      || (strpos($base_url, '-qa.') || strpos($base_url, '-test.') >= 0)) {
-      $environ = 'qa';
-    }
-    elseif ((strpos($base_url, 'localhost') >= 0)) {
-        $environ = 'dev';
-      }
     else {
-      $environ = 'unknown'; // Unknown defaults to dev mode
+      // Local development - most local development URLs
+      if (strpos($base_url, '://localhost')
+        || strpos($base_url, '://192.168.')
+        || strpos($base_url, '://127.')
+        || strpos($base_url, '://10.')) {
+        $env['type'] = 'dev';
+      }
+      // Non-Pantheon ENVs checks for Enterprise Drupal.
+      elseif ((preg_match('#^http(s?)://dev-#', $base_url) === 1) && (strpos($base_url, '-dev.'))) {
+        $env['type'] = 'dev';
+      }
+      elseif ((preg_match('#^http(s?)://(test|qa)-#', $base_url) === 1)
+        || (strpos($base_url, '-qa.') || strpos($base_url, '-test.'))) {
+        $env['type'] = 'qa';
+      } else {
+        $env['type'] = 'prod_not-pantheon';
+      }
     }
   }
-  return $environ;
+  return $env;
 }
 
 /***************************

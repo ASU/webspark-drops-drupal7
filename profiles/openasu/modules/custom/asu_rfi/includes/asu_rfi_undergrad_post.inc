@@ -112,7 +112,7 @@ function asu_rfi_undergrad_post($data) {
   // Alter middleware submission data IF Online program
   if (strtolower($location) == 'online') {
     $asuOnlineList = _asu_rfi_parse_programs();
-    $managedOnline = asu_rfi_check_managed_online($prog_code, $asuOnlineList);
+    $managedOnline = _asu_rfi_check_managed_online($prog_code, $asuOnlineList);
     if ($managedOnline == true) {
       $fields = asu_rfi_online_fields($fields, $nid, $ipAddress, $college_code, $type_of_form, $enterpriseclientid);
       $body = json_encode($fields);
@@ -123,6 +123,8 @@ function asu_rfi_undergrad_post($data) {
 
   ///////////////////////////////////
   // Post data to SalesForce middleware via cURL
+  // NOTE: Unlike the graduate level submissions, the Salesforce endpoint for
+  // testing submissions is publicly available for undergraduate submissions.
   ///////////////////////////////////
   try {
     $ch = curl_init();
@@ -177,21 +179,6 @@ function asu_rfi_undergrad_post($data) {
       $e->getCode(), $e->getMessage()),
       E_USER_ERROR);
   }
-}
-
-/**
- * Is the program managed by Online folks? (i.e. not "asu")
- * @param $program
- * @param $getProgramsList
- * @return bool
- */
-function asu_rfi_check_managed_online($program, $getProgramsList) {
-  foreach ($getProgramsList as $onlineItem){
-    if ($onlineItem->plancode == $program && $onlineItem->crmdestination !== "asu") {
-      return true;
-    }
-  }
-  return false;
 }
 
 /**

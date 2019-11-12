@@ -6,13 +6,11 @@
       $('#take-me-to-rfi').on('click', function (e) {
         e.preventDefault();
         var forms = $('form[id^="asu-rfi-form-data"]');
-        if (forms.length === 0) {
-          location.href = 'https://students.asu.edu/typeofstudent';
-        } else {
-          console.log(forms.length);
-          console.log(forms.attr('id'));
+        if (forms.length !== 0) {
           var form_target = forms.closest(".block-asu-rfi-asu_rfi_form_block-instance").attr('id');
           location.href = '#' + form_target;
+        } else {
+          location.href = 'https://students.asu.edu/typeofstudent';
         }
       });
     }

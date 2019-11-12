@@ -68,8 +68,12 @@ function asu_rfi_schema() {
 function asu_rfi_install() {
   // Call initial configuration for form options upon install
   include('data/asu_rfi.form_options.inc');
+
+  // Update countries DB table
   asu_rfi_get_options_data('country', TRUE);
+  // Insert states into DB table
   asu_rfi_get_options_data('state_province', TRUE);
+  // Insert semester dates into DB table
   asu_rfi_get_options_data('rfi_dedupe_list_terms', TRUE);
 
   drupal_set_message('ASU RFI module has been installed. Configure module settings at <a href="/admin/config/content/asurfi">admin settings page</a>');

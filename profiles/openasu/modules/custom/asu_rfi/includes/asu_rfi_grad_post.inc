@@ -64,8 +64,8 @@ function asu_rfi_grad_post($data) {
 
   // Salesforce URL for posting data
   // Is it a dev or qa site, or in "test mode"?
-  $environ = _asu_rfi_detect_environment();
-  if (($environ == "dev") || ($environ == "qa")) {
+  $environ = (array) _asu_rfi_detect_environment();
+  if (($environ['type'] === "dev") || ($environ['type'] === "qa")) {
     $url = 'https://requestinfo-qa.asu.edu/prospect_form_post';
   } else {
     if ($form_mode == 'test') {
@@ -105,7 +105,7 @@ function asu_rfi_grad_post($data) {
   if (strtolower($location) == 'online') {
     $submission_data['campusSelection'] = "ONLNE";
     $asuOnlineList = _asu_rfi_parse_programs();
-    $managedOnline = asu_rfi_check_managed_online($data['program_code'], $asuOnlineList);
+    $managedOnline = _asu_rfi_check_managed_online($data['program_code'], $asuOnlineList);
 
     if ($managedOnline == true) {
       $college_code = db_query('select ' . $degreeMappings['field_academic_program_value']
@@ -146,76 +146,90 @@ function asu_rfi_grad_post($data) {
 
   ///////////////////////////////////
   // Post data to SalesForce middleware via cURL
+  // Attempt only if access to the endpoint is available
   ///////////////////////////////////
-  try {
-    $ch = curl_init();
-    $options = array(
-      CURLOPT_URL => $url,
-      CURLOPT_POST => 1,
-      CURLOPT_POSTFIELDS => $submission_data,
-      CURLOPT_RETURNTRANSFER => 1,
-      CURLOPT_HTTPHEADER => array('Content-Type: text/json'),
-      CURLOPT_SSL_VERIFYPEER => FALSE,
-    );
-    curl_setopt_array($ch, $options);
+  if ($environ['endpoint_access'] === true) {
+    try {
+      $ch = curl_init();
+      $options = array(
+        CURLOPT_URL => $url,
+        CURLOPT_POST => 1,
+        CURLOPT_POSTFIELDS => $submission_data,
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_HTTPHEADER => array('Content-Type: text/json'),
+        CURLOPT_SSL_VERIFYPEER => FALSE,
+      );
+      curl_setopt_array($ch, $options);
 
-    // DEBUG
-    dpm(CURLOPT_SSLVERSION, 'curlopt_sslversion');
-    dpm($options, 'curl - options');
+      // DEBUG
+      dpm(CURLOPT_SSLVERSION, 'curlopt_sslversion');
+      dpm($options, 'curl - options');
 
-    $response = curl_exec($ch);
-    $curl_info = curl_getinfo($ch); // Used by your drupal messages below
+      $response = curl_exec($ch);
+      $curl_info = curl_getinfo($ch); // Used by your drupal messages below
 
-    // DEBUG
-    dpm($response, 'curl - response');
-    dpm($curl_info, 'curl - curl_info');
+      // DEBUG
+      dpm($response, 'curl - response');
+      dpm($curl_info, 'curl - curl_info');
 
-    // Get the response from Salesforce middleware
-    if (strpos($response, "-1 ") == 0) {
-      $message = explode(':', $response);
-    }
-    dpm($message, 'message');
+      // Get the response from Salesforce middleware
+      if (strpos($response, "-1 ") == 0) {
+        $message = explode(':', $response);
+      }
 
-    // Successful POST of submission to middleware.
-    if (($curl_info['http_code'] == 200)) {
-      $node_wrapper->field_rfi_submission_status->set('SF_Complete');
-      $node_wrapper->field_rfi_error_message->set('');
-      $node_wrapper->save();
-      // If this successfully posts to SF, set "asu_rfi_last_failure_SF_posting"
-      // variable to current time.
-      variable_set('asu_rfi_last_attempt_SF_posting', time());
-    }
-    // If the POST to the middleware is not successful
-    else {
-      if (($curl_info['http_code'] >= 400)) { // errors !== 400
-        // update error message
-        if (isset($node_wrapper->field_rfi_error_message)) {
-          if (isset($message)) {
-            $msg = $message[1];
-          } else {
-            $msg = 'HTTP Code: ' . $curl_info['http_code'] . ' - See Exception error.';
+      // DEBUG
+      dpm($message, 'message');
+
+      // Successful POST of submission to middleware.
+      if (($curl_info['http_code'] == 200)) {
+        $node_wrapper->field_rfi_submission_status->set('SF_Complete');
+        $node_wrapper->field_rfi_error_message->set('');
+        $node_wrapper->save();
+        // If this successfully posts to SF, set "asu_rfi_last_failure_SF_posting"
+        // variable to current time.
+        variable_set('asu_rfi_last_attempt_SF_posting', time());
+      }
+      // If the POST to the middleware is not successful
+      else {
+        if (($curl_info['http_code'] >= 400)) { // errors !== 400
+          // update error message
+          if (isset($node_wrapper->field_rfi_error_message)) {
+            if (isset($message)) {
+              $msg = $message[1];
+            }
+            else {
+              $msg = 'HTTP Code: ' . $curl_info['http_code'] . ' - See Exception error.';
+            }
           }
         }
-      } else {
-
+        // Update the failed submission status to Incomplete.
+        $node_wrapper->field_rfi_error_message->set($msg);
+        $node_wrapper->field_rfi_submission_status->set('Incomplete');
+        $node_wrapper->save();
+        variable_set('asu_rfi_last_failure_SF_posting', time());
       }
-      // Update the failed submission status to Incomplete.
-      $node_wrapper->field_rfi_error_message->set($msg);
-      $node_wrapper->field_rfi_submission_status->set('Incomplete');
-      $node_wrapper->save();
-      variable_set('asu_rfi_last_failure_SF_posting', time());
-    }
 
-    curl_close($ch);
+      curl_close($ch);
 
-    if (FALSE === $response) {
-      throw new Exception(curl_error($ch), curl_errno($ch));
+      if (FALSE === $response) {
+        throw new Exception(curl_error($ch), curl_errno($ch));
+      }
+    } catch (Exception $e) {
+      $msg_added = ($e->getCode() == 0) ? ' -- IMPORTANT: Testing SalesForce RFI
+      submissions is not possible in this web hosting environment. The SalesForce
+      endpoint for testing is not reachable from this web server due to ASU network access
+      restrictions.' : '';
+      trigger_error(sprintf(
+        'Curl failed with error #%d: %s' . $msg_added,
+        $e->getCode(), $e->getMessage()),
+        E_USER_ERROR);
     }
-  } catch (Exception $e) {
-    trigger_error(sprintf(
-      'Curl failed with error #%d: %s',
-      $e->getCode(), $e->getMessage()),
-      E_USER_ERROR);
+  } else {
+    $msg_added = 'IMPORTANT: Testing SalesForce RFI
+      submissions is not possible in this web hosting environment. The SalesForce
+      endpoint for testing is not reachable from this web server due to ASU network access
+      restrictions.';
+    watchdog('asu_rfi', $msg_added, array(), WATCHDOG_WARNING);
+    drupal_set_message($message, 'warning');
   }
-
 }
