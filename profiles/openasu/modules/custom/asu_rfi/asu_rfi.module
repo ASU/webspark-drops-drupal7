@@ -137,7 +137,7 @@ function asu_rfi_cron_queue_info() {
   // Process to repost failed leads.
   $queues = array();
   $queues['asu_rfi_failed_leads_queue'] = array(
-    'worker callback' => '_asu_rfi_repost_rfi', // Function to call, each item.
+    'worker callback' => '_asu_rfi_repost_data', // Function to call each item.
     'time' => 20, // Seconds to spend working on the queue.
   );
   return $queues;
@@ -823,12 +823,13 @@ function _asu_rfi_validate_zipcode($country, $zip) {
  *********************************************************************/
 
 /**
- * RE-POSTs data to Salesforce middleware for all programs and forms
+ * POSTs data to Salesforce middleware for all programs and forms
  * @param $node - ASU RFI node storing the data
  * @param array $post - data to submit
  * @param string $program - program type (ugrad, grad)
  */
 function _asu_rfi_repost_data($node, $post = array(), $program = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
+  // Global, shared fields (undergrad and graduate)
   $post['domain'] = $node->field_rfi_domain['und'][0]['value'];
   $post['first_name'] = $node->field_rfi_first_name['und'][0]['value'];
   $post['last_name'] = $node->field_rfi_last_name['und'][0]['value'];
@@ -843,12 +844,11 @@ function _asu_rfi_repost_data($node, $post = array(), $program = ASU_RFI_PROSPEC
   $post['citizenship'] = isset($node->field_rfi_international['und'][0]['value']) ? $node->field_rfi_international['und'][0]['value'] : '';
   $post['questions'] = isset($node->field_rfi_question['und'][0]['value']) ? $node->field_rfi_question['und'][0]['value'] : '';
   $post['student_type'] = $node->field_rfi_student_type['und'][0]['value'];
-
   // Location
   $post['location'] = (isset($node->field_rfi_location['und'][0]['value']) && !empty($node->field_rfi_location['und'][0]['value']))
     ? $node->field_rfi_location['und'][0]['value']
     : 'no_preference';
-
+  // Remaining global/shared fields
   $post['campus'] = $node->field_rfi_campus['und'][0]['value'];
   $post['zipcode'] = isset($node->field_rfi_zipcode['und'][0]['value']) ? $node->field_rfi_zipcode['und'][0]['value'] : '';
   $post['mobile_check'] = isset($node->field_rfi_sms_opted['und'][0]['value']) ? $node->field_rfi_sms_opted['und'][0]['value'] : '';

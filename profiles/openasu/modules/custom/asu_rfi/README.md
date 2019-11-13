@@ -89,6 +89,19 @@ Some of the form types automatically define which programs will be listed in the
 For more detailed instructions on configuration, go to 
 https://brandguide.asu.edu/executing-the-brand/web-and-mobile/webspark/features/asu_rfi.
 
+SUBMISSION STATUS
+--------------------------
+When a form is submitted, the status is set to "Complete". When the form is also successfully submitted to SalesForce (this can occur
+at form submission OR later when cron is run), the status is updated to "SF_Complete." 
+
+Special case (Multiform option): When the 1st multiform is submitted, the status is set to "Incomplete". This status
+will remain until the second half of the form is submitted on the next page, which then sets the status to "Complete" -
+which leads to the SalesForce submission step. If the second half of the form is not submitted before cron is run, the module
+will attempt to send the submission to SalesForce - which will end up at "SF_Complete" or an error status ("Pending" or
+"Action required").
+
+See /admin/reports/asu-rfi-submissions-report for more information on statuses.
+
 PERMISSIONS
 --------------------------
 'Administer ASU RFI module' - access the module's admin.
@@ -110,6 +123,10 @@ Admin settings: /admin/config/asu/asurfi
 Block and Instances configurations
 /admin/structure/block
 /admin/structure/block/instances
+
+Listing of submissions and their statuses (a Drupal view called "RFI lead submissions")
+/admin/reports/asu-rfi-submissions-report
+/admin/content (filter for content type "ASU RFI form submissions")
 
 TABLES
 --------------------------
@@ -171,5 +188,7 @@ CREDITS
 ASU RFI module was created by
 Archana Puliroju <apuliroj@asu.edu> and
 Michael Samuelson <mlsamuel@asu.edu>
+
+Updated by Bryan Roseberry <jax@asu.edu>
 
 Maintained by Development, Applications and Design in the UTO.
