@@ -62,6 +62,7 @@ function asu_rfi_form_data($form, &$form_state) {
   $start_dates = _asu_rfi_get_sem_dates();
   $country = _asu_rfi_get_country_list();
 
+  // Dates
   for ($idate = 0; $idate < 4; $idate++) {
     $date = date('Y') + $idate;
     $date_key = substr_replace($date, '', 1, -2);
@@ -339,7 +340,7 @@ function asu_rfi_form_data($form, &$form_state) {
 
 
 /**
- * MULTIFORM (BOTH) - VALIDATE handler
+ * MULTIFORM (BOTH)- VALIDATE handler
  * Defaults to FIRST FORM
  * // NOT GETTING DEFINED OR USED??
  *
@@ -560,7 +561,6 @@ function asu_rfi_second_form($form, &$form_state) {
   }
 
   $states = _asu_rfi_get_state_list();
-
   honeypot_add_form_protection($form, $form_state, array(
     'honeypot',
     'time_restriction'
@@ -732,7 +732,6 @@ function asu_rfi_second_form_validate($form, &$form_state) {
   }
 }
 
-
 /**
  * MULTIFORM - SECOND FORM submit (for undergrad and grad students)
  * @param $form
@@ -742,15 +741,17 @@ function asu_rfi_second_form_validate($form, &$form_state) {
 function asu_rfi_second_form_submit($form, &$form_state) {
   unset($_SESSION['rfi_data']);
 
-  $email = check_plain($form_state['storage']['email']);
   $zipcode = check_plain($form_state['values']['zipcode']);
   $country = $form_state['storage']['country'];
-  $major = $form_state['storage']['prog_plan'];
   //$student_type = $form_state['storage']['student_type']; // unused??
   $address = check_plain($form_state['values']['address']);
   $form_state['storage']['address'] = $address;
 
-  $unique_id = $email . $major;
+  //$email = check_plain($form_state['storage']['email']); // UNUSED??
+  //$major = $form_state['storage']['prog_plan']; // UNUSED?
+  // $unique_id = $email . $major; // UNUSED??
+  // $webform_url = $form_state['values']['webform_url']; // unused??
+  // $ip_address = $form_state['storage']['ip_address']; // unused??
 
   // Make sure various fields have been updated in the second form
   $form_state['storage']['zipcode'] = $zipcode;
@@ -760,8 +761,7 @@ function asu_rfi_second_form_submit($form, &$form_state) {
   $form_state['storage']['state'] = $state;
   $veteran = $form_state['values']['military'];
   $form_state['storage']['military'] = $veteran;
-  // $webform_url = $form_state['values']['webform_url']; // unused??
-  // $ip_address = $form_state['storage']['ip_address']; // unused??
+
   $citizen = $form_state['values']['citizenship'];
   $node_entity_id = $form_state['storage']['submission_nodeid'];
   $form_state['storage']['type_of_form'] = $form_state['values']['type_of_form'];
@@ -966,7 +966,6 @@ function _asu_rfi_update_multiform_submission_fields($entity, $form_state, $mult
   }
   $wrapper->save();
 }
-
 
 /**
  * LONG FORM RFI generation
@@ -1572,7 +1571,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
   );
   $entity = entity_create('node', $ent_values);
 
-  // Now update new RFI submission node
+  // Now insert data into new RFI submission node
   $wrapper = entity_metadata_wrapper('node', $entity);
   if (isset($wrapper->title)) {
     $wrapper->title->set($f_name);
@@ -1733,9 +1732,9 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
 
     asu_rfi_undergrad_post($form_state['values']);
 
-    $undergrad_confid = variable_get('asu_rfi_undergrad_confirm_node');
-    if (!empty($undergrad_confid)) {
-      $u_alias = drupal_lookup_path('alias', $path = "node/$undergrad_confid", $path_language = NULL);
+    $undergrad_conf_id = variable_get('asu_rfi_undergrad_confirm_node');
+    if (!empty($undergrad_conf_id)) {
+      $u_alias = drupal_lookup_path('alias', $path = "node/$undergrad_conf_id", $path_language = NULL);
       if (!empty($u_alias)) {
         drupal_goto("$u_alias", array(
           'query' => array(
@@ -1749,7 +1748,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
           )
         ));
       } else {
-        drupal_goto("node/$undergrad_confid", array(
+        drupal_goto("node/$undergrad_conf_id", array(
           'query' => array(
             'pro' => $coded_college,
             'maj' => $coded_major,
@@ -1889,13 +1888,11 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type) {
   return $form;
 }
 
-
 /**
  * CURRENT STUDENTS - Validate handler
  * @param $form
  * @param $form_state
  */
-
 function asu_rfi_current_form_data_validate($form, &$form_state) {
   $f_name = $form_state['values']['first_name'];
   $f_name = ucfirst($f_name);

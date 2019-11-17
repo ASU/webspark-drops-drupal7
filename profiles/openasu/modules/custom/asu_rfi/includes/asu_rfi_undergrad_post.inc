@@ -14,7 +14,13 @@ function asu_rfi_undergrad_post($data) {
   );
   $availableCampuses = _asu_rfi_campus_location_options($nodeArr);
 
+  // Pull up RFI submission node
   $node_wrapper = entity_metadata_wrapper('node', $node);
+
+  // Get information for logging
+  $nid_info = (isset($node_wrapper->nid)) ? ' for NID ' . $node_wrapper->nid->value() : '';
+
+  // Set current status before attempt
   if (isset($node_wrapper->field_rfi_submission_status)) {
     if ($node_wrapper->field_rfi_submission_status->value() == "Incomplete") {
       $node_wrapper->field_rfi_submission_status->set('Pending');
@@ -139,35 +145,55 @@ function asu_rfi_undergrad_post($data) {
     $response = curl_exec($ch);
     $curl_info = curl_getinfo($ch);
 
-    // If response from middleware is a fail (HTTP code !== 200),
-    // 1) save the error message in the submission node and send message
+    // Successful CURL submission to middleware
+    if (($curl_info['http_code'] == 200)) {
+      $curl_message = 'SF SUCCESS - Posted undergrad form submission'
+        . $nid_info . ' to ' . $url;
+      if (isset($node_wrapper->field_rfi_error_message)) {
+        $node_wrapper->field_rfi_error_message->set('');
+      }
+      if (isset($node_wrapper->field_rfi_submission_status)) {
+        $node_wrapper->field_rfi_submission_status->set('SF_Complete');
+      }
+      $node_wrapper->save();
+      watchdog('asu_rfi', $curl_message, array(), WATCHDOG_INFO);
+      variable_set('asu_rfi_last_success_SF_posting', time());
+    }
+    // Failed CURL submission to SF middleware
+    // Save the error message in the submission node and send message
     // onto the confirmation page screen. And set the submission status to
     // Incomplete.
+    else {
+      $curl_message = (isset($node_wrapper->field_rfi_error_message))
+        ? 'SF FAILURE - cURL POST '
+        . $nid_info . ' to ' . $url . ' -- HTTP CODE: ' . $curl_info['http_code']
+        . ' - ' . $response
+        : '';
+      // if ($response == "Access Denied - hashed value does not match any registered site") {
+      if (($curl_info['http_code'] >= 400)) {
 
-    // if ($response == "Access Denied - hashed value does not match any registered site") {
-    if (($curl_info['http_code'] >= 400)) {
-      $error_message = (isset($node_wrapper->field_rfi_error_message)) ? $response
-        : 'cURL error - HTTP CODE: ' . $curl_info['http_code'];
+        $node_wrapper->field_rfi_error_message->set($curl_message);
+        $node_wrapper->field_rfi_submission_status->set('Incomplete');  // Why wasn't this here before???
+        $node_wrapper->save();
 
-      $node_wrapper->field_rfi_error_message->set($error_message);
-      $node_wrapper->field_rfi_submission_status->set('Incomplete');  // Why wasn't this here before???
-      $node_wrapper->save();
-
-      // Get admin email address from admin settings page
-      $to_email = variable_get('asu_rfi_error_email', NULL);
-      // Get middleware app key. If it's empty, don't send error email to admins.
-      if (!empty($mw_auth_key)) {
-        if (!empty($to_email)) {
-          if (!isset($data['cron_run']) || ($data['cron_run'] != "Cron_running")) {
-            _asu_rfi_failed_post_email($to_email, $nid);
+        // Get admin email address from admin settings page
+        $to_email = variable_get('asu_rfi_error_email', NULL);
+        // Get middleware app key. If it's empty, don't send error email to admins.
+        if (!empty($mw_auth_key)) {
+          if (!empty($to_email)) {
+            if (!isset($data['cron_run']) || ($data['cron_run'] != "Cron_running")) {
+              _asu_rfi_failed_post_email($to_email, $nid);
+            }
           }
         }
       }
-      if (drupal_valid_path('admin')) {
-        drupal_set_message('Error message from Middleware: ' . $error_message);
-      }
     }
     curl_close($ch);
+
+    // Output result of cURL action for admins
+    if (drupal_valid_path('admin')) {
+      drupal_set_message($curl_message);
+    }
 
     if (FALSE === $response) {
       throw new Exception(curl_error($ch), curl_errno($ch));

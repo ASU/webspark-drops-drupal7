@@ -13,6 +13,7 @@ function asu_rfi_grad_post($data) {
 
   dpm($data, __FUNCTION__ . ' $data');
 
+  // Pull up RFI submission node
   $nodeid = $data['submission_nodeid'];
   $node = node_load($nodeid);
   $nodeArr = array(
@@ -20,17 +21,36 @@ function asu_rfi_grad_post($data) {
   );
   $availableCampuses = _asu_rfi_campus_location_options($nodeArr);
 
+  // Select proper ENV for Salesforce POST. Is it a dev or qa site, or in "test mode"?
+  $environ = (array) _asu_rfi_detect_environment();
+  if (($environ['type'] === "dev") || ($environ['type'] === "qa")) {
+    $url = 'https://requestinfo-qa.asu.edu/prospect_form_post';
+  } else {
+    if ($form_mode == 'test') {
+      $url = 'https://requestinfo-qa.asu.edu/prospect_form_post';
+    } else {
+      $url = 'https://requestinfo.asu.edu/prospect_form_post';
+    }
+  }
+
+  // Load submission node
   $node_wrapper = entity_metadata_wrapper('node', $node);
+  // Get messaging info for logging
+  $nid_info = (isset($node_wrapper->nid)) ? ' for NID ' . $node_wrapper->nid->value() : '';
+
+  // Set current status of submission node to reflect upcoming action
   if (isset($node_wrapper->field_rfi_submission_status)) {
     if ($node_wrapper->field_rfi_submission_status->value() == "Incomplete") {
       $node_wrapper->field_rfi_submission_status->set('Pending');
-    } else {
+    }
+    else {
       if ($node_wrapper->field_rfi_submission_status->value() == "Pending") {
-        $node_wrapper->field_rfi_submission_status->set('Action Required');
+        $node_wrapper->field_rfi_submission_status->set('action_required');
       }
     }
   }
 
+  // Other form value generation
   $domain = isset($data['domain']) ? $data['domain'] : $_SERVER['HTTP_HOST'];
   $type_of_form = $data['type_of_form'];
   $source = $domain . '-' . $type_of_form . '-G';
@@ -52,29 +72,16 @@ function asu_rfi_grad_post($data) {
   $city = (isset($data['city'])) ? $data['city'] : ''; // City
   $state = (isset($data['state'])) ? $data['state'] : ''; // State
   $country = (isset($data['country'])) ? $data['country'] : ''; // country
-  // If NEITHER the USA NOR Canada, drop the address data.
+  // If NEITHER the USA NOR Canada, drop the address fields' data.
   if ($country !== "United States" && $country !== "Canada") {
     $address = '';
     $state = '';
     $city = '';
   }
+
   $location = (isset($data['location'])) ? $data['location'] : '';
-
-  // enterpriseclientid for use in EdPlus Leads submissions.
+  // GA enterpriseclientid for use in EdPlus Leads submissions.
   $enterpriseclientid = (isset($data['enterpriseclientid'])) ? $data['enterpriseclientid'] : '';
-
-  // Salesforce URL for posting data
-  // Is it a dev or qa site, or in "test mode"?
-  $environ = (array) _asu_rfi_detect_environment();
-  if (($environ['type'] === "dev") || ($environ['type'] === "qa")) {
-    $url = 'https://requestinfo-qa.asu.edu/prospect_form_post';
-  } else {
-    if ($form_mode == 'test') {
-      $url = 'https://requestinfo-qa.asu.edu/prospect_form_post';
-    } else {
-      $url = 'https://requestinfo.asu.edu/prospect_form_post';
-    }
-  }
 
   // Build data array to post to Salesforce
   $submission_data = array(
@@ -136,6 +143,8 @@ function asu_rfi_grad_post($data) {
       $submission_data = json_encode($submission_data);
       $fieldHash = sha1($mw_auth_key . '+' . $submission_data);
       $url = "https://webforms.asu.edu/asu_edplus_middleware/submit/$fieldHash";
+      // Make sure all submissions to webforms.asu.edu are attempted.
+      $environ['endpoint_access'] = true;
     }
   }
   // NOT online campus
@@ -148,9 +157,10 @@ function asu_rfi_grad_post($data) {
   }
 
   ///////////////////////////////////
-  // Post data to SalesForce middleware via cURL
-  // Attempt only if access to the endpoint is available
+  // FINALLY - POST data to SF middleware via cURL
   ///////////////////////////////////
+
+  // Attempt only if access to the endpoint is available
   if ($environ['endpoint_access'] === true) {
     try {
       $ch = curl_init();
@@ -170,49 +180,59 @@ function asu_rfi_grad_post($data) {
 
       $response = curl_exec($ch);
       $curl_info = curl_getinfo($ch); // Used by your drupal messages below
+      variable_set('asu_rfi_last_attempt_SF_posting', time());
 
       // DEBUG
       dpm($response, 'curl - response');
       dpm($curl_info, 'curl - curl_info');
 
       // Get the response from Salesforce middleware
-      if (strpos($response, "-1 ") == 0) {
-        $message = explode(':', $response);
-      }
+      $message = (strpos($response, "-1 ") == 0) ? explode(':', $response) : '';
 
       // DEBUG
       dpm($message, 'message');
 
       // Successful POST of submission to middleware.
       if (($curl_info['http_code'] == 200)) {
-        $node_wrapper->field_rfi_submission_status->set('SF_Complete');
-        $node_wrapper->field_rfi_error_message->set('');
+        $curl_message = 'SF SUCCESS - Posted graduate form submission' . $nid_info . ' to ' . $url;
+        if (isset($node_wrapper->field_rfi_submission_status)) {
+          $node_wrapper->field_rfi_submission_status->set('SF_Complete');
+        }
+        if (isset($node_wrapper->field_rfi_error_message)) {
+          $node_wrapper->field_rfi_error_message->set('');
+        }
         $node_wrapper->save();
-        // If this successfully posts to SF, set "asu_rfi_last_failure_SF_posting"
-        // variable to current time.
-        variable_set('asu_rfi_last_attempt_SF_posting', time());
+        // Record time of latest successful post
+        variable_set('asu_rfi_last_success_SF_posting', time());
+        watchdog('asu_rfi', $curl_message,
+          array(), WATCHDOG_INFO);
       }
-      // If the POST to the middleware is not successful
+      // Or it failed to POST to the middleware
       else {
+        $msg = 'HTTP Code: ' . $curl_info['http_code'] . ' - See Exception error.';
         if (($curl_info['http_code'] >= 400)) { // errors !== 400
           // update error message
           if (isset($node_wrapper->field_rfi_error_message)) {
-            if (isset($message)) {
-              $msg = $message[1];
-            }
-            else {
-              $msg = 'HTTP Code: ' . $curl_info['http_code'] . ' - See Exception error.';
-            }
+            $msg = (is_array($message)) ? $message[1] : $msg;
           }
         }
         // Update the failed submission status to Incomplete.
         $node_wrapper->field_rfi_error_message->set($msg);
         $node_wrapper->field_rfi_submission_status->set('Incomplete');
+
+        $curl_message = 'SF FAILURE - HTTP code ' . $curl_info['http_code']
+          . ' - Could not post graduate form submission' . $nid_info . ' to ' . $url;
+
+        watchdog('asu_rfi', $curl_message, array(), WATCHDOG_INFO);
         $node_wrapper->save();
         variable_set('asu_rfi_last_failure_SF_posting', time());
       }
 
       curl_close($ch);
+
+      if (drupal_valid_path('admin')) {
+        drupal_set_message($curl_message);
+      }
 
       if (FALSE === $response) {
         throw new Exception(curl_error($ch), curl_errno($ch));
@@ -227,12 +247,14 @@ function asu_rfi_grad_post($data) {
         $e->getCode(), $e->getMessage()),
         E_USER_ERROR);
     }
-  } else {
+  } else { // Do not attempt and JSON submission to a SF middleware endpoint.
     $msg_added = 'IMPORTANT: While submissions can be checked in this site, testing SalesForce RFI
       submissions is not possible from this web hosting environment (' . $base_url . ')
       because the SalesForce endpoint for testing is not reachable from this
        web server due to ASU network access restrictions.';
     watchdog('asu_rfi', $msg_added, array(), WATCHDOG_WARNING);
-    drupal_set_message($msg_added, 'warning');
+    if (drupal_valid_path('admin')) {
+      drupal_set_message($msg_added, 'warning');
+    }
   }
 }
