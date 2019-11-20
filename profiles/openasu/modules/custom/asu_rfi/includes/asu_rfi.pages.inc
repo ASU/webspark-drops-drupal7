@@ -21,8 +21,7 @@ header("Pragma: no-cache");
  * INIT configs
  */
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_email');
-module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_grad_post');
-module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_undergrad_post');
+module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_post_to_salesforce');
 
 /**
  * Implementation of hook_form().
@@ -801,7 +800,7 @@ function asu_rfi_second_form_submit($form, &$form_state) {
    * If the node id doesn't exist, redirect the user to builtin confirmation page.
    */
   if ($form_state['storage']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
-    asu_rfi_undergrad_post($form_state['storage']); //-- To be used in future
+    asu_rfi_post_to_salesforce($form_state['storage'], ASU_RFI_PROSPECT_LEVEL_UNDERGRAD); //-- To be used in future
     $undergrad_conf_id = variable_get('asu_rfi_undergrad_confirm_node');
 
     if (!empty($undergrad_conf_id)) {
@@ -843,7 +842,7 @@ function asu_rfi_second_form_submit($form, &$form_state) {
    * the user to built in confirmation page.
    */
   if ($form_state['storage']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_GRAD) {
-    asu_rfi_grad_post($form_state['storage']);
+    asu_rfi_post_to_salesforce($form_state['storage'], ASU_RFI_PROSPECT_LEVEL_GRAD);
     $grad_conf_id = variable_get('asu_rfi_grad_confirm_node');
     if (!empty($grad_conf_id)) {
       $galias = drupal_lookup_path('alias', $path = "node/$grad_conf_id", $path_language = NULL);
@@ -1692,7 +1691,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
   // Graduate
   if ($form_state['values']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_GRAD) {
 
-    asu_rfi_grad_post($form_state['values']);
+    asu_rfi_post_to_salesforce($form_state['values'], ASU_RFI_PROSPECT_LEVEL_GRAD);
 
     $grad_conf_id = variable_get('asu_rfi_grad_confirm_node');
     if (!empty($grad_conf_id)) {
@@ -1730,7 +1729,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
   // Undergrad
   if ($form_state['values']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
 
-    asu_rfi_undergrad_post($form_state['values']);
+    asu_rfi_post_to_salesforce($form_state['values'], ASU_RFI_PROSPECT_LEVEL_UNDERGRAD);
 
     $undergrad_conf_id = variable_get('asu_rfi_undergrad_confirm_node');
     if (!empty($undergrad_conf_id)) {

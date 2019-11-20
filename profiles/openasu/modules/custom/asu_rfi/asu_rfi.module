@@ -1,4 +1,5 @@
-<?php /** @noinspection HtmlUnknownTarget */
+<?php /** @noinspection HtmlUnknownAnchorTarget */
+/** @noinspection HtmlUnknownTarget */
 /** @noinspection SqlDialectInspection */
 /** @noinspection PhpInconsistentReturnPointsInspection */
 /** @noinspection PhpUnhandledExceptionInspection */
@@ -27,8 +28,7 @@
 define('ASU_RFI_PROSPECT_LEVEL_UNDERGRAD', "Undergraduate");
 define('ASU_RFI_PROSPECT_LEVEL_GRAD', "Graduate");
 
-module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_grad_post');
-module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_undergrad_post');
+module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_post_to_salesforce');
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_get_programs');
 
 /**
@@ -520,11 +520,11 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
   }
   // * Get the RFI form mode settings, if form is in test mode, give only admins access to the form view
   $rfi_mode = variable_get('asu_rfi_form_mode');
-  global $user;
   if ((($rfi_mode == "test") || empty($rfi_mode)) && ($form['#id'] == "asu-rfi-form-data"
       || $form['#id'] == "asu-rfi-long-form-data"
       || $form['#id'] == 'views-exposed-form-asu-rfi-submissions-report-page')) {
-//    if (user_access('administer nodes', $user) == 1 || user_access('administer asu rfi', $user) == 1) {
+      // global $user;
+      // if (user_access('administer nodes', $user) == 1 || user_access('administer asu rfi', $user) == 1) {
       return TRUE;
 /*    } else {
       $form['#access'] = FALSE;
@@ -861,7 +861,7 @@ function _asu_rfi_post_data_to_middleware($node, $post = array(), $program = ASU
       $post['type_of_form'] = 'MF';
     }
     $post['semester_name'] = isset($node->field_rfi_start_term['und'][0]['value']) ? $node->field_rfi_start_term['und'][0]['value'] : '';
-    asu_rfi_grad_post($post);
+    asu_rfi_post_to_salesforce($post, ASU_RFI_PROSPECT_LEVEL_GRAD);
   }
   // Undergrad program (default)
   else {
@@ -873,7 +873,7 @@ function _asu_rfi_post_data_to_middleware($node, $post = array(), $program = ASU
     }
     $post['ip_address'] = isset($node->field_rfi_ip_address['und'][0]['value']) ? $node->field_rfi_ip_address['und'][0]['value'] : '';
     $post['start_date'] = $node->field_rfi_start_term_code['und'][0]['value'];
-    asu_rfi_undergrad_post($post);
+    asu_rfi_post_to_salesforce($post, ASU_RFI_PROSPECT_LEVEL_UNDERGRAD);
   }
   variable_set('asu_rfi_last_attempt_SF_posting', time());
 }
@@ -1417,6 +1417,102 @@ function _asu_rfi_detect_environment() {
     }
   }
   return $env;
+}
+
+/**
+ * Determine source, ipAddress, source_type, domain
+ *
+ * @param array $data - submitted form data
+ * @return array $server_data
+ */
+function _asu_rfi_detect_source($data, $type) {
+  $server_data = array(
+    'domain' => (isset($data['domain'])) ? $data['domain'] : $_SERVER['HTTP_HOST'],
+    'ipAddress' => (isset($data['ip_address'])) ? $data['ip_address']
+      : $_SERVER['REMOTE_ADDR'],
+  );
+  switch ($type) {
+    case ASU_RFI_PROSPECT_LEVEL_UNDERGRAD:
+      $server_data['source_type'] = '-UG';
+      break;
+    case ASU_RFI_PROSPECT_LEVEL_GRAD:
+      $server_data['source_type'] = '-G';
+      break;
+    default:
+      $server_data['source_type'] = 'unknown';
+  }
+  $server_data['source'] = $server_data['domain'] . '-' . $data['type_of_form'] . $server_data['source_type'];
+  return $server_data;
+}
+
+/**
+ * Determine College Code via manual query
+ * @param array $degreeMappings
+ * @param string $prog_code - Program code
+ * @return string $result
+ */
+function _asu_rfi_get_college_code($degreeMappings, $prog_code) {
+  $result = db_query(
+    'select ' . $degreeMappings['field_academic_program_value'] . ' from ' .
+    $degreeMappings['table_asu_academic_program'] . ' prog join ' .
+    $degreeMappings['table_asu_academic_plan'] .
+    ' plan on prog.entity_id = plan.entity_id where plan.' .
+    $degreeMappings['field_academic_plan_value'] .
+    ' = :plancode',
+    array(':plancode' => $prog_code))
+    ->fetchField();
+  return $result;
+}
+
+/**
+ * Alter submission_data for online campus submissions -- NOT A drupal_alter()!
+ *
+ * @param $type - undergrad or graduate
+ * @param $default
+ * @param $server
+ * @param $college_code
+ * @param $enterpriseclientid
+ * @param $nid
+ * @param string $form_mode - test mode or no?
+ * @return array
+ */
+function _asu_rfi_online_fields_alter($type, $default, $server, $college_code, $enterpriseclientid, $nid, $form_mode) {
+  if ($type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
+    $fieldsUpdated = array(
+      'first_name' => $default['first_name'],
+      'last_name' => $default['last_name'],
+      'program' => $college_code . '-' . $default['program'],
+      'email' => $default['email'],
+      'phone' => $default['phone'],
+      'prod_test_flag' => $default['prod_test_flag'],
+      'base_url' => $server['domain'],
+      'origin_uri' => $server['domain'] . '/' . request_path(),
+      'remote_nid' => $nid,
+      'ldetect_v' => $server['ipAddress'],
+      'campaign' => $server['source'],
+      'sourceid' => $nid, // Overwritten with API key in Middleware.
+      'enterpriseclientid' => $enterpriseclientid,
+    );
+    return $fieldsUpdated;
+  }
+  elseif ($type === ASU_RFI_PROSPECT_LEVEL_GRAD) {
+    $online_data = array(
+      'first_name' => $default['firstName'],
+      'last_name' => $default['lastName'],
+      'program' => $college_code . '-' . $default['program'],
+      'email' => $default['emailAddress'],
+      'phone' => $default['phoneNumber'],
+      'prod_test_flag' => $form_mode,  // UPDATE + Verify availability
+      'base_url' => $server['domain'],
+      'origin_uri' => $server['domain'] . '/' . request_path(),
+      'remote_nid' => $nid,
+      'ldetect_v' => $server['ipAddress'],
+      'campaign' => $server['source'],
+      'sourceid' => $nid, // Overwritten with API key in Middleware.
+      'enterpriseclientid' => $enterpriseclientid,
+    );
+    return $online_data;
+  }
 }
 
 /***************************
