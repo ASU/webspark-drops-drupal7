@@ -125,7 +125,6 @@ projects[viewfield][subdir] = contrib
 projects[webform][version] = 4.19
 projects[webform][type] = module
 projects[webform][subdir] = contrib
-projects[webform][patch][3078020] = https://www.drupal.org/files/issues/2019-08-01/webform_7.x-4.19_conditional-form-control-css-class-email-number.patch
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ASU Module prerequisites - Webspark Web Standards components - contrib
