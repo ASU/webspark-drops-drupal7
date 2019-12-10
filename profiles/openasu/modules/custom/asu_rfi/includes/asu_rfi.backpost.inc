@@ -46,8 +46,8 @@ function asu_rfi_fail_post($hash, $nid) {
     $node_wrapper = entity_metadata_wrapper('node', $node);
 
     if (isset($node_wrapper->field_rfi_submission_status)) {
-      if ($node_wrapper->field_rfi_submission_status->value() == "Complete") {
-        $node_wrapper->field_rfi_submission_status->set("Pending");
+      if ($node_wrapper->field_rfi_submission_status->value() == "Form_Complete") {
+        $node_wrapper->field_rfi_submission_status->set("SF_Pending");
       }
     }
 

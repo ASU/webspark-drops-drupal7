@@ -565,7 +565,7 @@ function asu_rfi_form_after_build($form, &$form_state) {
 }
 
 /**
- * "Is the form in Test Mode" check?
+ * "Is the form in Test Mode" check and markup output
  * @param array $form
  * @return string $form_mode - if "test", then it's in test mode
  */
@@ -767,8 +767,8 @@ function asu_rfi_cron() {
     ), 'between')// changed in the last 10 days (864000 = 10(24 * 3600)).
     ->propertyOrderBy('created', 'DESC')
     ->fieldCondition('field_rfi_submission_status', 'value', array(
-      'Incomplete',
-      'Pending'
+      'Form_Multi_Partial',
+      'SF_Pending'
     ), 'IN')// Failed lead.
     ->addMetaData('account', user_load(1)); // Run the query as user 1.
   $results = $query->execute();
@@ -788,10 +788,10 @@ function asu_rfi_cron() {
   $last_sf_attempt = variable_get('asu_rfi_last_attempt_SF_posting', 0);
   $timediff_attempt = $last_sf_attempt - $last_sf_success;
   $last_email_sent = variable_get('asu_rfi_SF_error_message_sent', 0);
-  $to_email = variable_get('asu_rfi_error_email', NULL); // get error reporting email address from rfi admin settings page
 
   if (($last_email_sent - time()) > 86400) { // If the email was sent within 24hrs, don't send it again.
     if (($timediff > 172800) || ($timediff_attempt > 172800)) { // greater that two days
+      $to_email = variable_get('asu_rfi_error_email', NULL); // get error reporting email address from rfi admin settings page
       if (!empty($to_email)) {
         // send email to admin reporting the issue
         _asu_rfi_failed_post_email($to_email, 0);
@@ -823,7 +823,7 @@ function asu_rfi_cron_queue_info() {
  * @param array $post - data to submit
  * @param string $program - program type (ugrad, grad)
  */
-function _asu_rfi_post_data_to_middleware($node, $post = array(), $program = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
+function _asu_rfi_post_middleware_data($node, $post = array(), $program = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
   dpm($node, __FUNCTION__);
   // Global, shared fields (undergrad and graduate)
   $post['domain'] = $node->field_rfi_domain['und'][0]['value'];
@@ -861,7 +861,7 @@ function _asu_rfi_post_data_to_middleware($node, $post = array(), $program = ASU
       $post['type_of_form'] = 'MF';
     }
     $post['semester_name'] = isset($node->field_rfi_start_term['und'][0]['value']) ? $node->field_rfi_start_term['und'][0]['value'] : '';
-    asu_rfi_post_to_salesforce($post, ASU_RFI_PROSPECT_LEVEL_GRAD);
+    asu_rfi_post_to_sf_middleware($post, ASU_RFI_PROSPECT_LEVEL_GRAD);
   }
   // Undergrad program (default)
   else {
@@ -873,7 +873,7 @@ function _asu_rfi_post_data_to_middleware($node, $post = array(), $program = ASU
     }
     $post['ip_address'] = isset($node->field_rfi_ip_address['und'][0]['value']) ? $node->field_rfi_ip_address['und'][0]['value'] : '';
     $post['start_date'] = $node->field_rfi_start_term_code['und'][0]['value'];
-    asu_rfi_post_to_salesforce($post, ASU_RFI_PROSPECT_LEVEL_UNDERGRAD);
+    asu_rfi_post_to_sf_middleware($post, ASU_RFI_PROSPECT_LEVEL_UNDERGRAD);
   }
   variable_set('asu_rfi_last_attempt_SF_posting', time());
 }
@@ -890,7 +890,7 @@ function _asu_rfi_cron_repost_data($data) {
   $student_type = (sizeof($node->field_rfi_prospect_level) != 0) ? $node->field_rfi_prospect_level['und'][0]['value'] : '';
   if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
       || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
-    _asu_rfi_post_data_to_middleware($node, array(), $student_type);
+    _asu_rfi_post_middleware_data($node, array(), $student_type);
   }
 }
 
@@ -923,7 +923,7 @@ function asu_rfi_bulk_submit_action(&$node, $context) {
   $student_type = (isset($node->field_rfi_prospect_level['und'][0]['value'])) ? $node->field_rfi_prospect_level['und'][0]['value'] : '';
   if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
       || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
-    _asu_rfi_post_data_to_middleware($node, array(), $student_type);
+    _asu_rfi_post_middleware_data($node, array(), $student_type);
   }
 }
 

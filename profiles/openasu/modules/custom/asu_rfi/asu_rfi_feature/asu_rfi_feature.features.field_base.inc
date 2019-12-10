@@ -625,11 +625,11 @@ function asu_rfi_feature_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        'Complete' => 'Complete',
-        'Incomplete' => 'Incomplete',
-        'Pending' => 'Pending',
-        'action_required' => 'Action required',
-        'SF_Complete' => 'SF_Complete',
+        'Form_Complete' => 'Form Submission Complete',
+        'Form_Multi_Partial' => 'Multiform - Partial Submission',
+        'SF_Pending' => 'SF POST Pending',
+        'SF_Failed' => 'SF POST Failed - Action required',
+        'SF_Complete' => 'SF POST Successful',
       ),
       'allowed_values_function' => '',
       'allowed_values_php' => '',

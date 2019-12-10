@@ -7,7 +7,7 @@
  * @param array $data
  * @param string $type - Undergrad or graduate
  */
-function asu_rfi_post_to_salesforce($data, $type) {
+function asu_rfi_post_to_sf_middleware($data, $type) {
   global $base_url;
   $submission_data = array();
   $college_code = $url = $body = '';
@@ -28,13 +28,14 @@ function asu_rfi_post_to_salesforce($data, $type) {
   // Get information for logging
   $nid_info = (isset($node_wrapper->nid)) ? ' for NID ' . $node_wrapper->nid->value() : '';
 
+  // Status updated for incomplete/pending submissions
   if (isset($node_wrapper->field_rfi_submission_status)) {
-    if ($node_wrapper->field_rfi_submission_status->value() == "Incomplete") {
-      $node_wrapper->field_rfi_submission_status->set('Pending');
+    if ($node_wrapper->field_rfi_submission_status->value() == "Form_Multi_Partial") {
+      $node_wrapper->field_rfi_submission_status->set('SF_Pending');
       $node_wrapper->save();
-    } else {
-      if ($node_wrapper->field_rfi_submission_status->value() == "Pending") {
-        $node_wrapper->field_rfi_submission_status->set('action_required');
+    } else { // Attempt already made to submit to ; Set to "I Need help"
+      if ($node_wrapper->field_rfi_submission_status->value() == "SF_Pending") {
+        $node_wrapper->field_rfi_submission_status->set('SF_Failed');
         $node_wrapper->save();
       }
     }
@@ -242,7 +243,7 @@ function asu_rfi_post_to_salesforce($data, $type) {
 
       // SUCCESSFUL CURL POST submission to SF middleware
       if (($curl_info['http_code'] == 200)) {
-        $curl_message = 'SF SUCCESS - Posted form submission' . $nid_info . ' to ' . $url;
+        $curl_message = 'SF SUCCESS - Posted form submission' . $nid_info . ' to ' . $url . ' middleware.';
         if (isset($node_wrapper->field_rfi_submission_status)) {
           $node_wrapper->field_rfi_submission_status->set('SF_Complete');
         }
@@ -260,19 +261,21 @@ function asu_rfi_post_to_salesforce($data, $type) {
       // onto the confirmation page screen.
       else {
         $curl_message = (isset($node_wrapper->field_rfi_error_message))
-          ? 'SF FAILURE - Could not post graduate form submission' . $nid_info
-          . ' to ' . $url . '-- HTTP CODE: '
+          ? 'FAILED - Could not post form submission ' . $nid_info
+          . ' to SF middleware at ' . $url . '. HTTP CODE: '
           . $curl_info['http_code'] . ' - ' . $response : '';
 
         if (($curl_info['http_code'] >= 400)) {
           // update error message
           if (isset($node_wrapper->field_rfi_error_message)) {
-            $curl_message = (is_array($message)) ? $message[0] : $curl_message;
+            $curl_message = (is_array($message)) ? $curl_message . ' - ' . $message[0] : $curl_message;
           }
           // Get admin email address from admin settings page
           $to_email = variable_get('asu_rfi_error_email', NULL);
-          // Get middleware app key. If it's empty, don't send error email to admins.
-          // If no email is set, also don't send email.
+          // Send error email to admins. Don't send if any of the following is true:
+          // - middleware app key is empty
+          // - no admin email is set
+          // - this is a cron job
           if (!empty($mw_auth_key)) {
             if (!empty($to_email)) {
               if (!isset($data['cron_run']) || ($data['cron_run'] != "Cron_running")) {
@@ -281,10 +284,8 @@ function asu_rfi_post_to_salesforce($data, $type) {
             }
           }
         }
-
         $node_wrapper->field_rfi_error_message->set($curl_message);
         $node_wrapper->save();
-
         watchdog('asu_rfi', $curl_message, array(), WATCHDOG_ERROR);
         variable_set('asu_rfi_last_failure_SF_posting', time());
       }
@@ -299,8 +300,8 @@ function asu_rfi_post_to_salesforce($data, $type) {
         throw new Exception(curl_error($ch), curl_errno($ch));
       }
     } catch (Exception $e) {
-      $msg_start = '<strong>ERROR</strong>: RFI submission failed to the Salesforce middleware at '
-        . $base_url . 'HTTP CODE ' . $curl_info['http_code'] . '. ';
+      $msg_start = '<strong>ERROR</strong>: RFI submission failed to post to '
+        . $base_url . ' SF middleware. HTTP CODE: ' . $curl_info['http_code'] . '. ';
       $msg_ending = ' Please contact <a href="https://drupal.asu.edu/wcs">Web Consulting</a> for assistance.';
       $message_final = $msg_start . (((int) $e->getCode() === 0) ? ' This may have been due to
       ASU network access restrictions.' : '') . $msg_ending;
@@ -312,7 +313,7 @@ function asu_rfi_post_to_salesforce($data, $type) {
     }
   }
   else { // Do not attempt a JSON submission to a SF middleware endpoint.
-    $message_final = 'RFI test submissions to the Salesforce middleware at ' . $url
+    $message_final = 'NO RFI SUBMISSION ATTEMPTED. RFI test submissions to the Salesforce middleware at ' . $url
       . ' from (' . $base_url . ') will not work due to ASU network access restrictions.';
     watchdog('asu_rfi', $message_final, array(), WATCHDOG_WARNING);
     if (drupal_valid_path('admin')) {

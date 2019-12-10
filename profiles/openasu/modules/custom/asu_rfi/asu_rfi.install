@@ -175,3 +175,41 @@ function asu_rfi_update_7003(&$sandbox) {
     ->condition('name', 'asu_rfi_siteDomain', 'LIKE')
     ->execute();
 }
+
+/**
+ * Update ASU RFI submission statuses to more instructional, guiding values
+ */
+function asu_rfi_update_7004(&$sandbox) {
+  // Update these four Status values:
+  // Complete => Form_Complete
+  // Incomplete => Form_Multi_Partial
+  // Pending => SF_Pending
+  // action_required => SF_Failed
+  $tables = array(
+    'field_data_field_rfi_submission_status',
+    'field_revision_field_rfi_submission_status',
+  );
+  $statuses = array(
+    'Complete' => 'Form_Complete',
+    'Incomplete' => 'Form_Multi_Partial',
+    'Pending' => 'SF_Pending',
+    'action_required' => 'SF_Failed',
+  );
+  foreach ($tables as $table) {
+    foreach ($statuses as $old => $new) {
+      $query = Database::getConnection('default', 'default')
+        ->update($table)
+        ->fields(array(
+          'field_rfi_submission_status_value' => $new
+        ))
+        ->condition('field_rfi_submission_status_value', $old, 'LIKE');
+      $query->execute();
+    }
+  }
+  // Rebuild ASU RFI feature
+  features_rebuild(array(
+    'asu_rfi_feature' => array(
+      'views_default', 'field_base')
+    )
+  );
+}

@@ -522,15 +522,15 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['content'] = '<h4>RFI Submissions Statuses:</h4>
-<p><strong>Complete: </strong>Student completed the multi step form or the long form. Response from middleware has not been received.</p>
-
-<p><strong>Incomplete:</strong> Student submitted just the first part of the multistep form. If the student doesn’t complete the second part of the form, it will be submitted to middleware/HTTP POST when cron runs in the site.</p>
-
-<p><strong>SF_Complete:</strong> After a submission is posted to the middleware, middleware responds to the site with the status of the submission. If the submission went through successfully, the status of the submission changes to SF_Complete.</p>
+<p><strong>SF_Complete:</strong> (FINAL success): A submission has successfully posted to the middleware. No further action is required.</p>
  
-<p><strong>Pending:</strong> If any error occurs with the submission to the middleware, the submission status changes to Pending.</p>
+<p><strong>Form_Complete:</strong> (PARTIAL success; pending submission): A prospective/current student has completed either the one page "long" form OR the LAST page of a multistep form).</p>
 
-<p><strong>Action required:</strong> If any error occurs after trying to submit to the middleware, the submission status will change to "Action required" and the site administrators should correct the submission and post it back to middleware using Bulk operation below.</p>
+<p><strong>Form_Multi_Partial:</strong> (PARTIAL success; Multi-page forms ONLY): Student has only submitted the first part of the multistep form (they may or may not finish the half). If the prospective student does not complete and submit the second/last part of the form, an attempt to POST to the middleware will happen with the next cron job runs.</p>
+
+<p><strong>SF_Pending:</strong> (INITIAL, automated failure): Error occurred with the submission to the middleware.</p>
+
+<p><strong>SF_Failure:</strong>FAILURE: If any error occurs after trying to submit to the middleware, the submission status will change to "Action required". The site administrators should correct the error in the submission and post it back to middleware using Bulk operation below. If this does not work, please <a href="https://drupal.asu.edu/wcs/">contact Web Consulting</a> for assistance.</p>
 ';
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['fields'] = FALSE;
