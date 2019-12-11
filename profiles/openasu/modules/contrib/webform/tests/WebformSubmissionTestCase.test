@@ -23,7 +23,22 @@ class WebformSubmissionTestCase extends WebformTestCase {
     $this->drupalLogin($this->webform_users['admin']);
     $this->webformReset();
     $this->webformSubmissionExecute('sample');
+
+    $loggedInUser = $this->loggedInUser;
+
     $this->drupalLogout();
+
+    // Test webform_get_submission_count().
+    $this->webformSubmissionExecute('sample');
+
+    $count = webform_get_submission_count($this->webformForm()->nid);
+    $this->assertIdentical((int) $count, 2, 'webform_get_submission_count() counts 2 total submissions.');
+
+    $count = webform_get_submission_count($this->webformForm()->nid, $loggedInUser->uid);
+    $this->assertIdentical((int) $count, 1, 'webform_get_submission_count() counts 1 submission from loggedInUser.');
+
+    // Counting the anonymous submission doesn't work because
+    // $_SESSION['webform_submission'] is not populated in testing.
   }
 
   /**
@@ -156,7 +171,7 @@ class WebformSubmissionTestCase extends WebformTestCase {
       $actual_value = $actual_submission->data[$cid];
       $result = $this->assertEqual($stable_value, $actual_value, t('Component @form_key data integrity check when using @type values.', array('@form_key' => $component['form_key'], '@type' => $value_type)), t('Webform'));
       if (!$result || $result === 'fail') {
-        $this->fail(t('Expected !expected', array('!expected' => print_r($stable_value, TRUE))) . "\n\n" . t('Recieved !recieved', array('!recieved' => print_r($actual_value, TRUE))), t('Webform'));
+        $this->fail(t("Expected !expected\n\nRecieved !recieved", array('!expected' => print_r($stable_value, TRUE), '!recieved' => print_r($actual_value, TRUE))), t('Webform'));
       }
     }
   }

@@ -29,7 +29,7 @@
 <?php print ($email['html'] ? '<p>' : '') . t('Submitted by anonymous user: [submission:ip-address]') . ($email['html'] ? '</p>' : ''); ?>
 <?php endif; ?>
 
-<?php print ($email['html'] ? '<p>' : '') . t('Submitted values are') . ':' . ($email['html'] ? '</p>' : ''); ?>
+<?php print ($email['html'] ? '<p>' : '') . t('Submitted values are:') . ($email['html'] ? '</p>' : ''); ?>
 
 [submission:values]
 

@@ -634,7 +634,7 @@ function webform_component_edit_form($form, $form_state, $node, $component, $clo
  * Field name validation for the webform unique key. Must be alphanumeric.
  */
 function webform_component_edit_form_validate($form, &$form_state) {
-  $node = $form['#node'];;
+  $node = $form['#node'];
 
   if (!preg_match('/^[a-z0-9_]+$/i', $form_state['values']['form_key'])) {
     form_set_error('form_key', t('The form key %form_key is invalid. Please include only lowercase alphanumeric characters and underscores.', array('%form_key' => $form_state['values']['form_key'])));

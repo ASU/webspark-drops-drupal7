@@ -12,13 +12,8 @@ class WebformTestCase extends DrupalWebTestCase {
    * {@inheritdoc}
    */
   public function setUp($added_modules = array()) {
-    // Enable Webform and Token module if available.
-    if (module_exists('token')) {
-      $modules = array('webform', 'token');
-    }
-    else {
-      $modules = array('webform');
-    }
+    // Enable Webform and Token modules.
+    $modules = array('webform', 'token');
     parent::setUp(array_merge($modules, $added_modules));
 
     // Create a profile field to test [user:?] tokens.
@@ -724,11 +719,9 @@ class WebformTestCase extends DrupalWebTestCase {
           'pid' => '0',
           'weight' => '-15',
         ),
-        // Manually hard-code the input if token is not available.
-        // @todo: Update after http://drupal.org/node/1347790 is finished.
-        'sample values' => module_exists('token') ? NULL : 'bar',
+        'sample values' => NULL,
         'database values' => array('bar'),
-        'database default values' => module_exists('token') ? array('bar') : array(''),
+        'database default values' => array('bar'),
       ),
       'textfield_profile' => array(
         'component' => array(
@@ -745,9 +738,7 @@ class WebformTestCase extends DrupalWebTestCase {
         ),
         'sample values' => 'Female',
         'database values' => array('Female'),
-        // The default value will be blank if token does not exist.
-        // @todo: Update after http://drupal.org/node/1347790 is finished.
-        'database default values' => module_exists('token') ? array($this->webform_users['admin']->gender[LANGUAGE_NONE][0]['value']) : array(''),
+        'database default values' => array($this->webform_users['admin']->gender[LANGUAGE_NONE][0]['value']),
       ),
 
       // Test time components.

@@ -2188,7 +2188,7 @@ function theme_webform_view_messages(array $variables) {
     $message = t('Submissions for this form are closed.');
   }
   elseif ($node->webform['confidential'] && user_is_logged_in()) {
-    $message = t('This form is confidential. You must <a href="!url">Log out</a> to submit it.', array('!url' => url('/user/logout', array('query' => array('destination' => request_uri())))));
+    $message = t('This form is confidential. You must <a href="!url">Log out</a> to submit it.', array('!url' => url('user/logout', array('query' => drupal_get_destination()))));
   }
   // If open and not allowed to submit the form, give an explanation.
   elseif (array_search(TRUE, $allowed_roles) === FALSE && $user->uid != 1) {
@@ -3271,7 +3271,8 @@ function webform_client_form_pages($form, &$form_state) {
   // Merge any stored submission data for multistep forms.
   $original_values = is_array($form_state['values']['submitted']) ? $form_state['values']['submitted'] : array();
   if (isset($form_state['storage']['submitted'])) {
-    // Array + operator keeps all elements of left operand and discards any duplicate elements in right operand.
+    // Array + operator keeps all elements of left operand and discards any
+    // duplicate elements in right operand.
     $original_values += $form_state['storage']['submitted'];
   }
 
@@ -3754,6 +3755,23 @@ function theme_webform_element($variables) {
     $variables['element']['#id'] = NULL;
   }
 
+  // Determine whether or not this element has form control children. If so and
+  // if webform_fieldset_wrap is TRUE, wrap them in a fieldset and use legend
+  // instead of label.
+  $has_element_children = FALSE;
+  if (webform_variable_get('webform_fieldset_wrap')) {
+    foreach (array_keys($element) as $key) {
+      if (substr($key, 0, 1) !== '#') {
+        $has_element_children = TRUE;
+        break;
+      }
+    }
+  }
+
+  if ($has_element_children) {
+    $output .= '<fieldset class="fieldset-invisible">';
+  }
+
   switch ($element['#title_display']) {
     case 'inline':
       $output .= $description[$above];
@@ -3761,7 +3779,18 @@ function theme_webform_element($variables) {
     case 'before':
     case 'invisible':
     case 'after':
-      $title = ' ' . theme('form_element_label', $variables);
+      if ($has_element_children) {
+        $title = '<legend>' . $element['#title'];
+
+        if ($element['#required']) {
+          $title .= ' ' . theme('form_required_marker', $variables);
+        }
+
+        $title .= '</legend>';
+      }
+      else {
+        $title = ' ' . theme('form_element_label', $variables);
+      }
       break;
   }
 
@@ -3788,6 +3817,11 @@ function theme_webform_element($variables) {
   $output .= "\n";
 
   $output .= $description[!$above];
+
+  if ($has_element_children) {
+    $output .= '</fieldset>';
+  }
+
   $output .= "</div>\n";
 
   return $output;
@@ -3954,30 +3988,37 @@ function theme_webform_mail_headers(array $variables) {
  * Check if current user has a draft of this webform, and return the sid.
  */
 function _webform_fetch_draft_sid($nid, $uid) {
+  $q = db_select('webform_submissions')
+    ->fields('webform_submissions', array('sid'))
+    ->condition('nid', $nid)
+    ->condition('uid', $uid)
+    ->condition('is_draft', 1)
+    ->orderBy('submitted', 'DESC');
+
   // Detect whether a webform draft is being edited. If so, that is the one that
   // should be returned.
-  if (isset($_POST['form_id']) && stripos($_POST['form_id'], 'webform_client_form_') === 0 &&
-      !empty($_POST['details']['sid']) && empty($_POST['details']['finished'])) {
-    // A draft is already being edited.
-    $sid = $_POST['details']['sid'];
+  $is_webform = isset($_POST['form_id']) && stripos($_POST['form_id'], 'webform_client_form_') === 0;
+  $sid_provided = !empty($_POST['details']['sid']) && is_string($_POST['details']['sid']);
+  $not_finished = empty($_POST['details']['finished']);
+  if ($is_webform && $sid_provided && $not_finished) {
+    // Validate that the sid from $_POST belongs to the current user.
+    $q->condition('sid', $_POST['details']['sid']);
+    $existing_sid = TRUE;
   }
-  else {
-    $sid = db_select('webform_submissions')
-      ->fields('webform_submissions', array('sid'))
-      ->condition('nid', $nid)
-      ->condition('uid', $uid)
-      ->condition('is_draft', 1)
-      ->orderBy('submitted', 'DESC')
-      ->execute()
-      ->fetchField();
 
-    if ($sid) {
-      $context = array(
-        'nid' => $nid,
-        'uid' => $uid,
-      );
-      drupal_alter('webform_draft', $sid, $context);
-    }
+  // Retrieve exisiting draft sid.
+  $sid = $q
+    ->execute()
+    ->fetchField();
+
+  // Allow modules to alter the initial choice of sid when there might be more
+  // than one.
+  if ($sid && empty($existing_sid)) {
+    $context = array(
+      'nid' => $nid,
+      'uid' => $uid,
+    );
+    drupal_alter('webform_draft', $sid, $context);
   }
   return $sid;
 }
@@ -3997,9 +4038,11 @@ function webform_get_conditional_sorter($node) {
 }
 
 /**
- * This function is deprecated! Use webform_replace_tokens() instead.
+ * Wrapper for webform_replace_tokens().
  *
- * @deprecated
+ * @deprecated in webform:7.x-4.0 and is removed from webform:7.x-5.0. Use
+ * webform_replace_tokens().
+ * @see https://www.drupal.org/project/webform/issues/2038199
  */
 function _webform_filter_values($string, $node = NULL, $submission = NULL, $email = NULL, $strict = TRUE) {
   $output = webform_replace_tokens($string, $node, $submission, $email, $strict);
@@ -4122,8 +4165,9 @@ function webform_replace_url_tokens($redirect_url, $node = NULL, $submission = N
     }
   }
   $parsed_redirect_url['fragment'] = webform_replace_tokens($parsed_redirect_url['fragment'], $node, $submission);
-  // Determine whether the path is internal or external. Paths which contain the site's
-  // base url are still considered internal. #webform_external is private to webform.
+  // Determine whether the path is internal or external. Paths which contain the
+  // site's base url are still considered internal. #webform_external is private
+  // to webform.
   $parsed_redirect_url['#webform_external'] = url_is_external($parsed_redirect_url['path']);
   foreach (array(NULL, TRUE, FALSE) as $https) {
     if (stripos($parsed_redirect_url['path'], url('', array('absolute' => TRUE, 'https' => $https))) === 0) {
@@ -4142,9 +4186,11 @@ function webform_filter_descriptions($string, $node = NULL, $submission = NULL) 
 }
 
 /**
- * Deprecated! Use webform_filter_descriptions() instead.
+ * Duplicates webform_filter_descriptions().
  *
- * @deprecated
+ * @deprecated in webform:7.x-4.0 and is removed from webform:7.x-5.0. Use
+ * webform_filter_descriptions().
+ * @see https://www.drupal.org/project/webform/issues/2038199
  */
 function _webform_filter_descriptions($string, $node = NULL, $submission = NULL) {
   return webform_filter_descriptions($string, $node, $submission);
@@ -4160,9 +4206,11 @@ function webform_filter_xss($string) {
 }
 
 /**
- * Deprecated! Use webform_filter_xss() instead!
+ * Duplicates webform_filter_xss().
  *
- * @deprecated
+ * @deprecated in webform:7.x-4.0 and is removed from webform:7.x-5.0. Use
+ * webform_filter_xss().
+ * @see https://www.drupal.org/project/webform/issues/2038199
  */
 function _webform_filter_xss($string) {
   return webform_filter_xss($string);
@@ -4414,6 +4462,10 @@ function webform_variable_get($variable) {
     case 'webform_disabled_components':
       $result = variable_get('webform_disabled_components', array());
       break;
+
+    case 'webform_fieldset_wrap':
+      $result = variable_get('webform_fieldset_wrap', FALSE);
+      break;
   }
   return $result;
 }
@@ -4584,6 +4636,7 @@ function webform_format_email_address($address, $name, $node = NULL, $submission
   }
 
   foreach ($address as $key => $individual_address) {
+    $individual_address = trim($individual_address);
     $individual_address = webform_replace_tokens($individual_address, $node, $submission);
     $email_parts = webform_parse_email_address($individual_address);
     if ($format == 'long' && !empty($name[$key]) && !strlen($email_parts['name'])) {
@@ -4967,7 +5020,8 @@ function webform_set_breadcrumb($node, $submission = NULL) {
   if ($submission) {
     $breadcrumb = menu_get_active_breadcrumb();
 
-    // Append the node title (or its menu name), in case it isn't in the path already.
+    // Append the node title (or its menu name), in case it isn't in the path
+    // already.
     $active_trail = menu_get_active_trail();
     $last_active = end($active_trail);
     $breadcrumb[] = $last_active['href'] === $node_path && !empty($last_active['in_active_trail'])
@@ -5120,14 +5174,14 @@ function webform_date_format($type = NULL, array $exclude = array()) {
 
     // Date/Time formatting characters
     // WHAT           REQUIRED (at least 1) OPTIONAL (allowed but insufficient)
-    // ---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Day-of-week                          DlNw
     // Day            dj                    Stz
     // Month          FmMn
     // Year           oYy                   L
     //
     //                NOT ALLOWED
-    // --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Time           aABgGhHisueIOPTZ
     // Special        /.,-: <space>
     //
@@ -5303,7 +5357,7 @@ function _webform_submission_serial_next_value($nid) {
   // a transaction. The return value of db_transaction() must be assigned or the
   // transaction will commit immediately. The transaction will commit when $txn
   // goes out-of-scope.
-  $txn = db_transaction();
+  $transaction = db_transaction();
 
   // Get the next_serial value.
   $next_serial = db_select('webform', 'w')
@@ -5392,8 +5446,9 @@ function webform_input_vars_check(array &$form, array $form_state, $detect_key, 
     $form['#input_var_waring_parent'] = $parent_key;
   }
   if (!empty($form_state['input']) && array_key_exists($detect_key, $form_state['input']) && !array_key_exists('form_id', $form_state['input'])) {
-    // A form was submitted with POST, but the form_id was missing. The most likely cause of this
-    // is that the POST was truncated because PHP exceeded its max_input_vars limit.
+    // A form was submitted with POST, but the form_id was missing. The most
+    // likely cause of this is that the POST was truncated because PHP exceeded
+    // its max_input_vars limit.
     $subs = array(
       '@count' => webform_count_terminals($_POST),
       '@limit' => (int) ini_get('max_input_vars'),
@@ -5420,8 +5475,8 @@ function webform_pre_render_input_vars($element) {
   // Determine the limit on input vars for this server configuration.
   $limit = ini_get('max_input_vars');
   if ($limit) {
-    // Estimate the number of input vars needed to see if the PHP limit has been exceeded.
-    // Additional input_vars: op.
+    // Estimate the number of input vars needed to see if the PHP limit has been
+    // exceeded. Additional input_vars: op.
     $count = 1 + webform_count_input_vars($element);
     if ($count > $limit * 0.95) {
       $subs = array(

@@ -38,9 +38,10 @@ files[] = tests/WebformGeneralTestCase.test
 files[] = tests/WebformPermissionsTestCase.test
 files[] = tests/WebformSubmissionTestCase.test
 files[] = tests/WebformTestCase.test
+files[] = tests/WebformUnitTestCase.test
 
-; Information added by Drupal.org packaging script on 2019-01-07
-version = "7.x-4.19"
+; Information added by Drupal.org packaging script on 2019-12-11
+version = "7.x-4.21"
 core = "7.x"
 project = "webform"
-datestamp = "1546876989"
+datestamp = "1576092840"
