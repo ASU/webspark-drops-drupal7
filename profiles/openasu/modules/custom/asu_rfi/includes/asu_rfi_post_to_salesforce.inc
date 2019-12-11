@@ -245,7 +245,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
       if (($curl_info['http_code'] == 200)) {
         $curl_message = 'SF SUCCESS - Posted form submission' . $nid_info . ' to ' . $url . ' middleware.';
         if (isset($node_wrapper->field_rfi_submission_status)) {
-          $node_wrapper->field_rfi_submission_status->set('SF_Complete');
+          $node_wrapper->field_rfi_submission_status->set('SF_Completed');
         }
         if (isset($node_wrapper->field_rfi_error_message)) {
           $node_wrapper->field_rfi_error_message->set('');

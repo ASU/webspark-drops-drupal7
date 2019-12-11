@@ -521,16 +521,21 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = '<h4>RFI Submissions Statuses:</h4>
-<p><strong>SF_Complete:</strong> (FINAL success): A submission has successfully posted to the middleware. No further action is required.</p>
- 
-<p><strong>Form_Complete:</strong> (PARTIAL success; pending submission): A prospective/current student has completed either the one page "long" form OR the LAST page of a multistep form).</p>
+  $handler->display->display_options['header']['area']['content'] = '<fieldset class="fieldset-nested-odd" style="padding: 1em; color: #333 !important;"><div class="fieldset-wrapper">
 
-<p><strong>Form_Multi_Partial:</strong> (PARTIAL success; Multi-page forms ONLY): Student has only submitted the first part of the multistep form (they may or may not finish the half). If the prospective student does not complete and submit the second/last part of the form, an attempt to POST to the middleware will happen with the next cron job runs.</p>
+<h4>What do the submission statuses mean?</h4> 
 
-<p><strong>SF_Pending:</strong> (INITIAL, automated failure): Error occurred with the submission to the middleware.</p>
+<ul>
+<li><strong>Ready for SF submission</strong> - A prospective/current student has completed either the one page "long" form OR the LAST page of a multistep form). It is ready (and waiting) to be submitted to Salesforce middleware.</li>
+<li><strong>Partial multiform submission</strong> - (Multi-page forms ONLY). A prospective student has currently only submitted the first part of a multistep RFI form, and they may or may not finish the other half). If the prospective student does not complete and submit the second/last part of the form before the next cron job runs (or a site administrator manually submits the data to Salesforce here), the cron job will attempt to POST this submission to its respective middleware.</li>
+<li><strong>SF POST Pending</strong> - Submissions that are now in the process of being submitted, or had past errors occur with the submission to the middleware and the submission process failed to complete. The next cron job will make one more attempt at submitting this submission to the middleware and then mark it as "SF Failed" if it does not go through).</li>
+<li><strong>SF POST Successful</strong> - DONE. A submission has successfully posted to the middleware. No further action is required.</li>
+<li><strong>SF POST Failed</strong> - If any error occurs while trying to submit to the middleware, the submission status will change to "SF POST Failed". The site administrators need to correct the error in the submission and post it back to middleware using the "OPERATIONS" list to resubmit. If this does not work, please <a href="https://drupal.asu.edu/wcs/">contact Web Consulting</a> for assistance.</li>
+<li><strong>SF POST Expired</strong> - The submission has passed its expiration date (currently 10 days after the submission) and it never successfully posted to the middleware. This submission is now marked to be deleted from the site upon the site\'s next cron job.)</li>
+</ul>
 
-<p><strong>SF_Failure:</strong>FAILURE: If any error occurs after trying to submit to the middleware, the submission status will change to "Action required". The site administrators should correct the error in the submission and post it back to middleware using Bulk operation below. If this does not work, please <a href="https://drupal.asu.edu/wcs/">contact Web Consulting</a> for assistance.</p>
+</div>
+</fieldset>
 ';
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['fields'] = FALSE;

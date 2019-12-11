@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpUnusedParameterInspection */
+<?php /** @noinspection PhpUnused */
+/** @noinspection PhpDocSignatureInspection */
+/** @noinspection PhpUnusedParameterInspection */
 
 /**
  * Implementation of hook_schema().
@@ -123,6 +125,7 @@ function asu_rfi_update_7001(&$sandbox){
 
 /**
  * Updates variable names not properly set by ASU RFI module
+ * @throws \InvalidMergeQueryException
  */
 function asu_rfi_update_7002(&$sandbox){
   $or = db_or()
@@ -181,35 +184,80 @@ function asu_rfi_update_7003(&$sandbox) {
  */
 function asu_rfi_update_7004(&$sandbox) {
   // Update these four Status values:
-  // Complete => Form_Complete
+  // Complete => Form_Completed
   // Incomplete => Form_Multi_Partial
   // Pending => SF_Pending
   // action_required => SF_Failed
-  $tables = array(
-    'field_data_field_rfi_submission_status',
-    'field_revision_field_rfi_submission_status',
-  );
+  // SF_Complete => SF_Completed
+  $tables = _asu_rfi_get_status_tables();
   $statuses = array(
-    'Complete' => 'Form_Complete',
+    'Complete' => 'Form_Completed',
     'Incomplete' => 'Form_Multi_Partial',
     'Pending' => 'SF_Pending',
     'action_required' => 'SF_Failed',
+    'SF_Complete' => 'SF_Completed',
   );
   foreach ($tables as $table) {
     foreach ($statuses as $old => $new) {
       $query = Database::getConnection('default', 'default')
         ->update($table)
         ->fields(array(
-          'field_rfi_submission_status_value' => $new
+          'field_rfi_submission_status_value' => $new,
         ))
         ->condition('field_rfi_submission_status_value', $old, 'LIKE');
       $query->execute();
     }
   }
-  // Rebuild ASU RFI feature
+  // Rebuild ASU RFI feature to update the RFI forms
   features_rebuild(array(
     'asu_rfi_feature' => array(
       'views_default', 'field_base')
     )
   );
+}
+
+/**
+ * Delete old Salesforce submissions that have processed or expired.
+ * @return array|mixed|string|null
+ */
+function asu_rfi_update_7005(&$sandbox) {
+  // Get ASU RFI nodes to delete.
+  $all_nids = _asu_rfi_get_submissions_to_delete();
+
+  // Delete ASU RFI nodes, using the Batch API
+  if (count($all_nids) > 0) {
+    // Batch API used, just in case there are a ton of nodes to delete.
+    if (!isset($sandbox['progress'])) {
+      $sandbox['progress'] = 0;
+      $sandbox['max'] = count($all_nids);
+      $sandbox['messages'] = array();
+      $sandbox['current_node'] = -1; // Last node read (starts at -1)
+    }
+    // Actual node deletions
+    foreach ($all_nids as $nid) {
+      node_delete($nid);
+      $sandbox['progress']++;
+      $sandbox['current_node'] = $nid;
+      // Show progress message if in Drush.
+      if (function_exists('drush_log')) {
+        drush_log(t('Deleted ASU RFI node @nid.', array('@nid' => $nid)), 'success');
+      }
+    }
+    // Set message.
+    // $sandbox['messages'][] = t("Last node deleted: @nid", array('@nid' => $nid));
+
+    // Check to see if finished.
+    $sandbox['#finished'] = ($sandbox['progress'] >= $sandbox['max'])
+      ? TRUE : ($sandbox['progress'] / $sandbox['max']);
+
+    if ($sandbox['#finished']) {
+      // $final_message = '<ul><li>' . implode('</li><li>', $sandbox['messages']) . "</li></ul>";
+      return t('The ASU RFI update has completed; All expired, stale or completed ASU RFI
+      form submissions have been deleted.');
+    }
+
+  } else {
+    $message = "No expired, stale or completed ASU RFI nodes to delete. Skipping...";
+    drupal_set_message($message, 'info');
+  }
 }

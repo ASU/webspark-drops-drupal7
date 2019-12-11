@@ -13,7 +13,7 @@ function asu_rfi_success_post($hash, $nid) {
     $node = node_load($nid);
     $node_wrapper = entity_metadata_wrapper('node', $node);
     if (isset($node_wrapper->field_rfi_submission_status)) {
-      $node_wrapper->field_rfi_submission_status->set('SF_Complete');
+      $node_wrapper->field_rfi_submission_status->set('SF_Completed');
     }
     if (isset($node_wrapper->field_rfi_error_message)) {
       $node_wrapper->field_rfi_error_message->set('');
@@ -46,7 +46,7 @@ function asu_rfi_fail_post($hash, $nid) {
     $node_wrapper = entity_metadata_wrapper('node', $node);
 
     if (isset($node_wrapper->field_rfi_submission_status)) {
-      if ($node_wrapper->field_rfi_submission_status->value() == "Form_Complete") {
+      if ($node_wrapper->field_rfi_submission_status->value() == "Form_Completed") {
         $node_wrapper->field_rfi_submission_status->set("SF_Pending");
       }
     }
@@ -84,7 +84,7 @@ function asu_rfi_test_post($hash, $nid) {
     $node = node_load($nid);
     $node_wrapper = entity_metadata_wrapper('node', $node);
     if (isset($node_wrapper->field_rfi_submission_status)) {
-      $node_wrapper->field_rfi_submission_status->set('SF_Complete');
+      $node_wrapper->field_rfi_submission_status->set('SF_Completed');
     }
     if (isset($node_wrapper->field_rfi_error_message)) {
       $node_wrapper->field_rfi_error_message->set($error_message);

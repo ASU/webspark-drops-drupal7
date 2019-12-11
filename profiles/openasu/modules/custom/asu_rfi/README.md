@@ -91,13 +91,13 @@ https://brandguide.asu.edu/executing-the-brand/web-and-mobile/webspark/features/
 
 SUBMISSION STATUS
 --------------------------
-When most RFI forms' HTML form are submitted properly, the form's submission is saved in the site's database and the status is immediately set to "Complete".
+When most RFI forms' HTML form are submitted properly, the form's submission is saved in the site's database and the status is immediately set to "Form_Completed".
 
 The process isn't over yet, however. During the same submission process (same HTTP request), but AFTER the "Complete" status is set, the module immediately tries to submit a modified version of the submission data to one of multiple SalesForce middleware servers (depending on which type of form, the determined environment type (dev/test/prod), and whether it's in testing mode or not based on settings at /admin/config/content/asurfi). 
 
-If that additional submission to the middleware is also successful, then the process is truly completed and the status of the form submission is updated to "SF_Complete." This is the final status you want to see for all submissions.
+If that additional submission to the middleware is also successful, then the process is truly completed and the status of the form submission is updated to "SF_Completed." This is the final status you want to see for all submissions.
 
-* Status exception for multistep/multipage forms: When the 1st page multiform is saved in the site database successfully, the submission's status is set to "Form_Multi_Partial" (in lieu of "Complete"). This status will remain until either 1) the second half of the form is also submitted on the next/last page (which sets it to "Complete"), or 2) the site's cron job is run. At that time, the site tries (during the same HTTP request) to submit the submission to the middleware (the same as above). This will end up with a status of "SF_Complete" (success) or an error is returned and the status is set to ("SF_Failed").
+* Status exception for multistep/multipage forms: When the 1st page multiform is saved in the site database successfully, the submission's status is set to "Form_Multi_Partial" (in lieu of "Complete"). This status will remain until either 1) the second half of the form is also submitted on the next/last page (which sets it to "Complete"), or 2) the site's cron job is run. At that time, the site tries (during the same HTTP request) to submit the submission to the middleware (the same as above). This will end up with a status of "SF_Completed" (success) or an error is returned and the status is set to ("SF_Failed").
 
 Cron jobs will attempt to process all "Pending" or "Form_Multi_Partial" submissions that aren't beyond 10 days old. If the status is "SF POST Pending", its status is set to "SF_Failed" and the module makes one more attempt to POST the data to the middleware. If that POST fails, no future, automated attempts will be made to submit the data. A site administrator will need to resolve the issue and post it manually at /admin/reports/asu-rfi-submissions-report under "Operations" (views_bulk_operations).
 

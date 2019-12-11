@@ -778,7 +778,7 @@ function asu_rfi_second_form_submit($form, &$form_state) {
   $node->field_rfi_state[LANGUAGE_NONE][0]['value'] = $state;
   $node->field_rfi_veteran[LANGUAGE_NONE][0]['value'] = $veteran;
   $node->field_rfi_question[LANGUAGE_NONE][0]['value'] = check_plain($questions);
-  $node->field_rfi_submission_status[LANGUAGE_NONE][0]['value'] = 'Form_Complete';
+  $node->field_rfi_submission_status[LANGUAGE_NONE][0]['value'] = 'Form_Completed';
   $node->field_rfi_address[LANGUAGE_NONE][0]['value'] = $address;
   $node->field_rfi_city[LANGUAGE_NONE][0]['value'] = $city;
   $node->field_rfi_international[LANGUAGE_NONE][0]['value'] = $international;
@@ -1630,7 +1630,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
     $wrapper->field_rfi_dob->set(base64_encode($dob_date));
   }
   if (isset($wrapper->field_rfi_submission_status)) {
-    $wrapper->field_rfi_submission_status->set('Form_Complete');
+    $wrapper->field_rfi_submission_status->set('Form_Completed');
   }
   if (isset($wrapper->field_rfi_address)) {
     $wrapper->field_rfi_address->set($address);
@@ -2002,7 +2002,7 @@ function asu_rfi_current_form_data_submit($form, &$form_state) {
     $wrapper->field_rfi_question->set($questions);
   }
   if (isset($wrapper->field_rfi_submission_status)) {
-    $wrapper->field_rfi_submission_status->set('Form_Complete');
+    $wrapper->field_rfi_submission_status->set('Form_Completed');
   }
   $wrapper->save();
 

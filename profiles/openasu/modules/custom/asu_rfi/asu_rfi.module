@@ -729,7 +729,7 @@ function asu_rfi_cron() {
 
   asu_rfi_check_cached_programs();
 
-  // Set as system variables so we can adjust via devel/php if desired.
+  // #1 - Set as system variables so we can adjust via devel/php if desired.
   $last_ran = variable_get('asu_rfi_cron_last_ran', 0);
   $stale_time = variable_get('asu_rfi_stale_time', 86400); // 86400 seconds == 1 day
 
@@ -746,12 +746,11 @@ function asu_rfi_cron() {
     variable_set('asu_rfi_cron_last_ran', time());
   }
 
-  // Check for unposted leads (confirmation == -1), and add them to the cron
-  // queue.
+  // #2 - Check for unposted leads (confirmation == -1), and add them to the cron queue.
   $queue = DrupalQueue::get('asu_rfi_failed_leads_queue');
-  $queue->deleteQueue();
+  $queue->deleteQueue(); // Why??
   $queue = DrupalQueue::get('asu_rfi_failed_leads_queue');
-  variable_set('asu_rfi_cron_last_ran', time());
+
   // Get failed RFI Leads.
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
@@ -774,14 +773,24 @@ function asu_rfi_cron() {
   $results = $query->execute();
 
   // Add failed leads to the cron jobs queue (passed into hook_cron_queue_info() worker)
-  if  (isset($results['node'])) {
+  if (isset($results['node'])) {
     // For each failed lead, add it to the asu_rfi_failed_leads_queue.
     foreach ($results['node'] as $key => $failed_rfi_lead) {
       $queue->createItem($failed_rfi_lead);
     }
   }
 
-  // If the site hasn't posted submissions to salesforce for two days, send an email to administrator.
+  // #3 - Delete ASU RFI nodes that have either 1) been submitted to SF already (SF_Complete), or
+  // 2) Have gone 10 days without getting successfully processed (stuck in SF_Pending, etc.).
+  $queue_2 = DrupalQueue::get('asu_rfi_delete_submissions_queue');
+  $all_nids = _asu_rfi_get_submissions_to_delete();
+  if (count($all_nids) > 0) {
+    foreach ($all_nids as $nid) {
+      $queue_2->createItem($nid);
+    }
+  }
+
+  // #4 - If the site hasn't posted submissions to salesforce for two days, send an email to administrator.
   $last_sf_success = variable_get('asu_rfi_last_success_SF_posting', 0);
   $last_sf_failure = variable_get('asu_rfi_last_failure_SF_posting', 0);
   $timediff = $last_sf_failure - $last_sf_success;
@@ -798,17 +807,24 @@ function asu_rfi_cron() {
       }
     }
   }
+
+  variable_set('asu_rfi_cron_last_ran', time());
 }
 
 /**
  * Implements hook_cron_queue_info().
  */
 function asu_rfi_cron_queue_info() {
-  // Process to repost failed leads.
   $queues = array();
+  // Repost failed leads.
   $queues['asu_rfi_failed_leads_queue'] = array(
     'worker callback' => '_asu_rfi_cron_repost_data',
-    'time' => 20, // Seconds to spend working on the queue.
+    'time' => 20,
+  );
+  // Delete stale/completed submissions.
+  $queues['asu_rfi_delete_submissions_queue'] = array(
+    'worker_callback' => '_asu_rfi_cron_delete_submissions',
+    'time' => 20,
   );
   return $queues;
 }
@@ -824,7 +840,6 @@ function asu_rfi_cron_queue_info() {
  * @param string $program - program type (ugrad, grad)
  */
 function _asu_rfi_post_middleware_data($node, $post = array(), $program = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
-  dpm($node, __FUNCTION__);
   // Global, shared fields (undergrad and graduate)
   $post['domain'] = $node->field_rfi_domain['und'][0]['value'];
   $post['first_name'] = $node->field_rfi_first_name['und'][0]['value'];
@@ -885,13 +900,20 @@ function _asu_rfi_post_middleware_data($node, $post = array(), $program = ASU_RF
  * @param object $data - RFI node ID, revision ID, node type
  */
 function _asu_rfi_cron_repost_data($data) {
-  dpm($data, __FUNCTION__);
   $node = node_load($data->nid);
   $student_type = (sizeof($node->field_rfi_prospect_level) != 0) ? $node->field_rfi_prospect_level['und'][0]['value'] : '';
   if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
       || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
     _asu_rfi_post_middleware_data($node, array(), $student_type);
   }
+}
+
+/**
+ * Cron worker callback for deleting RFI submissions
+ * @param string $data - node ID to be deleted.
+ */
+function _asu_rfi_cron_delete_submissions($data) {
+  node_delete($data);
 }
 
 /*******************************************************************************
@@ -930,6 +952,45 @@ function asu_rfi_bulk_submit_action(&$node, $context) {
 /*********************************************************************
  * HELPERS (Model/data building
  *********************************************************************/
+
+/**
+ * Return the list of tables related to the submission status field.
+ */
+function _asu_rfi_get_status_tables() {
+  return array(
+    'field_data_field_rfi_submission_status',
+    'field_revision_field_rfi_submission_status',
+  );
+}
+
+/**
+ * Get list of RFI nodes to delete
+ * @return array $all_nids
+ */
+function _asu_rfi_get_submissions_to_delete() {
+  $tables = _asu_rfi_get_status_tables();
+  $all_nids = array();
+  $and_sub1 = db_and()
+    ->condition('field_rfi_submission_status_value', 'SF_%', 'LIKE')
+    ->condition('field_rfi_submission_status_value', 'SF_Completed', 'NOT LIKE')
+    ->where('UNIX_TIMESTAMP(now()) - n.changed > 864000'); // Custom SQL command
+  $or_one = db_or()
+    ->condition('field_rfi_submission_status_value', 'SF_Completed', 'LIKE')
+    ->condition($and_sub1);
+
+  foreach ($tables as $table) {
+    $query = Database::getConnection('default', 'default')
+      ->select($table, 'f');
+    $query->innerJoin('node', 'n', 'f.entity_id = n.nid');
+    $query->fields('n', array('nid'))
+      ->condition('n.type', 'asu_rfi', 'LIKE')
+      ->condition($or_one)
+      ->range(0, 5); // Delete 5 nodes at a time.
+    $result = $query->execute()->fetchCol();
+    $all_nids = array_unique(array_merge($all_nids, $result));
+  }
+  return $all_nids;
+}
 
 /**
  * Queries the degrees in order to configure the location element of the form.
@@ -1275,8 +1336,7 @@ function _asu_rfi_add_program_data_js($desiredProg) {
 }
 
 /**
- * Get career summary data
- * // UNUSED??
+ * Get career summary data -- UNUSED(?)
  * @param $data
  * @return array|string
  */
