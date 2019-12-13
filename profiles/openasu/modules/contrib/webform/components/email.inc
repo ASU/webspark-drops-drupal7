@@ -61,7 +61,7 @@ function _webform_edit_email($component) {
     '#size' => 60,
     '#maxlength' => 127,
     '#weight' => 0,
-    '#attributes' => ($component['value'] == '[current-user:mail]' && count(form_get_errors()) == 0) ? array('disabled' => TRUE) : array(),
+    '#attributes' => ($component['value'] == '[current-user:mail]' && !form_get_errors()) ? array('disabled' => TRUE) : array(),
     '#id' => 'email-value',
   );
   $form['user_email'] = array(

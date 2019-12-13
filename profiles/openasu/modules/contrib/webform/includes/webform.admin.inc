@@ -20,7 +20,7 @@ function webform_admin_settings() {
   );
 
   // Add each component to the form:
-  $form['components'] = array('#tree' => TRUE);
+  $form['components'] += array('#tree' => TRUE);
   $component_types = webform_components(TRUE);
   foreach ($component_types as $key => $component) {
     $form['components'][$key] = array(
@@ -253,6 +253,13 @@ function webform_admin_settings() {
     '#title' => t("Select email mapping limit"),
     '#default_value' => webform_variable_get('webform_email_select_max'),
     '#description' => t('When mapping emails addresses to a select component, limit the choice to components with less than the amount of options indicated. This is to avoid flooding the email settings form.'),
+  );
+
+  $form['advanced']['webform_fieldset_wrap'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use fieldsets for grouped components'),
+    '#default_value' => webform_variable_get('webform_fieldset_wrap'),
+    '#description' => t('Components containing multiple fields, such as checkboxes and radio buttons, will be wrapped in fieldsets. This improves the accessibility of webforms and helps them conform to web standards, but may require updates to the CSS of the active theme.'),
   );
 
   $form = system_settings_form($form);
