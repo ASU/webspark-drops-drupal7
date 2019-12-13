@@ -36,6 +36,7 @@ function webspark_breadcrumbs_defaultconfig_strongarm() {
     'the' => 'the',
     'a' => 'a',
   );
+
   $export['easy_breadcrumb-capitalizator_ignored_words'] = $strongarm;
 
   $strongarm = new stdClass();

@@ -1,7 +1,85 @@
-<?php
+<?php /** @noinspection PhpDocSignatureInspection */
 /**
  * @file
  * Code for the Webspark breadcrumbs feature.
  */
 
 include_once 'webspark_breadcrumbs.features.inc';
+
+/**
+ * Implements hook_easy_breadcrumb_breadcrumb_alter().
+ */
+function webspark_breadcrumbs_easy_breadcrumb_breadcrumb_alter(array &$breadcrumb) {
+  $i = 0;
+  $acronyms = _webspark_breadcrumbs_academic_acronyms();
+  foreach($breadcrumb as $bread => $crumb) {
+    foreach ($acronyms as $url_crumb => $proper_crumb) {
+      if (isset($crumb['content'])) {
+        if (strtolower($crumb['content']) === $url_crumb) {
+          $breadcrumb[$i]['content'] = $proper_crumb;
+          break 1;
+        }
+      }
+    }
+    $i++;
+  }
+}
+/**
+ *
+ */
+function _webspark_breadcrumbs_academic_acronyms() {
+  $acronyms = &drupal_static(__FUNCTION__, NULL);
+  if (!isset($acronyms)) {
+    $acronyms = array(
+      'ba' => 'BA',
+      'bas' => 'BAS',
+      'bs' => 'BS',
+      'bse' => 'BSE',
+      'bsw' => 'BSW',
+      'empa' => 'EMPA',
+      'it' => 'IT',
+      'ms' => 'MS',
+      'ma' => 'MA',
+      'macc' => 'MACC',
+      'mcs' => 'MCS',
+      'mfa' => 'MFA',
+      'mas' => 'MAS',
+      'mba' => 'MBA',
+      'mlst' => 'MLSt',
+      'mnlm' => 'MNLM',
+      'mpa' => 'MPA',
+      'mpp' => 'MPP',
+      'mpsla' => 'MPSLA',
+      'mns' => 'MNS',
+      'mred' => 'MRED',
+      'mtax' => 'MTax',
+      'mse' => 'MSE',
+      'mst' => 'MST',
+      'msw' => 'MSW',
+      'mstech' => 'MSTech',
+      'mstp' => 'MSTP',
+      'mtesol' => 'MTESOL',
+      'muep' => 'MUEP',
+      'pfm' => 'PFM',
+      'phd' => 'PhD',
+      'cho' => 'CHO',
+      'cls' => 'CLS',
+      'cla' => 'CLA',
+      'cts' => 'CTS',
+      'chi' => 'CHI',
+      'ces' => 'CES',
+      'cte' => 'CTE',
+      'cas' => 'CAS',
+      'css' => 'CSS',
+      'cba' => 'CBA',
+      'ccs' => 'CCS',
+      'clas' => 'CLAS',
+      'sfis' => 'SFIS',
+      'chs' => 'CHS',
+      'cisa' => 'CISA',
+      'sos' => 'SOS',
+      'eoss' => 'EOSS',
+    );
+  }
+  return $acronyms;
+}
