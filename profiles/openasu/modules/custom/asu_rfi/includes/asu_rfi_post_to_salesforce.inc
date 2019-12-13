@@ -14,13 +14,13 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
   $form_mode = variable_get('asu_rfi_form_mode');
 
   // Pull up RFI submission node
-  $degreeMappings = _asu_rfi_degree_field_mappings();
+  $degreeMappings = _asu_rfi_get_degree_field_mappings();
   $nid = $data['submission_nodeid'];
   $node = node_load($nid);
   $nodeArr = array(
     $node->field_rfi_program['und'][0]['value'] => $node->field_rfi_program_name['und'][0]['value']
   );
-  $availableCampuses = _asu_rfi_campus_location_options($nodeArr);
+  $availableCampuses = _asu_rfi_get_campus_location_options($nodeArr);
 
   // Pull up RFI submission node
   $node_wrapper = entity_metadata_wrapper('node', $node);
@@ -45,7 +45,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
   // Start building data for middleware submission
   ////////////////////////////
   $prog_code = $data['program_code'];
-  $campus = _asu_rfi_get_correct_campus_id($data['campus']);
+  $campus = _asu_rfi_get_salesforce_campus_id($data['campus']);
   $phone = preg_replace('[\D]', '', $data['phone']);
   $mobile = (isset($data['mobile_check']))
     ? str_replace('-', '', $data['mobile_check'])
@@ -75,7 +75,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
   $mw_auth_key = variable_get('asu_rfi_form_auth_key');
 
   // Get server diagnostic data for submissions
-  $server = _asu_rfi_detect_source($data, $type);
+  $server = _asu_rfi_get_misc_submission_data($data, $type);
   $environ = (array) _asu_rfi_detect_environment();
 
   // Submission customization - UNDERGRAD vs GRAD
@@ -279,7 +279,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
           if (!empty($mw_auth_key)) {
             if (!empty($to_email)) {
               if (!isset($data['cron_run']) || ($data['cron_run'] != "Cron_running")) {
-                _asu_rfi_failed_post_email($to_email, $nid);
+                _asu_rfi_create_failed_post_email($to_email, $nid);
               }
             }
           }

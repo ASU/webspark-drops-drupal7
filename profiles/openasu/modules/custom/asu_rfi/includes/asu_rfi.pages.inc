@@ -57,7 +57,7 @@ function asu_rfi_form_data($form, &$form_state) {
 
   $domain = $_SERVER['HTTP_HOST'];
   // Get form options
-  $degreeMappings = _asu_rfi_degree_field_mappings();
+  $degreeMappings = _asu_rfi_get_degree_field_mappings();
   $start_dates = _asu_rfi_get_sem_dates();
   $country = _asu_rfi_get_country_list();
 
@@ -1482,7 +1482,7 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
  */
 function asu_rfi_long_form_data_submit($form, &$form_state) {
   global $user;
-  $degreeMappings = _asu_rfi_degree_field_mappings();
+  $degreeMappings = _asu_rfi_get_degree_field_mappings();
 
   // Get the type of the form. If the form is grad form, set prospect_level
   // value to "Graduate", else "Undergraduate"
@@ -1937,7 +1937,7 @@ function asu_rfi_current_form_data_validate($form, &$form_state) {
 function asu_rfi_current_form_data_submit($form, &$form_state) {
   global $user;
 
-  $degreeMappings = _asu_rfi_degree_field_mappings();
+  $degreeMappings = _asu_rfi_get_degree_field_mappings();
 
   $domain = $form_state['values']['domain'];
   $f_name = $form_state['values']['first_name'];
@@ -2053,7 +2053,7 @@ function _asu_rfi_form_initial_web_assets($form_main_type) {
  * @return bool
  */
 function _asu_rfi_program_location_confirm($prog, $campus, $loc) {
-  $degreeMappings = _asu_rfi_degree_field_mappings();
+  $degreeMappings = _asu_rfi_get_degree_field_mappings();
   $campusOptions = array();
 
   $query = new EntityFieldQuery();

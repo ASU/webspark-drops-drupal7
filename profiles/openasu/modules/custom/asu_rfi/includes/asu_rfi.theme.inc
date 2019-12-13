@@ -33,7 +33,7 @@ function asu_rfi_js_alter(&$javascript) {
 // Send data transaction variable dataLayer to GTM JS object.
 // Get degree mappings to grab content type specific values.
 function asu_rfi_preprocess_page(&$variables) {
-  $degreeMappings = _asu_rfi_degree_field_mappings();
+  $degreeMappings = _asu_rfi_get_degree_field_mappings();
 
   // If /degree-programs/request-info-thank-you is loaded, then grab the node
   // id from the URL, load the node and get the variables, and add Google

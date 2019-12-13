@@ -27,6 +27,8 @@
 
 define('ASU_RFI_PROSPECT_LEVEL_UNDERGRAD', "Undergraduate");
 define('ASU_RFI_PROSPECT_LEVEL_GRAD', "Graduate");
+define('ASU_RFI_STALE_TIME_DEFAULT', 86400);
+define('ASU_RFI_SUBMISSION_EXP_PERIOD', ASU_RFI_STALE_TIME_DEFAULT * 10); // 10 days
 
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_post_to_salesforce');
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_get_programs');
@@ -172,7 +174,7 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
         // instance setting using array_intersect_key function
       if (($instance_settings['form_type'] == 'ugrad_longform')
         || ($instance_settings['form_type'] == 'current_undergrad_form')) {
-        $program_options = _asu_rfi_get_undergrad_program_nodes();
+        $program_options = _asu_rfi_get_active_undergrad_programs();
         if (!empty($instance_settings['programs'])) {
           $programs = array_intersect_key($program_options, array_flip($instance_settings['programs']));
         }
@@ -186,7 +188,7 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
       // Grad long + current forms settings ONLY
       if (($instance_settings['form_type'] == 'graduate_longform')
         || ($instance_settings['form_type'] == 'current_grad_form')) {
-        $program_options = _asu_rfi_get_grad_programs();
+        $program_options = _asu_rfi_get_active_graduate_programs();
         if (!empty($instance_settings['grad_programs'])) {
           $programs = array_intersect_key($program_options, array_flip($instance_settings['grad_programs']));
         }
@@ -293,7 +295,7 @@ function asu_rfi_block_configure($delta = '', $multi_id = NULL) {
 
       $program_settings = $instance_settings['programs'] ? $instance_settings['programs'] : NULL;
 
-      $program_options = _asu_rfi_get_undergrad_program_nodes();
+      $program_options = _asu_rfi_get_active_undergrad_programs();
       //undergrad programs list
       $form['asu_rfi_form_block_programs'] = array(
         '#type' => 'select',
@@ -318,7 +320,7 @@ function asu_rfi_block_configure($delta = '', $multi_id = NULL) {
       // if grad degrees are available, populate the grad degrees field
       if (variable_get('asu_rfi_graduate_degree_type') == 'graduate') {
         $grad_program_settings = $instance_settings['grad_programs'] ? $instance_settings['grad_programs'] : NULL;
-        $grad_program_options = _asu_rfi_get_grad_programs();
+        $grad_program_options = _asu_rfi_get_active_graduate_programs();
 
         //grad programs list
         $form['asu_rfi_form_block_grad_programs'] = array(
@@ -444,7 +446,7 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
       $form['#after_build'][] = 'asu_rfi_form_after_build';
 
       $pcodes = $form['my_interest']['program_code']['#options'];
-      $possibleLocations = _asu_rfi_campus_location_options($pcodes);
+      $possibleLocations = _asu_rfi_get_campus_location_options($pcodes);
       asu_rfi_disable_form($form, $possibleLocations);
 
       if ($possibleLocations !== FALSE) {
@@ -490,7 +492,7 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
     if (isset($form['program_code']['#default_value']) && !empty($form['program_code']['#default_value'])) {
       $pcode = $form['program_code']['#default_value'];
       $pcode2 = array($pcode => $form['my_interest']['prog_plan']['#default_value']);
-      $possibleLocations = _asu_rfi_campus_location_options($pcode2);
+      $possibleLocations = _asu_rfi_get_campus_location_options($pcode2);
       asu_rfi_disable_form($form, $possibleLocations);
       $newLocationArr = array();
       foreach ($possibleLocations as $key => $value) {
@@ -731,17 +733,17 @@ function asu_rfi_cron() {
 
   // #1 - Set as system variables so we can adjust via devel/php if desired.
   $last_ran = variable_get('asu_rfi_cron_last_ran', 0);
-  $stale_time = variable_get('asu_rfi_stale_time', 86400); // 86400 seconds == 1 day
+  $stale_time = variable_get('asu_rfi_stale_time', ASU_RFI_STALE_TIME_DEFAULT);
 
   if (($last_ran + $stale_time) < time()) { // If we last ran over $stale_time seconds ago.
     module_load_include('inc', 'asu_rfi', 'data/asu_rfi.form_options');
     drupal_flush_all_caches();
     // Update countries DB table
-    asu_rfi_get_options_data('country');
+    asu_rfi_get_form_select_options('country');
     // Update states DB table
-    asu_rfi_get_options_data('state_province');
+    asu_rfi_get_form_select_options('state_province');
     // Update semester dates DB table
-    asu_rfi_get_options_data('rfi_dedupe_list_terms');
+    asu_rfi_get_form_select_options('rfi_dedupe_list_terms');
     // Update asu_rfi_cron_last_ran time.
     variable_set('asu_rfi_cron_last_ran', time());
   }
@@ -757,13 +759,13 @@ function asu_rfi_cron() {
     ->entityCondition('bundle', 'asu_rfi')
     // Don't let this keep happening forever if we have permanent failure.
     ->propertyCondition('created', array(
-      REQUEST_TIME - 864000,
-      REQUEST_TIME - 900
-    ), 'between')// Created in the last 10 days (864000 = 10(24 * 3600)).
+      REQUEST_TIME - ASU_RFI_SUBMISSION_EXP_PERIOD,
+      REQUEST_TIME - strtotime('15 minutes')
+    ), 'between')
     ->propertyCondition('changed', array(
-      REQUEST_TIME - 864000,
+      REQUEST_TIME - ASU_RFI_SUBMISSION_EXP_PERIOD,
       REQUEST_TIME
-    ), 'between')// changed in the last 10 days (864000 = 10(24 * 3600)).
+    ), 'between')
     ->propertyOrderBy('created', 'DESC')
     ->fieldCondition('field_rfi_submission_status', 'value', array(
       'Form_Multi_Partial',
@@ -798,12 +800,12 @@ function asu_rfi_cron() {
   $timediff_attempt = $last_sf_attempt - $last_sf_success;
   $last_email_sent = variable_get('asu_rfi_SF_error_message_sent', 0);
 
-  if (($last_email_sent - time()) > 86400) { // If the email was sent within 24hrs, don't send it again.
-    if (($timediff > 172800) || ($timediff_attempt > 172800)) { // greater that two days
+  if (($last_email_sent - time()) > ASU_RFI_STALE_TIME_DEFAULT) { // If the email was sent within 24hrs, don't send it again.
+    if (($timediff > (ASU_RFI_STALE_TIME_DEFAULT * 2)) || ($timediff_attempt > (ASU_RFI_STALE_TIME_DEFAULT * 2))) { // greater that two days
       $to_email = variable_get('asu_rfi_error_email', NULL); // get error reporting email address from rfi admin settings page
       if (!empty($to_email)) {
         // send email to admin reporting the issue
-        _asu_rfi_failed_post_email($to_email, 0);
+        _asu_rfi_create_failed_post_email($to_email, 0);
       }
     }
   }
@@ -956,7 +958,7 @@ function asu_rfi_bulk_submit_action(&$node, $context) {
 /**
  * Return the list of tables related to the submission status field.
  */
-function _asu_rfi_get_status_tables() {
+function _asu_rfi_get_status_field_tables() {
   return array(
     'field_data_field_rfi_submission_status',
     'field_revision_field_rfi_submission_status',
@@ -968,12 +970,12 @@ function _asu_rfi_get_status_tables() {
  * @return array $all_nids
  */
 function _asu_rfi_get_submissions_to_delete() {
-  $tables = _asu_rfi_get_status_tables();
+  $tables = _asu_rfi_get_status_field_tables();
   $all_nids = array();
   $and_sub1 = db_and()
     ->condition('field_rfi_submission_status_value', 'SF_%', 'LIKE')
     ->condition('field_rfi_submission_status_value', 'SF_Completed', 'NOT LIKE')
-    ->where('UNIX_TIMESTAMP(now()) - n.changed > 864000'); // Custom SQL command
+    ->where('UNIX_TIMESTAMP(now()) - n.changed > ' . ASU_RFI_SUBMISSION_EXP_PERIOD); // Custom SQL command
   $or_one = db_or()
     ->condition('field_rfi_submission_status_value', 'SF_Completed', 'LIKE')
     ->condition($and_sub1);
@@ -997,8 +999,8 @@ function _asu_rfi_get_submissions_to_delete() {
  * @param array $pcodes A list of the plan codes used in the RFI form
  * @return mixed $campusOptions An array of the available campuses
  */
-function _asu_rfi_campus_location_options($pcodes) {
-  $degree_mappings = _asu_rfi_degree_field_mappings(); // Get degree mappings to grab content type specific values
+function _asu_rfi_get_campus_location_options($pcodes) {
+  $degree_mappings = _asu_rfi_get_degree_field_mappings(); // Get degree mappings to grab content type specific values
   $asu_online_list = _asu_rfi_parse_programs();
 
   $campus_location_options = array();
@@ -1016,7 +1018,7 @@ function _asu_rfi_campus_location_options($pcodes) {
     if (isset($result['node'])) {
       $result_nodes = $result['node'];
       $desiredProg = _asu_rfi_get_program_codes($result_nodes, 'desiredProg');
-      $availableOnline = _asu_rfi_program_online_availability($desiredProg['code'], $asu_online_list);
+      $availableOnline = _asu_rfi_check_program_online_availability($desiredProg['code'], $asu_online_list);
 
       $locations = $desiredProg['locations'];
       if ($locations) {
@@ -1067,7 +1069,7 @@ function _asu_rfi_campus_location_options($pcodes) {
  * @return string
  * @TODO pull in from feed to stay up to date
  */
-function _asu_rfi_get_correct_campus_id($campus) {
+function _asu_rfi_get_salesforce_campus_id($campus) {
   switch ($campus) {
     case "Tempe":
       $campusId = "TEMPE";
@@ -1100,13 +1102,161 @@ function _asu_rfi_get_correct_campus_id($campus) {
 }
 
 /**
+ * Returns all active status program nodes, if they exist
+ * @param string $type - undergrad or graduate
+ * @return array $program_results - key => nid and value => program focus (program code +
+ *   program plan code)
+ * @throws \EntityFieldQueryException
+ * @TODO Probably will want to remove, or edit to use new program gathering logic.
+
+ */
+function _asu_rfi_get_active_programs($type) {
+  $degreeMappings = _asu_rfi_get_degree_field_mappings(); // Get degree mappings to grab content type specific values
+  $type_alt_spelling = '';
+  $type_degree_mapping_field = '';
+
+  if ($type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
+    $type_alt_spelling = 'undergrad';
+    $type_degree_mapping_field = 'field_academic_program';
+    // Get the degree types from the database
+    $program_type = db_query('SELECT DISTINCT ' . $degreeMappings['field_degree_program_value']
+      . ' from ' . $degreeMappings['table_asu_degree_program']);
+    // Set the variables so they can be used to show degree programs based on the form
+    // type selections above in block settings
+    foreach ($program_type as $programs) {
+      $degreetype = $programs->{$degreeMappings['field_degree_program_value']};
+      if ($degreetype == "undergrad") {
+        variable_set('asu_rfi_ugrad_degree_type', $degreetype);
+      }
+      if ($degreetype == "graduate") {
+        variable_set('asu_rfi_graduate_degree_type', $degreetype);
+      }
+    }
+  }
+  elseif ($type === ASU_RFI_PROSPECT_LEVEL_GRAD) {
+    $type_alt_spelling = 'graduate';
+    $type_degree_mapping_field = 'field_degree_program';
+  }
+
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', $degreeMappings['content_type'])
+    ->propertyCondition('status', 1)
+    ->fieldCondition($degreeMappings['field_degree_awarded'], 'value', 'NULL', '!=')
+    ->fieldCondition($degreeMappings[$type_degree_mapping_field], 'value', 'NULL', '!=')
+    ->fieldCondition($degreeMappings['field_academic_plan'], 'value', 'NULL', '!=')
+    ->fieldCondition($degreeMappings['field_degree_program'], 'value', $type_alt_spelling, '=')
+    ->fieldOrderBy($degreeMappings['field_degree_awarded'], 'value', 'ASC')
+    ->addMetaData('account', user_load(1)); // Run the query as user 1.
+  $result = $query->execute();
+
+  // Build program results list (array)
+  $program_results = array();
+  if (isset($result['node'])) {
+    $items_nids = array_keys($result['node']);
+    $items = entity_load('node', $items_nids);
+  }
+  if (isset($items)) {
+    $program_results = _asu_rfi_get_program_results($items);
+  }
+
+  return $program_results;
+}
+
+/**
+ * Get programs from query results
+ * @param array $items - array of nodes to pull program information from
+ * @return array $out - list of programs
+ */
+function _asu_rfi_get_program_results($items) {
+  $degreeMappings = _asu_rfi_get_degree_field_mappings(); // Get degree mappings to grab content type specific values
+  $program_results = array();
+  foreach ($items as $nid => $program) {
+    $program_wrapper = entity_metadata_wrapper('node', $program);
+    $program_abbr = $program_wrapper->{$degreeMappings['field_degree_awarded']}->value();
+    $program_plan_code = $program_wrapper->{$degreeMappings['field_academic_plan']}->value();
+    // Abbr in value matches how we present name in get programs Views Datasource View.
+    $program_results[$program_plan_code] = $program_abbr;
+  }
+  return $program_results;
+}
+
+/**
+ * Return desired programs from list of nodes OR list of programs, depending in $data_type
+ * @param $result_nodes
+ * @param (str) $data_type - Must be 'programs' or 'desiredProg'
+ * @return array
+ */
+function _asu_rfi_get_program_codes($result_nodes, $data_type) {
+  $degreeMappings = _asu_rfi_get_degree_field_mappings(); // Get degree mappings to grab content type specific values
+  $program_nids = array_keys($result_nodes);
+  $programs = entity_load('node', $program_nids);
+  $programs = reset($programs);
+  $programs = (array) $programs;
+  /** @noinspection PhpUnusedLocalVariableInspection */
+  $desiredProg = array(
+    'code' => $programs[$degreeMappings['field_academic_plan']]['und']['0']['value'],
+    'vid' => $programs['vid'],
+    'title' => $programs['title'],
+    'locations' => $programs[$degreeMappings['field_degree_campus']]['und'],
+  );
+  $out = ${$data_type};
+  return $out;
+}
+
+/**
+ * Determine source, ipAddress, source_type, domain
+ *
+ * @param array $data - submitted form data
+ * @return array $server_data
+ */
+function _asu_rfi_get_misc_submission_data($data, $type) {
+  $server_data = array(
+    'domain' => (isset($data['domain'])) ? $data['domain'] : $_SERVER['HTTP_HOST'],
+    'ipAddress' => (isset($data['ip_address'])) ? $data['ip_address']
+      : $_SERVER['REMOTE_ADDR'],
+  );
+  switch ($type) {
+    case ASU_RFI_PROSPECT_LEVEL_UNDERGRAD:
+      $server_data['source_type'] = '-UG';
+      break;
+    case ASU_RFI_PROSPECT_LEVEL_GRAD:
+      $server_data['source_type'] = '-G';
+      break;
+    default:
+      $server_data['source_type'] = 'unknown';
+  }
+  $server_data['source'] = $server_data['domain'] . '-' . $data['type_of_form'] . $server_data['source_type'];
+  return $server_data;
+}
+
+/**
+ * Determine College Code via manual query
+ * @param array $degreeMappings
+ * @param string $prog_code - Program code
+ * @return string $result
+ */
+function _asu_rfi_get_college_code($degreeMappings, $prog_code) {
+  $result = db_query(
+    'select ' . $degreeMappings['field_academic_program_value'] . ' from ' .
+    $degreeMappings['table_asu_academic_program'] . ' prog join ' .
+    $degreeMappings['table_asu_academic_plan'] .
+    ' plan on prog.entity_id = plan.entity_id where plan.' .
+    $degreeMappings['field_academic_plan_value'] .
+    ' = :plancode',
+    array(':plancode' => $prog_code))
+    ->fetchField();
+  return $result;
+}
+
+/**
  * Returns mappings between ASU RFI node fields and degree module(s) fields
  *
  * Example usage:
  * $degreeMappings = _asu_rfi_get_degree_mappings();
  * $degreeContentType = $degreeMappings['content_type'];
  */
-function _asu_rfi_degree_field_mappings() {
+function _asu_rfi_get_degree_field_mappings() {
   $map = &drupal_static(__FUNCTION__);
   // Swap out mapping values based on module enabled.
   // ASU AP takes priority, but default is to ASU
@@ -1164,178 +1314,6 @@ function _asu_rfi_degree_field_mappings() {
 }
 
 /**
- * Returns all active status program nodes
- * @return array where key is nid and value is program focus (program code +
- *   program plan code)
- * @throws \EntityFieldQueryException
- * @TODO Probably will want to remove, or edit to use new program gathering logic.
- */
-function _asu_rfi_get_undergrad_program_nodes() {
-  // Get degree mappings to grab content type specific values
-  $degreeMappings = _asu_rfi_degree_field_mappings();
-  // Get the degree types from the database
-  $program_type = db_query('SELECT DISTINCT ' . $degreeMappings['field_degree_program_value']
-    . ' from ' . $degreeMappings['table_asu_degree_program']);
-  // Set the variables so they can be used to show degree programs based on the form
-  // type selections above in block settings
-  foreach ($program_type as $programs) {
-    $degreetype = $programs->{$degreeMappings['field_degree_program_value']};
-    if ($degreetype == "undergrad") {
-      variable_set('asu_rfi_ugrad_degree_type', $degreetype);
-    }
-    if ($degreetype == "graduate") {
-      variable_set('asu_rfi_graduate_degree_type', $degreetype);
-    }
-  }
-
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', $degreeMappings['content_type'])
-    ->propertyCondition('status', 1)
-    ->fieldCondition($degreeMappings['field_degree_awarded'], 'value', 'NULL', '!=')
-    ->fieldCondition($degreeMappings['field_academic_program'], 'value', 'NULL', '!=')
-    ->fieldCondition($degreeMappings['field_academic_plan'], 'value', 'NULL', '!=')
-    ->fieldCondition($degreeMappings['field_degree_program'], 'value', 'undergrad', '=')
-    ->fieldOrderBy($degreeMappings['field_degree_awarded'], 'value', 'ASC')
-    ->addMetaData('account', user_load(1)); // Run the query as user 1.
-  $result = $query->execute();
-
-  // Build program results (array)
-  $program_entities = array();
-  if (isset($result['node'])) {
-    $items_nids = array_keys($result['node']);
-    $items = entity_load('node', $items_nids);
-    $program_entities = _asu_rfi_get_program_results($items);
-  }
-
-  return $program_entities;
-}
-
-/**
- * Get grad programs if any exist
- * @throws \EntityFieldQueryException
- */
-function _asu_rfi_get_grad_programs() {
-  $degreeMappings = _asu_rfi_degree_field_mappings(); // Get degree mappings to grab content type specific values
-
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', $degreeMappings['content_type'])
-    ->propertyCondition('status', 1)
-    ->fieldCondition($degreeMappings['field_degree_awarded'], 'value', 'NULL', '!=')
-    ->fieldCondition($degreeMappings['field_degree_program'], 'value', 'NULL', '!=')
-    ->fieldCondition($degreeMappings['field_academic_plan'], 'value', 'NULL', '!=')
-    ->fieldCondition($degreeMappings['field_degree_program'], 'value', 'graduate', '=')
-    ->fieldOrderBy($degreeMappings['field_degree_awarded'], 'value', 'ASC')
-    ->addMetaData('account', user_load(1)); // Run the query as user 1.
-  $result = $query->execute();
-  if (isset($result['node'])) {
-    $items_nids = array_keys($result['node']);
-    $items = entity_load('node', $items_nids);
-  }
-  // Build program results list (array)
-  $program_results = array();
-  if (isset($items)) {
-    $program_results = _asu_rfi_get_program_results($items);
-  }
-  return $program_results;
-}
-
-/**
- * Get programs from query results
- * @param array $items - array of nodes to pull program information from
- * @return array $out - list of programs
- */
-function _asu_rfi_get_program_results($items) {
-  $degreeMappings = _asu_rfi_degree_field_mappings(); // Get degree mappings to grab content type specific values
-  $program_results = array();
-  foreach ($items as $nid => $program) {
-    $program_wrapper = entity_metadata_wrapper('node', $program);
-    $program_abbr = $program_wrapper->{$degreeMappings['field_degree_awarded']}->value();
-    $program_plan_code = $program_wrapper->{$degreeMappings['field_academic_plan']}->value();
-    // Abbr in value matches how we present name in get programs Views Datasource View.
-    $program_results[$program_plan_code] = $program_abbr;
-  }
-  return $program_results;
-}
-
-/**
- * Return desired programs from list of nodes OR list of programs, depending in $data_type
- * @param $result_nodes
- * @param (str) $data_type - Must be 'programs' or 'desiredProg'
- * @return array
- */
-function _asu_rfi_get_program_codes($result_nodes, $data_type) {
-  $degreeMappings = _asu_rfi_degree_field_mappings(); // Get degree mappings to grab content type specific values
-  $program_nids = array_keys($result_nodes);
-  $programs = entity_load('node', $program_nids);
-  $programs = reset($programs);
-  $programs = (array) $programs;
-  /** @noinspection PhpUnusedLocalVariableInspection */
-  $desiredProg = array(
-    'code' => $programs[$degreeMappings['field_academic_plan']]['und']['0']['value'],
-    'vid' => $programs['vid'],
-    'title' => $programs['title'],
-    'locations' => $programs[$degreeMappings['field_degree_campus']]['und'],
-  );
-  $out = ${$data_type};
-  return $out;
-}
-
-/**
- * Compares the degree feed programs listed with online availability, using the
- * cached Get Programs API list.
- * @param string $programsFromDegreeFeed The current program
- * @param array $getProgramsAPIList The cached list of programs currently available with ASU Online. Cached Daily
- * @return boolean $available True False value determining whether it can be handled by ASU Online.
- */
-function _asu_rfi_program_online_availability($programsFromDegreeFeed, $getProgramsAPIList) {
-  $available = FALSE;
-  if ($getProgramsAPIList !== FALSE) {
-    foreach ($getProgramsAPIList as $item) {
-      if ($programsFromDegreeFeed == $item->plancode) {
-        $available = TRUE;
-      }
-    }
-  }
-  return $available;
-}
-
-/**
- * Is the program managed by Online folks? (i.e. not "asu")
- * @param $program
- * @param $getProgramsList
- * @return bool
- */
-function _asu_rfi_check_managed_online($program, $getProgramsList) {
-  foreach ($getProgramsList as $onlineItem){
-    if ($onlineItem->plancode == $program && $onlineItem->crmdestination !== "asu") {
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
- * Adds program data to a JS object available to the form
- * @param array $desiredProg The current program
- */
-function _asu_rfi_add_program_data_js($desiredProg) {
-  drupal_add_js(
-    array(
-      'asu_rfi' => array(
-        'degrees' => array(
-          $desiredProg['vid'] => array(
-            'code' => $desiredProg['code'],
-            'title' => $desiredProg['title'],
-            'locations' => $desiredProg['locations'],
-          )
-        )
-      )
-    ), 'setting');
-}
-
-/**
  * Get career summary data -- UNUSED(?)
  * @param $data
  * @return array|string
@@ -1361,6 +1339,40 @@ function _asu_rfi_get_career_data($data) {
   }
   $option = (isset($career_option)) ? $career_option : '';
   return $option;
+}
+
+/**
+ * Compares the degree feed programs listed with online availability, using the
+ * cached Get Programs API list.
+ * @param string $programsFromDegreeFeed The current program
+ * @param array $getProgramsAPIList The cached list of programs currently available with ASU Online. Cached Daily
+ * @return boolean $available True False value determining whether it can be handled by ASU Online.
+ */
+function _asu_rfi_check_program_online_availability($programsFromDegreeFeed, $getProgramsAPIList) {
+  $available = FALSE;
+  if ($getProgramsAPIList !== FALSE) {
+    foreach ($getProgramsAPIList as $item) {
+      if ($programsFromDegreeFeed == $item->plancode) {
+        $available = TRUE;
+      }
+    }
+  }
+  return $available;
+}
+
+/**
+ * Is the program managed by Online folks? (i.e. not "asu")
+ * @param $program
+ * @param $getProgramsList
+ * @return bool
+ */
+function _asu_rfi_check_managed_online($program, $getProgramsList) {
+  foreach ($getProgramsList as $onlineItem){
+    if ($onlineItem->plancode == $program && $onlineItem->crmdestination !== "asu") {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -1480,48 +1492,22 @@ function _asu_rfi_detect_environment() {
 }
 
 /**
- * Determine source, ipAddress, source_type, domain
- *
- * @param array $data - submitted form data
- * @return array $server_data
+ * Adds program data to a JS object available to the form
+ * @param array $desiredProg The current program
  */
-function _asu_rfi_detect_source($data, $type) {
-  $server_data = array(
-    'domain' => (isset($data['domain'])) ? $data['domain'] : $_SERVER['HTTP_HOST'],
-    'ipAddress' => (isset($data['ip_address'])) ? $data['ip_address']
-      : $_SERVER['REMOTE_ADDR'],
-  );
-  switch ($type) {
-    case ASU_RFI_PROSPECT_LEVEL_UNDERGRAD:
-      $server_data['source_type'] = '-UG';
-      break;
-    case ASU_RFI_PROSPECT_LEVEL_GRAD:
-      $server_data['source_type'] = '-G';
-      break;
-    default:
-      $server_data['source_type'] = 'unknown';
-  }
-  $server_data['source'] = $server_data['domain'] . '-' . $data['type_of_form'] . $server_data['source_type'];
-  return $server_data;
-}
-
-/**
- * Determine College Code via manual query
- * @param array $degreeMappings
- * @param string $prog_code - Program code
- * @return string $result
- */
-function _asu_rfi_get_college_code($degreeMappings, $prog_code) {
-  $result = db_query(
-    'select ' . $degreeMappings['field_academic_program_value'] . ' from ' .
-    $degreeMappings['table_asu_academic_program'] . ' prog join ' .
-    $degreeMappings['table_asu_academic_plan'] .
-    ' plan on prog.entity_id = plan.entity_id where plan.' .
-    $degreeMappings['field_academic_plan_value'] .
-    ' = :plancode',
-    array(':plancode' => $prog_code))
-    ->fetchField();
-  return $result;
+function _asu_rfi_add_program_data_js($desiredProg) {
+  drupal_add_js(
+    array(
+      'asu_rfi' => array(
+        'degrees' => array(
+          $desiredProg['vid'] => array(
+            'code' => $desiredProg['code'],
+            'title' => $desiredProg['title'],
+            'locations' => $desiredProg['locations'],
+          )
+        )
+      )
+    ), 'setting');
 }
 
 /**
@@ -1595,7 +1581,7 @@ function _asu_rfi_get_curl_auth() {
  * @param $nid
  * @throws \Exception
  */
-function _asu_rfi_failed_post_email($to_email, $nid = 0) {
+function _asu_rfi_create_failed_post_email($to_email, $nid = 0) {
   $host = $_SERVER['HTTP_HOST'];
   // form submission posting vs. hook_cron() running
   $content = ($nid != 0)

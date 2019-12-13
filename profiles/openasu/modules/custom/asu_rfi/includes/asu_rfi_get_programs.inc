@@ -47,7 +47,7 @@ function asu_rfi_check_cached_programs() {
   $timestamp = variable_get('asu_rfi_cached_programs_timestamp');
   $now = time();
 
-  if (!isset($programs) || !isset($timestamp) || $now - $timestamp > 86400 || strlen($programs) < 25) {
+  if (!isset($programs) || !isset($timestamp) || $now - $timestamp > ASU_RFI_STALE_TIME_DEFAULT || strlen($programs) < 25) {
     // Re-pull and update programs
     $getPrograms = asu_rfi_import_online_programs();
     if ($getPrograms == false) {

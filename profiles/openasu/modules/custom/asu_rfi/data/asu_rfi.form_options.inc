@@ -8,9 +8,9 @@
  *   or just running via cron (FALSE).
  * @throws \InvalidMergeQueryException
  */
-function asu_rfi_get_options_data($name, $installing = FALSE) {
+function asu_rfi_get_form_select_options($name, $installing = FALSE) {
   // Get configs
-  $config = (array) _asu_rfi_get_data_configs($name);
+  $config = (array) _asu_rfi_get_select_options_config($name);
   $url = $config['url'];
   $db_tbl = $config['db_tbl'];
   $json_options = $config['json_options'];
@@ -34,7 +34,7 @@ function asu_rfi_get_options_data($name, $installing = FALSE) {
       E_USER_ERROR);
   }
 
-  // Do DB upsert if values are returned from JSON feed...
+  // Do DB upsert of options if values are returned from JSON feed...
   if (count($result) > 0) {
     $data_count = 0;
     foreach ($result as $datum) {
@@ -68,7 +68,7 @@ function asu_rfi_get_options_data($name, $installing = FALSE) {
     }
   }
 
-  // Or error out if no data is in list...
+  // Or error out if no dropdown data is in list...
   else {
     $status = 'warning';
     $wd_status = WATCHDOG_WARNING;
@@ -94,7 +94,7 @@ function asu_rfi_get_options_data($name, $installing = FALSE) {
  * @param string $dataset - Which dataset to pull (states, country, semester dates, etc.)
  * @return array $config
  */
-function _asu_rfi_get_data_configs($dataset) {
+function _asu_rfi_get_select_options_config($dataset) {
   $config = array();
   if ($dataset == 'state_province') {
     $config = array(

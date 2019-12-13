@@ -72,11 +72,11 @@ function asu_rfi_install() {
   include('data/asu_rfi.form_options.inc');
 
   // Update countries DB table
-  asu_rfi_get_options_data('country', TRUE);
+  asu_rfi_get_form_select_options('country', TRUE);
   // Insert states into DB table
-  asu_rfi_get_options_data('state_province', TRUE);
+  asu_rfi_get_form_select_options('state_province', TRUE);
   // Insert semester dates into DB table
-  asu_rfi_get_options_data('rfi_dedupe_list_terms', TRUE);
+  asu_rfi_get_form_select_options('rfi_dedupe_list_terms', TRUE);
 
   drupal_set_message('ASU RFI module has been installed. Configure module settings at <a href="/admin/config/content/asurfi">admin settings page</a>');
 
@@ -189,7 +189,7 @@ function asu_rfi_update_7004(&$sandbox) {
   // Pending => SF_Pending
   // action_required => SF_Failed
   // SF_Complete => SF_Completed
-  $tables = _asu_rfi_get_status_tables();
+  $tables = _asu_rfi_get_status_field_tables();
   $statuses = array(
     'Complete' => 'Form_Completed',
     'Incomplete' => 'Form_Multi_Partial',
