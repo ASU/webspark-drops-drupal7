@@ -444,7 +444,7 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['filters']['field_rfi_submission_status_value']['field'] = 'field_rfi_submission_status_value';
   $handler->display->display_options['filters']['field_rfi_submission_status_value']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_rfi_submission_status_value']['expose']['operator_id'] = 'field_rfi_submission_status_value_op';
-  $handler->display->display_options['filters']['field_rfi_submission_status_value']['expose']['label'] = 'Status of the form submissions';
+  $handler->display->display_options['filters']['field_rfi_submission_status_value']['expose']['label'] = 'Status';
   $handler->display->display_options['filters']['field_rfi_submission_status_value']['expose']['operator'] = 'field_rfi_submission_status_value_op';
   $handler->display->display_options['filters']['field_rfi_submission_status_value']['expose']['identifier'] = 'field_rfi_submission_status_value';
   $handler->display->display_options['filters']['field_rfi_submission_status_value']['expose']['remember_roles'] = array(
@@ -474,7 +474,7 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['filters']['field_rfi_email_value']['operator'] = 'contains';
   $handler->display->display_options['filters']['field_rfi_email_value']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_rfi_email_value']['expose']['operator_id'] = 'field_rfi_email_value_op';
-  $handler->display->display_options['filters']['field_rfi_email_value']['expose']['label'] = 'Search by student\'s email';
+  $handler->display->display_options['filters']['field_rfi_email_value']['expose']['label'] = 'Email';
   $handler->display->display_options['filters']['field_rfi_email_value']['expose']['operator'] = 'field_rfi_email_value_op';
   $handler->display->display_options['filters']['field_rfi_email_value']['expose']['identifier'] = 'field_rfi_email_value';
   $handler->display->display_options['filters']['field_rfi_email_value']['expose']['remember_roles'] = array(
@@ -497,7 +497,7 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['filters']['field_rfi_last_name_value']['operator'] = 'contains';
   $handler->display->display_options['filters']['field_rfi_last_name_value']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['operator_id'] = 'field_rfi_last_name_value_op';
-  $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['label'] = 'Search by Last name';
+  $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['label'] = 'Last name';
   $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['operator'] = 'field_rfi_last_name_value_op';
   $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['identifier'] = 'field_rfi_last_name_value';
   $handler->display->display_options['filters']['field_rfi_last_name_value']['expose']['remember_roles'] = array(
@@ -521,31 +521,15 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = '<fieldset class="fieldset-nested-odd" style="padding: 1em; color: #333 !important;"><div class="fieldset-wrapper">
-
-<h4>What do the submission statuses mean?</h4> 
-
-<ul>
-<li><strong>Ready for SF submission</strong> (value: Form_completed) - A prospective/current student has successfully submitted either the single page "long"
-form OR the LAST page of a multistep form. It is ready (and waiting) to be submitted to Salesforce middleware.</li>
-<li><strong>Partial multiform submission</strong> (value: Form_Multi_Partial) - (Multi-page forms ONLY). A prospective student has currently only submitted
-the first part of a multistep RFI form (they may or may not finish the other half). If the prospective student does not complete and submit the second/last
-part of the form before the next cron job runs (or a site administrator manually submits the data to Salesforce here), the cron job will attempt to POST this
-submission to its respective middleware.</li>
-<li><strong>SF POST Pending</strong> (value: SF_Pending) - Submissions that are now in the process of being submitted, or had past errors occur with the
-submission to the middleware and the submission process failed to complete. The next cron job will make one more attempt at submitting this submission to the
-middleware and then mark it as "SF Failed" if it does not go through).</li>
-<li><strong>SF POST Successful</strong> (value: SF_Complete) - DONE. A submission has successfully posted to the middleware. No further action is required.</li>
-<li><strong>SF POST Failed</strong> - (value: SF_Failed) - If any error occurs while trying to submit to the middleware, the submission status will change
-to "SF POST Failed". The site administrators need to correct the error in the submission and post it back to middleware using the "OPERATIONS" list to resubmit.
-If this does not work, please <a href="https://drupal.asu.edu/wcs/">contact Web Consulting</a> for assistance.</li>
-<li><strong>SF POST Expired</strong> - (value: SF_Expired) - The submission has passed its expiration date (currently 10 days after the submission) and it
- never successfully posted to the middleware. This submission is now marked to be deleted from the site upon the site\'s next cron job.)</li>
-</ul>
-
-</div>
-</fieldset>
-';
+  $handler->display->display_options['header']['area']['content'] = '<fieldset class="collapsible collapsed field-group-fieldset form-wrapper fieldset-nested-even asu-rfi-intro collapse-processed">'
+    . '<legend><span class="fieldset-legend"><a class="fieldset-title" href="#"><span class="fieldset-legend-prefix element-invisible">Show</span>INTRO: What do submissions statuses mean?</a>'
+    . '</span></legend><div class="fieldset-wrapper"><ul><li><strong>Ready for SF POST</strong> - A prospective/current student has successfully submitted either the single page "long" form OR the LAST page of a multistep form. It is ready (and waiting) to be submitted to Salesforce middleware.</li>'
+    . '<li><strong>Partial multiform submitted</strong> - (Multi-page forms ONLY). A prospective student has currently only submitted the first part of a multistep RFI form (they may or may not finish the other half). If the prospective student does not complete and submit the second/last part of the form before the next cron job runs (or a site administrator manually submits the data to Salesforce here), the cron job will attempt to POST this submission to its respective middleware.</li>'
+    . '<li><strong>SF POST Pending</strong> - Submissions that are now in the process of being submitted, or had past errors occur with the submission to the middleware and the submission process failed to complete. The next cron job will make one more attempt at submitting this submission to the middleware and then mark it as "SF Failed" if it does not go through).</li>'
+    . '<li><strong>SF POST Successful</strong> - DONE. A submission has successfully posted to the middleware. No further action is required.</li>'
+    . '<li><strong>SF POST Failed</strong> - If any error occurs while trying to submit to the middleware, the submission status will change to "SF POST Failed". The site administrators need to correct the error in the submission and post it back to middleware using the "OPERATIONS" list to resubmit. If this does not work, please <a href="https://drupal.asu.edu/wcs/">contact Web Consulting</a> for assistance.</li>'
+    . '<li><strong>SF POST Expired</strong> - The submission has passed its expiration date (currently 10 days after the submission) and it never successfully posted to the middleware. This submission is now marked to be deleted from the site upon the site\'s next cron job.)</li></ul></div></fieldset>'
+    . '<h4>Search submissions by:</h4>';
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['fields'] = FALSE;
   /* Field: Bulk operations: Content */

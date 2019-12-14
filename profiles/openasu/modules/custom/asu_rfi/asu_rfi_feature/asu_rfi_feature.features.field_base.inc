@@ -625,8 +625,8 @@ function asu_rfi_feature_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        'Form_Completed' => 'Ready for SF submission',
-        'Form_Multi_Partial' => 'Partial multiform submission',
+        'Form_Completed' => 'Ready for SF POST',
+        'Form_Multi_Partial' => 'Partial multiform submitted',
         'SF_Pending' => 'SF POST Pending',
         'SF_Failed' => 'SF POST Failed',
         'SF_Completed' => 'SF POST Successful',

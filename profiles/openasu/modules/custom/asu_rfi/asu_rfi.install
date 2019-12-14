@@ -183,7 +183,7 @@ function asu_rfi_update_7003(&$sandbox) {
  * Update ASU RFI submission statuses to more instructional, guiding values
  */
 function asu_rfi_update_7004(&$sandbox) {
-  // Update these four Status values:
+  // 1) Update EXISTING Submission Status values in field_data tables
   // Complete => Form_Completed
   // Incomplete => Form_Multi_Partial
   // Pending => SF_Pending
@@ -208,7 +208,43 @@ function asu_rfi_update_7004(&$sandbox) {
       $query->execute();
     }
   }
-  // Rebuild ASU RFI feature to update the RFI forms
+
+  // 2) MANUALLY update field_rfi_submission_status in field_config (values exist).
+  $query = Database::getConnection('default', 'default')
+    ->select('field_config', 'fc')
+    ->fields('fc', array('data'))
+    ->condition('fc.field_name', 'field_rfi_submission_status', 'LIKE')
+    ->execute();
+  $field_base = $query->fetchField();
+  if (!empty($field_base)) {
+    $field_base = unserialize($field_base);
+    if (isset($field_base['settings']['allowed_values'])) {
+      $field_base['settings']['allowed_values'] = array(
+        'Form_Completed' => 'Ready for SF POST',
+        'Form_Multi_Partial' => 'Partial multiform submitted',
+        'SF_Pending' => 'SF POST Pending',
+        'SF_Failed' => 'SF POST Failed',
+        'SF_Completed' => 'SF POST Successful',
+        'SF_Expired' => 'SF POST Expired',
+      );
+    } else {
+      watchdog('asu_rfi', 'Field field_rfi_submission_status settings could not be updated.'
+        . 'Check the form dropdown to ensure the proper values are available.', WATCHDOG_ERROR);
+    }
+    $field_base = serialize($field_base);
+    Database::getConnection('default')
+      ->update('field_config')
+      ->fields(array('data' => $field_base))
+      ->condition('field_name', 'field_rfi_submission_status', 'LIKE')
+      ->execute();
+
+    // Empty form_cache table to reset node edit forms with old values (probably needs cleanup anyways)
+    Database::getConnection('default')
+      ->delete('cache_form')
+      ->execute();
+  }
+
+  // 3) Rebuild ASU RFI feature to update the RFI forms
   features_rebuild(array(
     'asu_rfi_feature' => array(
       'views_default', 'field_base')

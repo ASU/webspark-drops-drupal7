@@ -44,6 +44,43 @@ function asu_rfi_views_api() {
   );
 }
 
+/**
+ * Implements hook_views_pre_render().
+ */
+function asu_rfi_views_pre_render(&$view) {
+  // For the RFI report page intro
+ if ($view->name === 'asu_rfi_submissions_report') {
+   drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.report.js',   array(
+     'type' => 'file',
+     'scope' => 'header',
+     'group' => JS_THEME,
+     'weight' => 20,
+   ));
+   drupal_add_js('/misc/collapse.js',   array(
+     'type' => 'file',
+     'scope' => 'header',
+     'group' => JS_THEME,
+     'weight' => 19,
+   ));
+ }
+}
+
+/*function HOOK_views_pre_render ( &$view ) {
+  /// check to make sure the view has a classname
+  if ( $view->display_handler && !empty($view->display_handler->options['css_class']) ) {
+    $cln = $view->display_handler->options['css_class'];
+    $cls = 'CLASS GOES HERE';
+    /// test that the classname contains our class
+    if ( preg_match('/(^|\s+)' . preg_quote($cls) . '(\s+|$)/i', $cln) ) {
+      /// build the path to the js, which is local to my module, js/view.js
+      $sep = DIRECTORY_SEPARATOR;
+      $dir = rtrim(drupal_get_path('module', 'HOOK'), $sep);
+      $pth = "{$dir}{$sep}js{$sep}view.js";
+      drupal_add_js($pth);
+    }
+  }
+}
+*/
 /*********************************************************************
  * BLOCKS
  *********************************************************************/
@@ -174,7 +211,7 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
         // instance setting using array_intersect_key function
       if (($instance_settings['form_type'] == 'ugrad_longform')
         || ($instance_settings['form_type'] == 'current_undergrad_form')) {
-        $program_options = _asu_rfi_get_active_undergrad_programs();
+        $program_options = _asu_rfi_get_active_programs(ASU_RFI_PROSPECT_LEVEL_UNDERGRAD);
         if (!empty($instance_settings['programs'])) {
           $programs = array_intersect_key($program_options, array_flip($instance_settings['programs']));
         }
@@ -188,7 +225,7 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
       // Grad long + current forms settings ONLY
       if (($instance_settings['form_type'] == 'graduate_longform')
         || ($instance_settings['form_type'] == 'current_grad_form')) {
-        $program_options = _asu_rfi_get_active_graduate_programs();
+        $program_options = _asu_rfi_get_active_programs(ASU_RFI_PROSPECT_LEVEL_GRAD);
         if (!empty($instance_settings['grad_programs'])) {
           $programs = array_intersect_key($program_options, array_flip($instance_settings['grad_programs']));
         }
@@ -295,7 +332,7 @@ function asu_rfi_block_configure($delta = '', $multi_id = NULL) {
 
       $program_settings = $instance_settings['programs'] ? $instance_settings['programs'] : NULL;
 
-      $program_options = _asu_rfi_get_active_undergrad_programs();
+      $program_options = _asu_rfi_get_active_programs(ASU_RFI_PROSPECT_LEVEL_UNDERGRAD);
       //undergrad programs list
       $form['asu_rfi_form_block_programs'] = array(
         '#type' => 'select',
@@ -320,7 +357,7 @@ function asu_rfi_block_configure($delta = '', $multi_id = NULL) {
       // if grad degrees are available, populate the grad degrees field
       if (variable_get('asu_rfi_graduate_degree_type') == 'graduate') {
         $grad_program_settings = $instance_settings['grad_programs'] ? $instance_settings['grad_programs'] : NULL;
-        $grad_program_options = _asu_rfi_get_active_graduate_programs();
+        $grad_program_options = _asu_rfi_get_active_programs(ASU_RFI_PROSPECT_LEVEL_GRAD);
 
         //grad programs list
         $form['asu_rfi_form_block_grad_programs'] = array(
@@ -825,7 +862,7 @@ function asu_rfi_cron_queue_info() {
   );
   // Delete stale/completed submissions.
   $queues['asu_rfi_delete_submissions_queue'] = array(
-    'worker_callback' => '_asu_rfi_cron_delete_submissions',
+    'worker callback' => '_asu_rfi_cron_delete_submissions',
     'time' => 20,
   );
   return $queues;
