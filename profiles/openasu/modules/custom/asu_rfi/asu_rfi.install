@@ -186,14 +186,14 @@ function asu_rfi_update_7004(&$sandbox) {
   // 1) Update EXISTING Submission Status values in field_data tables
   // Complete => Form_Completed
   // Incomplete => Form_Multi_Partial
-  // Pending => SF_Pending
+  // Pending => SF_Multi_Pending
   // action_required => SF_Failed
   // SF_Complete => SF_Completed
   $tables = _asu_rfi_get_status_field_tables();
   $statuses = array(
     'Complete' => 'Form_Completed',
     'Incomplete' => 'Form_Multi_Partial',
-    'Pending' => 'SF_Pending',
+    'Pending' => 'SF_Multi_Pending',
     'action_required' => 'SF_Failed',
     'SF_Complete' => 'SF_Completed',
   );
@@ -209,7 +209,8 @@ function asu_rfi_update_7004(&$sandbox) {
     }
   }
 
-  // 2) MANUALLY update field_rfi_submission_status in field_config (values exist).
+  // 2) MANUALLY update field_rfi_submission_status in field_config (values exist),
+  // and adding new SF_Expired value.
   $query = Database::getConnection('default', 'default')
     ->select('field_config', 'fc')
     ->fields('fc', array('data'))
@@ -222,7 +223,7 @@ function asu_rfi_update_7004(&$sandbox) {
       $field_base['settings']['allowed_values'] = array(
         'Form_Completed' => 'Ready for SF POST',
         'Form_Multi_Partial' => 'Partial multiform submitted',
-        'SF_Pending' => 'SF POST Pending',
+        'SF_Multi_Pending' => 'SF POST Multiform Pending',
         'SF_Failed' => 'SF POST Failed',
         'SF_Completed' => 'SF POST Successful',
         'SF_Expired' => 'SF POST Expired',
@@ -250,6 +251,11 @@ function asu_rfi_update_7004(&$sandbox) {
       'views_default', 'field_base')
     )
   );
+  // 4) Manually clears views cache for Submissions report view.
+  $view = views_get_view('asu_rfi_submissions_report');
+  $view->set_display('default');
+  $cache = $view->display_handler->get_plugin('cache');
+  $cache->cache_flush();
 }
 
 /**

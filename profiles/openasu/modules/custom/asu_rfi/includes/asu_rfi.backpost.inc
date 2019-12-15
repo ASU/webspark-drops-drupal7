@@ -47,7 +47,7 @@ function asu_rfi_fail_post($hash, $nid) {
 
     if (isset($node_wrapper->field_rfi_submission_status)) {
       if ($node_wrapper->field_rfi_submission_status->value() == "Form_Completed") {
-        $node_wrapper->field_rfi_submission_status->set("SF_Pending");
+        $node_wrapper->field_rfi_submission_status->set("SF_Failed");
       }
     }
 

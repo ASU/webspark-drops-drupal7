@@ -99,7 +99,7 @@ If that additional submission to the middleware is also successful, then the pro
 
 * Status exception for multistep/multipage forms: When the 1st page multiform is saved in the site database successfully, the submission's status is set to "Form_Multi_Partial" (in lieu of "Complete"). This status will remain until either 1) the second half of the form is also submitted on the next/last page (which sets it to "Complete"), or 2) the site's cron job is run. At that time, the site tries (during the same HTTP request) to submit the submission to the middleware (the same as above). This will end up with a status of "SF_Completed" (success) or an error is returned and the status is set to ("SF_Failed").
 
-Cron jobs will attempt to process all "Pending" or "Form_Multi_Partial" submissions that aren't beyond 10 days old. If the status is "SF POST Pending", its status is set to "SF_Failed" and the module makes one more attempt to POST the data to the middleware. If that POST fails, no future, automated attempts will be made to submit the data. A site administrator will need to resolve the issue and post it manually at /admin/reports/asu-rfi-submissions-report under "Operations" (views_bulk_operations).
+Cron jobs will attempt to process all "SF_Multi_Pending" or "Form_Multi_Partial" submissions that aren't beyond 10 days old. A site administrator will need to resolve the issue and post it manually at /admin/reports/asu-rfi-submissions-report under "Operations" (views_bulk_operations).
 
 See /admin/reports/asu-rfi-submissions-report for the list of submissions and their statuses.
 
