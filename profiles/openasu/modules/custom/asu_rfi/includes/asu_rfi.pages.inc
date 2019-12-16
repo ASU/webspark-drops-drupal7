@@ -2068,7 +2068,7 @@ function _asu_rfi_program_location_confirm($prog, $campus, $loc) {
   if (isset($result['node'])) {
     $result_nodes = $result['node'];
     $programs = _asu_rfi_get_program_codes($result_nodes, 'programs');
-    $locations = $programs[$degreeMappings['field_degree_campus']]['und'];
+    $locations = $programs[$degreeMappings['field_degree_campus']][LANGUAGE_NONE];
     foreach ($locations as $location) {
       if (!in_array($location['value'], $campusOptions)) {
         array_push($campusOptions, $location['value']);

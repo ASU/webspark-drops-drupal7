@@ -19,7 +19,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
   $nid = $data['submission_nodeid'];
   $node = node_load($nid);
   $nodeArr = array(
-    $node->field_rfi_program['und'][0]['value'] => $node->field_rfi_program_name['und'][0]['value']
+    $node->field_rfi_program[LANGUAGE_NONE][0]['value'] => $node->field_rfi_program_name[LANGUAGE_NONE][0]['value']
   );
   $availableCampuses = _asu_rfi_get_campus_location_options($nodeArr);
   $node_wrapper = entity_metadata_wrapper('node', $node);
@@ -270,7 +270,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
           if (!empty($mw_auth_key)) {
             if (!empty($to_email)) {
               if (!isset($data['cron_run']) || ($data['cron_run'] != "Cron_running")) {
-                _asu_rfi_send_failed_post_email($to_email, $nid);
+                _asu_rfi_create_failed_post_email($to_email, $nid);
               }
             }
           }

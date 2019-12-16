@@ -770,7 +770,7 @@ function asu_rfi_cron() {
     asu_rfi_get_form_select_options('rfi_dedupe_list_terms');
   }
 
-  // #2 - Check for unposted leads (confirmation == -1), and add them to the cron queue.
+  // #2 - Cron + Queue API - Check for unposted leads (confirmation == -1), and add them to the cron queue.
   $queue = DrupalQueue::get('asu_rfi_failed_leads_queue');
   $queue->deleteQueue(); // Why??
   $queue = DrupalQueue::get('asu_rfi_failed_leads_queue');
@@ -796,7 +796,7 @@ function asu_rfi_cron() {
     ->addMetaData('account', user_load(1)); // Run the query as user 1.
   $results = $query->execute();
 
-  // Add failed leads to the cron jobs queue (passed into hook_cron_queue_info() worker)
+  // Add failed leads to the cron jobs queue
   if (isset($results['node'])) {
     // For each failed lead, add it to the asu_rfi_failed_leads_queue.
     foreach ($results['node'] as $key => $failed_rfi_lead) {
@@ -804,8 +804,8 @@ function asu_rfi_cron() {
     }
   }
 
-  // #3 - Delete ASU RFI nodes that have either 1) been submitted to SF already (SF_Complete), or
-  // 2) Have gone 10 days without getting successfully processed (stuck in SF_Failed, SF_Multi_Pending, etc.).
+  // #3 - Cron + Queue API - Delete ASU RFI nodes that have either 1) been submitted to SF already (SF_Complete), or
+  // 2) Has gone 14 days without getting successfully processed (stuck in SF_Failed, SF_Multi_Pending, etc.).
   $queue_2 = DrupalQueue::get('asu_rfi_delete_submissions_queue');
   $all_nids = _asu_rfi_get_submissions_to_delete();
   $count_nids = (int) count($all_nids);
@@ -813,8 +813,11 @@ function asu_rfi_cron() {
     foreach ($all_nids as $nid) {
       $queue_2->createItem($nid);
     }
-    watchdog('asu_rfi', '@count ASU RFI submissions have been added to the deletion queue.',
-      array('@count' => $count_nids), WATCHDOG_NOTICE);
+    watchdog('asu_rfi', '@count ASU RFI submissions (@nids) have'
+      . ' been added to the deletion queue.', array(
+        '@count' => $count_nids,
+        '@nids' => implode(",", $all_nids))
+      , WATCHDOG_NOTICE);
   }
 
   // #4 - If the site hasn't posted submissions to salesforce for two days, send an email to administrator.
@@ -869,33 +872,33 @@ function asu_rfi_cron_queue_info() {
  */
 function _asu_rfi_post_middleware_data($node, $post = array(), $program = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
   // Global, shared fields (undergrad and graduate)
-  $post['domain'] = $node->field_rfi_domain['und'][0]['value'];
-  $post['first_name'] = $node->field_rfi_first_name['und'][0]['value'];
-  $post['last_name'] = $node->field_rfi_last_name['und'][0]['value'];
-  $post['email'] = $node->field_rfi_email['und'][0]['value'];
-  $post['birthdate'] = base64_decode($node->field_rfi_dob['und'][0]['value']);
-  $post['phone'] = $node->field_rfi_phone['und'][0]['value'];
-  $post['address'] = isset($node->field_rfi_address['und'][0]['value']) ? $node->field_rfi_address['und'][0]['value'] : '';
-  $post['state'] = isset($node->field_rfi_state['und'][0]['value']) ? $node->field_rfi_state['und'][0]['value'] : '';
-  $post['country'] = isset($node->field_rfi_country['und'][0]['value']) ? $node->field_rfi_country['und'][0]['value'] : '';
-  $post['military'] = isset($node->field_rfi_veteran['und'][0]['value']) ? $node->field_rfi_veteran['und'][0]['value'] : '';
-  $post['program_code'] = isset($node->field_rfi_program['und'][0]['value']) ? $node->field_rfi_program['und'][0]['value'] : '';
-  $post['citizenship'] = isset($node->field_rfi_international['und'][0]['value']) ? $node->field_rfi_international['und'][0]['value'] : '';
-  $post['questions'] = isset($node->field_rfi_question['und'][0]['value']) ? $node->field_rfi_question['und'][0]['value'] : '';
-  $post['student_type'] = $node->field_rfi_student_type['und'][0]['value'];
+  $post['domain'] = $node->field_rfi_domain[LANGUAGE_NONE][0]['value'];
+  $post['first_name'] = $node->field_rfi_first_name[LANGUAGE_NONE][0]['value'];
+  $post['last_name'] = $node->field_rfi_last_name[LANGUAGE_NONE][0]['value'];
+  $post['email'] = $node->field_rfi_email[LANGUAGE_NONE][0]['value'];
+  $post['birthdate'] = base64_decode($node->field_rfi_dob[LANGUAGE_NONE][0]['value']);
+  $post['phone'] = $node->field_rfi_phone[LANGUAGE_NONE][0]['value'];
+  $post['address'] = isset($node->field_rfi_address[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_address[LANGUAGE_NONE][0]['value'] : '';
+  $post['state'] = isset($node->field_rfi_state[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_state[LANGUAGE_NONE][0]['value'] : '';
+  $post['country'] = isset($node->field_rfi_country[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_country[LANGUAGE_NONE][0]['value'] : '';
+  $post['military'] = isset($node->field_rfi_veteran[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_veteran[LANGUAGE_NONE][0]['value'] : '';
+  $post['program_code'] = isset($node->field_rfi_program[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_program[LANGUAGE_NONE][0]['value'] : '';
+  $post['citizenship'] = isset($node->field_rfi_international[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_international[LANGUAGE_NONE][0]['value'] : '';
+  $post['questions'] = isset($node->field_rfi_question[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_question[LANGUAGE_NONE][0]['value'] : '';
+  $post['student_type'] = $node->field_rfi_student_type[LANGUAGE_NONE][0]['value'];
   // Location
-  $post['location'] = (isset($node->field_rfi_location['und'][0]['value']) && !empty($node->field_rfi_location['und'][0]['value']))
-    ? $node->field_rfi_location['und'][0]['value']
+  $post['location'] = (isset($node->field_rfi_location[LANGUAGE_NONE][0]['value']) && !empty($node->field_rfi_location[LANGUAGE_NONE][0]['value']))
+    ? $node->field_rfi_location[LANGUAGE_NONE][0]['value']
     : 'no_preference';
   // Remaining global/shared fields
-  $post['campus'] = $node->field_rfi_campus['und'][0]['value'];
-  $post['zipcode'] = isset($node->field_rfi_zipcode['und'][0]['value']) ? $node->field_rfi_zipcode['und'][0]['value'] : '';
-  $post['mobile_check'] = isset($node->field_rfi_sms_opted['und'][0]['value']) ? $node->field_rfi_sms_opted['und'][0]['value'] : '';
+  $post['campus'] = $node->field_rfi_campus[LANGUAGE_NONE][0]['value'];
+  $post['zipcode'] = isset($node->field_rfi_zipcode[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_zipcode[LANGUAGE_NONE][0]['value'] : '';
+  $post['mobile_check'] = isset($node->field_rfi_sms_opted[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_sms_opted[LANGUAGE_NONE][0]['value'] : '';
   $post['submission_nodeid'] = $node->nid;
 
   // NOW - Grad or undergrad??
   // Graduate program
-  $type_of_form = isset($node->field_rfi_form_type['und'][0]['value']) ? $node->field_rfi_form_type['und'][0]['value'] : '';
+  $type_of_form = isset($node->field_rfi_form_type[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_form_type[LANGUAGE_NONE][0]['value'] : '';
   if ($program == ASU_RFI_PROSPECT_LEVEL_GRAD) {
     if ($type_of_form == "Graduate long form") {
       $post['type_of_form'] = 'LF';
@@ -903,7 +906,7 @@ function _asu_rfi_post_middleware_data($node, $post = array(), $program = ASU_RF
     if ($type_of_form == "Graduate multi form") {
       $post['type_of_form'] = 'MF';
     }
-    $post['semester_name'] = isset($node->field_rfi_start_term['und'][0]['value']) ? $node->field_rfi_start_term['und'][0]['value'] : '';
+    $post['semester_name'] = isset($node->field_rfi_start_term[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_start_term[LANGUAGE_NONE][0]['value'] : '';
     asu_rfi_post_to_sf_middleware($post, ASU_RFI_PROSPECT_LEVEL_GRAD);
   }
   // Undergrad program (default)
@@ -914,8 +917,8 @@ function _asu_rfi_post_middleware_data($node, $post = array(), $program = ASU_RF
     if ($type_of_form == "Undergraduate multi form") {
       $post['type_of_form'] = 'MF';
     }
-    $post['ip_address'] = isset($node->field_rfi_ip_address['und'][0]['value']) ? $node->field_rfi_ip_address['und'][0]['value'] : '';
-    $post['start_date'] = $node->field_rfi_start_term_code['und'][0]['value'];
+    $post['ip_address'] = isset($node->field_rfi_ip_address[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_ip_address[LANGUAGE_NONE][0]['value'] : '';
+    $post['start_date'] = $node->field_rfi_start_term_code[LANGUAGE_NONE][0]['value'];
     asu_rfi_post_to_sf_middleware($post, ASU_RFI_PROSPECT_LEVEL_UNDERGRAD);
   }
   variable_set('asu_rfi_last_attempt_SF_posting', time());
@@ -929,7 +932,9 @@ function _asu_rfi_post_middleware_data($node, $post = array(), $program = ASU_RF
  */
 function _asu_rfi_cron_repost_data($data) {
   $node = node_load($data->nid);
-  $student_type = (sizeof($node->field_rfi_prospect_level) != 0) ? $node->field_rfi_prospect_level['und'][0]['value'] : '';
+  $student_type = (sizeof($node->field_rfi_prospect_level) !== 0)
+    ? $node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value']
+    : '';
   if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
       || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
     _asu_rfi_post_middleware_data($node, array(), $student_type);
@@ -941,7 +946,12 @@ function _asu_rfi_cron_repost_data($data) {
  * @param string $data - node ID to be deleted.
  */
 function _asu_rfi_cron_delete_submissions($data) {
-  node_delete($data);
+  $node = node_load($data);
+  $status = (isset($node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value']))
+    ? $node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value'] : '';
+  if (!empty($status) && in_array($status, array('SF_Completed', 'SF_Expired'))) {
+    node_delete($data);
+  }
 }
 
 /*******************************************************************************
@@ -980,7 +990,7 @@ function asu_rfi_action_info() {
  * @param $context
  */
 function asu_rfi_bulk_submit_action(&$node, $context) {
-  $student_type = (isset($node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value'])) ? $node->field_rfi_prospect_level['und'][0]['value'] : '';
+  $student_type = (isset($node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value'])) ? $node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value'] : '';
   if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
       || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
     _asu_rfi_post_middleware_data($node, array(), $student_type);
@@ -1244,10 +1254,10 @@ function _asu_rfi_get_program_codes($result_nodes, $data_type) {
   $programs = (array) $programs;
   /** @noinspection PhpUnusedLocalVariableInspection */
   $desiredProg = array(
-    'code' => $programs[$degreeMappings['field_academic_plan']]['und']['0']['value'],
+    'code' => $programs[$degreeMappings['field_academic_plan']][LANGUAGE_NONE]['0']['value'],
     'vid' => $programs['vid'],
     'title' => $programs['title'],
-    'locations' => $programs[$degreeMappings['field_degree_campus']]['und'],
+    'locations' => $programs[$degreeMappings['field_degree_campus']][LANGUAGE_NONE],
   );
   $out = ${$data_type};
   return $out;

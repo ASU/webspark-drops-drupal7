@@ -110,8 +110,7 @@ function asu_rfi_uninstall() {
  * Enable Honeypot module if ASU RFI module is enabled (Now required for 1.2+)
  */
 function asu_rfi_update_7000(&$sandbox) {
-  if (module_exists('asu_rfi') && !module_exists('honeypot'))
-  {
+  if (module_exists('asu_rfi') && !module_exists('honeypot'))  {
     module_enable(array('honeypot'));
   }
 }
@@ -119,7 +118,7 @@ function asu_rfi_update_7000(&$sandbox) {
 /**
  * Forces a rebuild of the module's features to include the domain and location piece
  */
-function asu_rfi_update_7001(&$sandbox){
+function asu_rfi_update_7001(&$sandbox) {
   features_revert_module('asu_rfi_feature');
 }
 
@@ -269,7 +268,7 @@ function asu_rfi_update_7005(&$sandbox) {
     // Batch API used, just in case there are a ton of nodes to delete.
     if (!isset($sandbox['progress'])) {
       $sandbox['progress'] = 0;
-      $sandbox['max'] = count($all_nids);
+      $sandbox['max'] = 20;
       $sandbox['messages'] = array();
       $sandbox['current_node'] = -1; // Last node read (starts at -1)
     }
@@ -292,11 +291,11 @@ function asu_rfi_update_7005(&$sandbox) {
 
     if ($sandbox['#finished']) {
       // $final_message = '<ul><li>' . implode('</li><li>', $sandbox['messages']) . "</li></ul>";
-      return t('The ASU RFI update has completed; All expired, stale or completed ASU RFI form submissions have been deleted.');
+      return t('All expired and completed ASU RFI form submissions have been deleted.');
     }
-    $message = "Deleted " . $count . " ASU RFI completed/expired submissions.";
+    $message = "Deleted " . $sandbox['max'] . " ASU RFI completed/expired submissions.";
   } else {
-    $message = "No expired, stale or completed ASU RFI nodes to delete. Skipping...";
+    $message = "No expired or completed ASU RFI nodes were found to delete. Skipping...";
     drupal_set_message($message, 'info');
   }
   watchdog('asu_rfi', $message, array(), WATCHDOG_INFO);
