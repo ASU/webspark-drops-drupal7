@@ -124,8 +124,7 @@ function asu_rfi_update_7001(&$sandbox){
 }
 
 /**
- * Updates variable names not properly set by ASU RFI module
- * @throws \InvalidMergeQueryException
+ * Updates variable names not properly set by ASU RFI module.
  */
 function asu_rfi_update_7002(&$sandbox){
   $or = db_or()
@@ -230,7 +229,7 @@ function asu_rfi_update_7004(&$sandbox) {
       );
     } else {
       watchdog('asu_rfi', 'Field field_rfi_submission_status settings could not be updated.'
-        . 'Check the form dropdown to ensure the proper values are available.', WATCHDOG_ERROR);
+        . 'Check the Submission status field dropdown to ensure the proper values are available.', WATCHDOG_ERROR);
     }
     $field_base = serialize($field_base);
     Database::getConnection('default')
@@ -259,8 +258,7 @@ function asu_rfi_update_7004(&$sandbox) {
 }
 
 /**
- * Delete old Salesforce submissions that have processed or expired.
- * @return array|mixed|string|null
+ * Delete ASU RFI submissions that have been sent to Salesforce or expired.
  */
 function asu_rfi_update_7005(&$sandbox) {
   // Get ASU RFI nodes to delete.
@@ -301,5 +299,19 @@ function asu_rfi_update_7005(&$sandbox) {
   } else {
     $message = "No expired, stale or completed ASU RFI nodes to delete. Skipping...";
     drupal_set_message($message, 'info');
+  }
+}
+
+/**
+ * Add separate VBO permission for using views bulk operations.
+ */
+function asu_rfi_update_7006(&$sandbox) {
+  $roles = user_roles(TRUE, 'administer asu rfi');
+  if (count($roles)) {
+    foreach ($roles as $nid => $name) {
+      user_role_grant_permissions($nid, array('execute asu rfi vbo'));
+    }
+    watchdog('asu_rfi', 'Added new VBO permission for roles that had existing '
+      . '"administer ASU RFI" permissions.', array(), WATCHDOG_INFO);
   }
 }

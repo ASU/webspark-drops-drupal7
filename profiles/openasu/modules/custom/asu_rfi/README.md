@@ -1,8 +1,6 @@
 DESCRIPTION
 --------------------------
-The ASU RFI module provides ASU sites with RFI form functionality with
-automatic posting to ASU's SalesForce middleware (which forwards
-submissions into Salesforce separately from this site).
+The ASU RFI module provides ASU sites with RFI form functionality with automatic posting to ASU's SalesForce middleware (which forwards submissions into Salesforce separately from this site).
 
 INSTALLATION
 --------------------------
@@ -86,29 +84,38 @@ Each RFI block instance has its own independent settings, configurable through A
 
 Some of the form types automatically define which programs will be listed in the form while others allow you to manually determine the program options.
 
-For more detailed instructions on configuration, go to 
-https://brandguide.asu.edu/executing-the-brand/web-and-mobile/webspark/features/asu_rfi.
+For more detailed instructions on configuration, go to https://brandguide.asu.edu/executing-the-brand/web-and-mobile/webspark/features/asu_rfi.
 
-SUBMISSION STATUS
+Submissions to Salesforce
 --------------------------
-When most RFI forms' HTML form are submitted properly, the form's submission is saved in the site's database and the status is immediately set to "Form_Completed".
 
-The process isn't over yet, however. During the same submission process (same HTTP request), but AFTER the "Complete" status is set, the module immediately tries to submit a modified version of the submission data to one of multiple SalesForce middleware servers (depending on which type of form, the determined environment type (dev/test/prod), and whether it's in testing mode or not based on settings at /admin/config/content/asurfi). 
+When RFI forms are submitted by end users correctly, the form's submission is saved in the site's database and the status is immediately set to "Form_Completed".
 
-If that additional submission to the middleware is also successful, then the process is truly completed and the status of the form submission is updated to "SF_Completed." This is the final status you want to see for all submissions.
+The RFI process isn't over yet, however. During the same submission process (same HTTP request), but AFTER the "Form_Completed" status is set, the module immediately attempts to submit a modified version of the submission data to one of multiple SalesForce middleware servers. (Which middleware server depends on which type of form, the determined environment type (dev/test/prod), and whether it's in testing mode or not based on settings at /admin/config/content/asurfi). 
 
-* Status exception for multistep/multipage forms: When the 1st page multiform is saved in the site database successfully, the submission's status is set to "Form_Multi_Partial" (in lieu of "Complete"). This status will remain until either 1) the second half of the form is also submitted on the next/last page (which sets it to "Complete"), or 2) the site's cron job is run. At that time, the site tries (during the same HTTP request) to submit the submission to the middleware (the same as above). This will end up with a status of "SF_Completed" (success) or an error is returned and the status is set to ("SF_Failed").
+If that 2nd submission to the middleware is also successful, then the process is truly completed - and the status of the form submission is set to "SF_Completed." 
 
-Cron jobs will attempt to process all "SF_Multi_Pending" or "Form_Multi_Partial" submissions that aren't beyond 10 days old. A site administrator will need to resolve the issue and post it manually at /admin/reports/asu-rfi-submissions-report under "Operations" (views_bulk_operations).
+#### Submission status exception for multistep/multipage forms
+
+When the 1st page of the multiform is submitted by the end user, the submission's status is set to "Form_Multi_Partial" (not Form_Completed). This status will remain until either 1) the second half of the form is also submitted by the end user, or 2) the site's cron job is run. At that time, the site tries (during the same HTTP request) to submit the submission to the middleware (the same as above). This will end up with a status of "SF_Completed" (success) or an error is returned and the status is set to ("SF_Failed").
+
+A site administrator will need to resolve the SF_Failed issues (in the node edit page) and then repost it manually at /admin/reports/asu-rfi-submissions-report under "Operations" (views_bulk_operations).
 
 See /admin/reports/asu-rfi-submissions-report for the list of submissions and their statuses.
+
+#### Deletion of submissions
+
+RFI form submissions MUST NOT BE STORED in the web site beyond an honest attempt to submit the data to Salesforce for privacy/security reasons. 
+
+Starting with ASU RFI version 2.0, these submissions will be deleted intermittently by the module during a cron job if they are not manually deleted by the site administrator.
 
 PERMISSIONS
 --------------------------
 'Administer ASU RFI module' - access the module's admin.
 
-Additional access and permissions considerations to the RFI forms themselves
-can be managed through the Drupal blocks system's access controls.
+'Execute ASU RFI VBOs' - Execute ASU RFI VBOs from RFI Submissions view to submit or delete submission nodes. (This is on top of pre-existing Drupal CRUD permissions for nodes.)
+
+Additional access and permissions considerations to the RFI forms themselves can be managed through the Drupal blocks system's access controls.
 
 MODULES
 --------------------------
@@ -137,9 +144,9 @@ TABLES
 
 BLOCKS
 --------------------------
-RFI Master block - DO NOT USE!
-Instead, create Block Instances for individual RFI forms based off the RFI Master
-block.
+RFI Master block - *DO NOT USE THIS BLOCK!*
+
+Instead, create Block Instances for individual RFI forms based off the RFI Master block.
 
 HOOKS
 --------------------------
@@ -149,38 +156,35 @@ TROUBLESHOOTING
 --------------------------
 #### Known issues
 
+**What do the statuses of forms mean?**
+See the explanation of submission statuses at https://_yoursite_.asu.edu/admin/reports/asu-rfi-submissions-report.
+
+**How long does the module wait before deleting completed/expired submissions?**
+
+The submission is currently considered to be expired and marked for deletion at 14 days after the initial submission.
+
+**Can I keep the submissions because we have a special use case?**
+
+No. They must be deleted for privacy/security reasons. Please use Salesforce instead.
+
 **No available majors are available to select in the block's configuration form.**
 
-Make sure the ASU Academic Programs module is enabled, and that you have imported
-the desired degrees/programs. (See that module's README for more information.)
+Make sure the ASU Academic Programs module is enabled, and that you have imported the desired degrees/programs. (See that module's README for more information.)
 
-**This module was working with the ASU Degrees module pulling in the desired degrees,
-but it broke after a Webspark update. What happened?**
+**This module was working with the ASU Degrees module pulling in the desired degrees, but it broke after a Webspark update. What happened?**
 
-The ASU Degrees module has been superseded by the ASU Academic Programs (asu_ap) module.
-The former module no longer works with the ASU Degrees module. (See the asu_ap
-module's README for more information.)
+The ASU Degrees module has been superseded by the ASU Academic Programs (asu_ap) module. The former module no longer works with the ASU Degrees module. (See the asu_ap module's README for more information.)
 
-**I've updated the degrees in the site, but the new major options aren't
-appearing in the block's configuration form.**
+**I've updated the degrees in the site, but the new major options aren't appearing in the block's configuration form.**
 
-If you use caching in your site, RFI form blocks configured so they automatically
-detect context and determine which programs to display can get cached and display
-incorrect options. To avoid this issue, enable the Ajax Block module, and on the
-block configuration page, set the block to load via Ajax. That means an un-cached
-copy of the form will be added to the page via Javascript after the cached page loads.
-This occurs very quickly and doesn't affect the user experience to any great degree.
+If you use caching in your site, RFI form blocks configured so they automatically detect context and determine which programs to display can get cached and display incorrect options. To avoid this issue, enable the Ajax Block module, and on the block configuration page, set the block to load via Ajax. That means an un-cached copy of the form will be added to the page via Javascript after the cached page loads. This occurs very quickly and doesn't affect the user experience to any great degree.
 
 **I'm a non-Webspark user, and the block configurations on RFI form instances are not saving.**
 
-In order to avoid a per-instance bug with the Multiblock module where it forgets
-settings, you should apply the patch in comment #5 on:
-https://www.drupal.org/node/1370966#comment-6408056.) Webspark has had that patch
-applied to resolve that issue.
+In order to avoid a per-instance bug with the Multiblock module where it forgets settings, you should apply the patch in comment #5 on: https://www.drupal.org/node/1370966#comment-6408056.) Webspark has had that patch applied to resolve that issue.
 
 **I don't see my issue listed below, and I've read through the instructions at
-https://brandguide.asu.edu/executing-the-brand/web-and-mobile/webspark/features/asu_rfi.
-What do I do?**
+https://brandguide.asu.edu/executing-the-brand/web-and-mobile/webspark/features/asu_rfi. What do I do?**
 
 Go to https://drupal.asu.edu/wcs for assistance.
 
@@ -190,6 +194,6 @@ ASU RFI module was created by
 Archana Puliroju <apuliroj@asu.edu> and
 Michael Samuelson <mlsamuel@asu.edu>
 
-Updated by Bryan Roseberry <jax@asu.edu>
+Updated by Bryan Roseberry <aubjr@asu.edu>
 
 Maintained by Development, Applications and Design in the UTO.

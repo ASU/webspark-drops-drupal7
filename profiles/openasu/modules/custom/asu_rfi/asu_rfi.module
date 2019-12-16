@@ -20,7 +20,7 @@
  * Jared Rounsavall (jrounsav@asu.edu)
  *
  * @maintainer
- * Bryan Roseberry (jax@asu.edu)
+ * Bryan Roseberry (aubjr@asu.edu)
  *
  * Module provides ASU RFI form submission functionality.
  */
@@ -93,6 +93,10 @@ function asu_rfi_permission() {
     'administer asu rfi' => array(
       'title' => t('Administer ASU RFI'),
       'description' => t('Administer ASU RFI module'),
+    ),
+    'execute asu rfi vbo' => array(
+      'title' => t('Execute ASU RFI VBOs'),
+      'description' => t('Execute ASU RFI VBOs from RFI Submissions view'),
     ),
   );
 }
@@ -964,25 +968,47 @@ function asu_rfi_action_info() {
   return array(
     'asu_rfi_bulk_submit_action' => array(
       'type' => 'node',
-      'label' => t('Submit selected RFI submissions to middleware'),
+      'label' => t('Submit RFI submissions to middleware'),
       array('changes_property'),
       'configurable' => FALSE,
       'vbo_configurable' => FALSE,
       'triggers' => array('any'),
+      'permissions' => array('execute asu rfi vbo', 'administer asu rfi'),
+    ),
+    'asu_rfi_bulk_delete_submissions_action' => array(
+      'type' => 'node',
+      'label' => t('Delete completed and expired RFI submissions'),
+      array('changes_property'),
+      'configurable' => FALSE,
+      'vbo_configurable' => FALSE,
+      'triggers' => array('any'),
+      'permissions' => array('execute asu rfi vbo'),
     ),
   );
 }
 
 /**
- * Callback for hook_action_info
+ * Callback for hook_action_info - POST Middleware a single submission's data to SF
  * @param $node
  * @param $context
  */
 function asu_rfi_bulk_submit_action(&$node, $context) {
-  $student_type = (isset($node->field_rfi_prospect_level['und'][0]['value'])) ? $node->field_rfi_prospect_level['und'][0]['value'] : '';
+  $student_type = (isset($node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value'])) ? $node->field_rfi_prospect_level['und'][0]['value'] : '';
   if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
       || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
     _asu_rfi_post_middleware_data($node, array(), $student_type);
+  }
+}
+/**
+ * Callback for hook_action_info - Delete a single completed/expired submission
+ * @param $node
+ * @param $context
+ */
+function asu_rfi_bulk_delete_submissions_action(&$node, $context) {
+  $status = (isset($node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value']))
+    ? $node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value'] : '';
+  if (!empty($status) && in_array($status, array('SF_Completed', 'SF_Expired'))) {
+    node_delete($node->nid);
   }
 }
 
@@ -1001,7 +1027,7 @@ function _asu_rfi_get_status_field_tables() {
 }
 
 /**
- * Get list of RFI nodes to delete
+ * Get list of RFI nodes to delete to clean out completed/expired RFI submissions.
  * @return array $all_nids
  */
 function _asu_rfi_get_submissions_to_delete() {
@@ -1099,7 +1125,7 @@ function _asu_rfi_get_campus_location_options($pcodes) {
 }
 
 /**
- * Returns correct campusID for Salesforce
+ * Returns correct campusID string for Salesforce compatibility
  * @param $campus
  * @return string
  * @TODO pull in from feed to stay up to date

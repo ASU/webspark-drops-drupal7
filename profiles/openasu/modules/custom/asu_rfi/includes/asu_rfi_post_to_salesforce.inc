@@ -12,6 +12,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
   $submission_data = array();
   $college_code = $url = $body = '';
   $form_mode = variable_get('asu_rfi_form_mode');
+  $sf_pending = FALSE;
 
   // Get RFI submission node
   $degreeMappings = _asu_rfi_get_degree_field_mappings();
@@ -26,10 +27,18 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
   // Get information for logging
   $nid_info = (isset($node_wrapper->nid)) ? ' for NID ' . $node_wrapper->nid->value() : '';
 
-  // Status updated for incomplete multiform submissions to send at time of cron run
+  // Incomplete multiform submissions logic
   if (isset($node_wrapper->field_rfi_submission_status)) {
     if ($node_wrapper->field_rfi_submission_status->value() === "Form_Multi_Partial") {
+      // Do not send to SalesForce yet because this is NOT a cron run.
+      // This is the initial form submission.
+      $sf_pending = TRUE;
       $node_wrapper->field_rfi_submission_status->set('SF_Multi_Pending');
+      $node_wrapper->save();
+    } elseif ($node_wrapper->field_rfi_submission_status->value() == "SF_Multi_Pending") {
+      // Change the multiform submission to "Ready for SF POST" because this is happening
+      // AFTER the initial form submission.
+      $node_wrapper->field_rfi_submission_status->set('Form_Completed');
       $node_wrapper->save();
     }
   }
@@ -193,14 +202,15 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
   }
 
   ///////////////////////////////////
-  // Post data to SalesForce middleware via cURL
+  // Post data to SalesForce middleware via cURL if the form is ready to submit.
   // NOTE: The Salesforce endpoint for undergraduate testing submissions is
   // publicly available for undergraduate submissions.
   // The graduate endpoint for testing (currently requestinfo-qa.asu.edu)
   // is not available for testing from outside the ASU network (including Pantheon sites).
   ///////////////////////////////////
 
-  if ($environ['endpoint_access'] === true || $type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
+  if (($environ['endpoint_access'] === true || $type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD)
+    && (!$sf_pending)) {
     try {
       $ch = curl_init();
       $options = array(
@@ -305,20 +315,25 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
         E_USER_ERROR);
     }
   }
-  else { // Do not attempt a JSON submission to a SF middleware endpoint.
-    $message_final = 'NO RFI SUBMISSION ATTEMPTED. Submissions to ' . $url
-      . ' from (' . $base_url . ') will not work due to ASU network access restrictions.';
+  else { // Do not attempt submission to SF middleware
+    $message_final = 'NO RFI SUBMISSION ATTEMPTED - ';
+    if ($sf_pending) { // Multiform submission not ready to submit yet
+      $message_final .= 'Submission to SF for NID ' . $nid . ' will run when the student completes
+      the form, at the next cron job, or manually via a VBO under "OPERATIONS".';
+    } else { // Other connectivity issue?
+      $message_final = 'Submissions to ' . $url . ' from (' . $base_url . ') will not work
+       due to ASU network access restrictions.';
+      if (isset($node_wrapper->field_rfi_error_message)) {
+        $node_wrapper->field_rfi_error_message->set($message_final);
+      }
+      if (isset($node_wrapper->field_rfi_submission_status)) {
+        $node_wrapper->field_rfi_submission_status->set('SF_Failed');
+      }
+      $node_wrapper->save();
+    }
     watchdog('asu_rfi', $message_final, array(), WATCHDOG_WARNING);
     if (drupal_valid_path('admin')) {
-      drupal_set_message($message_final, 'warning');
+      drupal_set_message($message_final, 'info');
     }
-
-    if (isset($node_wrapper->field_rfi_error_message)) {
-      $node_wrapper->field_rfi_error_message->set($message_final);
-    }
-    if (isset($node_wrapper->field_rfi_submission_status)) {
-      $node_wrapper->field_rfi_submission_status->set('SF_Failed');
-    }
-    $node_wrapper->save();
   }
 }
