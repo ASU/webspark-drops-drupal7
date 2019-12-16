@@ -861,7 +861,102 @@ function asu_rfi_cron_queue_info() {
 }
 
 /*********************************************************************
- * CALLBACKS
+ * CRON CALLBACKS
+ *********************************************************************/
+
+/**
+ * Cron worker callback
+ * Load an RFI submission node object to attempt to repost to SF middleware
+ * Called once for each submission from the cron $queues array populated in hook_cron (createItem()).
+ * @param object $data - RFI node ID, revision ID, node type
+ */
+function _asu_rfi_cron_repost_data($data) {
+  $node = node_load($data->nid);
+  $student_type = (sizeof($node->field_rfi_prospect_level) !== 0)
+    ? $node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value']
+    : '';
+  if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
+      || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
+    _asu_rfi_post_middleware_data($node, array(), $student_type);
+  }
+}
+
+/**
+ * Cron worker callback for deleting RFI submissions
+ * @param string $data - node ID to be deleted.
+ */
+function _asu_rfi_cron_delete_submissions($data) {
+  $node = node_load($data);
+  $status = (isset($node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value']))
+    ? $node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value'] : '';
+  if (!empty($status) && in_array($status, array('SF_Completed', 'SF_Expired'))) {
+    node_delete($data);
+    if (function_exists('drush_log')) {
+      drush_log(t('Deletion of ASU RFI node @nid attempted...', array('@nid' => $data)), 'success');
+    }
+  }
+}
+
+/*********************************************************************
+ * VBOs + Actions CALLBACKS
+ *********************************************************************/
+
+/**
+ * Implements hook_action_info().
+ */
+function asu_rfi_action_info() {
+  return array(
+    'asu_rfi_bulk_submit_action' => array(
+      'type' => 'node',
+      'label' => t('Submit RFI submissions to middleware'),
+      array('changes_property'),
+      'configurable' => FALSE,
+      'vbo_configurable' => FALSE,
+      'triggers' => array('any'),
+      'permissions' => array('execute asu rfi vbo', 'administer asu rfi'),
+    ),
+    'asu_rfi_bulk_delete_submissions_action' => array(
+      'type' => 'node',
+      'label' => t('Delete completed and expired RFI submissions'),
+      array('changes_property'),
+      'configurable' => FALSE,
+      'vbo_configurable' => FALSE,
+      'triggers' => array('any'),
+      'permissions' => array('execute asu rfi vbo'),
+    ),
+  );
+}
+
+/**
+ * Callback for hook_action_info - POST Middleware a single submission's data to SF
+ * @param $node
+ * @param $context
+ */
+function asu_rfi_bulk_submit_action(&$node, $context) {
+  $student_type = (isset($node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value'])) ? $node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value'] : '';
+  if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
+      || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
+    _asu_rfi_post_middleware_data($node, array(), $student_type);
+  }
+}
+
+/**
+ * Callback for hook_action_info - Delete a single completed/expired submission
+ * @param $node
+ * @param $context
+ */
+function asu_rfi_bulk_delete_submissions_action(&$node, $context) {
+  $status = (isset($node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value']))
+    ? $node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value'] : '';
+  if (!empty($status) && in_array($status, array('SF_Completed', 'SF_Expired'))) {
+    node_delete($node->nid);
+    watchdog('asu_rfi', t('Deletion of ASU RFI node @nid attempted.'),
+      array('@nid' => $node->nid), WATCHDOG_NOTICE);
+  }
+}
+
+/*********************************************************************
+ * CALLBACKS - Salesforce
  *********************************************************************/
 
 /**
@@ -924,90 +1019,6 @@ function _asu_rfi_post_middleware_data($node, $post = array(), $program = ASU_RF
   variable_set('asu_rfi_last_attempt_SF_posting', time());
 }
 
-/**
- * Cron worker callback
- * Load an RFI submission node object to attempt to repost to SF middleware
- * Called once for each submission from the cron $queues array populated in hook_cron (createItem()).
- * @param object $data - RFI node ID, revision ID, node type
- */
-function _asu_rfi_cron_repost_data($data) {
-  $node = node_load($data->nid);
-  $student_type = (sizeof($node->field_rfi_prospect_level) !== 0)
-    ? $node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value']
-    : '';
-  if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
-      || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
-    _asu_rfi_post_middleware_data($node, array(), $student_type);
-  }
-}
-
-/**
- * Cron worker callback for deleting RFI submissions
- * @param string $data - node ID to be deleted.
- */
-function _asu_rfi_cron_delete_submissions($data) {
-  $node = node_load($data);
-  $status = (isset($node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value']))
-    ? $node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value'] : '';
-  if (!empty($status) && in_array($status, array('SF_Completed', 'SF_Expired'))) {
-    node_delete($data);
-  }
-}
-
-/*******************************************************************************
- * Views bulk operation hook to do bulk submissions of RFI submissions to middleware
- ********************************************************************************/
-
-/**
- * Implements hook_action_info().
- */
-function asu_rfi_action_info() {
-  return array(
-    'asu_rfi_bulk_submit_action' => array(
-      'type' => 'node',
-      'label' => t('Submit RFI submissions to middleware'),
-      array('changes_property'),
-      'configurable' => FALSE,
-      'vbo_configurable' => FALSE,
-      'triggers' => array('any'),
-      'permissions' => array('execute asu rfi vbo', 'administer asu rfi'),
-    ),
-    'asu_rfi_bulk_delete_submissions_action' => array(
-      'type' => 'node',
-      'label' => t('Delete completed and expired RFI submissions'),
-      array('changes_property'),
-      'configurable' => FALSE,
-      'vbo_configurable' => FALSE,
-      'triggers' => array('any'),
-      'permissions' => array('execute asu rfi vbo'),
-    ),
-  );
-}
-
-/**
- * Callback for hook_action_info - POST Middleware a single submission's data to SF
- * @param $node
- * @param $context
- */
-function asu_rfi_bulk_submit_action(&$node, $context) {
-  $student_type = (isset($node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value'])) ? $node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value'] : '';
-  if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
-      || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
-    _asu_rfi_post_middleware_data($node, array(), $student_type);
-  }
-}
-/**
- * Callback for hook_action_info - Delete a single completed/expired submission
- * @param $node
- * @param $context
- */
-function asu_rfi_bulk_delete_submissions_action(&$node, $context) {
-  $status = (isset($node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value']))
-    ? $node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value'] : '';
-  if (!empty($status) && in_array($status, array('SF_Completed', 'SF_Expired'))) {
-    node_delete($node->nid);
-  }
-}
 
 /*********************************************************************
  * HELPERS (Model/data building
