@@ -292,14 +292,14 @@ function asu_rfi_update_7005(&$sandbox) {
 
     if ($sandbox['#finished']) {
       // $final_message = '<ul><li>' . implode('</li><li>', $sandbox['messages']) . "</li></ul>";
-      return t('The ASU RFI update has completed; All expired, stale or completed ASU RFI
-      form submissions have been deleted.');
+      return t('The ASU RFI update has completed; All expired, stale or completed ASU RFI form submissions have been deleted.');
     }
-
+    $message = "Deleted " . $count . " ASU RFI completed/expired submissions.";
   } else {
     $message = "No expired, stale or completed ASU RFI nodes to delete. Skipping...";
     drupal_set_message($message, 'info');
   }
+  watchdog('asu_rfi', $message, array(), WATCHDOG_INFO);
 }
 
 /**

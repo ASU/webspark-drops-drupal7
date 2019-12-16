@@ -549,6 +549,13 @@ function asu_rfi_feature_views_default_views() {
       'override_label' => 0,
       'label' => '',
     ),
+    'action::asu_rfi_bulk_delete_submissions_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
   );
   /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
