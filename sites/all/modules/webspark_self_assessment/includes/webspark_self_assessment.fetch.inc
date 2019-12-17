@@ -15,8 +15,8 @@
 
 /**
  * webspark_self_assessment_get_status() - Compares all installed modules to
- *                                           all self assessed modules and
- *                                           returns whether not discrepancies exist
+ *                                         all self assessed modules and
+ *                                         returns whether not discrepancies exist
  *
  * @return $status - String that is either 'True' or 'False' depending on the
  *                   self assessment status
@@ -44,7 +44,7 @@ function webspark_self_assessment_get_status()
 function webspark_self_assessment_get_deviations()
 {
   $installedModules = webspark_self_assessment_get_installed_modules(); // All modules installed on the site
-  $supportedModules = webspark_self_assessment_get_default_modules(); // All modules supported under the warranty
+  $supportedModules = webspark_self_assessment_get_default_modules(); // All default modules in Webspark
 
   $deviations = webspark_self_assessment_module_diff($installedModules, $supportedModules); // Any unsupported or misplaced modules
 
@@ -77,16 +77,16 @@ function webspark_self_assessment_get_installed_modules()
 }
 
 /**
- * webspark_warranty_get_default_modules() - Imports all default module
+ * webspark_self_assessment_get_default_modules() - Imports all default module
  *                                           names listed within a JSON file and
  *                                           puts them all into one PHP associative array
  *
  * @return $devModulesArr - All vanilla Webspark modules in a simple associative array
  */
-function webspark_warranty_get_default_modules()
+function webspark_self_assessment_get_default_modules()
 {
   // Pulls in contents from JSON file within module directory
-  $defaultModulesJSON = file_get_contents(drupal_get_path('module', 'webspark_warranty') .
+  $defaultModulesJSON = file_get_contents(drupal_get_path('module', 'webspark_self_assessment') .
                                             "/assets/standardModuleList.json", true);
 
   // Converts JSON to associative array with PHP library function
