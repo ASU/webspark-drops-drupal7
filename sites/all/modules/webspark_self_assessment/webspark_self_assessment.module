@@ -1,0 +1,65 @@
+<?php
+/***
+ * @file - webspark_self_assessment.module
+ *
+ * Module file that holds all hooks for module
+ *
+ * Refer to following external docs for further assistance:
+ * https://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_menu/7.x
+ * https://api.drupal.org/api/drupal/modules%21block%21block.api.php/function/hook_block_info/7.x
+ * https://api.drupal.org/api/drupal/modules%21block%21block.api.php/function/hook_block_view/7.x
+ * https://api.drupal.org/api/drupal/includes%21module.inc/function/module_load_include/7.x
+ */
+
+require_once drupal_get_path('module', 'webspark_self_assessment') . '/includes/webspark_self_assessment.fetch.inc';
+require_once drupal_get_path('module', 'webspark_self_assessment') . '/includes/webspark_self_assessment.misc.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function webspark_self_assessment_menu()
+{
+  $items['admin/reports/self-assessment'] = array
+  (
+    'title' => 'Self Assessment Status',
+    'description' => 'Check the status of your site pertaining to vanilla Webspark using the Self Assessment Tool',
+    'page callback' => 'webspark_self_assessment_status_page',
+    'file' => 'webspark_self_assessment.view.inc',
+    'file path' => drupal_get_path('module', 'webspark_self_assessment') . '/views/',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function webspark_self_assessment_block_info()
+{
+  $blocks['self_assessment_status'] = array(
+    'info'  =>  t('Self Assessment Status')
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function webspark_self_assessment_block_view($delta = '')
+{
+  $currentStatus = webspark_self_assessment_get_status();
+
+  switch ($delta)
+  {
+    case 'self_assessment_status':
+      $block['subject'] = t('Self Assessment Status:');
+      $block['content'] = t("<h1><strong>" . $currentStatus . "</strong></h1>");
+
+      break;
+  }
+
+  return $block;
+}
