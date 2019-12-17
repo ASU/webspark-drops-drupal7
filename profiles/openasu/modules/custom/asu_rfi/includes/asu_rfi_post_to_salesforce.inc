@@ -230,14 +230,11 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
       variable_set('asu_rfi_last_attempt_SF_posting', time());
 
       // Get the response from Salesforce middleware
-      $message = (strpos($response, "-1 ") === 0) ? explode(':', $response) : '';
-
-      // DEBUG
-      dpm($message, 'message');
+      // $message = (strpos($response, "-1 ") === 0) ? explode(':', $response) : '';
 
       // SUCCESSFUL CURL POST submission to SF middleware
       if (($curl_info['http_code'] === 200)) {
-        $curl_message = 'SF SUCCESS - Posted form submission' . $nid_info . ' to ' . $url . ' middleware.';
+        $curl_message = 'SF SUCCESS - Submission ' . $nid_info . ' posted to middleware.';
         if (isset($node_wrapper->field_rfi_submission_status)) {
           $node_wrapper->field_rfi_submission_status->set('SF_Completed');
         }
@@ -247,17 +244,18 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
         $node_wrapper->save();
         // Record time of latest successful post
         variable_set('asu_rfi_last_success_SF_posting', time());
-        watchdog('asu_rfi', $curl_message,
-          array(), WATCHDOG_INFO);
+        if (function_exists('drush_log')) {
+          drush_log($curl_message, 'success');
+        }
+        watchdog('asu_rfi', $curl_message, array(), WATCHDOG_INFO);
       }
       // FAILED CURL submission to SF middleware
       // Save the error message in the submission node and send message
       // onto the confirmation page screen.
       else {
         $curl_message = (isset($node_wrapper->field_rfi_error_message))
-          ? 'FAILED - Could not post form submission ' . $nid_info
-          . ' to SF middleware at ' . $url . '. HTTP CODE: '
-          . $curl_info['http_code'] . ' - ' . $response : '';
+          ? 'FAIL - Submission ' . $nid_info . ' to middleware at ' . $url
+           . ' failed. HTTP CODE: ' . $curl_info['http_code'] . ' - ' . $response : '';
 
         if (($curl_info['http_code'] >= 400)) {
           // update error message
@@ -283,6 +281,9 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
         }
         $node_wrapper->save();
         watchdog('asu_rfi', $curl_message, array(), WATCHDOG_ERROR);
+        if (function_exists('drush_log')) {
+          drush_log($curl_message, 'error');
+        }
         variable_set('asu_rfi_last_failure_SF_posting', time());
       }
 
@@ -310,12 +311,12 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
     }
   }
   else { // Do not attempt submission to SF middleware
-    $message_final = 'NO SF SUBMISSION ATTEMPTED - ';
+    $message_final = 'NOTICE - ';
     if ($sf_multi_pending) { // Multiform submission not ready to submit yet
       $message_final .= 'MF submission to SF for NID ' . $nid . ' will run when the student completes
       the form, when cron runs again, or manually via a VBO under "OPERATIONS".';
     } else { // Other connectivity issue?
-      $message_final .= 'Submissions to ' . $url . ' from (' . $base_url . ') will not work
+      $message_final .= 'Submissions to ' . $url . ' from this site will not work
        due to ASU network access restrictions.';
       if (isset($node_wrapper->field_rfi_error_message)) {
         $node_wrapper->field_rfi_error_message->set($message_final);
@@ -325,7 +326,10 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
       }
       $node_wrapper->save();
     }
-    watchdog('asu_rfi', $message_final, array(), WATCHDOG_WARNING);
+    watchdog('asu_rfi', $message_final, array(), WATCHDOG_NOTICE);
+    if (function_exists('drush_log')) {
+      drush_log($message_final, 'notice');
+    }
     if (drupal_valid_path('admin')) {
       drupal_set_message($message_final, 'info');
     }

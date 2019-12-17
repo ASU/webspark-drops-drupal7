@@ -208,7 +208,7 @@ function asu_rfi_update_7004(&$sandbox) {
   }
 
   // 2) MANUALLY update field_rfi_submission_status in field_config (values exist),
-  // and adding new SF_Expired value.
+  // and adding new Current student completed value.
   $query = Database::getConnection('default', 'default')
     ->select('field_config', 'fc')
     ->fields('fc', array('data'))
@@ -224,7 +224,7 @@ function asu_rfi_update_7004(&$sandbox) {
         'SF_Multi_Pending' => 'SF POST Multiform Pending',
         'SF_Failed' => 'SF POST Failed',
         'SF_Completed' => 'SF POST Successful',
-        'SF_Expired' => 'SF POST Expired',
+        'Form_Completed_No_SF' => 'Completed (No Salesforce)',
       );
     } else {
       watchdog('asu_rfi', 'Field field_rfi_submission_status settings could not be updated.'
@@ -279,7 +279,7 @@ function asu_rfi_update_7005(&$sandbox) {
       $sandbox['current_node'] = $nid;
       // Show progress message if in Drush.
       if (function_exists('drush_log')) {
-        drush_log(t('Deleted ASU RFI node @nid.', array('@nid' => $nid)), 'success');
+        drush_log(t('Deleted RFI node @nid.', array('@nid' => $nid)), 'success');
       }
     }
     // Set message.
@@ -291,12 +291,15 @@ function asu_rfi_update_7005(&$sandbox) {
 
     if ($sandbox['#finished']) {
       // $final_message = '<ul><li>' . implode('</li><li>', $sandbox['messages']) . "</li></ul>";
-      return t('All expired and completed ASU RFI form submissions have been deleted.');
+      return t('All expired/completed RFI form submissions have been deleted.');
     }
-    $message = "Deleted " . $sandbox['max'] . " ASU RFI completed/expired submissions.";
+    $message = "Deleted " . $sandbox['max'] . " expired/completed RFI submissions.";
   } else {
-    $message = "No expired or completed ASU RFI nodes were found to delete. Skipping...";
+    $message = "No expired/completed RFI nodes were found to delete. Skipping...";
     drupal_set_message($message, 'info');
+  }
+  if (function_exists('drush_log')) {
+    drush_log(t($message, array('@nid' => $nid)), 'notice');
   }
   watchdog('asu_rfi', $message, array(), WATCHDOG_INFO);
 }
@@ -312,5 +315,57 @@ function asu_rfi_update_7006(&$sandbox) {
     }
     watchdog('asu_rfi', 'Added new VBO permission for roles that had existing '
       . '"administer ASU RFI" permissions.', array(), WATCHDOG_INFO);
+  }
+}
+
+/**
+ * Update current student form submissions status to Completed (No Salesforce)
+ */
+function asu_rfi_update_7007(&$sandbox) {
+  // #1 Update existing form_type values to human English
+  $tables = array(
+    'field_data_field_rfi_form_type',
+    'field_revision_field_rfi_form_type',
+  );
+  $values = array(
+    'current_undergrad_form' => 'Current undergraduate form',
+    'current_grad_form' => 'Current Grad form',
+  );
+  foreach ($tables as $table) {
+    foreach ($values as $old => $new) {
+      Database::getConnection('default', 'default')
+        ->update($table)
+        ->fields(array('field_rfi_form_type_value' => $new))
+        ->condition('field_rfi_form_type_value', $old, 'LIKE')
+        ->execute();
+    }
+  }
+
+  // #2 Update submission status of all current student forms, using NIDs from form_type tables.
+  $db_or = db_or()
+    ->condition('field_rfi_form_type_value', $values['current_undergrad_form'])
+    ->condition('field_rfi_form_type_value', $values['current_grad_form']);
+  $query = Database::getConnection('default')
+    ->select($tables[0], 'ft')
+    ->fields('ft', array('entity_id'))
+    ->condition($db_or)->execute()->fetchCol();
+
+  // Change to submission status tables
+  $tables = array(
+    'field_data_field_rfi_submission_status',
+    'field_revision_field_rfi_submission_status',
+  );
+
+  if (count($query) > 0) {
+    $nids = implode(',', $query);
+    foreach ($tables as $table) {
+      Database::getConnection('default', 'default')
+        ->update($table)
+        ->fields(array(
+          'field_rfi_submission_status_value' => 'Form_Completed_No_SF',
+        ))
+        ->where('entity_id IN (' . $nids . ')')
+        ->execute();
+    }
   }
 }

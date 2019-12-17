@@ -583,7 +583,8 @@ function asu_rfi_disable_form(&$form, $decider) {
 function asu_rfi_form_after_build($form, &$form_state) {
   // Remove requirement on student type field on Graduate forms
   if (isset($form['degree_type']['#default_value'])) {
-    if (($form['degree_type']['#default_value'] == "graduate_longform") || ($form['degree_type']['#default_value'] == "graduate")) {
+    if (($form['degree_type']['#default_value'] === "graduate_longform")
+      || ($form['degree_type']['#default_value'] == "graduate")) {
       $form['my_interest']['student_type']['#required'] = FALSE;
       $form['my_interest']['student_type']['#needs_validation'] = FALSE;
     }
@@ -596,15 +597,24 @@ function asu_rfi_form_after_build($form, &$form_state) {
  * @param array $form
  * @return string $form_mode - if "test", then it's in test mode
  */
-function _asu_rfi_form_test_mode_markup(&$form) {
+function _asu_rfi_form_test_mode_markup(&$form, $form_id) {
   $form_mode = variable_get('asu_rfi_form_mode');
-  if (($form_mode == "test") || empty($form_mode)) {
-    $form['form_stage'] = array(
-      '#type' => 'item',
-      '#markup' => t('<div class="alert alert-warning"><b>NOTE</b>: The form is in <b>TEST MODE</b>.
-        Its submissions will not go to Salesforce. <a href="/admin/config/content/asurfi">Toggle
-        TEST MODE off</a> under "Test/Live Mode"</div>')
-    );
+  $markup = ($form_id !== 'asu_rfi_current_form_data')
+    ? '<div class="alert alert-warning"><b>NOTICE</b>: The
+        Salesforce component of this site\'s RFI forms is in <b>TEST MODE</b>.
+        This form\'s submissions will not go to Salesforce. <a href="/admin/config/content/asurfi">Toggle
+        TEST MODE off</a> under "Test/Live Mode".</div>'
+    : '<div class="alert alert-info"><b>FYI</b>: While the
+        Salesforce component of this site\'s RFI form processing is in
+        <a href="/admin/config/content/asurfi"><b>TEST MODE</b></a>, current student RFI forms
+         do not submit their data to Salesforce.</div>';
+  {   // Non-current student forms only!
+    if (($form_mode == "test") || empty($form_mode)) {
+      $form['form_stage'] = array(
+        '#type' => 'item',
+        '#markup' => $markup,
+      );
+    }
   }
 }
 
@@ -804,7 +814,8 @@ function asu_rfi_cron() {
     }
   }
 
-  // #3 - Cron + Queue API - Delete ASU RFI nodes that have either 1) been submitted to SF already (SF_Complete), or
+  // #3 - Cron + Queue API - Delete ASU RFI nodes that have either
+  // 1) been submitted to SF already (SF_Complete), or
   // 2) Has gone 14 days without getting successfully processed (stuck in SF_Failed, SF_Multi_Pending, etc.).
   $queue_2 = DrupalQueue::get('asu_rfi_delete_submissions_queue');
   $all_nids = _asu_rfi_get_submissions_to_delete();
@@ -813,11 +824,8 @@ function asu_rfi_cron() {
     foreach ($all_nids as $nid) {
       $queue_2->createItem($nid);
     }
-    watchdog('asu_rfi', '@count ASU RFI submissions (@nids) have'
-      . ' been added to the deletion queue.', array(
-        '@count' => $count_nids,
-        '@nids' => implode(",", $all_nids))
-      , WATCHDOG_NOTICE);
+    watchdog('asu_rfi', '@count ASU RFI submissions have'
+      . ' been queued for deletion.', array('@count' => $count_nids, WATCHDOG_NOTICE));
   }
 
   // #4 - If the site hasn't posted submissions to salesforce for two days, send an email to administrator.
@@ -877,7 +885,7 @@ function _asu_rfi_cron_repost_data($data) {
     : '';
   if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
       || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
-    _asu_rfi_post_middleware_data($node, array(), $student_type);
+    _asu_rfi_process_middleware_data($node, array(), $student_type);
   }
 }
 
@@ -886,14 +894,9 @@ function _asu_rfi_cron_repost_data($data) {
  * @param string $data - node ID to be deleted.
  */
 function _asu_rfi_cron_delete_submissions($data) {
-  $node = node_load($data);
-  $status = (isset($node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value']))
-    ? $node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value'] : '';
-  if (!empty($status) && in_array($status, array('SF_Completed', 'SF_Expired'))) {
-    node_delete($data);
-    if (function_exists('drush_log')) {
-      drush_log(t('Deletion of ASU RFI node @nid attempted...', array('@nid' => $data)), 'success');
-    }
+  node_delete($data);
+  if (function_exists('drush_log')) {
+    drush_log(t('RFI node @nid deleted.', array('@nid' => $data)), 'success');
   }
 }
 
@@ -917,7 +920,7 @@ function asu_rfi_action_info() {
     ),
     'asu_rfi_bulk_delete_submissions_action' => array(
       'type' => 'node',
-      'label' => t('Delete completed and expired RFI submissions'),
+      'label' => t('Delete RFI submissions'),
       array('changes_property'),
       'configurable' => FALSE,
       'vbo_configurable' => FALSE,
@@ -936,7 +939,7 @@ function asu_rfi_bulk_submit_action(&$node, $context) {
   $student_type = (isset($node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value'])) ? $node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value'] : '';
   if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
       || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
-    _asu_rfi_post_middleware_data($node, array(), $student_type);
+    _asu_rfi_process_middleware_data($node, array(), $student_type);
   }
 }
 
@@ -946,13 +949,7 @@ function asu_rfi_bulk_submit_action(&$node, $context) {
  * @param $context
  */
 function asu_rfi_bulk_delete_submissions_action(&$node, $context) {
-  $status = (isset($node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value']))
-    ? $node->field_rfi_sumission_status[LANGUAGE_NONE][0]['value'] : '';
-  if (!empty($status) && in_array($status, array('SF_Completed', 'SF_Expired'))) {
-    node_delete($node->nid);
-    watchdog('asu_rfi', t('Deletion of ASU RFI node @nid attempted.'),
-      array('@nid' => $node->nid), WATCHDOG_NOTICE);
-  }
+  node_delete($node->nid);
 }
 
 /*********************************************************************
@@ -965,7 +962,7 @@ function asu_rfi_bulk_delete_submissions_action(&$node, $context) {
  * @param array $post - data to submit
  * @param string $program - program type (ugrad, grad)
  */
-function _asu_rfi_post_middleware_data($node, $post = array(), $program = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
+function _asu_rfi_process_middleware_data($node, $post = array(), $program = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
   // Global, shared fields (undergrad and graduate)
   $post['domain'] = $node->field_rfi_domain[LANGUAGE_NONE][0]['value'];
   $post['first_name'] = $node->field_rfi_first_name[LANGUAGE_NONE][0]['value'];
@@ -994,11 +991,11 @@ function _asu_rfi_post_middleware_data($node, $post = array(), $program = ASU_RF
   // NOW - Grad or undergrad??
   // Graduate program
   $type_of_form = isset($node->field_rfi_form_type[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_form_type[LANGUAGE_NONE][0]['value'] : '';
-  if ($program == ASU_RFI_PROSPECT_LEVEL_GRAD) {
-    if ($type_of_form == "Graduate long form") {
+  if ($program === ASU_RFI_PROSPECT_LEVEL_GRAD) {
+    if ($type_of_form === "Graduate long form") {
       $post['type_of_form'] = 'LF';
     }
-    if ($type_of_form == "Graduate multi form") {
+    if ($type_of_form === "Graduate multi form") {
       $post['type_of_form'] = 'MF';
     }
     $post['semester_name'] = isset($node->field_rfi_start_term[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_start_term[LANGUAGE_NONE][0]['value'] : '';
@@ -1006,10 +1003,10 @@ function _asu_rfi_post_middleware_data($node, $post = array(), $program = ASU_RF
   }
   // Undergrad program (default)
   else {
-    if ($type_of_form == "Undergraduate long form") {
+    if ($type_of_form === "Undergraduate long form") {
       $post['type_of_form'] = 'LF';
     }
-    if ($type_of_form == "Undergraduate multi form") {
+    if ($type_of_form === "Undergraduate multi form") {
       $post['type_of_form'] = 'MF';
     }
     $post['ip_address'] = isset($node->field_rfi_ip_address[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_ip_address[LANGUAGE_NONE][0]['value'] : '';
@@ -1018,7 +1015,6 @@ function _asu_rfi_post_middleware_data($node, $post = array(), $program = ASU_RF
   }
   variable_set('asu_rfi_last_attempt_SF_posting', time());
 }
-
 
 /*********************************************************************
  * HELPERS (Model/data building
@@ -1057,7 +1053,7 @@ function _asu_rfi_get_submissions_to_delete() {
     $query->fields('n', array('nid'))
       ->condition('n.type', 'asu_rfi', 'LIKE')
       ->condition($or_one)
-      ->range(0, 5); // Delete 5 nodes at a time.
+      ->range(0, 10); // Delete 10 nodes at a time.
     $result = $query->execute()->fetchCol();
     $all_nids = array_unique(array_merge($all_nids, $result));
   }
@@ -1412,6 +1408,32 @@ function _asu_rfi_get_career_data($data) {
 }
 
 /**
+ * Get type of form submission
+ * @param array $form_state
+ * @return array
+ */
+function _asu_rfi_get_type_of_form(&$form_state) {
+  // Get the type of the form. If the form is grad form, set prospect_level
+  // value to "Graduate", else "Undergraduate"
+  $form_type = $s_type = '';
+  switch ($form_state['values']['degree_type']) {
+    case "graduate_longform" :
+      $s_type = ASU_RFI_PROSPECT_LEVEL_GRAD;
+      $form_type = "Graduate long form";
+      $form_state['values']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_GRAD;
+      break;
+    case "ugrad_longform" :
+      $s_type = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
+      $form_type = "Undergraduate long form";
+      $form_state['values']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
+  }
+  return array(
+    'form_type' => $form_type,
+    'student_type' => $s_type,
+  );
+}
+
+/**
  * Compares the degree feed programs listed with online availability, using the
  * cached Get Programs API list.
  * @param string $programsFromDegreeFeed The current program
@@ -1689,7 +1711,7 @@ function _asu_rfi_create_failed_post_email($to_email, $nid = 0) {
 /**
  * Get multiform thanks messaging for posting in site outside of the form.
  */
-function _asu_rfi_form_multi_part1_thanks() {
+function _asu_rfi_multiform_thanks_part1() {
   $message = <<<EOT
   <div class="alert alert-success">
   <h4>Thank you for your interest in Arizona State University!</h4>
@@ -1703,7 +1725,7 @@ EOT;
 /**
  * Get multiform thanks messaging for posting in site outside of the form.
  */
-function _asu_rfi_form_multi_part2_thanks() {
+function _asu_rfi_multiform_thanks_part2() {
   $message = <<<EOT
   <div class="alert alert-success">
   <h4>Thank you for your interest in ASU.</h4>

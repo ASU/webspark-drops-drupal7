@@ -523,12 +523,14 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['content'] = '<fieldset class="collapsible collapsed field-group-fieldset form-wrapper fieldset-nested-even asu-rfi-intro collapse-processed">'
     . '<legend><span class="fieldset-legend"><a class="fieldset-title" href="#"><span class="fieldset-legend-prefix element-invisible">Show</span>INTRO: What do submissions statuses mean?</a>'
-    . '</span></legend><div class="fieldset-wrapper"><ul><li><strong>Ready for SF POST</strong> - A prospective/current student has successfully submitted either the single page "long" form OR the LAST page of a multistep form. It is ready (and waiting) to be submitted to Salesforce middleware.</li>'
+    . '</span></legend><div class="fieldset-wrapper">'
+    . '<ul><li><strong>Ready for SF POST</strong> - A prospective/current student has successfully submitted either the single page "long" form OR the LAST page of a multistep form. It is ready (and waiting) to be submitted to Salesforce middleware.</li>'
     . '<li><strong>Partial multiform submitted</strong> - (Multi-page forms ONLY). A prospective student has currently only submitted the first part of a multistep RFI form (they may or may not finish the other half). If the prospective student does not complete and submit the second/last part of the form before the next cron job runs (or a site administrator manually submits the data to Salesforce here), the cron job will attempt to POST this submission to its respective middleware.</li>'
     . '<li><strong>SF POST Multiform Pending</strong> - Submissions that are either now in the process of being submitted OR waiting to again be submitted to Salesforce</li>'
     . '<li><strong>SF POST Successful</strong> - DONE. A submission has successfully posted to the middleware. No further action is required.</li>'
     . '<li><strong>SF POST Failed</strong> - An error occurs while trying to submit to the middleware. the site administrators need to review the submission fields for issues and correct any errors found, and repost it to middleware using the "OPERATIONS" list to resubmit. If this does not work (or you do not see the error), consider contacting <a href="https://drupal.asu.edu/wcs/">UTO Web Consulting</a> for assistance.</li>'
-    . '<li><strong>SF POST Expired</strong> - The submission has passed its expiration date (currently 14 days after the submission) and it never successfully posted to the middleware. This submission is now marked to be deleted from the site upon the site\'s next cron job.)</li></ul></div></fieldset>'
+    . '<li><strong>Completed (No Salesforce)</strong> - (Current student forms ONLY). The submission has been received, and no Salesforce processing will occur. This is DONE. </li></ul>'
+    . '</div></fieldset>'
     . '<h4>Search submissions by:</h4>';
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['fields'] = FALSE;

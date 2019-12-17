@@ -630,7 +630,7 @@ function asu_rfi_feature_field_default_field_bases() {
         'SF_Multi_Pending' => 'SF POST Multiform Pending',
         'SF_Failed' => 'SF POST Failed',
         'SF_Completed' => 'SF POST Successful',
-        'SF_Expired' => 'SF POST Expired',
+        'Form_Completed_No_SF' => 'Completed (No Salesforce)',
       ),
       'allowed_values_function' => '',
       'allowed_values_php' => '',

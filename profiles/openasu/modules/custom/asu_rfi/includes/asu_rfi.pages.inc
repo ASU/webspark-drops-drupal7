@@ -119,7 +119,7 @@ function asu_rfi_form_data($form, &$form_state) {
     }
 
     // Is the form in "Test Mode"? If so, add markup
-    _asu_rfi_form_test_mode_markup($form);
+    _asu_rfi_form_test_mode_markup($form, $form_state['build_info']['form_id']);
 
     // Form field definitions
     $form['req_header_text'] = array(
@@ -572,10 +572,10 @@ function asu_rfi_second_form($form, &$form_state) {
   $form['#suffix'] = '</div>';
 
   // If the form in "Test Mode", add Test mode warning message markup
-  _asu_rfi_form_test_mode_markup($form);
+  _asu_rfi_form_test_mode_markup($form, $form_state['build_info']['form_id']);
 
   // Thank you for submitting first part of form messaging.
-  $thanks_msg = _asu_rfi_form_multi_part1_thanks();
+  $thanks_msg = _asu_rfi_multiform_thanks_part1();
   drupal_set_message($thanks_msg, 'success', FALSE);
 
   $form['citizenship'] = array(
@@ -666,7 +666,7 @@ function asu_rfi_second_form($form, &$form_state) {
   );
   $form['gdpr_message'] = array(
     '#type' => 'item',
-    '#markup' => _asu_get_gdpr_markup()
+    '#markup' => _asu_rfi_get_gdpr_markup()
   );
   $form['submit'] = array(
     '#type' => 'submit',
@@ -1004,7 +1004,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
     'time_restriction'
   ));
 
-  _asu_rfi_form_test_mode_markup($form);
+  _asu_rfi_form_test_mode_markup($form, $form_state['build_info']['form_id']);
 
   $form['req_header_text'] = array(
     '#value' => _asu_rfi_form_header_text(),
@@ -1361,7 +1361,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
   );
   $form['gdpr_message'] = array(
     '#type' => 'item',
-    '#markup' => _asu_get_gdpr_markup()
+    '#markup' => _asu_rfi_get_gdpr_markup()
   );
   $form['submit'] = array(
     '#type' => 'submit',
@@ -1373,7 +1373,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
 }
 
 /**
- * Form validation for ugrad and graduate RFI forms
+ * LONG FORM - Validation for ugrad and graduate RFI forms
  * @param $form
  * @param $form_state
  */
@@ -1476,7 +1476,7 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
 }
 
 /**
- * LONG FORM - SUBMIT handler (undergrad or graduate)
+ * LONG FORM - SUBMIT handler (undergrad and graduate)
  * @param $form
  * @param $form_state
  */
@@ -1486,15 +1486,11 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
 
   // Get the type of the form. If the form is grad form, set prospect_level
   // value to "Graduate", else "Undergraduate"
-  if (($form_state['values']['degree_type']) == "graduate_longform") {
-    $s_type = ASU_RFI_PROSPECT_LEVEL_GRAD;
-    $long_form_type = "Graduate long form";
-    $form_state['values']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_GRAD;
-  } else { // assume undergrad
-    $s_type = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
-    $long_form_type = "Undergraduate long form";
-    $form_state['values']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
-  }
+
+  // @TODO - deal with Current Student forms
+  $tof_data = _asu_rfi_get_type_of_form($form_state);
+  $long_form_type = $tof_data['form_type'];
+  $student_type = $tof_data['student_type'];
 
   ////////////////////////////////////////////
   // Bio information
@@ -1585,7 +1581,7 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
     $wrapper->field_rfi_last_name->set($l_name);
   }
   if (isset($wrapper->field_rfi_student_type)) {
-    $wrapper->field_rfi_student_type->set($s_type);
+    $wrapper->field_rfi_student_type->set($student_type);
   }
   if (isset($wrapper->field_rfi_email)) {
     $wrapper->field_rfi_email->set($email);
@@ -1793,7 +1789,7 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type) {
   ));
 
   // Is the form in "Test Mode"? If so, add markup
-  _asu_rfi_form_test_mode_markup($form);
+  _asu_rfi_form_test_mode_markup($form, $form_state['build_info']['form_id']);
 
   $form['req_header_text'] = array(
     '#value' => _asu_rfi_form_header_text(),
@@ -1877,7 +1873,7 @@ function asu_rfi_current_form_data($form, &$form_state, $programs, $form_type) {
   );
   $form['gdpr_message'] = array(
     '#type' => 'item',
-    '#markup' => _asu_get_gdpr_markup()
+    '#markup' => _asu_rfi_get_gdpr_markup()
   );
   $form['submit'] = array(
     '#type' => 'submit',
@@ -2002,7 +1998,7 @@ function asu_rfi_current_form_data_submit($form, &$form_state) {
     $wrapper->field_rfi_question->set($questions);
   }
   if (isset($wrapper->field_rfi_submission_status)) {
-    $wrapper->field_rfi_submission_status->set('Form_Completed');
+    $wrapper->field_rfi_submission_status->set('Form_Completed_No_SF');
   }
   $wrapper->save();
 
@@ -2213,7 +2209,7 @@ function _asu_rfi_get_sem_dates() {
  *
  * @return string - HTML containing all pertinent information and resources pertaining to GDPR
  */
-function _asu_get_gdpr_markup() {
+function _asu_rfi_get_gdpr_markup() {
   $gdpr_markup =
     "
     <div>
