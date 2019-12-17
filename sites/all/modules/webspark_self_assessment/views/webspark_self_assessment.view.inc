@@ -73,7 +73,7 @@ function webspark_self_assessment_deviates_view()
   $output = array(
     'deviationMessage' => array(
       '#type' => 'markup',
-      '#markup' => '<h1>' . t('Current Status: ') . '<span style="color: red">' . t('Deviations Detected') . '</span></h1>'
+      '#markup' => '<h1>' . t('Current Status: ') . '<span style="color: blue">' . t('Changes Present') . '</span></h1>'
     )
   );
 
@@ -108,14 +108,6 @@ function webspark_self_assessment_deviates_view()
       )
     );
   }
-
-  // Appends message on recommended action. Probably will change
-  $output[] = array(
-    'recommendedActionsMessage' => array(
-      '#type' => 'markup',
-      '#markup' => '<h2>' . t('TENTATIVE: Please resolve the issues listed above before contacting Web Consulting Services') . '</h2>'
-    )
-  );
 
   return $output;
 }
