@@ -1,6 +1,6 @@
 <?php
 /***
- * @file - webspark_warranty.view.inc
+ * @file - webspark_self_assessment.view.inc
  *
  * Includes file that acts as the view template for a Drupal menu page
  *
@@ -11,40 +11,40 @@
  */
 
 /**
- * Page callback for /reports/warranty.
+ * Page callback for /reports/self-assessment.
  */
-function webspark_warranty_status_page()
+function webspark_self_assessment_status_page()
 {
-  // Determines message based on whether site is in warranty or not
-  $status = webspark_warranty_get_warranty_status();
+  // Determines message based on whether site deviates from vanilla Webspark
+  $status = webspark_self_assessment_get_status();
 
   if ($status == 'True')
   {
     // Outputs render array that holds message with contact info for WCS
-    $output = webspark_warranty_under_warranty_view();
+    $output = webspark_self_assessment_regular_view();
   }
 
   else
   {
     // Outputs render array that holds violation message and table holding unsupported and misplaced modules
-    $output = webspark_warranty_violates_warranty_view();
+    $output = webspark_self_assessment_deviates_view();
   }
 
   return $output;
 }
 
 /**
- * webspark_warranty_under_warranty_view() - Creates render array with markup showing under-warranty message
+ * webspark_self_assessment_regular_view() - Creates render array with markup showing status message
  *
- * @return $output - Render array with markup showing under-warranty message
+ * @return $output - Render array with markup showing status message
  */
-function webspark_warranty_under_warranty_view()
+function webspark_self_assessment_regular_view()
 {
-  // Creates render array with markup showing under-warranty message
+  // Creates render array with markup showing status message
   $output = array(
     'message' => array(
       '#type' => 'markup',
-      '#markup' => '<h1>' . t('Current Status: ') . '<span style="color: green">' . t('In Warranty') . '</span></h1>' .
+      '#markup' => '<h1>' . t('Current Status: ') . '<span style="color: green">' . t('No Changes') . '</span></h1>' .
         '<h2>' . t('If you are experiencing issues regarding your site, please visit the following link: ') . '</h2>' .
         l(t('https://drupal.asu.edu/wcs'), 'https://drupal.asu.edu/wcs',
           array('attributes' => array('target' => '_blank'))) .
@@ -56,24 +56,24 @@ function webspark_warranty_under_warranty_view()
 }
 
 /**
- * webspark_warranty_violates_warranty_view() - Creates render array with markup showing warranty violation message,
- *                                              with tables demonstrating violations
- * @return $output - Render array with markup showing warranty violation message, with tables demonstrating violations
+ * webspark_self_assessment_deviates_view() - Creates render array with markup showing status message,
+ *                                            with tables demonstrating violations
+ * @return $output - Render array with markup showing status message, with tables demonstrating violations
  */
-function webspark_warranty_violates_warranty_view()
+function webspark_self_assessment_deviates_view()
 {
-  // Gets all warranty violations to potentially display in tables
-  $warrantyViolations = webspark_warranty_get_warranty_violations();
+  // Gets all deviations to potentially display in tables
+  $deviations = webspark_self_assessment_get_deviations();
 
   // Saves each type of violation in separate variable to avoid calling resource-intensive function
-  $unsupportedModules = $warrantyViolations['unsupported'];
-  $misplacedModules = $warrantyViolations['misplaced'];
+  $unsupportedModules = $deviations['unsupported'];
+  $misplacedModules = $deviations['misplaced'];
 
   // Default markup showing red error message
   $output = array(
-    'violationMessage' => array(
+    'deviationMessage' => array(
       '#type' => 'markup',
-      '#markup' => '<h1>' . t('Current Status: ') . '<span style="color: red">' . t('Out of Warranty') . '</span></h1>'
+      '#markup' => '<h1>' . t('Current Status: ') . '<span style="color: red">' . t('Deviations Detected') . '</span></h1>'
     )
   );
 
@@ -83,7 +83,7 @@ function webspark_warranty_violates_warranty_view()
     $output[] = array(
       'unsupportedMessage' => array(
         '#type' => 'markup',
-        '#markup' => '<h2>' . t('The following modules / themes are not covered by the Webspark Warranty:') . '</h2>'
+        '#markup' => '<h2>' . t('The following modules / themes are not in Webspark:') . '</h2>'
       ),
       'unsupportedTable' => array(
         '#theme' => 'table',

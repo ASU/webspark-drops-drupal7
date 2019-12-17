@@ -22,7 +22,7 @@ function webspark_self_assessment_menu()
   $items['admin/reports/self-assessment'] = array
   (
     'title' => 'Self Assessment Status',
-    'description' => 'Check the status of your site pertaining to vanilla Webspark',
+    'description' => 'Check the status of your site pertaining to vanilla Webspark using the Self Assessment Tool',
     'page callback' => 'webspark_self_assessment_status_page',
     'file' => 'webspark_self_assessment.view.inc',
     'file path' => drupal_get_path('module', 'webspark_self_assessment') . '/views/',
