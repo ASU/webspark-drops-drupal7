@@ -56,7 +56,7 @@ function asu_rfi_views_pre_render(&$view) {
      'group' => JS_THEME,
      'weight' => 20,
    ));
-   drupal_add_js('/misc/collapse.js',   array(
+   drupal_add_js('misc/collapse.js', array(
      'type' => 'file',
      'scope' => 'header',
      'group' => JS_THEME,
@@ -817,8 +817,10 @@ function asu_rfi_cron() {
   // #3 - Cron + Queue API - Delete ASU RFI nodes that have either
   // 1) been submitted to SF already (SF_Complete), or
   // 2) Has gone 14 days without getting successfully processed (stuck in SF_Failed, SF_Multi_Pending, etc.).
+  // A max of 50 nodes is deleted with each cron run.
   $queue_2 = DrupalQueue::get('asu_rfi_delete_submissions_queue');
-  $all_nids = _asu_rfi_get_submissions_to_delete();
+  $all_nids = _asu_rfi_get_submissions_to_delete(50);
+
   $count_nids = (int) count($all_nids);
   if ($count_nids > 0) {
     foreach ($all_nids as $nid) {
@@ -1033,14 +1035,28 @@ function _asu_rfi_get_status_field_tables() {
 /**
  * Get list of RFI nodes to delete to clean out completed/expired RFI submissions.
  * If it's over two weeks past its initial creation date, delete it.
- * @return array $all_nids
+ *
+ * @param int $submissions_per_pass - If 0, return all results. If > 0, limit the
+ * size per execution (likely a Batch API call).
+ * @param bool $only_count - Only return the count of nodes to delete. If FALSE, return all nids.
+ * @return array|int
  */
-function _asu_rfi_get_submissions_to_delete() {
+function _asu_rfi_get_submissions_to_delete($submissions_returned = 0, $only_count = FALSE) {
+
+  // waste of time
+  if ($only_count && $submissions_returned !== 0) {
+    $message = 'INFO: You know the node count already. You gave it to me: ' . $submissions_returned . '.';
+    watchdog('asu_rfi', $message, array(), WATCHDOG_INFO);
+    if (function_exists('drush_log')) {
+      drush_log(t($message), array(), 'warning');
+    }
+    return $submissions_returned;
+  }
+
   $tables = _asu_rfi_get_status_field_tables();
   $all_nids = array();
   $and_sub1 = db_and()
-    ->condition('field_rfi_submission_status_value', 'SF_%', 'LIKE')
-    ->condition('field_rfi_submission_status_value', 'SF_Completed', 'NOT LIKE')
+    ->condition('field_rfi_submission_status_value', 'SF_Failed', 'LIKE')
     ->where('UNIX_TIMESTAMP(now()) - n.created > ' . ASU_RFI_SUBMISSION_EXP_PERIOD); // Custom SQL command
   $or_one = db_or()
     ->condition('field_rfi_submission_status_value', 'SF_Completed', 'LIKE')
@@ -1052,12 +1068,31 @@ function _asu_rfi_get_submissions_to_delete() {
     $query->innerJoin('node', 'n', 'f.entity_id = n.nid');
     $query->fields('n', array('nid'))
       ->condition('n.type', 'asu_rfi', 'LIKE')
-      ->condition($or_one)
-      ->range(0, 10); // Delete 10 nodes at a time.
+      ->condition($or_one);
+    if ((int) $submissions_returned > 0) { // Is a batch run
+      $query->range(0, $submissions_returned);
+    }
+    $query->orderBy('n.nid', 'ASC');
     $result = $query->execute()->fetchCol();
     $all_nids = array_unique(array_merge($all_nids, $result));
   }
-  return $all_nids;
+
+  // Logging;
+  $count = count($all_nids);
+  if ($submissions_returned === 0) {
+    $message = __FUNCTION__ . ": There are " . $count . " RFI submission nodes qualified to delete.";
+    watchdog('asu_rfi', $message, array(), WATCHDOG_INFO);
+    if (function_exists('drush_log')) {
+      drush_log(t($message), array(), 'success');
+    }
+  }
+
+  if ($only_count) { // Return total number (not range-delimted)
+    return ($submissions_returned === 0) ? $count : $submissions_returned;
+  }
+  else {
+    return $all_nids;
+  }
 }
 
 /**
@@ -1619,7 +1654,7 @@ function _asu_rfi_online_fields_alter($type, $default, $server, $college_code, $
     $fieldsUpdated = array(
       'first_name' => $default['first_name'],
       'last_name' => $default['last_name'],
-      'program' => $college_code . '-' . $default['program'],
+      'program' => $college_code . '-' . $default['poiCode'],
       'email' => $default['email'],
       'phone' => $default['phone'],
       'prod_test_flag' => $default['prod_test_flag'],

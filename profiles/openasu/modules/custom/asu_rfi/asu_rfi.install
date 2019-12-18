@@ -260,48 +260,57 @@ function asu_rfi_update_7004(&$sandbox) {
  * Delete ASU RFI submissions that have been sent to Salesforce or expired.
  */
 function asu_rfi_update_7005(&$sandbox) {
-  // Get ASU RFI nodes to delete.
-  $all_nids = _asu_rfi_get_submissions_to_delete();
 
-  // Delete ASU RFI nodes, using the Batch API
-  if (count($all_nids) > 0) {
-    // Batch API used, just in case there are a ton of nodes to delete.
-    if (!isset($sandbox['progress'])) {
-      $sandbox['progress'] = 0;
-      $sandbox['max'] = 20;
-      $sandbox['messages'] = array();
-      $sandbox['current_node'] = -1; // Last node read (starts at -1)
-    }
-    // Actual node deletions
-    foreach ($all_nids as $nid) {
-      node_delete($nid);
-      $sandbox['progress']++;
-      $sandbox['current_node'] = $nid;
-      // Show progress message if in Drush.
-      if (function_exists('drush_log')) {
-        drush_log(t('Deleted RFI node @nid.', array('@nid' => $nid)), 'success');
-      }
-    }
-    // Set message.
-    // $sandbox['messages'][] = t("Last node deleted: @nid", array('@nid' => $nid));
+  $nids_per_pass = 50;
 
-    // Check to see if finished.
-    $sandbox['#finished'] = ($sandbox['progress'] >= $sandbox['max'])
-      ? TRUE : ($sandbox['progress'] / $sandbox['max']);
-
-    if ($sandbox['#finished']) {
-      // $final_message = '<ul><li>' . implode('</li><li>', $sandbox['messages']) . "</li></ul>";
-      return t('All expired/completed RFI form submissions have been deleted.');
+  if (!isset($sandbox['total'])) { // FIRST RUN IF NECESSARY
+    $total_count = _asu_rfi_get_submissions_to_delete(0, TRUE);
+    $sandbox['total'] = $total_count;
+    $sandbox['max'] = $nids_per_pass;
+    $sandbox['progress'] = 0;
+    $sandbox['messages'] = array();
+    $sandbox['current'] = -1; // Last node ID read (starts at -1)
+    if (function_exists('drush_log')) {
+      drush_log(t(__FUNCTION__ . ' - There are @count nodes to delete.', array('@count' => $total_count)), 'success');
     }
-    $message = "Deleted " . $sandbox['max'] . " expired/completed RFI submissions.";
+  }
+
+  // Now the batch operation
+
+  $all_nids = _asu_rfi_get_submissions_to_delete($nids_per_pass);
+
+  foreach ($all_nids as $nid) {
+    node_delete($nid);
+    $sandbox['progress']++;
+    $sandbox['current'] = $nid;
+    $sandbox['inter_count']++;
+    // Show progress message if in Drush.
+  }
+
+  // Check to see if finished.
+  $sandbox['#finished'] = ($sandbox['progress'] >= $sandbox['total'])
+    ? TRUE : ($sandbox['progress'] / $sandbox['total']);
+
+  if ($sandbox['#finished'] === TRUE) {
+    $final_message = "\n" . '<ul><li>' . implode('</li><li>', $sandbox['messages']) . '</li></ul>';
+    return $final_message . "\n" . t('The expired/completed RFI form submissions have been deleted.');
   } else {
-    $message = "No expired/completed RFI nodes were found to delete. Skipping...";
-    drupal_set_message($message, 'info');
+    $percent = $sandbox['#finished'];
+    $percent = round((float) $percent * 100) . '%';
+
+    $message = t('Deleted ' . $nids_per_pass . " nodes. Last node deleted: @nid. Job " . $percent . " complete.",
+      array('@nid' => $nid));
+
+    $test = $sandbox;
+
+    if (function_exists('drush_log')) {
+      drush_log(t(__FUNCTION__ . ' - ' . var_dump($sandbox), array()), 'success');
+    }
+
+    // Set message.
+    $sandbox['messages'][] = $message . "\n";
+    return $message;
   }
-  if (function_exists('drush_log')) {
-    drush_log(t($message, array('@nid' => $nid)), 'notice');
-  }
-  watchdog('asu_rfi', $message, array(), WATCHDOG_INFO);
 }
 
 /**
