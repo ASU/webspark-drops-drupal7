@@ -64,7 +64,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
   $location = (isset($data['location'])) ? $data['location'] : ''; // Location
   // Online campus check
   if ($location === "no_preference" || $type === ASU_RFI_PROSPECT_LEVEL_GRAD) {
-    if (!isset($campus) && sizeof($availableCampuses) == 1
+    if (!isset($campus) && count($availableCampuses) == 1
       && (ucfirst($availableCampuses[0]) == "Online")) {
       $location = "Online";
     }

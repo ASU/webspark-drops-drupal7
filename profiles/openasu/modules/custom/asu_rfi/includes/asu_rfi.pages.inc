@@ -1043,7 +1043,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
     '#required' => TRUE,
   );
 
-  if (sizeof($programs) == 1) {
+  if (count($programs) == 1) {
     $form['my_interest']['program_code'] = array(
       '#type' => 'select',
       '#title' => t('My program of interest'),

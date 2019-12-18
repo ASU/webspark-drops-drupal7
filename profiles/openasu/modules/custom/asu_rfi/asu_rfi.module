@@ -550,16 +550,7 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
   if ((($rfi_mode == "test") || empty($rfi_mode)) && ($form['#id'] == "asu-rfi-form-data"
       || $form['#id'] == "asu-rfi-long-form-data"
       || $form['#id'] == 'views-exposed-form-asu-rfi-submissions-report-page')) {
-      // global $user;
-      // if (user_access('administer nodes', $user) == 1 || user_access('administer asu rfi', $user) == 1) {
       return TRUE;
-/*    } else {
-      $form['#access'] = FALSE;
-      drupal_set_message("You do not have access to view this form", 'warning');
-      return FALSE;
-
-    }
-*/
   }
 }
 
@@ -786,25 +777,7 @@ function asu_rfi_cron() {
   $queue = DrupalQueue::get('asu_rfi_failed_leads_queue');
 
   // Get failed RFI Leads.
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'asu_rfi')
-    // Don't let this keep happening forever if we have permanent failure.
-    ->propertyCondition('created', array(
-      REQUEST_TIME - ASU_RFI_SUBMISSION_EXP_PERIOD,
-      REQUEST_TIME - strtotime('15 minutes')
-    ), 'between')
-    ->propertyCondition('changed', array(
-      REQUEST_TIME - ASU_RFI_SUBMISSION_EXP_PERIOD,
-      REQUEST_TIME
-    ), 'between')
-    ->propertyOrderBy('created', 'DESC')
-    ->fieldCondition('field_rfi_submission_status', 'value', array(
-      'Form_Multi_Partial',
-      'SF_Multi_Pending'
-    ), 'IN')// Failed lead.
-    ->addMetaData('account', user_load(1)); // Run the query as user 1.
-  $results = $query->execute();
+  $results = _asu_rfi_get_rfi_leads_to_submit();
 
   // Add failed leads to the cron jobs queue
   if (isset($results['node'])) {
@@ -816,7 +789,8 @@ function asu_rfi_cron() {
 
   // #3 - Cron + Queue API - Delete ASU RFI nodes that have either
   // 1) been submitted to SF already (SF_Complete), or
-  // 2) Has gone 14 days without getting successfully processed (stuck in SF_Failed, SF_Multi_Pending, etc.).
+  // 2) Has gone ASU_RFI_SUBMISSION_EXP_PERIOD days without getting successfully
+  // processed (stuck in SF_Failed).
   // A max of 50 nodes is deleted with each cron run.
   $queue_2 = DrupalQueue::get('asu_rfi_delete_submissions_queue');
   $all_nids = _asu_rfi_get_submissions_to_delete(50);
@@ -871,18 +845,17 @@ function asu_rfi_cron_queue_info() {
 }
 
 /*********************************************************************
- * CRON CALLBACKS
+ * CALLBACKS - Cron
  *********************************************************************/
 
 /**
- * Cron worker callback
  * Load an RFI submission node object to attempt to repost to SF middleware
  * Called once for each submission from the cron $queues array populated in hook_cron (createItem()).
  * @param object $data - RFI node ID, revision ID, node type
  */
 function _asu_rfi_cron_repost_data($data) {
   $node = node_load($data->nid);
-  $student_type = (sizeof($node->field_rfi_prospect_level) !== 0)
+  $student_type = (count($node->field_rfi_prospect_level) !== 0)
     ? $node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value']
     : '';
   if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
@@ -892,18 +865,15 @@ function _asu_rfi_cron_repost_data($data) {
 }
 
 /**
- * Cron worker callback for deleting RFI submissions
+ * Delete RFI submissions
  * @param string $data - node ID to be deleted.
  */
 function _asu_rfi_cron_delete_submissions($data) {
   node_delete($data);
-  if (function_exists('drush_log')) {
-    drush_log(t('RFI node @nid deleted.', array('@nid' => $data)), 'success');
-  }
 }
 
 /*********************************************************************
- * VBOs + Actions CALLBACKS
+ *  CALLBACKS - Actions for VBOs
  *********************************************************************/
 
 /**
@@ -933,7 +903,8 @@ function asu_rfi_action_info() {
 }
 
 /**
- * Callback for hook_action_info - POST Middleware a single submission's data to SF
+ * POST Middleware a single submission's data to SF
+ * Callback - hook_action_info()
  * @param $node
  * @param $context
  */
@@ -946,12 +917,13 @@ function asu_rfi_bulk_submit_action(&$node, $context) {
 }
 
 /**
- * Callback for hook_action_info - Delete a single submission (regardless of status)
+ * Delete a single submission (regardless of status). Wrapper for comparable hook_cron function.
+ * Callback for hook_action_info()
  * @param $node
  * @param $context
  */
 function asu_rfi_bulk_delete_submissions_action(&$node, $context) {
-  node_delete($node->nid);
+  _asu_rfi_cron_delete_submissions($node->nid);
 }
 
 /*********************************************************************
@@ -1096,6 +1068,32 @@ function _asu_rfi_get_submissions_to_delete($submissions_returned = 0, $only_cou
 }
 
 /**
+ * Get Failed RFI leads (submission nodes) to submit
+ * @return mixed
+ */
+function _asu_rfi_get_rfi_leads_to_submit() {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'asu_rfi')
+    // Don't let this keep happening forever if we have permanent failure.
+    ->propertyCondition('created', array(
+      REQUEST_TIME - ASU_RFI_SUBMISSION_EXP_PERIOD,
+      REQUEST_TIME - strtotime('15 minutes')
+    ), 'between')
+    ->propertyCondition('changed', array(
+      REQUEST_TIME - ASU_RFI_SUBMISSION_EXP_PERIOD,
+      REQUEST_TIME
+    ), 'between')
+    ->propertyOrderBy('created', 'DESC')
+    ->fieldCondition('field_rfi_submission_status', 'value', array(
+      'Form_Multi_Partial',
+      'SF_Multi_Pending'
+    ), 'IN')// Failed lead.
+    ->addMetaData('account', user_load(1)); // Run the query as user 1.
+  return $query->execute();
+}
+
+/**
  * Queries the degrees in order to configure the location element of the form.
  * @param array $pcodes A list of the plan codes used in the RFI form
  * @return mixed $campusOptions An array of the available campuses
@@ -1134,7 +1132,7 @@ function _asu_rfi_get_campus_location_options($pcodes) {
           } else {
             if ($hasOnline == TRUE && $availableOnline == FALSE) {
               $onlineError = TRUE;
-              for ($i = 0; $i < sizeof($desiredProg['locations']); $i++) {
+              for ($i = 0; $i < count($desiredProg['locations']); $i++) {
                 if ($desiredProg['locations'][$i]['value'] == 'Online') {
                   unset($desiredProg['locations'][$i]);
                 }
@@ -1156,7 +1154,7 @@ function _asu_rfi_get_campus_location_options($pcodes) {
     }
   }
 
-  if (sizeof($campus_location_options) == 0) {
+  if (count($campus_location_options) == 0) {
     return FALSE;
   }
   else {
@@ -1687,10 +1685,6 @@ function _asu_rfi_online_fields_alter($type, $default, $server, $college_code, $
     return $online_data;
   }
 }
-
-/***************************
- * For asu_rfi.pages.inc, other includes
- ***************************/
 
 /**
  * CURL options for JSON feed pulls in data inc files
