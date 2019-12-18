@@ -34,10 +34,16 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
       // This is the initial form submission.
       $sf_multi_pending = TRUE;
       $node_wrapper->field_rfi_submission_status->set('SF_Multi_Pending');
+      if (isset($node_wrapper->field_rfi_error_message)) {
+        $node_wrapper->field_rfi_error_message->set('Multiform is now pending to be submitted (regardless of completion state).');
+      }
       $node_wrapper->save();
     } elseif ($node_wrapper->field_rfi_submission_status->value() === "SF_Multi_Pending") {
       // Change the multiform submission to "Ready for SF POST" because this is happening
       // AFTER the initial form submission.
+      if (isset($node_wrapper->field_rfi_error_message)) {
+        $node_wrapper->field_rfi_error_message->set('Multiform will be submitted at the next opportunity (pass or fail).');
+      }
       $node_wrapper->field_rfi_submission_status->set('Form_Completed');
       $node_wrapper->save();
     }
