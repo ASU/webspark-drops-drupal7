@@ -946,7 +946,7 @@ function asu_rfi_bulk_submit_action(&$node, $context) {
 }
 
 /**
- * Callback for hook_action_info - Delete a single completed/expired submission
+ * Callback for hook_action_info - Delete a single submission (regardless of status)
  * @param $node
  * @param $context
  */
@@ -959,7 +959,7 @@ function asu_rfi_bulk_delete_submissions_action(&$node, $context) {
  *********************************************************************/
 
 /**
- * Attempts to POST data to Salesforce middleware for all programs and forms
+ * Prepares and submits data to Salesforce for all programs and forms
  * @param $node - ASU RFI node storing the data
  * @param array $post - data to submit
  * @param string $program - program type (ugrad, grad)
@@ -1045,7 +1045,7 @@ function _asu_rfi_get_submissions_to_delete($submissions_returned = 0, $only_cou
 
   // waste of time
   if ($only_count && $submissions_returned !== 0) {
-    $message = 'INFO: You know the node count already. You gave it to me: ' . $submissions_returned . '.';
+    $message = 'INFO: You know the node count already: ' . $submissions_returned . '.';
     watchdog('asu_rfi', $message, array(), WATCHDOG_INFO);
     if (function_exists('drush_log')) {
       drush_log(t($message), array(), 'warning');
@@ -1090,7 +1090,7 @@ function _asu_rfi_get_submissions_to_delete($submissions_returned = 0, $only_cou
   if ($only_count) { // Return total number (not range-delimted)
     return ($submissions_returned === 0) ? $count : $submissions_returned;
   }
-  else {
+  else { // Return node IDs
     return $all_nids;
   }
 }

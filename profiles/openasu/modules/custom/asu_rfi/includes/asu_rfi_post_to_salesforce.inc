@@ -1,8 +1,8 @@
 <?php
 
 /**
- * POSTs form data to Salesforce for both UNDERGRAD and GRADUATE submissions.
- * Used by multiple forms (long form, multiform)
+ * POSTs form data to Salesforce.
+ * Used by long form and the multiform, for both UNDERGRAD and GRADUATE submissions.
  * Done one submission at a time.
  * @param array $data - form data to submit
  * @param string $type - Undergrad or graduate
@@ -25,7 +25,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
   $node_wrapper = entity_metadata_wrapper('node', $node);
 
   // Get information for logging
-  $nid_info = (isset($node_wrapper->nid)) ? ' for NID ' . $node_wrapper->nid->value() : '';
+  $nid_info = (isset($node_wrapper->nid)) ? $node_wrapper->nid->value() : '';
 
   // Incomplete multiform submissions logic
   if (isset($node_wrapper->field_rfi_submission_status)) {
@@ -152,8 +152,8 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
       }
     }
 
-    // Build DEFAULT Graduate data array for Salesforce (the camelCase field keys
-    // don't match the usual key formatting).
+    // Build DEFAULT Graduate data array for Salesforce
+    // @TODO Review camelCase usage
     $submission_data = array(
       'source' => $server['source'],
       'firstName' => $data['first_name'],
@@ -197,7 +197,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
       $url = "https://webforms.asu.edu/asu_edplus_middleware/submit/$fieldHash";
     }
   } else {
-    // Legacy code for GRADUATE level only(?)
+    // Remove meaningless data points
     if ($type === ASU_RFI_PROSPECT_LEVEL_GRAD) {
       foreach ($submission_data as $key_value => $result_array) {
         if (($result_array == "None")) {
@@ -208,12 +208,9 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
   }
 
   ///////////////////////////////////
-  // Post data to SalesForce middleware via cURL if the form is ready to submit.
-  // TESTING NOTES:
-  // - The Salesforce endpoint for undergraduate testing submissions is
-  // universally available for undergraduate submissions.
-  // - The graduate endpoint for testing (currently requestinfo-qa.asu.edu)
-  // is not available for testing from outside the ASU network (including Pantheon sites).
+  // POST data to SalesForce middleware via cURL if the form is ready to submit.
+  // NOTE: Some middleware servers (test_mode and/or ENV URLs) are not available
+  // outside the ASU network (specifically Pantheon sites).
   ///////////////////////////////////
 
   if (($environ['endpoint_access'] === true || $type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD)
@@ -238,7 +235,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
       // Get the response from Salesforce middleware
       // $message = (strpos($response, "-1 ") === 0) ? explode(':', $response) : '';
 
-      // SUCCESSFUL CURL POST submission to SF middleware
+      // SUCCESSFUL POST
       if (($curl_info['http_code'] === 200)) {
         $curl_message = 'Submission ' . $nid_info . ' posted to middleware.';
         if (isset($node_wrapper->field_rfi_submission_status)) {
@@ -257,9 +254,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
           drupal_set_message($curl_message, 'status');
         }
       }
-      // FAILED CURL submission to SF middleware
-      // Save the error message in the submission node and send message
-      // onto the confirmation page screen.
+      // FAILED POST
       else {
         $curl_message = (isset($node_wrapper->field_rfi_error_message))
           ? 'NID '. $nid_info . ' submission to ' . $url . ' failed. HTTP CODE ' . $curl_info['http_code']
@@ -267,20 +262,17 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
 
         if (($curl_info['http_code'] >= 400)) {
           // update error message
+
           // Get admin email address from admin settings page
           $to_email = variable_get('asu_rfi_error_email', NULL);
-          // Send error email to admins. Don't send if any of the following is true:
-          // - middleware app key is empty
-          // - no admin email is set
-          // - this is a cron job
-          if (!empty($mw_auth_key)) {
-            if (!empty($to_email)) {
-              if (!isset($data['cron_run']) || ($data['cron_run'] != "Cron_running")) {
-                _asu_rfi_create_failed_post_email($to_email, $nid);
-              }
+          // Send error email to admins.
+          if (!empty($to_email) && !empty($mw_auth_key)) { // Admin email and middleware key are locally set
+            if (!isset($data['cron_run']) || ($data['cron_run'] != "Cron_running")) { // Not a cron job
+              _asu_rfi_create_failed_post_email($to_email, $nid);
             }
           }
         }
+        // Save the error message in the submission node
         if (isset($node_wrapper->field_rfi_submission_status)) { //
           $node_wrapper->field_rfi_submission_status->set('SF_Failed');
         }
@@ -288,26 +280,26 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
           $node_wrapper->field_rfi_error_message->set($curl_message);
         }
         $node_wrapper->save();
+        // Log/print messaging to end user and set timestamp
         watchdog('asu_rfi', $curl_message, array(), WATCHDOG_ERROR);
         if (function_exists('drush_log')) {
           drush_log($curl_message, 'error');
         }
         variable_set('asu_rfi_last_failure_SF_posting', time());
       }
-
-      curl_close($ch);
-
       if (drupal_valid_path('admin')) {
         drupal_set_message($curl_message);
       }
 
-      if (FALSE === $response) {
+      curl_close($ch);
+
+      if ($response === FALSE) {
         throw new Exception(curl_error($ch), curl_errno($ch));
       }
     } catch (Exception $e) {
       $msg_start = 'RFI submission POST to ' . $base_url . ' failed. HTTP CODE: '
-        . $curl_info['http_code'] . '. ';
-      $message_final = $msg_start . (((int) $e->getCode() === 0) ? ' This may have been due to
+        . ((isset($curl_info)) ? $curl_info['http_code'] : 'unknown') . '. ';
+      $message_final = $msg_start . (((int) $e->getCode() <= 0) ? ' This may have been due to
       ASU network access restrictions.' : '');
       watchdog('asu_rfi', $message_final, array(), WATCHDOG_ERROR);
       trigger_error(sprintf(
@@ -318,10 +310,11 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
   }
   else { // Do not attempt submission to SF middleware
     if ($sf_multi_pending) { // Multiform submission not ready to submit yet
-      $message_final = 'NID ' . $nid . ' MF submission will run when the student completes
-      the form, when cron runs again, or manually submitted via a VBO under "OPERATIONS".';
+      $message_final = 'NID ' . $nid . ' MF submission will be submitted when 1) the student completes
+      the form, or 2) after its status is manually to Form_Completed and is subsequently resubmitted
+      by either a cron job or manual administrator submission.';
     } else { // Other connectivity issue?
-      $message_final = 'Submissions to ' . $url . ' will not work
+      $message_final = 'NID ' . $nid_info . ' RFI submission ' . $nid_info . ' to ' . $url . ' will not work
        due to ASU network access restrictions.';
       if (isset($node_wrapper->field_rfi_error_message)) {
         $node_wrapper->field_rfi_error_message->set($message_final);

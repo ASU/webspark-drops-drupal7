@@ -244,11 +244,7 @@ function asu_rfi_update_7004(&$sandbox) {
   }
 
   // 3) Rebuild ASU RFI feature to update the RFI forms
-  features_rebuild(array(
-    'asu_rfi_feature' => array(
-      'views_default', 'field_base')
-    )
-  );
+  features_revert_module('asu_rfi_feature');
   // 4) Manually clears views cache for Submissions report view.
   $view = views_get_view('asu_rfi_submissions_report');
   $view->set_display('default');
@@ -263,7 +259,8 @@ function asu_rfi_update_7005(&$sandbox) {
 
   $nids_per_pass = 50;
 
-  if (!isset($sandbox['total'])) { // FIRST RUN IF NECESSARY
+  // First update run ONLY (Initialize update counters, data)
+  if (!isset($sandbox['total'])) {
     $total_count = _asu_rfi_get_submissions_to_delete(0, TRUE);
     $sandbox['total'] = $total_count;
     $sandbox['max'] = $nids_per_pass;
@@ -275,40 +272,32 @@ function asu_rfi_update_7005(&$sandbox) {
     }
   }
 
-  // Now the batch operation
-
+  // Actual batch operation to delete
   $all_nids = _asu_rfi_get_submissions_to_delete($nids_per_pass);
 
   foreach ($all_nids as $nid) {
     node_delete($nid);
     $sandbox['progress']++;
     $sandbox['current'] = $nid;
-    $sandbox['inter_count']++;
-    // Show progress message if in Drush.
   }
 
   // Check to see if finished.
   $sandbox['#finished'] = ($sandbox['progress'] >= $sandbox['total'])
     ? TRUE : ($sandbox['progress'] / $sandbox['total']);
 
-  if ($sandbox['#finished'] === TRUE) {
-    $final_message = "\n" . '<ul><li>' . implode('</li><li>', $sandbox['messages']) . '</li></ul>';
-    return $final_message . "\n" . t('The expired/completed RFI form submissions have been deleted.');
-  } else {
-    $percent = $sandbox['#finished'];
-    $percent = round((float) $percent * 100) . '%';
+  if ($sandbox['#finished'] === TRUE) {;
+    return "\n" . t('The expired/completed RFI form submissions have been deleted.');
+  }
+  else {
+    $percentage = $sandbox['#finished'];
+    $percentage = round((float) $percentage * 100, 1) . '%';
+    $message = t(__FUNCTION__ . 'Deleted ' . $sandbox['progress'] . ' of '
+      . $sandbox['total'] . " submissions (" . $percentage . " complete). "
+      . "Last node deleted: @nid...",
+      array('@nid' => (isset($nid)) ? $nid : 'unknown'));
 
-    $message = t('Deleted ' . $nids_per_pass . " nodes. Last node deleted: @nid. Job " . $percent . " complete.",
-      array('@nid' => $nid));
-
-    $test = $sandbox;
-
-    if (function_exists('drush_log')) {
-      drush_log(t(__FUNCTION__ . ' - ' . var_dump($sandbox), array()), 'success');
-    }
-
-    // Set message.
-    $sandbox['messages'][] = $message . "\n";
+    // Set message and add for final report.
+    //$sandbox['messages'][] = $message . "\n";
     return $message;
   }
 }
