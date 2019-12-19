@@ -125,7 +125,7 @@ function asu_rfi_update_7001(&$sandbox) {
 /**
  * Updates variable names not properly set by ASU RFI module.
  */
-function asu_rfi_update_7002(&$sandbox){
+function asu_rfi_update_7200(&$sandbox){
   $or = db_or()
     ->condition('v.name', 'last_attempt_SF_posting', 'LIKE')
     ->condition('v.name', 'last_success_SF_posting', 'LIKE')
@@ -170,7 +170,7 @@ function asu_rfi_update_7002(&$sandbox){
 /**
  * Delete deprecated asu_rfi_siteDomain variable
  */
-function asu_rfi_update_7003(&$sandbox) {
+function asu_rfi_update_7201(&$sandbox) {
   Database::getConnection('default', 'default')
     ->delete('variable')
     ->condition('name', 'asu_rfi_siteDomain', 'LIKE')
@@ -180,7 +180,7 @@ function asu_rfi_update_7003(&$sandbox) {
 /**
  * Update ASU RFI submission statuses to more instructional, guiding values
  */
-function asu_rfi_update_7004(&$sandbox) {
+function asu_rfi_update_7202(&$sandbox) {
   // 1) Update EXISTING Submission Status values in field_data tables
   // Complete => Form_Completed
   // Incomplete => Form_Multi_Partial
@@ -255,7 +255,7 @@ function asu_rfi_update_7004(&$sandbox) {
 /**
  * Delete ASU RFI submissions that have been sent to Salesforce or expired.
  */
-function asu_rfi_update_7005(&$sandbox) {
+function asu_rfi_update_7203(&$sandbox) {
 
   $nids_per_pass = 50;
 
@@ -291,7 +291,7 @@ function asu_rfi_update_7005(&$sandbox) {
   else {
     $percentage = $sandbox['#finished'];
     $percentage = round((float) $percentage * 100, 1) . '%';
-    $message = t(__FUNCTION__ . 'Deleted ' . $sandbox['progress'] . ' of '
+    $message = t('Deleted ' . $sandbox['progress'] . ' of '
       . $sandbox['total'] . " submissions (" . $percentage . " complete). "
       . "Last node deleted: @nid...",
       array('@nid' => (isset($nid)) ? $nid : 'unknown'));
@@ -305,7 +305,7 @@ function asu_rfi_update_7005(&$sandbox) {
 /**
  * Add separate VBO permission for using views bulk operations.
  */
-function asu_rfi_update_7006(&$sandbox) {
+function asu_rfi_update_7204(&$sandbox) {
   $roles = user_roles(TRUE, 'administer asu rfi');
   if (count($roles)) {
     foreach ($roles as $nid => $name) {
@@ -319,7 +319,7 @@ function asu_rfi_update_7006(&$sandbox) {
 /**
  * Update current student form submissions status to Completed (No Salesforce)
  */
-function asu_rfi_update_7007(&$sandbox) {
+function asu_rfi_update_7205(&$sandbox) {
   // #1 Update existing form_type values to human English
   $tables = array(
     'field_data_field_rfi_form_type',
