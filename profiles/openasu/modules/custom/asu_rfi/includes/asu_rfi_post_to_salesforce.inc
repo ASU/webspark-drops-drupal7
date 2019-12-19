@@ -35,17 +35,16 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
       $sf_multi_pending = TRUE;
       $node_wrapper->field_rfi_submission_status->set('SF_Multi_Pending');
       if (isset($node_wrapper->field_rfi_error_message)) {
-        $node_wrapper->field_rfi_error_message->set('Multiform is now pending to be submitted (regardless of completion state).');
+        $node_wrapper->field_rfi_error_message->set('Multiform is now pending to be submitted in the NEXT iteration of submissions (regardless of completion state).');
       }
       $node_wrapper->save();
     } elseif ($node_wrapper->field_rfi_submission_status->value() === "SF_Multi_Pending") {
-      // Change the multiform submission to "Ready for SF POST" because this is happening
-      // AFTER the initial form submission.
-      if (isset($node_wrapper->field_rfi_error_message)) {
-        $node_wrapper->field_rfi_error_message->set('Multiform will be submitted at the next opportunity (pass or fail).');
+      if (isset($node_wrapper->created) && isset($node_wrapper->field_rfi_error_message)) {
+        $created = $node_wrapper->created->value();
+        $message = _asu_rfi_create_expired_message($created);
+        $node_wrapper->field_rfi_error_message->set($message);
+        $node_wrapper->save();
       }
-      $node_wrapper->field_rfi_submission_status->set('Form_Completed');
-      $node_wrapper->save();
     }
   }
 
@@ -237,12 +236,12 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
 
       // SUCCESSFUL POST
       if (($curl_info['http_code'] === 200)) {
-        $curl_message = 'Submission ' . $nid_info . ' posted to middleware.';
+        $curl_message = 'SUCCESS - Submission ' . $nid_info . ' posted to middleware. This will be deleted by the next cron run.';
         if (isset($node_wrapper->field_rfi_submission_status)) {
           $node_wrapper->field_rfi_submission_status->set('SF_Completed');
         }
         if (isset($node_wrapper->field_rfi_error_message)) {
-          $node_wrapper->field_rfi_error_message->set('');
+          $node_wrapper->field_rfi_error_message->set($curl_message);
         }
         $node_wrapper->save();
         // Record time of latest successful post
@@ -256,13 +255,13 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
       }
       // FAILED POST
       else {
-        $curl_message = (isset($node_wrapper->field_rfi_error_message))
-          ? 'NID '. $nid_info . ' submission to ' . $url . ' failed. HTTP CODE ' . $curl_info['http_code']
-          . ': ' . $response : '';
+        $created = $node_wrapper->created->value();
+        $expired_message = _asu_rfi_create_expired_message($created);
+        $curl_message = 'NID ' . $nid_info . ' submission to ' . $url . ' failed. HTTP CODE ' . $curl_info['http_code']
+          . ': ' . $response . "\n\n -- " . $expired_message;
 
         if (($curl_info['http_code'] >= 400)) {
           // update error message
-
           // Get admin email address from admin settings page
           $to_email = variable_get('asu_rfi_error_email', NULL);
           // Send error email to admins.
@@ -311,8 +310,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
   else { // Do not attempt submission to SF middleware
     if ($sf_multi_pending) { // Multiform submission not ready to submit yet
       $message_final = 'NID ' . $nid . ' MF submission will be submitted when 1) the student completes
-      the form, or 2) after its status is manually to Form_Completed and is subsequently resubmitted
-      by either a cron job or manual administrator submission.';
+      the form, or 2) it is resubmitted by either a cron job or manual administrator submission.';
     } else { // Other connectivity issue?
       $message_final = 'NID ' . $nid_info . ' RFI submission ' . $nid_info . ' to ' . $url . ' will not work
        due to ASU network access restrictions.';

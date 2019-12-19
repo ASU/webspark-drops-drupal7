@@ -776,8 +776,8 @@ function asu_rfi_cron() {
   $queue->deleteQueue(); // Why??
   $queue = DrupalQueue::get('asu_rfi_failed_leads_queue');
 
-  // Get failed RFI Leads.
-  $results = _asu_rfi_get_rfi_leads_to_submit();
+  // Get failed RFI Leads (asu_rfi node submissions).
+  $results = _asu_rfi_get_unpassed_submissions();
 
   // Add failed leads to the cron jobs queue
   if (isset($results['node'])) {
@@ -1067,11 +1067,12 @@ function _asu_rfi_get_submissions_to_delete($submissions_returned = 0, $only_cou
   }
 }
 
-/**
- * Get Failed RFI leads (submission nodes) to submit
+/*
+ * Get RFI leads (submission nodes) not already successfully POSTed to middleware
+ * to (re)submit (again).
  * @return mixed
  */
-function _asu_rfi_get_rfi_leads_to_submit() {
+function _asu_rfi_get_unpassed_submissions() {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'asu_rfi')
@@ -1087,7 +1088,8 @@ function _asu_rfi_get_rfi_leads_to_submit() {
     ->propertyOrderBy('created', 'DESC')
     ->fieldCondition('field_rfi_submission_status', 'value', array(
       'Form_Multi_Partial',
-      'SF_Multi_Pending'
+      'SF_Multi_Pending',
+      'SF_Failed',
     ), 'IN')// Failed lead.
     ->addMetaData('account', user_load(1)); // Run the query as user 1.
   return $query->execute();
@@ -1735,6 +1737,26 @@ function _asu_rfi_create_failed_post_email($to_email, $nid = 0) {
     watchdog('asu_rfi', 'SF Error message email sent to ' . $to_email);
     variable_set('asu_rfi_SF_error_message_sent', time());
   }
+}
+
+/**
+ * Generate appropriate expiration message for RFI reports page.
+ * @param $created
+ * @return string
+ */
+function _asu_rfi_create_expired_message($created) {
+  $expires = (int) $created + ASU_RFI_SUBMISSION_EXP_PERIOD;
+  $cron_interval = (int) variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD);
+  if ($expires > time() && (($expires - time()) <= $cron_interval)) {
+    $message = 'IMMEDIATE ACTION NEEDED. Will be deleted by the next cron run unless fixed.';
+  } elseif ($expires < time()) {
+    $message = 'EXPIRED! Should have already been deleted, and will be deleted by the next cron job for sure.';
+  } else {
+    $expiration_date = date("M j, Y @ g:i A", $expires);
+    $message = 'PENDING - Will be periodically resubmitted to middleware until ' . $expiration_date
+      . ', after which it will be deleted by the next cron run.';
+  }
+  return $message;
 }
 
 /**
