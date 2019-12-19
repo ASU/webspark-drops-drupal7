@@ -9,6 +9,7 @@ dependencies[] = asu_rfi_feature
 dependencies[] = mimemail
 dependencies[] = views_bulk_operations
 dependencies[] = honeypot
+dependencies[] = asu_flog
 version = 7.x-2.0-rc1
 scripts[] = js/asu_rfi_form.js
 

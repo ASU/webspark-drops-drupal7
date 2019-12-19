@@ -30,7 +30,7 @@ define('ASU_RFI_PROSPECT_LEVEL_GRAD', "Graduate");
 define('ASU_RFI_STALE_TIME_DEFAULT', 86400); // One Day
 define('ASU_RFI_SUBMISSION_EXP_PERIOD', ASU_RFI_STALE_TIME_DEFAULT * 14); // Two weeks
 
-module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_post_to_salesforce');
+module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_post_to_middleware');
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_get_programs');
 
 /**
@@ -782,8 +782,8 @@ function asu_rfi_cron() {
   // Add failed leads to the cron jobs queue
   if (isset($results['node'])) {
     // For each failed lead, add it to the asu_rfi_failed_leads_queue.
-    foreach ($results['node'] as $key => $failed_rfi_lead) {
-      $queue->createItem($failed_rfi_lead);
+    foreach ($results['node'] as $key => $unpassed_submission) {
+      $queue->createItem($unpassed_submission);
     }
   }
 
@@ -834,12 +834,12 @@ function asu_rfi_cron_queue_info() {
   // Repost failed leads.
   $queues['asu_rfi_failed_leads_queue'] = array(
     'worker callback' => '_asu_rfi_cron_repost_data',
-    'time' => 20,
+    'time' => 30,
   );
   // Delete stale/completed submissions.
   $queues['asu_rfi_delete_submissions_queue'] = array(
     'worker callback' => '_asu_rfi_cron_delete_submissions',
-    'time' => 20,
+    'time' => 30,
   );
   return $queues;
 }
@@ -870,6 +870,9 @@ function _asu_rfi_cron_repost_data($data) {
  */
 function _asu_rfi_cron_delete_submissions($data) {
   node_delete($data);
+  if (function_exists('drush_log')) {
+    drush_log('Node ID ' . $data . ' deleted.', 'success');
+  }
 }
 
 /*********************************************************************
@@ -904,7 +907,8 @@ function asu_rfi_action_info() {
 
 /**
  * POST Middleware a single submission's data to SF
- * Callback - hook_action_info()
+ * One submission per call.
+ * Callback - hook_action_info() - for VBOs
  * @param $node
  * @param $context
  */
@@ -918,7 +922,7 @@ function asu_rfi_bulk_submit_action(&$node, $context) {
 
 /**
  * Delete a single submission (regardless of status). Wrapper for comparable hook_cron function.
- * Callback for hook_action_info()
+ * Callback for hook_action_info() - for VBOs
  * @param $node
  * @param $context
  */
@@ -932,6 +936,7 @@ function asu_rfi_bulk_delete_submissions_action(&$node, $context) {
 
 /**
  * Prepares and submits data to Salesforce for all programs and forms
+ * One submission sent per call
  * @param $node - ASU RFI node storing the data
  * @param array $post - data to submit
  * @param string $program - program type (ugrad, grad)
@@ -973,7 +978,7 @@ function _asu_rfi_process_middleware_data($node, $post = array(), $program = ASU
       $post['type_of_form'] = 'MF';
     }
     $post['semester_name'] = isset($node->field_rfi_start_term[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_start_term[LANGUAGE_NONE][0]['value'] : '';
-    asu_rfi_post_to_sf_middleware($post, ASU_RFI_PROSPECT_LEVEL_GRAD);
+    asu_rfi_post_to_middleware($post, ASU_RFI_PROSPECT_LEVEL_GRAD);
   }
   // Undergrad program (default)
   else {
@@ -985,7 +990,7 @@ function _asu_rfi_process_middleware_data($node, $post = array(), $program = ASU
     }
     $post['ip_address'] = isset($node->field_rfi_ip_address[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_ip_address[LANGUAGE_NONE][0]['value'] : '';
     $post['start_date'] = $node->field_rfi_start_term_code[LANGUAGE_NONE][0]['value'];
-    asu_rfi_post_to_sf_middleware($post, ASU_RFI_PROSPECT_LEVEL_UNDERGRAD);
+    asu_rfi_post_to_middleware($post, ASU_RFI_PROSPECT_LEVEL_UNDERGRAD);
   }
   variable_set('asu_rfi_last_attempt_SF_posting', time());
 }
@@ -1076,15 +1081,17 @@ function _asu_rfi_get_unpassed_submissions() {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'asu_rfi')
+
     // Don't let this keep happening forever if we have permanent failure.
-    ->propertyCondition('created', array(
-      REQUEST_TIME - ASU_RFI_SUBMISSION_EXP_PERIOD,
-      REQUEST_TIME - strtotime('15 minutes')
-    ), 'between')
-    ->propertyCondition('changed', array(
+    // UPDATE - We can kill this because we're deleting old submissions now. We
+    // need to find ALL of the old submissions. Leave submissions less than 15 minutes old alone.
+        ->propertyCondition('created', array(1, REQUEST_TIME - strtotime('15 minutes')), 'between')
+    /*
+      ->propertyCondition('changed', array(
       REQUEST_TIME - ASU_RFI_SUBMISSION_EXP_PERIOD,
       REQUEST_TIME
-    ), 'between')
+      ), 'between')
+    */
     ->propertyOrderBy('created', 'DESC')
     ->fieldCondition('field_rfi_submission_status', 'value', array(
       'Form_Multi_Partial',
@@ -1092,7 +1099,8 @@ function _asu_rfi_get_unpassed_submissions() {
       'SF_Failed',
     ), 'IN')// Failed lead.
     ->addMetaData('account', user_load(1)); // Run the query as user 1.
-  return $query->execute();
+  $results = $query->execute();
+  return $results;
 }
 
 /**
@@ -1750,10 +1758,10 @@ function _asu_rfi_create_expired_message($created) {
   if ($expires > time() && (($expires - time()) <= $cron_interval)) {
     $message = 'IMMEDIATE ACTION NEEDED. Will be deleted by the next cron run unless fixed.';
   } elseif ($expires < time()) {
-    $message = 'EXPIRED! Should have already been deleted, and will be deleted by the next cron job for sure.';
+    $message = 'EXPIRED! Will be deleted ASAP by the next deletion cron job.';
   } else {
     $expiration_date = date("M j, Y @ g:i A", $expires);
-    $message = 'PENDING - Will be periodically resubmitted to middleware until ' . $expiration_date
+    $message = 'PENDING - Will be periodically resubmitted until ' . $expiration_date
       . ', after which it will be deleted by the next cron run.';
   }
   return $message;

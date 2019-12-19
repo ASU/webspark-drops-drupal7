@@ -1,0 +1,5 @@
+name = ASU Fun Log
+package = ASU
+description = Mini-API to create Watchdog entries, Drush logging, and/or Drupal messaging in one line.
+version = 7.x-1.0
+core = 7.x

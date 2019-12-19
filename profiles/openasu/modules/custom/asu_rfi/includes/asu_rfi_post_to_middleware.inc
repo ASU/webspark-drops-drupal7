@@ -7,7 +7,7 @@
  * @param array $data - form data to submit
  * @param string $type - Undergrad or graduate
  */
-function asu_rfi_post_to_sf_middleware($data, $type) {
+function asu_rfi_post_to_middleware($data, $type) {
   global $base_url;
   $submission_data = array();
   $college_code = $url = $body = '';
@@ -236,7 +236,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
 
       // SUCCESSFUL POST
       if (($curl_info['http_code'] === 200)) {
-        $curl_message = 'SUCCESS - Submission ' . $nid_info . ' posted to middleware. This will be deleted by the next cron run.';
+        $curl_message = 'SUCCESS - Submission ' . $nid_info . ' posted to middleware. Will be deleted by the next cron run.';
         if (isset($node_wrapper->field_rfi_submission_status)) {
           $node_wrapper->field_rfi_submission_status->set('SF_Completed');
         }
@@ -258,7 +258,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
         $created = $node_wrapper->created->value();
         $expired_message = _asu_rfi_create_expired_message($created);
         $curl_message = 'NID ' . $nid_info . ' submission to ' . $url . ' failed. HTTP CODE ' . $curl_info['http_code']
-          . ': ' . $response . "\n\n -- " . $expired_message;
+          . ': ' . $response . "\n -- " . $expired_message;
 
         if (($curl_info['http_code'] >= 400)) {
           // update error message
@@ -282,7 +282,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
         // Log/print messaging to end user and set timestamp
         watchdog('asu_rfi', $curl_message, array(), WATCHDOG_ERROR);
         if (function_exists('drush_log')) {
-          drush_log($curl_message, 'error');
+          drush_log("\n" . $curl_message . "\n", 'error');
         }
         variable_set('asu_rfi_last_failure_SF_posting', time());
       }
@@ -296,7 +296,7 @@ function asu_rfi_post_to_sf_middleware($data, $type) {
         throw new Exception(curl_error($ch), curl_errno($ch));
       }
     } catch (Exception $e) {
-      $msg_start = 'RFI submission POST to ' . $base_url . ' failed. HTTP CODE: '
+      $msg_start = 'Submission POST to ' . $base_url . ' failed. HTTP CODE: '
         . ((isset($curl_info)) ? $curl_info['http_code'] : 'unknown') . '. ';
       $message_final = $msg_start . (((int) $e->getCode() <= 0) ? ' This may have been due to
       ASU network access restrictions.' : '');

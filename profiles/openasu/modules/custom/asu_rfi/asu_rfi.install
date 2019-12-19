@@ -159,8 +159,9 @@ function asu_rfi_update_7200(&$sandbox){
         ->condition('name', $name, 'LIKE')
         ->execute();
     }
-    $message = count($updates_needed) . " names of the ASU RFI module settings in
-     the variable table were updated. See the ASU RFI module CHANGELOG file for more information.";
+    $message = count($updates_needed) . " names of the ASU RFI module settings"
+     . " in the variable table were updated. See the ASU RFI module CHANGELOG "
+     . "file for more information.";
   } else {
     $message = "No updates were needed for the ASU RFI module.";
   }

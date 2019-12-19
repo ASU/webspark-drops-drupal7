@@ -1,0 +1,102 @@
+<?php
+/**
+ * ASU Fun Log .module file
+ */
+
+/**
+ * Create log entry and output.
+
+ * @param string $module - machine name of module
+ * @param $message - Message text. If dynamic parameters are being passed in to sanitize, they need to be included
+ * in $message. (See t() documentation for more information.)
+
+ * @param array $msg_params (OPTIONAL) - array of tokens/values to sanitize in $message (see t() documentation for more on this.)
+ * @param int $severity (OPTIONAL) - 0-7, matching WATCHDOG_* constants integer values. Defaults to WATCHDOG_INFO
+ * @param bool $drupal_message (OPTIONAL) - Create a drupal_set_message. FALSE by default.
+ * @param bool $drush (OPTIONAL) - Create a drush_log message. TRUE by default.
+ * @param bool $watchdog (OPTIONAL) - Create a watchdog message. TRUE by default.
+ * @param bool $dsm_admin_only (OPTIONAL) - Only show to users with /admin access. Defaults to TRUE.
+ */
+
+function flogger($module,
+                 $message,
+                 $msg_params = array(),
+                 $severity = 6,
+                 $drupal_message = FALSE,
+                 $drush = TRUE,
+                 $watchdog = TRUE,
+                 $dsm_admin_only = TRUE) {
+
+  if ((int) $severity < 0) {
+    watchdog('flogger', 'Log severity must be an integer between 0 and 7, matching WATCHDOG_\% constants'
+      , array(), 'error');
+  }
+  // Generate Watchdog entry
+  if ($watchdog) {
+    $module = (is_string($module) && !empty($module)) ? $module : 'flogger_undefined';
+    $severity = ($severity >= 8) ? 6 : $severity; // Set success for Drush to "INFO" for watchdog.
+    watchdog($module, $message, $msg_params, $severity);
+  }
+  // Generate Drush log entry
+  if (function_exists('drush_log')) {
+    if ($drush) {
+      $severity = _flogger_type_converter('drush', $severity);
+      drush_log("\n" . t($message, $msg_params), $severity);
+    }
+  }
+  // Generate Drupal message
+  if ($drupal_message) {
+    $show_message = TRUE;
+    if ($dsm_admin_only) { // only show to admin roles?
+      if (drupal_valid_path('admin')) {
+        $show_message = FALSE;
+      }
+    }
+    if ($show_message) {
+      $severity = _flogger_type_converter('drupal_message', $severity);
+      $message = (is_array($msg_params) && count($msg_params) > 0)
+        ? t($message, $msg_params) : $message;
+      drupal_set_message($message, $severity, TRUE);
+    }
+  }
+
+}
+
+function _flogger_type_converter ($log_type, $level) {
+  switch ($log_type) {
+    case 'drush' :
+      if ($level <= WATCHDOG_ERROR) {
+        return 'error';
+      }
+      elseif ($level === WATCHDOG_WARNING) {
+        return 'warning';
+      }
+      elseif ($level === WATCHDOG_NOTICE) {
+        return 'notice';
+      }
+      elseif ($level === WATCHDOG_INFO || $level === WATCHDOG_DEBUG) {
+        return 'ok';
+      }
+      elseif ($level === 8) { // No WATCHDOG_* equivalent - drush level only
+        return 'success';
+      }
+      else { // any value higher than 8
+        return 'ok';
+      }
+      break;
+    case 'drupal_message' :
+      if ($level <= WATCHDOG_ERROR) {
+        return 'error';
+      }
+      elseif ($level === WATCHDOG_WARNING) {
+        return 'warning';
+      }
+      elseif ($level >= WATCHDOG_NOTICE) {
+        return 'status';
+      }
+      break;
+    default :
+      return '';
+  }
+  return ''; // default catch-all
+}
