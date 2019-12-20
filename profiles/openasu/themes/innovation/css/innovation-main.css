@@ -586,59 +586,51 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 .alert {
   margin: 1em 0;
   padding: 1em;
-  font-weight: bolder;
+  font-weight: 400;
+}
+
+.alert,
+.alert a {
+  color: #2a2a2a;
+  border-bottom-color: #2a2a2a;
+}
+
+.alert a:hover {
+  color: #d23153;
+  border-bottom-color: #d23153;
+  cursor: pointer;
 }
 
 .alert a.close {
-  font-size: 1.375em;
+  font-size: 1.25em;
   opacity: 1;
-  color: #fff;
-}
-
-.alert a.close:hover {
-  color: #000;
+  border: none;
 }
 
 .alert-success {
-  background-color: #78BE20;
+  background-color: #ddefc7;
   border-color: #3E7E1F;
 }
 
 .alert-info {
-  background-color: #00A3E0;
+  background-color: #bfe8f7;
   border-color: #006B92;
 }
 
 .alert-danger {
-  background-color: #9e3f5d; /* 75% opacity of official maroon */
+  background-color: #e8d2d9; /* 20% opacity of official maroon */
   border-color: #8C1D40;
 }
 
 .alert-warning {
-  background-color: #FFC627;
-  border-color: #ec5937;
+  background-color: #ffecb8; /* 33% opacity of official maroon */
+  border-color: #8C1D40;
 }
 
-.alert-warning *,
-.alert-warning a.close {
-  color: #000;
-}
-
-/* unknown, undefined alert */
-div[class='alert alert-block'] {
-  background-color: #fbfbfb;
-  border-color: #d7d7d7;
-}
-div[class='alert alert-block'] a.close {
-  color: #000;
-}
-
-.alert-success,
-.alert-info,
-.alert-danger,
-.alert-warning a.close:hover {
-  color: #fff;
-  margin: 1em 0;
+.alert:not([class*="alert-"]),
+div[class='alert alert-block'] { /* Catch-all for default alert class */
+  background-color: #f7f7f7;
+  border-color: #ccc;
 }
 
 /* Devel debugging */
