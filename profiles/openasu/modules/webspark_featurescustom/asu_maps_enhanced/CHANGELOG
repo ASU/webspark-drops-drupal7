@@ -1,3 +1,9 @@
+asu_maps_enhanced 7.x-1.6, 2019
+-------------------------------
+- Switched map to display new ASU GIS map
+- Removed code for Concept3d location form
+- Changed form to allow embed of GIS map
+
 asu_maps_enhanced 7.x-1.5, 2019
 -------------------------------
 - Switched to new API and map URL for Concept3d maps
