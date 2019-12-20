@@ -662,7 +662,8 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
   border-color: #8C1D40;
 }
 
-.alert:not([class*="alert-"]) { /* Catch-all for default alert class */
+.alert:not([class*="alert-"]),
+div[class='alert alert-block'] { /* Catch-all for default alert class */
   background-color: #f7f7f7;
   border-color: #ccc;
 }
