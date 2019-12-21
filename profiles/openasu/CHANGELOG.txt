@@ -1,13 +1,27 @@
-Webspark 1.70.1 (College Station), 2019-09-04
----------------------------------------------
-- Drupal core
-
-  * Seven (seven) - Removed calls to IE-specific CSS files that were filling logs of sites with subthemes
-  * System (system) - Made arrows in fieldsets labels clickable to open/close fieldsets
-  * Update (update) - Added warning and explanation to Webspark's internal updates page for Pantheon-specific users to alleviate confusion about what to update in Webspark caused by the Pantheon Dashboard's incorrect list of "Available Updates"
-
+Webspark 1.70.3 (Huntsville), 2019-12-20
+----------------------------------------
 - Webspark core
 
+  * Drupal core (drupal) - v7.69-patch4
+    - SECURITY UPDATE - See https://www.drupal.org/project/drupal/releases/7.69 for details.
+
+
+Webspark 1.70.2 (Bryan), 2019-09-12
+-----------------------------------
+- Web standards components in Webspark
+
+  * ASU Enhanced Maps (asu_maps_enhanced) - v1.6
+    * Added PHP 5.x compatibility for ASU Enterprise-hosted sites
+
+
+Webspark 1.70.1 (College Station), 2019-09-04
+---------------------------------------------
+- Webspark core
+
+  * Drupal core - v7.67-patch4
+    * Seven (seven) - Removed calls to IE-specific CSS files that were filling logs of sites with subthemes
+    * System (system) - Made arrows in fieldsets labels clickable to open/close fieldsets
+    * Update (update) - Added warning and explanation to Webspark's internal updates page for Pantheon-specific users to alleviate confusion about what to update in Webspark caused by the Pantheon Dashboard's incorrect list of "Available Updates"
   * Webspark (openasu) - v1.70.1 - Set the Drush default version used by Pantheon hosted sites to 8.x
 
 - Web standards components in Webspark
@@ -37,7 +51,7 @@ Webspark 1.70.1 (College Station), 2019-09-04
     * Added icon for ASU carousel widget
   * Innovation (innovation) - v1.14
     * Fixed multiple theming bugs only visible in the administrative areas of the site to allow its usage as an administration theme in place of Webspark Seven (if desired).
-    * Added page title back to <title> tag to 1) readd the title to a browser's rendering of the page title in the top bar, and 2) to improve accessibility
+    * Added page title back to <title> tag to 1) read the title to a browser's rendering of the page title in the top bar, and 2) to improve accessibility
     * Added Innovation theme setting (at /admin/appearance/settings/innovation) to choose whether to make social media icons in the ASU mega footer open in a new window/tab (off by default)
     * Added standardized, ASU web standards styling to Views-generated pagers
     * Fixed ASU global footer CSS to allow for blocks to render properly beneath it (for administrative purposes only).
@@ -78,10 +92,10 @@ Webspark 1.70.1 (College Station), 2019-09-04
   - Managed by Panopoly
 
     * TinyMCE (tinymce) - v3.5.11 + patch
-      * Added the corrent left/right margins on WYSIWYG-inserted images and tables.
+      * Added the correct left/right margins on WYSIWYG-inserted images and tables.
       * Notes:
         * This change will apply to new elements/images.
-        * It will not automatically apply to existing elements in current pages, however. Existing pages need to either be opened to edit and then resaved, or programmatically updated by some user-generated, customized Drupal code for their site (not included).
+        * It will not automatically apply to existing elements in current pages, however. Existing pages need to either be opened to edit and then re-saved, or programmatically updated by some user-generated, customized Drupal code for their site (not included).
 
 
 Webspark 1.70 (Texas), 2019-07-12
@@ -89,7 +103,7 @@ Webspark 1.70 (Texas), 2019-07-12
 - Webspark core
 
   * Panopoly - v1.70
-    * Multiple Panopoly releases (1.68-1.70) rolled into one update; Includes updates to contrib modules. 
+    * Multiple Panopoly releases (1.68-1.70) rolled into one update; Includes updates to contrib modules.
       See https://www.drupal.org/project/panopoly/releases/7.x-1.70 for more info.
 
 - Web standards components in webspark
@@ -105,7 +119,7 @@ Webspark 1.70 (Texas), 2019-07-12
     * Added flexslider dependency
   * Webspark Test (webspark_test) - v1.1
     * Added feature steps to mock the asu_isearch directory import source
-    * Added scenario to asu_directory_import.feature which tests that both profile nodes and affiliation 
+    * Added scenario to asu_directory_import.feature which tests that both profile nodes and affiliation
       field_collections are created, updated, and loaded correctly
     * Updated behat.travis.yml config so that Chromedriver starts with a fullscreen window
 
@@ -116,7 +130,7 @@ Webspark 1.70 (Texas), 2019-07-12
     * Views (views) - v3.23
     * Webform (webform) - v4.19
     * SMTP (smtp) - v1.7+patch (https://www.drupal.org/project/smtp/issues/2979682)
-  
+
   - Managed by Panopoly
 
     * Chaos Tool Suite (ctools) - v1.15
@@ -134,7 +148,7 @@ Webspark 1.67 (Iowa), 2019-05-20
   * Drupal core - v7.67
     * Security update! See the latest release notes at https://www.drupal.org/project/drupal/releases/7.67 for more
       information
-    * Fixed array_flip() issues in core Entity API include. See https://drupal.org/node/1803048 for 
+    * Fixed array_flip() issues in core Entity API include. See https://drupal.org/node/1803048 for
       more information.
   * Panopoly - v1.67
     * See the latest release notes at https://www.drupal.org/project/panopoly/releases/7.x-1.67 for more information
@@ -201,7 +215,7 @@ Webspark 1.64.1 (San Diego), 2019-04-05
   * ASU Events (asu_events) - v3.0-alpha1
     * Deprecated module
     * Added hooks to disable module in preparation for removal in next release
-    
+
 - Contrib module updates
 
   - Managed by Webspark
@@ -291,9 +305,9 @@ Webspark 1.55.1 (Salem) release, 2018-10-24
 - Web standards components in Webspark
 
   * ASU CAS (v1.8)
-    * Fixed the "CAS SSL certificate bundle" error when the PEM certification location is left blank that the update 
-      to CAS v1.7 introduced. If the PEM certificate location is not set, the default value for the hosting server 
-      is set for the most common server configurations. 
+    * Fixed the "CAS SSL certificate bundle" error when the PEM certification location is left blank that the update
+      to CAS v1.7 introduced. If the PEM certificate location is not set, the default value for the hosting server
+      is set for the most common server configurations.
   * ASU GSA (v1.2)
     * Adds TPLs to override Google Appliance and core Search TPLs for CSS-namespaced search page markup
     * Removes old, unfinished cruft code
@@ -308,7 +322,7 @@ Webspark 1.55.1 (Salem) release, 2018-10-24
   * Webspark Megamenu (v1.10)
     * Font Awesome <i> tags were replaced with <span> for better accessibility
     * Accessibility fix for display of 'home' icon in the menu bar. Changed the code to meet accessibility standards.
-    * Styles for the menu items that were inadvertently stripped in the previous release are once again being applied. 
+    * Styles for the menu items that were inadvertently stripped in the previous release are once again being applied.
   * Innovation theme (v1.12)
     * Changed rollover color of the blue buttons to one with a higher contrast
 
@@ -356,7 +370,7 @@ Webspark 1.55 (Oregon) release, 2018-08-20
     * Fixed mapping of Twitter field for profile imports
     * Fixed configuration for proper HTML field filtering
     * Added profile video importing and display functionality
-    * Added asu_isearch_prepare_migration hook to allow for the programatic modification of the migrated entity before it is saved by Drupal
+    * Added asu_isearch_prepare_migration hook to allow for the programmatic modification of the migrated entity before it is saved by Drupal
     * Fixed mapping of gradFaculties field for profile imports
   * ASU GSA (v1.1)
     * Fixed issues preventing the contrib Google Appliance module from being updated above v1.14.
@@ -382,7 +396,7 @@ Webspark 1.55 (Oregon) release, 2018-08-20
     * Added help text and changed the name of blurb field to help avoid confusion about which field to use for different types of messaging
   * Webspark Megamenu (v1.9)
     * Improved tabbing through Megamenu with keyboard
-    * Megamenu subitems now correctly hover over the Web standards main menu
+    * Megamenu sub-items now correctly hover over the Web standards main menu
     * Fixed background color
     * Set correct colors for :focus without :hover for keyboard users
     * Layout changes done through the TB Megamenu UI to menus with more than 65KB of data will now save and render
@@ -430,7 +444,7 @@ Webspark 1.55 (Oregon) release, 2018-08-20
   until they have been judged stable and moved out of the experimental category.
 
   * ASU Events (v3.0-alpha1), ASU News (v3.0-alpha1)
-    * This is an intial alpha release of the replacements for the functionality of the existing Webspark News & Events
+    * This is an initial alpha release of the replacements for the functionality of the existing Webspark News & Events
       modules
     * No upgrade path is provided. To resolve issues for the module, uninstall and reinstall the module.
     * When testing, do not enable this module alongside the current Webspark News & Events modules. This will likely
@@ -462,7 +476,7 @@ Webspark 1.53 (Kansas) release, 2018-04-25
 
   * Drupal (v7.59)
     * Includes security updates. See https://www.drupal.org/project/drupal/releases/7.59 for details.
-  * Panopoly Widgets (v1.53) 
+  * Panopoly Widgets (v1.53)
     * Includes security updates to contrib modules and updates to Panopoly Widgets.
 
 - Contrib modules maintained in Panopoly
@@ -472,7 +486,7 @@ Webspark 1.53 (Kansas) release, 2018-04-25
 
 - Web standards components in Webspark
 
-  * ASU RFI (v1.9) 
+  * ASU RFI (v1.9)
     * Added initial support for the ASU AP module, which will be replacing the ASU Degrees module.
 
 
@@ -519,7 +533,7 @@ Webspark 1.52 (West Virginia) release, 2018-03-28
   * ASU Brand (v1.19)
     * Added ability to specify parent organization, title and URL on the ASU Brand Header block configuration form
   * ASU Directory Integration Reinvented (v1.9)
-    * Addition of variable to specify the lastname sorting field. This will allow the use of the lastNameExact field which will
+    * Addition of variable to specify the last name sorting field. This will allow the use of the lastNameExact field which will
       sort all last names as if they were lowercase, instead of placing lowercase names after.
     * Rank sorting remains active when facets applied.
     * Changed tab state handling behavior to only bind once to tab container, fixing a bug where multiple IPE submits
@@ -552,7 +566,7 @@ Webspark 1.52 (West Virginia) release, 2018-03-28
     * Value of Action Required leads now matches what is configured
   * ASU Spotlight (v1.8),
     Webspark Banner (v1.5),
-    Webspark Hero (v1.4), 
+    Webspark Hero (v1.4),
     Webspark Jumbohero (v1.4)
     * In smaller screen-sizes, longer blurbs/taglines that were previously removed are now truncated and suffixed with an ellipsis
     * Added SASS files for all future CSS development
@@ -564,9 +578,9 @@ Webspark 1.52 (West Virginia) release, 2018-03-28
   * ASU Userpicker (v1.1)
     * Userpicker's autocomplete can be configured to use either Solr or LDAP-enabled people search.
     * Default searching service is now an option at /admin/config/people/asu_userpicker
-    * CAS user add field now allows autocompletion
+    * CAS user add field now allows auto-completion
   * UTO carousel (v1.5)
-    * Deprecated in lieu of ASU Spotlight; This module will be completely removed from Webspark in the next release. Please use the ASU Spotlight for all future slideshows/carousels
+    * Deprecated in lieu of ASU Spotlight; This module will be completely removed from Webspark in the next release. Please use the ASU Spotlight for all future slide shows/carousels
   * Webspark Banner (v1.5)
     * Removed JS file and replaced its functionality with Drupal code
   * Webspark Content Callout (v1.7)
@@ -590,7 +604,7 @@ Webspark 1.48 (Nevada) release, 2017-12-22
 
   * ASU Academic Programs (v2.1)
     * Updated the ASU Academic Programs README.md with improved markdown styling
-    * Updated asu-drupal-modules README.md with more accurate information 
+    * Updated asu-drupal-modules README.md with more accurate information
     * Updated comments for ASU Academic Programs
     * Added College of Law, SFIS, Thunderbird school and campus to importing options; updated PUBSRV's college display name
     * Added support for joint ownership of programs
@@ -625,20 +639,20 @@ Webspark 1.48 (Nevada) release, 2017-12-22
     * Moved ASU custom behat tests and steps into this module.
     * Added Behat tests for the ASU DIRS suite and ASU Spotlight module
 
-Webspark 1.46.1 (Omaha) release, 2017-12-09 
+Webspark 1.46.1 (Omaha) release, 2017-12-09
 -------------------------------------------
 - Web standards components in Webspark
 
     * ASU Directory Integration Reinvented (v1.7.2)
-        * Bugfix for broken employee types filter
+        * Bug fix for broken employee types filter
 
 Webspark 1.46 (Nebraska) release, 2017-27-08
 --------------------------------------------
-- Webspark core 
+- Webspark core
 
     * Drupal core (v7.56) - This includes security and non-security updates, including:
         * Fixes security vulnerabilities
-        * Variety of improvements and bugfixes, including better support of PHP 7.0
+        * Variety of improvements and bug fixes, including better support of PHP 7.0
     * Panopoly (v1.46) - Includes a number of minor bug fixes and module updates, including upgrading the media module to
         2.1. See https://www.drupal.org/project/panopoly/releases/7.x-1.46 for details.
     * Removed unnecessary debugging code (theme_debug mode) from settings.php, which was causing issues in multiple places,
@@ -650,7 +664,7 @@ Webspark 1.46 (Nebraska) release, 2017-27-08
         * Fixes bug where page state title was being set as null
         * Hides pagination if only one page of results
         * Fixed CSS which was hindering the directory pane from going completely full-width inside of its container
-        * Bugfixes for history state handling, which was causing asu_dir higher index tab states to not be saved if there had been non-asu_dir panes placed before them
+        * Bug fixes for history state handling, which was causing asu_dir higher index tab states to not be saved if there had been non-asu_dir panes placed before them
         * Linted javascript code responsible for client side rendering (e.g., rendering directory lists, making AJAX requests
           to Solr backend, handling for inputs, keeping track of the Solr parameters, history state handling, etc.) and removed code no longer in use
         * Added default photo behavior for the ASU Directory field. Custom images as placeholders can be uploaded for the asu_dir module
@@ -690,7 +704,7 @@ Webspark 1.46 (Nebraska) release, 2017-27-08
 
 Webspark 1.43 (Colorado) release, 2017-16-05
 --------------------------------------------
-- Webspark core 
+- Webspark core
 
     * Drupal core (v7.54) - This includes security and non-security updates, including:
         * Old module cruft cleanup - Background: Drupal 7.50+ has a new check for erroneous entries that remain
@@ -761,7 +775,7 @@ Webspark 1.43 (Colorado) release, 2017-16-05
 
 
 
-Webspark 1.40.3 (Shell Valley) release, 2017-15-02 
+Webspark 1.40.3 (Shell Valley) release, 2017-15-02
 --------------------------------------------------
 - Webspark core
 
@@ -775,7 +789,7 @@ Webspark 1.40.3 (Shell Valley) release, 2017-15-02
         * Updated all layout TPLs to remote <section> tags and replace them with <div class="section"> tag.
             * IMPORTANT for Innovation subtheme users: Be sure to review your subtheme CSS files for any
               "section" CSS selectors and replace "section" with "div.section" - and thoroughly test your changes
-              before pushing up to production. Barring any namespacing issues, subtheme ".section" CSS class
+              before pushing up to production. Barring any namespace issues, subtheme ".section" CSS class
               selectors should still work.
         * In-Page Editor selections now properly displays eligible content panes again when the "+" button is
           clicked and a subcategory (such as "Views", "Blocks", etc.) is selected
@@ -796,16 +810,16 @@ Webspark 1.40.3 (Shell Valley) release, 2017-15-02
     - Webspark-managed modules
         * Webform - v4.14
 
-Webspark 1.40.2 (Pillsbury) release, 2017-25-01 
+Webspark 1.40.2 (Pillsbury) release, 2017-25-01
 -----------------------------------------------
 - Webspark-managed libraries - Additions
 
-    * React JS (v0.14.7) - Used by the latest ASU Directory Intergration Reinvented module and now available for general use by Webspark users
+    * React JS (v0.14.7) - Used by the latest ASU Directory Integration Reinvented module and now available for general use by Webspark users
 
 - Web standards components in Webspark
 
     * ASU Brand (v1.14)
-        * Added the ability to supress code injected through the Google Tag Manager that's embedded in the ASU global header when automated tests are run as part of the build process for Webspark
+        * Added the ability to suppress code injected through the Google Tag Manager that's embedded in the ASU global header when automated tests are run as part of the build process for Webspark
         * Improved the process to update the ASU global header and footer to the latest version to ensure they are updated to version 4.5
     * ASU Degrees (v1.10)
         * Moved the embedded PHP code in the view that provides the listing of degrees into its own module
@@ -834,7 +848,7 @@ Webspark 1.40.2 (Pillsbury) release, 2017-25-01
         * Changed the <h2> header to an <h1> on the banner, hero, and spotlight for improved accessibility based on their almost exclusive use as replacements for the <h1> page title
     * Innovation theme (v1.7) - Accessibility improvements
         * The In-Page Editor (IPE) link and image layouts now have responsive sizes
-        * Properly removed the unused and ADA incompliant hamburger menu
+        * Properly removed the unused and ADA non-compliant hamburger menu
         * Overrode Bootstrap's fixed base font on HTML and body tags with relative values, as a first step toward making all font sizes relative, allowing for easier browser zooming
         * Added ARIA role and label to the submenu block
         * Added ARIA roles to the <header> and <footer> tags on page.tpl
@@ -844,12 +858,12 @@ Webspark 1.40.2 (Pillsbury) release, 2017-25-01
         * Added a menu-block-wrapper.tpl.php with an aria-label to identify submenus
     * Webspark Megamenu (v1.6.1) - Added ARIA role to main navigation menu to fix tab key navigation functionality
 
-Webspark 1.40.1 (Hoople) release, 2016-16-09 
+Webspark 1.40.1 (Hoople) release, 2016-16-09
 --------------------------------------------
 - Contrib projects - Updates
 
     - Panopoly-managed modules
-        * Media (v2.0-beta1 + patch) - Re-applied patch for issue with multiple Media content items on the same page 
+        * Media (v2.0-beta1 + patch) - Re-applied patch for issue with multiple Media content items on the same page
           showing an empty field that was supposedly resolved in beta1.
 
     - Webspark-managed modules
@@ -858,7 +872,7 @@ Webspark 1.40.1 (Hoople) release, 2016-16-09
 - Web standards components in Webspark
     * Innovation theme (v1.6) - Color of primary and blue button text now white on :hover
 
-Webspark 1.40 (North Dakota) release, 2016-12-09 
+Webspark 1.40 (North Dakota) release, 2016-12-09
 ------------------------------------------------
 - Webspark core
 
@@ -943,7 +957,7 @@ Webspark 1.37 (South Dakota) release, 2016-15-07
         * Updated Innovation theme functions for form radios and checkboxes to be more WCAG-compliant
         * Added second table style when creating an HTML table in the WYSIWYG editor
         * Added more 100% wide columns to the Beast layout
-        * Added two new layouts (Brenhan Plus & Brenham Plus Flipped)
+        * Added two new layouts (Brenham Plus & Brenham Plus Flipped)
     * ASU RFI (v1.5)
         * Fixed a typo in the auto-response email for users requesting information
 
@@ -1178,7 +1192,7 @@ Webspark 1.13.15 (Bellingham) release, 2016-28-04
 
   The following deprecated Webspark modules/components (all of which are listed under "DEPRECATED" in the admin/modules
   page of your site) have been removed in this release:
-    * ASU Eadvisor Feed Feature (replaced by ASU Degrees)
+    * ASU eAdvisor Feed Feature (replaced by ASU Degrees)
     * ASU News (replaced by Webspark News & Events)
     * ASU Events (replaced by Webspark News & Events)
 
@@ -1271,7 +1285,7 @@ Webspark 1.13.13 (Hanford) release, 2015-02-10
     * The following contrib modules have been updated:
         * Feeds - v2.0-alpha9 (security update included)
         * Video Embed Field - v2.0-beta11 (security update included)
-        * Feeds XPathparser - v1.1
+        * Feeds XPath Parser - v1.1
         * Maxlength - v3.2-beta2
 
 - Custom ASU module updates:
@@ -1349,7 +1363,7 @@ Webspark 1.13.10 (Spokane) release, 2015-15-07
 
 - ASU custom modules
     * ASU Directory Integration Reinvented - v1.1
-        * Retargeted the CSS to target only the ASU Directory Integration Reinvented node form, as it was previously
+        * Re-targeted the CSS to target only the ASU Directory Integration Reinvented node form, as it was previously
           generic and targeting panel forms also
         * Fixed profile image width to be consistent in department display
         * Fixed pagination displays on results pages (showed ellipses with four pages when it should've been a page
@@ -1363,7 +1377,7 @@ Webspark 1.13.10 (Spokane) release, 2015-15-07
       DB settings for the Webspark Content Callout module
 
 
-Webspark 1.13.9 (Washington) release, 2015-01-07 
+Webspark 1.13.9 (Washington) release, 2015-01-07
 ------------------------------------------------
 - Webspark Core
     * Added meta tag to better identify Webspark sites and their version
@@ -1382,7 +1396,7 @@ Webspark 1.13.9 (Washington) release, 2015-01-07
       color to gold on hover
 
 
-Webspark 1.13.8 (Idaho II) release, 2015-18-06 
+Webspark 1.13.8 (Idaho II) release, 2015-18-06
 ----------------------------------------------
 - Drupal Core
     * Security update to Drupal 7.38
@@ -1398,7 +1412,7 @@ Webspark 1.13.7 (Idaho) release, 2015-09-06
       dynamically updated)
     * Moved code not directly related to the CAS authentication system out of
       ASU CAS and More module and into the Webspark Featurescustom module
-    * Integrated module update list code with Webspark spinup code in openasu.profile
+    * Integrated module update list code with Webspark spin-up code in openasu.profile
     * Removed Webspark master settings from Webspark Extras module
     * Reorganized and refactored Webspark Featurescustom module code related to
       updating theme settings, update status reporting, and Panels customizations
@@ -1492,13 +1506,13 @@ Webspark 1.13.5 (Utah) release, 2015-16-03
     * ASU News & Events - Fixed default permissions not being set for News and
       Events
 - Innovation theme
-    * Improved intra page navigation with anchor tags by taking into account
+    * Improved intra-page navigation with anchor tags by taking into account
       the sticky navigation menu and adjusting the scrolling so that the the link
       destination is not covered up by the navigation menu
     * Added table template file for views to Kalatheme
     * Fixed duplicate ID properties in footer <div> tags
 
-Webspark 1.13.4 (Oklahoma II) release, 2015-09-02 
+Webspark 1.13.4 (Oklahoma II) release, 2015-09-02
 -------------------------------------------------
 
 - Webspark Core
@@ -1511,7 +1525,7 @@ Webspark 1.13.4 (Oklahoma II) release, 2015-09-02
       scrolled too far due to sticky menu positioning)
 - Innovation theme
     * Fixed layout issue with table tags not rendering in views output
-    * Resolved strikethroughs not being saved in WYSIWYG editor
+    * Resolved strikethrough not being saved in WYSIWYG editor
 - Web standards components in Webspark
     * Updated Carousel feature
     * Updated ASU Directory module
@@ -1542,7 +1556,7 @@ Webspark 1.13.3 (Oklahoma) release, 2015-27-01
     * Added Carousel widget, which creates a web standards compliant carousel
       for web pages
     * Updated the ASU Directory module to format and style directory data to
-      comform to the web standards. (Important: This is a temporary ASU directory
+      conform to the web standards. (Important: This is a temporary ASU directory
       solution that will be deprecated when the new directory system is ready.)
     * Added RSS feed button to the Mega Footer
     * Updated Donate link functionality in the Mega Footer
@@ -1564,7 +1578,7 @@ Webspark 1.13.2 (New Mexico) release, 2015-11-01
     * Removed callout examples with images
     * Unset all permissions for the CAS role to mitigate the incorrect
       assignment of permissions for that role on some previous versions of Webspark
-    * Updated editor role permissions for the navbar on site spinup
+    * Updated editor role permissions for the navbar on site spin-up
     * Fixed misspelled DEPRECATED in module release
     * Set more permissions for editor role:
         + View admin theme
@@ -1612,9 +1626,9 @@ Webspark 1.13.1 (Arizona) release, 2014-05-12
 
 - Webspark Core
     * ASU global header changed to version 4.2
-    * Set moscone as default panels layout for content page in install
+    * Set Moscone as default panels layout for content page in install
     * Added Full HTML format for administrators
-    * Disabled contextual links for new spinups
+    * Disabled contextual links for new spin-ups
 - Innovation theme
     * Fixed 100% width background issues
     * Made Save button larger on IPE modal
@@ -1644,7 +1658,7 @@ Webspark 1.13.1 (Arizona) release, 2014-05-12
     * Added Webspark Jumbohero feature to add option for 700px tall banner image
     * Panels style plugin changes
     * Fixed Webspark WYSIWYG bugs/errors:
-        + Strikethroughs not being saved
+        + Strikethrough not being saved
         + Spell checker tool does not working
     * Removed three features fields from 'content page' content type
     * Mega Footer
