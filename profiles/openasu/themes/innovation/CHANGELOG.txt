@@ -1,3 +1,12 @@
+Innovation 7.x-1.15, 2019-XX-XX
+-------------------------------
+- Added ASU Web standards styling to the Maintenance page
+- The left-hand submenu's top border no longer goes 100% wide (beyond 1140px) in 100% wide regions/rows in a page
+- Improved readability of the system's help messages (usually below fields in forms)
+- Fixed :hover state in the ASU Global footer links to be in conformance with ASU Web standards (set to maroon +
+  dotted bottom-border)
+- Long site titles now break to the next line in mobile devices (vs. being clipped on a single line)
+
 Innovation 7.x-1.14, 2019-08-01
 -------------------------------
 - Added page title to <title> tag after Kalatheme's errant scraping to 1) readd the title to a browser's 

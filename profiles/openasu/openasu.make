@@ -346,8 +346,9 @@ libraries[chosen][destination] = libraries
 libraries[chosen][download][sha256] = 410147ddfb08f9a87f0272516fff7cd5ed5a4f0777c76f1b298d1106aa8405bd
 
 libraries[flexslider][download][type] = get
-libraries[flexslider][download][url] = https://github.com/woothemes/FlexSlider/archive/version/2.2.2.zip
-libraries[flexslider][download][sha256] = bd72421a8aa6f4b9cd3575f4eb58651f2b43c5dc00f0f8f80a373f71b5d1efcc
+libraries[flexslider][download][url] = https://github.com/woothemes/FlexSlider/archive/version/2.7.2.zip
+;libraries[flexslider][download][sha256] = bd72421a8aa6f4b9cd3575f4eb58651f2b43c5dc00f0f8f80a373f71b5d1efcc
+; @TODO - update SHA + download individual elements (vs. the entire library with demos, etc.)
 
 ; 1 of 2 - Font Awesome
 libraries[fontawesome_css][download][type] = get

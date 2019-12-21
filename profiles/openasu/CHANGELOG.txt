@@ -1,3 +1,78 @@
+Webspark 1.70.4 (Dallas), 2019-12-30
+------------------------------------
+- Webspark core
+
+  * Drupal core
+    * settings.php - Rollup of changes since its last update in Webspark. Now matches latest version, which shipped with Drupal core v7.60.
+  * Webspark (openasu) - v1.70.3
+    * Added new apple-touch-icon-120x120-precomposed.png to stop 404 log entries.
+    * The "system-help" block is now programmatically toggled on/off in the admin area of the site when the Innovation theme is made the administrator theme, and enabled on site spinup.
+
+- Web standards components in Webspark
+
+  * ASU Academic Programs (asu_ap) - v2.6
+    * Updated casing to "Sentence casing" (vs. Title Casing)
+  * ASU Spotlight (asu_spotlight) - v1.10
+    * Added better field validation to avoid triggering of error/warnings messages when previously uploaded spotlight images are subsequently deleted or lost
+  * Innovation (innovation) - v1.15
+    * Added ASU Web standards styling to the Maintenance page
+    * Added styling for .alert messages with no concurrent .alert-* CSS class defining its type (warning, error, info, etc.)
+    * Fixed white gap at the bottom of page below global footer that was mistakenly introduced with the v1.70.1 (College Station) release.
+    * The left-hand submenu's top border no longer goes 100% wide (beyond 1140px) in 100% wide regions/rows in a page
+    * Improved readability of the system's help messages (usually below fields in forms)
+    * Fixed :hover state in the ASU Global footer links to be in conformance with ASU Web standards by setting color to maroon and border-bottom style to dotted.
+    * Long site titles now break to the next line in mobile devices instead of being clipped on a single line
+  * Webspark Breadcrumbs (webspark_breadcrumbs) - v1.1
+    * Added list of ASU academic/department/unit acronym exceptions to correct their capitalization
+  * Webspark Carousel (uto_carousel) - v1.12,
+    ASU Spotlight (asu_spotlight) - v1.10
+    * Accessibility-related elements added to navigational widgets (buttons, arrows) to improve screen reader usability
+  * Webspark Carousel (uto_carousel) - v1.12
+    * Fixed layout/spacing issues (especially on mobile)
+  * Webspark Easyadmin (webspark_easyadmin) - v1.2
+    * Added warning text about elements in the "WEB" In-Page Editor tab not being available for Webspark carousel elements
+  * Webspark Hero (webspark_hero) - v1.8,
+    Webspark Jumbohero (webspark_jumbohero) - v1.7
+    * Improved pre-rendering sanitation of form field output
+    * Bylines/blurbs are no longer truncated automatically with an ellipsis and limited to one line.
+    * (Webspark Hero ONLY) - Height selector added to the Hero settings form to allow Jumbo Heroes with this widget.
+  * Webspark Mega Footer (mega_footer) - v1.12
+    * Added ability to make uploaded logos linkable in the mega footer UI
+    * Footer logos now constrained to a maximum width and can no longer jump up in size in certain widths (e.g., large phones, tablets)
+  * Webspark WYSIWYG (webspark_wysiwyg) - v1.8
+    * Activated the spellchecker button in TinyMCE
+
+- Contrib project updates
+
+  - Managed by Panopoly
+
+    * Date (date) - v2.10+patch
+      * Fixed PHP 7.2 compatibility issues
+    * Views (views) - v3.23+patch
+      * Included Glossary view A-Z links now working with AJAX
+
+  - Managed by Webspark
+
+    * Kalatheme (kalatheme) - v3.0-rc2+patch
+      * Moved the patch from a past release for form-control CSS class additions to the email and number webform components from Webform to Kalatheme.
+    * Maxlength (maxlength) - v3.3 (SECURITY UPDATE)
+    * Webform (webform) - v4.21 (SECURITY UPDATE)
+
+- Contrib project deletions
+
+  - Managed by Webspark
+
+    * Google Appliance (GSA servers no longer in service)
+
+- Contrib library updates
+
+  - Managed by Webspark
+
+    * Flexslider (flexslider) - v2.7.2 - Includes many bug fixes and improvements, including accessibility fixes.
+      See https://github.com/woocommerce/FlexSlider for more information.
+    * CAS (cas) - v1.3.8
+
+
 Webspark 1.70.3 (Huntsville), 2019-12-20
 ----------------------------------------
 - Webspark core
