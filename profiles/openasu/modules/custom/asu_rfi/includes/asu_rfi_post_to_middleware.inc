@@ -246,12 +246,7 @@ function asu_rfi_post_to_middleware($data, $type) {
         $node_wrapper->save();
         // Record time of latest successful post
         variable_set('asu_rfi_last_success_SF_posting', time());
-        if (function_exists('drush_log')) {
-          drush_log($curl_message, 'success');
-        }
-        if (drupal_valid_path('admin')) {
-          drupal_set_message($curl_message, 'status');
-        }
+        flogger('asu_rfi', $curl_message, array(), 8, TRUE, TRUE, TRUE);
       }
       // FAILED POST
       else {
@@ -279,15 +274,10 @@ function asu_rfi_post_to_middleware($data, $type) {
           $node_wrapper->field_rfi_error_message->set($curl_message);
         }
         $node_wrapper->save();
+
         // Log/print messaging to end user and set timestamp
-        watchdog('asu_rfi', $curl_message, array(), WATCHDOG_ERROR);
-        if (function_exists('drush_log')) {
-          drush_log("\n" . $curl_message . "\n", 'error');
-        }
+        flogger('asu_rfi', $curl_message, array(), WATCHDOG_ERROR, TRUE,TRUE, TRUE);
         variable_set('asu_rfi_last_failure_SF_posting', time());
-      }
-      if (drupal_valid_path('admin')) {
-        drupal_set_message($curl_message);
       }
 
       curl_close($ch);
@@ -322,11 +312,6 @@ function asu_rfi_post_to_middleware($data, $type) {
       }
       $node_wrapper->save();
     }
-    if (function_exists('drush_log')) {
-      drush_log($message_final, 'notice');
-    }
-    if (drupal_valid_path('admin')) {
-      drupal_set_message($message_final, 'info');
-    }
+    flogger('asu_rfi', $message_final, array(), WATCHDOG_NOTICE, TRUE, FALSE, TRUE);
   }
 }

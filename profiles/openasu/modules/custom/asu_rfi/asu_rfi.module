@@ -244,8 +244,7 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
       if (empty($programs) && !($instance_settings['form_type'] == 'multiform')) {
         $message = "No relevant programs set for this "
           . check_plain($instance_settings['form_type']) . " form.";
-        watchdog('asu_rfi', $message, array(), WATCHDOG_ERROR);
-        drupal_set_message($message, 'error', FALSE);
+        flogger('asu_rfi', $message, array(), WATCHDOG_ERROR, TRUE, FALSE, TRUE);
       }
 
       break;
@@ -776,8 +775,8 @@ function asu_rfi_cron() {
   $queue->deleteQueue(); // Why??
   $queue = DrupalQueue::get('asu_rfi_failed_leads_queue');
 
-  // Get failed RFI Leads (asu_rfi node submissions).
-  $results = _asu_rfi_get_unpassed_submissions();
+  // Get asu_rfi node submissions that have failed at least once.
+  $results = _asu_rfi_get_unpassed_submissions(TRUE);
 
   // Add failed leads to the cron jobs queue
   if (isset($results['node'])) {
@@ -800,8 +799,8 @@ function asu_rfi_cron() {
     foreach ($all_nids as $nid) {
       $queue_2->createItem($nid);
     }
-    watchdog('asu_rfi', '@count ASU RFI submissions have'
-      . ' been queued for deletion.', array('@count' => $count_nids, WATCHDOG_NOTICE));
+    flogger('asu_rfi', '@count ASU RFI submissions have'
+      . ' been queued for deletion.', array('@count' => $count_nids), WATCHDOG_NOTICE);
   }
 
   // #4 - If the site hasn't posted submissions to salesforce for two days, send an email to administrator.
@@ -1023,10 +1022,7 @@ function _asu_rfi_get_submissions_to_delete($submissions_returned = 0, $only_cou
   // waste of time
   if ($only_count && $submissions_returned !== 0) {
     $message = 'INFO: You know the node count already: ' . $submissions_returned . '.';
-    watchdog('asu_rfi', $message, array(), WATCHDOG_INFO);
-    if (function_exists('drush_log')) {
-      drush_log(t($message), array(), 'warning');
-    }
+    flogger('asu_rfi', $message);
     return $submissions_returned;
   }
 
@@ -1058,10 +1054,7 @@ function _asu_rfi_get_submissions_to_delete($submissions_returned = 0, $only_cou
   $count = count($all_nids);
   if ($submissions_returned === 0) {
     $message = __FUNCTION__ . ": There are " . $count . " RFI submission nodes qualified to delete.";
-    watchdog('asu_rfi', $message, array(), WATCHDOG_INFO);
-    if (function_exists('drush_log')) {
-      drush_log(t($message), array(), 'success');
-    }
+    flogger('asu_rfi', $message);
   }
 
   if ($only_count) { // Return total number (not range-delimted)
@@ -1072,12 +1065,24 @@ function _asu_rfi_get_submissions_to_delete($submissions_returned = 0, $only_cou
   }
 }
 
-/*
+/**
  * Get RFI leads (submission nodes) not already successfully POSTed to middleware
  * to (re)submit (again).
- * @return mixed
+ * @param bool $include_ready_to_post - If TRUE, include older, "Ready to SF POST"
+ * submissions that haven't been submitted yet (for whatever reason).
+ *
+ * @return mixed $results - List of nodes to delete.
  */
-function _asu_rfi_get_unpassed_submissions() {
+function _asu_rfi_get_unpassed_submissions($include_ready_to_post = FALSE) {
+
+  $statuses = array(
+    'Form_Multi_Partial',
+    'SF_Multi_Pending',
+    'SF_Failed',
+  );
+  if ($include_ready_to_post) {
+    $statuses[] = 'Form_Completed';
+  }
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'asu_rfi')
@@ -1085,19 +1090,9 @@ function _asu_rfi_get_unpassed_submissions() {
     // Don't let this keep happening forever if we have permanent failure.
     // UPDATE - We can kill this because we're deleting old submissions now. We
     // need to find ALL of the old submissions. Leave submissions less than 15 minutes old alone.
-        ->propertyCondition('created', array(1, REQUEST_TIME - strtotime('15 minutes')), 'between')
-    /*
-      ->propertyCondition('changed', array(
-      REQUEST_TIME - ASU_RFI_SUBMISSION_EXP_PERIOD,
-      REQUEST_TIME
-      ), 'between')
-    */
+    ->propertyCondition('created', array(1, REQUEST_TIME - strtotime('15 minutes')), 'between')
     ->propertyOrderBy('created', 'DESC')
-    ->fieldCondition('field_rfi_submission_status', 'value', array(
-      'Form_Multi_Partial',
-      'SF_Multi_Pending',
-      'SF_Failed',
-    ), 'IN')// Failed lead.
+    ->fieldCondition('field_rfi_submission_status', 'value', $statuses, 'IN')// Failed lead.
     ->addMetaData('account', user_load(1)); // Run the query as user 1.
   $results = $query->execute();
   return $results;
@@ -1742,7 +1737,8 @@ function _asu_rfi_create_failed_post_email($to_email, $nid = 0) {
   );
   $email_message = $MimeMailSystem->format($message);
   if ($MimeMailSystem->mail($email_message)) {
-    watchdog('asu_rfi', 'SF Error message email sent to ' . $to_email);
+    flogger('asu_rfi', 'SF Error message email sent to ' . $to_email,
+    array(), WATCHDOG_NOTICE, FALSE, FALSE);
     variable_set('asu_rfi_SF_error_message_sent', time());
   }
 }

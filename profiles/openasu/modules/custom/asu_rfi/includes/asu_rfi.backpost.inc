@@ -24,7 +24,7 @@ function asu_rfi_success_post($hash, $nid) {
     print('Success');
   } else {
     http_response_code(403);
-    watchdog('asu_rfi', 'On success post. Not a valid Hash / Nid combination');
+    watchdog('asu_rfi', __FUNCTION__ . ' - Not a valid Hash / Nid combination', array(), WATCHDOG_ERROR);
   }
 }
 
@@ -64,7 +64,7 @@ function asu_rfi_fail_post($hash, $nid) {
     print('Posted error message');
   } else {
     http_response_code(403);
-    watchdog('asu_rfi', 'On Fail post. Not a valid Hash / Nid combination');
+    watchdog('asu_rfi', __FUNCTION__ . ' - Not a valid Hash / Nid combination', array(), WATCHDOG_ERROR);
   }
 }
 

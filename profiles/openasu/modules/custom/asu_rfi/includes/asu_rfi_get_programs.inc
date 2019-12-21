@@ -28,7 +28,7 @@ function asu_rfi_import_online_programs() {
     } else {
       watchdog('asu_rfi', __FUNCTION__ . ' -- The ASUOnline programs list at ' . $url
         . ' is returning status code @code.',
-        array('@code' => $code[1]), WATCHDOG_NOTICE);
+        array('@code' => $code[1]), WATCHDOG_WARNING);
     }
   }
   if (!isset($data)) {

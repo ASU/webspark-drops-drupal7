@@ -78,7 +78,8 @@ function asu_rfi_install() {
   // Insert semester dates into DB table
   asu_rfi_get_form_select_options('rfi_dedupe_list_terms', TRUE);
 
-  drupal_set_message('ASU RFI module has been installed. Configure module settings at <a href="/admin/config/content/asurfi">admin settings page</a>');
+  flogger('asu_rfi','ASU RFI module has been installed. Configure module settings at '
+    . '<a href="/admin/config/content/asurfi">admin settings page</a>', array(), 8);
 
   // Check if CAS module exists and enabled and update cas_exclude variables with asu_rfi callback urls
   if (module_exists('cas')) {
@@ -165,8 +166,8 @@ function asu_rfi_update_7200(&$sandbox){
   } else {
     $message = "No updates were needed for the ASU RFI module.";
   }
-  watchdog('asu_rfi', $message, array(), WATCHDOG_INFO);
-  drupal_set_message($message, 'status');
+  flogger('asu_rfi', $message, array(), WATCHDOG_INFO, TRUE);
+
 }
 /**
  * Delete deprecated asu_rfi_siteDomain variable
@@ -228,8 +229,9 @@ function asu_rfi_update_7202(&$sandbox) {
         'Form_Completed_No_SF' => 'Completed (No Salesforce)',
       );
     } else {
-      watchdog('asu_rfi', 'Field field_rfi_submission_status settings could not be updated.'
-        . 'Check the Submission status field dropdown to ensure the proper values are available.', WATCHDOG_ERROR);
+      flogger('asu_rfi', 'Field field_rfi_submission_status settings could not be updated.'
+        . 'Check the Submission status field dropdown to ensure the proper values are available.',
+        array(), WATCHDOG_ERROR);
     }
     $field_base = serialize($field_base);
     Database::getConnection('default')
@@ -268,10 +270,10 @@ function asu_rfi_update_7203(&$sandbox) {
     $sandbox['progress'] = 0;
     $sandbox['messages'] = array();
     $sandbox['current'] = -1; // Last node ID read (starts at -1)
-    if (function_exists('drush_log')) {
-      drush_log(t(__FUNCTION__ . ' - There are @count nodes to delete.', array('@count' => $total_count)), 'success');
+
+    $message = t(__FUNCTION__ . ' - There are @count nodes to delete.', array('@count' => $total_count));
+    flogger('asu_rfi', $message);
     }
-  }
 
   // Actual batch operation to delete
   $all_nids = _asu_rfi_get_submissions_to_delete($nids_per_pass);
@@ -312,8 +314,8 @@ function asu_rfi_update_7204(&$sandbox) {
     foreach ($roles as $nid => $name) {
       user_role_grant_permissions($nid, array('execute asu rfi vbo'));
     }
-    watchdog('asu_rfi', 'Added new VBO permission for roles that had existing '
-      . '"administer ASU RFI" permissions.', array(), WATCHDOG_INFO);
+    flogger('asu_rfi', __FUNCTION__ . ' - Added new VBO permission for roles that had existing '
+      . '"administer ASU RFI" permissions.');
   }
 }
 

@@ -55,23 +55,22 @@ function asu_rfi_get_form_select_options($name, $installing = FALSE) {
       else {
         $message = t($name . ' record from ' . $url . ' was rejected. Debugging info: key - :key, value - :name ',
           array(':key' => $datum_key, ':name' => $datum_value,));
-        watchdog('asu_rfi', $message, array(), WATCHDOG_NOTICE);
+        watchdog('asu_rfi', $message, array(), WATCHDOG_DEBUG);
       }
     }
     if ($data_count > 0) {
       $message = $data_count . ' out of ' . count($result) . ' ' . $name . ' entries were
         upserted in ' . $db_tbl . ' DB table.';
-      watchdog('asu_rfi', $message, array(), WATCHDOG_NOTICE);
+      watchdog('asu_rfi', $message, array(), WATCHDOG_INFO);
     } else { // no $result entries got in
       watchdog('asu_rfi', 'None of the ' . count($result) . ' ' . $name . ' entries were
-        added to the ' . $db_tbl . ' DB table.');
+        added to the ' . $db_tbl . ' DB table.', array(), WATCHDOG_NOTICE);
     }
   }
 
   // Or error out if no dropdown data is in list...
   else {
-    $status = 'warning';
-    $wd_status = WATCHDOG_WARNING;
+    $status = WATCHDOG_WARNING;
     $message = 'No ' . $name . ' for RFI forms were pulled from ' . $url .
       ' to insert into ' . $db_tbl . '. Check your existing RFI forms to see if they still have all expected ' . $name . ' options.' .
       ' If it does not, please contact webconsulting@asu.edu for assistance.';
@@ -79,11 +78,9 @@ function asu_rfi_get_form_select_options($name, $installing = FALSE) {
     // Check to see if any option entries (valid or not) still exist in the table from past pulls.
     if (_asu_rfi_check_form_values($db_tbl) === 0 ) {
       $message .= ' The RFI form will not function properly until this issue has been resolved.';
-      $status = 'error';
-      $wd_status = WATCHDOG_ERROR;
+      $status = WATCHDOG_ERROR;
     }
-    drupal_set_message($message, $status);
-    watchdog('asu_rfi', $message, array(), $wd_status);
+    flogger('asu_rfi', $message, array(), $status, TRUE, FALSE, TRUE);
   }
 
 }
