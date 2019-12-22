@@ -2,7 +2,7 @@
 /** @noinspection PhpUnused */
 
 /**
- * Generate undergrad email
+ * Generate and send undergrad email
  *
  * @param string $prog_plan The program code selected by the user in the RFI form
  * @param string $e_email The email address entered by the user

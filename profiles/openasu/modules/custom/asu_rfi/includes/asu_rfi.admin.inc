@@ -27,7 +27,9 @@ function asu_rfi_admin_settings($form_state) {
     '#options' => $form_modes,
     '#default_value' => variable_get('asu_rfi_form_mode'),
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
-    '#description' => t("Specify if the forms are in Test mode or Live mode. Note: This is a sitewide configuration and will affect all forms. Only site admins can view the forms if they are in Test mode."),
+    '#description' => t("Specify if the forms are in Test mode or Live mode. '
+     . 'Note: This is a sitewide configuration and will affect all forms. Only '
+     . 'site admins can view the forms if they are in Test mode."),
     '#required' => TRUE,
   );
   // Will be enabled in future
@@ -36,7 +38,8 @@ function asu_rfi_admin_settings($form_state) {
     '#title' => t('Authentication code'),
     '#default_value' => variable_get('asu_rfi_form_auth_key'),
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
-    '#description' => t("Specifiy the form authentication key from Middleware. You can request the authentication key from <a href='https://webforms.asu.edu/content/access-rfi-middleware-request'>here</a>. Note that RFI submissions will not be posted to Salesforce via Middleware unless this code has been added"),
+    '#description' => t("Specify the form authentication key from Middleware. "
+    . "You can request the authentication key from <a href='https://webforms.asu.edu/content/access-rfi-middleware-request'>here</a>. Note that RFI submissions will not be posted to Salesforce via Middleware unless this code has been added"),
     '#required' => FALSE,
   );
   // Error notification email if submissions to Sales force failed for more than 2 days
@@ -45,7 +48,7 @@ function asu_rfi_admin_settings($form_state) {
     '#title' => t('Email(s) for error notification'),
     '#default_value' => variable_get('asu_rfi_error_email', NULL),
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
-    '#description' => t("Email ID(s) of the personnel to be notified if site cannot post RFI submissions to Salesforce for more than 2 days."),
+    '#description' => t("Email addresses to be notified if site cannot post RFI submissions to Salesforce for more than 2 days. Use a comma-delimited list of emails if more than one recipient. (NOTE: Using more than 3 email addresses can sometimes be blocked as spam by some email servers.)"),
     '#size' => 60,
     '#maxlength' => 150,
   );
@@ -72,17 +75,20 @@ function asu_rfi_admin_settings($form_state) {
   );
   $form['asu_rfi_confirm_content'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Confirmation webpage content settings. Text box to enter node id will appear after the form has been created.',
+    '#title' => 'Confirmation webpage content settings.',
+    '#description' => '(OPTIONAL) Text box to enter node id will appear after the form has been created. If left empty, a default confirmation template will be used.',
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
     '#attributes' => array('class' => array('asu_rfi_confirm_email_fields')),
   );
   $form['asu_rfi_confirm_content']['asu_rfi_undergrad_confirm_node'] = array(
     '#type' => 'textfield',
-    '#title' => t('Enter undergraduate confirmation node id'),
+    '#title' => t('Enter undergraduate confirmation node ID'),
     '#default_value' => variable_get('asu_rfi_undergrad_confirm_node'),
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
-    '#description' => t("Enter a custom node id for the undergraduate form confirmation page. If left empty, default confirmation template will be used."),
+    '#size' => 10,
+    '#maxlength' => 20,
+    '#description' => t("Enter a custom node id for the undergraduate form confirmation page."),
     '#states' => array(
       'visible' => array(
         ':input[name="undergrad_degree_type"]' => array('value' => 'undergrad'),
@@ -91,10 +97,12 @@ function asu_rfi_admin_settings($form_state) {
   );
   $form['asu_rfi_confirm_content']['asu_rfi_grad_confirm_node'] = array(
     '#type' => 'textfield',
-    '#title' => t('Enter graduate confirmation node id'),
+    '#title' => t('Enter graduate confirmation node ID'),
     '#default_value' => variable_get('asu_rfi_grad_confirm_node'),
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
-    '#description' => t("Enter a custom node id for the graduate form confirmation page. If left empty, default confirmation template will be used."),
+    '#size' => 10,
+    '#maxlength' => 20,
+    '#description' => t("Enter a custom node id for the graduate form confirmation page."),
     '#states' => array(
       'visible' => array(
         ':input[name="grad_degree_type"]' => array('value' => 'graduate'),
@@ -114,7 +122,7 @@ function asu_rfi_admin_settings($form_state) {
     '#default_value' => variable_get('asu_rfi_from_email_field'),
     '#description' => t('From email address to be shown in the user\'s email'),
     '#size' => 50,
-    '#maxlength' => 64,
+    '#maxlength' => 100,
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
   );
   $form['asu_rfi_confirm_email']['asu_rfi_from_name_field'] = array(
@@ -123,7 +131,7 @@ function asu_rfi_admin_settings($form_state) {
     '#default_value' => variable_get('asu_rfi_from_name_field'),
     '#description' => t('Name to be shown in the user\'s email'),
     '#size' => 50,
-    '#maxlength' => 64,
+    '#maxlength' => 100,
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
   );
   $form['asu_rfi_confirm_email']['asu_rfi_email_subject_field'] = array(
@@ -136,8 +144,28 @@ function asu_rfi_admin_settings($form_state) {
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
     '#siffix' => '</div>',
   );
+  $form['#validate'][] = '_asu_rfi_admin_settings_validate';
 
   return system_settings_form($form);
   // drupal_set_message('Next steps: Please start adding instances of RFI Master form <a href="/admin/structure/block/instances"><strong>here</strong></a>');
 }
 
+function _asu_rfi_admin_settings_validate($form, $form_state) {
+  dpm($form_state, __FUNCTION__ . ' form_state');
+  $confirm = array(
+    'asu_rfi_undergrad_confirm_node' => $form_state['values']['asu_rfi_confirm_content']['asu_rfi_undergrad_confirm_node'],
+    'asu_rfi_grad_confirm_node' => $form_state['values']['asu_rfi_confirm_content']['asu_rfi_grad_confirm_node'],
+    // 'asu_rfi_undergrad_confirm_node' => $form_state['values']['asu_rfi_confirm_content']['asu_rfi_undergrad_confirm_node'],
+    // 'asu_rfi_grad_confirm_node' => $form_state['values']['asu_rfi_confirm_content']['asu_rfi_grad_confirm_node'],
+  );
+  foreach ($confirm as $field => $nid) {
+    if (!empty($nid)) {
+      if (!is_int($nid)) {
+        form_set_error($field, 'Not a valid node ID number.');
+      }
+      if (!drupal_lookup_path('alias', 'node/' . $nid)) {
+        form_set_error($field, t('Node ID @nid does not exist.', array('@nid' => $nid)));
+      }
+    }
+  }
+}

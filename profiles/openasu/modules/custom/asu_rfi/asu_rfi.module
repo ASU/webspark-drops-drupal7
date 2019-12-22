@@ -110,9 +110,9 @@ function asu_rfi_menu() {
     'file' => 'includes/asu_rfi.pages.inc',
   );
   // request info form admin settings page
-  $items['admin/config/content/asurfi'] = array(
-    'title' => 'ASU RFI Form Settings',
-    'description' => t('Administer RFI form settings.'),
+  $items['admin/config/asurfi'] = array(
+    'title' => 'ASU RFI Settings',
+    'description' => t('Administer RFI form and submission settings.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('asu_rfi_admin_settings'),
     'access arguments' => array('administer asu rfi'),
@@ -1702,7 +1702,7 @@ function _asu_rfi_get_curl_auth() {
 }
 
 /**
- * Create and deliver email receipt to admin about failed SF submissions
+ * Create and deliver email receipt to admins about failed SF submissions
  * @param $to_email
  * @param $nid
  * @throws \Exception
