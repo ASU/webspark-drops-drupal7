@@ -3,10 +3,9 @@
 
 /**
  * Form definition for ASU RFI form admin settings
- * @param $form_state
- * @return mixed
+ * @return array $form
  */
-function asu_rfi_admin_settings($form_state) {
+function asu_rfi_admin_settings() {
   $form = array();
   $form_modes = array('test' => 'Test', 'prod' => 'Production');
 

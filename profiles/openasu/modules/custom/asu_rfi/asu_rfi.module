@@ -109,17 +109,26 @@ function asu_rfi_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'includes/asu_rfi.pages.inc',
   );
-  // request info form admin settings page
   $items['admin/config/asurfi'] = array(
-    'title' => 'ASU RFI Settings',
+    'title' => 'ASU RFI',
+    'description' => 'Administer the ASU Request for Information module.',
+    'position' => 'left',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+  $items['admin/config/asurfi/settings'] = array(
+    'title' => 'Settings',
     'description' => t('Administer RFI form and submission settings.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('asu_rfi_admin_settings'),
     'access arguments' => array('administer asu rfi'),
     'options' => array('attributes' => array('class' => 'title')),
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
     'file' => 'includes/asu_rfi.admin.inc'
   );
+
   // RFI submissions call back webservices
   $items['asu_rfi/success/%/%'] = array(
     'page callback' => 'asu_rfi_success_post',
