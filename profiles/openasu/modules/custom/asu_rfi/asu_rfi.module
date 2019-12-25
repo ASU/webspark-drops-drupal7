@@ -1082,14 +1082,14 @@ function _asu_rfi_get_submissions_to_delete($submissions_returned = 0, $only_cou
  *
  * @return mixed $results - List of nodes to delete.
  */
-function _asu_rfi_get_unpassed_submissions($include_ready_to_post = FALSE) {
+function _asu_rfi_get_unpassed_submissions($include_more = FALSE) {
 
   $statuses = array(
     'Form_Multi_Partial',
     'SF_Multi_Pending',
     'SF_Failed',
   );
-  if ($include_ready_to_post) {
+  if ($include_more = TRUE) {
     $statuses[] = 'Form_Completed';
   }
   $query = new EntityFieldQuery();

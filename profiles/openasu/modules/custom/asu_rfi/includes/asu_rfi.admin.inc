@@ -8,6 +8,11 @@
 function asu_rfi_admin_settings() {
   $form = array();
   $form_modes = array('test' => 'Test', 'prod' => 'Production');
+  $special_action_modes = array(
+    'all' => 'Cron AND ASU RFI form',
+    'form_only' => 'ASU RFI form only',
+    'none' => 'Never',
+  );
 
   $form['form_stage'] = array(
     '#type' => 'item',
@@ -34,6 +39,27 @@ function asu_rfi_admin_settings() {
      . 'site admins can view the forms if they are in Test mode."),
     '#required' => TRUE,
   );
+  $form['asu_rfi_form_access']['asu_rfi_submit_all_expired'] = array(
+    '#type' => 'select',
+    '#title' => t('Submit all expired submissions'),
+    '#options' => $special_action_modes,
+    '#default_value' => variable_get('asu_rfi_submit_all_expired', FALSE),
+    '#attributes' => array('class' => array('asu_rfi_admin_field')),
+    '#description' => t("Submit ALL expired RFI submissions, even if they are more than "
+      . (int) (ASU_RFI_STALE_TIME_DEFAULT) / 86400 . " days old."),
+    '#required' => TRUE,
+  );
+
+  $form['asu_rfi_form_access']['asu_rfi_delete_all_expired'] = array(
+    '#type' => 'select',
+    '#title' => t('Delete all expired submissions'),
+    '#options' => $special_action_modes,
+    '#default_value' => variable_get('asu_rfi_delete_all_expired', FALSE),
+    '#attributes' => array('class' => array('asu_rfi_admin_field')),
+    '#description' => t("Delete ALL expired RFI submissions, even if they are more than "
+    . (int) (ASU_RFI_STALE_TIME_DEFAULT) / 86400 . " days old."),
+    '#required' => TRUE,
+  );
   // Will be enabled in future
   $form['asu_rfi_form_access']['asu_rfi_form_auth_key'] = array(
     '#type' => 'hidden',
@@ -58,11 +84,10 @@ function asu_rfi_admin_settings() {
     '#title' => t('Email(s) for error notification'),
     '#default_value' => variable_get('asu_rfi_error_email', NULL),
     '#attributes' => array('class' => array('asu_rfi_admin_field')),
-    '#description' => t("Email addresses to be notified if site cannot post'
+    '#description' => t('Email addresses to be notified if site cannot post'
      . ' RFI submissions to Salesforce for more than 2 days. Use a comma-delimited'
      . ' list of emails if more than one recipient. (NOTE: Keep the number of email'
-     . ' addresses here to a minimum to avoid being blocked as spam by some email (SMTP) servers.)'
-     . ' "),
+     . ' addresses here to a minimum to avoid being blocked as spam by some email (SMTP) servers.)'),
     '#size' => 60,
     '#maxlength' => 150,
   );
@@ -89,7 +114,7 @@ function asu_rfi_admin_settings() {
   );
   $form['confirm_settings'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Confirmation settings',
+    '#title' => 'Confirmation messaging',
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
     '#description' => 'Management of RFI form responses to prospective (or current) students.',
@@ -137,12 +162,12 @@ function asu_rfi_admin_settings() {
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
     '#description' => t('If desired, enter the following information that'
-      . ' will be used when a receipt/confirmation email is sent to the submitter.'),
+      . ' will be used/displayed when a receipt/confirmation email is sent to the submitter.'),
     '#attributes' => array('class' => array('asu_rfi_confirm_email_fields')),
   );
   $form['confirm_settings']['asu_rfi_confirm_email']['asu_rfi_from_email_field'] = array(
     '#type' => 'textfield',
-    '#title' => t('Displayed "From" email address'),
+    '#title' => t('"From" email address'),
     '#default_value' => variable_get('asu_rfi_from_email_field'),
     '#size' => 50,
     '#maxlength' => 100,
@@ -150,7 +175,7 @@ function asu_rfi_admin_settings() {
   );
   $form['confirm_settings']['asu_rfi_confirm_email']['asu_rfi_from_name_field'] = array(
     '#type' => 'textfield',
-    '#title' => t('Displayed "From" name'),
+    '#title' => t('"From" name'),
     '#default_value' => variable_get('asu_rfi_from_name_field'),
     '#size' => 50,
     '#maxlength' => 100,
