@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * asu_rfi_feature.strongarm.inc
@@ -115,6 +116,13 @@ function asu_rfi_feature_strongarm() {
   $strongarm->name = 'node_submitted_asu_rfi';
   $strongarm->value = 0;
   $export['node_submitted_asu_rfi'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_asu_rfi_pattern';
+  $strongarm->value = '';
+  $export['pathauto_node_asu_rfi_pattern'] = $strongarm;
 
   return $export;
 }
