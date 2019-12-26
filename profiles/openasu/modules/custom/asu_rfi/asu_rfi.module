@@ -52,6 +52,9 @@ function asu_rfi_views_api() {
 function asu_rfi_views_pre_render(&$view) {
   // For the RFI report page intro
  if ($view->name === 'asu_rfi_submissions_report') {
+   dpm($view->result, __FUNCTION__);
+//   dpm($view->display['page']->display_options, __FUNCTION__);
+   // Add JS
    drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.report.js',   array(
      'type' => 'file',
      'scope' => 'header',
@@ -64,6 +67,16 @@ function asu_rfi_views_pre_render(&$view) {
      'group' => JS_THEME,
      'weight' => 19,
    ));
+   // Alter field outputs in the page view
+   foreach ($view->result as $key => $result) {
+     if ($result->field_field_rfi_submission_status[0]['raw'] === 'SF_Failed') {
+       $markup = preg_replace('/Submission (#\d+?) to __(.+?)__/',
+         'Submission $1 to <a href="$2">middleware</a> failed.',
+         $result->field_field_rfi_error_message[0]['rendered']['#markup'], 1);
+       $markup = str_replace('\n', '<br />', $markup);
+       $view->result[$key]->field_field_rfi_error_message[0]['rendered']['#markup'] = $markup;
+     }
+   }
  }
 }
 
@@ -781,29 +794,15 @@ function asu_rfi_cron() {
     asu_rfi_get_form_select_options('rfi_dedupe_list_terms');
   }
 
-  // #2 - Cron + Queue API - Check for unposted leads (confirmation == -1), and add them to the cron queue.
-  $queue = DrupalQueue::get('asu_rfi_failed_leads_queue');
-  $queue->deleteQueue(); // Why??
-  $queue = DrupalQueue::get('asu_rfi_failed_leads_queue');
-
-  // Get asu_rfi node submissions that have failed at least once.
-  $results = _asu_rfi_get_unpassed_submissions(TRUE);
-
-  // Add failed leads to the cron jobs queue
-  if (isset($results['node'])) {
-    // For each failed lead, add it to the asu_rfi_failed_leads_queue.
-    foreach ($results['node'] as $key => $unpassed_submission) {
-      $queue->createItem($unpassed_submission);
-    }
-  }
-
-  // #3 - Cron + Queue API - Delete ASU RFI nodes that have either
+  // #2 - Cron + Queue API - Delete ASU RFI nodes that have either
   // 1) been submitted to SF already (SF_Complete), or
-  // 2) Has gone ASU_RFI_SUBMISSION_EXP_PERIOD days without getting successfully
-  // processed (stuck in SF_Failed).
+  // 2) Has gone ASU_RFI_SUBMISSION_EXP_PERIOD (seconds) without getting successfully
+  // processed (stuck in SF_Failed) - IF expired flag is set to "all" in admin form. (on by default)
   // A max of 50 nodes is deleted with each cron run.
   $queue_2 = DrupalQueue::get('asu_rfi_delete_submissions_queue');
-  $all_nids = _asu_rfi_get_submissions_to_delete(50);
+
+  $expired = (variable_get('asu_rfi_expired_delete') === 'all') ? TRUE : FALSE;
+  $all_nids = _asu_rfi_get_submissions_to_delete(50, FALSE, $expired);
 
   $count_nids = (int) count($all_nids);
   if ($count_nids > 0) {
@@ -812,6 +811,24 @@ function asu_rfi_cron() {
     }
     flogger('asu_rfi', '@count ASU RFI submissions have'
       . ' been queued for deletion.', array('@count' => $count_nids), WATCHDOG_NOTICE);
+  }
+
+  // #3 - Cron + Queue API - Check for unposted leads (confirmation == -1), and add them to the cron queue.
+  $queue_3 = DrupalQueue::get('asu_rfi_failed_leads_queue');
+  $queue_3->deleteQueue(); // @TODO - Why is this repeated??
+  $queue_3 = DrupalQueue::get('asu_rfi_failed_leads_queue');
+
+  // Get asu_rfi node submissions that have failed at least once.
+  // Include expired in next cron run (per admin form setting) or skip them?
+  $expired = (variable_get('asu_rfi_expired_submit') === 'all') ? TRUE : FALSE;
+  $results = _asu_rfi_get_unpassed_submissions(TRUE, $expired);
+
+  // Add failed leads to the cron jobs queue
+  if (isset($results['node'])) {
+    // For each failed lead, add it to the asu_rfi_failed_leads_queue.
+    foreach ($results['node'] as $key => $unpassed_submission) {
+      $queue_3->createItem($unpassed_submission);
+    }
   }
 
   // #4 - If the site hasn't posted submissions to salesforce for two days, send an email to administrator.
@@ -875,7 +892,7 @@ function _asu_rfi_cron_repost_data($data) {
 }
 
 /**
- * Delete RFI submissions
+ * Delete single RFI submission during cron run, as passed in by the queue API from $queue_2.
  * @param string $data - node ID to be deleted.
  */
 function _asu_rfi_cron_delete_submissions($data) {
@@ -916,9 +933,9 @@ function asu_rfi_action_info() {
 }
 
 /**
- * POST Middleware a single submission's data to SF
- * One submission per call.
- * Callback - hook_action_info() - for VBOs
+ * POST VBO-submitted submission/node data to SF
+ * One node/submission per call, as passed in by VBO.
+ * Callback - hook_action_info()
  * @param $node
  * @param $context
  */
@@ -1026,9 +1043,10 @@ function _asu_rfi_get_status_field_tables() {
  * @param int $submissions_per_pass - If 0, return all results. If > 0, limit the
  * size per execution (likely a Batch API call).
  * @param bool $only_count - Only return the count of nodes to delete. If FALSE, return all nids.
+ * @param bool $expired - Include expired submissions.
  * @return array|int
  */
-function _asu_rfi_get_submissions_to_delete($submissions_returned = 0, $only_count = FALSE) {
+function _asu_rfi_get_submissions_to_delete($submissions_returned = 0, $only_count = FALSE, $expired = TRUE) {
 
   // waste of time
   if ($only_count && $submissions_returned !== 0) {
@@ -1039,6 +1057,7 @@ function _asu_rfi_get_submissions_to_delete($submissions_returned = 0, $only_cou
 
   $tables = _asu_rfi_get_status_field_tables();
   $all_nids = array();
+
   $and_sub1 = db_and()
     ->condition('field_rfi_submission_status_value', 'SF_Failed', 'LIKE')
     ->where('UNIX_TIMESTAMP(now()) - n.created > ' . ASU_RFI_SUBMISSION_EXP_PERIOD); // Custom SQL command
@@ -1064,8 +1083,8 @@ function _asu_rfi_get_submissions_to_delete($submissions_returned = 0, $only_cou
   // Logging;
   $count = count($all_nids);
   if ($submissions_returned === 0) {
-    $message = __FUNCTION__ . ": There are " . $count . " RFI submission nodes qualified to delete.";
-    flogger('asu_rfi', $message);
+    flogger('asu_rfi', __FUNCTION__ . ": There are " . $count
+      . " RFI submission nodes qualified to delete.");
   }
 
   if ($only_count) { // Return total number (not range-delimted)
@@ -1079,30 +1098,35 @@ function _asu_rfi_get_submissions_to_delete($submissions_returned = 0, $only_cou
 /**
  * Get RFI leads (submission nodes) not already successfully POSTed to middleware
  * to (re)submit (again).
- * @param bool $include_ready_to_post - If TRUE, include older, "Ready to SF POST"
+ * @param bool $include_rtp - If TRUE, include older, "Ready to SF POST"
  * submissions that haven't been submitted yet (for whatever reason).
- *
+ * @param string $expired - Set by RFI settings form; Defaults to ALL (applies to cron AND VBO actions)
  * @return mixed $results - List of nodes to delete.
  */
-function _asu_rfi_get_unpassed_submissions($include_more = FALSE) {
+function _asu_rfi_get_unpassed_submissions($include_rtp = FALSE, $expired = 'all') {
 
   $statuses = array(
     'Form_Multi_Partial',
     'SF_Multi_Pending',
     'SF_Failed',
   );
-  if ($include_more = TRUE) {
+  // Include the "Ready to submit"? (Not sure why there'd be some of these?)
+  if ($include_rtp === TRUE) {
     $statuses[] = 'Form_Completed';
   }
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'asu_rfi')
+    ->entityCondition('bundle', 'asu_rfi', 'LIKE');
 
-    // Don't let this keep happening forever if we have permanent failure.
-    // UPDATE - We can kill this because we're deleting old submissions now. We
-    // need to find ALL of the old submissions. Leave submissions less than 15 minutes old alone.
-    ->propertyCondition('created', array(1, REQUEST_TIME - strtotime('15 minutes')), 'between')
-    ->propertyOrderBy('created', 'DESC')
+  // Include the expired submissions?
+  if (variable_get('asu_rfi_expired_submit') === 'all') {
+    $query->propertyCondition('created', array(1, REQUEST_TIME - 1800), // everything up to 30 mins ago... just in case the submitter continues on.
+      'between');
+  } else {
+    $query->propertyCondition('created', array(REQUEST_TIME - ASU_RFI_SUBMISSION_EXP_PERIOD,
+      REQUEST_TIME - 1800), 'between'); // everything between 14 days old and 30 minutes old.
+  }
+    $query->propertyOrderBy('created', 'DESC')
     ->fieldCondition('field_rfi_submission_status', 'value', $statuses, 'IN')// Failed lead.
     ->addMetaData('account', user_load(1)); // Run the query as user 1.
   $results = $query->execute();

@@ -181,14 +181,18 @@ function asu_rfi_update_7200(&$sandbox){
 
 }
 /**
- * Delete deprecated asu_rfi_siteDomain variable.
+ * Delete deprecated asu_rfi_siteDomain variable; Include expired asu_rfi nodes
+ * with cron executions of resubmitting them to middleware or deleting them (locally).
  */
 function asu_rfi_update_7201(&$sandbox) {
   Database::getConnection('default', 'default')
     ->delete('variable')
     ->condition('name', 'asu_rfi_siteDomain', 'LIKE')
     ->execute();
-  flogger('asu_rfi', 'The unused asu_rfi_siteDomain setting was deleted.');
+  variable_set('asu_rfi_expired_submit', 'all');
+  variable_set('asu_rfi_expired_delete', 'all');
+  flogger('asu_rfi', 'The unused asu_rfi_siteDomain setting was deleted,'
+    . ' and expired RFI submissions will be resubmitted and/or deleted on every future cron run.');
 }
 
 /**
@@ -279,7 +283,7 @@ function asu_rfi_update_7203(&$sandbox) {
 
   // First update run ONLY (Initialize update counters, data)
   if (!isset($sandbox['total'])) {
-    $total_count = _asu_rfi_get_submissions_to_delete(0, TRUE);
+    $total_count = _asu_rfi_get_submissions_to_delete(0, TRUE, TRUE);
     $sandbox['total'] = $total_count;
     $sandbox['max'] = $nids_per_pass;
     $sandbox['progress'] = 0;

@@ -496,7 +496,7 @@ function asu_rfi_form_data_submit($form, &$form_state) {
     $form_state['storage']['submission_nodeid'] = $entity->nid;
     $form_state['storage']['step'] = 'asu_rfi_second_form';
 
-    // Then send the email
+    // Then send the requester an email
     if ($form_state['storage']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_GRAD) { // graduate
       asu_rfi_grad_email($form_state['storage']['program_code'],
         $form_state['storage']['email'],

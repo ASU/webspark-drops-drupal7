@@ -8,9 +8,8 @@
 function asu_rfi_admin_settings() {
   $form_modes = array('test' => 'Test', 'prod' => 'Production');
   $special_action_modes = array(
-    'all' => 'ALL - RFI Report page + Cron runs)',
-    'form_only' => 'Some - RFI Report page ONLY',
-    'none' => 'Neither',
+    'all' => 'Report page actions + Cron runs',
+    'form_only' => 'Report page actions ONLY',
   );
 
   ////////////////////////
@@ -53,9 +52,10 @@ function asu_rfi_admin_settings() {
     '#default_value' => variable_get('asu_rfi_expired_submit', 'all'),
     '#attributes' => array('class' => array('asu-rfi-admin-field')),
     '#description' => t("Submit ALL expired RFI submissions to Salesforce "
-      . " middleware - even though they are more than "
+      . " middleware when the above actions are executed - even though they are more than "
       . round((float) (ASU_RFI_SUBMISSION_EXP_PERIOD) / 86400 , 2)
-      . " days old and may not be relevant leads anymore."),
+      . ' days old and may not be relevant leads anymore.'
+      . ' <a href="/admin/reports/asu-rfi-submissions-report">RFI submissions report</a>'),
     '#required' => TRUE,
   );
   $form['asu_rfi_form_access']['asu_rfi_expired_delete'] = array(
@@ -64,8 +64,10 @@ function asu_rfi_admin_settings() {
     '#options' => $special_action_modes,
     '#default_value' => variable_get('asu_rfi_expired_delete', 'all'),
     '#attributes' => array('class' => array('asu-rfi-admin-field')),
-    '#description' => t("Delete ALL expired RFI submissions, even if they are more than "
-      . round((float) (ASU_RFI_SUBMISSION_EXP_PERIOD) / 86400 , 2) . " days old."),
+    '#description' => t("Delete any expired RFI submissions when the above actions"
+      . " are executed, even if they are more than "
+      . round((float) (ASU_RFI_SUBMISSION_EXP_PERIOD) / 86400 , 2) . " days old."
+      . ' <a href="/admin/reports/asu-rfi-submissions-report">RFI submissions report</a>'),
     '#required' => TRUE,
   );
   // Will be enabled in future
