@@ -801,9 +801,9 @@ function asu_rfi_second_form_submit($form, &$form_state) {
    */
   if ($form_state['storage']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
     asu_rfi_post_to_middleware($form_state['storage'], ASU_RFI_PROSPECT_LEVEL_UNDERGRAD); //-- To be used in future
-    $undergrad_conf_id = variable_get('asu_rfi_undergrad_confirm_node');
+    $undergrad_conf_id = ASU_RFI_UNDERGRAD_CONFIRMATION_NID;
 
-    if (!empty($undergrad_conf_id)) {
+    if ($undergrad_conf_id && $undergrad_conf_id !== 0 ) {
       $u_alias = drupal_lookup_path('alias', $path = "node/$undergrad_conf_id", $path_language = NULL);
       if (!empty($u_alias)) {
         drupal_goto("$u_alias", array(
@@ -843,8 +843,8 @@ function asu_rfi_second_form_submit($form, &$form_state) {
    */
   if ($form_state['storage']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_GRAD) {
     asu_rfi_post_to_middleware($form_state['storage'], ASU_RFI_PROSPECT_LEVEL_GRAD);
-    $grad_conf_id = variable_get('asu_rfi_grad_confirm_node');
-    if (!empty($grad_conf_id)) {
+    $grad_conf_id = ASU_RFI_GRAD_CONFIRMATION_NID;
+    if (isset($grad_conf_id) && (int) $grad_conf_id !== 0) {
       $galias = drupal_lookup_path('alias', $path = "node/$grad_conf_id", $path_language = NULL);
       if (!empty($alias)) {
         drupal_goto("$galias", array(
@@ -1689,8 +1689,8 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
 
     asu_rfi_post_to_middleware($form_state['values'], ASU_RFI_PROSPECT_LEVEL_GRAD);
 
-    $grad_conf_id = variable_get('asu_rfi_grad_confirm_node');
-    if (!empty($grad_conf_id)) {
+    $grad_conf_id = ASU_RFI_GRAD_CONFIRMATION_NID;
+    if (!empty($grad_conf_id) && (int) $grad_conf_id !== 0) {
       $grad_alias = drupal_lookup_path('alias', $path = "node/$grad_conf_id", $path_language = NULL);
       if (!empty($grad_alias)) {
         drupal_goto("$grad_alias", array(
@@ -1727,8 +1727,8 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
 
     asu_rfi_post_to_middleware($form_state['values'], ASU_RFI_PROSPECT_LEVEL_UNDERGRAD);
 
-    $undergrad_conf_id = variable_get('asu_rfi_undergrad_confirm_node');
-    if (!empty($undergrad_conf_id)) {
+    $undergrad_conf_id = ASU_RFI_UNDERGRAD_CONFIRMATION_NID;
+    if ($undergrad_conf_id && $undergrad_conf_id !== 0) {
       $u_alias = drupal_lookup_path('alias', $path = "node/$undergrad_conf_id", $path_language = NULL);
       if (!empty($u_alias)) {
         drupal_goto("$u_alias", array(

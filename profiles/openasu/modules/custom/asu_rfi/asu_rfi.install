@@ -88,9 +88,14 @@ function asu_rfi_install() {
     variable_set('cas_exclude',$out);
   }
 
-  // If honeypot module exists, set it's variable value
-  if(module_exists('honeypot')){
+  // If honeypot module exists, set its variable value
+  if (module_exists('honeypot')){
       variable_set('honeypot_element_name','rfihurl');
+  }
+
+  // Enable entityreference_autocomplete module for the ASU RFI admin form
+  if (!module_exists('entityreference_autocomplete')) {
+    module_enable('entityreference_autocomplete');
   }
 
   // Set the RFI form mode to "Test" initially upon module installation
@@ -124,11 +129,14 @@ function asu_rfi_update_7001(&$sandbox) {
 }
 
 /**
- * Enable Flogger module; Update non-namespaced variable names.
+ * Enable Flogger, Entityreference Autocomplete modules; Update non-namespaced variable names.
  */
 function asu_rfi_update_7200(&$sandbox){
   if (!module_exists('flogger')) {
     module_enable(array('flogger'));
+  }
+  if (!module_exists('entityreference_autocomplete')) {
+    module_enable(array('entityreference_autocomplete'));
   }
   $or = db_or()
     ->condition('v.name', 'last_attempt_SF_posting', 'LIKE')
@@ -180,6 +188,7 @@ function asu_rfi_update_7201(&$sandbox) {
     ->delete('variable')
     ->condition('name', 'asu_rfi_siteDomain', 'LIKE')
     ->execute();
+  flogger('asu_rfi', 'The unused asu_rfi_siteDomain setting was deleted.');
 }
 
 /**
@@ -232,7 +241,7 @@ function asu_rfi_update_7202(&$sandbox) {
         'Form_Completed_No_SF' => 'Completed (No Salesforce)',
       );
     } else {
-      flogger('asu_rfi', 'Field field_rfi_submission_status settings could not be updated.'
+      flogger('asu_rfi', __FUNCTION__ . ': Field field_rfi_submission_status settings could not be updated.'
         . 'Check the Submission status field dropdown to ensure the proper values are available.',
         array(), WATCHDOG_ERROR);
     }
@@ -256,6 +265,9 @@ function asu_rfi_update_7202(&$sandbox) {
   $view->set_display('default');
   $cache = $view->display_handler->get_plugin('cache');
   $cache->cache_flush();
+
+  flogger('asu_rfi', 'Submission status values were updated to more'
+  . ' helpful, friendly values');
 }
 
 /**
@@ -370,6 +382,49 @@ function asu_rfi_update_7205(&$sandbox) {
         ))
         ->where('entity_id IN (' . $nids . ')')
         ->execute();
+    }
+    flogger('asu_rfi', __FUNCTION__ . ': Any current student form '
+      . ' submissions (if they existed) were updated to "Completed (No Salesforce)".');
+  }
+}
+
+/**
+ * Copy confirmation node values into replacement confirmation_page values.
+ */
+function asu_rfi_update_7206(&$sandbox) {
+  $values = array(
+    'asu_rfi_undergrad_confirm_node' => 'asu_rfi_undergrad_confirm',
+    'asu_rfi_grad_confirm_node' => 'asu_rfi_grad_confirm',
+  );
+  foreach ($values as $old => $new) {
+    $nid = variable_get($old);
+    if (!empty($nid)) {
+      $node = entity_load_single('node', (int) $nid);
+      if ($node) {
+        $entity = serialize(
+          array(
+            'entity_id' => (string) $node->nid,
+            'entity_label' => $node->title,
+            'entity_type' => 'node',
+            'entity_bundle' => $node->type,
+            'entity_uuid' => $node->uuid,
+          )
+        );
+        variable_set($new, $entity);
+        // Add separate value for NIDs
+        variable_set($new . '_nid', $node->nid);
+        variable_del($old);
+        flogger('asu_rfi', __FUNCTION__ . ': ' . $old
+          . ' has been updated to ' . $new . ' in the variables table.');
+      }
+      else {
+        flogger('asu_rfi', __FUNCTION__ . ': Node ID @nid does'
+        . ' not exist. Skipping update of @old.', array('@nid' => $nid, '@old' => $old),
+          WATCHDOG_WARNING, TRUE, TRUE, FALSE);
+      }
+    } else {
+      flogger('asu_rfi', __FUNCTION__ . ': ' . $old . ' was not'
+       . ' already set. Skipping variable update.');
     }
   }
 }

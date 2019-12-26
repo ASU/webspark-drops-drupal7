@@ -29,6 +29,8 @@ define('ASU_RFI_PROSPECT_LEVEL_UNDERGRAD', "Undergraduate");
 define('ASU_RFI_PROSPECT_LEVEL_GRAD', "Graduate");
 define('ASU_RFI_STALE_TIME_DEFAULT', 86400); // One Day
 define('ASU_RFI_SUBMISSION_EXP_PERIOD', ASU_RFI_STALE_TIME_DEFAULT * 14); // Two weeks
+define('ASU_RFI_UNDERGRAD_CONFIRMATION_NID', variable_get('asu_rfi_undergrad_confirm_nid', 0));
+define('ASU_RFI_GRAD_CONFIRMATION_NID', variable_get('asu_rfi_grad_confirm_nid', 0));
 
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_post_to_middleware');
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_get_programs');
@@ -114,7 +116,7 @@ function asu_rfi_menu() {
     'description' => 'Administer the ASU Request for Information module.',
     'position' => 'left',
     'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer asu rfi'),
     'file' => 'system.admin.inc',
     'file path' => drupal_get_path('module', 'system'),
   );

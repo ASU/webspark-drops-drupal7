@@ -128,8 +128,8 @@ function asu_rfi_preprocess_page(&$variables) {
     // If confirmation node ID specified in module settings page is called instead:
 
     else {
-      $undergrad_confirm_nid = variable_get('asu_rfi_undergrad_confirm_node');
-      $grad_confirm_nid = variable_get('asu_rfi_grad_confirm_node');
+      $undergrad_confirm_nid = ASU_RFI_UNDERGRAD_CONFIRMATION_NID;
+      $grad_confirm_nid = ASU_RFI_GRAD_CONFIRMATION_NID;
 
       if (isset($variables['node']) && ($variables['node']->nid == $undergrad_confirm_nid || $variables['node']->nid == $grad_confirm_nid)) {
         if (isset($_GET['pro']) || isset($_GET['ccode']) || isset($_GET['maj']) || isset($_GET['sub'])) {

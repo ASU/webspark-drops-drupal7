@@ -10,7 +10,9 @@ dependencies[] = mimemail
 dependencies[] = views_bulk_operations
 dependencies[] = honeypot
 dependencies[] = flogger
-version = 7.x-2.0-rc2
+dependencies[] = entityreference_autocomplete
+
+version = 7.x-2.0-rc3
 scripts[] = js/asu_rfi_form.js
 
 files[] = data/asu_rfi.form_options.inc
