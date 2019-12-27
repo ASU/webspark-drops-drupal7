@@ -586,6 +586,40 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['fields']['field_rfi_error_message']['field'] = 'field_rfi_error_message';
   $handler->display->display_options['fields']['field_rfi_error_message']['label'] = 'Middleware response';
   $handler->display->display_options['fields']['field_rfi_error_message']['element_label_colon'] = FALSE;
+  /* Field: Content: Link to content */
+  $handler->display->display_options['fields']['view_node']['id'] = 'view_node';
+  $handler->display->display_options['fields']['view_node']['table'] = 'views_entity_node';
+  $handler->display->display_options['fields']['view_node']['field'] = 'view_node';
+  $handler->display->display_options['fields']['view_node']['label'] = '';
+  $handler->display->display_options['fields']['view_node']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['view_node']['element_label_colon'] = FALSE;
+  /* Field: Content: Link to delete content */
+  $handler->display->display_options['fields']['delete_node']['id'] = 'delete_node';
+  $handler->display->display_options['fields']['delete_node']['table'] = 'views_entity_node';
+  $handler->display->display_options['fields']['delete_node']['field'] = 'delete_node';
+  $handler->display->display_options['fields']['delete_node']['label'] = '';
+  $handler->display->display_options['fields']['delete_node']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['delete_node']['element_label_colon'] = FALSE;
+  /* Field: Content: Link to edit content */
+  $handler->display->display_options['fields']['edit_node_1']['id'] = 'edit_node_1';
+  $handler->display->display_options['fields']['edit_node_1']['table'] = 'views_entity_node';
+  $handler->display->display_options['fields']['edit_node_1']['field'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node_1']['label'] = '';
+  $handler->display->display_options['fields']['edit_node_1']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['edit_node_1']['element_label_colon'] = FALSE;
+  /* Field: Global: Contextual Links */
+  $handler->display->display_options['fields']['contextual_links']['id'] = 'contextual_links';
+  $handler->display->display_options['fields']['contextual_links']['table'] = 'views';
+  $handler->display->display_options['fields']['contextual_links']['field'] = 'contextual_links';
+  $handler->display->display_options['fields']['contextual_links']['label'] = 'More Submission Actions';
+  $handler->display->display_options['fields']['contextual_links']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['contextual_links']['alter']['text'] = '<div class="asu-rfi-contextual-links-container">[contextual_links]</div>';
+  $handler->display->display_options['fields']['contextual_links']['fields'] = array(
+    'view_node' => 'view_node',
+    'delete_node' => 'delete_node',
+    'edit_node_1' => 'edit_node_1',
+  );
+  $handler->display->display_options['fields']['contextual_links']['check_access'] = 0;
   /* Field: Content: Student type */
   $handler->display->display_options['fields']['field_rfi_student_type']['id'] = 'field_rfi_student_type';
   $handler->display->display_options['fields']['field_rfi_student_type']['table'] = 'field_data_field_rfi_student_type';
@@ -596,17 +630,6 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['fields']['field_rfi_start_term']['table'] = 'field_data_field_rfi_start_term';
   $handler->display->display_options['fields']['field_rfi_start_term']['field'] = 'field_rfi_start_term';
   $handler->display->display_options['fields']['field_rfi_start_term']['element_label_colon'] = FALSE;
-  /* Field: Content: Campus */
-  $handler->display->display_options['fields']['field_rfi_campus']['id'] = 'field_rfi_campus';
-  $handler->display->display_options['fields']['field_rfi_campus']['table'] = 'field_data_field_rfi_campus';
-  $handler->display->display_options['fields']['field_rfi_campus']['field'] = 'field_rfi_campus';
-  $handler->display->display_options['fields']['field_rfi_campus']['element_label_colon'] = FALSE;
-  /* Field: Content: Location */
-  $handler->display->display_options['fields']['field_rfi_location']['id'] = 'field_rfi_location';
-  $handler->display->display_options['fields']['field_rfi_location']['table'] = 'field_data_field_rfi_location';
-  $handler->display->display_options['fields']['field_rfi_location']['field'] = 'field_rfi_location';
-  $handler->display->display_options['fields']['field_rfi_location']['label'] = 'Location preference';
-  $handler->display->display_options['fields']['field_rfi_location']['element_label_colon'] = FALSE;
   /* Field: Content: Program */
   $handler->display->display_options['fields']['field_rfi_program']['id'] = 'field_rfi_program';
   $handler->display->display_options['fields']['field_rfi_program']['table'] = 'field_data_field_rfi_program';
@@ -617,6 +640,23 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['fields']['field_rfi_program_name']['table'] = 'field_data_field_rfi_program_name';
   $handler->display->display_options['fields']['field_rfi_program_name']['field'] = 'field_rfi_program_name';
   $handler->display->display_options['fields']['field_rfi_program_name']['element_label_colon'] = FALSE;
+  /* Field: Content: Location */
+  $handler->display->display_options['fields']['field_rfi_location']['id'] = 'field_rfi_location';
+  $handler->display->display_options['fields']['field_rfi_location']['table'] = 'field_data_field_rfi_location';
+  $handler->display->display_options['fields']['field_rfi_location']['field'] = 'field_rfi_location';
+  $handler->display->display_options['fields']['field_rfi_location']['label'] = 'Location preference';
+  $handler->display->display_options['fields']['field_rfi_location']['element_label_colon'] = FALSE;
+  /* Field: Content: Campus */
+  $handler->display->display_options['fields']['field_rfi_campus']['id'] = 'field_rfi_campus';
+  $handler->display->display_options['fields']['field_rfi_campus']['table'] = 'field_data_field_rfi_campus';
+  $handler->display->display_options['fields']['field_rfi_campus']['field'] = 'field_rfi_campus';
+  $handler->display->display_options['fields']['field_rfi_campus']['element_label_colon'] = FALSE;
+  /* Field: Content: Question */
+  $handler->display->display_options['fields']['field_rfi_question']['id'] = 'field_rfi_question';
+  $handler->display->display_options['fields']['field_rfi_question']['table'] = 'field_data_field_rfi_question';
+  $handler->display->display_options['fields']['field_rfi_question']['field'] = 'field_rfi_question';
+  $handler->display->display_options['fields']['field_rfi_question']['label'] = 'Additional question/comment';
+  $handler->display->display_options['fields']['field_rfi_question']['element_label_colon'] = FALSE;
   /* Field: Content: Email */
   $handler->display->display_options['fields']['field_rfi_email']['id'] = 'field_rfi_email';
   $handler->display->display_options['fields']['field_rfi_email']['table'] = 'field_data_field_rfi_email';
@@ -671,49 +711,11 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['fields']['field_rfi_international']['table'] = 'field_data_field_rfi_international';
   $handler->display->display_options['fields']['field_rfi_international']['field'] = 'field_rfi_international';
   $handler->display->display_options['fields']['field_rfi_international']['element_label_colon'] = FALSE;
-  /* Field: Content: Question */
-  $handler->display->display_options['fields']['field_rfi_question']['id'] = 'field_rfi_question';
-  $handler->display->display_options['fields']['field_rfi_question']['table'] = 'field_data_field_rfi_question';
-  $handler->display->display_options['fields']['field_rfi_question']['field'] = 'field_rfi_question';
-  $handler->display->display_options['fields']['field_rfi_question']['label'] = 'Additional question/comment';
-  $handler->display->display_options['fields']['field_rfi_question']['element_label_colon'] = FALSE;
   /* Field: Content: Form name */
   $handler->display->display_options['fields']['field_rfi_form_name']['id'] = 'field_rfi_form_name';
   $handler->display->display_options['fields']['field_rfi_form_name']['table'] = 'field_data_field_rfi_form_name';
   $handler->display->display_options['fields']['field_rfi_form_name']['field'] = 'field_rfi_form_name';
   $handler->display->display_options['fields']['field_rfi_form_name']['element_label_colon'] = FALSE;
-  /* Field: Content: Link to content */
-  $handler->display->display_options['fields']['view_node']['id'] = 'view_node';
-  $handler->display->display_options['fields']['view_node']['table'] = 'views_entity_node';
-  $handler->display->display_options['fields']['view_node']['field'] = 'view_node';
-  $handler->display->display_options['fields']['view_node']['label'] = '';
-  $handler->display->display_options['fields']['view_node']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['view_node']['element_label_colon'] = FALSE;
-  /* Field: Content: Link to delete content */
-  $handler->display->display_options['fields']['delete_node']['id'] = 'delete_node';
-  $handler->display->display_options['fields']['delete_node']['table'] = 'views_entity_node';
-  $handler->display->display_options['fields']['delete_node']['field'] = 'delete_node';
-  $handler->display->display_options['fields']['delete_node']['label'] = '';
-  $handler->display->display_options['fields']['delete_node']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['delete_node']['element_label_colon'] = FALSE;
-  /* Field: Content: Link to edit content */
-  $handler->display->display_options['fields']['edit_node_1']['id'] = 'edit_node_1';
-  $handler->display->display_options['fields']['edit_node_1']['table'] = 'views_entity_node';
-  $handler->display->display_options['fields']['edit_node_1']['field'] = 'edit_node';
-  $handler->display->display_options['fields']['edit_node_1']['label'] = '';
-  $handler->display->display_options['fields']['edit_node_1']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['edit_node_1']['element_label_colon'] = FALSE;
-  /* Field: Global: Contextual Links */
-  $handler->display->display_options['fields']['contextual_links']['id'] = 'contextual_links';
-  $handler->display->display_options['fields']['contextual_links']['table'] = 'views';
-  $handler->display->display_options['fields']['contextual_links']['field'] = 'contextual_links';
-  $handler->display->display_options['fields']['contextual_links']['label'] = 'Actions';
-  $handler->display->display_options['fields']['contextual_links']['fields'] = array(
-    'view_node' => 'view_node',
-    'delete_node' => 'delete_node',
-    'edit_node_1' => 'edit_node_1',
-  );
-  $handler->display->display_options['fields']['contextual_links']['check_access'] = 0;
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -787,6 +789,9 @@ function asu_rfi_feature_views_default_views() {
 .view-asu-rfi-submissions-report .view-header .questions.questions-collapsed {
   background-image: url(/misc/menu-collapsed.png);
   background-position: 5px 50%;
+}
+.view-asu-rfi-submissions-report .asu-rfi-contextual-links-container {
+  position: relative;
 }
 </style>';
   $handler->display->display_options['header']['area_1']['format'] = 'full_html';
@@ -877,9 +882,10 @@ function asu_rfi_feature_views_default_views() {
     t('Submitted date'),
     t('Last updated (here)'),
     t('Middleware response'),
+    t('More Submission Actions'),
+    t('<div class="asu-rfi-contextual-links-container">[contextual_links]</div>'),
     t('Location preference'),
     t('Additional question/comment'),
-    t('Actions'),
     t('Data export'),
     t('Attachment'),
     t('<style type="text/css">
@@ -910,6 +916,9 @@ function asu_rfi_feature_views_default_views() {
 .view-asu-rfi-submissions-report .view-header .questions.questions-collapsed {
   background-image: url(/misc/menu-collapsed.png);
   background-position: 5px 50%;
+}
+.view-asu-rfi-submissions-report .asu-rfi-contextual-links-container {
+  position: relative;
 }
 </style>'),
     t('<h4 class="questions"><a href="/admin/reports/asu-rfi-submissions-report">Commonly asked RFI submission questions...</a></h4>
