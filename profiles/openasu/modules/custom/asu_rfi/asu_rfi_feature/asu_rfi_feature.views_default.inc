@@ -764,6 +764,7 @@ function asu_rfi_feature_views_default_views() {
   $handler->display->display_options['header']['area_1']['content'] = '<style type="text/css">
 .view-asu-rfi-submissions-report table td { vertical-align: text-top; }
 .view-asu-rfi-submissions-report .views-field-field-rfi-error-message, .view-asu-rfi-submissions-report .views-field-field-rfi-question { min-width: 16em;}
+.view-asu-rfi-submissions-report .views-field-field-rfi-submission-status { min-width: 8em;}
 .view-asu-rfi-submissions-report .attachment .questions,
 .view-asu-rfi-submissions-report .view-header legend {
   font-weight: 300;
