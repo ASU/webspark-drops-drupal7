@@ -8,9 +8,10 @@
 function asu_rfi_admin_settings() {
   $form_modes = array('test' => 'Test', 'prod' => 'Production');
   $special_action_modes = array(
-    'all' => 'Report page actions + Cron runs',
+    'all' => 'Report page actions + cron jobs',
     'form_only' => 'Report page actions ONLY',
   );
+  $expiration_range = round((float) (ASU_RFI_SUBMISSION_EXP_PERIOD) / 86400 , 2) . ' days';
   ////////////////////////
 
   $form = array();
@@ -19,7 +20,7 @@ function asu_rfi_admin_settings() {
   if (!empty($auth_key) && strlen($auth_key) === 32) { // All SHAs should be 32 characters long.
     $stage = array(
       'message' => 'A middleware authentication code has already been added to this site.'
-      . '(NOTE: This does not validate that the code works.)',
+      . ' (NOTE: This does not validate that the code works.)',
       'css' => 'messages status',
     );
   } else {
@@ -59,32 +60,45 @@ function asu_rfi_admin_settings() {
      . 'site admins can view the forms if they are in Test mode."),
     '#required' => TRUE,
   );
-  $form['asu_rfi_form_access']['asu_rfi_expired_submit'] = array(
+  $form['asu_rfi_form_access']['expired_nodes'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Expired submissions handling',
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
+    '#attributes' => array('class' => array('asu-rfi-admin-field asu-rfi-form-access asu-rfi-expiration')),
+  );
+  $form['asu_rfi_form_access']['expired_nodes']['notes'] = array(
+    '#type' => 'item',
+    '#markup' => '<p>If "Report page actions + cron jobs" are selected below (HIGHLY'
+      . ' recommended), your expired RFI submissions (' . $expiration_range
+      . ' past their initial submission date) will be automatically queued for resubmission (or deletion)'
+      . ' every time a cron job runs <a href="/admin/config/system/cron">at periodic'
+      . ' intervals</a>.</p>'
+      . ' <p>If you want to manually manage the resubmission (or deletion) of RFI submissions,'
+      . ' select "<a href="/admin/reports/asu-rfi-submissions-report">Report page</a>'
+      . ' actions ONLY". (NOT recommended). (<strong>NOTE</strong>: If a cron job has'
+      . ' already queued existing expired submissions, selecting this setting will not'
+      . ' stop their resubmission (or deletion) even if it has not happened yet.'
+      . ' It will only stop <em><strong>future</strong></em>'
+      . ' submissions from also being placed in the resubmission (or deletion) queue.)</p>'
+  );
+  $form['asu_rfi_form_access']['expired_nodes']['asu_rfi_expired_submit'] = array(
     '#type' => 'select',
-    '#title' => t('Submit all expired submissions using...'),
+    '#title' => t('Submit ALL expired submissions using...'),
     '#options' => $special_action_modes,
     '#default_value' => variable_get('asu_rfi_expired_submit', 'all'),
     '#attributes' => array('class' => array('asu-rfi-admin-field')),
-    '#description' => t("Submit ALL expired RFI submissions to Salesforce "
-      . " middleware when the above actions are executed - even though they are more than "
-      . round((float) (ASU_RFI_SUBMISSION_EXP_PERIOD) / 86400 , 2)
-      . ' days old and may not be relevant leads anymore.'
-      . ' <a href="/admin/reports/asu-rfi-submissions-report">RFI submissions report</a>'),
     '#required' => TRUE,
   );
-  $form['asu_rfi_form_access']['asu_rfi_expired_delete'] = array(
+  $form['asu_rfi_form_access']['expired_nodes']['asu_rfi_expired_delete'] = array(
     '#type' => 'select',
     '#title' => t('Delete all expired submissions using...'),
     '#options' => $special_action_modes,
     '#default_value' => variable_get('asu_rfi_expired_delete', 'all'),
     '#attributes' => array('class' => array('asu-rfi-admin-field')),
-    '#description' => t("Delete any expired RFI submissions when the above actions"
-      . " are executed, even if they are more than "
-      . round((float) (ASU_RFI_SUBMISSION_EXP_PERIOD) / 86400 , 2) . " days old."
-      . ' <a href="/admin/reports/asu-rfi-submissions-report">RFI submissions report</a>'),
     '#required' => TRUE,
   );
-  // Will be enabled in future
+  // MAY be enabled in future (currently handled externally)
   $form['asu_rfi_form_access']['asu_rfi_form_auth_key'] = array(
     '#type' => 'hidden',
     '#title' => t('Authentication code'),
