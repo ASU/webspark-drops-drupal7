@@ -11,17 +11,31 @@ function asu_rfi_admin_settings() {
     'all' => 'Report page actions + Cron runs',
     'form_only' => 'Report page actions ONLY',
   );
-
   ////////////////////////
 
   $form = array();
 
+  $auth_key = variable_get('asu_rfi_form_auth_key');
+  if (!empty($auth_key) && strlen($auth_key) === 32) { // All SHAs should be 32 characters long.
+    $stage = array(
+      'message' => 'A middleware authentication code has already been added to this site.'
+      . '(NOTE: This does not validate that the code works.)',
+      'css' => 'messages status',
+    );
+  } else {
+    $stage = array(
+      'message' => 'RFI submissions will not be posted to Salesforce via Middleware'
+        . ' unless a valid authentication code has been added.'
+        . ' <a href="https://webforms.asu.edu/content/access-rfi-middleware-request">Request an'
+        . ' authentication key</a>',
+      'css' => 'messages warning',
+    );
+  }
+  $message = '<div class="' . $stage['css'] . '">' . $stage['message'] . '</div>';
+
   $form['form_stage'] = array(
     '#type' => 'item',
-    '#markup' => t('<div class="messages warning">Important: The RFI submissions will not be'
-    . ' posted to Salesforce via Middleware unless a valid authentication code has been added.'
-    . ' <a href="https://webforms.asu.edu/content/access-rfi-middleware-request">Request '
-    . ' authentication key</a></div>'),
+    '#markup' => $message,
   );
 
   // GENERAL SETTINGS

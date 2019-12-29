@@ -31,8 +31,8 @@ define('ASU_RFI_STALE_TIME_DEFAULT', 86400); // One Day
 define('ASU_RFI_SUBMISSION_EXP_PERIOD', ASU_RFI_STALE_TIME_DEFAULT * 14); // Two weeks
 define('ASU_RFI_UNDERGRAD_CONFIRMATION_NID', variable_get('asu_rfi_undergrad_confirm_nid', 0));
 define('ASU_RFI_GRAD_CONFIRMATION_NID', variable_get('asu_rfi_grad_confirm_nid', 0));
-define('ASU_RFI_EXPIRED_DELETE', variable_get('asu_rfi_expired_delete'), 'all');
-define('ASU_RFI_EXPIRED_SUBMIT', variable_get('asu_rfi_expired_submit'), 'all');
+define('ASU_RFI_EXPIRED_DELETE', variable_get('asu_rfi_expired_delete', 'all'));
+define('ASU_RFI_EXPIRED_SUBMIT', variable_get('asu_rfi_expired_submit', 'all'));
 
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_post_to_middleware');
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_get_programs');
@@ -53,7 +53,6 @@ function asu_rfi_views_api() {
  */
 function asu_rfi_views_pre_render(&$view) {
   // For the RFI report page intro
-  //dpm($view, __FUNCTION__);
  if ($view->name === 'asu_rfi_submissions_report') {
    // Add JS
    drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.report.js',   array(
@@ -137,7 +136,7 @@ function asu_rfi_menu() {
     'file path' => drupal_get_path('module', 'system'),
   );
   $items['admin/config/asurfi/settings'] = array(
-    'title' => 'Settings',
+    'title' => 'RFI Settings',
     'description' => t('Administer RFI form and submission settings.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('asu_rfi_admin_settings'),

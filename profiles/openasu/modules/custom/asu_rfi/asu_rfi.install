@@ -275,7 +275,7 @@ function asu_rfi_update_7202(&$sandbox) {
 }
 
 /**
- * Delete RFI form submissions that have been sent to Salesforce or are expired.
+ * Delete ALL RFI form submissions that have been sent to Salesforce or are expired (14 days old).
  */
 function asu_rfi_update_7203(&$sandbox) {
 
