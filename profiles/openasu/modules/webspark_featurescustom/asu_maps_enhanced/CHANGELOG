@@ -1,11 +1,15 @@
-asu_maps_enhanced 7.x-1.6, 2019
--------------------------------
+asu_maps_enhanced 7.x-1.7, 2019-12-20
+-------------------------------------
 - Switched map to display new ASU GIS map
 - Removed code for Concept3d location form
 - Changed form to allow embed of GIS map
 
-asu_maps_enhanced 7.x-1.5, 2019
--------------------------------
+asu_maps_enhanced 7.x-1.6, 2019-09-12
+-------------------------------------
+- Reverted PHP array notation to array() for PHP 5.3 compatibility
+
+asu_maps_enhanced 7.x-1.5, 2019-08-31
+-------------------------------------
 - Switched to new API and map URL for Concept3d maps
 - Refactored and adjusted campus coordinate config for new map URL
 - Moved custom utility functions to asu_maps_enhanced.helpers.inc
