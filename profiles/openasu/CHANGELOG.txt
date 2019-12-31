@@ -12,6 +12,10 @@ Webspark 1.70.4 (Dallas), 2019-12-30
 
   * ASU Academic Programs (asu_ap) - v2.6
     * Updated casing to "Sentence casing" (vs. Title Casing)
+  * ASU Enhanced Maps (asu_maps_enhanced) - v1.7
+    * Switched map to display new ASU GIS map
+    * Removed code for Concept3d location form
+    * Changed form to allow embed of GIS map
   * ASU Spotlight (asu_spotlight) - v1.10
     * Added better field validation to avoid triggering of error/warnings messages when previously uploaded spotlight images are subsequently deleted or lost
   * Innovation (innovation) - v1.15
@@ -19,7 +23,7 @@ Webspark 1.70.4 (Dallas), 2019-12-30
     * Added styling for .alert messages with no concurrent .alert-* CSS class defining its type (warning, error, info, etc.)
     * Fixed white gap at the bottom of page below global footer that was mistakenly introduced with the v1.70.1 (College Station) release.
     * The left-hand submenu's top border no longer goes 100% wide (beyond 1140px) in 100% wide regions/rows in a page
-    * Improved readability of the system's help messages (usually below fields in forms)
+    * Improved readability of the system's help messages, which usually render below fields in forms
     * Fixed :hover state in the ASU Global footer links to be in conformance with ASU Web standards by setting color to maroon and border-bottom style to dotted.
     * Long site titles now break to the next line in mobile devices instead of being clipped on a single line
   * Webspark Breadcrumbs (webspark_breadcrumbs) - v1.1
