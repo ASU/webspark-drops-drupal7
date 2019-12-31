@@ -1,6 +1,6 @@
 Webspark 1.70.4 (Dallas), 2019-12-30
 ------------------------------------
-- Webspark core
+- Webspark core 
 
   * Drupal core
     * settings.php - Rollup of changes since its last update in Webspark. Now matches latest version, which shipped with Drupal core v7.60.
