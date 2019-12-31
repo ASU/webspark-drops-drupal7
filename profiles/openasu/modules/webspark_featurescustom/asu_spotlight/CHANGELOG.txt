@@ -1,3 +1,8 @@
+ASU Spotlight 7.x-1.10, 2019-XX-XX
+-----------------------
+- Better field validation added to stop error/warnings messages when previously uploaded spotlight images are 
+  subsequently deleted or lost
+
 ASU Spotlight 7.x-1.9, 2019-08-02
 -----------------------
 - Increased PHP performance when the site is creating a spotlight editing form.
