@@ -20,6 +20,13 @@
   .hero-wrapper {
     height: 380px;
     overflow: scroll; /* Added for overflow of text elements */
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    &::-webkit-scrollbar { /* WebKit */
+      width: 0;
+      height: 0;
+    }
   }
   .pane-content {
     padding: 0 0.9375em 1em 0.9375em;

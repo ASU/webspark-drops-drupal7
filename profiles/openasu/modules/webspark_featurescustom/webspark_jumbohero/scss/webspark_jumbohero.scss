@@ -24,6 +24,13 @@
   }
   .jumbotext-wrapper {
     width: 100%;
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    &::-webkit-scrollbar { /* WebKit */
+      width: 0;
+      height: 0;
+    }
   }
   .field-name-field-webspark-jumbo-position {
     display: none;
