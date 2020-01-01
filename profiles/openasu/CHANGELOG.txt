@@ -1,3 +1,10 @@
+Webspark 1.70.5 (Lewisville), 2019-12-31
+----------------------------------------
+- Webspark core
+
+  * Webspark Hero (webspark_hero) - v1.9
+    * Suppressed rendering of scroll bars when hero content overflows
+
 Webspark 1.70.4 (Dallas), 2019-12-30
 ------------------------------------
 - Webspark core 

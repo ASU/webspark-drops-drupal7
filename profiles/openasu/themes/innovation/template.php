@@ -60,7 +60,7 @@ function innovation_preprocess_html(&$variables) {
       '#tag' => 'meta',
       '#attributes' => array(
         // Don't forget to update openasu.info as well!!
-        'content' => 'Webspark:1.70.4 (Dallas)',
+        'content' => 'Webspark:1.70.5 (Lewisville)',
         'http-equiv' => 'X-Name-of-Distro',
         'name' => 'cmsversion',
       )
