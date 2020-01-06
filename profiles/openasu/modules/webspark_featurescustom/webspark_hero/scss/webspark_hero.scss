@@ -53,6 +53,10 @@
     font-weight: 900;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   }
+  &.hero-height-hero .field-name-field-webspark-hero-height {
+    display: none;
+  }
+
   .field-name-field-webspark-hero-ugradbtn,
   .field-name-field-webspark-hero-gradbtn {
     width: 41.6667%;

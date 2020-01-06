@@ -1,4 +1,4 @@
-Webspark Jumbohero - 7.x-1.7, 2019-XX-XX
+Webspark Jumbohero - 7.x-1.7, 2019-12-30
 ------------------------------
 - All form field outputs are now sanitized before rendering. (This is mitigated in that only Drupal users with privileges
   to create and save heroes and jumbo heroes could exploit this vulnerability)

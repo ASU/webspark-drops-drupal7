@@ -59,6 +59,9 @@
   font-weight: 900;
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
+.pane-bundle-hero.hero-height-hero .field-name-field-webspark-hero-height {
+  display: none;
+}
 
 /* Button styles */
 .pane-bundle-hero .field-name-field-webspark-hero-ugradbtn,
