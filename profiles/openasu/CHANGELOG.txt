@@ -1,16 +1,12 @@
 Webspark 1.70.6 (Fort Worth), 2019-12-31
 ---------------------------------------
-- Webspark core
-
-  * Webspark Hero (webspark_hero) - v1.11
-    * Text height value no longer appears over hero images.
+* Webspark Hero (webspark_hero) - v1.11
+  * Text height value no longer appears over hero images.
 
 Webspark 1.70.5 (Lewisville), 2019-12-31
 ----------------------------------------
-- Webspark core
-
-  * Webspark Hero (webspark_hero) - v1.9
-    * Suppressed rendering of scroll bars when hero content overflows
+* Webspark Hero (webspark_hero) - v1.9
+  * Suppressed rendering of scroll bars when hero content overflows
 
 Webspark 1.70.4 (Dallas), 2019-12-30
 ------------------------------------
