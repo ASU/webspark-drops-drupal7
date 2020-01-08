@@ -28,6 +28,10 @@
 .pane-bundle-hero.hero-height-hero .hero-wrapper {
   height: 380px;
 }
+/* Select element height */
+.pane-bundle-hero.hero-height-jumbohero .hero-wrapper {
+  height: 700px;
+}
 
 .pane-bundle-hero .hero-wrapper::-webkit-scrollbar { /* WebKit */
   width: 0;
