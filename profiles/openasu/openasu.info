@@ -1,11 +1,11 @@
 name = ASU Webspark
 distribution_name = ASU Webspark
-description = "A good starting point for ASU Web standards compliant web sites with Drupal."
+description = "A great starting point for ASU Web standards compliant web sites with Drupal 7."
 core = 7.x
 exclusive = 1
 
 ; Remember to update in innovation as well for DOM
-version = 1.70.6
+version = 1.70.7
 
 ; Drupal Core
 dependencies[] = taxonomy

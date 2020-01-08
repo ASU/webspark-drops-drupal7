@@ -1,6 +1,11 @@
-Webspark 1.70.6 (Fort Worth), 2019-12-31
+Webspark 1.70.7 (Zipperlandville), 2020-01-08
 ---------------------------------------
-* Webspark Hero (webspark_hero) - v1.11
+* Webspark Panels Styles (webspark_panels_styles) - v1.11
+  * Removed lockdown .row class from customstyles.css padding selectors because this class can be applied to non-row tags.
+
+Webspark 1.70.6 (Fort Worth), 2019-01-07
+---------------------------------------
+* Webspark Hero (webspark_hero) - v1.10
   * Text height value no longer appears over hero images.
 
 Webspark 1.70.5 (Lewisville), 2019-12-31
