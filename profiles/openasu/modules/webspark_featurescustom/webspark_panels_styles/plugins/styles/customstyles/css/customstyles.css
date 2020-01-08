@@ -25,10 +25,10 @@
 }
 
 /* Spacing on rows */
-.row.row-padding-top {
+.row-padding-top {
 	padding-top: 2.625em;
 }
-.row.row-padding-bottom {
+.row-padding-bottom {
 	padding-bottom: 2.625em;
 }
 .space-top-sm {
