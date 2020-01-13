@@ -57,9 +57,13 @@ form[id^="asu-rfi-"] .form-type-checkbox label {
 form[id^="asu-rfi-"] .form-type-radios.form-item-location > #edit-location {
   overflow: auto;
 }
-form[id^="asu-rfi-"] #edit-location .radio {
+form[id^="asu-rfi-"] .form-type-radios.form-item-location > #edit-location .radio {
   margin-top: 0;
 }
+form[id^="asu-rfi-"] .form-type-radios.form-item-location > #edit-location .radio > label {
+  margin-left: -1em;
+}
+
 form[id^="asu-rfi-"] .form-required {
   color: black;
 }
