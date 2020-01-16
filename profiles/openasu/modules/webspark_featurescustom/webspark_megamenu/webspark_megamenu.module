@@ -14,16 +14,6 @@ function webspark_megamenu_init() {
 }
 
 /**
-* Implements hook_form_alter().
-**/
-function webspark_megamenu_form_alter(&$form, &$form_state, &$form_id) {
-  if ($form_id == "menu_edit_item") {
-    //dsm($form);
-    //$form['link_path']['#default_value'] = $GLOBALS['base_url'].'/'.variable_get('site_frontpage', 'node');
-  }
-}
-
-/**
  * Implements hook_page_alter().
  **/
 function webspark_megamenu_page_alter(&$page) {

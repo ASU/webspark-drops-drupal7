@@ -1,4 +1,5 @@
-.btn {
+.btn,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree {   /* Button CSS for menu links added */
     -moz-user-select: none;
     background-image: none;
     border: 1px solid transparent;
@@ -33,11 +34,17 @@
     opacity: 0.65;
     pointer-events: none;
 }
-.btn-primary {
+.btn-primary,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary {
     background-color: #8C1D40;
     color: white;
 }
-.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .btn-primary.dropdown-toggle {
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active,
+.open > .btn-primary.dropdown-toggle,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.active {
     background-color: #d23153;
     color: white;
 }
@@ -51,11 +58,17 @@
     background-color: white;
     color: #8C1D40;
 }
-.btn-secondary {
+.btn-secondary,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary {
     background-color: #dbdbdb;
     color: #2a2a2a;
 }
-.btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active, .btn-secondary.active, .open > .btn-secondary.dropdown-toggle {
+.btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active, .btn-secondary.active,
+.open > .btn-secondary.dropdown-toggle,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.active {
     background-color: #f2f2f2;
     color: #2a2a2a;
 }
@@ -69,18 +82,27 @@
     background-color: #2a2a2a;
     color: #dbdbdb;
 }
-.btn-gold {
+.btn-gold,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold {
     background-color: #ffc627;
     color: #2a2a2a;
 }
-.btn-gold:hover, .btn-gold:focus, .btn-gold:active, .btn-gold.active, .open > .btn-gold.dropdown-toggle {
+.btn-gold:hover, .btn-gold:focus, .btn-gold:active, .btn-gold.active, .open > .btn-gold.dropdown-toggle,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.active {
     background-color: #FFD45D;
     color: #2a2a2a;
 }
 .btn-gold:active, .btn-gold.active, .open > .btn-gold.dropdown-toggle {
     background-image: none;
 }
-.btn-gold.disabled, .btn-gold.disabled:hover, .btn-gold.disabled:focus, .btn-gold.disabled:active, .btn-gold.disabled.active, .btn-gold[disabled], .btn-gold[disabled]:hover, .btn-gold[disabled]:focus, .btn-gold[disabled]:active, .btn-gold.active[disabled], fieldset[disabled] .btn-gold, fieldset[disabled] .btn-gold:hover, fieldset[disabled] .btn-gold:focus, fieldset[disabled] .btn-gold:active, fieldset[disabled] .btn-gold.active {
+.btn-gold.disabled, .btn-gold.disabled:hover, .btn-gold.disabled:focus, .btn-gold.disabled:active,
+.btn-gold.disabled.active, .btn-gold[disabled], .btn-gold[disabled]:hover, .btn-gold[disabled]:focus,
+.btn-gold[disabled]:active, .btn-gold.active[disabled], fieldset[disabled] .btn-gold, fieldset[disabled]
+.btn-gold:hover, fieldset[disabled] .btn-gold:focus, fieldset[disabled] .btn-gold:active, fieldset[disabled]
+.btn-gold.active {
     background-color: #ffc627;
 }
 .btn-gold .badge {
@@ -275,4 +297,29 @@
 }
 .button.browse:hover {
 	background: -moz-linear-gradient(center bottom , #c5c5c5 0%, #fafafa 100%) repeat scroll 0 0 #e6e6e6;
+}
+
+/* More for LH menu buttons */
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu > li.btn-container.first > a {
+  margin-top: 0;
+}
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] ul.menu li.btn-container + li:not(.btn-container) {
+  margin-top: 0.9375em;
+}
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] ul.menu li:not(.btn-container) + li.btn-container {
+  border-top: 1px solid #d7d7d7;
+}
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container {
+  margin-left: 1.375em;
+  margin-bottom: 0.9375em;
+}
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu li.btn-container ul.menu {
+  margin-top: 0.9375em;
+}
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container + li:not(.btn-container) {
+  margin-left: 1.375em;
+}
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container + li:not(.btn-container) > a {
+  margin-left: 0;
+  padding-left: 1.375em;
 }
