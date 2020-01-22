@@ -101,7 +101,7 @@ function innovation_preprocess_html(&$variables) {
 /**
  * Override or insert variables into the page template.
  *
- * Implements template_process_block().
+ * Implements template_preprocess_block().
  */
 function innovation_preprocess_block(&$variables) {
   $block = $variables['block'];
@@ -132,7 +132,55 @@ function innovation_preprocess_block(&$variables) {
     ));
     $block->subject = '';
   }
+}
 
+/**
+ * Implements hook_process_menu_link().
+ */
+function innovation_process_menu_link(&$variables) {
+  if (isset($variables['element']['#localized_options']['attributes']['asu_themed_button'])) {
+    $styling = $variables['element']['#localized_options']['attributes']['asu_themed_button'];
+    if ((int) $styling !== 0) {
+      $base_classes = array('btn', 'btn-block', 'btn-pane-menu-tree');
+      switch ($styling) {
+        case 1:
+          $base_classes[] = 'btn-primary';
+          break;
+        case 2:
+          $base_classes[] = 'btn-secondary';
+          break;
+        case 3:
+          $base_classes[] = 'btn-gold';
+          break;
+        default:
+          // no classes
+          break;
+      }
+      // Apply to child <a> tag classes
+      $anchor_classes = (!empty($variables['element']['#localized_options']['attributes']['class']))
+         ? _innovation_remove_class($variables['element']['#localized_options']['attributes']['class'])
+         : array();
+      $variables['element']['#localized_options']['attributes']['class'] = array_merge(
+        $anchor_classes, $base_classes
+      );
+      // Apply to <li> tag classes - no changes needed yet
+      $list_item_classes = (array) _innovation_remove_class($variables['element']['#attributes']['class']);
+      $list_item_classes[] = 'btn-container';
+      $variables['element']['#attributes']['class'] = $list_item_classes;
+    }
+  }
+}
+
+/**
+ * Remove classes that interfere with button styling in LH submenus in blocks/panels
+ */
+function _innovation_remove_class($classes) {
+  foreach ($classes as $key => $class) {
+    if ($class === 'active') {
+      unset($classes[$key]);
+    }
+  }
+  return $classes;
 }
 
 /**
