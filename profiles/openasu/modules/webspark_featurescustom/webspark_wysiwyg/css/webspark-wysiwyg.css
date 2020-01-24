@@ -1,0 +1,32 @@
+/**
+ * Added styling for WYSIWYG Template created columns
+ */
+.wysiwyg-cols > .wysiwyg-cols-first {
+  padding-left: 0;
+}
+.wysiwyg-cols > .wysiwyg-cols-last {
+  padding-right: 0;
+}
+
+@media (max-width: 991px) {
+  .wysiwyg-cols > div:first-child {
+    padding-left: 0;
+  }
+  .wysiwyg-cols > div:last-child {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 930px) {
+  .wysiwyg-cols-4-half div:nth-of-type(3n),
+  .wysiwyg-cols-6 div:nth-of-type(4n),
+  .wysiwyg-cols-12 div:nth-of-type(7n) {
+    clear: both;
+    padding-left: 0;
+  }
+  .wysiwyg-cols-4-half div:nth-of-type(2n),
+  .wysiwyg-cols-6 div:nth-of-type(3n),
+  .wysiwyg-cols-12 div:nth-of-type(6n) {
+    padding-right: 0;
+  }
+}

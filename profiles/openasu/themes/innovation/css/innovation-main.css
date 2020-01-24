@@ -246,7 +246,7 @@ h6, .h6 {
   position: -moz-sticky;
   position: -ms-sticky;
   position: -o-sticky;
-  top: 0px;
+  top: 0;
 }
 
 /* =IMAGES
@@ -733,7 +733,7 @@ h2.widget-list {
 /* Main body of columns with content */
 #modalContent .panels-section-columns > .panels-section-column .content-type-button {
   font: normal 0.9rem/1.5em "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  top: 0em;
+  top: 0;
 }
 
 #modalContent .panels-section-columns > .panels-section-column .content-type-button div,
@@ -772,8 +772,8 @@ ul.help-text li.help-title {
 ----------------------------------------------------- */
 
 #header .container {
-  padding-left: 0px;
-  padding-right: 0px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 #header > .container .row .col-md-12 {
@@ -785,8 +785,8 @@ ul.help-text li.help-title {
 #footer > .container,
 #page-footer > .container {
   width: 100%;
-  padding-left: 0px;
-  padding-right: 0px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .section > .container .row,
@@ -849,8 +849,8 @@ ul.help-text li.help-title {
 }
 
 .row {
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
 }
 
 #page-footer {
@@ -870,9 +870,9 @@ ul.help-text li.help-title {
 }
 .ui-widget-content.ui-dialog.token-browser-container,
 .token-browser-container .ui-dialog-titlebar {
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
-  border-radius: 0px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
 }
 .token-browser-container .ui-dialog-titlebar {
   background-color: #eaeaec;
@@ -887,7 +887,7 @@ ul.help-text li.help-title {
 }
 
 /* FOCUS */
-/* [RN 6-12-18] Applied previous styles to outline and removed border properties for accessibility */
+/* Applied previous styles to outline and removed border properties */
 a:focus,
 .ui-widget-content a:focus,
 input:focus,
@@ -898,8 +898,8 @@ a.btn:focus,
 h4.ui-accordion-header.ui-state-hover,
 h4.ui-accordion-header:focus {
   outline: 2px solid #4D90FE;
-  -webkit-box-shadow: 0px 0px 5px  #4D90FE;
-  box-shadow: 0px 0px 5px  #4D90FE;
+  -webkit-box-shadow: 0 0 5px  #4D90FE;
+  box-shadow: 0 0 5px  #4D90FE;
 }
 
 /** UI Tabs
@@ -934,12 +934,12 @@ body #content .ui-tabs .ui-tabs-nav li a {
     width: 100%;
   }
   #header > .container .row {
-    margin-left: 0px;
-    margin-right: 0px;
+    margin-left: 0;
+    margin-right: 0;
   }
   #header > .container .row .col-md-12 {
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-left: 0;
+    padding-right: 0;
   }
   #header .container-fluid > .row > .col-md-12 {
     width: 100%;
@@ -1017,7 +1017,7 @@ body #content .ui-tabs .ui-tabs-nav li a {
   }
 }
 
-/** WEBSPARK-1118 - Temporary footer link fix */
+/** WEBSPARK-1118 - Temporary footer link fix @removeIfInGlobalCSS */
 #innovation-footer .footer-menu ul li a:hover {
   color: #8C1D40;
   border-bottom: 1px dotted #8C1D40;

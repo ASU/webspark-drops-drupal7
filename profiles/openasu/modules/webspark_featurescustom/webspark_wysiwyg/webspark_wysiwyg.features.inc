@@ -65,7 +65,7 @@ function webspark_wysiwyg_wysiwyg_default_profiles_alter(&$data) {
         EOP button large=btn btn-blue btn-lg
         EOP button full-col-wide=btn btn-blue btn-block
         EOP button large col-wide=btn btn-blue btn-lg btn-block'; /* WAS: '' */
-    $data['panopoly_wysiwyg_text']['settings']['css_path'] = '%b%t/css/innovation-main.css,%b%t/css/buttons.css,%b%t/css/forms.css,%b%t/css/nav.css,%b%t/fonts/roboto/css/roboto.css'; /* WAS: '' */
+    $data['panopoly_wysiwyg_text']['settings']['css_path'] = '%bprofiles/openasu/libraries/innovation_bootstrap/css/bootstrap.min.css,%b%t/css/innovation-main.css,%b%t/css/buttons.css,%b%t/css/forms.css,%b%t/css/nav.css,%b%t/fonts/roboto/css/roboto.css'; /* WAS: '' */
     $data['panopoly_wysiwyg_text']['settings']['css_setting'] = 'self'; /* WAS: 'theme' */
     unset($data['panopoly_wysiwyg_text']['settings']['buttons']['default']['forecolor']);
     unset($data['panopoly_wysiwyg_text']['settings']['buttons']['default']['underline']);
