@@ -34,7 +34,7 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
         <p>Use the WYSIWYG to replace this content with whatever is available in the WYSIWYG UI. Manual HTML editing is possible as well, but not recommended.</p>
       </div>
     </div>
-      <br>',
+      <br>&nbsp;',
     'name' => 'inline_columns_2',
     'content_types' => array(),
   );
@@ -53,7 +53,7 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
         <p>TWO (2) self-contained columns at ALL widths (mobile and desktop). Use the WYSIWYG to replace this content with whatever is available in the WYSIWYG UI. Manual HTML editing is possible as well, but not recommended.</p>
       </div>
     </div>
-      <br>',
+      <br>&nbsp;',
     'name' => 'inline_columns_2_rigid',
     'content_types' => array(),
   );
@@ -76,7 +76,7 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
         <p>Use the WYSIWYG to replace this content with whatever is available in the WYSIWYG UI. Manual HTML editing is possible as well, but not recommended.</p>
       </div>
     </div>
-      <br>',
+      <br>&nbsp;',
     'name' => 'inline_columns_3',
     'content_types' => array(),
   );
@@ -99,7 +99,7 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
         <p>Use the WYSIWYG to replace this content with whatever is available in the WYSIWYG UI. Manual HTML editing is possible as well, but not recommended.</p>
       </div>
     </div>
-      <br>',
+      <br>&nbsp;',
     'name' => 'inline_columns_3_rigid',
     'content_types' => array(),
   );
@@ -126,7 +126,7 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
           <p><strong>Col 4 -- IMPORTANT: </strong>Feel free to delete any of the content you put here, but take care to not delete any of the column HTML tags while editing. This is difficult to do within the Wysiwyg editor UI, but very easy to break when editing the HTML manually.</p>
         </div>
       </div>
-      <br>',
+      <br>&nbsp;',
     'name' => 'inline_columns_4',
     'content_types' => array(),
   );
@@ -153,7 +153,7 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
           <p>Floats to 2 cols x 2 rows under 931px.</p><p><strong>Col 4 -- IMPORTANT: </strong>Feel free to delete any of the content you put here, but take care to not delete any of the column HTML tags while editing. This is difficult to do within the Wysiwyg editor UI, but very easy to break when editing the HTML manually.</p>
         </div>
       </div>
-      <br>',
+      <br>&nbsp;',
     'name' => 'inline_columns_4_half',
     'content_types' => array(),
   );
@@ -180,7 +180,7 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
           <p><strong>Col 4 -- IMPORTANT: </strong>Feel free to delete any of the content you put here, but take care to not delete any of the column HTML tags while editing. This is difficult to do within the Wysiwyg editor UI, but very easy to break when editing the HTML manually.</p>
         </div>
       </div>
-      <br>',
+      <br>&nbsp;',
     'name' => 'inline_columns_4_rigid',
     'content_types' => array(),
   );
@@ -215,7 +215,7 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
           <p>Converts to 3 cols x 2 rows under 931px wide. Delete this same text and create your own content. Quisque tempus viverra neque in auctor. Aliquam feugiat venenatis ullamcorper. Sed ac rhoncus enim, ac luctus justo. Etiam elementum, neque id commodo tristique, quam est mattis tellus, non semper.</p>
         </div>
       </div>
-      <br>',
+      <br>&nbsp;',
     'name' => 'inline_columns_6',
     'content_types' => array(),
   );
@@ -275,7 +275,7 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
           <p>Small icons, etc.</p>
         </div>
       </div>
-      <br>',
+      <br>&nbsp;',
     'name' => 'inline_columns_12',
     'content_types' => array(),
   );
