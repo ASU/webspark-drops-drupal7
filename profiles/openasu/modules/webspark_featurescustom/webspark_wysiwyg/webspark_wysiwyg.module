@@ -84,3 +84,11 @@ function webspark_wysiwyg_filter_default_formats_alter(&$data) {
   buttton[style|class],hr';
   }
 }
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function webspark_wysiwyg_form_wysiwyg_profile_form_alter(&$form, &$form_state, $form_id) {
+  // Allows for longer CSS file settings for subtheme sites where the %t token doesn't inherit parent
+  $form['css']['css_path']['#maxlength'] = 512;
+}
