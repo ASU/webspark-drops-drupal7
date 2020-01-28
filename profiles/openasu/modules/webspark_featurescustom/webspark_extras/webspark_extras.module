@@ -124,3 +124,26 @@ function webspark_extras_form_update_manager_update_form_alter(&$form, &$form_st
     );
   }
 }
+
+/**
+ * Implements hook_webform_select_options_info()
+ */
+function webspark_extras_webform_select_options_info() {
+  $items = array();;
+  $items['campuses_local'] = array(
+    'title' => t('ASU Campuses - Local'),
+    'options callback' => 'webform_options_campuses_local',
+    'file' => 'includes/webform.options.inc',
+  );
+  $items['campuses_local_online'] = array(
+    'title' => t('ASU Campuses - Local + Online'),
+    'options callback' => 'webform_options_campuses_local_online',
+    'file' => 'includes/webform.options.inc',
+  );
+  $items['campuses_all'] = array(
+    'title' => t('ASU Campuses - ALL'),
+    'options callback' => 'webform_options_campuses_all',
+    'file' => 'includes/webform.options.inc',
+  );
+  return $items;
+}
