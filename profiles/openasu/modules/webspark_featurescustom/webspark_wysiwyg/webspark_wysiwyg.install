@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * Adds new multi-column WYSIWYG templates for use inside the WYSIWYG.
+ */
+
+function webspark_wysiwyg_update_7000(&$sandbox) {
+  features_rebuild(array('webspark_wysiwyg' => array('wysiwyg_template')));
+}

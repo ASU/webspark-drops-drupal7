@@ -1,0 +1,58 @@
+/**
+ * Added styling for WYSIWYG Template created Bootstrap columns
+ */
+
+.wysiwyg-cols > .wysiwyg-cols-first {
+  padding-left: 0;
+}
+.wysiwyg-cols > .wysiwyg-cols-last {
+  padding-right: 0;
+}
+
+/**
+ * TinyMCE only styling for column visibility
+ */
+body.mceContentBody .wysiwyg-cols {
+  border: 1px dashed #F392A8;
+}
+
+body.mceContentBody .wysiwyg-cols .column {
+  border: 1px dashed #e0e0e0;
+}
+
+@media (max-width: 991px) {
+  .wysiwyg-cols > div:first-child {
+    padding-left: 0;
+  }
+  .wysiwyg-cols > div:last-child {
+    padding-right: 0;
+  }
+}
+
+@media (min-width: 931px) {
+  body#mceTemplatePreview.mceContentBody .wysiwyg-cols .wysiwyg-widen-me:after {
+    content: " -- \01F60C  -- All columns in a row.";
+  }
+}
+
+@media (max-width: 930px) {
+  .wysiwyg-cols-2-base div:last-of-type,
+  .wysiwyg-cols-3-base div:not(.wysiwyg-cols-first),
+  .wysiwyg-cols-4-base div:not(.wysiwyg-cols-first),
+  .wysiwyg-cols-4-half div:nth-of-type(3n),
+  .wysiwyg-cols-6 div:nth-of-type(4n),
+  .wysiwyg-cols-12 div:nth-of-type(7n) {
+    clear: both;
+    padding-left: 0;
+  }
+  .wysiwyg-cols-3 div:not(.wysiwyg-cols-last),
+  .wysiwyg-cols-4-base div:not(.wysiwyg-cols-last),
+  .wysiwyg-cols-4-half div:nth-of-type(2n),
+  .wysiwyg-cols-6 div:nth-of-type(3n),
+  .wysiwyg-cols-12 div:nth-of-type(6n) {
+    padding-right: 0;
+  }
+  body#mceTemplatePreview.mceContentBody .wysiwyg-cols .wysiwyg-widen-me:after {
+    content: " -- \01F632  -- Too narrow to see all columns in a row. WIDEN ME!";
+  }
+}
