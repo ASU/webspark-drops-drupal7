@@ -20,18 +20,20 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
     'content_types' => array(),
   );
   $templates['inline_columns_2'] = array(
-    'title' => 'Two inline columns',
+    'title' => 'Two inline columns fluid',
     'description' => 'Inserts a single row of TWO (2) self-contained Bootstrap columns. Columns disappear under 931px wide. NOTE: Dashed column and row guides only appear in the TinyMCE WYSIWYG interface for editing guidance',
     'weight' => 1,
     'fid' => 0,
     'body' => '<div class="row row-full wysiwyg-cols wysiwyg-cols-2 wysiwyg-cols-2-base">
       <div class="column col-xs-12 col-sm-6 wysiwyg-cols-first">
-        <h3>Two column base - C1 Sample column title</h3>
-        <p>Delete this sample text and create your own content for this column. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel odio purus. Aenean ut leo bibendum, cursus ligula bibendum, lobortis erat. </p>
+        <h2 class="wysiwyg-widen-me">Two columns fluid</h2>
+        <p>Delete this sample text and create your own content for this column.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel odio purus. Aenean ut leo bibendum, cursus ligula bibendum, lobortis erat. </p>
       </div>
       <div class="column col-xs-12 col-sm-6 wysiwyg-cols-last">
         <h3>Col 2 RECOMMENDED - Use the WYSIWYG editor.</h3>
-        <p>Use the WYSIWYG to replace this content with whatever is available in the WYSIWYG UI. Manual HTML editing is possible as well, but not recommended.</p>
+        <p>Use the WYSIWYG to replace this content with whatever is available in the WYSIWYG UI.</p>
+        <p>Manual HTML editing is possible as well, but not recommended.</p>
       </div>
     </div>
       <br>&nbsp;',
@@ -39,18 +41,20 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
     'content_types' => array(),
   );
   $templates['inline_columns_2_rigid'] = array(
-    'title' => 'Two inline columns RIGID',
+    'title' => 'Two inline columns fixed',
     'description' => 'Inserts a single row of TWO (2) self-contained columns at ALL widths.',
     'weight' => 2,
     'fid' => 0,
     'body' => '<div class="row row-full wysiwyg-cols wysiwyg-cols-2 wysiwyg-cols-2-rigid">
       <div class="column col-xs-6 wysiwyg-cols-first">
-        <h3>Two column RIGID - Sample title</h3>
-        <p>TWO (2) self-contained columns at ALL widths (mobile and desktop). Delete this sample text and create your own content for this column. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel odio purus. Aenean ut leo bibendum, cursus ligula bibendum, lobortis erat. </p>
+        <h3>Two fixed columns at ALL widths</h3>
+        <p><strong>Mobile and desktop keeps all columns.</strong></p>
+        <p>Delete this sample text and create your own content for this column. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel odio purus. Aenean ut leo bibendum, cursus ligula bibendum, lobortis erat. </p>
       </div>
       <div class="column col-xs-6 wysiwyg-cols-last">
-        <h3>Col 2 RECOMMENDED - Use the WYSIWYG editor.</h3>
-        <p>TWO (2) self-contained columns at ALL widths (mobile and desktop). Use the WYSIWYG to replace this content with whatever is available in the WYSIWYG UI. Manual HTML editing is possible as well, but not recommended.</p>
+        <h3>RECOMMENDED - Use the WYSIWYG editor!</h3>
+        <p>Use the WYSIWYG to replace this content with whatever is available in the WYSIWYG UI.</p>
+        <p>Manual HTML editing is possible as well, but not recommended.</p>
       </div>
     </div>
       <br>&nbsp;',
@@ -58,13 +62,13 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
     'content_types' => array(),
   );
   $templates['inline_columns_3'] = array(
-    'title' => 'Three inline columns',
+    'title' => 'Three inline columns fluid',
     'description' => 'Inserts a single row of THREE (3) self-contained Bootstrap columns. Columns disappear under 931px. NOTE: Dashed column and row guides only appear in the TinyMCE WYSIWYG interface for editing guidance',
     'weight' => 3,
     'fid' => 0,
     'body' => '<div class="row row-full wysiwyg-cols wysiwyg-cols-3 wysiwyg-cols-3-base">
       <div class="column col-xs-12 col-sm-4 wysiwyg-cols-first">
-        <h4>Three Columns - Sample title</h4>
+        <h2 class="wysiwyg-widen-me">Three columns fluid</h2>
         <p>Inserts a single row of THREE (3) self-contained Bootstrap columns. Sample text to replace with your own content for this column. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel odio purus. Aenean ut leo bibendum, cursus ligula bibendum, lobortis erat. </p>
       </div>
       <div class="column col-xs-12 col-sm-4">
@@ -72,7 +76,7 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
         <p>Columns disappear under 931px. Take care to not delete any of the HTML CONTAINER tags generated by this template while editing your content. This probably will not be an issue for WYSIWYG editing, but it is easy to break the HTML in non-WYSIWYG modes like "Full HTML".</p>
       </div>
       <div class="column col-xs-12 col-sm-4 wysiwyg-cols-last">
-        <h4>Col 3 RECOMMENDED - Use the WYSIWYG in these columns.</h4>
+        <h4>RECOMMENDED - Use the WYSIWYG in these columns.</h4>
         <p>Use the WYSIWYG to replace this content with whatever is available in the WYSIWYG UI. Manual HTML editing is possible as well, but not recommended.</p>
       </div>
     </div>
@@ -81,13 +85,13 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
     'content_types' => array(),
   );
   $templates['inline_columns_3_rigid'] = array(
-    'title' => 'Three inline columns RIGID',
+    'title' => 'Three inline columns fixed',
     'description' => 'Inserts a single row of THREE (3) self-contained columns at ALL browser widths. NOTE: Dashed column and row guides only appear in the TinyMCE WYSIWYG interface for editing guidance',
     'weight' => 4,
     'fid' => 0,
     'body' => '<div class="row row-full wysiwyg-cols wysiwyg-cols-3 wysiwyg-cols-3-rigid">
       <div class="column col-xs-4 wysiwyg-cols-first">
-        <h4>Three column RIGID - Sample title</h4>
+        <h4>Three columns fixed - Sample title</h4>
         <p>A single row of THREE (3) self-contained columns at ALL browser widths. Sample text to replace with your own content for this column. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel odio purus. Aenean ut leo bibendum, cursus ligula bibendum, lobortis erat. </p>
       </div>
       <div class="column col-xs-4">
@@ -104,14 +108,14 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
     'content_types' => array(),
   );
   $templates['inline_columns_4'] = array(
-    'title' => 'Four inline columns',
+    'title' => 'Four inline columns fluid',
     'description' => 'Inserts a single row of FOUR (4) Bootstrap columns. Columns disappear under 931px wide. NOTE: Dashed column and row guides only appear in the TinyMCE WYSIWYG interface for editing guidance.',
     'weight' => 5,
     'fid' => 0,
     'body' => '
       <div class="row row-full wysiwyg-cols wysiwyg-cols-4 wysiwyg-cols-4-base">
         <div class="column col-xs-12 col-sm-3 wysiwyg-cols-first">
-          <h4>Four columns - Sample title</h4>
+          <h2 class="wysiwyg-widen-me">Four columns fluid</h2>
           <p>Inserts a single row of FOUR (4) Bootstrap columns. Sample text to replace with your own content for this column. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel odio purus. Aenean ut leo bibendum, cursus ligula bibendum, lobortis erat. </p>
         </div>
         <div class="column col-xs-12 col-sm-3">
@@ -123,7 +127,8 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
           <p>You should be able to use the WYSIWYG to replace this content with whatever is available in the WYSIWYG.</p>
         </div>
         <div class="column col-xs-12 col-sm-3 wysiwyg-cols-last">
-          <p><strong>Col 4 -- IMPORTANT: </strong>Feel free to delete any of the content you put here, but take care to not delete any of the column HTML tags while editing. This is difficult to do within the Wysiwyg editor UI, but very easy to break when editing the HTML manually.</p>
+          <h4>Col 4 Delete me or use me</h4>
+          <p><strong>IMPORTANT: </strong>Feel free to delete any of the content you put here, but take care to not delete any of the column HTML tags while editing. This is difficult to do within the Wysiwyg editor UI, but very easy to break when editing the HTML manually.</p>
         </div>
       </div>
       <br>&nbsp;',
@@ -131,14 +136,14 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
     'content_types' => array(),
   );
   $templates['inline_columns_4_half'] = array(
-    'title' => 'Four inline columns HALF',
+    'title' => 'Four inline columns fluid (hybrid)',
     'description' => 'Inserts a single row of FOUR (4) Bootstrap columns. Floats to 2 cols x 2 rows under 931px. NOTE: The dashed column and row guides only appear in the TinyMCE WYSIWYG interface.',
     'weight' => 6,
     'fid' => 0,
     'body' => '
       <div class="row row-full wysiwyg-cols wysiwyg-cols-4 wysiwyg-cols-4-half">
         <div class="column col-xs-6 col-sm-3 wysiwyg-cols-first">
-          <h4>Four columns Half - Sample title</h4>
+          <h2 class="wysiwyg-widen-me">Four columns fluid (hybrid)</h2>
           <p>Inserts a single row of FOUR (4) Bootstrap columns. Sample text to replace with your own content for this column. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel odio purus. Aenean ut leo bibendum, cursus ligula bibendum, lobortis erat. </p>
         </div>
         <div class="column col-xs-6 col-sm-3">
@@ -158,14 +163,14 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
     'content_types' => array(),
   );
   $templates['inline_columns_4_rigid'] = array(
-    'title' => 'Four inline columns RIGID',
+    'title' => 'Four inline columns fixed',
     'description' => 'Inserts a single row of FOUR (4) Bootstrap columns at ALL browser widths. NOTE: Dashed column and row guides only appear in the TinyMCE WYSIWYG interface for editing guidance',
     'weight' => 6,
     'fid' => 0,
     'body' => '
       <div class="row row-full wysiwyg-cols wysiwyg-cols-4 wysiwyg-cols-4-rigid">
         <div class="column col-xs-3 col-sm-3 wysiwyg-cols-first">
-          <h4>Four Columns RIGID - Sample title</h4>
+          <h4>Four Columns fixed - Sample title</h4>
           <p>A single row of FOUR (4) Bootstrap columns at ALL browser widths. Sample text to replace with your own content for this column. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel odio purus. Aenean ut leo bibendum, cursus ligula bibendum, lobortis erat. </p>
         </div>
         <div class="column col-xs-3">
@@ -185,14 +190,14 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
     'content_types' => array(),
   );
   $templates['inline_columns_6'] = array(
-    'title' => 'Six inline columns HALF',
+    'title' => 'Six inline columns fluid',
     'description' => 'Inserts a single row of SIX (6) Bootstrap columns. Converts to 3 cols x 2 rows under 931px wide. NOTE: Dashed column and row guides only appear in the TinyMCE WYSIWYG interface for editing guidance',
     'weight' => 7,
     'fid' => 0,
     'body' => '
       <div class="row row-full wysiwyg-cols wysiwyg-cols-6">
         <div class="column col-xs-4 col-sm-2 wysiwyg-cols-first">
-          <h4>Six Columns - Sample title</h4>
+          <h3 class="wysiwyg-widen-me">Six columns fluid (hybrid)</h3>
           <p>A single row of SIX (6) Bootstrap columns. Sample text to replace with your own content for this column. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel odio purus. Aenean ut leo bibendum, cursus ligula bibendum, lobortis erat. </p>
         </div>
         <div class="column col-xs-4 col-sm-2">
@@ -220,14 +225,14 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
     'content_types' => array(),
   );
   $templates['inline_columns_12'] = array(
-    'title' => 'Twelve inline columns',
+    'title' => 'Twelve inline columns fluid',
     'description' => 'Inserts a single row of TWELVE (12) self-contained Bootstrap columns. Converts to 6 cols x 2 rows under 931px widths. NOTE: Dashed column and row guides only appear in the TinyMCE WYSIWYG interface for editing guidance',
     'weight' => 8,
     'fid' => 0,
     'body' => '
       <div class="row row-full wysiwyg-cols wysiwyg-cols-12">
         <div class="column col-xs-2 col-sm-1 wysiwyg-cols-first">
-          <h4>12 Cols - Col 1</h4>
+          <h4 class="wysiwyg-widen-me"></h4>
           <p>Converts to 6 cols x 2 rows.</p>
         </div>
         <div class="column col-xs-2 col-sm-1">
@@ -248,11 +253,11 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
         </div>
         <div class="column col-xs-2 col-sm-1">
           <h4>Col 6</h4>
-          <p>Single words</p>
+          <p>Single words. Single words. Single words. </p>
         </div>
         <div class="column col-xs-2 col-sm-1">
           <h4>Col 7</h4>
-          <p>Single words</p>
+          <p>Small icons, etc.</p>
         </div>
         <div class="column col-xs-2 col-sm-1">
           <h4>Col 8</h4>
@@ -260,7 +265,7 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
         </div>
         <div class="column col-xs-2 col-sm-1">
           <h4>Col 9</h4>
-          <p>Small images</p>
+          <p>Small icons, etc.</p>
         </div>
         <div class="column col-xs-2 col-sm-1">
           <h4>Col 10</h4>
@@ -272,7 +277,7 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
         </div>
         <div class="column col-xs-2 col-sm-1">
           <h4>Col 12</h4>
-          <p>Small icons, etc.</p>
+          <p>Small icons, small words, etc.</p>
         </div>
       </div>
       <br>&nbsp;',

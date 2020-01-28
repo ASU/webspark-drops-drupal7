@@ -2,14 +2,6 @@
  * Added styling for WYSIWYG Template created Bootstrap columns
  */
 
-body.mceContentBody .wysiwyg-cols {
-  border: 1px dashed #ddd;
-}
-
-body.mceContentBody .wysiwyg-cols .column {
-  border: 1px dashed #ccc;
-}
-
 .wysiwyg-cols > .wysiwyg-cols-first {
   padding-left: 0;
 }
@@ -21,7 +13,7 @@ body.mceContentBody .wysiwyg-cols .column {
  * TinyMCE only styling for column visibility
  */
 body.mceContentBody .wysiwyg-cols {
-  border: 1px dashed #EEC7C4;
+  border: 1px dashed #F392A8;
 }
 
 body.mceContentBody .wysiwyg-cols .column {
@@ -34,6 +26,12 @@ body.mceContentBody .wysiwyg-cols .column {
   }
   .wysiwyg-cols > div:last-child {
     padding-right: 0;
+  }
+}
+
+@media (min-width: 931px) {
+  body#mceTemplatePreview.mceContentBody .wysiwyg-cols .wysiwyg-widen-me:after {
+    content: " -- \01F60C  -- All columns in a row.";
   }
 }
 
@@ -53,5 +51,8 @@ body.mceContentBody .wysiwyg-cols .column {
   .wysiwyg-cols-6 div:nth-of-type(3n),
   .wysiwyg-cols-12 div:nth-of-type(6n) {
     padding-right: 0;
+  }
+  body#mceTemplatePreview.mceContentBody .wysiwyg-cols .wysiwyg-widen-me:after {
+    content: " -- \01F632  -- Too narrow to see all columns in a row. WIDEN ME!";
   }
 }
