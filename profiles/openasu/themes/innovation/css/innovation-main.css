@@ -39,10 +39,10 @@ div.error label {
 /* =GLOBALS
 -------------------------------------------------------------- */
 html {
-	font-size: 100%;
+  font-size: 100%;
 }
 body {
-	font-size: 1em;
+  font-size: 1em;
   min-width: 320px;
 }
 
@@ -66,8 +66,8 @@ div.pane-menu-tree {
 }
 
 #skip_to_content {
-    position: absolute;
-    left: -9999px;
+  position: absolute;
+  left: -9999px;
 }
 
 #skip_to_content:focus{
@@ -220,45 +220,16 @@ h6, .h6 {
   overflow: hidden;
 }
 
+.header__sitename.element-invisible {
+  white-space: inherit;
+}
+
 .header__sitename a {
   color: #2a2a2a;
 }
 
 #asu_hdr #asu_universal_nav_new .icn {
   box-sizing: content-box;
-}
-
-@media (max-width: 991px) {
-  #header .container {
-    width: 100%;
-  }
-
-  #header > .container .row {
-    margin-left: 0px;
-    margin-right: 0px;
-  }
-
-  #header > .container .row .col-md-12 {
-    padding-left: 0px;
-    padding-right: 0px;
-  }
-
-  #header .container-fluid > .row > .col-md-12 {
-    width: 100%;
-  }
-
-  .header__sitename {
-    font-size: 15px;
-    padding: 12px 15px;
-    color: #FFF;
-    background: #505558;
-    font-weight: 600;
-    line-height: 12px;
-  }
-
-  .header__sitename a {
-    color: #FFF
-  }
 }
 
 /* =STICKY NAV BAR
@@ -349,7 +320,7 @@ table > thead > tr > td {
   font-weight: bold;
 }
 body:not(.page-admin) table > tbody > tr:nth-child(2n+1) {
-	background-color: #F5F5F5;
+  background-color: #F5F5F5;
 }
 
 table > caption + thead > tr:first-child > th,
@@ -367,8 +338,8 @@ table > tbody + tbody {
 
 /* WYSIWYG Bordered table */
 table.bordered {
-	border-bottom: 1px solid #b7b7b7;
-	border-left: 1px solid #b7b7b7;
+  border-bottom: 1px solid #b7b7b7;
+  border-left: 1px solid #b7b7b7;
 }
 table.bordered > thead > tr > th,
 table.bordered > thead > tr > td,
@@ -379,7 +350,7 @@ table.bordered > tfoot > tr > td {
   border-right: 1px solid #b7b7b7;
 }
 table.bordered > tbody > tr:nth-child(2n+1) {
-	background-color: #fff;
+  background-color: #fff;
 }
 table.bordered > caption + thead > tr:first-child > th,
 table.bordered > caption + thead > tr:first-child > td,
@@ -416,12 +387,6 @@ table.bordered > thead:first-child > tr:first-child > td {
 .node-content-callout .col-md-6 img,
 .node-content-callout .col-md-6 .embedded-video {
   margin-top: 22px;
-}
-
-@media (max-width: 768px) {
-  .node-content-callout h2 {
-    font-size: 38px;
-  }
 }
 
 /* =PANELS
@@ -619,51 +584,53 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 -------------------------------------------------------------- */
 
 .alert {
-  margin-top: 30px;
-  padding: 20px;
+  margin: 1em 0;
+  padding: 1em;
+  font-weight: 400;
+}
+
+.alert,
+.alert a {
+  color: #2a2a2a;
+  border-bottom-color: #2a2a2a;
+}
+
+.alert a:hover {
+  color: #d23153;
+  border-bottom-color: #d23153;
+  cursor: pointer;
 }
 
 .alert a.close {
-  font-size: 22px;
+  font-size: 1.25em;
   opacity: 1;
-  color: #fff;
-}
-
-.alert a.close:hover {
-  color: #000;
+  border: none;
 }
 
 .alert-success {
-  background-color: #78BE20;
+  background-color: #ddefc7;
   border-color: #3E7E1F;
 }
 
 .alert-info {
-  background-color: #00A3E0;
+  background-color: #bfe8f7;
   border-color: #006B92;
 }
 
 .alert-danger {
-  background-color: #9e3f5d; /* 75% opacity of official maroon */
+  background-color: #e8d2d9; /* 20% opacity of official maroon */
   border-color: #8C1D40;
 }
 
 .alert-warning {
-  background-color: #FFC627;
-  border-color: #ec5937;
+  background-color: #ffecb8; /* 33% opacity of official maroon */
+  border-color: #8C1D40;
 }
 
-.alert-warning *,
-.alert-warning a.close {
-  color: #000;
-}
-
-.alert-success,
-.alert-info,
-.alert-danger,
-.alert-warning a.close:hover {
-  color: #fff;
-  margin: 1em 0;
+.alert:not([class*="alert-"]),
+div[class='alert alert-block'] { /* Catch-all for default alert class */
+  background-color: #f7f7f7;
+  border-color: #ccc;
 }
 
 /* Devel debugging */
@@ -698,7 +665,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 #top-content #tabs .nav-pills > li.active > a:focus {
   background-color: #8C1D40;
 }
-  /* dropdown items from nav pills */
+/* dropdown items from nav pills */
 #top-content #tabs .nav-pills li.dropdown > ul.dropdown-menu a {
   background-color: rgba(0,0,0,0);
   border-bottom: none;
@@ -801,59 +768,6 @@ ul.help-text li.help-title {
   color: #ad0005;
 }
 
-
-/* =MEDIA QUERIES
--------------------------------------------------------------- */
-
-@media (max-width: 991px) {
-
-  .row .col-sm-6:nth-child(3),
-  .row .col-sm-6:nth-child(5),
-  .row .col-sm-6:nth-child(7) {
-    clear: both;
-  }
-
-}
-
-@media (max-width: 793px) {
-
-  .container-fluid .row {
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .panel-pane.js-lightgraybg,
-  .panel-pane.js-darkgraybg,
-  .panel-pane.pane-bundle-hero,
-  .panel-pane.pane-bundle-banner {
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-
-}
-
-@media (max-width: 480px) {
-
-  table {
-    margin: 24px 0 50px 0;
-  }
-
-  table.tablefield {
-    display: block;
-  }
-
-  img.media-element.pull-right {
-    float: none !important;
-    margin-left: 0;
-  }
-
-  img.media-element.pull-left {
-    float: none !important;
-    margin-right: 0;
-  }
-
-}
-
 /* =100% width fix for Bootstrap limitation
 ----------------------------------------------------- */
 
@@ -910,7 +824,8 @@ ul.help-text li.help-title {
   padding-right: 15px;
 }
 
-/** @TODO - remove these overrides when added to ASU global header/footer CSS */
+/* WEBSPARK-1561 - footer positioning issues */
+/* @TODO - remove these overrides when added to ASU global header/footer CSS */
 #innovation-footer {
   position: relative;
 }
@@ -919,12 +834,6 @@ ul.help-text li.help-title {
 }
 #innovation-footer .footer-menu ul li {
   padding-bottom: 0;
-}
-@media (max-width: 768px)
-{
-  #innovation-footer .footer-menu ul li {
-    padding-bottom: 0.5em;
-  }
 }
 
 
@@ -988,12 +897,13 @@ a.btn:focus,
 #top-content #tabs .nav-pills > li.active > a:focus,
 h4.ui-accordion-header.ui-state-hover,
 h4.ui-accordion-header:focus {
-	 outline: 2px solid #4D90FE;
-	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
-	 box-shadow: 0px 0px 5px  #4D90FE;
+  outline: 2px solid #4D90FE;
+  -webkit-box-shadow: 0px 0px 5px  #4D90FE;
+  box-shadow: 0px 0px 5px  #4D90FE;
 }
 
-/** UI Tabs **/
+/** UI Tabs
+----------------------------------------------------- */
 
 /* fixes for stacked tabs */
 body #content .ui-tabs .ui-tabs-nav li.ui-state-focus a {
@@ -1010,7 +920,86 @@ body #content .ui-tabs .ui-tabs-nav li a {
   clear: both;
 }
 
-/* fixes @media print issues - WEBSPARK-764 */
+/* =MEDIA QUERIES
+-------------------------------------------------------------- */
+
+@media (max-width: 991px) {
+  .row .col-sm-6:nth-child(3),
+  .row .col-sm-6:nth-child(5),
+  .row .col-sm-6:nth-child(7) {
+    clear: both;
+  }
+
+  #header .container {
+    width: 100%;
+  }
+  #header > .container .row {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+  #header > .container .row .col-md-12 {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  #header .container-fluid > .row > .col-md-12 {
+    width: 100%;
+  }
+  .header__sitename {
+    font-size: 15px;
+    padding: 12px 15px;
+    color: #FFF;
+    background: #505558;
+    font-weight: 600;
+    line-height: 12px;
+  }
+  .header__sitename a {
+    color: #FFF
+  }
+  #asu_hdr_title_gen {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 793px) {
+  .container-fluid .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .panel-pane.js-lightgraybg,
+  .panel-pane.js-darkgraybg,
+  .panel-pane.pane-bundle-hero,
+  .panel-pane.pane-bundle-banner {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  #innovation-footer .footer-menu ul li {
+    padding-bottom: 0.5em;
+  }
+  .node-content-callout h2 {
+    font-size: 38px;
+  }
+}
+
+@media (max-width: 480px) {
+  table {
+    margin: 24px 0 50px 0;
+  }
+  table.tablefield {
+    display: block;
+  }
+  img.media-element.pull-right {
+    float: none !important;
+    margin-left: 0;
+  }
+  img.media-element.pull-left {
+    float: none !important;
+    margin-right: 0;
+  }
+}
+
 @media print {
   .megafoot > .row div:not(.megafoot-border) {
     display: none; }
@@ -1026,4 +1015,10 @@ body #content .ui-tabs .ui-tabs-nav li a {
   #innovation-footer {
     position: revert;
   }
+}
+
+/** WEBSPARK-1118 - Temporary footer link fix */
+#innovation-footer .footer-menu ul li a:hover {
+  color: #8C1D40;
+  border-bottom: 1px dotted #8C1D40;
 }

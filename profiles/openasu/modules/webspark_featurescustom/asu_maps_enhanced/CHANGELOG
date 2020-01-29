@@ -1,24 +1,34 @@
-asu_maps_enhanced 7.x-1.5, 2019
--------------------------------
+ASU Enhanced Maps 7.x-1.7, 2019-12-20
+-------------------------------------
+- Switched map to display new ASU GIS map
+- Removed code for Concept3d location form
+- Changed form to allow embed of GIS map
+
+ASU Enhanced Maps 7.x-1.6, 2019-09-12
+--------------------------------------
+- Reverted PHP array notation to array() for PHP 5.3 compatibility
+
+ASU Enhanced Maps 7.x-1.5, 2019-09-04
+-------------------------------------
 - Switched to new API and map URL for Concept3d maps
 - Refactored and adjusted campus coordinate config for new map URL
 - Moved custom utility functions to asu_maps_enhanced.helpers.inc
 - Deprecated functionality which allowed multiple location markers
   to be selected
 
-asu_maps_enhanced 7.x-1.4, 2016-10-31
+ASU Enhanced Maps 7.x-1.4, 2016-10-31
 -------------------------------------
 - added Thunderbird campus as option
 - added 'None' option for better integration with events
 
-asu_maps_enhanced 7.x-1.3, 2016-08-04
+ASU Enhanced Maps 7.x-1.3, 2016-08-04
 -------------------------------------
 - added full interactive map tree functionality, leveraging the jqtree library
 - added modification of asu_maps_enhanced_items tables, to account for longer json_encoded strings
 - added ability to either show or hide map if no locations are selected
 - fixed bug which was breaking form saves with the workbench module
 
-asu_maps_enhanced 7.x-1.2, 2016-02-03
----------------------------
+ASU Enhanced Maps 7.x-1.2, 2016-02-03
+-------------------------------------
 - Added option to select which campus to display
 - Added option to display campus toggle menu above the map

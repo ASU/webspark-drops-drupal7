@@ -21,14 +21,13 @@ function webspark_newsevents_install() {
 }
 
 /**
- * Implements hook_update_N()
+ * Reverts Webspark News + Events
  */
 function webspark_newsevents_update_7001(&$sandbox) {
   features_revert_module('webspark_newsevents');
 }
 
 /**
- * Implements hook_update_N()
  * + Updated ASU Events module feed source XML mappings to match new fields
  */
 function webspark_newsevents_update_7002(&$sandbox) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * webspark_hero.features.defaultconfig.inc
@@ -58,7 +59,7 @@ function webspark_hero_defaultconfig_field_default_fields() {
 </ul>',
       'display' => array(
         'default' => array(
-          'label' => 'above',
+          'label' => 'hidden',
           'module' => 'backgroundfield',
           'settings' => array(),
           'type' => 'backgroundfield_formatter',
@@ -91,6 +92,13 @@ function webspark_hero_defaultconfig_field_default_fields() {
         'active' => 1,
         'module' => 'backgroundfield',
         'settings' => array(
+          'allowed_schemes' => array(
+            'public' => 'public',
+          ),
+          'allowed_types' => array(
+            'image' => 'image',
+          ),
+          'browser_plugins' => array(),
           'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
           'preview_image_style' => 'thumbnail',
           'progress_indicator' => '',
@@ -170,7 +178,7 @@ larger, primary hero text.</li>
           'rows' => 2,
         ),
         'type' => 'text_textarea',
-        'weight' => 2,
+        'weight' => 3,
       ),
     ),
   );
@@ -229,6 +237,7 @@ larger, primary hero text.</li>
       'label' => 'Explore graduate programs button  (recommended)',
       'required' => 0,
       'settings' => array(
+        'absolute_url' => 1,
         'attributes' => array(
           'class' => 'btn btn-blue btn-block',
           'configurable_title' => 0,
@@ -246,6 +255,7 @@ larger, primary hero text.</li>
         ),
         'rel_remove' => 'default',
         'title' => 'required',
+        'title_label_use_field_label' => FALSE,
         'title_maxlength' => 25,
         'title_value' => '',
         'url' => 0,
@@ -260,6 +270,69 @@ larger, primary hero text.</li>
         ),
         'type' => 'link_field',
         'weight' => 5,
+      ),
+    ),
+  );
+
+  // Exported field: 'fieldable_panels_pane-hero-field_webspark_hero_height'.
+  $fields['fieldable_panels_pane-hero-field_webspark_hero_height'] = array(
+    'field_config' => array(
+      'active' => 1,
+      'cardinality' => 1,
+      'deleted' => 0,
+      'entity_types' => array(),
+      'field_name' => 'field_webspark_hero_height',
+      'foreign keys' => array(),
+      'indexes' => array(
+        'value' => array(
+          0 => 'value',
+        ),
+      ),
+      'locked' => 0,
+      'module' => 'list',
+      'settings' => array(
+        'allowed_values' => array(
+          380 => 'Hero',
+          700 => 'Jumbo Hero',
+        ),
+        'allowed_values_function' => '',
+      ),
+      'translatable' => 0,
+      'type' => 'list_integer',
+    ),
+    'field_instance' => array(
+      'bundle' => 'hero',
+      'default_value' => array(
+        0 => array(
+          'value' => 380,
+        ),
+      ),
+      'deleted' => 0,
+      'description' => 'Hero = 380px; Jumbo Hero = 700px',
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+          'module' => 'list',
+          'settings' => array(),
+          'type' => 'list_key',
+          'weight' => 7,
+        ),
+      ),
+      'entity_type' => 'fieldable_panels_pane',
+      'field_name' => 'field_webspark_hero_height',
+      'label' => 'Hero height',
+      'required' => 1,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(
+          'apply_chosen' => 0,
+        ),
+        'type' => 'options_select',
+        'weight' => 2,
       ),
     ),
   );
@@ -313,6 +386,7 @@ larger, primary hero text.</li>
       'label' => 'Other call to action button (alternative)',
       'required' => 0,
       'settings' => array(
+        'absolute_url' => 1,
         'attributes' => array(
           'class' => 'btn btn-primary btn-col-4',
           'configurable_title' => 0,
@@ -330,6 +404,7 @@ larger, primary hero text.</li>
         ),
         'rel_remove' => 'default',
         'title' => 'required',
+        'title_label_use_field_label' => FALSE,
         'title_maxlength' => 25,
         'title_value' => '',
         'url' => 0,
@@ -402,6 +477,7 @@ larger, primary hero text.</li>
       'label' => 'Explore undergraduate programs button (recommended)',
       'required' => 0,
       'settings' => array(
+        'absolute_url' => 1,
         'attributes' => array(
           'class' => 'btn btn-blue btn-block',
           'configurable_title' => 0,
@@ -419,6 +495,7 @@ larger, primary hero text.</li>
         ),
         'rel_remove' => 'default',
         'title' => 'required',
+        'title_label_use_field_label' => FALSE,
         'title_maxlength' => 25,
         'title_value' => '',
         'url' => 0,
@@ -440,19 +517,27 @@ larger, primary hero text.</li>
   // Translatables
   // Included for use with string extractors like potx.
   t('<ul class="help-text">
+<li class="help-title">IMPORTANT!</li>
+<li>This byline field is only for smaller subtitles or bylines included <b>below</b> the 
+larger, primary hero text.</li>
+<li>Enter the primary hero text in the Title text field under "General Settings" section.</li>
+</ul>');
+  t('<ul class="help-text">
 <li class="help-title">Tips & Instructions</li>
 <li>Heroes should be added <strong>only to the top region</strong> of your page.</li>
 <li>Images should be 1170 x 380 px for optimal display.</li>
 <li>When adding a new image, <strong>refresh the page</strong> after saving to view the image.</li>
 </ul>');
-  t('Subtitle, Blurb, or Byline');
   t('Explore graduate programs button  (recommended)');
   t('Explore undergraduate programs button (recommended)');
+  t('Hero = 380px; Jumbo Hero = 700px');
+  t('Hero height');
   t('Hero image');
   t('If you do not add the explore degree buttons, you can optionally add a single call to action button to support the single most important item of the hero message and to drive the user.');
   t('It is recommended to add a button to explore graduate programs.');
   t('It is recommended to add a button to explore undergraduate programs.');
   t('Other call to action button (alternative)');
+  t('Subtitle, Blurb, or Byline');
 
   return $fields;
 }

@@ -13,20 +13,16 @@ function asu_spotlight_install() {
 }
 
 /**
-*Implemenation of hook_update_N()
-*
-*This reverts the feature portion to ensure that the optionset field is added
-**/
+ * Reverts the feature portion to ensure that the optionset field is added
+ */
 function asu_spotlight_update_7001(&$sandbox) {
   features_revert_module('asu_spotlight');
 }
 
 
 /**
-*Implementation of hook_update_N()
-*
-*This update disables the original Panopoly spotlight
-**/
+ *This update disables the original Panopoly spotlight
+ */
 function asu_spotlight_update_7002(&$sandbox) {
   $allowed_panes = variable_get('panels_page_allowed_types', array());
   $allowed_panes['fieldable_panels_pane-spotlight']=0;
@@ -34,9 +30,8 @@ function asu_spotlight_update_7002(&$sandbox) {
 }
 
 /**
-*Implementation of hook_update_N()
-*Eliminates the panopoly spotlight from the list of allowed pane types
-**/
+ * Eliminates the panopoly spotlight from the list of allowed pane types
+ */
 function asu_spotlight_update_7003(&$sandbox) {
 
   //Set the weight heavy, because we're removing the generic spotlight widget
@@ -54,10 +49,7 @@ function asu_spotlight_update_7003(&$sandbox) {
 
 
 /**
- * Implements hook_update_N()
  * Reverts feature to use custom image display type
- *
- * @param $sandbox
  */
 function asu_spotlight_update_7004(&$sandbox) {
   features_revert_module('asu_spotlight');
@@ -86,9 +78,8 @@ function asu_spotlight_update_7007(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
  * + Updates permissions for ASU Spotlight (admin, editor roles)
- **/
+ */
 function asu_spotlight_update_7008(&$sandbox) {
   features_revert_module('asu_spotlight');
 }
@@ -97,7 +88,6 @@ function asu_spotlight_update_7008(&$sandbox) {
  * Implementation of hook_uninstall().
  */
 function asu_spotlight_uninstall() {
-
   // Retrieve the file IDs for default files
   $fids = array(
     'panopoly_widgets_default_spotlight_fid' => variable_get('panopoly_widgets_default_spotlight_fid', NULL),

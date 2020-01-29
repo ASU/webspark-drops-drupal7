@@ -8,7 +8,7 @@
 .row.lightgraybg .column,
 .panel-pane.js-darkgraybg,
 .panel-pane.js-lightgraybg {
-	padding: 42px 0;
+	padding: 2.625em 0;
 }
 
 .js-darkgraybg,
@@ -26,68 +26,77 @@
 
 /* Spacing on rows */
 .row-padding-top {
-	padding-top: 42px !important;	
+	padding-top: 2.625em;
 }
 .row-padding-bottom {
-	padding-bottom: 42px !important;	
+	padding-bottom: 2.625em;
 }
 .space-top-sm {
-	padding-top: 12px;
+	padding-top: 0.75em;
 }
 .space-top-md {
-	padding-top: 30px;
+	padding-top: 1.875em;
 }
 .space-bot-sm {
-	padding-bottom: 12px;
+	padding-bottom: 0.75em;
 }
 .space-bot-md {
-	padding-bottom: 30px;
+	padding-bottom: 1.875em;
 }
-.megafoot .space-bot-md {
-	padding-bottom: 60px;
-}
+.remove-sm-above,
 .remove-6-above {
 	margin-top: -6px !important;
 }
+.remove-med-above,
 .remove-12-above {
 	margin-top: -12px !important;
 }
+.remove-lg-above,
 .remove-28-above {
 	margin-top: -28px !important;
 }
+.remove-xl-above,
 .remove-42-above {
 	margin-top: -42px !important;
 }
+.remove-sm-below,
 .remove-6-below {
 	margin-bottom: -6px !important;
 }
+.remove-med-below,
 .remove-12-below {
 	margin-bottom: -12px !important;
 }
+.remove-lg-below,
 .remove-28-below {
 	margin-bottom: -28px !important;
 }
+.remove-xl-below,
 .remove-42-below {
 	margin-bottom: -42px !important;
 }
 
+.add-margin-med-above,
 .add-margin-12-above {
-	margin-top: 12px;
+	margin-top: 0.75em;
 }
+.add-margin-lg-above,
 .add-margin-28-above {
-	margin-top: 28px;
+	margin-top: 1.75em;
 }
+.add-margin-xl-above
 .add-margin-42-above {
-	margin-top: 42px;
+	margin-top: 2.625em;
 }
+.add-margin-med-below,
 .add-margin-12-below {
-	margin-bottom: 12px;
+	margin-bottom: 0.75em;
 }
+.add-margin-lg-below,
 .add-margin-28-below {
-	margin-bottom: 28px;
+	margin-bottom: 1.75em;
 }
+.add-margin-xl-below,
 .add-margin-42-below {
-	margin-bottom: 42px;
+	margin-bottom: 2.625em;
 }
-
-

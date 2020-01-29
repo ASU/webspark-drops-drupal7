@@ -61,7 +61,7 @@ function _webform_edit_email($component) {
     '#size' => 60,
     '#maxlength' => 127,
     '#weight' => 0,
-    '#attributes' => ($component['value'] == '[current-user:mail]' && count(form_get_errors()) == 0) ? array('disabled' => TRUE) : array(),
+    '#attributes' => ($component['value'] == '[current-user:mail]' && !form_get_errors()) ? array('disabled' => TRUE) : array(),
     '#id' => 'email-value',
   );
   $form['user_email'] = array(
@@ -234,14 +234,7 @@ function theme_webform_email($variables) {
       $element['#attributes'][$property] = $element['#' . $property];
     }
   }
-
-  // Add form-control class if display is not inline
-  $email_classes = array('form-text', 'form-email');
-  if ($element["#title_display"] !== "inline") {
-    $email_classes[] = 'form-control';
-  }
-
-  _form_set_class($element, $email_classes);
+  _form_set_class($element, array('form-text', 'form-email'));
 
   return '<input' . drupal_attributes($element['#attributes']) . ' />';
 }

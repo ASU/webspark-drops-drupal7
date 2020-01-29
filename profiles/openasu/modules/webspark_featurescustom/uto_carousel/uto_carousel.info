@@ -1,8 +1,8 @@
-name = ASU Webspark Carousel
+name = Webspark Carousel
 description = "Adds the option of inserting an ASU-themed, content carousel into web pages. They are formatted text blocks and links, and differ from slideshows in that they place their text NEXT to images. Powered by Flexslider and jQuery."
 core = 7.x
 package = ASU Webspark
-version = 7.x-1.9
+version = 7.x-1.10
 project = uto_carousel
 dependencies[] = ctools
 dependencies[] = defaultconfig

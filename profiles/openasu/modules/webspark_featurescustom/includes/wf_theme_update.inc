@@ -118,6 +118,7 @@ function _webspark_featurescustom_webstandards_theme_config($theme) {
   $modules[] = 'webspark_panels_styles';
   $modules[] = 'webspark_banner';
   $modules[] = 'webspark_breadcrumbs';
+//  $modules[] = 'webspark_callout';
   $modules[] = 'webspark_content_callout';
   $modules[] = 'webspark_easyadmin';
   $modules[] = 'webspark_hero';
@@ -147,7 +148,7 @@ function _webspark_featurescustom_webstandards_theme_config($theme) {
     }
   }
   else {
-    watchdog('theme update', 'All modules already enabled for %theme theme, so no module_enable action taken.', array('%theme' => $theme));
+    watchdog('theme update', 'All modules already enabled for %theme theme, so no module_enable action taken.', array('%theme' => $theme), WATCHDOG_NOTICE);
   }
 
   // WEBSPARK-448, 509
@@ -156,7 +157,7 @@ function _webspark_featurescustom_webstandards_theme_config($theme) {
     variable_set('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT);
     variable_set('asu_brand_header_template', ASU_BRAND_HEADER_TEMPLATE_DEFAULT);
     variable_set('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT);
-    watchdog('theme update', 'Updated ASU Header values for %theme theme based on ASU Brand module settings', array('%theme' => $theme));
+    watchdog('theme update', 'Updated ASU Header values for %theme theme based on ASU Brand module settings', array('%theme' => $theme), WATCHDOG_NOTICE);
   }
 
   // WEBSPARK-610 - Re-apply original block configs to ensure their proper location
@@ -261,6 +262,22 @@ function _webspark_featurescustom_alt_theme_config($theme = NULL){
       )
     )
     ->execute();
+
+  // WEBSPARK-1551 - Move System Help block to help region if it exists (defaults to content)
+  $regions = array_keys(system_region_list($theme));
+  $help_region = (in_array('help', $regions)) ? 'help' : 'content';
+  $help_weight = ($help_region == 'help') ? 5 : -50;
+  db_update('block')
+    ->fields(array(
+      'region' => $help_region,
+      'status' => '1',
+      'weight' => $help_weight,
+    ))
+    ->condition('theme', $theme)
+    ->condition('module', 'system')
+    ->condition('delta', 'help')
+    ->execute();
+
   // Log changes
   drupal_set_message('Disabled Innovation-themed blocks for <em>' . t($theme) .
     '</em> theme. Go to the <a href="">blocks configuration</a> page to re-enable these blocks if desired.');

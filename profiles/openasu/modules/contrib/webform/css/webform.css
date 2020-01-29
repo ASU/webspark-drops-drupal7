@@ -34,6 +34,38 @@ html.js input.webform-calendar {
 .webform-container-inline.webform-component-textarea .form-textarea-wrapper {
   display: inline-block;
 }
+
+/* Reset so that these appear the same as the label elements they replace. */
+fieldset.fieldset-invisible,
+fieldset.fieldset-invisible > legend {
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: inherit;
+  position: static;
+  color: inherit;
+  height: auto;
+  width: auto;
+  font-family: inherit;
+  text-indent: 0;
+  line-height: inherit;
+  text-shadow: unset;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+fieldset.fieldset-invisible > legend {
+  font-weight: bold;
+  font-size: 0.929em;
+}
+/* This margin causes the fieldset to be too big. */
+fieldset.fieldset-invisible > div > div.form-item:last-child,
+fieldset.fieldset-invisible > table {
+  margin-bottom: 0;
+}
+
 .webform-component-textarea .grippie {
   display: block;
 }

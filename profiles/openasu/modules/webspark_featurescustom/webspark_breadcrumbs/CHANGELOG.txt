@@ -1,0 +1,4 @@
+Webspark Breadcrumbs 7.x-1.1, 2019-11-04
+--------------------------------------
+* Added academic and college-based exceptions to breadcrumb capitalization rules.
+* Added this CHANGELOG.txt file.

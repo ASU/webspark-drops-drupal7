@@ -238,7 +238,7 @@ function hook_webform_submission_actions($node, $submission) {
  * presented when the webform is displayed to that user. To allow multiple
  * drafts, implement this alter function to set the $sid to NULL, or use your
  * application's business logic to determine whether a new draft or which of
- * he pre-existing drafts should be presented.
+ * the pre-existing drafts should be presented.
  *
  * @param int $sid
  *   The id of the most recent submission to be presented for editing. Change

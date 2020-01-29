@@ -44,11 +44,18 @@ function mega_footer_block_view($delta = '') {
       // Logo
       $logo = variable_get('mega_footer_unit_logo', '');
       $check = variable_get('mega_footer_logo_alt', NULL);
-      $alt = (!empty($check)) ? $check : "";
+      $alt = (!empty($check)) ? check_plain($check) : "";
       if ($logo != '' && $logo != NULL) {
         $file = file_load($logo);
         $file_url = file_create_url($file->uri);
-        $footer_mark .= (!empty($file_url)) ? "<img src='$file_url' alt='$alt' title='$alt'/>" : "";
+        if (!empty($file_url)) {
+          $logo_link = variable_get('mega_footer_logo_link', '');
+          $logo_link_prefix = ($logo_link !== '') ? '<a href="' . $logo_link . '">' : '';
+          $logo_link_suffix = ($logo_link !== '') ? '</a>' : '';
+          $footer_mark .= '<div id="mega-footer-logo-wrapper">' . $logo_link_prefix
+            . "<img src='$file_url' alt='$alt' title='$alt'/>"
+            . $logo_link_suffix . "</div>";
+        }
       }
 
       // Title & Description
@@ -81,8 +88,7 @@ function mega_footer_block_view($delta = '') {
       $footer_mark .= (!empty($check)) ? "<p><a class='contact-link' href='" . 
           $check . "'>Contact us</a></p>": "";
 
-      // Social Media icons
-      // Open external check?
+      // Social Media icons - Open in new window/tab? setting check
       $external = (theme_get_setting('social_media_exit') == 1) ? 'target="_new" ' : '';
 
       $footer_mark .= "<ul class='dgtl-mkting-101'>";
@@ -174,7 +180,9 @@ function mega_footer_block_configure($delta = '') {
       '#title' => t('Choose an endorsed ASU logo image'),
       '#default_value' => variable_get('mega_footer_unit_logo', ''),
       '#upload_location' => 'public://',
-      '#description' => t('Only ASU-endorsed logos may be used.'),
+      '#description' => t("IMPORTANT: 1) Only ASU-endorsed logos may be used.
+      2) For best results, upload a logo with no margins around its edge and no wider than 330px.
+      Logo images that don't meet those technical requirements may experience distortion at different resolutions."),
     );
     $form['custom_logo']['mega_footer_logo_alt'] = array(
       '#type' => 'textfield',
@@ -183,6 +191,24 @@ function mega_footer_block_configure($delta = '') {
       '#description' => t('Alternative text is used by screen readers,
       search engines, and when the image cannot be loaded. By adding alt text
       you improve accessibility and search engine optimization.'),
+      '#states' => array(
+        'required' => array(
+          ':input[name="mega_footer_unit_logo[fid]"]' => array(
+            '!value' => 0,
+          ),
+        ),
+        'optional' => array(
+          ':input[name="mega_footer_unit_logo[fid]"]' => array(
+            'value' => 0,
+          ),
+        ),
+      ),
+    );
+    $form['custom_logo']['mega_footer_logo_link'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Logo URL'),
+      '#default_value' => variable_get('mega_footer_logo_link', ''),
+      '#description' => t('Adding a URL here turns the logo into a link. Absolute URL required.'),
     );
 
     // Unit information (text)
@@ -391,8 +417,9 @@ function mega_footer_block_save($delta = '', $edit = array()) {
     variable_set('mega_footer_unit_custom_social_media_3_name', $edit['mega_footer_unit_custom_social_media_3_name']);
     variable_set('mega_footer_unit_custom_social_media_3_logo', $edit['mega_footer_unit_custom_social_media_3_logo']);
     // Custom logo
-    variable_set('mega_footer_logo_alt', $edit['mega_footer_logo_alt']);
     variable_set('mega_footer_unit_logo', $edit['mega_footer_unit_logo']);
+    variable_set('mega_footer_logo_alt', $edit['mega_footer_logo_alt']);
+    variable_set('mega_footer_logo_link', $edit['mega_footer_logo_link']);
     // Contribute button
     variable_set('mega_footer_contribute_button', $edit['mega_footer_contribute_button']);
     variable_set('mega_footer_contribute_link', $edit['mega_footer_contribute_link']);
@@ -442,10 +469,18 @@ function mega_footer_block_validate(&$form, $form_state) {
   if ($delta == 'mega_footer') {
     foreach ($form_state['values'] as $haystack => $straw) {
       if (!is_array($straw)) {
+        // Logo alt is required if file is uploaded.
+        if ($haystack == 'mega_footer_unit_logo') {
+          if ($straw !== 0 && empty($form_state['values']['mega_footer_logo_alt'])) {
+            form_set_error('mega_footer_logo_alt', t('The logo alt value is required for the attached logo.'));
+          }
+        }
         if (stristr($haystack, '_link') && !empty($straw)) {
           $absolute = TRUE;
           $error_message_addendum = " The URL must also be an absolute URL (i.e. begin with an http:// or https://).";
-          if ($haystack == 'mega_footer_unit_contact_us_link' || $haystack == 'mega_footer_contribute_link' || $haystack == 'mega_footer_unit_rss_link') {
+          if ($haystack == 'mega_footer_unit_contact_us_link'
+            || $haystack == 'mega_footer_contribute_link'
+            || $haystack == 'mega_footer_unit_rss_link') {
             $absolute = FALSE;
             $error_message_addendum = "";
           }

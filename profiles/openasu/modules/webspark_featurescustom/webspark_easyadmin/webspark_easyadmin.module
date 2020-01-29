@@ -10,12 +10,18 @@
  */
 function webspark_easyadmin_form_alter(&$form, &$form_state, $form_id) {
   // Add help text to panopoly video widget and media widget video upload fields
-  if ($form_id == 'fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form') {
-    $form['field_video_file']['und'][0]['#description'] = t('Supply the URL of a video, such as http://youtu.be/a8jzvh5Wb00  or  http://vimeo.com/21654482');
+  $init_message = '<p class="help-block">Supply the URL of a video, such as http://youtu.be/a8jzvh5Wb00 or http://vimeo.com/21654482.<br />Supported internet media providers: <strong>YouTube Vimeo</strong>.</p>';
+
+  if ($form_id === 'fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form') {
+    $form['field_video_file']['und'][0]['#description'] = t($init_message);
   } 
-  if($form_id == "media_internet_add_upload"){
-  	$form['embed_code']['#description'] = t('Supply the URL of a video, such as http://youtu.be/a8jzvh5Wb00 or http://vimeo.com/21654482.<br />Supported internet media providers: <strong>YouTube Vimeo</strong>.');
-  } 
+  if ($form_id === "media_internet_add_upload") {
+    $message = $init_message . '<p class="help-block"><strong>NOTICE</strong>:<br />' .
+      '* This is only for embedding remotely hosted videos.<br />' .
+      '* It will not work with the ASU Carousel (aka uto_carousel) ' .
+      'or any other Webspark widgets that only output &lt;img&gt; tags.</p>';
+    $form['embed_code']['#description'] = t($message);
+  }
 }
 
 /**

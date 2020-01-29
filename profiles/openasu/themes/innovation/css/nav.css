@@ -80,9 +80,9 @@
 .pane-system-main-menu,
 .pane-menu-tree {
 	border-top: 8px solid #8C1D40;
-	margin-top: 24px;
-	margin-bottom: 48px;
-	padding: 30px;
+	margin-top: 1.5em;
+	margin-bottom: 3em;
+	padding: 2em;
 	position: relative;
 	z-index: 0;
 }
@@ -100,9 +100,18 @@
 	width: 100%;
 	z-index: -1;
 }
+
+/* WEBSPARK-856 - Apply max width and custom margin/padding to LH menu in 100% wide regions */
+.container .row-full .pane-menu-tree,
+.container .row-full .pane-system-main-menu {
+	max-width: 1140px;
+	margin: 2em auto 0 auto;
+	padding: 2em 1em 1em 1em;
+}
+
 .pane-system-main-menu h2,
 .pane-menu-tree h2 {
-	font-size: 21px;
+	font-size: 1.3125em;
 }
 .pane-system-main-menu ul.menu li.expanded,
 .pane-system-main-menu ul.menu li.collapsed,
@@ -124,10 +133,10 @@
 }
 .pane-system-main-menu ul.menu li li a,
 .pane-menu-tree ul.menu li li a {
-	padding-left: 22px;
+	padding-left: 1.375em;
 }
 .pane-menu-tree ul.menu li li li a {
-	padding-left: 44px;
+	padding-left: 2.75em;
 }
 .pane-system-main-menu ul.menu li a,
 .pane-menu-tree ul.menu li a {
@@ -135,11 +144,11 @@
 	border-top: 1px solid #d7d7d7;
 	border-bottom: none;
 	display: block;
-	padding: 10px 5px;
+	padding: 0.625em 0.3125em;
 	color: #8C1D40;
 	font-weight: 200;
 	text-decoration: none;
-	font-size: 18px;
+	font-size: 1.125em;
 }
 .pane-system-main-menu ul.menu li.active a,
 .pane-system-main-menu ul.menu li a.active,

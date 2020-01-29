@@ -2,6 +2,6 @@ name = Webspark Easy Admin
 description = "Simplifies and improves the admin UI in Webspark by modifying contrib module/profile settings (Panopoly, etc.)"
 core = 7.x
 package = ASU Webspark
-version = 7.x-1.1
+version = 7.x-1.2
 project = webspark_easyadmin
 

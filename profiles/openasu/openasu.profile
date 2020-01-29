@@ -128,6 +128,30 @@ function openasu_blockupdates_for_theme($theme) {
       ->condition('theme', $theme)
       ->execute();
   }
+  // Add System module's help block to the Innovation theme
+  $help_bid = db_select('block', 'b')
+    ->fields('b', array('bid'))
+    ->condition('delta', 'help')
+    ->condition('theme', $theme)
+    ->condition('module', 'system')
+    ->execute()
+    ->fetchField();
+
+  // WEBSPARK-1551 - Move System Help block to help region if it exists (defaults to content)
+  // @TODO - remove duplicate code from wf_theme_update.inc
+  $regions = array_keys(system_region_list($theme));
+  $help_region = (in_array('help', $regions)) ? 'help' : 'content';
+  $help_weight = ($help_region == 'help') ? 5 : -50;
+  db_update('block')
+    ->fields(array(
+      'region' => $help_region,
+      'status' => '1',
+      'weight' => $help_weight,
+    ))
+    ->condition('bid', $help_bid)
+    ->condition('theme', $theme)
+    ->execute();
+
   watchdog(__FUNCTION__, 'Updated block settings for %theme theme', array('%theme' => $theme));
 }
 

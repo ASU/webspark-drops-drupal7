@@ -23,6 +23,9 @@
   max-width: 1170px;
   margin: auto;
 }
+.megafoot .space-bot-md { /* from webspark_panels_styles */
+  padding-bottom: 3.75em;
+}
 .megafoot h2 {
   margin-bottom: 0.75em;
   font-size: 1.3125em;
@@ -111,6 +114,10 @@
   padding-bottom: 2.5em;
   background-color: #e5e5e5;
   width: 100%;
+}
+.megafoot #mega-footer-org-logo {
+    max-width: 330px;
+    margin-top: 1em;
 }
 
 .little-foot-nav > li > a {

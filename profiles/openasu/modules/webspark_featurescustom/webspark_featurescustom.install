@@ -52,8 +52,7 @@ function webspark_featurescustom_update_dependencies() {
 }
 
 /**
- * Implements hook_update_N()
- * + Enables ASU Webspark Carousel module for all Webspark users
+ * Enables ASU Webspark Carousel module for all Webspark users
  */
 function webspark_featurescustom_update_7000(&$sandbox) {
   if (!module_exists('uto_carousel')) {
@@ -62,8 +61,7 @@ function webspark_featurescustom_update_7000(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
- * + Spokane - Updates content callout feature's file assets setting in DB
+ * Spokane - Updates content callout feature's file assets setting in DB
  */
 function webspark_featurescustom_update_7001(&$sandbox) {
   if (module_exists('webspark_content_callout')) {
@@ -93,7 +91,6 @@ function webspark_featurescustom_update_7001(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N() -- Ferndale release
  * + Increases the number of stored Drupal log entries to higher threshold if currently set to 1000 rows or lower.
  * + Rebuilds Webspark WYSIWYG feature after adding lead paragraph styling
  * + Forces enabling of Webspark Extras module (has HTTPS code now)
@@ -117,7 +114,6 @@ function webspark_featurescustom_update_7002(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N() -- Billings release
  * + Disable and uninstall RespondJS module in preparation for removal
  */
 
@@ -138,8 +134,7 @@ function webspark_featurescustom_update_7003(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N() -- Sioux Falls release
- * + Add administrative theme viewing to the editor role.
+ * Add administrative theme viewing to the editor role.
  */
 function webspark_featurescustom_update_7004(&$sandbox) {
   // WEBSPARK-862 - Add administrative theme viewing to the editor role.
@@ -152,8 +147,7 @@ function webspark_featurescustom_update_7004(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N() -- Pillsbury release
- * + Update header to 4.5 with different logic
+ * Update header to 4.5 with different logic
  */
 function webspark_featurescustom_update_7005(&$sandbox) {
   watchdog('webspark_updates', "7004 - Update header to 4.5 with different logic");
@@ -169,7 +163,6 @@ function webspark_featurescustom_update_7005(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N() -- Colorado release
  * + Set theme to default Drupal theme if old ASU theme is current default.
  * + Enable Missing Module contrib module to help clean up new Drupal 7.52 errors.
  *   See Colorado release notes for more information.
@@ -212,10 +205,8 @@ function webspark_featurescustom_update_7006(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N() --
  * Since the location of the asu_dir module has changed, rebuild the registry, then
  * enable asu_dirs suite module, and dir panel module.
- * @param $sandbox
  */
 function webspark_featurescustom_update_7008(&$sandbox) {
   registry_rebuild();
@@ -226,10 +217,8 @@ function webspark_featurescustom_update_7008(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
  * -- Reverts Panopoly Page feature to apply missing settings to the Landing Page content type
  * -- Adds ASU Spotlight permissions to editor role.
- * @param $sandbox
  */
 function webspark_featurescustom_update_7009(&$sandbox) {
   // Create the new landing page content type.
@@ -256,7 +245,6 @@ function webspark_featurescustom_update_7009(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
  * -- Manually disables and uninstall the Modernizr module (since the code was removed)
  */
 function webspark_featurescustom_update_7010(&$sandbox) {
@@ -308,9 +296,7 @@ function webspark_featurescustom_update_7010(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N().
  * + Update Panopoly magic settings to Webspark-first values if values haven't been set.
- * @param $sandbox
  */
 function webspark_featurescustom_update_7011(&$sandbox) {
   // Panopoly Magic settings for Webspark set (form is at /admin/panopoly/settings/panopoly_magic)
@@ -339,9 +325,7 @@ function webspark_featurescustom_update_7011(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N().
  * + Update jQuery to v1.12.2 for default themes (not also set as admin_theme)
- * @param $sandbox
  */
 function webspark_featurescustom_update_7012(&$sandbox) {
 
@@ -397,9 +381,7 @@ function webspark_featurescustom_update_7012(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N().
  * + Disable and uninstall ASU GSA, Google Appliance modules.
- * @param $sandbox
  */
 function webspark_featurescustom_update_7013(&$sandbox) {
   if (module_exists('asu_gsa') || module_exists('google_appliance')) {
@@ -415,8 +397,7 @@ function webspark_featurescustom_update_7013(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
- * - Rebuild Panopoly Widgets feature to update widget categories.
+ * + Rebuild Panopoly Widgets feature to update widget categories.
  */
 function webspark_featurescustom_update_7014(&$sandbox) {
   $features = array(
@@ -437,6 +418,18 @@ function webspark_featurescustom_update_7014(&$sandbox) {
   features_rebuild(array(
     'panopoly_widgets' => array(
        'field_base', 'field_instance',
+    )
+  ));
+}
+
+/**
+ * + Rebuild Panopoly Widgets feature to update widget categories.
+ */
+function webspark_featurescustom_update_7015(&$sandbox) {
+  features_revert_module('webspark_wysiwyg');
+  features_rebuild(array(
+    'panopoly_wysiwyg' => array(
+      'wysiwyg'
     )
   ));
 }
