@@ -28,6 +28,18 @@ function asu_rfi_js_alter(&$javascript) {
 }
 
 /**
+ * Implements hook_preprocess_block()
+ */
+function asu_rfi_preprocess_block(&$variables) {
+  $block = $variables['block'];
+
+  if ($block->delta == 'YOURBLOCK') {
+    $variables['title_attributes_array']['class'][] = 'YOURCLASS';
+  }
+  dpm($block, __FUNCTION__);
+}
+
+/**
  * Implements hook_preprocess_page().
  */
 // Send data transaction variable dataLayer to GTM JS object.

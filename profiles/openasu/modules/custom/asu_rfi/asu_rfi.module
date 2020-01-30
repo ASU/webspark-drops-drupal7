@@ -193,7 +193,7 @@ function asu_rfi_block_info() {
 }
 
 /**
- * Implements hook_block_info().
+ * Implements hook_block_view().
  *
  * @param string $delta
  * @param array $multi_id (for Multiblock)
@@ -432,7 +432,7 @@ function asu_rfi_get_block_instance_settings($multi_id = NULL, $endpoint_build =
   $block_instance_settings = array();
   if (!$endpoint_build) {
     $block_instance_settings['programs'] = variable_get('asu_rfi_form_block_programs' . $multi_id, array());
-    //Below line added by Archana
+    // Below line added by Archana
     $block_instance_settings['form_type'] = variable_get('asu_rfi_form_block_type' . $multi_id, NULL);
     $block_instance_settings['grad_programs'] = variable_get('asu_rfi_form_block_grad_programs' . $multi_id, NULL);
   }
