@@ -1,3 +1,21 @@
+Webspark 1.70.8 (Dime Box), 2020-xx-xx
+---------------------------------------------
+- Web standards components in Webspark
+
+  * Innovation (innovation) - v1.16
+    - Added horizontal rule tag (<hr>) to list of WYSIWYG acceptable elements
+  * Webspark Extras - v1.7,
+    Webspark Featurescustom - v1.9
+    - Added pre-populated ASU campuses select lists for the Webform module
+  * Webspark Megamenu (webspark_megamenu) - v1.12,
+    Innovation (innovation) - v1.16
+    - Button styling now available for LH menu items via link edit menu
+  * Webspark Panels Styles (webspark_panels_styles) - v1.6
+    - Fixed syntax error in .add-margin-xl-above CSS selector rule.
+  * Webspark WYSIWYG (webspark_wysiwyg) - v1.9
+    - Added Bootstrap columns functionality to the WYSIWYG editor via WYSIWYG Templates and the "Insert
+      WYSIWYG Templates Content" button.
+
 Webspark 1.70.7 (Zipperlandville), 2020-01-08
 ---------------------------------------------
 * Webspark Panels Styles (webspark_panels_styles) - v1.5
