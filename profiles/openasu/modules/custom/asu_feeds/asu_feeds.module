@@ -143,9 +143,9 @@ function theme_asu_feeds_example_career_table($vars) {
 
     // Assign the row data.
     $rows[] = array(
-      array('data' => $career->careerDataOnetTitle . $bright . $green , 'align' => 'left'),
-      array('data' => $career->careerDataGrowth, 'align' => 'left'),
-      array('data' => $career->careerDataSalary, 'align' => 'left'),
+      array('data' => $career->careerDataOnetTitle . $bright . $green , 'class' => 'career-data-td'),
+      array('data' => $career->careerDataGrowth, 'class' => 'career-data-td'),
+      array('data' => $career->careerDataSalary, 'class' => 'career-data-td'),
     );
 
   }
