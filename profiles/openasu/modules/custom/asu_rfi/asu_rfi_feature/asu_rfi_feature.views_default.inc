@@ -782,6 +782,10 @@ function asu_rfi_feature_views_default_views() {
   background-color: #fff;
   text-transform: none !important;
   margin-bottom: 1em;
+  padding-top: 0;
+}
+.view-asu-rfi-submissions-report .attachment fieldset.collapsible .fieldset-legend {
+  position: relative;
 }
 .view-asu-rfi-submissions-report .view-header .questions {
   background: url(/misc/menu-expanded.png) 5px 65% no-repeat;
