@@ -123,9 +123,6 @@ function asu_rfi_post_to_middleware($data, $type) {
       'campus' => $campus,
       'location' => $location,
     );
-
-    // Build default submission for email
-    $body = json_encode($submission_data);
   }
 
   if ($type === ASU_RFI_PROSPECT_LEVEL_GRAD) {
@@ -174,6 +171,9 @@ function asu_rfi_post_to_middleware($data, $type) {
       'campusSelection' => $campus,
     );
   }
+
+  // Build default email body for UNDERGRAD and GRADUATE submission
+  $body = json_encode($submission_data);
 
   // Alter Online campus submission data
   if (strtolower($location) === "online") {
@@ -302,7 +302,7 @@ function asu_rfi_post_to_middleware($data, $type) {
       $message_final = 'WAITING - MF submission will be submitted 1) when the student completes
       the form, or 2) it is resubmitted by either a cron job or a manual submission.';
     } else { // Other connectivity issue?
-      $message_final = 'CANCELLED - Submission #' . $nid_info . ' to ' . $url . ' 
+      $message_final = 'CANCELLED - Submission #' . $nid_info . ' to ' . $url . '
        due to ASU network access restrictions.';
       if (isset($node_wrapper->field_rfi_error_message)) {
         $node_wrapper->field_rfi_error_message->set($message_final);
