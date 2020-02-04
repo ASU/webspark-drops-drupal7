@@ -468,7 +468,11 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
   // form text field to select option
   if ($form['#id'] == 'views-exposed-form-asu-rfi-submissions-report-page') {
     $form_types = array('' => ' - All -');
-    $form_types_query = db_query('SELECT DISTINCT field_rfi_form_type_value FROM {field_data_field_rfi_form_type}');
+    $form_types_query = db_select('field_data_field_rfi_form_type', 'ft')
+      ->fields('ft', array('field_rfi_form_type_value'))
+      ->distinct()
+      ->execute();
+
     foreach ($form_types_query as $form_types_options) {
       $form_types[$form_types_options->field_rfi_form_type_value] = $form_types_options->field_rfi_form_type_value;
     }
@@ -832,7 +836,7 @@ function asu_rfi_cron() {
     $queue_3 = DrupalQueue::get('asu_rfi_failed_leads_queue');
 
     // Get asu_rfi node submissions that have failed at least once.
-    $results = _asu_rfi_get_unpassed_submissions(TRUE, $expired);
+    $results = _asu_rfi_get_unpassed_submissions(TRUE);
 
     // Add failed leads to the cron jobs queue
     if (isset($results['node'])) {
@@ -1348,8 +1352,7 @@ function _asu_rfi_get_program_codes($result_nodes, $data_type) {
   $degreeMappings = _asu_rfi_get_degree_field_mappings(); // Get degree mappings to grab content type specific values
   $program_nids = array_keys($result_nodes);
   $programs = entity_load('node', $program_nids);
-  $programs = reset($programs);
-  $programs = (array) $programs;
+  $programs = (array) (reset($programs));
   /** @noinspection PhpUnusedLocalVariableInspection */
   $desiredProg = array(
     'code' => $programs[$degreeMappings['field_academic_plan']][LANGUAGE_NONE]['0']['value'],
