@@ -1349,16 +1349,27 @@ function _asu_rfi_get_program_results($items) {
  * @return array
  */
 function _asu_rfi_get_program_codes($result_nodes, $data_type) {
+
+  if ($data_type !== 'programs' && $data_type !== 'desiredProg') {
+    flogger('asu_rfi', '@data_type is not a valid type of program code data to request.',
+      array('@data_type' => $data_type), WATCHDOG_WARNING);
+    return array();
+  }
+
   $degreeMappings = _asu_rfi_get_degree_field_mappings(); // Get degree mappings to grab content type specific values
   $program_nids = array_keys($result_nodes);
   $programs = entity_load('node', $program_nids);
   $programs = (array) (reset($programs));
   /** @noinspection PhpUnusedLocalVariableInspection */
+  $code = (isset($programs[$degreeMappings['field_academic_plan']][LANGUAGE_NONE]['0']['value']))
+    ? $programs[$degreeMappings['field_academic_plan']][LANGUAGE_NONE]['0']['value'] : '';
   $desiredProg = array(
-    'code' => $programs[$degreeMappings['field_academic_plan']][LANGUAGE_NONE]['0']['value'],
-    'vid' => $programs['vid'],
-    'title' => $programs['title'],
-    'locations' => $programs[$degreeMappings['field_degree_campus']][LANGUAGE_NONE],
+    'code' => $code,
+    'vid' => (isset($programs['vid'])) ? $programs['vid'] : '',
+    'title' => (isset($programs['title'])) ? $programs['title'] : '',
+    'locations' => (isset($programs[$degreeMappings['field_degree_campus']][LANGUAGE_NONE]))
+      ? $programs[$degreeMappings['field_degree_campus']][LANGUAGE_NONE]
+      : '',
   );
   $out = ${$data_type};
   return $out;
