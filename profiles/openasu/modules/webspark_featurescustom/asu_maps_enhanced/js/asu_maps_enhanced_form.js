@@ -6,202 +6,42 @@
  *
  * @author Colton Testamarck ( colt@asu.edu )
  */
-(function ($) {
-    Drupal.behaviors.asu_maps_enhanced_form = {
-        attach: function (context, settings) {
+(function($, React, ReactDOM, AsuGisFeaturePicker) {
+  Drupal.behaviors.asu_maps_enhanced_form = {
+    attach: function(context, settings) {
+      if (settings.asu_maps_enhanced_form != null) {
+        var configs = settings.asu_maps_enhanced_form;
+        var test = document.getElementById(configs.form_field_id);
+        var map_items = configs.map_items;
+        var saved = {};
 
-            if (settings.asu_maps_enhanced_form != null) {
-                var configs = settings.asu_maps_enhanced_form;
-                var data = JSON.parse(configs.tree);
-                var tree_div = $(configs.form_field_id);
-                var map_items = array();
-                var map_field = $('#map_items_hidden textarea');
-
-                if (configs.map_items != null) {
-                    map_items = JSON.parse(configs.map_items);
-                }
-
-                //data needs to be array at top level
-                data = [data];
-
-                if (tree_div.length > 0) {
-                    // Build Department Hierarchy tree list for display in block
-                    tree_div.tree({
-                        closedIcon: $('<span tabindex="0" class="fa fa-plus-square"></span>'),
-                        openedIcon: $('<span tabindex="0" class="fa fa-minus-square"></span>'),
-                        data: data,
-                        // First level open
-                        autoOpen: 0,
-                        selectable: true,
-                        keyboardSupport: false,
-                        // Assign dept_id attribute to each tree <li>
-                        onCreateLi: function (node, $li) {
-
-                            var id = null;
-
-                            if (node.hasOwnProperty('id')) {
-                                id = node.id;
-                            } else if (node.hasOwnProperty('catId')) {
-                                id = node.catId;
-                            }
-
-                            if (id != null) {
-                                $li.attr('id', id);
-                            }
-
-                            //$li.attr('dept_id', node.dept_id);
-                            $li.find('.glyphicon').attr('name', node.name);
-
-                            if (id != 0) {
-                                if (!node.hasChildren()) {
-                                    $li.find('.jqtree-element').prepend('<span tabindex="0" class="jqtree-folder-icon fa fa-bookmark" name="' + node.name + '"></span>');
-                                }
-
-                                $li.find('.jqtree-element').append('<input class="asu-maps-enhanced-check" type="checkbox"></input>');
-                            }
-                        }
-                    });
-                }
-
-
-                for (var i = 0; i < map_items.length; i++) {
-                    var item = map_items[i];
-
-                    if (item.hasOwnProperty('id')) {
-                        $('#' + item.id + '>div .asu-maps-enhanced-check').click();
-                    } else if (item.hasOwnProperty('catId') && !item.hasOwnProperty('id')) {
-                        $('#' + item.catId + '>div .asu-maps-enhanced-check').click();
-                    }
-                }
-
-                $('.asu-maps-enhanced-check').change(function () {
-                    var parent = $(this).closest('li');
-                    var node = tree_div.tree('getNodeByHtmlElement', parent);
-
-
-                    if ($(this).is(':checked')) {
-
-                        if (asu_maps_enhanced_containsObject(node, map_items) == -1) {
-                            asu_maps_enhanced_insertObject(node, map_items);
-                            map_field.val(JSON.stringify(map_items));
-                        }
-
-                    } else {
-                        var index = asu_maps_enhanced_containsObject(node, map_items);
-
-                        if (index != -1) {
-                            map_items.splice(index, 1);
-                            map_field.val(JSON.stringify(map_items));
-                        }
-                    }
-                });
-
-                $(document).on('input', '#map-height-field input', function (event) {
-
-                    var data = $(this).val();
-
-                    if (!asu_maps_enhanced_isInt(data)) {
-                        $(this).val('');
-                    } else {
-                        if ($(this).val() < 425 || $(this).val() > 1100) {
-                            $('.height-valid').remove();
-                            $('<span class="height-valid invalid-style" >Invalid</span>').insertAfter('#map-height-field input');
-                        } else {
-                            $('.height-valid').remove();
-                            $('<span class="height-valid valid-style" >Valid</span>').insertAfter('#map-height-field input');
-                        }
-                    }
-                });
-            }
+        // stringify the saved items to
+        if (map_items[0] && map_items[0].hasOwnProperty('parent')) {
+          saved = map_items[0];
         }
+
+        console.log(saved, 'THE CONFIGS');
+
+        console.log(test, 'THE TEST ELEMENT');
+
+        var props = {
+          layers: configs.tree,
+          onChange: function(val) {
+            var text = document.querySelector('#asu_map_enhanced textarea');
+
+            console.log(text, 'THE TEXTFIELD');
+
+            text.value = '[' + val + ']';
+          },
+          selected: saved
+        };
+
+
+
+        if (test) {
+          ReactDOM.render(React.createElement(AsuGisFeaturePicker, props), test);
+        }
+      }
     }
-
-    function asu_maps_enhanced_isInt(value) {
-        return !isNaN(value) &&
-            parseInt(Number(value)) == value && !isNaN(parseInt(value, 10));
-    }
-
-    function asu_maps_enhanced_containsObject(obj, list) {
-
-        for (i = 0; i < list.length; i++) {
-
-            if (obj.hasOwnProperty('id')) {
-                if (obj.id == list[i].id) {
-                    return i;
-                }
-            } else if (obj.hasOwnProperty('catId') && !list[i].hasOwnProperty('id')) {
-                if (obj.catId == list[i].catId) {
-                    return i;
-                }
-            }
-        }
-
-        return -1;
-    }
-
-    function asu_maps_enhanced_insertObject(obj, list) {
-
-        var newnode = {};
-        var thetype = asu_maps_enhanced_get_type(obj);
-
-        newnode.item_type = thetype;
-
-        if (obj.hasOwnProperty('catId')) {
-            newnode.catId = obj.catId;
-        }
-
-        if (obj.hasOwnProperty('id')) {
-            newnode.id = obj.id;
-        }
-
-        if (obj.hasOwnProperty('lat')) {
-            newnode.lat = obj.lat;
-        }
-
-        if (obj.hasOwnProperty('level')) {
-            newnode.level = obj.level;
-        }
-
-        if (obj.hasOwnProperty('lng')) {
-            newnode.lng = obj.lng;
-        }
-
-        if (obj.hasOwnProperty('mapId')) {
-            newnode.mapId = obj.mapId;
-        }
-
-        if (obj.hasOwnProperty('name')) {
-            newnode.name = obj.name;
-        }
-
-        if (obj.hasOwnProperty('private')) {
-            newnode.private = obj.private;
-        }
-
-        // remove any location nodes from the list if they exist,
-        // and uncheck the box
-        if (newnode.item_type == 'location') {
-            for (var i = 0; i < list.length; i++) {
-
-                if (list[i].item_type == 'location') {
-                    var removed = list.splice(i, 1);
-                    var selector = '#' + removed[0].id + ' input';
-                    $(selector).prop('checked', false);
-                }
-            }
-        }
-
-        list.push(newnode);
-    }
-
-    function asu_maps_enhanced_get_type(obj) {
-        if (obj.hasOwnProperty('id')) {
-            return 'location';
-        } else {
-            return 'category';
-        }
-    }
-
-}(jQuery));
-
-
+  };
+})(jQuery, React, ReactDOM, AsuGisFeaturePicker);

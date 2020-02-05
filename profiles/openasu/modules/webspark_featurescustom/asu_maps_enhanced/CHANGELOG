@@ -1,3 +1,11 @@
+ASU Enhanced Maps 7.x-1.8
+-------------------------
+- Added new ASU Maps React widget which will save a JSON-encoded location
+  instead of an embed
+- Includes React 16.12 in a vendor directory of the module, which is loaded for rendering
+  the admin widget
+- Moved default map height configuration to a global Drupal variable
+
 ASU Enhanced Maps 7.x-1.7, 2019-12-20
 -------------------------------------
 - Switched map to display new ASU GIS map

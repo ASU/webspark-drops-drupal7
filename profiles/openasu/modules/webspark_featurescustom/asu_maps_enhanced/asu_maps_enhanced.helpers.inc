@@ -1,51 +1,58 @@
 <?php
 
 function asu_maps_enhanced_get_default_settings() {
-  $map_settings = array(
-    'display_campus_select' => 'NO',
-    'campus' => 'NONE',
+  $map_settings = [
     'name' => 'maps_enhanced_settings',
     'map_height' => 642,
-    'hide_map' => 'YES',
-    'campus_coords' => asu_maps_enhanced_get_campus_coords()
-  );
+  ];
 
   return $map_settings;
-
 }
 
-function asu_maps_enhanced_get_campus_coords() {
-  return array(
-    "THUNDERBIRD" => "mc/33.6224937,-112.1847479?z/17",
-    "POLY" => "mc/33.30463351165877,-111.67764695106507?z/16",
-    "DOWNTOWN" => "mc/33.4517422046421,-112.06978201586912?z/16",
-    "WEST" => "mc/33.60560202626335,-112.16131285054018?z/16",
-    "RESEARCH" => "mc/33.34149389022663,-111.89817340740967?z/16",
-    "SKYSONG" => "mc/33.46387500000001,-111.92400399999997?z/17",
-    "HAVASU" => "mc/34.472362999999994,-114.32183099999997?z/18",
-    "TEMPE" => "mc/33.42184849843031,-111.9283177883301?z/15"
-  );
-}
-
-/***
- * Get proper YES/NO value from the
- *
+/**
+ * Get the GIS map layers from API endpoint
  */
-function asu_maps_enhanced_get_select_value($item, $key) {
+function asu_maps_enhanced_get_layers() {
+  $tree = NULL;
 
-  $defaults = asu_maps_enhanced_get_default_settings();
-
-  if (!isset($item[$key])) {
-    return $defaults[$key];
+  if ($cache = cache_get('asu_maps_enhanced_gis_layer_tree')) {
+    $tree = drupal_json_decode($cache->data);
   }
-
-  if ($item[$key] !== 'NO' && $item[$key] !== '0') {
-    $value = ($item[$key]) ? 'YES' : 'NO';
-
-    return $value;
-  }
+  // Create content and cache if no cache available
   else {
-    return 'NO';
-  }
-}
 
+    $url = 'https://' . ASU_MAPS_ENHANCED_GIS_HOST . ASU_MAPS_ENHANCED_GIS_LAYERS_PATH;
+    $request = drupal_http_request($url);
+
+    if ($request->code == 200) {
+      $data = drupal_json_decode($request->data);
+
+      $layers = $data['operationalLayers'];
+
+      foreach ($layers as &$layer) {
+        $layer['value'] = $layer['id'];
+        $layer['label'] = $layer['title'];
+
+        unset($layer['visibleLayers']);
+
+        $layer['children'] = $layer['layers'];
+        unset($layer['layers']);
+
+
+        foreach ($layer['children'] as &$sublayer) {
+          unset($sublayer['popupInfo']);
+          $sublayer['value'] = $layer['id'] . '_' . $sublayer['id'];
+          $sublayer['label'] = $sublayer['name'];
+        }
+      }
+
+      $cached_copy = drupal_json_encode($layers);
+      $expire_date = time() + 3600 * ASU_MAPS_ENHANCED_TREE_CACHE_DURATION;
+      cache_set('asu_maps_enhanced_gis_layer_tree', $cached_copy, 'cache', $expire_date);
+
+      $tree = $layers;
+    }
+  }
+
+  return $tree;
+}
