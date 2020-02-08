@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 /**
  * @file
  * webspark_wysiwyg.features.wysiwyg_template.inc
@@ -12,11 +12,67 @@ function webspark_wysiwyg_wysiwyg_template_default_templates() {
   $templates['explore_programs_box'] = array(
     'title' => 'Explore Our Programs Box',
     'description' => 'Replace the button links and text with your own.',
-    'weight' => 0,
+    'weight' => -10,
     'fid' => 0,
     'format' => 'wysiwyg',
     'body' => '<div class="panel explore-programs"><div class="panel-body"><h3>Explore Our Programs</h3><p><a href="https://webapp4.asu.edu/programs/t5/undergrad" class="btn btn-blue btn-block">Undergraduate programs</a> <a href="https://webapp4.asu.edu/programs/t5/graduate/false" class="btn btn-blue btn-block">Graduate programs</a></p></div></div>',
     'name' => 'explore_programs_box',
+    'content_types' => array(),
+  );
+  $templates['alert_success'] = array(
+    'title' => 'Alert type:Success',
+    'description' => 'Inserts a success-styled alert element (without the "Close" X)',
+    'weight' => -3,
+    'fid' => 0,
+    'body' => '<div class="alert alert-block alert-success">
+        <h2>Success alert title</h2>
+        <p>Inserts a line break after this element as well. Delete it if you don\'t plan on adding any content after this.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel odio purus. Aenean ut leo bibendum, cursus ligula bibendum, lobortis erat. </p>
+      </div>
+      <br>&nbsp;',
+    'name' => 'alert_success',
+    'content_types' => array(),
+  );
+  $templates['alert_warning'] = array(
+    'title' => 'Alert type:Warning',
+    'description' => 'Inserts a warning-styled alert element (without the "Close" X)',
+    'weight' => -2,
+    'fid' => 0,
+    'body' => '<div class="alert alert-block alert-warning">
+        <h2>Warning alert title</h2>
+        <p>Inserts a line break after this element so the WYSIWYG can easily insert content after it. Delete it if you don\'t plan on adding any content after this.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel odio purus. Aenean ut leo bibendum, cursus ligula bibendum, lobortis erat. </p>
+      </div>
+      <br>&nbsp;',
+    'name' => 'alert_warning',
+    'content_types' => array(),
+  );
+  $templates['alert_danger'] = array(
+    'title' => 'Alert type:Danger',
+    'description' => 'Inserts a danger/error alert styled element (without the "Close" X).',
+    'weight' => -1,
+    'fid' => 0,
+    'body' => '<div class="alert alert-block alert-danger">
+        <h2>Danger alert title</h2>
+        <p>Inserts a line break after this element as well. Delete it if you don\'t plan on adding any content after this.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel odio purus. Aenean ut leo bibendum, cursus ligula bibendum, lobortis erat. </p>
+      </div>
+      <br>&nbsp;',
+    'name' => 'alert_danger',
+    'content_types' => array(),
+  );
+  $templates['alert_info'] = array(
+    'title' => 'Alert type:Info',
+    'description' => 'Inserts a info/notice-styled alert element (without the "Close" X).',
+    'weight' => 0,
+    'fid' => 0,
+    'body' => '<div class="alert alert-block alert-info">
+        <h2>Info alert title</h2>
+        <p>Inserts a line break after this element as well. Delete it if you don\'t plan on adding any content after this.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel odio purus. Aenean ut leo bibendum, cursus ligula bibendum, lobortis erat. </p>
+      </div>
+      <br>&nbsp;',
+    'name' => 'alert_info',
     'content_types' => array(),
   );
   $templates['inline_columns_2'] = array(
