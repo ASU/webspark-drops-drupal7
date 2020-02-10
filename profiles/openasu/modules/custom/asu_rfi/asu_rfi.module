@@ -909,8 +909,9 @@ function _asu_rfi_cron_repost_data($data) {
   $student_type = (count($node->field_rfi_prospect_level) !== 0)
     ? $node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value']
     : '';
-  if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
-      || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
+  if (!empty($student_type)
+    && ($node->field_rfi_submission_status !== 'SF_Completed' && $node->field_rfi_submission_status !== 'Form_Completed_No_SF')
+    && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
     _asu_rfi_process_middleware_data($node, array(), $student_type);
   }
 }
@@ -964,9 +965,12 @@ function asu_rfi_action_info() {
  * @param $context
  */
 function asu_rfi_bulk_submit_action(&$node, $context) {
-  $student_type = (isset($node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value'])) ? $node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value'] : '';
-  if (!empty($student_type) && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD
-      || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
+  $student_type = (isset($node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value']))
+    ? $node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value']
+    : '';
+  if (!empty($student_type)
+    && ($node->field_rfi_submission_status !== 'SF_Completed' && $node->field_rfi_submission_status !== 'Form_Completed_No_SF')
+    && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
     _asu_rfi_process_middleware_data($node, array(), $student_type);
   }
 }
