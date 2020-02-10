@@ -19,14 +19,15 @@ function asu_rfi_admin_settings() {
   $auth_key = variable_get('asu_rfi_form_auth_key');
   if (!empty($auth_key) && strlen($auth_key) === 32) { // All SHAs should be 32 characters long.
     $stage = array(
-      'message' => 'A middleware authentication code has already been added to this site.'
+      'message' => 'A middleware authentication code has been configured for this site.'
       . ' (NOTE: This does not validate that the code works.)',
       'css' => 'messages status',
     );
   } else {
     $stage = array(
-      'message' => 'RFI submissions will not be posted to Salesforce via Middleware'
-        . ' unless a valid authentication code has been added.'
+      'message' => 'WARNING: All undergrad (and many graduate) submissions'
+        . ' will not be successfully posted to Salesforce via Middleware'
+        . ' unless a valid authentication code has been configured.'
         . ' <a href="https://webforms.asu.edu/content/access-rfi-middleware-request">Request an'
         . ' authentication key</a>',
       'css' => 'messages warning',
@@ -55,9 +56,9 @@ function asu_rfi_admin_settings() {
     '#options' => $form_modes,
     '#default_value' => variable_get('asu_rfi_form_mode'),
     '#attributes' => array('class' => array('asu-rfi-admin-field')),
-    '#description' => t("Specify if the forms are in Test mode or Live mode. '
-     . 'Note: This is a sitewide configuration and will affect all forms. Only '
-     . 'site admins can view the forms if they are in Test mode."),
+    '#description' => t("Specify if the forms are in Test mode or Live mode. "
+     . "Note: This is a sitewide configuration and will affect all forms. Only "
+     . "site admins can view the forms if they are in Test mode."),
     '#required' => TRUE,
   );
   $form['asu_rfi_form_access']['expired_nodes'] = array(
@@ -72,8 +73,8 @@ function asu_rfi_admin_settings() {
     '#markup' => '<p>If "Report page actions + cron jobs" are selected below (HIGHLY'
       . ' recommended), your expired RFI submissions (' . $expiration_range
       . ' past their initial submission date) will be automatically queued for resubmission (or deletion)'
-      . ' every time a cron job runs <a href="/admin/config/system/cron">at periodic'
-      . ' intervals</a>.</p>'
+      . ' every time <a href="/admin/config/system/cron">a cron job runs</a> at periodic'
+      . ' intervals.</p>'
       . ' <p>If you want to manually manage the resubmission (or deletion) of RFI submissions,'
       . ' select "<a href="/admin/reports/asu-rfi-submissions-report">Report page</a>'
       . ' actions ONLY". (NOT recommended). (<strong>NOTE</strong>: If a cron job has'
