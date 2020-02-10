@@ -1,7 +1,21 @@
 <?php /** @noinspection PhpUnused */
 
 /**
- * Callback service function sent for success posting to SF
+ * @file asu_rfi.backpost.inc
+ *
+ * Locally updates submission data (initiated by middleware POSTS) after an action takes place
+ * on the middleware.
+ * webforms.asu.edu does this every five minutes.
+ * If the watchdog starts filling with errors every five minutes, there's a disconnect between
+ * the data on webforms.asu.edu and this site. Contact UTO web consulting at drupal.asu/.edu
+ * for assistance.
+ *
+ * Callback service functions below all fired by authenticated middleware POSTs
+ * to update the local status and error_message fields in RFI submission nodes.
+ */
+
+/**
+ * Successful posting to Salesforce
  * @param $hash
  * @param $nid
  */
@@ -9,7 +23,7 @@ function asu_rfi_success_post($hash, $nid) {
   header('Content-Type: text/json');
   $mw_auth_key = variable_get('asu_rfi_form_auth_key');
   $real_hash = sha1($mw_auth_key . '+' . $nid);
-  if ($real_hash == $hash) {
+  if ($real_hash === (string) $hash) {
     $node = node_load($nid);
     $node_wrapper = entity_metadata_wrapper('node', $node);
     if (isset($node_wrapper->field_rfi_submission_status)) {
@@ -24,12 +38,12 @@ function asu_rfi_success_post($hash, $nid) {
     print('Success');
   } else {
     http_response_code(403);
-    watchdog('asu_rfi', __FUNCTION__ . ' - Not a valid Hash / Nid combination', array(), WATCHDOG_ERROR);
+    flogger('asu_rfi', __FUNCTION__ . ' - Not a valid Hash / Nid combination', array(), WATCHDOG_ERROR);
   }
 }
 
 /**
- * Post failed submissions update
+ * Failed submission to Salesforce
  * @param $hash
  * @param $nid
  * @throws \Exception
@@ -38,7 +52,7 @@ function asu_rfi_fail_post($hash, $nid) {
   header('Content-Type: text/json');
   $mw_auth_key = variable_get('asu_rfi_form_auth_key');
   $real_hash = sha1($mw_auth_key . '+' . $nid);
-  if ($real_hash == $hash) {
+  if ($real_hash === (string) $hash) {
     $request_body = @file_get_contents('php://input');
     $error_message = $request_body;
 
@@ -64,12 +78,13 @@ function asu_rfi_fail_post($hash, $nid) {
     print('Posted error message');
   } else {
     http_response_code(403);
-    watchdog('asu_rfi', __FUNCTION__ . ' - Not a valid Hash / Nid combination', array(), WATCHDOG_ERROR);
+    flogger('asu_rfi', __FUNCTION__ . ' - Not a valid Hash / Nid combination', array(), WATCHDOG_ERROR);
   }
 }
 
 
-/** Test submissions post data update
+/**
+ * Test submissions update
  * @param $hash
  * @param $nid
  */
@@ -77,7 +92,7 @@ function asu_rfi_test_post($hash, $nid) {
   header('Content-Type: text/json');
   $mw_auth_key = variable_get('asu_rfi_form_auth_key');
   $real_hash = sha1($mw_auth_key . '+' . $nid);
-  if ($real_hash == $hash) {
+  if ($real_hash === (string) $hash) {
     $request_body = @file_get_contents('php://input');
     $error_message = $request_body;
 
@@ -95,6 +110,9 @@ function asu_rfi_test_post($hash, $nid) {
     cache_clear_all($cid, 'cache_field');
     print('Posted success message for test submission');
   } else {
+    http_response_code(403);
+    flogger('asu_rfi', __FUNCTION__ . ' - Not a valid hash/nid combination for nid @nid',
+      array('@nid' => $nid), WATCHDOG_ERROR);
     print('Not a valid Hash / Nid combination');
   }
 }
