@@ -1222,7 +1222,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-body">
-            Your birthday is important! Not only will we send you a birthday message, 
+            Your birthday is important! Not only will we send you a birthday message,
             it helps us keep your information secure as a unique identifier for your online submission.
           </div>
           <div class="modal-footer">
@@ -1406,14 +1406,15 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
     form_set_error('last_name', t('Last name field accepts only plain text.'));
   }
   // validation for email and phone
-  _asu_rfi_validate_electronic_contacts($email, $phone);
+  if (isset($email) || isset($phone)) {
+    _asu_rfi_validate_electronic_contacts($email, $phone);
+  }
 
   // Custom fields per student type (online vs. all others)
-
   // ONLY Online student validation
-  if (strtolower($form_state['input']['location']) == 'online') {
+  /* if (strtolower($form_state['input']['location']) == 'online') {
     // No fields not already included in shared validation above
-  }
+  } */
 
   // ONLY On-campus student validation
   else {
@@ -2127,23 +2128,28 @@ function _asu_rfi_get_state_list() {
 }
 
 /**
- * Build semester start dates
+ * Build semester start dates -- The web services from middleware pulls all the
+ * old semesters and saves into the local database
  * @return array|mixed $sem_dates_array
  */
 function _asu_rfi_get_sem_dates() {
   $sem_dates_array = &drupal_static(__FUNCTION__);
 
+  // Get semester dates from database
   $term_date = array();
   if (!isset($sem_dates_array)) {
-    //Get semester dates from database
-    $sem_dates_query = db_query("select * from {asu_rfi_sem_dates} order by CHAR_LENGTH(semId)");
+    $sem_dates_query = Database::getConnection('default', 'default')
+      ->select('asu_rfi_sem_dates', 'sd')
+      ->fields('sd')
+      ->orderBy('CHAR_LENGTH(semId)')
+      ->execute()
+      ->fetchAll();
     foreach ($sem_dates_query as $semester) {
       $term_date[$semester->semId] = $semester->semLabel;
     }
 
-    // Web services from middleware pulls all the old semesters and saves into
-    // database, the below code display only current and next three years in the drop down.
-    // build the date array
+    // Display only current and next three years in the drop down.
+    // Build the date array
     $date = array();
     $month = date('m');
     $day = date('d');
@@ -2210,9 +2216,7 @@ function _asu_rfi_get_sem_dates() {
  * @return string - HTML containing all pertinent information and resources pertaining to GDPR
  */
 function _asu_rfi_get_gdpr_markup() {
-  $gdpr_markup =
-    "
-    <div>
+  return "\n<div>
         <h5>By completing and submitting your information to ASU, you consent to:</h5>
         <ol class='gdpr-list'>
             <li>ASU using this information to contact you regarding information as you requested</li>
@@ -2222,10 +2226,7 @@ function _asu_rfi_get_gdpr_markup() {
             <a class='gdpr-link' href='https://www.asu.edu/privacy/#european-union-supplement'>ASU European Supplement to ASU's Privacy Statement</a>
             </li>
         </ol>
-    </div>
-  ";
-
-  return $gdpr_markup;
+    </div>\n";
 }
 
 /**
