@@ -1569,95 +1569,62 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
 
   // Now insert data into new RFI submission node
   $wrapper = entity_metadata_wrapper('node', $entity);
-  if (isset($wrapper->title)) {
-    $wrapper->title->set($f_name);
+  $fields_static = array(
+    'title' => 'f_name',
+    'field_rfi_domain' => 'domain',
+    'field_rfi_first_name' => 'f_name',
+    'field_rfi_last_name' => 'l_name',
+    'field_rfi_student_type' => 'student_type',
+    'field_rfi_email' => 'email',
+    'field_rfi_phone' => 'phone',
+    'field_rfi_sms_opted' => 'sms_number',
+    'field_rfi_country' => 'country',
+    'field_rfi_zipcode' => 'zip',
+    'field_rfi_start_term_code' => 'semester',
+    'field_rfi_program' => 'program',
+    'field_rfi_college_code' => 'college_code',
+    'field_rfi_form_type' => 'long_form_type',
+    'field_rfi_state' => 'state',
+    'field_rfi_veteran' => 'veteran',
+    'field_rfi_address' => 'address',
+    'field_rfi_city' => 'city',
+    'field_rfi_international' => 'international',
+    'field_rfi_start_term' => 'semester_name',
+    'field_rfi_program_name' => 'program_name',
+    'field_rfi_college_name' => 'college_name',
+    'field_rfi_enterpriseclientid' => 'enterpriseclientid',
+    'field_rfi_location' => 'location',
+    'field_rfi_campus' => 'campus',
+  );
+  foreach ($fields_static as $field => $var) {
+    if (isset($wrapper->{$field})) {
+      flogger('asu_rfi', $field . ' -> ' . ${$var});
+      $wrapper->{$field}->set(${$var});
+    }
   }
-  if (isset($wrapper->field_rfi_domain)) {
-    $wrapper->field_rfi_domain->set($domain);
-  }
-  if (isset($wrapper->field_rfi_first_name)) {
-    $wrapper->field_rfi_first_name->set($f_name);
-  }
-  if (isset($wrapper->field_rfi_last_name)) {
-    $wrapper->field_rfi_last_name->set($l_name);
-  }
-  if (isset($wrapper->field_rfi_student_type)) {
-    $wrapper->field_rfi_student_type->set($student_type);
-  }
-  if (isset($wrapper->field_rfi_email)) {
-    $wrapper->field_rfi_email->set($email);
-  }
-  if (isset($wrapper->field_rfi_phone)) {
-    $wrapper->field_rfi_phone->set($phone);
-  }
-  if (isset($wrapper->field_rfi_sms_opted)) {
-    $wrapper->field_rfi_sms_opted->set($sms_number);
-  }
-  if (isset($wrapper->field_rfi_country)) {
-    $wrapper->field_rfi_country->set($country);
-  }
-  if (isset($wrapper->field_rfi_zipcode)) {
-    $wrapper->field_rfi_zipcode->set($zip);
-  }
-  if (isset($wrapper->field_rfi_start_term_code)) {
-    $wrapper->field_rfi_start_term_code->set($semester);
-  }
-  if (isset($wrapper->field_rfi_program)) {
-    $wrapper->field_rfi_program->set($program);
-  }
-  if (isset($wrapper->field_rfi_college_code)) {
-    $wrapper->field_rfi_college_code->set($college_code);
-  }
-  if (isset($wrapper->field_rfi_form_type)) {
-    $wrapper->field_rfi_form_type->set($long_form_type);
-  }
+
   if (isset($wrapper->field_rfi_ip_address)) {
-    $wrapper->field_rfi_ip_address->set(intval($ip_address));
-  }
-  if (isset($wrapper->field_rfi_state)) {
-    $wrapper->field_rfi_state->set($state);
-  }
-  if (isset($wrapper->field_rfi_veteran)) {
-    $wrapper->field_rfi_veteran->set($veteran);
+    $ip = intval($wrapper->field_rfi_ip_address->value());
+    flogger('asu_rfi', 'rfi_ip_address -> ' . $ip);
+    $wrapper->field_rfi_ip_address->set($ip);
   }
   if (isset($wrapper->field_rfi_question)) {
+    flogger('asu_rfi', 'rfi_question -> ' . $questions);
     $wrapper->field_rfi_question->set(check_plain($questions));
   }
   if (isset($wrapper->field_rfi_dob)) {
-    $wrapper->field_rfi_dob->set(base64_encode($dob_date));
-  }
-  if (isset($wrapper->field_rfi_submission_status)) {
-    $wrapper->field_rfi_submission_status->set('Form_Completed');
-  }
-  if (isset($wrapper->field_rfi_address)) {
-    $wrapper->field_rfi_address->set($address);
-  }
-  if (isset($wrapper->field_rfi_city)) {
-    $wrapper->field_rfi_city->set($city);
-  }
-  if (isset($wrapper->field_rfi_international)) {
-    $wrapper->field_rfi_international->set($international);
-  }
-  if (isset($wrapper->field_rfi_start_term)) {
-    $wrapper->field_rfi_start_term->set($semester_name);
-  }
-  if (isset($wrapper->field_rfi_program_name)) {
-    $wrapper->field_rfi_program_name->set($program_name);
-  }
-  if (isset($wrapper->field_rfi_college_name)) {
-    $wrapper->field_rfi_college_name->set($college_name);
-  }
-  if (isset($wrapper->field_rfi_enterpriseclientid)) {
-    $wrapper->field_rfi_enterpriseclientid->set($enterpriseclientid);
+    $dob = base64_encode($dob_date);
+    flogger('asu_rfi', 'dob -> ' . $dob);
+    $wrapper->field_rfi_dob->set($dob);
   }
   if (isset($wrapper->field_rfi_prospect_level)) {
-    $wrapper->field_rfi_prospect_level->set($form_state['values']['prospect_level']);
+    $prospect_level = $form_state['values']['prospect_level'];
+    flogger('asu_rfi', 'prospect_level -> ' . $prospect_level);
+    $wrapper->field_rfi_prospect_level->set($prospect_level);
   }
-  if (isset($wrapper->field_rfi_location)) {
-    $wrapper->field_rfi_location->set($location);
-  }
-  if (isset($wrapper->field_rfi_campus)) {
-    $wrapper->field_rfi_campus->set($campus);
+  if (isset($wrapper->field_rfi_submission_status)) {
+    flogger('asu_rfi', 'Submission Status -> Form_Completed');
+    $wrapper->field_rfi_submission_status->set('Form_Completed');
   }
 
   $wrapper->save();

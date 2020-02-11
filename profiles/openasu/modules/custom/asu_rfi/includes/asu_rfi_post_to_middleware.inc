@@ -123,6 +123,8 @@ function asu_rfi_post_to_middleware($data, $type) {
       'campus' => $campus,
       'location' => $location,
     );
+    // Use JSON for ALL UNDERGRAD submissions
+    $body = json_encode($submission_data);
   }
 
   if ($type === ASU_RFI_PROSPECT_LEVEL_GRAD) {
@@ -149,7 +151,6 @@ function asu_rfi_post_to_middleware($data, $type) {
     }
 
     // Build DEFAULT Graduate data array for Salesforce
-    // @TODO Review camelCase usage
     $submission_data = array(
       'source' => $server['source'],
       'firstName' => $data['first_name'],
@@ -170,10 +171,8 @@ function asu_rfi_post_to_middleware($data, $type) {
       'smsNumber' => $mobile,
       'campusSelection' => $campus,
     );
+    $body = $submission_data; // No JSON encoding for default, non-online GRAD submissions
   }
-
-  // Build default email body for UNDERGRAD and GRADUATE submission
-  $body = json_encode($submission_data);
 
   // Alter Online campus submission data
   if (strtolower($location) === "online") {
@@ -191,17 +190,24 @@ function asu_rfi_post_to_middleware($data, $type) {
         $environ['endpoint_access'] = true;
       }
       $submission_data = _asu_rfi_online_fields_alter($type, $submission_data, $server, $college_code, $enterpriseclientid, $nid, $form_mode);
+      // Use JSON for Online GRADUATE submissions
       $body = json_encode($submission_data);
       $fieldHash = sha1($mw_auth_key . '+' .  $body);
       $url = "https://webforms.asu.edu/asu_edplus_middleware/submit/$fieldHash";
     }
   } else {
-    // Remove meaningless data points
+    // Remove meaningless data points for GRAD submissions
     if ($type === ASU_RFI_PROSPECT_LEVEL_GRAD) {
+      $grad_rebuild = FALSE;
       foreach ($submission_data as $key_value => $result_array) {
         if (($result_array == "None")) {
           unset($submission_data[$key_value]);
+          $grad_rebuild = TRUE;
         }
+      }
+      // Rebuild default, no JSON for default GRAD submissions if necessary.
+      if ($grad_rebuild === TRUE) {
+        $body = $submission_data;
       }
     }
   }
@@ -215,19 +221,16 @@ function asu_rfi_post_to_middleware($data, $type) {
   if (($environ['endpoint_access'] === true || $type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD)
     && (!$sf_multi_pending)) {
     try {
-      $ch = curl_init();
-      $options = array(
-        CURLOPT_URL => $url,
-        CURLOPT_POST => 1,
-        CURLOPT_POSTFIELDS => $body,
-        CURLOPT_RETURNTRANSFER => 1,
-        CURLOPT_HTTPHEADER => array('Content-Type: text/json'),
-        CURLOPT_SSL_VERIFYPEER => FALSE,
-      );
-      curl_setopt_array($ch, $options);
 
-      $response = curl_exec($ch);
-      $curl_info = curl_getinfo($ch); // Used by your drupal messages below
+      $curl = curl_init($url);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE); // If you don't want to use any of the return information, set to fa$
+      //curl_setopt($curl, CURLOPT_HEADER, FALSE); // Set this to false to remove informational headers
+      curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
+      curl_setopt($curl, CURLOPT_POSTFIELDS, $body); // data mapping
+      curl_setopt($curl, CURLOPT_SSLVERSION, 1); // This will set the security protocol to TLSv1
+      curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+      $response = curl_exec($curl);
+      $curl_info = curl_getinfo($curl); // Used by your drupal messages below
 
       variable_set('asu_rfi_last_attempt_SF_posting', time());
 
@@ -280,10 +283,10 @@ function asu_rfi_post_to_middleware($data, $type) {
         variable_set('asu_rfi_last_failure_SF_posting', time());
       }
 
-      curl_close($ch);
+      curl_close($curl);
 
       if ($response === FALSE) {
-        throw new Exception(curl_error($ch), curl_errno($ch));
+        throw new Exception(curl_error($curl), curl_errno($curl));
       }
     } catch (Exception $e) {
       $msg_start = 'POST to ' . $base_url . ' failed. HTTP CODE: '
