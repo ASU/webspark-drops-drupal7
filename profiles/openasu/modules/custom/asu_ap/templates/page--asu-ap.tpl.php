@@ -126,8 +126,6 @@ if (module_exists('metatag')) {
     </div>
     <!-- /.navmenu -->
 
-    <?php //dpm($page['content']['system_main']['nodes'][arg(1)]); ?>
-
     <?php if (isset($node_info['field_asu_ap_program']['#items'][0]['value'])): ?>
 	    <?php $program_decider_value = ($node_info['field_asu_ap_program']['#items'][0]['value']); ?>
       <?php if (isset($node_info['field_asu_ap_cert']['#items'][0]['value'])): ?>
@@ -163,7 +161,7 @@ if (module_exists('metatag')) {
                       <!-- Displaying 'Accelerated Program' field if true, displaying nothing if false -->
                       <?php if (isset($node_info['field_asu_ap_acc_program']['#items'][0]['value'])): ?>
                         <?php $accelerated_degree_value = ($node_info['field_asu_ap_acc_program']['#items'][0]['value']); ?>
-                        <?php if ($accelerated_degree_value == '1'): ?>
+                        <?php if (isset($accelerated_degree_value)): ?>
                           <br>
                           <i class="fa fa-location-arrow"></i>
                           <span class="asu-ap-program-flag">Accelerated Program</span>
@@ -175,7 +173,7 @@ if (module_exists('metatag')) {
                       <?php if (isset($node_info['field_asu_ap_conc_program']['#items'][0]['value'])): ?>
                         <?php $concurrent_degree_value = ($node_info['field_asu_ap_conc_program']['#items'][0]['value']); ?>
                         <?php if ($concurrent_degree_value == '1'): ?>
-                          <?php if ($accelerated_degree_value == '1'): ?>
+                          <?php if (isset($accelerated_degree_value)): ?>
                             <i class="fa fa-star"></i>
                             <span class="asu-ap-program-flag">Concurrent Program</span>
                           <?php else: ?>
@@ -191,7 +189,7 @@ if (module_exists('metatag')) {
                       <?php if (isset($node_info['field_asu_ap_new_program']['#items'][0]['value'])): ?>
                         <?php $new_degree_value = ($node_info['field_asu_ap_new_program']['#items'][0]['value']); ?>
                         <?php if ($new_degree_value == '1'): ?>
-                          <?php if (($accelerated_degree_value || $concurrent_degree_value) == '1'): ?>
+                          <?php if (isset($accelerated_degree_value) && isset($concurrent_degree_value)): ?>
                             <i class="fa fa-retweet"></i>
                             <span class="asu-ap-program-flag">New Program</span>
                           <?php else: ?>
