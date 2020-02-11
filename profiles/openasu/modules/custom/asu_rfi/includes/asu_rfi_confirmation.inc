@@ -57,7 +57,5 @@ function asu_rfi_confirmation($nid) {
     'quantity' => '1'
   );
 
-  $confirm_message = _asu_rfi_multiform_thanks_part2();
-
-  return $confirm_message;
+  return  _asu_rfi_multiform_thanks_part2();
 }

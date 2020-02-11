@@ -22,8 +22,7 @@ function asu_rfi_import_online_programs() {
     $finalHeader = count($header) - 1;
     if (isset($code[1]) && $code[1] >= 200 && $code[1] < 400) {
       if (isset($header[$finalHeader]) && !empty($header[$finalHeader])) {
-        $data = $header[$finalHeader];
-        return $data;
+        return $header[$finalHeader];
       }
     } else {
       watchdog('asu_rfi', __FUNCTION__ . ' -- The ASUOnline programs list at ' . $url

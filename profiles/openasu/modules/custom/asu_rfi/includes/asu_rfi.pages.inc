@@ -2064,7 +2064,6 @@ function _asu_rfi_program_location_confirm($prog, $campus, $loc) {
 function _asu_rfi_get_country_list() {
   $other_countries = &drupal_static(__FUNCTION__);
   if (!isset($other_countries)) {
-    /*$countries = db_query("select countryDesc from asu_rfi_countries order by countryDesc asc"); */
     $countries = db_select('asu_rfi_countries', 'arc')
       ->fields('arc', array('countryDesc'))
       ->orderBy('countryDesc')

@@ -1177,8 +1177,7 @@ function _asu_rfi_get_unpassed_submissions($include_rtp = FALSE) {
     $query->propertyOrderBy('created', 'DESC')
     ->fieldCondition('field_rfi_submission_status', 'value', $statuses, 'IN')// Failed lead.
     ->addMetaData('account', user_load(1)); // Run the query as user 1.
-  $results = $query->execute();
-  return $results;
+  return $query->execute();
 }
 
 /**
@@ -1372,7 +1371,7 @@ function _asu_rfi_get_program_results($items) {
  * Return desired programs from list of nodes OR list of programs, depending in $data_type
  * @param $result_nodes
  * @param (str) $data_type - Must be 'programs' or 'desiredProg'
- * @return array
+ * @return mixed
  */
 function _asu_rfi_get_program_codes($result_nodes, $data_type) {
 
@@ -1386,19 +1385,20 @@ function _asu_rfi_get_program_codes($result_nodes, $data_type) {
   $program_nids = array_keys($result_nodes);
   $programs = entity_load('node', $program_nids);
   $programs = (array) (reset($programs));
-  /** @noinspection PhpUnusedLocalVariableInspection */
   $code = (isset($programs[$degreeMappings['field_academic_plan']][LANGUAGE_NONE]['0']['value']))
     ? $programs[$degreeMappings['field_academic_plan']][LANGUAGE_NONE]['0']['value'] : '';
-  $desiredProg = array(
-    'code' => $code,
-    'vid' => (isset($programs['vid'])) ? $programs['vid'] : '',
-    'title' => (isset($programs['title'])) ? $programs['title'] : '',
-    'locations' => (isset($programs[$degreeMappings['field_degree_campus']][LANGUAGE_NONE]))
-      ? $programs[$degreeMappings['field_degree_campus']][LANGUAGE_NONE]
-      : '',
-  );
-  $out = ${$data_type};
-  return $out;
+  if ($data_type === 'programs') { // programs
+    return $code;
+  } else { // desiredProg
+    return array(
+      'code' => $code,
+      'vid' => (isset($programs['vid'])) ? $programs['vid'] : '',
+      'title' => (isset($programs['title'])) ? $programs['title'] : '',
+      'locations' => (isset($programs[$degreeMappings['field_degree_campus']][LANGUAGE_NONE]))
+        ? $programs[$degreeMappings['field_degree_campus']][LANGUAGE_NONE]
+        : '',
+    );
+  }
 }
 
 /**
@@ -1434,7 +1434,7 @@ function _asu_rfi_get_aux_submission_data($data, $type) {
  * @return string $result
  */
 function _asu_rfi_get_college_code($degreeMappings, $prog_code) {
-  $result = db_query(
+  return db_query(
     'select ' . $degreeMappings['field_academic_program_value'] . ' from ' .
     $degreeMappings['table_asu_academic_program'] . ' prog join ' .
     $degreeMappings['table_asu_academic_plan'] .
@@ -1443,7 +1443,6 @@ function _asu_rfi_get_college_code($degreeMappings, $prog_code) {
     ' = :plancode',
     array(':plancode' => $prog_code))
     ->fetchField();
-  return $result;
 }
 
 /**
@@ -1534,8 +1533,7 @@ function _asu_rfi_get_career_data($data) {
       $career_option[] = "<tr><td>" . $career_data_title . "&nbsp;&nbsp;&nbsp;&nbsp;</td><td>" . $growth . "</td><td>" . $median . "</td></tr>";
     }
   }
-  $option = (isset($career_option)) ? $career_option : '';
-  return $option;
+  return (isset($career_option)) ? $career_option : '';
 }
 
 /**
@@ -1747,7 +1745,7 @@ function _asu_rfi_add_program_data_js($desiredProg) {
  */
 function _asu_rfi_online_fields_alter($type, $default, $server, $college_code, $enterpriseclientid, $nid, $form_mode) {
   if ($type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
-    $fieldsUpdated = array(
+    return array(
       'first_name' => $default['first_name'],
       'last_name' => $default['last_name'],
       'program' => $college_code . '-' . $default['poiCode'],
@@ -1762,10 +1760,9 @@ function _asu_rfi_online_fields_alter($type, $default, $server, $college_code, $
       'sourceid' => $nid, // Overwritten with API key in Middleware.
       'enterpriseclientid' => $enterpriseclientid,
     );
-    return $fieldsUpdated;
   }
   elseif ($type === ASU_RFI_PROSPECT_LEVEL_GRAD) {
-    $online_data = array(
+    return array(
       'first_name' => $default['firstName'],
       'last_name' => $default['lastName'],
       'program' => $college_code . '-' . $default['program'],
@@ -1780,7 +1777,6 @@ function _asu_rfi_online_fields_alter($type, $default, $server, $college_code, $
       'sourceid' => $nid, // Overwritten with API key in Middleware.
       'enterpriseclientid' => $enterpriseclientid,
     );
-    return $online_data;
   }
 }
 
@@ -1860,25 +1856,23 @@ function _asu_rfi_create_expired_message($created) {
  * Get multiform thanks messaging for posting in site outside of the form.
  */
 function _asu_rfi_multiform_thanks_part1() {
-  $message = <<<EOT
+  return <<<EOT
   <div class="alert alert-success">
   <h4>Thank you for your interest in Arizona State University!</h4>
   <p>We will send you information that matches your unique interests. If you would like additional information,
    please <a href="#asu-rfi-second-form">specify below in the form</a>, under the program information.</p>
   </div>
 EOT;
-  return $message;
 }
 
 /**
  * Get multiform thanks messaging for posting in site outside of the form.
  */
 function _asu_rfi_multiform_thanks_part2() {
-  $message = <<<EOT
+  return <<<EOT
   <div class="alert alert-success">
   <h4>Thank you for your interest in ASU.</h4>
   <p>An ASU representative will contact you soon!</p>
   </div>
 EOT;
-  return $message;
 }

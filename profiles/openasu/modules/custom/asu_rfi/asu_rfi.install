@@ -1,4 +1,5 @@
-<?php /** @noinspection PhpUnused */
+<?php /** @noinspection PhpUnhandledExceptionInspection */
+/** @noinspection PhpUnused */
 /** @noinspection PhpDocSignatureInspection */
 /** @noinspection PhpUnusedParameterInspection */
 
@@ -78,8 +79,9 @@ function asu_rfi_install() {
   // Insert semester dates into DB table
   asu_rfi_get_form_select_options('rfi_dedupe_list_terms', TRUE);
 
+  $rfi_config_url = "/admin/config/content/asurfi";
   flogger('asu_rfi','ASU RFI module has been installed. Configure module settings at '
-    . '<a href="/admin/config/content/asurfi">admin settings page</a>', array(), 8);
+    . '<a href="'. $rfi_config_url . '">admin settings page</a>', array(), 8);
 
   // Check if CAS module exists and enabled and update cas_exclude variables with asu_rfi callback urls
   if (module_exists('cas')) {
@@ -95,7 +97,7 @@ function asu_rfi_install() {
 
   // Enable entityreference_autocomplete module for the ASU RFI admin form
   if (!module_exists('entityreference_autocomplete')) {
-    module_enable('entityreference_autocomplete');
+    module_enable(array('entityreference_autocomplete'));
   }
 
   // Set the RFI form mode to "Test" initially upon module installation
@@ -130,6 +132,7 @@ function asu_rfi_update_7001(&$sandbox) {
 
 /**
  * Enable Flogger, Entityreference Autocomplete modules; Update non-namespaced variable names.
+ * @throws \InvalidMergeQueryException
  */
 function asu_rfi_update_7200(&$sandbox){
   if (!module_exists('flogger')) {
@@ -307,7 +310,7 @@ function asu_rfi_update_7203(&$sandbox) {
   $sandbox['#finished'] = ($sandbox['progress'] >= $sandbox['total'])
     ? TRUE : ($sandbox['progress'] / $sandbox['total']);
 
-  if ($sandbox['#finished'] === TRUE) {;
+  if ($sandbox['#finished'] === TRUE) {
     return "\n" . t('The expired/completed RFI form submissions have been deleted.');
   }
   else {
