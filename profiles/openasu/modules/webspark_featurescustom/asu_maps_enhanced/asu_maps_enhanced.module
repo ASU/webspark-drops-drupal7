@@ -301,73 +301,10 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
     if (isset($items[0]['map_items'])) {
       $map_items = $items[0]['map_items'];
     } else {
-      $map_items = [];
+      $map_items = '[]';
     }
 
-    //Begin building the widget form
-    /*
-    $element['campus_selection'] = array(
-      '#title' => t('Select Campus Map'),
-      '#type' => 'select',
-      '#prefix' => '<div class="row"><div id="map_campus_select" class="col-md-4">',
-      '#suffix' => '</div>',
-      '#options' => array(
-      'NONE' => 'None',
-      'TEMPE' => 'Tempe',
-      'POLY' => 'Polytechnic',
-      'DOWNTOWN' => 'Downtown',
-      'WEST' => 'West',
-      'RESEARCH' => 'Research Park',
-      'SKYSONG' => 'Skysong',
-      'HAVASU' => 'Lake Havasu',
-      'THUNDERBIRD' => 'Thunderbird'
-      ),
-      '#default_value' => isset($prev_settings['campus']) ? $prev_settings['campus'] : $default_configs['campus'],
-      //'#default_value' => isset($loc_selected) ? $loc_selected : NULL,
-    );*/
 
-    /*$element['enhanced_map_height'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Height of Map (in pixels)'),
-      '#description' => t('Enter a number for the height of the map.  Entries are restricted to positive integers
-      greater than 425, and less than 1100.  If left blank, value will default to ' . ASU_MAPS_ENHANCED_DEFAULT_HEIGHT . '.'),
-      '#prefix' => '<div id="map-height-field" class="col-md-4">',
-      '#suffix' => '</div>',
-      '#element_validate' => array('asu_maps_enhanced_validate_height'),
-      '#default_value' => isset($prev_settings['map_height']) ? $prev_settings['map_height'] : $default_configs['map_height'],
-    );
-
-
-    $default_val = asu_maps_enhanced_get_select_value($prev_settings, 'display_campus_select');
-
-    $element['display_campus_select'] = array(
-      '#title' => t('Display Campus Selection Menu (Overhead)'),
-      '#type' => 'select',
-      '#prefix' => '<div id="map_display_campus_box" class="col-md-4">',
-      '#suffix' => '</div></div>',
-      '#options' => array(
-      'YES' => 'Yes',
-      'NO' => 'No'
-      ),
-      '#default_value' => $default_val,
-      //'#default_value' => isset($loc_selected) ? $loc_selected : NULL,
-    );
-
-    $default_val = asu_maps_enhanced_get_select_value($prev_settings, 'hide_map');
-
-    $element['hide_map'] = array(
-      '#title' => t('Hide Map if No Locations Selected'),
-      '#type' => 'select',
-      '#prefix' => '<div id="map-hide-map-display">',
-      '#suffix' => '</div>',
-      '#options' => array(
-      'YES' => 'Yes',
-      'NO' => 'No'
-      ),
-      '#default_value' => $default_val,
-      //'#default_value' => isset($loc_selected) ? $loc_selected : NULL,
-    );
-    */
     // Add the campus bird location tree as a setting to the map form js
     $tree = asu_maps_enhanced_get_layers();
 
@@ -379,7 +316,6 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
       'form_field_id' => 'asu-maps-enhanced-tree',
       'map_items' => $decoded_items
     ];
-
 
     // field to store the configuration, we set the style="display:none", rather than
     // a hidden field type.  this is so that the js can modify the values
@@ -417,80 +353,6 @@ function asu_maps_enhanced_field_widget_form(&$form, &$form_state, $field, $inst
   }
 
   return $element;
-}
-
-
-
-/**
- * Validation function for the height field.  Checks for valid integer values, and puts in our default if left blank
- *
- * @param $element
- * @param $form_state
- */
-/*
-function asu_maps_enhanced_validate_height($element, &$form_state) {
-  $value = $element['#value'];
-
-  if ($value == '' || $value == NULL) {
-  $value = ASU_MAPS_ENHANCED_DEFAULT_HEIGHT;
-  }
-
-  if ((!is_numeric($value) || intval($value) != $value || $value <= 0 || $value > 1100 || $value < 425)) {
-  drupal_add_js(drupal_get_path('module', 'asu_maps_enhanced') . '/js/asu_maps_enhanced_form.js');
-  form_error($element, t('%name must be a positive integer between 425 and 1100. ', array('%name' => $element['#title'])));
-  }
-
-  $items = drupal_json_decode($form_state['values']['field_asu_maps_enhanced_items']['und'][0]['map_items']);
-
-  $items[0]['map_height'] = $value;
-
-  $form_state['values']['field_asu_maps_enhanced_items']['und'][0]['map_items'] = drupal_json_encode($items);
-}*/
-
-
-/***
- * Implements hook_field_presave
- *
- * Sets the values of the map items for the field
- *
- * @param $entity_type
- * @param $entity
- * @param $field
- * @param $instance
- * @param $langcode
- * @param $items
- */
-function asu_maps_enhanced_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  if (isset($field['type']) && isset($items[0]['campus_selection'])) {
-    // the null check is necessary for workbench moderation, otherwise it will save
-    // null values upon publishing
-    if ($field['type'] == 'asu_maps_enhanced' && $items[0]['campus_selection'] != null) {
-      /*
-      $settings = array(
-      'display_campus_select' => $items[0]['display_campus_select'],
-      'campus' => $items[0]['campus_selection'],
-      'name' => 'maps_enhanced_settings',
-      'map_height' => $items[0]['enhanced_map_height'],
-      'hide_map' => $items[0]['hide_map']
-      );
-
-      $map_items = drupal_json_decode($items[0]['map_items']);
-
-      //if the first item is already settings, overwrite them
-      if (!isset($map_items[0]['mrkId']) && !isset($map_items[0]['catId']) && !isset($map_items[0]['id'])) {
-      $map_items[0] = $settings;
-
-      //else add the settings to beginning of array
-      }
-      else {
-      array_unshift($map_items, $settings);
-      }
-
-      $items[0]['map_items'] = drupal_json_encode($map_items);
-
-      //cache_clear_all();*/
-    }
-  }
 }
 
 /**

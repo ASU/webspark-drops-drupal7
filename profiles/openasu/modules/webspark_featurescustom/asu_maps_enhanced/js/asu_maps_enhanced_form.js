@@ -11,35 +11,27 @@
     attach: function(context, settings) {
       if (settings.asu_maps_enhanced_form != null) {
         var configs = settings.asu_maps_enhanced_form;
-        var test = document.getElementById(configs.form_field_id);
+        var form = document.getElementById(configs.form_field_id);
         var map_items = configs.map_items;
         var saved = {};
 
         // stringify the saved items to
-        if (map_items[0] && map_items[0].hasOwnProperty('parent')) {
+        if (Array.isArray(map_items) && map_items.length > 0 && map_items[0].hasOwnProperty('parent')) {
           saved = map_items[0];
         }
-
-        console.log(saved, 'THE CONFIGS');
-
-        console.log(test, 'THE TEST ELEMENT');
 
         var props = {
           layers: configs.tree,
           onChange: function(val) {
             var text = document.querySelector('#asu_map_enhanced textarea');
-
-            console.log(text, 'THE TEXTFIELD');
-
             text.value = '[' + val + ']';
           },
           selected: saved
         };
 
 
-
-        if (test) {
-          ReactDOM.render(React.createElement(AsuGisFeaturePicker, props), test);
+        if (form) {
+          ReactDOM.render(React.createElement(AsuGisFeaturePicker, props), form);
         }
       }
     }
