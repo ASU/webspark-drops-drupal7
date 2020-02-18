@@ -15,7 +15,7 @@
  * - For non-hidden FAPI elements: POSSIBLE Default values generated for form element;
  *   Usually for <select> element
  * - For hidden FAPI elements: Single, static value passed in manually.
- * @return array|bool - Form API array element if exists, or returns FALSE if $name is not matched.
+ * @return mixed (array, bool) - Form API array element if exists, or returns FALSE if $name is not matched.
  */
 function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
   switch ($name) {
