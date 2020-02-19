@@ -9,10 +9,10 @@
 function _asu_rfi_check_managed_online($program, $getProgramsList) {
   foreach ($getProgramsList as $onlineItem){
     if ($onlineItem->plancode == $program && $onlineItem->crmdestination !== "asu") {
-      return true;
+      return TRUE;
     }
   }
-  return false;
+  return FALSE;
 }
 
 /**
@@ -35,23 +35,25 @@ function _asu_rfi_check_program_online_availability($programsFromDegreeFeed, $ge
 }
 
 /**
- * Alter submission_data for online campus submissions -- NOT A drupal_alter()!
+ * Alter submission_data for online campus submissions.
+ *
+ * -- NOT A drupal_alter()!
  *
  * @param $type - undergrad or graduate
- * @param $default
- * @param $server
- * @param $college_code
- * @param $enterpriseclientid
- * @param $nid
+ * @param $default - $submission_data
+ * @param $server - Server data (including type)
+ * @param $college_code - College code
+ * @param $enterpriseclientid - Google Analytics code
+ * @param $nid - Node ID
  * @param string $form_mode - test mode or no?
- * @return array
+ * @return array - Revised list of fields for EdPlus consumption
  */
 function _asu_rfi_online_fields_alter($type, $default, $server, $college_code, $enterpriseclientid, $nid, $form_mode) {
   if ($type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
     return array(
       'first_name' => $default['first_name'],
       'last_name' => $default['last_name'],
-      'program' => $college_code . '-' . $default['poiCode'],
+      'program' => $college_code . '-' . $default['program'],
       'email' => $default['email'],
       'phone' => $default['phone'],
       'prod_test_flag' => $default['prod_test_flag'],
@@ -68,7 +70,7 @@ function _asu_rfi_online_fields_alter($type, $default, $server, $college_code, $
     return array(
       'first_name' => $default['firstName'],
       'last_name' => $default['lastName'],
-      'program' => $college_code . '-' . $default['program'],
+      'program' => $college_code . '-' . $default['poiCode'],
       'email' => $default['emailAddress'],
       'phone' => $default['phoneNumber'],
       'prod_test_flag' => $form_mode,  // UPDATE + Verify availability

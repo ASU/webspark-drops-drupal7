@@ -293,7 +293,7 @@ function asu_rfi_post_to_middleware($data, $type) {
         . ((isset($curl_info)) ? $curl_info['http_code'] : 'unknown') . '. ';
       $message_final = $msg_start . (((int) $e->getCode() <= 0) ? ' This may have been due to
       ASU network access restrictions.' : '');
-      watchdog('asu_rfi', $message_final, array(), WATCHDOG_ERROR);
+      flogger('asu_rfi', $message_final, array(), WATCHDOG_ERROR);
       trigger_error(sprintf(
         'Curl failed with error #%d: %s' . $message_final,
         $e->getCode(), $e->getMessage()),

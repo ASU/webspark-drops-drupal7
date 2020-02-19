@@ -872,7 +872,6 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
     $form['my_interest']['start_date']['#states']['optional'][':input[name="location"]']['value'] = 'online';
     $form['my_interest']['start_date']['#states']['invisible'][':input[name="location"]']['value'] = 'online';
     $form['my_interest']['start_date']['#empty_option'] = t('Select');
-    //$form['my_interest']['start_date']['#default_value'] = isset($_SESSION['rfi_data']['start_date']) ? $_SESSION['rfi_data']['start_date'] : NULL;
 
   $form['about_me'] = _asu_rfi_form_base_components('about_me');
   $form['about_me']['first_name'] = _asu_rfi_form_elements_multiple_keys('about_me', 'first_name');
@@ -956,7 +955,9 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
       form_set_error('program_code', t('My program of interest field required.'));
     }
   }
-  if (!_asu_rfi_program_location_confirm($form_state['input']['program_code'], $form_state['input']['campus'], $form_state['input']['location'])) {
+  // temporary campus value to include online campus value.
+  $temp_campus = (lcfirst($form_state['input']['location']) !== 'online') ? $form_state['input']['campus'] : '';
+  if (!_asu_rfi_program_location_confirm($form_state['input']['program_code'], $temp_campus, $form_state['input']['location'])) {
     form_set_error('campus', t('Your campus choice is not valid.'));
   }
 
@@ -983,13 +984,8 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
   }
 
   // Custom fields per student type (online vs. all others)
-  // ONLY Online student validation
-  if (strtolower($form_state['input']['location']) == 'online') {
-    // No fields not already included in shared validation
-  }
-
   // ONLY On-campus student validation
-  else {
+  if (strtolower($form_state['input']['location']) !== 'online') {
     $address = check_plain($form_state['values']['address']);
     $city = check_plain($form_state['values']['city']);
     $zip = $form_state['values']['zipcode'];
@@ -1052,6 +1048,7 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
  * LONG FORM - SUBMIT handler (undergrad and graduate)
  * @param $form
  * @param $form_state
+ * @noinspection PhpUnusedLocalVariableInspection
  */
 function asu_rfi_long_form_data_submit($form, &$form_state) {
   global $user;
@@ -1178,32 +1175,27 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
 
   if (isset($wrapper->field_rfi_ip_address)) {
     $ip = intval($wrapper->field_rfi_ip_address->value());
-    flogger('asu_rfi', 'rfi_ip_address -> ' . $ip);
     $wrapper->field_rfi_ip_address->set($ip);
   }
   if (isset($wrapper->field_rfi_question)) {
-    flogger('asu_rfi', 'rfi_question -> ' . $questions);
     $wrapper->field_rfi_question->set(check_plain($questions));
   }
   if (isset($wrapper->field_rfi_dob)) {
     $dob = base64_encode($dob_date);
-    flogger('asu_rfi', 'dob -> ' . $dob);
     $wrapper->field_rfi_dob->set($dob);
   }
   if (isset($wrapper->field_rfi_prospect_level)) {
     $prospect_level = $form_state['values']['prospect_level'];
-    flogger('asu_rfi', 'prospect_level -> ' . $prospect_level);
     $wrapper->field_rfi_prospect_level->set($prospect_level);
   }
   if (isset($wrapper->field_rfi_submission_status)) {
-    flogger('asu_rfi', 'Submission Status -> Form_Completed');
     $wrapper->field_rfi_submission_status->set('Form_Completed');
   }
 
   $wrapper->save();
 
   // Send the confirmation email
-  if (($location !== 'Online' && $location !== 'online')) {
+  if (ucfirst($location) !== 'Online') {
     if ($form_state['values']['prospect_level'] == ASU_RFI_PROSPECT_LEVEL_GRAD) {
       asu_rfi_grad_email($form_state['values']['program_code'], $form_state['values']['email'], $form_state['values']['first_name']);
     } else {
@@ -1612,6 +1604,7 @@ function _asu_rfi_get_sem_dates() {
   // Get semester dates from database
   $term_date = array();
   if (!isset($sem_dates_array)) {
+    /** @noinspection PhpUndefinedMethodInspection */
     $sem_dates_query = Database::getConnection('default', 'default')
       ->select('asu_rfi_sem_dates', 'sd')
       ->fields('sd')

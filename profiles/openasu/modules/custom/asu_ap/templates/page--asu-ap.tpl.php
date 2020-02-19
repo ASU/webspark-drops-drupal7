@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUndefinedVariableInspection */
 
 /**
  * @file
@@ -136,6 +136,7 @@ if (module_exists('metatag')) {
         <div id="main" class="clearfix">
           <a id="main-content"></a>
 
+          <!--suppress CssUnknownTarget -->
           <div class="asu-degree-banner-image"
                style="background-image:url(/sites/default/files/<?php echo $node_info['field_asu_banner_image']['#items'][0]['filename']; ?>)">
             <div class="container">
@@ -441,9 +442,12 @@ if (module_exists('metatag')) {
                             echo '<a href="//admission.asu.edu/transfer/pima">'.$campus['value'].'</a>';
                             break;
                           case 'Online':
-                            echo '<a href="//asuonline.asu.edu/">'.$campus['value'].'</a>';
+                            $online_url = (!empty($node_info['field_asu_ap_curriculum_url']['#items'][0]['url']))
+                              ? $node_info['field_asu_ap_curriculum_url']['#items'][0]['url']
+                              : '//asuonline.asu.edu/';
+                            echo '<a href="' . $online_url . '" target="_blank">'.$campus['value'].'</a>';
                             break;
-                          //Check ASU Feeds Parser.  The campus being used doesn't exist.
+                          // Check ASU Feeds Parser. The campus being used doesn't exist.
                           default:
                             echo $campus['value'];
                             break;

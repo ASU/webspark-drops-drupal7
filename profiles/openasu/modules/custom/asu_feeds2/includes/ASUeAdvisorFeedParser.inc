@@ -153,16 +153,27 @@ class ASUeAdvisorFeedParser extends FeedsParser {
       }
 
       // DepartmentNameJoint
-      if (count($data['DepartmentCodeJoint'])) {
-        foreach ($data['DepartmentCodeJoint'] as $college_key => $value) {
-            $parsed_data[$key]['DepartmentCodeJoint'][$college_key] = $value;
+      if (count($data['DepartmentNameJoint'])) {
+        foreach ($data['DepartmentNameJoint'] as $college_key => $value) {
+            $parsed_data[$key]['DepartmentNameJoint'][$college_key] = $value;
         }
-        $parsed_data[$key]['DepartmentCodeJoint'] = array_values($parsed_data[$key]['DepartmentCodeJoint']);
+        $parsed_data[$key]['DepartmentNameJoint'] = array_values($parsed_data[$key]['DepartmentNameJoint']);
       }
 
       // Format careerData
       if (count($data['careerData'])) {
         $parsed_data[$key]['careerData'] = json_encode($data['careerData']);
+      }
+
+      // Graduate All Apply Dates
+      if (count($data['graduateAllApplyDates'])) {
+        $gAAD = array();
+        foreach ($data['graduateAllApplyDates'] as $code => $dates) {
+          $gAAD[$code] = $dates;
+        }
+        $parsed_data[$key]['graduateAllApplyDates'] = serialize($gAAD);
+      } else {
+        $parsed_data[$key]['graduateAllApplyDates'] = array();
       }
 
       // Transfer agreements
@@ -243,7 +254,7 @@ class ASUeAdvisorFeedParser extends FeedsParser {
     } // End of foreach
 
     //error_log(print_r($parsed_data, true));
-    //watchdog('A2P Debug', '<pre>'. print_r($parsed_data, true) .'</pre>');
+    watchdog('A2P Debug', '<pre>'. print_r($parsed_data, true) .'</pre>');
     //watchdog('keith $v', '<pre>' . print_r($v, true) . '</pre>');
     return new FeedsParserResult($parsed_data);
   }
@@ -271,6 +282,7 @@ class ASUeAdvisorFeedParser extends FeedsParser {
       'CollegeUrl' => array('name' => t('College URL')),
       'CollegeUrlJoint' => array('name' => t('College URL (joint)')),
       'concurrentDegree' => array('name' => t('Concurrent Degree')),
+      'CurriculumUrl' => array('name' => t('Curriculum URL'), 'description' => t('Online campus ONLY'),),
       'Degree' => array('name' => t('Degree'),'description' => t('BA / BFA / MFA / etc'),),
       'DegreeDescr' => array('name' => t('Degree description')),
       'degreeMajorMap' => array('name' => t('Program Requirements')),
@@ -282,6 +294,7 @@ class ASUeAdvisorFeedParser extends FeedsParser {
       'Descr100' => array('name' => t('Description (100)')),
       'DescrlongExtns' => array('name' => t('Degree description (extended)')),
       'DiplomaDescr' => array('name' => t('Diploma description')),
+      'graduateAllApplyDates' => array('name' => t('Graduate All Apply Dates'),'description' => t('All future available terms and their application dates - by campus.'),),
       'majorMapDefaultYear' => array('name' => t('Major map year')),
       'MinMathReq' => array('name' => t('Minimum math requirement')),
       'newDegree' => array('name' => t('New Degree')),

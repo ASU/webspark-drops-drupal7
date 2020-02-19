@@ -55,15 +55,15 @@ function asu_rfi_get_form_select_options($name, $installing = FALSE) {
       else {
         $message = t($name . ' record from ' . $url . ' was rejected. Debugging info: key - :key, value - :name ',
           array(':key' => $datum_key, ':name' => $datum_value,));
-        watchdog('asu_rfi', $message, array(), WATCHDOG_DEBUG);
+        flogger('asu_rfi', $message, array(), WATCHDOG_DEBUG);
       }
     }
     if ($data_count > 0) {
       $message = $data_count . ' out of ' . count($result) . ' ' . $name . ' entries were
         upserted in ' . $db_tbl . ' DB table.';
-      watchdog('asu_rfi', $message, array(), WATCHDOG_INFO);
+      flogger('asu_rfi', $message, array(), WATCHDOG_INFO);
     } else { // no $result entries got in
-      watchdog('asu_rfi', 'None of the ' . count($result) . ' ' . $name . ' entries were
+      flogger('asu_rfi', 'None of the ' . count($result) . ' ' . $name . ' entries were
         added to the ' . $db_tbl . ' DB table.', array(), WATCHDOG_NOTICE);
     }
   }

@@ -11,9 +11,18 @@ include_once 'asu_ap_feature.features.inc';
  */
 function asu_ap_feature_form_alter(&$form, &$form_state, $form_id) {
 
+  /*
   // Hide irrelavant fields on ASU Academic Programs node edit form
   if ($form_id == 'asu_ap_node_form') {
-    $form['some_text'] = array('#markup' => '<div class="messages warning">If information needs to be changed, please do so on the degree catalog by contacting the Provost\'s Office.</div>');
+    $form['some_text'] = array('#markup' => '<div class="messages error">IMPORTANT:'
+    . ' While there are fields available below to customize these degree pages'
+    . ' with custom, additional content for this site, the degrees information imported
+    . ' from the official degrees feed (from webapp4.asu.edu) should'
+    . ' not be edited and saved here because those changes will be overwritten'
+    . ' the next time updates to the degrees are pulled in from the degrees feed.<br><br> If'
+    . ' imported information needs to be changed, please work with those in your unit'
+    . ' who are involved with the catalog updates; They can work with the Provost\'s'
+    . ' Office.</div>');
     $form['body']['#access'] = FALSE;
     $form['field_asu_ap_acad_plan']['#access'] = FALSE;
     $form['field_asu_ap_acad_prog']['#access'] = FALSE;
@@ -61,8 +70,9 @@ function asu_ap_feature_form_alter(&$form, &$form_state, $form_id) {
         $form['field_asu_ap_career_outlook']['#access'] = FALSE;
         $form['field_asu_ap_ex_car_tf']['#access'] = FALSE;
     }
-
   }
+  */
+
 }
 
 /**

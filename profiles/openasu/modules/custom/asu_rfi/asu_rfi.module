@@ -350,7 +350,7 @@ function asu_rfi_block_configure($delta = '', $multi_id = NULL) {
         );
       }
       else { // ERROR: Degree type was uncaptured by logic above
-        watchdog('asu_rfi', 'No form types selected for either undergrad or graduate programs.', array(), WATCHDOG_ERROR);
+        flogger('asu_rfi', 'No form types selected for either undergrad or graduate programs.', array(), WATCHDOG_ERROR);
         if (empty($form_types)) {
           header("Location: " . $_SERVER['REQUEST_URI']);
         }
@@ -487,8 +487,8 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
     drupal_add_css('#modal-content .widget-preview .fieldset-wrapper{ max-height: 75% !important;}', array('type' => 'inline'));
   }
 
-  // Change form type exposed filter in submissions view (/asu-rfi-submissions-report)
-  // form text field to select option
+  // RFI submissions report (view)
+  // Change form type exposed filter form text field to select option
   if ($form['#id'] == 'views-exposed-form-asu-rfi-submissions-report-page') {
     $form_types = array('' => ' - All -');
     $form_types_query = db_select('field_data_field_rfi_form_type', 'ft')
@@ -506,8 +506,31 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
     $form['field_rfi_form_type_value']['#default_values'] = array(0);
   }
 
+  // MULTISTEP FORM (Part 1)
+  if ($form['#id'] == "asu-rfi-form-data") {
+    if (isset($form['program_code']['#default_value']) && !empty($form['program_code']['#default_value'])) {
+      $pcode = $form['program_code']['#default_value'];
+      $pcode2 = array($pcode => $form['my_interest']['prog_plan']['#default_value']);
+      $possibleLocations = _asu_rfi_get_campus_location_options($pcode2);
+      asu_rfi_disable_form($form, $possibleLocations);
+      $newLocationArr = array();
+      foreach ($possibleLocations as $key => $value) {
+        $newLocationArr[$value] = $value;
+      }
+      $possibleLocations = $newLocationArr;
+      $form['my_interest']['campus']['#options'] = $possibleLocations;
+    }
+    drupal_add_js("(function ($) { $(window).on('unload', function(){ $('#asu-rfi-form-data').trigger('reset'); }) })(jQuery)", array(
+      'type' => 'inline',
+      'scope' => 'header',
+      'weight' => 0
+    ));
+    drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/theme/session_clear.js', 'file');
+    $form['#after_build'][] = 'asu_rfi_form_after_build';
+  }
+
   // MULTISTEP FORM (SECOND)
-  // Add js file
+  // Add Session clear file
   if (isset($form['#prefix'])) {
     if ($form['#prefix'] == '<div id="rfi-second-form">') {
       drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/theme/session_clear.js', 'file');
@@ -563,29 +586,6 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
     }
   }
 
-  // MULTISTEP FORM
-  if ($form['#id'] == "asu-rfi-form-data") {
-    if (isset($form['program_code']['#default_value']) && !empty($form['program_code']['#default_value'])) {
-      $pcode = $form['program_code']['#default_value'];
-      $pcode2 = array($pcode => $form['my_interest']['prog_plan']['#default_value']);
-      $possibleLocations = _asu_rfi_get_campus_location_options($pcode2);
-      asu_rfi_disable_form($form, $possibleLocations);
-      $newLocationArr = array();
-      foreach ($possibleLocations as $key => $value) {
-        $newLocationArr[$value] = $value;
-      }
-      $possibleLocations = $newLocationArr;
-      $form['my_interest']['campus']['#options'] = $possibleLocations;
-    }
-    drupal_add_js("(function ($) { $(window).on('unload', function(){ $('#asu-rfi-form-data').trigger('reset'); }) })(jQuery)", array(
-      'type' => 'inline',
-      'scope' => 'header',
-      'weight' => 0
-    ));
-    drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/theme/session_clear.js', 'file');
-    $form['#after_build'][] = 'asu_rfi_form_after_build';
-  }
-
   // ASU RFI module's admin settings
   // * Disable Google analytics site transactions key in asu_rfi admin settings page
   if ($form['#id'] == "asu-rfi-admin-settings") {
@@ -612,7 +612,7 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
  */
 function asu_rfi_disable_form(&$form, $decider) {
   if ($decider == FALSE) {
-    watchdog('asu_rfi', 'An RFI form was disabled possibly due to corrupt degree data. Please run cron. If cron doesn\'t fix the issue, please refresh your degree nodes');
+    flogger('asu_rfi', 'An RFI form was disabled possibly due to corrupt degree data. Please run cron. If cron doesn\'t fix the issue, please refresh your degree nodes');
     foreach (element_children($form) as $key) {
       $form[$key]['#access'] = FALSE;
     }
@@ -992,9 +992,20 @@ function asu_rfi_bulk_submit_action(&$node, $context) {
     ? $node->field_rfi_prospect_level[LANGUAGE_NONE][0]['value']
     : '';
   if (!empty($student_type)
-    && ($node->field_rfi_submission_status !== 'SF_Completed' && $node->field_rfi_submission_status !== 'Form_Completed_No_SF')
     && ($student_type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD || $student_type === ASU_RFI_PROSPECT_LEVEL_GRAD)) {
-    _asu_rfi_process_middleware_data($node, array(), $student_type);
+    $status = (isset($node->field_rfi_submission_status[LANGUAGE_NONE][0]['value']))
+      ? $node->field_rfi_submission_status[LANGUAGE_NONE][0]['value']
+      : '';
+    if ($status !== 'SF_Completed' && $status !== 'Form_Completed_No_SF') {
+      _asu_rfi_process_middleware_data($node, array(), $student_type);
+    } else {
+      $status = ($node->field_rfi_submission_status === 'Form_Completed_No_SF')
+        ? ' current student form submissions do not belong in Salesforce'
+        : ' it has already been submitted';
+      flogger('asu_rfi', 'Submission NID @node was not resubmitted because @status.',
+        array('@node' => $node->nid, '@status' => $status),
+        WATCHDOG_NOTICE, TRUE, FALSE, TRUE);
+    }
   }
 }
 
@@ -1097,7 +1108,6 @@ function _asu_rfi_get_status_field_tables() {
  * @return array|int
  */
 function _asu_rfi_get_submissions_to_delete($submissions_returned = 0, $only_count = FALSE) {
-
   // waste of time
   if ($only_count && $submissions_returned !== 0) {
     $message = 'INFO: You know the node count already: ' . $submissions_returned . '.';

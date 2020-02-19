@@ -68,7 +68,6 @@ function asu_rfi_preprocess_page(&$variables) {
         $items = entity_load('node', $items_nids);
       } else {
         $items = array();
-        watchdog('asu_rfi', __FUNCTION__ . ' - No asu_rfi nodes selected.', array(), WATCHDOG_NOTICE);
       }
 
       $price = $locale = 'unset';

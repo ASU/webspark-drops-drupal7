@@ -41,8 +41,17 @@ function asu_ap_feature_uninstall() {
 }
 
 /**
- * Implementing hook_update_N
+ * Reverts ASU AP feature after changes
  */
 function asu_ap_feature_update_7000(&$sandbox) {
   features_revert_module('asu_ap_feature');
+
+}
+/**
+ * Adds CurriculumURL, graduateAllApplyDates feed mapping options to ASUeAdvisorFeedParser
+ * Adds curriculum_url, grad_all_apply_dates fields for asu_ap_degree content type
+ */
+function asu_ap_feature_update_7001(&$sandbox) {
+  features_revert_module('asu_ap_feature');
+  feeds_cache_clear(); // Reset Feeds (ctools) cache of forms
 }

@@ -25,13 +25,13 @@ function asu_rfi_import_online_programs() {
         return $header[$finalHeader];
       }
     } else {
-      watchdog('asu_rfi', __FUNCTION__ . ' -- The ASUOnline programs list at ' . $url
+      flogger('asu_rfi', __FUNCTION__ . ' -- The ASUOnline programs list at ' . $url
         . ' is returning status code @code.',
         array('@code' => $code[1]), WATCHDOG_WARNING);
     }
   }
   if (!isset($data)) {
-    watchdog('asu_rfi', __FUNCTION__ . ' -- Failed to pull online programs from ' . $url, array(),
+    flogger('asu_rfi', __FUNCTION__ . ' -- Failed to pull online programs from ' . $url, array(),
     WATCHDOG_ERROR);
   }
   return false;
@@ -50,8 +50,7 @@ function asu_rfi_check_cached_programs() {
     // Re-pull and update programs
     $getPrograms = asu_rfi_import_online_programs();
     if ($getPrograms == false) {
-      watchdog('asu_rfi', __FUNCTION__ . ' -- Failed to import set
-      Online programs cache.',
+      flogger('asu_rfi', __FUNCTION__ . ' -- Failed to import set Online programs cache.',
         array(), WATCHDOG_ERROR);
       return false;
     }
@@ -73,14 +72,14 @@ function _asu_rfi_parse_programs() {
     if (isset($programString)) {
       $programs = json_decode($programString);
       if ($programs == NULL) {
-        watchdog('asu_rfi', __FUNCTION__ . ' -- The cached JSON of
-        programs cannot be parsed.', array(), WATCHDOG_ERROR);
+        flogger('asu_rfi', __FUNCTION__ . ' -- The cached JSON of programs cannot be parsed.',
+          array(), WATCHDOG_ERROR);
         return FALSE;
       }
     }
     else {
-      watchdog('asu_rfi', __FUNCTION__ . ' -- Cannot find cached JSON
-      list of programs to parse.', array(), WATCHDOG_ERROR);
+      flogger('asu_rfi', __FUNCTION__ . ' -- Cannot find cached JSON list of programs to parse.',
+        array(), WATCHDOG_ERROR);
       return FALSE;
     }
   }
