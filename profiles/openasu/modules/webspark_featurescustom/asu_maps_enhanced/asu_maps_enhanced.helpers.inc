@@ -29,7 +29,13 @@ function asu_maps_enhanced_get_layers() {
 
       $layers = $data['operationalLayers'];
 
-      foreach ($layers as &$layer) {
+      foreach ($layers as $topkey => &$layer) {
+
+        if ($layer['layerType'] != 'ArcGISMapServiceLayer') {
+          unset($layers[$topkey]);
+          continue;
+        }
+
         $layer['value'] = $layer['id'];
         $layer['label'] = $layer['title'];
 
@@ -39,15 +45,24 @@ function asu_maps_enhanced_get_layers() {
         unset($layer['layers']);
 
 
-        foreach ($layer['children'] as &$sublayer) {
-          unset($sublayer['popupInfo']);
-          $sublayer['value'] = $layer['id'] . '_' . $sublayer['id'];
-          $sublayer['label'] = $sublayer['name'];
+        foreach ($layer['children'] as $key =>  &$sublayer) {
+
+          if ($sublayer['name'] != NULL) {
+            unset($sublayer['popupInfo']);
+            $sublayer['value'] = $layer['id'] . '_' . $sublayer['id'];
+            $sublayer['label'] = $sublayer['name'];
+
+          // if no name is provided for layer, don't include it into the
+          // renderable tree
+          } else {
+            unset($layer['children'][$key]);
+          }
         }
       }
 
       $cached_copy = drupal_json_encode($layers);
       $expire_date = time() + 3600 * ASU_MAPS_ENHANCED_TREE_CACHE_DURATION;
+
       cache_set('asu_maps_enhanced_gis_layer_tree', $cached_copy, 'cache', $expire_date);
 
       $tree = $layers;
