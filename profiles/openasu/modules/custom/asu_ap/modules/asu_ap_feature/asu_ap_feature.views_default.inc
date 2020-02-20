@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * asu_ap_feature.views_default.inc
@@ -58,13 +59,13 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Content: Degree Image */
+  /* Field: Content: Degree image */
   $handler->display->display_options['fields']['field_degree_image']['id'] = 'field_degree_image';
   $handler->display->display_options['fields']['field_degree_image']['table'] = 'field_data_field_degree_image';
   $handler->display->display_options['fields']['field_degree_image']['field'] = 'field_degree_image';
   $handler->display->display_options['fields']['field_degree_image']['label'] = '';
   $handler->display->display_options['fields']['field_degree_image']['element_label_colon'] = FALSE;
-  /* Field: Content: Degree Awarded */
+  /* Field: Content: Degree awarded */
   $handler->display->display_options['fields']['field_asu_ap_awarded']['id'] = 'field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['table'] = 'field_data_field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['field'] = 'field_asu_ap_awarded';
@@ -73,7 +74,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['text'] = '<a href="/node/[nid]">[field_asu_ap_awarded]</a>';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['element_label_colon'] = FALSE;
-  /* Field: Content: Program Description (long) */
+  /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -101,7 +102,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_campus_1']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_limit'] = '1';
   $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_offset'] = '0';
-  /* Field: Content: Department Code */
+  /* Field: Content: Department code */
   $handler->display->display_options['fields']['field_asu_ap_department_code']['id'] = 'field_asu_ap_department_code';
   $handler->display->display_options['fields']['field_asu_ap_department_code']['table'] = 'field_data_field_asu_ap_department_code';
   $handler->display->display_options['fields']['field_asu_ap_department_code']['field'] = 'field_asu_ap_department_code';
@@ -129,11 +130,11 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['nid_1']['label'] = '';
   $handler->display->display_options['fields']['nid_1']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid_1']['element_label_colon'] = FALSE;
-  /* Sort criterion: Content: Degree Awarded (field_asu_ap_awarded) */
+  /* Sort criterion: Content: Degree awarded (field_asu_ap_awarded) */
   $handler->display->display_options['sorts']['field_asu_ap_awarded_value']['id'] = 'field_asu_ap_awarded_value';
   $handler->display->display_options['sorts']['field_asu_ap_awarded_value']['table'] = 'field_data_field_asu_ap_awarded';
   $handler->display->display_options['sorts']['field_asu_ap_awarded_value']['field'] = 'field_asu_ap_awarded_value';
-  /* Filter criterion: Content: Published */
+  /* Filter criterion: Content: Published status */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -342,13 +343,13 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Content: Degree Image */
+  /* Field: Content: Degree image */
   $handler->display->display_options['fields']['field_degree_image']['id'] = 'field_degree_image';
   $handler->display->display_options['fields']['field_degree_image']['table'] = 'field_data_field_degree_image';
   $handler->display->display_options['fields']['field_degree_image']['field'] = 'field_degree_image';
   $handler->display->display_options['fields']['field_degree_image']['label'] = '';
   $handler->display->display_options['fields']['field_degree_image']['element_label_colon'] = FALSE;
-  /* Field: Content: Degree Awarded */
+  /* Field: Content: Degree awarded */
   $handler->display->display_options['fields']['field_asu_ap_awarded']['id'] = 'field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['table'] = 'field_data_field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['field'] = 'field_asu_ap_awarded';
@@ -357,7 +358,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['text'] = '<a href="/node/[nid]">[field_asu_ap_awarded]</a>';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['element_label_colon'] = FALSE;
-  /* Field: Content: Program Description (long) */
+  /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -385,7 +386,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_campus_1']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_limit'] = '1';
   $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_offset'] = '0';
-  /* Field: Content: Department Code */
+  /* Field: Content: Department code */
   $handler->display->display_options['fields']['field_asu_ap_department_code']['id'] = 'field_asu_ap_department_code';
   $handler->display->display_options['fields']['field_asu_ap_department_code']['table'] = 'field_data_field_asu_ap_department_code';
   $handler->display->display_options['fields']['field_asu_ap_department_code']['field'] = 'field_asu_ap_department_code';
@@ -455,13 +456,13 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Content: Degree Image */
+  /* Field: Content: Degree image */
   $handler->display->display_options['fields']['field_degree_image']['id'] = 'field_degree_image';
   $handler->display->display_options['fields']['field_degree_image']['table'] = 'field_data_field_degree_image';
   $handler->display->display_options['fields']['field_degree_image']['field'] = 'field_degree_image';
   $handler->display->display_options['fields']['field_degree_image']['label'] = '';
   $handler->display->display_options['fields']['field_degree_image']['element_label_colon'] = FALSE;
-  /* Field: Content: Degree Awarded */
+  /* Field: Content: Degree awarded */
   $handler->display->display_options['fields']['field_asu_ap_awarded']['id'] = 'field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['table'] = 'field_data_field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['field'] = 'field_asu_ap_awarded';
@@ -470,7 +471,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['text'] = '<a href="/node/[nid]">[field_asu_ap_awarded]</a>';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['element_label_colon'] = FALSE;
-  /* Field: Content: Program Description (long) */
+  /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -498,7 +499,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_campus_1']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_limit'] = '1';
   $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_offset'] = '0';
-  /* Field: Content: Department Code */
+  /* Field: Content: Department code */
   $handler->display->display_options['fields']['field_asu_ap_department_code']['id'] = 'field_asu_ap_department_code';
   $handler->display->display_options['fields']['field_asu_ap_department_code']['table'] = 'field_data_field_asu_ap_department_code';
   $handler->display->display_options['fields']['field_asu_ap_department_code']['field'] = 'field_asu_ap_department_code';
@@ -528,7 +529,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['nid_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Content: Published */
+  /* Filter criterion: Content: Published status */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -732,7 +733,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Content: Published */
+  /* Filter criterion: Content: Published status */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -992,7 +993,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Content: Degree Awarded */
+  /* Field: Content: Degree awarded */
   $handler->display->display_options['fields']['field_asu_ap_awarded']['id'] = 'field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['table'] = 'field_data_field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['field'] = 'field_asu_ap_awarded';
@@ -1005,7 +1006,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap']['table'] = 'field_data_field_asu_ap';
   $handler->display->display_options['fields']['field_asu_ap']['field'] = 'field_asu_ap';
   $handler->display->display_options['fields']['field_asu_ap']['element_label_colon'] = FALSE;
-  /* Field: Content: Major Map URL */
+  /* Field: Content: Major map URL */
   $handler->display->display_options['fields']['field_asu_ap_major_map_url']['id'] = 'field_asu_ap_major_map_url';
   $handler->display->display_options['fields']['field_asu_ap_major_map_url']['table'] = 'field_data_field_asu_ap_major_map_url';
   $handler->display->display_options['fields']['field_asu_ap_major_map_url']['field'] = 'field_asu_ap_major_map_url';
@@ -1108,7 +1109,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Content: Degree Awarded */
+  /* Field: Content: Degree awarded */
   $handler->display->display_options['fields']['field_asu_ap_awarded']['id'] = 'field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['table'] = 'field_data_field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['field'] = 'field_asu_ap_awarded';
@@ -1121,7 +1122,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap']['table'] = 'field_data_field_asu_ap';
   $handler->display->display_options['fields']['field_asu_ap']['field'] = 'field_asu_ap';
   $handler->display->display_options['fields']['field_asu_ap']['element_label_colon'] = FALSE;
-  /* Field: Content: Major Map URL */
+  /* Field: Content: Major map URL */
   $handler->display->display_options['fields']['field_asu_ap_major_map_url']['id'] = 'field_asu_ap_major_map_url';
   $handler->display->display_options['fields']['field_asu_ap_major_map_url']['table'] = 'field_data_field_asu_ap_major_map_url';
   $handler->display->display_options['fields']['field_asu_ap_major_map_url']['field'] = 'field_asu_ap_major_map_url';
@@ -1145,7 +1146,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_offset'] = '0';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Content: Published */
+  /* Filter criterion: Content: Published status */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -1379,7 +1380,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Content: Degree Awarded */
+  /* Field: Content: Degree awarded */
   $handler->display->display_options['fields']['field_asu_ap_awarded']['id'] = 'field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['table'] = 'field_data_field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['field'] = 'field_asu_ap_awarded';
@@ -1424,7 +1425,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['nid_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Content: Published */
+  /* Filter criterion: Content: Published status */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -1579,13 +1580,13 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Content: Degree Image */
+  /* Field: Content: Degree image */
   $handler->display->display_options['fields']['field_degree_image']['id'] = 'field_degree_image';
   $handler->display->display_options['fields']['field_degree_image']['table'] = 'field_data_field_degree_image';
   $handler->display->display_options['fields']['field_degree_image']['field'] = 'field_degree_image';
   $handler->display->display_options['fields']['field_degree_image']['label'] = '';
   $handler->display->display_options['fields']['field_degree_image']['element_label_colon'] = FALSE;
-  /* Field: Content: Degree Awarded */
+  /* Field: Content: Degree awarded */
   $handler->display->display_options['fields']['field_asu_ap_awarded']['id'] = 'field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['table'] = 'field_data_field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['field'] = 'field_asu_ap_awarded';
@@ -1594,7 +1595,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_awarded']['alter']['text'] = '<a href="/node/[nid]">[field_asu_ap_awarded]</a>';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['element_label_colon'] = FALSE;
-  /* Field: Content: Program Description (long) */
+  /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -1622,7 +1623,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_campus_1']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_limit'] = '1';
   $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_offset'] = '0';
-  /* Field: Content: Department Code */
+  /* Field: Content: Department code */
   $handler->display->display_options['fields']['field_asu_ap_department_code']['id'] = 'field_asu_ap_department_code';
   $handler->display->display_options['fields']['field_asu_ap_department_code']['table'] = 'field_data_field_asu_ap_department_code';
   $handler->display->display_options['fields']['field_asu_ap_department_code']['field'] = 'field_asu_ap_department_code';
@@ -1652,7 +1653,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['nid_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Content: Published */
+  /* Filter criterion: Content: Published status */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -1821,7 +1822,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Content: Degree Awarded */
+  /* Field: Content: Degree awarded */
   $handler->display->display_options['fields']['field_asu_ap_awarded']['id'] = 'field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['table'] = 'field_data_field_asu_ap_awarded';
   $handler->display->display_options['fields']['field_asu_ap_awarded']['field'] = 'field_asu_ap_awarded';
@@ -1858,7 +1859,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_offset'] = '0';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Content: Published */
+  /* Filter criterion: Content: Published status */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';

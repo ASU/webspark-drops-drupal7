@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * asu_ap_feature.field_group.inc
@@ -180,6 +181,8 @@ function asu_ap_feature_field_group_info() {
       27 => 'field_asu_ap_second_language',
       28 => 'field_asu_ap_subplan_title',
       29 => 'field_asu_ap_subplan_url',
+      30 => 'field_asu_ap_curriculum_url',
+      31 => 'field_asu_ap_grad_all_app_dates',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(

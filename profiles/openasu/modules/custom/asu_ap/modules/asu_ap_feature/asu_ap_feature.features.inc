@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * asu_ap_feature.features.inc
@@ -58,7 +59,7 @@ function asu_ap_feature_node_info() {
     'asu_ap' => array(
       'name' => t('ASU Academic Programs'),
       'base' => 'node_content',
-      'description' => t('ASU Academic Programs Feed will create ASU Academic Programs nodes.'),
+      'description' => t('ASU Academic Programs Feed nodes create these pre-populated degree pages. These pages should not be created manually.'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',

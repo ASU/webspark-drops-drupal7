@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * asu_ap_feature.features.field_instance.inc
@@ -61,7 +62,7 @@ function asu_ap_feature_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 31,
+      'weight' => 33,
     ),
   );
 
@@ -113,7 +114,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 20,
+      'weight' => 21,
     ),
   );
 
@@ -445,7 +446,7 @@ function asu_ap_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 38,
+      'weight' => 40,
     ),
   );
 
@@ -497,7 +498,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 21,
+      'weight' => 22,
     ),
   );
 
@@ -1214,6 +1215,75 @@ function asu_ap_feature_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_curriculum_url'.
+  $field_instances['node-asu_ap-field_asu_ap_curriculum_url'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Program page URL (Online campus only).',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 58,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_curriculum_url',
+    'label' => 'Curriculum URL',
+    'required' => 0,
+    'settings' => array(
+      'absolute_url' => 1,
+      'attributes' => array(
+        'class' => '',
+        'configurable_class' => 0,
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => '_blank',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'value',
+      'title_allowed_values' => '',
+      'title_label_use_field_label' => 0,
+      'title_maxlength' => 128,
+      'title_value' => 'Online',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(),
+      'type' => 'link_field',
+      'weight' => 20,
+    ),
+  );
+
   // Exported field_instance: 'node-asu_ap-field_asu_ap_department'.
   $field_instances['node-asu_ap-field_asu_ap_department'] = array(
     'bundle' => 'asu_ap',
@@ -1262,7 +1332,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 22,
+      'weight' => 23,
     ),
   );
 
@@ -1314,7 +1384,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 24,
+      'weight' => 25,
     ),
   );
 
@@ -1367,7 +1437,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 25,
+      'weight' => 26,
     ),
   );
 
@@ -1420,7 +1490,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 23,
+      'weight' => 24,
     ),
   );
 
@@ -1472,7 +1542,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 26,
+      'weight' => 27,
     ),
   );
 
@@ -1577,7 +1647,62 @@ function asu_ap_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 27,
+      'weight' => 28,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_grad_all_app_dates'.
+  $field_instances['node-asu_ap-field_asu_ap_grad_all_app_dates'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'All future available terms and their application dates - by campus.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 59,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_grad_all_app_dates',
+    'label' => 'Grad All Apply Dates',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 29,
     ),
   );
 
@@ -1865,7 +1990,7 @@ function asu_ap_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 28,
+      'weight' => 30,
     ),
   );
 
@@ -1917,7 +2042,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 29,
+      'weight' => 31,
     ),
   );
 
@@ -1969,7 +2094,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 30,
+      'weight' => 32,
     ),
   );
 
@@ -2075,7 +2200,7 @@ function asu_ap_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 32,
+      'weight' => 34,
     ),
   );
 
@@ -2127,7 +2252,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 10,
       ),
       'type' => 'text_textfield',
-      'weight' => 33,
+      'weight' => 35,
     ),
   );
 
@@ -2280,7 +2405,7 @@ function asu_ap_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 34,
+      'weight' => 36,
     ),
   );
 
@@ -2332,7 +2457,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 35,
+      'weight' => 37,
     ),
   );
 
@@ -2508,7 +2633,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 36,
+      'weight' => 38,
     ),
   );
 
@@ -2577,7 +2702,7 @@ function asu_ap_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 37,
+      'weight' => 39,
     ),
   );
 
@@ -2666,7 +2791,7 @@ function asu_ap_feature_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
-      'default_image' => 5,
+      'default_image' => 3,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '',
@@ -2750,7 +2875,7 @@ function asu_ap_feature_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
-      'default_image' => 6,
+      'default_image' => 4,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '',
@@ -2801,7 +2926,7 @@ function asu_ap_feature_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('ASU Banner Image');
+  t('ASU banner image');
   t('Academic plan');
   t('Academic program');
   t('Accelerated program');
@@ -2811,14 +2936,15 @@ function asu_ap_feature_field_default_field_instances() {
   t('Add a link here to change from the default "Request information" link to one specific to your needs.');
   t('Add a link here to change from the default "Schedule a visit" link to one specific to your needs.');
   t('Add a link here to change from the default scholarship link to one specific to your needs.');
-  t('Additional program Fee');
+  t('Additional program fee');
   t('Additional requirements');
   t('Additional requirements for the program can be entered in to display at the top of the "Application requirements" region on undergraduate program nodes.');
   t('Admission requirements');
+  t('All future available terms and their application dates - by campus.');
   t('Application deadline');
-  t('CTA Button - How and when to apply');
-  t('CTA Button - Request information');
-  t('CTA Button - Schedule a visit');
+  t('CTA button - How and when to apply');
+  t('CTA button - Request information');
+  t('CTA button - Schedule a visit');
   t('Campus');
   t('Career opportunities');
   t('Career outlook description');
@@ -2828,6 +2954,7 @@ function asu_ap_feature_field_default_field_instances() {
   t('College URL');
   t('College URL (joint)');
   t('Concurrent program');
+  t('Curriculum URL');
   t('Degree');
   t('Degree awarded');
   t('Degree image');
@@ -2851,13 +2978,15 @@ function asu_ap_feature_field_default_field_instances() {
   t('Example careers');
   t('Example careers: True/False');
   t('Financing your education');
-  t('Major Map URL');
-  t('Major Map year');
-  t('Marketing text area');
+  t('Grad All Apply Dates');
+  t('Major map URL');
+  t('Major map year');
+  t('Marketing textarea');
   t('Minimum math requirement');
   t('New program');
   t('Program description (long)');
   t('Program description video');
+  t('Program page URL (Online campus only).');
   t('Program requirements');
   t('Program: Undergrad or Graduate');
   t('Related programs');
@@ -2865,7 +2994,7 @@ function asu_ap_feature_field_default_field_instances() {
   t('Scholarship link');
   t('Second language requirement');
   t('Short description');
-  t('Subplan: title');
+  t('Subplan: Title');
   t('Subplan: URL');
   t('This image only shows up on the view page.  Horizontal images work best.');
   t('This is the banner image across the top of the academic programs pages.');
