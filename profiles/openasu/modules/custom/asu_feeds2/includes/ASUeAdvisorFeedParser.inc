@@ -276,9 +276,14 @@ class ASUeAdvisorFeedParser extends FeedsParser {
       }
       $parsed_data[$key]['degreeSearchURL'] = "https://webapp4.asu.edu/programs/t5/majorinfo/ASU00/" . $parsed_data[$key]['AcadPlan'] . "/" . $batch->getProgram() . "/" . $cert;
 
-      // Program (Undergrad or Graduate) and Cert (True or False). Useful when creating views. - Chizuko
+      // Program (Undergrad or Graduate) and Cert (True or False). Useful when creating views.
       $parsed_data[$key]['program'] = $batch->getProgram();
       $parsed_data[$key]['cert'] = $cert;
+
+      // Clean up marketing text input for display in degree pages.
+      if (count($data['marketText'])) {
+        $parsed_data[$key]['marketText'] = filter_xss(html_entity_decode($data['marketText']));
+      }
 
       // Sub-plan code and subplan major map url - [SubPlnMajorMaps]
       $parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanCode'] = array();
@@ -293,7 +298,6 @@ class ASUeAdvisorFeedParser extends FeedsParser {
           }
         }
       }
-
       // Sub-plans - [SubPln]
       $parsed_data[$key]['subplan.code'] = array();
       $parsed_data[$key]['subplan.name'] = array();
@@ -303,8 +307,7 @@ class ASUeAdvisorFeedParser extends FeedsParser {
           $parsed_data[$key]['subplan.name'][] = $subplan;
         }
       }
-
-      //if subplan.code == subPlnMajorMaps.SubplnMajorMapSubplanCode then replace code with name
+      // if subplan.code == subPlnMajorMaps.SubplnMajorMapSubplanCode then replace code with name
       if (count($parsed_data[$key]['subplan.name'])) {
         $parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanName'] = array();
         foreach($parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanCode'] as $sn){
