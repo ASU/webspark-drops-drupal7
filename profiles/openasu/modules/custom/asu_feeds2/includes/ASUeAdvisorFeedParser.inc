@@ -247,6 +247,16 @@ class ASUeAdvisorFeedParser extends FeedsParser {
         $parsed_data[$key]['careerData'] = json_encode($data['careerData']);
       }
 
+      // Filter out MediaAmp videos for now - @TODO add MediaAMP support
+      if (count($data['Url4'])) {
+        $temp = ($data['Url4']);
+        if (strpos($data['Url4'], 'mediaamp.org') !== FALSE) {
+          $parsed_data[$key]['Url4'] = '';
+          drupal_set_message($data['Descr'] . ' - A MediaAMP URL was removed because'
+          . ' they are not currently supported in Webspark.', 'notice');
+        }
+      }
+
       // Transfer agreements
       $parsed_data[$key]['transferAgreementInfo.type'] = array();
       $parsed_data[$key]['transferAgreementInfo.year'] = array();
