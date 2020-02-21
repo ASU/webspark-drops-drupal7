@@ -52,7 +52,7 @@ function asu_ap_feature_feeds_importer_default() {
             'language' => 'und',
           ),
           3 => array(
-            'source' => 'acceleratedDegree',
+            'source' => 'accelerateDegrees',
             'target' => 'field_asu_ap_acc_program',
             'unique' => FALSE,
             'language' => 'und',
@@ -136,7 +136,7 @@ function asu_ap_feature_feeds_importer_default() {
             'language' => 'und',
           ),
           17 => array(
-            'source' => 'concurrentDegree',
+            'source' => 'concurrentDegrees',
             'target' => 'field_asu_ap_conc_program',
             'unique' => FALSE,
             'language' => 'und',
@@ -238,7 +238,7 @@ function asu_ap_feature_feeds_importer_default() {
             'language' => 'und',
           ),
           34 => array(
-            'source' => 'newDegree',
+            'source' => 'DegreeNew',
             'target' => 'field_asu_ap_new_program',
             'unique' => FALSE,
             'language' => 'und',

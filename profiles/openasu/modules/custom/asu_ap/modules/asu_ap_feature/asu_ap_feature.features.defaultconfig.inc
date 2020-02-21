@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * asu_ap_feature.features.defaultconfig.inc
@@ -10,30 +11,26 @@
 function asu_ap_feature_defaultconfig_features() {
   return array(
     'asu_ap_feature' => array(
-      'strongarm' => 'strongarm',
+      'user_default_permissions' => 'user_default_permissions',
     ),
   );
 }
 
 /**
- * Implements hook_defaultconfig_strongarm().
+ * Implements hook_defaultconfig_user_default_permissions().
  */
-function asu_ap_feature_defaultconfig_strongarm() {
-  $export = array();
+function asu_ap_feature_defaultconfig_user_default_permissions() {
+  $permissions = array();
 
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'chosen_include';
-  $strongarm->value = '1';
-  $export['chosen_include'] = $strongarm;
+  // Exported permission: 'use text format asu_feeds_text_format'.
+  $permissions['use text format asu_feeds_text_format'] = array(
+    'name' => 'use text format asu_feeds_text_format',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'editor' => 'editor',
+    ),
+    'module' => 'filter',
+  );
 
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'chosen_jquery_selector';
-  $strongarm->value = '.chosen-select';
-  $export['chosen_jquery_selector'] = $strongarm;
-
-  return $export;
+  return $permissions;
 }

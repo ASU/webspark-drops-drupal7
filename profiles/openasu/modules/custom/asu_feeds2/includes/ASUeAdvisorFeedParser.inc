@@ -228,7 +228,7 @@ class ASUeAdvisorFeedParser extends FeedsParser {
           }
           if ($value == 'Online') {
             unset($parsed_data[$key]['CampusStringArray'][$campus_key]);
-            array_push($parsed_data[$key]['CampusStringArray'],$value);
+            array_push($parsed_data[$key]['CampusStringArray'], $value);
           } else {
             $parsed_data[$key]['CampusStringArray'][$campus_key] = $value;
           }
@@ -248,13 +248,17 @@ class ASUeAdvisorFeedParser extends FeedsParser {
       }
 
       // Filter out MediaAmp videos for now - @TODO add MediaAMP support
-      if (count($data['Url4'])) {
-        $temp = ($data['Url4']);
+      if (isset($data['Url4'])) {
         if (strpos($data['Url4'], 'mediaamp.org') !== FALSE) {
           $parsed_data[$key]['Url4'] = '';
           drupal_set_message($data['Descr'] . ' - A MediaAMP URL was removed because'
           . ' they are not currently supported in Webspark.', 'notice');
+        } elseif (strpos($data['Url4'], 'player.vimeo.com') !== FALSE) {
+          // Vimeo refactoring for player.vimeo.com URLs
+          $data['Url4'] = preg_replace('|^(https?)://player.(vimeo.com)/video/(\d+)$|',
+            '$1://$2/$3', $data['Url4']);
         }
+        watchdog('asu_feeds2', print_r($data['Url4']));
       }
 
       // Transfer agreements
@@ -291,8 +295,8 @@ class ASUeAdvisorFeedParser extends FeedsParser {
       $parsed_data[$key]['cert'] = $cert;
 
       // Clean up marketing text input for display in degree pages.
-      if (count($data['marketText'])) {
-        $parsed_data[$key]['marketText'] = filter_xss(html_entity_decode($data['marketText']));
+      if (isset($data['marketText'])) {
+//        $parsed_data[$key]['marketText'] = filter_xss(html_entity_decode($data['marketText']));
       }
 
       // Sub-plan code and subplan major map url - [SubPlnMajorMaps]
@@ -335,7 +339,7 @@ class ASUeAdvisorFeedParser extends FeedsParser {
     } // END FOREACH of all data
     // DEBUG
     //error_log(print_r($parsed_data, true));
-    //watchdog('A2P Debug', '<pre>'. print_r($parsed_data, true) .'</pre>');
+    watchdog('A2P Debug', '<pre>'. print_r($parsed_data, true) .'</pre>');
 
     return new FeedsParserResult($parsed_data);
   }

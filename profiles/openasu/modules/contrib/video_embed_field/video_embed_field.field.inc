@@ -204,9 +204,15 @@ function video_embed_field_field_validate($entity_type, $entity, $field, $instan
       }
       else {
         $host = $parts['host'];
+        dpm($host, __FUNCTION__);
+        watchdog('video_embed_field', print_r($host));
         if (stripos($host, 'www.') > -1) {
           $host = substr($host, 4);
+        } elseif (stripos($host, 'player.vimeo') > -1) { // Vimeo refactoring for player.vimeo.com URLs
+          $host = substr($host, 7);
         }
+        dpm($host, __FUNCTION__ . ' - $host after');
+        watchdog('video_embed_field', print_r($host));
         $domains = _video_embed_field_get_instance_provider_domains($instance);
         if (!array_key_exists($host, $domains)) {
           $errors[$field['field_name']][$langcode][$delta][] = array(
