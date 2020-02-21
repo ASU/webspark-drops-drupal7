@@ -183,6 +183,11 @@ function asu_ap_feature_field_group_info() {
       29 => 'field_asu_ap_subplan_url',
       30 => 'field_asu_ap_curriculum_url',
       31 => 'field_asu_ap_grad_all_app_dates',
+      32 => 'field_asu_ap_url_1',
+      33 => 'field_asu_ap_url_2',
+      34 => 'field_asu_ap_url_3',
+      35 => 'field_asu_ap_url_4',
+      36 => 'field_asu_ap_market_text',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
