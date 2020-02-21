@@ -1,264 +1,147 @@
 /**
-  * View page styles
+  * ASU AP styles
   **/
-
+/**
+  * View page
+  */
 .view-asu-ap-view .view-content .views-field.views-field-field-degree-image {
-    float: left;
-    padding-right: 15px;
-}
-
-@media (min-width: 992px) and (max-width: 1200px) {
-    .view-asu-ap-view .view-content .views-field.views-field-field-degree-image img {
-        width: 212px;
-        height: 152px;
-    }
-}
-
-@media (min-width: 767px) and (max-width: 992px) {
-    .view-asu-ap-view .view-content .views-field.views-field-field-degree-image {
-        width: 50%;
-    }
-}
-
-@media (max-width: 767px) {
-    .view-asu-ap-view .view-content .views-field.views-field-field-degree-image {
-        float: none;
-    }
-    .asu-ap-major-title {
-        margin-top: 24px;
-    }
-    .views-field.views-field-field-asu-ap .asu-ap-rewritten-fields {
-        overflow: visible;
-        padding-left: 0;
-    }
+  float: left;
+  padding-right: 0.9375em;
 }
 
 .asu-ap-rewritten-fields {
-    overflow: hidden;
-    padding-left: 15px;
+  overflow: hidden;
+  padding-left: 0.9375em;
 }
 
-.view-asu-ap-view table>tbody>tr>td {
-    border: none;
+.view-asu-ap-view table > tbody > tr > td {
+  border: none;
 }
 
 .asu-ap-major-title {
-    font-size: 21px;
-    color: #8C1D40;
+  font-size: 1.3125em;
+  color: #8C1D40;
 }
 
 .asu-ap-field-title {
-    font-weight: bold;
-    float: left;
-    padding-right: 5px;
+  font-weight: bold;
+  float: left;
+  padding-right: 0.3125em;
 }
 
 .view-asu-ap-view .row, .view-asu-ap .col.col-lg-6 {
-    margin-bottom: 24px;
+  margin-bottom: 1.5em;
 }
-
 
 /**
   * Academic Programs Page styles
   **/
-
 .col-md-8 h2 {
-    margin-top: 0;
+  margin-top: 0;
 }
-
 .asu-ap-grey-section {
-    background: #f1f1f1;
-    padding: 48px 0;
+  background: #f1f1f1;
+  padding: 48px 0;
 }
-
 .asu-ap-grey-section a {
-    font-weight: 500;
+  font-weight: 500;
 }
-
 .space-bot-md {
-    margin-bottom: 24px;
+  margin-bottom: 1.5em;
 }
-
 .space-bot-lg {
-    margin-bottom: 36px;
+  margin-bottom: 36px;
 }
-
-.node-type-asu-ap p {
-    margin: 0 0 24px;
-    font-weight: 200;
+body.node-type-asu-ap #main-wrapper p {
+  margin: 0 0 1.5em;
+  font-weight: 200;
 }
-
-.node-type-asu-ap .field-name-field-asu-ap-example-careers p {
-    margin: 0;
+body.node-type-asu-ap #main-wrapper .field-name-field-asu-ap-example-careers p {
+  margin: 0;
 }
-
-.node-type-asu-ap .container .field-name-body, .asu-ap-short-description {
-    font-size: 20px;
-    /*margin-top: 48px;*/
+body.node-type-asu-ap #main-wrapper .asu-degree-banner-image img {
+  min-height: 288px;
 }
-
-.node-type-asu-ap .asu-degree-banner-image img {
-    min-height: 288px;
-}
-
-@media (min-width: 768px) {
-    .node-type-asu-ap .field-name-body {
-        font-size: 24px;
-    }
-    .node-type-asu-ap .col-sm-6 {
-        width: 50%;
-        float: left;
-    }
-    .node-type-asu-ap .asu-degree-banner-image img {
-        min-height: 238px;
-    }
-    .node-type-asu-ap h1#page-title {
-        font-size: 60px;
-    }
-}
-
-@media (min-width: 992px) {
-    .node-type-asu-ap .col-md-4 {
-        width: 33.33333%;
-    }
-    .node-type-asu-ap .asu-degree-banner-image img {
-        min-height: 200px;
-    }
-}
-
 .space-top-xl {
-    margin-top: 48px;
+  margin-top: 48px;
 }
-
 .space-bot-xl {
-    margin-bottom: 48px;
+  margin-bottom: 48px;
+}
+body.node-type-asu-ap #main-wrapper a.btn.btn-lg, .node-type-asu-ap .btn.btn-lg {
+  margin-top: 0;
+}
+body.node-type-asu-ap #main-wrapper .asu-degree-banner-image {
+  /*background-image: url(/sites/default/files/asu_degree_banner_default.jpg);*/
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 110px 0 20px 0;
+}
+body.node-type-asu-ap #main-wrapper #page-title {
+  color: white;
+  font-size: 3.125em;
+  margin-bottom: 0.625em;
+  line-height: 1;
+  font-weight: 900;
+  text-shadow: 0 0 0.3125em rgba(0, 0, 0, 0.5);
+}
+body.node-type-asu-ap #main-wrapper .space-bot-md {
+  padding-bottom: 0;
 }
 
-.node-type-asu-ap a.btn.btn-lg, .node-type-asu-ap .btn.btn-lg {
-    margin-top: 0;
+.asu-ap-short-description > p:first-child {
+  margin-bottom: 0.625em;
 }
-
-.node-type-asu-ap .asu-degree-banner-image {
-    /*background-image: url(/sites/default/files/asu_degree_banner_default.jpg);*/
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    padding: 110px 0 20px 0;
-}
-
-.node-type-asu-ap #page-title {
-    color: white;
-    font-size: 50px;
-    margin-bottom: 10px;
-    line-height: 1;
-    font-weight: 900;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-}
-
-.node-type-asu-ap .space-bot-md {
-    padding-bottom: 0;
-}
-
-.asu-ap-short-description>p:first-child {
-    margin-bottom: 10px;
-}
-
 .asu-ap-read-more {
-    margin-bottom: 25px;
+  margin-bottom: 1.5625em;
 }
-
-/*.region.region-asu-ap-marketing {
-    margin-top: 48px;
-}
-
-@media (max-width: 992px) {
-    .region.region-asu-ap-sidebar {
-        margin-top: 48px;
-    }
-}*/
-
 .view-asu-ap-view .view-header .btn-group {
-    padding: 1em 0 2em 0;
+  padding: 1em 0 2em 0;
+}
+.view-asu-ap-view .table > thead > tr > th {
+  white-space: nowrap;
 }
 
-.view-asu-ap-view .table>thead>tr>th {
-    white-space: nowrap;
+#asu-ap-node-form .fieldset-wrapper > * {
+  margin-bottom: 1.5625em;
 }
 
-#asu-ap-node-form .fieldset-wrapper>* {
-    margin-bottom: 25px;
+body.node-type-asu-ap #main-wrapper .pane-menu-tree {
+  margin-top: 0.625em;
 }
-
-.node-type-asu-ap .pane-menu-tree {
-    margin-top: 10px;
+body.node-type-asu-ap #main-wrapper .pane-menu-tree a:first-child {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
 }
-
-.node-type-asu-ap .pane-menu-tree a:first-child {
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
-}
-
-.node-type-asu-ap .pane-menu-tree a {
-    position: relative;
-    display: block;
-    padding: 10px 5px;
-    margin-bottom: -20px;
-    font-weight: normal;
-    background-color: white;
-    border-top: 1px solid #d7d7d7;
-    border-right: 0;
-    border-bottom: 0;
-    border-left: 0;
-}
-
-i.fa.fa-location-arrow {
-    font-size: 25px;
-    position: relative;
-    bottom: 8px;
-    margin-right: -10px;
-}
-
-i.fa.fa-star {
-    font-size: 25px;
-    position: relative;
-    bottom: 8px;
-    margin-right: -10px;
-}
-
-i.fa.fa-retweet {
-    font-size: 25px;
-    position: relative;
-    bottom: 8px;
-    margin-right: -10px;
-}
-
-span.asu-ap-program-flag {
-    font-size: 20px;
-    font-weight: normal;
-    vertical-align: middle;
-    padding-right: 5px;
+body.node-type-asu-ap #main-wrapper .pane-menu-tree a {
+  position: relative;
+  display: block;
+  padding: 0.625em 0.3125em;
+  margin-bottom: -20px;
+  font-weight: normal;
+  background-color: white;
+  border-top: 1px solid #d7d7d7;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
 }
 
 /* [NEW] PROGRAM REQUIREMENTS FIELD */
-
 .mm_section_note, .mm_notes {
-    margin-top: 30px;
+  margin-top: 1.875em;
 }
-
 .mm_section_note_row, .mm_section_note_R {
-    margin-top: 10px;
-    margin-bottom: 5px;
+  margin-top: 0.625em;
+  margin-bottom: 0.3125em;
 }
-
 .mm_req_cat, .mm_req {
-    margin-top: 10px;
-    font-weight: 700;
+  margin-top: 0.625em;
+  font-weight: 700;
 }
-
 .mm_reqUnderCat {
-    margin: 10px 10px 10px 0px;
+  margin: 0.625em 0.625em 0.625em 0;
 }
-
 a.ttCourse {
   border-bottom: none;
 }
@@ -270,15 +153,103 @@ a.ttCourse {
 .text-green {
   color: #006838;
 }
+
 .asu-degrees-example-careers-small {
   font-size: 75%;
-  margin: 0 0 24px 0 !important;
+  margin: 0 0 1.5em 0 !important;
 }
 
 /* Degree page breadcrumb styling */
 .asu-degrees-breadcrumb-container {
-    max-width: 1170px;
-    margin: 0 auto;
-    padding-left: 15px;
-    padding-right: 15px;
+  max-width: 1170px;
+  margin: 0 auto;
+  padding-left: 0.9375em;
+  padding-right: 0.9375em;
+}
+
+
+/* Font Awesome icons */
+i.fa.fa-location-arrow,
+span.fa.fa-location-arrow {
+  font-size: 1.5625em;
+  position: relative;
+  bottom: 8px;
+  margin-right: -0.625em;
+}
+
+i.fa.fa-star,
+span.fa.fa-star {
+  font-size: 1.5625em;
+  position: relative;
+  bottom: 8px;
+  margin-right: -0.625em;
+}
+
+i.fa.fa-retweet,
+span.fa.fa-retweet {
+  font-size: 1.5625em;
+  position: relative;
+  bottom: 8px;
+  margin-right: -0.625em;
+}
+
+span.asu-ap-program-flag {
+  font-size: 1.25em;
+  font-weight: normal;
+  vertical-align: middle;
+  padding-right: 0.3125em;
+}
+
+/**
+ * Media Rules
+ */
+
+@media (min-width: 992px) and (max-width: 1200px) {
+  .view-asu-ap-view .view-content .views-field.views-field-field-degree-image img {
+    width: 212px;
+    height: 152px;
+  }
+}
+
+@media (max-width: 767px) {
+  .view-asu-ap-view .view-content .views-field.views-field-field-degree-image {
+    float: none;
+  }
+  .asu-ap-major-title {
+    margin-top: 1.5em;
+  }
+  .views-field.views-field-field-asu-ap .asu-ap-rewritten-fields {
+    overflow: visible;
+    padding-left: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  body.node-type-asu-ap #main-wrapper .field-name-body {
+    font-size: 1.5em;
+  }
+  body.node-type-asu-ap #main-wrapper .col-sm-6 {
+    float: left;
+  }
+  body.node-type-asu-ap #main-wrapper .asu-degree-banner-image img {
+    min-height: 238px;
+  }
+  body.node-type-asu-ap #main-wrapper h1#page-title {
+    font-size: 3.75em;
+  }
+}
+
+@media (min-width: 767px) and (max-width: 992px) {
+  .view-asu-ap-view .view-content .views-field.views-field-field-degree-image {
+    width: 50%;
+  }
+}
+
+@media (min-width: 992px) {
+  .node-type-asu-ap .col-md-4 {
+    width: 33.33333%;
+  }
+  .node-type-asu-ap .asu-degree-banner-image img {
+    min-height: 200px;
+  }
 }
