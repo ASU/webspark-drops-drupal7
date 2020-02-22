@@ -10,7 +10,6 @@ include_once 'asu_ap_feature.features.inc';
  *  Implements hook_form_alter().
  */
 function asu_ap_feature_form_alter(&$form, &$form_state, $form_id) {
-
   /*
   // Hide irrelavant fields on ASU Academic Programs node edit form
   if ($form_id == 'asu_ap_node_form') {
@@ -89,9 +88,10 @@ function asu_ap_feature_field_default_field_instances_alter(&$fields) {
   }
 }
 
-  /**
-   * Grab image within the Feature module. Then, create image in the new site to use for default image for the ASU Academic Programs Banner Image field.
-	 */
+/**
+ * Grab image within the Feature module.
+ * Then, create image in the new site to use for default image for the ASU Academic Programs Banner Image field.
+ */
 function _asu_ap_feature_image($image, $key) {
   $filename = $image;
   $origfile = drupal_get_path('module', 'asu_ap_feature') . '/images/' . $filename;
@@ -117,13 +117,11 @@ function _asu_ap_feature_image($image, $key) {
  * this module into last place.
  */
 function asu_ap_feature_module_implements_alter(&$implementations, $hook) {
-
-    if ($hook == 'features_export_alter') {
-        $movetolast = $implementations['field_group_features_fix'];
-        unset($implementations['field_group_features_fix']);
-        $implementations['field_group_features_fix'] = $movetolast;
-    }
-
+  if ($hook == 'features_export_alter') {
+    $movetolast = $implementations['field_group_features_fix'];
+    unset($implementations['field_group_features_fix']);
+    $implementations['field_group_features_fix'] = $movetolast;
+  }
 }
 /**
  * Implements hook_features_export_alter().
@@ -139,10 +137,8 @@ function asu_ap_feature_module_implements_alter(&$implementations, $hook) {
  * circumvents the need for this fix.
  */
 function asu_ap_feature_features_export_alter(&$export, $module_name) {
-
-    if (!empty($export['features']['field_group']) || !empty($export['features']['dependencies']['field_group']) ) {
-        $identifier = "field_group:field_group:1";
-        $export['features']['ctools'][$identifier] = $identifier;
-    }
-
+  if (!empty($export['features']['field_group']) || !empty($export['features']['dependencies']['field_group']) ) {
+    $identifier = "field_group:field_group:1";
+    $export['features']['ctools'][$identifier] = $identifier;
+  }
 }

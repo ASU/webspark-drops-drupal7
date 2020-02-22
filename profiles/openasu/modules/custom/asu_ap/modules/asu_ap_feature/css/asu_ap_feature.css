@@ -41,7 +41,7 @@
 }
 .asu-ap-grey-section {
   background: #f1f1f1;
-  padding: 48px 0;
+  padding: 2em 0;
 }
 .asu-ap-grey-section a {
   font-weight: 500;
@@ -52,50 +52,85 @@
 .space-bot-lg {
   margin-bottom: 36px;
 }
-body.node-type-asu-ap #main-wrapper p {
+.node-type-asu-ap #main-wrapper p {
   margin: 0 0 1.5em;
   font-weight: 200;
 }
-body.node-type-asu-ap #main-wrapper .field-name-field-asu-ap-example-careers p {
+.node-type-asu-ap #main-wrapper .field-name-field-asu-ap-market-text {
+  font-size: 1.5em;
+}
+.node-type-asu-ap #main-wrapper .field-name-field-asu-ap-example-careers p {
   margin: 0;
 }
-body.node-type-asu-ap #main-wrapper .asu-degree-banner-image img {
+.node-type-asu-ap #main-wrapper .asu-degree-banner-image img {
   min-height: 288px;
 }
-.space-top-xl {
-  margin-top: 48px;
+
+.node-type-asu-ap .space-top-xl {
+  margin-top: 2em;
 }
-.space-bot-xl {
-  margin-bottom: 48px;
+.node-type-asu-ap .space-bot-xl {
+  margin-bottom: 2em;
 }
-body.node-type-asu-ap #main-wrapper a.btn.btn-lg, .node-type-asu-ap .btn.btn-lg {
+
+.node-type-asu-ap #main-wrapper a.btn.btn-lg, .node-type-asu-ap .btn.btn-lg {
   margin-top: 0;
 }
-body.node-type-asu-ap #main-wrapper .asu-degree-banner-image {
+.node-type-asu-ap #main-wrapper .asu-degree-banner-image {
   /*background-image: url(/sites/default/files/asu_degree_banner_default.jpg);*/
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
   padding: 110px 0 20px 0;
 }
-body.node-type-asu-ap #main-wrapper #page-title {
+.node-type-asu-ap #main-wrapper #page-title {
   color: white;
   font-size: 3.125em;
-  margin-bottom: 0.625em;
+  margin-bottom: 0.4375em;
   line-height: 1;
   font-weight: 900;
   text-shadow: 0 0 0.3125em rgba(0, 0, 0, 0.5);
 }
-body.node-type-asu-ap #main-wrapper .space-bot-md {
-  padding-bottom: 0;
+/* Banner - special categories */
+.node-type-asu-ap .asu-ap-special-categories {
+  display: block;
+  font-size: 1.3125em;
+}
+.node-type-asu-ap .asu-ap-special-categories > .asu-ap-special-category {
+  color: #fff;
+  display: block;
+  float: left;
+  font-weight: normal;
+  vertical-align: middle;
+  margin-right: 0.3125em;
+}
+.node-type-asu-ap .asu-ap-special-categories > .asu-ap-special-category > .asu-ap-program-flag {
+  margin-left: 0.3125em;
+}
+/* Font Awesome icons */
+span.fa {
 }
 
+.node-type-asu-ap #main-wrapper .asu-ap-grey-section ul {
+  padding-left: 1em;
+}
+.node-type-asu-ap #main-wrapper .space-bot-md {
+  padding-bottom: 0;
+}
 .asu-ap-short-description > p:first-child {
   margin-bottom: 0.625em;
 }
 .asu-ap-read-more {
   margin-bottom: 1.5625em;
 }
+.node-type-asu-ap #main-wrapper .asu-ap-math-intensity-graph {
+  margin-left: 0.75em;
+}
+.node-type-asu-ap #main-wrapper .asu-ap-math-intensity-graph img {
+  vertical-align: middle;
+}
+
+
 .view-asu-ap-view .view-header .btn-group {
   padding: 1em 0 2em 0;
 }
@@ -107,14 +142,14 @@ body.node-type-asu-ap #main-wrapper .space-bot-md {
   margin-bottom: 1.5625em;
 }
 
-body.node-type-asu-ap #main-wrapper .pane-menu-tree {
+.node-type-asu-ap #main-wrapper .pane-menu-tree {
   margin-top: 0.625em;
 }
-body.node-type-asu-ap #main-wrapper .pane-menu-tree a:first-child {
+.node-type-asu-ap #main-wrapper .pane-menu-tree a:first-child {
   border-top-right-radius: 0;
   border-top-left-radius: 0;
 }
-body.node-type-asu-ap #main-wrapper .pane-menu-tree a {
+.node-type-asu-ap #main-wrapper .pane-menu-tree a {
   position: relative;
   display: block;
   padding: 0.625em 0.3125em;
@@ -167,43 +202,13 @@ a.ttCourse {
   padding-right: 0.9375em;
 }
 
-
-/* Font Awesome icons */
-i.fa.fa-location-arrow,
-span.fa.fa-location-arrow {
-  font-size: 1.5625em;
-  position: relative;
-  bottom: 8px;
-  margin-right: -0.625em;
-}
-
-i.fa.fa-star,
-span.fa.fa-star {
-  font-size: 1.5625em;
-  position: relative;
-  bottom: 8px;
-  margin-right: -0.625em;
-}
-
-i.fa.fa-retweet,
-span.fa.fa-retweet {
-  font-size: 1.5625em;
-  position: relative;
-  bottom: 8px;
-  margin-right: -0.625em;
-}
-
-span.asu-ap-program-flag {
-  font-size: 1.25em;
-  font-weight: normal;
-  vertical-align: middle;
-  padding-right: 0.3125em;
+.node-type-asu-ap #main-wrapper .asu-ap-page-buttons {
+  margin: 2em 0 1em;
 }
 
 /**
  * Media Rules
  */
-
 @media (min-width: 992px) and (max-width: 1200px) {
   .view-asu-ap-view .view-content .views-field.views-field-field-degree-image img {
     width: 212px;
@@ -225,9 +230,6 @@ span.asu-ap-program-flag {
 }
 
 @media (min-width: 768px) {
-  body.node-type-asu-ap #main-wrapper .field-name-body {
-    font-size: 1.5em;
-  }
   body.node-type-asu-ap #main-wrapper .col-sm-6 {
     float: left;
   }

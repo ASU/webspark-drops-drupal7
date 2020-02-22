@@ -84,12 +84,25 @@ if (is_numeric(arg(1))) {
 else {
   $node_info = array();
 }
-
 // Add subsection of $page['content'] for metatags
 if (module_exists('metatag')) {
   print render($page['content']['metatags']);
 }
-
+// Resize Program description if no marketing text is available from the feed.
+if (isset($node_info['field_asu_ap_market_text']['#items'][0]['safe_value'])) {
+  print '<style type="text/css">.field-name-body::before {
+  content: "Program description";
+  font-size: 2.25em;
+  margin: 1.5em 0 1em;
+  font-weight: normal;
+}
+.field-name-body > :first-child {
+  padding-top: 1.5em;
+}
+</style>';
+} else {
+  print '<style type="text/css">.field-name-body div > p:first-of-type { font-size: 1.5em; }</style>';
+}
 ?>
 
 <div id="page-wrapper">
@@ -127,7 +140,7 @@ if (module_exists('metatag')) {
     <!-- /.navmenu -->
 
     <?php if (isset($node_info['field_asu_ap_program']['#items'][0]['value'])): ?>
-	    <?php $program_decider_value = ($node_info['field_asu_ap_program']['#items'][0]['value']); ?>
+	    <?php $program_decider_value = (string) ($node_info['field_asu_ap_program']['#items'][0]['value']); ?>
       <?php if (isset($node_info['field_asu_ap_cert']['#items'][0]['value'])): ?>
         <?php $cert_val = ($node_info['field_asu_ap_cert']['#items'][0]['value']); ?>
 
@@ -136,6 +149,7 @@ if (module_exists('metatag')) {
         <div id="main" class="clearfix">
           <a id="main-content"></a>
 
+          <!-- Top Banner image (TB) -->
           <!--suppress CssUnknownTarget -->
           <div class="asu-degree-banner-image"
                style="background-image:url(/sites/default/files/<?php echo $node_info['field_asu_banner_image']['#items'][0]['filename']; ?>)">
@@ -156,53 +170,44 @@ if (module_exists('metatag')) {
                             (<?php print render($node_info['field_asu_ap']['#items'][0]['value']); ?>)
                           <?php endif; ?>
                         <?php endif; ?>
-                      <?php elseif ($program_decider_value == 'graduate'): ?>
+                      <?php elseif ($program_decider_value === 'graduate'): ?>
                         <?php print $title; ?>
                       <?php endif; ?>
+                    </h1>
+
                       <!-- Displaying 'Accelerated Program' field if true, displaying nothing if false -->
+                    <div class="asu-ap-special-categories">
                       <?php if (isset($node_info['field_asu_ap_acc_program']['#items'][0]['value'])): ?>
                         <?php $accelerated_degree_value = ($node_info['field_asu_ap_acc_program']['#items'][0]['value']); ?>
                         <?php if (isset($accelerated_degree_value)): ?>
-                          <br>
-                          <i class="fa fa-location-arrow"></i>
-                          <span class="asu-ap-program-flag">Accelerated Program</span>
-                        <?php else: ?>
-                          <!-- do nothing, it's not an accelerated degree -->
+                          <div class="asu-ap-special-category">
+                            <i class="fa fa-location-arrow"></i>
+                            <span class="asu-ap-program-flag">Accelerated Program</span>
+                          </div>
                         <?php endif; ?>
                       <?php endif; ?>
                       <!-- Displaying 'Concurrent Program' field if true, displaying nothing if false -->
                       <?php if (isset($node_info['field_asu_ap_conc_program']['#items'][0]['value'])): ?>
                         <?php $concurrent_degree_value = ($node_info['field_asu_ap_conc_program']['#items'][0]['value']); ?>
                         <?php if ($concurrent_degree_value == '1'): ?>
-                          <?php if (isset($accelerated_degree_value)): ?>
+                          <div class="asu-ap-special-category">
                             <i class="fa fa-star"></i>
                             <span class="asu-ap-program-flag">Concurrent Program</span>
-                          <?php else: ?>
-                            <br>
-                            <i class="fa fa-star"></i>
-                            <span class="asu-ap-program-flag">Concurrent Program</span>
-                          <?php endif; ?>
-                        <?php else: ?>
-                          <!-- do nothing, it's not a concurrent degree -->
+                          </div>
                         <?php endif; ?>
                       <?php endif; ?>
                       <!-- Displaying 'New Program' field if true, displaying nothing if false -->
                       <?php if (isset($node_info['field_asu_ap_new_program']['#items'][0]['value'])): ?>
                         <?php $new_degree_value = ($node_info['field_asu_ap_new_program']['#items'][0]['value']); ?>
                         <?php if ($new_degree_value == '1'): ?>
-                          <?php if (isset($accelerated_degree_value) && isset($concurrent_degree_value)): ?>
+                          <div class="asu-ap-special-category">
                             <i class="fa fa-retweet"></i>
                             <span class="asu-ap-program-flag">New Program</span>
-                          <?php else: ?>
-                            <br>
-                            <i class="fa fa-retweet"></i>
-                            <span class="asu-ap-program-flag">New Program</span>
-                          <?php endif; ?>
-                        <?php else: ?>
-                          <!-- do nothing, it's not a new degree -->
+                          </div>
                         <?php endif; ?>
                       <?php endif; ?>
-                    </h1>
+                    </div>
+
                   <?php endif; ?>
                 </div>
               </div>
@@ -238,14 +243,14 @@ if (module_exists('metatag')) {
               print theme('easy_breadcrumb');
             } else {
               print theme('breadcrumb', array('breadcrumb' => drupal_get_breadcrumb()));
-            }
-          ?>
+            } ?>
         </div>
         <!-- /Breadcrumb -->
 
         <!--Start degree content-->
-        <div class="container">
 
+        <div class="container">
+          <!-- Top white section - Marketing + body content MB -->
           <?php if ($program_decider_value == 'undergrad'): ?>
             <?php if (isset($node_info['field_asu_ap_short_desc']['#items'][0]['safe_value'])): ?>
               <div class="asu-ap-short-description">
@@ -254,46 +259,61 @@ if (module_exists('metatag')) {
                   <a href="#degree-collapse" data-toggle="collapse" aria-expanded="false">Read More</a>
                 </div>
                 <div id="degree-collapse" class="collapse">
-                  <?php if (isset($node_info['body'])): ?>
+                  <?php if (isset($node_info['field_asu_ap_market_text']['#items'][0]['safe_value'])):  // marketing text ?>
+                    <?php print render($node_info['field_asu_ap_market_text']); ?>
+                  <?php endif; ?>
+                  <?php if (isset($node_info['body'])): // Program description (aka body field) ?>
                     <?php print render($node_info['body']); ?>
                   <?php endif; ?>
                 </div>
               </div>
-            <?php elseif (isset($node_info['body'])): ?>
-              <?php print render($node_info['body']); ?>
+            <?php else: ?>
+              <?php if (isset($node_info['field_asu_ap_market_text']['#items'][0]['safe_value'])):  // marketing text ?>
+                <?php print render($node_info['field_asu_ap_market_text']); ?>
+              <?php endif; ?>
+              <?php if (isset($node_info['body'])): // Program description (aka body field) ?>
+                <?php print render($node_info['body']); ?>
+              <?php endif; ?>
             <?php endif; ?>
 
-          <?php elseif ($program_decider_value == 'graduate'): ?>
-            <!-- Start optional description video display -->
+          <?php elseif ($program_decider_value === 'graduate'): ?>
+            <!-- MB - Start optional description video display -->
             <?php if (isset($node_info['field_asu_ap_grad_desc_video']['#items'][0]['safe_value'])): ?>
 
-              <!-- IF VIDEO IS PRESENT -->
+            <!-- IF VIDEO IS PRESENT -->
               <div class="row">
-                  <div class="col-md-8">
-                    <?php if (isset($node_info['field_asu_ap_short_desc']['#items'][0]['safe_value'])): ?>
-                      <div class="asu-ap-short-description">
-                        <?php print render($node_info['field_asu_ap_short_desc']['#items'][0]['safe_value']); ?>
-                        <div class="asu-ap-read-more">
-                          <a href="#degree-collapse" data-toggle="collapse" aria-expanded="false">Read More</a>
-                        </div>
-                        <div id="degree-collapse" class="collapse">
-                          <?php if (isset($node_info['body'])): ?>
-                            <?php print render($node_info['body']); ?>
-                          <?php endif; ?>
-                        </div>
+                <div class="col-md-8">
+                  <?php if (isset($node_info['field_asu_ap_short_desc']['#items'][0]['safe_value'])): ?>
+                    <div class="asu-ap-short-description">
+                      <?php print render($node_info['field_asu_ap_short_desc']['#items'][0]['safe_value']); ?>
+                      <div class="asu-ap-read-more">
+                        <a href="#degree-collapse" data-toggle="collapse" aria-expanded="false">Read More</a>
                       </div>
-                    <?php elseif (isset($node_info['body'])): ?>
+                      <div id="degree-collapse" class="collapse">
+                        <?php if (isset($node_info['field_asu_ap_market_text']['#items'][0]['safe_value'])):  // marketing text ?>
+                          <?php print render($node_info['field_asu_ap_market_text']); ?>
+                        <?php endif; ?>
+                        <?php if (isset($node_info['body'])): // Program description (aka body field) ?>
+                          <?php print render($node_info['body']); ?>
+                        <?php endif; ?>
+                      </div>
+                    </div>
+                  <?php else: ?>
+                    <?php if (isset($node_info['field_asu_ap_market_text']['#items'][0]['safe_value'])):  // marketing text ?>
+                      <?php print render($node_info['field_asu_ap_market_text']); ?>
+                    <?php endif; ?>
+                    <?php if (isset($node_info['body'])): // Program description (aka body field) ?>
                       <?php print render($node_info['body']); ?>
                     <?php endif; ?>
-                  </div>
-                  <div class="col-md-4">
-                    <?php echo $node_info['field_asu_ap_grad_desc_video']['#items'][0]['safe_value']; ?>
-                  </div>
+                  <?php endif; ?>
+                </div>
+                <div class="col-md-4">
+                  <?php echo $node_info['field_asu_ap_grad_desc_video']['#items'][0]['safe_value']; ?>
+                </div>
               </div>
 
             <?php else: ?>
-
-              <!-- IF VIDEO IS NOT PRESENT -->
+            <!-- IF VIDEO IS NOT PRESENT -->
               <?php if (isset($node_info['field_asu_ap_short_desc']['#items'][0]['safe_value'])): ?>
                 <div class="asu-ap-short-description">
                   <?php print render($node_info['field_asu_ap_short_desc']['#items'][0]['safe_value']); ?>
@@ -301,226 +321,257 @@ if (module_exists('metatag')) {
                     <a href="#degree-collapse" data-toggle="collapse" aria-expanded="false">Read More</a>
                   </div>
                   <div id="degree-collapse" class="collapse">
-                    <?php if (isset($node_info['body'])): ?>
+                    <?php if (isset($node_info['field_asu_ap_market_text']['#items'][0]['safe_value'])):  // marketing text ?>
+                      <?php print render($node_info['field_asu_ap_market_text']); ?>
+                    <?php endif; ?>
+                    <?php if (isset($node_info['body'])): // Program description (aka body field) ?>
                       <?php print render($node_info['body']); ?>
                     <?php endif; ?>
                   </div>
                 </div>
-              <?php elseif (isset($node_info['body'])): ?>
-                <?php print render($node_info['body']); ?>
+              <?php else: ?>
+                <?php if (isset($node_info['field_asu_ap_market_text']['#items'][0]['safe_value'])):  // marketing text ?>
+                  <?php print render($node_info['field_asu_ap_market_text']); ?>
+                <?php endif; ?>
+                <?php if (isset($node_info['body'])): // Program description (aka body field) ?>
+                  <?php print render($node_info['body']); ?>
+                <?php endif; ?>
               <?php endif; ?>
-
             <?php endif; ?>
-            <!-- End optional description video display -->
+          <!-- End optional description video display -->
           <?php endif; ?>
-            <div class="row space-bot-lg">
-              <div class="col-sm-6 col-md-4 space-bot-md">
-                <?php if (isset($node_info['field_asu_ap_cta_information']['#items'][0]['url'])): ?>
-                  <a href="<?php echo $node_info['field_asu_ap_cta_information']['#items'][0]['url'] ?>"
-                     class="btn btn-gold btn-block btn-lg">Request information</a>
-                <?php else: ?>
-                  <a href="#asu-rfi-form-data" id="take-me-to-rfi"
-                     class="btn btn-gold btn-block btn-lg">Request information</a>
-                <?php endif; ?>
-              </div>
-              <div class="col-sm-6 col-md-4 space-bot-md">
-                <?php if (isset($node_info['field_asu_ap_cta_visit']['#items'][0]['url'])): ?>
-                  <a href="<?php echo $node_info['field_asu_ap_cta_visit']['#items'][0]['url'] ?>"
-                     class="btn btn-gold btn-block btn-lg">Schedule a visit</a>
-                <?php else: ?>
-                  <a href="https://visit.asu.edu/"
-                     class="btn btn-gold btn-block btn-lg">Schedule a visit</a>
-                <?php endif; ?>
-              </div>
-              <div class="col-sm-6 col-md-4 space-bot-md">
-                <?php if (isset($node_info['field_asu_ap_cta_apply']['#items'][0]['url'])): ?>
-                  <a href="<?php echo $node_info['field_asu_ap_cta_apply']['#items'][0]['url'] ?>"
-                     class="btn btn-gold btn-block btn-lg">How and when to apply</a>
-                <?php else: ?>
-                  <a href="https://students.asu.edu/apply"
-                     class="btn btn-gold btn-block btn-lg">How and when to apply</a>
-                <?php endif; ?>
-              </div>
+
+          <div class="row space-bot-lg asu-ap-page-buttons">
+            <div class="col-sm-6 col-md-4 space-bot-md">
+              <?php $cta_information = (isset($node_info['field_asu_ap_cta_information']['#items'][0]['url']))
+                ? $node_info['field_asu_ap_cta_information']['#items'][0]['url']
+                : "#asu-rfi-form-data"; ?>
+                <a href="<?php echo $cta_information; ?>" class="btn btn-gold btn-block btn-lg">Request information</a>
             </div>
+            <div class="col-sm-6 col-md-4 space-bot-md">
+              <?php $cta_visit = (isset($node_info['field_asu_ap_cta_visit']['#items'][0]['url']))
+                ? $node_info['field_asu_ap_cta_visit']['#items'][0]['url']
+                : 'https://visit.asu.edu/'; ?>
+                <a href="<?php echo $cta_visit ?>" class="btn btn-gold btn-block btn-lg">Schedule a visit</a>
+            </div>
+            <div class="col-sm-6 col-md-4 space-bot-md">
+              <?php $cta_apply = (isset($node_info['field_asu_ap_cta_apply']['#items'][0]['url']))
+                ? $node_info['field_asu_ap_cta_apply']['#items'][0]['url']
+                : "https://students.asu.edu/apply"; ?>
+              <a href="<?php print $cta_apply?>" class="btn btn-gold btn-block btn-lg">How and when to apply</a>
+            </div>
+          </div>
         </div>
+
+        <!-- Middle gray section (MG) -->
         <div class="asu-ap-grey-section">
           <div class="container">
             <div class="row">
               <div class="col-sm-6 col-md-4">
-                <h2>Program offered</h2>
+
+                <h2>At A Glance</h2>
 
                 <div class="asu-ap-page-degree-offered">
-                  <p>
-                    <strong>
-                      <?php if (isset($node_info['field_asu_ap_awarded']['#items'][0]['value'])): ?>
-                        <?php if ($program_decider_value == 'undergrad'): ?>
-                          <?php if (isset($node_info['field_asu_ap_cert']['#items'][0]['value'])): ?>
-                            <?php if ($cert_val == 'false'): ?>
-                              <?php print render($node_info['field_asu_ap_awarded']['#items'][0]['value']); ?>,
-                              <?php if (isset($node_info['field_asu_ap']['#items'][0]['value'])): ?>
-                                <?php print render($node_info['field_asu_ap']['#items'][0]['value']); ?>
-                              <?php endif; ?>
-                            <?php elseif ($cert_val == 'true'): ?>
-                              <?php print render($node_info['field_asu_ap_awarded']['#items'][0]['value']); ?>
-                              <?php if (isset($node_info['field_asu_ap']['#items'][0]['value'])): ?>
-                                (<?php print render($node_info['field_asu_ap']['#items'][0]['value']); ?>)
-                              <?php endif; ?>
+                  <h4>
+                    <?php if (isset($node_info['field_asu_ap_awarded']['#items'][0]['value'])): ?>
+                      <?php if ($program_decider_value == 'undergrad'): ?>
+                        <?php if (isset($node_info['field_asu_ap_cert']['#items'][0]['value'])): ?>
+                          <?php if ($cert_val == 'false'): ?>
+                            <?php print render($node_info['field_asu_ap_awarded']['#items'][0]['value']); ?>,
+                            <?php if (isset($node_info['field_asu_ap']['#items'][0]['value'])): ?>
+                              <?php print render($node_info['field_asu_ap']['#items'][0]['value']); ?>
+                            <?php endif; ?>
+                          <?php elseif ($cert_val == 'true'): ?>
+                            <?php print render($node_info['field_asu_ap_awarded']['#items'][0]['value']); ?>
+                            <?php if (isset($node_info['field_asu_ap']['#items'][0]['value'])): ?>
+                              (<?php print render($node_info['field_asu_ap']['#items'][0]['value']); ?>)
                             <?php endif; ?>
                           <?php endif; ?>
-                        <?php elseif ($program_decider_value == 'graduate'): ?>
-                          <?php print render($node_info['field_asu_ap_awarded']['#items'][0]['value']); ?>
                         <?php endif; ?>
+                      <?php elseif ($program_decider_value === 'graduate'): ?>
+                        <?php print render($node_info['field_asu_ap_awarded']['#items'][0]['value']); ?>
                       <?php endif; ?>
-                    </strong>
-                    <br><br>
-                    <b>Offered by</b><br>
-                    <?php
-                      if (isset($node_info['field_asu_ap_college_j']['#items'][0]['value'])) {
-                        // $cc --> college_count; $ci --> college_index; $cn --> college_name
-                        $cc = count($node_info['field_asu_ap_college_j']['#items']) - 1;
-                        $ci = 0;
-                        foreach ($node_info['field_asu_ap_college_j']['#items'] as $cn) {
-                          $asu_college_raw = $cn['value'];
-                          list($asu_college_suffix, $asu_college_prefix) = explode(", ", $asu_college_raw);
-                          $asu_college = $asu_college_prefix . " " . $asu_college_suffix;
-                          echo $asu_college;
-                          if ($ci < $cc) {
-                            echo ', ';
-                          }
-                          ++$ci;
-                        }
-                      }
-                    ?>
-                  </p>
-                </div>
-                <p>
-                  <b>Location</b><br>
-                  <?php
-                    if (isset($node_info['field_asu_ap_campus']['#items'][0]['value'])) {
-                      $c = count($node_info['field_asu_ap_campus']['#items']) - 1;
-                      $i = 0;
-                      foreach ($node_info['field_asu_ap_campus']['#items'] as $campus) {
-                        $a = true;
-                        switch ($campus['value']) {
-                          case 'Downtown':
-                            echo '<a href="//tours.asu.edu/downtown">'.$campus['value'].'</a>';
-                            break;
-                          case 'Lake Havasu City':
-                            echo '<a href="//tours.asu.edu/havasu">'.$campus['value'].'</a>';
-                            break;
-                          case 'Polytechnic':
-                            echo '<a href="//tours.asu.edu/polytechnic">'.$campus['value'].'</a>';
-                            break;
-                          case 'Tempe':
-                            echo '<a href="//tours.asu.edu/tempe">'.$campus['value'].'</a>';
-                            break;
-                          case 'Thunderbird':
-                            echo '<a href="//tours.asu.edu/thunderbird">'.$campus['value'].'</a>';
-                            break;
-                          case 'West':
-                            echo '<a href="//tours.asu.edu/west">'.$campus['value'].'</a>';
-                            break;
-                          case 'ASU@TheGilaValley':
-                            echo '<a href="//admission.asu.edu/transfer/eastern-arizona">'.$campus['value'].'</a>';
-                            break;
-                          case 'ASU@Pinal':
-                            echo '<a href="//admission.asu.edu/transfer/central-arizona">'.$campus['value'].'</a>';
-                            break;
-                          case 'ASU@Tucson':
-                            echo '<a href="//transfer.asu.edu/asutucson'.$campus['value'].'</a>';
-                            break;
-                          case 'ASU@Yuma':
-                            echo '<a href="//admission.asu.edu/transfer/arizona-western">'.$campus['value'].'</a>';
-                            break;
-                          case 'ASU@Yavapai':
-                            echo '<a href="//admission.asu.edu/transfer/asuyavapai">'.$campus['value'].'</a>';
-                            break;
-                          case 'ASU@Cochise':
-                            echo '<a href="//admission.asu.edu/transfer/asu-cochise">'.$campus['value'].'</a>';
-                            break;
-                          case 'ASU@Pima':
-                            echo '<a href="//admission.asu.edu/transfer/pima">'.$campus['value'].'</a>';
-                            break;
-                          case 'Online':
-                            $online_url = (!empty($node_info['field_asu_ap_curriculum_url']['#items'][0]['url']))
-                              ? $node_info['field_asu_ap_curriculum_url']['#items'][0]['url']
-                              : '//asuonline.asu.edu/';
-                            echo '<a href="' . $online_url . '" target="_blank">'.$campus['value'].'</a>';
-                            break;
-                          // Check ASU Feeds Parser. The campus being used doesn't exist.
-                          default:
-                            echo $campus['value'];
-                            break;
-                        }
-                        if($i < $c && $a) {
-                          echo ', ';
-                        }
-                        ++$i;
-                      }
-                    }
-                  ?>
-                </p>
-
-                <?php if ($program_decider_value == 'undergrad'): ?>
-                  <?php if (isset($node_info['field_asu_ap_major_map_url'])): ?>
-                    <h2>Major map</h2>
-                    <p>A major map outlines the degree’s requirements for graduation.</p>
-                    <p><a href="<?php echo $node_info['field_asu_ap_major_map_url']['#items'][0]['url']; ?>">View Major Map</a></p>
-                  <?php else: ?>
-                    <?php if (isset($node_info['field_asu_ap_asuds_url'])): ?>
-                      <h2>Plan of study</h2>
-                      <p>The Plan of study is the required curriculum to complete the program.</p>
-                      <p><a href="<?php echo $node_info['field_asu_ap_asuds_url']['#items'][0]['url']; ?>">View Plan of Study</a></p>
                     <?php endif; ?>
-                  <?php endif; ?>
-                <?php elseif ($program_decider_value == 'graduate'): ?>
-                  <?php if (isset($node_info['field_asu_ap_asuds_url'])): ?>
-                    <h2>Plan of study</h2>
-                    <p>The Plan of study is the required curriculum to complete the program.</p>
-                    <p><a href="<?php echo $node_info['field_asu_ap_asuds_url']['#items'][0]['url']; ?>">View Plan of Study</a></p>
-                  <?php endif; ?>
-                <?php endif; ?>
+                  </h4>
+                  <ul>
+                  <?php if (isset($node_info['field_asu_ap_college_j']['#items'][0]['value'])) {
+                    print "<li><strong>Offered by</strong>: ";
+                    $college_count = count($node_info['field_asu_ap_college_j']['#items']) - 1;
+                    $college_index = 0;
+                    foreach ($node_info['field_asu_ap_college_j']['#items'] as $college_name) {
+                      $college_raw = $college_name['value'];
+                      list($college_suffix, $college_prefix) = explode(", ", $college_raw);
+                      $college = $college_prefix . " " . $college_suffix;
+                      // Build in college URL if it exists
+                      if (isset($node_info['field_asu_ap_college_url_j']['#items'][$college_index]['url'])) {
+                        if (valid_url($node_info['field_asu_ap_college_url_j']['#items'][$college_index]['url'], TRUE)) {
+                          $college = l(t($college), $node_info['field_asu_ap_college_url_j']['#items'][$college_index]['url'],
+                            array('attributes' => array('target' => '_blank')));
+                        }
+                      }
+                      echo $college;
+                      if ($college_index < $college_count) {
+                        echo ', ';
+                      }
+                      ++$college_index;
+                    }
+                    print "</li>";
+                  }
+                  if (isset($node_info['field_asu_ap_campus']['#items'][0]['value'])) {
+                    print "<li><strong>Location</strong>: ";
+                    $c = count($node_info['field_asu_ap_campus']['#items']) - 1;
+                    $i = 0;
+                    foreach ($node_info['field_asu_ap_campus']['#items'] as $campus) {
+                      $a = true;
+                      switch ($campus['value']) {
+                        case 'Downtown':
+                          echo '<a href="//tours.asu.edu/downtown">'.$campus['value'].'</a>';
+                          break;
+                        case 'Lake Havasu City':
+                          echo '<a href="//tours.asu.edu/havasu">'.$campus['value'].'</a>';
+                          break;
+                        case 'Polytechnic':
+                          echo '<a href="//tours.asu.edu/polytechnic">'.$campus['value'].'</a>';
+                          break;
+                        case 'Tempe':
+                          echo '<a href="//tours.asu.edu/tempe">'.$campus['value'].'</a>';
+                          break;
+                        case 'Thunderbird':
+                          echo '<a href="//tours.asu.edu/thunderbird">'.$campus['value'].'</a>';
+                          break;
+                        case 'West':
+                          echo '<a href="//tours.asu.edu/west">'.$campus['value'].'</a>';
+                          break;
+                        case 'ASU@TheGilaValley':
+                          echo '<a href="//admission.asu.edu/transfer/eastern-arizona">'.$campus['value'].'</a>';
+                          break;
+                        case 'ASU@Pinal':
+                          echo '<a href="//admission.asu.edu/transfer/central-arizona">'.$campus['value'].'</a>';
+                          break;
+                        case 'ASU@Tucson':
+                          echo '<a href="//transfer.asu.edu/asutucson'.$campus['value'].'</a>';
+                          break;
+                        case 'ASU@Yuma':
+                          echo '<a href="//admission.asu.edu/transfer/arizona-western">'.$campus['value'].'</a>';
+                          break;
+                        case 'ASU@Yavapai':
+                          echo '<a href="//admission.asu.edu/transfer/asuyavapai">'.$campus['value'].'</a>';
+                          break;
+                        case 'ASU@Cochise':
+                          echo '<a href="//admission.asu.edu/transfer/asu-cochise">'.$campus['value'].'</a>';
+                          break;
+                        case 'ASU@Pima':
+                          echo '<a href="//admission.asu.edu/transfer/pima">'.$campus['value'].'</a>';
+                          break;
+                        case 'Online':
+                          $online_url = (!empty($node_info['field_asu_ap_curriculum_url']['#items'][0]['url']))
+                            ? $node_info['field_asu_ap_curriculum_url']['#items'][0]['url']
+                            : '//asuonline.asu.edu/';
+                          echo '<a href="' . $online_url . '" target="_blank">'.$campus['value'].'</a>';
+                          break;
+                        // Check ASU Feeds Parser. The campus being used doesn't exist.
+                        default:
+                          echo $campus['value'];
+                          break;
+                      }
+                      if($i < $c && $a) {
+                        echo ', ';
+                      }
+                      ++$i;
+                    }
+                    print "</li>";
+                  } ?>
+
+                    <?php if (isset($node_info['field_asu_ap_program_fee']['#items'][0]['value'])
+                    && $node_info['field_asu_ap_program_fee']['#items'][0]['value'] === 'Y'): ?>
+                      <li><strong>Additional Program fees</strong>: Yes</li><?php endif; ?>
+                    <?php if (isset($node_info['field_asu_ap_second_language']['#items'][0]['value'])
+                      && $node_info['field_asu_ap_second_language']['#items'][0]['value'] === 'Y'): ?>
+                      <li><strong>Second Language requirement</strong>: Yes</li><?php endif; ?>
+                    <?php if (isset($node_info['field_asu_ap_min_math']['#items'][0]['value'])): ?>
+                      <li><strong>First Required Math Course</strong>:
+                      <?php print check_plain($node_info['field_asu_ap_min_math']['#items'][0]['value']) ?></li>
+                    <?php endif; ?>
+                    <?php if (isset($node_info['field_asu_ap_math_intensity']['#items'][0]['value'])): ?>
+                      <li><strong>Math Intensity</strong>: <span class="asu-ap-math-intensity"><?php
+                      $math_intensity_label = check_plain($node_info['field_asu_ap_math_intensity'][0]['#markup']);
+                      $math_intensity = check_plain($node_info['field_asu_ap_math_intensity']['#items'][0]['value']);
+                      print $math_intensity_label . '<span class="asu-ap-math-intensity-graph">';
+                      print '<img src="/' . drupal_get_path('module', 'asu_ap_feature')
+                        . '/images/math_intensity_' . $math_intensity . '.png" alt="Math intensity: '
+                        . $math_intensity . '" /></span>';
+                      ?></span>
+                      </li>
+                    <?php endif; ?>
+                  </ul>
+
+                  <?php
+                  // Major maps or Plan of Study
+                  if ($program_decider_value === 'undergrad') {
+                    if (isset($node_info['field_asu_ap_major_map_url'])) {
+                      $major_map_url = $node_info['field_asu_ap_major_map_url']['#items'][0]['url'];
+                      $year = preg_replace('|^.+/(20\d{2})$|', '$1', $major_map_url);
+                      $year_prefix = ((int) $year < 2100 && $year > 1999) ? $year . ' - ' . (++$year) : '' ;
+                      print '<h2>Required Courses (Major Map)</h2>';
+                      print '<p><a href="' . $node_info['field_asu_ap_major_map_url']['#items'][0]['url']
+                        . '" target="_blank">' . $year_prefix . ' Major Map</a></p>';
+                    }
+                    elseif (isset($node_info['field_asu_ap_asuds_url'])) {
+                      print '<h2>Plan of study</h2>';
+                      print '<p>The Plan of study is the required curriculum to complete the program.</p>';
+                      print '<p><a href="#plan-of-study">View Plan of Study</a></p>';
+                      // echo $node_info['field_asu_ap_asuds_url']['#items'][0]['url']
+                      // . '#degreeReq">View Plan of Study</a></p>';
+                    }
+                  }
+                  elseif ($program_decider_value === 'graduate') {
+                    if (isset($node_info['field_asu_ap_asuds_url'])) {
+                      print '<h2>Plan of study</h2>';
+                      print '<p>The Plan of study is the required curriculum to complete the program.</p>';
+                      print '<p><a href="#plan-of-study">View Plan of Study</a></p>';
+                      // echo $node_info['field_asu_ap_asuds_url']['#items'][0]['url'] . '#degreeReq">View Plan of Study</a></p>';
+                    }
+                  }
+                  ?>
 
                 <div class="asu-ap-subplans">
                 <?php if (isset($node_info['field_asu_ap_subplan_url']['#items'])): ?>
-                  <div class='asu-ap-sublplans'><p><b>Subplans</b><br/></div>
+                  <div class='asu-ap-sublplans'><p><b>Subplans</b><br /></div>
                     <?php foreach ($node_info['field_asu_ap_subplan_url']['#items'] as $sp) {
                       if ($sp['title'] != $sp['url']) {
-                        echo '<a href="'.$sp['url'].'">'.$sp['title'].'</a><br/>';
+                        echo '<a href="'.$sp['url'].'">'.$sp['title'].'</a><br />';
                       }
                       else {
-                        echo '<a href="'.$sp['url'].'">Online</a><br/>';
+                        echo '<a href="'.$sp['url'].'">Online</a><br />';
                       }
                     }
                   echo '</p>';
                 endif; ?>
                 </div>
               </div>
-              <div class="col-sm-6 col-md-4">
-                <?php if ($program_decider_value == 'undergrad'): ?>
-                  <h2>Application requirements</h2>
+            </div>
+            <div class="col-sm-6 col-md-4">
+              <?php if ($program_decider_value === 'undergrad'): ?>
+                <h2>Application requirements</h2>
+                  <?php if (isset($node_info['field_asu_ap_addl_req']['#items'][0]['safe_value'])): ?>
+                    <p><?php print render($node_info['field_asu_ap_addl_req']['#items'][0]['safe_value']); ?></p>
+                  <?php endif; ?>
+                  <p>All students are required to meet general university admission requirements:</p>
+                  <ul>
+                    <li><a href="https://students.asu.edu/freshman">Freshman</a></li>
+                    <li><a href="https://transfer.asu.edu/">Transfer</a></li>
+                    <li><a href="https://students.asu.edu/international">International</a></li>
+                    <li><a href="https://students.asu.edu/readmission">Readmission</a></li>
+                  </ul>
+              <?php elseif ($program_decider_value === 'graduate'): ?>
+                <?php if (isset($node_info['field_asu_ap_grad_app']['#items'][0]['safe_value'])): ?>
+                    <?php echo $node_info['field_asu_ap_grad_app']['#items'][0]['safe_value']; ?>
+                <?php endif ?>
+              <?php endif; ?>
+            </div>
 
-                    <?php if (isset($node_info['field_asu_ap_addl_req']['#items'][0]['safe_value'])): ?>
-                      <p>
-                        <?php print render($node_info['field_asu_ap_addl_req']['#items'][0]['safe_value']); ?>
-                      </p>
-                    <?php endif; ?>
-
-                    <p>All students are required to meet general university admission requirements:</p>
-                    <ul>
-                      <li><a href="https://students.asu.edu/freshman">Freshman</a></li>
-                      <li><a href="https://transfer.asu.edu/">Transfer</a></li>
-                      <li><a href="https://students.asu.edu/international">International</a></li>
-                      <li><a href="https://students.asu.edu/readmission">Readmission</a></li>
-                    </ul>
-                <?php elseif ($program_decider_value == 'graduate'): ?>
-                  <?php if (isset($node_info['field_asu_ap_grad_app']['#items'][0]['safe_value'])): ?>
-                      <?php echo $node_info['field_asu_ap_grad_app']['#items'][0]['safe_value']; ?>
-                  <?php endif ?>
-                <?php endif; ?>
-              </div>
               <div class="col-sm-6 col-md-4">
-                <?php if ($program_decider_value == 'undergrad'): ?>
+                <?php if ($program_decider_value === 'undergrad'): ?>
                   <h2>Affording college</h2>
 
                   <p>
@@ -547,7 +598,7 @@ if (module_exists('metatag')) {
                     more than 70 percent of all ASU students receive some form of
                     financial assistance every year.
                   </p>
-                <?php elseif ($program_decider_value == 'graduate'): ?>
+                <?php elseif ($program_decider_value === 'graduate'): ?>
                   <?php if (isset($node_info['field_asu_ap_grad_financing']['#items'][0]['safe_value'])): ?>
                       <?php echo $node_info['field_asu_ap_grad_financing']['#items'][0]['safe_value']; ?>
                   <?php endif ?>
@@ -557,12 +608,13 @@ if (module_exists('metatag')) {
           </div>
         </div>
 
+        <!-- Bottom white section (BW) -->
         <div class="container">
           <?php //print render($page['asu_ap_marketing']); ?>
         </div>
 
-        <div class="container space-top-xl space-bot-xl">
-          <div class="col-md-8">
+        <div class="container space-top-xl space-bot-sm">
+          <div class="col-md-8" id="plan-of-study">
 
             <?php if (isset($node_info['field_asu_ap_prog_req']['#items'][0]['safe_value'])): ?>
                 <h2>Program requirements</h2>
@@ -571,7 +623,7 @@ if (module_exists('metatag')) {
                 <h2>Program requirements</h2>
                 <?php print $node_info['field_asu_ap_admission_req']['#items'][0]['safe_value']; ?>
             <?php endif; ?>
-            <?php if ($program_decider_value == 'undergrad'): ?>
+            <?php if ($program_decider_value === 'undergrad'): ?>
               <?php if (isset($node_info['field_asu_ap_career_opps'])): ?>
                 <h2>Career outlook</h2>
                 <?php if (isset($node_info['field_asu_ap_career_outlook']['#items'][0]['safe_value'])): ?>
@@ -586,7 +638,7 @@ if (module_exists('metatag')) {
                   <?php print render($node_info['field_asu_ap_example_careers']); ?>
                 <?php endif; ?>
               <?php endif; ?>
-            <?php elseif ($program_decider_value == 'graduate'): ?>
+            <?php elseif ($program_decider_value === 'graduate'): ?>
               <?php if (isset($node_info['field_asu_ap_grad_text_area']['#items'][0]['safe_value'])): ?>
                   <?php echo $node_info['field_asu_ap_grad_text_area']['#items'][0]['safe_value']; ?>
               <?php endif; ?>

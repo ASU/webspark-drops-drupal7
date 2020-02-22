@@ -821,6 +821,32 @@ function asu_ap_feature_field_default_field_bases() {
     'type' => 'text_long',
   );
 
+  // Exported field_base: 'field_asu_ap_math_intensity'.
+  $field_bases['field_asu_ap_math_intensity'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_asu_ap_math_intensity',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        'G' => 'General',
+        'M' => 'Moderate',
+        'S' => 'Substantial',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
+  );
+
   // Exported field_base: 'field_asu_ap_min_math'.
   $field_bases['field_asu_ap_min_math'] = array(
     'active' => 1,

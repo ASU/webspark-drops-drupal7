@@ -16,7 +16,7 @@ function asu_ap_feature_field_default_field_instances() {
     'bundle' => 'asu_ap',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Program description (long)',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -43,10 +43,15 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'body',
-    'label' => 'Program description (long)',
+    'label' => 'Program description',
     'required' => 0,
     'settings' => array(
       'display_summary' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
       'text_processing' => 1,
       'user_register_form' => FALSE,
     ),
@@ -57,12 +62,14 @@ function asu_ap_feature_field_default_field_instances() {
         'maxlength_js' => '',
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_label_summary' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_summary' => '',
         'maxlength_js_truncate_html' => 0,
         'rows' => 20,
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 34,
+      'weight' => 35,
     ),
   );
 
@@ -446,7 +453,7 @@ function asu_ap_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 41,
+      'weight' => 42,
     ),
   );
 
@@ -2054,7 +2061,7 @@ function asu_ap_feature_field_default_field_instances() {
     'description' => 'Text to appear at top of degree page before catalog text begins.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
@@ -2098,6 +2105,51 @@ function asu_ap_feature_field_default_field_instances() {
       ),
       'type' => 'text_textarea',
       'weight' => 32,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_math_intensity'.
+  $field_instances['node-asu_ap-field_asu_ap_math_intensity'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Potential difficulty in math courses required for the degree.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 66,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_math_intensity',
+    'label' => 'Math Intensity',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 34,
     ),
   );
 
@@ -2255,7 +2307,7 @@ function asu_ap_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 35,
+      'weight' => 36,
     ),
   );
 
@@ -2307,7 +2359,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 10,
       ),
       'type' => 'text_textfield',
-      'weight' => 36,
+      'weight' => 37,
     ),
   );
 
@@ -2460,7 +2512,7 @@ function asu_ap_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 37,
+      'weight' => 38,
     ),
   );
 
@@ -2512,7 +2564,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 38,
+      'weight' => 39,
     ),
   );
 
@@ -2688,7 +2740,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 39,
+      'weight' => 40,
     ),
   );
 
@@ -2757,7 +2809,7 @@ function asu_ap_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 40,
+      'weight' => 41,
     ),
   );
 
@@ -2766,10 +2818,10 @@ function asu_ap_feature_field_default_field_instances() {
     'bundle' => 'asu_ap',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'The primary URL for this degree (not for asuonline.asu.edu URLs by default)',
+    'description' => 'The primary department/college URL for more information about this degree from their site (except for asuonline.asu.edu URLs - which are in Url4)',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_default',
@@ -2826,7 +2878,7 @@ function asu_ap_feature_field_default_field_instances() {
       'module' => 'link',
       'settings' => array(),
       'type' => 'link_field',
-      'weight' => 42,
+      'weight' => 43,
     ),
   );
 
@@ -2838,7 +2890,7 @@ function asu_ap_feature_field_default_field_instances() {
     'description' => 'Not being used by Degree Search at the moment.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_default',
@@ -2895,7 +2947,7 @@ function asu_ap_feature_field_default_field_instances() {
       'module' => 'link',
       'settings' => array(),
       'type' => 'link_field',
-      'weight' => 43,
+      'weight' => 44,
     ),
   );
 
@@ -2907,7 +2959,7 @@ function asu_ap_feature_field_default_field_instances() {
     'description' => 'If this major has an Online campus option and there\'s a program page on asuonline.asu.edu. (Defaults to asuonline.asu.edu upon rendering in code otherwise).',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_default',
@@ -2964,7 +3016,7 @@ function asu_ap_feature_field_default_field_instances() {
       'module' => 'link',
       'settings' => array(),
       'type' => 'link_field',
-      'weight' => 44,
+      'weight' => 45,
     ),
   );
 
@@ -2976,7 +3028,7 @@ function asu_ap_feature_field_default_field_instances() {
     'description' => 'Marketing video URL for this degree. Youtube or Vimeo videos only.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'video_embed_field',
         'settings' => array(
           'description' => 1,
@@ -3017,7 +3069,7 @@ function asu_ap_feature_field_default_field_instances() {
       'module' => 'video_embed_field',
       'settings' => array(),
       'type' => 'video_embed_field_video',
-      'weight' => 45,
+      'weight' => 46,
     ),
   );
 
@@ -3300,9 +3352,12 @@ function asu_ap_feature_field_default_field_instances() {
   t('Marketing Text');
   t('Marketing textarea');
   t('Marketing video URL for this degree. Youtube or Vimeo videos only.');
+  t('Math Intensity');
   t('Minimum math requirement');
   t('New program');
   t('Not being used by Degree Search at the moment.');
+  t('Potential difficulty in math courses required for the degree.');
+  t('Program description');
   t('Program description (long)');
   t('Program description video');
   t('Program page URL (Online campus only).');
@@ -3316,7 +3371,7 @@ function asu_ap_feature_field_default_field_instances() {
   t('Subplan: Title');
   t('Subplan: URL');
   t('Text to appear at top of degree page before catalog text begins.');
-  t('The primary URL for this degree (not for asuonline.asu.edu URLs by default)');
+  t('The primary department/college URL for more information about this degree from their site (except for asuonline.asu.edu URLs - which are in Url4)');
   t('This image only shows up on the view page.  Horizontal images work best.');
   t('This is the banner image across the top of the academic programs pages.');
   t('Turn the "Example Careers" section on and off; check the box to show the example careers, and uncheck it to hide them.');

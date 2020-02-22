@@ -188,6 +188,7 @@ function asu_ap_feature_field_group_info() {
       34 => 'field_asu_ap_url_3',
       35 => 'field_asu_ap_url_4',
       36 => 'field_asu_ap_market_text',
+      37 => 'field_asu_ap_math_intensity',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
