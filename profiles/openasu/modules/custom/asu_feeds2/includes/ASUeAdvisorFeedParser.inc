@@ -255,10 +255,11 @@ class ASUeAdvisorFeedParser extends FeedsParser {
           . ' they are not currently supported in Webspark.', 'notice');
         } elseif (strpos($data['Url4'], 'player.vimeo.com') !== FALSE) {
           // Vimeo refactoring for player.vimeo.com URLs
-          $data['Url4'] = preg_replace('|^(https?)://player.(vimeo.com)/video/(\d+)$|',
+          $parsed_data[$key]['Url4'] = preg_replace('|^(https?)://player.(vimeo.com)/video/(\d+)$|',
             '$1://$2/$3', $data['Url4']);
+          watchdog('asu_feeds2', 'Updated @old to @new on degree import for legacy video_embed_field handling.',
+            array('@old' => $data['Url4'], '@new' => $parsed_data[$key]['Url4']), WATCHDOG_NOTICE);
         }
-        watchdog('asu_feeds2', print_r($data['Url4']));
       }
 
       // Transfer agreements

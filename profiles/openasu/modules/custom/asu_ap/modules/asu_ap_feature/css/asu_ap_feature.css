@@ -1,97 +1,32 @@
 /**
-  * ASU AP styles
+  * ASU AP styles ----------------------------------------
   **/
-/**
-  * View page
-  */
-.view-asu-ap-view .view-content .views-field.views-field-field-degree-image {
-  float: left;
-  padding-right: 0.9375em;
-}
-
-.asu-ap-rewritten-fields {
-  overflow: hidden;
-  padding-left: 0.9375em;
-}
-
-.view-asu-ap-view table > tbody > tr > td {
-  border: none;
-}
-
-.asu-ap-major-title {
-  font-size: 1.3125em;
-  color: #8C1D40;
-}
-
-.asu-ap-field-title {
-  font-weight: bold;
-  float: left;
-  padding-right: 0.3125em;
-}
-
-.view-asu-ap-view .row, .view-asu-ap .col.col-lg-6 {
-  margin-bottom: 1.5em;
-}
-
-/**
-  * Academic Programs Page styles
-  **/
-.col-md-8 h2 {
-  margin-top: 0;
-}
-.asu-ap-grey-section {
-  background: #f1f1f1;
-  padding: 2em 0;
-}
-.asu-ap-grey-section a {
-  font-weight: 500;
-}
-.space-bot-md {
-  margin-bottom: 1.5em;
-}
-.space-bot-lg {
-  margin-bottom: 36px;
-}
-.node-type-asu-ap #main-wrapper p {
-  margin: 0 0 1.5em;
-  font-weight: 200;
-}
-.node-type-asu-ap #main-wrapper .field-name-field-asu-ap-market-text {
-  font-size: 1.5em;
-}
-.node-type-asu-ap #main-wrapper .field-name-field-asu-ap-example-careers p {
-  margin: 0;
-}
-.node-type-asu-ap #main-wrapper .asu-degree-banner-image img {
-  min-height: 288px;
-}
 
 .node-type-asu-ap .space-top-xl {
-  margin-top: 2em;
+  margin-top: 1em;
+}
+.node-type-asu-ap .space-bot-md {
+  margin-bottom: 1.5em;
+}
+.node-type-asu-ap .space-bot-lg {
+  margin-bottom: 2em;
 }
 .node-type-asu-ap .space-bot-xl {
   margin-bottom: 2em;
 }
-
+.node-type-asu-ap h2 {
+  font-size: 1.875em;
+}
+.col-md-8 h2:first-child {
+  margin-top: 0;
+}
 .node-type-asu-ap #main-wrapper a.btn.btn-lg, .node-type-asu-ap .btn.btn-lg {
   margin-top: 0;
 }
-.node-type-asu-ap #main-wrapper .asu-degree-banner-image {
-  /*background-image: url(/sites/default/files/asu_degree_banner_default.jpg);*/
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  padding: 110px 0 20px 0;
-}
-.node-type-asu-ap #main-wrapper #page-title {
-  color: white;
-  font-size: 3.125em;
-  margin-bottom: 0.4375em;
-  line-height: 1;
-  font-weight: 900;
-  text-shadow: 0 0 0.3125em rgba(0, 0, 0, 0.5);
-}
-/* Banner - special categories */
+
+/**
+ * ASU AP page header, banner, title, etc. ---------------------------------
+ */
 .node-type-asu-ap .asu-ap-special-categories {
   display: block;
   font-size: 1.3125em;
@@ -102,25 +37,89 @@
   float: left;
   font-weight: normal;
   vertical-align: middle;
-  margin-right: 0.3125em;
+  margin-right: 1.2em;
 }
 .node-type-asu-ap .asu-ap-special-categories > .asu-ap-special-category > .asu-ap-program-flag {
-  margin-left: 0.3125em;
+  margin-left: 0.1em;
 }
-/* Font Awesome icons */
-span.fa {
+.node-type-asu-ap #main-wrapper .asu-degree-banner-image {
+  /*background-image: url(/sites/default/files/asu_degree_banner_default.jpg);*/
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 110px 0 20px 0;
+}
+.node-type-asu-ap #main-wrapper .asu-degree-banner-image img {
+  min-height: 288px;
+}
+.node-type-asu-ap #main-wrapper #page-title {
+  color: white;
+  font-size: 3.125em;
+  margin-bottom: 0.4375em;
+  line-height: 1;
+  font-weight: 900;
+  text-shadow: 0 0 0.3125em rgba(0, 0, 0, 0.5);
+}
+.node-type-asu-ap .asu-degrees-breadcrumb-container {
+  max-width: 1170px;
+  margin: 0 auto;
+  padding-left: 0.9375em;
+  padding-right: 0.9375em;
+}
+.node-type-asu-ap .asu-ap-major-title {
+  font-size: 1.3125em;
+  color: #8C1D40;
+}
+.node-type-asu-ap .asu-ap-field-title {
+  font-weight: bold;
+  float: left;
+  padding-right: 0.3125em;
 }
 
+/**
+ * ASU AP page content stypling -----------------
+ */
+
+.node-type-asu-ap .field-name-body::before {
+  content: "Program description";
+  font-size: 2em;
+  margin: 1.5em 0 1em;
+  font-weight: normal;
+}
+.node-type-asu-ap .field-name-body > :first-child {
+  padding-top: 1.5em;
+}
+.node-type-asu-ap #main-wrapper p {
+  margin: 0 0 1.5em;
+  font-weight: 200;
+}
+.node-type-asu-ap #main-wrapper .field-name-field-asu-ap-market-text {
+  font-size: 1.5em;
+}
+.node-type-asu-ap #main-wrapper .field-name-field-asu-ap-market-text p {
+  margin: 0 0 1em;
+}
+.node-type-asu-ap #main-wrapper .field-name-field-asu-ap-example-careers p {
+  margin: 0;
+}
+
+.node-type-asu-ap #main-wrapper .asu-ap-grey-section {
+  background: #f1f1f1;
+  padding: 1em 0 2em;
+}
+.node-type-asu-ap #main-wrapper .asu-ap-grey-section a {
+  font-weight: 500;
+}
 .node-type-asu-ap #main-wrapper .asu-ap-grey-section ul {
   padding-left: 1em;
 }
 .node-type-asu-ap #main-wrapper .space-bot-md {
   padding-bottom: 0;
 }
-.asu-ap-short-description > p:first-child {
+.node-type-asu-ap .asu-ap-short-description > p:first-child {
   margin-bottom: 0.625em;
 }
-.asu-ap-read-more {
+.node-type-asu-ap .asu-ap-read-more {
   margin-bottom: 1.5625em;
 }
 .node-type-asu-ap #main-wrapper .asu-ap-math-intensity-graph {
@@ -128,18 +127,6 @@ span.fa {
 }
 .node-type-asu-ap #main-wrapper .asu-ap-math-intensity-graph img {
   vertical-align: middle;
-}
-
-
-.view-asu-ap-view .view-header .btn-group {
-  padding: 1em 0 2em 0;
-}
-.view-asu-ap-view .table > thead > tr > th {
-  white-space: nowrap;
-}
-
-#asu-ap-node-form .fieldset-wrapper > * {
-  margin-bottom: 1.5625em;
 }
 
 .node-type-asu-ap #main-wrapper .pane-menu-tree {
@@ -162,6 +149,52 @@ span.fa {
   border-left: 0;
 }
 
+/* Styling for icons and small print in "Example Careers" sections on degree pages */
+.text-yellow {
+  color: #ffc627;
+}
+.text-green {
+  color: #006838;
+}
+
+.node-type-asu-ap .asu-degrees-example-careers-small {
+  font-size: 75%;
+  margin: 0 0 1.5em 0 !important;
+}
+
+
+.node-type-asu-ap #main-wrapper .asu-ap-page-buttons {
+  margin: 2em 0 1em;
+}
+
+/**
+ ASU AP admin CSS -------------------------------------
+ */
+
+/**
+  * View page
+  */
+.view-asu-ap-view .view-content .views-field.views-field-field-degree-image {
+  float: left;
+  padding-right: 0.9375em;
+}
+.asu-ap-rewritten-fields {
+  overflow: hidden;
+  padding-left: 0.9375em;
+}
+.view-asu-ap-view table > tbody > tr > td {
+  border: none;
+}
+.view-asu-ap-view .view-header .btn-group {
+  padding: 1em 0 2em 0;
+}
+.view-asu-ap-view .table > thead > tr > th {
+  white-space: nowrap;
+}
+.view-asu-ap-view .row, .view-asu-ap .col.col-lg-6 {
+  margin-bottom: 1.5em;
+}
+
 /* [NEW] PROGRAM REQUIREMENTS FIELD */
 .mm_section_note, .mm_notes {
   margin-top: 1.875em;
@@ -181,33 +214,12 @@ a.ttCourse {
   border-bottom: none;
 }
 
-/* Styling for icons and small print in "Example Careers" sections on degree pages */
-.text-yellow {
-  color: #ffc627;
-}
-.text-green {
-  color: #006838;
-}
-
-.asu-degrees-example-careers-small {
-  font-size: 75%;
-  margin: 0 0 1.5em 0 !important;
-}
-
-/* Degree page breadcrumb styling */
-.asu-degrees-breadcrumb-container {
-  max-width: 1170px;
-  margin: 0 auto;
-  padding-left: 0.9375em;
-  padding-right: 0.9375em;
-}
-
-.node-type-asu-ap #main-wrapper .asu-ap-page-buttons {
-  margin: 2em 0 1em;
+#asu-ap-node-form .fieldset-wrapper > * {
+  margin-bottom: 1.5625em;
 }
 
 /**
- * Media Rules
+ * Media Rules ------------------------------------
  */
 @media (min-width: 992px) and (max-width: 1200px) {
   .view-asu-ap-view .view-content .views-field.views-field-field-degree-image img {
@@ -248,10 +260,10 @@ a.ttCourse {
 }
 
 @media (min-width: 992px) {
-  .node-type-asu-ap .col-md-4 {
+  body.node-type-asu-ap .col-md-4 {
     width: 33.33333%;
   }
-  .node-type-asu-ap .asu-degree-banner-image img {
+  body.node-type-asu-ap .asu-degree-banner-image img {
     min-height: 200px;
   }
 }
