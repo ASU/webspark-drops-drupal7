@@ -58,6 +58,7 @@ projects[radix_layouts][patch][101] = patches/webspark-420_radix-layouts_TPL-cus
 projects[radix_layouts][patch][102] = patches/webspark-743_add-two-brenham-layouts.patch
 projects[radix_layouts][patch][103] = patches/webspark-743_added-png.patch
 projects[radix_layouts][patch][104] = patches/webspark-1003-remove-section-tags-radix-layouts.patch
+projects[radix_layouts][patch][1610] = patches/ws-1610_tablet-css-width.patch
 
 ; panopoly_widgets.make
 
