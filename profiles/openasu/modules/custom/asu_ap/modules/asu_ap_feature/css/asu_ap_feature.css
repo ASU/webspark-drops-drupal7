@@ -2,20 +2,18 @@
   * ASU AP styles ----------------------------------------
   **/
 
+/**
+ * Global Layout ---------
+ */
 .node-type-asu-ap .space-top-xl {
   margin-top: 1em;
 }
 .node-type-asu-ap .space-bot-md {
   margin-bottom: 1.5em;
 }
-.node-type-asu-ap .space-bot-lg {
-  margin-bottom: 2em;
-}
+.node-type-asu-ap .space-bot-lg,
 .node-type-asu-ap .space-bot-xl {
   margin-bottom: 2em;
-}
-.node-type-asu-ap h2 {
-  font-size: 1.875em;
 }
 .col-md-8 h2:first-child {
   margin-top: 0;
@@ -60,12 +58,6 @@
   font-weight: 900;
   text-shadow: 0 0 0.3125em rgba(0, 0, 0, 0.5);
 }
-.node-type-asu-ap .asu-degrees-breadcrumb-container {
-  max-width: 1170px;
-  margin: 0 auto;
-  padding-left: 0.9375em;
-  padding-right: 0.9375em;
-}
 .node-type-asu-ap .asu-ap-major-title {
   font-size: 1.3125em;
   color: #8C1D40;
@@ -77,7 +69,7 @@
 }
 
 /**
- * ASU AP page content stypling -----------------
+ * ASU AP page content styling -----------------
  */
 
 .node-type-asu-ap .field-name-body::before {
@@ -107,11 +99,18 @@
   background: #f1f1f1;
   padding: 1em 0 2em;
 }
+.node-type-asu-ap .asu-ap-grey-section h2 {
+  font-size: 1.6em;
+  font-weight: 600;
+}
 .node-type-asu-ap #main-wrapper .asu-ap-grey-section a {
   font-weight: 500;
 }
 .node-type-asu-ap #main-wrapper .asu-ap-grey-section ul {
-  padding-left: 1em;
+  padding-left: 1.5em;
+}
+.node-type-asu-ap #main-wrapper .asu-ap-grey-section .item-list ul {
+  padding-left: 0;
 }
 .node-type-asu-ap #main-wrapper .space-bot-md {
   padding-bottom: 0;
@@ -162,9 +161,8 @@
   margin: 0 0 1.5em 0 !important;
 }
 
-
 .node-type-asu-ap #main-wrapper .asu-ap-page-buttons {
-  margin: 2em 0 1em;
+  margin: 1em 0 1em;
 }
 
 /**
@@ -239,6 +237,9 @@ a.ttCourse {
     overflow: visible;
     padding-left: 0;
   }
+  .node-type-asu-ap #main .row > div[class*="col-"] {
+    padding-left: 0;
+  }
 }
 
 @media (min-width: 768px) {
@@ -260,10 +261,16 @@ a.ttCourse {
 }
 
 @media (min-width: 992px) {
-  body.node-type-asu-ap .col-md-4 {
+  .node-type-asu-ap .col-md-4 {
     width: 33.33333%;
   }
-  body.node-type-asu-ap .asu-degree-banner-image img {
+  .node-type-asu-ap .asu-degree-banner-image img {
     min-height: 200px;
+  }
+  .node-type-asu-ap #main .row > div[class*="col-"]:first-child {
+    padding-left: 0;
+  }
+  .node-type-asu-ap #main .row > div[class*="col-"]:last-child {
+    padding-right: 0;
   }
 }
