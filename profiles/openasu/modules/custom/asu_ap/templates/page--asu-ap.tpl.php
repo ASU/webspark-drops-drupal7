@@ -119,7 +119,17 @@ if (module_exists('metatag')) {
     </div>
 
 <?php if (isset($node_info['field_asu_ap_program']['#items'][0]['value'])): ?>
-	<?php $program_type = (string) ($node_info['field_asu_ap_program']['#items'][0]['value']); ?>
+
+  <?php
+  $program_type = (string) ($node_info['field_asu_ap_program']['#items'][0]['value']);
+  $special_categories = 0; // Degree have special classifications?
+  $accelerated_degree_value = 0;
+  $concurrent_degree_value = 0;
+  $online_program_value = '';
+  $new_degree_value = 0;
+  $joint_programs_value = 0;
+  $wue_program_value = 0;
+  ?>
   <?php if (isset($node_info['field_asu_ap_cert']['#items'][0]['value'])): ?>
     <?php $cert_val = ($node_info['field_asu_ap_cert']['#items'][0]['value']); ?>
   <?php endif; ?>
@@ -157,30 +167,58 @@ if (module_exists('metatag')) {
                 </h1>
                 <div class="asu-ap-special-categories">
       <?php if (isset($node_info['field_asu_ap_acc_program']['#items'][0]['value'])): // Displaying 'Accelerated Program' field if true, displaying nothing if false  ?>
-        <?php $accelerated_degree_value = ($node_info['field_asu_ap_acc_program']['#items'][0]['value']); ?>
-        <?php if (isset($accelerated_degree_value)): ?>
+        <?php $accelerated_degree_value = (int) $node_info['field_asu_ap_acc_program']['#items'][0]['value']; ?>
+        <?php if (!empty($accelerated_degree_value)): ?>
                   <div class="asu-ap-special-category">
-                    <span class="fa fa-location-arrow"></span>
-                    <span class="asu-ap-program-flag">Accelerated Program</span>
+                    <a id="accelerated-degree" href="#asu-ap-accelerated-degree">
+                      <span class="fa fa-location-arrow"></span>
+                      <span class="asu-ap-program-flag" title="What is an accelerated program?">Accelerated Program</span>
+                    </a>
                   </div>
+          <?php $special_categories++; ?>
         <?php endif; ?>
       <?php endif; ?>
       <?php if (isset($node_info['field_asu_ap_conc_program']['#items'][0]['value'])): // Displaying 'Concurrent Program' field if true, displaying nothing if false ?>
-        <?php $concurrent_degree_value = ($node_info['field_asu_ap_conc_program']['#items'][0]['value']); ?>
-        <?php if ($concurrent_degree_value == '1'): ?>
+        <?php $concurrent_degree_value = (int) $node_info['field_asu_ap_conc_program']['#items'][0]['value']; ?>
+        <?php if ($concurrent_degree_value === 1): ?>
                   <div class="asu-ap-special-category">
-                    <span class="fa fa-star"></span>
-                    <span class="asu-ap-program-flag">Concurrent Program</span>
+                    <a id="concurrent-degree" href="#asu-ap-concurrent-degree">
+                      <span class="fa fa-star"></span>
+                      <span class="asu-ap-program-flag" title="What is a concurrent program?">Concurrent Program</span>
+                    </a>
                   </div>
+          <?php $special_categories++; ?>
+        <?php endif; ?>
+      <?php endif; ?>
+      <?php if (isset($node_info['field_asu_ap_online_mm_url']['#items'][0]['url'])): // Displaying 'Concurrent Program' field if true, displaying nothing if false ?>
+        <?php $online_program_value = $node_info['field_asu_ap_online_mm_url']['#items'][0]['url']; ?>
+        <?php if ($online_program_value): ?>
+                  <div class="asu-ap-special-category">
+                    <?php
+                    if (isset($node_info['field_asu_ap_campus']['#items'][0]['value'])) {
+                      $campus_count = count($node_info['field_asu_ap_campus']['#items']);
+                      $anchor_title = ($campus_count > 1) ? 'Online option is available' : 'Online degree program';
+                    }
+                    ?>
+                    <a id="online-program" title="<?php print $anchor_title; ?>" href="#asu-ap-online-program">
+                      <span class="fa fa-globe"></span>
+                      <span class="asu-ap-program-flag" title="<?php print $anchor_title; ?>">Online Program</span>
+                    </a>
+                  </div>
+          <?php $special_categories++; ?>
         <?php endif; ?>
       <?php endif; ?>
       <?php if (isset($node_info['field_asu_ap_new_program']['#items'][0]['value'])): // Displaying 'New Program' field if true, displaying nothing if false ?>
-        <?php $new_degree_value = ($node_info['field_asu_ap_new_program']['#items'][0]['value']); ?>
-        <?php if ($new_degree_value == '1'): ?>
+        <?php $new_degree_value = (int) $node_info['field_asu_ap_new_program']['#items'][0]['value']; ?>
+        <?php if ($new_degree_value === 1): ?>
                   <div class="asu-ap-special-category">
-                    <span class="fa fa-retweet"></span>
-                    <span class="asu-ap-program-flag">New Program</span>
+                    <!--suppress HtmlUnknownAnchorTarget -->
+                    <a id="new-program" href="#asu-ap-new-program">
+                      <span class="fa fa-retweet"></span>
+                      <span class="asu-ap-program-flag" title="What does this mean?">New Program</span>
+                    </a>
                   </div>
+          <?php $special_categories++; ?>
         <?php endif; ?>
       <?php endif; ?>
                 </div>
@@ -220,7 +258,7 @@ if (module_exists('metatag')) {
           <!-- START degree content  #################################### -->
         <div class="container container-top">
   <?php // Top white section - Marketing + body content MB
-    $ds_video_cols = (isset($node_info['field_asu_ap_url_4']['#items'][0]['url'])) ? 6 : 12; ?>
+    $ds_video_cols = (isset($node_info['field_asu_ap_url_4']['#items'][0]['video_url'])) ? 6 : 12; ?>
   <?php // LOCAL Marketing text YES
   if (isset($node_info['field_asu_ap_short_desc']['#items'][0]['safe_value'])): ?>
           <div class="row row-yes row-full row-local-market-data">
@@ -248,9 +286,9 @@ if (module_exists('metatag')) {
             <div id="degree-collapse" class="collapse">
               <div class="container">
                 <div class="row row-yes-sub row-ds-marketing-video-text">
-      <?php if (isset($node_info['field_asu_ap_market_text']['#items'][0]['safe_value'])): // @TODO togle visibility in config ?>
+      <?php if (isset($node_info['field_asu_ap_market_text']['#items'][0]['safe_value'])): // @TODO toggle visibility in config ?>
                     <div class="col-md-<?php print $ds_video_cols; ?>">
-        <?php print render($node_info['field_asu_ap_market_text']); ?>
+        <?php print render($node_info['field_asu_ap_market_text']); ?>>
                     </div>
       <?php endif; ?>
       <?php if ($ds_video_cols === 6): // SHOW Degree Search URL-based video @TODO toggle visibility in a config form ?>
@@ -280,7 +318,7 @@ if (module_exists('metatag')) {
           </div>
         <?php if ($ds_video_cols === 6): // Is there a DS URL-based video ?>
             <div class="col-md-<?php print $ds_video_cols ?>">
-            <?php print render($node_info['field_asu_ap_url_4']); ?>
+          <?php print render($node_info['field_asu_ap_url_4']); ?>
             </div>
         <?php endif; ?>
         </div>
@@ -506,7 +544,7 @@ if (module_exists('metatag')) {
                   <div class="asu-ap-subplans">
   <?php
   if (isset($node_info['field_asu_ap_subplan_url']['#items'])): ?>
-              <div class='asu-ap-sublplans'>
+              <div class='asu-ap-subplans'>
                 <p><b>Subplans</b></p>
     <?php
     foreach ($node_info['field_asu_ap_subplan_url']['#items'] as $sp) {
@@ -615,7 +653,7 @@ if (module_exists('metatag')) {
   if ($related_programs === TRUE
     && (isset($node_info['field_asu_ap_prog_req']['#items'][0]['safe_value'])
     XOR isset($node_info['field_asu_ap_admission_req']['#items'][0]['safe_value']))): ?>
-              <div class="col-md-4 col-sm-12 asu-ap-related-programs-solo">
+              <div class="col-md-4 col-sm-12 asu-ap-related-programs asu-ap-related-programs-solo">
     <?php
     print $related_programs_output;
     $related_programs_status = "ok";
@@ -634,9 +672,9 @@ if (module_exists('metatag')) {
 
   <?php if ($program_type === 'undergrad'): ?>
     <?php $career_cols = ($careers_half) ? 12 : 6; ?>
-    <?php if ($related_programs_rendered !== 'ok'): ?>
+    <?php if ($related_programs_status !== 'ok'): ?>
           <div class="row">
-            <div class="col-md-12 col-sm-12">
+            <div class="col-md-12 col-sm-12 asu-ap-related-programs">
       <?php
       print $related_programs_output . "\n";
       $related_programs_status = "ok";
@@ -683,12 +721,96 @@ if (module_exists('metatag')) {
           </div>
         </div>
 
+  <?php // Additional help text?>
+  <?php if ($special_categories > 0): ?>
+
+        <div class="asu-ap-grey-section">
+          <div class="container container-asu-ap-q-a">
+            <div class="row row-full">
+              <div class="column col-md-12">
+                <h2>More information</h2>
+    <?php if ($accelerated_degree_value): ?>
+                  <div id="asu-ap-accelerated-degree">
+                   <h4>What are Accelerated Programs at ASU?</h4>
+                    <div class="programs_term_content no-display" id="programs_term_accelerate">
+                      <p>ASU students may accelerate their studies by earning a bachelor’s and a master’s degree
+                        in as little as five years (for some programs) or by earning a bachelor’s degree in 2.5 or 3 years.</p>
+                      <p>Accelerated bachelor's and master's degree programs are designed for high-achieving
+                        undergraduate students who want the opportunity to combine undergraduate coursework with
+                        graduate coursework to accelerate completion of their master’s degree. These programs, featuring the
+                        same high-quality curriculum taught by ASU's world-renowned faculty, allow students to obtain both
+                        a bachelor's and a master's degree in as little as five years.</p>
+                      <p>Accelerated bachelor’s degree programs allow students to choose either a 2.5- or a
+                        3-year path while participating in the same high-quality educational experience of a 4-year option.
+                        Students can opt to fast-track their studies after acceptance into a participating program by
+                        connecting with their academic advisor.</p>
+                    </div>
+                  </div>
+    <?php endif; ?>
+    <?php if ($concurrent_degree_value === 1): ?>
+                  <div id="asu-ap-concurrent-degree">
+                   <h4>What are Concurrent Programs at ASU?</h4>
+                    <div class="programs_term_content no-display" id="programs_term_concurrent">
+                      <p>Students pursuing concurrent degrees earn two distinct degrees and receive two diplomas.
+                        ASU offers students two ways to earn concurrent degrees: by choosing a predetermined combination
+                        or creating their own combination.  Predetermined combinations have a single admissions
+                        application and one easy to follow major map.  To add a concurrent degree to your existing
+                        degree, work with your academic advisor. Either way, concurrent degrees allow students to
+                        pursue their own personal or professional interests.</p>
+                    </div>
+                  </div>
+    <?php endif; ?>
+    <?php if ($joint_programs_value !== 0): ?>
+                  <div id="asu-ap-joint-programs">
+                   <h4>What are Joint Programs at ASU?</h4>
+                    <div class="programs_term_content no-display" id="programs_term_joint">
+                      <p>Joint programs, or jointly conferred degrees, are offered by more than one college and provide
+                        opportunities for students to take advantage of the academic strengths of two academic units.
+                        Upon graduation, students are awarded one degree and one diploma conferred by two colleges. </p>
+                    </div>
+                  </div>
+    <?php endif; ?>
+    <?php if ($new_degree_value !== 0): ?>
+                  <div id="asu-ap-new-degree">
+                   <h4>What constitutes a New Program for ASU?</h4>
+                    <div class="programs_term_content no-display" id="programs_term_new">
+                      <p>ASU adds new programs to Degree Search frequently. Come back often and look for the “New Programs” option.</p>
+                    </div>
+                  </div>
+    <?php endif; ?>
+    <?php if (!empty($online_program_value)): ?>
+                  <div id="asu-ap-online-program">
+                   <h4>What are ASU's Online Programs?</h4>
+                    <div class="programs_term_content no-display" id="programs_term_online">
+                      <p><a href="http://asuonline.asu.edu/" target="_blank">ASU Online</a> offers programs in an entirely
+                        online format with multiple enrollment sessions throughout the year.
+                        See <a href="http://asuonline.asu.edu/" target="_blank">http://asuonline.asu.edu/</a> for more information.</p>
+                    </div>
+                  </div>
+    <?php endif; ?>
+    <?php if ($wue_program_value !== 0): ?>
+                  <div id="asu-ap-wue-program">
+                   <h4>What is the Western Undergraduate Exchange (WUE)?</h4>
+                    <div class="programs_term_content no-display">
+                      <p>The Western Undergraduate Exchange (WUE) is a program in which residents of western states
+                        (other than Arizona) may be eligible for reduced nonresident tuition. See more information
+                        and eligibility requirements on the <a href="http://students.asu.edu/admission/wue" target="_blank">Western Undergraduate
+                          Exchange (WUE) program.</a></p>
+                    </div>
+                  </div>
+    <?php endif; ?>
+                </div>
+              </div>
+            </div>
+          </div>
+  <?php endif; ?>
+<?php // End of degree content processing and rendering
+endif; ?>
+
         <!-- /#main, /#main-wrapper -->
       </div>
     </div>
   </div>
-
-<?php endif; ?>
 
   <!-- Page Footer -->
   <footer id="page-footer">

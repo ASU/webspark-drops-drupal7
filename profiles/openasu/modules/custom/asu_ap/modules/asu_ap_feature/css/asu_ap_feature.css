@@ -30,12 +30,15 @@
   font-size: 1.3125em;
 }
 .node-type-asu-ap .asu-ap-special-categories > .asu-ap-special-category {
-  color: #fff;
   display: block;
   float: left;
   font-weight: normal;
   vertical-align: middle;
   margin-right: 1.2em;
+}
+.node-type-asu-ap .asu-ap-special-categories > .asu-ap-special-category a {
+  color: #fff;
+  border-bottom: none;
 }
 .node-type-asu-ap .asu-ap-special-categories > .asu-ap-special-category > .asu-ap-program-flag {
   margin-left: 0.1em;
@@ -129,7 +132,7 @@
 }
 
 .node-type-asu-ap #main-wrapper .pane-menu-tree {
-  margin-top: 0.625em;
+  margin-top: 1em;
 }
 .node-type-asu-ap #main-wrapper .pane-menu-tree a:first-child {
   border-top-right-radius: 0;
@@ -155,16 +158,20 @@
 .text-green {
   color: #006838;
 }
-
 .node-type-asu-ap .asu-degrees-example-careers-small {
   font-size: 75%;
   margin: 0 0 1.5em 0 !important;
 }
-
 .node-type-asu-ap #main-wrapper .asu-ap-page-buttons {
   margin: 1em 0 1em;
 }
-
+/**
+ * Degree QA
+ */
+.node-type-asu-ap .container-asu-ap-q-a h4 {
+  margin-bottom: 0.25em;
+  font-style: italic;
+}
 /**
  ASU AP admin CSS -------------------------------------
  */
@@ -212,6 +219,10 @@ a.ttCourse {
   border-bottom: none;
 }
 
+.node-type-asu-ap .asu-ap-related-programs .pane-menu-tree {
+  margin-bottom: 1em;
+}
+
 .node-type-asu-ap .asu-ap-related-programs-solo {
   float: right;
   margin: 1em 0 1em 1em;
@@ -250,9 +261,6 @@ a.ttCourse {
   .node-type-asu-ap #plan-of-study .asu-ap-related-programs-solo {
     margin: 0 0 2em 0;
     float: none;
-  }
-  .node-type-asu-ap .asu-ap-related-programs-solo .pane-menu-tree {
-    margin-bottom: 1em;
   }
 }
 
