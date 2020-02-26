@@ -235,9 +235,9 @@ if (module_exists('metatag')) {
               </div>
             </div>
       <?php if ($cols['video'] === 4): ?>
-              <div class="col-md-<?php echo $cols['video']; ?>">
+            <div class="col-md-<?php echo $cols['video']; ?>">
         <?php echo $node_info['field_asu_ap_grad_desc_video']['#items'][0]['safe_value']; ?>
-              </div>
+            </div>
       <?php endif; ?>
           </div>
           <!-- Degree Search data -->
@@ -299,19 +299,19 @@ if (module_exists('metatag')) {
     <?php $cta_information = (isset($node_info['field_asu_ap_cta_information']['#items'][0]['url']))
       ? $node_info['field_asu_ap_cta_information']['#items'][0]['url']
       : "#asu-rfi-form-data"; ?>
-              <a href="<?php print $cta_information; ?>" class="btn btn-gold btn-block btn-lg">Request information</a>
+              <form><button type="submit" formaction="<?php print $cta_information; ?>" class="btn btn-gold btn-block btn-lg">Request information</button></form>
             </div>
             <div class="col-sm-6 col-md-4 space-bot-md">
     <?php $cta_visit = (isset($node_info['field_asu_ap_cta_visit']['#items'][0]['url']))
       ? $node_info['field_asu_ap_cta_visit']['#items'][0]['url']
       : 'https://visit.asu.edu/'; ?>
-              <a href="<?php print $cta_visit ?>" class="btn btn-gold btn-block btn-lg">Schedule a visit</a>
+              <form><button type="submit" formaction="<?php print $cta_visit ?>" class="btn btn-gold btn-block btn-lg">Schedule a visit</button></form>
             </div>
             <div class="col-sm-6 col-md-4 space-bot-md">
     <?php $cta_apply = (isset($node_info['field_asu_ap_cta_apply']['#items'][0]['url']))
       ? $node_info['field_asu_ap_cta_apply']['#items'][0]['url']
       : "https://students.asu.edu/apply"; ?>
-              <a href="<?php print $cta_apply?>" class="btn btn-gold btn-block btn-lg">How and when to apply</a>
+              <form><button type="submit" formaction="<?php print $cta_apply?>" class="btn btn-gold btn-block btn-lg">How and when to apply</button></form>
             </div>
           </div>
         </div>
@@ -321,7 +321,9 @@ if (module_exists('metatag')) {
           <div class="container">
             <div class="row row-full">
               <div class="col-sm-6 col-md-4">
+
   <?php // Column 1 ?>
+
                 <h2>At A Glance</h2>
                   <div class="asu-ap-page-degree-offered">
                   <h4>
@@ -488,17 +490,16 @@ if (module_exists('metatag')) {
     elseif (isset($node_info['field_asu_ap_asuds_url'])) {
       print '<h2>Plan of study</h2>';
       print '<p>The Plan of study is the required curriculum to complete the program.</p>';
+      /** @noinspection HtmlUnknownAnchorTarget */
       print '<p><a href="#plan-of-study">View Plan of Study</a></p>';
-      // echo $node_info['field_asu_ap_asuds_url']['#items'][0]['url']
-      // . '#degreeReq">View Plan of Study</a></p>';
     }
   }
   elseif ($program_type === 'graduate') {
     if (isset($node_info['field_asu_ap_asuds_url'])) {
       print '<h2>Plan of study</h2>';
       print '<p>The Plan of study is the required curriculum to complete the program.</p>';
+      /** @noinspection HtmlUnknownAnchorTarget */
       print '<p><a href="#plan-of-study">View Plan of Study</a></p>';
-      // echo $node_info['field_asu_ap_asuds_url']['#items'][0]['url'] . '#degreeReq">View Plan of Study</a></p>';
     }
   }
 ?>
@@ -522,7 +523,9 @@ if (module_exists('metatag')) {
                   </div>
                 </div>
               </div>
+
               <?php // Column 2 ?>
+
               <div class="col-sm-6 col-md-4">
   <?php if ($program_type === 'undergrad'): ?>
               <h2>Application requirements</h2>
@@ -542,7 +545,9 @@ if (module_exists('metatag')) {
       <?php endif ?>
     <?php endif; ?>
               </div>
+
   <?php // Column 3 ?>
+
               <div class="col-sm-6 col-md-4">
   <?php if ($program_type === 'undergrad'): ?>
                 <h2>Affording college</h2>
@@ -576,15 +581,44 @@ if (module_exists('metatag')) {
         </div>
 
       <!-- Bottom white section (BW) -->
-        <div class="container">
-          <div class="row row-full">
-  <?php //print render($page['asu_ap_marketing']); ?>
-          </div>
-        </div>
 
         <div class="container space-top-xl space-bot-sm">
+  <?php
+  // Which content to show and how.
+  $careers_half = ((isset($node_info['field_asu_ap_example_careers']))
+    XOR (isset($node_info['field_asu_ap_career_opps']))) ? TRUE : FALSE;
+  $related_programs = (isset($node_info['field_asu_ap_related_programs'])) ? TRUE : FALSE;
+  $related_programs_status = ($related_programs) ? "waiting" : "ok";
+
+  // Generate Related Programs menu pane
+  if ($related_programs === TRUE) {
+    $related_programs_output = '<div class="pane-menu-tree">' . "\n";
+    $related_programs_output .= '  <h4>Related Programs</h4>' . "\n";
+    for ($it = 0; $it < count($node_info['field_asu_ap_related_programs']); $it++) {
+      if (isset($node_info['field_asu_ap_related_programs'][$it]['#label'])) {
+        $rp_result = $node_info['field_asu_ap_related_programs'][$it]['#label'];
+      }
+      if (!empty($rp_result)) {
+        $related_programs_output .= '    <a href="/' . $node_info['field_asu_ap_related_programs'][$it]['#uri']['path'] . '">' . $rp_result . '</a>' . "\n";
+        unset($rp_result);
+      }
+      else {
+        break;
+      }
+      $related_programs_output .= "  <br>\n";
+    }
+    $related_programs_output .= "</div>\n";
+  } ?>
           <div class="row">
             <div class="col-md-12" id="plan-of-study">
+  <?php if ($related_programs === TRUE): ?>
+              <div class="col-md-4 col-sm-12 asu-ap-related-programs-solo">
+    <?php
+    print $related_programs_output;
+    $related_programs_status = "ok";
+    ?>
+              </div>
+  <?php endif; ?>
   <?php if (isset($node_info['field_asu_ap_prog_req']['#items'][0]['safe_value'])): ?>
               <h2>Program requirements</h2>
     <?php print $node_info['field_asu_ap_prog_req']['#items'][0]['safe_value']; ?>
@@ -594,11 +628,19 @@ if (module_exists('metatag')) {
   <?php endif; ?>
             </div>
           </div>
-  <?php
-  $related_programs = (isset($node_info['field_asu_ap_related_programs'])) ? TRUE : FALSE;
-  $career_cols = ($related_programs) ? 8 : 6;
 
-  if ($program_type === 'undergrad'): ?>
+  <?php if ($program_type === 'undergrad'): ?>
+    <?php $career_cols = ($careers_half) ? 12 : 6; ?>
+    <?php if ($related_programs_rendered !== 'ok'): ?>
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+      <?php
+      print $related_programs_output . "\n";
+      $related_programs_status = "ok";
+      ?>
+            </div>
+          </div>
+    <?php endif; ?>
           <div class="row">
     <?php if (isset($node_info['field_asu_ap_career_opps'])): ?>
             <div class="col-md-<?php print $career_cols ?> asu-ap-careers">
@@ -618,8 +660,8 @@ if (module_exists('metatag')) {
         <?php print render($node_info['field_asu_ap_example_careers']); ?>
       <?php endif; ?>
             </div>
-          </div>
     <?php endif; ?>
+          </div>
 
   <?php elseif ($program_type === 'graduate'): ?>
           <div class="row">
@@ -631,28 +673,6 @@ if (module_exists('metatag')) {
           </div>
   <?php endif; ?>
         </div>
-
-  <?php if ($related_programs === TRUE): ?>
-        <div class="col-md-4">
-          <div class="pane-menu-tree">
-          <h4>Related Programs</h4>
-    <?php
-        for ($it = 0; $it < count($node_info['field_asu_ap_related_programs']); $it++) {
-          if (isset($node_info['field_asu_ap_related_programs'][$it]['#label'])) {
-            $rp_result = $node_info['field_asu_ap_related_programs'][$it]['#label'];
-          }
-          if (!empty($rp_result)) {
-            echo '<a href="/'.$node_info['field_asu_ap_related_programs'][$it]['#uri']['path'].'">'.$rp_result.'</a>';
-            unset($rp_result);
-          } else {
-            break;
-          }
-          print '<br>';
-        }
-    ?>
-          </div>
-        </div>
-  <?php endif; ?>
 
         <div class="container">
           <div class="row">

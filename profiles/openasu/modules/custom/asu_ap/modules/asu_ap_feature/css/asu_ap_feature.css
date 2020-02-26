@@ -212,6 +212,11 @@ a.ttCourse {
   border-bottom: none;
 }
 
+.node-type-asu-ap .asu-ap-related-programs-solo {
+  float: right;
+  margin: 1em 0 1em 1em;
+}
+
 #asu-ap-node-form .fieldset-wrapper > * {
   margin-bottom: 1.5625em;
 }
@@ -237,26 +242,42 @@ a.ttCourse {
     overflow: visible;
     padding-left: 0;
   }
-  .node-type-asu-ap #main .row > div[class*="col-"] {
+  .node-type-asu-ap #main .row > div[class*="col-"],
+  .node-type-asu-ap #plan-of-study .asu-ap-related-programs-solo {
     padding-left: 0;
+    padding-right: 0;
+  }
+  .node-type-asu-ap #plan-of-study .asu-ap-related-programs-solo {
+    margin: 0 0 2em 0;
+    float: none;
+  }
+  .node-type-asu-ap .asu-ap-related-programs-solo .pane-menu-tree {
+    margin-bottom: 1em;
   }
 }
 
 @media (min-width: 768px) {
-  body.node-type-asu-ap #main-wrapper .col-sm-6 {
+  .node-type-asu-ap #main-wrapper .col-sm-6 {
     float: left;
   }
-  body.node-type-asu-ap #main-wrapper .asu-degree-banner-image img {
+  .node-type-asu-ap #main-wrapper .asu-degree-banner-image img {
     min-height: 238px;
   }
-  body.node-type-asu-ap #main-wrapper h1#page-title {
+  .node-type-asu-ap #main-wrapper h1#page-title {
     font-size: 3.75em;
   }
 }
 
-@media (min-width: 767px) and (max-width: 992px) {
+@media (min-width: 768px) and (max-width: 991px) {
   .view-asu-ap-view .view-content .views-field.views-field-field-degree-image {
     width: 50%;
+  }
+  .node-type-asu-ap #main .container {
+    min-width: 768px;
+  }
+  .node-type-asu-ap #main .container .row:not(.asu-ap-page-buttons) div[class*="col-"] {
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
