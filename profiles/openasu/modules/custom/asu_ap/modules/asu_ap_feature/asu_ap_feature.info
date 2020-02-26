@@ -14,6 +14,7 @@ dependencies[] = feeds
 dependencies[] = feeds_ui
 dependencies[] = field_group
 dependencies[] = filter
+dependencies[] = flogger
 dependencies[] = image
 dependencies[] = link
 dependencies[] = list

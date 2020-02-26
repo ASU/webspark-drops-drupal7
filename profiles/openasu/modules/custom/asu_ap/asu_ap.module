@@ -172,3 +172,40 @@ function asu_ap_feeds_presave(FeedsSource $source, $entity, $item) {
 		}
 	}
 }
+
+/**
+ * Implements hook_menu().
+ */
+function asu_ap_menu() {
+  $items['admin/config/asu_ap'] = array(
+    'title' => 'ASU AP',
+    'description' => 'Administer the ASU Academic Programs module.',
+    'position' => 'right',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer ap page output'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+  $items['admin/config/asu_ap/settings'] = array(
+    'title' => 'ASU AP Settings',
+    'description' => t('Administer the ASU Academic Programs and submission settings.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('asu_ap_admin_settings'),
+    'access arguments' => array('administer ap page output'),
+    'options' => array('attributes' => array('class' => 'title')),
+    'file' => 'includes/asu_rfi.admin.inc'
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function asu_ap_permission() {
+  return array(
+    'administer ap page output' => array(
+      'title' => t('Administer degree page output'),
+      'description' => t('Administer whether some degree page elements are displayed.'),
+    ),
+  );
+}

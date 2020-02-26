@@ -97,6 +97,11 @@
 .node-type-asu-ap #main-wrapper .field-name-field-asu-ap-example-careers p {
   margin: 0;
 }
+.node-type-asu-ap .ds-video-shell {
+  padding: 1em;
+  background-color: #f1f1f1;
+  margin-bottom: 1.5em;
+}
 
 .node-type-asu-ap #main-wrapper .asu-ap-grey-section {
   background: #f1f1f1;
@@ -164,6 +169,15 @@
 }
 .node-type-asu-ap #main-wrapper .asu-ap-page-buttons {
   margin: 1em 0 1em;
+}
+
+/*
+ * RFI form
+ */
+.node-type-asu-ap .region-prefooter .block-asu-rfi {
+  margin-bottom: 1em;
+  padding-left: 0;
+  padding-right: 0;
 }
 /**
  * Degree QA

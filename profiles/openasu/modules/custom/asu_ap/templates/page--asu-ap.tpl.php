@@ -258,7 +258,17 @@ if (module_exists('metatag')) {
           <!-- START degree content  #################################### -->
         <div class="container container-top">
   <?php // Top white section - Marketing + body content MB
-    $ds_video_cols = (isset($node_info['field_asu_ap_url_4']['#items'][0]['video_url'])) ? 6 : 12; ?>
+  if (isset($node_info['field_asu_ap_url_4']['#items'][0]['video_url'])) {
+    $ds_marketing_text_cols = array(
+      'text' => 7,
+      'video' => 5);
+  } else {
+    $ds_marketing_text_cols = array(
+      'text' => 12,
+      'video' => 0);
+  }
+
+  ?>
   <?php // LOCAL Marketing text YES
   if (isset($node_info['field_asu_ap_short_desc']['#items'][0]['safe_value'])): ?>
           <div class="row row-yes row-full row-local-market-data">
@@ -287,12 +297,12 @@ if (module_exists('metatag')) {
               <div class="container">
                 <div class="row row-yes-sub row-ds-marketing-video-text">
       <?php if (isset($node_info['field_asu_ap_market_text']['#items'][0]['safe_value'])): // @TODO toggle visibility in config ?>
-                    <div class="col-md-<?php print $ds_video_cols; ?>">
+                    <div class="col-md-<?php print $ds_marketing_text_cols['text']; ?>">
         <?php print render($node_info['field_asu_ap_market_text']); ?>>
                     </div>
       <?php endif; ?>
-      <?php if ($ds_video_cols === 6): // SHOW Degree Search URL-based video @TODO toggle visibility in a config form ?>
-                    <div class="col-md-<?php print $ds_video_cols ?>">
+      <?php if ($ds_marketing_text_cols['video'] === 5): // SHOW Degree Search URL-based video @TODO toggle visibility in a config form ?>
+                    <div class="col-md-<?php print $ds_marketing_text_cols['video'] ?>">
         <?php print render($node_info['field_asu_ap_url_4']); ?>
                     </div>
       <?php endif; ?>
@@ -313,12 +323,14 @@ if (module_exists('metatag')) {
       <?php // Is there DS marketing text? YES
       if (isset($node_info['field_asu_ap_market_text']['#items'][0]['safe_value'])): ?>
         <div class="row row-no row-ds-marketing-video-text">
-          <div class="col-md-<?php print $ds_video_cols; ?>">
+          <div class="col-md-<?php print $ds_marketing_text_cols['text']; ?>">
         <?php print render($node_info['field_asu_ap_market_text']); ?>
           </div>
-        <?php if ($ds_video_cols === 6): // Is there a DS URL-based video ?>
-            <div class="col-md-<?php print $ds_video_cols ?>">
+        <?php if ($ds_marketing_text_cols['video'] === 5): // Is there a DS URL-based video ?>
+            <div class="col-md-<?php print $ds_marketing_text_cols['video'] ?>">
+              <div class="ds-video-shell">
           <?php print render($node_info['field_asu_ap_url_4']); ?>
+              </div>
             </div>
         <?php endif; ?>
         </div>

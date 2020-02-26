@@ -54,4 +54,23 @@ function asu_ap_feature_update_7000(&$sandbox) {
 function asu_ap_feature_update_7001(&$sandbox) {
   features_revert_module('asu_ap_feature');
   feeds_cache_clear(); // Reset Feeds (ctools) cache of forms
+  flogger('update', "ASU AP module feature was reverted."
+  . " Please review any existing ASU AP degree pages you may have.",
+    array(), WATCHDOG_INFO, TRUE, TRUE);
+}
+
+/**
+ * Add separate VBO permission for using views bulk operations.
+ */
+function asu_ap_feature_update_7203(&$sandbox) {
+  $rid = variable_get('user_admin_role', '');
+  if (!empty($rid)) {
+    user_role_grant_permissions($rid, array('administer ap page output'));
+    flogger('update', "Added 'Administer degree page output' permission to the administrator role.",
+      array(), WATCHDOG_INFO, TRUE, TRUE);
+  } else {
+    flogger('update', "Could not add 'Administer degree page output' permission to the administrator role.
+      Make sure to manually enable the permission at /admin/people/permissions#module-asu_ap.",
+      array(), WATCHDOG_INFO, TRUE, TRUE);
+  }
 }
