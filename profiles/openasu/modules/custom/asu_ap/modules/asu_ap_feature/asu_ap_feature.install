@@ -6,6 +6,7 @@
 function asu_ap_feature_install() {
   _asu_ap_feature_image('asu_degree_banner_default.jpg', 'banner');
   _asu_ap_feature_image('asu_ap_image.jpg', 'image');
+  variable_set('asu_ap_ds_marketing_video', 'marketing_top');
 }
 
 /**
@@ -38,6 +39,7 @@ function asu_ap_feature_uninstall() {
   }
   node_types_rebuild();
   menu_rebuild();
+  variable_del('asu_ap_ds_marketing_video');
 }
 
 /**
@@ -61,8 +63,10 @@ function asu_ap_feature_update_7001(&$sandbox) {
 
 /**
  * Add separate VBO permission for using views bulk operations.
+ * Add permissions for managing certain Degree Search populated degree page fields.
  */
-function asu_ap_feature_update_7203(&$sandbox) {
+function asu_ap_feature_update_7002(&$sandbox) {
+  variable_set('asu_ap_ds_marketing_video', 'marketing_top');
   $rid = variable_get('user_admin_role', '');
   if (!empty($rid)) {
     user_role_grant_permissions($rid, array('administer ap page output'));
