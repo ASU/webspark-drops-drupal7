@@ -153,6 +153,7 @@ projects[chosen][subdir] = contrib
 projects[easy_breadcrumb][version] = 2.17
 projects[easy_breadcrumb][type] = module
 projects[easy_breadcrumb][subdir] = contrib
+projects[easy_breadcrumb][patch][3107889] = https://www.drupal.org/files/issues/2020-02-27/easy_breadcrumb_schema_no_dep.patch
 
 projects[entity_view_mode][version] = 1.0-rc1
 projects[entity_view_mode][type] = module
