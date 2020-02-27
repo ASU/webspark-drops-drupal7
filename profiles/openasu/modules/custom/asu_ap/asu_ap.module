@@ -9,7 +9,7 @@
  */
 function asu_ap_menu() {
   $items['admin/config/asu_ap'] = array(
-    'title' => 'ASU AP',
+    'title' => 'ASU AP (Degrees)',
     'description' => 'Administer the ASU Academic Programs module.',
     'position' => 'right',
     'page callback' => 'system_admin_menu_block_page',
@@ -18,13 +18,13 @@ function asu_ap_menu() {
     'file path' => drupal_get_path('module', 'system'),
   );
   $items['admin/config/asu_ap/settings'] = array(
-    'title' => 'Settings',
-    'description' => t('Administer the ASU Academic Programs and submission settings.'),
+    'title' => 'AP (Degrees) Settings',
+    'description' => t('Administer the ASU Academic Programs degree page output.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('asu_ap_admin_settings'),
     'access arguments' => array('administer ap page output'),
     'options' => array('attributes' => array('class' => 'title')),
-    'file' => 'includes/asu_rfi.admin.inc'
+    'file' => 'includes/asu_ap.admin.inc'
   );
   return $items;
 }

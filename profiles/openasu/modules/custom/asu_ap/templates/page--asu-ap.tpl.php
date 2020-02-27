@@ -258,7 +258,8 @@ if (module_exists('metatag')) {
           <!-- START degree content  #################################### -->
         <div class="container container-top">
   <?php // Top white section - Marketing + body content MB
-  if (isset($node_info['field_asu_ap_url_4']['#items'][0]['video_url'])) {
+  if (isset($node_info['field_asu_ap_url_4']['#items'][0]['video_url'])
+    && variable_get('asu_ap_ds_marketing_video') === 'marketing_top') {
     $ds_marketing_text_cols = array(
       'text' => 7,
       'video' => 5);
@@ -515,6 +516,10 @@ if (module_exists('metatag')) {
     $major_map_urls = array();
     if (isset($node_info['field_asu_ap_major_map_url'])) {
       print '<h2>Required Courses</h2>';
+      print "<p>A major map outlines a major's critical requirements, courses, and optimal course
+        sequence and aids students in remaining on track to graduation.</p>
+        <p>Every course listed in
+        a major map is required to graduate.</p>";
       $major_map_url = $node_info['field_asu_ap_major_map_url']['#items'][0]['url'];
       if (valid_url($major_map_url, TRUE)) {
         if (isset($node_info['field_asu_ap_major_map_year'])) {

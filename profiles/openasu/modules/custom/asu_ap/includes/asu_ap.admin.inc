@@ -19,14 +19,14 @@ function asu_ap_admin_settings() {
   $form['ds']['video_handling'] = array(
     '#type' => 'select',
     '#title' => 'Display Degree Search marketing video',
-    '#description' => 'This only affect degree videos that may have pulled in from Degree Search."
-     . " It has no bearing on other video URLs entered in degree edit pages.',
+    '#description' => 'This only affects videos that have been pulled in from the Degree Search feed. It has no bearing on other videos manually added in degree page edit forms in this site.',
     '#options' => array(
       'marketing_top' => 'Displayed',
       'none' => 'Hidden',
     ),
     '#default_value' => variable_get('asu_ap_ds_marketing_video', 'marketing_top'),
   );
+  $form['#submit'][] = 'asu_ap_admin_settings_submit';
   return system_settings_form($form);
 }
 
