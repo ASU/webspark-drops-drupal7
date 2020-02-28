@@ -1663,7 +1663,7 @@ function asu_ap_feature_field_default_field_instances() {
     'bundle' => 'asu_ap',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'All future available terms and their application dates - by campus.',
+    'description' => 'All future available terms and their application dates - by campus. MUST be a serialized array from the Degree Search feed (or at least the same serialized structure).',
     'display' => array(
       'default' => array(
         'label' => 'above',

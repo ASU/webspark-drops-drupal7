@@ -52,7 +52,7 @@ function asu_rfi_post_to_middleware($data, $type) {
   // Start building data for middleware submission
   ////////////////////////////
   $prog_code = $data['program_code'];
-  $campus = _asu_rfi_get_salesforce_campus_id($data['campus']);
+  $campus = _asu_rfi_get_campus_info($data['campus']);
   $phone = preg_replace('[\D]', '', $data['phone']);
   $mobile = (isset($data['mobile_check']))
     ? str_replace('-', '', $data['mobile_check'])
