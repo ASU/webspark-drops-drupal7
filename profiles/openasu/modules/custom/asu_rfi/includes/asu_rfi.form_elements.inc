@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 /**
  * Generates a Form API element for a single field from pre-determined list of
@@ -66,6 +66,15 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
         '#title' => t('My campus of choice is'),
         '#options' => array(),
         '#attributes' => array('class' => array('reqinfo_campus', 'chosen-disable')),
+        // For AJAX updates of fields
+        '#prefix' => '<div id="asu-ap-campus-ajax-wrapper">',
+        '#suffix' => '</div>',
+        '#ajax' => array(
+          'callback' => '_asu_rfi_campus_ajax_callback',
+          'wrapper' => 'asu-ap-campus-ajax-wrapper',
+          'method' => 'replace',
+          'effect' => 'fade',
+        ),
       );
       break;
     case 'student_type':
@@ -86,7 +95,10 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
         '#type' => 'select',
         '#title' => t('My start date'),
         '#options' => $value,
-        '#attributes' => array('class' => array('chosen-disable'))
+        '#attributes' => array('class' => array('chosen-disable')),
+        // For AJAX updates
+        '#prefix' => '<div id="asu-rfi-start-date-ajax-wrapper">',
+        '#suffix' => '</div>',
       );
       break;
     case 'first_name':

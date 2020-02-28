@@ -4,3 +4,4 @@ core = 7.x
 package = ASU
 version = 7.x-2.6
 dependencies[] = asu_ap_feature
+files[] = includes/asu_ap.admin.inc

@@ -698,7 +698,7 @@ function _asu_rfi_validate_electronic_contacts($email, $phone) {
 
 /**
  * Validation - Birthdate
- * @param $birthdate - Format (MM/DD/YYYY)
+ * @param $birthdate
  */
 function _asu_rfi_validate_birthdate($birthdate) {
   //get number of occurences of '/' in dob
@@ -1268,20 +1268,14 @@ function _asu_rfi_get_campus_location_options($pcodes) {
  */
 function _asu_rfi_get_campus_info($campus, $reverse = FALSE) {
   $campuses = array(
-    'TEMPE' => 'Tempe',
-    'ONLNE' => 'Online',
-    'WEST' => 'West',
-    'DTPHX' => 'Downtown',
-    'POLY' => 'Polytechnic',
-    'CALHC' => 'Lake Havasu City',
-    'CAC' => 'ASU@Pinal',
-    'EAC' => 'ASU@TheGilaValley',
-    'TUCSN' => 'ASU@Tucson',
-    'AWC' => 'ASU@Yuma',
-    'TBIRD' => 'Thunderbird',
-    'YAVAP' => 'ASU@Yavapai',
-    'PIMA' => 'ASU@Pima',
-    'COCHS' => 'ASU@Cochise',
+    "Tempe" => "TEMPE",
+    "Online" => "ONLNE",
+    "East Arizona College" => "EAC",
+    "Polytechnic" => "POLY",
+    "Lake Havasu" => "CALHC",
+    "West" => "WEST",
+    "Downtown" => "DTPHX",
+    "Arizona Western College" => "AWC",
   );
   if ($reverse === TRUE) {
     $campuses = array_flip($campuses);
@@ -1292,19 +1286,6 @@ function _asu_rfi_get_campus_info($campus, $reverse = FALSE) {
       break;
     }
   }
-  // If still here, check for dupe keys that break the 1:1 relationship required for the array_flip to work.
-  // Dupe keys so far:
-  // DOWNTOWN
-  // TMPE
-  if ($reverse === TRUE) {
-    if ($campus === 'DOWNTOWN') {
-      return 'Downtown';
-    }
-    if ($campus === 'TMPE') {
-      return 'Tempe';
-    }
-  }
-  // Nothing matched
   return '';
 }
 
@@ -1792,9 +1773,6 @@ function _asu_rfi_create_expired_message($created) {
   return $message;
 }
 
-/**
- * Generate content for birthday explanation modal
- */
 function _asu_rfi_get_birthday_explanation() {
   return '<!-- Button trigger modal -->
 	    <span class="fa fa-info-circle" data-toggle="modal" data-target="#myModal"></span>
@@ -1812,7 +1790,6 @@ function _asu_rfi_get_birthday_explanation() {
         </div>
       </div>';
 }
-
 /**
  * Get multiform thanks messaging for posting in site outside of the form.
  */
@@ -1825,6 +1802,7 @@ function _asu_rfi_multiform_thanks_part1() {
   </div>
 EOT;
 }
+
 /**
  * Get multiform thanks messaging for posting in site outside of the form.
  */
