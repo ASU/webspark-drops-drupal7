@@ -63,53 +63,17 @@ function asu_rfi_form_data($form, &$form_state) {
     $date_key = substr_replace($date, '', 1, -2);
     $year[$date_key] = $date;
   }
-  $degreeMappings = _asu_rfi_get_degree_field_mappings();
+
   $country = _asu_rfi_get_country_list();
 
-  // Load the current node object, get program name and degree type
-  $node = menu_get_object();
-  if (!empty($node)) {
-    if (!empty($degreeMappings)) {
-      $field_academic_plan = $degreeMappings['field_academic_plan'];
-      $field_degree_awarded = $degreeMappings['field_degree_awarded'];
-      $field_degree_program = $degreeMappings['field_degree_program'];
-      $field_academic_program = $degreeMappings['field_academic_program'];
-      $field_diploma_description = $degreeMappings['field_diploma_description'];
-      $academic_plan = &$node->$field_academic_plan;
-      $degree_awarded = &$node->$field_degree_awarded;
-      $degree_program = &$node->$field_degree_program;
-      $academic_program = &$node->$field_academic_program;
-      $diploma_description = &$node->$field_diploma_description;
-    } else {
-      $academic_plan = '';
-      $degree_awarded = '';
-      $degree_program = '';
-      $academic_program = '';
-      $diploma_description = '';
-    }
-    $deg_code = (!empty($academic_plan[LANGUAGE_NONE][0]['value'])) ? $academic_plan[LANGUAGE_NONE][0]['value'] : '';
-    $deg_name = (!empty($degree_awarded[LANGUAGE_NONE][0]['value'])) ? $degree_awarded[LANGUAGE_NONE][0]['value'] : '';
-    $degree[$deg_code] = $deg_name;
-    $college_code = (!empty($academic_program)) ? $academic_program[LANGUAGE_NONE][0]['value'] : "None";
-    $college_name = (!empty($diploma_description)) ? $diploma_description[LANGUAGE_NONE][0]['value'] : '';
-    $form_type = (!empty($degree_program[LANGUAGE_NONE][0]['value'])) ? $degree_program[LANGUAGE_NONE][0]['value'] : '';
+  // Load the current node object and get various degree data
+  $degree_assets = _asu_rfi_get_degree_specifics();
 
-    // Pull in available start terms for Graduate programs; Static for all others
-    $grad_dates = (isset($node->field_asu_ap_grad_all_app_dates[LANGUAGE_NONE][0]['value']))
-      ? $node->field_asu_ap_grad_all_app_dates[LANGUAGE_NONE][0]['value'] : '' ;
-    dpm($grad_dates, __FUNCTION__ . ' - grad_dates');
-    dpm($academic_plan, 'academic_plan');
-    dpm($degree_program[LANGUAGE_NONE][0]['value']);
-    if (!empty($grad_dates)
-      && !empty($academic_plan[LANGUAGE_NONE][0]['safe_value'])
-      && $degree_program[LANGUAGE_NONE][0]['safe_value'] === 'graduate') {
-      $ap = $academic_plan[LANGUAGE_NONE][0]['safe_value'];
-      $start_dates = _asu_rfi_get_sem_dates_dynamic($ap, $grad_dates);
-      dpm('dynamic');
-    } else {
-      $start_dates = _asu_rfi_get_sem_dates_static();
-      dpm('static');
-    }
+  if (!empty($degree_assets)) {
+    // Unknown why this old code existed...
+    // $degree[$deg_code] = $deg_name; // ??
+    $dc = $degree_assets['deg_code'];
+    $degree[$dc] = $degree_assets['deg_name'];
 
     $form = array();
     honeypot_add_form_protection($form, $form_state, array(
@@ -141,7 +105,7 @@ function asu_rfi_form_data($form, &$form_state) {
     $form['req_header_text'] = _asu_rfi_form_base_components('req_header_text');
     $form['req_helper'] = _asu_rfi_form_base_components('req_helper');
     $form['domain'] = _asu_rfi_form_base_components('domain');
-    $form['degree_type'] = _asu_rfi_form_base_components('degree_type', FALSE, $form_type);
+    $form['degree_type'] = _asu_rfi_form_base_components('degree_type', FALSE, $degree_assets['form_type']);
     // MY INTEREST
     $form['my_interest'] = _asu_rfi_form_base_components('my_interest');
 
@@ -157,13 +121,13 @@ function asu_rfi_form_data($form, &$form_state) {
       '#type' => 'textfield',
       '#title' => t('My program of interest'),
       '#required' => TRUE,
-      '#default_value' => $deg_name,
+      '#default_value' => $degree_assets['deg_name'],
       '#disabled' => TRUE,
       '#size' => 30,
     );
     $form['my_interest']['campus'] = _asu_rfi_form_elements_multiple_keys('my_interest', 'campus');
       $form['my_interest']['campus']['#required'] = TRUE;
-    $form['my_interest']['start_date'] = _asu_rfi_form_elements_multiple_keys('my_interest', 'start_date', TRUE, $start_dates); // Addon(s)
+    $form['my_interest']['start_date'] = _asu_rfi_form_elements_multiple_keys('my_interest', 'start_date', TRUE, $degree_assets['start_dates']); // Addon(s)
     $form['my_interest']['start_date']['#required'] = TRUE;
     //$form['my_interest']['start_date']['#default_value'] = isset($_SESSION['rfi_data']['start_date']) ? $_SESSION['rfi_data']['start_date'] : NULL;
 
@@ -203,20 +167,20 @@ function asu_rfi_form_data($form, &$form_state) {
       '#type' => 'hidden',
       '#size' => 30,
       '#maxlength' => 64,
-      '#default_value' => $college_code,
+      '#default_value' => $degree_assets['college_code'],
     );
     // NOPE - Single
     $form['program_code'] = array( // Node - single
       '#type' => 'hidden',
       '#maxlength' => 64,
-      '#default_value' => $deg_code,
+      '#default_value' => $degree_assets['deg_code'],
       '#size' => 50,
     );
     // NOPE - Single
     $form['college_name'] = array( // Nope - single
       '#type' => 'hidden',
       '#maxlength' => 128,
-      '#default_value' => $college_name,
+      '#default_value' => $degree_assets['college_name'],
       '#size' => 50,
     );
     $form['enterpriseclientid'] = _asu_rfi_form_base_components('enterpriseclientid');
@@ -805,6 +769,77 @@ function asu_rfi_long_form($delta, $programs, $form_type) {
   return drupal_get_form('asu_rfi_long_form_data', $programs, $form_type);
 }
 
+function _asu_rfi_get_degree_specifics() {
+
+  $degreeMappings = _asu_rfi_get_degree_field_mappings();
+  $node = menu_get_object();
+
+  // Load the current node object, get program name and degree type
+  if (!empty($node)) {
+    if (!empty($degreeMappings)) {
+      $field_academic_plan = $degreeMappings['field_academic_plan'];
+      $field_degree_awarded = $degreeMappings['field_degree_awarded'];
+      $field_degree_program = $degreeMappings['field_degree_program'];
+      $field_academic_program = $degreeMappings['field_academic_program'];
+      $field_diploma_description = $degreeMappings['field_diploma_description'];
+      $academic_plan = &$node->$field_academic_plan;
+      $degree_awarded = &$node->$field_degree_awarded;
+      $degree_program = &$node->$field_degree_program;
+      $academic_program = &$node->$field_academic_program;
+      $diploma_description = &$node->$field_diploma_description;
+    }
+    else {
+      $academic_plan = '';
+      $degree_awarded = '';
+      $degree_program = '';
+      $academic_program = '';
+      $diploma_description = '';
+    }
+    $deg_code = (!empty($academic_plan[LANGUAGE_NONE][0]['value']))
+      ? $academic_plan[LANGUAGE_NONE][0]['value'] : '';
+    $deg_name = (!empty($degree_awarded[LANGUAGE_NONE][0]['value']))
+      ? $degree_awarded[LANGUAGE_NONE][0]['value'] : '';
+    $college_code = (!empty($academic_program))
+      ? $academic_program[LANGUAGE_NONE][0]['value'] : "None";
+    $college_name = (!empty($diploma_description))
+      ? $diploma_description[LANGUAGE_NONE][0]['value'] : '';
+    $form_type = (!empty($degree_program[LANGUAGE_NONE][0]['value']))
+      ? $degree_program[LANGUAGE_NONE][0]['value'] : '';
+
+    // Pull in available start terms for Graduate programs; Static for all others
+    $grad_dates = (isset($node->field_asu_ap_grad_all_app_dates[LANGUAGE_NONE][0]['value']))
+      ? $node->field_asu_ap_grad_all_app_dates[LANGUAGE_NONE][0]['value'] : '' ;
+    dpm($grad_dates, __FUNCTION__ . ' - grad_dates');
+    dpm($academic_plan, 'academic_plan');
+    dpm($degree_program[LANGUAGE_NONE][0]['value']);
+    if (!empty($grad_dates)
+      && !empty($academic_plan[LANGUAGE_NONE][0]['safe_value'])
+      && $degree_program[LANGUAGE_NONE][0]['safe_value'] === 'graduate') {
+      $ap = $academic_plan[LANGUAGE_NONE][0]['safe_value'];
+      $start_dates = _asu_rfi_get_sem_dates_dynamic($ap, $grad_dates);
+      dpm('dynamic');
+    } else {
+      $start_dates = _asu_rfi_get_sem_dates_static();
+      dpm('static');
+    }
+
+    return array(
+      'academic_plan' => $academic_plan,
+      'academic_program' => $academic_program,
+      'degree_awarded' => $degree_awarded,
+      'degree_program' => $degree_program,
+      'diploma_description' => $diploma_description,
+      'deg_code' => $deg_code,
+      'deg_name' => $deg_name,
+      'college_code' => $college_code,
+      'college_name' => $college_name,
+      'form_type' => $form_type,
+      'grad_dates' => $grad_dates,
+      'start_dates' => $start_dates,
+    );
+  }
+}
+
 /**
  * LONG FORM - Form API construction of the form
  * @param $form
@@ -818,7 +853,6 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
   _asu_rfi_form_initial_web_assets('long_form');
 
   $form = array();
-  $start_dates = _asu_rfi_get_sem_dates_static();
   $country = _asu_rfi_get_country_list();
   $states = _asu_rfi_get_state_list();
   for ($idate = 0; $idate < 4; $idate++) {
@@ -826,6 +860,14 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
     $date_key = substr_replace($date, '', 1, -2);
     $year[$date_key] = $date;
   }
+
+  // Load the current node object and get various degree data
+  $degree_assets = _asu_rfi_get_degree_specifics();
+
+  // Unknown why this old code existed...
+  // $degree[$deg_code] = $deg_name; // ??
+  $dc = $degree_assets['deg_code'];
+  $degree[$dc] = $degree_assets['deg_name'];
 
   honeypot_add_form_protection($form, $form_state, array(
     'honeypot',
@@ -882,7 +924,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
     $form['my_interest']['student_type']['#states']['optional'][':input[name="location"]']['value'] = 'online';
     $form['my_interest']['student_type']['#empty_option'] = t('- Select -');
 
-  $form['my_interest']['start_date'] = _asu_rfi_form_elements_multiple_keys('my_interest', 'start_date', FALSE, $start_dates);
+  $form['my_interest']['start_date'] = _asu_rfi_form_elements_multiple_keys('my_interest', 'start_date', FALSE, $degree_assets['start_dates']);
     // Long form customizations
     $form['my_interest']['start_date']['#states']['optional'][':input[name="location"]']['value'] = 'online';
     $form['my_interest']['start_date']['#states']['invisible'][':input[name="location"]']['value'] = 'online';
@@ -1771,7 +1813,7 @@ function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '') {
     }
   }
 
-  dpm($all_dates, 'all_dates');
+  //dpm($all_dates, 'all_dates');
 
   $valid_semester_dates = array();
   // Filter by campus @TODO
@@ -1787,15 +1829,15 @@ function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '') {
     // Check dates against static list
     $final_dates = _asu_rfi_get_sem_dates_static(TRUE);
 
-    dpm($final_dates, 'final_dates - before');
-    dpm($valid_semester_dates, 'valid_semester_dates');
+    //dpm($final_dates, 'final_dates - before');
+    //dpm($valid_semester_dates, 'valid_semester_dates');
 
     foreach ($final_dates as $code => $date) {
       if (!in_array($date, $valid_semester_dates)) {
         unset($final_dates[$code]);
       }
     }
-    dpm($final_dates, 'final_dates - after');
+    //dpm($final_dates, 'final_dates - after');
   }
   else {
     return FALSE;

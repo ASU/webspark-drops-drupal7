@@ -34,6 +34,7 @@ define('ASU_RFI_GRAD_CONFIRMATION_NID', variable_get('asu_rfi_grad_confirm_nid',
 define('ASU_RFI_EXPIRED_DELETE', variable_get('asu_rfi_expired_delete', 'all'));
 define('ASU_RFI_EXPIRED_SUBMIT', variable_get('asu_rfi_expired_submit', 'all'));
 
+module_load_include('inc', 'asu_rfi', 'includes/asu_rfi.pages');
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_post_to_middleware');
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_get_programs');
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi.online_logic');
@@ -215,7 +216,6 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
       // Multipage form ONLY
       if ($instance_settings['form_type'] === 'multiform') {
         $block['subject'] = t('Request information');
-        module_load_include('inc', 'asu_rfi', 'includes/asu_rfi.pages');
         // Generate the multistep form body
         $block['content'] = asu_rfi_form($delta);
       } else { // For ALL other forms
@@ -261,7 +261,6 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
         // Step 4 - Generate block content
         // Long form (ugrad or grad) - FUTURE students
         if (!empty($programs)) {
-          module_load_include('inc', 'asu_rfi', 'includes/asu_rfi.pages');
           if (($instance_settings['form_type'] == 'ugrad_longform')
             || ($instance_settings['form_type'] == 'graduate_longform')) {
             $form_type = $instance_settings['form_type'];
@@ -451,7 +450,6 @@ function asu_rfi_get_block_instance_settings($multi_id = NULL, $endpoint_build =
 
   // Get multi_id value from array (no longer a string in Multiblock v1.1 -> 1.6)
   $multi_id = isset($multi_id['multiblock_delta']['#value']) ? '_' . $multi_id['multiblock_delta']['#value'] : NULL;
-
   $block_instance_settings = array();
   if (!$endpoint_build) {
     $block_instance_settings['programs'] = variable_get('asu_rfi_form_block_programs' . $multi_id, array());

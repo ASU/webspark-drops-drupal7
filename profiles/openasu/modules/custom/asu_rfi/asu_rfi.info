@@ -17,3 +17,4 @@ scripts[] = js/asu_rfi_form.js
 
 files[] = data/asu_rfi.form_options.inc
 files[] = includes/asu_rfi.theme.inc
+files[] = includes/asu_rfi.pages.inc
