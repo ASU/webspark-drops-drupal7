@@ -34,10 +34,14 @@ define('ASU_RFI_GRAD_CONFIRMATION_NID', variable_get('asu_rfi_grad_confirm_nid',
 define('ASU_RFI_EXPIRED_DELETE', variable_get('asu_rfi_expired_delete', 'all'));
 define('ASU_RFI_EXPIRED_SUBMIT', variable_get('asu_rfi_expired_submit', 'all'));
 
-module_load_include('inc', 'asu_rfi', 'includes/asu_rfi.pages');
-module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_post_to_middleware');
-module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_get_programs');
+// require_once load at all times for AJAX calls (these should probably all be in .module,
+// if not for the size of the file)
+require_once 'includes/asu_rfi.pages.inc';
+require_once 'includes/asu_rfi.form_elements.inc';
+require_once 'includes/asu_rfi.form_ajax.inc';
+
 module_load_include('inc', 'asu_rfi', 'includes/asu_rfi.online_logic');
+module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_email');
 
 /**
  * Implements hook_views_api().
@@ -1029,6 +1033,9 @@ function asu_rfi_bulk_delete_submissions_action(&$node, $context) {
  * @param string $program - program type (ugrad, grad)
  */
 function _asu_rfi_process_middleware_data($node, $post = array(), $program = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
+
+  module_load_include('inc', 'asu_rfi', 'includes/asu_rfi_post_to_middleware');
+
   // Global, shared fields (undergrad and graduate)
   $post['domain'] = $node->field_rfi_domain[LANGUAGE_NONE][0]['value'];
   $post['first_name'] = $node->field_rfi_first_name[LANGUAGE_NONE][0]['value'];
@@ -1401,6 +1408,92 @@ function _asu_rfi_get_program_codes($result_nodes, $data_type) {
         : '',
     );
   }
+}
+
+/**
+ * Get asuonline.asu.edu programs from feed
+ * @return mixed|bool
+ */
+function asu_rfi_import_online_programs() {
+  $url = "https://asuonline.asu.edu/lead-submissions-v3.3/programs";
+  $curl = curl_init();
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => $url,
+    CURLOPT_HEADER => true,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_HTTPHEADER => array('Accept: application/json')
+  ));
+
+  $header = explode("\n", curl_exec($curl));
+  curl_close($curl);
+
+  if (!empty($header) && !empty($header[0])) {
+    $code = explode(" ", $header[0]);
+    $finalHeader = count($header) - 1;
+    if (isset($code[1]) && $code[1] >= 200 && $code[1] < 400) {
+      if (isset($header[$finalHeader]) && !empty($header[$finalHeader])) {
+        return $header[$finalHeader];
+      }
+    } else {
+      flogger('asu_rfi', __FUNCTION__ . ' -- The ASUOnline programs list at ' . $url
+        . ' is returning status code @code.',
+        array('@code' => $code[1]), WATCHDOG_WARNING);
+    }
+  }
+  if (!isset($data)) {
+    flogger('asu_rfi', __FUNCTION__ . ' -- Failed to pull online programs from ' . $url, array(),
+      WATCHDOG_ERROR);
+  }
+  return false;
+}
+
+/**
+ *  Re-pull programs from asuonline.asu.edu under certain circumstances
+ * @return bool
+ */
+function asu_rfi_check_cached_programs() {
+  $programs = variable_get('asu_rfi_cached_programs');
+  $timestamp = variable_get('asu_rfi_cached_programs_timestamp');
+  $now = time();
+
+  if (!isset($programs) || !isset($timestamp) || $now - $timestamp > ASU_RFI_STALE_TIME_DEFAULT || strlen($programs) < 25) {
+    // Re-pull and update programs
+    $getPrograms = asu_rfi_import_online_programs();
+    if ($getPrograms == false) {
+      flogger('asu_rfi', __FUNCTION__ . ' -- Failed to import set Online programs cache.',
+        array(), WATCHDOG_ERROR);
+      return false;
+    }
+    variable_set('asu_rfi_cached_programs', $getPrograms);
+    variable_set('asu_rfi_cached_programs_timestamp', $now);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Parse JSON list of programs previously pulled in and cached in asu_rfi_cached_programs
+ * @return mixed
+ */
+function _asu_rfi_parse_programs() {
+  $programs = &drupal_static(__FUNCTION__);
+  if (!isset($programs)) {
+    $programString = variable_get('asu_rfi_cached_programs');
+    if (isset($programString)) {
+      $programs = json_decode($programString);
+      if ($programs == NULL) {
+        flogger('asu_rfi', __FUNCTION__ . ' -- The cached JSON of programs cannot be parsed.',
+          array(), WATCHDOG_ERROR);
+        return FALSE;
+      }
+    }
+    else {
+      flogger('asu_rfi', __FUNCTION__ . ' -- Cannot find cached JSON list of programs to parse.',
+        array(), WATCHDOG_ERROR);
+      return FALSE;
+    }
+  }
+  return $programs;
 }
 
 /**

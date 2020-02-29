@@ -65,14 +65,14 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
       return array( // Addon(s)
         '#type' => 'select',
         '#title' => t('My campus of choice is'),
-        '#options' => array(),
+        '#options' => (isset($value)) ? $value : array(),
         '#attributes' => array('class' => array('reqinfo_campus', 'chosen-disable')),
         // For AJAX updates of fields
         '#prefix' => '<div id="asu-rfi-campus-ajax-wrapper">',
         '#suffix' => '</div>',
         '#ajax' => array(
           'callback' => 'asu_rfi_campus_ajax_callback',
-          'wrapper' => 'asu-rfi-campus-ajax-wrapper',
+          'wrapper' => 'asu-rfi-start-date-ajax-wrapper',
           'method' => 'replace',
           'effect' => 'fade',
         ),
@@ -95,7 +95,7 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
       $start_date = array(
         '#type' => 'select',
         '#title' => t('My start date'),
-        '#options' => $value,
+        '#options' => (isset($value)) ? $value : array(),
         '#attributes' => array('class' => array('chosen-disable')),
         // For AJAX updates
         '#prefix' => '<div id="asu-rfi-start-date-ajax-wrapper">',
@@ -178,7 +178,7 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
       $state = array(
         '#id' => 'rfi-state',
         '#type' => 'select',
-        '#options' => $value,
+        '#options' => (isset($value)) ? $value : array(),
         '#title' => t('State/Province'),
         '#required' => FALSE,
       );
@@ -202,7 +202,7 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
       $country = array(
         '#id' => 'rfi-country',
         '#type' => 'select',
-        '#options' => $value,
+        '#options' => (isset($value)) ? $value : array(),
         '#title' => t('Country'),
         '#attributes' => array('class' => array('chosen-disable')),
       );
@@ -263,7 +263,7 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
         '#type' => 'hidden',
         '#size' => 30,
         '#maxlength' => 64,
-        '#default_value' => (string) $value, // $form_type
+        '#default_value' => (isset($value)) ? (string) $value : '', // $form_type
       );
       break;
     case 'domain':
@@ -287,7 +287,7 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
     case 'first_enity_id':
       return array(
         '#type' => 'hidden',
-        '#default_value' => $value,
+        '#default_value' => (isset($value)) ? (string) $value : '',
       );
       break;
     case 'ip_address':
@@ -303,7 +303,7 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
         '#type' => 'hidden',
         '#size' => 30,
         '#maxlength' => 64,
-        '#default_value' => $value,
+        '#default_value' => (isset($value)) ? (string) $value : '',
       );
       break;
     case 'webform_url':

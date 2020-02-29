@@ -889,8 +889,9 @@ function drupal_process_form($form_id, &$form, &$form_state) {
 
   // Only process the input if we have a correct form submission.
   if ($form_state['process_input']) {
+    watchdog('form', __FUNCTION__ . ' point 2');
     drupal_validate_form($form_id, $form, $form_state);
-
+    watchdog('form', __FUNCTION__ . ' point 3');
     // drupal_html_id() maintains a cache of element IDs it has seen,
     // so it can prevent duplicates. We want to be sure we reset that
     // cache when a form is processed, so scenarios that result in
@@ -900,7 +901,6 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // In case of errors, do not break HTML IDs of other forms.
       drupal_static_reset('drupal_html_id');
     }
-
     if ($form_state['submitted'] && !form_get_errors() && !$form_state['rebuild']) {
       // Execute form submit handlers.
       form_execute_handlers('submit', $form, $form_state);
@@ -912,7 +912,6 @@ function drupal_process_form($form_id, &$form, &$form_state) {
         cache_clear_all('form_' . $form_state['values']['form_build_id'], 'cache_form');
         cache_clear_all('form_state_' . $form_state['values']['form_build_id'], 'cache_form');
       }
-
       // If batches were set in the submit handlers, we process them now,
       // possibly ending execution. We make sure we do not react to the batch
       // that is already being processed (if a batch operation performs a
@@ -940,14 +939,12 @@ function drupal_process_form($form_id, &$form, &$form_state) {
         // page. Form redirection will be handled in _batch_finished(),
         // after the batch is processed.
       }
-
       // Set a flag to indicate that the form has been processed and executed.
       $form_state['executed'] = TRUE;
 
       // Redirect the form based on values in $form_state.
       drupal_redirect_form($form_state);
     }
-
     // Don't rebuild or cache form submissions invoked via drupal_form_submit().
     if (!empty($form_state['programmed'])) {
       return;
@@ -976,7 +973,6 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       $form = drupal_rebuild_form($form_id, $form_state, $form);
     }
   }
-
   // After processing the form, the form builder or a #process callback may
   // have set $form_state['cache'] to indicate that the form and form state
   // shall be cached. But the form may only be cached if the 'no_cache' property
@@ -1371,6 +1367,9 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
         else {
           $options = $elements['#options'];
         }
+        //if (strpos($elements['#id'], 'start-date')) {
+          dpm($options, __FUNCTION__ . ' ' . $elements['#id'] . ' $options');
+        //}
         if (is_array($elements['#value'])) {
           $value = in_array($elements['#type'], array('checkboxes', 'tableselect')) ? array_keys($elements['#value']) : $elements['#value'];
           foreach ($value as $v) {
@@ -1395,7 +1394,7 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
         }
         elseif (!isset($options[$elements['#value']])) {
           form_error($elements, $t('An illegal choice has been detected. Please contact the site administrator.'));
-          watchdog('form', 'Illegal choice %choice in %name element.', array('%choice' => $elements['#value'], '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
+          watchdog('form', 'BB - Illegal choice %choice in %name element.', array('%choice' => $elements['#value'], '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
         }
       }
     }
