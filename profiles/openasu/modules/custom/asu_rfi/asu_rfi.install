@@ -443,3 +443,10 @@ function asu_rfi_update_7206(&$sandbox) {
     }
   }
 }
+
+/**
+ * Add Online campus URL to variable table for admin form configuration options
+ */
+function asu_rfi_update_7207(&$sandbox) {
+  variable_set('asu_rfi_online_url', 'https://asuonline.asu.edu/lead-submissions-v3.3/programs');
+}
