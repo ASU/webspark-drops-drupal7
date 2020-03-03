@@ -391,11 +391,7 @@ function ajax_get_form() {
  * @see system_menu()
  */
 function ajax_form_callback() {
-
-  watchdog('ajax', __FUNCTION__ . ' called');
-
   list($form, $form_state, $form_id, $form_build_id, $commands) = ajax_get_form();
-
   drupal_process_form($form['#form_id'], $form, $form_state);
 
   // We need to return the part of the form (or some other content) that needs
@@ -404,12 +400,10 @@ function ajax_form_callback() {
   // up to the #ajax['callback'] function of the element (may or may not be a
   // button) that triggered the Ajax request to determine what needs to be
   // rendered.
-
   if (!empty($form_state['triggering_element'])) {
     $callback = $form_state['triggering_element']['#ajax']['callback'];
   }
   if (!empty($callback) && is_callable($callback)) {
-
     $result = $callback($form, $form_state);
 
     if (!(is_array($result) && isset($result['#type']) && $result['#type'] == 'ajax')) {
@@ -419,6 +413,7 @@ function ajax_form_callback() {
         '#commands' => ajax_prepare_response($result),
       );
     }
+
     $result['#commands'] = array_merge($commands, $result['#commands']);
 
     return $result;

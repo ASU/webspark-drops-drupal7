@@ -36,7 +36,6 @@ function asu_rfi_preprocess_block(&$variables) {
   if ($block->delta == 'YOURBLOCK') {
     $variables['title_attributes_array']['class'][] = 'YOURCLASS';
   }
-  dpm($block, __FUNCTION__);
 }
 
 /**

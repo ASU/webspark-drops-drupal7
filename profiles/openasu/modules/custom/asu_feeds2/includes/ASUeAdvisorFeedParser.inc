@@ -177,55 +177,8 @@ class ASUeAdvisorFeedParser extends FeedsParser {
       // Campuses
       if (count($data['CampusStringArray'])) {
         foreach ($data['CampusStringArray'] as $campus_key => $value) {
-          switch (trim(strtoupper($value))) {
-            case 'ONLNE':
-              $value = 'Online';
-              break;
-            case 'DOWNTOWN':
-            case 'DTPHX':
-              $value = 'Downtown';
-              break;
-            case 'POLY':
-              $value = 'Polytechnic';
-              break;
-            case 'TMPE':
-            case 'TEMPE':
-              $value = 'Tempe';
-              break;
-            case 'WEST':
-              $value = 'West';
-              break;
-            case 'CALHC':
-              $value = 'Lake Havasu City';
-              break;
-            case 'CAC':
-              $value = 'ASU@Pinal';
-              break;
-            case 'EAC':
-              $value = 'ASU@TheGilaValley';
-              break;
-            case 'TUCSN':
-              $value = 'ASU@Tucson';
-              break;
-            case 'AWC':
-              $value = 'ASU@Yuma';
-              break;
-            case 'TBIRD':
-              $value = 'Thunderbird';
-              break;
-            case 'YAVAP':
-              $value = 'ASU@Yavapai';
-              break;
-            case 'PIMA':
-              $value = 'ASU@Pima';
-              break;
-            case 'COCHS':
-              $value = 'ASU@Cochise';
-              break;
-            //Add case for missing campus from degree feed
-            default:
-              break;
-          }
+          $value = trim(strtoupper($value));
+          $value = $this->getCampusMappings($value, TRUE);
           if ($value == 'Online') {
             unset($parsed_data[$key]['CampusStringArray'][$campus_key]);
             array_push($parsed_data[$key]['CampusStringArray'], $value);
@@ -345,6 +298,40 @@ class ASUeAdvisorFeedParser extends FeedsParser {
     return new FeedsParserResult($parsed_data);
   }
 
+  public function getCampusMappings($campus, $reverse = FALSE) {
+    // Legacy code conversion
+    if ($campus === "TMPE") { $campus = 'TEMPE'; }
+    if ($campus === "DOWNTOWN") { $campus = 'DTPHX'; }
+
+    $campuses = array(
+      "Tempe" => 'TEMPE',
+      "West" => "WEST",
+      "Downtown" => "DTPHX",
+      "Online" => "ONLNE",
+      "Polytechnic" => "POLY",
+      'ASU@Lake Havasu' => 'CALHC',
+      'ASU@The Gila Valley' => 'EAC',
+      'ASU@Tucson' => 'TUCSN',
+      'ASU@Pinal' => 'CAC',
+      'ASU@Yavapai' => 'YAVAP',
+      'ASU@Yuma' => 'AWC',
+      'ASU@MexicoCity' => 'MXCTY',
+      'ASU@Cochise' => 'COCHS',
+      'ASU@Washington, D.C.' => 'WASHD',
+      'ASU@Pima' => 'PIMA',
+    );
+    // Flip campus keys + values if desired
+    if ($reverse === TRUE) {
+      $campuses = array_flip($campuses);
+    }
+    foreach ($campuses as $key => $value) {
+      if (stristr($key, $campus) !== FALSE) {
+        return $value;
+        break;
+      }
+    }
+    return '';
+}
   /**
    * Return mapping sources.
    */

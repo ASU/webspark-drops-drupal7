@@ -614,6 +614,7 @@ function asu_rfi_form_after_build($form, &$form_state) {
  * @return string $form_mode - if "test", then it's in test mode
  */
 function _asu_rfi_form_test_mode_markup(&$form, $form_id) {
+  global $user;
   $form_mode = variable_get('asu_rfi_form_mode');
   $markup = ($form_id !== 'asu_rfi_current_form_data')
     ? '<div class="alert alert-warning"><b>NOTICE</b>: The
@@ -624,14 +625,14 @@ function _asu_rfi_form_test_mode_markup(&$form, $form_id) {
         Salesforce component of this site\'s RFI form processing is in
         <a href="/admin/config/content/asurfi"><b>TEST MODE</b></a>, current student RFI forms
          do not submit their data to Salesforce.</div>';
-  {   // Non-current student forms only!
-    if (($form_mode == "test") || empty($form_mode)) {
+   // Non-current student forms only!
+    if (($form_mode === "test" || empty($form_mode))
+      && (user_access('administrator asu rfi'))) {
       $form['form_stage'] = array(
         '#type' => 'item',
         '#markup' => $markup,
       );
     }
-  }
 }
 
 /**
@@ -1243,8 +1244,12 @@ function _asu_rfi_get_campus_location_options($pcodes) {
  * @TODO pull in from feed to stay up to date
  */
 function _asu_rfi_get_campus_info($campus, $reverse = FALSE) {
+  // Legacy code conversion
+  if ($campus === "TMPE") { $campus = 'TEMPE'; }
+  if ($campus === "DOWNTOWN") { $campus = 'DTPHX'; }
+
   $campuses = array(
-    "Tempe" => "TEMPE",
+    "Tempe" => 'TEMPE',
     "West" => "WEST",
     "Downtown" => "DTPHX",
     "Online" => "ONLNE",

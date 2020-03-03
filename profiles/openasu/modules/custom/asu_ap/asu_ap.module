@@ -129,6 +129,23 @@ function asu_ap_menu_alter(&$items) {
 }
 
 /**
+ * Implements hook_html_head_alter().
+ */
+function asu_ap_html_head_alter(&$head_elements) {
+  $node = menu_get_object();
+  if (!empty($node)) { // loading a node page
+    if ($node->type === 'asu_ap') {
+      foreach ($head_elements as $key => $element) {
+        if (isset($element['#attributes']['rel']) && $element['#attributes']['rel'] == 'canonical') {
+          // I want a custom canonical URL.
+          $head_elements[$key]['#attributes']['href'] = $node->field_asu_ap_asuds_url['und'][0]['url'];
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_page()
  */
 function asu_ap_preprocess_page(&$variables) {
@@ -140,6 +157,13 @@ function asu_ap_preprocess_page(&$variables) {
         // Set page tpl for A2P
         $variables['theme_hook_suggestions'][] = 'page__asu_ap';
       }
+    }
+    // Add custom, canonical URL for Degree Search SEO improvements
+    $ds_url = (isset($variables['node']->field_asu_ap_asuds_url['und'][0]['url']))
+      ? $variables['node']->field_asu_ap_asuds_url['und'][0]['url'] : '';
+    if (!empty($ds_url) && valid_url($ds_url) && $variables['node']->type === 'asu_ap') {
+      // Remove other canonical URL set by Drupal core IF type === asu_ap
+      module_invoke('system', 'html_head');
     }
   }
 }

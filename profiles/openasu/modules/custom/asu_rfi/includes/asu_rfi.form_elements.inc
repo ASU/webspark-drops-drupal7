@@ -152,7 +152,7 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
       $mobile_check = array(
         '#type' => 'checkbox',
         '#title' => t('This is a USA mobile number and I would like to receive information via SMS text messaging'),
-        '#title_display' => 'before',
+        '#title_display' => 'after',
         '#size' => 30,
         '#maxlength' => 30,
         '#required' => FALSE,
@@ -214,7 +214,7 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
       return array(
         '#type' => 'checkbox',
         '#title' => t('I am not a U.S. citizen and do not have a green card.'),
-        '#title_display' => 'before',
+        '#title_display' => 'after',
       );
       break;
     case 'military':
