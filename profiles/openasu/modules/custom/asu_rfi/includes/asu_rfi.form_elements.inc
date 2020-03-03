@@ -66,6 +66,8 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
         '#type' => 'select',
         '#title' => t('My campus of choice is'),
         '#options' => (isset($value)) ? $value : array(),
+        '#empty_option' => ' - Select - ',
+        '#empty_value' => '',
         '#attributes' => array('class' => array('reqinfo_campus', 'chosen-disable')),
         // For AJAX updates of fields
         '#prefix' => '<div id="asu-rfi-campus-ajax-wrapper">',

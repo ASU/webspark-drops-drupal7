@@ -79,7 +79,7 @@ function asu_rfi_post_to_middleware($data, $type) {
   $mw_auth_key = variable_get('asu_rfi_form_auth_key');
 
   // Get server diagnostic data for submissions
-  $server = _asu_rfi_get_aux_submission_data($data, $type);
+  $server = _asu_rfi_get_tech_submission_data($data, $type);
   $environ = (array) _asu_rfi_detect_environment();
 
   // Submission customization - UNDERGRAD vs GRAD
@@ -180,7 +180,7 @@ function asu_rfi_post_to_middleware($data, $type) {
       // Match different "Online" campus spelling
       $submission_data['campusSelection'] = "ONLNE";
     }
-    $asuOnlineList = _asu_rfi_parse_programs();
+    $asuOnlineList = _asu_rfi_parse_cached_programs();
     $managedOnline = _asu_rfi_check_managed_online($prog_code, $asuOnlineList);
 
     if ($managedOnline == true) {

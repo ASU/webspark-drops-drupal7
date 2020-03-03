@@ -508,10 +508,12 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
     $form['field_rfi_form_type_value']['#default_values'] = array(0);
   }
 
+  // Multipage form
+  // MOVED FOR AJAX FIXES
+
   // LONG FORM
   if ($form['#id'] == "asu-rfi-long-form-data") {
     if (isset($form['my_interest']['program_code']['#options'])) {
-      drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.js');
 
       // Generate campus lists
       $pcodes = $form['my_interest']['program_code']['#options'];
@@ -553,8 +555,8 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
       }
       $possibleLocations = $newLocationArr;
 
-      //$form['my_interest']['campus']['#options'] = $possibleLocations;
-      $form['my_interest']['campus']['#options'] = _asu_rfi_get_campus_select($form);
+      $form['my_interest']['campus']['#options'] = $possibleLocations;
+      //$form['my_interest']['campus']['#options'] = _asu_rfi_get_campus_select($form);
     }
   }
 
@@ -1173,7 +1175,7 @@ function _asu_rfi_get_unpassed_submissions($include_rtp = FALSE) {
  */
 function _asu_rfi_get_campus_location_options($pcodes) {
   $degree_mappings = _asu_rfi_get_degree_field_mappings(); // Get degree mappings to grab content type specific values
-  $asu_online_list = _asu_rfi_parse_programs();
+  $asu_online_list = _asu_rfi_parse_cached_programs();
 
   $campus_location_options = array();
 
@@ -1235,26 +1237,35 @@ function _asu_rfi_get_campus_location_options($pcodes) {
 
 /**
  * Returns correct campusID string for Salesforce compatibility
+ *
  * @param $campus - Human-readable campus name (or PeopleSoft/Salesforce IDs if $reverse)
- * @return string campus code (or human name, if $reverse). Returns empty string if no match is found.
+ * @return string - The campus code (or human name, if $reverse). Returns empty string if no match is found.
  * @TODO pull in from feed to stay up to date
  */
 function _asu_rfi_get_campus_info($campus, $reverse = FALSE) {
   $campuses = array(
     "Tempe" => "TEMPE",
-    "Online" => "ONLNE",
-    "East Arizona College" => "EAC",
-    "Polytechnic" => "POLY",
-    "Lake Havasu" => "CALHC",
     "West" => "WEST",
     "Downtown" => "DTPHX",
-    "Arizona Western College" => "AWC",
+    "Online" => "ONLNE",
+    "Polytechnic" => "POLY",
+    'ASU@Lake Havasu' => 'CALHC',
+    'ASU@The Gila Valley' => 'EAC',
+    'ASU@Tucson' => 'TUCSN',
+    'ASU@Pinal' => 'CAC',
+    'ASU@Yavapai' => 'YAVAP',
+    'ASU@Yuma' => 'AWC',
+    'ASU@MexicoCity' => 'MXCTY',
+    'ASU@Cochise' => 'COCHS',
+    'ASU@Washington, D.C.' => 'WASHD',
+    'ASU@Pima' => 'PIMA',
   );
+  // Flip campus keys + values if desired
   if ($reverse === TRUE) {
     $campuses = array_flip($campuses);
   }
   foreach ($campuses as $key => $value) {
-    if ($key === $campus) {
+    if (stristr($key, $campus) !== FALSE) {
       return $value;
       break;
     }
@@ -1355,26 +1366,28 @@ function _asu_rfi_get_program_codes($result_nodes, $data_type) {
       array('@data_type' => $data_type), WATCHDOG_WARNING);
     return array();
   }
-
-  $degreeMappings = _asu_rfi_get_degree_field_mappings(); // Get degree mappings to grab content type specific values
-  $program_nids = array_keys($result_nodes);
-  $programs = entity_load('node', $program_nids);
-  $programs = reset($programs); // Pick the first one, just in case there are
-  // multiple nodes of the same program.
-  $programs = (array) $programs;
-  $code = (isset($programs[$degreeMappings['field_academic_plan']][LANGUAGE_NONE]['0']['value']))
-    ? $programs[$degreeMappings['field_academic_plan']][LANGUAGE_NONE]['0']['value'] : '';
-  if ($data_type === 'programs') { // programs
-    return $code;
-  } else { // desiredProg
-    return array(
-      'code' => $code,
-      'vid' => (isset($programs['vid'])) ? $programs['vid'] : '',
-      'title' => (isset($programs['title'])) ? $programs['title'] : '',
-      'locations' => (isset($programs[$degreeMappings['field_degree_campus']][LANGUAGE_NONE]))
-        ? $programs[$degreeMappings['field_degree_campus']][LANGUAGE_NONE]
-        : '',
-    );
+  else {
+    $degreeMappings = _asu_rfi_get_degree_field_mappings(); // Get degree mappings to grab content type specific values
+    $program_nids = array_keys($result_nodes);
+    $programs = entity_load('node', $program_nids);
+    $programs = reset($programs); // Pick the first one, just in case there are
+    // multiple nodes of the same program.
+    $programs = (array) $programs;
+    $code = (isset($programs[$degreeMappings['field_academic_plan']][LANGUAGE_NONE]['0']['value']))
+      ? $programs[$degreeMappings['field_academic_plan']][LANGUAGE_NONE]['0']['value'] : '';
+    if ($data_type === 'programs') { // programs
+      return $code;
+    }
+    else { // desiredProg
+      return array(
+        'code' => $code,
+        'vid' => (isset($programs['vid'])) ? $programs['vid'] : '',
+        'title' => (isset($programs['title'])) ? $programs['title'] : '',
+        'locations' => (isset($programs[$degreeMappings['field_degree_campus']][LANGUAGE_NONE]))
+          ? $programs[$degreeMappings['field_degree_campus']][LANGUAGE_NONE]
+          : '',
+      );
+    }
   }
 }
 
@@ -1383,7 +1396,12 @@ function _asu_rfi_get_program_codes($result_nodes, $data_type) {
  * @return mixed|bool
  */
 function asu_rfi_import_online_programs() {
-  $url = "https://asuonline.asu.edu/lead-submissions-v3.3/programs";
+  $url = variable_get('asu_rfi_online_url', '');
+  if (empty($url)) {
+    flogger('asu_rfi', 'ASU RFI - The ASUOnline programs JSON feed'
+      . ' URL has not been set in the ASU RFI configuration settings.',
+      array(), WATCHDOG_ERROR, TRUE);
+  }
   $curl = curl_init();
   curl_setopt_array($curl, array(
     CURLOPT_URL => $url,
@@ -1440,10 +1458,10 @@ function asu_rfi_check_cached_programs() {
 }
 
 /**
- * Parse JSON list of programs previously pulled in and cached in asu_rfi_cached_programs
+ * Parse previously pulled in and cached in list of programs (JSON, stored in asu_rfi_cached_programs)
  * @return mixed
  */
-function _asu_rfi_parse_programs() {
+function _asu_rfi_parse_cached_programs() {
   $programs = &drupal_static(__FUNCTION__);
   if (!isset($programs)) {
     $programString = variable_get('asu_rfi_cached_programs');
@@ -1470,7 +1488,7 @@ function _asu_rfi_parse_programs() {
  * @param array $data - submitted form data
  * @return array $server_data
  */
-function _asu_rfi_get_aux_submission_data($data, $type) {
+function _asu_rfi_get_tech_submission_data($data, $type) {
   $server_data = array(
     'domain' => (isset($data['domain'])) ? $data['domain'] : $_SERVER['HTTP_HOST'],
     'ipAddress' => (isset($data['ip_address'])) ? $data['ip_address']
@@ -1832,6 +1850,11 @@ function _asu_rfi_create_expired_message($created) {
   return $message;
 }
 
+/**
+ * Generate Birthday explanation text for modal
+ *
+ * @return string
+ */
 function _asu_rfi_get_birthday_explanation() {
   return '<!-- Button trigger modal -->
 	    <span class="fa fa-info-circle" data-toggle="modal" data-target="#myModal"></span>
@@ -1849,6 +1872,7 @@ function _asu_rfi_get_birthday_explanation() {
         </div>
       </div>';
 }
+
 /**
  * Get multiform thanks messaging for posting in site outside of the form.
  */
