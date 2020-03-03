@@ -508,44 +508,12 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
     $form['field_rfi_form_type_value']['#default_values'] = array(0);
   }
 
-  // MULTISTEP FORM (Part 1)
-  if ($form['#id'] == "asu-rfi-form-data") {
-    if (isset($form['program_code']['#default_value']) && !empty($form['program_code']['#default_value'])) {
-      $pcode = $form['program_code']['#default_value'];
-      $pcode2 = array($pcode => $form['my_interest']['prog_plan']['#default_value']);
-      $possibleLocations = _asu_rfi_get_campus_location_options($pcode2);
-      asu_rfi_disable_form($form, $possibleLocations);
-      $newLocationArr = array();
-      foreach ($possibleLocations as $key => $value) {
-        $newLocationArr[$value] = $value;
-      }
-      $possibleLocations = $newLocationArr;
-      $form['my_interest']['campus']['#options'] = $possibleLocations;
-    }
-    drupal_add_js("(function ($) { $(window).on('unload', function(){ $('#asu-rfi-form-data').trigger('reset'); }) })(jQuery)", array(
-      'type' => 'inline',
-      'scope' => 'header',
-      'weight' => 0
-    ));
-    drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/theme/session_clear.js', 'file');
-    $form['#after_build'][] = 'asu_rfi_form_after_build';
-  }
-
-  // MULTISTEP FORM (SECOND)
-  // Add Session clear file
-  if (isset($form['#prefix'])) {
-    if ($form['#prefix'] == '<div id="rfi-second-form">') {
-      drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/theme/session_clear.js', 'file');
-    }
-  }
-
   // LONG FORM
   if ($form['#id'] == "asu-rfi-long-form-data") {
     if (isset($form['my_interest']['program_code']['#options'])) {
-      drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/theme/session_clear.js', 'file');
       drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.js');
-      $form['#after_build'][] = 'asu_rfi_form_after_build';
 
+      // Generate campus lists
       $pcodes = $form['my_interest']['program_code']['#options'];
       $possibleLocations = _asu_rfi_get_campus_location_options($pcodes);
       asu_rfi_disable_form($form, $possibleLocations);
@@ -584,7 +552,9 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
         }
       }
       $possibleLocations = $newLocationArr;
-      $form['my_interest']['campus']['#options'] = $possibleLocations;
+
+      //$form['my_interest']['campus']['#options'] = $possibleLocations;
+      $form['my_interest']['campus']['#options'] = _asu_rfi_get_campus_select($form);
     }
   }
 
@@ -1246,7 +1216,7 @@ function _asu_rfi_get_campus_location_options($pcodes) {
       }
       _asu_rfi_add_program_data_js($desiredProg);
     }
-    if ($onlineError == TRUE) {
+    if ($onlineError === TRUE) {
       global $user;
       $desiredProgram = (isset($desiredProg) && isset($desiredProg['title'])) ? $desiredProg['title'] : '';
       if (in_array('administrator', $user->roles)) {
@@ -1257,12 +1227,10 @@ function _asu_rfi_get_campus_location_options($pcodes) {
     }
   }
 
-  if (count($campus_location_options) == 0) {
-    return FALSE;
-  }
-  else {
+  if (count($campus_location_options) > 0) {
     return $campus_location_options;
   }
+  return FALSE;
 }
 
 /**

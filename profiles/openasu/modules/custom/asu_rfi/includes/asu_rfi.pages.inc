@@ -61,14 +61,11 @@ function asu_rfi_form_data($form, &$form_state) {
   // Load degree settings from node
   // If AJAX, uses existing form_state value
   if (isset($form_state['values']['nid'])) {
-    dpm('form_state nid is SET');
     $campus = (isset($form_state['values']['campus'])) ? $form_state['values']['campus'] : '';
-    dpm($campus, __FUNCTION__ . ' $campus value when nid is set (probably AJAx call)');
-    $degree_assets = _asu_rfi_get_degree_specifics($form_state['values']['nid'], $campus);
+    $degree_assets = _asu_rfi_get_degree_specifics($form, $form_state['values']['nid'], $campus);
   } else {
     $node = menu_get_object();
-    dpm('form_state nid is NOT SET - using $node nid --'. $node->nid . '--');
-    $degree_assets = _asu_rfi_get_degree_specifics($node->nid);
+    $degree_assets = _asu_rfi_get_degree_specifics($form, $node->nid);
   }
 
   //dpm($degree_assets['start_dates'], __FUNCTION__ . ' -- degree_assets=>start_dates');
@@ -130,15 +127,19 @@ function asu_rfi_form_data($form, &$form_state) {
       '#size' => 30,
     );
 
+    // @TODO dynamic build of campus options here before
+
     $campus_options = $degree_assets['campus'];
+
     $form['my_interest']['campus'] = _asu_rfi_form_elements_multiple_keys(
       'my_interest',
       'campus'
       // TRUE,
       // $campus_options,
     );
-    $form['my_interest']['campus']['#default_value'] = $form_state['values']['campus'];
-    $form['my_interest']['campus']['#required'] = TRUE;
+      $form['my_interest']['campus']['#default_value'] = (isset($form_state['values']['campus']))
+        ? $form_state['values']['campus'] : '';
+      $form['my_interest']['campus']['#required'] = TRUE;
 
     // AJAX update for start dates
     ////////////////////////////////
@@ -240,6 +241,7 @@ function asu_rfi_form_data($form, &$form_state) {
       '#submit' => array('asu_rfi_form_data_submit'),
       '#value' => t('Next'),
     );
+    $form['#after_build'][] = 'asu_rfi_form_after_build';
 
     return $form;
   }
@@ -441,7 +443,8 @@ function asu_rfi_form_data_submit($form, &$form_state) {
  */
 function asu_rfi_second_form($form, &$form_state) {
 
-  // JS, HTTP header INIT ALREADY DONE IN asu_rfi_form_data call
+  // INIT form settings (JS, HTTP headers, etc.)
+  _asu_rfi_form_initial_web_assets('multiform_two');
 
   $current_time = time();
   $session_start_time = $_SESSION['rfi_data']['start_time'];
@@ -980,6 +983,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
     '#value' => t('I Agree / Submit'),
     '#attributes' => array('class' => array('rfi-button')),
   );
+  $form['#after_build'][] = 'asu_rfi_form_after_build';
   return $form;
 }
 
@@ -1529,11 +1533,14 @@ function asu_rfi_current_form_data_submit($form, &$form_state) {
 
 /**
  * INIT settings/assets to optionally add to any RFI forms.
- * @param string $form_main_type - multiform, long_form, or current_form
+ * @param string $type - multiform, long_form, or current_form
  */
-function _asu_rfi_form_initial_web_assets($form_main_type) {
+function _asu_rfi_form_initial_web_assets($type) {
+  // ALL
   drupal_add_css(drupal_get_path('module', 'asu_rfi') . '/theme/asu_rfi.css', 'file');
-  if ($form_main_type === 'multiform' || $form_main_type === 'long_form') {
+  drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/theme/session_clear.js', 'file');
+
+  if ($type === 'multiform' || $type === 'long_form') {
     // Add no-store in Cache-Control to clear all data when browser back button is clicked
     drupal_add_http_header(
       'Cache-Control',
@@ -1546,21 +1553,34 @@ function _asu_rfi_form_initial_web_assets($form_main_type) {
     // submissions destined for EdPlus and their Lead API 4.0 by way of the Middleware.
     drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.fields.js', 'file');
   }
-  if ($form_main_type === 'long_form') {
+
+  if ($type === 'multiform') {
+    drupal_add_js("(function ($) { $(window).on('unload', function(){ $('#asu-rfi-form-data').trigger('reset'); }) })(jQuery)",
+      array(
+        'type' => 'inline',
+        'scope' => 'header',
+        'weight' => 0
+      ));
+  }
+
+  if ($type === 'long_form') {
     drupal_page_is_cacheable(FALSE);
   }
 }
 
 /**
- * Get degree-specific variables
+ * Get degree-specific variables from a degree node for $form array generation
  *
  * Note: Cache API is required for the AJAX functionality to work (AJAX doesn't
  * do a full bootstrap, so $node is unavailable via menu_get_object()).
+ * @param $form - Form array to be edited
  * @param null $nid - Node ID. Defaults to NULL if creating node for first time (including cache).
  * @param string $campus - Human-friendly campus string.
  * @return array
  */
-function _asu_rfi_get_degree_specifics($nid = NULL, $campus = '') {
+function _asu_rfi_get_degree_specifics(&$form, $nid = NULL, $campus = '') {
+
+  dpm($form, __FUNCTION__ . ' - $form');
 
   $degreeMappings = _asu_rfi_get_degree_field_mappings();
 
@@ -1586,13 +1606,11 @@ function _asu_rfi_get_degree_specifics($nid = NULL, $campus = '') {
       $field_degree_program = $degreeMappings['field_degree_program'];
       $field_academic_program = $degreeMappings['field_academic_program'];
       $field_diploma_description = $degreeMappings['field_diploma_description'];
-      $field_campus = $degreeMappings['field_degree_campus'];
       $academic_plan = &$node->$field_academic_plan;
       $degree_awarded = &$node->$field_degree_awarded;
       $degree_program = &$node->$field_degree_program;
       $academic_program = &$node->$field_academic_program;
       $diploma_description = &$node->$field_diploma_description;
-      $node_campus = &$node->$field_campus;
     }
     else {
       $academic_plan = '';
@@ -1600,7 +1618,6 @@ function _asu_rfi_get_degree_specifics($nid = NULL, $campus = '') {
       $degree_program = '';
       $academic_program = '';
       $diploma_description = '';
-      $node_campus = '';
     }
     $deg_code = (!empty($academic_plan[LANGUAGE_NONE][0]['value']))
       ? $academic_plan[LANGUAGE_NONE][0]['value'] : '';
@@ -1624,6 +1641,14 @@ function _asu_rfi_get_degree_specifics($nid = NULL, $campus = '') {
     }
     else {
       $start_dates = _asu_rfi_get_sem_dates_static();
+    }
+
+    // Get dynamic campus list
+    $node_campus = _asu_rfi_get_campus_select($form);
+
+    if ($form['#id'] == "asu-rfi-form-data") {
+      // Build possible locations for this degree
+      $form['my_interest']['campus']['#options'] = $node_campus;
     }
 
     return array(
@@ -1908,6 +1933,39 @@ function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '') {
     return FALSE;
   }
   return $final_dates;
+}
+
+/**
+ * Get campus list for a degree
+ * @param $form
+ * @param array $program_code
+ * @return array Options list ready for form select element
+ */
+function _asu_rfi_get_campus_select($form, $program_code = array()) {
+  dpm($form, __FUNCTION__ . ' - $form');
+  if ($form['#id'] === 'asu-rfi-form-data') {
+    if (isset($form['program_code']['#default_value']) && !empty($form['program_code']['#default_value'])) {
+      $program_codes = array(
+        $form['program_code']['#default_value'] => $form['my_interest']['prog_plan']['#default_value'],
+      );
+      $possible_locations = _asu_rfi_get_campus_location_options($program_codes);
+      asu_rfi_disable_form($form, $possible_locations);
+
+      $new_locations = array();
+      if ($possible_locations !== FALSE) {
+        foreach ($possible_locations as $key => $value) {
+          $new_locations[$value] = $value;
+        }
+      }
+      return $new_locations;
+    }
+  }
+
+  elseif ($form['#id'] === 'asu-rfi-long-form-data') {
+    $program_codes = $form['my_interest']['program_code']['#options'];
+    $possible_locations = _asu_rfi_get_campus_location_options($program_codes);
+    asu_rfi_disable_form($form, $possible_locations);
+  }
 }
 
 /**
