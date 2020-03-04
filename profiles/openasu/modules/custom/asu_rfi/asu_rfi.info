@@ -14,7 +14,9 @@ dependencies[] = entityreference_autocomplete
 
 version = 7.x-2.0-rc1
 scripts[] = js/asu_rfi_form.js
+;scripts[] = theme/session_clear.js
 
+;stylesheets[all][] = theme/asu_rfi.css
 files[] = includes/asu_rfi.pages.inc
 files[] = includes/asu_rfi.form_elements.inc
 files[] = includes/asu_rfi.form_ajax.inc

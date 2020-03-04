@@ -267,7 +267,6 @@ function asu_rfi_admin_settings() {
  * @param $form_state
  */
 function _asu_rfi_admin_settings_validate($form, &$form_state) {
-  dpm($form_state);
   if (!valid_url($form_state['values']['asu_rfi_online_url'], TRUE)) {
     form_set_error('asu_rfi_online_url',
       'A valid JSON feed URL for pulling in Online campus degrees is required.');

@@ -349,7 +349,7 @@ if (module_exists('metatag')) {
             <div class="col-sm-6 col-md-4 space-bot-md">
     <?php $cta_information = (isset($node_info['field_asu_ap_cta_information']['#items'][0]['url']))
       ? $node_info['field_asu_ap_cta_information']['#items'][0]['url']
-      : "#asu-rfi-form-data"; ?>
+      : "#rfi-form"; ?>
               <form><button type="submit" formaction="<?php print $cta_information; ?>" class="btn btn-gold btn-block btn-lg">Request information</button></form>
             </div>
             <div class="col-sm-6 col-md-4 space-bot-md">
@@ -516,10 +516,10 @@ if (module_exists('metatag')) {
     $major_map_urls = array();
     if (isset($node_info['field_asu_ap_major_map_url'])) {
       print '<h2>Required Courses</h2>';
-      print "<p>A major map outlines a major's critical requirements, courses, and optimal course
+      print "<p xmlns=\"http://www.w3.org/1999/html\">A major map outlines a major's critical requirements, courses, and optimal course
         sequence and aids students in remaining on track to graduation.</p>
-        <p>Every course listed in
-        a major map is required to graduate.</p>";
+        <p><s>Every course listed in
+        a major map is required to graduate.</s></p>";
       $major_map_url = $node_info['field_asu_ap_major_map_url']['#items'][0]['url'];
       if (valid_url($major_map_url, TRUE)) {
         if (isset($node_info['field_asu_ap_major_map_year'])) {
