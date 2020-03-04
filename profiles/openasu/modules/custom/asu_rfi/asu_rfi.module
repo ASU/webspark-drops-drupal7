@@ -605,6 +605,8 @@ function asu_rfi_form_after_build($form, &$form_state) {
       $form['my_interest']['student_type']['#needs_validation'] = FALSE;
     }
   }
+  $form['#attach']['js'][] = array(drupal_get_path('module', 'asu_rfi') . '/theme/session_clear.js');
+  $form['#attach']['css'][] = array(drupal_get_path('module', 'asu_rfi') . '/theme/asu_rfi.css');
   return $form;
 }
 
@@ -651,22 +653,25 @@ function _asu_rfi_check_form_values($db_tbl) {
 /**
  * Validation - Email + phone numbers
  * @param $email
- * @param $phone
+ * @param $phone - If NULL, skip
+ * @param $email_field - Alternate Form API key for this field. Defaults to 'email'
  */
-function _asu_rfi_validate_electronic_contacts($email, $phone) {
+function _asu_rfi_validate_electronic_contacts($email, $phone = '', $email_field = 'email') {
   if (!preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9._-]+)*(\.[a-zA-Z]{2,6})+$/", $email)) {
-    form_set_error('email', t('You entered an invalid email.'));
+    form_set_error($email_field, t('You entered an invalid email.'));
   }
   /** If mobile number field is checked, then check for USA format, else check for special characters **/
-  $scam_num = substr($phone, 0, 3);
-  if (!empty($mobile_check) && $mobile_check != 0) {
-    if (!preg_match("/^([1]-)?([0-9]{3}[-|.][0-9]{3}[-|.][0-9]{4})$/i", $phone) || ($scam_num == "555")) {
-      form_set_error('phone', t('You entered an invalid Phone number.'));
+  if (!empty($phone)) {
+    $scam_num = substr($phone, 0, 3);
+    if (!empty($mobile_check) && $mobile_check != 0) {
+      if (!preg_match("/^([1]-)?([0-9]{3}[-|.][0-9]{3}[-|.][0-9]{4})$/i", $phone) || ($scam_num == "555")) {
+        form_set_error('phone', t('You entered an invalid Phone number.'));
+      }
     }
-  }
-  else {
-    if (!preg_match("/^[0-9.\s-_+()]+$/", $phone) || ($scam_num == "555")) {
-      form_set_error('phone', t('You entered an invalid Phone number.'));
+    else {
+      if (!preg_match("/^[0-9.\s-_+()]+$/", $phone) || ($scam_num == "555")) {
+        form_set_error('phone', t('You entered an invalid Phone number.'));
+      }
     }
   }
 }

@@ -50,14 +50,16 @@ function asu_rfi_admin_settings() {
     '#collapsed' => FALSE,
     '#attributes' => array('class' => array('asu-rfi-admin-field asu_rfi_form_access')),
   );
-  $form['asu_rfi_form_access']['online_url'] = array(
+  $form['asu_rfi_form_access']['asu_rfi_online_url'] = array(
     '#type' => 'textfield',
     '#title' => t('Online programs feed URL'),
     '#description' => t('The URL for the asuonline.asu.edu JSON feed that'
-      . ' lists all Online campus programs. This should have been set when this module was enabled.'),
+      . ' lists all Online campus programs. This should have been set when this module'
+      . ' was enabled, and will rarely be changed.'),
     '#default_value' => variable_get('asu_rfi_online_url'),
     '#size' => 60,
     '#maxlength' => 128,
+    '#required' => TRUE,
   );
   $form['asu_rfi_form_access']['asu_rfi_form_mode'] = array(
     '#type' => 'select',
@@ -253,9 +255,29 @@ function asu_rfi_admin_settings() {
   );
 
   // EXTRA submission actions for confirmation pages
+  $form['#validate'][] = '_asu_rfi_admin_settings_validate';
   $form['#submit'][] = '_asu_rfi_admin_settings_submit';
 
   return system_settings_form($form);
+}
+
+/**
+ * Validation handler for ASU RFI admin configuration form
+ * @param $form
+ * @param $form_state
+ */
+function _asu_rfi_admin_settings_validate($form, &$form_state) {
+  dpm($form_state);
+  if (!valid_url($form_state['values']['asu_rfi_online_url'], TRUE)) {
+    form_set_error('asu_rfi_online_url',
+      'A valid JSON feed URL for pulling in Online campus degrees is required.');
+  }
+  if (isset($form_state['values']['asu_rfi_from_email_field'])
+    && (!empty($form_state['values']['asu_rfi_from_email_field']))) {
+    _asu_rfi_validate_electronic_contacts($form_state['values']['asu_rfi_from_email_field'],
+      '',
+      'asu_rfi_from_email_field');
+  }
 }
 
 /**
@@ -269,6 +291,7 @@ function _asu_rfi_admin_settings_submit($form, $form_state) {
     'asu_rfi_undergrad_confirm' => 1,
     'asu_rfi_expired_delete' => 0,
     'asu_rfi_expired_submit' => 0,
+    'asu_rfi_online_url' => 0,
   );
   foreach ($keys as $element => $is_entity) {
     $value = ($is_entity === 1)

@@ -51,14 +51,16 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
     //////////////////////
     case 'req_header_text':
       return array(
-        '#value' => _asu_rfi_form_header_text(),
+        '#type' => 'item',
+        '#markup' => _asu_rfi_form_header_text(),
       );
       break;
     case 'req_helper':
       return array(
-        '#type' => 'item',
-        '#markup' => '<p>Fields marked with <span style = "color:black;">*</span> are required.</p>',
-        '#size' => 10,
+        '#type' => 'markup',
+        '#markup' => '<p>Fields marked with <span class="form-required">*</span> are required.</p>',
+        '#prefix' => '<div id="edit-req-helper" class="alert form-type-item form-item form-group">',
+        '#suffix' => '</div>',
       );
       break;
     case 'campus':
@@ -276,6 +278,13 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
         '#default_value' => (string) $_SERVER['HTTP_HOST'],
       );
       break;
+    case 'nid':
+      return array(
+        '#type' => 'hidden',
+        '#maxlength' => 16,
+        '#default_value' => (isset($value)) ? (string) $value : '',
+        '#size' => 16,
+      );
     case 'enterpriseclientid':
       // Will be filled in using JS to obtain from GA, per EdPlus.
       // See WEBSPARK-1198.
