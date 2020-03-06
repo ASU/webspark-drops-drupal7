@@ -235,6 +235,7 @@ function asu_rfi_form_data($form, &$form_state) {
 
     $form['#after_build'][] = 'asu_rfi_form_after_build';
 
+    $form['#attributes'][] = array('class' => array('asu-rfi-long-form-data'));
     $form['#prefix'] = '<div id="rfi-form">';
     $form['#suffix'] = '</div>';
 

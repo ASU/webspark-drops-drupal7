@@ -9,19 +9,21 @@
     }
 
     /* -- If there is only one item, automatically select it -- */
+  /*
     function setDefaultSingle(count) {
-        if (count == 1) {
-            var selectList = document.getElementById('edit-program-code');
+        if (count === 1) {
+            let selectList = document.getElementById('edit-program-code');
             selectList.selectedIndex = 1;
             selectList.firstChild.style.display = 'none';
         }
     }
+    */
 
     /* -- Bind the Online/Offline Selection -- */
     function bindLocation() {
-        var online = document.getElementById('edit-location-online');
-        var oncampus = document.getElementById('edit-location-on-campus');
-        var either = document.getElementById('edit-location-no-preference');
+        let online = document.getElementById('edit-location-online');
+        let oncampus = document.getElementById('edit-location-on-campus');
+        let either = document.getElementById('edit-location-no-preference');
         online.addEventListener('change', function () {
             restoreAllCampuses();
             restoreAllPrograms();
@@ -50,12 +52,12 @@
     }
 
     function setRequired(val) {
-        var form = document.getElementById("asu-rfi-long-form-data");
-        var grad = form.querySelector('input[value=graduate_longform]');
+        let form = document.getElementById("asu-rfi-long-form-data");
+        let grad = form.querySelector('input[value=graduate_longform]');
         if (!grad) {
-            var label = form.querySelector('label[for=edit-program-code]');
+            let label = form.querySelector('label[for=edit-program-code]');
 
-            var reqd = '<span class="form-required">*</span>';
+            let reqd = '<span class="form-required">*</span>';
             if (val && label.innerHTML.indexOf(reqd) < 0) {
                 label.innerHTML = label.innerHTML + reqd;
             } else if (label.innerHTML.indexOf(reqd) > 0) {
@@ -65,8 +67,8 @@
     }
 
     function futureRemoval(val) {
-        var form = document.getElementById("asu-rfi-long-form-data");
-        var grad = form.querySelector('input[value=graduate_longform]');
+        let form = document.getElementById("asu-rfi-long-form-data");
+        let grad = form.querySelector('input[value=graduate_longform]');
         if (val || grad || document.getElementById('edit-location-online').checked) {
             document.querySelectorAll('.form-item-student-type')[0].setAttribute('style', 'display:none;');
         } else {
@@ -77,7 +79,7 @@
     /* -- Bind the program selector to control what campuses show up -- */
     function bindPrograms() {
 
-        var reg = document.getElementById('edit-program-code');
+        let reg = document.getElementById('edit-program-code');
         reg.addEventListener('change', function () {
             restoreAllCampuses();
             filterCampus(reg.value);
@@ -86,10 +88,10 @@
 
     /* -- Reenable all programs for re-filtering -- */
     function restoreAllPrograms() {
-        var select = document.getElementById('edit-program-code');
-        var options = select.childNodes;
+        let select = document.getElementById('edit-program-code');
+        let options = select.childNodes;
         select.selectedIndex = 0;
-        for (var i = 0; i < options.length; i++) {
+        for (let i = 0; i < options.length; i++) {
             options[i].removeAttribute('style');
             options[i].removeAttribute('disabled');
         }
@@ -97,23 +99,23 @@
 
     /* -- Filter available Programs based on chosen Location -- */
     function filterPrograms(loc) {
-        var degrees = Drupal.settings.asu_rfi.degrees;
-        for (var i = 0; i < degrees.length; i++) {
-            var locations = degrees[i].locations;
-            var status = true;
-            for (var k = 0; k < locations.length; k++) {
-                var location = locations[k].value.toLowerCase();
+        let degrees = Drupal.settings.asu_rfi.degrees;
+        for (let i = 0; i < degrees.length; i++) {
+            let locations = degrees[i].locations;
+            let status = true;
+            for (let k = 0; k < locations.length; k++) {
+                let location = locations[k].value.toLowerCase();
 
-                if (loc == 'no_preference') {
+                if (loc === 'no_preference') {
                     status = false;
-                } else if (loc == 'online' && loc == location) {
+                } else if (loc === 'online' && loc === location) {
                     status = false;
-                } else if (loc == 'on_campus' && location !== 'online') {
+                } else if (loc === 'on_campus' && location !== 'online') {
                     status = false;
                 }
             }
             if (status) {
-                var option = document.getElementById('edit-program-code').querySelector('option[value=' + degrees[i].code + ']');
+                let option = document.getElementById('edit-program-code').querySelector('option[value=' + degrees[i].code + ']');
                 option.setAttribute('style', 'display:none;');
                 option.setAttribute('disabled', 'disabled');
             }
@@ -122,11 +124,11 @@
 
     /* -- Hide the online campus when onCampus is selected -- */
     function dropOnline() {
-        var campusSelect = document.getElementById('edit-campus');
-        var campuses = campusSelect.childNodes;
-        for (var i = 0; i < campuses.length; i++) {
-            var campus = campuses[i];
-            if (campus.text.toLowerCase() == 'online') {
+        let campusSelect = document.getElementById('edit-campus');
+        let campuses = campusSelect.childNodes;
+        for (let i = 0; i < campuses.length; i++) {
+            let campus = campuses[i];
+            if (campus.text.toLowerCase() === 'online') {
                 campus.setAttribute('style', 'display: none;');
                 campus.setAttribute('disabled', 'disabled');
             }
@@ -136,33 +138,33 @@
     /* -- Filter available campuses based on chosen program -- */
     function filterCampus(reg) {
         if (reg) {
-            var campusSelect = document.getElementById('edit-campus');
-            var campuses = campusSelect.childNodes;
-            var degrees = Drupal.settings.asu_rfi.degrees;
-            var oncampus = false;
-            var either = false;
+            let campusSelect = document.getElementById('edit-campus');
+            let campuses = campusSelect.childNodes;
+            let degrees = Drupal.settings.asu_rfi.degrees;
+            let oncampus = false;
+            let either = false;
             if (document.getElementById('edit-location-on-campus').checked) {
                 oncampus = true;
             }
             if (document.getElementById('edit-location-no-preference').checked) {
                 either = true;
             }
-            for (var i = 0; i < degrees.length; i++) {
-                var degree = degrees[i];
+            for (let i = 0; i < degrees.length; i++) {
+                let degree = degrees[i];
 
-                if (degree.code == reg) {
-                    for (var k = 0; k < campuses.length; k++) {
-                        var location = campuses[k];
-                        var status = true;
-                        for (var p = 0; p < degree.locations.length; p++) {
-                            var degLoc = degree.locations[p].value;
-                            if (degLoc == location.text || k == 0) {
+                if (degree.code === reg) {
+                    for (let k = 0; k < campuses.length; k++) {
+                        let location = campuses[k];
+                        let status = true;
+                        for (let p = 0; p < degree.locations.length; p++) {
+                            let degLoc = degree.locations[p].value;
+                            if (degLoc === location.text || k === 0) {
                                 status = false;
                             }
-                            if (location.text.toLowerCase() == 'online' && oncampus == true) {
+                            if (location.text.toLowerCase() === 'online' && oncampus === true) {
                                 status = true;
                             }
-                            if (location.text.toLowerCase() == 'online' && either == true) {
+                            if (location.text.toLowerCase() === 'online' && either === true) {
                                 status = false;
                             }
 
@@ -180,19 +182,19 @@
 
     /* -- Restore all campuses for re-filtering -- */
     function restoreAllCampuses() {
-        var campuses = document.getElementById('edit-campus');
-        var options = campuses.childNodes;
+        let campuses = document.getElementById('edit-campus');
+        let options = campuses.childNodes;
         campuses.selectedIndex = 0;
-        for (var i = 0; i < options.length; i++) {
+        for (let i = 0; i < options.length; i++) {
             options[i].removeAttribute('style');
             options[i].removeAttribute('disabled');
         }
     }
 
     function checkAddressArea() {
-        var onlineRadio = document.getElementById('edit-location-online');
-        var country = document.getElementById('rfi-country');
-        if (onlineRadio.checked || !(country.options[country.selectedIndex].text == "United States" || country.options[country.selectedIndex].text == "Canada")) {
+        let onlineRadio = document.getElementById('edit-location-online');
+        let country = document.getElementById('rfi-country');
+        if (onlineRadio.checked || !(country.options[country.selectedIndex].text === "United States" || country.options[country.selectedIndex].text === "Canada")) {
             document.getElementById('edit-address-info').setAttribute('style', 'display: none;');
         } else {
             document.getElementById('edit-address-info').setAttribute('style', 'display: block;');
@@ -200,23 +202,23 @@
     }
 
     function buildBoundCountry() {
-        var onlineRadio = document.getElementById('edit-location-online');
-        var country = document.getElementById('rfi-country');
-        var unbound = country.cloneNode(true);
-        var addressArea = document.getElementById('edit-address-info');
+        let onlineRadio = document.getElementById('edit-location-online');
+        let country = document.getElementById('rfi-country');
+        let unbound = country.cloneNode(true);
+        let addressArea = document.getElementById('edit-address-info');
         addressArea.setAttribute('style', 'display: none;');
         unbound.id = 'rfi-bound-country';
         unbound.name = '';
         unbound.setAttribute('disabled', 'disabled');
         country.addEventListener('change', function () {
 
-            var index = country.selectedIndex;
+            //let index = country.selectedIndex;
 
-            document.getElementById('rfi-bound-country').selectedIndex = index;
+            document.getElementById('rfi-bound-country').selectedIndex = country.selectedIndex;
 
-            if (!onlineRadio.checked && (country.options[country.selectedIndex].text == "United States" || country.options[country.selectedIndex].text == "Canada")) {
+            if (!onlineRadio.checked && (country.options[country.selectedIndex].text === "United States" || country.options[country.selectedIndex].text === "Canada")) {
                 addressArea.setAttribute('style', 'display: block;');
-            } else if (onlineRadio.checked || !(country.options[country.selectedIndex].text == "United States" || country.options[country.selectedIndex].text == "Canada")) {
+            } else if (onlineRadio.checked || !(country.options[country.selectedIndex].text === "United States" || country.options[country.selectedIndex].text === "Canada")) {
                 addressArea.setAttribute('style', 'display: none;');
             }
 
@@ -228,9 +230,9 @@
     }
 
     /* -- verify that everything is properly loaded before running the main thread -- */
-    var checkReady = setInterval(function () {
+    let checkReady = setInterval(function () {
         try {
-            var ch = document.getElementById('edit-program-code');
+            let ch = document.getElementById('edit-program-code');
             if (ch) {
                 clearMe();
                 main();
@@ -239,7 +241,7 @@
         }
     }, 300);
     // Cleans up the CheckReady Interval
-    var clearMe = function () {
+    let clearMe = function () {
         clearInterval(checkReady);
     }
 })();
