@@ -52,17 +52,18 @@
     }
 
     function setRequired(val) {
-        let form = document.getElementById("asu-rfi-long-form-data");
-        let grad = form.querySelector('input[value=graduate_longform]');
+        let form = document.getElementsByName("asu-rfi-long-form-data");
+        let grad = form[0].querySelector('input[value=graduate_longform]');
         if (!grad) {
             let label = form.querySelector('label[for=edit-program-code]');
-
-            let reqd = '<span class="form-required">*</span>';
-            if (val && label.innerHTML.indexOf(reqd) < 0) {
-                label.innerHTML = label.innerHTML + reqd;
-            } else if (label.innerHTML.indexOf(reqd) > 0) {
-                label.innerHTML = label.innerHTML.replace(reqd, '');
+            let required = '<span class="form-required">*</span>';
+            if (val && label.innerHTML.indexOf(required) < 0) {
+                label.innerHTML = label.innerHTML + required;
+            } else if (label.innerHTML.indexOf(required) > 0) {
+                label.innerHTML = label.innerHTML.replace(required, '');
             }
+        } else {
+          console.log(grad);
         }
     }
 
