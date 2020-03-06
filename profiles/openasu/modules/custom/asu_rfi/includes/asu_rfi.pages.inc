@@ -71,6 +71,17 @@ function asu_rfi_form_data($form, &$form_state) {
   }
 
   if (!empty($degree_assets)) {
+    dpm($degree_assets, 'degree_assets');
+    // If no grad_dates for graduate degrees, kill the form and return messaging
+    if (empty($degree_assets['grad_dates']) && $degree_assets['degree_program']['und'][0]['safe_value'] === 'graduate') {
+      $form = array();
+      $form['message'] = array(
+        '#type' => 'markup',
+        '#markup' => '<p>This program is not accepting new students at this time.</p>',
+      );
+      return $form;
+    }
+
     // Unknown why this old code existed... leaving refactored version of the logic below (to do nothing?)
     // $degree[$deg_code] = $deg_name; // ??
     $dc = $degree_assets['deg_code'];
@@ -1667,19 +1678,29 @@ function _asu_rfi_get_degree_specifics($nid = NULL, $campus = '') {
     // Pull in available start terms for Graduate programs; Static for all others
     $grad_dates = (isset($node->field_asu_ap_grad_all_app_dates[LANGUAGE_NONE][0]['value']))
       ? $node->field_asu_ap_grad_all_app_dates[LANGUAGE_NONE][0]['value'] : '';
+    dpm($grad_dates, 'grad_dates');
+    dpm($academic_plan[LANGUAGE_NONE][0]['safe_value'], '$academic_plan[LANGUAGE_NONE][0][safe_value]');
+    dpm($degree_program[LANGUAGE_NONE][0]['safe_value'], '$degree_program[LANGUAGE_NONE][0][safe_value]');
+    dpm($academic_program, '$academic_program');
     if (!empty($grad_dates)
       && !empty($academic_plan[LANGUAGE_NONE][0]['safe_value'])
       && $degree_program[LANGUAGE_NONE][0]['safe_value'] === 'graduate') {
       $acad_plan = $academic_plan[LANGUAGE_NONE][0]['safe_value'];
       $start_dates = _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus);
+      dpm('dynamic dates');
+    }
+    elseif (empty($grad_dates && $degree_program[LANGUAGE_NONE][0]['safe_value'] === 'graduate')) {
+      dpm('no dates - graduate');
+      $start_dates = array();
     }
     else {
+      dpm('static dates - undergrad');
       $start_dates = _asu_rfi_get_sem_dates_static();
     }
 
     // Pull in available campus options (works for _form_alter for multistep...
-    $acad_plan_code = ((isset($academic_plan[LANGUAGE_NONE][0]['value']))
-      ? $academic_plan[LANGUAGE_NONE][0]['value'] : '');
+    $acad_plan_code = ((isset($academic_plan[LANGUAGE_NONE][0]['safe_value']))
+      ? $academic_plan[LANGUAGE_NONE][0]['safe_value'] : '');
     $academic_plans = array(
       // 'acad_plan code' => 'Human readable programs name'
       $acad_plan_code => $degree_awarded,
