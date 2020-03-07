@@ -1,0 +1,34 @@
+<?php
+/** ASU AP install file */
+
+/**
+ * Implements hook_install().
+ */
+function asu_ap_install() {
+  variable_set('asu_ap_ds_marketing_video', 'marketing_top');
+  variable_set('asu_ap_views_grid_styling', 1);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function asu_ap_uninstall() {
+    db_delete('variable')
+      ->condition('name', 'asu_ap_%', 'LIKE')
+      ->execute();
+}
+
+/**
+ * Set new ASU AP configurations
+ */
+function asu_ap_update_7000(&$sandbox) {
+  $settings = array(
+    'asu_ap_ds_marketing_video' => 'marketing_top',
+    'asu_ap_views_grid_styling' => 1,
+  );
+  foreach ($settings as $key => $value) {
+    if (variable_get($key, 'not_set') === 'not_set') {
+      variable_set($key, $value);
+    }
+  }
+}
