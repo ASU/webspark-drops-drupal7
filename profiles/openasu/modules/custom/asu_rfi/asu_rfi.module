@@ -219,7 +219,7 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
 
       // Multipage form ONLY
       if ($instance_settings['form_type'] === 'multiform') {
-        $block['subject'] = t('Request information');
+        $block['subject'] = t('Request Information');
         // Generate the multistep form body
         $block['content'] = asu_rfi_form($delta);
       } else { // For ALL other forms
@@ -268,14 +268,14 @@ function asu_rfi_block_view($delta = '', $multi_id = NULL) {
           if (($instance_settings['form_type'] == 'ugrad_longform')
             || ($instance_settings['form_type'] == 'graduate_longform')) {
             $form_type = $instance_settings['form_type'];
-            $block['subject'] = t('Future Student Form');
+            $block['subject'] = t('Request Information');
             $block['content'] = asu_rfi_long_form($delta, $programs, $form_type);
           }
           // Current student form (ugrad or grad)
           elseif (($instance_settings['form_type'] == 'current_undergrad_form')
             || ($instance_settings['form_type'] == 'current_grad_form')) {
             $form_type = $instance_settings['form_type'];
-            $block['subject'] = t('Current Student Form');
+            $block['subject'] = t('Request Information');
             $block['content'] = asu_rfi_current_form($delta, $programs, $form_type);
           }
         } else { // No programs selected by above logic. Return empty block or

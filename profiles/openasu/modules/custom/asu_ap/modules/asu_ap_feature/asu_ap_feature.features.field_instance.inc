@@ -1907,7 +1907,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_grad_text_area',
-    'label' => 'Marketing textarea',
+    'label' => 'Additional marketing content',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -3419,7 +3419,7 @@ function asu_ap_feature_field_default_field_instances() {
   t('Major map URL');
   t('Major map year');
   t('Marketing Text');
-  t('Marketing textarea');
+  t('Additional marketing content');
   t('Marketing video URL for this degree. Youtube or Vimeo videos only.');
   t('Math Intensity');
   t('Minimum math requirement');

@@ -166,6 +166,9 @@ function asu_ap_preprocess_page(&$variables) {
       module_invoke('system', 'html_head');
     }
   }
+  if (variable_get('asu_ap_views_grid_styling') === 1) {
+    drupal_add_css(drupal_get_path('module', 'asu_ap') . '/css/views_grid.css');
+  }
 }
 
 /**

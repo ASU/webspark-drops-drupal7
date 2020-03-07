@@ -12,7 +12,7 @@ function asu_ap_admin_settings() {
   $form = array();
   $form['ds'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Degree Search data',
+    '#title' => 'Degree Search settings',
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
   );
@@ -26,6 +26,19 @@ function asu_ap_admin_settings() {
     ),
     '#default_value' => variable_get('asu_ap_ds_marketing_video', 'marketing_top'),
   );
+  $form['local'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Local content settings',
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
+  );
+  $form['local']['views_grid_styling'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Apply grid styling',
+    '#description' => t('Apply extra styling to clean up the Views -> Grid layout'),
+    '#default_value' => variable_get('asu_ap_views_grid_styling', 1),
+    '#return_value' => 1,
+  );
   $form['#submit'][] = 'asu_ap_admin_settings_submit';
   return system_settings_form($form);
 }
@@ -36,4 +49,5 @@ function asu_ap_admin_settings() {
  */
 function asu_ap_admin_settings_submit($form, $form_state) {
   variable_set('asu_ap_ds_marketing_video', $form_state['values']['video_handling']);
+  variable_set('asu_ap_views_grid_styling', $form_state['values']['views_grid_styling']);
 }

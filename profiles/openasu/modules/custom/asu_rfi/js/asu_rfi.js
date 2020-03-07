@@ -62,8 +62,6 @@
             } else if (label.innerHTML.indexOf(required) > 0) {
                 label.innerHTML = label.innerHTML.replace(required, '');
             }
-        } else {
-          console.log(grad);
         }
     }
 
