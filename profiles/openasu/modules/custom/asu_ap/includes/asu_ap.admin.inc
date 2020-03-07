@@ -12,7 +12,7 @@ function asu_ap_admin_settings() {
   $form = array();
   $form['ds'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Degree Search settings',
+    '#title' => 'Degree Search data',
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
   );
@@ -28,14 +28,14 @@ function asu_ap_admin_settings() {
   );
   $form['local'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Local content settings',
+    '#title' => 'Local degree content',
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
   );
   $form['local']['views_grid_styling'] = array(
     '#type' => 'checkbox',
-    '#title' => 'Apply extra styling to Views grid',
-    '#description' => t('Apply extra styling to clean up the Views -> Grid layout'),
+    '#title' => 'Apply extra Views grid styling',
+    '#description' => t('Apply views_grid.css file in ASU AP folder to clean up the degrees listing view\'s Grid layout'),
     '#default_value' => variable_get('asu_ap_views_grid_styling', 1),
     '#return_value' => 1,
   );
