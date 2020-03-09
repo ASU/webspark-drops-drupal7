@@ -89,11 +89,13 @@ function asu_ap_feature_field_default_field_instances_alter(&$fields) {
 }
 
 /**
- * Grab image within the Feature module.
- * Then, create image in the new site to use for default image for the ASU Academic Programs Banner Image field.
+ * Grab image within the Feature module and copy image over to files directory.
+ *
+ * @param string $filename - Name of new default file.
+ * @param string $type - 'banner' or 'image'
+ * @throws \FieldException
  */
-function _asu_ap_feature_image($image, $key) {
-  $filename = $image;
+function _asu_ap_feature_image($filename, $type) {
   $origfile = drupal_get_path('module', 'asu_ap_feature') . '/images/' . $filename;
   $uri = 'public://' . $filename;
   $file = (object) array(
@@ -105,7 +107,26 @@ function _asu_ap_feature_image($image, $key) {
     'status' => FILE_STATUS_PERMANENT,
   );
   $file = file_copy($file, $uri, FILE_EXISTS_REPLACE);
-  variable_set('asu_ap_feature_' . $key . '_fid', $file->fid);
+  variable_set('asu_ap_feature_' . $type . '_fid', $file->fid);
+  variable_set('asu_ap_degree_image_filename', $filename);
+
+  // Update ASU AP field instance of field_degree_image settings
+  $instance = field_info_instance('node', 'field_degree_image', 'asu_ap');
+  if (isset($instance['settings']['default_image'])) {
+    $instance['settings']['default_image'] = (int) $file->fid;
+    field_update_instance($instance);
+  } else {
+    flogger('asu_ap_feature', 'Default degree image file setting could not be found.', array());
+  }
+
+  // Update global field settings
+  $field = field_info_field('field_degree_image');
+  if (isset($field['settings']['default_image'])) {
+    $field['settings']['default_image'] = (int) $file->fid;
+    field_update_field($field);
+  } else {
+    flogger('asu_ap_feature', 'Default degree image instance setting could not be found.', array());
+  }
 }
 
 /**
