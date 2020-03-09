@@ -522,11 +522,13 @@ if (module_exists('metatag')) {
         a major map is required to graduate.</s></p>";
       $major_map_url = $node_info['field_asu_ap_major_map_url']['#items'][0]['url'];
       if (valid_url($major_map_url, TRUE)) {
-        if (isset($node_info['field_asu_ap_major_map_year'])) {
-          $year = (int) $node_info['field_asu_ap_major_map_year']['#items'][0]['value'];
-          $year_prefix = ((int) $year < 2100 && $year > 1999) ? $year . ' - ' . (++$year) : '';
+        if (isset($node_info['field_asu_ap_major_map_year']['und'][0]['safe_value'])) {
+          $year = (int) $node_info['field_asu_ap_major_map_year']['und'][0]['safe_value'];
+          $year_prefix = ((int) $year < 2100 && $year > 1999) ? $year . ' - ' . (++$year) . ' ' : '';
+        } else {
+          $year_prefix = '';
         }
-        $major_map_urls[] = l(t($year_prefix . ' Major Map (On-campus)'), $major_map_url,
+        $major_map_urls[] = l(t($year_prefix . 'Major Map (On-campus)'), $major_map_url,
           array('attributes' => array('target' => '_blank')));
       }
       if (isset($node_info['field_asu_ap_online_mm_url']['#items'][0]['url'])) {
@@ -540,7 +542,7 @@ if (module_exists('metatag')) {
         'items' => $major_map_urls,
         'title' => '',
         'type' => 'ul',
-        'attributes' => array('class' => 'asu-ap-major-map-links')));
+        'attributes' => array('class' => array('asu-ap-major-map-links'))));
     }
     elseif (isset($node_info['field_asu_ap_asuds_url'])) {
       print '<h2>Plan of study</h2>';

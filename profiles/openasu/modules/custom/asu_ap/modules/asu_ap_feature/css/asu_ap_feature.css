@@ -195,11 +195,16 @@
   */
 .view-asu-ap-view .view-content .views-field.views-field-field-degree-image {
   float: left;
-  padding-right: 0.9375em;
 }
-.asu-ap-rewritten-fields {
-  overflow: hidden;
-  padding-left: 0.9375em;
+.view-asu-ap-view .views-field-field-asu-ap {
+  clear: both;
+}
+.view-asu-ap-view .asu-ap-rewritten-fields {
+  padding-top: 1em;
+}
+.view-asu-ap-view .asu-ap-major-title {
+  font-size: 1.2em;
+  font-weight: bold;
 }
 .view-asu-ap-view table > tbody > tr > td {
   border: none;

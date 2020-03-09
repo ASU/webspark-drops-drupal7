@@ -23,7 +23,7 @@ function asu_ap_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('asu_ap_admin_settings'),
     'access arguments' => array('administer ap page output'),
-    'options' => array('attributes' => array('class' => 'title')),
+    'options' => array('attributes' => array('class' => array('title'))),
     'file' => 'includes/asu_ap.admin.inc'
   );
   return $items;
@@ -92,7 +92,7 @@ function _asu_ap_BLOCK_CONTENT() {
         '#theme' => 'item_list',
         '#items' => $result,
         '#type' => 'ul',
-        '#attributes' => array('class' => 'list-group'),
+        '#attributes' => array('class' => array('list-group')),
       );
     }
     else {
