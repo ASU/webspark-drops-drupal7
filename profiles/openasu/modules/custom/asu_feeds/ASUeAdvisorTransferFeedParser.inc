@@ -10,14 +10,15 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
 
   /**
    * Implementation of FeedsParser::parse().
+   * @throws \Exception
    */
   public function parse(FeedsSource $source, FeedsFetcherResult $fetcher_result) {
 
     $batch = $fetcher_result;
 
     $result = $batch->getRaw();
-    //error_log( print_r($result, true) );
     $parsed_data = $result;
+
     if (!count($parsed_data)) {
       return new FeedsParserResult($parsed_data);
     }
@@ -28,93 +29,111 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
       // Unique ID for the plan
       $parsed_data[$key]['guid'] = md5($parsed_data[$key]['AcadPlan']);
 
-      if (count($data['accelerateDegrees'])) {
-        $acceleratedDegree = array();
-        $parsed_data[$key]['acceleratedDegree'] = 1;
-      }
-
-      if (count($data['concurrentDegrees'])) {
-        $concurrentDegree = array();
-        $parsed_data[$key]['concurrentDegree'] = 1;
-      }
-
-      if (count($data['DegreeNew'])) {
-        $newDegree = array();
-        $ndVal = $data['DegreeNew'];
-        if ($ndVal == 1) {
-          $parsed_data[$key]['newDegree'] = 1;
+      if (isset($data['accelerateDegrees'])) {
+        if (count($data['accelerateDegrees'])) {
+          $acceleratedDegree = array();
+          $parsed_data[$key]['acceleratedDegree'] = 1;
         }
       }
 
-      if (count($data['CampusWueInfo'])) {
-        $wueCampusConfirmed = array();
-        foreach ($data['CampusWueInfo'] as $cwi) {
-          if ($cwi['isCampusWue'] == 1) {
-            $parsed_data[$key]['wueCampusConfirmed'] = 1;
+      if (isset($data['concurrentDegrees'])) {
+        if (count($data['concurrentDegrees'])) {
+          $concurrentDegree = array();
+          $parsed_data[$key]['concurrentDegree'] = 1;
+        }
+      }
+
+      if (isset($data['DegreeNew'])) {
+        if (is_array($data['DegreeNew']) || $data['DegreeNew'] instanceof Countable) {
+          if (count($data['DegreeNew'])) {
+            $newDegree = array();
+            $ndVal = $data['DegreeNew'];
+            if ($ndVal == 1) {
+              $parsed_data[$key]['newDegree'] = 1;
+            }
           }
         }
       }
 
-      if (count($data['DescrlongExtn5'])) {
-        $additionalAdmissions = array();
-        $parsed_data[$key]['additionalAdmissions'] = 1;
+      if (isset($data['CampusWueInfo'])) {
+        if (count($data['CampusWueInfo'])) {
+          $wueCampusConfirmed = array();
+          foreach ($data['CampusWueInfo'] as $cwi) {
+            if ($cwi['isCampusWue'] == 1) {
+              $parsed_data[$key]['wueCampusConfirmed'] = 1;
+            }
+          }
+        }
+      }
+
+      if (isset($data['DescrlongExtn5'])) {
+        if (is_array($data['DescrlongExtn5']) || $data['DescrlongExtn5'] instanceof Countable) {
+          if (count($data['DescrlongExtn5'])) {
+            $additionalAdmissions = array();
+            $parsed_data[$key]['additionalAdmissions'] = 1;
+          }
+        }
       }
 
       // Campuses
-      if(count($data['CampusStringArray'])){
-        foreach($data['CampusStringArray'] as $campus_key => $value){
-          switch(trim(strtoupper($value))){
-            case 'ONLNE':
-              $value = 'Online';
-              break;
-            case 'DOWNTOWN':
-            case 'DTPHX':
-              $value = 'Downtown';
-              break;
-            case 'POLY':
-              $value = 'Polytechnic';
-              break;
-            case 'TMPE':
-            case 'TEMPE':
-              $value = 'Tempe';
-              break;
-            case 'WEST':
-              $value = 'West';
-              break;
-            case 'CALHC':
-              $value = 'Havasu';
-              break;
-            case 'CAC':
-              $value = 'Pinal';
-              break;
-            case 'EAC':
-              $value = 'The Gila Valley';
-              break;
-            case 'TUCSN':
-              $value = 'Tucson';
-              break;
-            case 'AWC':
-              $value = 'Yuma';
-              break;
-            //Add case for missing campus from degree feed
-            default:
-              $value = $value;
-              break;
+      if (isset($data['CampusStringArray'])) {
+        if(count($data['CampusStringArray'])){
+          foreach($data['CampusStringArray'] as $campus_key => $value){
+            switch(trim(strtoupper($value))){
+              case 'ONLNE':
+                $value = 'Online';
+                break;
+              case 'DOWNTOWN':
+              case 'DTPHX':
+                $value = 'Downtown';
+                break;
+              case 'POLY':
+                $value = 'Polytechnic';
+                break;
+              case 'TMPE':
+              case 'TEMPE':
+                $value = 'Tempe';
+                break;
+              case 'WEST':
+                $value = 'West';
+                break;
+              case 'CALHC':
+                $value = 'Havasu';
+                break;
+              case 'CAC':
+                $value = 'Pinal';
+                break;
+              case 'EAC':
+                $value = 'The Gila Valley';
+                break;
+              case 'TUCSN':
+                $value = 'Tucson';
+                break;
+              case 'AWC':
+                $value = 'Yuma';
+                break;
+              //Add case for missing campus from degree feed
+              default:
+                $value = $value;
+                break;
+            }
+            if($value == 'Online'){
+              unset($parsed_data[$key]['CampusStringArray'][$campus_key]);
+              array_push($parsed_data[$key]['CampusStringArray'],$value);
+            }else{
+              $parsed_data[$key]['CampusStringArray'][$campus_key] = $value;
+            }
           }
-          if($value == 'Online'){
-            unset($parsed_data[$key]['CampusStringArray'][$campus_key]);
-            array_push($parsed_data[$key]['CampusStringArray'],$value);
-          }else{
-            $parsed_data[$key]['CampusStringArray'][$campus_key] = $value;
-          }
+          $parsed_data[$key]['CampusStringArray'] = array_values($parsed_data[$key]['CampusStringArray']);
         }
-        $parsed_data[$key]['CampusStringArray'] = array_values($parsed_data[$key]['CampusStringArray']);
       }
 
       // Format careerData
-      if (count($data['careerData'])) {
-        $parsed_data[$key]['careerData'] = json_encode($data['careerData']);
+      if (isset($data['careerData'])) {
+        if (count($data['careerData'])) {
+          $parsed_data[$key]['careerData'] = json_encode($data['careerData']);
 
+        }
       }
 
       // Transfer agreements
@@ -122,17 +141,19 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
       $parsed_data[$key]['transferAgreementInfo.year'] = array();
       $parsed_data[$key]['transferAgreementInfo.url'] = array();
       $parsed_data[$key]['transferAgreementInfo.communityCollege'] = array();
-      if (count($data['transferAgreementInfo'])) {
-        foreach ($data['transferAgreementInfo'] as $agreement) {
-          foreach ($agreement['transferAgreementYearsUrls'] as $year_url) {
-            $type = $agreement['transferAgreementType'];
-            $year = $year_url[0];
-            $url = $year_url[1];
-            $college = $agreement['tACommunityCollege'];
-            $parsed_data[$key]['transferAgreementInfo.type'][] = $type;
-            $parsed_data[$key]['transferAgreementInfo.year'][] = $year;
-            $parsed_data[$key]['transferAgreementInfo.url'][] = $url;
-            $parsed_data[$key]['transferAgreementInfo.communityCollege'][] = $college;
+      if (isset($data['transferAgreementInfo'])) {
+        if (count($data['transferAgreementInfo'])) {
+          foreach ($data['transferAgreementInfo'] as $agreement) {
+            foreach ($agreement['transferAgreementYearsUrls'] as $year_url) {
+              $type = $agreement['transferAgreementType'];
+              $year = $year_url[0];
+              $url = $year_url[1];
+              $college = $agreement['tACommunityCollege'];
+              $parsed_data[$key]['transferAgreementInfo.type'][] = $type;
+              $parsed_data[$key]['transferAgreementInfo.year'][] = $year;
+              $parsed_data[$key]['transferAgreementInfo.url'][] = $url;
+              $parsed_data[$key]['transferAgreementInfo.communityCollege'][] = $college;
+            }
           }
         }
       }
@@ -153,13 +174,15 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
       // Sub-plan code and subplan major map url - [SubPlnMajorMaps]
       $parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanCode'] = array();
       $parsed_data[$key]['subPlnMajorMaps.SubPlnMajorMapUrl'] = array();
-      if (count($data['SubPlnMajorMaps'])) {
-        foreach ($data['SubPlnMajorMaps'] as $subplan_url) {
-          if(isset($subplan_url['SubplnMajorMapSubplanCode'])){
-            $parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanCode'][] = $subplan_url['SubplnMajorMapSubplanCode'];
-          }
-          if(isset($subplan_url['SubPlnMajorMapUrl'])){
-            $parsed_data[$key]['subPlnMajorMaps.SubPlnMajorMapUrl'][] = $subplan_url['SubPlnMajorMapUrl'];
+      if (isset($data['SubPlnMajorMaps'])) {
+        if (count($data['SubPlnMajorMaps'])) {
+          foreach ($data['SubPlnMajorMaps'] as $subplan_url) {
+            if(isset($subplan_url['SubplnMajorMapSubplanCode'])){
+              $parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanCode'][] = $subplan_url['SubplnMajorMapSubplanCode'];
+            }
+            if(isset($subplan_url['SubPlnMajorMapUrl'])){
+              $parsed_data[$key]['subPlnMajorMaps.SubPlnMajorMapUrl'][] = $subplan_url['SubPlnMajorMapUrl'];
+            }
           }
         }
       }
@@ -167,26 +190,30 @@ class ASUeAdvisorTransferFeedParser extends FeedsParser {
       // Sub-plans - [SubPln]
       $parsed_data[$key]['subplan.code'] = array();
       $parsed_data[$key]['subplan.name'] = array();
-      if (count($data['SubPln'])) {
-        foreach ($data['SubPln'] as $the_code => $subplan) {
-          $parsed_data[$key]['subplan.code'][] = $the_code;
-          $parsed_data[$key]['subplan.name'][] = $subplan;
+      if (isset($data['SubPln'])) {
+        if (count($data['SubPln'])) {
+          foreach ($data['SubPln'] as $the_code => $subplan) {
+            $parsed_data[$key]['subplan.code'][] = $the_code;
+            $parsed_data[$key]['subplan.name'][] = $subplan;
+          }
         }
       }
 
       //if subplan.code == subPlnMajorMaps.SubplnMajorMapSubplanCode then replace code with name
-      if (count($parsed_data[$key]['subplan.name'])) {
-        $parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanName'] = array();
-        foreach($parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanCode'] as $sn){
-          $i = 0;
-          while ($i <= count($parsed_data[$key]['subplan.name'])) {
-            if ($sn == $parsed_data[$key]['subplan.code'][$i]) {
-              $parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanName'][] = $parsed_data[$key]['subplan.name'][$i];
-              $i == count($parsed_data[$key]['subplan.name']);
+      if (isset($parsed_data[$key]['subplan.name'])) {
+        if (count($parsed_data[$key]['subplan.name'])) {
+          $parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanName'] = array();
+          foreach($parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanCode'] as $sn){
+            $i = 0;
+            while ($i <= count($parsed_data[$key]['subplan.name'])) {
+              if ($sn == $parsed_data[$key]['subplan.code'][$i]) {
+                $parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanName'][] = $parsed_data[$key]['subplan.name'][$i];
+                $i == count($parsed_data[$key]['subplan.name']);
+              }
+              $i++;
             }
-            $i++;
+            unset($i);
           }
-          unset($i);
         }
       }
 

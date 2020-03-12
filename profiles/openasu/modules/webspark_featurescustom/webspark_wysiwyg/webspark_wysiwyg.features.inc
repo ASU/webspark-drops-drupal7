@@ -49,6 +49,10 @@ function webspark_wysiwyg_wysiwyg_default_profiles_alter(&$data) {
         Oval image=img-circle
         Image with rounded corners=img-rounded
         Image with double-border=img-thumbnail
+        Alert text success=alert alert-block alert-success
+        Alert text warning=alert alert-block alert-warning
+        Alert text danger=alert alert-block alert-danger
+        Alert text info=alert alert-block alert-info
         Primary button=btn btn-primary
         Primary button large=btn btn-primary btn-lg
         Primary button full-col-wide=btn btn-primary btn-block
