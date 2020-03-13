@@ -89,11 +89,38 @@ function block_example_block_view_alter(&$data, $block)
     $data['subject'] = NULL;
   }
 }
+
+/**
+ * Implements hook_navbar_alter()
+ */
+function asu_alert_banner_navbar_alter(&$items) 
+{
+  $items['asu-alert-banner'] = array(
+    '#type' => 'navbar_item',
+      'tab' => array(
+        '#type' => 'link',
+        '#title' => t('ASU Alert Banner'),
+        '#href' => 'admin/structure/block/manage/asu_alert_banner/asu_alert_banner/configure',
+        '#options' => array(
+          'attributes' => array(
+            'title' => t('Emergency'),
+            'class' => array('navbar-icon', 'navbar-icon-wrench',),
+          ),
+        ),
+      ),
+      'tray' => array(
+        '#heading' => t('User-defined emergency'),
+        '#wrapper_attributes' => array(
+          'class' => array('navbar-tray-emergency', 'navbar-menu-emergency'),
+        ),
+      ),
+      '#weight' => 1000,
+  );
+}
  
 /**
- * Custom function to assemble renderable array for block content.
- * Returns a renderable array with the block content.
- * @return returns a renderable array of block content.
+ * Auxillary function to assemble renderable array for block content.
+ * @return - a renderable array of block content.
  */
 function asu_alert_banner_block_render() 
 {
@@ -116,12 +143,6 @@ function asu_alert_banner_block_render()
             'data' => drupal_get_path('module', 'asu_alert_banner') . '/css/styles.css',
           ),
         ),
-        'js' => array(
-          array(
-            'type' => 'file',
-            'data' => drupal_get_path('module', 'asu_alert_banner') , '/js/script.js',
-          )
-        )
       ), 
     ),
   );

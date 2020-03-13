@@ -8,7 +8,7 @@
 
 ## Configuration
  1. Navigate to the *Block* page under *Structure* (`https://www.your-drupal-site.com/admin/structure/block`) and move the "ASU Alert Banner" module (under *Disabled*) to the *Content* section. It should be placed right above  **Main page content**
- 2. Click on *Configure* for the block and add the content you wish to the *Banner title* and *Banner body* fields
+ 2. Click on *ASU Alert Banner* at the end of the top navbar. Alternatively, you can alsoclick on *Configure* for the block. Add the content you wish to the *Banner title* and *Banner body* fields
  3. Press *Save block* when you're finished
 
 An informational alert should now be present on all content pages with your specified content
