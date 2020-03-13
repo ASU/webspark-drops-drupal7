@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * webspark_hero.strongarm.inc
@@ -20,6 +21,9 @@ function webspark_hero_strongarm() {
         'custom_settings' => FALSE,
       ),
       'token' => array(
+        'custom_settings' => FALSE,
+      ),
+      'preview' => array(
         'custom_settings' => FALSE,
       ),
     ),

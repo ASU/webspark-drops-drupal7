@@ -161,6 +161,7 @@ function asu_spotlight_field_formatter_view($entity_type, $entity, $field, $inst
   $element = array();
 
   if (!empty($items)) {
+    $log = 1;
     foreach ($items as $key => $item) {
 
       $tmp = $item;
@@ -168,12 +169,18 @@ function asu_spotlight_field_formatter_view($entity_type, $entity, $field, $inst
       $item['item'] = $tmp;
 
       // Setup the variables for calling theme_image_style
-      $item['slide']['path'] = $item['item']['uri'];
+      $item['slide']['path'] = (isset($item['item']['uri'])) ? $item['item']['uri'] : '';
       $item['slide']['style_name'] = $display['settings']['image_style'];
-      $item['slide']['width'] = $item['item']['metadata']['width'];
-      $item['slide']['height'] = $item['item']['metadata']['height'];
-      $item['slide']['alt'] = $item['item']['alt'];
-      $item['slide']['title'] = $item['item']['title'];
+      $item['slide']['width'] = (isset($item['item']['metadata']['width'])) ? $item['item']['metadata']['width'] : '';
+      $item['slide']['height'] = (isset($item['item']['metadata']['height'])) ? $item['item']['metadata']['height'] : '';
+      $item['slide']['alt'] = (isset($item['item']['alt'])) ? $item['item']['alt'] : '';
+      $item['slide']['title'] = (isset($item['item']['title'])) ? $item['item']['title'] : '';
+
+      if ($item['slide']['path'] == '') {
+        watchdog('asu_spotlight', 'The asu_spotlight slide #' . $log . ' titled "@title" has no valid URI (probably a missing file?).',
+          array('@title' => $item['item']['title']), WATCHDOG_NOTICE);
+        $log++;
+      }
 
       // Render the slide item
       // If not style set, we have to call theme_image since theme_image_style

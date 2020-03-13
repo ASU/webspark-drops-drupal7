@@ -1,0 +1,3 @@
+Flogger - v7.x-1.0 - 2019-12-19
+-------------------------------
+* Initial creation of module.

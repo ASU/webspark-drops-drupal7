@@ -41,8 +41,7 @@ function asu_gsa_uninstall() {
 }
 
 /**
- * Implements hook_update_N().
- * + Resave all Google Appliance admin settings after that module is updated from v1.12 to v1.14.
+ * Resave all Google Appliance admin settings after that module is updated from v1.12 to v1.14.
  */
 function asu_gsa_update_7000(&$sandbox) {
   // Google Appliance doesn't rebuild its form settings after it adds many
@@ -94,9 +93,8 @@ function asu_gsa_update_7000(&$sandbox) {
 }
 
 /**
-* Implements hook_update_N().
-* Automagically enable GCSE module and disable GSA module.
-*/
+ * Automagically enable GCSE module and disable GSA module.
+ */
 function asu_gsa_update_7101(&$sandbox) {
   // Array for modules that we want to enable with update.php (GCSE)
   $modules_to_enable = array(

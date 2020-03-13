@@ -24,8 +24,6 @@ function asu_brand_uninstall() {
 }
 
 /**
- * Implements hook_update_N().
- *
  * Set footer color variable to '' if it equals '_black' which is the actual
  * value for the black footer.
  */
@@ -38,7 +36,6 @@ function asu_brand_update_7100(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
  * + Updates header variables if Innovation theme is selected
  * + Re-add footer block to all pages
  */
@@ -68,7 +65,6 @@ function asu_brand_update_7101(&$sandbox) {
   }
 }
 /**
- * Implements hook_update_N()
  * + Updates ASU Header to v4.5
  */
 function asu_brand_update_7102(&$sandbox) {
@@ -78,7 +74,6 @@ function asu_brand_update_7102(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
  * + Adds Behat testing variable to turn off GTM during Behat testing
  */
 function asu_brand_update_7103(&$sandbox) {
@@ -86,7 +81,6 @@ function asu_brand_update_7103(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
  * + Updates ASU Header to v4.5 for all remaining non-Webspark Innovation users
  */
 function asu_brand_update_7104(&$sandbox) {
@@ -94,7 +88,6 @@ function asu_brand_update_7104(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
  * + Updates ASU Header to stable
  */
 function asu_brand_update_7105(&$sandbox) {
@@ -102,7 +95,6 @@ function asu_brand_update_7105(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
  * + Disable display of site name by Drupal, since the brand header is now handling it
  */
 function asu_brand_update_7106(&$sandbox) {

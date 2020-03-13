@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * webspark_hero.features.user_permission.inc

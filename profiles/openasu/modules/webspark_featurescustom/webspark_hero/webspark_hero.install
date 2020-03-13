@@ -1,9 +1,114 @@
 <?php
 
-// Implements hook_update_N().
 /**
  * + Updates Hero configuration form descriptions.
  */
 function webspark_hero_update_7000(&$sandbox) {
   features_revert(array('webspark_hero' => array('field_base', 'field_instance')));
+}
+
+/**
+ * + Adds Webspark Hero height selector (hero vs. jumbo hero).
+ */
+function webspark_hero_update_7001(&$sandbox) {
+  features_revert(array('webspark_hero' => array('default_config', 'field_base', 'field_instance')));
+}
+
+/**
+ * Checks default height values for any existing Webspark Hero FPPs.
+ */
+function webspark_hero_update_7002(&$sandbox) {
+  if (!module_exists('flogger')) {
+    module_enable(array('flogger'));
+  }
+
+  $fpp_per_pass = 25;
+  $height = 380;
+  $skip_completely = FALSE;
+  $message = t(__FUNCTION__ . ' - There are no Webspark Hero FPPs that need their'
+    . ' height value checked. Skipped update.');
+
+  // First update run ONLY (Initialize update counters, data)
+  if (!isset($sandbox['total'])) {
+    // Get total number of FPPs to update
+    $total_count = Database::getConnection('default', 'default')
+      ->select('fieldable_panels_panes', 'fpp')
+      ->fields('fpp', array(
+        'fpid',
+      ))
+      ->condition('fpp.bundle', 'hero')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    if ($total_count > 0) { // Set INIT params for batch to run.
+      $sandbox['total'] = $total_count;
+      $sandbox['max'] = $fpp_per_pass;
+      $sandbox['progress'] = 0;
+      $sandbox['messages'] = array();
+      $sandbox['current'] = -1;
+      $message = t(__FUNCTION__ . ' - There are @count Webspark hero FPPs'
+      . ' that need their height value checked.',
+        array('@count' => $total_count));
+      flogger('webspark_hero', $message);
+    }
+    else { // Don't apply any updates...
+      flogger('webspark_hero', $message);
+      $sandbox['#finished'] = TRUE;
+      $skip_completely = TRUE;
+    }
+  }
+
+  if (!$skip_completely) {
+    $results = Database::getConnection('default', 'default')
+      ->select('fieldable_panels_panes', 'fpp')
+      ->fields('fpp', array(
+        'fpid',
+      ))
+      ->condition('fpp.bundle', 'hero')
+      ->condition('fpp.fpid', $sandbox['current'], '>')
+      ->orderBy('fpp.fpid', 'ASC')
+      ->range(0, $fpp_per_pass)
+      ->execute()
+      ->fetchCol();
+
+    foreach ($results as $fpid) { // Update FPIDs - one at a time, $fpp_per_pass per batch run.
+      $entity = fieldable_panels_panes_load($fpid);
+      if (is_array($entity->field_webspark_hero_height)) {
+        if (empty($entity->field_webspark_hero_height)) {
+          $entity->field_webspark_hero_height['und'][0]['value'] = $height;
+        }
+      }
+      fieldable_panels_panes_save($entity);
+      $sandbox['progress']++;
+      $sandbox['current'] = $fpid;
+    }
+    // Check to see if all FPPs are updated.
+    $sandbox['#finished'] = ($sandbox['progress'] >= $sandbox['total'])
+      ? TRUE : ($sandbox['progress'] / $sandbox['total']);
+    // Done? yes...
+    if ($sandbox['#finished'] === TRUE) {
+      $message = "\n" . t('Check of @count Webspark hero heights is complete.',
+        array('@count', $sandbox['total']));
+      flogger('webspark_hero', $message, array(), WATCHDOG_INFO,
+        FALSE, FALSE, TRUE);
+      return $message;
+    } else { // nope, not yet...
+      $percentage = $sandbox['#finished'];
+      $percentage = round((float) $percentage * 100, 1) . '%';
+      $message = t('Checked ' . $sandbox['progress'] . ' of '
+        . $sandbox['total'] . " Webspark hero FPPs (" . $percentage . " complete). "
+        . "Last FPP updated: FPID @nid...",
+        array('@nid' => (isset($fpid)) ? $fpid : 'unknown'));
+      // Set message and add for final report.
+      //$sandbox['messages'][] = $message . "\n";
+    }
+  }
+  return $message;
+}
+
+/**
+ * + Features revert: Hides the new hero height field from display.
+ */
+function webspark_hero_update_7003(&$sandbox) {
+  features_revert(array('webspark_hero' => array('field_instance')));
 }

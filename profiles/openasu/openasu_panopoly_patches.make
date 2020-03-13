@@ -26,6 +26,11 @@ projects[token][sha256] = a84b6a1f43798d8d9da31915aa25fce0f62f59fae18c71e0775157
 ; Webspark - Fixes arrows/theming issue in browse tokens window
 projects[token][patch][2773825] = patches/webspark-897_token-browse-available-theme-fixes-2773825-1.patch
 
+; WEBSPARK-1573
+projects[date][version] = 2.10
+projects[date][subdir] = contrib
+projects[date][patch][2843367] = https://www.drupal.org/files/issues/2019-01-16/2843367-php71-string-offset-47.patch
+
 ; panopoly_admin.make
 
 ; jQuery Update was moved to Panopoly Core, but is left in Panopoly Admin's
@@ -61,13 +66,14 @@ projects[media][subdir] = contrib
 ; WEBSPARK-679 - WYSIWYG + Media module issues
 projects[media][patch][679] = patches/webspark-679_fix-HTML-encoded-macros-2028253-10.patch
 
-; WEBSPARK-1404
+; WEBSPARK-1404, WEBSPARK-1544, others
 projects[views][type] = module
 projects[views][subdir] = contrib
 projects[views][version] = 3.23
 projects[views][patch][] = https://www.drupal.org/files/issues/views-exposed-sorts-2037469-26.patch
 projects[views][patch][] = patches/webspark-1404_set-views-handler-filter-maxlength-to-null.patch
 projects[views][patch][] = https://www.drupal.org/files/issues/2019-06-01/n3054091-14-hard.patch
+projects[views][patch][3069508] = https://www.drupal.org/files/issues/2019-07-29/views-glossary-ajax-not-working-3069508-8-D7.patch
 
 ; WEBSPARK-1507
 projects[panopoly_theme][patch][] = https://www.drupal.org/files/issues/accordion-style-id-fix.2777847.8.patch
@@ -83,3 +89,10 @@ libraries[tinymce][patch][2876031] = https://www.drupal.org/files/issues/tinymce
 ;; WEBSPARK-819 patches
 libraries[tinymce][patch][2876032] = https://raw.githubusercontent.com/ASU/asu-drupal-modules/master/patches/ws-819_img-padding-TinyMCE.patch
 libraries[tinymce][patch][2876033] = https://raw.githubusercontent.com/ASU/asu-drupal-modules/master/patches/ws-819_img-padding-TinyMCE_min.patch
+
+; WEBSPARK-1517
+;; Patches Entity API contrib module
+projects[entity][type] = module
+projects[entity][subdir] = contrib
+projects[entity][version] = 1.9
+projects[entity][patch][] = https://www.drupal.org/files/issues/warning_array_flip-1803048-16.patch

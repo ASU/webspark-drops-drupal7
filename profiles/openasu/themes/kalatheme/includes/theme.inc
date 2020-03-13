@@ -73,10 +73,10 @@ function kalatheme_table($variables) {
       }
     }
     $rows[] = array(array(
-        'data' => $empty,
-        'colspan' => $header_count,
-        'class' => array('empty', 'message'),
-      ));
+      'data' => $empty,
+      'colspan' => $header_count,
+      'class' => array('empty', 'message'),
+    ));
   }
 
   // Format the table header:
@@ -246,6 +246,86 @@ function kalatheme_select($variables) {
   // Add Bootstrap class, then defer to core for the rest.
   $variables['element']['#attributes']['class'][] = 'form-control';
   return theme_select($variables);
+}
+
+// WEBSPARK-1539 - theme overrides for email, number components
+
+/**
+ * Implements theme_webform_email().
+ */
+function kalatheme_webform_email($variables) {
+  $element = $variables['element'];
+
+  // This IF statement is mostly in place to allow our tests to set type="text"
+  // because SimpleTest does not support type="email".
+  if (!isset($element['#attributes']['type'])) {
+    $element['#attributes']['type'] = 'email';
+  }
+
+  // Convert properties to attributes on the element if set.
+  foreach (array('id', 'name', 'value', 'size') as $property) {
+    if (isset($element['#' . $property]) && $element['#' . $property] !== '') {
+      $element['#attributes'][$property] = $element['#' . $property];
+    }
+  }
+
+  // Add Bootstrap form-control class if label display is not before (CSS inline)
+  $element_classes = array('form-text', 'form-email');
+  if ($element['#title_display'] !== 'inline') {
+    $element_classes[] = 'form-control';
+  }
+  _form_set_class($element, $element_classes);
+
+  return '<input' . drupal_attributes($element['#attributes']) . ' />';
+}
+
+/**
+ * Implements theme_webform_number().
+ */
+function kalatheme_webform_number($variables) {
+  $element = $variables['element'];
+
+  // This IF statement is mostly in place to allow our tests to set type="text"
+  // because SimpleTest does not support type="number".
+  if (!isset($element['#attributes']['type'])) {
+    // HTML5 number fields are no long used pending better browser support.
+    // See issues #2290029, #2202905.
+    // @code
+    // $element['#attributes']['type'] = 'number';
+    // @endcode
+    $element['#attributes']['type'] = 'text';
+  }
+
+  // Step property *must* be a full number with 0 prefix if a decimal.
+  if (!empty($element['#step']) && filter_var((float) $element['#step'], FILTER_VALIDATE_INT) === FALSE) {
+    $decimals = strlen($element['#step']) - strrpos($element['#step'], '.') - 1;
+    $element['#step'] = sprintf('%1.' . $decimals . 'F', $element['#step']);
+  }
+
+  // If the number is not an integer and step is undefined/empty, set the "any"
+  // value to allow any decimal.
+  if (empty($element['#integer']) && empty($element['#step'])) {
+    $element['#step'] = 'any';
+  }
+  elseif ($element['#integer'] && empty($element['#step'])) {
+    $element['#step'] = 1;
+  }
+
+  // Convert properties to attributes on the element if set.
+  foreach (array('id', 'name', 'value', 'size', 'min', 'max', 'step') as $property) {
+    if (isset($element['#' . $property]) && $element['#' . $property] !== '') {
+      $element['#attributes'][$property] = $element['#' . $property];
+    }
+  }
+
+  // Add Bootstrap form-control class if label display is not before (CSS inline)
+  $element_classes = array('form-text', 'form-number');
+  if ($element['#title_display'] !== 'inline') {
+    $element_classes[] = 'form-control';
+  }
+  _form_set_class($element, $element_classes);
+
+  return '<input' . drupal_attributes($element['#attributes']) . ' />';
 }
 
 /**
@@ -627,14 +707,14 @@ function kalatheme_update_report($variables) {
           // Apply an extra class if we're displaying both a recommended
           // version and anything else for an extra visual hint.
           if ($project['recommended'] !== $project['latest_version']
-              || !empty($project['also'])
-              || ($project['install_type'] == 'dev'
-                && isset($project['dev_version'])
-                && $project['latest_version'] !== $project['dev_version']
-                && $project['recommended'] !== $project['dev_version'])
-              || (isset($project['security updates'][0])
-                && $project['recommended'] !== $project['security updates'][0])
-              ) {
+            || !empty($project['also'])
+            || ($project['install_type'] == 'dev'
+              && isset($project['dev_version'])
+              && $project['latest_version'] !== $project['dev_version']
+              && $project['recommended'] !== $project['dev_version'])
+            || (isset($project['security updates'][0])
+              && $project['recommended'] !== $project['security updates'][0])
+          ) {
             $version_class[] = 'version-recommended-strong';
           }
           $versions_inner .= theme('update_version', array('version' => $project['releases'][$project['recommended']], 'tag' => t('Recommended version:'), 'class' => $version_class));
@@ -653,9 +733,9 @@ function kalatheme_update_report($variables) {
         $versions_inner .= theme('update_version', array('version' => $project['releases'][$project['latest_version']], 'tag' => t('Latest version:'), 'class' => array('version-latest')));
       }
       if ($project['install_type'] == 'dev'
-          && $project['status'] != UPDATE_CURRENT
-          && isset($project['dev_version'])
-          && $project['recommended'] !== $project['dev_version']) {
+        && $project['status'] != UPDATE_CURRENT
+        && isset($project['dev_version'])
+        && $project['recommended'] !== $project['dev_version']) {
         $versions_inner .= theme('update_version', array('version' => $project['releases'][$project['dev_version']], 'tag' => t('Development version:'), 'class' => array('version-latest')));
       }
     }

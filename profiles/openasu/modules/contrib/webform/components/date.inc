@@ -407,21 +407,21 @@ function theme_webform_date($variables) {
  * Element validation for Webform date fields.
  */
 function webform_validate_date($element, $form_state) {
-  $field_types = array('day', 'month', 'year');
+  $date_parts = array('day', 'month', 'year');
 
   // Determine if the user has specified a date. Hidden parts of the date will
   // be submitted automatically.
-  foreach ($field_types as $field_type) {
-    if (!in_array($field_type, $element['#exclude']) && $element[$field_type]['#value'] !== '') {
+  foreach ($date_parts as $date_part) {
+    if (!in_array($date_part, $element['#exclude']) && $element[$date_part]['#value'] !== '') {
       $field_found = TRUE;
     }
   }
 
   if (isset($field_found)) {
     // Check that each part of the date has been filled in.
-    foreach ($field_types as $field_type) {
-      if (empty($element[$field_type]['#value'])) {
-        form_error($element[$field_type], t('!part in !name is missing.', array('!name' => $element['#title'], '!part' => $element[$field_type]['#title'])));
+    foreach ($date_parts as $date_part) {
+      if (empty($element[$date_part]['#value'])) {
+        form_error($element[$date_part], t('!part in !name is missing.', array('!name' => $element['#title'], '!part' => $element[$date_part]['#title'])));
         $missing_fields = TRUE;
       }
     }
@@ -430,7 +430,7 @@ function webform_validate_date($element, $form_state) {
     }
 
     // Ensure date is made up of integers.
-    foreach (array('year', 'month', 'day') as $date_part) {
+    foreach ($date_parts as $date_part) {
       $element[$date_part]['#value'] = (int) $element[$date_part]['#value'];
     }
 

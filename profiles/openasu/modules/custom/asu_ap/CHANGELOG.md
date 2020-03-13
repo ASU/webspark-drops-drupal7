@@ -1,5 +1,8 @@
 # ASU Academic Programs Changelog
 
+### ASU Academic Programs 7.x-2.6, 2019-XX-XX
+- Updated casing to "Sentence casing" (vs. Title Casing)
+
 ### ASU Academic Programs 7.x-2.5, 2019-08-02
 - Codified and unified CSS value for ASU gold to #fffc732
 

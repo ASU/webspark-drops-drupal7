@@ -33,6 +33,10 @@
     margin: 0;
     padding: 0.625rem 0;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    & > a {
+      border-bottom: none;
+      color: #fff
+    }
   }
 }
 

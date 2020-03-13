@@ -15,11 +15,31 @@
   width: 100%;
   margin-top: -1px;
 }
+
+/* Added for overflow of text elements */
 .pane-bundle-hero .hero-wrapper {
+  overflow: scroll;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+/* Select element height */
+.pane-bundle-hero.hero-height-hero .hero-wrapper {
   height: 380px;
 }
+/* Select element height */
+.pane-bundle-hero.hero-height-jumbohero .hero-wrapper {
+  height: 700px;
+}
+
+.pane-bundle-hero .hero-wrapper::-webkit-scrollbar { /* WebKit */
+  width: 0;
+  height: 0;
+}
+
 .pane-bundle-hero .pane-content {
-  padding: 0 0.9375em;
+  padding: 0 0.9375em 1em 0.9375em;
 }
 .pane-bundle-hero p {
   margin: 0;
@@ -36,13 +56,18 @@
 }
 .pane-bundle-hero .field-name-field-webspark-hero-blurb {
   max-width: 900px;
-  margin-bottom: 1.5em;
+  margin-bottom: 1em;
   color: white;
   font-size: 1.5em;
   line-height: 1.5em;
   font-weight: 900;
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
+.pane-bundle-hero.hero-height-hero .field-name-field-webspark-hero-height {
+  display: none;
+}
+
+/* Button styles */
 .pane-bundle-hero .field-name-field-webspark-hero-ugradbtn,
 .pane-bundle-hero .field-name-field-webspark-hero-gradbtn {
   width: 41.6667%;
@@ -55,7 +80,7 @@
   padding-left: 0;
 }
 
-/* Button styles */
+
 /* =MEDIA QUERIES
 -------------------------------------------------------------- */
 @media (min-width: 1200px) {
@@ -85,12 +110,10 @@
     font-size: 2.5rem;
   }
   .pane-bundle-hero .field-name-field-webspark-hero-blurb .field-item > *:first-child {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+    white-space: normal;
   }
   .pane-bundle-hero .field-name-field-webspark-hero-blurb .field-item > *:nth-child(n+2) {
-    display: none;
+    /*display: none; */
   }
   .pane-bundle-hero .field-name-field-webspark-hero-ugradbtn,
   .pane-bundle-hero .field-name-field-webspark-hero-gradbtn {
@@ -99,7 +122,7 @@
     padding-left: 0;
   }
 }
-/* media print issues */
+/* @media print issues */
 @media print {
   .pane-bundle-hero .hero-wrapper {
   height: unset;

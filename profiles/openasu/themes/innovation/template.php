@@ -60,7 +60,7 @@ function innovation_preprocess_html(&$variables) {
       '#tag' => 'meta',
       '#attributes' => array(
         // Don't forget to update openasu.info as well!!
-        'content' => 'Webspark:1.70.1 (College Station)',
+        'content' => 'Webspark:1.70.7 (Zipperlandville)',
         'http-equiv' => 'X-Name-of-Distro',
         'name' => 'cmsversion',
       )
@@ -610,4 +610,18 @@ function innovation_fieldset($variables) {
   $output .= '</div>';
   $output .= "</fieldset>\n";
   return $output;
+}
+
+/**
+ * Implements hook_preprocess_maintenance_page().
+ */
+function innovation_preprocess_maintenance_page(&$variables) {
+  // By default, site_name is set to Drupal if no db connection is available
+  // or during site installation. Setting site_name to an empty string makes
+  // the site and update pages look cleaner.
+  // @see template_preprocess_maintenance_page()
+  if (!$variables['db_is_active']) {
+    $variables['site_name'] = '';
+  }
+  drupal_add_css(drupal_get_path('theme', 'innovation') . '/css/maintenance-page.css');
 }

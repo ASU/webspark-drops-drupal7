@@ -20,10 +20,17 @@
   .pane-content {
     position: relative;
     height: 700px;
-    padding: 0 0.9375em;
+    padding: 0 0.9375em 1em 0.9375em;
   }
   .jumbotext-wrapper {
     width: 100%;
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    &::-webkit-scrollbar { /* WebKit */
+      width: 0;
+      height: 0;
+    }
   }
   .field-name-field-webspark-jumbo-position {
     display: none;
@@ -43,7 +50,7 @@
   }
   .field-name-field-webspark-jumbohero-blurb {
     max-width: 900px;
-    margin-bottom: 1.5em;
+    margin-bottom: 1em;
     color: white;
     font-size: 1.5em;
     line-height: 1.5em;
@@ -147,9 +154,7 @@
     // Hide overflow blurbs
     .field-name-field-webspark-jumbohero-blurb .field-item {
       & > *:first-child {
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+        white-space: normal;
       }
       // If multiple paragraphs or other DOM elements, hide them all but the first
       & > *:nth-child(n+2) {

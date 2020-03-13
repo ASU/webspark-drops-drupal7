@@ -7,8 +7,7 @@ function mega_footer_install(){
 }
 
 /**
- * Implements hook_update_N().
- * - Swap out all old names with their new Drupal-standard names and re-add their existing values
+ * Swap out all old names with their new Drupal-standard names and re-add their existing values
  */
 function mega_footer_update_7001(&$sandbox) {
   // Set mega_footer_hide_logo_address
@@ -27,8 +26,7 @@ function mega_footer_update_7001(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N().
- * - Remove Google+ social media icon
+ * + Remove Google+ social media icon
  */
 function mega_footer_update_7002(&$sandbox) {
   variable_del('mega_footer_unit_google_link');
@@ -45,6 +43,7 @@ function _mega_footer_variables_define() {
     'megafoot_show_contact_info' => 'mega_footer_show_contact_info',
     'megafoot_logo_alt' => 'mega_footer_logo_alt',
     'unit_logo' => 'mega_footer_unit_logo',
+    'unit_link' => 'mega_footer_logo_link', // Added this for WEBSPARK-860
     'megafoot_unit_descrip' => 'mega_footer_unit_descrip',
     'unit_title' => 'mega_footer_unit_title',
     'unit_address_one' => 'mega_footer_unit_address_one',

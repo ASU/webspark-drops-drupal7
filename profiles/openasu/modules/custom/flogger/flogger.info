@@ -1,0 +1,5 @@
+name = Fun Logger
+package = ASU
+description = Mini-API to create Watchdog entries, Drush logging, and/or Drupal messaging (for a single event) with one function call.
+version = 7.x-1.0
+core = 7.x

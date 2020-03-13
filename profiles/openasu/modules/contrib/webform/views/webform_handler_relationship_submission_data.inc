@@ -59,7 +59,7 @@ class webform_handler_relationship_submission_data extends views_handler_relatio
     parent::options_submit($form, $form_state);
     _webform_views_options_submit($form, $form_state);
     $options =& $form_state['values']['options'];
-    $options['webform_form_key'] = $options['webform_join_by_form_key'] == 'form_key' && ($node = node_load($options['webform_nid']))
+    $options['webform_form_key'] = $options['webform_join_by'] == 'form_key' && ($node = node_load($options['webform_nid']))
                                         ? $node->webform['components'][$options['webform_cid']]['form_key']
                                         : NULL;
     // Drop PHP reference.

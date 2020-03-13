@@ -6,7 +6,7 @@ api = 2
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 projects[drupal][type] = core
-projects[drupal][version] = 7.67
+projects[drupal][version] = 7.69
 
 ; Drupal Core Patches
 
@@ -128,7 +128,6 @@ projects[viewfield][subdir] = contrib
 projects[webform][version] = 4.19
 projects[webform][type] = module
 projects[webform][subdir] = contrib
-projects[webform][patch][3078020] = https://www.drupal.org/files/issues/2019-08-01/webform_7.x-4.19_conditional-form-control-css-class-email-number.patch
 projects[webform][patch][2894251] = https://www.drupal.org/files/issues/empty-pages-email-2894251-8.patch
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -179,7 +178,7 @@ projects[google_cse][version] = 2.5
 projects[google_cse][type] = module
 projects[google_cse][subdir] = contrib
 
-projects[maxlength][version] = 3.2-beta2
+projects[maxlength][version] = 3.3
 projects[maxlength][type] = module
 projects[maxlength][subdir] = contrib
 
@@ -346,8 +345,9 @@ libraries[chosen][destination] = libraries
 libraries[chosen][download][sha256] = 410147ddfb08f9a87f0272516fff7cd5ed5a4f0777c76f1b298d1106aa8405bd
 
 libraries[flexslider][download][type] = get
-libraries[flexslider][download][url] = https://github.com/woothemes/FlexSlider/archive/version/2.2.2.zip
-libraries[flexslider][download][sha256] = bd72421a8aa6f4b9cd3575f4eb58651f2b43c5dc00f0f8f80a373f71b5d1efcc
+libraries[flexslider][download][url] = https://github.com/woothemes/FlexSlider/archive/version/2.7.2.zip
+;libraries[flexslider][download][sha256] = bd72421a8aa6f4b9cd3575f4eb58651f2b43c5dc00f0f8f80a373f71b5d1efcc
+; @TODO - update SHA + download individual elements (vs. the entire library with demos, etc.)
 
 ; 1 of 2 - Font Awesome
 libraries[fontawesome_css][download][type] = get

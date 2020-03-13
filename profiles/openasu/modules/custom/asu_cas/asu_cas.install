@@ -10,10 +10,7 @@ function asu_cas_enable() {
 }
 
 /**
- * Implements hook_update_N();
- *
- * Updating the WebSpark Default Theme from "OpenASU Bootstrap"
- * to "ASU WebSpark Bootstrap".
+ * Updating the WebSpark Default Theme from "OpenASU Bootstrap" to "ASU WebSpark Bootstrap".
  */
 function asu_cas_update_7000(&$sandbox) {
 
@@ -98,7 +95,6 @@ function asu_cas_update_7000(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
  * Making sure the new responsive ASU header is being updated from older
  * versions
  */
@@ -121,7 +117,6 @@ function asu_cas_update_7002(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N
  * + Add missing permissions to features - WEBSPARK-393, WEBSPARK-462
  */
 function asu_cas_update_7003(&$sandbox) {
@@ -176,7 +171,6 @@ function asu_cas_update_7003(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
  * + Remove perms from CAS role and add them to adminisrator role  - WEBSPARK-470
  * + Add perms for Add ASU Spotlight perms
  * + Add admin theme, create files perms to editor role
@@ -219,7 +213,6 @@ function asu_cas_update_7004(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
  * + Set administrative theme to Webspark Seven IF Seven theme is the current
  * admin theme.
  */
@@ -230,7 +223,6 @@ function asu_cas_update_7005(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
  * + Enables Webspark EasyAdmin module
  */
 function asu_cas_update_7006(&$sandbox) {
@@ -240,7 +232,6 @@ function asu_cas_update_7006(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
  * + Enables Webspark Featurescustom
  * + NOTE: Future Webspark DB updates will come in webspark_featurescustom
  */
@@ -259,8 +250,7 @@ function asu_cas_update_7007(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N()
- * - Set Certificate Authority PEM Certificate field
+ * + Set Certificate Authority PEM Certificate field
  */
 function asu_cas_update_7008(&$sandbox) {
   if (module_exists('cas')) {

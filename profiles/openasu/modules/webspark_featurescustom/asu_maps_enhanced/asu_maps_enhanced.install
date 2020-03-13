@@ -13,8 +13,7 @@ function asu_maps_enhanced_install() {
 }
 
 /**
- *Implements hook_update_N
- *in order to revert module and add fields
+ * In order to revert module and add fields
  *
  **/
 function asu_maps_enhanced_update_7001(&$sandbox) {
@@ -22,9 +21,6 @@ function asu_maps_enhanced_update_7001(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N
- * @param $sandbox
- *
  * Update the db to hold a longer list of items for a map
  */
 function asu_maps_enhanced_update_7002(&$sandbox) {

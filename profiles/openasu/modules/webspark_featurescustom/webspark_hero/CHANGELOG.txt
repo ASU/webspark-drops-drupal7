@@ -1,3 +1,22 @@
+Webspark Jumbohero - 7.x-1.11, 2020-01-06
+-----------------------------------------
+- Text height value no longer appears over hero images.
+
+Webspark Jumbohero - 7.x-1.10, 2020-01-03
+-----------------------------------------
+- Added default height values to existing hero FPPs (fixed regression in last release).
+
+Webspark Hero - 7.x-1.9, 2019-12-31
+-----------------------------------
+- Suppressed rendering of scroll bars when hero content overflows
+
+Webspark Hero - 7.x-1.8, 2019-XX-XX (SECURITY UPDATE)
+------------------------------
+- All form field outputs are now sanitized before rendering. (This is mitigated in that only Drupal users with privileges
+  to create and save heroes and jumbo heroes could exploit this vulnerability)
+- Height option added to settings field to allow Jumbo Heroes with this widget.
+- Bylines/blurbs are no longer truncated automatically with an ellipsis and limited to one line
+
 Webspark Hero - 7.x-1.7, 2019-08-02
 ------------------------------
 - Improved mouseover description when a link to create an ASU spotlight is rendered in the In-Page Editor
