@@ -1578,7 +1578,6 @@ function _asu_rfi_form_initial_web_assets($type) {
     drupal_add_js('jQuery(window).unload(function(){});', array('type' => 'inline'));
     // Add js to gather enterpriseclientid from GA to add to payload for
     // submissions destined for EdPlus and their Lead API 4.0 by way of the Middleware.
-    drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.fields.js', 'file');
   }
 
   if ($type === 'multiform') {
@@ -1724,11 +1723,11 @@ function _asu_rfi_get_degree_specifics_init($nid) {
   if ($node = menu_get_object()) {
     $nid = $node->nid;
     cache_set('asu_rfi_degree__' . $nid, $node, 'cache', time() + 86400);
-    dpm('SUCCESS - $node loaded, initial cache set: cid asu_rfi_degree__' . $nid);
+    //dpm('SUCCESS - $node loaded, initial cache set: cid asu_rfi_degree__' . $nid);
     return $node;
     // Set acad_plan in Javascript
   } else {
-    dpm('FAIL! $node could not be loaded by node_load');
+    //dpm('FAIL! $node could not be loaded by node_load');
     flogger('asu_rfi', 'Degree node object could not be loaded to'
       . ' generate RFI form.', array(), WATCHDOG_ERROR);
     return ''; // Empty string
@@ -1783,6 +1782,32 @@ function _asu_rfi_program_location_confirm($prog, $campus, $loc) {
     }
   }
   return FALSE;
+}
+
+/**
+ * Get semester code as of TODAY
+ *
+ * @param int $month - 1, 11
+ * @param int $day - 1-31
+ * @param bool $summer - Check for summer semester. Defauts to false.
+ * @return int - Semester codes. 1 = Spring, 4 = Summer, 7 = Fall
+ */
+function _asu_rfi_get_semester_today($month, $day, $summer = FALSE) {
+  if (($month >= 8)) { // FALL (8/15 and forward)
+    if (($month !== 8) || ($month === 8 && $day > 14)) {
+      return '7'; // FALL
+    }
+  }
+  else { // Spring OR summer (before 8/15)
+    if ($summer) {
+      if (($month === 5 && $day > 14) || ($month === 8 && $day <= 14)) {
+        return '4'; // SUMMER
+      }
+    } else {
+      return '1'; // SPRING
+    }
+  }
+  return 'unknown'; // No semester?
 }
 
 /**
@@ -1841,50 +1866,30 @@ function _asu_rfi_get_sem_dates_static($summer = FALSE) {
       $term_date[$semester->semId] = $semester->semLabel;
     }
 
-    // Display only current and next three years in the drop down.
+    // Display only current and next two years in the drop down.
     // Build the date array
     $date = array();
-    $month = date('m');
-    $day = date('d');
+    $year = (int) date('Y');
     $new = array();
     $options = array();
     $semester = _asu_rfi_get_ps_semester_codes($summer);
-    $year = date('Y');
+    $semester_today = _asu_rfi_get_semester_today(date('m'), date('d'), $summer);
 
-    for ($i = 0; $i <= 2; $i++) {
+    for ($i = 0; $i <= 3; $i++) {
       $date[$i] = $year + $i;
       $new[$i] = substr_replace($date[$i], "", 1, 1);
-      if ($i == 0) {
-        if ($year == $date[0]) { // check if it is current year
-          if (($month <= 8)) {
-            if (($month != 8) || ($month == 8) && ($day <= 14)) {
-              $sem = $semester["7"];
-              $trim_year = $new[$i] . "7";  // append semester code digit to the key depending on the season. Ex. For spring, add 1.
-              $list = $date[$i];
-              $options[$trim_year] = $list . " " . $sem;
-            }
+      if ($i === 0) {  // Current year (nothing sent in fall semester)
+        if ($semester_today !== '7') { // Before fall start
+          if ($summer && $semester_today === '1') { // Spring time and summer included
+            $trim_year = $new[$i] . '4';
+            $options[$trim_year] = ($date[$i]) . " " . $semester['4'];
           }
-          if ($summer) { // For graduate start term options in the summer
-            if (($month >= 5) && ($month <= 8)) {
-              if (($month != 5) || ($month == 5) && ($day > 14) || ($month == 8) && ($day <= 14)) {
-                $trim_year = $new[$i] . "4";  // append semester code digit depending on the season. Ex. For spring, add 1.
-                $options[$trim_year] = $date[$i] . " " . $semester["4"];
-              }
-            }
-          }
-          if (($month >= 8)) {
-            if (($month != 8) || ($month == 8) && ($day > 14)) {
-              $trim_year = ($new[$i] + 1) . "1";  // append semester code digit to the key depending on the season. Ex. For spring, add 1.
-              $options[$trim_year] = ($date[$i] + 1). " " . $semester["1"];
-              $trim_year = ($new[$i] + 1) . "7";
-              $options[$trim_year] = ($date[$i] + 1) . " " . $semester["7"];
-            }
-          }
+          $trim_year = $new[$i] . '7';  // Fall
+          $options[$trim_year] = ($date[$i]). " " . $semester['7'];
         }
-      } else {
+      } else { // Future years
         $trim_year = ($new[$i]) . "1";  // append 1 to the key depending on the season. For spring, add 1.
         $options[$trim_year] = $date[$i] . " " . $semester["1"];
-
         if ($summer) {
           $next_trim_year = ($new[$i]) . "4";
           $options[$next_trim_year] = $date[$i] . " " . $semester['4'];
@@ -1894,7 +1899,7 @@ function _asu_rfi_get_sem_dates_static($summer = FALSE) {
       }
     }
     if (!empty($term_date)) {
-      $sem_dates_array = array_intersect($term_date, $options);
+      $sem_dates_array = array_intersect($options, $term_date);
     } else {
       $sem_dates_array = $options;
     }
@@ -1923,7 +1928,6 @@ function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '') {
   if (empty($grad_dates)) { // either an undergrad degree or field hasn't been updated.
     return _asu_rfi_get_sem_dates_static();
   }
-  // Move on
   $dates = unserialize($grad_dates);
   if ($dates === FALSE) { // Corrupted or missing serialized array
     flogger('asu_rfi', 'Corrupted/missing grad_dates list. Returning static'
@@ -1933,8 +1937,11 @@ function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '') {
   } else {
     ksort($dates);
   }
+
   // Reformat graduate data
   $all_dates = array();
+  $final_dates = array();
+
   foreach ($dates as $key => $value) {
     $campus_dates = explode(':', $value, 2);
     if (count($campus_dates) === 2) {
@@ -1955,7 +1962,6 @@ function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '') {
     }
   }
 
-  $final_dates = array();
   // Filter by campus
   $valid_semester_dates = array();
   if (count($all_dates)) {
@@ -1964,7 +1970,7 @@ function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '') {
         if ((string) $campus !== $value['campus_human']) {
           continue; // skip adding this one
         }
-      }
+      } // else add this value
       $valid_semester_dates[] = $value['semester_check'];
     }
     // Filter against all possible dates in static list

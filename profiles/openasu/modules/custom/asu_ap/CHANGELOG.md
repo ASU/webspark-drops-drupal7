@@ -4,8 +4,9 @@
 ##### Architecture & Development
 - Reformatted page-level TPL file output (code and HTML)
 - Combined graduate vs. undergrad logic in TPL
-- Added new fields to ASU AP degree page content type
-- Added newer fields as options for feed mappings
+- Added new fields to ASU AP degree page content type to store additional data to render on
+  degree pages.
+- Added many other fields for future field mappings
 - Re-added missing "asu_feeds_text_format" Drupal input format
 - Campus options updated
 - Added configuration form to handle some new, optional elements of degree pages
@@ -17,6 +18,7 @@
 - Updated ASU IXR library for PHP 7.x compatibility
 ##### UI/UX Improvements
 - Degree pages:
+    - Added canonical URLs in <link> tags pointing at Degree Search page counterparts for SEO improvements
     - Added marketing text and video pulled in from Degree Search (including new logic to determine when to show this imported content)
     - Added several newer Degree Search pages elements to individual degree page output middle section
     - Online campus links now point to asuonline.asu.edu degree pages

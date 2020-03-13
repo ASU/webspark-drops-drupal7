@@ -16,8 +16,9 @@
                 var ga_id = gaIds[i].get('clientId');
                 $('input[name="enterpriseclientid"]').val(ga_id);
                 // This counter should be equal to the number of GA accounts to be read
-                if (++match === 1)
+                if (++match === 1) {
                   break;
+                }
               }
             }
           });

@@ -608,6 +608,7 @@ function asu_rfi_form_after_build($form, &$form_state) {
   if ($form['#form_id'] !== 'asu_rfi_form_data') { // load for all except multiform step 1 (step 2 is handled in asu_rfi_form_data)
     drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/theme/session_clear.js');
   }
+  drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.fields.js', 'file');
   drupal_add_css(drupal_get_path('module', 'asu_rfi') . '/theme/asu_rfi.css');
   return $form;
 }

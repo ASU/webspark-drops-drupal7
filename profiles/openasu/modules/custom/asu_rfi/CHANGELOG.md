@@ -67,7 +67,7 @@
 
 ##### Data Management
 
-- Updated RFI submission deletion policies to better adhere to UTO security and/or PII policies
+- Updated RFI submission deletion policies to adhere to the University Data Handling Standard.
     * Upon updating the module to this version, all submissions older than 14 days old upon updating the module, regardless of status
     * All submissions that have successfully been sent onto any Salesforce middleware are deleted upon every cron run
     * All submissions that have not been sent on (status SF_Failed) are resubmitted every time a cron job runs
