@@ -19,7 +19,9 @@
 .alerticon .fa {
   background: radial-gradient(white 50%, transparent 50%);
 }
-.alertbody {
+.alertbody a:hover{
+  color: initial;
+  border-color: initial;
 }
 .alertbody h2 {
   font-size: 30px;
