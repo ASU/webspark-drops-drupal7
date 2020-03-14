@@ -54,19 +54,24 @@ function asu_ap_feature_form_alter(&$form, &$form_state, $form_id) {
       $form['field_asu_ap_url_3']['#access'] = FALSE;
       $form['field_asu_ap_url_4']['#access'] = FALSE;
     } else {
-      $form['some_text'] = array(
-        '#markup' => '<div class="messages error">'
-        . '<strong>IMPORTANT</strong>:'
-        . ' While there are fields available below to customize these degree pages'
-        . ' with custom, additional content for this site, the degrees information imported'
-        . ' from the official degrees feed (from webapp4.asu.edu) should'
-        . ' not be edited and saved here because those changes will be overwritten'
-        . ' the next time updates to the degrees are pulled in from the degrees feed.'
-        . ' <br><br> If'
-        . ' imported information needs to be changed, please work with those in your unit'
-        . ' who are involved with the catalog updates; They can work with the Provost\'s'
-        . ' Office.</div>',
+      $form['ds_warning_text'] = array(
+        '#weight' => '8',
+        '#markup' => '<div class="messages error asu-ap-ds-error">'
+        . '<strong>WARNING</strong>:'
+        . ' The degree information stored below was originally pulled in from'
+        . ' the same data source that Degree Search uses to create their degree pages.'
+        . ' Future updates to Degree Search pages may also be pulled in, overwriting'
+        . ' the current text below.'
+        . ' <br><br>Therefore, please refrain from making and saving any edits below.'
+        . ' They will ultimately be overwritten and lost.'
+        . ' <br><br> If any information below does need to be changed, please work with'
+        . ' those in your unit who are involved with any degree-related catalog updates.'
+        . ' They will work with the Provost\'s Office to get any updates applied'
+        . ' in Degree Search - after which they can be easily synced here with'
+        . ' with a single click import.</div>',
       );
+      $form['#attach']['css'][] = drupal_get_path('module', 'asu_ap_feature')
+        . 'css/form.css';
     }
 
     // Hide fields based on undergrad vs graduate degrees

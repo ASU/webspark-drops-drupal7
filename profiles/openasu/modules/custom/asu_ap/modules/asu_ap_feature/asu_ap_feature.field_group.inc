@@ -21,18 +21,15 @@ function asu_ap_feature_field_group_info() {
   $field_group->mode = 'form';
   $field_group->parent_name = '';
   $field_group->data = array(
-    'label' => 'Banner & Program Flags',
+    'label' => 'Primary images',
     'weight' => '2',
     'children' => array(
-      0 => 'field_asu_ap_acc_program',
-      1 => 'field_asu_ap_conc_program',
-      2 => 'field_asu_ap_new_program',
-      3 => 'field_asu_banner_image',
-      4 => 'field_degree_image',
+      0 => 'field_asu_banner_image',
+      1 => 'field_degree_image',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'label' => 'Banner & Program Flags',
+      'label' => 'Primary images',
       'instance_settings' => array(
         'required_fields' => 0,
         'id' => '',
@@ -148,8 +145,8 @@ function asu_ap_feature_field_group_info() {
   $field_group->mode = 'form';
   $field_group->parent_name = '';
   $field_group->data = array(
-    'label' => 'Hidden',
-    'weight' => '8',
+    'label' => 'Degree Search data (imported)',
+    'weight' => '9',
     'children' => array(
       0 => 'body',
       1 => 'field_asu_ap',
@@ -165,35 +162,36 @@ function asu_ap_feature_field_group_info() {
       11 => 'field_asu_ap_college_j',
       12 => 'field_asu_ap_college_url',
       13 => 'field_asu_ap_college_url_j',
-      14 => 'field_asu_ap_department',
-      15 => 'field_asu_ap_department_code',
-      16 => 'field_asu_ap_department_code_j',
-      17 => 'field_asu_ap_department_j',
-      18 => 'field_asu_ap_diploma_desc',
-      19 => 'field_asu_ap_example_careers',
-      20 => 'field_asu_ap_major_map_url',
-      21 => 'field_asu_ap_major_map_year',
-      22 => 'field_asu_ap_min_math',
-      23 => 'field_asu_ap_prog_req',
-      24 => 'field_asu_ap_program',
-      25 => 'field_asu_ap_program_fee',
-      26 => 'field_asu_ap_req_desc',
-      27 => 'field_asu_ap_second_language',
-      28 => 'field_asu_ap_subplan_title',
-      29 => 'field_asu_ap_subplan_url',
-      30 => 'field_asu_ap_curriculum_url',
-      31 => 'field_asu_ap_grad_all_app_dates',
-      32 => 'field_asu_ap_url_1',
-      33 => 'field_asu_ap_url_2',
-      34 => 'field_asu_ap_url_3',
-      35 => 'field_asu_ap_url_4',
-      36 => 'field_asu_ap_market_text',
-      37 => 'field_asu_ap_math_intensity',
-      38 => 'field_asu_ap_online_mm_url',
+      14 => 'field_asu_ap_curriculum_url',
+      15 => 'field_asu_ap_department',
+      16 => 'field_asu_ap_department_code',
+      17 => 'field_asu_ap_department_code_j',
+      18 => 'field_asu_ap_department_j',
+      19 => 'field_asu_ap_diploma_desc',
+      20 => 'field_asu_ap_example_careers',
+      21 => 'field_asu_ap_grad_all_app_dates',
+      22 => 'field_asu_ap_major_map_url',
+      23 => 'field_asu_ap_major_map_year',
+      24 => 'field_asu_ap_market_text',
+      25 => 'field_asu_ap_math_intensity',
+      26 => 'field_asu_ap_min_math',
+      27 => 'field_asu_ap_online_mm_url',
+      28 => 'field_asu_ap_prog_req',
+      29 => 'field_asu_ap_program',
+      30 => 'field_asu_ap_program_fee',
+      31 => 'field_asu_ap_req_desc',
+      32 => 'field_asu_ap_second_language',
+      33 => 'field_asu_ap_subplan_title',
+      34 => 'field_asu_ap_subplan_url',
+      35 => 'field_asu_ap_url_1',
+      36 => 'field_asu_ap_url_2',
+      37 => 'field_asu_ap_url_3',
+      38 => 'field_asu_ap_url_4',
+      39 => 'group_asu_ap_special_category',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'label' => 'Hidden',
+      'label' => 'Degree Search data (imported)',
       'instance_settings' => array(
         'required_fields' => 0,
         'id' => '',
@@ -265,13 +263,45 @@ function asu_ap_feature_field_group_info() {
   );
   $field_groups['group_asu_ap_grp_prog|node|asu_ap|form'] = $field_group;
 
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_asu_ap_special_category|node|asu_ap|form';
+  $field_group->group_name = 'group_asu_ap_special_category';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'asu_ap';
+  $field_group->mode = 'form';
+  $field_group->parent_name = 'group_asu_ap_grp_hidden';
+  $field_group->data = array(
+    'label' => 'Program Flags',
+    'weight' => '41',
+    'children' => array(
+      0 => 'field_asu_ap_acc_program',
+      1 => 'field_asu_ap_conc_program',
+      2 => 'field_asu_ap_new_program',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'label' => 'Program Flags',
+      'instance_settings' => array(
+        'required_fields' => 1,
+        'id' => '',
+        'classes' => 'group-asu-ap-special-category field-group-fieldset',
+        'description' => '',
+      ),
+      'formatter' => 'collapsible',
+    ),
+  );
+  $field_groups['group_asu_ap_special_category|node|asu_ap|form'] = $field_group;
+
   // Translatables
   // Included for use with string extractors like potx.
-  t('Banner & Program Flags');
   t('Career Display');
   t('Custom Graduate Markup');
-  t('Hidden');
+  t('Degree Search data (imported)');
+  t('Primary images');
   t('Program Description & Call to Action Buttons');
+  t('Program Flags');
   t('Program Links, Requirements & Options');
   t('Related Programs');
 
