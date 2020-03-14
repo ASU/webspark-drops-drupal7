@@ -6,7 +6,6 @@
 function asu_ap_feature_install() {
   _asu_ap_feature_image('asu_degree_banner_default.jpg', 'banner');
   _asu_ap_feature_image('asu_ap_image.png', 'image');
-  variable_set('asu_ap_ds_marketing_video', 'marketing_top');
   variable_set('asu_ap_degree_image_filename', 'asu_ap_image.png');
 }
 

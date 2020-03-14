@@ -16,6 +16,18 @@ function asu_ap_admin_settings() {
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
   );
+  $form['ds']['hide_ds_fields'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Hide Degree Search fields',
+    '#description' => 'Hides the fields that hold Degree Search generated degree information'
+      . ' on degree page edit forms. '
+      . ' <strong>IMPORTANT</strong>:'
+      . ' Disabling this setting and updating the Degree Search field data '
+      . ' in this site will be overwritten with the'
+      . ' next pull of degree data from Degree Search.'
+      . ' Use this feature for debugging local differences from Degree Search ONLY.',
+    '#default_value' => variable_get('asu_ap_hide_ds_fields', 1),
+  );
   $form['ds']['video_handling'] = array(
     '#type' => 'select',
     '#title' => 'Display Degree Search marketing video',
@@ -50,4 +62,5 @@ function asu_ap_admin_settings() {
 function asu_ap_admin_settings_submit($form, $form_state) {
   variable_set('asu_ap_ds_marketing_video', $form_state['values']['video_handling']);
   variable_set('asu_ap_views_grid_styling', $form_state['values']['views_grid_styling']);
+  variable_set('asu_ap_hide_ds_fields', $form_state['values']['hide_ds_fields']);
 }
