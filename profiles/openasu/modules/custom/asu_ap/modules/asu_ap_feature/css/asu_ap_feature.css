@@ -111,7 +111,8 @@
   font-size: 1.6em;
   font-weight: 600;
 }
-.node-type-asu-ap #main-wrapper .asu-ap-grey-section a {
+.node-type-asu-ap #main-wrapper .asu-ap-grey-section a,
+.node-type-asu-ap #main-wrapper .asu-ap-major-map-links {
   font-weight: 500;
 }
 .node-type-asu-ap #main-wrapper .asu-ap-grey-section ul {

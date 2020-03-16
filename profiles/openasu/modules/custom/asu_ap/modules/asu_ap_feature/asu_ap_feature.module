@@ -17,6 +17,9 @@ function asu_ap_feature_form_alter(&$form, &$form_state, $form_id) {
       $form['body']['#access'] = FALSE;
       $form['field_asu_ap_acad_plan']['#access'] = FALSE;
       $form['field_asu_ap_acad_prog']['#access'] = FALSE;
+      $form['field_asu_ap_acc_program']['#access'] = FALSE;
+      $form['field_asu_ap_conc_program']['#access'] = FALSE;
+      $form['field_asu_ap_new_program']['#access'] = FALSE;
       $form['field_asu_ap_college']['#access'] = FALSE;
       $form['field_asu_ap_college_j']['#access'] = FALSE;
       $form['field_asu_ap_college_url']['#access'] = FALSE;
@@ -183,4 +186,39 @@ function asu_ap_feature_features_export_alter(&$export, $module_name) {
     $identifier = "field_group:field_group:1";
     $export['features']['ctools'][$identifier] = $identifier;
   }
+}
+
+/**
+ * Generate Major/Minor Map URLs
+ *
+ * @param array $node_info - node information from theme TPL
+ * @param string $cert_val
+ * @return string
+ */
+function _asu_ap_feature_map_urls_create($node_info, $cert_val = 'false') {
+  $map_type = ($cert_val === 'true') ? 'Minor' : 'Major';
+  $major_map_urls = array();
+  $major_map_url = $node_info['field_asu_ap_major_map_url']['#items'][0]['url'];
+  if (valid_url($major_map_url, TRUE)) {
+    if (isset($node_info['field_asu_ap_major_map_year']['#items'][0]['safe_value'])) {
+      $year = (int)$node_info['field_asu_ap_major_map_year']['#items'][0]['safe_value'];
+      $year_prefix = ((int)$year < 2100 && $year > 1999) ? $year . ' - ' . (++$year) . ' ' : '';
+    } else {
+      $year_prefix = '';
+    }
+    $major_map_urls[] = l(t($year_prefix . $map_type . ' Map (On-campus)'), $major_map_url,
+      array('attributes' => array('target' => '_blank')));
+  }
+  if (isset($node_info['field_asu_ap_online_mm_url']['#items'][0]['url'])) {
+    $online_url = $node_info['field_asu_ap_online_mm_url']['#items'][0]['url'];
+    if (valid_url($online_url, TRUE)) {
+      $major_map_urls[] = l(t($year_prefix . $map_type . ' Map (Online)'), $online_url,
+        array('attributes' => array('target' => '_blank')));
+    }
+  }
+  return theme_item_list(array(
+    'items' => $major_map_urls,
+    'title' => '',
+    'type' => 'ul',
+    'attributes' => array('class' => array('asu-ap-major-map-links'))));
 }

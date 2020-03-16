@@ -85,6 +85,7 @@ if (is_numeric(arg(1))) {
 else {
   $node_info = array();
 }
+
 // Add subsection of $page['content'] for metatags
 if (module_exists('metatag')) {
   print render($page['content']['metatags']);
@@ -323,10 +324,10 @@ if (module_exists('metatag')) {
     else: ?>
       <?php // Is there DS marketing text? YES
       if (isset($node_info['field_asu_ap_market_text']['#items'][0]['safe_value'])): ?>
-        <div class="row row-no row-ds-marketing-video-text">
-          <div class="col-md-<?php print $ds_marketing_text_cols['text']; ?>">
+          <div class="row row-no row-ds-marketing-video-text">
+            <div class="col-md-<?php print $ds_marketing_text_cols['text']; ?>">
         <?php print render($node_info['field_asu_ap_market_text']); ?>
-          </div>
+            </div>
         <?php if ($ds_marketing_text_cols['video'] === 5): // Is there a DS URL-based video ?>
             <div class="col-md-<?php print $ds_marketing_text_cols['video'] ?>">
               <div class="ds-video-shell">
@@ -334,14 +335,14 @@ if (module_exists('metatag')) {
               </div>
             </div>
         <?php endif; ?>
-        </div>
+          </div>
       <?php endif; ?>
       <?php if (isset($node_info['body'])): // Program description (aka body field) ?>
-        <div class="row row-no row-ds-body">
-          <div class="col-md-12">
-            <?php print render($node_info['body']); ?>
+          <div class="row row-no row-ds-body">
+            <div class="col-md-12">
+        <?php print render($node_info['body']); ?>
+            </div>
           </div>
-        </div>
       <?php endif; ?>
     <?php endif; ?>
   <?php // CTA Buttons ?>
@@ -511,54 +512,38 @@ if (module_exists('metatag')) {
   }
   print '</ul>';
 
-  // Major maps or Plan of Study
-  if ($program_type === 'undergrad') {
-    $major_map_urls = array();
-    if (isset($node_info['field_asu_ap_major_map_url'])) {
-      print '<h2>Required Courses</h2>';
-      print "<p>A major map outlines a major's critical requirements, courses, and optimal course
+  // Major maps or Plan of Study - undergrad
+  ///////////////////
+  // show if NOT a certificate/minor
+  if ($cert_val !== 'true') { // Show if not a cert/minor
+    if ($program_type === 'undergrad') {
+      $major_map_urls = array();
+      if (isset($node_info['field_asu_ap_major_map_url'])) {
+        print '<h2>Required Courses</h2>';
+        print "<p>A major map outlines a major's critical requirements, courses, and optimal course
         sequence and aids students in remaining on track to graduation.</p>
         <p>While circumstances vary between students and their paths towards graduation
-        (utilizing placement testing to fulfill required math or foreign language courses,
-        fulfilling multiple General Studies requirements with one course, etc.),
-        completing the courses listed in a major map fulfills all of the requirements for graduation.</p>";
-      $major_map_url = $node_info['field_asu_ap_major_map_url']['#items'][0]['url'];
-      if (valid_url($major_map_url, TRUE)) {
-        if (isset($node_info['field_asu_ap_major_map_year']['und'][0]['safe_value'])) {
-          $year = (int) $node_info['field_asu_ap_major_map_year']['und'][0]['safe_value'];
-          $year_prefix = ((int) $year < 2100 && $year > 1999) ? $year . ' - ' . (++$year) . ' ' : '';
-        } else {
-          $year_prefix = '';
-        }
-        $major_map_urls[] = l(t($year_prefix . 'Major Map (On-campus)'), $major_map_url,
-          array('attributes' => array('target' => '_blank')));
+        (utilizing placement testing to fulfill required math or foreign language
+        courses, fulfilling multiple General Studies requirements with one course,
+        etc.), completing the courses listed in a major map fulfills all of the
+        requirements for graduation.</p>";
+        print _asu_ap_feature_map_urls_create($node_info);
+      } elseif (isset($node_info['field_asu_ap_asuds_url'])) {
+        print '<h2>Plan of study</h2>';
+        print '<p>The Plan of study is the required curriculum to complete the program.</p>';
+        /** @noinspection HtmlUnknownAnchorTarget */
+        print '<p><a href="#plan-of-study">View Plan of Study</a></p>';
       }
-      if (isset($node_info['field_asu_ap_online_mm_url']['#items'][0]['url'])) {
-        $online_url = $node_info['field_asu_ap_online_mm_url']['#items'][0]['url'];
-        if (valid_url($online_url, TRUE)) {
-          $major_map_urls[] = l(t($year_prefix . ' Major Map (Online)'), $online_url,
-            array('attributes' => array('target' => '_blank')));
-        }
+    }
+    // Major maps or Plan of Study -- Graduated
+    //////
+    elseif ($program_type === 'graduate') {
+      if (isset($node_info['field_asu_ap_asuds_url'])) {
+        print '<h2>Plan of study</h2>';
+        print '<p>The Plan of study is the required curriculum to complete the program.</p>';
+        /** @noinspection HtmlUnknownAnchorTarget */
+        print '<p><a href="#plan-of-study">View Plan of Study</a></p>';
       }
-      print theme_item_list(array(
-        'items' => $major_map_urls,
-        'title' => '',
-        'type' => 'ul',
-        'attributes' => array('class' => array('asu-ap-major-map-links'))));
-    }
-    elseif (isset($node_info['field_asu_ap_asuds_url'])) {
-      print '<h2>Plan of study</h2>';
-      print '<p>The Plan of study is the required curriculum to complete the program.</p>';
-      /** @noinspection HtmlUnknownAnchorTarget */
-      print '<p><a href="#plan-of-study">View Plan of Study</a></p>';
-    }
-  }
-  elseif ($program_type === 'graduate') {
-    if (isset($node_info['field_asu_ap_asuds_url'])) {
-      print '<h2>Plan of study</h2>';
-      print '<p>The Plan of study is the required curriculum to complete the program.</p>';
-      /** @noinspection HtmlUnknownAnchorTarget */
-      print '<p><a href="#plan-of-study">View Plan of Study</a></p>';
     }
   }
 ?>
@@ -587,21 +572,24 @@ if (module_exists('metatag')) {
 
               <div class="col-sm-6 col-md-4">
   <?php if ($program_type === 'undergrad'): ?>
-              <h2>Application requirements</h2>
+                <h2>Application requirements</h2>
     <?php if (isset($node_info['field_asu_ap_addl_req']['#items'][0]['safe_value'])): ?>
-          <p><?php print render($node_info['field_asu_ap_addl_req']['#items'][0]['safe_value']); ?></p>
+                <p><?php print render($node_info['field_asu_ap_addl_req']['#items'][0]['safe_value']); ?></p>
     <?php endif; ?>
-              <p>All students are required to meet general university admission requirements:</p>
-              <ul>
-                <li><a href="https://students.asu.edu/freshman">Freshman</a></li>
-                <li><a href="https://transfer.asu.edu/">Transfer</a></li>
-                <li><a href="https://students.asu.edu/international">International</a></li>
-                <li><a href="https://students.asu.edu/readmission">Readmission</a></li>
-              </ul>
+                <p>All students are required to meet general university admission requirements:</p>
+                <ul>
+                  <li><a href="https://students.asu.edu/freshman">Freshman</a></li>
+                  <li><a href="https://transfer.asu.edu/">Transfer</a></li>
+                  <li><a href="https://students.asu.edu/international">International</a></li>
+                  <li><a href="https://students.asu.edu/readmission">Readmission</a></li>
+                </ul>
   <?php elseif ($program_type === 'graduate'): ?>
-      <?php if (isset($node_info['field_asu_ap_grad_app']['#items'][0]['safe_value'])): ?>
+      <?php // Show manually entered data if exists; otherwise, show info from Degree Search
+        if (isset($node_info['field_asu_ap_grad_app']['#items'][0]['safe_value'])): ?>
         <?php echo $node_info['field_asu_ap_grad_app']['#items'][0]['safe_value']; ?>
-      <?php endif ?>
+      <?php else: ?>
+        <?php if (isset($node_info['field_asu_ap_grad_text_area'])): ?>
+        <?php endif ?>
     <?php endif; ?>
               </div>
 
@@ -683,6 +671,9 @@ if (module_exists('metatag')) {
   <?php endif; ?>
   <?php if (isset($node_info['field_asu_ap_prog_req']['#items'][0]['safe_value'])): ?>
               <h2>Program requirements</h2>
+    <?php if ($cert_val === 'true'): ?>
+      <?php print _asu_ap_feature_map_urls_create($node_info, $cert_val); ?>
+    <?php endif; ?>
     <?php print $node_info['field_asu_ap_prog_req']['#items'][0]['safe_value']; ?>
   <?php elseif (isset($node_info['field_asu_ap_admission_req']['#items'][0]['safe_value'])): ?>
               <h2>Admission requirements</h2>
@@ -744,86 +735,85 @@ if (module_exists('metatag')) {
 
   <?php // Additional help text?>
   <?php if ($special_categories > 0): ?>
-
         <div class="asu-ap-grey-section">
           <div class="container container-asu-ap-q-a">
             <div class="row row-full">
               <div class="column col-md-12">
                 <h2>More information</h2>
     <?php if ($accelerated_degree_value): ?>
-                  <div id="asu-ap-accelerated-degree">
-                   <h4>What are Accelerated Programs at ASU?</h4>
-                    <div class="programs_term_content no-display" id="programs_term_accelerate">
-                      <p>ASU students may accelerate their studies by earning a bachelor’s and a master’s degree
-                        in as little as five years (for some programs) or by earning a bachelor’s degree in 2.5 or 3 years.</p>
-                      <p>Accelerated bachelor's and master's degree programs are designed for high-achieving
-                        undergraduate students who want the opportunity to combine undergraduate coursework with
-                        graduate coursework to accelerate completion of their master’s degree. These programs, featuring the
-                        same high-quality curriculum taught by ASU's world-renowned faculty, allow students to obtain both
-                        a bachelor's and a master's degree in as little as five years.</p>
-                      <p>Accelerated bachelor’s degree programs allow students to choose either a 2.5- or a
-                        3-year path while participating in the same high-quality educational experience of a 4-year option.
-                        Students can opt to fast-track their studies after acceptance into a participating program by
-                        connecting with their academic advisor.</p>
-                    </div>
+                <div id="asu-ap-accelerated-degree">
+                  <h4>What are Accelerated Programs at ASU?</h4>
+                  <div class="programs_term_content no-display" id="programs_term_accelerate">
+                    <p>ASU students may accelerate their studies by earning a bachelor’s and a master’s degree
+                      in as little as five years (for some programs) or by earning a bachelor’s degree in 2.5 or 3 years.</p>
+                    <p>Accelerated bachelor's and master's degree programs are designed for high-achieving
+                      undergraduate students who want the opportunity to combine undergraduate coursework with
+                      graduate coursework to accelerate completion of their master’s degree. These programs, featuring the
+                      same high-quality curriculum taught by ASU's world-renowned faculty, allow students to obtain both
+                      a bachelor's and a master's degree in as little as five years.</p>
+                    <p>Accelerated bachelor’s degree programs allow students to choose either a 2.5- or a
+                      3-year path while participating in the same high-quality educational experience of a 4-year option.
+                      Students can opt to fast-track their studies after acceptance into a participating program by
+                      connecting with their academic advisor.</p>
                   </div>
+                </div>
     <?php endif; ?>
     <?php if ($concurrent_degree_value === 1): ?>
-                  <div id="asu-ap-concurrent-degree">
-                   <h4>What are Concurrent Programs at ASU?</h4>
-                    <div class="programs_term_content no-display" id="programs_term_concurrent">
-                      <p>Students pursuing concurrent degrees earn two distinct degrees and receive two diplomas.
-                        ASU offers students two ways to earn concurrent degrees: by choosing a predetermined combination
-                        or creating their own combination.  Predetermined combinations have a single admissions
-                        application and one easy to follow major map.  To add a concurrent degree to your existing
-                        degree, work with your academic advisor. Either way, concurrent degrees allow students to
-                        pursue their own personal or professional interests.</p>
-                    </div>
+                <div id="asu-ap-concurrent-degree">
+                  <h4>What are Concurrent Programs at ASU?</h4>
+                  <div class="programs_term_content no-display" id="programs_term_concurrent">
+                    <p>Students pursuing concurrent degrees earn two distinct degrees and receive two diplomas.
+                      ASU offers students two ways to earn concurrent degrees: by choosing a predetermined combination
+                      or creating their own combination.  Predetermined combinations have a single admissions
+                      application and one easy to follow major map.  To add a concurrent degree to your existing
+                      degree, work with your academic advisor. Either way, concurrent degrees allow students to
+                      pursue their own personal or professional interests.</p>
                   </div>
+                </div>
     <?php endif; ?>
     <?php if ($joint_programs_value !== 0): ?>
-                  <div id="asu-ap-joint-programs">
-                   <h4>What are Joint Programs at ASU?</h4>
-                    <div class="programs_term_content no-display" id="programs_term_joint">
-                      <p>Joint programs, or jointly conferred degrees, are offered by more than one college and provide
-                        opportunities for students to take advantage of the academic strengths of two academic units.
-                        Upon graduation, students are awarded one degree and one diploma conferred by two colleges. </p>
-                    </div>
+                <div id="asu-ap-joint-programs">
+                  <h4>What are Joint Programs at ASU?</h4>
+                  <div class="programs_term_content no-display" id="programs_term_joint">
+                    <p>Joint programs, or jointly conferred degrees, are offered by more than one college and provide
+                      opportunities for students to take advantage of the academic strengths of two academic units.
+                      Upon graduation, students are awarded one degree and one diploma conferred by two colleges. </p>
                   </div>
+                </div>
     <?php endif; ?>
     <?php if ($new_degree_value !== 0): ?>
-                  <div id="asu-ap-new-degree">
-                   <h4>What constitutes a New Program for ASU?</h4>
-                    <div class="programs_term_content no-display" id="programs_term_new">
-                      <p>ASU adds new programs to Degree Search frequently. Come back often and look for the “New Programs” option.</p>
-                    </div>
+                <div id="asu-ap-new-degree">
+                  <h4>What constitutes a New Program for ASU?</h4>
+                  <div class="programs_term_content no-display" id="programs_term_new">
+                    <p>ASU adds new programs to Degree Search frequently. Come back often and look for the “New Programs” option.</p>
                   </div>
+                </div>
     <?php endif; ?>
     <?php if (!empty($online_program_value)): ?>
-                  <div id="asu-ap-online-program">
-                   <h4>What are ASU's Online Programs?</h4>
-                    <div class="programs_term_content no-display" id="programs_term_online">
-                      <p><a href="http://asuonline.asu.edu/" target="_blank">ASU Online</a> offers programs in an entirely
-                        online format with multiple enrollment sessions throughout the year.
-                        See <a href="http://asuonline.asu.edu/" target="_blank">http://asuonline.asu.edu/</a> for more information.</p>
-                    </div>
+                <div id="asu-ap-online-program">
+                  <h4>What are ASU's Online Programs?</h4>
+                  <div class="programs_term_content no-display" id="programs_term_online">
+                    <p><a href="http://asuonline.asu.edu/" target="_blank">ASU Online</a> offers programs in an entirely
+                      online format with multiple enrollment sessions throughout the year.
+                      See <a href="http://asuonline.asu.edu/" target="_blank">http://asuonline.asu.edu/</a> for more information.</p>
                   </div>
+                </div>
     <?php endif; ?>
     <?php if ($wue_program_value !== 0): ?>
-                  <div id="asu-ap-wue-program">
-                   <h4>What is the Western Undergraduate Exchange (WUE)?</h4>
-                    <div class="programs_term_content no-display">
-                      <p>The Western Undergraduate Exchange (WUE) is a program in which residents of western states
-                        (other than Arizona) may be eligible for reduced nonresident tuition. See more information
-                        and eligibility requirements on the <a href="http://students.asu.edu/admission/wue" target="_blank">Western Undergraduate
-                          Exchange (WUE) program.</a></p>
-                    </div>
+                <div id="asu-ap-wue-program">
+                  <h4>What is the Western Undergraduate Exchange (WUE)?</h4>
+                  <div class="programs_term_content no-display">
+                    <p>The Western Undergraduate Exchange (WUE) is a program in which residents of western states
+                      (other than Arizona) may be eligible for reduced nonresident tuition. See more information
+                      and eligibility requirements on the <a href="http://students.asu.edu/admission/wue" target="_blank">Western Undergraduate
+                        Exchange (WUE) program.</a></p>
                   </div>
-    <?php endif; ?>
                 </div>
+    <?php endif; ?>
               </div>
             </div>
           </div>
+        </div>
   <?php endif; ?>
 <?php // End of degree content processing and rendering
 endif; ?>
@@ -835,11 +825,11 @@ endif; ?>
 
   <!-- Page Footer -->
   <footer id="page-footer">
-      <div class="container">
-        <div class="row row-full">
+    <div class="container">
+      <div class="row row-full">
 <?php print render($page['footer']); ?>
-        </div>
       </div>
+    </div>
   </footer>
   <!-- /#footer -->
 
