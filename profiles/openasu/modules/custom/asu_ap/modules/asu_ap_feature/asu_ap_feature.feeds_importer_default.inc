@@ -64,8 +64,8 @@ function asu_ap_feature_feeds_importer_default() {
             'language' => 'und',
           ),
           5 => array(
-            'source' => 'AdmissionsDegRequirements',
-            'target' => 'field_asu_ap_admission_req',
+            'source' => 'DescrlongExtn5',
+            'target' => 'field_asu_ap_req_desc',
             'unique' => FALSE,
             'language' => 'und',
           ),
@@ -160,168 +160,180 @@ function asu_ap_feature_feeds_importer_default() {
             'language' => 'und',
           ),
           21 => array(
-            'source' => 'Descr100',
-            'target' => 'title',
+            'source' => 'AdmissionsDegRequirements',
+            'target' => 'field_asu_ap_admission_req',
             'unique' => FALSE,
             'language' => 'und',
           ),
           22 => array(
             'source' => 'Descr100',
-            'target' => 'field_asu_ap_awarded',
+            'target' => 'title',
             'unique' => FALSE,
             'language' => 'und',
           ),
           23 => array(
+            'source' => 'Descr100',
+            'target' => 'field_asu_ap_awarded',
+            'unique' => FALSE,
+            'language' => 'und',
+          ),
+          24 => array(
             'source' => 'DepartmentCode',
             'target' => 'field_asu_ap_department_code',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          24 => array(
+          25 => array(
             'source' => 'DepartmentCodeJoint',
             'target' => 'field_asu_ap_department_code_j',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          25 => array(
+          26 => array(
             'source' => 'DepartmentName',
             'target' => 'field_asu_ap_department',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          26 => array(
+          27 => array(
             'source' => 'DepartmentNameJoint',
             'target' => 'field_asu_ap_department_j',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          27 => array(
+          28 => array(
             'source' => 'DiplomaDescr',
             'target' => 'field_asu_ap_diploma_desc',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          28 => array(
+          29 => array(
             'source' => 'careerData',
             'target' => 'field_asu_ap_example_careers',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          29 => array(
+          30 => array(
+            'source' => 'gradAdditionalRequirements',
+            'target' => 'field_asu_ap_grad_addl_req',
+            'unique' => FALSE,
+            'language' => 'und',
+          ),
+          31 => array(
             'source' => 'graduateAllApplyDates',
             'target' => 'field_asu_ap_grad_all_app_dates',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          30 => array(
+          32 => array(
             'source' => 'AsuCritTrackUrl',
             'target' => 'field_asu_ap_major_map_url:url',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          31 => array(
+          33 => array(
             'source' => 'AsuCritTrackUrl',
             'target' => 'field_asu_ap_major_map_url:title',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          32 => array(
+          34 => array(
             'source' => 'majorMapDefaultYear',
             'target' => 'field_asu_ap_major_map_year',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          33 => array(
+          35 => array(
             'source' => 'marketText',
             'target' => 'field_asu_ap_market_text',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          34 => array(
+          36 => array(
             'source' => 'MathIntensity',
             'target' => 'field_asu_ap_math_intensity',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          35 => array(
+          37 => array(
             'source' => 'MinMathReq',
             'target' => 'field_asu_ap_min_math',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          36 => array(
+          38 => array(
             'source' => 'DegreeNew',
             'target' => 'field_asu_ap_new_program',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          37 => array(
+          39 => array(
             'source' => 'onlineMajorMapURL',
             'target' => 'field_asu_ap_online_mm_url:url',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          38 => array(
+          40 => array(
             'source' => 'degreeMajorMap',
             'target' => 'field_asu_ap_prog_req',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          39 => array(
+          41 => array(
             'source' => 'program',
             'target' => 'field_asu_ap_program',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          40 => array(
-            'source' => 'Reqdescr',
-            'target' => 'field_asu_ap_req_desc',
-            'unique' => FALSE,
-            'language' => 'und',
-          ),
-          41 => array(
+          42 => array(
             'source' => 'AsuLangReqFlag',
             'target' => 'field_asu_ap_second_language',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          42 => array(
+          43 => array(
             'source' => 'subPlnMajorMaps.SubPlnMajorMapUrl',
             'target' => 'field_asu_ap_subplan_url:url',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          43 => array(
+          44 => array(
             'source' => 'subPlnMajorMaps.SubplnMajorMapSubplanName',
             'target' => 'field_asu_ap_subplan_url:title',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          44 => array(
+          45 => array(
+            'source' => 'TransferAdmission',
+            'target' => 'field_asu_ap_transfer_admis_req',
+            'unique' => FALSE,
+            'language' => 'und',
+          ),
+          46 => array(
             'source' => 'Url1',
             'target' => 'field_asu_ap_url_1:url',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          45 => array(
+          47 => array(
             'source' => 'Url2',
             'target' => 'field_asu_ap_url_2:url',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          46 => array(
+          48 => array(
             'source' => 'Url3',
             'target' => 'field_asu_ap_url_3:url',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          47 => array(
+          49 => array(
             'source' => 'Url4',
             'target' => 'field_asu_ap_url_4:video_url',
             'unique' => FALSE,
             'language' => 'und',
           ),
-          48 => array(
+          50 => array(
             'source' => 'wueCampusConfirmed',
             'target' => 'field_asu_ap_wue_available',
             'unique' => FALSE,

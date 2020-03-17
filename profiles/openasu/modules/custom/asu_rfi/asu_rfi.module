@@ -1258,20 +1258,20 @@ function _asu_rfi_get_campus_info($campus, $reverse = FALSE) {
 
   $campuses = array(
     "Tempe" => 'TEMPE',
-    "West" => "WEST",
     "Downtown" => "DTPHX",
     "Online" => "ONLNE",
     "Polytechnic" => "POLY",
+    "West" => "WEST",
+    'ASU@Cochise' => 'COCHS',
     'ASU@Lake Havasu' => 'CALHC',
+    'ASU@MexicoCity' => 'MXCTY',
+    'ASU@Pima' => 'PIMA',
+    'ASU@Pinal' => 'CAC',
     'ASU@The Gila Valley' => 'EAC',
     'ASU@Tucson' => 'TUCSN',
-    'ASU@Pinal' => 'CAC',
+    'ASU@Washington, D.C.' => 'WASHD',
     'ASU@Yavapai' => 'YAVAP',
     'ASU@Yuma' => 'AWC',
-    'ASU@MexicoCity' => 'MXCTY',
-    'ASU@Cochise' => 'COCHS',
-    'ASU@Washington, D.C.' => 'WASHD',
-    'ASU@Pima' => 'PIMA',
   );
   // Flip campus keys + values if desired
   if ($reverse === TRUE) {

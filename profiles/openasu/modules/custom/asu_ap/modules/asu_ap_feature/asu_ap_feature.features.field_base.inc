@@ -657,6 +657,25 @@ function asu_ap_feature_field_default_field_bases() {
     'type' => 'text_long',
   );
 
+  // Exported field_base: 'field_asu_ap_grad_addl_req'.
+  $field_bases['field_asu_ap_grad_addl_req'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_asu_ap_grad_addl_req',
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'text_long',
+  );
+
   // Exported field_base: 'field_asu_ap_grad_all_app_dates'.
   $field_bases['field_asu_ap_grad_all_app_dates'] = array(
     'active' => 1,
@@ -1156,6 +1175,25 @@ function asu_ap_feature_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'link_field',
+  );
+
+  // Exported field_base: 'field_asu_ap_transfer_admis_req'.
+  $field_bases['field_asu_ap_transfer_admis_req'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_asu_ap_transfer_admis_req',
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'text_long',
   );
 
   // Exported field_base: 'field_asu_ap_url_1'.

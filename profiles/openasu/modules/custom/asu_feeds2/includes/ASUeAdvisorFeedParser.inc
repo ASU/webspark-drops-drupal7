@@ -293,7 +293,7 @@ class ASUeAdvisorFeedParser extends FeedsParser {
     } // END FOREACH of all data
     // DEBUG
     //error_log(print_r($parsed_data, true));
-    watchdog('A2P Debug', '<pre>'. print_r($parsed_data, true) .'</pre>');
+    //watchdog('A2P Debug', '<pre>'. print_r($parsed_data, true) .'</pre>');
 
     return new FeedsParserResult($parsed_data);
   }
@@ -382,7 +382,7 @@ class ASUeAdvisorFeedParser extends FeedsParser {
       'DegreeDescrlong' => array('name' => t('Degree Description - long')), // NEW
       'DegreeDescrshort' => array('name' => t('Degree Description - short')), // NEW
       'DegreeEducationLvl' => array('name' => t('Degree Education level')), // NEW
-      'degreeMajorMap' => array('name' => t('Program Requirements - Minors-Certificates (aka degreeMajorMap)')),
+      'degreeMajorMap' => array('name' => t('Minor/Certificates Requirements (aka degreeMajorMap)')),
       'DegreeNew' => array('name' => t('New degree')), // NEW - replaces newDegree
       'DepartmentCode' => array('name' => t('Department code')),
       'DepartmentCodeJoint' => array('name' => t('Department code (joint)')),
@@ -426,6 +426,7 @@ class ASUeAdvisorFeedParser extends FeedsParser {
       'SMISUrl' => array('name' => t('SMIS Url')), // NEW
       'StudyField' => array('name' => t('Study Field')), // NEW
       'subplanDeadlines' => array('name' => t('Subplan deadlines')), // NEW
+      'TransferAdmission' => array('name' => t('Transfer Admission Requirements')), // NEW
       'TranscriptLevel' => array('name' => t('Transcript Level')), // NEW
       'TrnscrDescr' => array('name' => t('Transcript Description')), // NEW
       'TrnscrIndentInteger' => array('name' => t('TrnscrIndentInteger')), // NEW

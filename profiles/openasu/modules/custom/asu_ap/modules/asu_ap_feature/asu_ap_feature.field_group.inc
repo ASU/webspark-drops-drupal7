@@ -187,7 +187,9 @@ function asu_ap_feature_field_group_info() {
       36 => 'field_asu_ap_url_2',
       37 => 'field_asu_ap_url_3',
       38 => 'field_asu_ap_url_4',
-      39 => 'group_asu_ap_special_category',
+      39 => 'field_asu_ap_grad_addl_req',
+      40 => 'field_asu_ap_transfer_admis_req',
+      41 => 'group_asu_ap_special_category',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
