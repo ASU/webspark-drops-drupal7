@@ -504,7 +504,7 @@ if (module_exists('metatag')) {
     print "<li><strong>Second Language requirement</strong>: Yes</li>\n";
   }
   if (isset($node_info['field_asu_ap_min_math']['#items'][0]['value'])) {
-    print "<li><strong>First Required Math Course</strong>:";
+    print "<li><strong>First Required Math Course</strong>: ";
     print check_plain($node_info['field_asu_ap_min_math']['#items'][0]['value']) . '</li>';
   }
   if (isset($node_info['field_asu_ap_math_intensity']['#items'][0]['value'])) {
