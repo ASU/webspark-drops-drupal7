@@ -319,7 +319,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['style_options']['columns_vertical'] = '4';
   $handler->display->display_options['style_options']['columns_xs'] = '12';
   $handler->display->display_options['style_options']['columns_sm'] = '6';
-  $handler->display->display_options['style_options']['columns_md'] = '4';
+  $handler->display->display_options['style_options']['columns_md'] = '3';
   $handler->display->display_options['style_options']['columns_lg'] = '3';
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
@@ -428,7 +428,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['style_options']['columns_vertical'] = '4';
   $handler->display->display_options['style_options']['columns_xs'] = '12';
   $handler->display->display_options['style_options']['columns_sm'] = '6';
-  $handler->display->display_options['style_options']['columns_md'] = '4';
+  $handler->display->display_options['style_options']['columns_md'] = '3';
   $handler->display->display_options['style_options']['columns_lg'] = '3';
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
@@ -709,7 +709,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['style_options']['columns_vertical'] = '4';
   $handler->display->display_options['style_options']['columns_xs'] = '12';
   $handler->display->display_options['style_options']['columns_sm'] = '6';
-  $handler->display->display_options['style_options']['columns_md'] = '4';
+  $handler->display->display_options['style_options']['columns_md'] = '3';
   $handler->display->display_options['style_options']['columns_lg'] = '3';
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
@@ -1529,7 +1529,7 @@ function asu_ap_feature_views_default_views() {
   $handler->display->display_options['style_options']['columns_vertical'] = '4';
   $handler->display->display_options['style_options']['columns_xs'] = '12';
   $handler->display->display_options['style_options']['columns_sm'] = '6';
-  $handler->display->display_options['style_options']['columns_md'] = '4';
+  $handler->display->display_options['style_options']['columns_md'] = '3';
   $handler->display->display_options['style_options']['columns_lg'] = '3';
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
