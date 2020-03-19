@@ -89,7 +89,23 @@ function asu_ap_feature_update_7002(&$sandbox) {
  */
 function asu_ap_feature_update_7003(&$sandbox) {
   features_revert_module('asu_ap_feature');
-
+  // @TODO TEST WITH features_rebuild() vs. revert
+  /*
+    features_rebuild(array(
+      'asu_ap_feature' => array(
+        'defaultconfig',
+        'field_base',
+        'field_instance',
+        'feeds_importer',
+        'field_group',
+        'filter',
+        'image',
+        'node',
+        'variable',
+        'views_view',
+      )
+    ));
+  */
   // 1 - Find old image and delete it.
   $old_filename = (string) variable_get('asu_ap_degree_image_filename', 'asu_ap_image.jpg');
   $old_fid = Database::getConnection('default', 'default')
