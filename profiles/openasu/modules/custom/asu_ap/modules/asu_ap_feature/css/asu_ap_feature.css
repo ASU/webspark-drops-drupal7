@@ -88,6 +88,9 @@
   margin: 0 0 1.5em;
   font-weight: 200;
 }
+.node-type-asu-ap #main-wrapper .row-ds-marketing-video-text {
+  padding-bottom: 1em;
+}
 .node-type-asu-ap #main-wrapper .field-name-field-asu-ap-market-text {
   font-size: 1.5em;
 }

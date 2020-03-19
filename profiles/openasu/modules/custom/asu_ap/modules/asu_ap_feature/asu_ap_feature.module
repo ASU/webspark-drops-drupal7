@@ -13,8 +13,19 @@ function asu_ap_feature_form_alter(&$form, &$form_state, $form_id) {
 
   // Hide irrelavant fields on ASU Academic Programs node edit form
   if ($form_id == 'asu_ap_node_form') {
+    dpm($form, __FUNCTION__);
     if (variable_get('asu_ap_hide_ds_fields') === 1) {
       $form['body']['#access'] = FALSE;
+      $form['group_asu_ap_grp_hidden']['#access'] = FALSE;
+      $form['ds_warning_text'] = array(
+        '#weight' => '8',
+        '#markup' => '<div class="messages warning asu-ap-ds-error">'
+          . '<strong>Note</strong>:'
+          . ' Fields whose content is managed by (and '
+          . ' may be overwritten by) Degree Search have been hidden.'
+          . ' See <a href="/admin/config/asu_ap/settings">ASU AP settings</a> for more information.</div>',
+      );
+      /*
       $form['field_asu_ap_acad_plan']['#access'] = FALSE;
       $form['field_asu_ap_acad_prog']['#access'] = FALSE;
       $form['field_asu_ap_acc_program']['#access'] = FALSE;
@@ -52,10 +63,13 @@ function asu_ap_feature_form_alter(&$form, &$form_state, $form_id) {
       $form['field_asu_ap_market_text']['#access'] = FALSE;
       $form['field_asu_ap_math_intensity']['#access'] = FALSE;
       $form['field_asu_ap_online_mm_url']['#access'] = FALSE;
+      $form['field_asu_ap_grad_addl_req']['#access'] = FALSE;
+      $form['field_asu_ap_transfer_admis_req']['#access'] = FALSE;
       $form['field_asu_ap_url_1']['#access'] = FALSE;
       $form['field_asu_ap_url_2']['#access'] = FALSE;
       $form['field_asu_ap_url_3']['#access'] = FALSE;
       $form['field_asu_ap_url_4']['#access'] = FALSE;
+      */
     } else {
       $form['ds_warning_text'] = array(
         '#weight' => '8',

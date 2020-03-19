@@ -26,6 +26,7 @@ function asu_ap_update_7000(&$sandbox) {
   $settings = array(
     'asu_ap_ds_marketing_video' => 'marketing_top',
     'asu_ap_views_grid_styling' => 1,
+    'asu_ap_hide_ds_fields' => 1,
   );
   foreach ($settings as $key => $value) {
     if (variable_get($key, 'not_set') === 'not_set') {
