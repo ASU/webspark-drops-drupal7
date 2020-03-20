@@ -202,10 +202,10 @@ class ASUeAdvisorFeedParser extends FeedsParser {
 
       // Filter out MediaAmp videos for now - @TODO add MediaAMP support
       if (isset($data['Url4'])) {
-        if (strpos($data['Url4'], 'mediaamp.org') !== FALSE) {
+        if (strpos($data['Url4'], 'mediaamp.') !== FALSE) {
           $parsed_data[$key]['Url4'] = '';
-          drupal_set_message($data['Descr'] . ' - A MediaAMP URL was removed because'
-          . ' they are not currently supported in Webspark.', 'notice');
+          drupal_set_message($data['Descr'] . ' - A marketing video with a MediaAMP URL was removed because'
+          . ' it is not currently supported in Webspark (Youtube and Vimeo URLs only).', 'warning');
         } elseif (strpos($data['Url4'], 'player.vimeo.com') !== FALSE) {
           // Vimeo refactoring for player.vimeo.com URLs
           $parsed_data[$key]['Url4'] = preg_replace('|^(https?)://player.(vimeo.com)/video/(\d+)$|',

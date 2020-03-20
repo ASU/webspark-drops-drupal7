@@ -619,7 +619,6 @@ function asu_rfi_form_after_build($form, &$form_state) {
  * @return string $form_mode - if "test", then it's in test mode
  */
 function _asu_rfi_form_test_mode_markup(&$form, $form_id) {
-  global $user;
   $form_mode = variable_get('asu_rfi_form_mode');
   $markup = ($form_id !== 'asu_rfi_current_form_data')
     ? '<div class="alert alert-warning"><b>NOTICE</b>: The
