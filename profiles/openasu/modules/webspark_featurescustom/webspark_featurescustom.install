@@ -1,4 +1,6 @@
-<?php
+<?php /** @noinspection PhpDocSignatureInspection */
+/** @noinspection PhpUnusedParameterInspection */
+/** @noinspection PhpUnused */
 
 /**
  * Future Webspark DB updates here (instead of asu_cas module)
@@ -172,11 +174,11 @@ function webspark_featurescustom_update_7006(&$sandbox) {
   $theme = variable_get('theme_default');
   $admin_theme = variable_get('admin_theme');
   $message_admin = ($admin_theme == 'asu_webspark_bootstrap') ? 'and administrative theme have both' : 'has';
-  $message = "The old ASU Webspark Bootstrap theme has been removed from 
+  $message = "The old ASU Webspark Bootstrap theme has been removed from
       Webspark's codebase because it no longer complies with ASU's current Web
       Standards (see " . l('the Marketing Hub web site', 'https://brandguide.asu.edu') .
-      " for more information.) <br><br>The main theme " . $message_admin . " been set to a default theme 
-      called Webspark Seven. Go to " . l("/admin/appearance", "Drupal themes") . " 
+      " for more information.) <br><br>The main theme " . $message_admin . " been set to a default theme
+      called Webspark Seven. Go to " . l("/admin/appearance", "Drupal themes") . "
       page to select another theme, such as Innovation (the current ASU Web standards
       theme included with Webspark.)";
   if ($theme === 'asu_webspark_bootstrap') {
@@ -224,7 +226,7 @@ function webspark_featurescustom_update_7009(&$sandbox) {
   // Create the new landing page content type.
   if (module_exists('panopoly_pages')) {
     features_rebuild(array('panopoly_pages' => array('variable', 'panelizer_defaults')));
-    watchdog('webspark_updates', t('7009 - Rebuilds Panopoly Page feature via features_rebuild() to apply missing settings 
+    watchdog('webspark_updates', t('7009 - Rebuilds Panopoly Page feature via features_rebuild() to apply missing settings
         to the Landing Page content type.'));
   }
   else {
@@ -283,12 +285,12 @@ function webspark_featurescustom_update_7010(&$sandbox) {
       ->condition('type', 'module', 'LIKE')
       ->condition('name', 'modernizr', 'LIKE')
       ->countQuery()->execute()->fetchField();
-    $reason = (int) $second_count != 0 ? ' because another copy of the Modernizr module 
-        is installed somewhere in the sites directory. No more action will be taken.' : ' for an 
-        unknown reason. Go to Reports -> Status Report and check the Missing Modules 
-        list for Modernizr. If it is there, follow the instructions there to remove it. 
+    $reason = (int) $second_count != 0 ? ' because another copy of the Modernizr module
+        is installed somewhere in the sites directory. No more action will be taken.' : ' for an
+        unknown reason. Go to Reports -> Status Report and check the Missing Modules
+        list for Modernizr. If it is there, follow the instructions there to remove it.
         Otherwise, no other action is necessary.';
-    $message = "While the Modernizr module was removed from the Webspark profile, it could not be 
+    $message = "While the Modernizr module was removed from the Webspark profile, it could not be
         uninstalled from the database " . $reason;
     watchdog('update', $message, array(), WATCHDOG_WARNING);
     drupal_set_message($message, 'warning');
@@ -357,14 +359,14 @@ function webspark_featurescustom_update_7012(&$sandbox) {
     }
     else {
       $messaging['msg'] = 'jQuery was not updated for ' . $theme_default . ' because 1) ' . $theme_default .
-        ' is set as the administrative theme, and 2) most of the administrative 
-        areas are not compatible with jQuery 1.8+. Consider selecting Webspark 
-        Seven for the administrative section of your site at 
-        /admin/appearance and manually setting jQuery to 1.12 for the ' . $theme_default . ' default theme at 
+        ' is set as the administrative theme, and 2) most of the administrative
+        areas are not compatible with jQuery 1.8+. Consider selecting Webspark
+        Seven for the administrative section of your site at
+        /admin/appearance and manually setting jQuery to 1.12 for the ' . $theme_default . ' default theme at
         /admin/config/development/jquery_update. ' . "\n";
     }
 
-    // Set admin_theme to v1.7, regardless of the default theme is because 1) 1.8+ won't work in the admin area, and 2) v1.4.x is buggy with other 
+    // Set admin_theme to v1.7, regardless of the default theme is because 1) 1.8+ won't work in the admin area, and 2) v1.4.x is buggy with other
     // jQuery updates in at least one reported case.
     if (version_compare($jquery_current_version_admin, "1.7", "<")) {
       _jquery_update_set_theme_version($admin_theme, '1.7');
@@ -432,4 +434,26 @@ function webspark_featurescustom_update_7015(&$sandbox) {
       'wysiwyg'
     )
   ));
+}
+
+/**
+ * Disable and uninstall ASU GCSE module (removes local site search)
+ */
+function webspark_featurescustom_update_7016(&$sandbox) {
+  if (module_exists('asu_gcse')) {
+    module_disable(array('asu_gcse', 'google_cse'));
+    drupal_uninstall_modules(array('asu_gcse', 'google_cse'));
+  }
+}
+
+/**
+ * Disable Mobile Friendly Toolbar, Enable Admin Menu + Admin Menu Toolbar modules
+ */
+function webspark_featurescustom_update_7017(&$sandbox) {
+  if (module_exists('navbar')) {
+    if (module_enable(array('admin_menu', 'admin_menu_toolbar'))) {
+      module_disable(array('navbar'));
+      drupal_uninstall_modules(array('navbar'));
+    }
+  }
 }
