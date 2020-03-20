@@ -1183,6 +1183,10 @@ function _asu_rfi_get_unpassed_submissions($include_rtp = FALSE) {
  * @return mixed $campusOptions An array of the available campuses
  */
 function _asu_rfi_get_campus_location_options($pcodes) {
+  $alerted = &drupal_static(__FUNCTION__);
+  if (!isset($alerted)) {
+    $alerted = FALSE;
+  }
   $degree_mappings = _asu_rfi_get_degree_field_mappings(); // Get degree mappings to grab content type specific values
   $asu_online_list = _asu_rfi_parse_cached_programs();
 
@@ -1221,20 +1225,24 @@ function _asu_rfi_get_campus_location_options($pcodes) {
                   unset($desiredProg['locations'][$i]);
                 }
               }
+              // Alert user ONCE
+              if ($alerted === FALSE) {
+                global $user;
+                $desiredProgram = (isset($desiredProg) && isset($desiredProg['title']))
+                  ? 'the ' . $desiredProg['title'] . ' program'
+                  : 'this degree program';
+                if (in_array('administrator', $user->roles)) {
+                  drupal_set_message("The Online campus option for " . $desiredProgram
+                    . " is not yet fully online. We may need more details from you to complete"
+                    . " its launch. Please email EdPlus@asu.edu for more information.", 'error');
+                }
+                $alerted = TRUE;
+              }
             }
           }
         }
       }
       _asu_rfi_add_program_data_js($desiredProg);
-    }
-    if ($onlineError === TRUE) {
-      global $user;
-      $desiredProgram = (isset($desiredProg) && isset($desiredProg['title'])) ? $desiredProg['title'] : '';
-      if (in_array('administrator', $user->roles)) {
-        drupal_set_message("This degree program(" . $desiredProgram
-          . ") is not yet fully online. We may need more details from you to complete
-          its launch. Please email EdPlus@asu.edu for more information.", 'error');
-      }
     }
   }
 
