@@ -1,0 +1,619 @@
+diff --git a/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.features.field_instance.inc b/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.features.field_instance.inc
+index 3ba698d..595ace6 100644
+--- a/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.features.field_instance.inc
++++ b/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.features.field_instance.inc
+@@ -69,7 +69,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'summary_rows' => 5,
+       ),
+       'type' => 'text_textarea_with_summary',
+-      'weight' => 36,
++      'weight' => 37,
+     ),
+   );
+ 
+@@ -340,7 +340,7 @@ function asu_ap_feature_field_default_field_instances() {
+     'bundle' => 'asu_ap',
+     'default_value' => NULL,
+     'deleted' => 0,
+-    'description' => '',
++    'description' => 'Requirements to earn your degree - (Formerly "Admissions requirements") - Maps to AdmissionsDegRequirements) in feed',
+     'display' => array(
+       'default' => array(
+         'label' => 'above',
+@@ -364,12 +364,13 @@ function asu_ap_feature_field_default_field_instances() {
+     ),
+     'entity_type' => 'node',
+     'field_name' => 'field_asu_ap_admission_req',
+-    'label' => 'Admission requirements',
++    'label' => 'Degree requirements',
+     'required' => 0,
+     'settings' => array(
+       'linkit' => array(
++        'button_text' => 'Search',
+         'enable' => 0,
+-        'insert_plugin' => '',
++        'profile' => '',
+       ),
+       'text_processing' => 1,
+       'user_register_form' => FALSE,
+@@ -385,7 +386,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'rows' => 5,
+       ),
+       'type' => 'text_textarea',
+-      'weight' => 12,
++      'weight' => 23,
+     ),
+   );
+ 
+@@ -1339,7 +1340,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'size' => 60,
+       ),
+       'type' => 'text_textfield',
+-      'weight' => 23,
++      'weight' => 24,
+     ),
+   );
+ 
+@@ -1391,7 +1392,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'size' => 60,
+       ),
+       'type' => 'text_textfield',
+-      'weight' => 25,
++      'weight' => 26,
+     ),
+   );
+ 
+@@ -1444,7 +1445,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'size' => 60,
+       ),
+       'type' => 'text_textfield',
+-      'weight' => 26,
++      'weight' => 27,
+     ),
+   );
+ 
+@@ -1497,7 +1498,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'size' => 60,
+       ),
+       'type' => 'text_textfield',
+-      'weight' => 24,
++      'weight' => 25,
+     ),
+   );
+ 
+@@ -1549,7 +1550,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'size' => 60,
+       ),
+       'type' => 'text_textfield',
+-      'weight' => 27,
++      'weight' => 28,
+     ),
+   );
+ 
+@@ -1654,7 +1655,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'rows' => 5,
+       ),
+       'type' => 'text_textarea',
+-      'weight' => 28,
++      'weight' => 29,
+     ),
+   );
+ 
+@@ -1709,7 +1710,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'rows' => 5,
+       ),
+       'type' => 'text_textarea',
+-      'weight' => 29,
++      'weight' => 30,
+     ),
+   );
+ 
+@@ -1997,7 +1998,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+       ),
+       'type' => 'link_field',
+-      'weight' => 30,
++      'weight' => 31,
+     ),
+   );
+ 
+@@ -2049,7 +2050,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'size' => 60,
+       ),
+       'type' => 'text_textfield',
+-      'weight' => 31,
++      'weight' => 32,
+     ),
+   );
+ 
+@@ -2104,7 +2105,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'rows' => 5,
+       ),
+       'type' => 'text_textarea',
+-      'weight' => 32,
++      'weight' => 33,
+     ),
+   );
+ 
+@@ -2149,7 +2150,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'apply_chosen' => '',
+       ),
+       'type' => 'options_select',
+-      'weight' => 34,
++      'weight' => 35,
+     ),
+   );
+ 
+@@ -2201,7 +2202,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'size' => 60,
+       ),
+       'type' => 'text_textfield',
+-      'weight' => 33,
++      'weight' => 34,
+     ),
+   );
+ 
+@@ -2321,7 +2322,7 @@ function asu_ap_feature_field_default_field_instances() {
+       'module' => 'link',
+       'settings' => array(),
+       'type' => 'link_field',
+-      'weight' => 35,
++      'weight' => 36,
+     ),
+   );
+ 
+@@ -2376,7 +2377,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'rows' => 5,
+       ),
+       'type' => 'text_textarea',
+-      'weight' => 37,
++      'weight' => 38,
+     ),
+   );
+ 
+@@ -2428,7 +2429,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'size' => 10,
+       ),
+       'type' => 'text_textfield',
+-      'weight' => 38,
++      'weight' => 39,
+     ),
+   );
+ 
+@@ -2536,7 +2537,7 @@ function asu_ap_feature_field_default_field_instances() {
+     'bundle' => 'asu_ap',
+     'default_value' => NULL,
+     'deleted' => 0,
+-    'description' => '',
++    'description' => 'Admissions requirements. Formerly labeled as "Requirement description". Mapped to DescrlongExtn5 in the feed.',
+     'display' => array(
+       'default' => array(
+         'label' => 'above',
+@@ -2560,12 +2561,13 @@ function asu_ap_feature_field_default_field_instances() {
+     ),
+     'entity_type' => 'node',
+     'field_name' => 'field_asu_ap_req_desc',
+-    'label' => 'Requirement description',
++    'label' => 'Admissions Requirements',
+     'required' => 0,
+     'settings' => array(
+       'linkit' => array(
++        'button_text' => 'Search',
+         'enable' => 0,
+-        'insert_plugin' => '',
++        'profile' => '',
+       ),
+       'text_processing' => 1,
+       'user_register_form' => FALSE,
+@@ -2581,7 +2583,7 @@ function asu_ap_feature_field_default_field_instances() {
+         'rows' => 5,
+       ),
+       'type' => 'text_textarea',
+-      'weight' => 39,
++      'weight' => 12,
+     ),
+   );
+ 
+@@ -3376,9 +3378,11 @@ function asu_ap_feature_field_default_field_instances() {
+   t('Additional program fee');
+   t('Additional requirements');
+   t('Additional requirements for the program can be entered in to display at the top of the "Application requirements" region on undergraduate program nodes.');
+-  t('Admission requirements');
++  t('Admissions Requirements');
++  t('Admissions requirements. Formerly labeled as "Requirement description". Mapped to DescrlongExtn5 in the feed.');
+   t('All future available terms and their application dates - by campus. MUST be a serialized array from the Degree Search feed (or at least the same serialized structure).');
+   t('Application deadline');
++  t('Banner image across the top of the academic programs pages. Recommended size image is 1170x380px by default, though this may vary depending on the image. A default image is provided if left empty.');
+   t('CTA button - How and when to apply');
+   t('CTA button - Request information');
+   t('CTA button - Schedule a visit');
+@@ -3395,6 +3399,7 @@ function asu_ap_feature_field_default_field_instances() {
+   t('Degree');
+   t('Degree awarded');
+   t('Degree image');
++  t('Degree requirements');
+   t('Denotes the ASU catalog value (on/off) for "accelerated program" with respect to this degree program.<br>
+ <i>NOTE:</i> This field can be overridden, but will reapply the official catalog value to the degree program if the ASU Academic Program feed is updated.');
+   t('Denotes the ASU catalog value (on/off) for "concurrent program" with respect to this degree program.<br>
+@@ -3423,6 +3428,7 @@ function asu_ap_feature_field_default_field_instances() {
+   t('Marketing video URL for this degree. Youtube or Vimeo videos only.');
+   t('Math Intensity');
+   t('Minimum math requirement');
++  t('NOTE: This image only shows up on the grid layout listing of degrees (generated by Drupal Views). Horizontal images work best.');
+   t('New program');
+   t('Not being used by Degree Search at the moment.');
+   t('Online Major Map URL');
+@@ -3435,7 +3441,7 @@ function asu_ap_feature_field_default_field_instances() {
+   t('Program requirements');
+   t('Program: Undergrad or Graduate');
+   t('Related programs');
+-  t('Requirement description');
++  t('Requirements to earn your degree - (Formerly "Admissions requirements") - Maps to AdmissionsDegRequirements) in feed');
+   t('Scholarship link');
+   t('Second language requirement');
+   t('Short description');
+@@ -3443,8 +3449,6 @@ function asu_ap_feature_field_default_field_instances() {
+   t('Subplan: URL');
+   t('Text to appear at top of degree page before catalog text begins.');
+   t('The primary department/college URL for more information about this degree from their site (except for asuonline.asu.edu URLs - which are in Url4)');
+-  t('This image only shows up on the view page.  Horizontal images work best.');
+-  t('This is the banner image across the top of the academic programs pages.');
+   t('Turn the "Example Careers" section on and off; check the box to show the example careers, and uncheck it to hide them.');
+   t('URL 1');
+   t('URL 2');
+diff --git a/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.feeds_importer_default.inc b/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.feeds_importer_default.inc
+index cb2b504..5f11cde 100644
+--- a/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.feeds_importer_default.inc
++++ b/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.feeds_importer_default.inc
+@@ -64,8 +64,8 @@ function asu_ap_feature_feeds_importer_default() {
+             'language' => 'und',
+           ),
+           5 => array(
+-            'source' => 'AdmissionsDegRequirements',
+-            'target' => 'field_asu_ap_admission_req',
++            'source' => 'DescrlongExtn5',
++            'target' => 'field_asu_ap_req_desc',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+@@ -160,125 +160,125 @@ function asu_ap_feature_feeds_importer_default() {
+             'language' => 'und',
+           ),
+           21 => array(
++            'source' => 'AdmissionsDegRequirements',
++            'target' => 'field_asu_ap_admission_req',
++            'unique' => FALSE,
++            'language' => 'und',
++          ),
++          22 => array(
+             'source' => 'Descr100',
+             'target' => 'title',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          22 => array(
++          23 => array(
+             'source' => 'Descr100',
+             'target' => 'field_asu_ap_awarded',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          23 => array(
++          24 => array(
+             'source' => 'DepartmentCode',
+             'target' => 'field_asu_ap_department_code',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          24 => array(
++          25 => array(
+             'source' => 'DepartmentCodeJoint',
+             'target' => 'field_asu_ap_department_code_j',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          25 => array(
++          26 => array(
+             'source' => 'DepartmentName',
+             'target' => 'field_asu_ap_department',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          26 => array(
++          27 => array(
+             'source' => 'DepartmentNameJoint',
+             'target' => 'field_asu_ap_department_j',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          27 => array(
++          28 => array(
+             'source' => 'DiplomaDescr',
+             'target' => 'field_asu_ap_diploma_desc',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          28 => array(
++          29 => array(
+             'source' => 'careerData',
+             'target' => 'field_asu_ap_example_careers',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          29 => array(
++          30 => array(
+             'source' => 'graduateAllApplyDates',
+             'target' => 'field_asu_ap_grad_all_app_dates',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          30 => array(
++          31 => array(
+             'source' => 'AsuCritTrackUrl',
+             'target' => 'field_asu_ap_major_map_url:url',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          31 => array(
++          32 => array(
+             'source' => 'AsuCritTrackUrl',
+             'target' => 'field_asu_ap_major_map_url:title',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          32 => array(
++          33 => array(
+             'source' => 'majorMapDefaultYear',
+             'target' => 'field_asu_ap_major_map_year',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          33 => array(
++          34 => array(
+             'source' => 'marketText',
+             'target' => 'field_asu_ap_market_text',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          34 => array(
++          35 => array(
+             'source' => 'MathIntensity',
+             'target' => 'field_asu_ap_math_intensity',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          35 => array(
++          36 => array(
+             'source' => 'MinMathReq',
+             'target' => 'field_asu_ap_min_math',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          36 => array(
++          37 => array(
+             'source' => 'DegreeNew',
+             'target' => 'field_asu_ap_new_program',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          37 => array(
++          38 => array(
+             'source' => 'onlineMajorMapURL',
+             'target' => 'field_asu_ap_online_mm_url:url',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          38 => array(
++          39 => array(
+             'source' => 'degreeMajorMap',
+             'target' => 'field_asu_ap_prog_req',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          39 => array(
++          40 => array(
+             'source' => 'program',
+             'target' => 'field_asu_ap_program',
+             'unique' => FALSE,
+             'language' => 'und',
+           ),
+-          40 => array(
+-            'source' => 'Reqdescr',
+-            'target' => 'field_asu_ap_req_desc',
+-            'unique' => FALSE,
+-            'language' => 'und',
+-          ),
+           41 => array(
+             'source' => 'AsuLangReqFlag',
+             'target' => 'field_asu_ap_second_language',
+diff --git a/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.info b/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.info
+index 95a199c..744c6a5 100644
+--- a/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.info
++++ b/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.info
+@@ -1,8 +1,8 @@
+-name = ASU Academic Programs Feature
+-description = Configurations for the ASU Academic Programs feed and its generated nodes
++name = ASU Academic Programs (Feature)
++description = Configurations for the ASU Academic Programs feed and its generated degree pages
+ core = 7.x
+ package = ASU
+-version = 7.x-2.7
++version = 7.x-2.20
+ dependencies[] = asu_feeds2
+ dependencies[] = asu_ixr
+ dependencies[] = chosen
+diff --git a/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.views_default.inc b/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.views_default.inc
+index e486e60..74c8713 100644
+--- a/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.views_default.inc
++++ b/profiles/openasu/modules/custom/asu_ap/modules/asu_ap_feature/asu_ap_feature.views_default.inc
+@@ -30,8 +30,11 @@ function asu_ap_feature_views_default_views() {
+   $handler->display->display_options['query']['type'] = 'views_query';
+   $handler->display->display_options['query']['options']['query_comment'] = FALSE;
+   $handler->display->display_options['exposed_form']['type'] = 'basic';
+-  $handler->display->display_options['pager']['type'] = 'none';
++  $handler->display->display_options['pager']['type'] = 'full';
++  $handler->display->display_options['pager']['options']['items_per_page'] = '24';
+   $handler->display->display_options['pager']['options']['offset'] = '0';
++  $handler->display->display_options['pager']['options']['id'] = '0';
++  $handler->display->display_options['pager']['options']['quantity'] = '9';
+   $handler->display->display_options['style_plugin'] = 'views_bootstrap_grid_plugin_style';
+   $handler->display->display_options['row_plugin'] = 'fields';
+   $handler->display->display_options['row_options']['separator'] = '<br>';
+@@ -80,7 +83,7 @@ function asu_ap_feature_views_default_views() {
+   $handler->display->display_options['fields']['body']['field'] = 'body';
+   $handler->display->display_options['fields']['body']['label'] = '';
+   $handler->display->display_options['fields']['body']['exclude'] = TRUE;
+-  $handler->display->display_options['fields']['body']['alter']['max_length'] = '125';
++  $handler->display->display_options['fields']['body']['alter']['max_length'] = '200';
+   $handler->display->display_options['fields']['body']['alter']['more_link'] = TRUE;
+   $handler->display->display_options['fields']['body']['alter']['more_link_text'] = 'read more';
+   $handler->display->display_options['fields']['body']['alter']['more_link_path'] = '/node/[nid]';
+@@ -116,11 +119,13 @@ function asu_ap_feature_views_default_views() {
+   $handler->display->display_options['fields']['field_asu_ap']['label'] = '';
+   $handler->display->display_options['fields']['field_asu_ap']['alter']['alter_text'] = TRUE;
+   $handler->display->display_options['fields']['field_asu_ap']['alter']['text'] = '<div class="asu-ap-rewritten-fields">
++
+     <div class="asu-ap-major-title">[field_asu_ap_awarded] ([field_asu_ap])</div>
++
+     [body]
++
+     <div class="asu-ap-field-title">Location:</div> [field_asu_ap_campus]<br>
+-    <div class="asu-ap-field-title">Degree Type:</div> [field_asu_ap]<br>
+-    <div class="asu-ap-field-title">Available Online:</div> [field_asu_ap_campus_1]
++
+ </div>';
+   $handler->display->display_options['fields']['field_asu_ap']['element_label_colon'] = FALSE;
+   /* Field: Content: Nid */
+@@ -364,7 +369,7 @@ function asu_ap_feature_views_default_views() {
+   $handler->display->display_options['fields']['body']['field'] = 'body';
+   $handler->display->display_options['fields']['body']['label'] = '';
+   $handler->display->display_options['fields']['body']['exclude'] = TRUE;
+-  $handler->display->display_options['fields']['body']['alter']['max_length'] = '125';
++  $handler->display->display_options['fields']['body']['alter']['max_length'] = '200';
+   $handler->display->display_options['fields']['body']['alter']['more_link'] = TRUE;
+   $handler->display->display_options['fields']['body']['alter']['more_link_text'] = 'read more';
+   $handler->display->display_options['fields']['body']['alter']['more_link_path'] = '/node/[nid]';
+@@ -400,11 +405,13 @@ function asu_ap_feature_views_default_views() {
+   $handler->display->display_options['fields']['field_asu_ap']['label'] = '';
+   $handler->display->display_options['fields']['field_asu_ap']['alter']['alter_text'] = TRUE;
+   $handler->display->display_options['fields']['field_asu_ap']['alter']['text'] = '<div class="asu-ap-rewritten-fields">
++
+     <div class="asu-ap-major-title">[field_asu_ap_awarded], [field_asu_ap]</div>
++
+     [body]
+-    <div class="asu-ap-field-title">Location:</div> [field_asu_ap_campus]<br>
+-    <div class="asu-ap-field-title">Degree Type:</div> [field_asu_ap]<br>
+-    <div class="asu-ap-field-title">Available Online:</div> [field_asu_ap_campus_1]
++
++    <div class="asu-ap-field-location"><div class="asu-ap-field-title">Location:</div>[field_asu_ap_campus]</div>
++
+ </div>';
+   $handler->display->display_options['fields']['field_asu_ap']['element_label_colon'] = FALSE;
+   /* Field: Content: Nid */
+@@ -477,7 +484,7 @@ function asu_ap_feature_views_default_views() {
+   $handler->display->display_options['fields']['body']['field'] = 'body';
+   $handler->display->display_options['fields']['body']['label'] = '';
+   $handler->display->display_options['fields']['body']['exclude'] = TRUE;
+-  $handler->display->display_options['fields']['body']['alter']['max_length'] = '125';
++  $handler->display->display_options['fields']['body']['alter']['max_length'] = '200';
+   $handler->display->display_options['fields']['body']['alter']['more_link'] = TRUE;
+   $handler->display->display_options['fields']['body']['alter']['more_link_text'] = 'read more';
+   $handler->display->display_options['fields']['body']['alter']['more_link_path'] = '/node/[nid]';
+@@ -513,11 +520,13 @@ function asu_ap_feature_views_default_views() {
+   $handler->display->display_options['fields']['field_asu_ap']['label'] = '';
+   $handler->display->display_options['fields']['field_asu_ap']['alter']['alter_text'] = TRUE;
+   $handler->display->display_options['fields']['field_asu_ap']['alter']['text'] = '<div class="asu-ap-rewritten-fields">
++
+     <div class="asu-ap-major-title">[field_asu_ap_awarded], [field_asu_ap]</div>
++
+     [body]
++
+     <div class="asu-ap-field-title">Location:</div> [field_asu_ap_campus]<br>
+-    <div class="asu-ap-field-title">Degree Type:</div> [field_asu_ap]<br>
+-    <div class="asu-ap-field-title">Available Online:</div> [field_asu_ap_campus_1]
++
+ </div>';
+   $handler->display->display_options['fields']['field_asu_ap']['element_label_colon'] = FALSE;
+   /* Field: Content: Nid */
+@@ -1022,13 +1031,6 @@ function asu_ap_feature_views_default_views() {
+   $handler->display->display_options['fields']['field_asu_ap_campus']['field'] = 'field_asu_ap_campus';
+   $handler->display->display_options['fields']['field_asu_ap_campus']['label'] = 'Location';
+   $handler->display->display_options['fields']['field_asu_ap_campus']['delta_offset'] = '0';
+-  /* Field: Content: Campus */
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['id'] = 'field_asu_ap_campus_1';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['table'] = 'field_data_field_asu_ap_campus';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['field'] = 'field_asu_ap_campus';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['label'] = 'Available Online';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_limit'] = '1';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_offset'] = '0';
+   $handler->display->display_options['path'] = 'programs/undergraduate/list';
+   $handler->display->display_options['menu']['title'] = 'ASU Degrees';
+   $handler->display->display_options['menu']['weight'] = '50';
+@@ -1137,13 +1139,6 @@ function asu_ap_feature_views_default_views() {
+   $handler->display->display_options['fields']['field_asu_ap_campus']['field'] = 'field_asu_ap_campus';
+   $handler->display->display_options['fields']['field_asu_ap_campus']['label'] = 'Location';
+   $handler->display->display_options['fields']['field_asu_ap_campus']['delta_offset'] = '0';
+-  /* Field: Content: Campus */
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['id'] = 'field_asu_ap_campus_1';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['table'] = 'field_data_field_asu_ap_campus';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['field'] = 'field_asu_ap_campus';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['label'] = 'Available Online';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_limit'] = '1';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_offset'] = '0';
+   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+   $handler->display->display_options['defaults']['filters'] = FALSE;
+   /* Filter criterion: Content: Published status */
+@@ -1409,13 +1404,6 @@ function asu_ap_feature_views_default_views() {
+   $handler->display->display_options['fields']['field_asu_ap_campus']['field'] = 'field_asu_ap_campus';
+   $handler->display->display_options['fields']['field_asu_ap_campus']['label'] = 'Location';
+   $handler->display->display_options['fields']['field_asu_ap_campus']['delta_offset'] = '0';
+-  /* Field: Content: Campus */
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['id'] = 'field_asu_ap_campus_1';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['table'] = 'field_data_field_asu_ap_campus';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['field'] = 'field_asu_ap_campus';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['label'] = 'Available Online';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_limit'] = '1';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_offset'] = '0';
+   /* Field: Content: Nid */
+   $handler->display->display_options['fields']['nid_1']['id'] = 'nid_1';
+   $handler->display->display_options['fields']['nid_1']['table'] = 'node';
+@@ -1601,7 +1589,7 @@ function asu_ap_feature_views_default_views() {
+   $handler->display->display_options['fields']['body']['field'] = 'body';
+   $handler->display->display_options['fields']['body']['label'] = '';
+   $handler->display->display_options['fields']['body']['exclude'] = TRUE;
+-  $handler->display->display_options['fields']['body']['alter']['max_length'] = '125';
++  $handler->display->display_options['fields']['body']['alter']['max_length'] = '200';
+   $handler->display->display_options['fields']['body']['alter']['more_link'] = TRUE;
+   $handler->display->display_options['fields']['body']['alter']['more_link_text'] = 'read more';
+   $handler->display->display_options['fields']['body']['alter']['more_link_path'] = '/node/[nid]';
+@@ -1637,11 +1625,13 @@ function asu_ap_feature_views_default_views() {
+   $handler->display->display_options['fields']['field_asu_ap']['label'] = '';
+   $handler->display->display_options['fields']['field_asu_ap']['alter']['alter_text'] = TRUE;
+   $handler->display->display_options['fields']['field_asu_ap']['alter']['text'] = '<div class="asu-ap-rewritten-fields">
++
+     <div class="asu-ap-major-title">[field_asu_ap_awarded]</div>
++
+     [body]
+-    <div class="asu-ap-field-title">Location:</div> [field_asu_ap_campus]<br>
+-    <div class="asu-ap-field-title">Degree Type:</div> [field_asu_ap]<br>
+-    <div class="asu-ap-field-title">Available Online:</div> [field_asu_ap_campus_1]
++
++    <div class="asu-ap-field-title">Location:</div> [field_asu_ap_campus]
++
+ </div>';
+   $handler->display->display_options['fields']['field_asu_ap']['element_label_colon'] = FALSE;
+   /* Field: Content: Nid */
+@@ -1850,13 +1840,6 @@ function asu_ap_feature_views_default_views() {
+   $handler->display->display_options['fields']['field_asu_ap_campus']['field'] = 'field_asu_ap_campus';
+   $handler->display->display_options['fields']['field_asu_ap_campus']['label'] = 'Location';
+   $handler->display->display_options['fields']['field_asu_ap_campus']['delta_offset'] = '0';
+-  /* Field: Content: Campus */
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['id'] = 'field_asu_ap_campus_1';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['table'] = 'field_data_field_asu_ap_campus';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['field'] = 'field_asu_ap_campus';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['label'] = 'Available Online';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_limit'] = '1';
+-  $handler->display->display_options['fields']['field_asu_ap_campus_1']['delta_offset'] = '0';
+   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+   $handler->display->display_options['defaults']['filters'] = FALSE;
+   /* Filter criterion: Content: Published status */

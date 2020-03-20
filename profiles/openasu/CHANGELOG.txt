@@ -1,9 +1,18 @@
-Webspark 1.70.8 (Dime Box), 2020-xx-xx
+Webspark 1.70.8 (Big Spring), 2020-xx-xx
 ---------------------------------------------
 - Web standards components in Webspark
 
+  * ASU Brand (asu_brand) - v1.21
+    - Added drupal_alter to allow dynamic customization and theming of site menu before it is passed to the header
+      (credit: Travis B. (tbutterf))
+  * ASU Feeds (asu_feeds) (DEPRECATED) - v1.2,
+    IXR (ixr) (DEPRECATED) - v1.1
+    - Updated for PHP 7.x compatibility errors
+  * ASU Directory Integration Reinvented (asu_dir) - v1.10.2
+    - Fixed "Undefined variable: field_paragraph_research_areas" error
   * Innovation (innovation) - v1.16
     - Added horizontal rule tag (<hr>) to list of WYSIWYG acceptable elements
+    - Added ability to select alert styling within the WYSIWYG editor.
   * Webspark Extras - v1.7,
     Webspark Featurescustom - v1.9
     - Added pre-populated ASU campuses select lists for the Webform module
@@ -15,6 +24,31 @@ Webspark 1.70.8 (Dime Box), 2020-xx-xx
   * Webspark WYSIWYG (webspark_wysiwyg) - v1.9
     - Added Bootstrap columns functionality to the WYSIWYG editor via WYSIWYG Templates and the "Insert
       WYSIWYG Templates Content" button.
+
+- Contrib project additions
+
+  - Managed by Webspark
+
+    * Redis (redis) - v3.18
+
+- Contrib project updates
+
+  - Managed by Webspark
+
+    * Easy Breadcrumb (easy_breadcrumb) - v2.17+patch
+      * Patched to use the schema.org vocabulary for structured data for their rich results generation (SEO improvement).
+
+- Contrib library updates
+
+  - Managed by Webspark
+    * Flexslider (flexslider) - v2.7.2 + patch
+      * (Accessibility fix) Removed <ul> nav when only one slide exists
+      * (Accessibility fix) Added 'slide' ARIA-label
+
+- Webspark custom projects - Changes/Deletions
+
+  - ASU GCSE (asu_gcse) - v1.0 (no change)
+    * Disabled and uninstalled the module (codebase will be removed in the next Webspark release).
 
 Webspark 1.70.7 (Zipperlandville), 2020-01-08
 ---------------------------------------------
