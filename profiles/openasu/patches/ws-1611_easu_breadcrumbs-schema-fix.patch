@@ -1,0 +1,74 @@
+diff --git a/README.md b/README.md
+index 75e98a7..27e9c85 100644
+--- a/README.md
++++ b/README.md
+@@ -86,4 +86,4 @@ MAINTAINERS
+ Supporting organization:
+
+  * Hook 42 - https://www.drupal.org/hook-42
+- * Petend - https://www.drupal.org/petend
+\ No newline at end of file
++ * Petend - https://www.drupal.org/petend
+diff --git a/easy_breadcrumb.module b/easy_breadcrumb.module
+index ece554a..bdead8a 100644
+--- a/easy_breadcrumb.module
++++ b/easy_breadcrumb.module
+@@ -142,23 +142,24 @@ function easy_breadcrumb_block_view($delta = NULL) {
+  */
+ function template_preprocess_easy_breadcrumb(&$variables) {
+   $breadcrumbs = _easy_breadcrumb_build_items();
+-  if (module_exists('schemaorg')) {
+-    $variables['list_type'] = 'https://schema.org/BreadcrumbList';
+-  }
+-  else {
+-    $variables['list_type'] = 'http://data-vocabulary.org/Breadcrumb';
+-  }
++  $variables['list_type'] = 'https://schema.org/BreadcrumbList';
+   foreach ($breadcrumbs as $i => $breadcrumb) {
+     if (isset($breadcrumb['url'])) {
+-      $variables['breadcrumb'][$i] = '<span itemprop="title">';
++      $variables['breadcrumb'][$i] = '<span>';
+
+       $parsed_query = '';
+       $parsed_url = parse_url($breadcrumb['url']);
+       if (isset($parsed_url['query'])) {
+         parse_str($parsed_url['query'], $parsed_query);
+       }
+-      $variables['breadcrumb'][$i] .= l($breadcrumb['content'], $parsed_url['path'], array(
+-        'attributes' => array('class' => $breadcrumb['class']),
++      $variables['breadcrumb'][$i] .= l('<span itemprop="name">' . $breadcrumb['content'] . '</span>', $parsed_url['path'], array(
++        'attributes' => array(
++          'class' => $breadcrumb['class'],
++          'itemtype' => "http://schema.org/Thing",
++          'itemprop' => "item",
++          'itemscope' => "",
++          'itemid' => check_plain(url($breadcrumb['url'], array('absolute' => TRUE,))),
++        ),
+         'query' => $parsed_query,
+         'html' => (!empty($breadcrumb['html'])) ? $breadcrumb['html'] : FALSE,
+       ));
+@@ -167,7 +168,7 @@ function template_preprocess_easy_breadcrumb(&$variables) {
+     }
+     else {
+       $class = implode(' ', $breadcrumb['class']);
+-      $variables['breadcrumb'][$i] = '<span class="' . $class . '" itemprop="title">' . $breadcrumb['content'] . '</span>';
++      $variables['breadcrumb'][$i] = '<span class="' . $class . '" itemprop="name">' . $breadcrumb['content'] . '</span>';
+     }
+   }
+   $variables['segments_quantity'] = isset($variables['breadcrumb']) ? count($variables['breadcrumb']) : 0;
+diff --git a/tpl/easy-breadcrumb.tpl.php b/tpl/easy-breadcrumb.tpl.php
+index 5d58a16..4d4bd61 100644
+--- a/tpl/easy-breadcrumb.tpl.php
++++ b/tpl/easy-breadcrumb.tpl.php
+@@ -8,7 +8,10 @@
+ if ($segments_quantity > 0): ?>
+   <div itemscope class="easy-breadcrumb" itemtype="<?php print $list_type; ?>">
+     <?php foreach ($breadcrumb as $i => $item): ?>
+-      <?php print $item; ?>
++      <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
++        <?php print $item; ?>
++        <meta itemprop="position" content="<?php print $i; ?>" />
++      </span>
+       <?php if ($i < $segments_quantity - $separator_ending): ?>
+          <span class="easy-breadcrumb_segment-separator"><?php print $separator; ?></span>
+       <?php
