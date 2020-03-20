@@ -142,23 +142,24 @@ function easy_breadcrumb_block_view($delta = NULL) {
  */
 function template_preprocess_easy_breadcrumb(&$variables) {
   $breadcrumbs = _easy_breadcrumb_build_items();
-  if (module_exists('schemaorg')) {
-    $variables['list_type'] = 'https://schema.org/BreadcrumbList';
-  }
-  else {
-    $variables['list_type'] = 'http://data-vocabulary.org/Breadcrumb';
-  }
+  $variables['list_type'] = 'https://schema.org/BreadcrumbList';
   foreach ($breadcrumbs as $i => $breadcrumb) {
     if (isset($breadcrumb['url'])) {
-      $variables['breadcrumb'][$i] = '<span itemprop="title">';
+      $variables['breadcrumb'][$i] = '<span>';
 
       $parsed_query = '';
       $parsed_url = parse_url($breadcrumb['url']);
       if (isset($parsed_url['query'])) {
         parse_str($parsed_url['query'], $parsed_query);
       }
-      $variables['breadcrumb'][$i] .= l($breadcrumb['content'], $parsed_url['path'], array(
-        'attributes' => array('class' => $breadcrumb['class']),
+      $variables['breadcrumb'][$i] .= l('<span itemprop="name">' . $breadcrumb['content'] . '</span>', $parsed_url['path'], array(
+        'attributes' => array(
+          'class' => $breadcrumb['class'],
+          'itemtype' => "http://schema.org/Thing",
+          'itemprop' => "item",
+          'itemscope' => "",
+          'itemid' => check_plain(url($breadcrumb['url'], array('absolute' => TRUE,))),
+        ),
         'query' => $parsed_query,
         'html' => (!empty($breadcrumb['html'])) ? $breadcrumb['html'] : FALSE,
       ));
@@ -167,7 +168,7 @@ function template_preprocess_easy_breadcrumb(&$variables) {
     }
     else {
       $class = implode(' ', $breadcrumb['class']);
-      $variables['breadcrumb'][$i] = '<span class="' . $class . '" itemprop="title">' . $breadcrumb['content'] . '</span>';
+      $variables['breadcrumb'][$i] = '<span class="' . $class . '" itemprop="name">' . $breadcrumb['content'] . '</span>';
     }
   }
   $variables['segments_quantity'] = isset($variables['breadcrumb']) ? count($variables['breadcrumb']) : 0;
