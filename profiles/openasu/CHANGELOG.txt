@@ -5,9 +5,6 @@ Webspark 1.70.8 (Big Spring), 2020-xx-xx
   * ASU Brand (asu_brand) - v1.21
     - Added drupal_alter to allow dynamic customization and theming of site menu before it is passed to the header
       (credit: Travis B. (tbutterf))
-  * ASU Feeds (asu_feeds) (DEPRECATED) - v1.2,
-    IXR (ixr) (DEPRECATED) - v1.1
-    - Updated for PHP 7.x compatibility errors
   * ASU Directory Integration Reinvented (asu_dir) - v1.10.2
     - Fixed "Undefined variable: field_paragraph_research_areas" error
   * Innovation (innovation) - v1.16
@@ -30,6 +27,7 @@ Webspark 1.70.8 (Big Spring), 2020-xx-xx
   - Managed by Webspark
 
     * Redis (redis) - v3.18
+    * Entity Reference Autocomplete - v1.13
 
 - Contrib project updates
 
@@ -37,6 +35,12 @@ Webspark 1.70.8 (Big Spring), 2020-xx-xx
 
     * Easy Breadcrumb (easy_breadcrumb) - v2.17+patch
       * Patched to use the schema.org vocabulary for structured data for their rich results generation (SEO improvement).
+    * Multiblock (multiblock) - v1.6
+    * Radix Layouts (radix_layouts) - v3.4+patch
+      * Tweaked layout width for tablet layouts
+    * Videg Embed Fields - v2.0-beta11+patch
+      * Vimeo and Youtube URL parsing updated to match those services' APIs
+      * The target video is no longer set when the entity is set but has an empty target URL.
 
 - Contrib library updates
 
@@ -47,8 +51,20 @@ Webspark 1.70.8 (Big Spring), 2020-xx-xx
 
 - Webspark custom projects - Changes/Deletions
 
-  - ASU GCSE (asu_gcse) - v1.0 (no change)
-    * Disabled and uninstalled the module (codebase will be removed in the next Webspark release).
+  * ASU Degrees (DEPRECATED) - v1.11
+    - Added the "list-item" class to list items
+  * ASU Feeds (asu_feeds) (DEPRECATED) - v1.2,
+    IXR (ixr) (DEPRECATED) - v1.1
+    - Updated for PHP 7.x compatibility errors
+  * ASU Feeds 2 (asu_feeds2) - v3.0
+    - Added mappings to include new Degree Search fields created since last update
+    - Refactored/consolidated custom field generation logic for easier support
+  * Fun Logger (flogger) - v1.1
+    - drupal_set_message display logic fixed to show only for administrator roles in certain edge cases
+  * ASU GCSE (asu_gcse) - v1.0
+    - Disabled and uninstalled the module (codebase will be removed in the next Webspark release).
+  * ASU IXR (asu_ixr) - v3.0
+    - Updated for PHP 7.2+ compatibility
 
 Webspark 1.70.7 (Zipperlandville), 2020-01-08
 ---------------------------------------------
