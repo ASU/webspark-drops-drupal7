@@ -1,13 +1,99 @@
-Webspark 1.70.8 (Big Spring), 2020-xx-xx
+Webspark 1.70.8 (Big Spring), 2020-03-20
 ---------------------------------------------
 - Web standards components in Webspark
+
+  * ASU Request for Information (asu_rfi, asu_rfi_feature) - v3.0
+    * Architecture & Development
+      - Refactored and/or consolidated many functionally duplicitous functions and files
+      - Fixed the naming convention of configuration variables and private PHP functions to match Drupal standards
+      - Removed unused configuration variables
+      - Created Fun Logger (flogger) module to improve the developer debugging experience
+      - Added internal documentation/comments for developers
+      - Required EntityReference_autocomplete contrib module as a dependency
+      - Updated Multiblock contrib module (v1.6) plus other patches
+      - Integrated the Queue API to queue larger middleware submission related tasks (to avoid web page timeouts)
+      - Utilized drupal_static for performance improvements
+      - Added UNDERGRAD/GRAD constants for universal module use.
+      - Added "Delete RFI submissions" permission for RFI submissions report operations
+      - Integrated usage of the Database API
+      - Utilized the Batch API to update existing data for the code and UI changes.
+      - Combined comparable RFI form element generation into single location to maintain element consistency between
+        form types
+      - Moved many form customizations from hook_form_alter into the initial form generation logic so AJAX rendering
+        would consistently work
+    * General bug fixes
+      - Updated deprecated PHP code to PHP 7.x standards
+      - The Request Info button now correctly chooses when and how to point to existing RFI forms
+      - RFI multiblock instance settings now correctly save for grad RFI forms when all majors are wanted for a single RFI form block
+      - Fixed multiblock ID issues.
+      - Fixed instance settings for multistep RFI form blocks
+      - Fixed JSON feed URL to ASUOnline program data sources (also forces an HTTPS connection)
+      - Added endpoint availability detection to avoid hanging a site while attempting to POST submissions to unavailable middleware
+      - Added try/catch to cURL calls for graduate RFI posts to middleware
+      - Re-added limited integration with deprecated ASU Degrees module-generated degrees pages
+      - Fixed state and country form field logic
+      - Refactored the CSS, JS (ECMAScript v1.6+) and added other module theming improvements
+    * UI/UX Improvements
+      * RFI submission reports page improvements
+        * Updated RFI submission status value options, and improved the related help text
+        * Reorganized the report's columns to put more relevant data up towards the front
+        * Improved the messaging of the submission's current status for end users
+        * Added a "Delete submissions" bulk operation option
+        * Cleaned up the view's theming
+      * RFI configuration page improvements/fixes
+        * Added easier to find "RFI settings" admin menu link under "Configuration"
+        * Reorganized the configuration form items into categories
+        * Added dynamic messaging about middleware auth key status
+        * Inserted Online campus URL feed field for future update flexibility
+        * Confirmation pages can now be selected via autocomplete based on the page's title
+        * The automatic resubmission of failed RFI submissions and the deletion of qualifying RFI submissions (both via cron jobs) can be toggled on/off
+      * Form improvements
+        * The major is now chosen automatically regardless of the RFI form type (works for both undergrad and graduate programs)
+        * Added missing form field validation to email, phone number, and email fields
+        * RFI blocks now display error messages (to admins only) with helper instructions for when the form isn't rendering within a correctly placed block o$
+        * Added AJAX-powered, dynamic start term options generation for graduate degrees, based on degree and campus selections
+        * Updated ASU campus list options
+        * Added better, "this program is not available", logic
+        * Removed 'align="left|right|center"' <td> tag properties to improve accessibility.
+      * Updated README documentation for end users
+    * Data Management
+      - Updated RFI submission deletion policies to adhere to the University Data Handling Standard.
+        * Upon updating the module to this version, all submissions older than 14 days old upon updating the module, regardless of status
+        * All submissions that have successfully been sent onto any Salesforce middleware are deleted upon every cron run
+        * All submissions that have not been sent on (status SF_Failed) are resubmitted every time a cron job runs
+        * All submissions that have failed for 14 days past the initial submission date are deleted at the next cron run - regardless of their status
+  * ASU Academic Programs 7.x-3.0, 2020-XX-XX
+    * Architecture & Development
+      - Reformatted page-level TPL file output (code and HTML)
+      - Combined graduate vs. undergrad logic in TPL
+      - Added new fields to ASU AP degree page content type to store additional data to render on degree pages.
+      - Added many other Degree Search field mapping options for future additional fields, if needed
+      - Re-added missing "asu_feeds_text_format" Drupal input format
+      - Campus options updated to current list
+      - Added configuration form to handle new, optional elements of degree pages pulled in from Degree Search that can be toggled on/off:
+        - The visibility of degree page fields with data imported from Degree Search data
+        - Showing/hiding of marketing video content at top of degree pages
+    * Refactored ASU AP CSS
+      - Namespaced existing selectors
+      - Removed duplicate rules
+      - Added CSS for new elements
+    * General Bug fixes
+      - Updated ASU IXR library for PHP 7.x compatibility
+    * UI/UX Improvements
+      * Degree pages:
+        - Added canonical URLs in <link> tags pointing at Degree Search page counterparts for SEO improvements
+        - Added marketing text and video pulled in from Degree Search and logic to determine when to show them
+        - Added several newer Degree Search pages elements to individual degree page output middle section
+        - Online campus link now point to the corresponding asuonline.asu.edu degree page
+        - Added missing and/or new degree "special categories" links to title banner
+        - Special category text now link to explanations (imported from Degree Search) optionally rendered at the bottom of the page.
+        - Updated casing to "Sentence casing" (vs. Title Casing)
+        - Degree page edit form explanatory messaging improved
+        - Fixed @media CSS rules for better tablet layouts
 
   * ASU Brand (asu_brand) - v1.21
     - Added drupal_alter to allow dynamic customization and theming of site menu before it is passed to the header
       (credit: Travis B. (tbutterf))
-  * ASU Feeds (asu_feeds) (DEPRECATED) - v1.2,
-    IXR (ixr) (DEPRECATED) - v1.1
-    - Updated for PHP 7.x compatibility errors
   * ASU Directory Integration Reinvented (asu_dir) - v1.10.2
     - Fixed "Undefined variable: field_paragraph_research_areas" error
   * Innovation (innovation) - v1.16
@@ -30,6 +116,7 @@ Webspark 1.70.8 (Big Spring), 2020-xx-xx
   - Managed by Webspark
 
     * Redis (redis) - v3.18
+    * Entity Reference Autocomplete - v1.13
 
 - Contrib project updates
 
@@ -37,6 +124,12 @@ Webspark 1.70.8 (Big Spring), 2020-xx-xx
 
     * Easy Breadcrumb (easy_breadcrumb) - v2.17+patch
       * Patched to use the schema.org vocabulary for structured data for their rich results generation (SEO improvement).
+    * Multiblock (multiblock) - v1.6
+    * Radix Layouts (radix_layouts) - v3.4+patch
+      * Tweaked layout width for tablet layouts
+    * Videg Embed Fields - v2.0-beta11+patch
+      * Vimeo and Youtube URL parsing updated to match those services' APIs
+      * The target video is no longer set when the entity is set but has an empty target URL.
 
 - Contrib library updates
 
@@ -47,8 +140,21 @@ Webspark 1.70.8 (Big Spring), 2020-xx-xx
 
 - Webspark custom projects - Changes/Deletions
 
-  - ASU GCSE (asu_gcse) - v1.0 (no change)
-    * Disabled and uninstalled the module (codebase will be removed in the next Webspark release).
+  * ASU Degrees (DEPRECATED) - v1.11
+    - Added the "list-item" class to list items
+  * ASU Feeds (asu_feeds) (DEPRECATED) - v1.2,
+    IXR (ixr) (DEPRECATED) - v1.1
+    - Updated for PHP 7.x compatibility errors
+  * ASU Feeds 2 (asu_feeds2) - v3.0
+    - Added mappings to include new Degree Search fields created since last update
+    - Refactored/consolidated custom field generation logic for easier support
+  * Fun Logger (flogger) - v1.1
+    - drupal_set_message display logic fixed to show only for administrator roles in certain edge cases
+  * ASU GCSE (asu_gcse) - v1.0
+    - Disabled and uninstalled the module (codebase will be removed in the next Webspark release).
+  * ASU IXR (asu_ixr) - v3.0
+    - Updated for PHP 7.2+ compatibility
+
 
 Webspark 1.70.7 (Zipperlandville), 2020-01-08
 ---------------------------------------------

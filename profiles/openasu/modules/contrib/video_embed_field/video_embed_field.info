@@ -12,6 +12,11 @@ dependencies[] = image
 
 ; Information added by Drupal.org packaging script on 2015-09-07
 version = "7.x-2.0-beta11"
+;;;;;;;;;;;;
+; PATCHED:
+;       * Vimeo and Youtube URL parsing updated to match those services' APIs
+;      * The target video is no longer set when the entity is set but has an empty target URL.
+;;;;;;;;;;;;
 core = "7.x"
 project = "video_embed_field"
 datestamp = "1441639440"
