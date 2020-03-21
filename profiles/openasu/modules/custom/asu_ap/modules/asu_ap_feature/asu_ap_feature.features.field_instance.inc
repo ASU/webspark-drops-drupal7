@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * asu_ap_feature.features.field_instance.inc
@@ -15,7 +16,7 @@ function asu_ap_feature_field_default_field_instances() {
     'bundle' => 'asu_ap',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Program description (long)',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -42,10 +43,15 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'body',
-    'label' => 'Program description (long)',
+    'label' => 'Program description',
     'required' => 0,
     'settings' => array(
       'display_summary' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
       'text_processing' => 1,
       'user_register_form' => FALSE,
     ),
@@ -56,12 +62,14 @@ function asu_ap_feature_field_default_field_instances() {
         'maxlength_js' => '',
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_label_summary' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_summary' => '',
         'maxlength_js_truncate_html' => 0,
         'rows' => 20,
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 31,
+      'weight' => 38,
     ),
   );
 
@@ -113,7 +121,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 20,
+      'weight' => 21,
     ),
   );
 
@@ -332,7 +340,7 @@ function asu_ap_feature_field_default_field_instances() {
     'bundle' => 'asu_ap',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Requirements to earn your degree - (Formerly "Admissions requirements") - Maps to AdmissionsDegRequirements) in feed',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -356,12 +364,13 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_admission_req',
-    'label' => 'Admission requirements',
+    'label' => 'Degree requirements',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'text_processing' => 1,
       'user_register_form' => FALSE,
@@ -377,7 +386,7 @@ function asu_ap_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 12,
+      'weight' => 23,
     ),
   );
 
@@ -445,7 +454,7 @@ function asu_ap_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 38,
+      'weight' => 45,
     ),
   );
 
@@ -497,7 +506,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 21,
+      'weight' => 22,
     ),
   );
 
@@ -1214,6 +1223,75 @@ function asu_ap_feature_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_curriculum_url'.
+  $field_instances['node-asu_ap-field_asu_ap_curriculum_url'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Program page URL (Online campus only).',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 58,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_curriculum_url',
+    'label' => 'Curriculum URL',
+    'required' => 0,
+    'settings' => array(
+      'absolute_url' => 1,
+      'attributes' => array(
+        'class' => '',
+        'configurable_class' => 0,
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => '_blank',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'value',
+      'title_allowed_values' => '',
+      'title_label_use_field_label' => 0,
+      'title_maxlength' => 128,
+      'title_value' => 'Online',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(),
+      'type' => 'link_field',
+      'weight' => 20,
+    ),
+  );
+
   // Exported field_instance: 'node-asu_ap-field_asu_ap_department'.
   $field_instances['node-asu_ap-field_asu_ap_department'] = array(
     'bundle' => 'asu_ap',
@@ -1262,7 +1340,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 22,
+      'weight' => 24,
     ),
   );
 
@@ -1314,7 +1392,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 24,
+      'weight' => 26,
     ),
   );
 
@@ -1367,7 +1445,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 25,
+      'weight' => 27,
     ),
   );
 
@@ -1420,7 +1498,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 23,
+      'weight' => 25,
     ),
   );
 
@@ -1472,7 +1550,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 26,
+      'weight' => 28,
     ),
   );
 
@@ -1577,7 +1655,117 @@ function asu_ap_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 27,
+      'weight' => 29,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_grad_addl_req'.
+  $field_instances['node-asu_ap-field_asu_ap_grad_addl_req'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Graduate level degrees only. Additional, custom admission requirements. Mapped field: gradAdditionalRequirements.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 68,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_grad_addl_req',
+    'label' => 'Grad Additional Requirements',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 30,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_grad_all_app_dates'.
+  $field_instances['node-asu_ap-field_asu_ap_grad_all_app_dates'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'All future available terms and their application dates - by campus. MUST be a serialized array from the Degree Search feed (or at least the same serialized structure).',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 59,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_grad_all_app_dates',
+    'label' => 'Grad All Apply Dates',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 31,
     ),
   );
 
@@ -1775,7 +1963,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_grad_text_area',
-    'label' => 'Marketing textarea',
+    'label' => 'Additional marketing content',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -1865,7 +2053,7 @@ function asu_ap_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 28,
+      'weight' => 32,
     ),
   );
 
@@ -1917,7 +2105,107 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 29,
+      'weight' => 33,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_market_text'.
+  $field_instances['node-asu_ap-field_asu_ap_market_text'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Text to appear at top of degree page before catalog text begins.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 65,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_market_text',
+    'label' => 'Marketing Text',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 34,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_math_intensity'.
+  $field_instances['node-asu_ap-field_asu_ap_math_intensity'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Potential difficulty in math courses required for the degree.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 66,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_math_intensity',
+    'label' => 'Math Intensity',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 36,
     ),
   );
 
@@ -1969,7 +2257,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 30,
+      'weight' => 35,
     ),
   );
 
@@ -2024,12 +2312,81 @@ function asu_ap_feature_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_online_mm_url'.
+  $field_instances['node-asu_ap-field_asu_ap_online_mm_url'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Online Major Map URL, if exists.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 67,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_online_mm_url',
+    'label' => 'Online Major Map URL',
+    'required' => 0,
+    'settings' => array(
+      'absolute_url' => 1,
+      'attributes' => array(
+        'class' => '',
+        'configurable_class' => 0,
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => '_blank',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'optional',
+      'title_allowed_values' => '',
+      'title_label_use_field_label' => 0,
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(),
+      'type' => 'link_field',
+      'weight' => 37,
+    ),
+  );
+
   // Exported field_instance: 'node-asu_ap-field_asu_ap_prog_req'.
   $field_instances['node-asu_ap-field_asu_ap_prog_req'] = array(
     'bundle' => 'asu_ap',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Formerly labeled as "Program requirements". Mapped to degreeMajorMap in feed. Should be empty for all but minors/certs.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -2053,7 +2410,7 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_prog_req',
-    'label' => 'Program requirements',
+    'label' => 'Minor or Cert Requirements',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -2075,7 +2432,7 @@ function asu_ap_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 32,
+      'weight' => 39,
     ),
   );
 
@@ -2127,7 +2484,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 10,
       ),
       'type' => 'text_textfield',
-      'weight' => 33,
+      'weight' => 40,
     ),
   );
 
@@ -2235,7 +2592,7 @@ function asu_ap_feature_field_default_field_instances() {
     'bundle' => 'asu_ap',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Admissions requirements. Formerly labeled as "Requirement description". Mapped to DescrlongExtn5 in the feed.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -2259,12 +2616,13 @@ function asu_ap_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_asu_ap_req_desc',
-    'label' => 'Requirement description',
+    'label' => 'Admissions Requirements',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'text_processing' => 1,
       'user_register_form' => FALSE,
@@ -2280,7 +2638,7 @@ function asu_ap_feature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 34,
+      'weight' => 12,
     ),
   );
 
@@ -2332,7 +2690,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 35,
+      'weight' => 42,
     ),
   );
 
@@ -2508,7 +2866,7 @@ function asu_ap_feature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 36,
+      'weight' => 43,
     ),
   );
 
@@ -2577,7 +2935,312 @@ function asu_ap_feature_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 37,
+      'weight' => 44,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_transfer_admis_req'.
+  $field_instances['node-asu_ap-field_asu_ap_transfer_admis_req'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 69,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_transfer_admis_req',
+    'label' => 'Transfer Admission Requirements',
+    'required' => FALSE,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 46,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_url_1'.
+  $field_instances['node-asu_ap-field_asu_ap_url_1'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'The primary department/college URL for more information about this degree from their site (except for asuonline.asu.edu URLs - which are in Url4)',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 61,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_url_1',
+    'label' => 'URL 1',
+    'required' => 0,
+    'settings' => array(
+      'absolute_url' => 1,
+      'attributes' => array(
+        'class' => '',
+        'configurable_class' => 0,
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => 'default',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'value',
+      'title_allowed_values' => '',
+      'title_label_use_field_label' => 0,
+      'title_maxlength' => 128,
+      'title_value' => 'Program URL',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(),
+      'type' => 'link_field',
+      'weight' => 47,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_url_2'.
+  $field_instances['node-asu_ap-field_asu_ap_url_2'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Not being used by Degree Search at the moment.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 62,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_url_2',
+    'label' => 'URL 2',
+    'required' => 0,
+    'settings' => array(
+      'absolute_url' => 1,
+      'attributes' => array(
+        'class' => '',
+        'configurable_class' => 0,
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => '_blank',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'optional',
+      'title_allowed_values' => '',
+      'title_label_use_field_label' => 0,
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(),
+      'type' => 'link_field',
+      'weight' => 48,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_url_3'.
+  $field_instances['node-asu_ap-field_asu_ap_url_3'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'If this major has an Online campus option and there\'s a program page on asuonline.asu.edu. (Defaults to asuonline.asu.edu upon rendering in code otherwise).',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 63,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_url_3',
+    'label' => 'URL 3',
+    'required' => 0,
+    'settings' => array(
+      'absolute_url' => 1,
+      'attributes' => array(
+        'class' => '',
+        'configurable_class' => 0,
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => '_blank',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'value',
+      'title_allowed_values' => '',
+      'title_label_use_field_label' => 0,
+      'title_maxlength' => 128,
+      'title_value' => 'Online',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(),
+      'type' => 'link_field',
+      'weight' => 49,
+    ),
+  );
+
+  // Exported field_instance: 'node-asu_ap-field_asu_ap_url_4'.
+  $field_instances['node-asu_ap-field_asu_ap_url_4'] = array(
+    'bundle' => 'asu_ap',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Marketing video URL for this degree. Youtube or Vimeo videos only.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'video_embed_field',
+        'settings' => array(
+          'description' => 1,
+          'description_position' => 'bottom',
+          'video_style' => 'normal',
+        ),
+        'type' => 'video_embed_field',
+        'weight' => 64,
+      ),
+      'featured' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_asu_ap_url_4',
+    'label' => 'URL 4',
+    'required' => 0,
+    'settings' => array(
+      'allowed_providers' => array(
+        'vimeo' => 'vimeo',
+        'youtube' => 'youtube',
+      ),
+      'description_field' => 0,
+      'description_length' => 128,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'video_embed_field',
+      'settings' => array(),
+      'type' => 'video_embed_field_video',
+      'weight' => 50,
     ),
   );
 
@@ -2635,7 +3298,7 @@ function asu_ap_feature_field_default_field_instances() {
   $field_instances['node-asu_ap-field_asu_banner_image'] = array(
     'bundle' => 'asu_ap',
     'deleted' => 0,
-    'description' => 'This is the banner image across the top of the academic programs pages.',
+    'description' => 'Banner image across the top of the academic programs pages. Recommended size image is 1170x380px by default, though this may vary depending on the image. A default image is provided if left empty.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -2666,7 +3329,7 @@ function asu_ap_feature_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
-      'default_image' => 5,
+      'default_image' => 3,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '',
@@ -2719,7 +3382,7 @@ function asu_ap_feature_field_default_field_instances() {
   $field_instances['node-asu_ap-field_degree_image'] = array(
     'bundle' => 'asu_ap',
     'deleted' => 0,
-    'description' => 'This image only shows up on the view page.  Horizontal images work best.',
+    'description' => 'NOTE: This image only shows up on the grid layout listing of degrees (generated by Drupal Views). Horizontal images work best.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -2750,7 +3413,7 @@ function asu_ap_feature_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
-      'default_image' => 6,
+      'default_image' => 24,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '',
@@ -2801,7 +3464,7 @@ function asu_ap_feature_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('ASU Banner Image');
+  t('ASU banner image');
   t('Academic plan');
   t('Academic program');
   t('Accelerated program');
@@ -2811,14 +3474,18 @@ function asu_ap_feature_field_default_field_instances() {
   t('Add a link here to change from the default "Request information" link to one specific to your needs.');
   t('Add a link here to change from the default "Schedule a visit" link to one specific to your needs.');
   t('Add a link here to change from the default scholarship link to one specific to your needs.');
-  t('Additional program Fee');
+  t('Additional marketing content');
+  t('Additional program fee');
   t('Additional requirements');
   t('Additional requirements for the program can be entered in to display at the top of the "Application requirements" region on undergraduate program nodes.');
-  t('Admission requirements');
+  t('Admissions Requirements');
+  t('Admissions requirements. Formerly labeled as "Requirement description". Mapped to DescrlongExtn5 in the feed.');
+  t('All future available terms and their application dates - by campus. MUST be a serialized array from the Degree Search feed (or at least the same serialized structure).');
   t('Application deadline');
-  t('CTA Button - How and when to apply');
-  t('CTA Button - Request information');
-  t('CTA Button - Schedule a visit');
+  t('Banner image across the top of the academic programs pages. Recommended size image is 1170x380px by default, though this may vary depending on the image. A default image is provided if left empty.');
+  t('CTA button - How and when to apply');
+  t('CTA button - Request information');
+  t('CTA button - Schedule a visit');
   t('Campus');
   t('Career opportunities');
   t('Career outlook description');
@@ -2828,9 +3495,11 @@ function asu_ap_feature_field_default_field_instances() {
   t('College URL');
   t('College URL (joint)');
   t('Concurrent program');
+  t('Curriculum URL');
   t('Degree');
   t('Degree awarded');
   t('Degree image');
+  t('Degree requirements');
   t('Denotes the ASU catalog value (on/off) for "accelerated program" with respect to this degree program.<br>
 <i>NOTE:</i> This field can be overridden, but will reapply the official catalog value to the degree program if the ASU Academic Program feed is updated.');
   t('Denotes the ASU catalog value (on/off) for "concurrent program" with respect to this degree program.<br>
@@ -2851,25 +3520,44 @@ function asu_ap_feature_field_default_field_instances() {
   t('Example careers');
   t('Example careers: True/False');
   t('Financing your education');
-  t('Major Map URL');
-  t('Major Map year');
-  t('Marketing text area');
+  t('Formerly labeled as "Program requirements". Mapped to degreeMajorMap in feed. Should be empty for all but minors/certs.');
+  t('Grad Additional Requirements');
+  t('Grad All Apply Dates');
+  t('Graduate level degrees only. Additional, custom admission requirements. Mapped field: gradAdditionalRequirements.');
+  t('If this major has an Online campus option and there\'s a program page on asuonline.asu.edu. (Defaults to asuonline.asu.edu upon rendering in code otherwise).');
+  t('Major map URL');
+  t('Major map year');
+  t('Marketing Text');
+  t('Marketing video URL for this degree. Youtube or Vimeo videos only.');
+  t('Math Intensity');
   t('Minimum math requirement');
+  t('Minor or Cert Requirements');
+  t('NOTE: This image only shows up on the grid layout listing of degrees (generated by Drupal Views). Horizontal images work best.');
   t('New program');
+  t('Not being used by Degree Search at the moment.');
+  t('Online Major Map URL');
+  t('Online Major Map URL, if exists.');
+  t('Potential difficulty in math courses required for the degree.');
+  t('Program description');
   t('Program description (long)');
   t('Program description video');
-  t('Program requirements');
+  t('Program page URL (Online campus only).');
   t('Program: Undergrad or Graduate');
   t('Related programs');
-  t('Requirement description');
+  t('Requirements to earn your degree - (Formerly "Admissions requirements") - Maps to AdmissionsDegRequirements) in feed');
   t('Scholarship link');
   t('Second language requirement');
   t('Short description');
-  t('Subplan: title');
+  t('Subplan: Title');
   t('Subplan: URL');
-  t('This image only shows up on the view page.  Horizontal images work best.');
-  t('This is the banner image across the top of the academic programs pages.');
+  t('Text to appear at top of degree page before catalog text begins.');
+  t('The primary department/college URL for more information about this degree from their site (except for asuonline.asu.edu URLs - which are in Url4)');
+  t('Transfer Admission Requirements');
   t('Turn the "Example Careers" section on and off; check the box to show the example careers, and uncheck it to hide them.');
+  t('URL 1');
+  t('URL 2');
+  t('URL 3');
+  t('URL 4');
   t('URL for program at ASU Degree Search');
   t('WUE eligible program');
 

@@ -9,12 +9,20 @@
  */
 function asu_isearch_cron() {
 
+  // SKIP this whole mess for a while for RFI Development...
+  if (variable_get('asu_rfi_freeze_isearch_cron') === 1) {
+    flogger('asu_rfi', 'asu_isearch should not be running these cron jobs.');
+    return FALSE;
+  }
+
   // if we are locked from automatic update, then return false without updating
   $lock = variable_get('isearch_local_lock', FALSE);
 
   if ($lock) {
     return FALSE;
   }
+
+  flogger('asu_rfi', 'But it is....');
 
   // it takes too much time to do both of these actions every cron run.
   // so switch between caching depts and migrating departments.
@@ -264,7 +272,7 @@ function asu_isearch_cleanup_profile($data) {
         $title = $profile->title;
         watchdog('asu_isearch', "Profile'[@id]'REpublishedviacroncleanup", array('@id' => $title));
         node_save($profile);
-      
+
     }
   }
 

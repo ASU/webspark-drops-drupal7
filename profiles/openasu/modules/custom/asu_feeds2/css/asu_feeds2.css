@@ -2,3 +2,9 @@
 #asu-ap-feed-node-form .fieldset-legend::before {
   content: "ASU Academic Programs ";
 }
+
+/* Accessibility fix - removed align=left from tables */
+.field-name-field-asu-degree-example-careers table tr td,
+.field-name-field-asu-ap-example-careers table tr td {
+  text-align: left;
+}

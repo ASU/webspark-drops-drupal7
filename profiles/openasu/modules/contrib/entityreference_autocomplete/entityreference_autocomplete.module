@@ -1,0 +1,414 @@
+<?php
+
+/**
+ * @file
+ * A Form API element to reference entities using an autocomplete textfield.
+ */
+
+/**
+ * Value for "entityreference" to indicate a field accepts unlimited values.
+ */
+define('ERA_CARDINALITY_UNLIMITED', -1);
+
+/**
+ * Implements hook_menu().
+ */
+function entityreference_autocomplete_menu() {
+  $items = array();
+
+  $items['entityreference_autocomplete/autocomplete/%/%entityreference_autocomplete_bundles/%'] = array(
+    'title' => 'Entity Reference Element autocomplete callback',
+    'page callback' => 'entityreference_autocomplete_autocomplete_callback',
+    'page arguments' => array(2, 3, 4),
+    'access arguments' => array('access content'),
+    'file' => 'includes/autocomplete_callback.inc',
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Returns a list of bundles from the "entityreference_autocomplete" path.
+ *
+ * @param string $bundles_string
+ *   List of bundles.
+ *
+ * @return array|null
+ *   The different bundles extracted from the autocomplete path.
+ */
+function entityreference_autocomplete_bundles_load($bundles_string) {
+  return '*' === $bundles_string ? NULL : explode('+', $bundles_string);
+}
+
+/**
+ * Implements hook_element_info().
+ */
+function entityreference_autocomplete_element_info() {
+  $types = array();
+
+  $types['entityreference'] = array(
+    '#input' => TRUE,
+    '#size' => 60,
+    '#autocomplete_path' => FALSE,
+    '#value_callback' => 'entityreference_autocomplete_value_callback',
+    '#process' => array('ajax_process_form', 'entityreference_autocomplete_process_entityreference'),
+    '#element_validate' => array('entityreference_autocomplete_validate_entityreference'),
+    '#theme' => 'textfield',
+    '#theme_wrappers' => array('form_element'),
+    // Custom attributes. Set to false so that nothing happens if a dev doesn't
+    // specify them.
+    '#era_entity_type' => FALSE,
+    '#era_bundles' => FALSE,
+    '#era_cardinality' => 1,
+    // Specify some sensible defaults for the number of results returned.
+    '#era_query_settings' => array(
+      'limit' => '50',
+    ),
+  );
+
+  // Since Drupal core 7.39, additional processing is necessary for
+  // autocomplete text fields. See https://www.drupal.org/node/2561431
+  // In prior versions of Drupal core, form_process_autocomplete() is not
+  // available.
+  if (function_exists('form_process_autocomplete')) {
+    $types['entityreference']['#process'][] = 'form_process_autocomplete';
+  }
+
+  return $types;
+}
+
+/**
+ * Form element value callback for "entityreference" element type.
+ *
+ * Turns the #default_value (entity IDs expected) into proper reference labels,
+ * leaving the references in the same way that they would be returned by the
+ * autocomplete callback.
+ *
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ * @param mixed $edit
+ *   If the form has been submitted, the value submitted for the element.
+ * @param array $form_state
+ *   An associative array containing the $form_state properties.
+ *
+ * @return string
+ *   The value to be placed in $element['#value'].
+ */
+function entityreference_autocomplete_value_callback(array $element, $edit = FALSE, &$form_state) {
+  // Just process the value when $edit comes as FALSE (no form submission), and
+  // if there are default values specified, transform them into proper labels.
+  if ($edit === FALSE && !empty($element['#default_value'])) {
+    // Only one entity referenced.
+    if (is_numeric($element['#default_value'])) {
+      $references_label = entityreference_autocomplete_label_for_reference($element['#era_entity_type'], $element['#default_value']);
+    }
+    // Multiple entities referenced.
+    elseif (is_array($element['#default_value'])) {
+      $referenced_labels = array();
+      foreach ($element['#default_value'] as $entity_id) {
+        $referenced_labels[] = entityreference_autocomplete_label_for_reference($element['#era_entity_type'], $entity_id);
+      }
+      $references_label = implode(', ', array_filter($referenced_labels));
+    }
+
+    // Labels assembled.
+    if (!empty($references_label)) {
+      return $references_label;
+    }
+
+    // This should never be reached, but if it's, return whatever default
+    // value was specified.
+    return $element['#default_value'];
+  }
+
+  // The user submitted a value for the element. Return it as is.
+  return $edit;
+}
+
+/**
+ * Form element processing handler for the "entityreference" element type.
+ *
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ * @param array $form_state
+ *   An associative array containing the $form_state properties.
+ *
+ * @return array
+ *   The processed element.
+ */
+function entityreference_autocomplete_process_entityreference(array $element, &$form_state) {
+  if (!empty($element['#era_entity_type'])) {
+    // Set the autocomplete path based on the entity type to look for.
+    $autocomplete_path = 'entityreference_autocomplete/autocomplete/' . $element['#era_entity_type'];
+
+    // If there's bundle filtering, add it. Otherwise, set a wildcard. Also,
+    // force the property to be an array.
+    if (!empty($element['#era_bundles']) && is_array($element['#era_bundles'])) {
+      $autocomplete_path .= '/' . implode('+', $element['#era_bundles']);
+    }
+    else {
+      $autocomplete_path .= '/*';
+    }
+
+    // Merge effective settings with the default settings array.
+    $element_info = entityreference_autocomplete_element_info();
+    $query_settings = array_merge($element_info['entityreference']['#era_query_settings'], $element['#era_query_settings']);
+    $autocomplete_path .= '/' . http_build_query($query_settings);
+    $element['#autocomplete_path'] = $autocomplete_path;
+  }
+
+  return $element;
+}
+
+/**
+ * Form element validation handler for "entityreference" elements.
+ *
+ * Note that #required is validated by core.
+ */
+function entityreference_autocomplete_validate_entityreference(array &$element, array &$form_state) {
+  $labels_string = $element['#value'];
+  $input_labels = entityreference_autocomplete_explode_tags($labels_string, TRUE);
+
+  // If there are more values than the allowed, set an error and return. No need
+  // to validate each of the values.
+  if ($element['#era_cardinality'] !== ERA_CARDINALITY_UNLIMITED && count($input_labels) > $element['#era_cardinality']) {
+    form_error($element, t('The "@field" field cannot contain more than @cardinality @format_plural_values.', array(
+      '@field' => isset($element['#title']) ? $element['#title'] : $element['#name'],
+      '@cardinality' => $element['#era_cardinality'],
+      '@format_plural_values' => format_plural($element['#era_cardinality'], 'value', 'values'),
+    )));
+
+    return;
+  }
+
+  $uuid_exists = function_exists('entity_get_uuid_by_id');
+  $entity_type = $element['#era_entity_type'];
+  $entity_info = entity_get_info($entity_type);
+  $query_settings = $element['#era_query_settings'];
+  $values = array();
+
+  $realname_exists = module_exists('realname');
+
+  foreach ($input_labels as $input_label) {
+    list($entity_label) = preg_split('/\s\((\d+)\)$/', $input_label);
+
+    // Query the database to see which entities match.
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', $entity_type);
+
+    // Check if user entered the exact entity id, and add a filter for it.
+    $exact_id_match = preg_match('/.+\((\d+)\)/', $input_label, $matches);
+    if ($exact_id_match) {
+      $query->entityCondition('entity_id', $matches[1]);
+    }
+
+    // Hack for #2735139 (Realname compatibility).
+    if (($entity_type != 'user') || (!$exact_id_match || !$realname_exists)) {
+      $label_column = entityreference_autocomplete_resolve_entity_label_column($entity_type);
+      $query->propertyCondition($label_column, $entity_label);
+    }
+
+    // Add bundles to the query, if specified.
+    if (!empty($element['#era_bundles']) && !empty($entity_info['entity keys']['bundle'])) {
+      $query->entityCondition('bundle', $element['#era_bundles']);
+    }
+
+    // Add the property conditions declared.
+    if (!empty($query_settings['property_conditions']) && is_array($query_settings['property_conditions'])) {
+      foreach ($query_settings['property_conditions'] as $property_condition) {
+        $operator = isset($property_condition[2]) ? $property_condition[2] : NULL;
+        $query->propertyCondition($property_condition[0], $property_condition[1], $operator);
+      }
+    }
+
+    // Add the field conditions declared.
+    if (!empty($query_settings['field_conditions']) && is_array($query_settings['field_conditions'])) {
+      foreach ($query_settings['field_conditions'] as $field_condition) {
+        $column = isset($field_condition[1]) ? $field_condition[1] : NULL;
+        $value = isset($field_condition[2]) ? $field_condition[2] : NULL;
+        $operator = isset($field_condition[3]) ? $field_condition[3] : NULL;
+        $delta_group = isset($field_condition[4]) ? $field_condition[4] : NULL;
+        $language_group = isset($field_condition[5]) ? $field_condition[5] : NULL;
+        $query->fieldCondition($field_condition[0], $column, $value, $operator, $delta_group, $language_group);
+      }
+    }
+
+    // Add a tag to the query so modules can alter it.
+    $query->addTag('era_query');
+    $query->addMetaData('era_search_string', $entity_label);
+
+    $matching_entities = $query->execute();
+
+    // No matches found.
+    if (empty($matching_entities[$entity_type])) {
+      // Error if there are no entities available for a required field.
+      form_error($element, t('There are no entities matching "%value"', array('%value' => $entity_label)));
+    }
+    // One or more matches found.
+    else {
+      $matching_entities = entity_load($entity_type, array_keys($matching_entities[$entity_type]));
+
+      if (count($matching_entities) > 1) {
+        // Display helpful error if there are several matching entities.
+        $multiples = array();
+
+        foreach ($matching_entities as $id => $entity) {
+          $multiples[] = $entity->{$label_column} . ' (' . $id . ')';
+        }
+
+        form_error($element, t('Multiple entities match this reference; "%multiple". 
+          Specify the one you want by appending the ID in parentheses, like "@value (@id)"',
+          array(
+            '%multiple' => implode('", "', $multiples),
+          )));
+      }
+      else {
+        $entity = current($matching_entities);
+        list($entity_id, , $bundle) = entity_extract_ids($entity_type, $entity);
+
+        // User doesn't have read (view) access to it, set same error as the one
+        // for no matches, since we don't want to reveal that the entity exists.
+        if (!entity_access('view', $entity_type, $entity)) {
+          form_error($element, t('There are no entities matching "%value"', array(
+            '%value' => $entity_label,
+          )));
+        }
+        else {
+          // Return some basic context of the entity referenced by the user.
+          $values[$entity_id] = array(
+            'entity_id' => $entity_id,
+            'entity_label' => entity_label($entity_type, $entity),
+            'entity_type' => $entity_type,
+            'entity_bundle' => $bundle,
+          );
+
+          // If uuid module is available.
+          if ($uuid_exists) {
+            $uuid = entity_get_uuid_by_id($entity_type, array($entity_id));
+            $values[$entity_id]['entity_uuid'] = !empty($uuid) ? reset($uuid) : NULL;
+          }
+        }
+      }
+    }
+  }
+
+  // If there's only one allowed, return values into the element's index.
+  $values = ($element['#era_cardinality'] === 1) ? current($values) : $values;
+  form_set_value($element, $values, $form_state);
+}
+
+/**
+ * Returns the label to be set for a reference field.
+ *
+ * @param string $entity_type
+ *   The type of the entity being referenced.
+ * @param string|int $entity_id
+ *   The ID of the Entity being referenced.
+ * @param bool $quote_wrap
+ *   Whether the label should be wrapped within quotes if it contains commas or
+ *   quotes. defaults to TRUE.
+ *
+ * @return string
+ *   The assembled label for the reference.
+ */
+function entityreference_autocomplete_label_for_reference($entity_type, $entity_id, $quote_wrap = TRUE) {
+  if ($entity_referenced = entity_load_single($entity_type, $entity_id)) {
+    $reference_label = entity_label($entity_type, $entity_referenced) . ' (' . $entity_id . ')';
+
+    // Names containing commas, preceding or trailing spaces, or quotes, must be
+    // wrapped in quotes.
+    $punctuation_included = (strpos($reference_label, ',') !== FALSE || strpos($reference_label, '"') !== FALSE || trim($reference_label) !== $reference_label);
+
+    if ($quote_wrap && $punctuation_included) {
+      $reference_label = '"' . str_replace('"', '""', $reference_label) . '"';
+    }
+    return $reference_label;
+  }
+
+  // No entity object loaded, so return NULL.
+  return NULL;
+}
+
+/**
+ * Returns the name of the column to use as the entity label for a given entity.
+ *
+ * @param string $entity_type
+ *   The entity type for which the column to use as label needs to be resolved.
+ *
+ * @return string
+ *   The name of the column to use as the entity label for the passed entity.
+ */
+function entityreference_autocomplete_resolve_entity_label_column($entity_type) {
+  $entity_info = entity_get_info($entity_type);
+  $label_column = FALSE;
+
+  // Check if the entity has a label column defined.
+  if (isset($entity_info['entity keys']['label'])) {
+    $label_column = $entity_info['entity keys']['label'];
+  }
+  // Interesting that Drupal's core doesn't define any label for users, is
+  // that considered a core bug?
+  else {
+    switch ($entity_type) {
+      case 'user':
+        $label_column = 'name';
+        break;
+    }
+  }
+
+  // Still no label available, fall back to entity id column.
+  if (!$label_column) {
+    $label_column = $entity_info['entity keys']['id'];
+  }
+
+  return $label_column;
+}
+
+/**
+ * Explodes a string of tags into an array.
+ *
+ * This is almost a clone of drupal's drupal_explode_tags() function. The reason
+ * to use this custom function is because drupal_explode_tags() assumes that the
+ * tags entered will be saved straight into the database after being returned,
+ * so it removes any escape formatting of the tags. That will make the
+ * autocomplete callback to remove any quotes added to tags when users add a
+ * different tag, making the escaping of previous ones to disappear, which
+ * ultimately will result in an invalid value error in the validation callback.
+ *
+ * This function does the same as drupal_explode_tags() in terms of exploding
+ * the tags, but it doesn't remove any escape formatting from the tags to be
+ * returned, unless it's explicitly requested.
+ *
+ * @param string $tags
+ *   String of tags to explode.
+ * @param bool $remove_escape_formatting
+ *   Flag indicating whether to remove the escape formatting for the tags.
+ *
+ * @return string[]
+ *   List of tags.
+ *
+ * @see drupal_explode_tags()
+ */
+function entityreference_autocomplete_explode_tags($tags, $remove_escape_formatting = FALSE) {
+  preg_match_all('%(?:^|,\ *)("(?>[^"]*)(?>""[^"]* )*"|(?: [^",]*))%x', $tags, $matches);
+  $typed_tags = array_unique($matches[1]);
+
+  if ($remove_escape_formatting) {
+    $tags = array();
+
+    foreach ($typed_tags as $tag) {
+      // If a user has escaped a term (to demonstrate that it is a group,
+      // or includes a comma or quote character), remove the escape formatting.
+      $tag = str_replace('""', '"', preg_replace('/^"(.*)"$/', '\1', $tag));
+
+      if ($tag != "") {
+        $tags[] = $tag;
+      }
+    }
+
+    return $tags;
+  }
+
+  return $typed_tags;
+}

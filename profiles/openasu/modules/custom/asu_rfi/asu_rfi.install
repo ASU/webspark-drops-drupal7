@@ -1,118 +1,452 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
+/** @noinspection PhpUnused */
+/** @noinspection PhpDocSignatureInspection */
+/** @noinspection PhpUnusedParameterInspection */
 
 /**
  * Implementation of hook_schema().
  */
 function asu_rfi_schema() {
-
-/* US states schema */
-$schema['asu_rfi_states_list'] = array(
-  'description' => 'List of US states',
-  'fields' => array(
-     'stateCode' => array(
-          'description' => 'State code',
-          'type' => 'varchar',
-          'length' => 225,
-          'not null' => TRUE),
-     'stateDesc' => array(
-          'description' => 'State Name',
-          'type' => 'varchar',
-          'length' => 225,
-          'not null' => TRUE
-          )
-       ),
-       'primary key' => array('stateCode'),
+  /* US states schema */
+  $schema['asu_rfi_states_list'] = array(
+    'description' => 'List of US states',
+    'fields' => array(
+    'stateCode' => array(
+      'description' => 'State code',
+      'type' => 'varchar',
+      'length' => 225,
+      'not null' => TRUE
+    ),
+    'stateDesc' => array(
+      'description' => 'State Name',
+      'type' => 'varchar',
+      'length' => 225,
+      'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('stateCode'),
   );
-
-/* US countries schema */ 
- $schema['asu_rfi_countries'] = array(
-   'description' => 'Countries list',
-   'fields' => array(
-     'countryCode3' => array(
+  /* US countries schema */
+  $schema['asu_rfi_countries'] = array(
+    'description' => 'Countries list',
+    'fields' => array(
+      'countryCode3' => array(
         'description' => 'Country code',
         'type' => 'varchar',
         'length' => 225,
-        'not null' => TRUE),
-     'countryDesc' => array(
+        'not null' => TRUE
+      ),
+      'countryDesc' => array(
         'description' => 'Country name',
         'type' => 'varchar',
         'length' => 225,
-        'not null' => TRUE),
+        'not null' => TRUE
+      ),
     ),
     'primary key' => array('countryCode3'),
-   );
-   
-   /* US countries schema */ 
- $schema['asu_rfi_sem_dates'] = array(
-   'description' => 'Start term dates',
-   'fields' => array(
-     'semId' => array(
+  );
+  /* Semester dates */
+  $schema['asu_rfi_sem_dates'] = array(
+    'description' => 'Start term dates',
+    'fields' => array(
+      'semId' => array(
         'description' => 'Semeter term ID',
         'type' => 'varchar',
         'length' => 225,
-        'not null' => TRUE),
-     'semLabel' => array(
+        'not null' => TRUE
+      ),
+      'semLabel' => array(
         'description' => 'Semester term label',
         'type' => 'varchar',
         'length' => 225,
-        'not null' => TRUE),
+        'not null' => TRUE
+      ),
     ),
     'primary key' => array('semId'),
-   );
+  );
 
-   return $schema;
+  return $schema;
 }
 
 function asu_rfi_install() {
-
   // Call initial configuration for form options upon install
   include('data/asu_rfi.form_options.inc');
-  asu_rfi_get_options_data('country', TRUE);
-  asu_rfi_get_options_data('state_province', TRUE);
-  asu_rfi_get_options_data('rfi_dedupe_list_terms', TRUE);
 
-  drupal_set_message('ASU RFI module has been installed. Configure module settings at <a href="/admin/config/content/asurfi">admin settings page</a>');
- 
+  // Update countries DB table
+  asu_rfi_get_form_select_options('country', TRUE);
+  // Insert states into DB table
+  asu_rfi_get_form_select_options('state_province', TRUE);
+  // Insert semester dates into DB table
+  asu_rfi_get_form_select_options('rfi_dedupe_list_terms', TRUE);
+
+  $rfi_config_url = "/admin/config/content/asurfi";
+  flogger('asu_rfi','ASU RFI module has been installed. Configure module settings at '
+    . '<a href="'. $rfi_config_url . '">admin settings page</a>', array(), 8);
+
   // Check if CAS module exists and enabled and update cas_exclude variables with asu_rfi callback urls
   if (module_exists('cas')) {
     $out = variable_get('cas_exclude', 'none');
     $out = $out . "\r\nasu_rfi/success/*\r\nasu_rfi/failure/*";
     variable_set('cas_exclude',$out);
   }
-  
-  // If honeypot module exists, set it's variable value
-  if(module_exists('honeypot')){
+
+  // If honeypot module exists, set its variable value
+  if (module_exists('honeypot')){
       variable_set('honeypot_element_name','rfihurl');
   }
-  
+
+  // Enable entityreference_autocomplete module for the ASU RFI admin form
+  if (!module_exists('entityreference_autocomplete')) {
+    module_enable(array('entityreference_autocomplete'));
+  }
+
   // Set the RFI form mode to "Test" initially upon module installation
   variable_set('asu_rfi_form_mode','test');
 }
 
+/**
+ * Delete all variables and remove DB tables
+ */
 function asu_rfi_uninstall() {
   drupal_uninstall_schema('asu_rfi');
-  variable_del('asu_rfi_form_mode');
-  variable_del('asu_rfi_google_analytics_key');
-  variable_del('asu_rfi_error_email');
-  variable_del('asu_rfi_from_email_field');
-  variable_del('asu_rfi_cached_programs');
-  variable_del('asu_rfi_cached_programs_timestamp');
+  db_delete('variable')
+    ->condition('name', 'asu_rfi_%', 'LIKE')
+    ->execute();
  }
 
 /**
- * + Enable Honeypot module if ASU RFI module is enabled (Now required for 1.2+)
+ * Enable Honeypot module if ASU RFI module is enabled (Now required for 1.2+)
  */
 function asu_rfi_update_7000(&$sandbox) {
-  if (module_exists('asu_rfi') && !module_exists('honeypot'))
-  {
+  if (module_exists('asu_rfi') && !module_exists('honeypot'))  {
     module_enable(array('honeypot'));
   }
 }
 
 /**
- * Implements hook_update_N
- * + Forces a rebuild of the module's features to include the domain and location piece 
+ * Forces a rebuild of the module's features to include the domain and location piece
  */
-function asu_rfi_update_7001(){
+function asu_rfi_update_7001(&$sandbox) {
   features_revert_module('asu_rfi_feature');
+}
+
+/**
+ * Enable Flogger, Entityreference Autocomplete modules; Update non-namespaced variable names.
+ * @throws \InvalidMergeQueryException
+ */
+function asu_rfi_update_7200(&$sandbox){
+  if (!module_exists('flogger')) {
+    module_enable(array('flogger'));
+  }
+  if (!module_exists('entityreference_autocomplete')) {
+    module_enable(array('entityreference_autocomplete'));
+  }
+  $or = db_or()
+    ->condition('v.name', 'last_attempt_SF_posting', 'LIKE')
+    ->condition('v.name', 'last_success_SF_posting', 'LIKE')
+    ->condition('v.name', 'last_failure_SF_posting', 'LIKE')
+    ->condition('v.name', 'SF_error_message_sent', 'LIKE')
+    ->condition('v.name', 'siteDomain', 'LIKE');
+  $updates_needed = Database::getConnection('default', 'default')
+    ->select('variable', 'v')
+    ->fields('v', array('name', 'value'))
+    ->condition($or)
+    ->execute()
+    ->fetchAllKeyed();
+  if (count($updates_needed) > 0) {
+    $additions = array();
+    foreach ($updates_needed as $name => $value) {
+      $additions['asu_rfi_' . $name] = $value;
+    }
+    foreach ($additions as $name => $value) {
+      db_merge('variable')
+        ->key(array(
+          'name' => $name))
+        ->fields(array(
+          'name' => $name,
+          'value' => $value,
+        ))
+        ->execute();
+    }
+    foreach ($updates_needed as $name => $value) {
+      Database::getConnection('default', 'default')
+        ->delete('variable')
+        ->condition('name', $name, 'LIKE')
+        ->execute();
+    }
+    $message = count($updates_needed) . " names of the ASU RFI module settings"
+     . " in the variable table were updated. See the ASU RFI module CHANGELOG "
+     . "file for more information.";
+  } else {
+    $message = "No variable naming updates were needed for the ASU RFI module.";
+  }
+  flogger('asu_rfi', $message, array(), WATCHDOG_INFO, TRUE);
+
+}
+/**
+ * Delete deprecated asu_rfi_siteDomain variable; Include expired asu_rfi nodes
+ * with cron executions of resubmitting them to middleware or deleting them (locally).
+ */
+function asu_rfi_update_7201(&$sandbox) {
+  Database::getConnection('default', 'default')
+    ->delete('variable')
+    ->condition('name', 'asu_rfi_siteDomain', 'LIKE')
+    ->execute();
+  variable_set('asu_rfi_expired_submit', 'all');
+  variable_set('asu_rfi_expired_delete', 'all');
+  flogger('asu_rfi', 'The unused asu_rfi_siteDomain setting was deleted,'
+    . ' and expired RFI submissions will be resubmitted and/or deleted on every future cron run.');
+}
+
+/**
+ * Update submission statuses to more instructional, guiding values
+ */
+function asu_rfi_update_7202(&$sandbox) {
+  // 1) Update EXISTING Submission Status values in field_data tables
+  // Complete => Form_Completed
+  // Incomplete => Form_Multi_Partial
+  // Pending => SF_Multi_Pending
+  // action_required => SF_Failed
+  // SF_Complete => SF_Completed
+  $tables = _asu_rfi_get_status_field_tables();
+  $statuses = array(
+    'Complete' => 'Form_Completed',
+    'Incomplete' => 'Form_Multi_Partial',
+    'Pending' => 'SF_Multi_Pending',
+    'action_required' => 'SF_Failed',
+    'SF_Complete' => 'SF_Completed',
+  );
+  foreach ($tables as $table) {
+    foreach ($statuses as $old => $new) {
+      $query = Database::getConnection('default', 'default')
+        ->update($table)
+        ->fields(array(
+          'field_rfi_submission_status_value' => $new,
+        ))
+        ->condition('field_rfi_submission_status_value', $old, 'LIKE');
+      $query->execute();
+    }
+  }
+
+  // 2) MANUALLY update field_rfi_submission_status in field_config (values exist),
+  // and adding new Current student completed value.
+  $query = Database::getConnection('default', 'default')
+    ->select('field_config', 'fc')
+    ->fields('fc', array('data'))
+    ->condition('fc.field_name', 'field_rfi_submission_status', 'LIKE')
+    ->execute();
+  $field_base = $query->fetchField();
+  if (!empty($field_base)) {
+    $field_base = unserialize($field_base);
+    if (isset($field_base['settings']['allowed_values'])) {
+      $field_base['settings']['allowed_values'] = array(
+        'Form_Completed' => 'Ready for SF POST',
+        'Form_Multi_Partial' => 'Partial multiform submitted',
+        'SF_Multi_Pending' => 'SF POST Multiform Pending',
+        'SF_Failed' => 'SF POST Failed',
+        'SF_Completed' => 'SF POST Successful',
+        'Form_Completed_No_SF' => 'Completed (No Salesforce)',
+      );
+    } else {
+      flogger('asu_rfi', __FUNCTION__ . ': Field field_rfi_submission_status settings could not be updated.'
+        . 'Check the Submission status field dropdown to ensure the proper values are available.',
+        array(), WATCHDOG_ERROR);
+    }
+    $field_base = serialize($field_base);
+    Database::getConnection('default')
+      ->update('field_config')
+      ->fields(array('data' => $field_base))
+      ->condition('field_name', 'field_rfi_submission_status', 'LIKE')
+      ->execute();
+
+    // Empty form_cache table to reset node edit forms with old values (probably needs cleanup anyways)
+    Database::getConnection('default')
+      ->delete('cache_form')
+      ->execute();
+  }
+
+  // 3) Rebuild ASU RFI feature to update the RFI forms
+  features_revert_module('asu_rfi_feature');
+  // 4) Manually clears views cache for Submissions report view.
+  $view = views_get_view('asu_rfi_submissions_report');
+  $view->set_display('default');
+  $cache = $view->display_handler->get_plugin('cache');
+  $cache->cache_flush();
+
+  flogger('asu_rfi', 'Submission status values were updated to more'
+  . ' helpful, friendly values');
+}
+
+/**
+ * Delete ALL RFI form submissions that have been sent to Salesforce or are expired (14 days old).
+ */
+function asu_rfi_update_7203(&$sandbox) {
+
+  $nids_per_pass = 50;
+
+  // First update run ONLY (Initialize update counters, data)
+  if (!isset($sandbox['total'])) {
+    $total_count = _asu_rfi_get_submissions_to_delete(0, TRUE);
+    $sandbox['total'] = $total_count;
+    $sandbox['max'] = $nids_per_pass;
+    $sandbox['progress'] = 0;
+    $sandbox['messages'] = array();
+    $sandbox['current'] = -1; // Last node ID read (starts at -1)
+
+    $message = t(__FUNCTION__ . ' - There are @count nodes to delete.', array('@count' => $total_count));
+    flogger('asu_rfi', $message);
+    }
+
+  // Actual batch operation to delete
+  $all_nids = _asu_rfi_get_submissions_to_delete($nids_per_pass);
+
+  foreach ($all_nids as $nid) {
+    node_delete($nid);
+    $sandbox['progress']++;
+    $sandbox['current'] = $nid;
+  }
+
+  // Check to see if finished.
+  $sandbox['#finished'] = ($sandbox['progress'] >= $sandbox['total'])
+    ? TRUE : ($sandbox['progress'] / $sandbox['total']);
+
+  if ($sandbox['#finished'] === TRUE) {
+    return "\n" . t('The expired/completed RFI form submissions have been deleted.');
+  }
+  else {
+    $percentage = $sandbox['#finished'];
+    $percentage = round((float) $percentage * 100, 1) . '%';
+    $message = t('Deleted ' . $sandbox['progress'] . ' of '
+      . $sandbox['total'] . " submissions (" . $percentage . " complete). "
+      . "Last node deleted: @nid...",
+      array('@nid' => (isset($nid)) ? $nid : 'unknown'));
+
+    // Set message and add for final report.
+    //$sandbox['messages'][] = $message . "\n";
+    return $message;
+  }
+}
+
+/**
+ * Add separate VBO permission for using views bulk operations.
+ */
+function asu_rfi_update_7204(&$sandbox) {
+  $roles = user_roles(TRUE, 'administer asu rfi');
+  if (count($roles)) {
+    foreach ($roles as $nid => $name) {
+      user_role_grant_permissions($nid, array('execute asu rfi vbo'));
+    }
+    flogger('asu_rfi', __FUNCTION__ . ' - Added new VBO permission for roles that had existing '
+      . '"administer ASU RFI" permissions.');
+  }
+}
+
+/**
+ * Update current student form submissions status to Completed (No Salesforce)
+ */
+function asu_rfi_update_7205(&$sandbox) {
+  // #1 Update existing form_type values to human English
+  $tables = array(
+    'field_data_field_rfi_form_type',
+    'field_revision_field_rfi_form_type',
+  );
+  $values = array(
+    'current_undergrad_form' => 'Current undergraduate form',
+    'current_grad_form' => 'Current Grad form',
+  );
+  foreach ($tables as $table) {
+    foreach ($values as $old => $new) {
+      Database::getConnection('default', 'default')
+        ->update($table)
+        ->fields(array('field_rfi_form_type_value' => $new))
+        ->condition('field_rfi_form_type_value', $old, 'LIKE')
+        ->execute();
+    }
+  }
+
+  // #2 Update submission status of all current student forms, using NIDs from form_type tables.
+  $db_or = db_or()
+    ->condition('field_rfi_form_type_value', $values['current_undergrad_form'])
+    ->condition('field_rfi_form_type_value', $values['current_grad_form']);
+  $query = Database::getConnection('default')
+    ->select($tables[0], 'ft')
+    ->fields('ft', array('entity_id'))
+    ->condition($db_or)->execute()->fetchCol();
+
+  // Change to submission status tables
+  $tables = array(
+    'field_data_field_rfi_submission_status',
+    'field_revision_field_rfi_submission_status',
+  );
+
+  if (count($query) > 0) {
+    $nids = implode(',', $query);
+    foreach ($tables as $table) {
+      Database::getConnection('default', 'default')
+        ->update($table)
+        ->fields(array(
+          'field_rfi_submission_status_value' => 'Form_Completed_No_SF',
+        ))
+        ->where('entity_id IN (' . $nids . ')')
+        ->execute();
+    }
+    flogger('asu_rfi', __FUNCTION__ . ': Any current student form '
+      . ' submissions (if they existed) were updated to "Completed (No Salesforce)".');
+  }
+}
+
+/**
+ * Copy confirmation node values into replacement confirmation_page values.
+ */
+function asu_rfi_update_7206(&$sandbox) {
+  $values = array(
+    'asu_rfi_undergrad_confirm_node' => 'asu_rfi_undergrad_confirm',
+    'asu_rfi_grad_confirm_node' => 'asu_rfi_grad_confirm',
+  );
+  foreach ($values as $old => $new) {
+    $nid = variable_get($old);
+    if (!empty($nid)) {
+      $node = entity_load_single('node', (int) $nid);
+      if ($node) {
+        $entity = serialize(
+          array(
+            'entity_id' => (string) $node->nid,
+            'entity_label' => $node->title,
+            'entity_type' => 'node',
+            'entity_bundle' => $node->type,
+            'entity_uuid' => $node->uuid,
+          )
+        );
+        // manually insert serialized array
+        Database::getConnection('default', 'default')
+          ->merge('variable')
+          ->fields(array(
+            'name' => $new,
+            'value' => $entity,
+          ))
+          ->condition('name', $new, 'LIKE')
+          ->execute();
+        // Add separate value for NIDs
+        variable_set($new . '_nid', $node->nid);
+        variable_del($old);
+        flogger('asu_rfi', __FUNCTION__ . ': ' . $old
+          . ' has been updated to ' . $new . ' in the variables table.');
+      }
+      else {
+        flogger('asu_rfi', __FUNCTION__ . ': Node ID @nid does'
+        . ' not exist. Skipping update of @old.', array('@nid' => $nid, '@old' => $old),
+          WATCHDOG_WARNING, TRUE, TRUE, FALSE);
+      }
+    } else {
+      flogger('asu_rfi', __FUNCTION__ . ': ' . $old . ' was not'
+       . ' already set. Skipping variable update.');
+    }
+  }
+}
+
+/**
+ * Add Online campus URL to variable table for admin form configuration options
+ */
+function asu_rfi_update_7207(&$sandbox) {
+  variable_set('asu_rfi_online_url', 'https://asuonline.asu.edu/lead-submissions-v3.3/programs');
 }

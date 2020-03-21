@@ -456,6 +456,10 @@ function video_embed_field_handler_youtube_form_validate($element, &$form_state,
 function _video_embed_field_get_vimeo_data($url) {
   // Set oembed endpoint
   $oembed_endpoint = 'http://vimeo.com/api/oembed';
+  // Vimeo refactoring for player.vimeo.com URLs
+  if (strpos($url, 'player.vimeo.com') !== FALSE) {
+     $url = preg_replace('|^(https?)://player.(vimeo.com)/video/(\d+)$|', '$1://$2/$3', $url);
+  }
   // Fetch vimeo data
   $response = drupal_http_request($oembed_endpoint . '.json?url=' . rawurlencode($url));
 
