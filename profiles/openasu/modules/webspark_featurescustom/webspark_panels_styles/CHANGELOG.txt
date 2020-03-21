@@ -1,3 +1,6 @@
+Webspark Panels Styles 7.x-1.6, 2020-xx-xx
+------------------------------
+- Fixed syntax error in .add-margin-xl-above CSS selector rule.
 
 Webspark Panels Styles 7.x-1.5, 2020-01-07
 ------------------------------
@@ -5,7 +8,7 @@ Webspark Panels Styles 7.x-1.5, 2020-01-07
 
 Webspark Panels Styles 7.x-1.4, 2019-12-30
 ------------------------------------
-- Updated CSS class names to be more semantic
+- Updated CSS class names to be more semantic.
 
 Webspark Panels Styles 7.x-1.3-dev, 2014-12-16
 ------------------------------

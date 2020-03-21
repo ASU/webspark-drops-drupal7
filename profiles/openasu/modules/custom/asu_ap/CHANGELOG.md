@@ -11,7 +11,7 @@
 - Re-added missing "asu_feeds_text_format" Drupal input format
 - Campus options updated to current list
 - Added configuration form to handle new, optional elements of degree pages
-  pulled in from Degree Search can be toggled on/off:
+  pulled in from Degree Search that can be toggled on/off:
     - The visibility of degree page fields with data imported from Degree
       Search data
     - Showing/hiding of marketing video content at top of degree pages
@@ -24,9 +24,9 @@
 ##### UI/UX Improvements
 - Degree pages:
     - Added canonical URLs in <link> tags pointing at Degree Search page counterparts for SEO improvements
-    - Added marketing text and video pulled in from Degree Search (including new logic to determine when to show this imported content)
+    - Added marketing text and video pulled in from Degree Search and logic to determine when to show them
     - Added several newer Degree Search pages elements to individual degree page output middle section
-    - Online campus links now point to asuonline.asu.edu degree pages
+    - Online campus link now point to the corresponding asuonline.asu.edu degree page
     - Added missing and/or new degree "special categories" links to title banner
     - Special category text now link to explanations (imported from Degree Search) optionally rendered at the bottom of the page.
 - Updated casing to "Sentence casing" (vs. Title Casing)
