@@ -126,7 +126,7 @@ before_script:
   # Enable Panopoly Test module
   - drush pm-enable panopoly_test --yes
   - drush pm-enable webspark_test --yes
-  - drush rr
+  - drush updb
   - cd ./profiles/openasu/modules/panopoly/panopoly_test/behat
 
 script:
