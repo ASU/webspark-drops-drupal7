@@ -6,6 +6,6 @@ Hide the following during testing:
 
 .cc-banner.cc-type-info,
 #panels-ipe-edit-control-form .form-type-checkbox,
-#panels-ipe-edit-control-form #edit-log {
+#panels-ipe-control-container .form-item-log {
   display: none !important;
 }
