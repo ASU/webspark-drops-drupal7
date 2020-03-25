@@ -1,0 +1,11 @@
+/*
+Hide the following during testing:
+1) revision checkbox and log <input>
+2) ASU's GDPR Cookie consent <span>
+*/
+
+#panels-ipe-edit-control-form .form-item-revision,
+#panels-ipe-edit-control-form .form-item-log,
+.cc-banner.cc-type-info {
+  display: none !important;
+}

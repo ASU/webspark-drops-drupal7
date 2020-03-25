@@ -1,12 +1,18 @@
-<?php
+<?php /** @noinspection PhpUnused */
 /**
  * Implements hook_install()
  *
  * Set up private file path and tmp directory
  */
 function webspark_test_install() {
-
-  // Set the private and temporary file paths.
-  variable_set('file_private_path', 'sites/default/files/private');
-  variable_set('file_temporary_path', '/tmp');
+  // Set the private and temporary file paths for this module to run
+  $settings = array(
+    'file_private_path' => 'sites/default/files/private',
+    'file_temporary_path' => '/tmp',
+  );
+  foreach ($settings as $name => $value) {
+    if (!variable_get($name)) {
+      variable_set($name, $value);
+    }
+  }
 }

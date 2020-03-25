@@ -2,23 +2,21 @@ default:
   suites:
     default:
       paths:
-        features: '%paths.base%/features'
+        features: 'features'
       filters:
         tags: "~@chrome"
       contexts:
         - FeatureContext
         - Drupal\DrupalExtension\Context\DrupalContext
         - Drupal\DrupalExtension\Context\MinkContext
-        - Drupal\DrupalExtension\Context\MarkupContext
-        - Drupal\DrupalExtension\Context\DrushContext
         - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+        - Drupal\DrupalExtension\Context\MarkupContext
         - Drupal\DrupalExtension\Context\RawDrupalContext
   extensions:
-    Behat\MinkExtension:
+    Drupal\MinkExtension:
       goutte: ~
       selenium2: ~
-      #base_url: http://localhost
-      #files_path: './profiles/openasu/modules/panopoly/webspark_test/tests'
     Drupal\DrupalExtension:
       blackbox: ~
       api_driver: 'drupal'
@@ -63,14 +61,34 @@ default:
         # Webspark additions to fix incompatibilities with stock Panopoly tests
         TabsID: "#tabs"
 
-# Setup for Google Chrome only tests.
-chrome:
-  suites:
-    default:
-      filters:
-        tags: "@chrome"
-  extensions:
-    Behat\MinkExtension:
-      selenium2:
-        browser: chrome
-        capabilities: {"browser": "chrome", "browserName": "chrome", "browserVersion": "ANY", "version": "ANY"}
+# Maybe setup for Firefox only tests.
+#firefox:
+
+# OLD Chrome-only tests. Google Chrome is now the default.
+#chrome:
+#  suites:
+#    default:
+#      filters:
+#        tags: "@chrome"
+#  extensions:
+#    Drupal\MinkExtension:
+#      selenium2:
+#        browser: chrome
+#        capabilities:
+#          browser: chrome
+#          browserName: chrome
+#          browserVersion: ANY
+#          version: ANY
+#          extra_capabilities:
+#            chromeOptions:
+#              w3c: false
+#              args:
+#                - "--start-maximized"
+#                - "--headless"
+#                - "--disable-gpu"
+#          chrome:
+#            switches:
+#              - "--headless"
+#              - "--disable-gpu"
+#              - "--window-size=2560,1440"
+#              - "--no-sandbox"

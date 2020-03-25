@@ -10,7 +10,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
  * Define application features from the specific context.
  */
 class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext {
-  
+
   /**
    * Initializes context.
    * Every scenario gets its own context object.
@@ -24,6 +24,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
 
   /**
    * @When I mock the migration source :arg1
+   * @throws Exception
    */
   public function iMockTheMigrationSource($arg1) {
     $path = $this->getMinkParameter('files_path') . '/' . $arg1;
@@ -31,7 +32,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
     $file = file_save_data( $file_contents, "private://isearch/feeds/asu_isearch_master.json", FILE_EXISTS_REPLACE );
 
     if (!$file) {
-      throw new \Exception('Migration mocking failed at '.__FUNCTION__);
+      throw new \Exception('Migration mocking failed at ' . __FUNCTION__);
     }
   }
 

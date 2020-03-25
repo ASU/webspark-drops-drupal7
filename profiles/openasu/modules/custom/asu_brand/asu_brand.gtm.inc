@@ -24,13 +24,13 @@ function asu_brand_page_process(&$children, $elements) {
        $custom_gtm = variable_get('asu_brand_gtm_override', '');
        $gtm = (trim($custom_gtm) != '') ? $custom_gtm : asu_brand_get_gtm_snippet();
      }
-     else {
-       $gtm = '<!--GTM Code removed for testing -->';
-     }
+    else {
+      $gtm = '<!--GTM Code removed for testing -->';
+    }
     // Insert snippet after the opening body tag.
-     if ($gtm) {
-       $children = preg_replace('@<body[^>]*>@', '$0' . $gtm, $children, 1);
-     }
+    if ($gtm) {
+      $children = preg_replace('@<body[^>]*>@', '$0' . $gtm, $children, 1);
+    }
   }
   return $children;
 }

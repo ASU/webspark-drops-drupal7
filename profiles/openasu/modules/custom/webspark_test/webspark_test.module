@@ -1,5 +1,14 @@
-<?php
+<?php /** @noinspection PhpUnusedParameterInspection */
 /**
  * @file
  * .module file.
  */
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function webspark_test_preprocess_html(&$variables) {
+  if (variable_get('asu_brand_ci_testing') === 1) {
+    drupal_add_css(drupal_get_path('module', 'webspark_test') . '/css/webspark-test.css');
+  }
+}

@@ -1,19 +1,23 @@
-language: php
+version: ~> 1.0
 
-addons:
-  artifacts: true
-  chrome: stable
+# make sure we test on latest xenial environment
+sudo: required
+os: linux
+dist: xenial
+
+language: php
 
 # PHP 7
 php:
   - 7.2
 
-# make sure we test on latest xenial environment
-sudo: required
-dist: xenial
+addons:
+  artifacts: true
+  chrome: stable
 
 services:
   - mysql
+  - redis
 
 # Cache Composer & Drush directories.
 cache:
@@ -31,7 +35,7 @@ branches:
   only:
     - master
     - travis-ci
-    
+
 # Cut down on git depth from default of 50
 git:
   depth: 3
@@ -42,7 +46,7 @@ before_install:
   #- sh -e /etc/init.d/xvfb start
   #- sleep 3
   # Added screen size (1024x768 - as defined in /etc/init.d/xvfb - isway too small)
-  - /sbin/start-stop-daemon --start --verbose --pidfile /tmp/cucumber_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1600x1200x16
+  - /sbin/start-stop-daemon --start --verbose --pidfile /tmp/cucumber_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 2560x1440x16
   - sleep 1
   # Disable PHP features - XDebug
   - phpenv config-rm xdebug.ini
@@ -58,15 +62,29 @@ install:
   - composer global require --no-interaction drush/drush:7.*
 
   # Download LATEST_RELEASE of ChromeDriver
+
+  - CHROME_MAIN_VERSION=`google-chrome-stable --version | sed -E 's/(^Google Chrome |\.[0-9]+ )//g'`
+  - echo $CHROME_MAIN_VERSION
+  - CHROMEDRIVER_VERSION=`curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_MAIN_VERSION"`
+  - echo $CHROMEDRIVER_VERSION
+  - curl "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -O
+  - unzip chromedriver_linux64.zip -d ~/bin
+  - cd ~/bin
+  - ls -las
+  - export PATH=/home/travis/bin:$PATH
+
+# existing ChromeDriver commands
+  - cd ~/
   # https://sites.google.com/a/chromium.org/chromedriver/downloads - Downloads page
   # https://chromedriver.storage.googleapis.com/ - XML of latest downloads
-  - cd ~/
-  - wget -N https://chromedriver.storage.googleapis.com/$(curl -L https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
-  - unzip ~/chromedriver_linux64.zip -d ~/
-  - rm ~/chromedriver_linux64.zip
-  - sudo mv -f ~/chromedriver /usr/local/share/
-  - sudo chmod +x /usr/local/share/chromedriver
-  - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+  # - wget -N https://chromedriver.storage.googleapis.com/80.0.3987.16/chromedriver_linux64.zip
+  #  - wget -N https://chromedriver.storage.googleapis.com/$(curl -L https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
+  #- unzip ~/chromedriver_linux64.zip -d ~/
+  #- rm ~/chromedriver_linux64.zip
+  #- sudo mv -f ~/chromedriver /usr/local/share/
+  #- sudo chmod +x /usr/local/share/chromedriver
+  #- sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+  #- export CHROME_BIN=chromium-browser
 
   # Build Behat dependencies
   - cd $TRAVIS_BUILD_DIR/profiles/openasu/modules/panopoly/panopoly_test/behat
@@ -88,10 +106,10 @@ install:
   - sudo chmod -R 777 sites
 
   # Get Selenium
-  - wget https://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
-  - java -jar selenium-server-standalone-2.53.0.jar > /dev/null 2>&1 &
-  #- wget https://selenium-release.storage.googleapis.com/3.0-beta2/selenium-server-standalone-3.0.0-beta2.jar
-  #- java -jar selenium-server-standalone-3.0.0-beta2.jar > /dev/null 2>&1 &
+  # - 3.9/selenium-server-standalone-3.9.1.jar
+  - wget https://selenium-release.storage.googleapis.com/3.9/selenium-server-standalone-3.9.1.jar
+  - java -jar -Dwebdriver.chrome.driver="/home/travis/bin/chromedriver" selenium-server-standalone-3.9.1.jar > /dev/null 2>&1 &
+  # - java -jar selenium-server-standalone-3.9.1.jar > /dev/null 2>&1 &
   - sleep 3
 
   # Disable sendmail
@@ -112,8 +130,10 @@ before_script:
   - cd ./profiles/openasu/modules/panopoly/panopoly_test/behat
 
 script:
+  - bin/behat --init
   - bin/behat --colors --tags '~@webspark_ignore' --tags '~@panopoly_demo' --tags '~@panopoly_search' --config behat.travis.yml
   - cd ../../../custom/webspark_test/behat
+  - bin/behat --init
   - bin/behat --colors --config behat.travis.yml
 
 after_script:
