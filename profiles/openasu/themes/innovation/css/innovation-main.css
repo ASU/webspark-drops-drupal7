@@ -1022,3 +1022,9 @@ body #content .ui-tabs .ui-tabs-nav li a {
   color: #8C1D40;
   border-bottom: 1px dotted #8C1D40;
 }
+
+.cc-banner.cc-type-info,
+#panels-ipe-edit-control-form .form-type-checkbox,
+#panels-ipe-edit-control-form #edit-log {
+  display: none !important;
+}
