@@ -4,8 +4,8 @@ Hide the following during testing:
 2) ASU's GDPR Cookie consent <span>
 */
 
-#panels-ipe-edit-control-form .form-item-revision,
-#panels-ipe-edit-control-form .form-item-log,
-.cc-banner.cc-type-info {
+.cc-banner.cc-type-info,
+#panels-ipe-edit-control-form .form-type-checkbox,
+#panels-ipe-edit-control-form #edit-log {
   display: none !important;
 }
