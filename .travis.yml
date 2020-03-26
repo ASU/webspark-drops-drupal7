@@ -57,9 +57,9 @@ install:
   - sudo apt-get update > /dev/null
   - "mysql -e 'create database drupal;'"
 
-  # Install latest Drush 8.x.
+  # Install latest Drush 7.x.
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  - composer global require --no-interaction drush/drush:8.*
+  - composer global require --no-interaction drush/drush:7.*
 
   # Download LATEST_RELEASE of ChromeDriver
 
