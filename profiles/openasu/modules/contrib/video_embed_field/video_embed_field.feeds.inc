@@ -53,18 +53,19 @@ function video_embed_field_set_target($source, $entity, $target, $value) {
   $field = isset($entity->$field_name) ? $entity->$field_name : array(LANGUAGE_NONE => array());
 
   // Allow for multiple mappings to the same target.
-  $count = call_user_func_array('array_merge_recursive', $field[LANGUAGE_NONE]);
-  $delta = count($count[$sub_field]);
+
+  // Additional checks for empty values before passing $value
+  $count = (!empty($field[LANGUAGE_NONE])) ? call_user_func_array('array_merge_recursive', $field[LANGUAGE_NONE])
+    : 0;
+  $delta = (is_array($count)) ? count($count[$sub_field]) : 0;
+  // End additional checks
 
   foreach ($value as $v) {
-
     if ($info['cardinality'] != FIELD_CARDINALITY_UNLIMITED && $info['cardinality'] <= $delta) {
       break;
     }
-
     if (is_scalar($v)) {
       $field[LANGUAGE_NONE][$delta][$sub_field] = $v;
-
       $delta++;
     }
   }

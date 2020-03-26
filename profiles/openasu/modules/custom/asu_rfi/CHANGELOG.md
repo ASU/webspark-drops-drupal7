@@ -1,10 +1,88 @@
 # ASU Request for Information Changelog
 
+### ASU RFI 7.x-3.0, 2020-02-11
+
+#### Major overhaul of the entire module
+##### Architecture & Development
+
+- Refactored and/or consolidated many functionally duplicitous functions and files
+- Fixed the naming convention of configuration variables and private PHP functions to match Drupal standards
+- Removed unused configuration variables
+- Created Fun Logger (flogger) module to improve the developer debugging experience
+- Added internal documentation/comments for developers
+- Required EntityReference_autocomplete contrib module as a dependency
+- Updated Multiblock contrib module (v1.6) plus other patches
+- Integrated the Queue API to queue larger middleware submission related tasks (to avoid web page timeouts)
+- Utilized drupal_static for performance improvements
+- Added UNDERGRAD/GRAD constants for universal module use.
+- Added "Delete RFI submissions" permission for RFI submissions report operations
+- Integrated usage of the Database API
+- Utilized the Batch API to update existing data for the code and UI changes.
+- Combined comparable RFI form element generation into single location to maintain element consistency between
+  form types
+- Moved many form customizations from hook_form_alter into the initial form generation logic so AJAX rendering
+  would consistently work
+
+##### More bug fixes
+
+- Updated deprecated PHP code to PHP 7.x standards
+- The Request Info button now correctly chooses when and how to point to existing RFI forms
+- RFI multiblock instance settings now correctly save for grad RFI forms when all majors are wanted for a single RFI form block
+- Fixed multiblock ID issues.
+- Fixed instance settings for multistep RFI form blocks
+- Fixed JSON feed URL to ASUOnline program data sources (also forces an HTTPS connection)
+- Added endpoint availability detection to avoid hanging a site while attempting to POST submissions to unavailable middleware
+- Added try/catch to cURL calls for graduate RFI posts to middleware
+- Re-added limited integration with deprecated ASU Degrees module-generated degrees pages
+- Fixed state and country form field logic
+- Refactored the CSS, JS (ECMAScript v1.6+) and added other module theming improvements
+
+##### UI/UX Improvements
+
+- RFI submission reports page improvements
+    * Updated RFI submission status value options, and improved the related help text
+    * Reorganized the report's columns to put more relevant data up towards the front
+    * Improved the messaging of the submission's current status for end users
+    * Added a "Delete submissions" bulk operation option
+    * Cleaned up the view's theming
+
+- RFI configuration page improvements/fixes
+    * Added easier to find "RFI settings" admin menu link under "Configuration"
+    * Reorganized the configuration form items into categories
+    * Added dynamic messaging about middleware auth key status
+    * Inserted Online campus URL feed field for future update flexibility
+    * Confirmation pages can now be selected via autocomplete based on the page's title
+    * The automatic resubmission of failed RFI submissions and the deletion of qualifying RFI submissions (both via cron jobs) can be toggled on/off
+
+- Form improvements
+    * The major is now chosen automatically regardless of the RFI form type (works for both undergrad and graduate programs)
+    * Added missing form field validation to email, phone number, and email fields
+    * RFI blocks now display error messages (to admins only) with helper instructions for when the form isn't rendering within a correctly placed block on a degrees page
+    * Added AJAX-powered, dynamic start term options generation for graduate degrees, based on degree and campus selections
+    * Updated ASU campus list options
+    * Added better, "this program is not available", logic
+    * Removed 'align="left|right|center"' <td> tag properties to improve accessibility.
+
+- Updated README documentation for end users
+
+##### Data Management
+
+- Updated RFI submission deletion policies to adhere to the University Data Handling Standard.
+    * Upon updating the module to this version, all submissions older than 14 days old upon updating the module, regardless of status
+    * All submissions that have successfully been sent onto any Salesforce middleware are deleted upon every cron run
+    * All submissions that have not been sent on (status SF_Failed) are resubmitted every time a cron job runs
+    * All submissions that have failed for 14 days past the initial submission date are deleted at the next cron run - regardless of their status
+
+---
+
+### ASU RFI 7.x-1.16, 2019-10-04
+- Fixed PHP 7.x compatibility issues/warnings
+- More refactoring of code
+
 ### ASU RFI 7.x-1.15, 2019-08-02
 - Fixed file permissions (755 to 644) for PHP files
-- Refactored and reduced code for form widgets with pre-populating values/options 
+- Refactored and reduced code for form widgets with pre-populating values/options
   (states, countries, semester dates)
-
 
 ### ASU RFI 7.x-1.14, 2019-02-25
 - Update RFI confirmation email wording

@@ -2,5 +2,6 @@ name = ASU Academic Programs
 description = "Contains the base configuration for the ASU Academic Programs module."
 core = 7.x
 package = ASU
-version = 7.x-2.6
+version = 7.x-3.0
 dependencies[] = asu_ap_feature
+files[] = includes/asu_ap.admin.inc

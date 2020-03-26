@@ -1,3 +1,8 @@
+Innovation 7.x-1.16, 2020-xx-xx
+-------------------------------
+- Added horizontal rule tag (<hr>) to list of WYSIWYG acceptable elements
+-
+
 Innovation 7.x-1.15, 2019-12-31
 -------------------------------
 - Updated version of Webspark in template.php

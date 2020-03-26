@@ -47,10 +47,8 @@ function flogger($module,
   // Generate Drupal message
   if ($drupal_message) {
     $show_message = TRUE;
-    if ($dsm_admin_only) { // only show to admin roles?
-      if (drupal_valid_path('admin')) {
-        $show_message = FALSE;
-      }
+    if ($dsm_admin_only && !drupal_valid_path('admin')) {
+      $show_message = FALSE;
     }
     if ($show_message) {
       $severity = _flogger_type_converter('drupal_message', $severity);

@@ -25,33 +25,148 @@ class ASUeAdvisorFeedParser extends FeedsParser {
     // Parse the items - flatten where necessary
     foreach ($parsed_data as $key => $data) {
 
-      // Unique ID for the plan
-      $parsed_data[$key]['guid'] = md5($parsed_data[$key]['AcadPlan']);
-
+      // Parsing data from similar feed structures needing to return TRUE if values exist
+      /*
+      <member>
+          <name>concurrentDegrees</name>
+          <value>
+              <array>
+                  <data>
+                      <value>
+                          <struct>
+                              <member>
+                                  <name>subplanDeadlines</name>
+                                  <value>
+                                      <struct/>
+                                  </value>
+                              </member>
+                          </struct>
+                      </value>
+                  </data>
+              </array>
+          </value>
+      </member>
+       */
       // Accelerated degrees
-      if (count($data['accelerateDegrees'])) {
-        $acceleratedDegree = array();
-        $parsed_data[$key]['acceleratedDegree'] = 1;
-      }
-
       // Concurrent degrees
-      if (count($data['concurrentDegrees'])) {
-        $concurrentDegree = array();
-        $parsed_data[$key]['concurrentDegree'] = 1;
-      }
-
-      // New degrees
-      if (count($data['DegreeNew'])) {
-        $newDegree = array();
-        $ndVal = $data['DegreeNew'];
-        if ($ndVal == 1) {
-          $parsed_data[$key]['newDegree'] = 1;
+      $toBeProcessed = array('accelerateDegrees', 'concurrentDegrees');
+      foreach ($toBeProcessed as $field) {
+        if (count($data[$field])) {
+          $parsed_data[$key][$field] = 1;
         }
       }
 
+      // Parsing data from similar <array> structures in the feed
+      /*
+       <member>
+          <name>CollegeUrlJoint</name>
+          <value>
+              <array>
+                  <data>
+                      <value>http://clas.asu.edu/</value>
+                  </data>
+              </array>
+          </value>
+      </member>
+      <member>
+          <name>gradAdditionalRequirements</name>
+          <value>
+              <array>
+                  <data/>
+              </array>
+          </value>
+      </member>
+       */
+      // CollegeAcadOrgJoint
+      // CollegeDescr100Joint
+      // CollegeUrlJoint
+      // DepartmentCodeJoint
+      // DepartmentNameJoint
+      // planCatDescr
+      $toBeProcessed = array(
+        'CollegeAcadOrgJoint',
+        'CollegeDescr100Joint',
+        'CollegeDescrlongJoint',
+        'CollegeUrlJoint',
+        'DepartmentCodeJoint',
+        'DepartmentNameJoint',
+        'planCatDescr',
+        'psDeadlines',
+        'secondMajors',
+      );
+      foreach ($toBeProcessed as $field) {
+        if (count($data[$field])) {
+          foreach ($data[$field] as $college_key => $value) {
+            $parsed_data[$key][$field][$college_key] = $value;
+          }
+          $parsed_data[$key][$field] = array_values($parsed_data[$key][$field]);
+        }
+      }
+
+      // Parsing data from similar <array> structures to return serialized array
+      /*
+      <member>
+          <name>applyInfo</name>
+          <value>
+              <struct>
+                  <member>
+                      <name>AWC:REG:2204</name>
+                      <value>2020 Summer:null:null:2020-05-18:2020-05-18</value>
+                  </member>
+                  <member>
+                      <name>EAC:REG:2207</name>
+                      <value>2020 Fall:null:null:2020-08-20:2020-08-20</value>
+                  </member>
+              </struct>
+          </value>
+      </member>
+      <member>
+          <name>graduateAllApplyDates</name>
+          <value>
+              <struct/>
+          </value>
+      </member>
+      */
+      // Apply Info
+      // Graduate All Apply Dates
+      // Plan Deadlines
+      $toBeProcessed = array(
+        'graduateAllApplyDates',
+        'graduateApplyDates',
+        'applyInfo',
+        'planDeadlines',
+        'subplanDeadlines',
+      );
+      foreach ($toBeProcessed as $field) {
+        if (count($data[$field])) {
+          $temp = array();
+          foreach ($data[$field] as $code => $dates) {
+            $temp[$code] = $dates;
+          }
+          $parsed_data[$key][$field] = serialize($temp);
+        }
+        else {
+          $parsed_data[$key][$field] = array();
+        }
+      }
+
+      // Check boolean value and then RETURN boolean based on that response (two levels)
+      // New degrees (aka DegreeNew)
+      if (count($data['DegreeNew'])) {
+        $ndVal = $data['DegreeNew'];
+        if ($ndVal == 1) {
+          $parsed_data[$key]['DegreeNew'] = 1;
+        }
+      }
+
+      // Custom one-off feed value processing
+      ////////////////////////
+
+      // Unique ID for the plan
+      $parsed_data[$key]['guid'] = md5($parsed_data[$key]['AcadPlan']);
+
       // Whether or not the campus is part of WUE (boolean)
       if (count($data['CampusWueInfo'])) {
-        $wueCampusConfirmed = array();
         foreach ($data['CampusWueInfo'] as $cwi) {
           if ($cwi['isCampusWue'] == 1) {
             $parsed_data[$key]['wueCampusConfirmed'] = 1;
@@ -59,68 +174,14 @@ class ASUeAdvisorFeedParser extends FeedsParser {
         }
       }
 
-      // Additional admission information
-      if (count($data['DescrlongExtns'])) {
-        $additionalAdmissions = array();
-        $parsed_data[$key]['additionalAdmissions'] = 1;
-      }
-
       // Campuses
       if (count($data['CampusStringArray'])) {
         foreach ($data['CampusStringArray'] as $campus_key => $value) {
-          switch (trim(strtoupper($value))) {
-            case 'ONLNE':
-              $value = 'Online';
-              break;
-            case 'DOWNTOWN':
-            case 'DTPHX':
-              $value = 'Downtown';
-              break;
-            case 'POLY':
-              $value = 'Polytechnic';
-              break;
-            case 'TMPE':
-            case 'TEMPE':
-              $value = 'Tempe';
-              break;
-            case 'WEST':
-              $value = 'West';
-              break;
-            case 'CALHC':
-              $value = 'Lake Havasu City';
-              break;
-            case 'CAC':
-              $value = 'ASU@Pinal';
-              break;
-            case 'EAC':
-              $value = 'ASU@TheGilaValley';
-              break;
-            case 'TUCSN':
-              $value = 'ASU@Tucson';
-              break;
-            case 'AWC':
-              $value = 'ASU@Yuma';
-              break;
-            case 'TBIRD':
-              $value = 'Thunderbird';
-              break;
-            case 'YAVAP':
-              $value = 'ASU@Yavapai';
-              break;
-            case 'PIMA':
-              $value = 'ASU@Pima';
-              break;
-            case 'COCHS':
-              $value = 'ASU@Cochise';
-              break;
-            //Add case for missing campus from degree feed
-            default:
-              $value = $value;
-              break;
-          }
+          $value = trim(strtoupper($value));
+          $value = $this->getCampusMappings($value, TRUE);
           if ($value == 'Online') {
             unset($parsed_data[$key]['CampusStringArray'][$campus_key]);
-            array_push($parsed_data[$key]['CampusStringArray'],$value);
+            array_push($parsed_data[$key]['CampusStringArray'], $value);
           } else {
             $parsed_data[$key]['CampusStringArray'][$campus_key] = $value;
           }
@@ -128,41 +189,30 @@ class ASUeAdvisorFeedParser extends FeedsParser {
         $parsed_data[$key]['CampusStringArray'] = array_values($parsed_data[$key]['CampusStringArray']);
       }
 
-      // CollegeDescr100Joint
-      if (count($data['CollegeDescr100Joint'])) {
-        foreach ($data['CollegeDescr100Joint'] as $college_key => $value) {
-            $parsed_data[$key]['CollegeDescr100Joint'][$college_key] = $value;
-        }
-        $parsed_data[$key]['CollegeDescr100Joint'] = array_values($parsed_data[$key]['CollegeDescr100Joint']);
+      // NOT IN USE ANYWHERE?
+      // Additional admission information
+      if (count($data['DescrlongExtns'])) {
+        $parsed_data[$key]['additionalAdmissions'] = 1;
       }
 
-      // CollegeUrlJoint
-      if (count($data['CollegeUrlJoint'])) {
-        foreach ($data['CollegeUrlJoint'] as $college_key => $value) {
-            $parsed_data[$key]['CollegeUrlJoint'][$college_key] = $value;
-        }
-        $parsed_data[$key]['CollegeUrlJoint'] = array_values($parsed_data[$key]['CollegeUrlJoint']);
-      }
-
-      // DepartmentCodeJoint
-      if (count($data['DepartmentCodeJoint'])) {
-        foreach ($data['DepartmentCodeJoint'] as $college_key => $value) {
-            $parsed_data[$key]['DepartmentCodeJoint'][$college_key] = $value;
-        }
-        $parsed_data[$key]['DepartmentCodeJoint'] = array_values($parsed_data[$key]['DepartmentCodeJoint']);
-      }
-
-      // DepartmentNameJoint
-      if (count($data['DepartmentCodeJoint'])) {
-        foreach ($data['DepartmentCodeJoint'] as $college_key => $value) {
-            $parsed_data[$key]['DepartmentCodeJoint'][$college_key] = $value;
-        }
-        $parsed_data[$key]['DepartmentCodeJoint'] = array_values($parsed_data[$key]['DepartmentCodeJoint']);
-      }
-
-      // Format careerData
+      // Format careerData (JSON)
       if (count($data['careerData'])) {
         $parsed_data[$key]['careerData'] = json_encode($data['careerData']);
+      }
+
+      // Filter out MediaAmp videos for now - @TODO add MediaAMP support
+      if (isset($data['Url4'])) {
+        if (strpos($data['Url4'], 'mediaamp.') !== FALSE) {
+          $parsed_data[$key]['Url4'] = '';
+          drupal_set_message($data['Descr'] . ' - A marketing video with a MediaAMP URL was removed because'
+          . ' it is not currently supported in Webspark (Youtube and Vimeo URLs only).', 'warning');
+        } elseif (strpos($data['Url4'], 'player.vimeo.com') !== FALSE) {
+          // Vimeo refactoring for player.vimeo.com URLs
+          $parsed_data[$key]['Url4'] = preg_replace('|^(https?)://player.(vimeo.com)/video/(\d+)$|',
+            '$1://$2/$3', $data['Url4']);
+          watchdog('asu_feeds2', 'Updated @old to @new on degree import for legacy video_embed_field handling.',
+            array('@old' => $data['Url4'], '@new' => $parsed_data[$key]['Url4']), WATCHDOG_NOTICE);
+        }
       }
 
       // Transfer agreements
@@ -194,9 +244,14 @@ class ASUeAdvisorFeedParser extends FeedsParser {
       }
       $parsed_data[$key]['degreeSearchURL'] = "https://webapp4.asu.edu/programs/t5/majorinfo/ASU00/" . $parsed_data[$key]['AcadPlan'] . "/" . $batch->getProgram() . "/" . $cert;
 
-      // Program (Undergrad or Graduate) and Cert (True or False). Useful when creating views. - Chizuko
+      // Program (Undergrad or Graduate) and Cert (True or False). Useful when creating views.
       $parsed_data[$key]['program'] = $batch->getProgram();
       $parsed_data[$key]['cert'] = $cert;
+
+      // Clean up marketing text input for display in degree pages.
+      if (isset($data['marketText'])) {
+//        $parsed_data[$key]['marketText'] = filter_xss(html_entity_decode($data['marketText']));
+      }
 
       // Sub-plan code and subplan major map url - [SubPlnMajorMaps]
       $parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanCode'] = array();
@@ -211,7 +266,6 @@ class ASUeAdvisorFeedParser extends FeedsParser {
           }
         }
       }
-
       // Sub-plans - [SubPln]
       $parsed_data[$key]['subplan.code'] = array();
       $parsed_data[$key]['subplan.name'] = array();
@@ -221,8 +275,7 @@ class ASUeAdvisorFeedParser extends FeedsParser {
           $parsed_data[$key]['subplan.name'][] = $subplan;
         }
       }
-
-      //if subplan.code == subPlnMajorMaps.SubplnMajorMapSubplanCode then replace code with name
+      // if subplan.code == subPlnMajorMaps.SubplnMajorMapSubplanCode then replace code with name
       if (count($parsed_data[$key]['subplan.name'])) {
         $parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanName'] = array();
         foreach($parsed_data[$key]['subPlnMajorMaps.SubplnMajorMapSubplanCode'] as $sn){
@@ -237,17 +290,48 @@ class ASUeAdvisorFeedParser extends FeedsParser {
           unset($i);
         }
       }
-
-
-
-    } // End of foreach
-
+    } // END FOREACH of all data
+    // DEBUG
     //error_log(print_r($parsed_data, true));
     //watchdog('A2P Debug', '<pre>'. print_r($parsed_data, true) .'</pre>');
-    //watchdog('keith $v', '<pre>' . print_r($v, true) . '</pre>');
+
     return new FeedsParserResult($parsed_data);
   }
 
+  public function getCampusMappings($campus, $reverse = FALSE) {
+    // Legacy code conversion
+    if ($campus === "TMPE") { $campus = 'TEMPE'; }
+    if ($campus === "DOWNTOWN") { $campus = 'DTPHX'; }
+
+    $campuses = array(
+      "Tempe" => 'TEMPE',
+      "West" => "WEST",
+      "Downtown" => "DTPHX",
+      "Online" => "ONLNE",
+      "Polytechnic" => "POLY",
+      'ASU@Lake Havasu' => 'CALHC',
+      'ASU@The Gila Valley' => 'EAC',
+      'ASU@Tucson' => 'TUCSN',
+      'ASU@Pinal' => 'CAC',
+      'ASU@Yavapai' => 'YAVAP',
+      'ASU@Yuma' => 'AWC',
+      'ASU@MexicoCity' => 'MXCTY',
+      'ASU@Cochise' => 'COCHS',
+      'ASU@Washington, D.C.' => 'WASHD',
+      'ASU@Pima' => 'PIMA',
+    );
+    // Flip campus keys + values if desired
+    if ($reverse === TRUE) {
+      $campuses = array_flip($campuses);
+    }
+    foreach ($campuses as $key => $value) {
+      if (stristr($key, $campus) !== FALSE) {
+        return $value;
+        break;
+      }
+    }
+    return '';
+}
   /**
    * Return mapping sources.
    */
@@ -257,45 +341,118 @@ class ASUeAdvisorFeedParser extends FeedsParser {
       'keywords' => array('name' => t('Keywords')),
       'AcadPlan' => array('name' => t('Academic plan')),
       'AcadProg' => array('name' => t('Academic program')),
-      'acceleratedDegree' => array('name' => t('Accelerated Degree')),
-      'AdmissionsDegRequirements' => array('name' => t('Admission requirements')),
+      'accelerateDegrees' => array('name' => t('Accelerated Degrees')), // NEW - Replaces acceleratedDegree
+      'AdmissionsDegRequirements' => array('name' => t('Degree admission requirements')),
+      'applyInfo' => array('name' => t('Apply Information')), // NEW -- @TODO Needs processing
+      'asuAcadpLrfText' => array('name' => t('AcadpLrfText')), // NEW
+      'asuAcadpMrfText' => array('name' => t('AcadpMrfText')), // NEW
+      'AsuAdmReqUrl' => array('name' => t('Admissions Req Url')), // NEW
       'AsuCareerOpp' => array('name' => t('Career opportunities')),
+      'asuChooseSndMjrFlg' => array('name' => t('Choose Second Major Flg')), // NEW
       'AsuCritTrackUrl' => array('name' => t('Major map URL')),
+      'AsuCustomText' => array('name' => t('Custom text')), // NEW
+      'AsuDegSrchFlg' => array('name' => t('Degree search flag')), // NEW
       'AsuLangReqFlag' => array('name' => t('Second language requirement')),
+      'AsuMailCode' => array('name' => t('ASU Mail Code')), // NEW
+      'asuMathReqFlag' => array('name' => t('Math Req Flag')), // NEW
+      'AsuNactvAppOvrd' => array('name' => t('AsuNactvAppOvrd')), // NEW
+      'AsuOfficeLoc' => array('name' => t('Office location')), // NEW
       'AsuProgramFee' => array('name' => t('Additional program fee')),
       'CampusStringArray' => array('name' => t('Campus')),
-      'careerData' => array('name' => t('Example Careers')),
-      'cert' => array('name' => t('Certificate option: True or False')),
+      'careerData' => array('name' => t('Example careers')),
+      'cert' => array('name' => t('Certificate option: True or False')), // Not in feed; Custom source value generated above
+      'CatalogUrl' => array('name' => t('Catalog URL')), // NEW
+      'ChangeMajor' => array('name' => t('Change major')), // NEW
+      'CipCode' => array('name' => t('CIP Code')), // NEW
+      'CollegeAcadOrg' => array('name' => t('College Academic Org')), // NEW
+      'CollegeAcadOrgJoint' => array('name' => t('College Academic Org (joint)')), // NEW
       'CollegeDescr100' => array('name' => t('College name')),
       'CollegeDescr100Joint' => array('name' => t('College name (joint)')),
+      'CollegeDescrlong' => array('name' => t('College Description long')), // NEW
+      'CollegeDescrlongJoint' => array('name' => t('College Description long (joint)')), // NEW
       'CollegeUrl' => array('name' => t('College URL')),
       'CollegeUrlJoint' => array('name' => t('College URL (joint)')),
-      'concurrentDegree' => array('name' => t('Concurrent Degree')),
+      'committeeId' => array('name' => t('Committee ID')), // NEW
+      'concurrentDegrees' => array('name' => t('Concurrent Degrees')), // NEW - replaced concurrentDegree
+      'concurrentDegreesMap' => array('name' => t('Concurrent Degrees map')), // NEW
+      'CurriculumUrl' => array('name' => t('Curriculum URL'), 'description' => t('Online campus ONLY'),),
       'Degree' => array('name' => t('Degree'),'description' => t('BA / BFA / MFA / etc'),),
       'DegreeDescr' => array('name' => t('Degree description')),
-      'degreeMajorMap' => array('name' => t('Program Requirements')),
-      'degreeSearchURL' => array('name' => t('ASU Degree Search URL')),
+      'DegreeDescrformal' => array('name' => t('Degree Description - formal')), // NEW
+      'DegreeDescrlong' => array('name' => t('Degree Description - long')), // NEW
+      'DegreeDescrshort' => array('name' => t('Degree Description - short')), // NEW
+      'DegreeEducationLvl' => array('name' => t('Degree Education level')), // NEW
+      'degreeMajorMap' => array('name' => t('Minor/Certificates Requirements (aka degreeMajorMap)')),
+      'DegreeNew' => array('name' => t('New degree')), // NEW - replaces newDegree
       'DepartmentCode' => array('name' => t('Department code')),
       'DepartmentCodeJoint' => array('name' => t('Department code (joint)')),
       'DepartmentName' => array('name' => t('Department name')),
       'DepartmentNameJoint' => array('name' => t('Department name (joint)')),
+      'Descr' => array('name' => t('Description')), // NEW
       'Descr100' => array('name' => t('Description (100)')),
+      'Descr254' => array('name' => t('Description (254)')), // NEW
+      'Descrlong' => array('name' => t('Description (long)')), // NEW
+      'DescrlongExtn5' => array('name' => t('Admission requirements (aka Description long (Extn5))')), // NEW
       'DescrlongExtns' => array('name' => t('Degree description (extended)')),
+      'Descrshort' => array('name' => t('Description (short)')), // NEW
       'DiplomaDescr' => array('name' => t('Diploma description')),
-      'majorMapDefaultYear' => array('name' => t('Major map year')),
+      'DiplomaIndentInteger' => array('name' => t('Diploma Indent Integer')), // NEW
+      'DiplomaPrintFl' => array('name' => t('Diploma Print Fl')), // NEW
+      'EffStatus' => array('name' => t('Eff Status')), // NEW
+      'EmailAddr' => array('name' => t('Email address')), // NEW
+      'EvaluatePlan' => array('name' => t('EvaluatePlan')), // NEW
+      'FirstTermValid' => array('name' => t('FirstTermValid')), // NEW
+      'gradAdditionalRequirements' => array('name' => t('Grad Additional Requirements')), // NEW
+      'graduateAllApplyDates' => array('name' => t('Graduate All Apply Dates'),'description' => t('All future available terms and their application dates - by campus.'),),
+      'graduateApplyDates' => array('name' => t('Graduate Apply Dates')), // NEW
+      'HegisCode' => array('name' => t('Hegis code')), // NEW
+      'Institution' => array('name' => t('Institution')), // NEW
+      'InternalDegree' => array('name' => t('Internal Degree')), // NEW
+      'majorMapDefaultYear' => array('name' => t('Major map default year')), // NEW
+      'managedOnlineCampus' => array('name' => t('Managed Online campus')), // NEW
+      'marketText' => array('name' => t('Marketing Text')), // NEW
+      'MathIntensity' => array('name' => t('Math Intensity')), // NEW
       'MinMathReq' => array('name' => t('Minimum math requirement')),
-      'newDegree' => array('name' => t('New Degree')),
-      'program' => array('name' => t('Program: Undergrad or Graduate')),
+      'Notes' => array('name' => t('Notes')), // NEW
+      'onlineMajorMapURL' => array('name' => t('Online Major Map URL')), // NEW
+      'Phone' => array('name' => t('Phone')), // NEW
+      'planCatDescr' => array('name' => t('Plan category description')), // NEW
+      'planDeadlines' => array('name' => t('Plan deadlines')), // NEW
+      'PlanUrl' => array('name' => t('Plan URL')), // NEW
+      'PlnReqtrmDflt' => array('name' => t('Plan Req trm Dflt')), // NEW
+      'psDeadlines' => array('name' => t('PS deadlines')), // NEW
       'Reqdescr' => array('name' => t('Requirement description')),
+      'secondMajors' => array('name' => t('Second majors')), // NEW
+      'SMISUrl' => array('name' => t('SMIS Url')), // NEW
+      'StudyField' => array('name' => t('Study Field')), // NEW
+      'subplanDeadlines' => array('name' => t('Subplan deadlines')), // NEW
+      'TransferAdmission' => array('name' => t('Transfer Admission Requirements')), // NEW
+      'TranscriptLevel' => array('name' => t('Transcript Level')), // NEW
+      'TrnscrDescr' => array('name' => t('Transcript Description')), // NEW
+      'TrnscrIndentInteger' => array('name' => t('TrnscrIndentInteger')), // NEW
+      'TrnscrPrintFl' => array('name' => t('TrnscrPrintFl')), // NEW
+      'Url1' => array('name' => t('Url1')), // NEW
+      'Url2' => array('name' => t('Url2')), // NEW
+      'Url3' => array('name' => t('Url3')), // NEW
+      'Url4' => array('name' => t('Url4')), // NEW
+
+      /////////////////////////
+      // Not in feed; Custom source value generated above
+      /////////////////////////
+      'degreeSearchURL' => array('name' => t('ASU Degree Search URL')),
+      'program' => array('name' => t('Program: Undergrad or Graduate')),
       'subplan.code' => array('name' => t('Subplan code')),
       'subplan.name' => array('name' => t('Subplan name')),
+      // 'SubPlnMajorMaps' => array('name' => t('Subplan Major Maps')),  // NEW - Not included, but parsed out and passed onto the feed below
       'subPlnMajorMaps.SubplnMajorMapSubplanCode' => array('name' => t('Subplan code for URL')),
       'subPlnMajorMaps.SubplnMajorMapSubplanName' => array('name' => t('Subplan name for URL')),
       'subPlnMajorMaps.SubPlnMajorMapUrl' => array('name' => t('Subplan major map URL')),
+      // 'transferAgreementInfo' => array('name' => t('Transfer agreement information')), // NEW - Not included, but parsed out and passed onto the feed below
       'transferAgreementInfo.type' => array('name' => t('Transfer agreement type')),
       'transferAgreementInfo.year' => array('name' => t('Transfer agreement year')),
       'transferAgreementInfo.url' => array('name' => t('Transfer agreement URL')),
       'transferAgreementInfo.communityCollege' => array('name' => t('Transfer agreement community college')),
+      //'CampusWueInfo' => array('name' => t('Campus WUE info')), // NEW - Not included, but parsed out and passed into the field below as a boolean.
       'wueCampusConfirmed' => array('name' => t('WUE Confirmed')),
     );
   }

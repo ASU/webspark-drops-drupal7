@@ -7,3 +7,7 @@
 .asu-degrees-example-careers-small {
     font-size: 75%;
 }
+/* Accessibility fix - removed align=left from tables */
+.field-name-field-asu-degree-example-careers table tr td.career-data-td {
+  text-align: left;
+}
