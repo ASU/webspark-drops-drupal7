@@ -4,6 +4,7 @@
  */
 function webspark_test_preprocess_page(&$variables) {
   if (variable_get('asu_brand_ci_testing') == 1) {
+    setcookie('cookieconsent_status', 'dismiss'); // Kill consent popup!
     drupal_add_css(drupal_get_path('module', 'webspark_test') . '/css/webspark-test.css');
   }
 }
