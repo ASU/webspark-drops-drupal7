@@ -18,7 +18,7 @@ default:
             switches:
               - "--headless"
               - "--disable-gpu"
-              - "--window-size=1920,1080"
+              - "--window-size=2560,1440"
               - "--no-sandbox"
       javascript_session: selenium2
       browser_name: chrome
