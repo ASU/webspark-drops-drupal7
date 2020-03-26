@@ -121,13 +121,17 @@ before_script:
   - drush si openasu --db-url=mysql://root:@127.0.0.1/drupal --account-name=admin --account-pass=admin --site-mail=admin@example.com --site-name="Webspark" --yes
   - drush runserver > /dev/null 2>&1 &
   - sleep 3
+
   # Turn on ASU Brand filtering of GTM snippet, Cookie Consent (GDPR) addition after v4.7
   - drush vset --always-set asu_brand_ci_testing 1
   - drush vset --always-set asu_brand_header_version 4.7
+  - drush vset --always-set block_cache 0
+  - drush vset --always-set cache 0
+  - drush cc all
+
   # Enable Panopoly Test module
   - drush pm-enable panopoly_test --yes
   - drush pm-enable webspark_test --yes
-  - drush cc all
   - cd ./profiles/openasu/modules/panopoly/panopoly_test/behat
 
 script:
