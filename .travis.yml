@@ -57,9 +57,9 @@ install:
   - sudo apt-get update > /dev/null
   - "mysql -e 'create database drupal;'"
 
-  # Install latest Drush 7.x.
+  # Install latest Drush 8.x.
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  - composer global require --no-interaction drush/drush:7.*
+  - composer global require --no-interaction drush/drush:8.*
 
   # Download LATEST_RELEASE of ChromeDriver
 
@@ -126,14 +126,12 @@ before_script:
   # Enable Panopoly Test module
   - drush pm-enable panopoly_test --yes
   - drush pm-enable webspark_test --yes
-  - drush rr
-  - cd ./profiles/openasu/modules/panopoly/panopoly_test/behat
+  - drush updb && drush cc all
 
 script:
-  - bin/behat --init
+  - cd ./profiles/openasu/modules/panopoly/panopoly_test/behat
   - bin/behat --colors --tags '~@webspark_ignore' --tags '~@panopoly_demo' --tags '~@panopoly_search' --config behat.travis.yml
   - cd ../../../custom/webspark_test/behat
-  - bin/behat --init
   - bin/behat --colors --config behat.travis.yml
 
 after_script:
