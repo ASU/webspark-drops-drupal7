@@ -71,16 +71,6 @@ function asu_ap_feature_update_7001(&$sandbox) {
  */
 function asu_ap_feature_update_7002(&$sandbox) {
   variable_set('asu_ap_ds_marketing_video', 'marketing_top');
-  $rid = variable_get('user_admin_role', '');
-  if (!empty($rid)) {
-    user_role_grant_permissions($rid, array('administer ap page output'));
-    flogger('update', "Added 'Administer degree page output' permission to the administrator role.",
-      array(), WATCHDOG_INFO, TRUE, TRUE);
-  } else {
-    flogger('update', "Could not add 'Administer degree page output' permission to the administrator role.
-      Make sure to manually enable the permission at /admin/people/permissions#module-asu_ap.",
-      array(), WATCHDOG_INFO, TRUE, TRUE);
-  }
 }
 
 /**
