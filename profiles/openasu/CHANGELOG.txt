@@ -1,4 +1,4 @@
-Webspark 1.70.8 (Big Spring), 2020-03-20
+Webspark 1.70.8 (Big Spring), 2020-04-07
 ---------------------------------------------
 - Web standards components in Webspark
 
@@ -62,7 +62,7 @@ Webspark 1.70.8 (Big Spring), 2020-03-20
         * All submissions that have successfully been sent onto any Salesforce middleware are deleted upon every cron run
         * All submissions that have not been sent on (status SF_Failed) are resubmitted every time a cron job runs
         * All submissions that have failed for 14 days past the initial submission date are deleted at the next cron run - regardless of their status
-  * ASU Academic Programs 7.x-3.0, 2020-XX-XX
+  * ASU Academic Programs (asu_ap) - 7.x-3.0
     * Architecture & Development
       - Reformatted page-level TPL file output (code and HTML)
       - Combined graduate vs. undergrad logic in TPL
@@ -127,7 +127,7 @@ Webspark 1.70.8 (Big Spring), 2020-03-20
     * Multiblock (multiblock) - v1.6
     * Radix Layouts (radix_layouts) - v3.4+patch
       * Tweaked layout width for tablet layouts
-    * Videg Embed Fields - v2.0-beta11+patch
+    * Video Embed Field - v2.0-beta11+patch
       * Vimeo and Youtube URL parsing updated to match those services' APIs
       * The target video is no longer set when the entity is set but has an empty target URL.
 

@@ -1,6 +1,6 @@
 # ASU Academic Programs Changelog
 
-### ASU Academic Programs 7.x-3.0, 2020-XX-XX
+### ASU Academic Programs 7.x-3.0, 2020-04-07
 ##### Architecture & Development
 - Reformatted page-level TPL file output (code and HTML)
 - Combined graduate vs. undergrad logic in TPL
@@ -20,7 +20,7 @@
     - Removed duplicate rules
     - Added CSS for new elements
 ##### Bug fixes
-- Updated ASU IXR library for PHP 7.x compatibility
+- Updated ASU IXR library or PHP 7.x compatibility
 ##### UI/UX Improvements
 - Degree pages:
     - Added canonical URLs in <link> tags pointing at Degree Search page counterparts for SEO improvements
