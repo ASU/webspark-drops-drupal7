@@ -137,11 +137,11 @@ before_script:
 
 script:
   - bin/behat --init
-  # - bin/behat --colors --tags '@zero' --config behat.travis.yml
-  - bin/behat --colors --tags '~@webspark_ignore' --tags '~@panopoly_demo' --tags '~@panopoly_search' --config behat.travis.yml
+  - bin/behat --colors --tags '@zero' --config behat.travis.yml
+  #- bin/behat --colors --tags '~@webspark_ignore' --tags '~@panopoly_demo' --tags '~@panopoly_search' --config behat.travis.yml
   - cd ../../../custom/webspark_test/behat
   - bin/behat --init
-  - bin/behat --colors --config behat.travis.yml
+  - bin/behat --colors --tags '@zero' --config behat.travis.yml
 
 after_script:
   - sleep 3

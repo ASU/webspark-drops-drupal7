@@ -17,7 +17,7 @@ Feature: Add image widget
       | Editor  | plain_text                 |
       | Caption | Testing caption            |
       And I click "Browse"
-      And I switch to the frame 0
+      And I switch to the only available frame "mediaBrowser"
       And I attach the file "test-sm.png" to "files[upload]"
       And I press "Next"
     Then I should see "Destination"
@@ -54,7 +54,7 @@ Feature: Add image widget
       | Editor  | plain_text                              |
       | URL     | https://www.drupal.org/project/panopoly |
       And I click "Browse"
-      And I switch to the frame 0
+      And I switch to the only available frame "mediaBrowser"
       And I attach the file "test-sm.png" to "files[upload]"
       And I press "Next"
     Then I should see "Destination"

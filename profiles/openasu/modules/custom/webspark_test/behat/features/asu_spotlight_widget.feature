@@ -12,7 +12,7 @@ Feature: Add ASU spotlight widget
     And I click "Add ASU spotlight" in the "CTools modal" region
     Then I should see "Configure new Add ASU spotlight"
 
-  @api @javascript @drupal_private_files
+  @api @javascript @drupal_private_files @zero
   Scenario: Add a ASU spotlight
     When I fill in the following:
       | field_asu_spotlight_items[und][0][title]  | Testing item title  |
@@ -22,7 +22,7 @@ Feature: Add ASU spotlight widget
       | Button color                              | red              |
       | Text position over image                  | mid-center    |
     And I click "Browse"
-    And I switch to the frame "mediaBrowser"
+    And I switch to the only available frame "mediaBrowser"
     And I attach the file "test-lg.png" to "files[upload]"
     And I press "Next"
     Then I should see "Destination"
