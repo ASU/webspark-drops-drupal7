@@ -20,6 +20,14 @@ function asu_ap_uninstall() {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function asu_ap_update_dependencies() {
+  $dependencies['asu_ap'][7001] = array(
+    'asu_ap_feature' => 7002,
+  );
+}
+/**
  * Set new ASU AP configurations
  */
 function asu_ap_update_7000(&$sandbox) {
@@ -32,5 +40,20 @@ function asu_ap_update_7000(&$sandbox) {
     if (variable_get($key, 'not_set') === 'not_set') {
       variable_set($key, $value);
     }
+  }
+}
+/**
+ * Add permissions to ASU AP
+ */
+function asu_ap_update_7001(&$sandbox) {
+  $rid = variable_get('user_admin_role', '');
+  if (!empty($rid)) {
+    user_role_grant_permissions($rid, array('administer ap page output'));
+    flogger('update', "Added 'Administer degree page output' permission to the administrator role.",
+      array(), WATCHDOG_INFO, TRUE, TRUE);
+  } else {
+    flogger('update', "Could not add 'Administer degree page output' permission to the administrator role.
+      Make sure to manually enable the permission at /admin/people/permissions#module-asu_ap.",
+      array(), WATCHDOG_INFO, TRUE, TRUE);
   }
 }

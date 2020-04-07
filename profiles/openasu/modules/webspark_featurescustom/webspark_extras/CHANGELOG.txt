@@ -1,4 +1,4 @@
-Webspark Extras 7.x-1.7, 2020-xx-xx
+Webspark Extras 7.x-1.7, 2020-04-07
 -----------------------------------
 - Added pre-populated ASU campuses select lists for the Webform module
 
