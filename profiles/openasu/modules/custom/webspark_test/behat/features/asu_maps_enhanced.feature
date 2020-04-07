@@ -8,46 +8,23 @@ Feature: Configure and display an interactive map showing an ASU building locati
     When I click "Content Page"
     And I fill in "Title" with "Test page for directory panel"
     And I type "testing in body" in the "edit-body-und-0-value" WYSIWYG editor
-    And I press the "Publish" button
+    And I press the "Save" button
     And I click "Customize this page"
     And I click "Add new pane"
     And I click "Add ASU enhanced map"
-    And I wait 30 seconds
     Then I should see "Title"
-    And I click the "#6268>div>a" element
-    And I click the "#6274>div>a" element
-    And I click the "#62862 input" element
-    And I click the "#62861 input" element
+    And I click the "#asu-gis-fp>ol>li:last-child button" element
+    And I wait 2 seconds
+    And I click the "#asu-gis-fp-CampusBuilding_7147_1" element
+    And I wait 2 seconds
+    And I click the "#asu-maps-enhanced-tree select" element
     When I fill in the following:
-      | Title                                                    | ASU Map |
-      | field_asu_maps_enhanced_items[und][0][campus_selection]  | TEMPE   |
-    And I click the "#edit-return" element
-    And I press "Save as custom"
+      | Select a Feature | {"id":630,"name":"Academic Center","lat":33.30705300012226,"lng":-111.67845199981096,"parent":"CampusBuilding_7147_1"} |
+    And I scroll "edit-return" into view
+    And I press the "edit-return" button
+    And I press the "panels-ipe-save" button
+    And I wait 5 seconds
     And I switch to the iframe "enhanced-map-frame"
-    And I wait 3 seconds
-    Then I should see "College of Design North"
+    And I wait 5 seconds
+    Then I should see "Academic Center"
 
-  @javascript @api @asu_maps_enhanced
-  Scenario: Display a map panel with categories.
-    Given I am at "/node/add"
-    When I click "Content Page"
-    And I fill in "Title" with "Test page for directory panel"
-    And I type "testing in body" in the "edit-body-und-0-value" WYSIWYG editor
-    And I press the "Publish" button
-    And I click "Customize this page"
-    And I click "Add new pane"
-    And I click "Add ASU enhanced map"
-    And I wait 30 seconds
-    Then I should see "Title"
-    And I click the "#6268>div>a" element
-    And I click the "#6273>div>input" element
-    When I fill in the following:
-      | Title                                                    | ASU Map |
-      | field_asu_maps_enhanced_items[und][0][campus_selection]  | TEMPE   |
-    And I click the "#edit-return" element
-    And I press "Save as custom"
-    And I switch to the iframe "enhanced-map-frame"
-    And I wait 2 seconds
-    And I click the '[alt="Palo Verde West map marker"]' element
-    And I wait 2 seconds
-    Then I should see "Palo Verde West"

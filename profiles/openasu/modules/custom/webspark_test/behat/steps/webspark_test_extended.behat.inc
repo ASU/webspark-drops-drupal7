@@ -92,6 +92,5 @@ class WebsparkCustomBehatTests extends RawDrupalContext implements DrupalSubCont
     if (null != $element) {
       throw new \InvalidArgumentException(print('The specified item was found.'));
     }
-
   }
 }
