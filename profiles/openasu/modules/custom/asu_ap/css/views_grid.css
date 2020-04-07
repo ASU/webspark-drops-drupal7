@@ -3,7 +3,7 @@
 .asu-ap-field-title {
   font-weight: 600;
 }
-.asu-ap-field-location .asu-ap-field-title {
+.asu-ap-field-location, .asu-ap-field-title {
   display: inline;
   padding-right: 0.5em;
 }
