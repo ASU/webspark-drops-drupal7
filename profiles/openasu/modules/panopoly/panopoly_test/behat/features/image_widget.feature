@@ -2,8 +2,8 @@ Feature: Add image widget
   In order to add an image to page
   As a site administrator
   I need to be able to use the image widget
- 
-  @api @javascript @panopoly_widgets @local_files @webspark_broken @webspark_fixed @drupal_private_files
+
+  @api @javascript @panopoly_widgets @local_files @webspark_broken @webspark_fixed @drupal_private_files @zero
   Scenario: Add a image
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
@@ -17,7 +17,7 @@ Feature: Add image widget
       | Editor  | plain_text                 |
       | Caption | Testing caption            |
       And I click "Browse"
-      And I switch to the frame "mediaBrowser"
+      And I switch to the frame 0
       And I attach the file "test-sm.png" to "files[upload]"
       And I press "Next"
     Then I should see "Destination"
@@ -40,7 +40,7 @@ Feature: Add image widget
       And I should see the image alt "Testing alt text" in the "Boxton Content" region
       And I should not see the link "Testing alt text" in the "Boxton Content" region
 
-  @api @javascript @panopoly_widgets @local_files @drupal_private_files
+  @api @javascript @panopoly_widgets @local_files @drupal_private_files @zero
   Scenario: Add an image with link
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
@@ -54,7 +54,7 @@ Feature: Add image widget
       | Editor  | plain_text                              |
       | URL     | https://www.drupal.org/project/panopoly |
       And I click "Browse"
-      And I switch to the frame "mediaBrowser"
+      And I switch to the frame 0
       And I attach the file "test-sm.png" to "files[upload]"
       And I press "Next"
     Then I should see "Destination"
