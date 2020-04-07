@@ -28,6 +28,7 @@
 .node-type-asu-ap .asu-ap-special-categories {
   display: block;
   font-size: 1.3125em;
+  text-shadow: 0 0 0.3125em rgba(0, 0, 0, 0.5);
 }
 .node-type-asu-ap .asu-ap-special-categories > .asu-ap-special-category {
   display: block;
