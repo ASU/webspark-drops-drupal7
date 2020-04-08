@@ -595,7 +595,8 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
    */
   public function iSwitchToTheFrame($frame) {
     // $this->getSession()->switchToIFrame($frame);
-    $this->getSession()->switchToIFrame(0);
+    $key = (int) $frame;
+    $this->getSession()->switchToIFrame($key);
     $this->iframe = $frame;
     sleep(3);
   }

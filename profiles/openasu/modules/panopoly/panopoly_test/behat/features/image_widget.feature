@@ -3,7 +3,7 @@ Feature: Add image widget
   As a site administrator
   I need to be able to use the image widget
 
-  @api @javascript @panopoly_widgets @local_files @webspark_broken @webspark_fixed @drupal_private_files @zero
+  @api @javascript @panopoly_widgets @local_files @webspark_broken @webspark_fixed @drupal_private_files
   Scenario: Add a image
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
@@ -40,7 +40,7 @@ Feature: Add image widget
       And I should see the image alt "Testing alt text" in the "Boxton Content" region
       And I should not see the link "Testing alt text" in the "Boxton Content" region
 
-  @api @javascript @panopoly_widgets @local_files @drupal_private_files @zero
+  @api @javascript @panopoly_widgets @local_files @drupal_private_files
   Scenario: Add an image with link
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
