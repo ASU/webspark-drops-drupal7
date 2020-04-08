@@ -43,7 +43,7 @@ Feature: Add media using the rich text editor
       And I press "Save"
     # The media style selector.
     When I wait 2 seconds
-      And I switch to the frame 0
+      And I switch to the frame 1
       And I select "Quarter Size" from "format"
     Then the "Alt Text" field should contain "Sample Alt text"
       And the "Title Text" field should contain "Sample Title text"
@@ -121,7 +121,7 @@ Feature: Add media using the rich text editor
         | Title Text | Title & some > "character's" < |
       And I press "Save"
     When I wait 2 seconds
-      And I switch to the frame 0
+      And I switch to the frame 1
     When I click the fake "Submit" button
       And I switch out of all frames
     # Save the whole node.
@@ -162,7 +162,7 @@ Feature: Add media using the rich text editor
       And I press "Save"
     # The media style selector.
     When I wait 2 seconds
-      And I switch to the frame 0
+      And I switch to the frame 1
       And I select "Quarter Size" from "format"
     Then the "Alt Text" field should contain "Sample Alt text"
       And the "Title Text" field should contain "Sample Title text"
@@ -185,7 +185,7 @@ Feature: Add media using the rich text editor
       And I fill in "File URL or media resource" with "https://www.youtube.com/watch?v=W_-vFa-IyB8"
       And I press "Next" in the "Media web tab" region
       And I wait 2 seconds
-    When I switch to the frame 0
+    When I switch to the frame 1
     Then I should see "Minecraft: Development history"
     When I select "Default" from "format"
       And I click the fake "Submit" button
@@ -208,7 +208,7 @@ Feature: Add media using the rich text editor
       And I fill in "File URL or media resource" with "http://vimeo.com/59482983"
       And I press "Next" in the "Media web tab" region
       And I wait 2 seconds
-    When I switch to the frame 0
+    When I switch to the frame 1
     Then I should see "Panopoly by Troels Lenda"
     When I select "Default" from "format"
       And I click the fake "Submit" button

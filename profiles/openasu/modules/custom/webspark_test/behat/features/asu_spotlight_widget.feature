@@ -12,7 +12,7 @@ Feature: Add ASU spotlight widget
     And I click "Add ASU spotlight" in the "CTools modal" region
     Then I should see "Configure new Add ASU spotlight"
 
-  @api @javascript @drupal_private_files @zero
+  @api @javascript @drupal_private_files
   Scenario: Add a ASU spotlight
     When I fill in the following:
       | field_asu_spotlight_items[und][0][title]  | Testing item title  |
