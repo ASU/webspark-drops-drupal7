@@ -21,7 +21,7 @@ Feature: Add media using the rich text editor
 
   # TODO: About 10% of the time this test will hang with Firefox, so for now,
   # we will run in Chrome only on Travis-CI to get consistent builds.
-  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files @zero
+  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files
   Scenario: Upload an image with format and alt text
     When I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
     # Upload the file.
@@ -58,7 +58,7 @@ Feature: Add media using the rich text editor
 
   # TODO: About 10% of the time this test will hang with Firefox, so for now,
   # we will run in Chrome only on Travis-CI to get consistent builds.
-  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files @webspark_broken @webspark_fixed @zero
+  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files @webspark_broken @webspark_fixed
   Scenario: The second alt/title text sticks
     When I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
     When I click the "Media browser" button in the "edit-body-und-0-value" WYSIWYG editor
@@ -102,7 +102,7 @@ Feature: Add media using the rich text editor
 
   # TODO: About 10% of the time this test will hang with Firefox, so for now,
   # we will run in Chrome only on Travis-CI to get consistent builds.
-  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files @zero
+  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files
   Scenario: HTML entities in alt/title text get decoded/encoded correctly
     When I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
     When I click the "Media browser" button in the "edit-body-und-0-value" WYSIWYG editor
@@ -139,7 +139,7 @@ Feature: Add media using the rich text editor
       And the "Title Text" field should contain "Title & some > \"character's\" <"
       And I switch out of all frames
 
-  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files @webspark_broken @webspark_fixed @zero
+  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_image @panopoly_images @drupal_private_files @webspark_broken @webspark_fixed
   Scenario: Use an image from elsewhere on the web
     When I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
       And I click the "Media browser" button in the "edit-body-und-0-value" WYSIWYG editor
@@ -175,7 +175,7 @@ Feature: Add media using the rich text editor
 
   # TODO: About 10% of the time this test will hang with Firefox, so for now,
   # we will run in Chrome only on Travis-CI to get consistent builds.
-  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_video @panopoly_widgets @zero
+  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_video @panopoly_widgets
   Scenario: Add a YouTube video
     When I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
     # Upload the file.
@@ -198,7 +198,7 @@ Feature: Add media using the rich text editor
 
   # TODO: About 10% of the time this test will hang with Firefox, so for now,
   # we will run in Chrome only on Travis-CI to get consistent builds.
-  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_video @panopoly_widgets @zero
+  @api @javascript @chrome @panopoly_wysiwyg @panopoly_wysiwyg_video @panopoly_widgets
   Scenario: Add a Vimeo video
     When I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
     # Upload the file.

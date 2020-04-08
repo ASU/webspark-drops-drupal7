@@ -44,14 +44,12 @@ before_install:
   # Setup display for Selenium
   - export DISPLAY=:99.0
   #- sh -e /etc/init.d/xvfb start
-  #- sleep 3
   # Added screen size (1024x768 - as defined in /etc/init.d/xvfb - isway too small)
   - /sbin/start-stop-daemon --start --verbose --pidfile /tmp/cucumber_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 2560x1440x16
   - sleep 1
   # Disable PHP features - XDebug
   - phpenv config-rm xdebug.ini
   - phpenv config-add travis.php.ini
-  #- google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 
 install:
   - sudo apt-get update > /dev/null
@@ -137,14 +135,12 @@ before_script:
 
 script:
   - bin/behat --init
-  - bin/behat --colors --tags '@zero' --config behat.travis.yml
-  #- bin/behat --colors --tags '~@webspark_ignore' --tags '~@panopoly_demo' --tags '~@panopoly_search' --config behat.travis.yml
+  - bin/behat --colors --tags '~@webspark_ignore' --tags '~@panopoly_demo' --tags '~@panopoly_search' --config behat.travis.yml
   - cd ../../../custom/webspark_test/behat
   - bin/behat --init
   - bin/behat --colors --tags '@zero' --config behat.travis.yml
 
 after_script:
-  - sleep 3
   - drush pm-disable panopoly_test --yes
   # Turn off ASU Brand filtering of GTM snippet
   - drush vset --always-set asu_brand_ci_testing 0
