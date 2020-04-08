@@ -3,7 +3,7 @@ name = "ASU Feeds"
 description = "Integrates ASU data into Drupal and the Feeds module."
 version = 7.x-3.0
 ; Added to staging module package
-package = "ASU Experimental"
+package = ASU
 core = 7.x
 php = 5.2
 dependencies[] = feeds

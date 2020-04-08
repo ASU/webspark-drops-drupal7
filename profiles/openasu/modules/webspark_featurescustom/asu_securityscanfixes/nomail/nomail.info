@@ -1,6 +1,6 @@
 name = No Mail
 description = "Does only one thing: Disables a site's ability to actually send email. ASU context: This should be enabled when security scans are being run by the Internet Security Office (ISO) to stop unintentional email spamming."
 core = 7.x
-category = ASU
+package = ASU
 version = 7.x-1.1
 ; updated by Bryan Roseberry - 9/21/2018
