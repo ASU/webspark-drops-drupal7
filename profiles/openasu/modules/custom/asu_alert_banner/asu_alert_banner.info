@@ -1,0 +1,5 @@
+name = ASU Alert Banner
+description = Provides ASU sites with an alert banner feature to notify users of important information
+
+core = 7.x
+package = ASU
