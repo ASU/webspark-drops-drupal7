@@ -778,7 +778,6 @@ if (module_exists('metatag')) {
           <div class="container container-asu-ap-q-a">
             <div class="row row-full">
               <div class="column col-md-12">
-                <h2>More information</h2>
     <?php if ($accelerated_degree_value): ?>
                 <div id="asu-ap-accelerated-degree">
                   <h4>What are Accelerated Programs at ASU?</h4>

@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * Install file.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function nomail_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+  if ($phase === 'runtime') {
+    $requirements['nomail'] = array(
+      'title' => $t('No mail module is enabled'),
+      'description' => $t('Only suitable for temporary use to avoid unintended email spamming during scanning/testing'
+      . ' by the Internet Security Office (ISO). Disabling this module to allow email delivery when testing is completed'
+      . ' is highly recommended.'),
+      'value' => 'ALL email delivery is being blocked.',
+      'severity' => REQUIREMENT_ERROR,
+    );
+  }
+  return $requirements;
+}

@@ -3,37 +3,37 @@ Webspark 1.70.8 (Big Spring), 2020-04-07
 - Web standards components in Webspark
 
   * ASU Request for Information (asu_rfi, asu_rfi_feature) - v3.0
-    * Architecture & Development
-      - Refactored and/or consolidated many functionally duplicitous functions and files
-      - Fixed the naming convention of configuration variables and private PHP functions to match Drupal standards
-      - Removed unused configuration variables
-      - Created Fun Logger (flogger) module to improve the developer debugging experience
-      - Added internal documentation/comments for developers
-      - Required EntityReference_autocomplete contrib module as a dependency
-      - Updated Multiblock contrib module (v1.6) plus other patches
-      - Integrated the Queue API to queue larger middleware submission related tasks (to avoid web page timeouts)
-      - Utilized drupal_static for performance improvements
-      - Added UNDERGRAD/GRAD constants for universal module use.
-      - Added "Delete RFI submissions" permission for RFI submissions report operations
-      - Integrated usage of the Database API
-      - Utilized the Batch API to update existing data for the code and UI changes.
-      - Combined comparable RFI form element generation into single location to maintain element consistency between
+    - Architecture & Development
+      * Refactored and/or consolidated many functionally duplicitous functions and files
+      * Fixed the naming convention of configuration variables and private PHP functions to match Drupal standards
+      * Removed unused configuration variables
+      * Created Fun Logger (flogger) module to improve the developer debugging experience
+      * Added internal documentation/comments for developers
+      * Required EntityReference_autocomplete contrib module as a dependency
+      * Updated Multiblock contrib module (v1.6) plus other patches
+      * Integrated the Queue API to queue larger middleware submission related tasks (to avoid web page timeouts)
+      * Utilized drupal_static for performance improvements
+      * Added UNDERGRAD/GRAD constants for universal module use.
+      * Added "Delete RFI submissions" permission for RFI submissions report operations
+      * Integrated usage of the Database API
+      * Utilized the Batch API to update existing data for the code and UI changes.
+      * Combined comparable RFI form element generation into single location to maintain element consistency between
         form types
-      - Moved many form customizations from hook_form_alter into the initial form generation logic so AJAX rendering
+      * Moved many form customizations from hook_form_alter into the initial form generation logic so AJAX rendering
         would consistently work
-    * General bug fixes
-      - Updated deprecated PHP code to PHP 7.x standards
-      - The Request Info button now correctly chooses when and how to point to existing RFI forms
-      - RFI multiblock instance settings now correctly save for grad RFI forms when all majors are wanted for a single RFI form block
-      - Fixed multiblock ID issues.
-      - Fixed instance settings for multistep RFI form blocks
-      - Fixed JSON feed URL to ASUOnline program data sources (also forces an HTTPS connection)
-      - Added endpoint availability detection to avoid hanging a site while attempting to POST submissions to unavailable middleware
-      - Added try/catch to cURL calls for graduate RFI posts to middleware
-      - Re-added limited integration with deprecated ASU Degrees module-generated degrees pages
-      - Fixed state and country form field logic
-      - Refactored the CSS, JS (ECMAScript v1.6+) and added other module theming improvements
-    * UI/UX Improvements
+    - General bug fixes
+      * Updated deprecated PHP code to PHP 7.x standards
+      * The Request Info button now correctly chooses when and how to point to existing RFI forms
+      * RFI multiblock instance settings now correctly save for grad RFI forms when all majors are wanted for a single RFI form block
+      * Fixed multiblock ID issues.
+      * Fixed instance settings for multistep RFI form blocks
+      * Fixed JSON feed URL to ASUOnline program data sources (also forces an HTTPS connection)
+      * Added endpoint availability detection to avoid hanging a site while attempting to POST submissions to unavailable middleware
+      * Added try/catch to cURL calls for graduate RFI posts to middleware
+      * Re-added limited integration with deprecated ASU Degrees module-generated degrees pages
+      * Fixed state and country form field logic
+      * Refactored the CSS, JS (ECMAScript v1.6+) and added other module theming improvements
+    - UI/UX Improvements
       * RFI submission reports page improvements
         * Updated RFI submission status value options, and improved the related help text
         * Reorganized the report's columns to put more relevant data up towards the front
@@ -56,59 +56,59 @@ Webspark 1.70.8 (Big Spring), 2020-04-07
         * Added better, "this program is not available", logic
         * Removed 'align="left|right|center"' <td> tag properties to improve accessibility.
       * Updated README documentation for end users
-    * Data Management
-      - Updated RFI submission deletion policies to adhere to the University Data Handling Standard.
+    - Data Management
+      * Updated RFI submission deletion policies to adhere to the University Data Handling Standard.
         * Upon updating the module to this version, all submissions older than 14 days old upon updating the module, regardless of status
         * All submissions that have successfully been sent onto any Salesforce middleware are deleted upon every cron run
         * All submissions that have not been sent on (status SF_Failed) are resubmitted every time a cron job runs
         * All submissions that have failed for 14 days past the initial submission date are deleted at the next cron run - regardless of their status
   * ASU Academic Programs (asu_ap) - 7.x-3.0
-    * Architecture & Development
-      - Reformatted page-level TPL file output (code and HTML)
-      - Combined graduate vs. undergrad logic in TPL
-      - Added new fields to ASU AP degree page content type to store additional data to render on degree pages.
-      - Added many other Degree Search field mapping options for future additional fields, if needed
-      - Re-added missing "asu_feeds_text_format" Drupal input format
-      - Campus options updated to current list
-      - Added configuration form to handle new, optional elements of degree pages pulled in from Degree Search that can be toggled on/off:
-        - The visibility of degree page fields with data imported from Degree Search data
-        - Showing/hiding of marketing video content at top of degree pages
-    * Refactored ASU AP CSS
-      - Namespaced existing selectors
-      - Removed duplicate rules
-      - Added CSS for new elements
-    * General Bug fixes
-      - Updated ASU IXR library for PHP 7.x compatibility
-    * UI/UX Improvements
-      * Degree pages:
-        - Added canonical URLs in <link> tags pointing at Degree Search page counterparts for SEO improvements
-        - Added marketing text and video pulled in from Degree Search and logic to determine when to show them
-        - Added several newer Degree Search pages elements to individual degree page output middle section
-        - Online campus link now point to the corresponding asuonline.asu.edu degree page
-        - Added missing and/or new degree "special categories" links to title banner
-        - Special category text now link to explanations (imported from Degree Search) optionally rendered at the bottom of the page.
-        - Updated casing to "Sentence casing" (vs. Title Casing)
-        - Degree page edit form explanatory messaging improved
-        - Fixed @media CSS rules for better tablet layouts
+    - Architecture & Development
+      * Reformatted page-level TPL file output (code and HTML)
+      * Combined graduate vs. undergrad logic in TPL
+      * Added new fields to ASU AP degree page content type to store additional data to render on degree pages.
+      * Added many other Degree Search field mapping options for future additional fields, if needed
+      * Re-added missing "asu_feeds_text_format" Drupal input format
+      * Campus options updated to current list
+      * Added configuration form to handle new, optional elements of degree pages pulled in from Degree Search that can be toggled on/off:
+        * The visibility of degree page fields with data imported from Degree Search data
+        * Showing/hiding of marketing video content at top of degree pages
+    - Refactored ASU AP CSS
+      * Namespaced existing selectors
+      * Removed duplicate rules
+      * Added CSS for new elements
+    - General Bug fixes
+      * Updated ASU IXR library for PHP 7.x compatibility
+    - UI/UX Improvements
+      -- Degree pages:
+        * Added canonical URLs in <link> tags pointing at Degree Search page counterparts for SEO improvements
+        * Added marketing text and video pulled in from Degree Search and logic to determine when to show them
+        * Added several newer Degree Search pages elements to individual degree page output middle section
+        * Online campus link now point to the corresponding asuonline.asu.edu degree page
+        * Added missing and/or new degree "special categories" links to title banner
+        * Special category text now link to explanations (imported from Degree Search) optionally rendered at the bottom of the page.
+        * Updated casing to "Sentence casing" (vs. Title Casing)
+        * Degree page edit form explanatory messaging improved
+        * Fixed @media CSS rules for better tablet layouts
 
   * ASU Brand (asu_brand) - v1.21
-    - Added drupal_alter to allow dynamic customization and theming of site menu before it is passed to the header
+    * Added drupal_alter to allow dynamic customization and theming of site menu before it is passed to the header
       (credit: Travis B. (tbutterf))
   * ASU Directory Integration Reinvented (asu_dir) - v1.10.2
-    - Fixed "Undefined variable: field_paragraph_research_areas" error
+    * Fixed "Undefined variable: field_paragraph_research_areas" error
   * Innovation (innovation) - v1.16
-    - Added horizontal rule tag (<hr>) to list of WYSIWYG acceptable elements
-    - Added ability to select alert styling within the WYSIWYG editor.
+    * Added horizontal rule tag (<hr>) to list of WYSIWYG acceptable elements
+    * Added ability to select alert styling within the WYSIWYG editor.
   * Webspark Extras - v1.7,
     Webspark Featurescustom - v1.9
-    - Added pre-populated ASU campuses select lists for the Webform module
+    * Added pre-populated ASU campuses select lists for the Webform module
   * Webspark Megamenu (webspark_megamenu) - v1.12,
     Innovation (innovation) - v1.16
-    - Button styling now available for LH menu items via link edit menu
+    * Button styling now available for LH menu items via link edit menu
   * Webspark Panels Styles (webspark_panels_styles) - v1.6
-    - Fixed syntax error in .add-margin-xl-above CSS selector rule.
+    * Fixed syntax error in .add-margin-xl-above CSS selector rule.
   * Webspark WYSIWYG (webspark_wysiwyg) - v1.9
-    - Added Bootstrap columns functionality to the WYSIWYG editor via WYSIWYG Templates and the "Insert
+    * Added Bootstrap columns functionality to the WYSIWYG editor via WYSIWYG Templates and the "Insert
       WYSIWYG Templates Content" button.
 
 - Contrib project additions
@@ -141,19 +141,19 @@ Webspark 1.70.8 (Big Spring), 2020-04-07
 - Webspark custom projects - Changes/Deletions
 
   * ASU Degrees (DEPRECATED) - v1.11
-    - Added the "list-item" class to list items
+    * Added the "list-item" class to list items
   * ASU Feeds (asu_feeds) (DEPRECATED) - v1.2,
     IXR (ixr) (DEPRECATED) - v1.1
-    - Updated for PHP 7.x compatibility errors
+    * Updated for PHP 7.x compatibility errors
   * ASU Feeds 2 (asu_feeds2) - v3.0
-    - Added mappings to include new Degree Search fields created since last update
-    - Refactored/consolidated custom field generation logic for easier support
+    * Added mappings to include new Degree Search fields created since last update
+    * Refactored/consolidated custom field generation logic for easier support
   * Fun Logger (flogger) - v1.1
-    - drupal_set_message display logic fixed to show only for administrator roles in certain edge cases
+    * drupal_set_message display logic fixed to show only for administrator roles in certain edge cases
   * ASU GCSE (asu_gcse) - v1.0
-    - Disabled and uninstalled the module (codebase will be removed in the next Webspark release).
+    * Disabled and uninstalled the module (codebase will be removed in the next Webspark release).
   * ASU IXR (asu_ixr) - v3.0
-    - Updated for PHP 7.2+ compatibility
+    * Updated for PHP 7.2+ compatibility
 
 
 Webspark 1.70.7 (Zipperlandville), 2020-01-08
@@ -891,14 +891,14 @@ Webspark 1.48 (Nevada) release, 2017-12-22
     * Moved ASU custom behat tests and steps into this module.
     * Added Behat tests for the ASU DIRS suite and ASU Spotlight module
 
-Webspark 1.46.1 (Omaha) release, 2017-12-09
+Webspark 1.46.1 (Omaha) release, 2017-09-12
 -------------------------------------------
 - Web standards components in Webspark
 
     * ASU Directory Integration Reinvented (v1.7.2)
         * Bug fix for broken employee types filter
 
-Webspark 1.46 (Nebraska) release, 2017-27-08
+Webspark 1.46 (Nebraska) release, 2017-08-27
 --------------------------------------------
 - Webspark core
 
@@ -1027,7 +1027,7 @@ Webspark 1.43 (Colorado) release, 2017-16-05
 
 
 
-Webspark 1.40.3 (Shell Valley) release, 2017-15-02
+Webspark 1.40.3 (Shell Valley) release, 2017-02-15
 --------------------------------------------------
 - Webspark core
 
@@ -1062,7 +1062,7 @@ Webspark 1.40.3 (Shell Valley) release, 2017-15-02
     - Webspark-managed modules
         * Webform - v4.14
 
-Webspark 1.40.2 (Pillsbury) release, 2017-25-01
+Webspark 1.40.2 (Pillsbury) release, 2017-01-25
 -----------------------------------------------
 - Webspark-managed libraries - Additions
 
@@ -1110,7 +1110,7 @@ Webspark 1.40.2 (Pillsbury) release, 2017-25-01
         * Added a menu-block-wrapper.tpl.php with an aria-label to identify submenus
     * Webspark Megamenu (v1.6.1) - Added ARIA role to main navigation menu to fix tab key navigation functionality
 
-Webspark 1.40.1 (Hoople) release, 2016-16-09
+Webspark 1.40.1 (Hoople) release, 2016-09-16
 --------------------------------------------
 - Contrib projects - Updates
 
@@ -1124,7 +1124,7 @@ Webspark 1.40.1 (Hoople) release, 2016-16-09
 - Web standards components in Webspark
     * Innovation theme (v1.6) - Color of primary and blue button text now white on :hover
 
-Webspark 1.40 (North Dakota) release, 2016-12-09
+Webspark 1.40 (North Dakota) release, 2016-09-12
 ------------------------------------------------
 - Webspark core
 
@@ -1189,7 +1189,7 @@ the Webspark distribution.
 
     * ASU Directory (asu_directory)
 
-Webspark 1.37 (South Dakota) release, 2016-15-07
+Webspark 1.37 (South Dakota) release, 2016-07-15
 ------------------------------------------------
 
 - Webspark core
@@ -1278,7 +1278,7 @@ Webspark 1.37 (South Dakota) release, 2016-15-07
     * Panopoly Demo
 
 
-Webspark 1.27.1 (Ismay) release, 2016-23-06
+Webspark 1.27.1 (Ismay) release, 2016-06-23
 -------------------------------------------
 - Drupal core
     * Updated to v7.44 (Security updates)
@@ -1297,10 +1297,10 @@ Webspark 1.27.1 (Ismay) release, 2016-23-06
 
 - Contributed libraries/modules
     * Field Group (patch)
-        - Fixed issue where "Show" appears in horizontal tab title if node form is submitted through ajax
+        * Fixed issue where "Show" appears in horizontal tab title if node form is submitted through ajax
     * Font Awesome library (v4.6.3) - Adds new icons
 
-Webspark 1.27 (Montana) release (MAJOR Update), 2016-17-06
+Webspark 1.27 (Montana) release (MAJOR Update), 2016-06-17
 ----------------------------------------------------------
 - Webspark core
     * Updated Panopoly core - v1.27
@@ -1426,7 +1426,7 @@ Webspark 1.27 (Montana) release (MAJOR Update), 2016-17-06
     * OpenASU Demo
 
 
-Webspark 1.13.15 (Bellingham) release, 2016-28-04
+Webspark 1.13.15 (Bellingham) release, 2016-04-28
 -------------------------------------------------
 - Drupal core:
     * The update to Drupal 7.43 broke file uploads attached to all Drupal forms submitted by unauthenticated users when
@@ -1485,7 +1485,7 @@ Webspark 1.13.15 (Bellingham) release, 2016-28-04
         * Added additional padding in order to prevent elements from colliding with the Global ASU Footer
 
 
-Webspark 1.13.14 (Ferndale) release, 2016-04-03
+Webspark 1.13.14 (Ferndale) release, 2016-03-04
 -----------------------------------------------
 
 - Drupal core:
@@ -1530,7 +1530,7 @@ Webspark 1.13.14 (Ferndale) release, 2016-04-03
         * Deprecated contact fields
         * Added alt text field for logo
 
-Webspark 1.13.13 (Hanford) release, 2015-02-10
+Webspark 1.13.13 (Hanford) release, 2015-10-02
 ----------------------------------------------
 
 - Contrib modules in Webspark:
@@ -1566,7 +1566,7 @@ Webspark 1.13.13 (Hanford) release, 2015-02-10
     * Webspark Megamenu
         * Added Automatic resizing of the MegaMenu depending on the size of the screen
 
-Webspark 1.13.12 (Pullman) release, 2015-02-09
+Webspark 1.13.12 (Pullman) release, 2015-09-02
 ----------------------------------------------
 - ASU custom modules
     * ASU RFI - v1.2
@@ -1583,7 +1583,7 @@ Webspark 1.13.12 (Pullman) release, 2015-02-09
         * Fixed some upper case and lower case field names
 
 
-Webspark 1.13.11 (Tacoma) release, 2015-28-08
+Webspark 1.13.11 (Tacoma) release, 2015-08-28
 ---------------------------------------------
 - Drupal Core
     * Updated to 7.39 (Security release)
@@ -1607,7 +1607,7 @@ Webspark 1.13.11 (Tacoma) release, 2015-28-08
         * Deeply nested menu tree links are now indented
 
 
-Webspark 1.13.10 (Spokane) release, 2015-15-07
+Webspark 1.13.10 (Spokane) release, 2015-07-15
 ----------------------------------------------
 - Contributed Drupal Modules in Webspark
     * Patched Media module to fix bug that made WYSIWYG fields disappear from ASU Degree edit forms when 1) more than
@@ -1629,7 +1629,7 @@ Webspark 1.13.10 (Spokane) release, 2015-15-07
       DB settings for the Webspark Content Callout module
 
 
-Webspark 1.13.9 (Washington) release, 2015-01-07
+Webspark 1.13.9 (Washington) release, 2015-07-01
 ------------------------------------------------
 - Webspark Core
     * Added meta tag to better identify Webspark sites and their version
@@ -1648,13 +1648,13 @@ Webspark 1.13.9 (Washington) release, 2015-01-07
       color to gold on hover
 
 
-Webspark 1.13.8 (Idaho II) release, 2015-18-06
+Webspark 1.13.8 (Idaho II) release, 2015-06-18
 ----------------------------------------------
 - Drupal Core
     * Security update to Drupal 7.38
 
 
-Webspark 1.13.7 (Idaho) release, 2015-09-06
+Webspark 1.13.7 (Idaho) release, 2015-06-09
 -------------------------------------------
 
 - Webspark Core
@@ -1688,7 +1688,7 @@ Webspark 1.13.7 (Idaho) release, 2015-09-06
     * Updated title of ASU RFI settings menu
     * Updated RFI module with added functionality and bug fixes
 
-Webspark 1.13.6 (Wyoming) release, 2015-20-04
+Webspark 1.13.6 (Wyoming) release, 2015-04-20
 ---------------------------------------------
 
 - Webspark Core
@@ -1710,23 +1710,23 @@ Webspark 1.13.6 (Wyoming) release, 2015-20-04
       disabled to remove those links for non-academic sites. (This feature is also
       now disabled by default. To add those links, enable the module.)
     * Degrees module updates
-        - Added New Program and Concurrent Program fields
-        - Changed the Additional Requirements field name to "Additional
+        * Added New Program and Concurrent Program fields
+        * Changed the Additional Requirements field name to "Additional
           Requirements URL"
-        - Disabled the option to upload image files to the site when using the
+        * Disabled the option to upload image files to the site when using the
           "Add image" feature while editing an ASU Degree node
-        - Added the ability to link related programs together from their
+        * Added the ability to link related programs together from their
           respective ASU Degree pages (nodes)
-        - Added the option to import degrees by Campus
-        - Replaced the College Code input text field in the import feed page
+        * Added the option to import degrees by Campus
+        * Replaced the College Code input text field in the import feed page
           with a select list of Colleges and Campuses
-        - Removed Preview button from the edit page for the ASU Degree nodes
-        - Fixed "Request Information" button so it correctly jumps to the RFI
+        * Removed Preview button from the edit page for the ASU Degree nodes
+        * Fixed "Request Information" button so it correctly jumps to the RFI
           form (if the ASU RFI module is enabled)
-        - Fixed bug with the Accelerated Programs not being flagged properly
+        * Fixed bug with the Accelerated Programs not being flagged properly
     * Updated the ASU RFI module to 1.1
 
-Webspark 1.13.5 (Utah) release, 2015-16-03
+Webspark 1.13.5 (Utah) release, 2015-03-16
 ------------------------------------------
 
 - Drupal Core
@@ -1764,7 +1764,7 @@ Webspark 1.13.5 (Utah) release, 2015-16-03
     * Added table template file for views to Kalatheme
     * Fixed duplicate ID properties in footer <div> tags
 
-Webspark 1.13.4 (Oklahoma II) release, 2015-09-02
+Webspark 1.13.4 (Oklahoma II) release, 2015-02-09
 -------------------------------------------------
 
 - Webspark Core
@@ -1785,7 +1785,7 @@ Webspark 1.13.4 (Oklahoma II) release, 2015-09-02
     * Fixed layout issues in Mega Footer
     * Can now allow Donate instead of Contribute in Mega Footer
 
-Webspark 1.13.3 (Oklahoma) release, 2015-27-01
+Webspark 1.13.3 (Oklahoma) release, 2015-01-27
 ----------------------------------------------
 
 - Webspark Core
@@ -1819,7 +1819,7 @@ Webspark 1.13.3 (Oklahoma) release, 2015-27-01
       log/report entries
     * Patched Background Image module to fix default_image error
 
-Webspark 1.13.2 (New Mexico) release, 2015-11-01
+Webspark 1.13.2 (New Mexico)) release, 2015-01-11
 ------------------------------------------------
 
 - Webspark Core
@@ -1873,7 +1873,7 @@ Webspark 1.13.2 (New Mexico) release, 2015-11-01
 - Breadcrumbs
     * Fixed incorrect text, URLs, and paths not going beyond third page
 
-Webspark 1.13.1 (Arizona) release, 2014-05-12
+Webspark 1.13.1 (Arizona) release, 2014-12-05
 -----------------------------------------------
 
 - Webspark Core

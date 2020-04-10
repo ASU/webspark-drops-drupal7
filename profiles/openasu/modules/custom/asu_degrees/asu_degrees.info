@@ -1,5 +1,5 @@
 name = ASU Degrees
-description = [DEPRECATED - Use new ASU Academic Programs module] - Extends ASU Degrees Feature module.
+description = [DEPRECATED, OUT OF DATE] Use the new ASU Academic Programs module instead. - Extends ASU Degrees Feature module to create degrees pages.
 core = 7.x
 package = ASU Deprecated
 version = 7.x-1.11
