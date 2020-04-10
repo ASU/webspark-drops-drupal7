@@ -20,6 +20,7 @@ class WebsparkBehatTests extends RawDrupalContext implements DrupalSubContextInt
   public function __construct(DrupalDriverManager $drupal) {
     $this->drupal = $drupal;
   }
+
   /**
    * @Then the :field Innovation radio button should be set to :option
    *

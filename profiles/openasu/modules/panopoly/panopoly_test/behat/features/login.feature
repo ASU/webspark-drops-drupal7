@@ -7,8 +7,8 @@ I want to be able to login
     Given users:
     | name     | pass      | mail             | roles    |
     | TestUser | ChangeMe! | foo@example.com  | editor   |
- 
-  @standard_login @api
+
+  @standard_login @api @webspark_broken @webspark_ignore
   Scenario: Editor is able to login
     Given I am on "/user"
     When I fill in "TestUser" for "edit-name"
