@@ -13,7 +13,6 @@ php:
 
 addons:
   artifacts: true
-  chrome: stable
 
 services:
   - mysql
