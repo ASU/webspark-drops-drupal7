@@ -138,6 +138,13 @@ Webspark 1.70.8 (Big Spring), 2020-04-07
       * (Accessibility fix) Removed <ul> nav when only one slide exists
       * (Accessibility fix) Added 'slide' ARIA-label
 
+- Webspark custom projects - Additions
+  * ASU Alert Banner (asu_alert_banner) - v1.1
+    * Provides ASU sites with an alert banner feature to notify users of important information.
+  * No Mail (nomail) - v1.1
+    * Blocks all email delivery from the site.
+    * Only enable prior to web security scans.
+
 - Webspark custom projects - Changes/Deletions
 
   * ASU Degrees (DEPRECATED) - v1.11

@@ -9,7 +9,6 @@ Feature: Link to page on the site
     When I visit "/admin/appearance/settings/innovation"
       And I check the box "edit-always-show-page-title"
       And I press "edit-submit"
-    And I wait 5 seconds
       And I visit "/node/add/panopoly-test-page"
       And I fill in the following:
         | Title  | Testing Linkit       |
