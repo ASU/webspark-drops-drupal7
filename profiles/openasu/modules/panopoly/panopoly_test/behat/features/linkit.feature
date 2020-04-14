@@ -33,7 +33,7 @@ Feature: Link to page on the site
       And I press "edit-submit"
     Then I should see "Linkit Target" in the "a" element with the "title" attribute set to "Testing title" in the "Burr Flipped Content" region
     When I click "Linkit Target"
-    Then I should see "Linkit Target"
+    Then the "h1" element should contain "Linkit Target"
 
   @api @javascript @panopoly_wysiwyg
   Scenario: Add a link to an external page
