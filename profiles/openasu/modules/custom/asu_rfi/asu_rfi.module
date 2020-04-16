@@ -784,7 +784,7 @@ function _asu_rfi_validate_zipcode($country, $zip) {
 
 /**
  * Implements hook_cron().
- * @throws \Exception
+ * @throws Exception
  */
 function asu_rfi_cron() {
 
@@ -1006,7 +1006,7 @@ function asu_rfi_bulk_delete_submissions_action(&$node, $context) {
  *********************************************************************/
 
 /**
- * Prepares and submits data to Salesforce for all programs and forms
+ * Prepares and submits data to Salesforce middleware for all programs and forms
  * One submission sent per call
  * @param $node - ASU RFI node storing the data
  * @param array $post - data to submit
@@ -1063,7 +1063,7 @@ function _asu_rfi_process_middleware_data($node, $post = array(), $program = ASU
       $post['type_of_form'] = 'MF';
     }
     $post['ip_address'] = isset($node->field_rfi_ip_address[LANGUAGE_NONE][0]['value']) ? $node->field_rfi_ip_address[LANGUAGE_NONE][0]['value'] : '';
-    $post['start_date'] = $node->field_rfi_start_term_code[LANGUAGE_NONE][0]['value'];
+    $post['start_date'] = $node->field_rfi_start_term_code[LANGUAGE_NONE][0]['value']; // @TODO 7208
     asu_rfi_post_to_middleware($post, ASU_RFI_PROSPECT_LEVEL_UNDERGRAD);
   }
   variable_set('asu_rfi_last_attempt_SF_posting', time());
@@ -1298,7 +1298,7 @@ function _asu_rfi_get_campus_info($campus, $reverse = FALSE) {
  * @param string $type - undergrad or graduate
  * @return array $program_results - key => nid and value => program focus (program code +
  *   program plan code)
- * @throws \EntityFieldQueryException
+ * @throws EntityFieldQueryException
  * @TODO Probably will want to remove, or edit to use new program gathering logic.
 
  */
@@ -1734,7 +1734,7 @@ function _asu_rfi_detect_browser() {
  * Determine type of site environment (dev, test, or live)
  * NOTE: This will work for all Pantheon sites, but everywhere else it won't
  * catch everything. The "test mode" setting will have to catch the rest.
- * @return string $env - Name of the environment. dev, qa, or prod
+ * @return array $env - Type of environment (dev, qa, or prod), and endpoint_access (T/F).
  */
 function _asu_rfi_detect_environment() {
   $env = &drupal_static(__FUNCTION__);
@@ -1812,7 +1812,7 @@ function _asu_rfi_get_curl_auth() {
  * Create and deliver email receipt to admins about failed SF submissions
  * @param $to_email
  * @param $nid
- * @throws \Exception
+ * @throws Exception
  */
 function _asu_rfi_create_failed_post_email($to_email, $nid = 0) {
   $host = $_SERVER['HTTP_HOST'];

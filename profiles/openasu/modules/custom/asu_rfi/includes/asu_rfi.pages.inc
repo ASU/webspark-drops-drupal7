@@ -147,7 +147,7 @@ function asu_rfi_form_data($form, &$form_state) {
         ? $form_state['values']['campus'] : '';
       $form['my_interest']['campus']['#required'] = TRUE;
 
-    // start dates - INIT and AJAX updates
+    // start dates - INIT creation and AJAX updates
     ////////////////////////////////
     if (!empty($form_state['values']['campus'])) {
       $start_dates = _asu_rfi_get_sem_dates_dynamic(
@@ -168,7 +168,7 @@ function asu_rfi_form_data($form, &$form_state) {
         TRUE,
         $degree_assets['start_dates']); // Addon(s)
     }
-    // END AJAX start date updates
+    // END INIT and AJAX start date creation, updates
     /////////////////////////////
 
     $form['my_interest']['campus']['#required'] = TRUE;
@@ -296,7 +296,7 @@ function asu_rfi_form_data_validate($form, &$form_state) {
  * Defaults to FIRST FORM
  * @param $form
  * @param $form_state
- * @throws \Exception
+ * @throws Exception
  */
 function asu_rfi_form_data_submit($form, &$form_state) {
   // SECOND FORM? Go to other submit
@@ -569,7 +569,7 @@ function asu_rfi_second_form_validate($form, &$form_state) {
  * MULTIFORM - SECOND FORM submit (for undergrad and grad students)
  * @param $form
  * @param $form_state
- * @throws \Exception
+ * @throws Exception
  */
 function asu_rfi_second_form_submit($form, &$form_state) {
 
@@ -1600,7 +1600,6 @@ function _asu_rfi_form_initial_web_assets($type) {
  *
  * Note: Cache API is required for the AJAX functionality to work (AJAX doesn't
  * do a full bootstrap, so $node is unavailable via menu_get_object()).
- * @param $form - Form array to be edited
  * @param null $nid - Node ID. Defaults to NULL if creating node for first time (including cache).
  * @param string $campus - Human-friendly campus string.
  * @return array
@@ -1714,6 +1713,7 @@ function _asu_rfi_get_degree_specifics($nid = NULL, $campus = '') {
 
 /**
  * Initial creating of $node object (and in cache for AJAX calls and better performance.)
+ * Necessary to get AJAX to work since menu_get_object() does not work for AJAX calls (no full bootstrap executed)
  *
  * @param $nid - Node ID
  * @return mixed|string - Returns $node object, or empty string.
@@ -1792,7 +1792,7 @@ function _asu_rfi_program_location_confirm($prog, $campus, $loc) {
  * @param bool $summer - Check for summer semester. Defauts to false.
  * @return int - Semester codes. 1 = Spring, 4 = Summer, 7 = Fall
  */
-function _asu_rfi_get_semester_today($month, $day, $summer = FALSE) {
+function _asu_rfi_get_current_semester($month, $day, $summer = FALSE) {
   if (($month >= 8)) { // FALL (8/15 and forward)
     if (($month !== 8) || ($month === 8 && $day > 14)) {
       return '7'; // FALL
@@ -1814,7 +1814,7 @@ function _asu_rfi_get_semester_today($month, $day, $summer = FALSE) {
  * @param bool $summer
  * @return array list of semester names + PeopleSoft codes
  */
-function _asu_rfi_get_ps_semester_codes($summer = FALSE) {
+function _asu_rfi_get_semester_digits($summer = FALSE) {
   $semesters = array(
     '1' => "Spring",
   );
@@ -1831,8 +1831,8 @@ function _asu_rfi_get_ps_semester_codes($summer = FALSE) {
  * @param $code - one digit code for semester
  * @return bool|string - Human readable semester name or FALSE is no matches
  */
-function _asu_rfi_ps_semester_codes_convert($code) {
-  $semesters = _asu_rfi_get_ps_semester_codes(TRUE);
+function _asu_rfi_semester_digits_to_text($code) {
+  $semesters = _asu_rfi_get_semester_digits(TRUE);
   $code = (int) $code;
   foreach ($semesters as $digit => $semester_name) {
     if ($code === (int) $digit) {
@@ -1850,61 +1850,48 @@ function _asu_rfi_ps_semester_codes_convert($code) {
  * @return array|mixed $sem_dates_array
  */
 function _asu_rfi_get_sem_dates_static($summer = FALSE) {
-  $sem_dates_array = &drupal_static(__FUNCTION__);
+  $semester_terms = &drupal_static(__FUNCTION__);
 
-  // Get semester dates from database
-  $term_date = array();
-  if (!isset($sem_dates_array)) {
-    /** @noinspection PhpUndefinedMethodInspection */
-    $sem_dates_query = Database::getConnection('default', 'default')
-      ->select('asu_rfi_sem_dates', 'sd')
-      ->fields('sd')
-      ->orderBy('CHAR_LENGTH(semId)')
-      ->execute()
-      ->fetchAll();
-    foreach ($sem_dates_query as $semester) {
-      $term_date[$semester->semId] = $semester->semLabel;
-    }
+  if (isset($semester_terms)) {
+    return $semester_terms;
+  }
+  else {
+    // Get semester dates from database
+    $all_avail_terms = _asu_rfi_get_all_avail_terms();
 
     // Display only current and next two years in the drop down.
-    // Build the date array
-    $date = array();
-    $year = (int) date('Y');
-    $new = array();
-    $options = array();
-    $semester = _asu_rfi_get_ps_semester_codes($summer);
-    $semester_today = _asu_rfi_get_semester_today(date('m'), date('d'), $summer);
+    $degree_terms = _asu_rfi_get_sem_codes_human_mapping($summer, 2);
 
-    for ($i = 0; $i <= 3; $i++) {
-      $date[$i] = $year + $i;
-      $new[$i] = substr_replace($date[$i], "", 1, 1);
-      if ($i === 0) {  // Current year (nothing sent in fall semester)
-        if ($semester_today !== '7') { // Before fall start
-          if ($summer && $semester_today === '1') { // Spring time and summer included
-            $trim_year = $new[$i] . '4';
-            $options[$trim_year] = ($date[$i]) . " " . $semester['4'];
-          }
-          $trim_year = $new[$i] . '7';  // Fall
-          $options[$trim_year] = ($date[$i]). " " . $semester['7'];
-        }
-      } else { // Future years
-        $trim_year = ($new[$i]) . "1";  // append 1 to the key depending on the season. For spring, add 1.
-        $options[$trim_year] = $date[$i] . " " . $semester["1"];
-        if ($summer) {
-          $next_trim_year = ($new[$i]) . "4";
-          $options[$next_trim_year] = $date[$i] . " " . $semester['4'];
-        }
-        $next_trim_year = ($new[$i]) . "7";
-        $options[$next_trim_year] = $date[$i]. " " . $semester["7"];
-      }
-    }
-    if (!empty($term_date)) {
-      $sem_dates_array = array_intersect($options, $term_date);
+    // Filter out semester codes not available for the degree if necessary
+    if (!empty($all_avail_terms)) {
+      return array_intersect($degree_terms, $all_avail_terms);
     } else {
-      $sem_dates_array = $options;
+      return $degree_terms;
     }
   }
-  return $sem_dates_array;
+}
+
+/**
+ * All available terms in the DB
+ *
+ * @return array
+ */
+function _asu_rfi_get_all_avail_terms() {
+  $all_avail_terms = &drupal_static(__FUNCTION__);
+  if (!isset($all_avail_terms)) {
+    $all_avail_terms = array();
+    /** @noinspection PhpUndefinedMethodInspection */
+    $sem_dates_results = Database::getConnection('default', 'default')
+      ->select('asu_rfi_sem_dates', 'sd')
+      ->fields('sd')
+      ->orderBy('semSortCode')
+      ->execute()
+      ->fetchAll();
+    foreach ($sem_dates_results as $semester) {
+      $all_avail_terms[$semester->semId] = $semester->semLabel;
+    }
+  }
+  return $all_avail_terms;
 }
 
 /**
@@ -1922,9 +1909,10 @@ function _asu_rfi_get_sem_dates_static($summer = FALSE) {
  * @param string $acad_plan - Academic plan of graduate degree
  * @param string $grad_dates - Serialized array from Graduate All Apply Dates (feed: graduateAllApplyDates) field.
  * @param string $campus - Filter by campus string (for when form is updated and called by AJAX)
+ * @param bool $keep_ps_codes - If TRUE, don't change the keys to semesterCode. For PS code to be returned instead.
  * @return mixed $final_dates - If TRUE, array of ('semesterCode' => 'Fall YYYY'), etc. Returns FALSE if empty.
  */
-function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '') {
+function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '', $keep_ps_codes = FALSE) {
   if (empty($grad_dates)) { // either an undergrad degree or field hasn't been updated.
     return _asu_rfi_get_sem_dates_static();
   }
@@ -1939,15 +1927,15 @@ function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '') {
   }
 
   // Reformat graduate data
+  // 1) Select campuses available
   $all_dates = array();
   $final_dates = array();
-
   foreach ($dates as $key => $value) {
     $campus_dates = explode(':', $value, 2);
     if (count($campus_dates) === 2) {
       preg_match('|([A-Z]{3,5}):([A-Z]+?):\d(\d{2})(\d)|', $key, $matches);
       if (count($matches) === 5) {
-        $semester = _asu_rfi_ps_semester_codes_convert($matches[4]);
+        $semester = _asu_rfi_semester_digits_to_text($matches[4]);
         $year = '20' . $matches[3];
         $all_dates[$matches[0]] = array(
           'campus' => $matches[1],
@@ -1962,7 +1950,7 @@ function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '') {
     }
   }
 
-  // Filter by campus
+  // 2) Filter starts dates by campus
   $valid_semester_dates = array();
   if (count($all_dates)) {
     foreach ($all_dates as $code => $value) {

@@ -84,10 +84,25 @@ function asu_rfi_post_to_middleware($data, $type) {
 
   // Submission customization - UNDERGRAD vs GRAD
   if ($type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
+
+    // Select proper ENV for Salesforce GRAD POSTs.
+    // Is it a dev or qa site, or in "test mode"?
+    if (($environ['type'] === "dev") || ($environ['type'] === "qa")) {
+      $tld = 'https://webforms-qa.asu.edu';
+    } else {
+      if ($form_mode === 'test') {
+        $tld = 'https://webforms-qa.asu.edu';
+      }
+      else {
+        $tld = 'https://webforms.asu.edu';
+      }
+    }
+
+
     $hashkey = sha1($mw_auth_key . '+' . $nid);
     // Default submission URL (non-Online)
     // @TODO - Add $environ check to hit testing/dev version of webforms.asu.edu?
-    $url = "https://webforms.asu.edu/asu_rfi_dedupe/submit_rfi/$hashkey/$nid";
+    $url = $tld . "/asu_rfi_dedupe/submit_rfi/$hashkey/$nid";
 
     // Get college code from database based on program code
     if ($prog_code == "" || empty($prog_code)) {
@@ -107,7 +122,7 @@ function asu_rfi_post_to_middleware($data, $type) {
       'prospect_level' => ASU_RFI_PROSPECT_LEVEL_UNDERGRAD,
       'student_type' => $data['student_type'],
       'program' => $prog_code,
-      'starting_semester' => $data['start_date'],
+      'starting_semester' => $data['start_date'], ////// Fix me @TODO 7208
       'email' => $data['email'],
       'zip' => $data['zipcode'],
       'phone' => $phone,
@@ -123,6 +138,7 @@ function asu_rfi_post_to_middleware($data, $type) {
       'campus' => $campus,
       'location' => $location,
     );
+
     // Use JSON for ALL UNDERGRAD submissions
     $body = json_encode($submission_data);
   }
@@ -186,14 +202,14 @@ function asu_rfi_post_to_middleware($data, $type) {
     if ($managedOnline == true) {
       if ($type === ASU_RFI_PROSPECT_LEVEL_GRAD) {
         $college_code = _asu_rfi_get_college_code($degreeMappings, $prog_code);
-        // Make sure all submissions to webforms.asu.edu are attempted.
+        // Make sure all submissions to webforms.asu.edu (or webforms-qa.asu.edu) are attempted.
         $environ['endpoint_access'] = true;
       }
       $submission_data = _asu_rfi_online_fields_alter($type, $submission_data, $server, $college_code, $enterpriseclientid, $nid, $form_mode);
       // Use JSON for Online GRADUATE submissions
       $body = json_encode($submission_data);
       $fieldHash = sha1($mw_auth_key . '+' .  $body);
-      $url = "https://webforms.asu.edu/asu_edplus_middleware/submit/$fieldHash";
+      $url = $tld . "/asu_edplus_middleware/submit/$fieldHash";
     }
   } else {
     // Remove meaningless data points for GRAD submissions

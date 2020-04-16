@@ -61,6 +61,12 @@ function asu_rfi_schema() {
         'length' => 225,
         'not null' => TRUE
       ),
+      'semSortCode' => array(
+        'description' => 'ASU-valid Semester term code',
+        'type' => 'varchar',
+        'length' => 4,
+        'not null' => TRUE
+      ),
     ),
     'primary key' => array('semId'),
   );
@@ -449,4 +455,20 @@ function asu_rfi_update_7206(&$sandbox) {
  */
 function asu_rfi_update_7207(&$sandbox) {
   variable_set('asu_rfi_online_url', 'https://asuonline.asu.edu/lead-submissions-v3.3/programs');
+}
+
+/**
+ * Add sorting logic (via ASU semester codes) to asu_rfi_sem_dates table.
+ */
+function asu_rfi_update_7208(&$sandbox) {
+  db_truncate('asu_rfi_sem_dates')->execute();
+  $semSortCode = array(
+      'description' => 'ASU-valid Semester term code',
+      'type' => 'varchar',
+      'length' => 4,
+      'not null' => TRUE,
+  );
+  db_add_field('asu_rfi_sem_dates', 'semSortCode', $semSortCode);
+  // Then rebuild semester terms in DB table
+  asu_rfi_get_form_select_options('rfi_dedupe_list_terms');
 }
