@@ -1,9 +1,0 @@
-{
-  "name": "imagesloaded",
-  "version": "2.1.2",
-  "description": "jQuery is all like _You images done yet or what?_",
-  "main": "jquery.imagesloaded.js",
-  "dependencies": {
-    "jquery": ">=1.4.3"
-  }
-}
