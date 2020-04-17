@@ -1503,6 +1503,84 @@ function _asu_rfi_parse_cached_programs() {
 }
 
 /**
+ * Create upcoming 4-digit semester codes and map to human readable semester names
+ *
+ * @param bool $summer - Include summer semester
+ * @param string $key_type - Return either peopleSoft codes (ps) or 4-digit codes (digits). Defaults to 'digits'.
+ * @param array $all_avail_terms - All terms (PS codes => human readable names)
+ * @param int $addl_years - Number of additional years to create drop down options
+ * @return array - All 4-digit (Or PS) semester codes (key) (ex. 1) => human-readable counterparts (Ex. Fall 2020)
+ */
+function _asu_rfi_get_sem_codes_human_mapping($summer, $all_avail_terms, $key_type = 'digits', $addl_years = 2) {
+  $options = &drupal_static(__FUNCTION__);
+  if (!isset($options)) {
+    // 1) Build the date array
+    $semester = _asu_rfi_get_semester_digits($summer);
+    $semester_today = _asu_rfi_get_current_semester(date('m'), date('d'), $summer);
+
+    // 2) Generate semester digits from semLabel field
+    $addl_years++; // <= years + 1
+    $date = $new = $options = array();
+    $year = (int)date('Y');
+    for ($i = 0; $i <= $addl_years; $i++) {
+      $date[$i] = $year + $i;
+      $new[$i] = substr_replace(($date[$i]), "", 1, 1);
+      if ($i === 0) {  // Current year (nothing sent in fall semester)
+        if ($semester_today !== '7') { // Before fall start
+          if ($summer && $semester_today === '1') { // Spring time and summer included
+            $human_term = ($date[$i]) . " " . $semester['4'];  // YYYY Summer
+            $key = ($key_type === 'ps')
+              ? _asu_rfi_get_ps_sem_code_key($human_term, $all_avail_terms)
+              : ($new[$i]) . '4';
+            $options[$key] = $human_term;
+          }
+          $human_term = ($date[$i]) . " " . $semester['7']; // YYYY Fall
+          $key = ($key_type === 'ps')
+            ? _asu_rfi_get_ps_sem_code_key($human_term, $all_avail_terms)
+            : ($new[$i]) . '7';
+          $options[$key] = $human_term;
+        }
+      } else { // Future years
+        $human_term = ($date[$i]) . " " . $semester["1"]; // YYYY Spring
+        $future_key = ($key_type === 'ps')
+          ? _asu_rfi_get_ps_sem_code_key($human_term, $all_avail_terms)
+          : ($new[$i]) . "1";  // append 1 to the key depending on the season. For spring, add 1.
+        $options[$future_key] = $human_term;
+        if ($summer) {
+          $human_term = ($date[$i]) . " " . $semester['4'];
+          $future_key = ($key_type === 'ps')
+            ? _asu_rfi_get_ps_sem_code_key($human_term, $all_avail_terms)
+            : ($new[$i]) . "4";
+          $options[$future_key] = $human_term;
+        }
+        $human_term = ($date[$i]) . " " . $semester['7'];
+        $future_key = ($key_type === 'ps')
+          ? _asu_rfi_get_ps_sem_code_key($human_term, $all_avail_terms)
+          : ($new[$i]) . "7";
+        $options[$future_key] = $human_term;
+      }
+    }
+  }
+  return $options;
+}
+
+/**
+ * Select PS code for the term from available options
+ *
+ * @param $term - Human readable term
+ * @param $available_terms - All available terms
+ * @return string
+ */
+function _asu_rfi_get_ps_sem_code_key($term, $available_terms) {
+  $key = array_search($term, $available_terms);
+  if ($key === FALSE) {
+    flogger('asu_rfi', 'No matching PeopleSoft term for @term.', array(':term' => $term), WATCHDOG_WARNING);
+  } else {
+    return $key;
+  }
+}
+
+/**
  * Determine source, ipAddress, source_type, domain
  *
  * @param array $data - submitted form data
@@ -1801,10 +1879,11 @@ function _asu_rfi_add_program_data_js($desiredProg) {
 /**
  * CURL options for JSON feed pulls in data inc files
  */
-function _asu_rfi_get_curl_auth() {
+function _asu_rfi_get_curl_auth($env) {
+  $text = ($env === 'dev' XOR $env === 'qa') ? 'other:other' : '7755:e7acf2e698751f4cac11718d97df6ebf64b94372';
   return array(
     'Content-Type: text/json',
-    'Authorization: Basic 7755:e7acf2e698751f4cac11718d97df6ebf64b94372'
+    'Authorization: Basic 7755:e7acf2e698751f4cac11718d97df6ebf64b94372',
   );
 }
 

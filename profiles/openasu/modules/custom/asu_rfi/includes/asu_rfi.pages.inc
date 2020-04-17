@@ -1847,7 +1847,7 @@ function _asu_rfi_semester_digits_to_text($code) {
  * Build semester start dates -- The web services from middleware pulls all the
  * old semesters and saves into the local database
  * @param bool $summer Return summer semester options if TRUE. Defaults to FALSE
- * @return array|mixed $sem_dates_array
+ * @return array|mixed 4-digit sem code (key) => Human-readable semester (summer 2020)
  */
 function _asu_rfi_get_sem_dates_static($summer = FALSE) {
   $semester_terms = &drupal_static(__FUNCTION__);
@@ -1857,10 +1857,12 @@ function _asu_rfi_get_sem_dates_static($summer = FALSE) {
   }
   else {
     // Get semester dates from database
+    // PS semester code (key) => Human-readable semester (Summer 2020)
     $all_avail_terms = _asu_rfi_get_all_avail_terms();
 
     // Display only current and next two years in the drop down.
-    $degree_terms = _asu_rfi_get_sem_codes_human_mapping($summer, 2);
+    // PS semester codes (key) (ex. 1) => human-readable counterparts (Ex. Fall 2020)
+    $degree_terms = _asu_rfi_get_sem_codes_human_mapping($summer, $all_avail_terms, 'ps');
 
     // Filter out semester codes not available for the degree if necessary
     if (!empty($all_avail_terms)) {
@@ -1869,29 +1871,6 @@ function _asu_rfi_get_sem_dates_static($summer = FALSE) {
       return $degree_terms;
     }
   }
-}
-
-/**
- * All available terms in the DB
- *
- * @return array
- */
-function _asu_rfi_get_all_avail_terms() {
-  $all_avail_terms = &drupal_static(__FUNCTION__);
-  if (!isset($all_avail_terms)) {
-    $all_avail_terms = array();
-    /** @noinspection PhpUndefinedMethodInspection */
-    $sem_dates_results = Database::getConnection('default', 'default')
-      ->select('asu_rfi_sem_dates', 'sd')
-      ->fields('sd')
-      ->orderBy('semSortCode')
-      ->execute()
-      ->fetchAll();
-    foreach ($sem_dates_results as $semester) {
-      $all_avail_terms[$semester->semId] = $semester->semLabel;
-    }
-  }
-  return $all_avail_terms;
 }
 
 /**
@@ -1909,10 +1888,9 @@ function _asu_rfi_get_all_avail_terms() {
  * @param string $acad_plan - Academic plan of graduate degree
  * @param string $grad_dates - Serialized array from Graduate All Apply Dates (feed: graduateAllApplyDates) field.
  * @param string $campus - Filter by campus string (for when form is updated and called by AJAX)
- * @param bool $keep_ps_codes - If TRUE, don't change the keys to semesterCode. For PS code to be returned instead.
  * @return mixed $final_dates - If TRUE, array of ('semesterCode' => 'Fall YYYY'), etc. Returns FALSE if empty.
  */
-function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '', $keep_ps_codes = FALSE) {
+function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '') {
   if (empty($grad_dates)) { // either an undergrad degree or field hasn't been updated.
     return _asu_rfi_get_sem_dates_static();
   }
@@ -1976,6 +1954,29 @@ function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '', $
     }
   }
   return FALSE;
+}
+
+/**
+ * Get ALL available terms in the DB, as pulled in from PeopleSoft
+ *
+ * @return array - PS semester code (key) => Human-readable semester (Summer 2020)
+ */
+function _asu_rfi_get_all_avail_terms() {
+  $all_avail_terms = &drupal_static(__FUNCTION__);
+  if (!isset($all_avail_terms)) {
+    $all_avail_terms = array();
+    /** @noinspection PhpUndefinedMethodInspection */
+    $sem_dates_results = Database::getConnection('default', 'default')
+      ->select('asu_rfi_sem_dates', 'sd')
+      ->fields('sd')
+      ->orderBy('semSortCode')
+      ->execute()
+      ->fetchAll();
+    foreach ($sem_dates_results as $semester) {
+      $all_avail_terms[$semester->semId] = $semester->semLabel;
+    }
+  }
+  return $all_avail_terms;
 }
 
 /**

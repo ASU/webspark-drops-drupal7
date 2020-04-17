@@ -36,7 +36,9 @@ function asu_rfi_get_form_select_options($name, $installing = FALSE) {
 
   // Do DB upsert of options if values are returned from JSON feed...
   if (count($results) > 0) {
-    $mapped_terms = ($name === 'rfi_dedupe_list_terms') ? _asu_rfi_get_sem_codes_human_mapping(TRUE, 4) : array();
+    $mapped_terms = ($name === 'rfi_dedupe_list_terms')
+      ? _asu_rfi_get_sem_codes_human_mapping(TRUE, array(), 'digits', 4)
+      : array();
     $data_count = 0;
     foreach ($results as $result) {
       $datum_key = (!empty($result->{$config['datum_key']})) ? check_plain($result->{$config['datum_key']}) : 'EMPTY';
@@ -50,12 +52,11 @@ function asu_rfi_get_form_select_options($name, $installing = FALSE) {
           $db_value => $datum_value,
         );
         // Add in semester four digit code from semLabel field @TODO 7208
-        if (isset($config['db_sorter'])) {
-          $db_sorter = $config['db_sorter'];
-          $value = $result->{$db_sorter};
+        if (isset($config['db_sorter']) && !empty($config['db_sorter'])) {
+          $value = $result->{$config['datum_value']};
           $code = array_search($value, $mapped_terms);
           if ($code !== FALSE && !empty($value)) {
-            $fields[$value] = $code;
+            $fields[$config['db_sorter']] = $code;
           }
         }
         db_merge($db_tbl)
@@ -120,11 +121,11 @@ function _asu_rfi_get_select_options_config($dataset) {
       'datum_key' => 'value',
       'datum_value' => 'label',
     );
-    $config['url'] = $tld . '/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
+    $config['url'] = 'https://' . $tld . '/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
     $config['json_options'] = array(
       CURLOPT_URL => $config['url'],
       CURLOPT_RETURNTRANSFER => 1,
-      CURLOPT_HTTPHEADER => _asu_rfi_get_curl_auth(),
+      CURLOPT_HTTPHEADER => _asu_rfi_get_curl_auth($env['type']),
     );
   }
   elseif ($dataset == 'country') {
@@ -137,11 +138,11 @@ function _asu_rfi_get_select_options_config($dataset) {
         'datum_key' => 'value',
         'datum_value' => 'label',
       );
-      $config['url'] = $tld . '/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
+      $config['url'] = 'https://' . $tld . '/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
       $config['json_options'] = array(
         CURLOPT_URL => $config['url'],
         CURLOPT_RETURNTRANSFER => 1,
-        CURLOPT_HTTPHEADER => _asu_rfi_get_curl_auth(),
+        CURLOPT_HTTPHEADER => _asu_rfi_get_curl_auth($env['type']),
       );
   }
   elseif ($dataset == 'rfi_dedupe_list_terms') {
@@ -155,7 +156,7 @@ function _asu_rfi_get_select_options_config($dataset) {
       'datum_value' => 'Name',
       'db_sorter' => 'semSortCode', // Optional param - semester sorting code
     );
-    $config['url'] = $tld . '/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
+    $config['url'] = 'https://' . $tld . '/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
     $fields = array(
       'condition_Term_Status__c' => TRUE,
     );
@@ -165,54 +166,9 @@ function _asu_rfi_get_select_options_config($dataset) {
       CURLOPT_POST => 1,
       CURLOPT_POSTFIELDS => $body,
       CURLOPT_RETURNTRANSFER => 1,
-      CURLOPT_HTTPHEADER => _asu_rfi_get_curl_auth(),
+      CURLOPT_HTTPHEADER => _asu_rfi_get_curl_auth($env['type']),
     );
   }
+  watchdog('asu_rfi', print_r($config));
   return $config;
-}
-
-/**
- * Create upcoming 4-digit semester codes and map to human readable semester names
- *
- * @param bool $summer - Include summer semester
- * @param int $addl_years - Number of additional years to create drop down options
- * @return array - All 4-digit PS semester codes (keys) (ex. 1) => human-readable counterparts (Ex. Fall 2020)
- */
-function _asu_rfi_get_sem_codes_human_mapping($summer, $addl_years = 2) {
-  $options = &drupal_static(__FUNCTION__);
-
-  if (!isset($options)) {
-    // 1) Build the date array
-    $semester = _asu_rfi_get_semester_digits($summer);
-    $semester_today = _asu_rfi_get_current_semester(date('m'), date('d'), $summer);
-
-    // 2) Generate semester digits from semLabel field @TODO 7208
-    $addl_years++; // <= years + 1
-    $date = $new = $options = array();
-    $year = (int)date('Y');
-    for ($i = 0; $i <= $addl_years; $i++) {
-      $date[$i] = $year + $i;
-      $new[$i] = substr_replace($date[$i], "", 1, 1);
-      if ($i === 0) {  // Current year (nothing sent in fall semester)
-        if ($semester_today !== '7') { // Before fall start
-          if ($summer && $semester_today === '1') { // Spring time and summer included
-            $trim_year = $new[$i] . '4';
-            $options[$trim_year] = ($date[$i]) . " " . $semester['4'];
-          }
-          $trim_year = $new[$i] . '7';  // Fall
-          $options[$trim_year] = ($date[$i]) . " " . $semester['7'];
-        }
-      } else { // Future years
-        $trim_year = ($new[$i]) . "1";  // append 1 to the key depending on the season. For spring, add 1.
-        $options[$trim_year] = $date[$i] . " " . $semester["1"];
-        if ($summer) {
-          $next_trim_year = ($new[$i]) . "4";
-          $options[$next_trim_year] = $date[$i] . " " . $semester['4'];
-        }
-        $next_trim_year = ($new[$i]) . "7";
-        $options[$next_trim_year] = $date[$i] . " " . $semester["7"];
-      }
-    }
-  }
-  return $options;
 }

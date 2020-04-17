@@ -463,12 +463,13 @@ function asu_rfi_update_7207(&$sandbox) {
 function asu_rfi_update_7208(&$sandbox) {
   db_truncate('asu_rfi_sem_dates')->execute();
   $semSortCode = array(
-      'description' => 'ASU-valid Semester term code',
+      'description' => 'Four-digit ASU semester term code',
       'type' => 'varchar',
       'length' => 4,
       'not null' => TRUE,
   );
   db_add_field('asu_rfi_sem_dates', 'semSortCode', $semSortCode);
   // Then rebuild semester terms in DB table
-  asu_rfi_get_form_select_options('rfi_dedupe_list_terms');
+  flogger('asu_rfi', 'Run cron immediately to update your ASU RFI semester date options!', array(),
+    WATCHDOG_WARNING, TRUE, TRUE, FALSE);
 }
