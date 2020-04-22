@@ -1731,7 +1731,7 @@ function _asu_rfi_get_type_of_form(&$form_state) {
       $form_state['values']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_GRAD;
       break;
     case "ugrad_longform" :
-      $s_type = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
+      $s_type = (isset($form_state['values']['student_type'])) ? $form_state['values']['student_type'] : '';
       $form_type = "Undergraduate long form";
       $form_state['values']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
   }

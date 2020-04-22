@@ -352,7 +352,6 @@ function asu_rfi_form_data_submit($form, &$form_state) {
     $form_state['storage']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_GRAD;
   }
   else { // Undergraduate
-    $form_state['values']['student_type'] = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
     $form_state['storage']['student_type'] = $form_state['values']['student_type'];
     $multi_form_type = "Undergraduate multi form";
     $form_state['storage']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
@@ -579,10 +578,10 @@ function asu_rfi_second_form_submit($form, &$form_state) {
 
   $zipcode = check_plain($form_state['values']['zipcode']);
   $country = $form_state['storage']['country'];
-  //$student_type = $form_state['storage']['student_type']; // unused??
   $address = check_plain($form_state['values']['address']);
   $form_state['storage']['address'] = $address;
 
+  //$student_type = $form_state['storage']['student_type'];
   //$email = check_plain($form_state['storage']['email']); // UNUSED??
   //$major = $form_state['storage']['prog_plan']; // UNUSED?
   // $unique_id = $email . $major; // UNUSED??
@@ -1134,9 +1133,9 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
   // value to "Graduate", else "Undergraduate"
 
   // @TODO - deal with Current Student forms
-  $tof_data = _asu_rfi_get_type_of_form($form_state);
-  $long_form_type = $tof_data['form_type'];
-  $student_type = $tof_data['student_type'];
+  $type_of_form = _asu_rfi_get_type_of_form($form_state);
+  $long_form_type = $type_of_form['form_type'];
+  $student_type = $type_of_form['student_type'];
 
   ////////////////////////////////////////////
   // Bio information
