@@ -664,17 +664,28 @@ function _asu_rfi_validate_electronic_contacts($email, $phone = '', $email_field
   }
   /** If mobile number field is checked, then check for USA format, else check for special characters **/
   if (!empty($phone)) {
-    $scam_num = substr($phone, 0, 3);
-    if (!empty($mobile_check) && $mobile_check != 0) {
-      if (!preg_match("/^([1]-)?([0-9]{3}[-|.][0-9]{3}[-|.][0-9]{4})$/i", $phone) || ($scam_num == "555")) {
-        form_set_error('phone', t('You entered an invalid Phone number.'));
-      }
+    if (preg_match("/^([+]?)([(]?[0-9]{1}[0-9]{2}[)]?)([-\s.]?)([0-9]{1}[0-9]{2})([-\s.]?)([0-9]{4,6})$/im", $phone, $matches)) {
+      return _asu_rfi_format_phone_number($matches);
     }
     else {
-      if (!preg_match("/^[0-9.\s-_+()]+$/", $phone) || ($scam_num == "555")) {
-        form_set_error('phone', t('You entered an invalid Phone number.'));
-      }
+      form_set_error('phone', t('You entered an invalid Phone number. See phone number field description for accepted formats.'));
     }
+  }
+}
+
+/**
+ * Reformat phone number for Salesforce
+ *
+ * @param array $matches - preg_match output
+ * @return mixed|string - Phone number string, depending on locale
+ */
+function _asu_rfi_format_phone_number($matches) {
+  if ($matches[1] === '+' || strpos($matches[2], '0', 0)) { // Int'l number - leave alone
+    return $matches[0];
+  } elseif (strstr($matches[2], '(')) { // Domestic number with parens already
+    return $matches[2] . ' ' . $matches[4] . '-' . $matches[6];
+  } else { // Default: Domestic (xxx) xxx-xxxx
+    return '(' . $matches[2] . ') ' . $matches[4] . '-' . $matches[6];
   }
 }
 
@@ -737,7 +748,7 @@ function _asu_rfi_validate_birthdate($birthdate) {
         form_set_error('birthdate', t('Year cannot be greater than ' . $year_limit));
       }
 
-      if (!preg_match("/^(0[1-9]|1[012])[\-\/.](0[1-9]|[12][0-9]|3[01])[\-\/.](19|20)\d\d$/", $birthdate)) {
+      if (!preg_match("/^([1-9]|1[012])[\-\/.]([1-9]|[12][0-9]|3[01])[\-\/.](19|20)\d\d$/", $birthdate)) {
         form_set_error('birthdate', t('Date of birth accepts the format mm/dd/yyyy.'));
         form_set_error('dob_field', t(' '));
       }
