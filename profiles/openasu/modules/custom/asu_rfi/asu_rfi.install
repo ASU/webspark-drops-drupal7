@@ -121,6 +121,16 @@ function asu_rfi_uninstall() {
  }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function asu_rfi_update_dependencies() {
+  // Enable asu_libs module BEFORE applying ANY asu_rfi module updates.
+  $deps['asu_rfi'][7200] = array(
+    'webspark_featurescustom' => 7018,
+  );
+}
+
+/**
  * Enable Honeypot module if ASU RFI module is enabled (Now required for 1.2+)
  */
 function asu_rfi_update_7000(&$sandbox) {
