@@ -273,8 +273,7 @@ function _asu_rfi_admin_settings_validate($form, &$form_state) {
   }
   if (isset($form_state['values']['asu_rfi_from_email_field'])
     && (!empty($form_state['values']['asu_rfi_from_email_field']))) {
-    _asu_rfi_validate_electronic_contacts($form_state['values']['asu_rfi_from_email_field'],
-      '',
+    asu_libs_validate_email($form_state['values']['asu_rfi_from_email_field'],
       'asu_rfi_from_email_field');
   }
 }

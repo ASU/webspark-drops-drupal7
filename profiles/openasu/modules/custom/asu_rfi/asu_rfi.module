@@ -652,132 +652,6 @@ function _asu_rfi_check_form_values($db_tbl) {
   return (int) $result;
 }
 
-/**
- * Validation - Email + phone numbers
- * @param $email
- * @param $phone - If NULL, skip
- * @param $email_field - Alternate Form API key for this field. Defaults to 'email'
- */
-function _asu_rfi_validate_electronic_contacts($email, $phone = '', $email_field = 'email') {
-  if (!preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9._-]+)*(\.[a-zA-Z]{2,6})+$/", $email)) {
-    form_set_error($email_field, t('You entered an invalid email.'));
-  }
-  /** If mobile number field is checked, then check for USA format, else check for special characters **/
-  if (!empty($phone)) {
-    $scam_num = substr($phone, 0, 3);
-    if (!empty($mobile_check) && $mobile_check != 0) {
-      if (!preg_match("/^([1]-)?([0-9]{3}[-|.][0-9]{3}[-|.][0-9]{4})$/i", $phone) || ($scam_num == "555")) {
-        form_set_error('phone', t('You entered an invalid Phone number.'));
-      }
-    }
-    else {
-      if (!preg_match("/^[0-9.\s-_+()]+$/", $phone) || ($scam_num == "555")) {
-        form_set_error('phone', t('You entered an invalid Phone number.'));
-      }
-    }
-  }
-}
-
-/**
- * Validation - Birthdate
- * @param $birthdate
- */
-function _asu_rfi_validate_birthdate($birthdate) {
-  //get number of occurences of '/' in dob
-  $slashes = substr_count($birthdate, '/');
-  if ($slashes == 2) {
-    $date_format = explode('/', $birthdate);
-    $month = $date_format[0];
-    $day = $date_format[1];
-    $year = $date_format[2];
-    $current_year = date('Y');
-    $year_limit = $current_year - 1;
-    $isLeapYear = date('L');
-
-    if (strlen($birthdate) < 11) {
-      if (($month < 1) || ($month > 12)) {
-        form_set_error('birthdate', t('Month range has to be between 1 and 12.'));
-        form_set_error('dob_field', t(' '));
-      }
-
-      if (($month == 1) || ($month == 3) || ($month == 5) || ($month == 7) || ($month == 8) || ($month == 10) || ($month == 12)) {
-        if (($day < 1) || ($day > 31)) {
-          form_set_error('birthdate', t('Date range has to be between 1 and 31.'));
-          form_set_error('dob_field', t(' '));
-        }
-      }
-
-      if (($month == 4) || ($month == 6) || ($month == 9) || ($month == 11)) {
-        if (($day < 1) || ($day > 30)) {
-          form_set_error('birthdate', t('Date range has to be between 1 and 30.'));
-          form_set_error('dob_field', t(' '));
-        }
-      }
-
-      if ($month == 2) {
-        if ($isLeapYear == 1) {
-          if (($day < 1) || ($day > 29)) {
-            form_set_error('birthdate', t('Date range has to be between 1 and 29.'));
-            form_set_error('dob_field', t(' '));
-          }
-        }
-        if ($isLeapYear == 0) {
-          if (($day < 1) || ($day > 28)) {
-            form_set_error('birthdate', t('Date range has to be between 1 and 28.'));
-            form_set_error('dob_field', t(' '));
-          }
-        }
-      }
-
-      if (strlen($year) != 4) {
-        form_set_error('birthdate', t('Year has to be 4 digits.'));
-      }
-
-      if ($year > $year_limit) {
-        form_set_error('birthdate', t('Year cannot be greater than ' . $year_limit));
-      }
-
-      if (!preg_match("/^(0[1-9]|1[012])[\-\/.](0[1-9]|[12][0-9]|3[01])[\-\/.](19|20)\d\d$/", $birthdate)) {
-        form_set_error('birthdate', t('Date of birth accepts the format mm/dd/yyyy.'));
-        form_set_error('dob_field', t(' '));
-      }
-
-    } else {
-      form_set_error('birthdate', t('Date of birth is invalid, it accepts the format mm/dd/yyyy.'));
-      form_set_error('dob_field', t(' '));
-    }
-  } else {
-    form_set_error('birthdate', t('Date of birth is invalid, it accepts the format mm/dd/yyyy.'));
-    form_set_error('dob_field', t(' '));
-  }
-}
-
-/**
- * Validation - ZIP Codes
- * @param $country
- * @param $zip
- */
-function _asu_rfi_validate_zipcode($country, $zip) {
-  if ($country == "United States") {
-    if ((strlen($zip) < 5)) {
-      form_set_error('zipcode', t('Postal code cannot be less than 5 digits.'));
-    }
-    if (!preg_match('/^[0-9]{5}+$/', $zip)) {
-      form_set_error('zipcode', t('Postal code accepts 5 digits only.'));
-    }
-  } else {
-    if (!preg_match("/^[a-zA-Z0-9\s-]+$/", $zip)) {
-      form_set_error('zipcode', t('Postal code is not valid.'));
-    }
-    if ((strlen($zip) < 4)) {
-      form_set_error('zipcode', t('Postal code cannot be less than 4 characters.'));
-    }
-    if (strlen($zip) > 20) {
-      form_set_error('zipcode', t('Postal code cannot be longer than 20 characters.'));
-    }
-  }
-}
-
 /*****************************************
  * CRON
  *****************************************/
@@ -1252,48 +1126,6 @@ function _asu_rfi_get_campus_location_options($pcodes) {
 }
 
 /**
- * Returns correct campusID string for Salesforce compatibility
- *
- * @param $campus - Human-readable campus name (or PeopleSoft/Salesforce IDs if $reverse)
- * @return string - The campus code (or human name, if $reverse). Returns empty string if no match is found.
- * @TODO pull in from feed to stay up to date
- */
-function _asu_rfi_get_campus_info($campus, $reverse = FALSE) {
-  // Legacy code conversion
-  if ($campus === "TMPE") { $campus = 'TEMPE'; }
-  if ($campus === "DOWNTOWN") { $campus = 'DTPHX'; }
-
-  $campuses = array(
-    "Tempe" => 'TEMPE',
-    "Downtown" => "DTPHX",
-    "Online" => "ONLNE",
-    "Polytechnic" => "POLY",
-    "West" => "WEST",
-    'ASU@Cochise' => 'COCHS',
-    'ASU@Lake Havasu' => 'CALHC',
-    'ASU@MexicoCity' => 'MXCTY',
-    'ASU@Pima' => 'PIMA',
-    'ASU@Pinal' => 'CAC',
-    'ASU@The Gila Valley' => 'EAC',
-    'ASU@Tucson' => 'TUCSN',
-    'ASU@Washington, D.C.' => 'WASHD',
-    'ASU@Yavapai' => 'YAVAP',
-    'ASU@Yuma' => 'AWC',
-  );
-  // Flip campus keys + values if desired
-  if ($reverse === TRUE) {
-    $campuses = array_flip($campuses);
-  }
-  foreach ($campuses as $key => $value) {
-    if (stristr($key, $campus) !== FALSE) {
-      return $value;
-      break;
-    }
-  }
-  return '';
-}
-
-/**
  * Returns all active status program nodes, if they exist
  * @param string $type - undergrad or graduate
  * @return array $program_results - key => nid and value => program focus (program code +
@@ -1503,84 +1335,6 @@ function _asu_rfi_parse_cached_programs() {
 }
 
 /**
- * Create upcoming 4-digit semester codes and map to human readable semester names
- *
- * @param bool $summer - Include summer semester
- * @param string $key_type - Return either peopleSoft codes (ps) or 4-digit codes (digits). Defaults to 'digits'.
- * @param array $all_avail_terms - All terms (PS codes => human readable names)
- * @param int $addl_years - Number of additional years to create drop down options
- * @return array - All 4-digit (Or PS) semester codes (key) (ex. 1) => human-readable counterparts (Ex. Fall 2020)
- */
-function _asu_rfi_get_sem_codes_human_mapping($summer, $all_avail_terms, $key_type = 'digits', $addl_years = 2) {
-  $options = &drupal_static(__FUNCTION__);
-  if (!isset($options)) {
-    // 1) Build the date array
-    $semester = _asu_rfi_get_semester_digits($summer);
-    $semester_today = _asu_rfi_get_current_semester(date('m'), date('d'), $summer);
-
-    // 2) Generate semester digits from semLabel field
-    $addl_years++; // <= years + 1
-    $date = $new = $options = array();
-    $year = (int)date('Y');
-    for ($i = 0; $i <= $addl_years; $i++) {
-      $date[$i] = $year + $i;
-      $new[$i] = substr_replace(($date[$i]), "", 1, 1);
-      if ($i === 0) {  // Current year (nothing sent in fall semester)
-        if ($semester_today !== '7') { // Before fall start
-          if ($summer && $semester_today === '1') { // Spring time and summer included
-            $human_term = ($date[$i]) . " " . $semester['4'];  // YYYY Summer
-            $key = ($key_type === 'ps')
-              ? _asu_rfi_get_ps_sem_code_key($human_term, $all_avail_terms)
-              : ($new[$i]) . '4';
-            $options[$key] = $human_term;
-          }
-          $human_term = ($date[$i]) . " " . $semester['7']; // YYYY Fall
-          $key = ($key_type === 'ps')
-            ? _asu_rfi_get_ps_sem_code_key($human_term, $all_avail_terms)
-            : ($new[$i]) . '7';
-          $options[$key] = $human_term;
-        }
-      } else { // Future years
-        $human_term = ($date[$i]) . " " . $semester["1"]; // YYYY Spring
-        $future_key = ($key_type === 'ps')
-          ? _asu_rfi_get_ps_sem_code_key($human_term, $all_avail_terms)
-          : ($new[$i]) . "1";  // append 1 to the key depending on the season. For spring, add 1.
-        $options[$future_key] = $human_term;
-        if ($summer) {
-          $human_term = ($date[$i]) . " " . $semester['4'];
-          $future_key = ($key_type === 'ps')
-            ? _asu_rfi_get_ps_sem_code_key($human_term, $all_avail_terms)
-            : ($new[$i]) . "4";
-          $options[$future_key] = $human_term;
-        }
-        $human_term = ($date[$i]) . " " . $semester['7'];
-        $future_key = ($key_type === 'ps')
-          ? _asu_rfi_get_ps_sem_code_key($human_term, $all_avail_terms)
-          : ($new[$i]) . "7";
-        $options[$future_key] = $human_term;
-      }
-    }
-  }
-  return $options;
-}
-
-/**
- * Select PS code for the term from available options
- *
- * @param $term - Human readable term
- * @param $available_terms - All available terms
- * @return string
- */
-function _asu_rfi_get_ps_sem_code_key($term, $available_terms) {
-  $key = array_search($term, $available_terms);
-  if ($key === FALSE) {
-    flogger('asu_rfi', 'No matching PeopleSoft term for @term.', array(':term' => $term), WATCHDOG_WARNING);
-  } else {
-    return $key;
-  }
-}
-
-/**
  * Determine source, ipAddress, source_type, domain
  *
  * @param array $data - submitted form data
@@ -1731,7 +1485,7 @@ function _asu_rfi_get_type_of_form(&$form_state) {
       $form_state['values']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_GRAD;
       break;
     case "ugrad_longform" :
-      $s_type = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
+      $s_type = (isset($form_state['values']['student_type'])) ? $form_state['values']['student_type'] : '';
       $form_type = "Undergraduate long form";
       $form_state['values']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
   }
@@ -1739,122 +1493,6 @@ function _asu_rfi_get_type_of_form(&$form_state) {
     'form_type' => $form_type,
     'student_type' => $s_type,
   );
-}
-
-/**
- * Detect the user's OS. // WHY? UNUSED.
- * @return int|string
- */
-function _asu_rfi_detect_os() {
-  $current_os = "unknown";
-  $os_list = array(
-    'Windows 7' => '(Windows NT 6\.1)',
-    'Windows Vista' => '(Windows NT 6\.0)',
-    'Windows XP' => '(Windows NT 5\.1)|(Windows XP)',
-    'Mac OS' => '(Mac_PowerPC)|(Macintosh)',
-    'Linux' => '(Linux)|(X11)',
-    'Search Bot' => '(nuhk)|(Googlebot)|(Yammybot)|(Openbot)|(Slurp)|(MSNBot)|(Ask Jeeves\/Teoma)|(ia_archiver)',
-    'Windows 3.11' => 'Win16',
-    'Windows 95' => '(Windows 95)|(Win95)|(Windows_95)',
-    'Windows 98' => '(Windows 98)|(Win98)',
-    'Windows 2000' => '(Windows NT 5\.0)|(Windows 2000)',
-    'Windows Server 2003' => '(Windows NT 5\.2)',
-    'Windows NT 4.0' => '(Windows NT 4\.0)|(WinNT4\.0)|(WinNT)|(Windows NT)',
-    'Windows ME' => '(Windows 98)|(Win 9x 4\.90)|(Windows ME)',
-    'Open BSD' => 'OpenBSD',
-    'Sun OS' => 'SunOS',
-    'QNX' => 'QNX',
-    'BeOS' => 'BeOS',
-    'OS/2' => 'OS\/2'
-  );
-
-  if (isset($_SERVER['HTTP_USER_AGENT'])) {
-    foreach ($os_list as $current_os => $match) {
-      if (preg_match('#' . $match . '#i', $_SERVER['HTTP_USER_AGENT'])) {
-        break;
-      }
-    }
-  }
-  return $current_os;
-}
-
-/**
- * Detect the user's browser.
- * @return string
- */
-function _asu_rfi_detect_browser() {
-  $browser = 'unknown';
-  if (isset($_SERVER['HTTP_USER_AGENT'])) {
-    $u_agent = $_SERVER['HTTP_USER_AGENT'];
-    if (stripos($u_agent, 'MSIE') !== FALSE) {
-      $browser = "IE";
-    }
-    elseif (stripos($u_agent, 'Chrome') !== FALSE) {
-      $browser = "Chrome";
-    }
-    elseif (stripos($u_agent, 'Firefox') !== FALSE) {
-      $browser = "Firefox";
-    }
-    elseif (stripos($u_agent, 'Safari') !== FALSE) {
-      $browser = "Safari";
-    }
-    elseif (stripos($u_agent, 'Flock') !== FALSE) {
-      $browser = "Flock";
-    }
-    elseif (stripos($u_agent, 'Opera') !== FALSE) {
-      $browser = "Opera";
-    }
-  }
-  return $browser;
-}
-
-/**
- * Determine type of site environment (dev, test, or live)
- * NOTE: This will work for all Pantheon sites, but everywhere else it won't
- * catch everything. The "test mode" setting will have to catch the rest.
- * @return array $env - Type of environment (dev, qa, or prod), and endpoint_access (T/F).
- */
-function _asu_rfi_detect_environment() {
-  $env = &drupal_static(__FUNCTION__);
-  if (!isset($env)) {
-    $env = array(
-      'type' => '',
-      'endpoint_access' => true,
-    );
-    global $base_url;
-    // Pantheon ENVs
-    if (defined('PANTHEON_ENVIRONMENT')) {
-      if ($_ENV["PANTHEON_ENVIRONMENT"] === 'live') {
-        $env['type'] = 'prod_pantheon';
-      }
-      elseif ($_ENV["PANTHEON_ENVIRONMENT"] === 'test') {
-        $env['type'] = 'qa';
-      } else { // All remaining multidevs + Dev ENV
-        $env['type'] = 'dev';
-      }
-      $env['endpoint_access'] = false; // No access to Enterprise dev/QA web service endpoints
-    }
-    else {
-      // Local development - most local development URLs
-      if (strpos($base_url, '://localhost')
-        || strpos($base_url, '://192.168.')
-        || strpos($base_url, '://127.')
-        || strpos($base_url, '://10.')) {
-        $env['type'] = 'dev';
-      }
-      // Non-Pantheon ENVs checks for Enterprise Drupal.
-      elseif ((preg_match('#^http(s?)://dev-#', $base_url) === 1) && (strpos($base_url, '-dev.'))) {
-        $env['type'] = 'dev';
-      }
-      elseif ((preg_match('#^http(s?)://(test|qa)-#', $base_url) === 1)
-        || (strpos($base_url, '-qa.') || strpos($base_url, '-test.'))) {
-        $env['type'] = 'qa';
-      } else {
-        $env['type'] = 'prod_not-pantheon';
-      }
-    }
-  }
-  return $env;
 }
 
 /**
@@ -1880,7 +1518,7 @@ function _asu_rfi_add_program_data_js($desiredProg) {
  * CURL options for JSON feed pulls in data inc files
  */
 function _asu_rfi_get_curl_auth($env) {
-  $text = ($env === 'dev' XOR $env === 'qa') ? 'other:other' : '7755:e7acf2e698751f4cac11718d97df6ebf64b94372';
+  //$text = ($env === 'dev' XOR $env === 'qa') ? 'other:other' : '7755:e7acf2e698751f4cac11718d97df6ebf64b94372';
   return array(
     'Content-Type: text/json',
     'Authorization: Basic 7755:e7acf2e698751f4cac11718d97df6ebf64b94372',

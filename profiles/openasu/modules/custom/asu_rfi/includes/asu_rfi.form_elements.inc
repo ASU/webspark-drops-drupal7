@@ -87,7 +87,7 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
         '#type' => 'select',
         '#title' => t('I will be a future'),
         '#options' => array(
-          'First Time Freshman' => 'First Time Freshman',
+          'First-year student' => 'First-year student',
           'Transfer' => 'Transfer',
           'Readmission' => 'Readmission'
         ),
@@ -142,7 +142,8 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
         '#suffix' => '</div>',
         '#type' => 'textfield',
         '#title' => t('Preferred phone number'),
-        '#description' => t('USA Format: xxx-xxx-xxxx'),
+        '#description' => t('USA (domestic) example: (123) 456-7890; International examples: +222333344444'
+         . ' (+ sign, 3 digit area code, and number), OR 0223344445555 (zero-leading country code, two digit area code, rest of number)'),
         '#size' => 30,
         '#maxlength' => 40,
         '#required' => TRUE,
@@ -238,7 +239,7 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
       return array(
         '#type' => 'textfield',
         '#title' => t('Date of birth'),
-        '#description' => t('Format: mm/dd/yyyy'),
+        '#description' => t('Format: m/d/yyyy (ex. 1/27/2000)'),
         '#title_display' => 'invisible',
         '#size' => 30,
         '#maxlength' => 30,
@@ -256,7 +257,7 @@ function _asu_rfi_form_base_components($name, $session = FALSE, $value = '') {
     case 'gdpr_message':
       return array(
         '#type' => 'item',
-        '#markup' => _asu_rfi_get_gdpr_markup()
+        '#markup' => asu_libs_get_gdpr_markup()
       );
       break;
 

@@ -37,7 +37,7 @@ function asu_rfi_get_form_select_options($name, $installing = FALSE) {
   // Do DB upsert of options if values are returned from JSON feed...
   if (count($results) > 0) {
     $mapped_terms = ($name === 'rfi_dedupe_list_terms')
-      ? _asu_rfi_get_sem_codes_human_mapping(TRUE, array(), 'digits', 4)
+      ? asu_libs_get_sem_codes_human_mapping(TRUE, array(), 'digits', 4)
       : array();
     $data_count = 0;
     foreach ($results as $result) {
@@ -107,7 +107,7 @@ function asu_rfi_get_form_select_options($name, $installing = FALSE) {
  */
 function _asu_rfi_get_select_options_config($dataset) {
   // PROD or not?
-  $env = _asu_rfi_detect_environment();
+  $env = asu_libs_detect_environment();
   $tld = ($env['type'] === 'dev' XOR $env['type'] === 'qa') ? 'webforms-qa.asu.edu' : 'webforms.asu.edu';
 
   $config = array();
@@ -169,6 +169,5 @@ function _asu_rfi_get_select_options_config($dataset) {
       CURLOPT_HTTPHEADER => _asu_rfi_get_curl_auth($env['type']),
     );
   }
-  watchdog('asu_rfi', print_r($config));
   return $config;
 }

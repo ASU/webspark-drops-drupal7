@@ -52,7 +52,7 @@ function asu_rfi_post_to_middleware($data, $type) {
   // Start building data for middleware submission
   ////////////////////////////
   $prog_code = $data['program_code'];
-  $campus = _asu_rfi_get_campus_info($data['campus']);
+  $campus = asu_libs_get_campus_codes($data['campus']);
   $phone = preg_replace('[\D]', '', $data['phone']);
   $mobile = (isset($data['mobile_check']))
     ? str_replace('-', '', $data['mobile_check'])
@@ -80,7 +80,7 @@ function asu_rfi_post_to_middleware($data, $type) {
 
   // Get server diagnostic data for submissions
   $server = _asu_rfi_get_tech_submission_data($data, $type);
-  $environ = (array) _asu_rfi_detect_environment();
+  $environ = (array) asu_libs_detect_environment();
 
   // Submission customization - UNDERGRAD vs GRAD
   if ($type === ASU_RFI_PROSPECT_LEVEL_UNDERGRAD) {
