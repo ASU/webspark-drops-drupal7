@@ -146,20 +146,31 @@ function asu_libs_validate_birthdate($birthdate, $birth_field_name = 'birthdate'
 }
 
 /**
- * Validation - Email + phone numbers
+ * Validation - Email
+ *
  * @param string $email - Email address to test.
- * @param string $phone - Phone number to validate. Defaults to empty (skip).
- * @param boolean $return_phone - Return revised/formatted phone number. Defaults to FALSE.
  * @param string $email_field_name - Alternate Form API key for this field. Defaults to 'email'.
- * @param string $phone_field_name - Alternate Form API key for this field. Defaults to 'phone'.
  * @return mixed|string
  */
-function asu_libs_validate_electronic_contacts($email = '', $phone = '', $return_phone = FALSE, $email_field_name = 'email', $phone_field_name = 'phone') {
+function asu_libs_validate_email($email, $email_field_name = 'email') {
   if (!empty($email)) {
     if (!preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9._-]+)*(\.[a-zA-Z]{2,6})+$/", $email)) {
-      form_set_error($email_field_name, t('You entered an invalid email.'));
+      form_set_error($email_field_name, t('You entered an invalid email address.'));
     }
+  } else {
+    form_set_error($email_field_name, 'You need to enter an email address.');
   }
+}
+
+/**
+ *  * Validation - Email
+ *
+ * @param string $phone - Phone number to validate. Defaults to empty (skip).
+ * @param boolean $return_phone - Return revised/formatted phone number. Defaults to FALSE.
+ * @param string $phone_field_name - Alternate Form API key for this field. Defaults to 'phone'
+ * @return mixed|string - Return revised number IF return_phone is TRUS
+ */
+function asu_libs_validate_phone($phone, $return_phone = FALSE, $phone_field_name = 'phone') {
   /** If mobile number field is checked, then check for USA format, else check for special characters **/
   if (!empty($phone)) {
     if (strpos($phone, '011', 0) === 0) { // swap out old '011' with +
@@ -293,8 +304,8 @@ function asu_libs_get_ps_sem_code_key($term, $available_terms) {
   if ($key !== FALSE) {
     return $key;
   } else {
-    watchdog('asu_rfi', 'No matching PeopleSoft term for @term. Consider running cron to ensure that your'
-      . ' locally stored available start terms are up-to-date.', array('@term' => $term), WATCHDOG_WARNING);
+//    watchdog('asu_rfi', 'No matching PeopleSoft term for @term. Consider running cron to ensure that your'
+//      . ' locally stored available start terms are up-to-date.', array('@term' => $term), WATCHDOG_WARNING);
     return FALSE;
   }
 }

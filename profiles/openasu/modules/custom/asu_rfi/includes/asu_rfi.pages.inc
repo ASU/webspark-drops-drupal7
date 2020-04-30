@@ -269,8 +269,17 @@ function asu_rfi_form_data_validate($form, &$form_state) {
   if (!preg_match("/^[a-zA-Z.\s-_]+$/", $l_name)) {
     form_set_error('last_name', t('Last name field accepts only plain text.'));
   }
-  // Validation for email and phone
- asu_libs_validate_electronic_contacts($email, $phone, TRUE);
+  // validate email
+  if (isset($email)) {
+    asu_libs_validate_email($email);
+  }
+  // validate phone
+  if (isset($phone)) {
+    $validated_phone = asu_libs_validate_phone($phone, TRUE);
+    if ($phone !== $validated_phone && !empty($validated_phone)) {
+      $form_state['values']['phone'] = $validated_phone;
+    }
+  }
 
   // validate zip code
   if (empty($zip)) {
@@ -286,7 +295,6 @@ function asu_rfi_form_data_validate($form, &$form_state) {
     asu_libs_validate_birthdate($birth_date);
   } else {
     form_set_error('birthdate', t('Date of birth is required.'));
-    form_set_error('dob_field', t(' '));
   }
 }
 
@@ -1050,9 +1058,16 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
   if (!preg_match("/^[a-zA-Z.\s-_]+$/", $l_name)) {
     form_set_error('last_name', t('Last name field accepts only plain text.'));
   }
-  // validation for email and phone
-  if (isset($email) || isset($phone)) {
-    asu_libs_validate_electronic_contacts($email, $phone);
+  // validate email
+  if (isset($email)) {
+    asu_libs_validate_email($email);
+  }
+  // validate phone
+  if (isset($phone)) {
+    $validated_phone = asu_libs_validate_phone($phone, TRUE);
+    if ($phone !== $validated_phone && !empty($validated_phone)) {
+      $form_state['values']['phone'] = $validated_phone;
+    }
   }
 
   // Custom fields per student type (online vs. all others)
