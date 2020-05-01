@@ -7,7 +7,6 @@ Webspark 1.70.8 (Big Spring), 2020-04-07
       * Refactored and/or consolidated many functionally duplicitous functions and files
       * Fixed the naming convention of configuration variables and private PHP functions to match Drupal standards
       * Removed unused configuration variables
-      * Created Fun Logger (flogger) module to improve the developer debugging experience
       * Added internal documentation/comments for developers
       * Required EntityReference_autocomplete contrib module as a dependency
       * Updated Multiblock contrib module (v1.6) plus other patches
@@ -21,6 +20,8 @@ Webspark 1.70.8 (Big Spring), 2020-04-07
         form types
       * Moved many form customizations from hook_form_alter into the initial form generation logic so AJAX rendering
         would consistently work
+      * Created Fun Logger (flogger) module to improve the developer debugging experience
+      * Transferred out and renamed various validation functions into a new, separate module called Libraries Volume One.
     - General bug fixes
       * Updated deprecated PHP code to PHP 7.x standards
       * The Request Info button now correctly chooses when and how to point to existing RFI forms
@@ -144,6 +145,9 @@ Webspark 1.70.8 (Big Spring), 2020-04-07
   * No Mail (nomail) - v1.1
     * Blocks all email delivery from the site.
     * Only enable prior to web security scans.
+  * ASU Libraries Volume One - 7.x-1.0
+    * Transferred in and renamed various validation functions from ASU RFI module for use by other projects.
+
 
 - Webspark custom projects - Changes/Deletions
 
