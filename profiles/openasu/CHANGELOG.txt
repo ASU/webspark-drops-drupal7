@@ -2,6 +2,39 @@ Webspark 1.70.8 (Big Spring), 2020-04-07
 ---------------------------------------------
 - Web standards components in Webspark
 
+  * ASU Academic Programs (asu_ap) - 7.x-3.0
+    - Architecture & Development
+      * Reformatted page-level TPL file output (code and HTML)
+      * Combined graduate vs. undergrad logic in TPL
+      * Added new fields to ASU AP degree page content type to store additional data to render on degree pages.
+      * Added many other Degree Search field mapping options for future additional fields, if needed
+      * Re-added missing "asu_feeds_text_format" Drupal input format
+      * Campus options updated to current list
+      * Added configuration form to handle new, optional elements of degree pages pulled in from Degree Search that can be toggled on/off:
+        * The visibility of degree page fields with data imported from Degree Search data
+        * Showing/hiding of marketing video content at top of degree pages
+    - Refactored ASU AP CSS
+      * Namespaced existing selectors
+      * Removed duplicate rules
+      * Added CSS for new elements
+    - General Bug fixes
+      * Updated ASU IXR library for PHP 7.x compatibility
+    - UI/UX Improvements
+      -- Degree pages:
+        * Added canonical URLs in <link> tags pointing at Degree Search page counterparts for SEO improvements
+        * Added marketing text and video pulled in from Degree Search and logic to determine when to show them
+        * Added several newer Degree Search pages elements to individual degree page output middle section
+        * Online campus link now point to the corresponding asuonline.asu.edu degree page
+        * Added missing and/or new degree "special categories" links to title banner
+        * Special category text now link to explanations (imported from Degree Search) optionally rendered at the bottom of the page.
+        * Updated casing to "Sentence casing" (vs. Title Casing)
+        * Degree page edit form explanatory messaging improved
+        * Fixed @media CSS rules for better tablet layouts
+  * ASU Brand (asu_brand) - v1.21
+    * Added drupal_alter to allow dynamic customization and theming of site menu before it is passed to the header
+      (credit: Travis B. (tbutterf))
+  * ASU Directory Integration Reinvented (asu_dir) - v1.10.2
+    * Fixed "Undefined variable: field_paragraph_research_areas" error
   * ASU Request for Information (asu_rfi, asu_rfi_feature) - v3.0
     - Architecture & Development
       * Refactored and/or consolidated many functionally duplicitous functions and files
@@ -63,40 +96,6 @@ Webspark 1.70.8 (Big Spring), 2020-04-07
         * All submissions that have successfully been sent onto any Salesforce middleware are deleted upon every cron run
         * All submissions that have not been sent on (status SF_Failed) are resubmitted every time a cron job runs
         * All submissions that have failed for 14 days past the initial submission date are deleted at the next cron run - regardless of their status
-  * ASU Academic Programs (asu_ap) - 7.x-3.0
-    - Architecture & Development
-      * Reformatted page-level TPL file output (code and HTML)
-      * Combined graduate vs. undergrad logic in TPL
-      * Added new fields to ASU AP degree page content type to store additional data to render on degree pages.
-      * Added many other Degree Search field mapping options for future additional fields, if needed
-      * Re-added missing "asu_feeds_text_format" Drupal input format
-      * Campus options updated to current list
-      * Added configuration form to handle new, optional elements of degree pages pulled in from Degree Search that can be toggled on/off:
-        * The visibility of degree page fields with data imported from Degree Search data
-        * Showing/hiding of marketing video content at top of degree pages
-    - Refactored ASU AP CSS
-      * Namespaced existing selectors
-      * Removed duplicate rules
-      * Added CSS for new elements
-    - General Bug fixes
-      * Updated ASU IXR library for PHP 7.x compatibility
-    - UI/UX Improvements
-      -- Degree pages:
-        * Added canonical URLs in <link> tags pointing at Degree Search page counterparts for SEO improvements
-        * Added marketing text and video pulled in from Degree Search and logic to determine when to show them
-        * Added several newer Degree Search pages elements to individual degree page output middle section
-        * Online campus link now point to the corresponding asuonline.asu.edu degree page
-        * Added missing and/or new degree "special categories" links to title banner
-        * Special category text now link to explanations (imported from Degree Search) optionally rendered at the bottom of the page.
-        * Updated casing to "Sentence casing" (vs. Title Casing)
-        * Degree page edit form explanatory messaging improved
-        * Fixed @media CSS rules for better tablet layouts
-
-  * ASU Brand (asu_brand) - v1.21
-    * Added drupal_alter to allow dynamic customization and theming of site menu before it is passed to the header
-      (credit: Travis B. (tbutterf))
-  * ASU Directory Integration Reinvented (asu_dir) - v1.10.2
-    * Fixed "Undefined variable: field_paragraph_research_areas" error
   * Innovation (innovation) - v1.16
     * Added horizontal rule tag (<hr>) to list of WYSIWYG acceptable elements
     * Added ability to select alert styling within the WYSIWYG editor.
@@ -132,24 +131,17 @@ Webspark 1.70.8 (Big Spring), 2020-04-07
       * Vimeo and Youtube URL parsing updated to match those services' APIs
       * The target video is no longer set when the entity is set but has an empty target URL.
 
-- Contrib library updates
+- Webspark custom project additions
 
-  - Managed by Webspark
-    * Flexslider (flexslider) - v2.7.2 + patch
-      * (Accessibility fix) Removed <ul> nav when only one slide exists
-      * (Accessibility fix) Added 'slide' ARIA-label
-
-- Webspark custom projects - Additions
   * ASU Alert Banner (asu_alert_banner) - v1.1
     * Provides ASU sites with an alert banner feature to notify users of important information.
+  * ASU Libraries Volume One (asu_libs) - v7.x-1.0
+    * Transferred in and renamed various validation functions from ASU RFI module for use by other projects.
   * No Mail (nomail) - v1.1
     * Blocks all email delivery from the site.
     * Only enable prior to web security scans.
-  * ASU Libraries Volume One - 7.x-1.0
-    * Transferred in and renamed various validation functions from ASU RFI module for use by other projects.
 
-
-- Webspark custom projects - Changes/Deletions
+- Webspark custom project changes/deletions
 
   * ASU Degrees (DEPRECATED) - v1.11
     * Added the "list-item" class to list items
@@ -166,6 +158,28 @@ Webspark 1.70.8 (Big Spring), 2020-04-07
   * ASU IXR (asu_ixr) - v3.0
     * Updated for PHP 7.2+ compatibility
 
+- Contrib library updates
+
+  - Managed by Panopoly
+
+    * Backbone - v1.0.0 + patch,
+      jQuery.imagesloaded - v2.1.2 + patch,
+      jQuery.imgAreaSelect - v0.9.11-rc.1 + patch
+      markItUp - v1.1 + patch,
+      TinyMCE - v3.5.11 + patch,
+      Underscore - v1.5.2 + patch
+      * Removed demos, documentation, other non-essential files
+    * jQuery.imgAreaSelect - v0.9.11-rc.1 + patch
+      * Removed older versions of jQuery to resolve security scan false positives
+
+  - Managed by Webspark
+
+    * Ajax Solr - Git commit #5445d073 + patch,
+    Chosen - v1.1.0 + patch,
+      - Removed demos, documentation, other non-essential files
+    * Flexslider (flexslider) - v2.7.2 + patch
+      * (Accessibility fix) Removed <ul> nav when only one slide exists
+      * (Accessibility fix) Added 'slide' ARIA-label
 
 Webspark 1.70.7 (Zipperlandville), 2020-01-08
 ---------------------------------------------
