@@ -30,8 +30,12 @@ default:
         Bryant Sidebar: ".bryant .radix-layouts-sidebar"
         Bryant Flipped Content: ".bryant-flipped .radix-layouts-content"
         Bryant Flipped Sidebar: ".bryant-flipped .radix-layouts-sidebar"
+        Burr Flipped Content: ".burr-flipped .radix-layouts-content"
+        Burr Flipped Sidebar: ".burr-flipped .radix-layouts-sidebar"
         # For Panels / Panopoly specific regions.
         CTools modal: "#modalContent"
+        CTools modal category: "#modalContent .panels-categories-box"
+        CTools modal list: "#modalContent .panels-section-columns"
         Live preview: ".panopoly-magic-preview"
         Linkit modal: "#linkit-modal"
         # For the Media Browser
