@@ -100,7 +100,8 @@ function webspark_featurescustom_update_7001(&$sandbox) {
 
 function webspark_featurescustom_update_7002(&$sandbox) {
   // WEBSPARK-696
-  $max_log_count = settype(variable_get('dblog_row_limit'), "int");
+  $limit = variable_get('dblog_row_limit');
+  $max_log_count = settype($limit, "int");
   if ($max_log_count <= 1000 && $max_log_count != 0) {
     variable_set('dblog_row_limit', '100000');
     watchdog('webspark_updates', "7002 - Increased dblog_row_limit to 100,000 latest log entries.");
@@ -194,7 +195,7 @@ function webspark_featurescustom_update_7006(&$sandbox) {
     drupal_set_message($message, 'warning');
     watchdog('webspark_updates', '7006 - ' . $message, WATCHDOG_INFO);
   }
-  // Missimg Module - enable
+  // Missing Module - enable
   if (!module_exists('missing_module')) {
     module_enable(array('missing_module'));
     drupal_set_message("Make sure that your Webspark site's administrator role " .
@@ -455,5 +456,14 @@ function webspark_featurescustom_update_7017(&$sandbox) {
       module_disable(array('navbar'));
       drupal_uninstall_modules(array('navbar'));
     }
+  }
+}
+
+/**
+ * Enable new ASU Libs module for general usage (for ASU RFI now)
+ */
+function webspark_featurescustom_update_7018(&$sandbox) {
+  if (!module_exists('asu_libs')) {
+    module_enable(array('asu_libs'));
   }
 }

@@ -52,8 +52,8 @@ function asu_rfi_form_data($form, &$form_state) {
   $form = array();
 
   // INIT - Dates
-  for ($idate = 0; $idate < 4; $idate++) {
-    $date = date('Y') + $idate;
+  for ($init_date = 0; $init_date < 4; $init_date++) {
+    $date = date('Y') + $init_date;
     $date_key = substr_replace($date, '', 1, -2);
     $year[$date_key] = $date;
   }
@@ -147,7 +147,7 @@ function asu_rfi_form_data($form, &$form_state) {
         ? $form_state['values']['campus'] : '';
       $form['my_interest']['campus']['#required'] = TRUE;
 
-    // start dates - INIT and AJAX updates
+    // start dates - INIT creation and AJAX updates
     ////////////////////////////////
     if (!empty($form_state['values']['campus'])) {
       $start_dates = _asu_rfi_get_sem_dates_dynamic(
@@ -168,7 +168,7 @@ function asu_rfi_form_data($form, &$form_state) {
         TRUE,
         $degree_assets['start_dates']); // Addon(s)
     }
-    // END AJAX start date updates
+    // END INIT and AJAX start date creation, updates
     /////////////////////////////
 
     $form['my_interest']['campus']['#required'] = TRUE;
@@ -269,8 +269,17 @@ function asu_rfi_form_data_validate($form, &$form_state) {
   if (!preg_match("/^[a-zA-Z.\s-_]+$/", $l_name)) {
     form_set_error('last_name', t('Last name field accepts only plain text.'));
   }
-  // Validation for email and phone
- _asu_rfi_validate_electronic_contacts($email, $phone);
+  // validate email
+  if (isset($email)) {
+    asu_libs_validate_email($email);
+  }
+  // validate phone
+  if (isset($phone)) {
+    $validated_phone = asu_libs_validate_phone($phone, TRUE);
+    if ($phone !== $validated_phone && !empty($validated_phone)) {
+      $form_state['values']['phone'] = $validated_phone;
+    }
+  }
 
   // validate zip code
   if (empty($zip)) {
@@ -278,15 +287,14 @@ function asu_rfi_form_data_validate($form, &$form_state) {
       form_set_error('zipcode', t('Postal code field is required.'));
     }
   } else {
-    _asu_rfi_validate_zipcode($country, $zip);
+    asu_libs_validate_zipcode($country, $zip);
   }
 
   // Validate birth date
   if (!empty($birth_date)) {
-    _asu_rfi_validate_birthdate($birth_date);
+    asu_libs_validate_birthdate($birth_date);
   } else {
     form_set_error('birthdate', t('Date of birth is required.'));
-    form_set_error('dob_field', t(' '));
   }
 }
 
@@ -296,7 +304,7 @@ function asu_rfi_form_data_validate($form, &$form_state) {
  * Defaults to FIRST FORM
  * @param $form
  * @param $form_state
- * @throws \Exception
+ * @throws Exception
  */
 function asu_rfi_form_data_submit($form, &$form_state) {
   // SECOND FORM? Go to other submit
@@ -352,7 +360,6 @@ function asu_rfi_form_data_submit($form, &$form_state) {
     $form_state['storage']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_GRAD;
   }
   else { // Undergraduate
-    $form_state['values']['student_type'] = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
     $form_state['storage']['student_type'] = $form_state['values']['student_type'];
     $multi_form_type = "Undergraduate multi form";
     $form_state['storage']['prospect_level'] = ASU_RFI_PROSPECT_LEVEL_UNDERGRAD;
@@ -408,17 +415,17 @@ function asu_rfi_form_data_submit($form, &$form_state) {
 
   // Or update the existing submission node.
   else {
-    $get_nodeid = db_select('field_data_field_rfi_uniquedata', 'afu')
+    $get_node_id = db_select('field_data_field_rfi_uniquedata', 'afu')
       ->fields('afu', array('entity_id'))
       ->condition('field_rfi_uniquedata_value', $unique_id, '=')
       ->execute()
       ->fetchField();
 
     // Update ASU RFI node values
-    $node = node_load($get_nodeid);
+    $node = node_load($get_node_id);
     _asu_rfi_update_multiform_submission_fields($node, $form_state, $multi_form_type, $dob_date, $unique_id);
 
-    $form_state['storage']['submission_nodeid'] = $get_nodeid;
+    $form_state['storage']['submission_nodeid'] = $get_node_id;
     $form_state['storage']['step'] = 'asu_rfi_second_form';
   }
 }
@@ -554,7 +561,7 @@ function asu_rfi_second_form_validate($form, &$form_state) {
       form_set_error('zipcode', t('Postal code field is required.'));
     }
   } else {
-    _asu_rfi_validate_zipcode($country, $zip);
+    asu_libs_validate_zipcode($country, $zip);
   }
 
   // validate comments
@@ -569,7 +576,7 @@ function asu_rfi_second_form_validate($form, &$form_state) {
  * MULTIFORM - SECOND FORM submit (for undergrad and grad students)
  * @param $form
  * @param $form_state
- * @throws \Exception
+ * @throws Exception
  */
 function asu_rfi_second_form_submit($form, &$form_state) {
 
@@ -579,10 +586,10 @@ function asu_rfi_second_form_submit($form, &$form_state) {
 
   $zipcode = check_plain($form_state['values']['zipcode']);
   $country = $form_state['storage']['country'];
-  //$student_type = $form_state['storage']['student_type']; // unused??
   $address = check_plain($form_state['values']['address']);
   $form_state['storage']['address'] = $address;
 
+  //$student_type = $form_state['storage']['student_type'];
   //$email = check_plain($form_state['storage']['email']); // UNUSED??
   //$major = $form_state['storage']['prog_plan']; // UNUSED?
   // $unique_id = $email . $major; // UNUSED??
@@ -725,6 +732,7 @@ function asu_rfi_second_form_submit($form, &$form_state) {
  * @param $multi_form_type
  * @param $dob_date
  * @param $unique_id -
+ * @throws EntityMetadataWrapperException
  */
 function _asu_rfi_update_multiform_submission_fields($entity, $form_state, $multi_form_type, $dob_date, $unique_id) {
   $wrapper = entity_metadata_wrapper('node', $entity);
@@ -1051,9 +1059,16 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
   if (!preg_match("/^[a-zA-Z.\s-_]+$/", $l_name)) {
     form_set_error('last_name', t('Last name field accepts only plain text.'));
   }
-  // validation for email and phone
-  if (isset($email) || isset($phone)) {
-    _asu_rfi_validate_electronic_contacts($email, $phone);
+  // validate email
+  if (isset($email)) {
+    asu_libs_validate_email($email);
+  }
+  // validate phone
+  if (isset($phone)) {
+    $validated_phone = asu_libs_validate_phone($phone, TRUE);
+    if ($phone !== $validated_phone && !empty($validated_phone)) {
+      $form_state['values']['phone'] = $validated_phone;
+    }
   }
 
   // Custom fields per student type (online vs. all others)
@@ -1084,12 +1099,12 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
         form_set_error('zipcode', t('Postal code field is required.'));
       }
     } else {
-      _asu_rfi_validate_zipcode($country, $zip);
+      asu_libs_validate_zipcode($country, $zip);
     }
 
     // Validate birth date
     if (!empty($birth_date)) {
-      _asu_rfi_validate_birthdate($birth_date);
+      asu_libs_validate_birthdate($birth_date);
     } else {
       form_set_error('birthdate', t('Date of birth is required.'));
       form_set_error('dob_field', t(' '));
@@ -1121,6 +1136,7 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
  * LONG FORM - SUBMIT handler (undergrad and graduate)
  * @param $form
  * @param $form_state
+ * @throws EntityMetadataWrapperException
  * @noinspection PhpUnusedLocalVariableInspection
  */
 function asu_rfi_long_form_data_submit($form, &$form_state) {
@@ -1134,9 +1150,9 @@ function asu_rfi_long_form_data_submit($form, &$form_state) {
   // value to "Graduate", else "Undergraduate"
 
   // @TODO - deal with Current Student forms
-  $tof_data = _asu_rfi_get_type_of_form($form_state);
-  $long_form_type = $tof_data['form_type'];
-  $student_type = $tof_data['student_type'];
+  $type_of_form = _asu_rfi_get_type_of_form($form_state);
+  $long_form_type = $type_of_form['form_type'];
+  $student_type = $type_of_form['student_type'];
 
   ////////////////////////////////////////////
   // Bio information
@@ -1600,7 +1616,6 @@ function _asu_rfi_form_initial_web_assets($type) {
  *
  * Note: Cache API is required for the AJAX functionality to work (AJAX doesn't
  * do a full bootstrap, so $node is unavailable via menu_get_object()).
- * @param $form - Form array to be edited
  * @param null $nid - Node ID. Defaults to NULL if creating node for first time (including cache).
  * @param string $campus - Human-friendly campus string.
  * @return array
@@ -1714,6 +1729,7 @@ function _asu_rfi_get_degree_specifics($nid = NULL, $campus = '') {
 
 /**
  * Initial creating of $node object (and in cache for AJAX calls and better performance.)
+ * Necessary to get AJAX to work since menu_get_object() does not work for AJAX calls (no full bootstrap executed)
  *
  * @param $nid - Node ID
  * @return mixed|string - Returns $node object, or empty string.
@@ -1785,126 +1801,33 @@ function _asu_rfi_program_location_confirm($prog, $campus, $loc) {
 }
 
 /**
- * Get semester code as of TODAY
- *
- * @param int $month - 1, 11
- * @param int $day - 1-31
- * @param bool $summer - Check for summer semester. Defauts to false.
- * @return int - Semester codes. 1 = Spring, 4 = Summer, 7 = Fall
- */
-function _asu_rfi_get_semester_today($month, $day, $summer = FALSE) {
-  if (($month >= 8)) { // FALL (8/15 and forward)
-    if (($month !== 8) || ($month === 8 && $day > 14)) {
-      return '7'; // FALL
-    }
-  }
-  else { // Spring OR summer (before 8/15)
-    if ($summer) {
-      if (($month === 5 && $day > 14) || ($month === 8 && $day <= 14)) {
-        return '4'; // SUMMER
-      }
-    } else {
-      return '1'; // SPRING
-    }
-  }
-  return 'unknown'; // No semester?
-}
-
-/**
- * @param bool $summer
- * @return array list of semester names + PeopleSoft codes
- */
-function _asu_rfi_get_ps_semester_codes($summer = FALSE) {
-  $semesters = array(
-    '1' => "Spring",
-  );
-  if ($summer) {
-    $semesters['4'] = "Summer";
-  }
-  $semesters['7'] = "Fall";
-  return $semesters;
-}
-
-/**
- * Get human readable name of semester from code
- *
- * @param $code - one digit code for semester
- * @return bool|string - Human readable semester name or FALSE is no matches
- */
-function _asu_rfi_ps_semester_codes_convert($code) {
-  $semesters = _asu_rfi_get_ps_semester_codes(TRUE);
-  $code = (int) $code;
-  foreach ($semesters as $digit => $semester_name) {
-    if ($code === (int) $digit) {
-      return $semester_name;
-      break;
-    }
-  }
-  return "InvalidSemester";
-}
-
-/**
  * Build semester start dates -- The web services from middleware pulls all the
  * old semesters and saves into the local database
  * @param bool $summer Return summer semester options if TRUE. Defaults to FALSE
- * @return array|mixed $sem_dates_array
+ * @return array|mixed 4-digit sem code (key) => Human-readable semester (summer 2020)
  */
 function _asu_rfi_get_sem_dates_static($summer = FALSE) {
-  $sem_dates_array = &drupal_static(__FUNCTION__);
+  $semester_terms = &drupal_static(__FUNCTION__);
 
-  // Get semester dates from database
-  $term_date = array();
-  if (!isset($sem_dates_array)) {
-    /** @noinspection PhpUndefinedMethodInspection */
-    $sem_dates_query = Database::getConnection('default', 'default')
-      ->select('asu_rfi_sem_dates', 'sd')
-      ->fields('sd')
-      ->orderBy('CHAR_LENGTH(semId)')
-      ->execute()
-      ->fetchAll();
-    foreach ($sem_dates_query as $semester) {
-      $term_date[$semester->semId] = $semester->semLabel;
-    }
+  if (isset($semester_terms)) {
+    return $semester_terms;
+  }
+  else {
+    // Get semester dates from database
+    // PS semester code (key) => Human-readable semester (Summer 2020)
+    $all_avail_terms = _asu_rfi_get_all_avail_terms();
 
     // Display only current and next two years in the drop down.
-    // Build the date array
-    $date = array();
-    $year = (int) date('Y');
-    $new = array();
-    $options = array();
-    $semester = _asu_rfi_get_ps_semester_codes($summer);
-    $semester_today = _asu_rfi_get_semester_today(date('m'), date('d'), $summer);
+    // PS semester codes (key) (ex. 1) => human-readable counterparts (Ex. Fall 2020)
+    $degree_terms = asu_libs_get_sem_codes_human_mapping($summer, $all_avail_terms, 'ps');
 
-    for ($i = 0; $i <= 3; $i++) {
-      $date[$i] = $year + $i;
-      $new[$i] = substr_replace($date[$i], "", 1, 1);
-      if ($i === 0) {  // Current year (nothing sent in fall semester)
-        if ($semester_today !== '7') { // Before fall start
-          if ($summer && $semester_today === '1') { // Spring time and summer included
-            $trim_year = $new[$i] . '4';
-            $options[$trim_year] = ($date[$i]) . " " . $semester['4'];
-          }
-          $trim_year = $new[$i] . '7';  // Fall
-          $options[$trim_year] = ($date[$i]). " " . $semester['7'];
-        }
-      } else { // Future years
-        $trim_year = ($new[$i]) . "1";  // append 1 to the key depending on the season. For spring, add 1.
-        $options[$trim_year] = $date[$i] . " " . $semester["1"];
-        if ($summer) {
-          $next_trim_year = ($new[$i]) . "4";
-          $options[$next_trim_year] = $date[$i] . " " . $semester['4'];
-        }
-        $next_trim_year = ($new[$i]) . "7";
-        $options[$next_trim_year] = $date[$i]. " " . $semester["7"];
-      }
-    }
-    if (!empty($term_date)) {
-      $sem_dates_array = array_intersect($options, $term_date);
+    // Filter out semester codes not available for the degree if necessary
+    if (!empty($all_avail_terms)) {
+      return array_intersect($degree_terms, $all_avail_terms);
     } else {
-      $sem_dates_array = $options;
+      return $degree_terms;
     }
   }
-  return $sem_dates_array;
 }
 
 /**
@@ -1939,19 +1862,19 @@ function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '') {
   }
 
   // Reformat graduate data
+  // 1) Select campuses available
   $all_dates = array();
   $final_dates = array();
-
   foreach ($dates as $key => $value) {
     $campus_dates = explode(':', $value, 2);
     if (count($campus_dates) === 2) {
       preg_match('|([A-Z]{3,5}):([A-Z]+?):\d(\d{2})(\d)|', $key, $matches);
       if (count($matches) === 5) {
-        $semester = _asu_rfi_ps_semester_codes_convert($matches[4]);
+        $semester = asu_libs_semester_digits_to_text($matches[4]);
         $year = '20' . $matches[3];
         $all_dates[$matches[0]] = array(
           'campus' => $matches[1],
-          'campus_human' => _asu_rfi_get_campus_info($matches[1], TRUE),
+          'campus_human' => asu_libs_get_campus_codes($matches[1], TRUE),
           'reg' => $matches[2],
           'year' => '20' . $matches[3],
           'semester' => $semester,
@@ -1962,7 +1885,7 @@ function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '') {
     }
   }
 
-  // Filter by campus
+  // 2) Filter starts dates by campus
   $valid_semester_dates = array();
   if (count($all_dates)) {
     foreach ($all_dates as $code => $value) {
@@ -1988,6 +1911,29 @@ function _asu_rfi_get_sem_dates_dynamic($acad_plan, $grad_dates, $campus = '') {
     }
   }
   return FALSE;
+}
+
+/**
+ * Get ALL available terms in the DB, as pulled in from PeopleSoft
+ *
+ * @return array - PS semester code (key) => Human-readable semester (Summer 2020)
+ */
+function _asu_rfi_get_all_avail_terms() {
+  $all_avail_terms = &drupal_static(__FUNCTION__);
+  if (!isset($all_avail_terms)) {
+    $all_avail_terms = array();
+    /** @noinspection PhpUndefinedMethodInspection */
+    $sem_dates_results = Database::getConnection('default', 'default')
+      ->select('asu_rfi_sem_dates', 'sd')
+      ->fields('sd')
+      ->orderBy('semSortCode')
+      ->execute()
+      ->fetchAll();
+    foreach ($sem_dates_results as $semester) {
+      $all_avail_terms[$semester->semId] = $semester->semLabel;
+    }
+  }
+  return $all_avail_terms;
 }
 
 /**
@@ -2031,25 +1977,6 @@ function _asu_rfi_get_state_list() {
  */
 function _asu_rfi_form_header_text() {
   return "<h4>Please complete and submit the form below, and a representative will contact you about enrolling at ASU.";
-}
-
-/**
- * ASU Get GDPR Markup - Creates simple HTML to append to end of all RFI forms to ensure GDPR compliance
- *
- * @return string - HTML containing all pertinent information and resources pertaining to GDPR
- */
-function _asu_rfi_get_gdpr_markup() {
-  return "\n<div>
-        <h5>By completing and submitting your information to ASU, you consent to:</h5>
-        <ol class='gdpr-list'>
-            <li>ASU using this information to contact you regarding information as you requested</li>
-            <li>The terms of <a class='gdpr-link' href='https://www.asu.edu/privacy/#asu-privacy-general'>ASU's Privacy Statement</a></li>
-            <li>If you are in the European Union or another country or state that has adopted the GDPR
-            (General Data Protection Regulation) or similar privacy protection, please also read the
-            <a class='gdpr-link' href='https://www.asu.edu/privacy/#european-union-supplement'>ASU European Supplement to ASU's Privacy Statement</a>
-            </li>
-        </ol>
-    </div>\n";
 }
 
 /**

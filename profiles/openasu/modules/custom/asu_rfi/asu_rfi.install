@@ -61,6 +61,12 @@ function asu_rfi_schema() {
         'length' => 225,
         'not null' => TRUE
       ),
+      'semSortCode' => array(
+        'description' => 'ASU-valid Semester term code',
+        'type' => 'varchar',
+        'length' => 4,
+        'not null' => TRUE
+      ),
     ),
     'primary key' => array('semId'),
   );
@@ -113,6 +119,16 @@ function asu_rfi_uninstall() {
     ->condition('name', 'asu_rfi_%', 'LIKE')
     ->execute();
  }
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function asu_rfi_update_dependencies() {
+  // Enable asu_libs module BEFORE applying ANY asu_rfi module updates.
+  $deps['asu_rfi'][7200] = array(
+    'webspark_featurescustom' => 7018,
+  );
+}
 
 /**
  * Enable Honeypot module if ASU RFI module is enabled (Now required for 1.2+)
@@ -449,4 +465,21 @@ function asu_rfi_update_7206(&$sandbox) {
  */
 function asu_rfi_update_7207(&$sandbox) {
   variable_set('asu_rfi_online_url', 'https://asuonline.asu.edu/lead-submissions-v3.3/programs');
+}
+
+/**
+ * Add sorting logic (via ASU semester codes) to asu_rfi_sem_dates table.
+ */
+function asu_rfi_update_7208(&$sandbox) {
+  db_truncate('asu_rfi_sem_dates')->execute();
+  $semSortCode = array(
+      'description' => 'Four-digit ASU semester term code',
+      'type' => 'varchar',
+      'length' => 4,
+      'not null' => TRUE,
+  );
+  db_add_field('asu_rfi_sem_dates', 'semSortCode', $semSortCode);
+  // Then rebuild semester terms in DB table
+  flogger('asu_rfi', 'Run cron immediately to update your ASU RFI semester date options!', array(),
+    WATCHDOG_WARNING, TRUE, TRUE, FALSE);
 }
