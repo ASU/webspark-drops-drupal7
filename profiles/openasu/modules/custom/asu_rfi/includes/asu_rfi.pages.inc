@@ -52,8 +52,8 @@ function asu_rfi_form_data($form, &$form_state) {
   $form = array();
 
   // INIT - Dates
-  for ($idate = 0; $idate < 4; $idate++) {
-    $date = date('Y') + $idate;
+  for ($init_date = 0; $init_date < 4; $init_date++) {
+    $date = date('Y') + $init_date;
     $date_key = substr_replace($date, '', 1, -2);
     $year[$date_key] = $date;
   }
@@ -415,17 +415,17 @@ function asu_rfi_form_data_submit($form, &$form_state) {
 
   // Or update the existing submission node.
   else {
-    $get_nodeid = db_select('field_data_field_rfi_uniquedata', 'afu')
+    $get_node_id = db_select('field_data_field_rfi_uniquedata', 'afu')
       ->fields('afu', array('entity_id'))
       ->condition('field_rfi_uniquedata_value', $unique_id, '=')
       ->execute()
       ->fetchField();
 
     // Update ASU RFI node values
-    $node = node_load($get_nodeid);
+    $node = node_load($get_node_id);
     _asu_rfi_update_multiform_submission_fields($node, $form_state, $multi_form_type, $dob_date, $unique_id);
 
-    $form_state['storage']['submission_nodeid'] = $get_nodeid;
+    $form_state['storage']['submission_nodeid'] = $get_node_id;
     $form_state['storage']['step'] = 'asu_rfi_second_form';
   }
 }
@@ -732,6 +732,7 @@ function asu_rfi_second_form_submit($form, &$form_state) {
  * @param $multi_form_type
  * @param $dob_date
  * @param $unique_id -
+ * @throws EntityMetadataWrapperException
  */
 function _asu_rfi_update_multiform_submission_fields($entity, $form_state, $multi_form_type, $dob_date, $unique_id) {
   $wrapper = entity_metadata_wrapper('node', $entity);
@@ -1135,6 +1136,7 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
  * LONG FORM - SUBMIT handler (undergrad and graduate)
  * @param $form
  * @param $form_state
+ * @throws EntityMetadataWrapperException
  * @noinspection PhpUnusedLocalVariableInspection
  */
 function asu_rfi_long_form_data_submit($form, &$form_state) {
