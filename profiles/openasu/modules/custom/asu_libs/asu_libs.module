@@ -30,22 +30,22 @@ function asu_libs_get_gdpr_markup() {
 function asu_libs_validate_zipcode($country, $zip, $us_long_allowed = FALSE, $zip_field_name = 'zipcode') {
   if ($country == "United States") {
     if ((strlen($zip) < 5)) {
-      form_set_error($zip_field_name, t('US Postal code cannot be less than 5 digits.'));
+      form_set_error($zip_field_name, t('Domestic postal/ZIP codes cannot be less than 5 digits.'));
     }
     $zip_pattern = ($us_long_allowed === TRUE) ? '/^\d{5}(-\d{4})?$/' : '/^\d{5}$/';
-    $zip_pattern_error = ($us_long_allowed === TRUE) ? ' (or XXXXX-XXXX)' : '';
+    $zip_pattern_error = ($us_long_allowed === TRUE) ? ' (or 12345-6789)' : '';
     if (!preg_match($zip_pattern, $zip)) {
-      form_set_error($zip_field_name, t('US Postal codes only be formatted as XXXXX' . $zip_pattern_error . '.'));
+      form_set_error($zip_field_name, t('US Postal/ZIP codes may only be formatted like 12345' . $zip_pattern_error . '.'));
     }
   } else {
     if (!preg_match("/^[a-zA-Z0-9\s-]+$/", $zip)) {
       form_set_error($zip_field_name, t('Postal code is not valid (contains invalid characters - numbers, letters, or dashes only)'));
     }
     if ((strlen($zip) < 4)) {
-      form_set_error($zip_field_name, t('Postal code cannot be less than 4 characters.'));
+      form_set_error($zip_field_name, t('International postal codes cannot be less than 4 characters.'));
     }
     if (strlen($zip) > 20) {
-      form_set_error($zip_field_name, t('Postal code cannot be longer than 20 characters.'));
+      form_set_error($zip_field_name, t('International postal codes cannot be longer than 20 characters.'));
     }
   }
 }
