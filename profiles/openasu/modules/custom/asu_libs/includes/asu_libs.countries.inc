@@ -3,7 +3,7 @@
 /**
  * Convert countries between Peoplesoft and Salesforce values.
  *
- * @param array $results - Query results with countries. @see
+ * @param array $results - Query results with countries. @see asu_rfi_get_form_select_options()
  */
 function asu_libs_get_sf_country_mapping(&$results) {
   $map = array(

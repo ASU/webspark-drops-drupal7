@@ -35,13 +35,18 @@ function asu_rfi_get_form_select_options($name, $sf_convert = TRUE) {
 
   // Do DB upsert of options if values are returned from JSON feed...
   if (count($results) > 0) {
+
+    // Pre-update customization:
+    // Get upcoming terms
     $mapped_terms = ($name === 'rfi_dedupe_list_terms')
       ? asu_libs_get_sem_codes_human_mapping(TRUE, array(), 'digits', 4)
       : array();
+
     // Update countries to Salesforce values
     if ($name === 'country') {
       asu_libs_get_sf_country_mapping($results);
     }
+
     $data_count = 0;
     foreach ($results as $result) {
       $datum_key = (!empty($result->{$config['datum_key']})) ? check_plain($result->{$config['datum_key']}) : 'EMPTY';
