@@ -3,12 +3,11 @@
 /**
  * Get list names and IDs for various RFI form dropdowns
  *
- * @param $name - (str) Which dataset to pull (state_province, country, rfi_dedupe_list_terms (aka sem_dates))
- * @param $installing - (bool) Module installing for the first time (TRUE)
- *   or just running via cron (FALSE).
+ * @param string $name - Which dataset to pull (state_province, country, rfi_dedupe_list_terms (aka sem_dates))
+ * @param bool $sf_convert - Convert values to Salesforce-compatibility (only countries for now). Defaults to TRUE.
  * @throws InvalidMergeQueryException
  */
-function asu_rfi_get_form_select_options($name, $installing = FALSE) {
+function asu_rfi_get_form_select_options($name, $sf_convert = TRUE) {
   // Get configs
   $config = (array) _asu_rfi_get_select_options_config($name);
   $url = $config['url'];
@@ -39,6 +38,10 @@ function asu_rfi_get_form_select_options($name, $installing = FALSE) {
     $mapped_terms = ($name === 'rfi_dedupe_list_terms')
       ? asu_libs_get_sem_codes_human_mapping(TRUE, array(), 'digits', 4)
       : array();
+    // Update countries to Salesforce values
+    if ($name === 'country') {
+      asu_libs_get_sf_country_mapping($results);
+    }
     $data_count = 0;
     foreach ($results as $result) {
       $datum_key = (!empty($result->{$config['datum_key']})) ? check_plain($result->{$config['datum_key']}) : 'EMPTY';
@@ -110,7 +113,6 @@ function _asu_rfi_get_select_options_config($dataset) {
   $env = asu_libs_detect_environment();
   $tld = ($env['type'] === 'dev' XOR $env['type'] === 'qa') ? 'webforms-qa.asu.edu' : 'webforms.asu.edu';
 
-  $config = array();
   if ($dataset == 'state_province') {
     $config = array(
       'type' => 'fieldinfo',
@@ -121,29 +123,17 @@ function _asu_rfi_get_select_options_config($dataset) {
       'datum_key' => 'value',
       'datum_value' => 'label',
     );
-    $config['url'] = 'https://' . $tld . '/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
-    $config['json_options'] = array(
-      CURLOPT_URL => $config['url'],
-      CURLOPT_RETURNTRANSFER => 1,
-      CURLOPT_HTTPHEADER => _asu_rfi_get_curl_auth($env['type']),
-    );
   }
   elseif ($dataset == 'country') {
-      $config = array(
-        'type' => 'fieldinfo',
-        'name' => 'country',
-        'db_tbl' => 'asu_rfi_countries',
-        'db_key' => 'countryCode3',
-        'db_value' => 'countryDesc',
-        'datum_key' => 'value',
-        'datum_value' => 'label',
-      );
-      $config['url'] = 'https://' . $tld . '/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
-      $config['json_options'] = array(
-        CURLOPT_URL => $config['url'],
-        CURLOPT_RETURNTRANSFER => 1,
-        CURLOPT_HTTPHEADER => _asu_rfi_get_curl_auth($env['type']),
-      );
+    $config = array(
+      'type' => 'fieldinfo',
+      'name' => 'country',
+      'db_tbl' => 'asu_rfi_countries',
+      'db_key' => 'countryCode3',
+      'db_value' => 'countryDesc',
+      'datum_key' => 'value',
+      'datum_value' => 'label',
+    );
   }
   elseif ($dataset == 'rfi_dedupe_list_terms') {
     $config = array(
@@ -156,18 +146,24 @@ function _asu_rfi_get_select_options_config($dataset) {
       'datum_value' => 'Name',
       'db_sorter' => 'semSortCode', // Optional param - semester sorting code
     );
-    $config['url'] = 'https://' . $tld . '/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
     $fields = array(
       'condition_Term_Status__c' => TRUE,
     );
     $body = json_encode($fields);
     $config['json_options'] = array(
-      CURLOPT_URL => $config['url'],
       CURLOPT_POST => 1,
       CURLOPT_POSTFIELDS => $body,
-      CURLOPT_RETURNTRANSFER => 1,
-      CURLOPT_HTTPHEADER => _asu_rfi_get_curl_auth($env['type']),
     );
   }
+
+  // Build out global options in $config for JSON pull
+  $config['url'] = 'https://' . $tld . '/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
+  if (!isset($config['json_options'])) {
+    $config['json_options'] = array();
+  }
+  $config['json_options'][CURLOPT_URL] = $config['url'];
+  $config['json_options'][CURLOPT_RETURNTRANSFER] = 1;
+  $config['json_options'][CURLOPT_HTTPHEADER] = _asu_rfi_get_curl_auth($env['type']);
+
   return $config;
 }

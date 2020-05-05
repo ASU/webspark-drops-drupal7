@@ -79,11 +79,11 @@ function asu_rfi_install() {
   include('data/asu_rfi.form_options.inc');
 
   // Update countries DB table
-  asu_rfi_get_form_select_options('country', TRUE);
+  asu_rfi_get_form_select_options('country');
   // Insert states into DB table
-  asu_rfi_get_form_select_options('state_province', TRUE);
+  asu_rfi_get_form_select_options('state_province');
   // Insert semester dates into DB table
-  asu_rfi_get_form_select_options('rfi_dedupe_list_terms', TRUE);
+  asu_rfi_get_form_select_options('rfi_dedupe_list_terms');
 
   $rfi_config_url = "/admin/config/content/asurfi";
   flogger('asu_rfi','ASU RFI module has been installed. Configure module settings at '
