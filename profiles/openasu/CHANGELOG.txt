@@ -1,5 +1,5 @@
-Webspark 1.70.8 (Big Spring), 2020-04-07
----------------------------------------------
+Webspark 1.70.8 (Big Spring), 2020-05-05
+----------------------------------------
 - Web standards components in Webspark
 
   * ASU Academic Programs (asu_ap) - 7.x-3.0
@@ -84,7 +84,7 @@ Webspark 1.70.8 (Big Spring), 2020-04-07
       * Form improvements
         * The major is now chosen automatically regardless of the RFI form type (works for both undergrad and graduate programs)
         * Added missing form field validation to email, phone number, and email fields
-        * RFI blocks now display error messages (to admins only) with helper instructions for when the form isn't rendering within a correctly placed block o$
+        * RFI blocks now display error messages (to admins only) with helper instructions for when the form isn't rendering within a correctly placed block on a degrees page
         * Added AJAX-powered, dynamic start term options generation for graduate degrees, based on degree and campus selections
         * Updated ASU campus list options
         * Added better, "this program is not available", logic
@@ -143,7 +143,7 @@ Webspark 1.70.8 (Big Spring), 2020-04-07
 
 - Webspark custom project changes/deletions
 
-  * ASU Degrees (DEPRECATED) - v1.11
+  * ASU Degrees (asu_degrees) (DEPRECATED) - v1.11
     * Added the "list-item" class to list items
   * ASU Feeds (asu_feeds) (DEPRECATED) - v1.2,
     IXR (ixr) (DEPRECATED) - v1.1
@@ -979,7 +979,7 @@ Webspark 1.46 (Nebraska) release, 2017-08-27
 
     * CAS (v1.3.5) - Applied security update to CAS library
 
-Webspark 1.43 (Colorado) release, 2017-16-05
+Webspark 1.43 (Colorado) release, 2017-05-16
 --------------------------------------------
 - Webspark core
 
