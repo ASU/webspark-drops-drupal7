@@ -22,7 +22,7 @@ function asu_isearch_cron() {
     return FALSE;
   }
 
-  flogger('asu_rfi', 'But it is....');
+  flogger('asu_dirs', 'Cron is working on asu_dirs in ' . __FUNCTION__);
 
   // it takes too much time to do both of these actions every cron run.
   // so switch between caching depts and migrating departments.
