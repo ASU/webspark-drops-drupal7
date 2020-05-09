@@ -11,20 +11,19 @@ function asu_libs_detect_environment() {
   if (!isset($env)) {
     $env = array(
       'type' => '',
-      'endpoint_access' => true,
+      'endpoint_access' => TRUE,
     );
     global $base_url;
     // Pantheon ENVs
     if (defined('PANTHEON_ENVIRONMENT')) {
+      $env['endpoint_access'] = FALSE;
       if ($_ENV["PANTHEON_ENVIRONMENT"] === 'live') {
         $env['type'] = 'prod_pantheon';
-      }
-      elseif ($_ENV["PANTHEON_ENVIRONMENT"] === 'test') {
+      } elseif ($_ENV["PANTHEON_ENVIRONMENT"] === 'test') {
         $env['type'] = 'qa';
       } else { // All remaining multidevs + Dev ENV
         $env['type'] = 'dev';
       }
-      $env['endpoint_access'] = false; // No access to Enterprise dev/QA web service endpoints
     }
     else {
       // Local development - most local development URLs

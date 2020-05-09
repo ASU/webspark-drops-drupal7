@@ -110,13 +110,13 @@ function asu_rfi_get_form_select_options($name, $sf_convert = TRUE) {
  * Store configs for all three RFI form dropdown types
  * Two columns of table data by default (third optional column - $db_sorter - available for sorting)
  *
- * @param string $dataset - Which dataset to pull (states, country, semester dates, etc.)
+ * @param string $dataset - Which dataset to pull (state_province, country, rfi_dedupe_list_terms)
  * @return array $config
  */
 function _asu_rfi_get_select_options_config($dataset) {
   // PROD or not?
   $env = asu_libs_detect_environment();
-  $tld = ($env['type'] === 'dev' XOR $env['type'] === 'qa') ? 'webforms-qa.asu.edu' : 'webforms.asu.edu';
+  $tld = 'webforms.asu.edu';
 
   if ($dataset == 'state_province') {
     $config = array(
@@ -127,6 +127,7 @@ function _asu_rfi_get_select_options_config($dataset) {
       'db_value' => 'stateDesc',
       'datum_key' => 'value',
       'datum_value' => 'label',
+      'json_options' => array(),
     );
   }
   elseif ($dataset == 'country') {
@@ -138,6 +139,7 @@ function _asu_rfi_get_select_options_config($dataset) {
       'db_value' => 'countryDesc',
       'datum_key' => 'value',
       'datum_value' => 'label',
+      'json_options' => array(),
     );
   }
   elseif ($dataset == 'rfi_dedupe_list_terms') {
@@ -163,9 +165,6 @@ function _asu_rfi_get_select_options_config($dataset) {
 
   // Build out global options in $config for JSON pull
   $config['url'] = 'https://' . $tld . '/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
-  if (!isset($config['json_options'])) {
-    $config['json_options'] = array();
-  }
   $config['json_options'][CURLOPT_URL] = $config['url'];
   $config['json_options'][CURLOPT_RETURNTRANSFER] = 1;
   $config['json_options'][CURLOPT_HTTPHEADER] = _asu_rfi_get_curl_auth($env['type']);
