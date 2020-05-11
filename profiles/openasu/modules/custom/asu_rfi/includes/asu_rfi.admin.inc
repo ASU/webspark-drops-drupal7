@@ -95,11 +95,10 @@ function asu_rfi_admin_settings() {
     '#options' => $form_modes,
     '#default_value' => $form_mode,
     '#attributes' => array('class' => array('asu-rfi-admin-field')),
-    '#description' => t("Selects which type of middleware to which RFI form submissions will be submitted."
-      . " - Site-wide configuration that affect all RFI forms."
-      . " - In 'None' mode, no RFI form submissions are sent onto any middleware. They will be deleted as if they"
-      . " were successfully submitted (with the next cron run, etc.)."
-      . " - In 'Test' mode, only site admins can see the forms."),
+    '#description' => t("Site-wide setting to select the type of middleware to which the RFI form submissions will be submitted. OPTIONS: "
+      . " * 'None' = No RFI form submissions are sent to middleware. Will be marked as 'FAILED' submissions."
+      . " * 'Test' = Will be submitted to QA middleware (to be pushed to Salesforce QA - which is not available in some web hosting environments."
+      . " * 'Production' = Submitted to PROD middleware (to be into the real Salesforce.)"),
     '#required' => TRUE,
   );
   $form['asu_rfi_form_access']['expired_nodes'] = array(
@@ -182,9 +181,10 @@ function asu_rfi_admin_settings() {
     '#title' => t('Site identifier for Google Analytics'),
     '#default_value' => variable_get('asu_rfi_google_analytics_key'),
     '#attributes' => array('class' => array('asu-rfi-admin-field')),
-    '#description' => t('Must be 6-10 alphanumeric (or dashes/underscores), but can otherwise be anything you want.'
-    . ' It will be used to differentiate your RFI submissions from other website submissions in Google Analytics. Example:'
-    . ' If your site is collegename.asu.edu, use "CollegeNam", "Col-Name", etc.'),
+    '#description' => t('Must be 6-10 alphanumeric (or dashes/underscores) characters.'
+    . ' This will be used to differentiate your RFI submissions from other website submissions in Google Analytics. Example:'
+    . ' If your site is collegename.asu.edu, use "CollegeNam", "Col-Name", etc. IMPORTANT: Once this has been set, it will'
+    . ' not be alterable in this form.'),
     '#required' => TRUE,
     '#disabled' => FALSE,
   );

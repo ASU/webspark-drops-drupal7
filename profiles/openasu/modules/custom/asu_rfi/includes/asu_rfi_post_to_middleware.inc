@@ -57,7 +57,7 @@ function asu_rfi_post_to_middleware($data, $type) {
   ////////////////////////////////////////////////
 
   // Send to any middleware?
-  $form_mode = variable_get('asu_rfi_form_mode');
+  $form_mode = variable_get('asu_rfi_form_mode', 'test');
   $middleware_access = variable_get('asu_rfi_enterprise_access_', 0);
 
   // If YES, start building middleware submission

@@ -568,7 +568,7 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
   // * Disable Google analytics site transactions key in asu_rfi admin settings page
   if ($form['#id'] == "asu-rfi-admin-settings") {
     if (!empty($form['asu_rfi_form_access']['asu_rfi_google_analytics_key']['#default_value'])) {
-      if (preg_match("/^[a-zA-Z0-9\-_]{6,10}$/", $form_state['values']['asu_rfi_google_analytics_key']['#default_value'])) {
+      if (preg_match("/^[a-zA-Z0-9\-_]{6,10}$/", $form['asu_rfi_form_access']['asu_rfi_google_analytics_key']['#default_value'])) {
         $form['asu_rfi_form_access']['asu_rfi_google_analytics_key']['#disabled'] = TRUE;
       } else {
         $form['asu_rfi_form_access']['asu_rfi_google_analytics_key']['#disabled'] = FALSE;
