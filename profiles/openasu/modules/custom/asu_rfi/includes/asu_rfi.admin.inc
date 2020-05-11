@@ -6,16 +6,17 @@
  * @return array $form
  */
 function asu_rfi_admin_settings() {
-  $form_modes = array('test' => 'Test', 'prod' => 'Production');
+  $form_modes = array('test' => 'Test', 'prod' => 'Production', 'none' => 'None (No middleware)');
   $special_action_modes = array(
-    'all' => 'Report page actions + cron jobs',
-    'form_only' => 'Report page actions ONLY',
+    'all' => 'RFI Report page actions + cron jobs',
+    'form_only' => 'RFI Report page actions',
   );
   $expiration_range = round((float) (ASU_RFI_SUBMISSION_EXP_PERIOD) / 86400 , 2) . ' days';
   ////////////////////////
 
   $form = array();
 
+  // Middleware authorization warning if necessary
   $auth_key = variable_get('asu_rfi_form_auth_key');
   if (!empty($auth_key) && strlen($auth_key) === 32) { // All SHAs should be 32 characters long.
     $stage = array(
@@ -34,11 +35,38 @@ function asu_rfi_admin_settings() {
     );
   }
   $message = '<div class="' . $stage['css'] . '">' . $stage['message'] . '</div>';
+  $form['form_stage'] = array(
+    '#type' => 'item',
+    '#markup' => $message,
+  );
+
+  // Middleware access warning (for non-Enterprise sites))
+  $access_key = variable_get('asu_rfi_enterprise_access_', 0);
+  $form_mode = variable_get('asu_rfi_form_mode', 'test');
+  if ($form_mode === 'none') {
+    $stage = array(
+      'message' => 'NOTE: No submissions will be sent onto the middleware (or the Salesforce QA environment).',
+      'css' => 'messages warning',
+    );
+  } elseif ($access_key === 0 ) {
+    if ($form_mode === 'test') { // All SHAs should be 32 characters long.
+      $extra_text = (defined('PANTHEON_ENVIRONMENT'))
+        ? 'Pantheon sites '
+        : 'This site ';
+      $stage = array(
+        'message' => $extra_text . ' cannot reach the QA middleware servers. "Test" mode submissions will'
+        . ' not be submitted to the middleware (or the Salesforce QA environment).',
+        'css' => 'messages error',
+      );
+    }
+  }
+  $message = '<div class="' . $stage['css'] . '">' . $stage['message'] . '</div>';
 
   $form['form_stage'] = array(
     '#type' => 'item',
     '#markup' => $message,
   );
+
 
   // GENERAL SETTINGS
   ///////////////////////
@@ -63,13 +91,15 @@ function asu_rfi_admin_settings() {
   );
   $form['asu_rfi_form_access']['asu_rfi_form_mode'] = array(
     '#type' => 'select',
-    '#title' => t('Test/Live Mode'),
+    '#title' => t('RFI forms mode'),
     '#options' => $form_modes,
-    '#default_value' => variable_get('asu_rfi_form_mode'),
+    '#default_value' => $form_mode,
     '#attributes' => array('class' => array('asu-rfi-admin-field')),
-    '#description' => t("Specify if the forms are in Test mode or Live mode. "
-     . "Note: This is a sitewide configuration and will affect all forms. Only "
-     . "site admins can view the forms if they are in Test mode."),
+    '#description' => t("Selects which type of middleware to which RFI form submissions will be submitted."
+      . " - Site-wide configuration that affect all RFI forms."
+      . " - In 'None' mode, no RFI form submissions are sent onto any middleware. They will be deleted as if they"
+      . " were successfully submitted (with the next cron run, etc.)."
+      . " - In 'Test' mode, only site admins can see the forms."),
     '#required' => TRUE,
   );
   $form['asu_rfi_form_access']['expired_nodes'] = array(
@@ -152,8 +182,9 @@ function asu_rfi_admin_settings() {
     '#title' => t('Site identifier for Google Analytics'),
     '#default_value' => variable_get('asu_rfi_google_analytics_key'),
     '#attributes' => array('class' => array('asu-rfi-admin-field')),
-    '#description' => t('Enter a 6-10 character string to identify your site in'
-     . ' Google Analytics transactions.'),
+    '#description' => t('Must be 6-10 alphanumeric (or dashes/underscores), but can otherwise be anything you want.'
+    . ' It will be used to differentiate your RFI submissions from other website submissions in Google Analytics. Example:'
+    . ' If your site is collegename.asu.edu, use "CollegeNam", "Col-Name", etc.'),
     '#required' => TRUE,
     '#disabled' => FALSE,
   );
@@ -276,6 +307,16 @@ function _asu_rfi_admin_settings_validate($form, &$form_state) {
     asu_libs_validate_email($form_state['values']['asu_rfi_from_email_field'],
       'asu_rfi_from_email_field');
   }
+  if (isset($form_state['values']['asu_rfi_google_analytics_key'])) {
+    $form_state['values']['asu_rfi_google_analytics_key'];
+    if (!preg_match("/^[a-zA-Z0-9\-_]{6,10}$/", $form_state['values']['asu_rfi_google_analytics_key'])) {
+      form_set_error('asu_rfi_google_analytics_key',
+        'Your Google Analytics key must be 6-10 alphanumeric (or dashes/underscores) are allowed.');
+    }
+  } else {
+    form_set_error('asu_rfi_google_analytics_key',
+      'Your Google Analytics key must be 6-10 alphanumeric (or dashes/underscores).');
+  }
 }
 
 /**
@@ -292,12 +333,12 @@ function _asu_rfi_admin_settings_submit($form, $form_state) {
     'asu_rfi_online_url' => 0,
   );
   foreach ($keys as $element => $is_entity) {
+    $key = ($is_entity === 1) ? $element . '_nid' : $element;
     $value = ($is_entity === 1)
       ? ((isset($form_state['values'][$element]['entity_id']))
         ? $form_state['values'][$element]['entity_id']
         : '')
       : $form_state['values'][$element];
-    $key = ($is_entity === 1) ? $element . '_nid' : $element;
     variable_set($key, $value);
   }
 }
