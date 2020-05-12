@@ -117,7 +117,7 @@ When the 1st page of the multiform is submitted by the end user, the submission'
 set to "Partial Multiform Submitted". This status will remain until either 1) the second
 half of the form is also submitted by the end user, or 2) the site's cron job is run. At that time,
 the site will try (during the same HTTP request) to submit the submission to the middleware (the
-same as above). This will end up with a status of "Middleware POST SUCCESS" or "Middleware POST FAILED"
+same as above). This will end up with a status of "SUCCESSFUL Middleware POST" or "FAILED Middleware POST"
 (when an error is returned by the middleware).
 
 A site administrator will need to resolve the "Middleware POST FAILED" issues and then
