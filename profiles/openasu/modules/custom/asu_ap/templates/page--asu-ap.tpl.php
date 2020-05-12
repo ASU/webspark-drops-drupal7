@@ -86,6 +86,8 @@ else {
   $node_info = array();
 }
 
+dpm($node_info);
+
 // Add subsection of $page['content'] for metatags
 if (module_exists('metatag')) {
   print render($page['content']['metatags']);
@@ -195,10 +197,10 @@ if (module_exists('metatag')) {
         <?php
         $is_online = 0;
         foreach ($node_info['field_asu_ap_campus']['#items'] as $campus) {
-          if ($campus === 'Online') {
-            $online_program_value = (!empty($node_info['field_asu_ap_online_mm_url']['#items'][0]['url']))
-              ? $node_info['field_asu_ap_online_mm_url']['#items'][0]['url']
-              : '//asuonline.asu.edu/';
+          if ($campus['safe_value'] === 'Online') {
+            $online_program_value = (!empty($node_info['field_asu_ap_curriculum_url']['#items'][0]['url']))
+              ? $node_info['field_asu_ap_curriculum_url']['#items'][0]['url']
+              : 'https://asuonline.asu.edu/';
             $is_online = 1;
             break;
           }
@@ -841,10 +843,10 @@ if (module_exists('metatag')) {
                 <div id="asu-ap-online-program">
                   <h4>What are ASU's Online Programs?</h4>
                   <div class="programs_term_content no-display" id="programs_term_online">
-                    <p><a href="https://asuonline.asu.edu/" target="_blank">ASU Online</a> offers programs in an entirely
-                      online format with multiple enrollment sessions throughout the year.</p>
-                    <p>See <a href="<? echo $online_program_value ?>" target="_blank"><? echo $online_program_value ?></a> for even more
-                      information on the <?php print $title; ?> program at ASU Online.</p>
+                    <p><a href="https://asuonline.asu.edu/" target="_blank">ASU Online</a> offers programs like <?php print $title; ?>
+                      in an entirely online format with multiple enrollment sessions throughout the year.</p>
+                    <p>More information on the program is available <a href="<?php print $online_program_value ?>" target="_blank">directly
+                        from ASU Online.</p>
                   </div>
                 </div>
     <?php endif; ?>
