@@ -664,7 +664,7 @@ function _asu_rfi_check_form_values($db_tbl) {
  */
 function asu_rfi_cron() {
 
-  asu_rfi_check_cached_programs();
+  asu_rfi_check_online_programs_cache();
 
   // #1 - Set as system variables so we can adjust via devel/php if desired.
   $last_ran = variable_get('asu_rfi_cron_last_ran', 0);
@@ -1287,14 +1287,14 @@ function asu_rfi_import_online_programs() {
     flogger('asu_rfi', __FUNCTION__ . ' -- Failed to pull online programs from ' . $url, array(),
       WATCHDOG_ERROR);
   }
-  return false;
+  return FALSE;
 }
 
 /**
  *  Re-pull programs from asuonline.asu.edu under certain circumstances
  * @return bool
  */
-function asu_rfi_check_cached_programs() {
+function asu_rfi_check_online_programs_cache() {
   $programs = variable_get('asu_rfi_cached_programs');
   $timestamp = variable_get('asu_rfi_cached_programs_timestamp');
   $now = time();
@@ -1305,13 +1305,13 @@ function asu_rfi_check_cached_programs() {
     if ($getPrograms == false) {
       flogger('asu_rfi', __FUNCTION__ . ' -- Failed to import set Online programs cache.',
         array(), WATCHDOG_ERROR);
-      return false;
+      return FALSE;
     }
     variable_set('asu_rfi_cached_programs', $getPrograms);
     variable_set('asu_rfi_cached_programs_timestamp', $now);
-    return true;
+    return TRUE;
   }
-  return false;
+  return FALSE;
 }
 
 
