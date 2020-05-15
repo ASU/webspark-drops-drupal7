@@ -1,4 +1,5 @@
-<?php /** @noinspection PhpUnhandledExceptionInspection */
+<?php /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+/** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection PhpUnused */
 /** @noinspection PhpDocSignatureInspection */
 /** @noinspection PhpUnusedParameterInspection */
@@ -78,11 +79,18 @@ function asu_rfi_install() {
   // Call initial configuration for form options upon install
   include('data/asu_rfi.form_options.inc');
 
-  // Update countries DB table
+  // Check middleware access up front and store
+  asu_libs_set_asset_access_value('asu_rfi');
+  // Set the RFI form mode to "Test" initially upon module installation
+  variable_set('asu_rfi_form_mode','test');
+  variable_set('asu_rfi_middleware_env', 'prod');
+  flogger('asu_rfi', 'All RFI forms are currently running in Test mode (managed in ASU RFI settings).');
+
+  // Update/insert local countries DB table
   asu_rfi_get_form_select_options('country');
-  // Insert states into DB table
+  // Update/insert states into DB table
   asu_rfi_get_form_select_options('state_province');
-  // Insert semester dates into DB table
+  // Update/insert semester dates into DB table
   asu_rfi_get_form_select_options('rfi_dedupe_list_terms');
 
   $rfi_config_url = "/admin/config/content/asurfi";
@@ -93,7 +101,7 @@ function asu_rfi_install() {
   if (module_exists('cas')) {
     $out = variable_get('cas_exclude', 'none');
     $out = $out . "\r\nasu_rfi/success/*\r\nasu_rfi/failure/*";
-    variable_set('cas_exclude',$out);
+    variable_set('cas_exclude', $out);
   }
 
   // If honeypot module exists, set its variable value
@@ -105,9 +113,6 @@ function asu_rfi_install() {
   if (!module_exists('entityreference_autocomplete')) {
     module_enable(array('entityreference_autocomplete'));
   }
-
-  // Set the RFI form mode to "Test" initially upon module installation
-  variable_set('asu_rfi_form_mode','test');
 }
 
 /**
@@ -148,7 +153,7 @@ function asu_rfi_update_7001(&$sandbox) {
 
 /**
  * Enable Flogger, Entityreference Autocomplete modules; Update non-namespaced variable names.
- * @throws \InvalidMergeQueryException
+ * @throws InvalidMergeQueryException
  */
 function asu_rfi_update_7200(&$sandbox){
   if (!module_exists('flogger')) {
@@ -256,11 +261,11 @@ function asu_rfi_update_7202(&$sandbox) {
     $field_base = unserialize($field_base);
     if (isset($field_base['settings']['allowed_values'])) {
       $field_base['settings']['allowed_values'] = array(
-        'Form_Completed' => 'Ready for SF POST',
+        'Form_Completed' => 'Ready for middleware POST',
         'Form_Multi_Partial' => 'Partial multiform submitted',
-        'SF_Multi_Pending' => 'SF POST Multiform Pending',
-        'SF_Failed' => 'SF POST Failed',
-        'SF_Completed' => 'SF POST Successful',
+        'SF_Multi_Pending' => 'Pending middleware POST (multiform)',
+        'SF_Failed' => 'FAILED Middleware POST',
+        'SF_Completed' => 'SUCCESSFUL Middleware POST',
         'Form_Completed_No_SF' => 'Completed (No Salesforce)',
       );
     } else {
@@ -480,6 +485,18 @@ function asu_rfi_update_7208(&$sandbox) {
   );
   db_add_field('asu_rfi_sem_dates', 'semSortCode', $semSortCode);
   // Then rebuild semester terms in DB table
-  flogger('asu_rfi', 'Run cron immediately to update your ASU RFI semester date options!', array(),
-    WATCHDOG_WARNING, TRUE, TRUE, FALSE);
+  flogger('asu_rfi', '!!IMPORTANT!! -- Run cron immediately to update your ASU RFI semester start date'
+    . ' options or your RFI forms will not work properly! Either use Drush (recommended) or run cron at ' . $_SERVER['HTTP_HOST']
+    . '/admin/config/system/cron', array(), WATCHDOG_WARNING, TRUE, TRUE, FALSE);
+}
+
+/**
+ * Set middleware access value (T/F) for checking access, middleware env selection
+ */
+function asu_rfi_update_7209(&$sandbox) {
+  asu_libs_set_asset_access_value('asu_rfi');
+  variable_set('asu_rfi_middleware_env', 'prod');
+  variable_set('asu_rfi_hide_online_alerts', 1);
+  variable_set('asu_rfi_online_url', 'https://asuonline.asu.edu/lead-submissions-v3.3/programs');
+  features_revert_module('asu_rfi_feature');
 }

@@ -3,28 +3,22 @@
 /**
  * Determine type of site environment (dev, test, or live)
  * NOTE: This will work for all Pantheon sites, but everywhere else it won't
- * catch everything. The "test mode" setting will have to catch the rest.
- * @return array $env - Type of environment (dev, qa, or prod), and endpoint_access (T/F).
+ * catch everything.
+ * @return string (str) $env - Type of environment (dev, qa, or prod).
  */
-function asu_libs_detect_environment() {
+function asu_libs_get_environment_type() {
   $env = &drupal_static(__FUNCTION__);
   if (!isset($env)) {
-    $env = array(
-      'type' => '',
-      'endpoint_access' => true,
-    );
     global $base_url;
     // Pantheon ENVs
     if (defined('PANTHEON_ENVIRONMENT')) {
       if ($_ENV["PANTHEON_ENVIRONMENT"] === 'live') {
-        $env['type'] = 'prod_pantheon';
-      }
-      elseif ($_ENV["PANTHEON_ENVIRONMENT"] === 'test') {
-        $env['type'] = 'qa';
+        $env = 'prod_pantheon';
+      } elseif ($_ENV["PANTHEON_ENVIRONMENT"] === 'test') {
+        $env = 'qa';
       } else { // All remaining multidevs + Dev ENV
-        $env['type'] = 'dev';
+        $env = 'dev';
       }
-      $env['endpoint_access'] = false; // No access to Enterprise dev/QA web service endpoints
     }
     else {
       // Local development - most local development URLs
@@ -32,21 +26,44 @@ function asu_libs_detect_environment() {
         || strpos($base_url, '://192.168.') !== FALSE
         || strpos($base_url, '://127.') !== FALSE
         || strpos($base_url, '://10.') !== FALSE) {
-        $env['type'] = 'dev';
+        $env = 'dev';
       }
       // Non-Pantheon ENVs checks for Enterprise Drupal.
       elseif ((preg_match('#^http(s?)://dev-#', $base_url) === 1) && (strpos($base_url, '-dev.'))) {
-        $env['type'] = 'dev';
+        $env = 'dev';
       }
       elseif ((preg_match('#^http(s?)://(test|qa)-#', $base_url) === 1)
         || (strpos($base_url, '-qa.') !== FALSE || strpos($base_url, '-test.') !== FALSE)) {
-        $env['type'] = 'qa';
+        $env = 'qa';
       } else {
-        $env['type'] = 'prod_not-pantheon';
+        $env = 'prod_not-pantheon';
       }
     }
   }
   return $env;
+}
+
+/**
+ * Detect access to endpoint/middleware/data resources (ASU Enterprise, behind ASU firewall, etc.)
+ *
+ * @param string $module - machine name of module setting value (ex. asu_rfi, etc.)
+ * @param string $data_type - Ex. 'start_date', 'degrees'. Left blank, does general access check.
+ * @param string $url - URL inside the enterprise ENV to check. If blank, does general access check to "Enterprise" space.
+ * @param int $timeout - cURL timeout for request. Defaults to 5 seconds.
+ */
+function asu_libs_set_asset_access_value($module, $data_type = '', $url = "https://webapp4-qa.asu.edu", $timeout = 5) {
+  $curl = curl_init($url);
+  $timeout = (int) $timeout;
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE); // If you don't want to use any of the return information, set to false
+  curl_setopt($curl, CURLOPT_SSLVERSION, 1); // This will set the security protocol to TLSv1
+  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $timeout); // If no response in $timeout seconds, no access is assumed
+  curl_exec($curl);
+  $curl_info = curl_getinfo($curl); // Used by your drupal messages below
+
+  $is_available = ($curl_info['http_code'] === 200) ? 1 : 0;
+  variable_set(check_plain($module) . '_enterprise_access_' . check_plain($data_type), $is_available);
+  flogger($module, "Access to " . $url . " - " . $is_available);
 }
 
 /**

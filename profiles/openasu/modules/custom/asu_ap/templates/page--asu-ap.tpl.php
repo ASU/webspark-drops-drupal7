@@ -191,9 +191,19 @@ if (module_exists('metatag')) {
           <?php $special_categories++; ?>
         <?php endif; ?>
       <?php endif; ?>
-      <?php if (isset($node_info['field_asu_ap_online_mm_url']['#items'][0]['url'])): // Displaying 'Concurrent Program' field if true, displaying nothing if false ?>
-        <?php $online_program_value = $node_info['field_asu_ap_online_mm_url']['#items'][0]['url']; ?>
-        <?php if ($online_program_value): ?>
+      <?php if (isset($node_info['field_asu_ap_campus']['#items']) && count($node_info['field_asu_ap_campus']['#items']) > 0): // Displaying 'Online Program' field if true, displaying nothing if false ?>
+        <?php
+        $is_online = 0;
+        foreach ($node_info['field_asu_ap_campus']['#items'] as $campus) {
+          if ($campus['safe_value'] === 'Online') {
+            $online_program_value = (!empty($node_info['field_asu_ap_curriculum_url']['#items'][0]['url']))
+              ? $node_info['field_asu_ap_curriculum_url']['#items'][0]['url']
+              : 'https://asuonline.asu.edu/';
+            $is_online = 1;
+            break;
+          }
+        } ?>
+        <?php if ($is_online === 1): ?>
                   <div class="asu-ap-special-category">
                     <?php
                     if (isset($node_info['field_asu_ap_campus']['#items'][0]['value'])) {
@@ -456,7 +466,7 @@ if (module_exists('metatag')) {
         case 'ASU@Cochise':
           echo '<a href="//admission.asu.edu/transfer/asu-cochise">' . $campus['value'] . '</a>';
           break;
-        case 'Lake Havasu City':
+        case 'ASU@Lake Havasu':
           echo '<a href="//tours.asu.edu/havasu">' . $campus['value'] . '</a>';
           break;
         case 'ASU@MexicoCity':
@@ -831,9 +841,10 @@ if (module_exists('metatag')) {
                 <div id="asu-ap-online-program">
                   <h4>What are ASU's Online Programs?</h4>
                   <div class="programs_term_content no-display" id="programs_term_online">
-                    <p><a href="http://asuonline.asu.edu/" target="_blank">ASU Online</a> offers programs in an entirely
-                      online format with multiple enrollment sessions throughout the year.
-                      See <a href="http://asuonline.asu.edu/" target="_blank">http://asuonline.asu.edu/</a> for more information.</p>
+                    <p><a href="https://asuonline.asu.edu/" target="_blank">ASU Online</a> offers programs like <?php print $title; ?>
+                      in an entirely online format with multiple enrollment sessions throughout the year.</p>
+                    <p>More information on the program is available <a href="<?php print $online_program_value ?>" target="_blank">directly
+                        from ASU Online.</p>
                   </div>
                 </div>
     <?php endif; ?>
