@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUndefinedClassInspection */
 
 /**
  * POSTs form data to Salesforce.
@@ -58,6 +58,7 @@ function asu_rfi_post_to_middleware($data, $type) {
 
   // Send to any middleware?
   $form_mode = variable_get('asu_rfi_form_mode', 'test');
+  $middleware_env = variable_get('asu_rfi_middleware_env', 'prod');
   $middleware_access = variable_get('asu_rfi_enterprise_access_', 0);
 
   // If YES, start building middleware submission
@@ -100,7 +101,7 @@ function asu_rfi_post_to_middleware($data, $type) {
 
       $hashkey = sha1($mw_auth_key . '+' . $nid);
       // Select proper ENV for Salesforce GRAD POSTs.
-      $tld = ($form_mode === 'prod') ? $url = ASU_RFI_MIDDLEWARE_UNDERGRAD_PROD : ASU_RFI_MIDDLEWARE_UNDERGRAD_QA;
+      $tld = ($middleware_env === 'prod') ? ASU_RFI_MIDDLEWARE_UNDERGRAD_PROD : ASU_RFI_MIDDLEWARE_UNDERGRAD_QA;
       // Default submission URL (non-Online)
       $url = $tld . "/asu_rfi_dedupe/submit_rfi/$hashkey/$nid";
 
@@ -154,7 +155,8 @@ function asu_rfi_post_to_middleware($data, $type) {
       }
 
       // Select proper ENV for Salesforce GRAD POSTs.
-      $url = ($form_mode === 'prod') ? $url = ASU_RFI_MIDDLEWARE_GRAD_PROD . '/prospect_form_post' : ASU_RFI_MIDDLEWARE_GRAD_QA . '/prospect_form_post';
+      $tld = ($middleware_env === 'prod') ? ASU_RFI_MIDDLEWARE_GRAD_PROD : ASU_RFI_MIDDLEWARE_GRAD_QA;
+      $url = $tld . '/prospect_form_post';
 
       // Build DEFAULT Graduate data array for Salesforce
       $submission_data = array(
@@ -182,6 +184,10 @@ function asu_rfi_post_to_middleware($data, $type) {
 
     // Alter Online campus submission data
     if (strtolower($location) === "online") {
+
+      // ALL Online campus RFI submissions are supposed to go to webforms middleware - not to requestinfo.asu.edu.
+      $tld = ($middleware_env === 'prod') ? $url = ASU_RFI_MIDDLEWARE_UNDERGRAD_PROD : ASU_RFI_MIDDLEWARE_UNDERGRAD_QA;
+
       if ($type === ASU_RFI_PROSPECT_LEVEL_GRAD) {
         // Match different "Online" campus spelling
         $submission_data['campusSelection'] = "ONLNE";
@@ -252,6 +258,7 @@ function asu_rfi_post_to_middleware($data, $type) {
         flogger('asu_rfi', $curl_message, array(), 8, TRUE, TRUE, TRUE);
       } // FAILED POST
       else {
+        /** @noinspection PhpUndefinedFieldInspection */
         $created = $node_wrapper->created->value();
         $expired_message = _asu_rfi_create_expired_message($created);
         $curl_message = 'FAILED - Submission #' . $nid_info . ' to __' . $url . '__. '

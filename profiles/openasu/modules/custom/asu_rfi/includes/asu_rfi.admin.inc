@@ -7,11 +7,17 @@
  */
 function asu_rfi_admin_settings() {
   $form_modes = array('test' => 'Test', 'prod' => 'Production', 'none' => 'None (No middleware)');
+  $form_mode = variable_get('asu_rfi_form_mode', 'test');
+  $middleware_target_envs = array('test' => 'QA/Test', 'prod' => 'Production');
+  $middleware_env = variable_get('asu_rfi_middleware_env', 'prod');
+  // Middleware QA access check (for non-ASU-Enterprise sites))
+  $enterprise_access = variable_get('asu_rfi_enterprise_access_', 0);
   $special_action_modes = array(
     'all' => 'RFI Report page actions + cron jobs',
     'form_only' => 'RFI Report page actions',
   );
   $expiration_range = round((float) (ASU_RFI_SUBMISSION_EXP_PERIOD) / 86400 , 2) . ' days';
+
   ////////////////////////
 
   $form = array();
@@ -40,166 +46,19 @@ function asu_rfi_admin_settings() {
     '#markup' => $message,
   );
 
-  // Middleware access warning (for non-Enterprise sites))
-  $access_key = variable_get('asu_rfi_enterprise_access_', 0);
-  $form_mode = variable_get('asu_rfi_form_mode', 'test');
+  // RFI submissions turned off completely in the site?
   if ($form_mode === 'none') {
     $stage = array(
-      'message' => 'NOTE: No submissions will be sent onto the middleware (or the Salesforce QA environment).',
+      'message' => 'The RFI form submissions will not be sent to any RFI middleware (or Salesforce environment). To re-enable,'
+      . ' change the Test mode setting below.',
       'css' => 'messages warning',
     );
-  } elseif ($access_key === 0 ) {
-    if ($form_mode === 'test') { // All SHAs should be 32 characters long.
-      $extra_text = (defined('PANTHEON_ENVIRONMENT'))
-        ? 'Pantheon sites '
-        : 'This site ';
-      $stage = array(
-        'message' => $extra_text . ' cannot reach the QA middleware servers. "Test" mode submissions will'
-        . ' not be submitted to the middleware (or the Salesforce QA environment).',
-        'css' => 'messages error',
-      );
-    }
+    $message = '<div class="' . $stage['css'] . '">' . $stage['message'] . '</div>';
+    $form['form_stage'] = array(
+      '#type' => 'item',
+      '#markup' => $message,
+    );
   }
-  $message = '<div class="' . $stage['css'] . '">' . $stage['message'] . '</div>';
-
-  $form['form_stage'] = array(
-    '#type' => 'item',
-    '#markup' => $message,
-  );
-
-
-  // GENERAL SETTINGS
-  ///////////////////////
-
-  $form['asu_rfi_form_access'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('General settings'),
-    '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
-    '#attributes' => array('class' => array('asu-rfi-admin-field asu_rfi_form_access')),
-  );
-  $form['asu_rfi_form_access']['asu_rfi_online_url'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Online programs feed URL'),
-    '#description' => t('The URL for the asuonline.asu.edu JSON feed that'
-      . ' lists all Online campus programs. This should have been set when this module'
-      . ' was enabled, and will rarely be changed.'),
-    '#default_value' => variable_get('asu_rfi_online_url'),
-    '#size' => 60,
-    '#maxlength' => 128,
-    '#required' => TRUE,
-  );
-  $form['asu_rfi_form_access']['asu_rfi_form_mode'] = array(
-    '#type' => 'select',
-    '#title' => t('RFI forms mode'),
-    '#options' => $form_modes,
-    '#default_value' => $form_mode,
-    '#attributes' => array('class' => array('asu-rfi-admin-field')),
-    '#description' => t("Site-wide setting to select the type of middleware to which the RFI form submissions will be submitted. OPTIONS: "
-      . " * 'None' = No RFI form submissions are sent to middleware. Will be marked as 'FAILED' submissions."
-      . " * 'Test' = Will be submitted to QA middleware (to be pushed to Salesforce QA - which is not available in some web hosting environments."
-      . " * 'Production' = Submitted to PROD middleware (to be into the real Salesforce.)"),
-    '#required' => TRUE,
-  );
-  $form['asu_rfi_form_access']['expired_nodes'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Expired submissions handling'),
-    '#collapsible' => FALSE,
-    '#collapsed' => FALSE,
-    '#attributes' => array('class' => array('asu-rfi-admin-field asu-rfi-form-access asu-rfi-expiration')),
-  );
-  $form['asu_rfi_form_access']['expired_nodes']['notes'] = array(
-    '#type' => 'item',
-    '#markup' => '<p>If "Report page actions + cron jobs" are selected below (HIGHLY'
-      . ' recommended), your expired RFI submissions (' . $expiration_range
-      . ' past their initial submission date) will be automatically queued for resubmission (or deletion)'
-      . ' every time <a href="/admin/config/system/cron">a cron job runs</a> at periodic'
-      . ' intervals.</p>'
-      . ' <p>If you want to manually manage the resubmission (or deletion) of RFI submissions,'
-      . ' select "<a href="/admin/reports/asu-rfi-submissions-report">Report page</a>'
-      . ' actions ONLY". (NOT recommended). (<strong>NOTE</strong>: If a cron job has'
-      . ' already queued existing expired submissions, selecting this setting will not'
-      . ' stop their resubmission (or deletion) even if it has not happened yet.'
-      . ' It will only stop <em><strong>future</strong></em>'
-      . ' submissions from also being placed in the resubmission (or deletion) queue.)</p>'
-  );
-  $form['asu_rfi_form_access']['expired_nodes']['asu_rfi_expired_submit'] = array(
-    '#type' => 'select',
-    '#title' => t('Submit ALL expired submissions using...'),
-    '#options' => $special_action_modes,
-    '#default_value' => variable_get('asu_rfi_expired_submit', 'all'),
-    '#attributes' => array('class' => array('asu-rfi-admin-field')),
-    '#required' => TRUE,
-  );
-  $form['asu_rfi_form_access']['expired_nodes']['asu_rfi_expired_delete'] = array(
-    '#type' => 'select',
-    '#title' => t('Delete all expired submissions using...'),
-    '#options' => $special_action_modes,
-    '#default_value' => variable_get('asu_rfi_expired_delete', 'all'),
-    '#attributes' => array('class' => array('asu-rfi-admin-field')),
-    '#required' => TRUE,
-  );
-  // MAY be enabled in future (currently handled externally)
-  $form['asu_rfi_form_access']['asu_rfi_form_auth_key'] = array(
-    '#type' => 'hidden',
-    '#title' => t('Authentication code'),
-    '#default_value' => variable_get('asu_rfi_form_auth_key'),
-    '#attributes' => array('class' => array('asu-rfi-admin-field')),
-    '#description' => t('Don\'t have a code? @url.',
-      array('@url' => l(
-          'Request authentication key',
-          'https://webforms.asu.edu/content/access-rfi-middleware-request'),
-      )),
-    '#required' => FALSE,
-  );
-
-  // ERROR REPORTING
-  /////////////////////////
-
-  $form['asu_rfi_error_reporting'] = array(
-    '#type' => 'fieldset',
-    '#title' => 'Error reporting',
-    '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
-    '#description' => t('What to do if a submission fails, etc..'),
-    '#attributes' => array('class' => array('asu-rfi-admin-error-reporting')),
-  );
-  $form['asu_rfi_error_reporting']['asu_rfi_error_email'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Email(s) for error notification'),
-    '#default_value' => variable_get('asu_rfi_error_email', NULL),
-    '#attributes' => array('class' => array('asu-rfi-admin-field')),
-    '#description' => t('Email addresses to be notified if site cannot post'
-     . ' RFI submissions to Salesforce for more than 2 days. Use a comma-delimited'
-     . ' list of emails if more than one recipient. (NOTE: Keep the number of email'
-     . ' addresses here to a minimum to avoid being blocked as spam by some email (SMTP) servers.)'),
-    '#size' => 60,
-    '#maxlength' => 150,
-  );
-  $form['asu_rfi_form_access']['asu_rfi_google_analytics_key'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Site identifier for Google Analytics'),
-    '#default_value' => variable_get('asu_rfi_google_analytics_key'),
-    '#attributes' => array('class' => array('asu-rfi-admin-field')),
-    '#description' => t('Must be 6-10 alphanumeric (or dashes/underscores) characters.'
-    . ' This will be used to differentiate your RFI submissions from other website submissions in Google Analytics. Example:'
-    . ' If your site is collegename.asu.edu, use "CollegeNam", "Col-Name", etc. IMPORTANT: Once this has been set, it will'
-    . ' not be alterable in this form.'),
-    '#required' => TRUE,
-    '#disabled' => FALSE,
-  );
-  $form['undergrad_degree_type'] = array(
-    '#type' => 'hidden',
-    '#size' => 30,
-    '#maxlength' => 64,
-    '#default_value' => variable_get('asu_rfi_ugrad_degree_type'),
-  );
-  $form['grad_degree_type'] = array(
-    '#type' => 'hidden',
-    '#size' => 30,
-    '#maxlength' => 64,
-    '#default_value' => variable_get('asu_rfi_graduate_degree_type'),
-  );
 
   // CONFIRMATION SETTINGS
   ////////////////////////////
@@ -285,6 +144,187 @@ function asu_rfi_admin_settings() {
     '#siffix' => '</div>',
   );
 
+
+  // GENERAL SETTINGS
+  ///////////////////////
+
+  $form['general_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('General Settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    '#attributes' => array('class' => array('asu-rfi-admin-field asu_rfi_form_access asu-rfi-general-settings')),
+  );
+  $form['general_settings']['asu_rfi_form_mode'] = array(
+    '#type' => 'select',
+    '#title' => t('Test mode'),
+    '#options' => $form_modes,
+    '#default_value' => $form_mode,
+    '#attributes' => array('class' => array('asu-rfi-admin-field')),
+    '#description' => t("OPTIONS: <br>"
+      . " * 'None' = No RFI form submissions are sent to middleware target environment (or Salesforce). All will be treated as 'FAILED' submissions. Forms are hidden from non-admin users.<br>"
+      . " * 'Test' = Submitted to middleware target environment ONLY (not onto Salesforce), with a confirmation message returned and recorded in the RFI submission status field. Forms are hidden from non-admin users.<br>"
+      . " * 'Production' = Submitted to middleware target environment and Salesforce"),
+    '#required' => TRUE,
+  );
+
+  $form['general_settings']['expired_nodes'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Expired submissions handling'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    '#attributes' => array('class' => array('asu-rfi-admin-field asu-rfi-general-settings asu-rfi-expiration')),
+  );
+  $form['general_settings']['expired_nodes']['notes'] = array(
+    '#type' => 'item',
+    '#markup' => '<p>If "Report page actions + cron jobs" are selected below (HIGHLY'
+      . ' recommended), your expired RFI submissions (' . $expiration_range
+      . ' past their initial submission date) will be automatically queued for resubmission (or deletion)'
+      . ' every time <a href="/admin/config/system/cron">a cron job runs</a> at periodic'
+      . ' intervals.</p>'
+      . ' <p>If you want to manually manage the resubmission (or deletion) of RFI submissions,'
+      . ' select "<a href="/admin/reports/asu-rfi-submissions-report">Report page</a>'
+      . ' actions ONLY". (NOT recommended). (<strong>NOTE</strong>: If a cron job has'
+      . ' already queued existing expired submissions, selecting this setting will not'
+      . ' stop their resubmission (or deletion) even if it has not happened yet.'
+      . ' It will only stop <em><strong>future</strong></em>'
+      . ' submissions from also being placed in the resubmission (or deletion) queue.)</p>'
+  );
+  $form['general_settings']['expired_nodes']['asu_rfi_expired_submit'] = array(
+    '#type' => 'select',
+    '#title' => t('Submit ALL expired submissions using...'),
+    '#options' => $special_action_modes,
+    '#default_value' => variable_get('asu_rfi_expired_submit', 'all'),
+    '#attributes' => array('class' => array('asu-rfi-admin-field')),
+    '#required' => TRUE,
+  );
+  $form['general_settings']['expired_nodes']['asu_rfi_expired_delete'] = array(
+    '#type' => 'select',
+    '#title' => t('Delete all expired submissions using...'),
+    '#options' => $special_action_modes,
+    '#default_value' => variable_get('asu_rfi_expired_delete', 'all'),
+    '#attributes' => array('class' => array('asu-rfi-admin-field')),
+    '#required' => TRUE,
+  );
+  // MAY be enabled in future (currently handled externally)
+  $form['general_settings']['asu_rfi_form_auth_key'] = array(
+    '#type' => 'hidden',
+    '#title' => t('Authentication code'),
+    '#default_value' => variable_get('asu_rfi_form_auth_key'),
+    '#attributes' => array('class' => array('asu-rfi-admin-field')),
+    '#description' => t('Don\'t have a code? @url.',
+      array('@url' => l(
+          'Request authentication key',
+          'https://webforms.asu.edu/content/access-rfi-middleware-request'),
+      )),
+    '#required' => FALSE,
+  );
+
+  // ERROR REPORTING
+  /////////////////////////
+
+  $form['general_settings']['error_reporting'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Submission alerts',
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    '#description' => t('What to do if a submission fails, etc..'),
+    '#attributes' => array('class' => array('asu-rfi-admin-error-reporting')),
+  );
+  $form['general_settings']['error_reporting']['asu_rfi_error_email'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Email(s) for error notification'),
+    '#default_value' => variable_get('asu_rfi_error_email', NULL),
+    '#attributes' => array('class' => array('asu-rfi-admin-field')),
+    '#description' => t('Email addresses to be notified if site cannot post'
+     . ' RFI submissions to Salesforce for more than 2 days. Use a comma-delimited'
+     . ' list of emails if more than one recipient. (NOTE: Keep the number of email'
+     . ' addresses here to a minimum to avoid being blocked as spam by some email (SMTP) servers.)'),
+    '#size' => 60,
+    '#maxlength' => 150,
+  );
+
+  // DEVELOPER SETTINGS
+  /////////////////////////
+
+  $form['general_settings']['developer_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Developer settings (Advanced)'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#attributes' => array('class' => array('asu-rfi-admin-field asu-rfi-developer-settings')),
+  );
+
+  // Which middleware environment? For developers only.
+  $form['general_settings']['developer_settings']['asu_rfi_middleware_env'] = array(
+    '#type' => 'select',
+    '#title' => t('Middleware target environment'),
+    '#options' => $middleware_target_envs,
+    '#default_value' => $middleware_env,
+    '#attributes' => array('class' => array('asu-rfi-admin-field')),
+    '#required' => TRUE,
+  );
+  if ($enterprise_access === 0) {
+    $form['general_settings']['developer_settings']['asu_rfi_middleware_env']['#default_value'] = 'prod';
+    $form['general_settings']['developer_settings']['asu_rfi_middleware_env']['#disabled'] = TRUE;
+    $extra_text = (defined('PANTHEON_ENVIRONMENT'))
+      ? 'Pantheon-hosted sites like this one'
+      : 'This site';
+    $message = 'DISABLED - ' . $extra_text . ' (' . $_SERVER['HTTP_HOST'] . ') cannot reach the QA middleware servers.';
+  } else {
+    $message = t("Leave this set to the default (Production) if you don't understand this setting.<br>")
+      . "OPTIONS:<br> * 'Production' = Submitted to PROD middleware (and then pushed into the real Salesforce.)<br>"
+      . " * 'Test' = Submitted to QA middleware (and then pushed to Salesforce QA (not available in some web hosting environments.)";
+  }
+  $form['general_settings']['developer_settings']['asu_rfi_middleware_env']['#description'] = $message;
+
+  $form['general_settings']['developer_settings']['asu_rfi_google_analytics_key'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Site identifier for Google Analytics'),
+    '#default_value' => variable_get('asu_rfi_google_analytics_key'),
+    '#attributes' => array('class' => array('asu-rfi-admin-field')),
+    '#description' => t('Must be 6-10 alphanumeric (or dashes/underscores) characters.'
+    . ' This will be used to differentiate your RFI submissions from other website submissions in Google Analytics. Example:'
+    . ' If your site is collegename.asu.edu, use "CollegeNam", "Col-Name", etc. IMPORTANT: Once this has been set, it will'
+    . ' not be alterable in this form.'),
+    '#required' => TRUE,
+    '#disabled' => FALSE,
+  );
+  $form['general_settings']['developer_settings']['asu_rfi_online_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Online programs feed URL'),
+    '#description' => t('The URL for the asuonline.asu.edu JSON feed that'
+      . ' lists all Online campus programs. This should have been set when this module'
+      . ' was enabled, and will rarely be changed.'),
+    '#default_value' => variable_get('asu_rfi_online_url'),
+    '#size' => 60,
+    '#maxlength' => 128,
+    '#required' => TRUE,
+  );
+  $form['general_settings']['developer_settings']['asu_rfi_hide_online_alerts'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Hide Online "not available" alerts'),
+    '#description' => t('Suppress the "this program is not yet online" message that is displayed when'
+      . ' a degree is available in the Degree Search feed but not in the Online feed.'),
+    '#default_value' => variable_get('asu_rfi_hide_online_alerts'),
+    '#return_value' => 1,
+    '#required' => FALSE,
+  );
+
+  // HIDDEN
+  $form['undergrad_degree_type'] = array(
+    '#type' => 'hidden',
+    '#size' => 30,
+    '#maxlength' => 64,
+    '#default_value' => variable_get('asu_rfi_ugrad_degree_type'),
+  );
+  $form['grad_degree_type'] = array(
+    '#type' => 'hidden',
+    '#size' => 30,
+    '#maxlength' => 64,
+    '#default_value' => variable_get('asu_rfi_graduate_degree_type'),
+  );
+
   // EXTRA submission actions for confirmation pages
   $form['#validate'][] = '_asu_rfi_admin_settings_validate';
   $form['#submit'][] = '_asu_rfi_admin_settings_submit';
@@ -326,11 +366,13 @@ function _asu_rfi_admin_settings_validate($form, &$form_state) {
  */
 function _asu_rfi_admin_settings_submit($form, $form_state) {
   $keys = array(
+    'asu_rfi_online_url' => 0,
+    'asu_rfi_middleware_env' => 0,
+    'asu_rfi_hide_online_alerts' => 0,
     'asu_rfi_grad_confirm' => 1,
     'asu_rfi_undergrad_confirm' => 1,
     'asu_rfi_expired_delete' => 0,
     'asu_rfi_expired_submit' => 0,
-    'asu_rfi_online_url' => 0,
   );
   foreach ($keys as $element => $is_entity) {
     $key = ($is_entity === 1) ? $element . '_nid' : $element;

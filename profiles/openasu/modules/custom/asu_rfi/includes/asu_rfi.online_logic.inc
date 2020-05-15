@@ -82,5 +82,8 @@ function _asu_rfi_online_fields_alter($type, $default, $server, $college_code, $
       'sourceid' => $nid, // Overwritten with API key in Middleware.
       'enterpriseclientid' => $enterpriseclientid,
     );
+  } else {
+    flogger('asu_rfi', __FUNCTION__ . ' returning an empty array of Online campus submission fields.', array(), WATCHDOG_ERROR);
+    return array();
   }
 }

@@ -114,8 +114,9 @@ function asu_rfi_get_form_select_options($dataset, $convert_to_sf = TRUE) {
  * @return array $config
  */
 function _asu_rfi_get_select_options_config($dataset) {
-  // Always pull select options from PRODUCTION middleware to avoid being blocked by the ASU firewall.
-  $tld = 'webforms.asu.edu';
+  // Pull select options from undergrad middleware (PRODUCTION is the default to avoid being blocked by the ASU firewall.)
+  $env = variable_get('asu_rfi_middleware_env', 'prod');
+  $tld = ($env === 'prod') ? ASU_RFI_MIDDLEWARE_UNDERGRAD_PROD : ASU_RFI_MIDDLEWARE_UNDERGRAD_QA;
   $config = array();
 
   if ($dataset == 'state_province') {
@@ -164,7 +165,7 @@ function _asu_rfi_get_select_options_config($dataset) {
   }
 
   // Build out global options in $config for JSON pull
-  $config['url'] = 'https://' . $tld . '/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
+  $config['url'] = $tld . '/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
   $config['json_options'][CURLOPT_URL] = $config['url'];
   $config['json_options'][CURLOPT_RETURNTRANSFER] = 1;
   $config['json_options'][CURLOPT_HTTPHEADER] = _asu_rfi_get_curl_auth();

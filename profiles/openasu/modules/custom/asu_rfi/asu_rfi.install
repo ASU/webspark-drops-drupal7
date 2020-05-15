@@ -1,4 +1,5 @@
-<?php /** @noinspection PhpUnhandledExceptionInspection */
+<?php /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+/** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection PhpUnused */
 /** @noinspection PhpDocSignatureInspection */
 /** @noinspection PhpUnusedParameterInspection */
@@ -80,6 +81,10 @@ function asu_rfi_install() {
 
   // Check middleware access up front and store
   asu_libs_set_asset_access_value('asu_rfi');
+  // Set the RFI form mode to "Test" initially upon module installation
+  variable_set('asu_rfi_form_mode','test');
+  variable_set('asu_rfi_middleware_env', 'prod');
+  flogger('asu_rfi', 'All RFI forms are currently running in Test mode (managed in ASU RFI settings).');
 
   // Update/insert local countries DB table
   asu_rfi_get_form_select_options('country');
@@ -96,7 +101,7 @@ function asu_rfi_install() {
   if (module_exists('cas')) {
     $out = variable_get('cas_exclude', 'none');
     $out = $out . "\r\nasu_rfi/success/*\r\nasu_rfi/failure/*";
-    variable_set('cas_exclude',$out);
+    variable_set('cas_exclude', $out);
   }
 
   // If honeypot module exists, set its variable value
@@ -108,10 +113,6 @@ function asu_rfi_install() {
   if (!module_exists('entityreference_autocomplete')) {
     module_enable(array('entityreference_autocomplete'));
   }
-
-  // Set the RFI form mode to "Test" initially upon module installation
-  variable_set('asu_rfi_form_mode','test');
-  flogger('asu_rfi', 'All RFI forms are running in Test mode (managed in ASU RFI settings).');
 }
 
 /**
@@ -152,7 +153,7 @@ function asu_rfi_update_7001(&$sandbox) {
 
 /**
  * Enable Flogger, Entityreference Autocomplete modules; Update non-namespaced variable names.
- * @throws \InvalidMergeQueryException
+ * @throws InvalidMergeQueryException
  */
 function asu_rfi_update_7200(&$sandbox){
   if (!module_exists('flogger')) {
@@ -490,9 +491,12 @@ function asu_rfi_update_7208(&$sandbox) {
 }
 
 /**
- * Set middleware access value (T/F) for checking access
+ * Set middleware access value (T/F) for checking access, middleware env selection
  */
 function asu_rfi_update_7209(&$sandbox) {
   asu_libs_set_asset_access_value('asu_rfi');
+  variable_set('asu_rfi_middleware_env', 'prod');
+  variable_set('asu_rfi_hide_online_alerts', 1);
+  variable_set('asu_rfi_online_url', 'https://asuonline.asu.edu/lead-submissions-v3.3/programs');
   features_revert_module('asu_rfi_feature');
 }
