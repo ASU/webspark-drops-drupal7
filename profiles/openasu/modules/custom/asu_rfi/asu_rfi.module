@@ -1121,7 +1121,7 @@ function _asu_rfi_get_campus_location_options($pcodes) {
               }
               // Alert for Administrators to help ASUOnline be aware of issues with their degrees
               // @TODO - fix for AJAX calls related to form updates
-              if ($alerted === FALSE) {
+              if ($alerted === FALSE && (variable_get('asu_rfi_hide_online_alerts') !== 1)) {
                 global $user;
                 $desiredProgram = (isset($desiredProg) && isset($desiredProg['title']))
                   ? 'the ' . $desiredProg['title'] . ' program'
