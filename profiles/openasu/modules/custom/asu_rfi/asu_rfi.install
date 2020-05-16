@@ -500,3 +500,10 @@ function asu_rfi_update_7209(&$sandbox) {
   variable_set('asu_rfi_online_url', 'https://asuonline.asu.edu/lead-submissions-v3.3/programs');
   features_revert_module('asu_rfi_feature');
 }
+
+/**
+ * Manually re-update the RFI form's <select> elements
+ */
+function asu_rfi_update_7210(&$sandbox) {
+  _asu_rfi_update_form_options();
+}

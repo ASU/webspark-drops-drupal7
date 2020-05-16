@@ -1,6 +1,6 @@
 ### ASU Libraries Volume One 7.x-1.1, 2020-05-15
 - Added basic ASU Enterprise environment availability detection for use when ASU Enterprise webhosting assets need to
-  be available.
+  be available
 
 ### ASU Libraries Volume One 7.x-1.0, 2020-04-07
 - Transferred and renamed various validation functions from ASU RFI module

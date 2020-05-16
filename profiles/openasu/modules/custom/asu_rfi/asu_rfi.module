@@ -686,17 +686,7 @@ function asu_rfi_cron() {
   $last_ran = variable_get('asu_rfi_cron_last_ran', 0);
 
   if (($last_ran + ASU_RFI_STALE_TIME_DEFAULT) < time()) { // If we last ran over $stale_time seconds ago.
-    module_load_include('inc', 'asu_rfi', 'data/asu_rfi.form_options');
-    drupal_flush_all_caches();
-
-    // Update asset access value (Enterprise access check)
-    asu_libs_set_asset_access_value('asu_rfi');
-    // Update countries DB table
-    asu_rfi_get_form_select_options('country');
-    // Update states DB table
-    asu_rfi_get_form_select_options('state_province');
-    // Update semester dates DB table
-    asu_rfi_get_form_select_options('rfi_dedupe_list_terms');
+    _asu_rfi_update_form_options();
   }
 
   // #2 - Cron + Queue API - Delete ASU RFI nodes that have either
@@ -825,6 +815,22 @@ function _asu_rfi_cron_delete_submissions($data) {
   if (function_exists('drush_log')) {
     drush_log('Node ID ' . $data . ' deleted.', 'success');
   }
+}
+
+/**
+ * Update form select options (should've used the Queue API to ensure this ran (vs. the traditional cron runs)
+ */
+function _asu_rfi_update_form_options() {
+  module_load_include('inc', 'asu_rfi', 'data/asu_rfi.form_options');
+  drupal_flush_all_caches();
+  // Update asset access value (Enterprise access check)
+  asu_libs_set_asset_access_value('asu_rfi');
+  // Update countries DB table
+  asu_rfi_get_form_select_options('country');
+  // Update states DB table
+  asu_rfi_get_form_select_options('state_province');
+  // Update semester dates DB table
+  asu_rfi_get_form_select_options('rfi_dedupe_list_terms');
 }
 
 /*********************************************************************
