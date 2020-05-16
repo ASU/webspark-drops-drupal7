@@ -3,8 +3,8 @@
 ### ASU Academic Programs 7.x-3.1, 2020-05-15
 - The ASU@Lake Havasu campus link now works
 - Certain ASUOnline links URLs now correctly point to asuonline.asu.edu resources instead of Degree
-  Search pages.
-- The ASUOnline FAQ information at the bottom of degree pages has been updated.
+  Search pages
+- The ASUOnline FAQ information at the bottom of degree pages has been updated
 
 ### ASU Academic Programs 7.x-3.0, 2020-04-07
 ##### Architecture & Development

@@ -1,6 +1,6 @@
 asu_isearch 7.x-1.14
 --------------------
-- Removed unwanted dpm() call from past debugging
+- Removed unwanted debugging code
 
 asu_isearch 7.x-1.13
 --------------------
