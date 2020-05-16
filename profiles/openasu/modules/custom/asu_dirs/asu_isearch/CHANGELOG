@@ -1,3 +1,7 @@
+asu_isearch 7.x-1.14
+--------------------
+- Removed unwanted dpm() call from past debugging
+
 asu_isearch 7.x-1.13
 --------------------
 - Academic grammar fix
