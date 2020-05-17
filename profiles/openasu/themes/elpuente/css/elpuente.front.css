@@ -1,0 +1,102 @@
+/*
+ * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
+ * Override Bootstrap variables below.
+ */
+#asu-os-hero {
+  background-image: url(../images/bg-study-mg.jpg);
+  background-size: cover;
+  color: #fff;
+}
+#asu-os-hero h2 {
+  margin: 12px 0;
+  color: #fff;
+  font-size: 48px;
+}
+#asu-os-hero p {
+  font-size: 36px;
+  font-weight: 200;
+}
+#asu-os-hero a {
+  transition: all 0.25s ease-in-out 0s;
+}
+#asu-os-hero .row {
+  padding: 55px 0;
+}
+
+#asu-os-center {
+  background-color: #f5f5f5;
+}
+#asu-os-center h1 {
+  color: #8c1d40;
+  margin-bottom: 1em;
+}
+#asu-os-center .sellingpoints img {
+  margin-top: 10px;
+}
+#asu-os-center .sellingpoints .col-md-3 {
+  text-align: center;
+}
+#asu-os-center .row {
+  padding: 30px 0;
+}
+#asu-os-center .asu-os-logo-plus-asu {
+  padding: 15px 15px;
+}
+#asu-os-center .asu-os-center-maintext {
+  font-size: 1.5em;
+  color: #777777;
+}
+#asu-os-center .asu-os-center-subtext {
+  color: #CBCBCB;
+  letter-spacing: 1px;
+  font-weight: 500;
+  padding: 0px 10px;
+}
+#asu-os-center .talkingpoint {
+  color: #8c1d40;
+}
+
+#asu-os-foot {
+  background-image: url(../images/bg-classroom-blue.jpg);
+  background-size: cover;
+  color: white;
+  padding: 3em 0;
+  overflow: hidden;
+}
+#asu-os-foot img {
+  margin-top: -45px;
+  margin-left: -25px;
+}
+#asu-os-foot h2 {
+  color: white;
+  margin-bottom: 0;
+  margin-top: 0;
+  font-size: 3.5em;
+}
+#asu-os-foot .row {
+  padding: 35px 0;
+}
+#asu-os-foot .align-right {
+  padding-right: 40px;
+}
+
+.btn-gold {
+  background: #ffc627;
+}
+.btn-gold:hover {
+  background: #FFD053;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.align-center {
+  text-align: center;
+}
+
+@media (max-width: 991px) {
+  #asu-os-foot img {
+    display: none;
+  }
+}
