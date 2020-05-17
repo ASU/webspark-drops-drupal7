@@ -1,0 +1,25 @@
+/**
+ * OS Widget - Theme customizations
+ */
+
+@import "variables";
+@import "base";
+
+// Calendar
+$calendar-line-height: 2em;
+
+.view .date-nav-wrapper {
+  .date-prev,
+  .date-next {
+    @include border-radius(0);
+    background-color: #dfdfdf;
+    line-height: 1.6em;
+  }
+  .date-heading {
+    h3 {
+      line-height: $calendar-line-height;
+      background-color: #dfdfdf;
+      vertical-align: middle;
+    }
+  }
+}

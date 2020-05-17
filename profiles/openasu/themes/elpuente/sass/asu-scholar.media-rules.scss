@@ -1,0 +1,51 @@
+/* =MEDIA QUERIES
+-------------------------------------------------------------- */
+
+@media (max-width: 991px) {
+
+  .row .col-sm-6:nth-child(3),
+  .row .col-sm-6:nth-child(5),
+  .row .col-sm-6:nth-child(7) {
+    clear: both;
+  }
+
+}
+
+@media (max-width: 793px) {
+
+  .container-fluid .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .panel-pane.js-lightgraybg,
+  .panel-pane.js-darkgraybg,
+  .panel-pane.pane-bundle-hero,
+  .panel-pane.pane-bundle-banner {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  table {
+    margin: 1.5em 0 3.125em 0;
+  }
+
+  table.tablefield {
+    display: block;
+  }
+
+  img.media-element.pull-right {
+    float: none !important;
+    margin-left: 0;
+  }
+
+  img.media-element.pull-left {
+    float: none !important;
+    margin-right: 0;
+  }
+
+}

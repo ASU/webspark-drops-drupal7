@@ -1,0 +1,105 @@
+@import "variables";
+@import "base";
+
+#asu-os-hero {
+  background-image: url(../images/bg-study-mg.jpg);
+  background-size: cover;
+  color: #fff;
+  h2 {
+    margin: 12px 0;
+    color: #fff;
+    font-size: $font-size-h1;
+  }
+  p {
+    font-size: $font-size-h2;
+    font-weight: 200;
+  }
+  a {
+    transition: all 0.25s ease-in-out 0s;
+  }
+  .row {
+    padding: 55px 0;
+  }
+}
+
+#asu-os-center {
+  background-color: $asu-lightest-gray;
+  h1 {
+    color: $brand-primary;
+    margin-bottom: 1em;
+  }
+  .sellingpoints  {
+    img {
+      margin-top: 10px;
+    }
+    .col-md-3 {
+      text-align: center; 
+    }
+  }
+  .row {
+    padding: 30px 0;
+  }
+  .asu-os-logo-plus-asu {
+    padding: 15px 15px;
+  }
+  .asu-os-center-maintext {
+    font-size: 1.5em;
+    color: $gray-tempest;
+  }
+  .asu-os-center-subtext {
+    color: $gray-overcast;
+    letter-spacing: 1px;
+    font-weight: 500;
+    padding: 0px 10px;
+  }
+  .talkingpoint {
+    color: $brand-primary;
+  }
+}
+
+#asu-os-foot{
+  background-image: url(../images/bg-classroom-blue.jpg);
+  background-size: cover;
+  color: white;
+  padding: 3em 0;
+  overflow: hidden;
+  img {
+    margin-top: -45px;
+    margin-left: -25px;
+  }
+  h2 {
+    color: white;
+    margin-bottom: 0;
+    margin-top: 0;
+    font-size: 3.5em;
+  }
+  .row {
+    padding: 35px 0;
+  }
+  .align-right {
+    padding-right: 40px;
+  }
+}
+
+.btn-gold {
+  background: $asu-color-gold;
+  &:hover {
+    background: $gold-hover-color;
+  }
+}
+
+.align-right {
+  text-align: right;
+}
+
+.align-center {
+  text-align: center;
+}
+
+@media (max-width: 991px) {
+  #asu-os-foot {
+    img {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,774 @@
+/*
+ * Web standard styles (overrides of Bootstrap CSS)
+ *
+ * Taken from innovation_main.css in Webspark and modified here.
+ */
+
+// Includes SASS variables used in Boostrap (variables) and other custom CSS rules (base).
+@import "variables";
+@import "base";
+
+/* =BOOTSTRAP, PANOPOLY & WEBSPARK OVERRIDES
+-------------------------------------------------------------- */
+#asu_footer ul {
+  max-width: $container-large-desktop;
+  margin: 0 auto;
+  padding-left: 0;
+}
+
+body #page .region-content {
+  padding: 0;
+}
+
+#main-wrapper {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+#tabs {
+  margin-bottom: 0;
+}
+
+div.error {
+  background-repeat: no-repeat;
+  label {
+    padding-left: 2em;
+  }
+}
+
+/* =GLOBALS
+-------------------------------------------------------------- */
+body {
+  min-width: 20em;
+}
+
+p {
+  margin: 1em 0;
+}
+
+.pane-node-body {
+  margin-top: 2.85em;
+  margin-bottom: 3em;
+}
+
+.page-teaser {
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+
+div.pane-system-main-menu,
+div.pane-menu-tree {
+  margin-top: 3em;
+}
+
+#skip_to_content {
+  position: absolute;
+  left: -9999px;
+}
+
+#skip_to_content:focus{
+  position: relative;
+  left: 0;
+}
+
+
+/* =LINKS & BUTTONS
+-------------------------------------------------------------- */
+body {
+  font-weight: 200;
+}
+
+#page { // but this link styling only within the node content - not in the header/footer
+  a,
+  a:visited,
+  .ui-widget-content a {
+    border-bottom: 1px dotted $brand-primary;
+    text-decoration: none;
+    color: $brand-primary;
+    &:not(.ctools-dropdown-link, contextual-links-trigger) {
+      transition: all 0.25s ease-in-out 0s;
+    }
+  }
+
+  a:hover,
+  a:focus,
+  .ui-widget-content a:hover,
+  .ui-widget-content a:focus {
+    color: $link-hover-color;
+    text-decoration: none;
+    border-bottom: 1px dotted $link-hover-color;
+  }
+
+  a:focus,
+  .ui-widget-content a:focus {
+    outline: thin dotted;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+  }
+}
+
+button, .button, .btn, a.btn, .btn a {
+  transition: all 0.25s ease-in-out 0s;
+  word-wrap: break-word;
+}
+
+a.btn.btn-lg, .btn.btn-lg {
+  margin-top: 1.5em;
+}
+
+a.btn, .btn {
+  margin-top: 15px;
+}
+
+a.btn:hover, .btn a:hover,
+a.btn:focus, .btn a:focus {
+  border-bottom: none;
+}
+
+a.btn-secondary,
+.btn-secondary a,
+a.btn-gold,
+.btn-gold a {
+  color: $text-color;
+  border-bottom: none;
+}
+
+a.btn-blue,
+.btn-blue a,
+a.btn-primary,
+.btn-primary a {
+  color: #fff;
+  border-bottom: none;
+  &:hover {
+    color: #fff;
+  }
+}
+
+/* =TYPOGRAPHY  --- DONE
+-------------------------------------------------------------- */
+h1, .h1 {
+  margin: 1rem 1rem 1rem 0.5rem;
+  line-height: 1.2em;
+}
+h1.page-title,
+h1.page-heading,
+h1#page-title,
+h1#page-heading {
+  border-bottom: 1px solid #eee;
+  margin: 1rem 1rem 1rem 0.5rem;
+}
+
+h2, h3, h4, h5, h6, .h2, .h3, .h4, .h5, .h6 {
+  margin-bottom: 1rem; // 1.5 * base font size (16px)
+}
+
+.explore-programs h3 {
+  font-size: 1.625em;
+}
+
+h5, .h5 {
+  font-weight: bold;
+}
+
+h6, .h6 {
+  font-style: italic;
+}
+
+/* WYSIWYG style -- Lead Paragraph -- WEBSPARK-684 */
+.lead-paragraph {
+  font-family: inherit;
+  font-size: 1.5em;
+  font-weight: 200;
+  line-height: 1.4;
+}
+
+/* =HEADER
+-------------------------------------------------------------- */
+.header__sitename {
+  font-size: 1.5em;
+  font-weight: bold;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 0.5em 0 0.5em 1em !important;
+  a {
+    color: $text-color;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+#asu_hdr_imp_wrapper #asu_universal_nav_new .icn {
+  box-sizing: content-box;
+}
+
+#asu_hdr_imp_wrapper {
+  .header__sitename {
+    padding: 12px 0 12px .5em !important;
+    margin: .5rem 0 0;
+  }
+}
+
+@media (max-width: 991px) {
+  #header {
+    .container {
+      width: 100%;
+      .row {
+        margin-left: 0;
+        margin-right: 0;
+        .col-md-12 {
+          padding-left: 0;
+          padding-right: 0;
+        }
+      }
+    }
+    .container-fluid > .row > .col-md-12 {
+      width: 100%;
+    }
+  }
+  .header__sitename {
+    font-size: 0.9375em;
+    padding: 0.75em 0.9375em;
+    color: #FFF;
+    background: #505558;
+    font-weight: 600;
+    line-height: 0.75em;
+    a {
+      color: #FFF
+    }
+  }
+}
+
+/* =STICKY NAV BAR
+-------------------------------------------------------------- */
+#ASUNavMenu.affix {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+/* =IMAGES
+-------------------------------------------------------------- */
+
+/* Added from Panopoly Images CSS file (removed in Panopoly 1.21) */
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: bottom;
+  // wysiwyg image spacing
+  &.media-element{
+    &.pull-right {
+      margin-left: 1.25em;
+    }
+    &.pull-left {
+      margin-right: 1.25em;
+    }
+  }
+}
+
+.img-circle,
+p.img-circle img {
+  border-radius: 50%;
+}
+.img-rounded,
+p.img-rounded img {
+  background-color: white;
+  border: 1px solid #dddddd;
+  border-radius: 0.25em;
+  display: inline-block;
+  height: auto;
+  line-height: $line-height-base;
+  max-width: 100%;
+  padding: 0.25em;
+  transition: all 0.2s ease-in-out 0s;
+}
+
+/* =TABLES
+-------------------------------------------------------------- */
+
+table {
+  // Default table styles
+  background-color: white;
+  margin-bottom: 1.5em;
+  max-width: 100%;
+  width: 100%;
+  // WYSIWYG - default style
+  & > thead > tr {
+    th,
+    td {
+      border-bottom: 2px solid $asu-light-gray;
+      vertical-align: bottom;
+      font-weight: bold;
+    }
+  }
+  & > thead,
+  & > tbody,
+  & > tfoot {
+    & > tr > th,
+    & > tr > td {
+      border-right: 1px solid $asu-light-gray;
+      border-top: 1px solid $asu-light-gray;
+      line-height: $line-height-base;
+      padding: 8px;
+      vertical-align: top;
+    }
+  }
+  & > tbody {
+    & + tbody {
+      border-top: 2px solid $asu-light-gray;
+    }
+    & > tr:nth-child(2n) {
+      background-color: $asu-lightest-gray;
+    }
+    & > tr:nth-child(2n+1) {
+      background-color: #fff;
+    }
+  }
+  & > caption + thead,
+  & > colgroup + thead,
+  & > thead:first-child {
+    & > tr:first-child {
+      & > th,
+      & > td {
+        border-top: 0 none;
+      }
+    }
+  }
+  /* WYSIWYG Bordered table */
+  &.bordered {
+    border-bottom: 1px solid $asu-light-gray;
+    border-left: 1px solid $asu-light-gray;
+    & > thead,
+    & > tbody,
+    & > tfoot {
+      & > tr > th,
+      & > tr > td {
+        border-right: 1px solid $asu-light-gray;
+      }
+    }
+    & > tbody > tr:nth-child(2n+1) {
+      background-color: #fff;
+    }
+    & > caption + thead,
+    & > colgroup + thead,
+    & > thead:first-child {
+      & > tr:first-child {
+        & > th,
+        & > td {
+          border-top: 1px solid $asu-light-gray;
+        }
+      }
+    }
+  }
+}
+
+/* =CONTENT CALLOUTS
+-------------------------------------------------------------- */
+.node-content-callout {
+  padding: 5em 0;
+  .col-md-12 .content-wrapper {
+    max-width: 800px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+  }
+  h2 {
+    margin-bottom: 2.125em;
+    font-size: 3em;
+  }
+  .btn {
+    margin-top: 1.125em;
+  }
+  .col-md-6 {
+    img, .embedded-video {
+      margin-top: 1.375em;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .node-content-callout h2 {
+    font-size: 2.375em;
+  }
+  #asu_hdr_imp_wrapper {
+    .header__sitename {
+      margin: 0;
+    }
+  }
+}
+
+/* =PANELS
+-------------------------------------------------------------- */
+.panel {
+  background-color: #fbfbfb;
+  border: 1px solid #d7d7d7;
+}
+
+.js-darkgraybg, .js-lightgraybg {
+  .panel {
+    background-color: #fff;
+  }
+}
+
+/* =VIDEO
+-------------------------------------------------------------- */
+/* Generic video */
+.embedded-video,
+.media-youtube-video,
+.media-vimeo-video {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 0;
+  height: 0;
+  overflow: hidden;
+  object,
+  embed,
+  iframe {
+    position: absolute !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+/* =BREADCRUMBS
+-------------------------------------------------------------- */
+.easy-breadcrumb {
+  background-color: transparent;
+  margin: 2em 0;
+  padding: 0;
+  color: #828282;
+  font-size: 0.875em;
+  .easy-breadcrumb_segment-separator {
+    padding: 0 5px;
+  }
+  a {
+    border-bottom: 0 none;
+  }
+}
+
+.breadcrumb {
+  background-color: transparent;
+  font-size: .9em;
+  a {
+    color: $brand-primary;
+    border-bottom: none;
+  }
+  span {
+    padding: 0 5px;
+  }
+}
+
+/* =FLEXSLIDER SLIDESHOWS
+-------------------------------------------------------------- */
+
+.flexslider {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0 0 2.75em;
+}
+
+/* =ACCORDIONS
+-------------------------------------------------------------- */
+.ui-accordion {
+  margin: 3em 0;
+  color: $text-color;
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: 200;
+  line-height: $line-height-base;
+  .ui-accordion-header {
+    margin-top: 0;
+    .ui-icon {
+      left: auto;
+      right: 0.5em;
+    }
+  }
+  .ui-accordion-content {
+    top: 0;
+    border: 1px solid $asu-lighter-gray;
+    border-bottom: 0 none;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding: 1.25em;
+  }
+  &:last-of-type {
+    border-bottom: 1px solid $asu-lighter-gray;
+  }
+  .accordion-content {
+    color: $text-color;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    font-weight: 200;
+    line-height: $line-height-base;
+  }
+  .ui-state-active .ui-icon,
+  .ui-state-default .ui-icon,
+  .ui-accordion .ui-state-active .ui-icon {
+    background-image: url("../images/accordion-arrows.png");
+  }
+  .ui-icon-triangle-1-e {
+    background-position: 0 0;
+  }
+  .ui-state-hover .ui-icon-triangle-1-e,
+  .ui-icon-triangle-1-s {
+    background-position: 0 -13px;
+  }
+  .ui-icon {
+    height: 13px;
+    width: 13px;
+  }
+}
+
+h4.ui-accordion-header {
+  padding: 0.625em 1.25em;
+  text-transform: uppercase;
+  font-size: $font-size-base;
+  &.ui-corner-all,
+  &.ui-corner-top {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+  }
+  &.ui-state-default {
+    background-color: #fff;
+    border: 1px solid $asu-lighter-gray;
+    border-bottom: 1px solid #fff;
+    color: #909090;
+    &:last-of-type {
+      border: 1px solid $asu-lighter-gray;
+    }
+  }
+  &.ui-state-hover {
+    color: #111;
+  }
+  &.ui-state-active {
+    border: 1px solid $asu-lighter-gray;
+    border-bottom: 3px solid #111;
+    color: #111;
+  }
+}
+
+/* =ALERTS
+-------------------------------------------------------------- */
+
+.alert {
+  margin-top: 1.875em;
+  padding: 1.25em;
+  a.close {
+    font-size: 1.375em;
+    opacity: 1;
+    color: #fff;
+    &:hover {
+      color: #000;
+    }
+  }
+}
+.alert-warning *,
+.alert-warning a.close {
+  color: #000;
+  &:hover {
+    color: #fff;
+    margin: 1em 0;
+  }
+}
+// Clean up dpm() output for easier debugging
+.alert > ul > li > [class^=krumo] {
+  all: initial;
+}
+
+/* =ADMIN UI
+-------------------------------------------------------------- */
+
+/* Node edit */
+
+#top-content #tabs .nav-pills {
+  padding-top: 1em;
+  li {
+    a {
+      background-color: $asu-lightest-gray;
+      &:hover {
+        background-color: $asu-lighter-gray;
+        color: #000;
+      }
+    }
+  }
+  & > li.active {
+    & > a,
+    & > a:hover,
+    & > a:focus {
+      background-color: $brand-primary;
+    }
+  }
+}
+
+/* IPE */
+
+#panels-ipe-control-container a {
+  border-bottom: none;
+}
+
+/* Ctools Modals */
+
+.ctools-modal-content {
+  .btn {
+    margin-top: 3px;
+    padding: 0.25em 0.625em;
+    font-size: 0.6925em;
+  }
+  #edit-settings-spacing {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+    -webkit-column-width: 15em;
+    -moz-column-width: 15em;
+    column-width: 15em;
+  }
+}
+
+#modalContent .form-submit.btn {
+  margin-bottom: 1em;
+  padding: 0.375em 1.25em;
+  font-size: 1.125em;
+}
+
+.panels-section-column-categories .panels-categories-box {
+  margin-bottom: 0.5em;
+}
+
+h2.widget-list {
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0 0 0 10px;
+}
+
+.panels-section-column .content-type-button {
+  top: 3px;
+  line-height: 1.35;
+}
+
+ul.help-text {
+  background-color: $asu-lightest-gray;
+  padding: 0.5em 1em;
+  li {
+    list-style: none;
+    padding: 2px 0;
+    line-height: 1.25;
+    &.help-title {
+      font-size: 14px;
+      font-weight: bold;
+    }
+  }
+}
+
+/* =100% width fix for Bootstrap limitation
+----------------------------------------------------- */
+
+#header {
+  .container,
+  & > .container .row .col-md-12 {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.section > .container,
+#footer > .container,
+#page-footer > .container,
+.asu-global--outer {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.section > .container .row,
+#footer > .container .row,
+#page-footer > .container .row,
+#page-wrapper,
+.asu-global--inner {
+  max-width: $container-large-desktop;
+  margin: 0 auto;
+}
+
+.section > .container .row-full,
+#footer > .container .row-full,
+#page-footer > .container .row-full {
+  width: 100% !important;
+  max-width: none;
+}
+
+.section > .container .row-full .col-md-12,
+#footer > .container .row-full .col-md-12,
+#page-footer > .container .row-full .col-md-12 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.section > .container .row-full [class^="pane-"],
+#footer > .container .row-full .content,
+#page-footer > .container .row-full .content,
+#asu_hdr, .asu-global--inner--padding {
+  max-width: $container-large-desktop;
+  margin: 0 auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+#asu_hdr_title_gen>div {
+  max-width: $container-large-desktop;
+  margin: 0 auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.row {
+  padding: 0;
+  margin: 0;
+}
+
+#page-footer {
+  background-color: #1E1E1E;
+  #block-asu-brand-asu-brand-footer {
+    background-color: #E5E5E5;
+  }
+}
+
+/* Token browsing modal fixes */
+
+.ui-widget-content.ui-dialog.token-browser-container {
+  background-color: #fff;
+  padding: 0.5em;
+  border: 1px solid #ddd;
+}
+.ui-widget-content.ui-dialog.token-browser-container,
+.token-browser-container .ui-dialog-titlebar {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.token-browser-container {
+  .ui-dialog-titlebar {
+    background-color: #eaeaec;
+  }
+  .ui-dialog-title {
+    color: #333;
+    padding-left: 1em;
+  }
+  table.treeTable > tbody > tr > td:not(first-child) {
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+  }
+}
+
+/* OS - Boxes customizations */
+
+.block-boxes-os_sv_list_box {
+  // Events list
+  h1.node-title {
+    margin-top: 0px;
+  }
+}

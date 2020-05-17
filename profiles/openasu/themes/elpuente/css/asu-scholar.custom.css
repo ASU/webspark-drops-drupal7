@@ -1,0 +1,715 @@
+/*
+ * Web standard styles (overrides of Bootstrap CSS)
+ *
+ * Taken from innovation_main.css in Webspark and modified here.
+ */
+/*
+ * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
+ * Override Bootstrap variables below.
+ */
+/* =BOOTSTRAP, PANOPOLY & WEBSPARK OVERRIDES
+-------------------------------------------------------------- */
+#asu_footer ul {
+  max-width: 1170px;
+  margin: 0 auto;
+  padding-left: 0;
+}
+
+body #page .region-content {
+  padding: 0;
+}
+
+#main-wrapper {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+#tabs {
+  margin-bottom: 0;
+}
+
+div.error {
+  background-repeat: no-repeat;
+}
+div.error label {
+  padding-left: 2em;
+}
+
+/* =GLOBALS
+-------------------------------------------------------------- */
+body {
+  min-width: 20em;
+}
+
+p {
+  margin: 1em 0;
+}
+
+.pane-node-body {
+  margin-top: 2.85em;
+  margin-bottom: 3em;
+}
+
+.page-teaser {
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+
+div.pane-system-main-menu,
+div.pane-menu-tree {
+  margin-top: 3em;
+}
+
+#skip_to_content {
+  position: absolute;
+  left: -9999px;
+}
+
+#skip_to_content:focus {
+  position: relative;
+  left: 0;
+}
+
+/* =LINKS & BUTTONS
+-------------------------------------------------------------- */
+body {
+  font-weight: 200;
+}
+
+#page a,
+#page a:visited,
+#page .ui-widget-content a {
+  border-bottom: 1px dotted #8c1d40;
+  text-decoration: none;
+  color: #8c1d40;
+}
+#page a:not(.ctools-dropdown-link, contextual-links-trigger),
+#page a:visited:not(.ctools-dropdown-link, contextual-links-trigger),
+#page .ui-widget-content a:not(.ctools-dropdown-link, contextual-links-trigger) {
+  transition: all 0.25s ease-in-out 0s;
+}
+#page a:hover,
+#page a:focus,
+#page .ui-widget-content a:hover,
+#page .ui-widget-content a:focus {
+  color: #d23153;
+  text-decoration: none;
+  border-bottom: 1px dotted #d23153;
+}
+#page a:focus,
+#page .ui-widget-content a:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+button, .button, .btn, a.btn, .btn a {
+  transition: all 0.25s ease-in-out 0s;
+  word-wrap: break-word;
+}
+
+a.btn.btn-lg, .btn.btn-lg {
+  margin-top: 1.5em;
+}
+
+a.btn, .btn {
+  margin-top: 15px;
+}
+
+a.btn:hover, .btn a:hover,
+a.btn:focus, .btn a:focus {
+  border-bottom: none;
+}
+
+a.btn-secondary,
+.btn-secondary a,
+a.btn-gold,
+.btn-gold a {
+  color: #2a2a2a;
+  border-bottom: none;
+}
+
+a.btn-blue,
+.btn-blue a,
+a.btn-primary,
+.btn-primary a {
+  color: #fff;
+  border-bottom: none;
+}
+a.btn-blue:hover,
+.btn-blue a:hover,
+a.btn-primary:hover,
+.btn-primary a:hover {
+  color: #fff;
+}
+
+/* =TYPOGRAPHY  --- DONE
+-------------------------------------------------------------- */
+h1, .h1 {
+  margin: 1rem 1rem 1rem 0.5rem;
+  line-height: 1.2em;
+}
+
+h1.page-title,
+h1.page-heading,
+h1#page-title,
+h1#page-heading {
+  border-bottom: 1px solid #eee;
+  margin: 1rem 1rem 1rem 0.5rem;
+}
+
+h2, h3, h4, h5, h6, .h2, .h3, .h4, .h5, .h6 {
+  margin-bottom: 1rem;
+}
+
+.explore-programs h3 {
+  font-size: 1.625em;
+}
+
+h5, .h5 {
+  font-weight: bold;
+}
+
+h6, .h6 {
+  font-style: italic;
+}
+
+/* WYSIWYG style -- Lead Paragraph -- WEBSPARK-684 */
+.lead-paragraph {
+  font-family: inherit;
+  font-size: 1.5em;
+  font-weight: 200;
+  line-height: 1.4;
+}
+
+/* =HEADER
+-------------------------------------------------------------- */
+.header__sitename {
+  font-size: 1.5em;
+  font-weight: bold;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 0.5em 0 0.5em 1em !important;
+}
+.header__sitename a {
+  color: #2a2a2a;
+}
+.header__sitename a:hover {
+  text-decoration: none;
+}
+
+#asu_hdr_imp_wrapper #asu_universal_nav_new .icn {
+  box-sizing: content-box;
+}
+
+#asu_hdr_imp_wrapper .header__sitename {
+  padding: 12px 0 12px .5em !important;
+  margin: .5rem 0 0;
+}
+
+@media (max-width: 991px) {
+  #header .container {
+    width: 100%;
+  }
+  #header .container .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  #header .container .row .col-md-12 {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  #header .container-fluid > .row > .col-md-12 {
+    width: 100%;
+  }
+
+  .header__sitename {
+    font-size: 0.9375em;
+    padding: 0.75em 0.9375em;
+    color: #FFF;
+    background: #505558;
+    font-weight: 600;
+    line-height: 0.75em;
+  }
+  .header__sitename a {
+    color: #FFF;
+  }
+}
+/* =STICKY NAV BAR
+-------------------------------------------------------------- */
+#ASUNavMenu.affix {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+/* =IMAGES
+-------------------------------------------------------------- */
+/* Added from Panopoly Images CSS file (removed in Panopoly 1.21) */
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: bottom;
+}
+img.media-element.pull-right {
+  margin-left: 1.25em;
+}
+img.media-element.pull-left {
+  margin-right: 1.25em;
+}
+
+.img-circle,
+p.img-circle img {
+  border-radius: 50%;
+}
+
+.img-rounded,
+p.img-rounded img {
+  background-color: white;
+  border: 1px solid #dddddd;
+  border-radius: 0.25em;
+  display: inline-block;
+  height: auto;
+  line-height: 1.44;
+  max-width: 100%;
+  padding: 0.25em;
+  transition: all 0.2s ease-in-out 0s;
+}
+
+/* =TABLES
+-------------------------------------------------------------- */
+table {
+  background-color: white;
+  margin-bottom: 1.5em;
+  max-width: 100%;
+  width: 100%;
+  /* WYSIWYG Bordered table */
+}
+table > thead > tr th,
+table > thead > tr td {
+  border-bottom: 2px solid #b7b7b7;
+  vertical-align: bottom;
+  font-weight: bold;
+}
+table > thead > tr > th, table > thead > tr > td, table > tbody > tr > th, table > tbody > tr > td, table > tfoot > tr > th, table > tfoot > tr > td {
+  border-right: 1px solid #b7b7b7;
+  border-top: 1px solid #b7b7b7;
+  line-height: 1.44;
+  padding: 8px;
+  vertical-align: top;
+}
+table > tbody + tbody {
+  border-top: 2px solid #b7b7b7;
+}
+table > tbody > tr:nth-child(2n) {
+  background-color: #f5f5f5;
+}
+table > tbody > tr:nth-child(2n+1) {
+  background-color: #fff;
+}
+table > caption + thead > tr:first-child > th, table > caption + thead > tr:first-child > td, table > colgroup + thead > tr:first-child > th, table > colgroup + thead > tr:first-child > td, table > thead:first-child > tr:first-child > th, table > thead:first-child > tr:first-child > td {
+  border-top: 0 none;
+}
+table.bordered {
+  border-bottom: 1px solid #b7b7b7;
+  border-left: 1px solid #b7b7b7;
+}
+table.bordered > thead > tr > th, table.bordered > thead > tr > td, table.bordered > tbody > tr > th, table.bordered > tbody > tr > td, table.bordered > tfoot > tr > th, table.bordered > tfoot > tr > td {
+  border-right: 1px solid #b7b7b7;
+}
+table.bordered > tbody > tr:nth-child(2n+1) {
+  background-color: #fff;
+}
+table.bordered > caption + thead > tr:first-child > th, table.bordered > caption + thead > tr:first-child > td, table.bordered > colgroup + thead > tr:first-child > th, table.bordered > colgroup + thead > tr:first-child > td, table.bordered > thead:first-child > tr:first-child > th, table.bordered > thead:first-child > tr:first-child > td {
+  border-top: 1px solid #b7b7b7;
+}
+
+/* =CONTENT CALLOUTS
+-------------------------------------------------------------- */
+.node-content-callout {
+  padding: 5em 0;
+}
+.node-content-callout .col-md-12 .content-wrapper {
+  max-width: 800px;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+.node-content-callout h2 {
+  margin-bottom: 2.125em;
+  font-size: 3em;
+}
+.node-content-callout .btn {
+  margin-top: 1.125em;
+}
+.node-content-callout .col-md-6 img, .node-content-callout .col-md-6 .embedded-video {
+  margin-top: 1.375em;
+}
+
+@media (max-width: 768px) {
+  .node-content-callout h2 {
+    font-size: 2.375em;
+  }
+
+  #asu_hdr_imp_wrapper .header__sitename {
+    margin: 0;
+  }
+}
+/* =PANELS
+-------------------------------------------------------------- */
+.panel {
+  background-color: #fbfbfb;
+  border: 1px solid #d7d7d7;
+}
+
+.js-darkgraybg .panel, .js-lightgraybg .panel {
+  background-color: #fff;
+}
+
+/* =VIDEO
+-------------------------------------------------------------- */
+/* Generic video */
+.embedded-video,
+.media-youtube-video,
+.media-vimeo-video {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 0;
+  height: 0;
+  overflow: hidden;
+}
+.embedded-video object,
+.embedded-video embed,
+.embedded-video iframe,
+.media-youtube-video object,
+.media-youtube-video embed,
+.media-youtube-video iframe,
+.media-vimeo-video object,
+.media-vimeo-video embed,
+.media-vimeo-video iframe {
+  position: absolute !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* =BREADCRUMBS
+-------------------------------------------------------------- */
+.easy-breadcrumb {
+  background-color: transparent;
+  margin: 2em 0;
+  padding: 0;
+  color: #828282;
+  font-size: 0.875em;
+}
+.easy-breadcrumb .easy-breadcrumb_segment-separator {
+  padding: 0 5px;
+}
+.easy-breadcrumb a {
+  border-bottom: 0 none;
+}
+
+.breadcrumb {
+  background-color: transparent;
+  font-size: .9em;
+}
+.breadcrumb a {
+  color: #8c1d40;
+  border-bottom: none;
+}
+.breadcrumb span {
+  padding: 0 5px;
+}
+
+/* =FLEXSLIDER SLIDESHOWS
+-------------------------------------------------------------- */
+.flexslider {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0 0 2.75em;
+}
+
+/* =ACCORDIONS
+-------------------------------------------------------------- */
+.ui-accordion {
+  margin: 3em 0;
+  color: #2a2a2a;
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 200;
+  line-height: 1.44;
+}
+.ui-accordion .ui-accordion-header {
+  margin-top: 0;
+}
+.ui-accordion .ui-accordion-header .ui-icon {
+  left: auto;
+  right: 0.5em;
+}
+.ui-accordion .ui-accordion-content {
+  top: 0;
+  border: 1px solid #e9e9e9;
+  border-bottom: 0 none;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding: 1.25em;
+}
+.ui-accordion:last-of-type {
+  border-bottom: 1px solid #e9e9e9;
+}
+.ui-accordion .accordion-content {
+  color: #2a2a2a;
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 200;
+  line-height: 1.44;
+}
+.ui-accordion .ui-state-active .ui-icon,
+.ui-accordion .ui-state-default .ui-icon,
+.ui-accordion .ui-accordion .ui-state-active .ui-icon {
+  background-image: url("../images/accordion-arrows.png");
+}
+.ui-accordion .ui-icon-triangle-1-e {
+  background-position: 0 0;
+}
+.ui-accordion .ui-state-hover .ui-icon-triangle-1-e,
+.ui-accordion .ui-icon-triangle-1-s {
+  background-position: 0 -13px;
+}
+.ui-accordion .ui-icon {
+  height: 13px;
+  width: 13px;
+}
+
+h4.ui-accordion-header {
+  padding: 0.625em 1.25em;
+  text-transform: uppercase;
+  font-size: 16px;
+}
+h4.ui-accordion-header.ui-corner-all, h4.ui-accordion-header.ui-corner-top {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+h4.ui-accordion-header.ui-state-default {
+  background-color: #fff;
+  border: 1px solid #e9e9e9;
+  border-bottom: 1px solid #fff;
+  color: #909090;
+}
+h4.ui-accordion-header.ui-state-default:last-of-type {
+  border: 1px solid #e9e9e9;
+}
+h4.ui-accordion-header.ui-state-hover {
+  color: #111;
+}
+h4.ui-accordion-header.ui-state-active {
+  border: 1px solid #e9e9e9;
+  border-bottom: 3px solid #111;
+  color: #111;
+}
+
+/* =ALERTS
+-------------------------------------------------------------- */
+.alert {
+  margin-top: 1.875em;
+  padding: 1.25em;
+}
+.alert a.close {
+  font-size: 1.375em;
+  opacity: 1;
+  color: #fff;
+}
+.alert a.close:hover {
+  color: #000;
+}
+
+.alert-warning *,
+.alert-warning a.close {
+  color: #000;
+}
+.alert-warning *:hover,
+.alert-warning a.close:hover {
+  color: #fff;
+  margin: 1em 0;
+}
+
+.alert > ul > li > [class^=krumo] {
+  all: initial;
+}
+
+/* =ADMIN UI
+-------------------------------------------------------------- */
+/* Node edit */
+#top-content #tabs .nav-pills {
+  padding-top: 1em;
+}
+#top-content #tabs .nav-pills li a {
+  background-color: #f5f5f5;
+}
+#top-content #tabs .nav-pills li a:hover {
+  background-color: #e9e9e9;
+  color: #000;
+}
+#top-content #tabs .nav-pills > li.active > a, #top-content #tabs .nav-pills > li.active > a:hover, #top-content #tabs .nav-pills > li.active > a:focus {
+  background-color: #8c1d40;
+}
+
+/* IPE */
+#panels-ipe-control-container a {
+  border-bottom: none;
+}
+
+/* Ctools Modals */
+.ctools-modal-content .btn {
+  margin-top: 3px;
+  padding: 0.25em 0.625em;
+  font-size: 0.6925em;
+}
+.ctools-modal-content #edit-settings-spacing {
+  -webkit-column-count: 3;
+  -moz-column-count: 3;
+  column-count: 3;
+  -webkit-column-width: 15em;
+  -moz-column-width: 15em;
+  column-width: 15em;
+}
+
+#modalContent .form-submit.btn {
+  margin-bottom: 1em;
+  padding: 0.375em 1.25em;
+  font-size: 1.125em;
+}
+
+.panels-section-column-categories .panels-categories-box {
+  margin-bottom: 0.5em;
+}
+
+h2.widget-list {
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0 0 0 10px;
+}
+
+.panels-section-column .content-type-button {
+  top: 3px;
+  line-height: 1.35;
+}
+
+ul.help-text {
+  background-color: #f5f5f5;
+  padding: 0.5em 1em;
+}
+ul.help-text li {
+  list-style: none;
+  padding: 2px 0;
+  line-height: 1.25;
+}
+ul.help-text li.help-title {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* =100% width fix for Bootstrap limitation
+----------------------------------------------------- */
+#header .container, #header > .container .row .col-md-12 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.section > .container,
+#footer > .container,
+#page-footer > .container,
+.asu-global--outer {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.section > .container .row,
+#footer > .container .row,
+#page-footer > .container .row,
+#page-wrapper,
+.asu-global--inner {
+  max-width: 1170px;
+  margin: 0 auto;
+}
+
+.section > .container .row-full,
+#footer > .container .row-full,
+#page-footer > .container .row-full {
+  width: 100% !important;
+  max-width: none;
+}
+
+.section > .container .row-full .col-md-12,
+#footer > .container .row-full .col-md-12,
+#page-footer > .container .row-full .col-md-12 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.section > .container .row-full [class^="pane-"],
+#footer > .container .row-full .content,
+#page-footer > .container .row-full .content,
+#asu_hdr, .asu-global--inner--padding {
+  max-width: 1170px;
+  margin: 0 auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+#asu_hdr_title_gen > div {
+  max-width: 1170px;
+  margin: 0 auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.row {
+  padding: 0;
+  margin: 0;
+}
+
+#page-footer {
+  background-color: #1E1E1E;
+}
+#page-footer #block-asu-brand-asu-brand-footer {
+  background-color: #E5E5E5;
+}
+
+/* Token browsing modal fixes */
+.ui-widget-content.ui-dialog.token-browser-container {
+  background-color: #fff;
+  padding: 0.5em;
+  border: 1px solid #ddd;
+}
+
+.ui-widget-content.ui-dialog.token-browser-container,
+.token-browser-container .ui-dialog-titlebar {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+
+.token-browser-container .ui-dialog-titlebar {
+  background-color: #eaeaec;
+}
+.token-browser-container .ui-dialog-title {
+  color: #333;
+  padding-left: 1em;
+}
+.token-browser-container table.treeTable > tbody > tr > td:not(first-child) {
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+}
+
+/* OS - Boxes customizations */
+.block-boxes-os_sv_list_box h1.node-title {
+  margin-top: 0px;
+}

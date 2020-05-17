@@ -1,0 +1,75 @@
+/**
+*	Web Standard Styling, to be accompanied by a js file
+**/
+@import "variables";
+@import "base";
+
+$asu-nav-color: white;
+
+#page.container {
+  max-width: $container-large-desktop;
+  width: inherit;
+}
+
+#block-asu-primary-menu {
+  left: 0;
+  margin-left: 0;
+  background-color: $asu-darker-gray;
+  width: 100%;
+  a {
+    font-family: $font-family-base;
+    color: $asu-nav-color;
+    font-weight: bold;
+    font-size: $font-size-base;
+    padding: 21px 25px;
+  }
+  & > ul.nice-menu {
+    max-width:  1124px;;
+    li {
+      ul {
+        background: $asu-darkest-gray;
+        border-top: 0;
+      }
+      &:hover,
+      a.active {
+        color: $asu-color-gold;
+        background: #000000 !important;
+        border-radius: 0 0 4px 4px;
+      }
+    }
+    & > li > ul {
+      margin-top: 18px;
+      border-radius: 0 0 4px 4px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+      & > li a {
+        font-weight: normal;
+      }
+    }
+    & > li,
+    & > li > a {
+      transition: all 0.25s ease-in-out 0s;
+      &:hover {
+        color: $asu-color-gold;
+        background: #000000 !important;
+      }
+    }
+    &.nice-menu-down {
+      li ul li ul {
+        left: 100%;
+        margin-left: -4px;
+      }
+    }
+    a > i {
+      margin-left: 5px;
+    }
+    display: block;
+    margin: auto;
+    float: none;
+  }
+  .nice-menu-down {
+    z-index: 500;
+  }
+  @media screen and (max-width: 990px){
+    display: none;
+  }
+}

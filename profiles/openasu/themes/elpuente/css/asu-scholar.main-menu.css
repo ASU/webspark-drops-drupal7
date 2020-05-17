@@ -1,0 +1,71 @@
+/**
+*	Web Standard Styling, to be accompanied by a js file
+**/
+/*
+ * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
+ * Override Bootstrap variables below.
+ */
+#page.container {
+  max-width: 1170px;
+  width: inherit;
+}
+
+#block-asu-primary-menu {
+  left: 0;
+  margin-left: 0;
+  background-color: #353535;
+  width: 100%;
+}
+#block-asu-primary-menu a {
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 21px 25px;
+}
+#block-asu-primary-menu > ul.nice-menu {
+  max-width: 1124px;
+  display: block;
+  margin: auto;
+  float: none;
+}
+#block-asu-primary-menu > ul.nice-menu li ul {
+  background: #1f1f1f;
+  border-top: 0;
+}
+#block-asu-primary-menu > ul.nice-menu li:hover,
+#block-asu-primary-menu > ul.nice-menu li a.active {
+  color: #ffc627;
+  background: #000000 !important;
+  border-radius: 0 0 4px 4px;
+}
+#block-asu-primary-menu > ul.nice-menu > li > ul {
+  margin-top: 18px;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+#block-asu-primary-menu > ul.nice-menu > li > ul > li a {
+  font-weight: normal;
+}
+#block-asu-primary-menu > ul.nice-menu > li, #block-asu-primary-menu > ul.nice-menu > li > a {
+  transition: all 0.25s ease-in-out 0s;
+}
+#block-asu-primary-menu > ul.nice-menu > li:hover, #block-asu-primary-menu > ul.nice-menu > li > a:hover {
+  color: #ffc627;
+  background: #000000 !important;
+}
+#block-asu-primary-menu > ul.nice-menu.nice-menu-down li ul li ul {
+  left: 100%;
+  margin-left: -4px;
+}
+#block-asu-primary-menu > ul.nice-menu a > i {
+  margin-left: 5px;
+}
+#block-asu-primary-menu .nice-menu-down {
+  z-index: 500;
+}
+@media screen and (max-width: 990px) {
+  #block-asu-primary-menu {
+    display: none;
+  }
+}

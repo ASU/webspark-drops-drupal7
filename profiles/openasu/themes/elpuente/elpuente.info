@@ -1,0 +1,87 @@
+;----------// Theme Information
+
+name        = ASU Scholar
+description = The base of ASU theming on top of an Openscholar base theme.
+core        = 7.x
+base theme  = os_basetheme
+release     = 7.x-1.0
+engine      = phptemplate
+screenshot  = screenshot.png
+;  flavor_name = ""
+plugins[os][flavor] = flavors
+
+os[widgets][boxes-site_logo] = false
+os[theme_type]   = 'vsite'
+os[theme_access] = 'public'
+os[cp_layout_css] = cp-layout-map.css
+
+;----------// Stylesheets
+; Bootstrap core
+stylesheets[all][] = css/elpuente.core-bootstrap.css
+; Layout customizations
+;stylesheets[all][] = css/elpuente.layout.css
+; Main menu CSS
+stylesheets[all][] = css/elpuente.main-menu.css
+; OS Widgets CSS
+stylesheets[all][] = css/elpuente.os-widgets.css
+; Last CSS sheets to overrule all others - including Innovation CSS import
+stylesheets[all][] = css/elpuente.custom.css
+stylesheets[all][] = css/elpuente.media-rules.css
+
+;----------// Theme Javascript
+
+scripts[] = js/elpuente.js
+
+;----------// Theme Settings
+
+  ; Layout settings - Standard bigscreen
+settings[bigscreen_layout]         = 'three_col_grail'
+settings[bigscreen_page_unit]      = '%'
+settings[bigscreen_sidebar_unit]   = '%'
+settings[bigscreen_max_width_unit] = 'px'
+settings[bigscreen_page_width]     = 50
+settings[bigscreen_sidebar_first]  = 25
+settings[bigscreen_sidebar_second] = 25
+settings[bigscreen_set_max_width]  = 1
+settings[bigscreen_max_width]      = 1140
+settings[bigscreen_media_query]    = 'only screen and (min-width:1025px)'
+
+
+  ; Layout settings - Tablet landscape
+settings[tablet_landscape_layout]         = 'three_col_grail'
+settings[tablet_landscape_page_unit]      = '%'
+settings[tablet_landscape_sidebar_unit]   = '%'
+settings[tablet_landscape_page_width]     = 100
+settings[tablet_landscape_sidebar_first]  = 20
+settings[tablet_landscape_sidebar_second] = 20
+settings[tablet_landscape_media_query]    = 'only screen and (min-width:769px) and (max-width:1024px)'
+
+
+  ; Layout settings - Tablet portrait
+settings[tablet_portrait_layout]         = 'one_col_stack'
+settings[tablet_portrait_page_unit]      = '%'
+settings[tablet_portrait_sidebar_unit]   = '%'
+settings[tablet_portrait_page_width]     = 100
+settings[tablet_portrait_sidebar_first]  = 100
+settings[tablet_portrait_sidebar_second] = 100
+settings[tablet_portrait_media_query]    = 'only screen and (min-width:481px) and (max-width:768px)'
+
+
+  ; Layout settings - Smartphone landscape
+settings[smartphone_landscape_layout]         = 'one_col_stack'
+settings[smartphone_landscape_page_unit]      = '%'
+settings[smartphone_landscape_sidebar_unit]   = '%'
+settings[smartphone_landscape_page_width]     = 100
+settings[smartphone_landscape_sidebar_first]  = 100
+settings[smartphone_landscape_sidebar_second] = 100
+settings[smartphone_landscape_media_query]    = 'only screen and (min-width:321px) and (max-width:480px)'
+
+
+  ; Layout settings - Smartphone portrait
+settings[smartphone_portrait_layout]         = 'one_col_stack'
+settings[smartphone_portrait_page_unit]      = '%'
+settings[smartphone_portrait_sidebar_unit]   = '%'
+settings[smartphone_portrait_page_width]     = 100
+settings[smartphone_portrait_sidebar_first]  = 100
+settings[smartphone_portrait_sidebar_second] = 100
+settings[smartphone_portrait_media_query]    = 'only screen and (max-width:320px)'
