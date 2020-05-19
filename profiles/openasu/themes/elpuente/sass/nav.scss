@@ -1,0 +1,538 @@
+/**
+ * moved over from Innovationn
+ * Nothing done
+ */
+
+/* =NAVBAR
+-------------------------------------------------------------- */
+.navmenu {
+  background-color: #353535;
+}
+.navmenu .container {
+  padding-left: 0;
+}
+.nav > li > a {
+  display: inline-block;
+}
+.navbar-nav > li > a {
+  color: #ededed;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 1;
+  padding: 20px 25px 20px 25px;
+}
+.navbar-nav > li.dropdown > a {
+  padding: 20px 0 20px 25px;
+}
+.navbar-nav > .active,
+.navbar-nav > .active > a {
+  background-color: #000;
+  color: #ededed;
+}
+.navbar-nav > li:hover > a,
+.navbar-nav > li:focus > a,
+.navbar-nav > .active:hover > a,
+.navbar-nav > .active:focus > a,
+.navbar-nav > li > a:hover,
+.navbar-nav > li > a:focus,
+.nav .open > a,
+.nav .open > a:hover,
+.nav .open > a:focus,
+.navbar-nav > .active > a:hover,
+.navbar-nav > .active > a:focus {
+  background-color: #000;
+  color: #ffc627;
+}
+.navbar-nav > li > a.dropdown-toggle {
+  padding: 20px 25px 20px 7px;
+}
+.caret {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid;
+  margin-left: 2px;
+}
+.navbar-nav .dropdown-menu {
+  background-color: #1e1e1e;
+  border: 1px solid #1e1e1e;
+}
+.navbar-nav .dropdown-menu > li > a  {
+  color: #ededed;
+  font-size: 15px;
+  font-weight: normal;
+  line-height: 1;
+  padding: 9px 25px 10px;
+}
+.navbar-nav .dropdown-menu > li > a:hover,
+.navbar-nav .dropdown-menu > li > a:focus {
+  background-color: #000;
+  color: #ffc627;
+}
+.navbar-nav > li:focus > a,
+.navbar-nav > .active:focus > a,
+.navbar-nav > li > a:focus,
+.nav .open > a:focus,
+.navbar-nav > .active > a:focus
+.navbar-nav .dropdown-menu > li > a:focus {
+  outline: 2px solid #4D90FE;
+  -webkit-box-shadow: 0px 0px 5px  #4D90FE;
+  box-shadow: 0px 0px 5px  #4D90FE;
+}
+
+/* =SIDEBAR MENUS
+-------------------------------------------------------------- */
+.pane-system-main-menu,
+.pane-menu-tree {
+  border-top: 8px solid #8C1D40;
+  margin-top: 1.5em;
+  margin-bottom: 3em;
+  padding: 2em;
+  position: relative;
+  z-index: 0;
+}
+.pane-system-main-menu:before,
+.pane-menu-tree:before {
+  border-bottom: 1px solid #e9e9e9;
+  border-left: 1px solid #e9e9e9;
+  border-right: 1px solid #e9e9e9;
+  content: "";
+  display: block;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: -1;
+}
+
+/* WEBSPARK-856 - Apply max width and custom margin/padding to LH menu in 100% wide regions */
+.container .row-full .pane-menu-tree,
+.container .row-full .pane-system-main-menu {
+  max-width: 1140px;
+  margin: 2em auto 0 auto;
+  padding: 2em 1em 1em 1em;
+}
+
+.pane-system-main-menu h2,
+.pane-menu-tree h2 {
+  font-size: 1.3125em;
+}
+.pane-system-main-menu ul.menu li.expanded,
+.pane-system-main-menu ul.menu li.collapsed,
+.pane-system-main-menu ul.menu li.leaf,
+.pane-menu-tree ul.menu li.expanded,
+.pane-menu-tree ul.menu li.collapsed,
+.pane-menu-tree ul.menu li.leaf {
+  list-style-image: none;
+}
+.pane-system-main-menu ul.menu,
+.pane-menu-tree ul.menu {
+  padding-left: 0;
+}
+.pane-system-main-menu ul.menu li,
+.pane-menu-tree ul.menu li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.pane-system-main-menu ul.menu li li a,
+.pane-menu-tree ul.menu li li a {
+  padding-left: 1.375em;
+}
+.pane-menu-tree ul.menu li li li a {
+  padding-left: 2.75em;
+}
+.pane-system-main-menu ul.menu li a,
+.pane-menu-tree ul.menu li a {
+  background-color: #fff;
+  border-top: 1px solid #d7d7d7;
+  border-bottom: none;
+  display: block;
+  padding: 0.625em 0.3125em;
+  color: #8C1D40;
+  font-weight: 200;
+  text-decoration: none;
+  font-size: 1.125em;
+}
+.pane-system-main-menu ul.menu li.active a,
+.pane-system-main-menu ul.menu li a.active,
+.pane-menu-tree ul.menu li.active > a,
+.pane-menu-tree ul.menu li.active-trail > a {
+  font-weight: bold;
+}
+.pane-system-main-menu ul.menu li a:hover,
+.pane-menu-tree ul.menu li a:hover {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+.pane-system-main-menu ul.menu li a:focus,
+.pane-menu-tree ul.menu li a:focus {
+  outline: 2px solid #4D90FE;
+  -webkit-box-shadow: 0px 0px 5px  #4D90FE;
+  box-shadow: 0px 0px 5px  #4D90FE;
+}
+
+/* =TABS & QuickTabs
+-------------------------------------------------------------- */
+/* Removing panopoly styles */
+
+/* WEBSPARK-742 - panopoly-theme.css override */
+.ui-widget,
+.ui-widget-header,
+.ui-widget-content {
+  font-family: inherit;
+}
+
+ul.quicktabs-style-nostyle {
+  font-size: 1.2em;
+}
+
+.ui-tabs-panel,
+.ui-tabs-panel p {
+  font-size: 1.111em;
+}
+
+.ui-widget-header {
+  background: none;
+  min-height: auto;
+  padding: 0;
+  color: #2a2a2a;
+  font-size: 18px;
+  font-weight: 200;
+  line-height: 1.44;
+}
+ul.quicktabs-style-nostyle,
+.ui-tabs .ui-tabs-nav {
+  border-bottom: 1px solid #777 !important;
+  padding: 1em 0 0 0;
+}
+ul.quicktabs-style-nostyle {
+  margin-bottom: 0;
+}
+.ui-tabs .ui-tabs-nav li.ui-corner-top {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+ul.quicktabs-style-nostyle li,
+.ui-tabs .ui-tabs-nav li {
+  border-top: 5px solid transparent;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  top: 0;
+}
+ul.quicktabs-style-nostyle li {
+  display: inline-block;
+}
+ul.quicktabs-style-nostyle li,
+.ui-tabs .ui-tabs-nav li.ui-state-default {
+  background: none;
+  background-color: transparent;
+  color: #767676;
+}
+ul.quicktabs-style-nostyle li:hover,
+ul.quicktabs-style-nostyle li.active,
+.ui-tabs .ui-tabs-nav li.ui-state-hover,
+.ui-tabs .ui-tabs-nav li.ui-state-active,
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected {
+  border-top: 5px solid #8C1D40;
+  background: none;
+  background-color: transparent;
+  margin-bottom: -1px;
+  padding-bottom: 0;
+}
+ul.quicktabs-style-nostyle li,
+.ui-tabs .ui-tabs-nav li.ui-state-default,
+.ui-tabs .ui-tabs-nav li.ui-state-hover,
+.ui-tabs .ui-tabs-nav li.ui-state-active,
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected {
+  margin-bottom: -1px;
+}
+
+ul.quicktabs-style-nostyle li a,
+.ui-tabs .ui-tabs-nav li a {
+  display: block;
+  position: relative;
+  border-color: #777 #777 transparent #777;
+  border-image: none;
+  border-radius: 0;
+  border-style: solid;
+  border-width: 1px;
+  padding: 10px 15px;
+  color: #777;
+  line-height: 1.44;
+  transition: all 0.25s ease-in-out 0s;
+}
+ul.quicktabs-style-nostyle li a {
+  display: inline-block;
+  padding: 9px 18px;
+  text-decoration: none;
+  color: #767676;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.44;
+}
+.ui-tabs .ui-tabs-nav li.ui-state-default a,
+.ui-tabs .ui-tabs-nav li.ui-state-default a:link,
+.ui-tabs .ui-tabs-nav li.ui-state-default a:visited {
+  color: #767676;
+  transition: all 0.25s ease-in-out 0s;
+}
+ul.quicktabs-style-nostyle li:hover a,
+.ui-tabs .ui-tabs-nav li.ui-state-hover a {
+  background-color: #eee;
+  border-bottom-color: #777;
+}
+ul.quicktabs-style-nostyle li.active a,
+ul.quicktabs-style-nostyle li.active:hover a,
+.ui-tabs .ui-tabs-nav li.ui-state-active a {
+  background-color: transparent;
+  border-bottom-color: #fff;
+  margin-left: 0.08em;
+}
+.ui-tabs .ui-tabs-nav li.ui-state-focus a {
+  border-top: 2px solid #4D90FE;
+  border-right: 2px solid #4D90FE;
+  border-bottom: 2px solid #4D90FE;
+  border-left: 2px solid #4D90FE;
+  -webkit-box-shadow: 0px 0px 5px  #4D90FE;
+  box-shadow: 0px 0px 5px  #4D90FE;
+}
+ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
+  color: #767676;
+}
+
+/* WEBSPARK-1197 */
+.panel-panel-inner ul.quicktabs-style-nostyle, .panel-panel-inner .ui-tabs .ui-tabs-nav {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+/* Nav pills */
+.nav-pills > li {
+  float: left;
+}
+.nav-pills > li > a {
+  border: 0 none;
+  border-radius: 4px;
+}
+.nav-pills > li + li {
+  margin-left: 2px;
+}
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus {
+  color: white;
+  background-color: #8C1D40;
+}
+.nav-pills > li.active > a:focus {
+  outline: 2px solid #4D90FE;
+  -webkit-box-shadow: 0px 0px 5px  #4D90FE;
+  box-shadow: 0px 0px 5px  #4D90FE;
+}
+
+/* =BREADCRUMBS
+-------------------------------------------------------------- */
+.breadcrumb {
+  padding: 0 0;
+  margin-top: 24px;
+  margin-bottom: 48px;
+  list-style: none;
+  font-size: 14px;
+  background-color: transparent;
+  border-radius: 4px;
+}
+.breadcrumb > li {
+  display: inline-block;
+}
+.breadcrumb > li + li:before {
+  content: "/\00a0";
+  padding: 0 5px;
+  color: #828282;
+}
+.breadcrumb > li > a {
+  border-bottom: 0;
+}
+.breadcrumb > .active {
+  color: #828282;
+}
+
+/* =PAGERS & PAGINATION
+-------------------------------------------------------------- */
+.pagination {
+  display: inline-block;
+  padding-left: 0;
+  margin: 24px 0;
+  border-radius: 4px;
+}
+.pagination > li {
+  display: inline;
+}
+.pagination > li > a,
+.pagination > li > span {
+  position: relative;
+  float: left;
+  padding: 6px 19px;
+  line-height: 1.44;
+  text-decoration: none;
+  color: #8C1D40;
+  background-color: white;
+  border: 1px solid #dddddd;
+  margin-left: -1px;
+}
+.pagination > li:first-child > a,
+.pagination > li:first-child > span {
+  margin-left: 0;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+}
+.pagination > li:last-child > a,
+.pagination > li:last-child > span {
+  border-bottom-right-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.pagination > li > a:hover, .pagination > li > a:focus,
+.pagination > li > span:hover,
+.pagination > li > span:focus {
+  color: #d23153;
+  background-color: #eeeeee;
+  border-color: #dddddd;
+}
+.pagination > .active > a, .pagination > .active > a:hover, .pagination > .active > a:focus,
+.pagination > .active > span,
+.pagination > .active > span:hover,
+.pagination > .active > span:focus {
+  z-index: 2;
+  color: white;
+  background-color: #8C1D40;
+  border-color: #8C1D40;
+  cursor: default;
+}
+.pagination > .disabled > span,
+.pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus {
+  color: #777777;
+  background-color: white;
+  border-color: #dddddd;
+  cursor: not-allowed;
+}
+.pagination-lg > li > a,
+.pagination-lg > li > span {
+  padding: 12px 24px;
+  font-size: 20px;
+}
+.pagination-lg > li:first-child > a,
+.pagination-lg > li:first-child > span {
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+}
+.pagination-lg > li:last-child > a,
+.pagination-lg > li:last-child > span {
+  border-bottom-right-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.pagination-sm > li > a,
+.pagination-sm > li > span {
+  padding: 5px 12px;
+  font-size: 14px;
+}
+.pagination-sm > li:first-child > a,
+.pagination-sm > li:first-child > span {
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+}
+.pagination-sm > li:last-child > a,
+.pagination-sm > li:last-child > span {
+  border-bottom-right-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.pager {
+  padding-left: 0;
+  margin: 1em 0;
+  list-style: none;
+  text-align: center;
+}
+.pager:before, .pager:after {
+  content: " ";
+  display: table;
+}
+.pager:after {
+  clear: both;
+}
+.pager li {
+  display: inline;
+}
+.pager li > a,
+.pager li > span {
+  display: inline-block;
+  padding: 5px 14px;
+  background-color: white;
+  border: 1px solid #dddddd;
+  border-radius: 15px;
+}
+.pager li > a:hover,
+.pager li > a:focus {
+  text-decoration: none;
+  background-color: #eeeeee;
+}
+.pager .next > a,
+.pager .next > span {
+  float: right;
+}
+.pager .previous > a,
+.pager .previous > span {
+  float: left;
+}
+.pager .disabled > a,
+.pager .disabled > a:hover,
+.pager .disabled > a:focus,
+.pager .disabled > span {
+  color: #777777;
+  background-color: white;
+  cursor: not-allowed;
+}
+
+/* theme_item_list pager CSS */
+.item-list.item-list-pager {
+  text-align: center;
+  clear: both;
+}
+.item-list.item-list-pager .pager {
+  margin: 1em;
+  display: inline-block;
+}
+.item-list.item-list-pager .pager li {
+  padding: 0;
+  margin: 0;
+  float: left;
+}
+.item-list.item-list-pager .pager li a {
+  background-color: #fff;
+  border-radius: 0px;
+  border: 1px solid #ccc;
+  border-right: none;
+}
+.item-list.item-list-pager .pager :first-child a,
+.item-list.item-list-pager .pager .pager-current.first {
+  border-top-left-radius: 0.25em;
+  border-bottom-left-radius: 0.25em;
+}
+.item-list.item-list-pager .pager :last-of-type a,
+.item-list.item-list-pager .pager .pager-current.last {
+  border-top-right-radius: 0.25em;
+  border-bottom-right-radius: 0.25em;
+  border: 1px solid #ccc;
+}
+.item-list.item-list-pager .pager .pager-current,
+#media-browser-tabset .item-list.item-list-pager .pager .pager-current {
+  border: 1px solid #8C1D40;
+  padding: 5px 14px;
+  background-color: #8C1D40;
+  color: #fff;
+}
+.item-list.item-list-pager .pager-ellipsis {
+  display: none;
+}
