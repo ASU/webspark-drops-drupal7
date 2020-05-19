@@ -14,7 +14,7 @@ $asu-nav-color: white;
 #block-asu-primary-menu {
   left: 0;
   margin-left: 0;
-  background-color: $asu-darker-gray;
+  background-color: $asu-gray-darker;
   width: 100%;
   a {
     font-family: $font-family-base;
@@ -27,12 +27,12 @@ $asu-nav-color: white;
     max-width:  1124px;;
     li {
       ul {
-        background: $asu-darkest-gray;
+        background: $asu-gray-darkest;
         border-top: 0;
       }
       &:hover,
       a.active {
-        color: $asu-color-gold;
+        color: $asu-gold;
         background: #000000 !important;
         border-radius: 0 0 4px 4px;
       }
@@ -49,7 +49,7 @@ $asu-nav-color: white;
     & > li > a {
       transition: all 0.25s ease-in-out 0s;
       &:hover {
-        color: $asu-color-gold;
+        color: $asu-gold;
         background: #000000 !important;
       }
     }

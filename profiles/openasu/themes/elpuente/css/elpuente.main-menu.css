@@ -13,11 +13,11 @@
 #block-asu-primary-menu {
   left: 0;
   margin-left: 0;
-  background-color: #353535;
+  background-color: #484848;
   width: 100%;
 }
 #block-asu-primary-menu a {
-  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Arial Bold", sans-serif;
   color: white;
   font-weight: bold;
   font-size: 16px;
@@ -30,12 +30,12 @@
   float: none;
 }
 #block-asu-primary-menu > ul.nice-menu li ul {
-  background: #1f1f1f;
+  background: #191919;
   border-top: 0;
 }
 #block-asu-primary-menu > ul.nice-menu li:hover,
 #block-asu-primary-menu > ul.nice-menu li a.active {
-  color: #ffc627;
+  color: #FFC627;
   background: #000000 !important;
   border-radius: 0 0 4px 4px;
 }
@@ -51,7 +51,7 @@
   transition: all 0.25s ease-in-out 0s;
 }
 #block-asu-primary-menu > ul.nice-menu > li:hover, #block-asu-primary-menu > ul.nice-menu > li > a:hover {
-  color: #ffc627;
+  color: #FFC627;
   background: #000000 !important;
 }
 #block-asu-primary-menu > ul.nice-menu.nice-menu-down li ul li ul {

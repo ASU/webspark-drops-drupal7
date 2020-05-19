@@ -3,6 +3,7 @@
  *
  * Taken from innovation_main.css in Webspark and modified here.
  */
+/** This is innovation-main.css **/
 
 // Includes SASS variables used in Boostrap (variables) and other custom CSS rules (base).
 @import "variables";
@@ -298,7 +299,7 @@ table {
   & > thead > tr {
     th,
     td {
-      border-bottom: 2px solid $asu-light-gray;
+      border-bottom: 2px solid $asu-gray-light;
       vertical-align: bottom;
       font-weight: bold;
     }
@@ -308,8 +309,8 @@ table {
   & > tfoot {
     & > tr > th,
     & > tr > td {
-      border-right: 1px solid $asu-light-gray;
-      border-top: 1px solid $asu-light-gray;
+      border-right: 1px solid $asu-gray-light;
+      border-top: 1px solid $asu-gray-light;
       line-height: $line-height-base;
       padding: 8px;
       vertical-align: top;
@@ -317,10 +318,10 @@ table {
   }
   & > tbody {
     & + tbody {
-      border-top: 2px solid $asu-light-gray;
+      border-top: 2px solid $asu-gray-light;
     }
     & > tr:nth-child(2n) {
-      background-color: $asu-lightest-gray;
+      background-color: $asu-gray-lightest;
     }
     & > tr:nth-child(2n+1) {
       background-color: #fff;
@@ -338,14 +339,14 @@ table {
   }
   /* WYSIWYG Bordered table */
   &.bordered {
-    border-bottom: 1px solid $asu-light-gray;
-    border-left: 1px solid $asu-light-gray;
+    border-bottom: 1px solid $asu-gray-light;
+    border-left: 1px solid $asu-gray-light;
     & > thead,
     & > tbody,
     & > tfoot {
       & > tr > th,
       & > tr > td {
-        border-right: 1px solid $asu-light-gray;
+        border-right: 1px solid $asu-gray-light;
       }
     }
     & > tbody > tr:nth-child(2n+1) {
@@ -357,7 +358,7 @@ table {
       & > tr:first-child {
         & > th,
         & > td {
-          border-top: 1px solid $asu-light-gray;
+          border-top: 1px solid $asu-gray-light;
         }
       }
     }
@@ -492,14 +493,14 @@ table {
   }
   .ui-accordion-content {
     top: 0;
-    border: 1px solid $asu-lighter-gray;
+    border: 1px solid $asu-gray-lighter;
     border-bottom: 0 none;
     margin-bottom: 0;
     margin-top: 0;
     padding: 1.25em;
   }
   &:last-of-type {
-    border-bottom: 1px solid $asu-lighter-gray;
+    border-bottom: 1px solid $asu-gray-lighter;
   }
   .accordion-content {
     color: $text-color;
@@ -537,18 +538,18 @@ h4.ui-accordion-header {
   }
   &.ui-state-default {
     background-color: #fff;
-    border: 1px solid $asu-lighter-gray;
+    border: 1px solid $asu-gray-lighter;
     border-bottom: 1px solid #fff;
     color: #909090;
     &:last-of-type {
-      border: 1px solid $asu-lighter-gray;
+      border: 1px solid $asu-gray-lighter;
     }
   }
   &.ui-state-hover {
     color: #111;
   }
   &.ui-state-active {
-    border: 1px solid $asu-lighter-gray;
+    border: 1px solid $asu-gray-lighter;
     border-bottom: 3px solid #111;
     color: #111;
   }
@@ -591,9 +592,9 @@ h4.ui-accordion-header {
   padding-top: 1em;
   li {
     a {
-      background-color: $asu-lightest-gray;
+      background-color: $asu-gray-lightest;
       &:hover {
-        background-color: $asu-lighter-gray;
+        background-color: $asu-gray-lighter;
         color: #000;
       }
     }
@@ -653,7 +654,7 @@ h2.widget-list {
 }
 
 ul.help-text {
-  background-color: $asu-lightest-gray;
+  background-color: $asu-gray-lightest;
   padding: 0.5em 1em;
   li {
     list-style: none;
