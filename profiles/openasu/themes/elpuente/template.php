@@ -13,7 +13,7 @@ function elpuente_preprocess_html(&$variables) {
   $path = current_path();
   // If El Puente is currently showing in an admin page, add special CSS.
   if (path_is_admin($path)) {
-    if (isset($variables['classes_array'])) {a
+    if (isset($variables['classes_array'])) {
       $variables['classes_array'][] = 'path-is-admin';
       $variables['classes_array'][] = 'pia';
     }
