@@ -46,7 +46,7 @@
 
 .btn-primary,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary {
-  background-color: #8C1D40;
+  background-color: #8c1d40;
   color: white;
 }
 
@@ -65,12 +65,12 @@
 }
 
 .btn-primary.disabled, .btn-primary.disabled:hover, .btn-primary.disabled:focus, .btn-primary.disabled:active, .btn-primary.disabled.active, .btn-primary[disabled], .btn-primary[disabled]:hover, .btn-primary[disabled]:focus, .btn-primary[disabled]:active, .btn-primary.active[disabled], fieldset[disabled] .btn-primary, fieldset[disabled] .btn-primary:hover, fieldset[disabled] .btn-primary:focus, fieldset[disabled] .btn-primary:active, fieldset[disabled] .btn-primary.active {
-  background-color: #8C1D40;
+  background-color: #8c1d40;
 }
 
 .btn-primary .badge {
   background-color: white;
-  color: #8C1D40;
+  color: #8c1d40;
 }
 
 .btn-secondary,
@@ -104,7 +104,7 @@
 
 .btn-gold,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold {
-  background-color: #FFC627;
+  background-color: #ffc627;
   color: #2a2a2a;
 }
 
@@ -126,12 +126,12 @@
 .btn-gold[disabled]:active, .btn-gold.active[disabled], fieldset[disabled] .btn-gold, fieldset[disabled]
 .btn-gold:hover, fieldset[disabled] .btn-gold:focus, fieldset[disabled] .btn-gold:active, fieldset[disabled]
 .btn-gold.active {
-  background-color: #FFC627;
+  background-color: #ffc627;
 }
 
 .btn-gold .badge {
   background-color: #2a2a2a;
-  color: #FFC627;
+  color: #ffc627;
 }
 
 .btn-blue {
@@ -239,7 +239,7 @@
 }
 
 .btn-warning {
-  background-color: #FFC627;
+  background-color: #ffc627;
   border-color: #72870f;
   color: #2a2a2a;
 }
@@ -255,13 +255,13 @@
 }
 
 .btn-warning.disabled, .btn-warning.disabled:hover, .btn-warning.disabled:focus, .btn-warning.disabled:active, .btn-warning.disabled.active, .btn-warning[disabled], .btn-warning[disabled]:hover, .btn-warning[disabled]:focus, .btn-warning[disabled]:active, .btn-warning.active[disabled], fieldset[disabled] .btn-warning, fieldset[disabled] .btn-warning:hover, fieldset[disabled] .btn-warning:focus, fieldset[disabled] .btn-warning:active, fieldset[disabled] .btn-warning.active {
-  background-color: #FFC627;
+  background-color: #ffc627;
   border-color: #72870f;
 }
 
 .btn-warning .badge {
   background-color: #2a2a2a;
-  color: #FFC627;
+  color: #ffc627;
 }
 
 .btn-danger {
@@ -292,7 +292,7 @@
 
 .btn-link {
   border-radius: 0;
-  color: #8C1D40;
+  color: #8c1d40;
   cursor: pointer;
   font-weight: normal;
 }

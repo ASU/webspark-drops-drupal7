@@ -23,17 +23,6 @@
 $rhythm-unit: "rem"; // Rhythm unit (Compass vertical rhythm)
 
 //
-// Misc. theme settings
-//
-$elpuente-images-dir: "/sites/all/themes/elpuente/images";
-
-// Panel pane padding
-$asu-panel-padding: 1em 1.5em 1em;
-
-// The amount lists, blockquotes and comments are indented.
-$indent-amount: 30px;
-
-//
 // Partials to be shared with all .scss files.
 //
 @import "compass/support";  // Add Compass' IE and vendor prefix support variables.

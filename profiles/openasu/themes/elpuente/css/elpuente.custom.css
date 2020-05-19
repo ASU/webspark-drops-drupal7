@@ -80,14 +80,14 @@ div.pane-menu-tree {
 body {
   font-family: "Arial Bold", sans-serif;
   color: #191919;
-  background-color: #FFFFFF;
+  background-color: #fff;
 }
 
 a,
 .ui-widget-content a {
-  border-bottom: 1px dotted #8C1D40;
+  border-bottom: 1px dotted #8c1d40;
   text-decoration: none;
-  color: #8C1D40;
+  color: #8c1d40;
   transition: all 0.25s ease-in-out 0s;
 }
 
@@ -274,7 +274,7 @@ p.img-rounded img {
 .img-thumbnail,
 p.img-thumbnail img {
   background-color: white;
-  border: 1px solid #DDDDDD;
+  border: 1px solid #ddd;
   border-radius: 4px;
   display: inline-block;
   height: auto;
@@ -300,7 +300,7 @@ table > tbody > tr > th,
 table > tbody > tr > td,
 table > tfoot > tr > th,
 table > tfoot > tr > td {
-  border-top: 1px solid #BFBFBF;
+  border-top: 1px solid #bfbfbf;
   line-height: 1.44;
   padding: 8px;
   vertical-align: top;
@@ -308,13 +308,13 @@ table > tfoot > tr > td {
 
 table > thead > tr > th,
 table > thead > tr > td {
-  border-bottom: 2px solid #BFBFBF;
+  border-bottom: 2px solid #bfbfbf;
   vertical-align: bottom;
   font-weight: bold;
 }
 
 body:not(.page-admin) table > tbody > tr:nth-child(2n+1) {
-  background-color: #FAFAFA;
+  background-color: #fafafa;
 }
 
 table > caption + thead > tr:first-child > th,
@@ -327,13 +327,13 @@ table > thead:first-child > tr:first-child > td {
 }
 
 table > tbody + tbody {
-  border-top: 2px solid #BFBFBF;
+  border-top: 2px solid #bfbfbf;
 }
 
 /* WYSIWYG Bordered table */
 table.bordered {
-  border-bottom: 1px solid #BFBFBF;
-  border-left: 1px solid #BFBFBF;
+  border-bottom: 1px solid #bfbfbf;
+  border-left: 1px solid #bfbfbf;
 }
 
 table.bordered > thead > tr > th,
@@ -342,7 +342,7 @@ table.bordered > tbody > tr > th,
 table.bordered > tbody > tr > td,
 table.bordered > tfoot > tr > th,
 table.bordered > tfoot > tr > td {
-  border-right: 1px solid #BFBFBF;
+  border-right: 1px solid #bfbfbf;
 }
 
 table.bordered > tbody > tr:nth-child(2n+1) {
@@ -355,7 +355,7 @@ table.bordered > colgroup + thead > tr:first-child > th,
 table.bordered > colgroup + thead > tr:first-child > td,
 table.bordered > thead:first-child > tr:first-child > th,
 table.bordered > thead:first-child > tr:first-child > td {
-  border-top: 1px solid #BFBFBF;
+  border-top: 1px solid #bfbfbf;
 }
 
 /* =CONTENT CALLOUTS
@@ -622,19 +622,19 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 .alert-danger {
   background-color: #e8d2d9;
   /* 20% opacity of official maroon */
-  border-color: #8C1D40;
+  border-color: #8c1d40;
 }
 
 .alert-warning {
   background-color: #ffecb8;
   /* 33% opacity of official maroon */
-  border-color: #8C1D40;
+  border-color: #8c1d40;
 }
 
 .alert:not([class*="alert-"]),
 div[class='alert alert-block'] {
   /* Catch-all for default alert class */
-  background-color: #FAFAFA;
+  background-color: #fafafa;
   border-color: #ccc;
 }
 
@@ -666,7 +666,7 @@ div[class='alert alert-block'] {
 #top-content #tabs .nav-pills > li.active > a,
 #top-content #tabs .nav-pills > li.active > a:hover,
 #top-content #tabs .nav-pills > li.active > a:focus {
-  background-color: #8C1D40;
+  background-color: #8c1d40;
 }
 
 /* dropdown items from nav pills */
@@ -752,7 +752,7 @@ h2.widget-list {
 
 #modal-content .form-tablefield input.form-submit.btn,
 #modalContent .form-tablefield input.form-submit.btn {
-  background-color: #8C1D40 !important;
+  background-color: #8c1d40 !important;
 }
 
 ul.help-text {
@@ -875,7 +875,7 @@ ul.help-text li.help-title {
 .ui-widget-content.ui-dialog.token-browser-container {
   background-color: #fff;
   padding: 0.5em;
-  border: 1px solid #DDDDDD;
+  border: 1px solid #ddd;
 }
 
 .ui-widget-content.ui-dialog.token-browser-container,
@@ -1041,6 +1041,6 @@ body #content .ui-tabs .ui-tabs-nav li a {
 }
 /** WEBSPARK-1118 - Temporary footer link fix @removeIfInGlobalCSS */
 #innovation-footer .footer-menu ul li a:hover {
-  color: #8C1D40;
-  border-bottom: 1px dotted #8C1D40;
+  color: #8c1d40;
+  border-bottom: 1px dotted #8c1d40;
 }

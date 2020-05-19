@@ -1,5 +1,7 @@
 /**
  * @description - If Innovation is the admin theme, add these changes to clean up the UI
+ *
+ * IS SASS
  */
 /*
  * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
@@ -9,8 +11,8 @@
 /** System Help block theming (if enabled) */
 #block-system-help {
   padding: 1em;
-  border: 1px solid #00A3E0;
-  background-color: #D6F0FA;
+  border: 1px solid #00a3e0;
+  background-color: #d6f0fa;
   margin: 1em 0;
 }
 #block-system-help:first-child:before {
@@ -69,19 +71,19 @@
 .pia #block-system-main > .content > form[id] {
   margin: 0;
   padding: 1em;
-  border: 1px solid #DDDDDD;
-  box-shadow: 4px 6px 3px #FAFAFA;
+  border: 1px solid #ddd;
+  box-shadow: 4px 6px 3px #fafafa;
 }
 .pia fieldset.fieldset-nested- {
   margin: 0.5em 0;
   padding: 1em;
-  border: 1px solid #E0E0DC !important;
+  border: 1px solid #e0e0dc !important;
 }
 .pia fieldset.fieldset-nested-odd {
-  background-color: #FAFAFA;
+  background-color: #fafafa;
 }
 .pia fieldset.fieldset-nested-even {
-  background-color: #EDF9DD;
+  background-color: #edf9dd;
 }
 .pia #block-system-main fieldset legend {
   width: initial;
@@ -90,13 +92,13 @@
 }
 .pia .admin-list > dt,
 .pia #block-system-main .content > dl > dt {
-  border: 1px solid #DDDDDD;
+  border: 1px solid #ddd;
   border-bottom: none;
   padding: 0.25em 0.25em 0 0.25em;
 }
 .pia .admin-list > dl > dt + dd,
 .pia #block-system-main .content > dl > dt + dd {
-  border: 1px solid #DDDDDD;
+  border: 1px solid #ddd;
   border-top: none;
   margin-bottom: 0.5em;
   padding: 0 0.25em 0.25em 0.25em;
@@ -111,13 +113,13 @@
 .pia #block-system-main .content > dl > dt:nth-of-type(2n+1),
 .pia .admin-list > dd:nth-of-type(2n+1),
 .pia #block-system-main .content > dl > dd:nth-of-type(2n+1) {
-  background-color: #FAFAFA;
+  background-color: #fafafa;
 }
 .pia body:not(.page-admin-reports-status) table > tbody > tr:nth-child(2n+1) {
-  background-color: #FAFAFA;
+  background-color: #fafafa;
 }
 .pia #block-system-main table thead {
-  background-color: #EDF9DD;
+  background-color: #edf9dd;
 }
 .pia table[id] .form-item,
 .pia table[id] .form-actions .btn,
@@ -165,8 +167,8 @@
 .pia .view-filters > form,
 .pia #ctools-export-ui-list-form {
   padding: 1em;
-  border: 1px solid #DDDDDD;
-  background-color: #FAFAFA;
+  border: 1px solid #ddd;
+  background-color: #fafafa;
 }
 .pia .view-filters .form-control,
 .pia #ctools-export-ui-list-form .form-control {
@@ -179,13 +181,13 @@
   margin-top: 1em;
 }
 .pia #block-admin-display-form table .region-title {
-  background-color: #E1F8C4;
+  background-color: #e1f8c4;
 }
 .pia table.update .alert {
   color: initial;
 }
 .pia table.update .alert.alert-success {
-  background-color: #E1F8C4;
+  background-color: #e1f8c4;
 }
 .pia #module-filter-update-status-form .module-filter-inputs-wrapper .form-item-module-filter-name {
   margin-bottom: 1em;
@@ -195,12 +197,12 @@
 }
 .pia .update tr.ok,
 .pia .update-status.ok {
-  background: #E1F8C4;
+  background: #e1f8c4;
 }
 .pia .admin-panel {
   padding: 0 1em;
   margin-bottom: 1em;
-  border: 1px solid #E0E0DC !important;
+  border: 1px solid #e0e0dc !important;
 }
 .pia .admin-panel .body {
   padding: 0;
@@ -214,7 +216,7 @@
   background-color: initial;
 }
 .pia .better_watchdog_ui_watchdog-detail table > thead > tr > th, .pia .better_watchdog_ui_watchdog-detail table > thead > tr > td, .pia .better_watchdog_ui_watchdog-detail table > tbody > tr > th, .pia .better_watchdog_ui_watchdog-detail table > tbody > tr > td, .pia .better_watchdog_ui_watchdog-detail table > tfoot > tr > th, .pia .better_watchdog_ui_watchdog-detail table > tfoot > tr > td {
-  border: 1px solid #BFBFBF;
+  border: 1px solid #bfbfbf;
 }
 .pia .view-better-watchdog-ui-view table .form-type-checkbox {
   padding: 0 0.25em;

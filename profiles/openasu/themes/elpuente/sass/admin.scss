@@ -1,5 +1,7 @@
 /**
  * @description - If Innovation is the admin theme, add these changes to clean up the UI
+ *
+ * IS SASS
  */
 
 @import "variables";
@@ -10,7 +12,7 @@
 #block-system-help {
   padding: 1em;
   border: 1px solid $asu-blue;
-  background-color: $asu-bkgd-info;
+  background-color: $asu-info-bkgd;
   margin: 1em 0;
   &:first-child:before {
     content: "Drupal Help --";

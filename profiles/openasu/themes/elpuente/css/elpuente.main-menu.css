@@ -6,7 +6,7 @@
  * Override Bootstrap variables below.
  */
 #page.container {
-  max-width: 1170px;
+  max-width: 1164px;
   width: inherit;
 }
 
@@ -35,7 +35,7 @@
 }
 #block-asu-primary-menu > ul.nice-menu li:hover,
 #block-asu-primary-menu > ul.nice-menu li a.active {
-  color: #FFC627;
+  color: #ffc627;
   background: #000000 !important;
   border-radius: 0 0 4px 4px;
 }
@@ -51,7 +51,7 @@
   transition: all 0.25s ease-in-out 0s;
 }
 #block-asu-primary-menu > ul.nice-menu > li:hover, #block-asu-primary-menu > ul.nice-menu > li > a:hover {
-  color: #FFC627;
+  color: #ffc627;
   background: #000000 !important;
 }
 #block-asu-primary-menu > ul.nice-menu.nice-menu-down li ul li ul {

@@ -11,25 +11,31 @@
 // Variables
 // --------------------------------------------------
 
+// The base sizing in pixels
 $the-base:         16px;
+// Panel pane padding
+$asu-panel-padding: 1em 1.5em 1em;
+$elpuente-images-dir: "/sites/all/themes/elpuente/images";
+// The amount lists, blockquotes and comments are indented.
+$indent-amount: 30px;
 
-//== Colors  --- DONE
+//== Colors --- WS2 DONE
 
 // Official ASU colors
 //// ASU Primary colors
-$asu-maroon:       #8C1D40;
-$asu-gold:         #FFC627;
-$asu-blue:         #00A3E0;
-$asu-green:        #78BE20;
-$asu-orange:       #FF7F32;
+$asu-maroon:       #8c1d40;
+$asu-gold:         #ffc627;
+$asu-blue:         #00a3e0;
+$asu-green:        #78be20;
+$asu-orange:       #ff7f32;
 //// ASU Gray shades
 $asu-gray-darkest:      #191919; // Not using lighten() mixing
 $asu-gray-darker:       #484848;
 $asu-gray-dark:         #747474;
-$asu-gray:              #BFBFBF;
-$asu-gray-light:        #D0D0D0;
+$asu-gray:              #bfbfbf;
+$asu-gray-light:        #d0d0d0;
 $asu-gray-lighter:      #e8e8e8;
-$asu-gray-lightest:     #FAFAFA;
+$asu-gray-lightest:     #fafafa;
 //// Background colors
 
 //// BOOTSTRAP DEFAULTS - Bootstrap-assigned colors.
@@ -39,46 +45,50 @@ $gray-dark:              $asu-gray-darker; // lighten(#000, 20%);   // #333
 $gray:                   $asu-gray-dark; // #5c6670; //lighten(#000, 33.5%); // #555
 $gray-light:             $asu-gray; // lighten(#000, 60%);   // #999
 $gray-lighter:           $asu-gray-lighter; // lighten(#000, 93.5%); // #eee
-$gray-fieldset:          #EDF9DD;
-$gray-fieldset-nested:   #E0E0DC;
-$gray-alt-admin:         #DDDDDD;
-$gray-alt-admin-pia:     #E1F8C4;
+$gray-fieldset:          #edf9dd;
+$gray-fieldset-nested:   #e0e0dc;
+$gray-alt-admin:         #ddd;
+$gray-alt-admin-pia:     #e1f8c4;
 
 //== ASU Alert/Messages
-//// Alert backgrounds are the same as background colors above. Use same variables.
-$asu-bkgd-error:         #F7DDDD; // Drupal "error" === Bootstrap "danger"
-$asu-bkgd-danger:        $asu-bkgd-error;
-$asu-bkgd-success:       #E9F5DB;
-$asu-bkgd-warning:       #FFEADE;
-$asu-bkgd-info:          #D6F0FA;
+//// LIGHT Alert backgrounds are the same as background colors above. Use same variables.
+$asu-error-bkgd:         #f7dddd; // Drupal "error" === Bootstrap "danger"
+$asu-error-alt:          #b72a2a;
+$asu-danger-bkgd:        $asu-error-bkgd;
+$asu-danger-alt:         $asu-error-alt;
+$asu-success-bkgd:       #e9f5db;
+$asu-success-alt:        $asu-success-bkgd;
+$asu-warning-bkgd:       #ffeade;
+$asu-info-bkgd:          #d6f0fa;
+
 //// Alert/Message - WHITE background text, border
-$asu-alert-white-error:   #B72A2A;
+$asu-alert-white-error:   $asu-error-alt;
 $asu-alert-white-success: #446D12;
-$asu-alert-white-warning: #BD4800;
+$asu-alert-white-warning: #bd4800;
 $asu-alert-white-info:    #126877;
 $asu-alert-white-border:  $asu-gray-light;
 //// Alert/Message - Black background text, border
-$asu-alert-black-error:   #FF7B7D;
+$asu-alert-black-error:   #ff7b7d;
 $asu-alert-black-success: $asu-green;
-$asu-alert-black-warning: #FF8034;
-$asu-alert-black-info:    #00B0F3;
+$asu-alert-black-warning: #ff8034;
+$asu-alert-black-info:    #00b0f3;
 $asu-alert-black-border:  $asu-gray-light;
 
 //// BOOTSTRAP DEFAULTS - Primary branding colors (Bootstrap defaults that are set to ASU colors)
 $brand-primary:          $asu-maroon; // maroon
-$brand-white:            #FFFFFF;
-$brand-success:          $asu-bkgd-success; // #5cb85c;
-$brand-info:             $asu-bkgd-info; // #78BE20;
-$brand-warning:          $asu-bkgd-warning; // #FF7F32;
-$brand-danger:           $asu-bkgd-error; // #CC2F2F;
+$brand-white:            #fff;
+$brand-success:          $asu-success-bkgd; // #5cb85c;
+$brand-info:             $asu-info-bkgd; // #78BE20;
+$brand-warning:          $asu-warning-bkgd; // #FF7F32;
+$brand-danger:           $asu-error-bkgd; // #CC2F2F;
 
 //// Unpublished nodes
-$asu-bkgd-unpublished:  $asu-bkgd-error;
+$asu-bkgd-unpublished:  $asu-error-bkgd;
 
 //// Background color for `<body>`.
 $body-bg:               $brand-white;
 $body-bg-gray:          $asu-gray-lighter;
-$body-bg-dark:     $asu-gray-darkest;
+$body-bg-dark:          $asu-gray-darkest;
 //// Global text color on `<body>`.
 $text-color:            $asu-gray-darkest;
 $text-color-bg-dark:    $asu-gray-lightest;
@@ -88,9 +98,9 @@ $link-color:            $brand-primary;
 $link-color-gold:       $asu-gold;
 //** Link hover color set via `darken()` function.
 $link-hover-color:      #d23153;
-$gold-hover-color:      #FFD053;
+$gold-hover-color:      #ffd053;
 
-//== Typography
+//== Typography --- WS2 DONE
 //
 //## Font, line-height, and color for body text, headings, and more.
 
@@ -133,7 +143,7 @@ $headings-font-family:    inherit;
 $headings-font-weight:    700;
 $headings-color:          #000;
 
-//-- Iconography  --- DONE
+//-- Iconography  --- WS2 DONE
 //
 //## Specify custom locations of the include Glyphicons icon font. Useful for those including Bootstrap via Bower.
 
@@ -141,7 +151,7 @@ $icon-font-path:          "bootstrap/";
 $icon-font-name:          "glyphicons-halflings-regular";
 $icon-font-svg-id:        "glyphicons_halflingsregular";
 
-//== Components
+//== Components  --- IN PROGRESS (carets)
 //
 //## Define common padding and border radius sizes and more. Values based on 14px text and 1.428 line-height (~20px to start).
 //
@@ -162,19 +172,19 @@ $line-height-large:         1.1; // Larger
 $line-height-small:         1.5;
 
 $border-radius-base:        0;
-$border-radius-circle:      50%;
+$border-radius-circle:      50%;  // Round the corners!
 
 //** Global color for active items (e.g., navs or dropdowns).
 $component-active-color:    $brand-white;
 //** Global background color for active items (e.g., navs or dropdowns).
-$component-active-bg:       $brand-primary;
+$component-active-bg:       $link-hover-color;
 
 //** Width of the `border` for generating carets that indicator dropdowns.
 $caret-width-base:          4px;
 //** Carets increase slightly in size for larger components.
 $caret-width-large:         5px;
 
-//== Tables  --- IN PROGRESS
+//== Tables  --- WS2 DONE
 //
 //## Customizes the `.table` component with basic values, each used across all table variations.
 
@@ -194,7 +204,8 @@ $table-bg-accent:               $asu-gray-lighter;
 //** Border color for table and cell borders.
 $table-border-color:            $asu-gray-lighter;
 
-//== Buttons  --- DONE
+
+//== Buttons  --- WS2 DONE
 //
 //## For each of Bootstrap's buttons, define text, background and border color.
 
@@ -214,9 +225,7 @@ $btn-gray-color:                 $asu-gray-darkest;
 $btn-gray-bg:                    $asu-gray-lighter;
 
 
-
-
-//== Forms  --- DONE
+//== Forms  --- NOT DONE
 //
 //##
 
@@ -286,7 +295,7 @@ $dropdown-header-color:          $gray-light;
 // Note: Deprecated $dropdown-caret-color as of v3.1.0
 $dropdown-caret-color:           #000;
 
-//-- Z-index master list  --- NOT DONE
+//-- Z-index master list  -- WS2 DONE
 //
 // Warning: Avoid customizing these values. They're used for a bird's eye view
 // of components dependent on the z-axis and are designed to all work together.
@@ -334,26 +343,26 @@ $screen-xs-max:              ($screen-sm-min - 1);
 $screen-sm-max:              ($screen-md-min - 1);
 $screen-md-max:              ($screen-lg-min - 1);
 
-//== Grid system  --- DONE
+//== Grid system  --- WS2 DONE
 //
 //## Define your custom responsive grid.
 
 //** Number of columns in the grid.
 $grid-columns:              12;
 //** Padding between columns. Gets divided in half for the left and right.
-$grid-gutter-width:         30px;
+$grid-gutter-width:         24px;
 // Navbar collapse
 //** Point at which the navbar becomes uncollapsed.
 $grid-float-breakpoint:     $screen-sm-min;
 //** Point at which the navbar begins collapsing.
 $grid-float-breakpoint-max: ($grid-float-breakpoint - 1);
 
-//== Navbar  --- IN PROGRESS
+//== Navbar  --- WS2 DONE (maybe.... inverse links???)
 //
 //##
 
 // Basics of a navbar
-$navbar-height:                    57px;
+$navbar-height:                    48px; // 3rem
 $navbar-margin-bottom:             -1px;
 $navbar-border-radius:             0;
 $navbar-padding-horizontal:        floor(($grid-gutter-width / 2));
@@ -361,32 +370,32 @@ $navbar-padding-vertical:          (($navbar-height - $line-height-computed) / 2
 $navbar-collapse-max-height:       340px;
 
 $navbar-default-color:             #fff;
-$navbar-default-bg:                #353535;
+$navbar-default-bg:                #fff;
 $navbar-default-border:            0;
 
 // Navbar links
-$navbar-default-link-color:                #fff;
-$navbar-default-link-hover-color:          $asu-gold;
-$navbar-default-link-hover-bg:             #000;
-$navbar-default-link-active-color:         $asu-gold;
-$navbar-default-link-active-bg:            #000;
-$navbar-default-link-disabled-color:       #ccc;
+$navbar-default-link-color:                $asu-maroon;
+$navbar-default-link-hover-color:          $link-hover-color;
+$navbar-default-link-hover-bg:             $asu-gray-lighter;
+$navbar-default-link-active-color:         $link-hover-color;
+$navbar-default-link-active-bg:            $link-hover-color;
+$navbar-default-link-disabled-color:       opacify($asu-maroon, 0.5);
 $navbar-default-link-disabled-bg:          transparent;
 
 // Navbar brand label
 $navbar-default-brand-color:               $navbar-default-link-color;
-$navbar-default-brand-hover-color:         #000; //darken($navbar-default-brand-color, 10%);
+$navbar-default-brand-hover-color:         $navbar-default-link-hover-color; //darken($navbar-default-brand-color, 10%);
 $navbar-default-brand-hover-bg:            transparent;
 
 // Navbar toggle
-$navbar-default-toggle-hover-bg:           $gray-alt-admin;
-$navbar-default-toggle-icon-bar-bg:        #888;
-$navbar-default-toggle-border-color:       $gray-alt-admin;
+$navbar-default-toggle-hover-bg:           $navbar-default-link-hover-bg;
+$navbar-default-toggle-icon-bar-bg:        $asu-gray-darkest;
+$navbar-default-toggle-border-color:       $navbar-default-link-hover-bg;
 
 // Inverted navbar
 // Reset inverted navbar basics
 $navbar-inverse-color:                      $gray-light;
-$navbar-inverse-bg:                         #222;
+$navbar-inverse-bg:                         $asu-gray-darkest;
 $navbar-inverse-border:                     darken($navbar-inverse-bg, 10%);
 
 // Inverted navbar links
@@ -404,16 +413,16 @@ $navbar-inverse-brand-hover-color:          #fff;
 $navbar-inverse-brand-hover-bg:             transparent;
 
 // Inverted navbar toggle
-$navbar-inverse-toggle-hover-bg:            #333;
+$navbar-inverse-toggle-hover-bg:            $asu-gray-darkest;
 $navbar-inverse-toggle-icon-bar-bg:         #fff;
-$navbar-inverse-toggle-border-color:        #333;
+$navbar-inverse-toggle-border-color:        $asu-gray-darkest;
 
-//== Navs
+//== Navs --- IN PROGRESS
 //
 //##
 
 //=== Shared nav styles
-$nav-link-padding:                          10px 15px;
+$nav-link-padding:                          $padding-base-vertical;
 $nav-link-hover-bg:                         $gray-lighter;
 
 $nav-disabled-link-color:                   $gray-light;
@@ -434,37 +443,37 @@ $nav-tabs-justified-link-border-color:            $gray-alt-admin;
 $nav-tabs-justified-active-link-border-color:     $body-bg;
 
 //== Pills
-$nav-pills-border-radius:                   $border-radius-base;
+$nav-pills-border-radius:                   $border-radius-circle; // rounded
 $nav-pills-active-link-hover-bg:            $component-active-bg;
 $nav-pills-active-link-hover-color:         $component-active-color;
 
-//== Pagination
+//== Pagination - WS2 DONE
 //
 //##
 
-$pagination-color:                     $link-color;
+$pagination-color:                     $asu-gray-darkest;
 $pagination-bg:                        #fff;
-$pagination-border:                    $gray-alt-admin;
+$pagination-border:                    transparent;
 
-$pagination-hover-color:               $link-hover-color;
-$pagination-hover-bg:                  $gray-lighter;
-$pagination-hover-border:              $gray-alt-admin;
+$pagination-hover-color:               #fff;
+$pagination-hover-bg:                  $link-hover-color;
+$pagination-hover-border:              $pagination-border;
 
 $pagination-active-color:              #fff;
 $pagination-active-bg:                 $brand-primary;
-$pagination-active-border:             $brand-primary;
+$pagination-active-border:             $pagination-border;
 
 $pagination-disabled-color:            $gray-light;
 $pagination-disabled-bg:               #fff;
-$pagination-disabled-border:           $gray-alt-admin;
+$pagination-disabled-border:           $pagination-border;
 
-//== Pager
+//== Pager --- IN PROGRESS
 //
 //##
 
 $pager-bg:                             $pagination-bg;
 $pager-border:                         $pagination-border;
-$pager-border-radius:                  15px;
+$pager-border-radius:                  $border-radius-circle;
 
 $pager-hover-bg:                       $pagination-hover-bg;
 
@@ -473,46 +482,55 @@ $pager-active-color:                   $pagination-active-color;
 
 $pager-disabled-color:                 $pagination-disabled-color;
 
-//== Jumbotron   --- DONE
+//== Jumbotron   --- WS2 DONE
 //
 //##
 
-$jumbotron-padding:              2.5em;
-$jumbotron-color:                inherit;
-$jumbotron-bg:                   $gray-lighter;
-$jumbotron-heading-color:        inherit;
-$jumbotron-font-size:            ceil(($font-size-base * 1.5));
+$jumbotron-padding:                    2.5em;
+$jumbotron-color:                      inherit;
+$jumbotron-bg:                         $gray-lighter;
+$jumbotron-heading-color:              inherit;
+$jumbotron-font-size:                  ceil(($font-size-base * 1.5));
 
-//== Form states and alerts  --- DONE
+//== Form states and alerts  --- WS2 DONE
 //
 //## Define colors for form feedback states and, by default, alerts.
 
-$state-success-text:             #fff;
-$state-success-bg:               #148e4b;
-$state-success-border:           #0b4b28; // darken(adjust-hue($state-success-bg, -10), 5%);
+$state-success-text:             $asu-gray-darkest;
+$state-success-bg:               $asu-green;
+$state-success-border:           $asu-green; // darken(adjust-hue($state-success-bg, -10), 5%);
 
-$state-info-text:                #fff;
-$state-info-bg:                  #008ed6;
-$state-info-border:              #005b8a; // darken(adjust-hue($state-info-bg, -10), 7%);
+$state-info-text:                $asu-gray-darkest;
+$state-info-bg:                  $asu-blue;
+$state-info-border:              $asu-blue; // darken(adjust-hue($state-info-bg, -10), 7%);
 
-$state-warning-text:             #000;
-$state-warning-bg:               #bfe319;
-$state-warning-border:           #bfe319; //darken(adjust-hue($state-warning-bg, -10), 5%);
+$state-info-alt-text:            $asu-gray-darkest;
+$state-info-alt-bg:              $asu-gray-lighter;
+$state-info-alt-border:          $asu-gray-lighter; // darken(adjust-hue($state-info-bg, -10), 7%);
+
+$state-info-black-text:          #fff;
+$state-info-black-bg:            $asu-gray-darkest;
+$state-info-black-border:        $asu-gray-darkest; // darken(adjust-hue($state-info-bg, -10), 7%);
+
+$state-warning-text:             $asu-gray-darkest;
+$state-warning-bg:               $asu-orange;
+$state-warning-border:           $asu-orange; //darken(adjust-hue($state-warning-bg, -10), 5%);
 
 $state-danger-text:              #fff;
-$state-danger-bg:                #ec5937;
-$state-danger-border:            #c43413; // darken(adjust-hue($state-danger-bg, -10), 5%);
+$state-danger-bg:                $asu-maroon;
+$state-danger-border:            $asu-maroon; // darken(adjust-hue($state-danger-bg, -10), 5%);
 
-//== Tooltips
+
+//== Tooltips  --- WS2 DONE
 //
 //##
 
 //** Tooltip max width
-$tooltip-max-width:           200px;
+$tooltip-max-width:           17.625rem; // 282px
 //** Tooltip text color
-$tooltip-color:               #fff;
+$tooltip-color:               $asu-gray-darkest;
 //** Tooltip background color
-$tooltip-bg:                  #000;
+$tooltip-bg:                  $asu-gray-lighter;
 $tooltip-opacity:             .9;
 
 //** Tooltip arrow width
@@ -520,14 +538,14 @@ $tooltip-arrow-width:         5px;
 //** Tooltip arrow color
 $tooltip-arrow-color:         $tooltip-bg;
 
-//== Popovers
+//== Popovers  --- WS2 DONE
 //
 //##
 
 //** Popover body background color
 $popover-bg:                          #fff;
 //** Popover maximum width
-$popover-max-width:                   276px;
+$popover-max-width:                   17.625rem;
 //** Popover border color
 $popover-border-color:                rgba(0,0,0,.2);
 //** Popover fallback border color
@@ -537,7 +555,7 @@ $popover-fallback-border-color:       $gray-lighter;
 $popover-title-bg:                    darken($popover-bg, 3%);
 
 //** Popover arrow width
-$popover-arrow-width:                 10px;
+$popover-arrow-width:                 0.625rem;
 //** Popover arrow color
 $popover-arrow-color:                 #fff;
 
@@ -548,7 +566,7 @@ $popover-arrow-outer-color:           rgba(0,0,0,.25);
 //** Popover outer arrow fallback color
 $popover-arrow-outer-fallback-color:  $gray-light;
 
-//== Labels
+//== Labels   --- WS2 DONE
 //
 //##
 
@@ -575,10 +593,10 @@ $label-link-hover-color:      #fff;
 //##
 
 //** Padding applied to the modal body
-$modal-inner-padding:         1.25em;
+$modal-inner-padding:         1.75em; // @TODO Make sure images inside of these have negative padding or something?
 
 //** Padding applied to the modal title
-$modal-title-padding:         15px;
+$modal-title-padding:         1em;
 //** Modal title line-height
 $modal-title-line-height:     $line-height-base;
 
@@ -590,7 +608,7 @@ $modal-content-border-color:                   rgba(0,0,0,.2);
 $modal-content-fallback-border-color:          $gray-light;
 
 //** Modal backdrop background color
-$modal-backdrop-bg:           #000;
+$modal-backdrop-bg:           $asu-gray-darkest;
 //** Modal backdrop opacity
 $modal-backdrop-opacity:      0.5;
 //** Modal header border color
@@ -602,11 +620,11 @@ $modal-lg:                    900px;
 $modal-md:                    600px;
 $modal-sm:                    300px;
 
-//== Alerts
+//== Alerts  --- WS2 Done
 //
 //## Define alert colors, border radius, and padding.
 
-$alert-padding:               15px;
+$alert-padding:               $padding-base-horizontal;
 $alert-border-radius:         $border-radius-base;
 $alert-link-font-weight:      bold;
 
@@ -626,7 +644,7 @@ $alert-danger-bg:             $state-danger-bg;
 $alert-danger-text:           $state-danger-text;
 $alert-danger-border:         $state-danger-border;
 
-//== Progress bars
+//== Progress bars  --- WS2 DONE
 //
 //##
 
@@ -646,7 +664,7 @@ $progress-bar-danger-bg:      $brand-danger;
 //** Info progress bar color
 $progress-bar-info-bg:        $brand-info;
 
-//== List group
+//== List group --- WS2 DONE
 //
 //##
 
@@ -667,15 +685,15 @@ $list-group-active-bg:          $component-active-bg;
 $list-group-active-border:      $list-group-active-bg;
 $list-group-active-text-color:  lighten($list-group-active-bg, 40%);
 
-$list-group-link-color:         #555;
-$list-group-link-heading-color: #333;
+$list-group-link-color:         $asu-gray-darker;
+$list-group-link-heading-color: $asu-gray-darkest;
 
 //== Panels
 //
 //##
 
 $panel-bg:                    #fff;
-$panel-body-padding:          15px;
+$panel-body-padding:          $padding-base-vertical;
 $panel-border-radius:         $border-radius-base;
 
 //** Border color for elements within panels
@@ -784,7 +802,7 @@ $carousel-caption-color:                      #fff;
 //##
 
 $close-font-weight:           bold;
-$close-color:                 #000;
+$close-color:                 $asu-gray-darkest;
 $close-text-shadow:           0 1px 0 #fff;
 
 //== Code
