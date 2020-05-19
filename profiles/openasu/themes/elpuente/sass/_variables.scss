@@ -245,7 +245,7 @@ $input-height-large:             (ceil($font-size-large * $line-height-large) + 
 $input-height-small:             (floor($font-size-small * $line-height-small) + ($padding-small-vertical * 2) + 2);
 
 $legend-color:                   $gray-dark;
-$legend-border-color:            #e5e5e5;
+$legend-border-color:            $asu-gray-lighter;
 
 //** Background color for textual input addons
 $input-group-addon-bg:           $gray-lighter;
@@ -270,10 +270,10 @@ $dropdown-link-color:           #fff;
 //** Hover color for dropdown links.
 $dropdown-link-hover-color:      #000;
 //** Hover background for dropdown links.
-$dropdown-link-hover-bg:         #ffb310;
+$dropdown-link-hover-bg:         $asu-gold;
 
 //** Active dropdown menu item text color.
-$dropdown-link-active-color:     #ffb310;
+$dropdown-link-active-color:     $asu-gold;
 //** Active dropdown menu item background color.
 $dropdown-link-active-bg:        #4F5557;
 
@@ -366,9 +366,9 @@ $navbar-default-border:            0;
 
 // Navbar links
 $navbar-default-link-color:                #fff;
-$navbar-default-link-hover-color:          #ffb310;
+$navbar-default-link-hover-color:          $asu-gold;
 $navbar-default-link-hover-bg:             #000;
-$navbar-default-link-active-color:         #ffb310;
+$navbar-default-link-active-color:         $asu-gold;
 $navbar-default-link-active-bg:            #000;
 $navbar-default-link-disabled-color:       #ccc;
 $navbar-default-link-disabled-bg:          transparent;
