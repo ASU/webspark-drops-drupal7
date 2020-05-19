@@ -109,11 +109,11 @@ button, .button, .btn, a.btn, .btn a {
 }
 
 a.btn.btn-lg, .btn.btn-lg {
-  margin-top: 24px;
+  margin-top: 1.5rem;
 }
 
 a.btn, .btn {
-  margin-top: 15px;
+  margin-top: 0.9375rem;
 }
 
 a.btn:hover, .btn a:hover {
@@ -274,7 +274,7 @@ p.img-rounded img {
 .img-thumbnail,
 p.img-thumbnail img {
   background-color: white;
-  border: 1px solid #dddddd;
+  border: 1px solid #DDDDDD;
   border-radius: 4px;
   display: inline-block;
   height: auto;
@@ -300,7 +300,7 @@ table > tbody > tr > th,
 table > tbody > tr > td,
 table > tfoot > tr > th,
 table > tfoot > tr > td {
-  border-top: 1px solid #b7b7b7;
+  border-top: 1px solid #BFBFBF;
   line-height: 1.44;
   padding: 8px;
   vertical-align: top;
@@ -308,13 +308,13 @@ table > tfoot > tr > td {
 
 table > thead > tr > th,
 table > thead > tr > td {
-  border-bottom: 2px solid #b7b7b7;
+  border-bottom: 2px solid #BFBFBF;
   vertical-align: bottom;
   font-weight: bold;
 }
 
 body:not(.page-admin) table > tbody > tr:nth-child(2n+1) {
-  background-color: #F5F5F5;
+  background-color: #FAFAFA;
 }
 
 table > caption + thead > tr:first-child > th,
@@ -327,13 +327,13 @@ table > thead:first-child > tr:first-child > td {
 }
 
 table > tbody + tbody {
-  border-top: 2px solid #b7b7b7;
+  border-top: 2px solid #BFBFBF;
 }
 
 /* WYSIWYG Bordered table */
 table.bordered {
-  border-bottom: 1px solid #b7b7b7;
-  border-left: 1px solid #b7b7b7;
+  border-bottom: 1px solid #BFBFBF;
+  border-left: 1px solid #BFBFBF;
 }
 
 table.bordered > thead > tr > th,
@@ -342,7 +342,7 @@ table.bordered > tbody > tr > th,
 table.bordered > tbody > tr > td,
 table.bordered > tfoot > tr > th,
 table.bordered > tfoot > tr > td {
-  border-right: 1px solid #b7b7b7;
+  border-right: 1px solid #BFBFBF;
 }
 
 table.bordered > tbody > tr:nth-child(2n+1) {
@@ -355,7 +355,7 @@ table.bordered > colgroup + thead > tr:first-child > th,
 table.bordered > colgroup + thead > tr:first-child > td,
 table.bordered > thead:first-child > tr:first-child > th,
 table.bordered > thead:first-child > tr:first-child > td {
-  border-top: 1px solid #b7b7b7;
+  border-top: 1px solid #BFBFBF;
 }
 
 /* =CONTENT CALLOUTS
@@ -634,7 +634,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 .alert:not([class*="alert-"]),
 div[class='alert alert-block'] {
   /* Catch-all for default alert class */
-  background-color: #f7f7f7;
+  background-color: #FAFAFA;
   border-color: #ccc;
 }
 
@@ -875,7 +875,7 @@ ul.help-text li.help-title {
 .ui-widget-content.ui-dialog.token-browser-container {
   background-color: #fff;
   padding: 0.5em;
-  border: 1px solid #ddd;
+  border: 1px solid #DDDDDD;
 }
 
 .ui-widget-content.ui-dialog.token-browser-container,

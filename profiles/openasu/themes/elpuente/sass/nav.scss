@@ -1,15 +1,15 @@
 /**
  * moved over from Innovationn
- * Nothing done
+ * IS_SCSS
  */
-
+@import "variables";
 /* =NAVBAR
 -------------------------------------------------------------- */
 .navmenu {
   background-color: #353535;
-}
-.navmenu .container {
-  padding-left: 0;
+  .container {
+    padding-left: 0;
+  }
 }
 .nav > li > a {
   display: inline-block;
@@ -41,7 +41,7 @@
 .navbar-nav > .active > a:hover,
 .navbar-nav > .active > a:focus {
   background-color: #000;
-  color: #ffc627;
+  color: $asu-gold;
 }
 .navbar-nav > li > a.dropdown-toggle {
   padding: 20px 25px 20px 7px;
@@ -66,7 +66,7 @@
 .navbar-nav .dropdown-menu > li > a:hover,
 .navbar-nav .dropdown-menu > li > a:focus {
   background-color: #000;
-  color: #ffc627;
+  color: $asu-gold;
 }
 .navbar-nav > li:focus > a,
 .navbar-nav > .active:focus > a,
@@ -83,7 +83,7 @@
 -------------------------------------------------------------- */
 .pane-system-main-menu,
 .pane-menu-tree {
-  border-top: 8px solid #8C1D40;
+  border-top: 8px solid $asu-maroon;
   margin-top: 1.5em;
   margin-bottom: 3em;
   padding: 2em;
@@ -149,7 +149,7 @@
   border-bottom: none;
   display: block;
   padding: 0.625em 0.3125em;
-  color: #8C1D40;
+  color: $asu-maroon;
   font-weight: 200;
   text-decoration: none;
   font-size: 1.125em;
@@ -162,7 +162,7 @@
 }
 .pane-system-main-menu ul.menu li a:hover,
 .pane-menu-tree ul.menu li a:hover {
-  background-color: #f5f5f5;
+  background-color: $asu-gray-lightest;
   font-weight: bold;
 }
 .pane-system-main-menu ul.menu li a:focus,
@@ -235,7 +235,7 @@ ul.quicktabs-style-nostyle li.active,
 .ui-tabs .ui-tabs-nav li.ui-state-hover,
 .ui-tabs .ui-tabs-nav li.ui-state-active,
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected {
-  border-top: 5px solid #8C1D40;
+  border-top: 5px solid $asu-maroon;
   background: none;
   background-color: transparent;
   margin-bottom: -1px;
@@ -323,7 +323,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
   color: white;
-  background-color: #8C1D40;
+  background-color: $asu-maroon;
 }
 .nav-pills > li.active > a:focus {
   outline: 2px solid #4D90FE;
@@ -375,9 +375,9 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
   padding: 6px 19px;
   line-height: 1.44;
   text-decoration: none;
-  color: #8C1D40;
+  color: $asu-maroon;
   background-color: white;
-  border: 1px solid #dddddd;
+  border: 1px solid $gray-alt-admin;
   margin-left: -1px;
 }
 .pagination > li:first-child > a,
@@ -396,7 +396,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 .pagination > li > span:focus {
   color: #d23153;
   background-color: #eeeeee;
-  border-color: #dddddd;
+  border-color: $gray-alt-admin;
 }
 .pagination > .active > a, .pagination > .active > a:hover, .pagination > .active > a:focus,
 .pagination > .active > span,
@@ -404,8 +404,8 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 .pagination > .active > span:focus {
   z-index: 2;
   color: white;
-  background-color: #8C1D40;
-  border-color: #8C1D40;
+  background-color: $asu-maroon;
+  border-color: $asu-maroon;
   cursor: default;
 }
 .pagination > .disabled > span,
@@ -416,7 +416,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 .pagination > .disabled > a:focus {
   color: #777777;
   background-color: white;
-  border-color: #dddddd;
+  border-color: $gray-alt-admin;
   cursor: not-allowed;
 }
 .pagination-lg > li > a,
@@ -470,7 +470,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
   display: inline-block;
   padding: 5px 14px;
   background-color: white;
-  border: 1px solid #dddddd;
+  border: 1px solid $gray-alt-admin;
   border-radius: 15px;
 }
 .pager li > a:hover,
@@ -528,9 +528,9 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 }
 .item-list.item-list-pager .pager .pager-current,
 #media-browser-tabset .item-list.item-list-pager .pager .pager-current {
-  border: 1px solid #8C1D40;
+  border: 1px solid $asu-maroon;
   padding: 5px 14px;
-  background-color: #8C1D40;
+  background-color: $asu-maroon;
   color: #fff;
 }
 .item-list.item-list-pager .pager-ellipsis {

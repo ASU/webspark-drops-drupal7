@@ -275,7 +275,7 @@ p.img-rounded img {
 .img-thumbnail,
 p.img-thumbnail img {
   background-color: white;
-  border: 1px solid #dddddd;
+  border: 1px solid $gray-alt-admin;
   border-radius: 4px;
   display: inline-block;
   height: auto;
@@ -301,7 +301,7 @@ table > tbody > tr > th,
 table > tbody > tr > td,
 table > tfoot > tr > th,
 table > tfoot > tr > td {
-  border-top: 1px solid #b7b7b7;
+  border-top: 1px solid $asu-gray;
   line-height: 1.44;
   padding: 8px;
   vertical-align: top;
@@ -309,12 +309,12 @@ table > tfoot > tr > td {
 
 table > thead > tr > th,
 table > thead > tr > td {
-  border-bottom: 2px solid #b7b7b7;
+  border-bottom: 2px solid $asu-gray;
   vertical-align: bottom;
   font-weight: bold;
 }
 body:not(.page-admin) table > tbody > tr:nth-child(2n+1) {
-  background-color: #F5F5F5;
+  background-color: $asu-gray-lightest;
 }
 
 table > caption + thead > tr:first-child > th,
@@ -327,13 +327,13 @@ table > thead:first-child > tr:first-child > td {
 }
 
 table > tbody + tbody {
-  border-top: 2px solid #b7b7b7;
+  border-top: 2px solid $asu-gray;
 }
 
 /* WYSIWYG Bordered table */
 table.bordered {
-  border-bottom: 1px solid #b7b7b7;
-  border-left: 1px solid #b7b7b7;
+  border-bottom: 1px solid $asu-gray;
+  border-left: 1px solid $asu-gray;
 }
 table.bordered > thead > tr > th,
 table.bordered > thead > tr > td,
@@ -341,7 +341,7 @@ table.bordered > tbody > tr > th,
 table.bordered > tbody > tr > td,
 table.bordered > tfoot > tr > th,
 table.bordered > tfoot > tr > td {
-  border-right: 1px solid #b7b7b7;
+  border-right: 1px solid $asu-gray;
 }
 table.bordered > tbody > tr:nth-child(2n+1) {
   background-color: #fff;
@@ -352,7 +352,7 @@ table.bordered > colgroup + thead > tr:first-child > th,
 table.bordered > colgroup + thead > tr:first-child > td,
 table.bordered > thead:first-child > tr:first-child > th,
 table.bordered > thead:first-child > tr:first-child > td {
-  border-top: 1px solid #b7b7b7;
+  border-top: 1px solid $asu-gray;
 }
 
 
@@ -623,7 +623,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 
 .alert:not([class*="alert-"]),
 div[class='alert alert-block'] { /* Catch-all for default alert class */
-  background-color: #f7f7f7;
+  background-color: $asu-gray-lightest;
   border-color: #ccc;
 }
 
@@ -860,7 +860,7 @@ ul.help-text li.help-title {
 .ui-widget-content.ui-dialog.token-browser-container {
   background-color: #fff;
   padding: 0.5em;
-  border: 1px solid #ddd;
+  border: 1px solid $gray-alt-admin;
 }
 .ui-widget-content.ui-dialog.token-browser-container,
 .token-browser-container .ui-dialog-titlebar {
@@ -1014,5 +1014,5 @@ body #content .ui-tabs .ui-tabs-nav li a {
 /** WEBSPARK-1118 - Temporary footer link fix @removeIfInGlobalCSS */
 #innovation-footer .footer-menu ul li a:hover {
   color: $asu-maroon;
-  border-bottom: 1px dotted #8C1D40;
+  border-bottom: 1px dotted $asu-maroon;
 }

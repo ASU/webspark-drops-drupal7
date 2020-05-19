@@ -28,7 +28,7 @@ $asu-gray-darker:       #484848;
 $asu-gray-dark:         #747474;
 $asu-gray:              #BFBFBF;
 $asu-gray-light:        #D0D0D0;
-$asu-gray-lighter: #e8e8e8;
+$asu-gray-lighter:      #e8e8e8;
 $asu-gray-lightest:     #FAFAFA;
 //// Background colors
 
@@ -39,6 +39,10 @@ $gray-dark:              $asu-gray-darker; // lighten(#000, 20%);   // #333
 $gray:                   $asu-gray-dark; // #5c6670; //lighten(#000, 33.5%); // #555
 $gray-light:             $asu-gray; // lighten(#000, 60%);   // #999
 $gray-lighter:           $asu-gray-lighter; // lighten(#000, 93.5%); // #eee
+$gray-fieldset:          #EDF9DD;
+$gray-fieldset-nested:   #E0E0DC;
+$gray-alt-admin:         #DDDDDD;
+$gray-alt-admin-pia:     #E1F8C4;
 
 //== ASU Alert/Messages
 //// Alert backgrounds are the same as background colors above. Use same variables.
@@ -375,9 +379,9 @@ $navbar-default-brand-hover-color:         #000; //darken($navbar-default-brand-
 $navbar-default-brand-hover-bg:            transparent;
 
 // Navbar toggle
-$navbar-default-toggle-hover-bg:           #ddd;
+$navbar-default-toggle-hover-bg:           $gray-alt-admin;
 $navbar-default-toggle-icon-bar-bg:        #888;
-$navbar-default-toggle-border-color:       #ddd;
+$navbar-default-toggle-border-color:       $gray-alt-admin;
 
 // Inverted navbar
 // Reset inverted navbar basics
@@ -418,15 +422,15 @@ $nav-disabled-link-hover-color:             $gray-light;
 $nav-open-link-hover-color:                 #fff;
 
 //== Tabs
-$nav-tabs-border-color:                     #ddd;
+$nav-tabs-border-color:                     $gray-alt-admin;
 
 $nav-tabs-link-hover-border-color:          $gray-lighter;
 
 $nav-tabs-active-link-hover-bg:             $body-bg;
 $nav-tabs-active-link-hover-color:          $gray;
-$nav-tabs-active-link-hover-border-color:   #ddd;
+$nav-tabs-active-link-hover-border-color:   $gray-alt-admin;
 
-$nav-tabs-justified-link-border-color:            #ddd;
+$nav-tabs-justified-link-border-color:            $gray-alt-admin;
 $nav-tabs-justified-active-link-border-color:     $body-bg;
 
 //== Pills
@@ -440,11 +444,11 @@ $nav-pills-active-link-hover-color:         $component-active-color;
 
 $pagination-color:                     $link-color;
 $pagination-bg:                        #fff;
-$pagination-border:                    #ddd;
+$pagination-border:                    $gray-alt-admin;
 
 $pagination-hover-color:               $link-hover-color;
 $pagination-hover-bg:                  $gray-lighter;
-$pagination-hover-border:              #ddd;
+$pagination-hover-border:              $gray-alt-admin;
 
 $pagination-active-color:              #fff;
 $pagination-active-bg:                 $brand-primary;
@@ -452,7 +456,7 @@ $pagination-active-border:             $brand-primary;
 
 $pagination-disabled-color:            $gray-light;
 $pagination-disabled-bg:               #fff;
-$pagination-disabled-border:           #ddd;
+$pagination-disabled-border:           $gray-alt-admin;
 
 //== Pager
 //
@@ -649,7 +653,7 @@ $progress-bar-info-bg:        $brand-info;
 //** Background color on `.list-group-item`
 $list-group-bg:                 #fff;
 //** `.list-group-item` border color
-$list-group-border:             #ddd;
+$list-group-border:             $gray-alt-admin;
 //** List group border radius
 $list-group-border-radius:      $border-radius-base;
 
@@ -675,10 +679,10 @@ $panel-body-padding:          15px;
 $panel-border-radius:         $border-radius-base;
 
 //** Border color for elements within panels
-$panel-inner-border:          #ddd;
+$panel-inner-border:          $gray-alt-admin;
 $panel-footer-bg:             $asu-gray-lightest;
 $panel-default-text:          $gray-dark;
-$panel-default-border:        #ddd;
+$panel-default-border:        $gray-alt-admin;
 $panel-default-heading-bg:    $asu-gray-lightest;
 
 $panel-primary-text:          #fff;
@@ -710,7 +714,7 @@ $thumbnail-padding:           0.25em;
 //** Thumbnail background color
 $thumbnail-bg:                $body-bg;
 //** Thumbnail border color
-$thumbnail-border:            #ddd;
+$thumbnail-border:            $gray-alt-admin;
 //** Thumbnail border radius
 $thumbnail-border-radius:     $border-radius-base;
 
