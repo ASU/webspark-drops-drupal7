@@ -98,7 +98,7 @@ $link-color:            $brand-primary;
 $link-color-gold:       $asu-gold;
 //** Link hover color set via `darken()` function.
 $link-hover-color:      #d23153;
-$gold-hover-color:      #ffd053;
+$link-hover-color-gold: #ffd053;
 
 //== Typography --- WS2 DONE
 //
@@ -223,6 +223,9 @@ $btn-dark-bg:                    $asu-gray-darkest;
 
 $btn-gray-color:                 $asu-gray-darkest;
 $btn-gray-bg:                    $asu-gray-lighter;
+
+$btn-scale:                      1.1;
+$btn-disabled-opacity:           0.5;
 
 
 //== Forms  --- NOT DONE

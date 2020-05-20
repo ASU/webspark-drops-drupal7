@@ -74,9 +74,9 @@
 .nav .open > a:focus,
 .navbar-nav > .active > a:focus
 .navbar-nav .dropdown-menu > li > a:focus {
-  outline: 2px solid #4D90FE;
-  -webkit-box-shadow: 0px 0px 5px  #4D90FE;
-  box-shadow: 0px 0px 5px  #4D90FE;
+  outline: 2px solid $input-border-focus;
+  -webkit-box-shadow: 0px 0px 5px  $input-border-focus;
+  box-shadow: 0px 0px 5px  $input-border-focus;
 }
 
 /* =SIDEBAR MENUS
@@ -167,9 +167,9 @@
 }
 .pane-system-main-menu ul.menu li a:focus,
 .pane-menu-tree ul.menu li a:focus {
-  outline: 2px solid #4D90FE;
-  -webkit-box-shadow: 0px 0px 5px  #4D90FE;
-  box-shadow: 0px 0px 5px  #4D90FE;
+  outline: 2px solid $input-border-focus;
+  -webkit-box-shadow: 0px 0px 5px  $input-border-focus;
+  box-shadow: 0px 0px 5px  $input-border-focus;
 }
 
 /* =TABS & QuickTabs
@@ -196,7 +196,7 @@ ul.quicktabs-style-nostyle {
   background: none;
   min-height: auto;
   padding: 0;
-  color: #2a2a2a;
+  color: $asu-gray-darkest;
   font-size: 18px;
   font-weight: 200;
   line-height: 1.44;
@@ -291,12 +291,12 @@ ul.quicktabs-style-nostyle li.active:hover a,
   margin-left: 0.08em;
 }
 .ui-tabs .ui-tabs-nav li.ui-state-focus a {
-  border-top: 2px solid #4D90FE;
-  border-right: 2px solid #4D90FE;
-  border-bottom: 2px solid #4D90FE;
-  border-left: 2px solid #4D90FE;
-  -webkit-box-shadow: 0px 0px 5px  #4D90FE;
-  box-shadow: 0px 0px 5px  #4D90FE;
+  border-top: 2px solid $input-border-focus;
+  border-right: 2px solid $input-border-focus;
+  border-bottom: 2px solid $input-border-focus;
+  border-left: 2px solid $input-border-focus;
+  -webkit-box-shadow: 0px 0px 5px  $input-border-focus;
+  box-shadow: 0px 0px 5px  $input-border-focus;
 }
 ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
   color: #767676;
@@ -322,13 +322,13 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
-  color: white;
+  color: #fff;
   background-color: $asu-maroon;
 }
 .nav-pills > li.active > a:focus {
-  outline: 2px solid #4D90FE;
-  -webkit-box-shadow: 0px 0px 5px  #4D90FE;
-  box-shadow: 0px 0px 5px  #4D90FE;
+  outline: 2px solid $input-border-focus;
+  -webkit-box-shadow: 0px 0px 5px  $input-border-focus;
+  box-shadow: 0px 0px 5px  $input-border-focus;
 }
 
 /* =BREADCRUMBS
@@ -376,7 +376,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
   line-height: 1.44;
   text-decoration: none;
   color: $asu-maroon;
-  background-color: white;
+  background-color: #fff;
   border: 1px solid $gray-alt-admin;
   margin-left: -1px;
 }
@@ -403,7 +403,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 .pagination > .active > span:hover,
 .pagination > .active > span:focus {
   z-index: 2;
-  color: white;
+  color: #fff;
   background-color: $asu-maroon;
   border-color: $asu-maroon;
   cursor: default;
@@ -415,7 +415,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 .pagination > .disabled > a:hover,
 .pagination > .disabled > a:focus {
   color: #777777;
-  background-color: white;
+  background-color: #fff;
   border-color: $gray-alt-admin;
   cursor: not-allowed;
 }
@@ -469,7 +469,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 .pager li > span {
   display: inline-block;
   padding: 5px 14px;
-  background-color: white;
+  background-color: #fff;
   border: 1px solid $gray-alt-admin;
   border-radius: 15px;
 }
@@ -491,7 +491,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 .pager .disabled > a:focus,
 .pager .disabled > span {
   color: #777777;
-  background-color: white;
+  background-color: #fff;
   cursor: not-allowed;
 }
 

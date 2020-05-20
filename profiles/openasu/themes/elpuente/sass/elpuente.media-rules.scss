@@ -1,25 +1,66 @@
 /* =MEDIA QUERIES
+ * IN PROGRESS
 -------------------------------------------------------------- */
-
 @import "variables";
 
 @media (max-width: 991px) {
+
+  h1, .h1 {
+    margin-bottom: 48px;
+    font-size: $font-size-h1-mobile;
+//    line-height: 1.2;
+  }
+
+  h1.page-title {
+    margin-bottom: 0;
+    padding-bottom: 12px;
+  }
+
+  h2, .h2 {
+    font-size: $font-size-h2-mobile;
+//    line-height: 1.44;
+  }
 
   .row .col-sm-6:nth-child(3),
   .row .col-sm-6:nth-child(5),
   .row .col-sm-6:nth-child(7) {
     clear: both;
   }
-
+  #header .container {
+    width: 100%;
+  }
+  #header > .container .row {
+    margin-left: 0;
+    margin-right: 0;
+    .col-md-12 {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+  #header .container-fluid > .row > .col-md-12 {
+    width: 100%;
+  }
+  .header__sitename {
+    font-size: 15px;
+    padding: 12px 15px;
+    color: #fff;
+    background: $asu-gray-darker;
+    font-weight: 600;
+    line-height: 12px;
+    a {
+      color: #fff;
+    }
+  }
+  #asu_hdr_title_gen {
+    white-space: normal;
+  }
 }
 
 @media (max-width: 793px) {
-
   .container-fluid .row {
     margin-left: 0;
     margin-right: 0;
   }
-
   .panel-pane.js-lightgraybg,
   .panel-pane.js-darkgraybg,
   .panel-pane.pane-bundle-hero,
@@ -27,27 +68,47 @@
     padding-right: 15px;
     padding-left: 15px;
   }
+}
 
+@media (max-width: 768px) {
+  #innovation-footer .footer-menu ul li {
+    padding-bottom: 0.5em;
+  }
+  .node-content-callout h2 {
+    font-size: 38px;
+  }
 }
 
 @media (max-width: 480px) {
-
   table {
-    margin: 1.5em 0 3.125em 0;
+    margin: 24px 0 50px 0;
   }
-
   table.tablefield {
     display: block;
   }
-
   img.media-element.pull-right {
     float: none !important;
     margin-left: 0;
   }
-
   img.media-element.pull-left {
     float: none !important;
     margin-right: 0;
   }
+}
 
+@media print {
+  .megafoot > .row div:not(.megafoot-border) {
+    display: none; }
+  .megafoot ul.social-media li a {
+    font-size: 1em;
+  }
+  .ui-tabs-nav {
+    display: none;
+  }
+  .ui-tabs .ui-tabs-hide {
+    display: block !important;
+  }
+  #innovation-footer {
+    position: revert;
+  }
 }
