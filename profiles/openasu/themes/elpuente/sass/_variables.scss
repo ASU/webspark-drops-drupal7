@@ -15,9 +15,9 @@
 $the-base:         16px;
 // Panel pane padding
 $asu-panel-padding: 1em 1.5em 1em;
-$elpuente-images-dir: "/sites/all/themes/elpuente/images";
+$elpuente-images-dir: "/profiles/openasu/themes/elpuente/images";
 // The amount lists, blockquotes and comments are indented.
-$indent-amount: 30px;
+$indent-amount: 1.875rem;
 
 //== Colors --- WS2 DONE
 
@@ -33,7 +33,7 @@ $asu-gray-darkest:      #191919; // Not using lighten() mixing
 $asu-gray-darker:       #484848;
 $asu-gray-dark:         #747474;
 $asu-gray:              #bfbfbf;
-$asu-gray-light:        #d0d0d0;
+$asu-gray-light: #d0d0d0;
 $asu-gray-lighter:      #e8e8e8;
 $asu-gray-lightest:     #fafafa;
 //// Background colors
@@ -110,7 +110,7 @@ $font-family-serif:       Georgia, "Times New Roman", Times, serif;
 $font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", "DejaVu Sans Mono", monospace, sans-serif;
 $font-family-sans-serif:  "Arial Bold", sans-serif;
 
-// BASE FONT
+// BASE FONT --- WS2 DONE
 /////////////////////
 $font-family-base:        $font-family-sans-serif;
 
@@ -165,8 +165,8 @@ $padding-large-horizontal:  2 * $padding-base-vertical;
 $padding-small-vertical:    0.5 * $padding-base-vertical;
 $padding-small-horizontal:  0.5 * $padding-base-vertical;
 
-$padding-xs-vertical:       0.125 * $padding-base-vertical;
-$padding-xs-horizontal:     0.125 * $padding-base-vertical;
+$padding-xs-vertical:       0.25 * $padding-base-vertical;
+$padding-xs-horizontal:     0.25 * $padding-base-vertical;
 
 $line-height-large:         1.1; // Larger
 $line-height-small:         1.5;
@@ -228,7 +228,7 @@ $btn-scale:                      1.1;
 $btn-disabled-opacity:           0.5;
 
 
-//== Forms  --- NOT DONE
+//== Forms  --- WS2 DONE
 //
 //##
 
@@ -743,6 +743,10 @@ $thumbnail-border-radius:     $border-radius-base;
 $thumbnail-caption-color:     $text-color;
 //** Padding around the thumbnail caption
 $thumbnail-caption-padding:   9px;
+
+//== Images (custom) (same size for desktop and mobile)
+$image-round-medium:          240px;
+$image-round-small:           180px;
 
 //== Wells
 //

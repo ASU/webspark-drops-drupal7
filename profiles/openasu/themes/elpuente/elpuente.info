@@ -4,7 +4,7 @@ name        = El Puente
 description = New Web Standards 2.0 theme to replace Innovation in Drupal 7's Webspark
 core        = 7.x
 base theme  = kalatheme
-release     = 7.x-1.0
+release     = 7.x-1.0-alpha1
 engine      = phptemplate
 screenshot  = screenshot.png
 
@@ -21,7 +21,7 @@ features[] = name
 
 ;----------// Stylesheets
 
-; Bootstrap core
+; Bootstrap core - replaces bootstrap.css
 stylesheets[all][] = css/elpuente.core-bootstrap.css
 ; Last CSS sheets to overrule all others - including Innovation CSS import
 stylesheets[all][] = css/elpuente.custom.css

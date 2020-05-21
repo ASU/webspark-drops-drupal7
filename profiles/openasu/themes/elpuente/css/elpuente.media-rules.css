@@ -1,14 +1,61 @@
-/* =MEDIA QUERIES
+/* =MEDIA QUERIES --- IN PROGRESS
 -------------------------------------------------------------- */
 /*
  * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
  * Override Bootstrap variables below.
  */
 @media (max-width: 991px) {
+  h1, .h1 {
+    margin-bottom: 48px;
+    font-size: 48px;
+  }
+
+  h1.page-title {
+    margin-bottom: 0;
+    padding-bottom: 12px;
+  }
+
+  h2, .h2 {
+    font-size: 34px;
+  }
+
   .row .col-sm-6:nth-child(3),
   .row .col-sm-6:nth-child(5),
   .row .col-sm-6:nth-child(7) {
     clear: both;
+  }
+
+  #header .container {
+    width: 100%;
+  }
+
+  #header > .container .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  #header > .container .row .col-md-12 {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  #header .container-fluid > .row > .col-md-12 {
+    width: 100%;
+  }
+
+  .header__sitename {
+    font-size: 15px;
+    padding: 12px 15px;
+    color: #fff;
+    background: #484848;
+    font-weight: 600;
+    line-height: 12px;
+  }
+  .header__sitename a {
+    color: #fff;
+  }
+
+  #asu_hdr_title_gen {
+    white-space: normal;
   }
 }
 @media (max-width: 793px) {
@@ -25,9 +72,18 @@
     padding-left: 15px;
   }
 }
+@media (max-width: 768px) {
+  #innovation-footer .footer-menu ul li {
+    padding-bottom: 0.5em;
+  }
+
+  .node-content-callout h2 {
+    font-size: 38px;
+  }
+}
 @media (max-width: 480px) {
   table {
-    margin: 1.5em 0 3.125em 0;
+    margin: 24px 0 50px 0;
   }
 
   table.tablefield {
@@ -42,5 +98,26 @@
   img.media-element.pull-left {
     float: none !important;
     margin-right: 0;
+  }
+}
+@media print {
+  .megafoot > .row div:not(.megafoot-border) {
+    display: none;
+  }
+
+  .megafoot ul.social-media li a {
+    font-size: 1em;
+  }
+
+  .ui-tabs-nav {
+    display: none;
+  }
+
+  .ui-tabs .ui-tabs-hide {
+    display: block !important;
+  }
+
+  #innovation-footer {
+    position: revert;
   }
 }

@@ -1,5 +1,5 @@
 /**
- * moved over from Innovationn
+ * moved over from Innovationn (innovation-main.css source)
  * IS_SCSS
  */
 @import "variables";
@@ -74,7 +74,7 @@ div.pane-menu-tree {
   }
 }
 
-/* =LINKS & BUTTONS
+/* =LINKS & BUTTONS --- DONE
 -------------------------------------------------------------- */
 body {
   font-family: $font-family-base;
@@ -84,7 +84,7 @@ body {
 
 a,
 .ui-widget-content a {
-  border-bottom: 1px dotted $asu-maroon;
+  border-bottom: 1px solid $asu-maroon;
   text-decoration: none;
   color: $asu-maroon;
   transition: all 0.25s ease-in-out 0s;
@@ -106,11 +106,11 @@ button, .button, .btn, a.btn, .btn a {
 }
 
 a.btn.btn-lg, .btn.btn-lg {
-  margin-top: 1.5rem;
+  margin-top: 1.5em;
 }
 
 a.btn, .btn {
-  margin-top: 0.9375rem;
+  margin-top: 0.9375em;
 }
 
 a.btn:hover, .btn a:hover {
@@ -142,7 +142,7 @@ a.btn-primary:hover,
   border-bottom: none;
 }
 
-/* =TYPOGRAPHY
+/* =TYPOGRAPHY --- WS2.0 DONE
 -------------------------------------------------------------- */
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   margin-bottom: 1.5rem;
@@ -153,27 +153,27 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 h1, .h1 {
   font-size: $font-size-h1;
-  line-height: 68/64; // 1.0625
+  line-height: 1.0625em; // 1.0625
 }
 
 h2, .h2 {
   font-size: $font-size-h2;
-  line-height: 44/40; // 1.1
+  line-height: 1.1em; // 1.1
 }
 
 h3, .h3 {
   font-size: $font-size-h3;
-  line-height: 28/24; // 1.1428
+  line-height: 1.1428em; // 1.1428
 }
 
 h4, .h4 {
   font-size: $font-size-h4;
-  line-height: 26/20; //1.3
+  line-height: 1.3em; //1.3
 }
 
 h5, .h5, h6, .h6 {
   font-size: $font-size-h5;
-  line-height: 24/16 // 1.5
+  line-height: 1.5em // 1.5
 }
 
 h6, .h6 {
@@ -183,9 +183,9 @@ h6, .h6 {
   /* WYSIWYG style -- Lead Paragraph -- WEBSPARK-684  (Arbitrary - no WS2.0 rules yet */
 .lead-paragraph {
   font-family: inherit;
-  font-size: 1.5em;
+  font-size: 2rem;
   font-weight: 200;
-  line-height: 26/20;
+  line-height: 1.6em;
 }
 
 .highlight {
@@ -199,24 +199,22 @@ h6, .h6 {
   background-color: $asu-gray-darkest;
 }
 
-// @TODO - different padding
-
 .explore-programs h3 {
   font-size: 1.625rem;
 }
 
-/* =HEADER
+/* =HEADER --- IN PROGRESS
 -------------------------------------------------------------- */
 .header__sitename {
   color: $asu-gray-darkest;
   font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 1.5em;
   line-height: 1;
   letter-spacing: -0.5px;
   margin-top: 0;
   margin-bottom: 0;
-  padding: 0 0 12px 12px;
+  padding: 0 0 0.75rem 0.75rem;
   white-space: nowrap;
   overflow: hidden;
 }
@@ -233,7 +231,7 @@ h6, .h6 {
   box-sizing: content-box;
 }
 
-/* =STICKY NAV BAR
+/* =STICKY NAV BAR --- WS2.0 DONE
 -------------------------------------------------------------- */
 #ASUNavMenu.affix {
   position: fixed;
@@ -247,7 +245,7 @@ h6, .h6 {
   top: 0;
 }
 
-/* =IMAGES
+/* =IMAGES --- IN PROGRESS
 -------------------------------------------------------------- */
 
 /* Added from Panopoly Images CSS file (removed in Panopoly 1.21) */
@@ -268,7 +266,7 @@ img.media-element.pull-left {
 
 .img-circle,
 p.img-circle img {
-  border-radius: 50%;
+  border-radius: $border-radius-circle;
 }
 
 .img-rounded,
@@ -289,12 +287,12 @@ p.img-thumbnail img {
   transition: all 0.2s ease-in-out 0s;
 }
 
-/* =TABLES
+/* =TABLES --- IN PROGRESS
 -------------------------------------------------------------- */
 /* Default table styles */
 table {
   background-color: #fff;
-  margin-bottom: 24px;
+  margin-bottom: 1.5em;
   max-width: 100%;
   width: 100%;
 }
@@ -307,7 +305,7 @@ table > tfoot > tr > th,
 table > tfoot > tr > td {
   border-top: 1px solid $asu-gray;
   line-height: 1.44;
-  padding: 8px;
+  padding: $padding-small-vertical $padding-small-horizontal;
   vertical-align: top;
 }
 
@@ -360,7 +358,7 @@ table.bordered > thead:first-child > tr:first-child > td {
 }
 
 
-/* =CONTENT CALLOUTS
+/* =CONTENT CALLOUTS --- NOT DONE
 -------------------------------------------------------------- */
 .node-content-callout {
   padding: 80px 0;
@@ -375,7 +373,7 @@ table.bordered > thead:first-child > tr:first-child > td {
 
 .node-content-callout h2 {
   margin-bottom: 34px;
-  font-size: 48px;
+  font-size: $font-size-h2;
 }
 
 .node-content-callout .btn {
@@ -387,11 +385,11 @@ table.bordered > thead:first-child > tr:first-child > td {
   margin-top: 22px;
 }
 
-/* =PANELS
+/* =PANELS --- WS2.0 DONE
 -------------------------------------------------------------- */
 .panel {
-  background-color: #fbfbfb;
-  border: 1px solid #d7d7d7;
+  background-color: $asu-gray-lightest;
+  border: 1px solid $asu-gray-light;
 }
 
 .js-darkgraybg .panel,
@@ -399,7 +397,7 @@ table.bordered > thead:first-child > tr:first-child > td {
   background-color: #fff;
 }
 
-/* =VIDEO
+/* =VIDEO --- WS2.0 DONE
 -------------------------------------------------------------- */
 /* Generic video */
 .embedded-video,
@@ -430,41 +428,41 @@ table.bordered > thead:first-child > tr:first-child > td {
   height: 100% !important;
 }
 
-/* =BREADCRUMBS
+/* =BREADCRUMBS --- WS2.0 DONE
 -------------------------------------------------------------- */
 .easy-breadcrumb {
   background-color: transparent;
   margin: 2em 0;
   padding: 0;
-  color: #555;
-  font-size: 14px;
+  color: $asu-gray-darker;
+  font-size: 0.875em;
 }
 
 .easy-breadcrumb .easy-breadcrumb_segment-separator {
-  padding: 0 5px;
+  padding: 0 0.3125rem; // 5px
 }
 
 .easy-breadcrumb a {
   border-bottom: 0 none;
 }
 
-/* =FLEXSLIDER SLIDESHOWS
+/* =FLEXSLIDER SLIDESHOWS --- WS2.0 DONE
 -------------------------------------------------------------- */
 
 .flexslider {
   border: none;
   border-radius: 0;
   box-shadow: none;
-  margin: 0 0 44px;
+  margin: 0 0 2.75rem; // 44px
 }
 
-/* =ACCORDIONS
+/* =ACCORDIONS --- NOT DONE
 -------------------------------------------------------------- */
 .ui-accordion {
-  margin: 48px 0;
+  margin: 3rem 0;
   color: $asu-gray-darkest;
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 16px;
+  font-size: 1rem; // 16px
   font-weight: 200;
   line-height: 1.44;
 }
@@ -578,12 +576,12 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
   height: 13px;
   width: 13px;
 }
-/* =ALERTS
+/* =ALERTS --- WS2.0 DONE
 -------------------------------------------------------------- */
 
 .alert {
-  margin: 1em 0;
-  padding: 1em;
+  margin: $padding-base-vertical 0;
+  padding: $padding-base-vertical $padding-base-horizontal;
   font-weight: 400;
 }
 
@@ -606,29 +604,29 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 }
 
 .alert-success {
-  background-color: #ddefc7;
-  border-color: #3E7E1F;
+  background-color: $asu-success-bkgd;
+  border-color: $asu-green;
 }
 
 .alert-info {
-  background-color: #bfe8f7;
-  border-color: #006B92;
+  background-color: $asu-info-bkgd;
+  border-color: $asu-blue;
 }
 
 .alert-danger {
-  background-color: #e8d2d9; /* 20% opacity of official maroon */
+  background-color: $asu-danger-bkgd; /* 20% opacity of official maroon */
   border-color: $asu-maroon;
 }
 
 .alert-warning {
-  background-color: #ffecb8; /* 33% opacity of official maroon */
-  border-color: $asu-maroon;
+  background-color: $asu-warning-bkgd; /* 33% opacity of official maroon */
+  border-color: $asu-orange;
 }
 
 .alert:not([class*="alert-"]),
 div[class='alert alert-block'] { /* Catch-all for default alert class */
   background-color: $asu-gray-lightest;
-  border-color: #ccc;
+  border-color: $asu-gray-light;
 }
 
 /* Devel debugging */
@@ -637,10 +635,10 @@ div[class='alert alert-block'] { /* Catch-all for default alert class */
 }
 
 .logged-in .alert .krumo-root .krumo-element:not(a) {
-  color: #497415;
+  color: $asu-green;
 }
 
-/* =ADMIN UI
+/* =ADMIN UI --- WS2.0 DONE (admin only)
 -------------------------------------------------------------- */
 
 /* Node edit */
@@ -681,7 +679,7 @@ div[class='alert alert-block'] { /* Catch-all for default alert class */
 /* Ctools Modals */
 .ctools-modal-content .btn {
   margin-top: 0.25em;
-  padding: 4px 10px;
+  padding: $padding-xs-vertical 0.625em;
   font-size: 0.6925em;
 }
 
@@ -760,13 +758,13 @@ ul.help-text li.help-title {
   font-weight: bold;
 }
 
-/* =FORMS
+/* =FORMS --- WS2.0 DONE
 -------------------------------------------------------------- */
 .marker, .form-required {
   color: $asu-error-alt;
 }
 
-/* =100% width fix for Bootstrap limitation
+/* =100% width fix for Bootstrap limitation --- SKIPPED (NEEDS REVIEW)
 ----------------------------------------------------- */
 
 #header .container {
@@ -858,7 +856,7 @@ ul.help-text li.help-title {
   }
 }
 
-/** Token browsing modal
+/** Token browsing modal --- SKIPPED (Admin only)
 ----------------------------------------------------- */
 
 .ui-widget-content.ui-dialog.token-browser-container {
@@ -887,8 +885,9 @@ ul.help-text li.help-title {
   }
 }
 
-/* FOCUS */
-/* Applied previous styles to outline and removed border properties */
+/** FOCUS --- WS2.0 DONE
+----------------------------------------------------- */
+// Applied previous styles to outline and removed border properties
 a:focus,
 .ui-widget-content a:focus,
 input:focus,
@@ -903,7 +902,7 @@ h4.ui-accordion-header:focus {
   box-shadow: 0 0 5px  $input-border-focus;
 }
 
-/** UI Tabs
+/** UI Tabs --- WS2.0 DONE
 ----------------------------------------------------- */
 
 /* fixes for stacked tabs */
@@ -921,10 +920,9 @@ body #content .ui-tabs .ui-tabs-nav li {
   }
 }
 
-  /* =MEDIA QUERIES - moved to separate file
-  -------------------------------------------------------------- */
+/* =MEDIA QUERIES - moved to separate file */
 
-/** WEBSPARK-1118 - Temporary footer link fix @removeIfInGlobalCSS */
+// WEBSPARK-1118 - Temporary footer link fix @removeIfInGlobalCSS
 #innovation-footer .footer-menu ul li a:hover {
   color: $asu-maroon;
   border-bottom: 1px dotted $asu-maroon;

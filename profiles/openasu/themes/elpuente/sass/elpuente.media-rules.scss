@@ -1,8 +1,13 @@
-/* =MEDIA QUERIES
- * IN PROGRESS
+
+/* =MEDIA QUERIES --- IN PROGRESS
 -------------------------------------------------------------- */
 @import "variables";
 
+// @TODO WS2.0 Adapt ALL header sizing
+
+/*
+ * Default "Mobile size" < 991px
+ */
 @media (max-width: 991px) {
 
   h1, .h1 {
@@ -54,8 +59,21 @@
   #asu_hdr_title_gen {
     white-space: normal;
   }
+  // Nav.scss
+  .item-list.item-list-pager,
+  .pagination,
+  .pager {
+    font-size: 1em;
+    li,
+    & > li {
+      font-size: 1em;
+    }
+  }
 }
 
+/**
+ Smaller tablet size
+ */
 @media (max-width: 793px) {
   .container-fluid .row {
     margin-left: 0;

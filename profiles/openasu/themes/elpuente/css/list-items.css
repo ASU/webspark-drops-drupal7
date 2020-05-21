@@ -1,0 +1,7 @@
+/**
+ * Blockquotes
+ */
+blockquote > img:first-of-type {
+  float: left;
+  clip-path: circle(182px);
+}
