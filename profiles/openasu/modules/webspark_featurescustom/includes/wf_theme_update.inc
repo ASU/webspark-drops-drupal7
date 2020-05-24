@@ -17,7 +17,7 @@ function webspark_featurescustom_libraries_info_alter(&$libraries) {
   global $theme_info;
   if (isset($theme_info->name) && isset($theme_info->base_theme)) {
     $library_path = DRUPAL_ROOT . '/sites/all/libraries/' . $theme_info->name . '_bootstrap/css/bootstrap.css';
-    if ($theme_info->name != 'innovation' && $theme_info->base_theme == 'innovation' && !file_exists($library_path)) {
+    if ($theme_info->name !== 'innovation' && $theme_info->base_theme === 'innovation' && !file_exists($library_path)) {
       $libraries[$theme_info->name . '_bootstrap']['machine name'] = 'innovation_bootstrap';
     }
   }
@@ -60,8 +60,9 @@ function _webspark_featurescustom_get_base_theme($theme) {
       unset($all_themes[$name]);
     }
   }
+  $base_themes_checklist = array('innovation', 'elpuente');
   $base_themes = (array_key_exists($theme, $all_themes)) ? drupal_find_base_themes($all_themes, $theme) : array();
-  return ($theme === 'innovation' || in_array('innovation', array_keys($base_themes))) ? 1 : 0;
+  return ($theme === 'innovation' || $theme === 'elpuente' || in_array($base_themes_checklist, array_keys($base_themes))) ? 1 : 0;
 }
 
 /**
@@ -118,7 +119,6 @@ function _webspark_featurescustom_webstandards_theme_config($theme) {
   $modules[] = 'webspark_panels_styles';
   $modules[] = 'webspark_banner';
   $modules[] = 'webspark_breadcrumbs';
-//  $modules[] = 'webspark_callout';
   $modules[] = 'webspark_content_callout';
   $modules[] = 'webspark_easyadmin';
   $modules[] = 'webspark_hero';
@@ -140,10 +140,10 @@ function _webspark_featurescustom_webstandards_theme_config($theme) {
     try {
       module_enable($modules_to_enable);
       drupal_set_message('Modules enabled for <em>' . t($theme) . '</em> - ' . implode(', ', $modules_to_enable));
-      watchdog('theme update', 'Modules enabled for %theme theme - ' . implode(', ', $modules_to_enable), array('%theme' => $theme));
+      watchdog('theme update', 'Web standards-based modules enabled for %theme theme - ' . implode(', ', $modules_to_enable), array('%theme' => $theme));
     }
     catch (Exception $e) {
-      watchdog('theme update', 'Innovation module dependency enabling failed: ' . $e->getMessage(), WATCHDOG_ERROR);
+      watchdog('theme update', 'Web standards-based module dependency enabling failed: ' . $e->getMessage(), WATCHDOG_ERROR);
       drupal_set_message('The enabling of Innovation theme-specific modules may have failed. Check your <a href="/admin/reports/dblog">recent log messages</a> for details.', 'error');
     }
   }
@@ -151,7 +151,6 @@ function _webspark_featurescustom_webstandards_theme_config($theme) {
     watchdog('theme update', 'All modules already enabled for %theme theme, so no module_enable action taken.', array('%theme' => $theme), WATCHDOG_NOTICE);
   }
 
-  // WEBSPARK-448, 509
   // Reset ASU Header settings
   if (module_exists('asu_brand')) {
     variable_set('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT);
@@ -160,8 +159,7 @@ function _webspark_featurescustom_webstandards_theme_config($theme) {
     watchdog('theme update', 'Updated ASU Header values for %theme theme based on ASU Brand module settings', array('%theme' => $theme), WATCHDOG_NOTICE);
   }
 
-  // WEBSPARK-610 - Re-apply original block configs to ensure their proper location
-  // to match spinup settings.
+  // Re-apply original block configs to ensure their proper location to match spinup settings.
   // function openasu_blockupdates_for_theme() in openasu.profile
   if (function_exists('openasu_blockupdates_for_theme')) {
     openasu_blockupdates_for_theme($theme);

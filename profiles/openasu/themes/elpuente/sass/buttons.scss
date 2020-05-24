@@ -13,9 +13,11 @@
   cursor: pointer;
   display: inline-block;
   font-size: 1em;
-  font-weight: normal;
+  font-weight: bold;
   line-height: 1em;
   margin-bottom: 0;
+  max-width: $btn-max-width;
+  min-width: $btn-min-width; // default (not -med)
   padding: $padding-base-vertical $padding-base-horizontal;
   transition: .03s ease-in-out;
   text-align: center;
@@ -271,20 +273,20 @@
 .btn-lg, .btn-group-lg > .btn {
   border-radius: $border-radius-circle;
   font-size: 1.25em;
-  line-height: 1;
   padding: 0.75em 1.5em;
+  min-width: $btn-min-width-lg;
 }
 .btn-sm, .btn-group-sm > .btn {
   border-radius: $border-radius-circle;
   font-size: 0.875em;
-  line-height: 1;
   padding: $padding-small-vertical $padding-base-horizontal;
+  min-width: $btn-min-width-sm;
 }
 .btn-xs, .btn-group-xs > .btn {
   border-radius: $border-radius-circle;
   font-size: 0.75em;
-  line-height: 1;
   padding: $padding-xs-vertical ($padding-xs-horizontal*3);
+  min-width: $btn-min-width-sm;
 }
 .btn-block {
   display: block;

@@ -28,6 +28,11 @@
 
 div.error {
   background-repeat: no-repeat;
+  text-align: left;
+  font: normal 12px/16px "FontAwesome";
+  letter-spacing: 0px;
+  color: #B72A2A;
+  opacity: 1;
 }
 div.error label {
   padding-left: 2em;
@@ -181,7 +186,80 @@ h6, .h6 {
   font-weight: normal;
 }
 
-/* WYSIWYG style -- Lead Paragraph -- WEBSPARK-684  (Arbitrary - no WS2.0 rules yet */
+/* HR separator - custom */
+hr.asu-element-gold {
+  border-color: #ffc627;
+  border-width: 8px;
+  margin-left: 0;
+  max-width: 256px;
+}
+
+/* Signatures (beneath content) */
+.sig-title, .sig-byline {
+  font-size: 16px;
+}
+
+.sig-title:before {
+  padding-right: 0.5em;
+  content: "\f068";
+  font-family: "FontAwesome", sans-serif;
+}
+
+.sig-byline {
+  font-weight: normal;
+  padding-left: 1.33em;
+}
+
+.sig-title ~ .sig-byline {
+  margin-top: -1em;
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: none;
+  font-weight: bold;
+  padding-left: 6rem;
+}
+blockquote:before {
+  font-family: "FontAwesome", sans-serif;
+  content: "\f10d";
+  font-size: 4.5rem;
+  float: left;
+  margin-left: -6rem;
+  color: #d0d0d0;
+}
+blockquote > p:not([class*=sig-]):after {
+  font-family: "FontAwesome", sans-serif;
+  content: "\f10e";
+  font-size: 1rem;
+  color: inherit;
+  padding-left: 0.5em;
+  position: absolute;
+}
+blockquote.asu-element-gold:before {
+  color: #ffc627;
+}
+blockquote.asu-element-maroon:before {
+  color: #8c1d40;
+}
+blockquote.bq-image {
+  padding-left: 14.3625rem;
+}
+blockquote.bq-image img:first-of-type {
+  clip-path: circle(90px);
+  float: left;
+  position: absolute;
+  margin-left: -14rem;
+}
+blockquote.bq-image:before {
+  font-family: "Arial Bold", sans-serif;
+  font-size: initial;
+  content: initial;
+  margin-left: -14.3625rem;
+  color: #d0d0d0;
+}
+
+/* WYSIWYG style -- Lead Paragraph --*/
 .lead-paragraph {
   font-family: inherit;
   font-size: 2rem;
@@ -264,7 +342,7 @@ img.media-element.pull-left {
 
 .img-circle,
 p.img-circle img {
-  border-radius: 50%;
+  border-radius: 32px;
 }
 
 .img-rounded,
@@ -285,14 +363,17 @@ p.img-thumbnail img {
   transition: all 0.2s ease-in-out 0s;
 }
 
-/* =TABLES --- IN PROGRESS
--------------------------------------------------------------- */
-/* Default table styles */
+img.ws2-drop-shadow
 table {
   background-color: #fff;
   margin-bottom: 1.5em;
   max-width: 100%;
   width: 100%;
+  border: 1px solid #e8e8e8;
+}
+
+table > tbody {
+  border-top: none;
 }
 
 table > thead > tr > th,
@@ -923,3 +1004,7 @@ body #content .ui-tabs .ui-tabs-nav li a {
   color: #8c1d40;
   border-bottom: 1px dotted #8c1d40;
 }
+
+/* CARDS
+ -- WILL GO IN OWN SCSS FILE AFTER DEVELOPMENT
+ */

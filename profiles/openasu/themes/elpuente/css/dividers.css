@@ -1,5 +1,5 @@
 /**
- * New WS2.0 - Dividers
+ * New WS2.0 - Dividers and Backgrounds
  * IS_SCSS
  */
 /*
@@ -7,14 +7,14 @@
  * Override Bootstrap variables below.
  */
 /*
-  TODO
+  @TODO
   (all three colors)
   background-topo (all three colors)
  */
 hr.body-gold {
   height: 0.5rem;
   background-color: #ffc627;
-  max-width: 256px;
+  max-width: 16rem;
   margin: 2em 0;
 }
 

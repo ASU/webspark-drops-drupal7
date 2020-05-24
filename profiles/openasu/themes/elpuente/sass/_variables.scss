@@ -17,7 +17,7 @@ $the-base:         16px;
 $asu-panel-padding: 1em 1.5em 1em;
 $elpuente-images-dir: "/profiles/openasu/themes/elpuente/images";
 // The amount lists, blockquotes and comments are indented.
-$indent-amount: 1.875rem;
+$indent-amount: 6rem;
 
 //== Colors --- WS2 DONE
 
@@ -77,10 +77,10 @@ $asu-alert-black-border:  $asu-gray-light;
 //// BOOTSTRAP DEFAULTS - Primary branding colors (Bootstrap defaults that are set to ASU colors)
 $brand-primary:          $asu-maroon; // maroon
 $brand-white:            #fff;
-$brand-success:          $asu-success-bkgd; // #5cb85c;
-$brand-info:             $asu-info-bkgd; // #78BE20;
-$brand-warning:          $asu-warning-bkgd; // #FF7F32;
-$brand-danger:           $asu-error-bkgd; // #CC2F2F;
+$brand-success:          $asu-alert-white-success;
+$brand-info:             $asu-alert-white-info; // #78BE20;
+$brand-warning:          $asu-alert-white-warning; // #FF7F32;
+$brand-danger:           #CC2F2F; // $asu-error-bkgd (alt?)
 
 //// Unpublished nodes
 $asu-bkgd-unpublished:  $asu-error-bkgd;
@@ -172,7 +172,7 @@ $line-height-large:         1.1; // Larger
 $line-height-small:         1.5;
 
 $border-radius-base:        0;
-$border-radius-circle:      50%;  // Round the corners!
+$border-radius-circle:      $padding-base-vertical * 2; // Round the corners to the padding * 2
 
 //** Global color for active items (e.g., navs or dropdowns).
 $component-active-color:    $brand-white;
@@ -194,11 +194,11 @@ $table-cell-padding:            1rem;
 $table-condensed-cell-padding:  0.5rem;
 
 //** Default background color used for all tables.
-$table-bg:                      transparent;
+$table-bg:                      #fff;
 //** Background color used for `.table-striped`.
-$table-bg-accent:               $asu-gray-lighter;
+$table-bg-accent:               $asu-gray-lightest;
 //** Background color used for `.table-hover`.
-//$table-bg-hover:                #f5f5f5;
+$table-bg-hover:                $asu-gray-lighter;
 //$table-bg-active:               $table-bg-hover;
 
 //** Border color for table and cell borders.
@@ -209,23 +209,29 @@ $table-border-color:            $asu-gray-lighter;
 //
 //## For each of Bootstrap's buttons, define text, background and border color.
 
-$btn-font-weight:                normal;
-$btn-default-border:             transparent;
+$btn-font-weight:               normal;
+$btn-default-border:            transparent;
 
-$btn-default-color:              $asu-gray-lightest;
-$btn-default-bg:                 $brand-primary;
+$btn-default-color:             $asu-gray-lightest;
+$btn-default-bg:                $brand-primary;
 
-$btn-gold-color:                 $asu-gray-darkest;
-$btn-gold-bg:                    $asu-gold;
+$btn-gold-color:                $asu-gray-darkest;
+$btn-gold-bg:                   $asu-gold;
 
-$btn-dark-color:                 $asu-gray-lightest;
-$btn-dark-bg:                    $asu-gray-darkest;
+$btn-dark-color:                $asu-gray-lightest;
+$btn-dark-bg:                   $asu-gray-darkest;
 
-$btn-gray-color:                 $asu-gray-darkest;
-$btn-gray-bg:                    $asu-gray-lighter;
+$btn-gray-color:                $asu-gray-darkest;
+$btn-gray-bg:                   $asu-gray-lighter;
 
-$btn-scale:                      1.1;
-$btn-disabled-opacity:           0.5;
+$btn-scale:                     1.1;
+$btn-disabled-opacity:          0.5;
+
+$btn-min-width-lg:              7rem; // 112
+$btn-min-width:                 5rem;
+$btn-min-width-sm:              4rem;
+
+$btn-max-width:                 17.5rem; // 280px
 
 
 //== Forms  --- WS2 DONE
@@ -250,11 +256,11 @@ $input-border-focus:             #66afe9;
 $input-color-placeholder:        $gray-light;
 
 //** Default `.form-control` height
-$input-height-base:              ($line-height-computed + ($padding-base-vertical * 2) + 2);
+$input-height-base:              ($line-height-computed + ($padding-base-vertical * 1) + 2);
 //** Large `.form-control` height
-$input-height-large:             (ceil($font-size-large * $line-height-large) + ($padding-large-vertical * 2) + 2);
+$input-height-large:             (ceil($font-size-large * $line-height-large) + ($padding-large-vertical * 1) + 2);
 //** Small `.form-control` height
-$input-height-small:             (floor($font-size-small * $line-height-small) + ($padding-small-vertical * 2) + 2);
+$input-height-small:             (floor($font-size-small * $line-height-small) + ($padding-small-vertical * 1) + 2);
 
 $legend-color:                   $gray-dark;
 $legend-border-color:            $asu-gray-lighter;
@@ -360,7 +366,7 @@ $grid-float-breakpoint:     $screen-sm-min;
 //** Point at which the navbar begins collapsing.
 $grid-float-breakpoint-max: ($grid-float-breakpoint - 1);
 
-//== Navbar  --- WS2 DONE (maybe.... inverse links???)
+//== Navbar  --- IN PROGRESS (maybe.... inverse links???)
 //
 //##
 
@@ -747,6 +753,9 @@ $thumbnail-caption-padding:   9px;
 //== Images (custom) (same size for desktop and mobile)
 $image-round-medium:          240px;
 $image-round-small:           180px;
+//== Additional - Testimonial images
+$blockquote-image-offset:     14.3625rem;
+
 
 //== Wells
 //
@@ -872,3 +881,4 @@ $container-md:                 $container-desktop;
 $container-large-desktop:      ((1140px + $grid-gutter-width));
 //** For `$screen-lg-min` and up.
 $container-lg:                 $container-large-desktop;
+

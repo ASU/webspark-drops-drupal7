@@ -7,14 +7,14 @@
 // @TODO - Make this a dynamic mixin
 blockquote > img:first-of-type {
   float: left;
-  clip-path: circle($image-round-small);
+  clip-path: circle($image-round-small/2);
 }
 /**
  * Testimonials, round images
  */
 img.img-testimonial-medium {
-  clip-path: circle($image-round-medium);
+  clip-path: circle($image-round-medium/2);
 }
 img.img-testimonial-small {
-  clip-path: circle($image-round-small);
+  clip-path: circle($image-round-small/2);
 }

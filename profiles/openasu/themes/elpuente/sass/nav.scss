@@ -319,6 +319,11 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
   & > a {
     border: 0 none;
     border-radius: $border-radius-circle;
+    max-width: $btn-max-width;
+    min-width: $btn-min-width; // default (not -med)
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: -0.25px;
   }
   & > li + li {
     margin-left: 0.125em;

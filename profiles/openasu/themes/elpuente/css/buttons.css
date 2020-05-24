@@ -10,13 +10,15 @@
   -moz-user-select: none;
   background-image: none;
   border: 1px solid transparent;
-  border-radius: 50%;
+  border-radius: 32px;
   cursor: pointer;
   display: inline-block;
   font-size: 1em;
-  font-weight: normal;
+  font-weight: bold;
   line-height: 1em;
   margin-bottom: 0;
+  max-width: 17.5rem;
+  min-width: 5rem;
   padding: 16px 16px;
   transition: .03s ease-in-out;
   text-align: center;
@@ -292,24 +294,24 @@
 }
 
 .btn-lg, .btn-group-lg > .btn {
-  border-radius: 50%;
+  border-radius: 32px;
   font-size: 1.25em;
-  line-height: 1;
   padding: 0.75em 1.5em;
+  min-width: 7rem;
 }
 
 .btn-sm, .btn-group-sm > .btn {
-  border-radius: 50%;
+  border-radius: 32px;
   font-size: 0.875em;
-  line-height: 1;
   padding: 8px 16px;
+  min-width: 4rem;
 }
 
 .btn-xs, .btn-group-xs > .btn {
-  border-radius: 50%;
+  border-radius: 32px;
   font-size: 0.75em;
-  line-height: 1;
   padding: 4px 12px;
+  min-width: 4rem;
 }
 
 .btn-block {

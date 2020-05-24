@@ -63,7 +63,7 @@ function kalatheme_libraries_info() {
 function _kalatheme_get_version($library, $options) {
   // Use bootstrap.min.css if exists, if not use normal bootstrap.css
   $file = (file_exists(DRUPAL_ROOT . '/' . $library['library path'] . '/css/bootstrap.min.css')) ?
-    '/css/bootstrap.min.css' : '/css/bootstrap.css';
+    'css/bootstrap.min.css' : 'css/bootstrap.css';
 
   // Provide defaults.
   $options += array(

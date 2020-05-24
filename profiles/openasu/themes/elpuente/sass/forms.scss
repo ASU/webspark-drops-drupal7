@@ -1,4 +1,20 @@
 /* Taken from https://github.com/flatlogic/awesome-bootstrap-checkbox */
+@import "variables";
+/* global overrides */
+
+.form-control {
+  padding: $padding-small-vertical $padding-base-horizontal;
+}
+
+/* Error alerts (form elements, others) */
+div.error, table tr.error {
+  background-color: transparent;
+}
+.form-item input.error, .form-item textarea.error, .form-item select.error {
+  border: 1px solid $brand-danger;
+  border-bottom-width: $padding-xs-vertical;
+}
+
 /* Checkboxes */
 
 @import "variables";

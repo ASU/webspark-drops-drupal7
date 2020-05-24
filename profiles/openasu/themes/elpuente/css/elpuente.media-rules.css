@@ -4,6 +4,9 @@
  * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
  * Override Bootstrap variables below.
  */
+/*
+ * Default "Mobile size" < 991px
+ */
 @media (max-width: 991px) {
   h1, .h1 {
     margin-bottom: 48px;
@@ -57,7 +60,23 @@
   #asu_hdr_title_gen {
     white-space: normal;
   }
+
+  .item-list.item-list-pager,
+  .pagination,
+  .pager {
+    font-size: 1em;
+  }
+  .item-list.item-list-pager li, .item-list.item-list-pager > li,
+  .pagination li,
+  .pagination > li,
+  .pager li,
+  .pager > li {
+    font-size: 1em;
+  }
 }
+/**
+ Smaller tablet size
+ */
 @media (max-width: 793px) {
   .container-fluid .row {
     margin-left: 0;
