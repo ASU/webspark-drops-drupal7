@@ -14,7 +14,7 @@
 // The base sizing in pixels
 $the-base:         16px;
 // Panel pane padding
-$asu-panel-padding: 1em 1.5em 1em;
+$ws2-panel-padding: 1em 1.5em 1em;
 $elpuente-images-dir: "/profiles/openasu/themes/elpuente/images";
 // The amount lists, blockquotes and comments are indented.
 $indent-amount: 6rem;
@@ -23,28 +23,28 @@ $indent-amount: 6rem;
 
 // Official ASU colors
 //// ASU Primary colors
-$asu-maroon:       #8c1d40;
-$asu-gold:         #ffc627;
-$asu-blue:         #00a3e0;
-$asu-green:        #78be20;
-$asu-orange:       #ff7f32;
+$ws2-maroon:       #8c1d40;
+$ws2-gold:         #ffc627;
+$ws2-blue:         #00a3e0;
+$ws2-green:        #78be20;
+$ws2-orange:       #ff7f32;
 //// ASU Gray shades
-$asu-gray-darkest:      #191919; // Not using lighten() mixing
-$asu-gray-darker:       #484848;
-$asu-gray-dark:         #747474;
-$asu-gray:              #bfbfbf;
-$asu-gray-light:        #d0d0d0;
-$asu-gray-lighter:      #e8e8e8;
-$asu-gray-lightest:     #fafafa;
+$ws2-gray-darkest:      #191919; // Not using lighten() mixing
+$ws2-gray-darker:       #484848;
+$ws2-gray-dark:         #747474;
+$ws2-gray:              #bfbfbf;
+$ws2-gray-light:        #d0d0d0;
+$ws2-gray-lighter:      #e8e8e8;
+$ws2-gray-lightest:     #fafafa;
 //// Background colors
 
 //// BOOTSTRAP DEFAULTS - Bootstrap-assigned colors.
 //// Stock grays (not affiliated with ASU)
-$gray-darker:            $asu-gray-darkest; // lighten(#000, 13.5%); // #222
-$gray-dark:              $asu-gray-darker; // lighten(#000, 20%);   // #333
-$gray:                   $asu-gray-dark; // #5c6670; //lighten(#000, 33.5%); // #555
-$gray-light:             $asu-gray; // lighten(#000, 60%);   // #999
-$gray-lighter:           $asu-gray-lighter; // lighten(#000, 93.5%); // #eee
+$gray-darker:            $ws2-gray-darkest; // lighten(#000, 13.5%); // #222
+$gray-dark:              $ws2-gray-darker; // lighten(#000, 20%);   // #333
+$gray:                   $ws2-gray-dark; // #5c6670; //lighten(#000, 33.5%); // #555
+$gray-light:             $ws2-gray; // lighten(#000, 60%);   // #999
+$gray-lighter:           $ws2-gray-lighter; // lighten(#000, 93.5%); // #eee
 $gray-fieldset:          #edf9dd;
 $gray-fieldset-nested:   #e0e0dc;
 $gray-alt-admin:         #ddd;
@@ -52,50 +52,50 @@ $gray-alt-admin-pia:     #e1f8c4;
 
 //== ASU Alert/Messages
 //// LIGHT Alert backgrounds are the same as background colors above. Use same variables.
-$asu-error-bkgd:         #f7dddd; // Drupal "error" === Bootstrap "danger"
-$asu-error-alt:          #b72a2a;
-$asu-danger-bkgd:        $asu-error-bkgd;
-$asu-danger-alt:         $asu-error-alt;
-$asu-success-bkgd:       #e9f5db;
-$asu-success-alt:        $asu-success-bkgd;
-$asu-warning-bkgd:       #ffeade;
-$asu-info-bkgd:          #d6f0fa;
+$ws2-error-bkgd:         #f7dddd; // Drupal "error" === Bootstrap "danger"
+$ws2-error-alt:          #b72a2a;
+$ws2-danger-bkgd:        $ws2-error-bkgd;
+$ws2-danger-alt:         $ws2-error-alt;
+$ws2-success-bkgd:       #e9f5db;
+$ws2-success-alt:        $ws2-success-bkgd;
+$ws2-warning-bkgd:       #ffeade;
+$ws2-info-bkgd:          #d6f0fa;
 
 //// Alert/Message - WHITE background text, border
-$asu-alert-white-error:   $asu-error-alt;
-$asu-alert-white-success: #446D12;
-$asu-alert-white-warning: #bd4800;
-$asu-alert-white-info:    #126877;
-$asu-alert-white-border:  $asu-gray-light;
+$ws2-alert-white-error:   $ws2-error-alt;
+$ws2-alert-white-success: #446D12;
+$ws2-alert-white-warning: #bd4800;
+$ws2-alert-white-info:    #126877;
+$ws2-alert-white-border:  $ws2-gray-light;
 //// Alert/Message - Black background text, border
-$asu-alert-black-error:   #ff7b7d;
-$asu-alert-black-success: $asu-green;
-$asu-alert-black-warning: #ff8034;
-$asu-alert-black-info:    #00b0f3;
-$asu-alert-black-border:  $asu-gray-light;
+$ws2-alert-black-error:   #ff7b7d;
+$ws2-alert-black-success: $ws2-green;
+$ws2-alert-black-warning: #ff8034;
+$ws2-alert-black-info:    #00b0f3;
+$ws2-alert-black-border:  $ws2-gray-light;
 
 //// BOOTSTRAP DEFAULTS - Primary branding colors (Bootstrap defaults that are set to ASU colors)
-$brand-primary:          $asu-maroon; // maroon
+$brand-primary:          $ws2-maroon; // maroon
 $brand-white:            #fff;
-$brand-success:          $asu-alert-white-success;
-$brand-info:             $asu-alert-white-info; // #78BE20;
-$brand-warning:          $asu-alert-white-warning; // #FF7F32;
-$brand-danger:           #CC2F2F; // $asu-error-bkgd (alt?)
+$brand-success:          $ws2-alert-white-success;
+$brand-info:             $ws2-alert-white-info; // #78BE20;
+$brand-warning:          $ws2-alert-white-warning; // #FF7F32;
+$brand-danger:           #CC2F2F; // $ws2-error-bkgd (alt?)
 
 //// Unpublished nodes
-$asu-bkgd-unpublished:  $asu-error-bkgd;
+$ws2-bkgd-unpublished:  $ws2-error-bkgd;
 
 //// Background color for `<body>`.
 $body-bg:               $brand-white;
-$body-bg-gray:          $asu-gray-lighter;
-$body-bg-dark:          $asu-gray-darkest;
+$body-bg-gray:          $ws2-gray-lighter;
+$body-bg-dark:          $ws2-gray-darkest;
 //// Global text color on `<body>`.
-$text-color:            $asu-gray-darkest;
-$text-color-bg-dark:    $asu-gray-lightest;
+$text-color:            $ws2-gray-darkest;
+$text-color-bg-dark:    $ws2-gray-lightest;
 
 //** Global textual link color.
 $link-color:            $brand-primary;
-$link-color-gold:       $asu-gold;
+$link-color-gold:       $ws2-gold;
 //** Link hover color set via `darken()` function.
 $link-hover-color:      #d23153;
 $link-hover-color-gold: #ffd053;
@@ -196,13 +196,13 @@ $table-condensed-cell-padding:  0.5rem;
 //** Default background color used for all tables.
 $table-bg:                      #fff;
 //** Background color used for `.table-striped`.
-$table-bg-accent:               $asu-gray-lightest;
+$table-bg-accent:               $ws2-gray-lightest;
 //** Background color used for `.table-hover`.
-$table-bg-hover:                $asu-gray-lighter;
+$table-bg-hover:                $ws2-gray-lighter;
 //$table-bg-active:               $table-bg-hover;
 
 //** Border color for table and cell borders.
-$table-border-color:            $asu-gray-lighter;
+$table-border-color:            $ws2-gray-lighter;
 
 
 //== Buttons  --- WS2 DONE
@@ -212,17 +212,17 @@ $table-border-color:            $asu-gray-lighter;
 $btn-font-weight:               normal;
 $btn-default-border:            transparent;
 
-$btn-default-color:             $asu-gray-lightest;
+$btn-default-color:             $ws2-gray-lightest;
 $btn-default-bg:                $brand-primary;
 
-$btn-gold-color:                $asu-gray-darkest;
-$btn-gold-bg:                   $asu-gold;
+$btn-gold-color:                $ws2-gray-darkest;
+$btn-gold-bg:                   $ws2-gold;
 
-$btn-dark-color:                $asu-gray-lightest;
-$btn-dark-bg:                   $asu-gray-darkest;
+$btn-dark-color:                $ws2-gray-lightest;
+$btn-dark-bg:                   $ws2-gray-darkest;
 
-$btn-gray-color:                $asu-gray-darkest;
-$btn-gray-bg:                   $asu-gray-lighter;
+$btn-gray-color:                $ws2-gray-darkest;
+$btn-gray-bg:                   $ws2-gray-lighter;
 
 $btn-scale:                     1.1;
 $btn-disabled-opacity:          0.5;
@@ -263,7 +263,7 @@ $input-height-large:             (ceil($font-size-large * $line-height-large) + 
 $input-height-small:             (floor($font-size-small * $line-height-small) + ($padding-small-vertical * 1) + 2);
 
 $legend-color:                   $gray-dark;
-$legend-border-color:            $asu-gray-lighter;
+$legend-border-color:            $ws2-gray-lighter;
 
 //** Background color for textual input addons
 $input-group-addon-bg:           $gray-lighter;
@@ -288,10 +288,10 @@ $dropdown-link-color:           #fff;
 //** Hover color for dropdown links.
 $dropdown-link-hover-color:      #000;
 //** Hover background for dropdown links.
-$dropdown-link-hover-bg:         $asu-gold;
+$dropdown-link-hover-bg:         $ws2-gold;
 
 //** Active dropdown menu item text color.
-$dropdown-link-active-color:     $asu-gold;
+$dropdown-link-active-color:     $ws2-gold;
 //** Active dropdown menu item background color.
 $dropdown-link-active-bg:        #4F5557;
 
@@ -383,12 +383,12 @@ $navbar-default-bg:                #fff;
 $navbar-default-border:            0;
 
 // Navbar links
-$navbar-default-link-color:                $asu-maroon;
+$navbar-default-link-color:                $ws2-maroon;
 $navbar-default-link-hover-color:          $link-hover-color;
-$navbar-default-link-hover-bg:             $asu-gray-lighter;
+$navbar-default-link-hover-bg:             $ws2-gray-lighter;
 $navbar-default-link-active-color:         $link-hover-color;
 $navbar-default-link-active-bg:            $link-hover-color;
-$navbar-default-link-disabled-color:       opacify($asu-maroon, 0.5);
+$navbar-default-link-disabled-color:       opacify($ws2-maroon, 0.5);
 $navbar-default-link-disabled-bg:          transparent;
 
 // Navbar brand label
@@ -398,13 +398,13 @@ $navbar-default-brand-hover-bg:            transparent;
 
 // Navbar toggle
 $navbar-default-toggle-hover-bg:           $navbar-default-link-hover-bg;
-$navbar-default-toggle-icon-bar-bg:        $asu-gray-darkest;
+$navbar-default-toggle-icon-bar-bg:        $ws2-gray-darkest;
 $navbar-default-toggle-border-color:       $navbar-default-link-hover-bg;
 
 // Inverted navbar
 // Reset inverted navbar basics
 $navbar-inverse-color:                      $gray-light;
-$navbar-inverse-bg:                         $asu-gray-darkest;
+$navbar-inverse-bg:                         $ws2-gray-darkest;
 $navbar-inverse-border:                     darken($navbar-inverse-bg, 10%);
 
 // Inverted navbar links
@@ -422,9 +422,9 @@ $navbar-inverse-brand-hover-color:          #fff;
 $navbar-inverse-brand-hover-bg:             transparent;
 
 // Inverted navbar toggle
-$navbar-inverse-toggle-hover-bg:            $asu-gray-darkest;
+$navbar-inverse-toggle-hover-bg:            $ws2-gray-darkest;
 $navbar-inverse-toggle-icon-bar-bg:         #fff;
-$navbar-inverse-toggle-border-color:        $asu-gray-darkest;
+$navbar-inverse-toggle-border-color:        $ws2-gray-darkest;
 
 //== Navs --- IN PROGRESS
 //
@@ -460,7 +460,7 @@ $nav-pills-active-link-hover-color:         $component-active-color;
 //
 //##
 
-$pagination-color:                     $asu-gray-darkest;
+$pagination-color:                     $ws2-gray-darkest;
 $pagination-bg:                        #fff;
 $pagination-border:                    transparent;
 
@@ -505,29 +505,29 @@ $jumbotron-font-size:                  ceil(($font-size-base * 1.5));
 //
 //## Define colors for form feedback states and, by default, alerts.
 
-$state-success-text:             $asu-gray-darkest;
-$state-success-bg:               $asu-green;
-$state-success-border:           $asu-green; // darken(adjust-hue($state-success-bg, -10), 5%);
+$state-success-text:             $ws2-gray-darkest;
+$state-success-bg:               $ws2-green;
+$state-success-border:           $ws2-green; // darken(adjust-hue($state-success-bg, -10), 5%);
 
-$state-info-text:                $asu-gray-darkest;
-$state-info-bg:                  $asu-blue;
-$state-info-border:              $asu-blue; // darken(adjust-hue($state-info-bg, -10), 7%);
+$state-info-text:                $ws2-gray-darkest;
+$state-info-bg:                  $ws2-blue;
+$state-info-border:              $ws2-blue; // darken(adjust-hue($state-info-bg, -10), 7%);
 
-$state-info-alt-text:            $asu-gray-darkest;
-$state-info-alt-bg:              $asu-gray-lighter;
-$state-info-alt-border:          $asu-gray-lighter; // darken(adjust-hue($state-info-bg, -10), 7%);
+$state-info-alt-text:            $ws2-gray-darkest;
+$state-info-alt-bg:              $ws2-gray-lighter;
+$state-info-alt-border:          $ws2-gray-lighter; // darken(adjust-hue($state-info-bg, -10), 7%);
 
 $state-info-black-text:          #fff;
-$state-info-black-bg:            $asu-gray-darkest;
-$state-info-black-border:        $asu-gray-darkest; // darken(adjust-hue($state-info-bg, -10), 7%);
+$state-info-black-bg:            $ws2-gray-darkest;
+$state-info-black-border:        $ws2-gray-darkest; // darken(adjust-hue($state-info-bg, -10), 7%);
 
-$state-warning-text:             $asu-gray-darkest;
-$state-warning-bg:               $asu-orange;
-$state-warning-border:           $asu-orange; //darken(adjust-hue($state-warning-bg, -10), 5%);
+$state-warning-text:             $ws2-gray-darkest;
+$state-warning-bg:               $ws2-orange;
+$state-warning-border:           $ws2-orange; //darken(adjust-hue($state-warning-bg, -10), 5%);
 
 $state-danger-text:              #fff;
-$state-danger-bg:                $asu-maroon;
-$state-danger-border:            $asu-maroon; // darken(adjust-hue($state-danger-bg, -10), 5%);
+$state-danger-bg:                $ws2-maroon;
+$state-danger-border:            $ws2-maroon; // darken(adjust-hue($state-danger-bg, -10), 5%);
 
 
 //== Tooltips  --- WS2 DONE
@@ -537,9 +537,9 @@ $state-danger-border:            $asu-maroon; // darken(adjust-hue($state-danger
 //** Tooltip max width
 $tooltip-max-width:           17.625rem; // 282px
 //** Tooltip text color
-$tooltip-color:               $asu-gray-darkest;
+$tooltip-color:               $ws2-gray-darkest;
 //** Tooltip background color
-$tooltip-bg:                  $asu-gray-lighter;
+$tooltip-bg:                  $ws2-gray-lighter;
 $tooltip-opacity:             .9;
 
 //** Tooltip arrow width
@@ -617,7 +617,7 @@ $modal-content-border-color:                   rgba(0,0,0,.2);
 $modal-content-fallback-border-color:          $gray-light;
 
 //** Modal backdrop background color
-$modal-backdrop-bg:           $asu-gray-darkest;
+$modal-backdrop-bg:           $ws2-gray-darkest;
 //** Modal backdrop opacity
 $modal-backdrop-opacity:      0.5;
 //** Modal header border color
@@ -658,7 +658,7 @@ $alert-danger-border:         $state-danger-border;
 //##
 
 //** Background color of the whole progress component
-$progress-bg:                 $asu-gray-lightest;
+$progress-bg:                 $ws2-gray-lightest;
 //** Progress bar text color
 $progress-bar-color:          #fff;
 
@@ -685,7 +685,7 @@ $list-group-border:             $gray-alt-admin;
 $list-group-border-radius:      $border-radius-base;
 
 //** Background color of single list elements on hover
-$list-group-hover-bg:           $asu-gray-lightest;
+$list-group-hover-bg:           $ws2-gray-lightest;
 //** Text color of active list elements
 $list-group-active-color:       $component-active-color;
 //** Background color of active list elements
@@ -694,8 +694,8 @@ $list-group-active-bg:          $component-active-bg;
 $list-group-active-border:      $list-group-active-bg;
 $list-group-active-text-color:  lighten($list-group-active-bg, 40%);
 
-$list-group-link-color:         $asu-gray-darker;
-$list-group-link-heading-color: $asu-gray-darkest;
+$list-group-link-color:         $ws2-gray-darker;
+$list-group-link-heading-color: $ws2-gray-darkest;
 
 //== Panels
 //
@@ -707,10 +707,10 @@ $panel-border-radius:         $border-radius-base;
 
 //** Border color for elements within panels
 $panel-inner-border:          $gray-alt-admin;
-$panel-footer-bg:             $asu-gray-lightest;
+$panel-footer-bg:             $ws2-gray-lightest;
 $panel-default-text:          $gray-dark;
 $panel-default-border:        $gray-alt-admin;
-$panel-default-heading-bg:    $asu-gray-lightest;
+$panel-default-heading-bg:    $ws2-gray-lightest;
 
 $panel-primary-text:          #fff;
 $panel-primary-border:        $brand-primary;
@@ -761,7 +761,7 @@ $blockquote-image-offset:     14.3625rem;
 //
 //##
 
-$well-bg:                     $asu-gray-lightest;
+$well-bg:                     $ws2-gray-lightest;
 $well-border:                 darken($well-bg, 7%);
 
 //== Badges
@@ -789,7 +789,7 @@ $badge-border-radius:         10px;
 $breadcrumb-padding-vertical:   0.5em;
 $breadcrumb-padding-horizontal: 0.9375em;
 //** Breadcrumb background color
-$breadcrumb-bg:                 $asu-gray-lightest;
+$breadcrumb-bg:                 $ws2-gray-lightest;
 //** Breadcrumb text color
 $breadcrumb-color:              #ccc;
 //** Text color of current page in the breadcrumb
@@ -818,7 +818,7 @@ $carousel-caption-color:                      #fff;
 //##
 
 $close-font-weight:           bold;
-$close-color:                 $asu-gray-darkest;
+$close-color:                 $ws2-gray-darkest;
 $close-text-shadow:           0 1px 0 #fff;
 
 //== Code
@@ -831,7 +831,7 @@ $code-bg:                     #f9f2f4;
 $kbd-color:                   #fff;
 $kbd-bg:                      #333;
 
-$pre-bg:                      $asu-gray-lightest;
+$pre-bg:                      $ws2-gray-lightest;
 $pre-color:                   $gray-dark;
 $pre-border-color:            #ccc;
 $pre-scrollable-max-height:   340px;

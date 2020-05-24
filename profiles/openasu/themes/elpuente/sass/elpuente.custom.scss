@@ -86,15 +86,15 @@ div.pane-menu-tree {
 -------------------------------------------------------------- */
 body {
   font-family: $font-family-base;
-  color: $asu-gray-darkest;
+  color: $ws2-gray-darkest;
   background-color: $brand-white;
 }
 
 a,
 .ui-widget-content a {
-  border-bottom: 1px solid $asu-maroon;
+  border-bottom: 1px solid $ws2-maroon;
   text-decoration: none;
-  color: $asu-maroon;
+  color: $ws2-maroon;
   transition: all 0.25s ease-in-out 0s;
   &:hover {
     color: $link-hover-color;
@@ -130,7 +130,7 @@ a.btn-secondary,
 a.btn-gold,
 .btn-gold a
 {
-  color: $asu-gray-darkest;
+  color: $ws2-gray-darkest;
   border-bottom: none;
 }
 
@@ -154,7 +154,7 @@ a.btn-primary:hover,
 -------------------------------------------------------------- */
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   margin-bottom: 1.5rem;
-  color: $asu-gray-darkest;
+  color: $ws2-gray-darkest;
   font-family: Arial, sans-serif;
   font-weight: 700;
 }
@@ -190,7 +190,7 @@ h6, .h6 {
 
 /* HR separator - custom */
 hr.asu-element-gold {
-  border-color: $asu-gold;
+  border-color: $ws2-gold;
   border-width: 8px;
   margin-left: 0;
   max-width: 256px;
@@ -227,7 +227,7 @@ blockquote {
     font-size: 4.5rem; //
     float: left;
     margin-left: -6rem;
-    color: $asu-gray-light; // Default color
+    color: $ws2-gray-light; // Default color
   }
   & > p:not([class*=sig-]):after { // quote
     font-family: "FontAwesome", sans-serif;
@@ -238,10 +238,10 @@ blockquote {
     position: absolute;
   }
   &.asu-element-gold:before { // quote
-    color: $asu-gold;
+    color: $ws2-gold;
   }
   &.asu-element-maroon:before { // quote
-    color: $asu-maroon;
+    color: $ws2-maroon;
   }
   &.bq-image {
     img:first-of-type {
@@ -255,7 +255,7 @@ blockquote {
       font-size: initial; //
       content: initial;
       margin-left: $blockquote-image-offset/(-1);
-      color: $asu-gray-light; // Default color
+      color: $ws2-gray-light; // Default color
     }
     padding-left: $blockquote-image-offset; // 230px
   }
@@ -273,11 +273,11 @@ blockquote {
   // nothing yet - no styling
 }
 .highlight.highlight-gold {
-  background-color: $asu-gold;
+  background-color: $ws2-gold;
 }
 .highlight.highlight-dark {
-  color: $asu-gray-lightest;
-  background-color: $asu-gray-darkest;
+  color: $ws2-gray-lightest;
+  background-color: $ws2-gray-darkest;
 }
 .explore-programs h3 {
   font-size: 1.625rem;
@@ -286,7 +286,7 @@ blockquote {
 /* =HEADER --- IN PROGRESS
 -------------------------------------------------------------- */
 .header__sitename {
-  color: $asu-gray-darkest;
+  color: $ws2-gray-darkest;
   font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
   font-weight: bold;
   font-size: 1.5em;
@@ -304,7 +304,7 @@ blockquote {
 }
 
 .header__sitename a {
-  color: $asu-gray-darkest;
+  color: $ws2-gray-darkest;
 }
 
 #asu_hdr #asu_universal_nav_new .icn {
@@ -377,7 +377,7 @@ table {
   margin-bottom: 1.5em;
   max-width: 100%;
   width: 100%;
-  border: 1px solid $asu-gray-lighter;
+  border: 1px solid $ws2-gray-lighter;
 }
 table > tbody {
   border-top: none;
@@ -389,7 +389,7 @@ table > tbody > tr > th,
 table > tbody > tr > td,
 table > tfoot > tr > th,
 table > tfoot > tr > td {
-  border-top: 1px solid $asu-gray;
+  border-top: 1px solid $ws2-gray;
   line-height: 1.44;
   padding: $padding-small-vertical $padding-small-horizontal;
   vertical-align: top;
@@ -397,12 +397,12 @@ table > tfoot > tr > td {
 
 table > thead > tr > th,
 table > thead > tr > td {
-  border-bottom: 2px solid $asu-gray;
+  border-bottom: 2px solid $ws2-gray;
   vertical-align: bottom;
   font-weight: bold;
 }
 body:not(.page-admin) table > tbody > tr:nth-child(2n+1) {
-  background-color: $asu-gray-lightest;
+  background-color: $ws2-gray-lightest;
 }
 
 table > caption + thead > tr:first-child > th,
@@ -415,13 +415,13 @@ table > thead:first-child > tr:first-child > td {
 }
 
 table > tbody + tbody {
-  border-top: 2px solid $asu-gray;
+  border-top: 2px solid $ws2-gray;
 }
 
 /* WYSIWYG Bordered table */
 table.bordered {
-  border-bottom: 1px solid $asu-gray;
-  border-left: 1px solid $asu-gray;
+  border-bottom: 1px solid $ws2-gray;
+  border-left: 1px solid $ws2-gray;
 }
 table.bordered > thead > tr > th,
 table.bordered > thead > tr > td,
@@ -429,7 +429,7 @@ table.bordered > tbody > tr > th,
 table.bordered > tbody > tr > td,
 table.bordered > tfoot > tr > th,
 table.bordered > tfoot > tr > td {
-  border-right: 1px solid $asu-gray;
+  border-right: 1px solid $ws2-gray;
 }
 table.bordered > tbody > tr:nth-child(2n+1) {
   background-color: #fff;
@@ -440,7 +440,7 @@ table.bordered > colgroup + thead > tr:first-child > th,
 table.bordered > colgroup + thead > tr:first-child > td,
 table.bordered > thead:first-child > tr:first-child > th,
 table.bordered > thead:first-child > tr:first-child > td {
-  border-top: 1px solid $asu-gray;
+  border-top: 1px solid $ws2-gray;
 }
 
 
@@ -474,8 +474,8 @@ table.bordered > thead:first-child > tr:first-child > td {
 /* =PANELS --- WS2.0 DONE
 -------------------------------------------------------------- */
 .panel {
-  background-color: $asu-gray-lightest;
-  border: 1px solid $asu-gray-light;
+  background-color: $ws2-gray-lightest;
+  border: 1px solid $ws2-gray-light;
 }
 
 .js-darkgraybg .panel,
@@ -520,7 +520,7 @@ table.bordered > thead:first-child > tr:first-child > td {
   background-color: transparent;
   margin: 2em 0;
   padding: 0;
-  color: $asu-gray-darker;
+  color: $ws2-gray-darker;
   font-size: 0.875em;
 }
 
@@ -546,7 +546,7 @@ table.bordered > thead:first-child > tr:first-child > td {
 -------------------------------------------------------------- */
 .ui-accordion {
   margin: 3rem 0;
-  color: $asu-gray-darkest;
+  color: $ws2-gray-darkest;
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1rem; // 16px
   font-weight: 200;
@@ -631,7 +631,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 }
 
 .ui-accordion .accordion-content {
-  color: $asu-gray-darkest;
+  color: $ws2-gray-darkest;
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   font-weight: 200;
@@ -673,8 +673,8 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 
 .alert,
 .alert a {
-  color: $asu-gray-darkest;
-  border-bottom-color: $asu-gray-darkest;
+  color: $ws2-gray-darkest;
+  border-bottom-color: $ws2-gray-darkest;
 }
 
 .alert a:hover {
@@ -690,29 +690,29 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 }
 
 .alert-success {
-  background-color: $asu-success-bkgd;
-  border-color: $asu-green;
+  background-color: $ws2-success-bkgd;
+  border-color: $ws2-green;
 }
 
 .alert-info {
-  background-color: $asu-info-bkgd;
-  border-color: $asu-blue;
+  background-color: $ws2-info-bkgd;
+  border-color: $ws2-blue;
 }
 
 .alert-danger {
-  background-color: $asu-danger-bkgd; /* 20% opacity of official maroon */
-  border-color: $asu-maroon;
+  background-color: $ws2-danger-bkgd; /* 20% opacity of official maroon */
+  border-color: $ws2-maroon;
 }
 
 .alert-warning {
-  background-color: $asu-warning-bkgd; /* 33% opacity of official maroon */
-  border-color: $asu-orange;
+  background-color: $ws2-warning-bkgd; /* 33% opacity of official maroon */
+  border-color: $ws2-orange;
 }
 
 .alert:not([class*="alert-"]),
 div[class='alert alert-block'] { /* Catch-all for default alert class */
-  background-color: $asu-gray-lightest;
-  border-color: $asu-gray-light;
+  background-color: $ws2-gray-lightest;
+  border-color: $ws2-gray-light;
 }
 
 /* Devel debugging */
@@ -721,7 +721,7 @@ div[class='alert alert-block'] { /* Catch-all for default alert class */
 }
 
 .logged-in .alert .krumo-root .krumo-element:not(a) {
-  color: $asu-green;
+  color: $ws2-green;
 }
 
 /* =ADMIN UI --- WS2.0 DONE (admin only)
@@ -732,10 +732,10 @@ div[class='alert alert-block'] { /* Catch-all for default alert class */
 #top-content #tabs .nav-pills {
   padding-top: 1em;
   li a {
-    background-color: $asu-gray-lightest;
+    background-color: $ws2-gray-lightest;
 
     &:hover {
-      background-color: $asu-gray-lighter;
+      background-color: $ws2-gray-lighter;
       color: #000;
     }
   }
@@ -743,7 +743,7 @@ div[class='alert alert-block'] { /* Catch-all for default alert class */
     &,
     &:hover,
     &:focus {
-      background-color: $asu-maroon;
+      background-color: $ws2-maroon;
     }
   }
   /* dropdown items from nav pills */
@@ -751,7 +751,7 @@ div[class='alert alert-block'] { /* Catch-all for default alert class */
     background-color: rgba(0,0,0,0);
     border-bottom: none;
     &:hover {
-      background-color: $asu-gray-lighter;
+      background-color: $ws2-gray-lighter;
       color: #000;
     }
   }
@@ -826,10 +826,10 @@ h2.widget-list {
 }
 #modal-content .form-tablefield input.form-submit.btn,
 #modalContent .form-tablefield input.form-submit.btn {
-  background-color: $asu-maroon !important;
+  background-color: $ws2-maroon !important;
 }
 ul.help-text {
-  background-color: $asu-gray-lightest;
+  background-color: $ws2-gray-lightest;
   padding: 0.5em 1em;
 }
 
@@ -847,7 +847,7 @@ ul.help-text li.help-title {
 /* =FORMS --- WS2.0 DONE
 -------------------------------------------------------------- */
 .marker, .form-required {
-  color: $asu-error-alt;
+  color: $ws2-error-alt;
 }
 
 /* =100% width fix for Bootstrap limitation --- SKIPPED (NEEDS REVIEW)
@@ -936,9 +936,9 @@ ul.help-text li.help-title {
 }
 
 #page-footer {
-  background-color: $asu-gray-darkest;
+  background-color: $ws2-gray-darkest;
   #block-asu-brand-asu-brand-footer {
-    background-color: $asu-gray-lighter;
+    background-color: $ws2-gray-lighter;
   }
 }
 
@@ -1010,8 +1010,8 @@ body #content .ui-tabs .ui-tabs-nav li {
 
 // WEBSPARK-1118 - Temporary footer link fix @removeIfInGlobalCSS
 #innovation-footer .footer-menu ul li a:hover {
-  color: $asu-maroon;
-  border-bottom: 1px dotted $asu-maroon;
+  color: $ws2-maroon;
+  border-bottom: 1px dotted $ws2-maroon;
 }
 
 /* CARDS

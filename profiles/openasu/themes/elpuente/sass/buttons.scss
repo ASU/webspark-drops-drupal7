@@ -43,7 +43,7 @@
 }
 .btn-primary,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary {
-  background-color: $asu-maroon;
+  background-color: $ws2-maroon;
   color: #fff;
 }
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active,
@@ -68,8 +68,8 @@
 //////////////////////////////////
 .btn-secondary,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary {
-  background-color: $asu-gray;
-  color: $asu-gray-darkest;
+  background-color: $ws2-gray;
+  color: $ws2-gray-darkest;
 }
 .btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active, .btn-secondary.active,
 .open > .btn-secondary.dropdown-toggle,
@@ -86,14 +86,14 @@
   opacity: $btn-disabled-opacity;
 }
 .btn-secondary .badge {
-  color: $asu-gray-darkest;
+  color: $ws2-gray-darkest;
 }
 // Gold button (WS2.0 - Gold)
 //////////////////////////////////
 .btn-gold,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold {
-  background-color: $asu-gold;
-  color: $asu-gray-darkest;
+  background-color: $ws2-gold;
+  color: $ws2-gray-darkest;
 }
 .btn-gold:hover, .btn-gold:focus, .btn-gold:active, .btn-gold.active, .open > .btn-gold.dropdown-toggle,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold:hover,
@@ -110,18 +110,18 @@
 .btn-gold[disabled]:active, .btn-gold.active[disabled], fieldset[disabled] .btn-gold, fieldset[disabled]
 .btn-gold:hover, fieldset[disabled] .btn-gold:focus, fieldset[disabled] .btn-gold:active, fieldset[disabled]
 .btn-gold.active {
-  background-color: $asu-gold;
+  background-color: $ws2-gold;
 }
 .btn-gold .badge {
-  background-color: $asu-gray-darkest;
-  color: $asu-gold;
+  background-color: $ws2-gray-darkest;
+  color: $ws2-gold;
 }
 
 // Secondary button (WS2.0 - NONE; Gray substituted in)
 //////////////////////////////////
 .btn-blue {
-  background-color: $asu-gray;
-  color: $asu-gray-darkest;
+  background-color: $ws2-gray;
+  color: $ws2-gray-darkest;
 }
 .btn-blue:hover, .btn-blue:focus, .btn-blue:active, .btn-blue.active, .open > .btn-blue.dropdown-toggle {
   transform: scale($btn-scale);
@@ -133,19 +133,19 @@
   opacity: $btn-disabled-opacity;
 }
 .btn-blue .badge {
-  color: $asu-gray-darkest;
+  color: $ws2-gray-darkest;
 }
 
 // Default button (WS2.0 - NONE; Substitute - Gray)
 //////////////////////////////////
 .btn-default {
-  background-color: $asu-maroon;
+  background-color: $ws2-maroon;
   color: #fff;
-  border-bottom: 1px solid $asu-maroon !important; // override innovation-main.css line 107
+  border-bottom: 1px solid $ws2-maroon !important; // override innovation-main.css line 107
 }
 .btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open > .btn-default.dropdown-toggle {
   transform: scale($btn-scale);
-  border: 1px solid $asu-maroon !important; // override innovation-main.css line 107
+  border: 1px solid $ws2-maroon !important; // override innovation-main.css line 107
 }
 .btn-default:active, .btn-default.active, .open > .btn-default.dropdown-toggle {
   background-image: none;
@@ -155,14 +155,14 @@
 }
 
 .btn-default .badge {
-  background-color: $asu-gray-darker;
+  background-color: $ws2-gray-darker;
   color: whitesmoke;
 }
 
 // Success button (WS2.0 - Green)
 //////////////////////////////////
 .btn-success {
-  background-color: $asu-green;
+  background-color: $ws2-green;
   color: #fff;
 }
 .btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .open > .btn-success.dropdown-toggle {
@@ -176,14 +176,14 @@
 }
 .btn-success .badge {
   background-color: #fff;
-  color: $asu-green;
+  color: $ws2-green;
 }
 
 // Info button (WS2.0 - Blue)
 //////////////////////////////////
 .btn-info {
-  background-color: $asu-blue;
-  border-color: $asu-blue;
+  background-color: $ws2-blue;
+  border-color: $ws2-blue;
   color: #fff;
 }
 .btn-info:hover, .btn-info:focus, .btn-info:active, .btn-info.active, .open > .btn-info.dropdown-toggle {
@@ -199,15 +199,15 @@
 }
 .btn-info .badge {
   background-color: #fff;
-  color: $asu-blue;
+  color: $ws2-blue;
 }
 
 // Warning button (WS2.0 - Gold)
 //////////////////////////////////
 .btn-warning {
-  background-color: $asu-orange;
-  border-color: $asu-orange;
-  color: $asu-gray-darkest;
+  background-color: $ws2-orange;
+  border-color: $ws2-orange;
+  color: $ws2-gray-darkest;
 }
 .btn-warning:hover, .btn-warning:focus, .btn-warning:active, .btn-warning.active, .open > .btn-warning.dropdown-toggle {
   transform: scale($btn-scale);
@@ -219,8 +219,8 @@
   opacity: $btn-disabled-opacity;
 }
 .btn-warning .badge {
-  background-color: $asu-gray-darkest;
-  color: $asu-gold;
+  background-color: $ws2-gray-darkest;
+  color: $ws2-gold;
 }
 
 // Secondary button (WS2.0 - Maroon)
@@ -248,7 +248,7 @@
 //////////////////////////////////
 .btn-link {
   border-radius: 0;
-  color: $asu-maroon;
+  color: $ws2-maroon;
   cursor: pointer;
   font-weight: normal;
 }
@@ -298,10 +298,10 @@
 
 .button.browse {
   background: -moz-linear-gradient(center bottom , #e9eaec 0%, #fafafa 100%) repeat scroll 0 0 #fafafa;
-  border: 1px solid $asu-gray-light;
+  border: 1px solid $ws2-gray-light;
   border-radius: 3px;
-  box-shadow: 0 3px 3px 0 $asu-gray-light;
-  color: $asu-gray-dark;
+  box-shadow: 0 3px 3px 0 $ws2-gray-light;
+  color: $ws2-gray-dark;
   cursor: pointer;
   font: bold 12px/32px "Open Sans","Lucida Sans","Lucida Grande",verdana sans-serif;
   height: 33px;
@@ -323,7 +323,7 @@
   margin-top: 0.9375em;
 }
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] ul.menu li:not(.btn-container) + li.btn-container {
-  border-top: 1px solid $asu-gray-light
+  border-top: 1px solid $ws2-gray-light
 }
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container {
   margin-left: 1.375em;

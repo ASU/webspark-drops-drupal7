@@ -42,7 +42,7 @@
 .navbar-nav > .active > a:hover,
 .navbar-nav > .active > a:focus {
   background-color: #000;
-  color: $asu-gold;
+  color: $ws2-gold;
 }
 .navbar-nav > li > a.dropdown-toggle {
   padding: 20px 25px 20px 7px;
@@ -54,8 +54,8 @@
   margin-left: 2px;
 }
 .navbar-nav .dropdown-menu {
-  background-color: $asu-gray-darkest;
-  border: 1px solid $asu-gray-darkest;
+  background-color: $ws2-gray-darkest;
+  border: 1px solid $ws2-gray-darkest;
   & > li > a  {
     color: #ededed;
     font-size: 15px;
@@ -65,7 +65,7 @@
     &:hover,
     &:focus {
       background-color: #000;
-      color: $asu-gold;
+      color: $ws2-gold;
     }
   }
 }
@@ -85,7 +85,7 @@
 -------------------------------------------------------------- */
 .pane-system-main-menu,
 .pane-menu-tree {
-  border-top: $padding-small-vertical solid $asu-maroon;
+  border-top: $padding-small-vertical solid $ws2-maroon;
   margin-top: 1.5em;
   margin-bottom: 3em;
   padding: 2em;
@@ -94,9 +94,9 @@
 }
 .pane-system-main-menu:before,
 .pane-menu-tree:before {
-  border-bottom: 1px solid $asu-gray-lighter;
-  border-left: 1px solid $asu-gray-lighter;
-  border-right: 1px solid $asu-gray-lighter;
+  border-bottom: 1px solid $ws2-gray-lighter;
+  border-left: 1px solid $ws2-gray-lighter;
+  border-right: 1px solid $ws2-gray-lighter;
   content: "";
   display: block;
   height: 100%;
@@ -147,11 +147,11 @@
 .pane-system-main-menu ul.menu li a,
 .pane-menu-tree ul.menu li a {
   background-color: #fff;
-  border-top: 1px solid $asu-gray-light;
+  border-top: 1px solid $ws2-gray-light;
   border-bottom: none;
   display: block;
   padding: 0.625em 0.3125em;
-  color: $asu-maroon;
+  color: $ws2-maroon;
   font-weight: 200;
   text-decoration: none;
   font-size: 1.125em;
@@ -164,7 +164,7 @@
 }
 .pane-system-main-menu ul.menu li a:hover,
 .pane-menu-tree ul.menu li a:hover {
-  background-color: $asu-gray-lightest;
+  background-color: $ws2-gray-lightest;
   font-weight: bold;
 }
 .pane-system-main-menu ul.menu li a:focus,
@@ -198,14 +198,14 @@ ul.quicktabs-style-nostyle {
   background: none;
   min-height: auto;
   padding: 0;
-  color: $asu-gray-darkest;
+  color: $ws2-gray-darkest;
   font-size: 1.125em;
   font-weight: 200;
   line-height: $line-height-computed;
 }
 ul.quicktabs-style-nostyle,
 .ui-tabs .ui-tabs-nav {
-  border-bottom: 1px solid $asu-gray-light !important;
+  border-bottom: 1px solid $ws2-gray-light !important;
   padding: $padding-base-vertical 0 0 0;
 }
 ul.quicktabs-style-nostyle {
@@ -230,14 +230,14 @@ ul.quicktabs-style-nostyle li,
 .ui-tabs .ui-tabs-nav li.ui-state-default {
   background: none;
   background-color: transparent;
-  color: $asu-gray-darkest;
+  color: $ws2-gray-darkest;
 }
 ul.quicktabs-style-nostyle li:hover,
 ul.quicktabs-style-nostyle li.active,
 .ui-tabs .ui-tabs-nav li.ui-state-hover,
 .ui-tabs .ui-tabs-nav li.ui-state-active,
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected {
-  border-top: 0.3125em solid $asu-maroon;
+  border-top: 0.3125em solid $ws2-maroon;
   background: none;
   background-color: transparent;
   margin-bottom: -1px;
@@ -255,13 +255,13 @@ ul.quicktabs-style-nostyle li a,
 .ui-tabs .ui-tabs-nav li a {
   display: block;
   position: relative;
-  border-color: $asu-gray-dark $asu-gray-dark transparent $asu-gray-dark;
+  border-color: $ws2-gray-dark $ws2-gray-dark transparent $ws2-gray-dark;
   border-image: none;
   border-radius: 0;
   border-style: solid;
   border-width: 1px;
   padding: 0.625em 0.9375em;
-  color: $asu-gray-dark;
+  color: $ws2-gray-dark;
   line-height: $line-height-computed;
   transition: all 0.25s ease-in-out 0s;
 }
@@ -269,7 +269,7 @@ ul.quicktabs-style-nostyle li a {
   display: inline-block;
   padding: 1em 1.5em;
   text-decoration: none;
-  color: $asu-gray-darkest;
+  color: $ws2-gray-darkest;
   font-size: 1.125em;
   font-weight: 400;
   line-height: $line-height-computed; // was 1.44
@@ -277,12 +277,12 @@ ul.quicktabs-style-nostyle li a {
 .ui-tabs .ui-tabs-nav li.ui-state-default a,
 .ui-tabs .ui-tabs-nav li.ui-state-default a:link,
 .ui-tabs .ui-tabs-nav li.ui-state-default a:visited {
-  color: $asu-gray-darkest;
+  color: $ws2-gray-darkest;
   transition: all 0.25s ease-in-out 0s;
 }
 ul.quicktabs-style-nostyle li:hover a,
 .ui-tabs .ui-tabs-nav li.ui-state-hover a {
-  border: 0.5em solid $asu-maroon;
+  border: 0.5em solid $ws2-maroon;
 }
 ul.quicktabs-style-nostyle li.active a,
 ul.quicktabs-style-nostyle li.active:hover a,
@@ -300,7 +300,7 @@ ul.quicktabs-style-nostyle li.active:hover a,
   box-shadow: 0 0 0.3125em  $input-border-focus;
 }
 ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
-  color: $asu-gray-darkest;
+  color: $ws2-gray-darkest;
 }
 
 /* WEBSPARK-1197 */
@@ -332,7 +332,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
   &.active > a:hover,
   &.active > a:focus {
     color: #fff;
-    background-color: $asu-maroon;
+    background-color: $ws2-maroon;
   }
   &.active > a:focus {
     outline: 0.125em solid $input-border-focus;
@@ -355,14 +355,14 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
     & + li:before {
       content: "/\00a0";
       padding: 0 0.3125em;
-      color: $asu-gray-dark; //#828282;
+      color: $ws2-gray-dark; //#828282;
     }
     & > a {
       border-bottom: 0;
     }
   }
   & > .active {
-    color: $asu-gray-dark; //#828282;
+    color: $ws2-gray-dark; //#828282;
   }
 }
 
@@ -382,9 +382,9 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
       float: left;
       padding: $padding-small-vertical $padding-small-horizontal;
       text-decoration: none;
-      color: $asu-maroon;
+      color: $ws2-maroon;
       background-color: #fff;
-      border: 1px solid $asu-maroon;
+      border: 1px solid $ws2-maroon;
       margin-left: -1px;
       border-radius: $pager-border-radius;
     }
@@ -400,7 +400,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
     & > span:hover,
     & > span:focus {
       color: $link-hover-color;
-      background-color: $asu-gray-lightest;
+      background-color: $ws2-gray-lightest;
       border-color: $gray-alt-admin;
     }
   }
@@ -410,8 +410,8 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
   & > .active > span:focus {
     z-index: 2;
     color: #fff;
-    background-color: $asu-maroon;
-    border-color: $asu-maroon;
+    background-color: $ws2-maroon;
+    border-color: $ws2-maroon;
     cursor: default;
   }
   & > .disabled > span,
@@ -420,7 +420,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
   & > .disabled > a,
   & > .disabled > a:hover,
   & > .disabled > a:focus {
-    color: $asu-gray-dark;
+    color: $ws2-gray-dark;
     background-color: #fff;
     border-color: $gray-alt-admin;
     cursor: not-allowed;
@@ -503,7 +503,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
   .disabled > a:hover,
   .disabled > a:focus,
   .disabled > span {
-    color: $asu-gray-dark;
+    color: $ws2-gray-dark;
     background-color: #fff;
     cursor: not-allowed;
   }
@@ -543,8 +543,8 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 
 .item-list.item-list-pager .pager .pager-current,
 #media-browser-tabset .item-list.item-list-pager .pager .pager-current {
-  border: 1px solid $asu-maroon;
+  border: 1px solid $ws2-maroon;
   padding: $padding-small-vertical; // 0.5rem
-  background-color: $asu-maroon;
+  background-color: $ws2-maroon;
   color: #fff;
 }
