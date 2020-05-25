@@ -15,27 +15,29 @@
 $the-base:         16px;
 // Panel pane padding
 $ws2-panel-padding: 1em 1.5em 1em;
+// theme image base dir
 $elpuente-images-dir: "/profiles/openasu/themes/elpuente/images";
-// The amount lists, blockquotes and comments are indented.
-$indent-amount: 6rem;
+// block-level indent - blockquotes.
+$block-indent: 6rem; // 96px
 
-//== Colors --- WS2 DONE
+/*== Colors --- WS2 DONE
+-----------------------------------------------------*/
 
 // Official ASU colors
 //// ASU Primary colors
-$ws2-maroon:       #8c1d40;
-$ws2-gold:         #ffc627;
-$ws2-blue:         #00a3e0;
-$ws2-green:        #78be20;
-$ws2-orange:       #ff7f32;
+$ws2-maroon:             #8c1d40;
+$ws2-gold:               #ffc627;
+$ws2-blue:               #00a3e0;
+$ws2-green:              #78be20;
+$ws2-orange:             #ff7f32;
 //// ASU Gray shades
-$ws2-gray-darkest:      #191919; // Not using lighten() mixing
-$ws2-gray-darker:       #484848;
-$ws2-gray-dark:         #747474;
-$ws2-gray:              #bfbfbf;
-$ws2-gray-light:        #d0d0d0;
-$ws2-gray-lighter:      #e8e8e8;
-$ws2-gray-lightest:     #fafafa;
+$ws2-gray-darkest:       #191919; // Not using lighten() mixing
+$ws2-gray-darker:        #484848;
+$ws2-gray-dark:          #747474;
+$ws2-gray:               #bfbfbf;
+$ws2-gray-light:         #d0d0d0;
+$ws2-gray-lighter:       #e8e8e8;
+$ws2-gray-lightest:      #fafafa;
 //// Background colors
 
 //// BOOTSTRAP DEFAULTS - Bootstrap-assigned colors.
@@ -75,40 +77,42 @@ $ws2-alert-black-info:    #00b0f3;
 $ws2-alert-black-border:  $ws2-gray-light;
 
 //// BOOTSTRAP DEFAULTS - Primary branding colors (Bootstrap defaults that are set to ASU colors)
-$brand-primary:          $ws2-maroon; // maroon
-$brand-white:            #fff;
-$brand-success:          $ws2-alert-white-success;
-$brand-info:             $ws2-alert-white-info; // #78BE20;
-$brand-warning:          $ws2-alert-white-warning; // #FF7F32;
-$brand-danger:           #CC2F2F; // $ws2-error-bkgd (alt?)
+$brand-primary:           $ws2-maroon; // maroon
+$brand-white:             #fff;
+$brand-success:           $ws2-alert-white-success;
+$brand-info:              $ws2-alert-white-info; // #78BE20;
+$brand-warning:           $ws2-alert-white-warning; // #FF7F32;
+$brand-danger:            #CC2F2F; // $ws2-error-bkgd (alt?)
 
 //// Unpublished nodes
-$ws2-bkgd-unpublished:  $ws2-error-bkgd;
+$ws2-bkgd-unpublished:    $ws2-error-bkgd;
 
 //// Background color for `<body>`.
-$body-bg:               $brand-white;
-$body-bg-gray:          $ws2-gray-lighter;
-$body-bg-dark:          $ws2-gray-darkest;
+$body-bg:                 $brand-white;
+$body-bg-gray:            $ws2-gray-lighter;
+$body-bg-dark:            $ws2-gray-darkest;
 //// Global text color on `<body>`.
-$text-color:            $ws2-gray-darkest;
-$text-color-bg-dark:    $ws2-gray-lightest;
+$text-color:              $ws2-gray-darkest;
+
+//// Alternate styling
+$text-color-bg-dark:      $ws2-gray-lightest;
+$ws2-content-styles-container: ".region-content #page-page";
 
 //** Global textual link color.
-$link-color:            $brand-primary;
-$link-color-gold:       $ws2-gold;
+$link-color:              $brand-primary;
+$link-color-gold:         $ws2-gold;
 //** Link hover color set via `darken()` function.
-$link-hover-color:      #d23153;
-$link-hover-color-gold: #ffd053;
+$link-hover-color:        #d23153;
+$link-hover-color-gold:   #ffd053;
 
 //== Typography --- WS2 DONE
 //
 //## Font, line-height, and color for body text, headings, and more.
 
-$font-family-sans-serif:  Arial, sans-serif;
+$font-family-sans-serif:  Arial, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif;
 $font-family-serif:       Georgia, "Times New Roman", Times, serif;
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
 $font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", "DejaVu Sans Mono", monospace, sans-serif;
-$font-family-sans-serif:  "Arial Bold", sans-serif;
 
 // BASE FONT --- WS2 DONE
 /////////////////////
@@ -141,15 +145,15 @@ $headers-line-height-small-computed:    floor(($font-size-base * $headers-line-h
 //** By default, this inherits from the `<body>`.
 $headings-font-family:    inherit;
 $headings-font-weight:    700;
-$headings-color:          #000;
+$headings-color:          $text-color;
 
 //-- Iconography  --- WS2 DONE
 //
 //## Specify custom locations of the include Glyphicons icon font. Useful for those including Bootstrap via Bower.
 
-$icon-font-path:          "bootstrap/";
-$icon-font-name:          "glyphicons-halflings-regular";
-$icon-font-svg-id:        "glyphicons_halflingsregular";
+$icon-font-path:            "bootstrap/";
+$icon-font-name:            "glyphicons-halflings-regular";
+$icon-font-svg-id:          "glyphicons_halflingsregular";
 
 //== Components  --- IN PROGRESS (carets)
 //
@@ -215,13 +219,13 @@ $btn-default-border:            transparent;
 $btn-default-color:             $ws2-gray-lightest;
 $btn-default-bg:                $brand-primary;
 
-$btn-gold-color:                $ws2-gray-darkest;
+$btn-gold-color:                $text-color;
 $btn-gold-bg:                   $ws2-gold;
 
 $btn-dark-color:                $ws2-gray-lightest;
 $btn-dark-bg:                   $ws2-gray-darkest;
 
-$btn-gray-color:                $ws2-gray-darkest;
+$btn-gray-color:                $text-color;
 $btn-gray-bg:                   $ws2-gray-lighter;
 
 $btn-scale:                     1.1;
@@ -460,7 +464,7 @@ $nav-pills-active-link-hover-color:         $component-active-color;
 //
 //##
 
-$pagination-color:                     $ws2-gray-darkest;
+$pagination-color:                     $text-color;
 $pagination-bg:                        #fff;
 $pagination-border:                    transparent;
 
@@ -505,15 +509,15 @@ $jumbotron-font-size:                  ceil(($font-size-base * 1.5));
 //
 //## Define colors for form feedback states and, by default, alerts.
 
-$state-success-text:             $ws2-gray-darkest;
+$state-success-text:             $text-color;
 $state-success-bg:               $ws2-green;
 $state-success-border:           $ws2-green; // darken(adjust-hue($state-success-bg, -10), 5%);
 
-$state-info-text:                $ws2-gray-darkest;
+$state-info-text:                $text-color;
 $state-info-bg:                  $ws2-blue;
 $state-info-border:              $ws2-blue; // darken(adjust-hue($state-info-bg, -10), 7%);
 
-$state-info-alt-text:            $ws2-gray-darkest;
+$state-info-alt-text:            $text-color;
 $state-info-alt-bg:              $ws2-gray-lighter;
 $state-info-alt-border:          $ws2-gray-lighter; // darken(adjust-hue($state-info-bg, -10), 7%);
 
@@ -521,7 +525,7 @@ $state-info-black-text:          #fff;
 $state-info-black-bg:            $ws2-gray-darkest;
 $state-info-black-border:        $ws2-gray-darkest; // darken(adjust-hue($state-info-bg, -10), 7%);
 
-$state-warning-text:             $ws2-gray-darkest;
+$state-warning-text:             $text-color;
 $state-warning-bg:               $ws2-orange;
 $state-warning-border:           $ws2-orange; //darken(adjust-hue($state-warning-bg, -10), 5%);
 
@@ -535,17 +539,17 @@ $state-danger-border:            $ws2-maroon; // darken(adjust-hue($state-danger
 //##
 
 //** Tooltip max width
-$tooltip-max-width:           17.625rem; // 282px
+$tooltip-max-width:              17.625rem; // 282px
 //** Tooltip text color
-$tooltip-color:               $ws2-gray-darkest;
+$tooltip-color:                  $text-color;
 //** Tooltip background color
-$tooltip-bg:                  $ws2-gray-lighter;
-$tooltip-opacity:             .9;
+$tooltip-bg:                     $ws2-gray-lighter;
+$tooltip-opacity:                0.9;
 
 //** Tooltip arrow width
-$tooltip-arrow-width:         5px;
+$tooltip-arrow-width:            5px;
 //** Tooltip arrow color
-$tooltip-arrow-color:         $tooltip-bg;
+$tooltip-arrow-color:            $tooltip-bg;
 
 //== Popovers  --- WS2 DONE
 //
@@ -695,7 +699,10 @@ $list-group-active-border:      $list-group-active-bg;
 $list-group-active-text-color:  lighten($list-group-active-bg, 40%);
 
 $list-group-link-color:         $ws2-gray-darker;
-$list-group-link-heading-color: $ws2-gray-darkest;
+$list-group-link-heading-color: $text-color;
+
+$ws2-list-item-even:            "\2022";
+$ws2-list-item-odd:             "\25E6";
 
 //== Panels
 //
@@ -818,7 +825,7 @@ $carousel-caption-color:                      #fff;
 //##
 
 $close-font-weight:           bold;
-$close-color:                 $ws2-gray-darkest;
+$close-color:                 $text-color;
 $close-text-shadow:           0 1px 0 #fff;
 
 //== Code

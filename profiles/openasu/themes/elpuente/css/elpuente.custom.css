@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /**
  * moved over from Innovationn (innovation-main.css source)
  * IS_SCSS
@@ -6,6 +7,8 @@
  * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
  * Override Bootstrap variables below.
  */
+/*== Colors --- WS2 DONE
+-----------------------------------------------------*/
 /*
  * Custom Web standard styles
  */
@@ -47,9 +50,17 @@ html {
 body {
   font-size: 1rem;
   min-width: 20em;
+  font-family: Arial, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif;
+  color: #191919;
+  background-color: #fff;
 }
 body #page .region-content {
   padding: 0;
+}
+
+.region-content #page-page .asu-element-alt {
+  color: #fafafa;
+  background-color: #191919;
 }
 
 p {
@@ -82,12 +93,6 @@ div.pane-menu-tree {
 
 /* =LINKS & BUTTONS --- DONE
 -------------------------------------------------------------- */
-body {
-  font-family: "Arial Bold", sans-serif;
-  color: #191919;
-  background-color: #fff;
-}
-
 a,
 .ui-widget-content a {
   border-bottom: 1px solid #8c1d40;
@@ -252,7 +257,7 @@ blockquote.bq-image img:first-of-type {
   margin-left: -14rem;
 }
 blockquote.bq-image:before {
-  font-family: "Arial Bold", sans-serif;
+  font-family: Arial, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif;
   font-size: initial;
   content: initial;
   margin-left: -14.3625rem;
@@ -262,15 +267,14 @@ blockquote.bq-image:before {
 /* WYSIWYG style -- Lead Paragraph --*/
 .lead-paragraph {
   font-family: inherit;
-  font-size: 2rem;
-  font-weight: 200;
-  line-height: 1.6em;
+  font-size: 1.25rem;
+  line-height: 2em;
+  color: #2a2a2a;
 }
 
 .highlight.highlight-gold {
   background-color: #ffc627;
 }
-
 .highlight.highlight-dark {
   color: #fafafa;
   background-color: #191919;
@@ -324,14 +328,13 @@ blockquote.bq-image:before {
 
 /* =IMAGES --- IN PROGRESS
 -------------------------------------------------------------- */
-/* Added from Panopoly Images CSS file (removed in Panopoly 1.21) */
 img {
   max-width: 100%;
   height: auto;
   vertical-align: bottom;
 }
 
-/* wysiwyg image spacing */
+/* WYSIWYG image spacing */
 img.media-element.pull-right {
   margin-left: 20px;
 }
@@ -363,7 +366,90 @@ p.img-thumbnail img {
   transition: all 0.2s ease-in-out 0s;
 }
 
-img.ws2-drop-shadow
+img.ws2-drop-shadow {
+  box-shadow: 0 0.625em 1.25em rgba(0, 0, 41, 0.25);
+}
+
+div.caption-inner {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+div.caption-inner > img {
+  margin-bottom: 0;
+}
+div.caption-inner p.caption-text,
+div.caption-inner .caption-text {
+  padding: 1rem;
+  font-size: 0.75rem;
+  text-align: left;
+  margin: 0;
+  border: 1px solid #d0d0d0;
+  border-top: none;
+}
+
+/* =LISTS, ordered + unordered #WS2.0
+-------------------------------------------------------------- */
+.region-content #page-page ul, .region-content #page-page ol {
+  padding-left: 2em;
+  list-style-type: none;
+}
+.region-content #page-page ul li:before, .region-content #page-page ol li:before {
+  font-weight: bolder;
+  vertical-align: middle;
+}
+.region-content #page-page ul li:last-child, .region-content #page-page ol li:last-child {
+  padding-bottom: 0;
+}
+.region-content #page-page ul.asu-element-maroon li:before, .region-content #page-page ol.asu-element-maroon li:before {
+  color: #8c1d40;
+}
+.region-content #page-page ul.asu-element-gray li:before, .region-content #page-page ol.asu-element-gray li:before {
+  color: #191919;
+}
+.region-content #page-page ul.asu-element-alt, .region-content #page-page ol.asu-element-alt {
+  padding: 32px 32px;
+}
+.region-content #page-page ul.asu-element-alt li:before, .region-content #page-page ol.asu-element-alt li:before {
+  color: #fafafa;
+}
+.region-content #page-page ul.asu-element-alt.asu-element-gold li:before, .region-content #page-page ol.asu-element-alt.asu-element-gold li:before {
+  color: #ffc627;
+}
+.region-content #page-page ul li:before {
+  padding: 0 2.75em 0 0;
+  margin: 0 -2em 0 0;
+  content: "\2022";
+  font-size: 2em;
+}
+.region-content #page-page ul ul > li:before {
+  content: "◦";
+}
+.region-content #page-page ul ul ul > li:before {
+  content: "•";
+}
+.region-content #page-page ul ul ul ul > li:before {
+  content: "◦";
+}
+.region-content #page-page ul ul ul ul ul > li:before {
+  content: "•";
+}
+.region-content #page-page ol > li {
+  padding-bottom: 1em;
+  counter-increment: customlist;
+}
+.region-content #page-page ol > li:before {
+  content: counter(customlist) " ";
+  float: left;
+  width: 2em;
+}
+.region-content #page-page ol > li:first-child {
+  counter-reset: customlist;
+}
+
+/* =TABLES --- IN PROGRESS
+-------------------------------------------------------------- */
+/* Default table styles */
 table {
   background-color: #fff;
   margin-bottom: 1.5em;

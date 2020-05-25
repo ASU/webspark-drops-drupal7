@@ -4,6 +4,8 @@
  * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
  * Override Bootstrap variables below.
  */
+/*== Colors --- WS2 DONE
+-----------------------------------------------------*/
 .btn,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree {
   /* Button CSS for menu links added */

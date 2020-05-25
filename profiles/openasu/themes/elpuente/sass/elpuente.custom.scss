@@ -52,6 +52,14 @@ body {
   #page .region-content {
     padding: 0;
   }
+  font-family: $font-family-base;
+  color: $ws2-gray-darkest;
+  background-color: $brand-white;
+}
+
+#{$ws2-content-styles-container} .asu-element-alt {
+  color: $text-color-bg-dark;
+  background-color: $ws2-gray-darkest;
 }
 
 p {
@@ -62,12 +70,10 @@ p {
   margin-top: 2.85em;
   margin-bottom: 3em;
 }
-
 .page-teaser {
   margin-top: 3em;
   margin-bottom: 3em;
 }
-
 div.pane-system-main-menu,
 div.pane-menu-tree {
   margin-top: 3em;
@@ -84,12 +90,6 @@ div.pane-menu-tree {
 
 /* =LINKS & BUTTONS --- DONE
 -------------------------------------------------------------- */
-body {
-  font-family: $font-family-base;
-  color: $ws2-gray-darkest;
-  background-color: $brand-white;
-}
-
 a,
 .ui-widget-content a {
   border-bottom: 1px solid $ws2-maroon;
@@ -220,7 +220,7 @@ hr.asu-element-gold {
 blockquote {
   border-left: none;
   font-weight: bold;
-  padding-left: $indent-amount;
+  padding-left: $block-indent;
   &:before { // quote
     font-family: "FontAwesome", sans-serif;
     content: "\f10d";
@@ -264,21 +264,22 @@ blockquote {
 /* WYSIWYG style -- Lead Paragraph --*/ // aka WS2.0 SEO paragraph
 .lead-paragraph {
   font-family: inherit;
-  font-size: 2rem;
-  font-weight: 200;
-  line-height: 1.6em;
+  font-size: 1.25rem;
+  line-height: 2em;
+  color: #2a2a2a;
 }
 
 .highlight {
   // nothing yet - no styling
+  &.highlight-gold {
+    background-color: $ws2-gold;
+  }
+  &.highlight-dark {
+    color: $ws2-gray-lightest;
+    background-color: $ws2-gray-darkest;
+  }
 }
-.highlight.highlight-gold {
-  background-color: $ws2-gold;
-}
-.highlight.highlight-dark {
-  color: $ws2-gray-lightest;
-  background-color: $ws2-gray-darkest;
-}
+
 .explore-programs h3 {
   font-size: 1.625rem;
 }
@@ -327,34 +328,30 @@ blockquote {
 
 /* =IMAGES --- IN PROGRESS
 -------------------------------------------------------------- */
-
-/* Added from Panopoly Images CSS file (removed in Panopoly 1.21) */
+// Added from Panopoly Images CSS file (removed in Panopoly 1.21)
 img {
   max-width: 100%;
   height: auto;
   vertical-align: bottom;
 }
 
-/* wysiwyg image spacing */
+/* WYSIWYG image spacing */
 img.media-element.pull-right {
   margin-left: 20px;
 }
-
 img.media-element.pull-left {
   margin-right: 20px;
 }
-
 .img-circle,
 p.img-circle img {
   border-radius: $border-radius-circle;
 }
 
-.img-rounded, // Innovation
+.img-rounded, // #Innovation
 p.img-rounded img {
   border-radius: 4px;
 }
-
-.img-thumbnail, // Innovation
+.img-thumbnail, // #Innovation
 p.img-thumbnail img {
   background-color: #fff;
   border: 1px solid $gray-alt-admin;
@@ -367,7 +364,105 @@ p.img-thumbnail img {
   transition: all 0.2s ease-in-out 0s;
 }
 
-img.ws2-drop-shadow
+// Images and captions #WS2.0
+img.ws2-drop-shadow {
+  box-shadow: 0 0.625em 1.25em rgba(0, 0, 41, 0.25);
+}
+div.caption-inner {
+  padding: 0;
+  background: transparent;
+  border: none;
+  & > img {
+    margin-bottom: 0;
+  }
+  p.caption-text, // override of caption filter module rule
+  .caption-text {
+    padding: 1rem;
+    font-size: 0.75rem;
+    text-align: left;
+    margin: 0;
+    border: 1px solid $ws2-gray-light;
+    border-top: none;
+  }
+}
+
+/* =LISTS, ordered + unordered #WS2.0
+-------------------------------------------------------------- */
+
+#{$ws2-content-styles-container} {
+  ul, ol {
+    padding-left: 2em;
+    list-style-type: none;
+    li {
+      &:before {
+        font-weight: bolder;
+        vertical-align: middle;
+      }
+      &:last-child {
+        padding-bottom: 0;
+      }
+    }
+    &.asu-element-maroon li:before  {
+      color: $ws2-maroon;
+    }
+    &.asu-element-gray li:before  {
+      color: $text-color;
+    }
+    &.asu-element-alt {
+      padding: $padding-large-vertical $padding-large-horizontal;
+      li:before {
+        color: $text-color-bg-dark;
+      }
+      &.asu-element-gold li:before  {
+        color: $ws2-gold;
+      }
+    }
+  }
+  ul {
+    li:before {
+      padding: 0 2.75em 0 0;
+      margin: 0 -2em 0 0;
+      content: "\2022";
+      font-size: 2em;
+    }
+    // Alternating elements to 5th level (@TODO - Better dynamic, nested CSS method for traversing down levels?
+    ul {
+      & > li:before {
+        content: "#{$ws2-list-item-odd}";
+      }
+      ul {
+        & > li:before {
+          content: "#{$ws2-list-item-even}";
+        }
+        ul {
+          & > li:before {
+            content: "#{$ws2-list-item-odd}";
+          }
+          ul {
+            & > li:before {
+              content: "#{$ws2-list-item-even}";
+            }
+          }
+        }
+      }
+    }
+  }
+  // Ordered lists
+  ol {
+    & > li {
+      padding-bottom: 1em;
+      counter-increment: customlist;
+      &:before {
+        content: counter(customlist) " ";
+        float: left;
+        width: 2em;
+      }
+      &:first-child {
+        counter-reset: customlist;
+      }
+    }
+  }
+}
 
 /* =TABLES --- IN PROGRESS
 -------------------------------------------------------------- */
@@ -662,9 +757,9 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
   height: 13px;
   width: 13px;
 }
+
 /* =ALERTS --- WS2.0 DONE
 -------------------------------------------------------------- */
-
 .alert {
   margin: $padding-base-vertical 0;
   padding: $padding-base-vertical $padding-base-horizontal;
