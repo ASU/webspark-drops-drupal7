@@ -41,6 +41,8 @@
   opacity: $btn-disabled-opacity;
   pointer-events: none;
 }
+// Primary button (WS2.0 - Maroon)
+//////////////////////////////////
 .btn-primary,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary {
   background-color: $ws2-maroon;
@@ -136,7 +138,26 @@
   color: $ws2-gray-darkest;
 }
 
-// Default button (WS2.0 - NONE; Substitute - Gray)
+// Secondary button (WS2.0 - NONE; Gray substituted in)
+//////////////////////////////////
+.btn-black {
+  background-color: $ws2-gray-darkest;
+  color: $ws2-gray-lightest;
+}
+.btn-black:hover, .btn-black:focus, .btn-black:active, .btn-black.active, .open > .btn-black.dropdown-toggle {
+  transform: scale($btn-scale);
+}
+.btn-black:active, .btn-black.active, .open > .btn-black.dropdown-toggle {
+  background-image: none;
+}
+.btn-black.disabled, .btn-black.disabled:hover, .btn-black.disabled:focus, .btn-black.disabled:active, .btn-black.disabled.active, .btn-black[disabled], .btn-black[disabled]:hover, .btn-black[disabled]:focus, .btn-black[disabled]:active, .btn-black.active[disabled], fieldset[disabled] .btn-black, fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fieldset[disabled] .btn-black:active, fieldset[disabled] .btn-black.active {
+  opacity: $btn-disabled-opacity;
+}
+.btn-black .badge {
+  color: $ws2-gray-darkest;
+}
+
+// Default button (WS2.0 - NONE; Substitute - Maroon)
 //////////////////////////////////
 .btn-default {
   background-color: $ws2-maroon;
@@ -155,7 +176,7 @@
 }
 
 .btn-default .badge {
-  background-color: $ws2-gray-darker;
+  background-color: $ws2-maroon;
   color: whitesmoke;
 }
 
@@ -270,9 +291,11 @@
 
 // Alternative buttons
 ///////////////////////////////////
+// Large == WS2.0 default?
+
 .btn-lg, .btn-group-lg > .btn {
   border-radius: $border-radius-circle;
-  font-size: 1.25em;
+  font-size: 1em;
   padding: 0.75em 1.5em;
   min-width: $btn-min-width-lg;
 }

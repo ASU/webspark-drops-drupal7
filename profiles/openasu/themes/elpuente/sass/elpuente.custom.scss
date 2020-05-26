@@ -57,11 +57,6 @@ body {
   background-color: $brand-white;
 }
 
-#{$ws2-content-styles-container} .asu-element-alt {
-  color: $text-color-bg-dark;
-  background-color: $ws2-gray-darkest;
-}
-
 p {
   margin: 1em 0;
 }
@@ -154,7 +149,7 @@ a.btn-primary:hover,
 -------------------------------------------------------------- */
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   margin-bottom: 1.5rem;
-  color: $ws2-gray-darkest;
+  color: inherit;
   font-family: Arial, sans-serif;
   font-weight: 700;
 }
@@ -189,7 +184,7 @@ h6, .h6 {
 }
 
 /* HR separator - custom */
-hr.asu-element-gold {
+hr.ws2-element-gold {
   border-color: $ws2-gold;
   border-width: 8px;
   margin-left: 0;
@@ -197,21 +192,21 @@ hr.asu-element-gold {
 }
 
 /* Signatures (beneath content) */
-.sig-title, .sig-byline {
+.ws2-sig-title, .ws2-sig-byline {
   font-size: $font-size-base;
 }
-.sig-title {
+.ws2-sig-title {
   &:before {
     padding-right: 0.5em;
     content: "\f068";
     font-family: "FontAwesome", sans-serif;
   }
 }
-.sig-byline {
+.ws2-sig-byline {
   font-weight: normal;
   padding-left: 1.33em;
 }
-.sig-title ~ .sig-byline { // offset sig-title bottom margin
+.ws2-sig-title ~ .ws2-sig-byline { // offset sig-title bottom margin
   margin-top: -1em;
 }
 
@@ -237,13 +232,13 @@ blockquote {
     padding-left: 0.5em;
     position: absolute;
   }
-  &.asu-element-gold:before { // quote
+  &.ws2-element-gold:before { // quote
     color: $ws2-gold;
   }
-  &.asu-element-maroon:before { // quote
+  &.ws2-element-maroon:before { // quote
     color: $ws2-maroon;
   }
-  &.bq-image {
+  &.ws2-bq-image {
     img:first-of-type {
       clip-path: circle($image-round-small/2);
       float: left;
@@ -388,10 +383,9 @@ div.caption-inner {
 
 /* =LISTS, ordered + unordered #WS2.0
 -------------------------------------------------------------- */
-
 #{$ws2-content-styles-container} {
   ul, ol {
-    padding-left: 2em;
+    padding-left: 0;
     list-style-type: none;
     li {
       &:before {
@@ -402,53 +396,47 @@ div.caption-inner {
         padding-bottom: 0;
       }
     }
-    &.asu-element-maroon li:before  {
+    // Custom bullet, background theming
+    &.ws2-element-maroon li:before  {
       color: $ws2-maroon;
     }
-    &.asu-element-gray li:before  {
+    &.ws2-element-gray li:before  {
       color: $text-color;
     }
-    &.asu-element-alt {
-      padding: $padding-large-vertical $padding-large-horizontal;
-      li:before {
-        color: $text-color-bg-dark;
-      }
-      &.asu-element-gold li:before  {
-        color: $ws2-gold;
-      }
+    & > ul, & > ol {
+      padding-left: 2em;
     }
   }
-  ul {
+  ul {  // Unordered lists ONLY
     li:before {
       padding: 0 2.75em 0 0;
       margin: 0 -2em 0 0;
-      content: "\2022";
+      content: "#{$ws2-list-item-even}";  // bullet
       font-size: 2em;
     }
     // Alternating elements to 5th level (@TODO - Better dynamic, nested CSS method for traversing down levels?
     ul {
       & > li:before {
-        content: "#{$ws2-list-item-odd}";
+        content: "#{$ws2-list-item-odd}";  // hollow bullet
       }
       ul {
         & > li:before {
-          content: "#{$ws2-list-item-even}";
+          content: "#{$ws2-list-item-even}";  // bullet
         }
         ul {
           & > li:before {
-            content: "#{$ws2-list-item-odd}";
+            content: "#{$ws2-list-item-odd}";  // hollow bullet
           }
           ul {
             & > li:before {
-              content: "#{$ws2-list-item-even}";
+              content: "#{$ws2-list-item-even}";  // bullet
             }
           }
         }
       }
     }
   }
-  // Ordered lists
-  ol {
+  ol {  // Ordered lists ONLY
     & > li {
       padding-bottom: 1em;
       counter-increment: customlist;
@@ -459,6 +447,40 @@ div.caption-inner {
       }
       &:first-child {
         counter-reset: customlist;
+      }
+    }
+
+    // Ordered, HOWTO stepped lists
+    &.ws2-list-stepped {
+      & > li {
+        line-height: 2em;
+        border-bottom: 1px solid $ws2-gray;
+        padding-bottom: 2em;
+        padding-top: 2em;
+        &:before {
+          font-weight: bold;
+          font-size: 1.3125em;
+          width: 5em;
+          clip-path: circle(1rem);
+          text-align: center;
+          margin-left: -1.75em;
+        }
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+      & > li:before,
+      &.ws2-element-maroon > li:before { // default
+        background-color: $ws2-maroon;
+        color: #fff;
+      }
+      &.ws2-element-gray > li:before {
+        background-color: $text-color;
+        color: #fff;
+      }
+      &.ws2-element-gold > li:before {
+        background-color: $ws2-gold;
+        color: $text-color;
       }
     }
   }
@@ -818,6 +840,50 @@ div[class='alert alert-block'] { /* Catch-all for default alert class */
 .logged-in .alert .krumo-root .krumo-element:not(a) {
   color: $ws2-green;
 }
+
+
+
+/* =Alternate styles (gray, black) --- IN PROGRESS
+-------------------------------------------------------------- */
+#{$ws2-content-styles-container} .ws2-element-alt { // Global shell for content-element only overrides
+  // Global alt styling
+  ////////////////////////////////
+  padding: $padding-base-vertical*1.5 $padding-base-horizontal*1.5;
+  border-style: solid;
+  border-width: 1px;
+  // Manage border padding/margins in container
+  & > *:first-child {
+    padding-top: 0;
+    margin-top: 0;
+  }
+  & > *:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  &.ws2-element-alt-gray {
+    color: $text-color;
+    background-color: $ws2-gray-lighter;
+    border-color: $ws2-gray-lighter;
+  }
+  &.ws2-element-alt-black {
+    color: $text-color-bg-dark;
+    background-color: $ws2-gray-darkest;
+    border-color: $ws2-gray-darkest;
+    // Lists
+    ul, ol {
+      li:before {
+        color: $text-color-bg-dark;
+      }
+      &.ws2-element-style.ws2-element-gold li:before { // only allow gold element in black background
+        color: $ws2-gold;
+      }
+    }
+  }
+  &.ws2-element-alt-white {
+    border-color: $ws2-gray-light;
+  }
+}
+
 
 /* =ADMIN UI --- WS2.0 DONE (admin only)
 -------------------------------------------------------------- */

@@ -58,11 +58,6 @@ body #page .region-content {
   padding: 0;
 }
 
-.region-content #page-page .asu-element-alt {
-  color: #fafafa;
-  background-color: #191919;
-}
-
 p {
   margin: 1em 0;
 }
@@ -157,7 +152,7 @@ a.btn-primary:hover,
 -------------------------------------------------------------- */
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   margin-bottom: 1.5rem;
-  color: #191919;
+  color: inherit;
   font-family: Arial, sans-serif;
   font-weight: 700;
 }
@@ -192,7 +187,7 @@ h6, .h6 {
 }
 
 /* HR separator - custom */
-hr.asu-element-gold {
+hr.ws2-element-gold {
   border-color: #ffc627;
   border-width: 8px;
   margin-left: 0;
@@ -200,22 +195,22 @@ hr.asu-element-gold {
 }
 
 /* Signatures (beneath content) */
-.sig-title, .sig-byline {
+.ws2-sig-title, .ws2-sig-byline {
   font-size: 16px;
 }
 
-.sig-title:before {
+.ws2-sig-title:before {
   padding-right: 0.5em;
   content: "\f068";
   font-family: "FontAwesome", sans-serif;
 }
 
-.sig-byline {
+.ws2-sig-byline {
   font-weight: normal;
   padding-left: 1.33em;
 }
 
-.sig-title ~ .sig-byline {
+.ws2-sig-title ~ .ws2-sig-byline {
   margin-top: -1em;
 }
 
@@ -241,22 +236,22 @@ blockquote > p:not([class*=sig-]):after {
   padding-left: 0.5em;
   position: absolute;
 }
-blockquote.asu-element-gold:before {
+blockquote.ws2-element-gold:before {
   color: #ffc627;
 }
-blockquote.asu-element-maroon:before {
+blockquote.ws2-element-maroon:before {
   color: #8c1d40;
 }
-blockquote.bq-image {
+blockquote.ws2-bq-image {
   padding-left: 14.3625rem;
 }
-blockquote.bq-image img:first-of-type {
+blockquote.ws2-bq-image img:first-of-type {
   clip-path: circle(90px);
   float: left;
   position: absolute;
   margin-left: -14rem;
 }
-blockquote.bq-image:before {
+blockquote.ws2-bq-image:before {
   font-family: Arial, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif;
   font-size: initial;
   content: initial;
@@ -391,7 +386,7 @@ div.caption-inner .caption-text {
 /* =LISTS, ordered + unordered #WS2.0
 -------------------------------------------------------------- */
 .region-content #page-page ul, .region-content #page-page ol {
-  padding-left: 2em;
+  padding-left: 0;
   list-style-type: none;
 }
 .region-content #page-page ul li:before, .region-content #page-page ol li:before {
@@ -401,25 +396,19 @@ div.caption-inner .caption-text {
 .region-content #page-page ul li:last-child, .region-content #page-page ol li:last-child {
   padding-bottom: 0;
 }
-.region-content #page-page ul.asu-element-maroon li:before, .region-content #page-page ol.asu-element-maroon li:before {
+.region-content #page-page ul.ws2-element-maroon li:before, .region-content #page-page ol.ws2-element-maroon li:before {
   color: #8c1d40;
 }
-.region-content #page-page ul.asu-element-gray li:before, .region-content #page-page ol.asu-element-gray li:before {
+.region-content #page-page ul.ws2-element-gray li:before, .region-content #page-page ol.ws2-element-gray li:before {
   color: #191919;
 }
-.region-content #page-page ul.asu-element-alt, .region-content #page-page ol.asu-element-alt {
-  padding: 32px 32px;
-}
-.region-content #page-page ul.asu-element-alt li:before, .region-content #page-page ol.asu-element-alt li:before {
-  color: #fafafa;
-}
-.region-content #page-page ul.asu-element-alt.asu-element-gold li:before, .region-content #page-page ol.asu-element-alt.asu-element-gold li:before {
-  color: #ffc627;
+.region-content #page-page ul > ul, .region-content #page-page ul > ol, .region-content #page-page ol > ul, .region-content #page-page ol > ol {
+  padding-left: 2em;
 }
 .region-content #page-page ul li:before {
   padding: 0 2.75em 0 0;
   margin: 0 -2em 0 0;
-  content: "\2022";
+  content: "•";
   font-size: 2em;
 }
 .region-content #page-page ul ul > li:before {
@@ -445,6 +434,35 @@ div.caption-inner .caption-text {
 }
 .region-content #page-page ol > li:first-child {
   counter-reset: customlist;
+}
+.region-content #page-page ol.ws2-list-stepped > li {
+  line-height: 2em;
+  border-bottom: 1px solid #bfbfbf;
+  padding-bottom: 2em;
+  padding-top: 2em;
+}
+.region-content #page-page ol.ws2-list-stepped > li:before {
+  font-weight: bold;
+  font-size: 1.3125em;
+  width: 5em;
+  clip-path: circle(1rem);
+  text-align: center;
+  margin-left: -1.75em;
+}
+.region-content #page-page ol.ws2-list-stepped > li:last-child {
+  border-bottom: none;
+}
+.region-content #page-page ol.ws2-list-stepped > li:before, .region-content #page-page ol.ws2-list-stepped.ws2-element-maroon > li:before {
+  background-color: #8c1d40;
+  color: #fff;
+}
+.region-content #page-page ol.ws2-list-stepped.ws2-element-gray > li:before {
+  background-color: #191919;
+  color: #fff;
+}
+.region-content #page-page ol.ws2-list-stepped.ws2-element-gold > li:before {
+  background-color: #ffc627;
+  color: #191919;
 }
 
 /* =TABLES --- IN PROGRESS
@@ -813,6 +831,41 @@ div[class='alert alert-block'] {
 
 .logged-in .alert .krumo-root .krumo-element:not(a) {
   color: #78be20;
+}
+
+/* =Alternate styles (gray, black) --- IN PROGRESS
+-------------------------------------------------------------- */
+.region-content #page-page .ws2-element-alt {
+  padding: 24px 24px;
+  border-style: solid;
+  border-width: 1px;
+}
+.region-content #page-page .ws2-element-alt > *:first-child {
+  padding-top: 0;
+  margin-top: 0;
+}
+.region-content #page-page .ws2-element-alt > *:last-child {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+.region-content #page-page .ws2-element-alt.ws2-element-alt-gray {
+  color: #191919;
+  background-color: #e8e8e8;
+  border-color: #e8e8e8;
+}
+.region-content #page-page .ws2-element-alt.ws2-element-alt-black {
+  color: #fafafa;
+  background-color: #191919;
+  border-color: #191919;
+}
+.region-content #page-page .ws2-element-alt.ws2-element-alt-black ul li:before, .region-content #page-page .ws2-element-alt.ws2-element-alt-black ol li:before {
+  color: #fafafa;
+}
+.region-content #page-page .ws2-element-alt.ws2-element-alt-black ul.ws2-element-style.ws2-element-gold li:before, .region-content #page-page .ws2-element-alt.ws2-element-alt-black ol.ws2-element-style.ws2-element-gold li:before {
+  color: #ffc627;
+}
+.region-content #page-page .ws2-element-alt.ws2-element-alt-white {
+  border-color: #d0d0d0;
 }
 
 /* =ADMIN UI --- WS2.0 DONE (admin only)
