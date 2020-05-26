@@ -152,31 +152,54 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   color: inherit;
   font-family: Arial, sans-serif;
   font-weight: 700;
+  line-height: calc(100% + 4px);
+  /* Highlighting style augmentations for headers, titles, etc. */
+  &.ws2-element-style {
+    line-height: calc(100% + 8px);
+    padding: $padding-xs-vertical $padding-small-horizontal;
+    &.ws2-element-gold {
+      background-color: $ws2-gold;
+    }
+    &.ws2-element-gray {
+      color: $ws2-gray-lightest;
+      background-color: $ws2-gray-darkest;
+    }
+  }
 }
 
 h1, .h1 {
   font-size: $font-size-h1;
-  line-height: 1.0625em; // 1.0625
+  &.ws2-element-style {
+    font-size: $font-size-h1*1.166;
+    padding: $padding-xs-vertical $padding-small-horizontal*1.5;
+    &.ws2-too-long {
+      font-size: $font-size-h1*0.90625;
+    }
+  }
 }
 
 h2, .h2 {
   font-size: $font-size-h2;
-  line-height: 1.1em; // 1.1
+  &.ws2-element-style {
+    font-size: $font-size-h2*1.2;
+  }
 }
 
 h3, .h3 {
   font-size: $font-size-h3;
-  line-height: 1.1428em; // 1.1428
+  &.ws2-element-style {
+    font-size: $font-size-h3*1.25;
+  }
 }
 
 h4, .h4 {
   font-size: $font-size-h4;
-  line-height: 1.3em; //1.3
+  &.ws2-element-style {
+    font-size: $font-size-h4*1.4;
+  }
 }
-
 h5, .h5, h6, .h6 {
   font-size: $font-size-h5;
-  line-height: 1.5em // 1.5
 }
 
 h6, .h6 {
@@ -261,18 +284,7 @@ blockquote {
   font-family: inherit;
   font-size: 1.25rem;
   line-height: 2em;
-  color: #2a2a2a;
-}
-
-.highlight {
-  // nothing yet - no styling
-  &.highlight-gold {
-    background-color: $ws2-gold;
-  }
-  &.highlight-dark {
-    color: $ws2-gray-lightest;
-    background-color: $ws2-gray-darkest;
-  }
+  color: $text-color;
 }
 
 .explore-programs h3 {

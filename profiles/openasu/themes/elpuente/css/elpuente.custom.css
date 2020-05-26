@@ -155,31 +155,55 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   color: inherit;
   font-family: Arial, sans-serif;
   font-weight: 700;
+  line-height: calc(100% + 4px);
+  /* Highlighting style augmentations for headers, titles, etc. */
+}
+h1.ws2-element-style, h2.ws2-element-style, h3.ws2-element-style, h4.ws2-element-style, h5.ws2-element-style, h6.ws2-element-style, .h1.ws2-element-style, .h2.ws2-element-style, .h3.ws2-element-style, .h4.ws2-element-style, .h5.ws2-element-style, .h6.ws2-element-style {
+  line-height: calc(100% + 8px);
+  padding: 4px 8px;
+}
+h1.ws2-element-style.ws2-element-gold, h2.ws2-element-style.ws2-element-gold, h3.ws2-element-style.ws2-element-gold, h4.ws2-element-style.ws2-element-gold, h5.ws2-element-style.ws2-element-gold, h6.ws2-element-style.ws2-element-gold, .h1.ws2-element-style.ws2-element-gold, .h2.ws2-element-style.ws2-element-gold, .h3.ws2-element-style.ws2-element-gold, .h4.ws2-element-style.ws2-element-gold, .h5.ws2-element-style.ws2-element-gold, .h6.ws2-element-style.ws2-element-gold {
+  background-color: #ffc627;
+}
+h1.ws2-element-style.ws2-element-gray, h2.ws2-element-style.ws2-element-gray, h3.ws2-element-style.ws2-element-gray, h4.ws2-element-style.ws2-element-gray, h5.ws2-element-style.ws2-element-gray, h6.ws2-element-style.ws2-element-gray, .h1.ws2-element-style.ws2-element-gray, .h2.ws2-element-style.ws2-element-gray, .h3.ws2-element-style.ws2-element-gray, .h4.ws2-element-style.ws2-element-gray, .h5.ws2-element-style.ws2-element-gray, .h6.ws2-element-style.ws2-element-gray {
+  color: #fafafa;
+  background-color: #191919;
 }
 
 h1, .h1 {
   font-size: 64px;
-  line-height: 1.0625em;
+}
+h1.ws2-element-style, .h1.ws2-element-style {
+  font-size: 74.624px;
+  padding: 4px 12px;
+}
+h1.ws2-element-style.ws2-too-long, .h1.ws2-element-style.ws2-too-long {
+  font-size: 58px;
 }
 
 h2, .h2 {
   font-size: 40px;
-  line-height: 1.1em;
+}
+h2.ws2-element-style, .h2.ws2-element-style {
+  font-size: 48px;
 }
 
 h3, .h3 {
   font-size: 24px;
-  line-height: 1.1428em;
+}
+h3.ws2-element-style, .h3.ws2-element-style {
+  font-size: 30px;
 }
 
 h4, .h4 {
   font-size: 20.8px;
-  line-height: 1.3em;
+}
+h4.ws2-element-style, .h4.ws2-element-style {
+  font-size: 29.12px;
 }
 
 h5, .h5, h6, .h6 {
   font-size: 16px;
-  line-height: 1.5em;
 }
 
 h6, .h6 {
@@ -264,15 +288,7 @@ blockquote.ws2-bq-image:before {
   font-family: inherit;
   font-size: 1.25rem;
   line-height: 2em;
-  color: #2a2a2a;
-}
-
-.highlight.highlight-gold {
-  background-color: #ffc627;
-}
-.highlight.highlight-dark {
-  color: #fafafa;
-  background-color: #191919;
+  color: #191919;
 }
 
 .explore-programs h3 {
