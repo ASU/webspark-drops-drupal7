@@ -83,7 +83,8 @@ div.pane-menu-tree {
   }
 }
 
-/* =LINKS & BUTTONS --- DONE
+/* =LINKS --- WS2.0 DONE
+ * =BUTTONS --- IN PROGRESS
 -------------------------------------------------------------- */
 a,
 .ui-widget-content a {
@@ -100,7 +101,7 @@ a,
 
 #header a,
 #asu_footer a {
-  border-bottom: none;
+  border-bottom: transparent;
 }
 
 button, .button, .btn, a.btn, .btn a {
@@ -108,41 +109,33 @@ button, .button, .btn, a.btn, .btn a {
   word-wrap: break-word;
 }
 
-a.btn.btn-lg, .btn.btn-lg {
-  margin-top: 1.5em;
-}
-
 a.btn, .btn {
   margin-top: 0.9375em;
+  &.btn-lg {
+    margin-top: 1.5em;
+  }
+  &:hover {
+    border-bottom: transparent;
+  }
 }
 
-a.btn:hover, .btn a:hover {
-  border-bottom: none;
-}
-
-a.btn-secondary,
-.btn-secondary a,
-a.btn-gold,
-.btn-gold a
+a.btn-secondary, .btn-secondary a,
+a.btn-gold, .btn-gold a
 {
   color: $ws2-gray-darkest;
-  border-bottom: none;
+  border-bottom-color: $ws2-gold;
 }
 
-a.btn-blue,
-.btn-blue a,
-a.btn-primary,
-.btn-primary a {
+a.btn-blue, .btn-blue a,
+a.btn-primary, .btn-primary a {
   color: #fff;
-  border-bottom: none;
+  border-bottom-color: $ws2-maroon;
 }
 
-a.btn-blue:hover,
-.btn-blue a:hover,
-a.btn-primary:hover,
-.btn-primary a:hover {
+a.btn-blue:hover, .btn-blue a:hover,
+a.btn-primary:hover, .btn-primary a:hover {
   color: #fff;
-  border-bottom: none;
+  border-bottom-color: $ws2-maroon;
 }
 
 /* =TYPOGRAPHY --- WS2.0 DONE
@@ -153,10 +146,12 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: Arial, sans-serif;
   font-weight: 700;
   line-height: calc(100% + 4px);
+  display: block;
   /* Highlighting style augmentations for headers, titles, etc. */
   &.ws2-element-style {
     line-height: calc(100% + 8px);
     padding: $padding-xs-vertical $padding-small-horizontal;
+    display: table;
     &.ws2-element-gold {
       background-color: $ws2-gold;
     }
@@ -177,31 +172,27 @@ h1, .h1 {
     }
   }
 }
-
 h2, .h2 {
   font-size: $font-size-h2;
   &.ws2-element-style {
-    font-size: $font-size-h2*1.2;
+    font-size: ceil(($font-size-h2*1.2));
   }
 }
-
 h3, .h3 {
   font-size: $font-size-h3;
   &.ws2-element-style {
-    font-size: $font-size-h3*1.25;
+    font-size: ceil(($font-size-h3*1.3333));
   }
 }
-
 h4, .h4 {
   font-size: $font-size-h4;
   &.ws2-element-style {
-    font-size: $font-size-h4*1.4;
+    font-size: ceil(($font-size-h4*1.4));
   }
 }
 h5, .h5, h6, .h6 {
   font-size: $font-size-h5;
 }
-
 h6, .h6 {
   font-weight: normal;
 }
@@ -478,7 +469,7 @@ div.caption-inner {
           margin-left: -1.75em;
         }
         &:last-child {
-          border-bottom: none;
+          border-bottom: transparent;
         }
       }
       & > li:before,
@@ -741,7 +732,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
   border-left: 1px solid #e6e6e6;
 }
 .ui-widget h3.ui-accordion-header a {
-  border-bottom: none;
+  border-bottom: transparent;
 }
 
 .ui-accordion .ui-accordion-content {
@@ -795,47 +786,89 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
 /* =ALERTS --- WS2.0 DONE
 -------------------------------------------------------------- */
 .alert {
-  margin: $padding-base-vertical 0;
-  padding: $padding-base-vertical $padding-base-horizontal;
-  font-weight: 400;
-}
-
-.alert,
-.alert a {
   color: $ws2-gray-darkest;
+  font-weight: 400;
   border-bottom-color: $ws2-gray-darkest;
+  position: relative;
+  margin: $padding-base-vertical 0;
+  padding: $padding-base-vertical*1.5 $padding-base-horizontal*1.5;
+  a {
+    color: $ws2-gray-darkest;
+    border-bottom-color: $ws2-gray-darkest;
+    &.close {
+      background-color: #fff;
+      color: $text-color;
+      font-size: 1.25em;
+      font-weight: bold;
+      opacity: 0.6;
+      border: 1px solid $ws2-gray-light;
+      padding: 0.25rem 0.5rem 0.25rem 0.58rem;
+      margin: 0 0 $padding-base-vertical $padding-base-horizontal;
+      border-radius: 1rem;
+      height: 2rem;
+      width: 2rem;
+      &:hover {
+        opacity: 0.8;
+        color: $text-color;
+        border-bottom-color: $ws2-gray-light;
+      }
+      & + p:empty {
+        margin-top: -1rem;
+        padding-top: 0;
+        background-color: red !important;
+      }
+    }
+    &:hover {
+      color: $link-hover-color;
+      border-bottom-color: $link-hover-color;
+      cursor: pointer;
+    }
+  }
 }
 
-.alert a:hover {
-  color: $link-hover-color;
-  border-bottom-color: $link-hover-color;
-  cursor: pointer;
-}
-
-.alert a.close {
-  font-size: 1.25em;
-  opacity: 1;
-  border: none;
+.alert-success,
+.alert-info,
+.alert-danger,
+.alert-warning {
+  padding-left: 6em;
+  &:before {
+    font-family: FontAwesome, sans-serif;
+    font-size: 2rem;
+    position: absolute;
+    left: 0;
+    top: calc(50% - 1.5rem);
+    padding: 0 1.5rem;
+  }
 }
 
 .alert-success {
   background-color: $ws2-success-bkgd;
   border-color: $ws2-green;
+  &:before {
+    content: "\f058";
+  }
 }
-
 .alert-info {
   background-color: $ws2-info-bkgd;
   border-color: $ws2-blue;
+  &:before {
+    content: "\f05a";
+  }
 }
-
 .alert-danger {
   background-color: $ws2-danger-bkgd; /* 20% opacity of official maroon */
   border-color: $ws2-maroon;
+  &:before {
+    content: "\f071";
+  }
 }
 
 .alert-warning {
   background-color: $ws2-warning-bkgd; /* 33% opacity of official maroon */
   border-color: $ws2-orange;
+  &:before {
+    content: "\f0f3";
+  }
 }
 
 .alert:not([class*="alert-"]),
@@ -855,7 +888,7 @@ div[class='alert alert-block'] { /* Catch-all for default alert class */
 
 
 
-/* =Alternate styles (gray, black) --- IN PROGRESS
+/* =Alternate Element styles for 1) gray, 2) black, and 3) white --- IN PROGRESS
 -------------------------------------------------------------- */
 #{$ws2-content-styles-container} .ws2-element-alt { // Global shell for content-element only overrides
   // Global alt styling
@@ -872,11 +905,25 @@ div[class='alert alert-block'] { /* Catch-all for default alert class */
     padding-bottom: 0;
     margin-bottom: 0;
   }
+
+  /*
+   * Gray
+   */
+
   &.ws2-element-alt-gray {
     color: $text-color;
     background-color: $ws2-gray-lighter;
     border-color: $ws2-gray-lighter;
+    // Buttons
+    .ws2-element-style.btn-tag { // Tag button variation
+      background-color: $ws2-gray !important;
+    }
   }
+
+  /*
+   * Black
+   */
+
   &.ws2-element-alt-black {
     color: $text-color-bg-dark;
     background-color: $ws2-gray-darkest;
@@ -890,9 +937,24 @@ div[class='alert alert-block'] { /* Catch-all for default alert class */
         color: $ws2-gold;
       }
     }
+    // Buttons
+    .ws2-element-style.btn-tag { // Tag button variation
+      background-color: $ws2-gray-dark;
+      border-color: $ws2-gray-dark;
+      color: #fff;
+    }
   }
+
+  /*
+   * White
+   */
+
   &.ws2-element-alt-white {
     border-color: $ws2-gray-light;
+    // Buttons
+    .ws2-element-style.btn-tag { // only allow gold element in black background
+      background-color: $ws2-gray-lighter;
+    }
   }
 }
 
@@ -922,7 +984,7 @@ div[class='alert alert-block'] { /* Catch-all for default alert class */
   /* dropdown items from nav pills */
   li.dropdown > ul.dropdown-menu a {
     background-color: rgba(0,0,0,0);
-    border-bottom: none;
+    border-bottom: transparent;
     &:hover {
       background-color: $ws2-gray-lighter;
       color: #000;
@@ -932,7 +994,7 @@ div[class='alert alert-block'] { /* Catch-all for default alert class */
 
 /* IPE */
 #panels-ipe-control-container a {
-  border-bottom: none;
+  border-bottom: transparent;
 }
 
 /* Ctools Modals */
@@ -1174,7 +1236,7 @@ body #content .ui-tabs .ui-tabs-nav li {
   }
   a {
     margin-left: 0;
-    border-bottom: none;
+    border-bottom: transparent;
     clear: both;
   }
 }

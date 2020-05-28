@@ -61,6 +61,8 @@
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:active,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.active {
   transform: scale(1.1);
+  color: #fafafa;
+  background-color: #8c1d40;
 }
 
 .btn-primary:active, .btn-primary.active, .open > .btn-primary.dropdown-toggle {
@@ -88,6 +90,7 @@
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:active,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.active {
   transform: scale(1.1);
+  color: #191919;
 }
 
 .btn-secondary:active, .btn-secondary.active, .open > .btn-secondary.dropdown-toggle {
@@ -114,6 +117,7 @@
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold:active,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.active {
   transform: scale(1.1);
+  color: #191919;
 }
 
 .btn-gold:active, .btn-gold.active, .open > .btn-gold.dropdown-toggle {
@@ -140,6 +144,7 @@
 
 .btn-blue:hover, .btn-blue:focus, .btn-blue:active, .btn-blue.active, .open > .btn-blue.dropdown-toggle {
   transform: scale(1.1);
+  color: #191919;
 }
 
 .btn-blue:active, .btn-blue.active, .open > .btn-blue.dropdown-toggle {
@@ -161,6 +166,7 @@
 
 .btn-black:hover, .btn-black:focus, .btn-black:active, .btn-black.active, .open > .btn-black.dropdown-toggle {
   transform: scale(1.1);
+  color: #fafafa;
 }
 
 .btn-black:active, .btn-black.active, .open > .btn-black.dropdown-toggle {
@@ -178,12 +184,10 @@
 .btn-default {
   background-color: #8c1d40;
   color: #fff;
-  border-bottom: 1px solid #8c1d40 !important;
 }
 
 .btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open > .btn-default.dropdown-toggle {
   transform: scale(1.1);
-  border: 1px solid #8c1d40 !important;
 }
 
 .btn-default:active, .btn-default.active, .open > .btn-default.dropdown-toggle {
@@ -196,7 +200,7 @@
 
 .btn-default .badge {
   background-color: #8c1d40;
-  color: whitesmoke;
+  color: #fafafa;
 }
 
 .btn-success {
@@ -308,7 +312,7 @@
 
 .btn-link:hover, .btn-link:focus {
   background-color: transparent;
-  color: #d23153;
+  color: #8c1d40;
   text-decoration: underline;
 }
 
@@ -330,11 +334,18 @@
   min-width: 4rem;
 }
 
-.btn-xs, .btn-group-xs > .btn {
+.btn-xs, .btn-group-xs > .btn,
+.btn-tag {
   border-radius: 32px;
   font-size: 0.75em;
   padding: 4px 12px;
   min-width: 4rem;
+}
+
+.btn-tag {
+  background-color: #e8e8e8;
+  border-color: #e8e8e8;
+  font-weight: normal;
 }
 
 .btn-block {
@@ -365,7 +376,7 @@
   background: -moz-linear-gradient(center bottom, #c5c5c5 0%, #fafafa 100%) repeat scroll 0 0 #e6e6e6;
 }
 
-/* More customization for LH menu buttons */
+/* More customization for buttons placed in the LH menu */
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu > li.btn-container.first > a {
   margin-top: 0;
 }
