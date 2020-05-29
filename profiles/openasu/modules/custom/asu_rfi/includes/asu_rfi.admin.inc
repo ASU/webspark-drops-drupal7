@@ -11,7 +11,8 @@ function asu_rfi_admin_settings() {
   $middleware_target_envs = array('test' => 'QA/Test', 'prod' => 'Production');
   $middleware_env = variable_get('asu_rfi_middleware_env', 'prod');
   // Middleware QA access check (for non-ASU-Enterprise sites))
-  $enterprise_access = variable_get('asu_rfi_enterprise_access_', 0);
+  $not_a_bool = (int) 0;
+  $enterprise_access = variable_get('asu_rfi_enterprise_access_', $not_a_bool);
   $special_action_modes = array(
     'all' => 'RFI Report page actions + cron jobs',
     'form_only' => 'RFI Report page actions',

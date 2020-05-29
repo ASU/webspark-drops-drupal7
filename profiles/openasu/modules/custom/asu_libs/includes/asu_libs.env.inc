@@ -47,7 +47,8 @@ function asu_libs_get_environment_type() {
  * Detect access to endpoint/middleware/data resources (ASU Enterprise, behind ASU firewall, etc.)
  *
  * @param string $module - machine name of module setting value (ex. asu_rfi, etc.)
- * @param string $data_type - Ex. 'start_date', 'degrees'. Left blank, does general access check.
+ * @param string $data_type - Resource type. Can be any string suitable for a variable table name. Ex. 'start_date',
+ *   'degrees'. Left blank, does general access check.
  * @param string $url - URL inside the enterprise ENV to check. If blank, does general access check to "Enterprise" space.
  * @param int $timeout - cURL timeout for request. Defaults to 5 seconds.
  */
@@ -63,7 +64,8 @@ function asu_libs_set_asset_access_value($module, $data_type = '', $url = "https
 
   $is_available = ($curl_info['http_code'] === 200) ? 1 : 0;
   variable_set(check_plain($module) . '_enterprise_access_' . check_plain($data_type), $is_available);
-  flogger($module, "Access to " . $url . " - " . $is_available);
+  $english_is_available = ($is_available === 1) ? '' : 'not ';
+  flogger($module, "Access to " . $url . " is " . $english_is_available . "available.");
 }
 
 /**

@@ -507,3 +507,10 @@ function asu_rfi_update_7209(&$sandbox) {
 function asu_rfi_update_7210(&$sandbox) {
   _asu_rfi_update_form_options();
 }
+
+/**
+ * Set middleware access value (T/F) for checking access again.
+ */
+function asu_rfi_update_7211(&$sandbox) {
+  asu_libs_set_asset_access_value('asu_rfi');
+}
