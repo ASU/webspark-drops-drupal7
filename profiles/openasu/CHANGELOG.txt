@@ -1,3 +1,13 @@
+Webspark 1.70.10 (Texon), 2020-05-28
+------------------------------------
+- Web standards components in Webspark
+
+  * ASU Request for Information (asu_rfi, asu_rfi_feature) - v3.2
+    - Fixed issue that was blocking the processing of production RFI submissions on sites hosted outside the ASU network
+      (e.g., Pantheon hosted sites). All RFI form submissions once again submit to the RFI middleware when the module is set
+      to production mode. Those submissions that had their status incorrectly set to ‘CANCELLED’ will be resubmitted and
+      sent on to the middleware with the next cron run.
+
 Webspark 1.70.9 (Stanton), 2020-05-15
 -------------------------------------
 - Web standards components in Webspark
