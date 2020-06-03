@@ -837,7 +837,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
   font-size: 2rem;
   position: absolute;
   left: 0;
-  top: calc(50% - 1.5rem);
+  top: 1.5rem;
   padding: 0 1.5rem;
 }
 

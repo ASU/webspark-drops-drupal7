@@ -390,22 +390,27 @@ div.caption-inner {
   ul, ol {
     padding-left: 0;
     list-style-type: none;
+
     li {
       &:before {
         font-weight: bolder;
         vertical-align: middle;
       }
+
       &:last-child {
         padding-bottom: 0;
       }
     }
+
     // Custom bullet, background theming
-    &.ws2-element-maroon li:before  {
+    &.ws2-element-maroon li:before {
       color: $ws2-maroon;
     }
-    &.ws2-element-gray li:before  {
+
+    &.ws2-element-gray li:before {
       color: $text-color;
     }
+
     & > ul, & > ol {
       padding-left: 2em;
     }
@@ -836,7 +841,7 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
     font-size: 2rem;
     position: absolute;
     left: 0;
-    top: calc(50% - 1.5rem);
+    top: 1.5rem; // 50% top : calc(50% - 1.5rem);f
     padding: 0 1.5rem;
   }
 }
