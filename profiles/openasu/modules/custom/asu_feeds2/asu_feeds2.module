@@ -20,7 +20,7 @@ function asu_feeds2_feeds_plugins() {
     ),
   );
   $info['ASUeAdvisorFeedFetcher'] = array(
-    'name' => t('ASU eAdvisor Feed Fetcher'),
+    'name' => t('ASU eAdvisor Feed Fetcher (v2)'),
     'description' => t('Fetcher for ASU eAdvisor degree data, via XML-RPC using the IXR library.'),
     'handler' => array(
       'parent' => 'FeedsFetcher',
