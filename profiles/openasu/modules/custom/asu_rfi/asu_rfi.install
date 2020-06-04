@@ -494,6 +494,9 @@ function asu_rfi_update_7208(&$sandbox) {
  * Set middleware access value (T/F) for checking access, middleware env selection
  */
 function asu_rfi_update_7209(&$sandbox) {
+  if (!module_exists('asu_libs')) {
+    module_enable(array('asu_libs'));
+  }
   asu_libs_set_asset_access_value('asu_rfi');
   variable_set('asu_rfi_middleware_env', 'prod');
   variable_set('asu_rfi_hide_online_alerts', 1);
@@ -512,5 +515,22 @@ function asu_rfi_update_7210(&$sandbox) {
  * Set middleware access value (T/F) for checking access again.
  */
 function asu_rfi_update_7211(&$sandbox) {
+  if (!module_exists('asu_libs')) {
+    module_enable(array('asu_libs'));
+  }
+  asu_libs_set_asset_access_value('asu_rfi');
+}
+
+/**
+ * Reapply updates for 7210, 7211
+ */
+function asu_rfi_update_7212(&$sandbox) {
+  if (!module_exists('asu_libs')) {
+    module_enable(array('asu_libs'));
+  }
+  variable_set('asu_rfi_middleware_env', 'prod');
+  variable_set('asu_rfi_hide_online_alerts', 1);
+  variable_set('asu_rfi_online_url', 'https://asuonline.asu.edu/lead-submissions-v3.3/programs');
+  features_revert_module('asu_rfi_feature');
   asu_libs_set_asset_access_value('asu_rfi');
 }
