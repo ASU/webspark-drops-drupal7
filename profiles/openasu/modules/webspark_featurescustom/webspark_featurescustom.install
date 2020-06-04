@@ -50,6 +50,10 @@ function webspark_featurescustom_update_dependencies() {
   $deps['webspark_featurescustom'][7012] = array(
     'jquery_update' => 7001,
   );
+  // Apply version change AFTER update to jQuery Update 3.x.
+  $deps['asu_rfi'][7209] = array(
+    'webspark_featurescustom' => 7018,
+  );
   return $deps;
 }
 

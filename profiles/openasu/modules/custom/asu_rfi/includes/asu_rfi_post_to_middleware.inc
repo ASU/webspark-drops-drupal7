@@ -61,9 +61,9 @@ function asu_rfi_post_to_middleware($data, $type) {
   $middleware_env = variable_get('asu_rfi_middleware_env', 'prod');
   $middleware_access = variable_get('asu_rfi_enterprise_access_', 0);
 
-  // If YES, start building middleware submission
-  if ($middleware_access === 1
-    && $form_mode !== 'none'
+  // If YES below, start building middleware submission and submit it
+  if (($middleware_access === 1 || $middleware_env === 'prod')
+    && ($form_mode !== 'none')
     && (!$sf_multi_pending)) {
 
     $prog_code = $data['program_code'];
