@@ -515,56 +515,58 @@ function asu_rfi_form_alter(&$form, &$form_state, $form_id) {
   // MOVED FOR AJAX FIXES
 
   // LONG FORM
-  // (likely for non-degree, AP page forms)
-  if ($form['#id'] == "asu-rfi-long-form-data") {
-    if (isset($form['my_interest']['program_code']['#options'])) {
-      //dpm($form['my_interest']['campus']['#options'], 'form_alter fired campus');
-      /*
+  /*
+// (likely for non-degree, AP page forms)
 
-      // Generate campus lists for RFI forms not rendered on an asu_ap node (degree page)
-      $pcodes = $form['my_interest']['program_code']['#options'];
-      $possibleLocations = _asu_rfi_get_campus_location_options($pcodes);
-      asu_rfi_disable_form($form, $possibleLocations);
+if ($form['#id'] == "asu-rfi-long-form-data") {
+if (isset($form['my_interest']['program_code']['#options'])) {
+  //dpm($form['my_interest']['campus']['#options'], 'form_alter fired campus');
 
-      if ($possibleLocations !== FALSE) {
-        if (!in_array("Online", $possibleLocations)) {
-          $form['my_interest']['location']['online'] = array('#disabled' => TRUE);
-          $form['my_interest']['location']['no_preference'] = array('#disabled' => TRUE);
-          $form['my_interest']['location']['#default_value'] = 'on_campus';
-        } else {
-          if (count($possibleLocations) == 1 && $possibleLocations[0] == "Online") {
-            $form['my_interest']['location']['on_campus'] = array('#disabled' => TRUE);
-            $form['my_interest']['location']['no_preference'] = array('#disabled' => TRUE);
-            $form['my_interest']['location']['#default_value'] = 'online';
-            // -- Convert form for EdPlus Consumption
-            $form['my_interest']['campus']['#access'] = FALSE;
-            $form['my_interest']['student_type']['#access'] = FALSE;
-            $form['my_interest']['start_date']['#access'] = FALSE;
-            $form['about_me']['mobile_check']['#access'] = FALSE;
-            $form['about_me']['country']['#access'] = FALSE;
-            $form['about_me']['zipcode']['#access'] = FALSE;
-            $form['about_me']['dob_field']['#access'] = FALSE;
-            $form['about_me']['birthdate']['#access'] = FALSE;
-            $form['about_me']['citizenship']['#access'] = FALSE;
-            $form['about_me']['military']['#access'] = FALSE;
-            $form['address_info']['#access'] = FALSE;
-            $form['questions']['#access'] = FALSE;
-            // -- END Convert form for EdPlus Consumption
-          }
-        }
+
+  // Generate campus lists for RFI forms not rendered on an asu_ap node (degree page)
+  $pcodes = $form['my_interest']['program_code']['#options'];
+  $possibleLocations = _asu_rfi_get_campus_location_options($pcodes);
+  asu_rfi_disable_form($form, $possibleLocations);
+
+  if ($possibleLocations !== FALSE) {
+    if (!in_array("Online", $possibleLocations)) {
+      $form['my_interest']['location']['online'] = array('#disabled' => TRUE);
+      $form['my_interest']['location']['no_preference'] = array('#disabled' => TRUE);
+      $form['my_interest']['location']['#default_value'] = 'on_campus';
+    } else {
+      if (count($possibleLocations) == 1 && $possibleLocations[0] == "Online") {
+        $form['my_interest']['location']['on_campus'] = array('#disabled' => TRUE);
+        $form['my_interest']['location']['no_preference'] = array('#disabled' => TRUE);
+        $form['my_interest']['location']['#default_value'] = 'online';
+        // -- Convert form for EdPlus Consumption
+        $form['my_interest']['campus']['#access'] = FALSE;
+        $form['my_interest']['student_type']['#access'] = FALSE;
+        $form['my_interest']['start_date']['#access'] = FALSE;
+        $form['about_me']['mobile_check']['#access'] = FALSE;
+        $form['about_me']['country']['#access'] = FALSE;
+        $form['about_me']['zipcode']['#access'] = FALSE;
+        $form['about_me']['dob_field']['#access'] = FALSE;
+        $form['about_me']['birthdate']['#access'] = FALSE;
+        $form['about_me']['citizenship']['#access'] = FALSE;
+        $form['about_me']['military']['#access'] = FALSE;
+        $form['address_info']['#access'] = FALSE;
+        $form['questions']['#access'] = FALSE;
+        // -- END Convert form for EdPlus Consumption
       }
-
-      $newLocationArr = array();
-      if ($possibleLocations !== FALSE) {
-        foreach ($possibleLocations as $key => $value) {
-          $newLocationArr[$value] = $value;
-        }
-      }
-      $possibleLocations = $newLocationArr;
-      $form['my_interest']['campus']['#options'] = $possibleLocations;
-          */
     }
   }
+
+  $newLocationArr = array();
+  if ($possibleLocations !== FALSE) {
+    foreach ($possibleLocations as $key => $value) {
+      $newLocationArr[$value] = $value;
+    }
+  }
+  $possibleLocations = $newLocationArr;
+  $form['my_interest']['campus']['#options'] = $possibleLocations;
+    }
+  }
+*/
 
   // ASU RFI module's admin settings
   // * Disable Google analytics site transactions key in asu_rfi admin settings page
@@ -1630,7 +1632,7 @@ function _asu_rfi_create_expired_message($created) {
   if ($expires > time() && (($expires - time()) <= $cron_interval)) {
     $message = 'IMMEDIATE ACTION NEEDED. Will be deleted ASAP by cron run unless fixed and resubmitted.';
   } elseif ($expires < time()) {
-    $message = 'EXPIRED - Will be deleted ASAP by cron.';
+    $message = 'EXPIRED - Will be deleted by the next cron.';
   } else {
     $expiration_date = date("M j, Y @ g:i A", $expires);
     $message = 'PENDING - Will be periodically resubmitted until ' . $expiration_date

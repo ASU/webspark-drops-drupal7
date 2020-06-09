@@ -64,7 +64,7 @@ function asu_rfi_post_to_middleware($data, $type) {
   // If YES below, start building middleware submission and submit it
   if (($middleware_access === 1 || $middleware_env === 'prod')
     && ($form_mode !== 'none')
-    && (!$sf_multi_pending)) {
+    && ($sf_multi_pending === FALSE)) {
 
     $prog_code = $data['program_code'];
     $campus = asu_libs_get_campus_codes($data['campus']);
@@ -245,7 +245,14 @@ function asu_rfi_post_to_middleware($data, $type) {
 
       // SUCCESSFUL POST
       if (($curl_info['http_code'] === 200)) {
-        $curl_message = 'SUCCESS - Submission ' . $nid_info . ' posted to middleware. Will be deleted by the next cron run.';
+        if (isset($node_wrapper->created)) {
+          $created = $node_wrapper->created->value();
+          $expires = (int) $created + ASU_RFI_SUBMISSION_EXP_PERIOD;
+          $curl_message = 'SUCCESS - Submission ' . $nid_info . ' posted to middleware. Will be automatically deleted by the next cron job after '
+            . date("M j, Y @ g:i A", $expires);
+        } else {
+          $curl_message = 'SUCCESS - Submission ' . $nid_info . ' posted to middleware. Will be automatically deleted by a future cron job.';
+        }
         if (isset($node_wrapper->field_rfi_submission_status)) {
           $node_wrapper->field_rfi_submission_status->set('SF_Completed');
         }
@@ -258,9 +265,12 @@ function asu_rfi_post_to_middleware($data, $type) {
         flogger('asu_rfi', $curl_message, array(), 8, TRUE, TRUE, TRUE);
       } // FAILED POST
       else {
-        /** @noinspection PhpUndefinedFieldInspection */
-        $created = $node_wrapper->created->value();
-        $expired_message = _asu_rfi_create_expired_message($created);
+        if (isset($node_wrapper->created)) {
+          $created = $node_wrapper->created->value();
+          $expired_message = _asu_rfi_create_expired_message($created);
+        } else {
+          $expired_message = '';
+        }
         $curl_message = 'FAILED - Submission #' . $nid_info . ' to __' . $url . '__. '
           . 'HTTP code ' . $curl_info['http_code']
           . ': "' . $response . '" ' . "\n" . $expired_message;
@@ -297,8 +307,7 @@ function asu_rfi_post_to_middleware($data, $type) {
     } catch (Exception $e) {
       $msg_start = 'POST to ' . $base_url . ' failed. HTTP CODE: '
         . ((isset($curl_info)) ? $curl_info['http_code'] : 'unknown') . '. ';
-      $message_final = $msg_start . (((int)$e->getCode() <= 0) ? ' May be due to
-    middleware access restrictions.' : '');
+      $message_final = $msg_start . (((int)$e->getCode() <= 0) ? ' May be due to middleware access restrictions.' : '');
       flogger('asu_rfi', $message_final, array(), WATCHDOG_ERROR);
       trigger_error(sprintf(
         'Curl failed with error #%d: %s' . $message_final,
@@ -322,7 +331,7 @@ function asu_rfi_post_to_middleware($data, $type) {
     if (isset($node_wrapper->field_rfi_error_message)) {
       $node_wrapper->field_rfi_error_message->set($message_final);
     }
-    if (isset($node_wrapper->field_rfi_submission_status)) {
+    if (isset($node_wrapper->field_rfi_submission_status) && $sf_multi_pending === FALSE) { // Don't set failed status for partial submissions just set to pending
       $node_wrapper->field_rfi_submission_status->set('SF_Failed');
     }
     $node_wrapper->save();
