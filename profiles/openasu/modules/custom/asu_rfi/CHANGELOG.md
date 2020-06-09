@@ -1,5 +1,11 @@
 # ASU Request for Information Changelog
 
+### ASU RFI 7.x-3.3, 2020-06-09
+- The RFI module settings now correctly block the resubmissions of older, locally-saved RFI submissions as originally intended.
+- Locally-saved copies of RFI submissions are now deleted 45 days after their initial submission, up from 14 days.
+- Added option to manually set the RFI submission retention time.
+- Standalone RFI forms now auto-update the campus options based on the degree selected.
+
 ### ASU RFI 7.x-3.2, 2020-05-28
 - Fixed issue that was blocking the processing of production RFI submissions on sites hosted outside the ASU network
  (e.g., Pantheon hosted sites). All RFI form submissions once again submit to the RFI middleware when the module is set
