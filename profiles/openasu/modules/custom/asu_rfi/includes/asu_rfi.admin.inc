@@ -17,6 +17,13 @@ function asu_rfi_admin_settings() {
     'all' => 'RFI Report page actions + cron jobs',
     'form_only' => 'RFI Report page actions',
   );
+  $expiration_options = array(
+    0 => 'Zero days (immediate)',
+    1 => 'One day',
+    14 => '14 days',
+    30 => '30 days',
+    45 => '45 days',
+  );
   $expiration_range = round((float) (ASU_RFI_SUBMISSION_EXP_PERIOD) / 86400 , 2) . ' days';
 
   ////////////////////////
@@ -207,6 +214,18 @@ function asu_rfi_admin_settings() {
     '#attributes' => array('class' => array('asu-rfi-admin-field')),
     '#required' => TRUE,
   );
+  $form['general_settings']['expired_nodes']['asu_rfi_expired_period'] = array(
+    '#type' => 'select',
+    '#title' => t('Expiration period (days)'),
+    '#options' => $expiration_options,
+    '#default_value' => variable_get('asu_rfi_expired_period', 45),
+    '#description' => t('RFI submissions will be automatically deleted this number of days after the initial'
+      . ' RFI form submission. NOTES: 1) The zero or one day options are not recommended for production (debugging only).'
+      . ' They could lead to submission loss. 2) In the future, this setting may be removed and be preset'
+      . ' with a value that complies with any ASU and UTO security standards.'),
+    '#attributes' => array('class' => array('asu-rfi-admin-field')),
+    '#required' => TRUE,
+  );
   // MAY be enabled in future (currently handled externally)
   $form['general_settings']['asu_rfi_form_auth_key'] = array(
     '#type' => 'hidden',
@@ -311,6 +330,14 @@ function asu_rfi_admin_settings() {
     '#return_value' => 1,
     '#required' => FALSE,
   );
+  $form['general_settings']['developer_settings']['asu_rfi_use_jr_js'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable old ASU RFI Javascript for debugging'),
+    '#description' => t('For UTO developer debugging only. Leave unchecked.'),
+    '#default_value' => variable_get('asu_rfi_use_jr_js'),
+    '#return_value' => 1,
+    '#required' => FALSE,
+  );
 
   // HIDDEN
   $form['undergrad_degree_type'] = array(
@@ -374,6 +401,8 @@ function _asu_rfi_admin_settings_submit($form, $form_state) {
     'asu_rfi_undergrad_confirm' => 1,
     'asu_rfi_expired_delete' => 0,
     'asu_rfi_expired_submit' => 0,
+    'asu_rfi_expired_period' => 0,
+    'asu_rfi_use_jr_js' => 0,
   );
   foreach ($keys as $element => $is_entity) {
     $key = ($is_entity === 1) ? $element . '_nid' : $element;

@@ -299,7 +299,7 @@ function asu_rfi_update_7202(&$sandbox) {
 }
 
 /**
- * Delete ALL RFI form submissions that have been sent to Salesforce or are expired (14 days old).
+ * Delete ALL RFI form submissions that have been sent to Salesforce or are expired (more than X days old).
  */
 function asu_rfi_update_7203(&$sandbox) {
 
@@ -533,4 +533,12 @@ function asu_rfi_update_7212(&$sandbox) {
   variable_set('asu_rfi_online_url', 'https://asuonline.asu.edu/lead-submissions-v3.3/programs');
   features_revert_module('asu_rfi_feature');
   asu_libs_set_asset_access_value('asu_rfi');
+}
+
+/**
+ * Extend deletion period of RFI submissions out to 45 days
+ */
+function asu_rfi_update_7213(&$sandbox) {
+  variable_set('asu_rfi_expired_period', 45);
+  variable_set('asu_rfi_use_jr_js', 0);
 }

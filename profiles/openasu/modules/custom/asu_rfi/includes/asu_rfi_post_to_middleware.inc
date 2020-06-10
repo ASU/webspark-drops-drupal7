@@ -245,7 +245,14 @@ function asu_rfi_post_to_middleware($data, $type) {
 
       // SUCCESSFUL POST
       if (($curl_info['http_code'] === 200)) {
-        $curl_message = 'SUCCESS - Submission ' . $nid_info . ' posted to middleware. Will be deleted by the next cron run.';
+        if (isset($node_wrapper->created)) {
+          $created = $node_wrapper->created->value();
+          $expires = (int) $created + ASU_RFI_SUBMISSION_EXP_PERIOD;
+          $curl_message = 'SUCCESS - Submission ' . $nid_info . ' posted to middleware. Will be automatically deleted by the next cron job after '
+            . date("M j, Y @ g:i A", $expires);
+        } else {
+          $curl_message = 'SUCCESS - Submission ' . $nid_info . ' posted to middleware. Will be automatically deleted by a future cron job.';
+        }
         if (isset($node_wrapper->field_rfi_submission_status)) {
           $node_wrapper->field_rfi_submission_status->set('SF_Completed');
         }
@@ -258,9 +265,12 @@ function asu_rfi_post_to_middleware($data, $type) {
         flogger('asu_rfi', $curl_message, array(), 8, TRUE, TRUE, TRUE);
       } // FAILED POST
       else {
-        /** @noinspection PhpUndefinedFieldInspection */
-        $created = $node_wrapper->created->value();
-        $expired_message = _asu_rfi_create_expired_message($created);
+        if (isset($node_wrapper->created)) {
+          $created = $node_wrapper->created->value();
+          $expired_message = _asu_rfi_create_expired_message($created);
+        } else {
+          $expired_message = '';
+        }
         $curl_message = 'FAILED - Submission #' . $nid_info . ' to __' . $url . '__. '
           . 'HTTP code ' . $curl_info['http_code']
           . ': "' . $response . '" ' . "\n" . $expired_message;
