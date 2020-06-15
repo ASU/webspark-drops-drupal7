@@ -842,22 +842,55 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
     $date_key = substr_replace($date, '', 1, -2);
     $year[$date_key] = $date;
   }
+  // Load degree settings
+  //// If AJAX, uses existing form_state campus value
+  $degree_assets = array(
+    'academic_plan' => '',
+    'academic_program' => '',
+    'degree_awarded' => '',
+    'degree_program' => '',
+    'diploma_description' => '',
+    'campus' => array(),
+    'deg_code' => '',
+    'deg_name' => '',
+    'college_code' => '',
+    'college_name' => '',
+    'form_type' => '',
+    'grad_dates' => '',
+    'start_dates' => array(),
+  );
 
-  // Load degree settings from node
-  // If AJAX, uses existing form_state value
   if (isset($form_state['values']['nid'])) {
-    $campus = (isset($form_state['values']['campus'])) ? $form_state['values']['campus'] : '';
-    $degree_assets = _asu_rfi_get_degree_specifics($form_state['values']['nid'], $campus);
+    $nid = (int) $form_state['values']['nid'];
+    if ($node = node_load($nid)) {
+      if (isset($node->type) && ($node->type === "asu_ap" XOR $node->type === "asu_degree")) { // Is AP/Degree page
+        $campus = (isset($form_state['values']['campus'])) ? $form_state['values']['campus'] : '';
+        $degree_assets = _asu_rfi_get_degree_specifics($nid, $campus);
+      } else { // not ASU AP/Degree page
+        $acad_plan_code = (isset($form_state['values']['program_code'])) ? $form_state['values']['program_code'] : '';
+        $degree_assets = _asu_rfi_get_degree_specifics($nid, '', $programs, $acad_plan_code);
+      }
+    } else {
+      flogger('asu_rfi', "Node @nid could not be loaded to populate RFI form fields.", array('nid' => $nid));
+    }
+  //// Else attempt to load degree information for the first time
   } else {
-    $node = menu_get_object();
-    $degree_assets = _asu_rfi_get_degree_specifics($node->nid);
+    $node = menu_get_object(); // Works for asu_ap nodes, but not for other nodes
+    if (!empty($node)) {
+      if (isset($node->type) && ($node->type === "asu_ap" xor $node->type === "asu_degree")) {
+        // RFI block on a non-degree page, so get nothing
+        $degree_assets = _asu_rfi_get_degree_specifics($node->nid);
+      } else { // RFI block on a non-degree page
+        // https://www.drupal.org/forum/support/module-development-and-code-questions/2017-02-08/how-do-i-get-the-changed-value-of-a#comment-11923464
+        $degree_assets = _asu_rfi_get_degree_specifics($node->nid, '', $programs);
+      }
+    }
   }
-
 
   // Unknown why this old code existed...
   // $degree[$deg_code] = $deg_name; // ??
-  $dc = $degree_assets['deg_code'];
-  $degree[$dc] = $degree_assets['deg_name'];
+  $dc = (isset($degree_assets['deg_code'])) ? $degree_assets['deg_code'] : '';
+  $degree[$dc] = (isset($degree_assets['deg_name'])) ? $degree_assets['deg_name'] : '';
 
   honeypot_add_form_protection($form, $form_state, array(
     'honeypot',
@@ -896,7 +929,16 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
       ),
     ),
   );
-  if (count($programs) !== 1) {
+  $form['my_interest']['program_code']['#prefix'] = '<div id="asu-rfi-program-ajax-wrapper">';
+  $form['my_interest']['program_code']['#suffix'] = '</div>';
+  $form['my_interest']['program_code']['#ajax'] = array(
+    'callback' => 'asu_rfi_program_ajax_callback',
+    'wrapper' => 'asu-rfi-campus-ajax-wrapper',
+    'method' => 'replace',
+    'effect' => 'fade',
+  );
+
+  if (count($programs) !== 1) { // Either none, OR multiple -- Add AJAX capabilities
     $form['my_interest']['program_code']['#empty_option'] = t('- Select -');
   }
 
@@ -1000,7 +1042,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
   // Address Info
   $form['address_info'] = _asu_rfi_form_base_components('address_info');
     // Long form customizations
-    $form['address_info']['#states']['invisible'][':input[name="location"]']['value'] = ['online'];
+  $form['address_info']['#states']['invisible'][':input[name="location"]']['value'] = ['online'];
   $form['address_info']['address'] = _asu_rfi_form_elements_multiple_keys('address_info', 'address');
   $form['address_info']['city'] = _asu_rfi_form_elements_multiple_keys('address_info', 'city');
   $form['address_info']['state'] = _asu_rfi_form_elements_multiple_keys('address_info', 'state', FALSE, $states);
@@ -1011,7 +1053,9 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
   $form['enterpriseclientid'] = _asu_rfi_form_base_components('enterpriseclientid');
   $form['gdpr_message'] = _asu_rfi_form_base_components('gdpr_message');
 
-  $nid = (isset($form_state['values']['nid'])) ? $form_state['values']['nid'] : $node->nid;
+  // Hack for non-degree RFI forms
+  $nid_check = (isset($node)) ? $node->nid : '';
+  $nid = (isset($form_state['values']['nid'])) ? $form_state['values']['nid'] : $nid_check;
   $form['nid'] = _asu_rfi_form_base_components('nid', FALSE, $nid);
 
   $form['submit'] = array(
@@ -1607,7 +1651,9 @@ function _asu_rfi_form_initial_web_assets($type) {
 
   if ($type === 'long_form') {
     drupal_page_is_cacheable(FALSE);
-    drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.js');
+    if (variable_get('asu_rfi_use_jr_js', 0) === 1) {
+      drupal_add_js(drupal_get_path('module', 'asu_rfi') . '/js/asu_rfi.js');
+    }
   }
 }
 
@@ -1618,10 +1664,14 @@ function _asu_rfi_form_initial_web_assets($type) {
  * do a full bootstrap, so $node is unavailable via menu_get_object()).
  * @param null $nid - Node ID. Defaults to NULL if creating node for first time (including cache).
  * @param string $campus - Human-friendly campus string.
+ *
+ * ONLY for RFI forms not on ASU AP/Degrees pages.
+ * @param array $programs - List of programs for special use case of code below to gather a list of available campuses.
+ * @param string $single_code - Pass in a single academic plan code to get campus(es) back
+ *
  * @return array
  */
-function _asu_rfi_get_degree_specifics($nid = NULL, $campus = '') {
-
+function _asu_rfi_get_degree_specifics($nid = NULL, $campus = '', $programs = array(), $single_code = '') {
   $degreeMappings = _asu_rfi_get_degree_field_mappings();
 
   if (!is_null($nid)) { // If cached version with JS value
@@ -1631,11 +1681,11 @@ function _asu_rfi_get_degree_specifics($nid = NULL, $campus = '') {
       //dpm('FOUND - Using cached version of $node for nid ' . $nid);
     } else {
       //dpm('Node ID ' . $nid . ' set, but cache_get failed to find cached version. Initializing node cache object.');
-      $node = _asu_rfi_get_degree_specifics_init($nid);
+      $node = _asu_rfi_get_degree_specifics_init($nid, count($programs));
     }
   } else {
     //dpm('Node ID ' . $nid . ' not set. Initializing node cache object.');
-    $node = _asu_rfi_get_degree_specifics_init($nid);
+    $node = _asu_rfi_get_degree_specifics_init($nid, count($programs));
   }
 
   // Load the current node object, get program name and degree type
@@ -1659,17 +1709,39 @@ function _asu_rfi_get_degree_specifics($nid = NULL, $campus = '') {
       $academic_program = '';
       $diploma_description = '';
     }
-    $deg_code = (!empty($academic_plan[LANGUAGE_NONE][0]['value']))
-      ? $academic_plan[LANGUAGE_NONE][0]['value'] : '';
-    $deg_name = (!empty($degree_awarded[LANGUAGE_NONE][0]['value']))
-      ? $degree_awarded[LANGUAGE_NONE][0]['value'] : '';
-    $college_code = (!empty($academic_program))
-      ? $academic_program[LANGUAGE_NONE][0]['value'] : "None";
-    $college_name = (!empty($diploma_description))
-      ? $diploma_description[LANGUAGE_NONE][0]['value'] : '';
-    $form_type = (!empty($degree_program[LANGUAGE_NONE][0]['value']))
-      ? $degree_program[LANGUAGE_NONE][0]['value'] : '';
 
+    $deg_code = (!empty($academic_plan[LANGUAGE_NONE][0]['value'])) ? $academic_plan[LANGUAGE_NONE][0]['value'] : '';
+    $deg_name = (!empty($degree_awarded[LANGUAGE_NONE][0]['value'])) ? $degree_awarded[LANGUAGE_NONE][0]['value'] : '';
+    $college_code = (!empty($academic_program)) ? $academic_program[LANGUAGE_NONE][0]['value'] : "None";
+    $college_name = (!empty($diploma_description)) ? $diploma_description[LANGUAGE_NONE][0]['value'] : '';
+    $form_type = (!empty($degree_program[LANGUAGE_NONE][0]['value'])) ? $degree_program[LANGUAGE_NONE][0]['value'] : '';
+
+    // Campus -> Pull in available options (single node or list of programs)
+    // FORMAT: 'acad_plan code' => 'Human readable programs name'
+    if (empty($programs)) { // Locations from a single ASU AP/Degrees node
+      $acad_plan_code = ((isset($academic_plan[LANGUAGE_NONE][0]['safe_value'])) ? $academic_plan[LANGUAGE_NONE][0]['safe_value'] : '');
+      $academic_plans = array(
+        $acad_plan_code => $degree_awarded,
+      );
+    } elseif (!empty($single_code)) { // Locations for a single code passed in manually
+      $academic_plans = _asu_rfi_get_single_program($programs, $single_code);
+    } else { // Get locations for ALL $programs. (Hack to get the campus locations out to RFI forms NOT in ASU AP or degrees pages.
+      $academic_plans = $programs;
+    }
+    $possible_locations = _asu_rfi_get_campus_location_options($academic_plans);
+
+    // Disable the form if the possible locations aren't available. (Broken with AJAX?)
+    asu_rfi_disable_form($form, $possible_locations);
+
+    // General final campus options list
+    $campus_options = array();
+    if ($possible_locations !== FALSE) {
+      foreach ($possible_locations as $key => $value) {
+        $campus_options[$value] = $value;
+      }
+    }
+
+    // START DATES
     // Pull in available start terms for Graduate programs; Static for all others
     $grad_dates = (isset($node->field_asu_ap_grad_all_app_dates[LANGUAGE_NONE][0]['value']))
       ? $node->field_asu_ap_grad_all_app_dates[LANGUAGE_NONE][0]['value'] : '';
@@ -1689,25 +1761,6 @@ function _asu_rfi_get_degree_specifics($nid = NULL, $campus = '') {
         $start_dates = array();
       }
     }
-
-    // Pull in available campus options (works for _form_alter for multistep...
-    $acad_plan_code = ((isset($academic_plan[LANGUAGE_NONE][0]['safe_value']))
-      ? $academic_plan[LANGUAGE_NONE][0]['safe_value'] : '');
-    $academic_plans = array(
-      // 'acad_plan code' => 'Human readable programs name'
-      $acad_plan_code => $degree_awarded,
-    );
-    $possible_locations = _asu_rfi_get_campus_location_options($academic_plans);
-    asu_rfi_disable_form($form, $possible_locations);
-
-    $campus_options = array();
-    if ($possible_locations !== FALSE) {
-      foreach ($possible_locations as $key => $value) {
-        $campus_options[$value] = $value;
-      }
-    }
-
-    // ... @TODO - move alter form LONG FORM circumstances to here
 
     return array(
       'academic_plan' => $academic_plan,
@@ -1732,9 +1785,10 @@ function _asu_rfi_get_degree_specifics($nid = NULL, $campus = '') {
  * Necessary to get AJAX to work since menu_get_object() does not work for AJAX calls (no full bootstrap executed)
  *
  * @param $nid - Node ID
+ * @param int $ap_node_exists - If not empty, this means that there is probably not an ASU AP/Degrees node to pull.
  * @return mixed|string - Returns $node object, or empty string.
  */
-function _asu_rfi_get_degree_specifics_init($nid) {
+function _asu_rfi_get_degree_specifics_init($nid, $ap_node_exists = 0) {
   // Load the node for the first time and save it in the cache for that degree.
   if ($node = menu_get_object()) {
     $nid = $node->nid;
@@ -1743,9 +1797,11 @@ function _asu_rfi_get_degree_specifics_init($nid) {
     return $node;
     // Set acad_plan in Javascript
   } else {
-    //dpm('FAIL! $node could not be loaded by node_load');
-    flogger('asu_rfi', 'Degree node object could not be loaded to'
-      . ' generate RFI form.', array(), WATCHDOG_ERROR);
+    //dpm('FAIL! $node could not be loaded by node_load') if there's supposed to be a node.
+    if ($ap_node_exists === 0) {
+      flogger('asu_rfi', 'Degree node object could not be loaded to'
+        . ' generate RFI form.', array(), WATCHDOG_ERROR);
+    }
     return ''; // Empty string
   }
 }
@@ -1922,7 +1978,6 @@ function _asu_rfi_get_all_avail_terms() {
   $all_avail_terms = &drupal_static(__FUNCTION__);
   if (!isset($all_avail_terms)) {
     $all_avail_terms = array();
-    /** @noinspection PhpUndefinedMethodInspection */
     $sem_dates_results = Database::getConnection('default', 'default')
       ->select('asu_rfi_sem_dates', 'sd')
       ->fields('sd')
@@ -1983,7 +2038,7 @@ function _asu_rfi_form_header_text() {
  * Add common $form elements at the close/end of the form
  *
  * @param $form - Current form array
- * @param string $name - <form> 'name' attribute for dgetElementById call
+ * @param string $name - <form> 'name' attribute for getElementById call
  */
 function _asu_rfi_form_closure(&$form, $name) {
   $form['#after_build'][] = 'asu_rfi_form_after_build';

@@ -196,7 +196,7 @@ See the explanation of submission statuses at https://_yoursite_.asu.edu/admin/r
 
 **How long does the module wait before deleting completed/expired submissions?**
 
-The submission is currently considered to be expired and marked for deletion at 14 days after the
+The submission is currently considered to be expired and marked for deletion at 45 days after the
 initial submission.
 
 **Can I keep the submissions because we have a special use case?**
