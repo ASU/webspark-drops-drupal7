@@ -15,7 +15,7 @@
  */
 
 /**
- * Successful posting to Salesforce
+ * Successful posting to Salesforce (per middleware HTTP request)
  * @param $hash
  * @param $nid
  */
@@ -25,17 +25,22 @@ function asu_rfi_success_post($hash, $nid) {
   $real_hash = sha1($mw_auth_key . '+' . $nid);
   if ($real_hash === (string) $hash) {
     $node = node_load($nid);
-    $node_wrapper = entity_metadata_wrapper('node', $node);
-    if (isset($node_wrapper->field_rfi_submission_status)) {
-      $node_wrapper->field_rfi_submission_status->set('SF_Completed');
+    if ($node !== FALSE) { // RFI submission node still exists locally
+      $node_wrapper = entity_metadata_wrapper('node', $node);
+      if (isset($node_wrapper->field_rfi_submission_status)) {
+        $node_wrapper->field_rfi_submission_status->set('SF_Completed');
+      }
+      if (isset($node_wrapper->field_rfi_error_message)) {
+        $node_wrapper->field_rfi_error_message->set('Middleware posted NID #' . check_plain($nid) . ' to Salesforce.');
+      }
+      $node_wrapper->save();
+      $cid = 'field:node:' . $nid;
+      cache_clear_all($cid, 'cache_field');
+      print('Success');
     }
-    if (isset($node_wrapper->field_rfi_error_message)) {
-      $node_wrapper->field_rfi_error_message->set('');
+    else {
+      print ('Posted no message. NID #' . check_plain($nid) . ' does not exist.');
     }
-    $node_wrapper->save();
-    $cid = 'field:node:' . $nid;
-    cache_clear_all($cid, 'cache_field');
-    print('Success');
   } else {
     http_response_code(403);
     flogger('asu_rfi', __FUNCTION__ . ' - Not a valid Hash / Nid combination', array(), WATCHDOG_ERROR);
@@ -57,25 +62,29 @@ function asu_rfi_fail_post($hash, $nid) {
     $error_message = $request_body;
 
     $node = node_load($nid);
-    $node_wrapper = entity_metadata_wrapper('node', $node);
+    if ($node !== FALSE) { // RFI submission node still exists locally
+      $node_wrapper = entity_metadata_wrapper('node', $node);
 
-    if (isset($node_wrapper->field_rfi_submission_status)) {
-      if ($node_wrapper->field_rfi_submission_status->value() == "Form_Completed") {
-        $node_wrapper->field_rfi_submission_status->set("SF_Failed");
+      if (isset($node_wrapper->field_rfi_submission_status)) {
+        if ($node_wrapper->field_rfi_submission_status->value() == "Form_Completed") {
+          $node_wrapper->field_rfi_submission_status->set("SF_Failed");
+        }
       }
-    }
 
-    $to_email = variable_get('asu_rfi_error_email', NULL); // get error reporting email address from rfi admin settings page
-    if (!empty($to_email)) {
-      _asu_rfi_create_failed_post_email($to_email, $nid);
+      $to_email = variable_get('asu_rfi_error_email', NULL); // get error reporting email address from rfi admin settings page
+      if (!empty($to_email) && !is_null($to_email)) {
+        _asu_rfi_create_failed_post_email($to_email, $nid);
+      }
+      if (isset($node_wrapper->field_rfi_error_message)) {
+        $node_wrapper->field_rfi_error_message->set($error_message);
+      }
+      $node_wrapper->save();
+      $cid = 'field:node:' . $nid;
+      cache_clear_all($cid, 'cache_field');
+      print('Posted error message');
+    } else {
+      print ('Posted no message. NID #' . check_plain($nid) . ' does not exist.');
     }
-    if (isset($node_wrapper->field_rfi_error_message)) {
-      $node_wrapper->field_rfi_error_message->set($error_message);
-    }
-    $node_wrapper->save();
-    $cid = 'field:node:' . $nid;
-    cache_clear_all($cid, 'cache_field');
-    print('Posted error message');
   } else {
     http_response_code(403);
     flogger('asu_rfi', __FUNCTION__ . ' - Not a valid Hash / Nid combination', array(), WATCHDOG_ERROR);
@@ -97,18 +106,22 @@ function asu_rfi_test_post($hash, $nid) {
     $error_message = $request_body;
 
     $node = node_load($nid);
-    $node_wrapper = entity_metadata_wrapper('node', $node);
-    if (isset($node_wrapper->field_rfi_submission_status)) {
-      $node_wrapper->field_rfi_submission_status->set('SF_Completed');
-    }
-    if (isset($node_wrapper->field_rfi_error_message)) {
-      $node_wrapper->field_rfi_error_message->set($error_message);
-    }
-    $node_wrapper->save();
+    if ($node !== FALSE) { // RFI submission node still exists locally
+      $node_wrapper = entity_metadata_wrapper('node', $node);
+      if (isset($node_wrapper->field_rfi_submission_status)) {
+        $node_wrapper->field_rfi_submission_status->set('SF_Completed');
+      }
+      if (isset($node_wrapper->field_rfi_error_message)) {
+        $node_wrapper->field_rfi_error_message->set($error_message);
+      }
+      $node_wrapper->save();
 
-    $cid = 'field:node:' . $nid;
-    cache_clear_all($cid, 'cache_field');
-    print('Posted success message for test submission');
+      $cid = 'field:node:' . $nid;
+      cache_clear_all($cid, 'cache_field');
+      print('Posted success message for test submission');
+    } else {
+      print ('Posted no messages. NID #' . check_plain($nid) . ' does not exist.');
+    }
   } else {
     http_response_code(403);
     flogger('asu_rfi', __FUNCTION__ . ' - Not a valid hash/nid combination for nid @nid',
