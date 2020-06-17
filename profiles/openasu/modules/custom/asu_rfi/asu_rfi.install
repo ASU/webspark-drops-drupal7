@@ -307,7 +307,7 @@ function asu_rfi_update_7203(&$sandbox) {
 
   // First update run ONLY (Initialize update counters, data)
   if (!isset($sandbox['total'])) {
-    $total_count = _asu_rfi_get_submissions_to_delete(0, TRUE);
+    $total_count = _asu_rfi_get_submissions_to_delete(0, TRUE, TRUE);
     $sandbox['total'] = $total_count;
     $sandbox['max'] = $nids_per_pass;
     $sandbox['progress'] = 0;
@@ -319,7 +319,7 @@ function asu_rfi_update_7203(&$sandbox) {
     }
 
   // Actual batch operation to delete
-  $all_nids = _asu_rfi_get_submissions_to_delete($nids_per_pass);
+  $all_nids = _asu_rfi_get_submissions_to_delete($nids_per_pass, FALSE, TRUE);
 
   foreach ($all_nids as $nid) {
     node_delete($nid);
@@ -541,4 +541,52 @@ function asu_rfi_update_7212(&$sandbox) {
 function asu_rfi_update_7213(&$sandbox) {
   variable_set('asu_rfi_expired_period', 45);
   variable_set('asu_rfi_use_jr_js', 0);
+}
+
+/**
+ * Repeat of 7203 with addendum to delete ALL RFI form submissions - REGARDLESS OF STATUS - that are expired (45 days old).
+ */
+function asu_rfi_update_7214(&$sandbox) {
+
+  $nids_per_pass = 50;
+  // First update run ONLY (Initialize update counters, data)
+  if (!isset($sandbox['total'])) {
+    $total_count = _asu_rfi_get_submissions_to_delete(0, TRUE, TRUE);
+    $sandbox['total'] = $total_count;
+    $sandbox['max'] = $nids_per_pass;
+    $sandbox['progress'] = 0;
+    $sandbox['messages'] = array();
+    $sandbox['current'] = -1; // Last node ID read (starts at -1)
+
+    $message = t(__FUNCTION__ . ' - There are @count nodes to delete.', array('@count' => $total_count));
+    flogger('asu_rfi', $message);
+  }
+
+  // Actual batch operation to delete
+  $all_nids = _asu_rfi_get_submissions_to_delete($nids_per_pass, FALSE, TRUE);
+  foreach ($all_nids as $nid) {
+    node_delete($nid);
+    $sandbox['progress']++;
+    $sandbox['current'] = $nid;
+  }
+
+  // Check to see if finished.
+  $sandbox['#finished'] = ($sandbox['progress'] >= $sandbox['total'])
+    ? TRUE : ($sandbox['progress'] / $sandbox['total']);
+
+  if ($sandbox['#finished'] === TRUE) {
+    return "\n" . t('The expired/completed RFI form submissions have been deleted.');
+  }
+  else {
+    $percentage = $sandbox['#finished'];
+    $percentage = round((float) $percentage * 100, 1) . '%';
+    $message = t('Deleted ' . $sandbox['progress'] . ' of '
+      . $sandbox['total'] . " submissions (" . $percentage . " complete). "
+      . "Last node deleted: @nid...",
+      array('@nid' => (isset($nid)) ? $nid : 'unknown'));
+
+    // Set message and add for final report.
+    //$sandbox['messages'][] = $message . "\n";
+    return $message;
+  }
 }
