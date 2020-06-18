@@ -60,7 +60,7 @@ function innovation_preprocess_html(&$variables) {
       '#tag' => 'meta',
       '#attributes' => array(
         // Don't forget to update openasu.info as well!!
-        'content' => 'Webspark:1.70.11 (Hondo)',
+        'content' => 'Webspark:1.70.12 (El Paso)',
         'http-equiv' => 'X-Name-of-Distro',
         'name' => 'cmsversion',
       )
