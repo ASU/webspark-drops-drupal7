@@ -1,5 +1,9 @@
 # ASU Request for Information Changelog
 
+### ASU RFI 7.x-3.4, 2020-06-17
+- Updating from version 1.15 or older will now delete all locally-saved RFI submissions older than 45 days to prevent the
+  creation of duplicate contacts in Salesforce.
+
 ### ASU RFI 7.x-3.3, 2020-06-09
 - The RFI module settings now correctly block the resubmissions of older, locally-saved RFI submissions as originally intended.
 - Locally-saved copies of RFI submissions are now deleted 45 days after their initial submission, up from 14 days.

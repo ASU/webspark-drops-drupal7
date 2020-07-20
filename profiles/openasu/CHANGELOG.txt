@@ -1,3 +1,17 @@
+Webspark 1.70.12 (El Paso), 2020-06-17
+----------------------------------------------
+- Webspark core
+
+  * Drupal core - v1.72-patch4
+    * Security update! See the latest release notes at https://www.drupal.org/project/drupal/releases/7.72 for more
+      information
+
+- Web standards components in Webspark
+
+  * ASU Request for Information (asu_rfi, asu_rfi_feature) - v3.4
+    - Updating from version 1.15 or older will now delete all locally-saved RFI submissions older than 45 days to
+      prevent the creation of duplicate contacts in Salesforce.
+
 Webspark 1.70.11 (Hondo), 2020-06-09
 ------------------------------------
 - Web standards components in Webspark
@@ -260,7 +274,7 @@ Webspark 1.70.4 (Dallas), 2019-12-30
 ------------------------------------
 - Webspark core
 
-  * Drupal core
+  * Drupal core - v7.69-patch4
     * settings.php - Rollup of changes since its last update in Webspark. Now matches latest version, which shipped with Drupal core v7.60.
   * Webspark (openasu) - v1.70.3
     * Added new apple-touch-icon-120x120-precomposed.png to stop 404 log entries.
