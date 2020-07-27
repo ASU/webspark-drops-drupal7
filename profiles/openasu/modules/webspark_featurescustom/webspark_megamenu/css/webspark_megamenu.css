@@ -1,28 +1,38 @@
 /* =TB MEGA MENU
 -------------------------------------------------------------- */
+/*
+ * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
+ * Override Bootstrap variables below.
+ */
+/*== Colors --- WS2 DONE
+-----------------------------------------------------*/
+/* Global values */
+/* Selectors
+------------------------------------------------------------- */
 .navmenu {
   position: relative;
   z-index: 200;
   margin-bottom: -1px;
 }
 
-.tb-megamenu.tb-megamenu-main-menu .collapse {
-  display: block;
-}
-
 .tb-megamenu {
   background-color: #353535;
   font-size: 16px;
 }
-
+.tb-megamenu.tb-megamenu-main-menu .collapse {
+  display: block;
+}
 .tb-megamenu .mega-inner, .tb-megamenu .span12.mega-col-nav .mega-inner {
   padding: 0;
 }
-
-li.tb-megamenu-item.mega a {
+.tb-megamenu .fa.fa-home.icon-white {
+  margin-right: 0;
+  display: block !important;
+  font-size: 16px;
+}
+.tb-megamenu li.tb-megamenu-item.mega a {
   border: none;
 }
-
 .tb-megamenu .nav > li > a {
   padding: 21px 25px;
   font-size: 16px;
@@ -30,75 +40,73 @@ li.tb-megamenu-item.mega a {
   line-height: 1;
   color: #ededed;
 }
-
-.tb-megamenu .fa.fa-home.icon-white {
-  margin-right: 0;
-  display: block !important;
-  font-size: 16px;
-}
-
-.tb-megamenu .nav li.dropdown.open > .dropdown-toggle, .tb-megamenu .nav > li > a:focus, .tb-megamenu .nav > .active > a:focus, .tb-megamenu .nav li.dropdown.open.active > .dropdown-toggle, .tb-megamenu .nav > li.dropdown.open.active > a:hover, .tb-megamenu .nav > li > a:hover, .tb-megamenu .nav > li.dropdown.open.active > a:focus {
+.tb-megamenu .nav li.dropdown.open > .dropdown-toggle, .tb-megamenu .nav li.dropdown.open.active > .dropdown-toggle {
   color: #ffc627;
-  background-color: #000000;
+  background-color: #000;
 }
-
+.tb-megamenu .nav > li > a:focus,
+.tb-megamenu .nav > .active > a:focus {
+  color: #ffc627;
+  background-color: #000;
+}
+.tb-megamenu .nav > li.dropdown.open.active > a:hover, .tb-megamenu .nav > li.dropdown.open.active > a:focus {
+  color: #ffc627;
+  background-color: #000;
+}
+.tb-megamenu .nav > li > a:hover {
+  color: #ffc627;
+  background-color: #000;
+}
 .tb-megamenu .nav > .active > a:hover {
   color: #ffc627;
-  background: #1F1F1F;
+  background: #191919;
 }
-
-.tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child {
-  background: #1f1f1f;
+.tb-megamenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child,
+.tb-megamenu .nav li.dropdown.active > .dropdown-toggle,
+.tb-megamenu li.tb-megamenu-item.mega.active a {
+  background: #191919;
   color: #ffc627;
   font-size: 16px;
   font-weight: bold;
-  border : none;
+  border: none;
 }
-.tb-megamenu .nav li.dropdown.active > .dropdown-toggle {
-  background: #1f1f1f;
+.tb-megamenu li.tb-megamenu-item.mega a {
+  border: none;
+}
+.tb-megamenu li.tb-megamenu-item.mega.active a {
+  background: #191919;
   color: #ffc627;
   font-size: 16px;
   font-weight: bold;
-  border : none;
 }
- li.tb-megamenu-item.mega.active a {
-  background: #1f1f1f;
-  color: #ffc627;
-  font-size: 16px;
-  font-weight: bold;
-  border : none;
+.tb-megamenu li.tb-megamenu-item.mega.active .mega-dropdown-inner a {
+  font-weight: normal;
 }
-
-li.tb-megamenu-item.mega.active .tb-megamenu-submenu li a {
+.tb-megamenu li.tb-megamenu-item.mega.active .tb-megamenu-submenu li a {
   color: #ededed;
   font-size: 16px;
-  border : none;
+  border: none;
 }
-li.tb-megamenu-item.mega.active .tb-megamenu-submenu li.active a{
+.tb-megamenu li.tb-megamenu-item.mega.active .tb-megamenu-submenu li.active a {
   background: #000;
   color: #ededed;
   font-size: 16px;
-  border : none;
+  border: none;
 }
-li.tb-megamenu-item.mega .mega-dropdown-inner a {
+.tb-megamenu li.tb-megamenu-item.mega .mega-dropdown-inner a {
   height: 100%;
 }
-
-li.tb-megamenu-item.mega.active .mega-dropdown-inner a {
+.tb-megamenu li.tb-megamenu-item.mega .tb-megamenu-column-inner.mega-inner.clearfix {
   font-weight: normal;
 }
-
-.tb-megamenu-column-inner.mega-inner.clearfix {
-  font-weight: normal;
-}
-
-.tb-megamenu-submenu, .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child {
+.tb-megamenu .tb-megamenu-submenu,
+.tb-megamenu .dropdown-menu.mega-dropdown-menu.nav-child {
   padding: 10px 0;
   border-radius: 0 0 4px 4px;
-  border: solid 1px #000000;
+  border: solid 1px #000;
 }
-
-.tb-megamenu-column-inner.mega-inner.clearfix a, ul.tb-megamenu-subnav.mega-nav a {
+.tb-megamenu .tb-megamenu-column-inner.mega-inner.clearfix a,
+.tb-megamenu ul.tb-megamenu-subnav.mega-nav a {
   display: block;
   clear: both;
   padding: 9px 10px 10px 25px !important;
@@ -108,16 +116,13 @@ li.tb-megamenu-item.mega.active .mega-dropdown-inner a {
   color: #ededed;
   border-bottom: 0;
 }
-
 .tb-megamenu .tb-block ul li a:hover {
   line-height: 1;
 }
-
 .tb-megamenu .row-fluid + .row-fluid {
   border: none;
 }
-
-.tb-megamenu-column-inner h2 {
+.tb-megamenu .tb-megamenu-column-inner h2 {
   display: block;
   clear: both;
   padding: 9px 10px 10px 25px;
@@ -129,127 +134,132 @@ li.tb-megamenu-item.mega.active .mega-dropdown-inner a {
   margin-bottom: 0;
   white-space: nowrap;
 }
-
-.tb-megamenu-column-inner .block-inner h2, .tb-megamenu .block-inner .menu.clearfix a {
-  padding: 9px 10px 10px 10px!important;
+.tb-megamenu .tb-megamenu-column-inner .block-inner h2 {
+  padding: 9px 10px 10px 10px !important;
 }
-
-.tb-megamenu .dropdown-menu li > a:hover, .tb-megamenu .dropdown-menu li > a:focus, .tb-megamenu .dropdown-submenu:hover > a, .tb-megamenu .dropdown-menu .active > a:hover {
-  background: #000000;
-  color: #EDEDED;
+.tb-megamenu .tb-megamenu-column-inner .block-inner h2,
+.tb-megamenu .block-inner .menu.clearfix a {
+  padding: 9px 10px 10px 10px !important;
 }
-
-.tb-megamenu-block.tb-block.tb-megamenu-block li:hover {
-  background: #000000;
+.tb-megamenu .dropdown-menu li > a:hover, .tb-megamenu .dropdown-menu li > a:focus {
+  background: #000;
+  color: #ededed;
 }
-
-.tb-megamenu-item.level-2.mega.dropdown-submenu .nav-child {
-  position : absolute;
-  top : -5px;
+.tb-megamenu .dropdown-submenu:hover > a,
+.tb-megamenu .dropdown-menu .active > a:hover {
+  background: #000;
+  color: #ededed;
 }
-
-.tb-megamenu .block-inner{
+.tb-megamenu .tb-megamenu-block.tb-block.tb-megamenu-block li:hover {
+  background: #000;
+}
+.tb-megamenu .tb-megamenu-item.level-2.mega.dropdown-submenu .nav-child {
+  position: absolute;
+  top: -5px;
+}
+.tb-megamenu .block-inner {
   padding: 0 15px;
 }
-
-.tb-megamenu .mega-nav > li:first-child > a, .tb-megamenu .dropdown-menu .mega-nav > li:first-child > a {
+.tb-megamenu .mega-nav > li:first-child > a,
+.tb-megamenu .dropdown-menu .mega-nav > li:first-child > a {
   padding: 8px 15px;
 }
-
-.tb-megamenu-column.mega-col-nav:last-child {
-  border-right: none;
+.tb-megamenu .row-fluid .span1, .tb-megamenu .row-fluid .span2, .tb-megamenu .row-fluid .span3, .tb-megamenu .row-fluid .span4, .tb-megamenu .row-fluid .span5, .tb-megamenu .row-fluid .span6, .tb-megamenu .row-fluid .span7, .tb-megamenu .row-fluid .span8, .tb-megamenu .row-fluid .span9, .tb-megamenu .row-fluid .span10, .tb-megamenu .row-fluid .span11 {
+  margin-left: 0;
 }
-
 .tb-megamenu .row-fluid .span1 {
-  margin-left : 0;
   width: 8.33%;
 }
-
 .tb-megamenu .row-fluid .span2 {
-  margin-left : 0;
   width: 16.6677%;
 }
-
 .tb-megamenu .row-fluid .span3 {
-  margin-left: 0;
   width: 25%;
 }
-
 .tb-megamenu .row-fluid .span4 {
-  margin-left: 0;
   width: 33.33%;
 }
-
-.tb-megamenu .row-fluid .span5, .tb-megamenu .row-fluid .span7, .tb-megamenu .row-fluid .span8, .tb-megamenu .row-fluid .span9, .tb-megamenu .row-fluid .span10, .tb-megamenu .row-fluid .span11 {
-  margin-left : 0;
-}
-
 .tb-megamenu .row-fluid .span6 {
-  margin-left : 0;
-  width : 50%;
+  width: 50%;
 }
-
-.tb-megamenu-row.row-fluid.hide-extra-padding .tb-megamenu-column:last-child .tb-megamenu-block.adding-padding {
-  border-right: none;
-}
-
 .tb-megamenu .row-fluid .mega-col-nav .adding-padding {
   border-right: solid 1px #414141;
   margin-bottom: -1000px;
   padding-bottom: 1000px;
 }
-
-.tb-megamenu-column.mega-col-nav:last-child {
-  border-right: none;
-}
-
-.tb-megamenu-row.row-fluid.hide-extra-padding {
+.tb-megamenu .tb-megamenu-row.row-fluid.hide-extra-padding {
   overflow: hidden;
 }
-
+.tb-megamenu .tb-megamenu-row.row-fluid.hide-extra-padding .tb-megamenu-column:last-child .tb-megamenu-block.adding-padding {
+  border-right: none;
+}
+.tb-megamenu .tb-megamenu-column.mega-col-nav:last-child {
+  border-right: none;
+}
 .tb-megamenu .nav li.dropdown > .dropdown-toggle .caret {
-  border-top-color:#ededed;
+  border-top-color: #ededed;
   transition: all 0.25s ease-in 0s;
 }
-.tb-megamenu .nav li.dropdown.open .caret, .tb-megamenu .nav li.dropodown.open.active .caret, .tb-megamenu .nav li.dropdown.open a:hover .caret, .tb-megamenu .nav li.dropdown.open a:focus .caret {
-  border-top-color:#ffc627;
+.tb-megamenu .nav li.dropdown.open .caret {
+  border-top-color: #ffc627;
 }
-.tb-megamenu .nav li.dropdown.open > .dropdown-toggle .caret, .tb-megamenu .nav li.dropdown.active > .dropdown-toggle .caret, .tb-megamenu .nav li.dropdown.open.active > .dropdown-toggle .caret {
+.tb-megamenu .nav li.dropodown.open.active .caret {
+  border-top-color: #ffc627;
+}
+.tb-megamenu .nav li.dropdown.open a:hover .caret, .tb-megamenu .nav li.dropdown.open a:focus .caret {
+  border-top-color: #ffc627;
+}
+.tb-megamenu .nav li.dropdown.open > .dropdown-toggle .caret {
   border-bottom-color: #eee;
-  border-top-color: #ffc627 ;
+  border-top-color: #ffc627;
 }
-.tb-megamenu-submenu {
+.tb-megamenu .nav li.dropdown.active > .dropdown-toggle .caret, .tb-megamenu .nav li.dropdown.open.active > .dropdown-toggle .caret {
+  border-bottom-color: #eee;
+  border-top-color: #ffc627;
+}
+.tb-megamenu .tb-megamenu-submenu {
   border: none;
 }
-.tb-megamenu-nav>li>.tb-megamenu-submenu>.mega-dropdown-inner>.tb-megamenu-row>.tb-megamenu-column:not(:first-child){
-  border-left: 1px solid #AFA593;
-}
-
-.tb-megamenu-nav, ul.tb-megamenu-subnav a {
+.tb-megamenu .tb-megamenu-nav {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.tb-megamenu .dropdown-menu .mega-nav .mega-group > a.mega-group-title {
-  font-weight: normal;
-  color: #ffc627;
+.tb-megamenu .tb-megamenu-nav > li > .tb-megamenu-submenu > .mega-dropdown-inner > .tb-megamenu-row > .tb-megamenu-column:not(:first-child) {
+  border-left: 1px solid #AFA593;
 }
-.tb-megamenu-subnav>.dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child,
-.tb-megamenu-subnav>.dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child a {
-  background-color: #343434;
+.tb-megamenu ul.tb-megamenu-subnav a {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.tb-megamenu ul.tb-megamenu-subnav > .dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child {
+  background-color: #353535;
   border-color: #2a2a2a;
 }
-.tb-megamenu-subnav>.dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child a:hover {
-  background-color: #1F1F1F;
+.tb-megamenu ul.tb-megamenu-subnav > .dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child a {
+  background-color: #353535;
+  border-color: #2a2a2a;
 }
-.tb-megamenu .mega-nav .mega-group > .mega-group-title, .tb-megamenu .dropdown-menu .mega-nav .mega-group > .mega-group-title{
+.tb-megamenu ul.tb-megamenu-subnav > .dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child a:hover {
+  background-color: #191919;
+}
+.tb-megamenu .mega-nav .mega-group > .mega-group-title,
+.tb-megamenu .dropdown-menu .mega-nav .mega-group > .mega-group-title {
   text-transform: none;
   font-size: 16px;
 }
 .tb-megamenu .nav > li > a:focus,
-.tb-megamenu .nav > .active > a:focus,
+.tb-megamenu .nav > .active > a:focus {
+  outline: 2px solid #00BAFF;
+  -webkit-box-shadow: 0 0 5px #00BAFF;
+  box-shadow: 0 0 5px #00BAFF;
+}
 .tb-megamenu .dropdown-menu li > a:focus,
 .tb-megamenu .nav li.dropdown.active a:focus {
-	 outline: 2px solid #4D90FE;
-	 -webkit-box-shadow: 0px 0px 5px  #4D90FE;
-	 box-shadow: 0px 0px 5px  #4D90FE;
+  outline: 2px solid #00BAFF;
+  -webkit-box-shadow: 0 0 5px #00BAFF;
+  box-shadow: 0 0 5px #00BAFF;
+}
+.tb-megamenu .dropdown-menu .mega-nav .mega-group > a.mega-group-title {
+  font-weight: normal;
+  color: #ffc627;
 }
