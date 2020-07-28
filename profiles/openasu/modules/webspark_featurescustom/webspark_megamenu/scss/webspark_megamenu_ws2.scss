@@ -1,26 +1,47 @@
-/* =TB MEGA MENU V1 (Innovation)
+/* =TB MEGA MENU WS2.0 (elpuente)
 -------------------------------------------------------------- */
 
 @import "webspark_megamenu_base";
 
-/* V1 (Innovation) values */
-$a11y-border: #4D90FE;
+$a11y-border: $ws2-a11y;
 $mm-lighter-gray: #ededed;
 $mm-med-gray: #414141;
 $mm-dark-gray: #353535;
 $mm-darker-gray: #2a2a2a;
 
-/* Selectors
-------------------------------------------------------------- */
+/** Selectors
+-------------------------------------------------------------- */
 
+.ws2-global-header-logo {
+  float: left;
+  margin-right: 1.125rem;
+}
 .navmenu {
   position: relative;
   z-index: 200;
   margin-bottom: -1px;
 }
+
+// TB megamenu root
 .tb-megamenu {
-  background-color: $mm-dark-gray;
-  font-size: 16px;
+  background-color: white;
+  font-size: 1rem;
+
+  // Global header LOGO
+  .ws2-global-header-logo {
+    margin-top: 0.5rem;
+    & > a {
+      border-bottom: none !important;
+    }
+  }
+
+  // TITLE
+  .ws2-global-header-title,
+  .subdomain-name {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
 
   &.tb-megamenu-main-menu .collapse {
     display: block;
@@ -28,25 +49,27 @@ $mm-darker-gray: #2a2a2a;
   .mega-inner, .span12.mega-col-nav .mega-inner {
     padding: 0;
   }
+
+  /////////////////////
   .fa.fa-home.icon-white {
     margin-right: 0;
     display: block !important;
-    font-size: 16px;
+    font-size: 1rem;
+    padding-top: 0.25rem; // additional padding
   }
 
-  // NEW
   li.tb-megamenu-item.mega a {
     border: none;
   }
-  // END NEW
 
   .nav {
     & > li > a {
-      padding: 21px 25px;
+      padding: 0.5rem 0.75rem;
+      margin-right: 0.5rem;
       font-size: 16px;
-      font-weight: bold;
-      line-height: 1;
-      color: $mm-lighter-gray;
+      font-weight: 400; //normal
+      line-height: 1.5;
+      color: $mm-darkest-gray;
     }
     li.dropdown.open {
       & > .dropdown-toggle, &.active > .dropdown-toggle {
@@ -70,7 +93,7 @@ $mm-darker-gray: #2a2a2a;
       }
       .active > a:hover {
         color: $asu-gold;
-        background: $ws2-gray-darkest;
+        background: $mm-darkest-gray;
       }
     }
   }
@@ -78,10 +101,10 @@ $mm-darker-gray: #2a2a2a;
   .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child,
   .nav li.dropdown.active > .dropdown-toggle,
   li.tb-megamenu-item.mega.active a {
-    background: $ws2-gray-darkest;
+    background: $mm-darkest-gray;
     color: $asu-gold;
     font-size: 16px;
-    font-weight: bold;
+    //font-weight: bold;
     border: none;
   }
 
@@ -93,10 +116,10 @@ $mm-darker-gray: #2a2a2a;
     // END CANT FIND THIS?
     &.active {
       a {
-        background: $ws2-gray-darkest;
+        background: $mm-darkest-gray;
         color: $asu-gold;
         font-size: 16px;
-        font-weight: bold;
+        //font-weight: bold;
       }
 
       .mega-dropdown-inner a {
@@ -131,7 +154,6 @@ $mm-darker-gray: #2a2a2a;
   .tb-megamenu-submenu,
   .dropdown-menu.mega-dropdown-menu.nav-child {
     padding: 10px 0;
-    border-radius: 0 0 4px 4px;
     border: solid 1px #000;
   }
 
@@ -291,7 +313,7 @@ $mm-darker-gray: #2a2a2a;
         background-color: $mm-dark-gray;
         border-color: $mm-darker-gray;
         &:hover {
-          background-color: $ws2-gray-darkest;
+          background-color: $mm-darkest-gray;
         }
       }
     }

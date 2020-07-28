@@ -8,16 +8,18 @@
  * Implements hook_init().
  **/
 function webspark_megamenu_init() {
-  drupal_add_js(drupal_get_path('module', 'webspark_megamenu') .'/js/webspark_megamenu.js', 'file');
   drupal_add_js(libraries_get_path('emulatetab') . '/src/emulatetab.joelpurra.min.js');
-  drupal_add_css(drupal_get_path('module', 'webspark_megamenu') . '/css/webspark_megamenu.css', array('weight' => 99, 'group' => CSS_DEFAULT));
+  $ws2_check = _webspark_featurescustom_ws2_check();
+  drupal_add_js(drupal_get_path('module', 'webspark_megamenu') . '/js/webspark_megamenu' . $ws2_check . '.js', 'file');
+  drupal_add_css(drupal_get_path('module', 'webspark_megamenu') . '/css/webspark_megamenu' . $ws2_check . '.css', array('weight' => 99, 'group' => CSS_DEFAULT));
 }
 
 /**
  * Implements hook_page_alter().
  **/
 function webspark_megamenu_page_alter(&$page) {
-  drupal_add_js(drupal_get_path('module', 'webspark_megamenu').'/js/webspark_megamenu_pre.js', array('scope'=>'header'));
+  $ws2_check = _webspark_featurescustom_ws2_check();
+  drupal_add_js(drupal_get_path('module', 'webspark_megamenu').'/js/webspark_megamenu_pre' . $ws2_check . '.js', array('scope'=>'header'));
 }
 
 /**

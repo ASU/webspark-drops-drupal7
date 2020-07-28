@@ -1,4 +1,4 @@
-/* =TB MEGA MENU V1 (Innovation)
+/* =TB MEGA MENU WS2.0 (elpuente)
 -------------------------------------------------------------- */
 /** =TB MEGA MENU - BASE values, mixins, etc. for both V1 and WS2.0
 ------------------------------------------------------------------- */
@@ -9,9 +9,13 @@
 /*== Colors --- WS2 DONE
 -----------------------------------------------------*/
 /* Global values */
-/* V1 (Innovation) values */
-/* Selectors
-------------------------------------------------------------- */
+/** Selectors
+-------------------------------------------------------------- */
+.ws2-global-header-logo {
+  float: left;
+  margin-right: 1.125rem;
+}
+
 .navmenu {
   position: relative;
   z-index: 200;
@@ -19,8 +23,20 @@
 }
 
 .tb-megamenu {
-  background-color: #353535;
-  font-size: 16px;
+  background-color: white;
+  font-size: 1rem;
+}
+.tb-megamenu .ws2-global-header-logo {
+  margin-top: 0.5rem;
+}
+.tb-megamenu .ws2-global-header-logo > a {
+  border-bottom: none !important;
+}
+.tb-megamenu .ws2-global-header-title,
+.tb-megamenu .subdomain-name {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
 }
 .tb-megamenu.tb-megamenu-main-menu .collapse {
   display: block;
@@ -31,17 +47,19 @@
 .tb-megamenu .fa.fa-home.icon-white {
   margin-right: 0;
   display: block !important;
-  font-size: 16px;
+  font-size: 1rem;
+  padding-top: 0.25rem;
 }
 .tb-megamenu li.tb-megamenu-item.mega a {
   border: none;
 }
 .tb-megamenu .nav > li > a {
-  padding: 21px 25px;
+  padding: 0.5rem 0.75rem;
+  margin-right: 0.5rem;
   font-size: 16px;
-  font-weight: bold;
-  line-height: 1;
-  color: #ededed;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #191919;
 }
 .tb-megamenu .nav li.dropdown.open > .dropdown-toggle, .tb-megamenu .nav li.dropdown.open.active > .dropdown-toggle {
   color: #ffc627;
@@ -70,7 +88,6 @@
   background: #191919;
   color: #ffc627;
   font-size: 16px;
-  font-weight: bold;
   border: none;
 }
 .tb-megamenu li.tb-megamenu-item.mega a {
@@ -80,7 +97,6 @@
   background: #191919;
   color: #ffc627;
   font-size: 16px;
-  font-weight: bold;
 }
 .tb-megamenu li.tb-megamenu-item.mega.active .mega-dropdown-inner a {
   font-weight: normal;
@@ -105,7 +121,6 @@
 .tb-megamenu .tb-megamenu-submenu,
 .tb-megamenu .dropdown-menu.mega-dropdown-menu.nav-child {
   padding: 10px 0;
-  border-radius: 0 0 4px 4px;
   border: solid 1px #000;
 }
 .tb-megamenu .tb-megamenu-column-inner.mega-inner.clearfix a,
@@ -252,15 +267,15 @@
 }
 .tb-megamenu .nav > li > a:focus,
 .tb-megamenu .nav > .active > a:focus {
-  outline: 2px solid #4D90FE;
-  -webkit-box-shadow: 0 0 5px #4D90FE;
-  box-shadow: 0 0 5px #4D90FE;
+  outline: 2px solid #00BAFF;
+  -webkit-box-shadow: 0 0 5px #00BAFF;
+  box-shadow: 0 0 5px #00BAFF;
 }
 .tb-megamenu .dropdown-menu li > a:focus,
 .tb-megamenu .nav li.dropdown.active a:focus {
-  outline: 2px solid #4D90FE;
-  -webkit-box-shadow: 0 0 5px #4D90FE;
-  box-shadow: 0 0 5px #4D90FE;
+  outline: 2px solid #00BAFF;
+  -webkit-box-shadow: 0 0 5px #00BAFF;
+  box-shadow: 0 0 5px #00BAFF;
 }
 .tb-megamenu .dropdown-menu .mega-nav .mega-group > a.mega-group-title {
   font-weight: normal;

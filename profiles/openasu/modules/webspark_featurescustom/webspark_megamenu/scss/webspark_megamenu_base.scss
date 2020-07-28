@@ -1,0 +1,22 @@
+/** =TB MEGA MENU - BASE values, mixins, etc. for both V1 and WS2.0
+------------------------------------------------------------------- */
+
+@import "../../../../themes/elpuente/sass/variables";
+
+/* Global values */
+$asu-gold: $ws2-gold;
+$mm-darkest-gray: $ws2-gray-darkest;
+
+@mixin megamenu-default-style() {
+  color: #ffc627;
+  background-color: #000;
+}
+@mixin megamenu-submenu-style() {
+  background: #000;
+  color: $mm-lighter-gray;
+}
+@mixin megamenu-focus-style() {
+  outline: 2px solid $a11y-border;
+  -webkit-box-shadow: 0 0 5px  $a11y-border;
+  box-shadow: 0 0 5px  $a11y-border;
+}
