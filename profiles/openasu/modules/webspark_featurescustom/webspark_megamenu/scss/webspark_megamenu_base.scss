@@ -1,4 +1,5 @@
 /** =TB MEGA MENU - BASE values, mixins, etc. for both V1 and WS2.0
+ * Mixin parameter defaults are all Innovation. Pass in WS2.0 values.
 ------------------------------------------------------------------- */
 
 @import "../../../../themes/elpuente/sass/variables";
@@ -7,16 +8,20 @@
 $asu-gold: $ws2-gold;
 $mm-darkest-gray: $ws2-gray-darkest;
 
-@mixin megamenu-default-style() {
-  color: #ffc627;
-  background-color: #000;
+@mixin megamenu-default-style($background-color: #fff, $color: $mm-darkest-gray) {
+  background-color: $background-color;
+  background-image: none;
+  color: $color;
 }
-@mixin megamenu-submenu-style() {
-  background: #000;
-  color: $mm-lighter-gray;
+
+@mixin megamenu-submenu-style($background: #fff, $color: $mm-darkest-gray) {
+  background-color: $background;
+  background-image: none;
+  color: $color;
 }
-@mixin megamenu-focus-style() {
-  outline: 2px solid $a11y-border;
-  -webkit-box-shadow: 0 0 5px  $a11y-border;
-  box-shadow: 0 0 5px  $a11y-border;
+
+@mixin megamenu-focus-style($border: $ws2-a11y) {
+  outline: 2px solid $border;
+  -webkit-box-shadow: 0 0 5px  $border;
+  box-shadow: 0 0 5px $border;
 }

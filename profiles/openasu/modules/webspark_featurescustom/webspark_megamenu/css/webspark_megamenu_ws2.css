@@ -1,6 +1,7 @@
 /* =TB MEGA MENU WS2.0 (elpuente)
 -------------------------------------------------------------- */
 /** =TB MEGA MENU - BASE values, mixins, etc. for both V1 and WS2.0
+ * Mixin parameter defaults are all Innovation. Pass in WS2.0 values.
 ------------------------------------------------------------------- */
 /*
  * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
@@ -62,31 +63,37 @@
   color: #191919;
 }
 .tb-megamenu .nav li.dropdown.open > .dropdown-toggle, .tb-megamenu .nav li.dropdown.open.active > .dropdown-toggle {
-  color: #ffc627;
-  background-color: #000;
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
 }
 .tb-megamenu .nav > li > a:focus,
 .tb-megamenu .nav > .active > a:focus {
-  color: #ffc627;
-  background-color: #000;
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
 }
 .tb-megamenu .nav > li.dropdown.open.active > a:hover, .tb-megamenu .nav > li.dropdown.open.active > a:focus {
-  color: #ffc627;
-  background-color: #000;
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
 }
 .tb-megamenu .nav > li > a:hover {
-  color: #ffc627;
-  background-color: #000;
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
 }
 .tb-megamenu .nav > .active > a:hover {
-  color: #ffc627;
-  background: #191919;
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
 }
 .tb-megamenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child,
 .tb-megamenu .nav li.dropdown.active > .dropdown-toggle,
 .tb-megamenu li.tb-megamenu-item.mega.active a {
-  background: #191919;
-  color: #ffc627;
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
   font-size: 16px;
   border: none;
 }
@@ -94,21 +101,25 @@
   border: none;
 }
 .tb-megamenu li.tb-megamenu-item.mega.active a {
-  background: #191919;
-  color: #ffc627;
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
   font-size: 16px;
 }
 .tb-megamenu li.tb-megamenu-item.mega.active .mega-dropdown-inner a {
   font-weight: normal;
 }
 .tb-megamenu li.tb-megamenu-item.mega.active .tb-megamenu-submenu li a {
-  color: #ededed;
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
   font-size: 16px;
   border: none;
 }
 .tb-megamenu li.tb-megamenu-item.mega.active .tb-megamenu-submenu li.active a {
-  background: #000;
-  color: #ededed;
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
   font-size: 16px;
   border: none;
 }
@@ -131,7 +142,9 @@
   font-size: 16px;
   font-weight: normal;
   line-height: 1;
-  color: #ededed;
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
   border-bottom: 0;
 }
 .tb-megamenu .tb-block ul li a:hover {
@@ -147,7 +160,9 @@
   font-size: 16px;
   font-weight: bold;
   line-height: 1;
-  color: #ededed;
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
   border-bottom: 0;
   margin-bottom: 0;
   white-space: nowrap;
@@ -160,13 +175,15 @@
   padding: 9px 10px 10px 10px !important;
 }
 .tb-megamenu .dropdown-menu li > a:hover, .tb-megamenu .dropdown-menu li > a:focus {
-  background: #000;
-  color: #ededed;
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
 }
 .tb-megamenu .dropdown-submenu:hover > a,
 .tb-megamenu .dropdown-menu .active > a:hover {
-  background: #000;
-  color: #ededed;
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
 }
 .tb-megamenu .tb-megamenu-block.tb-block.tb-megamenu-block li:hover {
   background: #000;

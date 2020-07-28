@@ -50,22 +50,22 @@ $mm-darker-gray: #2a2a2a;
     }
     li.dropdown.open {
       & > .dropdown-toggle, &.active > .dropdown-toggle {
-        @include megamenu-default-style();
+        @include megamenu-default-style(#000, $asu-gold);
       }
     }
     & > {
       li > a:focus,
       .active > a:focus {
-        @include megamenu-default-style();
+        @include megamenu-default-style(#000, $asu-gold);
       }
       li {
         &.dropdown.open.active {
           & > a:hover, > a:focus {
-            @include megamenu-default-style();
+            @include megamenu-default-style(#000, $asu-gold);
           }
         }
         & > a:hover {
-          @include megamenu-default-style();
+          @include megamenu-default-style(#000, $asu-gold); //
         }
       }
       .active > a:hover {
@@ -180,12 +180,12 @@ $mm-darker-gray: #2a2a2a;
   .dropdown-menu li > a {
     &:hover,
     &:focus {
-      @include megamenu-submenu-style();
+      @include megamenu-submenu-style('#000', $mm-lighter-gray);
     }
   }
   .dropdown-submenu:hover > a,
   .dropdown-menu .active > a:hover {
-    @include megamenu-submenu-style();
+    @include megamenu-submenu-style('#000', $mm-lighter-gray);
   }
   .tb-megamenu-block.tb-block.tb-megamenu-block li:hover {
     background: #000;
@@ -305,12 +305,12 @@ $mm-darker-gray: #2a2a2a;
   .nav > {
     li > a:focus,
     .active > a:focus {
-      @include megamenu-focus-style();
+      @include megamenu-focus-style(#4D90FE);
     }
   }
   .dropdown-menu li > a:focus,
   .nav li.dropdown.active a:focus {
-    @include megamenu-focus-style();
+    @include megamenu-focus-style(#4D90FE);
   }
   .dropdown-menu .mega-nav .mega-group > a.mega-group-title {
     font-weight: normal;

@@ -22,7 +22,6 @@ $mm-darker-gray: #2a2a2a;
   margin-bottom: -1px;
 }
 
-// TB megamenu root
 .tb-megamenu {
   background-color: white;
   font-size: 1rem;
@@ -63,7 +62,7 @@ $mm-darker-gray: #2a2a2a;
   }
 
   .nav {
-    & > li > a {
+    & > li > a { // top level only :)
       padding: 0.5rem 0.75rem;
       margin-right: 0.5rem;
       font-size: 16px;
@@ -92,8 +91,7 @@ $mm-darker-gray: #2a2a2a;
         }
       }
       .active > a:hover {
-        color: $asu-gold;
-        background: $mm-darkest-gray;
+        @include megamenu-default-style();
       }
     }
   }
@@ -101,8 +99,7 @@ $mm-darker-gray: #2a2a2a;
   .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child,
   .nav li.dropdown.active > .dropdown-toggle,
   li.tb-megamenu-item.mega.active a {
-    background: $mm-darkest-gray;
-    color: $asu-gold;
+    @include megamenu-default-style();
     font-size: 16px;
     //font-weight: bold;
     border: none;
@@ -116,8 +113,7 @@ $mm-darker-gray: #2a2a2a;
     // END CANT FIND THIS?
     &.active {
       a {
-        background: $mm-darkest-gray;
-        color: $asu-gold;
+        @include megamenu-default-style();
         font-size: 16px;
         //font-weight: bold;
       }
@@ -128,14 +124,13 @@ $mm-darker-gray: #2a2a2a;
 
       .tb-megamenu-submenu li {
         a {
-          color: $mm-lighter-gray;
+          @include megamenu-default-style();
           font-size: 16px;
           border: none;
         }
 
         &.active a {
-          background: #000;
-          color: $mm-lighter-gray;
+          @include megamenu-default-style();
           font-size: 16px;
           border: none;
         }
@@ -165,7 +160,7 @@ $mm-darker-gray: #2a2a2a;
     font-size: 16px;
     font-weight: normal;
     line-height: 1;
-    color: $mm-lighter-gray;
+    @include megamenu-default-style();
     border-bottom: 0;
   }
 
@@ -184,7 +179,7 @@ $mm-darker-gray: #2a2a2a;
       font-size: 16px;
       font-weight: bold;
       line-height: 1;
-      color: $mm-lighter-gray;
+      @include megamenu-default-style();
       border-bottom: 0;
       margin-bottom: 0;
       white-space: nowrap;

@@ -1,6 +1,7 @@
 /* =TB MEGA MENU V1 (Innovation)
 -------------------------------------------------------------- */
 /** =TB MEGA MENU - BASE values, mixins, etc. for both V1 and WS2.0
+ * Mixin parameter defaults are all Innovation. Pass in WS2.0 values.
 ------------------------------------------------------------------- */
 /*
  * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
@@ -44,21 +45,25 @@
   color: #ededed;
 }
 .tb-megamenu .nav li.dropdown.open > .dropdown-toggle, .tb-megamenu .nav li.dropdown.open.active > .dropdown-toggle {
-  color: #ffc627;
   background-color: #000;
+  background-image: none;
+  color: #ffc627;
 }
 .tb-megamenu .nav > li > a:focus,
 .tb-megamenu .nav > .active > a:focus {
-  color: #ffc627;
   background-color: #000;
+  background-image: none;
+  color: #ffc627;
 }
 .tb-megamenu .nav > li.dropdown.open.active > a:hover, .tb-megamenu .nav > li.dropdown.open.active > a:focus {
-  color: #ffc627;
   background-color: #000;
+  background-image: none;
+  color: #ffc627;
 }
 .tb-megamenu .nav > li > a:hover {
-  color: #ffc627;
   background-color: #000;
+  background-image: none;
+  color: #ffc627;
 }
 .tb-megamenu .nav > .active > a:hover {
   color: #ffc627;
@@ -145,12 +150,14 @@
   padding: 9px 10px 10px 10px !important;
 }
 .tb-megamenu .dropdown-menu li > a:hover, .tb-megamenu .dropdown-menu li > a:focus {
-  background: #000;
+  background-color: "#000";
+  background-image: none;
   color: #ededed;
 }
 .tb-megamenu .dropdown-submenu:hover > a,
 .tb-megamenu .dropdown-menu .active > a:hover {
-  background: #000;
+  background-color: "#000";
+  background-image: none;
   color: #ededed;
 }
 .tb-megamenu .tb-megamenu-block.tb-block.tb-megamenu-block li:hover {
