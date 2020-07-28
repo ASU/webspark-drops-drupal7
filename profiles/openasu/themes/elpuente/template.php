@@ -673,3 +673,13 @@ function elpuente_preprocess_maintenance_page(&$variables) {
   }
   drupal_add_css(drupal_get_path('theme', 'elpuente') . '/css/maintenance-page.css');
 }
+
+/**
+ * Adds site name to the TB Megamenu nav TPL
+ *
+ * @param $variables
+ */
+function elpuente_preprocess_tb_megamenu_nav(&$variables) {
+  $site_name = variable_get('site_name', 'Set your site name!');
+  $variables['site_name'] = check_plain($site_name);
+}
