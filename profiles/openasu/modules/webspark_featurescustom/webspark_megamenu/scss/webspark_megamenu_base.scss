@@ -25,3 +25,7 @@ $mm-darkest-gray: $ws2-gray-darkest;
   -webkit-box-shadow: 0 0 5px  $border;
   box-shadow: 0 0 5px $border;
 }
+
+@mixin megamenu-active-style() {
+  width: calc(100% + 16px);
+}
