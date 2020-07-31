@@ -5,7 +5,7 @@
  * Unit: (OPTIONAL) If parent of main site's focus is required.
  * Title: Main site title
  */
-dpm(get_defined_vars(), 'TB MM nav TPL');
+//dpm(get_defined_vars(), 'TB MM nav TPL');
 ?>
 <div class="tb-megamenu-ws2-shell">
 <div class="ws2-global-header-logo">

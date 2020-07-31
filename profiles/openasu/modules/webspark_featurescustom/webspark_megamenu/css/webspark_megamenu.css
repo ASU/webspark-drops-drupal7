@@ -9,7 +9,44 @@
  */
 /*== Colors --- WS2 DONE
 -----------------------------------------------------*/
-/* Global values */
+/* Global values
+----------------------------------------------------- */
+/* Global megamenu mixins
+----------------------------------------------------- */
+/* Universal markup
+----------------------------------------------------- */
+.row-fluid .span1, .row-fluid .span2, .row-fluid .span3, .row-fluid .span4, .row-fluid .span5, .row-fluid .span6, .row-fluid .span7, .row-fluid .span8, .row-fluid .span9, .row-fluid .span10, .row-fluid .span11 {
+  margin-left: 0;
+}
+.row-fluid .span1 {
+  width: calc(8.33% - 2.12766%);
+}
+.row-fluid .span2 {
+  width: calc(16.6677% - 2.12766%);
+}
+.row-fluid .span3 {
+  width: calc(25% - 2.12766%);
+}
+.row-fluid .span4 {
+  width: calc(33.33% - 2.12766%);
+}
+.row-fluid .span6 {
+  width: calc(50% - 2.12766%);
+}
+
+#tb-megamenu-admin .dropdown-menu li.tb-megamenu-item {
+  border: 1px solid #747474;
+}
+#tb-megamenu-admin .dropdown-menu li.tb-megamenu-item a {
+  color: #191919;
+}
+#tb-megamenu-admin .dropdown-menu li.tb-megamenu-item a:hover {
+  color: #747474;
+}
+#tb-megamenu-admin .mega-inner, #tb-megamenu-admin .tb-megamenu .span12.mega-col-nav .mega-inner {
+  padding: 10px;
+}
+
 /* V1 (Innovation) values */
 /* Selectors
 ------------------------------------------------------------- */
@@ -130,6 +167,11 @@
 .tb-megamenu .row-fluid + .row-fluid {
   border: none;
 }
+.tb-megamenu .row-fluid .mega-col-nav .adding-padding {
+  border-right: solid 1px #2a2a2a;
+  margin-bottom: -1000px;
+  padding-bottom: 1000px;
+}
 .tb-megamenu .tb-megamenu-column-inner h2 {
   display: block;
   clear: both;
@@ -173,29 +215,6 @@
 .tb-megamenu .mega-nav > li:first-child > a,
 .tb-megamenu .dropdown-menu .mega-nav > li:first-child > a {
   padding: 8px 15px;
-}
-.tb-megamenu .row-fluid .span1, .tb-megamenu .row-fluid .span2, .tb-megamenu .row-fluid .span3, .tb-megamenu .row-fluid .span4, .tb-megamenu .row-fluid .span5, .tb-megamenu .row-fluid .span6, .tb-megamenu .row-fluid .span7, .tb-megamenu .row-fluid .span8, .tb-megamenu .row-fluid .span9, .tb-megamenu .row-fluid .span10, .tb-megamenu .row-fluid .span11 {
-  margin-left: 0;
-}
-.tb-megamenu .row-fluid .span1 {
-  width: 8.33%;
-}
-.tb-megamenu .row-fluid .span2 {
-  width: 16.6677%;
-}
-.tb-megamenu .row-fluid .span3 {
-  width: 25%;
-}
-.tb-megamenu .row-fluid .span4 {
-  width: 33.33%;
-}
-.tb-megamenu .row-fluid .span6 {
-  width: 50%;
-}
-.tb-megamenu .row-fluid .mega-col-nav .adding-padding {
-  border-right: solid 1px #414141;
-  margin-bottom: -1000px;
-  padding-bottom: 1000px;
 }
 .tb-megamenu .tb-megamenu-row.row-fluid.hide-extra-padding {
   overflow: hidden;

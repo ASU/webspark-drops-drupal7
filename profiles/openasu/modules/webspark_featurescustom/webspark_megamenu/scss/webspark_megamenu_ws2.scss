@@ -4,23 +4,36 @@
 @import "webspark_megamenu_base";
 
 $a11y-border: $ws2-a11y;
-$mm-lighter-gray: #ededed;
-$mm-med-gray: #414141;
-$mm-dark-gray: #353535;
-$mm-darker-gray: #2a2a2a;
+$mm-light-gray: $ws2-gray-light;
+$mm-lighter-gray: $ws2-gray-lighter;
+$mm-dark-gray: $ws2-gray-dark;
+$mm-darker-gray: $ws2-gray-darker;
+
+$ws2-gray-darkest:       #191919; // Not using lighten() mixing
+$ws2-gray-darker:        #484848;
+$ws2-gray-dark:          #747474;
+$ws2-gray:               #bfbfbf;
+$ws2-gray-light:         #d0d0d0;
+$ws2-gray-lighter:       #e8e8e8;
+$ws2-gray-lightest:      #fafafa;
 
 /** Selectors
 -------------------------------------------------------------- */
 
+// ASU header logo
 .ws2-global-header-logo {
   float: left;
   margin-right: 1.125rem;
 }
+
+// Container for menu
 .navmenu {
   position: relative;
   z-index: 200;
   margin-bottom: -1px;
 }
+
+// Global TB Megamenu styling
 
 .tb-megamenu {
   background-color: white;
@@ -32,19 +45,14 @@ $mm-darker-gray: #2a2a2a;
       border-bottom: none !important;
     }
   }
-  // TITLE
+  // Subdomain title
   .ws2-global-header-title,
   .subdomain-name {
     font-size: 2rem;
     margin-bottom: 0.5rem;
     font-weight: 700;
   }
-  &.tb-megamenu-main-menu .collapse {
-    display: block;
-  }
-  .mega-inner, .span12.mega-col-nav .mega-inner {
-    padding: 0;
-  }
+  // Home icon
   .fa.fa-home.icon-white {
     margin-right: 0;
     display: block !important;
@@ -52,11 +60,39 @@ $mm-darker-gray: #2a2a2a;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
   }
-  li.tb-megamenu-item.mega a {
-    border: none;
+  // border/background of submenus
+  .mega > .mega-dropdown-menu {
+    min-width: 200px;
+    display: block;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px; width: 1px;
+    margin: -1px; padding: 0; border: 0;
+  }
+
+  &.tb-megamenu-main-menu .collapse {
+    display: block;
+  }
+  .mega-inner, .span12.mega-col-nav .mega-inner {
+    padding: 0;
   }
 
   .nav {
+
+    // Adds Chevron (arrow down) - Currently using FA 4.x
+    li {
+      &.dropdown {
+        > .dropdown-toggle .fa-chevron-down {
+          font-size: 0.75rem;
+          vertical-align: 2px;
+        }
+        .level-2 .fa-chevron-down {
+          display: none;
+        }
+      }
+    }
+
+    // Top-level menu elements
     & > li > a {
       padding: 0.5rem 0.75rem;
       margin-right: 0.5rem;
@@ -83,10 +119,14 @@ $mm-darker-gray: #2a2a2a;
       @include megamenu-active-style();
     }
     li.dropdown.open {
-      & > .dropdown-toggle, &.active > .dropdown-toggle {
+      & > .dropdown-toggle,
+      &.active > .dropdown-toggle {
         @include megamenu-default-style();
       }
     }
+
+
+
     & > {
       li > a:focus,
       .active > a:focus {
@@ -94,7 +134,8 @@ $mm-darker-gray: #2a2a2a;
       }
       li {
         &.dropdown.open.active {
-          & > a:hover, > a:focus {
+          & > a:hover,
+          > a:focus {
             @include megamenu-default-style();
           }
         }
@@ -106,47 +147,78 @@ $mm-darker-gray: #2a2a2a;
         @include megamenu-default-style();
       }
     }
+
+
+
+  }
+
+  .dropdown-menu .mega-nav > li a {
+    padding: 0;
   }
 
   .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child,
   .nav li.dropdown.active > .dropdown-toggle,
   li.tb-megamenu-item.mega.active a {
     @include megamenu-default-style();
-    font-size: 16px;
+    font-size: 1rem;
     border: none;
   }
 
   li.tb-megamenu-item.mega {
-    a { // WHY is this here?
+    a {
       border: none;
+    }
+
+    // Submenu container styling
+    &.level-1 > .tb-megamenu-submenu.dropdown-menu {
+      border: 1px solid $ws2-gray-light;
+      border-top: none;
+      margin-top: 0;
     }
     &.active {
       a {
         @include megamenu-default-style();
-        font-size: 16px;
+        font-size: 1rem;
       }
       .mega-dropdown-inner a {
         font-weight: normal;
       }
       .tb-megamenu-submenu li {
-        a {
-          @include megamenu-default-style();
-          font-size: 16px;
-          border: none;
-        }
-
+        a,
         &.active a {
           @include megamenu-default-style();
-          font-size: 16px;
-          border: none;
+          font-size: 1rem;
+          &:hover {
+            color: $ws2-maroon;
+          }
         }
+      }
+    }
+
+    // Submenu links
+    .tb-megamenu-submenu {
+      li > a:focus,
+      .active > a:focus {
+        @include megamenu-default-style(#ffffff, $ws2-maroon, yes, yes);
+      }
+      li {
+        &.dropdown.open.active {
+          & > a:hover, > a:focus {
+            @include megamenu-default-style(#ffffff, $ws2-maroon, yes, yes);
+          }
+        }
+        & > a:hover {
+          @include megamenu-default-style(#ffffff, $ws2-maroon, yes, yes);
+        }
+      }
+      .active > a:hover {
+        @include megamenu-default-style(#ffffff, $ws2-maroon, yes, yes);
       }
     }
 
     .mega-dropdown-inner a {
       height: 100%;
     }
-
     .tb-megamenu-column-inner.mega-inner.clearfix {
       font-weight: normal;
     }
@@ -155,34 +227,38 @@ $mm-darker-gray: #2a2a2a;
   .tb-megamenu-submenu,
   .dropdown-menu.mega-dropdown-menu.nav-child {
     padding: 10px 0;
-    border: solid 1px #000;
+    box-shadow: none;
   }
 
   .tb-megamenu-column-inner.mega-inner.clearfix a,
   ul.tb-megamenu-subnav.mega-nav a {
-    display: block;
     clear: both;
-    padding: 9px 10px 10px 25px !important;
-    font-size: 16px;
+    display: inline;
+    //padding: 9px 10px 10px 25px !important;
+    //font-size: 16px;
     font-weight: normal;
-    line-height: 1;
+    //line-height: 1;
     @include megamenu-default-style();
-    border-bottom: 0;
+    //border-bottom: 0;
   }
 
-  .tb-block ul li a:hover {
-    //line-height: 1;
-  }
   .row-fluid + .row-fluid {
     border: none;
+  }
+  .row-fluid {
+    .mega-col-nav .adding-padding {
+      border-right: solid 1px $mm-darker-gray;
+      margin-bottom: -1000px;
+      padding-bottom: 1000px;
+    }
   }
 
   .tb-megamenu-column-inner {
     h2 {
       display: block;
       clear: both;
-      padding: 9px 10px 10px 25px;
-      font-size: 16px;
+      padding: 0.5rem 0.5rem 0.5rem 1.5625rem;
+      font-size: 1rem;
       font-weight: bold;
       line-height: 1;
       @include megamenu-default-style();
@@ -191,63 +267,43 @@ $mm-darker-gray: #2a2a2a;
       white-space: nowrap;
     }
     .block-inner h2 {
-      padding: 9px 10px 10px 10px !important;
+      padding: 0.5rem !important;
     }
   }
 
   .tb-megamenu-column-inner .block-inner h2,
   .block-inner .menu.clearfix a {
-    padding: 9px 10px 10px 10px!important;
+    padding: 0.5rem !important;
   }
 
-  .dropdown-menu li > a {
-    &:hover,
-    &:focus {
-      @include megamenu-submenu-style();
+  .dropdown-menu {
+    padding: 32px;
+    li {
+      padding: 0.5rem 0;
+      & > a {
+        &:hover,
+        &:focus {
+          @include megamenu-default-style(#ffffff, $ws2-maroon, yes, yes);
+        }
+      }
     }
   }
   .dropdown-submenu:hover > a,
   .dropdown-menu .active > a:hover {
-    //@include megamenu-submenu-style();
+    @include megamenu-default-style(#ffffff, $ws2-maroon, yes, yes);
   }
-  .tb-megamenu-block.tb-block.tb-megamenu-block li:hover {
-    //background: #000;
-  }
+
   .tb-megamenu-item.level-2.mega.dropdown-submenu .nav-child {
     position: absolute;
     top: -5px;
   }
   .block-inner {
-    padding: 0 15px;
+    padding: 0 1rem;
   }
+
   .mega-nav > li:first-child > a,
   .dropdown-menu .mega-nav > li:first-child > a {
-    padding: 8px 15px;
-  }
-  .row-fluid {
-    .span1, .span2, .span3, .span4, .span5, .span6, .span7, .span8, .span9, .span10, .span11 {
-      margin-left: 0;
-    }
-    .span1 {
-      width: 8.33%;
-    }
-    .span2 {
-      width: 16.6677%;
-    }
-    .span3 {
-      width: 25%;
-    }
-    .span4 {
-      width: 33.33%;
-    }
-    .span6 {
-      width: 50%;
-    }
-    .mega-col-nav .adding-padding {
-      border-right: solid 1px $mm-med-gray;
-      margin-bottom: -1000px;
-      padding-bottom: 1000px;
-    }
+    padding: 0;
   }
 
   .tb-megamenu-row.row-fluid.hide-extra-padding {
@@ -260,38 +316,12 @@ $mm-darker-gray: #2a2a2a;
     border-right: none;
   }
 
-  .nav li {
-    &.dropdown {
-      > .dropdown-toggle .fa-chevron-down {
-        padding-left: 0.5rem;
-        font-size: 0.75rem;
-        vertical-align: 2px;
-      }
-      &.open .fa-chevron-down {
-      }
-    }
-    &.dropdown {
-      &.open {
-        a {
-          &:hover .fa-chevron-down, &:focus .fa-chevron-down {
-          }
-        }
-        > .dropdown-toggle .fa-chevron-down {
-        }
-      }
-      &.active > .dropdown-toggle .fa-chevron-down, &.open.active > .dropdown-toggle .fa-chevron-down {
-        //border-bottom-color: #eee;
-        //border-top-color: $asu-gold;
-      }
-    }
-  }
-
   .tb-megamenu-submenu {
     border: none;
   }
   .tb-megamenu-nav {
     & > li > .tb-megamenu-submenu > .mega-dropdown-inner > .tb-megamenu-row > .tb-megamenu-column:not(:first-child) {
-      border-left: 1px solid #AFA593;
+      border-left: 1px solid $mm-light-gray;
     }
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -301,17 +331,14 @@ $mm-darker-gray: #2a2a2a;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-    & > .dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child {
-      background-color: $mm-dark-gray;
-      border-color: $mm-darker-gray;
-      a {
-        //background-color: $mm-dark-gray;
-        border-color: $mm-darker-gray;
-        &:hover {
-          //background-color: $mm-darkest-gray;
-        }
-      }
-    }
+    //& > .dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child {
+    //  border-color: $mm-darker-gray;
+    //  a {
+    //    border-color: $mm-darker-gray;
+    //    &:hover {
+    //    }
+    //  }
+    //}
   }
 
   .mega-nav .mega-group > .mega-group-title,
@@ -319,14 +346,7 @@ $mm-darker-gray: #2a2a2a;
     text-transform: none;
     font-size: 1rem;
   }
-  .nav > {
-    li > a:focus,
-    .active > a:focus {
-      @include megamenu-focus-style();
-    }
-  }
-  .dropdown-menu li > a:focus,
-  .nav li.dropdown.active a:focus {
+  .dropdown-menu li > a:focus {
     @include megamenu-focus-style();
   }
   .dropdown-menu .mega-nav .mega-group > a.mega-group-title {

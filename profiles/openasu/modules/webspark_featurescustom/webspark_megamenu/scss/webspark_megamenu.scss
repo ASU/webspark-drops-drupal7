@@ -3,6 +3,8 @@
 
 @import "webspark_megamenu_base";
 
+
+
 /* V1 (Innovation) values */
 $a11y-border: #4D90FE;
 $mm-lighter-gray: #ededed;
@@ -154,6 +156,14 @@ $mm-darker-gray: #2a2a2a;
     border: none;
   }
 
+  .row-fluid {
+    .mega-col-nav .adding-padding {
+      border-right: solid 1px $mm-darker-gray;
+      margin-bottom: -1000px;
+      padding-bottom: 1000px;
+    }
+  }
+
   .tb-megamenu-column-inner {
     h2 {
       display: block;
@@ -200,31 +210,6 @@ $mm-darker-gray: #2a2a2a;
   .mega-nav > li:first-child > a,
   .dropdown-menu .mega-nav > li:first-child > a {
     padding: 8px 15px;
-  }
-  .row-fluid {
-    .span1, .span2, .span3, .span4, .span5, .span6, .span7, .span8, .span9, .span10, .span11 {
-      margin-left: 0;
-    }
-    .span1 {
-      width: 8.33%;
-    }
-    .span2 {
-      width: 16.6677%;
-    }
-    .span3 {
-      width: 25%;
-    }
-    .span4 {
-      width: 33.33%;
-    }
-    .span6 {
-      width: 50%;
-    }
-    .mega-col-nav .adding-padding {
-      border-right: solid 1px $mm-med-gray;
-      margin-bottom: -1000px;
-      padding-bottom: 1000px;
-    }
   }
 
   .tb-megamenu-row.row-fluid.hide-extra-padding {
