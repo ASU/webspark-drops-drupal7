@@ -94,7 +94,6 @@ a,
   border-bottom: 1px solid #8c1d40;
   text-decoration: none;
   color: #8c1d40;
-  transition: all 0.25s ease-in-out 0s;
 }
 a:hover,
 .ui-widget-content a:hover {

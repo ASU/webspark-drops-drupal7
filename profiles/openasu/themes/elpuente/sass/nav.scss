@@ -7,28 +7,34 @@
 /* =NAVBAR -- Part of Main Menu styling! --- NOT DONE
 -------------------------------------------------------------- */
 .navmenu {
-  background-color: #353535;
+  border-bottom: 1px solid $ws2-gray-lighter;
   .container {
     padding-left: 0;
+    padding-right: 0;
   }
 }
 .nav > li > a {
   display: inline-block;
 }
+
+.navbar-nav {
+
+}
+
 .navbar-nav > li > a {
-  color: #ededed;
-  font-size: 16px;
-  font-weight: normal;
-  line-height: 1;
-  padding: 20px 25px 20px 25px;
+  //color: #ededed;
+  //font-size: 1rem;
+  //font-weight: normal;
+  //line-height: 1;
+  //padding: 20px 25px 20px 25px;
 }
 .navbar-nav > li.dropdown > a {
-  padding: 20px 0 20px 25px;
+  //padding: 20px 0 20px 25px;
 }
 .navbar-nav > .active,
 .navbar-nav > .active > a {
-  background-color: #000;
-  color: #ededed;
+  //background-color: #000;
+  //color: #ededed;
 }
 .navbar-nav > li:hover > a,
 .navbar-nav > li:focus > a,
@@ -41,19 +47,20 @@
 .nav .open > a:focus,
 .navbar-nav > .active > a:hover,
 .navbar-nav > .active > a:focus {
-  background-color: #000;
-  color: $ws2-gold;
+  //background-color: #000;
+  //color: $ws2-gold;
 }
 .navbar-nav > li > a.dropdown-toggle {
-  padding: 20px 25px 20px 7px;
+  //padding: 20px 25px 20px 7px;
 }
 .caret {
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 6px solid;
-  margin-left: 2px;
+//  border-left: 6px solid transparent;
+//  border-right: 6px solid transparent;
+//  border-top: 6px solid;
+//  margin-left: 2px;
 }
 .navbar-nav .dropdown-menu {
+  /*
   background-color: $ws2-gray-darkest;
   border: 1px solid $ws2-gray-darkest;
   & > li > a  {
@@ -68,6 +75,7 @@
       color: $ws2-gold;
     }
   }
+  */
 }
 
 .navbar-nav > li:focus > a,
@@ -76,9 +84,9 @@
 .nav .open > a:focus,
 .navbar-nav > .active > a:focus
 .navbar-nav .dropdown-menu > li > a:focus {
-  outline: 0.125em solid $input-border-focus;
-  -webkit-box-shadow: 0 0 0.3125em  $input-border-focus;
-  box-shadow: 0 0 0.3125em  $input-border-focus;
+  //outline: 0.125em solid $input-border-focus;
+  //-webkit-box-shadow: 0 0 0.3125em  $input-border-focus;
+  //box-shadow: 0 0 0.3125em  $input-border-focus;
 }
 
 /* =SIDEBAR MENUS --- NOT DONE
@@ -396,18 +404,21 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
     &:last-child > a,
     &:last-child > span {
     }*/
-    & > a:hover, .pagination > li > a:focus,
+    & > a:hover,
     & > span:hover,
-    & > span:focus {
+    & > span:focus,
+    .pagination > li > a:focus {
       color: $link-hover-color;
       background-color: $ws2-gray-lightest;
       border-color: $gray-alt-admin;
     }
   }
-  & > .active > a, .pagination > .active > a:hover, .pagination > .active > a:focus,
+  & > .active > a,
   & > .active > span,
   & > .active > span:hover,
-  & > .active > span:focus {
+  & > .active > span:focus,
+  .pagination > .active > a:hover,
+  .pagination > .active > a:focus {
     z-index: 2;
     color: #fff;
     background-color: $ws2-maroon;
@@ -433,15 +444,6 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
     font-size: 1.25em;
     border-radius: $border-radius-circle;
   }
-/*
-  &:first-child > a,
-  &:first-child > span {
-  }
-
-  &:last-child > a,
-  &:last-child > span {
-  }
- */
 }
 .pagination-sm > li {
   font-size: 1em;
@@ -451,14 +453,6 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
     font-size: 1em;
     border-radius: $border-radius-circle;
   }
-  /*
-  &:first-child > a,
-  &:first-child > span {
-  }
-  &:last-child > a,
-  &:last-child > span {
-  }
-  */
 }
 .pager {
   padding-left: 0;
