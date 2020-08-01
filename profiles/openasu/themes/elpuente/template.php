@@ -675,11 +675,11 @@ function elpuente_preprocess_maintenance_page(&$variables) {
 }
 
 /**
- * Adds site name to the TB Megamenu nav TPL
+ * Adds site name (and unit name if set) to the TB Megamenu nav TPL
  *
  * @param $variables
  */
 function elpuente_preprocess_tb_megamenu_nav(&$variables) {
-  $site_name = variable_get('site_name', 'Set your site name!');
-  $variables['site_name'] = check_plain($site_name);
+  $variables['site_name'] = check_plain(variable_get('site_name', 'Set your site name!'));
+  $variables['site_unit_name'] = check_plain(variable_get('site_unit_name', ''));;
 }

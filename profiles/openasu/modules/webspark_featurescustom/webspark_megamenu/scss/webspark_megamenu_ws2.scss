@@ -20,12 +20,6 @@ $ws2-gray-lightest:      #fafafa;
 /** Selectors
 -------------------------------------------------------------- */
 
-// ASU header logo
-.ws2-global-header-logo {
-  float: left;
-  margin-right: 1.125rem;
-}
-
 // Container for menu
 .navmenu {
   position: relative;
@@ -33,25 +27,38 @@ $ws2-gray-lightest:      #fafafa;
   margin-bottom: -1px;
 }
 
+//////////////////////////////
 // Global TB Megamenu styling
-
+//////////////////////////////
 .tb-megamenu {
+  padding-top: 0.5rem;
   background-color: white;
   font-size: 1rem;
+
   // Global header LOGO
   .ws2-global-header-logo {
+    float: left;
+    margin-right: 1.125rem;
     margin-top: 0.5rem;
     & > a {
       border-bottom: none !important;
     }
   }
-  // Subdomain title
-  .ws2-global-header-title,
-  .subdomain-name {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+  // Unit name
+  .ws2-global-header-unit {
     font-weight: 700;
   }
+  // Subdomain name (site title)
+  .ws2-global-header-title,
+  .subdomain-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+
+    &.ws2-no-unit-name {
+      font-size: 2rem;
+    }
+  }
+
   // Home icon
   .fa.fa-home.icon-white {
     margin-right: 0;
@@ -60,173 +67,163 @@ $ws2-gray-lightest:      #fafafa;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
   }
+
   // border/background of submenus
   .mega > .mega-dropdown-menu {
     min-width: 200px;
     display: block;
     overflow: hidden;
     clip: rect(0 0 0 0);
-    height: 1px; width: 1px;
-    margin: -1px; padding: 0; border: 0;
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
   }
 
   &.tb-megamenu-main-menu .collapse {
     display: block;
   }
-  .mega-inner, .span12.mega-col-nav .mega-inner {
+
+  .mega-inner,
+  .span12.mega-col-nav .mega-inner {
     padding: 0;
   }
 
   .nav {
-
-    // Adds Chevron (arrow down) - Currently using FA 4.x
     li {
+      &.active a:after {
+        @include megamenu-active-style();
+      }
+
+      // Adds Chevron (arrow down) - Currently using FA 4.x
       &.dropdown {
         > .dropdown-toggle .fa-chevron-down {
           font-size: 0.75rem;
           vertical-align: 2px;
         }
+
         .level-2 .fa-chevron-down {
           display: none;
+        }
+
+        &.open {
+          & > .dropdown-toggle,
+          &.active > .dropdown-toggle {
+            @include megamenu-default-style();
+          }
         }
       }
     }
 
     // Top-level menu elements
-    & > li > a {
-      padding: 0.5rem 0.75rem;
-      margin-right: 0.5rem;
-      font-size: 16px;
-      font-weight: 400; //normal
-      line-height: 1.5;
-      color: $mm-darkest-gray;
-      &::after {
-        content: '';
-        position: relative;
-        display: block;
-        height: 0.5rem;
-        background-color: $asu-gold;
-        width: 0;
-        transition: 0.5s cubic-bezier(0.19, 1, 0.19, 1);
-        bottom: -0.5rem;
-        left: -0.5rem;
-      }
-      &:hover::after {
-        @include megamenu-active-style();
-      }
-    }
-    li.active a::after {
-      @include megamenu-active-style();
-    }
-    li.dropdown.open {
-      & > .dropdown-toggle,
-      &.active > .dropdown-toggle {
-        @include megamenu-default-style();
-      }
-    }
-
-
-
     & > {
-      li > a:focus,
-      .active > a:focus {
-        @include megamenu-default-style();
-      }
-      li {
+      li,
+      .active {
+        & > a:hover,
+        & > a:focus {
+          @include megamenu-default-style();
+        }
+
         &.dropdown.open.active {
           & > a:hover,
-          > a:focus {
+          & > a:focus {
             @include megamenu-default-style();
           }
         }
-        & > a:hover {
-          @include megamenu-default-style();
+      }
+      li > a {
+        padding: 0.5rem 0.75rem;
+        margin-right: 0.5rem;
+        font-size: 16px;
+        font-weight: 400; //normal
+        line-height: 1.5;
+        color: $mm-darkest-gray;
+        // Yellow bottom of top-level elements
+        &:after {
+          content: '';
+          position: relative;
+          display: block;
+          height: 0.5rem;
+          background-color: $asu-gold;
+          width: 0;
+          transition: 0.5s cubic-bezier(0.19, 1, 0.19, 1);
+          bottom: -0.5rem;
+          left: -0.5rem;
+        }
+        &:hover::after {
+          @include megamenu-active-style();
         }
       }
-      .active > a:hover {
-        @include megamenu-default-style();
-      }
     }
-
-
-
   }
 
-  .dropdown-menu .mega-nav > li a {
-    padding: 0;
-  }
-
-  .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child,
-  .nav li.dropdown.active > .dropdown-toggle,
-  li.tb-megamenu-item.mega.active a {
-    @include megamenu-default-style();
-    font-size: 1rem;
-    border: none;
-  }
-
-  li.tb-megamenu-item.mega {
-    a {
+  .tb-megamenu-item {
+    // Main submenu padding
+    &.dropdown .dropdown-menu > div:first-child {
+      padding: 1rem 2rem 2rem 2rem;
+    }
+    .tb-megamenu-row .tb-megamenu-column .tb-megamenu-column-inner:not(:first-child) {
+      margin-left: 1.5rem;
+    }
+    .tb-megamenu-row .tb-megamenu-column .tb-megamenu-column-inner .tb-megamenu-column-inner {
       border: none;
     }
 
-    // Submenu container styling
-    &.level-1 > .tb-megamenu-submenu.dropdown-menu {
-      border: 1px solid $ws2-gray-light;
-      border-top: none;
-      margin-top: 0;
-    }
-    &.active {
+
+    &.mega {
+      // Eliminates all default <a> borders
       a {
-        @include megamenu-default-style();
-        font-size: 1rem;
+        border: none;
       }
-      .mega-dropdown-inner a {
-        font-weight: normal;
-      }
-      .tb-megamenu-submenu li {
-        a,
-        &.active a {
+      // Submenu container styling
+      &.active {
+        a:not(.mega-group-title) {
           @include megamenu-default-style();
-          font-size: 1rem;
-          &:hover {
-            color: $ws2-maroon;
+        }
+        .tb-megamenu-submenu li {
+          a:not(.mega-group-title),
+          &.active a:not(.mega-group-title) {
+            @include megamenu-default-style();
+            &:hover {
+              color: $ws2-maroon;
+            }
           }
         }
       }
-    }
 
-    // Submenu links
-    .tb-megamenu-submenu {
-      li > a:focus,
-      .active > a:focus {
-        @include megamenu-default-style(#ffffff, $ws2-maroon, yes, yes);
+      // @TODO remove when completed
+      &.level-1 > .tb-megamenu-submenu.dropdown-menu {
+        border: 1px solid $ws2-gray-light;
+        border-top: none;
+        margin-top: 0;
       }
-      li {
-        &.dropdown.open.active {
-          & > a:hover, > a:focus {
+      // END REMOVE when completed
+
+      // Submenu links
+      .tb-megamenu-submenu {
+        box-shadow: none;
+        li,
+        .active {
+          &.dropdown.open.active {
+            & > a:hover:not(.mega-group-title),
+            & > a:focus:not(.mega-group-title) {
+              @include megamenu-default-style(#ffffff, $ws2-maroon, yes, yes);
+            }
+          }
+          & > a:hover:not(.mega-group-title),
+          & > a:focus:not(.mega-group-title) {
             @include megamenu-default-style(#ffffff, $ws2-maroon, yes, yes);
           }
         }
-        & > a:hover {
-          @include megamenu-default-style(#ffffff, $ws2-maroon, yes, yes);
-        }
       }
-      .active > a:hover {
-        @include megamenu-default-style(#ffffff, $ws2-maroon, yes, yes);
+      .mega-dropdown-inner a {
+        height: 100%;
       }
-    }
-
-    .mega-dropdown-inner a {
-      height: 100%;
-    }
-    .tb-megamenu-column-inner.mega-inner.clearfix {
-      font-weight: normal;
     }
   }
 
-  .tb-megamenu-submenu,
   .dropdown-menu.mega-dropdown-menu.nav-child {
-    padding: 10px 0;
     box-shadow: none;
   }
 
@@ -234,18 +231,14 @@ $ws2-gray-lightest:      #fafafa;
   ul.tb-megamenu-subnav.mega-nav a {
     clear: both;
     display: inline;
-    //padding: 9px 10px 10px 25px !important;
-    //font-size: 16px;
     font-weight: normal;
-    //line-height: 1;
     @include megamenu-default-style();
-    //border-bottom: 0;
   }
 
-  .row-fluid + .row-fluid {
-    border: none;
-  }
   .row-fluid {
+    & + .row-fluid {
+      border: none;
+    }
     .mega-col-nav .adding-padding {
       border-right: solid 1px $mm-darker-gray;
       margin-bottom: -1000px;
@@ -254,14 +247,14 @@ $ws2-gray-lightest:      #fafafa;
   }
 
   .tb-megamenu-column-inner {
-    h2 {
+    h2 { // Block title??
+      @include megamenu-default-style();
       display: block;
       clear: both;
       padding: 0.5rem 0.5rem 0.5rem 1.5625rem;
       font-size: 1rem;
       font-weight: bold;
       line-height: 1;
-      @include megamenu-default-style();
       border-bottom: 0;
       margin-bottom: 0;
       white-space: nowrap;
@@ -271,25 +264,27 @@ $ws2-gray-lightest:      #fafafa;
     }
   }
 
-  .tb-megamenu-column-inner .block-inner h2,
-  .block-inner .menu.clearfix a {
-    padding: 0.5rem !important;
-  }
-
   .dropdown-menu {
-    padding: 32px;
+    padding: 2rem;
     li {
       padding: 0.5rem 0;
       & > a {
-        &:hover,
-        &:focus {
+        &:hover:not(.mega-group-title),
+        &:focus:not(.mega-group-title) {
           @include megamenu-default-style(#ffffff, $ws2-maroon, yes, yes);
         }
       }
     }
+    .mega-nav > li {
+      a,
+      &:first-child > a {
+        padding: 0;
+      }
+    }
   }
-  .dropdown-submenu:hover > a,
-  .dropdown-menu .active > a:hover {
+
+  .dropdown-submenu:hover > a:not(.mega-group-title),
+  .dropdown-menu .active > a:hover:not(.mega-group-title) {
     @include megamenu-default-style(#ffffff, $ws2-maroon, yes, yes);
   }
 
@@ -297,60 +292,67 @@ $ws2-gray-lightest:      #fafafa;
     position: absolute;
     top: -5px;
   }
+
   .block-inner {
     padding: 0 1rem;
   }
 
-  .mega-nav > li:first-child > a,
-  .dropdown-menu .mega-nav > li:first-child > a {
+  .mega-nav > li:first-child > a {
     padding: 0;
   }
 
-  .tb-megamenu-row.row-fluid.hide-extra-padding {
-    overflow: hidden;
-    .tb-megamenu-column:last-child .tb-megamenu-block.adding-padding {
-      border-right: none;
+  .tb-megamenu-row {
+    &.row-fluid {
+      &.hide-extra-padding {
+        overflow: hidden;
+
+        .tb-megamenu-column:last-child .tb-megamenu-block.adding-padding {
+          border-right: none;
+        }
+      }
     }
   }
+
   .tb-megamenu-column.mega-col-nav:last-child {
     border-right: none;
   }
 
-  .tb-megamenu-submenu {
-    border: none;
-  }
   .tb-megamenu-nav {
     & > li > .tb-megamenu-submenu > .mega-dropdown-inner > .tb-megamenu-row > .tb-megamenu-column:not(:first-child) {
       border-left: 1px solid $mm-light-gray;
+      padding-left: 1.33rem;
     }
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  ul.tb-megamenu-subnav {
+  .tb-megamenu-subnav {
     a {
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-    //& > .dropdown-submenu .tb-megamenu-submenu.dropdown-menu.mega-dropdown-menu.nav-child {
-    //  border-color: $mm-darker-gray;
-    //  a {
-    //    border-color: $mm-darker-gray;
-    //    &:hover {
-    //    }
-    //  }
-    //}
   }
 
+  // Mega Group Title link styling
   .mega-nav .mega-group > .mega-group-title,
-  .dropdown-menu .mega-nav .mega-group > .mega-group-title {
-    text-transform: none;
-    font-size: 1rem;
+  .dropdown-menu .mega-nav .mega-group > .mega-group-title,
+  .dropdown-menu .active .mega-nav .mega-group > .mega-group-title {
+    @include megamenu-group-title-style();
+    &:hover,
+    &:focus {
+      @include megamenu-group-title-style-hover();
+    }
   }
-  .dropdown-menu li > a:focus {
-    @include megamenu-focus-style();
-  }
-  .dropdown-menu .mega-nav .mega-group > a.mega-group-title {
-    font-weight: normal;
-    color: $asu-gold;
+
+  .dropdown-menu {
+    li > a:focus {
+      @include megamenu-focus-style();
+    }
+    .mega-group > a.mega-group-title {
+      @include megamenu-group-title-style();
+      &:hover,
+      &:focus {
+        @include megamenu-group-title-style-hover();
+      }
+    }
   }
 }

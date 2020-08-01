@@ -38,3 +38,18 @@ function webspark_megamenu_libraries_info() {
   );
   return $libraries;
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function webspark_megamenu_form_system_site_information_settings_alter(&$form, &$form_state, $form_id) {
+  // Adds unit title to /admin/config/system/site-information
+  $form['site_information']['site_unit_name'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Unit name',
+    '#default_value' => variable_get('site_unit_name', ''),
+    '#description' => 'Parent unit at ASU. This will appear in the global header above the subdomain (site name). (Optional)',
+    '#weight' => -1,
+  );
+  $form['site_information']['site_name']['#weight'] = -2;
+}
