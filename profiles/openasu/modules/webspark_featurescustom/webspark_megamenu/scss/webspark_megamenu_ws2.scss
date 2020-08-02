@@ -20,6 +20,18 @@ $ws2-gray-lightest:      #fafafa;
 /** Selectors
 -------------------------------------------------------------- */
 
+#ASUNavMenu {
+  background-color: #fff;
+  &.sticky-menu {
+    .ws2-global-header-unit {
+      display: none;
+    }
+    .ws2-global-header-title {
+      font-size: 1.5rem;
+    }
+  }
+}
+
 // Container for menu
 .navmenu {
   position: relative;
@@ -31,7 +43,7 @@ $ws2-gray-lightest:      #fafafa;
 // Global TB Megamenu styling
 //////////////////////////////
 .tb-megamenu {
-  padding-top: 0.5rem;
+  padding-top: 1rem;
   background-color: white;
   font-size: 1rem;
 
@@ -45,14 +57,23 @@ $ws2-gray-lightest:      #fafafa;
     }
   }
   // Unit name
-  .ws2-global-header-unit {
+  .ws2-global-header-unit,
+  .ws2-global-header-title {
     font-weight: 700;
+    a {
+      color: $mm-darkest-gray;
+      border-bottom: none;
+      &:focus,
+      &:hover {
+        //border-bottom: 2px solid $mm-darkest-gray;
+        text-decoration: underline $mm-darkest-gray;
+      }
+    }
   }
   // Subdomain name (site title)
   .ws2-global-header-title,
   .subdomain-name {
     font-size: 1.5rem;
-    font-weight: 700;
 
     &.ws2-no-unit-name {
       font-size: 2rem;
@@ -123,12 +144,14 @@ $ws2-gray-lightest:      #fafafa;
         & > a:hover,
         & > a:focus {
           @include megamenu-default-style();
+          @include megamenu-transition();
         }
 
         &.dropdown.open.active {
           & > a:hover,
           & > a:focus {
             @include megamenu-default-style();
+            @include megamenu-transition();
           }
         }
       }
@@ -147,7 +170,7 @@ $ws2-gray-lightest:      #fafafa;
           height: 0.5rem;
           background-color: $asu-gold;
           width: 0;
-          transition: 0.5s cubic-bezier(0.19, 1, 0.19, 1);
+          @include megamenu-transition();
           bottom: -0.5rem;
           left: -0.5rem;
         }
@@ -353,6 +376,19 @@ $ws2-gray-lightest:      #fafafa;
       &:focus {
         @include megamenu-group-title-style-hover();
       }
+    }
+  }
+
+  /* 100% wide, white background on megamenu open/hover event */
+  .tb-megamenu-item.level-1.mega.mega-align-justify.dropdown > .tb-megamenu-submenu {
+    width: 100vw;
+    background-color: yellow !important;
+    padding: 0 200px;
+    margin-left: -200px;
+    & > .mega-dropdown-inner {
+      max-width: 1140px;
+      // margin properties remove the cubic-bezier transition /* margin: 0 auto; */
+      position: sticky;
     }
   }
 }

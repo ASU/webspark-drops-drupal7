@@ -22,7 +22,7 @@ $tb_mm_admin_padding: 2.12766%; // TB Megamenu admin padding % to subtract
     color: $color;
   }
   @if $link == 'yes' {
-    border-bottom: 1px solid $ws2-maroon;
+    text-decoration: underline $ws2-maroon;
   }
 }
 
@@ -53,12 +53,16 @@ $tb_mm_admin_padding: 2.12766%; // TB Megamenu admin padding % to subtract
   padding-left: 0;
   margin-bottom: 1rem;
   display: block;
-  border: none;
+  text-decoration: none;
   cursor: default !important;
 }
 @mixin megamenu-group-title-style-hover() {
-  border-bottom: none !important;
+  text-decoration: none !important;
   color: $mm-darkest-gray !important;
+}
+
+@mixin megamenu-transition() {
+  transition: all 0.5s cubic-bezier(.19, 1, .19, 1) 0s;
 }
 
 /* Universal markup

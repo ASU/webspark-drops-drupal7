@@ -680,6 +680,25 @@ function elpuente_preprocess_maintenance_page(&$variables) {
  * @param $variables
  */
 function elpuente_preprocess_tb_megamenu_nav(&$variables) {
+  // Build site name
+  global $base_url;
+  $variables['site_url'] = $base_url;
   $variables['site_name'] = check_plain(variable_get('site_name', 'Set your site name!'));
-  $variables['site_unit_name'] = check_plain(variable_get('site_unit_name', ''));;
+  $variables['site_name_output'] = l($variables['site_name'], $variables['site_url']);
+  // Build unit name
+  $site_unit_name = check_plain(variable_get('site_unit_name', ''));
+  if (isset($site_unit_name) && !empty($site_unit_name)) {
+    $variables['site_name_extra_class'] = 'ws2-has-unit-name';
+    $variables['site_unit_name'] = $site_unit_name;
+    // Unit URL
+    $site_unit_url = check_plain(variable_get('site_unit_url', ''));
+    if (!empty($site_unit_url) && (valid_url($site_unit_url))) {
+      $variables['site_unit_output'] = l($site_unit_name, $site_unit_url);
+    } else {
+      $variables['site_unit_output'] = $site_unit_name;
+    }
+  } else {
+    $variables['site_name_extra_class'] = 'ws2-no-unit-name';
+    $variables['site_unit_name'] = '';
+  }
 }
