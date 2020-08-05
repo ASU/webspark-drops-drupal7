@@ -3,6 +3,7 @@
  * IS_SCSS
  */
 @import "variables";
+@import "mixins/global";
 
 /*
  * Custom Web standard styles
@@ -118,23 +119,35 @@ a.btn, .btn {
   }
 }
 
-a.btn-secondary, .btn-secondary a,
-a.btn-gold, .btn-gold a
-{
-  color: $ws2-gray-darkest;
-  border-bottom-color: $ws2-gold;
-}
-
-a.btn-blue, .btn-blue a,
+a.btn-default, .btn-default a,
 a.btn-primary, .btn-primary a {
   color: #fff;
   border-bottom-color: $ws2-maroon;
+  &:hover {
+    color: #fff;
+    border-bottom-color: $ws2-maroon;
+  }
 }
 
-a.btn-blue:hover, .btn-blue a:hover,
-a.btn-primary:hover, .btn-primary a:hover {
+a.btn-secondary, .btn-secondary a,
+a.btn-blue, .btn-blue a {
+  color: $ws2-gray-darkest;
+  border-bottom-color: transparent;
+  border-bottom: none;
+  &:hover {
+    color: $ws2-gray-darkest;
+    border-bottom-color: transparent;
+    border-bottom: none;
+  }
+}
+
+a.btn-gold, .btn-gold a {
   color: #fff;
   border-bottom-color: $ws2-maroon;
+  &:hover {
+    color: #fff;
+    border-bottom-color: $ws2-maroon;
+  }
 }
 
 /* =TYPOGRAPHY --- WS2.0 DONE
@@ -969,13 +982,19 @@ div[class='alert alert-block'] { /* Catch-all for default alert class */
 /* Node edit */
 
 #top-content #tabs .nav-pills {
-  padding-top: 1em;
-  li a {
-    background-color: $ws2-gray-lightest;
-
-    &:hover {
-      background-color: $ws2-gray-lighter;
-      color: #000;
+  padding: 0.5rem;
+  background-color: $ws2-gray-lighter;
+  li {
+    padding-right: 0.5rem;
+    a {
+      @include ws2-global-transition();
+      background-color: $ws2-gray-lightest;
+      &:hover {
+        transform: scale(1.1);
+      }
+      &.active:hover {
+        color: $ws2-gray-lightest;
+      }
     }
   }
   & > li.active > a {

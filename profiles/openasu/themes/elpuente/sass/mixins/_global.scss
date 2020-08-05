@@ -1,0 +1,5 @@
+/* Global mixin library for multiple or all elements */
+
+@mixin ws2-global-transition() {
+  transition: all 0.5s cubic-bezier(.19, 1, .19, 1) 0s;
+}

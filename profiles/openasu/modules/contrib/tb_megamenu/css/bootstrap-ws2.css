@@ -837,11 +837,11 @@
   margin-bottom: 20px;
   list-style: none;
 }
-.tb-megamenu .nav > li > a {
+#tb-megamenu-admin.tb-megamenu .nav > li > a {
   display: block;
 }
-.tb-megamenu .nav > li > a:hover,
-.tb-megamenu .nav > li > a:focus {
+#tb-megamenu-admin.tb-megamenu .nav > li > a:hover,
+#tb-megamenu-admin.tb-megamenu .nav > li > a:focus {
   text-decoration: none;
   background-color: #eeeeee;
 }
@@ -1044,8 +1044,8 @@
 }
 .tb-megamenu .nav-tabs .open .dropdown-toggle,
 .tb-megamenu .nav-pills .open .dropdown-toggle,
-.tb-megamenu .nav > li.dropdown.open.active > a:hover,
-.tb-megamenu .nav > li.dropdown.open.active > a:focus {
+#tb-megamenu-admin.tb-megamenu .nav > li.dropdown.open.active > a:hover,
+#tb-megamenu-admin.tb-megamenu .nav > li.dropdown.open.active > a:focus {
   color: #ffffff;
   background-color: #999999;
   border-color: #999999;

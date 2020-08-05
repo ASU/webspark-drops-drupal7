@@ -17,7 +17,7 @@
   float: left;
   margin-left: 0;
 }
-.tb-megamenu .nav > li > a {
+#tb-megamenu-admin.tb-megamenu .nav > li > a {
   border-right: 1px solid #222;
   border-top: 0;
   color: #fff;
@@ -25,17 +25,17 @@
   padding: 15px 20px;
   text-shadow: none;
 }
-.tb-megamenu .nav > li > a:focus,
-.tb-megamenu .nav > li > a:hover {
+#tb-megamenu-admin.tb-megamenu .nav > li > a:focus,
+#tb-megamenu-admin.tb-megamenu .nav > li > a:hover {
   background-color: #fff;
   color: #e54e4b;
   text-decoration: none;
   text-shadow: none;
   outline: none;
 }
-.tb-megamenu .nav > .active > a,
-.tb-megamenu .nav > .active > a:hover,
-.tb-megamenu .nav > .active > a:focus {
+#tb-megamenu-admin.tb-megamenu .nav > .active > a,
+#tb-megamenu-admin.tb-megamenu .nav > .active > a:hover,
+#tb-megamenu-admin.tb-megamenu .nav > .active > a:focus {
   background-color: #e54e4b;
   color: #fff;
   text-shadow: none;

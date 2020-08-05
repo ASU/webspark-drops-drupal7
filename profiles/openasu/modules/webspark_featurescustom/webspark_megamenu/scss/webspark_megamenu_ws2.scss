@@ -30,12 +30,15 @@ $ws2-gray-lightest:      #fafafa;
     .ws2-global-header-title {
       font-size: 1.5rem;
     }
+    .ws2-global-header-logo {
+      margin: 0 1.125rem 0.5rem 0;
+    }
   }
-  .navmenu {
-    position: relative;
-    z-index: 200;
-    margin-bottom: -1px;
-  }
+}
+.navmenu {
+  position: relative;
+  z-index: 200;
+  margin-bottom: -1px;
 }
 
 //////////////////////////////
@@ -110,8 +113,9 @@ $ws2-gray-lightest:      #fafafa;
     // Container for every TB Mega menu item
     li.tb-megamenu-item {
       // top level buttons
-      @include megamenu-button-styling();
-
+      .btn {
+        @include megamenu-button-styling();
+      }
       // Yellow bar across the bottom
       &.active:not(.btn) a:after {
         @include megamenu-active-style();
@@ -212,13 +216,12 @@ $ws2-gray-lightest:      #fafafa;
     & > { // .nav
       li,
       .active {
-        @include megamenu-transition();
+        @include ws2-global-transition();
         &:not(.btn) {
           & > a:hover,
           & > a:focus {
             @include megamenu-default-style();
           }
-
           &.dropdown.open.active {
             & > a:hover,
             & > a:focus {
@@ -226,7 +229,12 @@ $ws2-gray-lightest:      #fafafa;
             }
           }
         }
+        &.btn {
+        @include megamenu-button-styling(0.1rem);
+          margin-right: 0.5rem;
+        }
       }
+      // Text (non-button) links
       li:not(.btn) > a {
         padding: 0.5rem 0.75rem;
         margin-right: 0.5rem;
@@ -241,7 +249,7 @@ $ws2-gray-lightest:      #fafafa;
           height: 0.5rem;
           background-color: $asu-gold;
           width: 0;
-          @include megamenu-transition();
+          @include ws2-global-transition();
           bottom: -0.5rem;
           left: -0.5rem;
         }
@@ -278,7 +286,7 @@ $ws2-gray-lightest:      #fafafa;
     &.mega-dropdown-menu.nav-child {
       box-shadow: none;
     }
-    li {
+    li:not(.btn) {
       padding: 0.5rem 0;
       & > a {
         &:focus {
@@ -295,7 +303,6 @@ $ws2-gray-lightest:      #fafafa;
       &:first-child > a {
         padding: 0;
       }
-      @include megamenu-button-styling();
     }
     .mega-group > a.mega-group-title {
       @include megamenu-group-title-style();
@@ -363,7 +370,6 @@ $ws2-gray-lightest:      #fafafa;
           &.clearfix a {
             clear: both;
             display: inline;
-            @include megamenu-default-style();
           }
         }
         .block-inner h2 {
@@ -378,4 +384,11 @@ $ws2-gray-lightest:      #fafafa;
   .block-inner {
     padding: 0 1rem;
   }
+  &#tb-megamenu-admin {
+    .nav > li > a:hover,
+    .nav > li > a:focus {
+      background-color: #e8e8e8;
+    }
+  }
 }
+

@@ -3,6 +3,7 @@
 ------------------------------------------------------------------- */
 
 @import "../../../../themes/elpuente/sass/variables";
+@import "../../../../themes/elpuente/sass/mixins/global";
 
 /* Global values
 ----------------------------------------------------- */
@@ -61,23 +62,19 @@ $tb_mm_admin_padding: 2.12766%; // TB Megamenu admin padding % to subtract
   color: $mm-darkest-gray !important;
 }
 
-@mixin megamenu-transition() {
-  transition: all 0.5s cubic-bezier(.19, 1, .19, 1) 0s;
-}
-
-@mixin megamenu-button-styling() {
-  &.btn {
+// Maybe should be a global mixin??
+@mixin megamenu-button-styling($type: 0.5rem) {
     display: inline-block;
-    margin-top: 0.5rem;
+    margin-top: $type;
     margin-bottom: 0.5rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
     border: none;
     & > a {
+      padding: 0;
       font-weight: bold !important;
       &:hover {
         text-decoration: none !important;
         border-bottom: none !important;
+        color: inherit !important;
       }
     }
     &.btn-primary > a {
@@ -96,7 +93,6 @@ $tb_mm_admin_padding: 2.12766%; // TB Megamenu admin padding % to subtract
       background-color: $asu-gold !important;
       color: $ws2-gray-darkest !important;
     }
-  }
 }
 /* Universal markup
 ----------------------------------------------------- */

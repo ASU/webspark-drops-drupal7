@@ -146,10 +146,10 @@
   list-style: none;
 }
 
-.tb-megamenu .nav > li > a {
+#tb-megamenu-admin.tb-megamenu .nav > li > a {
   display: block;
 }
-.tb-megamenu .nav > li > a:hover {
+#tb-megamenu-admin.tb-megamenu .nav > li > a:hover {
   text-decoration: none;
   background-color: #eee;
 }

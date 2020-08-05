@@ -54,18 +54,18 @@
         var br = true;
         var objs = [{
           fs: 14,
-          pd: 8,
+          pd: 0,
           pds: "0.5rem 0.75rem"
         }, {
           fs: 15,
-          pd: 8,
+          pd: 0,
           pds: "0.5rem 0.75rem"
         }, {
           fs: 16,
-          pd: 8,
+          pd: 0,
           pds: "0.5rem 0.75rem"
         }];
-        var megamenu = document.getElementsByClassName("tb-megamenu-nav")[0];
+        var megamenu = document.getElementsByClassName("tb-megamenu-nav:not(.btn)")[0];
         var carets = 0;
         if (megamenu) {
           carets = megamenu.getElementsByClassName("caret").length * 10;
@@ -83,19 +83,19 @@
         if ((poss[2] + carets) < x) {
           if (typeof(Storage) !== "undefined") {
             localStorage.setItem("asuMegaFont", "16px");
-            localStorage.setItem("asuMegaPadding", "0.5rem 0.75rem");
+            localStorage.setItem("asuMegaPadding", "0 0.5rem");
           }
           return objs[2];
         } else if ((poss[1] + carets) < x) {
           if (typeof(Storage) !== "undefined") {
             localStorage.setItem("asuMegaFont", "15px");
-            localStorage.setItem("asuMegaPadding", "0.5rem 0.75rem");
+            localStorage.setItem("asuMegaPadding", "0 0.5rem");
           }
           return objs[1];
         } else {
           if (typeof(Storage) !== "undefined") {
             localStorage.setItem("asuMegaFont", "14px");
-            localStorage.setItem("asuMegaPadding", "0.5rem 0.75rem");
+            localStorage.setItem("asuMegaPadding", "0 0.5rem");
           }
           return objs[0];
         }

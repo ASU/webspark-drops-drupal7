@@ -39,7 +39,7 @@
   margin-bottom: 0;
   max-width: $btn-max-width;
   min-width: $btn-min-width; // default (not -med)
-  padding: $padding-base-vertical $padding-base-horizontal;
+  padding: $padding-base-vertical/2 $padding-base-horizontal/2;
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
@@ -315,7 +315,7 @@ fieldset[disabled] .btn-black {
 .btn-lg, .btn-group-lg > .btn {
   border-radius: $border-radius-circle;
   font-size: 1em;
-  padding: 0.75em 1.5em;
+  padding: 1em 1.5em;
   min-width: $btn-min-width-lg;
 }
 // Sm == WS2.0 Medium
