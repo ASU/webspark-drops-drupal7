@@ -65,6 +65,39 @@ $tb_mm_admin_padding: 2.12766%; // TB Megamenu admin padding % to subtract
   transition: all 0.5s cubic-bezier(.19, 1, .19, 1) 0s;
 }
 
+@mixin megamenu-button-styling() {
+  &.btn {
+    display: inline-block;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border: none;
+    & > a {
+      font-weight: bold !important;
+      &:hover {
+        text-decoration: none !important;
+        border-bottom: none !important;
+      }
+    }
+    &.btn-primary > a {
+      background-color: $ws2-maroon !important;
+      color: $ws2-gray-lightest !important;
+    }
+    &.btn-black > a {
+      background-color: $ws2-gray-darkest !important;
+      color: $ws2-gray-lightest !important;
+    }
+    &.btn-secondary > a {
+      background-color: $ws2-gray-light !important;
+      color: $ws2-gray-darkest !important;
+    }
+    &.btn-gold > a {
+      background-color: $asu-gold !important;
+      color: $ws2-gray-darkest !important;
+    }
+  }
+}
 /* Universal markup
 ----------------------------------------------------- */
 

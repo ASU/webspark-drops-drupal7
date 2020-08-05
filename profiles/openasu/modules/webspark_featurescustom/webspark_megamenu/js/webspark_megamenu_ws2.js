@@ -25,7 +25,7 @@
               count++;
             });
             var data = calcFits(t, x, count, a);
-            ASUNavMenu.find("li.tb-megamenu-item.level-1.mega").children("a").css({
+            ASUNavMenu.find("li.tb-megamenu-item.level-1.mega:not(.btn)").children("a").css({
               "font-size": data.fs,
               "padding": data.pds,
               "min-height": "3rem"

@@ -58,8 +58,7 @@
 #ASUNavMenu.sticky-menu .ws2-global-header-title {
   font-size: 1.5rem;
 }
-
-.navmenu {
+#ASUNavMenu .navmenu {
   position: relative;
   z-index: 200;
   margin-bottom: -1px;
@@ -69,12 +68,10 @@
   padding-top: 1rem;
   background-color: white;
   font-size: 1rem;
-  /* 100% wide, white background on megamenu open/hover event */
 }
 .tb-megamenu .ws2-global-header-logo {
   float: left;
-  margin-right: 1.125rem;
-  margin-top: 0.5rem;
+  margin: 0.5rem 1.125rem 1rem 0;
 }
 .tb-megamenu .ws2-global-header-logo > a {
   border-bottom: none !important;
@@ -108,7 +105,14 @@
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
 }
-.tb-megamenu .mega > .mega-dropdown-menu {
+.tb-megamenu.tb-megamenu-main-menu .collapse {
+  display: block;
+}
+.tb-megamenu .nav {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.tb-megamenu .nav.mega > .mega-dropdown-menu {
   min-width: 200px;
   display: block;
   overflow: hidden;
@@ -119,53 +123,142 @@
   padding: 0;
   border: 0;
 }
-.tb-megamenu.tb-megamenu-main-menu .collapse {
-  display: block;
+.tb-megamenu .nav li.tb-megamenu-item.btn {
+  display: inline-block;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border: none;
 }
-.tb-megamenu .mega-inner,
-.tb-megamenu .span12.mega-col-nav .mega-inner {
-  padding: 0;
+.tb-megamenu .nav li.tb-megamenu-item.btn > a {
+  font-weight: bold !important;
 }
-.tb-megamenu .nav li.active a:after {
+.tb-megamenu .nav li.tb-megamenu-item.btn > a:hover {
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+.tb-megamenu .nav li.tb-megamenu-item.btn.btn-primary > a {
+  background-color: #8c1d40 !important;
+  color: #fafafa !important;
+}
+.tb-megamenu .nav li.tb-megamenu-item.btn.btn-black > a {
+  background-color: #191919 !important;
+  color: #fafafa !important;
+}
+.tb-megamenu .nav li.tb-megamenu-item.btn.btn-secondary > a {
+  background-color: #d0d0d0 !important;
+  color: #191919 !important;
+}
+.tb-megamenu .nav li.tb-megamenu-item.btn.btn-gold > a {
+  background-color: #ffc627 !important;
+  color: #191919 !important;
+}
+.tb-megamenu .nav li.tb-megamenu-item.active:not(.btn) a:after {
   width: calc(100% + 16px);
 }
-.tb-megamenu .nav li.dropdown > .dropdown-toggle .fa-chevron-down {
+.tb-megamenu .nav li.tb-megamenu-item.dropdown > .dropdown-toggle .fa-chevron-down {
   font-size: 0.75rem;
   vertical-align: 2px;
 }
-.tb-megamenu .nav li.dropdown .level-2 .fa-chevron-down {
+.tb-megamenu .nav li.tb-megamenu-item.dropdown .level-2 .fa-chevron-down {
   display: none;
 }
-.tb-megamenu .nav li.dropdown.open > .dropdown-toggle, .tb-megamenu .nav li.dropdown.open.active > .dropdown-toggle {
+.tb-megamenu .nav li.tb-megamenu-item.dropdown.open > .dropdown-toggle, .tb-megamenu .nav li.tb-megamenu-item.dropdown.open.active > .dropdown-toggle {
   background-color: #fff;
   background-image: none;
   color: #191919;
 }
-.tb-megamenu .nav > li > a:hover, .tb-megamenu .nav > li > a:focus,
-.tb-megamenu .nav > .active > a:hover,
-.tb-megamenu .nav > .active > a:focus {
+.tb-megamenu .nav li.tb-megamenu-item.dropdown .dropdown-menu > div:first-child {
+  padding: 1rem 2rem 2rem 2rem;
+}
+.tb-megamenu .nav li.tb-megamenu-item.level-2.mega.dropdown-submenu .nav-child {
+  position: absolute;
+  top: -5px;
+}
+.tb-megamenu .nav li.tb-megamenu-item.mega a {
+  border: none;
+}
+.tb-megamenu .nav li.tb-megamenu-item.mega.active:not(.btn) a:not(.mega-group-title) {
   background-color: #fff;
   background-image: none;
   color: #191919;
+}
+.tb-megamenu .nav li.tb-megamenu-item.mega.active:not(.btn) .tb-megamenu-submenu li:not(.btn) a:not(.mega-group-title), .tb-megamenu .nav li.tb-megamenu-item.mega.active:not(.btn) .tb-megamenu-submenu li:not(.btn).active a:not(.mega-group-title) {
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
+}
+.tb-megamenu .nav li.tb-megamenu-item.mega.active:not(.btn) .tb-megamenu-submenu li:not(.btn) a:not(.mega-group-title):hover, .tb-megamenu .nav li.tb-megamenu-item.mega.active:not(.btn) .tb-megamenu-submenu li:not(.btn).active a:not(.mega-group-title):hover {
+  color: #8c1d40;
+}
+.tb-megamenu .nav li.tb-megamenu-item.mega.level-1.mega-align-justify.dropdown > .tb-megamenu-submenu {
+  width: 100vw;
+  background-color: #fff !important;
+  padding: 0 190px;
+  margin-left: -190px;
+}
+.tb-megamenu .nav li.tb-megamenu-item.mega.level-1.mega-align-justify.dropdown > .tb-megamenu-submenu > .mega-dropdown-inner {
+  max-width: 1170px;
+  position: sticky;
+}
+.tb-megamenu .nav li.tb-megamenu-item.mega.level-1 > .tb-megamenu-submenu.dropdown-menu {
+  border: 1px solid #d0d0d0;
+  border-top: none;
+  margin-top: 0;
+}
+.tb-megamenu .nav li.tb-megamenu-item.mega.level-2.mega.dropdown-submenu .nav-child {
+  position: absolute;
+  top: -5px;
+}
+.tb-megamenu .nav li.tb-megamenu-item.mega .tb-megamenu-submenu {
+  box-shadow: none;
+}
+.tb-megamenu .nav li.tb-megamenu-item.mega .tb-megamenu-submenu li.dropdown.open.active > a:hover:not(.mega-group-title), .tb-megamenu .nav li.tb-megamenu-item.mega .tb-megamenu-submenu li.dropdown.open.active > a:focus:not(.mega-group-title),
+.tb-megamenu .nav li.tb-megamenu-item.mega .tb-megamenu-submenu .active.dropdown.open.active > a:hover:not(.mega-group-title),
+.tb-megamenu .nav li.tb-megamenu-item.mega .tb-megamenu-submenu .active.dropdown.open.active > a:focus:not(.mega-group-title) {
+  background-color: #ffffff;
+  background-image: none;
+  color: #8c1d40;
+  text-decoration: underline #8c1d40;
+}
+.tb-megamenu .nav li.tb-megamenu-item.mega .tb-megamenu-submenu li > a:hover:not(.mega-group-title), .tb-megamenu .nav li.tb-megamenu-item.mega .tb-megamenu-submenu li > a:focus:not(.mega-group-title),
+.tb-megamenu .nav li.tb-megamenu-item.mega .tb-megamenu-submenu .active > a:hover:not(.mega-group-title),
+.tb-megamenu .nav li.tb-megamenu-item.mega .tb-megamenu-submenu .active > a:focus:not(.mega-group-title) {
+  background-color: #ffffff;
+  background-image: none;
+  color: #8c1d40;
+  text-decoration: underline #8c1d40;
+}
+.tb-megamenu .nav li.tb-megamenu-item.mega .mega-dropdown-inner a {
+  height: 100%;
+}
+.tb-megamenu .nav > li,
+.tb-megamenu .nav > .active {
   transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s;
 }
-.tb-megamenu .nav > li.dropdown.open.active > a:hover, .tb-megamenu .nav > li.dropdown.open.active > a:focus,
-.tb-megamenu .nav > .active.dropdown.open.active > a:hover,
-.tb-megamenu .nav > .active.dropdown.open.active > a:focus {
+.tb-megamenu .nav > li:not(.btn) > a:hover, .tb-megamenu .nav > li:not(.btn) > a:focus,
+.tb-megamenu .nav > .active:not(.btn) > a:hover,
+.tb-megamenu .nav > .active:not(.btn) > a:focus {
   background-color: #fff;
   background-image: none;
   color: #191919;
-  transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s;
 }
-.tb-megamenu .nav > li > a {
+.tb-megamenu .nav > li:not(.btn).dropdown.open.active > a:hover, .tb-megamenu .nav > li:not(.btn).dropdown.open.active > a:focus,
+.tb-megamenu .nav > .active:not(.btn).dropdown.open.active > a:hover,
+.tb-megamenu .nav > .active:not(.btn).dropdown.open.active > a:focus {
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
+}
+.tb-megamenu .nav > li:not(.btn) > a {
   padding: 0.5rem 0.75rem;
   margin-right: 0.5rem;
   font-size: 16px;
-  font-weight: 400;
   line-height: 1.5;
   color: #191919;
 }
-.tb-megamenu .nav > li > a:after {
+.tb-megamenu .nav > li:not(.btn) > a:after {
   content: '';
   position: relative;
   display: block;
@@ -176,103 +269,40 @@
   bottom: -0.5rem;
   left: -0.5rem;
 }
-.tb-megamenu .nav > li > a:hover::after {
+.tb-megamenu .nav > li:not(.btn) > a:hover::after {
   width: calc(100% + 16px);
 }
-.tb-megamenu .tb-megamenu-item.dropdown .dropdown-menu > div:first-child {
-  padding: 1rem 2rem 2rem 2rem;
+.tb-megamenu .nav > li:not(.btn) > a:not(.btn) {
+  font-weight: 400;
 }
-.tb-megamenu .tb-megamenu-item .tb-megamenu-row .tb-megamenu-column .tb-megamenu-column-inner:not(:first-child) {
-  margin-left: 1.5rem;
+.tb-megamenu .nav > li > .tb-megamenu-submenu > .mega-dropdown-inner > .tb-megamenu-row > .tb-megamenu-column:not(:first-child) {
+  border-left: 1px solid #d0d0d0;
+  padding-left: 1.33rem;
 }
-.tb-megamenu .tb-megamenu-item .tb-megamenu-row .tb-megamenu-column .tb-megamenu-column-inner .tb-megamenu-column-inner {
-  border: none;
-}
-.tb-megamenu .tb-megamenu-item.mega a {
-  border: none;
-}
-.tb-megamenu .tb-megamenu-item.mega.active a:not(.mega-group-title) {
-  background-color: #fff;
-  background-image: none;
-  color: #191919;
-}
-.tb-megamenu .tb-megamenu-item.mega.active .tb-megamenu-submenu li a:not(.mega-group-title), .tb-megamenu .tb-megamenu-item.mega.active .tb-megamenu-submenu li.active a:not(.mega-group-title) {
-  background-color: #fff;
-  background-image: none;
-  color: #191919;
-}
-.tb-megamenu .tb-megamenu-item.mega.active .tb-megamenu-submenu li a:not(.mega-group-title):hover, .tb-megamenu .tb-megamenu-item.mega.active .tb-megamenu-submenu li.active a:not(.mega-group-title):hover {
-  color: #8c1d40;
-}
-.tb-megamenu .tb-megamenu-item.mega.level-1 > .tb-megamenu-submenu.dropdown-menu {
-  border: 1px solid #d0d0d0;
-  border-top: none;
-  margin-top: 0;
-}
-.tb-megamenu .tb-megamenu-item.mega .tb-megamenu-submenu {
-  box-shadow: none;
-}
-.tb-megamenu .tb-megamenu-item.mega .tb-megamenu-submenu li.dropdown.open.active > a:hover:not(.mega-group-title), .tb-megamenu .tb-megamenu-item.mega .tb-megamenu-submenu li.dropdown.open.active > a:focus:not(.mega-group-title),
-.tb-megamenu .tb-megamenu-item.mega .tb-megamenu-submenu .active.dropdown.open.active > a:hover:not(.mega-group-title),
-.tb-megamenu .tb-megamenu-item.mega .tb-megamenu-submenu .active.dropdown.open.active > a:focus:not(.mega-group-title) {
-  background-color: #ffffff;
-  background-image: none;
-  color: #8c1d40;
-  text-decoration: underline #8c1d40;
-}
-.tb-megamenu .tb-megamenu-item.mega .tb-megamenu-submenu li > a:hover:not(.mega-group-title), .tb-megamenu .tb-megamenu-item.mega .tb-megamenu-submenu li > a:focus:not(.mega-group-title),
-.tb-megamenu .tb-megamenu-item.mega .tb-megamenu-submenu .active > a:hover:not(.mega-group-title),
-.tb-megamenu .tb-megamenu-item.mega .tb-megamenu-submenu .active > a:focus:not(.mega-group-title) {
-  background-color: #ffffff;
-  background-image: none;
-  color: #8c1d40;
-  text-decoration: underline #8c1d40;
-}
-.tb-megamenu .tb-megamenu-item.mega .mega-dropdown-inner a {
-  height: 100%;
-}
-.tb-megamenu .dropdown-menu.mega-dropdown-menu.nav-child {
-  box-shadow: none;
-}
-.tb-megamenu .tb-megamenu-column-inner.mega-inner.clearfix a,
-.tb-megamenu ul.tb-megamenu-subnav.mega-nav a {
+.tb-megamenu .nav .tb-megamenu-subnav.mega-nav a {
   clear: both;
   display: inline;
-  font-weight: normal;
   background-color: #fff;
   background-image: none;
   color: #191919;
 }
-.tb-megamenu .row-fluid + .row-fluid {
-  border: none;
-}
-.tb-megamenu .row-fluid .mega-col-nav .adding-padding {
-  border-right: solid 1px #484848;
-  margin-bottom: -1000px;
-  padding-bottom: 1000px;
-}
-.tb-megamenu .tb-megamenu-column-inner h2 {
-  background-color: #fff;
-  background-image: none;
-  color: #191919;
-  display: block;
-  clear: both;
-  padding: 0.5rem 0.5rem 0.5rem 1.5625rem;
-  font-size: 1rem;
-  font-weight: bold;
-  line-height: 1;
-  border-bottom: 0;
-  margin-bottom: 0;
-  white-space: nowrap;
-}
-.tb-megamenu .tb-megamenu-column-inner .block-inner h2 {
-  padding: 0.5rem !important;
+.tb-megamenu .nav .tb-megamenu-subnav a {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 .tb-megamenu .dropdown-menu {
   padding: 2rem;
 }
+.tb-megamenu .dropdown-menu.mega-dropdown-menu.nav-child {
+  box-shadow: none;
+}
 .tb-megamenu .dropdown-menu li {
   padding: 0.5rem 0;
+}
+.tb-megamenu .dropdown-menu li > a:focus {
+  outline: 2px solid #00BAFF;
+  -webkit-box-shadow: 0 0 5px #00BAFF;
+  box-shadow: 0 0 5px #00BAFF;
 }
 .tb-megamenu .dropdown-menu li > a:hover:not(.mega-group-title), .tb-megamenu .dropdown-menu li > a:focus:not(.mega-group-title) {
   background-color: #ffffff;
@@ -283,68 +313,36 @@
 .tb-megamenu .dropdown-menu .mega-nav > li a, .tb-megamenu .dropdown-menu .mega-nav > li:first-child > a {
   padding: 0;
 }
-.tb-megamenu .dropdown-submenu:hover > a:not(.mega-group-title),
-.tb-megamenu .dropdown-menu .active > a:hover:not(.mega-group-title) {
-  background-color: #ffffff;
-  background-image: none;
-  color: #8c1d40;
-  text-decoration: underline #8c1d40;
+.tb-megamenu .dropdown-menu .mega-nav > li.btn {
+  display: inline-block;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border: none;
 }
-.tb-megamenu .tb-megamenu-item.level-2.mega.dropdown-submenu .nav-child {
-  position: absolute;
-  top: -5px;
+.tb-megamenu .dropdown-menu .mega-nav > li.btn > a {
+  font-weight: bold !important;
 }
-.tb-megamenu .block-inner {
-  padding: 0 1rem;
-}
-.tb-megamenu .mega-nav > li:first-child > a {
-  padding: 0;
-}
-.tb-megamenu .tb-megamenu-row.row-fluid.hide-extra-padding {
-  overflow: hidden;
-}
-.tb-megamenu .tb-megamenu-row.row-fluid.hide-extra-padding .tb-megamenu-column:last-child .tb-megamenu-block.adding-padding {
-  border-right: none;
-}
-.tb-megamenu .tb-megamenu-column.mega-col-nav:last-child {
-  border-right: none;
-}
-.tb-megamenu .tb-megamenu-nav {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-.tb-megamenu .tb-megamenu-nav > li > .tb-megamenu-submenu > .mega-dropdown-inner > .tb-megamenu-row > .tb-megamenu-column:not(:first-child) {
-  border-left: 1px solid #d0d0d0;
-  padding-left: 1.33rem;
-}
-.tb-megamenu .tb-megamenu-subnav a {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-.tb-megamenu .mega-nav .mega-group > .mega-group-title,
-.tb-megamenu .dropdown-menu .mega-nav .mega-group > .mega-group-title,
-.tb-megamenu .dropdown-menu .active .mega-nav .mega-group > .mega-group-title {
-  text-transform: none;
-  font-weight: 700;
-  font-size: 1.5rem;
-  padding-left: 0;
-  margin-bottom: 1rem;
-  display: block;
-  text-decoration: none;
-  cursor: default !important;
-}
-.tb-megamenu .mega-nav .mega-group > .mega-group-title:hover, .tb-megamenu .mega-nav .mega-group > .mega-group-title:focus,
-.tb-megamenu .dropdown-menu .mega-nav .mega-group > .mega-group-title:hover,
-.tb-megamenu .dropdown-menu .mega-nav .mega-group > .mega-group-title:focus,
-.tb-megamenu .dropdown-menu .active .mega-nav .mega-group > .mega-group-title:hover,
-.tb-megamenu .dropdown-menu .active .mega-nav .mega-group > .mega-group-title:focus {
+.tb-megamenu .dropdown-menu .mega-nav > li.btn > a:hover {
   text-decoration: none !important;
+  border-bottom: none !important;
+}
+.tb-megamenu .dropdown-menu .mega-nav > li.btn.btn-primary > a {
+  background-color: #8c1d40 !important;
+  color: #fafafa !important;
+}
+.tb-megamenu .dropdown-menu .mega-nav > li.btn.btn-black > a {
+  background-color: #191919 !important;
+  color: #fafafa !important;
+}
+.tb-megamenu .dropdown-menu .mega-nav > li.btn.btn-secondary > a {
+  background-color: #d0d0d0 !important;
   color: #191919 !important;
 }
-.tb-megamenu .dropdown-menu li > a:focus {
-  outline: 2px solid #00BAFF;
-  -webkit-box-shadow: 0 0 5px #00BAFF;
-  box-shadow: 0 0 5px #00BAFF;
+.tb-megamenu .dropdown-menu .mega-nav > li.btn.btn-gold > a {
+  background-color: #ffc627 !important;
+  color: #191919 !important;
 }
 .tb-megamenu .dropdown-menu .mega-group > a.mega-group-title {
   text-transform: none;
@@ -360,13 +358,80 @@
   text-decoration: none !important;
   color: #191919 !important;
 }
-.tb-megamenu .tb-megamenu-item.level-1.mega.mega-align-justify.dropdown > .tb-megamenu-submenu {
-  width: 100vw;
-  background-color: yellow !important;
-  padding: 0 200px;
-  margin-left: -200px;
+.tb-megamenu .dropdown-menu .mega-nav .mega-group > .mega-group-title,
+.tb-megamenu .dropdown-menu .active .mega-nav .mega-group > .mega-group-title {
+  text-transform: none;
+  font-weight: 700;
+  font-size: 1.5rem;
+  padding-left: 0;
+  margin-bottom: 1rem;
+  display: block;
+  text-decoration: none;
+  cursor: default !important;
 }
-.tb-megamenu .tb-megamenu-item.level-1.mega.mega-align-justify.dropdown > .tb-megamenu-submenu > .mega-dropdown-inner {
-  max-width: 1140px;
-  position: sticky;
+.tb-megamenu .dropdown-menu .mega-nav .mega-group > .mega-group-title:hover, .tb-megamenu .dropdown-menu .mega-nav .mega-group > .mega-group-title:focus,
+.tb-megamenu .dropdown-menu .active .mega-nav .mega-group > .mega-group-title:hover,
+.tb-megamenu .dropdown-menu .active .mega-nav .mega-group > .mega-group-title:focus {
+  text-decoration: none !important;
+  color: #191919 !important;
+}
+.tb-megamenu .dropdown-menu .active > a:hover:not(.mega-group-title),
+.tb-megamenu .dropdown-menu .dropdown-submenu:hover > a:not(.mega-group-title) {
+  background-color: #ffffff;
+  background-image: none;
+  color: #8c1d40;
+  text-decoration: underline #8c1d40;
+}
+.tb-megamenu .tb-megamenu-row.row-fluid + .row-fluid {
+  border: none;
+}
+.tb-megamenu .tb-megamenu-row.row-fluid .mega-col-nav .adding-padding {
+  border-right: solid 1px #484848;
+  margin-bottom: -1000px;
+  padding-bottom: 1000px;
+}
+.tb-megamenu .tb-megamenu-row.row-fluid.hide-extra-padding {
+  overflow: hidden;
+}
+.tb-megamenu .tb-megamenu-row.row-fluid.hide-extra-padding .tb-megamenu-column:last-child .tb-megamenu-block.adding-padding {
+  border-right: none;
+}
+.tb-megamenu .tb-megamenu-row .tb-megamenu-column.mega-col-nav:last-child {
+  border-right: none;
+}
+.tb-megamenu .tb-megamenu-row .tb-megamenu-column .tb-megamenu-column-inner h2 {
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
+  display: block;
+  clear: both;
+  padding: 0.5rem 0.5rem 0.5rem 1.5625rem;
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1;
+  border-bottom: 0;
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+.tb-megamenu .tb-megamenu-row .tb-megamenu-column .tb-megamenu-column-inner:not(:first-child) {
+  margin-left: 1.5rem;
+}
+.tb-megamenu .tb-megamenu-row .tb-megamenu-column .tb-megamenu-column-inner.mega-inner {
+  padding: 0;
+}
+.tb-megamenu .tb-megamenu-row .tb-megamenu-column .tb-megamenu-column-inner.mega-inner.clearfix a {
+  clear: both;
+  display: inline;
+  background-color: #fff;
+  background-image: none;
+  color: #191919;
+}
+.tb-megamenu .tb-megamenu-row .tb-megamenu-column .tb-megamenu-column-inner .block-inner h2 {
+  padding: 0.5rem !important;
+}
+.tb-megamenu .tb-megamenu-row .tb-megamenu-column .tb-megamenu-column-inner .tb-megamenu-column-inner {
+  border: none;
+}
+.tb-megamenu .block-inner {
+  padding: 0 1rem;
 }
