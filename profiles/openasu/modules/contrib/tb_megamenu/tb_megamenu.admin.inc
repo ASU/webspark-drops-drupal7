@@ -65,8 +65,11 @@ function tb_megamenu_configure_form($form, &$form_state, $menu_names = array()) 
       'type' => 'external'
     ));
   }
-  tb_megamenu_add_css(drupal_get_path('module', 'tb_megamenu') . '/css/bootstrap.css');
-  tb_megamenu_add_css(drupal_get_path('module', 'tb_megamenu') . '/css/base.css');
+// TODO Check for El Puente
+//  tb_megamenu_add_css(drupal_get_path('module', 'tb_megamenu') . '/css/bootstrap.css');
+  tb_megamenu_add_css(drupal_get_path('module', 'tb_megamenu') . '/css/bootstrap-ws2.css');
+//  tb_megamenu_add_css(drupal_get_path('module', 'tb_megamenu') . '/css/base.css');
+  tb_megamenu_add_css(drupal_get_path('module', 'tb_megamenu') . '/css/base-ws2.css');
   tb_megamenu_add_css(drupal_get_path('module', 'tb_megamenu') . '/css/admin.css');
   tb_megamenu_add_css(drupal_get_path('module', 'tb_megamenu') . '/css/backend.css');
   if($lib_chosen_existed && !empty($lib_chosen['js'])) {

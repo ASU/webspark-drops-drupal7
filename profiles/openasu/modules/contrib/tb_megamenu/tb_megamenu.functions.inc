@@ -589,10 +589,15 @@ function tb_megamenu_replace_css() {
   $files = array(
     drupal_get_path('module', 'tb_megamenu') . '/css/admin.css',
     drupal_get_path('module', 'tb_megamenu') . '/css/backend.css',
-    drupal_get_path('module', 'tb_megamenu') . '/css/base.css',
-    drupal_get_path('module', 'tb_megamenu') . '/css/bootstrap.css',
+// TODO - Check for El Puente
+
+//    drupal_get_path('module', 'tb_megamenu') . '/css/base.css',
+    drupal_get_path('module', 'tb_megamenu') . '/css/base-ws2.css',
+//    drupal_get_path('module', 'tb_megamenu') . '/css/bootstrap.css',
+    drupal_get_path('module', 'tb_megamenu') . '/css/bootstrap-ws2.css',
     drupal_get_path('module', 'tb_megamenu') . '/css/bootstrap-responsive.css',
-    drupal_get_path('module', 'tb_megamenu') . '/css/default.css',
+//    drupal_get_path('module', 'tb_megamenu') . '/css/default.css',
+    drupal_get_path('module', 'tb_megamenu') . '/css/default-ws2.css',
     drupal_get_path('module', 'tb_megamenu') . '/css/styles/black.css',
     drupal_get_path('module', 'tb_megamenu') . '/css/styles/blue.css',
     drupal_get_path('module', 'tb_megamenu') . '/css/styles/green.css',
