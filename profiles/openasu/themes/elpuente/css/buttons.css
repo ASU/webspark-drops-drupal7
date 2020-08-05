@@ -6,6 +6,17 @@
  */
 /*== Colors --- WS2 DONE
 -----------------------------------------------------*/
+/* Selectors
+------------------------------------------------------ */
+#tabs .nav.nav-pills > li > a {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+#tb-megamenu-main-menu > button.btn-navbar.tb-megamenu-button {
+  display: none;
+}
+
 .btn,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree {
   /* Button CSS for menu links added */
@@ -22,26 +33,30 @@
   max-width: 17.5rem;
   min-width: 5rem;
   padding: 16px 16px;
-  transition: .03s ease-in-out;
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
 }
-
-.btn:focus,
-.btn:active:focus, .btn.active:focus, .btn:active, .btn.active {
+.btn.active, .btn:focus, .btn:active, .btn:active:focus, .btn.active:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:active:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.active:focus {
   background-image: none;
   outline: 0 none;
 }
-
-.btn:hover, .btn:focus {
+.btn:hover, .btn:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:focus {
   border: 1px solid transparent;
   text-decoration: none;
   transform: scale(1.1);
 }
-
-.btn.disabled, .btn[disabled], fieldset[disabled] .btn,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.disabled {
+.btn.disabled, .btn[disabled], .btn fieldset[disabled] .btn,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.disabled,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree[disabled],
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree fieldset[disabled] .btn {
   box-shadow: none;
   cursor: not-allowed;
   opacity: 0.5;
@@ -49,160 +64,289 @@
 }
 
 .btn-primary,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary {
+.btn-default,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default {
+  color: #ffffff;
   background-color: #8c1d40;
-  color: #fff;
 }
-
-.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active,
-.open > .btn-primary.dropdown-toggle,
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active,
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:hover,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:focus,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:active,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.active {
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:active {
   transform: scale(1.1);
-  color: #fafafa;
-  background-color: #8c1d40;
 }
-
-.btn-primary:active, .btn-primary.active, .open > .btn-primary.dropdown-toggle {
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active,
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active,
+.btn-default.active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.active {
+  color: #fafafa;
+}
+.btn-primary:active, .btn-primary.active,
+.btn-default:active,
+.btn-default.active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.active {
   background-image: none;
 }
-
-.btn-primary.disabled, .btn-primary.disabled:hover, .btn-primary.disabled:focus, .btn-primary.disabled:active, .btn-primary.disabled.active, .btn-primary[disabled], .btn-primary[disabled]:hover, .btn-primary[disabled]:focus, .btn-primary[disabled]:active, .btn-primary.active[disabled], fieldset[disabled] .btn-primary, fieldset[disabled] .btn-primary:hover, fieldset[disabled] .btn-primary:focus, fieldset[disabled] .btn-primary:active, fieldset[disabled] .btn-primary.active {
+.btn-primary.disabled, .btn-primary.disabled:hover, .btn-primary.disabled:focus, .btn-primary.disabled:active, .btn-primary.disabled.active, .btn-primary[disabled], .btn-primary[disabled]:hover, .btn-primary[disabled]:focus, .btn-primary[disabled]:active, .btn-primary.active[disabled],
+.btn-default.disabled,
+.btn-default.disabled:hover,
+.btn-default.disabled:focus,
+.btn-default.disabled:active,
+.btn-default.disabled.active,
+.btn-default[disabled],
+.btn-default[disabled]:hover,
+.btn-default[disabled]:focus,
+.btn-default[disabled]:active,
+.btn-default.active[disabled],
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.disabled,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.disabled:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.disabled:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.disabled:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.disabled.active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary[disabled],
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary[disabled]:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary[disabled]:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary[disabled]:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.active[disabled],
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.disabled,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.disabled:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.disabled:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.disabled:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.disabled.active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default[disabled],
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default[disabled]:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default[disabled]:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default[disabled]:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.active[disabled] {
   opacity: 0.5;
 }
-
-.btn-primary .badge {
+.btn-primary .badge,
+.btn-default .badge,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary .badge,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default .badge {
   color: #fff;
 }
 
-.btn-secondary,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary {
-  background-color: #bfbfbf;
-  color: #191919;
-}
-
-.btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active, .btn-secondary.active,
-.open > .btn-secondary.dropdown-toggle,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:hover,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:focus,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:active,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.active {
-  transform: scale(1.1);
-  color: #191919;
-}
-
-.btn-secondary:active, .btn-secondary.active, .open > .btn-secondary.dropdown-toggle {
+.open > .btn-primary.dropdown-toggle,
+.open > .btn-default.dropdown-toggle {
+  color: #fafafa;
+  background-color: #8c1d40;
   background-image: none;
 }
 
-.btn-secondary.disabled, .btn-secondary.disabled:hover, .btn-secondary.disabled:focus, .btn-secondary.disabled:active, .btn-secondary.disabled.active, .btn-secondary[disabled], .btn-secondary[disabled]:hover, .btn-secondary[disabled]:focus, .btn-secondary[disabled]:active, .btn-secondary.active[disabled], fieldset[disabled] .btn-secondary, fieldset[disabled] .btn-secondary:hover, fieldset[disabled] .btn-secondary:focus, fieldset[disabled] .btn-secondary:active, fieldset[disabled] .btn-secondary.active {
+fieldset[disabled] .btn-primary,
+fieldset[disabled] .btn-default {
+  opacity: 0.5;
+}
+fieldset[disabled] .btn-primary:hover, fieldset[disabled] .btn-primary:focus, fieldset[disabled] .btn-primary:active, fieldset[disabled] .btn-primary.active,
+fieldset[disabled] .btn-default:hover,
+fieldset[disabled] .btn-default:focus,
+fieldset[disabled] .btn-default:active,
+fieldset[disabled] .btn-default.active {
   opacity: 0.5;
 }
 
-.btn-secondary .badge {
+.btn-secondary,
+.btn-blue,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue {
   color: #191919;
+  background-color: #bfbfbf;
+}
+.btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active,
+.btn-blue:hover,
+.btn-blue:focus,
+.btn-blue:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue:active {
+  transform: scale(1.1);
+}
+.btn-secondary:active, .btn-secondary.active,
+.btn-blue:active,
+.btn-blue.active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue.active {
+  background-image: none;
+}
+.btn-secondary.disabled, .btn-secondary.disabled:hover, .btn-secondary.disabled:focus, .btn-secondary.disabled:active, .btn-secondary.disabled.active, .btn-secondary[disabled], .btn-secondary[disabled]:hover, .btn-secondary[disabled]:focus, .btn-secondary[disabled]:active, .btn-secondary.active[disabled],
+.btn-blue.disabled,
+.btn-blue.disabled:hover,
+.btn-blue.disabled:focus,
+.btn-blue.disabled:active,
+.btn-blue.disabled.active,
+.btn-blue[disabled],
+.btn-blue[disabled]:hover,
+.btn-blue[disabled]:focus,
+.btn-blue[disabled]:active,
+.btn-blue.active[disabled],
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.disabled,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.disabled:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.disabled:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.disabled:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.disabled.active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary[disabled],
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary[disabled]:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary[disabled]:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary[disabled]:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.active[disabled],
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue.disabled,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue.disabled:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue.disabled:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue.disabled:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue.disabled.active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue[disabled],
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue[disabled]:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue[disabled]:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue[disabled]:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue.active[disabled] {
+  opacity: 0.5;
+}
+.btn-secondary .badge,
+.btn-blue .badge,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary .badge,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue .badge {
+  color: #191919;
+}
+
+.open > .btn-secondary.dropdown-toggle,
+.open > .btn-blue.dropdown-toggle {
+  color: #191919;
+  background-color: #bfbfbf;
+  background-image: none;
+}
+
+fieldset[disabled] .btn-secondary,
+fieldset[disabled] .btn-blue {
+  opacity: 0.5;
+}
+fieldset[disabled] .btn-secondary:hover, fieldset[disabled] .btn-secondary:focus, fieldset[disabled] .btn-secondary:active, fieldset[disabled] .btn-secondary.active,
+fieldset[disabled] .btn-blue:hover,
+fieldset[disabled] .btn-blue:focus,
+fieldset[disabled] .btn-blue:active,
+fieldset[disabled] .btn-blue.active {
+  opacity: 0.5;
 }
 
 .btn-gold,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold {
-  background-color: #ffc627;
   color: #191919;
+  background-color: #ffc627;
 }
-
-.btn-gold:hover, .btn-gold:focus, .btn-gold:active, .btn-gold.active, .open > .btn-gold.dropdown-toggle,
+.btn-gold:hover, .btn-gold:focus, .btn-gold:active,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold:hover,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold:active {
+  transform: scale(1.1);
+}
+.btn-gold:active, .btn-gold.active,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold:active,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.active {
-  transform: scale(1.1);
-  color: #191919;
-}
-
-.btn-gold:active, .btn-gold.active, .open > .btn-gold.dropdown-toggle {
   background-image: none;
 }
-
-.btn-gold.disabled, .btn-gold.disabled:hover, .btn-gold.disabled:focus, .btn-gold.disabled:active,
-.btn-gold.disabled.active, .btn-gold[disabled], .btn-gold[disabled]:hover, .btn-gold[disabled]:focus,
-.btn-gold[disabled]:active, .btn-gold.active[disabled], fieldset[disabled] .btn-gold, fieldset[disabled]
-.btn-gold:hover, fieldset[disabled] .btn-gold:focus, fieldset[disabled] .btn-gold:active, fieldset[disabled]
-.btn-gold.active {
-  background-color: #ffc627;
+.btn-gold.disabled, .btn-gold.disabled:hover, .btn-gold.disabled:focus, .btn-gold.disabled:active, .btn-gold.disabled.active, .btn-gold[disabled], .btn-gold[disabled]:hover, .btn-gold[disabled]:focus, .btn-gold[disabled]:active, .btn-gold.active[disabled],
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.disabled,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.disabled:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.disabled:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.disabled:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.disabled.active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold[disabled],
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold[disabled]:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold[disabled]:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold[disabled]:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.active[disabled] {
+  opacity: 0.5;
 }
-
-.btn-gold .badge {
-  background-color: #191919;
+.btn-gold .badge,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold .badge {
   color: #ffc627;
 }
 
-.btn-blue {
-  background-color: #bfbfbf;
+.open > .btn-gold.dropdown-toggle {
   color: #191919;
-}
-
-.btn-blue:hover, .btn-blue:focus, .btn-blue:active, .btn-blue.active, .open > .btn-blue.dropdown-toggle {
-  transform: scale(1.1);
-  color: #191919;
-}
-
-.btn-blue:active, .btn-blue.active, .open > .btn-blue.dropdown-toggle {
+  background-color: #ffc627;
   background-image: none;
 }
 
-.btn-blue.disabled, .btn-blue.disabled:hover, .btn-blue.disabled:focus, .btn-blue.disabled:active, .btn-blue.disabled.active, .btn-blue[disabled], .btn-blue[disabled]:hover, .btn-blue[disabled]:focus, .btn-blue[disabled]:active, .btn-blue.active[disabled], fieldset[disabled] .btn-blue, fieldset[disabled] .btn-blue:hover, fieldset[disabled] .btn-blue:focus, fieldset[disabled] .btn-blue:active, fieldset[disabled] .btn-blue.active {
+fieldset[disabled] .btn-gold {
+  opacity: 0.5;
+}
+fieldset[disabled] .btn-gold:hover, fieldset[disabled] .btn-gold:focus, fieldset[disabled] .btn-gold:active, fieldset[disabled] .btn-gold.active {
   opacity: 0.5;
 }
 
-.btn-blue .badge {
-  color: #191919;
-}
-
-.btn-black {
+.btn-black,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black {
+  color: #fafafa;
   background-color: #191919;
-  color: #fafafa;
 }
-
-.btn-black:hover, .btn-black:focus, .btn-black:active, .btn-black.active, .open > .btn-black.dropdown-toggle {
+.btn-black:hover, .btn-black:focus, .btn-black:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black:active {
   transform: scale(1.1);
+}
+.btn-black:active, .btn-black.active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.active {
+  background-image: none;
+}
+.btn-black.disabled, .btn-black.disabled:hover, .btn-black.disabled:focus, .btn-black.disabled:active, .btn-black.disabled.active, .btn-black[disabled], .btn-black[disabled]:hover, .btn-black[disabled]:focus, .btn-black[disabled]:active, .btn-black.active[disabled],
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled.active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled],
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled]:hover,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled]:focus,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled]:active,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.active[disabled] {
+  opacity: 0.5;
+}
+.btn-black .badge,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black .badge {
   color: #fafafa;
 }
 
-.btn-black:active, .btn-black.active, .open > .btn-black.dropdown-toggle {
+.open > .btn-black.dropdown-toggle {
+  color: #fafafa;
+  background-color: #191919;
   background-image: none;
 }
 
-.btn-black.disabled, .btn-black.disabled:hover, .btn-black.disabled:focus, .btn-black.disabled:active, .btn-black.disabled.active, .btn-black[disabled], .btn-black[disabled]:hover, .btn-black[disabled]:focus, .btn-black[disabled]:active, .btn-black.active[disabled], fieldset[disabled] .btn-black, fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fieldset[disabled] .btn-black:active, fieldset[disabled] .btn-black.active {
+fieldset[disabled] .btn-black {
+  opacity: 0.5;
+}
+fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fieldset[disabled] .btn-black:active, fieldset[disabled] .btn-black.active {
   opacity: 0.5;
 }
 
-.btn-black .badge {
-  color: #191919;
-}
-
-.btn-default {
-  background-color: #8c1d40;
-  color: #fff;
-}
-
-.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open > .btn-default.dropdown-toggle {
-  transform: scale(1.1);
-}
-
-.btn-default:active, .btn-default.active, .open > .btn-default.dropdown-toggle {
-  background-image: none;
-}
-
-.btn-default.disabled, .btn-default.disabled:hover, .btn-default.disabled:focus, .btn-default.disabled:active, .btn-default.disabled.active, .btn-default[disabled], .btn-default[disabled]:hover, .btn-default[disabled]:focus, .btn-default[disabled]:active, .btn-default.active[disabled], fieldset[disabled] .btn-default, fieldset[disabled] .btn-default:hover, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default:active, fieldset[disabled] .btn-default.active {
-  opacity: 0.5;
-}
-
-.btn-default .badge {
-  background-color: #8c1d40;
-  color: #fafafa;
-}
-
+/* NOT ASU Web standards 2.0 colors - Bootstrap and/or alert color classes */
 .btn-success {
   background-color: #78be20;
   color: #fff;
@@ -376,32 +520,26 @@
   background: -moz-linear-gradient(center bottom, #c5c5c5 0%, #fafafa 100%) repeat scroll 0 0 #e6e6e6;
 }
 
-/* More customization for buttons placed in the LH menu */
-.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu > li.btn-container.first > a {
-  margin-top: 0;
-}
-
-.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] ul.menu li.btn-container + li:not(.btn-container) {
-  margin-top: 0.9375em;
-}
-
+/* Buttons placed in the LH (secondary) menu */
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] ul.menu li:not(.btn-container) + li.btn-container {
   border-top: 1px solid #d0d0d0;
 }
-
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] ul.menu li.btn-container + li:not(.btn-container) {
+  margin-top: 0.9375em;
+}
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu > li.btn-container.first > a {
+  margin-top: 0;
+}
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu li.btn-container ul.menu {
+  margin-top: 0.9375em;
+}
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container {
   margin-left: 1.375em;
   margin-bottom: 0.9375em;
 }
-
-.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu li.btn-container ul.menu {
-  margin-top: 0.9375em;
-}
-
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container + li:not(.btn-container) {
   margin-left: 1.375em;
 }
-
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container + li:not(.btn-container) > a {
   margin-left: 0;
   padding-left: 1.375em;

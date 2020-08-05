@@ -33,7 +33,7 @@ div.error {
   background-repeat: no-repeat;
   text-align: left;
   font: normal 12px/16px "FontAwesome";
-  letter-spacing: 0px;
+  letter-spacing: 0;
   color: #B72A2A;
   opacity: 1;
 }
@@ -108,7 +108,7 @@ a:hover,
 }
 
 button, .button, .btn, a.btn, .btn a {
-  transition: all 0.25s ease-in-out 0s;
+  transition: 0.5s cubic-bezier(0.19, 1, 0.19, 1);
   word-wrap: break-word;
 }
 
