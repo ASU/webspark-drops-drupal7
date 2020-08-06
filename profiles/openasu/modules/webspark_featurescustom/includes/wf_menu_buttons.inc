@@ -22,7 +22,7 @@ function webspark_featurescustom_form_alter(&$form, &$form_state, &$form_id) {
       '#title' => t('Style as ASU Web standards button?'),
       '#options' => $options,
       '#default_value' => $asu_button_style,
-      '#description' => 'If an option is selected, the link will appear as an ASU Web standards button. NOTE: Per 
+      '#description' => 'If an option is selected, the link will appear as an ASU Web standards button. NOTE: Per
       ASU Web standards, gold styling may only be used for "Request Info" buttons that point to an ASU degree page.',
       '#weight' => 1,
     );

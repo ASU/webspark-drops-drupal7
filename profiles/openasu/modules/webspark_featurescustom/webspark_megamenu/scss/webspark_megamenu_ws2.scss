@@ -169,14 +169,15 @@ $ws2-gray-lightest:      #fafafa;
           // 100% wide, white background on megamenu open/hover event
           &.mega-align-justify.dropdown > .tb-megamenu-submenu {
             width: 100vw;
-            //    background-color: yellow !important;
-            background-color: #fff !important;
+            background-color: yellow !important;
+            //background-color: #fff !important;
             padding: 0 190px;
             margin-left: -190px;
             & > .mega-dropdown-inner {
               max-width: 1170px;
               // margin properties remove the cubic-bezier transition /* margin: 0 auto; */
               position: sticky;
+              background-color: darkorange;
             }
           }
           & > .tb-megamenu-submenu.dropdown-menu {
@@ -230,7 +231,7 @@ $ws2-gray-lightest:      #fafafa;
           }
         }
         &.btn {
-        @include megamenu-button-styling(0.1rem);
+        @include megamenu-button-styling(0.2rem);
           margin-right: 0.5rem;
         }
       }
@@ -244,13 +245,13 @@ $ws2-gray-lightest:      #fafafa;
         // Yellow bottom of top-level elements
         &:after {
           content: '';
-          position: relative;
+          position: absolute;
           display: block;
           height: 0.5rem;
           background-color: $asu-gold;
           width: 0;
           @include ws2-global-transition();
-          bottom: -0.5rem;
+          bottom: 0;
           left: -0.5rem;
         }
         &:hover::after {

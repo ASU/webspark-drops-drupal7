@@ -4,7 +4,7 @@
       buildStyle(localStorage.asuMegaFont, localStorage.asuMegaPadding);
     }
   }
-  
+
   function buildStyle(fontSize, padding){
     var styleItem = document.createElement('style');
     styleItem.type = 'text/css';

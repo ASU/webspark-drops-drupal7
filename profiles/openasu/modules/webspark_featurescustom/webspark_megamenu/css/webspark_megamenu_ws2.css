@@ -199,13 +199,14 @@
 }
 .tb-megamenu .nav li.tb-megamenu-item.mega.level-1.mega-align-justify.dropdown > .tb-megamenu-submenu {
   width: 100vw;
-  background-color: #fff !important;
+  background-color: yellow !important;
   padding: 0 190px;
   margin-left: -190px;
 }
 .tb-megamenu .nav li.tb-megamenu-item.mega.level-1.mega-align-justify.dropdown > .tb-megamenu-submenu > .mega-dropdown-inner {
   max-width: 1170px;
   position: sticky;
+  background-color: darkorange;
 }
 .tb-megamenu .nav li.tb-megamenu-item.mega.level-1 > .tb-megamenu-submenu.dropdown-menu {
   border: 1px solid #d0d0d0;
@@ -259,7 +260,7 @@
 .tb-megamenu .nav > li.btn,
 .tb-megamenu .nav > .active.btn {
   display: inline-block;
-  margin-top: 0.1rem;
+  margin-top: 0.2rem;
   margin-bottom: 0.5rem;
   border: none;
   margin-right: 0.5rem;
@@ -304,13 +305,13 @@
 }
 .tb-megamenu .nav > li:not(.btn) > a:after {
   content: '';
-  position: relative;
+  position: absolute;
   display: block;
   height: 0.5rem;
   background-color: #ffc627;
   width: 0;
   transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s;
-  bottom: -0.5rem;
+  bottom: 0;
   left: -0.5rem;
 }
 .tb-megamenu .nav > li:not(.btn) > a:hover::after {

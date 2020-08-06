@@ -1,15 +1,90 @@
 (function($) {
-  Drupal.behaviors.webspark_megamenu_hidden = {
-    attach: function(context, settings) {
-      let tb_block = $(".tb-megamenu-block.tb-block.tb-megamenu-block");
+  /**
+   * Move padding from row-fluid to .tb-megamenu-block??
+   * @type {{attach: Drupal.behaviors.webspark_megamenu_hidden.attach}}
+   */
+  Drupal.behaviors.webspark_megamenu_hidden = { // jshint ignore:line
+    attach: function(context, settings) { // jshint ignore:line
+      var tb_block = $(".tb-megamenu-block.tb-block.tb-megamenu-block");
       if (tb_block.length) {
         tb_block.closest(".tb-megamenu-row.row-fluid").addClass("hide-extra-padding");
         tb_block.closest(".tb-megamenu-block.tb-block.tb-megamenu-block").addClass("adding-padding");
       }
     }
   };
-  Drupal.behaviors.webspark_resize_menu = {
-    attach: function(context, settings) {
+
+  /**
+   * Resize the main menu's font size and padding.
+   * @type {{attach: Drupal.behaviors.webspark_resize_menu.attach}}
+   */
+  Drupal.behaviors.webspark_resize_menu = { // jshint ignore:line
+    attach: function(context, settings) { // jshint ignore:line
+
+  /**
+   * Recalculates padding, font size, etc.??
+   * @param t - (int) sum of pixel widths of all items in the navbar
+   * @param x - (int) pixel width of $("#ASUNavMenu .container .navbar-collapse")
+   * @param count - (int) number of elements in a (jQuery collection below)
+   * @param a - (obj) jQuery collection of menu items
+   * @returns {{mrg: number, fs: number, pds: string}}
+   */
+      function calcFits(t, x, count, a) {
+        var poss = [];
+        var objs = [{
+          fs: 14,
+          mrg: 8,
+          pds: "0.5rem 0.75rem"
+        }, {
+          fs: 15,
+          mrg: 8,
+          pds: "0.5rem 0.75rem"
+        }, {
+          fs: 16,
+          mrg: 8,
+          pds: "0.5rem 0.75rem"
+        }];
+
+        var megamenu = document.getElementsByClassName("tb-megamenu-nav")[0];
+        // Calculate Chevrons net width
+        var chevrons = 0;
+        if (megamenu) {
+          chevrons = megamenu.getElementsByClassName("fa-chevron-down").length * 12; // 12px wide
+        }
+        for (var i = 0; i < objs.length; ++i) {
+          var hold = 0;
+          for (var c = 0; c < a.length; ++c) {
+            hold += $.fn.textWidth($(a[c]).find("a").eq(0).text(), objs[i].fs + "px sans-serif");
+          }
+          hold = hold + (count * objs[i].mrg); // Margin is only on one side in WS2.0
+          poss.push(hold);
+        }
+        // Take the ASU WS2.0 logo width into account
+        var ws2_logo = document.getElementsByClassName("ws2-global-header-logo")[0].clientWidth;
+        // Add in ASU WS2.0 right margins
+        var item_margin = count * 8; // 8px (0.5rem)
+        var ws2_width = x - ws2_logo - item_margin;
+
+        // hard-coded numbers overridden below for WS2.0
+        if ((poss[2] + chevrons) < ws2_width) {
+          if (typeof(Storage) !== "undefined") {
+            localStorage.setItem("asuMegaFont", "16px");
+            localStorage.setItem("asuMegaPadding", "0 0.5rem");
+          }
+          return objs[2];
+        } else if ((poss[1] + chevrons) < ws2_width) {
+          if (typeof(Storage) !== "undefined") {
+            localStorage.setItem("asuMegaFont", "15px");
+            localStorage.setItem("asuMegaPadding", "0 0.5rem");
+          }
+          return objs[1];
+        } else {
+          if (typeof(Storage) !== "undefined") {
+            localStorage.setItem("asuMegaFont", "14px");
+            localStorage.setItem("asuMegaPadding", "0 0.5rem");
+          }
+          return objs[0];
+        }
+      }
 
       var ASUNavMenu = $("#ASUNavMenu");
       if (ASUNavMenu.length) {
@@ -26,84 +101,43 @@
             });
             var data = calcFits(t, x, count, a);
             ASUNavMenu.find("li.tb-megamenu-item.level-1.mega:not(.btn)").children("a").css({
-              "font-size": data.fs,
-              "padding": data.pds,
-              "min-height": "3rem"
+              "font-size" : data.fs,
+              "padding" : data.pds,
+              "min-height" : "3rem"
+            });
+            // Top-level button customization
+            ASUNavMenu.find("li.tb-megamenu-item.level-1.mega.btn").children("a").css({
+              "font-size" : data.fs
+            });
+            // Apply margin to menu
+            ASUNavMenu.find("li.tb-megamenu-item.level-1.mega.mega-align-justify.dropdown > .tb-megamenu-submenu").css({
+              "margin-left" : (-1 * data.marg)
             });
           }
         });
       }
 
+      /**
+       * Calculate the total text width
+       * @param text
+       * @param font
+       * @returns {*}
+       */
       $.fn.textWidth = function(text, font) {
-        if (!$.fn.textWidth.fakeEl) $.fn.textWidth.fakeEl = $("<span>").hide().appendTo(document.body);
+        if (!$.fn.textWidth.fakeEl) {
+          $.fn.textWidth.fakeEl = $("<span>").hide().appendTo(document.body);
+        }
         $.fn.textWidth.fakeEl.text(text || this.val() || this.text()).css("font", font || this.css("font"));
         return $.fn.textWidth.fakeEl.width();
       };
-
-      /**
-       * Recalculates padding, font size, etc.??
-       * @param t
-       * @param x
-       * @param count
-       * @param a
-       * @returns {{pd: number, fs: number, pds: string}}
-       */
-      function calcFits(t, x, count, a) {
-        var data = [];
-        var poss = [];
-        var br = true;
-        var objs = [{
-          fs: 14,
-          pd: 0,
-          pds: "0.5rem 0.75rem"
-        }, {
-          fs: 15,
-          pd: 0,
-          pds: "0.5rem 0.75rem"
-        }, {
-          fs: 16,
-          pd: 0,
-          pds: "0.5rem 0.75rem"
-        }];
-        var megamenu = document.getElementsByClassName("tb-megamenu-nav:not(.btn)")[0];
-        var carets = 0;
-        if (megamenu) {
-          carets = megamenu.getElementsByClassName("caret").length * 10;
-        }
-        for (var i = 0; i < objs.length; ++i) {
-          var hold = 0;
-          for (var c = 0; c < a.length; ++c) {
-            hold += $.fn.textWidth($(a[c]).find("a").eq(0).text(), objs[i].fs + "px sans-serif");
-          }
-          hold = hold + (count * objs[i].pd * 2);
-          poss.push(hold);
-        }
-
-        // WS2.0 - Overrode
-        if ((poss[2] + carets) < x) {
-          if (typeof(Storage) !== "undefined") {
-            localStorage.setItem("asuMegaFont", "16px");
-            localStorage.setItem("asuMegaPadding", "0 0.5rem");
-          }
-          return objs[2];
-        } else if ((poss[1] + carets) < x) {
-          if (typeof(Storage) !== "undefined") {
-            localStorage.setItem("asuMegaFont", "15px");
-            localStorage.setItem("asuMegaPadding", "0 0.5rem");
-          }
-          return objs[1];
-        } else {
-          if (typeof(Storage) !== "undefined") {
-            localStorage.setItem("asuMegaFont", "14px");
-            localStorage.setItem("asuMegaPadding", "0 0.5rem");
-          }
-          return objs[0];
-        }
-
-      }
-
     }
   };
+
+  // noinspection JSUnusedLocalSymbols,JSHint
+  /**
+   * purpose - unknown. Perhaps to make all columns in a menu row the same height as the tallest?
+   * @type {{attach: Drupal.behaviors.webspark_megamenu_driveify.attach}}
+   */
   Drupal.behaviors.webspark_megamenu_driveify = {
     attach: function(context, settings) {
       var rows = $(".tb-megamenu-row");
@@ -115,21 +149,25 @@
             for (var j = 0; j < some.length; j++) {
               rows.css("display", "block");
               if (some[j].className.indexOf("tb-megamenu-column") >= 0) {
-                if ($("#" + some[j].id).height() > bigheight) {
-                  bigheight = $("#" + some[j].id).height();
+                var elemHeight = $("#" + some[j].id).height();
+                if (elemHeight > bigheight) {
+                  bigheight = elemHeight;
                 }
               }
               rows.css("display", "");
             }
-            for (var j = 0; j < some.length; j++) {
-              $("#" + some[j].id).css("height", bigheight + "px");
+            for (var k = 0; k < some.length; k++) {
+              $("#" + some[k].id).css("height", bigheight + "px");
             }
           }
         }
       } catch (e) {}
     }
   };
-  Drupal.behaviors.webspark_megamenu = {
+  /**
+   * Swaps out Home link with FontAwesome home icon
+   */
+  Drupal.behaviors.webspark_megamenu = { // jshint ignore:line
     attach: function() {
       var firstNavItem = $(".tb-megamenu-nav > li:first-child > a");
       try {
@@ -145,8 +183,8 @@
    * Added Accessibility capability
    * @type {{attach: Drupal.behaviors.webspark_megamenu_accessible.attach}}
    */
-  Drupal.behaviors.webspark_megamenu_accessible = {
-    attach: function(context, settings) {
+  Drupal.behaviors.webspark_megamenu_accessible = { // jshint ignore:line
+    attach: function(context, settings) { // jshint ignore:line
       $(".navmenu a").unbind().each(function() {
         $(this).unbind().on("keydown", function(e) {
           // On keydown tab (no shift)
@@ -158,8 +196,9 @@
               // Anchor tag's parent is the last element of top level elements
               if ($(this).parent().is(":last-child")) {
                 e.preventDefault();
-                if ($("#main-wrapper").find(":focusable").length !== 0) {
-                  $("#main-wrapper").find(":focusable")[0].focus();
+                var mainWrapper = $("#main-wrapper").find(":focusable");
+                if (mainWrapper.length !== 0) {
+                  mainWrapper[0].focus();
                 } else {
                   $("#page-footer").find(":focusable")[0].focus();
                 }
