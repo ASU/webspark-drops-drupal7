@@ -7,17 +7,42 @@
 /*== Colors --- WS2 DONE
 -----------------------------------------------------*/
 /*
- * Default "Mobile size" < 991px
+ * Default alternate desktop size: >= 992px
+ */
+@media (min-width: 992px) {
+  #ASUNavMenu {
+    display: inherit;
+  }
+}
+/*
+ * Default alternate desktop size: >= 992px
+ */
+@media (max-width: 1199px) {
+  .container {
+    width: 100% !important;
+  }
+}
+/*
+ * Default "Mobile size" <= 991px
  */
 @media (max-width: 991px) {
+  .container {
+    width: 100%;
+    max-width: 992px;
+  }
+
+  #ASUNavMenu {
+    display: none !important;
+  }
+
   h1, .h1 {
-    margin-bottom: 48px;
+    margin-bottom: 3rem;
     font-size: 48px;
   }
 
   h1.page-title {
     margin-bottom: 0;
-    padding-bottom: 12px;
+    padding-bottom: 0.75rem;
   }
 
   h2, .h2 {
@@ -93,7 +118,7 @@
     padding-left: 15px;
   }
 }
-@media (max-width: 768px) {
+@media (max-width: 931px) {
   #innovation-footer .footer-menu ul li {
     padding-bottom: 0.5em;
   }

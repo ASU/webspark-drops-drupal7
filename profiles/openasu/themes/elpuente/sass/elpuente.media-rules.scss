@@ -2,28 +2,50 @@
 /* =MEDIA QUERIES --- IN PROGRESS
 -------------------------------------------------------------- */
 @import "variables";
+@import "bootstrap/variables";
 
-// @TODO
-//  WS2.0 Adapt ALL header sizing
-// Pagination
-// Tabs (background, size)
 
 /*
- * Default "Mobile size" < 991px
+ * Default alternate desktop size: >= 992px
  */
-@media (max-width: 991px) {
+@media (min-width: $screen-md) {
+  #ASUNavMenu {
+    display: inherit;
+  }
+}
 
+/*
+ * Default alternate desktop size: >= 992px
+ */
+@media (max-width: $screen-md-max) {
+  .container {
+    width: 100% !important;
+  }
+}
+
+/*
+ * Default "Mobile size" <= 991px
+ */
+@media (max-width: $screen-sm-max) {
+
+  .container {
+    width: 100%;
+    max-width: $screen-md;
+  }
+
+  // Swap out desktop menu
+  #ASUNavMenu {
+    display: none !important;
+  }
   h1, .h1 {
-    margin-bottom: 48px;
+    margin-bottom: 3rem;
     font-size: $font-size-h1-mobile;
 //    line-height: 1.2;
   }
-
   h1.page-title {
     margin-bottom: 0;
-    padding-bottom: 12px;
+    padding-bottom: 0.75rem;
   }
-
   h2, .h2 {
     font-size: $font-size-h2-mobile;
 //    line-height: 1.44;
@@ -91,7 +113,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm) {
   #innovation-footer .footer-menu ul li {
     padding-bottom: 0.5em;
   }
