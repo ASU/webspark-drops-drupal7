@@ -1,0 +1,1226 @@
+@charset "UTF-8";
+/**
+ * moved over from Innovationn (innovation-main.css source)
+ * IS_SCSS
+ */
+/*
+ * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
+ * Override Bootstrap variables below.
+ */
+/*== Colors --- WS2 DONE
+-----------------------------------------------------*/
+/*
+ * Custom Web standard styles
+ */
+/* =BOOTSTRAP, PANOPOLY & WEBSPARK OVERRIDES
+-------------------------------------------------------------- */
+#asu_footer ul {
+  max-width: 1170px;
+  margin: 0 auto;
+  padding-left: 0;
+}
+
+#main-wrapper {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+#tabs {
+  margin-bottom: 0;
+}
+
+div.error {
+  background-repeat: no-repeat;
+  text-align: left;
+  font: normal 12px/16px "FontAwesome";
+  letter-spacing: 0px;
+  color: #B72A2A;
+  opacity: 1;
+}
+div.error label {
+  padding-left: 2em;
+}
+
+/* =GLOBALS
+-------------------------------------------------------------- */
+html {
+  font-size: 100%;
+}
+
+body {
+  font-size: 1rem;
+  min-width: 20em;
+  font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif;
+  color: #191919;
+  background-color: #fff;
+}
+body #page .region-content {
+  padding: 0;
+}
+
+p {
+  margin: 1em 0;
+}
+
+.pane-node-body {
+  margin-top: 2.85em;
+  margin-bottom: 3em;
+}
+
+.page-teaser {
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+
+div.pane-system-main-menu,
+div.pane-menu-tree {
+  margin-top: 3em;
+}
+
+#skip_to_content {
+  position: absolute;
+  left: -9999px;
+}
+#skip_to_content:focus {
+  position: relative;
+  left: 0;
+}
+
+/* =LINKS --- WS2.0 DONE
+ * =BUTTONS --- IN PROGRESS
+-------------------------------------------------------------- */
+a,
+.ui-widget-content a {
+  border-bottom: 1px solid #8c1d40;
+  text-decoration: none;
+  color: #8c1d40;
+}
+a:hover,
+.ui-widget-content a:hover {
+  color: #8c1d40;
+  text-decoration: none;
+  border-bottom: 1px dotted #8c1d40;
+}
+
+#header a,
+#asu_footer a {
+  border-bottom: transparent;
+}
+
+button, .button, .btn, a.btn, .btn a {
+  transition: all 0.25s ease-in-out 0s;
+  word-wrap: break-word;
+}
+
+a.btn, .btn {
+  margin-top: 0.9375em;
+}
+a.btn.btn-lg, .btn.btn-lg {
+  margin-top: 1.5em;
+}
+a.btn:hover, .btn:hover {
+  border-bottom: transparent;
+}
+
+a.btn-secondary, .btn-secondary a,
+a.btn-gold, .btn-gold a {
+  color: #191919;
+  border-bottom-color: #ffc627;
+}
+
+a.btn-blue, .btn-blue a,
+a.btn-primary, .btn-primary a {
+  color: #fff;
+  border-bottom-color: #8c1d40;
+}
+
+a.btn-blue:hover, .btn-blue a:hover,
+a.btn-primary:hover, .btn-primary a:hover {
+  color: #fff;
+  border-bottom-color: #8c1d40;
+}
+
+/* =TYPOGRAPHY --- WS2.0 DONE
+-------------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  margin-bottom: 1.5rem;
+  color: inherit;
+  font-family: Arial, sans-serif;
+  font-weight: 700;
+  line-height: calc(100% + 4px);
+  display: block;
+  /* Highlighting style augmentations for headers, titles, etc. */
+}
+h1.ws2-element-style, h2.ws2-element-style, h3.ws2-element-style, h4.ws2-element-style, h5.ws2-element-style, h6.ws2-element-style, .h1.ws2-element-style, .h2.ws2-element-style, .h3.ws2-element-style, .h4.ws2-element-style, .h5.ws2-element-style, .h6.ws2-element-style {
+  line-height: calc(100% + 8px);
+  padding: 4px 8px;
+  display: table;
+}
+h1.ws2-element-style.ws2-element-gold, h2.ws2-element-style.ws2-element-gold, h3.ws2-element-style.ws2-element-gold, h4.ws2-element-style.ws2-element-gold, h5.ws2-element-style.ws2-element-gold, h6.ws2-element-style.ws2-element-gold, .h1.ws2-element-style.ws2-element-gold, .h2.ws2-element-style.ws2-element-gold, .h3.ws2-element-style.ws2-element-gold, .h4.ws2-element-style.ws2-element-gold, .h5.ws2-element-style.ws2-element-gold, .h6.ws2-element-style.ws2-element-gold {
+  background-color: #ffc627;
+}
+h1.ws2-element-style.ws2-element-gray, h2.ws2-element-style.ws2-element-gray, h3.ws2-element-style.ws2-element-gray, h4.ws2-element-style.ws2-element-gray, h5.ws2-element-style.ws2-element-gray, h6.ws2-element-style.ws2-element-gray, .h1.ws2-element-style.ws2-element-gray, .h2.ws2-element-style.ws2-element-gray, .h3.ws2-element-style.ws2-element-gray, .h4.ws2-element-style.ws2-element-gray, .h5.ws2-element-style.ws2-element-gray, .h6.ws2-element-style.ws2-element-gray {
+  color: #fafafa;
+  background-color: #191919;
+}
+
+h1, .h1 {
+  font-size: 64px;
+}
+h1.ws2-element-style, .h1.ws2-element-style {
+  font-size: 74.624px;
+  padding: 4px 12px;
+}
+h1.ws2-element-style.ws2-too-long, .h1.ws2-element-style.ws2-too-long {
+  font-size: 58px;
+}
+
+h2, .h2 {
+  font-size: 40px;
+}
+h2.ws2-element-style, .h2.ws2-element-style {
+  font-size: 48px;
+}
+
+h3, .h3 {
+  font-size: 24px;
+}
+h3.ws2-element-style, .h3.ws2-element-style {
+  font-size: 32px;
+}
+
+h4, .h4 {
+  font-size: 20px;
+}
+h4.ws2-element-style, .h4.ws2-element-style {
+  font-size: 28px;
+}
+
+h5, .h5, h6, .h6 {
+  font-size: 16px;
+}
+
+h6, .h6 {
+  font-weight: normal;
+}
+
+/* HR separator - custom */
+hr.ws2-element-gold {
+  border-color: #ffc627;
+  border-width: 8px;
+  margin-left: 0;
+  max-width: 256px;
+}
+
+/* Signatures (beneath content) */
+.ws2-sig-title, .ws2-sig-byline {
+  font-size: 16px;
+}
+
+.ws2-sig-title:before {
+  padding-right: 0.5em;
+  content: "\f068";
+  font-family: "FontAwesome", sans-serif;
+}
+
+.ws2-sig-byline {
+  font-weight: normal;
+  padding-left: 1.33em;
+}
+
+.ws2-sig-title ~ .ws2-sig-byline {
+  margin-top: -1em;
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: none;
+  font-weight: bold;
+  padding-left: 6rem;
+}
+blockquote:before {
+  font-family: "FontAwesome", sans-serif;
+  content: "\f10d";
+  font-size: 4.5rem;
+  float: left;
+  margin-left: -6rem;
+  color: #d0d0d0;
+}
+blockquote > p:not([class*=sig-]):after {
+  font-family: "FontAwesome", sans-serif;
+  content: "\f10e";
+  font-size: 1rem;
+  color: inherit;
+  padding-left: 0.5em;
+  position: absolute;
+}
+blockquote.ws2-element-gold:before {
+  color: #ffc627;
+}
+blockquote.ws2-element-maroon:before {
+  color: #8c1d40;
+}
+blockquote.ws2-bq-image {
+  padding-left: 14.3625rem;
+}
+blockquote.ws2-bq-image img:first-of-type {
+  clip-path: circle(90px);
+  float: left;
+  position: absolute;
+  margin-left: -14rem;
+}
+blockquote.ws2-bq-image:before {
+  font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif;
+  font-size: initial;
+  content: initial;
+  margin-left: -14.3625rem;
+  color: #d0d0d0;
+}
+
+/* WYSIWYG style -- Lead Paragraph --*/
+.lead-paragraph {
+  font-family: inherit;
+  font-size: 1.25rem;
+  line-height: 2em;
+  color: #191919;
+}
+
+.explore-programs h3 {
+  font-size: 1.625rem;
+}
+
+/* =HEADER --- IN PROGRESS
+-------------------------------------------------------------- */
+.header__sitename {
+  color: #191919;
+  font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: bold;
+  font-size: 1.5em;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0 0 0.75rem 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.header__sitename.element-invisible {
+  white-space: inherit;
+}
+
+.header__sitename a {
+  color: #191919;
+}
+
+#asu_hdr #asu_universal_nav_new .icn {
+  box-sizing: content-box;
+}
+
+/* =STICKY NAV BAR --- WS2.0 DONE
+-------------------------------------------------------------- */
+#ASUNavMenu.affix {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.sticky-menu {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+}
+
+/* =IMAGES --- IN PROGRESS
+-------------------------------------------------------------- */
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: bottom;
+}
+
+/* WYSIWYG image spacing */
+img.media-element.pull-right {
+  margin-left: 20px;
+}
+
+img.media-element.pull-left {
+  margin-right: 20px;
+}
+
+.img-circle,
+p.img-circle img {
+  border-radius: 32px;
+}
+
+.img-rounded,
+p.img-rounded img {
+  border-radius: 4px;
+}
+
+.img-thumbnail,
+p.img-thumbnail img {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: inline-block;
+  height: auto;
+  line-height: 1.44;
+  max-width: 100%;
+  padding: 4px;
+  transition: all 0.2s ease-in-out 0s;
+}
+
+img.ws2-drop-shadow {
+  box-shadow: 0 0.625em 1.25em rgba(0, 0, 41, 0.25);
+}
+
+div.caption-inner {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+div.caption-inner > img {
+  margin-bottom: 0;
+}
+div.caption-inner p.caption-text,
+div.caption-inner .caption-text {
+  padding: 1rem;
+  font-size: 0.75rem;
+  text-align: left;
+  margin: 0;
+  border: 1px solid #d0d0d0;
+  border-top: none;
+}
+
+/* =LISTS, ordered + unordered #WS2.0
+-------------------------------------------------------------- */
+.region-content #page-page ul, .region-content #page-page ol {
+  padding-left: 0;
+  list-style-type: none;
+}
+.region-content #page-page ul li:before, .region-content #page-page ol li:before {
+  font-weight: bolder;
+  vertical-align: middle;
+}
+.region-content #page-page ul li:last-child, .region-content #page-page ol li:last-child {
+  padding-bottom: 0;
+}
+.region-content #page-page ul.ws2-element-maroon li:before, .region-content #page-page ol.ws2-element-maroon li:before {
+  color: #8c1d40;
+}
+.region-content #page-page ul.ws2-element-gray li:before, .region-content #page-page ol.ws2-element-gray li:before {
+  color: #191919;
+}
+.region-content #page-page ul > ul, .region-content #page-page ul > ol, .region-content #page-page ol > ul, .region-content #page-page ol > ol {
+  padding-left: 2em;
+}
+.region-content #page-page ul li:before {
+  padding: 0 2.75em 0 0;
+  margin: 0 -2em 0 0;
+  content: "•";
+  font-size: 2em;
+}
+.region-content #page-page ul ul > li:before {
+  content: "◦";
+}
+.region-content #page-page ul ul ul > li:before {
+  content: "•";
+}
+.region-content #page-page ul ul ul ul > li:before {
+  content: "◦";
+}
+.region-content #page-page ul ul ul ul ul > li:before {
+  content: "•";
+}
+.region-content #page-page ol > li {
+  padding-bottom: 1em;
+  counter-increment: customlist;
+}
+.region-content #page-page ol > li:before {
+  content: counter(customlist) " ";
+  float: left;
+  width: 2em;
+}
+.region-content #page-page ol > li:first-child {
+  counter-reset: customlist;
+}
+.region-content #page-page ol.ws2-list-stepped > li {
+  line-height: 2em;
+  border-bottom: 1px solid #bfbfbf;
+  padding-bottom: 2em;
+  padding-top: 2em;
+}
+.region-content #page-page ol.ws2-list-stepped > li:before {
+  font-weight: bold;
+  font-size: 1.3125em;
+  width: 5em;
+  clip-path: circle(1rem);
+  text-align: center;
+  margin-left: -1.75em;
+}
+.region-content #page-page ol.ws2-list-stepped > li:last-child {
+  border-bottom: transparent;
+}
+.region-content #page-page ol.ws2-list-stepped > li:before, .region-content #page-page ol.ws2-list-stepped.ws2-element-maroon > li:before {
+  background-color: #8c1d40;
+  color: #fff;
+}
+.region-content #page-page ol.ws2-list-stepped.ws2-element-gray > li:before {
+  background-color: #191919;
+  color: #fff;
+}
+.region-content #page-page ol.ws2-list-stepped.ws2-element-gold > li:before {
+  background-color: #ffc627;
+  color: #191919;
+}
+
+/* =TABLES --- IN PROGRESS
+-------------------------------------------------------------- */
+/* Default table styles */
+table {
+  background-color: #fff;
+  margin-bottom: 1.5em;
+  max-width: 100%;
+  width: 100%;
+  border: 1px solid #e8e8e8;
+}
+
+table > tbody {
+  border-top: none;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td,
+table > tfoot > tr > th,
+table > tfoot > tr > td {
+  border-top: 1px solid #bfbfbf;
+  line-height: 1.44;
+  padding: 8px 8px;
+  vertical-align: top;
+}
+
+table > thead > tr > th,
+table > thead > tr > td {
+  border-bottom: 2px solid #bfbfbf;
+  vertical-align: bottom;
+  font-weight: bold;
+}
+
+body:not(.page-admin) table > tbody > tr:nth-child(2n+1) {
+  background-color: #fafafa;
+}
+
+table > caption + thead > tr:first-child > th,
+table > caption + thead > tr:first-child > td,
+table > colgroup + thead > tr:first-child > th,
+table > colgroup + thead > tr:first-child > td,
+table > thead:first-child > tr:first-child > th,
+table > thead:first-child > tr:first-child > td {
+  border-top: 0 none;
+}
+
+table > tbody + tbody {
+  border-top: 2px solid #bfbfbf;
+}
+
+/* WYSIWYG Bordered table */
+table.bordered {
+  border-bottom: 1px solid #bfbfbf;
+  border-left: 1px solid #bfbfbf;
+}
+
+table.bordered > thead > tr > th,
+table.bordered > thead > tr > td,
+table.bordered > tbody > tr > th,
+table.bordered > tbody > tr > td,
+table.bordered > tfoot > tr > th,
+table.bordered > tfoot > tr > td {
+  border-right: 1px solid #bfbfbf;
+}
+
+table.bordered > tbody > tr:nth-child(2n+1) {
+  background-color: #fff;
+}
+
+table.bordered > caption + thead > tr:first-child > th,
+table.bordered > caption + thead > tr:first-child > td,
+table.bordered > colgroup + thead > tr:first-child > th,
+table.bordered > colgroup + thead > tr:first-child > td,
+table.bordered > thead:first-child > tr:first-child > th,
+table.bordered > thead:first-child > tr:first-child > td {
+  border-top: 1px solid #bfbfbf;
+}
+
+/* =CONTENT CALLOUTS --- NOT DONE
+-------------------------------------------------------------- */
+.node-content-callout {
+  padding: 80px 0;
+}
+
+.node-content-callout .col-md-12 .content-wrapper {
+  max-width: 800px;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+
+.node-content-callout h2 {
+  margin-bottom: 34px;
+  font-size: 40px;
+}
+
+.node-content-callout .btn {
+  margin-top: 18px;
+}
+
+.node-content-callout .col-md-6 img,
+.node-content-callout .col-md-6 .embedded-video {
+  margin-top: 22px;
+}
+
+/* =PANELS --- WS2.0 DONE
+-------------------------------------------------------------- */
+.panel {
+  background-color: #fafafa;
+  border: 1px solid #d0d0d0;
+}
+
+.js-darkgraybg .panel,
+.js-lightgraybg .panel {
+  background-color: #fff;
+}
+
+/* =VIDEO --- WS2.0 DONE
+-------------------------------------------------------------- */
+/* Generic video */
+.embedded-video,
+.media-youtube-video,
+.media-vimeo-video {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.embedded-video iframe,
+.embedded-video object,
+.embedded-video embed,
+.media-youtube-video iframe,
+.media-youtube-video object,
+.media-youtube-video embed,
+.media-vimeo-video iframe,
+.media-vimeo-video object,
+.media-vimeo-video embed {
+  position: absolute !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* =BREADCRUMBS --- WS2.0 DONE
+-------------------------------------------------------------- */
+.easy-breadcrumb {
+  background-color: transparent;
+  margin: 2em 0;
+  padding: 0;
+  color: #484848;
+  font-size: 0.875em;
+}
+
+.easy-breadcrumb .easy-breadcrumb_segment-separator {
+  padding: 0 0.3125rem;
+}
+
+.easy-breadcrumb a {
+  border-bottom: 0 none;
+}
+
+/* =FLEXSLIDER SLIDESHOWS --- WS2.0 DONE
+-------------------------------------------------------------- */
+.flexslider {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0 0 2.75rem;
+}
+
+/* =ACCORDIONS --- NOT DONE
+-------------------------------------------------------------- */
+.ui-accordion {
+  margin: 3rem 0;
+  color: #191919;
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 200;
+  line-height: 1.44;
+}
+
+.ui-accordion .ui-accordion-header {
+  margin-top: 0;
+}
+
+h3.ui-accordion-header,
+h4.ui-accordion-header {
+  padding: 10px 20px;
+  text-transform: uppercase;
+  font-size: 16px;
+}
+
+h4.ui-accordion-header.ui-corner-all,
+h4.ui-accordion-header.ui-corner-top {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+
+h3.ui-accordion-header.ui-state-default,
+h4.ui-accordion-header.ui-state-default {
+  background-color: #fff;
+  border-top: 1px solid #e6e6e6;
+  border-right: 1px solid #e6e6e6;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #e6e6e6;
+  color: #767676;
+}
+
+h3.ui-accordion-header.ui-state-default a,
+h3.ui-accordion-header.ui-state-default a:link,
+h3.ui-accordion-header.ui-state-default a:visited {
+  color: #767676;
+}
+
+h3.ui-accordion-header.ui-state-hover a,
+h3.ui-accordion-header.ui-state-hover a:focus,
+h3.ui-accordion-header.ui-state-default a:focus,
+h3.ui-accordion-header:focus,
+h4.ui-accordion-header.ui-state-hover,
+h4.ui-accordion-header:focus {
+  color: #111;
+}
+
+h3.ui-accordion-header.ui-state-active,
+h4.ui-accordion-header.ui-state-active {
+  border-top: 1px solid #e6e6e6;
+  border-right: 1px solid #e6e6e6;
+  border-bottom: 3px solid #111;
+  border-left: 1px solid #e6e6e6;
+  color: #111;
+}
+
+h3.ui-accordion-header.ui-state-active a,
+h3.ui-accordion-header.ui-state-active a:link,
+h3.ui-accordion-header.ui-state-active a:visited {
+  color: #111;
+}
+
+h3.ui-accordion-header.ui-state-default:last-of-type,
+h4.ui-accordion-header.ui-state-default:last-of-type {
+  border-top: 1px solid #e6e6e6;
+  border-right: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
+  border-left: 1px solid #e6e6e6;
+}
+
+.ui-widget h3.ui-accordion-header a {
+  border-bottom: transparent;
+}
+
+.ui-accordion .ui-accordion-content {
+  top: 0;
+  border-top: 1px solid #e6e6e6;
+  border-right: 1px solid #e6e6e6;
+  border-bottom: 0 none;
+  border-left: 1px solid #e6e6e6;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding: 20px;
+}
+
+.ui-accordion .ui-accordion-content:last-of-type {
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.ui-accordion .accordion-content {
+  color: #191919;
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 200;
+  line-height: 1.44;
+}
+
+.ui-accordion .ui-accordion-header .ui-icon {
+  left: auto;
+  right: 0.5em;
+}
+
+.ui-accordion .ui-state-active .ui-icon,
+.ui-accordion .ui-state-default .ui-icon,
+.ui-accordion .ui-accordion .ui-state-active .ui-icon {
+  background-image: url("/profiles/openasu/themes/innovation/images/accordion-arrows.png");
+}
+
+.ui-accordion .ui-icon-triangle-1-e {
+  background-position: 0 0;
+}
+
+.ui-accordion .ui-state-hover .ui-icon-triangle-1-e,
+.ui-accordion .ui-icon-triangle-1-s {
+  background-position: 0 -13px;
+}
+
+.ui-accordion .ui-icon {
+  height: 13px;
+  width: 13px;
+}
+
+/* =ALERTS --- WS2.0 DONE
+-------------------------------------------------------------- */
+.alert {
+  color: #191919;
+  font-weight: 400;
+  border-bottom-color: #191919;
+  position: relative;
+  margin: 16px 0;
+  padding: 24px 24px;
+}
+.alert a {
+  color: #191919;
+  border-bottom-color: #191919;
+}
+.alert a.close {
+  background-color: #fff;
+  color: #191919;
+  font-size: 1.25em;
+  font-weight: bold;
+  opacity: 0.6;
+  border: 1px solid #d0d0d0;
+  padding: 0.25rem 0.5rem 0.25rem 0.58rem;
+  margin: 0 0 16px 16px;
+  border-radius: 1rem;
+  height: 2rem;
+  width: 2rem;
+}
+.alert a.close:hover {
+  opacity: 0.8;
+  color: #191919;
+  border-bottom-color: #d0d0d0;
+}
+.alert a.close + p:empty {
+  margin-top: -1rem;
+  padding-top: 0;
+  background-color: red !important;
+}
+.alert a:hover {
+  color: #8c1d40;
+  border-bottom-color: #8c1d40;
+  cursor: pointer;
+}
+
+.alert-success,
+.alert-info,
+.alert-danger,
+.alert-warning {
+  padding-left: 6em;
+}
+.alert-success:before,
+.alert-info:before,
+.alert-danger:before,
+.alert-warning:before {
+  font-family: FontAwesome, sans-serif;
+  font-size: 2rem;
+  position: absolute;
+  left: 0;
+  top: 1.5rem;
+  padding: 0 1.5rem;
+}
+
+.alert-success {
+  background-color: #e9f5db;
+  border-color: #78be20;
+}
+.alert-success:before {
+  content: "\f058";
+}
+
+.alert-info {
+  background-color: #d6f0fa;
+  border-color: #00a3e0;
+}
+.alert-info:before {
+  content: "\f05a";
+}
+
+.alert-danger {
+  background-color: #f7dddd;
+  /* 20% opacity of official maroon */
+  border-color: #8c1d40;
+}
+.alert-danger:before {
+  content: "\f071";
+}
+
+.alert-warning {
+  background-color: #ffeade;
+  /* 33% opacity of official maroon */
+  border-color: #ff7f32;
+}
+.alert-warning:before {
+  content: "\f0f3";
+}
+
+.alert:not([class*="alert-"]),
+div[class='alert alert-block'] {
+  /* Catch-all for default alert class */
+  background-color: #fafafa;
+  border-color: #d0d0d0;
+}
+
+/* Devel debugging */
+.logged-in .alert > ul > li > [class^=krumo] {
+  all: initial;
+}
+
+.logged-in .alert .krumo-root .krumo-element:not(a) {
+  color: #78be20;
+}
+
+/* =Alternate Element styles for 1) gray, 2) black, and 3) white --- IN PROGRESS
+-------------------------------------------------------------- */
+.region-content #page-page .ws2-element-alt {
+  padding: 24px 24px;
+  border-style: solid;
+  border-width: 1px;
+  /*
+   * Gray
+   */
+  /*
+   * Black
+   */
+  /*
+   * White
+   */
+}
+.region-content #page-page .ws2-element-alt > *:first-child {
+  padding-top: 0;
+  margin-top: 0;
+}
+.region-content #page-page .ws2-element-alt > *:last-child {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+.region-content #page-page .ws2-element-alt.ws2-element-alt-gray {
+  color: #191919;
+  background-color: #e8e8e8;
+  border-color: #e8e8e8;
+}
+.region-content #page-page .ws2-element-alt.ws2-element-alt-gray .ws2-element-style.btn-tag {
+  background-color: #bfbfbf !important;
+}
+.region-content #page-page .ws2-element-alt.ws2-element-alt-black {
+  color: #fafafa;
+  background-color: #191919;
+  border-color: #191919;
+}
+.region-content #page-page .ws2-element-alt.ws2-element-alt-black ul li:before, .region-content #page-page .ws2-element-alt.ws2-element-alt-black ol li:before {
+  color: #fafafa;
+}
+.region-content #page-page .ws2-element-alt.ws2-element-alt-black ul.ws2-element-style.ws2-element-gold li:before, .region-content #page-page .ws2-element-alt.ws2-element-alt-black ol.ws2-element-style.ws2-element-gold li:before {
+  color: #ffc627;
+}
+.region-content #page-page .ws2-element-alt.ws2-element-alt-black .ws2-element-style.btn-tag {
+  background-color: #747474;
+  border-color: #747474;
+  color: #fff;
+}
+.region-content #page-page .ws2-element-alt.ws2-element-alt-white {
+  border-color: #d0d0d0;
+}
+.region-content #page-page .ws2-element-alt.ws2-element-alt-white .ws2-element-style.btn-tag {
+  background-color: #e8e8e8;
+}
+
+/* =ADMIN UI --- WS2.0 DONE (admin only)
+-------------------------------------------------------------- */
+/* Node edit */
+#top-content #tabs .nav-pills {
+  padding-top: 1em;
+  /* dropdown items from nav pills */
+}
+#top-content #tabs .nav-pills li a {
+  background-color: #fafafa;
+}
+#top-content #tabs .nav-pills li a:hover {
+  background-color: #e8e8e8;
+  color: #000;
+}
+#top-content #tabs .nav-pills > li.active > a, #top-content #tabs .nav-pills > li.active > a:hover, #top-content #tabs .nav-pills > li.active > a:focus {
+  background-color: #8c1d40;
+}
+#top-content #tabs .nav-pills li.dropdown > ul.dropdown-menu a {
+  background-color: transparent;
+  border-bottom: transparent;
+}
+#top-content #tabs .nav-pills li.dropdown > ul.dropdown-menu a:hover {
+  background-color: #e8e8e8;
+  color: #000;
+}
+
+/* IPE */
+#panels-ipe-control-container a {
+  border-bottom: transparent;
+}
+
+/* Ctools Modals */
+.ctools-modal-content .btn {
+  margin-top: 0.25em;
+  padding: 4px 0.625em;
+  font-size: 0.6925em;
+}
+
+#modalContent .form-submit.btn {
+  margin-bottom: 1em;
+  padding: 6px 20px;
+  font-size: 1.125em;
+}
+
+.ctools-modal-content #edit-settings-spacing {
+  -webkit-column-count: 3;
+  -moz-column-count: 3;
+  column-count: 3;
+  -webkit-column-width: 15em;
+  -moz-column-width: 15em;
+  column-width: 15em;
+}
+
+.panels-section-column-categories .panels-categories-box {
+  margin-bottom: 0.5em;
+}
+
+h2.widget-list {
+  font-size: 0.9em;
+  line-height: 1.4;
+  margin: 0 0 0 0.625em;
+}
+
+/* LH side categories */
+#modalContent .panels-section-column-categories .content-type-button {
+  top: 0.5em;
+  line-height: 1.1em;
+  font-size: 0.75em;
+}
+
+#modalContent .panels-section-column-categories .content-type-button div,
+#modalContent .panels-section-column-categories .content-type-button span {
+  left: 3em;
+  position: absolute;
+  top: 0.25em;
+  width: 80%;
+}
+
+#modalContent .panels-section-column-categories .content-type-button > a:hover > img,
+#modalContent .panels-section-column-categories .content-type-button > a > img:hover {
+  border: 2px solid #fff;
+}
+
+/* Main body of columns with content */
+#modalContent .panels-section-columns > .panels-section-column .content-type-button {
+  font: normal 0.9rem/1.5em "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  top: 0;
+}
+
+#modalContent .panels-section-columns > .panels-section-column .content-type-button div,
+#modalContent .panels-section-columns > .panels-section-column .content-type-button span {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+#modal-content .form-tablefield input.form-submit.btn,
+#modalContent .form-tablefield input.form-submit.btn {
+  background-color: #8c1d40 !important;
+}
+
+ul.help-text {
+  background-color: #fafafa;
+  padding: 0.5em 1em;
+}
+
+ul.help-text li {
+  list-style: none;
+  padding: 0.125em 0;
+  line-height: 1.25;
+}
+
+ul.help-text li.help-title {
+  font-size: 0.875em;
+  font-weight: bold;
+}
+
+/* =FORMS --- WS2.0 DONE
+-------------------------------------------------------------- */
+.marker, .form-required {
+  color: #b72a2a;
+}
+
+/* =100% width fix for Bootstrap limitation --- SKIPPED (NEEDS REVIEW)
+----------------------------------------------------- */
+#header .container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#header > .container .row .col-md-12 {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.section > .container,
+#footer > .container,
+#page-footer > .container {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.section > .container .row,
+#footer > .container .row,
+#page-footer > .container .row {
+  max-width: 1170px;
+  margin: 0 auto;
+}
+
+.section > .container .row-full,
+#footer > .container .row-full,
+#page-footer > .container .row-full {
+  width: 100% !important;
+  max-width: none;
+}
+
+.section > .container .row-full .col-md-12,
+#footer > .container .row-full .col-md-12,
+#page-footer > .container .row-full .col-md-12 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.section > .container .row-full [class^="pane-"],
+#footer > .container .row-full .content,
+#page-footer > .container .row-full .region > div:not(.block-asu-brand) .content {
+  max-width: 1170px;
+  margin: 0 auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+#page-footer #innovation-top {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* WEBSPARK-1561 - footer positioning issues */
+/* @TODO - remove these overrides when added to ASU global header/footer CSS */
+#innovation-footer {
+  position: relative;
+}
+#innovation-footer .footer-menu ul {
+  padding: 1em;
+}
+#innovation-footer .footer-menu ul li {
+  padding-bottom: 0;
+}
+
+/* 100% width issue - override for flexslider; asuflex.css carries the rest after this rule
+----------------------------------------------------- */
+.section > .container .row-full .pane-bundle-asu-spotlight [class^="pane-"] {
+  width: 100% !important;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+  max-width: none !important;
+}
+
+.row {
+  padding: 0;
+  margin: 0;
+}
+
+#page-footer {
+  background-color: #191919;
+}
+#page-footer #block-asu-brand-asu-brand-footer {
+  background-color: #e8e8e8;
+}
+
+/** Token browsing modal --- SKIPPED (Admin only)
+----------------------------------------------------- */
+.ui-widget-content.ui-dialog.token-browser-container {
+  background-color: #fff;
+  padding: 0.5em;
+  border: 1px solid #ddd;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+
+.token-browser-container .ui-dialog-titlebar {
+  background-color: #eaeaec;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.token-browser-container .ui-dialog-title {
+  color: #333;
+  padding-left: 1em;
+}
+.token-browser-container table.treeTable > tbody > tr > td:not(first-child) {
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+}
+
+/** FOCUS --- WS2.0 DONE
+----------------------------------------------------- */
+a:focus,
+.ui-widget-content a:focus,
+input:focus,
+a.btn:focus,
+.btn a:focus,
+#skip_to_content:focus,
+#top-content #tabs .nav-pills > li.active > a:focus,
+h4.ui-accordion-header.ui-state-hover,
+h4.ui-accordion-header:focus {
+  outline: 2px solid #66afe9;
+  -webkit-box-shadow: 0 0 5px #66afe9;
+  box-shadow: 0 0 5px #66afe9;
+}
+
+/** UI Tabs --- WS2.0 DONE
+----------------------------------------------------- */
+/* fixes for stacked tabs */
+body #content .ui-tabs .ui-tabs-nav li.ui-state-focus {
+  margin-bottom: 0;
+}
+body #content .ui-tabs .ui-tabs-nav li.ui-state-focus a {
+  border-top: none;
+}
+body #content .ui-tabs .ui-tabs-nav li a {
+  margin-left: 0;
+  border-bottom: transparent;
+  clear: both;
+}
+
+/* =MEDIA QUERIES - moved to separate file */
+#innovation-footer .footer-menu ul li a:hover {
+  color: #8c1d40;
+  border-bottom: 1px dotted #8c1d40;
+}
+
+/* CARDS
+ -- WILL GO IN OWN SCSS FILE AFTER DEVELOPMENT
+ */

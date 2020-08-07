@@ -41,7 +41,7 @@ function asu_brand_init() {
   if (variable_get('asu_brand_sitemenu_injection_flag', 1)) {
     $menu_array = asu_brand_get_site_menu_array();
     drupal_alter('asu_brand_sitemenu', $menu_array); // Invoke alter
-    
+
     $site_name = asu_brand_get_site_name();
     drupal_alter('asu_brand_sitename', $site_name); // Invoke alter
 
@@ -71,7 +71,7 @@ function asu_brand_init() {
     }
 
     //ASUHeader.site_title = {title: "Name of Site", parent_org: "Name of Parent Organization"};
-    
+
     $js = 'window.ASUHeader = window.ASUHeader || {};';
     $js .= 'ASUHeader.site_menu = ASUHeader.site_menu || {};';
     $js .= 'ASUHeader.site_menu.json = \''.json_encode($menu_array, JSON_HEX_APOS).'\';';
@@ -81,7 +81,7 @@ function asu_brand_init() {
     if (variable_get('asu_brand_ci_testing', 0) == 1) {
       $js .= 'ASUHeader.disableCookieConsent = true;';
     }
-    
+
     drupal_add_js($js, array('type' => 'inline', 'scope' => 'header', 'group' => JS_THEME, 'weight' => -10));
   }
 }
@@ -169,7 +169,7 @@ function asu_brand_block_save($delta = '', $edit = array()) {
 
       asu_brand_cache_clear();
       break;
-    
+
     case 'asu_brand_footer':
       variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
       variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
@@ -178,7 +178,7 @@ function asu_brand_block_save($delta = '', $edit = array()) {
       variable_set('asu_brand_preview_pages', $edit['asu_brand_preview_pages']);
       asu_brand_cache_clear();
       break;
-    
+
     case 'asu_brand_students_footer':
       variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
       variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
@@ -195,7 +195,7 @@ function asu_brand_block_view($delta = '') {
   $block = array();
   $is_preview_path = asu_brand_is_preview_path();
   $preview_text = t('No preview available');
-  
+
   switch ($delta) {
     case 'asu_brand_header':
       $block['subject'] = NULL;
@@ -218,7 +218,7 @@ function asu_brand_block_view($delta = '') {
         $block['content'] = asu_brand_get_block_footer();
       }
       break;
-    
+
     case 'asu_brand_students_footer':
       $block['subject'] = NULL;
       if ($is_preview_path) {
@@ -258,7 +258,7 @@ function asu_brand_page_alter(&$page) {
 
 /**
  * Clear block caches.
- * 
+ *
  * If called without arguments, clears all asu_brand related items. $cid can be
  * any asu_brand item (without the 'asu_brand:' part.
  */
@@ -310,6 +310,7 @@ function asu_brand_get_site_name() {
  */
 function asu_brand_get_site_menu_array() {
   $menu_tree = menu_tree_all_data(variable_get('asu_brand_sitemenu_name', ASU_BRAND_SITE_MENU_NAME_DEFAULT));
+  drupal_alter('asu_brand_sitemenu_name', $menu_tree); // Invoke alter
   $menu_array = array();
   $i=0;
   foreach ($menu_tree as $item) {

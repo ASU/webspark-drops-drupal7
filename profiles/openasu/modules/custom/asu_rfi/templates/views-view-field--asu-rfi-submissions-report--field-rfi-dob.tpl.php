@@ -21,12 +21,9 @@
  * regardless of any changes in the aliasing that might happen if
  * the view is modified.
  */
-?>
-<?php
-if(isset($output)){
+
+if (isset($output)) {
   print base64_decode($output);
+} else {
+  print $output;
 }
-else{
-   print $output; 
-}
-?>

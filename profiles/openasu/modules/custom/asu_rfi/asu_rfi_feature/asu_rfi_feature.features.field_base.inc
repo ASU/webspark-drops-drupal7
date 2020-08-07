@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * asu_rfi_feature.features.field_base.inc
@@ -625,11 +626,12 @@ function asu_rfi_feature_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        'Complete' => 'Complete',
-        'Incomplete' => 'Incomplete',
-        'Pending' => 'Pending',
-        'action_required' => 'Action required',
-        'SF_Complete' => 'SF_Complete',
+        'Form_Completed' => 'Ready for middleware POST',
+        'Form_Multi_Partial' => 'Partial multiform submitted',
+        'SF_Multi_Pending' => 'Pending middleware POST (multiform)',
+        'SF_Failed' => 'FAILED Middleware POST',
+        'SF_Completed' => 'SUCCESSFUL Middleware POST',
+        'Form_Completed_No_SF' => 'Completed (No Salesforce)',
       ),
       'allowed_values_function' => '',
       'allowed_values_php' => '',

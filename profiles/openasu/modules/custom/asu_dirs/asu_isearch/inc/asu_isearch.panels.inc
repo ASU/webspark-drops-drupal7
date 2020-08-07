@@ -201,7 +201,7 @@ function asu_isearch_preprocess_panels_pane(&$variables) {
     $content = &$variables['content'];
 
     // Setup variables here...
-    $content['title'] = '';
+    unset($content['title']);
     $directory = new IsearchProfileDirectory();
 
     // load the configuration saved for this pane

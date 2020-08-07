@@ -22,7 +22,7 @@ class ASUeAdvisorFeedsFetcherResult extends FeedsFetcherResult {
     $this->unit_identifier = strtoupper($unit_identifier);
     $this->program = $program;
     $this->cert = (boolean) $cert;
-    parent::__construct();
+    parent::__construct(NULL);
   }
 
   // We need get methods. So, we can use $program and $cert in ASUeAdvisorTransferFeedParser.inc.

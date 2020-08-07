@@ -1,0 +1,12 @@
+name = Entity Reference Autocomplete
+description = A Form API element type to reference arbitrary entities through an autocomplete textfield
+core = 7.x
+
+dependencies[] = entity
+
+; Information added by Drupal.org packaging script on 2017-03-23
+version = "7.x-1.13"
+core = "7.x"
+project = "entityreference_autocomplete"
+datestamp = "1490279589"
+

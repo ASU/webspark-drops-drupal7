@@ -1,0 +1,41 @@
+commit 08092442903bfc105945645f56cf00f4ce73c3b4
+Author: Bryan R <aubjr@asu.edu>
+Date:   Wed Mar 18 17:40:16 2020 -0700
+
+    End of today's embed work
+
+diff --git a/profiles/openasu/modules/contrib/video_embed_field/video_embed_field.feeds.inc b/profiles/openasu/modules/contrib/video_embed_field/video_embed_field.feeds.inc
+index d55a0573f..586e6a2a1 100644
+--- a/profiles/openasu/modules/contrib/video_embed_field/video_embed_field.feeds.inc
++++ b/profiles/openasu/modules/contrib/video_embed_field/video_embed_field.feeds.inc
+@@ -47,26 +47,23 @@ function video_embed_field_set_target($source, $entity, $target, $value) {
+ 
+   list($field_name, $sub_field) = explode(':', $target, 2);
+ 
+-  watchdog('debug', print_r(get_defined_vars()));
+-
+   $info = field_info_field($field_name);
+ 
+   // Iterate over all values.
+   $field = isset($entity->$field_name) ? $entity->$field_name : array(LANGUAGE_NONE => array());
+ 
+   // Allow for multiple mappings to the same target.
+-  $count = call_user_func_array('array_merge_recursive', $field[LANGUAGE_NONE]);
+-  $delta = count($count[$sub_field]);
++  // Additional checks for empty values before passing $value
++  $count = (!empty($field[LANGUAGE_NONE])) ? call_user_func_array('array_merge_recursive', $field[LANGUAGE_NONE])
++    : 0;
++  $delta = (is_array($count)) ? count($count[$sub_field]) : 0;
+ 
+   foreach ($value as $v) {
+-
+     if ($info['cardinality'] != FIELD_CARDINALITY_UNLIMITED && $info['cardinality'] <= $delta) {
+       break;
+     }
+-
+     if (is_scalar($v)) {
+       $field[LANGUAGE_NONE][$delta][$sub_field] = $v;
+-
+       $delta++;
+     }
+   }

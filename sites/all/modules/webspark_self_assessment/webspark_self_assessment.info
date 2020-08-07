@@ -1,5 +1,0 @@
-name = Webspark Self Assessment Tool
-description = Module that allows Webspark admins to assess whether site utilizes contrib modules or custom code
-
-core = 7.x
-package = ASU

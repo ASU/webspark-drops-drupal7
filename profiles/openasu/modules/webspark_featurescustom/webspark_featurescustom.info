@@ -6,8 +6,10 @@ project = webspark_featurescustom
 files[] = webspark_featurescustom.module
 
 ; See below for info on version number
-version = 7.x-1.8
+version = 7.x-1.9
 required = TRUE
 
-; Contains submodules enabled in the installation profile by default to avoid dependency/permissions issues with Panopoly
-; The version number of this module is only updated when code that is NOT part of said submodules has been updated.
+; Contains submodules enabled in the installation profile by default to avoid dependency/permissions
+; issues with Panopoly.
+; The version number of this module is only updated when code that is NOT part of said submodules
+; has been updated.

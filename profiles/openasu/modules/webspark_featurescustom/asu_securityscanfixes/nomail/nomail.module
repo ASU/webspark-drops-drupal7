@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * Implements hook_mail_alter().
+ */
+function nomail_mail_alter(&$message) {
+  $message['send'] = FALSE;
+}
