@@ -169,12 +169,13 @@ $ws2-gray-lightest:      #fafafa;
           // 100% wide, white background on megamenu open/hover event
           &.mega-align-justify.dropdown > .tb-megamenu-submenu {
             width: 100vw;
-            background-color: yellow !important;
+            //background-color: yellow !important;
             //background-color: #fff !important;
-            padding: 0 190px;
-            margin-left: -190px;
+            padding-top: 0;
+            padding-bottom: 0;
+            //margin-left: -190px;
             & > .mega-dropdown-inner {
-              max-width: 1170px;
+              max-width: 1140px;
               // margin properties remove the cubic-bezier transition /* margin: 0 auto; */
               position: sticky;
               background-color: darkorange;
@@ -233,6 +234,9 @@ $ws2-gray-lightest:      #fafafa;
         &.btn {
         @include megamenu-button-styling(0.2rem);
           margin-right: 0.5rem;
+        }
+        &:last-child {
+          margin-right: 0;
         }
       }
       // Text (non-button) links

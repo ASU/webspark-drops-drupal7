@@ -199,12 +199,11 @@
 }
 .tb-megamenu .nav li.tb-megamenu-item.mega.level-1.mega-align-justify.dropdown > .tb-megamenu-submenu {
   width: 100vw;
-  background-color: yellow !important;
-  padding: 0 190px;
-  margin-left: -190px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 .tb-megamenu .nav li.tb-megamenu-item.mega.level-1.mega-align-justify.dropdown > .tb-megamenu-submenu > .mega-dropdown-inner {
-  max-width: 1170px;
+  max-width: 1140px;
   position: sticky;
   background-color: darkorange;
 }
@@ -295,6 +294,10 @@
 .tb-megamenu .nav > .active.btn.btn-gold > a {
   background-color: #ffc627 !important;
   color: #191919 !important;
+}
+.tb-megamenu .nav > li:last-child,
+.tb-megamenu .nav > .active:last-child {
+  margin-right: 0;
 }
 .tb-megamenu .nav > li:not(.btn) > a {
   padding: 0.5rem 0.75rem;

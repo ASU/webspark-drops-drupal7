@@ -29,49 +29,57 @@
    * @returns {{mrg: number, fs: number, pds: string}}
    */
       function calcFits(t, x, count, a) {
-        var poss = [];
+        var possTextWidths = [];
         var objs = [{
           fs: 14,
           mrg: 8,
-          pds: "0.5rem 0.75rem"
+          pds: "0.5rem 0.5rem"
         }, {
           fs: 15,
           mrg: 8,
-          pds: "0.5rem 0.75rem"
+          pds: "0.5rem 0.5rem"
         }, {
           fs: 16,
           mrg: 8,
           pds: "0.5rem 0.75rem"
         }];
 
-        var megamenu = document.getElementsByClassName("tb-megamenu-nav")[0];
+        var megamenu = document.getElementsByClassName("tb-megamenu-nav")[0].children;
+        var chevron = document.getElementsByClassName("fa-chevron-down");
+        var chevronParent = chevron[0].parentElement;
+        var chevronWidth = chevron[0].clientWidth;
+//        var chevronPadd = window.getComputedStyle(chevronParent).paddingRight;
+        var chevronPadd = 8;
         // Calculate Chevrons net width
-        var chevrons = 0;
-        if (megamenu) {
-          chevrons = megamenu.getElementsByClassName("fa-chevron-down").length * 12; // 12px wide
+        var chevronTotal = 0;
+        var chevronPadTotal = chevronWidth + chevronPadd; //DEFAULT 12px width + 0.5rem padding
+        if (megamenu.length > 0) {
+          chevronTotal = chevron.length * chevronPadTotal;
         }
+
+        // Sum Top-level menu item text lengths (in px), based on the 3 different font sizes
         for (var i = 0; i < objs.length; ++i) {
           var hold = 0;
           for (var c = 0; c < a.length; ++c) {
             hold += $.fn.textWidth($(a[c]).find("a").eq(0).text(), objs[i].fs + "px sans-serif");
           }
-          hold = hold + (count * objs[i].mrg); // Margin is only on one side in WS2.0
-          poss.push(hold);
+          hold += (count * objs[i].mrg);
+          hold += (count * (chevronPadd * 2));
+          possTextWidths.push(hold);
         }
-        // Take the ASU WS2.0 logo width into account
-        var ws2_logo = document.getElementsByClassName("ws2-global-header-logo")[0].clientWidth;
-        // Add in ASU WS2.0 right margins
-        var item_margin = count * 8; // 8px (0.5rem)
-        var ws2_width = x - ws2_logo - item_margin;
 
-        // hard-coded numbers overridden below for WS2.0
-        if ((poss[2] + chevrons) < ws2_width) {
+        // Take the ASU WS2.0 logo width into account
+        var ws2_logo = document.getElementsByClassName("ws2-global-header-logo")[0].offsetWidth;
+        // Calculate Total menu width - Logo width - menu elem padding
+        var ws2_menu_width = Number(x) - Number(ws2_logo);
+
+        if ((possTextWidths[2] + chevronTotal) < ws2_menu_width) {
           if (typeof(Storage) !== "undefined") {
             localStorage.setItem("asuMegaFont", "16px");
             localStorage.setItem("asuMegaPadding", "0 0.5rem");
           }
           return objs[2];
-        } else if ((poss[1] + chevrons) < ws2_width) {
+        } else if ((possTextWidths[1] + chevronTotal) < ws2_menu_width) {
           if (typeof(Storage) !== "undefined") {
             localStorage.setItem("asuMegaFont", "15px");
             localStorage.setItem("asuMegaPadding", "0 0.5rem");
@@ -86,6 +94,21 @@
         }
       }
 
+  /**
+   * Calculate the total text width
+   * @param text
+   * @param font
+   * @returns {*}
+   */
+      $.fn.textWidth = function(text, font) {
+        if (!$.fn.textWidth.fakeEl) {
+          $.fn.textWidth.fakeEl = $("<span>").hide().appendTo(document.body);
+        }
+        $.fn.textWidth.fakeEl.text(text || this.val() || this.text()).css("font", font || this.css("font"));
+        return $.fn.textWidth.fakeEl.width();
+      };
+
+      // Calculates the proper font size and padding to top-level links and buttons.
       var ASUNavMenu = $("#ASUNavMenu");
       if (ASUNavMenu.length) {
         $(window).on("resize load", function() {
@@ -94,11 +117,34 @@
             var x = $("#ASUNavMenu .container .navbar-collapse").width();
             var count = 0;
             var t = 0;
-
+            // Get element widths
             jQuery.each(a, function(a, b) {
               t += jQuery(b).width();
               count++;
             });
+
+            // Apply styling on background if necessary
+            var check = $("#ASUNavMenu li.tb-megamenu-item.level-1.mega.mega-align-justify.dropdown")
+              .children(".tb-megamenu-submenu");
+              if (check.length > 0) {
+                for (var cnt = 0; cnt < check.length; cnt++) {
+                  var tbShell = document.getElementById("tb-megamenu-ws2-shell").offsetWidth; // 1140px max-width
+                  var LHSpacing = (window.innerWidth - tbShell) / 2;
+                  var subMenu = check[cnt].firstElementChild;
+                  // subMenu.style.backgroundColor = "blue";
+                  var subMenuWidth = subMenu.offsetWidth;
+                  var RHSpacing = window.innerWidth - LHSpacing - subMenuWidth;
+                  /*
+                  1 - left margin = innerWidth - tbShell
+                  2 - RH margin = innerWidth - left Margin - submenuwidth
+                   */
+                  // check[cnt].style.backgroundColor = "aqua";
+                  check[cnt].style.marginLeft = ((-1 * LHSpacing - 6) + "px"); // Mystery 6px????
+                  check[cnt].style.paddingLeft = LHSpacing + "px";
+                  check[cnt].style.paddingRight = RHSpacing + "px";
+                }
+              }
+
             var data = calcFits(t, x, count, a);
             ASUNavMenu.find("li.tb-megamenu-item.level-1.mega:not(.btn)").children("a").css({
               "font-size" : data.fs,
@@ -110,26 +156,11 @@
               "font-size" : data.fs
             });
             // Apply margin to menu
-            ASUNavMenu.find("li.tb-megamenu-item.level-1.mega.mega-align-justify.dropdown > .tb-megamenu-submenu").css({
-              "margin-left" : (-1 * data.marg)
-            });
+            // ASUNavMenu.find("li.tb-megamenu-item.level-1.mega.mega-align-justify.dropdown > .tb-megamenu-submenu").css({
+            // });
           }
         });
       }
-
-      /**
-       * Calculate the total text width
-       * @param text
-       * @param font
-       * @returns {*}
-       */
-      $.fn.textWidth = function(text, font) {
-        if (!$.fn.textWidth.fakeEl) {
-          $.fn.textWidth.fakeEl = $("<span>").hide().appendTo(document.body);
-        }
-        $.fn.textWidth.fakeEl.text(text || this.val() || this.text()).css("font", font || this.css("font"));
-        return $.fn.textWidth.fakeEl.width();
-      };
     }
   };
 
