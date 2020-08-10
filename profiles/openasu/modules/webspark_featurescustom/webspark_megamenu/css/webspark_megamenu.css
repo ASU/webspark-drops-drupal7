@@ -293,3 +293,9 @@
   font-weight: normal;
   color: #ffc627;
 }
+
+#tb-megamenu-admin .tb-megamenu-column-inner.mega-inner.clearfix a,
+#tb-megamenu-admin ul.tb-megamenu-subnav.mega-nav a,
+#tb-megamenu-admin .tb-megamenu-column-inner h2 {
+  padding-left: 10px !important;
+}

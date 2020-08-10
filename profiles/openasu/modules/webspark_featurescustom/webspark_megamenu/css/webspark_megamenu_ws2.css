@@ -205,7 +205,6 @@
 .tb-megamenu .nav li.tb-megamenu-item.mega.level-1.mega-align-justify.dropdown > .tb-megamenu-submenu > .mega-dropdown-inner {
   max-width: 1140px;
   position: sticky;
-  background-color: darkorange;
 }
 .tb-megamenu .nav li.tb-megamenu-item.mega.level-1 > .tb-megamenu-submenu.dropdown-menu {
   border: 1px solid #d0d0d0;

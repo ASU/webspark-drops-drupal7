@@ -78,3 +78,29 @@ function _webspark_megamenu_sisa_form_validate(&$form, &$form_state){
     }
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function webspark_megamenu_form_alter(&$form, &$form_state, $form_id) {
+//  dpm($form);
+  $type = (isset($form['#node']->type)) ? $form['#node']->type : '';
+  if (!empty($type)) {
+    $form['menu']['hide_top_menu'] = array(
+      '#type' => 'checkbox',
+      '#title' => 'Hide top-level menu on this page',
+      '#default_value' => 0,
+      '#weight' => -100,
+    );
+    $form['#submit'][] = '_webspark_megamenu_node_form_submit';
+  }
+}
+
+function _webspark_megamenu_node_form_submit(&$form, &$form_state) {
+  $show = (isset($form_state['values']['menu']['hide_top_menu']))
+    ? $form_state['values']['menu']['hide_top_menu']
+    : 0;
+  $form_state['values']['options']['attributes']['hide_top_menu'] = $show;
+  // @TODO - Set value in menu attributes manually
+//  dpm($form_state, __FUNCTION__ . ' - $form_state');
+}

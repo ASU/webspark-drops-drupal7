@@ -300,3 +300,13 @@ $mm-darker-gray: #2a2a2a;
     color: $asu-gold;
   }
 }
+
+// UI form only
+#tb-megamenu-admin {
+  .tb-megamenu-column-inner.mega-inner.clearfix a,
+  ul.tb-megamenu-subnav.mega-nav a,
+  .tb-megamenu-column-inner h2 {
+    padding-left: 10px !important;
+  }
+}
+
