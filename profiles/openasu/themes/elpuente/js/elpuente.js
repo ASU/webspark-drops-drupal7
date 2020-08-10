@@ -3,15 +3,14 @@
  */
 
 (function ($, Drupal) {
+  // noinspection JSUnusedLocalSymbols
   Drupal.behaviors.asu_standard = {
-    attach: function (context, settings) { // Code to run on DOM ready, each AJAX request finish.
-
+    // Code to run on DOM ready, each AJAX request finish.
+    attach: function (context, settings) {// jshint ignore:line
       $("#asu_mobile_hdr").wrapInner("<div class='asu_mobile_hdr_wrapper'></div>");
       $("#asu_mobile_menu").wrapInner("<div class='asu_mobile_menu_wrapper'></div>");
-
       // Add header to Ctools Modal menu to improve UI
       $(".panels-add-content-modal .panels-categories-box").after("<h2 class=\"widget-list\">More Content Panes</h2>");
-
     }
   };
 
@@ -20,32 +19,36 @@
   var navOffset = 0;
   $(window).scroll(function () {
     // Mobile Friendly Navbar - Drupal default
-    if ($('#navbar-administration').length > 0) {
-      navOffset = $('#navbar-bar').height() + $('#navbar-tray').height();
-      if (typeof($('#navbar-tray').attr('data-offset-left')) !== typeof undefined) {
-        navOffset = navOffset - $('#navbar-tray').height();
+    var asuNavMenu = $("#ASUNavMenu");
+    if ($("#navbar-administration").length > 0) {
+      var navTray = $("#navbar-tray");
+      navOffset = $("#navbar-bar").height() + navTray.height();
+      if (typeof(navTray.attr("data-offset-left")) !== typeof undefined) {
+        navOffset = navOffset - navTray.height();
       }
     }
     // Admin Menu - Popular alternative
-    else if ($('#admin-menu').length > 0) {
-      navOffset = $('#admin-menu').height();
+    else if ($("#admin-menu").length > 0) {
+      navOffset = $("#admin-menu").height();
     }
-    navOffsetUnits = navOffset + "px";
+    var navOffsetUnits = navOffset + "px";
     var navOffsetTop = {"top": navOffsetUnits};
-    if (($('#ASUNavMenu').offset().top - ($(window).scrollTop() + navOffset)) < 1 && $('.sticky-menu').length < 1) {
-      $('#ASUNavMenu').addClass('sticky-menu').css(navOffsetTop);
-    } else if (($('#ASUNavMenu').offset().top - ($(window).scrollTop() + navOffset)) >= 1) {
-      $('#ASUNavMenu').removeClass('sticky-menu').removeAttr("style");
+    if ((navOffset + 1 - $(window).scrollTop()) >= 1) {
+      // console.log("no sticky");
+      asuNavMenu.removeClass("sticky-menu").removeAttr("style");
+    } else if ((asuNavMenu.offset().top - ($(window).scrollTop() + navOffset)) < 1 && $(".sticky-menu").length < 1) {
+      // console.log("sticky");
+      asuNavMenu.addClass("sticky-menu").css(navOffsetTop);
     }
   });
 
   // Fixes all anchor tags with hashes
-  $('a').on('click', function (e) {
-    var $this = $(this);
-    var url = $this.attr('href');
-    var cls = $this.attr('class');
-    if (!$this.hasClass('accordion-toggle') && !$this.closest('ui-tabs').length == 0 && $this.closest('nav-tabs').length == 0) {
-      if (url.slice(0, 1) == '#') {
+  $("a").on("click", function (e) {
+    let $this = $(this);
+    var url = $this.attr("href");
+    // var cls = $this.attr("class");
+    if (!$this.hasClass("accordion-toggle") && !$this.closest("ui-tabs").length === 0 && $this.closest("nav-tabs").length === 0) { // jshint ignore:line
+      if (url.slice(0, 1) === "#") {
         e.preventDefault();
         smoothScroll(url);
       }
@@ -59,9 +62,9 @@
 
   // Function to calculate current offset with respect to scroll position
   function offsetTop() {
-    var hh = $('#header').height();
+    var hh = $("#header").height();
     var sp = $(document).scrollTop();
-    var fx = $('#ASUNavMenu').height();
+    var fx = $("#ASUNavMenu").height();
     if (sp < hh) {
       fx = fx * 2;
     }
@@ -70,12 +73,12 @@
   }
 
   // Hash smooth scrolling
-  function smoothScroll(hash) {
-    $('html,body').animate({scrollTop: $(hash).offset().top - offsetTop()}, 'slow');
+  function smoothScroll(hash) { // jshint ignore:line
+    $("html,body").animate({scrollTop: $(hash).offset().top - offsetTop()}, "slow");
     window.location.hash = hash;
   }
 
   // WEBSPARK-897 - Stop conflict between Token module (and its jQuery calls) and Bootstrap's button() function.
   $.fn.bootstrapBtn = $.fn.button.noConflict();
 
-})(jQuery, Drupal);
+})(jQuery, Drupal); // jshint ignore:line
