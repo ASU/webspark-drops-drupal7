@@ -9,6 +9,15 @@
  * Default alternate desktop size: >= 992px
  */
 @media (min-width: $screen-md) {
+  // From React components: Hide primary menu but show top gray bar.
+  header[class^=css-] {
+    & > .universal-nav {
+      display: block;
+    }
+    & > .primary-nav {
+      display: none;
+    }
+  }
   #ASUNavMenu {
     display: inherit;
   }
