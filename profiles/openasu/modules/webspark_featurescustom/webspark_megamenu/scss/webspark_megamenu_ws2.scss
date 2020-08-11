@@ -76,7 +76,7 @@ $ws2-gray-lightest:      #fafafa;
   .ws2-global-header-title,
   .subdomain-name {
     font-size: 1.5rem;
-
+    @include ws2-global-transition();
     &.ws2-no-unit-name {
       font-size: 2rem;
     }
@@ -98,18 +98,14 @@ $ws2-gray-lightest:      #fafafa;
 
   .nav {
     // border/background of submenus
-    &.mega > .mega-dropdown-menu {
-      min-width: 200px;
-      display: block;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      height: 1px;
-      width: 1px;
-      margin: -1px;
-      padding: 0;
-      border: 0;
+    .mega {
+      .mega-dropdown-menu {
+        .level-2 .btn > a {
+          padding-right: 0.5rem;
+          padding-left: 0.5rem;
+        }
+      }
     }
-
     // Container for every TB Mega menu item
     li.tb-megamenu-item {
       // top level buttons
@@ -330,6 +326,7 @@ $ws2-gray-lightest:      #fafafa;
     }
   }
 
+  // Sorted by layout
   .tb-megamenu-row {
     &.row-fluid {
       & + .row-fluid {

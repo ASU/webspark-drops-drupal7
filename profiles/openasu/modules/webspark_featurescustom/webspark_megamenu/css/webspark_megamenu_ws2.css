@@ -98,6 +98,7 @@
 .tb-megamenu .ws2-global-header-title,
 .tb-megamenu .subdomain-name {
   font-size: 1.5rem;
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s;
 }
 .tb-megamenu .ws2-global-header-title.ws2-no-unit-name,
 .tb-megamenu .subdomain-name.ws2-no-unit-name {
@@ -117,16 +118,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.tb-megamenu .nav.mega > .mega-dropdown-menu {
-  min-width: 200px;
-  display: block;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
+.tb-megamenu .nav .mega .mega-dropdown-menu .level-2 .btn > a {
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
 }
 .tb-megamenu .nav li.tb-megamenu-item .btn {
   display: inline-block;
