@@ -52,8 +52,8 @@ $tb_mm_admin_padding: 2.12766%; // TB Megamenu admin padding % to subtract
   font-weight: 700;
   font-size: 1.5rem;
   padding-left: 0;
-  margin-bottom: 1rem;
-  display: block;
+  margin-bottom: 0.75em;
+  display: inline-block !important;
   text-decoration: none;
   cursor: default !important;
 }

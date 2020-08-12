@@ -304,14 +304,9 @@ $ws2-gray-lightest:      #fafafa;
         padding: 0;
       }
     }
-    .mega-group > a.mega-group-title {
-      @include megamenu-group-title-style();
-      &:hover,
-      &:focus {
-        @include megamenu-group-title-style-hover();
-      }
-    }
+
     // Mega Group Title link styling
+    .mega-group > a.mega-group-title,
     .mega-nav .mega-group > .mega-group-title,
     .active .mega-nav .mega-group > .mega-group-title {
       @include megamenu-group-title-style();

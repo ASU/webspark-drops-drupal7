@@ -26,22 +26,25 @@
    * @param x - (int) pixel width of $("#ASUNavMenu .container .navbar-collapse")
    * @param count - (int) number of elements in a (jQuery collection below)
    * @param a - (obj) jQuery collection of menu items
-   * @returns {{mrg: number, fs: number, pds: string}}
+   * @returns {{mrg: number, fs: number, pds: string, subfs: string}}
    */
       function calcFits(t, x, count, a) {
         var possTextWidths = [];
         var objs = [{
           fs: 14,
           mrg: 8,
-          pds: "0.5rem 0.5rem"
+          pds: "0.5rem 0.5rem",
+          subfs: "1.25rem"
         }, {
           fs: 15,
           mrg: 8,
-          pds: "0.5rem 0.5rem"
+          pds: "0.5rem 0.5rem",
+          subfs: "1.25rem"
         }, {
           fs: 16,
           mrg: 8,
-          pds: "0.5rem 0.75rem"
+          pds: "0.5rem 0.75rem",
+          subfs: "1.5rem"
         }];
 
         var megamenu = document.getElementsByClassName("tb-megamenu-nav")[0].children;
@@ -77,18 +80,21 @@
           if (typeof(Storage) !== "undefined") {
             localStorage.setItem("asuMegaFont", "16px");
             localStorage.setItem("asuMegaPadding", "0 0.5rem");
+            localStorage.setItem("asuMegaSubTFont", "1.5rem");
           }
           return objs[2];
         } else if ((possTextWidths[1] + chevronTotal) < ws2_menu_width) {
           if (typeof(Storage) !== "undefined") {
             localStorage.setItem("asuMegaFont", "15px");
             localStorage.setItem("asuMegaPadding", "0 0.5rem");
+            localStorage.setItem("asuMegaSubTFont", "1.25rem");
           }
           return objs[1];
         } else {
           if (typeof(Storage) !== "undefined") {
             localStorage.setItem("asuMegaFont", "14px");
             localStorage.setItem("asuMegaPadding", "0 0.5rem");
+            localStorage.setItem("asuMegaSubTFont", "1.25rem");
           }
           return objs[0];
         }
@@ -146,18 +152,19 @@
               }
 
             var data = calcFits(t, x, count, a);
+            // Restyle top-level non-button menu items
             ASUNavMenu.find("li.tb-megamenu-item.level-1.mega:not(.btn)").children("a").css({
               "font-size" : data.fs,
               "padding" : data.pds,
               "min-height" : "3rem"
             });
-            // Top-level button customization
-            ASUNavMenu.find("li.tb-megamenu-item.level-1.mega.btn").children("a").css({
-              "font-size" : data.fs
+            // Resize top-level buttons, submenu links
+            ASUNavMenu.find("li.tb-megamenu-item.mega, li.tb-megamenu-item.level-1.mega.btn").children("a:not(.mega-group-title)").css({
+              "font-size" : data.fs,
             });
-            // Apply margin to menu
-            // ASUNavMenu.find("li.tb-megamenu-item.level-1.mega.mega-align-justify.dropdown > .tb-megamenu-submenu").css({
-            // });
+            ASUNavMenu.find("li.tb-megamenu-item.mega").children("a.mega-group-title").css({
+              "font-size" : data.subfs,
+            });
           }
         });
       }
