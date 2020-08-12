@@ -2,7 +2,7 @@
     Drupal.behaviors.webspark_mega_footer = {
         attach: function (context, settings) {
 
-            if ($(window).innerWidth() >= 768) {
+            if ($(window).innerWidth() >= 992) {
                 $('.big-foot-nav').not('.in').addClass('in');
                 $('.big-foot-head').removeAttr("data-toggle");
             } else {
@@ -10,7 +10,7 @@
             }
 
             $(window).resize(function () {
-                if ($(window).innerWidth() >= 768) {
+                if ($(window).innerWidth() >= 992) {
                     $('.big-foot-nav').not('.in').addClass('in');
                     $('.big-foot-head').removeAttr("data-toggle");
                 } else {
