@@ -12,6 +12,7 @@
  *   it to the default Innovation library.
  * + Ensure the user doesn't have a Bootstrap library already
  *   set up for their subtheme.
+ * + El Puente will use the default Innovation bootstrap library.
  */
 function webspark_featurescustom_libraries_info_alter(&$libraries) {
   global $theme_info;
@@ -33,7 +34,7 @@ function webspark_featurescustom_menu_alter(&$items) {
 }
 
 /**
- * @param has_base_theme - (boolean) - Is innovation the theme
+ * Is the current theme ASU Web standards theme (innovation, elpuente)?
  *
  * @TODO - Put in check to see if certain settings are already in place before module_load_include...s
  */
@@ -43,16 +44,33 @@ function _webspark_featurescustom_theme_check() {
   $new_theme = check_plain($_REQUEST['theme']);
 
   // WEBSPARK-610 - What settings to apply, based on the theme
-  $theme_test_result = _webspark_featurescustom_get_base_theme($new_theme);
+  $theme_test_result = _webspark_featurescustom_ws_theme_check($new_theme);
   _webspark_featurescustom_act($new_theme, $theme_test_result);
 }
 
 /**
- * Is new theme an ASU theme or have an ASU base theme?
- * @param $theme - New theme selected
- * @returns TRUE or FALSE
+ * Is $theme an ASU web standards theme (or have an ASU WS base theme)?
+ * @param string $theme - New theme selected
+ * @param int $ws_version - Which version of Web standards is desired? Defaults to all WS themes (0).
+ * @return mixed - Theme name if true, 0 if false.
  */
-function _webspark_featurescustom_get_base_theme($theme) {
+function _webspark_featurescustom_ws_theme_check($theme, $ws_version = 0) {
+  // Check #1 - Is $theme a web standards theme?
+  if ($theme === 'innovation') {
+    if ($ws_version !== 2) { // Exclude WS2.x
+      return $theme; // TRUE
+    } else {
+      return 0;
+    }
+  }
+  if ($theme === 'elpuente') {
+    if ($ws_version !== 1) { // Exclude WS1.0
+      return $theme; // TRUE
+    } else {
+      return 0;
+    }
+  }
+  // Check #2 - Is $theme a subtheme of a Web standards theme?
   $all_themes = list_themes(TRUE);
   // remove themes with no base_theme.
   foreach ($all_themes as $name => $value) {
@@ -60,22 +78,52 @@ function _webspark_featurescustom_get_base_theme($theme) {
       unset($all_themes[$name]);
     }
   }
-  $base_themes_checklist = array('innovation', 'elpuente');
-  $base_themes = (array_key_exists($theme, $all_themes)) ? drupal_find_base_themes($all_themes, $theme) : array();
-  return ($theme === 'innovation' || $theme === 'elpuente' || in_array($base_themes_checklist, array_keys($base_themes))) ? 1 : 0;
+  // Get WS themes to check against.
+  $ws_base_theme_options = array();
+  switch ($ws_version) {
+    case 2:
+      $ws_base_theme_options[] = 'elpuente';
+      break;
+    case 1:
+      $ws_base_theme_options[] = 'innovation';
+      break;
+    default: // 0
+      $ws_base_theme_options = array('innovation', 'elpuente');
+  }
+  $theme_base_themes = (array_key_exists($theme, $all_themes)) ? drupal_find_base_themes($all_themes, $theme) : array();
+
+  if (!empty($theme_base_themes)) {
+    foreach ($ws_base_theme_options as $option) {
+      $option_array = (array)$option;
+      if (in_array($ws_base_theme_options, array_keys($theme_base_themes))) {
+        if ($option_array[0] === $theme) {
+          return $theme;
+        } else {
+          return $option_array[0];
+        }
+      }
+      unset($option_array);
+    }
+    // not matched -- return 0
+    return 0;
+  } else {
+    return 0;
+  }
 }
 
 /**
  * Enable ASU Web Standards elements or not?
  *
- * @param $theme_test_result - Boolean - Is innovation the theme or base_theme of
- * the new theme?
+ * @param string $new_theme - Theme to be changed to.
+ * @param mixed $theme_test_result - Is an ASU Web standards theme (ex. innovation, elpuente).
+ * Theme machine name if true; 0 if false.
+ * the theme or base_theme of the new theme?
  */
 function _webspark_featurescustom_act($new_theme, $theme_test_result) {
-  if ($theme_test_result === 1) { // innovation is involved
+  if ($theme_test_result !== 0) { // ASU Web standards theme is involved
     _webspark_featurescustom_webstandards_theme_config($new_theme);
   }
-  else { // or not
+  else { // Not an ASU Web standards theme
     if ($new_theme !== 'asu_webspark_bootstrap') {
       _webspark_featurescustom_alt_theme_config($new_theme);
     }
@@ -88,10 +136,9 @@ function _webspark_featurescustom_act($new_theme, $theme_test_result) {
 
 /**
  * Theme update callback - On theme change from any theme to Innovation theme
- * @TODO - Centralize the ASU header information
  */
 function _webspark_featurescustom_webstandards_theme_config($theme) {
-  // Enabling Innovation-related modules if they are not enabled
+  // Enabling WS theme-related modules if they are not enabled
   $modules = array();
   $modules_to_enable = array();
   // Contrib module dependencies for features
@@ -285,7 +332,7 @@ function _webspark_featurescustom_alt_theme_config($theme = NULL){
 /**
  * Implements hook_form_alter().
  *
- * Admin theme selection form
+ * Adds the theme checking to the admin theme selection form (/admin/appearance).
  */
 function webspark_featurescustom_form_system_themes_admin_form_alter(&$form, &$form_state, $form_id) {
   // + Add additional submission handler to end after manually running D7 core form submit
@@ -300,6 +347,6 @@ function webspark_featurescustom_form_system_themes_admin_form_alter(&$form, &$f
  */
 function _webspark_featurescustom_admin_theme($form, &$form_state) {
   $admin_theme = $form_state['values']['admin_theme']; // new admin theme
-  $theme_test_result = _webspark_featurescustom_get_base_theme($admin_theme);
+  $theme_test_result = _webspark_featurescustom_ws_theme_check($admin_theme);
   _webspark_featurescustom_act($admin_theme, $theme_test_result);
 }
