@@ -28,7 +28,7 @@ function mega_footer_block_view($delta = '') {
   $block = array();
 
   if ($delta == 'mega_footer') {
-    $theme = _webspark_featurescustom_ws2_check();
+    $theme = _webspark_featurescustom_get_ws2_suffix();
     $mega_menu = menu_tree_all_data('menu-mega-footer-menu');
     $mega_menu = menu_tree_output($mega_menu);
 
@@ -238,7 +238,7 @@ function mega_footer_block_view($delta = '') {
  * @return array $form
  */
 function mega_footer_block_configure($delta = '') {
-  $theme = _webspark_featurescustom_ws2_check();
+  $theme = _webspark_featurescustom_get_ws2_suffix();
 
   // Form to configure Mega Footer block.
   drupal_add_js(drupal_get_path('module', 'mega_footer') . '/js/megafoot_menu.js');
@@ -448,7 +448,7 @@ function mega_footer_block_configure($delta = '') {
 function mega_footer_block_save($delta = '', $edit = array()) {
 
   if ($delta == 'mega_footer') {
-    $theme = _webspark_featurescustom_ws2_check();
+    $theme = _webspark_featurescustom_get_ws2_suffix();
     if ($edit['mega_footer_unit_logo'] != '') {
       $block = block_load('mega_footer', 'mega_footer');
       $file = file_load($edit['mega_footer_unit_logo']);
@@ -532,7 +532,7 @@ function mega_footer_block_save($delta = '', $edit = array()) {
  *
  **/
 function mega_footer_form_alter(&$form, &$form_state, $form_id) {
-  $theme = _webspark_featurescustom_ws2_check();
+  $theme = _webspark_featurescustom_get_ws2_suffix();
   if ($form_id == 'menu_edit_menu' && $form['menu_name']['#default_value'] == 'menu-mega-footer-menu') {
     $form['actions']['delete']['#access'] = FALSE;
     $form['title']['#access'] = FALSE;

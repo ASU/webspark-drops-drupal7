@@ -11,7 +11,7 @@ function webspark_featurescustom_form_alter(&$form, &$form_state, &$form_id) {
     ? $form['options']['#value']['attributes']['asu_themed_button']
     : 0;
   if ($form_id === 'menu_edit_item') {
-    if (_webspark_featurescustom_ws2_check(TRUE) === "_ws2") { // WS2.0
+    if (_webspark_featurescustom_get_ws2_suffix(TRUE) === "_ws2") { // WS2.0
       $options = array(
         0 => '-- None --',
         1 => 'Maroon',
