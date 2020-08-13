@@ -1,6 +1,8 @@
 @import "compass/css3";
 @import "base";
 
+@import "../../../../themes/elpuente/sass/mixins/global";
+
 #block-mega-footer-mega-footer {
   background-color: #1e1e1e;
 }
@@ -164,7 +166,6 @@
   @include a11y-strong-focus();
 }
 
-
 @media (max-width: 991px) {
   .megafoot h2 {
     cursor: pointer;
@@ -182,6 +183,8 @@
     border-bottom: 1px solid #383d3e;
   }
 }
+
+// @media print rules for Innovation theme
 
 @media print {
   .megafoot {
