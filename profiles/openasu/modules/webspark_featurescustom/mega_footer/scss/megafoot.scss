@@ -25,8 +25,8 @@
     max-width: 1170px;
     margin: auto;
   }
-  .space-bot-md { /* from webspark_panels_styles */
-    padding-bottom: 3.75em;
+  .space-bot-md { // from webspark_panels_styles
+    padding-bottom: 1.25em;
   }
   h2 {
     margin-bottom: 0.75em;
@@ -157,6 +157,14 @@
   padding: 0 !important;
 }
 
+// [KM 12-5-16] Added stronger focus styles for keyboard accessibility
+.megafoot a:focus,
+.big-foot-nav > li > a:focus,
+.little-foot-nav > li > a:focus {
+  @include a11y-strong-focus();
+}
+
+
 @media (max-width: 991px) {
   .megafoot h2 {
     cursor: pointer;
@@ -215,12 +223,4 @@
   .pane-bundle-banner .hero-wrapper {
     height: unset;
   }
-}
-
-
-/* [KM 12-5-16] Added stronger focus styles for keyboard accessibility */
-
-.megafoot a:focus, .big-foot-nav > li > a:focus,
-.little-foot-nav > li > a:focus {
-  @include a11y-strong-focus();
 }
