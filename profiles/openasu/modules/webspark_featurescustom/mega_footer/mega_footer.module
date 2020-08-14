@@ -69,11 +69,11 @@ function mega_footer_block_view($delta = '') {
       if ($theme !== '_ws2') {
         $bootstrap_col_width = 2;
         $footer_mark .= "<div class='col-md-4 col-sm-12 space-bot-md megafoot-border'>";
+        $footer_mark .= "<div class='megafoot-logo-social'>";
       } else {
         $footer_mark .= "<div class='col-md- col-sm- space-bot-md '>";
+        $footer_mark .= "<div class='row megafoot-logo-social'>";
       }
-
-      $footer_mark .= "<div class='row megafoot-logo-social'>";
 
       // Logo
       $logo = variable_get('mega_footer_unit_logo', '');
@@ -100,7 +100,7 @@ function mega_footer_block_view($delta = '') {
       // Social Media icons - Open in new window/tab? setting check
       $external = (theme_get_setting('social_media_exit') == 1) ? 'target="_new" ' : '';
 
-      if ($theme === "_ws2") {
+      if ($theme === "_ws2") { // WS2.0 ONLY
         $footer_mark .= "<div id='mega-footer-social-media' class='col-md-7 col-sm-12'>";
         $footer_mark .= "<nav role='navigation' aria-label='Social media'>";
       }
@@ -119,12 +119,12 @@ function mega_footer_block_view($delta = '') {
       $footer_mark = _mega_footer_custom_icon_and_link('social_media', '2', $footer_mark, $external, $theme);
       $footer_mark = _mega_footer_custom_icon_and_link('social_media', '3', $footer_mark, $external, $theme);
       $footer_mark .= "</ul>";
-      if ($theme === "_ws2") {
+      if ($theme === "_ws2") { // WS2.0 ONLY
         $footer_mark .= "</nav>";
         $footer_mark .= "</div>";
+        $footer_mark .= "</div>";  // end row
       }
-      $footer_mark .= "</div>";
-  	  $footer_mark .= "</div>"; // end row
+      $footer_mark .= "</div>"; // WS1.0 - END megafoot-logo-social
     }
     $footer_columns = (count(menu_navigation_links('menu-mega-footer-menu', $level = 0)));
 
@@ -133,9 +133,7 @@ function mega_footer_block_view($delta = '') {
       || (variable_get('mega_footer_contribute_link', NULL) !== NULL)
       || ($footer_columns !== 0) ) {
 
-      if ($theme !== "_ws2") {
-        $footer_mark .= "<div class='col-md-2 col-sm-12 space-bot-md megafoot-border'>";
-      } else {
+      if ($theme === "_ws2") {
         $footer_mark .= '<div class="row mega-footer-menu-links">'; // begin row
         $footer_mark .= '<nav role="navigation" aria-label="Footer">';
         $footer_mark .= "<div class='col-md-" . $bootstrap_col_width . " col-sm-12 space-bot-md megafoot-border'>";
@@ -144,7 +142,8 @@ function mega_footer_block_view($delta = '') {
       // Title & Description
       $footer_mark .= "<div class='mega-dept-title'>" .
         variable_get('mega_footer_unit_title', 'Arizona State University') . "</div>";
-      // Old extra info
+
+      // Old extra info -- WS1.0 ONLY
       if ($theme !== "_ws2") {
         $check = variable_get('mega_footer_unit_descrip', NULL);
         $footer_mark .= (!empty($check)) ? "<div class='megafoot-description'>" . $check . "</div>" : "";
@@ -181,9 +180,8 @@ function mega_footer_block_view($delta = '') {
           : "<a class='btn btn-gold' id='contribute-button' href='"
             . variable_get('mega_footer_contribute_link', NULL) . "'>$contrib</a>";
       }
-
-      $footer_mark .= "</div>";
     }
+    $footer_mark .= "</div>";
 
     // INIT for RH columns (Links)
     ///////////////////
@@ -213,7 +211,8 @@ function mega_footer_block_view($delta = '') {
         }
         $footer_mark .= "<li><a href='" . url($inner['#href']) . "'>" . $inner['#title'] . "</a></li>";
       }
-      $footer_mark .= "</ul></div>";
+      $footer_mark .= "</ul>";
+      $footer_mark .= "</div>";
       $i++;
     }
     $footer_mark .= ($theme !== "_ws2") ? "</div></div>" : "</div></nav></div>";
@@ -226,7 +225,7 @@ function mega_footer_block_view($delta = '') {
         ),
       ),
     );
-    if ($theme === "_ws2") {
+    if ($theme === "_ws2") { // Add WS2.0 standards CSS file
       $block['content']['#attached']['css'][] = drupal_get_path('module', 'mega_footer') . '/css/megafoot2l.css';
     }
   }

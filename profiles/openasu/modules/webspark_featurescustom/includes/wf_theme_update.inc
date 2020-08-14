@@ -84,22 +84,17 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
     }
   }
   // Now check if theme or base theme (WS2.0 only). If base theme, get that theme's name instead.
-  dpm($ws_version, __FUNCTION__ . ' - ws_version');
   // Check #1 - Is $theme an existing web standards theme?
   if ($theme === 'innovation') {
-    if ($ws_version !== 2) { // Exclude WS2.x option (can be 1 or 0/all)
-      dpm('TRUE - ' . $theme);
-      return $theme; // TRUE
+    if ($ws_version !== 2) { // Exclude WS2.x option;
+      return $theme; // TRUE is a WS1 theme
     } else {
-      dpm('FALSE - ' . $theme . ' is a WS theme, but it is not WS2 as requested.');
-      return 0;
+      return 0; // FALSE is a WS theme, but it is not WS1 as requested.
     }
   } elseif ($theme === 'elpuente') {
     if ($ws_version !== 1) { // Exclude WS1.0 option
-      dpm('TRUE - ' . $theme);
       return $theme; // TRUE
-    } else {
-      dpm("FALSE - " . $theme . ' is a WS theme, but it is not WS1 as requested.');
+    } else { // is a WS theme, but it is not WS2 as requested.
       return 0;
     }
   }
@@ -128,26 +123,20 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
       : array();
 
     if (!empty($theme_base_themes)) {
-      dpm($theme . ' theme has base theme(s):');
-      dpm($theme_base_themes);
       foreach ($ws_base_theme_options as $option) {
         $option_array = (array)$option;
         if (in_array($ws_base_theme_options, array_keys($theme_base_themes))) {
-          if ($option_array[0] === $theme) {
-            dpm('TRUE - ' . $theme . ' is === '. $option_array[0] . ' - Is a WS subtheme.');
+          if ($option_array[0] === $theme) { // Is a WS subtheme
             return $theme;
-          } else {
-            dpm('TRUE - ' . $theme . ' - theme HAS a WS subthemes');
+          } else { // theme HAS a WS subthemes
             return $option_array[0];
           }
         }
         unset($option_array);
       }
-      // not matched -- return 0
-      dpm('FALSE - ' . $theme . ' (and its subthemes) are not WS');
+      // $theme (and its subthemes) are not WS
       return 0;
-    } else {
-      dpm('FALSE - ' . $theme . ' has no subthemes at all.');
+    } else { // $theme has no subthemes. Not WS.
       return 0;
     }
   }
@@ -248,7 +237,7 @@ function _webspark_featurescustom_web_standards_theme_config($theme) {
     watchdog('theme update', 'Updated ASU Header values for %theme theme based on ASU Brand module settings', array('%theme' => $theme), WATCHDOG_NOTICE);
   }
 
-  dpm($theme, __FUNCTION__ . ' - which theme?');
+//  dpm($theme, __FUNCTION__ . ' - which theme?');
 
   // Re-apply original block configs to ensure their proper location to match spinup settings.
   // function openasu_blockupdates_for_theme() in openasu.profile
@@ -343,7 +332,6 @@ function _webspark_featurescustom_web_standards_theme_config($theme) {
  * Innovation-specific blocks.
  */
 function _webspark_featurescustom_alt_theme_config($theme = NULL) {
-  dpm($theme, __FUNCTION__);
   if (is_null($theme)) { // callback from admin theme form
     $theme = variable_get('admin_theme');
     drupal_set_message($theme . ' selected as admininstrator theme');
@@ -381,7 +369,6 @@ function _webspark_featurescustom_alt_theme_config($theme = NULL) {
   // WEBSPARK-1551 - Move System Help block to help region if it exists (defaults to content)
   $regions = array_keys(system_region_list($theme));
   $help_region = (in_array('help', $regions)) ? 'help' : 'content';
-  dpm($help_region, __FUNCTION__ . ' - help_region');
   $help_weight = ($help_region === 'help') ? 5 : -50;
   db_merge('block')
     ->key(array(
