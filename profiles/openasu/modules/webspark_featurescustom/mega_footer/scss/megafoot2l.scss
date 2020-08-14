@@ -1,15 +1,7 @@
-/*** Megafooter Logo ***/
-/*** Megafooter Logo & Social Media ***/
-/*** Megafooter Logo & Social Media ***/
-/*** Megafooter Title ***/
-/*** Megafooter Contact Us ***/
-/*** Megafooter Contribute Button ***/
-/*** Megafooter Menu Items ***/
-/*** Megafooter Menu 6 Columns ***/
-/*** Megafooter Menu 5 Columns ***/
-/*** Megafooter Menu 4 Columns ***/
-/*** Megafooter Menu 3 Columns ***/
-/*** Megafooter Menu 2 Columns ***/
+/*
+* Megafooter - WS2.0 styling
+* Requires El Puente SASS files (for variables and mixins) to build the CSS
+*/
 
 @import "../../../../themes/elpuente/sass/variables";
 @import "../../../../themes/elpuente/sass/mixins/global";
@@ -32,6 +24,7 @@
       text-decoration: underline;
       transition: none;
     }
+    // Megafooter Logo & Social Media
     &.megafoot-logo-social {
       border-bottom: 1px solid #333;
       #mega-footer-logo-wrapper {
@@ -46,6 +39,7 @@
           padding: .5rem 0;
         }
       }
+      // Megafooter Social Media
       #mega-footer-social-media {
         float: right;
         padding-left: 0;
@@ -72,6 +66,7 @@
         }
       }
     }
+    // Megafooter Menu Items
     &.mega-footer-menu-links {
       padding-bottom: 3rem;
       padding-top: 2.0625rem;
@@ -84,6 +79,7 @@
         opacity: 1;
         text-align: left;
       }
+      // Megafooter Contact Us
       .contact-link {
         border-bottom: 0;
         color: $ws2-gray-lighter;
@@ -95,6 +91,7 @@
         opacity: 1;
         transition: none;
       }
+      // Megafooter menu link columns
       nav {
         h2 {
           color: #fff;
@@ -131,6 +128,7 @@
       }
     }
     // Buttons
+    // Megafooter Contribute button
     a.btn {
       padding: 1rem 2rem;
       text-underline: none;

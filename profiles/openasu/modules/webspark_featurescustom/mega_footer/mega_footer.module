@@ -64,7 +64,6 @@ function mega_footer_block_view($delta = '') {
     $sm_icons = array($mfsm_facebook, $mfsm_twitter, $mfsm_linkedin, $mfsm_youtube, $mfsm_instagram, $mfsm_vimeo, $mfsm_flickr, $mfsm_pinterest, $mfsm_tumblr,$mfsm_rss,$mfsm_custom1,$mfsm_custom2,$mfsm_custom3);
 
     if ((variable_get('mega_footer_unit_logo', '') != 0) || (!empty(array_filter($sm_icons)))) {
-      $footer_mark .= "<div class='row megafoot-logo-social'>";
 
       // Include default LH column
       if ($theme !== '_ws2') {
@@ -73,6 +72,8 @@ function mega_footer_block_view($delta = '') {
       } else {
         $footer_mark .= "<div class='col-md- col-sm- space-bot-md '>";
       }
+
+      $footer_mark .= "<div class='row megafoot-logo-social'>";
 
       // Logo
       $logo = variable_get('mega_footer_unit_logo', '');
@@ -238,13 +239,13 @@ function mega_footer_block_view($delta = '') {
  * @return array $form
  */
 function mega_footer_block_configure($delta = '') {
-  $theme = _webspark_featurescustom_get_ws2_suffix();
-
-  // Form to configure Mega Footer block.
-  drupal_add_js(drupal_get_path('module', 'mega_footer') . '/js/megafoot_menu.js');
 
   $form = array();
   if ($delta == 'mega_footer') {
+
+    $theme = _webspark_featurescustom_get_ws2_suffix();
+    // Form to configure Mega Footer block.
+    drupal_add_js(drupal_get_path('module', 'mega_footer') . '/js/megafoot_menu.js');
 
     // Custom unit logo
     $form['custom_logo'] = array(
@@ -532,8 +533,8 @@ function mega_footer_block_save($delta = '', $edit = array()) {
  *
  **/
 function mega_footer_form_alter(&$form, &$form_state, $form_id) {
-  $theme = _webspark_featurescustom_get_ws2_suffix();
   if ($form_id == 'menu_edit_menu' && $form['menu_name']['#default_value'] == 'menu-mega-footer-menu') {
+    $theme = _webspark_featurescustom_get_ws2_suffix();
     $form['actions']['delete']['#access'] = FALSE;
     $form['title']['#access'] = FALSE;
     if ($theme !== "_ws2") {
