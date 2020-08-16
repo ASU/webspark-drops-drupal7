@@ -1,0 +1,10 @@
+@media all and (min-width: 991px) {
+  #headerContainer header
+  {
+    position: relative !important;
+  }
+  .primary-nav
+  {
+    display: none !important;
+  }
+}

@@ -4,17 +4,17 @@
  * ASU Brand administration functions.
  */
 function asu_brand_get_block_configure_form($delta) {
-  
+
   $form['asu_brand'] = array(
       '#type' => 'fieldset',
       '#title' => t('ASU Brand settings'),
       '#description' => t('This block is cached for %lifetime. To update now, <a href="@link">clear the cache</a>.', array('%lifetime' => format_interval(ASU_BRAND_CACHE_LIFETIME), '@link' => url('admin/config/development/performance'))),
   );
-  
+
   switch ($delta) {
-    
+
     case ASU_BRAND_HEADER_DELTA:
-      
+
       $form['asu_brand']['asu_brand_header_basepath'] = array(
           '#type' => 'textfield',
           '#title' => t('ASU theme basepath'),
@@ -44,7 +44,7 @@ function asu_brand_get_block_configure_form($delta) {
           '#description' => t('This setting is shared between all ASU Brand blocks.<br />Specify "preview pages" by using their paths. Enter one path per line. The \'*\' character is a wildcard. Example paths are blog for the blog page and blog/* for every personal blog. <front> is the front page.<br />The default is %default.', array('%default' => ASU_BRAND_PREVIEW_PAGES_DEFAULT)),
           '#required' => TRUE,
       );
-      
+
       $form['asu_brand']['asu_brand_header_template'] = array(
         '#type' => 'textfield',
         '#title' => t('ASU header template key'),
@@ -52,19 +52,19 @@ function asu_brand_get_block_configure_form($delta) {
         '#description' => t('The default is %default. For a list of template keys, visit <a href="@template_path">@template_path</a>.', array('%default' => ASU_BRAND_HEADER_TEMPLATE_DEFAULT, '@template_path' => url('https://asu.edu/asuthemes/' . variable_get('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT) . '/heads/'))),
         '#required' => TRUE,
       );
-      
+
       $form['asu_brand']['site_menu'] = array(
           '#type' => 'fieldset',
           '#title' => t('Site menu injection'),
           '#collapsed' => FALSE,
       );
-      
+
       $form['asu_brand']['site_menu']['asu_brand_sitemenu_injection_flag'] = array(
         '#type' => 'checkbox',
         '#title' => t('Append local site menu into ASU header menu and display in responsive state.'),
         '#default_value' => variable_get('asu_brand_sitemenu_injection_flag', 1),
       );
-      
+
       $form['asu_brand']['site_menu']['asu_brand_sitemenu_name'] = array(
           '#type' => 'select',
           '#title' => t('Menu to inject'),
@@ -77,7 +77,7 @@ function asu_brand_get_block_configure_form($delta) {
               ),
           ),
       );
-      
+
       $form['asu_brand']['gtm'] = array(
           '#type' => 'fieldset',
           '#title' => t('Override Google Tag Manager (GTM) settings'),
@@ -85,7 +85,7 @@ function asu_brand_get_block_configure_form($delta) {
           '#collapsible' => TRUE,
           '#collapsed' => TRUE,
       );
-      
+
       $form['asu_brand']['gtm']['asu_brand_gtm_override'] = array(
           '#type' => 'textarea',
           '#title' => t('Custom GTM Script'),
@@ -143,17 +143,17 @@ function asu_brand_get_block_configure_form($delta) {
       );
 
       break;
-      
+
       case 'asu_brand_footer':
         // Footer standardized with no color options
         $form['asu_brand']['#title'] = t('ASU Brand Footer settings');
         break;
-      
+
       case 'asu_brand_students_footer':
-        
+
         break;
   }
-  
+
   return $form;
 }
 
@@ -197,7 +197,7 @@ function asu_brand_get_version_options($reset = FALSE, $basepath = '') {
 
   if ($reset || !isset($options)) {
     $options = array('' => t('Select a version'));
-    
+
     // Use internal xml errors to provide user readable errors.
     libxml_use_internal_errors(TRUE);
     try {
@@ -213,7 +213,7 @@ function asu_brand_get_version_options($reset = FALSE, $basepath = '') {
             $options[(string) $header->version] = t((string) $header->name);
           }
         }
-        
+
         // Save options to variable table in case xml is not available at a later time.
         variable_set('asu_brand_version_options', $options);
       }
@@ -221,7 +221,7 @@ function asu_brand_get_version_options($reset = FALSE, $basepath = '') {
         // There was an error with loading the xml. Get versions from the
         // variable table.
         $options = variable_get('asu_brand_version_options', $options);
-        
+
         $log_message = "Failed loading ASU header version XML file\n";
         foreach(libxml_get_errors() as $error) {
           $log_message .= "\t" . $error->message;
@@ -233,7 +233,7 @@ function asu_brand_get_version_options($reset = FALSE, $basepath = '') {
       // There was an error with loading the xml. Get versions from the
       // variable table.
       $options = variable_get('asu_brand_version_options', $options);
-        
+
       drupal_set_message('Failed loading ASU header version XML file. Please try again later. The full error description has been logged.', 'error');
       watchdog('asu_brand', $e, array(), WATCHDOG_ERROR);
     }
