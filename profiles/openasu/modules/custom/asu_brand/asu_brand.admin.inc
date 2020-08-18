@@ -15,91 +15,105 @@ function asu_brand_get_block_configure_form($delta) {
 
     case ASU_BRAND_HEADER_DELTA:
 
-      $form['asu_brand']['asu_brand_header_basepath'] = array(
-          '#type' => 'textfield',
-          '#title' => t('ASU theme basepath'),
-          '#default_value' => variable_get('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT),
-          '#description' => t('This setting is shared between all ASU Brand blocks. The default is %default. To use a local path, use %local_path', array('%default' => ASU_BRAND_HEADER_BASEPATH_DEFAULT, '%local_path' => '/afs/asu.edu/www/asuthemes')),
-          '#required' => TRUE,
-          '#ajax' => array(
-              'event' => 'change',
-              'callback' => 'asu_brand_basepath_ajax_callback',
-              'wrapper' => 'dropdown_header_version_replace',
+      // Customize the site title, add the parent org title (and their URLs)
+      $form['asu_brand']['custom_title'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Site and parent org name settings'),
+        '#description' => t('Settings to override the site name link URL. Also allows setting a parent organization name and URL.'),
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+      );
+      $form['asu_brand']['custom_title']['asu_brand_site_name'] = array(
+        '#markup' => "<p><b>Site Title</b></p><p>" . t('Go to the '
+            . l('Site information form', '/admin/config/system/site-information'))
+          . ' to change the title.' . "</p>",
+      );
+      $form['asu_brand']['custom_title']['asu_brand_parent_org_title'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Parent Organization Title'),
+        '#default_value' => variable_get('asu_brand_parent_org_title', ''),
+        '#description' => t('If added, this name will be placed before (or above) the site title in the header.'
+          . ' Requires a URL to be added below.'),
+      );
+      $form['asu_brand']['custom_title']['asu_brand_parent_org_url'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Parent Organization URL'),
+        '#default_value' => variable_get('asu_brand_parent_org_url', ''),
+        '#description' => t('The destination URL of the parent organization link.'),
+        '#states' => array(
+          'required' => array(
+            ':input[name="asu_brand_parent_org_title"]' => array('empty' => FALSE),
           ),
+        ),
       );
-      $form['asu_brand']['asu_brand_header_version'] = array(
-          '#type' => 'select',
-          '#title' => t('ASU header version'),
-          '#description' => t('Select the version of the ASU header. <strong>This setting is shared between all ASU Brand blocks.</strong>'),
-          '#options' => asu_brand_get_version_options(FALSE, (!empty($form_state['values']['asu_brand_header_basepath'])) ? $form_state['values']['asu_brand_header_basepath'] : variable_get('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT)),
-          '#default_value' => variable_get('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT),
-          '#required' => TRUE,
-          '#prefix' => '<div id="dropdown_header_version_replace">',
-          '#suffix' => '</div>',
-      );
-      $form['asu_brand']['asu_brand_preview_pages'] = array(
-          '#type' => 'textarea',
-          '#title' => t('Preview pages'),
-          '#default_value' => variable_get('asu_brand_preview_pages', ASU_BRAND_PREVIEW_PAGES_DEFAULT),
-          '#description' => t('This setting is shared between all ASU Brand blocks.<br />Specify "preview pages" by using their paths. Enter one path per line. The \'*\' character is a wildcard. Example paths are blog for the blog page and blog/* for every personal blog. <front> is the front page.<br />The default is %default.', array('%default' => ASU_BRAND_PREVIEW_PAGES_DEFAULT)),
-          '#required' => TRUE,
+      $form['asu_brand']['custom_title']['asu_brand_override_url'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Override Site Name Base URL'),
+        '#default_value' => variable_get('asu_brand_override_url', '/'),
+        '#description' => t("Overrides the URL for the site name link in the header. If not provided, the link will be set to the root '/'"),
       );
 
-      $form['asu_brand']['asu_brand_header_template'] = array(
-        '#type' => 'textfield',
-        '#title' => t('ASU header template key'),
-        '#default_value' => variable_get('asu_brand_header_template', ASU_BRAND_HEADER_TEMPLATE_DEFAULT),
-        '#description' => t('The default is %default. For a list of template keys, visit <a href="@template_path">@template_path</a>.', array('%default' => ASU_BRAND_HEADER_TEMPLATE_DEFAULT, '@template_path' => url('https://asu.edu/asuthemes/' . variable_get('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT) . '/heads/'))),
+      $form['asu_brand']['asu_brand_preview_pages'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Preview pages'),
+        '#default_value' => variable_get('asu_brand_preview_pages', ASU_BRAND_PREVIEW_PAGES_DEFAULT),
+        '#description' => t('This setting is shared between all ASU Brand blocks.<br />Specify "preview pages"'
+          . ' by using their paths. Enter one path per line. The \'*\' character is a wildcard. Example paths are'
+          . ' blog for the blog page and blog/* for every personal blog. <front> is the front page.<br />The default'
+          . ' is %default.', array('%default' => ASU_BRAND_PREVIEW_PAGES_DEFAULT)),
         '#required' => TRUE,
       );
 
+      // Site menu injection - Insert a selected Drupal menu into the mobile/responsive menu.
       $form['asu_brand']['site_menu'] = array(
-          '#type' => 'fieldset',
-          '#title' => t('Site menu injection'),
-          '#collapsed' => FALSE,
+        '#type' => 'fieldset',
+        '#title' => t('Drupal menu injection'),
+        '#collapsed' => FALSE,
       );
-
       $form['asu_brand']['site_menu']['asu_brand_sitemenu_injection_flag'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Append local site menu into ASU header menu and display in responsive state.'),
+        '#title' => t('Append local Drupal (site) menu into ASU header menu and display in the mobile state.'),
         '#default_value' => variable_get('asu_brand_sitemenu_injection_flag', 1),
       );
-
       $form['asu_brand']['site_menu']['asu_brand_sitemenu_name'] = array(
-          '#type' => 'select',
-          '#title' => t('Menu to inject'),
-          '#description' => t('Select the site menu to inject.'),
-          '#options' => asu_brand_get_site_menu_options(),
-          '#default_value' => variable_get('asu_brand_sitemenu_name', ASU_BRAND_SITE_MENU_NAME_DEFAULT),
-          '#states' => array(
-              'visible' => array(
-                  ':input[name="asu_brand_sitemenu_injection_flag"]' => array('checked' => TRUE),
-              ),
+        '#type' => 'select',
+        '#title' => t('Menu to inject'),
+        '#description' => t('Select the Drupal (site) menu to inject.'),
+        '#options' => asu_brand_get_site_menu_options(),
+        '#default_value' => variable_get('asu_brand_sitemenu_name', ASU_BRAND_SITE_MENU_NAME_DEFAULT),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="asu_brand_sitemenu_injection_flag"]' => array('checked' => TRUE),
           ),
+        ),
       );
 
+      // Add custom GTM code
       $form['asu_brand']['gtm'] = array(
-          '#type' => 'fieldset',
-          '#title' => t('Override Google Tag Manager (GTM) settings'),
-          '#description' => t('ASU Universal GTM settings are automatically set. Overriding is not common.'),
-          '#collapsible' => TRUE,
-          '#collapsed' => TRUE,
+        '#type' => 'fieldset',
+        '#title' => t('Google Tag Manager (GTM) setting overrides'),
+        '#description' => t('Add your own custom, ASU Universal GTM code here to override the default GTM'
+          . ' settings managed by the ASU Marketing Hub. WARNING: Your site analytics data and other ASU data'
+          . ' collection may be broken or stopped completely if this field is not'
+          . ' used correctly. Leave this legacy field blank unless you REALLY know what you are doing.'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
       );
-
       $form['asu_brand']['gtm']['asu_brand_gtm_override'] = array(
-          '#type' => 'textarea',
-          '#title' => t('Custom GTM Script'),
-          '#default_value' => variable_get('asu_brand_gtm_override', ''),
-          '#description' => t('This script should be provided by the ASU google Analytics Administrator.'),
+        '#type' => 'textarea',
+        '#title' => t('Custom GTM Script'),
+        '#default_value' => variable_get('asu_brand_gtm_override', ''),
+        '#description' => t('This script should be provided by an ASU Google Tag Manager administrator.'),
       );
 
-
+      // Login URL alteration/override blocking
       $form['asu_brand']['do_not_override'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Do Not Override Login URL'),
-      '#description' => t('If host is added to list, the brand module will not override the login URL with the CAS module path.'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
+        '#type' => 'fieldset',
+        '#title' => t('Block login URL alteration'),
+        '#description' => t('The ASU Brand module will not override the login URL'
+          . ' with the CAS module path for any of the following hostnames.'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
       );
 
       // format our do not override list array as a comma-delimted list in the form field, for easy editing
@@ -109,39 +123,29 @@ function asu_brand_get_block_configure_form($delta) {
       $form['asu_brand']['do_not_override']['asu_brand_do_not_override'] = array(
         '#type' => 'textarea',
         '#title' => t('Do Not Override List'),
-        '#description' => t('Add hosts to list, separated by commas.'),
+        '#description' => t('Host names, separated by commas.'),
         '#default_value' => $fstring,
       );
 
-      $form['asu_brand']['custom_title'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Site Name/URL Settings'),
-        '#description' => t('Settings to override the site name link URL. Also allows setting a parent organization name and URL.'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
+      // No longer options......
+      // Header template
+      $form['asu_brand']['asu_brand_header_template'] = array(
+        '#type' => 'hidden',
+        '#required' => TRUE,
+        '#value' => ASU_BRAND_HEADER_TEMPLATE_DEFAULT,
       );
-
-      $form['asu_brand']['custom_title']['asu_brand_override_url'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Override Site Name Base URL'),
-        '#default_value' => variable_get('asu_brand_override_url', '/'),
-        '#description' => t("Overrides the URL for the site name link in the header. If not provided, the link will be set to the root '/'"),
+      // Header basepath
+      $form['asu_brand']['asu_brand_header_basepath'] = array(
+        '#type' => 'hidden',
+        '#required' => TRUE,
+        '#value' => variable_get('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT),
       );
-
-      $form['asu_brand']['custom_title']['asu_brand_parent_org_title'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Parent Organization Title'),
-        '#default_value' => variable_get('asu_brand_parent_org_title', ''),
-        '#description' => t('The parent org name will be placed before the site title in the header, and separated by a \'|\'.'),
+      // Header version
+      $form['asu_brand']['asu_brand_header_version'] = array(
+        '#type' => 'hidden',
+        '#required' => TRUE,
+        '#value' => variable_get('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT),
       );
-
-      $form['asu_brand']['custom_title']['asu_brand_parent_org_url'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Parent Organization URL'),
-        '#default_value' => variable_get('asu_brand_parent_org_url', ''),
-        '#description' => t('The href value for the parent organization link.'),
-      );
-
       break;
 
       case 'asu_brand_footer':
@@ -150,10 +154,8 @@ function asu_brand_get_block_configure_form($delta) {
         break;
 
       case 'asu_brand_students_footer':
-
         break;
   }
-
   return $form;
 }
 
@@ -168,6 +170,8 @@ function asu_brand_form_block_admin_configure_alter(&$form, $form_state) {
       $options = asu_brand_get_version_options(FALSE, $form_state['values']['asu_brand_header_basepath']);
       $form['settings']['asu_brand']['asu_brand_header_version']['#options'] = $options;
     }
+    $form['#validate'][] = 'asu_brand_block_form_valuation';
+    $form['settings']['title']['#access'] = FALSE;
   }
 }
 

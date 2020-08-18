@@ -5,14 +5,6 @@
  */
 
 /**
- * Implements hook_init().
- **/
-//function webspark_megamenu_init() {
-  // #1....
-//  $ws2_check = _webspark_featurescustom_get_ws2_suffix(FALSE, 'elpuente', '_ws2');
-//}
-
-/**
  * Implements hook_page_alter().
  */
 function webspark_megamenu_page_alter(&$page) {
@@ -41,68 +33,28 @@ function webspark_megamenu_libraries_info() {
   return $libraries;
 }
 
-/**
- * Implements hook_form_FORM_ID_alter().
- */
-function webspark_megamenu_form_system_site_information_settings_alter(&$form, &$form_state, $form_id) {
-  // Adds unit title to /admin/config/system/site-information
-  $form['site_information']['site_unit_name'] = array(
-    '#type' => 'textfield',
-    '#title' => 'Parent unit - Name',
-    '#default_value' => variable_get('site_unit_name', ''),
-    '#description' => 'Parent unit at ASU. This will appear in the global header above the subdomain (site name). (Optional)',
-    '#weight' => -2,
-  );
-  $form['site_information']['site_unit_url'] = array(
-    '#type' => 'textfield',
-    '#title' => 'Parent unit - Base URL',
-    '#default_value' => variable_get('site_unit_url', ''),
-    '#description' => 'Required if the parent unit name is not empty. Must be an absolute URL (https://yourdomain.asu.edu, etc.)',
-    '#weight' => -1,
-    '#states' => array(
-      'required' => array(
-        ':input[name="site_unit_name"]' => array('empty' => FALSE),
-      ),
-    ),
-  );
-  $form['site_information']['site_name']['#weight'] = -3;
-  $form['#validate'][] = '_webspark_megamenu_sisa_form_validate';
-}
+///**
+// * Implements hook_form_FORM_ID_alter().
+// */
+//function webspark_megamenu_form_alter(&$form, &$form_state, $form_id) {
+////  dpm($form);
+//  $type = (isset($form['#node']->type)) ? $form['#node']->type : '';
+//  if (!empty($type)) {
+//    $form['menu']['hide_top_menu'] = array(
+//      '#type' => 'checkbox',
+//      '#title' => 'Hide top-level menu on this page',
+//      '#default_value' => 0,
+//      '#weight' => -100,
+//    );
+//    $form['#submit'][] = '_webspark_megamenu_node_form_submit';
+//  }
+//}
 
-/**
- * Implements hook_access().
- */
-function _webspark_megamenu_sisa_form_validate(&$form, &$form_state){
-  if (!empty($form_state['values']['site_unit_name'])) {
-    if ((filter_var($form_state['values']['site_unit_url'], FILTER_VALIDATE_URL) === FALSE)
-      || (!valid_url($form_state['values']['site_unit_url']))) {
-    form_set_error('site_unit_url', 'The site unit URL is not a valid URL.');
-    }
-  }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- */
-function webspark_megamenu_form_alter(&$form, &$form_state, $form_id) {
-//  dpm($form);
-  $type = (isset($form['#node']->type)) ? $form['#node']->type : '';
-  if (!empty($type)) {
-    $form['menu']['hide_top_menu'] = array(
-      '#type' => 'checkbox',
-      '#title' => 'Hide top-level menu on this page',
-      '#default_value' => 0,
-      '#weight' => -100,
-    );
-    $form['#submit'][] = '_webspark_megamenu_node_form_submit';
-  }
-}
-
-function _webspark_megamenu_node_form_submit(&$form, &$form_state) {
-  $show = (isset($form_state['values']['menu']['hide_top_menu']))
-    ? $form_state['values']['menu']['hide_top_menu']
-    : 0;
-  $form_state['values']['options']['attributes']['hide_top_menu'] = $show;
-  // @TODO - Set value in menu attributes manually
-//  dpm($form_state, __FUNCTION__ . ' - $form_state');
-}
+//function _webspark_megamenu_node_form_submit(&$form, &$form_state) {
+//  $show = (isset($form_state['values']['menu']['hide_top_menu']))
+//    ? $form_state['values']['menu']['hide_top_menu']
+//    : 0;
+//  $form_state['values']['options']['attributes']['hide_top_menu'] = $show;
+//  // @TODO - Set value in menu attributes manually
+////  dpm($form_state, __FUNCTION__ . ' - $form_state');
+//}

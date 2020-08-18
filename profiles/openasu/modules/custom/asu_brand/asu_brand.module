@@ -45,17 +45,14 @@ function asu_brand_init() {
     $site_name = asu_brand_get_site_name();
     drupal_alter('asu_brand_sitename', $site_name); // Invoke alter
 
-    $site_url = variable_get('asu_brand_override_url', '/');
-
+    $site_url = variable_get('ws2_header_site_override_url', '/');
     if (empty($site_url)) {
       $site_url = '/';
     }
-
     drupal_alter('asu_brand_site_url', $site_url); // Invoke alter
 
-    $parent_org_title = variable_get('asu_brand_parent_org_title', '');
-
-    $parent_org_url = variable_get('asu_brand_parent_org_url', '');
+    $parent_org_title = variable_get('ws2_header_site_unit_name', '');
+    $parent_org_url = variable_get('ws2_header_site_unit_url', '');
 
     $site_title_array = array(
       'title' => $site_name,
@@ -69,8 +66,6 @@ function asu_brand_init() {
     if (!empty($parent_org_url)) {
       $site_title_array['parent_org_url'] = $parent_org_url;
     }
-
-    //ASUHeader.site_title = {title: "Name of Site", parent_org: "Name of Parent Organization"};
 
     $js = 'window.ASUHeader = window.ASUHeader || {};';
     $js .= 'ASUHeader.site_menu = ASUHeader.site_menu || {};';
@@ -529,4 +524,16 @@ function _asu_brand_ws2_create_json()
   $site_menu = asu_brand_get_site_menu_array('5');
 
   return json_encode($site_menu);
+}
+
+/**
+ * Global header - validation
+ */
+function asu_brand_block_form_valuation(&$form, &$form_state) {
+  if (!empty($form_state['values']['asu_brand_parent_org_title'])) {
+    if ((filter_var($form_state['values']['asu_brand_parent_org_url'], FILTER_VALIDATE_URL) === FALSE)
+      || (!valid_url($form_state['values']['asu_brand_parent_org_url']))) {
+      form_set_error('asu_brand_parent_org_url', 'The site unit URL is not a valid URL.');
+    }
+  }
 }
