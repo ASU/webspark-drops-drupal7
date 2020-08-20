@@ -18,7 +18,6 @@ function asu_brand_get_block_settings($reset = FALSE) {
     $settings->header_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version . '/headers/default.shtml';
     $settings->footer_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version . '/includes/footer.shtml';
     $settings->gtm_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version . '/includes/gtm.shtml';
-    $settings->students_footer_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version . '/includes/students_footer.shtml';
 
     // Set javascript settings.
     $js_settings = array(
@@ -121,15 +120,6 @@ function asu_brand_get_block_footer_ws2() {
   $settings = asu_brand_get_block_settings();
   $cache_id = 'asu_brand:footer_ws2';
   return asu_brand_get_cached_content($cache_id, $settings->footer_path);
-}
-
-/**
- * Build the content of the students footer block.
- */
-function asu_brand_get_block_students_footer() {
-  $settings = asu_brand_get_block_settings();
-  $cache_id = 'asu_brand:students_footer';
-  return asu_brand_get_cached_content($cache_id, $settings->students_footer_path);
 }
 
 /**

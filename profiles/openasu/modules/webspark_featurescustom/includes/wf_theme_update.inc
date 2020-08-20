@@ -304,20 +304,6 @@ function _webspark_featurescustom_web_standards_theme_config($theme) {
       )
       ->execute();
   }
-  // Disable deprecated ASU Students block for all themes except asu_webspark_bootstrap
-  db_merge('block')
-    ->key(array(
-      'module' => 'asu_brand',
-      'delta' => 'asu_brand_students_footer',
-      'theme' => $theme,
-    ))
-    ->fields(array(
-        'region' => '-1',
-        'status' => '0',
-        'weight' => '0'
-      )
-    )
-    ->execute();
 
   // Flush ASU Brand caches so ASU headers are right...
   asu_brand_cache_clear();

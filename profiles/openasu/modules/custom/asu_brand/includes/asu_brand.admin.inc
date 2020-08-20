@@ -149,8 +149,6 @@ function asu_brand_get_block_configure_form($delta) {
         $form['asu_brand']['#title'] = t('ASU Brand Footer settings');
         break;
 
-      case 'asu_brand_students_footer':
-        break;
   }
   return $form;
 }

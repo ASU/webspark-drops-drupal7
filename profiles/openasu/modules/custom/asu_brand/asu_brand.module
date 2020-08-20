@@ -145,10 +145,6 @@ function asu_brand_block_info() {
     'info' => t('WS2.0: Footer'),
     'cache' => DRUPAL_NO_CACHE,
   );
-  $blocks['asu_brand_students_footer'] = array(
-    'info' => t('ASU Brand: students footer'),
-    'cache' => DRUPAL_NO_CACHE,
-  );
   return $blocks;
 }
 
@@ -163,7 +159,6 @@ function asu_brand_block_configure($delta = '') {
     case ASU_BRAND_HEADER_DELTA:
     case 'asu_brand_header_ws2':
     case 'asu_brand_footer':
-    case 'asu_brand_students_footer':
       module_load_include('inc', 'asu_brand', 'includes/asu_brand.admin');
       $form = asu_brand_get_block_configure_form($delta);
       break;
@@ -208,7 +203,6 @@ function asu_brand_block_save($delta = '', $edit = array()) {
       // Same saved configs for WS1.0 and WS2.0
     case 'asu_brand_footer':
     case 'asu_brand_footer_ws2':
-    case 'asu_brand_students_footer':
     variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
       // No color options on footer anymore
       variable_set('asu_brand_preview_pages', $edit['asu_brand_preview_pages']);
@@ -300,18 +294,6 @@ function asu_brand_block_view($delta = '') {
         $block['content'] = asu_brand_get_block_footer_ws2();
       }
       break;
-
-    // Legacy students.asu.edu footer. Will go away with WS2.0, if it hasn't already
-    case 'asu_brand_students_footer':
-      $block['subject'] = NULL;
-      if ($is_preview_path) {
-        $block['content'] = $preview_text;
-      }
-      else {
-        module_load_include('inc', 'asu_brand', 'includes/asu_brand.block');
-        $block['content'] = asu_brand_get_block_students_footer();
-      }
-      break;
   }
   return $block;
 }
@@ -366,7 +348,6 @@ function asu_brand_get_cache_ids($reset = FALSE) {
       'asu_brand:header_ws2',
       'asu_brand:footer',
       'asu_brand:footer_ws2',
-      'asu_brand:students_footer',
       'asu_brand:gtm'
     );
   }
