@@ -11,11 +11,8 @@
  CONFIG
 *********************************************************************/
 
-define('ASU_BRAND_HEADER_VERSION_XML_URL', 'http://asu.edu/asuthemes/headers.xml');
-define('ASU_BRAND_HEADER_VERSION_DEFAULT', 'stable');
-define('ASU_BRAND_HEADER_BASEPATH_DEFAULT', 'http://www.asu.edu/asuthemes');
-define('ASU_BRAND_HEADER_TEMPLATE_DEFAULT', 'default');
-define('ASU_BRAND_FOOTER_COLOR_DEFAULT', '');
+define('ASU_BRAND_HEADER_VERSION_DEFAULT', 'stable'); // Assume 4.x for now
+define('ASU_BRAND_HEADER_BASEPATH_DEFAULT', '//www.asu.edu/asuthemes');
 define('ASU_BRAND_CACHE_LIFETIME', 172800); // 48 Hours ( 60 x 60 x 48 )
 define('ASU_BRAND_PREVIEW_PAGES_DEFAULT', "system/ajax/*\npanels/ajax/*");
 define('ASU_BRAND_DO_NOT_OVERRIDE', variable_get('asu_brand_do_not_override', '["www.asu.edu"]'));
@@ -37,7 +34,6 @@ define('ASU_BRAND_SITE_MENU_NAME_DEFAULT', 'main-menu');
  * Implements hook_init().
  */
 function asu_brand_init() {
-
   if (variable_get('asu_brand_sitemenu_injection_flag', 1)) {
     $menu_array = asu_brand_get_site_menu_array();
     drupal_alter('asu_brand_sitemenu', $menu_array); // Invoke alter
@@ -45,24 +41,21 @@ function asu_brand_init() {
     $site_name = asu_brand_get_site_name();
     drupal_alter('asu_brand_sitename', $site_name); // Invoke alter
 
-    $site_url = variable_get('ws2_header_site_override_url', '/');
+    $site_url = variable_get('asu_brand_override_url', '/');
     if (empty($site_url)) {
       $site_url = '/';
     }
     drupal_alter('asu_brand_site_url', $site_url); // Invoke alter
 
-    $parent_org_title = variable_get('ws2_header_site_unit_name', '');
-    $parent_org_url = variable_get('ws2_header_site_unit_url', '');
-
     $site_title_array = array(
       'title' => $site_name,
       'site_url' => $site_url
     );
-
+    $parent_org_title = variable_get('asu_brand_parent_org_title', '');
+    $parent_org_url = variable_get('asu_brand_parent_org_url', '');
     if (!empty($parent_org_title)) {
       $site_title_array['parent_org'] = $parent_org_title;
     }
-
     if (!empty($parent_org_url)) {
       $site_title_array['parent_org_url'] = $parent_org_url;
     }
@@ -82,6 +75,45 @@ function asu_brand_init() {
 }
 
 /**
+ * Implements hook_permission().
+ */
+function asu_brand_permission() {
+  return array(
+    'administer asu brand' => array(
+      'title' => t('Administer ASU Brand module'),
+      'description' => t('Administer ASU Brand module'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function asu_brand_menu() {
+  $items = array();
+  // Add parent item in admin/navigation menu
+  $items['admin/config/asu_brand'] = array(
+    'title' => 'ASU Brand',
+    'description' => 'Administer the ASU Brand module.',
+    'position' => 'right',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer asu brand'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+  $items['admin/config/asu_brand/settings'] = array(
+    'title' => 'Settings',
+    'description' => t('Administer ASU Brand settings.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('asu_brand_admin_settings'),
+    'access arguments' => array('administer asu brand'),
+    'options' => array('attributes' => array('class' => 'title')),
+    'file' => 'includes/asu_brand.admin.inc'
+  );
+  return $items;
+}
+
+/**
  * Implements hook_cron().
  */
 function asu_brand_cron() {
@@ -96,17 +128,21 @@ function asu_brand_cron() {
 function asu_brand_block_info() {
   // Never cache the header with Drupal's caching system because the contents of
   // the block changes based on if the user is logged in. The included header files
-  // are cached manually when then block is viewed in _asu_brand_block_header().
+  // are cached manually when the block is loaded in _asu_brand_block_header().
   $blocks[ASU_BRAND_HEADER_DELTA] = array(
     'info' => t('ASU Brand: header'),
     'cache' => DRUPAL_NO_CACHE,
   );
   // Added for WS2
   $blocks['asu_brand_header_ws2'] = array(
-    'info' => t('ASU Header 2.0'),
+    'info' => t('WS2.0: Header'),
   );
   $blocks['asu_brand_footer'] = array(
     'info' => t('ASU Brand: footer'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['asu_brand_footer_ws2'] = array(
+    'info' => t('WS2.0: Footer'),
     'cache' => DRUPAL_NO_CACHE,
   );
   $blocks['asu_brand_students_footer'] = array(
@@ -118,14 +154,17 @@ function asu_brand_block_info() {
 
 /**
  * Implements hook_block_configure().
+ * @param string $delta - Which block to configure
+ * @return array|mixed
  */
 function asu_brand_block_configure($delta = '') {
   $form = array();
   switch ($delta) {
     case ASU_BRAND_HEADER_DELTA:
+    case 'asu_brand_header_ws2':
     case 'asu_brand_footer':
     case 'asu_brand_students_footer':
-      module_load_include('inc', 'asu_brand', 'asu_brand.admin');
+      module_load_include('inc', 'asu_brand', 'includes/asu_brand.admin');
       $form = asu_brand_get_block_configure_form($delta);
       break;
   }
@@ -134,31 +173,28 @@ function asu_brand_block_configure($delta = '') {
 
 /**
  * Implements hook_block_save().
+ * @param string $delta - Which block to save
+ * @param array $edit - Submitted values for saving
  */
 
 function asu_brand_block_save($delta = '', $edit = array()) {
   switch ($delta) {
+    // Same config form additions for WS1.0 and WS2.0
     case 'asu_brand_header':
+    case 'asu_brand_header_ws2':
       variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
-      variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
-      variable_set('asu_brand_header_template', $edit['asu_brand_header_template']);
       variable_set('asu_brand_preview_pages', $edit['asu_brand_preview_pages']);
       variable_set('asu_brand_gtm_override', $edit['asu_brand_gtm_override']);
       variable_set('asu_brand_sitemenu_injection_flag', $edit['asu_brand_sitemenu_injection_flag']);
       variable_set('asu_brand_sitemenu_name', $edit['asu_brand_sitemenu_name']);
 
       if (isset($edit['asu_brand_do_not_override'])) {
-
         // explode and trim input on commas, then check for plain non-empty input
         $overrides = array_map('trim', explode(',', $edit['asu_brand_do_not_override']));
-
         $overrides = array_filter($overrides, function($val) {
-
           $val = check_plain($val);
-
           return !empty($val);
         });
-
         variable_set('asu_brand_do_not_override', drupal_json_encode($overrides));
       }
 
@@ -169,42 +205,12 @@ function asu_brand_block_save($delta = '', $edit = array()) {
       asu_brand_cache_clear();
       break;
 
-    // Added for WS2
-    case 'asu_brand_header_ws2':
-      if (isset($edit['asu_brand_do_not_override'])) {
-
-        // explode and trim input on commas, then check for plain non-empty input
-        $overrides = array_map('trim', explode(',', $edit['asu_brand_do_not_override']));
-
-        $overrides = array_filter($overrides, function($val) {
-
-          $val = check_plain($val);
-
-          return !empty($val);
-        });
-
-        variable_set('asu_brand_do_not_override', drupal_json_encode($overrides));
-      }
-
-      variable_set('asu_brand_parent_org_title', $edit['asu_brand_parent_org_title']);
-      variable_set('asu_brand_parent_org_url', $edit['asu_brand_parent_org_url']);
-      variable_set('asu_brand_override_url', $edit['asu_brand_override_url']);
-
-      asu_brand_cache_clear();
-      break;
-
+      // Same saved configs for WS1.0 and WS2.0
     case 'asu_brand_footer':
-      variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
-      variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
-      // No color options on footer anymore
-      //variable_set('asu_brand_footer_color', $edit['asu_brand_footer_color']);
-      variable_set('asu_brand_preview_pages', $edit['asu_brand_preview_pages']);
-      asu_brand_cache_clear();
-      break;
-
+    case 'asu_brand_footer_ws2':
     case 'asu_brand_students_footer':
-      variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
-      variable_set('asu_brand_header_basepath', $edit['asu_brand_header_basepath']);
+    variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
+      // No color options on footer anymore
       variable_set('asu_brand_preview_pages', $edit['asu_brand_preview_pages']);
       asu_brand_cache_clear();
       break;
@@ -221,70 +227,88 @@ function asu_brand_block_view($delta = '') {
   $preview_text = t('No preview available');
 
   switch ($delta) {
+    // WS1.0 Header
     case 'asu_brand_header':
       $block['subject'] = NULL;
       if ($is_preview_path) {
         $block['content'] = $preview_text;
       }
       else {
-        module_load_include('inc', 'asu_brand', 'asu_brand.block');
+        module_load_include('inc', 'asu_brand', 'includes/asu_brand.block');
         $block['content'] = asu_brand_get_block_header();
       }
       break;
 
-      // Added for WS2
+      // WS2.0 Header - Rendered by Javascript (web component)
       case 'asu_brand_header_ws2':
         $block['subject'] = '';
-        $block['content'] = array(
-          '#markup' => '<div id="headerContainer"></div>',
-          '#attached' => array(
-            'css' => array(
-              drupal_get_path('module', 'asu_brand') . '/styles/styles_ws2.css'
-            ),
-            'js' => array(
+        if ($is_preview_path) {
+          $block['content'] = 'WS2.0 Header: ' . $preview_text;
+        } else {
+          $block['content'] = array(
+            '#markup' => '<div id="headerContainer"></div>',
+            '#attached' => array(
+              'css' => array(
+                drupal_get_path('module', 'asu_brand') . '/styles/styles_ws2.css'
+              ),
+              'js' => array(
                 array(
-                    'type' => 'file',
-                    'data' => $module_path . '/scripts_ws2/vendor.production.js',
+                  'type' => 'file',
+                  'data' => $module_path . '/scripts_ws2/vendor.production.js',
                 ),
                 array(
-                    'type' => 'file',
-                    'data' => $module_path . '/scripts_ws2/core.production.js',
+                  'type' => 'file',
+                  'data' => $module_path . '/scripts_ws2/core.production.js',
                 ),
                 array(
-                    'type' => 'file',
-                    'data' => $module_path . '/scripts_ws2/render.js',
+                  'type' => 'file',
+                  'data' => $module_path . '/scripts_ws2/render.js',
                 ),
                 array(
-                    'type' => 'setting',
-                    'data' => array('asu_brand' => array(
-                      'siteName' => variable_get('site_name'),
-                      'siteSubtitle' => variable_get('site_slogan'),
-                      'navTree' => _asu_brand_ws2_create_json()
-                    )),
+                  'type' => 'setting',
+                  'data' => array('asu_brand' => array(
+                    'siteName' => variable_get('site_name'),
+                    'siteSubtitle' => variable_get('site_slogan'),
+                    'navTree' => _asu_brand_ws2_create_json()
+                  )),
                 )
               )
-          ),
-        );
+            ),
+          );
+        }
         break;
 
+    // WS1.0 Footer
     case 'asu_brand_footer':
       $block['subject'] = NULL;
       if ($is_preview_path) {
-        $block['content'] = $preview_text;
+        $block['content'] = 'WS1.0 footer: ' . $preview_text;
       }
       else {
-        module_load_include('inc', 'asu_brand', 'asu_brand.block');
+        module_load_include('inc', 'asu_brand', 'includes/asu_brand.block');
         $block['content'] = asu_brand_get_block_footer();
       }
       break;
 
+    // WS2.0 Footer
+    case 'asu_brand_footer_ws2':
+      $block['subject'] = NULL;
+      if ($is_preview_path) {
+        $block['content'] = 'WS2.0 footer: ' . $preview_text;
+      } else {
+        module_load_include('inc', 'asu_brand', 'includes/asu_brand.block');
+        $block['content'] = asu_brand_get_block_footer_ws2();
+      }
+      break;
+
+    // Legacy students.asu.edu footer. Will go away with WS2.0, if it hasn't already
     case 'asu_brand_students_footer':
       $block['subject'] = NULL;
       if ($is_preview_path) {
         $block['content'] = $preview_text;
       }
       else {
-        module_load_include('inc', 'asu_brand', 'asu_brand.block');
+        module_load_include('inc', 'asu_brand', 'includes/asu_brand.block');
         $block['content'] = asu_brand_get_block_students_footer();
       }
       break;
@@ -311,15 +335,18 @@ function asu_brand_page_alter(&$page) {
 
   // Add callback routine.
   $page['#post_render'][] = 'asu_brand_page_process';
-  // Load include file.
-  module_load_include('inc', 'asu_brand', 'asu_brand.gtm');
+  module_load_include('inc', 'asu_brand', 'includes/asu_brand.gtm');
 }
 
 /**
- * Clear block caches.
  *
+ * Implements hook_cache_clear().
+ *
+ * Clears block caches.
  * If called without arguments, clears all asu_brand related items. $cid can be
  * any asu_brand item (without the 'asu_brand:' part.
+ * @param string $cid - Drupal cache ID.
+ * @param bool $wildcard - Clear ALL cached "asu_brand:*" blocks. Defaults to TRUE.
  */
 function asu_brand_cache_clear($cid = '', $wildcard = TRUE) {
   cache_clear_all('asu_brand:' . $cid, 'cache', $wildcard);
@@ -327,17 +354,29 @@ function asu_brand_cache_clear($cid = '', $wildcard = TRUE) {
 
 /**
  * Get list of cache IDs.
+ * @param bool $reset Flush static version of cache IDs. Defaults to FALSE.
+ * @return array|mixed|string[]|null
  */
 function asu_brand_get_cache_ids($reset = FALSE) {
   $cache_ids = &drupal_static(__FUNCTION__);
-  if ($reset || !isset($cache_ids)) {
-    $cache_ids = array('asu_brand:head', 'asu_brand:header', 'asu_brand:footer', 'asu_brand:students_footer', 'asu_brand:gtm');
+  if ($reset || (!isset($cache_ids))) {
+    $cache_ids = array(
+      'asu_brand:head',
+      'asu_brand:header',
+      'asu_brand:header_ws2',
+      'asu_brand:footer',
+      'asu_brand:footer_ws2',
+      'asu_brand:students_footer',
+      'asu_brand:gtm'
+    );
   }
   return $cache_ids;
 }
 
 /**
  * Determine if path is generating a preview.
+ * @param bool $reset - Flush static version of list of pages. Defaults to FALSE.
+ * @return array|bool|mixed|null
  */
 function asu_brand_is_preview_path($reset = FALSE) {
   $page_match = &drupal_static(__FUNCTION__);
@@ -371,12 +410,12 @@ function asu_brand_get_site_menu_array($version = '') {
   $menu_tree = menu_tree_all_data(variable_get('asu_brand_sitemenu_name', ASU_BRAND_SITE_MENU_NAME_DEFAULT));
   drupal_alter('asu_brand_sitemenu_name', $menu_tree); // Invoke alter
   $menu_array = array();
-  $i=0;
+  $i = 0;
   // Checks if creating special menu structure for WS2L
   if (isset($version) && $version = '5') {
     foreach ($menu_tree as $item) {
       if (isset($item['link']) && $item['link']['access'] && !$item['link']['hidden']) {
-        if ($menu_item = asu_brand_get_menu_item($item['link']['title'], $item['link']['link_path'], $item['link']['options'], true))
+        if ($menu_item = asu_brand_get_menu_item($item['link']['title'], $item['link']['link_path'], $item['link']['options'], TRUE))
         {
           $menu_array[$i] = array_map('trim', $menu_item);
         } else {
@@ -384,20 +423,20 @@ function asu_brand_get_site_menu_array($version = '') {
         }
         // Render child items.
         if (asu_brand_menuitem_has_active_children($item)) {
-          $j=0;
+          $j = 0;
           foreach ($item['below'] as $child) {
             if (isset($child['link']) && !$child['link']['hidden']) {
-              if ($menu_item = asu_brand_get_menu_item($child['link']['title'], $child['link']['link_path'], $child['link']['options'], true)) {
+              if ($menu_item = asu_brand_get_menu_item($child['link']['title'], $child['link']['link_path'], $child['link']['options'], TRUE)) {
                 $menu_array[$i]['items'][$j] = array(array_map('trim', $menu_item));
               } else {
                 $j--;
               }
               // Render grandchild items.
               if (asu_brand_menuitem_has_active_children($child)) {
-                $k=0;
+                $k = 0;
                 foreach ($child['below'] as $grandchild) {
                   if (isset($grandchild['link']) && !$grandchild['link']['hidden']) {
-                    if ($menu_item = asu_brand_get_menu_item($grandchild['link']['title'], $grandchild['link']['link_path'], $grandchild['link']['options'], true)) {
+                    if ($menu_item = asu_brand_get_menu_item($grandchild['link']['title'], $grandchild['link']['link_path'], $grandchild['link']['options'], TRUE)) {
                       $menu_array[$i]['items'][$j]['items'][$k] = array(array_map('trim', $menu_item));
                     } else {
                       $k--;
@@ -462,32 +501,24 @@ function asu_brand_get_site_menu_array($version = '') {
 
 /**
  * Compose and return menu item
- *   Special handling for 'Special menu items' module
- *   Return NULL for path if <nolink>
- *   Return empty array if <separator>
- * @param atring $title
- * @param atring $path
- * @param assoc array $options
- * @return assoc array>
+ * Special handling for 'Special menu items' module
+ *   - Return NULL for path if <nolink>
+ *   - Return empty array if <separator>
+ * @param string $title - menu item title
+ * @param string $path - menu item path
+ * @param array $options - Options for rendering the <a> tag, such as target, href, etc.
+ * @param bool $ws2l_check - Check to see if a check for WS2.0 is needed. Defaults to FALSE.
+ * @return array
  */
-function asu_brand_get_menu_item($title, $path, $options = array(), $ws2l_check = false) {
-  // default
-  if (isset($ws2l_check) && $ws2l_check == true)
-  {
-    $menu_item = array(
-      'title' => t(strip_tags(htmlspecialchars_decode($title))),
-      'text' => t(strip_tags(htmlspecialchars_decode($title))),
-      'href'  => url($path, $options)
-    );
+function asu_brand_get_menu_item($title, $path, $options = array(), $ws2l_check = FALSE) {
+  $menu_item = array(
+    'title' => t(strip_tags(htmlspecialchars_decode($title))),
+    'path'  => url($path, $options)
+  );
+  if (isset($ws2l_check) && $ws2l_check === TRUE) {
+    $menu_item['text'] = t(strip_tags(htmlspecialchars_decode($title)));
   }
-  else
-  {
-    $menu_item = array(
-      'title' => t(strip_tags(htmlspecialchars_decode($title))),
-      'path'  => url($path, $options)
-    );
-  }
-  // special handling for 'Special menu items' module
+  // Special handling for 'Special menu items' module
   if (module_exists('special_menu_items')) {
     switch ($path) {
       case '<nolink>':
@@ -495,7 +526,6 @@ function asu_brand_get_menu_item($title, $path, $options = array(), $ws2l_check 
         break;
       case '<separator>':
         return array(); // return empty array if separator
-        break;
     }
   }
   return $menu_item;
@@ -503,13 +533,13 @@ function asu_brand_get_menu_item($title, $path, $options = array(), $ws2l_check 
 
 
 /**
- * Parses menuitem and returns true if there are active child menu items.
- * @param array $menuitem
+ * Parses menu_item and returns true if there are active child menu items.
+ * @param array $menu_item
  * @return boolean
  */
-function asu_brand_menuitem_has_active_children($menuitem) {
-  if (is_array($menuitem) && isset($menuitem['below']) && !empty($menuitem['below'])) {
-    foreach ($menuitem['below'] as $child) {
+function asu_brand_menuitem_has_active_children($menu_item) {
+  if (is_array($menu_item) && isset($menu_item['below']) && !empty($menu_item['below'])) {
+    foreach ($menu_item['below'] as $child) {
       if (isset($child['link']) && $child['link']['access'] && ($child['link']['hidden'] == 0)) return true;
     }
   }
@@ -517,19 +547,18 @@ function asu_brand_menuitem_has_active_children($menuitem) {
 }
 
 /**
- * Creates and returns JSON string from asu_brand_get_site_menu_array() by passing parameters to determine array structure
+ * Creates and returns JSON string from asu_brand_get_site_menu_array() by passing parameters to
+ * determine array structure.
  */
-function _asu_brand_ws2_create_json()
-{
+function _asu_brand_ws2_create_json() {
   $site_menu = asu_brand_get_site_menu_array('5');
-
   return json_encode($site_menu);
 }
 
 /**
  * Global header - validation
  */
-function asu_brand_block_form_valuation(&$form, &$form_state) {
+function _asu_brand_block_form_validate(&$form, &$form_state) {
   if (!empty($form_state['values']['asu_brand_parent_org_title'])) {
     if ((filter_var($form_state['values']['asu_brand_parent_org_url'], FILTER_VALIDATE_URL) === FALSE)
       || (!valid_url($form_state['values']['asu_brand_parent_org_url']))) {

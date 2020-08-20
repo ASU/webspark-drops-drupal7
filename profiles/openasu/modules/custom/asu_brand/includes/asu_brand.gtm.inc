@@ -1,16 +1,10 @@
 <?php
-
 /**
  * @file
  * Contains the GTM snippet insertion code.
  *
  * @author Chandi Cumaranatunge
  */
-
-
-/*********************************************************************
- DRUPAL HOOKS
-*********************************************************************/
 
 /**
  * Implements callback_post_render().
@@ -35,11 +29,6 @@ function asu_brand_page_process(&$children, $elements) {
   return $children;
 }
 
-
-/*********************************************************************
- INTERNAL
-*********************************************************************/
-
 /**
  * Checks if ASU Brand header is visible on current page
  * @param array $elements
@@ -50,15 +39,14 @@ function asu_brand_is_header_visible($elements) {
   foreach ($elements as $region_key => $region) {
   if (($region_key[0] != '#') && is_array($region)) {
       foreach ($region as $block_key => $block) {
-        if ($block_key == $module_name.'_'.ASU_BRAND_HEADER_DELTA) {
+        if ($block_key == $module_name . '_' . ASU_BRAND_HEADER_DELTA) {
           return TRUE;
         }
       }
     }
   }
-  return false;
+  return FALSE;
 }
-
 
 /**
  * Get GTM snippet from header assets

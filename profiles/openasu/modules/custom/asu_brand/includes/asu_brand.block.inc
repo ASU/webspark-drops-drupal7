@@ -14,14 +14,11 @@ function asu_brand_get_block_settings($reset = FALSE) {
 
     $settings = new StdClass;
     $settings->header_version = variable_get('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT);
-    $settings->header_basebath = variable_get('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT);
-    $settings->header_template = variable_get('asu_brand_header_template', ASU_BRAND_HEADER_TEMPLATE_DEFAULT);
-    $settings->footer_color = variable_get('asu_brand_footer_color', ASU_BRAND_FOOTER_COLOR_DEFAULT);
-    $settings->head_path = $settings->header_basebath . '/' . $settings->header_version . '/heads/' . $settings->header_template . '.shtml';
-    $settings->header_path = $settings->header_basebath . '/' . $settings->header_version . '/headers/' . $settings->header_template . '.shtml';
-    $settings->footer_path = $settings->header_basebath . '/' . $settings->header_version . '/includes/footer' . $settings->footer_color . '.shtml';
-    $settings->gtm_path = $settings->header_basebath . '/' . $settings->header_version . '/includes/gtm.shtml';
-    $settings->students_footer_path = $settings->header_basebath . '/' . $settings->header_version . '/includes/students_footer.shtml';
+    $settings->head_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version . '/heads/default.shtml';
+    $settings->header_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version . '/headers/default.shtml';
+    $settings->footer_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version . '/includes/footer.shtml';
+    $settings->gtm_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version . '/includes/gtm.shtml';
+    $settings->students_footer_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version . '/includes/students_footer.shtml';
 
     // Set javascript settings.
     $js_settings = array(
@@ -53,7 +50,7 @@ function asu_brand_get_block_settings($reset = FALSE) {
       $settings->long_term_cache[$cache_id] = variable_get($cache_id, NULL);
     }
   }
-  
+
   return $settings;
 }
 
@@ -94,7 +91,7 @@ function asu_brand_get_cached_content($cache_id, $file_path, $reset = FALSE) {
       watchdog('asu_brand', 'Unable to load @path to the cache; using long term cache.', array('@path' => $file_path), WATCHDOG_ERROR);
     }
   }
-  
+
   return $output;
 }
 
@@ -104,10 +101,10 @@ function asu_brand_get_cached_content($cache_id, $file_path, $reset = FALSE) {
 function asu_brand_get_block_header() {
   $settings = asu_brand_get_block_settings();
   $cache_id = 'asu_brand:header';
-  
+
   // Set js settings, include js file, and inject head into <head>.
   asu_brand_head_inject();
-  
+
   return asu_brand_get_cached_content($cache_id, $settings->header_path);
 }
 
@@ -117,6 +114,12 @@ function asu_brand_get_block_header() {
 function asu_brand_get_block_footer() {
   $settings = asu_brand_get_block_settings();
   $cache_id = 'asu_brand:footer';
+  return asu_brand_get_cached_content($cache_id, $settings->footer_path);
+}
+
+function asu_brand_get_block_footer_ws2() {
+  $settings = asu_brand_get_block_settings();
+  $cache_id = 'asu_brand:footer_ws2';
   return asu_brand_get_cached_content($cache_id, $settings->footer_path);
 }
 
@@ -151,17 +154,17 @@ function asu_brand_head_inject() {
   $inline_script = <<<EOL
    <script type="text/javascript">
     <!--//--><![CDATA[//><!--
-    
+
     var overrides = $overrides;
     var hostname = window.location.hostname;
     var ASUHeader = ASUHeader || {};
-    
-    
-    if (overrides.indexOf(hostname) == -1) {  
+
+
+    if (overrides.indexOf(hostname) == -1) {
         ASUHeader.user_signedin = $asu_sso_signedin;
         ASUHeader.signout_url = "$asu_sso_signouturl";
     }
-       
+
     //--><!]]>
   </script>
 EOL;

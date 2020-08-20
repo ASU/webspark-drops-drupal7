@@ -5,6 +5,8 @@
  */
 function asu_brand_install() {
   variable_set('asu_brand_ci_testing', 0);
+  // Set permissions for ASU Brand
+  _asu_brand_user_perms('add');
 }
 
 /**
@@ -21,6 +23,8 @@ function asu_brand_uninstall() {
   foreach (asu_brand_get_cache_ids() as $cache_id) {
     cache_clear_all($cache_id, 'cache');
   }
+  // Remove permissions for ASU Brand
+  _asu_brand_user_perms('remove');
 }
 
 /**
@@ -28,7 +32,7 @@ function asu_brand_uninstall() {
  * value for the black footer.
  */
 function asu_brand_update_7100(&$sandbox) {
-  $footer_color = variable_get('asu_brand_footer_color', ASU_BRAND_FOOTER_COLOR_DEFAULT);
+  $footer_color = variable_get('asu_brand_footer_color', '');
   if ($footer_color = '_black') {
     variable_set('asu_brand_footer_color', '');
     cache_clear_all('asu_brand:footer', 'cache');
@@ -95,20 +99,59 @@ function asu_brand_update_7105(&$sandbox) {
 }
 
 /**
+ * + Set header version to "stable"
  * + Disable display of site name by Drupal, since the brand header is now handling it
  */
 function asu_brand_update_7106(&$sandbox) {
-
   variable_set('asu_brand_header_version', 'stable');
-
   $themes = list_themes();
-
   foreach ($themes AS $key => $item) {
-
     $theme_key = 'theme_'.$key.'_settings';
 
     $settings = variable_get($theme_key, array());
     $settings['toggle_name'] = FALSE;
     variable_set($theme_key, $settings);
+  }
+}
+
+/**
+ * Delete deprecated/legacy settings for headers/footers (pre WS1.0)
+ */
+function asu_brand_update_7200(&$sandbox) {
+  variable_del('asu_brand_footer_color');
+  variable_del('asu_brand_header_template');
+  variable_del('asu_brand_header_basepath');
+
+}
+
+/**
+ * Adds permissions for ASU Brand configuration form to existing installs
+ * @param $sandbox
+ */
+function asu_brand_update_7201(&$sandbox) {
+  _asu_brand_user_perms('add');
+}
+
+/**
+ * Manages (adds or removes) permissions for ASU Brand
+ * @param $action - Add or remove ASU Brand permissions.
+ */
+function _asu_brand_user_perms($action) {
+  $admin_role = user_role_load_by_name('administrator')->rid;
+  $perms = array('administer asu brand');
+  if (!empty($admin_role) && is_numeric($admin_role)) {
+    if ($action === 'add') {
+      user_role_grant_permissions($admin_role, $perms); // admin role grant
+    } elseif ($action === 'remove') {
+      // Delete permission entries from role_permission
+      db_delete('role_permission')
+        ->condition('permission', 'administer asu brand', 'LIKE')
+        ->condition('module', 'asu_brand')
+        ->condition('rid', $admin_role, '!=')
+        ->execute();
+      // admin role remove (to clear static cache entries as well, use the Drupal API)
+      user_role_revoke_permissions($admin_role, $perms);
+    }
+    watchdog('user', __FUNCTION__ . ' - ' . $action . ' ASU Brand permissions');
   }
 }

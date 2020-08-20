@@ -232,7 +232,6 @@ function _webspark_featurescustom_web_standards_theme_config($theme) {
   // Reset ASU Header settings
   if (module_exists('asu_brand')) {
     variable_set('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT);
-    variable_set('asu_brand_header_template', ASU_BRAND_HEADER_TEMPLATE_DEFAULT);
     variable_set('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT);
     watchdog('theme update', 'Updated ASU Header values for %theme theme based on ASU Brand module settings', array('%theme' => $theme), WATCHDOG_NOTICE);
   }

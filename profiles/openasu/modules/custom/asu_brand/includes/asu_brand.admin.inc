@@ -3,8 +3,14 @@
 /**
  * ASU Brand administration functions.
  */
-function asu_brand_get_block_configure_form($delta) {
 
+/**
+ * Implements hook_block_configure_form().
+ *
+ * @param $delta
+ * @return mixed
+ */
+function asu_brand_get_block_configure_form($delta) {
   $form['asu_brand'] = array(
       '#type' => 'fieldset',
       '#title' => t('ASU Brand settings'),
@@ -12,9 +18,8 @@ function asu_brand_get_block_configure_form($delta) {
   );
 
   switch ($delta) {
-
-    case ASU_BRAND_HEADER_DELTA:
-
+    case ASU_BRAND_HEADER_DELTA: // WS1.0 header default
+    case 'asu_brand_header_ws2':
       // Customize the site title, add the parent org title (and their URLs)
       $form['asu_brand']['custom_title'] = array(
         '#type' => 'fieldset',
@@ -128,18 +133,8 @@ function asu_brand_get_block_configure_form($delta) {
       );
 
       // No longer options......
-      // Header template
-      $form['asu_brand']['asu_brand_header_template'] = array(
-        '#type' => 'hidden',
-        '#required' => TRUE,
-        '#value' => ASU_BRAND_HEADER_TEMPLATE_DEFAULT,
-      );
-      // Header basepath
-      $form['asu_brand']['asu_brand_header_basepath'] = array(
-        '#type' => 'hidden',
-        '#required' => TRUE,
-        '#value' => variable_get('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT),
-      );
+      // Header template - hard-coded
+      // Header basepath - hard-coded
       // Header version
       $form['asu_brand']['asu_brand_header_version'] = array(
         '#type' => 'hidden',
@@ -149,6 +144,7 @@ function asu_brand_get_block_configure_form($delta) {
       break;
 
       case 'asu_brand_footer':
+      case 'asu_brand_footer_ws2':
         // Footer standardized with no color options
         $form['asu_brand']['#title'] = t('ASU Brand Footer settings');
         break;
@@ -164,129 +160,73 @@ function asu_brand_get_block_configure_form($delta) {
  * Rebuild the version options and deselect item.
  */
 function asu_brand_form_block_admin_configure_alter(&$form, $form_state) {
-  if ($form['module']['#value'] == 'asu_brand' && $form['delta']['#value'] == 'asu_brand_header') {
-    // if form state is set (ajax call) then set the header version options to match the base path.
-    if (isset($form_state['values'])) {
-      $options = asu_brand_get_version_options(FALSE, $form_state['values']['asu_brand_header_basepath']);
-      $form['settings']['asu_brand']['asu_brand_header_version']['#options'] = $options;
+  if ($form['module']['#value'] === 'asu_brand') {
+    if (in_array($form['delta']['#value'], array('asu_brand_header', 'asu_brand_header_ws2'))) {
+      // If form state is set (ajax call) then set the header version options to match the base path.
+      if (isset($form_state['values'])) {
+        $options = asu_brand_get_version_options(FALSE);
+        $form['settings']['asu_brand']['asu_brand_header_version']['#options'] = $options;
+      }
+      $form['#validate'][] = '_asu_brand_block_form_validate';
+      $form['settings']['title']['#access'] = FALSE;
     }
-    $form['#validate'][] = 'asu_brand_block_form_valuation';
-    $form['settings']['title']['#access'] = FALSE;
+    if ($form['delta']['#value'] == 'asu_brand_footer') {
+      $form['settings']['title']['#access'] = FALSE;
+    }
   }
 }
-
-/**
- * Selects just the asu_brand_header_version to be returned for re-rendering
- * @param array $form
- * @param array $form_state
- * @return renderable array (asu_brand_header_version)
- */
-function asu_brand_basepath_ajax_callback($form, $form_state) {
-  // force user to select header version again as basepath has changed.
-  // available header versions can differ between DEV, QA and PROD.
-  $form['settings']['asu_brand']['asu_brand_header_version']['#value'] = '';
-  return $form['settings']['asu_brand']['asu_brand_header_version'];
-}
-
 
 /**
  * Get the header version options as an associative array in the form of
  * array(
  *   'version' => description text,
  * );
+ * @param bool $reset
+ * @return array|mixed|null
  */
-function asu_brand_get_version_options($reset = FALSE, $basepath = '') {
-  // disabling the caching of version options to enable sensitivity to basepath changes.
-  //$options = &drupal_static(__FUNCTION__);
+function asu_brand_get_version_options($reset = FALSE) {
+  $options = &drupal_static(__FUNCTION__);
 
   if ($reset || !isset($options)) {
-    $options = array('' => t('Select a version'));
-
-    // Use internal xml errors to provide user readable errors.
-    libxml_use_internal_errors(TRUE);
-    try {
-      $items = new SimpleXMLElement((($basepath != '') ? $basepath : variable_get('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT)).'/gtmheaders.xml', 0, TRUE);
-      if ($items) {
-        $brand_module_info = system_get_info('module', $name = 'asu_brand');
-        $brand_module_version = (isset($brand_module_info['version'])) ? $brand_module_info['version'] : null;
-        foreach ($items->header as $header) {
-          $dep_min = (isset($header->compatibility->brand_module->min)) ? $header->compatibility->brand_module->min : null;
-          $dep_max = (isset($header->compatibility->brand_module->max)) ? $header->compatibility->brand_module->max : null;
-
-          if (asu_brand_dependencies_met($brand_module_version, $dep_min, $dep_max)) {
-            $options[(string) $header->version] = t((string) $header->name);
-          }
-        }
-
-        // Save options to variable table in case xml is not available at a later time.
-        variable_set('asu_brand_version_options', $options);
-      }
-      else {
-        // There was an error with loading the xml. Get versions from the
-        // variable table.
-        $options = variable_get('asu_brand_version_options', $options);
-
-        $log_message = "Failed loading ASU header version XML file\n";
-        foreach(libxml_get_errors() as $error) {
-          $log_message .= "\t" . $error->message;
-        }
-        drupal_set_message($log_message, 'error');
-      }
-    }
-    catch (Exception $e) {
-      // There was an error with loading the xml. Get versions from the
-      // variable table.
-      $options = variable_get('asu_brand_version_options', $options);
-
-      drupal_set_message('Failed loading ASU header version XML file. Please try again later. The full error description has been logged.', 'error');
-      watchdog('asu_brand', $e, array(), WATCHDOG_ERROR);
-    }
+    // Hard-coded here because the XML feed at asu.edu/asuthemes/gtmheaders.xml will no longer be used.
+    $options = array(
+      '' => t('Select a version'),
+      'stable' => '4.x (WS1.0)',
+      '5.0' => '5.x (WS2.0)',
+    );
   }
   return $options;
 }
-
 
 function asu_brand_get_site_menu_options() {
   return menu_get_menus();
 }
 
 /**
- * Checks if passed brand module version meets the minimum
- *   and maximum versino dependancies
- * @param string $current_version
- * @param string $min_version
- * @param string $mac_version
- * @return boolean
+ * ASU Brand admin settings form definition.
  */
-function asu_brand_dependencies_met($current_version, $min_version, $max_version) {
+function asu_brand_admin_settings() {
+  $form = array();
+  $form['ws_version'] = array(
+    '#type' => 'select',
+    '#title' => 'Web Standards version',
+    '#description' => 'Select which Web Standards version of ASU Brand assets to display.'
+      . ' NOTE: Webspark manages this setting by the selection of the theme. This setting form'
+      . ' only appears for non-Webspark sites.',
+    '#options' => asu_brand_get_version_options(),
+    '#required' => TRUE,
+    '#default_value' => variable_get('asu_brand_header_version', ''),
+  );
+  $form['#submit'][] = '_asu_brand_admin_settings_submit';
 
-  if(count($curr_varr = explode('-', $current_version)) < 2) return FALSE;
-  if(count($min_varr = explode('-', $min_version)) < 2) return FALSE;
+  return system_settings_form($form);
+}
 
-  // min check
-  if(floatval($curr_varr[0]) != floatval($min_varr[0])) return FALSE;
-
-  $min_varr = explode('.', $min_varr[1]);
-  $curr_varr = explode('.', $curr_varr[1]);
-
-  if (count($min_varr) < 2 || count($curr_varr) < 2) return FALSE;
-
-  if (floatval($curr_varr[1]) < floatval($min_varr[1])) return FALSE;
-
-  // max check (optional)
-  /* todo: get rid of this check?
-  if ($max_version) {
-    $max_varr = explode('-', $max_version);
-    $curr_varr = explode('-', $current_version);
-
-    if (count($max_varr) < 2) return FALSE;
-    if ($curr_varr[0] != $max_varr[0]) return FALSE;
-
-    $max_varr = explode('.', $max_varr[1]);
-    $curr_varr = explode('.', $curr_varr[1]);
-    if(intval($curr_varr[1]) > intval($max_varr[1])) return FALSE;
-  }*/
-
-  // all checks successful
-  return TRUE;
+/**
+ * ASU Brand admin settings form submission callback.
+ * @param $form
+ * @param $form_state
+ */
+function _asu_brand_admin_settings_submit($form, $form_state) {
+  variable_set('asu_brand_header_version', $form_state['values']['ws_version']);
 }
