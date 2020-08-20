@@ -65,7 +65,7 @@ function _webspark_featurescustom_get_ws2_suffix($use_adm_theme = FALSE, $theme_
 /**
  * Is $theme an ASU web standards theme (or have an ASU WS base theme)?
  * @param string $theme - New theme selected
- * @param int $ws_version - Which version of Web standards is desired? Defaults to all WS themes (0).
+ * @param int $ws_version - Which version of Web standards is desired? Checks for ANY WS theme by default (=== 0).
  * @param bool $use_adm_theme - Use the admin theme name (not the default theme).
  * Default: FALSE - Users want to check if Web Standards 2.0 is enabled in the site but the check is being
  * done from an admin theme managed URL/form.
@@ -146,9 +146,8 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
  * Enable ASU Web Standards elements or not?
  *
  * @param string $new_theme - Theme to be changed to.
- * @param mixed $theme_test_result - Is an ASU Web standards theme (ex. innovation, elpuente).
- * Theme machine name if true; 0 if false.
- * the theme or base_theme of the new theme?
+ * @param mixed $theme_test_result - Is an ASU Web standards theme (ex. innovation, elpuente). Theme machine name if true; 0 if false.
+ *
  */
 function _webspark_featurescustom_act($new_theme, $theme_test_result) {
   if ($theme_test_result !== 0) { // ASU Web standards theme is involved
@@ -213,7 +212,6 @@ function _webspark_featurescustom_web_standards_theme_config($theme) {
       $modules_to_enable[] = $module;
     }
   }
-
   if (count($modules_to_enable) > 0) {
     try {
       module_enable($modules_to_enable);
@@ -224,8 +222,7 @@ function _webspark_featurescustom_web_standards_theme_config($theme) {
       watchdog('theme update', 'Web standards-based module dependency enabling failed: ' . $e->getMessage(), WATCHDOG_ERROR);
       drupal_set_message('The enabling of Innovation theme-specific modules may have failed. Check your <a href="/admin/reports/dblog">recent log messages</a> for details.', 'error');
     }
-  }
-  else {
+  } else {
     watchdog('theme update', 'All modules already enabled for %theme theme, so no module_enable action taken.', array('%theme' => $theme), WATCHDOG_NOTICE);
   }
 
@@ -237,7 +234,6 @@ function _webspark_featurescustom_web_standards_theme_config($theme) {
   }
 
 //  dpm($theme, __FUNCTION__ . ' - which theme?');
-
   // Re-apply original block configs to ensure their proper location to match spinup settings.
   // function openasu_blockupdates_for_theme() in openasu.profile
   if (function_exists('openasu_blockupdates_for_theme')) {
@@ -305,6 +301,8 @@ function _webspark_featurescustom_web_standards_theme_config($theme) {
       ->execute();
   }
 
+  // @TODO swap in/out global header/footer blocks (WS1.0 or WS2.0?)
+
   // Flush ASU Brand caches so ASU headers are right...
   asu_brand_cache_clear();
   // and log changes.
@@ -313,8 +311,10 @@ function _webspark_featurescustom_web_standards_theme_config($theme) {
 }
 
 /**
- * Alternate callback for when Innovation is NOT selected - disable
+ * Alternate callback for when a desired Web standards theme has NOT been selected - disable
  * Innovation-specific blocks.
+ * @param null $theme - Name of theme. If 0,
+ * @throws InvalidMergeQueryException
  */
 function _webspark_featurescustom_alt_theme_config($theme = NULL) {
   if (is_null($theme)) { // callback from admin theme form

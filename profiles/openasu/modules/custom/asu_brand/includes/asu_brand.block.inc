@@ -6,6 +6,8 @@
 
 /**
  * Get ASU brand block settings.
+ * @param bool $reset - Use cacbed block settings. Defaults to FALSE.
+ * @return array|mixed|StdClass
  */
 function asu_brand_get_block_settings($reset = FALSE) {
   $settings = &drupal_static(__FUNCTION__);
@@ -13,11 +15,16 @@ function asu_brand_get_block_settings($reset = FALSE) {
   if ($reset || !isset($settings)) {
 
     $settings = new StdClass;
-    $settings->header_version = variable_get('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT);
-    $settings->head_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version . '/heads/default.shtml';
-    $settings->header_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version . '/headers/default.shtml';
-    $settings->footer_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version . '/includes/footer.shtml';
-    $settings->gtm_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version . '/includes/gtm.shtml';
+    $settings->header_version = variable_get('asu_brand_header_version',
+      ASU_BRAND_HEADER_VERSION_DEFAULT);
+    $settings->head_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version
+      . '/heads/default.shtml';
+    $settings->header_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version
+      . '/headers/default.shtml';
+    $settings->footer_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version
+      . '/includes/footer.shtml';
+    $settings->gtm_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version
+      . '/includes/gtm.shtml';
 
     // Set javascript settings.
     $js_settings = array(
@@ -54,72 +61,147 @@ function asu_brand_get_block_settings($reset = FALSE) {
 }
 
 /**
+ * Build the content of the WS1.0 header block.
+ * @param int $ws_version
+ * @return mixed|null
+ */
+function asu_brand_get_block_header($ws_version) {
+  $settings = asu_brand_get_block_settings();
+  $cache_id = ($ws_version === 2) ? 'asu_brand:header_ws2' : 'asu_brand:header';
+
+  // Set js settings, include js file, and inject head into <head>.
+  asu_brand_head_inject();
+  return asu_brand_get_cached_content($cache_id, $settings->header_path);
+}
+
+/**
+ * Build the content of the footer block.
+ * @param int $ws_version
+ * @return mixed|null
+ */
+function asu_brand_get_block_footer($ws_version) {
+  $settings = asu_brand_get_block_settings();
+  $cache_id = ($ws_version === 2) ? 'asu_brand:footer_ws2' : 'asu_brand:footer';
+  return asu_brand_get_cached_content($cache_id, $settings->footer_path);
+}
+
+/**
  * Get a block's content in this order as they are available:
  * 1. Regular Drupal cache.
  * 2. Off-site resource file.
  * 3. Long-cache stored in variable table (this is updated if #2 is performed).
  *
  * If $reset == TRUE, then skip #1.
+ * @param $cache_id
+ * @param $file_path
+ * @param bool $reset
+ * @return mixed|null
  */
 function asu_brand_get_cached_content($cache_id, $file_path, $reset = FALSE) {
-
-  if($output = cache_get($cache_id)) {
+  if ($output = cache_get($cache_id)) {
     $output = $output->data;
   }
-
-  if ($reset || $output==NULL || !isset($output)) {
-
-    // set timeout to 1.5 seconds.  if it takes too long, fall back
-    // to long term caching
-    $options = array(
-      'timeout' => 1.5
-    );
-
-    $output = drupal_http_request($file_path, $options);
-
-    //if ($output = drupal_http_request($file_path)) {//$output = file_get_contents($file_path)) {
-    if ($output->code == 200) {
-      $output = $output->data;
-
+  if ($reset || $output == NULL || !isset($output)) {
+    if ($cache_id === 'asu_brand:header_ws2') { // Render WS2.0 header w/Preact
+      $module_path = drupal_get_path('module', 'asu_brand');
+      $output = array(
+        '#markup' => '<div id="headerContainer"></div>',
+        '#attached' => array(
+          'css' => array(
+            drupal_get_path('module', 'asu_brand') . '/styles/styles_ws2.css'
+          ),
+          'js' => array(
+            array(
+              'type' => 'file',
+              'data' => $module_path . '/scripts_ws2/vendor.production.js',
+            ),
+            array(
+              'type' => 'file',
+              'data' => $module_path . '/scripts_ws2/core.production.js',
+            ),
+            array(
+              'type' => 'file',
+              'data' => $module_path . '/scripts_ws2/render.js',
+            ),
+            array(
+              'type' => 'setting',
+              'data' => array('asu_brand' => array(
+                'siteName' => variable_get('site_name'),
+                'siteSubtitle' => variable_get('site_slogan'),
+                'navTree' => _asu_brand_ws2_create_json()
+              )),
+            )
+          )
+        ),
+      );
+      dpm(_asu_brand_ws2_create_json(), __FUNCTION__);
+    }
+    elseif ($cache_id === 'asu_brand:footer_ws2') { // Render WS2.0 footer
+      $module_path = drupal_get_path('module', 'asu_brand');
+      $markup = <<<EOL
+<div id="innovation-footer">
+  <div id="innovation-bar">
+    <div class="innovation-top">
+      <div class="innovation-status">
+        <nav aria-label="University Services">
+                <ul class="default">
+                <li class="footer-link"><a href="https://www.asu.edu/maps">Maps and Locations</a></li>
+                <li class="footer-link"><a href="https://www.asu.edu/asujobs">Jobs</a></li>
+                <li class="footer-link"><a href="https://isearch.asu.edu">Directory</a></li>
+                <li class="footer-link"><a href="https://www.asu.edu/contactasu/">Contact ASU</a></li>
+                <li class="footer-link"><a href="https://my.asu.edu/">My ASU</a></li>
+                </ul>
+        </nav>
+      </div>
+      <div class="innovation-image">
+        <a href="https://www.asu.edu/rankings"><img src="//www.asu.edu/asuthemes/5.0/assets/Number-1-in-the-u$
+      </div>
+    </div>
+  </div>
+  <div class="footer-menu">
+        <nav class="nav colophon" aria-label="University Legal and Compliance">
+        <ul class="default">
+          <li class="footer-link"><a href="https://www.asu.edu/copyright/">Copyright and Trademark</a></li>
+          <li class="footer-link"><a href="https://www.asu.edu/accessibility/">Accessibility</a></li>
+          <li class="footer-link"><a href="https://www.asu.edu/privacy/">Privacy</a></li>
+          <li class="footer-link"><a href="https://www.asu.edu/tou/">Terms of Use</a></li>
+          <li class="footer-link"><a href="https://www.asu.edu/emergency/">Emergency</a></li>
+        </ul>
+    </nav>
+  </div>
+</div>
+EOL;
+      $output = array(
+        '#markup' => $markup,
+        '#attached' => array(
+          'css' => array(
+            drupal_get_path('module', 'asu_brand') . '/styles/footer_ws2.css'
+          ),
+        ),
+      );
       cache_set($cache_id, $output, 'cache', time() + ASU_BRAND_CACHE_LIFETIME);
       variable_set($cache_id, $output);
-    } else {
-      // File resource is not available; use long term cache and cache it for 1 hour.
-      $output = variable_get($cache_id, NULL);
-      cache_set($cache_id, $output, 'cache', time() + 3600);
-      watchdog('asu_brand', 'Unable to load @path to the cache; using long term cache.', array('@path' => $file_path), WATCHDOG_ERROR);
+    }
+    else {
+      // Old way (from AFS) for WS1.0 header + footer
+      // set timeout to 1.5 seconds.  if it takes too long, fall back to long term caching
+      $options = array(
+        'timeout' => 1.5
+      );
+      $output = drupal_http_request($file_path, $options);
+      if ($output->code == 200) {
+        $output = $output->data;
+        cache_set($cache_id, $output, 'cache', time() + ASU_BRAND_CACHE_LIFETIME);
+        variable_set($cache_id, $output);
+      } else {
+        // File resource is not available; use long term cache and cache it for 1 hour.
+        $output = variable_get($cache_id, NULL);
+        cache_set($cache_id, $output, 'cache', time() + 3600);
+        watchdog('asu_brand', 'Unable to load @path to the cache; using long term cache.', array('@path' => $file_path), WATCHDOG_ERROR);
+      }
     }
   }
-
   return $output;
-}
-
-/**
- * Build the content of the header block.
- */
-function asu_brand_get_block_header() {
-  $settings = asu_brand_get_block_settings();
-  $cache_id = 'asu_brand:header';
-
-  // Set js settings, include js file, and inject head into <head>.
-  asu_brand_head_inject();
-
-  return asu_brand_get_cached_content($cache_id, $settings->header_path);
-}
-
-/**
- * Build the content of the footer block.
- */
-function asu_brand_get_block_footer() {
-  $settings = asu_brand_get_block_settings();
-  $cache_id = 'asu_brand:footer';
-  return asu_brand_get_cached_content($cache_id, $settings->footer_path);
-}
-
-function asu_brand_get_block_footer_ws2() {
-  $settings = asu_brand_get_block_settings();
-  $cache_id = 'asu_brand:footer_ws2';
-  return asu_brand_get_cached_content($cache_id, $settings->footer_path);
 }
 
 /**

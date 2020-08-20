@@ -18,12 +18,6 @@ define('ASU_BRAND_PREVIEW_PAGES_DEFAULT', "system/ajax/*\npanels/ajax/*");
 define('ASU_BRAND_DO_NOT_OVERRIDE', variable_get('asu_brand_do_not_override', '["www.asu.edu"]'));
 
 /**
- * Delta of ASU Header block (declared in asu_brand.module)
- * @var string
- */
-define('ASU_BRAND_HEADER_DELTA', 'asu_brand_header');
-
-/**
  * Default machine name of site menu to inject into the responsive header menu
  * @var string
  */
@@ -129,7 +123,7 @@ function asu_brand_block_info() {
   // Never cache the header with Drupal's caching system because the contents of
   // the block changes based on if the user is logged in. The included header files
   // are cached manually when the block is loaded in _asu_brand_block_header().
-  $blocks[ASU_BRAND_HEADER_DELTA] = array(
+  $blocks['asu_brand_header'] = array(
     'info' => t('ASU Brand: header'),
     'cache' => DRUPAL_NO_CACHE,
   );
@@ -156,7 +150,7 @@ function asu_brand_block_info() {
 function asu_brand_block_configure($delta = '') {
   $form = array();
   switch ($delta) {
-    case ASU_BRAND_HEADER_DELTA:
+    case 'asu_brand_header':
     case 'asu_brand_header_ws2':
     case 'asu_brand_footer':
       module_load_include('inc', 'asu_brand', 'includes/asu_brand.admin');
@@ -203,8 +197,7 @@ function asu_brand_block_save($delta = '', $edit = array()) {
       // Same saved configs for WS1.0 and WS2.0
     case 'asu_brand_footer':
     case 'asu_brand_footer_ws2':
-    variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
-      // No color options on footer anymore
+      variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
       variable_set('asu_brand_preview_pages', $edit['asu_brand_preview_pages']);
       asu_brand_cache_clear();
       break;
@@ -213,10 +206,10 @@ function asu_brand_block_save($delta = '', $edit = array()) {
 
 /**
  * Implements hook_block_view().
+ * @noinspection PhpDocSignatureInspection
  */
 function asu_brand_block_view($delta = '') {
   $block = array();
-  $module_path = drupal_get_path('module', 'asu_brand');
   $is_preview_path = asu_brand_is_preview_path();
   $preview_text = t('No preview available');
 
@@ -229,7 +222,7 @@ function asu_brand_block_view($delta = '') {
       }
       else {
         module_load_include('inc', 'asu_brand', 'includes/asu_brand.block');
-        $block['content'] = asu_brand_get_block_header();
+        $block['content'] = asu_brand_get_block_header(1);
       }
       break;
 
@@ -239,36 +232,7 @@ function asu_brand_block_view($delta = '') {
         if ($is_preview_path) {
           $block['content'] = 'WS2.0 Header: ' . $preview_text;
         } else {
-          $block['content'] = array(
-            '#markup' => '<div id="headerContainer"></div>',
-            '#attached' => array(
-              'css' => array(
-                drupal_get_path('module', 'asu_brand') . '/styles/styles_ws2.css'
-              ),
-              'js' => array(
-                array(
-                  'type' => 'file',
-                  'data' => $module_path . '/scripts_ws2/vendor.production.js',
-                ),
-                array(
-                  'type' => 'file',
-                  'data' => $module_path . '/scripts_ws2/core.production.js',
-                ),
-                array(
-                  'type' => 'file',
-                  'data' => $module_path . '/scripts_ws2/render.js',
-                ),
-                array(
-                  'type' => 'setting',
-                  'data' => array('asu_brand' => array(
-                    'siteName' => variable_get('site_name'),
-                    'siteSubtitle' => variable_get('site_slogan'),
-                    'navTree' => _asu_brand_ws2_create_json()
-                  )),
-                )
-              )
-            ),
-          );
+          $block['content'] = asu_brand_get_block_header(2);
         }
         break;
 
@@ -280,7 +244,7 @@ function asu_brand_block_view($delta = '') {
       }
       else {
         module_load_include('inc', 'asu_brand', 'includes/asu_brand.block');
-        $block['content'] = asu_brand_get_block_footer();
+        $block['content'] = asu_brand_get_block_footer(1);
       }
       break;
 
@@ -291,7 +255,7 @@ function asu_brand_block_view($delta = '') {
         $block['content'] = 'WS2.0 footer: ' . $preview_text;
       } else {
         module_load_include('inc', 'asu_brand', 'includes/asu_brand.block');
-        $block['content'] = asu_brand_get_block_footer_ws2();
+        $block['content'] = asu_brand_get_block_footer(2);
       }
       break;
   }
@@ -373,7 +337,6 @@ function asu_brand_is_preview_path($reset = FALSE) {
   }
   return $page_match;
 }
-
 
 /**
  * Get site name displayed in mobile menu

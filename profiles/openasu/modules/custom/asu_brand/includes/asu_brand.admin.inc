@@ -18,7 +18,7 @@ function asu_brand_get_block_configure_form($delta) {
   );
 
   switch ($delta) {
-    case ASU_BRAND_HEADER_DELTA: // WS1.0 header default
+    case 'asu_brand_header': // WS1.0 header default
     case 'asu_brand_header_ws2':
       // Customize the site title, add the parent org title (and their URLs)
       $form['asu_brand']['custom_title'] = array(
@@ -189,8 +189,8 @@ function asu_brand_get_version_options($reset = FALSE) {
     // Hard-coded here because the XML feed at asu.edu/asuthemes/gtmheaders.xml will no longer be used.
     $options = array(
       '' => t('Select a version'),
-      'stable' => '4.x (WS1.0)',
-      '5.0' => '5.x (WS2.0)',
+      'stable' => 'Web Standards 1.0',
+      '5.0' => 'Web Standards 2.x',
     );
   }
   return $options;
