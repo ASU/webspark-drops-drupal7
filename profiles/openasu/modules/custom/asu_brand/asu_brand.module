@@ -15,7 +15,6 @@ define('ASU_BRAND_HEADER_VERSION_DEFAULT', 'stable'); // Assume 4.x for now
 define('ASU_BRAND_HEADER_BASEPATH_DEFAULT', '//www.asu.edu/asuthemes');
 define('ASU_BRAND_CACHE_LIFETIME', 172800); // 48 Hours ( 60 x 60 x 48 )
 define('ASU_BRAND_PREVIEW_PAGES_DEFAULT', "system/ajax/*\npanels/ajax/*");
-define('ASU_BRAND_DO_NOT_OVERRIDE', variable_get('asu_brand_do_not_override', '["www.asu.edu"]'));
 
 /**
  * Default machine name of site menu to inject into the responsive header menu
@@ -28,14 +27,17 @@ define('ASU_BRAND_SITE_MENU_NAME_DEFAULT', 'main-menu');
  * Implements hook_init().
  */
 function asu_brand_init() {
-  if (variable_get('asu_brand_sitemenu_injection_flag', 1)) {
-    $menu_array = asu_brand_get_site_menu_array();
+  // Check which Web standards version first
+  $suffix = (variable_get('asu_brand_header_version', 'stable') === '5.0') ? '_ws2' : '';
+
+  if (variable_get('asu_brand_header' . $suffix . '_sitemenu_injection_flag', 1)) {
+    $menu_array = asu_brand_get_site_menu_array($suffix);
     drupal_alter('asu_brand_sitemenu', $menu_array); // Invoke alter
 
     $site_name = asu_brand_get_site_name();
     drupal_alter('asu_brand_sitename', $site_name); // Invoke alter
 
-    $site_url = variable_get('asu_brand_override_url', '/');
+    $site_url = variable_get('asu_brand_header' . $suffix . '_override_url', '/');
     if (empty($site_url)) {
       $site_url = '/';
     }
@@ -45,8 +47,8 @@ function asu_brand_init() {
       'title' => $site_name,
       'site_url' => $site_url
     );
-    $parent_org_title = variable_get('asu_brand_parent_org_title', '');
-    $parent_org_url = variable_get('asu_brand_parent_org_url', '');
+    $parent_org_title = variable_get('asu_brand_header' . $suffix . '_parent_org_title', '');
+    $parent_org_url = variable_get('asu_brand_header' . $suffix . '_parent_org_url', '');
     if (!empty($parent_org_title)) {
       $site_title_array['parent_org'] = $parent_org_title;
     }
@@ -60,7 +62,7 @@ function asu_brand_init() {
     $js .= 'ASUHeader.site_menu.site_name = '.json_encode($site_name, JSON_HEX_APOS).';';
     $js .= 'ASUHeader.site_title = '.json_encode($site_title_array, JSON_HEX_APOS).';';
 
-    if (variable_get('asu_brand_ci_testing', 0) == 1) {
+    if (variable_get('asu_brand_ci_testing', 0) === 1) {
       $js .= 'ASUHeader.disableCookieConsent = true;';
     }
 
@@ -153,6 +155,7 @@ function asu_brand_block_configure($delta = '') {
     case 'asu_brand_header':
     case 'asu_brand_header_ws2':
     case 'asu_brand_footer':
+    case 'asu_brand_footer_ws2':
       module_load_include('inc', 'asu_brand', 'includes/asu_brand.admin');
       $form = asu_brand_get_block_configure_form($delta);
       break;
@@ -171,11 +174,10 @@ function asu_brand_block_save($delta = '', $edit = array()) {
     // Same config form additions for WS1.0 and WS2.0
     case 'asu_brand_header':
     case 'asu_brand_header_ws2':
-      variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
       variable_set('asu_brand_preview_pages', $edit['asu_brand_preview_pages']);
-      variable_set('asu_brand_gtm_override', $edit['asu_brand_gtm_override']);
-      variable_set('asu_brand_sitemenu_injection_flag', $edit['asu_brand_sitemenu_injection_flag']);
-      variable_set('asu_brand_sitemenu_name', $edit['asu_brand_sitemenu_name']);
+      variable_set($delta . '_gtm_override', $edit['asu_brand_gtm_override']);
+      variable_set($delta . '_sitemenu_injection_flag', $edit['asu_brand_sitemenu_injection_flag']);
+      variable_set($delta . '_sitemenu_name', $edit['asu_brand_sitemenu_name']);
 
       if (isset($edit['asu_brand_do_not_override'])) {
         // explode and trim input on commas, then check for plain non-empty input
@@ -184,21 +186,19 @@ function asu_brand_block_save($delta = '', $edit = array()) {
           $val = check_plain($val);
           return !empty($val);
         });
-        variable_set('asu_brand_do_not_override', drupal_json_encode($overrides));
+        variable_set($delta . '_do_not_override', drupal_json_encode($overrides));
       }
 
-      variable_set('asu_brand_parent_org_title', $edit['asu_brand_parent_org_title']);
-      variable_set('asu_brand_parent_org_url', $edit['asu_brand_parent_org_url']);
-      variable_set('asu_brand_override_url', $edit['asu_brand_override_url']);
+      variable_set($delta . '_parent_org_title', $edit['asu_brand_parent_org_title']);
+      variable_set($delta . '_parent_org_url', $edit['asu_brand_parent_org_url']);
+      variable_set($delta . '_override_url', $edit['asu_brand_override_url']);
 
       asu_brand_cache_clear();
       break;
 
-      // Same saved configs for WS1.0 and WS2.0
+    // Same saved configs for WS1.0 and WS2.0
     case 'asu_brand_footer':
     case 'asu_brand_footer_ws2':
-      variable_set('asu_brand_header_version', $edit['asu_brand_header_version']);
-      variable_set('asu_brand_preview_pages', $edit['asu_brand_preview_pages']);
       asu_brand_cache_clear();
       break;
   }
@@ -212,6 +212,7 @@ function asu_brand_block_view($delta = '') {
   $block = array();
   $is_preview_path = asu_brand_is_preview_path();
   $preview_text = t('No preview available');
+  module_load_include('inc', 'asu_brand', 'includes/asu_brand.block');
 
   switch ($delta) {
     // WS1.0 Header
@@ -221,20 +222,19 @@ function asu_brand_block_view($delta = '') {
         $block['content'] = $preview_text;
       }
       else {
-        module_load_include('inc', 'asu_brand', 'includes/asu_brand.block');
-        $block['content'] = asu_brand_get_block_header(1);
+        $block['content'] = asu_brand_get_block_header($delta);
       }
       break;
 
-      // WS2.0 Header - Rendered by Javascript (web component)
-      case 'asu_brand_header_ws2':
-        $block['subject'] = '';
-        if ($is_preview_path) {
-          $block['content'] = 'WS2.0 Header: ' . $preview_text;
-        } else {
-          $block['content'] = asu_brand_get_block_header(2);
-        }
-        break;
+    // WS2.0 Header - Rendered by Javascript (web component)
+    case 'asu_brand_header_ws2':
+      $block['subject'] = '';
+      if ($is_preview_path) {
+        $block['content'] = 'WS2.0 Header: ' . $preview_text;
+      } else {
+        $block['content'] = asu_brand_get_block_header($delta);
+      }
+      break;
 
     // WS1.0 Footer
     case 'asu_brand_footer':
@@ -243,7 +243,6 @@ function asu_brand_block_view($delta = '') {
         $block['content'] = 'WS1.0 footer: ' . $preview_text;
       }
       else {
-        module_load_include('inc', 'asu_brand', 'includes/asu_brand.block');
         $block['content'] = asu_brand_get_block_footer(1);
       }
       break;
@@ -254,9 +253,11 @@ function asu_brand_block_view($delta = '') {
       if ($is_preview_path) {
         $block['content'] = 'WS2.0 footer: ' . $preview_text;
       } else {
-        module_load_include('inc', 'asu_brand', 'includes/asu_brand.block');
         $block['content'] = asu_brand_get_block_footer(2);
       }
+      break;
+
+    default:
       break;
   }
   return $block;
@@ -349,9 +350,11 @@ function asu_brand_get_site_name() {
 
 /**
  * Returns site menu array
+ * @param string $suffix - WS2.0 suffix "_ws2" if WS2.0 is detected.
+ * @return array
  */
-function asu_brand_get_site_menu_array($version = '') {
-  $menu_tree = menu_tree_all_data(variable_get('asu_brand_sitemenu_name', ASU_BRAND_SITE_MENU_NAME_DEFAULT));
+function asu_brand_get_site_menu_array($suffix = '') {
+  $menu_tree = menu_tree_all_data(variable_get('asu_brand_header' . $suffix . '_sitemenu_name', ASU_BRAND_SITE_MENU_NAME_DEFAULT));
   drupal_alter('asu_brand_sitemenu_name', $menu_tree); // Invoke alter
   $menu_array = array();
   $i = 0;
@@ -451,15 +454,15 @@ function asu_brand_get_site_menu_array($version = '') {
  * @param string $title - menu item title
  * @param string $path - menu item path
  * @param array $options - Options for rendering the <a> tag, such as target, href, etc.
- * @param bool $ws2l_check - Check to see if a check for WS2.0 is needed. Defaults to FALSE.
+ * @param bool $is_ws2l - Check to see if a check for WS2.0 is needed. Defaults to FALSE.
  * @return array
  */
-function asu_brand_get_menu_item($title, $path, $options = array(), $ws2l_check = FALSE) {
+function asu_brand_get_menu_item($title, $path, $options = array(), $is_ws2l = FALSE) {
   $menu_item = array(
     'title' => t(strip_tags(htmlspecialchars_decode($title))),
     'path'  => url($path, $options)
   );
-  if (isset($ws2l_check) && $ws2l_check === TRUE) {
+  if ($is_ws2l === TRUE) {
     $menu_item['text'] = t(strip_tags(htmlspecialchars_decode($title)));
   }
   // Special handling for 'Special menu items' module

@@ -65,9 +65,9 @@ function asu_brand_get_block_settings($reset = FALSE) {
  * @param int $ws_version
  * @return mixed|null
  */
-function asu_brand_get_block_header($ws_version) {
+function asu_brand_get_block_header($delta) {
   $settings = asu_brand_get_block_settings();
-  $cache_id = ($ws_version === 2) ? 'asu_brand:header_ws2' : 'asu_brand:header';
+  $cache_id = ($delta === 'asu_brand_header_ws2') ? 'asu_brand:header_ws2' : 'asu_brand:header';
 
   // Set js settings, include js file, and inject head into <head>.
   asu_brand_head_inject();
@@ -76,12 +76,12 @@ function asu_brand_get_block_header($ws_version) {
 
 /**
  * Build the content of the footer block.
- * @param int $ws_version
+ * @param int $delta - Block delta value (machine name of the block)
  * @return mixed|null
  */
-function asu_brand_get_block_footer($ws_version) {
+function asu_brand_get_block_footer($delta) {
   $settings = asu_brand_get_block_settings();
-  $cache_id = ($ws_version === 2) ? 'asu_brand:footer_ws2' : 'asu_brand:footer';
+  $cache_id = ($delta === 'asu_brand_footer_ws2') ? 'asu_brand:footer_ws2' : 'asu_brand:footer';
   return asu_brand_get_cached_content($cache_id, $settings->footer_path);
 }
 
@@ -134,7 +134,6 @@ function asu_brand_get_cached_content($cache_id, $file_path, $reset = FALSE) {
           )
         ),
       );
-      dpm(_asu_brand_ws2_create_json(), __FUNCTION__);
     }
     elseif ($cache_id === 'asu_brand:footer_ws2') { // Render WS2.0 footer
       $module_path = drupal_get_path('module', 'asu_brand');
@@ -184,7 +183,7 @@ EOL;
     }
     else {
       // Old way (from AFS) for WS1.0 header + footer
-      // set timeout to 1.5 seconds.  if it takes too long, fall back to long term caching
+      // Set timeout to 1.5 seconds.  if it takes too long, fall back to long term caching
       $options = array(
         'timeout' => 1.5
       );
@@ -210,7 +209,8 @@ EOL;
  */
 function asu_brand_head_inject() {
 
-  $overrides = ASU_BRAND_DO_NOT_OVERRIDE;
+  $suffix = (variable_get('asu_brand_header_version', 'stable') === '5.0') ? '_ws2' : '';
+  $overrides = variable_get('asu_brand_header' . $suffix . '_do_not_override', '["www.asu.edu"]');
   $settings = asu_brand_get_block_settings();
   $cache_id = 'asu_brand:head';
 

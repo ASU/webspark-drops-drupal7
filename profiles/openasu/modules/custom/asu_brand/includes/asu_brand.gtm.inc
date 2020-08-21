@@ -14,8 +14,9 @@
 function asu_brand_page_process(&$children, $elements) {
   if (asu_brand_is_header_visible($elements)) {
     // Added check for testing - Hide GTM code during testing
-    if (variable_get('asu_brand_ci_testing', 0) != 1 ) {
-       $custom_gtm = variable_get('asu_brand_gtm_override', '');
+    if (variable_get('asu_brand_ci_testing', 0) !== 1 ) {
+       $suffix = (variable_get('asu_brand_header_version', 'stable') === '5.0' ? '_ws2' : '');
+       $custom_gtm = variable_get('asu_brand_header' . $suffix . '_gtm_override', '');
        $gtm = (trim($custom_gtm) != '') ? $custom_gtm : asu_brand_get_gtm_snippet();
      }
      else {

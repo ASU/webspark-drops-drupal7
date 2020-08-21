@@ -80,10 +80,9 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
   // Use the default theme (not the current page's theme) if the admin theme is NOT the theme you want to check.)
   if ($use_adm_theme === FALSE) {
     if ($theme !== variable_get('theme_default')) {
-      $theme = variable_get('theme_default');
+      $theme = variable_get('theme_default'); // Gets current (not new) theme
     }
   }
-  // Now check if theme or base theme (WS2.0 only). If base theme, get that theme's name instead.
   // Check #1 - Is $theme an existing web standards theme?
   if ($theme === 'innovation') {
     if ($ws_version !== 2) { // Exclude WS2.x option;
@@ -98,7 +97,8 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
       return 0;
     }
   }
-  else { // Check #2 - Is $theme a subtheme of a Web standards theme?
+  else {
+    // Check #2 - Is $theme a subtheme of a Web standards theme? If so, return the base theme's name instead.
     $all_themes = list_themes(TRUE);
     // remove themes with no base_theme.
     foreach ($all_themes as $name => $value) {
@@ -150,8 +150,18 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
  *
  */
 function _webspark_featurescustom_act($new_theme, $theme_test_result) {
+  dpm($new_theme, 'new_theme');
+  dpm($theme_test_result, 'theme_test_result');
   if ($theme_test_result !== 0) { // ASU Web standards theme is involved
-    _webspark_featurescustom_web_standards_theme_config($new_theme);
+    $ws_data = array(
+      'curr_version' => ($theme_test_result === 'elpuente') ? '5.0' : 'stable',
+      'curr_suffix' => ($theme_test_result === 'elpuente') ? '_ws2' : '',
+      'prev_version' => ($theme_test_result !== 'elpuente') ? 'stable' : '5.0',
+      'prev_suffix' => ($theme_test_result !== 'elpuente') ? '' : '_ws2',
+    );
+    dpm($ws_data, 'ws_data');
+    variable_set('asu_brand_header_version', $ws_data['curr_version']);
+    _webspark_featurescustom_web_standards_theme_config($new_theme, $ws_data);
   }
   else { // Not an ASU Web standards theme
     if ($new_theme !== 'asu_webspark_bootstrap') {
@@ -166,8 +176,11 @@ function _webspark_featurescustom_act($new_theme, $theme_test_result) {
 
 /**
  * Theme update callback - On theme change from any theme to Innovation theme
+ * @param string $theme - name of Web standards theme
+ * @param array $ws_data - Web standards data (header version, asset suffix)
+ * @throws InvalidMergeQueryException
  */
-function _webspark_featurescustom_web_standards_theme_config($theme) {
+function _webspark_featurescustom_web_standards_theme_config($theme, $ws_data) {
   // Enabling WS theme-related modules if they are not enabled
   $modules = array();
   $modules_to_enable = array();
@@ -226,14 +239,73 @@ function _webspark_featurescustom_web_standards_theme_config($theme) {
     watchdog('theme update', 'All modules already enabled for %theme theme, so no module_enable action taken.', array('%theme' => $theme), WATCHDOG_NOTICE);
   }
 
-  // Reset ASU Header settings
+  // Reset ASU Brand settings; Update ASU Brand block settings
   if (module_exists('asu_brand')) {
     variable_set('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT);
     variable_set('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT);
-    watchdog('theme update', 'Updated ASU Header values for %theme theme based on ASU Brand module settings', array('%theme' => $theme), WATCHDOG_NOTICE);
+
+    // Global footer block
+    $weight = db_select('block', 'b')
+        ->fields('b', array('weight'))
+        ->condition('region', 'footer')
+        ->condition('theme', $theme)
+        ->condition('delta', 'mega_footer')
+        ->execute()
+        ->fetchField();
+    $weight = (int) $weight + 1;
+    db_merge('block')
+      ->key(array(
+        'module' => 'asu_brand',
+        'delta' => 'asu_brand_footer' . $ws_data['curr_suffix'],
+        'theme' => $theme,
+      ))
+      ->fields(array(
+          'region' => 'footer',
+          'status' => '1',
+          'weight' => $weight,
+        )
+      )->execute();
+    db_merge('block')
+      ->key(array(
+        'module' => 'asu_brand',
+        'delta' => 'asu_brand_footer' . $ws_data['prev_suffix'],
+        'theme' => $theme,
+      ))
+      ->fields(array(
+          'region' => '-1',
+          'status' => '0',
+          'weight' => $weight,
+        )
+      )->execute();
+
+    // Global header block
+    db_merge('block')
+      ->key(array(
+        'module' => 'asu_brand',
+        'delta' => 'asu_brand_header' . $ws_data['curr_suffix'],
+        'theme' => $theme,
+      ))
+      ->fields(array(
+          'region' => 'footer',
+          'status' => '1',
+        )
+      )->execute();
+    db_merge('block')
+      ->key(array(
+        'module' => 'asu_brand',
+        'delta' => 'asu_brand_header' . $ws_data['prev_suffix'],
+        'theme' => $theme,
+      ))
+      ->fields(array(
+          'region' => '-1',
+          'status' => '0',
+        )
+      )->execute();
+
+    watchdog('theme update', 'Updated ASU Header, footer block values for %theme theme based on'
+     . ' ASU Brand module settings', array('%theme' => $theme), WATCHDOG_NOTICE);
   }
 
-//  dpm($theme, __FUNCTION__ . ' - which theme?');
   // Re-apply original block configs to ensure their proper location to match spinup settings.
   // function openasu_blockupdates_for_theme() in openasu.profile
   if (function_exists('openasu_blockupdates_for_theme')) {
@@ -284,8 +356,7 @@ function _webspark_featurescustom_web_standards_theme_config($theme) {
           'status' => '1',
           'weight' => '-100'
         )
-      )
-      ->execute();
+      )->execute();
     db_merge('block')
       ->key(array(
         'module' => 'system',
@@ -297,8 +368,7 @@ function _webspark_featurescustom_web_standards_theme_config($theme) {
           'status' => '0',
           'weight' => '0'
         )
-      )
-      ->execute();
+      )->execute();
   }
 
   // @TODO swap in/out global header/footer blocks (WS1.0 or WS2.0?)

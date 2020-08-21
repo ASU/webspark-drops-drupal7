@@ -121,7 +121,6 @@ function asu_brand_update_7200(&$sandbox) {
   variable_del('asu_brand_footer_color');
   variable_del('asu_brand_header_template');
   variable_del('asu_brand_header_basepath');
-
 }
 
 /**
@@ -163,6 +162,37 @@ function asu_brand_update_7202(&$sandbox) {
       ->condition('module', $module)
       ->condition('delta', $delta)
       ->execute();
+  }
+  $message = 'An attempt to delete any legacy students footer blocks has been made. If any remained, they should be deleted now.';
+  watchdog('asu_brand', $message);
+  drupal_set_message($message, 'status', FALSE);
+}
+
+/**
+ * Rename any unshared ASU Brand header block settings to separate them between WS1.0 and WS2.0
+ * @param $sandbox
+ */
+function asu_brand_update_7203(&$sandbox) {
+  $delta = (variable_get('asu_brand_header_version', 'stable') === '5.0')
+    ? 'asu_brand_header_ws2'
+    : 'asu_brand_header';
+  $asu_brand_settings = array(
+    'asu_brand_parent_org_url' => $delta . '_parent_org_url',
+    'asu_brand_parent_org_title' => $delta . '_parent_org_title',
+    'asu_brand_override_url' => $delta . '_override_url',
+    'asu_brand_sitemenu_injection_flag' => $delta . '_sitemenu_injection_flag',
+    'asu_brand_sitemenu_name' => $delta . '_sitemenu_name',
+    'asu_brand_gtm_override' => $delta . '_gtm_override',
+    'asu_brand_do_not_override' => $delta . '_do_not_override',
+  );
+  foreach ($asu_brand_settings as $old => $new) {
+    $query = Database::getConnection('default', 'default')
+      ->merge('variable')
+      ->fields(array(
+        'name' => $new,
+      ))
+      ->condition('name', $old, 'LIKE');
+    $query->execute();
   }
 }
 

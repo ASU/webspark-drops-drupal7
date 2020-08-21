@@ -36,14 +36,14 @@ function asu_brand_get_block_configure_form($delta) {
       $form['asu_brand']['custom_title']['asu_brand_parent_org_title'] = array(
         '#type' => 'textfield',
         '#title' => t('Parent Organization Title'),
-        '#default_value' => variable_get('asu_brand_parent_org_title', ''),
+        '#default_value' => variable_get($delta . '_parent_org_title', ''),
         '#description' => t('If added, this name will be placed before (or above) the site title in the header.'
           . ' Requires a URL to be added below.'),
       );
       $form['asu_brand']['custom_title']['asu_brand_parent_org_url'] = array(
         '#type' => 'textfield',
         '#title' => t('Parent Organization URL'),
-        '#default_value' => variable_get('asu_brand_parent_org_url', ''),
+        '#default_value' => variable_get($delta . '_parent_org_url', ''),
         '#description' => t('The destination URL of the parent organization link.'),
         '#states' => array(
           'required' => array(
@@ -54,7 +54,7 @@ function asu_brand_get_block_configure_form($delta) {
       $form['asu_brand']['custom_title']['asu_brand_override_url'] = array(
         '#type' => 'textfield',
         '#title' => t('Override Site Name Base URL'),
-        '#default_value' => variable_get('asu_brand_override_url', '/'),
+        '#default_value' => variable_get($delta . '_override_url', '/'),
         '#description' => t("Overrides the URL for the site name link in the header. If not provided, the link will be set to the root '/'"),
       );
 
@@ -78,14 +78,14 @@ function asu_brand_get_block_configure_form($delta) {
       $form['asu_brand']['site_menu']['asu_brand_sitemenu_injection_flag'] = array(
         '#type' => 'checkbox',
         '#title' => t('Append local Drupal (site) menu into ASU header menu and display in the mobile state.'),
-        '#default_value' => variable_get('asu_brand_sitemenu_injection_flag', 1),
+        '#default_value' => variable_get($delta . '_sitemenu_injection_flag', 1),
       );
       $form['asu_brand']['site_menu']['asu_brand_sitemenu_name'] = array(
         '#type' => 'select',
         '#title' => t('Menu to inject'),
         '#description' => t('Select the Drupal (site) menu to inject.'),
         '#options' => asu_brand_get_site_menu_options(),
-        '#default_value' => variable_get('asu_brand_sitemenu_name', ASU_BRAND_SITE_MENU_NAME_DEFAULT),
+        '#default_value' => variable_get($delta . '_sitemenu_name', ASU_BRAND_SITE_MENU_NAME_DEFAULT),
         '#states' => array(
           'visible' => array(
             ':input[name="asu_brand_sitemenu_injection_flag"]' => array('checked' => TRUE),
@@ -107,7 +107,7 @@ function asu_brand_get_block_configure_form($delta) {
       $form['asu_brand']['gtm']['asu_brand_gtm_override'] = array(
         '#type' => 'textarea',
         '#title' => t('Custom GTM Script'),
-        '#default_value' => variable_get('asu_brand_gtm_override', ''),
+        '#default_value' => variable_get($delta . '_gtm_override', ''),
         '#description' => t('This script should be provided by an ASU Google Tag Manager administrator.'),
       );
 
@@ -122,7 +122,7 @@ function asu_brand_get_block_configure_form($delta) {
       );
 
       // format our do not override list array as a comma-delimted list in the form field, for easy editing
-      $overrides = drupal_json_decode(variable_get('asu_brand_do_not_override', '["www.asu.edu"]'));
+      $overrides = drupal_json_decode(variable_get($delta . '_do_not_override', '["www.asu.edu"]'));
       $fstring = implode(', ', $overrides);
 
       $form['asu_brand']['do_not_override']['asu_brand_do_not_override'] = array(
@@ -136,11 +136,6 @@ function asu_brand_get_block_configure_form($delta) {
       // Header template - hard-coded
       // Header basepath - hard-coded
       // Header version
-      $form['asu_brand']['asu_brand_header_version'] = array(
-        '#type' => 'hidden',
-        '#required' => TRUE,
-        '#value' => variable_get('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT),
-      );
       break;
 
       case 'asu_brand_footer':
@@ -167,8 +162,7 @@ function asu_brand_form_block_admin_configure_alter(&$form, $form_state) {
       }
       $form['#validate'][] = '_asu_brand_block_form_validate';
       $form['settings']['title']['#access'] = FALSE;
-    }
-    if ($form['delta']['#value'] == 'asu_brand_footer') {
+    } elseif (in_array($form['delta']['#value'], array('asu_brand_footer', 'asu_brand_footer_ws2'))) {
       $form['settings']['title']['#access'] = FALSE;
     }
   }
