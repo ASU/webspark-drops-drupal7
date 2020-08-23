@@ -49,15 +49,18 @@
 
         var megamenu = document.getElementsByClassName("tb-megamenu-nav")[0].children;
         var chevron = document.getElementsByClassName("fa-chevron-down");
-        var chevronParent = chevron[0].parentElement;
-        var chevronWidth = chevron[0].clientWidth;
+
+        if (chevron.length > 0) {
+          var chevronParent = chevron[0].parentElement;
+          var chevronWidth = chevron[0].clientWidth;
 //        var chevronPadd = window.getComputedStyle(chevronParent).paddingRight;
-        var chevronPadd = 8;
-        // Calculate Chevrons net width
-        var chevronTotal = 0;
-        var chevronPadTotal = chevronWidth + chevronPadd; //DEFAULT 12px width + 0.5rem padding
-        if (megamenu.length > 0) {
-          chevronTotal = chevron.length * chevronPadTotal;
+          var chevronPadd = 8;
+          // Calculate Chevrons net width
+          var chevronTotal = 0;
+          var chevronPadTotal = chevronWidth + chevronPadd; //DEFAULT 12px width + 0.5rem padding
+          if (megamenu.length > 0) {
+            chevronTotal = chevron.length * chevronPadTotal;
+          }
         }
 
         // Sum Top-level menu item text lengths (in px), based on the 3 different font sizes
