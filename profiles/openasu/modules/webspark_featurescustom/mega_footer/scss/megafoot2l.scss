@@ -132,7 +132,7 @@
     a.btn {
       padding: 1rem 2rem;
       text-underline: none;
-      @include ws2-global-transition();
+      transition: 30ms ease-in-out;
       &.btn-gold {
         &#contribute-button {
           color: $ws2-gray-darkest;
@@ -184,7 +184,14 @@
         float: left;
         .dgtl-mkting-101 {
           float: left;
+          padding:0 0 1rem 0;
         }
+      }
+      .fa.icon-rotates,
+      svg.icon-rotates { // niner9 update
+        display: block;
+        transition-duration: 0.4s;
+        float: right;
       }
     }
     .big-foot-head {
@@ -220,16 +227,6 @@
     .mega-dept-title {
       margin-top: 0;
     }
-  }
-  .fa.icon-rotates {
-    transition-duration: 0.4s;
-    display: inline-block;
-    float: right;
-  }
-  svg.icon-rotates {
-    transition-duration: 0.4s;
-    display: inline-block;
-    float: right;
   }
 }
 

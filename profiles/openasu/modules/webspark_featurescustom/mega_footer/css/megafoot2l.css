@@ -120,7 +120,7 @@
 .megafoot .row a.btn {
   padding: 1rem 2rem;
   text-underline: none;
-  transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s;
+  transition: 30ms ease-in-out;
 }
 .megafoot .row a.btn.btn-gold#contribute-button {
   color: #191919;
@@ -167,6 +167,13 @@
   }
   .megafoot .row.megafoot-logo-social #mega-footer-social-media .dgtl-mkting-101 {
     float: left;
+    padding: 0 0 1rem 0;
+  }
+  .megafoot .row .fa.icon-rotates,
+  .megafoot .row svg.icon-rotates {
+    display: block;
+    transition-duration: 0.4s;
+    float: right;
   }
   .megafoot .big-foot-head .fa,
   .megafoot .big-foot-head svg {
@@ -194,18 +201,6 @@
   }
   .megafoot .mega-dept-title {
     margin-top: 0;
-  }
-
-  .fa.icon-rotates {
-    transition-duration: 0.4s;
-    display: inline-block;
-    float: right;
-  }
-
-  svg.icon-rotates {
-    transition-duration: 0.4s;
-    display: inline-block;
-    float: right;
   }
 }
 @media screen and (max-width: 768px) {
