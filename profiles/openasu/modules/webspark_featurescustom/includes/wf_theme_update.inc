@@ -43,21 +43,22 @@ function _webspark_featurescustom_appearance_theme_update() {
   module_load_include('inc', 'system', 'system.admin.inc');
   $new_theme = check_plain($_REQUEST['theme']);
 
-  // WEBSPARK-610 - What settings to apply, based on the theme
-  $theme_test_result = _webspark_featurescustom_web_standards_theme_check($new_theme);
-  _webspark_featurescustom_act($new_theme, $theme_test_result);
+  // Get what settings to apply, based on what the theme is (a Web standards check)
+  $ws_theme_test_result = _webspark_featurescustom_web_standards_theme_check($new_theme);
+  _webspark_featurescustom_act($new_theme, $ws_theme_test_result);
 }
 
 /**
  * Get WS2.0 suffix to append to files/assets if the default/active theme is an ASU Web standars 2.0 theme
+ * @param bool $use_current_theme - @see _webspark_featurescustom_web_standards_theme_check()
  * @param string $theme_to_check - machine name of theme to check for as the current, default theme. Defaults to El Puente theme.
  * @param string $suffix - Suffix to append to the CSS file name as the alternate CSS file. Defaults to _ws2
  * @return string - Returns the suffix passed in IF $theme === checked theme.
  */
-function _webspark_featurescustom_get_ws2_suffix($use_adm_theme = FALSE, $theme_to_check = 'elpuente', $suffix = '_ws2') {
+function _webspark_featurescustom_get_ws2_suffix($use_current_theme = FALSE, $theme_to_check = 'elpuente', $suffix = '_ws2') {
   $theme = &drupal_static(__FUNCTION__);
   if (!isset($theme)) {
-    $theme = _webspark_featurescustom_web_standards_theme_check($theme, 2, $use_adm_theme);
+    $theme = _webspark_featurescustom_web_standards_theme_check($theme, 2, $use_current_theme);
   }
   return ($theme === $theme_to_check) ? $suffix : '';
 }
@@ -66,20 +67,22 @@ function _webspark_featurescustom_get_ws2_suffix($use_adm_theme = FALSE, $theme_
  * Is $theme an ASU web standards theme (or have an ASU WS base theme)?
  * @param string $theme - New theme selected
  * @param int $ws_version - Which version of Web standards is desired? Checks for ANY WS theme by default (=== 0).
- * @param bool $use_adm_theme - Use the admin theme name (not the default theme).
+ * @param bool $use_current_theme - Use the admin theme name (not the default theme).
  * Default: FALSE - Users want to check if Web Standards 2.0 is enabled in the site but the check is being
  * done from an admin theme managed URL/form.
  * Set to TRUE if the theme of the current URL (of the form) needs to be returned - not the default theme.
  * @return mixed - Theme name if true, 0 if false.
  */
-function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_version = 0, $use_adm_theme = FALSE) {
+function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_version = 0, $use_current_theme = FALSE) {
   // Get current theme if not checking a particular theme (default)
   if (empty($theme)) {
     global $theme;
   }
   // Use the default theme (not the current page's theme) if the admin theme is NOT the theme you want to check.)
-  if ($use_adm_theme === FALSE) {
-    if ($theme !== variable_get('theme_default')) {
+  if ($use_current_theme === FALSE) {
+    if (isset($_REQUEST['theme'])) { // Theme change is happening
+      $theme = check_plain($_REQUEST['theme']);
+    } elseif ($theme !== variable_get('theme_default')) {
       $theme = variable_get('theme_default'); // Gets current (not new) theme
     }
   }
@@ -134,9 +137,9 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
         }
         unset($option_array);
       }
-      // $theme (and its subthemes) are not WS
+      // $theme (and its subthemes) are both not WS
       return 0;
-    } else { // $theme has no subthemes. Not WS.
+    } else { // $theme has no subthemes, so it's not WS.
       return 0;
     }
   }
@@ -146,41 +149,38 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
  * Enable ASU Web Standards elements or not?
  *
  * @param string $new_theme - Theme to be changed to.
- * @param mixed $theme_test_result - Is an ASU Web standards theme (ex. innovation, elpuente). Theme machine name if true; 0 if false.
- *
+ * @param mixed $ws_theme_test_result - Machine name of ASU Web standards theme or subtheme
+ * (ex. innovation, elpuente). Theme machine name if true; 0 if false.
+ * @throws InvalidMergeQueryException
  */
-function _webspark_featurescustom_act($new_theme, $theme_test_result) {
-  dpm($new_theme, 'new_theme');
-  dpm($theme_test_result, 'theme_test_result');
-  if ($theme_test_result !== 0) { // ASU Web standards theme is involved
-    $ws_data = array(
-      'curr_version' => ($theme_test_result === 'elpuente') ? '5.0' : 'stable',
-      'curr_suffix' => ($theme_test_result === 'elpuente') ? '_ws2' : '',
-      'prev_version' => ($theme_test_result !== 'elpuente') ? 'stable' : '5.0',
-      'prev_suffix' => ($theme_test_result !== 'elpuente') ? '' : '_ws2',
-    );
-    dpm($ws_data, 'ws_data');
-    variable_set('asu_brand_header_version', $ws_data['curr_version']);
-    _webspark_featurescustom_web_standards_theme_config($new_theme, $ws_data);
-  }
-  else { // Not an ASU Web standards theme
-    if ($new_theme !== 'asu_webspark_bootstrap') {
-      _webspark_featurescustom_alt_theme_config($new_theme);
+function _webspark_featurescustom_act($new_theme, $ws_theme_test_result) {
+  if (module_exists('asu_brand')) {
+    $ws_data = asu_brand_get_ws_data($ws_theme_test_result);
+    switch ($ws_theme_test_result) {
+      case 'elpuente':
+      case 'innovation':
+        variable_set('asu_brand_header_version', $ws_data['curr_version']);
+        _webspark_featurescustom_web_standards_theme_config($new_theme, $ws_data);
+        break;
+      default:
+        variable_set('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT);
+        if ($new_theme !== 'asu_webspark_bootstrap') {
+          _webspark_featurescustom_alt_theme_config($new_theme);
+        } else { // no changes
+          drupal_set_message('No changes for asu_webspark_bootstrap theme.');
+        }
+        break;
     }
-    else { // no changes
-      drupal_set_message('No changes for asu_webspark_bootstrap theme');
-    }
+    system_theme_default(); // reset themes
   }
-  system_theme_default(); // reset themes
 }
 
 /**
- * Theme update callback - On theme change from any theme to Innovation theme
- * @param string $theme - name of Web standards theme
+ * Theme update callback - On theme change to Web standards based theme (regardless of old theme)
+ * @param string $new_theme - name of Web standards theme
  * @param array $ws_data - Web standards data (header version, asset suffix)
- * @throws InvalidMergeQueryException
  */
-function _webspark_featurescustom_web_standards_theme_config($theme, $ws_data) {
+function _webspark_featurescustom_web_standards_theme_config($new_theme, $ws_data) {
   // Enabling WS theme-related modules if they are not enabled
   $modules = array();
   $modules_to_enable = array();
@@ -228,156 +228,28 @@ function _webspark_featurescustom_web_standards_theme_config($theme, $ws_data) {
   if (count($modules_to_enable) > 0) {
     try {
       module_enable($modules_to_enable);
-      drupal_set_message('Modules enabled for <em>' . t($theme) . '</em> - ' . implode(', ', $modules_to_enable));
-      watchdog('theme update', 'Web standards-based modules enabled for %theme theme - ' . implode(', ', $modules_to_enable), array('%theme' => $theme));
+      drupal_set_message('Modules enabled for <em>' . t($new_theme) . '</em> - ' . implode(', ', $modules_to_enable));
+      watchdog('theme update', 'Web standards-based modules enabled for %theme theme - ' . implode(', ', $modules_to_enable), array('%theme' => $new_theme));
     }
     catch (Exception $e) {
       watchdog('theme update', 'Web standards-based module dependency enabling failed: ' . $e->getMessage(), WATCHDOG_ERROR);
-      drupal_set_message('The enabling of Innovation theme-specific modules may have failed. Check your <a href="/admin/reports/dblog">recent log messages</a> for details.', 'error');
+      drupal_set_message('The enabling of Web standards specific modules may have failed. Check your <a href="/admin/reports/dblog">recent log messages</a> for details.', 'error');
     }
   } else {
-    watchdog('theme update', 'All modules already enabled for %theme theme, so no module_enable action taken.', array('%theme' => $theme), WATCHDOG_NOTICE);
+    watchdog('theme update', 'All modules already enabled for %theme theme, so no module_enable action taken.', array('%theme' => $new_theme), WATCHDOG_NOTICE);
   }
 
-  // Reset ASU Brand settings; Update ASU Brand block settings
-  if (module_exists('asu_brand')) {
-    variable_set('asu_brand_header_version', ASU_BRAND_HEADER_VERSION_DEFAULT);
-    variable_set('asu_brand_header_basepath', ASU_BRAND_HEADER_BASEPATH_DEFAULT);
-
-    // Global footer block
-    $weight = db_select('block', 'b')
-        ->fields('b', array('weight'))
-        ->condition('region', 'footer')
-        ->condition('theme', $theme)
-        ->condition('delta', 'mega_footer')
-        ->execute()
-        ->fetchField();
-    $weight = (int) $weight + 1;
-    db_merge('block')
-      ->key(array(
-        'module' => 'asu_brand',
-        'delta' => 'asu_brand_footer' . $ws_data['curr_suffix'],
-        'theme' => $theme,
-      ))
-      ->fields(array(
-          'region' => 'footer',
-          'status' => '1',
-          'weight' => $weight,
-        )
-      )->execute();
-    db_merge('block')
-      ->key(array(
-        'module' => 'asu_brand',
-        'delta' => 'asu_brand_footer' . $ws_data['prev_suffix'],
-        'theme' => $theme,
-      ))
-      ->fields(array(
-          'region' => '-1',
-          'status' => '0',
-          'weight' => $weight,
-        )
-      )->execute();
-
-    // Global header block
-    db_merge('block')
-      ->key(array(
-        'module' => 'asu_brand',
-        'delta' => 'asu_brand_header' . $ws_data['curr_suffix'],
-        'theme' => $theme,
-      ))
-      ->fields(array(
-          'region' => 'footer',
-          'status' => '1',
-        )
-      )->execute();
-    db_merge('block')
-      ->key(array(
-        'module' => 'asu_brand',
-        'delta' => 'asu_brand_header' . $ws_data['prev_suffix'],
-        'theme' => $theme,
-      ))
-      ->fields(array(
-          'region' => '-1',
-          'status' => '0',
-        )
-      )->execute();
-
-    watchdog('theme update', 'Updated ASU Header, footer block values for %theme theme based on'
-     . ' ASU Brand module settings', array('%theme' => $theme), WATCHDOG_NOTICE);
-  }
-
-  // Re-apply original block configs to ensure their proper location to match spinup settings.
-  // function openasu_blockupdates_for_theme() in openasu.profile
+  // Apply original block configs from Webspark install profile (openasu.profile) to ensure their proper
+  // location to match spinup settings.
   if (function_exists('openasu_blockupdates_for_theme')) {
-    openasu_blockupdates_for_theme($theme);
+    openasu_blockupdates_for_theme($new_theme, $ws_data);
   }
 
-  // Upsert Mega Footer block
-  if (module_exists('mega_footer') && module_exists('mega_footer_menu')) {
-    $fields = array(
-      'region' => 'footer',
-      'status' => 1,
-    );
-    $result = db_select('block', 'b')->fields('b', array('weight', 'pages'))
-      ->condition('module', 'asu_brand')
-      ->condition('delta', 'asu_brand_footer')
-      ->condition('theme', $theme)
-      ->execute()
-      ->fetchObject();
-    if (!empty($result)) {
-      $fields['weight'] = (int) ($result->weight - 1); // lighter than the asu_brand_footer
-      $fields['pages'] = $result->pages;
-    } else {
-      drupal_set_message('Check to ensure that the Mega footer'
-       . ' is in the right location (directly above the ASU global footer). If not, go'
-       . ' <a href="/admin/structure/block">manually reorder</a> the mega footer block.)', 'warning');
-    }
-    db_merge('block')
-      ->key(array(
-        'module' => 'mega_footer',
-        'delta' => 'mega_footer',
-        'theme' => $theme,
-      ))
-      ->fields($fields)
-      ->execute();
-  }
-
-  // WEBSPARK-509 - Swap out system main-menu with TB Mega Menu main-menu on
-  // theme update. (#610 - updated queries to Database API)
-  if (module_exists('tb_megamenu') && module_exists('webspark_megamenu')) {
-    db_merge('block')
-      ->key(array(
-        'module' => 'tb_megamenu',
-        'delta' => 'main-menu',
-        'theme' => $theme,
-      ))
-      ->fields(array(
-          'region' => 'menu',
-          'status' => '1',
-          'weight' => '-100'
-        )
-      )->execute();
-    db_merge('block')
-      ->key(array(
-        'module' => 'system',
-        'delta' => 'main-menu',
-        'theme' => $theme,
-      ))
-      ->fields(array(
-          'region' => '-1',
-          'status' => '0',
-          'weight' => '0'
-        )
-      )->execute();
-  }
-
-  // @TODO swap in/out global header/footer blocks (WS1.0 or WS2.0?)
-
-  // Flush ASU Brand caches so ASU headers are right...
+  // Flush ASU Brand caches so ASU header/footer/megamenu/mega_footer are right.
   asu_brand_cache_clear();
   // and log changes.
-  drupal_set_message('Enabled Web Standards-themed blocks for <em>' . t($theme) . '</em> theme');
-  watchdog('theme update', 'Enabled Web Standards-themed blocks for %theme theme', array('%theme' => $theme));
+  drupal_set_message('Enabled Web Standards-themed blocks for <em>' . t($new_theme) . '</em> theme');
+  watchdog('theme update', 'Enabled Web Standards-themed blocks for %theme theme', array('%theme' => $new_theme));
 }
 
 /**
@@ -404,11 +276,11 @@ function _webspark_featurescustom_alt_theme_config($theme = NULL) {
     ->condition(db_or()
       ->condition(db_and()
         ->condition('module', 'asu_brand')
-        ->condition('delta', 'asu_brand_footer')
+        ->condition('delta', 'asu_brand_foote%', 'LIKE')
       )
       ->condition(db_and()
         ->condition('module', 'asu_brand')
-        ->condition('delta', 'asu_brand_header')
+        ->condition('delta', 'asu_brand_heade%', 'LIKE')
       )
       ->condition(db_and()
         ->condition('module', 'tb_megamenu')
@@ -421,22 +293,10 @@ function _webspark_featurescustom_alt_theme_config($theme = NULL) {
     )
     ->execute();
 
-  // WEBSPARK-1551 - Move System Help block to help region if it exists (defaults to content)
-  $regions = array_keys(system_region_list($theme));
-  $help_region = (in_array('help', $regions)) ? 'help' : 'content';
-  $help_weight = ($help_region === 'help') ? 5 : -50;
-  db_merge('block')
-    ->key(array(
-      'module' => 'system',
-      'delta' => 'help',
-      'theme' => $theme,
-    ))
-    ->fields(array(
-      'region' => $help_region,
-      'status' => '1',
-      'weight' => $help_weight,
-    ))
-    ->execute();
+  // Add System module's help block to the theme
+  if (function_exists('_openasu_system_help_block_enable')) {
+    _openasu_system_help_block_enable($theme);
+  }
 
   // Log changes
   drupal_set_message('Disabled Innovation-themed blocks for <em>' . t($theme) .

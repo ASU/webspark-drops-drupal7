@@ -14,7 +14,7 @@ function asu_brand_get_block_configure_form($delta) {
   $form['asu_brand'] = array(
       '#type' => 'fieldset',
       '#title' => t('ASU Brand settings'),
-      '#description' => t('This block is cached for %lifetime. To update now, <a href="@link">clear the cache</a>.', array('%lifetime' => format_interval(ASU_BRAND_CACHE_LIFETIME), '@link' => url('admin/config/development/performance'))),
+      '#description' => t('This block is cached for %lifetime. To update now, <a href="@link">clear the cache</a>.', array('%lifetime' => format_interval(ASU_BRAND_CACHE_LIFETIME), '@link' => url('/admin/config/development/performance'))),
   );
 
   switch ($delta) {

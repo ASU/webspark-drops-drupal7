@@ -197,6 +197,47 @@ function asu_brand_update_7203(&$sandbox) {
 }
 
 /**
+ * Configure global header/footer block defaults for elpuente
+ * (does NOT affect subtheme block settings)
+ * @param $sandbox
+ */
+function asu_brand_update_7204(&$sandbox) {
+  // Global footer block
+  // Get weight from Innovation theme
+  $weight = db_select('block', 'b')
+    ->fields('b', array('weight'))
+    ->condition('region', 'footer')
+    ->condition('theme', 'innovation')
+    ->condition('delta', 'mega_footer')
+    ->execute()
+    ->fetchField();
+  $weight = (!empty($weight)) ? (int) $weight + 1 : 1;
+  db_merge('block')
+    ->key(array(
+      'module' => 'asu_brand',
+      'delta' => 'asu_brand_header_ws2',
+      'theme' => 'elpuente',
+    ))
+    ->fields(array(
+        'region' => 'header',
+        'status' => '1',
+      )
+    )->execute();
+  db_merge('block')
+    ->key(array(
+      'module' => 'asu_brand',
+      'delta' => 'asu_brand_footer_ws2',
+      'theme' => 'elpuente',
+    ))
+    ->fields(array(
+        'region' => 'footer',
+        'status' => '1',
+        'weight' => $weight,
+      )
+    )->execute();
+}
+
+/**
  * Manages (adds or removes) permissions for ASU Brand
  * @param $action - Add or remove ASU Brand permissions.
  */

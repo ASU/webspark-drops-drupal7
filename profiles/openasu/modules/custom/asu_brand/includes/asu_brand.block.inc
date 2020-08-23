@@ -102,8 +102,9 @@ function asu_brand_get_cached_content($cache_id, $file_path, $reset = FALSE) {
     $output = $output->data;
   }
   if ($reset || $output == NULL || !isset($output)) {
-    if ($cache_id === 'asu_brand:header_ws2') { // Render WS2.0 header w/Preact
-      $module_path = drupal_get_path('module', 'asu_brand');
+    $module_path = drupal_get_path('module', 'asu_brand');
+    // Render WS2.0 header w/Preact
+    if ($cache_id === 'asu_brand:header_ws2') {
       $output = array(
         '#markup' => '<div id="headerContainer"></div>',
         '#attached' => array(
@@ -128,15 +129,15 @@ function asu_brand_get_cached_content($cache_id, $file_path, $reset = FALSE) {
               'data' => array('asu_brand' => array(
                 'siteName' => variable_get('site_name'),
                 'siteSubtitle' => variable_get('site_slogan'),
-                'navTree' => _asu_brand_ws2_create_json()
+                'navTree' => _asu_brand_create_json('_ws2'),
               )),
             )
           )
         ),
       );
     }
-    elseif ($cache_id === 'asu_brand:footer_ws2') { // Render WS2.0 footer
-      $module_path = drupal_get_path('module', 'asu_brand');
+    // Render WS2.0 footer
+    elseif ($cache_id === 'asu_brand:footer_ws2') {
       $markup = <<<EOL
 <div id="innovation-footer">
   <div id="innovation-bar">
@@ -174,15 +175,14 @@ EOL;
         '#markup' => $markup,
         '#attached' => array(
           'css' => array(
-            drupal_get_path('module', 'asu_brand') . '/styles/footer_ws2.css'
+            $module_path . '/styles/footer_ws2.css',
           ),
         ),
       );
       cache_set($cache_id, $output, 'cache', time() + ASU_BRAND_CACHE_LIFETIME);
       variable_set($cache_id, $output);
     }
-    else {
-      // Old way (from AFS) for WS1.0 header + footer
+    else { // Render WS1.0 header + footer from AFS or cache (legacy block)
       // Set timeout to 1.5 seconds.  if it takes too long, fall back to long term caching
       $options = array(
         'timeout' => 1.5

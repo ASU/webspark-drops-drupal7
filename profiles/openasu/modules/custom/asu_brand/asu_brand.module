@@ -132,6 +132,7 @@ function asu_brand_block_info() {
   // Added for WS2
   $blocks['asu_brand_header_ws2'] = array(
     'info' => t('WS2.0: Header'),
+    'cache' => DRUPAL_NO_CACHE,
   );
   $blocks['asu_brand_footer'] = array(
     'info' => t('ASU Brand: footer'),
@@ -215,6 +216,25 @@ function asu_brand_block_view($delta = '') {
   module_load_include('inc', 'asu_brand', 'includes/asu_brand.block');
 
   switch ($delta) {
+    // WS2.0 Header - Rendered by Javascript (web component)
+    case 'asu_brand_header_ws2':
+      $block['subject'] = '';
+      if ($is_preview_path) {
+        $block['content'] = 'WS2.0 Header: ' . $preview_text;
+      } else {
+        $block['content'] = asu_brand_get_block_header($delta);
+      }
+      break;
+    // WS2.0 Footer
+    case 'asu_brand_footer_ws2':
+      $block['subject'] = NULL;
+      if ($is_preview_path) {
+        $block['content'] = 'WS2.0 footer: ' . $preview_text;
+      } else {
+        $block['content'] = asu_brand_get_block_footer($delta);
+      }
+      break;
+
     // WS1.0 Header
     case 'asu_brand_header':
       $block['subject'] = NULL;
@@ -225,17 +245,6 @@ function asu_brand_block_view($delta = '') {
         $block['content'] = asu_brand_get_block_header($delta);
       }
       break;
-
-    // WS2.0 Header - Rendered by Javascript (web component)
-    case 'asu_brand_header_ws2':
-      $block['subject'] = '';
-      if ($is_preview_path) {
-        $block['content'] = 'WS2.0 Header: ' . $preview_text;
-      } else {
-        $block['content'] = asu_brand_get_block_header($delta);
-      }
-      break;
-
     // WS1.0 Footer
     case 'asu_brand_footer':
       $block['subject'] = NULL;
@@ -243,17 +252,7 @@ function asu_brand_block_view($delta = '') {
         $block['content'] = 'WS1.0 footer: ' . $preview_text;
       }
       else {
-        $block['content'] = asu_brand_get_block_footer(1);
-      }
-      break;
-
-    // WS2.0 Footer
-    case 'asu_brand_footer_ws2':
-      $block['subject'] = NULL;
-      if ($is_preview_path) {
-        $block['content'] = 'WS2.0 footer: ' . $preview_text;
-      } else {
-        $block['content'] = asu_brand_get_block_footer(2);
+        $block['content'] = asu_brand_get_block_footer($delta);
       }
       break;
 
@@ -279,7 +278,6 @@ function asu_brand_page_alter(&$page) {
   //     - templates may add tags after body tag
   //   - callbacks in $elements['#post_render']
   //     - asu_brand_page_process(): callback set here
-
   // Add callback routine.
   $page['#post_render'][] = 'asu_brand_page_process';
   module_load_include('inc', 'asu_brand', 'includes/asu_brand.gtm');
@@ -350,7 +348,7 @@ function asu_brand_get_site_name() {
 
 /**
  * Returns site menu array
- * @param string $suffix - WS2.0 suffix "_ws2" if WS2.0 is detected.
+ * @param string $suffix - WS2.0 suffix "_ws2" if WS2.0 is detected. Defaults to empty (for WS1.0)
  * @return array
  */
 function asu_brand_get_site_menu_array($suffix = '') {
@@ -358,90 +356,51 @@ function asu_brand_get_site_menu_array($suffix = '') {
   drupal_alter('asu_brand_sitemenu_name', $menu_tree); // Invoke alter
   $menu_array = array();
   $i = 0;
+
   // Checks if creating special menu structure for WS2L
-  if (isset($version) && $version = '5') {
-    foreach ($menu_tree as $item) {
-      if (isset($item['link']) && $item['link']['access'] && !$item['link']['hidden']) {
-        if ($menu_item = asu_brand_get_menu_item($item['link']['title'], $item['link']['link_path'], $item['link']['options'], TRUE))
-        {
-          $menu_array[$i] = array_map('trim', $menu_item);
-        } else {
-          $i--;
-        }
-        // Render child items.
-        if (asu_brand_menuitem_has_active_children($item)) {
-          $j = 0;
-          foreach ($item['below'] as $child) {
-            if (isset($child['link']) && !$child['link']['hidden']) {
-              if ($menu_item = asu_brand_get_menu_item($child['link']['title'], $child['link']['link_path'], $child['link']['options'], TRUE)) {
-                $menu_array[$i]['items'][$j] = array(array_map('trim', $menu_item));
-              } else {
-                $j--;
-              }
-              // Render grandchild items.
-              if (asu_brand_menuitem_has_active_children($child)) {
-                $k = 0;
-                foreach ($child['below'] as $grandchild) {
-                  if (isset($grandchild['link']) && !$grandchild['link']['hidden']) {
-                    if ($menu_item = asu_brand_get_menu_item($grandchild['link']['title'], $grandchild['link']['link_path'], $grandchild['link']['options'], TRUE)) {
-                      $menu_array[$i]['items'][$j]['items'][$k] = array(array_map('trim', $menu_item));
-                    } else {
-                      $k--;
-                    }
-                    $k++;
+  $is_ws2l = ($suffix === '_ws2') ? TRUE : FALSE;
+  $menu_key = ($suffix === '_ws2') ? 'items' : 'children';
+
+  foreach ($menu_tree as $item) {
+    if (isset($item['link']) && $item['link']['access'] && !$item['link']['hidden']) {
+      if ($menu_item = asu_brand_get_menu_item($item['link']['title'], $item['link']['link_path'], $item['link']['options'], $is_ws2l))
+      {
+        $menu_array[$i] = array_map('trim', $menu_item);
+      } else {
+        $i--;
+      }
+      // Render child items.
+      if (asu_brand_menuitem_has_active_children($item)) {
+        $j = 0;
+        foreach ($item['below'] as $child) {
+          if (isset($child['link']) && !$child['link']['hidden']) {
+            if ($menu_item = asu_brand_get_menu_item($child['link']['title'], $child['link']['link_path'], $child['link']['options'], $is_ws2l)) {
+              $menu_array[$i][$menu_key][$j] = array(array_map('trim', $menu_item));
+            } else {
+              $j--;
+            }
+            // Render grandchild items.
+            if (asu_brand_menuitem_has_active_children($child)) {
+              $k = 0;
+              foreach ($child['below'] as $grandchild) {
+                if (isset($grandchild['link']) && !$grandchild['link']['hidden']) {
+                  if ($menu_item = asu_brand_get_menu_item($grandchild['link']['title'], $grandchild['link']['link_path'], $grandchild['link']['options'], $is_ws2l)) {
+                    $menu_array[$i][$menu_key][$j][$menu_key][$k] = array(array_map('trim', $menu_item));
+                  } else {
+                    $k--;
                   }
+                  $k++;
                 }
               }
-              $j++;
             }
+            $j++;
           }
         }
-        $i++;
       }
+      $i++;
     }
   }
-  // Normal menu creation
-  else {
-    foreach ($menu_tree as $item) {
-      if (isset($item['link']) && $item['link']['access'] && !$item['link']['hidden']) {
-        if ($menu_item = asu_brand_get_menu_item($item['link']['title'], $item['link']['link_path'], $item['link']['options']))
-        {
-          $menu_array[$i] = array_map('trim', $menu_item);
-        } else {
-          $i--;
-        }
-        // Render child items.
-        if (asu_brand_menuitem_has_active_children($item)) {
-          $j=0;
-          foreach ($item['below'] as $child) {
-            if (isset($child['link']) && !$child['link']['hidden']) {
-              if ($menu_item = asu_brand_get_menu_item($child['link']['title'], $child['link']['link_path'], $child['link']['options'])) {
-                $menu_array[$i]['children'][$j] = array_map('trim', $menu_item);
-              } else {
-                $j--;
-              }
-              // Render grandchild items.
-              if (asu_brand_menuitem_has_active_children($child)) {
-                $k=0;
-                foreach ($child['below'] as $grandchild) {
-                  if (isset($grandchild['link']) && !$grandchild['link']['hidden']) {
-                    if ($menu_item = asu_brand_get_menu_item($grandchild['link']['title'], $grandchild['link']['link_path'], $grandchild['link']['options'])) {
-                      $menu_array[$i]['children'][$j]['children'][$k] = array_map('trim', $menu_item);
-                    } else {
-                      $k--;
-                    }
-                    $k++;
-                  }
-                }
-              }
-              $j++;
-            }
-          }
-        }
-        $i++;
-      }
-    }
-  }
+
   return $menu_array;
 }
 
@@ -496,9 +455,11 @@ function asu_brand_menuitem_has_active_children($menu_item) {
 /**
  * Creates and returns JSON string from asu_brand_get_site_menu_array() by passing parameters to
  * determine array structure.
+ * @param string $suffix - Determines WS2.0 (if '_ws2') or not (if empty)
+ * @return false|string
  */
-function _asu_brand_ws2_create_json() {
-  $site_menu = asu_brand_get_site_menu_array('5');
+function _asu_brand_create_json($suffix = '') {
+  $site_menu = asu_brand_get_site_menu_array($suffix);
   return json_encode($site_menu);
 }
 
