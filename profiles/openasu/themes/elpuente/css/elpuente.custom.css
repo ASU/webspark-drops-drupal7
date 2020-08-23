@@ -308,7 +308,6 @@ blockquote.ws2-bq-image:before {
 -------------------------------------------------------------- */
 .header__sitename {
   color: #191919;
-  font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
   font-weight: bold;
   font-size: 1.5em;
   line-height: 1;
@@ -318,6 +317,7 @@ blockquote.ws2-bq-image:before {
   padding: 0 0 0.75rem 0.75rem;
   white-space: nowrap;
   overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s;
 }
 
 .header__sitename.element-invisible {
@@ -666,36 +666,37 @@ table.bordered > thead:first-child > tr:first-child > td {
   margin: 0 0 2.75rem;
 }
 
-/* =ACCORDIONS --- NOT DONE
+/* =ACCORDIONS --- NOT DONE (reorg'd)
 -------------------------------------------------------------- */
 .ui-accordion {
   margin: 3rem 0;
   color: #191919;
-  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif;
   font-size: 1rem;
   font-weight: 200;
   line-height: 1.44;
 }
-
 .ui-accordion .ui-accordion-header {
   margin-top: 0;
 }
-
-h3.ui-accordion-header,
-h4.ui-accordion-header {
-  padding: 10px 20px;
-  text-transform: uppercase;
-  font-size: 16px;
+.ui-accordion .ui-accordion-header .ui-icon {
+  left: auto;
+  right: 0.5em;
 }
-
-h4.ui-accordion-header.ui-corner-all,
-h4.ui-accordion-header.ui-corner-top {
+.ui-accordion h3.ui-accordion-header,
+.ui-accordion h4.ui-accordion-header {
+  padding: 0.625rem 1.25rem;
+  text-transform: uppercase;
+  font-size: 1rem;
+}
+.ui-accordion h3.ui-accordion-header.ui-corner-all, .ui-accordion h3.ui-accordion-header.ui-corner-top,
+.ui-accordion h4.ui-accordion-header.ui-corner-all,
+.ui-accordion h4.ui-accordion-header.ui-corner-top {
   border-top-right-radius: 0;
   border-top-left-radius: 0;
 }
-
-h3.ui-accordion-header.ui-state-default,
-h4.ui-accordion-header.ui-state-default {
+.ui-accordion h3.ui-accordion-header.ui-state-default,
+.ui-accordion h4.ui-accordion-header.ui-state-default {
   background-color: #fff;
   border-top: 1px solid #e6e6e6;
   border-right: 1px solid #e6e6e6;
@@ -703,49 +704,47 @@ h4.ui-accordion-header.ui-state-default {
   border-left: 1px solid #e6e6e6;
   color: #767676;
 }
-
-h3.ui-accordion-header.ui-state-default a,
-h3.ui-accordion-header.ui-state-default a:link,
-h3.ui-accordion-header.ui-state-default a:visited {
+.ui-accordion h3.ui-accordion-header.ui-state-default a,
+.ui-accordion h3.ui-accordion-header.ui-state-default a:link,
+.ui-accordion h3.ui-accordion-header.ui-state-default a:visited,
+.ui-accordion h4.ui-accordion-header.ui-state-default a,
+.ui-accordion h4.ui-accordion-header.ui-state-default a:link,
+.ui-accordion h4.ui-accordion-header.ui-state-default a:visited {
   color: #767676;
 }
-
-h3.ui-accordion-header.ui-state-hover a,
-h3.ui-accordion-header.ui-state-hover a:focus,
-h3.ui-accordion-header.ui-state-default a:focus,
-h3.ui-accordion-header:focus,
-h4.ui-accordion-header.ui-state-hover,
-h4.ui-accordion-header:focus {
-  color: #111;
-}
-
-h3.ui-accordion-header.ui-state-active,
-h4.ui-accordion-header.ui-state-active {
-  border-top: 1px solid #e6e6e6;
-  border-right: 1px solid #e6e6e6;
-  border-bottom: 3px solid #111;
-  border-left: 1px solid #e6e6e6;
-  color: #111;
-}
-
-h3.ui-accordion-header.ui-state-active a,
-h3.ui-accordion-header.ui-state-active a:link,
-h3.ui-accordion-header.ui-state-active a:visited {
-  color: #111;
-}
-
-h3.ui-accordion-header.ui-state-default:last-of-type,
-h4.ui-accordion-header.ui-state-default:last-of-type {
+.ui-accordion h3.ui-accordion-header.ui-state-default:last-of-type,
+.ui-accordion h4.ui-accordion-header.ui-state-default:last-of-type {
   border-top: 1px solid #e6e6e6;
   border-right: 1px solid #e6e6e6;
   border-bottom: 1px solid #e6e6e6;
   border-left: 1px solid #e6e6e6;
 }
-
-.ui-widget h3.ui-accordion-header a {
-  border-bottom: transparent;
+.ui-accordion h3.ui-accordion-header.ui-state-active,
+.ui-accordion h4.ui-accordion-header.ui-state-active {
+  border-top: 1px solid #e6e6e6;
+  border-right: 1px solid #e6e6e6;
+  border-bottom: 3px solid #191919;
+  border-left: 1px solid #e6e6e6;
+  color: #191919;
 }
-
+.ui-accordion h3.ui-accordion-header.ui-state-active a,
+.ui-accordion h3.ui-accordion-header.ui-state-active a:link,
+.ui-accordion h3.ui-accordion-header.ui-state-active a:visited,
+.ui-accordion h4.ui-accordion-header.ui-state-active a,
+.ui-accordion h4.ui-accordion-header.ui-state-active a:link,
+.ui-accordion h4.ui-accordion-header.ui-state-active a:visited {
+  color: #191919;
+}
+.ui-accordion h3.ui-accordion-header .ui-state-hover a,
+.ui-accordion h3.ui-accordion-header .ui-state-hover a:focus,
+.ui-accordion h3.ui-accordion-header .ui-state-default a:focus, .ui-accordion h3.ui-accordion-header:focus, .ui-accordion h3.ui-accordion-header.ui-state-hover,
+.ui-accordion h4.ui-accordion-header .ui-state-hover a,
+.ui-accordion h4.ui-accordion-header .ui-state-hover a:focus,
+.ui-accordion h4.ui-accordion-header .ui-state-default a:focus,
+.ui-accordion h4.ui-accordion-header:focus,
+.ui-accordion h4.ui-accordion-header.ui-state-hover {
+  color: #191919;
+}
 .ui-accordion .ui-accordion-content {
   top: 0;
   border-top: 1px solid #e6e6e6;
@@ -756,42 +755,32 @@ h4.ui-accordion-header.ui-state-default:last-of-type {
   margin-top: 0;
   padding: 20px;
 }
-
 .ui-accordion .ui-accordion-content:last-of-type {
   border-bottom: 1px solid #e6e6e6;
 }
-
 .ui-accordion .accordion-content {
   color: #191919;
-  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 16px;
+  font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif;
+  font-size: 1rem;
   font-weight: 200;
   line-height: 1.44;
 }
-
-.ui-accordion .ui-accordion-header .ui-icon {
-  left: auto;
-  right: 0.5em;
+.ui-accordion .ui-icon {
+  height: 13px;
+  width: 13px;
 }
-
+.ui-accordion .ui-accordion-header .ui-icon,
 .ui-accordion .ui-state-active .ui-icon,
 .ui-accordion .ui-state-default .ui-icon,
 .ui-accordion .ui-accordion .ui-state-active .ui-icon {
   background-image: url("/profiles/openasu/themes/innovation/images/accordion-arrows.png");
 }
-
 .ui-accordion .ui-icon-triangle-1-e {
   background-position: 0 0;
 }
-
 .ui-accordion .ui-state-hover .ui-icon-triangle-1-e,
 .ui-accordion .ui-icon-triangle-1-s {
   background-position: 0 -13px;
-}
-
-.ui-accordion .ui-icon {
-  height: 13px;
-  width: 13px;
 }
 
 /* =ALERTS --- WS2.0 DONE
