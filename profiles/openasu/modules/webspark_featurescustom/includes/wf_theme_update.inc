@@ -155,6 +155,7 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
  */
 function _webspark_featurescustom_act($new_theme, $ws_theme_test_result) {
   if (module_exists('asu_brand')) {
+    module_load_include('inc', 'asu_brand', 'includes/asu_brand.theme_update');
     $ws_data = asu_brand_get_ws_data($ws_theme_test_result);
     switch ($ws_theme_test_result) {
       case 'elpuente':
