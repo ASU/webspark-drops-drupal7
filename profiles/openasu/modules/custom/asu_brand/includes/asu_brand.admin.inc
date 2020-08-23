@@ -221,4 +221,12 @@ function asu_brand_admin_settings() {
  */
 function _asu_brand_admin_settings_submit($form, $form_state) {
   variable_set('asu_brand_header_version', $form_state['values']['ws_version']);
+  if (!module_exists('webspark_featurescustom')) { // Save settings
+    $ws_data = ($form_state['values']['ws_version'] === '5.0')
+      ? asu_brand_get_ws_data('elpuente')
+      : asu_brand_get_ws_data('innovation');
+    asu_brand_block_theme_update('__standalone__', $ws_data);
+    // Flush ASU Brand caches so updated ASU header/footer (and any other related blocks) are right
+    asu_brand_cache_clear();
+  }
 }

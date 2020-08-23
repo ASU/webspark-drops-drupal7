@@ -60,7 +60,7 @@ function openasu_theme_innovation_setup(&$install_state) {
   // Configure blocks for Web standards theme (currently Innovation)
   openasu_blockupdates_for_theme($theme);
 
-  // Flush ASU Brand caches so ASU headers are right
+  // Flush ASU Brand caches so updated ASU header/footer (and any other related blocks) are right
   asu_brand_cache_clear();
 }
 
@@ -69,6 +69,7 @@ function openasu_theme_innovation_setup(&$install_state) {
  * For both profile and module (webspark_featurescustom) usage
  * @param $theme - Target/new theme
  * @param array $ws_data - If alternate theme data is added, it may override default Web standards keys, data, etc.
+ * @noinspection HtmlUnknownTarget
  */
 function openasu_blockupdates_for_theme($theme, $ws_data = array()) {
   if (module_exists('asu_brand')) {
@@ -130,13 +131,15 @@ function openasu_blockupdates_for_theme($theme, $ws_data = array()) {
           ->fields($fields)
           ->execute();
       }
-      // Enable the global header/footer
+
+      // Enable the Web standards global header/footer w/ASU Brand code (skip if not enabled)
       asu_brand_block_theme_update($theme, $ws_data);
+
     } catch (Exception $e) {
       $message = 'All Web standards blocks for %theme could not be updated or created.'
         . ' Go to <a href="/admin/structure/block/list/' . check_plain($theme) . '">' . check_plain($theme)
         . ' to place the blocks in their proper locations.';
-      watchdog('asu_rfi', $message, array(), WATCHDOG_ERROR);
+      watchdog('asu_brand', $message, array(), WATCHDOG_ERROR);
     }
     // Adjust system help block
     _openasu_system_help_block_enable($theme);
@@ -174,6 +177,7 @@ function _openasu_system_help_block_enable($theme) {
 
 /**
  * Implements hook_form_FORM_ID_alter()
+ * @noinspection PhpDocSignatureInspection
  */
 function openasu_form_install_configure_form_alter(&$form, $form_state) {
 
@@ -210,6 +214,7 @@ function openasu_form_install_configure_form_alter(&$form, $form_state) {
 
 /**
  * Custom submission handler for ASURITE IDs during Webspark install.
+ * @noinspection PhpDocSignatureInspection
  */
 function openasu_admin_save_asurite($form_id, &$form_state) {
   $asurite = $form_state['values']['openasu_admin_asurite'];

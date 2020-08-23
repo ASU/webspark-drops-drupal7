@@ -8,66 +8,79 @@
  * @throws InvalidMergeQueryException
  */
 function asu_brand_block_theme_update($theme, $ws_data) {
-  if (empty($ws_data)) { // Defaults to WS1.0
-    $ws_data['kill_suffix'] = '_ws2';
-    $ws_data['curr_suffix'] = '';
+  if ($theme === '__standalone__') { // ASU Brand standalone code
+    $theme = variable_get('theme_default');
   }
-  // Enable the Global header block
-  db_merge('block')
-    ->key(array(
-      'module' => 'asu_brand',
-      'delta' => 'asu_brand_header' . $ws_data['kill_suffix'],
-      'theme' => $theme,
-    ))
-    ->fields(array(
-        'region' => '-1',
-        'status' => '0',
-      )
-    )->execute();
-  db_merge('block')
-    ->key(array(
-      'module' => 'asu_brand',
-      'delta' => 'asu_brand_header' . $ws_data['curr_suffix'],
-      'theme' => $theme,
-    ))
-    ->fields(array(
-        'region' => 'header',
-        'status' => '1',
-      )
-    )->execute();
+  if (empty($ws_data)) { // Defaults to WS1.0
+    $ws_data['curr_suffix'] = '';
+    $ws_data['kill_suffix'] = '_ws2';
+  }
+  try {
+    // Enable the Global header block
+    db_merge('block')
+      ->key(array(
+        'module' => 'asu_brand',
+        'delta' => 'asu_brand_header' . $ws_data['kill_suffix'],
+        'theme' => $theme,
+      ))
+      ->fields(array(
+          'region' => '-1',
+          'status' => '0',
+        )
+      )->execute();
+    db_merge('block')
+      ->key(array(
+        'module' => 'asu_brand',
+        'delta' => 'asu_brand_header' . $ws_data['curr_suffix'],
+        'theme' => $theme,
+      ))
+      ->fields(array(
+          'region' => 'header',
+          'status' => '1',
+        )
+      )->execute();
 
 //    // Enable the Global footer block
-  db_merge('block')
-    ->key(array(
-      'module' => 'asu_brand',
-      'delta' => 'asu_brand_footer' . $ws_data['kill_suffix'],
-      'theme' => $theme,
-    ))
-    ->fields(array(
-        'region' => '-1',
-        'status' => '0',
-      )
-    )->execute();
-  $weight = db_select('block', 'b')
-    ->fields('b', array('weight'))
-    ->condition('region', 'footer')
-    ->condition('theme', $theme)
-    ->condition('delta', 'mega_footer')
-    ->execute()
-    ->fetchField();
-  $weight = (int)$weight + 1;
-  db_merge('block')
-    ->key(array(
-      'module' => 'asu_brand',
-      'delta' => 'asu_brand_footer' . $ws_data['curr_suffix'],
-      'theme' => $theme,
-    ))
-    ->fields(array(
-        'region' => 'footer',
-        'status' => '1',
-        'weight' => $weight,
-      )
-    )->execute();
+    db_merge('block')
+      ->key(array(
+        'module' => 'asu_brand',
+        'delta' => 'asu_brand_footer' . $ws_data['kill_suffix'],
+        'theme' => $theme,
+      ))
+      ->fields(array(
+          'region' => '-1',
+          'status' => '0',
+        )
+      )->execute();
+    $weight = db_select('block', 'b')
+      ->fields('b', array('weight'))
+      ->condition('region', 'footer')
+      ->condition('theme', $theme)
+      ->condition('delta', 'mega_footer')
+      ->execute()
+      ->fetchField();
+    $weight = (int)$weight + 1;
+    db_merge('block')
+      ->key(array(
+        'module' => 'asu_brand',
+        'delta' => 'asu_brand_footer' . $ws_data['curr_suffix'],
+        'theme' => $theme,
+      ))
+      ->fields(array(
+          'region' => 'footer',
+          'status' => '1',
+          'weight' => $weight,
+        )
+      )->execute();
+    drupal_set_message('The Web standards header and footer blocks have been updated for the ' . check_plain($theme)
+      . 'theme.', 'status', FALSE);
+  } catch (Exception $e) {
+    $message = 'All Web standards blocks for ' . check_plain($theme) . ' could not be updated or created'
+      . ' by the ASU Brand module. Go to <a href="/admin/structure/block/list/' . check_plain($theme)
+      . '">' . check_plain($theme) . ' to place the blocks in their proper locations.';
+    watchdog('asu_brand', $message, array(), WATCHDOG_ERROR);
+    drupal_set_message($message, 'error', FALSE);
+  }
 }
 
 /**

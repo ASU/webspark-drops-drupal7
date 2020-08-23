@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpUnusedParameterInspection */
+/** @noinspection PhpDocSignatureInspection */
 
 /**
  * @file
@@ -36,7 +37,7 @@ function webspark_featurescustom_menu_alter(&$items) {
 /**
  * Is the current theme ASU Web standards theme (innovation, elpuente)?
  *
- * @TODO - Put in check to see if certain settings are already in place before module_load_include...s
+ * @noinspection PhpUnused
  */
 function _webspark_featurescustom_appearance_theme_update() {
   // Checking if the selected theme is our theme & calling function to active modules/configuration
@@ -131,7 +132,7 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
         if (in_array($ws_base_theme_options, array_keys($theme_base_themes))) {
           if ($option_array[0] === $theme) { // Is a WS subtheme
             return $theme;
-          } else { // theme HAS a WS subthemes
+          } else { // new/current theme HAS a WS subtheme
             return $option_array[0];
           }
         }
@@ -151,7 +152,6 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
  * @param string $new_theme - Theme to be changed to.
  * @param mixed $ws_theme_test_result - Machine name of ASU Web standards theme or subtheme
  * (ex. innovation, elpuente). Theme machine name if true; 0 if false.
- * @throws InvalidMergeQueryException
  */
 function _webspark_featurescustom_act($new_theme, $ws_theme_test_result) {
   if (module_exists('asu_brand')) {
@@ -200,7 +200,6 @@ function _webspark_featurescustom_web_standards_theme_config($new_theme, $ws_dat
   $modules[] = 'asu_spotlight';
   $modules[] = 'mega_footer';
   // OpenASU custom modules, features - keep this up with openasu.info
-  // TODO - automate this process by reading in .info file
   $modules[] = 'webspark_featurescustom';
   $modules[] = 'asu_maps_enhanced';
   $modules[] = 'asu_spotlight';
@@ -234,6 +233,7 @@ function _webspark_featurescustom_web_standards_theme_config($new_theme, $ws_dat
     }
     catch (Exception $e) {
       watchdog('theme update', 'Web standards-based module dependency enabling failed: ' . $e->getMessage(), WATCHDOG_ERROR);
+      /** @noinspection HtmlUnknownTarget */
       drupal_set_message('The enabling of Web standards specific modules may have failed. Check your <a href="/admin/reports/dblog">recent log messages</a> for details.', 'error');
     }
   } else {
@@ -242,9 +242,7 @@ function _webspark_featurescustom_web_standards_theme_config($new_theme, $ws_dat
 
   // Apply original block configs from Webspark install profile (openasu.profile) to ensure their proper
   // location to match spinup settings.
-  if (function_exists('openasu_blockupdates_for_theme')) {
-    openasu_blockupdates_for_theme($new_theme, $ws_data);
-  }
+  openasu_blockupdates_for_theme($new_theme, $ws_data);
 
   // Flush ASU Brand caches so ASU header/footer/megamenu/mega_footer are right.
   asu_brand_cache_clear();
@@ -257,7 +255,6 @@ function _webspark_featurescustom_web_standards_theme_config($new_theme, $ws_dat
  * Alternate callback for when a desired Web standards theme has NOT been selected - disable
  * Innovation-specific blocks.
  * @param null $theme - Name of theme. If 0,
- * @throws InvalidMergeQueryException
  */
 function _webspark_featurescustom_alt_theme_config($theme = NULL) {
   if (is_null($theme)) { // callback from admin theme form
@@ -321,7 +318,7 @@ function webspark_featurescustom_form_system_themes_admin_form_alter(&$form, &$f
  *
  * Custom submission handler for admin theme form.
  */
-function _webspark_featurescustom_admin_theme($form, &$form_state) {
+function _webspark_featurescustom_admin_theme($form, $form_state) {
   $theme = $form_state['values']['admin_theme']; // new admin theme
   $theme_test_result = _webspark_featurescustom_web_standards_theme_check($theme, 0, TRUE);
   _webspark_featurescustom_act($theme, $theme_test_result);
