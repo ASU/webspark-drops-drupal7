@@ -186,13 +186,21 @@ function asu_brand_update_7203(&$sandbox) {
     'asu_brand_do_not_override' => $delta . '_do_not_override',
   );
   foreach ($asu_brand_settings as $old => $new) {
-    $query = Database::getConnection('default', 'default')
-      ->merge('variable')
-      ->fields(array(
-        'name' => $new,
-      ))
-      ->condition('name', $old, 'LIKE');
-    $query->execute();
+    $value = db_select('variable', 'v')
+      ->fields('v', array('value'))
+      ->condition('name', $old, 'LIKE')
+      ->execute()
+      ->fetchField();
+    if (!empty($value)) {
+      db_merge('variable')
+        ->key(array(
+          'name' => $old,
+        ))
+        ->fields(array(
+          'name' => $new,
+          'value' => $value,
+        ))->execute();
+    }
   }
 }
 
