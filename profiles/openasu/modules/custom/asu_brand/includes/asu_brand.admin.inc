@@ -197,36 +197,52 @@ function asu_brand_get_site_menu_options() {
 /**
  * ASU Brand admin settings form definition.
  */
-function asu_brand_admin_settings() {
-  $form = array();
-  $form['ws_version'] = array(
-    '#type' => 'select',
-    '#title' => 'Web Standards version',
-    '#description' => 'Select which Web Standards version of ASU Brand assets to display.'
-      . ' NOTE: Webspark manages this setting by the selection of the theme. This setting form'
-      . ' only appears for non-Webspark sites.',
-    '#options' => asu_brand_get_version_options(),
-    '#required' => TRUE,
-    '#default_value' => variable_get('asu_brand_header_version', ''),
-  );
-  $form['#submit'][] = '_asu_brand_admin_settings_submit';
-
-  return system_settings_form($form);
+function asu_brand_admin_settings($form, &$form_state) {
+  if (!module_exists('webspark_featurescustom')) { // Save settings
+    $form['instructions'] = array(
+      '#markup' => '<div class="messages warning">'
+        . '<p><strong>Only the ASU Brand header and footer blocks are swapped in or out by this setting.</strong></p>'
+        . '<p>Any blocks containing Web standards compliant megafooters or main menus must'
+        . ' be handled at the <a href="/admin/structure/block">block configuration</a> page.</p></div>',
+    );
+    $form['ws_version'] = array(
+      '#type' => 'select',
+      '#title' => 'Web Standards version',
+      '#description' => 'Select which version of Web Standards assets to display.',
+      '#options' => asu_brand_get_version_options(),
+      '#required' => TRUE,
+      '#default_value' => variable_get('asu_brand_header_version', ''),
+    );
+    $form['#submit'][] = '_asu_brand_admin_settings_submit';
+    $form = system_settings_form($form);
+  } else {
+    $form['not_available'] = array(
+    '#markup' => '<h3>Disabled</h3><p>The ASU Brand settings form is disabled for Webspark installations'
+      . ' because the Web Standards block management is handled automatically when '
+      . '<a href="/admin/appearance">themes are changed</a>.</p>'
+      . '<p>If you must change the placement of a global Web standards block (header/footer) without'
+      . ' changing themes, this can be done manually at the <a href="/admin/structure/block">block '
+      . ' configuration</a> page. But note that these changes may be overwritten when the site theme is'
+      . ' changed again.</p>',
+    );
+    $form = system_settings_form($form);
+    $form['actions']['submit'] = array();
+  }
+  return $form;
 }
 
 /**
- * ASU Brand admin settings form submission callback.
+ * ASU Brand admin settings form submission callback. Can only be reached by non-Webspark sites.
  * @param $form
  * @param $form_state
  */
-function _asu_brand_admin_settings_submit($form, $form_state) {
+function _asu_brand_admin_settings_submit($form, &$form_state) {
   variable_set('asu_brand_header_version', $form_state['values']['ws_version']);
-  if (!module_exists('webspark_featurescustom')) { // Save settings
+    module_load_include('inc', 'asu_brand', 'includes/asu_brand.theme_update');
     $ws_data = ($form_state['values']['ws_version'] === '5.0')
       ? asu_brand_get_ws_data('elpuente')
       : asu_brand_get_ws_data('innovation');
     asu_brand_block_theme_update('__standalone__', $ws_data);
     // Flush ASU Brand caches so updated ASU header/footer (and any other related blocks) are right
     asu_brand_cache_clear();
-  }
 }

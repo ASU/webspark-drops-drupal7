@@ -98,7 +98,7 @@ function asu_brand_menu() {
     'file path' => drupal_get_path('module', 'system'),
   );
   $items['admin/config/asu_brand/settings'] = array(
-    'title' => 'Settings',
+    'title' => 'ASU Brand settings',
     'description' => t('Administer ASU Brand settings.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('asu_brand_admin_settings'),
