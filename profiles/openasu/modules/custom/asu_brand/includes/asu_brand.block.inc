@@ -154,7 +154,7 @@ function asu_brand_get_cached_content($cache_id, $file_path, $reset = FALSE) {
         </nav>
       </div>
       <div class="innovation-image">
-        <a href="https://www.asu.edu/rankings"><img src="//www.asu.edu/asuthemes/5.0/assets/Number-1-in-the-us-for-innovation@2x.png" />
+        <a href="https://www.asu.edu/rankings"><img src="//www.asu.edu/asuthemes/5.0/assets/Number-1-in-the-us-for-innovation@2x.png" /></a>
       </div>
     </div>
   </div>

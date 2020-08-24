@@ -50,7 +50,7 @@ function mega_footer_block_view($delta = '') {
     $mfsm_twitter   = _mega_footer_social_media('twitter', 'twitter-square', 'Twitter', '', '', $theme);
     $mfsm_linkedin  = _mega_footer_social_media('linkedin', 'linkedin-square', 'LinkedIn', '', '', $theme);
     $mfsm_youtube   = _mega_footer_social_media('youtube', 'youtube-square', 'YouTube', '', '', $theme);
-    $mfsm_instagram = _mega_footer_social_media('instagram', 'instagram-square', 'Instagram', '', '', $theme);
+    $mfsm_instagram = _mega_footer_social_media('instagram', 'instagram', 'Instagram', '', '', $theme);
     $mfsm_vimeo     = _mega_footer_social_media('vimeo', 'vimeo-square', 'Vimeo', '', '', $theme);
     $mfsm_flickr    = _mega_footer_social_media('flickr', 'flickr', 'Flickr', '', '', $theme);
     $mfsm_pinterest = _mega_footer_social_media('pinterest', 'pinterest-square', 'Pinterest', '', '', $theme);
@@ -109,7 +109,7 @@ function mega_footer_block_view($delta = '') {
       $footer_mark = _mega_footer_social_media('twitter', 'twitter-square', 'Twitter', $footer_mark, $external, $theme);
       $footer_mark = _mega_footer_social_media('linkedin', 'linkedin', 'LinkedIn', $footer_mark, $external, $theme);
       $footer_mark = _mega_footer_social_media('youtube', 'youtube-square', 'YouTube', $footer_mark, $external, $theme);
-      $footer_mark = _mega_footer_social_media('instagram', 'instagram-square', 'Instagram', $footer_mark, $external, $theme);
+      $footer_mark = _mega_footer_social_media('instagram', 'instagram', 'Instagram', $footer_mark, $external, $theme);
       $footer_mark = _mega_footer_social_media('vimeo', 'vimeo-square', 'Vimeo', $footer_mark, $external, $theme);
       $footer_mark = _mega_footer_social_media('flickr', 'flickr', 'Flickr', $footer_mark, $external, $theme);
       $footer_mark = _mega_footer_social_media('pinterest', 'pinterest-square', 'Pinterest', $footer_mark, $external, $theme);
@@ -200,7 +200,7 @@ function mega_footer_block_view($delta = '') {
         $footer_mark .= "<div class='col-md-" . $bootstrap_col_width . " col-sm-" . $bootstrap_col_width
           . " space-bot-md'><h2 data-toggle='collapse' data-target='#mega_accord" . $i
           . "' class='big-foot-head collapsed'>" .
-          $item['#title'] . "<span class='fas fa-chevron-up icon-rotates'></span></h2>";
+          $item['#title'] . "<span class='fa fa-chevron-up icon-rotates'></span></h2>";
       }
 
       $footer_mark .= "<ul class='big-foot-nav  collapse in' id='mega_accord" . $i . "' style=''>";

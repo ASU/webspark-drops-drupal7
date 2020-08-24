@@ -26,7 +26,7 @@ function _mega_footer_social_media($name, $class, $title, $mark, $external, $the
       $mark .= '<li><a ' . $external . ' href="' . $check . '" title="' . $title . '"><span class="fa '
         . $className . '"><span class="sr-only">' . $title . '</span></span></a></li>';
       } else {
-      $fa_prefix = ($title == 'RSS') ? 'fas' : 'fab';
+      $fa_prefix = ($title == 'RSS') ? 'fa' : 'fa';
       $mark .= '<li><a ' . $external . ' href="' . $check . '" title="' . $title . '"><i class="' . $fa_prefix . ' '
       . $className . '"></i></a></li>';
     }
