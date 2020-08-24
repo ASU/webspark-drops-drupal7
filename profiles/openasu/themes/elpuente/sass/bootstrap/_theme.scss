@@ -39,14 +39,17 @@
 
   &:hover,
   &:focus  {
-    background-color: darken($btn-color, 12%);
+    //background-color: darken($btn-color, 12%);
+    background-color: $btn-color;
     background-position: 0 -15px;
   }
 
   &:active,
   &.active {
-    background-color: darken($btn-color, 12%);
-    border-color: darken($btn-color, 14%);
+    //background-color: darken($btn-color, 12%);
+    //border-color: darken($btn-color, 14%);
+    background-color: $btn-color;
+    border-color: $btn-color;
   }
 
   &:disabled,
