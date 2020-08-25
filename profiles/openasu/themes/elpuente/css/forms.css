@@ -3,6 +3,7 @@
 /* Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2): Override Bootstrap variables below. */
 /*== Colors --- WS2 DONE
 -----------------------------------------------------*/
+/* Global mixin library for multiple or all elements */
 /* global overrides */
 .form-control { padding: 8px 16px; }
 
@@ -22,7 +23,7 @@ div.error, table tr.error { background-color: transparent; }
 
 .form-type-checkbox input[type="checkbox"], .form-type-radio input[type="radio"] { height: 1.5em; width: 1.5em; opacity: 0; z-index: 1; }
 
-.form-type-checkbox input[type="checkbox"]:focus + label::before, .form-type-radio input[type="radio"]:focus + label::before { outline: 2px solid #66afe9; -webkit-box-shadow: 0px 0px 5px #66afe9; box-shadow: 0px 0px 5px #66afe9; }
+.form-type-checkbox input[type="checkbox"]:focus + label::before, .form-type-radio input[type="radio"]:focus + label::before { outline: 2px solid #191919; }
 
 .form-type-checkbox input[type="checkbox"]:indeterminate + label::after, .form-type-radio input[type="radio"]:indeterminate + label::after { background-color: #555555; border-radius: 0.0625em; content: ""; display: block; height: 0.125em; margin-left: -1.0312em; margin-top: 0.4325em; width: 0.625em; }
 
@@ -45,7 +46,7 @@ div.error, table tr.error { background-color: transparent; }
 
 .form-type-radio label::after { background-color: #555555; border-radius: 50%; content: " "; font-size: 1em; display: inline-block; position: absolute; height: 1em; width: 1em; top: 0.25em; left: 0.3em; margin-left: -1.25em; transform: scale(0, 0); transition: transform 0.05s cubic-bezier(0.8, -0.33, 0.2, 1.33) 0s; }
 
-.form-type-radio input[type="radio"]:focus + label::before { outline: 2px solid #66afe9; -webkit-box-shadow: 0px 0px 5px #66afe9; box-shadow: 0px 0px 5px #66afe9; }
+.form-type-radio input[type="radio"]:focus + label::before { outline: 2px solid #191919; -webkit-box-shadow: 0px 0px 5px #191919; box-shadow: 0px 0px 5px #191919; }
 
 .form-type-radio input[type="radio"]:checked + label::after { transform: scale(1, 1); }
 

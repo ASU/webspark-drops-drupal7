@@ -30,7 +30,7 @@ $ws2-gold:               #ffc627;
 $ws2-blue:               #00a3e0;
 $ws2-green:              #78be20;
 $ws2-orange:             #ff7f32;
-$ws2-a11y:               #00BAFF; //#4D90FE;
+$ws2-a11y:               #191919; //#00BAFF; //#4D90FE;
 
 //// ASU Gray shades
 $ws2-gray-darkest: #191919; // Not using lighten() mixing
@@ -99,6 +99,7 @@ $text-color:              $ws2-gray-darkest;
 //// Alternate styling
 $text-color-bg-dark:      $ws2-gray-lightest;
 $ws2-content-styles-container: ".region-content #page-page";
+$ws2-content-styles-blacklist: "div.pane-menu-tree";
 
 //** Global textual link color.
 $link-color:              $brand-primary;
@@ -256,7 +257,7 @@ $input-border:                   #ccc;
 //** `<input>` border radius
 $input-border-radius:            $border-radius-base;
 //** Border color for inputs on focus
-$input-border-focus:             #66afe9;
+$input-border-focus:             $ws2-gray-darkest;
 
 //** Placeholder text color
 $input-color-placeholder:        $gray-light;

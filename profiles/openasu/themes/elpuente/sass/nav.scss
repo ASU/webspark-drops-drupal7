@@ -3,6 +3,7 @@
  * IS_SCSS
  */
 @import "variables";
+@import "mixins/global"; // mixins
 
 /* =NAVBAR -- Part of Main Menu styling! --- NOT DONE
 -------------------------------------------------------------- */
@@ -63,9 +64,7 @@
 .nav .open > a:focus,
 .navbar-nav > .active > a:focus
 .navbar-nav .dropdown-menu > li > a:focus {
-  //outline: 0.125em solid $input-border-focus;
-  //-webkit-box-shadow: 0 0 0.3125em  $input-border-focus;
-  //box-shadow: 0 0 0.3125em  $input-border-focus;
+  @include a11y-strong-focus();
 }
 
 /* =SIDEBAR MENUS --- NOT DONE
@@ -315,9 +314,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
     background-color: $ws2-maroon;
   }
   &.active > a:focus {
-    outline: 0.125em solid $input-border-focus;
-    -webkit-box-shadow: 0 0 0.3125em  $input-border-focus;
-    box-shadow: 0 0 0.3125em  $input-border-focus;
+    @include a11y-strong-focus();
   }
 }
 

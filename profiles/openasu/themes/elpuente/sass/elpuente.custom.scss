@@ -28,14 +28,11 @@
 
 div.error {
   background-repeat: no-repeat;
-
   text-align: left;
   font: normal 12px/16px "FontAwesome";
   letter-spacing: 0;
   color: #B72A2A;
   opacity: 1;
-
-
   label {
     padding-left: 2em;
   }
@@ -104,7 +101,7 @@ a,
 }
 
 button, .button, .btn, a.btn, .btn a {
-  transition: 0.5s cubic-bezier(0.19, 1, 0.19, 1);
+  @include ws2-global-transition();
   word-wrap: break-word;
 }
 
@@ -154,7 +151,7 @@ a.btn-gold, .btn-gold a {
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   margin-bottom: 1.5rem;
   color: inherit;
-  font-family: Arial, sans-serif;
+  font-family: $font-family-base;
   font-weight: 700;
   line-height: calc(100% + 4px);
   display: block;
@@ -397,7 +394,7 @@ div.caption-inner {
 
 /* =LISTS, ordered + unordered #WS2.0
 -------------------------------------------------------------- */
-#{$ws2-content-styles-container} {
+#{$ws2-content-styles-container} *:not(#{$ws2-content-styles-blacklist}){
   ul, ol {
     padding-left: 0;
     list-style-type: none;
@@ -1057,7 +1054,7 @@ h2.widget-list {
 
 /* Main body of columns with content */
 #modalContent .panels-section-columns > .panels-section-column .content-type-button {
-  font: normal 0.9rem/1.5em "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: normal 0.9rem/1.5em $font-family-base;
   top: 0;
 }
 
@@ -1226,9 +1223,7 @@ a.btn:focus,
 #top-content #tabs .nav-pills > li.active > a:focus,
 h4.ui-accordion-header.ui-state-hover,
 h4.ui-accordion-header:focus {
-  outline: 2px solid $input-border-focus;
-  -webkit-box-shadow: 0 0 5px  $input-border-focus;
-  box-shadow: 0 0 5px  $input-border-focus;
+  @include a11y-strong-focus();
 }
 
 /** UI Tabs --- WS2.0 DONE

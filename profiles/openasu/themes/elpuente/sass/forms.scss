@@ -1,5 +1,7 @@
 /* Taken from https://github.com/flatlogic/awesome-bootstrap-checkbox */
 @import "variables";
+@import "mixins/global"; // mixins
+
 /* global overrides */
 
 .form-control {
@@ -64,9 +66,7 @@ div.error, table tr.error {
 }
 .form-type-checkbox input[type="checkbox"]:focus + label::before,
 .form-type-radio input[type="radio"]:focus + label::before {
-  outline: 2px solid $input-border-focus;
-  -webkit-box-shadow: 0px 0px 5px  $input-border-focus;
-  box-shadow: 0px 0px 5px  $input-border-focus;
+  @include a11y-strong-focus();
 }
 .form-type-checkbox input[type="checkbox"]:indeterminate + label::after,
 .form-type-radio input[type="radio"]:indeterminate + label::after {
