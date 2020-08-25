@@ -1,10 +1,6 @@
-/** =TB MEGA MENU - BASE values, mixins, etc. for both V1 and WS2.0
- * Mixin parameter defaults are all Innovation. Pass in WS2.0 values.
+/** =TB MEGA MENU - BASE values, mixins, etc. for both V1 and WS2.0 Mixin parameter defaults are all Innovation. Pass in WS2.0 values.
 ------------------------------------------------------------------- */
-/*
- * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
- * Override Bootstrap variables below.
- */
+/* Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2): Override Bootstrap variables below. */
 /*== Colors --- WS2 DONE
 -----------------------------------------------------*/
 /* Global mixin library for multiple or all elements */
@@ -14,34 +10,14 @@
 ----------------------------------------------------- */
 /* Universal markup
 ----------------------------------------------------- */
-.row-fluid .span1, .row-fluid .span2, .row-fluid .span3, .row-fluid .span4, .row-fluid .span5, .row-fluid .span6, .row-fluid .span7, .row-fluid .span8, .row-fluid .span9, .row-fluid .span10, .row-fluid .span11 {
-  margin-left: 0;
-}
-.row-fluid .span1 {
-  width: calc(8.33% - 2.12766%);
-}
-.row-fluid .span2 {
-  width: calc(16.6677% - 2.12766%);
-}
-.row-fluid .span3 {
-  width: calc(25% - 2.12766%);
-}
-.row-fluid .span4 {
-  width: calc(33.33% - 2.12766%);
-}
-.row-fluid .span6 {
-  width: calc(50% - 2.12766%);
-}
+.row-fluid .span1, .row-fluid .span2, .row-fluid .span3, .row-fluid .span4, .row-fluid .span5, .row-fluid .span6, .row-fluid .span7, .row-fluid .span8, .row-fluid .span9, .row-fluid .span10, .row-fluid .span11 { margin-left: 0; }
+.row-fluid .span1 { width: calc(8.33% - 2.12766%); }
+.row-fluid .span2 { width: calc(16.6677% - 2.12766%); }
+.row-fluid .span3 { width: calc(25% - 2.12766%); }
+.row-fluid .span4 { width: calc(33.33% - 2.12766%); }
+.row-fluid .span6 { width: calc(50% - 2.12766%); }
 
-#tb-megamenu-admin .dropdown-menu li.tb-megamenu-item {
-  border: 1px solid #747474;
-}
-#tb-megamenu-admin .dropdown-menu li.tb-megamenu-item a {
-  color: #191919;
-}
-#tb-megamenu-admin .dropdown-menu li.tb-megamenu-item a:hover {
-  color: #747474;
-}
-#tb-megamenu-admin .mega-inner, #tb-megamenu-admin .tb-megamenu .span12.mega-col-nav .mega-inner {
-  padding: 10px;
-}
+#tb-megamenu-admin .dropdown-menu li.tb-megamenu-item { border: 1px solid #747474; }
+#tb-megamenu-admin .dropdown-menu li.tb-megamenu-item a { color: #191919; }
+#tb-megamenu-admin .dropdown-menu li.tb-megamenu-item a:hover { color: #747474; }
+#tb-megamenu-admin .mega-inner, #tb-megamenu-admin .tb-megamenu .span12.mega-col-nav .mega-inner { padding: 10px; }
