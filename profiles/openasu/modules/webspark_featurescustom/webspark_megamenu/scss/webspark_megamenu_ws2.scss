@@ -67,7 +67,6 @@ $ws2-gray-lightest:      #fafafa;
       border-bottom: none;
       &:focus,
       &:hover {
-        //border-bottom: 2px solid $mm-darkest-gray;
         text-decoration: underline $mm-darkest-gray;
       }
     }
@@ -113,11 +112,11 @@ $ws2-gray-lightest:      #fafafa;
         @include elpuente-button-styling();
       }
       // Yellow bar across the bottom of top level elements
-      &.active:not(.btn) {
-        a:after {
+      &.active {
+        &:not(.btn) a:after {
           @include megamenu-active-style();
         }
-        &.dropdown-submenu a::after {
+        &.dropdown-submenu:not(.btn) a:after {
           width: inherit;
         }
       }
@@ -256,7 +255,7 @@ $ws2-gray-lightest:      #fafafa;
           bottom: 0;
           left: -0.5rem;
         }
-        &:hover::after {
+        &:hover:after {
           @include megamenu-active-style();
         }
         &:not(.btn) {
@@ -324,13 +323,13 @@ $ws2-gray-lightest:      #fafafa;
     }
 
     // Temporary Flyout addition for WS2l
-    .dropdown-submenu > a::after {
+    .dropdown-submenu > a:after {
       color: $ws2-gray-light;
       content: "\F054";
       font-family: "FontAwesome", sans-serif;
       font-size: 1rem;
       border: none;
-      width: inherit;
+      width: inherit !important;
     }
   }
 
