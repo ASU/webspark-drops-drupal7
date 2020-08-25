@@ -1,10 +1,7 @@
 // Globals
+
+@import "../../../../themes/elpuente/sass/variables";
+@import "../../../../themes/elpuente/sass/mixins/global";
+
 $link-color-hover : #fff;
 $link-color : #ccc;
-$a11y-strong-focus-color : #4D90FE;
-
-// Mixins
-@mixin a11y-strong-focus {
-  outline: 2px solid $a11y-strong-focus-color;
-  @include box-shadow(0px 0px 5px $a11y-strong-focus-color);
-}

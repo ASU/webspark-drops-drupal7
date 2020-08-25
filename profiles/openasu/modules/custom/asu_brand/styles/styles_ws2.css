@@ -64,5 +64,6 @@
   .innovation-image { border-bottom: 0; float: left; order: 1; width: 100%; }
   .mb-left { display: block; float: left; }
   .mb-right { display: block; float: right; } }
-@media all and (min-width: 991px) { #headerContainer header { position: relative !important; }
+@media all and (min-width: 992px) { #headerContainer header { position: relative; }
+  #headerContainer header.scrolled { border-bottom: none; }
   .primary-nav { display: none !important; } }

@@ -110,11 +110,16 @@ $ws2-gray-lightest:      #fafafa;
     li.tb-megamenu-item {
       // top level buttons
       .btn {
-        @include megamenu-button-styling();
+        @include elpuente-button-styling();
       }
-      // Yellow bar across the bottom
-      &.active:not(.btn) a:after {
-        @include megamenu-active-style();
+      // Yellow bar across the bottom of top level elements
+      &.active:not(.btn) {
+        a:after {
+          @include megamenu-active-style();
+        }
+        &.dropdown-submenu a::after {
+          width: inherit;
+        }
       }
       // Adds Chevron (arrow down) - Currently using FA 4.x
       &.dropdown {
@@ -225,7 +230,7 @@ $ws2-gray-lightest:      #fafafa;
           }
         }
         &.btn {
-        @include megamenu-button-styling(0.2rem);
+        @include elpuente-button-styling(0.2rem);
           margin-right: 0.5rem;
         }
         &:last-child {
@@ -288,7 +293,7 @@ $ws2-gray-lightest:      #fafafa;
       padding: 0.5rem 0;
       & > a {
         &:focus {
-          @include megamenu-focus-style();
+          @include a11y-strong-focus();
         }
         &:hover:not(.mega-group-title),
         &:focus:not(.mega-group-title) {
@@ -325,6 +330,7 @@ $ws2-gray-lightest:      #fafafa;
       font-family: "FontAwesome", sans-serif;
       font-size: 1rem;
       border: none;
+      width: inherit;
     }
   }
 

@@ -291,9 +291,12 @@
 }
 
 // Global header
-@media all and (min-width: 991px) {
+@media all and (min-width: 992px) {
   #headerContainer header {
-    position: relative !important;
+    position: relative;
+    &.scrolled {
+      border-bottom: none;
+    }
   }
   .primary-nav {
     display: none !important;

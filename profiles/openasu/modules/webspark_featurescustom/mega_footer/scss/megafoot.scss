@@ -1,8 +1,6 @@
 @import "compass/css3";
 @import "base";
 
-@import "../../../../themes/elpuente/sass/mixins/global";
-
 #block-mega-footer-mega-footer {
   background-color: #1e1e1e;
 }
@@ -159,12 +157,27 @@
 }
 
 // [KM 12-5-16] Added stronger focus styles for keyboard accessibility
-.megafoot a:focus,
 .big-foot-nav > li > a:focus,
 .little-foot-nav > li > a:focus {
-  @include a11y-strong-focus();
+  @include a11y-strong-focus($ws2-gray-light);
+}
+// Applied previous styles to outline and removed border properties
+.megafoot {
+  a:focus,
+  .ui-widget-content a:focus,
+  input:focus,
+  a.btn:focus,
+  .btn a:focus,
+  #skip_to_content:focus,
+  #top-content #tabs .nav-pills > li.active > a:focus,
+  h4.ui-accordion-header.ui-state-hover,
+  h4.ui-accordion-header:focus {
+    @include a11y-strong-focus($ws2-gray-light);
+  }
 }
 
+/** Media rules
+---------------------------------------------------- */
 @media (max-width: 991px) {
   .megafoot h2 {
     cursor: pointer;
