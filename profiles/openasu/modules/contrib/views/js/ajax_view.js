@@ -80,7 +80,10 @@
     // Add a trigger to update this view specifically.
     var self_settings = this.element_settings;
     self_settings.event = 'RefreshView';
-    this.refreshViewAjax = new Drupal.ajax(this.selector, this.$view, self_settings);
+    var self = this;
+    this.$view.once('refresh', function () {
+      self.refreshViewAjax = new Drupal.ajax(self.selector, self.$view, self_settings);
+    });
   };
 
   Drupal.views.ajaxView.prototype.attachExposedFormAjax = function() {
@@ -101,7 +104,7 @@
    * Attach the ajax behavior to each link.
    */
   Drupal.views.ajaxView.prototype.attachPagerAjax = function() {
-    this.$view.find('ul.pager > li > a, th.views-field a, .attachment .views-summary a')
+    this.$view.find('ul.pager > li > a, ol.pager > li > a, th.views-field a, .attachment .views-summary a')
       .each(jQuery.proxy(this.attachPagerLinkAjax, this));
   };
 
@@ -118,7 +121,6 @@
       return;
     }
 
-
     // Provide a default page if none has been set. This must be done
     // prior to merging with settings to avoid accidentally using the
     // page landed on instead of page 1.
@@ -129,11 +131,11 @@
     // Construct an object using the settings defaults and then overriding
     // with data specific to the link.
     $.extend(
-    viewData,
-    this.settings,
-    Drupal.Views.parseQueryString(href),
-    // Extract argument data from the URL.
-    Drupal.Views.parseViewArgs(href, this.settings.view_base_path)
+      viewData,
+      this.settings,
+      Drupal.Views.parseQueryString(href),
+      // Extract argument data from the URL.
+      Drupal.Views.parseViewArgs(href, this.settings.view_base_path)
     );
 
     // For anchor tags, these will go to the target of the anchor rather
