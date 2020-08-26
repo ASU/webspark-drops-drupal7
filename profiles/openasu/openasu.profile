@@ -143,7 +143,7 @@ function openasu_blockupdates_for_theme($theme, $ws_data = array()) {
     }
     // Adjust system help block
     _openasu_system_help_block_enable($theme);
-    watchdog(__FUNCTION__, 'Updating block settings for %theme theme were attempted.', array('%theme' => $theme));
+    watchdog('openasu', 'Updating block settings for %theme theme were attempted.', array('%theme' => $theme));
   }
 }
 

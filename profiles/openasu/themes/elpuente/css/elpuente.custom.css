@@ -34,8 +34,140 @@ div.pane-system-main-menu, div.pane-menu-tree { margin-top: 3em; }
 #skip_to_content { position: absolute; left: -9999px; }
 #skip_to_content:focus { position: relative; left: 0; }
 
-/* =LINKS --- WS2.0 DONE =BUTTONS --- IN PROGRESS
+/* =LINKS --- WS2.0 DONE =BUTTONS --- WS2.0 DONE
 -------------------------------------------------------------- */
+/* =BUTTONS --- WS2.0 DONE
+-------------------------------------------------------------- */
+#tabs .nav.nav-pills > li > a { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+
+#tb-megamenu-main-menu > button.btn-navbar.tb-megamenu-button { display: none; }
+
+.btn, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree { /* Button CSS for menu links added */ -moz-user-select: none; background-image: none; border: 1px solid transparent; border-radius: 32px; cursor: pointer; display: inline-block; font-size: 1em; font-weight: bold; line-height: 1em; margin-bottom: 0; max-width: 17.5rem; min-width: 5rem; padding: 8px 8px; text-align: center; vertical-align: middle; white-space: nowrap; }
+.btn.active, .btn:focus, .btn:active, .btn:active:focus, .btn.active:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:active:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.active:focus { background-image: none; outline: 0 none; }
+.btn:hover, .btn:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:focus { border: 1px solid transparent; text-decoration: none; transform: scale(1.1); }
+.btn.disabled, .btn[disabled], .btn fieldset[disabled] .btn, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.disabled, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree fieldset[disabled] .btn { box-shadow: none; cursor: not-allowed; opacity: 0.5; pointer-events: none; }
+
+.btn-primary, .btn-default, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default { color: #ffffff; background-color: #8c1d40; }
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-default:hover, .btn-default:focus, .btn-default:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:active { transform: scale(1.1); }
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.active { color: #fafafa; }
+.btn-primary:active, .btn-primary.active, .btn-default:active, .btn-default.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.active { background-image: none; }
+.btn-primary.disabled, .btn-primary.disabled:hover, .btn-primary.disabled:focus, .btn-primary.disabled:active, .btn-primary.disabled.active, .btn-primary[disabled], .btn-primary[disabled]:hover, .btn-primary[disabled]:focus, .btn-primary[disabled]:active, .btn-primary.active[disabled], .btn-default.disabled, .btn-default.disabled:hover, .btn-default.disabled:focus, .btn-default.disabled:active, .btn-default.disabled.active, .btn-default[disabled], .btn-default[disabled]:hover, .btn-default[disabled]:focus, .btn-default[disabled]:active, .btn-default.active[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.disabled, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.disabled:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.disabled:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.disabled:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.disabled.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary[disabled]:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary[disabled]:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary[disabled]:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary.active[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.disabled, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.disabled:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.disabled:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.disabled:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.disabled.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default[disabled]:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default[disabled]:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default[disabled]:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default.active[disabled] { opacity: 0.5; }
+.btn-primary .badge, .btn-default .badge, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary .badge, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default .badge { color: #fff; }
+
+.open > .btn-primary.dropdown-toggle, .open > .btn-default.dropdown-toggle { color: #fafafa; background-color: #8c1d40; background-image: none; }
+
+fieldset[disabled] .btn-primary, fieldset[disabled] .btn-default { opacity: 0.5; }
+fieldset[disabled] .btn-primary:hover, fieldset[disabled] .btn-primary:focus, fieldset[disabled] .btn-primary:active, fieldset[disabled] .btn-primary.active, fieldset[disabled] .btn-default:hover, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default:active, fieldset[disabled] .btn-default.active { opacity: 0.5; }
+
+.btn-secondary, .btn-blue, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue { color: #191919; background-color: #bfbfbf; }
+.btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active, .btn-blue:hover, .btn-blue:focus, .btn-blue:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue:active { transform: scale(1.1); }
+.btn-secondary:active, .btn-secondary.active, .btn-blue:active, .btn-blue.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue.active { background-image: none; }
+.btn-secondary.disabled, .btn-secondary.disabled:hover, .btn-secondary.disabled:focus, .btn-secondary.disabled:active, .btn-secondary.disabled.active, .btn-secondary[disabled], .btn-secondary[disabled]:hover, .btn-secondary[disabled]:focus, .btn-secondary[disabled]:active, .btn-secondary.active[disabled], .btn-blue.disabled, .btn-blue.disabled:hover, .btn-blue.disabled:focus, .btn-blue.disabled:active, .btn-blue.disabled.active, .btn-blue[disabled], .btn-blue[disabled]:hover, .btn-blue[disabled]:focus, .btn-blue[disabled]:active, .btn-blue.active[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.disabled, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.disabled:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.disabled:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.disabled:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.disabled.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary[disabled]:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary[disabled]:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary[disabled]:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary.active[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue.disabled, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue.disabled:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue.disabled:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue.disabled:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue.disabled.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue[disabled]:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue[disabled]:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue[disabled]:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue.active[disabled] { opacity: 0.5; }
+.btn-secondary .badge, .btn-blue .badge, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary .badge, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue .badge { color: #191919; }
+
+.open > .btn-secondary.dropdown-toggle, .open > .btn-blue.dropdown-toggle { color: #191919; background-color: #bfbfbf; background-image: none; }
+
+fieldset[disabled] .btn-secondary, fieldset[disabled] .btn-blue { opacity: 0.5; }
+fieldset[disabled] .btn-secondary:hover, fieldset[disabled] .btn-secondary:focus, fieldset[disabled] .btn-secondary:active, fieldset[disabled] .btn-secondary.active, fieldset[disabled] .btn-blue:hover, fieldset[disabled] .btn-blue:focus, fieldset[disabled] .btn-blue:active, fieldset[disabled] .btn-blue.active { opacity: 0.5; }
+
+.btn-gold, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold { color: #191919; background-color: #ffc627; }
+.btn-gold:hover, .btn-gold:focus, .btn-gold:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold:active { transform: scale(1.1); }
+.btn-gold:active, .btn-gold.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.active { background-image: none; }
+.btn-gold.disabled, .btn-gold.disabled:hover, .btn-gold.disabled:focus, .btn-gold.disabled:active, .btn-gold.disabled.active, .btn-gold[disabled], .btn-gold[disabled]:hover, .btn-gold[disabled]:focus, .btn-gold[disabled]:active, .btn-gold.active[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.disabled, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.disabled:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.disabled:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.disabled:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.disabled.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold[disabled]:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold[disabled]:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold[disabled]:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold.active[disabled] { opacity: 0.5; }
+.btn-gold .badge, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold .badge { color: #ffc627; }
+
+.open > .btn-gold.dropdown-toggle { color: #191919; background-color: #ffc627; background-image: none; }
+
+fieldset[disabled] .btn-gold { opacity: 0.5; }
+fieldset[disabled] .btn-gold:hover, fieldset[disabled] .btn-gold:focus, fieldset[disabled] .btn-gold:active, fieldset[disabled] .btn-gold.active { opacity: 0.5; }
+
+.btn-black, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black { color: #fafafa; background-color: #191919; }
+.btn-black:hover, .btn-black:focus, .btn-black:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black:active { transform: scale(1.1); }
+.btn-black:active, .btn-black.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.active { background-image: none; }
+.btn-black.disabled, .btn-black.disabled:hover, .btn-black.disabled:focus, .btn-black.disabled:active, .btn-black.disabled.active, .btn-black[disabled], .btn-black[disabled]:hover, .btn-black[disabled]:focus, .btn-black[disabled]:active, .btn-black.active[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled]:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled]:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled]:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.active[disabled] { opacity: 0.5; }
+.btn-black .badge, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black .badge { color: #fafafa; }
+
+.open > .btn-black.dropdown-toggle { color: #fafafa; background-color: #191919; background-image: none; }
+
+fieldset[disabled] .btn-black { opacity: 0.5; }
+fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fieldset[disabled] .btn-black:active, fieldset[disabled] .btn-black.active { opacity: 0.5; }
+
+/* NOT ASU Web standards 2.0 colors - Bootstrap and/or alert color classes */
+.btn-success { background-color: #78be20; color: #fff; }
+
+.btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .open > .btn-success.dropdown-toggle { transform: scale(1.1); }
+
+.btn-success:active, .btn-success.active, .open > .btn-success.dropdown-toggle { background-image: none; }
+
+.btn-success.disabled, .btn-success.disabled:hover, .btn-success.disabled:focus, .btn-success.disabled:active, .btn-success.disabled.active, .btn-success[disabled], .btn-success[disabled]:hover, .btn-success[disabled]:focus, .btn-success[disabled]:active, .btn-success.active[disabled], fieldset[disabled] .btn-success, fieldset[disabled] .btn-success:hover, fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:active, fieldset[disabled] .btn-success.active { opacity: 0.5; }
+
+.btn-success .badge { background-color: #fff; color: #78be20; }
+
+.btn-info { background-color: #00a3e0; border-color: #00a3e0; color: #fff; }
+
+.btn-info:hover, .btn-info:focus, .btn-info:active, .btn-info.active, .open > .btn-info.dropdown-toggle { transform: scale(1.1); }
+
+.btn-info:active, .btn-info.active, .open > .btn-info.dropdown-toggle { background-image: none; }
+
+.btn-info.disabled, .btn-info.disabled:hover, .btn-info.disabled:focus, .btn-info.disabled:active, .btn-info.disabled.active, .btn-info[disabled], .btn-info[disabled]:hover, .btn-info[disabled]:focus, .btn-info[disabled]:active, .btn-info.active[disabled], fieldset[disabled] .btn-info, fieldset[disabled] .btn-info:hover, fieldset[disabled] .btn-info:focus, fieldset[disabled] .btn-info:active, fieldset[disabled] .btn-info.active { opacity: 0.5; }
+
+.btn-info .badge { background-color: #fff; color: #00a3e0; }
+
+.btn-warning { background-color: #ff7f32; border-color: #ff7f32; color: #191919; }
+
+.btn-warning:hover, .btn-warning:focus, .btn-warning:active, .btn-warning.active, .open > .btn-warning.dropdown-toggle { transform: scale(1.1); }
+
+.btn-warning:active, .btn-warning.active, .open > .btn-warning.dropdown-toggle { background-image: none; }
+
+.btn-warning.disabled, .btn-warning.disabled:hover, .btn-warning.disabled:focus, .btn-warning.disabled:active, .btn-warning.disabled.active, .btn-warning[disabled], .btn-warning[disabled]:hover, .btn-warning[disabled]:focus, .btn-warning[disabled]:active, .btn-warning.active[disabled], fieldset[disabled] .btn-warning, fieldset[disabled] .btn-warning:hover, fieldset[disabled] .btn-warning:focus, fieldset[disabled] .btn-warning:active, fieldset[disabled] .btn-warning.active { opacity: 0.5; }
+
+.btn-warning .badge { background-color: #191919; color: #ffc627; }
+
+.btn-danger { background-color: #ec5937; border-color: #ad2e10; color: #fff; }
+
+.btn-danger:hover, .btn-danger:focus, .btn-danger:active, .btn-danger.active, .open > .btn-danger.dropdown-toggle { transform: scale(1.1); }
+
+.btn-danger:active, .btn-danger.active, .open > .btn-danger.dropdown-toggle { background-image: none; }
+
+.btn-danger.disabled, .btn-danger.disabled:hover, .btn-danger.disabled:focus, .btn-danger.disabled:active, .btn-danger.disabled.active, .btn-danger[disabled], .btn-danger[disabled]:hover, .btn-danger[disabled]:focus, .btn-danger[disabled]:active, .btn-danger.active[disabled], fieldset[disabled] .btn-danger, fieldset[disabled] .btn-danger:hover, fieldset[disabled] .btn-danger:focus, fieldset[disabled] .btn-danger:active, fieldset[disabled] .btn-danger.active { opacity: 0.5; }
+
+.btn-danger .badge { background-color: #fff; color: #ec5937; }
+
+.btn-link { border-radius: 0; color: #8c1d40; cursor: pointer; font-weight: normal; }
+
+.btn-link, .btn-link:active, .btn-link[disabled], fieldset[disabled] .btn-link { background-color: transparent; box-shadow: none; }
+
+.btn-link, .btn-link:hover, .btn-link:focus, .btn-link:active { border-color: transparent; }
+
+.btn-link:hover, .btn-link:focus { background-color: transparent; color: #8c1d40; text-decoration: underline; }
+
+.btn-link[disabled]:hover, .btn-link[disabled]:focus, fieldset[disabled] .btn-link:hover, fieldset[disabled] .btn-link:focus { opacity: 0.5; }
+
+.btn-lg, .btn-group-lg > .btn { border-radius: 32px; font-size: 1em; padding: 1em 1.5em; min-width: 7rem; }
+
+.btn-sm, .btn-group-sm > .btn { border-radius: 32px; font-size: 0.875em; padding: 8px 16px; min-width: 4rem; }
+
+.btn-xs, .btn-group-xs > .btn, .btn-tag { border-radius: 32px; font-size: 0.75em; padding: 4px 12px; min-width: 4rem; }
+
+.btn-tag { background-color: #e8e8e8; border-color: #e8e8e8; font-weight: normal; }
+
+.btn-block { display: block; width: 100%; }
+
+.btn-block + .btn-block { margin-top: 15px; }
+
+.button.browse { background: -moz-linear-gradient(center bottom, #e9eaec 0%, #fafafa 100%) repeat scroll 0 0 #fafafa; border: 1px solid #d0d0d0; border-radius: 3px; box-shadow: 0 3px 3px 0 #d0d0d0; color: #747474; cursor: pointer; font: bold 12px/32px "Open Sans","Lucida Sans","Lucida Grande",verdana sans-serif; height: 33px; margin: 0 18px 0 0; outline: medium none; padding: 8px 13px; text-decoration: none; }
+
+.button.browse:hover { background: -moz-linear-gradient(center bottom, #c5c5c5 0%, #fafafa 100%) repeat scroll 0 0 #e6e6e6; }
+
+/* Buttons placed in the LH (secondary) menu */
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] ul.menu li:not(.btn-container) + li.btn-container { border-top: 1px solid #d0d0d0; }
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] ul.menu li.btn-container + li:not(.btn-container) { margin-top: 0.9375em; }
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu > li.btn-container.first > a { margin-top: 0; }
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu li.btn-container ul.menu { margin-top: 0.9375em; }
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container { margin-left: 1.375em; margin-bottom: 0.9375em; }
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container + li:not(.btn-container) { margin-left: 1.375em; }
+.pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container + li:not(.btn-container) > a { margin-left: 0; padding-left: 1.375em; }
+
 a, .ui-widget-content a { border-bottom: 1px solid #8c1d40; text-decoration: none; color: #8c1d40; }
 a:hover, .ui-widget-content a:hover { color: #8c1d40; text-decoration: none; border-bottom: 1px dotted #8c1d40; }
 
@@ -83,24 +215,26 @@ h6, .h6 { font-weight: normal; }
 /* HR separator - custom */
 hr.ws2-element-gold { border-color: #ffc627; border-width: 8px; margin-left: 0; max-width: 256px; }
 
-/* Signatures (beneath content) */
-.ws2-sig-title, .ws2-sig-byline { font-size: 16px; }
-
-.ws2-sig-title:before { padding-right: 0.5em; content: "\f068"; font-family: "FontAwesome", sans-serif; }
-
-.ws2-sig-byline { font-weight: normal; padding-left: 1.33em; }
-
-.ws2-sig-title ~ .ws2-sig-byline { margin-top: -1em; }
-
+/* Blockquotes - Includes quotes/image styles, and testimonials Along with signature styling at the bottom */
 /* Blockquotes */
-blockquote { border-left: none; font-weight: bold; padding-left: 6rem; }
-blockquote:before { font-family: "FontAwesome", sans-serif; content: "\f10d"; font-size: 4.5rem; float: left; margin-left: -6rem; color: #d0d0d0; }
-blockquote > p:not([class*=sig-]):after { font-family: "FontAwesome", sans-serif; content: "\f10e"; font-size: 1rem; color: inherit; padding-left: 0.5em; position: absolute; }
-blockquote.ws2-element-gold:before { color: #ffc627; }
-blockquote.ws2-element-maroon:before { color: #8c1d40; }
-blockquote.ws2-bq-image { padding-left: 14.3625rem; }
-blockquote.ws2-bq-image img:first-of-type { clip-path: circle(90px); float: left; position: absolute; margin-left: -14rem; }
+/* blockquotes-output - Return base64-encoded string for rendering open quote. @param (str) $color - (optional) defaults to dark gray. Alt options (gold, maroon, white) */
+/* blockquotes-quotes - Returns background-image CSS rule @param (str) $color - desired colors (gold, maroon, white) */
+/* Blockquote SASS
+----------------------------------------------*/
+blockquote { border-left: none; font-weight: bold; padding-left: 6rem; max-width: 75ch; /* Signatures (beneath content) */ /* Content customizations */ }
+blockquote.ws2-element-alt { padding: 24px 24px 24px 6rem; }
+blockquote:before { background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDIuODcgMjQ1LjgyIj48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6IzE5MTkxOTt9PC9zdHlsZT48L2RlZnM+PGcgaWQ9IkxheWVyXzIiIGRhdGEtbmFtZT0iTGF5ZXIgMiI+PGcgaWQ9IkxheWVyXzEtMiIgZGF0YS1uYW1lPSJMYXllciAxIj48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMTMuNjEsMjQ1LjgySDBWMTY0LjU2cTAtNDkuMzQsOC42OS03Ny44M1Q0MC44NCwzNS41OFE2NC4yOSwxMi45NSwxMDAuNjcsMGwyMi4yNCw0Ni45cS0zNCwxMS4zMy00OC43MiwzMS41NFQ1OC42MywxMzIuMjFoNTVabTE4MCwwSDE4MFYxNjQuNTZxMC00OS43NCw4LjctNzhUMjIxLDM1LjU4UTI0NC42NSwxMi45NSwyODAuNjMsMGwyMi4yNCw0Ni45cS0zNCwxMS4zMy00OC43MiwzMS41NHQtMTUuNTcsNTMuNzdoNTVaIi8+PC9nPjwvZz48L3N2Zz4K); margin-top: 1.5rem; background-repeat: no-repeat; content: ''; min-height: 3rem; min-width: 2.375rem; float: left; margin-left: -4rem; color: #d0d0d0; }
+blockquote > p:not([class*=sig-]):after { content: '"'; }
+blockquote.ws2-element-maroon:before { background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDIuODcgMjQ1LjgyIj48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6IzhjMWQ0MDt9PC9zdHlsZT48L2RlZnM+PGcgaWQ9IkxheWVyXzIiIGRhdGEtbmFtZT0iTGF5ZXIgMiI+PGcgaWQ9IkxheWVyXzEtMiIgZGF0YS1uYW1lPSJMYXllciAxIj48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMTMuNjEsMjQ1LjgySDBWMTY0LjU2cTAtNDkuMzQsOC42OS03Ny44M1Q0MC44NCwzNS41OFE2NC4yOSwxMi45NSwxMDAuNjcsMGwyMi4yNCw0Ni45cS0zNCwxMS4zMy00OC43MiwzMS41NFQ1OC42MywxMzIuMjFoNTVabTE4MCwwSDE4MFYxNjQuNTZxMC00OS43NCw4LjctNzhUMjIxLDM1LjU4UTI0NC42NSwxMi45NSwyODAuNjMsMGwyMi4yNCw0Ni45cS0zNCwxMS4zMy00OC43MiwzMS41NHQtMTUuNTcsNTMuNzdoNTVaIi8+PC9nPjwvZz48L3N2Zz4K); margin-top: 1.5rem; }
+blockquote.ws2-element-gold:before { background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDIuODcgMjQ1LjgyIj48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6I2ZmYzYyNzt9PC9zdHlsZT48L2RlZnM+PGcgaWQ9IkxheWVyXzIiIGRhdGEtbmFtZT0iTGF5ZXIgMiI+PGcgaWQ9IkxheWVyXzEtMiIgZGF0YS1uYW1lPSJMYXllciAxIj48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMTMuNjEsMjQ1LjgySDBWMTY0LjU2cTAtNDkuMzQsOC42OS03Ny44M1Q0MC44NCwzNS41OFE2NC4yOSwxMi45NSwxMDAuNjcsMGwyMi4yNCw0Ni45cS0zNCwxMS4zMy00OC43MiwzMS41NFQ1OC42MywxMzIuMjFoNTVabTE4MCwwSDE4MFYxNjQuNTZxMC00OS43NCw4LjctNzhUMjIxLDM1LjU4UTI0NC42NSwxMi45NSwyODAuNjMsMGwyMi4yNCw0Ni45cS0zNCwxMS4zMy00OC43MiwzMS41NHQtMTUuNTcsNTMuNzdoNTVaIi8+PC9nPjwvZz48L3N2Zz4K); margin-top: 1.5rem; }
+blockquote.ws2-element-white:before { background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDIuODcgMjQ1LjgyIj48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6I2ZmZmZmZjt9PC9zdHlsZT48L2RlZnM+PGcgaWQ9IkxheWVyXzIiIGRhdGEtbmFtZT0iTGF5ZXIgMiI+PGcgaWQ9IkxheWVyXzEtMiIgZGF0YS1uYW1lPSJMYXllciAxIj48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMTMuNjEsMjQ1LjgySDBWMTY0LjU2cTAtNDkuMzQsOC42OS03Ny44M1Q0MC44NCwzNS41OFE2NC4yOSwxMi45NSwxMDAuNjcsMGwyMi4yNCw0Ni45cS0zNCwxMS4zMy00OC43MiwzMS41NFQ1OC42MywxMzIuMjFoNTVabTE4MCwwSDE4MFYxNjQuNTZxMC00OS43NCw4LjctNzhUMjIxLDM1LjU4UTI0NC42NSwxMi45NSwyODAuNjMsMGwyMi4yNCw0Ni45cS0zNCwxMS4zMy00OC43MiwzMS41NHQtMTUuNTcsNTMuNzdoNTVaIi8+PC9nPjwvZz48L3N2Zz4K); margin-top: 1.5rem; }
+blockquote.ws2-bq-image { overflow: auto; padding-left: 14.3625rem; }
+blockquote.ws2-bq-image img:first-of-type { clip-path: circle(90px); float: left; position: absolute; margin-left: -14.375rem; }
 blockquote.ws2-bq-image:before { font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif; font-size: initial; content: initial; margin-left: -14.3625rem; color: #d0d0d0; }
+blockquote .ws2-sig-title, blockquote .ws2-sig-byline { font-size: 16px; font-style: inherit; }
+blockquote .ws2-sig-title:before { padding-right: 0.5em; content: "\2014"; }
+blockquote .ws2-sig-byline { clear: left; display: block; font-weight: normal; padding-left: 1.5em; }
+blockquote.ws2-element-black a { color: #ffc627; }
 
 /* WYSIWYG style -- Lead Paragraph --*/
 .lead-paragraph { font-family: inherit; font-size: 1.25rem; line-height: 2em; color: #191919; }

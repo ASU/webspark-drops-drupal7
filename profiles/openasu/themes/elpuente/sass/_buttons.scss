@@ -1,16 +1,11 @@
-
 /* =BUTTONS --- WS2.0 DONE
 -------------------------------------------------------------- */
-
 @import "variables";
 
 @mixin buttons-style-base($color, $background) {
   color: $color;
   background-color: $background;
 }
-
-/* Selectors
------------------------------------------------------- */
 
 #tabs { // shrink height of View/Edit/Devel buttons!!
   .nav.nav-pills > li > a {

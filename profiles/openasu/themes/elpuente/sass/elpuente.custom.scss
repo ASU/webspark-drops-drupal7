@@ -81,8 +81,10 @@ div.pane-menu-tree {
 }
 
 /* =LINKS --- WS2.0 DONE
- * =BUTTONS --- IN PROGRESS
+ * =BUTTONS --- WS2.0 DONE
 -------------------------------------------------------------- */
+@import "buttons";
+
 a,
 .ui-widget-content a {
   border-bottom: 1px solid $ws2-maroon;
@@ -213,70 +215,10 @@ hr.ws2-element-gold {
   max-width: 256px;
 }
 
-/* Signatures (beneath content) */
-.ws2-sig-title, .ws2-sig-byline {
-  font-size: $font-size-base;
-}
-.ws2-sig-title {
-  &:before {
-    padding-right: 0.5em;
-    content: "\f068";
-    font-family: "FontAwesome", sans-serif;
-  }
-}
-.ws2-sig-byline {
-  font-weight: normal;
-  padding-left: 1.33em;
-}
-.ws2-sig-title ~ .ws2-sig-byline { // offset sig-title bottom margin
-  margin-top: -1em;
-}
+/* Blockquotes - Includes quotes/image styles, and testimonials
+ * Along with signature styling at the bottom */
+@import "blockquotes";
 
-/* Blockquotes */
-// Includes quotes/image styles, and testimonials
-blockquote {
-  border-left: none;
-  font-weight: bold;
-  padding-left: $block-indent;
-  &:before { // quote
-    font-family: "FontAwesome", sans-serif;
-    content: "\f10d";
-    font-size: 4.5rem; //
-    float: left;
-    margin-left: -6rem;
-    color: $ws2-gray-light; // Default color
-  }
-  & > p:not([class*=sig-]):after { // quote
-    font-family: "FontAwesome", sans-serif;
-    content: "\f10e";
-    font-size: 1rem; //
-    color: inherit;
-    padding-left: 0.5em;
-    position: absolute;
-  }
-  &.ws2-element-gold:before { // quote
-    color: $ws2-gold;
-  }
-  &.ws2-element-maroon:before { // quote
-    color: $ws2-maroon;
-  }
-  &.ws2-bq-image {
-    img:first-of-type {
-      clip-path: circle($image-round-small/2);
-      float: left;
-      position: absolute;
-      margin-left: -14rem;
-    }
-    &:before { // quote
-      font-family: $font-family-base;
-      font-size: initial; //
-      content: initial;
-      margin-left: $blockquote-image-offset/(-1);
-      color: $ws2-gray-light; // Default color
-    }
-    padding-left: $blockquote-image-offset; // 230px
-  }
-}
 
 /* WYSIWYG style -- Lead Paragraph --*/ // aka WS2.0 SEO paragraph
 .lead-paragraph {

@@ -12,7 +12,7 @@
 *********************************************************************/
 
 define('ASU_BRAND_HEADER_VERSION_DEFAULT', 'stable'); // Assume 4.x for now
-define('ASU_BRAND_HEADER_BASEPATH_DEFAULT', '//www.asu.edu/asuthemes');
+define('ASU_BRAND_HEADER_BASEPATH_DEFAULT', 'https://www.asu.edu/asuthemes');
 define('ASU_BRAND_CACHE_LIFETIME', 172800); // 48 Hours ( 60 x 60 x 48 )
 define('ASU_BRAND_PREVIEW_PAGES_DEFAULT', "system/ajax/*\npanels/ajax/*");
 

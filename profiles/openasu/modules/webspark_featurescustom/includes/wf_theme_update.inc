@@ -43,10 +43,11 @@ function _webspark_featurescustom_appearance_theme_update() {
   // Checking if the selected theme is our theme & calling function to active modules/configuration
   module_load_include('inc', 'system', 'system.admin.inc');
   $new_theme = check_plain($_REQUEST['theme']);
-
-  // Get what settings to apply, based on what the theme is (a Web standards check)
-  $ws_theme_test_result = _webspark_featurescustom_web_standards_theme_check($new_theme);
-  _webspark_featurescustom_act($new_theme, $ws_theme_test_result);
+  if (!empty($new_theme)) {
+    // Get what settings to apply, based on what the theme is (a Web standards check)
+    $ws_theme_test_result = _webspark_featurescustom_web_standards_theme_check($new_theme);
+    _webspark_featurescustom_act($new_theme, $ws_theme_test_result);
+  }
 }
 
 /**
@@ -79,12 +80,13 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
   if (empty($theme)) {
     global $theme;
   }
-  // Use the default theme (not the current page's theme) if the admin theme is NOT the theme you want to check.)
+  // Use the default theme (not the current page's theme) if the admin theme is NOT the theme
+  // you want to check.)
   if ($use_current_theme === FALSE) {
-    if (isset($_REQUEST['theme'])) { // Theme change is happening
+    if (isset($_REQUEST['theme'])) { // Theme change is happening; Use that theme.
       $theme = check_plain($_REQUEST['theme']);
     } elseif ($theme !== variable_get('theme_default')) {
-      $theme = variable_get('theme_default'); // Gets current (not new) theme
+      $theme = variable_get('theme_default'); // Gets current theme (no theme change is taking place
     }
   }
   // Check #1 - Is $theme an existing web standards theme?
