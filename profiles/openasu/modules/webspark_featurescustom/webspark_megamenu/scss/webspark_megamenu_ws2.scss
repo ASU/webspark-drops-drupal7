@@ -236,6 +236,7 @@ $ws2-gray-lightest:      #fafafa;
           margin-right: 0;
         }
       }
+      margin-left: 0.5rem;
       // Text (non-button) links
       li:not(.btn) > a {
         padding: 0.5rem 0.75rem;
@@ -254,6 +255,7 @@ $ws2-gray-lightest:      #fafafa;
           @include ws2-global-transition();
           bottom: 0;
           left: -0.5rem;
+          margin-left: 0.5rem;
         }
         &:hover:after {
           @include megamenu-active-style();

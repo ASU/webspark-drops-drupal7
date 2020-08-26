@@ -34,7 +34,8 @@ $tb_mm_admin_padding: 2.12766%; // TB Megamenu admin padding % to subtract
 }
 
 @mixin megamenu-active-style() {
-  width: calc(100% + 8px);
+  //width: calc(100% + 8px);
+  width: 100%;
 }
 
 @mixin megamenu-admin-col-spacing($width) {
