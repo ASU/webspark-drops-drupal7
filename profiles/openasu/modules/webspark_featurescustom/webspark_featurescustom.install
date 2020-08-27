@@ -23,6 +23,7 @@ function webspark_featurescustom_enable() {
   bugs that pop up when panelizer is enabled before it:
   see https://www.drupal.org/node/2183937 */
   module_enable(array('taxonomy'));
+  variable_set('clean_url', 1);
 }
 
 /**
@@ -470,4 +471,11 @@ function webspark_featurescustom_update_7018(&$sandbox) {
   if (!module_exists('asu_libs')) {
     module_enable(array('asu_libs'));
   }
+}
+
+/**
+ * Turn Clean URLs on again if initial install didn't do it.
+ */
+function webspark_featurescustom_update_7019(&$sandbox) {
+  variable_set('clean_url', 1);
 }

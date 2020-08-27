@@ -46,6 +46,7 @@ function openasu_theme_innovation_setup(&$install_state) {
   // Enable and set the themes
   $basetheme = 'kalatheme';
   $theme = 'innovation';
+  variable_set('clean_url', 1);
   system_rebuild_theme_data();
   drupal_theme_rebuild();
   theme_enable(array($basetheme));
