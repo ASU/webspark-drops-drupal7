@@ -1,8 +1,6 @@
 name = Panopoly Test
 description = Provides configuration and functionality for use in the Panopoly automated tests.
-core = 7.x
 package = Panopoly
-project = panopoly_test
 dependencies[] = ctools
 dependencies[] = entity
 dependencies[] = features

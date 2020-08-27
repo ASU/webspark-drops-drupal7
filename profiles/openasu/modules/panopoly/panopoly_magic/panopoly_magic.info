@@ -18,5 +18,5 @@ files[] = plugins/views/panopoly_magic_plugin_display_panel_pane.inc
 ; Information added by Drupal.org packaging script on 2020-06-18
 version = "7.x-1.75"
 core = "7.x"
-project = "panopoly"
+project = "panopoly_magic"
 datestamp = "1592505419"

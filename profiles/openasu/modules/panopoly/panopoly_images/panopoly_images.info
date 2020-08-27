@@ -30,5 +30,5 @@ features[image][] = panopoly_image_video
 ; Information added by Drupal.org packaging script on 2020-06-18
 version = "7.x-1.75"
 core = "7.x"
-project = "panopoly"
+project = "panopoly_images"
 datestamp = "1592505419"
