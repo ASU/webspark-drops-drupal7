@@ -9,9 +9,11 @@ use Drupal\DrupalDriverManager;
 use Drupal\Component\Utility\Random;
 use Drupal\DrupalExtension\Context\RawDrupalContext;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Drupal\DrupalExtension\Hook\Scope\AfterUserCreateScope;
 use Behat\Testwork\Tester\Result\TestResult;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
+use WebDriver\Exception\NoAlertOpenError;
 
 class TestSubContext extends RawDrupalContext implements DrupalSubContextInterface {
 
@@ -58,6 +60,15 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
   protected $private_path_overridden = FALSE;
 
   /**
+   * Set to TRUE after the window has been resized.
+   */
+  protected $window_resized = FALSE;
+
+  const PANOPOLY_BEHAT_FLAG_PHP_NOTICES_OFF = 0;
+  const PANOPOLY_BEHAT_FLAG_PHP_NOTICES_PRINT = 1;
+  const PANOPOLY_BEHAT_FLAG_PHP_NOTICES_FAIL = 2;
+
+  /**
    * Initializes context.
    */
   public function __construct(DrupalDriverManager $drupal) {
@@ -89,6 +100,133 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
    */
   public function setJavascript() {
     $this->javascript = true;
+  }
+
+  /**
+   * @BeforeSuite
+   *
+   * If we will flag PHP errors, clear all of them before we run a suite.
+   */
+  public static function clearPhpBehatNoticeLogs() {
+    if (!empty(getenv('PANOPOLY_BEHAT_FLAG_PHP_NOTICES'))) {
+      db_delete('watchdog')
+        ->condition('type', array('php', 'behat'), 'IN')
+        ->execute();
+      $local_file_path = getenv('PANOPOLY_BEHAT_SCREENSHOT_PATH');
+      if (empty($local_file_path)) {
+        print "Environment variable PANOPOLY_BEHAT_SCREENSHOT_PATH is not set, unable to save errors\n";
+      }
+      elseif (!is_dir($local_file_path)) {
+        print "Directory $local_file_path does not exist, unable to save errors\n";
+      }
+      else {
+        $file_location = "$local_file_path/behat-php-errors.txt";
+        if (@file_put_contents($file_location, "Scenario|Time|Message\r\n") !== FALSE) {
+          print "PHP errors will be saved to $file_location\n";
+        }
+        else {
+          print "Unable to save errors\n";
+        }
+      }
+    }
+  }
+
+  /**
+   * Output any PHP notices that were logged in the scenario.
+   *
+   * @AfterScenario
+   */
+  public function flagPhpScenarioErrors(AfterScenarioScope $scope) {
+    $flagPhp = getenv('PANOPOLY_BEHAT_FLAG_PHP_NOTICES');
+    if (!empty($flagPhp)) {
+      $scenarioName = $scope->getFeature()->getTitle();
+      $result = db_select('watchdog', 'w')
+        ->fields('w', [])
+        ->condition('w.type', 'php', '=')
+        ->execute();
+
+      $errors = [];
+      foreach ($result as $entry) {
+        $variables = unserialize($entry->variables);
+        $time = date('Ymd-Hi', $entry->timestamp);
+        $errors[] = "$scenarioName|$time|" . strip_tags(t($entry->message, $variables));
+      }
+
+      if (!empty($errors)) {
+        $message = implode("\r\n", $errors);
+        print "$message\n";
+        // Write the error message(s) to a file.
+        $local_file_path = getenv('PANOPOLY_BEHAT_SCREENSHOT_PATH');
+        if (empty($local_file_path)) {
+          print "Environment variable PANOPOLY_BEHAT_SCREENSHOT_PATH is not set, unable to save errors\n";
+        }
+        else if (!is_dir($local_file_path)) {
+          print "Directory $local_file_path does not exist, unable to save errors\n";
+        }
+        else {
+          $file_location = "$local_file_path/behat-php-errors.txt";
+          if (@file_put_contents($file_location, $message . "\r\n", FILE_APPEND) !== FALSE) {
+            print "PHP errors saved to $file_location\n";
+          }
+          else {
+            print "Unable to save errors\n";
+          }
+        }
+        // Clear the log for the next scenario.
+        db_update('watchdog')
+          ->fields(array('type' => 'behat'))
+          ->condition('type', 'php')
+          ->execute();
+        if ($flagPhp == self::PANOPOLY_BEHAT_FLAG_PHP_NOTICES_FAIL) {
+          throw new \Exception("PHP errors were logged. See scenario output for details.");
+        }
+      }
+    }
+  }
+
+  /**
+   * Fail the suite if any PHP notices are logged.
+   *
+   * @AfterSuite
+   */
+  public static function flagPhpSuiteErrors() {
+    if (getenv('PANOPOLY_BEHAT_FLAG_PHP_NOTICES') != self::PANOPOLY_BEHAT_FLAG_PHP_NOTICES_OFF) {
+      $number_of_rows = db_select('watchdog', 'w')
+        ->fields('w', [])
+        ->condition('w.type', 'behat', '=')
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+
+      if ($number_of_rows > 0) {
+        print "PHP errors were logged. See scenario output for details.\n";
+      }
+    }
+  }
+
+  /**
+   * Resize the window before first Javascript scenarios.
+   *
+   * @BeforeScenario @javascript
+   */
+  public function resizeWindow($event) {
+    if (!$this->window_resized) {
+      $session = $this->getSession();
+      if (!$session->isStarted()) {
+        $session->start();
+      }
+
+      $dimensions = getenv('PANOPOLY_BEHAT_WINDOW_SIZE');
+      if (!empty($dimensions)) {
+        list ($width, $height) = explode('x', $dimensions);
+        $session->resizeWindow((int) $width, (int) $height, 'current');
+      }
+      else {
+        $session->getDriver()->maximizeWindow();
+      }
+
+      $this->window_resized = TRUE;
+    }
   }
 
   /**
@@ -561,7 +699,14 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
     // Create a new user.
     $this->getDriver()->userCreate($user);
 
-    $this->users[$user->name] = $this->user = $user;
+    if (method_exists($this, 'getUserManager')) {
+      $user_manager = $this->getUserManager();
+      $user_manager->addUser($user);
+      $user_manager->setCurrentUser($user);
+    }
+    else {
+      $this->users[$user->name] = $this->user = $user;
+    }
 
     $base_url = rtrim($this->locatePath('/'), '/');
     $login_link = $this->getDriver('drush')->drush('uli', array(
@@ -617,6 +762,39 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
   public function iSwitchOutOfAllFrames() {
     $this->getSession()->switchToIFrame();
     $this->iframe = NULL;
+  }
+
+  /**
+   * @When I click :text link or button
+   */
+  public function iClickLinkOrButton($text) {
+    $link = $this->getSession()->getPage()->findLink($text);
+    if ($link !== NULL) {
+      $link->click();
+      return;
+    }
+
+    $button = $this->getSession()->getPage()->findButton($text);
+    if ($button !== NULL) {
+      $button->press();
+      return;
+    }
+
+    throw new \Exception(sprintf('The link or button "%s" was not found on the page %s', $text, $this->getSession()->getCurrentUrl()));
+  }
+
+  /**
+   * @When I type :text into :field field
+   */
+  public function iTypeIntoField($text, $field) {
+    // The builtin "I fill in..." step will immediately move focus out of the
+    // field, which makes it impossible to test autocomplete. This step puts the
+    // value in without changing focus.
+    $this->getSession()
+      ->getDriver()
+      ->getWebDriverSession()
+      ->element('xpath', $this->getSession()->getSelectorsHandler()->selectorToXpath('named_exact', array('field', $field)))
+      ->postValue(array('value' => array($text)));
   }
 
   /**
@@ -765,7 +943,7 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
     if ($div) {
       $radios = $div->find('xpath', "//input[@type='radio']");
       if ($radios) {
-        $checkedRadio = $div->find('xpath', "//input[@type='radio' and @checked='checked']/following-sibling::label[contains(text(), '$option')] ");
+        $checkedRadio = $div->find('xpath', "//input[@type='radio' and @checked='checked' and @id=(//label[contains(., '$option')]/@for)] ");
         if (!$checkedRadio) {
           throw new \Exception(sprintf('We found the radio buttons for "%s", but "%s" was not selected.', $field, $option));
         }
@@ -933,6 +1111,36 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
     }
 
     throw new \Exception(sprintf("Cannot find link with text '%s' and index %d", $link, $count));
+  }
+
+  /**
+   * @When (I )confirm the popup
+   */
+  public function iConfirmPopup() {
+    for ($i = 0; $i < 5; $i++) {
+      try {
+        $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
+        break;
+      }
+      catch (NoAlertOpenError $e) {
+        sleep(1);
+      }
+    }
+  }
+
+  /**
+   * @When (I )cancel the popup
+   */
+  public function iCancelPopup() {
+    for ($i = 0; $i < 5; $i++) {
+      try {
+        $this->getSession()->getDriver()->getWebDriverSession()->dismiss_alert();
+        break;
+      }
+      catch (NoAlertOpenError $e) {
+        sleep(1);
+      }
+    }
   }
 
 }
