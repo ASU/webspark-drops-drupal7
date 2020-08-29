@@ -2,10 +2,13 @@
 Hide the following during testing:
 1) revision checkbox and log <input>
 2) ASU's GDPR Cookie consent <span>
+3) Foresee <div>
 */
 
 body > .cc-banner,
 #panels-ipe-edit-control-form .form-type-checkbox,
-#panels-ipe-control-container .form-item-log {
+#panels-ipe-control-container .form-item-log,
+.acsAbandonButton,
+.acsModalBackdrop {
   display: none !important;
 }
