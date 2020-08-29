@@ -18,7 +18,7 @@ Feature: Test pathauto for administrator users
     # don't use 'save_draft', and this makes this test compatible with them.
     #When I press "Publish"
     When I press "edit-submit"
-    Then I should see "Testing title"
+    Then the "h1" element should contain "Testing title"
 
   @api @panopoly_admin
   Scenario: Pathauto should automatically assign an url
@@ -33,7 +33,7 @@ Feature: Test pathauto for administrator users
     Then the url should match "completely-other-title"
     # But visiting the old URL should continue to work
     When I visit "/content/testing-title"
-    Then I should see "Completely other title"
+    Then the "h1" element should contain "Completely other title"
 
   @api @panopoly_admin
   Scenario: My own permalink should be kept even if changing title

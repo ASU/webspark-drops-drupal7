@@ -2,7 +2,7 @@ Feature: Configure and display an interactive map showing an ASU building locati
   Background:
     Given I am logged in as a user with the "administrator" role
 
-  @javascript @api @asu_maps_enhanced
+  @javascript @api @asu_maps_enhanceds
   Scenario: Display a map panel with 1 location.
     Given I am at "/node/add"
     When I click "Content Page"

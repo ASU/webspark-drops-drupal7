@@ -19,7 +19,7 @@ Feature: Add a file to a page
       | Editor | plain_text         |
       | Text   | Testing file text  |
       And I click "Browse"
-      And I switch to the frame "mediaBrowser"
+      And I switch to the only available frame "mediaBrowser"
     Then I should see "Allowed file types: txt doc docx xls xlsx pdf ppt pptx pps ppsx odt ods odp."
     When I attach the file "test.txt" to "files[upload]"
       And I press "Next"
