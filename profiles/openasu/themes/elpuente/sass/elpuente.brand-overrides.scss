@@ -1,0 +1,15 @@
+/**
+ * Overrides the Web component-generated styling for WS2.0 components for use in Webspark
+ */
+
+// Global header - Gray bar to 100%
+#header > .container {
+  width: 100%;
+}
+#header > .container #headerContainer .region.region-header > *:not(#block-asu-brand-asu-brand-header-ws2.block-asu-brand) {
+  max-width: 1164px;
+}
+#header > .container #headerContainer .universal-nav > div {
+  margin: 0 auto;
+  padding-right: 2rem;
+}

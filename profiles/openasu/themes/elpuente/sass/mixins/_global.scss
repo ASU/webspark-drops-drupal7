@@ -1,0 +1,46 @@
+/* Global mixin library for multiple or all elements */
+
+// Transitions for hover/focus
+@mixin ws2-global-transition() {
+  transition: all 0.5s cubic-bezier(.19, 1, .19, 1) 0s;
+}
+
+// Accessibility borders on focus
+@mixin a11y-strong-focus($color: $input-border-focus) {
+  outline: 2px solid $color;
+  //@include box-shadow(0px 0px 5px $a11y-strong-focus-color);
+}
+
+// Buttons for El Puente
+// Maybe should be a global mixin (or in a buttons file)?? YES... someday
+@mixin elpuente-button-styling($type: 0.5rem) {
+  display: inline-block;
+  margin-top: $type;
+  margin-bottom: 0.5rem;
+  border: none;
+  & > a {
+    padding: 0;
+    font-weight: bold !important;
+    &:hover {
+      text-decoration: none !important;
+      border-bottom: none !important;
+      color: inherit !important;
+    }
+  }
+  &.btn-primary > a {
+    background-color: $ws2-maroon !important;
+    color: $ws2-gray-lightest !important;
+  }
+  &.btn-black > a {
+    background-color: $ws2-gray-darkest !important;
+    color: $ws2-gray-lightest !important;
+  }
+  &.btn-secondary > a {
+    background-color: $ws2-gray-light !important;
+    color: $ws2-gray-darkest !important;
+  }
+  &.btn-gold > a {
+    background-color: $asu-gold !important;
+    color: $ws2-gray-darkest !important;
+  }
+}

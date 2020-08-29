@@ -1,0 +1,213 @@
+@media only screen and (max-width: 320px) {
+  .container {
+    width: 100%;
+  }
+
+  div#content-column, div.content-inner, .sidebar-first div.content-inner, .sidebar-second div.content-inner, .two-sidebars div.content-inner, div.sidebar, .sidebar-first div.sidebar, .sidebar-second div.sidebar, .two-sidebars div.sidebar, div.region .block {
+    clear: both;
+    display: block;
+    float: none;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+  }
+
+  .at-panel .region, .at-panel .panel-row, .at-panel .panel-row .region, .at-panel .inset-wrapper {
+    display: block;
+    float: none;
+    width: 100%;
+  }
+}
+@media only screen and (min-width: 321px) and (max-width: 480px) {
+  .container {
+    width: 100%;
+  }
+
+  .at-panel .region {
+    display: inline;
+    float: left;
+  }
+
+  .content .region, .two-brick > .panel-row > .region, .two-50 > .region, .two-66-33 > .region, .two-33-66 > .region, .footer .region, .header .region, .three-3x33 > .region, .three-25-50-25 > .region, .three-50-25-25 > .region, .three-25-25-50 > .region, .three-inset-left > .inset-wrapper, .three-inset-left > .inset-wrapper > .region, .three-inset-left > .region-three-inset-left-sidebar, .three-inset-right > .inset-wrapper, .three-inset-right > .inset-wrapper > .region, .three-inset-right > .region-three-inset-right-sidebar, .six-6x16 > .panel-row > .region, .six-6x16 > .panel-row, .five-5x20 > .panel-row > .region, .five-5x20 > .panel-row, .four-4x25 > .panel-row > .region, .four-4x25 > .panel-row {
+    clear: both;
+    display: block;
+    float: none;
+    width: 100%;
+  }
+}
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+  .container {
+    width: 100%;
+  }
+
+  .at-panel .region {
+    display: inline;
+    float: left;
+  }
+
+  .content .region,
+  .two-brick > .panel-row > .region,
+  .two-50 > .region,
+  .three-25-50-25 > div.region-three-25-50-25-second,
+  .three-50-25-25 > div.region-three-50-25-25-first,
+  .three-25-25-50 > div.region-three-25-25-50-third,
+  .six-6x16 > .panel-row > .region,
+  .five-5x20 > .row-1 > .region {
+    width: 50%;
+  }
+
+  .two-brick > .panel-row {
+    float: left;
+    clear: both;
+  }
+
+  .two-66-33 > .region-two-66-33-first, .two-33-66 > .region-two-33-66-second, .three-inset-left > .inset-wrapper > div.region-three-inset-left-middle, .three-inset-right > .inset-wrapper > div.region-three-inset-right-middle {
+    width: 66.6667%;
+  }
+
+  .two-66-33 > .region-two-66-33-second, .two-33-66 > .region-two-33-66-first, .footer .region, .header .region, .three-3x33 > .region, .three-inset-left > .inset-wrapper > div.region-three-inset-left-inset, .three-inset-right > .inset-wrapper > div.region-three-inset-right-inset, .five-5x20 > .row-2 > .region {
+    width: 33.3333%;
+  }
+
+  .three-25-50-25 > .region, .three-50-25-25 > .region, .three-25-25-50 > .region, .three-inset-left > .region-three-inset-left-sidebar, .three-inset-right > .region-three-inset-right-sidebar {
+    width: 25%;
+  }
+
+  .three-inset-left > .region-three-inset-left-sidebar, .three-inset-left > .inset-wrapper, .three-inset-left > .inset-wrapper > .region-three-inset-left-middle {
+    float: right;
+  }
+
+  .three-inset-left > .inset-wrapper {
+    width: 75%;
+  }
+
+  .three-inset-left > .inset-wrapper > .region, .three-inset-right > .inset-wrapper > .region {
+    width: 100%;
+  }
+
+  .three-inset-right > .inset-wrapper {
+    float: left;
+    width: 75%;
+  }
+
+  .six-6x16 > .panel-row {
+    float: left;
+    width: 33.3333%;
+  }
+
+  .five-5x20 > .row-1 {
+    width: 40%;
+  }
+
+  .five-5x20 > .row-2 {
+    width: 60%;
+  }
+
+  .five-5x20 > .panel-row {
+    float: left;
+  }
+
+  .four-4x25 > .panel-row > .region, .four-4x25 > .panel-row {
+    float: left;
+    width: 50%;
+  }
+}
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    width: 100%;
+  }
+
+  #content-column, .content-column, div.sidebar {
+    clear: none;
+    float: left;
+  }
+
+  .two-sidebars .content-inner {
+    margin-left: 20%;
+    margin-right: 20%;
+  }
+
+  .sidebar-first .content-inner {
+    margin-left: 20%;
+    margin-right: 0;
+  }
+
+  .sidebar-second .content-inner {
+    margin-left: 0;
+    margin-right: 20%;
+  }
+
+  .region-sidebar-first {
+    margin-left: -100%;
+    width: 20%;
+  }
+
+  .region-sidebar-second {
+    margin-left: -20%;
+    width: 20%;
+  }
+
+  .at-panel .region {
+    display: inline;
+    float: left;
+  }
+
+  .content .region, .two-brick > .panel-row > .region, .two-50 > .region, .three-25-50-25 > div.region-three-25-50-25-second, .three-50-25-25 > div.region-three-50-25-25-first, .three-25-25-50 > div.region-three-25-25-50-third, .six-6x16 > .panel-row > .region, .five-5x20 > .row-1 > .region {
+    width: 50%;
+  }
+
+  .two-brick > .panel-row {
+    float: none;
+  }
+
+  .two-66-33 > .region-two-66-33-first, .two-33-66 > .region-two-33-66-second, .three-inset-left > .inset-wrapper > div.region-three-inset-left-middle, .three-inset-right > .inset-wrapper > div.region-three-inset-right-middle {
+    width: 66.6667%;
+  }
+
+  .two-66-33 > .region-two-66-33-second, .two-33-66 > .region-two-33-66-first, .footer .region, .header .region, .three-3x33 > .region, .three-inset-left > .inset-wrapper > div.region-three-inset-left-inset, .three-inset-right > .inset-wrapper > div.region-three-inset-right-inset, .five-5x20 > .row-2 > .region {
+    width: 33.3333%;
+  }
+
+  .three-25-50-25 > .region, .three-50-25-25 > .region, .three-25-25-50 > .region, .three-inset-left > .region-three-inset-left-sidebar, .three-inset-right > .region-three-inset-right-sidebar {
+    width: 25%;
+  }
+
+  .three-inset-left > .region-three-inset-left-sidebar, .three-inset-left > .inset-wrapper, .three-inset-left > .inset-wrapper > .region-three-inset-left-middle {
+    float: right;
+  }
+
+  .three-inset-left > .inset-wrapper {
+    width: 75%;
+  }
+
+  .three-inset-left > .inset-wrapper > .region, .three-inset-right > .inset-wrapper > .region {
+    width: 100%;
+  }
+
+  .three-inset-right > .inset-wrapper {
+    float: left;
+    width: 75%;
+  }
+
+  .six-6x16 > .panel-row {
+    float: left;
+    width: 33.3333%;
+  }
+
+  .five-5x20 > .row-1 {
+    width: 40%;
+  }
+
+  .five-5x20 > .row-2 {
+    width: 60%;
+  }
+
+  .five-5x20 > .panel-row {
+    float: left;
+  }
+
+  .four-4x25 > .panel-row > .region, .four-4x25 > .panel-row {
+    float: left;
+    width: 50%;
+  }
+}

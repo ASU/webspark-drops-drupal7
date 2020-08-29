@@ -1,0 +1,602 @@
+/**
+ * moved over from Innovationn
+ * IS_SCSS
+ */
+@import "variables";
+@import "mixins/global"; // mixins
+
+/* =NAVBAR -- Part of Main Menu styling! --- NOT DONE
+-------------------------------------------------------------- */
+.navmenu {
+  border-bottom: 1px solid $ws2-gray-lighter;
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+.nav > li > a {
+  display: inline-block;
+}
+
+.navbar-nav > li:focus > a,
+.navbar-nav > .active:focus > a,
+.navbar-nav > li > a:focus,
+.nav .open > a:focus,
+.navbar-nav > .active > a:focus
+.navbar-nav .dropdown-menu > li > a:focus {
+  @include a11y-strong-focus();
+}
+
+/* =SIDEBAR MENUS --- NOT DONE
+-------------------------------------------------------------- */
+/* WEBSPARK-856 - Apply max width and custom margin/padding to LH menu in 100% wide regions */
+.container .row-full .pane-menu-tree,
+.container .row-full .pane-system-main-menu {
+  max-width: 1140px;
+  margin: 2em auto 0 auto;
+  padding: 2em 1em 1em 1em;
+}
+
+.pane-system-main-menu,
+.pane-menu-tree {
+  border-top: $padding-small-vertical solid $ws2-maroon;
+  margin-top: 1.5em;
+  margin-bottom: 3em;
+  padding: 2em;
+  position: relative;
+  z-index: 0;
+  h2 {
+    font-size: 1.3125em;
+  }
+  ul.menu {
+    padding-left: 0;
+    li {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      a {
+        background-color: #fff;
+        border-top: 1px solid $ws2-gray-light;
+        border-bottom: none;
+        display: block;
+        padding: 0.625em 0.3125em;
+        color: $ws2-maroon;
+        font-weight: 200;
+        text-decoration: none;
+        font-size: 1.125em;
+        &:hover {
+          background-color: $ws2-gray-lightest;
+          font-weight: bold;
+        }
+      }
+      li {
+        a {
+          padding-left: 1.375em;
+        }
+        li a {
+          padding-left: 2.75em;
+        }
+      }
+      a.active,
+      &.active a,
+      &.active > a,
+      &.active-trail > a {
+        font-weight: bold;
+      }
+      &.expanded,
+      &.collapsed,
+      &.leaf {
+        list-style-image: none;
+      }
+    }
+  }
+  &:before {
+    border-bottom: 1px solid $ws2-gray-lighter;
+    border-left: 1px solid $ws2-gray-lighter;
+    border-right: 1px solid $ws2-gray-lighter;
+    content: "";
+    display: block;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: -1;
+  }
+
+  .pane-system-main-menu ul.menu li a:focus,
+  .pane-menu-tree ul.menu li a:focus {
+    outline: 0.125em solid $input-border-focus;
+    -webkit-box-shadow: 0 0 0.3125em  $input-border-focus;
+    box-shadow: 0 0 0.3125em  $input-border-focus;
+  }
+
+}
+
+/* =TABS & QuickTabs --- WS2.0 DONE
+-------------------------------------------------------------- */
+/* Removing panopoly styles */
+
+/* WEBSPARK-742 - panopoly-theme.css override */
+.ui-widget,
+.ui-widget-header,
+.ui-widget-content {
+  font-family: inherit;
+}
+
+ul.quicktabs-style-nostyle {
+  font-size: $font-size-h3;
+}
+
+.ui-tabs-panel,
+.ui-tabs-panel p {
+  font-size: 1em;
+}
+
+.ui-widget-header {
+  background: none;
+  min-height: auto;
+  padding: 0;
+  color: $ws2-gray-darkest;
+  font-size: 1.125em;
+  font-weight: 200;
+  line-height: $line-height-computed;
+}
+ul.quicktabs-style-nostyle,
+.ui-tabs .ui-tabs-nav {
+  border-bottom: 1px solid $ws2-gray-light !important;
+  padding: $padding-base-vertical 0 0 0;
+}
+ul.quicktabs-style-nostyle {
+  margin-bottom: 0;
+}
+.ui-tabs .ui-tabs-nav li.ui-corner-top {
+  border-top-right-radius: $border-radius-base;
+  border-top-left-radius: $border-radius-base;
+}
+ul.quicktabs-style-nostyle li,
+.ui-tabs .ui-tabs-nav li {
+  border-top: 0.3125em solid transparent;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  top: 0;
+}
+ul.quicktabs-style-nostyle li {
+  display: inline-block;
+}
+ul.quicktabs-style-nostyle li,
+.ui-tabs .ui-tabs-nav li.ui-state-default {
+  background: none;
+  background-color: transparent;
+  color: $ws2-gray-darkest;
+}
+ul.quicktabs-style-nostyle li:hover,
+ul.quicktabs-style-nostyle li.active,
+.ui-tabs .ui-tabs-nav li.ui-state-hover,
+.ui-tabs .ui-tabs-nav li.ui-state-active,
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected {
+  border-top: 0.3125em solid $ws2-maroon;
+  background: none;
+  background-color: transparent;
+  margin-bottom: -1px;
+  padding-bottom: 0;
+}
+ul.quicktabs-style-nostyle li,
+.ui-tabs .ui-tabs-nav li.ui-state-default,
+.ui-tabs .ui-tabs-nav li.ui-state-hover,
+.ui-tabs .ui-tabs-nav li.ui-state-active,
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected {
+  margin-bottom: -1px;
+}
+
+ul.quicktabs-style-nostyle li a,
+.ui-tabs .ui-tabs-nav li a {
+  display: block;
+  position: relative;
+  border-color: $ws2-gray-dark $ws2-gray-dark transparent $ws2-gray-dark;
+  border-image: none;
+  border-radius: 0;
+  border-style: solid;
+  border-width: 1px;
+  padding: 0.625em 0.9375em;
+  color: $ws2-gray-dark;
+  line-height: $line-height-computed;
+  transition: 0.5s cubic-bezier(0.19, 1, 0.19, 1);
+}
+ul.quicktabs-style-nostyle li a {
+  display: inline-block;
+  padding: 1em 1.5em;
+  text-decoration: none;
+  color: $ws2-gray-darkest;
+  font-size: 1.125em;
+  font-weight: 400;
+  line-height: $line-height-computed; // was 1.44
+}
+.ui-tabs .ui-tabs-nav li.ui-state-default a,
+.ui-tabs .ui-tabs-nav li.ui-state-default a:link,
+.ui-tabs .ui-tabs-nav li.ui-state-default a:visited {
+  color: $ws2-gray-darkest;
+  transition: 0.5s cubic-bezier(0.19, 1, 0.19, 1);
+}
+ul.quicktabs-style-nostyle li:hover a,
+.ui-tabs .ui-tabs-nav li.ui-state-hover a {
+  border: 0.5em solid $ws2-maroon;
+}
+ul.quicktabs-style-nostyle li.active a,
+ul.quicktabs-style-nostyle li.active:hover a,
+.ui-tabs .ui-tabs-nav li.ui-state-active a {
+  background-color: transparent;
+  border-bottom-color: #fff;
+  margin-left: 0.08em;
+}
+.ui-tabs .ui-tabs-nav li.ui-state-focus a {
+  border-top: 0.125em solid $input-border-focus;
+  border-right: 0.125em solid $input-border-focus;
+  border-bottom: 0.125em solid $input-border-focus;
+  border-left: 0.125em solid $input-border-focus;
+  -webkit-box-shadow: 0 0 0.3125em  $input-border-focus;
+  box-shadow: 0 0 0.3125em  $input-border-focus;
+}
+ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
+  color: $ws2-gray-darkest;
+}
+
+/* WEBSPARK-1197 */
+.panel-panel-inner ul.quicktabs-style-nostyle, .panel-panel-inner .ui-tabs .ui-tabs-nav {
+  /*
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  */
+}
+
+/* Nav pills --- WS2.0 DONE
+-------------------------------------------------------------- */
+
+.nav-pills > li {
+  float: left;
+  & > a {
+    border: 0 none;
+    border-radius: $border-radius-circle;
+    max-width: $btn-max-width;
+    min-width: $btn-min-width; // default (not -med)
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: -0.25px;
+  }
+  & > li + li {
+    margin-left: 0.125em;
+  }
+  &.active > a,
+  &.active > a:hover,
+  &.active > a:focus {
+    color: #fff;
+    background-color: $ws2-maroon;
+  }
+  &.active > a:focus {
+    @include a11y-strong-focus();
+  }
+}
+
+/* =BREADCRUMBS --- WS2.0 DONE
+-------------------------------------------------------------- */
+.breadcrumb {
+  padding: 0 0;
+  margin-top: 1.5em;
+  margin-bottom: 3em;
+  list-style: none;
+  font-size: 0.875em;
+  background-color: transparent;
+  & > li {
+    display: inline-block;
+    & + li:before {
+      content: "/\00a0";
+      padding: 0 0.3125em;
+      color: $ws2-gray-dark; //#828282;
+    }
+    & > a {
+      border-bottom: 0;
+    }
+  }
+  & > .active {
+    color: $ws2-gray-dark; //#828282;
+  }
+}
+
+/* =PAGERS & PAGINATION -- WS2.0 DONE
+-------------------------------------------------------------- */
+.pagination {
+  display: inline-block;
+  padding-left: 0;
+  margin: 1.5rem 0;
+  border-radius: $border-radius-base;
+  & > li {
+    font-size: 1.25em;
+    display: inline;
+    & > a,
+    & > span {
+      position: relative;
+      float: left;
+      padding: $padding-small-vertical $padding-small-horizontal;
+      text-decoration: none;
+      color: $ws2-maroon;
+      background-color: #fff;
+      border: 1px solid $ws2-maroon;
+      margin-left: -1px;
+      border-radius: $pager-border-radius;
+    }
+    &:first-child > a,
+    &:first-child > span {
+      margin-left: 0;
+    }
+    /*
+    &:last-child > a,
+    &:last-child > span {
+    }*/
+    & > a:hover,
+    & > span:hover,
+    & > span:focus,
+    .pagination > li > a:focus {
+      color: $link-hover-color;
+      background-color: $ws2-gray-lightest;
+      border-color: $gray-alt-admin;
+    }
+  }
+  & > .active > a,
+  & > .active > span,
+  & > .active > span:hover,
+  & > .active > span:focus,
+  .pagination > .active > a:hover,
+  .pagination > .active > a:focus {
+    z-index: 2;
+    color: #fff;
+    background-color: $ws2-maroon;
+    border-color: $ws2-maroon;
+    cursor: default;
+  }
+  & > .disabled > span,
+  & > .disabled > span:hover,
+  & > .disabled > span:focus,
+  & > .disabled > a,
+  & > .disabled > a:hover,
+  & > .disabled > a:focus {
+    color: $ws2-gray-dark;
+    background-color: #fff;
+    border-color: $gray-alt-admin;
+    cursor: not-allowed;
+  }
+}
+.pagination-lg > li {
+  & > a,
+  & > span {
+    padding: $padding-small-vertical $padding-small-horizontal;
+    font-size: 1.25em;
+    border-radius: $border-radius-circle;
+  }
+}
+.pagination-sm > li {
+  font-size: 1em;
+  & > a,
+  & > span {
+    padding: $padding-small-vertical $padding-small-horizontal;
+    font-size: 1em;
+    border-radius: $border-radius-circle;
+  }
+}
+.pager {
+  padding-left: 0;
+  margin: 1em 0;
+  list-style: none;
+  text-align: center;
+  &:before, &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+  li {
+    font-size: 1.25em;
+    display: inline;
+    // ALT     display: inline-block;
+    margin: 0 1em;
+    & > a,
+    & > span {
+      display: inline-block;
+      background-color: #fff;
+      border-radius: $pager-border-radius;
+      border: 1px solid #fff;
+    }
+    & > a {
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+  .next > a,
+  .next > span {
+    float: right;
+  }
+  .previous > a,
+  .previous > span {
+    float: left;
+  }
+  .disabled > a,
+  .disabled > a:hover,
+  .disabled > a:focus,
+  .disabled > span {
+    color: $ws2-gray-dark;
+    background-color: #fff;
+    cursor: not-allowed;
+  }
+}
+
+/* theme_item_list pager CSS */
+.item-list.item-list-pager {
+  text-align: center;
+  clear: both;
+  .pager {
+    margin: 1em;
+    display: inline-block;
+    li {
+      font-size: 1.25em;
+      padding: 0;
+      margin: 0 1em;
+      float: left;
+      a {
+        background-color: #fff;
+        border-radius: $pager-border-radius;
+        border: 1px solid #fff;
+      }
+    }
+    & :first-child a,
+    .pager-current.first {
+      // Removed
+    }
+    & :last-of-type a,
+    .pager-current.last {
+      // Removed
+    }
+  }
+  .pager-ellipsis {
+    display: none;
+  }
+}
+
+.item-list.item-list-pager .pager .pager-current,
+#media-browser-tabset .item-list.item-list-pager .pager .pager-current {
+  border: 1px solid $ws2-maroon;
+  padding: $padding-small-vertical; // 0.5rem
+  background-color: $ws2-maroon;
+  color: #fff;
+}
+
+
+.pane-menu-tree  ul li::before {
+  content: none;
+}
+.pane-menu-tree {
+  margin-top: 1.5em;
+  margin-bottom: 3em;
+  padding: 0em;
+  position: relative;
+  z-index: 0;
+  border:0px solid #e8e8e8;
+  ul.menu li {
+    border-top:1px solid #ececec;
+    a {
+      background-color: #fff;
+      border-top: 0px solid #e8e8e8;
+      border-left: 0px solid #e8e8e8;
+      border-right: 0px solid #e8e8e8;
+      border-bottom: 0;
+      display: block;
+      margin:0 1rem;
+      padding: 1.4rem 0 1.3rem 0;
+      color: #191919;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 1.25rem;
+      letter-spacing: -.037rem;
+      line-height: 1.5rem;
+      position:relative;
+      &.active {
+        border-bottom: 8px solid #ffc627;
+      }
+      &:hover {
+        background-color:#fff;
+        text-decoration:underline;
+      }
+    }
+    &.expanded {
+      padding-bottom: 14px;
+      a.active {
+        padding: 1.4rem 0 .8rem 0;
+        margin-bottom: .8rem;
+      }
+      ul li a.active {
+        padding: 0 0 .8rem 0;
+        margin-bottom: .8rem;
+      }
+    }
+    &.last ul li.first.last a {
+      padding-bottom: 1.5rem;
+    }
+    ul {
+      li {
+        border-top: 0;
+        a {
+          background-color: #fff;
+          border-top: 1px solid #e8e8e8;
+          border-bottom: none;
+          display: block;
+          padding-top: 0.5rem;
+          padding-left: 0;
+          color: $ws2-gray-darkest;
+          font-weight: bold;
+          text-decoration: none;
+          font-size: 1.250em;
+          letter-spacing: -0.5px;
+          margin: 0 2.5rem 0 2.5rem;
+          padding-bottom: .5rem;
+        }
+        &.first a {
+          padding-top: 0;
+          padding-bottom: 0.5rem;
+        }
+        &.leaf {
+          a {
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            font-size: 1rem;
+            color: #2a2a2a;
+            font-weight: normal;
+          }
+          &.last a {
+            border-top: 0px solid #e8e8e8;
+            border-bottom: 1px solid #e8e8e8;
+          }
+          &.first.last a {
+            border-top: 0px solid #e8e8e8;
+          }
+        }
+        &.last ul li.first.last.leaf a {
+          border-top: 0px solid #e8e8e8;
+          border-bottom: 1px solid #e8e8e8;
+          font-size: 1em;
+          color: #2a2a2a;
+          font-weight: normal;
+        }
+        &.expanded {
+          a::before { // Chevron
+            content: "\f078";
+            font-family: "FontAwesome";
+            position: relative;
+            float: right;
+          }
+          ul li a::before {
+            content: none;
+          }
+        }
+      }
+      border-top:0px solid #e8e8e8;
+    }
+  }
+  h2.pane-title  {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1rem;
+    letter-spacing: -0.015em;
+    color: #191919;
+    padding: 1rem;
+    margin: 0;
+    display: block;
+    text-decoration: none;
+  }
+}
+
+//.pane-menu-tree ul.menu li ul li ul li.last.leaf a {
+//    border-bottom: 1px solid #e8e8e8;
+//}

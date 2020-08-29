@@ -29,7 +29,11 @@ projects[token][patch][2773825] = patches/webspark-897_token-browse-available-th
 ; WEBSPARK-1573
 projects[date][version] = 2.10
 projects[date][subdir] = contrib
-projects[date][patch][2843367] = https://www.drupal.org/files/issues/2019-01-16/2843367-php71-string-offset-47.patch
+projects[date][patch][2449261] = https://www.drupal.org/files/issues/2018-08-30/date-cannot_create_references_to_from_string_offsets-2449261-14.patch
+projects[date][patch][2889759] = https://www.drupal.org/files/issues/date-php7Offset-2889759-1.patch
+projects[date][patch][2995679] = https://www.drupal.org/files/issues/2018-08-28/date-array_conversion-2995679-2-D7.patch
+projects[date][patch][2843367-1] = https://www.drupal.org/files/issues/2019-01-16/2843367-php71-string-offset-47.patch
+projects[date][patch][2843367-2] = https://www.drupal.org/files/issues/2843367-php71-string-offset-26.patch
 
 ; panopoly_admin.make
 
@@ -62,7 +66,7 @@ projects[radix_layouts][patch][1610] = patches/ws-1610_tablet-css-width.patch
 
 ; panopoly_widgets.make
 
-projects[media][version] = 2.21
+projects[media][version] = 2.26
 projects[media][subdir] = contrib
 ; WEBSPARK-679 - WYSIWYG + Media module issues
 projects[media][patch][679] = patches/webspark-679_fix-HTML-encoded-macros-2028253-10.patch
@@ -70,11 +74,14 @@ projects[media][patch][679] = patches/webspark-679_fix-HTML-encoded-macros-20282
 ; WEBSPARK-1404, WEBSPARK-1544, others
 projects[views][type] = module
 projects[views][subdir] = contrib
-projects[views][version] = 3.23
+projects[views][version] = 3.24
+; Add Panopoly patches
 projects[views][patch][] = https://www.drupal.org/files/issues/views-exposed-sorts-2037469-26.patch
+projects[views][patch][2977851] = https://www.drupal.org/files/issues/2019-09-23/2977851-views-php72-count-14_0.patch
+projects[views][patch][2284423] = https://www.drupal.org/files/issues/2019-04-29/views-same_sort_twice-2284423-3.patch
+projects[views][patch][3076826] = https://www.drupal.org/files/issues/2019-08-23/views-php7-3076826-2.patch
+; Add local patches
 projects[views][patch][] = patches/webspark-1404_set-views-handler-filter-maxlength-to-null.patch
-projects[views][patch][] = https://www.drupal.org/files/issues/2019-06-01/n3054091-14-hard.patch
-projects[views][patch][3069508] = https://www.drupal.org/files/issues/2019-07-29/views-glossary-ajax-not-working-3069508-8-D7.patch
 
 ; WEBSPARK-1507
 projects[panopoly_theme][patch][] = https://www.drupal.org/files/issues/accordion-style-id-fix.2777847.8.patch

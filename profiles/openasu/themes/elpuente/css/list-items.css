@@ -1,0 +1,10 @@
+/* Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2): Override Bootstrap variables below. */
+/*== Colors --- WS2 DONE
+-----------------------------------------------------*/
+/** Blockquotes */
+blockquote > img:first-of-type { float: left; clip-path: circle(90px); }
+
+/** Testimonials, round images */
+img.img-testimonial-medium { clip-path: circle(120px); }
+
+img.img-testimonial-small { clip-path: circle(90px); }

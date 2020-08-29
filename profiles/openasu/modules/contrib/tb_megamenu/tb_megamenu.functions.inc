@@ -472,7 +472,8 @@ function tb_megamenu_animation_options($block_config) {
     'fading' => t('Fading'),
     'slide' => t('Slide'),
     'zoom' => t('Zoom'),
-    'elastic' => t('Elastic')
+    'elastic' => t('Elastic'),
+    'bezier' => t('ASU WS2.0'),
   );
   $options = array();
   foreach ($animations as $value => $title) {
@@ -588,10 +589,15 @@ function tb_megamenu_replace_css() {
   $files = array(
     drupal_get_path('module', 'tb_megamenu') . '/css/admin.css',
     drupal_get_path('module', 'tb_megamenu') . '/css/backend.css',
-    drupal_get_path('module', 'tb_megamenu') . '/css/base.css',
-    drupal_get_path('module', 'tb_megamenu') . '/css/bootstrap.css',
+// TODO - Check for El Puente
+
+//    drupal_get_path('module', 'tb_megamenu') . '/css/base.css',
+    drupal_get_path('module', 'tb_megamenu') . '/css/base-ws2.css',
+//    drupal_get_path('module', 'tb_megamenu') . '/css/bootstrap.css',
+    drupal_get_path('module', 'tb_megamenu') . '/css/bootstrap-ws2.css',
     drupal_get_path('module', 'tb_megamenu') . '/css/bootstrap-responsive.css',
-    drupal_get_path('module', 'tb_megamenu') . '/css/default.css',
+//    drupal_get_path('module', 'tb_megamenu') . '/css/default.css',
+    drupal_get_path('module', 'tb_megamenu') . '/css/default-ws2.css',
     drupal_get_path('module', 'tb_megamenu') . '/css/styles/black.css',
     drupal_get_path('module', 'tb_megamenu') . '/css/styles/blue.css',
     drupal_get_path('module', 'tb_megamenu') . '/css/styles/green.css',
@@ -648,7 +654,7 @@ function tb_megamenu_update_megamenus(&$form, &$form_state) {
       $block_config = tb_megamenu_get_block_config($menu_name);
       tb_megamenu_sync_config_all($items, $menu_config, 'backend');
       tb_megamenu_sync_order_menus($menu_config);
-      
+
       global $language;
       $tb_megamenu = db_select('tb_megamenus', 't')
         ->fields('t')

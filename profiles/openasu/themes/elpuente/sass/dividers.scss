@@ -1,0 +1,60 @@
+/**
+ * New WS2.0 - Dividers and Backgrounds
+ * IS_SCSS
+ */
+@import "variables";
+
+/*
+  @TODO
+  (all three colors)
+  background-topo (all three colors)
+ */
+hr.body-gold {
+  height: 0.5rem;
+  background-color: $ws2-gold;
+  max-width: 16rem;
+  margin: 2em 0;
+}
+
+// Background dividers
+.asu-divider {
+  background-position: top center;
+  background-repeat: no-repeat;
+  &.asu-divider-morse {
+    background-image: url("#{$elpuente-images-dir}/morse_white.png");
+    background-color: #fff;
+  }
+  &.asu-divider-morse-gray {
+    background-image: url("#{$elpuente-images-dir}/morse_gray.png");
+    background-color: $ws2-gray;
+  }
+  &.asu-divider-morse-gray {
+    background-image: url("#{$elpuente-images-dir}/morse_black.png");
+    background-color: $ws2-gray-darkest;
+  }
+  &.asu-divider-topo {
+    background-image: url("#{$elpuente-images-dir}/topo_white.png");
+    background-color: #fff;
+  }
+  &.asu-divider-topo-gray {
+    background-image: url("#{$elpuente-images-dir}/topo_gray.png");
+    background-color: $ws2-gray;
+  }
+  &.asu-divider-topo-black {
+    background-image: url("#{$elpuente-images-dir}/topo_black.png");
+    background-color: $ws2-gray-darkest;
+  }
+  &.asu-divider-net {
+    background-image: url("#{$elpuente-images-dir}/network_white.png");
+    background-color: #fff;
+  }
+  &.asu-divider-net-black {
+    background-image: url("#{$elpuente-images-dir}/network_black.png");
+    background-color: $ws2-gray-darkest;
+  }
+  // repeat network images
+  &[class*=asu-divider-net] {
+    background-position: top left;
+    background-repeat: repeat-x;
+  }
+}

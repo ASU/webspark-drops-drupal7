@@ -1,0 +1,322 @@
+/**
+ * @description - If Innovation is the admin theme, add these changes to clean up the UI
+ *
+ * IS SASS --- WS2.0 SKIPPED (awaiting testing)
+ */
+
+@import "variables";
+
+/* -------- Admin-wide CSS selectors ---------- */
+
+/** System Help block theming (if enabled) */
+#block-system-help {
+  padding: 1em;
+  border: 1px solid $ws2-blue;
+  background-color: $ws2-info-bkgd;
+  margin: 1em 0;
+  &:first-child:before {
+    content: "Drupal Help --";
+    font-weight: bold;
+  }
+  .content:last-child {
+    margin: 0;
+  }
+}
+/** Field help-block override */
+.help-block {
+  color: inherit;
+  opacity: 0.8;
+}
+
+.pia {
+//////////////////////////
+  h1#page-title {
+    margin-bottom: 0.3333em;
+  }
+  table a.tabledrag-handle {
+    margin-left: inherit;
+    border-bottom: none;
+    margin: auto;
+  }
+
+  /** Alerts with links in text */
+  .alert-danger a,
+  .alert-info a {
+    color: #fff;
+    border-bottom-color: #fff;
+  }
+
+  /** All admin area forms */
+  #top-content #action-links {
+    margin-bottom: 1em;
+  }
+
+  /** wrap admin forms that are panelized and the <form> tag is rendered outside the node TPL (/node/add, etc.) */
+  #block-system-main > .content > form[id] {
+    margin: 0;
+    padding: 1em;
+    border: 1px solid $gray-alt-admin;
+    box-shadow: 4px 6px 3px $ws2-gray-lightest;
+  }
+
+  /** Fieldset theming */
+  fieldset.fieldset-nested- {
+    margin: 0.5em 0;
+    padding: 1em;
+    border: 1px solid $gray-fieldset-nested !important;
+  }
+
+  fieldset.fieldset-nested-odd {
+    background-color: $ws2-gray-lightest;
+  }
+
+  fieldset.fieldset-nested-even {
+    background-color: $gray-fieldset;
+  }
+
+  #block-system-main fieldset legend {
+    width: initial;
+    margin-bottom: 0;
+    font-weight: bold;
+  }
+
+  /** Category lists on main admin landing pages */
+  .admin-list > dt,
+  #block-system-main .content > dl > dt {
+    border: 1px solid $gray-alt-admin;
+    border-bottom: none;
+    padding: 0.25em 0.25em 0 0.25em;
+
+  }
+
+  .admin-list > dl > dt + dd,
+  #block-system-main .content > dl > dt + dd {
+    border: 1px solid $gray-alt-admin;
+    border-top: none;
+    margin-bottom: 0.5em;
+    padding: 0 0.25em 0.25em 0.25em;
+  }
+
+  .admin-list > dt:nth-of-type(2n),
+  #block-system-main .content > dl > dt:nth-of-type(2n),
+  .admin-list > dd:nth-of-type(2n),
+  #block-system-main .content > dl > dd:nth-of-type(2n) {
+    background-color: #fff;
+  }
+
+  .admin-list > dt:nth-of-type(2n+1),
+  #block-system-main .content > dl > dt:nth-of-type(2n+1),
+  .admin-list > dd:nth-of-type(2n+1),
+  #block-system-main .content > dl > dd:nth-of-type(2n+1) {
+    background-color: $ws2-gray-lightest;
+  }
+
+  /** Tables */
+  /*** striping added EXCEPT on Reports -> Status */
+  body:not(.page-admin-reports-status) table > tbody > tr:nth-child(2n+1) {
+    background-color: $ws2-gray-lightest;
+  }
+
+  #block-system-main table thead {
+    background-color: $gray-fieldset;
+  }
+
+  /*** Form elements for field settings */
+  table[id] {
+    .form-item,
+    .form-actions .btn,
+    .form-submit {
+      margin: 0.25em;
+    }
+  }
+
+  /** Main system block container for most /admin based pages */
+  #block-system-main {
+    margin-bottom: 1em;
+  }
+
+  /** Restore browser-native checkboxes, radio buttons */
+  #block-system-main table tr .form-type-checkbox,
+  #block-system-main table tr .form-type-radio,
+  &.page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox {
+    margin-top: 0.25em;
+  }
+
+  #block-system-main table tr .form-type-checkbox > input[type="checkbox"],
+  #block-system-main table tr .form-type-checkbox > input[type="radio"],
+  &.page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox > input[type="checkbox"] {
+    opacity: initial;
+    padding: 0 0.5em;
+  }
+
+  #block-system-main table tr .form-type-checkbox > label.element-invisible,
+  #block-system-main .views-field-views-bulk-operations .form-type-checkbox > input.form-checkbox + label,
+  #block-system-main table tr .form-type-checkbox > input.form-checkbox + label:before,
+  #block-system-main table tr .form-type-checkbox > input.form-checkbox + label:after,
+  &.page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox > input.form-checkbox + label:before,
+  &.page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox > input.form-checkbox + label:after {
+    display: none;
+  }
+
+  /** Filter button */
+  #block-system-main .container-inline div,
+  .container-inline label {
+    display: inline-block;
+  }
+
+  /** Views exposed filters */
+  .view-better-watchdog-ui-view {
+    .views-operator {
+      margin-bottom: 1em;
+    }
+    .views-exposed-widgets .description {
+      font-size: 0.75em;
+    }
+  }
+
+  .views-exposed-widget {
+    &.views-submit-button {
+      clear: both;
+    }
+    & > .form-submit {
+      margin: 1em 1em 0 0;
+    }
+  }
+
+  .views-exposed-form {
+    .views-submit-button,
+    .views-reset-button {
+      padding-right: 0;
+    }
+  }
+
+  /** layout of entire exposed form **/
+  /** CTools export forms added **/
+  .view-filters > form,
+  #ctools-export-ui-list-form {
+    padding: 1em;
+    border: 1px solid $gray-alt-admin;
+    background-color: $ws2-gray-lightest;
+  }
+
+  .view-filters .form-control,
+  #ctools-export-ui-list-form .form-control {
+    padding: 0.25em;
+  }
+
+  .views-exposed-form .views-exposed-widget {
+    padding-top: 0;
+  }
+
+  /** CTools exports forms additional */
+  #ctools-export-ui-list-form {
+    margin-top: 1em;
+  }
+
+  /** ------------- Custom CSS selectors for individual sections --------- */
+
+  /** Blocks administration */
+  #block-admin-display-form table .region-title {
+    background-color: $gray-alt-admin-pia;
+  }
+
+  /** Available updates */
+  table.update .alert {
+    color: initial;
+    &.alert-success {
+      background-color: $gray-alt-admin-pia;
+    }
+  }
+
+  #module-filter-update-status-form {
+    .module-filter-inputs-wrapper .form-item-module-filter-name {
+      margin-bottom: 1em;
+    }
+    #module-filter-show-wrapper .form-item {
+      padding: 0 1.5em;
+    }
+  }
+
+  .update tr.ok,
+  .update-status.ok {
+    background: $gray-alt-admin-pia;
+  }
+
+  /* Configuration - Landing page */
+  .admin-panel {
+    padding: 0 1em;
+    margin-bottom: 1em;
+    border: 1px solid $gray-fieldset-nested !important;
+    .body {
+      padding: 0;
+    }
+  }
+
+  &.page-admin-config .admin > .clearfix {
+    margin-left: 0;
+    margin-right: 0;
+    width: 48%;
+  }
+
+  /** URL aliases - column all gray due to bootstrap */
+  #block-system-main .table {
+    & > tbody > tr.active > td,
+    & > tbody > tr.active > th,
+    & > tbody > tr > td.active,
+    & > tbody > tr > th.active,
+    & > tfoot > tr.active > td,
+    & > tfoot > tr.active > th,
+    & > tfoot > tr > td.active,
+    & > tfoot > tr > th.active,
+    & > thead > tr.active > td,
+    & > thead > tr.active > th,
+    & > thead > tr > td.active,
+    & > thead > tr > th.active {
+      background-color: initial;
+    }
+  }
+
+  /** Recent Log Entries */
+  .better_watchdog_ui_watchdog-detail table {
+    & > thead > tr > th,
+    & > thead > tr > td,
+    & > tbody > tr > th,
+    & > tbody > tr > td,
+    & > tfoot > tr > th,
+    & > tfoot > tr > td {
+      border: 1px solid $ws2-gray;
+    }
+  }
+
+  .view-better-watchdog-ui-view table .form-type-checkbox {
+    padding: 0 0.25em;
+  }
+}
+
+/** Module Filter + absolutely positioned ASU global footer don't jive together. */
+html.js .pia.page-admin-modules {
+  footer#page-footer {
+    display: none;
+  }
+  .module-filter-inputs-wrapper {
+    .checkbox input[type="checkbox"],
+    .checkbox-inline input[type="checkbox"] {
+      float: initial;
+    }
+    .module-filter-clear a {
+      float: none;
+    }
+  }
+}
+
+/** Views exposed forms - /admin/content */
+.pia .vbo-views-form div.form-item + input.btn {
+  margin-top: 1em;
+}
+.pia div.form-item > .help-block {
+  font-size: 0.8em;
+  margin-top: 0;
+}
+.views-exposed-form .views-widget-filter-severity {
+  max-width: 15%;
+}

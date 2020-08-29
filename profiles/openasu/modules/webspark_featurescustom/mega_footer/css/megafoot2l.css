@@ -1,0 +1,225 @@
+/*
+* Megafooter - WS2.0 styling
+* Requires El Puente SASS files (for variables and mixins) to build the CSS
+*/
+/*
+ * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
+ * Override Bootstrap variables below.
+ */
+/*== Colors --- WS2 DONE
+-----------------------------------------------------*/
+/* Global mixin library for multiple or all elements */
+.megafoot {
+  padding-top: 0;
+}
+.megafoot .space-bot-md {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.megafoot .row a {
+  border-bottom: 0;
+  color: #e8e8e8;
+  display: inline-block;
+  font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif;
+  font-size: 1rem;
+  opacity: 1;
+  text-align: left;
+  text-decoration: underline;
+  transition: none;
+}
+.megafoot .row.megafoot-logo-social {
+  border-bottom: 1px solid #333;
+}
+.megafoot .row.megafoot-logo-social #mega-footer-logo-wrapper {
+  padding-left: 0;
+  padding-right: 0;
+  display: inline-block;
+}
+.megafoot .row.megafoot-logo-social #mega-footer-logo-wrapper a {
+  border-bottom: 0;
+}
+.megafoot .row.megafoot-logo-social #mega-footer-logo-wrapper img {
+  height: auto;
+  padding: .5rem 0;
+}
+.megafoot .row.megafoot-logo-social #mega-footer-social-media {
+  float: right;
+  padding-left: 0;
+  padding-right: 0;
+}
+.megafoot .row.megafoot-logo-social #mega-footer-social-media .dgtl-mkting-101 {
+  float: right;
+  margin-bottom: 0;
+  padding: 2rem 0;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  -moz-box-pack: end;
+  justify-content: flex-end;
+}
+.megafoot .row.megafoot-logo-social #mega-footer-social-media .dgtl-mkting-101 ul li {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 2rem;
+  color: #bfbfbf;
+  line-height: 1;
+  padding-top: 7px;
+}
+.megafoot .row.mega-footer-menu-links {
+  padding-bottom: 3rem;
+  padding-top: 2.0625rem;
+}
+.megafoot .row.mega-footer-menu-links .mega-dept-title {
+  color: #fff;
+  font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 0;
+  opacity: 1;
+  text-align: left;
+}
+.megafoot .row.mega-footer-menu-links .contact-link {
+  border-bottom: 0;
+  color: #e8e8e8;
+  display: inline-block;
+  text-align: left;
+  text-decoration: underline;
+  font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif;
+  font-size: 1rem;
+  opacity: 1;
+  transition: none;
+}
+.megafoot .row.mega-footer-menu-links nav h2 {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 0;
+  margin-bottom: 0.9rem;
+  opacity: 1;
+  text-align: left;
+}
+.megafoot .row.mega-footer-menu-links nav .big-foot-nav > li > a {
+  border-bottom: 0;
+  color: #e8e8e8;
+  display: block;
+  font-size: 1rem;
+  font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif;
+  letter-spacing: 0;
+  opacity: 1;
+  text-align: left;
+}
+.megafoot .row.mega-footer-menu-links nav .big-foot-nav > li > a:hover {
+  border-bottom: 0;
+  color: #ffc627;
+  display: block;
+  font-size: 1rem;
+  text-decoration: underline;
+  text-align: left;
+  letter-spacing: 0;
+}
+.megafoot .row a.btn {
+  padding: 1rem 2rem;
+  text-underline: none;
+  transition: 30ms ease-in-out;
+}
+.megafoot .row a.btn.btn-gold#contribute-button {
+  color: #191919;
+  background-color: #ffc627;
+  border-color: #ffc627;
+  text-decoration: none;
+}
+.megafoot .row a.btn.btn-gold:hover {
+  color: #212529;
+  background-color: #ffc627;
+  border-color: #ffc627;
+}
+.megafoot .row a.btn:hover#contribute-button {
+  transform: scale(1.1);
+}
+.megafoot .row .fa.icon-rotates,
+.megafoot .row svg.icon-rotates {
+  display: none;
+}
+
+/* MEDIA RULES
+----------------------------------------------- */
+@media screen and (max-width: 991px) {
+  .megafoot {
+    padding-left: 2.25rem;
+    padding-right: 2.25rem;
+  }
+  .megafoot .dgtl-mkting-101 {
+    float: left;
+    padding: 0 0 1rem 0;
+  }
+  .megafoot h2 {
+    font-size: 1.125rem;
+    margin-bottom: 1.25rem;
+    margin-top: 1.25rem;
+  }
+  .megafoot .row .space-bot-md {
+    border-bottom: 1px solid #383d3e;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .megafoot .row.megafoot-logo-social #mega-footer-social-media {
+    float: left;
+  }
+  .megafoot .row.megafoot-logo-social #mega-footer-social-media .dgtl-mkting-101 {
+    float: left;
+    padding: 0 0 1rem 0;
+  }
+  .megafoot .row .fa.icon-rotates,
+  .megafoot .row svg.icon-rotates {
+    display: block;
+    transition-duration: 0.4s;
+    float: right;
+  }
+  .megafoot .big-foot-head .fa,
+  .megafoot .big-foot-head svg {
+    cursor: pointer;
+    float: right;
+    margin-right: 0;
+    margin-top: .225em;
+  }
+  .megafoot .big-foot-head.collapsed .icon-rotates {
+    -moz-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transition: rotate(180deg);
+    transition-duration: 0.4s;
+    float: right;
+  }
+  .megafoot .big-foot-nav > li {
+    margin-left: 22px;
+  }
+  .megafoot .col-sm-3 {
+    width: 100%;
+  }
+  .megafoot .col-sm-2 {
+    width: 100%;
+  }
+  .megafoot .mega-dept-title {
+    margin-top: 0;
+  }
+}
+@media screen and (max-width: 768px) {
+  .megafoot .row .space-bot-md {
+    border-bottom: 0 solid #383d3e;
+  }
+  .megafoot .row.mega-footer-menu-links .space-bot-md {
+    border-bottom: 1px solid #383d3e;
+  }
+
+  .icon-rotates {
+    display: inline-block;
+  }
+
+  svg.icon-rotates {
+    display: inline-block;
+  }
+
+  #mega-footer-logo-wrapper {
+    display: block;
+  }
+}

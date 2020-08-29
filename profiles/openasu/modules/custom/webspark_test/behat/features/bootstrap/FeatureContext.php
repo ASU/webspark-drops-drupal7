@@ -29,10 +29,18 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
   public function iMockTheMigrationSource($arg1) {
     $path = $this->getMinkParameter('files_path') . '/' . $arg1;
     $file_contents = file_get_contents($path);
-    $file = file_save_data($file_contents, 'private://isearch/feeds/asu_isearch_master.json', FILE_EXISTS_REPLACE);
+    $destination = 'private://isearch/feeds';
+    $dir_uri = drupal_realpath($destination);
+
+    if (!$file_contents) {
+      throw new \Exception('Migration mocking failed at ' . __FUNCTION__ . '. ' . check_plain($arg1)
+        . ' not found or was unreadable.');
+    }
+    $file = file_save_data($file_contents, $destination . '/asu_isearch_master.json', FILE_EXISTS_REPLACE);
 
     if (!$file) {
-      throw new \Exception('Migration mocking failed at ' . __FUNCTION__);
+      throw new \Exception('Migration mocking failed at ' . __FUNCTION__
+        . ': Check the permissions for the ' . $dir_uri . ' directory first.');
     }
   }
 

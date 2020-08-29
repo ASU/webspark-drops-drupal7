@@ -5,6 +5,8 @@
  */
 function asu_brand_install() {
   variable_set('asu_brand_ci_testing', 0);
+  // Set permissions for ASU Brand
+  _asu_brand_user_perms('add');
 }
 
 /**
@@ -21,6 +23,8 @@ function asu_brand_uninstall() {
   foreach (asu_brand_get_cache_ids() as $cache_id) {
     cache_clear_all($cache_id, 'cache');
   }
+  // Remove permissions for ASU Brand
+  _asu_brand_user_perms('remove');
 }
 
 /**
@@ -28,7 +32,7 @@ function asu_brand_uninstall() {
  * value for the black footer.
  */
 function asu_brand_update_7100(&$sandbox) {
-  $footer_color = variable_get('asu_brand_footer_color', ASU_BRAND_FOOTER_COLOR_DEFAULT);
+  $footer_color = variable_get('asu_brand_footer_color', '');
   if ($footer_color = '_black') {
     variable_set('asu_brand_footer_color', '');
     cache_clear_all('asu_brand:footer', 'cache');
@@ -95,20 +99,172 @@ function asu_brand_update_7105(&$sandbox) {
 }
 
 /**
+ * + Set header version to "stable"
  * + Disable display of site name by Drupal, since the brand header is now handling it
  */
 function asu_brand_update_7106(&$sandbox) {
-
   variable_set('asu_brand_header_version', 'stable');
-
   $themes = list_themes();
-
   foreach ($themes AS $key => $item) {
-
     $theme_key = 'theme_'.$key.'_settings';
 
     $settings = variable_get($theme_key, array());
     $settings['toggle_name'] = FALSE;
     variable_set($theme_key, $settings);
+  }
+}
+
+/**
+ * Delete deprecated/legacy settings for headers/footers (pre WS1.0)
+ */
+function asu_brand_update_7200(&$sandbox) {
+  variable_del('asu_brand_footer_color');
+  variable_del('asu_brand_header_template');
+  variable_del('asu_brand_header_basepath');
+}
+
+/**
+ * Adds permissions for ASU Brand configuration form to existing installs
+ * @param $sandbox
+ */
+function asu_brand_update_7201(&$sandbox) {
+  _asu_brand_user_perms('add');
+}
+
+/**
+ * Delete all legacy asu_brand_students_footer blocks, just in case they still exist anywhere.
+ * @param $sandbox
+ */
+function asu_brand_update_7202(&$sandbox) {
+  $module = 'asu_brand';
+  $delta = 'asu_brand_students_footer';
+  $result = db_select('block', 'b')
+    ->fields('b', array('bid'))
+    ->condition('module', $module)
+    ->condition('delta', $delta)
+    ->orderBy('bid')
+    ->execute();
+  $block_ids = $result->fetchCol();
+
+  foreach ($block_ids as $bid) {
+    db_delete('block_custom')
+      ->condition('bid', $bid)
+      ->execute();
+    db_delete('block')
+      ->condition('module', $module)
+      ->condition('delta', $delta)
+      ->execute();
+    db_delete('block_role')
+      ->condition('module', $module)
+      ->condition('delta', $delta)
+      ->execute();
+    db_delete('block_node_type')
+      ->condition('module', $module)
+      ->condition('delta', $delta)
+      ->execute();
+  }
+  $message = 'An attempt to delete any legacy students footer blocks has been made. If any remained, they should be deleted now.';
+  watchdog('asu_brand', $message);
+  drupal_set_message($message, 'status', FALSE);
+}
+
+/**
+ * Rename any unshared ASU Brand header block settings to separate them between WS1.0 and WS2.0
+ * @param $sandbox
+ */
+function asu_brand_update_7203(&$sandbox) {
+  $delta = (variable_get('asu_brand_header_version', 'stable') === '5.0')
+    ? 'asu_brand_header_ws2'
+    : 'asu_brand_header';
+  $asu_brand_settings = array(
+    'asu_brand_parent_org_url' => $delta . '_parent_org_url',
+    'asu_brand_parent_org_title' => $delta . '_parent_org_title',
+    'asu_brand_override_url' => $delta . '_override_url',
+    'asu_brand_sitemenu_injection_flag' => $delta . '_sitemenu_injection_flag',
+    'asu_brand_sitemenu_name' => $delta . '_sitemenu_name',
+    'asu_brand_gtm_override' => $delta . '_gtm_override',
+    'asu_brand_do_not_override' => $delta . '_do_not_override',
+  );
+  foreach ($asu_brand_settings as $old => $new) {
+    $value = db_select('variable', 'v')
+      ->fields('v', array('value'))
+      ->condition('name', $old, 'LIKE')
+      ->execute()
+      ->fetchField();
+    if (!empty($value)) {
+      db_merge('variable')
+        ->key(array(
+          'name' => $old,
+        ))
+        ->fields(array(
+          'name' => $new,
+          'value' => $value,
+        ))->execute();
+    }
+  }
+}
+
+/**
+ * Configure global header/footer block defaults for elpuente
+ * (does NOT affect subtheme block settings)
+ * @param $sandbox
+ */
+function asu_brand_update_7204(&$sandbox) {
+  // Global footer block
+  // Get weight from Innovation theme
+  $weight = db_select('block', 'b')
+    ->fields('b', array('weight'))
+    ->condition('region', 'footer')
+    ->condition('theme', 'innovation')
+    ->condition('delta', 'mega_footer')
+    ->execute()
+    ->fetchField();
+  $weight = (!empty($weight)) ? (int) $weight + 1 : 1;
+  db_merge('block')
+    ->key(array(
+      'module' => 'asu_brand',
+      'delta' => 'asu_brand_header_ws2',
+      'theme' => 'elpuente',
+    ))
+    ->fields(array(
+        'region' => 'header',
+        'status' => '1',
+      )
+    )->execute();
+  db_merge('block')
+    ->key(array(
+      'module' => 'asu_brand',
+      'delta' => 'asu_brand_footer_ws2',
+      'theme' => 'elpuente',
+    ))
+    ->fields(array(
+        'region' => 'footer',
+        'status' => '1',
+        'weight' => $weight,
+      )
+    )->execute();
+}
+
+/**
+ * Manages (adds or removes) permissions for ASU Brand
+ * @param $action - Add or remove ASU Brand permissions.
+ */
+function _asu_brand_user_perms($action) {
+  $admin_role = user_role_load_by_name('administrator')->rid;
+  $perms = array('administer asu brand');
+  if (!empty($admin_role) && is_numeric($admin_role)) {
+    if ($action === 'add') {
+      user_role_grant_permissions($admin_role, $perms); // admin role grant
+    } elseif ($action === 'remove') {
+      // Delete permission entries from role_permission
+      db_delete('role_permission')
+        ->condition('permission', 'administer asu brand', 'LIKE')
+        ->condition('module', 'asu_brand')
+        ->condition('rid', $admin_role, '!=')
+        ->execute();
+      // admin role remove (to clear static cache entries as well, use the Drupal API)
+      user_role_revoke_permissions($admin_role, $perms);
+    }
+    watchdog('user', __FUNCTION__ . ' - ' . $action . ' ASU Brand permissions');
   }
 }

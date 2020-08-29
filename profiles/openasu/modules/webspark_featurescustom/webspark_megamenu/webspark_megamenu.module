@@ -5,19 +5,15 @@
  */
 
 /**
- * Implements hook_init().
- **/
-function webspark_megamenu_init() {
-  drupal_add_js(drupal_get_path('module', 'webspark_megamenu') .'/js/webspark_megamenu.js', 'file');
-  drupal_add_js(libraries_get_path('emulatetab') . '/src/emulatetab.joelpurra.min.js');
-  drupal_add_css(drupal_get_path('module', 'webspark_megamenu') . '/css/webspark_megamenu.css', array('weight' => 99, 'group' => CSS_DEFAULT));
-}
-
-/**
  * Implements hook_page_alter().
- **/
+ */
 function webspark_megamenu_page_alter(&$page) {
-  drupal_add_js(drupal_get_path('module', 'webspark_megamenu').'/js/webspark_megamenu_pre.js', array('scope'=>'header'));
+  $ws2_check = _webspark_featurescustom_get_ws2_suffix();
+  drupal_add_js(drupal_get_path('module', 'webspark_megamenu').'/js/webspark_megamenu_pre' . $ws2_check . '.js', array('scope'=>'header'));
+  drupal_add_js(drupal_get_path('module', 'webspark_megamenu') . '/js/webspark_megamenu' . $ws2_check . '.js', 'file');
+  drupal_add_css(drupal_get_path('module', 'webspark_megamenu') . '/css/webspark_megamenu' . $ws2_check . '.css',
+  array('weight' => 99, 'group' => CSS_DEFAULT));
+  drupal_add_js(libraries_get_path('emulatetab') . '/src/emulatetab.joelpurra.min.js');
 }
 
 /**
@@ -36,3 +32,29 @@ function webspark_megamenu_libraries_info() {
   );
   return $libraries;
 }
+
+///**
+// * Implements hook_form_FORM_ID_alter().
+// */
+//function webspark_megamenu_form_alter(&$form, &$form_state, $form_id) {
+////  dpm($form);
+//  $type = (isset($form['#node']->type)) ? $form['#node']->type : '';
+//  if (!empty($type)) {
+//    $form['menu']['hide_top_menu'] = array(
+//      '#type' => 'checkbox',
+//      '#title' => 'Hide top-level menu on this page',
+//      '#default_value' => 0,
+//      '#weight' => -100,
+//    );
+//    $form['#submit'][] = '_webspark_megamenu_node_form_submit';
+//  }
+//}
+
+//function _webspark_megamenu_node_form_submit(&$form, &$form_state) {
+//  $show = (isset($form_state['values']['menu']['hide_top_menu']))
+//    ? $form_state['values']['menu']['hide_top_menu']
+//    : 0;
+//  $form_state['values']['options']['attributes']['hide_top_menu'] = $show;
+//  // @TODO - Set value in menu attributes manually
+////  dpm($form_state, __FUNCTION__ . ' - $form_state');
+//}

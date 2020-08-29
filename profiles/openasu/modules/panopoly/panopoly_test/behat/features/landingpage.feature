@@ -6,7 +6,7 @@ Feature: Add landing page
   Background:
     Given I am logged in as a user with the "administrator" role
       #temporarily add page titles back
-      When I visit "/admin/appearance/settings/innovation"
+    When I visit the default theme settings page
       And I check the box "edit-always-show-page-title"
       And I press "edit-submit"
       And I visit "/node/add/panopoly-landing-page"
@@ -21,8 +21,8 @@ Feature: Add landing page
     When I press "edit-submit"
     Then the "h1" element should contain "Testing landing page title"
 
-    When I visit "/admin/appearance/settings/innovation"
+    When I visit the default theme settings page
       And I uncheck the box "edit-always-show-page-title"
       And I press "edit-submit"
-      And I visit "/admin/appearance/settings/innovation"
+      And I visit the default theme settings page
     Then the "edit-always-show-page-title" checkbox should not be checked

@@ -31,7 +31,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li.active {
 	background: none;
 	background-color: transparent;
 	padding-bottom: 0;
-	transition: all 0.25s ease-in-out 0s;
+  transition: 0.5s cubic-bezier(0.19, 1, 0.19, 1);
 }
 ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 	display: inline-block;

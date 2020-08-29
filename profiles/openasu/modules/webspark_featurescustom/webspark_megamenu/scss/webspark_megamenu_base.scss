@@ -1,0 +1,100 @@
+/** =TB MEGA MENU - BASE values, mixins, etc. for both V1 and WS2.0
+ * Mixin parameter defaults are all Innovation. Pass in WS2.0 values.
+------------------------------------------------------------------- */
+
+@import "../../../../themes/elpuente/sass/variables";
+@import "../../../../themes/elpuente/sass/mixins/global";
+
+/* Global values
+----------------------------------------------------- */
+$asu-gold: $ws2-gold;
+$mm-darkest-gray: $ws2-gray-darkest;
+$tb_mm_admin_padding: 2.12766%; // TB Megamenu admin padding % to subtract
+
+/* Global megamenu mixins
+----------------------------------------------------- */
+
+@mixin megamenu-default-style($background-color: #fff, $color: $mm-darkest-gray, $link: no, $hover: no) {
+  background-color: $background-color;
+  background-image: none;
+  @if $hover == 'yes' {
+    color: $ws2-maroon;
+  } @else {
+    color: $color;
+  }
+  @if $link == 'yes' {
+    text-decoration: underline $ws2-maroon;
+  }
+}
+
+@mixin megamenu-submenu-style($background: #fff, $color: $mm-darkest-gray) {
+  background-color: $background;
+  background-image: none;
+  color: $color;
+}
+
+@mixin megamenu-active-style() {
+  //width: calc(100% + 8px);
+  width: 100%;
+}
+
+@mixin megamenu-admin-col-spacing($width) {
+  width: calc(#{$width} - #{$tb_mm_admin_padding});
+}
+
+@mixin megamenu-group-title-style() {
+  text-transform: none;
+  font-weight: 700;
+  font-size: 1.5rem;
+  padding-left: 0;
+  margin-bottom: 0.75em;
+  display: inline-block !important;
+  text-decoration: none;
+  cursor: default !important;
+}
+@mixin megamenu-group-title-style-hover() {
+  text-decoration: none !important;
+  color: $mm-darkest-gray !important;
+}
+
+/* Universal markup
+----------------------------------------------------- */
+
+// Column/row widths + spacing
+.row-fluid {
+  .span1, .span2, .span3, .span4, .span5, .span6, .span7, .span8, .span9, .span10, .span11 {
+    margin-left: 0;
+  }
+  .span1 {
+    @include megamenu-admin-col-spacing(8.33%);
+    //width: 8.33%;
+  }
+  .span2 {
+    @include megamenu-admin-col-spacing(16.6677%);
+  }
+  .span3 {
+    @include megamenu-admin-col-spacing(25%);
+  }
+  .span4 {
+    @include megamenu-admin-col-spacing(33.33%);
+  }
+  .span6 {
+    @include megamenu-admin-col-spacing(50%);
+  }
+}
+
+// Administration UI styling
+#tb-megamenu-admin {
+  .dropdown-menu li.tb-megamenu-item {
+    border: 1px solid $ws2-gray-dark;
+    a {
+      color: $ws2-gray-darkest;
+      &:hover {
+        color: $ws2-gray-dark;
+      }
+    }
+  }
+  .mega-inner, .tb-megamenu .span12.mega-col-nav .mega-inner {
+    padding: 10px;
+  }
+}
