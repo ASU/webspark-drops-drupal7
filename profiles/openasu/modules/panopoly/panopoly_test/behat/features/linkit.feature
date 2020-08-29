@@ -6,7 +6,7 @@ Feature: Link to page on the site
   Background:
     Given I am logged in as a user with the "administrator" role
       And a "panopoly_test_page" with the title "Linkit Target"
-    When I visit "/admin/appearance/settings/innovation"
+    When I visit the default theme settings page
       And I check the box "edit-always-show-page-title"
       And I press "edit-submit"
       And I visit "/node/add/panopoly-test-page"
@@ -53,8 +53,8 @@ Feature: Link to page on the site
   Scenario: Resetting the Innovation theme Always Show Page Title setting
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
-    When I visit "/admin/appearance/settings/innovation"
+    When I visit the default theme settings page
       And I uncheck the box "edit-always-show-page-title"
       And I press "edit-submit"
-      And I visit "/admin/appearance/settings/innovation"
+      And I visit the default theme settings page
     Then the "edit-always-show-page-title" checkbox should not be checked
