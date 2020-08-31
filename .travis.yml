@@ -122,7 +122,7 @@ before_script:
 
   # Turn on ASU Brand filtering of GTM snippet, Cookie Consent (GDPR) addition after v4.7
   - drush vset --always-set asu_brand_ci_testing 1
-  - drush vset --always-set asu_brand_header_version 4.7
+  - drush vset --always-set asu_brand_header_version stable
   - drush vset --always-set block_cache 0
   - drush vset --always-set cache 0
   - drush pm-disable navbar admin_menu admin_menu_toolbar --yes
