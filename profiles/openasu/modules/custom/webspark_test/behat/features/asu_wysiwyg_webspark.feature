@@ -38,7 +38,7 @@ Feature: Use rich text editor
       | edit-body-und-0-value_styleselect_text  | Lead paragraph                    | p        | class     | lead-paragraph |
       | edit-body-und-0-value_styleselect_text  | Alert text success                | p        | class     | alert alert-block alert-success |
       | edit-body-und-0-value_styleselect_text  | Alert text warning                | p        | class     | alert alert-block alert-warning |
-      | edit-body-und-0-value_styleselect_text  | Disabled Button                   | p        | class     | ws2-element-style btn btn-disabled |
+      | edit-body-und-0-value_styleselect_text  | Button Disabled                   | p        | class     | ws2-element-style btn btn-disabled |
       | edit-body-und-0-value_styleselect_text  | Alert text danger                 | p        | class     | alert alert-block alert-danger |
       | edit-body-und-0-value_styleselect_text  | Alert text info                   | p        | class     | alert alert-block alert-info |
 
