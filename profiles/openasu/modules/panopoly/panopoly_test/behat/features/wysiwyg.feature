@@ -38,7 +38,7 @@ Feature: Use rich text editor
       | Align Left                    | p          | text-align      | left         |
       | Align Center                  | p          | text-align      | center       |
       | Align Right                   | p          | text-align      | right        |
-  
+
 # Removed actions related to buttons that were removed by Webspark WYSIWYG
 #  @api @javascript @panopoly_wysiwyg @webspark_broken @webspark_fixed
 #  Scenario Outline: Format text in the editor (advanced toolbar)
