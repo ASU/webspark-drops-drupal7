@@ -187,11 +187,27 @@ function elpuente_preprocess_panels_pane(&$variables) {
     }
     $variables['classes_array'][] = $banner_class;
     $variables['title_placement'] = 'none';
+    // Check for buttons
+    if (!isset($variables['content']['field_ws2_button']) && !isset($variables['content']['field_ws2_button_2'])) {
+      $variables['content']['#groups']['group_banner_text']->format_settings['instance_settings']['classes'] = str_replace(
+        '-6 col-md-6',
+        '-10 col-md-10',
+        $variables['content']['#groups']['group_banner_text']->format_settings['instance_settings']['classes']);
+      $variables['content']['#groups']['group_buttons']->format_settings['instance_settings']['classes'] = str_replace(
+        '-5 col-md-5',
+        '-1 col-md-1',
+        $variables['content']['#groups']['group_buttons']->format_settings['instance_settings']['classes']
+      );
+    }
   }
 }
 
+/**
+ * Add class 'row' to contain Bootstrap columns in notification banner FPPs
+ *
+ * @param $variables
+ */
 function elpuente_preprocess_fieldable_panels_pane(&$variables) {
-//  dpm($variables);
   if (in_array('fieldable_panels_pane__banners_ws2', $variables['theme_hook_suggestions'])) {
     $variables['classes_array'][] = 'row';
   }
