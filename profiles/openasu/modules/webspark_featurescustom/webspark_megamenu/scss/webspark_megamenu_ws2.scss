@@ -109,7 +109,7 @@ $ws2-gray-lightest:      #fafafa;
     li.tb-megamenu-item {
       // top level buttons
       .btn {
-        @include elpuente-button-styling();
+        @include ws2-button-styling();
       }
       // Yellow bar across the bottom of top level elements
       &.active {
@@ -229,7 +229,7 @@ $ws2-gray-lightest:      #fafafa;
           }
         }
         &.btn {
-        @include elpuente-button-styling(0.2rem);
+        @include ws2-button-styling(0.2rem);
           margin-right: 0.5rem;
         }
         &:last-child {

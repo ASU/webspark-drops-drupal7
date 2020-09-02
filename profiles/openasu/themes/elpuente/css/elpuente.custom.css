@@ -169,7 +169,7 @@ fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fields
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container + li:not(.btn-container) > a { margin-left: 0; padding-left: 1.375em; }
 
 a, .ui-widget-content a { border-bottom: 1px solid #8c1d40; text-decoration: none; color: #8c1d40; }
-a:hover, .ui-widget-content a:hover { color: #8c1d40; text-decoration: none; border-bottom: 1px dotted #8c1d40; }
+a:hover, .ui-widget-content a:hover { color: #8c1d40; text-decoration: none; border-bottom: none; }
 
 #header a, #asu_footer a { border-bottom: transparent; }
 
@@ -354,6 +354,7 @@ table.bordered > caption + thead > tr:first-child > th, table.bordered > caption
 
 /* =BREADCRUMBS --- WS2.0 DONE
 -------------------------------------------------------------- */
+/** Breadcrumbs */
 .easy-breadcrumb { background-color: transparent; margin: 2em 0; padding: 0; color: #484848; font-size: 0.875em; }
 
 .easy-breadcrumb .easy-breadcrumb_segment-separator { padding: 0 0.3125rem; }
@@ -385,12 +386,24 @@ table.bordered > caption + thead > tr:first-child > th, table.bordered > caption
 .ui-accordion .ui-icon-triangle-1-e { background-position: 0 0; }
 .ui-accordion .ui-state-hover .ui-icon-triangle-1-e, .ui-accordion .ui-icon-triangle-1-s { background-position: 0 -13px; }
 
-/* =ALERTS --- WS2.0 DONE
--------------------------------------------------------------- */
+/** UI Tabs --- WS2.0 DONE
+------------------------------------------------------------------------ */
+/* fixes for stacked tabs */
+body #content .ui-tabs .ui-tabs-nav li.ui-state-focus { margin-bottom: 0; }
+body #content .ui-tabs .ui-tabs-nav li.ui-state-focus a { border-top: none; }
+body #content .ui-tabs .ui-tabs-nav li a { margin-left: 0; border-bottom: transparent; clear: both; }
+
+/* Devel debugging ------------------------------------------------------ */
+.logged-in .alert > ul > li > [class^=krumo] { all: initial; }
+
+.logged-in .alert .krumo-root .krumo-element:not(a) { color: #78be20; }
+
+/* =ALERTS -------------------------------------------------------------- */
+/** Alerts */
 .alert { color: #191919; font-weight: 400; border-bottom-color: #191919; position: relative; margin: 16px 0; padding: 24px 24px; }
 .alert a { color: #191919; border-bottom-color: #191919; }
-.alert a.close { background-color: #fff; color: #191919; font-size: 1.25em; font-weight: bold; opacity: 0.6; border: 1px solid #d0d0d0; padding: 0.25rem 0.5rem 0.25rem 0.58rem; margin: 0 0 16px 16px; border-radius: 1rem; height: 2rem; width: 2rem; }
-.alert a.close:hover { opacity: 0.8; color: #191919; border-bottom-color: #d0d0d0; }
+.alert a.close { background-color: #fff; color: #191919; font-size: 1.25em; font-weight: bold; opacity: 0.8; border: 1px solid #d0d0d0; padding: 0.25rem 0.5rem 0.25rem 0.58rem; margin: 0 0 16px 16px; border-radius: 1rem; height: 2rem; width: 2rem; }
+.alert a.close:hover { opacity: 1.0; color: #191919; border-bottom-color: #d0d0d0; cursor: pointer; }
 .alert a.close + p:empty { margin-top: -1rem; padding-top: 0; background-color: red !important; }
 .alert a:hover { color: #8c1d40; border-bottom-color: #8c1d40; cursor: pointer; }
 
@@ -411,28 +424,47 @@ table.bordered > caption + thead > tr:first-child > th, table.bordered > caption
 
 .alert:not([class*="alert-"]), div[class='alert alert-block'] { /* Catch-all for default alert class */ background-color: #fafafa; border-color: #d0d0d0; }
 
-/* Devel debugging */
-.logged-in .alert > ul > li > [class^=krumo] { all: initial; }
-
-.logged-in .alert .krumo-root .krumo-element:not(a) { color: #78be20; }
+/* Banners (FPPs) ------------------------------------------------------- */
+/* Banners */
+.pane-bundle-banners-ws2 { margin: 1rem 0; }
+.pane-bundle-banners-ws2 > .pane-content { padding: 2rem 0; }
+.pane-bundle-banners-ws2 > .pane-content .field-name-field-banner-title-int { font-weight: normal; font-size: 24px; margin: 0.5rem 0; padding: 0; }
+.pane-bundle-banners-ws2.ws2-banner-success { background-color: #78be20; }
+.pane-bundle-banners-ws2.ws2-banner-success a:not(.btn) { color: #191919; border-bottom-color: #191919; }
+.pane-bundle-banners-ws2.ws2-banner-warning { background-color: #ff7f32; }
+.pane-bundle-banners-ws2.ws2-banner-warning a:not(.btn) { color: #191919; border-bottom-color: #191919; }
+.pane-bundle-banners-ws2.ws2-banner-info { background-color: #00a3e0; }
+.pane-bundle-banners-ws2.ws2-banner-info a:not(.btn) { color: #191919; border-bottom-color: #191919; }
+.pane-bundle-banners-ws2 .field-name-field-banner-color { display: none; }
+.pane-bundle-banners-ws2 .pane-content { position: relative; }
+.pane-bundle-banners-ws2 .pane-content .row > div:first-child { padding-left: 6rem; }
+.pane-bundle-banners-ws2 .pane-content .row > div:first-child:before { font-family: FontAwesome, sans-serif; font-size: 2rem; position: absolute; left: 0; top: 0; padding: 0 1.5rem; content: "\f0f3"; }
+.pane-bundle-banners-ws2 .pane-content .btn { padding-right: 1rem; padding-left: 1rem; }
+.pane-bundle-banners-ws2 .pane-content .banner-close a.close.close { background-color: #fff; color: #191919; font-size: 1.25em; font-weight: bold; opacity: 0.8; border: 1px solid #d0d0d0; padding: 0.25rem 0.5rem 0.25rem 0.58rem; margin: 0 0 16px 16px; border-radius: 1rem; height: 2rem; width: 2rem; }
+.pane-bundle-banners-ws2 .pane-content .banner-close a.close.close:hover { opacity: 1.0; color: #191919; border-bottom-color: #d0d0d0; cursor: pointer; }
+.pane-bundle-banners-ws2 .pane-content .banner-close a.close.close + p:empty { margin-top: -1rem; padding-top: 0; background-color: red !important; }
 
 /* =Alternate Element styles for 1) gray, 2) black, and 3) white --- IN PROGRESS
+------------------------------------------------------------------------- */
+/* =Alternate Element styles for 1) gray, 2) black, and 3) white
 -------------------------------------------------------------- */
-.region-content #page-page .ws2-element-alt { padding: 24px 24px; border-style: solid; border-width: 1px; /* Gray */ /* Black */ /* White */ }
+.region-content #page-page .ws2-element-alt { padding: 24px 24px; border-style: solid; border-width: 1px; /* #1 - Gray ---------------*/ /* #2 - Black ---------------*/ /* White */ }
 .region-content #page-page .ws2-element-alt > *:first-child { padding-top: 0; margin-top: 0; }
 .region-content #page-page .ws2-element-alt > *:last-child { padding-bottom: 0; margin-bottom: 0; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-gray { color: #191919; background-color: #e8e8e8; border-color: #e8e8e8; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-gray .ws2-element-style.btn-tag { background-color: #bfbfbf !important; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-black { color: #fafafa; background-color: #191919; border-color: #191919; }
+.region-content #page-page .ws2-element-alt.ws2-element-alt-black a { color: #ffc627; border-bottom-color: #ffc627; }
+.region-content #page-page .ws2-element-alt.ws2-element-alt-black a:hover, .region-content #page-page .ws2-element-alt.ws2-element-alt-black a:focus { border-bottom-color: transparent; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-black ul li:before, .region-content #page-page .ws2-element-alt.ws2-element-alt-black ol li:before { color: #fafafa; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-black ul.ws2-element-style.ws2-element-gold li:before, .region-content #page-page .ws2-element-alt.ws2-element-alt-black ol.ws2-element-style.ws2-element-gold li:before { color: #ffc627; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-black .ws2-element-style.btn-tag { background-color: #747474; border-color: #747474; color: #fff; }
+.region-content #page-page .ws2-element-alt.ws2-element-alt-black .btn.btn-black { color: #191919; background-color: #ffc627; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-white { border-color: #d0d0d0; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-white .ws2-element-style.btn-tag { background-color: #e8e8e8; }
 
 /* =ADMIN UI --- WS2.0 DONE (admin only)
--------------------------------------------------------------- */
-/* Node edit */
+------------------------------------------------------------------------- */
 #top-content #tabs .nav-pills { padding: 0.5rem; background-color: #e8e8e8; /* dropdown items from nav pills */ }
 #top-content #tabs .nav-pills li { padding-right: 0.5rem; }
 #top-content #tabs .nav-pills li a { transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; background-color: #fafafa; }
@@ -476,8 +508,7 @@ ul.help-text li { list-style: none; padding: 0.125em 0; line-height: 1.25; }
 
 ul.help-text li.help-title { font-size: 0.875em; font-weight: bold; }
 
-/* =FORMS --- WS2.0 DONE
--------------------------------------------------------------- */
+/* =FORMS --- WS2.0 DONE ------------------------------------------- */
 .marker, .form-required { color: #b72a2a; }
 
 /* =100% width fix for Bootstrap limitation --- SKIPPED (NEEDS REVIEW)
@@ -521,18 +552,10 @@ ul.help-text li.help-title { font-size: 0.875em; font-weight: bold; }
 .token-browser-container .ui-dialog-title { color: #333; padding-left: 1em; }
 .token-browser-container table.treeTable > tbody > tr > td:not(first-child) { padding-top: 0.25em; padding-bottom: 0.25em; }
 
-/** FOCUS --- WS2.0 DONE
+/** Accessibility --- WS2.0 DONE
 ----------------------------------------------------- */
 a:focus, .ui-widget-content a:focus, input:focus, a.btn:focus, .btn a:focus, #skip_to_content:focus, #top-content #tabs .nav-pills > li.active > a:focus, h4.ui-accordion-header.ui-state-hover, h4.ui-accordion-header:focus { outline: 2px solid #191919; }
 
-/** UI Tabs --- WS2.0 DONE
------------------------------------------------------ */
-/* fixes for stacked tabs */
-body #content .ui-tabs .ui-tabs-nav li.ui-state-focus { margin-bottom: 0; }
-body #content .ui-tabs .ui-tabs-nav li.ui-state-focus a { border-top: none; }
-body #content .ui-tabs .ui-tabs-nav li a { margin-left: 0; border-bottom: transparent; clear: both; }
-
-/* =MEDIA QUERIES - moved to separate file */
 #innovation-footer .footer-menu ul li a:hover { color: #8c1d40; border-bottom: 1px dotted #8c1d40; }
 
 /* CARDS -- WILL GO IN OWN SCSS FILE AFTER DEVELOPMENT */

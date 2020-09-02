@@ -11,9 +11,8 @@
   //@include box-shadow(0px 0px 5px $a11y-strong-focus-color);
 }
 
-// Buttons for El Puente
-// Maybe should be a global mixin (or in a buttons file)?? YES... someday
-@mixin elpuente-button-styling($type: 0.5rem) {
+// Buttons
+@mixin ws2-button-styling($type: 0.5rem) {
   display: inline-block;
   margin-top: $type;
   margin-bottom: 0.5rem;
@@ -42,5 +41,33 @@
   &.btn-gold > a {
     background-color: $asu-gold !important;
     color: $ws2-gray-darkest !important;
+  }
+}
+
+// Close (X) buttons for alerts, banners, etc.
+@mixin ws2-close-button() {
+  &.close {
+    background-color: #fff;
+    color: $text-color;
+    font-size: 1.25em;
+    font-weight: bold;
+    opacity: 0.8;
+    border: 1px solid $ws2-gray-light;
+    padding: 0.25rem 0.5rem 0.25rem 0.58rem;
+    margin: 0 0 $padding-base-vertical $padding-base-horizontal;
+    border-radius: 1rem;
+    height: 2rem;
+    width: 2rem;
+    &:hover {
+      opacity: 1.0;
+      color: $text-color;
+      border-bottom-color: $ws2-gray-light;
+      cursor: pointer;
+    }
+    & + p:empty {
+      margin-top: -1rem;
+      padding-top: 0;
+      background-color: red !important;
+    }
   }
 }

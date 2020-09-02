@@ -172,6 +172,32 @@ function elpuente_process_menu_link(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_panels_pane().
+ */
+function elpuente_preprocess_panels_pane(&$variables) {
+  $variables['title_placement'] = 'default';
+  // Banners (FPPs) - Add style/color class at parent-level element (same as CSS Class field) in IPE UI).
+  if (in_array('panels_pane__fieldable_panels_pane', $variables['theme_hook_suggestions'])
+    && ($variables['content']['#bundle'] === 'banners_ws2')) {
+    $banner_class = isset($variables['content']['field_banner_color']['#items'][0]['value'])
+      ? $variables['content']['field_banner_color']['#items'][0]['value']
+      : '';
+    if ($banner_class === 'ws2-element-alt-gray' || $banner_class === 'ws2-element-alt-black') {
+      $variables['classes_array'][] = 'ws2-element-alt';
+    }
+    $variables['classes_array'][] = $banner_class;
+    $variables['title_placement'] = 'none';
+  }
+}
+
+function elpuente_preprocess_fieldable_panels_pane(&$variables) {
+//  dpm($variables);
+  if (in_array('fieldable_panels_pane__banners_ws2', $variables['theme_hook_suggestions'])) {
+    $variables['classes_array'][] = 'row';
+  }
+}
+
+/**
  * Remove classes that interfere with button styling in LH submenus in blocks/panels
  */
 function _elpuente_remove_class($classes) {

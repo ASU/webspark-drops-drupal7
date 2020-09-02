@@ -93,7 +93,7 @@ a,
   &:hover {
     color: $link-hover-color;
     text-decoration: none;
-    border-bottom: 1px dotted $link-hover-color;
+    border-bottom: none;
   }
 }
 
@@ -591,21 +591,7 @@ table.bordered > thead:first-child > tr:first-child > td {
 
 /* =BREADCRUMBS --- WS2.0 DONE
 -------------------------------------------------------------- */
-.easy-breadcrumb {
-  background-color: transparent;
-  margin: 2em 0;
-  padding: 0;
-  color: $ws2-gray-darker;
-  font-size: 0.875em;
-}
-
-.easy-breadcrumb .easy-breadcrumb_segment-separator {
-  padding: 0 0.3125rem; // 5px
-}
-
-.easy-breadcrumb a {
-  border-bottom: 0 none;
-}
+@import 'breadcrumbs';
 
 /* =FLEXSLIDER SLIDESHOWS --- WS2.0 DONE
 -------------------------------------------------------------- */
@@ -724,101 +710,26 @@ table.bordered > thead:first-child > tr:first-child > td {
   }
 }
 
-/* =ALERTS --- WS2.0 DONE
--------------------------------------------------------------- */
-.alert {
-  color: $ws2-gray-darkest;
-  font-weight: 400;
-  border-bottom-color: $ws2-gray-darkest;
-  position: relative;
-  margin: $padding-base-vertical 0;
-  padding: $padding-base-vertical*1.5 $padding-base-horizontal*1.5;
+/** UI Tabs --- WS2.0 DONE
+------------------------------------------------------------------------ */
+
+/* fixes for stacked tabs */
+body #content .ui-tabs .ui-tabs-nav li {
+  &.ui-state-focus {
+    a {
+      border-top: none;
+    }
+    margin-bottom: 0;
+  }
   a {
-    color: $ws2-gray-darkest;
-    border-bottom-color: $ws2-gray-darkest;
-    &.close {
-      background-color: #fff;
-      color: $text-color;
-      font-size: 1.25em;
-      font-weight: bold;
-      opacity: 0.6;
-      border: 1px solid $ws2-gray-light;
-      padding: 0.25rem 0.5rem 0.25rem 0.58rem;
-      margin: 0 0 $padding-base-vertical $padding-base-horizontal;
-      border-radius: 1rem;
-      height: 2rem;
-      width: 2rem;
-      &:hover {
-        opacity: 0.8;
-        color: $text-color;
-        border-bottom-color: $ws2-gray-light;
-      }
-      & + p:empty {
-        margin-top: -1rem;
-        padding-top: 0;
-        background-color: red !important;
-      }
-    }
-    &:hover {
-      color: $link-hover-color;
-      border-bottom-color: $link-hover-color;
-      cursor: pointer;
-    }
+    margin-left: 0;
+    border-bottom: transparent;
+    clear: both;
   }
 }
 
-.alert-success,
-.alert-info,
-.alert-danger,
-.alert-warning {
-  padding-left: 6em;
-  &:before {
-    font-family: FontAwesome, sans-serif;
-    font-size: 2rem;
-    position: absolute;
-    left: 0;
-    top: 1.5rem; // 50% top : calc(50% - 1.5rem);f
-    padding: 0 1.5rem;
-  }
-}
 
-.alert-success {
-  background-color: $ws2-success-bkgd;
-  border-color: $ws2-green;
-  &:before {
-    content: "\f058";
-  }
-}
-.alert-info {
-  background-color: $ws2-info-bkgd;
-  border-color: $ws2-blue;
-  &:before {
-    content: "\f05a";
-  }
-}
-.alert-danger {
-  background-color: $ws2-danger-bkgd; /* 20% opacity of official maroon */
-  border-color: $ws2-maroon;
-  &:before {
-    content: "\f071";
-  }
-}
-
-.alert-warning {
-  background-color: $ws2-warning-bkgd; /* 33% opacity of official maroon */
-  border-color: $ws2-orange;
-  &:before {
-    content: "\f0f3";
-  }
-}
-
-.alert:not([class*="alert-"]),
-div[class='alert alert-block'] { /* Catch-all for default alert class */
-  background-color: $ws2-gray-lightest;
-  border-color: $ws2-gray-light;
-}
-
-/* Devel debugging */
+/* Devel debugging ------------------------------------------------------ */
 .logged-in .alert > ul > li > [class^=krumo] {
   all: initial;
 }
@@ -827,84 +738,20 @@ div[class='alert alert-block'] { /* Catch-all for default alert class */
   color: $ws2-green;
 }
 
+/* =ALERTS -------------------------------------------------------------- */
+@import 'alerts';
 
+/* Banners (FPPs) ------------------------------------------------------- */
+@import 'banners';
 
 /* =Alternate Element styles for 1) gray, 2) black, and 3) white --- IN PROGRESS
--------------------------------------------------------------- */
-#{$ws2-content-styles-container} .ws2-element-alt { // Global shell for content-element only overrides
-  // Global alt styling
-  ////////////////////////////////
-  padding: $padding-base-vertical*1.5 $padding-base-horizontal*1.5;
-  border-style: solid;
-  border-width: 1px;
-  // Manage border padding/margins in container
-  & > *:first-child {
-    padding-top: 0;
-    margin-top: 0;
-  }
-  & > *:last-child {
-    padding-bottom: 0;
-    margin-bottom: 0;
-  }
-
-  /*
-   * Gray
-   */
-
-  &.ws2-element-alt-gray {
-    color: $text-color;
-    background-color: $ws2-gray-lighter;
-    border-color: $ws2-gray-lighter;
-    // Buttons
-    .ws2-element-style.btn-tag { // Tag button variation
-      background-color: $ws2-gray !important;
-    }
-  }
-
-  /*
-   * Black
-   */
-
-  &.ws2-element-alt-black {
-    color: $text-color-bg-dark;
-    background-color: $ws2-gray-darkest;
-    border-color: $ws2-gray-darkest;
-    // Lists
-    ul, ol {
-      li:before {
-        color: $text-color-bg-dark;
-      }
-      &.ws2-element-style.ws2-element-gold li:before { // only allow gold element in black background
-        color: $ws2-gold;
-      }
-    }
-    // Buttons
-    .ws2-element-style.btn-tag { // Tag button variation
-      background-color: $ws2-gray-dark;
-      border-color: $ws2-gray-dark;
-      color: #fff;
-    }
-  }
-
-  /*
-   * White
-   */
-
-  &.ws2-element-alt-white {
-    border-color: $ws2-gray-light;
-    // Buttons
-    .ws2-element-style.btn-tag { // only allow gold element in black background
-      background-color: $ws2-gray-lighter;
-    }
-  }
-}
-
+------------------------------------------------------------------------- */
+@import 'altstyles';
 
 /* =ADMIN UI --- WS2.0 DONE (admin only)
--------------------------------------------------------------- */
+------------------------------------------------------------------------- */
 
-/* Node edit */
-
+// Node edit form
 #top-content #tabs .nav-pills {
   padding: 0.5rem;
   background-color: $ws2-gray-lighter;
@@ -1026,8 +873,7 @@ ul.help-text li.help-title {
   font-weight: bold;
 }
 
-/* =FORMS --- WS2.0 DONE
--------------------------------------------------------------- */
+/* =FORMS --- WS2.0 DONE ------------------------------------------- */
 .marker, .form-required {
   color: $ws2-error-alt;
 }
@@ -1153,40 +999,9 @@ ul.help-text li.help-title {
   }
 }
 
-/** FOCUS --- WS2.0 DONE
+/** Accessibility --- WS2.0 DONE
 ----------------------------------------------------- */
-// Applied previous styles to outline and removed border properties
-a:focus,
-.ui-widget-content a:focus,
-input:focus,
-a.btn:focus,
-.btn a:focus,
-#skip_to_content:focus,
-#top-content #tabs .nav-pills > li.active > a:focus,
-h4.ui-accordion-header.ui-state-hover,
-h4.ui-accordion-header:focus {
-  @include a11y-strong-focus();
-}
-
-/** UI Tabs --- WS2.0 DONE
------------------------------------------------------ */
-
-/* fixes for stacked tabs */
-body #content .ui-tabs .ui-tabs-nav li {
-  &.ui-state-focus {
-    a {
-      border-top: none;
-    }
-    margin-bottom: 0;
-  }
-  a {
-    margin-left: 0;
-    border-bottom: transparent;
-    clear: both;
-  }
-}
-
-/* =MEDIA QUERIES - moved to separate file */
+@import 'accessibility';
 
 // WEBSPARK-1118 - Temporary footer link fix @removeIfInGlobalCSS
 #innovation-footer .footer-menu ul li a:hover {
@@ -1194,9 +1009,5 @@ body #content .ui-tabs .ui-tabs-nav li {
   border-bottom: 1px dotted $ws2-maroon;
 }
 
-/* CARDS
- -- WILL GO IN OWN SCSS FILE AFTER DEVELOPMENT
- */
-.asu-card {
-
-}
+/* CARDS -- WILL GO IN OWN SCSS FILE AFTER DEVELOPMENT */
+@import 'cards';
