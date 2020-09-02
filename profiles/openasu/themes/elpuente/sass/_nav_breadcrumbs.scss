@@ -1,0 +1,22 @@
+.breadcrumb {
+  padding: 0 0;
+  margin-top: 1.5em;
+  margin-bottom: 3em;
+  list-style: none;
+  font-size: 0.875em;
+  background-color: transparent;
+  & > li {
+    display: inline-block;
+    & + li:before {
+      content: "/\00a0";
+      padding: 0 0.3125em;
+      color: $ws2-gray-dark; //#828282;
+    }
+    & > a {
+      border-bottom: 0;
+    }
+  }
+  & > .active {
+    color: $ws2-gray-dark; //#828282;
+  }
+}

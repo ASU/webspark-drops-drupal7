@@ -1,17 +1,62 @@
-/** New WS2.0 - Dividers and Backgrounds IS_SCSS */
-/* Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2): Override Bootstrap variables below. */
+/**
+ * New WS2.0 - Dividers and Backgrounds
+ * IS_SCSS
+ */
+/*
+ * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
+ * Override Bootstrap variables below.
+ */
 /*== Colors --- WS2 DONE
 -----------------------------------------------------*/
-/* @TODO (all three colors) background-topo (all three colors) */
-hr.body-gold { height: 0.5rem; background-color: #ffc627; max-width: 16rem; margin: 2em 0; }
+/*
+  @TODO
+  (all three colors)
+  background-topo (all three colors)
+ */
+hr.body-gold {
+  height: 0.5rem;
+  background-color: #ffc627;
+  max-width: 16rem;
+  margin: 2em 0;
+}
 
-.asu-divider { background-position: top center; background-repeat: no-repeat; }
-.asu-divider.asu-divider-morse { background-image: url("/profiles/openasu/themes/elpuente/images/morse_white.png"); background-color: #fff; }
-.asu-divider.asu-divider-morse-gray { background-image: url("/profiles/openasu/themes/elpuente/images/morse_gray.png"); background-color: #bfbfbf; }
-.asu-divider.asu-divider-morse-gray { background-image: url("/profiles/openasu/themes/elpuente/images/morse_black.png"); background-color: #191919; }
-.asu-divider.asu-divider-topo { background-image: url("/profiles/openasu/themes/elpuente/images/topo_white.png"); background-color: #fff; }
-.asu-divider.asu-divider-topo-gray { background-image: url("/profiles/openasu/themes/elpuente/images/topo_gray.png"); background-color: #bfbfbf; }
-.asu-divider.asu-divider-topo-black { background-image: url("/profiles/openasu/themes/elpuente/images/topo_black.png"); background-color: #191919; }
-.asu-divider.asu-divider-net { background-image: url("/profiles/openasu/themes/elpuente/images/network_white.png"); background-color: #fff; }
-.asu-divider.asu-divider-net-black { background-image: url("/profiles/openasu/themes/elpuente/images/network_black.png"); background-color: #191919; }
-.asu-divider[class*=asu-divider-net] { background-position: top left; background-repeat: repeat-x; }
+.asu-divider {
+  background-position: top center;
+  background-repeat: no-repeat;
+}
+.asu-divider.asu-divider-morse {
+  background-image: url("/profiles/openasu/themes/elpuente/images/morse_white.png");
+  background-color: #fff;
+}
+.asu-divider.asu-divider-morse-gray {
+  background-image: url("/profiles/openasu/themes/elpuente/images/morse_gray.png");
+  background-color: #bfbfbf;
+}
+.asu-divider.asu-divider-morse-gray {
+  background-image: url("/profiles/openasu/themes/elpuente/images/morse_black.png");
+  background-color: #191919;
+}
+.asu-divider.asu-divider-topo {
+  background-image: url("/profiles/openasu/themes/elpuente/images/topo_white.png");
+  background-color: #fff;
+}
+.asu-divider.asu-divider-topo-gray {
+  background-image: url("/profiles/openasu/themes/elpuente/images/topo_gray.png");
+  background-color: #bfbfbf;
+}
+.asu-divider.asu-divider-topo-black {
+  background-image: url("/profiles/openasu/themes/elpuente/images/topo_black.png");
+  background-color: #191919;
+}
+.asu-divider.asu-divider-net {
+  background-image: url("/profiles/openasu/themes/elpuente/images/network_white.png");
+  background-color: #fff;
+}
+.asu-divider.asu-divider-net-black {
+  background-image: url("/profiles/openasu/themes/elpuente/images/network_black.png");
+  background-color: #191919;
+}
+.asu-divider[class*=asu-divider-net] {
+  background-position: top left;
+  background-repeat: repeat-x;
+}
