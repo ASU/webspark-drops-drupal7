@@ -23,7 +23,7 @@ img.img-testimonial-small {
 
 /* -- ordered + unordered lists
 -------------------------------------------------------------- */
-#{$ws2-content-styles-container} *:not(#{$ws2-content-styles-blacklist}){
+#{$ws2-content-styles-container} {
   ul, ol {
     padding-left: 0;
     list-style-type: none;
@@ -126,6 +126,14 @@ img.img-testimonial-small {
       &.ws2-element-gold > li:before {
         background-color: $ws2-gold;
         color: $text-color;
+      }
+    }
+  }
+  // Exception -- No custom bullets in the secondary menu
+  div.pane-menu-tree {
+    ul, ol {
+      li:before {
+        content: none;
       }
     }
   }
