@@ -4,8 +4,7 @@
 @import "variables";
 @import "mixins/global";
 
-// Local nav mixins
-
+// Local Navigation mixins
 @mixin nav-leaf-styling($right: '') {
   border-top: none;
   border-bottom: none;

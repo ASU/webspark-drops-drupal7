@@ -26,7 +26,9 @@ $block-indent: 6rem; // 96px
 // Official ASU colors
 //// ASU Primary colors
 $ws2-maroon:             #8c1d40;
+$ws2-maroon-hover:       #440E22;
 $ws2-gold:               #ffc627;
+$ws2-gold-hover:         #7F6227;
 $ws2-blue:               #00a3e0;
 $ws2-green:              #78be20; // Banner - success
 $ws2-orange:             #ff7f32; // Banner - warning
@@ -105,8 +107,8 @@ $ws2-content-styles-blacklist: "div.pane-menu-tree";
 $link-color:              $brand-primary;
 $link-color-gold:         $ws2-gold;
 //** Link hover color set via `darken()` function.
-$link-hover-color:        $brand-primary;
-$link-hover-color-gold:   #ffd053;
+$link-hover-color:        $ws2-maroon-hover;
+$link-hover-color-gold:   $ws2-gold-hover;
 
 //== Typography --- WS2 DONE
 //
