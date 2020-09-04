@@ -34,13 +34,14 @@ div.pane-system-main-menu, div.pane-menu-tree { margin-top: 3em; }
 #skip_to_content { position: absolute; left: -9999px; }
 #skip_to_content:focus { position: relative; left: 0; }
 
-/* =LINKS --- WS2.0 DONE =BUTTONS --- WS2.0 DONE
--------------------------------------------------------------- */
+/* Buttons --- WS2.0 DONE ------------------------------------ */
 /* =BUTTONS --- WS2.0 DONE
 -------------------------------------------------------------- */
 #tabs .nav.nav-pills > li > a { padding-top: 0.5rem; padding-bottom: 0.5rem; }
 
 .tb-megamenu-main-menu > button.btn-navbar.tb-megamenu-button { display: none; }
+
+button, .button, .btn, a.btn, .btn a { transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; word-wrap: break-word; }
 
 .btn, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree { /* Button CSS for menu links added */ -moz-user-select: none; background-image: none; border: 1px solid transparent; border-radius: 32px; cursor: pointer; display: inline-block; font-size: 1em; font-weight: bold; line-height: 1em; margin-bottom: 0; max-width: 17.5rem; min-width: 5rem; padding: 8px 8px; text-align: center; vertical-align: middle; white-space: nowrap; }
 .btn.active, .btn:focus, .btn:active, .btn:active:focus, .btn.active:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:active:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.active:focus { background-image: none; outline: 0 none; }
@@ -168,12 +169,11 @@ fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fields
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container + li:not(.btn-container) { margin-left: 1.375em; }
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container + li:not(.btn-container) > a { margin-left: 0; padding-left: 1.375em; }
 
+/* Links --- WS2.0 DONE -------------------------------------- */
 a, .ui-widget-content a { border-bottom: 1px solid #8c1d40; text-decoration: none; color: #8c1d40; }
 a:hover, .ui-widget-content a:hover { color: #8c1d40; text-decoration: none; border-bottom: none; }
 
 #header a, #asu_footer a { border-bottom: transparent; }
-
-button, .button, .btn, a.btn, .btn a { transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; word-wrap: break-word; }
 
 a.btn, .btn { margin-top: 0.9375em; }
 a.btn.btn-lg, .btn.btn-lg { margin-top: 1.5em; }
@@ -212,9 +212,6 @@ h5, .h5, h6, .h6 { font-size: 16px; }
 
 h6, .h6 { font-weight: normal; }
 
-/* HR separator - custom */
-hr.ws2-element-gold { border-color: #ffc627; border-width: 8px; margin-left: 0; max-width: 256px; }
-
 /* Blockquotes - Includes quotes/image styles, and testimonials Along with signature styling at the bottom */
 /* Blockquotes */
 /* blockquotes-output - Return base64-encoded string for rendering open quote. @param (str) $color - (optional) defaults to dark gray. Alt options (gold, maroon, white) */
@@ -241,24 +238,14 @@ blockquote.ws2-element-black a { color: #ffc627; }
 
 .explore-programs h3 { font-size: 1.625rem; }
 
-/* =HEADER --- IN PROGRESS
--------------------------------------------------------------- */
+/* Header - IN PROGRESS ------------------------------------------- */
 .header__sitename { color: #191919; font-weight: bold; font-size: 1.5em; line-height: 1; letter-spacing: -0.5px; margin-top: 0; margin-bottom: 0; padding: 0 0 0.75rem 0.75rem; white-space: nowrap; overflow: hidden; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; }
-
 .header__sitename.element-invisible { white-space: inherit; }
-
 .header__sitename a { color: #191919; }
 
 #asu_hdr #asu_universal_nav_new .icn { box-sizing: content-box; }
 
-/* =STICKY NAV BAR --- WS2.0 DONE
--------------------------------------------------------------- */
-#ASUNavMenu.affix { position: fixed; top: 0; width: 100%; }
-
-.sticky-menu { position: sticky; position: -webkit-sticky; top: 0; }
-
-/* =IMAGES --- IN PROGRESS
--------------------------------------------------------------- */
+/* =IMAGES --------------------------------------------------- */
 img { max-width: 100%; height: auto; vertical-align: bottom; }
 
 /* WYSIWYG image spacing */
@@ -278,8 +265,7 @@ div.caption-inner { padding: 0; background: transparent; border: none; }
 div.caption-inner > img { margin-bottom: 0; }
 div.caption-inner p.caption-text, div.caption-inner .caption-text { padding: 1rem; font-size: 0.75rem; text-align: left; margin: 0; border: 1px solid #d0d0d0; border-top: none; }
 
-/* =LISTS, ordered + unordered #WS2.0
--------------------------------------------------------------- */
+/* Lists --- WS2.0 DONE -------------------------------------- */
 /** List items */
 /* -- BlockQuotes
 -------------------------------------------------------------- */
@@ -314,8 +300,8 @@ img.img-testimonial-small { clip-path: circle(90px); }
 .region-content #page-page ol.ws2-list-stepped.ws2-element-gold > li:before { background-color: #ffc627; color: #191919; }
 .region-content #page-page div.pane-menu-tree ul li:before, .region-content #page-page div.pane-menu-tree ol li:before { content: none; }
 
-/* =TABLES --- IN PROGRESS
--------------------------------------------------------------- */
+/* Tables ---------------------------------------------------- */
+/* IN PROGRESS */
 /* Default table styles */
 table { background-color: #fff; margin-bottom: 1.5em; max-width: 100%; width: 100%; border: 1px solid #e8e8e8; }
 
@@ -340,16 +326,11 @@ table.bordered > tbody > tr:nth-child(2n+1) { background-color: #fff; }
 
 table.bordered > caption + thead > tr:first-child > th, table.bordered > caption + thead > tr:first-child > td, table.bordered > colgroup + thead > tr:first-child > th, table.bordered > colgroup + thead > tr:first-child > td, table.bordered > thead:first-child > tr:first-child > th, table.bordered > thead:first-child > tr:first-child > td { border-top: 1px solid #bfbfbf; }
 
-/* =CONTENT CALLOUTS --- NOT DONE
--------------------------------------------------------------- */
-.node-content-callout { padding: 80px 0; }
-
-.node-content-callout .col-md-12 .content-wrapper { max-width: 800px; margin-right: auto; margin-left: auto; text-align: center; }
-
+/* =CONTENT CALLOUTS --- SASS DONE (no WS2.0) ---------------- */
+.node-content-callout { padding: 5rem 0; }
 .node-content-callout h2 { margin-bottom: 34px; font-size: 40px; }
-
+.node-content-callout .col-md-12 .content-wrapper { max-width: 50rem; margin-right: auto; margin-left: auto; text-align: center; }
 .node-content-callout .btn { margin-top: 18px; }
-
 .node-content-callout .col-md-6 img, .node-content-callout .col-md-6 .embedded-video { margin-top: 22px; }
 
 /* =PANELS --- WS2.0 DONE
@@ -398,18 +379,6 @@ table.bordered > caption + thead > tr:first-child > th, table.bordered > caption
 .ui-accordion .ui-accordion-header .ui-icon, .ui-accordion .ui-state-active .ui-icon, .ui-accordion .ui-state-default .ui-icon, .ui-accordion .ui-accordion .ui-state-active .ui-icon { background-image: url("/profiles/openasu/themes/innovation/images/accordion-arrows.png"); }
 .ui-accordion .ui-icon-triangle-1-e { background-position: 0 0; }
 .ui-accordion .ui-state-hover .ui-icon-triangle-1-e, .ui-accordion .ui-icon-triangle-1-s { background-position: 0 -13px; }
-
-/** UI Tabs --- WS2.0 DONE
------------------------------------------------------------------------- */
-/* fixes for stacked tabs */
-body #content .ui-tabs .ui-tabs-nav li.ui-state-focus { margin-bottom: 0; }
-body #content .ui-tabs .ui-tabs-nav li.ui-state-focus a { border-top: none; }
-body #content .ui-tabs .ui-tabs-nav li a { margin-left: 0; border-bottom: transparent; clear: both; }
-
-/* Devel debugging ------------------------------------------------------ */
-.logged-in .alert > ul > li > [class^=krumo] { all: initial; }
-
-.logged-in .alert .krumo-root .krumo-element:not(a) { color: #78be20; }
 
 /* =ALERTS -------------------------------------------------------------- */
 /** Alerts */
@@ -503,72 +472,47 @@ h2.widget-list { font-size: 0.9em; line-height: 1.4; margin: 0 0 0 0.625em; }
 
 /* LH side categories */
 #modalContent .panels-section-column-categories .content-type-button { top: 0.5em; line-height: 1.1em; font-size: 0.75em; }
-
 #modalContent .panels-section-column-categories .content-type-button div, #modalContent .panels-section-column-categories .content-type-button span { left: 3em; position: absolute; top: 0.25em; width: 80%; }
-
 #modalContent .panels-section-column-categories .content-type-button > a:hover > img, #modalContent .panels-section-column-categories .content-type-button > a > img:hover { border: 2px solid #fff; }
 
 /* Main body of columns with content */
 #modalContent .panels-section-columns > .panels-section-column .content-type-button { font: normal 0.9rem/1.5em Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif; top: 0; }
-
 #modalContent .panels-section-columns > .panels-section-column .content-type-button div, #modalContent .panels-section-columns > .panels-section-column .content-type-button span { position: relative; top: 0; left: 0; }
 
 #modal-content .form-tablefield input.form-submit.btn, #modalContent .form-tablefield input.form-submit.btn { background-color: #8c1d40 !important; }
 
 ul.help-text { background-color: #fafafa; padding: 0.5em 1em; }
-
 ul.help-text li { list-style: none; padding: 0.125em 0; line-height: 1.25; }
-
 ul.help-text li.help-title { font-size: 0.875em; font-weight: bold; }
-
-/* =FORMS --- WS2.0 DONE ------------------------------------------- */
-.marker, .form-required { color: #b72a2a; }
 
 /* =100% width fix for Bootstrap limitation --- SKIPPED (NEEDS REVIEW)
 ----------------------------------------------------- */
 #header .container { padding-left: 0; padding-right: 0; }
-
-#header > .container .row .col-md-12 { padding-right: 0; padding-left: 0; }
+#header .container .row .col-md-12 { padding-right: 0; padding-left: 0; }
 
 .section > .container, #footer > .container, #page-footer > .container { width: 100%; padding-left: 0; padding-right: 0; }
-
 .section > .container .row, #footer > .container .row, #page-footer > .container .row { max-width: 1170px; margin: 0 auto; }
-
 .section > .container .row-full, #footer > .container .row-full, #page-footer > .container .row-full { width: 100% !important; max-width: none; }
-
 .section > .container .row-full .col-md-12, #footer > .container .row-full .col-md-12, #page-footer > .container .row-full .col-md-12 { padding-left: 0; padding-right: 0; }
+.section > .container .row-full [class^="pane-"], .section > .container .row-full .content, .section > .container .row-full .region > div:not(.block-asu-brand) .content, #footer > .container .row-full [class^="pane-"], #footer > .container .row-full .content, #footer > .container .row-full .region > div:not(.block-asu-brand) .content, #page-footer > .container .row-full [class^="pane-"], #page-footer > .container .row-full .content, #page-footer > .container .row-full .region > div:not(.block-asu-brand) .content { max-width: 1170px; margin: 0 auto; padding-left: 15px; padding-right: 15px; }
+.section > .container .row-full .region > div.block-asu-brand > .content, #footer > .container .row-full .region > div.block-asu-brand > .content, #page-footer > .container .row-full .region > div.block-asu-brand > .content { max-width: 100%; padding-left: 0; padding-right: 0; }
 
-.section > .container .row-full [class^="pane-"], #footer > .container .row-full .content, #page-footer > .container .row-full .region > div:not(.block-asu-brand) .content { max-width: 1170px; margin: 0 auto; padding-left: 15px; padding-right: 15px; }
-
-#page-footer #innovation-top { padding-left: 15px; padding-right: 15px; }
+.section > .container .row-full .pane-bundle-asu-spotlight [class^="pane-"] { width: 100% !important; padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0; max-width: none !important; }
 
 /* WEBSPARK-1561 - footer positioning issues */
 /* @TODO - remove these overrides when added to ASU global header/footer CSS */
 #innovation-footer { position: relative; }
 #innovation-footer .footer-menu ul { padding: 1em; }
 #innovation-footer .footer-menu ul li { padding-bottom: 0; }
-
-/* 100% width issue - override for flexslider; asuflex.css carries the rest after this rule
------------------------------------------------------ */
-.section > .container .row-full .pane-bundle-asu-spotlight [class^="pane-"] { width: 100% !important; padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0; max-width: none !important; }
+#innovation-footer .footer-menu ul li a:hover { color: #8c1d40; border-bottom: 1px dotted #8c1d40; }
 
 .row { padding: 0; margin: 0; }
 
 #page-footer { background-color: #191919; }
+#page-footer #innovation-top { padding-left: 15px; padding-right: 15px; }
 #page-footer #block-asu-brand-asu-brand-footer { background-color: #e8e8e8; }
 
-/** Token browsing modal --- SKIPPED (Admin only)
------------------------------------------------------ */
-.ui-widget-content.ui-dialog.token-browser-container { background-color: #fff; padding: 0.5em; border: 1px solid #ddd; -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0; }
-
-.token-browser-container .ui-dialog-titlebar { background-color: #eaeaec; -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0; }
-.token-browser-container .ui-dialog-title { color: #333; padding-left: 1em; }
-.token-browser-container table.treeTable > tbody > tr > td:not(first-child) { padding-top: 0.25em; padding-bottom: 0.25em; }
-
-/** Accessibility --- WS2.0 DONE
------------------------------------------------------ */
+/** Accessibility --- WS2.0 DONE ------------------------------ */
 a:focus, .ui-widget-content a:focus, input:focus, a.btn:focus, .btn a:focus, #skip_to_content:focus, #top-content #tabs .nav-pills > li.active > a:focus, h4.ui-accordion-header.ui-state-hover, h4.ui-accordion-header:focus { outline: 2px solid #191919; }
 
-#innovation-footer .footer-menu ul li a:hover { color: #8c1d40; border-bottom: 1px dotted #8c1d40; }
-
-/* CARDS -- WILL GO IN OWN SCSS FILE AFTER DEVELOPMENT */
+/* Cards -------------------------------------------- */

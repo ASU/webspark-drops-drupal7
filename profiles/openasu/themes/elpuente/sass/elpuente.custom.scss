@@ -80,73 +80,10 @@ div.pane-menu-tree {
   }
 }
 
-/* =LINKS --- WS2.0 DONE
- * =BUTTONS --- WS2.0 DONE
--------------------------------------------------------------- */
-@import "buttons";
-
-a,
-.ui-widget-content a {
-  border-bottom: 1px solid $ws2-maroon;
-  text-decoration: none;
-  color: $ws2-maroon;
-  &:hover {
-    color: $link-hover-color;
-    text-decoration: none;
-    border-bottom: none;
-  }
-}
-
-#header a,
-#asu_footer a {
-  border-bottom: transparent;
-}
-
-button, .button, .btn, a.btn, .btn a {
-  @include ws2-global-transition();
-  word-wrap: break-word;
-}
-
-a.btn, .btn {
-  margin-top: 0.9375em;
-  &.btn-lg {
-    margin-top: 1.5em;
-  }
-  &:hover {
-    border-bottom: transparent;
-  }
-}
-
-a.btn-default, .btn-default a,
-a.btn-primary, .btn-primary a {
-  color: #fff;
-  border-bottom-color: $ws2-maroon;
-  &:hover {
-    color: #fff;
-    border-bottom-color: $ws2-maroon;
-  }
-}
-
-a.btn-secondary, .btn-secondary a,
-a.btn-blue, .btn-blue a {
-  color: $ws2-gray-darkest;
-  border-bottom-color: transparent;
-  border-bottom: none;
-  &:hover {
-    color: $ws2-gray-darkest;
-    border-bottom-color: transparent;
-    border-bottom: none;
-  }
-}
-
-a.btn-gold, .btn-gold a {
-  color: #fff;
-  border-bottom-color: $ws2-maroon;
-  &:hover {
-    color: #fff;
-    border-bottom-color: $ws2-maroon;
-  }
-}
+/* Buttons --- WS2.0 DONE ------------------------------------ */
+@import 'buttons';
+/* Links --- WS2.0 DONE -------------------------------------- */
+@import 'links';
 
 /* =TYPOGRAPHY --- WS2.0 DONE
 -------------------------------------------------------------- */
@@ -207,18 +144,9 @@ h6, .h6 {
   font-weight: normal;
 }
 
-/* HR separator - custom */
-hr.ws2-element-gold {
-  border-color: $ws2-gold;
-  border-width: 8px;
-  margin-left: 0;
-  max-width: 256px;
-}
-
 /* Blockquotes - Includes quotes/image styles, and testimonials
  * Along with signature styling at the bottom */
 @import "blockquotes";
-
 
 /* WYSIWYG style -- Lead Paragraph --*/ // aka WS2.0 SEO paragraph
 .lead-paragraph {
@@ -232,8 +160,7 @@ hr.ws2-element-gold {
   font-size: 1.625rem;
 }
 
-/* =HEADER --- IN PROGRESS
--------------------------------------------------------------- */
+/* Header - IN PROGRESS ------------------------------------------- */
 .header__sitename {
   color: $ws2-gray-darkest;
   font-weight: bold;
@@ -246,197 +173,47 @@ hr.ws2-element-gold {
   white-space: nowrap;
   overflow: hidden;
   @include ws2-global-transition();
-}
-
-.header__sitename.element-invisible {
-  white-space: inherit;
-}
-
-.header__sitename a {
-  color: $ws2-gray-darkest;
+  &.element-invisible {
+    white-space: inherit;
+  }
+  a {
+    color: $ws2-gray-darkest;
+  }
 }
 
 #asu_hdr #asu_universal_nav_new .icn {
   box-sizing: content-box;
 }
 
-/* =STICKY NAV BAR --- WS2.0 DONE
--------------------------------------------------------------- */
-#ASUNavMenu.affix {
-  position: fixed;
-  top: 0;
-  width: 100%;
-}
-.sticky-menu {
-  position: sticky;
-  position: -webkit-sticky;
-  top: 0;
-}
+/* =IMAGES --------------------------------------------------- */
+@import 'images';
+/* Lists --- WS2.0 DONE -------------------------------------- */
+@import 'list_items';
+/* Tables ---------------------------------------------------- */
+@import 'tables';
 
-/* =IMAGES --- IN PROGRESS
--------------------------------------------------------------- */
-// Added from Panopoly Images CSS file (removed in Panopoly 1.21)
-img {
-  max-width: 100%;
-  height: auto;
-  vertical-align: bottom;
-}
-
-/* WYSIWYG image spacing */
-img.media-element.pull-right {
-  margin-left: 20px;
-}
-img.media-element.pull-left {
-  margin-right: 20px;
-}
-.img-circle,
-p.img-circle img {
-  border-radius: $border-radius-circle;
-}
-
-.img-rounded, // #Innovation
-p.img-rounded img {
-  border-radius: 4px;
-}
-.img-thumbnail, // #Innovation
-p.img-thumbnail img {
-  background-color: #fff;
-  border: 1px solid $gray-alt-admin;
-  border-radius: 4px;
-  display: inline-block;
-  height: auto;
-  line-height: 1.44;
-  max-width: 100%;
-  padding: 4px;
-  transition: all 0.2s ease-in-out 0s;
-}
-
-// Images and captions #WS2.0
-img.ws2-drop-shadow {
-  box-shadow: 0 0.625em 1.25em rgba(0, 0, 41, 0.25);
-}
-div.caption-inner {
-  padding: 0;
-  background: transparent;
-  border: none;
-  & > img {
-    margin-bottom: 0;
-  }
-  p.caption-text, // override of caption filter module rule
-  .caption-text {
-    padding: 1rem;
-    font-size: 0.75rem;
-    text-align: left;
-    margin: 0;
-    border: 1px solid $ws2-gray-light;
-    border-top: none;
-  }
-}
-
-/* =LISTS, ordered + unordered #WS2.0
--------------------------------------------------------------- */
-@import "list_items";
-
-/* =TABLES --- IN PROGRESS
--------------------------------------------------------------- */
-/* Default table styles */
-table {
-  background-color: #fff;
-  margin-bottom: 1.5em;
-  max-width: 100%;
-  width: 100%;
-  border: 1px solid $ws2-gray-lighter;
-}
-table > tbody {
-  border-top: none;
-}
-
-table > thead > tr > th,
-table > thead > tr > td,
-table > tbody > tr > th,
-table > tbody > tr > td,
-table > tfoot > tr > th,
-table > tfoot > tr > td {
-  border-top: 1px solid $ws2-gray;
-  line-height: 1.44;
-  padding: $padding-small-vertical $padding-small-horizontal;
-  vertical-align: top;
-}
-
-table > thead > tr > th,
-table > thead > tr > td {
-  border-bottom: 2px solid $ws2-gray;
-  vertical-align: bottom;
-  font-weight: bold;
-}
-body:not(.page-admin) table > tbody > tr:nth-child(2n+1) {
-  background-color: $ws2-gray-lightest;
-}
-
-table > caption + thead > tr:first-child > th,
-table > caption + thead > tr:first-child > td,
-table > colgroup + thead > tr:first-child > th,
-table > colgroup + thead > tr:first-child > td,
-table > thead:first-child > tr:first-child > th,
-table > thead:first-child > tr:first-child > td {
-  border-top: 0 none;
-}
-
-table > tbody + tbody {
-  border-top: 2px solid $ws2-gray;
-}
-
-/* WYSIWYG Bordered table */
-table.bordered {
-  border-bottom: 1px solid $ws2-gray;
-  border-left: 1px solid $ws2-gray;
-}
-table.bordered > thead > tr > th,
-table.bordered > thead > tr > td,
-table.bordered > tbody > tr > th,
-table.bordered > tbody > tr > td,
-table.bordered > tfoot > tr > th,
-table.bordered > tfoot > tr > td {
-  border-right: 1px solid $ws2-gray;
-}
-table.bordered > tbody > tr:nth-child(2n+1) {
-  background-color: #fff;
-}
-table.bordered > caption + thead > tr:first-child > th,
-table.bordered > caption + thead > tr:first-child > td,
-table.bordered > colgroup + thead > tr:first-child > th,
-table.bordered > colgroup + thead > tr:first-child > td,
-table.bordered > thead:first-child > tr:first-child > th,
-table.bordered > thead:first-child > tr:first-child > td {
-  border-top: 1px solid $ws2-gray;
-}
-
-
-/* =CONTENT CALLOUTS --- NOT DONE
--------------------------------------------------------------- */
+/* =CONTENT CALLOUTS --- SASS DONE (no WS2.0) ---------------- */
 .node-content-callout {
-  padding: 80px 0;
-}
-
-.node-content-callout .col-md-12 .content-wrapper {
-  max-width: 800px;
-  margin-right: auto;
-  margin-left: auto;
-  text-align: center;
-}
-
-.node-content-callout h2 {
-  margin-bottom: 34px;
-  font-size: $font-size-h2;
-}
-
-.node-content-callout .btn {
-  margin-top: 18px;
-}
-
-.node-content-callout .col-md-6 img,
-.node-content-callout .col-md-6 .embedded-video {
-  margin-top: 22px;
+  padding: 5rem 0;
+  h2 {
+    margin-bottom: 34px;
+    font-size: $font-size-h2;
+  }
+  .col-md-12 .content-wrapper {
+    max-width: 50rem;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+  }
+  .btn {
+    margin-top: 18px;
+  }
+  .col-md-6 {
+    img,
+    .embedded-video {
+      margin-top: 22px;
+    }
+  }
 }
 
 /* =PANELS --- WS2.0 DONE
@@ -506,7 +283,6 @@ table.bordered > thead:first-child > tr:first-child > td {
 
 /* =FLEXSLIDER SLIDESHOWS --- WS2.0 DONE
 -------------------------------------------------------------- */
-
 .flexslider {
   border: none;
   border-radius: 0;
@@ -621,47 +397,16 @@ table.bordered > thead:first-child > tr:first-child > td {
   }
 }
 
-/** UI Tabs --- WS2.0 DONE
------------------------------------------------------------------------- */
-
-/* fixes for stacked tabs */
-body #content .ui-tabs .ui-tabs-nav li {
-  &.ui-state-focus {
-    a {
-      border-top: none;
-    }
-    margin-bottom: 0;
-  }
-  a {
-    margin-left: 0;
-    border-bottom: transparent;
-    clear: both;
-  }
-}
-
-
-/* Devel debugging ------------------------------------------------------ */
-.logged-in .alert > ul > li > [class^=krumo] {
-  all: initial;
-}
-
-.logged-in .alert .krumo-root .krumo-element:not(a) {
-  color: $ws2-green;
-}
-
 /* =ALERTS -------------------------------------------------------------- */
 @import 'alerts';
-
 /* Banners (FPPs) ------------------------------------------------------- */
 @import 'banners';
-
 /* =Alternate Element styles for 1) gray, 2) black, and 3) white --- IN PROGRESS
 ------------------------------------------------------------------------- */
 @import 'altstyles';
 
 /* =ADMIN UI --- WS2.0 DONE (admin only)
 ------------------------------------------------------------------------- */
-
 // Node edit form
 #top-content #tabs .nav-pills {
   padding: 0.5rem;
@@ -737,112 +482,98 @@ h2.widget-list {
   top: 0.5em;
   line-height: 1.1em;
   font-size: 0.75em;
-}
-
-#modalContent .panels-section-column-categories .content-type-button div,
-#modalContent .panels-section-column-categories .content-type-button span {
-  left: 3em;
-  position: absolute;
-  top: 0.25em;
-  width: 80%;
-}
-
-#modalContent .panels-section-column-categories .content-type-button > a:hover > img,
-#modalContent .panels-section-column-categories .content-type-button > a > img:hover {
-  border: 2px solid #fff;
+  div, span {
+    left: 3em;
+    position: absolute;
+    top: 0.25em;
+    width: 80%;
+  }
+  & > a:hover > img,
+  & > a > img:hover {
+    border: 2px solid #fff;
+  }
 }
 
 /* Main body of columns with content */
 #modalContent .panels-section-columns > .panels-section-column .content-type-button {
   font: normal 0.9rem/1.5em $font-family-base;
   top: 0;
+  div, span {
+    position: relative;
+    top: 0;
+    left: 0;
+  }
 }
 
-#modalContent .panels-section-columns > .panels-section-column .content-type-button div,
-#modalContent .panels-section-columns > .panels-section-column .content-type-button span {
-  position: relative;
-  top: 0;
-  left: 0;
-}
 #modal-content .form-tablefield input.form-submit.btn,
 #modalContent .form-tablefield input.form-submit.btn {
   background-color: $ws2-maroon !important;
 }
+
 ul.help-text {
   background-color: $ws2-gray-lightest;
   padding: 0.5em 1em;
-}
-
-ul.help-text li {
-  list-style: none;
-  padding: 0.125em 0;
-  line-height: 1.25;
-}
-
-ul.help-text li.help-title {
-  font-size: 0.875em;
-  font-weight: bold;
-}
-
-/* =FORMS --- WS2.0 DONE ------------------------------------------- */
-.marker, .form-required {
-  color: $ws2-error-alt;
+  li {
+    list-style: none;
+    padding: 0.125em 0;
+    line-height: 1.25;
+    &.help-title {
+      font-size: 0.875em;
+      font-weight: bold;
+    }
+  }
 }
 
 /* =100% width fix for Bootstrap limitation --- SKIPPED (NEEDS REVIEW)
 ----------------------------------------------------- */
-
 #header .container {
   padding-left: 0;
   padding-right: 0;
+  .row .col-md-12 {
+    padding-right: 0;
+    padding-left: 0;
+  }
 }
-
-#header > .container .row .col-md-12 {
-  padding-right: 0;
-  padding-left: 0;
-}
-
 .section > .container,
 #footer > .container,
 #page-footer > .container {
   width: 100%;
   padding-left: 0;
   padding-right: 0;
+  .row {
+    max-width: 1170px;
+    margin: 0 auto;
+  }
+  .row-full {
+    width: 100% !important;
+    max-width: none;
+    .col-md-12 {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    [class^="pane-"],
+    .content,
+    .region > div:not(.block-asu-brand) .content {
+      max-width: 1170px;
+      margin: 0 auto;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+    .region > div.block-asu-brand > .content {
+      max-width: 100%;
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
 }
-
-.section > .container .row,
-#footer > .container .row,
-#page-footer > .container .row {
-  max-width: 1170px;
-  margin: 0 auto;
-}
-
-.section > .container .row-full,
-#footer > .container .row-full,
-#page-footer > .container .row-full {
+// 100% width issue - override for flexslider; asuflex.css carries the rest after this rule
+.section > .container .row-full .pane-bundle-asu-spotlight [class^="pane-"] {
   width: 100% !important;
-  max-width: none;
-}
-
-.section > .container .row-full .col-md-12,
-#footer > .container .row-full .col-md-12,
-#page-footer > .container .row-full .col-md-12 {
   padding-left: 0;
   padding-right: 0;
-}
-
-.section > .container .row-full [class^="pane-"],
-#footer > .container .row-full .content,
-#page-footer > .container .row-full .region > div:not(.block-asu-brand) .content {
-  max-width: 1170px;
-  margin: 0 auto;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-#page-footer #innovation-top {
-  padding-left: 15px;
-  padding-right: 15px;
+  margin-left: 0;
+  margin-right: 0;
+  max-width: none !important;
 }
 
 /* WEBSPARK-1561 - footer positioning issues */
@@ -853,20 +584,13 @@ ul.help-text li.help-title {
     padding: 1em;
     li {
       padding-bottom: 0;
+      // WEBSPARK-1118 - Temporary footer link fix @removeIfInGlobalCSS
+      a:hover {
+        color: $ws2-maroon;
+        border-bottom: 1px dotted $ws2-maroon;
+      }
     }
   }
-}
-
-
-/* 100% width issue - override for flexslider; asuflex.css carries the rest after this rule
------------------------------------------------------ */
-.section > .container .row-full .pane-bundle-asu-spotlight [class^="pane-"] {
-  width: 100% !important;
-  padding-left: 0;
-  padding-right: 0;
-  margin-left: 0;
-  margin-right: 0;
-  max-width: none !important;
 }
 
 .row {
@@ -876,49 +600,16 @@ ul.help-text li.help-title {
 
 #page-footer {
   background-color: $ws2-gray-darkest;
+  #innovation-top {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
   #block-asu-brand-asu-brand-footer {
     background-color: $ws2-gray-lighter;
   }
 }
 
-/** Token browsing modal --- SKIPPED (Admin only)
------------------------------------------------------ */
-
-.ui-widget-content.ui-dialog.token-browser-container {
-  background-color: #fff;
-  padding: 0.5em;
-  border: 1px solid $gray-alt-admin;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-
-}
-.token-browser-container {
-  .ui-dialog-titlebar {
-    background-color: #eaeaec;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    border-radius: 0;
-  }
-  .ui-dialog-title {
-    color: #333;
-    padding-left: 1em;
-  }
-  table.treeTable > tbody > tr > td:not(first-child) {
-    padding-top: 0.25em;
-    padding-bottom: 0.25em;
-  }
-}
-
-/** Accessibility --- WS2.0 DONE
------------------------------------------------------ */
+/** Accessibility --- WS2.0 DONE ------------------------------ */
 @import 'accessibility';
-
-// WEBSPARK-1118 - Temporary footer link fix @removeIfInGlobalCSS
-#innovation-footer .footer-menu ul li a:hover {
-  color: $ws2-maroon;
-  border-bottom: 1px dotted $ws2-maroon;
-}
-
-/* CARDS -- WILL GO IN OWN SCSS FILE AFTER DEVELOPMENT */
+/* Cards -------------------------------------------- */
 @import 'cards';

@@ -28,10 +28,6 @@
 .nav-pills > li.active > a:focus { outline: 2px solid #191919; }
 
 /* Tabs, QuickTabs --------------------------------------------- */
-/* =TABS & QuickTabs --- WS2.0 DONE
--------------------------------------------------------------- */
-/* Removing panopoly styles */
-/* WEBSPARK-742 - panopoly-theme.css override */
 .ui-widget, .ui-widget-header, .ui-widget-content { font-family: inherit; }
 
 ul.quicktabs-style-nostyle { font-size: 24px; }
@@ -69,6 +65,11 @@ ul.quicktabs-style-nostyle li.active a, ul.quicktabs-style-nostyle li.active:hov
 .ui-tabs .ui-tabs-nav li.ui-state-focus a { border-top: 0.125em solid #191919; border-right: 0.125em solid #191919; border-bottom: 0.125em solid #191919; border-left: 0.125em solid #191919; }
 
 ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a { color: #191919; }
+
+/* fixes for stacked tabs */
+body #content .ui-tabs .ui-tabs-nav li.ui-state-focus { margin-bottom: 0; }
+body #content .ui-tabs .ui-tabs-nav li.ui-state-focus a { border-top: none; }
+body #content .ui-tabs .ui-tabs-nav li a { margin-left: 0; border-bottom: transparent; clear: both; }
 
 /* Pagers ------------------------------------------------------ */
 /* =PAGERS & PAGINATION -- WS2.0 DONE
@@ -149,3 +150,9 @@ span.nolink { margin: 0 2.5rem 0 2.5rem; text-decoration: underline; }
 
 /* WEBSPARK-856 - Apply max width and custom margin/padding to LH menu in 100% wide regions */
 .container .row-full .pane-menu-tree, .container .row-full .pane-system-main-menu { max-width: 1140px; margin: 2em auto 0 auto; padding: 2em 1em 1em 1em; }
+
+/* =STICKY NAV BAR --- WS2.0 DONE
+-------------------------------------------------------------- */
+#ASUNavMenu.affix { position: fixed; top: 0; width: 100%; }
+
+.sticky-menu { position: sticky; position: -webkit-sticky; top: 0; }

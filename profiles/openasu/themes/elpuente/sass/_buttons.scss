@@ -20,6 +20,12 @@
 }
 
 // DEFAULTS
+
+button, .button, .btn, a.btn, .btn a {
+  @include ws2-global-transition();
+  word-wrap: break-word;
+}
+
 .btn,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree {   /* Button CSS for menu links added */
   -moz-user-select: none;

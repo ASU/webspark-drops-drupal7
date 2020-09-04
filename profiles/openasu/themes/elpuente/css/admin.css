@@ -66,3 +66,15 @@ html.js .pia.page-admin-modules .module-filter-inputs-wrapper .module-filter-cle
 .pia div.form-item > .help-block { font-size: 0.8em; margin-top: 0; }
 
 .views-exposed-form .views-widget-filter-severity { max-width: 15%; }
+
+/* Devel debugging */
+.logged-in .alert > ul > li > [class^=krumo] { all: initial; }
+.logged-in .alert .krumo-root .krumo-element:not(a) { color: #78be20; }
+
+/** Token browsing modal --- SKIPPED (Admin only)
+----------------------------------------------------- */
+.ui-widget-content.ui-dialog.token-browser-container { background-color: #fff; padding: 0.5em; border: 1px solid #ddd; -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0; }
+
+.token-browser-container .ui-dialog-titlebar { background-color: #eaeaec; -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0; }
+.token-browser-container .ui-dialog-title { color: #333; padding-left: 1em; }
+.token-browser-container table.treeTable > tbody > tr > td:not(first-child) { padding-top: 0.25em; padding-bottom: 0.25em; }

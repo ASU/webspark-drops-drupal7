@@ -1,9 +1,7 @@
+// Tabs, Quicktabs
 
-/* =TABS & QuickTabs --- WS2.0 DONE
--------------------------------------------------------------- */
-/* Removing panopoly styles */
-
-/* WEBSPARK-742 - panopoly-theme.css override */
+// Removing panopoly styles
+// WEBSPARK-742 - panopoly-theme.css override
 .ui-widget,
 .ui-widget-header,
 .ui-widget-content {
@@ -124,4 +122,19 @@ ul.quicktabs-style-nostyle li.active:hover a,
 }
 ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
   color: $ws2-gray-darkest;
+}
+
+/* fixes for stacked tabs */
+body #content .ui-tabs .ui-tabs-nav li {
+  &.ui-state-focus {
+    a {
+      border-top: none;
+    }
+    margin-bottom: 0;
+  }
+  a {
+    margin-left: 0;
+    border-bottom: transparent;
+    clear: both;
+  }
 }

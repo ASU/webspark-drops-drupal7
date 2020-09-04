@@ -97,3 +97,16 @@
 @import 'nav_pagination';
 /* Secondary menu ---------------------------------------------- */
 @import 'nav_secondary_menu';
+
+/* =STICKY NAV BAR --- WS2.0 DONE
+-------------------------------------------------------------- */
+#ASUNavMenu.affix {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+.sticky-menu {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+}

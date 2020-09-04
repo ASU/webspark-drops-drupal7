@@ -5,6 +5,9 @@
 /* @TODO (all three colors) background-topo (all three colors) */
 hr.body-gold { height: 0.5rem; background-color: #ffc627; max-width: 16rem; margin: 2em 0; }
 
+/* HR separator - custom */
+hr.ws2-element-gold { border-color: #ffc627; border-width: 8px; margin-left: 0; max-width: 256px; }
+
 .asu-divider { background-position: top center; background-repeat: no-repeat; }
 .asu-divider.asu-divider-morse { background-image: url("/profiles/openasu/themes/elpuente/images/morse_white.png"); background-color: #fff; }
 .asu-divider.asu-divider-morse-gray { background-image: url("/profiles/openasu/themes/elpuente/images/morse_gray.png"); background-color: #bfbfbf; }
