@@ -12,7 +12,22 @@
 
 .navbar-nav > li:focus > a, .navbar-nav > .active:focus > a, .navbar-nav > li > a:focus, .nav .open > a:focus, .navbar-nav > .active > a:focus .navbar-nav .dropdown-menu > li > a:focus { outline: 2px solid #191919; }
 
-/* =TABS & QuickTabs ------------------------------------------ */
+/* Navigation breadcrumbs ---------------------------------------------------- */
+.breadcrumb { padding: 0 0; margin-top: 1.5em; margin-bottom: 3em; list-style: none; font-size: 0.875em; background-color: transparent; }
+.breadcrumb > li { display: inline-block; }
+.breadcrumb > li + li:before { content: "/\00a0"; padding: 0 0.3125em; color: #747474; }
+.breadcrumb > li > a { border-bottom: 0; }
+.breadcrumb > .active { color: #747474; }
+
+/* Nav pills --- WS2.0 DONE
+-------------------------------------------------------------- */
+.nav-pills > li { float: left; }
+.nav-pills > li > a { border: 0 none; border-radius: 32px; max-width: 17.5rem; min-width: 5rem; text-align: center; font-weight: bold; letter-spacing: -0.25px; }
+.nav-pills > li > li + li { margin-left: 0.125em; }
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus { color: #fff; background-color: #8c1d40; }
+.nav-pills > li.active > a:focus { outline: 2px solid #191919; }
+
+/* Tabs, QuickTabs --------------------------------------------- */
 /* =TABS & QuickTabs --- WS2.0 DONE
 -------------------------------------------------------------- */
 /* Removing panopoly styles */
@@ -55,13 +70,6 @@ ul.quicktabs-style-nostyle li.active a, ul.quicktabs-style-nostyle li.active:hov
 
 ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a { color: #191919; }
 
-/* Navigation breadcrumbs -------------------------------------- */
-.breadcrumb { padding: 0 0; margin-top: 1.5em; margin-bottom: 3em; list-style: none; font-size: 0.875em; background-color: transparent; }
-.breadcrumb > li { display: inline-block; }
-.breadcrumb > li + li:before { content: "/\00a0"; padding: 0 0.3125em; color: #747474; }
-.breadcrumb > li > a { border-bottom: 0; }
-.breadcrumb > .active { color: #747474; }
-
 /* Pagers ------------------------------------------------------ */
 /* =PAGERS & PAGINATION -- WS2.0 DONE
 -------------------------------------------------------------- */
@@ -100,9 +108,6 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a { color: #191919; }
 /* Secondary menu ---------------------------------------------- */
 /* =SIDEBAR MENUS
 -------------------------------------------------------------- */
-/* WEBSPARK-856 - Apply max width and custom margin/padding to LH menu in 100% wide regions */
-.container .row-full .pane-menu-tree, .container .row-full .pane-system-main-menu { max-width: 1140px; margin: 2em auto 0 auto; padding: 2em 1em 1em 1em; }
-
 .pane-system-main-menu, .pane-menu-tree { border-top: 8px solid #8c1d40; margin-top: 1.5em; margin-bottom: 3em; padding: 2em; position: relative; z-index: 0; }
 .pane-system-main-menu h2, .pane-menu-tree h2 { font-size: 1.3125em; }
 .pane-system-main-menu ul.menu, .pane-menu-tree ul.menu { padding-left: 0; }
@@ -142,10 +147,5 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a { color: #191919; }
 
 span.nolink { margin: 0 2.5rem 0 2.5rem; text-decoration: underline; }
 
-/* Nav pills --- WS2.0 DONE
--------------------------------------------------------------- */
-.nav-pills > li { float: left; }
-.nav-pills > li > a { border: 0 none; border-radius: 32px; max-width: 17.5rem; min-width: 5rem; text-align: center; font-weight: bold; letter-spacing: -0.25px; }
-.nav-pills > li > li + li { margin-left: 0.125em; }
-.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus { color: #fff; background-color: #8c1d40; }
-.nav-pills > li.active > a:focus { outline: 2px solid #191919; }
+/* WEBSPARK-856 - Apply max width and custom margin/padding to LH menu in 100% wide regions */
+.container .row-full .pane-menu-tree, .container .row-full .pane-system-main-menu { max-width: 1140px; margin: 2em auto 0 auto; padding: 2em 1em 1em 1em; }

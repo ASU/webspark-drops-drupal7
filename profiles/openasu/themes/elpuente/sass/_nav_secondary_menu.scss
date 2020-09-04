@@ -1,13 +1,8 @@
 /* =SIDEBAR MENUS
 -------------------------------------------------------------- */
-/* WEBSPARK-856 - Apply max width and custom margin/padding to LH menu in 100% wide regions */
-.container .row-full .pane-menu-tree,
-.container .row-full .pane-system-main-menu {
-  max-width: 1140px;
-  margin: 2em auto 0 auto;
-  padding: 2em 1em 1em 1em;
-}
 
+// Styles for primary (main-menu) && secondary menu
+///////////////////////
 .pane-system-main-menu,
 .pane-menu-tree {
   border-top: $padding-small-vertical solid $ws2-maroon;
@@ -81,9 +76,8 @@
   }
 }
 
-// Only secondary menu
+// ONLY secondary menu
 ///////////////////////
-
 .pane-menu-tree {
   margin-top: 1.5em;
   border: none;
@@ -218,4 +212,14 @@
 span.nolink {
   margin: 0 2.5rem 0 2.5rem;
   text-decoration: underline;
+}
+
+/* WEBSPARK-856 - Apply max width and custom margin/padding to LH menu in 100% wide regions */
+.container .row-full {
+  .pane-menu-tree,
+  .pane-system-main-menu {
+    max-width: 1140px;
+    margin: 2em auto 0 auto;
+    padding: 2em 1em 1em 1em;
+  }
 }

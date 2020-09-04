@@ -39,19 +39,33 @@
   @include a11y-strong-focus();
 }
 
-
-/* =TABS & QuickTabs ------------------------------------------ */
-@import 'nav_tabs';
-/* Navigation breadcrumbs -------------------------------------- */
-@import 'nav_breadcrumbs';
-/* Pagers ------------------------------------------------------ */
-@import 'nav_pagination';
-/* Secondary menu ---------------------------------------------- */
-@import 'nav_secondary_menu';
+/* Navigation breadcrumbs
+ * ---------------------------------------------------- */
+.breadcrumb {
+  padding: 0 0;
+  margin-top: 1.5em;
+  margin-bottom: 3em;
+  list-style: none;
+  font-size: 0.875em;
+  background-color: transparent;
+  & > li {
+    display: inline-block;
+    & + li:before {
+      content: "/\00a0";
+      padding: 0 0.3125em;
+      color: $ws2-gray-dark; //#828282;
+    }
+    & > a {
+      border-bottom: 0;
+    }
+  }
+  & > .active {
+    color: $ws2-gray-dark; //#828282;
+  }
+}
 
 /* Nav pills --- WS2.0 DONE
 -------------------------------------------------------------- */
-
 .nav-pills > li {
   float: left;
   & > a {
@@ -76,3 +90,10 @@
     @include a11y-strong-focus();
   }
 }
+
+/* Tabs, QuickTabs --------------------------------------------- */
+@import 'nav_tabs';
+/* Pagers ------------------------------------------------------ */
+@import 'nav_pagination';
+/* Secondary menu ---------------------------------------------- */
+@import 'nav_secondary_menu';

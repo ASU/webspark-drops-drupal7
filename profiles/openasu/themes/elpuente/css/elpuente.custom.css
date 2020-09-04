@@ -280,6 +280,18 @@ div.caption-inner p.caption-text, div.caption-inner .caption-text { padding: 1re
 
 /* =LISTS, ordered + unordered #WS2.0
 -------------------------------------------------------------- */
+/** List items */
+/* -- BlockQuotes
+-------------------------------------------------------------- */
+blockquote > img:first-of-type { float: left; clip-path: circle(90px); }
+
+/** Testimonials, round images */
+img.img-testimonial-medium { clip-path: circle(120px); }
+
+img.img-testimonial-small { clip-path: circle(90px); }
+
+/* -- ordered + unordered lists
+-------------------------------------------------------------- */
 .region-content #page-page *:not(div.pane-menu-tree) ul, .region-content #page-page *:not(div.pane-menu-tree) ol { padding-left: 0; list-style-type: none; }
 .region-content #page-page *:not(div.pane-menu-tree) ul li:before, .region-content #page-page *:not(div.pane-menu-tree) ol li:before { font-weight: bolder; vertical-align: middle; }
 .region-content #page-page *:not(div.pane-menu-tree) ul li:last-child, .region-content #page-page *:not(div.pane-menu-tree) ol li:last-child { padding-bottom: 0; }
