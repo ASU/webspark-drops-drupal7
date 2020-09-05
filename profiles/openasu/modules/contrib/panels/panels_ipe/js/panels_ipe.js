@@ -436,7 +436,7 @@ $(function() {
       return false;
     }
 
-    if ($(this.element).attr('id') == 'panels-ipe-cancel') {
+    if ($(this.element).attr('id') === 'panels-ipe-cancel') {
       if (!Drupal.PanelsIPE.editors[this.element_settings.ipe_cache_key].cancelEditing()) {
         return false;
       }
