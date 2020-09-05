@@ -1,0 +1,24 @@
+// Header - Custom CSS not already contained in the Webspark Megamenu module.
+
+#asu_hdr #asu_universal_nav_new .icn {
+  box-sizing: content-box;
+}
+.header__sitename {
+  color: $ws2-gray-darkest;
+  font-weight: bold;
+  font-size: 1.5em;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0 0 0.75rem 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  @include ws2-global-transition();
+  &.element-invisible {
+    white-space: inherit;
+  }
+  a {
+    color: $ws2-gray-darkest;
+  }
+}

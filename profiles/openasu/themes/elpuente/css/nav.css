@@ -3,8 +3,7 @@
 /*== Colors --- WS2 DONE
 -----------------------------------------------------*/
 /* Global mixin library for multiple or all elements */
-/* =NAVBAR -- Part of Main Menu styling! --- NOT DONE
--------------------------------------------------------------- */
+/* Main Menu styling (partial) ---------------------------------------------- */
 .navmenu { border-bottom: 1px solid #e8e8e8; }
 .navmenu .container { padding-left: 0; padding-right: 0; }
 
@@ -12,22 +11,25 @@
 
 .navbar-nav > li:focus > a, .navbar-nav > .active:focus > a, .navbar-nav > li > a:focus, .nav .open > a:focus, .navbar-nav > .active > a:focus .navbar-nav .dropdown-menu > li > a:focus { outline: 2px solid #191919; }
 
-/* Navigation breadcrumbs ---------------------------------------------------- */
+/* Navigation breadcrumbs ----------------------------------- */
 .breadcrumb { padding: 0 0; margin-top: 1.5em; margin-bottom: 3em; list-style: none; font-size: 0.875em; background-color: transparent; }
 .breadcrumb > li { display: inline-block; }
 .breadcrumb > li + li:before { content: "/\00a0"; padding: 0 0.3125em; color: #747474; }
 .breadcrumb > li > a { border-bottom: 0; }
 .breadcrumb > .active { color: #747474; }
 
-/* Nav pills --- WS2.0 DONE
--------------------------------------------------------------- */
+.easy-breadcrumb { background-color: transparent; margin: 2em 0; padding: 0; color: #484848; font-size: 0.875em; }
+.easy-breadcrumb a { border-bottom: 0 none; }
+.easy-breadcrumb .easy-breadcrumb_segment-separator { padding: 0 0.3125rem; }
+
+/* Nav pills --------------------------------------------- */
 .nav-pills > li { float: left; }
 .nav-pills > li > a { border: 0 none; border-radius: 32px; max-width: 17.5rem; min-width: 5rem; text-align: center; font-weight: bold; letter-spacing: -0.25px; }
 .nav-pills > li > li + li { margin-left: 0.125em; }
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus { color: #fff; background-color: #8c1d40; }
 .nav-pills > li.active > a:focus { outline: 2px solid #191919; }
 
-/* Tabs, QuickTabs --------------------------------------------- */
+/* Tabs, QuickTabs, pagers, pagination, sidebar (secondary menu) -------------------------------------------------------------- */
 .ui-widget, .ui-widget-header, .ui-widget-content { font-family: inherit; }
 
 ul.quicktabs-style-nostyle { font-size: 24px; }
@@ -71,9 +73,6 @@ body #content .ui-tabs .ui-tabs-nav li.ui-state-focus { margin-bottom: 0; }
 body #content .ui-tabs .ui-tabs-nav li.ui-state-focus a { border-top: none; }
 body #content .ui-tabs .ui-tabs-nav li a { margin-left: 0; border-bottom: transparent; clear: both; }
 
-/* Pagers ------------------------------------------------------ */
-/* =PAGERS & PAGINATION -- WS2.0 DONE
--------------------------------------------------------------- */
 .pagination { display: inline-block; padding-left: 0; margin: 1.5rem 0; border-radius: 0; }
 .pagination > li { font-size: 1.25em; display: inline; }
 .pagination > li > a, .pagination > li > span { position: relative; float: left; padding: 8px 8px; text-decoration: none; color: #8c1d40; background-color: #fff; border: 1px solid #8c1d40; margin-left: -1px; border-radius: 32px; }
@@ -97,7 +96,6 @@ body #content .ui-tabs .ui-tabs-nav li a { margin-left: 0; border-bottom: transp
 .pager .previous > a, .pager .previous > span { float: left; }
 .pager .disabled > a, .pager .disabled > a:hover, .pager .disabled > a:focus, .pager .disabled > span { color: #747474; background-color: #fff; cursor: not-allowed; }
 
-/* theme_item_list pager CSS */
 .item-list.item-list-pager { text-align: center; clear: both; }
 .item-list.item-list-pager .pager { margin: 1em; display: inline-block; }
 .item-list.item-list-pager .pager li { font-size: 1.25em; padding: 0; margin: 0 1em; float: left; }
@@ -106,10 +104,9 @@ body #content .ui-tabs .ui-tabs-nav li a { margin-left: 0; border-bottom: transp
 
 .item-list.item-list-pager .pager .pager-current, #media-browser-tabset .item-list.item-list-pager .pager .pager-current { border: 1px solid #8c1d40; padding: 8px; background-color: #8c1d40; color: #fff; }
 
-/* Secondary menu ---------------------------------------------- */
 /* =SIDEBAR MENUS
 -------------------------------------------------------------- */
-.pane-system-main-menu, .pane-menu-tree { border-top: 8px solid #8c1d40; margin-top: 1.5em; margin-bottom: 3em; padding: 2em; position: relative; z-index: 0; }
+.pane-system-main-menu, .pane-menu-tree { border-top: 8px solid #8c1d40; margin-bottom: 3em; padding: 2em; position: relative; z-index: 0; }
 .pane-system-main-menu h2, .pane-menu-tree h2 { font-size: 1.3125em; }
 .pane-system-main-menu ul.menu, .pane-menu-tree ul.menu { padding-left: 0; }
 .pane-system-main-menu ul.menu li, .pane-menu-tree ul.menu li { list-style-type: none; margin: 0; padding: 0; }
@@ -151,8 +148,7 @@ span.nolink { margin: 0 2.5rem 0 2.5rem; text-decoration: underline; }
 /* WEBSPARK-856 - Apply max width and custom margin/padding to LH menu in 100% wide regions */
 .container .row-full .pane-menu-tree, .container .row-full .pane-system-main-menu { max-width: 1140px; margin: 2em auto 0 auto; padding: 2em 1em 1em 1em; }
 
-/* =STICKY NAV BAR --- WS2.0 DONE
--------------------------------------------------------------- */
+/* =STICKY NAV BAR --------------------------------------------- */
 #ASUNavMenu.affix { position: fixed; top: 0; width: 100%; }
 
 .sticky-menu { position: sticky; position: -webkit-sticky; top: 0; }

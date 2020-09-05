@@ -4,7 +4,7 @@
 @import "variables";
 @import "mixins/global";
 
-// Local Navigation mixins
+// Mixins
 @mixin nav-leaf-styling($right: '') {
   border-top: none;
   border-bottom: none;
@@ -16,8 +16,8 @@
   }
 }
 
-/* =NAVBAR -- Part of Main Menu styling! --- NOT DONE
--------------------------------------------------------------- */
+// Selectors
+/* Main Menu styling (partial) ---------------------------------------------- */
 .navmenu {
   border-bottom: 1px solid $ws2-gray-lighter;
   .container {
@@ -38,8 +38,7 @@
   @include a11y-strong-focus();
 }
 
-/* Navigation breadcrumbs
- * ---------------------------------------------------- */
+/* Navigation breadcrumbs ----------------------------------- */
 .breadcrumb {
   padding: 0 0;
   margin-top: 1.5em;
@@ -63,8 +62,22 @@
   }
 }
 
-/* Nav pills --- WS2.0 DONE
--------------------------------------------------------------- */
+// Easy Breadcrumbs (main breadcrumbs for site)
+.easy-breadcrumb {
+  background-color: transparent;
+  margin: 2em 0;
+  padding: 0;
+  color: $ws2-gray-darker;
+  font-size: 0.875em;
+  a {
+    border-bottom: 0 none;
+  }
+  .easy-breadcrumb_segment-separator {
+    padding: 0 0.3125rem; // 5px
+  }
+}
+
+/* Nav pills --------------------------------------------- */
 .nav-pills > li {
   float: left;
   & > a {
@@ -90,15 +103,13 @@
   }
 }
 
-/* Tabs, QuickTabs --------------------------------------------- */
+/* Tabs, QuickTabs, pagers, pagination, sidebar (secondary menu)
+  -------------------------------------------------------------- */
 @import 'nav_tabs';
-/* Pagers ------------------------------------------------------ */
 @import 'nav_pagination';
-/* Secondary menu ---------------------------------------------- */
 @import 'nav_secondary_menu';
 
-/* =STICKY NAV BAR --- WS2.0 DONE
--------------------------------------------------------------- */
+/* =STICKY NAV BAR --------------------------------------------- */
 #ASUNavMenu.affix {
   position: fixed;
   top: 0;

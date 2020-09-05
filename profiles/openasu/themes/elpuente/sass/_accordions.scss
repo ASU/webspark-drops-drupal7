@@ -1,0 +1,106 @@
+// Accordion styling
+// in jQuery UI and panel panes
+.ui-accordion {
+  margin: 3rem 0;
+  color: $ws2-gray-darkest;
+  font-family: $font-family-base;
+  font-size: 1rem; // 16px
+  font-weight: 200;
+  line-height: 1.44;
+  .ui-accordion-header {
+    margin-top: 0;
+    .ui-icon {
+      left: auto;
+      right: 0.5em;
+    }
+  }
+  h3.ui-accordion-header,
+  h4.ui-accordion-header {
+    padding: 0.625rem 1.25rem;
+    text-transform: uppercase;
+    font-size: 1rem;
+    &.ui-corner-all,
+    &.ui-corner-top {
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+    }
+    &.ui-state-default {
+      background-color: #fff;
+      border-top: 1px solid #e6e6e6;
+      border-right: 1px solid #e6e6e6;
+      border-bottom: 1px solid #fff;
+      border-left: 1px solid #e6e6e6;
+      color: #767676;
+      a,
+      a:link,
+      a:visited {
+        color: #767676;
+      }
+
+      &:last-of-type {
+        border-top: 1px solid #e6e6e6;
+        border-right: 1px solid #e6e6e6;
+        border-bottom: 1px solid #e6e6e6;
+        border-left: 1px solid #e6e6e6;
+      }
+    }
+    &.ui-state-active {
+      border-top: 1px solid #e6e6e6;
+      border-right: 1px solid #e6e6e6;
+      border-bottom: 3px solid $ws2-gray-darkest; // #111;
+      border-left: 1px solid #e6e6e6;
+      color: $ws2-gray-darkest; // #111;
+      a,
+      a:link,
+      a:visited {
+        color: $ws2-gray-darkest;
+      }
+    }
+    .ui-state-hover a,
+    .ui-state-hover a:focus,
+    .ui-state-default a:focus,
+    &:focus,
+    &.ui-state-hover {
+      color: $ws2-gray-darkest; // #111;
+    }
+  }
+  .ui-accordion-content {
+    top: 0;
+    border-top: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+    border-bottom: 0 none;
+    border-left: 1px solid #e6e6e6;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding: 20px;
+    &:last-of-type {
+      border-bottom: 1px solid #e6e6e6;
+    }
+  }
+  .accordion-content {
+    color: $ws2-gray-darkest;
+    font-family: $font-family-base;
+    font-size: 1rem;
+    font-weight: 200;
+    line-height: 1.44;
+  }
+  .ui-icon {
+    height: 13px;
+    width: 13px;
+  }
+  .ui-accordion-header,
+  .ui-state-active,
+  .ui-state-default,
+  .ui-accordion .ui-state-active {
+    .ui-icon {
+      background-image: url("/profiles/openasu/themes/innovation/images/accordion-arrows.png");
+    }
+  }
+  .ui-icon-triangle-1-e {
+    background-position: 0 0;
+  }
+  .ui-state-hover .ui-icon-triangle-1-e,
+  .ui-icon-triangle-1-s {
+    background-position: 0 -13px;
+  }
+}

@@ -1,5 +1,4 @@
 // Accessibility
-
 // Applied previous styles to outline and removed border properties
 a:focus,
 .ui-widget-content a:focus,
@@ -11,4 +10,13 @@ a.btn:focus,
 h4.ui-accordion-header.ui-state-hover,
 h4.ui-accordion-header:focus {
   @include a11y-strong-focus();
+}
+
+#skip_to_content {
+  position: absolute;
+  left: -9999px;
+  &:focus{
+    position:relative;
+    left: 0;
+  }
 }

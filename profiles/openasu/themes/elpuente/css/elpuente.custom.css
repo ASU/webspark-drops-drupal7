@@ -1,14 +1,11 @@
 @charset "UTF-8";
-/** Initially ported over from Innovationn (innovation-main.css source) */
+/** BOOTSTRAP, PANOPOLY & WEBSPARK OVERRIDES Initially ported over from Innovationn (innovation-main.css source) And then it was split into SCSS files by category */
 /* Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2): Override Bootstrap variables below. */
 /*== Colors --- WS2 DONE
 -----------------------------------------------------*/
 /* Global mixin library for multiple or all elements */
-/* Custom Web standard styles */
-/* =BOOTSTRAP, PANOPOLY & WEBSPARK OVERRIDES
+/* Global-level and/or Misc. selectors with no clear category
 -------------------------------------------------------------- */
-#asu_footer ul { max-width: 1170px; margin: 0 auto; padding-left: 0; }
-
 #main-wrapper { margin-bottom: 0; margin-top: 0; }
 
 #tabs { margin-bottom: 0; }
@@ -16,11 +13,7 @@
 div.error { background-repeat: no-repeat; text-align: left; font: normal 12px/16px "FontAwesome"; letter-spacing: 0; color: #B72A2A; opacity: 1; }
 div.error label { padding-left: 2em; }
 
-/* =GLOBALS
--------------------------------------------------------------- */
-html { font-size: 100%; }
-
-body { font-size: 1rem; min-width: 20em; font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif; color: #191919; background-color: #fff; }
+body { min-width: 20em; }
 body #page .region-content { padding: 0; }
 
 p { margin: 1em 0; }
@@ -29,12 +22,7 @@ p { margin: 1em 0; }
 
 .page-teaser { margin-top: 3em; margin-bottom: 3em; }
 
-div.pane-system-main-menu, div.pane-menu-tree { margin-top: 3em; }
-
-#skip_to_content { position: absolute; left: -9999px; }
-#skip_to_content:focus { position: relative; left: 0; }
-
-/* Buttons --- WS2.0 DONE ------------------------------------ */
+/* Level one (atomic) elements ------------------------------- */
 /* =BUTTONS --- WS2.0 DONE
 -------------------------------------------------------------- */
 #tabs .nav.nav-pills > li > a { padding-top: 0.5rem; padding-bottom: 0.5rem; }
@@ -169,7 +157,6 @@ fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fields
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container + li:not(.btn-container) { margin-left: 1.375em; }
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container + li:not(.btn-container) > a { margin-left: 0; padding-left: 1.375em; }
 
-/* Links --- WS2.0 DONE -------------------------------------- */
 a, .ui-widget-content a { border-bottom: 1px solid #8c1d40; text-decoration: none; color: #8c1d40; }
 a:hover, .ui-widget-content a:hover { color: #440E22; text-decoration: none; border-bottom: none; }
 
@@ -188,8 +175,10 @@ a.btn-secondary:hover, .btn-secondary a:hover, a.btn-blue:hover, .btn-blue a:hov
 a.btn-gold, .btn-gold a { color: #fff; border-bottom-color: #8c1d40; }
 a.btn-gold:hover, .btn-gold a:hover { color: #fff; border-bottom-color: #8c1d40; }
 
-/* =TYPOGRAPHY --- WS2.0 DONE
--------------------------------------------------------------- */
+html { font-size: 100%; }
+
+body { font-size: 1rem; font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif; color: #191919; background-color: #fff; }
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 { margin-bottom: 1.5rem; color: inherit; font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif; font-weight: 700; line-height: calc(100% + 4px); display: block; /* Highlighting style augmentations for headers, titles, etc. */ }
 h1.ws2-element-style, h2.ws2-element-style, h3.ws2-element-style, h4.ws2-element-style, h5.ws2-element-style, h6.ws2-element-style, .h1.ws2-element-style, .h2.ws2-element-style, .h3.ws2-element-style, .h4.ws2-element-style, .h5.ws2-element-style, .h6.ws2-element-style { line-height: calc(100% + 8px); padding: 4px 8px; display: table; }
 h1.ws2-element-style.ws2-element-gold, h2.ws2-element-style.ws2-element-gold, h3.ws2-element-style.ws2-element-gold, h4.ws2-element-style.ws2-element-gold, h5.ws2-element-style.ws2-element-gold, h6.ws2-element-style.ws2-element-gold, .h1.ws2-element-style.ws2-element-gold, .h2.ws2-element-style.ws2-element-gold, .h3.ws2-element-style.ws2-element-gold, .h4.ws2-element-style.ws2-element-gold, .h5.ws2-element-style.ws2-element-gold, .h6.ws2-element-style.ws2-element-gold { background-color: #ffc627; }
@@ -212,7 +201,11 @@ h5, .h5, h6, .h6 { font-size: 16px; }
 
 h6, .h6 { font-weight: normal; }
 
-/* Blockquotes - Includes quotes/image styles, and testimonials Along with signature styling at the bottom */
+/* WYSIWYG style -- Lead Paragraph --*/
+.lead-paragraph { font-family: inherit; font-size: 1.25rem; line-height: 2em; color: #191919; }
+
+.explore-programs h3 { font-size: 1.625rem; }
+
 /* Blockquotes */
 /* blockquotes-output - Return base64-encoded string for rendering open quote. @param (str) $color - (optional) defaults to dark gray. Alt options (gold, maroon, white) */
 /* blockquotes-quotes - Returns background-image CSS rule @param (str) $color - desired colors (gold, maroon, white) */
@@ -233,19 +226,6 @@ blockquote .ws2-sig-title:before { padding-right: 0.5em; content: "\2014"; }
 blockquote .ws2-sig-byline { clear: left; display: block; font-weight: normal; padding-left: 1.5em; }
 blockquote.ws2-element-black a { color: #ffc627; }
 
-/* WYSIWYG style -- Lead Paragraph --*/
-.lead-paragraph { font-family: inherit; font-size: 1.25rem; line-height: 2em; color: #191919; }
-
-.explore-programs h3 { font-size: 1.625rem; }
-
-/* Header - IN PROGRESS ------------------------------------------- */
-.header__sitename { color: #191919; font-weight: bold; font-size: 1.5em; line-height: 1; letter-spacing: -0.5px; margin-top: 0; margin-bottom: 0; padding: 0 0 0.75rem 0.75rem; white-space: nowrap; overflow: hidden; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; }
-.header__sitename.element-invisible { white-space: inherit; }
-.header__sitename a { color: #191919; }
-
-#asu_hdr #asu_universal_nav_new .icn { box-sizing: content-box; }
-
-/* =IMAGES --------------------------------------------------- */
 img { max-width: 100%; height: auto; vertical-align: bottom; }
 
 /* WYSIWYG image spacing */
@@ -265,7 +245,6 @@ div.caption-inner { padding: 0; background: transparent; border: none; }
 div.caption-inner > img { margin-bottom: 0; }
 div.caption-inner p.caption-text, div.caption-inner .caption-text { padding: 1rem; font-size: 0.75rem; text-align: left; margin: 0; border: 1px solid #d0d0d0; border-top: none; }
 
-/* Lists --- WS2.0 DONE -------------------------------------- */
 /** List items */
 /* -- BlockQuotes
 -------------------------------------------------------------- */
@@ -300,7 +279,6 @@ img.img-testimonial-small { clip-path: circle(90px); }
 .region-content #page-page ol.ws2-list-stepped.ws2-element-gold > li:before { background-color: #ffc627; color: #191919; }
 .region-content #page-page div.pane-menu-tree ul li:before, .region-content #page-page div.pane-menu-tree ol li:before { content: none; }
 
-/* Tables ---------------------------------------------------- */
 /* IN PROGRESS */
 /* Default table styles */
 table { background-color: #fff; margin-bottom: 1.5em; max-width: 100%; width: 100%; border: 1px solid #e8e8e8; }
@@ -326,41 +304,27 @@ table.bordered > tbody > tr:nth-child(2n+1) { background-color: #fff; }
 
 table.bordered > caption + thead > tr:first-child > th, table.bordered > caption + thead > tr:first-child > td, table.bordered > colgroup + thead > tr:first-child > th, table.bordered > colgroup + thead > tr:first-child > td, table.bordered > thead:first-child > tr:first-child > th, table.bordered > thead:first-child > tr:first-child > td { border-top: 1px solid #bfbfbf; }
 
-/* =CONTENT CALLOUTS --- SASS DONE (no WS2.0) ---------------- */
+/* Content Callouts ------------------------------------------ */
 .node-content-callout { padding: 5rem 0; }
 .node-content-callout h2 { margin-bottom: 34px; font-size: 40px; }
 .node-content-callout .col-md-12 .content-wrapper { max-width: 50rem; margin-right: auto; margin-left: auto; text-align: center; }
 .node-content-callout .btn { margin-top: 18px; }
 .node-content-callout .col-md-6 img, .node-content-callout .col-md-6 .embedded-video { margin-top: 22px; }
 
-/* =PANELS --- WS2.0 DONE
--------------------------------------------------------------- */
+/* Panels ---------------------------------------------------- */
 .panel { background-color: #fafafa; border: 1px solid #d0d0d0; }
 
 .js-darkgraybg .panel, .js-lightgraybg .panel { background-color: #fff; }
 
-/* =VIDEO --- WS2.0 DONE
--------------------------------------------------------------- */
-/* Generic video */
+/* Video ---------------------------------------------------- */
 .embedded-video, .media-youtube-video, .media-vimeo-video { position: relative; padding-bottom: 56.25%; padding-top: 0; height: 0; overflow: hidden; }
 
 .embedded-video iframe, .embedded-video object, .embedded-video embed, .media-youtube-video iframe, .media-youtube-video object, .media-youtube-video embed, .media-vimeo-video iframe, .media-vimeo-video object, .media-vimeo-video embed { position: absolute !important; margin-top: 0 !important; margin-bottom: 0 !important; top: 0; left: 0; width: 100% !important; height: 100% !important; }
 
-/* =BREADCRUMBS --- WS2.0 DONE
--------------------------------------------------------------- */
-/** Easy Breadcrumbs (main breadcrumbs for site) */
-.easy-breadcrumb { background-color: transparent; margin: 2em 0; padding: 0; color: #484848; font-size: 0.875em; }
-
-.easy-breadcrumb .easy-breadcrumb_segment-separator { padding: 0 0.3125rem; }
-
-.easy-breadcrumb a { border-bottom: 0 none; }
-
-/* =FLEXSLIDER SLIDESHOWS --- WS2.0 DONE
--------------------------------------------------------------- */
+/* Flexslider (slideshows) ----------------------------------------------- */
 .flexslider { border: none; border-radius: 0; box-shadow: none; margin: 0 0 2.75rem; }
 
-/* =ACCORDIONS --- NOT DONE (reorg'd)
--------------------------------------------------------------- */
+/* Level 2 design elements (compounds) ---------------------------------- */
 .ui-accordion { margin: 3rem 0; color: #191919; font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif; font-size: 1rem; font-weight: 200; line-height: 1.44; }
 .ui-accordion .ui-accordion-header { margin-top: 0; }
 .ui-accordion .ui-accordion-header .ui-icon { left: auto; right: 0.5em; }
@@ -380,7 +344,6 @@ table.bordered > caption + thead > tr:first-child > th, table.bordered > caption
 .ui-accordion .ui-icon-triangle-1-e { background-position: 0 0; }
 .ui-accordion .ui-state-hover .ui-icon-triangle-1-e, .ui-accordion .ui-icon-triangle-1-s { background-position: 0 -13px; }
 
-/* =ALERTS -------------------------------------------------------------- */
 /** Alerts */
 .alert { color: #191919; font-weight: 400; border-bottom-color: #191919; position: relative; margin: 16px 0; padding: 24px 24px; }
 .alert a { color: #191919; border-bottom-color: #191919; }
@@ -406,7 +369,6 @@ table.bordered > caption + thead > tr:first-child > th, table.bordered > caption
 
 .alert:not([class*="alert-"]), div[class='alert alert-block'] { /* Catch-all for default alert class */ background-color: #fafafa; border-color: #d0d0d0; }
 
-/* Banners (FPPs) ------------------------------------------------------- */
 /* Banners */
 .pane-bundle-banners-ws2 { margin: 1rem 0; }
 .pane-bundle-banners-ws2 > .pane-content { padding: 2rem 0; }
@@ -426,8 +388,6 @@ table.bordered > caption + thead > tr:first-child > th, table.bordered > caption
 .pane-bundle-banners-ws2 .pane-content .banner-close a.close.close:hover { opacity: 1.0; color: #191919; border-bottom-color: #d0d0d0; cursor: pointer; }
 .pane-bundle-banners-ws2 .pane-content .banner-close a.close.close + p:empty { margin-top: -1rem; padding-top: 0; background-color: red !important; }
 
-/* =Alternate Element styles for 1) gray, 2) black, and 3) white --- IN PROGRESS
-------------------------------------------------------------------------- */
 /* =Alternate Element styles for 1) gray, 2) black, and 3) white
 -------------------------------------------------------------- */
 .region-content #page-page .ws2-element-alt { padding: 24px 24px; border-style: solid; border-width: 1px; /* #1 - Gray ---------------*/ /* #2 - Black ---------------*/ /* White */ }
@@ -445,50 +405,10 @@ table.bordered > caption + thead > tr:first-child > th, table.bordered > caption
 .region-content #page-page .ws2-element-alt.ws2-element-alt-white { border-color: #d0d0d0; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-white .ws2-element-style.btn-tag { background-color: #e8e8e8; }
 
-/* =ADMIN UI --- WS2.0 DONE (admin only)
-------------------------------------------------------------------------- */
-#top-content #tabs .nav-pills { padding: 0.5rem; background-color: #e8e8e8; /* dropdown items from nav pills */ }
-#top-content #tabs .nav-pills li { padding-right: 0.5rem; }
-#top-content #tabs .nav-pills li a { transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; background-color: #fafafa; }
-#top-content #tabs .nav-pills li a:hover { transform: scale(1.1); }
-#top-content #tabs .nav-pills li a.active:hover { color: #fafafa; }
-#top-content #tabs .nav-pills > li.active > a, #top-content #tabs .nav-pills > li.active > a:hover, #top-content #tabs .nav-pills > li.active > a:focus { background-color: #8c1d40; }
-#top-content #tabs .nav-pills li.dropdown > ul.dropdown-menu a { background-color: transparent; border-bottom: transparent; }
-#top-content #tabs .nav-pills li.dropdown > ul.dropdown-menu a:hover { background-color: #e8e8e8; color: #000; }
-
-/* IPE */
-#panels-ipe-control-container a { border-bottom: transparent; }
-
-/* Ctools Modals */
-.ctools-modal-content .btn { margin-top: 0.25em; padding: 4px 0.625em; font-size: 0.6925em; }
-
-#modalContent .form-submit.btn { margin-bottom: 1em; padding: 6px 20px; font-size: 1.125em; }
-
-.ctools-modal-content #edit-settings-spacing { -webkit-column-count: 3; -moz-column-count: 3; column-count: 3; -webkit-column-width: 15em; -moz-column-width: 15em; column-width: 15em; }
-
-.panels-section-column-categories .panels-categories-box { margin-bottom: 0.5em; }
-
-h2.widget-list { font-size: 0.9em; line-height: 1.4; margin: 0 0 0 0.625em; }
-
-/* LH side categories */
-#modalContent .panels-section-column-categories .content-type-button { top: 0.5em; line-height: 1.1em; font-size: 0.75em; }
-#modalContent .panels-section-column-categories .content-type-button div, #modalContent .panels-section-column-categories .content-type-button span { left: 3em; position: absolute; top: 0.25em; width: 80%; }
-#modalContent .panels-section-column-categories .content-type-button > a:hover > img, #modalContent .panels-section-column-categories .content-type-button > a > img:hover { border: 2px solid #fff; }
-
-/* Main body of columns with content */
-#modalContent .panels-section-columns > .panels-section-column .content-type-button { font: normal 0.9rem/1.5em Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif; top: 0; }
-#modalContent .panels-section-columns > .panels-section-column .content-type-button div, #modalContent .panels-section-columns > .panels-section-column .content-type-button span { position: relative; top: 0; left: 0; }
-
-#modal-content .form-tablefield input.form-submit.btn, #modalContent .form-tablefield input.form-submit.btn { background-color: #8c1d40 !important; }
-
-ul.help-text { background-color: #fafafa; padding: 0.5em 1em; }
-ul.help-text li { list-style: none; padding: 0.125em 0; line-height: 1.25; }
-ul.help-text li.help-title { font-size: 0.875em; font-weight: bold; }
-
 /* =100% width fix for Bootstrap limitation --- SKIPPED (NEEDS REVIEW)
 ----------------------------------------------------- */
 #header .container { padding-left: 0; padding-right: 0; }
-#header .container .row .col-md-12 { padding-right: 0; padding-left: 0; }
+#header .container .row .col-md-12 { padding-left: 0; padding-right: 0; }
 
 .section > .container, #footer > .container, #page-footer > .container { width: 100%; padding-left: 0; padding-right: 0; }
 .section > .container .row, #footer > .container .row, #page-footer > .container .row { max-width: 1170px; margin: 0 auto; }
@@ -499,20 +419,26 @@ ul.help-text li.help-title { font-size: 0.875em; font-weight: bold; }
 
 .section > .container .row-full .pane-bundle-asu-spotlight [class^="pane-"] { width: 100% !important; padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0; max-width: none !important; }
 
-/* WEBSPARK-1561 - footer positioning issues */
-/* @TODO - remove these overrides when added to ASU global header/footer CSS */
+.row { padding: 0; margin: 0; }
+
+#asu_hdr #asu_universal_nav_new .icn { box-sizing: content-box; }
+
+.header__sitename { color: #191919; font-weight: bold; font-size: 1.5em; line-height: 1; letter-spacing: -0.5px; margin-top: 0; margin-bottom: 0; padding: 0 0 0.75rem 0.75rem; white-space: nowrap; overflow: hidden; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; }
+.header__sitename.element-invisible { white-space: inherit; }
+.header__sitename a { color: #191919; }
+
 #innovation-footer { position: relative; }
 #innovation-footer .footer-menu ul { padding: 1em; }
 #innovation-footer .footer-menu ul li { padding-bottom: 0; }
 #innovation-footer .footer-menu ul li a:hover { color: #8c1d40; border-bottom: 1px dotted #8c1d40; }
 
-.row { padding: 0; margin: 0; }
-
 #page-footer { background-color: #191919; }
 #page-footer #innovation-top { padding-left: 15px; padding-right: 15px; }
 #page-footer #block-asu-brand-asu-brand-footer { background-color: #e8e8e8; }
 
-/** Accessibility --- WS2.0 DONE ------------------------------ */
+#asu_footer ul { max-width: 1170px; margin: 0 auto; padding-left: 0; }
+
 a:focus, .ui-widget-content a:focus, input:focus, a.btn:focus, .btn a:focus, #skip_to_content:focus, #top-content #tabs .nav-pills > li.active > a:focus, h4.ui-accordion-header.ui-state-hover, h4.ui-accordion-header:focus { outline: 2px solid #191919; }
 
-/* Cards -------------------------------------------- */
+#skip_to_content { position: absolute; left: -9999px; }
+#skip_to_content:focus { position: relative; left: 0; }

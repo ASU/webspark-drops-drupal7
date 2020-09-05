@@ -4,18 +4,14 @@
  */
 @import "variables";
 
-/*
-  @TODO
-  (all three colors)
-  background-topo (all three colors)
- */
+// @TODO (all three colors), background-topo (all three colors)
+
 hr.body-gold {
   height: 0.5rem;
   background-color: $ws2-gold;
   max-width: 16rem;
   margin: 2em 0;
 }
-
 /* HR separator - custom */
 hr.ws2-element-gold {
   border-color: $ws2-gold;

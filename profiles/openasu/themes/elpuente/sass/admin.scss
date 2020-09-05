@@ -1,14 +1,12 @@
 /**
  * @description - If Innovation is the admin theme, add these changes to clean up the UI
- *
- * IS SASS --- WS2.0 SKIPPED (awaiting testing)
+ * WS2.0 SKIPPED (awaiting testing)
  */
-
 @import "variables";
+@import "mixins/global";
 
 /* -------- Admin-wide CSS selectors ---------- */
-
-/** System Help block theming (if enabled) */
+// System Help block theming (if enabled)
 #block-system-help {
   padding: 1em;
   border: 1px solid $ws2-blue;
@@ -22,7 +20,7 @@
     margin: 0;
   }
 }
-/** Field help-block override */
+// Field help-block override
 .help-block {
   color: inherit;
   opacity: 0.8;
@@ -65,15 +63,12 @@
     padding: 1em;
     border: 1px solid $gray-fieldset-nested !important;
   }
-
   fieldset.fieldset-nested-odd {
     background-color: $ws2-gray-lightest;
   }
-
   fieldset.fieldset-nested-even {
     background-color: $gray-fieldset;
   }
-
   #block-system-main fieldset legend {
     width: initial;
     margin-bottom: 0;
@@ -88,7 +83,6 @@
     padding: 0.25em 0.25em 0 0.25em;
 
   }
-
   .admin-list > dl > dt + dd,
   #block-system-main .content > dl > dt + dd {
     border: 1px solid $gray-alt-admin;
@@ -96,14 +90,13 @@
     margin-bottom: 0.5em;
     padding: 0 0.25em 0.25em 0.25em;
   }
-
+  // Add zebra styling for readability
   .admin-list > dt:nth-of-type(2n),
   #block-system-main .content > dl > dt:nth-of-type(2n),
   .admin-list > dd:nth-of-type(2n),
   #block-system-main .content > dl > dd:nth-of-type(2n) {
     background-color: #fff;
   }
-
   .admin-list > dt:nth-of-type(2n+1),
   #block-system-main .content > dl > dt:nth-of-type(2n+1),
   .admin-list > dd:nth-of-type(2n+1),
@@ -116,11 +109,9 @@
   body:not(.page-admin-reports-status) table > tbody > tr:nth-child(2n+1) {
     background-color: $ws2-gray-lightest;
   }
-
   #block-system-main table thead {
     background-color: $gray-fieldset;
   }
-
   /*** Form elements for field settings */
   table[id] {
     .form-item,
@@ -141,14 +132,12 @@
   &.page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox {
     margin-top: 0.25em;
   }
-
   #block-system-main table tr .form-type-checkbox > input[type="checkbox"],
   #block-system-main table tr .form-type-checkbox > input[type="radio"],
   &.page-admin-modules .module-filter-inputs-wrapper .form-type-checkbox > input[type="checkbox"] {
     opacity: initial;
     padding: 0 0.5em;
   }
-
   #block-system-main table tr .form-type-checkbox > label.element-invisible,
   #block-system-main .views-field-views-bulk-operations .form-type-checkbox > input.form-checkbox + label,
   #block-system-main table tr .form-type-checkbox > input.form-checkbox + label:before,
@@ -173,7 +162,6 @@
       font-size: 0.75em;
     }
   }
-
   .views-exposed-widget {
     &.views-submit-button {
       clear: both;
@@ -182,7 +170,6 @@
       margin: 1em 1em 0 0;
     }
   }
-
   .views-exposed-form {
     .views-submit-button,
     .views-reset-button {
@@ -251,13 +238,11 @@
       padding: 0;
     }
   }
-
   &.page-admin-config .admin > .clearfix {
     margin-left: 0;
     margin-right: 0;
     width: 48%;
   }
-
   /** URL aliases - column all gray due to bootstrap */
   #block-system-main .table {
     & > tbody > tr.active > td,
@@ -275,7 +260,6 @@
       background-color: initial;
     }
   }
-
   /** Recent Log Entries */
   .better_watchdog_ui_watchdog-detail table {
     & > thead > tr > th,
@@ -287,9 +271,16 @@
       border: 1px solid $ws2-gray;
     }
   }
-
   .view-better-watchdog-ui-view table .form-type-checkbox {
     padding: 0 0.25em;
+  }
+  // Views exposed forms - /admin/content
+  .vbo-views-form div.form-item + input.btn {
+    margin-top: 1em;
+  }
+  div.form-item > .help-block {
+    font-size: 0.8em;
+    margin-top: 0;
   }
 }
 
@@ -310,18 +301,12 @@ html.js .pia.page-admin-modules {
 }
 
 /** Views exposed forms - /admin/content */
-.pia .vbo-views-form div.form-item + input.btn {
-  margin-top: 1em;
-}
-.pia div.form-item > .help-block {
-  font-size: 0.8em;
-  margin-top: 0;
-}
 .views-exposed-form .views-widget-filter-severity {
   max-width: 15%;
 }
 
-/* Devel debugging */
+/* Devel debugging
+----------------------------------------------------- */
 .logged-in .alert {
   & > ul > li > [class^=krumo] {
     all: initial;
@@ -333,7 +318,6 @@ html.js .pia.page-admin-modules {
 
 /** Token browsing modal --- SKIPPED (Admin only)
 ----------------------------------------------------- */
-
 .ui-widget-content.ui-dialog.token-browser-container {
   background-color: #fff;
   padding: 0.5em;
@@ -357,5 +341,127 @@ html.js .pia.page-admin-modules {
   table.treeTable > tbody > tr > td:not(first-child) {
     padding-top: 0.25em;
     padding-bottom: 0.25em;
+  }
+}
+
+// Node edit form
+#top-content #tabs .nav-pills {
+  padding: 0.5rem;
+  background-color: $ws2-gray-lighter;
+  li {
+    padding-right: 0.5rem;
+    a {
+      @include ws2-global-transition();
+      background-color: $ws2-gray-lightest;
+      &:hover {
+        transform: scale(1.1);
+      }
+      &.active:hover {
+        color: $ws2-gray-lightest;
+      }
+    }
+  }
+  & > li.active > a {
+    &,
+    &:hover,
+    &:focus {
+      background-color: $ws2-maroon;
+    }
+  }
+  /* dropdown items from nav pills */
+  li.dropdown > ul.dropdown-menu a {
+    background-color: rgba(0,0,0,0);
+    border-bottom: transparent;
+    &:hover {
+      background-color: $ws2-gray-lighter;
+      color: #000;
+    }
+  }
+}
+
+/* IPE */
+#panels-ipe-control-container a {
+  border-bottom: transparent;
+}
+
+/* Ctools Modals */
+.ctools-modal-content {
+  .btn {
+    margin-top: 0.25em;
+    padding: $padding-xs-vertical 0.625em;
+    font-size: 0.6925em;
+  }
+  #edit-settings-spacing {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+    -webkit-column-width: 15em;
+    -moz-column-width: 15em;
+    column-width: 15em;
+  }
+}
+
+.panels-section-column-categories .panels-categories-box {
+  margin-bottom: 0.5em;
+}
+
+h2.widget-list {
+  font-size: 0.9em;
+  line-height: 1.4;
+  margin: 0 0 0 0.625em;
+}
+
+/* Main body of columns with content */
+#modalContent {
+  .form-submit.btn {
+    margin-bottom: 1em;
+    padding: 6px 20px;
+    font-size: 1.125em;
+  }
+  /* LH side categories */
+  .panels-section-column-categories .content-type-button {
+    top: 0.5em;
+    line-height: 1.1em;
+    font-size: 0.75em;
+    div, span {
+      left: 3em;
+      position: absolute;
+      top: 0.25em;
+      width: 80%;
+    }
+    & > a:hover > img,
+    & > a > img:hover {
+      border: 2px solid #fff;
+    }
+  }
+  .panels-section-columns > .panels-section-column .content-type-button {
+    font: normal 0.9rem/1.5em $font-family-base;
+    top: 0;
+
+    div, span {
+      position: relative;
+      top: 0;
+      left: 0;
+    }
+  }
+}
+#modal-content, #modalContent {
+  .form-tablefield input.form-submit.btn {
+    background-color: $ws2-maroon !important;
+  }
+}
+
+// <UL> help text
+ul.help-text {
+  background-color: $ws2-gray-lightest;
+  padding: 0.5em 1em;
+  li {
+    list-style: none;
+    padding: 0.125em 0;
+    line-height: 1.25;
+    &.help-title {
+      font-size: 0.875em;
+      font-weight: bold;
+    }
   }
 }
