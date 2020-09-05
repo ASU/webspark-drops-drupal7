@@ -8,12 +8,12 @@ hr.body-gold { height: 0.5rem; background-color: #ffc627; max-width: 16rem; marg
 hr.ws2-element-gold { border-color: #ffc627; border-width: 8px; margin-left: 0; max-width: 256px; }
 
 .asu-divider { background-position: top center; background-repeat: no-repeat; }
-.asu-divider.asu-divider-morse { background-image: url("/profiles/openasu/themes/elpuente/images/morse_white.png"); background-color: #fff; }
-.asu-divider.asu-divider-morse-gray { background-image: url("/profiles/openasu/themes/elpuente/images/morse_gray.png"); background-color: #bfbfbf; }
-.asu-divider.asu-divider-morse-gray { background-image: url("/profiles/openasu/themes/elpuente/images/morse_black.png"); background-color: #191919; }
-.asu-divider.asu-divider-topo { background-image: url("/profiles/openasu/themes/elpuente/images/topo_white.png"); background-color: #fff; }
-.asu-divider.asu-divider-topo-gray { background-image: url("/profiles/openasu/themes/elpuente/images/topo_gray.png"); background-color: #bfbfbf; }
-.asu-divider.asu-divider-topo-black { background-image: url("/profiles/openasu/themes/elpuente/images/topo_black.png"); background-color: #191919; }
-.asu-divider.asu-divider-net { background-image: url("/profiles/openasu/themes/elpuente/images/network_white.png"); background-color: #fff; }
-.asu-divider.asu-divider-net-black { background-image: url("/profiles/openasu/themes/elpuente/images/network_black.png"); background-color: #191919; }
-.asu-divider[class*=asu-divider-net] { background-position: top left; background-repeat: repeat-x; }
+.asu-divider.divider-morse-white { background-image: url("/profiles/openasu/themes/elpuente/images/morse_white.png"); background-color: #fff; }
+.asu-divider.divider-morse-gray { background-image: url("/profiles/openasu/themes/elpuente/images/morse_gray.png"); background-color: #bfbfbf; }
+.asu-divider.divider-morse-black { background-image: url("/profiles/openasu/themes/elpuente/images/morse_black.png"); background-color: #191919; }
+.asu-divider.divider-topo-white { background-image: url("/profiles/openasu/themes/elpuente/images/topo_white.png"); background-color: #fff; }
+.asu-divider.divider-topo-gray { background-image: url("/profiles/openasu/themes/elpuente/images/topo_gray.png"); background-color: #bfbfbf; }
+.asu-divider.divider-topo-black { background-image: url("/profiles/openasu/themes/elpuente/images/topo_black.png"); background-color: #191919; }
+.asu-divider.divider-net-white { background-image: url("/profiles/openasu/themes/elpuente/images/network_white.png"); background-color: #fff; }
+.asu-divider.divider-net-black { background-image: url("/profiles/openasu/themes/elpuente/images/network_black.png"); background-color: #191919; }
+.asu-divider[class*=divider-net] { background-position: top left; background-repeat: repeat-x; }

@@ -6,13 +6,6 @@
 /* Global mixin library for multiple or all elements */
 /* Global-level and/or Misc. selectors with no clear category
 -------------------------------------------------------------- */
-#main-wrapper { margin-bottom: 0; margin-top: 0; }
-
-#tabs { margin-bottom: 0; }
-
-div.error { background-repeat: no-repeat; text-align: left; font: normal 12px/16px "FontAwesome"; letter-spacing: 0; color: #B72A2A; opacity: 1; }
-div.error label { padding-left: 2em; }
-
 body { min-width: 20em; }
 body #page .region-content { padding: 0; }
 
@@ -21,6 +14,13 @@ p { margin: 1em 0; }
 .pane-node-body { margin-top: 2.85em; margin-bottom: 3em; }
 
 .page-teaser { margin-top: 3em; margin-bottom: 3em; }
+
+#main-wrapper { margin-bottom: 0; margin-top: 0; }
+
+#tabs { margin-bottom: 0; }
+
+div.error { background-repeat: no-repeat; text-align: left; font: normal 12px/16px "FontAwesome"; letter-spacing: 0; color: #B72A2A; opacity: 1; }
+div.error label { padding-left: 2em; }
 
 /* Level one (atomic) elements ------------------------------- */
 /* =BUTTONS --- WS2.0 DONE
@@ -277,7 +277,7 @@ img.img-testimonial-small { clip-path: circle(90px); }
 .region-content #page-page ol.ws2-list-stepped > li:before, .region-content #page-page ol.ws2-list-stepped.ws2-element-maroon > li:before { background-color: #8c1d40; color: #fff; }
 .region-content #page-page ol.ws2-list-stepped.ws2-element-gray > li:before { background-color: #191919; color: #fff; }
 .region-content #page-page ol.ws2-list-stepped.ws2-element-gold > li:before { background-color: #ffc627; color: #191919; }
-.region-content #page-page div.pane-menu-tree ul li:before, .region-content #page-page div.pane-menu-tree ol li:before { content: none; }
+.region-content #page-page div.pane-menu-tree ul li:before, .region-content #page-page div.pane-menu-tree ol li:before, .region-content #page-page .panels-ipe-dragbar ul li:before, .region-content #page-page .panels-ipe-dragbar ol li:before, .region-content #page-page .panels-ipe-newblock ul li:before, .region-content #page-page .panels-ipe-newblock ol li:before { content: none !important; }
 
 /* IN PROGRESS */
 /* Default table styles */
@@ -417,7 +417,7 @@ table.bordered > caption + thead > tr:first-child > th, table.bordered > caption
 .section > .container .row-full [class^="pane-"], .section > .container .row-full .content, .section > .container .row-full .region > div:not(.block-asu-brand) .content, #footer > .container .row-full [class^="pane-"], #footer > .container .row-full .content, #footer > .container .row-full .region > div:not(.block-asu-brand) .content, #page-footer > .container .row-full [class^="pane-"], #page-footer > .container .row-full .content, #page-footer > .container .row-full .region > div:not(.block-asu-brand) .content { max-width: 1170px; margin: 0 auto; padding-left: 15px; padding-right: 15px; }
 .section > .container .row-full .region > div.block-asu-brand > .content, #footer > .container .row-full .region > div.block-asu-brand > .content, #page-footer > .container .row-full .region > div.block-asu-brand > .content { max-width: 100%; padding-left: 0; padding-right: 0; }
 
-.section > .container .row-full .pane-bundle-asu-spotlight [class^="pane-"] { width: 100% !important; padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0; max-width: none !important; }
+.section > .container .row-full .pane-bundle-asu-spotlight [class^="pane-"] { width: 100% !important; padding-left: 0; padding-right: 0; max-width: none !important; margin-left: 0; margin-right: 0; }
 
 .row { padding: 0; margin: 0; }
 

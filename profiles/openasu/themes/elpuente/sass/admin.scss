@@ -1,5 +1,5 @@
 /**
- * @description - If Innovation is the admin theme, add these changes to clean up the UI
+ * @description - If Innovation is the admin theme, add these changes to clean up the admin UI
  * WS2.0 SKIPPED (awaiting testing)
  */
 @import "variables";
@@ -305,8 +305,7 @@ html.js .pia.page-admin-modules {
   max-width: 15%;
 }
 
-/* Devel debugging
------------------------------------------------------ */
+/* Devel debugging ---------------------------------- */
 .logged-in .alert {
   & > ul > li > [class^=krumo] {
     all: initial;
@@ -316,8 +315,7 @@ html.js .pia.page-admin-modules {
   }
 }
 
-/** Token browsing modal --- SKIPPED (Admin only)
------------------------------------------------------ */
+/* Token browsing modal ----------------------------- */
 .ui-widget-content.ui-dialog.token-browser-container {
   background-color: #fff;
   padding: 0.5em;
@@ -325,8 +323,8 @@ html.js .pia.page-admin-modules {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
-
 }
+
 .token-browser-container {
   .ui-dialog-titlebar {
     background-color: #eaeaec;
@@ -382,6 +380,13 @@ html.js .pia.page-admin-modules {
 /* IPE */
 #panels-ipe-control-container a {
   border-bottom: transparent;
+}
+// limit 100% wide during editing
+.panels-ipe-editing .panels-ipe-portlet-wrapper,
+.panels-ipe-editing .panels-ipe-placeholder {
+  max-width: 1170px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Ctools Modals */

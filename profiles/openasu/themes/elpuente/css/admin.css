@@ -1,4 +1,4 @@
-/** @description - If Innovation is the admin theme, add these changes to clean up the UI WS2.0 SKIPPED (awaiting testing) */
+/** @description - If Innovation is the admin theme, add these changes to clean up the admin UI WS2.0 SKIPPED (awaiting testing) */
 /* Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2): Override Bootstrap variables below. */
 /*== Colors --- WS2 DONE
 -----------------------------------------------------*/
@@ -64,13 +64,11 @@ html.js .pia.page-admin-modules .module-filter-inputs-wrapper .module-filter-cle
 /** Views exposed forms - /admin/content */
 .views-exposed-form .views-widget-filter-severity { max-width: 15%; }
 
-/* Devel debugging
------------------------------------------------------ */
+/* Devel debugging ---------------------------------- */
 .logged-in .alert > ul > li > [class^=krumo] { all: initial; }
 .logged-in .alert .krumo-root .krumo-element:not(a) { color: #78be20; }
 
-/** Token browsing modal --- SKIPPED (Admin only)
------------------------------------------------------ */
+/* Token browsing modal ----------------------------- */
 .ui-widget-content.ui-dialog.token-browser-container { background-color: #fff; padding: 0.5em; border: 1px solid #ddd; -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0; }
 
 .token-browser-container .ui-dialog-titlebar { background-color: #eaeaec; -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0; }
@@ -88,6 +86,8 @@ html.js .pia.page-admin-modules .module-filter-inputs-wrapper .module-filter-cle
 
 /* IPE */
 #panels-ipe-control-container a { border-bottom: transparent; }
+
+.panels-ipe-editing .panels-ipe-portlet-wrapper, .panels-ipe-editing .panels-ipe-placeholder { max-width: 1170px; margin-left: auto; margin-right: auto; }
 
 /* Ctools Modals */
 .ctools-modal-content .btn { margin-top: 0.25em; padding: 4px 0.625em; font-size: 0.6925em; }

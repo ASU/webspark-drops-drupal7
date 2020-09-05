@@ -27,27 +27,22 @@ img.img-testimonial-small {
   ul, ol {
     padding-left: 0;
     list-style-type: none;
-
     li {
       &:before {
         font-weight: bolder;
         vertical-align: middle;
       }
-
       &:last-child {
         padding-bottom: 0;
       }
     }
-
     // Custom bullet, background theming
     &.ws2-element-maroon li:before {
       color: $ws2-maroon;
     }
-
     &.ws2-element-gray li:before {
       color: $text-color;
     }
-
     & > ul, & > ol {
       padding-left: 2em;
     }
@@ -94,7 +89,6 @@ img.img-testimonial-small {
         counter-reset: customlist;
       }
     }
-
     // Ordered, HOWTO stepped lists
     &.ws2-list-stepped {
       & > li {
@@ -130,10 +124,12 @@ img.img-testimonial-small {
     }
   }
   // Exception -- No custom bullets in the secondary menu
-  div.pane-menu-tree {
+  div.pane-menu-tree,
+  .panels-ipe-dragbar, // .panels-ipe-editing
+  .panels-ipe-newblock {
     ul, ol {
       li:before {
-        content: none;
+        content: none !important;
       }
     }
   }

@@ -24,40 +24,40 @@ hr.ws2-element-gold {
 .asu-divider {
   background-position: top center;
   background-repeat: no-repeat;
-  &.asu-divider-morse {
+  &.divider-morse-white {
     background-image: url("#{$elpuente-images-dir}/morse_white.png");
     background-color: #fff;
   }
-  &.asu-divider-morse-gray {
+  &.divider-morse-gray {
     background-image: url("#{$elpuente-images-dir}/morse_gray.png");
     background-color: $ws2-gray;
   }
-  &.asu-divider-morse-gray {
+  &.divider-morse-black {
     background-image: url("#{$elpuente-images-dir}/morse_black.png");
     background-color: $ws2-gray-darkest;
   }
-  &.asu-divider-topo {
+  &.divider-topo-white {
     background-image: url("#{$elpuente-images-dir}/topo_white.png");
     background-color: #fff;
   }
-  &.asu-divider-topo-gray {
+  &.divider-topo-gray {
     background-image: url("#{$elpuente-images-dir}/topo_gray.png");
     background-color: $ws2-gray;
   }
-  &.asu-divider-topo-black {
+  &.divider-topo-black {
     background-image: url("#{$elpuente-images-dir}/topo_black.png");
     background-color: $ws2-gray-darkest;
   }
-  &.asu-divider-net {
+  &.divider-net-white {
     background-image: url("#{$elpuente-images-dir}/network_white.png");
     background-color: #fff;
   }
-  &.asu-divider-net-black {
+  &.divider-net-black {
     background-image: url("#{$elpuente-images-dir}/network_black.png");
     background-color: $ws2-gray-darkest;
   }
   // repeat network images
-  &[class*=asu-divider-net] {
+  &[class*=divider-net] {
     background-position: top left;
     background-repeat: repeat-x;
   }

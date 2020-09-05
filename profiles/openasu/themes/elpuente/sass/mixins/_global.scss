@@ -71,3 +71,20 @@
     }
   }
 }
+
+//// 100% wide vs. 1170px
+//@mixin container-width($which: 'centered', $margin: 'complete') {
+//  @if $which == 'full' {
+//    width: 100%;
+//    padding-left: 0;
+//    padding-right: 0;
+//  } @else {
+//    max-width: 1170px;
+//    @if $margin == 'x-axis' {
+//      margin-left: auto;
+//      margin-right: auto;
+//    } @else {
+//      margin: 0 auto;
+//    }
+//  }
+//}
