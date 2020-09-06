@@ -23,7 +23,7 @@ function theme_customstyles_render_region($vars) {
   $settings = $vars['settings'];
 
   $settings['attributes'] = '';
-  foreach ($settings as $key=>$param) {
+  foreach ($settings as $key => $param) {
     $settings['attributes'] .= ' ' . $param;
   }
   // Theme.
@@ -39,27 +39,45 @@ function theme_customstyles_render_region($vars) {
     $content_wrapper = _customstyles_wrapper_wrap($settings);
     $output = $content_wrapper['prefix'] . $output . $content_wrapper['suffix'];
   }
-
   return $output;
 }
 
 /**
  * Theme function for the pane style.
+ * @throws Exception
  */
 function theme_customstyles_render_pane($vars) {
   $content = &$vars['content'];
   $settings = $vars['settings'];
 
-  // This is needed to prevent throwing an error in php 5.5+
   if (!isset($content->css_class)) {
     $content->css_class = '';
   }
+  // Add attributes to classes string
   foreach ($settings as $key => $param) {
      $content->css_class .= ' ' . $param;
   }
-  $output = theme('panels_pane', $vars);
+  // Custom additions of alt style custom classes
+  $classes = _customstyles_alt_styles_check('divider', $content->css_class);
+  if ($classes !== FALSE) {
+    $content->css_class .= ' ' . $classes;
+  }
+  return theme('panels_pane', $vars);
+}
 
-  return $output;
+/**
+ * Return CSS classes to add a particular alt styling (white, gray, black).
+ *
+ * @param string $type - Type of pane content (i.e. divider, etc.). Usually from a CSS class part (prefix?)
+ * @param string $classes - Current list of classes
+ * @return false|string
+ */
+function _customstyles_alt_styles_check($type, $classes) {
+  if (preg_match('/' . $type . '-(\w{4,7})-(white|gray|black)/', $classes, $matches)) {
+    return ' ws2-element-alt ws2-element-alt-' . $matches[2];
+  } else {
+    return FALSE;
+  }
 }
 
 /**
@@ -192,7 +210,6 @@ function _customstyles_wrapper_wrap($item = array()) {
   $wrap['attributes'] .= ' class="' . $value . '"';
   $wrap['prefix'] = (!empty($item['prefix'])) ? PHP_EOL . $item['prefix'] : PHP_EOL . '<div ' . $wrap['attributes'] . '>';
   $wrap['suffix'] = (!empty($item['suffix'])) ? $item['suffix']  . PHP_EOL : '</div>' . PHP_EOL;
-  //
   return $wrap;
 }
 

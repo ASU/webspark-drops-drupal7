@@ -4,6 +4,10 @@
  */
 @import "variables";
 
+@mixin divider-padding() {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
 // @TODO (all three colors), background-topo (all three colors)
 
 hr.body-gold {
@@ -21,44 +25,46 @@ hr.ws2-element-gold {
 }
 
 // Background dividers
-.asu-divider {
+#{$ws2-content-styles-container} {
   background-position: top center;
-  background-repeat: no-repeat;
-  &.divider-morse-white {
+  background-repeat: repeat;
+  & [class*= divider-] {
+    @include divider-padding();
+  }
+  .divider-morse-white {
     background-image: url("#{$elpuente-images-dir}/morse_white.png");
     background-color: #fff;
   }
-  &.divider-morse-gray {
+  .divider-morse-gray {
     background-image: url("#{$elpuente-images-dir}/morse_gray.png");
     background-color: $ws2-gray;
   }
-  &.divider-morse-black {
+  .divider-morse-black {
     background-image: url("#{$elpuente-images-dir}/morse_black.png");
     background-color: $ws2-gray-darkest;
   }
-  &.divider-topo-white {
+  .divider-topo-white {
     background-image: url("#{$elpuente-images-dir}/topo_white.png");
     background-color: #fff;
   }
-  &.divider-topo-gray {
+  .divider-topo-gray {
     background-image: url("#{$elpuente-images-dir}/topo_gray.png");
     background-color: $ws2-gray;
   }
-  &.divider-topo-black {
+  .divider-topo-black {
     background-image: url("#{$elpuente-images-dir}/topo_black.png");
     background-color: $ws2-gray-darkest;
   }
-  &.divider-net-white {
+  .divider-network-white {
     background-image: url("#{$elpuente-images-dir}/network_white.png");
     background-color: #fff;
   }
-  &.divider-net-black {
+  .divider-network-black {
     background-image: url("#{$elpuente-images-dir}/network_black.png");
     background-color: $ws2-gray-darkest;
   }
   // repeat network images
-  &[class*=divider-net] {
+  [class*=divider-network-] {
     background-position: top left;
-    background-repeat: repeat-x;
   }
 }
