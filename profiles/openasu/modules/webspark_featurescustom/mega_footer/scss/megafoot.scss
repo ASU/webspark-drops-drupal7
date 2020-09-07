@@ -99,20 +99,30 @@
   }
   .dgtl-mkting-101 {
     margin-bottom: 1.75em;
-    > li > a {
-      margin-right: 0.625em;
-      font-size: 2.375em;
-      color: $link-color;
-      border-bottom: 0;
+    & > li {
+      float: left;
+      & > a {
+        margin-right: 0.625em;
+        font-size: 2.375em;
+        color: $link-color;
+        border-bottom: 0;
+        line-height: 1rem;
+        // Custom SVGs
+        svg {
+          fill: #cccccc;
+          width: 33px;
+          &:hover {
+            fill: #ffffff;
+          }
+        }
+      }
     }
   }
   ul > li > a, ol > li > a {
     position: relative;
     text-decoration: none;
   }
-  .dgtl-mkting-101 > li {
-    float: left;
-  }
+
   .fa:hover {
     color: $link-color-hover;
   }
