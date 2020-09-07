@@ -5,7 +5,7 @@
  * Code for the WS2 Banners feature.
  */
 
-//include_once 'ws2_banners.features.inc';
+include_once 'ws2_banners.features.inc';
 
 /**
  * Implementation of hook_entity_info_alter().
