@@ -31,7 +31,6 @@ stylesheets[all][] = css/forms.css
 ;stylesheets[all][] = css/list-items.css
 stylesheets[all][] = css/maintenance-pages.css
 stylesheets[all][] = css/nav.css
-stylesheets[all][] = css/elpuente.brand-overrides.css
 stylesheets[all][] = css/elpuente.custom.css
 stylesheets[all][] = css/elpuente.media-rules.css
 stylesheets[print][] = css/print.css

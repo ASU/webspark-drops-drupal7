@@ -27,13 +27,8 @@
   background-image: url(#{$bg-quotes-image});
   margin-top: 1.5rem;
 }
-
-// Include alternate styling rules
-//@import './alt_styling';
-
 /* Blockquote SASS
 ----------------------------------------------*/
-
 blockquote {
   border-left: none;
   font-weight: bold;
@@ -88,7 +83,6 @@ blockquote {
     }
     padding-left: $blockquote-image-offset; // 230px
   }
-
   /* Signatures (beneath content) */
   .ws2-sig-title,
   .ws2-sig-byline {
