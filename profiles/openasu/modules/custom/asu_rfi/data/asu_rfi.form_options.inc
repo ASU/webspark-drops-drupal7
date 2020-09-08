@@ -1,100 +1,124 @@
-<?php
+<?php /** @noinspection PhpUnusedParameterInspection */
 
 /**
- * Helper functions
  * Get list names and IDs for various RFI form dropdowns
- * @param $name - (str) Which dataset to pull (state_province, country, rfi_dedupe_list_terms (aka sem_dates))
- * @param $installing - (bool) Module installing for the first time (TRUE)
- *   or just running via cron (FALSE).
+ *
+ * @param string $dataset - Which dataset to pull (state_province, country, rfi_dedupe_list_terms (aka sem_dates))
+ * @param bool $convert_to_sf - Convert values to Salesforce-compatibility (only countries for now). Defaults to TRUE.
+ * @throws InvalidMergeQueryException
  */
-function asu_rfi_get_options_data($name, $installing = FALSE) {
-
+function asu_rfi_get_form_select_options($dataset, $convert_to_sf = TRUE) {
   // Get configs
-  $config = (array) _asu_rfi_get_data_configs($name);
+  $config = (array) _asu_rfi_get_select_options_config($dataset);
   $url = $config['url'];
   $db_tbl = $config['db_tbl'];
   $json_options = $config['json_options'];
+  $results = array();
 
   // Do CURL call to JSON feed
   try {
     $ch = curl_init();
     curl_setopt_array($ch, $json_options);
     $response = curl_exec($ch);
-    $result = json_decode($response);
+    $results = json_decode($response);
     curl_close($ch);
 
-    if (FALSE === $response) {
+    if ($response === FALSE) {
       throw new Exception(curl_error($ch), curl_errno($ch));
     }
   } catch (Exception $e) {
     trigger_error(sprintf(
-      'Curl call to get ' . $name . ' from ' . $url . ' failed with error #%d: %s',
+      'Curl call to get ' . $dataset . ' from ' . $url . ' failed with error #%d: %s',
       $e->getCode(), $e->getMessage()),
       E_USER_ERROR);
   }
 
-  // Do DB upsert if values are returned from JSON feed...
-  if (count($result)) {
-    $cntry_cnt = 0;
-    foreach ($result as $datum) {
-      $datum_key = (!empty($datum->{$config['datum_key']})) ? check_plain($datum->{$config['datum_key']}) : 'EMPTY';
-      $datum_value = (!empty($datum->{$config['datum_value']})) ? check_plain($datum->{$config['datum_value']}) : 'EMPTY';
+  // Do DB upsert of options if values are returned from JSON feed...
+  if (count($results) > 0) {
+
+    // Pre-update customization:
+    // Get upcoming terms
+    $mapped_terms = ($dataset === 'rfi_dedupe_list_terms')
+      ? asu_libs_get_sem_codes_human_mapping(TRUE, array(), 'digits', 4)
+      : array();
+
+    // Update countries to Salesforce values
+    if ($dataset === 'country') {
+      asu_libs_get_sf_country_mapping($results);
+    }
+
+    $data_count = 0;
+    foreach ($results as $result) {
+      $datum_key = (!empty($result->{$config['datum_key']})) ? check_plain($result->{$config['datum_key']}) : 'EMPTY';
+      $datum_value = (!empty($result->{$config['datum_value']})) ? check_plain($result->{$config['datum_value']}) : 'EMPTY';
       $db_key = $config['db_key'];
       $db_value = $config['db_value'];
+      // Upsert since both aren't empty
       if ($datum_key !== 'EMPTY' || $datum_value !== 'EMPTY') {
+        $fields = array(
+          $db_key => $datum_key,
+          $db_value => $datum_value,
+        );
+        // Add in semester four digit code from semLabel field @TODO 7208
+        if (isset($config['db_sorter']) && !empty($config['db_sorter'])) {
+          $value = $result->{$config['datum_value']};
+          $code = array_search($value, $mapped_terms);
+          if ($code !== FALSE && !empty($value)) {
+            $fields[$config['db_sorter']] = $code;
+          }
+        }
         db_merge($db_tbl)
           ->key(array($db_key => $datum_key))
-          ->fields(array(
-            $db_key => $datum_key,
-            $db_value => $datum_value,
-          ))
+          ->fields($fields)
           ->execute();
-        $cntry_cnt++;
+        $data_count++;
       }
       else {
-        $message = t($name . ' record from ' . $url . ' was rejected. Debugging info: key - :key, value - :name ',
-          array(':key' => $datum_key, ':name' => $datum_value,));
-        watchdog('asu_rfi', $message, array(), WATCHDOG_NOTICE);
+        $message = t($dataset . ' record from ' . $url . ' was rejected. Debugging info: key - :key, value - :dataset ',
+          array(':key' => $datum_key, ':dataset' => $datum_value,));
+        flogger('asu_rfi', $message, array(), WATCHDOG_DEBUG);
       }
     }
-    if ($cntry_cnt > 0) {
-      $message = $cntry_cnt . ' out of ' . count($result) . ' ' . $name . ' entries were
+    if ($data_count > 0) {
+      $message = $data_count . ' out of ' . count($results) . ' ' . $dataset . ' entries were
         upserted in ' . $db_tbl . ' DB table.';
-      watchdog('asu_rfi', $message, array(), WATCHDOG_NOTICE);
-    } else { // no $result entries got in
-      watchdog('asu_rfi', 'None of the ' . count($result) . ' ' . $name . ' entries were
-        added to the ' . $db_tbl . ' DB table.');
+      flogger('asu_rfi', $message, array(), WATCHDOG_INFO);
+    } else { // no $results entries got in
+      flogger('asu_rfi', 'None of the ' . count($results) . ' ' . $dataset . ' entries were
+        added to the ' . $db_tbl . ' DB table.', array(), WATCHDOG_NOTICE);
     }
   }
 
-  // Or error out if no data is in list...
+  // Or error out if no dropdown data is in list...
   else {
-    $status = 'warning';
-    $wd_status = WATCHDOG_WARNING;
-    $message = 'No ' . $name . ' for RFI forms were pulled from ' . $url .
-      ' to insert into ' . $db_tbl . '. Check your existing RFI forms to see if they still have all expected ' . $name . ' options.' .
+    $status = WATCHDOG_WARNING;
+    $message = 'No ' . $dataset . ' for RFI forms were pulled from ' . $url .
+      ' to insert into ' . $db_tbl . '. Check your existing RFI forms to see if they still have all expected ' . $dataset . ' options.' .
       ' If it does not, please contact webconsulting@asu.edu for assistance.';
 
     // Check to see if any option entries (valid or not) still exist in the table from past pulls.
     if (_asu_rfi_check_form_values($db_tbl) === 0 ) {
       $message .= ' The RFI form will not function properly until this issue has been resolved.';
-      $status = 'error';
-      $wd_status = WATCHDOG_ERROR;
+      $status = WATCHDOG_ERROR;
     }
-    drupal_set_message($message, $status);
-    watchdog('asu_rfi', $message, array(), $wd_status);
+    flogger('asu_rfi', $message, array(), $status, TRUE, FALSE, TRUE);
   }
 
 }
 
 /**
- * Helper function
- * Stores configs for all three types
- * @param $dataset - Which dataset to pull (states, country, semester dates, etc.)
- * @return $config - Array of configurations
+ * Store configs for all three RFI form dropdown types
+ * Two columns of table data by default (third optional column - $db_sorter - available for sorting)
+ *
+ * @param string $dataset - Which dataset to pull (state_province, country, rfi_dedupe_list_terms)
+ * @return array $config
  */
-function _asu_rfi_get_data_configs($dataset) {
+function _asu_rfi_get_select_options_config($dataset) {
+  // Pull select options from undergrad middleware (PRODUCTION is the default to avoid being blocked by the ASU firewall.)
+  $env = variable_get('asu_rfi_middleware_env', 'prod');
+  $tld = ($env === 'prod') ? ASU_RFI_MIDDLEWARE_UNDERGRAD_PROD : ASU_RFI_MIDDLEWARE_UNDERGRAD_QA;
   $config = array();
+
   if ($dataset == 'state_province') {
     $config = array(
       'type' => 'fieldinfo',
@@ -104,30 +128,20 @@ function _asu_rfi_get_data_configs($dataset) {
       'db_value' => 'stateDesc',
       'datum_key' => 'value',
       'datum_value' => 'label',
-    );
-    $config['url'] = 'https://webforms.asu.edu/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
-    $config['json_options'] = array(
-      CURLOPT_URL => $config['url'],
-      CURLOPT_RETURNTRANSFER => 1,
-      CURLOPT_HTTPHEADER => _asu_rfi_get_curl_auth(),
+      'json_options' => array(),
     );
   }
   elseif ($dataset == 'country') {
-      $config = array(
-        'type' => 'fieldinfo',
-        'name' => 'country',
-        'db_tbl' => 'asu_rfi_countries',
-        'db_key' => 'countryCode3',
-        'db_value' => 'countryDesc',
-        'datum_key' => 'value',
-        'datum_value' => 'label',
-      );
-      $config['url'] = 'https://webforms.asu.edu/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
-      $config['json_options'] = array(
-        CURLOPT_URL => $config['url'],
-        CURLOPT_RETURNTRANSFER => 1,
-        CURLOPT_HTTPHEADER => _asu_rfi_get_curl_auth(),
-      );
+    $config = array(
+      'type' => 'fieldinfo',
+      'name' => 'country',
+      'db_tbl' => 'asu_rfi_countries',
+      'db_key' => 'countryCode3',
+      'db_value' => 'countryDesc',
+      'datum_key' => 'value',
+      'datum_value' => 'label',
+      'json_options' => array(),
+    );
   }
   elseif ($dataset == 'rfi_dedupe_list_terms') {
     $config = array(
@@ -138,20 +152,23 @@ function _asu_rfi_get_data_configs($dataset) {
       'db_value' => 'semLabel',
       'datum_key' => 'Id',
       'datum_value' => 'Name',
+      'db_sorter' => 'semSortCode', // Optional param - semester sorting code
     );
-    $config['url'] = 'https://webforms.asu.edu/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
     $fields = array(
       'condition_Term_Status__c' => TRUE,
     );
     $body = json_encode($fields);
     $config['json_options'] = array(
-      CURLOPT_URL => $config['url'],
       CURLOPT_POST => 1,
       CURLOPT_POSTFIELDS => $body,
-      CURLOPT_RETURNTRANSFER => 1,
-      CURLOPT_HTTPHEADER => _asu_rfi_get_curl_auth(),
     );
   }
+
+  // Build out global options in $config for JSON pull
+  $config['url'] = $tld . '/salesforce_query/api/' . $config['type'] . '/' . $config['name'];
+  $config['json_options'][CURLOPT_URL] = $config['url'];
+  $config['json_options'][CURLOPT_RETURNTRANSFER] = 1;
+  $config['json_options'][CURLOPT_HTTPHEADER] = _asu_rfi_get_curl_auth();
 
   return $config;
 }

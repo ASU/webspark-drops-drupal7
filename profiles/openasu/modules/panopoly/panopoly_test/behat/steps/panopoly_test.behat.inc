@@ -594,7 +594,19 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
    * @When I switch to the frame :frame
    */
   public function iSwitchToTheFrame($frame) {
-    $this->getSession()->switchToIFrame($frame);
+    // $this->getSession()->switchToIFrame($frame);
+    $key = (int) $frame;
+    $this->getSession()->switchToIFrame($key);
+    $this->iframe = $frame;
+    sleep(3);
+  }
+
+  /**
+   * @When I switch to the only available frame :frame
+   */
+  public function iSwitchToTheOnlyFrame($frame) {
+    // Guessing that the iFrame is the ONLY one - setting it to 0
+    $this->getSession()->switchToIFrame(0);
     $this->iframe = $frame;
     sleep(3);
   }
@@ -829,7 +841,7 @@ class TestSubContext extends RawDrupalContext implements DrupalSubContextInterfa
   public function clearDblog() {
     db_delete('watchdog')->execute();
   }
-  
+
   /**
    * @When I select the first autocomplete option for :text on the :field field
    */

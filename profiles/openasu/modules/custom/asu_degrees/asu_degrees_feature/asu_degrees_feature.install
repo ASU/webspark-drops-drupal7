@@ -1,16 +1,16 @@
 <?php
- 
+
   /**
    * Grab image within the Feature module. Then, create image in the new site to use for default image for the ASU Degree Banner Image and ASU Degree fields.
    */
 function asu_degrees_feature_install() {
   _asu_degrees_feature_image('asu_degree_banner_default.jpg', 'banner');
   _asu_degrees_feature_image('asu_degree_image.jpg', 'image');
-  
+
 }
 
-/** 
- * Implementing hook_update_N 
+/**
+ * Implementing hook_update_N
  */
 function asu_degrees_feature_update_7000(&$sandbox) {
   features_revert_module('asu_degrees_feature');

@@ -8,6 +8,11 @@ configure = admin/config/user-interface/easy-breadcrumb
 
 ; Information added by Drupal.org packaging script on 2019-06-19
 version = "7.x-2.17"
+
+;;;;;;;;;;;;;;
+; 2020-03-20 - Patched to use the schema.org vocabulary for structured data for their rich results generation (SEO improvement).
+;;;;;;;;;;;;;;
+
 core = "7.x"
 project = "easy_breadcrumb"
 datestamp = "1560945791"

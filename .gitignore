@@ -75,8 +75,10 @@ profiles/openasu/modules/**/.gitignore
 webspark**.bash
 __webspark**.bash
 sites/default/settings.local.php
-profiles/openasu/modules/panopoly_test/tests/bin
-profiles/openasu/modules/panopoly_test/tests/vendor
-sites/Webspark7.dd
-sites/sites.php
-sites/default/settings.php
+
+# Panopoly Test, Webspark Test
+######################
+profiles/openasu/modules/**/behat/bin
+profiles/openasu/modules/**/behat/vendor
+profiles/openasu/modules/**/behat/behat.local.yml
+

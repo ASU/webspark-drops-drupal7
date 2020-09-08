@@ -52,7 +52,7 @@ function _asu_degrees_BLOCK_CONTENT() {
         '#theme' => 'item_list',
         '#items' => $result,
         '#type' => 'ul',
-        '#attributes' => array('class' => 'list-group'),
+        '#attributes' => array('class' => array('list-group')),
       );
     }
     else {

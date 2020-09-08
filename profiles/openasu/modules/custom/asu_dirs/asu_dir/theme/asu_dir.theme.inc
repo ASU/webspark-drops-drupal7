@@ -85,9 +85,16 @@ function theme_asu_dir_isearch_view(&$vars) {
 
   _asu_isearch_build_contextual_filter_form($content, $view, $view_config, $directory);
 
-  $html = $content['isearch_az_index']['#markup'];
-  $html .= render($content['isearch_view_exposed_form']);
-  $html .= $content['isearch_view']['#markup'];
+  $html = '';
+  if (isset($content['isearch_az_index']['#markup'])) {
+    $html = $content['isearch_az_index']['#markup'];
+  }
+  if (isset($content['isearch_view_exposed_form'])) {
+    $html .= render($content['isearch_view_exposed_form']);
+  }
+  if (isset($content['isearch_view']['#markup'])) {
+    $html .= $content['isearch_view']['#markup'];
+  }
 
   return $html;
 }

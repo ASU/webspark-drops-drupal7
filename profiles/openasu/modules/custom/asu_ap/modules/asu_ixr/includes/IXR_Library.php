@@ -211,6 +211,7 @@ class IXR_Message
     xml_set_character_data_handler($this->_parser, 'cdata');
     $chunk_size = 262144; // 256Kb, parse in chunks to avoid the RAM usage on very large messages
     do {
+      $final = false;
       if (strlen($this->message) <= $chunk_size) {
         $final = true;
       }
@@ -1293,7 +1294,7 @@ class IXR_ClassServer extends IXR_Server
 
   function __construct($delim = '.', $wait = false)
   {
-    $this->IXR_Server(array(), false, $wait);
+    IXR_Server::__construct(array(), false, $wait);
     $this->_delimiter = $delim;
     $this->_objects = array();
   }

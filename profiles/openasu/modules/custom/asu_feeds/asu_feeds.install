@@ -1,27 +1,21 @@
 <?php
-/*
-function asu_feeds_install() {
-  //clear the cache to display in Feeds as available plugin.
-  //cache_clear_all('plugins:feeds:plugins', 'cache');
-	
-	
-	$weight = db_select('system', 's')
-              ->fields('s', array('weight'))
-              ->condition('name', 'othermodule', '=')
-              ->execute()
-              ->fetchField();
-  db_update('system')
-    ->fields(array('weight' => $weight +1))
-    ->condition('name', 'yourmodulename', '=')
-    ->execute();
+
+/**
+ * Implements hook_requirements()
+ */
+function asu_feeds_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+  if ($phase === 'runtime') {
+    $requirements['asu_feeds'] = array(
+      'title' => $t('ASU Feeds'),
+      'description' => $t('DEPRECATED.'),
+      'value' => 'This module is no longer supported or receiving updates. Any modules depending on this library'
+        . ' (ex. asu_degrees) may display incorrect or incomplete data.'
+        . ' RECOMMENDATION: Replace this module with the updated ASU Feeds 2 (asu_feeds2) module to get the latest version of'
+        . ' this library.',
+      'severity' => REQUIREMENT_WARNING,
+    );
+  }
+  return $requirements;
 }
-*/
-/*
-function asu_feeds_enable() {
-  //clear the cache to display in Feeds as available plugin.
-  cache_clear_all('plugins:feeds:plugins', 'cache');
-}
-*/
-
-
-

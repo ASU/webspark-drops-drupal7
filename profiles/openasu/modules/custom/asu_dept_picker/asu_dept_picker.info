@@ -1,7 +1,7 @@
 name = ASU Department Picker Field
 description = "Creates a custom field used to select an ASU department."
 core = 7.x
-package = ASU CLAS
+package = ASU
 version = 7.x-1.0.1
 project = asu_dept_picker
 

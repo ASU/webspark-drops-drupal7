@@ -1,0 +1,5 @@
+name = ASU Libraries Volume One
+description = "Includes standardized form field validators, semester codes handling, campus lists, GDPR output."
+core = 7.x
+package = ASU
+version = 7.x-1.1

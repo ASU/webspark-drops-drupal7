@@ -49,6 +49,10 @@ function webspark_wysiwyg_wysiwyg_default_profiles_alter(&$data) {
         Oval image=img-circle
         Image with rounded corners=img-rounded
         Image with double-border=img-thumbnail
+        Alert text success=alert alert-block alert-success
+        Alert text warning=alert alert-block alert-warning
+        Alert text danger=alert alert-block alert-danger
+        Alert text info=alert alert-block alert-info
         Primary button=btn btn-primary
         Primary button large=btn btn-primary btn-lg
         Primary button full-col-wide=btn btn-primary btn-block
@@ -65,7 +69,7 @@ function webspark_wysiwyg_wysiwyg_default_profiles_alter(&$data) {
         EOP button large=btn btn-blue btn-lg
         EOP button full-col-wide=btn btn-blue btn-block
         EOP button large col-wide=btn btn-blue btn-lg btn-block'; /* WAS: '' */
-    $data['panopoly_wysiwyg_text']['settings']['css_path'] = '%b%t/css/innovation-main.css,%b%t/css/buttons.css,%b%t/css/forms.css,%b%t/css/nav.css,%b%t/fonts/roboto/css/roboto.css'; /* WAS: '' */
+    $data['panopoly_wysiwyg_text']['settings']['css_path'] = '%bprofiles/openasu/libraries/innovation_bootstrap/css/bootstrap.min.css,%bprofiles/openasu/themes/innovation/css/innovation-main.css,%bprofiles/openasu/themes/innovation/css/buttons.css,%bprofiles/openasu/themes/innovation/css/forms.css,%bprofiles/openasu/themes/innovation/css/nav.css,%bprofiles/openasu/themes/innovation/fonts/roboto/css/roboto.css,%bprofiles/openasu/modules/webspark_featurescustom/webspark_wysiwyg/css/webspark-wysiwyg.css'; /* WAS: '' */
     $data['panopoly_wysiwyg_text']['settings']['css_setting'] = 'self'; /* WAS: 'theme' */
     unset($data['panopoly_wysiwyg_text']['settings']['buttons']['default']['forecolor']);
     unset($data['panopoly_wysiwyg_text']['settings']['buttons']['default']['underline']);

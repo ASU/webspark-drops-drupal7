@@ -6,3 +6,19 @@
 function asu_gcse_enable() {
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('search Google CSE'));
 }
+
+function asu_gcse_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+  if ($phase === 'runtime') {
+    $requirements['asu_gcse'] = array(
+      'title' => $t('ASU Google Custom Search Appliance'),
+      'description' => $t('DEPRECATED.'),
+      'value' => 'This module is no longer supported and is being removed from Webspark in compliance with ASU Web standards'
+        . ' in relation to search output/results. The module will be removed in the next Webspark release.'
+        . ' RECOMMENDATION: Disable this module immediately.',
+      'severity' => REQUIREMENT_WARNING,
+    );
+  }
+  return $requirements;
+}

@@ -5,4 +5,5 @@
 * Upon import, ASU Academic Programs nodes will be created for each of the programs or certificates from the selected source.
 * For more information on setting up the module, [see webspark.asu.edu](https://webspark.asu.edu).
 
-**Developer and maintainer:** Michael Gilardi, mgilardi@asu.edu
+**Current Maintainer** Bryan Roseberry, aubjr@asu.edu
+**Original Developer** Michael Gilardi, mgilardi@asu.edu

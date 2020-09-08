@@ -22,7 +22,7 @@ Feature: Add ASU spotlight widget
       | Button color                              | red              |
       | Text position over image                  | mid-center    |
     And I click "Browse"
-    And I switch to the frame "mediaBrowser"
+    And I switch to the only available frame "mediaBrowser"
     And I attach the file "test-lg.png" to "files[upload]"
     And I press "Next"
     Then I should see "Destination"

@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Load include files
+ */
+
+module_load_include('inc', 'asu_libs', 'includes/asu_libs.campuses');
+module_load_include('inc', 'asu_libs', 'includes/asu_libs.countries');
+module_load_include('inc', 'asu_libs', 'includes/asu_libs.env');
+module_load_include('inc', 'asu_libs', 'includes/asu_libs.semesters');
+module_load_include('inc', 'asu_libs', 'includes/asu_libs.validators');
+module_load_include('inc', 'asu_libs', 'includes/asu_libs.misc');

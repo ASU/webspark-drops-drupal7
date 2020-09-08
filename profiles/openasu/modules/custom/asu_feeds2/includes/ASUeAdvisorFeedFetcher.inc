@@ -170,7 +170,7 @@ class ASUeAdvisorFeedFetcher extends FeedsFetcher {
       '#title' => t('Program'),
       '#options' => array(
         'undergrad' => t('Undergraduate Programs'),
-        'undergrad_mc' => t('Undergraduate Minors & Certificates'),
+        'undergrad_mc' => t('Undergraduate - Minors & Certificates'),
         'graduate' => t('Graduate Programs & Certificates'),
       ),
       '#default_value' => isset($source_config['program']) ? $source_config['program'] : '',

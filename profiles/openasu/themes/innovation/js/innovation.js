@@ -4,7 +4,7 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.asu_standard = {
-    attach: function (context, settings) {
+    attach: function (context, settings) { // Code to run on DOM ready, each AJAX request finish.
 
       $("#asu_mobile_hdr").wrapInner("<div class='asu_mobile_hdr_wrapper'></div>");
       $("#asu_mobile_menu").wrapInner("<div class='asu_mobile_menu_wrapper'></div>");
@@ -15,6 +15,7 @@
     }
   };
 
+  // Local functions that are globally available via Drupal.behaviors.asu_standard.
   // Add support for sticky menu
   var navOffset = 0;
   $(window).scroll(function () {
@@ -74,8 +75,7 @@
     window.location.hash = hash;
   }
 
-  // WEBSPARK-897 - Stop conflict between Token module (and its jQuery calls) and Bootstrap's button() function
-  // This was keeping Token dialog box's X button from rendering.
+  // WEBSPARK-897 - Stop conflict between Token module (and its jQuery calls) and Bootstrap's button() function.
   $.fn.bootstrapBtn = $.fn.button.noConflict();
 
 })(jQuery, Drupal);
