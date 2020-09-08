@@ -279,6 +279,23 @@ img.img-testimonial-small { clip-path: circle(90px); }
 .region-content #page-page ol.ws2-list-stepped.ws2-element-gold > li:before { background-color: #ffc627; color: #191919; }
 .region-content #page-page div.pane-menu-tree ul li:before, .region-content #page-page div.pane-menu-tree ol li:before, .region-content #page-page .panels-ipe-dragbar ul li:before, .region-content #page-page .panels-ipe-dragbar ol li:before, .region-content #page-page .panels-ipe-newblock ul li:before, .region-content #page-page .panels-ipe-newblock ol li:before { content: none !important; }
 
+/** New WS2.0 - Dividers and Backgrounds IS_SCSS */
+hr.ws2-hr-gold { height: 0.5rem; background-color: #ffc627; max-width: 16rem; margin: 2em 0; }
+
+hr.ws2-element-gold { border-color: #ffc627; border-width: 8px; margin-left: 0; max-width: 256px; }
+
+.region-content #page-page { background-position: top center; background-repeat: repeat; }
+.region-content #page-page [class*=divider-] { padding-top: 3rem; padding-bottom: 3rem; }
+.region-content #page-page .divider-morse-white { background-image: url("/profiles/openasu/themes/elpuente/images/morse_white.png"); background-color: #fff; }
+.region-content #page-page .divider-morse-gray { background-image: url("/profiles/openasu/themes/elpuente/images/morse_gray.png"); background-color: #bfbfbf; }
+.region-content #page-page .divider-morse-black { background-image: url("/profiles/openasu/themes/elpuente/images/morse_black.png"); background-color: #191919; }
+.region-content #page-page .divider-topo-white { background-image: url("/profiles/openasu/themes/elpuente/images/topo_white.png"); background-color: #fff; }
+.region-content #page-page .divider-topo-gray { background-image: url("/profiles/openasu/themes/elpuente/images/topo_gray.png"); background-color: #bfbfbf; }
+.region-content #page-page .divider-topo-black { background-image: url("/profiles/openasu/themes/elpuente/images/topo_black.png"); background-color: #191919; }
+.region-content #page-page .divider-network-white { background-image: url("/profiles/openasu/themes/elpuente/images/network_white.png"); background-color: #fff; }
+.region-content #page-page .divider-network-black { background-image: url("/profiles/openasu/themes/elpuente/images/network_black.png"); background-color: #191919; }
+.region-content #page-page [class*=divider-network-] { background-position: top left; }
+
 /* IN PROGRESS */
 /* Default table styles */
 table { background-color: #fff; margin-bottom: 1.5em; max-width: 100%; width: 100%; border: 1px solid #e8e8e8; }

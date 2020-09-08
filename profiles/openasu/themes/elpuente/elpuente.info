@@ -26,7 +26,7 @@ stylesheets[all][] = css/elpuente.core-bootstrap.css
 ; Last CSS sheets to overrule all others - including Innovation CSS import
 stylesheets[all][] = css/admin.css
 stylesheets[all][] = css/buttons.css
-stylesheets[all][] = css/dividers.css
+;stylesheets[all][] = css/dividers.css
 stylesheets[all][] = css/forms.css
 ;stylesheets[all][] = css/list-items.css
 stylesheets[all][] = css/maintenance-pages.css

@@ -8,15 +8,15 @@
   padding-top: 3rem;
   padding-bottom: 3rem;
 }
-// @TODO (all three colors), background-topo (all three colors)
 
-hr.body-gold {
+// <HR>s
+hr.ws2-hr-gold {
   height: 0.5rem;
   background-color: $ws2-gold;
   max-width: 16rem;
   margin: 2em 0;
 }
-/* HR separator - custom */
+// HR separator - custom ??? what was this for??
 hr.ws2-element-gold {
   border-color: $ws2-gold;
   border-width: 8px;
@@ -24,7 +24,7 @@ hr.ws2-element-gold {
   max-width: 256px;
 }
 
-// Background dividers
+// Background image dividers
 #{$ws2-content-styles-container} {
   background-position: top center;
   background-repeat: repeat;
