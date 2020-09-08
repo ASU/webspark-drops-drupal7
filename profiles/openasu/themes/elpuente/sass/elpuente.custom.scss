@@ -1,0 +1,175 @@
+/**
+ * BOOTSTRAP, PANOPOLY & WEBSPARK OVERRIDES
+ * Initially ported over from Innovationn (innovation-main.css source)
+ * And then it was split into SCSS files by category
+ */
+@import "variables";
+@import "mixins/global";
+
+/* Global-level and/or Misc. selectors with no clear category
+-------------------------------------------------------------- */
+body {
+  min-width: 20em;
+  #page .region-content {
+    padding: 0;
+  }
+}
+p {
+  margin: 1em 0;
+}
+.pane-node-body {
+  margin-top: 2.85em;
+  margin-bottom: 3em;
+}
+.page-teaser {
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+#main-wrapper {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+#tabs {
+  margin-bottom: 0;
+}
+div.error {
+  background-repeat: no-repeat;
+  text-align: left;
+  font: normal 12px/16px "FontAwesome";
+  letter-spacing: 0;
+  color: #B72A2A;
+  opacity: 1;
+  label {
+    padding-left: 2em;
+  }
+}
+
+/* Level one (atomic) elements ------------------------------- */
+@import 'buttons_holder';
+@import 'links';
+@import 'typography';
+@import "blockquotes";
+@import 'images';
+@import 'list_items';
+@import 'dividers';
+@import 'tables';
+@import 'content_callout';
+
+/* Panels ---------------------------------------------------- */
+.panel {
+  background-color: $ws2-gray-lightest;
+  border: 1px solid $ws2-gray-light;
+}
+
+.js-darkgraybg .panel,
+.js-lightgraybg .panel {
+  background-color: #fff;
+}
+
+/* Video ---------------------------------------------------- */
+// Generic video
+.embedded-video,
+.media-youtube-video,
+.media-vimeo-video {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 0;
+  height: 0;
+  overflow: hidden;
+}
+.embedded-video iframe,
+.embedded-video object,
+.embedded-video embed,
+.media-youtube-video iframe,
+.media-youtube-video object,
+.media-youtube-video embed,
+.media-vimeo-video iframe,
+.media-vimeo-video object,
+.media-vimeo-video embed {
+  position: absolute !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Flexslider (slideshows) ----------------------------------------------- */
+.flexslider {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0 0 2.75rem; // 44px
+}
+
+/* Level 2 design elements (compounds) ---------------------------------- */
+@import 'accordions';
+@import 'alerts';
+@import 'banners'; // FPP only
+@import 'cards';
+// Alternate Element styles for 1) gray, 2) black, and 3) white --- IN PROGRESS
+@import 'altstyles';
+
+/* =100% width fix for Bootstrap limitation --- SKIPPED (NEEDS REVIEW)
+----------------------------------------------------- */
+#header .container {
+  padding-left: 0;
+  padding-right: 0;
+  .row .col-md-12 {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+.section > .container,
+#footer > .container,
+#page-footer > .container {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  .row {
+    max-width: 1170px;
+    margin: 0 auto;
+  }
+  .row-full {
+    width: 100% !important;
+    max-width: none;
+    .col-md-12 {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    [class^="pane-"],
+    .content,
+    .region > div:not(.block-asu-brand) .content {
+      max-width: 1170px;
+      margin: 0 auto;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+    .region > div.block-asu-brand > .content {
+      max-width: 100%;
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+}
+// Override for Flexslider; asuflex.css carries the rest after this rule
+.section > .container .row-full .pane-bundle-asu-spotlight [class^="pane-"] {
+  width: 100% !important;
+  padding-left: 0;
+  padding-right: 0;
+  max-width: none !important;
+  margin-left: 0;
+  margin-right: 0;
+}
+// Global row margin + padding rule overrides
+.row {
+  padding: 0;
+  margin: 0;
+}
+
+// Header and footer customizations (not already in Webspark Megamenu or elsewhere)
+@import 'header_custom';
+@import 'footer_custom';
+// Accessibility
+@import 'accessibility';

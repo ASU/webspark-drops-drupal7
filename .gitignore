@@ -82,3 +82,6 @@ profiles/openasu/modules/**/behat/bin
 profiles/openasu/modules/**/behat/vendor
 profiles/openasu/modules/**/behat/behat.local.yml
 
+# Panopoly core for testing Panopoly
+######################
+profiles/panopoly

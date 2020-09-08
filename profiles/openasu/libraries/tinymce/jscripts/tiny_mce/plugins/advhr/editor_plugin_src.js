@@ -30,14 +30,13 @@
 			});
 
 			ed.onNodeChange.add(function(ed, cm, n) {
-				cm.setActive('advhr', n.nodeName == 'HR');
+				cm.setActive('advhr', n.nodeName === 'HR');
 			});
 
 			ed.onClick.add(function(ed, e) {
 				e = e.target;
-
 				if (e.nodeName === 'HR')
-					ed.selection.select(e);
+          ed.selection.select(e);
 			});
 		},
 

@@ -6,7 +6,7 @@ Feature: Link to page on the site
   Background:
     Given I am logged in as a user with the "administrator" role
       And a "panopoly_test_page" with the title "Linkit Target"
-    When I visit "/admin/appearance/settings/innovation"
+    When I visit the default theme settings page
       And I check the box "edit-always-show-page-title"
       And I press "edit-submit"
       And I visit "/node/add/panopoly-test-page"
@@ -18,7 +18,7 @@ Feature: Link to page on the site
   Scenario: Add a link to an internal page
     When I click the "Link to content" button in the "edit-body-und-0-value" WYSIWYG editor
       And I wait 1 seconds
-      And I fill in "edit-linkit-search" with "Target"
+      And I type "target" into "edit-linkit-search" field
       And I wait 1 seconds
       And I press the "Tab" key in the "edit-linkit-search" field
     When I click "Options" in the "Linkit modal" region
@@ -33,7 +33,7 @@ Feature: Link to page on the site
       And I press "edit-submit"
     Then I should see "Linkit Target" in the "a" element with the "title" attribute set to "Testing title" in the "Burr Flipped Content" region
     When I click "Linkit Target"
-    Then I should see "Linkit Target"
+    Then the "h1" element should contain "Linkit Target"
 
   @api @javascript @panopoly_wysiwyg
   Scenario: Add a link to an external page
@@ -53,8 +53,8 @@ Feature: Link to page on the site
   Scenario: Resetting the Innovation theme Always Show Page Title setting
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
-    When I visit "/admin/appearance/settings/innovation"
+    When I visit the default theme settings page
       And I uncheck the box "edit-always-show-page-title"
       And I press "edit-submit"
-      And I visit "/admin/appearance/settings/innovation"
+      And I visit the default theme settings page
     Then the "edit-always-show-page-title" checkbox should not be checked

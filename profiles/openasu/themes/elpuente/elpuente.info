@@ -1,0 +1,57 @@
+;----------// Theme Information
+
+name        = El Puente
+description = New Web Standards 2.0 theme to replace Innovation in Drupal 7's Webspark
+core        = 7.x
+base theme  = kalatheme
+release     = 7.x-1.0-alpha1
+engine      = phptemplate
+screenshot  = screenshot.png
+
+regions[header] = Header
+regions[menu] = Menu
+regions[content] = Content
+regions[prefooter] = Prefooter
+regions[footer] = Footer
+regions[closure] = Closure
+
+features[] = favicon
+features[] = logo
+features[] = name
+
+;----------// Stylesheets
+
+; Bootstrap core - replaces bootstrap.css
+stylesheets[all][] = css/elpuente.core-bootstrap.css
+; Last CSS sheets to overrule all others - including Innovation CSS import
+stylesheets[all][] = css/admin.css
+stylesheets[all][] = css/buttons.css
+;stylesheets[all][] = css/dividers.css
+stylesheets[all][] = css/forms.css
+;stylesheets[all][] = css/list-items.css
+stylesheets[all][] = css/maintenance-pages.css
+stylesheets[all][] = css/nav.css
+stylesheets[all][] = css/elpuente.brand-overrides.css
+stylesheets[all][] = css/elpuente.custom.css
+stylesheets[all][] = css/elpuente.media-rules.css
+stylesheets[print][] = css/print.css
+
+;----------// Theme Javascript
+
+scripts[] = js/elpuente.js
+
+;----------// Theme Settings
+
+settings[toggle_logo] = 0
+settings[toggle_name] = 0
+settings[toggle_slogan] = 0
+settings[toggle_node_user_picture] = 0
+settings[toggle_comment_user_picture] = 0
+settings[toggle_comment_user_verification] = 0
+settings[toggle_favicon] = 1
+settings[toggle_main_menu] = 0
+settings[toggle_secondary_menu] = 0
+settings[responsive_toggle] = 1
+settings[pane_styles_toggle] = 1
+settings[always_show_page_title] = 0
+settings[default_picture] = 0

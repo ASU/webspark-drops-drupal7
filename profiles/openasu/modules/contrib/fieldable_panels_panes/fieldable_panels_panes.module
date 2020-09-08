@@ -628,7 +628,11 @@ function fieldable_panels_pane_type_load($type) {
     // * admin/structure/fieldable-panels-panes/manage/FPPTYPE/display
     // Redirect these paths as appropriate. Need to be extra verbose here to
     // avoid breaking other paths.
-    if ($type == 'manage' && arg(0) == 'admin' && arg(1) == 'structure' && arg(2) == 'fieldable-panels-panes' && (arg(5) == 'fields' || arg(5) == 'display')) {
+    if ($type == 'manage'
+      && arg(0) == 'admin'
+      && arg(1) == 'structure'
+      && arg(2) == 'fieldable-panels-panes'
+      && (arg(5) == 'fields' || arg(5) == 'display')) {
       drupal_goto('admin/structure/fieldable-panels-panes/' . arg(4) . '/' . arg(5));
     }
     else {

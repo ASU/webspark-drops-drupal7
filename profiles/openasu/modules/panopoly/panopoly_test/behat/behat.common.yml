@@ -68,32 +68,3 @@ default:
 
 # Maybe setup for Firefox only tests.
 #firefox:
-
-# OLD Chrome-only tests. Google Chrome is now the default.
-#chrome:
-#  suites:
-#    default:
-#      filters:
-#        tags: "@chrome"
-#  extensions:
-#    Drupal\MinkExtension:
-#      selenium2:
-#        browser: chrome
-#        capabilities:
-#          browser: chrome
-#          browserName: chrome
-#          browserVersion: ANY
-#          version: ANY
-#          extra_capabilities:
-#            chromeOptions:
-#              w3c: false
-#              args:
-#                - "--start-maximized"
-#                - "--headless"
-#                - "--disable-gpu"
-#          chrome:
-#            switches:
-#              - "--headless"
-#              - "--disable-gpu"
-#              - "--window-size=2560,1440"
-#              - "--no-sandbox"

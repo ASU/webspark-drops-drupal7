@@ -1,0 +1,23 @@
+/* Content Callouts ------------------------------------------ */
+.node-content-callout {
+  padding: 5rem 0;
+  h2 {
+    margin-bottom: 34px;
+    font-size: $font-size-h2;
+  }
+  .col-md-12 .content-wrapper {
+    max-width: 50rem;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+  }
+  .btn {
+    margin-top: 18px;
+  }
+  .col-md-6 {
+    img,
+    .embedded-video {
+      margin-top: 22px;
+    }
+  }
+}

@@ -1,3 +1,10 @@
+/*
+ * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
+ * Override Bootstrap variables below.
+ */
+/*== Colors --- WS2 DONE
+-----------------------------------------------------*/
+/* Global mixin library for multiple or all elements */
 #block-mega-footer-mega-footer {
   background-color: #1e1e1e;
 }
@@ -23,14 +30,17 @@
   max-width: 1170px;
   margin: auto;
 }
-.megafoot .space-bot-md { /* from webspark_panels_styles */
-  padding-bottom: 3.75em;
+.megafoot .space-bot-md {
+  padding-bottom: 1.25em;
 }
 .megafoot h2 {
   margin-bottom: 0.75em;
   font-size: 1.3125em;
   font-weight: normal;
   color: #fff;
+}
+.megafoot #mega-footer-logo-wrapper a {
+  border-bottom: none;
 }
 .megafoot address {
   color: #fff;
@@ -77,13 +87,11 @@
 .megafoot ul:after, .megafoot ol:after {
   clear: both;
 }
-.megafoot .contact-link,
-.megafoot .row a {
+.megafoot .contact-link, .megafoot .row a {
   color: #ccc;
   border-bottom: 1px dotted #ccc;
 }
-.megafoot .contact-link:hover,
-.megafoot .row a:hover {
+.megafoot .contact-link:hover, .megafoot .row a:hover {
   color: #fff;
   border-bottom-color: #fff;
 }
@@ -93,18 +101,26 @@
 .megafoot .dgtl-mkting-101 {
   margin-bottom: 1.75em;
 }
+.megafoot .dgtl-mkting-101 > li {
+  float: left;
+}
 .megafoot .dgtl-mkting-101 > li > a {
   margin-right: 0.625em;
   font-size: 2.375em;
   color: #ccc;
   border-bottom: 0;
+  line-height: 1rem;
+}
+.megafoot .dgtl-mkting-101 > li > a svg {
+  fill: #cccccc;
+  width: 33px;
+}
+.megafoot .dgtl-mkting-101 > li > a svg:hover {
+  fill: #ffffff;
 }
 .megafoot ul > li > a, .megafoot ol > li > a {
   position: relative;
   text-decoration: none;
-}
-.megafoot .dgtl-mkting-101 > li {
-  float: left;
 }
 .megafoot .fa:hover {
   color: #fff;
@@ -116,8 +132,10 @@
   width: 100%;
 }
 .megafoot #mega-footer-org-logo {
-    max-width: 330px;
-    margin-top: 1em;
+  max-width: 330px;
+  /* 33% of 992px */
+  margin-top: 1em;
+  /* based on 17px margin-top of menu col <h2>s */
 }
 
 .little-foot-nav > li > a {
@@ -148,6 +166,25 @@
   padding: 0 !important;
 }
 
+.big-foot-nav > li > a:focus,
+.little-foot-nav > li > a:focus {
+  outline: 2px solid #d0d0d0;
+}
+
+.megafoot a:focus,
+.megafoot .ui-widget-content a:focus,
+.megafoot input:focus,
+.megafoot a.btn:focus,
+.megafoot .btn a:focus,
+.megafoot #skip_to_content:focus,
+.megafoot #top-content #tabs .nav-pills > li.active > a:focus,
+.megafoot h4.ui-accordion-header.ui-state-hover,
+.megafoot h4.ui-accordion-header:focus {
+  outline: 2px solid #d0d0d0;
+}
+
+/** Media rules
+---------------------------------------------------- */
 @media (max-width: 991px) {
   .megafoot h2 {
     cursor: pointer;
@@ -165,18 +202,6 @@
     border-bottom: 1px solid #383d3e;
   }
 }
-
-.megafoot a:focus, .big-foot-nav > li > a:focus,
-.little-foot-nav > li > a:focus {
-  outline: 2px solid #4D90FE;
-  -moz-box-shadow: 0px 0px 5px #4D90FE;
-  -webkit-box-shadow: 0px 0px 5px #4D90FE;
-  box-shadow: 0px 0px 5px #4D90FE;
-}
-
-/* @media print rules for Innovation theme */
-
-/* fixes @media print issues - WEBSPARK-764 */
 @media print {
   .megafoot > .row div:not(.megafoot-border) {
     display: none;
@@ -184,32 +209,38 @@
   .megafoot ul.social-media li a {
     font-size: 1em;
   }
+
   .ui-tabs-nav {
     display: none;
   }
-  .ui-tabs .ui-tabs-hide {
+  .ui-tabs-nav .ui-tabs-hide {
     display: block !important;
   }
+
   .view-footer-contact .social-links .field {
     width: 100% !important;
     margin-bottom: 0.5em;
   }
+
   #block-views-footer-contact-block .social-links a[href]:after {
     display: block;
     float: right;
     min-width: 96%;
     font-size: 0.9em;
   }
+
   #block-views-footer-contact-block, #block-mega-footer-mega-footer {
-    clear:left;
+    clear: left;
     width: unset;
   }
+
   #top-content #tabs .nav.nav-pills,
   .region-closure,
   #innovation-bar,
   #ASUNavMenu.sticky-menu {
     display: none !important;
   }
+
   .pane-bundle-hero .hero-wrapper,
   .pane-bundle-jumbohero .hero-wrapper,
   .pane-bundle-banner .hero-wrapper {

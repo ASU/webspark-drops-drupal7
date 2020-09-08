@@ -1,0 +1,41 @@
+/**
+ * @file
+ * Beast panel layout
+**/
+/* Admin UI */
+div.panels-ipe-placeholder {
+  margin-top: 1.5em;	
+}
+.page-admin .beast .column {
+	margin-bottom: 1em;
+}
+.page-admin .beast .section-top #panels-dnd-main div.panel-region {
+	background-color: #ffecee ;
+}
+.page-admin .beast .section-bottom #panels-dnd-main div.panel-region {
+	background-color: #ecffef ;	
+}
+.panels-ipe-editing .beast .section-top div.panels-ipe-placeholder {
+  background-color: #ffecee;
+}
+.panels-ipe-editing .beast .section-bottom div.panels-ipe-placeholder {
+  background-color: #ecffef;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+div.panels-ipe-placeholder h3 {
+	width: 225px;
+}
+
+@media only screen and (max-width: 480px) {
+  .beast-double-column  .column,
+  .beast-triple-column .column {
+    width: 100%;
+    float: none;
+  }
+
+}

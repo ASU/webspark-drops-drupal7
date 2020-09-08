@@ -25,8 +25,8 @@
     max-width: 1170px;
     margin: auto;
   }
-  .space-bot-md { /* from webspark_panels_styles */
-    padding-bottom: 3.75em;
+  .space-bot-md { // from webspark_panels_styles
+    padding-bottom: 1.25em;
   }
   h2 {
     margin-bottom: 0.75em;
@@ -99,20 +99,30 @@
   }
   .dgtl-mkting-101 {
     margin-bottom: 1.75em;
-    > li > a {
-      margin-right: 0.625em;
-      font-size: 2.375em;
-      color: $link-color;
-      border-bottom: 0;
+    & > li {
+      float: left;
+      & > a {
+        margin-right: 0.625em;
+        font-size: 2.375em;
+        color: $link-color;
+        border-bottom: 0;
+        line-height: 1rem;
+        // Custom SVGs
+        svg {
+          fill: #cccccc;
+          width: 33px;
+          &:hover {
+            fill: #ffffff;
+          }
+        }
+      }
     }
   }
   ul > li > a, ol > li > a {
     position: relative;
     text-decoration: none;
   }
-  .dgtl-mkting-101 > li {
-    float: left;
-  }
+
   .fa:hover {
     color: $link-color-hover;
   }
@@ -156,6 +166,28 @@
   padding: 0 !important;
 }
 
+// [KM 12-5-16] Added stronger focus styles for keyboard accessibility
+.big-foot-nav > li > a:focus,
+.little-foot-nav > li > a:focus {
+  @include a11y-strong-focus($ws2-gray-light);
+}
+// Applied previous styles to outline and removed border properties
+.megafoot {
+  a:focus,
+  .ui-widget-content a:focus,
+  input:focus,
+  a.btn:focus,
+  .btn a:focus,
+  #skip_to_content:focus,
+  #top-content #tabs .nav-pills > li.active > a:focus,
+  h4.ui-accordion-header.ui-state-hover,
+  h4.ui-accordion-header:focus {
+    @include a11y-strong-focus($ws2-gray-light);
+  }
+}
+
+/** Media rules
+---------------------------------------------------- */
 @media (max-width: 991px) {
   .megafoot h2 {
     cursor: pointer;
@@ -173,6 +205,8 @@
     border-bottom: 1px solid #383d3e;
   }
 }
+
+// @media print rules for Innovation theme
 
 @media print {
   .megafoot {
@@ -214,12 +248,4 @@
   .pane-bundle-banner .hero-wrapper {
     height: unset;
   }
-}
-
-
-/* [KM 12-5-16] Added stronger focus styles for keyboard accessibility */
-
-.megafoot a:focus, .big-foot-nav > li > a:focus,
-.little-foot-nav > li > a:focus {
-  @include a11y-strong-focus();
 }

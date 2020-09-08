@@ -1,0 +1,69 @@
+/* Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2): Override Bootstrap variables below. */
+/*== Colors --- WS2 DONE
+-----------------------------------------------------*/
+/* Global mixin library for multiple or all elements */
+#innovation-bar { padding: 1.8em 0; background-color: #ffc627; font-family: Arial, sans-serif; }
+#innovation-bar img { height: auto; margin-top: -1.8em; max-width: 447px; width: 100%; }
+#innovation-bar a { font-size: 16px; font-weight: bold; border-bottom: 0; color: #000; text-decoration: none; }
+#innovation-bar a:hover { text-decoration: underline; }
+#innovation-bar a:focus { background-color: #000; box-shadow: -.15em 0 0 #000, .15em 0 0 #000; color: #fff; outline: 0; }
+#innovation-bar .innovation-status { text-align: left; width: 78%; display: inline-block; margin-bottom: .7em; margin-top: .7em; }
+#innovation-bar .innovation-top { margin: 0 auto; width: 1170px; }
+#innovation-bar .innovation-top .innovation-status { width: 61%; }
+#innovation-bar .innovation-image a:focus { background-color: transparent; box-shadow: none; }
+#innovation-bar .innovation-image a:focus img { background-color: transparent; border: 1px solid #000; box-shadow: none; }
+
+.innovation-image { float: right; text-align: right; }
+
+.footer #innovation-footer ol::before, .footer #innovation-footer ol::after { display: table; }
+
+#innovation-footer { position: absolute; left: 0; right: 0; }
+#innovation-footer a, #innovation-footer a:hover { transition: none; }
+#innovation-footer ul li { display: inline; white-space: nowrap; }
+#innovation-footer ul li::before, #innovation-footer ul li::after { display: table; }
+#innovation-footer ul > li > a, #innovation-footer ul > li > a, #innovation-footer ol > li > a, #innovation-footer ol > li > a { position: relative; }
+#innovation-footer ul::after, #innovation-footer ol::after { clear: both; content: " "; display: table; }
+#innovation-footer #innovation-bar ul { display: inline-block; margin: 0; padding-bottom: 0; padding-top: 0; padding-left: 15px; padding-right: 15px; }
+#innovation-footer #innovation-bar ul.default li a { margin-right: 25px; }
+#innovation-footer .footer-menu { font-size: 16px; font-family: Arial, Helvetica, sans-serif; line-height: 1.44; font-weight: 200; padding: 0; background-color: #e5e5e5; color: #2a2a2a; }
+#innovation-footer .footer-menu a:hover { color: #8c1d40; text-decoration: underline; transition: none; }
+#innovation-footer .footer-menu a:focus { background-color: #000; box-shadow: -.15em 0 0 #000, .15em 0 0 #000; color: #fff; outline: 0; }
+#innovation-footer .footer-menu .nav ul { margin: 0 auto; width: 1170px; }
+#innovation-footer .footer-menu ul { display: block; list-style: none; margin: 0 auto; padding-bottom: .9em; padding-top: .9em; }
+#innovation-footer .footer-menu ul li { padding-bottom: 0; float: left; }
+#innovation-footer .footer-menu ul li a { font-size: 1rem; font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif; color: #333; font-weight: 400; margin-right: 30px; text-decoration: none; border-bottom: none; transition: none; }
+#innovation-footer .footer-menu ul.default { padding-left: 15px; }
+#innovation-footer .footer-menu ul.default li a { margin-right: 25px; }
+
+.nav { display: block; margin-bottom: 0; padding-left: 0; list-style: none; }
+.nav::after { clear: both; }
+.nav::before, .nav::after { content: " "; display: table; }
+
+/** Media Rules ------------------------------------------*/
+@media screen and (max-width: 1200px) { body #innovation-bar .innovation-top .innovation-status { width: 52%; padding-right: 0; }
+  .innovation-image { width: 48%; }
+  #innovation-bar .innovation-status { padding-right: 20px; }
+  #innovation-bar .innovation-top, #innovation-footer .footer-menu .nav ul { width: auto; } }
+@media screen and (max-width: 992px) { body #innovation-footer .footer-menu ul.default li a { margin-right: 0; }
+  #innovation-bar { padding: 1.3em 0; }
+  #innovation-bar img { max-width: 100%; }
+  #innovation-bar .innovation-top { width: 100%; display: flex; flex-direction: column; margin: 0 auto; }
+  #innovation-bar .innovation-status { order: 2; width: 100% !important; }
+  #innovation-footer #innovation-bar ul { display: grid; grid-template-rows: 1fr 1fr 1fr; grid-auto-flow: column; justify-items: start; padding: 0 2rem; text-align: left; width: auto; }
+  #innovation-footer .footer-menu { width: 100%; padding: 0.7em 0; background-color: #e5e5e5; text-align: left; }
+  #innovation-footer .footer-menu ul { text-align: left; display: block; }
+  #innovation-footer .footer-menu ul li { float: none; }
+  #innovation-footer .footer-menu ul li a { margin-right: 0; font-size: 15px; }
+  #innovation-footer .footer-menu ul li.footer-link { display: grid; margin-right: 0; padding: 0.5rem 0; }
+  #innovation-footer .footer-menu ul.default { display: grid; text-align: left; grid-template-rows: 1fr 1fr 1fr; grid-auto-flow: column; justify-items: start; width: auto; padding: 0 2rem; }
+  #innovation-footer .footer-menu ul.default li a { margin-right: 0; }
+  #innovation-footer .footer-menu .nav ul { margin: 0; width: auto; }
+  #innovation-footer ul li.footer-link { display: grid; margin-right: 0; padding: 0.5rem 0; white-space: inherit; }
+  #innovation-footer ul .footer-link:nth-child(n+4) { display: grid; justify-self: end; }
+  #innovation-footer ul::before { content: inherit; }
+  .innovation-image { border-bottom: 0; float: left; order: 1; width: 100%; }
+  .mb-left { display: block; float: left; }
+  .mb-right { display: block; float: right; } }
+@media all and (min-width: 992px) { #headerContainer header { position: relative; }
+  #headerContainer header.scrolled { border-bottom: none; }
+  .primary-nav { display: none !important; } }

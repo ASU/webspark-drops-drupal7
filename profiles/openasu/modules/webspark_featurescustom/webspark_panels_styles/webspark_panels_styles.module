@@ -11,7 +11,7 @@ function webspark_panels_styles_ctools_plugin_directory($module, $plugin) {
  * Implements hook_init().
  */
 function webspark_panels_styles_init() {
-  drupal_add_js(drupal_get_path('module', 'webspark_panels_styles') 
+  drupal_add_js(drupal_get_path('module', 'webspark_panels_styles')
     . '/plugins/styles/customstyles/js/customstyles.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 99));
 }
 
@@ -20,7 +20,6 @@ function webspark_panels_styles_init() {
  * Overrides theming function output of list in add-content.inc (Panels) and the preprocessing in Panopoly
  */
 function webspark_panels_styles_preprocess_panels_add_content_modal(&$vars) {
-
   // Remove Panels module rendered root_content
   $vars['root_content'] = '';
 

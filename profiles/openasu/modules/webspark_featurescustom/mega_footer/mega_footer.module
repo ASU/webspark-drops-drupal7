@@ -28,18 +28,52 @@ function mega_footer_block_view($delta = '') {
   $block = array();
 
   if ($delta == 'mega_footer') {
+    $theme = _webspark_featurescustom_get_ws2_suffix();
     $mega_menu = menu_tree_all_data('menu-mega-footer-menu');
     $mega_menu = menu_tree_output($mega_menu);
 
-    $footer_mark = "<div class='megafoot'><div class='row'>";
+    $footer_mark = "<div class='megafoot'>";
+    if ($theme !== "_ws2") {
+      $footer_mark .= "<div class='row'>";
+      $bootstrap_col_width = 3;
+    } else {
+      // INIT Column Width depending on number of columns
+      if (count(menu_navigation_links('menu-mega-footer-menu', $level = 0)) >= 4) {
+        $bootstrap_col_width = 2;
+      } else {
+        $bootstrap_col_width = 3;
+      }
+    }
 
-    // INIT for LH column - Assume no LH column
-    $bootstrap_col_width = 3;
+    // social media icon variables
+    $mfsm_facebook  = _mega_footer_social_media('facebook', 'facebook-square', 'Facebook', '', '', $theme);
+    $mfsm_twitter   = _mega_footer_social_media('twitter', 'twitter-square', 'Twitter', '', '', $theme);
+    $mfsm_linkedin  = _mega_footer_social_media('linkedin', 'linkedin-square', 'LinkedIn', '', '', $theme);
+    $mfsm_youtube   = _mega_footer_social_media('youtube', 'youtube-square', 'YouTube', '', '', $theme, TRUE);
+    $mfsm_instagram = _mega_footer_social_media('instagram', 'instagram', 'Instagram', '', '', $theme, TRUE);
+    $mfsm_vimeo     = _mega_footer_social_media('vimeo', 'vimeo-square', 'Vimeo', '', '', $theme);
+    $mfsm_flickr    = _mega_footer_social_media('flickr', 'flickr', 'Flickr', '', '', $theme);
+    $mfsm_pinterest = _mega_footer_social_media('pinterest', 'pinterest-square', 'Pinterest', '', '', $theme);
+    $mfsm_tumblr    = _mega_footer_social_media('tumblr', 'tumblr-square', 'Tumblr', '', '', $theme);
+    $mfsm_rss       = _mega_footer_social_media('rss', 'rss-square', 'RSS', '', '', $theme);
+    $mfsm_custom1   = _mega_footer_custom_icon_and_link('social_media', '1', '', '', $theme);
+    $mfsm_custom2   = _mega_footer_custom_icon_and_link('social_media', '2', '', '', $theme);
+    $mfsm_custom3   = _mega_footer_custom_icon_and_link('social_media', '3', '', '', $theme);
 
-    if (variable_get('mega_footer_hide_logo_address') == 0) {
+    // Create the social media icons array
+    $sm_icons = array($mfsm_facebook, $mfsm_twitter, $mfsm_linkedin, $mfsm_youtube, $mfsm_instagram, $mfsm_vimeo, $mfsm_flickr, $mfsm_pinterest, $mfsm_tumblr,$mfsm_rss,$mfsm_custom1,$mfsm_custom2,$mfsm_custom3);
+
+    if ((variable_get('mega_footer_unit_logo', '') != 0) || (!empty(array_filter($sm_icons)))) {
+
       // Include default LH column
-      $bootstrap_col_width = 2;
-      $footer_mark .= "<div class='col-md-4 col-sm-12 space-bot-md megafoot-border'>";
+      if ($theme !== '_ws2') {
+        $bootstrap_col_width = 2;
+        $footer_mark .= "<div class='col-md-4 col-sm-12 space-bot-md megafoot-border'>";
+        $footer_mark .= "<div class='megafoot-logo-social'>";
+      } else {
+        $footer_mark .= "<div class='col-md- col-sm- space-bot-md '>";
+        $footer_mark .= "<div class='row megafoot-logo-social'>";
+      }
 
       // Logo
       $logo = variable_get('mega_footer_unit_logo', '');
@@ -52,84 +86,124 @@ function mega_footer_block_view($delta = '') {
           $logo_link = variable_get('mega_footer_logo_link', '');
           $logo_link_prefix = ($logo_link !== '') ? '<a href="' . $logo_link . '">' : '';
           $logo_link_suffix = ($logo_link !== '') ? '</a>' : '';
-          $footer_mark .= '<div id="mega-footer-logo-wrapper">' . $logo_link_prefix
-            . "<img src='$file_url' alt='$alt' title='$alt'/>"
-            . $logo_link_suffix . "</div>";
+
+          $footer_mark .= ($theme === "_ws2")
+            ? '<div id="mega-footer-logo-wrapper" class="col-md-5 col-sm-12">' . $logo_link_prefix
+              . "<img src='$file_url' alt='$alt' />"
+              . $logo_link_suffix . "</div>"
+            : '<div id="mega-footer-logo-wrapper">' . $logo_link_prefix
+              . "<img src='$file_url' alt='$alt' title='$alt'/>"
+              . $logo_link_suffix . "</div>";
         }
+      }
+
+      // Social Media icons - Open in new window/tab? setting check
+      $external = (theme_get_setting('social_media_exit') == 1) ? 'target="_new" ' : '';
+
+      if ($theme === "_ws2") { // WS2.0 ONLY
+        $footer_mark .= "<div id='mega-footer-social-media' class='col-md-7 col-sm-12'>";
+        $footer_mark .= "<nav role='navigation' aria-label='Social media'>";
+      }
+      $footer_mark .= "<ul class='dgtl-mkting-101'>";
+      $footer_mark = _mega_footer_social_media('facebook', 'facebook-square', 'Facebook', $footer_mark, $external, $theme);
+      $footer_mark = _mega_footer_social_media('twitter', 'twitter-square', 'Twitter', $footer_mark, $external, $theme);
+      $footer_mark = _mega_footer_social_media('linkedin', 'linkedin', 'LinkedIn', $footer_mark, $external, $theme);
+      $footer_mark = _mega_footer_social_media('youtube', 'youtube-square', 'YouTube', $footer_mark, $external, $theme, TRUE);
+      $footer_mark = _mega_footer_social_media('instagram', 'instagram', 'Instagram', $footer_mark, $external, $theme, TRUE);
+      $footer_mark = _mega_footer_social_media('vimeo', 'vimeo-square', 'Vimeo', $footer_mark, $external, $theme);
+      $footer_mark = _mega_footer_social_media('flickr', 'flickr', 'Flickr', $footer_mark, $external, $theme);
+      $footer_mark = _mega_footer_social_media('pinterest', 'pinterest-square', 'Pinterest', $footer_mark, $external, $theme);
+      $footer_mark = _mega_footer_social_media('tumblr', 'tumblr-square', 'Tumblr', $footer_mark, $external, $theme);
+      $footer_mark = _mega_footer_social_media('rss', 'rss-square', 'RSS', $footer_mark, $external, $theme);
+      $footer_mark = _mega_footer_custom_icon_and_link('social_media', '1', $footer_mark, $external, $theme);
+      $footer_mark = _mega_footer_custom_icon_and_link('social_media', '2', $footer_mark, $external, $theme);
+      $footer_mark = _mega_footer_custom_icon_and_link('social_media', '3', $footer_mark, $external, $theme);
+      $footer_mark .= "</ul>";
+      if ($theme === "_ws2") { // WS2.0 ONLY
+        $footer_mark .= "</nav>";
+        $footer_mark .= "</div>";
+        $footer_mark .= "</div>";  // end row
+      }
+      $footer_mark .= "</div>"; // WS1.0 - END megafoot-logo-social
+    }
+    $footer_columns = (count(menu_navigation_links('menu-mega-footer-menu', $level = 0)));
+
+    if ((variable_get('mega_footer_unit_title', 'Arizona State University') != 0)
+      || (variable_get('mega_footer_unit_contact_us_link', NULL) !== NULL)
+      || (variable_get('mega_footer_contribute_link', NULL) !== NULL)
+      || ($footer_columns !== 0) ) {
+
+      if ($theme === "_ws2") {
+        $footer_mark .= '<div class="row mega-footer-menu-links">'; // begin row
+        $footer_mark .= '<nav role="navigation" aria-label="Footer">';
+        $footer_mark .= "<div class='col-md-" . $bootstrap_col_width . " col-sm-12 space-bot-md megafoot-border'>";
       }
 
       // Title & Description
       $footer_mark .= "<div class='mega-dept-title'>" .
         variable_get('mega_footer_unit_title', 'Arizona State University') . "</div>";
 
-      $check = variable_get('mega_footer_unit_descrip', NULL);
-      $footer_mark .= (!empty($check)) ? "<div class='megafoot-description'>" . $check . "</div>" : "";
-
-      // Show contact info?
-      if (variable_get('mega_footer_show_contact_info', FALSE) == TRUE) {
-        $footer_mark .= "<address>";
-        $check = variable_get('mega_footer_unit_address_one', NULL);
-        $footer_mark .= (!empty($check)) ? $check . "<br />" : "";
-        $is_line_two = variable_get('mega_footer_unit_address_two', NULL);
-        $footer_mark .= (!empty($is_line_two)) ? $is_line_two . "<br />" : "";
-        $check = variable_get('mega_footer_unit_address_three', NULL);
-        $footer_mark .= (!empty($check)) ? $check . "<br />" : "";
-        $check = variable_get('mega_footer_unit_phone', NULL);
-        $footer_mark .= (!empty($check)) ? "Phone: <a class='phone-link' href='tel:" .
-            $check . "'>" . $check . "</a><br />" : "";
-        $is_fax = variable_get('mega_footer_unit_fax', '');
-        $footer_mark .= (!empty($is_fax)) ? "Fax: <a class='phone-link' href='tel:" .
-            $is_fax . "'>" . $is_fax . "</a><br />" : "";
-        $footer_mark .= "</address>";
+      // Old extra info -- WS1.0 ONLY
+      if ($theme !== "_ws2") {
+        $check = variable_get('mega_footer_unit_descrip', NULL);
+        $footer_mark .= (!empty($check)) ? "<div class='megafoot-description'>" . $check . "</div>" : "";
+        // Show contact info?
+        if (variable_get('mega_footer_show_contact_info', FALSE) == TRUE) {
+          $footer_mark .= "<address>";
+          $check = variable_get('mega_footer_unit_address_one', NULL);
+          $footer_mark .= (!empty($check)) ? $check . "<br />" : "";
+          $is_line_two = variable_get('mega_footer_unit_address_two', NULL);
+          $footer_mark .= (!empty($is_line_two)) ? $is_line_two . "<br />" : "";
+          $check = variable_get('mega_footer_unit_address_three', NULL);
+          $footer_mark .= (!empty($check)) ? $check . "<br />" : "";
+          $check = variable_get('mega_footer_unit_phone', NULL);
+          $footer_mark .= (!empty($check)) ? "Phone: <a class='phone-link' href='tel:" .
+              $check . "'>" . $check . "</a><br />" : "";
+          $is_fax = variable_get('mega_footer_unit_fax', '');
+          $footer_mark .= (!empty($is_fax)) ? "Fax: <a class='phone-link' href='tel:" .
+              $is_fax . "'>" . $is_fax . "</a><br />" : "";
+          $footer_mark .= "</address>";
+        }
       }
 
       // Contact Us
       $check = variable_get('mega_footer_unit_contact_us_link', NULL);
-      $footer_mark .= (!empty($check)) ? "<p><a class='contact-link' href='" . 
+      $footer_mark .= (!empty($check)) ? "<p><a class='contact-link' href='" .
           $check . "'>Contact us</a></p>": "";
-
-      // Social Media icons - Open in new window/tab? setting check
-      $external = (theme_get_setting('social_media_exit') == 1) ? 'target="_new" ' : '';
-
-      $footer_mark .= "<ul class='dgtl-mkting-101'>";
-      $footer_mark = _mega_footer_social_media('facebook', 'facebook-square', 'Facebook', $footer_mark, $external);
-      $footer_mark = _mega_footer_social_media('twitter', 'twitter-square', 'Twitter', $footer_mark, $external);
-      $footer_mark = _mega_footer_social_media('linkedin', 'linkedin-square', 'LinkedIn', $footer_mark, $external);
-      $footer_mark = _mega_footer_social_media('youtube', 'youtube-square', 'YouTube', $footer_mark, $external);
-      $footer_mark = _mega_footer_social_media('instagram', 'instagram', 'Instagram', $footer_mark, $external);
-      $footer_mark = _mega_footer_social_media('vimeo', 'vimeo-square', 'Vimeo', $footer_mark, $external);
-      $footer_mark = _mega_footer_social_media('flickr', 'flickr', 'Flickr', $footer_mark, $external);
-      $footer_mark = _mega_footer_social_media('pinterest', 'pinterest-square', 'Pinterest', $footer_mark, $external);
-      $footer_mark = _mega_footer_social_media('tumblr', 'tumblr-square', 'Tumblr', $footer_mark, $external);
-      $footer_mark = _mega_footer_social_media('rss', 'rss-square', 'RSS', $footer_mark, $external);
-      $footer_mark = _mega_footer_custom_icon_and_link('social_media', '1', $footer_mark, $external);
-      $footer_mark = _mega_footer_custom_icon_and_link('social_media', '2', $footer_mark, $external);
-      $footer_mark = _mega_footer_custom_icon_and_link('social_media', '3', $footer_mark, $external);
-      $footer_mark .= "</ul>";
 
       // Add Contribute button
       $contrib = variable_get('mega_footer_contribute_button', 'Contribute');
       if (variable_get('mega_footer_contribute_link', NULL) != NULL) {
-        $footer_mark .= "<a class='btn btn-primary' href='" . variable_get('mega_footer_contribute_link', NULL) . "'>$contrib</a>";
+        $footer_mark .= ($theme !== "_ws2")
+          ? "<a class='btn btn-primary' href='" . variable_get('mega_footer_contribute_link', NULL)
+            . "'>$contrib</a>"
+          : "<a class='btn btn-gold' id='contribute-button' href='"
+            . variable_get('mega_footer_contribute_link', NULL) . "'>$contrib</a>";
       }
-
-      $footer_mark .= "</div>";
     }
+    $footer_mark .= "</div>";
 
     // INIT for RH columns (Links)
     ///////////////////
 
     $i = 0;
     foreach ($mega_menu as $item) {
-
       if (is_bool($item)) {
         break;
       }
-      $caret = (!empty($item['#below'])) ? "caret" : "";
-      $footer_mark .= "<div class='col-md-" . $bootstrap_col_width . " col-sm-3 space-bot-md'>
+      if ($theme !== "_ws2") {
+        $caret = (!empty($item['#below'])) ? "caret" : "";
+        $footer_mark .= "<div class='col-md-" . $bootstrap_col_width . " col-sm-3 space-bot-md'>
           <h2 data-toggle='collapse' data-target='#mega_accord" . $i . "' class='big-foot-head'>" .
-        $item['#title'] . "<span class='$caret'></span></h2>
-          <ul class='big-foot-nav  collapse in' id='mega_accord" . $i . "' style=''>";
+          $item['#title'] . "<span class='$caret'></span></h2>";
+      } else {
+        $footer_mark .= "<div class='col-md-" . $bootstrap_col_width . " col-sm-" . $bootstrap_col_width
+          . " space-bot-md'><h2 data-toggle='collapse' data-target='#mega_accord" . $i
+          . "' class='big-foot-head collapsed'>" .
+          $item['#title'] . "<span class='fa fa-chevron-up icon-rotates'></span></h2>";
+      }
+
+      $footer_mark .= "<ul class='big-foot-nav  collapse in' id='mega_accord" . $i . "' style=''>";
 
       foreach ($item['#below'] as $inner) {
         if (is_bool($inner)) {
@@ -137,11 +211,11 @@ function mega_footer_block_view($delta = '') {
         }
         $footer_mark .= "<li><a href='" . url($inner['#href']) . "'>" . $inner['#title'] . "</a></li>";
       }
-
-      $footer_mark .= "</ul></div>";
+      $footer_mark .= "</ul>";
+      $footer_mark .= "</div>";
       $i++;
     }
-    $footer_mark .= "</div></div>";
+    $footer_mark .= ($theme !== "_ws2") ? "</div></div>" : "</div></nav></div>";
 
     $block['content'] = array(
       '#markup' => $footer_mark,
@@ -149,23 +223,28 @@ function mega_footer_block_view($delta = '') {
         'css' => array(
           drupal_get_path('module', 'mega_footer') . '/css/megafoot.css',
         ),
-      )
+      ),
     );
-
+    if ($theme === "_ws2") { // Add WS2.0 standards CSS file
+      $block['content']['#attached']['css'][] = drupal_get_path('module', 'mega_footer') . '/css/megafoot2l.css';
+    }
   }
   return $block;
 }
 
 /**
  * Implements hook_block_configure().
+ * @param string $delta
+ * @return array $form
  */
 function mega_footer_block_configure($delta = '') {
 
-  // Form to configure Mega Footer block.
-  drupal_add_js(drupal_get_path('module', 'mega_footer') . '/js/megafoot_menu.js');
-
   $form = array();
   if ($delta == 'mega_footer') {
+
+    $theme = _webspark_featurescustom_get_ws2_suffix();
+    // Form to configure Mega Footer block.
+    drupal_add_js(drupal_get_path('module', 'mega_footer') . '/js/megafoot_menu.js');
 
     // Custom unit logo
     $form['custom_logo'] = array(
@@ -225,19 +304,21 @@ function mega_footer_block_configure($delta = '') {
       '#default_value' => variable_get('mega_footer_unit_title', 'ASU'),
       '#required' => FALSE,
     );
-    $form['unit_information']['mega_footer_unit_description'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Unit Description'),
-      '#maxlength' => 255,
-      '#description' => t('Displayed below the department title, similar to a byline. Max length of 255 characters.'),
-      '#default_value' => variable_get('mega_footer_unit_descrip', NULL),
-      '#required' => FALSE,
-    );
+    if ($theme !== "_ws2") {
+      $form['unit_information']['mega_footer_unit_description'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Unit Description'),
+        '#maxlength' => 255,
+        '#description' => t('Displayed below the department title, similar to a byline. Max length of 255 characters.'),
+        '#default_value' => variable_get('mega_footer_unit_descrip', NULL),
+        '#required' => FALSE,
+      );
+    }
     $form['unit_information']['mega_footer_unit_contact_us_link'] = array(
       '#type' => 'textfield',
       '#title' => t('Contact Us link'),
       '#default_value' => variable_get('mega_footer_unit_contact_us_link', NULL),
-      '#description' => t('Enter the URL to a Contact Us page. While it is recommended to use a 
+      '#description' => t('Enter the URL to a Contact Us page. While it is recommended to use a
       relative link, you can link to an external site. NOTE: You will need to generate this page manually.'),
       '#required' => FALSE,
     );
@@ -249,7 +330,7 @@ function mega_footer_block_configure($delta = '') {
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#description' => t("Enter your unit's URL for any of the following social media networks or feeds.
-      Up to three custom social media URLs and custom icons can be added below if another social media icon 
+      Up to three custom social media URLs and custom icons can be added below if another social media icon
       doesn't exist in this list."),
     );
 
@@ -284,86 +365,90 @@ function mega_footer_block_configure($delta = '') {
       '#default_value' => variable_get('mega_footer_contribute_link', NULL),
     );
 
-    // Advanced options - old address info, hide/show LH column
-    $form['advanced_options'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Advanced options'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-      '#description' => t('Only adjust these settings if you know what you are doing.'),
-    );
-    $form['advanced_options']['mega_footer_hide_logo_address'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Hide the default left-hand column of Mega Footer'),
-      '#description' => t('Check this box if you have already created a custom left-hand column for your mega footer and 
-      are including it in the same region elsewhere. NOTE: This is only to allow site builders the ability 
-      to customize the footer within existing ASU Web standards. Go to the ' . l('ASU Brand Guide', 'https://brandguide.asu.edu/') .
-        ' for more information.'),
-      '#default_value' => variable_get('mega_footer_hide_logo_address', FALSE),
-      '#required' => FALSE,
-    );
-    $form['advanced_options']['mega_footer_show_contact_info'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Show old contact information - Address, Phone, and Fax information (Not Recommended)'),
-      '#description' => t('The ASU Web standards no longer allow the display the physical addresses, telephone numbers, 
-      and other unit-specific contact information in the mega footer. They should be displayed in a separate contact page. 
-      As a result, the old contact fields have been deprecated and will no longer be displayed by default. 
-      This behavior may be overridden here, but please note 1) doing so goes against the official ASU Web standard,
-      and 2) the ability to populate these fields here for the super footer will be removed in a future version of this module.' .
-        l("Find out more...", "https://brandguide.asu.edu/web-standards/enterprise/super-footer") . ''),
-      '#default_value' => variable_get('mega_footer_show_contact_info', FALSE),
-      '#required' => FALSE,
-    );
-    $form['advanced_options']['old_contact'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Old Contact Information'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-      '#prefix' => "<div class='mega-dep-group'>",
-      '#suffix' => "</div>"
-    );
-    $form['advanced_options']['old_contact']['mega_footer_unit_address_one'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Address First Line'),
-      '#default_value' => variable_get('mega_footer_unit_address_one', NULL),
-      '#required' => FALSE,
-    );
-    $form['advanced_options']['old_contact']['mega_footer_unit_address_two'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Address Second Line'),
-      '#default_value' => variable_get('mega_footer_unit_address_two', NULL),
-      '#required' => FALSE,
-    );
-    $form['advanced_options']['old_contact']['mega_footer_unit_address_three'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Address Third Line'),
-      '#default_value' => variable_get('mega_footer_unit_address_three', NULL),
-      '#required' => FALSE,
-    );
-    $form['advanced_options']['old_contact']['mega_footer_unit_phone'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Phone'),
-      '#default_value' => variable_get('mega_footer_unit_phone', NULL),
-      '#required' => FALSE,
-    );
-    $form['advanced_options']['old_contact']['mega_footer_unit_fax'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Fax'),
-      '#default_value' => variable_get('mega_footer_unit_fax', NULL),
-    );
+    if ($theme !== "_ws2") {
+      // Advanced options - old address info, hide/show LH column
+      $form['advanced_options'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Advanced options'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+        '#description' => t('Only adjust these settings if you know what you are doing.'),
+      );
+      $form['advanced_options']['mega_footer_hide_logo_address'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Hide the default left-hand column of Mega Footer'),
+        '#description' => t('Check this box if you have already created a custom left-hand column for your mega footer and
+        are including it in the same region elsewhere. NOTE: This is only to allow site builders the ability
+        to customize the footer within existing ASU Web standards. Go to the ' . l('ASU Brand Guide', 'https://brandguide.asu.edu/') .
+          ' for more information.'),
+        '#default_value' => variable_get('mega_footer_hide_logo_address', FALSE),
+        '#required' => FALSE,
+      );
+      $form['advanced_options']['mega_footer_show_contact_info'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Show old contact information - Address, Phone, and Fax information (Not Recommended)'),
+        '#description' => t('The ASU Web standards no longer allow the display the physical addresses, telephone numbers,
+        and other unit-specific contact information in the mega footer. They should be displayed in a separate contact page.
+        As a result, the old contact fields have been deprecated and will no longer be displayed by default.
+        This behavior may be overridden here, but please note 1) doing so goes against the official ASU Web standard,
+        and 2) the ability to populate these fields here for the super footer will be removed in a future version of this module.' .
+          l("Find out more...", "https://brandguide.asu.edu/web-standards/enterprise/super-footer") . ''),
+        '#default_value' => variable_get('mega_footer_show_contact_info', FALSE),
+        '#required' => FALSE,
+      );
+      $form['advanced_options']['old_contact'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Old Contact Information'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+        '#prefix' => "<div class='mega-dep-group'>",
+        '#suffix' => "</div>"
+      );
+      $form['advanced_options']['old_contact']['mega_footer_unit_address_one'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Address First Line'),
+       '#default_value' => variable_get('mega_footer_unit_address_one', NULL),
+        '#required' => FALSE,
+      );
+      $form['advanced_options']['old_contact']['mega_footer_unit_address_two'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Address Second Line'),
+        '#default_value' => variable_get('mega_footer_unit_address_two', NULL),
+        '#required' => FALSE,
+      );
+      $form['advanced_options']['old_contact']['mega_footer_unit_address_three'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Address Third Line'),
+        '#default_value' => variable_get('mega_footer_unit_address_three', NULL),
+        '#required' => FALSE,
+      );
+      $form['advanced_options']['old_contact']['mega_footer_unit_phone'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Phone'),
+        '#default_value' => variable_get('mega_footer_unit_phone', NULL),
+        '#required' => FALSE,
+      );
+      $form['advanced_options']['old_contact']['mega_footer_unit_fax'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Fax'),
+        '#default_value' => variable_get('mega_footer_unit_fax', NULL),
+      );
+    }
     $form['#submit'][] = '_mega_footer_check_values';
   }
   return $form;
 }
 
 /**
- *Implements hook_block_save
+ * Implements hook_block_save()
  *
- **/
+ * @param string $delta
+ * @param array $edit
+ */
 function mega_footer_block_save($delta = '', $edit = array()) {
 
   if ($delta == 'mega_footer') {
-
+    $theme = _webspark_featurescustom_get_ws2_suffix();
     if ($edit['mega_footer_unit_logo'] != '') {
       $block = block_load('mega_footer', 'mega_footer');
       $file = file_load($edit['mega_footer_unit_logo']);
@@ -394,8 +479,13 @@ function mega_footer_block_save($delta = '', $edit = array()) {
     }
 
     variable_set('mega_footer_unit_title', $edit['mega_footer_unit_title']);
-    variable_set('mega_footer_unit_descrip', $edit['mega_footer_unit_description']);
+
+    if ($theme !== "_ws2") {
+      variable_set('mega_footer_unit_descrip', $edit['mega_footer_unit_description']);
+    }
+
     variable_set('mega_footer_unit_contact_us_link', $edit['mega_footer_unit_contact_us_link']);
+
     // Social media
     variable_set('mega_footer_unit_facebook_link', $edit['mega_footer_unit_facebook_link']);
     variable_set('mega_footer_unit_twitter_link', $edit['mega_footer_unit_twitter_link']);
@@ -423,14 +513,16 @@ function mega_footer_block_save($delta = '', $edit = array()) {
     // Contribute button
     variable_set('mega_footer_contribute_button', $edit['mega_footer_contribute_button']);
     variable_set('mega_footer_contribute_link', $edit['mega_footer_contribute_link']);
-    // Advanced options
-    variable_set('mega_footer_hide_logo_address', $edit['mega_footer_hide_logo_address']);
-    variable_set('mega_footer_show_contact_info', $edit['mega_footer_show_contact_info']);
-    variable_set('mega_footer_unit_address_one', $edit['mega_footer_unit_address_one']);
-    variable_set('mega_footer_unit_address_two', $edit['mega_footer_unit_address_two']);
-    variable_set('mega_footer_unit_address_three', $edit['mega_footer_unit_address_three']);
-    variable_set('mega_footer_unit_phone', $edit['mega_footer_unit_phone']);
-    variable_set('mega_footer_unit_fax', $edit['mega_footer_unit_fax']);
+    if ($theme !== "_ws2") {
+      // Advanced options
+      variable_set('mega_footer_hide_logo_address', $edit['mega_footer_hide_logo_address']);
+      variable_set('mega_footer_show_contact_info', $edit['mega_footer_show_contact_info']);
+      variable_set('mega_footer_unit_address_one', $edit['mega_footer_unit_address_one']);
+      variable_set('mega_footer_unit_address_two', $edit['mega_footer_unit_address_two']);
+      variable_set('mega_footer_unit_address_three', $edit['mega_footer_unit_address_three']);
+      variable_set('mega_footer_unit_phone', $edit['mega_footer_unit_phone']);
+      variable_set('mega_footer_unit_fax', $edit['mega_footer_unit_fax']);
+    }
   }
 }
 
@@ -441,10 +533,13 @@ function mega_footer_block_save($delta = '', $edit = array()) {
  **/
 function mega_footer_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'menu_edit_menu' && $form['menu_name']['#default_value'] == 'menu-mega-footer-menu') {
+    $theme = _webspark_featurescustom_get_ws2_suffix();
     $form['actions']['delete']['#access'] = FALSE;
     $form['title']['#access'] = FALSE;
-    $form['description']['#access'] = FALSE;
-    $form['description']['#expanded'] = TRUE;
+    if ($theme !== "_ws2") {
+      $form['description']['#access'] = FALSE;
+      $form['description']['#expanded'] = TRUE;
+    }
     $form['menu_name']['#description'] = 'The top level menu items will not be rendered as links,
         and instead as titles for each column of links.
         Adding any more than 4 top-level links will result in the

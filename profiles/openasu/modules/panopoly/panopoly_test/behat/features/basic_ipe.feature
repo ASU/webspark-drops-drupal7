@@ -3,9 +3,9 @@ Feature: Make basic changes with the IPE
   As a site administrator
   I need to be able to manipulate them with the IPE
 
-  Background: 
+  Background:
     Given I am logged in as a user with the "administrator" role
-    And Panopoly magic live previews are disabled
+      And Panopoly magic live previews are disabled
     When I visit "/node/add/panopoly-test-page"
     And I fill in the following:
       | Title  | Basic IPE Testing title |
@@ -17,7 +17,7 @@ Feature: Make basic changes with the IPE
   @api @javascript @webspark_broken @webspark_fixed
   Scenario: Change layout
     When I change layout with the Panels IPE
-    And I click "Phelan"
-    And I press "Save" in the "CTools modal" region
-    And I wait for the Panels IPE to deactivate
-    Then I should see "Basic IPE Testing title"
+      And I click "Phelan"
+      And I press "Save" in the "CTools modal" region
+      And I wait for the Panels IPE to deactivate
+    Then I should see "Testing title"

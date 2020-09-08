@@ -1538,7 +1538,7 @@
     margin-top: -100%;
   }
 .tb-megamenu.animate.slide .mega.open > .mega-dropdown-menu > div {
-    margin-top: 0%;
+    margin-top: 0;
   }
 .tb-megamenu.animate.slide .mega .mega > .mega-dropdown-menu {
     min-width: 0;
@@ -1549,6 +1549,36 @@
     margin-left: -500px;
   }
 .tb-megamenu.animate.slide .mega .mega.open > .mega-dropdown-menu > div {
+    margin-left: 0;
+  }
+
+  /* ASU WS2.0 Bezier */
+  .tb-megamenu.animate.bezier .mega.animating > .mega-dropdown-menu {
+    overflow: hidden;
+  }
+  .tb-megamenu.animate.bezier .mega > .mega-dropdown-menu > div {
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s;
+    -webkit-transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s;
+    -ms-transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s;
+    -o-transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -o-backface-visibility: hidden;
+    backface-visibility: hidden;
+    margin-top: -2rem;
+  }
+  .tb-megamenu.animate.bezier .mega.open > .mega-dropdown-menu > div {
+    margin-top: 0;
+  }
+  .tb-megamenu.animate.bezier .mega .mega > .mega-dropdown-menu {
+    min-width: 0;
+  }
+  .tb-megamenu.animate.bezier .mega .mega > .mega-dropdown-menu > div {
+    min-width: 200px;
+    margin-top: 0;
+    margin-left: -500px;
+  }
+  .tb-megamenu.animate.bezier .mega .mega.open > .mega-dropdown-menu > div {
     margin-left: 0;
   }
 }

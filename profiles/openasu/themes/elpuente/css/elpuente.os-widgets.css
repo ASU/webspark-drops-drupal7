@@ -1,0 +1,20 @@
+/**
+ * OS Widget - Theme customizations
+ */
+/*
+ * Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2):
+ * Override Bootstrap variables below.
+ */
+.view .date-nav-wrapper .date-prev,
+.view .date-nav-wrapper .date-next {
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  background-color: #dfdfdf;
+  line-height: 1.6em;
+}
+.view .date-nav-wrapper .date-heading h3 {
+  line-height: 2em;
+  background-color: #dfdfdf;
+  vertical-align: middle;
+}

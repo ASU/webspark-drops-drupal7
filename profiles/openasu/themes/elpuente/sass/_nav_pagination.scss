@@ -1,0 +1,164 @@
+// PAGERS & PAGINATION
+
+.pagination {
+  display: inline-block;
+  padding-left: 0;
+  margin: 1.5rem 0;
+  border-radius: $border-radius-base;
+  & > li {
+    font-size: 1.25em;
+    display: inline;
+    & > a,
+    & > span {
+      position: relative;
+      float: left;
+      padding: $padding-small-vertical $padding-small-horizontal;
+      text-decoration: none;
+      color: $ws2-maroon;
+      background-color: #fff;
+      border: 1px solid $ws2-maroon;
+      margin-left: -1px;
+      border-radius: $pager-border-radius;
+    }
+    &:first-child > a,
+    &:first-child > span {
+      margin-left: 0;
+    }
+    & > a:hover,
+    & > span:hover,
+    & > span:focus,
+    .pagination > li > a:focus {
+      color: $link-hover-color;
+      background-color: $ws2-gray-lightest;
+      border-color: $gray-alt-admin;
+    }
+  }
+  & > .active > a,
+  & > .active > span,
+  & > .active > span:hover,
+  & > .active > span:focus,
+  .pagination > .active > a:hover,
+  .pagination > .active > a:focus {
+    z-index: 2;
+    color: #fff;
+    background-color: $ws2-maroon;
+    border-color: $ws2-maroon;
+    cursor: default;
+  }
+  & > .disabled > span,
+  & > .disabled > span:hover,
+  & > .disabled > span:focus,
+  & > .disabled > a,
+  & > .disabled > a:hover,
+  & > .disabled > a:focus {
+    color: $ws2-gray-dark;
+    background-color: #fff;
+    border-color: $gray-alt-admin;
+    cursor: not-allowed;
+  }
+}
+.pagination-lg > li {
+  & > a,
+  & > span {
+    padding: $padding-small-vertical $padding-small-horizontal;
+    font-size: 1.25em;
+    border-radius: $border-radius-circle;
+  }
+}
+.pagination-sm > li {
+  font-size: 1em;
+  & > a,
+  & > span {
+    padding: $padding-small-vertical $padding-small-horizontal;
+    font-size: 1em;
+    border-radius: $border-radius-circle;
+  }
+}
+.pager {
+  padding-left: 0;
+  margin: 1em 0;
+  list-style: none;
+  text-align: center;
+  &:before, &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+  li {
+    font-size: 1.25em;
+    display: inline;
+    // ALT     display: inline-block;
+    margin: 0 1em;
+    & > a,
+    & > span {
+      display: inline-block;
+      background-color: #fff;
+      border-radius: $pager-border-radius;
+      border: 1px solid #fff;
+    }
+    & > a {
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+  .next > a,
+  .next > span {
+    float: right;
+  }
+  .previous > a,
+  .previous > span {
+    float: left;
+  }
+  .disabled > a,
+  .disabled > a:hover,
+  .disabled > a:focus,
+  .disabled > span {
+    color: $ws2-gray-dark;
+    background-color: #fff;
+    cursor: not-allowed;
+  }
+}
+
+// theme_item_list - pager CSS
+.item-list.item-list-pager {
+  text-align: center;
+  clear: both;
+  .pager {
+    margin: 1em;
+    display: inline-block;
+    li {
+      font-size: 1.25em;
+      padding: 0;
+      margin: 0 1em;
+      float: left;
+      a {
+        background-color: #fff;
+        border-radius: $pager-border-radius;
+        border: 1px solid #fff;
+      }
+    }
+    & :first-child a,
+    .pager-current.first {
+      // Removed
+    }
+    & :last-of-type a,
+    .pager-current.last {
+      // Removed
+    }
+  }
+  .pager-ellipsis {
+    display: none;
+  }
+}
+
+.item-list.item-list-pager .pager .pager-current,
+#media-browser-tabset .item-list.item-list-pager .pager .pager-current {
+  border: 1px solid $ws2-maroon;
+  padding: $padding-small-vertical; // 0.5rem
+  background-color: $ws2-maroon;
+  color: #fff;
+}

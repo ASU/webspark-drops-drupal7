@@ -1,16 +1,10 @@
 <?php
-
 /**
  * @file
  * Contains the GTM snippet insertion code.
  *
  * @author Chandi Cumaranatunge
  */
-
-
-/*********************************************************************
- DRUPAL HOOKS
-*********************************************************************/
 
 /**
  * Implements callback_post_render().
@@ -20,25 +14,21 @@
 function asu_brand_page_process(&$children, $elements) {
   if (asu_brand_is_header_visible($elements)) {
     // Added check for testing - Hide GTM code during testing
-    if (variable_get('asu_brand_ci_testing', 0) != 1 ) {
-       $custom_gtm = variable_get('asu_brand_gtm_override', '');
+    if (variable_get('asu_brand_ci_testing', 0) !== 1 ) {
+       $suffix = (variable_get('asu_brand_header_version', 'stable') === '5.0' ? '_ws2' : '');
+       $custom_gtm = variable_get('asu_brand_header' . $suffix . '_gtm_override', '');
        $gtm = (trim($custom_gtm) != '') ? $custom_gtm : asu_brand_get_gtm_snippet();
      }
-     else {
-       $gtm = '<!--GTM Code removed for testing -->';
-     }
+    else {
+      $gtm = '<!--GTM Code removed for testing -->';
+    }
     // Insert snippet after the opening body tag.
-     if ($gtm) {
-       $children = preg_replace('@<body[^>]*>@', '$0' . $gtm, $children, 1);
-     }
+    if ($gtm) {
+      $children = preg_replace('@<body[^>]*>@', '$0' . $gtm, $children, 1);
+    }
   }
   return $children;
 }
-
-
-/*********************************************************************
- INTERNAL
-*********************************************************************/
 
 /**
  * Checks if ASU Brand header is visible on current page
@@ -50,15 +40,14 @@ function asu_brand_is_header_visible($elements) {
   foreach ($elements as $region_key => $region) {
   if (($region_key[0] != '#') && is_array($region)) {
       foreach ($region as $block_key => $block) {
-        if ($block_key == $module_name.'_'.ASU_BRAND_HEADER_DELTA) {
+        if ($block_key == $module_name . '_' . 'asu_brand_header') {
           return TRUE;
         }
       }
     }
   }
-  return false;
+  return FALSE;
 }
-
 
 /**
  * Get GTM snippet from header assets

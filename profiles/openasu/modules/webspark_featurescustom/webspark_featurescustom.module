@@ -10,3 +10,4 @@ module_load_include('inc', 'webspark_featurescustom', 'includes/wf_theme_update'
 module_load_include('inc', 'webspark_featurescustom', 'includes/wf_menu_buttons');
 module_load_include('inc', 'webspark_featurescustom', 'includes/wf_update_status_filter');
 module_load_include('inc', 'webspark_featurescustom', 'includes/wf_panels_styles');
+module_load_include('inc', 'webspark_featurescustom', 'includes/wf_site_information_form');

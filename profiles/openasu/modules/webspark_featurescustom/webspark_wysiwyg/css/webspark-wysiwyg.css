@@ -13,12 +13,26 @@
  * TinyMCE only styling for column visibility
  */
 body.mceContentBody .wysiwyg-cols {
-  border: 1px dashed #F392A8;
+  border: 1px dashed #f392a8 !important;
 }
-
 body.mceContentBody .wysiwyg-cols .column {
   border: 1px dashed #e0e0e0;
 }
+/* WS2.0 borders */
+body.mceContentBody .ws2-element-alt,
+body.mceContentBody .ws2-element-style { /* default */
+  border: 1px dashed #f1c9ff !important;
+}
+body.mceContentBody .ws2-element-style.ws2-element-gray {
+  border: 1px dashed #cccccc;
+}
+body.mceContentBody .ws2-element-style.ws2-element-maroon {
+  border: 1px dashed #8c1d40;
+}
+body.mceContentBody .ws2-element-style.ws2-element-gold {
+  border: 1px dashed #ffc627;
+}
+
 
 @media (max-width: 991px) {
   .wysiwyg-cols > div:first-child {

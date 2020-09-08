@@ -17,8 +17,8 @@ Feature: Add video widget
     When I fill in "Testing video" for "edit-title"
     When I click "Browse"
       And I switch to the frame "mediaBrowser"
-    Then I should see "Supported internet media providers"
-      And I should see "YouTube"
+#    Then I should see "Supported internet media providers"
+    Then I should see "YouTube"
     When I fill in "File URL or media resource" with "https://www.youtube.com/watch?v=1TV0q4Sdxlc"
       And I press "Next"
       And I switch out of all frames
@@ -37,8 +37,8 @@ Feature: Add video widget
     When I fill in "Testing video" for "edit-title"
     When I click "Browse"
       And I switch to the frame "mediaBrowser"
-    Then I should see "Supported internet media providers"
-      And I should see "Vimeo"
+#    Then I should see "Supported internet media providers"
+    Then I should see "Vimeo"
     When I fill in "File URL or media resource" with "http://vimeo.com/59482983"
       And I press "Next"
       And I switch out of all frames

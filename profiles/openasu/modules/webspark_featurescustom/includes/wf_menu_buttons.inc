@@ -11,19 +11,32 @@ function webspark_featurescustom_form_alter(&$form, &$form_state, &$form_id) {
     ? $form['options']['#value']['attributes']['asu_themed_button']
     : 0;
   if ($form_id === 'menu_edit_item') {
-    $options = array(
-      0 => '-- None --',
-      1 => 'Primary (Maroon)',
-      2 => 'Alternate (Gray)',
-      3 => 'Request Info (Gold) - restricted',
-    );
+    if (_webspark_featurescustom_get_ws2_suffix(TRUE) === "_ws2") { // WS2.0
+      $options = array(
+        0 => '-- None --',
+        1 => 'Maroon',
+        4 => 'Black',
+      );
+      $desc_text = '';
+    } else { // Innovation, etc.
+      $options = array(
+        0 => '-- None --',
+        1 => 'Primary (Maroon)',
+        2 => 'Alternate (Gray)',
+        3 => 'Request Info (Gold) - restricted',
+      );
+      $desc_text = "\n<br>" . "Gold styling may only be used for 'Request Info' buttons that point to an ASU degree page.";
+    }
+
     $form['asu_themed_button'] = array(
       '#type' => 'select',
-      '#title' => t('Style as ASU Web standards button?'),
+      '#title' => t('Style as ASU Web standards button in secondary menu?'),
       '#options' => $options,
       '#default_value' => $asu_button_style,
-      '#description' => 'If an option is selected, the link will appear as an ASU Web standards button. NOTE: Per 
-      ASU Web standards, gold styling may only be used for "Request Info" buttons that point to an ASU degree page.',
+      '#description' => 'If an option is selected, the link will appear as an ASU Web standards button (vs. a link)'
+        . ' in the secondary menu.' . $desc_text
+        . "\n<br><b>IMPORTANT:</b>" . ' Styling of buttons in the primary menu is handled in the '
+        . "<a href='/admin/structure/tb-megamenu'>TB Megamenu UI</a>. ",
       '#weight' => 1,
     );
     $init_submit = $form['#submit'];

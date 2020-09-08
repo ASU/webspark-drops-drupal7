@@ -20,7 +20,6 @@ $plugin = array(
  * @ingroup themeable
  */
 function theme_panopoly_theme_panopoly_accordion_style_render_region($vars) {
-
   // Include Some Basic Information
   $display = $vars['display'];
   $panes = $vars['panes'];
@@ -34,7 +33,7 @@ function theme_panopoly_theme_panopoly_accordion_style_render_region($vars) {
     if ($pane_id != 'empty_placeholder') {
       $output .= !empty($display->content[$pane_id]->title) ? '<h4 class="accordion-title">' . $display->content[$pane_id]->title . '</h4>' : '<h4 class="accordion-title">' . '&nbsp;' . '</h4>';
       $output .= '<div class="accordion-content ' . $accordion_id . '-' . $pane_id . '">' . $pane . '</div>';
-    } 
+    }
   }
   $output .= '</div>' ;
 
@@ -76,7 +75,7 @@ function panopoly_theme_panopoly_accordion_style_settings_form($style_settings) 
   $form['active'] = array(
     '#type' => 'textfield',
     '#title' => t('Set active'),
-    '#description' => t('Set to -1 if you want no pane active'),  
+    '#description' => t('Set to -1 if you want no pane active'),
     '#default_value' => (isset($style_settings['active'])) ? $style_settings['active'] : 0,
   );
   $height_options = array(
@@ -84,10 +83,10 @@ function panopoly_theme_panopoly_accordion_style_settings_form($style_settings) 
     'fill' => t('Expand to the available height based on the accordion\'s parent height.'),
     'content' => t('Each panel will be only as tall as its content.'),
   );
-  if ($style_settings['fillSpace']) {
+  if (isset($style_settings['fillSpace']) && $style_settings['fillSpace'] === TRUE) {
     $height_default = 'fill';
   }
-  else if ($style_settings['clearStyle']) {
+  elseif (isset($style_settings['clearStyle']) && $style_settings['clearStyle'] === TRUE) {
     $height_default = 'content';
   }
   else {
@@ -102,19 +101,19 @@ function panopoly_theme_panopoly_accordion_style_settings_form($style_settings) 
   $form['collapsible'] = array(
     '#type' => 'checkbox',
     '#description' => t("Whether all the sections can be closed at once. Allows collapsing the active section by the triggering event (click is the default)."),
-    '#title' => t('Can close all section'),  
-    '#return_value' => 1,  
+    '#title' => t('Can close all section'),
+    '#return_value' => 1,
     '#default_value' => (isset($style_settings['collapsible'])) ? $style_settings['collapsible'] : 0,
   );
   $form['event'] = array(
     '#type' => 'select',
-    '#title' => t('The event on which to trigger the accordion.'),  
+    '#title' => t('The event on which to trigger the accordion.'),
     '#options' => array('click' => t('On click'), 'mouseover' => t('On mouse over')),
     '#default_value' => (isset($style_settings['event'])) ? $style_settings['event'] : 'click',
   );
   $form['navigation'] = array(
     '#type' => 'checkbox',
-    '#title' => t('If set, looks for the anchor that matches location.href and activates it. Great for href-based state-saving. Use navigationFilter to implement your own matcher..'),  
+    '#title' => t('If set, looks for the anchor that matches location.href and activates it. Great for href-based state-saving. Use navigationFilter to implement your own matcher..'),
     '#return_value' => TRUE,
     '#default_value' => (isset($style_settings['navigation'])) ? $style_settings['navigation'] : FALSE,
   );

@@ -31,19 +31,14 @@ Feature: Use rich text editor
       | edit-body-und-0-value_styleselect_text  | Oval image                        | p        | class     | img-circle |
       | edit-body-und-0-value_styleselect_text  | Image with rounded corners        | p        | class     | img-rounded |
       | edit-body-und-0-value_styleselect_text  | Image with double-border          | p        | class     | img-thumbnail |
-      | edit-body-und-0-value_styleselect_text  | Primary button                    | p        | class     | btn btn-primary |
-      | edit-body-und-0-value_styleselect_text  | Primary button large              | p        | class     | btn btn-primary btn-lg |
-      | edit-body-und-0-value_styleselect_text  | Primary button full-col-wide      | p        | class     | btn btn-primary btn-block |
-      | edit-body-und-0-value_styleselect_text  | Primary button large col-wide     | p        | class     | btn btn-primary btn-lg btn-block |
-      | edit-body-und-0-value_styleselect_text  | Secondary button                  | p        | class     | btn btn-secondary |
-      | edit-body-und-0-value_styleselect_text  | Secondary button large            | p        | class     | btn btn-secondary btn-lg |
-      | edit-body-und-0-value_styleselect_text  | Secondary button full-col-wide    | p        | class     | btn btn-secondary btn-block |
-      | edit-body-und-0-value_styleselect_text  | Secondary button large col-wide   | p        | class     | btn btn-secondary btn-lg btn-block |
-      | edit-body-und-0-value_styleselect_text  | RFI/Visit/Apply (RVA) button      | p        | class     | btn btn-gold |
-      | edit-body-und-0-value_styleselect_text  | RVA button large                  | p        | class     | btn btn-gold btn-lg |
-      | edit-body-und-0-value_styleselect_text  | RVA button full-col-wide          | p        | class     | btn btn-gold btn-block |
-      | edit-body-und-0-value_styleselect_text  | RVA button large col-wide         | p        | class     | btn btn-gold btn-lg btn-block |
-      | edit-body-und-0-value_styleselect_text  | Explore Our Programs (EOP) button | p        | class     | btn btn-blue |
-      | edit-body-und-0-value_styleselect_text  | EOP button large                  | p        | class     | btn btn-blue btn-lg |
-      | edit-body-und-0-value_styleselect_text  | EOP button full-col-wide          | p        | class     | btn btn-blue btn-block |
-      | edit-body-und-0-value_styleselect_text  | EOP button large col-wide         | p        | class     | btn btn-blue btn-lg btn-block |
+      | edit-body-und-0-value_styleselect_text  | Maroon button                     | p        | class     | btn btn-primary |
+      | edit-body-und-0-value_styleselect_text  | Gold button                       | p        | class     | btn btn-gold |
+      | edit-body-und-0-value_styleselect_text  | Black button                      | p        | class     | btn btn-black |
+      | edit-body-und-0-value_styleselect_text  | Gray button                       | p        | class     | btn btn-secondary |
+      | edit-body-und-0-value_styleselect_text  | Lead paragraph                    | p        | class     | lead-paragraph |
+      | edit-body-und-0-value_styleselect_text  | Alert text success                | p        | class     | alert alert-block alert-success |
+      | edit-body-und-0-value_styleselect_text  | Alert text warning                | p        | class     | alert alert-block alert-warning |
+      | edit-body-und-0-value_styleselect_text  | Button Disabled                   | p        | class     | ws2-element-style btn btn-disabled |
+      | edit-body-und-0-value_styleselect_text  | Alert text danger                 | p        | class     | alert alert-block alert-danger |
+      | edit-body-und-0-value_styleselect_text  | Alert text info                   | p        | class     | alert alert-block alert-info |
+

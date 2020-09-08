@@ -8,6 +8,7 @@
  * Implements hook_form_FORM_ID_alter().
  */
 function webspark_featurescustom_form_panopoly_page_node_form_alter(&$form, &$form_state, $form_id) {
+  // panopoly_page_node_form
   // Content Page node form
   // + Remove feature fields from panopoly content page
   $form['field_featured_image']['#access'] = FALSE;
@@ -70,7 +71,7 @@ function webspark_featurescustom_entity_info_alter(&$entity_info) {
     IMPORTANT: Use the more detailed Enhanced ASU map when pointing at ASU-related locations.'); // Add map
   $entity_info['fieldable_panels_pane']['bundles']['table']['description'] = t('Adds an HTML formatted data table.
     Customizable number of rows and columns.'); // Add table
-  $entity_info['fieldable_panels_pane']['bundles']['video']['description'] = t('Adds a URL for videos from online video from Youtube or Vimeo 
+  $entity_info['fieldable_panels_pane']['bundles']['video']['description'] = t('Adds a URL for videos from online video from Youtube or Vimeo
     (other video sites are not supported).'); // Add video
   $entity_info['fieldable_panels_pane']['bundles']['spotlight']['description'] = t('DEPRECATED - Use ASU Spotlight instead.'); // Add Spotlight
 }

@@ -243,9 +243,13 @@ function tb_megamenu_block_view($delta = 0) {
       ));
     }
 
-    tb_megamenu_add_css(drupal_get_path('module', 'tb_megamenu') . '/css/bootstrap.css');
-    tb_megamenu_add_css(drupal_get_path('module', 'tb_megamenu') . '/css/base.css');
-    tb_megamenu_add_css(drupal_get_path('module', 'tb_megamenu') . '/css/default.css');
+    $suffix = _tb_megamenu_theme_check(FALSE, 'elpuente', '-ws2');
+    tb_megamenu_add_css(drupal_get_path('module', 'tb_megamenu') . '/css/bootstrap'
+      . $suffix . '.css');
+    tb_megamenu_add_css(drupal_get_path('module', 'tb_megamenu') . '/css/base'
+      . $suffix . '.css');
+    tb_megamenu_add_css(drupal_get_path('module', 'tb_megamenu') . '/css/default'
+      . $suffix . '.css');
     tb_megamenu_add_css(drupal_get_path('module', 'tb_megamenu') . '/css/compatibility.css');
     drupal_add_js(drupal_get_path('module', 'tb_megamenu') . '/js/tb-megamenu-frontend.js');
     drupal_add_js(drupal_get_path('module', 'tb_megamenu') . '/js/tb-megamenu-touch.js');
@@ -314,4 +318,13 @@ function tb_megamenu_block_view_alter(&$data, $block) {
  */
 function tb_megamenu_form_menu_overview_form_alter(&$form, &$form_state) {
   $form['#submit'][] = 'tb_megamenu_update_megamenus';
+}
+
+/**
+ * Check for a particular theme
+ * @see _webspark_featurescustom_ws2_check()
+ * @noinspection PhpDocSignatureInspection
+ */
+function _tb_megamenu_theme_check($need_admin = FALSE, $theme_to_check = 'elpuente', $suffix = '_ws2') {
+  return _webspark_featurescustom_get_ws2_suffix($need_admin, $theme_to_check, $suffix);
 }

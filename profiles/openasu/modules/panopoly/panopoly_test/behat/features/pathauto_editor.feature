@@ -6,7 +6,7 @@ Feature: Test pathauto for editor users
   Background:
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
-    When I visit "/admin/appearance/settings/innovation"
+    When I visit the default theme settings page
       And I check the box "edit-always-show-page-title"
       And I press "edit-submit"
       And I am logged in as a user with the "editor" role
@@ -19,7 +19,7 @@ Feature: Test pathauto for editor users
     # don't use 'save_draft', and this makes this test compatible with them.
     #When I press "Publish"
     When I press "edit-submit"
-    Then I should see "Testing title"
+    Then the "h1" element should contain "Testing title"
 
   @api @panopoly_admin
   Scenario: Pathauto should automatically assign an url
@@ -34,14 +34,14 @@ Feature: Test pathauto for editor users
     Then the url should match "completely-other-title"
     # But visiting the old URL should continue to work
     When I visit "/content/testing-title"
-    Then I should see "Completely other title"
+    Then the "h1" element should contain "Completely other title"
 
   @api @panopoly_admin @webspark_added
   Scenario: Resetting the Innovation theme Always Show Page Title setting
     Given I am logged in as a user with the "administrator" role
       And Panopoly magic live previews are disabled
-    When I visit "/admin/appearance/settings/innovation"
+    When I visit the default theme settings page
       And I uncheck the box "edit-always-show-page-title"
       And I press "edit-submit"
-      And I visit "/admin/appearance/settings/innovation"
+      And I visit the default theme settings page
     Then the "edit-always-show-page-title" checkbox should not be checked

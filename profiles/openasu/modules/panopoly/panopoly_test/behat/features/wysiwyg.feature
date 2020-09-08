@@ -39,16 +39,18 @@ Feature: Use rich text editor
       | Align Center                  | p          | text-align      | center       |
       | Align Right                   | p          | text-align      | right        |
 
-  # Removed actions related to buttons that were removed by Webspark WYSIWYG
-  @api @javascript @panopoly_wysiwyg @webspark_broken @webspark_fixed
-  Scenario Outline: Format text in the editor (advanced toolbar)
-    When I click the "<Action>" button in the "edit-body-und-0-value" WYSIWYG editor
-      And I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
-      #And I press "Publish"
-      And I press "edit-submit"
-    Then I should see "Testing body" in the "<Element>" element with the "<Property>" CSS property set to "<Value>" in the "Bryant Content" region
-
-    Examples:
-      | Action          | Element | Property        | Value     |
-      | Align Full      | p       | text-align      | justify   |
-      | Increase Indent | p       | padding-left    | 30px      |
+# Removed actions related to buttons that were removed by Webspark WYSIWYG
+#  @api @javascript @panopoly_wysiwyg @webspark_broken @webspark_fixed
+#  Scenario Outline: Format text in the editor (advanced toolbar)
+#    When I expand the toolbar in the "edit-body-und-0-value" WYSIWYG editor
+#      And I click the "<Action>" button in the "edit-body-und-0-value" WYSIWYG editor
+#      And I type "Testing body" in the "edit-body-und-0-value" WYSIWYG editor
+#      #And I press "Publish"
+#      And I press "edit-submit"
+#    Then I should see "Testing body" in the "<Element>" element with the "<Property>" CSS property set to "<Value>" in the "Bryant Content" region
+#
+#    Examples:
+#      | Action          | Element | Property        | Value     |
+#      | Underline       | span    | text-decoration | underline |
+#      | Align Full      | p       | text-align      | justify   |
+#      | Increase Indent | p       | padding-left    | 30px      |
