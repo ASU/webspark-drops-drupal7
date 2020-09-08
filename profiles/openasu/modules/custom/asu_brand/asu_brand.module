@@ -31,7 +31,7 @@ function asu_brand_init() {
   $suffix = (variable_get('asu_brand_header_version', 'stable') === '5.0') ? '_ws2' : '';
 
   if (variable_get('asu_brand_header' . $suffix . '_sitemenu_injection_flag', 1)) {
-    $menu_array = asu_brand_get_site_menu_array($suffix);
+    $menu_array = asu_brand_get_site_menu_array();
     drupal_alter('asu_brand_sitemenu', $menu_array); // Invoke alter
 
     $site_name = asu_brand_get_site_name();
@@ -348,44 +348,36 @@ function asu_brand_get_site_name() {
 
 /**
  * Returns site menu array
- * @param string $suffix - WS2.0 suffix "_ws2" if WS2.0 is detected. Defaults to empty (for WS1.0)
- * @return array
  */
-function asu_brand_get_site_menu_array($suffix = '') {
-  $menu_tree = menu_tree_all_data(variable_get('asu_brand_header' . $suffix . '_sitemenu_name', ASU_BRAND_SITE_MENU_NAME_DEFAULT));
+function asu_brand_get_site_menu_array() {
+  $menu_tree = menu_tree_all_data(variable_get('asu_brand_sitemenu_name', ASU_BRAND_SITE_MENU_NAME_DEFAULT));
   drupal_alter('asu_brand_sitemenu_name', $menu_tree); // Invoke alter
   $menu_array = array();
-  $i = 0;
-
-  // Checks if creating special menu structure for WS2L
-  $is_ws2l = ($suffix === '_ws2') ? TRUE : FALSE;
-  $menu_key = ($suffix === '_ws2') ? 'items' : 'children';
-
+  $i=0;
   foreach ($menu_tree as $item) {
     if (isset($item['link']) && $item['link']['access'] && !$item['link']['hidden']) {
-      if ($menu_item = asu_brand_get_menu_item($item['link']['title'], $item['link']['link_path'], $item['link']['options'], $is_ws2l))
-      {
+      if ($menu_item = asu_brand_get_menu_item($item['link']['title'], $item['link']['link_path'], $item['link']['options'])) {
         $menu_array[$i] = array_map('trim', $menu_item);
       } else {
         $i--;
       }
       // Render child items.
       if (asu_brand_menuitem_has_active_children($item)) {
-        $j = 0;
+        $j=0;
         foreach ($item['below'] as $child) {
           if (isset($child['link']) && !$child['link']['hidden']) {
-            if ($menu_item = asu_brand_get_menu_item($child['link']['title'], $child['link']['link_path'], $child['link']['options'], $is_ws2l)) {
-              $menu_array[$i][$menu_key][$j] = array(array_map('trim', $menu_item));
+            if ($menu_item = asu_brand_get_menu_item($child['link']['title'], $child['link']['link_path'], $child['link']['options'])) {
+              $menu_array[$i]['children'][$j] = array_map('trim', $menu_item);
             } else {
               $j--;
             }
             // Render grandchild items.
             if (asu_brand_menuitem_has_active_children($child)) {
-              $k = 0;
+              $k=0;
               foreach ($child['below'] as $grandchild) {
                 if (isset($grandchild['link']) && !$grandchild['link']['hidden']) {
-                  if ($menu_item = asu_brand_get_menu_item($grandchild['link']['title'], $grandchild['link']['link_path'], $grandchild['link']['options'], $is_ws2l)) {
-                    $menu_array[$i][$menu_key][$j][$menu_key][$k] = array(array_map('trim', $menu_item));
+                  if ($menu_item = asu_brand_get_menu_item($grandchild['link']['title'], $grandchild['link']['link_path'], $grandchild['link']['options'])) {
+                    $menu_array[$i]['children'][$j]['children'][$k] = array_map('trim', $menu_item);
                   } else {
                     $k--;
                   }
@@ -400,31 +392,27 @@ function asu_brand_get_site_menu_array($suffix = '') {
       $i++;
     }
   }
-
   return $menu_array;
 }
 
 
 /**
  * Compose and return menu item
- * Special handling for 'Special menu items' module
- *   - Return NULL for path if <nolink>
- *   - Return empty array if <separator>
- * @param string $title - menu item title
- * @param string $path - menu item path
- * @param array $options - Options for rendering the <a> tag, such as target, href, etc.
- * @param bool $is_ws2l - Check to see if a check for WS2.0 is needed. Defaults to FALSE.
- * @return array
+ *   Special handling for 'Special menu items' module
+ *   Return NULL for path if <nolink>
+ *   Return empty array if <separator>
+ * @param atring $title
+ * @param atring $path
+ * @param assoc array $options
+ * @return assoc array>
  */
-function asu_brand_get_menu_item($title, $path, $options = array(), $is_ws2l = FALSE) {
+function asu_brand_get_menu_item($title, $path, $options = array()) {
+  // default
   $menu_item = array(
-    'title' => t(strip_tags(htmlspecialchars_decode($title))),
-    'path'  => url($path, $options)
-  );
-  if ($is_ws2l === TRUE) {
-    $menu_item['text'] = t(strip_tags(htmlspecialchars_decode($title)));
-  }
-  // Special handling for 'Special menu items' module
+        'title' => t(strip_tags(htmlspecialchars_decode($title))),
+        'path'  => url($path, $options)
+      );
+  // special handling for 'Special menu items' module
   if (module_exists('special_menu_items')) {
     switch ($path) {
       case '<nolink>':
@@ -432,6 +420,7 @@ function asu_brand_get_menu_item($title, $path, $options = array(), $is_ws2l = F
         break;
       case '<separator>':
         return array(); // return empty array if separator
+        break;
     }
   }
   return $menu_item;
@@ -453,15 +442,93 @@ function asu_brand_menuitem_has_active_children($menu_item) {
 }
 
 /**
- * Creates and returns JSON string from asu_brand_get_site_menu_array() by passing parameters to
- * determine array structure.
- * @param string $suffix - Determines WS2.0 (if '_ws2') or not (if empty)
- * @return false|string
+ * FOLLOWING CODE IS FOR WEB STANDARDS 2.0 COMPLIANCE
+ *
+ * HELPER FUNCTIONS DEFINED FOR ASU HEADER 5.0
  */
-function _asu_brand_create_json($suffix = '') {
-  $site_menu = asu_brand_get_site_menu_array($suffix);
-  return json_encode($site_menu);
+
+/**
+ * Fetches pre-built menu array designed for ASU Header 4.0 (and below) and
+ * creates WS2L compatible version with JSON encoding for Preact component
+ *
+ * @return string
+ */
+function _asu_brand_create_json()
+{
+  $defaultMenu = asu_brand_get_site_menu_array(); // Default menu array compatible with WS1
+  $ws2Menu = _asu_brand_create_ws2l_menu($defaultMenu); // New menu array compatible with WS2
+
+  return json_encode($ws2Menu); // JSON encoded string of WS2-compatible menu array
 }
+
+/**
+ * Recursively iterates through entire pre-built menu array and creates new WS2L array
+ * with correct array keys and flattening properties for JSON encoding
+ *
+ * @param array $menu_array - Full (or partial) menu tree for iteration
+ */
+function _asu_brand_create_ws2l_menu($menu_tree)
+{
+  $ws2_compat_menu = array(); // Array that holds completed menu with given param $menu_tree and is compatible with WS2 structure
+  $tree_length_counter = 0; // Counter for array length (aka number of outermost leaves in tree)
+
+  // Iterate through entire menu with each leaf acting as a subtree
+  foreach ($menu_tree as $menu_subtree)
+  {
+    $ws2_compat_subtree = array(); // Temporary array that holds correct subtree
+    $headerFound = false; // Flag that determines if subtree contains a heading (which determines array flattening procedures)
+    $flattened_subtree = array(); // Temporary array that holds subtree contents as flattened array of equal depth (instead of as children)
+
+    if (isset($menu_subtree['title'])) // Checks if menu entry has a title
+    {
+      $ws2_compat_subtree['text'] = $menu_subtree['title']; // Add title to temp array as corresponding entry for WS2 tree structure (i.e. 'text')
+    }
+
+    // Checks if menu entry has path and whether path is actually useful (e.g. has actual characters to redirect to)
+    if (isset($menu_subtree['path']) && strlen($menu_subtree['path']) > 0)
+    {
+      $ws2_compat_subtree['href'] = $menu_subtree['path']; // Add link path to temp array as corresponding entry for WS2 tree structure (i.e. 'href')
+    }
+
+    // If there is no path, then it is not clickable and therefore acts as a menu heading
+    else
+    {
+      $ws2_compat_subtree['type'] = 'heading'; // Set temp array type as heading to correspond to WS2 tree structure
+      $headerFound = true; // Sets flag to true since heading has now been found
+    }
+
+    // Checks if menu entry has children which thereby contains other menu entries
+    if (isset($menu_subtree['children']))
+    {
+      if ($headerFound) // Checks if heading was found, which in turn determines if array flattening is necessary
+      {
+        // Recursive call with menu subtree acting as new subtree to repeat process, which is then stored other temp array to be integrated separately
+        $flattened_subtree = _asu_brand_create_ws2l_menu($menu_subtree['children']);
+      }
+
+      else // If no heading is found, maps children to correspond to WS2 tree structure
+      {
+        // Recursive call with menu subtree acting as new subtree to repeat process, which is stored in child array of temp array
+        $ws2_compat_subtree['items'][] = _asu_brand_create_ws2l_menu($menu_subtree['children']);
+      }
+    }
+
+    $ws2_compat_menu[$tree_length_counter] = $ws2_compat_subtree; // Integrates properly mapped child array using counter defined above
+    $tree_length_counter++; // Iterate counter
+
+
+    if ($headerFound) // Checks if header found to being flattened array integration
+    {
+      foreach ($flattened_subtree as $sibling_entry) // Iterate through flattened array
+      {
+        $ws2_compat_menu[$tree_length_counter] = $sibling_entry; // Adds flattened array as siblings of menu tree instead of tree
+        $tree_length_counter++; // Iterate through counter again to account for new entries
+      }
+    }
+  }
+
+  return $ws2_compat_menu; // Return properly structured menu tree for JSON encoding
+ }
 
 /**
  * Global header - validation
