@@ -13,19 +13,15 @@
     padding-bottom: 0.5rem;
   }
 }
-
 // Hide TB Megamenu button
 .tb-megamenu-main-menu > button.btn-navbar.tb-megamenu-button {
   display: none;
 }
 
-// DEFAULTS
-
 button, .button, .btn, a.btn, .btn a {
   @include ws2-global-transition();
   word-wrap: break-word;
 }
-
 .btn,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree {   /* Button CSS for menu links added */
   -moz-user-select: none;
@@ -104,7 +100,6 @@ fieldset[disabled] .btn-default {
 
 // Secondary  (WS2.0 - Gray) button (WS1.0 Blue buttons will use this look - added that class)
 //////////////////////////////////
-
 .btn-secondary,
 .btn-blue,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary,
@@ -230,11 +225,9 @@ fieldset[disabled] .btn-black {
 .btn-info:hover, .btn-info:focus, .btn-info:active, .btn-info.active, .open > .btn-info.dropdown-toggle {
   transform: scale($btn-scale);
 }
-
 .btn-info:active, .btn-info.active, .open > .btn-info.dropdown-toggle {
   background-image: none;
 }
-
 .btn-info.disabled, .btn-info.disabled:hover, .btn-info.disabled:focus, .btn-info.disabled:active, .btn-info.disabled.active, .btn-info[disabled], .btn-info[disabled]:hover, .btn-info[disabled]:focus, .btn-info[disabled]:active, .btn-info.active[disabled], fieldset[disabled] .btn-info, fieldset[disabled] .btn-info:hover, fieldset[disabled] .btn-info:focus, fieldset[disabled] .btn-info:active, fieldset[disabled] .btn-info.active {
   opacity: $btn-disabled-opacity;
 }

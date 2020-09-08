@@ -1,4 +1,3 @@
-/* IN PROGRESS */
 /* Default table styles */
 table {
   background-color: #fff;
@@ -10,7 +9,6 @@ table {
 table > tbody {
   border-top: none;
 }
-
 table > thead > tr > th,
 table > thead > tr > td,
 table > tbody > tr > th,
@@ -22,7 +20,6 @@ table > tfoot > tr > td {
   padding: $padding-small-vertical $padding-small-horizontal;
   vertical-align: top;
 }
-
 table > thead > tr > th,
 table > thead > tr > td {
   border-bottom: 2px solid $ws2-gray;
@@ -32,7 +29,6 @@ table > thead > tr > td {
 body:not(.page-admin) table > tbody > tr:nth-child(2n+1) {
   background-color: $ws2-gray-lightest;
 }
-
 table > caption + thead > tr:first-child > th,
 table > caption + thead > tr:first-child > td,
 table > colgroup + thead > tr:first-child > th,
@@ -41,12 +37,10 @@ table > thead:first-child > tr:first-child > th,
 table > thead:first-child > tr:first-child > td {
   border-top: 0 none;
 }
-
 table > tbody + tbody {
   border-top: 2px solid $ws2-gray;
 }
-
-/* WYSIWYG Bordered table */
+// WYSIWYG Bordered table
 table.bordered {
   border-bottom: 1px solid $ws2-gray;
   border-left: 1px solid $ws2-gray;
