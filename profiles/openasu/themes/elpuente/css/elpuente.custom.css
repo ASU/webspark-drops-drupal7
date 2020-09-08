@@ -424,6 +424,8 @@ table.bordered > caption + thead > tr:first-child > th, table.bordered > caption
 .region-content #page-page .ws2-element-alt.ws2-element-alt-black ul.ws2-element-style.ws2-element-gold li:before, .region-content #page-page .ws2-element-alt.ws2-element-alt-black ol.ws2-element-style.ws2-element-gold li:before { color: #ffc627; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-black .ws2-element-style.btn-tag { background-color: #747474; border-color: #747474; color: #fff; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-black .btn.btn-black { color: #191919; background-color: #ffc627; }
+.region-content #page-page .ws2-element-alt.ws2-element-alt-black.pane-bundle-banners-ws2 .banner-close > a.close { color: #191919; opacity: 0.7; }
+.region-content #page-page .ws2-element-alt.ws2-element-alt-black.pane-bundle-banners-ws2 .banner-close > a.close:hover { opacity: 1.0; background-color: #fff; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-white { border-color: #d0d0d0; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-white .ws2-element-style.btn-tag { background-color: #e8e8e8; }
 
