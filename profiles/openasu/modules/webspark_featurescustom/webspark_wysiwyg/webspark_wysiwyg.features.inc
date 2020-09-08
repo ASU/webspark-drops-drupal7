@@ -35,6 +35,7 @@ function webspark_wysiwyg_wysiwyg_default_profiles_alter(&$data) {
     $data['panopoly_wysiwyg_text']['preferences']['user_choose'] = 1; /* WAS: 0 */
     $data['panopoly_wysiwyg_text']['settings']['buttons']['default']['anchor'] = 1; /* WAS: '' */
     $data['panopoly_wysiwyg_text']['settings']['buttons']['default']['hr'] = 1; /* WAS: '' */
+    $data['panopoly_wysiwyg_text']['settings']['buttons']['advhr']['advhr'] = 1; /* WAS: '' */
     $data['panopoly_wysiwyg_text']['settings']['buttons']['default']['styleselect'] = 1; /* WAS: '' */
     $data['panopoly_wysiwyg_text']['settings']['buttons']['table'] = array(
       'tablecontrols' => 1,
