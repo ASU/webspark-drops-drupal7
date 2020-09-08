@@ -129,7 +129,8 @@ function asu_brand_get_cached_content($cache_id, $file_path, $reset = FALSE) {
               'data' => array('asu_brand' => array(
                 'siteName' => variable_get('site_name'),
                 'siteSubtitle' => variable_get('site_slogan'),
-                'navTree' => _asu_brand_create_json('_ws2'),
+                'isLoggedIn' => user_is_logged_in(),
+                'navTree' => _asu_brand_create_json(),
               )),
             )
           )
