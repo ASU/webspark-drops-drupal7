@@ -13,8 +13,8 @@
         subtitle: Drupal.settings.asu_brand.siteSubtitle,
         loggedIn: Drupal.settings.asu_brand.isLoggedIn,
         userName: Drupal.settings.asu_brand.isLoggedIn == true ? loginInfo.userName : "",
-        loginLink: "https://weblogin.asu.edu/cas/login",
-        logoutLink: "https://weblogin.asu.edu/cas/logout",
+        loginLink: Drupal.settings.asu_brand.casLoginLink,
+        logoutLink: Drupal.settings.asu_brand.casLogoutLink
       }, document.getElementById("headerContainer"));
     }
   };
