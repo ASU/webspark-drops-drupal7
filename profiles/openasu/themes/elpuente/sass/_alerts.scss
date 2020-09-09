@@ -34,7 +34,6 @@
     padding: 0 1.5rem;
   }
 }
-
 .alert-success {
   background-color: $ws2-success-bkgd;
   border-color: $ws2-green;
@@ -56,7 +55,6 @@
     content: "\f071";
   }
 }
-
 .alert-warning {
   background-color: $ws2-warning-bkgd; /* 33% opacity of official maroon */
   border-color: $ws2-orange;
@@ -64,7 +62,6 @@
     content: "\f0f3";
   }
 }
-
 .alert:not([class*="alert-"]),
 div[class='alert alert-block'] { /* Catch-all for default alert class */
   background-color: $ws2-gray-lightest;

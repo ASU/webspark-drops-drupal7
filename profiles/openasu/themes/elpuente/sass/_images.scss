@@ -5,7 +5,6 @@ img {
   height: auto;
   vertical-align: bottom;
 }
-
 /* WYSIWYG image spacing */
 img.media-element.pull-right {
   margin-left: 20px;
@@ -17,7 +16,6 @@ img.media-element.pull-left {
 p.img-circle img {
   border-radius: $border-radius-circle;
 }
-
 .img-rounded, // #Innovation
 p.img-rounded img {
   border-radius: 4px;
@@ -34,7 +32,6 @@ p.img-thumbnail img {
   padding: 4px;
   transition: all 0.2s ease-in-out 0s;
 }
-
 // Images and captions #WS2.0
 img.ws2-drop-shadow {
   box-shadow: 0 0.625em 1.25em rgba(0, 0, 41, 0.25);

@@ -8,6 +8,9 @@
 
 /* Global-level and/or Misc. selectors with no clear category
 -------------------------------------------------------------- */
+// ASU Brand overrides (from global, etc.)
+@import "brand-overrides";
+
 body {
   min-width: 20em;
   #page .region-content {
@@ -60,7 +63,6 @@ div.error {
   background-color: $ws2-gray-lightest;
   border: 1px solid $ws2-gray-light;
 }
-
 .js-darkgraybg .panel,
 .js-lightgraybg .panel {
   background-color: #fff;

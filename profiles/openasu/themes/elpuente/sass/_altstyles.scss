@@ -66,6 +66,16 @@
     .btn.btn-black { // Turn black buttons into gold
       @include buttons-style-base($ws2-gray-darkest, $ws2-gold);
     }
+    &.pane-bundle-banners-ws2 {
+      .banner-close > a.close {
+        color: $ws2-gray-darkest;
+        opacity: 0.7;
+        &:hover {
+          opacity: 1.0;
+          background-color: #fff;
+        }
+      }
+    }
   }
 
   /*

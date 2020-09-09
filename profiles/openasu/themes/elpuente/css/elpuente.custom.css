@@ -6,6 +6,13 @@
 /* Global mixin library for multiple or all elements */
 /* Global-level and/or Misc. selectors with no clear category
 -------------------------------------------------------------- */
+/** Overrides the Web component-generated styling for WS2.0 components for use in Webspark */
+#header > .container { width: 100%; }
+
+#header > .container #headerContainer .region.region-header > *:not(#block-asu-brand-asu-brand-header-ws2.block-asu-brand) { max-width: 1164px; }
+
+#header > .container #headerContainer .universal-nav > div { margin: 0 auto; padding-right: 2rem; }
+
 body { min-width: 20em; }
 body #page .region-content { padding: 0; }
 
@@ -296,7 +303,6 @@ hr.ws2-element-gold { border-color: #ffc627; border-width: 8px; margin-left: 0; 
 .region-content #page-page .divider-network-black { background-image: url("/profiles/openasu/themes/elpuente/images/network_black.png"); background-color: #191919; }
 .region-content #page-page [class*=divider-network-] { background-position: top left; }
 
-/* IN PROGRESS */
 /* Default table styles */
 table { background-color: #fff; margin-bottom: 1.5em; max-width: 100%; width: 100%; border: 1px solid #e8e8e8; }
 
@@ -312,7 +318,6 @@ table > caption + thead > tr:first-child > th, table > caption + thead > tr:firs
 
 table > tbody + tbody { border-top: 2px solid #bfbfbf; }
 
-/* WYSIWYG Bordered table */
 table.bordered { border-bottom: 1px solid #bfbfbf; border-left: 1px solid #bfbfbf; }
 
 table.bordered > thead > tr > th, table.bordered > thead > tr > td, table.bordered > tbody > tr > th, table.bordered > tbody > tr > td, table.bordered > tfoot > tr > th, table.bordered > tfoot > tr > td { border-right: 1px solid #bfbfbf; }
@@ -419,6 +424,8 @@ table.bordered > caption + thead > tr:first-child > th, table.bordered > caption
 .region-content #page-page .ws2-element-alt.ws2-element-alt-black ul.ws2-element-style.ws2-element-gold li:before, .region-content #page-page .ws2-element-alt.ws2-element-alt-black ol.ws2-element-style.ws2-element-gold li:before { color: #ffc627; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-black .ws2-element-style.btn-tag { background-color: #747474; border-color: #747474; color: #fff; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-black .btn.btn-black { color: #191919; background-color: #ffc627; }
+.region-content #page-page .ws2-element-alt.ws2-element-alt-black.pane-bundle-banners-ws2 .banner-close > a.close { color: #191919; opacity: 0.7; }
+.region-content #page-page .ws2-element-alt.ws2-element-alt-black.pane-bundle-banners-ws2 .banner-close > a.close:hover { opacity: 1.0; background-color: #fff; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-white { border-color: #d0d0d0; }
 .region-content #page-page .ws2-element-alt.ws2-element-alt-white .ws2-element-style.btn-tag { background-color: #e8e8e8; }
 
