@@ -1,5 +1,5 @@
-
-/* =MEDIA QUERIES --- IN PROGRESS
+/* =MEDIA QUERIES -- IN PROGRESS
+ * Contains print and screen rules
 -------------------------------------------------------------- */
 @import "variables";
 @import "bootstrap/variables";
@@ -162,5 +162,20 @@
   }
   #innovation-footer {
     position: revert;
+  }
+  // fixes @media print issues - WEBSPARK-764
+  #top-content #tabs .nav.nav-pills,
+  .region-closure,
+  #innovation-bar,
+  #ASUNavMenu.sticky-menu {
+    display: none !important;
+  }
+  #page .container,
+  #innovation-footer .footer-menu ul,
+  #innovation-bar .innovation-top {
+    width: 100%;
+  }
+  aside.right-sidebar, aside.left-sidebar {
+    width: 25% !important;
   }
 }
