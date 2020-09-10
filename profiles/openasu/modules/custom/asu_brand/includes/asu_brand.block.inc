@@ -105,6 +105,7 @@ function asu_brand_get_cached_content($cache_id, $file_path, $reset = FALSE) {
     $module_path = drupal_get_path('module', 'asu_brand');
     // Render WS2.0 header w/Preact
     if ($cache_id === 'asu_brand:header_ws2') {
+      global $base_url;
       $output = array(
         '#markup' => '<div id="headerContainer"></div>',
         '#attached' => array(
@@ -130,6 +131,8 @@ function asu_brand_get_cached_content($cache_id, $file_path, $reset = FALSE) {
                 'siteName' => variable_get('site_name'),
                 'siteSubtitle' => variable_get('site_slogan'),
                 'isLoggedIn' => user_is_logged_in(),
+                'casLoginLink' => $base_url . '/cas',
+                'casLogoutLink' => $base_url . '/caslogout',
                 'navTree' => _asu_brand_create_json(),
               )),
             )
