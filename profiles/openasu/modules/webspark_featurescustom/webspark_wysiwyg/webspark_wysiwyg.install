@@ -7,3 +7,53 @@
 function webspark_wysiwyg_update_7000(&$sandbox) {
   features_rebuild(array('webspark_wysiwyg' => array('wysiwyg_template')));
 }
+
+/**
+ * Enables the Advanced HR plugin for TinyMCE.
+ */
+function webspark_wysiwyg_update_7001(&$sandbox) {
+  if (module_exists('wysiwyg')) {
+    $settings = db_select('wysiwyg', 'w')
+      ->fields('w', array('settings'))
+      ->condition('format', 'panopoly_wysiwyg_text')
+      ->condition('editor', 'tinymce')
+      ->execute()
+      ->fetchField();
+    if (!empty($settings)) {
+      $settings = unserialize($settings);
+      if ($settings !== FALSE) {
+        // First make sure it's not already enabled.
+        if (!isset($settings['buttons']['advhr']['advhr'])) {
+          // Add advhr plugin in the right order.
+          $buttons = $settings['buttons'];
+          $settings['buttons'] = array();
+          $settings['buttons']['default'] = $buttons['default'];
+          $settings['buttons']['advhr']['advhr'] = 1;
+          $settings['buttons'] = $settings['buttons'] + $buttons;
+          $settings = serialize($settings);
+          db_update('wysiwyg')
+            ->fields(array('settings' => $settings))
+            ->condition('format', 'panopoly_wysiwyg_text')
+            ->condition('editor', 'tinymce')
+            ->execute();
+          flogger('webspark_wysiwyg', 'Enabled the Advanced Horizontal Rule plugin for TinyMCE.',
+            array(),
+            WATCHDOG_INFO, TRUE);
+        } else { // Already enabled. Skip
+          flogger('theme_update', 'The Advanced Horizontal Rule plugin was already enabled.'
+            . ' No action taken.');
+        }
+      } else {
+        // Data wasn't a well-formed, serialized array. Manual CSS paths need to be set.
+        flogger('theme_update', 'The TinyMCE library could not enable the Advanced horizontal rule'
+          . ' plugin. Please go to "Buttons and Plugins" in the @url page and enable the plugin manually.',
+          array('@url' => l('WYSIWYG settings',
+            '/admin/config/content/wysiwyg/profile/panopoly_wysiwyg_text')),
+          WATCHDOG_WARNING, TRUE);
+      }
+    } else {
+      flogger('theme_update', 'The WYSIWYG profile data (called "WYSIWYG") could not be found.',
+        array(), WATCHDOG_NOTICE);
+    }
+  }
+}
