@@ -245,6 +245,7 @@ function _webspark_featurescustom_web_standards_theme_config($new_theme, $ws_dat
   // Apply original block configs from Webspark install profile (openasu.profile) to ensure their proper
   // location to match spinup settings.
   openasu_blockupdates_for_theme($new_theme, $ws_data);
+  _webspark_featurescustom_wysiwyg_css($new_theme);
 
   // Flush ASU Brand caches so ASU header/footer/megamenu/mega_footer are right.
   asu_brand_cache_clear();
@@ -297,6 +298,8 @@ function _webspark_featurescustom_alt_theme_config($theme = NULL) {
   if (function_exists('_openasu_system_help_block_enable')) {
     _openasu_system_help_block_enable($theme);
   }
+  // Set WYSIWYG profile (WYSIWYG) CSS to the theme's default.
+  _webspark_featurescustom_wysiwyg_css($theme, $alt_theme = FALSE);
 
   // Log changes
   drupal_set_message('Disabled Innovation-themed blocks for <em>' . t($theme) .
@@ -324,4 +327,56 @@ function _webspark_featurescustom_admin_theme($form, $form_state) {
   $theme = $form_state['values']['admin_theme']; // new admin theme
   $theme_test_result = _webspark_featurescustom_web_standards_theme_check($theme, 0, TRUE);
   _webspark_featurescustom_act($theme, $theme_test_result);
+}
+
+/**
+ * Sets the CSS file paths to the new theme's defaults so the WYSIWYG can apply that styling.
+ * @param string $new_theme - New theme machine name
+ * @param bool $alt_theme - Is an alternate theme (not Web standards?). Defaults to FALSE.
+ */
+function _webspark_featurescustom_wysiwyg_css($new_theme, $alt_theme = FALSE) {
+  if (module_exists('wysiwyg')) {
+    $innovation_css_path = '%bprofiles/openasu/libraries/innovation_bootstrap/css/bootstrap.min.css,%bprofiles/openasu/themes/innovation/css/innovation-main.css,%bprofiles/openasu/themes/innovation/css/buttons.css,%bprofiles/openasu/themes/innovation/css/forms.css,%bprofiles/openasu/themes/innovation/css/nav.css,%bprofiles/openasu/themes/innovation/fonts/roboto/css/roboto.css,%bprofiles/openasu/modules/webspark_featurescustom/webspark_wysiwyg/css/webspark-wysiwyg.css';
+    $elpuente_css_path = '%bprofiles/openasu/themes/elpuente/css/elpuente.core-bootstrap.css,%bprofiles/openasu/themes/elpuente/css/admin.css,%bprofiles/openasu/themes/elpuente/css/maintenance-pages.css,%bprofiles/openasu/themes/elpuente/css/nav.css,%bprofiles/openasu/themes/elpuente/css/elpuente.custom.css,%bprofiles/openasu/themes/elpuente/css/elpuente.media-rules.css';
+    $alt_theme_css_path = '';
+    $settings = db_select('wysiwyg', 'w')
+      ->fields('w', array('settings'))
+      ->condition('format', 'panopoly_wysiwyg_text')
+      ->condition('editor', 'tinymce')
+      ->execute()
+      ->fetchField();
+    if (!empty($settings)) {
+      $settings = unserialize($settings);
+      if ($settings !== FALSE) {
+        if ($alt_theme === TRUE) { // Use the active theme's CSS for alternate themes
+          $settings['css_path'] = $alt_theme_css_path;
+          $settings['css_setting'] = 'theme';
+          $settings['css_theme'] = ''; // Active theme
+        } else {
+          $settings['css_path'] = ($new_theme === 'elpuente') ? $elpuente_css_path : $innovation_css_path;
+        }
+        $settings = serialize($settings);
+        db_update('wysiwyg')
+          ->fields(array('settings' => $settings))
+          ->condition('format', 'panopoly_wysiwyg_text')
+          ->condition('editor', 'tinymce')
+          ->execute();
+        flogger('theme_update', 'The CSS styling for @theme has been applied to the WYSIWYG'
+          . ' editor.',
+          array('@theme' => $new_theme),
+          WATCHDOG_INFO, TRUE);
+      } else {
+        // Data wasn't a well-formed, serialized array. Manual CSS paths need to be set.
+        flogger('theme_update', 'The WYSIWYG module\'s CSS path setting could not'
+          . ' be updated for the @theme theme, so styling within the WYSIWYG window may not match the theme.'
+          . ' Please check the CSS Path field vales at @url to see if your theme\'s CSS files are listed properly.',
+          array('@theme' => $new_theme,
+            '@url' => l('WYSIWYG settings', '/admin/config/content/wysiwyg/profile/panopoly_wysiwyg_text')),
+          WATCHDOG_WARNING, TRUE);
+      }
+    } else {
+      flogger('theme_update', 'The WYSIWYG profile data (called "WYSIWYG") could not be found.',
+        array(), WATCHDOG_NOTICE);
+    }
+  }
 }
