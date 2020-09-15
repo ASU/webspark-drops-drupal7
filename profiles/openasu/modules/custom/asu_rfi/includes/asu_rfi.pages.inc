@@ -1002,7 +1002,7 @@ function asu_rfi_long_form_data($form, &$form_state, $programs, $form_type) {
 
   $form['about_me']['country'] = _asu_rfi_form_elements_multiple_keys('about_me', 'country', FALSE, $country);
     // Long form customizations
-    $form['about_me']['country']['#required'] = TRUE;
+    // $form['about_me']['country']['#required'] = TRUE;
     $form['about_me']['country']['#states']['invisible'][':input[name="location"]']['value'] = 'online';
     $form['about_me']['country']['#states']['optional'][':input[name="location"]']['value'] = 'online';
     $form['about_me']['country']['#empty_option'] = t('- Select -');
@@ -1134,7 +1134,7 @@ function asu_rfi_long_form_data_validate($form, &$form_state) {
         form_set_error('student_type', 'I will be a future field required.');
       }
     }
-    if (empty($country)) {
+    if (empty($country) && $form_state['input']['location'] !== 'online') {
       form_set_error('country', 'The Country field is required.');
     }
     // validate zip code
