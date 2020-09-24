@@ -20,6 +20,8 @@
   #header > .container .row { margin-left: 0; margin-right: 0; }
   #header > .container .row .col-md-12 { padding-left: 0; padding-right: 0; }
   #header .container-fluid > .row > .col-md-12 { width: 100%; }
+  #header > .container #headerContainer .universal-nav > div { padding-right: 0; } /* Mobile header padding offset fix */
+  #header a { color: #191919; } /* Mobile header link color fix */
   .header__sitename { font-size: 15px; padding: 12px 15px; color: #fff; background: #484848; font-weight: 600; line-height: 12px; }
   .header__sitename a { color: #fff; }
   #asu_hdr_title_gen { white-space: normal; }

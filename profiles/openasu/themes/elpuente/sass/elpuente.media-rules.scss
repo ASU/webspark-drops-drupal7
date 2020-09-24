@@ -79,6 +79,11 @@
   #header .container-fluid > .row > .col-md-12 {
     width: 100%;
   }
+  // Mobile header link color fix
+  #header a
+  {
+    color: $ws2-gray-darkest;
+  }
   .header__sitename {
     font-size: 15px;
     padding: 12px 15px;
