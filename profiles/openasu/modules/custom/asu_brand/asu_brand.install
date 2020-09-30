@@ -211,22 +211,19 @@ function asu_brand_update_7203(&$sandbox) {
  */
 function asu_brand_update_7204(&$sandbox) {
   $header_weight = db_select('block', 'b')
-    ->condition('region', 'footer')
-    ->condition('theme', 'innovation')
-    ->condition('delta', 'mega_footer');
-  $header_weight->addExpression('SUM(b.weight)', 'weight'); // addExpression() Not chainable
+    ->condition('region', 'header')
+    ->condition('delta', 'mega_header');
+  $header_weight->addExpression('MIN(b.weight)', 'weight'); // addExpression() Not chainable
   $weight = $header_weight->execute()->fetchField();
   $header_weight = (!empty($weight)) ? (int) $weight - 1 : 0;
   // Global footer block
-  // Get weight from Innovation theme
+  // Get lowest weight from any theme
   $footer_weight = db_select('block', 'b')
-    ->fields('b', array('weight'))
     ->condition('region', 'footer')
-    ->condition('theme', 'innovation')
-    ->condition('delta', 'mega_footer')
-    ->execute()
-    ->fetchField();
-  $footer_weight = (!empty($footer_weight)) ? (int) $footer_weight + 1 : 1;
+    ->condition('delta', 'mega_footer');
+  $footer_weight->addExpression('MAX(b.weight)', 'weight'); // addExpression() Not chainable
+  $weight = $footer_weight->execute()->fetchField();
+  $footer_weight = (!empty($weight)) ? (int) $weight + 1 : 1;
   db_merge('block')
     ->key(array(
       'module' => 'asu_brand',
