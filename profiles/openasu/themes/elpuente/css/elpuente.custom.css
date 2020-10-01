@@ -173,14 +173,11 @@ a.btn, .btn { margin-top: 0.9375em; }
 a.btn.btn-lg, .btn.btn-lg { margin-top: 1.5em; }
 a.btn:hover, .btn:hover { border-bottom: transparent; }
 
-a.btn-default, .btn-default a, a.btn-primary, .btn-primary a { color: #fff; border-bottom-color: #8c1d40; }
-a.btn-default:hover, .btn-default a:hover, a.btn-primary:hover, .btn-primary a:hover { color: #fff; border-bottom-color: #8c1d40; }
+a.btn-default, .btn-default a, a.btn-primary, .btn-primary a, a.btn-blue, .btn-blue a { color: #fff; border-bottom-color: #8c1d40; }
+a.btn-default:hover, .btn-default a:hover, a.btn-primary:hover, .btn-primary a:hover, a.btn-blue:hover, .btn-blue a:hover { color: #fff; border-bottom-color: #8c1d40; }
 
-a.btn-secondary, .btn-secondary a, a.btn-blue, .btn-blue a { color: #191919; border-bottom-color: transparent; border-bottom: none; }
-a.btn-secondary:hover, .btn-secondary a:hover, a.btn-blue:hover, .btn-blue a:hover { color: #191919; border-bottom-color: transparent; border-bottom: none; }
-
-a.btn-gold, .btn-gold a { color: #fff; border-bottom-color: #8c1d40; }
-a.btn-gold:hover, .btn-gold a:hover { color: #fff; border-bottom-color: #8c1d40; }
+a.btn-secondary, .btn-secondary a, a.btn-gold, .btn-gold a { color: #191919; border-bottom-color: transparent; border-bottom: none; }
+a.btn-secondary:hover, .btn-secondary a:hover, a.btn-gold:hover, .btn-gold a:hover { color: #191919; border-bottom-color: transparent; border-bottom: none; }
 
 html { font-size: 100%; }
 

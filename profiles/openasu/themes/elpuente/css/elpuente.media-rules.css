@@ -7,11 +7,12 @@
 @media (min-width: 992px) { header[class^=css-] > .universal-nav { display: block; }
   header[class^=css-] > .primary-nav { display: none; }
   #ASUNavMenu { display: inherit; } }
-/* Default alternate desktop size: >= 992px */
+/* Default alternate desktop size: <= 992px */
 @media (max-width: 1199px) { .container { width: 100% !important; } }
 /* Default "Mobile size" <= 991px */
 @media (max-width: 991px) { .container { width: 100%; max-width: 992px; }
   #ASUNavMenu { display: none !important; }
+  #headerContainer .primary-nav .navbar-container a { border-bottom: 1px solid #d0d0d0; }
   h1, .h1 { margin-bottom: 3rem; font-size: 48px; }
   h1.page-title { margin-bottom: 0; padding-bottom: 0.75rem; }
   h2, .h2 { font-size: 34px; }
@@ -20,8 +21,7 @@
   #header > .container .row { margin-left: 0; margin-right: 0; }
   #header > .container .row .col-md-12 { padding-left: 0; padding-right: 0; }
   #header .container-fluid > .row > .col-md-12 { width: 100%; }
-  #header > .container #headerContainer .universal-nav > div { padding-right: 0; } /* Mobile header padding offset fix */
-  #header a { color: #191919; } /* Mobile header link color fix */
+  #header a { color: #191919; }
   .header__sitename { font-size: 15px; padding: 12px 15px; color: #fff; background: #484848; font-weight: 600; line-height: 12px; }
   .header__sitename a { color: #fff; }
   #asu_hdr_title_gen { white-space: normal; }

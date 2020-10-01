@@ -24,7 +24,7 @@
 }
 
 /*
- * Default alternate desktop size: >= 992px
+ * Default alternate desktop size: <= 992px
  */
 @media (max-width: $screen-md-max) {
   .container {
@@ -46,10 +46,18 @@
   #ASUNavMenu {
     display: none !important;
   }
+
+  #headerContainer {
+    .primary-nav {
+      .navbar-container a {
+        border-bottom: 1px solid $ws2-gray-light;
+      }
+    }
+  }
+
   h1, .h1 {
     margin-bottom: 3rem;
     font-size: $font-size-h1-mobile;
-//    line-height: 1.2;
   }
   h1.page-title {
     margin-bottom: 0;
@@ -57,7 +65,6 @@
   }
   h2, .h2 {
     font-size: $font-size-h2-mobile;
-//    line-height: 1.44;
   }
 
   .row .col-sm-6:nth-child(3),
