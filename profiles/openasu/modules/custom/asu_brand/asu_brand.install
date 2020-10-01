@@ -212,7 +212,7 @@ function asu_brand_update_7203(&$sandbox) {
 function asu_brand_update_7204(&$sandbox) {
   $header_weight = db_select('block', 'b')
     ->condition('region', 'header')
-    ->condition('delta', 'mega_header');
+    ->condition('delta', 'asu_brand_heade%', 'LIKE');
   $header_weight->addExpression('MIN(b.weight)', 'weight'); // addExpression() Not chainable
   $weight = $header_weight->execute()->fetchField();
   $header_weight = (!empty($weight)) ? (int) $weight - 1 : 0;
@@ -220,7 +220,7 @@ function asu_brand_update_7204(&$sandbox) {
   // Get lowest weight from any theme
   $footer_weight = db_select('block', 'b')
     ->condition('region', 'footer')
-    ->condition('delta', 'mega_footer');
+    ->condition('delta', 'asu_brand_foote%', 'LIKE');
   $footer_weight->addExpression('MAX(b.weight)', 'weight'); // addExpression() Not chainable
   $weight = $footer_weight->execute()->fetchField();
   $footer_weight = (!empty($weight)) ? (int) $weight + 1 : 1;
