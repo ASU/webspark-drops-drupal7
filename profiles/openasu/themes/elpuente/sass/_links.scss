@@ -11,9 +11,10 @@ a,
   }
 }
 
-#header a,
-#asu_footer a {
-  border-bottom: transparent;
+#header, #asu_footer {
+  a {
+    border-bottom: transparent;
+  }
 }
 
 a.btn, .btn {
@@ -26,8 +27,10 @@ a.btn, .btn {
   }
 }
 
+// MAROON
 a.btn-default, .btn-default a,
-a.btn-primary, .btn-primary a {
+a.btn-primary, .btn-primary a,
+a.btn-blue, .btn-blue a {
   color: #fff;
   border-bottom-color: $ws2-maroon;
   &:hover {
@@ -36,8 +39,9 @@ a.btn-primary, .btn-primary a {
   }
 }
 
+// GOLD
 a.btn-secondary, .btn-secondary a,
-a.btn-blue, .btn-blue a {
+a.btn-gold, .btn-gold a {
   color: $ws2-gray-darkest;
   border-bottom-color: transparent;
   border-bottom: none;
@@ -45,14 +49,5 @@ a.btn-blue, .btn-blue a {
     color: $ws2-gray-darkest;
     border-bottom-color: transparent;
     border-bottom: none;
-  }
-}
-
-a.btn-gold, .btn-gold a {
-  color: #fff;
-  border-bottom-color: $ws2-maroon;
-  &:hover {
-    color: #fff;
-    border-bottom-color: $ws2-maroon;
   }
 }

@@ -210,25 +210,31 @@ function asu_brand_update_7203(&$sandbox) {
  * @param $sandbox
  */
 function asu_brand_update_7204(&$sandbox) {
+  $header_weight = db_select('block', 'b')
+    ->condition('region', 'header')
+    ->condition('delta', 'asu_brand_heade%', 'LIKE');
+  $header_weight->addExpression('MIN(b.weight)', 'weight'); // addExpression() Not chainable
+  $weight = $header_weight->execute()->fetchField();
+  $header_weight = (!empty($weight)) ? (int) $weight - 1 : 0;
   // Global footer block
-  // Get weight from Innovation theme
-  $weight = db_select('block', 'b')
-    ->fields('b', array('weight'))
+  // Get lowest weight from any theme
+  $footer_weight = db_select('block', 'b')
     ->condition('region', 'footer')
-    ->condition('theme', 'innovation')
-    ->condition('delta', 'mega_footer')
-    ->execute()
-    ->fetchField();
-  $weight = (!empty($weight)) ? (int) $weight + 1 : 1;
+    ->condition('delta', 'asu_brand_foote%', 'LIKE');
+  $footer_weight->addExpression('MAX(b.weight)', 'weight'); // addExpression() Not chainable
+  $weight = $footer_weight->execute()->fetchField();
+  $footer_weight = (!empty($weight)) ? (int) $weight + 1 : 1;
   db_merge('block')
     ->key(array(
       'module' => 'asu_brand',
       'delta' => 'asu_brand_header_ws2',
       'theme' => 'elpuente',
+      'pages' => '',
     ))
     ->fields(array(
         'region' => 'header',
         'status' => '1',
+        'weight' => $header_weight,
       )
     )->execute();
   db_merge('block')
@@ -236,11 +242,12 @@ function asu_brand_update_7204(&$sandbox) {
       'module' => 'asu_brand',
       'delta' => 'asu_brand_footer_ws2',
       'theme' => 'elpuente',
+      'pages' => '',
     ))
     ->fields(array(
         'region' => 'footer',
         'status' => '1',
-        'weight' => $weight,
+        'weight' => $footer_weight,
       )
     )->execute();
 }

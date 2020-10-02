@@ -110,6 +110,7 @@ div.error {
 @import 'alerts';
 @import 'banners'; // FPP only
 @import 'cards';
+@import 'forms_ws2';
 // Alternate Element styles for 1) gray, 2) black, and 3) white --- IN PROGRESS
 @import 'altstyles';
 
@@ -168,6 +169,12 @@ div.error {
 .row {
   padding: 0;
   margin: 0;
+}
+
+// Button fix for heroes
+.hero-wrapper
+{
+  .btn { padding: 0.5rem 1rem; }
 }
 
 // Header and footer customizations (not already in Webspark Megamenu or elsewhere)

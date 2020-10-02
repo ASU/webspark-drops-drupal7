@@ -64,9 +64,11 @@ button, .button, .btn, a.btn, .btn a {
 // Primary button (WS2.0 - Maroon) - // Default button class added)
 //////////////////////////////////
 .btn-primary,
+.btn-blue,
 .btn-default,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default {
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default,
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue {
   @include buttons-style-base(#ffffff, $ws2-maroon);
   &:hover, &:focus, &:active {
     transform: scale($btn-scale);
@@ -86,12 +88,14 @@ button, .button, .btn, a.btn, .btn a {
   }
 }
 .open > .btn-primary.dropdown-toggle,
-.open > .btn-default.dropdown-toggle {
+.open > .btn-default.dropdown-toggle,
+.open > .btn-blue.dropdown-toggle {
   @include buttons-style-base($ws2-gray-lightest, $ws2-maroon);
   background-image: none;
 }
 fieldset[disabled] .btn-primary,
-fieldset[disabled] .btn-default {
+fieldset[disabled] .btn-default,
+fieldset[disabled] .btn-blue {
   opacity: $btn-disabled-opacity;
   &:hover, &:focus, &:active, &.active {
     opacity: $btn-disabled-opacity;
@@ -101,9 +105,7 @@ fieldset[disabled] .btn-default {
 // Secondary  (WS2.0 - Gray) button (WS1.0 Blue buttons will use this look - added that class)
 //////////////////////////////////
 .btn-secondary,
-.btn-blue,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue {
+.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary {
   @include buttons-style-base($ws2-gray-darkest, $ws2-gray);
   &:hover, &:focus, &:active {
     transform: scale($btn-scale);
@@ -119,13 +121,11 @@ fieldset[disabled] .btn-default {
     color: $ws2-gray-darkest;
   }
 }
-.open > .btn-secondary.dropdown-toggle,
-.open > .btn-blue.dropdown-toggle {
+.open > .btn-secondary.dropdown-toggle {
   @include buttons-style-base($ws2-gray-darkest, $ws2-gray);
   background-image: none;
 }
-fieldset[disabled] .btn-secondary,
-fieldset[disabled] .btn-blue {
+fieldset[disabled] .btn-secondary {
   opacity: $btn-disabled-opacity;
   &:hover, &:focus, &:active, &.active {
     opacity: $btn-disabled-opacity;
