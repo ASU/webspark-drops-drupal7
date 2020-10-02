@@ -2,6 +2,10 @@
  * Banners
  */
 
+// Import from El Puente theme
+@import "../../../../themes/elpuente/sass/variables";
+@import "../../../../themes/elpuente/sass/mixins/global";
+
 .pane-bundle-banners-ws2 {
   margin: 1rem 0;
   & > .pane-content {

@@ -388,25 +388,6 @@ table.bordered > caption + thead > tr:first-child > th, table.bordered > caption
 
 .alert:not([class*="alert-"]), div[class='alert alert-block'] { /* Catch-all for default alert class */ background-color: #fafafa; border-color: #d0d0d0; }
 
-/* Banners */
-.pane-bundle-banners-ws2 { margin: 1rem 0; }
-.pane-bundle-banners-ws2 > .pane-content { padding: 2rem 0; }
-.pane-bundle-banners-ws2 > .pane-content .field-name-field-banner-title-int { font-weight: normal; font-size: 24px; margin: 0.5rem 0; padding: 0; }
-.pane-bundle-banners-ws2.ws2-banner-success { background-color: #78be20; }
-.pane-bundle-banners-ws2.ws2-banner-success a:not(.btn) { color: #191919; border-bottom-color: #191919; }
-.pane-bundle-banners-ws2.ws2-banner-warning { background-color: #ff7f32; }
-.pane-bundle-banners-ws2.ws2-banner-warning a:not(.btn) { color: #191919; border-bottom-color: #191919; }
-.pane-bundle-banners-ws2.ws2-banner-info { background-color: #00a3e0; }
-.pane-bundle-banners-ws2.ws2-banner-info a:not(.btn) { color: #191919; border-bottom-color: #191919; }
-.pane-bundle-banners-ws2 .field-name-field-banner-color { display: none; }
-.pane-bundle-banners-ws2 .pane-content { position: relative; }
-.pane-bundle-banners-ws2 .pane-content .row > div:first-child { padding-left: 6rem; }
-.pane-bundle-banners-ws2 .pane-content .row > div:first-child:before { font-family: FontAwesome, sans-serif; font-size: 2rem; position: absolute; left: 0; top: 0; padding: 0 1.5rem; content: "\f0f3"; }
-.pane-bundle-banners-ws2 .pane-content .btn { padding-right: 1rem; padding-left: 1rem; }
-.pane-bundle-banners-ws2 .pane-content .banner-close a.close.close { background-color: #fff; color: #191919; font-size: 1.25em; font-weight: bold; opacity: 0.8; border: 1px solid #d0d0d0; padding: 0.25rem 0.5rem 0.25rem 0.58rem; margin: 0 0 16px 16px; border-radius: 1rem; height: 2rem; width: 2rem; }
-.pane-bundle-banners-ws2 .pane-content .banner-close a.close.close:hover { opacity: 1.0; color: #191919; border-bottom-color: #d0d0d0; cursor: pointer; }
-.pane-bundle-banners-ws2 .pane-content .banner-close a.close.close + p:empty { margin-top: -1rem; padding-top: 0; background-color: red !important; }
-
 .form-control { padding: 8px 16px; }
 
 /* Error alerts (form elements, others) */

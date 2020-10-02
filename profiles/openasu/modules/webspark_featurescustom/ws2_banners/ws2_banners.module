@@ -34,5 +34,7 @@ function ws2_banners_preprocess_fieldable_panels_pane(&$variables) {
   if (in_array('fieldable_panels_pane__banners_ws2', $variables['theme_hook_suggestions'])) {
     drupal_add_js(drupal_get_path('module', 'ws2_banners')
       . '/js/ws2_banners.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 98));
+    drupal_add_css(drupal_get_path('module', 'ws2_banners')
+      . '/css/ws2-banners.css', array('weight' => 99));
   }
 }
