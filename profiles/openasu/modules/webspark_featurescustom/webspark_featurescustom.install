@@ -479,3 +479,10 @@ function webspark_featurescustom_update_7018(&$sandbox) {
 function webspark_featurescustom_update_7019(&$sandbox) {
   variable_set('clean_url', 1);
 }
+
+/**
+ * Enable Web Standards 2.0 compliant Notification banners module
+ */
+function webspark_featurescustom_update_7020(&$sandbox) {
+  module_enable(array('ws2_banners'));
+}
