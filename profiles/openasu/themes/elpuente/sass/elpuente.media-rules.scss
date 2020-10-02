@@ -10,13 +10,18 @@
  */
 @media (min-width: $screen-md) {
   // From React components: Hide primary menu but show top gray bar.
-  header[class^=css-] {
-    & > .universal-nav {
+  header[class^=css-]
+  {
+    & > .universal-nav
+    {
       display: block;
     }
-    & > .primary-nav {
+    & > .primary-nav
+    {
       display: none;
     }
+
+    border-bottom: none;
   }
   #ASUNavMenu {
     display: inherit;

@@ -83,6 +83,9 @@ fieldset[disabled] .btn-gold:hover, fieldset[disabled] .btn-gold:focus, fieldset
 .btn-black.disabled, .btn-black.disabled:hover, .btn-black.disabled:focus, .btn-black.disabled:active, .btn-black.disabled.active, .btn-black[disabled], .btn-black[disabled]:hover, .btn-black[disabled]:focus, .btn-black[disabled]:active, .btn-black.active[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled]:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled]:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled]:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.active[disabled] { opacity: 0.5; }
 .btn-black .badge, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black .badge { color: #fafafa; }
 
+/* Button fix for heroes */
+.hero-wrapper .btn { padding: 0.5rem 1rem; }
+
 .open > .btn-black.dropdown-toggle { color: #fafafa; background-color: #191919; background-image: none; }
 
 fieldset[disabled] .btn-black { opacity: 0.5; }
@@ -164,10 +167,10 @@ fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fields
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container + li:not(.btn-container) { margin-left: 1.375em; }
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container + li:not(.btn-container) > a { margin-left: 0; padding-left: 1.375em; }
 
-a, .ui-widget-content a { border-bottom: 1px solid #8c1d40; text-decoration: none; color: #8c1d40; }
+a, .ui-widget-content a { text-decoration: none; color: #8c1d40; }
 a:hover, .ui-widget-content a:hover { color: #440E22; text-decoration: none; border-bottom: none; }
 
-#header a, #asu_footer a { border-bottom: transparent; }
+#asu_footer a { border-bottom: transparent; }
 
 a.btn, .btn { margin-top: 0.9375em; }
 a.btn.btn-lg, .btn.btn-lg { margin-top: 1.5em; }

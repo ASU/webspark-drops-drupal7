@@ -170,6 +170,12 @@ div.error {
   margin: 0;
 }
 
+// Button fix for heroes
+.hero-wrapper
+{
+  .btn { padding: 0.5rem 1rem; }
+}
+
 // Header and footer customizations (not already in Webspark Megamenu or elsewhere)
 @import 'header_custom';
 @import 'footer_custom';
