@@ -6,6 +6,7 @@
 /* Default alternate desktop size: >= 992px */
 @media (min-width: 992px) { header[class^=css-] > .universal-nav { display: block; }
   header[class^=css-] > .primary-nav { display: none; }
+  header[class^=css-] { border-bottom: none; }
   #ASUNavMenu { display: inherit; } }
 /* Default alternate desktop size: <= 992px */
 @media (max-width: 1199px) { .container { width: 100% !important; } }
