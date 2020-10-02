@@ -1,10 +1,24 @@
 /** main width settings */
 
-.section > .container .row-full .pane-bundle-asu-spotlight {
+#page-page .section > .container .row-full .pane-bundle-asu-spotlight {
   .pane-content {
     max-width: 100%;
     padding-left: 0;
     padding-right: 0;
+    ol.flex-control-nav > li:before,
+    ul.flex-direction-nav > li:before {
+      content: inherit;
+    }
+    .flex-viewport > ul.slides {
+      font-weight: inherit;
+      vertical-align: inherit;
+      & > li::before {
+        padding: inherit;
+        margin: inherit;
+        content: none;
+        font-size: inherit;
+      }
+    }
   }
   & > {
     h1.pane-title, h2.pane-title {
