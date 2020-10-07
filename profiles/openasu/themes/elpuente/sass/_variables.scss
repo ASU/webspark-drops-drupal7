@@ -243,7 +243,6 @@ $btn-min-width-sm:              4rem;
 
 $btn-max-width:                 17.5rem; // 280px
 
-
 //== Forms  --- WS2 DONE
 //
 //##
@@ -465,6 +464,9 @@ $nav-tabs-justified-active-link-border-color:     $body-bg;
 $nav-pills-border-radius:                   $border-radius-circle; // rounded
 $nav-pills-active-link-hover-bg:            $component-active-bg;
 $nav-pills-active-link-hover-color:         $component-active-color;
+
+//== Pane menu tree for sidebar navigation
+$pane-menu-tree-selectors: ".pane-menu-tree .menu-block-wrapper ul.menu";
 
 //== Pagination - WS2 DONE
 //
@@ -895,3 +897,7 @@ $container-large-desktop:      ((1140px + $grid-gutter-width));
 //** For `$screen-lg-min` and up.
 $container-lg:                 $container-large-desktop;
 
+/* MISCELLANEOUS
+------------------------------------------------ */
+//== Disabled DOM elements
+$disabled-selectors: "&.disabled, &.disabled:hover, &.disabled:focus, &.disabled:active, &.disabled.active, &[disabled], &[disabled]:hover, &[disabled]:focus, &[disabled]:active, &.active[disabled]";

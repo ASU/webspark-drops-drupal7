@@ -3,6 +3,8 @@
 /* Bootstrap variables list (defaults copied from bootstrap-sass version 3.1.0.2): Override Bootstrap variables below. */
 /*== Colors --- WS2 DONE
 -----------------------------------------------------*/
+/* MISCELLANEOUS
+------------------------------------------------ */
 /* Default alternate desktop size: >= 992px */
 @media (min-width: 992px) { header[class^=css-] { border-bottom: none; }
   header[class^=css-] > .universal-nav { display: block; }

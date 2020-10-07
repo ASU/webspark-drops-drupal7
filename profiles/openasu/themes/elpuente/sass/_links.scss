@@ -1,9 +1,10 @@
 // Links
-#{$ws2-content-styles-container-lite} a,
-#{$ws2-content-styles-container-lite} .ui-widget-content a {
+#{$ws2-content-styles-container-lite} :not(.btn) > a,
+#{$ws2-content-styles-container-lite} .ui-widget-content :not(.btn) > a {
   border-bottom: 1px solid $ws2-maroon;
   text-decoration: none;
   color: $ws2-maroon;
+  &:focus,
   &:hover {
     color: $link-hover-color;
     text-decoration: none;

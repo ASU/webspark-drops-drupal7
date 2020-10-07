@@ -2,40 +2,67 @@
 -------------------------------------------------------------- */
 @import "variables";
 
+$pane-menu-tree-selectors-btn: "#{$pane-menu-tree-selectors} li a.btn-pane-menu-tree";
+
 @mixin buttons-style-base($color, $background) {
   color: $color;
   background-color: $background;
+  border-bottom: none;
+  border-bottom-color: transparent;
 }
-
-#tabs { // shrink height of View/Edit/Devel buttons!!
-  .nav.nav-pills > li > a {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+@mixin buttons-bootstrap-pseudo($type, $color: $ws2-gray-lightest) {
+  .btn-#{$type}:hover,
+  .btn-#{$type}:focus,
+  .btn-#{$type}:active,
+  .btn-#{$type}.active,
+  .open > .btn-#{$type}.dropdown-toggle {
+    transform: scale($btn-scale);
+    background-image: none;
+    color: $color;
   }
 }
-// Hide TB Megamenu button
-.tb-megamenu-main-menu > button.btn-navbar.tb-megamenu-button {
-  display: none;
+@mixin buttons-bootstrap-pseudo-disabled($type) {
+  .btn-#{$type}.disabled,
+  .btn-#{$type}.disabled:hover,
+  .btn-#{$type}.disabled:focus,
+  .btn-#{$type}.disabled:active,
+  .btn-#{$type}.disabled.active,
+  .btn-#{$type}[disabled],
+  .btn-#{$type}[disabled]:hover,
+  .btn-#{$type}[disabled]:focus,
+  .btn-#{$type}[disabled]:active,
+  .btn-#{$type}.active[disabled],
+  fieldset[disabled] .btn-#{$type},
+  fieldset[disabled] .btn-#{$type}:hover,
+  fieldset[disabled] .btn-#{$type}:focus,
+  fieldset[disabled] .btn-#{$type}:active,
+  fieldset[disabled] .btn-#{$type}.active {
+    opacity: $btn-disabled-opacity;
+  }
+}
+@mixin buttons-bootstrap-badge($type, $color, $background) {
+  .btn-#{$type} .badge {
+    color: $color;
+    background-color: $background;
+  }
 }
 
-button, .button, .btn, a.btn, .btn a {
+///////////////////////////////////////////
+
+// GLOBAL BUTTON CSS
+////////////////////
+// Global Level 1
+button, .button, .btn, a.btn, .btn > a {
   @include ws2-global-transition();
   word-wrap: break-word;
-}
-
-// From links SASS - for button links
-a.btn, .btn {
-  margin-top: 0.9375em;
-  &.btn-lg {
-    margin-top: 1.5em;
-  }
   &:hover {
     border-bottom: transparent;
+    text-decoration: none;
   }
 }
-
+// Global Level 2a
 .btn,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree {   /* Button CSS for menu links added */
+#{$pane-menu-tree-selectors-btn} {
   -moz-user-select: none;
   background-image: none;
   border: 1px solid transparent;
@@ -46,7 +73,7 @@ a.btn, .btn {
   font-weight: bold;
   line-height: 1em;
   margin-bottom: 0;
-  max-width: $btn-max-width;
+  //max-width: $btn-max-width; // Disabled for now
   min-width: $btn-min-width; // default (not -med)
   padding: $padding-base-vertical/2 $padding-base-horizontal/2;
   text-align: center;
@@ -59,13 +86,14 @@ a.btn, .btn {
   &.active:focus {
     background-image: none;
     outline: 0 none;
-  }
-  &:hover, &:focus {
-    border: 1px solid transparent;
     text-decoration: none;
+  }
+  &:hover,
+  &:focus {
+    border: 1px solid transparent;
     transform: scale($btn-scale);
   }
-  &.disabled, &[disabled], fieldset[disabled] .btn {
+  #{$disabled-selectors} {
     box-shadow: none;
     cursor: not-allowed;
     opacity: $btn-disabled-opacity;
@@ -73,27 +101,49 @@ a.btn, .btn {
   }
 }
 
-// Primary button (WS2.0 - Maroon) - // Default button class added; WS1.0 blue buttons will use this color.
-
-// From links SASS file
-a.btn-default, .btn-default a,
-a.btn-primary, .btn-primary a,
-a.btn-blue, .btn-blue a {
-  color: #fff;
-  border-bottom-color: $ws2-maroon;
-  &:hover {
-    color: #fff;
-    border-bottom-color: $ws2-maroon;
+// Global 2B - Partials
+// Applies only to links with the .btn class on itself (not parents)
+// Doesn't apply to megamenu buttons
+a.btn,
+.btn {
+  margin-top: 0.9375em;
+  &.btn-lg {
+    margin-top: 1.5em;
+  }
+}
+// Applies only to links that have PARENT elements with the class attached to it.
+.btn > a {
+  &.btn-lg {
+    margin-top: 1.5em;
   }
 }
 
+// Individual button styles
+// (WS2.0 OFFICIAL)
 //////////////////////////////////
-.btn-primary,
-.btn-blue,
-.btn-default,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue {
+
+// Primary button (WS2.0 Maroon OFFICIAL)
+// * Default button class added
+// * WS1.0 blue buttons will use this color.
+// From links SASS file
+//a.btn-default, .btn-default > a,
+//a.btn-primary, .btn-primary > a,
+//a.btn-blue, .btn-blue > a {
+//  color: #fff;
+//  border-bottom-color: $ws2-maroon;
+//  &:hover {
+//    color: #fff;
+//    border-bottom-color: $ws2-maroon;
+//  }
+//}
+
+//////////////////////////////////
+.btn-default, a.btn-default, .btn-default > a,
+.btn-primary, a.btn-primary, .btn-primary > a,
+.btn-blue, a.btn-blue, .btn-blue > a,
+#{$pane-menu-tree-selectors-btn}.btn-primary,
+#{$pane-menu-tree-selectors-btn}.btn-default,
+#{$pane-menu-tree-selectors-btn}.btn-blue {
   @include buttons-style-base(#ffffff, $ws2-maroon);
   &:hover, &:focus, &:active {
     transform: scale($btn-scale);
@@ -104,8 +154,7 @@ a.btn-blue, .btn-blue a {
   &:active, &.active {
     background-image: none;
   }
-  &.disabled, &.disabled:hover, &.disabled:focus, &.disabled:active, &.disabled.active,
-  &[disabled], &[disabled]:hover, &[disabled]:focus, &[disabled]:active, &.active[disabled] {
+  #{$disabled-selectors} {
     opacity: $btn-disabled-opacity;
   }
   .badge {
@@ -127,34 +176,19 @@ fieldset[disabled] .btn-blue {
   }
 }
 
-// Secondary  (WS2.0 - Gray) button
+// Secondary (WS2.0 Gray OFFICIAL)
 //////////////////////////////////
-
-// From Links SASS file
-// GOLD
-a.btn-secondary, .btn-secondary a,
-a.btn-gold, .btn-gold a {
-  color: $ws2-gray-darkest;
-  border-bottom-color: transparent;
-  border-bottom: none;
-  &:hover {
-    color: $ws2-gray-darkest;
-    border-bottom-color: transparent;
-    border-bottom: none;
-  }
-}
-
-.btn-secondary,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary {
+.btn-secondary, a.btn-secondary, .btn-secondary > a,
+#{$pane-menu-tree-selectors-btn}.btn-secondary {
   @include buttons-style-base($ws2-gray-darkest, $ws2-gray);
   &:hover, &:focus, &:active {
+    color: $ws2-gray-darkest;
     transform: scale($btn-scale);
   }
   &:active, &.active {
     background-image: none;
   }
-  &.disabled, &.disabled:hover, &.disabled:focus, &.disabled:active, &.disabled.active,
-  &[disabled], &[disabled]:hover, &[disabled]:focus, &[disabled]:active, &.active[disabled] {
+  #{$disabled-selectors} {
     opacity: $btn-disabled-opacity;
   }
   .badge {
@@ -172,20 +206,19 @@ fieldset[disabled] .btn-secondary {
   }
 }
 
-// Gold (WS2.0 - Gold) button
+// Gold Button (WS2.0 Gold OFFICIAL)
 //////////////////////////////////
-
-.btn-gold,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-gold {
+.btn-gold, a.btn-gold, .btn-gold > a,
+#{$pane-menu-tree-selectors-btn}.btn-gold {
   @include buttons-style-base($ws2-gray-darkest, $ws2-gold);
   &:hover, &:focus, &:active {
     transform: scale($btn-scale);
+    color: $ws2-gray-darkest;
   }
   &:active, &.active {
     background-image: none;
   }
-  &.disabled, &.disabled:hover, &.disabled:focus, &.disabled:active, &.disabled.active,
-  &[disabled], &[disabled]:hover, &[disabled]:focus, &[disabled]:active, &.active[disabled] {
+  #{$disabled-selectors} {
     opacity: $btn-disabled-opacity;
   }
   .badge {
@@ -203,10 +236,10 @@ fieldset[disabled] .btn-gold {
   }
 }
 
-// Black button (WS2.0 - Black)
+// Black button (WS2.0 Black OFFICIAL)
 //////////////////////////////////
-.btn-black,
-.pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black {
+.btn-black, a.btn-black, .btn-black > a,
+#{$pane-menu-tree-selectors-btn}.btn-black {
   @include buttons-style-base($ws2-gray-lightest, $ws2-gray-darkest);
   &:hover, &:focus, &:active {
     transform: scale($btn-scale);
@@ -214,8 +247,7 @@ fieldset[disabled] .btn-gold {
   &:active, &.active {
     background-image: none;
   }
-  &.disabled, &.disabled:hover, &.disabled:focus, &.disabled:active, &.disabled.active,
-  &[disabled], &[disabled]:hover, &[disabled]:focus, &[disabled]:active, &.active[disabled] {
+  #{$disabled-selectors} {
     opacity: $btn-disabled-opacity;
   }
   .badge {
@@ -235,112 +267,49 @@ fieldset[disabled] .btn-black {
 
 /* NOT ASU Web standards 2.0 colors - Bootstrap and/or alert color classes */
 
-// Success button (WS2.0 - Green)
+// Bootstrap Success button (WS2.0 Green)
 //////////////////////////////////
 .btn-success {
-  background-color: $ws2-green;
-  color: #fff;
+  @include buttons-style-base($ws2-gray-lightest, $ws2-gray-darkest);
 }
-.btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .open > .btn-success.dropdown-toggle {
-  transform: scale($btn-scale);
-}
-.btn-success:active, .btn-success.active, .open > .btn-success.dropdown-toggle {
-  background-image: none;
-}
-.btn-success.disabled, .btn-success.disabled:hover, .btn-success.disabled:focus, .btn-success.disabled:active, .btn-success.disabled.active, .btn-success[disabled], .btn-success[disabled]:hover, .btn-success[disabled]:focus, .btn-success[disabled]:active, .btn-success.active[disabled], fieldset[disabled] .btn-success, fieldset[disabled] .btn-success:hover, fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:active, fieldset[disabled] .btn-success.active {
-  opacity: $btn-disabled-opacity;
-}
-.btn-success .badge {
-  background-color: #fff;
-  color: $ws2-green;
-}
+@include buttons-bootstrap-pseudo('success');
+@include buttons-bootstrap-pseudo-disabled('success');
+@include buttons-bootstrap-badge('success', $ws2-green, '#fff');
 
-// Info button (WS2.0 - WAS Blue)
+// Bootstrap Info button (WS2.0 Blue)
 //////////////////////////////////
 .btn-info {
-  background-color: $ws2-blue;
-  border-color: $ws2-blue;
-  color: #fff;
+  @include buttons-style-base($ws2-gray-lightest, $ws2-blue);
 }
-.btn-info:hover, .btn-info:focus, .btn-info:active, .btn-info.active, .open > .btn-info.dropdown-toggle {
-  transform: scale($btn-scale);
-}
-.btn-info:active, .btn-info.active, .open > .btn-info.dropdown-toggle {
-  background-image: none;
-}
-.btn-info.disabled, .btn-info.disabled:hover, .btn-info.disabled:focus, .btn-info.disabled:active, .btn-info.disabled.active, .btn-info[disabled], .btn-info[disabled]:hover, .btn-info[disabled]:focus, .btn-info[disabled]:active, .btn-info.active[disabled], fieldset[disabled] .btn-info, fieldset[disabled] .btn-info:hover, fieldset[disabled] .btn-info:focus, fieldset[disabled] .btn-info:active, fieldset[disabled] .btn-info.active {
-  opacity: $btn-disabled-opacity;
-}
-.btn-info .badge {
-  background-color: #fff;
-  color: $ws2-blue;
-}
+@include buttons-bootstrap-pseudo('info');
+@include buttons-bootstrap-pseudo-disabled('info');
+@include buttons-bootstrap-badge('info', $ws2-blue, '#fff');
 
-// Warning button (WS2.0 - Gold)
+// Bootstrap Warning button (using WS2.0 Gold)
 //////////////////////////////////
 .btn-warning {
-  background-color: $ws2-orange;
-  border-color: $ws2-orange;
-  color: $ws2-gray-darkest;
+  @include buttons-style-base($ws2-gray-darkest, $ws2-orange);
 }
-.btn-warning:hover, .btn-warning:focus, .btn-warning:active, .btn-warning.active, .open > .btn-warning.dropdown-toggle {
-  transform: scale($btn-scale);
-}
-.btn-warning:active, .btn-warning.active, .open > .btn-warning.dropdown-toggle {
-  background-image: none;
-}
-.btn-warning.disabled, .btn-warning.disabled:hover, .btn-warning.disabled:focus, .btn-warning.disabled:active, .btn-warning.disabled.active, .btn-warning[disabled], .btn-warning[disabled]:hover, .btn-warning[disabled]:focus, .btn-warning[disabled]:active, .btn-warning.active[disabled], fieldset[disabled] .btn-warning, fieldset[disabled] .btn-warning:hover, fieldset[disabled] .btn-warning:focus, fieldset[disabled] .btn-warning:active, fieldset[disabled] .btn-warning.active {
-  opacity: $btn-disabled-opacity;
-}
-.btn-warning .badge {
-  background-color: $ws2-gray-darkest;
-  color: $ws2-gold;
-}
+@include buttons-bootstrap-pseudo('warning', $ws2-gray-darkest);
+@include buttons-bootstrap-pseudo-disabled('warning');
+@include buttons-bootstrap-badge('warning', $ws2-gold, $ws2-gray-darkest);
 
-// Secondary button (WS2.0 - Maroon)
+// Bootstrap Secondary button (using WS2.0 Maroon)
 //////////////////////////////////
 .btn-danger {
-  background-color: #ec5937;
-  border-color: #ad2e10;
-  color: #fff;
+  @include buttons-style-base($ws2-gray-lightest, $ws2-maroon);
 }
-.btn-danger:hover, .btn-danger:focus, .btn-danger:active, .btn-danger.active, .open > .btn-danger.dropdown-toggle {
-  transform: scale($btn-scale);
-}
-.btn-danger:active, .btn-danger.active, .open > .btn-danger.dropdown-toggle {
-  background-image: none;
-}
-.btn-danger.disabled, .btn-danger.disabled:hover, .btn-danger.disabled:focus, .btn-danger.disabled:active, .btn-danger.disabled.active, .btn-danger[disabled], .btn-danger[disabled]:hover, .btn-danger[disabled]:focus, .btn-danger[disabled]:active, .btn-danger.active[disabled], fieldset[disabled] .btn-danger, fieldset[disabled] .btn-danger:hover, fieldset[disabled] .btn-danger:focus, fieldset[disabled] .btn-danger:active, fieldset[disabled] .btn-danger.active {
-  opacity: $btn-disabled-opacity;
-}
-.btn-danger .badge {
-  background-color: #fff;
-  color: #ec5937;
-}
+@include buttons-bootstrap-pseudo('danger');
+@include buttons-bootstrap-pseudo-disabled('danger');
+@include buttons-bootstrap-badge('danger', $ws2-gray-lightest, $ws2-maroon);
 
-// "Link" button (WS2.0 - Maroon)
+// Bootstrap "Link" button (using WS2.0 Maroon)
 //////////////////////////////////
 .btn-link {
-  border-radius: 0;
-  color: $ws2-maroon;
-  cursor: pointer;
-  font-weight: normal;
+  @include buttons-style-base($ws2-gray-lightest, $ws2-maroon);
 }
-.btn-link, .btn-link:active, .btn-link[disabled], fieldset[disabled] .btn-link {
-  background-color: transparent;
-  box-shadow: none;
-}
-.btn-link, .btn-link:hover, .btn-link:focus, .btn-link:active {
-  border-color: transparent;
-}
-.btn-link:hover, .btn-link:focus {
-  background-color: transparent;
-  color: $link-hover-color;
-  text-decoration: underline;
-}
-.btn-link[disabled]:hover, .btn-link[disabled]:focus, fieldset[disabled] .btn-link:hover, fieldset[disabled] .btn-link:focus {
-  opacity: $btn-disabled-opacity;
-}
+@include buttons-bootstrap-pseudo('link', $ws2-maroon);
+@include buttons-bootstrap-pseudo-disabled('link');
 
 // Alternative buttons - Sizes, etc.
 ///////////////////////////////////
@@ -371,6 +340,7 @@ fieldset[disabled] .btn-black {
 .btn-tag {
   background-color: $ws2-gray-lighter;
   border-color: $ws2-gray-lighter;
+  color: $ws2-gray-darkest;
   font-weight: normal;
 }
 
@@ -378,9 +348,9 @@ fieldset[disabled] .btn-black {
 .btn-block {
   display: block;
   width: 100%;
-}
-.btn-block + .btn-block {
-  margin-top: 15px;
+  & + .btn-block {
+    margin-top: 15px;
+  }
 }
 
 .button.browse {
@@ -396,9 +366,9 @@ fieldset[disabled] .btn-black {
   outline: medium none;
   padding: 8px 13px;
   text-decoration: none;
-}
-.button.browse:hover {
-  background: -moz-linear-gradient(center bottom , #c5c5c5 0%, #fafafa 100%) repeat scroll 0 0 #e6e6e6;
+  &:hover {
+    background: -moz-linear-gradient(center bottom , #c5c5c5 0%, #fafafa 100%) repeat scroll 0 0 #e6e6e6;
+  }
 }
 
 /* Buttons placed in the LH (secondary) menu */
@@ -431,4 +401,17 @@ fieldset[disabled] .btn-black {
       }
     }
   }
+}
+
+// MISC
+// Shrink height of View/Edit/Devel buttons!!
+#tabs {
+  .nav.nav-pills > li > a {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
+// Hide TB Megamenu button
+.tb-megamenu-main-menu > button.btn-navbar.tb-megamenu-button {
+  display: none;
 }
