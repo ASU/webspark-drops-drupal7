@@ -43,7 +43,10 @@ img.img-testimonial-small {
     &.ws2-element-gray li:before {
       color: $text-color;
     }
-    & > ul, & > ol {
+    & > li > ul,
+    & > li > ol,
+    & > ul,
+    & > ol {
       padding-left: 2em;
     }
   }

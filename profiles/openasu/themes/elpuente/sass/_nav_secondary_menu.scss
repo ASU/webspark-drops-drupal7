@@ -3,8 +3,8 @@
 
 // Styles for primary (main-menu) && secondary menu
 ///////////////////////
-.pane-system-main-menu,
-.pane-menu-tree {
+#{$ws2-content-styles-container} .pane-system-main-menu,
+#{$ws2-content-styles-container} .pane-menu-tree {
   border-top: $padding-small-vertical solid $ws2-maroon;
   margin-bottom: 3em;
   padding: 2em 0;
@@ -58,14 +58,14 @@
       }
       &.expanded {
         span {
-          margin-top:1.4rem;  
+          margin-top: 1.4rem;
         }
         ul.menu {
           li.expanded span {
-            margin-top:0rem;
+            margin-top: 0;
           }
           &:after {
-            padding-top:0.4rem;
+            padding-top: 0.4rem;
           }
         }
       }
@@ -90,7 +90,7 @@
 
 // ONLY secondary menu
 ///////////////////////
-.pane-menu-tree {
+#{$ws2-content-styles-container} .pane-menu-tree {
   margin-top: 1.5em;
   border: none;
   ul {
@@ -224,14 +224,14 @@
 }
 
 span.nolink {
-  display: block; 
+  display: block;
   font-size: 1.1rem;
   letter-spacing: -.035em;
   font-weight: 700;
-  text-align: left; 
-  line-height: calc(100% + 0.12em); 
-  opacity: 1; 
-  margin: 1rem 2.5rem 1rem 2.5rem;     
+  text-align: left;
+  line-height: calc(100% + 0.12em);
+  opacity: 1;
+  margin: 1rem 2.5rem 1rem 2.5rem;
 }
 
 /* WEBSPARK-856 - Apply max width and custom margin/padding to LH menu in 100% wide regions */

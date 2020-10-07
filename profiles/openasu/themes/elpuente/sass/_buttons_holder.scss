@@ -22,6 +22,18 @@ button, .button, .btn, a.btn, .btn a {
   @include ws2-global-transition();
   word-wrap: break-word;
 }
+
+// From links SASS - for button links
+a.btn, .btn {
+  margin-top: 0.9375em;
+  &.btn-lg {
+    margin-top: 1.5em;
+  }
+  &:hover {
+    border-bottom: transparent;
+  }
+}
+
 .btn,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree {   /* Button CSS for menu links added */
   -moz-user-select: none;
@@ -61,7 +73,20 @@ button, .button, .btn, a.btn, .btn a {
   }
 }
 
-// Primary button (WS2.0 - Maroon) - // Default button class added)
+// Primary button (WS2.0 - Maroon) - // Default button class added; WS1.0 blue buttons will use this color.
+
+// From links SASS file
+a.btn-default, .btn-default a,
+a.btn-primary, .btn-primary a,
+a.btn-blue, .btn-blue a {
+  color: #fff;
+  border-bottom-color: $ws2-maroon;
+  &:hover {
+    color: #fff;
+    border-bottom-color: $ws2-maroon;
+  }
+}
+
 //////////////////////////////////
 .btn-primary,
 .btn-blue,
@@ -102,8 +127,23 @@ fieldset[disabled] .btn-blue {
   }
 }
 
-// Secondary  (WS2.0 - Gray) button (WS1.0 Blue buttons will use this look - added that class)
+// Secondary  (WS2.0 - Gray) button
 //////////////////////////////////
+
+// From Links SASS file
+// GOLD
+a.btn-secondary, .btn-secondary a,
+a.btn-gold, .btn-gold a {
+  color: $ws2-gray-darkest;
+  border-bottom-color: transparent;
+  border-bottom: none;
+  &:hover {
+    color: $ws2-gray-darkest;
+    border-bottom-color: transparent;
+    border-bottom: none;
+  }
+}
+
 .btn-secondary,
 .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary {
   @include buttons-style-base($ws2-gray-darkest, $ws2-gray);
@@ -215,7 +255,7 @@ fieldset[disabled] .btn-black {
   color: $ws2-green;
 }
 
-// Info button (WS2.0 - Blue)
+// Info button (WS2.0 - WAS Blue)
 //////////////////////////////////
 .btn-info {
   background-color: $ws2-blue;

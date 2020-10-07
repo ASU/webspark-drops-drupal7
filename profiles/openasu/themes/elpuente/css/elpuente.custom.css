@@ -38,10 +38,17 @@ div.error label { padding-left: 2em; }
 
 button, .button, .btn, a.btn, .btn a { transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; word-wrap: break-word; }
 
+a.btn, .btn { margin-top: 0.9375em; }
+a.btn.btn-lg, .btn.btn-lg { margin-top: 1.5em; }
+a.btn:hover, .btn:hover { border-bottom: transparent; }
+
 .btn, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree { /* Button CSS for menu links added */ -moz-user-select: none; background-image: none; border: 1px solid transparent; border-radius: 32px; cursor: pointer; display: inline-block; font-size: 1em; font-weight: bold; line-height: 1em; margin-bottom: 0; max-width: 17.5rem; min-width: 5rem; padding: 8px 8px; text-align: center; vertical-align: middle; white-space: nowrap; }
 .btn.active, .btn:focus, .btn:active, .btn:active:focus, .btn.active:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:active:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.active:focus { background-image: none; outline: 0 none; }
 .btn:hover, .btn:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:focus { border: 1px solid transparent; text-decoration: none; transform: scale(1.1); }
 .btn.disabled, .btn[disabled], .btn fieldset[disabled] .btn, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.disabled, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree fieldset[disabled] .btn { box-shadow: none; cursor: not-allowed; opacity: 0.5; pointer-events: none; }
+
+a.btn-default, .btn-default a, a.btn-primary, .btn-primary a, a.btn-blue, .btn-blue a { color: #fff; border-bottom-color: #8c1d40; }
+a.btn-default:hover, .btn-default a:hover, a.btn-primary:hover, .btn-primary a:hover, a.btn-blue:hover, .btn-blue a:hover { color: #fff; border-bottom-color: #8c1d40; }
 
 .btn-primary, .btn-blue, .btn-default, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue { color: #ffffff; background-color: #8c1d40; }
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-blue:hover, .btn-blue:focus, .btn-blue:active, .btn-default:hover, .btn-default:focus, .btn-default:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-primary:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-default:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-blue:active { transform: scale(1.1); }
@@ -54,6 +61,9 @@ button, .button, .btn, a.btn, .btn a { transition: all 0.5s cubic-bezier(0.19, 1
 
 fieldset[disabled] .btn-primary, fieldset[disabled] .btn-default, fieldset[disabled] .btn-blue { opacity: 0.5; }
 fieldset[disabled] .btn-primary:hover, fieldset[disabled] .btn-primary:focus, fieldset[disabled] .btn-primary:active, fieldset[disabled] .btn-primary.active, fieldset[disabled] .btn-default:hover, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default:active, fieldset[disabled] .btn-default.active, fieldset[disabled] .btn-blue:hover, fieldset[disabled] .btn-blue:focus, fieldset[disabled] .btn-blue:active, fieldset[disabled] .btn-blue.active { opacity: 0.5; }
+
+a.btn-secondary, .btn-secondary a, a.btn-gold, .btn-gold a { color: #191919; border-bottom-color: transparent; border-bottom: none; }
+a.btn-secondary:hover, .btn-secondary a:hover, a.btn-gold:hover, .btn-gold a:hover { color: #191919; border-bottom-color: transparent; border-bottom: none; }
 
 .btn-secondary, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary { color: #191919; background-color: #bfbfbf; }
 .btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-secondary:active { transform: scale(1.1); }
@@ -82,9 +92,6 @@ fieldset[disabled] .btn-gold:hover, fieldset[disabled] .btn-gold:focus, fieldset
 .btn-black:active, .btn-black.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.active { background-image: none; }
 .btn-black.disabled, .btn-black.disabled:hover, .btn-black.disabled:focus, .btn-black.disabled:active, .btn-black.disabled.active, .btn-black[disabled], .btn-black[disabled]:hover, .btn-black[disabled]:focus, .btn-black[disabled]:active, .btn-black.active[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.disabled.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled]:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled]:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black[disabled]:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black.active[disabled] { opacity: 0.5; }
 .btn-black .badge, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.btn-black .badge { color: #fafafa; }
-
-/* Button fix for heroes */
-.hero-wrapper .btn { padding: 0.5rem 1rem; }
 
 .open > .btn-black.dropdown-toggle { color: #fafafa; background-color: #191919; background-image: none; }
 
@@ -167,20 +174,10 @@ fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fields
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container + li:not(.btn-container) { margin-left: 1.375em; }
 .pane-menu-tree .menu-block-wrapper nav[aria-label="Secondary"] > ul.menu ul.menu li.btn-container + li:not(.btn-container) > a { margin-left: 0; padding-left: 1.375em; }
 
-a, .ui-widget-content a { text-decoration: none; color: #8c1d40; }
-a:hover, .ui-widget-content a:hover { color: #440E22; text-decoration: none; border-bottom: none; }
+.region-content #page-page a, .region-content #page-page .ui-widget-content a { border-bottom: 1px solid #8c1d40; text-decoration: none; color: #8c1d40; }
+.region-content #page-page a:hover, .region-content #page-page .ui-widget-content a:hover { color: #440E22; text-decoration: none; border-bottom: none; }
 
-#asu_footer a { border-bottom: transparent; }
-
-a.btn, .btn { margin-top: 0.9375em; }
-a.btn.btn-lg, .btn.btn-lg { margin-top: 1.5em; }
-a.btn:hover, .btn:hover { border-bottom: transparent; }
-
-a.btn-default, .btn-default a, a.btn-primary, .btn-primary a, a.btn-blue, .btn-blue a { color: #fff; border-bottom-color: #8c1d40; }
-a.btn-default:hover, .btn-default a:hover, a.btn-primary:hover, .btn-primary a:hover, a.btn-blue:hover, .btn-blue a:hover { color: #fff; border-bottom-color: #8c1d40; }
-
-a.btn-secondary, .btn-secondary a, a.btn-gold, .btn-gold a { color: #191919; border-bottom-color: transparent; border-bottom: none; }
-a.btn-secondary:hover, .btn-secondary a:hover, a.btn-gold:hover, .btn-gold a:hover { color: #191919; border-bottom-color: transparent; border-bottom: none; }
+#header a, #asu_footer a { border-bottom: transparent; }
 
 html { font-size: 100%; }
 
@@ -269,7 +266,7 @@ img.img-testimonial-small { clip-path: circle(90px); }
 .region-content #page-page ul li:last-child, .region-content #page-page ol li:last-child { padding-bottom: 0; }
 .region-content #page-page ul.ws2-element-maroon li:before, .region-content #page-page ol.ws2-element-maroon li:before { color: #8c1d40; }
 .region-content #page-page ul.ws2-element-gray li:before, .region-content #page-page ol.ws2-element-gray li:before { color: #191919; }
-.region-content #page-page ul > ul, .region-content #page-page ul > ol, .region-content #page-page ol > ul, .region-content #page-page ol > ol { padding-left: 2em; }
+.region-content #page-page ul > li > ul, .region-content #page-page ul > li > ol, .region-content #page-page ul > ul, .region-content #page-page ul > ol, .region-content #page-page ol > li > ul, .region-content #page-page ol > li > ol, .region-content #page-page ol > ul, .region-content #page-page ol > ol { padding-left: 2em; }
 .region-content #page-page ul li:before { padding: 0 2.75em 0 0; margin: 0 -2em 0 0; content: "•"; font-size: 2em; }
 .region-content #page-page ul ul > li:before { content: "◦"; }
 .region-content #page-page ul ul ul > li:before { content: "•"; }
@@ -493,6 +490,8 @@ div.ctools-modal-content .dependent-options { padding-left: 2em; }
 .section > .container .row-full .pane-bundle-asu-spotlight [class^="pane-"] { width: 100% !important; padding-left: 0; padding-right: 0; max-width: none !important; margin-left: 0; margin-right: 0; }
 
 .row { padding: 0; margin: 0; }
+
+.hero-wrapper .btn { padding: 0.5rem 1rem; }
 
 #asu_hdr #asu_universal_nav_new .icn { box-sizing: content-box; }
 

@@ -1,6 +1,6 @@
 // Links
-a,
-.ui-widget-content a {
+#{$ws2-content-styles-container} a,
+#{$ws2-content-styles-container} .ui-widget-content a {
   border-bottom: 1px solid $ws2-maroon;
   text-decoration: none;
   color: $ws2-maroon;
@@ -14,40 +14,5 @@ a,
 #header, #asu_footer {
   a {
     border-bottom: transparent;
-  }
-}
-
-a.btn, .btn {
-  margin-top: 0.9375em;
-  &.btn-lg {
-    margin-top: 1.5em;
-  }
-  &:hover {
-    border-bottom: transparent;
-  }
-}
-
-// MAROON
-a.btn-default, .btn-default a,
-a.btn-primary, .btn-primary a,
-a.btn-blue, .btn-blue a {
-  color: #fff;
-  border-bottom-color: $ws2-maroon;
-  &:hover {
-    color: #fff;
-    border-bottom-color: $ws2-maroon;
-  }
-}
-
-// GOLD
-a.btn-secondary, .btn-secondary a,
-a.btn-gold, .btn-gold a {
-  color: $ws2-gray-darkest;
-  border-bottom-color: transparent;
-  border-bottom: none;
-  &:hover {
-    color: $ws2-gray-darkest;
-    border-bottom-color: transparent;
-    border-bottom: none;
   }
 }

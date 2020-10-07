@@ -24,7 +24,7 @@
 
 /* Nav pills --------------------------------------------- */
 .nav-pills > li { float: left; }
-.nav-pills > li > a { border: 0 none; border-radius: 32px; max-width: 17.5rem; min-width: 5rem; text-align: center; font-weight: bold; letter-spacing: -0.25px; }
+.nav-pills > li > a { border: 0 none; border-radius: 32px; min-width: 5rem; text-align: center; font-weight: bold; letter-spacing: -0.25px; }
 .nav-pills > li > li + li { margin-left: 0.125em; }
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus { color: #fff; background-color: #8c1d40; }
 .nav-pills > li.active > a:focus { outline: 2px solid #191919; }
@@ -106,45 +106,45 @@ body #content .ui-tabs .ui-tabs-nav li a { margin-left: 0; border-bottom: transp
 
 /* =SIDEBAR MENUS
 -------------------------------------------------------------- */
-.pane-system-main-menu, .pane-menu-tree { border-top: 8px solid #8c1d40; margin-bottom: 3em; padding: 2em 0; position: relative; z-index: 0; }
-.pane-system-main-menu h2, .pane-menu-tree h2 { font-size: 1.3125em; }
-.pane-system-main-menu ul.menu, .pane-menu-tree ul.menu { padding-left: 0; }
-.pane-system-main-menu ul.menu li, .pane-menu-tree ul.menu li { list-style-type: none; margin: 0; padding: 0; }
-.pane-system-main-menu ul.menu li a, .pane-menu-tree ul.menu li a { background-color: #fff; border-top: 1px solid #d0d0d0; border-bottom: none; display: block; padding: 0.625em 0.3125em; color: #8c1d40; font-weight: 200; text-decoration: none; font-size: 1.125em; }
-.pane-system-main-menu ul.menu li a:hover, .pane-menu-tree ul.menu li a:hover { background-color: #fafafa; font-weight: normal; }
-.pane-system-main-menu ul.menu li li a, .pane-menu-tree ul.menu li li a { padding-left: 1.375em; }
-.pane-system-main-menu ul.menu li li li a, .pane-menu-tree ul.menu li li li a { padding-left: 2.75em; }
-.pane-system-main-menu ul.menu li ul li ul li a, .pane-menu-tree ul.menu li ul li ul li a { margin: 0 1.5rem 0 3.5rem; }
-.pane-system-main-menu ul.menu li a.active, .pane-system-main-menu ul.menu li.active a, .pane-system-main-menu ul.menu li.active > a, .pane-system-main-menu ul.menu li.active-trail > a, .pane-menu-tree ul.menu li a.active, .pane-menu-tree ul.menu li.active a, .pane-menu-tree ul.menu li.active > a, .pane-menu-tree ul.menu li.active-trail > a { font-weight: normal; }
-.pane-system-main-menu ul.menu li.expanded, .pane-system-main-menu ul.menu li.collapsed, .pane-system-main-menu ul.menu li.leaf, .pane-menu-tree ul.menu li.expanded, .pane-menu-tree ul.menu li.collapsed, .pane-menu-tree ul.menu li.leaf { list-style-image: none; }
-.pane-system-main-menu ul.menu li.expanded span, .pane-menu-tree ul.menu li.expanded span { margin-top: 1.4rem; }
-.pane-system-main-menu ul.menu li.expanded ul.menu li.expanded span, .pane-menu-tree ul.menu li.expanded ul.menu li.expanded span { margin-top: 0rem; }
-.pane-system-main-menu ul.menu li.expanded ul.menu:after, .pane-menu-tree ul.menu li.expanded ul.menu:after { padding-top: 0.4rem; }
-.pane-system-main-menu:before, .pane-menu-tree:before { border: none; content: ""; display: block; height: 100%; left: 0; position: absolute; top: 0; width: 100%; z-index: -1; }
-.pane-system-main-menu .pane-system-main-menu ul.menu li a:focus, .pane-system-main-menu .pane-menu-tree ul.menu li a:focus, .pane-menu-tree .pane-system-main-menu ul.menu li a:focus, .pane-menu-tree .pane-menu-tree ul.menu li a:focus { outline: 0.125em solid #191919; }
+.region-content #page-page .pane-system-main-menu, .region-content #page-page .pane-menu-tree { border-top: 8px solid #8c1d40; margin-bottom: 3em; padding: 2em 0; position: relative; z-index: 0; }
+.region-content #page-page .pane-system-main-menu h2, .region-content #page-page .pane-menu-tree h2 { font-size: 1.3125em; }
+.region-content #page-page .pane-system-main-menu ul.menu, .region-content #page-page .pane-menu-tree ul.menu { padding-left: 0; }
+.region-content #page-page .pane-system-main-menu ul.menu li, .region-content #page-page .pane-menu-tree ul.menu li { list-style-type: none; margin: 0; padding: 0; }
+.region-content #page-page .pane-system-main-menu ul.menu li a, .region-content #page-page .pane-menu-tree ul.menu li a { background-color: #fff; border-top: 1px solid #d0d0d0; border-bottom: none; display: block; padding: 0.625em 0.3125em; color: #8c1d40; font-weight: 200; text-decoration: none; font-size: 1.125em; }
+.region-content #page-page .pane-system-main-menu ul.menu li a:hover, .region-content #page-page .pane-menu-tree ul.menu li a:hover { background-color: #fafafa; font-weight: normal; }
+.region-content #page-page .pane-system-main-menu ul.menu li li a, .region-content #page-page .pane-menu-tree ul.menu li li a { padding-left: 1.375em; }
+.region-content #page-page .pane-system-main-menu ul.menu li li li a, .region-content #page-page .pane-menu-tree ul.menu li li li a { padding-left: 2.75em; }
+.region-content #page-page .pane-system-main-menu ul.menu li ul li ul li a, .region-content #page-page .pane-menu-tree ul.menu li ul li ul li a { margin: 0 1.5rem 0 3.5rem; }
+.region-content #page-page .pane-system-main-menu ul.menu li a.active, .region-content #page-page .pane-system-main-menu ul.menu li.active a, .region-content #page-page .pane-system-main-menu ul.menu li.active > a, .region-content #page-page .pane-system-main-menu ul.menu li.active-trail > a, .region-content #page-page .pane-menu-tree ul.menu li a.active, .region-content #page-page .pane-menu-tree ul.menu li.active a, .region-content #page-page .pane-menu-tree ul.menu li.active > a, .region-content #page-page .pane-menu-tree ul.menu li.active-trail > a { font-weight: normal; }
+.region-content #page-page .pane-system-main-menu ul.menu li.expanded, .region-content #page-page .pane-system-main-menu ul.menu li.collapsed, .region-content #page-page .pane-system-main-menu ul.menu li.leaf, .region-content #page-page .pane-menu-tree ul.menu li.expanded, .region-content #page-page .pane-menu-tree ul.menu li.collapsed, .region-content #page-page .pane-menu-tree ul.menu li.leaf { list-style-image: none; }
+.region-content #page-page .pane-system-main-menu ul.menu li.expanded span, .region-content #page-page .pane-menu-tree ul.menu li.expanded span { margin-top: 1.4rem; }
+.region-content #page-page .pane-system-main-menu ul.menu li.expanded ul.menu li.expanded span, .region-content #page-page .pane-menu-tree ul.menu li.expanded ul.menu li.expanded span { margin-top: 0; }
+.region-content #page-page .pane-system-main-menu ul.menu li.expanded ul.menu:after, .region-content #page-page .pane-menu-tree ul.menu li.expanded ul.menu:after { padding-top: 0.4rem; }
+.region-content #page-page .pane-system-main-menu:before, .region-content #page-page .pane-menu-tree:before { border: none; content: ""; display: block; height: 100%; left: 0; position: absolute; top: 0; width: 100%; z-index: -1; }
+.region-content #page-page .pane-system-main-menu .pane-system-main-menu ul.menu li a:focus, .region-content #page-page .pane-system-main-menu .pane-menu-tree ul.menu li a:focus, .region-content #page-page .pane-menu-tree .pane-system-main-menu ul.menu li a:focus, .region-content #page-page .pane-menu-tree .pane-menu-tree ul.menu li a:focus { outline: 0.125em solid #191919; }
 
-.pane-menu-tree { margin-top: 1.5em; border: none; }
-.pane-menu-tree ul li::before { content: none; }
-.pane-menu-tree ul.menu { margin-bottom: 0; }
-.pane-menu-tree ul.menu li { border-top: 1px solid #d0d0d0; }
-.pane-menu-tree ul.menu li a { background-color: #fff; border: none; display: block; margin: 0 1rem; padding: 1.4rem 0 1.3rem 0; color: #191919; font-weight: 400; text-decoration: none; font-size: 1rem; letter-spacing: -0.037rem; line-height: 1.5rem; position: relative; }
-.pane-menu-tree ul.menu li a.active { border-bottom: 8px solid #ffc627; padding-bottom: 0.8rem; }
-.pane-menu-tree ul.menu li a:hover { background-color: #fff; text-decoration: underline; }
-.pane-menu-tree ul.menu li.expanded a.active { padding: 1.4rem 0 0.8rem 0; margin-bottom: 0.8rem; }
-.pane-menu-tree ul.menu li.expanded ul li a.active { padding: 0 0 0.5rem 0; margin-bottom: 0.5rem; font-weight: normal; }
-.pane-menu-tree ul.menu li.expanded ul li a::before { content: none; }
-.pane-menu-tree ul.menu li.last ul li.first.last.leaf a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; padding-top: 0.5rem; }
-.pane-menu-tree ul.menu li ul { border-top: none; }
-.pane-menu-tree ul.menu li ul li { border-top: 0; }
-.pane-menu-tree ul.menu li ul li a { background-color: #fff; border-top: none; border-bottom: none; display: block; padding-top: 0.5rem; padding-left: 0; color: #191919; font-weight: 400; text-decoration: none; font-size: 1rem; letter-spacing: -0.5px; margin: 0 2.5rem 0 2.5rem; padding-bottom: 0.5rem; }
-.pane-menu-tree ul.menu li ul li.first a { padding-top: 0; padding-bottom: 0.5rem; }
-.pane-menu-tree ul.menu li ul li.leaf a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; }
-.pane-menu-tree ul.menu li ul li.leaf.last a { border-top: none; }
-.pane-menu-tree ul.menu li ul li.leaf.first.last a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; border-top: none; }
-.pane-menu-tree ul.menu li ul li.last ul li.first.last.leaf a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; padding-top: 0.5rem; }
-.pane-menu-tree ul.menu li ul li.expanded ul li a::before { content: none; }
-.pane-menu-tree h2.pane-title { font-size: 1.5rem; font-weight: 700; line-height: 1.5rem; letter-spacing: -0.015em; color: #191919; padding: 1rem; margin: 0; display: block; text-decoration: none; }
-.pane-menu-tree .pane-content { border-width: 0 1px 1px 1px; border-style: solid; border-color: #d0d0d0; }
+.region-content #page-page .pane-menu-tree { margin-top: 1.5em; border: none; }
+.region-content #page-page .pane-menu-tree ul li::before { content: none; }
+.region-content #page-page .pane-menu-tree ul.menu { margin-bottom: 0; }
+.region-content #page-page .pane-menu-tree ul.menu li { border-top: 1px solid #d0d0d0; }
+.region-content #page-page .pane-menu-tree ul.menu li a { background-color: #fff; border: none; display: block; margin: 0 1rem; padding: 1.4rem 0 1.3rem 0; color: #191919; font-weight: 400; text-decoration: none; font-size: 1rem; letter-spacing: -0.037rem; line-height: 1.5rem; position: relative; }
+.region-content #page-page .pane-menu-tree ul.menu li a.active { border-bottom: 8px solid #ffc627; padding-bottom: 0.8rem; }
+.region-content #page-page .pane-menu-tree ul.menu li a:hover { background-color: #fff; text-decoration: underline; }
+.region-content #page-page .pane-menu-tree ul.menu li.expanded a.active { padding: 1.4rem 0 0.8rem 0; margin-bottom: 0.8rem; }
+.region-content #page-page .pane-menu-tree ul.menu li.expanded ul li a.active { padding: 0 0 0.5rem 0; margin-bottom: 0.5rem; font-weight: normal; }
+.region-content #page-page .pane-menu-tree ul.menu li.expanded ul li a::before { content: none; }
+.region-content #page-page .pane-menu-tree ul.menu li.last ul li.first.last.leaf a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; padding-top: 0.5rem; }
+.region-content #page-page .pane-menu-tree ul.menu li ul { border-top: none; }
+.region-content #page-page .pane-menu-tree ul.menu li ul li { border-top: 0; }
+.region-content #page-page .pane-menu-tree ul.menu li ul li a { background-color: #fff; border-top: none; border-bottom: none; display: block; padding-top: 0.5rem; padding-left: 0; color: #191919; font-weight: 400; text-decoration: none; font-size: 1rem; letter-spacing: -0.5px; margin: 0 2.5rem 0 2.5rem; padding-bottom: 0.5rem; }
+.region-content #page-page .pane-menu-tree ul.menu li ul li.first a { padding-top: 0; padding-bottom: 0.5rem; }
+.region-content #page-page .pane-menu-tree ul.menu li ul li.leaf a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; }
+.region-content #page-page .pane-menu-tree ul.menu li ul li.leaf.last a { border-top: none; }
+.region-content #page-page .pane-menu-tree ul.menu li ul li.leaf.first.last a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; border-top: none; }
+.region-content #page-page .pane-menu-tree ul.menu li ul li.last ul li.first.last.leaf a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; padding-top: 0.5rem; }
+.region-content #page-page .pane-menu-tree ul.menu li ul li.expanded ul li a::before { content: none; }
+.region-content #page-page .pane-menu-tree h2.pane-title { font-size: 1.5rem; font-weight: 700; line-height: 1.5rem; letter-spacing: -0.015em; color: #191919; padding: 1rem; margin: 0; display: block; text-decoration: none; }
+.region-content #page-page .pane-menu-tree .pane-content { border-width: 0 1px 1px 1px; border-style: solid; border-color: #d0d0d0; }
 
 span.nolink { display: block; font-size: 1.1rem; letter-spacing: -.035em; font-weight: 700; text-align: left; line-height: calc(100% + 0.12em); opacity: 1; margin: 1rem 2.5rem 1rem 2.5rem; }
 
