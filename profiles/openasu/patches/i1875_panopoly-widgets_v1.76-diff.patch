@@ -1,0 +1,47 @@
+--- /home/bryan/drupal.org_projects/panopoly/modules/panopoly/panopoly_widgets/panopoly_widgets.spotlight.inc	2020-08-26 22:12:53.549023961 -0700
++++ panopoly_widgets/panopoly_widgets.spotlight.inc	2020-09-17 13:40:23.000000000 -0700
+@@ -287,6 +287,44 @@
+       '#default_value' => isset($items[$delta]['fid']) ? $items[$delta]['fid'] : NULL,
+     );
+ 
++    // Allow cropping via the manualcrop module.
++    if (module_exists('manualcrop') && user_access("use manualcrop")) {
++      $fid = isset($form_state['values'][$field['field_name']][$langcode][$delta]['fid']) ?
++        $form_state['values'][$field['field_name']][$langcode][$delta]['fid'] : $element['fid']['#default_value'];
++      $file = !empty($fid) ? file_load($fid) : NULL;
++
++      // If the remove button was clicked, then unset the file.
++      $triggering_parents = !empty($form_state['triggering_element']) ? $form_state['triggering_element']['#parents'] : array();
++      if (count($triggering_parents) >= 5 && $triggering_parents[4] == 'remove_button' && $triggering_parents[2] == $delta) {
++        $file = NULL;
++      }
++
++      if (!empty($file)) {
++        $manualcrop = array(
++          'manualcrop_enable' => TRUE,
++          'manualcrop_keyboard' => TRUE,
++          'manualcrop_thumblist' => FALSE,
++          'manualcrop_inline_crop' => FALSE,
++          'manualcrop_crop_info' => TRUE,
++          'manualcrop_instant_preview' => TRUE,
++          'manualcrop_instant_crop' => FALSE,
++          'manualcrop_default_crop_area' => TRUE,
++          'manualcrop_maximize_default_crop_area' => TRUE,
++          'manualcrop_styles_mode' => 'include',
++          'manualcrop_styles_list' => array(
++            'panopoly_image_spotlight' => 'panopoly_image_spotlight',
++          ),
++          'manualcrop_require_cropping' => array(),
++        );
++        manualcrop_croptool_process($form, $form_state, $element['fid'], $file, $manualcrop);
++      }
++      else {
++        // Mark this element as supporting manualcrop, even if the crop tool
++        // isn't currently available.
++        $element['fid']['manualcrop'] = array();
++      }
++    }
++
+     $element['alt'] = array(
+       '#title' => t('Alt text'),
+       '#type' => 'textfield',

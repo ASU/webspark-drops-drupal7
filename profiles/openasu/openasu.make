@@ -20,50 +20,56 @@ projects[drupal][patch][948516] = https://www.drupal.org/files/issues/2019-08-09
 ; The Panopoly Foundation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-projects[panopoly_core][version] = 1.70
+projects[panopoly_core][version] = 1.76
 projects[panopoly_core][subdir] = panopoly
 
-projects[panopoly_images][version] = 1.70
+projects[panopoly_images][version] = 1.76
 projects[panopoly_images][subdir] = panopoly
 
-projects[panopoly_theme][version] = 1.70
+projects[panopoly_theme][version] = 1.76
 projects[panopoly_theme][subdir] = panopoly
+; v1.76 patch
+projects[panopoly_theme][patch][] = i1875_panopoly-theme_v1.76-diff.patch
 
-projects[panopoly_magic][version] = 1.70
+projects[panopoly_magic][version] = 1.76
 projects[panopoly_magic][subdir] = panopoly
 ; Validation error with reusable FPPs. Updated in 1.52; Custom patch different from drupal.org/node/2813395
-projects[panopoly_magic][patch][2813395] = patches/ws-1236_title-cant-reuse-error_2813395.patch
+; projects[panopoly_magic][patch][2813395] = patches/ws-1236_title-cant-reuse-error_2813395.patch
+projects[panopoly_magic][patch][] = patches/i1875_panopoly-magic_v1.76-diff.patch
 
-projects[panopoly_widgets][version] = 1.70
+projects[panopoly_widgets][version] = 1.76
 projects[panopoly_widgets][subdir] = panopoly
+projects[panopoly_widgets][patch][] = patches/i1875_panopoly-widgets_v1.76-diff.patch
 
-projects[panopoly_admin][version] = 1.70
+projects[panopoly_admin][version] = 1.76
 projects[panopoly_admin][subdir] = panopoly
 
-projects[panopoly_users][version] = 1.70
+projects[panopoly_users][version] = 1.76
 projects[panopoly_users][subdir] = panopoly
 
 ; The Panopoly Toolset
-projects[panopoly_pages][version] = 1.70
+projects[panopoly_pages][version] = 1.76
 projects[panopoly_pages][subdir] = panopoly
 
-projects[panopoly_wysiwyg][version] = 1.70
+projects[panopoly_wysiwyg][version] = 1.76
 projects[panopoly_wysiwyg][subdir] = panopoly
 
-projects[panopoly_search][version] = 1.70
+projects[panopoly_search][version] = 1.76
 projects[panopoly_search][subdir] = panopoly
 ; Fixes DB update dependency ordering
 ; projects[panopoly_search][patch][2766677] = patches/panopoly-search-update-dependency-2766677-1.patch
 
-projects[panopoly_test][version] = 1.70
+projects[panopoly_test][version] = 1.76
 projects[panopoly_test][subdir] = panopoly
 ; ASU custom tests and modifications
-projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.46.patch
-projects[panopoly_test][patch][1370] = patches/webspark-847_behat_common.patch
-projects[panopoly_test][patch][142] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
-projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.patch
+;projects[panopoly_test][patch][137] = patches/webspark-847_panopoly-test-137-update-v-1.46.patch
+;projects[panopoly_test][patch][1370] = patches/webspark-847_behat_common.patch
+;projects[panopoly_test][patch][142] = patches/webspark-944_add-init-config-tests-panopoly-test.patch
+;projects[panopoly_test][patch][143] = patches/webspark-1066-panopoly-test-v146.patch
 ; Last patch must be applied until the patches are combined down the road
-projects[panopoly_test][patch][1560] = patches/ws-1560-1353_panopoly-behat-widget-name-changes.patch
+;projects[panopoly_test][patch][1560] = patches/ws-1560-1353_panopoly-behat-widget-name-changes.patch
+projects[panopoly_test][patch][1761] = i1875_panopoly-test_v1.76-patch-behat-dir.diff.patch
+projects[panopoly_test][patch][1762] = i1875_panopoly-test_v1.76-patch-gitignore.diff.patch
 
 ; ASU-specific, Webspark-agnostic modules (/custom directory contents)
 ; No longer pulled from asu_drupal_modules repo
