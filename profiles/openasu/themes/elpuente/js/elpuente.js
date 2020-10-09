@@ -79,6 +79,7 @@
   }
 
   // WEBSPARK-897 - Stop conflict between Token module (and its jQuery calls) and Bootstrap's button() function.
-  $.fn.bootstrapBtn = $.fn.button.noConflict();
+  // $.fn.bootstrapBtn = $.fn.button.noConflict();
+  // Removed for El Puente
 
 })(jQuery, Drupal); // jshint ignore:line
