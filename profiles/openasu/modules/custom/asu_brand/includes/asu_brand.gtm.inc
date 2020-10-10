@@ -56,5 +56,5 @@ function asu_brand_get_gtm_snippet() {
   $settings = asu_brand_get_block_settings();
   $cache_id = 'asu_brand:gtm';
 
-  return asu_brand_get_cached_content($cache_id, $settings->gtm_path);
+  return asu_brand_get_asset_content($cache_id, $settings->gtm_path, $settings->header_version);
 }

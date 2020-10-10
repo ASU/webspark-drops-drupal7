@@ -17,12 +17,16 @@ function asu_brand_get_block_settings($reset = FALSE) {
     $settings = new StdClass;
     $settings->header_version = variable_get('asu_brand_header_version',
       ASU_BRAND_HEADER_VERSION_DEFAULT);
+    // 4.x only
     $settings->head_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version
       . '/heads/default.shtml';
+    // 4.x ALL, 5.x cookie consent only
     $settings->header_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version
       . '/headers/default.shtml';
+    // 4.x only - DONE
     $settings->footer_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version
       . '/includes/footer.shtml';
+    // Both 4.x and 5.x
     $settings->gtm_path = ASU_BRAND_HEADER_BASEPATH_DEFAULT . '/' . $settings->header_version
       . '/includes/gtm.shtml';
 
@@ -71,7 +75,7 @@ function asu_brand_get_block_header($delta) {
 
   // Set js settings, include js file, and inject head into <head>.
   asu_brand_head_inject();
-  return asu_brand_get_cached_content($cache_id, $settings->header_path);
+  return asu_brand_get_asset_content($cache_id, $settings->header_path, $settings->header_version);
 }
 
 /**
@@ -82,7 +86,7 @@ function asu_brand_get_block_header($delta) {
 function asu_brand_get_block_footer($delta) {
   $settings = asu_brand_get_block_settings();
   $cache_id = ($delta === 'asu_brand_footer_ws2') ? 'asu_brand:footer_ws2' : 'asu_brand:footer';
-  return asu_brand_get_cached_content($cache_id, $settings->footer_path);
+  return asu_brand_get_asset_content($cache_id, $settings->footer_path, $settings->header_version);
 }
 
 /**
@@ -92,12 +96,13 @@ function asu_brand_get_block_footer($delta) {
  * 3. Long-cache stored in variable table (this is updated if #2 is performed).
  *
  * If $reset == TRUE, then skip #1.
- * @param $cache_id
- * @param $file_path
+ * @param string $cache_id
+ * @param string $file_path
+ * @param string $version - header version (4.x or 5.x)
  * @param bool $reset
  * @return mixed|null
  */
-function asu_brand_get_cached_content($cache_id, $file_path, $reset = FALSE) {
+function asu_brand_get_asset_content($cache_id, $file_path, $version, $reset = FALSE) {
   if ($output = cache_get($cache_id)) {
     $output = $output->data;
   }
@@ -140,7 +145,7 @@ function asu_brand_get_cached_content($cache_id, $file_path, $reset = FALSE) {
         ),
       );
     }
-    // Render WS2.0 footer
+    // Render WS2.0 footer - currently static in code
     elseif ($cache_id === 'asu_brand:footer_ws2') {
       $markup = <<<EOL
 <div id="innovation-footer">
@@ -158,7 +163,7 @@ function asu_brand_get_cached_content($cache_id, $file_path, $reset = FALSE) {
         </nav>
       </div>
       <div class="innovation-image">
-        <a href="https://www.asu.edu/rankings"><img src="//www.asu.edu/asuthemes/5.0/assets/Number-1-in-the-us-for-innovation@2x.png" /></a>
+        <a href="https://www.asu.edu/rankings"><img src="//www.asu.edu/asuthemes/5.0/assets/Number-1-in-the-us-for-innovation@2x.png" alt="Number 1 in the United States for Innovation" /></a>
       </div>
     </div>
   </div>
@@ -186,21 +191,35 @@ EOL;
       cache_set($cache_id, $output, 'cache', time() + ASU_BRAND_CACHE_LIFETIME);
       variable_set($cache_id, $output);
     }
-    else { // Render WS1.0 header + footer from AFS or cache (legacy block)
-      // Set timeout to 1.5 seconds.  if it takes too long, fall back to long term caching
-      $options = array(
-        'timeout' => 1.5
-      );
-      $output = drupal_http_request($file_path, $options);
-      if ($output->code == 200) {
-        $output = $output->data;
-        cache_set($cache_id, $output, 'cache', time() + ASU_BRAND_CACHE_LIFETIME);
-        variable_set($cache_id, $output);
-      } else {
-        // File resource is not available; use long term cache and cache it for 1 hour.
-        $output = variable_get($cache_id, NULL);
-        cache_set($cache_id, $output, 'cache', time() + 3600);
-        watchdog('asu_brand', 'Unable to load @path to the cache; using long term cache.', array('@path' => $file_path), WATCHDOG_ERROR);
+    else { // Possible WS1.0 assets needed? Depends on version requested.
+      if ($version === '5.0') { // Skip AFS assets for v5.0
+        if ($cache_id === 'asu_brand:footer' || $cache_id === 'asu_brand:head') {
+          return '<!-- No ' . $cache_id . ' from AFS for v5.x -->';
+        } elseif ($cache_id === 'asu_brand:header') {
+          return <<<EOL
+<!-- Partial ' . $cache_id . ' asset for v5.x -->
+<link rel="stylesheet" type="text/css" href="https://www.asu.edu/asuthemes/5.0/vendor/cookieconsent/cookieconsent.min.css"/>
+<script src="https://www.asu.edu/asuthemes/5.0/vendor/cookieconsent/cookieconsent.min.js"></script>
+<!-- End Partial ' . $cache_id . ' asset for v5.x -->
+EOL;
+        }
+      }
+      else { // Render WS1.0 header + footer from AFS or cached version (legacy block)
+        // Set timeout to 1.5 seconds.  if it takes too long, fall back to long term caching
+        $options = array(
+          'timeout' => 1.5
+        );
+        $output = drupal_http_request($file_path, $options);
+        if ($output->code == 200) {
+          $output = $output->data;
+          cache_set($cache_id, $output, 'cache', time() + ASU_BRAND_CACHE_LIFETIME);
+          variable_set($cache_id, $output);
+        } else {
+          // File resource is not available; use long term cache and cache it for 1 hour.
+          $output = variable_get($cache_id, NULL);
+          cache_set($cache_id, $output, 'cache', time() + 3600);
+          watchdog('asu_brand', 'Unable to load @path to the cache; using long term cache.', array('@path' => $file_path), WATCHDOG_ERROR);
+        }
       }
     }
   }
@@ -219,13 +238,15 @@ function asu_brand_head_inject() {
   $cache_id = 'asu_brand:head';
 
   $settings->js_settings['overrides'] = $overrides;
-  $head_output =  asu_brand_get_cached_content($cache_id, $settings->head_path);
+  $head_output = asu_brand_get_asset_content($cache_id, $settings->head_path, $settings->header_version);
+  drupal_add_js(array('asu_brand' => $settings->js_settings), 'setting');
+  drupal_add_html_head(array('#type' => 'markup', '#markup' => $head_output, '#weight' => -99), 'asu_brand_head');
 
+  // Likely only necessary for header v4.x...
   // Inject header javascript into <head> and set the weight to a high negative value.
   $asu_sso_signedin = $settings->js_settings['asu_sso_signedin'];
   $asu_sso_signinurl = $settings->js_settings['asu_sso_signinurl'];
   $asu_sso_signouturl = $settings->js_settings['asu_sso_signouturl'];
-
 
   $inline_script = <<<EOL
    <script type="text/javascript">
@@ -245,8 +266,6 @@ function asu_brand_head_inject() {
   </script>
 EOL;
 
-  drupal_add_js(array('asu_brand' => $settings->js_settings), 'setting');
-  drupal_add_js(drupal_get_path('module', 'asu_brand') . '/asu_brand.js', array());
   drupal_add_html_head(array('#type' => 'markup', '#markup' => $inline_script, '#weight' => -100), 'asu_brand_head_js');
-  drupal_add_html_head(array('#type' => 'markup', '#markup' => $head_output, '#weight' => -99), 'asu_brand_head');
+  drupal_add_js(drupal_get_path('module', 'asu_brand') . '/asu_brand.js', array()); // Repeats the above inline JS
 }
