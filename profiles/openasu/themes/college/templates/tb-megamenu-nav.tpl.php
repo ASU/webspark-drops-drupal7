@@ -9,7 +9,7 @@
 <div id="tb-megamenu-ws2-shell" class="tb-megamenu-ws2-shell">
   <div class="ws2-global-header-logo">
     <a href="https://www.asu.edu/">
-      <img src="/profiles/openasu/themes/elpuente/images/ASU-logo-stacked-2x.png" alt="Arizona State University" width="93" height="72" />
+      <img src="/profiles/openasu/themes/college/images/ASU-logo-stacked-2x.png" alt="Arizona State University" width="93" height="72" />
     </a>
   </div>
 

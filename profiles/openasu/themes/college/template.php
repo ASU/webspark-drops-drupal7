@@ -9,7 +9,7 @@
  *
  * Implements template_preprocess_html().
  */
-function elpuente_preprocess_html(&$variables) {
+function college_preprocess_html(&$variables) {
   $path = current_path();
   // If El Puente is currently showing in an admin page, add special CSS.
   if (path_is_admin($path)) {
@@ -19,7 +19,7 @@ function elpuente_preprocess_html(&$variables) {
     }
     drupal_add_css(path_to_theme() . '/css/admin.css');
     if (strstr($path,'admin/reports/dblog')) {
-      drupal_add_js(path_to_theme() . '/js/elpuente-admin.js');
+      drupal_add_js(path_to_theme() . '/js/college-admin.js');
     }
   }
 
@@ -33,7 +33,7 @@ function elpuente_preprocess_html(&$variables) {
   }
 
   // Add theme js file here rather than in .info to add a weight and ensure it loads last
-  drupal_add_js(drupal_get_path('theme', 'elpuente') . '/js/elpuente.js', array(
+  drupal_add_js(drupal_get_path('theme', 'college') . '/js/college.js', array(
     'scope' => 'footer',
     'group' => JS_THEME,
     'weight' => 200
@@ -42,11 +42,11 @@ function elpuente_preprocess_html(&$variables) {
   $link_apple_icons = array(
     'default' => array(
       'rel' => 'apple-touch-icon',
-      'href' => '/profiles/openasu/themes/elpuente/images/apple-touch-icon.png',
+      'href' => '/profiles/openasu/themes/college/images/apple-touch-icon.png',
     ),
     'precomposed' => array(
       'rel' => 'apple-touch-icon-precomposed',
-      'href' => '/profiles/openasu/themes/elpuente/images/apple-touch-icon-precomposed.png',
+      'href' => '/profiles/openasu/themes/college/images/apple-touch-icon-precomposed.png',
     ),
   );
   foreach ($link_apple_icons as $key => $value) {
@@ -78,7 +78,7 @@ function elpuente_preprocess_html(&$variables) {
       '#tag' => 'meta',
       '#attributes' => array(
         'name' => 'TileImage',
-        'content' => '/profiles/openasu/themes/elpuente/images/mstile.png',
+        'content' => '/profiles/openasu/themes/college/images/mstile.png',
       )
     ),
     'android-titlebar-bgcolor' => array(
@@ -103,10 +103,10 @@ function elpuente_preprocess_html(&$variables) {
  *
  * Implements template_preprocess_block().
  */
-function elpuente_preprocess_block(&$variables) {
+function college_preprocess_block(&$variables) {
   $block = $variables['block'];
 
-  if ($block->delta == 'main-menu' && $block->module == 'system' && $block->status == 1 && $block->theme = 'elpuente') {
+  if ($block->delta == 'main-menu' && $block->module == 'system' && $block->status == 1 && $block->theme = 'college') {
     // Get the entire main menu tree.
     $main_menu_tree = array();
     $main_menu_tree = menu_tree_all_data('main-menu', NULL, 2);
@@ -137,7 +137,7 @@ function elpuente_preprocess_block(&$variables) {
 /**
  * Implements hook_process_menu_link().
  */
-function elpuente_process_menu_link(&$variables) {
+function college_process_menu_link(&$variables) {
   if (isset($variables['element']['#localized_options']['attributes']['asu_themed_button'])) {
     $styling = $variables['element']['#localized_options']['attributes']['asu_themed_button'];
     if ((int) $styling !== 0) {
@@ -158,13 +158,13 @@ function elpuente_process_menu_link(&$variables) {
       }
       // Apply to child <a> tag classes
       $anchor_classes = (!empty($variables['element']['#localized_options']['attributes']['class']))
-        ? _elpuente_remove_class($variables['element']['#localized_options']['attributes']['class'])
+        ? _college_remove_class($variables['element']['#localized_options']['attributes']['class'])
         : array();
       $variables['element']['#localized_options']['attributes']['class'] = array_merge(
         $anchor_classes, $base_classes
       );
       // Apply to <li> tag classes - no changes needed yet
-      $list_item_classes = (array) _elpuente_remove_class($variables['element']['#attributes']['class']);
+      $list_item_classes = (array) _college_remove_class($variables['element']['#attributes']['class']);
       $list_item_classes[] = 'btn-container';
       $variables['element']['#attributes']['class'] = $list_item_classes;
     }
@@ -174,7 +174,7 @@ function elpuente_process_menu_link(&$variables) {
 /**
  * Implements hook_preprocess_panels_pane().
  */
-function elpuente_preprocess_panels_pane(&$variables) {
+function college_preprocess_panels_pane(&$variables) {
   $variables['title_placement'] = 'default';
   // Banners (FPPs) - Add style/color class at parent-level element (same as CSS Class field) in IPE UI).
   if (in_array('panels_pane__fieldable_panels_pane', $variables['theme_hook_suggestions'])
@@ -207,7 +207,7 @@ function elpuente_preprocess_panels_pane(&$variables) {
  *
  * @param $variables
  */
-function elpuente_preprocess_fieldable_panels_pane(&$variables) {
+function college_preprocess_fieldable_panels_pane(&$variables) {
   if (in_array('fieldable_panels_pane__banners_ws2', $variables['theme_hook_suggestions'])) {
     $variables['classes_array'][] = 'row';
   }
@@ -216,7 +216,7 @@ function elpuente_preprocess_fieldable_panels_pane(&$variables) {
 /**
  * Remove classes that interfere with button styling in LH submenus in blocks/panels
  */
-function _elpuente_remove_class($classes) {
+function _college_remove_class($classes) {
   foreach ($classes as $key => $class) {
     if ($class === 'active') {
       unset($classes[$key]);
@@ -228,7 +228,7 @@ function _elpuente_remove_class($classes) {
 /**
  * Implements hook_ctools_plugin_post_alter()
  */
-function elpuente_ctools_plugin_post_alter(&$plugin, &$info) {
+function college_ctools_plugin_post_alter(&$plugin, &$info) {
   if ($info['type'] == 'styles') {
     if ($plugin['name'] == 'kalacustomize') {
       $plugin['title'] = 'ASU Customize';
@@ -239,7 +239,7 @@ function elpuente_ctools_plugin_post_alter(&$plugin, &$info) {
 /**
  * Implements hook_ctools_content_subtype_alter()
  */
-function elpuente_ctools_content_subtype_alter(&$subtype, &$plugin) {
+function college_ctools_content_subtype_alter(&$subtype, &$plugin) {
   if ($plugin['module'] == 'views_content' && $subtype['title'] == 'Add content item') {
     $subtype['title'] = t('Add existing content');
   }
@@ -252,7 +252,7 @@ function elpuente_ctools_content_subtype_alter(&$subtype, &$plugin) {
  * Header so that it can also activate the local menu.
  *
  */
-function elpuente_block_view_alter(&$data, $block) {
+function college_block_view_alter(&$data, $block) {
   // Add the attributes if applicable
   if (($block->module == 'asu_brand') && ($block->delta == 'asu_brand_header')) {
     $data['content'] = str_replace('<a href="javascript:toggleASU();">', '<a href="javascript:toggleASU();" data-target=".navbar-collapse" data-toggle="collapse">', $data['content']);
@@ -262,7 +262,7 @@ function elpuente_block_view_alter(&$data, $block) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function elpuente_form_panels_edit_style_settings_form_alter(&$form, &$form_state) {
+function college_form_panels_edit_style_settings_form_alter(&$form, &$form_state) {
   // Add some extra ASU styles if extra styles are on
   if (isset($form['general_settings']['settings']['title'])) {
     $styles = array('title', 'content');
@@ -277,7 +277,7 @@ function elpuente_form_panels_edit_style_settings_form_alter(&$form, &$form_stat
 /**
  * Implements theme_links__system_main_menu.
  */
-function elpuente_links__system_main_menu($variables) {
+function college_links__system_main_menu($variables) {
   $links = $variables['links'];
   $attributes = $variables['attributes'];
   $heading = $variables['heading'];
@@ -399,7 +399,7 @@ function elpuente_links__system_main_menu($variables) {
 * active child menu items.
 
 */
-function elpuente_menuitem_has_active_children($menuitem) {
+function college_menuitem_has_active_children($menuitem) {
   if (is_array($menuitem) && isset($menuitem['below']) && !empty($menuitem['below'])) {
     foreach ($menuitem['below'] as $child) {
       if (isset($child['link']) && $child['link']['access'] && ($child['link']['hidden'] == 0)) {
@@ -413,7 +413,7 @@ function elpuente_menuitem_has_active_children($menuitem) {
 /**
  * Overrides theme_form_element().
  */
-function elpuente_form_element(&$variables) {
+function college_form_element(&$variables) {
   $element = &$variables['element'];
   $is_checkbox = FALSE;
   $is_radio = FALSE;
@@ -543,7 +543,7 @@ function elpuente_form_element(&$variables) {
 /**
  * Overrides theme_form_element_label().
  */
-function elpuente_form_element_label(&$variables) {
+function college_form_element_label(&$variables) {
   $element = $variables['element'];
   // This is also used in the installer, pre-database setup.
   $t = get_t();
@@ -603,7 +603,7 @@ function elpuente_form_element_label(&$variables) {
  * Adds wrapper CSS classes for all passed in item-list type classes
  * (i.e. ul class='pager' => additional wrapper 'item-list-pager' class).
  */
-function elpuente_item_list($variables) {
+function college_item_list($variables) {
   $items = $variables['items'];
   $title = $variables['title'];
   $type = $variables['type'];
@@ -654,7 +654,7 @@ function elpuente_item_list($variables) {
       }
       if (count($children) > 0) {
         // Render nested list.
-        $data .= elpuente_item_list(array('items' => $children, 'title' => NULL, 'type' => $type, 'attributes' => $attributes));
+        $data .= college_item_list(array('items' => $children, 'title' => NULL, 'type' => $type, 'attributes' => $attributes));
       }
       if ($i == 1) {
         $attributes['class'][] = 'first';
@@ -675,7 +675,7 @@ function elpuente_item_list($variables) {
  *
  * Added odd/even classes for more fieldset theming options.
  */
-function elpuente_fieldset($variables) {
+function college_fieldset($variables) {
   $element = $variables['element'];
   element_set_attributes($element, array('id'));
 
@@ -705,7 +705,7 @@ function elpuente_fieldset($variables) {
 /**
  * Implements hook_preprocess_maintenance_page().
  */
-function elpuente_preprocess_maintenance_page(&$variables) {
+function college_preprocess_maintenance_page(&$variables) {
   // By default, site_name is set to Drupal if no db connection is available
   // or during site installation. Setting site_name to an empty string makes
   // the site and update pages look cleaner.
@@ -713,7 +713,7 @@ function elpuente_preprocess_maintenance_page(&$variables) {
   if (!$variables['db_is_active']) {
     $variables['site_name'] = '';
   }
-  drupal_add_css(drupal_get_path('theme', 'elpuente') . '/css/maintenance-page.css');
+  drupal_add_css(drupal_get_path('theme', 'college') . '/css/maintenance-page.css');
 }
 
 /**
@@ -721,7 +721,7 @@ function elpuente_preprocess_maintenance_page(&$variables) {
  *
  * @param $variables
  */
-function elpuente_preprocess_tb_megamenu_nav(&$variables) {
+function college_preprocess_tb_megamenu_nav(&$variables) {
   // Build site name
   global $base_url;
   $suffix = (variable_get('asu_brand_header_version', 'stable') === '5.0')

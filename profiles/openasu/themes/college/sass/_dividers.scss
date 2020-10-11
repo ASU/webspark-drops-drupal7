@@ -32,35 +32,35 @@ hr.ws2-element-gold {
     @include divider-padding();
   }
   .divider-morse-white {
-    background-image: url("#{$elpuente-images-dir}/morse_white.png");
+    background-image: url("#{$college-images-dir}/morse_white.png");
     background-color: #fff;
   }
   .divider-morse-gray {
-    background-image: url("#{$elpuente-images-dir}/morse_gray.png");
+    background-image: url("#{$college-images-dir}/morse_gray.png");
     background-color: $ws2-gray;
   }
   .divider-morse-black {
-    background-image: url("#{$elpuente-images-dir}/morse_black.png");
+    background-image: url("#{$college-images-dir}/morse_black.png");
     background-color: $ws2-gray-darkest;
   }
   .divider-topo-white {
-    background-image: url("#{$elpuente-images-dir}/topo_white.png");
+    background-image: url("#{$college-images-dir}/topo_white.png");
     background-color: #fff;
   }
   .divider-topo-gray {
-    background-image: url("#{$elpuente-images-dir}/topo_gray.png");
+    background-image: url("#{$college-images-dir}/topo_gray.png");
     background-color: $ws2-gray;
   }
   .divider-topo-black {
-    background-image: url("#{$elpuente-images-dir}/topo_black.png");
+    background-image: url("#{$college-images-dir}/topo_black.png");
     background-color: $ws2-gray-darkest;
   }
   .divider-network-white {
-    background-image: url("#{$elpuente-images-dir}/network_white.png");
+    background-image: url("#{$college-images-dir}/network_white.png");
     background-color: #fff;
   }
   .divider-network-black {
-    background-image: url("#{$elpuente-images-dir}/network_black.png");
+    background-image: url("#{$college-images-dir}/network_black.png");
     background-color: $ws2-gray-darkest;
   }
   // repeat network images

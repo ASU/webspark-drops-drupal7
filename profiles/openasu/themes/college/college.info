@@ -1,10 +1,10 @@
 ;----------// Theme Information
 
-name        = El Puente
+name        = College
 description = New Web Standards 2.0 theme to replace Innovation in Drupal 7's Webspark
 core        = 7.x
 base theme  = kalatheme
-release     = 7.x-1.0-alpha1
+release     = 7.x-1.0-beta1
 engine      = phptemplate
 screenshot  = screenshot.png
 
@@ -22,17 +22,17 @@ features[] = name
 ;----------// Stylesheets
 
 ; Bootstrap core - replaces bootstrap.css
-stylesheets[all][] = css/elpuente.core-bootstrap.css
+stylesheets[all][] = css/college.core-bootstrap.css
 ; Last CSS sheets to overrule all others - including Innovation CSS import
 stylesheets[all][] = css/admin.css
 stylesheets[all][] = css/maintenance-pages.css
 stylesheets[all][] = css/nav.css
-stylesheets[all][] = css/elpuente.custom.css
-stylesheets[all][] = css/elpuente.media-rules.css
+stylesheets[all][] = css/college.custom.css
+stylesheets[all][] = css/college.media-rules.css
 
 ;----------// Theme Javascript
 
-scripts[] = js/elpuente.js
+scripts[] = js/college.js
 
 ;----------// Theme Settings
 

@@ -274,14 +274,14 @@ hr.ws2-element-gold { border-color: #ffc627; border-width: 8px; margin-left: 0; 
 
 div.region-content #page-page { background-position: top center; background-repeat: repeat; }
 div.region-content #page-page [class*=divider-] { padding-top: 3rem; padding-bottom: 3rem; }
-div.region-content #page-page .divider-morse-white { background-image: url("/profiles/openasu/themes/elpuente/images/morse_white.png"); background-color: #fff; }
-div.region-content #page-page .divider-morse-gray { background-image: url("/profiles/openasu/themes/elpuente/images/morse_gray.png"); background-color: #bfbfbf; }
-div.region-content #page-page .divider-morse-black { background-image: url("/profiles/openasu/themes/elpuente/images/morse_black.png"); background-color: #191919; }
-div.region-content #page-page .divider-topo-white { background-image: url("/profiles/openasu/themes/elpuente/images/topo_white.png"); background-color: #fff; }
-div.region-content #page-page .divider-topo-gray { background-image: url("/profiles/openasu/themes/elpuente/images/topo_gray.png"); background-color: #bfbfbf; }
-div.region-content #page-page .divider-topo-black { background-image: url("/profiles/openasu/themes/elpuente/images/topo_black.png"); background-color: #191919; }
-div.region-content #page-page .divider-network-white { background-image: url("/profiles/openasu/themes/elpuente/images/network_white.png"); background-color: #fff; }
-div.region-content #page-page .divider-network-black { background-image: url("/profiles/openasu/themes/elpuente/images/network_black.png"); background-color: #191919; }
+div.region-content #page-page .divider-morse-white { background-image: url("/profiles/openasu/themes/college/images/morse_white.png"); background-color: #fff; }
+div.region-content #page-page .divider-morse-gray { background-image: url("/profiles/openasu/themes/college/images/morse_gray.png"); background-color: #bfbfbf; }
+div.region-content #page-page .divider-morse-black { background-image: url("/profiles/openasu/themes/college/images/morse_black.png"); background-color: #191919; }
+div.region-content #page-page .divider-topo-white { background-image: url("/profiles/openasu/themes/college/images/topo_white.png"); background-color: #fff; }
+div.region-content #page-page .divider-topo-gray { background-image: url("/profiles/openasu/themes/college/images/topo_gray.png"); background-color: #bfbfbf; }
+div.region-content #page-page .divider-topo-black { background-image: url("/profiles/openasu/themes/college/images/topo_black.png"); background-color: #191919; }
+div.region-content #page-page .divider-network-white { background-image: url("/profiles/openasu/themes/college/images/network_white.png"); background-color: #fff; }
+div.region-content #page-page .divider-network-black { background-image: url("/profiles/openasu/themes/college/images/network_black.png"); background-color: #191919; }
 div.region-content #page-page [class*=divider-network-] { background-position: top left; }
 
 /* Default table styles */

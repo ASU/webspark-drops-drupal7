@@ -1,5 +1,5 @@
 /**
- * Elpuente theme JS
+ * College theme JS
  */
 
 (function ($, Drupal) {
