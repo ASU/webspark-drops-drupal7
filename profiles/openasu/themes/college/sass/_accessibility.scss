@@ -1,0 +1,22 @@
+// Accessibility
+// Applied previous styles to outline and removed border properties
+a:focus,
+.ui-widget-content a:focus,
+input:focus,
+a.btn:focus,
+.btn a:focus,
+#skip_to_content:focus,
+#top-content #tabs .nav-pills > li.active > a:focus,
+h4.ui-accordion-header.ui-state-hover,
+h4.ui-accordion-header:focus {
+  @include a11y-strong-focus();
+}
+
+#skip_to_content {
+  position: absolute;
+  left: -9999px;
+  &:focus{
+    position:relative;
+    left: 0;
+  }
+}

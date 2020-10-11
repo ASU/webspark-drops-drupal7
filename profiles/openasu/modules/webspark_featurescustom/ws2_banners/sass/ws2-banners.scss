@@ -1,0 +1,67 @@
+/*
+ * Banners
+ */
+
+// Import from El Puente theme
+@import "../../../../themes/college/sass/variables";
+@import "../../../../themes/college/sass/mixins/global";
+
+.pane-bundle-banners-ws2 {
+  margin: 1rem 0;
+  & > .pane-content {
+    padding: 2rem 0;
+    .field-name-field-banner-title-int {
+      font-weight: normal;
+      font-size: $font-size-h3;
+      margin: 0.5rem 0;
+      padding: 0;
+    }
+  }
+  &.ws2-banner-success { // Success
+    background-color: $ws2-green;
+    a:not(.btn) {
+      color: $ws2-gray-darkest;
+      border-bottom-color: $ws2-gray-darkest;
+    }
+  }
+  &.ws2-banner-warning { // Alert
+    background-color: $ws2-orange;
+    a:not(.btn) {
+      color: $ws2-gray-darkest;
+      border-bottom-color: $ws2-gray-darkest;
+    }
+  }
+  &.ws2-banner-info { // Info
+    background-color: $ws2-blue;
+    a:not(.btn) {
+      color: $ws2-gray-darkest;
+      border-bottom-color: $ws2-gray-darkest;
+    }
+  }
+  // Gray and black handled in _altstyles.scss
+  .field-name-field-banner-color {
+    display: none;
+  }
+  .pane-content {
+    position: relative;
+    .row > div:first-child {
+      padding-left: 6rem;
+      &:before {
+        font-family: FontAwesome, sans-serif;
+        font-size: 2rem;
+        position: absolute;
+        left: 0;
+        top: 0; // 50% top : calc(50% - 1.5rem);
+        padding: 0 1.5rem;
+        content: "\f0f3";
+      }
+    }
+    .btn {
+      padding-right: 1rem;
+      padding-left: 1rem;
+    }
+    .banner-close a.close {
+      @include ws2-close-button();
+    }
+  }
+}

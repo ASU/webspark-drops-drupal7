@@ -1,0 +1,6 @@
+/** moved over from Innovationn NEED WS2.0 input from HUB Design */
+/* Maintenance page CSS */
+.maintenance-page.in-maintenance #page-wrapper { margin: 1em; }
+.maintenance-page.in-maintenance div#name-and-slogan { margin: 1em 0; }
+.maintenance-page.in-maintenance h1#site-name, .maintenance-page.in-maintenance #page-title { margin: inherit; }
+.maintenance-page.in-maintenance .maintenance-mode-content { font-weight: bolder; }

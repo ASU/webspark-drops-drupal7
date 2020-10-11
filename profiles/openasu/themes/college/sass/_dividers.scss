@@ -1,0 +1,70 @@
+/**
+ * New WS2.0 - Dividers and Backgrounds
+ * IS_SCSS
+ */
+@import "variables";
+
+@mixin divider-padding() {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+// <HR>s
+hr.ws2-hr-gold {
+  height: 0.5rem;
+  background-color: $ws2-gold;
+  max-width: 16rem;
+  margin: 2em 0;
+}
+// HR separator - custom ??? what was this for??
+hr.ws2-element-gold {
+  border-color: $ws2-gold;
+  border-width: 8px;
+  margin-left: 0;
+  max-width: 256px;
+}
+
+// Background image dividers
+#{$ws2-content-styles-container} {
+  background-position: top center;
+  background-repeat: repeat;
+  & [class*= divider-] {
+    @include divider-padding();
+  }
+  .divider-morse-white {
+    background-image: url("#{$college-images-dir}/morse_white.png");
+    background-color: #fff;
+  }
+  .divider-morse-gray {
+    background-image: url("#{$college-images-dir}/morse_gray.png");
+    background-color: $ws2-gray;
+  }
+  .divider-morse-black {
+    background-image: url("#{$college-images-dir}/morse_black.png");
+    background-color: $ws2-gray-darkest;
+  }
+  .divider-topo-white {
+    background-image: url("#{$college-images-dir}/topo_white.png");
+    background-color: #fff;
+  }
+  .divider-topo-gray {
+    background-image: url("#{$college-images-dir}/topo_gray.png");
+    background-color: $ws2-gray;
+  }
+  .divider-topo-black {
+    background-image: url("#{$college-images-dir}/topo_black.png");
+    background-color: $ws2-gray-darkest;
+  }
+  .divider-network-white {
+    background-image: url("#{$college-images-dir}/network_white.png");
+    background-color: #fff;
+  }
+  .divider-network-black {
+    background-image: url("#{$college-images-dir}/network_black.png");
+    background-color: $ws2-gray-darkest;
+  }
+  // repeat network images
+  [class*=divider-network-] {
+    background-position: top left;
+  }
+}

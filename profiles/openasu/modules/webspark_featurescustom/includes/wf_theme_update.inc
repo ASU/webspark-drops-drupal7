@@ -35,7 +35,7 @@ function webspark_featurescustom_menu_alter(&$items) {
 }
 
 /**
- * Is the current theme ASU Web standards theme (innovation, elpuente)?
+ * Is the current theme ASU Web standards theme (innovation, college)?
  *
  * @noinspection PhpUnused
  */
@@ -57,7 +57,7 @@ function _webspark_featurescustom_appearance_theme_update() {
  * @param string $suffix - Suffix to append to the CSS file name as the alternate CSS file. Defaults to _ws2
  * @return string - Returns the suffix passed in IF $theme === checked theme.
  */
-function _webspark_featurescustom_get_ws2_suffix($use_current_theme = FALSE, $theme_to_check = 'elpuente', $suffix = '_ws2') {
+function _webspark_featurescustom_get_ws2_suffix($use_current_theme = FALSE, $theme_to_check = 'college', $suffix = '_ws2') {
   $theme = &drupal_static(__FUNCTION__);
   if (!isset($theme)) {
     $theme = _webspark_featurescustom_web_standards_theme_check($theme, 2, $use_current_theme);
@@ -96,7 +96,7 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
     } else {
       return 0; // FALSE is a WS theme, but it is not WS1 as requested.
     }
-  } elseif ($theme === 'elpuente') {
+  } elseif ($theme === 'college') {
     if ($ws_version !== 1) { // Exclude WS1.0 option
       return $theme; // TRUE
     } else { // is a WS theme, but it is not WS2 as requested.
@@ -116,13 +116,13 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
     $ws_base_theme_options = array();
     switch ($ws_version) {
       case 2:
-        $ws_base_theme_options[] = 'elpuente';
+        $ws_base_theme_options[] = 'college';
         break;
       case 1:
         $ws_base_theme_options[] = 'innovation';
         break;
       default: // 0
-        $ws_base_theme_options = array('innovation', 'elpuente');
+        $ws_base_theme_options = array('innovation', 'college');
     }
     $theme_base_themes = (array_key_exists($theme, $all_themes))
       ? drupal_find_base_themes($all_themes, $theme)
@@ -153,14 +153,14 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
  *
  * @param string $new_theme - Theme to be changed to.
  * @param mixed $ws_theme_test_result - Machine name of ASU Web standards theme or subtheme
- * (ex. innovation, elpuente). Theme machine name if true; 0 if false.
+ * (ex. innovation, college). Theme machine name if true; 0 if false.
  */
 function _webspark_featurescustom_act($new_theme, $ws_theme_test_result) {
   if (module_exists('asu_brand')) {
     module_load_include('inc', 'asu_brand', 'includes/asu_brand.theme_update');
     $ws_data = asu_brand_get_ws_data($ws_theme_test_result);
     switch ($ws_theme_test_result) {
-      case 'elpuente':
+      case 'college':
       case 'innovation':
         variable_set('asu_brand_header_version', $ws_data['curr_version']);
         _webspark_featurescustom_web_standards_theme_config($new_theme, $ws_data);
@@ -245,6 +245,7 @@ function _webspark_featurescustom_web_standards_theme_config($new_theme, $ws_dat
   // Apply original block configs from Webspark install profile (openasu.profile) to ensure their proper
   // location to match spinup settings.
   openasu_blockupdates_for_theme($new_theme, $ws_data);
+  _webspark_featurescustom_wysiwyg_css($new_theme);
 
   // Flush ASU Brand caches so ASU header/footer/megamenu/mega_footer are right.
   asu_brand_cache_clear();
@@ -297,6 +298,8 @@ function _webspark_featurescustom_alt_theme_config($theme = NULL) {
   if (function_exists('_openasu_system_help_block_enable')) {
     _openasu_system_help_block_enable($theme);
   }
+  // Set WYSIWYG profile (WYSIWYG) CSS to the theme's default.
+  _webspark_featurescustom_wysiwyg_css($theme, $alt_theme = FALSE);
 
   // Log changes
   drupal_set_message('Disabled Innovation-themed blocks for <em>' . t($theme) .
@@ -324,4 +327,56 @@ function _webspark_featurescustom_admin_theme($form, $form_state) {
   $theme = $form_state['values']['admin_theme']; // new admin theme
   $theme_test_result = _webspark_featurescustom_web_standards_theme_check($theme, 0, TRUE);
   _webspark_featurescustom_act($theme, $theme_test_result);
+}
+
+/**
+ * Sets the CSS file paths to the new theme's defaults so the WYSIWYG can apply that styling.
+ * @param string $new_theme - New theme machine name
+ * @param bool $alt_theme - Is an alternate theme (not Web standards?). Defaults to FALSE.
+ */
+function _webspark_featurescustom_wysiwyg_css($new_theme, $alt_theme = FALSE) {
+  if (module_exists('wysiwyg')) {
+    $innovation_css_path = '%bprofiles/openasu/libraries/innovation_bootstrap/css/bootstrap.min.css,%bprofiles/openasu/themes/innovation/css/innovation-main.css,%bprofiles/openasu/themes/innovation/css/buttons.css,%bprofiles/openasu/themes/innovation/css/forms.css,%bprofiles/openasu/themes/innovation/css/nav.css,%bprofiles/openasu/themes/innovation/fonts/roboto/css/roboto.css,%bprofiles/openasu/modules/webspark_featurescustom/webspark_wysiwyg/css/webspark-wysiwyg.css';
+    $college_css_path = '%bprofiles/openasu/themes/college/css/college.core-bootstrap.css,%bprofiles/openasu/themes/college/css/admin.css,%bprofiles/openasu/themes/college/css/maintenance-pages.css,%bprofiles/openasu/themes/college/css/nav.css,%bprofiles/openasu/themes/college/css/college.custom.css,%bprofiles/openasu/themes/college/css/college.media-rules.css';
+    $alt_theme_css_path = '';
+    $settings = db_select('wysiwyg', 'w')
+      ->fields('w', array('settings'))
+      ->condition('format', 'panopoly_wysiwyg_text')
+      ->condition('editor', 'tinymce')
+      ->execute()
+      ->fetchField();
+    if (!empty($settings)) {
+      $settings = unserialize($settings);
+      if ($settings !== FALSE) {
+        if ($alt_theme === TRUE) { // Use the active theme's CSS for alternate themes
+          $settings['css_path'] = $alt_theme_css_path;
+          $settings['css_setting'] = 'theme';
+          $settings['css_theme'] = ''; // Active theme
+        } else {
+          $settings['css_path'] = ($new_theme === 'college') ? $college_css_path : $innovation_css_path;
+        }
+        $settings = serialize($settings);
+        db_update('wysiwyg')
+          ->fields(array('settings' => $settings))
+          ->condition('format', 'panopoly_wysiwyg_text')
+          ->condition('editor', 'tinymce')
+          ->execute();
+        flogger('theme_update', 'The CSS styling for @theme has been applied to the WYSIWYG'
+          . ' editor.',
+          array('@theme' => $new_theme),
+          WATCHDOG_INFO, TRUE);
+      } else {
+        // Data wasn't a well-formed, serialized array. Manual CSS paths need to be set.
+        flogger('theme_update', 'The WYSIWYG module\'s CSS path setting could not'
+          . ' be updated for the @theme theme, so styling within the WYSIWYG window may not match the theme.'
+          . ' Please check the CSS Path field vales at @url to see if your theme\'s CSS files are listed properly.',
+          array('@theme' => $new_theme,
+            '@url' => l('WYSIWYG settings', '/admin/config/content/wysiwyg/profile/panopoly_wysiwyg_text')),
+          WATCHDOG_WARNING, TRUE);
+      }
+    } else {
+      flogger('theme_update', 'The WYSIWYG profile data (called "WYSIWYG") could not be found.',
+        array(), WATCHDOG_NOTICE);
+    }
+  }
 }

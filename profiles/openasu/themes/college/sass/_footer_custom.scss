@@ -1,0 +1,31 @@
+// WEBSPARK-1561 - footer positioning issues
+// @TODO - remove these overrides when added to ASU global header/footer CSS
+#innovation-footer {
+  position: relative;
+  .footer-menu ul {
+    padding: 1em;
+    li {
+      padding-bottom: 0;
+      // WEBSPARK-1118 - Temporary footer link fix @removeIfInGlobalCSS
+      a:hover {
+        color: $ws2-maroon;
+        border-bottom: 1px dotted $ws2-maroon;
+      }
+    }
+  }
+}
+#page-footer {
+  background-color: $ws2-gray-darkest;
+  #innovation-top {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  #block-asu-brand-asu-brand-footer {
+    background-color: $ws2-gray-lighter;
+  }
+}
+#asu_footer ul {
+  max-width: 1170px;
+  margin: 0 auto;
+  padding-left: 0;
+}

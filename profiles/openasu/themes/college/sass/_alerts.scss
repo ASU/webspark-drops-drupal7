@@ -1,0 +1,69 @@
+/**
+ * Alerts
+ */
+.alert {
+  color: $ws2-gray-darkest;
+  font-weight: 400;
+  border-bottom-color: $ws2-gray-darkest;
+  position: relative;
+  margin: $padding-base-vertical 0;
+  padding: $padding-base-vertical*1.5 $padding-base-horizontal*1.5;
+  a {
+    color: $ws2-gray-darkest;
+    border-bottom-color: $ws2-gray-darkest;
+    // Close button
+    @include ws2-close-button();
+    &:hover {
+      color: $link-hover-color;
+      border-bottom-color: $link-hover-color;
+      cursor: pointer;
+    }
+  }
+}
+.alert-success,
+.alert-info,
+.alert-danger,
+.alert-warning {
+  padding-left: 6em;
+  &:before {
+    font-family: FontAwesome, sans-serif;
+    font-size: 2rem;
+    position: absolute;
+    left: 0;
+    top: 1.5rem; // 50% top : calc(50% - 1.5rem);f
+    padding: 0 1.5rem;
+  }
+}
+.alert-success {
+  background-color: $ws2-success-bkgd;
+  border-color: $ws2-green;
+  &:before {
+    content: "\f058";
+  }
+}
+.alert-info {
+  background-color: $ws2-info-bkgd;
+  border-color: $ws2-blue;
+  &:before {
+    content: "\f05a";
+  }
+}
+.alert-danger {
+  background-color: $ws2-danger-bkgd; /* 20% opacity of official maroon */
+  border-color: $ws2-maroon;
+  &:before {
+    content: "\f071";
+  }
+}
+.alert-warning {
+  background-color: $ws2-warning-bkgd; /* 33% opacity of official maroon */
+  border-color: $ws2-orange;
+  &:before {
+    content: "\f0f3";
+  }
+}
+.alert:not([class*="alert-"]),
+div[class='alert alert-block'] { /* Catch-all for default alert class */
+  background-color: $ws2-gray-lightest;
+  border-color: $ws2-gray-light;
+}

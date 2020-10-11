@@ -1,0 +1,140 @@
+/**
+ * List items
+ */
+
+@import "variables";
+
+/* -- BlockQuotes
+-------------------------------------------------------------- */
+// circle cropped LH bullet point image
+blockquote > img:first-of-type {
+  float: left;
+  clip-path: circle($image-round-small/2);
+}
+/**
+ * Testimonials, round images
+ */
+img.img-testimonial-medium {
+  clip-path: circle($image-round-medium/2);
+}
+img.img-testimonial-small {
+  clip-path: circle($image-round-small/2);
+}
+
+/* -- ordered + unordered lists
+-------------------------------------------------------------- */
+#{$ws2-content-styles-container} {
+  ul, ol {
+    padding-left: 0;
+    list-style-type: none;
+    li {
+      &:before {
+        font-weight: bolder;
+        vertical-align: middle;
+      }
+      &:last-child {
+        padding-bottom: 0;
+      }
+    }
+    // Custom bullet, background theming
+    &.ws2-element-maroon li:before {
+      color: $ws2-maroon;
+    }
+    &.ws2-element-gray li:before {
+      color: $text-color;
+    }
+    & > li > ul,
+    & > li > ol,
+    & > ul,
+    & > ol {
+      padding-left: 2em;
+    }
+  }
+  ul {  // Unordered lists ONLY
+    li:before {
+      padding: 0 2.75em 0 0;
+      margin: 0 -2em 0 0;
+      content: "#{$ws2-list-item-even}";  // bullet
+      font-size: 2em;
+    }
+    // Alternating elements to 5th level (@TODO - Better dynamic, nested CSS method for traversing down levels?
+    ul {
+      & > li:before {
+        content: "#{$ws2-list-item-odd}";  // hollow bullet
+      }
+      ul {
+        & > li:before {
+          content: "#{$ws2-list-item-even}";  // bullet
+        }
+        ul {
+          & > li:before {
+            content: "#{$ws2-list-item-odd}";  // hollow bullet
+          }
+          ul {
+            & > li:before {
+              content: "#{$ws2-list-item-even}";  // bullet
+            }
+          }
+        }
+      }
+    }
+  }
+  ol {  // Ordered lists ONLY
+    & > li {
+      padding-bottom: 1em;
+      counter-increment: customlist;
+      &:before {
+        content: counter(customlist) " ";
+        float: left;
+        width: 2em;
+      }
+      &:first-child {
+        counter-reset: customlist;
+      }
+    }
+    // Ordered, HOWTO stepped lists
+    &.ws2-list-stepped {
+      & > li {
+        line-height: 2em;
+        border-bottom: 1px solid $ws2-gray;
+        padding-bottom: 2em;
+        padding-top: 2em;
+        &:before {
+          font-weight: bold;
+          font-size: 1.3125em;
+          width: 5em;
+          clip-path: circle(1rem);
+          text-align: center;
+          margin-left: -1.75em;
+        }
+        &:last-child {
+          border-bottom: transparent;
+        }
+      }
+      & > li:before,
+      &.ws2-element-maroon > li:before { // default
+        background-color: $ws2-maroon;
+        color: #fff;
+      }
+      &.ws2-element-gray > li:before {
+        background-color: $text-color;
+        color: #fff;
+      }
+      &.ws2-element-gold > li:before {
+        background-color: $ws2-gold;
+        color: $text-color;
+      }
+    }
+  }
+  // Exception -- No custom bullets in the secondary menu
+  div.pane-menu-tree,
+  .panels-ipe-dragbar, // .panels-ipe-editing
+  .panels-ipe-newblock {
+    ul, ol {
+      li:before {
+        content: none !important;
+      }
+    }
+  }
+}
+

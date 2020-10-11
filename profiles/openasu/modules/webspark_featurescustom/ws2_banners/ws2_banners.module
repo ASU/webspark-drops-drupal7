@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Code for the WS2 Banners feature.
+ */
+
+include_once 'ws2_banners.features.inc';
+
+/**
+ * Implementation of hook_entity_info_alter().
+ */
+function ws2_banners_entity_info_alter(&$entity_info) {
+// WS2.0 Banners
+  $entity_info['fieldable_panels_pane']['bundles']['banners_ws2'] = array(
+    'label' => t('Add WS2.0 banner'),
+    'description' => t('Add a WS2.0-themed notification banner. Designed to work best in 100% wide rows.'),
+    'pane category' => t('Custom'),
+    'pane top level' => TRUE,
+    'pane icon' => drupal_get_path('module', 'ws2_banners') . '/images/icon_banners_WS2.png',
+    'admin' => array(
+      'path' => 'admin/structure/fieldable-panels-panes/%fieldable_panels_panes_type',
+      'bundle argument' => 3,
+      'real path' => 'admin/structure/fieldable-panels-panes/banners_ws2',
+      'access arguments' => array('administer fieldable panels panes'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function ws2_banners_preprocess_fieldable_panels_pane(&$variables) {
+  if (in_array('fieldable_panels_pane__banners_ws2', $variables['theme_hook_suggestions'])) {
+    drupal_add_js(drupal_get_path('module', 'ws2_banners')
+      . '/js/ws2_banners.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 98));
+    drupal_add_css(drupal_get_path('module', 'ws2_banners')
+      . '/css/ws2-banners.css', array('weight' => 99));
+  }
+}

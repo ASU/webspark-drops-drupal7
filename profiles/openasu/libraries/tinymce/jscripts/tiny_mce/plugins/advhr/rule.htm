@@ -22,29 +22,30 @@
 					<tr role="group" aria-labelledby="width_label">
 						<td><label id="width_label" for="width">{#advhr_dlg.width}</label></td>
 						<td class="nowrap">
-							<input id="width" name="width" type="text" value="" class="mceFocus" />
-							<span style="display:none;" id="width_unit_label">{#advhr_dlg.widthunits}</span>
+							<input id="width" name="width" type="text" value="256" class="mceFocus" />
+							<span style="display: none;" id="width_unit_label">{#advhr_dlg.widthunits}</span>
 							<select name="width2" id="width2" aria-labelledby="width_unit_label">
 								<option value="">px</option>
 								<option value="%">%</option>
 							</select>
 						</td>
 					</tr>
-					<tr>
-						<td><label for="size">{#advhr_dlg.size}</label></td>
-						<td><select id="size" name="size">
-							<option value="">{#advhr_dlg.normal}</option>
-							<option value="1">1</option>
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-							<option value="5">5</option>
-						</select></td>
-					</tr>
-					<tr>
-						<td><label for="noshade">{#advhr_dlg.noshade}</label></td>
-						<td><input type="checkbox" name="noshade" id="noshade" class="radio" /></td>
-					</tr>
+          <tr>
+            <td><label for="align">{#advhr_dlg.align}</label></td>
+            <td>
+            <select id="align" name="align">
+              <option value="left" selected>left (WS2.0 standard)</option>
+              <option value="center">center</option>
+              <option value="right">right</option>
+              <option value="justify">justify</option>
+            </select>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <input type="hidden" id="size" name="size" value="8" />
+            </td>
+          </tr>
 			</table>
 		</div>
 	</div>

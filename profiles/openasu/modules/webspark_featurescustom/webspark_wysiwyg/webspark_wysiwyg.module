@@ -75,13 +75,13 @@ function webspark_wysiwyg_filter_default_formats_alter(&$data) {
     $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['rule_valid_ids'][98] = 'X*'; /* WAS: '' */
     $data['panopoly_wysiwyg_text']['filters']['wysiwyg']['settings']['valid_elements'] = 'a[href|target<_blank|title|style|class|id],
   div[style|class|align<center?justify?left?right],
-  br,em,i,strong,cite,code,blockquote,ul,ol,li,dl,dt,dd,
+  br,em,i,strong,cite,code,blockquote[class],ul[class],ol[class],li[class],dl,dt,dd,
   table[style|class],thead,th,tbody,tr,td,
   span[style|class],p[style|class],
   h1[style|class],h2[style|class],h3[style|class],h4[style|class],h5[style|class],h6[style|class],
+  hr[style|class|width|height|align],
   img[!src|title|alt|style|width|height|class|hspace|vspace],
-  @[style|class],#p,&nbsp;
-  buttton[style|class],hr';
+  @[style|class],&nbsp;';
   }
 }
 

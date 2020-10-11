@@ -1,0 +1,77 @@
+// Typography
+
+html {
+  font-size: 100%;
+}
+body {
+  font-size: 1rem;
+  font-family: $font-family-base;
+  color: $ws2-gray-darkest;
+  background-color: $brand-white;
+}
+// Headers
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  margin-bottom: 1.5rem;
+  color: inherit;
+  font-family: $font-family-base;
+  font-weight: 700;
+  line-height: calc(100% + 4px);
+  display: block;
+  /* Highlighting style augmentations for headers, titles, etc. */
+  &.ws2-element-style {
+    line-height: calc(100% + 8px);
+    padding: $padding-xs-vertical $padding-small-horizontal;
+    display: table;
+    &.ws2-element-gold {
+      background-color: $ws2-gold;
+    }
+    &.ws2-element-gray {
+      color: $ws2-gray-lightest;
+      background-color: $ws2-gray-darkest;
+    }
+  }
+}
+h1, .h1 {
+  font-size: $font-size-h1;
+  &.ws2-element-style {
+    font-size: $font-size-h1*1.166;
+    padding: $padding-xs-vertical $padding-small-horizontal*1.5;
+    &.ws2-too-long {
+      font-size: $font-size-h1*0.90625;
+    }
+  }
+}
+h2, .h2 {
+  font-size: $font-size-h2;
+  &.ws2-element-style {
+    font-size: ceil(($font-size-h2*1.2));
+  }
+}
+h3, .h3 {
+  font-size: $font-size-h3;
+  &.ws2-element-style {
+    font-size: ceil(($font-size-h3*1.3333));
+  }
+}
+h4, .h4 {
+  font-size: $font-size-h4;
+  &.ws2-element-style {
+    font-size: ceil(($font-size-h4*1.4));
+  }
+}
+h5, .h5, h6, .h6 {
+  font-size: $font-size-h5;
+}
+h6, .h6 {
+  font-weight: normal;
+}
+/* WYSIWYG style -- Lead Paragraph --*/ // aka WS2.0 SEO paragraph
+.lead-paragraph {
+  font-family: inherit;
+  font-size: 1.25rem;
+  line-height: 2em;
+  color: $text-color;
+}
+.explore-programs h3 {
+  font-size: 1.625rem;
+}

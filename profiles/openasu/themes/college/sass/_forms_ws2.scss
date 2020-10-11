@@ -1,0 +1,268 @@
+// Taken from https://github.com/flatlogic/awesome-bootstrap-checkbox
+
+// NOT DONE (WS2)
+@import "variables";
+@import "mixins/global";
+
+.form-control {
+  padding: $padding-small-vertical $padding-base-horizontal;
+}
+
+/* Error alerts (form elements, others) */
+
+div.error, table tr.error {
+  background-color: transparent;
+}
+.form-item input.error, .form-item textarea.error, .form-item select.error {
+  border: 1px solid $brand-danger;
+  border-bottom-width: $padding-xs-vertical;
+}
+
+/* Checkboxes */
+.form-type-checkbox {
+  padding-left: 0.75em;
+  label {
+    display: inline-block;
+    padding-left: 0.2em;
+    position: relative;
+    vertical-align: top;
+    max-width: 95%;
+    &::before {
+      background-color: #fff;
+      border: 1px solid #cccccc;
+      border-radius: 0.25em;
+      content: "";
+      display: inline-block;
+      height: 1.5em;
+      left: 0;
+      margin-left: -2em;
+      position: absolute;
+      transition: border 0.15s ease-in-out 0s, color 0.15s ease-in-out 0s;
+      width: 1.5em;
+    }
+    &::after {
+      color: #555555;
+      display: inline-block;
+      font-size: 1.25em;
+      height: 1.4325em;
+      width: 1.5em;
+      position: absolute;
+      left: 0.05em;
+      top: -0.15em;
+      margin-left: -1.55em;
+      padding-left: 0;
+      padding-top: 0;
+    }
+  }
+  &.form-type-checkbox-circle label::before {
+    border-radius: 50%;
+  }
+  &.form-type-checkbox-inline {
+    margin-top: 0;
+  }
+  input[type="checkbox"]:checked + label::after {
+    content: "";
+    font-family: "FontAwesome";
+  }
+}
+
+/* Radio && Checkboxes */
+.form-type-checkbox input[type="checkbox"],
+.form-type-radio input[type="radio"] {
+  height: 1.5em;
+  width: 1.5em;
+  opacity: 0;
+  z-index: 1;
+  &:focus + label::before {
+    @include a11y-strong-focus();
+  }
+  &:indeterminate + label::after {
+    background-color: #555555;
+    border-radius: 0.0625em;
+    content: "";
+    display: block;
+    height: 0.125em;
+    margin-left: -1.0312em;
+    margin-top: 0.4325em;
+    width: 0.625em;
+  }
+  &:disabled + label {
+    opacity: 0.65;
+    &::before {
+      background-color: #eeeeee;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* Radio buttons */
+.form-type-radio {
+  padding-left: inherit;
+  label {
+    display: inline-block;
+    padding-left: 1em;
+    position: relative;
+    vertical-align: middle;
+    max-width: 95%;
+    &::before {
+      background-color: #fff;
+      border: 1px solid #cccccc;
+      border-radius: 50%;
+      content: "";
+      display: inline-block;
+      position: absolute;
+      height: 1.5em;
+      width: 1.5em;
+      left: 0;
+      margin-left: -1.2em;
+      transition: border 0.15s ease-in-out 0s;
+    }
+    &::after {
+      background-color: #555555;
+      border-radius: 50%;
+      content: " ";
+      font-size: 1em;
+      display: inline-block;
+      position: absolute;
+      height: 1em;
+      width: 1em;
+      top: 0.25em;
+      left: 0.3em;
+      margin-left: -1.25em;
+      transform: scale(0, 0);
+      transition: transform 0.05s cubic-bezier(0.8, -0.33, 0.2, 1.33) 0s;
+    }
+  }
+  input[type="radio"] {
+    &:focus + label::before {
+      outline: 2px solid $input-border-focus;
+    }
+    &:checked + label::after {
+      transform: scale(1, 1);
+    }
+  }
+  &.form-type-radio-inline {
+    margin-top: 0;
+  }
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  .styled:checked + label {
+    &::before,
+    &::after {
+      color: #fff;
+    }
+  }
+  &.styled {
+    &:checked + label::after {
+      content: "";
+      font-family: "FontAwesome";
+    }
+  }
+}
+
+/* Action buttons for all forms */
+.form-actions {
+  text-align: center;
+  vertical-align: middle;
+  padding-left: 1em;
+  padding-right: 1em;
+  display: inline-block;
+  margin-bottom: 0.25em;
+  margin-top: 0.25em;
+  .btn,
+  .form-submit {
+    margin: 1em 0.3125em;
+  }
+}
+
+/* Modal Content overrides */
+
+div.ctools-modal-content,
+#modal-content .view-settings-wrapper label {
+  font-size: 1em;
+}
+div.ctools-modal-content .dependent-options {
+  padding-left: 2em;
+}
+
+// place real inputs beneath pseudo inputs
+#modal-content {
+  .radio input[type="radio"],
+  .checkbox input[type="checkbox"] {
+    position: absolute;
+  }
+  .form-type-radio label {
+    padding-left: 2em;
+    &::before,
+    &::after {
+      margin-left: 0;
+    }
+  }
+  .fieldset-wrapper {
+    margin-top: inherit;
+    padding: 0 0.625em 1em;
+  }
+  .form-item {
+    margin-bottom: 1em;
+    margin-top: 0;
+  }
+  .form-actions {
+    float: right;
+    clear: right;
+    margin: 0 0 1em 1em;
+  }
+  // Global i798
+  .form-submit.btn {
+    margin: 1em 1em 1em 0; /* LTR */
+    &:last-child {
+      margin-right: 0; /* LTR */
+    }
+  }
+  .form-type-checkbox {
+    padding-left: 2em;
+  }
+  // Hide preview content if empty
+  div.preview:empty {
+    display: none;
+  }
+}
+
+#modal-content .form-actions,
+.page-admin .form-actions,
+#block-system-main .node-form {
+  background-color: #ffe9ac;
+  border-radius: 0.25em;
+  margin: 0 1em 1em 0;
+  min-width: 25%;
+  width: auto;
+}
+
+/* Webform fixes */
+.webform-container-inline div,
+.webform-container-inline div.form-item {
+  display: inline-block; /* WAS: inline */
+}
+
+/* Add title banner -> Browse... button click to Media modal */
+// Add padding to panel #1
+#media-browser-page-wrapper #media-tab-upload,
+#media-browser-tabset .media-browser-tab {
+  padding: 0 1em;
+}
+
+// Add LH margin to button
+#media-browser-page-wrapper {
+  .manualcrop-style-button-holder {
+    padding-top: 0;
+  }
+  #edit-upload-upload-button {
+    margin-left: 1.125em;
+  }
+}
+
+.marker,
+.form-required {
+  color: $ws2-error-alt;
+}

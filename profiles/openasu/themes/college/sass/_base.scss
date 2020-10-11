@@ -1,0 +1,60 @@
+////////////////
+// BJR - This base file's functionality has been replaced for the most part by _variables.scss (the bootstrap
+// variables to be included in the bootstrap output file - college.core-bootstrap.css)
+//
+// The remaining rules below are outside of Bootstrap but need to be set separately.
+////////////////
+//
+// "base" partial
+//
+// To make it easier to use all variables and mixins in any Sass file in this
+// theme, each .scss file has a \@import 'base' declaration.
+// And this _base.scss file is in charge of importing all the other partials needed for the theme.
+//
+// This base partial is organized in this way:
+// - First we set any shared Sass variables.
+// - Next we import Compass plug-ins (Sass mixin libraries).
+// - Last we import a _custom.scss partial that includes our custom mixins.
+
+// Compass' vertical_rhythm extension is a powerful tool to set up a vertical
+// rhythm for your entire page. You can see some of its mixins and functions in
+// use in the normalize.scss file.
+// @see http://compass-style.org/reference/compass/typography/vertical_rhythm/
+$rhythm-unit: "rem"; // Rhythm unit (Compass vertical rhythm)
+
+//
+// Partials to be shared with all .scss files.
+//
+@import "compass/support";  // Add Compass' IE and vendor prefix support variables.
+@import "compass/utilities/general/clearfix"; // Better than Drupal's clearfix.
+//@import "compass/utilities/sprites"; // See http://compass-style.org/help/tutorials/spriting/
+@import "compass/css3";     // Use one CSS3 mixin instead of multiple vendor prefixes.
+@import "compass/css3/border-radius";  // for dynamic border generation
+@import "compass/typography/vertical_rhythm"; // Helps set up a vertical rhythm.
+
+///////////////////////
+// TODO - Do we need the rules below?
+///////////////////////
+
+// Here we define the lower and upper bounds for each media size
+//$small-range-min: (0em); /* 0 */
+//$small-range-max: (40em); /* 640px */
+//$medium-range-min: (40.063em); /* 641px */
+//$medium-range-max: (61.9375em); /* 991px */
+//$large-range-min: (62em); /* 992px */
+//$large-range-max: (90em); /* 1440px */
+
+// Media Queries
+//$screen: "only screen" !default;
+
+//$landscape: "#{$screen} and (orientation: landscape)" !default;
+//$portrait: "#{$screen} and (orientation: portrait)" !default;
+
+//$small-up: $screen !default;
+//$small-only: "#{$screen} and (max-width: #{$small-range-max})" !default;
+
+//$medium-up: "#{$screen} and (min-width:#{$medium-range-min})" !default;
+//$medium-only: "#{$screen} and (min-width:#{$medium-range-min}) and (max-width:#{$medium-range-max})" !default;
+
+//$large-up: "#{$screen} and (min-width:#{$large-range-min})" !default;
+//$large-only: "#{$screen} and (min-width:#{$large-range-min}) and (max-width:#{$large-range-max})" !default;

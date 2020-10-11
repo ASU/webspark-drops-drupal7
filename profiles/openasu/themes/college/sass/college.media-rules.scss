@@ -1,0 +1,198 @@
+/* =MEDIA QUERIES -- IN PROGRESS
+ * Contains print and screen rules
+-------------------------------------------------------------- */
+@import "variables";
+@import "bootstrap/variables";
+
+
+/*
+ * Default alternate desktop size: >= 992px
+ */
+@media (min-width: $screen-md) {
+  // From React components: Hide primary menu but show top gray bar.
+  header[class^=css-]
+  {
+    & > .universal-nav
+    {
+      display: block;
+    }
+    & > .primary-nav
+    {
+      display: none;
+    }
+
+    border-bottom: none;
+  }
+  #ASUNavMenu {
+    display: inherit;
+  }
+}
+
+/*
+ * Default alternate desktop size: <= 992px
+ */
+@media (max-width: $screen-md-max) {
+  .container {
+    width: 100% !important;
+  }
+}
+
+/*
+ * Default "Mobile size" <= 991px
+ */
+@media (max-width: $screen-sm-max) {
+
+  .container {
+    width: 100%;
+    max-width: $screen-md;
+  }
+
+  // Swap out desktop menu
+  #ASUNavMenu {
+    display: none !important;
+  }
+
+  #headerContainer {
+    .primary-nav {
+      .navbar-container a {
+        border-bottom: 1px solid $ws2-gray-light;
+      }
+    }
+  }
+
+  h1, .h1 {
+    margin-bottom: 3rem;
+    font-size: $font-size-h1-mobile;
+  }
+  h1.page-title {
+    margin-bottom: 0;
+    padding-bottom: 0.75rem;
+  }
+  h2, .h2 {
+    font-size: $font-size-h2-mobile;
+  }
+
+  .row .col-sm-6:nth-child(3),
+  .row .col-sm-6:nth-child(5),
+  .row .col-sm-6:nth-child(7) {
+    clear: both;
+  }
+  #header .container {
+    width: 100%;
+  }
+  #header > .container .row {
+    margin-left: 0;
+    margin-right: 0;
+    .col-md-12 {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+  #header .container-fluid > .row > .col-md-12 {
+    width: 100%;
+  }
+  // Mobile header link color fix
+  #header a
+  {
+    color: $ws2-gray-darkest;
+  }
+  .header__sitename {
+    font-size: 15px;
+    padding: 12px 15px;
+    color: #fff;
+    background: $ws2-gray-darker;
+    font-weight: 600;
+    line-height: 12px;
+    a {
+      color: #fff;
+    }
+  }
+  #asu_hdr_title_gen {
+    white-space: normal;
+  }
+  // Nav.scss
+  .item-list.item-list-pager,
+  .pagination,
+  .pager {
+    font-size: 1em;
+    li,
+    & > li {
+      font-size: 1em;
+    }
+  }
+}
+
+/**
+ Smaller tablet size
+ */
+@media (max-width: 793px) {
+  .container-fluid .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .panel-pane.js-lightgraybg,
+  .panel-pane.js-darkgraybg,
+  .panel-pane.pane-bundle-hero,
+  .panel-pane.pane-bundle-banner {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+}
+
+@media (max-width: $screen-sm) {
+  #innovation-footer .footer-menu ul li {
+    padding-bottom: 0.5em;
+  }
+  .node-content-callout h2 {
+    font-size: 38px;
+  }
+}
+
+@media (max-width: 480px) {
+  table {
+    margin: 24px 0 50px 0;
+  }
+  table.tablefield {
+    display: block;
+  }
+  img.media-element.pull-right {
+    float: none !important;
+    margin-left: 0;
+  }
+  img.media-element.pull-left {
+    float: none !important;
+    margin-right: 0;
+  }
+}
+
+@media print {
+  .megafoot > .row div:not(.megafoot-border) {
+    display: none; }
+  .megafoot ul.social-media li a {
+    font-size: 1em;
+  }
+  .ui-tabs-nav {
+    display: none;
+  }
+  .ui-tabs .ui-tabs-hide {
+    display: block !important;
+  }
+  #innovation-footer {
+    position: revert;
+  }
+  // fixes @media print issues - WEBSPARK-764
+  #top-content #tabs .nav.nav-pills,
+  .region-closure,
+  #innovation-bar,
+  #ASUNavMenu.sticky-menu {
+    display: none !important;
+  }
+  #page .container,
+  #innovation-footer .footer-menu ul,
+  #innovation-bar .innovation-top {
+    width: 100%;
+  }
+  aside.right-sidebar, aside.left-sidebar {
+    width: 25% !important;
+  }
+}

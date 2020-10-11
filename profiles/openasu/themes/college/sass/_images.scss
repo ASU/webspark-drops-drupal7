@@ -1,0 +1,55 @@
+// Images
+// Added from Panopoly Images CSS file (removed in Panopoly 1.21)
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: bottom;
+}
+/* WYSIWYG image spacing */
+img.media-element.pull-right {
+  margin-left: 20px;
+}
+img.media-element.pull-left {
+  margin-right: 20px;
+}
+.img-circle,
+p.img-circle img {
+  border-radius: $border-radius-circle;
+}
+.img-rounded, // #Innovation
+p.img-rounded img {
+  border-radius: 4px;
+}
+.img-thumbnail, // #Innovation
+p.img-thumbnail img {
+  background-color: #fff;
+  border: 1px solid $gray-alt-admin;
+  border-radius: 4px;
+  display: inline-block;
+  height: auto;
+  line-height: 1.44;
+  max-width: 100%;
+  padding: 4px;
+  transition: all 0.2s ease-in-out 0s;
+}
+// Images and captions #WS2.0
+img.ws2-drop-shadow {
+  box-shadow: 0 0.625em 1.25em rgba(0, 0, 41, 0.25);
+}
+div.caption-inner {
+  padding: 0;
+  background: transparent;
+  border: none;
+  & > img {
+    margin-bottom: 0;
+  }
+  p.caption-text, // override of caption filter module rule
+  .caption-text {
+    padding: 1rem;
+    font-size: 0.75rem;
+    text-align: left;
+    margin: 0;
+    border: 1px solid $ws2-gray-light;
+    border-top: none;
+  }
+}

@@ -1,0 +1,66 @@
+/* Default table styles */
+table {
+  background-color: #fff;
+  margin-bottom: 1.5em;
+  max-width: 100%;
+  width: 100%;
+  border: 1px solid $ws2-gray-lighter;
+}
+table > tbody {
+  border-top: none;
+}
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td,
+table > tfoot > tr > th,
+table > tfoot > tr > td {
+  border-top: 1px solid $ws2-gray;
+  line-height: 1.44;
+  padding: $padding-small-vertical $padding-small-horizontal;
+  vertical-align: top;
+}
+table > thead > tr > th,
+table > thead > tr > td {
+  border-bottom: 2px solid $ws2-gray;
+  vertical-align: bottom;
+  font-weight: bold;
+}
+body:not(.page-admin) table > tbody > tr:nth-child(2n+1) {
+  background-color: $ws2-gray-lightest;
+}
+table > caption + thead > tr:first-child > th,
+table > caption + thead > tr:first-child > td,
+table > colgroup + thead > tr:first-child > th,
+table > colgroup + thead > tr:first-child > td,
+table > thead:first-child > tr:first-child > th,
+table > thead:first-child > tr:first-child > td {
+  border-top: 0 none;
+}
+table > tbody + tbody {
+  border-top: 2px solid $ws2-gray;
+}
+// WYSIWYG Bordered table
+table.bordered {
+  border-bottom: 1px solid $ws2-gray;
+  border-left: 1px solid $ws2-gray;
+}
+table.bordered > thead > tr > th,
+table.bordered > thead > tr > td,
+table.bordered > tbody > tr > th,
+table.bordered > tbody > tr > td,
+table.bordered > tfoot > tr > th,
+table.bordered > tfoot > tr > td {
+  border-right: 1px solid $ws2-gray;
+}
+table.bordered > tbody > tr:nth-child(2n+1) {
+  background-color: #fff;
+}
+table.bordered > caption + thead > tr:first-child > th,
+table.bordered > caption + thead > tr:first-child > td,
+table.bordered > colgroup + thead > tr:first-child > th,
+table.bordered > colgroup + thead > tr:first-child > td,
+table.bordered > thead:first-child > tr:first-child > th,
+table.bordered > thead:first-child > tr:first-child > td {
+  border-top: 1px solid $ws2-gray;
+}

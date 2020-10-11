@@ -1,0 +1,10 @@
+/**
+ * THE CUSTOMIZED BOOTSTRAP 3.1.0.2 CSS GENERATOR
+ * DO NOT MODIFY THIS FILE! Changes to Bootstrap should be done in _variables.scss or _base.scss
+ */
+// customize bootstrap variables here:
+@import "variables";
+// Non-Bootstrap rules here:
+@import "base";
+// Now build the bootstrap CSS rules in college.core-bootstrap.scss by calling this:
+@import "bootstrap";

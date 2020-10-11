@@ -1,0 +1,122 @@
+/**
+ * Navigation
+ */
+@import "variables";
+@import "mixins/global";
+
+// Mixins
+@mixin nav-leaf-styling($right: '') {
+  border-top: none;
+  border-bottom: none;
+  font-size: 1rem;
+  color: #2a2a2a;
+  font-weight: normal;
+  @if $right == 'yes' {
+    border-right: none;
+  }
+}
+
+// Selectors
+/* Main Menu styling (partial) ---------------------------------------------- */
+.navmenu {
+  border-bottom: 1px solid $ws2-gray-lighter;
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+.nav > li > a {
+  display: inline-block;
+}
+
+.navbar-nav > li:focus > a,
+.navbar-nav > .active:focus > a,
+.navbar-nav > li > a:focus,
+.nav .open > a:focus,
+.navbar-nav > .active > a:focus
+.navbar-nav .dropdown-menu > li > a:focus {
+  @include a11y-strong-focus();
+}
+
+/* Navigation breadcrumbs ----------------------------------- */
+.breadcrumb {
+  padding: 0 0;
+  margin-top: 1.5em;
+  margin-bottom: 3em;
+  list-style: none;
+  font-size: 0.875em;
+  background-color: transparent;
+  & > li {
+    display: inline-block;
+    & + li:before {
+      content: "/\00a0";
+      padding: 0 0.3125em;
+      color: $ws2-gray-dark; //#828282;
+    }
+    & > a {
+      border-bottom: 0;
+    }
+  }
+  & > .active {
+    color: $ws2-gray-dark; //#828282;
+  }
+}
+
+// Easy Breadcrumbs (main breadcrumbs for site)
+.easy-breadcrumb {
+  background-color: transparent;
+  margin: 2em 0;
+  padding: 0;
+  color: $ws2-gray-darker;
+  font-size: 0.875em;
+  a {
+    border-bottom: 0 none;
+  }
+  .easy-breadcrumb_segment-separator {
+    padding: 0 0.3125rem; // 5px
+  }
+}
+
+/* Nav pills --------------------------------------------- */
+.nav-pills > li {
+  float: left;
+  & > a {
+    border: 0 none;
+    border-radius: $border-radius-circle;
+//    max-width: $btn-max-width;
+    min-width: $btn-min-width; // default (not -med)
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: -0.25px;
+  }
+  & > li + li {
+    margin-left: 0.125em;
+  }
+  &.active > a,
+  &.active > a:hover,
+  &.active > a:focus {
+    color: #fff;
+    background-color: $ws2-maroon;
+  }
+  &.active > a:focus {
+    @include a11y-strong-focus();
+  }
+}
+
+/* Tabs, QuickTabs, pagers, pagination, sidebar (secondary menu)
+  -------------------------------------------------------------- */
+@import 'nav_tabs';
+@import 'nav_pagination';
+@import 'nav_secondary_menu';
+
+/* =STICKY NAV BAR --------------------------------------------- */
+#ASUNavMenu.affix {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+.sticky-menu {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+}
