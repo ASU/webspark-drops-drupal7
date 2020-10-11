@@ -92,7 +92,7 @@ function asu_brand_block_theme_update($theme, $ws_data) {
 function asu_brand_get_ws_data($ws_theme_test_result) {
   $ws_data = array();
   switch ($ws_theme_test_result) {
-    case 'elpuente':
+    case 'college':
       return array(
         'curr_version' => '5.0',
         'curr_suffix' => '_ws2',

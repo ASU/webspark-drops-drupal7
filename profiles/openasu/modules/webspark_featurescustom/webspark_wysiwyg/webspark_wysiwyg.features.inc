@@ -97,8 +97,8 @@ function webspark_wysiwyg_wysiwyg_default_profiles_alter(&$data) {
   EOP button full-col-wide=btn btn-blue btn-block
   EOP button large col-wide=btn btn-blue btn-lg btn-block'; /* WAS: '' */
     $theme = variable_get('theme_default', '');
-    if ($theme === 'elpuente') {
-      $data['panopoly_wysiwyg_text']['settings']['css_path'] = '%bprofiles/openasu/libraries/fontawesome/css/font-awesome.min.css,%bprofiles/openasu/modules/webspark_featurescustom/webspark_wysiwyg/css/webspark-wysiwyg.css,%bprofiles/openasu/themes/elpuente/css/admin.css,%bprofiles/openasu/themes/elpuente/css/nav.css,%bprofiles/openasu/themes/elpuente/css/elpuente.custom.css,%bprofiles/openasu/themes/elpuente/css/elpuente.media-rules.css';
+    if ($theme === 'college') {
+      $data['panopoly_wysiwyg_text']['settings']['css_path'] = '%bprofiles/openasu/libraries/fontawesome/css/font-awesome.min.css,%bprofiles/openasu/modules/webspark_featurescustom/webspark_wysiwyg/css/webspark-wysiwyg.css,%bprofiles/openasu/themes/college/css/admin.css,%bprofiles/openasu/themes/college/css/nav.css,%bprofiles/openasu/themes/college/css/college.custom.css,%bprofiles/openasu/themes/college/css/college.media-rules.css';
     } else {
       $data['panopoly_wysiwyg_text']['settings']['css_path'] = '%bprofiles/openasu/libraries/innovation_bootstrap/css/bootstrap.min.css,%bprofiles/openasu/themes/innovation/css/innovation-main.css,%bprofiles/openasu/themes/innovation/css/buttons.css,%bprofiles/openasu/themes/innovation/css/forms.css,%bprofiles/openasu/themes/innovation/css/nav.css,%bprofiles/openasu/themes/innovation/fonts/roboto/css/roboto.css,%bprofiles/openasu/modules/webspark_featurescustom/webspark_wysiwyg/css/webspark-wysiwyg.css';
     }
