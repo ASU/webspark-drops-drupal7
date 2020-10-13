@@ -267,5 +267,13 @@ function asu_brand_head_inject() {
 EOL;
 
   drupal_add_html_head(array('#type' => 'markup', '#markup' => $inline_script, '#weight' => -100), 'asu_brand_head_js');
+
+  // For 4.x only
+  if ($settings->header_version !== "5.0") {
+    drupal_add_html_head(array('#type' => 'markup', '#markup' => $head_output, '#weight' => -99), 'asu_brand_head');
+    drupal_add_js(array('asu_brand' => $settings->js_settings), 'setting');
+  }
+
+  // This appears to repeat the inline script above(?)
   drupal_add_js(drupal_get_path('module', 'asu_brand') . '/asu_brand.js', array()); // Repeats the above inline JS
 }
