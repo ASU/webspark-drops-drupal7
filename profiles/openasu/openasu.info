@@ -87,5 +87,6 @@ dependencies[] = webspark_megamenu
 dependencies[] = mega_footer_menu
 dependencies[] = webspark_wysiwyg
 dependencies[] = webspark_extras
+dependencies[] = ws2_banners
 ;dependencies[] = asu_cas (moved to openasu_install)
 ;dependencies[] = better_watchdog_ui (moved to openasu_install)
