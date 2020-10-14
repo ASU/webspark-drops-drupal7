@@ -34,7 +34,7 @@ div.error label { padding-left: 2em; }
 /* Level one (atomic) elements ------------------------------- */
 /* =BUTTONS --- WS2.0 DONE
 -------------------------------------------------------------- */
-button, .button, .btn, a.btn, .btn > a { transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; word-wrap: break-word; }
+button, .button, .btn, a.btn, .btn > a { transition: .1s ease-out; word-wrap: break-word; }
 button:hover, .button:hover, .btn:hover, a.btn:hover, .btn > a:hover { border-bottom: transparent; text-decoration: none; }
 
 .btn, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree { -moz-user-select: none; background-image: none; border: 1px solid transparent; border-radius: 32px; cursor: pointer; display: inline-block; font-size: 1em; font-weight: bold; line-height: 1em; margin-bottom: 0; min-width: 5rem; padding: 8px 8px; text-align: center; vertical-align: middle; white-space: nowrap; }

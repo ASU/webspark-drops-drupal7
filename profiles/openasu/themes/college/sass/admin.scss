@@ -349,7 +349,7 @@ html.js .pia.page-admin-modules {
   li {
     padding-right: 0.5rem;
     a {
-      @include ws2-global-transition();
+      @include ws2-element-transition-button();
       background-color: $ws2-gray-lightest;
       &:hover {
         transform: scale(1.1);

@@ -14,7 +14,7 @@
   padding: 0 0 0.75rem 0.75rem;
   white-space: nowrap;
   overflow: hidden;
-  @include ws2-global-transition();
+  @include ws2-element-transition-global();
   &.element-invisible {
     white-space: inherit;
   }
