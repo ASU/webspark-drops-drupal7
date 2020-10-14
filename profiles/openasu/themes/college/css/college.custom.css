@@ -268,7 +268,7 @@ div.region-content #page-page ol.ws2-list-stepped.ws2-element-gold > li:before {
 div.region-content #page-page div.pane-menu-tree ul li:before, div.region-content #page-page div.pane-menu-tree ol li:before, div.region-content #page-page .panels-ipe-dragbar ul li:before, div.region-content #page-page .panels-ipe-dragbar ol li:before, div.region-content #page-page .panels-ipe-newblock ul li:before, div.region-content #page-page .panels-ipe-newblock ol li:before { content: none !important; }
 
 /** New WS2.0 - Dividers and Backgrounds IS_SCSS */
-hr.ws2-hr-gold { height: 0.5rem; background-color: #ffc627; max-width: 16rem; margin: 2em 0; }
+hr.ws2-hr-gold { height: 0.5rem; background-color: #ffc627; max-width: 16rem; margin: 3em 0; }
 
 hr.ws2-element-gold { border-color: #ffc627; border-width: 8px; margin-left: 0; max-width: 256px; }
 
