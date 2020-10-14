@@ -1,8 +1,12 @@
 /* Global mixin library for multiple or all elements */
 
 // Transitions for hover/focus
-@mixin ws2-global-transition() {
+@mixin ws2-element-transition-global() {
   transition: all 0.5s cubic-bezier(.19, 1, .19, 1) 0s;
+}
+// Transitions for hover/focus
+@mixin ws2-element-transition-button() {
+  transition: .1s ease-out;
 }
 
 // Accessibility borders on focus

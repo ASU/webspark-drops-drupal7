@@ -44,7 +44,7 @@ before_install:
   # Setup display for Selenium
   - export DISPLAY=:99.0
   #- sh -e /etc/init.d/xvfb start
-  # Added screen size (1024x768 - as defined in /etc/init.d/xvfb - isway too small)
+  # Added screen size (1024x768 - as defined in /etc/init.d/xvfb - is way too small)
   - /sbin/start-stop-daemon --start --verbose --pidfile /tmp/cucumber_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 2560x1440x16
   - sleep 1
   # Disable PHP features - XDebug
@@ -119,6 +119,12 @@ before_script:
   - drush si openasu --db-url=mysql://root:@127.0.0.1/drupal --account-name=admin --account-pass=admin --site-mail=admin@example.com --site-name="Webspark" --yes
   - drush runserver > /dev/null 2>&1 &
   - sleep 3
+
+  # Enable correct themes as defaults (currently WS2.0)
+  - drush pm-disable innovation
+  - drush pm-enable college
+  - drush vset theme_default college
+  - drush vset admin_theme webspark_seven
 
   # Turn on ASU Brand filtering of GTM snippet, Cookie Consent (GDPR) addition after v4.7
   - drush vset --always-set asu_brand_ci_testing 1

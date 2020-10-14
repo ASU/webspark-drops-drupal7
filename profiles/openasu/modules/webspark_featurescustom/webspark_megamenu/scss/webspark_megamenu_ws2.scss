@@ -75,7 +75,7 @@ $ws2-gray-lightest:      #fafafa;
   .ws2-global-header-title,
   .subdomain-name {
     font-size: 1.5rem;
-    @include ws2-global-transition();
+    @include ws2-element-transition-global();
     &.ws2-no-unit-name {
       font-size: 2rem;
     }
@@ -215,7 +215,7 @@ $ws2-gray-lightest:      #fafafa;
     & > { // .nav
       li,
       .active {
-        @include ws2-global-transition();
+        @include ws2-element-transition-global();
         &:not(.btn) {
           & > a:hover,
           & > a:focus {
@@ -252,7 +252,7 @@ $ws2-gray-lightest:      #fafafa;
           height: 0.5rem;
           background-color: $asu-gold;
           width: 0;
-          @include ws2-global-transition();
+          @include ws2-element-transition-global();
           bottom: 0;
           left: -0.5rem;
           margin-left: 0.5rem;

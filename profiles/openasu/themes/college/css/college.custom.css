@@ -34,7 +34,7 @@ div.error label { padding-left: 2em; }
 /* Level one (atomic) elements ------------------------------- */
 /* =BUTTONS --- WS2.0 DONE
 -------------------------------------------------------------- */
-button, .button, .btn, a.btn, .btn > a { transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; word-wrap: break-word; }
+button, .button, .btn, a.btn, .btn > a { transition: .1s ease-out; word-wrap: break-word; }
 button:hover, .button:hover, .btn:hover, a.btn:hover, .btn > a:hover { border-bottom: transparent; text-decoration: none; }
 
 .btn, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree { -moz-user-select: none; background-image: none; border: 1px solid transparent; border-radius: 32px; cursor: pointer; display: inline-block; font-size: 1em; font-weight: bold; line-height: 1em; margin-bottom: 0; min-width: 5rem; padding: 8px 8px; text-align: center; vertical-align: middle; white-space: nowrap; }
@@ -227,7 +227,7 @@ img.media-element.pull-left { margin-right: 20px; }
 
 .img-thumbnail, p.img-thumbnail img { background-color: #fff; border: 1px solid #ddd; border-radius: 4px; display: inline-block; height: auto; line-height: 1.44; max-width: 100%; padding: 4px; transition: all 0.2s ease-in-out 0s; }
 
-img.ws2-drop-shadow { box-shadow: 0 0.625em 1.25em rgba(0, 0, 41, 0.25); }
+.ws2-drop-shadow { box-shadow: 0 0.625em 1.25em rgba(0, 0, 41, 0.25); }
 
 div.caption-inner { padding: 0; background: transparent; border: none; }
 div.caption-inner > img { margin-bottom: 0; }
@@ -268,17 +268,15 @@ div.region-content #page-page ol.ws2-list-stepped.ws2-element-gold > li:before {
 div.region-content #page-page div.pane-menu-tree ul li:before, div.region-content #page-page div.pane-menu-tree ol li:before, div.region-content #page-page .panels-ipe-dragbar ul li:before, div.region-content #page-page .panels-ipe-dragbar ol li:before, div.region-content #page-page .panels-ipe-newblock ul li:before, div.region-content #page-page .panels-ipe-newblock ol li:before { content: none !important; }
 
 /** New WS2.0 - Dividers and Backgrounds IS_SCSS */
-hr.ws2-hr-gold { height: 0.5rem; background-color: #ffc627; max-width: 16rem; margin: 2em 0; }
+hr.ws2-hr-gold { height: 0.5rem; background-color: #ffc627; max-width: 16rem; margin: 3em 0; }
 
 hr.ws2-element-gold { border-color: #ffc627; border-width: 8px; margin-left: 0; max-width: 256px; }
 
 div.region-content #page-page { background-position: top center; background-repeat: repeat; }
 div.region-content #page-page [class*=divider-] { padding-top: 3rem; padding-bottom: 3rem; }
 div.region-content #page-page .divider-morse-white { background-image: url("/profiles/openasu/themes/college/images/morse_white.png"); background-color: #fff; }
-div.region-content #page-page .divider-morse-gray { background-image: url("/profiles/openasu/themes/college/images/morse_gray.png"); background-color: #bfbfbf; }
 div.region-content #page-page .divider-morse-black { background-image: url("/profiles/openasu/themes/college/images/morse_black.png"); background-color: #191919; }
 div.region-content #page-page .divider-topo-white { background-image: url("/profiles/openasu/themes/college/images/topo_white.png"); background-color: #fff; }
-div.region-content #page-page .divider-topo-gray { background-image: url("/profiles/openasu/themes/college/images/topo_gray.png"); background-color: #bfbfbf; }
 div.region-content #page-page .divider-topo-black { background-image: url("/profiles/openasu/themes/college/images/topo_black.png"); background-color: #191919; }
 div.region-content #page-page .divider-network-white { background-image: url("/profiles/openasu/themes/college/images/network_white.png"); background-color: #fff; }
 div.region-content #page-page .divider-network-black { background-image: url("/profiles/openasu/themes/college/images/network_black.png"); background-color: #191919; }

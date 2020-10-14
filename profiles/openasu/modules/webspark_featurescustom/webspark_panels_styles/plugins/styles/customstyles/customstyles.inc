@@ -93,10 +93,8 @@ function customstyles_pane_settings_form($style_settings) {
   $ws2_divider_options = array (
     '' => t('None'),
     'divider-topo-white' => t('Topographical White'),
-    'divider-topo-gray' => t('Topographical Gray'),
     'divider-topo-black' => t('Topographical Black'),
     'divider-morse-white' => t('Morse code White'),
-    'divider-morse-gray' => t('Morse code Gray'),
     'divider-morse-black' => t('Morse code Black'),
     'divider-network-white' => t('Network White'),
     'divider-network-black' => t('Network Black'),

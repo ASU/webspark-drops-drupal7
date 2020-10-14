@@ -53,7 +53,7 @@ $pane-menu-tree-selectors-btn: "#{$pane-menu-tree-selectors} li a.btn-pane-menu-
 ////////////////////
 // Global Level 1
 button, .button, .btn, a.btn, .btn > a {
-  @include ws2-global-transition();
+  @include ws2-element-transition-button();
   word-wrap: break-word;
   &:hover {
     border-bottom: transparent;

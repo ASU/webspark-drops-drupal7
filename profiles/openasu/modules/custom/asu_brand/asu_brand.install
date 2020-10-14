@@ -253,6 +253,94 @@ function asu_brand_update_7204(&$sandbox) {
 }
 
 /**
+ * Move El Puente (WS2.0 dev theme) theme and block settings to its replacement theme (College).
+ */
+function asu_brand_update_7205(&$sandbox) {
+  // Move variable table settings from elpuente to college.
+  $college = db_select('variable', 'v')
+    ->fields('v', array('name'))
+    ->condition('name', 'theme_college_settings')
+    ->execute()
+    ->fetchField();
+  if ($college === FALSE) {
+    $elpuente_settings = db_select('variable', 'v')
+      ->fields('v', array('value'))
+      ->condition('name', 'theme_elpuente_settings')
+      ->execute()
+      ->fetchField();
+    if (!empty($elpuente_settings)) {
+      db_merge('variable')
+        ->key(array(
+          'name' => 'theme_college_settings',
+        ))
+        ->fields(array(
+            'name' => 'theme_college_settings',
+            'value' => $elpuente_settings,
+          )
+        )->execute();
+    }
+    flogger('asu_brand', 'El Puente theme settings were transferred to the College theme.',
+      array(), WATCHDOG_INFO, TRUE);
+  } else {
+    flogger('asu_brand', 'College theme settings were already set. El Puente theme settings will be deleted.',
+      array(), WATCHDOG_INFO, TRUE);
+  }
+  db_delete('variable')
+    ->condition('name', 'theme_elpuente_settings')
+    ->execute();
+
+  // Move block table entries from elpuente to college
+  $elpuente_blocks = db_select('block', 'b')
+    ->fields('b', array('bid', 'module', 'delta', 'theme'))
+    ->condition('theme', 'elpuente')
+    ->orderBy('bid')
+    ->execute()
+    ->fetchAll();
+  $count = count($elpuente_blocks);
+  if ($count > 0) {
+    $updated = $deleted = 0;
+    foreach($elpuente_blocks as $block) {
+      $setting = db_select('block', 'b')
+        ->fields('b', array(
+          'bid',
+        ))
+        ->condition('module', $block->module)
+        ->condition('delta', $block->delta)
+        ->condition('theme', 'college')
+        ->execute()
+        ->fetchField();
+      if ($setting !== FALSE) {
+        // College theme block #bid entry already exists; Delete duplicate El Puente record
+        db_delete('block')
+          ->condition('module', $block->module)
+          ->condition('delta', $block->delta)
+          ->condition('theme', 'elpuente')
+          ->execute();
+        $deleted++;
+      } else {
+        // No College theme entry exists; Update El Puente record to College theme
+        db_update('block')
+          ->fields(array(
+            'theme' => 'college'
+          ))
+          ->condition('module', $block->module)
+          ->condition('delta', $block->delta)
+          ->condition('bid', $block->bid)
+          ->execute();
+        $updated++;
+      }
+    }
+    $extra = ($updated > 0) ? $updated . ' records needed to be added to the College theme, while' : ' all';
+    flogger('asu_brand', "Of the %count block settings records for the El Puente theme,"
+      .  $extra . ' %del were deleted because they were already set.',
+      array('%count' => $count, '%upd' => $updated, '%del' => $deleted), WATCHDOG_INFO, TRUE);
+  } else {
+    flogger('asu_brand', 'No block settings for the El Puente theme were found. Skipping update.',
+      array(), WATCHDOG_INFO, TRUE);
+  }
+}
+
+/**
  * Manages (adds or removes) permissions for ASU Brand
  * @param $action - Add or remove ASU Brand permissions.
  */
