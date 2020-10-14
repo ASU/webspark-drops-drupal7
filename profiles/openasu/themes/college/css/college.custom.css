@@ -227,7 +227,7 @@ img.media-element.pull-left { margin-right: 20px; }
 
 .img-thumbnail, p.img-thumbnail img { background-color: #fff; border: 1px solid #ddd; border-radius: 4px; display: inline-block; height: auto; line-height: 1.44; max-width: 100%; padding: 4px; transition: all 0.2s ease-in-out 0s; }
 
-img.ws2-drop-shadow { box-shadow: 0 0.625em 1.25em rgba(0, 0, 41, 0.25); }
+.ws2-drop-shadow { box-shadow: 0 0.625em 1.25em rgba(0, 0, 41, 0.25); }
 
 div.caption-inner { padding: 0; background: transparent; border: none; }
 div.caption-inner > img { margin-bottom: 0; }
