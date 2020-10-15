@@ -90,8 +90,13 @@
 
 // ONLY secondary menu
 ///////////////////////
+<<<<<<< Updated upstream:profiles/openasu/themes/elpuente/sass/_nav_secondary_menu.scss
 .pane-menu-tree {
   margin-top: 1.5em;
+=======
+#{$ws2-content-styles-container} .pane-menu-tree {
+  margin-top: 0em;
+>>>>>>> Stashed changes:profiles/openasu/themes/college/sass/_nav_secondary_menu.scss
   border: none;
   ul {
     li::before {
@@ -211,7 +216,7 @@
     line-height: 1.5rem;
     letter-spacing: -0.015em;
     color: $ws2-gray-darkest;
-    padding: 1rem;
+    padding: 0 1rem 1rem 1rem;
     margin: 0;
     display: block;
     text-decoration: none;

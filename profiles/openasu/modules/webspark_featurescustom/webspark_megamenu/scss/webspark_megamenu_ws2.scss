@@ -105,6 +105,25 @@ $ws2-gray-lightest:      #fafafa;
         }
       }
     }
+    .btn {
+        -moz-user-select: none; 
+        background-image: none; 
+        border: 1px solid transparent; 
+        border-bottom-color: transparent;
+        border-bottom-style: solid; 
+        border-bottom-width: 1px; 
+        border-radius: 32px; 
+        cursor: pointer; 
+        display: inline-block; 
+        font-size: 1em; font-weight: bold;   
+        line-height: 1em; 
+        margin-bottom: 0; 
+        min-width: 5rem; 
+        padding: 8px 8px; 
+        text-align: center; 
+        vertical-align: middle; 
+        white-space: nowrap;    
+    }
     // Container for every TB Mega menu item
     li.tb-megamenu-item {
       // top level buttons

@@ -298,7 +298,7 @@ function ws2_banners_defaultconfig_field_default_fields() {
       'settings' => array(
         'absolute_url' => 0,
         'attributes' => array(
-          'class' => 'btn btn-black',
+          'class' => 'btn btn-sm btn-black',
           'configurable_class' => 0,
           'configurable_title' => 0,
           'rel' => '',
@@ -387,7 +387,7 @@ function ws2_banners_defaultconfig_field_default_fields() {
       'settings' => array(
         'absolute_url' => 0,
         'attributes' => array(
-          'class' => 'btn btn-black',
+          'class' => 'btn btn-sm btn-black',
           'configurable_class' => 0,
           'configurable_title' => 0,
           'rel' => '',
