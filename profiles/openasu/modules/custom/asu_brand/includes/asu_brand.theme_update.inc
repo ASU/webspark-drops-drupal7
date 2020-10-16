@@ -72,8 +72,8 @@ function asu_brand_block_theme_update($theme, $ws_data) {
           'weight' => $weight,
         )
       )->execute();
-    drupal_set_message('The Web standards header and footer blocks have been updated for the ' . check_plain($theme)
-      . 'theme.', 'status', FALSE);
+    drupal_set_message('The Web standards header and footer blocks have been updated for the ' . strtoupper(check_plain($theme))
+      . ' theme.', 'status', FALSE);
   } catch (Exception $e) {
     $message = 'All Web standards blocks for ' . check_plain($theme) . ' could not be updated or created'
       . ' by the ASU Brand module. Go to <a href="/admin/structure/block/list/' . check_plain($theme)
