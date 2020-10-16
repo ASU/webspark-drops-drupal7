@@ -40,6 +40,7 @@ function openasu_theme_innovation_setup(&$install_state) {
   // Default themes on spinup
   $basetheme = 'kalatheme';
   $theme = 'innovation';
+  $ws2_theme = 'college';
 
   // Set install state to
   $install_state['parameters']['whichtheme'] = $theme;
@@ -53,6 +54,7 @@ function openasu_theme_innovation_setup(&$install_state) {
   drupal_theme_rebuild();
   theme_enable(array($basetheme));
   theme_enable(array($theme));
+  theme_enable(array($ws2_theme));
   variable_set('theme_default', $theme);
   variable_set('admin_theme', 'webspark_seven');
   variable_set('node_admin_theme', 1);
