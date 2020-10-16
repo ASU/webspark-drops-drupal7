@@ -161,7 +161,7 @@ fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fields
 div.region-content :not(.btn) > a, div.region-content .ui-widget-content :not(.btn) > a { border-bottom: 1px solid #8c1d40; text-decoration: none; color: #8c1d40; }
 div.region-content :not(.btn) > a:focus, div.region-content :not(.btn) > a:hover, div.region-content .ui-widget-content :not(.btn) > a:focus, div.region-content .ui-widget-content :not(.btn) > a:hover { color: #440E22; text-decoration: none; border-bottom: none; }
 
-#header a, #asu_footer a { border-bottom: transparent; }
+#asu_footer a { border-bottom: transparent; }
 
 html { font-size: 100%; }
 

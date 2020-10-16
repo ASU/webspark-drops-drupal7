@@ -52,14 +52,6 @@
     display: none !important;
   }
 
-  #headerContainer {
-    .primary-nav {
-      .navbar-container a {
-        border-bottom: 1px solid $ws2-gray-light;
-      }
-    }
-  }
-
   h1, .h1 {
     margin-bottom: 3rem;
     font-size: $font-size-h1-mobile;
