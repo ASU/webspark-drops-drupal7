@@ -59,7 +59,7 @@ function mega_footer_block_view($delta = '') {
     $mfsm_custom2   = _mega_footer_custom_icon_and_link('social_media', '2', '', '', $theme);
     $mfsm_custom3   = _mega_footer_custom_icon_and_link('social_media', '3', '', '', $theme);
 
-    // Create the social media icons array
+    // Create the social media icons array (for counting, etc. - not for rendering)
     $sm_icons = array($mfsm_facebook, $mfsm_twitter, $mfsm_linkedin, $mfsm_youtube, $mfsm_instagram, $mfsm_vimeo, $mfsm_flickr, $mfsm_pinterest, $mfsm_tumblr,$mfsm_rss,$mfsm_custom1,$mfsm_custom2,$mfsm_custom3);
 
     if ((variable_get('mega_footer_unit_logo', '') !== '') || (!empty(array_filter($sm_icons)))) {
@@ -76,7 +76,7 @@ function mega_footer_block_view($delta = '') {
 
       // Logo
       $logo = variable_get('mega_footer_unit_logo', '');
-      if ($logo !== '') {
+      if ($logo != 0) {
         $check = variable_get('mega_footer_logo_alt', '');
         $alt = (!empty($check)) ? check_plain($check) : '';
         $file = file_load($logo);
@@ -97,35 +97,36 @@ function mega_footer_block_view($delta = '') {
       }
 
       // Social Media icons
-      // Open in new window/tab? setting check
-      $external = (theme_get_setting('social_media_exit') == 1) ? 'target="_new" ' : '';
-      // Assemble social media markup
-      $icons_markup = "<ul class='dgtl-mkting-101'>";
-      $icons_markup = _mega_footer_social_media('facebook', 'facebook-square', 'Facebook', $icons_markup, $external, $theme);
-      $icons_markup = _mega_footer_social_media('twitter', 'twitter-square', 'Twitter', $icons_markup, $external, $theme);
-      $icons_markup = _mega_footer_social_media('linkedin', 'linkedin', 'LinkedIn', $icons_markup, $external, $theme);
-      $icons_markup = _mega_footer_social_media('youtube', 'youtube-square', 'YouTube', $icons_markup, $external, $theme, TRUE);
-      $icons_markup = _mega_footer_social_media('instagram', 'instagram', 'Instagram', $icons_markup, $external, $theme, TRUE);
-      $icons_markup = _mega_footer_social_media('vimeo', 'vimeo-square', 'Vimeo', $icons_markup, $external, $theme);
-      $icons_markup = _mega_footer_social_media('flickr', 'flickr', 'Flickr', $icons_markup, $external, $theme);
-      $icons_markup = _mega_footer_social_media('pinterest', 'pinterest-square', 'Pinterest', $icons_markup, $external, $theme);
-      $icons_markup = _mega_footer_social_media('tumblr', 'tumblr-square', 'Tumblr', $icons_markup, $external, $theme);
-      $icons_markup = _mega_footer_social_media('rss', 'rss-square', 'RSS', $icons_markup, $external, $theme);
-      $icons_markup = _mega_footer_custom_icon_and_link('social_media', '1', $icons_markup, $external, $theme);
-      $icons_markup = _mega_footer_custom_icon_and_link('social_media', '2', $icons_markup, $external, $theme);
-      $icons_markup = _mega_footer_custom_icon_and_link('social_media', '3', $icons_markup, $external, $theme);
-      $icons_markup .= "</ul>";
+      if (!empty(array_filter($sm_icons))) {
+        // Open in new window/tab? setting check
+        $external = (theme_get_setting('social_media_exit') == 1) ? 'target="_new" ' : '';
+        // Assemble social media markup
+        $icons_markup = "<ul class='dgtl-mkting-101'>";
+        $icons_markup = _mega_footer_social_media('facebook', 'facebook-square', 'Facebook', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_social_media('twitter', 'twitter-square', 'Twitter', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_social_media('linkedin', 'linkedin', 'LinkedIn', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_social_media('youtube', 'youtube-square', 'YouTube', $icons_markup, $external, $theme, TRUE);
+        $icons_markup = _mega_footer_social_media('instagram', 'instagram', 'Instagram', $icons_markup, $external, $theme, TRUE);
+        $icons_markup = _mega_footer_social_media('vimeo', 'vimeo-square', 'Vimeo', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_social_media('flickr', 'flickr', 'Flickr', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_social_media('pinterest', 'pinterest-square', 'Pinterest', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_social_media('tumblr', 'tumblr-square', 'Tumblr', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_social_media('rss', 'rss-square', 'RSS', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_custom_icon_and_link('social_media', '1', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_custom_icon_and_link('social_media', '2', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_custom_icon_and_link('social_media', '3', $icons_markup, $external, $theme);
+        $icons_markup .= "</ul>";
 
+        if ($theme === "_ws2") { // WS2.0 ONLY
+          $footer_mark .= "<div id='mega-footer-social-media' class='col-md-7 col-sm-12'>";
+          $footer_mark .= "<nav role='navigation' aria-label='Social media'>" . $icons_markup . "</nav>";
+          $footer_mark .= "</div>";
+        }
+      }
       if ($theme === "_ws2") { // WS2.0 ONLY
-        $footer_mark .= "<div id='mega-footer-social-media' class='col-md-7 col-sm-12'>";
-        $footer_mark .= "<nav role='navigation' aria-label='Social media'>" . $icons_markup . "</nav>";
-        $footer_mark .= "</div>";
         $footer_mark .= "</div>";  // end row megafoot-logo-social
       }
-
-      $footer_mark .= "</div>"; // WS1.0 - END megafoot-logo-social, WS2.0 - END col-md- col-sm- space-bot-md
-    } else {
-
+      $footer_mark .= "</div>"; // WS2.0 - END col-md- col-sm- space-bot-md; WS1.0 - END megafoot-logo-social
     }
 
     $footer_columns = (count(menu_navigation_links('menu-mega-footer-menu', $level = 0)));
@@ -183,9 +184,9 @@ function mega_footer_block_view($delta = '') {
             . "'>$contrib</a>";
       }
 
-      // Add social media alternate (WS1.0 ONLY)
+      // Add social media alternate rendering at bottom of column (WS1.0 ONLY)
       if ($theme !== "_ws2") { // WS1.0 ONLY
-        if ((variable_get('mega_footer_unit_logo', '') !== '') || (!empty(array_filter($sm_icons)))) {
+        if (!empty(array_filter($sm_icons))) {
           $footer_mark .= "<nav role='navigation' aria-label='Social media'>" . $icons_markup . "</nav>";
         }
       }
