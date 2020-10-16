@@ -69,13 +69,14 @@ button, .button, .btn, a.btn, .btn > a {
   border-radius: $border-radius-circle;
   cursor: pointer;
   display: inline-block;
-  font-size: 1em;
+  font-size: 1rem;
   font-weight: bold;
-  line-height: 1em;
+  line-height: 1rem;
   margin-bottom: 0;
   //max-width: $btn-max-width; // Disabled for now
   min-width: $btn-min-width; // default (not -med)
-  padding: $padding-base-vertical/2 $padding-base-horizontal/2;
+  //padding: $padding-base-vertical/2 $padding-base-horizontal/2;
+  padding: 1rem 2rem;
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;

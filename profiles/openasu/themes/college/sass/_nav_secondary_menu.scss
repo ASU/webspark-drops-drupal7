@@ -91,7 +91,7 @@
 // ONLY secondary menu
 ///////////////////////
 #{$ws2-content-styles-container} .pane-menu-tree {
-  margin-top: 1.5em;
+  margin-top: 0;
   border: none;
   ul {
     li::before {
@@ -211,7 +211,7 @@
     line-height: 1.5rem;
     letter-spacing: -0.015em;
     color: $ws2-gray-darkest;
-    padding: 1rem;
+    padding: 0 1rem 1rem 1rem;
     margin: 0;
     display: block;
     text-decoration: none;

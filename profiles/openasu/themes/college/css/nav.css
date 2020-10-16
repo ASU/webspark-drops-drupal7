@@ -125,7 +125,7 @@ div.region-content #page-page .pane-system-main-menu ul.menu li.expanded ul.menu
 div.region-content #page-page .pane-system-main-menu:before, div.region-content #page-page .pane-menu-tree:before { border: none; content: ""; display: block; height: 100%; left: 0; position: absolute; top: 0; width: 100%; z-index: -1; }
 div.region-content #page-page .pane-system-main-menu .pane-system-main-menu ul.menu li a:focus, div.region-content #page-page .pane-system-main-menu .pane-menu-tree ul.menu li a:focus, div.region-content #page-page .pane-menu-tree .pane-system-main-menu ul.menu li a:focus, div.region-content #page-page .pane-menu-tree .pane-menu-tree ul.menu li a:focus { outline: 0.125em solid #191919; }
 
-div.region-content #page-page .pane-menu-tree { margin-top: 1.5em; border: none; }
+div.region-content #page-page .pane-menu-tree { margin-top: 0; border: none; }
 div.region-content #page-page .pane-menu-tree ul li::before { content: none; }
 div.region-content #page-page .pane-menu-tree ul.menu { margin-bottom: 0; }
 div.region-content #page-page .pane-menu-tree ul.menu li { border-top: 1px solid #d0d0d0; }
@@ -145,7 +145,7 @@ div.region-content #page-page .pane-menu-tree ul.menu li ul li.leaf.last a { bor
 div.region-content #page-page .pane-menu-tree ul.menu li ul li.leaf.first.last a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; border-top: none; }
 div.region-content #page-page .pane-menu-tree ul.menu li ul li.last ul li.first.last.leaf a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; padding-top: 0.5rem; }
 div.region-content #page-page .pane-menu-tree ul.menu li ul li.expanded ul li a::before { content: none; }
-div.region-content #page-page .pane-menu-tree h2.pane-title { font-size: 1.5rem; font-weight: 700; line-height: 1.5rem; letter-spacing: -0.015em; color: #191919; padding: 1rem; margin: 0; display: block; text-decoration: none; }
+div.region-content #page-page .pane-menu-tree h2.pane-title { font-size: 1.5rem; font-weight: 700; line-height: 1.5rem; letter-spacing: -0.015em; color: #191919; padding: 0 1rem 1rem 1rem; margin: 0; display: block; text-decoration: none; }
 div.region-content #page-page .pane-menu-tree .pane-content { border-width: 0 1px 1px 1px; border-style: solid; border-color: #d0d0d0; }
 
 span.nolink { display: block; font-size: 1.1rem; letter-spacing: -.035em; font-weight: 700; text-align: left; line-height: calc(100% + 0.12em); opacity: 1; margin: 1rem 2.5rem 1rem 2.5rem; }

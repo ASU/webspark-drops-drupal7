@@ -13,7 +13,7 @@
 
 #header > .container #headerContainer .region.region-header > *:not(#block-asu-brand-asu-brand-header-ws2.block-asu-brand) { max-width: 1164px; }
 
-#header > .container #headerContainer .universal-nav > div { margin: 0 auto; }
+#header > .container #headerContainer .universal-nav > div { margin: 0 auto; padding-right: 2rem; }
 
 body { min-width: 20em; }
 body #page .region-content { padding: 0; }
@@ -37,7 +37,7 @@ div.error label { padding-left: 2em; }
 button, .button, .btn, a.btn, .btn > a { transition: .1s ease-out; word-wrap: break-word; }
 button:hover, .button:hover, .btn:hover, a.btn:hover, .btn > a:hover { border-bottom: transparent; text-decoration: none; }
 
-.btn, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree { -moz-user-select: none; background-image: none; border: 1px solid transparent; border-radius: 32px; cursor: pointer; display: inline-block; font-size: 1em; font-weight: bold; line-height: 1em; margin-bottom: 0; min-width: 5rem; padding: 8px 8px; text-align: center; vertical-align: middle; white-space: nowrap; }
+.btn, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree { -moz-user-select: none; background-image: none; border: 1px solid transparent; border-radius: 32px; cursor: pointer; display: inline-block; font-size: 1rem; font-weight: bold; line-height: 1rem; margin-bottom: 0; min-width: 5rem; padding: 1rem 2rem; text-align: center; vertical-align: middle; white-space: nowrap; }
 .btn.active, .btn:focus, .btn:active, .btn:active:focus, .btn.active:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:active:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.active:focus { background-image: none; outline: 0 none; text-decoration: none; }
 .btn:hover, .btn:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:focus { border: 1px solid transparent; transform: scale(1.1); }
 .btn.disabled, .btn.disabled:hover, .btn.disabled:focus, .btn.disabled:active, .btn.disabled.active, .btn[disabled], .btn[disabled]:hover, .btn[disabled]:focus, .btn[disabled]:active, .btn.active[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.disabled, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.disabled:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.disabled:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.disabled:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.disabled.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree[disabled]:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree[disabled]:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree[disabled]:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.active[disabled] { box-shadow: none; cursor: not-allowed; opacity: 0.5; pointer-events: none; }
@@ -161,7 +161,7 @@ fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fields
 div.region-content :not(.btn) > a, div.region-content .ui-widget-content :not(.btn) > a { border-bottom: 1px solid #8c1d40; text-decoration: none; color: #8c1d40; }
 div.region-content :not(.btn) > a:focus, div.region-content :not(.btn) > a:hover, div.region-content .ui-widget-content :not(.btn) > a:focus, div.region-content .ui-widget-content :not(.btn) > a:hover { color: #440E22; text-decoration: none; border-bottom: none; }
 
-#asu_footer a { border-bottom: transparent; }
+#header a, #asu_footer a { border-bottom: transparent; }
 
 html { font-size: 100%; }
 
@@ -491,8 +491,6 @@ div.region-content #page-page .ws2-element-alt.ws2-element-alt-white .ws2-elemen
 #page-footer #block-asu-brand-asu-brand-footer { background-color: #e8e8e8; }
 
 #asu_footer ul { max-width: 1170px; margin: 0 auto; padding-left: 0; }
-
-#mega-footer-logo-wrapper img { max-height: 75px; }
 
 a:focus, .ui-widget-content a:focus, input:focus, a.btn:focus, .btn a:focus, #skip_to_content:focus, #top-content #tabs .nav-pills > li.active > a:focus, h4.ui-accordion-header.ui-state-hover, h4.ui-accordion-header:focus { outline: 2px solid #191919; }
 
