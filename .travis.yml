@@ -123,7 +123,6 @@ before_script:
   # Enable correct themes as defaults (currently WS2.0)
   - drush pm-enable college --yes
   - drush vset theme_default college
-  - drush vset admin_theme webspark_seven
   - drush pm-disable innovation --yes
 
   # Turn on ASU Brand filtering of GTM snippet, Cookie Consent (GDPR) addition after v4.7

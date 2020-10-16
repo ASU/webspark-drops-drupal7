@@ -37,15 +37,17 @@ function openasu_install_tasks_alter(&$tasks, $install_state) {
  * Implements hook_form_submit()
  */
 function openasu_theme_innovation_setup(&$install_state) {
+  // Default themes on spinup
+  $basetheme = 'kalatheme';
+  $theme = 'innovation';
+
   // Set install state to
-  $install_state['parameters']['whichtheme'] = 'innovation';
+  $install_state['parameters']['whichtheme'] = $theme;
 
   // Disable the default Bartik theme
   theme_disable(array('bartik'));
 
   // Enable and set the themes
-  $basetheme = 'kalatheme';
-  $theme = 'innovation';
   variable_set('clean_url', 1);
   system_rebuild_theme_data();
   drupal_theme_rebuild();
@@ -66,7 +68,7 @@ function openasu_theme_innovation_setup(&$install_state) {
 }
 
 /**
- * MASTER block configuration for Webspark for themes (Innovation on spinup)
+ * MASTER block configuration for Webspark for themes
  * For both profile and module (webspark_featurescustom) usage
  * @param $theme - Target/new theme
  * @param array $ws_data - If alternate theme data is added, it may override default Web standards keys, data, etc.
