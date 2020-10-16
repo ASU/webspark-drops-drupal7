@@ -33,8 +33,7 @@
   border-bottom: 1px solid #333;
 }
 .megafoot .row.megafoot-logo-social #mega-footer-logo-wrapper {
-  padding-left: 0;
-  padding-right: 0;
+  padding: 1.5rem 0;
   display: inline-block;
 }
 .megafoot .row.megafoot-logo-social #mega-footer-logo-wrapper a {

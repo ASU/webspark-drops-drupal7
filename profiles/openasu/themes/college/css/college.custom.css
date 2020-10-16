@@ -13,7 +13,7 @@
 
 #header > .container #headerContainer .region.region-header > *:not(#block-asu-brand-asu-brand-header-ws2.block-asu-brand) { max-width: 1164px; }
 
-#header > .container #headerContainer .universal-nav > div { margin: 0 auto; padding-right: 2rem; }
+#header > .container #headerContainer .universal-nav > div { margin: 0 auto; }
 
 body { min-width: 20em; }
 body #page .region-content { padding: 0; }
@@ -161,7 +161,7 @@ fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fields
 div.region-content :not(.btn) > a, div.region-content .ui-widget-content :not(.btn) > a { border-bottom: 1px solid #8c1d40; text-decoration: none; color: #8c1d40; }
 div.region-content :not(.btn) > a:focus, div.region-content :not(.btn) > a:hover, div.region-content .ui-widget-content :not(.btn) > a:focus, div.region-content .ui-widget-content :not(.btn) > a:hover { color: #440E22; text-decoration: none; border-bottom: none; }
 
-#header a, #asu_footer a { border-bottom: transparent; }
+#asu_footer a { border-bottom: transparent; }
 
 html { font-size: 100%; }
 
@@ -491,6 +491,8 @@ div.region-content #page-page .ws2-element-alt.ws2-element-alt-white .ws2-elemen
 #page-footer #block-asu-brand-asu-brand-footer { background-color: #e8e8e8; }
 
 #asu_footer ul { max-width: 1170px; margin: 0 auto; padding-left: 0; }
+
+#mega-footer-logo-wrapper img { max-height: 75px; }
 
 a:focus, .ui-widget-content a:focus, input:focus, a.btn:focus, .btn a:focus, #skip_to_content:focus, #top-content #tabs .nav-pills > li.active > a:focus, h4.ui-accordion-header.ui-state-hover, h4.ui-accordion-header:focus { outline: 2px solid #191919; }
 

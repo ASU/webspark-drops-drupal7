@@ -15,7 +15,6 @@
 /* Default "Mobile size" <= 991px */
 @media (max-width: 991px) { .container { width: 100%; max-width: 992px; }
   #ASUNavMenu { display: none !important; }
-  #headerContainer .primary-nav .navbar-container a { border-bottom: 1px solid #d0d0d0; }
   h1, .h1 { margin-bottom: 3rem; font-size: 48px; }
   h1.page-title { margin-bottom: 0; padding-bottom: 0.75rem; }
   h2, .h2 { font-size: 34px; }
