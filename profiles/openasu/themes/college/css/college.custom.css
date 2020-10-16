@@ -492,6 +492,8 @@ div.region-content #page-page .ws2-element-alt.ws2-element-alt-white .ws2-elemen
 
 #asu_footer ul { max-width: 1170px; margin: 0 auto; padding-left: 0; }
 
+#mega-footer-logo-wrapper img { max-height: 75px; }
+
 a:focus, .ui-widget-content a:focus, input:focus, a.btn:focus, .btn a:focus, #skip_to_content:focus, #top-content #tabs .nav-pills > li.active > a:focus, h4.ui-accordion-header.ui-state-hover, h4.ui-accordion-header:focus { outline: 2px solid #191919; }
 
 #skip_to_content { position: absolute; left: -9999px; }
