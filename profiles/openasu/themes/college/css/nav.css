@@ -11,7 +11,7 @@
 
 .nav > li > a { display: inline-block; }
 
-.navbar-nav > li:focus > a, .navbar-nav > .active:focus > a, .navbar-nav > li > a:focus, .nav .open > a:focus, .navbar-nav > .active > a:focus .navbar-nav .dropdown-menu > li > a:focus { outline: 2px solid #191919; }
+.navbar-nav > li:focus > a, .navbar-nav > .active:focus > a, .navbar-nav > li > a:focus, .nav .open > a:focus, .navbar-nav > .active > a:focus .navbar-nav .dropdown-menu > li > a:focus { outline: 2px solid #191919; outline-offset: 0.25rem; }
 
 /* Navigation breadcrumbs ----------------------------------- */
 .breadcrumb { padding: 0 0; margin-top: 1.5em; margin-bottom: 3em; list-style: none; font-size: 0.875em; background-color: transparent; }
@@ -29,7 +29,7 @@
 .nav-pills > li > a { border: 0 none; border-radius: 32px; min-width: 5rem; text-align: center; font-weight: bold; letter-spacing: -0.25px; }
 .nav-pills > li > li + li { margin-left: 0.125em; }
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus { color: #fff; background-color: #8c1d40; }
-.nav-pills > li.active > a:focus { outline: 2px solid #191919; }
+.nav-pills > li.active > a:focus { outline: 2px solid #191919; outline-offset: 0.25rem; }
 
 /* Tabs, QuickTabs, pagers, pagination, sidebar (secondary menu) -------------------------------------------------------------- */
 .ui-widget, .ui-widget-header, .ui-widget-content { font-family: inherit; }
