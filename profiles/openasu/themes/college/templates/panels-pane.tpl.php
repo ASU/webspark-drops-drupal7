@@ -16,7 +16,7 @@
  * - $display: The complete panels display object containing all kinds of
  *   data including the contexts and all of the other panes being displayed.
  */
-/** Only adding to El Puente just in case some super-custom work should be done in the TPL. */
+/** Only adding to College theme just in case some super-custom work should be done in the TPL. */
 /**
  * Added preliminary $title processing to place it within the pane-content div if desired.
  */

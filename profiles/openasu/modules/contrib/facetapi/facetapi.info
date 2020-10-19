@@ -18,7 +18,6 @@ files[] = plugins/facetapi/widget_links.inc
 files[] = tests/facetapi_test.plugins.inc
 files[] = tests/facetapi.test
 
-version = "7.x-1.5"
 ; Information added by Drupal.org packaging script on 2019-09-19
 version = "7.x-1.6"
 core = "7.x"

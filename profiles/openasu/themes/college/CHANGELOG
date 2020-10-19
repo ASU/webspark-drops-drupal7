@@ -1,0 +1,24 @@
+College (v1.0) - 2020-10-19
+---------------------------
+- Initial creation of theme by forking Innovation and gutting it, and then doing the following:
+  - Integrated SASS (using Compass) into all new elements
+  - Refactored existing CSS from Innovation and altered it for WS2.0
+  - Implemented a one-click swap out between Innovation (WS1.0) and College (WS2.0) theme-related elements (blocks, scripts, etc.)
+  - Created WS2.0-themed, global-level elements:
+    - Drupal-based
+      - Megamenu
+      - Sidebar menu
+      - Mega footer
+        - Added custom FontAwesome 5.x icons for Youtube and Instagram (NOTE: FontAwesome 4.x is still the only available version)
+    - Web components-based
+      - Global Header
+      - Global Footer
+  - Created WS2.0-themed elements for the IPE
+    - Banners
+    - Dividers
+  - Created WS2.0-themed elements for the WYSIWYG (HTML-level elements)
+    - Typography (Fonts, Headings, Lead/SEO paragraphs)
+    - Alerts
+    - Banners
+    - List items
+    - Buttons

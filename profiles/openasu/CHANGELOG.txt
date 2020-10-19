@@ -1,3 +1,101 @@
+Webspark 1.76 (Florida), 2020-09-15
+-----------------------------------
+
+- Webspark core updates
+
+  * Drupal core - v1.73+patch4
+    * Security update! See the latest release notes at https://www.drupal.org/project/drupal/releases/7.73 for more
+      information
+  * Panopoly - v1.76
+    - Multiple Panopoly releases (1.71-1.76) rolled into this update; See https://www.drupal.org/project/panopoly/releases/7.x-1.76 for more info.
+    - The following Panopoly modules were patched for Webspark customizations
+      - Panopoly Test - Synced up with Webspark to work in Travis-CI.org testing
+      - Panopoly Theme
+      - Panopoly WYSIWYG
+
+- Web standards components in Webspark
+
+  * College (v1.0) - Web standards 2.0 Lite theme
+    - Integrated SASS (using Compass) into all new elements
+    - Refactored existing CSS from Innovation and altered it for WS2.0
+    - Implemented a one-click swap out between Innovation (WS1.0) and College (WS2.0) theme-related elements (blocks, scripts, etc.)
+    - Created WS2.0-themed, global-level elements:
+      - Drupal-based
+        - Megamenu
+        - Sidebar menu
+        - Mega footer
+          - Added custom FontAwesome 5.x icons for Youtube and Instagram (NOTE: FontAwesome 4.x is still the only available version)
+      - Web components-based
+        - Global Header
+        - Global Footer
+    - Created WS2.0-themed elements for the IPE
+      - Banners
+      - Dividers
+    - Created WS2.0-themed elements for the WYSIWYG (HTML-level elements)
+      - Typography (Fonts, Headings, Lead/SEO paragraphs)
+      - Alerts
+      - Banners
+      - List items
+      - Buttons
+  * WS2.0 Banners (ws2_banners) - v1.0
+    - Added this Features-based module that adds WS2.0 banners as an option in the IPE
+  * Webspark Featurescustom (webspark_featurescustom) - v1.10
+    - Refactored code for determining if a Web standards theme is in use so it could be used globally throughout Webspark
+    - Removed any legacy code for an ASU Students site content block
+    - Added new fields for adding parent unit information to the block settings
+  * Webspark Panels Styles (webspark_panels_styles) - v1.7
+    - Added WS2.0-compliant divider styling option for Panels panes
+  * Webspark Seven (webspark_seven) - v1.1
+    - Eliminated "Help region not found" error which occurred after theme changes tried to place elements in the Help region.
+  * Webspark WYSIWYG (webspark_wysiwyg) - v1.10
+    - Added database update to enable the Advanced Horizontal Rule plugin (AHR) and customize/simplify the UI for end users.
+    - Updated Styles dropdown list to:
+      - Include WS2.0 styles for:
+        - Typography (Fonts, Headings, Lead/SEO paragraphs)
+        - Alerts
+        - List items
+        - Buttons
+        - Element animations
+        - Horizontal rules (Gold, regular)
+      - Moved deprecated WS1.0 styles to the bottom of the WYSIWYG "Styles" list.
+
+- Contrib module updates
+
+  - Managed by Panopoly
+    * Admin Views (v1.7)
+    * Date (v2.10)
+    * Facet API (v1.6)
+    * Field Group (v1.6)
+    * Fieldable Panels Panes (v1.13)
+    * File Entity (v2.27)
+    * Link (v1.7)
+    * Media (v2.26)
+    * Search API Solr (v1.15)
+    * Tablefield (v3.6)
+    * Views (v3.24)
+    * WYSIWYG (v2.6)
+
+  - Maintained by Webspark
+    * TB Megamenu (v7.x-1.0-rc2+10-dev+patch)
+      - Patched to work with WS2.0 megamenu requirements
+
+- Custom module updates
+  * ASU Brand (asu_brand) - v2.0
+    - Updated for WS2.0 theme release (College)
+    - Integrated web component versions of the new WS2.0 global header/footer
+    - Added new fields for header parent org, department URL to header block configuration form
+    - Added SASS for CSS management
+    - Added logic to detect which Web standards theme is working to determine which header/footer blocks to enable/disable when the theme is switched.
+    - Hid ASU Brand configuration form from Webspark installs (only visible outside of Webspark) because those settings are now managed by which Web standards theme is enabled and is set as the default.
+  * ASU Request for Information (asu_rfi) - v3.5
+    - Online campus selections for WPCarey no longer return a, "Country not selected", error.
+  * Webspark Test (webspark_test) - v2.0
+    - Updated to work with latest versions of Chrome, Chromedriver, along with the latest version of the Panopoly Test module
+
+- Contrib library updates
+  * TinyMCE (v3.5.11+patch)
+    - Patched to work for Web standards 2.0's new, gold horizontal rule
+
 Webspark 1.70.12 (El Paso), 2020-06-17
 ----------------------------------------------
 - Webspark core

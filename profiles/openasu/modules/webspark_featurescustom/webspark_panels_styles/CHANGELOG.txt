@@ -1,3 +1,7 @@
+Webspark Panels Styles 7.x-1.7, 2020-10-19
+------------------------------
+- Added WS2.0-compliant divider styling option for Panels panes.
+
 Webspark Panels Styles 7.x-1.6, 2020-04-07
 ------------------------------
 - Fixed syntax error in .add-margin-xl-above CSS selector rule.
