@@ -1,10 +1,21 @@
+Webspark Mega Menu - 7.x-2.0, 2020-10-19
+---------------------
+- Created WS2.0 themed version of the output
+- Fixed TB Megamenu UI to allow for inserting WS2.0 styling
+- Updated, refactored SASS to work for WS2.0 theme
+- Added and refactored JS logic to work with the new theme (font size, spacing settings)
+- Added theme detection logic to determine which web assets (JS/CSS/images) to load
+- Replaced carets with chevrons
+- Added secondary button insertion capability within the megamenu
+- Re-added temporary support for flyout menus
+
 Webspark Mega Menu - 7.x-1.11, 2019-08-02
 ---------------------
 - Codified and unified CSS value for ASU gold to #fffc732
 
 Webspark Mega Menu - 7.x-1.10, 2018-10-09
 ---------------------
-- Accessibility fix - Updated <i> tags to <span> tags 
+- Accessibility fix - Updated <i> tags to <span> tags
 
 Webspark Mega Menu - 7.x-1.9, 2018-05-15
 ---------------------

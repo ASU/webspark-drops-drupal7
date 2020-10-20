@@ -1,3 +1,7 @@
+ASU Spotlight 7.x-1.11, 2020-10-19
+-----------------------
+- Removed <ul> bullets and fixed layout when spotlights are used with WS2.0 College theme
+
 ASU Spotlight 7.x-1.10, 2019-12-20
 -----------------------
 - Better field validation added to stop error/warnings messages when previously uploaded spotlight images are

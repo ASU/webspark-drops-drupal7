@@ -1,3 +1,7 @@
+Webspark Extras 7.x-1.8, 2020-10-19
+-----------------------------------
+- Updated Quicktabs animation to match WS2.0
+
 Webspark Extras 7.x-1.7, 2020-04-07
 -----------------------------------
 - Added pre-populated ASU campuses select lists for the Webform module
