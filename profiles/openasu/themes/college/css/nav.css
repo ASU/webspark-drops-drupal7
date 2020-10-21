@@ -14,7 +14,7 @@
 .navbar-nav > li:focus > a, .navbar-nav > .active:focus > a, .navbar-nav > li > a:focus, .nav .open > a:focus, .navbar-nav > .active > a:focus .navbar-nav .dropdown-menu > li > a:focus { outline: 2px solid #191919; outline-offset: 0.25rem; }
 
 /* Navigation breadcrumbs ----------------------------------- */
-.breadcrumb { padding: 0 0; margin-top: 1.5em; margin-bottom: 3em; list-style: none; font-size: 0.875em; background-color: transparent; }
+.breadcrumb { padding: 0; margin-top: 1.5em; margin-bottom: 3em; list-style: none; font-size: 0.875em; background-color: transparent; }
 .breadcrumb > li { display: inline-block; }
 .breadcrumb > li + li:before { content: "/\00a0"; padding: 0 0.3125em; color: #747474; }
 .breadcrumb > li > a { border-bottom: 0; }

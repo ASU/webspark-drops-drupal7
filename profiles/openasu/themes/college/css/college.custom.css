@@ -32,6 +32,7 @@ div.error { background-repeat: no-repeat; text-align: left; font: normal 12px/16
 div.error label { padding-left: 2em; }
 
 /* Level one (atomic) elements ------------------------------- */
+/* buttons */
 /* =BUTTONS --- WS2.0 DONE
 -------------------------------------------------------------- */
 button, .button, .btn, a.btn, .btn > a { transition: .1s ease-out; word-wrap: break-word; }
@@ -158,11 +159,13 @@ fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fields
 
 .tb-megamenu-main-menu > button.btn-navbar.tb-megamenu-button { display: none; }
 
+/* links */
 div.region-content :not(.btn) > a:not(.btn), div.region-content .ui-widget-content :not(.btn) > a:not(.btn) { border-bottom: 1px solid #8c1d40; text-decoration: none; color: #8c1d40; }
 div.region-content :not(.btn) > a:not(.btn):focus, div.region-content :not(.btn) > a:not(.btn):hover, div.region-content .ui-widget-content :not(.btn) > a:not(.btn):focus, div.region-content .ui-widget-content :not(.btn) > a:not(.btn):hover { color: #440E22; text-decoration: none; border-bottom: none; }
 
 #header a, #asu_footer a { border-bottom: transparent; }
 
+/* typography */
 html { font-size: 100%; }
 
 body { font-size: 1rem; font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif; color: #191919; background-color: #fff; }
@@ -194,6 +197,7 @@ h6, .h6 { font-weight: normal; }
 
 .explore-programs h3 { font-size: 1.625rem; }
 
+/* blockquotes */
 /* Blockquotes */
 /* blockquotes-output - Return base64-encoded string for rendering open quote. @param (str) $color - (optional) defaults to dark gray. Alt options (gold, maroon, white) */
 /* blockquotes-quotes - Returns background-image CSS rule @param (str) $color - desired colors (gold, maroon, white) */
@@ -214,6 +218,7 @@ blockquote .ws2-sig-title:before { padding-right: 0.5em; content: "\2014"; }
 blockquote .ws2-sig-byline { clear: left; display: block; font-weight: normal; padding-left: 1.5em; }
 blockquote.ws2-element-black a { color: #ffc627; }
 
+/* images */
 img { max-width: 100%; height: auto; vertical-align: bottom; }
 
 /* WYSIWYG image spacing */
@@ -233,6 +238,7 @@ div.caption-inner { padding: 0; background: transparent; border: none; }
 div.caption-inner > img { margin-bottom: 0; }
 div.caption-inner p.caption-text, div.caption-inner .caption-text { padding: 1rem; font-size: 0.75rem; text-align: left; margin: 0; border: 1px solid #d0d0d0; border-top: none; }
 
+/* list items */
 /** List items */
 /* -- BlockQuotes
 -------------------------------------------------------------- */
@@ -267,6 +273,7 @@ div.region-content #page-page ol.ws2-list-stepped.ws2-element-gray > li:before {
 div.region-content #page-page ol.ws2-list-stepped.ws2-element-gold > li:before { background-color: #ffc627; color: #191919; }
 div.region-content #page-page div.pane-menu-tree ul li:before, div.region-content #page-page div.pane-menu-tree ol li:before, div.region-content #page-page .panels-ipe-dragbar ul li:before, div.region-content #page-page .panels-ipe-dragbar ol li:before, div.region-content #page-page .panels-ipe-newblock ul li:before, div.region-content #page-page .panels-ipe-newblock ol li:before { content: none !important; }
 
+/* dividers */
 /** New WS2.0 - Dividers and Backgrounds IS_SCSS */
 hr.ws2-hr-gold { height: 0.5rem; background-color: #ffc627; max-width: 16rem; margin: 3em 0; }
 
@@ -282,6 +289,7 @@ div.region-content #page-page .divider-network-white { background-image: url("/p
 div.region-content #page-page .divider-network-black { background-image: url("/profiles/openasu/themes/college/images/network_black.png"); background-color: #191919; }
 div.region-content #page-page [class*=divider-network-] { background-position: top left; }
 
+/* tables */
 /* Default table styles */
 table { background-color: #fff; margin-bottom: 1.5em; max-width: 100%; width: 100%; border: 1px solid #e8e8e8; }
 
@@ -305,6 +313,7 @@ table.bordered > tbody > tr:nth-child(2n+1) { background-color: #fff; }
 
 table.bordered > caption + thead > tr:first-child > th, table.bordered > caption + thead > tr:first-child > td, table.bordered > colgroup + thead > tr:first-child > th, table.bordered > colgroup + thead > tr:first-child > td, table.bordered > thead:first-child > tr:first-child > th, table.bordered > thead:first-child > tr:first-child > td { border-top: 1px solid #bfbfbf; }
 
+/* content callouts */
 /* Content Callouts ------------------------------------------ */
 .node-content-callout { padding: 5rem 0; }
 .node-content-callout h2 { margin-bottom: 34px; font-size: 40px; }
@@ -348,7 +357,7 @@ table.bordered > caption + thead > tr:first-child > th, table.bordered > caption
 /** Alerts */
 .alert { color: #191919; font-weight: 400; border-bottom-color: #191919; position: relative; margin: 16px 0; padding: 24px 24px; }
 .alert a { color: #191919; border-bottom-color: #191919; }
-.alert a.close { background-color: #fff; color: #191919; font-size: 1.25em; font-weight: bold; opacity: 0.8; border: 1px solid #d0d0d0; padding: 0.25rem 0.5rem 0.25rem 0.58rem; margin: 0 0 16px 16px; border-radius: 1rem; height: 2rem; width: 2rem; }
+.alert a.close { background-color: #fff; color: #191919; font-size: 1.25em; font-weight: bold; opacity: 0.8; border: 1px solid #d0d0d0 !important; padding: 0.25rem 0.5rem 0.25rem 0.58rem; margin: 0 0 16px 16px; border-radius: 1rem; height: 2rem; width: 2rem; }
 .alert a.close:hover { opacity: 1.0; color: #191919; border-bottom-color: #d0d0d0; cursor: pointer; }
 .alert a.close + p:empty { margin-top: -1rem; padding-top: 0; background-color: red !important; }
 .alert a:hover { color: #440E22; border-bottom-color: #440E22; cursor: pointer; }
