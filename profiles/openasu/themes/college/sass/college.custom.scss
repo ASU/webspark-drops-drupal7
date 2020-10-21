@@ -48,14 +48,23 @@ div.error {
 }
 
 /* Level one (atomic) elements ------------------------------- */
+/* buttons */
 @import 'buttons_holder';
+/* links */
 @import 'links';
+/* typography */
 @import 'typography';
+/* blockquotes */
 @import "blockquotes";
+/* images */
 @import 'images';
+/* list items */
 @import 'list_items';
+/* dividers */
 @import 'dividers';
+/* tables */
 @import 'tables';
+/* content callouts */
 @import 'content_callout';
 
 /* Panels ---------------------------------------------------- */
