@@ -1,184 +1,43 @@
-/**
- * CSS file for Webspark hero module.
- */
+/** CSS file for Webspark hero module. */
 /* Increase font size of modal warning and move higher */
-.hero-warning {
-  position: relative;
-  top: -105px;
-  font-size: 1em;
-  font-weight: bold;
-}
+.hero-warning { position: relative; top: -105px; font-size: 1em; font-weight: bold; }
 
 /* Make hero background image responsive */
-.pane-bundle-jumbohero {
-  background-size: cover;
-  width: 100%;
-  margin-top: -1px;
-}
-.pane-bundle-jumbohero .pane-content {
-  position: relative;
-  height: 700px;
-  padding: 0 0.9375em 1em 0.9375em;
-}
-.pane-bundle-jumbohero .jumbotext-wrapper {
-  width: 100%;
-}
-.pane-bundle-jumbohero .jumbotext-wrapper {
-  overflow: scroll; /* Added for overflow of text elements */
-  overflow-y: scroll;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-}
-
-.pane-bundle-jumbohero .jumbotext-wrapper::-webkit-scrollbar  { /* WebKit */
-  width: 0;
-  height: 0;
-}
-
-.pane-bundle-jumbohero .field-name-field-webspark-jumbo-position {
-  display: none;
-}
-.pane-bundle-jumbohero p {
-  margin: 0;
-  padding: 0;
-}
-.pane-bundle-jumbohero h2 {
-  color: white;
-  font-size: 3.75rem;
-  font-weight: 900;
-  line-height: 1;
-  margin: 0;
-  padding: 0.625rem 0;
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-}
-.pane-bundle-jumbohero .field-name-field-webspark-jumbohero-blurb {
-  max-width: 900px;
-  margin-bottom: 1em;
-  color: white;
-  font-size: 1.5em;
-  line-height: 1.5em;
-  font-weight: 900;
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-}
-.pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn, .pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn {
-  width: 41.6667%;
-  display: inline-block;
-  margin-bottom: 0.75em;
-}
-.pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn {
-  padding-right: 0.9375em;
-}
-.pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn {
-  padding-left: 0.9375em;
-}
-.pane-bundle-jumbohero .position-top-left {
-  padding-top: 4.6875em;
-  text-align: left;
-}
-.pane-bundle-jumbohero .position-top-center {
-  padding-top: 4.6875em;
-  text-align: center;
-}
-.pane-bundle-jumbohero .position-top-center .field-name-field-webspark-jumbohero-blurb {
-  margin: 0 auto;
-}
-.pane-bundle-jumbohero .position-top-right {
-  padding-top: 4.6875em;
-  text-align: right;
-}
-.pane-bundle-jumbohero .position-top-right .field-name-field-webspark-jumbohero-blurb {
-  float: right;
-}
-.pane-bundle-jumbohero .position-bottom-left {
-  position: absolute;
-  bottom: 5em;
-  padding-top: 0;
-}
-.pane-bundle-jumbohero .position-bottom-center {
-  position: absolute;
-  bottom: 5em;
-  padding-top: 0;
-  text-align: center;
-}
-.pane-bundle-jumbohero .position-bottom-center .field-name-field-webspark-jumbohero-blurb {
-  margin: 0 auto;
-}
-.pane-bundle-jumbohero .position-bottom-right {
-  position: absolute;
-  bottom: 5em;
-  padding-top: 0;
-  text-align: right;
-}
-.pane-bundle-jumbohero .position-bottom-right .field-name-field-webspark-jumbohero-blurb {
-  float: right;
-}
+.pane-bundle-jumbohero { background-size: cover; width: 100%; margin-top: -1px; }
+.pane-bundle-jumbohero .pane-content { position: relative; height: 700px; padding: 0 0.9375em 1em 0.9375em; }
+.pane-bundle-jumbohero .jumbotext-wrapper { width: 100%; overflow-y: scroll; scrollbar-width: none; /* Firefox */ -ms-overflow-style: none; /* Internet Explorer 10+ */ }
+.pane-bundle-jumbohero .jumbotext-wrapper::-webkit-scrollbar { /* WebKit */ width: 0; height: 0; }
+.pane-bundle-jumbohero .field-name-field-webspark-jumbo-position { display: none; }
+.pane-bundle-jumbohero p { margin: 0; padding: 0; }
+.pane-bundle-jumbohero h2 { color: white; font-size: 3.75rem; font-weight: 900; line-height: 1; margin: 0; padding: 0.625rem 0; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
+.pane-bundle-jumbohero .field-name-field-webspark-jumbohero-blurb { max-width: 900px; margin-bottom: 1em; color: white; font-size: 1.5em; line-height: 1.5em; font-weight: 900; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
+.pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn, .pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn { width: 41.6667%; display: inline-block; margin-bottom: 0.75em; }
+.pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn { padding-right: 0.9375em; }
+.pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn { padding-left: 0.9375em; }
+.pane-bundle-jumbohero .position-top-left { padding-top: 4.6875em; text-align: left; }
+.pane-bundle-jumbohero .position-top-center { padding-top: 4.6875em; text-align: center; }
+.pane-bundle-jumbohero .position-top-center .field-name-field-webspark-jumbohero-blurb { margin: 0 auto; }
+.pane-bundle-jumbohero .position-top-right { padding-top: 4.6875em; text-align: right; }
+.pane-bundle-jumbohero .position-top-right .field-name-field-webspark-jumbohero-blurb { float: right; }
+.pane-bundle-jumbohero .position-bottom-left { position: absolute; bottom: 5em; padding-top: 0; }
+.pane-bundle-jumbohero .position-bottom-center { position: absolute; bottom: 5em; padding-top: 0; text-align: center; }
+.pane-bundle-jumbohero .position-bottom-center .field-name-field-webspark-jumbohero-blurb { margin: 0 auto; }
+.pane-bundle-jumbohero .position-bottom-right { position: absolute; bottom: 5em; padding-top: 0; text-align: right; }
+.pane-bundle-jumbohero .position-bottom-right .field-name-field-webspark-jumbohero-blurb { float: right; }
 
 /* Button styles */
 /* Positioning content within jumbo hero */
 /* =MEDIA QUERIES
 -------------------------------------------------------------- */
-@media (min-width: 1200px) {
-  .pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn,
-  .pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn {
-    width: 33.3333%;
-  }
-}
-@media (max-width: 992px) {
-  .pane-bundle-jumbohero .jumbotext-wrapper {
-    width: 95%;
-  }
-  .pane-bundle-jumbohero h2 {
-    font-size: 3.125rem;
-  }
-  .pane-bundle-jumbohero .field-name-field-webspark-jumbohero-blurb {
-    font-size: 1.3125em;
-    line-height: 1.3125em;
-  }
-  .pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn,
-  .pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn {
-    width: 50%;
-  }
-}
-@media (max-width: 768px) {
-  .pane-bundle-jumbohero h2 {
-    padding-top: 1.875em;
-    font-size: 2.5rem;
-  }
-  .pane-bundle-jumbohero .field-name-field-webspark-jumbohero-blurb .field-item > *:first-child {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-  .pane-bundle-jumbohero .field-name-field-webspark-jumbohero-blurb .field-item > *:nth-child(n+2) {
-    display: none;
-  }
-  .pane-bundle-jumbohero .position-top-right .field-name-field-webspark-jumbohero-blurb,
-  .pane-bundle-jumbohero .position-bottom-right .field-name-field-webspark-jumbohero-blurb {
-    margin-bottom: 0;
-  }
-  .pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn,
-  .pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn {
-    display: block;
-    width: 100%;
-    margin: 0;
-    padding: 0 0.9375em;
-  }
-  .pane-bundle-jumbohero .position-bottom-left,
-  .pane-bundle-jumbohero .position-bottom-center,
-  .pane-bundle-jumbohero .position-bottom-right {
-    bottom: 5em;
-  }
-}
-@media (max-width: 480px) {
-  .pane-bundle-jumbohero .jumbotext-wrapper {
-    width: 90%;
-  }
-}
-/* media print issues */
-@media print {
-  .pane-bundle-hero .hero-wrapper,
-  .pane-bundle-jumbohero .hero-wrapper,
-  .pane-bundle-banner .hero-wrapper {
-  height: unset;
-  }
-}
+@media (min-width: 1200px) { .pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn, .pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn { width: 33.3333%; } }
+@media (max-width: 992px) { .pane-bundle-jumbohero .jumbotext-wrapper { width: 95%; }
+  .pane-bundle-jumbohero h2 { font-size: 3.125rem; }
+  .pane-bundle-jumbohero .field-name-field-webspark-jumbohero-blurb { font-size: 1.3125em; line-height: 1.3125em; }
+  .pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn, .pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn { width: 50%; } }
+@media (max-width: 768px) { .pane-bundle-jumbohero h2 { padding-top: 1.875em; font-size: 2.5rem; }
+  .pane-bundle-jumbohero .field-name-field-webspark-jumbohero-blurb .field-item > *:first-child { white-space: normal; }
+  .pane-bundle-jumbohero .field-name-field-webspark-jumbohero-blurb .field-item > *:nth-child(n+2) { display: none; }
+  .pane-bundle-jumbohero .position-top-right .field-name-field-webspark-jumbohero-blurb, .pane-bundle-jumbohero .position-bottom-right .field-name-field-webspark-jumbohero-blurb { margin-bottom: 0; }
+  .pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn, .pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn { display: block; width: 100%; margin: 0; padding: 0 0.9375em; }
+  .pane-bundle-jumbohero .position-bottom-left, .pane-bundle-jumbohero .position-bottom-center, .pane-bundle-jumbohero .position-bottom-right { bottom: 5em; } }
+@media (max-width: 480px) { .pane-bundle-jumbohero .jumbotext-wrapper { width: 90%; } }

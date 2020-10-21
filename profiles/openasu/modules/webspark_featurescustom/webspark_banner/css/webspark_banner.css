@@ -1,31 +1,5 @@
-/**
- * CSS file for Webspark banner module.
- */
+/** CSS file for Webspark banner module. */
 /* Make banner background image responsive */
-.pane-bundle-banner {
-  background-size: cover;
-  width: 100%;
-  margin-top: -1px;
-}
-.pane-bundle-banner h1,
-.pane-bundle-banner h2 {
-  color: white;
-  font-size: 3.75rem;
-  font-weight: 900;
-  line-height: 1;
-  margin: 0 0 0.5625em 0;
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-}
-.pane-bundle-banner .pane-content {
-  padding-top: 6.625em;
-  padding-bottom: 1.875em;
-}
-
-/* media print issues */
-@media print {
-  .pane-bundle-hero .hero-wrapper,
-  .pane-bundle-jumbohero .hero-wrapper,
-  .pane-bundle-banner .hero-wrapper {
-  height: unset;
-  }
-}
+.pane-bundle-banner { background-size: cover; width: 100%; margin-top: -1px; }
+.pane-bundle-banner h1, .pane-bundle-banner h2 { color: white; font-size: 3.75rem; font-weight: 900; line-height: 1; margin: 0 0 0.5625em 0; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
+.pane-bundle-banner .pane-content { padding-top: 6.625em; padding-bottom: 1.875em; }
