@@ -1,175 +1,57 @@
-/*********************************************
- * CSS for RFI FORMS
- *********************************************/
+/********************************************* CSS for RFI FORMS ********************************************/
 /** Multiblock overrides */
-.block-multiblock {
-  margin-right: auto;
-  margin-left: auto;
-  padding-left: 1em;
-  padding-right: 1em;
-}
-.block-multiblock .form-wrapper {
-  margin-top: 1em;
-  border-bottom: 1px solid grey;
-}
+.block-multiblock { margin-right: auto; margin-left: auto; padding-left: 1em; padding-right: 1em; }
+.block-multiblock .form-wrapper { margin-top: 1em; border-bottom: 1px solid grey; }
 
 /** ASU RFI Form elements **/
+form[id^="asu-rfi-"] div.fieldset-wrapper { overflow: visible !important; }
+form[id^="asu-rfi-"] fieldset legend { margin-bottom: inherit; font-size: 1.3em; font-weight: 600; }
+form[id^="asu-rfi-"] fieldset:not(:first-of-type) legend { margin-top: 1em; }
+form[id^="asu-rfi-"] input[type="text"] { width: 230px; }
+form[id^="asu-rfi-"] .uneditable-input { width: 240px; }
+form[id^="asu-rfi-"] select { width: 230px !important; }
+form[id^="asu-rfi-"] .chosen-container { width: 230px !important; }
+form[id^="asu-rfi-"] .chosen-container.error { background: none !important; }
+form[id^="asu-rfi-"] .chosen-search input[type="text"] { max-width: 230px !important; }
+form[id^="asu-rfi-"] .form-type-checkbox { padding-left: 0; }
+form[id^="asu-rfi-"] .form-type-checkbox label { margin-left: 2em; }
+form[id^="asu-rfi-"] .form-type-checkbox input[type="checkbox"] { float: right; }
+form[id^="asu-rfi-"] .form-type-radios .form-radios { margin-left: 1.25em; }
+form[id^="asu-rfi-"] .form-type-radios .form-radios .form-type-radio { margin-top: 0.5em; margin-bottom: 0.5em; }
+form[id^="asu-rfi-"] .form-type-radios.form-item-location > #edit-location { overflow: auto; }
+form[id^="asu-rfi-"] .form-type-radios.form-item-location > #edit-location .radio { margin-top: 0; }
+form[id^="asu-rfi-"] #edit-req-helper { font-style: italic; font-size: 0.9em; }
+form[id^="asu-rfi-"] #edit-req-helper p { margin: 0; }
+form[id^="asu-rfi-"] .form-item-birthdate label { display: none !important; }
+form[id^="asu-rfi-"] .form-item-mobile-check .fa-check { position: relative !important; }
 
-/* Fieldset, wrappers */
-form[id^="asu-rfi-"] div.fieldset-wrapper {
-  overflow: visible !important;
-}
-form[id^="asu-rfi-"] fieldset legend {
-  margin-bottom: inherit;
-  font-size: 1.3em;
-  font-weight: 600;
-}
-form[id^="asu-rfi-"] fieldset:not(:first-of-type) legend {
-  margin-top: 1em;
-}
-/* DOM elements */
-form[id^="asu-rfi-"] input[type="text"] {
-  width: 230px;
-}
-form[id^="asu-rfi-"] .uneditable-input {
-  width: 240px;
-}
-form[id^="asu-rfi-"] select {
-  width: 230px !important;
-}
-form[id^="asu-rfi-"] .chosen-container {
-  width: 230px !important;
-}
-form[id^="asu-rfi-"] .chosen-search input[type="text"] {
-  max-width: 230px !important;
-}
-form[id^="asu-rfi-"] .chosen-container.error {
-  background: none !important;
-}
-form[id^="asu-rfi-"] .form-type-checkbox {
-  padding-left: 0;
-}
-form[id^="asu-rfi-"] .form-type-checkbox input[type="checkbox"] {
-  float: right;
-}
-form[id^="asu-rfi-"] .form-type-checkbox label {
-  margin-left: 2em;
-}
-form[id^="asu-rfi-"] .form-type-radios.form-item-location > #edit-location {
-  overflow: auto;
-}
-form[id^="asu-rfi-"] .form-type-radios.form-item-location > #edit-location .radio {
-  margin-top: 0;
-}
-/* Form-specific mods */
-#rfi_second_form {
-  margin-top: 1.25em;
-}
-#asu-rfi-long-form-data label {
-  font-weight: normal;
-  font-size: smaller;
-}
-#asu-rfi-long-form-data .fieldset-wrapper {
-  padding-left: 60px;
-  margin-bottom: 30px;
-  padding-bottom: 25px;
-}
-#asu-rfi-long-form-data .form-wrapper {
-  margin-top: 15px;
-  border-bottom: 1px solid grey;
-}
+#rfi_second_form { margin-top: 1.25em; }
+#rfi_second_form .form-item-military.form-group { border-bottom: 1px solid grey; }
+#rfi_second_form .form-item-citizenship { border-bottom: 1px solid grey; }
 
-/* Field-specific mods */
-form[id^="asu-rfi-"] #edit-req-helper {
-  font-style: italic;
-  font-size: 0.9em;
-}
-form[id^="asu-rfi-"] #edit-req-helper p {
-  margin: 0;
-}
-form[id^="asu-rfi-"] .form-item-birthdate label {
-  display: none !important;
-}
-#asu-rfi-second-form .form-item-military.form-group {
-  border-bottom: 1px solid grey;
-}
-#asu-rfi-second-form .form-item-citizenship {
-  border-bottom: 1px solid grey;
-}
-#asu-rfi-long-form-data .form-item-citizenship {
-  padding-left: 0 !important;
-}
-form[id^=asu-rfi-] .form-item-mobile-check .fa-check {
-  position: relative !important;
-}
-#edit-dob-field {
-  margin-bottom: -17px;
-}
-#edit-dob-field .modal-body {
-  padding: 2.1875rem;
-}
-#edit-location .form-type-radio.form-item-location.form-item.radio {
-  display: inline;
-  margin-right: 2em;
-  float: left;
-}
-.rfi-button {
-  background: #a30046 !important;
-  color: #ffffff !important;
-  margin-bottom: 1.25em !important;
-  margin-left: 1.375em !important;
-}
+#asu-rfi-long-form-data label { font-weight: normal; font-size: smaller; }
+#asu-rfi-long-form-data .fieldset-wrapper { padding-left: 60px; margin-bottom: 30px; padding-bottom: 25px; }
+#asu-rfi-long-form-data .form-wrapper { margin-top: 15px; border-bottom: 1px solid grey; }
+#asu-rfi-long-form-data .form-item-citizenship { padding-left: 0 !important; }
+
+#edit-dob-field { margin-bottom: -17px; }
+#edit-dob-field .modal-body { padding: 2.1875rem; }
+
+#edit-location .form-type-radio.form-item-location.form-item.radio { display: inline; margin-right: 2em; float: left; }
+
+.rfi-button { background: #a30046 !important; color: #ffffff !important; margin-bottom: 1.25em !important; margin-left: 1.375em !important; }
 
 /* GDPR disclaimer */
-div[id^="edit-gdpr-message"] {
-  border: 1px solid #ccc;
-  border-radius: 0.25rem;
-  padding: 1em;
-  background-color: #f7f7f7;
-  margin-top: 2em;
-}
-.gdpr-list {
-  list-style: none;
-  counter-reset: item;
-  margin-left: -2.5em;
-}
-.gdpr-list > li {
-  counter-increment: item;
-  margin-bottom: 5px;
-  padding-left: 2em;
-  text-indent: -2em;
-}
-.gdpr-list > li:before {
-  text-indent: 0;
-  margin-right: 10px;
-  content: counter(item);
-  background: #5C6670;
-  border-radius: 25%;
-  color: #FFF;
-  width: 1.2em;
-  text-align: center;
-  display: inline-block;
-  font-weight: bold;
-}
-.gdpr-link {
-  font-weight: bold;
-  text-decoration: underline;
-  border-bottom: none;
-}
+div[id^="edit-gdpr-message"] { border: 1px solid #ccc; border-radius: 0.25rem; padding: 1em; background-color: #f7f7f7; margin-top: 2em; }
+div[id^="edit-gdpr-message"] .gdpr-list { list-style: none; counter-reset: item; margin-left: -2.5em; }
+div[id^="edit-gdpr-message"] .gdpr-list > li { counter-increment: item; margin-bottom: 5px; padding-left: 2em; text-indent: -2em; }
+div[id^="edit-gdpr-message"] .gdpr-list > li:before { text-indent: 0; margin-right: 10px; content: counter(item); background: #5C6670; border-radius: 25%; color: #FFF; width: 1.2em; text-align: center; display: inline-block; font-weight: bold; }
+div[id^="edit-gdpr-message"] .gdpr-list .gdpr-link { font-weight: bold; text-decoration: underline; border-bottom: none; }
+
+.college div[id^="edit-gdpr-message"] .gdpr-list { margin-left: 0; }
+.college div[id^="edit-gdpr-message"] .gdpr-list > li { padding-left: 0; text-indent: 0; }
 
 /** MEDIA RULES **/
-@media screen and (min-width: 320px) {
-  form[id^="asu-rfi-"] textarea {
-    width: 100%;
-  }
-}
-@media screen and (min-width: 769px) {
-  form[id^="asu-rfi-"] textarea {
-    max-width: 75%;
-  }
-}
-@media screen and (min-width: 992px) {
-  form[id^="asu-rfi-"] textarea {
-    max-width: 600px;
-  }
-}
+@media screen and (min-width: 320px) { form[id^="asu-rfi-"] textarea { width: 100%; } }
+@media screen and (min-width: 769px) { form[id^="asu-rfi-"] textarea { max-width: 75%; } }
+@media screen and (min-width: 992px) { form[id^="asu-rfi-"] textarea { max-width: 600px; } }
