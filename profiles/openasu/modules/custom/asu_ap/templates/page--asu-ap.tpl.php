@@ -552,12 +552,12 @@ if (module_exists('metatag')) {
         print '<p><a href="#plan-of-study">View Plan of Study</a></p>';
       }
     }
-    // Major maps or Plan of Study -- Graduated
+    // Major maps or Plan of Study -- Graduate
     //////
     elseif ($program_type === 'graduate') {
       if (isset($node_info['field_asu_ap_asuds_url'])) {
         print '<h2>Plan of study</h2>';
-        print '<p>The Plan of study is the required curriculum to complete the program.</p>';
+        print '<p>The Plan of study is the required curriculum to complete this graduate level program.</p>';
         /** @noinspection HtmlUnknownAnchorTarget */
         print '<p><a href="#plan-of-study">View Plan of Study</a></p>';
       }
@@ -700,23 +700,23 @@ if (module_exists('metatag')) {
         print $node_info['field_asu_ap_prog_req']['#items'][0]['safe_value'];
         $label = 'Enrollment';
       ?>
-    <?php else: ?>
-      <?php // Degree requirements
-      if (isset($node_info['field_asu_ap_admission_req']['#items'][0]['safe_value'])): ?>
-              <h3>Degree requirements</h3>
-        <?php print $node_info['field_asu_ap_admission_req']['#items'][0]['safe_value']; ?>
-      <?php endif; ?>
     <?php endif; ?>
   <?php endif; ?>
+
+  <?php // Degree requirements (confusingly, field_asu_ap_admission_req)
+  if (isset($node_info['field_asu_ap_admission_req']['#items'][0]['safe_value'])): ?>
+              <h3>Degree requirements</h3>
+    <?php print $node_info['field_asu_ap_admission_req']['#items'][0]['safe_value']; ?>
+  <?php endif; ?>
   <?php if (isset($node_info['field_asu_ap_req_desc']['#items'][0]['safe_value'])): ?>
-            <h3><?php print $label ?> requirements</h3>
+              <h3><?php print $label ?> requirements</h3>
     <?php print $node_info['field_asu_ap_req_desc']['#items'][0]['safe_value']; ?>
   <?php endif; ?>
 
   <?php // Transfer admission requirements
   if ($program_type === 'undergrad'): ?>
     <?php if (isset($node_info['asu_ap_transfer_admis_req']['#items'][0]['safe_value'])): ?>
-            <h4>Transfer admission requirements</h4>
+              <h4>Transfer admission requirements</h4>
       <?php print $node_info['asu_ap_transfer_admis_req']['#items'][0]['safe_value']; ?>
     <?php endif; ?>
   <?php endif; ?>
@@ -724,7 +724,7 @@ if (module_exists('metatag')) {
   <?php // Grad Additional requirement
   if ($program_type === 'graduate'): ?>
     <?php if (isset($node_info['field_asu_ap_grad_addl_req']['#items'][0]['safe_value'])): ?>
-            <h4>Additional requirements</h4>
+              <h4>Additional requirements</h4>
       <?php print $node_info['field_asu_ap_grad_addl_req']['#items'][0]['safe_value']; ?>
     <?php endif; ?>
   <?php endif; ?>
