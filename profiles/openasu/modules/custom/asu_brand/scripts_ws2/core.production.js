@@ -819,12 +819,12 @@
     }
   }
 
-  &.scrolled .primary-nav .navbar-brand d img {
+  &.scrolled .navbar-component .navbar-brand d img {
     height: 64px;
   }
 
   @media (max-width: ${e}) {
-    &.scrolled .primary-nav .navbar-brand d img {
+    &.scrolled .navbar-component .navbar-brand d img {
       height: 28px;
     }
 
@@ -1073,7 +1073,7 @@
             }
 
             @media (max-width: ${t}) {
-              &.scrolled .primary-nav .header-title h1 {
+              &.scrolled .navbar-component .header-title h1 {
                 font-size: 1rem;
               }
             }
