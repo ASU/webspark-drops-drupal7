@@ -1,14 +1,20 @@
 // Links
-#{$ws2-content-styles-container-lite} :not(.btn) > a:not(.btn),
-#{$ws2-content-styles-container-lite} .ui-widget-content :not(.btn) > a:not(.btn) {
-  border-bottom: 1px solid $ws2-maroon;
-  text-decoration: none;
-  color: $ws2-maroon;
-  &:focus,
-  &:hover {
-    color: $link-hover-color;
+#{$ws2-content-styles-container-lite} {
+  *:not(.btn) > a:not(.btn),
+  .ui-widget-content :not(.btn) > a:not(.btn) {
+    border-bottom: 1px solid $ws2-maroon;
     text-decoration: none;
-    border-bottom: none;
+    color: $ws2-maroon;
+    &:focus,
+    &:hover {
+      color: $link-hover-color;
+      text-decoration: none;
+      border-bottom: none;
+    }
+  }
+  .chosen-container > a {
+    border-bottom: inherit !important;
+    color: inherit !important;
   }
 }
 

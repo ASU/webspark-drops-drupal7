@@ -160,8 +160,9 @@ fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fields
 .tb-megamenu-main-menu > button.btn-navbar.tb-megamenu-button { display: none; }
 
 /* links */
-div.region-content :not(.btn) > a:not(.btn), div.region-content .ui-widget-content :not(.btn) > a:not(.btn) { border-bottom: 1px solid #8c1d40; text-decoration: none; color: #8c1d40; }
-div.region-content :not(.btn) > a:not(.btn):focus, div.region-content :not(.btn) > a:not(.btn):hover, div.region-content .ui-widget-content :not(.btn) > a:not(.btn):focus, div.region-content .ui-widget-content :not(.btn) > a:not(.btn):hover { color: #440E22; text-decoration: none; border-bottom: none; }
+div.region-content *:not(.btn) > a:not(.btn), div.region-content .ui-widget-content :not(.btn) > a:not(.btn) { border-bottom: 1px solid #8c1d40; text-decoration: none; color: #8c1d40; }
+div.region-content *:not(.btn) > a:not(.btn):focus, div.region-content *:not(.btn) > a:not(.btn):hover, div.region-content .ui-widget-content :not(.btn) > a:not(.btn):focus, div.region-content .ui-widget-content :not(.btn) > a:not(.btn):hover { color: #440E22; text-decoration: none; border-bottom: none; }
+div.region-content .chosen-container > a { border-bottom: inherit !important; color: inherit !important; }
 
 #header a, #asu_footer a { border-bottom: transparent; }
 
