@@ -191,7 +191,8 @@ if (module_exists('metatag')) {
           <?php $special_categories++; ?>
         <?php endif; ?>
       <?php endif; ?>
-      <?php if (isset($node_info['field_asu_ap_campus']['#items']) && count($node_info['field_asu_ap_campus']['#items']) > 0): // Displaying 'Online Program' field if true, displaying nothing if false ?>
+      <?php // Displaying 'Online Program' field if true, displaying nothing if false
+      if (isset($node_info['field_asu_ap_campus']['#items']) && count($node_info['field_asu_ap_campus']['#items']) > 0): ?>
         <?php
         $is_online = 0;
         foreach ($node_info['field_asu_ap_campus']['#items'] as $campus) {
@@ -843,8 +844,8 @@ if (module_exists('metatag')) {
                   <div class="programs_term_content no-display" id="programs_term_online">
                     <p><a href="https://asuonline.asu.edu/" target="_blank">ASU Online</a> offers programs like <?php print $title; ?>
                       in an entirely online format with multiple enrollment sessions throughout the year.</p>
-                    <p>More information on the program is available <a href="<?php print $online_program_value ?>" target="_blank">directly
-                        from ASU Online.</p>
+                    <p>More information on the program is available
+                      <a href="<?php echo $online_program_value; ?>" target="_blank">directly from ASU Online</a>.</p>
                   </div>
                 </div>
     <?php endif; ?>
