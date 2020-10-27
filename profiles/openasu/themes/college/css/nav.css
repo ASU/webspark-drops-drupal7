@@ -93,7 +93,7 @@ body #content .ui-tabs .ui-tabs-nav li a { margin-left: 0; border-bottom: transp
 .pager:after { clear: both; }
 .pager li { font-size: 1.25em; display: inline; margin: 0 1em; }
 .pager li > a, .pager li > span { display: inline-block; background-color: #fff; border-radius: 32px; border: 1px solid #fff; }
-.pager li > a:hover, .pager li > a:focus { text-decoration: none; }
+.pager li > a:hover, .pager li > a:focus { text-decoration: none; font-weight: bold; background-color: #8c1d40 !important; color: #fff !important; }
 .pager .next > a, .pager .next > span { float: right; }
 .pager .previous > a, .pager .previous > span { float: left; }
 .pager .disabled > a, .pager .disabled > a:hover, .pager .disabled > a:focus, .pager .disabled > span { color: #747474; background-color: #fff; cursor: not-allowed; }
@@ -101,10 +101,10 @@ body #content .ui-tabs .ui-tabs-nav li a { margin-left: 0; border-bottom: transp
 .item-list.item-list-pager { text-align: center; clear: both; }
 .item-list.item-list-pager .pager { margin: 1em; display: inline-block; }
 .item-list.item-list-pager .pager li { font-size: 1.25em; padding: 0; margin: 0 1em; float: left; }
-.item-list.item-list-pager .pager li a { background-color: #fff; border-radius: 32px; border: 1px solid #fff; }
+.item-list.item-list-pager .pager li a { background-color: #fff; border-radius: 32px; border: 1px solid #fff !important; }
 .item-list.item-list-pager .pager-ellipsis { display: none; }
 
-.item-list.item-list-pager .pager .pager-current, #media-browser-tabset .item-list.item-list-pager .pager .pager-current { border: 1px solid #8c1d40; padding: 8px; background-color: #8c1d40; color: #fff; }
+.item-list.item-list-pager .pager .pager-current, #media-browser-tabset .item-list.item-list-pager .pager .pager-current { border: 1px solid #8c1d40; border-radius: 2rem; padding: 5px 14px; background-color: #8c1d40; color: #fff; }
 
 /* =SIDEBAR MENUS
 -------------------------------------------------------------- */
