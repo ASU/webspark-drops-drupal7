@@ -1,13 +1,20 @@
 Webspark Mega Menu - 7.x-2.0, 2020-10-19
 ---------------------
-- Created WS2.0 themed version of the output
-- Fixed TB Megamenu UI to allow for inserting WS2.0 styling
-- Updated, refactored SASS to work for WS2.0 theme
-- Added and refactored JS logic to work with the new theme (font size, spacing settings)
-- Added theme detection logic to determine which web assets (JS/CSS/images) to load
-- Replaced carets with chevrons
-- Added secondary button insertion capability within the megamenu
-- Re-added temporary support for flyout menus
+- Added new Web Standards 2 Limited desktop theming for primary navigation
+  and the ASU global header minus the top gray universal bar
+- Provides framework for rendering mobile ASU global header and desktop
+  gray universal bar with the College theme
+- Added theme detection logic to determine which web assets to load (e.g.,
+  JS, CSS, images)
+- Fixed live preview of menu items in the TB Megamenu UI to enhance the
+  application of Web Standards 2 Limited styling to menu items
+- Updated and refactored SASS to work for Web Standards 2 Limited design
+- Added and refactored JS logic for font size and space settings to work
+  with the College theme
+- Added the ability to add buttons to the primary navigation menubar,
+  drop-down menus, and mega-menus for use with the College theme; Web
+  Standards 1.0 button theming is not provided and the use of buttons with
+  the Innovation theme is not supported.
 
 Webspark Mega Menu - 7.x-1.11, 2019-08-02
 ---------------------

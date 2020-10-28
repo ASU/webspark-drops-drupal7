@@ -1,7 +1,8 @@
 # ASU Request for Information Changelog
 
-### ASU RFI 7.x-3.5, 2020-10-19
-Online campus selections for WPCarey no longer return a, "Country not selected", error.
+### ASU RFI 7.x-3.5, 2020-10-28
+- Fixed "Country not selected" error for W.P. Carey programs with online
+campus selected
 
 ### ASU RFI 7.x-3.4, 2020-06-17
 - Updating from version 1.15 or older will now delete all locally-saved RFI submissions older than 45 days to prevent the

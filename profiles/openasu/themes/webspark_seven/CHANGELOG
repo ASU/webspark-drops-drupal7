@@ -1,6 +1,7 @@
-Webspark Seven 7.x-1.1, 2020-10-19
-------------------------------------
-- Eliminated "Help region not found" error which occurred after theme changes tried to place elements in the Help region.
+Webspark Seven 7.x-1.1, 2020-10-28
+----------------------------------
+- Fixed "Help region not found" error which occurred after theme changes
+  tried to place elements in the Help region
 
 Webspark Seven 7.x-1.0.1, 2018-01-02
 ------------------------------------

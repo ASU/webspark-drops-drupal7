@@ -1,6 +1,6 @@
 Webspark Panels Styles 7.x-1.7, 2020-10-19
 ------------------------------
-- Added WS2.0-compliant divider styling option for Panels panes.
+- Added Web Standards 2 Limited divider styling option for Panels panes
 
 Webspark Panels Styles 7.x-1.6, 2020-04-07
 ------------------------------

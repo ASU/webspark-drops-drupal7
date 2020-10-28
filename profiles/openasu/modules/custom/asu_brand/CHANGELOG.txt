@@ -1,5 +1,23 @@
 CHANGELOG for ASU Brand module for Drupal 7
 
+7.x-2.0 2020-10-28
+-------------------
+- Integrated the ASU global header preact web component (v1.1.13) to
+  provide the Web Standards 2 mobile universal header when the College
+  theme is set
+- Added Web Standards 2 theming for the ASU global footer
+- Added new parent organization and department URL fields to the header
+  block configuration form to generate the parent unit link in the ASU
+  global header when those values are set
+- Added SASS for CSS management
+- Added logic to detect when the Innovation or College theme is set to
+  determine which header/footer blocks to enable/disable when the theme is
+  changed
+- Hid ASU Brand configuration form from Webspark installs because those
+  settings are now automatically set based on which web standards theme is
+  set as the default. The configuration form remains available for
+  non-Webspark installs.
+
 7.x-1.21 2020-03-20
 -------------------
 - Added drupal_alter to allow dynamic customization and theming of site menu before it is passed to the header
@@ -83,7 +101,7 @@ CHANGELOG for ASU Brand module for Drupal 7
   is a best practice. Renamed _asu_brand_block_header() and
   _asu_brand_block_footer() to better represent what they do.
 - Removed extra variable_del() in asu_brand_uninstall().
-- Added block for students.asu.edu menu footer (located at 
+- Added block for students.asu.edu menu footer (located at
   http://www.asu.edu/asuthemes/4.0/includes/students_footer.shtml as of this
   release).
 - Added asu_brand_cache_clear() to clear all asu_brand related cached items.

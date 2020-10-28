@@ -1,6 +1,11 @@
-Mega Footer 7.x-2.0, 2020-10-19
+Mega Footer 7.x-2.0, 2020-10-28
 -------------------------------
-- 
+- Added new Web Standards 2 Limited theming
+- Added theme detection logic to determine which web assets to load (e.g.,
+  JS, CSS, images)
+- Added custom Font Awesome 5.x icon versions for Youtube and Instagram
+- Increased the desktop/tab breakpoint from 768px to 992px
+- Added SASS to generate the Web Standard 2 Limited CSS styling
 
 Mega Footer 7.x-1.12, 2019-12-20
 --------------------------------

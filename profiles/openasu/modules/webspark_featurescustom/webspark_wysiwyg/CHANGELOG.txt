@@ -1,15 +1,12 @@
-Webspark WYSIWYG 7.x-1.10, 2020-10-19
+Webspark WYSIWYG 7.x-1.10, 2020-10-28
 ------------------------------------
-- Added database update to enable the Advanced Horizontal Rule plugin (AHR) and customize/simplify the UI for end users.
-- Updated Styles dropdown list to:
-  - Include WS2.0 styles for:
-    - Typography (Fonts, Headings, Lead/SEO paragraphs)
-    - Alerts
-    - List items
-    - Buttons
-    - Element animations
-    - Horizontal rules (Gold, regular)
-  - Moved deprecated WS1.0 styles to the bottom of the WYSIWYG "Styles" list.
+- Added database update to enable the Advanced Horizontal Rule plugin (AHR)
+  and customize the UI to simplify it for end users
+- Updated "Styles" dropdown list to include Web Standards 2 Limited styles
+  for alerts, buttons, element animations, horizontal rules, list items,
+  and typography for fonts, headings, and lead paragraphs
+- Moved deprecated Web Standards 1 styles to the bottom of the WYSIWYG
+  "Styles" list
 
 Webspark WYSIWYG 7.x-1.9, 2020-0-07
 ------------------------------------
