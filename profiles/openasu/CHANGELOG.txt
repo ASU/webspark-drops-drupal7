@@ -1,123 +1,151 @@
-Webspark 1.76 (Florida), 2020-10-19
+Webspark 1.76 (Florida), 2020-10-28
 -----------------------------------
-
 - Webspark core updates
 
   * Drupal core - v1.73+patch4
-    * Security update! See the latest release notes at https://www.drupal.org/project/drupal/releases/7.73 for more
-      information
+    - Security update! See the latest release notes at
+      https://www.drupal.org/project/drupal/releases/7.73 for more information
+
   * Panopoly - v1.76
-    - Multiple Panopoly releases (1.71-1.76) rolled into this update; See https://www.drupal.org/project/panopoly/releases/7.x-1.76 for more info.
+    - Multiple Panopoly releases (1.71-1.76) rolled into this update; See
+      https://www.drupal.org/project/panopoly/releases/7.x-1.76 for more info.
     - The following Panopoly modules were patched for Webspark customizations
       - Panopoly Test - Synced up with Webspark to work in Travis-CI.org testing
       - Panopoly Theme
       - Panopoly WYSIWYG
 
+  * Webspark (openasu) - v1.76
+    - Implemented a one-click switch between the Web Standards 1 and Web
+      Standards 2 Limited design of theme-related elements (e.g., blocks,
+      scripts, etc.)
+
 - Web standards components in Webspark
 
-  * College (v1.0) - Web standards 2.0 Lite theme
-    - Integrated SASS (using Compass) into all new elements
-    - Refactored existing CSS from Innovation and altered it for WS2.0
-    - Implemented a one-click swap out between Innovation (WS1.0) and College (WS2.0) theme-related elements (blocks, scripts, etc.)
-    - Created WS2.0-themed, global-level elements:
-      - Drupal-based
-        - Megamenu
-        - Sidebar menu
-        - Mega footer
-          - Added custom FontAwesome 5.x icons for Youtube and Instagram (NOTE: FontAwesome 4.x is still the only available version)
-      - Web components-based
-        - Global Header
-        - Global Footer
-    - Created WS2.0-themed elements for the IPE
-      - Banners
-      - Dividers
-    - Created WS2.0-themed elements for the WYSIWYG (HTML-level elements)
-      - Typography (Fonts, Headings, Lead/SEO paragraphs)
-      - Alerts
-      - Banners
-      - List items
-      - Buttons
-  * ASU Spotlight (asu_spotlight) - v1.11
-    - Removed <ul> bullets and fixed layout when spotlights are used with WS2.0 College theme
-  * Mega Footer (mega_footer) - v2.0
-    - Forked theme output and added new theming/layout for WS2.0
-    - Added Web standards theme detection logic to render the proper theming
-    - Added custom Font Awesome 5.x icon versions for Youtube, Instagram
-    - Increased the desktop/tab breakpoint from 768px to 992px
-    - Added SASS to generate the WS2.0 CSS styling
-  * Webspark Extras (webspark_extras) - v1.8
-    - Updated Quicktabs animation to match WS2.0
-  * Webspark Featurescustom (webspark_featurescustom) - v1.10
-    - Refactored code for determining if a Web standards theme is in use so it could be used globally throughout Webspark
-    - Removed any legacy code for an ASU Students site content block
-    - Added new fields for adding parent unit information to the block settings
-    - Added CSS file list selection logic for the WYSIWYG editor so that the correct theme's CSS files can be used to render the output in the WYSIWYG window.
-  * Webspark Megamenu (webspark_megamenu) - v2.0
-    - Created WS2.0 themed version of the output
-    - Fixed TB Megamenu UI to allow for inserting WS2.0 styling
-    - Updated, refactored SASS to work for WS2.0 theme
-    - Added and refactored JS logic to work with the new theme (font size, spacing settings)
-    - Added theme detection logic to determine which web assets (JS/CSS/images) to load
-    - Replaced carets with chevrons
-    - Added secondary button insertion capability within the megamenu
-    - Re-added temporary support for flyout menus
-  * Webspark Panels Styles (webspark_panels_styles) - v1.7
-    - Added WS2.0-compliant divider styling option for Panels panes
-  * Webspark Seven (webspark_seven) - v1.1
-    - Eliminated "Help region not found" error which occurred after theme changes tried to place elements in the Help region.
-  * Webspark WYSIWYG (webspark_wysiwyg) - v1.10
-    - Added database update to enable the Advanced Horizontal Rule plugin (AHR) and customize/simplify the UI for end users.
-    - Updated Styles dropdown list to:
-      - Include WS2.0 styles for:
-        - Typography (Fonts, Headings, Lead/SEO paragraphs)
-        - Alerts
-        - List items
-        - Buttons
-        - Element animations
-        - Horizontal rules (Gold, regular)
-      - Moved deprecated WS1.0 styles to the bottom of the WYSIWYG "Styles" list.
-  * WS2.0 Banners (ws2_banners) - v1.0
-    - Added this Features-based module that adds WS2.0 banners as an option in the IPE
-
-- Custom module updates
   * ASU Brand (asu_brand) - v2.0
-    - Updated for WS2.0 theme release (College)
-    - Integrated web component versions of the new WS2.0 global header/footer
-    - Added new fields for header parent org, department URL to header block configuration form
+    - Integrated the ASU global header preact web component (v1.1.13) to
+      provide the Web Standards 2 mobile universal header when the College
+      theme is set
+    - Added Web Standards 2 theming for the ASU global footer
+    - Added new parent organization and department URL fields to the header
+      block configuration form to generate the parent unit link in the ASU
+      global header when those values are set
     - Added SASS for CSS management
-    - Added logic to detect which Web standards theme is working to determine which header/footer blocks to enable/disable when the theme is switched.
-    - Hid ASU Brand configuration form from Webspark installs (only visible outside of Webspark) because those settings are now managed by which Web standards theme is enabled and is set as the default.
+    - Added logic to detect when the Innovation or College theme is set to
+      determine which header/footer blocks to enable/disable when the theme is
+      changed
+    - Hid ASU Brand configuration form from Webspark installs because those
+      settings are now automatically set based on which web standards theme is
+      set as the default. The configuration form remains available for
+      non-Webspark installs.
+
   * ASU Request for Information (asu_rfi) - v3.5
-    - Online campus selections for WPCarey no longer return a, "Country not selected", error.
+    - Fixed "Country not selected" error for W.P. Carey programs with online
+      campus selected
+
+  * ASU Spotlight (asu_spotlight) - v1.11
+    - Removed extraneous <ul> bullets and fixed layout when spotlights are used
+      with the College theme
+
+  * College (college) - v1.0
+
+    - Provides Web Standards 2 Limited design for secondary navigation (sidebar
+      menu, breadcrumbs, Mega footer), alerts, banners, buttons, dividers, list
+      items, typography, and framework for primary navigation (Megamenu)
+    - Integrated SASS (using Compass) into all new elements
+    - Refactored existing CSS from the Innovation theme and adapted it for Web
+      Standards 2 Limited
+
+  * Mega Footer (mega_footer) - v2.0
+    - Added new Web Standards 2 Limited theming
+    - Added theme detection logic to determine which web assets to load (e.g.,
+      JS, CSS, images)
+    - Added custom Font Awesome 5.x icon versions for Youtube and Instagram
+    - Increased the desktop/tab breakpoint from 768px to 992px
+    - Added SASS to generate the Web Standard 2 Limited CSS styling
+
+  * Webspark Extras (webspark_extras) - v1.8
+    - Updated Quicktabs animation to match the Web Standards 2 Limited design
+
+  * Webspark Featurescustom (webspark_featurescustom) - v1.10
+    - Refactored code for determining if a web standards compliant theme is in
+      use so that it can be called globally to make that determination
+    - Removed legacy content block code for rendering the old students.asu.edu
+      style footer
+    - Added parent unit information fields to the block settings
+    - Added CSS file list selection logic for the WYSIWYG editor so that the
+      correct theme's CSS files can be used to render the output in the WYSIWYG
+      window
+
+  * Webspark Megamenu (webspark_megamenu) - v2.0
+    - Added new Web Standards 2 Limited desktop theming for primary navigation
+      and the ASU global header minus the top gray universal bar
+    - Provides framework for rendering mobile ASU global header and desktop
+      gray universal bar with the College theme
+    - Added theme detection logic to determine which web assets to load (e.g.,
+      JS, CSS, images)
+    - Fixed live preview of menu items in the TB Megamenu UI to enhance the
+      application of Web Standards 2 Limited styling to menu items
+    - Updated and refactored SASS to work for Web Standards 2 Limited design
+    - Added and refactored JS logic for font size and space settings to work
+      with the College theme
+    - Added the ability to add buttons to the primary navigation menubar,
+      drop-down menus, and mega-menus for use with the College theme; Web
+      Standards 1.0 button theming is not provided and the use of buttons with
+      the Innovation theme is not supported.
+
+  * Webspark Panels Styles (webspark_panels_styles) - v1.7
+    - Added Web Standards 2 Limited divider styling option for Panels panes
+
   * Webspark Test (webspark_test) - v2.0
-    - Updated to work with latest versions of Chrome, Chromedriver, along with the latest version of the Panopoly Test module
+    - Updated to work with latest versions of Chrome, Chromedriver, along with
+      the latest version of the Panopoly Test module
+
+  * Webspark Seven (webspark_seven) - v1.1
+    - Fixed "Help region not found" error which occurred after theme changes
+      tried to place elements in the Help region
+
+  * Webspark WYSIWYG (webspark_wysiwyg) - v1.10
+    - Added database update to enable the Advanced Horizontal Rule plugin (AHR)
+      and customize the UI to simplify it for end users
+    - Updated "Styles" dropdown list to include Web Standards 2 Limited styles
+      for alerts, buttons, element animations, horizontal rules, list items,
+      and typography for fonts, headings, and lead paragraphs
+    - Moved deprecated Web Standards 1 styles to the bottom of the WYSIWYG
+      "Styles" list
+
+  * WS2.0 Banners (ws2_banners) - v1.0
+    - Initial release of this Features-based module
+    - Adds Web Standards 2 design banners as an option in the IPE
 
 - Contrib module updates
 
   - Managed by Panopoly
-    * Admin Views (v1.7)
-    * Date (v2.10)
-    * Facet API (v1.6)
-    * Field Group (v1.6)
-    * Fieldable Panels Panes (v1.13)
-    * File Entity (v2.27)
-    * Link (v1.7)
-    * Media (v2.26)
-    * Search API Solr (v1.15)
-    * Tablefield (v3.6)
-    * Views (v3.24)
-    * WYSIWYG (v2.6)
+    * Admin Views (admin_views) - v1.7
+    * Date (date) - v2.10
+    * Facet API (facetapi) - v1.6
+    * Field Group (field_group) - v1.6
+    * Fieldable Panels Panes (fieldable_panels_pane) - v1.13
+    * File Entity (file_entity) - v2.27
+    * Link (link) - v1.7
+    * Media (media) - v2.26
+    * Search API Solr (search_api_solr) - v1.15
+    * Tablefield (tablefield) - v3.6
+    * Views (views) - v3.24
+    * WYSIWYG (wysiwyg) - v2.6
 
   - Maintained by Webspark
-    * TB Megamenu (v7.x-1.0-rc2+10-dev+patch)
-      - Patched to work with WS2.0 megamenu requirements
+
+    * Field Collection (field_collection) - v1.1
+    * TB Megamenu (tb_megamenu) - v1.0-rc2+10-dev+patch
+      - Patched to work with Web Standards 2 Limited megamenu requirements
 
 - Contrib library updates
-  * TinyMCE (v3.5.11+patch)
-    - Patched to work for Web standards 2.0's new, gold horizontal rule
+
+  * TinyMCE (tinymce) - v3.5.11+patch
+    - Patched to work for Web Standards 2.0's new, gold horizontal rule
 
 Webspark 1.70.12 (El Paso), 2020-06-17
-----------------------------------------------
+--------------------------------------
 - Webspark core
 
   * Drupal core - v1.72-patch4
@@ -394,7 +422,7 @@ Webspark 1.70.4 (Dallas), 2019-12-30
 
   * Drupal core - v7.69-patch4
     * settings.php - Rollup of changes since its last update in Webspark. Now matches latest version, which shipped with Drupal core v7.60.
-  * Webspark (openasu) - v1.70.3
+  * Webspark (openasu) - v1.70.4
     * Added new apple-touch-icon-120x120-precomposed.png to stop 404 log entries.
     * The "system-help" block is now programmatically toggled on/off in the admin area of the site when the Innovation theme is made the administrator theme, and enabled on site spinup.
 
