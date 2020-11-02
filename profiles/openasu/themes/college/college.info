@@ -49,3 +49,6 @@ settings[responsive_toggle] = 1
 settings[pane_styles_toggle] = 1
 settings[always_show_page_title] = 0
 settings[default_picture] = 0
+
+; Panels layouts
+plugins[panels][layouts] = layouts
