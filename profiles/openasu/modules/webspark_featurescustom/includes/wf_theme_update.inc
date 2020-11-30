@@ -102,8 +102,7 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
     } else { // is a WS theme, but it is not WS2 as requested.
       return 0;
     }
-  }
-  else {
+  } else {
     // Check #2 - Is $theme a subtheme of a Web standards theme? If so, return the base theme's name instead.
     $all_themes = list_themes(TRUE);
     // remove themes with no base_theme.
@@ -131,10 +130,10 @@ function _webspark_featurescustom_web_standards_theme_check($theme = '', $ws_ver
     if (!empty($theme_base_themes)) {
       foreach ($ws_base_theme_options as $option) {
         $option_array = (array)$option;
-        if (in_array($ws_base_theme_options, array_keys($theme_base_themes))) {
+        if (in_array($option_array[0], array_keys($theme_base_themes))) {
           if ($option_array[0] === $theme) { // Is a WS subtheme
             return $theme;
-          } else { // new/current theme HAS a WS subtheme
+          } else { // New/current theme HAS a WS subtheme
             return $option_array[0];
           }
         }
