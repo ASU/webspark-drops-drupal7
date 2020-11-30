@@ -14,7 +14,7 @@
 .megafoot .row.megafoot-logo-social { border-bottom: 1px solid #333; }
 .megafoot .row.megafoot-logo-social #mega-footer-logo-wrapper { padding: 1.5rem 0; display: inline-block; }
 .megafoot .row.megafoot-logo-social #mega-footer-logo-wrapper a { border-bottom: 0; }
-.megafoot .row.megafoot-logo-social #mega-footer-logo-wrapper img { height: auto; padding: .5rem 0; }
+.megafoot .row.megafoot-logo-social #mega-footer-logo-wrapper img { height: auto; max-height: 112px; padding: .5rem 0; }
 .megafoot .row.megafoot-logo-social #mega-footer-social-media { float: right; padding-left: 0; padding-right: 0; }
 .megafoot .row.megafoot-logo-social #mega-footer-social-media .dgtl-mkting-101 { float: right; margin-bottom: 0; padding: 2rem 0; -webkit-box-pack: end; -ms-flex-pack: end; -webkit-justify-content: flex-end; -moz-box-pack: end; justify-content: flex-end; }
 .megafoot .row.megafoot-logo-social #mega-footer-social-media .dgtl-mkting-101 ul li { display: inline-block; vertical-align: middle; font-size: 2rem; color: #bfbfbf; line-height: 1; padding-top: 7px; }
