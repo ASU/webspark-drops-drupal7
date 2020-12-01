@@ -13,7 +13,7 @@
 
 #header > .container #headerContainer .region.region-header > *:not(#block-asu-brand-asu-brand-header-ws2.block-asu-brand) { max-width: 1164px; }
 
-#header > .container #headerContainer .universal-nav > div { margin: 0 auto; padding-right: 2rem; }
+#header > .container #headerContainer .universal-nav > div { margin: 0 auto; }
 
 body { min-width: 20em; }
 body #page .region-content { padding: 0; }
