@@ -1,3 +1,24 @@
+Webspark 1.76.1 (Niceville), 2020-11-30
+---------------------------------------
+- Webspark core updates
+
+  * Drupal core - v7.75+patch4
+    - Security update! See the latest release notes at
+      https://www.drupal.org/project/drupal/releases/7.75 for more information
+
+  * Webspark (openasu) - v1.76.1
+    - Fixed regression in version v1.76 (Florida) when switching themes, which
+      broke subthemes based on the Innovation or College themes.
+
+- Web standards components in Webspark
+
+  * College - v1.1
+    - Panels directory added to College config file to allow Panels layouts
+    - Removed right-hand padding from bottom buttons of mobile menu
+
+  * Mega Footer 7.x-2.1, 2020-11-30
+    - Added max-width property for custom logos in the mega footer
+
 Webspark 1.76 (Florida), 2020-10-28
 -----------------------------------
 - Webspark core updates
@@ -47,7 +68,6 @@ Webspark 1.76 (Florida), 2020-10-28
       with the College theme
 
   * College (college) - v1.0
-
     - Provides Web Standards 2 Limited design for secondary navigation (sidebar
       menu, breadcrumbs, Mega footer), alerts, banners, buttons, dividers, list
       items, typography, and framework for primary navigation (Megamenu)
