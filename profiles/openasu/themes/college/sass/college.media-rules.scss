@@ -16,7 +16,7 @@
     {
       display: block;
     }
-    & > .primary-nav
+    & > .navbar-component
     {
       display: none;
     }
@@ -50,14 +50,6 @@
   // Swap out desktop menu
   #ASUNavMenu {
     display: none !important;
-  }
-
-  #headerContainer {
-    .primary-nav {
-      .navbar-container a {
-        border-bottom: 1px solid $ws2-gray-light;
-      }
-    }
   }
 
   h1, .h1 {

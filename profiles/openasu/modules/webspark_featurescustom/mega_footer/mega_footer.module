@@ -21,28 +21,27 @@ function mega_footer_block_info() {
 
 /**
  * Implements hook_block_view().
- **/
+ */
 function mega_footer_block_view($delta = '') {
-
   // Build custom mega footer.
   $block = array();
 
-  if ($delta == 'mega_footer') {
+  if ($delta === 'mega_footer') {
     $theme = _webspark_featurescustom_get_ws2_suffix();
     $mega_menu = menu_tree_all_data('menu-mega-footer-menu');
     $mega_menu = menu_tree_output($mega_menu);
 
-    $footer_mark = "<div class='megafoot'>";
-    if ($theme !== "_ws2") {
-      $footer_mark .= "<div class='row'>";
-      $bootstrap_col_width = 3;
-    } else {
+    $footer_mark = '<div class="megafoot">';
+    if ($theme === "_ws2") { // WS2.0
       // INIT Column Width depending on number of columns
       if (count(menu_navigation_links('menu-mega-footer-menu', $level = 0)) >= 4) {
         $bootstrap_col_width = 2;
       } else {
         $bootstrap_col_width = 3;
       }
+    } else { // WS1.0
+      $footer_mark .= '<div class="row">';
+      $bootstrap_col_width = 3;
     }
 
     // social media icon variables
@@ -60,91 +59,95 @@ function mega_footer_block_view($delta = '') {
     $mfsm_custom2   = _mega_footer_custom_icon_and_link('social_media', '2', '', '', $theme);
     $mfsm_custom3   = _mega_footer_custom_icon_and_link('social_media', '3', '', '', $theme);
 
-    // Create the social media icons array
+    // Create the social media icons array (for counting, etc. - not for rendering)
     $sm_icons = array($mfsm_facebook, $mfsm_twitter, $mfsm_linkedin, $mfsm_youtube, $mfsm_instagram, $mfsm_vimeo, $mfsm_flickr, $mfsm_pinterest, $mfsm_tumblr,$mfsm_rss,$mfsm_custom1,$mfsm_custom2,$mfsm_custom3);
 
-    if ((variable_get('mega_footer_unit_logo', '') != 0) || (!empty(array_filter($sm_icons)))) {
+    if ((variable_get('mega_footer_unit_logo', '') !== '') || (!empty(array_filter($sm_icons)))) {
 
       // Include default LH column
-      if ($theme !== '_ws2') {
+      if ($theme === '_ws2') { // WS2.0
+        $footer_mark .= '<div class="col-md- col-sm- space-bot-md">';
+        $footer_mark .= '<div class="row megafoot-logo-social">';
+      } else { // WS1.0
         $bootstrap_col_width = 2;
-        $footer_mark .= "<div class='col-md-4 col-sm-12 space-bot-md megafoot-border'>";
-        $footer_mark .= "<div class='megafoot-logo-social'>";
-      } else {
-        $footer_mark .= "<div class='col-md- col-sm- space-bot-md '>";
-        $footer_mark .= "<div class='row megafoot-logo-social'>";
+        $footer_mark .= '<div class="col-md-4 col-sm-12 space-bot-md megafoot-border">';
+        $footer_mark .= '<div class="megafoot-logo-social">';
       }
 
       // Logo
       $logo = variable_get('mega_footer_unit_logo', '');
-      $check = variable_get('mega_footer_logo_alt', NULL);
-      $alt = (!empty($check)) ? check_plain($check) : "";
-      if ($logo != '' && $logo != NULL) {
+      if ($logo != 0) {
+        $check = variable_get('mega_footer_logo_alt', '');
+        $alt = (!empty($check)) ? check_plain($check) : '';
         $file = file_load($logo);
         $file_url = file_create_url($file->uri);
         if (!empty($file_url)) {
           $logo_link = variable_get('mega_footer_logo_link', '');
           $logo_link_prefix = ($logo_link !== '') ? '<a href="' . $logo_link . '">' : '';
           $logo_link_suffix = ($logo_link !== '') ? '</a>' : '';
-
           $footer_mark .= ($theme === "_ws2")
             ? '<div id="mega-footer-logo-wrapper" class="col-md-5 col-sm-12">' . $logo_link_prefix
               . "<img src='$file_url' alt='$alt' />"
               . $logo_link_suffix . "</div>"
             : '<div id="mega-footer-logo-wrapper">' . $logo_link_prefix
               . "<img src='$file_url' alt='$alt' title='$alt'/>"
-              . $logo_link_suffix . "</div>";
+              . $logo_link_suffix . "</div>"
+          ;
         }
       }
 
-      // Social Media icons - Open in new window/tab? setting check
-      $external = (theme_get_setting('social_media_exit') == 1) ? 'target="_new" ' : '';
+      // Social Media icons
+      if (!empty(array_filter($sm_icons))) {
+        // Open in new window/tab? setting check
+        $external = (theme_get_setting('social_media_exit') == 1) ? 'target="_new" ' : '';
+        // Assemble social media markup
+        $icons_markup = "<ul class='dgtl-mkting-101'>";
+        $icons_markup = _mega_footer_social_media('facebook', 'facebook-square', 'Facebook', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_social_media('twitter', 'twitter-square', 'Twitter', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_social_media('linkedin', 'linkedin', 'LinkedIn', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_social_media('youtube', 'youtube-square', 'YouTube', $icons_markup, $external, $theme, TRUE);
+        $icons_markup = _mega_footer_social_media('instagram', 'instagram', 'Instagram', $icons_markup, $external, $theme, TRUE);
+        $icons_markup = _mega_footer_social_media('vimeo', 'vimeo-square', 'Vimeo', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_social_media('flickr', 'flickr', 'Flickr', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_social_media('pinterest', 'pinterest-square', 'Pinterest', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_social_media('tumblr', 'tumblr-square', 'Tumblr', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_social_media('rss', 'rss-square', 'RSS', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_custom_icon_and_link('social_media', '1', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_custom_icon_and_link('social_media', '2', $icons_markup, $external, $theme);
+        $icons_markup = _mega_footer_custom_icon_and_link('social_media', '3', $icons_markup, $external, $theme);
+        $icons_markup .= "</ul>";
 
-      if ($theme === "_ws2") { // WS2.0 ONLY
-        $footer_mark .= "<div id='mega-footer-social-media' class='col-md-7 col-sm-12'>";
-        $footer_mark .= "<nav role='navigation' aria-label='Social media'>";
+        if ($theme === "_ws2") { // WS2.0 ONLY
+          $footer_mark .= "<div id='mega-footer-social-media' class='col-md-7 col-sm-12'>";
+          $footer_mark .= "<nav role='navigation' aria-label='Social media'>" . $icons_markup . "</nav>";
+          $footer_mark .= "</div>";
+        }
       }
-      $footer_mark .= "<ul class='dgtl-mkting-101'>";
-      $footer_mark = _mega_footer_social_media('facebook', 'facebook-square', 'Facebook', $footer_mark, $external, $theme);
-      $footer_mark = _mega_footer_social_media('twitter', 'twitter-square', 'Twitter', $footer_mark, $external, $theme);
-      $footer_mark = _mega_footer_social_media('linkedin', 'linkedin', 'LinkedIn', $footer_mark, $external, $theme);
-      $footer_mark = _mega_footer_social_media('youtube', 'youtube-square', 'YouTube', $footer_mark, $external, $theme, TRUE);
-      $footer_mark = _mega_footer_social_media('instagram', 'instagram', 'Instagram', $footer_mark, $external, $theme, TRUE);
-      $footer_mark = _mega_footer_social_media('vimeo', 'vimeo-square', 'Vimeo', $footer_mark, $external, $theme);
-      $footer_mark = _mega_footer_social_media('flickr', 'flickr', 'Flickr', $footer_mark, $external, $theme);
-      $footer_mark = _mega_footer_social_media('pinterest', 'pinterest-square', 'Pinterest', $footer_mark, $external, $theme);
-      $footer_mark = _mega_footer_social_media('tumblr', 'tumblr-square', 'Tumblr', $footer_mark, $external, $theme);
-      $footer_mark = _mega_footer_social_media('rss', 'rss-square', 'RSS', $footer_mark, $external, $theme);
-      $footer_mark = _mega_footer_custom_icon_and_link('social_media', '1', $footer_mark, $external, $theme);
-      $footer_mark = _mega_footer_custom_icon_and_link('social_media', '2', $footer_mark, $external, $theme);
-      $footer_mark = _mega_footer_custom_icon_and_link('social_media', '3', $footer_mark, $external, $theme);
-      $footer_mark .= "</ul>";
       if ($theme === "_ws2") { // WS2.0 ONLY
-        $footer_mark .= "</nav>";
-        $footer_mark .= "</div>";
-        $footer_mark .= "</div>";  // end row
+        $footer_mark .= "</div>";  // end row megafoot-logo-social
       }
-      $footer_mark .= "</div>"; // WS1.0 - END megafoot-logo-social
+      $footer_mark .= "</div>"; // WS2.0 - END col-md- col-sm- space-bot-md; WS1.0 - END megafoot-logo-social
     }
+
     $footer_columns = (count(menu_navigation_links('menu-mega-footer-menu', $level = 0)));
 
-    if ((variable_get('mega_footer_unit_title', 'Arizona State University') != 0)
-      || (variable_get('mega_footer_unit_contact_us_link', NULL) !== NULL)
-      || (variable_get('mega_footer_contribute_link', NULL) !== NULL)
+    if ((variable_get('mega_footer_unit_title', '') !== '')
+      || (variable_get('mega_footer_unit_contact_us_link', '') !== '')
+      || (variable_get('mega_footer_contribute_link', '') !== '')
       || ($footer_columns !== 0) ) {
 
       if ($theme === "_ws2") {
         $footer_mark .= '<div class="row mega-footer-menu-links">'; // begin row
         $footer_mark .= '<nav role="navigation" aria-label="Footer">';
-        $footer_mark .= "<div class='col-md-" . $bootstrap_col_width . " col-sm-12 space-bot-md megafoot-border'>";
+        $footer_mark .= '<div class="col-md-' . $bootstrap_col_width . ' col-sm-12 space-bot-md megafoot-border">';
       }
 
       // Title & Description
       $footer_mark .= "<div class='mega-dept-title'>" .
         variable_get('mega_footer_unit_title', 'Arizona State University') . "</div>";
 
-      // Old extra info -- WS1.0 ONLY
-      if ($theme !== "_ws2") {
+      // Old extra unit info (WS1.0 ONLY)
+      if ($theme !== "_ws2") { // WS1.0
         $check = variable_get('mega_footer_unit_descrip', NULL);
         $footer_mark .= (!empty($check)) ? "<div class='megafoot-description'>" . $check . "</div>" : "";
         // Show contact info?
@@ -174,14 +177,23 @@ function mega_footer_block_view($delta = '') {
       // Add Contribute button
       $contrib = variable_get('mega_footer_contribute_button', 'Contribute');
       if (variable_get('mega_footer_contribute_link', NULL) != NULL) {
-        $footer_mark .= ($theme !== "_ws2")
-          ? "<a class='btn btn-primary' href='" . variable_get('mega_footer_contribute_link', NULL)
-            . "'>$contrib</a>"
-          : "<a class='btn btn-gold' id='contribute-button' href='"
-            . variable_get('mega_footer_contribute_link', NULL) . "'>$contrib</a>";
+        $footer_mark .= ($theme === "_ws2")
+          ? "<a class='btn btn-gold' id='contribute-button' href='"
+            . variable_get('mega_footer_contribute_link', NULL) . "'>$contrib</a>"
+          : "<a class='btn btn-primary' href='" . variable_get('mega_footer_contribute_link', NULL)
+            . "'>$contrib</a>";
+      }
+
+      // Add social media alternate rendering at bottom of column (WS1.0 ONLY)
+      if ($theme !== "_ws2") { // WS1.0 ONLY
+        if (!empty(array_filter($sm_icons))) {
+          $footer_mark .= "<nav role='navigation' aria-label='Social media'>" . $icons_markup . "</nav>";
+        }
       }
     }
-    $footer_mark .= "</div>";
+
+    $footer_mark .= "</div>"; // WS1.0 END col-md-4 col-sm-12 space-bot-md megafoot-border,
+    // WS2.0 END col-md-4 col-sm-12 space-bot-md megafoot-border
 
     // INIT for RH columns (Links)
     ///////////////////
@@ -191,20 +203,20 @@ function mega_footer_block_view($delta = '') {
       if (is_bool($item)) {
         break;
       }
-      if ($theme !== "_ws2") {
-        $caret = (!empty($item['#below'])) ? "caret" : "";
-        $footer_mark .= "<div class='col-md-" . $bootstrap_col_width . " col-sm-3 space-bot-md'>
-          <h2 data-toggle='collapse' data-target='#mega_accord" . $i . "' class='big-foot-head'>" .
-          $item['#title'] . "<span class='$caret'></span></h2>";
-      } else {
+      if ($theme === "_ws2") { // WS2.0
         $footer_mark .= "<div class='col-md-" . $bootstrap_col_width . " col-sm-" . $bootstrap_col_width
           . " space-bot-md'><h2 data-toggle='collapse' data-target='#mega_accord" . $i
           . "' class='big-foot-head collapsed'>" .
           $item['#title'] . "<span class='fa fa-chevron-up icon-rotates'></span></h2>";
+      } else { // WS1.0
+        $caret = (!empty($item['#below'])) ? "caret" : "";
+        $footer_mark .= "<div class='col-md-" . $bootstrap_col_width . " col-sm-3 space-bot-md'>
+          <h2 data-toggle='collapse' data-target='#mega_accord" . $i . "' class='big-foot-head'>" .
+          $item['#title'] . "<span class='$caret'></span></h2>";
       }
 
-      $footer_mark .= "<ul class='big-foot-nav  collapse in' id='mega_accord" . $i . "' style=''>";
-
+      // Each column's links output
+      $footer_mark .= "<ul class='big-foot-nav collapse in' id='mega_accord" . $i . "' style=''>";
       foreach ($item['#below'] as $inner) {
         if (is_bool($inner)) {
           break;
@@ -215,7 +227,9 @@ function mega_footer_block_view($delta = '') {
       $footer_mark .= "</div>";
       $i++;
     }
-    $footer_mark .= ($theme !== "_ws2") ? "</div></div>" : "</div></nav></div>";
+    $footer_mark .= ($theme === "_ws2")
+      ? "</div></nav></div>" // WS2.0
+      : "</div></div>"; // WS1.0
 
     $block['content'] = array(
       '#markup' => $footer_mark,
@@ -225,7 +239,7 @@ function mega_footer_block_view($delta = '') {
         ),
       ),
     );
-    if ($theme === "_ws2") { // Add WS2.0 standards CSS file
+    if ($theme === "_ws2") { // WS2.0 (CSS)
       $block['content']['#attached']['css'][] = drupal_get_path('module', 'mega_footer') . '/css/megafoot2l.css';
     }
   }

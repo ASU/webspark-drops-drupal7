@@ -14,7 +14,8 @@
         loggedIn: Drupal.settings.asu_brand.isLoggedIn,
         userName: Drupal.settings.asu_brand.isLoggedIn == true ? loginInfo.userName : "",
         loginLink: Drupal.settings.asu_brand.casLoginLink,
-        logoutLink: Drupal.settings.asu_brand.casLogoutLink
+        logoutLink: Drupal.settings.asu_brand.casLogoutLink,
+        animateTitle: false
       }, document.getElementById("headerContainer"));
     }
   };

@@ -11,7 +11,7 @@
  */
 function college_preprocess_html(&$variables) {
   $path = current_path();
-  // If El Puente is currently showing in an admin page, add special CSS.
+  // If College is currently showing in an admin page, add special CSS.
   if (path_is_admin($path)) {
     if (isset($variables['classes_array'])) {
       $variables['classes_array'][] = 'path-is-admin';
@@ -60,7 +60,7 @@ function college_preprocess_html(&$variables) {
       '#tag' => 'meta',
       '#attributes' => array(
         // Don't forget to update openasu.info as well!!
-        'content' => 'Webspark:1.70.9 (Stanton)',
+        'content' => 'Webspark:1.76.1 (Niceville)',
         'http-equiv' => 'X-Name-of-Distro',
         'name' => 'cmsversion',
       )
@@ -728,7 +728,7 @@ function college_preprocess_tb_megamenu_nav(&$variables) {
     ? '_ws2' : '';
   $url = check_plain(variable_get('asu_brand_header' . $suffix . '_override_url', ''));
   $variables['site_url'] = (!empty($url)) ? $url : $base_url;
-  $variables['site_name'] = check_plain(variable_get('site_name', 'Set your site name!'));
+  $variables['site_name'] = variable_get('site_name', 'Set your site name!');
   $variables['site_name_output'] = l($variables['site_name'], $variables['site_url']);
   // Build unit name
   $site_unit_name = check_plain(variable_get('asu_brand_header' . $suffix . '_parent_org_title', ''));

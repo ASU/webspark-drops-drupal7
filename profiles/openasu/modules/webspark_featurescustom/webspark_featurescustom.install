@@ -486,3 +486,10 @@ function webspark_featurescustom_update_7019(&$sandbox) {
 function webspark_featurescustom_update_7020(&$sandbox) {
   module_enable(array('ws2_banners'));
 }
+
+/**
+ * Enable Web Standards 2.0 "College" theme (This does NOT set it as the default/current theme)
+ */
+function webspark_featurescustom_update_7021(&$sandbox) {
+  theme_enable(array('college'));
+}

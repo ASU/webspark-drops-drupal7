@@ -8,8 +8,7 @@
   padding: $padding-small-vertical $padding-base-horizontal;
 }
 
-/* Error alerts (form elements, others) */
-
+// Error alerts (form elements, others)
 div.error, table tr.error {
   background-color: transparent;
 }
@@ -18,9 +17,9 @@ div.error, table tr.error {
   border-bottom-width: $padding-xs-vertical;
 }
 
-/* Checkboxes */
+// Checkboxes
 .form-type-checkbox {
-  padding-left: 0.75em;
+  padding-left: 2em;
   label {
     display: inline-block;
     padding-left: 0.2em;
@@ -66,38 +65,9 @@ div.error, table tr.error {
   }
 }
 
-/* Radio && Checkboxes */
-.form-type-checkbox input[type="checkbox"],
-.form-type-radio input[type="radio"] {
-  height: 1.5em;
-  width: 1.5em;
-  opacity: 0;
-  z-index: 1;
-  &:focus + label::before {
-    @include a11y-strong-focus();
-  }
-  &:indeterminate + label::after {
-    background-color: #555555;
-    border-radius: 0.0625em;
-    content: "";
-    display: block;
-    height: 0.125em;
-    margin-left: -1.0312em;
-    margin-top: 0.4325em;
-    width: 0.625em;
-  }
-  &:disabled + label {
-    opacity: 0.65;
-    &::before {
-      background-color: #eeeeee;
-      cursor: not-allowed;
-    }
-  }
-}
-
-/* Radio buttons */
+// Radio buttons
 .form-type-radio {
-  padding-left: inherit;
+  padding-left: 1em;
   label {
     display: inline-block;
     padding-left: 1em;
@@ -146,8 +116,13 @@ div.error, table tr.error {
   }
 }
 
-input[type="checkbox"],
-input[type="radio"] {
+/* Radio && Checkboxes */
+.form-type-checkbox input[type="checkbox"],
+.form-type-radio input[type="radio"] {
+  height: 1.5em;
+  width: 1.5em;
+  opacity: 0;
+  z-index: 1;
   .styled:checked + label {
     &::before,
     &::after {
@@ -160,6 +135,33 @@ input[type="radio"] {
       font-family: "FontAwesome";
     }
   }
+  &:focus + label::before {
+    @include a11y-strong-focus();
+  }
+  &:indeterminate + label::after {
+    background-color: #555555;
+    border-radius: 0.0625em;
+    content: "";
+    display: block;
+    height: 0.125em;
+    margin-left: -1.0312em;
+    margin-top: 0.4325em;
+    width: 0.625em;
+  }
+  &:disabled + label {
+    opacity: 0.65;
+    &::before {
+      background-color: #eeeeee;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Core system.css override
+.form-checkboxes .form-item,
+.form-radios .form-item {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 /* Action buttons for all forms */

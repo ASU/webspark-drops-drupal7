@@ -1,8 +1,12 @@
 name = TB Mega Menu
 description = Megamenu solutions for Drupal
 package = Menu
-version = VERSION
 core = 7.x
+
+; Information added by Drupal.org packaging script on 2017-11-20
+version = "7.x-1.0-rc2+10-dev+patch"
+project = "tb_megamenu"
+datestamp = "1511153590"
 
 dependencies[] = libraries
 dependencies[] = jquery_update

@@ -13,7 +13,7 @@
 
 #header > .container #headerContainer .region.region-header > *:not(#block-asu-brand-asu-brand-header-ws2.block-asu-brand) { max-width: 1164px; }
 
-#header > .container #headerContainer .universal-nav > div { margin: 0 auto; padding-right: 2rem; }
+#header > .container #headerContainer .universal-nav > div { margin: 0 auto; }
 
 body { min-width: 20em; }
 body #page .region-content { padding: 0; }
@@ -32,12 +32,13 @@ div.error { background-repeat: no-repeat; text-align: left; font: normal 12px/16
 div.error label { padding-left: 2em; }
 
 /* Level one (atomic) elements ------------------------------- */
+/* buttons */
 /* =BUTTONS --- WS2.0 DONE
 -------------------------------------------------------------- */
 button, .button, .btn, a.btn, .btn > a { transition: .1s ease-out; word-wrap: break-word; }
 button:hover, .button:hover, .btn:hover, a.btn:hover, .btn > a:hover { border-bottom: transparent; text-decoration: none; }
 
-.btn, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree { -moz-user-select: none; background-image: none; border: 1px solid transparent; border-radius: 32px; cursor: pointer; display: inline-block; font-size: 1em; font-weight: bold; line-height: 1em; margin-bottom: 0; min-width: 5rem; padding: 8px 8px; text-align: center; vertical-align: middle; white-space: nowrap; }
+.btn, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree { -moz-user-select: none; background-image: none; border: 1px solid transparent; border-radius: 32px; cursor: pointer; display: inline-block; font-size: 1rem; font-weight: bold; line-height: 1rem; margin-bottom: 0; min-width: 5rem; padding: 1rem 2rem; text-align: center; vertical-align: middle; white-space: nowrap; }
 .btn.active, .btn:focus, .btn:active, .btn:active:focus, .btn.active:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:active:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.active:focus { background-image: none; outline: 0 none; text-decoration: none; }
 .btn:hover, .btn:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree:focus { border: 1px solid transparent; transform: scale(1.1); }
 .btn.disabled, .btn.disabled:hover, .btn.disabled:focus, .btn.disabled:active, .btn.disabled.active, .btn[disabled], .btn[disabled]:hover, .btn[disabled]:focus, .btn[disabled]:active, .btn.active[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.disabled, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.disabled:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.disabled:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.disabled:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.disabled.active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree[disabled], .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree[disabled]:hover, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree[disabled]:focus, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree[disabled]:active, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree.active[disabled] { box-shadow: none; cursor: not-allowed; opacity: 0.5; pointer-events: none; }
@@ -158,11 +159,14 @@ fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fields
 
 .tb-megamenu-main-menu > button.btn-navbar.tb-megamenu-button { display: none; }
 
-div.region-content :not(.btn) > a, div.region-content .ui-widget-content :not(.btn) > a { border-bottom: 1px solid #8c1d40; text-decoration: none; color: #8c1d40; }
-div.region-content :not(.btn) > a:focus, div.region-content :not(.btn) > a:hover, div.region-content .ui-widget-content :not(.btn) > a:focus, div.region-content .ui-widget-content :not(.btn) > a:hover { color: #440E22; text-decoration: none; border-bottom: none; }
+/* links */
+div.region-content *:not(.btn) > a:not(.btn), div.region-content .ui-widget-content :not(.btn) > a:not(.btn) { border-bottom: 1px solid #8c1d40; text-decoration: none; color: #8c1d40; }
+div.region-content *:not(.btn) > a:not(.btn):focus, div.region-content *:not(.btn) > a:not(.btn):hover, div.region-content .ui-widget-content :not(.btn) > a:not(.btn):focus, div.region-content .ui-widget-content :not(.btn) > a:not(.btn):hover { color: #440E22; text-decoration: none; border-bottom: none; }
+div.region-content .chosen-container > a { border-bottom: inherit !important; color: inherit !important; }
 
 #header a, #asu_footer a { border-bottom: transparent; }
 
+/* typography */
 html { font-size: 100%; }
 
 body { font-size: 1rem; font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif; color: #191919; background-color: #fff; }
@@ -194,6 +198,7 @@ h6, .h6 { font-weight: normal; }
 
 .explore-programs h3 { font-size: 1.625rem; }
 
+/* blockquotes */
 /* Blockquotes */
 /* blockquotes-output - Return base64-encoded string for rendering open quote. @param (str) $color - (optional) defaults to dark gray. Alt options (gold, maroon, white) */
 /* blockquotes-quotes - Returns background-image CSS rule @param (str) $color - desired colors (gold, maroon, white) */
@@ -214,6 +219,7 @@ blockquote .ws2-sig-title:before { padding-right: 0.5em; content: "\2014"; }
 blockquote .ws2-sig-byline { clear: left; display: block; font-weight: normal; padding-left: 1.5em; }
 blockquote.ws2-element-black a { color: #ffc627; }
 
+/* images */
 img { max-width: 100%; height: auto; vertical-align: bottom; }
 
 /* WYSIWYG image spacing */
@@ -233,6 +239,7 @@ div.caption-inner { padding: 0; background: transparent; border: none; }
 div.caption-inner > img { margin-bottom: 0; }
 div.caption-inner p.caption-text, div.caption-inner .caption-text { padding: 1rem; font-size: 0.75rem; text-align: left; margin: 0; border: 1px solid #d0d0d0; border-top: none; }
 
+/* list items */
 /** List items */
 /* -- BlockQuotes
 -------------------------------------------------------------- */
@@ -267,6 +274,7 @@ div.region-content #page-page ol.ws2-list-stepped.ws2-element-gray > li:before {
 div.region-content #page-page ol.ws2-list-stepped.ws2-element-gold > li:before { background-color: #ffc627; color: #191919; }
 div.region-content #page-page div.pane-menu-tree ul li:before, div.region-content #page-page div.pane-menu-tree ol li:before, div.region-content #page-page .panels-ipe-dragbar ul li:before, div.region-content #page-page .panels-ipe-dragbar ol li:before, div.region-content #page-page .panels-ipe-newblock ul li:before, div.region-content #page-page .panels-ipe-newblock ol li:before { content: none !important; }
 
+/* dividers */
 /** New WS2.0 - Dividers and Backgrounds IS_SCSS */
 hr.ws2-hr-gold { height: 0.5rem; background-color: #ffc627; max-width: 16rem; margin: 3em 0; }
 
@@ -282,6 +290,7 @@ div.region-content #page-page .divider-network-white { background-image: url("/p
 div.region-content #page-page .divider-network-black { background-image: url("/profiles/openasu/themes/college/images/network_black.png"); background-color: #191919; }
 div.region-content #page-page [class*=divider-network-] { background-position: top left; }
 
+/* tables */
 /* Default table styles */
 table { background-color: #fff; margin-bottom: 1.5em; max-width: 100%; width: 100%; border: 1px solid #e8e8e8; }
 
@@ -305,6 +314,7 @@ table.bordered > tbody > tr:nth-child(2n+1) { background-color: #fff; }
 
 table.bordered > caption + thead > tr:first-child > th, table.bordered > caption + thead > tr:first-child > td, table.bordered > colgroup + thead > tr:first-child > th, table.bordered > colgroup + thead > tr:first-child > td, table.bordered > thead:first-child > tr:first-child > th, table.bordered > thead:first-child > tr:first-child > td { border-top: 1px solid #bfbfbf; }
 
+/* content callouts */
 /* Content Callouts ------------------------------------------ */
 .node-content-callout { padding: 5rem 0; }
 .node-content-callout h2 { margin-bottom: 34px; font-size: 40px; }
@@ -348,7 +358,7 @@ table.bordered > caption + thead > tr:first-child > th, table.bordered > caption
 /** Alerts */
 .alert { color: #191919; font-weight: 400; border-bottom-color: #191919; position: relative; margin: 16px 0; padding: 24px 24px; }
 .alert a { color: #191919; border-bottom-color: #191919; }
-.alert a.close { background-color: #fff; color: #191919; font-size: 1.25em; font-weight: bold; opacity: 0.8; border: 1px solid #d0d0d0; padding: 0.25rem 0.5rem 0.25rem 0.58rem; margin: 0 0 16px 16px; border-radius: 1rem; height: 2rem; width: 2rem; }
+.alert a.close { background-color: #fff; color: #191919; font-size: 1.25em; font-weight: bold; opacity: 0.8; border: 1px solid #d0d0d0 !important; padding: 0.25rem 0.5rem 0.25rem 0.58rem; margin: 0 0 16px 16px; border-radius: 1rem; height: 2rem; width: 2rem; }
 .alert a.close:hover { opacity: 1.0; color: #191919; border-bottom-color: #d0d0d0; cursor: pointer; }
 .alert a.close + p:empty { margin-top: -1rem; padding-top: 0; background-color: red !important; }
 .alert a:hover { color: #440E22; border-bottom-color: #440E22; cursor: pointer; }
@@ -372,13 +382,11 @@ table.bordered > caption + thead > tr:first-child > th, table.bordered > caption
 
 .form-control { padding: 8px 16px; }
 
-/* Error alerts (form elements, others) */
 div.error, table tr.error { background-color: transparent; }
 
 .form-item input.error, .form-item textarea.error, .form-item select.error { border: 1px solid #CC2F2F; border-bottom-width: 4px; }
 
-/* Checkboxes */
-.form-type-checkbox { padding-left: 0.75em; }
+.form-type-checkbox { padding-left: 2em; }
 .form-type-checkbox label { display: inline-block; padding-left: 0.2em; position: relative; vertical-align: top; max-width: 95%; }
 .form-type-checkbox label::before { background-color: #fff; border: 1px solid #cccccc; border-radius: 0.25em; content: ""; display: inline-block; height: 1.5em; left: 0; margin-left: -2em; position: absolute; transition: border 0.15s ease-in-out 0s, color 0.15s ease-in-out 0s; width: 1.5em; }
 .form-type-checkbox label::after { color: #555555; display: inline-block; font-size: 1.25em; height: 1.4325em; width: 1.5em; position: absolute; left: 0.05em; top: -0.15em; margin-left: -1.55em; padding-left: 0; padding-top: 0; }
@@ -386,15 +394,7 @@ div.error, table tr.error { background-color: transparent; }
 .form-type-checkbox.form-type-checkbox-inline { margin-top: 0; }
 .form-type-checkbox input[type="checkbox"]:checked + label::after { content: ""; font-family: "FontAwesome"; }
 
-/* Radio && Checkboxes */
-.form-type-checkbox input[type="checkbox"], .form-type-radio input[type="radio"] { height: 1.5em; width: 1.5em; opacity: 0; z-index: 1; }
-.form-type-checkbox input[type="checkbox"]:focus + label::before, .form-type-radio input[type="radio"]:focus + label::before { outline: 2px solid #191919; }
-.form-type-checkbox input[type="checkbox"]:indeterminate + label::after, .form-type-radio input[type="radio"]:indeterminate + label::after { background-color: #555555; border-radius: 0.0625em; content: ""; display: block; height: 0.125em; margin-left: -1.0312em; margin-top: 0.4325em; width: 0.625em; }
-.form-type-checkbox input[type="checkbox"]:disabled + label, .form-type-radio input[type="radio"]:disabled + label { opacity: 0.65; }
-.form-type-checkbox input[type="checkbox"]:disabled + label::before, .form-type-radio input[type="radio"]:disabled + label::before { background-color: #eeeeee; cursor: not-allowed; }
-
-/* Radio buttons */
-.form-type-radio { padding-left: inherit; }
+.form-type-radio { padding-left: 1em; }
 .form-type-radio label { display: inline-block; padding-left: 1em; position: relative; vertical-align: middle; max-width: 95%; }
 .form-type-radio label::before { background-color: #fff; border: 1px solid #cccccc; border-radius: 50%; content: ""; display: inline-block; position: absolute; height: 1.5em; width: 1.5em; left: 0; margin-left: -1.2em; transition: border 0.15s ease-in-out 0s; }
 .form-type-radio label::after { background-color: #555555; border-radius: 50%; content: " "; font-size: 1em; display: inline-block; position: absolute; height: 1em; width: 1em; top: 0.25em; left: 0.3em; margin-left: -1.25em; transform: scale(0, 0); transition: transform 0.05s cubic-bezier(0.8, -0.33, 0.2, 1.33) 0s; }
@@ -402,8 +402,16 @@ div.error, table tr.error { background-color: transparent; }
 .form-type-radio input[type="radio"]:checked + label::after { transform: scale(1, 1); }
 .form-type-radio.form-type-radio-inline { margin-top: 0; }
 
-input[type="checkbox"] .styled:checked + label::before, input[type="checkbox"] .styled:checked + label::after, input[type="radio"] .styled:checked + label::before, input[type="radio"] .styled:checked + label::after { color: #fff; }
-input[type="checkbox"].styled:checked + label::after, input[type="radio"].styled:checked + label::after { content: ""; font-family: "FontAwesome"; }
+/* Radio && Checkboxes */
+.form-type-checkbox input[type="checkbox"], .form-type-radio input[type="radio"] { height: 1.5em; width: 1.5em; opacity: 0; z-index: 1; }
+.form-type-checkbox input[type="checkbox"] .styled:checked + label::before, .form-type-checkbox input[type="checkbox"] .styled:checked + label::after, .form-type-radio input[type="radio"] .styled:checked + label::before, .form-type-radio input[type="radio"] .styled:checked + label::after { color: #fff; }
+.form-type-checkbox input[type="checkbox"].styled:checked + label::after, .form-type-radio input[type="radio"].styled:checked + label::after { content: ""; font-family: "FontAwesome"; }
+.form-type-checkbox input[type="checkbox"]:focus + label::before, .form-type-radio input[type="radio"]:focus + label::before { outline: 2px solid #191919; outline-offset: 0.25rem; }
+.form-type-checkbox input[type="checkbox"]:indeterminate + label::after, .form-type-radio input[type="radio"]:indeterminate + label::after { background-color: #555555; border-radius: 0.0625em; content: ""; display: block; height: 0.125em; margin-left: -1.0312em; margin-top: 0.4325em; width: 0.625em; }
+.form-type-checkbox input[type="checkbox"]:disabled + label, .form-type-radio input[type="radio"]:disabled + label { opacity: 0.65; }
+.form-type-checkbox input[type="checkbox"]:disabled + label::before, .form-type-radio input[type="radio"]:disabled + label::before { background-color: #eeeeee; cursor: not-allowed; }
+
+.form-checkboxes .form-item, .form-radios .form-item { margin-top: 0.5em; margin-bottom: 0.5em; }
 
 /* Action buttons for all forms */
 .form-actions { text-align: center; vertical-align: middle; padding-left: 1em; padding-right: 1em; display: inline-block; margin-bottom: 0.25em; margin-top: 0.25em; }
@@ -492,7 +500,7 @@ div.region-content #page-page .ws2-element-alt.ws2-element-alt-white .ws2-elemen
 
 #asu_footer ul { max-width: 1170px; margin: 0 auto; padding-left: 0; }
 
-a:focus, .ui-widget-content a:focus, input:focus, a.btn:focus, .btn a:focus, #skip_to_content:focus, #top-content #tabs .nav-pills > li.active > a:focus, h4.ui-accordion-header.ui-state-hover, h4.ui-accordion-header:focus { outline: 2px solid #191919; }
+a:focus, .ui-widget-content a:focus, input:focus, a.btn:focus, .btn a:focus, #skip_to_content:focus, #top-content #tabs .nav-pills > li.active > a:focus, h4.ui-accordion-header.ui-state-hover, h4.ui-accordion-header:focus { outline: 2px solid #191919; outline-offset: 0.25rem; }
 
 #skip_to_content { position: absolute; left: -9999px; }
 #skip_to_content:focus { position: relative; left: 0; }

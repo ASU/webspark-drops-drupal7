@@ -2,8 +2,6 @@
 -------------------------------------------------------------- */
 @import "variables";
 
-$pane-menu-tree-selectors-btn: "#{$pane-menu-tree-selectors} li a.btn-pane-menu-tree";
-
 @mixin buttons-style-base($color, $background) {
   color: $color;
   background-color: $background;
@@ -48,9 +46,9 @@ $pane-menu-tree-selectors-btn: "#{$pane-menu-tree-selectors} li a.btn-pane-menu-
 }
 
 ///////////////////////////////////////////
-
 // GLOBAL BUTTON CSS
-////////////////////
+///////////////////////////////////////////
+
 // Global Level 1
 button, .button, .btn, a.btn, .btn > a {
   @include ws2-element-transition-button();
@@ -62,20 +60,21 @@ button, .button, .btn, a.btn, .btn > a {
 }
 // Global Level 2a
 .btn,
-#{$pane-menu-tree-selectors-btn} {
+#{$pane-menu-tree-btn} {
   -moz-user-select: none;
   background-image: none;
   border: 1px solid transparent;
   border-radius: $border-radius-circle;
   cursor: pointer;
   display: inline-block;
-  font-size: 1em;
+  font-size: 1rem;
   font-weight: bold;
-  line-height: 1em;
+  line-height: 1rem;
   margin-bottom: 0;
   //max-width: $btn-max-width; // Disabled for now
   min-width: $btn-min-width; // default (not -med)
-  padding: $padding-base-vertical/2 $padding-base-horizontal/2;
+  //padding: $padding-base-vertical/2 $padding-base-horizontal/2;
+  padding: 1rem 2rem;
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
@@ -121,29 +120,12 @@ a.btn,
 // Individual button styles
 // (WS2.0 OFFICIAL)
 //////////////////////////////////
-
-// Primary button (WS2.0 Maroon OFFICIAL)
-// * Default button class added
-// * WS1.0 blue buttons will use this color.
-// From links SASS file
-//a.btn-default, .btn-default > a,
-//a.btn-primary, .btn-primary > a,
-//a.btn-blue, .btn-blue > a {
-//  color: #fff;
-//  border-bottom-color: $ws2-maroon;
-//  &:hover {
-//    color: #fff;
-//    border-bottom-color: $ws2-maroon;
-//  }
-//}
-
-//////////////////////////////////
 .btn-default, a.btn-default, .btn-default > a,
 .btn-primary, a.btn-primary, .btn-primary > a,
 .btn-blue, a.btn-blue, .btn-blue > a,
-#{$pane-menu-tree-selectors-btn}.btn-primary,
-#{$pane-menu-tree-selectors-btn}.btn-default,
-#{$pane-menu-tree-selectors-btn}.btn-blue {
+#{$pane-menu-tree-btn}.btn-primary,
+#{$pane-menu-tree-btn}.btn-default,
+#{$pane-menu-tree-btn}.btn-blue {
   @include buttons-style-base(#ffffff, $ws2-maroon);
   &:hover, &:focus, &:active {
     transform: scale($btn-scale);
@@ -179,7 +161,7 @@ fieldset[disabled] .btn-blue {
 // Secondary (WS2.0 Gray OFFICIAL)
 //////////////////////////////////
 .btn-secondary, a.btn-secondary, .btn-secondary > a,
-#{$pane-menu-tree-selectors-btn}.btn-secondary {
+#{$pane-menu-tree-btn}.btn-secondary {
   @include buttons-style-base($ws2-gray-darkest, $ws2-gray);
   &:hover, &:focus, &:active {
     color: $ws2-gray-darkest;
@@ -209,7 +191,7 @@ fieldset[disabled] .btn-secondary {
 // Gold Button (WS2.0 Gold OFFICIAL)
 //////////////////////////////////
 .btn-gold, a.btn-gold, .btn-gold > a,
-#{$pane-menu-tree-selectors-btn}.btn-gold {
+#{$pane-menu-tree-btn}.btn-gold {
   @include buttons-style-base($ws2-gray-darkest, $ws2-gold);
   &:hover, &:focus, &:active {
     transform: scale($btn-scale);
@@ -239,7 +221,7 @@ fieldset[disabled] .btn-gold {
 // Black button (WS2.0 Black OFFICIAL)
 //////////////////////////////////
 .btn-black, a.btn-black, .btn-black > a,
-#{$pane-menu-tree-selectors-btn}.btn-black {
+#{$pane-menu-tree-btn}.btn-black {
   @include buttons-style-base($ws2-gray-lightest, $ws2-gray-darkest);
   &:hover, &:focus, &:active {
     transform: scale($btn-scale);
@@ -367,7 +349,7 @@ fieldset[disabled] .btn-black {
   padding: 8px 13px;
   text-decoration: none;
   &:hover {
-    background: -moz-linear-gradient(center bottom , #c5c5c5 0%, #fafafa 100%) repeat scroll 0 0 #e6e6e6;
+    background: -moz-linear-gradient(center bottom, #c5c5c5 0%, #fafafa 100%) repeat scroll 0 0 #e6e6e6;
   }
 }
 
@@ -411,7 +393,7 @@ fieldset[disabled] .btn-black {
     padding-bottom: 0.5rem;
   }
 }
-// Hide TB Megamenu button
+// Hide TB Megamenu built-in toggle button
 .tb-megamenu-main-menu > button.btn-navbar.tb-megamenu-button {
   display: none;
 }

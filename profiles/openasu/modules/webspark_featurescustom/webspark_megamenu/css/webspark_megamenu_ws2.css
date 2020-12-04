@@ -46,6 +46,7 @@
 .tb-megamenu .fa.fa-home.icon-white { margin-right: 0; display: block !important; font-size: 1rem; padding-top: 0.25rem; padding-bottom: 0.25rem; }
 .tb-megamenu.tb-megamenu-main-menu .collapse { display: block; }
 .tb-megamenu .nav { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.tb-megamenu .nav .btn { -moz-user-select: none; background-image: none; border: 1px solid transparent; border-bottom-color: transparent;border-bottom-style: solid; border-bottom-width: 1px; border-radius: 32px; cursor: pointer; display: inline-block; font-size: 1em; font-weight: bold;   line-height: 1em; margin-bottom: 0; min-width: 5rem; padding: 8px 8px; text-align: center; vertical-align: middle; white-space: nowrap; }
 .tb-megamenu .nav .mega .mega-dropdown-menu .level-2 .btn > a { padding-right: 0.5rem; padding-left: 0.5rem; }
 .tb-megamenu .nav li.tb-megamenu-item .btn { display: inline-block; margin-top: 0.5rem; margin-bottom: 0.5rem; border: none; }
 .tb-megamenu .nav li.tb-megamenu-item .btn > a { padding: 0; font-weight: bold !important; }

@@ -91,7 +91,7 @@ $brand-danger:            #CC2F2F; // $ws2-error-bkgd (alt?)
 //// Unpublished nodes
 $ws2-bkgd-unpublished:    $ws2-error-bkgd;
 
-//// Background color for `<body>`.
+//// Background color for `<body>`..region-content #page-page .pane-menu-tree
 $body-bg:                 $brand-white;
 $body-bg-gray:            $ws2-gray-lighter;
 $body-bg-dark:            $ws2-gray-darkest;
@@ -466,7 +466,8 @@ $nav-pills-active-link-hover-bg:            $component-active-bg;
 $nav-pills-active-link-hover-color:         $component-active-color;
 
 //== Pane menu tree for sidebar navigation
-$pane-menu-tree-selectors: ".pane-menu-tree .menu-block-wrapper ul.menu";
+$pane-menu-tree: ".pane-menu-tree .menu-block-wrapper";
+$pane-menu-tree-btn: "#{$pane-menu-tree} ul.menu li a.btn-pane-menu-tree";
 
 //== Pagination - WS2 DONE
 //

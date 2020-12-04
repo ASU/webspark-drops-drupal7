@@ -102,6 +102,9 @@
       &:hover,
       &:focus {
         text-decoration: none;
+        font-weight: bold;
+        background-color: $ws2-maroon !important;
+        color: #fff !important;
       }
     }
   }
@@ -138,7 +141,7 @@
       a {
         background-color: #fff;
         border-radius: $pager-border-radius;
-        border: 1px solid #fff;
+        border: 1px solid #fff !important;
       }
     }
     & :first-child a,
@@ -158,7 +161,8 @@
 .item-list.item-list-pager .pager .pager-current,
 #media-browser-tabset .item-list.item-list-pager .pager .pager-current {
   border: 1px solid $ws2-maroon;
-  padding: $padding-small-vertical; // 0.5rem
+  border-radius: 2rem;
+  padding:  5px 14px; // taken from Innovation
   background-color: $ws2-maroon;
   color: #fff;
 }

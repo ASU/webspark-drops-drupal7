@@ -15,8 +15,9 @@ Feature: Use rich text editor
     When I click the "<Styles>" element identified by the "id" attribute in the "edit-body-und-0-value" WYSIWYG editor
     # For the 'Oval image' option, the padding on the <a> tag for the option was causing the behat ->click() operation to
     # to mistarget, resulting in the style being highlighted but not actually applied. The fix for now is to remove
-    # the padding via targeted css in the  webspark_seven.css file:
+    # the padding via targeted css in the webspark_seven.css file:
     # .page-node-add-panopoly-test-page .cirkuitSkin .mceMenu { padding: 0; }
+    # UPDATE: The Oval image is a deprecated style and has been removed.
     And I click the "<Styling>" option in the opened "Styles" WYSIWYG editor drop down list
     And I type "Testing element" in the "edit-body-und-0-value" WYSIWYG editor
       #And I press "Publish"
@@ -28,7 +29,6 @@ Feature: Use rich text editor
       | edit-body-und-0-value_styleselect_text  | Image align left                  | p        | class     | pull-left |
       | edit-body-und-0-value_styleselect_text  | Lead paragraph                    | p        | class     | lead-paragraph |
       | edit-body-und-0-value_styleselect_text  | Image align right                 | p        | class     | pull-right |
-      | edit-body-und-0-value_styleselect_text  | Oval image                        | p        | class     | img-circle |
       | edit-body-und-0-value_styleselect_text  | Image with rounded corners        | p        | class     | img-rounded |
       | edit-body-und-0-value_styleselect_text  | Image with double-border          | p        | class     | img-thumbnail |
       | edit-body-und-0-value_styleselect_text  | Maroon button                     | p        | class     | btn btn-primary |

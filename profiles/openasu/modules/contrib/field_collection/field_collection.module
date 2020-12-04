@@ -644,7 +644,7 @@ function field_collection_field_update($host_entity_type, $host_entity, $field, 
       $items_to_remove = array_diff($ids, $current_by_id);
       // Delete unused field collection items now.
       foreach (field_collection_item_load_multiple($items_to_remove) as $un_item) {
-        $un_item->updateHostEntity($host_entity);
+        $un_item->updateHostEntity($host_entity, $host_entity_type);
         $un_item->deleteRevision(TRUE);
       }
     }

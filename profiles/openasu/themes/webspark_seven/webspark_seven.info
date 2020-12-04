@@ -1,7 +1,7 @@
 name = Webspark Seven
 description = "A customization of the Seven administration theme for Webspark, it is the default for site administration."
 package = Core
-version = 7.x-1.0.1
+version = 7.x-1.1
 core = 7.x
 base theme = seven
 stylesheets[screen][] = css/webspark_seven.css

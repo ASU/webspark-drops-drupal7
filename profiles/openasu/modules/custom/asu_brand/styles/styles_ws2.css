@@ -66,4 +66,4 @@
   .mb-right { display: block; float: right; } }
 @media all and (min-width: 992px) { #headerContainer header { position: relative; }
   #headerContainer header.scrolled { border-bottom: none; }
-  .primary-nav { display: none !important; } }
+  .navbar-component { display: none !important; } }

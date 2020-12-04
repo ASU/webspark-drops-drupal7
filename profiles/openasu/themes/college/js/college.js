@@ -44,7 +44,7 @@
 
   // Fixes all anchor tags with hashes
   $("a").on("click", function (e) {
-    let $this = $(this);
+    var $this = $(this);
     var url = $this.attr("href");
     // var cls = $this.attr("class");
     if (!$this.hasClass("accordion-toggle") && !$this.closest("ui-tabs").length === 0 && $this.closest("nav-tabs").length === 0) { // jshint ignore:line
@@ -80,6 +80,6 @@
 
   // WEBSPARK-897 - Stop conflict between Token module (and its jQuery calls) and Bootstrap's button() function.
   // $.fn.bootstrapBtn = $.fn.button.noConflict();
-  // Removed for El Puente
+  // Removed for College theme
 
 })(jQuery, Drupal); // jshint ignore:line

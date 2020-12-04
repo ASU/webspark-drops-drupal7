@@ -405,9 +405,15 @@ function field_collection_update_7008() {
  */
 function field_collection_update_7009(&$sandbox) {
   $items_per_pass = 10;
+  $field_collection_fields = field_read_fields(array('type' => 'field_collection'));
+
+  // If you don't have any field_collecton fields then skip this update.
+  if (empty($field_collection_fields)) {
+    return;
+  }
 
   if (!isset($sandbox['current_field'])) {
-    $sandbox['field_collection_fields'] = array_keys(field_read_fields(array('type' => 'field_collection')));
+    $sandbox['field_collection_fields'] = array_keys($field_collection_fields);
     $sandbox['current_field'] = 0;
     $sandbox['current_field_collection_item'] = 0;
     $sandbox['field_name'] = $sandbox['field_collection_fields'][$sandbox['current_field']];

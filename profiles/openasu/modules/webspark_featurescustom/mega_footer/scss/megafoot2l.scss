@@ -28,14 +28,14 @@
     &.megafoot-logo-social {
       border-bottom: 1px solid #333;
       #mega-footer-logo-wrapper {
-        padding-left: 0;
-        padding-right: 0;
+        padding: 1.5rem 0;
         display: inline-block;
         a {
           border-bottom: 0;
         }
         img {
           height: auto;
+          max-height: 112px;
           padding: .5rem 0;
         }
       }

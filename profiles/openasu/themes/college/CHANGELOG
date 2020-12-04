@@ -1,0 +1,13 @@
+College (v1.1) - 2020-11-30
+---------------------------
+- Panels directory added to College config file to allow Panels layouts
+- Removed right-hand padding from bottom buttons of mobile menu
+
+College (v1.0) - 2020-10-28
+---------------------------
+- Provides Web Standards 2 Limited design for secondary navigation (sidebar
+  menu, breadcrumbs, Mega footer), alerts, banners, buttons, dividers, list
+  items, typography, and framework for primary navigation (Megamenu)
+- Integrated SASS (using Compass) into all new elements
+- Refactored existing CSS from the Innovation theme and adapted it for Web
+  Standards 2 Limited

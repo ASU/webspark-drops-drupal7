@@ -6,7 +6,7 @@ project = webspark_featurescustom
 files[] = webspark_featurescustom.module
 
 ; See below for info on version number
-version = 7.x-1.9
+version = 7.x-1.10
 required = TRUE
 
 ; Contains submodules enabled in the installation profile by default to avoid dependency/permissions
