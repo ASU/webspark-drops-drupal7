@@ -1,3 +1,11 @@
+Webspark 1.76.2 (Gainesville), 2020-12-05
+-----------------------------------------
+- Webspark core updates
+
+  * Drupal core - v7.77+patch4
+    - See the latest release notes at https://www.drupal.org/project/drupal/releases/7.77
+      for more information
+
 Webspark 1.76.1 (Niceville), 2020-11-30
 ---------------------------------------
 - Webspark core updates

@@ -60,7 +60,7 @@ function college_preprocess_html(&$variables) {
       '#tag' => 'meta',
       '#attributes' => array(
         // Don't forget to update openasu.info as well!!
-        'content' => 'Webspark:1.76.1 (Niceville)',
+        'content' => 'Webspark:1.76.2 (Gainesville)',
         'http-equiv' => 'X-Name-of-Distro',
         'name' => 'cmsversion',
       )
