@@ -204,8 +204,8 @@ h6, .h6 { font-weight: normal; }
 /* blockquotes-quotes - Returns background-image CSS rule @param (str) $color - desired colors (gold, maroon, white) */
 /* Blockquote SASS
 ----------------------------------------------*/
-blockquote { border-left: none; font-weight: bold; padding-left: 6rem; max-width: 75ch; /* Signatures (beneath content) */ /* Content customizations */ }
-blockquote.ws2-element-alt { padding: 24px 24px 24px 6rem; }
+blockquote { border-left: none; font-weight: bold; padding-left: 4rem; max-width: 75ch; /* Signatures (beneath content) */ /* Content customizations */ }
+blockquote.ws2-element-alt { padding: 24px 24px 24px 4rem; }
 blockquote:before { background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDIuODcgMjQ1LjgyIj48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6IzE5MTkxOTt9PC9zdHlsZT48L2RlZnM+PGcgaWQ9IkxheWVyXzIiIGRhdGEtbmFtZT0iTGF5ZXIgMiI+PGcgaWQ9IkxheWVyXzEtMiIgZGF0YS1uYW1lPSJMYXllciAxIj48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMTMuNjEsMjQ1LjgySDBWMTY0LjU2cTAtNDkuMzQsOC42OS03Ny44M1Q0MC44NCwzNS41OFE2NC4yOSwxMi45NSwxMDAuNjcsMGwyMi4yNCw0Ni45cS0zNCwxMS4zMy00OC43MiwzMS41NFQ1OC42MywxMzIuMjFoNTVabTE4MCwwSDE4MFYxNjQuNTZxMC00OS43NCw4LjctNzhUMjIxLDM1LjU4UTI0NC42NSwxMi45NSwyODAuNjMsMGwyMi4yNCw0Ni45cS0zNCwxMS4zMy00OC43MiwzMS41NHQtMTUuNTcsNTMuNzdoNTVaIi8+PC9nPjwvZz48L3N2Zz4K); margin-top: 1.5rem; background-repeat: no-repeat; content: ''; min-height: 3rem; min-width: 2.375rem; float: left; margin-left: -4rem; color: #d0d0d0; }
 blockquote > p:not([class*=sig-]):after { content: '"'; }
 blockquote.ws2-element-maroon:before { background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDIuODcgMjQ1LjgyIj48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6IzhjMWQ0MDt9PC9zdHlsZT48L2RlZnM+PGcgaWQ9IkxheWVyXzIiIGRhdGEtbmFtZT0iTGF5ZXIgMiI+PGcgaWQ9IkxheWVyXzEtMiIgZGF0YS1uYW1lPSJMYXllciAxIj48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMTMuNjEsMjQ1LjgySDBWMTY0LjU2cTAtNDkuMzQsOC42OS03Ny44M1Q0MC44NCwzNS41OFE2NC4yOSwxMi45NSwxMDAuNjcsMGwyMi4yNCw0Ni45cS0zNCwxMS4zMy00OC43MiwzMS41NFQ1OC42MywxMzIuMjFoNTVabTE4MCwwSDE4MFYxNjQuNTZxMC00OS43NCw4LjctNzhUMjIxLDM1LjU4UTI0NC42NSwxMi45NSwyODAuNjMsMGwyMi4yNCw0Ni45cS0zNCwxMS4zMy00OC43MiwzMS41NHQtMTUuNTcsNTMuNzdoNTVaIi8+PC9nPjwvZz48L3N2Zz4K); margin-top: 1.5rem; }
@@ -250,29 +250,22 @@ img.img-testimonial-medium { clip-path: circle(120px); }
 
 img.img-testimonial-small { clip-path: circle(90px); }
 
-/* -- ordered + unordered lists
+/* -- ordered + unordered lists - Turning off temporarily
 -------------------------------------------------------------- */
-div.region-content #page-page ul, div.region-content #page-page ol { padding-left: 0; list-style-type: none; }
+div.region-content #page-page ul li, div.region-content #page-page ol li { line-height: 2em; }
 div.region-content #page-page ul li:before, div.region-content #page-page ol li:before { font-weight: bolder; vertical-align: middle; }
 div.region-content #page-page ul li:last-child, div.region-content #page-page ol li:last-child { padding-bottom: 0; }
-div.region-content #page-page ul.ws2-element-maroon li:before, div.region-content #page-page ol.ws2-element-maroon li:before { color: #8c1d40; }
-div.region-content #page-page ul.ws2-element-gray li:before, div.region-content #page-page ol.ws2-element-gray li:before { color: #191919; }
 div.region-content #page-page ul > li > ul, div.region-content #page-page ul > li > ol, div.region-content #page-page ul > ul, div.region-content #page-page ul > ol, div.region-content #page-page ol > li > ul, div.region-content #page-page ol > li > ol, div.region-content #page-page ol > ul, div.region-content #page-page ol > ol { padding-left: 2em; }
-div.region-content #page-page ul li:before { padding: 0 2.75em 0 0; margin: 0 -2em 0 0; content: "•"; font-size: 2em; }
-div.region-content #page-page ul ul > li:before { content: "◦"; }
-div.region-content #page-page ul ul ul > li:before { content: "•"; }
-div.region-content #page-page ul ul ul ul > li:before { content: "◦"; }
-div.region-content #page-page ul ul ul ul ul > li:before { content: "•"; }
-div.region-content #page-page ol > li { padding-bottom: 1em; counter-increment: customlist; }
-div.region-content #page-page ol > li:before { content: counter(customlist) " "; float: left; width: 2em; }
-div.region-content #page-page ol > li:first-child { counter-reset: customlist; }
-div.region-content #page-page ol.ws2-list-stepped > li { line-height: 2em; border-bottom: 1px solid #bfbfbf; padding-bottom: 2em; padding-top: 2em; }
-div.region-content #page-page ol.ws2-list-stepped > li:before { font-weight: bold; font-size: 1.3125em; width: 5em; clip-path: circle(1rem); text-align: center; margin-left: -1.75em; }
+div.region-content #page-page ol.ws2-list-stepped { padding-left: 0; list-style-type: none; }
+div.region-content #page-page ol.ws2-list-stepped li:before { font-weight: bolder; vertical-align: middle; }
+div.region-content #page-page ol.ws2-list-stepped li:last-child { padding-bottom: 0; }
+div.region-content #page-page ol.ws2-list-stepped > li { border-bottom: 1px solid #bfbfbf; padding-bottom: 2em; padding-top: 2em; counter-increment: customlist; }
+div.region-content #page-page ol.ws2-list-stepped > li:before { content: counter(customlist) " "; float: left; font-weight: bold; font-size: 1.3125em; width: 5em; clip-path: circle(1rem); text-align: center; margin-left: -1.75em; }
+div.region-content #page-page ol.ws2-list-stepped > li:first-child { counter-reset: customlist; }
 div.region-content #page-page ol.ws2-list-stepped > li:last-child { border-bottom: transparent; }
 div.region-content #page-page ol.ws2-list-stepped > li:before, div.region-content #page-page ol.ws2-list-stepped.ws2-element-maroon > li:before { background-color: #8c1d40; color: #fff; }
 div.region-content #page-page ol.ws2-list-stepped.ws2-element-gray > li:before { background-color: #191919; color: #fff; }
 div.region-content #page-page ol.ws2-list-stepped.ws2-element-gold > li:before { background-color: #ffc627; color: #191919; }
-div.region-content #page-page div.pane-menu-tree ul li:before, div.region-content #page-page div.pane-menu-tree ol li:before, div.region-content #page-page .panels-ipe-dragbar ul li:before, div.region-content #page-page .panels-ipe-dragbar ol li:before, div.region-content #page-page .panels-ipe-newblock ul li:before, div.region-content #page-page .panels-ipe-newblock ol li:before { content: none !important; }
 
 /* dividers */
 /** New WS2.0 - Dividers and Backgrounds IS_SCSS */
