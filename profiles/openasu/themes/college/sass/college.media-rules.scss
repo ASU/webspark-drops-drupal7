@@ -69,6 +69,7 @@
   .row .col-sm-6:nth-child(7) {
     clear: both;
   }
+  #header { margin-bottom: 132px; } // Accounts for spacing needed for sticky header
   #header .container {
     width: 100%;
   }
