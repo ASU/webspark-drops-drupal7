@@ -19,6 +19,7 @@
   h1.page-title { margin-bottom: 0; padding-bottom: 0.75rem; }
   h2, .h2 { font-size: 34px; }
   .row .col-sm-6:nth-child(3), .row .col-sm-6:nth-child(5), .row .col-sm-6:nth-child(7) { clear: both; }
+  #header { margin-bottom: 132px; } /* Accounts for spacing needed for sticky menus */
   #header .container { width: 100%; }
   #header > .container .row { margin-left: 0; margin-right: 0; }
   #header > .container .row .col-md-12 { padding-left: 0; padding-right: 0; }
