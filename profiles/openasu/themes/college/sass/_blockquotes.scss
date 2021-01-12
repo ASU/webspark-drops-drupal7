@@ -32,12 +32,12 @@
 blockquote {
   border-left: none;
   font-weight: bold;
-  padding-left: $block-indent;
+  padding-left: 4rem;
   max-width: 75ch;
   &.ws2-element-alt {
     // override alt default padding
     padding: $padding-base-vertical * 1.5 $padding-base-horizontal * 1.5
-    $padding-base-vertical * 1.5 $block-indent;
+    $padding-base-vertical * 1.5 4rem;
   }
   &:before {
     // quote
