@@ -1,0 +1,9 @@
+<?php
+function mymodule_init() {
+  $options = array(
+    'group' => CSS_THEME,
+    'every_page' => TRUE,
+    'weight' => 9999
+  );
+  drupal_add_css(drupal_get_path('module', 'customcss') . '/customcss.css', $options);
+}
