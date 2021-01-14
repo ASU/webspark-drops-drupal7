@@ -9,8 +9,8 @@
 .pane-bundle-jumbohero .jumbotext-wrapper::-webkit-scrollbar { /* WebKit */ width: 0; height: 0; }
 .pane-bundle-jumbohero .field-name-field-webspark-jumbo-position { display: none; }
 .pane-bundle-jumbohero p { margin: 0; padding: 0; }
-.pane-bundle-jumbohero h2 { color: white; font-size: 3.75rem; font-weight: 900; line-height: 1; margin: 0; padding: 0.625rem 0; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
-.pane-bundle-jumbohero .field-name-field-webspark-jumbohero-blurb { max-width: 900px; margin-bottom: 1em; color: white; font-size: 1.5em; line-height: 1.5em; font-weight: 900; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
+.pane-bundle-jumbohero h2 { color: white; font-size: 3.75rem; font-weight: 700; line-height: 1; margin: 0; padding: 0.625rem 0; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
+.pane-bundle-jumbohero .field-name-field-webspark-jumbohero-blurb { max-width: 900px; margin-bottom: 1em; color: white; font-size: 1.5em; line-height: 1.5em; font-weight: 700; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
 .pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn, .pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn { width: 41.6667%; display: inline-block; margin-bottom: 0.75em; }
 .pane-bundle-jumbohero .field-name-field-webspark-hero-ugradbtn { padding-right: 0.9375em; }
 .pane-bundle-jumbohero .field-name-field-webspark-hero-gradbtn { padding-left: 0.9375em; }
