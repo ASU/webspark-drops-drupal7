@@ -38,7 +38,7 @@ ul.quicktabs-style-nostyle { font-size: 24px; }
 
 .ui-tabs-panel, .ui-tabs-panel p { font-size: 1em; }
 
-.ui-widget-header { background: none; min-height: auto; padding: 0; color: #191919; font-size: 1.125em; font-weight: 200; line-height: 24px; }
+.ui-widget-header { background: none; min-height: auto; padding: 0; color: #191919; font-size: 1.125rem; font-weight: 200; line-height: 24px; }
 
 ul.quicktabs-style-nostyle, .ui-tabs .ui-tabs-nav { border-bottom: 1px solid #d0d0d0 !important; padding: 16px 0 0 0; }
 
@@ -71,9 +71,15 @@ ul.quicktabs-style-nostyle li.active a, ul.quicktabs-style-nostyle li.active:hov
 ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a { color: #191919; }
 
 /* fixes for stacked tabs */
+body #content .ui-tabs .ui-tabs-nav li { border: none; }
+body #content .ui-tabs .ui-tabs-nav li:hover { border-bottom: 0.3125em solid #8c1d40; }
+body #content .ui-tabs .ui-tabs-nav li:hover a { color: #8c1d40; }
+body #content .ui-tabs .ui-tabs-nav li:before { content: ''; }
+body #content .ui-tabs .ui-tabs-nav li.ui-state-active { border-bottom: 0.3125em solid #8c1d40; }
+body #content .ui-tabs .ui-tabs-nav li.ui-state-active a { color: #8c1d40; }
 body #content .ui-tabs .ui-tabs-nav li.ui-state-focus { margin-bottom: 0; }
 body #content .ui-tabs .ui-tabs-nav li.ui-state-focus a { border-top: none; }
-body #content .ui-tabs .ui-tabs-nav li a { margin-left: 0; border-bottom: transparent; clear: both; }
+body #content .ui-tabs .ui-tabs-nav li a { margin-left: 0; border: none; border-bottom: transparent; clear: both; color: #191919; }
 
 .pagination { display: inline-block; padding-left: 0; margin: 1.5rem 0; border-radius: 0; }
 .pagination > li { font-size: 1.25em; display: inline; }

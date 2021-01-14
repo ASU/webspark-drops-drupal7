@@ -22,7 +22,7 @@ ul.quicktabs-style-nostyle {
   min-height: auto;
   padding: 0;
   color: $ws2-gray-darkest;
-  font-size: 1.125em;
+  font-size: 1.125rem;
   font-weight: 200;
   line-height: $line-height-computed;
 }
@@ -126,6 +126,22 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
 
 /* fixes for stacked tabs */
 body #content .ui-tabs .ui-tabs-nav li {
+  border: none;
+  &:hover {
+    border-bottom: 0.3125em solid $ws2-maroon;
+    a {
+      color: $ws2-maroon;
+    }
+  }
+  &:before {
+    content: '';
+  }
+  &.ui-state-active {
+    border-bottom: 0.3125em solid $ws2-maroon;
+    a {
+      color: $ws2-maroon;
+    }
+  }
   &.ui-state-focus {
     a {
       border-top: none;
@@ -134,7 +150,9 @@ body #content .ui-tabs .ui-tabs-nav li {
   }
   a {
     margin-left: 0;
+    border: none;
     border-bottom: transparent;
     clear: both;
+    color: $ws2-gray-darkest;
   }
 }
