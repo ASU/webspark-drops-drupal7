@@ -8,8 +8,8 @@
 .pane-bundle-hero .hero-wrapper::-webkit-scrollbar { /* WebKit */ width: 0; height: 0; }
 .pane-bundle-hero .pane-content { padding: 0 0.9375em 1em 0.9375em; }
 .pane-bundle-hero p { margin: 0; padding: 0; }
-.pane-bundle-hero h1, .pane-bundle-hero h2 { color: white; font-size: 3.75rem; font-weight: 900; line-height: 1; margin: 0; padding: 5.3125rem 0.9375rem 0.625rem 0.9375rem; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
-.pane-bundle-hero .field-name-field-webspark-hero-blurb { max-width: 900px; margin-bottom: 1em; color: white; font-size: 1.5em; line-height: 1.5em; font-weight: 900; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
+.pane-bundle-hero h1, .pane-bundle-hero h2 { color: white; font-size: 3.75rem; font-weight: 700; line-height: 1; margin: 0; padding: 5.3125rem 0.9375rem 0.625rem 0.9375rem; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
+.pane-bundle-hero .field-name-field-webspark-hero-blurb { max-width: 900px; margin-bottom: 1em; color: white; font-size: 1.5em; line-height: 1.5em; font-weight: 700; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
 .pane-bundle-hero.hero-height-hero .field-name-field-webspark-hero-height { display: none; }
 .pane-bundle-hero .field-name-field-webspark-hero-ugradbtn, .pane-bundle-hero .field-name-field-webspark-hero-gradbtn { width: 41.6667%; display: inline-block; margin-bottom: 0.75em; padding-left: 0.9375em; padding-right: 0.9375em; }
 .pane-bundle-hero .field-name-field-webspark-hero-ugradbtn { padding-left: 0; }
