@@ -152,15 +152,18 @@ body {
         ul.ui-tabs-nav {
           li {
             border: none;
-            color: $ws2-gray-darkest;
+            &:hover {
+              border-bottom: 0.3125em solid $ws2-maroon;
+              a {
+                color: $ws2-maroon;
+              }
+            }
             &:before {
               content: '';
             }
             a {
               border: none;
-              &:hover {
-                color: $ws2-maroon;
-              }
+              color: $ws2-gray-darkest;
             }
             &.ui-state-active {
               border-bottom: 0.3125em solid $ws2-maroon;
