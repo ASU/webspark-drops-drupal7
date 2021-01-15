@@ -70,6 +70,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a { color: #191919; }
 #content .ui-tabs .ui-tabs-nav li:hover a:after { width: 100%; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; }
 #content .ui-tabs .ui-tabs-nav li:before { content: ''; }
 #content .ui-tabs .ui-tabs-nav li.ui-state-active a { color: #8c1d40; }
+#content .ui-tabs .ui-tabs-nav li.ui-state-active a:after { width: 100%; }
 #content .ui-tabs .ui-tabs-nav li.ui-state-focus { margin-bottom: 0; }
 #content .ui-tabs .ui-tabs-nav li.ui-state-focus a { border-top: none; }
 

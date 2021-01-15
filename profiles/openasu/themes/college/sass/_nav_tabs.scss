@@ -187,6 +187,9 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a {
   &.ui-state-active {
     a {
       color: $ws2-maroon;
+      &:after {
+        width: 100%;
+      }
     }
   }
   &.ui-state-focus {
