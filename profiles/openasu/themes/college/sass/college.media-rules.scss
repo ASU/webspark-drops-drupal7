@@ -72,20 +72,27 @@
   #header .container {
     width: 100%;
   }
-  #header > .container .row {
-    margin-left: 0;
-    margin-right: 0;
-    .col-md-12 {
-      padding-left: 0;
-      padding-right: 0;
+  #header > .container {
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+      .col-md-12 {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+    // Create space above mobile menu for Admin menu component.
+    #headerContainer {
+      & > header[class^=css-] > .navbar-component {
+        margin-top: 24px;
+      }
     }
   }
   #header .container-fluid > .row > .col-md-12 {
     width: 100%;
   }
   // Mobile header link color fix
-  #header a
-  {
+  #header a {
     color: $ws2-gray-darkest;
   }
   .header__sitename {
@@ -157,6 +164,7 @@
   }
 }
 
+// Print page layout fixes
 @media print {
   .megafoot > .row div:not(.megafoot-border) {
     display: none; }

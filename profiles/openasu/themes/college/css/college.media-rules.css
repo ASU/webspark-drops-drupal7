@@ -22,6 +22,7 @@
   #header .container { width: 100%; }
   #header > .container .row { margin-left: 0; margin-right: 0; }
   #header > .container .row .col-md-12 { padding-left: 0; padding-right: 0; }
+  #header > .container #headerContainer > header[class^=css-] > .navbar-component { margin-top: 24px; }
   #header .container-fluid > .row > .col-md-12 { width: 100%; }
   #header a { color: #191919; }
   .header__sitename { font-size: 15px; padding: 12px 15px; color: #fff; background: #484848; font-weight: 600; line-height: 12px; }
