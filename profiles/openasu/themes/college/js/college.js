@@ -7,10 +7,30 @@
   Drupal.behaviors.asu_standard = {
     // Code to run on DOM ready, each AJAX request finish.
     attach: function (context, settings) {// jshint ignore:line
-      $("#asu_mobile_hdr").wrapInner("<div class='asu_mobile_hdr_wrapper'></div>");
-      $("#asu_mobile_menu").wrapInner("<div class='asu_mobile_menu_wrapper'></div>");
+      $("#asu_mobile_hdr", context).wrapInner("<div class='asu_mobile_hdr_wrapper'></div>");
+      $("#asu_mobile_menu", context).wrapInner("<div class='asu_mobile_menu_wrapper'></div>");
       // Add header to Ctools Modal menu to improve UI
-      $(".panels-add-content-modal .panels-categories-box").after("<h2 class=\"widget-list\">More Content Panes</h2>");
+      $(".panels-add-content-modal .panels-categories-box", context).after("<h2 class=\"widget-list\">More Content Panes</h2>");
+
+      // College theme event listener
+      $(window).resize(function () {
+        adjustMobileHeight(context, settings);
+      });
+      $(window).load(function () {
+        adjustMobileHeight(context, settings);
+      });
+      if ($("#navbar-bar").length) {
+        $("#navbar-bar > .navbar-tab > a.navbar-tab," +
+          "#navbar-tray .navbar-icon.navbar-icon-toggle-vertical," +
+          "#navbar-tray .navbar-icon.navbar-icon-toggle-horizontal", context).on({
+          mouseenter: function () {
+            adjustMobileHeight(context, settings);
+          },
+          mouseout: function () {
+            adjustMobileHeight(context, settings);
+          }
+        });
+      }
     }
   };
 
@@ -46,7 +66,6 @@
   $("a").on("click", function (e) {
     var $this = $(this);
     var url = $this.attr("href");
-    // var cls = $this.attr("class");
     if (!$this.hasClass("accordion-toggle") && !$this.closest("ui-tabs").length === 0 && $this.closest("nav-tabs").length === 0) { // jshint ignore:line
       if (url.slice(0, 1) === "#") {
         e.preventDefault();
@@ -78,8 +97,48 @@
     window.location.hash = hash;
   }
 
-  // WEBSPARK-897 - Stop conflict between Token module (and its jQuery calls) and Bootstrap's button() function.
-  // $.fn.bootstrapBtn = $.fn.button.noConflict();
-  // Removed for College theme
-
+  // College theme - header spacing fixes
+  // @return int
+  function returnHeight(elementStyle) {
+    let menuHeight = "";
+    for (prop in elementStyle) {
+      if (prop.match(/^paddingTop/)) {
+        menuHeight = elementStyle[prop].match(/\d+/)[0];
+      }
+    }
+    return Number(menuHeight);
+  }
+  function adjustMobileHeight(context, settings) {
+    // Checks if it is mobile view
+    if ($(window).width() < 992) {
+      // var druTopMenuProcess = settings.asu_standards.access;
+      var druInitHt = settings.asu_standards.barbar;
+      var totHeight = druInitHt;
+      var druAdmMenuHt = 0;
+      var asuMobMenu = $(".block-asu-brand div#headerContainer > header[class^=css-] > .navbar-component", context);
+      var asuMobMenuHeight = asuMobMenu.outerHeight();
+      if (!isNaN(asuMobMenuHeight)) {
+        if (druInitHt === 39) { // Navbar (varied heights)
+          const bodyTag = document.getElementsByTagName("body")[0];
+          druAdmMenuHt = returnHeight(bodyTag.style);
+          totHeight = Number(asuMobMenuHeight) - 4; // Remove 4px to account for #header height;
+        } else if (druInitHt === 30) { // Admin menu
+          druAdmMenuHt = druInitHt;
+          totHeight = Number(asuMobMenuHeight) - 4; // Remove 4px to account for #header height;
+        } else {
+          // do nothing
+          totHeight = druAdmMenuHt + Number(asuMobMenuHeight) - 4; // Remove 4px to account for #header height;
+        }
+      }
+      // Body content - Padding top (combined heights)
+      $("#page-wrapper #main-wrapper", context).css("paddingTop", totHeight + "px");
+      // Mobile header - Top margin (only ASU admin menu height)
+      if (druAdmMenuHt !== 0) {
+        asuMobMenu.css({"margin-top": druAdmMenuHt});
+      }
+    } else {
+      // console.log("No admin menu or navbar - SKIPPING");
+      $("#page-wrapper #main-wrapper", context).css("paddingTop", 0);
+    }
+  }
 })(jQuery, Drupal); // jshint ignore:line

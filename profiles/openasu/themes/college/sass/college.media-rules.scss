@@ -56,10 +56,27 @@
     width: 100%;
     max-width: $screen-md;
   }
-  // Swap out desktop menu
+
+  // Swap out desktop menu and detached, sticky mobile menu from web component
   #ASUNavMenu {
     display: none !important;
   }
+  // Create space above mobile menu for:
+  //// Navbar component.
+  body.admin-menu #main-wrapper,
+  body > nav#navbar-administration + div#page-wrapper #main-wrapper {
+    //margin-top: 5.25rem; // Moves content body down by (height of mobile menu + height of Navbar)
+  }
+  #headerContainer {
+    & > header[class*=css-] > .navbar-component {
+      //padding-top: 39px; // Height of
+    }
+  }
+  // Since mobile menu is DOM-detached, shrink header down to 4px for padding
+  header#header {
+    height: 0.25rem;
+  }
+
   // Headers
   h1, .h1 {
     margin-bottom: 3rem;
@@ -93,12 +110,6 @@
         .col-md-12 {
           padding-left: 0;
           padding-right: 0;
-        }
-      }
-      // Create space above mobile menu for Admin menu component.
-      #headerContainer {
-        & > header[class^=css-] > .navbar-component {
-          margin-top: 24px;
         }
       }
     }
